@@ -23,12 +23,12 @@ Supporting artefact: `tools/_probe_hall_site.gd` (throwaway probe, same
 terminus). Its output grid is the ground truth §2 of the design sites
 against.
 
-One loose end: a `perf_render_stats.gd --label=main-baseline` run was
-still mid-flight at handover time (llvmpipe is slow; 240-frame settle ×
-4 views). The design's §7 budget is stated relative to a before-run the
-implementer executes anyway, so nothing blocks on it; if my run finished
-after this file was written, its numbers are in the design doc's §7
-(check the doc's git history — a follow-up commit means it landed).
+The `perf_render_stats.gd --label=main-baseline` run completed after the
+first push and its numbers are now in the design doc's §7: the
+`stronghold_approach` view measures **1069 draw calls / 25.8M primitives
+/ 1381 objects** — the lightest hero view in the set (village 2080,
+band-1 open field 5646), so the budget line (≤ 1230 after) has real
+measured headroom behind it.
 
 ## 2. Decided vs open
 

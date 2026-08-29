@@ -480,9 +480,22 @@ Target hardware: ROG Ally. Measured with `tools/perf_render_stats.gd`
 frame TIME is meaningless and the structural counters — draw calls,
 primitives, objects — are what carry).
 
-**Baseline (this session, `main` @ a97f3e84, `--label=main-baseline`):**
-run was started; the implementer re-runs the same command before changing
-anything and records both numbers in their report:
+**Baseline (MEASURED this session, `main` @ a97f3e84,
+`--label=main-baseline`):**
+
+```
+view                     draw calls     primitives      objects
+village_high                   2080       26871629         2262
+band1_open                     5646       29772682         4619
+band4_ironwood                  806       27083158         1122
+stronghold_approach            1069       25796867         1381
+```
+
+The approach view is the LIGHTEST hero view in the set — roughly half the
+village and a fifth of the open band-1 field. The chapter's climax has
+real, measured headroom; the massing below spends some of it and the
+budget line caps how much. The implementer re-runs the same command
+before and after and records both:
 
 ```
 xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
@@ -495,12 +508,13 @@ xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3
   the retiring castle). Since the castle's 132 disappear from the world,
   the net world-level module change is **≤ +85**, all at one site the
   player reaches once.
-- **Draw calls at `stronghold_approach`:** the after number must be
-  **≤ the before number + 15 %**, and the view now contains the ENTIRE
-  merged location (today the same view carries the works AND the castle's
-  132 modules on the skyline — merging removes a whole building from the
-  scene; spending part of that back on massing is the trade, and it is
-  measured, not assumed).
+- **Draw calls at `stronghold_approach`:** measured before = **1069**;
+  the after number must be **≤ 1230 (+15 %)**. The view then contains the
+  ENTIRE merged location (today the same view carries the works AND the
+  castle's 132 modules on the skyline — merging removes a whole building
+  from the scene; spending part of that back on massing is the trade).
+  ~+85 net modules at 1–2 draw calls each fits with margin; the budget
+  exists to catch scope creep, not to squeeze the design.
 - **Lights:** ≤ **18 unshadowed OmniLights exterior** at the Hall (gate
   fire 4 + gate sky-fill 1 + causeway braziers 6 + flank fire 4 + flank
   sky-fill 2 + yard 1), versus **46 today across the two buildings**
