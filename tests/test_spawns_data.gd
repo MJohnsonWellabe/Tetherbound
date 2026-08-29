@@ -62,6 +62,25 @@ func _spawned_species() -> Array[String]:
 	return out
 
 
+## A single band's own spawns.json, keyed by `order` -- for pinning a specific
+## authored entry against accidental deletion/retuning, independent of the
+## merged table's cross-band ordering.
+func _band_spawns_by_order(band: String) -> Dictionary:
+	var path := "res://data/config/bands/%s/spawns.json" % band
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not (parsed is Dictionary):
+		return {}
+	var out := {}
+	for entry: Variant in (parsed as Dictionary).get("spawns", []):
+		var spawn := entry as Dictionary
+		if spawn.has("order"):
+			out[int(spawn["order"])] = spawn
+	return out
+
+
 func _warrens_spawned_species() -> Array[String]:
 	var file := FileAccess.open(WARRENS_PATH, FileAccess.READ)
 	if file == null:
@@ -414,3 +433,83 @@ func test_every_band_has_an_always_reachable_alpha_or_elder() -> void:
 		assert_true(any_reachable,
 			("%s has no always-reachable alpha/elder spawn; owner-direction §11 wants every major "
 			+ "region to hold a credible roster temptation a player can actually find") % band)
+
+
+## T3-REWARD, owner-direction §11, second pass. Coordinator audit of bands 1,
+## 3 and 5 (band 4 already cleared the bar and is another lane's file this
+## round; band 2 was fixed above). Unlike Band 2, these three already carried
+## genuine "reconsider the five" temptations when read against §11's own test
+## ("could a reasonable player see something here and think, 'I might want
+## that instead of one of mine'?") -- not always as a mechanical alpha/elder
+## tag, but as deliberate prose framing on an ordinary cluster. Per this
+## task's own instruction ("if a region already clears the bar, say so with
+## the evidence and move on rather than padding it"), nothing new was
+## authored here. What follows pins the specific entries the audit found, so
+## a later edit cannot silently delete the thing that clears the bar without
+## a test noticing.
+
+func test_band1_clears_the_roster_temptation_floor() -> void:
+	var by_order := _band_spawns_by_order("band1_lower_meadows")
+	# Elder Mosshell: mechanical (`elder`), a curiosity-discoverable pond
+	# hollow, catchable, "the whole temptation" per its own `_why_d1`.
+	assert_true(by_order.has(1900), "Band 1 order 1900 (the elder Mosshell) is missing")
+	assert_eq(str(by_order.get(1900, {}).get("species", "")), "mosshell",
+		"Band 1 order 1900 must stay the elder Mosshell -- the region's mechanically-tagged roster temptation")
+	assert_true(by_order.get(1900, {}).has("elder"),
+		"Band 1 order 1900 lost its `elder` block -- it is the region's only always-reachable mechanical temptation")
+	# Meadowhart herd: prose-only, but its own `_why_d1` is explicit --
+	# "otherwise unseen in Band 1 ... the species the tournament final's mount
+	# and the saddle recipe already made them want", sited 220m off-spine so
+	# finding it costs a real decision (owner-direction §11's traversal-role
+	# and attachment vocabulary).
+	assert_true(by_order.has(1005), "Band 1 order 1005 (the off-spine Meadowhart herd) is missing")
+	assert_eq(str(by_order.get(1005, {}).get("species", "")), "meadowhart",
+		"Band 1 order 1005 must stay Meadowhart -- the region's traversal-role roster temptation")
+
+
+func test_band3_clears_the_roster_temptation_floor() -> void:
+	var by_order := _band_spawns_by_order("band3_the_river_lock")
+	# Alpha Burrowback behind the Relay: mechanical, and its own `_why_alpha`
+	# frames it explicitly as "the wild counterweight" to the region's first
+	# real Team Tether fight.
+	assert_true(by_order.has(3002), "Band 3 order 3002 (the alpha Burrowback) is missing")
+	assert_eq(str(by_order.get(3002, {}).get("species", "")), "burrowback",
+		"Band 3 order 3002 must stay Burrowback -- the region's mechanically-tagged roster temptation")
+	assert_true(by_order.get(3002, {}).has("alpha"),
+		"Band 3 order 3002 lost its `alpha` block -- it is the region's only always-reachable mechanical temptation")
+	# Brooktail at the Old Mill Crossing: prose-only, and its own `_why` names
+	# itself outright -- "the region's team-building temptation in prompt
+	# 60's sense" -- standing at the one crossing every player must use, and
+	# on the very captain's own team the player will meet later in the band.
+	assert_true(by_order.has(3004), "Band 3 order 3004 (the Old Mill Crossing Brooktail) is missing")
+	assert_eq(str(by_order.get(3004, {}).get("species", "")), "brooktail",
+		"Band 3 order 3004 must stay Brooktail -- the region's own-named team-building temptation")
+
+
+func test_band5_clears_the_roster_temptation_floor_and_its_own_final_opportunity() -> void:
+	var by_order := _band_spawns_by_order("band5_stronghold_approach")
+	# Alpha Galecrest: mechanical, "the pack leader of the chapter's largest
+	# aggressor cluster... a wild fight worth winning on its own terms".
+	assert_true(by_order.has(5001), "Band 5 order 5001 (the alpha Galecrest) is missing")
+	assert_eq(str(by_order.get(5001, {}).get("species", "")), "galecrest",
+		"Band 5 order 5001 must stay Galecrest -- the region's mechanically-tagged roster temptation")
+	assert_true(by_order.get(5001, {}).has("alpha"),
+		"Band 5 order 5001 lost its `alpha` block -- it is the region's only always-reachable mechanical temptation")
+	# owner-direction §15's specific ask on top of §11's general floor: "at
+	# least one final tempting roster opportunity" before the player commits
+	# to the Hall. Order 5004's own `_why` names itself as exactly that --
+	# "a special encounter ... that tempts a prepared player to spend
+	# resources before the Hall" -- sited at the same off-spine detour as the
+	# apex Air TM so the same trip risks both.
+	assert_true(by_order.has(5004), "Band 5 order 5004 (the solitary special-encounter Mudsnout) is missing")
+	assert_eq(str(by_order.get(5004, {}).get("species", "")), "mudsnout",
+		"Band 5 order 5004 must stay Mudsnout -- the region's owner-direction §15 final-opportunity encounter")
+	# Order 5003 is the closest-to-the-gate cluster that is ITSELF framed as a
+	# roster temptation ("the final chance to weigh a catch against the five
+	# that are about to fight the boss") -- a couple of ordinary ambient
+	# clusters (5015, 5021) sit a few metres nearer the door by z alone, but
+	# neither carries any temptation framing; being closest only matters for
+	# the entry that is actually trying to tempt a swap.
+	assert_true(by_order.has(5003), "Band 5 order 5003 (the final-stretch Trailpup) is missing")
+	assert_eq(str(by_order.get(5003, {}).get("species", "")), "trailpup",
+		"Band 5 order 5003 must stay Trailpup -- the final roster-temptation cluster before the Hall door")
