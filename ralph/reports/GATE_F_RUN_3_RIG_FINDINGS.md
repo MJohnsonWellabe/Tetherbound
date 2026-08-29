@@ -327,6 +327,39 @@ would need an explicit protocol exception, not a quiet workaround).
 
 ---
 
+## RIG-20 — `region` containment reports `corridor` even at the Stronghold approach and the Hall, teleported to directly, far from the South Bridge
+
+**Severity: recorded as context for the concurrent T2-STRANDING lane, not
+chased further.** Found running X07 (DIAG world/regional audit, teleport
+permitted, no stranding exposure — see the coordinator's exposure table).
+
+X07-144 and X07-164 teleport directly to the named region centres of the
+Stronghold approach `(-65, 7028)` and the Hall `(150, 7595)` and land exactly
+on target (`0.0 m` off in both cases — the teleport primitive itself is
+accurate). But `map_state.gd`'s own region-containment check reports
+`region=corridor` at both, not `stronghold_approach` or `hall`
+(X07-145/X07-165, both FAIL). These coordinates are **5.7-6.3 km from the
+South Bridge carve** (z≈7028/7595 versus the stranding cluster's
+z≈1314-1326) — nowhere near the corridor this run has been calling "the
+South Bridge stranding."
+
+**This raises a real question the T2-STRANDING lane should be aware of,
+without this operator answering it**: is `corridor` a name specific to the
+South Bridge carve, or is it the containment check's generic fallback for
+"no defined named-region polygon contains this point" anywhere on the map?
+If the latter, then the position clustering in RIG-13 (every stranded
+`move_to` landing at `region=corridor`) is evidence the player is somewhere
+outside every named region's polygon — consistent with, but not identical
+to, being specifically stuck at the bridge geometry. If `stronghold_approach`
+and `hall`'s own region polygons simply don't cover their own landmark
+coordinates (a separate, plain data gap), that would explain this finding
+without implying anything about the South Bridge at all. **Not
+distinguished by this run** — flagged here because it directly bears on how
+literally to read every `region=corridor` line in RIG-13's evidence table
+above.
+
+---
+
 ## Open finding, inherited and NOT resolved by this rewrite: does the South Bridge gate ever actually open?
 
 S05, re-run clean under the RIG-13/14/18 understanding (real creature
