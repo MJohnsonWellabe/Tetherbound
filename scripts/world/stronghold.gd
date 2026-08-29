@@ -243,6 +243,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 	_build_keep_parapets()
 	_build_gate_frame()
 	_build_hall_massing()
+	_build_occupation()
 	_build_interior_area()
 	_build_machine()
 	_build_recovery_point()
@@ -256,6 +257,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 		_markers["entrance"] = _markers.get("ramp_foot",
 			to_global(Vector3(0.0, _floor_y, _mouth_outer_z() - 4.0)))
 	set_process(true)
+	_report_light_budget()
 	print("[stronghold] %d spaces on the route (%s), floor y=%.2f, %d gauntlet trainer(s), %d approach pylon(s)%s" % [
 		_order.size(), " -> ".join(_order), global_position.y + _floor_y, gauntlet_size(),
 		_approach_pylons,
@@ -922,6 +924,17 @@ func _build_approach_ramp() -> void:
 	body.rotation.x = mesh.rotation.x
 	add_child(body)
 
+	# T1-HALL-REBUILD: the causeway dressing (kerbs, rails, banner piers, the
+	# two brazier pairs) has to stand ON this slab, and the slab's rise is
+	# SAMPLED from the real ground rather than authored -- `site.ramp_run` is
+	# the only number in the config. So the ramp publishes what it actually
+	# built, and `_causeway_y()` is the one place anything asks where the
+	# surface is. Nothing downstream re-derives the slope.
+	_ramp_run_m = run
+	_ramp_foot_z = outer_z - run
+	_ramp_foot_y = end_local
+	_ramp_half_w = width * 0.5
+
 	_markers["ramp_foot"] = to_global(Vector3(lateral, end_local, outer_z - run))
 	if rad_to_deg(angle) > 40.0:
 		push_warning("the stronghold's approach ramp climbs at %.0f degrees; that is a wall, not a way in" % [
@@ -1031,6 +1044,7 @@ func _face_rect(rect: Dictionary) -> void:
 ## `_build_gate_frame()` instead, which wants the coping/roofline read without
 ## competing with the jambs it plants right where a girder would land).
 func _build_exterior_dressing() -> void:
+	var variant := 0
 	for id in EXTERIOR_CHAMBERS:
 		if not _chambers.has(id):
 			continue
@@ -1041,7 +1055,16 @@ func _build_exterior_dressing() -> void:
 		for side in ["-x", "+x"]:
 			if not _opening_on(id, side).is_empty():
 				continue
-			_dress_exterior_wall(centre, size, height, side, true)
+			# T1-HALL-REBUILD, design §6.3 and the first build pass's own
+			# flagged gap: the hardware stamp was IDENTICAL on all four flank
+			# walls, which is what made the works read as one extruded crate
+			# wearing a decal four times. `variant` is a per-wall index into the
+			# fitting subsets below, so no two walls a player can see together
+			# carry the same arrangement. The vocabulary does not change -- a
+			# girder, a pillar pair, a live conduit, a banner pair -- only which
+			# of them this particular wall got.
+			_dress_exterior_wall(centre, size, height, side, true, variant)
+			variant += 1
 
 
 ## T1-HALL (2026-08-30). Design acceptance item 6: "continuous parapet line".
@@ -1078,7 +1101,7 @@ func _build_keep_parapets() -> void:
 ## generalising code that never runs the other way would just be more
 ## surface for a mistake to hide in.
 func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: String,
-		hardware: bool) -> void:
+		hardware: bool, variant: int = 0) -> void:
 	var along_x := side == "-z" or side == "+z"
 	var span := (size.x if along_x else size.y) + _wall_t * 2.0
 	var offset := (size.y if along_x else size.x) * 0.5 + _wall_t * 0.5
@@ -1117,21 +1140,42 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 	# player approaching from the meadow can actually see it. Only ever
 	# reached for `-x`/`+x` (see this function's own header), so `centre.z`/
 	# `face_x` are the right axis pair without checking `along_x` again.
-	var girder_y := minf(height * 0.55, height - 1.0)
-	_box(Vector3(0.5, 0.5, span * 0.62), Vector3(face_x + sign_ * 0.35, _floor_y + girder_y, centre.z),
-		_tether_material(), false)
-	for f in [-0.30, 0.30]:
-		_box(Vector3(0.6, height, 0.6),
-			Vector3(face_x + sign_ * 0.35, _floor_y + height * 0.5, centre.z + f * span * 0.5),
+	#
+	# T1-HALL-REBUILD: which of the four fittings a wall gets, and at what
+	# height, is now driven by `variant`. FOUR ARRANGEMENTS OF ONE VOCABULARY,
+	# not four vocabularies -- an occupying force bolts the same parts on in
+	# whatever order the wall allowed, and that is exactly what makes it read
+	# as bolted on rather than moulded in. The subsets are chosen so that any
+	# two walls visible in one frame differ in at least two of the four
+	# fittings.
+	var kind := variant % 4
+	var girder := kind != 1
+	var pillars := kind != 2
+	var conduit := kind != 3
+	var banners := 2 if kind != 2 else 1
+	var girder_frac: float = [0.55, 0.55, 0.68, 0.42][kind]
+	var girder_y := minf(height * girder_frac, height - 1.0)
+	if girder:
+		_box(Vector3(0.5, 0.5, span * (0.62 if kind != 3 else 0.44)),
+			Vector3(face_x + sign_ * 0.35, _floor_y + girder_y, centre.z),
 			_tether_material(), false)
+	if pillars:
+		var spread := 0.30 if kind != 1 else 0.42
+		for f in [-spread, spread]:
+			_box(Vector3(0.6, height, 0.6),
+				Vector3(face_x + sign_ * 0.35, _floor_y + height * 0.5, centre.z + f * span * 0.5),
+				_tether_material(), false)
 	# A live conduit climbing to the parapet -- "the deeper you go the more of
 	# the room is machine" (`_comment_language`), now readable from outside.
-	_box(Vector3(0.3, height * 0.85, 0.3),
-		Vector3(face_x + sign_ * 0.35, _floor_y + height * 0.42, centre.z), _live_material(), false)
+	if conduit:
+		var run_z := centre.z + (0.0 if kind == 0 else signf(float(kind) - 1.5) * span * 0.18)
+		_box(Vector3(0.3, height * 0.85, 0.3),
+			Vector3(face_x + sign_ * 0.35, _floor_y + height * 0.42, run_z), _live_material(), false)
 
-	for f2 in [-0.22, 0.22]:
-		_hang_banner(Vector3(face_x, _floor_y + height * 0.6, centre.z + f2 * span),
-			0.0 if sign_ > 0.0 else PI)
+	var stations: Array = [-0.22, 0.22] if banners == 2 else [0.28 * signf(float(kind) - 1.5)]
+	for f2: float in stations:
+		_hang_banner(Vector3(face_x, _floor_y + height * (0.6 if kind != 3 else 0.72),
+			centre.z + f2 * span), 0.0 if sign_ > 0.0 else PI)
 
 
 ## `yaw_rad` rotates the model's local +X onto the direction the mount should
@@ -1219,6 +1263,23 @@ func _build_gate_frame() -> void:
 	for s2 in [-1.0, 1.0]:
 		_hang_banner(Vector3(lateral + s2 * (width * 0.5 + jamb_w + 0.35), _floor_y + op_height * 0.7,
 			outer_face_z), PI * 0.5)
+
+	# T1-HALL-REBUILD, design §4 tier 1: a blind arch over the lintel, in the
+	# board's dark timber. The jamb-and-lintel pair turns the hole into a
+	# doorway; the arch is what turns the doorway into a GATE, and it is the
+	# one piece of the design's own gate recipe the first build pass skipped.
+	# `Wall_Arch` is the medieval kit's own module and is fitted by its measured
+	# bounds -- the two kits do not share a scale and guessing between them is
+	# how the old castle got its sandcastle turrets.
+	var arch := _load_prop(MEDIEVAL_KIT, "Wall_Arch")
+	if arch != null:
+		var holder := Node3D.new()
+		holder.name = "GateBlindArch"
+		holder.add_child(arch)
+		_fit_to_height(arch, 2.6)
+		holder.position = Vector3(lateral, _floor_y + jamb_h + 0.6, jamb_z + jamb_proud * 0.2)
+		add_child(holder)
+		_tint_node(arch, _timber())
 
 
 ## T1-HALL (2026-08-30). HALL_DESIGN_2026-08-30.md §4/§9 step 2: the castle
@@ -1349,8 +1410,6 @@ func _build_hall_waist() -> void:
 ## chambers behind them are never seen from the meadow at this range, and
 ## `interior_structure.gd`'s own `reveals` pass already gives THEM a window
 ## grammar from the inside.
-const SLIT_SPACING := 8.0
-const SLIT_SIZE := Vector3(0.4, 1.8, 0.35)
 func _build_hall_slits() -> void:
 	for id in EXTERIOR_CHAMBERS:
 		if not _chambers.has(id):
@@ -1365,17 +1424,47 @@ func _build_hall_slits() -> void:
 			_slit_row(centre, size, height, side)
 
 
+## T1-HALL-REBUILD: EVERY DAYLIGHT OPENING IS FRAMED, and a slit is an
+## opening. This row shipped as bare dark rectangles laid on the wall face --
+## which is the Warrens-exterior lesson exactly: an unframed daylight opening
+## does not read as a window, it reads as a hole punched in the render. The fix
+## is the same one the gate and the passages already have (a jamb-and-lintel
+## surround standing proud of the wall) at slit scale: two jambs, a sill and a
+## head in the LIGHT stone standing 0.22m proud, with the dark void set back
+## behind them. In sun the surround throws a real shadow line into the recess;
+## in shade the value step between #f2e9da-family dressed stone and the void's
+## near-black is what carries the read, which matters because the gate face is
+## the SHADED face at the day keyframe (design §2).
+const SLIT_SPACING := 8.0
+const SLIT_SIZE := Vector3(0.4, 1.8, 0.35)
+const SLIT_SURROUND_M := 0.26
+const SLIT_PROUD_M := 0.22
 func _slit_row(centre: Vector3, size: Vector2, height: float, side: String) -> void:
 	var sign_ := -1.0 if side.begins_with("-") else 1.0
-	var face_x := centre.x + sign_ * (size.x * 0.5 + _wall_t * 0.5 + SLIT_SIZE.x * 0.5 - 0.05)
+	var wall_face := centre.x + sign_ * (size.x * 0.5 + _wall_t * 0.5)
+	var void_x := wall_face + sign_ * (SLIT_SIZE.x * 0.5 - 0.05)
+	var frame_x := wall_face + sign_ * (SLIT_PROUD_M * 0.5 + SLIT_SIZE.x * 0.5)
 	var span := size.y
 	var count := maxi(1, int(floor(span / SLIT_SPACING)))
 	var start := centre.z - float(count - 1) * 0.5 * SLIT_SPACING
 	var slit_y := _floor_y + height * 0.72
-	var slit_material := _material(_stone_dark(), 0.0, false)
+	var void_material := _material(_stone_dark().darkened(0.55), 0.0, false)
+	var frame_material := _material(_stone_light(), 0.0, true)
+	var half_w := SLIT_SIZE.z * 0.5
+	var half_h := SLIT_SIZE.y * 0.5
 	for i in count:
 		var z := start + float(i) * SLIT_SPACING
-		_box(SLIT_SIZE, Vector3(face_x, slit_y, z), slit_material, false)
+		_box(SLIT_SIZE, Vector3(void_x, slit_y, z), void_material, false)
+		# Jambs, either side of the void along the wall's own run.
+		for s in [-1.0, 1.0]:
+			_box(Vector3(SLIT_PROUD_M + SLIT_SIZE.x, SLIT_SIZE.y + SLIT_SURROUND_M * 2.0, SLIT_SURROUND_M),
+				Vector3(frame_x, slit_y, z + s * (half_w + SLIT_SURROUND_M * 0.5)),
+				frame_material, false)
+		# Head and sill.
+		for s2 in [-1.0, 1.0]:
+			_box(Vector3(SLIT_PROUD_M + SLIT_SIZE.x, SLIT_SURROUND_M, SLIT_SIZE.z + SLIT_SURROUND_M * 2.0),
+				Vector3(frame_x, slit_y + s2 * (half_h + SLIT_SURROUND_M * 0.5), z),
+				frame_material, false)
 
 
 ## Design §6.1: "the single highest-value occupation object... the moment
@@ -1447,6 +1536,579 @@ func _build_cable_landing() -> void:
 	var spokes: Node3D = SEVERED_SPOKES.new()
 	spokes.call("_conduit_span", builder, 0, pylon_head, anchor, _live_material(), 1.0)
 	spokes.free()
+
+
+## --- the occupation layer (T1-HALL-REBUILD, 2026-08-30) ----------------------
+
+## HALL_DESIGN_2026-08-30.md §6, and a regression the merge introduced without
+## meaning to: `landmark.gd` was the ONLY caller of `stronghold_occupation.gd`,
+## so retiring the detached castle took the game's whole garrison camp, brazier
+## row and tether-lamp set out of the world with it. The merged Hall inherited
+## the architecture and none of the occupation. This pass is that layer
+## re-authored at the merged site, in this file's own local frame, driven by
+## `stronghold.json`'s `hall_occupation` block.
+##
+## Everything here is BOLTED ON, HUNG OVER, or WIRED THROUGH -- never
+## construction. The architecture is Meadows stone; Team Tether is what has
+## been fastened to it. Reserved-colour discipline holds throughout: oxblood
+## and teal only on Tether elements, brass only on Tether fittings.
+##
+## Technique for the fires is PORTED from `stronghold_occupation.gd`, per the
+## design's own instruction to read that file rather than extend it -- the
+## basket proportions, the flame-without-its-stick, and the two-summed-sines
+## flicker are all its hard-won numbers, and every one of them has a defect
+## recorded against it in that file's header. Re-deriving them would have been
+## re-earning them.
+const TORCH_PROP := preload("res://scripts/world/torch_prop.gd")
+const FANTASY_PROPS := "res://assets/props/quaternius_fantasy"
+const MEDIEVAL_KIT := "res://assets/buildings/quaternius_medieval"
+const BRASS_COLOUR := Color("#8a6f3a")
+const IRON_COLOUR := Color("#2a2622")
+const FIRE_COLOUR := Color(1.0, 0.55, 0.16)
+
+## `stronghold_occupation.gd`'s round-2 basket, unchanged: squatter than it is
+## wide, so what stands against the sky is the fire and not the ironwork.
+const BRAZIER_POST_H := 0.30
+const BRAZIER_BOWL_H := 0.16
+const BRAZIER_BOWL_R := 0.26
+const BRAZIER_FLAME_LIFT := 0.13
+## Below 1.0 the flame vanishes inside the bowl -- that file's round-2 frames
+## came back with rows of empty black bowls at 0.62.
+const BRAZIER_FLAME_SCALE := 0.95
+const FLICKER_AMOUNT := 0.26
+const FLICKER_SPEED := 7.0
+
+var _fires: Array[OmniLight3D] = []
+var _fire_energy: Array[float] = []
+var _fire_time: float = 0.0
+
+## Set by `_build_approach_ramp()` so the causeway dressing can stand ON the
+## ramp without re-deriving its slope. The ramp's rise is sampled from the real
+## ground (`site.ramp_run` is the only authored number), so anything that wants
+## to sit on it has to ask the ramp, not the config.
+var _ramp_run_m: float = 0.0
+var _ramp_foot_z: float = 0.0
+var _ramp_foot_y: float = 0.0
+var _ramp_half_w: float = 3.5
+
+
+## The approach ramp's own surface height at a local z, clamped at both ends so
+## a station authored slightly off the slab does not extrapolate into the sky.
+func _causeway_y(z: float) -> float:
+	if _ramp_run_m <= 0.01:
+		return _floor_y
+	var t := clampf((z - _ramp_foot_z) / _ramp_run_m, 0.0, 1.0)
+	return _ramp_foot_y + (_floor_y - _ramp_foot_y) * t
+
+
+func _occupation() -> Dictionary:
+	return _config.get("hall_occupation", {}) as Dictionary
+
+
+func _build_occupation() -> void:
+	if _occupation().is_empty():
+		return
+	_build_causeway_dressing()
+	_build_hall_fire()
+	_build_garrison_camp()
+	_build_relay_hub()
+	_build_hoarding()
+	_build_yard_stairs()
+	_build_skirt_grounding()
+
+
+## The 40m climb, dressed: kerbs following the ramp's own slope, a timber rail
+## on their tops (the board's timber approach), and two pairs of oxblood
+## banners on stone piers. Kerbs are the one piece here that gets to be solid
+## geometry -- they are at ankle height beside a walking surface, which is
+## where a kerb belongs; everything standing on them is decoration.
+func _build_causeway_dressing() -> void:
+	var cfg: Dictionary = _occupation().get("causeway", {}) as Dictionary
+	if cfg.is_empty() or _ramp_run_m <= 0.01:
+		return
+	var lateral := _local_of((_chambers[_order[0]] as Dictionary).get("at", [])).x
+	var kerb_w := float(cfg.get("kerb_width_m", 0.8))
+	var kerb_h := float(cfg.get("kerb_height_m", 0.9))
+	var kerb_x := _ramp_half_w + kerb_w * 0.5
+	var top_z := _ramp_foot_z + _ramp_run_m
+	var rise := _floor_y - _ramp_foot_y
+	var angle := atan2(rise, _ramp_run_m)
+	var length := sqrt(_ramp_run_m * _ramp_run_m + rise * rise)
+	var stone := _material(_stone_dark(), 0.0, true)
+	for s in [-1.0, 1.0]:
+		# One tilted box per kerb, the same construction `_build_approach_ramp`
+		# uses for the slab itself, so the kerb cannot drift off the slope.
+		var mesh := MeshInstance3D.new()
+		mesh.name = "CausewayKerb"
+		var box := BoxMesh.new()
+		box.size = Vector3(kerb_w, kerb_h, length)
+		mesh.mesh = box
+		mesh.material_override = stone
+		mesh.position = Vector3(lateral + s * kerb_x,
+			(_floor_y + _ramp_foot_y) * 0.5 + kerb_h * 0.5, (top_z + _ramp_foot_z) * 0.5)
+		mesh.rotation.x = -angle
+		add_child(mesh)
+
+	# Timber railing along the kerb tops. `Prop_WoodenFence_Single` is fitted
+	# by its own measured bounds rather than by a guessed scale, the same way
+	# `_fit_to_height` already sizes the machine.
+	var pitch := maxf(1.0, float(cfg.get("rail_pitch_m", 2.6)))
+	var rail_count := maxi(1, int(floor(_ramp_run_m / pitch)))
+	for i in rail_count:
+		var z := _ramp_foot_z + (float(i) + 0.5) * (_ramp_run_m / float(rail_count))
+		for s2 in [-1.0, 1.0]:
+			var rail := _load_prop(MEDIEVAL_KIT, "Prop_WoodenFence_Single")
+			if rail == null:
+				continue
+			var holder := Node3D.new()
+			holder.name = "CausewayRail"
+			holder.add_child(rail)
+			_fit_to_height(rail, 1.1)
+			holder.position = Vector3(lateral + s2 * kerb_x, _causeway_y(z) + kerb_h, z)
+			holder.rotation.x = -angle
+			add_child(holder)
+			_tint_node(rail, _timber())
+
+	# Banner piers: a banner out on open ground needs something to hang from.
+	var pier_h := float(cfg.get("pier_height_m", 3.4))
+	for entry: Variant in (cfg.get("banner_pairs", []) as Array):
+		var bz := float(entry)
+		var base := _causeway_y(bz) + kerb_h
+		for s3 in [-1.0, 1.0]:
+			_box(Vector3(0.7, pier_h, 0.7),
+				Vector3(lateral + s3 * kerb_x, base + pier_h * 0.5, bz),
+				_material(_stone_light(), 0.0, true), false)
+			# `_hang_banner`'s own header: local +X must point along the mount's
+			# OUTWARD normal, so a west pier faces PI and an east pier faces 0.
+			_hang_banner(Vector3(lateral + s3 * (kerb_x + 0.35), base + pier_h * 0.78, bz),
+				0.0 if s3 > 0.0 else PI, BANNER_COLOUR, BANNER_SCALE * 0.8)
+
+
+## Six fires with lights, two without. The two without stand at gate fire
+## points `lights` already authors: the T1-ARCH gate recipe lit that curtain
+## convincingly and put nothing in frame that could be doing the lighting.
+func _build_hall_fire() -> void:
+	var holder := Node3D.new()
+	holder.name = "HallBraziers"
+	add_child(holder)
+	var index := 0
+	for entry: Variant in (_occupation().get("braziers", []) as Array):
+		var spec: Dictionary = entry as Dictionary
+		var node := _brazier(holder, spec, index)
+		if node == null:
+			continue
+		var light := OmniLight3D.new()
+		light.name = "Fire"
+		light.light_color = FIRE_COLOUR
+		light.omni_range = float(spec.get("range", 15.0))
+		light.shadow_enabled = false
+		light.position = Vector3(0.0, _bowl_rim(float(spec.get("scale", 2.1)))
+			+ BRAZIER_FLAME_LIFT * float(spec.get("scale", 2.1)), 0.0)
+		node.add_child(light)
+		var energy := float(spec.get("energy", 2.9))
+		light.light_energy = energy
+		_fires.append(light)
+		_fire_energy.append(energy)
+		index += 1
+	for entry2: Variant in (_occupation().get("gate_source", []) as Array):
+		if _brazier(holder, entry2 as Dictionary, index) != null:
+			index += 1
+	set_process(true)
+
+
+func _brazier(holder: Node3D, spec: Dictionary, index: int) -> Node3D:
+	var at := _local_of(spec.get("at", []))
+	var scale_factor := float(spec.get("scale", 2.1))
+	var y := _floor_y
+	if bool(spec.get("on_causeway", false)):
+		y = _causeway_y(at.z) + float(_occupation().get("causeway", {})
+			.get("kerb_height_m", 0.9))
+	var brazier := Node3D.new()
+	brazier.name = "Brazier_%d" % index
+	brazier.position = Vector3(at.x, y, at.z)
+	holder.add_child(brazier)
+	_add_basket(brazier, scale_factor)
+
+	# The flame WITHOUT its stick: `torch_prop.gd` is a 0.78m brand authored to
+	# be carried, and leaving its handle in turns a fire-basket into a torch
+	# somebody planted in a bucket (that failure is recorded in
+	# `stronghold_occupation.gd`'s own round-2 note).
+	var torch: Node3D = TORCH_PROP.new()
+	var flame_scale := scale_factor * BRAZIER_FLAME_SCALE
+	torch.scale = Vector3.ONE * flame_scale
+	var stick := torch.get_node_or_null(^"Stick")
+	if stick != null:
+		stick.queue_free()
+	torch.position = Vector3(0.0, _bowl_rim(scale_factor)
+		- float(torch.call("flame_local_position").y) * flame_scale
+		+ BRAZIER_FLAME_LIFT * scale_factor, 0.0)
+	brazier.add_child(torch)
+	return brazier
+
+
+func _bowl_rim(scale_factor: float) -> float:
+	return (BRAZIER_POST_H + BRAZIER_BOWL_H) * scale_factor
+
+
+func _add_basket(into: Node3D, scale_factor: float) -> void:
+	var iron := StandardMaterial3D.new()
+	iron.albedo_color = IRON_COLOUR
+	iron.roughness = 0.8
+	iron.metallic = 0.4
+	var post := MeshInstance3D.new()
+	post.name = "Post"
+	var post_mesh := CylinderMesh.new()
+	post_mesh.top_radius = 0.05 * scale_factor
+	post_mesh.bottom_radius = 0.10 * scale_factor
+	post_mesh.height = BRAZIER_POST_H * scale_factor
+	post_mesh.radial_segments = 8
+	post_mesh.material = iron
+	post.mesh = post_mesh
+	post.position = Vector3(0.0, BRAZIER_POST_H * 0.5 * scale_factor, 0.0)
+	into.add_child(post)
+	var bowl := MeshInstance3D.new()
+	bowl.name = "Bowl"
+	var bowl_mesh := CylinderMesh.new()
+	bowl_mesh.top_radius = BRAZIER_BOWL_R * scale_factor
+	bowl_mesh.bottom_radius = BRAZIER_BOWL_R * 0.55 * scale_factor
+	bowl_mesh.height = BRAZIER_BOWL_H * scale_factor
+	bowl_mesh.radial_segments = 10
+	bowl_mesh.material = iron
+	bowl.mesh = bowl_mesh
+	bowl.position = Vector3(0.0, (BRAZIER_POST_H + BRAZIER_BOWL_H * 0.5) * scale_factor, 0.0)
+	into.add_child(bowl)
+
+
+## The board's Inner Yard stalls with a hostile owner. Same prop family the
+## retired castle's checkpoint used, so the Meadows keeps ONE camp vocabulary
+## (D24) rather than gaining a second at its most important location.
+func _build_garrison_camp() -> void:
+	var list: Array = _occupation().get("camp", []) as Array
+	if list.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "GarrisonCamp"
+	add_child(holder)
+	for entry: Variant in list:
+		var spec: Dictionary = entry as Dictionary
+		var node := _load_prop(str(spec.get("dir", FANTASY_PROPS)), str(spec.get("model", "")))
+		if node == null:
+			continue
+		node.name = str(spec.get("model", "CampProp"))
+		var at := _local_of(spec.get("at", []))
+		node.position = Vector3(at.x, _floor_y + float(spec.get("lift", 0.0)), at.z)
+		node.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		node.scale = Vector3.ONE * float(spec.get("scale", 1.0))
+		holder.add_child(node)
+		var tint := str(spec.get("tint", ""))
+		if not tint.is_empty():
+			_tint_node(node, Color(tint))
+
+
+## Design §6.4: the Hall's own distribution hub in the inner bailey, fenced by
+## short tether girders. The apparatus is one of the three installed hero
+## meshes -- no new asset, no generation.
+func _build_relay_hub() -> void:
+	var cfg: Dictionary = _occupation().get("relay_hub", {}) as Dictionary
+	if cfg.is_empty():
+		return
+	var path := str(cfg.get("model", ""))
+	if not ResourceLoader.exists(path):
+		push_warning("the relay hub's mesh is missing (%s); the inner bailey stands unequipped" % path)
+		return
+	var packed: PackedScene = load(path) as PackedScene
+	if packed == null:
+		return
+	var at := _local_of(cfg.get("at", []))
+	var holder := Node3D.new()
+	holder.name = "RelayHub"
+	holder.position = Vector3(at.x, _floor_y, at.z)
+	holder.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
+	add_child(holder)
+	var instance: Node3D = packed.instantiate() as Node3D
+	holder.add_child(instance)
+	# Board 14 draws a squat machine, never taller than a hall -- fit it to a
+	# real height rather than trusting the exporter's scale.
+	_fit_to_height(instance, float(cfg.get("height", 4.0)))
+
+	var radius := float(cfg.get("fence_radius_m", 3.2))
+	var post_h := float(cfg.get("fence_height_m", 1.5))
+	var posts := maxi(3, int(cfg.get("fence_posts", 4)))
+	for i in posts:
+		var a := TAU * float(i) / float(posts) + PI * 0.25
+		_box(Vector3(0.28, post_h, 0.28),
+			Vector3(at.x + cos(a) * radius, _floor_y + post_h * 0.5, at.z + sin(a) * radius),
+			_tether_material(), false)
+
+
+## The board's wall walk, delivered as exterior dressing. Design §4 states the
+## trade in full: the two yard fights own their floors, and a ledge halfway up
+## a wall is a bug in a fight room, so elevation is delivered by the causeway
+## climb, the terraced massing and this -- not by walkable catwalks. NO
+## COLLIDERS, the same rule `_build_trim`'s girders already follow.
+func _build_hoarding() -> void:
+	var cfg: Dictionary = _occupation().get("hoarding", {}) as Dictionary
+	if cfg.is_empty():
+		return
+	var id := str(cfg.get("chamber", "courtyard"))
+	if not _chambers.has(id):
+		return
+	var chamber: Dictionary = _chambers[id]
+	var centre := _local_of(chamber.get("at", []))
+	var half := _size_of(chamber.get("size", [])) * 0.5
+	var height := float(chamber.get("height", 9.0))
+	var sign_ := -1.0 if str(cfg.get("side", "-x")).begins_with("-") else 1.0
+	var face_x := centre.x + sign_ * (half.x + _wall_t * 0.5)
+	var deck_w := float(cfg.get("deck_width_m", 1.6))
+	var deck_y := _floor_y + height + 1.4 - float(cfg.get("deck_below_top_m", 1.9))
+	var from_z := float(cfg.get("from_z", centre.z - half.y))
+	var to_z := float(cfg.get("to_z", centre.z))
+	var run := absf(to_z - from_z)
+	if run < 1.0:
+		return
+	var mid_z := (from_z + to_z) * 0.5
+	var deck_x := face_x + sign_ * (deck_w * 0.5)
+	var timber := _material(_timber(), 0.0, false)
+	_box(Vector3(deck_w, 0.22, run), Vector3(deck_x, deck_y, mid_z), timber, false)
+
+	var bracket_pitch := maxf(1.5, float(cfg.get("bracket_pitch_m", 3.5)))
+	var brackets := maxi(2, int(round(run / bracket_pitch)) + 1)
+	for i in brackets:
+		var bz := lerpf(from_z, to_z, float(i) / float(brackets - 1))
+		var support := _load_prop(MEDIEVAL_KIT, "Prop_Support")
+		if support == null:
+			# The kit bracket is the nicer read, but the walkway must not
+			# disappear because one module failed to load.
+			_box(Vector3(deck_w * 0.9, 0.24, 0.24),
+				Vector3(deck_x, deck_y - 0.9, bz), timber, false)
+			continue
+		var holder := Node3D.new()
+		holder.name = "HoardingBracket"
+		holder.add_child(support)
+		_fit_to_height(support, 1.6)
+		holder.position = Vector3(deck_x, deck_y - 1.6, bz)
+		holder.rotation.y = PI * 0.5
+		add_child(holder)
+		_tint_node(support, _timber())
+
+	var rail_pitch := maxf(1.2, float(cfg.get("rail_pitch_m", 2.4)))
+	var rails := maxi(1, int(floor(run / rail_pitch)))
+	for j in rails:
+		var rz := from_z + (float(j) + 0.5) * (run / float(rails)) * signf(to_z - from_z)
+		var rail := _load_prop(MEDIEVAL_KIT, "Prop_WoodenFence_Single")
+		if rail == null:
+			continue
+		var rail_holder := Node3D.new()
+		rail_holder.name = "HoardingRail"
+		rail_holder.add_child(rail)
+		_fit_to_height(rail, 1.05)
+		rail_holder.position = Vector3(face_x + sign_ * deck_w, deck_y + 0.11, rz)
+		rail_holder.rotation.y = PI * 0.5
+		add_child(rail_holder)
+		_tint_node(rail, _timber())
+
+
+## Stair dressing at the courtyard's north-east interior corner -- the way up
+## to the parapet, without being one (§4's stated trade, again). Sited clear of
+## the x=0 doorway lane and well outside the courtyard trainer's own stand.
+func _build_yard_stairs() -> void:
+	var cfg: Dictionary = _occupation().get("stairs", {}) as Dictionary
+	if cfg.is_empty():
+		return
+	var at := _local_of(cfg.get("at", []))
+	var yaw := deg_to_rad(float(cfg.get("yaw_deg", 90.0)))
+	var flight := _load_prop(MEDIEVAL_KIT, "Stairs_Exterior_Straight")
+	if flight != null:
+		var holder := Node3D.new()
+		holder.name = "YardStairs"
+		holder.add_child(flight)
+		_fit_to_height(flight, float(cfg.get("run_height_m", 4.6)))
+		holder.position = Vector3(at.x, _floor_y, at.z)
+		holder.rotation.y = yaw
+		add_child(holder)
+	var platform := _load_prop(MEDIEVAL_KIT, "Stairs_Exterior_Platform")
+	if platform != null:
+		var pad := Node3D.new()
+		pad.name = "YardStairPlatform"
+		pad.add_child(platform)
+		_fit_to_height(platform, float(cfg.get("platform_height_m", 4.6)))
+		pad.position = Vector3(at.x, _floor_y, at.z - 3.4)
+		pad.rotation.y = yaw
+		add_child(pad)
+
+
+## The "fits the Meadows, not floating" half of the acceptance list. Buttress
+## pilasters down the faces of the skirt that show tall, plus half-buried
+## boulders at its foot wearing the same granite the cave stone does. The
+## boulders sample the REAL terrain, so the line they make follows whatever the
+## ground under the skirt actually does -- which is the whole reason a rubble
+## line reads as ground contact and a straight authored one does not.
+func _build_skirt_grounding() -> void:
+	var cfg: Dictionary = _occupation().get("grounding", {}) as Dictionary
+	if cfg.is_empty():
+		return
+	var dark := _material(_stone_dark(), 0.0, true)
+	var b_w := float(cfg.get("buttress_width_m", 1.4))
+	var b_proud := float(cfg.get("buttress_proud_m", 0.9))
+	var b_pitch := maxf(3.0, float(cfg.get("buttress_pitch_m", 7.0)))
+	for id in EXTERIOR_CHAMBERS:
+		if not _chambers.has(id):
+			continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var half := _size_of(chamber.get("size", [])) * 0.5
+		for side: Variant in (cfg.get("buttress_sides", []) as Array):
+			var s := str(side)
+			if not _opening_on(id, s).is_empty():
+				continue
+			var sign_ := -1.0 if s.begins_with("-") else 1.0
+			var along_x := s == "-z" or s == "+z"
+			var span := (half.x if along_x else half.y) * 2.0
+			var count := maxi(1, int(floor(span / b_pitch)))
+			var start := -float(count - 1) * 0.5 * (span / float(count))
+			for i in count:
+				var d := start + float(i) * (span / float(count))
+				# The pilaster runs from the skirt's own foot up to the base
+				# course, which is what makes it read as a buttress carrying
+				# the wall rather than as a stripe painted on it.
+				var buttress_h := _skirt + BASE_COURSE_H
+				var at := Vector3(centre.x + d, _floor_y - _skirt * 0.5 + BASE_COURSE_H * 0.5,
+					centre.z + sign_ * (half.y + _wall_t * 0.5 + b_proud * 0.5))
+				var size := Vector3(b_w, buttress_h, _wall_t + b_proud)
+				if not along_x:
+					at = Vector3(centre.x + sign_ * (half.x + _wall_t * 0.5 + b_proud * 0.5),
+						at.y, centre.z + d)
+					size = Vector3(_wall_t + b_proud, buttress_h, b_w)
+				_box(size, at, dark, false)
+
+	var models: Array = cfg.get("boulders", []) as Array
+	if models.is_empty() or _world == null or not _world.has_method("ground_height_at"):
+		return
+	var dir := str(cfg.get("boulder_dir", "res://assets/environment/nature"))
+	var pitch := maxf(3.0, float(cfg.get("boulder_pitch_m", 9.0)))
+	var scale_base := float(cfg.get("boulder_scale", 2.6))
+	var sink := float(cfg.get("boulder_sink_m", 0.9))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("boulder_seed", 91731))
+	var holder := Node3D.new()
+	holder.name = "SkirtRubble"
+	add_child(holder)
+	for id2 in EXTERIOR_CHAMBERS:
+		if not _chambers.has(id2):
+			continue
+		var chamber2: Dictionary = _chambers[id2]
+		var centre2 := _local_of(chamber2.get("at", []))
+		var half2 := _size_of(chamber2.get("size", [])) * 0.5
+		for side2: Variant in (cfg.get("boulder_sides", []) as Array):
+			var s2 := str(side2)
+			var sign2 := -1.0 if s2.begins_with("-") else 1.0
+			var along_x2 := s2 == "-z" or s2 == "+z"
+			var span2 := (half2.x if along_x2 else half2.y) * 2.0
+			var count2 := maxi(1, int(floor(span2 / pitch)))
+			for i2 in count2:
+				var t := (float(i2) + 0.5) / float(count2)
+				var d2 := lerpf(-span2 * 0.5, span2 * 0.5, t) + rng.randf_range(-1.2, 1.2)
+				var out := _wall_t * 0.5 + 1.2 + rng.randf_range(0.0, 1.4)
+				var local := Vector3(centre2.x + d2, 0.0, centre2.z + sign2 * (half2.y + out)) \
+					if along_x2 else Vector3(centre2.x + sign2 * (half2.x + out), 0.0, centre2.z + d2)
+				var world_at := to_global(local)
+				var ground: float = float(_world.call("ground_height_at", world_at.x, world_at.z))
+				if is_nan(ground):
+					continue
+				# The causeway runs down the mouth's own centre line; a boulder
+				# dropped on it is an obstacle in the one corridor every player
+				# walks.
+				if absf(local.x - _local_of((_chambers[_order[0]] as Dictionary)
+						.get("at", [])).x) < _ramp_half_w + 1.5 and local.z < centre2.z - half2.y:
+					continue
+				var model := str(models[rng.randi_range(0, models.size() - 1)])
+				var rock := _load_prop(dir, model)
+				if rock == null:
+					continue
+				rock.name = "SkirtBoulder"
+				rock.position = Vector3(local.x, ground - global_position.y - sink, local.z)
+				rock.rotation.y = rng.randf_range(0.0, TAU)
+				rock.scale = Vector3.ONE * scale_base * rng.randf_range(0.75, 1.25)
+				holder.add_child(rock)
+
+
+## --- occupation plumbing -----------------------------------------------------
+
+## The same three-format fallback `props.gd::place` and
+## `stronghold_occupation.gd::_load_model` both already walk: .gltf/.glb arrive
+## as scenes, .obj as a bare Mesh that has to be wrapped.
+func _load_prop(dir: String, model: String) -> Node3D:
+	if model.is_empty():
+		return null
+	for extension in [".gltf", ".glb"]:
+		var path := "%s/%s%s" % [dir, model, extension]
+		if not ResourceLoader.exists(path):
+			continue
+		var packed: PackedScene = load(path) as PackedScene
+		if packed == null:
+			push_warning("hall occupation prop failed to load: %s" % path)
+			return null
+		return packed.instantiate() as Node3D
+	var obj_path := "%s/%s.obj" % [dir, model]
+	if ResourceLoader.exists(obj_path):
+		var mesh: Mesh = load(obj_path) as Mesh
+		if mesh == null:
+			return null
+		var instance := MeshInstance3D.new()
+		instance.mesh = mesh
+		return instance
+	push_warning("hall occupation prop missing: %s (looked under %s)" % [model, dir])
+	return null
+
+
+## Per-placement albedo override through a UNIQUE material, so tinting one
+## crate cannot repaint every other instance sharing the imported resource --
+## the same trap `building_prefabs.gd::_apply_retint` documents.
+func _tint_node(node: Node, colour: Color) -> void:
+	for child in node.find_children("*", "MeshInstance3D", true, false):
+		var instance := child as MeshInstance3D
+		var mesh := instance.mesh
+		if mesh == null:
+			continue
+		for surface in mesh.get_surface_count():
+			var source := instance.get_active_material(surface)
+			var material: StandardMaterial3D = null
+			if source is StandardMaterial3D:
+				material = (source as StandardMaterial3D).duplicate() as StandardMaterial3D
+			else:
+				material = StandardMaterial3D.new()
+				material.roughness = 0.9
+			material.albedo_color = colour
+			instance.set_surface_override_material(surface, material)
+
+
+## Design §7's exterior light ceiling, made checkable rather than aspirational.
+## A config light counts as EXTERIOR when it does not stand inside a roofed
+## chamber -- the two yards are open to the sky and their lights are seen from
+## the meadow, so they are part of the approach's budget even though they sit
+## within the footprint. The braziers this pass adds are counted too.
+const EXTERIOR_OMNI_BUDGET := 18
+func _report_light_budget() -> void:
+	var exterior := _fires.size()
+	for entry: Variant in _config.get("lights", []) + _config.get("lights_flanks", []):
+		var at := _local_of((entry as Dictionary).get("at", []))
+		var roofed := false
+		for id: String in _chambers:
+			var chamber: Dictionary = _chambers[id]
+			if bool(chamber.get("open", false)):
+				continue
+			var centre := _local_of(chamber.get("at", []))
+			var half := _size_of(chamber.get("size", [])) * 0.5 + Vector2(_wall_t, _wall_t)
+			if absf(at.x - centre.x) <= half.x and absf(at.z - centre.z) <= half.y:
+				roofed = true
+				break
+		if not roofed:
+			exterior += 1
+	print("[stronghold] %d exterior omni light(s) at the Hall (budget %d), %d of them flickering fires" % [
+		exterior, EXTERIOR_OMNI_BUDGET, _fires.size()])
+	if exterior > EXTERIOR_OMNI_BUDGET:
+		push_warning("the Hall stands %d exterior omni lights, over the design's budget of %d" % [
+			exterior, EXTERIOR_OMNI_BUDGET])
 
 
 ## CONTENT-0828B. The shared constructed-interior method, in the fortress's own
@@ -1973,10 +2635,29 @@ func _build_marks() -> void:
 ## its guardian: a trainer defeat is written to the flag store by the encounter
 ## director, and there is no single signal this node could listen to that covers
 ## a fight won now and a fight won before the last save.
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_flicker_fires(delta)
 	if _doors.is_empty():
 		return
 	_sync_doors()
+
+
+## Two summed sines rather than one, so the fire reads as fire and not as a
+## mechanical strobe, and each light offset by its own index so a row of
+## braziers does not pulse in unison -- which is the tell that gives a scripted
+## flicker away faster than the flicker itself does.
+## `stronghold_occupation.gd`'s numbers, ported with its reasoning.
+func _flicker_fires(delta: float) -> void:
+	if _fires.is_empty():
+		return
+	_fire_time += delta
+	for i in _fires.size():
+		var light := _fires[i]
+		if light == null or not is_instance_valid(light):
+			continue
+		var phase := _fire_time * FLICKER_SPEED + float(i) * 1.7
+		var wave := (sin(phase) + sin(phase * 0.37)) * 0.5
+		light.light_energy = _fire_energy[i] * (1.0 + FLICKER_AMOUNT * wave)
 
 
 func _sync_doors() -> void:

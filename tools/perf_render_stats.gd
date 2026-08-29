@@ -37,6 +37,15 @@ const VIEWS := {
 }
 
 var _label := ""
+## T1-HALL-REBUILD (2026-08-30). `--views=a,b` restricts the run to a subset.
+## The four views cost 240 settle + 180 resettle each + 30 sample frames, and
+## on llvmpipe that is the difference between a run that finishes in a session
+## and one a lane kills at 40 minutes with nothing printed (which is exactly
+## what happened to the first Hall build pass, leaving the design's own
+## draw-call budget unverified). A single-view run measures the one counter the
+## Hall's budget is written against in a fraction of the time; the default is
+## still all four, so nothing that already calls this tool changes.
+var _views: Array[String] = []
 
 
 func _init() -> void:
@@ -47,6 +56,9 @@ func _run() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--label="):
 			_label = a.substr("--label=".length())
+		elif a.begins_with("--views="):
+			for v in a.substr("--views=".length()).split(",", false):
+				_views.append(v.strip_edges())
 
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
@@ -70,6 +82,8 @@ func _run() -> void:
 	print("%-22s %12s %14s %12s" % ["view", "draw calls", "primitives", "objects"])
 
 	for name: String in VIEWS.keys():
+		if not _views.is_empty() and not _views.has(name):
+			continue
 		var spec: Array = VIEWS[name]
 		var ground := 0.0
 		if world.has_method("ground_height_at"):

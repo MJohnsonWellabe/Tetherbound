@@ -14,8 +14,14 @@ extends SceneTree
 ##
 ## NEVER --headless with a rendering driver: hangs forever.
 
+## T1-HALL-REBUILD (2026-08-30) extends this tool rather than forking it: the
+## same stands, plus the design §10 requirement its author flagged as unmet --
+## "H-03 repeated at `golden` and `night` (the gate face is the SHADED face --
+## §2 -- so its dusk/night self-lit read is part of the design and must be
+## judged, not just the noon state)". `--out=` lets a lane write its own frames
+## without overwriting a previous lane's evidence.
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://shots/hall0830"
+const DEFAULT_OUT_DIR := "res://shots/hall0830"
 const SETTLE_FRAMES := 90
 const POSE_FRAMES := 3
 const FOV := 70.0
@@ -31,8 +37,14 @@ func _hide_canvas_layers(node: Node) -> void:
 		_hide_canvas_layers(child)
 
 
+var _out_dir := DEFAULT_OUT_DIR
+
+
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--out="):
+			_out_dir = a.substr("--out=".length())
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	var packed: PackedScene = load(SCENE)
 	if packed == null:
 		push_error("could not load %s" % SCENE)
@@ -117,6 +129,15 @@ func _run() -> void:
 		var dir: Vector2 = s["dir"]
 		var target := eye + Vector3(dir.x, 0.0, dir.y).normalized() * 40.0
 		await _shoot(camera, look, torch, false, eye, target, str(s["name"]), written, failures)
+		# Design §10: the gate face is the SHADED face at the day keyframe, so
+		# its self-lit dusk/night read is part of the design and has to be
+		# judged too. Only H-03 gets the variants -- it is the stand the gate
+		# fills, and three frames of one stand is a comparison a judge can use
+		# where eighteen frames of everything is a pile.
+		if str(s["name"]) == "H-03-ramp-foot":
+			for hour: String in ["golden", "night"]:
+				await _shoot(camera, look, torch, false, eye, target,
+					"H-03-ramp-foot-%s" % hour, written, failures, hour)
 
 	# H-04 gate-mouth: on the ramp, looking S through the gate. Use the
 	# stronghold's own ramp_foot/entrance marker plus a step up the slope
@@ -141,7 +162,7 @@ func _run() -> void:
 		await _shoot(camera, look, torch, true, eye7, target7, "H-07-courtyard", written, failures)
 
 	print("")
-	print("%d frames -> %s" % [written.size(), OUT_DIR])
+	print("%d frames -> %s" % [written.size(), _out_dir])
 	if not failures.is_empty():
 		for line in failures:
 			print("FAIL: %s" % line)
@@ -150,7 +171,7 @@ func _run() -> void:
 
 func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 		eye: Vector3, target: Vector3, name_value: String,
-		written: Array[String], failures: Array[String]) -> void:
+		written: Array[String], failures: Array[String], hour: String = "day") -> void:
 	camera.global_position = eye
 	camera.look_at(target, Vector3.UP)
 	torch.visible = interior
@@ -160,7 +181,7 @@ func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 	if look != null:
 		if look.has_method("set_weather"):
 			look.call("set_weather", {})
-		look.call("apply_time", "day")
+		look.call("apply_time", hour)
 	for i in POSE_FRAMES:
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -168,7 +189,7 @@ func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 	if image == null:
 		failures.append("%s: viewport returned no image" % name_value)
 		return
-	var path := "%s/%s.png" % [OUT_DIR, name_value]
+	var path := "%s/%s.png" % [_out_dir, name_value]
 	if image.save_png(path) != OK:
 		failures.append("%s: save_png failed" % name_value)
 		return
