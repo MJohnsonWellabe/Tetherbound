@@ -487,6 +487,40 @@
           "_why": "Second piece of authored edge, opposite side, at a different height so the two do not read as a pair."
         }
       ]
+    },
+    {
+      "order": 1020,
+      "name": "tether_waypost",
+      "_why": "T3-BRIDGE, owner-direction §5: 'Team Tether patrol or evidence' as its own checklist item, distinct from the wilds/trainers/resources already authored here and distinct from the south_bridge_grunt fight itself -- everything Team Tether in Band 1 before this was spoken (Oskar/the Foreman/the Ranger's dialogue, data/dialogue/village.json) or fought (the bridge). Nothing physical said it until now. Follows data/config/bands/band3_the_river_lock/props.json order 3000's own established grammar for this exact faction beat (a staked, retinted Banner claims ground) rather than inventing a new one, but stripped down to EVIDENCE per §32's reveal ladder (data/config/old_quarry.json's own _comment_evidence: 'no dialogue in this file, no interactable on the hardware, no note to read' at this stage of the ladder) -- no brazier, no held position, because nobody mans this one. A dropped crate and a staked banner read as 'they were through here, recently, and didn't stay' rather than 'this is a manned post', which is the correct claim for ground the player has not been challenged on yet. Sited on-route (within `tools/_probe_band1_cadence.py`'s own 60m on-route lateral call) at arc~2100m of 2403m -- inside the last kilometre before the south_bridge_grunt checkpoint (arc~2372m), so the escalation reads as: evidence, then the grunt himself. Checked clear of every other authored entry in this band (nearest, the order-1049 mudsnout pocket, is 48m off).",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            156.0,
+            1227.5
+          ],
+          "yaw_deg": 15.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the anchor -- a supply crate that fell, or was left, off the same road the grunt now watches the end of. Stamped no differently from any other loose crate in the world; it is the banner beside it that says whose."
+        },
+        {
+          "model": "Banner",
+          "at": [
+            158.0,
+            1230.2
+          ],
+          "yaw_deg": 15.0,
+          "pitch_deg": -6.0,
+          "sink_m": -0.1,
+          "scale": 2.6,
+          "dir": "res://assets/buildings/quaternius_castle",
+          "retint": {
+            "Banner": "#7a2430"
+          },
+          "_why": "Same module, same oxblood hex, same scale/pitch/sink_m as the river checkpoint's own staked banner (band3_the_river_lock/props.json order 3000) -- CLAUDE.md's reserved Team Tether accent, no new mesh, no new colour. Yaw and pitch match that entry's own reasoning, not a re-derivation: 2.6 gives the same ~1.8m reading height at the same distance a passing player judges it from, and the small negative pitch/sink_m keep the unmodelled buried pole end from floating. TUNABLE against the actual road bearing here (roughly -72deg by the spine's own (180,1200)-(30,1250) segment) once this can be rendered and checked; 15deg is a legible-to-a-passerby placeholder, not a probed value."
+        }
+      ]
     }
   ]
 }
