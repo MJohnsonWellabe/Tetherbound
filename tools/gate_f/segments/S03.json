@@ -289,187 +289,6 @@
       "expected": "`tam_tools_given` is the rung's own contract flag"
     },
     {
-      "id": "S03-26a",
-      "title": "T2-BUILDPLACE: why Mira moved ahead of the catch loop",
-      "action": "note",
-      "args": {
-        "text": "FINDING-T2-BUILDPLACE-2026-08-30.md, round 2: scripts/combat/encounter_director.gd::interaction_offer() returns a priority-100, distance-0 \"<ally> is out of the fight.\" statement UNCONDITIONALLY once the tracked ally has fainted, with no proximity gate -- prompt_arbiter.gd ranks priority before distance always, so this one line outranks every other interaction in the world, including a village NPC's own greeting, for the rest of the live session (the tracked ally is cleared only by a fresh load, per RIG-13, not by anything short of that). Confirmed live: this exact fix's own first validation run FAILed S03-53 (interact_with Mira) with the live prompt reading exactly \"Ripplet is out of the fight.\" -- Mira's own greeting never had a chance once the catch loop's own real, non-buggy fainting (RIG-15) happened first. That is a real GAME defect in a file this lane does not own (scripts/combat/**, actively edited by T3-TYPECHART) and is not fixed here -- it is named, loudly, in the finding doc, for whoever owns that file. What IS in scope: visiting Mira for her mandatory axe/pickaxe grant BEFORE the catch loop ever risks fainting the party's only creature, so this segment's own tool-acquisition does not depend on winning a race against a bug in a file this lane cannot touch."
-      },
-      "expected": "a note event carries this observation into events.jsonl"
-    },
-    {
-      "id": "S03-52",
-      "title": "walk to Mira",
-      "action": "move_to",
-      "args": {
-        "at": [
-          18.99,
-          -1.01
-        ],
-        "budget_frames": 3000,
-        "close_enough": 3.0,
-        "held_budget_frames": 7200,
-        "answer_prompts": true
-      },
-      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE: reverted from move_to_entity back to the original authored coordinate -- two live replays showed a straight-line walk to Mira's own live node position gets stuck on her building's wall (stopped 6.9 m short, 120 held frames) and lands nearer a door prop than her, exactly the known 'every straight-line walk in this project failed on the same village wall' limitation _walk_loop's own header names. The original coordinate is a proven-reachable spot outside that building (0 held frames in every prior run); S03-53's interact_with is what actually makes this safe now, by verifying the live prompt before pressing rather than pressing blind."
-    },
-    {
-      "id": "S03-52a",
-      "title": "let the arbiter settle after arrival",
-      "action": "wait",
-      "args": {
-        "seconds": 1
-      },
-      "expected": "T2-BUILDPLACE: a live replay reached the walk's own target and still read \"Put Moss away\" (encounter_director.gd's companion-status fallback) instead of Mira's greeting on the very next step -- a live probe (probe_mira_position_check.gd) confirms her greeting DOES win at this exact coordinate, with or without a deployed ally, so this is most likely the arbiter not yet having re-evaluated on the frame right after the walk loop's own single settle frame. A full second is cheap next to another failed replay."
-    },
-    {
-      "id": "S03-53",
-      "title": "greet Mira",
-      "action": "interact_with",
-      "args": {
-        "entity": "Mira",
-        "expect_prompt": "Mira"
-      },
-      "expected": "T2-BUILDPLACE: the live prompt must actually name Mira before pressing -- interact_with refuses (not presses) on a mismatched or absent prompt, which is the difference between a real greeting and 20 silent no-op presses at the wrong thing."
-    },
-    {
-      "id": "S03-54",
-      "title": "hear her out",
-      "action": "advance_dialogue_until_closed",
-      "args": {},
-      "expected": "data/config/village_npcs.json:26-28: village_mira_shop_intro is unconditional on `unless_flag: mira_shop_open`, so this is her FIRST-VISIT conversation regardless of party/combat state. Its effects (data/dialogue/village.json:29-39) hand over an axe, a pickaxe, 30 coin and flag:mira_shop_open, then queue shop:goods:mira the moment the dialogue box closes."
-    },
-    {
-      "id": "S03-54a",
-      "title": "Mira's tools landed",
-      "action": "assert",
-      "args": {
-        "check": "flag_set",
-        "flag": "mira_shop_open"
-      },
-      "expected": "T2-BUILDPLACE finding (FINDING-T2-BUILDPLACE-2026-08-30.md): this is the ONLY source of axe/pickaxe anywhere in the game -- Tam's own gift (village.json:181) is knife+torch only. If this flag is unset here, wood and stone can never be gathered downstream no matter what else this segment does."
-    },
-    {
-      "id": "S03-55",
-      "title": "let her shop open",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "village_mira_shop_intro's own last line carries shop:goods:mira (sequence_director.gd::_queue_shop), queued the instant the dialogue box closes."
-    },
-    {
-      "id": "S03-56",
-      "title": "close Mira's shop without buying anything",
-      "action": "press",
-      "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
-      },
-      "expected": "S03 does not exercise trading (that is X-lab/journey-later territory); back out to world control with nothing bought or sold."
-    },
-    {
-      "id": "S03-56a",
-      "title": "the world owns input again",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "world"
-      },
-      "expected": "closing the shop hands input back to the world before the segment moves on to Oskar and the gathering loop."
-    },
-    {
-      "id": "S03-56b",
-      "title": "T2-BUILDPLACE: why the tools need binding by hand",
-      "action": "note",
-      "args": {
-        "text": "FINDING-T2-BUILDPLACE-2026-08-30.md: wood/stone/fiber are all tool-gated (harvest_logic.gd, gathered_with) and carrying a tool in the satchel is not enough -- it must be visibly EQUIPPED on the hotbar (tests/test_harvest.gd::test_gather_with_no_equipped_tool_is_refused, and this segment's own kept S03-exit.json is the live proof: zero wood/stone/fiber ever gathered). Grandpa's opening gift already fills the hotbar (autofill_hotbar fires once, on the very first all-empty poll, per probe_tool_equip_sequence.gd's own read of this run's real S02-exit.json), so Tam's knife and Mira's axe/pickaxe never land on the bar on their own. The sequence below is the same production gesture X02.json's own proven build lab already uses (backpack_assign, L3): open the Satchel, focus an item, press backpack_assign, which cycles it unbound -> slot 1 -> slot 2 -> ... -> off. Assigning knife (4 presses -> slot 4) and pickaxe (3 presses -> slot 3) before axe (2 presses -> slot 2) is the order live-verified not to clobber an earlier assignment, because a never-before-bound item's FIRST press always lands at slot 1 regardless of what already occupies it."
-      },
-      "expected": "a note event carries this observation into events.jsonl"
-    },
-    {
-      "id": "S03-56c",
-      "title": "open the Satchel",
-      "action": "open_menu",
-      "args": {
-        "tab": "backpack"
-      },
-      "expected": "the `inventory` shortcut (data/config/menu.json) opens directly onto the Satchel tab regardless of which tab was last open -- sidesteps the reopens-on-last-tab defect S03-121 already recorded for the Build tab."
-    },
-    {
-      "id": "S03-56d",
-      "title": "focus the knife",
-      "action": "focus_move",
-      "args": {
-        "direction": "right",
-        "times": 4
-      },
-      "expected": "the satchel fills in acquisition order: orb_basic, potion_small, berries, revive (S02's opening), then knife (Tam) -- 4 cells right of the grid's opening focus, in the 6-column grid (data/config/menu.json)."
-    },
-    {
-      "id": "S03-56e",
-      "title": "assign the knife to hotbar slot 4",
-      "action": "press",
-      "args": {
-        "control": "backpack_assign",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 10
-      },
-      "expected": "backpack_assign cycles unbound -> 1 -> 2 -> 3 -> 4; four presses land the knife on hotbar slot 4."
-    },
-    {
-      "id": "S03-56f",
-      "title": "focus the pickaxe",
-      "action": "focus_move",
-      "args": {
-        "direction": "left",
-        "times": 3
-      },
-      "expected": "torch (Tam), axe, then pickaxe (Mira) fill the next three cells after knife; three left from the knife's cell reaches the pickaxe's, wrapping up a grid row."
-    },
-    {
-      "id": "S03-56g",
-      "title": "assign the pickaxe to hotbar slot 3",
-      "action": "press",
-      "args": {
-        "control": "backpack_assign",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 10
-      },
-      "expected": "backpack_assign cycles unbound -> 1 -> 2 -> 3; three presses land the pickaxe on hotbar slot 3."
-    },
-    {
-      "id": "S03-56h",
-      "title": "focus the axe",
-      "action": "focus_move",
-      "args": {
-        "direction": "left",
-        "times": 1
-      },
-      "expected": "axe sits one cell left of the pickaxe (Mira hands them over axe-then-pickaxe, village.json:33-34)."
-    },
-    {
-      "id": "S03-56i",
-      "title": "assign the axe to hotbar slot 2",
-      "action": "press",
-      "args": {
-        "control": "backpack_assign",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 10
-      },
-      "expected": "backpack_assign cycles unbound -> 1 -> 2; two presses land the axe on hotbar slot 2."
-    },
-    {
-      "id": "S03-56j",
-      "title": "close the Satchel",
-      "action": "close_menu",
-      "args": {},
-      "expected": "the shell closes and the world is live again, with axe on hotbar_2, pickaxe on hotbar_3, knife on hotbar_4 -- live-verified end to end (equip + real gather of wood/stone/fiber each) by tools/gate_f/probe_tool_equip_sequence.gd."
-    },
-    {
       "id": "S03-27",
       "title": "capture GF-03-VILLAGE-02",
       "action": "capture",
@@ -1421,6 +1240,187 @@
         "intended_proof": "the level-up actually announces itself to the player"
       },
       "expected": "Section G: first level-up moment, announcement on screen -- the level-up actually announces itself to the player"
+    },
+    {
+      "id": "S03-51b",
+      "title": "T2-BUILDPLACE: why Mira is visited here, and why the ally was recalled",
+      "action": "note",
+      "args": {
+        "text": "FINDING-T2-BUILDPLACE-2026-08-30.md, round 2: scripts/combat/encounter_director.gd::interaction_offer() and its _creature_control_offer() fallback both compete for the SAME interact button Mira's own greeting needs, and BOTH lose to a village NPC's priority-0 offer only when the tracked `_ally` is either null or genuinely absent from the offer pool -- an `_ally_body` that is still deployed (dismissed or not) can otherwise leave a stray \"Put <ally> away\"/\"<ally> is out of the fight\" line contending for the same prompt depending on exactly where the walk stops. `S03-39b`'s creature_recall press (right after the catch loop, before Bryn) clears `_ally`/`_ally_body` to null; Bryn's own challenge attempt reads a null ally and falls back to its defeated-line dialogue without re-summoning anything (can_challenge() never calls summon_active_creature()), so the ally is still dismissed by the time this step runs. An earlier attempt moved Mira's visit to right after Tam instead, before the catch loop could risk a faint at all -- that introduced a NEW walking path (Tam's position to Mira's) that a live replay showed getting physically stuck on geometry (120 held frames, stopped 2.7m short of the target in a straight line the walker could not complete), landing the player somewhere without a clean line to Mira. Kept in its ORIGINAL position (right after Bryn, before Oskar) instead, on a walking path already proven clean in every prior run (0 held frames), with the recall press doing the actual work of clearing the blocking prompt."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-52",
+      "title": "walk to Mira",
+      "action": "move_to",
+      "args": {
+        "at": [
+          18.99,
+          -1.01
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE: reverted from move_to_entity back to the original authored coordinate -- two live replays showed a straight-line walk to Mira's own live node position gets stuck on her building's wall (stopped 6.9 m short, 120 held frames) and lands nearer a door prop than her, exactly the known 'every straight-line walk in this project failed on the same village wall' limitation _walk_loop's own header names. The original coordinate is a proven-reachable spot outside that building (0 held frames in every prior run); S03-53's interact_with is what actually makes this safe now, by verifying the live prompt before pressing rather than pressing blind."
+    },
+    {
+      "id": "S03-52a",
+      "title": "let the arbiter settle after arrival",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "T2-BUILDPLACE: a live replay reached the walk's own target and still read \"Put Moss away\" (encounter_director.gd's companion-status fallback) instead of Mira's greeting on the very next step -- a live probe (probe_mira_position_check.gd) confirms her greeting DOES win at this exact coordinate, with or without a deployed ally, so this is most likely the arbiter not yet having re-evaluated on the frame right after the walk loop's own single settle frame. A full second is cheap next to another failed replay."
+    },
+    {
+      "id": "S03-53",
+      "title": "greet Mira",
+      "action": "interact_with",
+      "args": {
+        "entity": "Mira",
+        "expect_prompt": "Mira"
+      },
+      "expected": "T2-BUILDPLACE: the live prompt must actually name Mira before pressing -- interact_with refuses (not presses) on a mismatched or absent prompt, which is the difference between a real greeting and 20 silent no-op presses at the wrong thing."
+    },
+    {
+      "id": "S03-54",
+      "title": "hear her out",
+      "action": "advance_dialogue_until_closed",
+      "args": {},
+      "expected": "data/config/village_npcs.json:26-28: village_mira_shop_intro is unconditional on `unless_flag: mira_shop_open`, so this is her FIRST-VISIT conversation regardless of party/combat state. Its effects (data/dialogue/village.json:29-39) hand over an axe, a pickaxe, 30 coin and flag:mira_shop_open, then queue shop:goods:mira the moment the dialogue box closes."
+    },
+    {
+      "id": "S03-54a",
+      "title": "Mira's tools landed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "mira_shop_open"
+      },
+      "expected": "T2-BUILDPLACE finding (FINDING-T2-BUILDPLACE-2026-08-30.md): this is the ONLY source of axe/pickaxe anywhere in the game -- Tam's own gift (village.json:181) is knife+torch only. If this flag is unset here, wood and stone can never be gathered downstream no matter what else this segment does."
+    },
+    {
+      "id": "S03-55",
+      "title": "let her shop open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "village_mira_shop_intro's own last line carries shop:goods:mira (sequence_director.gd::_queue_shop), queued the instant the dialogue box closes."
+    },
+    {
+      "id": "S03-56",
+      "title": "close Mira's shop without buying anything",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "S03 does not exercise trading (that is X-lab/journey-later territory); back out to world control with nothing bought or sold."
+    },
+    {
+      "id": "S03-56a",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "closing the shop hands input back to the world before the segment moves on to Oskar and the gathering loop."
+    },
+    {
+      "id": "S03-56b",
+      "title": "T2-BUILDPLACE: why the tools need binding by hand",
+      "action": "note",
+      "args": {
+        "text": "FINDING-T2-BUILDPLACE-2026-08-30.md: wood/stone/fiber are all tool-gated (harvest_logic.gd, gathered_with) and carrying a tool in the satchel is not enough -- it must be visibly EQUIPPED on the hotbar (tests/test_harvest.gd::test_gather_with_no_equipped_tool_is_refused, and this segment's own kept S03-exit.json is the live proof: zero wood/stone/fiber ever gathered). Grandpa's opening gift already fills the hotbar (autofill_hotbar fires once, on the very first all-empty poll, per probe_tool_equip_sequence.gd's own read of this run's real S02-exit.json), so Tam's knife and Mira's axe/pickaxe never land on the bar on their own. The sequence below is the same production gesture X02.json's own proven build lab already uses (backpack_assign, L3): open the Satchel, focus an item, press backpack_assign, which cycles it unbound -> slot 1 -> slot 2 -> ... -> off. Assigning knife (4 presses -> slot 4) and pickaxe (3 presses -> slot 3) before axe (2 presses -> slot 2) is the order live-verified not to clobber an earlier assignment, because a never-before-bound item's FIRST press always lands at slot 1 regardless of what already occupies it."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-56c",
+      "title": "open the Satchel",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "the `inventory` shortcut (data/config/menu.json) opens directly onto the Satchel tab regardless of which tab was last open -- sidesteps the reopens-on-last-tab defect S03-121 already recorded for the Build tab."
+    },
+    {
+      "id": "S03-56d",
+      "title": "focus the knife",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 4
+      },
+      "expected": "the satchel fills in acquisition order: orb_basic, potion_small, berries, revive (S02's opening), then knife (Tam) -- 4 cells right of the grid's opening focus, in the 6-column grid (data/config/menu.json)."
+    },
+    {
+      "id": "S03-56e",
+      "title": "assign the knife to hotbar slot 4",
+      "action": "press",
+      "args": {
+        "control": "backpack_assign",
+        "hold": "tap",
+        "times": 4,
+        "settle_frames": 10
+      },
+      "expected": "backpack_assign cycles unbound -> 1 -> 2 -> 3 -> 4; four presses land the knife on hotbar slot 4."
+    },
+    {
+      "id": "S03-56f",
+      "title": "focus the pickaxe",
+      "action": "focus_move",
+      "args": {
+        "direction": "left",
+        "times": 3
+      },
+      "expected": "torch (Tam), axe, then pickaxe (Mira) fill the next three cells after knife; three left from the knife's cell reaches the pickaxe's, wrapping up a grid row."
+    },
+    {
+      "id": "S03-56g",
+      "title": "assign the pickaxe to hotbar slot 3",
+      "action": "press",
+      "args": {
+        "control": "backpack_assign",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 10
+      },
+      "expected": "backpack_assign cycles unbound -> 1 -> 2 -> 3; three presses land the pickaxe on hotbar slot 3."
+    },
+    {
+      "id": "S03-56h",
+      "title": "focus the axe",
+      "action": "focus_move",
+      "args": {
+        "direction": "left",
+        "times": 1
+      },
+      "expected": "axe sits one cell left of the pickaxe (Mira hands them over axe-then-pickaxe, village.json:33-34)."
+    },
+    {
+      "id": "S03-56i",
+      "title": "assign the axe to hotbar slot 2",
+      "action": "press",
+      "args": {
+        "control": "backpack_assign",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 10
+      },
+      "expected": "backpack_assign cycles unbound -> 1 -> 2; two presses land the axe on hotbar slot 2."
+    },
+    {
+      "id": "S03-56j",
+      "title": "close the Satchel",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes and the world is live again, with axe on hotbar_2, pickaxe on hotbar_3, knife on hotbar_4 -- live-verified end to end (equip + real gather of wood/stone/fiber each) by tools/gate_f/probe_tool_equip_sequence.gd."
     },
     {
       "id": "S03-60",
