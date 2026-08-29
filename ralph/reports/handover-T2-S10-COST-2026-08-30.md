@@ -316,14 +316,81 @@ small at that point for even those rates to threaten the ceiling.
 **This is the strongest available evidence that isolating fights into small
 segments works**, even under real, measured price volatility.
 
-### S10b
+### S10b — actual result
 
-In progress at the time of writing; seeded correctly from `S10a-exit.json`
-via the run directory's owning-segment fallback (confirmed: no
-"seed source does not exist" error, unlike the RIG-12 failure mode this
-mechanism was fixed for). Result will be appended below once it completes.
+**Ran to completion, chained correctly from S10a-exit.json.**
+`INVENTORY.json`: `complete: true`, exit code 0.
 
-<!-- MECHANICS_RESULT_PLACEHOLDER_S10B -->
+```
+steps: {ran: 59, pass: 41, fail: 14, delegated: 4, skipped: 0, refused: 0}
+wall clock: 442.9 s of the 14,400 s ceiling (3.1%)
+S10bC delegation: GF-13-FINALE-02, the S10-SEQ-warden capture_seq,
+  GF-13-FINALE-03, GF-13-FINALE-04 all correctly delegated
+saves/S10b-exit.json: written, 1,415,616 bytes, loadable
+```
+
+Seeded correctly via the run directory's owning-segment fallback (no
+"seed source does not exist" error — the RIG-12 failure mode this mechanism
+was fixed for did not recur). The reprice ledger shows the same shape as
+S10a: a transient stand-up spike (0.309443 s/frame) that predicted 9,637 s —
+comfortably under the 14,362 s then remaining, so it did not even need to
+**arm** a warning — followed by settled quiet-walk pricing (0.0166-0.042
+s/frame) for the rest of the segment. `S10b` is the segment I flagged as
+carrying the single most expensive *capture* lane in the protocol (the
+Warden through the ceremony, no cheaper save point along the way); its
+*logic*-lane cost here is unremarkable, which is the expected shape — the
+capture lane's cost is a rendering-mode problem for a GPU host, not a
+logic-mode one.
+
+### S10c
+
+Deliberately **not** run to completion against the stranded save: `S10c`'s
+own `move_to` to Old Mill Crossing carries a 132,750-frame budget, and
+`move_to` spends its **entire** budget before reporting FAIL when it cannot
+arrive (confirmed by S10a's own reprice ledger, where one failed walk
+consumed ~380 s of wall clock against a much smaller budget). From a
+stranded-save spawn point nowhere near that route, this would very likely
+burn its full budget for no additional mechanics information beyond what
+S10a/S10b already established, at a real wall-clock cost this session's time
+budget does not comfortably afford. This is a validation-cost trade-off,
+recorded rather than hidden: whoever runs the real evidence pass does not
+inherit this shortcut, because the real S09-exit will place the player where
+these walks actually succeed, at which point `move_to`'s budget is spent
+walking, not failing.
+
+### S10d — actual result
+
+Run specifically to exercise the one code path `S10a`/`S10b` do not: a
+segment declaring **no** `capture_lane` at all (the `NO_CAPTURE_LANE` shape
+`X06`/`X08` already use in the un-split protocol).
+
+**Ran to completion, chained correctly from S10b-exit.json.**
+`INVENTORY.json`: `complete: true`, exit code 0. No pre-flight complaint
+about the missing `capture_lane` declaration — confirming the harness's own
+documented rule ("a logic lane with prescribed captures and no capture_lane
+is a BLOCKER") correctly does **not** fire for a segment that plans zero
+captures.
+
+```
+steps: {ran: <see committed INVENTORY.json>, delegated: 0}
+saves/S10d-exit.json: written, loadable
+```
+
+(Exact step/cost numbers are in the committed `INVENTORY.json` for this
+segment rather than retyped here, to avoid a transcription drift between
+this prose and the artefact it describes.)
+
+### S10e
+
+Not run in this validation pass — it is structurally identical to `S10d`
+(same `NO_CAPTURE_LANE` declaration, same handoff mechanics), which `S10d`
+already exercised, and its one genuinely distinct feature — writing the
+final save as `S10-exit.json` rather than `S10e-exit.json` — is verifiable
+by inspection of `tools/gate_f/segments/S10e.json` (step `S10e-118`) rather
+than by running it. Whoever runs the real evidence pass should still run it
+for real, of course; this is a statement about what this mechanics
+validation needed to prove, not a claim that `S10e` is untested in
+substance.
 
 ### Exact commands to reproduce
 
