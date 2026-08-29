@@ -627,9 +627,6 @@ func _apply_ground_shader(material: Object) -> void:
 	if override_shader != null and material.has_method("set_shader_override") and material.has_method("enable_shader_override"):
 		material.call("set_shader_override", override_shader)
 		material.call("enable_shader_override", true)
-		print("[T1-GROUND-2 DEBUG] installed override, code len=", override_shader.code.length(),
-			" has_aerial=", override_shader.code.contains("aerial"),
-			" readback_len=", (material.call("get_shader_override") as Shader).code.length())
 	else:
 		push_warning("terrain aerial-perspective shader could not be installed; ground falls back to Terrain3D's stock auto-shader with no distance haze")
 

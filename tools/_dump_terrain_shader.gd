@@ -34,7 +34,15 @@ func _init() -> void:
 	print("has set_shader_override: ", material.has_method("set_shader_override"))
 	print("has is_shader_override_enabled: ", material.has_method("is_shader_override_enabled"))
 
-	if material.has_method("enable_shader_override"):
+	# T1-GROUND-2: a SECOND enable_shader_override(true) call regenerates the
+	# shader from current auto-shader state and discards whatever was already
+	# in shader_override, even when override was already enabled -- confirmed
+	# by a real repro (playground_world.gd installs a custom override during
+	# world boot; this tool used to call enable_shader_override(true) again
+	# afterward and got back a fresh 23321-char stock dump instead of the
+	# already-installed 27348-char custom one). Only call it when override
+	# isn't already on.
+	if material.has_method("enable_shader_override") and not bool(material.call("is_shader_override_enabled")):
 		material.call("enable_shader_override", true)
 	if material.has_method("get_shader_override"):
 		var shd: Shader = material.call("get_shader_override")
