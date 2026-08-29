@@ -221,3 +221,38 @@ instead, cropped to the guardian at comparable scale in each:
 
 Per conventions.md, this lane does not grade its own fix — before/after
 evidence above is ready to route back to the independent judge.
+
+---
+
+## Session 2 continued: sampling Band 2 for the same class of defect
+
+Coordinator's hypothesis: bands 2 and 4 carry the most vegetation and the
+most rock, so a creature silhouette is most likely to fail there the way
+Creek Hollow's water creatures failed against the pond. Band 2/4's own
+`spawns.json` carry no `habitat` tag and no water species at all (every
+entry is Ground/Air: trailpup, burrowback, meadowhart, duskhush, mudsnout,
+galecrest, pipwing), so the exact "standing below the water line" defect
+class does not apply there by construction — there is nothing to
+depth-check. All species heights were already confirmed clear of
+`grass_field.json`'s tallest tuft in session 1's table above.
+
+That leaves rock-background silhouette contrast as the open question. Wrote
+`tools/_probe_band2_rock_silhouette.gd` (same clear-vantage instrument,
+generalised past Creek Hollow) and sampled the two Band 2 spawns nearest The
+Old Quarry's worked rock face (`map_landmarks.json` centre ~[400,1800]):
+order 2029 (burrowback, 45m out) and order 2027 (burrowback, ~215m out, the
+next-nearest).
+
+**No defect found at either sampled point** — `band2-quarry-near-2029.png`,
+`band2-quarry-near-2027.png`. Both burrowbacks read with strong contrast:
+dark grey/black bodies with a white face patch, clearly separated against
+open hillside grass and tree trunks. Neither spawn actually stands on the
+quarry's own rock terrain — that dressing is localised to the quarry's exact
+working-face props (`data/config/bands/band2_stone_and_root/props.json`'s
+`quarry_station` cluster), not the surrounding hillside the nearby wild
+spawns occupy. The "band 2 is rock-heavy so creatures fail there" hypothesis
+does not hold at these two points; a two-point sample does not clear the
+whole band (55 spawn clusters), but it does not support spending more
+render budget chasing this specific theory without a more specific lead.
+Band 4 was not sampled this session — no comparable "nearest landmark"
+anchor was identified for it in the time available.
