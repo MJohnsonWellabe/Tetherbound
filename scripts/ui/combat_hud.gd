@@ -424,14 +424,18 @@ func _draw_prompt() -> void:
 	_prompt.text = str(_director.call("prompt"))
 
 
+## T3-MATCHUPS: was a three-branch `match` whose default arm returned
+## GROUND_OCHRE, so every one of the five types the creature expansion added --
+## fire, electric, ice, psychic, dark -- drew as the GROUND colour. Harmless
+## while those types were mechanically inert; actively misleading now that they
+## have chart rows, because this tag is what the matchup arrow rides on and it
+## was naming the wrong type underneath a real verdict.
+##
+## GROUND_OCHRE stays the fallback rather than a neutral grey: an unknown type
+## here is a typo or a species built by a test, and the tag must stay legible
+## against the enemy plate. Losing the type is better than losing the word.
 func _type_color(type_id: String) -> Color:
-	match type_id:
-		"water":
-			return UITokens.WATER_BLUE
-		"air":
-			return UITokens.AIR_SKY
-		_:
-			return UITokens.GROUND_OCHRE
+	return UITokens.type_colour(type_id, UITokens.GROUND_OCHRE)
 
 
 ## T3-TYPECHART's readiness tell: the foe's type, plus how the creature the
@@ -456,7 +460,21 @@ func _type_color(type_id: String) -> Color:
 ##
 ## Read at a glance rather than at leisure, which is the constraint a
 ## real-time, directly-piloted fight puts on every HUD element here.
-func _draw_type_tag(foe_type: String) -> void:
+## T3-MATCHUPS added the second half. `combat_manager` has resolved damage
+## through `multiplier_dual` since T3-CREATURES -- both call sites and
+## `active_matchup()` -- but this tag only ever wrote the PRIMARY type, so a
+## dual-typed foe read as a mono-typed one. That was invisible while the five
+## new types had no rows and every second half was worth 1.0. It stopped being
+## invisible with this lane: the game's first double weakness is a Water move
+## into Ashtusk at 1.5625, and a player who saw only "GROUND" had no way to
+## tell why that hit was harder here than against the Burrowback behind it.
+##
+## So the word becomes "GROUND/FIRE" when there is a second half. The slash
+## rather than a second widget, for the reason the arrow rides this tag rather
+## than getting its own: this is a real-time, directly-piloted fight on a
+## 7-inch handheld and the plate has room for one more word, not one more
+## element.
+func _draw_type_tag(foe_type: String, foe_secondary: String = "") -> void:
 	var matchup: int = int(_manager.call("active_matchup"))
 	var glyph := ""
 	var colour := _type_color(foe_type)
@@ -466,7 +484,11 @@ func _draw_type_tag(foe_type: String) -> void:
 	elif matchup < 0:
 		glyph = "  ▼"
 		colour = UITokens.WARNING
-	_enemy_type_tag.text = foe_type.to_upper() + glyph
+	var word := foe_type.to_upper()
+	var second := foe_secondary.strip_edges()
+	if not second.is_empty():
+		word += "/" + second.to_upper()
+	_enemy_type_tag.text = word + glyph
 	_enemy_type_tag.add_theme_color_override("font_color", colour)
 
 
@@ -485,7 +507,7 @@ func _draw_enemy() -> void:
 	# has renamed is called what they called it when it is on the other side of
 	# a fight, which is the same rule the ally plate above already follows.
 	_enemy_name.text = str(foe.label())
-	_draw_type_tag(str(foe.creature_type))
+	_draw_type_tag(str(foe.creature_type), str(foe.get("secondary_type")))
 
 	var fraction: float = foe.hp_fraction()
 	_enemy_health.value = fraction * 100.0

@@ -48,6 +48,77 @@ const WATER_BLUE := Color("#4AADE8")
 const GROUND_OCHRE := Color("#B99050")
 const AIR_SKY := Color("#73C8ED")
 
+## T3-MATCHUPS. The five types the creature expansion brought in.
+##
+## They shipped with no colour of their own, so `combat_hud.gd::_type_color`
+## fell through to GROUND_OCHRE and `playground_hud.gd::_type_colour` to
+## TEXT_SECONDARY. A Dark creature reading as the GROUND colour on the fight
+## HUD is worse than no colour at all -- the type tag is the readiness tell the
+## matchup arrow rides on, so it was actively telling the player the wrong
+## thing about a matchup that now has real numbers behind it.
+##
+## Hues are taken from the owner's own art: the board's FUTURE TYPES swatches,
+## and the creature-expansion reference sheets. Nightburrow's "strong purple
+## emissive cracks" and Shadelet's "violet sheen" give Dark; Stormtrail's
+## "bright yellow-gold lightning markings" and Sparkit's "yellow-gold" give
+## Electric; Cindercub's terracotta and Ashtusk's "orange glowing cracks" give
+## Fire; Frostclaw's "icy blue" gives Ice; Riftfrill's "lilac frills,
+## cyan/violet markings" gives Psychic.
+##
+## The two constraints that shaped the exact values, both of which cost
+## something:
+##
+## - ICE had to be separable from WATER_BLUE and AIR_SKY, which are already two
+##   blues sitting next to each other. It is therefore much paler and less
+##   saturated than either rather than a third mid-blue -- "frost", not "a
+##   colder water".
+## - DARK and PSYCHIC are both purple in the owner's art. Separated by hue
+##   rather than by lightness (violet vs pink-magenta), because lightness is
+##   what a 19px label on a 7-inch handheld loses first.
+##
+## Nature and Light are deliberately absent. They have no species, no move and
+## no chart row, and a colour for a type nothing can be is a stub -- the same
+## position `type_chart.json` takes about their matchup rows.
+const FIRE_EMBER := Color("#EE7B33")
+const ELECTRIC_GOLD := Color("#F5D33A")
+const ICE_FROST := Color("#A8E6EC")
+const PSYCHIC_LILAC := Color("#F09ADB")
+const DARK_VIOLET := Color("#9B7BEA")
+
+## Every type that has a colour, keyed by the string `species.json` and
+## `moves.json` use.
+##
+## ONE table, because there were already two copies of the three-type version
+## (`combat_hud.gd` and `playground_hud.gd` each had their own `match`), they
+## disagreed about the fallback, and adding five types to two hand-written
+## `match` statements is exactly the shape of duplication this repo keeps
+## rediscovering -- `type_chart.json`'s own `_comment_types` says so about the
+## type vocabulary, which had the same problem. Callers keep their own fallback
+## because they genuinely differ: the fight HUD wants the tag to stay readable,
+## the field HUD wants an unknown type to recede.
+const TYPE_COLOURS := {
+	"ground": GROUND_OCHRE,
+	"water": WATER_BLUE,
+	"air": AIR_SKY,
+	"fire": FIRE_EMBER,
+	"electric": ELECTRIC_GOLD,
+	"ice": ICE_FROST,
+	"psychic": PSYCHIC_LILAC,
+	"dark": DARK_VIOLET,
+}
+
+
+## The colour for a type, or `fallback` if it has none.
+##
+## Case-folded and whitespace-tolerant for the same reason
+## `type_chart.gd::multiplier` is: these strings come from hand-authored JSON
+## where "Ground" and "ground" are the same intent, and a capital letter should
+## not silently change what the player sees any more than it should silently
+## switch a mechanic off.
+static func type_colour(type_id: String, fallback: Color) -> Color:
+	var key := type_id.strip_edges().to_lower()
+	return TYPE_COLOURS.get(key, fallback)
+
 # --- Build theme set (warm/brass, see build_theme.tres) --------------------
 
 const BUILD_BG := Color(Color("#2A211A"), 0.92)

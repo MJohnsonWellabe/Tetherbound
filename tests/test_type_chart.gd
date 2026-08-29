@@ -142,11 +142,24 @@ func test_the_magnitudes_are_the_ones_the_design_note_argues_for() -> void:
 ##
 ## This is the case that actually happens: a species with a typo'd `type`, a
 ## move with none, a creature hand-built by a test that never set one, and --
-## the reason it matters most -- any of the board's six planned types (fire,
-## ice, nature, light, shadow, electric) the day one is authored. They must be
-## playable at neutral the moment they exist.
+## the reason it matters most -- any planned type the day before someone
+## authors its rows. It must be playable at neutral the moment it exists.
+##
+## AMENDED BY T3-MATCHUPS, and the amendment is the whole point of the test
+## rather than a concession to it. `fire`, `ice` and `electric` were in this
+## list as examples of "planned, unauthored". They now have rows, so they are
+## no longer examples of anything and asserting they read neutral would assert
+## the chart does nothing. The board's `shadow` came out too, for a different
+## reason worth recording: it is the earlier label for what shipped as `dark`
+## (see type_chart.json's `_comment_future_types_SUPERSEDED_BY_T3_MATCHUPS`), so
+## leaving it here as an "unknown type" would quietly bless the exact confusion
+## that would make someone author `shadow` rows against a `dark` roster.
+##
+## `nature` and `light` are what remains genuinely planned-and-unauthored, and
+## they are the reason this test still earns its place: it is the assertion that
+## the chart's extension point survived five types being turned on.
 func test_unknown_and_empty_types_are_neutral() -> void:
-	for unknown: String in ["", "   ", "fire", "ice", "nature", "light", "shadow", "electric", "??"]:
+	for unknown: String in ["", "   ", "nature", "light", "shadow", "??"]:
 		for known: String in LIVE_TYPES:
 			assert_true(is_equal_approx(CHART.multiplier(unknown, known), 1.0),
 				"attacking with unknown type '%s' is not neutral" % unknown)
@@ -404,3 +417,240 @@ func test_off_type_coverage_exists_in_the_shipped_roster() -> void:
 		"only %d species carry an off-type move (%s); the chart is keyed on the MOVE, and with "
 			% [off_type.size(), off_type]
 		+ "every move aligned to its wielder it degenerates into a species chart")
+
+
+# --- T3-MATCHUPS: the eight-type chart ---------------------------------------
+#
+# The five types the creature expansion brought in (fire, electric, ice,
+# psychic, dark) shipped typed but MECHANICALLY INERT -- every pairing neutral,
+# because `neutral`-by-omission is what let them be added as data with no code.
+# T3-MATCHUPS turned them on, from the owner's own instruction. Design note,
+# with every measurement behind these rows:
+# ralph/reports/MATCHUPS_DESIGN_2026-08-30.md.
+#
+# The tests ABOVE this line iterate `LIVE_TYPES` (ground/water/air) only, and
+# that is not an oversight left behind -- it is the guard on the property
+# `test_the_shipped_three_by_three_block_is_untouched` states outright below.
+# They keep asserting the exact triangle T3-TYPECHART tuned, and they still
+# pass, which is the evidence that extending the chart to eight types was an
+# extension rather than a rewrite.
+
+## Every type the chart declares, not just the chapter's three.
+const ALL_TYPES := ["ground", "water", "air", "fire", "electric", "ice", "psychic", "dark"]
+
+## The owner's instruction, verbatim: "Fire beats Ice, Water beats Fire,
+## Electric beats Water, Ground resists Electric, Dark or Psychic beat
+## Electric." Five fixed points. `[attacking move, defending creature,
+## expected]`.
+const OWNER_FIXED_PAIRS := [
+	["fire", "ice", ADVANTAGE],
+	["water", "fire", ADVANTAGE],
+	["electric", "water", ADVANTAGE],
+	["electric", "ground", DISADVANTAGE],
+	["dark", "electric", ADVANTAGE],
+	["psychic", "electric", ADVANTAGE],
+]
+
+
+## THE OWNER'S FIVE FIXED POINTS, EXACTLY AS HE GAVE THEM.
+##
+## Everything else in this chart was delegated to the lane; these were not. If
+## one of them is failing, the chart has stopped doing what it was asked to do
+## and no amount of internal elegance makes that acceptable -- the response is
+## to fix the chart, or to go back to the owner, never to edit this list.
+##
+## The last row is the "Dark OR Psychic beat Electric" clause, taken as BOTH.
+## Either alone would satisfy the owner's words; both is the safe reading and it
+## is what makes Electric genuinely high-risk/high-reward rather than a type
+## with one exotic counter nobody owns yet.
+func test_the_owners_five_fixed_pairs_are_honoured() -> void:
+	for pair: Array in OWNER_FIXED_PAIRS:
+		var attacker := str(pair[0])
+		var defender := str(pair[1])
+		var expected := float(pair[2])
+		var actual := CHART.multiplier(attacker, defender)
+		assert_true(is_equal_approx(actual, expected),
+			"owner-fixed pair '%s' into '%s' is %.4f, not %.2f" % [attacker, defender, actual, expected])
+
+
+## Resist and advantage are DIFFERENT TOOLS, and the owner drew that
+## distinction himself: he named Ground as RESISTING Electric rather than
+## beating it.
+##
+## So `ground -> electric` must stay neutral. A future author reaching for the
+## genre-canonical "Ground beats Electric" would be making the single most
+## inflationary edit available in this table -- ground is 57.6% of all 66
+## authored trainer creatures in the chapter, so an offensive edge for ground is
+## an edge into most of the game.
+func test_ground_resists_electric_without_beating_it() -> void:
+	assert_true(is_equal_approx(CHART.multiplier("electric", "ground"), DISADVANTAGE),
+		"the owner asked for ground to RESIST electric")
+	assert_true(is_equal_approx(CHART.multiplier("ground", "electric"), 1.0),
+		("`ground` into `electric` is %.4f, not neutral. The owner said ground RESISTS electric, not "
+		+ "that it beats it, and at 57.6%% ground opposition an offensive edge for ground is the most "
+		+ "inflationary entry this table can hold.") % CHART.multiplier("ground", "electric"))
+
+
+## THE PROPERTY THAT MAKES THIS AN EXTENSION RATHER THAN A REWRITE.
+##
+## All nine cells of the {ground,water,air} x {ground,water,air} block are
+## byte-identical to what T3-TYPECHART shipped, measured and argued. Its census
+## work, its 1.25-vs-1.5 magnitude argument and its per-starter spread all
+## survive the eight-type chart untouched, and the measured consequence is +0%
+## on 27 of 27 authored trainer rungs for all three starters.
+##
+## Deliberately a LITERAL table rather than a loop over the config: the point is
+## to compare against what shipped, and a check derived from the file it is
+## checking would pass no matter what the file said.
+func test_the_shipped_three_by_three_block_is_untouched() -> void:
+	var shipped := {
+		"ground": {"ground": 1.0, "water": 0.8, "air": 1.25},
+		"water": {"ground": 1.25, "water": 1.0, "air": 0.8},
+		"air": {"ground": 0.8, "water": 1.25, "air": 1.0},
+	}
+	for attacker: String in shipped:
+		for defender: String in (shipped[attacker] as Dictionary):
+			var expected := float((shipped[attacker] as Dictionary)[defender])
+			var actual := CHART.multiplier(attacker, defender)
+			assert_true(is_equal_approx(actual, expected),
+				("'%s' into '%s' is now %.4f but T3-TYPECHART shipped %.4f. The three live types were "
+				+ "tuned against a census of the whole chapter; extending the chart to eight must not "
+				+ "silently retune them.") % [attacker, defender, actual, expected])
+
+
+## Ground's and Air's rows gained nothing at all, and Water's gained only new
+## types.
+##
+## Stated separately from the block test because it is a different failure: the
+## block could stay identical while `ground` quietly grew a `fire` entry, and
+## that would be this chart reaching back into a tuned row. Ground's and Air's
+## new defensive exposure belongs in the NEW types' rows, which is where a new
+## type's opinions go.
+func test_the_two_untouched_rows_gained_no_entries() -> void:
+	var chart := _json(CHART_PATH)
+	var matchups: Dictionary = chart.get("matchups", {})
+	for attacker: String in ["ground", "air"]:
+		var row: Dictionary = matchups.get(attacker, {})
+		assert_eq(row.size(), 2,
+			("the '%s' row now has %d entries (%s); T3-TYPECHART shipped exactly 2 and T3-MATCHUPS "
+			+ "added none. A new type's opinion about %s belongs in that type's own row.")
+				% [attacker, row.size(), row.keys(), attacker])
+
+
+## Every type is on the circle: at least one advantage, at least one weakness.
+##
+## The owner explicitly licensed asymmetry -- "every type doesn't have to be
+## equal ... Dark could beat multiple and only be weak to one" -- so this does
+## NOT assert the exactly-one shape the three-type triangle has. It asserts the
+## one structural property the asymmetry was not allowed to eat. A type with no
+## advantage is a type nobody has a reason to build around; a type with no
+## weakness is one nothing answers.
+func test_every_type_has_at_least_one_advantage_and_one_weakness() -> void:
+	for subject: String in ALL_TYPES:
+		var beats: Array = []
+		var beaten_by: Array = []
+		for other: String in ALL_TYPES:
+			if other == subject:
+				continue
+			if CHART.multiplier(subject, other) > 1.0:
+				beats.append(other)
+			if CHART.multiplier(other, subject) > 1.0:
+				beaten_by.append(other)
+		assert_true(not beats.is_empty(),
+			"'%s' beats nothing; every type must be somebody's answer to something" % subject)
+		assert_true(not beaten_by.is_empty(),
+			"'%s' is beaten by nothing; no type may be an invulnerable pick" % subject)
+
+
+## Dark is the owner's own worked example: "Dark could beat multiple and only be
+## weak to one making it a stronger type."
+##
+## Implemented literally -- two advantages, one weakness -- and this pins it,
+## because it is the clearest statement in the instruction of what asymmetry was
+## supposed to buy. A later "balance pass" that evened Dark out would be
+## reversing an owner decision, not tidying a chart.
+func test_dark_is_the_asymmetry_the_owner_asked_for() -> void:
+	var beats: Array = []
+	var beaten_by: Array = []
+	for other: String in ALL_TYPES:
+		if other == "dark":
+			continue
+		if CHART.multiplier("dark", other) > 1.0:
+			beats.append(other)
+		if CHART.multiplier(other, "dark") > 1.0:
+			beaten_by.append(other)
+	assert_true(beats.size() >= 2,
+		"dark beats only %s; the owner asked for it to beat multiple" % [beats])
+	assert_eq(beaten_by.size(), 1,
+		"dark is weak to %s; the owner asked for exactly one weakness" % [beaten_by])
+
+
+## Mirror matchups stay neutral for all eight types, not just the live three.
+func test_no_type_is_strong_or_weak_against_itself() -> void:
+	for t: String in ALL_TYPES:
+		assert_true(is_equal_approx(CHART.multiplier(t, t), 1.0),
+			"'%s' into itself is %.3f, not neutral" % [t, CHART.multiplier(t, t)])
+
+
+## One advantage magnitude and one resist magnitude, across all eight types.
+##
+## The brief invited the new types to carry their own magnitudes and the design
+## note argues against it: the anchor for 1.25 is the owner board's TM ladder,
+## whose own heading is "TM SYSTEM (ALL TYPES)" and whose shipped form
+## (data/moves/tms.json) tops out at exactly 2.0x for ground, water AND air. A
+## per-type chart magnitude would have nothing to be calibrated against. And
+## `combat.json`'s `damage.variance` is 0.1, so every hit already swings +/-10%
+## -- enough to swallow a 1.25-vs-1.35 distinction whole. Asymmetry lives in the
+## SHAPE of the graph, which a player can count, not in magnitudes they cannot
+## feel.
+func test_one_advantage_magnitude_and_one_resist_magnitude_across_all_eight() -> void:
+	for attacker: String in ALL_TYPES:
+		for defender: String in ALL_TYPES:
+			var mult := CHART.multiplier(attacker, defender)
+			if is_equal_approx(mult, 1.0):
+				continue
+			var expected := ADVANTAGE if mult > 1.0 else DISADVANTAGE
+			assert_true(is_equal_approx(mult, expected),
+				("'%s' into '%s' is %.4f. The chart runs ONE advantage magnitude (%.2f) and ONE "
+				+ "resist magnitude (%.2f) for all eight types; a per-type magnitude has no anchor "
+				+ "and is below the +/-10%% damage variance a player can perceive.")
+					% [attacker, defender, mult, ADVANTAGE, DISADVANTAGE])
+
+
+## THE EXTENSION POINT IS STILL OPEN.
+##
+## Turning five types on must not have closed the door the chart was built
+## around. The board still plans Nature and Light; neither has a species, a move
+## or a row, and both must stay playable at 1.00 the moment something claims one
+## -- as a data edit, with no code change, exactly as fire/electric/ice/psychic/
+## dark were until today.
+##
+## This is worth more than any row in the table, and it is the thing a
+## well-meaning "let us stub the remaining types for completeness" would spend.
+func test_the_unplanned_types_are_still_neutral_everywhere() -> void:
+	for planned: String in ["nature", "light"]:
+		for known: String in ALL_TYPES:
+			assert_true(is_equal_approx(CHART.multiplier(planned, known), 1.0),
+				"'%s' is still unauthored and must attack at neutral, not %.3f"
+					% [planned, CHART.multiplier(planned, known)])
+			assert_true(is_equal_approx(CHART.multiplier(known, planned), 1.0),
+				"'%s' is still unauthored and must defend at neutral, not %.3f"
+					% [planned, CHART.multiplier(known, planned)])
+
+
+## Every one of the ten new-type moves the expansion shipped can now actually do
+## something.
+##
+## Before this lane they were provably flat: `test_every_move_type_is_declared`
+## above records the reasoning for why that was acceptable but not desirable
+## ("never the best answer, never the worst"). This asserts the state changed --
+## each of the five new types has a row, so a move of that type can roll an
+## advantage somewhere.
+func test_every_new_type_actually_has_a_row_now() -> void:
+	var chart := _json(CHART_PATH)
+	var matchups: Dictionary = chart.get("matchups", {})
+	for t: String in ["fire", "electric", "ice", "psychic", "dark"]:
+		assert_true(matchups.has(t),
+			("'%s' has no row. The expansion shipped creatures and moves carrying it, and without a "
+			+ "row every one of them is permanently neutral -- a mechanic that silently does "
+			+ "nothing, which is the failure this whole file exists to catch.") % t)
