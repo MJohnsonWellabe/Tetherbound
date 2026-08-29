@@ -1401,7 +1401,29 @@ func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGe
 		rng.randf_range(-0.18, 0.18))
 	holder.add_child(art)
 	_keep_rock_out_of_the_rooms(art)
-	_tint_rock(art, tint)
+	# T1-ARCH (2026-08-29), owner evidence "Warrens exterior: bad". Was
+	# `_tint_rock(art, tint)` -- see that function's own header for why a
+	# multiply was believed to be "the right tool outside" after two blind
+	# rounds. Fresh render evidence contradicts that belief: even under full
+	# midday sun, `Rock_Medium_1/2/3.gltf`'s own `Rocks_Diffuse.png` (sampled:
+	# a dark, consistently green-dominant moss/lichen photo, average roughly
+	# (80,90,65)) survives any plausible multiply, because a multiply can only
+	# darken and desaturate toward the tint -- it cannot rotate a green-
+	# dominant photo toward a neutral stone hue. Scaled up 2.2-4.4x to clad an
+	# entire building's exterior shell (`perimeter_scale`/`roof_scale`), that
+	# reads as an undifferentiated dark green mass, which is exactly what
+	# `shots/t1arch/W-ext-0{1,2}-knoll-from-outside.png` show: a wall of mossy
+	# hedge, not a granite outcrop.
+	#
+	# `_wear_the_cave_stone()` already exists to fix precisely this failure
+	# mode -- CONTENT-0828B's own interior-rock pass hit the identical bug
+	# ("the nature pack's mint-grey came back through and the cave filled with
+	# green") and answered it by giving the rock the cave's OWN wall material
+	# (`_material()`, triplanar `Rock030`) instead of tinting the nature pack's
+	# texture. That reasoning does not stop being true at the cave mouth: the
+	# outcrop and the chamber walls are supposed to be the same rock, and now
+	# they are, in both directions.
+	_wear_the_cave_stone(art, tint)
 
 
 ## CONTENT-0828. The one thing `_place_rock()` never checked: whether the
