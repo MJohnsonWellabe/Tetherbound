@@ -1,69 +1,62 @@
-> **STALE AS OF 2026-08-29 — DO NOT READ AS CURRENT.**
->
-> This file is still in the state the run's THIRD session left it. Run 3's
-> own final session did not get to the findings write-up before the owner
-> stood the lane down, and said so explicitly in
-> `ralph/reports/handover-GATE-F-RUN-3-2026-08-29.md`.
->
-> Known-wrong below: the text narrates RIG-11 as an open defect. **RIG-11 was
-> fixed and re-verified after S06.** In particular the claim that "there is
-> not one `combat_start` event in this run" was true when written and is
-> not true now — S07, S08 and S09 all carry real telemetry, and `party
-> size 1` throughout is attributable to the South Bridge stranding, not to
-> RIG-11.
->
-> Current run state (S01-S09 complete, S10 BLOCKED on a cost gate, X02
-> complete, X03 killed, X01/X04-X08 never started) is in that handover and in
-> `ralph/STATE_OF_THE_THREE_TRACKS_2026-08-29.md`. Rewrite this file from
-> the run directory's own INVENTORY.json files before trusting any sentence
-> in it.
-
 # Gate F run 3 — findings about the GAME
 
-**Date:** 2026-08-28. **Branch:** `ralph/GATE-F-RUN-3`.
-**Run directory:** `ralph/reports/gate-f-run-20260828T183531Z`.
-**Candidate:** `main@26f0db4`, unchanged for every segment of the run.
-**Lanes run:** logic only. **No pixels were captured.** See
-`GATE_F_CAPTURE_LANES.md` for what that costs and who can pay it.
-**Companion:** `GATE_F_RUN_3_RIG_FINDINGS.md` — findings about the instrument.
+**Rewritten:** 2026-08-30, from `ralph/reports/gate-f-run-20260828T183531Z`'s
+own `INVENTORY.json`/`events.jsonl`/`notes/*.md` files. **Branch:**
+`ralph/T2-GATEF`. **Candidate:** `main@26f0db4`, unchanged for every segment.
+**Lanes run:** logic only. **No pixels were captured** — see
+`GATE_F_CAPTURE_LANES.md`. **Companion:** `GATE_F_RUN_3_RIG_FINDINGS.md` —
+findings about the instrument; read it first if you have not, because most of
+what makes this run hard to read is there, not here.
 
-> **STATUS: PROVISIONAL.** Written while the run is still executing so that the
-> evidence survives the container. Sections marked *(pending)* are filled as
-> segments land.
+**Run state at rewrite time:** S01-S09 complete, S10 BLOCKED at step 27/121 on
+a genuine cost gate, X02 complete, X03 killed mid-run (not evidence, preserved
+as `X03-killed-1/`), X01/X04-X08 not yet run by this lane.
 
 ---
 
-## Read this first: how much of this run is about the game
+## The headline finding: the player has been stranded at the South Bridge since partway through S05, and it dominates everything downstream
 
-Not much of it, and saying so plainly is the most useful thing this document
-does.
+This is not a footnote. **Every single `move_to` step in the kept S06, S07,
+S08, S09, and the first 22 steps of S10 fails**, each one stopping between
+1.6 km and 6.3 km short of its target, and **every failure lands within a few
+metres of the same spot** — x∈[0,16], y∈[-8,-2], z∈[1314,1326], the South
+Bridge carve corridor's own centre:
 
-**There is not one `combat_start` event in this run.** No fight at all, across
-five completed segments, including an entire tournament. The cause is measured
-and it is the instrument, not the chapter — `RIG-11`, with the whole derivation
-in `gate-f-run-20260828T183531Z/DIAG-S02-ENCOUNTER/FINDING.md`. In one line: a
-fight requires a *deployed* creature, a loaded save deploys none, every journey
-segment from S03 on begins with a load, and no journey step-script in the
-protocol ever presses `creature_recall` — the button the game itself puts on
-screen for exactly this.
+| segment | asked to reach | stopped at | short by |
+|---|---|---|---|
+| S06 | Old Quarry (403,1794) | (13,-3,1314) | 618.2 m |
+| S07 | river/relay (150,3500) | (8,-3,1318) | 2186.2 m |
+| S08 | ironwood grove (-345,5060) | (15,-4,1324) | 3753.0 m |
+| S09 | outer watch (64,7400) | (2,-3,1321) | 6079.4 m |
+| S10 | Hall (0,7560) | (8,-3,1318) | 6241.6 m |
 
-So a large class of results in this run's artefacts are **not findings about
-Tetherbound**, and would be badly misread as such:
+**Read S06 through S09's FAIL counts (21, 22, 22, 12 respectively) as this one
+stranding, counted once per assertion that depends on the player's location or
+on a flag gated behind reaching the next region — not as 77 independent
+findings about bands 2 through 5's own content.** Every band-3/4/5 objective
+flag (`relay_captain_defeated`, `captive_rescued`, `relay_disabled`,
+`mill_crossing_restored`, all three `defeated_captain_*` flags,
+`hall_approach_open`) is unset as a direct, mechanical consequence of the
+player never arriving.
 
-| looks like | actually |
-|---|---|
-| the opening's first catch never happens | the harness never had a creature out; the encounter works — proven end to end |
-| the tournament is never won (`tournament_won` unset) | it was never fought; no input could have won it |
-| the South Bridge never opens (`south_bridge_open` unset) | its gate fight could not start |
-| the player falls off the world 178 times at z≈1325 | the bridge gate is legitimately still shut, and the game's own recovery volume caught the player every time — the game protecting itself, working |
-| the party never grows past 1 | catching requires combat |
-| the objective chain never leaves *"Catch your first wild creature."* | its first rung requires the first catch |
-| 26 objective assertions fail | `RIG-1`: two different id spaces compared |
-| S03 fails 64 of 274 steps | 58 of them ran inside one shop panel nobody closed (`RIG-7`) |
+**What this means for the run's coverage:** five consecutive segments (S05's
+tail through S09) plus the first fifth of S10 have produced almost no new
+information about bands 2 through 5's actual content — encounter design,
+regional identity, pacing, difficulty curve — because the player is not
+reaching any of it. This is the dominant fact this run has to report about
+Track 2 for bands 2-5, and it is worth stating plainly: **this run cannot
+speak to whether Stone & Root, River & Relay, Upper Meadows, or the Stronghold
+approach are fun, fair, or well-paced, because the player was not there.**
 
-**None of the above may be cited as evidence about the game.** They are listed
-here, in the game document, precisely because that is where somebody would go
-looking for them.
+**Whether this is a rig defect (the harness's straight-line `move_to`
+primitive failing to navigate a real, legitimate obstacle a free-roaming
+player would walk around) or a genuine game defect (the walkable path is
+actually broken or absent at this exact spot) is an open question, not
+settled by this run.** `ralph/GATE_F_RUN_3_RIG_FINDINGS.md`'s RIG-13 section
+has the full mechanical detail and the concurrent T2-STRANDING lane is
+actively diagnosing it. This document does not pre-judge which it is — but
+notes that a player-facing verdict on bands 2-5 is on hold until that
+question resolves, whichever way it goes.
 
 ---
 
@@ -71,143 +64,196 @@ looking for them.
 
 ### GAME-OK-1 — the front door is sound
 
-S01, 13 of 13 steps PASS, on a fresh `user://`:
+S01, 13 of 13 steps PASS, on a fresh `user://`: process start to title
+interactive in 500 ms; the title screen owns input and a real Control holds
+focus (a stick moves something); no save present, Start New Game enters the
+world directly with no overwrite confirmation; a new game starts with zero
+creatures, as the five-creature rule requires; the quest log tracks the first
+main-chain rung correctly.
 
-- process start → title interactive in **500 ms** (30 settle frames);
-- the title owns input (`input_context = title`) and a real Control holds focus
-  (`Start New Game`), so a stick moves something — §E.4's own standard, and the
-  thing that decides whether the front door is usable on a handheld at all;
-- with no save present, Start New Game enters the world directly rather than
-  raising an overwrite confirmation;
-- the world stands up and the fresh spawn is contained in `grandpas_village`;
-- a new game starts with **zero** creatures, as the five-creature rule requires;
-- the quest log tracks the first main-chain rung with the right text on screen.
+### GAME-OK-2 — the opening's first encounter works, confirmed by a dedicated probe, independent of the harness's own S02 script
 
-### GAME-OK-2 — the opening plays, beats 1 through 8, on the production path
-
-This is the strongest positive result in the run, and it had to be established
-by a purpose-built probe because the harness's own S02 could not
-(`DIAG-S02-ENCOUNTER/FINDING.md`, transcript `pass3.txt`). A clean process,
-nothing loaded, nothing granted, driven through the real panels with synthetic
-input:
-
-- the bed's *Get up*, the loft crossing and the stair descent;
-- Grandpa's briefing, advanced **by predicate rather than by count**, with its
-  three gifts landing line by line as he speaks;
-- the starter picker, and the five-creature rule's first bite — the other two
-  stay with him;
-- the naming pad, walked cell by cell on a gamepad grid, and confirmed on Done;
-- `grandpa_named` opening on the name the player typed;
-- **the follower body deployed by the naming beat** (`AllyCreature`, one node);
-- and then, standing at the exact coordinates S02 pressed at, `(26.78, −38.32)`,
-  one `interact`:
+S02's own step script never gets a fight to start (see the companion RIG
+document — this is a harness gap, `press interact` blind rather than a
+resolved engage). But `DIAG-S02-ENCOUNTER/FINDING.md`, driving the same
+production path with a purpose-built probe, confirmed the encounter mechanism
+itself works end to end: the bed, the loft crossing, Grandpa's briefing
+advanced by predicate, the starter picker (the five-creature rule's first
+bite — the other two stay with Grandpa), the naming pad walked cell by cell,
+and then, at the exact coordinates S02 pressed at, one `interact`:
 
 ```
 director.interaction_offer = {"actionable":true,"distance":5.990,
                               "label":"Engage Bramblebun","priority":0}
-arbiter.winning_provider() = encounter_director.gd
 pressed interact: is_fighting false -> true   >>> A FIGHT STARTED
 ```
 
-Reached a second way — the starter granted through the game's own
-`adopt_starter()` — the same spot offers *"Engage Bramblebun"* on **30 of 30**
-samples across 30 play-seconds, at a steady 5.99 m against a 6.00 m reach.
-
-**The chapter's opening is not a dead end.** Any reading of this run that says
-otherwise is reading the harness.
+Confirmed on 30 of 30 samples across 30 play-seconds at a steady 5.99 m
+against a 6.00 m reach. **The chapter's opening is not a dead end.**
 
 ### GAME-OK-3 — the interaction arbiter behaves correctly under modals
 
-Measured incidentally, and worth recording because it is the mechanism a lot of
-this run's confusion passed through. While a conversation owns input, the
-arbiter reports **no winning provider and an empty prompt**, and `interact` does
-nothing — even with an actionable *"Engage Bramblebun"* offer standing 1.71 m
-away from the director. That is `interaction_arbiter.gd` being deliberately deaf
-to the world while a panel owns input (OF25), and it is right.
+While a conversation owns input, the arbiter reports no winning provider and
+an empty prompt, and `interact` does nothing — even with an actionable offer
+standing 1.71 m away. Correct, deliberate behavior (`interaction_arbiter.gd`).
+
+### GAME-OK-4 — S03 produced real, if unlucky, combat
+
+With the rig fixed to walk to a live individual and press only a real engage
+prompt (see companion doc, RIG-16/17), S03 fought three real
+engage/combat/throw cycles. All three throws missed the catch — ordinary
+variance at whatever this species/orb combination's real chance is, not by
+itself a finding about the odds (protocol §0.6) — but the fights themselves
+ran, resolved, and the world state (HP, fainting, re-engage refusal against a
+stale prompt) all behaved as designed.
 
 ---
 
 ## Findings
 
-### GAME-1 — opening the pause shell on a controller fires the destructive drop verb
+### GAME-1 — opening the pause shell on a controller can fire the destructive backpack-drop verb
 
-**Severity: SHIP.** Player-facing, on the first pause menu of the chapter, on the
-primary input device.
+**Severity: SHIP candidate.** Player-facing, on the first pause menu of the
+chapter, on the primary input device. `project.godot` binds both
+`game_menu` and `backpack_drop` to joypad button 6 (Start/Menu). The pause
+shell opens on the Satchel tab, so the press that opens the shell also lands
+on the backpack tab's destructive drop verb if focus happens to be sitting on
+it. Observed in S02: `game_menu opened the shell: context world ->
+menu_backpack, focus on 'Drop it'`. `tab_backpack.gd` carries a guard
+(`_ignore_drop_until_release`) for exactly this symptom; the operator's own
+notes record it not holding on at least one attempt. Independent of the
+stranding and of any rig gap — this is a controller-first project (hard rule)
+and Start is the controller's most-pressed button.
 
-`project.godot` binds both of these to **joypad button 6** (Start / Menu):
+### GAME-2 — after a load, nothing is deployed, and only a low-priority interaction line says so
 
-```
-game_menu      = InputEventJoypadButton button_index 6
-backpack_drop  = InputEventJoypadButton button_index 6
-```
+**Severity: recorded as an OBSERVATION for Phase B, not asserted as a
+defect** — whether this needs a change is a design call this run does not
+make. Loading a save restores the party but deploys no creature body;
+`_sync_active_creature()` declines to summon when nothing is out. The only
+on-screen indication is a non-actionable interaction line (`Call out Moss`),
+which only appears when nothing else is offering anything nearby and is
+restated nowhere else (quest log, HUD, party screen). Whether a real player
+would notice this at all is unmeasured here — no pixels were captured.
 
-The pause shell opens on the Satchel tab. So the press that opens the shell also
-reaches the backpack tab's destructive drop verb on the tab it opened on, and the
-player is asked whether to throw away the highlighted item because they pressed
-Start.
+### GAME-3 — the build catalogue's d-pad focus navigation repeatedly fails to move onto the next piece cell
 
-Observed, S02-63:
-
-```
-game_menu opened the shell: context world -> menu_backpack,
-focus on 'Drop it' (@Button@62560)
-```
-
-`tab_backpack.gd:1345-1370` already carries a guard for exactly this
-(`_ignore_drop_until_release`) and its comment describes this symptom. **The
-guard did not hold.** The operator recorded it across S02 attempts 5 and 6, where
-the confirmation also ate the five tab presses that were supposed to reach the
-Save tab, so no handoff save was written.
-
-This one is independent of `RIG-11` and independent of the capture gap. It is a
-controller-first project (hard rule) and this is the controller's most-pressed
-button.
-
-### GAME-2 — after a load, nothing is deployed, and only the interaction line says so
-
-**Severity: recorded as an OBSERVATION for Phase B, not asserted as a defect.**
-Whether this is a defect is a design call, and §J says the operator does not make
-those.
-
-Measured (`DIAG-S02-ENCOUNTER/pass2.txt`): loading a save restores the party and
-deploys no creature. `_sync_active_creature()` declines to summon when nothing is
-out, and says so in its own comment. The game's only indication is the
-interaction line, which is **non-actionable** and names a different button:
+**Severity: SHIP candidate.** Measured in X02 (seeded from `S03-exit`, before
+the stranding — this is not a stranding artefact). Across at least seven
+distinct build-catalogue cells in a single session, a `ui_right`/`ui_down`
+press reported "did not move focus off" the currently-focused button:
 
 ```
-{"actionable":false,"priority":-1,"label":"<RB glyph>   Call out Moss"}
+X02-036  focus the floor piece    — FAIL: ui_right did not move focus off @Button@62324
+X02-049  focus the wall piece (1) — FAIL: 2x ui_right did not move focus off @Button@65678
+X02-054  focus the wall piece (2) — FAIL: 2x ui_right did not move focus off @Button@66152
+X02-059  focus the wall piece (3) — FAIL: 2x ui_right did not move focus off @Button@66626
+X02-064  focus the doorway piece  — FAIL: 3x ui_right did not move focus off @Button@67109
+X02-069  focus the roof piece     — FAIL: 4x ui_right did not move focus off @Button@67655
+X02-082  focus the camp           — FAIL: 5x ui_right did not move focus off @Button@69395
+X02-087  focus the creature bed   — FAIL: 6x ui_right did not move focus off @Button@70067
 ```
 
-What is worth Phase B's attention: this line only appears when the player is
-standing where nothing else is offering anything, it is the lowest priority
-offer there is, and nothing in the quest log, the HUD's tracked objective, or the
-party screen restates it. A player who loads a save and walks to a creature is
-shown *"Call out Moss"* only if no bush, prop or NPC outranks it.
+Each failure still allowed the piece to be armed and placed afterward (the
+`arm the * ghost` steps immediately following all PASS), so this reads as a
+**focus-reporting/navigation defect rather than a hard block** — the game
+still let the operator proceed, but the on-screen focus indicator a real
+player relies on to know what they are about to place did not visibly move
+when the input said it should. §8's own standard (a poll-only reader that
+reports a working menu while the stick moves nothing) is exactly the defect
+class this matches. Worth a real player test: does the highlighted piece
+actually change, or does only the *placed* piece change while the highlight
+stays put?
 
-**The run cannot say whether a real player would be confused by this**, because
-the run had no player and captured no frames. It is exactly the shape of question
-§K.4 reserves for the owner's own pass.
+### GAME-4 — the craft panel's `input_context` never leaves `world`, even while it appears to function
+
+**Severity: recorded as an ambiguity, not asserted as a defect** — the
+underlying mechanism (does crafting actually require exclusive input
+ownership, or is this by design) is not decidable from this run's telemetry
+alone. In X02, interacting with the workbench (`X02-015`) is immediately
+followed by an assert that the craft panel owns input, which FAILs:
+`input_context=world (wanted prefix panel)`. The subsequent focus-move steps
+also FAIL (`did not move focus off nothing`) — consistent with no panel
+Control ever holding focus. Yet the very next step, an unconditional
+`ui_accept` press, is followed by a `PASS` on "the axe costs 4 wood/3 stone/2
+fiber and the satchel pays it," and the same pattern repeats for the pickaxe.
+**Two readings are both consistent with this telemetry and this run cannot
+distinguish them:** (a) the craft panel genuinely opened and crafted
+correctly, but `input_context`'s accessor does not recognize it as a panel
+owner (an instrumentation gap, RIG-8's shape, not a player-facing defect); or
+(b) the panel never actually opened and the `ui_accept` press did something
+else that happened to also pay for and grant the axe. Not chased further this
+pass — flagged for whoever next has capture-lane or live-probe access to the
+craft panel's actual `Control.has_focus()` state at this exact moment.
 
 ---
 
-## Per-segment observations *(pending — filled as the chain completes)*
+## Per-segment summary
 
-The journey chain is S06 → S10 and the studies X01 → X08 at the time of writing.
+| segment | steps | PASS | FAIL | DELEGATED | what dominates the FAILs |
+|---|---:|---:|---:|---:|---|
+| S01 | 14 | 13 | 0 | 1 | clean |
+| S02 | 75 | 61 | 6 | 8 | first-catch engagement never fires from S02's own blind press (see companion doc); road-gate flag consequently unset |
+| S03 | 338 | 284 | 47 | 7 | RIG-13/14/15/16/17/18 history (see companion doc); real combat achieved, team stayed at 1 |
+| S04 | 73 | 53 | 14 | 6 | tournament ungated by team-of-1 (RIG-18); zero combat_start |
+| S05 | 77 | 58 | 6 | 13 | South Bridge gate never opens (open question, see companion doc) |
+| S06 | 104 | 72 | 21 | 11 | South Bridge stranding (RIG-13) |
+| S07 | 99 | 68 | 22 | 9 | South Bridge stranding |
+| S08 | 135 | 102 | 22 | 11 | South Bridge stranding |
+| S09 | 76 | 56 | 12 | 8 | South Bridge stranding |
+| S10 | 27/121 (BLOCKED) | 19 | 6 | 2 | stranding through step 22; genuine cost-gate BLOCKER at step 27 |
+| X02 | 170 | 146 | 20 | 4 | build-catalogue focus defect (GAME-3), craft-panel context ambiguity (GAME-4), RIG-14 tab-cycle shape (see companion doc) |
+
 `HANDOFF_PROVENANCE.md` in the run directory records which entry save each
-segment actually had, which is **not** in every case the one §B names — see
-`RIG-10`.
+segment actually had — not in every case the one §B names (RIG-10/RIG-12).
 
 ---
 
-## What this run cannot conclude
+## S10's BLOCKER is a real capacity limit, not a pricing bug
 
-Stated here rather than left to inference:
+S10 ran 27 of 121 steps (19 PASS, 6 FAIL, 2 DELEGATED) before the harness's
+own cost gate refused to continue: `0.097 s/frame`, measured immediately
+after a real combat exchange (`combat_quick` x38, a party switch,
+`combat_quick` x24), against `40195 s` (11.2 h) predicted for the remainder
+versus `13974 s` of budget left. Unlike CD-7c (RIG-2, a genuine
+divide-by-a-handful-of-frames pricing artifact, already fixed), this price
+jump tracks real combat-dense content (the gauntlet, elites, the Warden, the
+legendary choice) and is not a rig bug to patch. No `S10-exit` save exists.
+The practical fix is a faster host or splitting S10 into smaller segments
+each under the 14400 s ceiling — not a shorter wait, which the protocol
+itself says would just mean fights do not resolve.
 
-1. **Nothing about how the game looks.** No pixels were captured; every
-   prescribed §G frame is delegated and unpaid. See `GATE_F_CAPTURE_LANES.md`.
-2. **Nothing about combat, catching, difficulty, or the progression that
-   depends on them** — no fight occurred (`RIG-11`).
-3. **Nothing about pacing or first-clear timing** past the opening, because the
-   journey's later segments were played in a world whose gates could not open.
-4. **Nothing about device performance, audio, controller feel, or handheld
+---
+
+## What this run still cannot conclude
+
+1. **Nothing about bands 2 through 5's own content, pacing, or difficulty** —
+   the player never arrived (South Bridge stranding, open question between
+   rig and game).
+2. **Almost nothing about combat** — zero `combat_start` events anywhere from
+   S04 through S10, despite RIG-11 (the fix that was supposed to unblock this)
+   being confirmed fixed. X04, not yet run, is this run's best remaining
+   chance at real combat evidence.
+3. **Nothing about how the game looks.** No pixels were captured; every
+   prescribed §G frame is delegated and unpaid — see `GATE_F_CAPTURE_LANES.md`.
+4. **Nothing about the chapter's finale, the Warden fight, or the legendary
+   choice** — S10 BLOCKED at step 27/121, genuinely, on cost.
+5. **Nothing about pacing or first-clear timing** past the opening — the
+   journey's later segments were played in a world the player could not
+   traverse.
+6. **Nothing about device performance, audio, controller feel, or handheld
    legibility** — all `[OWNER-ONLY]` per §K, unchanged.
+
+## What this run DOES conclude, positively, and should not be re-litigated
+
+1. The front door (boot, title, new game, zero starting creatures) works.
+2. The opening's core encounter mechanism works end to end, on the production
+   path, independent of the harness's own scripting gap in S02.
+3. The interaction arbiter correctly refuses input to the world while a modal
+   owns it.
+4. Real combat, once it is correctly triggered (S03, with the rig fixed),
+   resolves correctly — HP tracking, fainting, re-engage refusal against a
+   stale prompt all behaved as designed.
+5. Two independent, player-facing UI defects exist regardless of the
+   stranding or any rig gap: the Start-button drop-verb collision (GAME-1)
+   and the build-catalogue focus-navigation gap (GAME-3).
