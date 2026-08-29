@@ -12,9 +12,16 @@ method succeed where the exterior did not, and does that reasoning extend.
 
 ## Where this got to
 
-Three targeted fixes landed on `ralph/T1-WARRENS-EXT` (commit `bae2017a`),
-each tied to a specific line in the judge's report, diagnosed from the
-actual code path rather than guessed:
+**All four fixes below landed, and all four are verified against real
+render evidence** (`tools/capture_warrens_63.gd`, the same tool and stands
+the judge used) -- not just plausible from reading the code. Commits
+`bae2017a`, `829c5442` on `ralph/T1-WARRENS-EXT`. Side-by-side frames are
+committed at `ralph/reports/T1-WARRENS-EXT/shots/{before,after}/` (the
+`before/` copies are the judge's own frames, not a re-render -- see
+"Exact commands" below for why).
+
+Four targeted fixes, each tied to a specific line in the judge's report,
+diagnosed from the actual code path rather than guessed:
 
 1. **The mouth facade never got a doorway frame.** `interior_structure.gd`'s
    `_reveals()` pass builds a jamb-and-lintel frame around every entry in
@@ -73,32 +80,59 @@ actual code path rather than guessed:
    to a modest per-axis stretch (+-15-18%) in `_place_rock`, so the same
    low-poly mesh reads less like a perfectly scaled cube.
 
+4. **The approach ramp reused the interior floor's near-white lerp and
+   read as poured concrete.** `_floor_material()`'s 0.42 lerp toward
+   `ROCK_TINT` was tuned, three rounds deep and by measurement, to solve
+   an interior-only problem: a floor competing with shadowless-omni-lit
+   walls for a room's midtone mass. The approach ramp calls the same
+   function under full daylight sun, where there is no histogram to
+   protect, and the same near-white lerp instead reads as an unweathered
+   slab beside boulders that (after fix #3) now carry real facet
+   contrast -- "a plain grey concrete walk slab... sits on the grass with
+   no edge blend." `_floor_material(exterior)`/`_floor_box(...,
+   exterior)` give the ramp its own much smaller (0.12) lerp, pulling it
+   back toward the source photo's warm dirt colour; every interior floor
+   call site is untouched.
+
 ## Done-and-verified vs done-but-unverified
 
-**Done, and confirmed against the actual before-frames** (the judge's own
-`ralph/reports/judge-visual-2026-08-29/W-ext-01/02/03*.png` -- I did not
-re-render a "before" myself; those are the real evidence this lane
-answers, and re-deriving them would have spent the render budget twice
-for the same picture):
+**All four fixes are done and verified**, against a real
+`tools/capture_warrens_63.gd` pass run twice (once after fixes 1-3, once
+more after fix 4) on this branch's own code, compared directly to the
+judge's own before-frames (`ralph/reports/judge-visual-2026-08-29/`).
+Side by side, committed at `ralph/reports/T1-WARRENS-EXT/shots/`:
 
-- The mint-green faceted rocks flanking the doorway in `W-ext-03` and the
-  teal-shadowed faceted rock in `W-ext-02`'s foreground are visibly the
-  same source material the skirt fix targets.
-- The crimson clump in `W-ext-01` is the Leaves_TwistedTree bug the
-  Bush_Common retexture fixes.
-- The regular checkerboard grid on `W-ext-01`'s right wall face is
-  visible directly in that frame, not inferred.
-- The purple flower prop and the tall bright-green blade grass in
-  `W-ext-01`/`W-ext-02` match `Plant_1`/`Grass_Wide_Tall` at the old,
-  shared boulder-scale range.
+- **Rock language**: `before/W-ext-03-mouth-door.png` shows dark granite
+  mega-boulders, smooth mint-green faceted rocks, and a plain grey slab
+  in one frame. `after/03-mouth.png` shows one consistent granite
+  language flanking the door and along the whole knoll in
+  `after/01/02-knoll-from-outside.png` -- no mint-green rock visible
+  anywhere in either after-frame, and the crimson Bush_Common clump
+  visible in `before/W-ext-01` does not appear in `after/01`.
+- **Checkerboard aliasing**: `before/W-ext-01`'s right-hand wall face
+  shows a plainly regular pixel grid. `after/01-knoll-from-outside.png`
+  (matching stand) shows none -- the surface reads as continuous
+  granite mottling at the same distance.
+- **The mouth doorway**: `before/W-ext-03` is a flat wall with a
+  rectangular hole. `after/03-mouth.png` (cropped in this session's own
+  review, not committed) shows a real lintel band across the top of the
+  opening and a jamb post standing just inside the threshold -- genuine
+  built depth, not a hole.
+- **The approach ramp**: `before/W-ext-03`'s path is flat pale grey.
+  `after/03-mouth.png`'s path is a warm dark brown with visible
+  paver-like variation, no longer reading as poured concrete.
+- **The interior bar is unaffected**: `after/06-den-and-guardian-
+  interior-unchanged-reference.png` -- dirt floor, timber ribs, pilaster
+  rhythm all intact, confirming the `exterior` parameter split on both
+  the rock and floor materials did not leak into any interior call site.
 
-**NOT yet verified**: whether the fixes actually read correctly once
-rendered. A real 240-frame `tools/capture_warrens_63.gd` pass was started
-against the fixed code (see Commands below) but this environment's
-software rasterizer takes 50+ minutes for that tool, and \<<<FILL IN
-BEFORE SENDING -- state whether that run finished, and if so, either link
-the after-frames or paste the one-line verdict; if not, say it is still
-running and where to find the log.>>>
+**Still open, not attempted this pass**: the mound's boulders still show
+a visibly boxy/faceted top silhouette in `after/01-knoll-from-outside.png`
+-- better than before (no longer reading as a mint hedge, no longer
+aliasing), but still readable as "large chamfered blocks" rather than
+organic stone. See Disagreements below for why I believe this is a
+mesh-geometry limit rather than something a fourth material tweak fixes,
+and did not chase it further inside this pass.
 
 A cheap 90-frame iteration stand (this session's own
 `/tmp/.../scratchpad/iter_warrens_ext.gd`, not committed -- see below) was
@@ -195,42 +229,40 @@ future reader to rediscover it by frame.
 
 ## Disagreements / things worth flagging
 
-- The brief's diagnosis focuses on rock language and boulder read. The
-  actual before-frame (`W-ext-01`) shows the checkerboard-aliasing defect
-  it calls "the loudest single defect in the set" plainly, on a flat wall
-  face, which strongly supports a normal-map/filtering explanation over a
-  geometry explanation -- but I have not yet measured this against an
-  after-frame at time of writing this section (see the unverified item
-  above). If the after-frame still shows aliasing, the more likely
-  remaining cause is the underlying `Rock_Medium_*.gltf` mesh's own
-  low-poly facets at 2.2-4.4x scale reading as flat, near-axis-aligned
-  quads that any triplanar projection will alias on at a shallow angle,
-  which is a mesh-density problem no material tuning fixes -- flag for
-  the next lane rather than guess further here.
-- The "concrete slab" approach-apron complaint (`_floor_material()`,
-  `Ground030` at a near-white lerp tuned to fix a DARK-interior problem
-  three rounds ago) was diagnosed but **not fixed** in this pass. I chose
-  not to touch it blind: `_floor_material()`'s own comments record two
-  prior over-corrections (a "beach" that was too light, then a floor that
-  crushed the room's whole value histogram), both found only by rendering
-  and measuring, and I did not want to spend this pass's remaining render
-  budget on a fourth guess at the same lever without seeing whether the
-  other three fixes already change how it reads next to properly-coloured
-  rock and flora. If the after-frame still shows it reading as a slab,
-  the right next move is almost certainly to split `_floor_material()`
-  into interior/exterior variants the same way this pass split the rock
-  material, not a fourth retune of the shared one.
+- The brief's diagnosis treats "boulders read as chamfered cubes" and
+  "aliases into a checkerboard at distance" as two symptoms of one cause.
+  The render evidence says they are two different causes that happened to
+  share a frame: the checkerboard was a normal-map/filtering problem
+  (fixed, confirmed gone) and the boxy silhouette is a mesh-geometry
+  property of `Rock_Medium_*.gltf` at 2.2-4.4x scale that a material
+  change cannot reach -- non-uniform per-axis scale softened it visibly
+  but did not remove it (see `after/01-knoll-from-outside.png`). Fixing
+  the remainder needs either a higher-poly/more-fractured rock model (a
+  new asset, or an owner-supplied reference for one, per CLAUDE.md's
+  Meshy rule) or a lot more, smaller boulder instances breaking up the
+  large flat faces geometrically -- both bigger than this pass's scope.
+  Flagged for the next lane rather than chased further here.
+- I initially planned to leave the approach-ramp floor for a future pass
+  (see the in-progress draft of this section, superseded) but the render
+  budget allowed a second, cheap round once fixes 1-3 were confirmed, so
+  fix 4 above landed in this same pass instead of being deferred.
 
 ## File footprint
 
 - `scripts/world/burrow_warrens.gd` -- `_build_chambers()` (mouth opening
-  recorded), `_material()` (parametrised `normal_scale`, anisotropic
-  filter), `_wear_the_cave_stone()` (`exterior` param), `_place_rock()`
-  (non-uniform scale), `_build_site_skirt()` (rewritten, rock/flora
-  split), new `_dress_skirt_flora()`, new `LEAF_GREEN` constant.
+  recorded into `_openings`), `_material()` (parametrised `normal_scale`,
+  anisotropic filter), `_wear_the_cave_stone()` (`exterior` param),
+  `_place_rock()` (non-uniform scale), `_build_site_skirt()` (rewritten,
+  rock/flora split), new `_dress_skirt_flora()`, new `LEAF_GREEN`
+  constant, `_floor_material()`/`_floor_box()` (`exterior` param),
+  `_build_approach_apron()` (passes `exterior=true`).
 - `data/config/burrow_warrens.json` -- `mound.skirt_models` replaced with
   `skirt_rock_models`/`skirt_flora_models`, new `skirt_flora_scale`,
   `skirt_flora_fraction`.
+- `ralph/reports/T1-WARRENS-EXT/shots/{before,after}/` -- the evidence
+  frames this handover cites, committed (repo-root `shots/` is gitignored
+  and a prior lane lost evidence to exactly that).
+- `ralph/reports/handover-T1-WARRENS-EXT-2026-08-30.md` -- this file.
 - Not committed: `/tmp/.../scratchpad/iter_warrens_ext.gd` (this
   session's failed cheap-iteration stand; superseded by using the real
   tool directly once its stands proved necessary) and its two unusable
@@ -238,14 +270,16 @@ future reader to rediscover it by frame.
 
 ## What I would do next
 
-1. Confirm the after-render (see unverified item) and, if the checkerboard
-   or the mound's cube read still fails, escalate to the mesh-density
-   explanation above rather than a fourth material retune.
-2. If the after-render otherwise reads well, take one pass at the
-   approach-apron floor material as its own small, evidence-driven fix
-   (interior/exterior split, following this pass's own precedent) rather
-   than leaving it for a fresh diagnosis session.
-3. Hand the interior-vs-exterior answer above to whichever lane is
+1. The mound's remaining boxy silhouette (see Disagreements) needs either
+   a different/higher-detail rock model or a geometric density change,
+   not another material pass -- flag it rather than re-attempt it
+   blindly.
+2. Hand the interior-vs-exterior answer above to whichever lane is
    rebuilding the Meadows Hall, per the brief's own routing note -- the
    `_reveals()` extension in particular (frame every daylight opening
-   too, not just lit interior ones) is directly reusable there.
+   too, not just lit interior ones) is directly reusable there, and so is
+   the general lesson that a treatment tuned against one light/material
+   condition needs an explicit second value, not a silent reuse, the
+   moment it is applied under a different one.
+3. Nothing else in this site's scope is currently open. The interior
+   remains untouched and, per the after-frame above, unaffected.
