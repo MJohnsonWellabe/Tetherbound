@@ -4,27 +4,47 @@
 **Envelope:** up to 1,800 credits (of a 3,410 balance; 900 reserved for the concurrent T1-CREATURE-MESH lane).
 **Board:** `docs/art/reference/npc-board-2026-08-30/00_MEADOWS_NPC_DESIGN_BOARD.png` (1536×1024, read in full, panel by panel).
 
-## Bottom line, first
+## Bottom line, first — REVISED after rendering (see below for what changed)
 
-**Recommended spend: 0 credits mandatory, ~90 credits optional (Traveling Merchant's cart, sourced-first).**
+**Recommended spend: ~90–100 credits for one captain-silhouette accessory (one mesh, reused across all five named captains), 0 elsewhere mandatory, ~90 more optional (Traveling Merchant's cart, sourced-first).**
 
-All 25 named NPCs are satisfiable by the six installed production humanoid
-rigs (`docs/art/HUMANOID_ASSET_INVENTORY.md`) through the existing
+This plan's first pass called every NPC on the board, captains included,
+satisfiable at zero Meshy cost by the existing rig/palette/badge system —
+reasoned from reading `npc_ranks.json`'s code comments, not from a render.
+The owner pushed back and asked for the rank ladder to actually be built
+and looked at rather than taken on faith. It was:
+`tools/_capture_rank_variety.gd` renders all eleven named grunts/officers/
+captains in `data/config/bands/*/trainers.json` through the real
+`trainer_npc.gd::model_config()` placement path, the same code that puts
+them in the world (`shots/rank_variety/`). **The render disproves the
+original captain classification** — Captain Halder and Captain Hald
+(`09-captain-halder-front.png`, `11-captain-hald-front.png`) are the same
+cap, mask, coat and boots as every grunt in the lineup; the only
+differences across all eleven figures are a body-value/hue shift and a
+chest badge that changes colour and grows slightly with rank. The board's
+own TEAM TETHER NOTES line — *"Captains have distinctive silhouettes"* — is
+not met. **The grunt/officer conclusion holds** — uniform, anonymous
+rank-and-file reads as the evident design intent elsewhere in this
+codebase, and the render is consistent with that being fine, not a defect.
+Full account of what changed and why:
+`ralph/reports/handover-T1-NPC-CAST-2026-08-30.md`.
+
+24 of the 25 named NPCs are satisfiable by the six installed production
+humanoid rigs (`docs/art/HUMANOID_ASSET_INVENTORY.md`) through the existing
 per-material palette/hair/badge variant system that `character_model.gd` and
 `npc_ranks.gd` already implement and that eight villagers and seventeen
-Team-Tether-ranked NPCs already ship on today. None of the 25 clears the bar
-CLAUDE.md and the inventory set for a new humanoid mesh: *"a real
+Team-Tether-ranked NPCs already ship on today. None of those 24 clears the
+bar CLAUDE.md and the inventory set for a new humanoid mesh: *"a real
 player-facing need the existing six cannot satisfy."* The board's own
 HUMANOID RIG & MESHY GUIDELINES panel agrees — *"Use the existing
 Tetherbound human base rig... All characters fit the same humanoid rig for
-animations"* — and its masthead says the same thing a second time. This
-board is a retexture/variant/placement specification for a cast that is
-already almost entirely built, not a request for 25 (or even a handful of)
-new generations.
+animations"* — and its masthead says the same thing a second time.
 
-**Hand back essentially the full 1,800-credit envelope.** Reserve nothing
-beyond the ~90 credits below, and only spend that after a free-asset search
-comes up empty (see #17).
+**Hand back most of the 1,800-credit envelope, not all of it.** ~90–100
+credits for one captain accessory mesh (reused across all five named
+captains — one generation, not five), plus the same ~90-credit optional
+Traveling Merchant cart as before (sourcing-first). Still roughly
+1,610–1,710 credits handed back.
 
 This is not a reluctant minimum reading of the brief — it is the board and
 the inventory agreeing independently, which the brief itself flagged as the
@@ -70,7 +90,7 @@ rank appears repeatedly across all five bands) and `data/config/trainers.json`
 |---|---|---|---|---|---|
 | 1–3 | Grunt A/B/C | Battle/Trainer | **Zero — already fully served.** | `grunt` rank, `npc_ranks.json` | 0 |
 | 4–5 | Officer A/B | Battle/Trainer | **Zero — already fully served.** | `officer` rank (base `grunt`) | 0 |
-| 6–7 | Captain A/B | Battle/Trainer, Story/Key Info | **Zero today; real gap flagged, not a Meshy job.** | `captain` rank (base `grunt`) | 0 |
+| 6–7 | Captain A/B | Battle/Trainer, Story/Key Info | **Real gap, CONFIRMED BY RENDER — needs a small accessory generation.** | `captain` rank (base `grunt`) + new coat/cape accessory mesh | ~90–100 |
 | 8 | Warden (Meadows) | Battle/Trainer, Story/Key Info | **DO NOT TOUCH.** Already rebuilt from board 16. | `assets/characters/warden/warden_lod0.glb` | 0 |
 
 **1–3, Grunts.** `data/config/npc_ranks.json` and the grunt rig already carry
@@ -89,30 +109,61 @@ apart; they see a rank badge.
 Dell, Warder Solene, Warder Ness) with its own badge tier over the grunt
 rig.
 
-**6–7, Captains — the one place the board argues for something real.** The
-TEAM TETHER NOTES panel: *"Grunts have simpler gear, Officers add command
-pieces, **Captains have distinctive silhouettes**."* `npc_ranks.json`'s own
-`_comment_ladder` independently says the identical thing from the
-engineering side, unprompted by this board: *"real rank READING at distance
-needs silhouette — different headgear, shoulder kit, a coat at captain —
-which is accessory geometry."* Two independent sources naming the same gap
-is real signal. **This is still not a Meshy job**, for two reasons: (a) a
-silhouette-changing coat/cape is *accessory geometry* layered on the
-existing rig, the same category as the badge system, not a new humanoid
-body — CLAUDE.md's new-mesh bar is about the body, and the existing four
-captains (`relay_captain`/Captain Vance, `captain_riverwatch`/Captain
-Oreth, `captain_field`/Captain Halder, `captain_ridge`/Captain Vess,
-`stronghold_elite`/Keeper Hald) already read as captains by badge alone
-today without it; (b) building that geometry is scripts-and-accessory work
-(`character_model.gd`'s `_apply_accessories`/`_attach_part`, currently
-primitive-shape only — box/sphere/ring/disc, no arbitrary mesh), squarely
-outside this lane's file ownership ("scripts beyond what a material variant
-genuinely requires"). **Flagged to the coordinator as a real, evidenced
-follow-up ticket** — a coat/cape accessory mesh for the captain rank,
-buildable the same way `torch_prop.tscn` was (built geometry, no Meshy
-credit) or as a small owner-referenced prop generation if a built primitive
-can't sell "coat" — not something this session should spend budget or
-scope on.
+**6–7, Captains — CORRECTED after rendering, no longer "zero."** The first
+pass of this plan reasoned from `npc_ranks.json`'s own code comments that
+the badge system was probably enough and called this "not a Meshy job."
+The owner asked for it to actually be built and looked at instead of taken
+on faith, which was the right call: `tools/_capture_rank_variety.gd`
+renders all five named captains (`relay_captain`/Captain Vance,
+`captain_riverwatch`/Captain Oreth, `captain_field`/Captain Halder,
+`captain_ridge`/Captain Vess, `stronghold_elite`/Keeper Hald) through the
+real `trainer_npc.gd::model_config()` placement path, alongside three named
+grunts and three named officers, same camera and lighting throughout
+(`shots/rank_variety/`). **Every one of the eleven is the same cap, the
+same face mask, the same coat, the same boots.** Pixel-sampling the badge
+and torso across all eleven confirms the *config* genuinely differs per
+individual and climbs a clean ladder (badge red-channel: grunts ~103–132,
+officers ~146–158, captains ~162–165) — so this is not a rendering bug,
+the rank system is working exactly as coded — but colour and a coin-sized
+badge are the *entire* differentiation. The board's TEAM TETHER NOTES panel
+says *"Captains have distinctive silhouettes."* They do not, confirmed by
+render, not assumed from reading the palette code.
+
+**This still is not a full humanoid regeneration** — CLAUDE.md's new-mesh
+bar is about the body, and the body is fine — but it is now a real,
+rendered-and-confirmed case for **one small accessory generation**: a
+coat/cape/shoulder-piece mesh, generated once against the board's own
+captain panels as reference art (satisfying CLAUDE.md's "never without
+owner-supplied reference art" the same way the board already satisfies it
+for everything else in this ledger), then reused as a single attachable
+mesh across all five named captains — the same "one mesh, many uses"
+economy as the TM orb and the tether pylon, not five separate generations.
+Rough cost, using `meshy.py`'s own measured `COSTS` table and the
+tether-pylon/relay-apparatus recipe (3 preview candidates, retexture the
+winner): **~90 credits** (3×20 preview + 30 retexture), possibly +40 for a
+refine pass if the winner needs it — call it **~90–100 credits**, not the
+1,800 envelope. A primitive box/cylinder was tried and rejected once
+already for the chest badge itself (`npc_ranks.json`'s own
+`_comment_badge_shape`: it "rendered as a flat pure-red untextured
+rectangle... a debug gizmo") — a coat needs real drape, which a primitive
+cannot sell, so this is a case where the generation is the cheaper and more
+honest option, not a shortcut around one.
+
+**One real blocker, outside this lane's ownership, flagged rather than
+worked around:** `character_model.gd`'s `_apply_accessories()`
+(scripts/characters/character_model.gd:606-633) only ever builds a
+`_primitive_mesh()` — there is no path today to attach a real mesh loaded
+from a `.glb`, even though the underlying `_attach_part(mesh: Mesh, ...)`
+function it calls already takes a generic `Mesh` and would accept one
+unmodified. The minimal fix is small and scoped exactly to this need (read
+an optional `"mesh_path"` key in an accessory entry and `load()` it instead
+of calling `_primitive_mesh()` when present), but it is a change to
+`scripts/characters/character_model.gd`, which sits outside "scripts
+beyond what a material variant genuinely requires" as this lane's file
+ownership is written. Flagged for the coordinator to route to whichever
+lane owns that file, alongside the generation request above — the two are
+a matched pair; the mesh is useless without the attachment path, and the
+attachment path has nothing to attach without the mesh.
 
 **8, Warden.** CLAUDE.md and the inventory are explicit and this session
 did not reopen it. Confirmed `assets/characters/warden/warden_lod0.glb`
@@ -229,11 +280,17 @@ rather than attempted here.
 
 ## What "good" looks like, so a placement pass doesn't need to re-derive this
 
-- **Team Tether (1–8):** no visual change needed to be board-satisfying.
-  Good = the rank ladder stays legible at combat distance (badge + palette,
-  already shipped) and the Warden stays untouched. The captain-silhouette
-  and rank-height gaps are logged, not silently accepted as fine — but they
-  are follow-up tickets, not this plan's spend.
+- **Team Tether, grunts/officers (1–5):** no visual change needed to be
+  board-satisfying — render-confirmed uniform rank presentation, which
+  matches this codebase's own established design intent for rank-and-file.
+- **Team Tether, captains (6–7):** good = a captain is identifiable as a
+  captain from the same distance/angle a player would recognise a grunt,
+  by silhouette (coat/cape/shoulder shape), not only by walking up close
+  enough to read a chest badge's colour. The render in
+  `shots/rank_variety/` is the before-state to check the after against.
+  The rank-height gap (officer/captain rendering at the grunt's 1.80m
+  instead of the board's graduated 1.8/1.9m) is a separate, smaller,
+  logged follow-up, not this plan's spend either.
 - **Village/Settlement (9–17) and Trail/Wilderness (18–25):** good = each
   new NPC lands on an existing rig with a hair colour or palette genuinely
   distinct from every other NPC already on that base (the game already
@@ -276,28 +333,48 @@ board's own colour family rather than drifting into an already-used hex
 (`art.json` already discourages colour collisions explicitly in its own
 comments — see Halda's).
 
-## Job 3 (prepare Meshy inputs) — does not apply
+## Job 3 (prepare Meshy inputs) — one real item now, after the correction
 
-No mandatory Meshy call exists in this classification, so there is nothing
-to crop or prompt-author under `views.json`/`meshy.py` today. If the
-coordinator green-lights the optional Traveling Merchant cart (~90 credits,
-after a sourcing attempt fails), the single board crop needed is panel 17
-(`docs/art/reference/npc-board-2026-08-30/00_MEADOWS_NPC_DESIGN_BOARD.png`,
-roughly px region [1160,470]–[1340,660] at native resolution, verified by
-inspection this session) — that crop is trivial to cut and is not blocking;
-not cut speculatively because the sourcing step should happen first and
-might make it unnecessary entirely.
+**Captain coat/cape accessory.** Reference crops saved at
+`assets/characters/captain_accessory/reference/board_captain_a_turnaround.png`
+and `board_captain_b_turnaround.png` — each is a clean 4-view turnaround
+(front, 3/4, side, back) plus a head close-up, cropped straight from the
+board's panels 6 and 7. The back view on both is the useful one: a
+full-length trailing cape/coat with a stood-up collar, clearly a garment
+distinct from anything on the grunt base today. This satisfies CLAUDE.md's
+"never a Meshy generation without owner-supplied reference art" the same
+way every other board-derived generation in `docs/ASSET_LEDGER.md` does.
+**Not yet cut to `views.json`'s per-figure convention** (single-figure
+crops with a measured `band`/`centres`, like the six sheets that file
+already documents) — this is a garment, not a character turnaround, so
+`crop_prop_views.py`'s prop path (the one used for `tether_pylon`/
+`relay_apparatus`, front/side/rear crops of one object) is the closer fit,
+and the coordinator or executing lane should re-crop tightly to just the
+coat once a generation is actually approved, rather than this lane
+guessing at the isolation Meshy will want. A `meshy.py` prompt block was
+**not** added either, for the same reason — it's a small enough prompt
+that whoever runs the generation should write it against the exact crop
+they cut, following `NEGATIVE_PROP`/`STYLE_PROP`'s existing shape (a worn
+garment, not a freestanding prop, so it will want its own style line
+rather than reusing `STYLE_PROP` verbatim — e.g. "stylised cloth/leather
+coat and cape, worn open over a humanoid torso, clean readable drape,
+no character, no head, no hands").
+
+The Traveling Merchant cart (#17) is unchanged from the first pass: sourcing-first, ~90 credits if that fails, not committed.
 
 ## Running total against the envelope
 
 | Item | Credits | Committed? |
 |---|---|---|
-| 25 humanoid NPCs (all classifications above) | 0 | — |
+| 24 of 25 humanoid NPCs (all classifications except captains) | 0 | — |
+| **Captain coat/cape accessory (one mesh, all five named captains)** | **~90–100** | **Recommended — render-confirmed gap** |
 | Traveling Merchant cart (prop, sourcing-first) | 0–90 | Optional, not committed |
-| **Total against 1,800 envelope** | **0 (up to 90 optional)** | |
-| **Handed back to the coordinator** | **≥1,710 of 1,800** | |
+| **Total against 1,800 envelope** | **~90–100 recommended, up to ~190 with the optional cart** | |
+| **Handed back to the coordinator** | **~1,610–1,710 of 1,800** | |
 
-This is deliberately not "spend the envelope because it exists." Per the
-brief's own framing: if the honest classification says the cast fits in far
-less than 1,800, say so and hand the difference back. It does, by a wide
-margin, and this plan does.
+Still nowhere near the full envelope, and this is deliberately not "spend
+it because it exists" — the captain spend is the one item in this whole
+25-NPC board that survived being rendered and checked rather than assumed.
+Everything else here held up under that same scrutiny at zero cost; this
+one didn't, and the number changed because of that, not because 1,800 was
+sitting there to spend.
