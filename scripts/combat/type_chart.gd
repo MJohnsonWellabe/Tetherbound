@@ -62,6 +62,22 @@ static func neutral() -> float:
 	return float(config().get("neutral", NEUTRAL))
 
 
+## Every type name a species or a move is allowed to declare.
+##
+## A SPELLING CHECKER, not a gameplay gate. Nothing in this file's own lookup
+## consults it -- `multiplier()` still resolves any unnamed pairing to
+## `neutral()`, so the extension-point property this chart was designed around
+## is untouched and a type absent from this list would still PLAY correctly. It
+## exists because the vocabulary was hardcoded twice, as `KNOWN_TYPES` in
+## tests/test_moves.gd and again in tests/test_moves_data.gd, and two copies of
+## one list is the exact failure mode this repo keeps rediscovering. Returns
+## empty if the config declares none, and every caller must read that as "no
+## vocabulary to check against" rather than as "no type is valid".
+static func known_types() -> Array:
+	var declared: Variant = config().get("types", [])
+	return declared as Array if declared is Array else []
+
+
 ## The damage multiplier for a move of `move_type` landing on a creature of
 ## `defender_type`.
 ##
@@ -96,6 +112,56 @@ static func multiplier(move_type: String, defender_type: String) -> float:
 ## this repo has collected before.
 static func effectiveness(move_type: String, defender_type: String) -> int:
 	return classify(multiplier(move_type, defender_type))
+
+
+## The multiplier for a move landing on a defender that may carry TWO types.
+##
+## T3-CREATURES. The owner's creature-expansion brief introduces five
+## dual-typed creatures (Nightburrow Ground/Dark, Stormtrail Ground/Electric,
+## Cindercub Fire/Ground, Riftfrill Water/Psychic, Ashtusk Ground/Fire), so the
+## chart needs one answer for a defender with two rows instead of one.
+##
+## THE RULE IS MULTIPLICATION, and the reason is the property this very file
+## depends on: an unnamed pairing resolves to `neutral`. Every one of those five
+## pairs an authored type (ground/water/air) with an unauthored one, so the
+## second type contributes exactly 1.0 today. Multiply and that is a true
+## no-op. Take the more favourable of the two, or average them, and the
+## unauthored half instead ERASES or halves the authored half's weakness --
+## Nightburrow would shrug off Water not because it is a shadow-flame apex but
+## because nobody has written the dark rows yet, and the day somebody does,
+## five creatures silently get harder with no edit to any of them. Multiplying
+## is the only rule under which `neutral` is an identity element, which is the
+## same argument NEUTRAL's own comment makes one layer down.
+##
+## An empty `secondary` is the ordinary case -- seventeen of the seventeen
+## species that existed before this lane -- and returns the single-type answer
+## unchanged, so nothing that was mono-typed moves by a floating-point hair.
+##
+## Bounded by `dual_type.max`/`dual_type.min` from the config. Non-binding on
+## any ordinary pairing: the bounds ARE the natural double-advantage (1.5625)
+## and double-resistance (0.64) values. They exist because 1.5625 is past the
+## 1.5 that TYPECHART_DESIGN_2026-08-30.md section 3.2 measured as the point
+## where the Warden fight folds, and because that number becomes reachable the
+## moment somebody authors the first fire or dark row. The guard that actually
+## matters is tests/test_dual_type.gd, which pins the maximum multiplier the
+## REAL roster can produce at 1.25 and fails loudly the day that stops being
+## true. Full argument: ralph/reports/DUALTYPE_DESIGN_2026-08-30.md.
+static func multiplier_dual(
+	move_type: String, primary_type: String, secondary_type: String = ""
+) -> float:
+	var mult := multiplier(move_type, primary_type)
+	if secondary_type.strip_edges().is_empty():
+		return mult
+	mult *= multiplier(move_type, secondary_type)
+
+	var rule: Dictionary = config().get("dual_type", {}) if config().get("dual_type", {}) is Dictionary else {}
+	var lo := float(rule.get("min", 0.0))
+	var hi := float(rule.get("max", 0.0))
+	if hi > 0.0:
+		mult = minf(mult, hi)
+	if lo > 0.0:
+		mult = maxf(mult, lo)
+	return mult
 
 
 ## The same verdict for a multiplier already in hand -- what combat_manager has

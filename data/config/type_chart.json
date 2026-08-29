@@ -11,6 +11,16 @@
 
   "neutral": 1.0,
 
+  "_comment_types": "T3-CREATURES. The authored type VOCABULARY -- every type a species or a move is allowed to name. This is a spelling checker, NOT a gameplay gate: nothing in scripts/combat/type_chart.gd reads it, and `matchups` below still resolves any unnamed pairing to `neutral`, so the extension-point property the chart was built on is untouched. It exists because the vocabulary was previously hardcoded TWICE, as `KNOWN_TYPES` in tests/test_moves.gd and again in tests/test_moves_data.gd, and this repo has repeatedly rediscovered what two copies of one list do. Both tests now read this, and tests/test_dual_type.gd additionally holds every species' `type` and `type_secondary` to it -- coverage that did not exist before, because nothing validated a species' type at all. The last five are the owner's future regions, present here because the creature-expansion brief puts creatures carrying those types into the Meadows now; they have no matchup rows on purpose (see _comment_future_types).",
+  "types": ["ground", "water", "air", "fire", "electric", "ice", "psychic", "dark"],
+
+  "_comment_dual_type": "T3-CREATURES. The owner's creature-expansion brief (docs/owner-direction/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md) introduces five dual-typed creatures, so a defender can carry two rows. `rule` is MULTIPLY, and the argument is the same one `neutral` above rests on: an unnamed pairing resolves to 1.0, and multiplication is the only rule that makes 1.0 an IDENTITY. All five of those creatures pair an authored type (ground/water/air) with an unauthored one (fire/electric/psychic/dark), so under multiply the second type is a true no-op and the measured maximum multiplier the whole roster can produce stays 1.25 -- exactly what a mono-type already produces, so this moves no damage number in the game. Under `min` (take the more favourable) or `average` the unauthored half would instead ERASE or halve the authored half's weakness: Nightburrow would resist Water not because it is a shadow-flame apex but because nobody has authored the dark rows, and the day somebody did, five creatures would silently get harder with no edit to any of them. `min`/`max` bound the result at the natural double-resistance (0.8*0.8) and double-advantage (1.25*1.25) values, so they are NON-BINDING on any ordinary two-type creature. They exist because 1.5625 is past the 1.5 that TYPECHART_DESIGN_2026-08-30.md section 3.2 measured as the point where the Warden fight folds, and it becomes reachable the instant somebody authors the first fire or dark row -- Cindercub is Fire/Ground, so an authored water>fire of 1.25 would make it 1.5625 to every Water move that same day. TUNABLE, like everything else here. Full argument: ralph/reports/DUALTYPE_DESIGN_2026-08-30.md.",
+  "dual_type": {
+    "rule": "multiply",
+    "min": 0.64,
+    "max": 1.5625
+  },
+
   "_comment_matchups": "Outer key is the ATTACKING MOVE's type, inner key is the DEFENDING CREATURE's species type. Only non-neutral pairings need an entry; the mirror matchups (ground vs ground and so on) are neutral by omission.",
   "matchups": {
     "ground": {

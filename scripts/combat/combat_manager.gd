@@ -268,8 +268,13 @@ func active_matchup() -> int:
 	if creature == null or _enemy == null or _moves == null:
 		return 0
 	var defending := str(_enemy.creature_type)
-	var quick := TYPE_CHART.multiplier(_moves.type_of(str(creature.move_quick)), defending)
-	var charged := TYPE_CHART.multiplier(_moves.type_of(str(creature.move_charged)), defending)
+	var defending2 := str(_enemy.get("secondary_type"))
+	var quick := TYPE_CHART.multiplier_dual(
+		_moves.type_of(str(creature.move_quick)), defending, defending2
+	)
+	var charged := TYPE_CHART.multiplier_dual(
+		_moves.type_of(str(creature.move_charged)), defending, defending2
+	)
 	return TYPE_CHART.classify(maxf(quick, charged))
 
 
@@ -773,8 +778,8 @@ func _resolve_player_strike() -> void:
 	# `type_of` then returns "" and the chart returns neutral — so a moveless
 	# creature fights at exactly today's numbers rather than crashing or getting
 	# free damage.
-	var type_mult: float = TYPE_CHART.multiplier(
-		_moves.type_of(move_id), str(_enemy.creature_type)
+	var type_mult: float = TYPE_CHART.multiplier_dual(
+		_moves.type_of(move_id), str(_enemy.creature_type), str(_enemy.get("secondary_type"))
 	)
 	var damage: float = MATH.rolled_damage(
 		float(_pending_move.get("power", 9.0)),
@@ -1133,8 +1138,9 @@ func _on_enemy_strike() -> void:
 	# that only ever helped the player would be a flat damage buff with a type
 	# name on it. The move is the one the AI just swung with, which is the same
 	# `move_quick` id the power lookup on the next line already stands in for.
-	var type_mult: float = TYPE_CHART.multiplier(
-		_moves.type_of(_enemy.move_quick), str(creature.creature_type)
+	var type_mult: float = TYPE_CHART.multiplier_dual(
+		_moves.type_of(_enemy.move_quick), str(creature.creature_type),
+		str(creature.get("secondary_type"))
 	)
 	var damage: float = MATH.rolled_damage(
 		float(cfg.get("power", 8.0)),
