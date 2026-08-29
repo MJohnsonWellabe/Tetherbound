@@ -211,6 +211,21 @@ const TM_AT := {
 	# of the three to reach, in the region whose wild band is the chapter's
 	# strongest.
 	"tm_heavenfall": Vector2(140.0, 7300.0),
+	# T3-BRIDGE. Band 1 had zero TM pickups over its whole 2,384m span — every
+	# other early-chapter checklist item (wilds, trainers, resources, a rest
+	# camp, an off-route detour) had landed by BAND1-D1/PW2, but "a TM pickup
+	# or discovery" (owner-direction §5) had not. tm_wind_blade was already an
+	# item (data/items/items.json) and already purchasable at Mira's —
+	# REWARD-ECONOMY stocked it there — this adds a second, free acquisition
+	# path rather than replacing that one, the same "any one of the three
+	# makes it obtainable" shape tests/test_chapter_rewards.gd already checks.
+	# Air-compatible, planted 8.5m off the pipwing grove pocket
+	# (data/config/bands/band1_lower_meadows/spawns.json order 1046, itself
+	# already off-spine by ~110m at the oak grove's far side) rather than on
+	# the road: owner-direction §13's own example is "a Pipwing nest ... with
+	# a TM sphere", and finding one requires the same curiosity-driven detour
+	# into the grove interior that order 1046's own comment already banked on.
+	"tm_wind_blade": Vector2(336.0, 786.0),
 }
 
 ## Where Grandpa's house stands: the west building pad in
