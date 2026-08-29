@@ -147,6 +147,11 @@ func _receive_miras_real_one_time_gift() -> void:
 		_fail("Mira's required visit did not write %s before saving" % MIRA_VISITED_FLAG)
 	if not bool(progression.call("has", "recipe_orb_basic")):
 		_fail("Mira's required visit did not unlock the Basic Orb recipe before saving")
+	# The real lesson also opens Mira's shop. Leave it through the production
+	# panel seam before the save: a player who closes the merchant screen should
+	# regain world input, and this persistence smoke's later movement assertion
+	# deliberately proves that state rather than saving an unrelated open modal.
+	await _close_mira_shop()
 
 
 func _take_authored_one_shot_pickups() -> void:
@@ -307,6 +312,18 @@ func _finish_open_conversation() -> void:
 	await process_frame
 	if guard >= 96:
 		_fail("a production conversation never closed")
+
+
+func _close_mira_shop() -> void:
+	await process_frame
+	var shop := root.get_node_or_null(^"ShopPanel")
+	if shop == null or not bool(shop.call("is_open")):
+		_fail("Mira's production lesson did not open its expected shop panel")
+		return
+	shop.call("close")
+	await process_frame
+	if bool(shop.call("is_open")):
+		_fail("Mira's production shop panel did not release through close()")
 
 
 func _mira() -> Dictionary:
