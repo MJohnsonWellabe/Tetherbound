@@ -21,8 +21,19 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/gate_a/water"
 
 const READY_TIMEOUT_FRAMES := 240
-const POSE_FRAMES := 4
-const SETTLE_AFTER_MOVE := 4
+const POSE_FRAMES := 6
+## T1-SKY: was 4. A same-run pixel check (sky-only patch, so terrain shadow
+## cannot explain it) found the first two of four viewpoints rendering
+## measurably darker than the last two -- sky avg RGB (21,24,24) and
+## (67,74,75) against (130,133,128) and (114,139,148) -- despite every
+## viewpoint sharing the identical frozen "day" state. Not a time-of-day
+## bug (the clock is pinned; see the freeze-once comment below) but a
+## render-state warm-up one: this tool repositions the camera by large XZ
+## jumps between viewpoints, and 4 frames is far stingier than the 15
+## tools/_capture_ground_and_sky.gd budgets for the same kind of jump
+## (its own ARRIVE_FRAMES/REFRAME_FRAMES) to let Terrain3D's region stream
+## and the sun's shadow map catch up. Matched to that proven budget.
+const SETTLE_AFTER_MOVE := 15
 const FOV := 70.0
 
 func _init() -> void:
@@ -80,11 +91,39 @@ func _run() -> void:
 	# Evidence frames must be comparable across runs. WorldWeather randomises
 	# its later cycle, and a long software-rendered world build can consume a
 	# meaningful part of that clock before the first capture.
+	#
+	# FREEZE-ONCE, same as tools/_capture_ground_and_sky.gd: apply_time()/
+	# set_weather() are ordinary direct method calls that write node
+	# properties immediately, not through a per-frame tween, so they do not
+	# need a live _process to take effect. A pin that is never frozen wears
+	# off across a multi-viewpoint pass -- WorldLook's own passive clock kept
+	# advancing between this call and the shutter, which is why every frame
+	# from this tool came back in a dusk/night wash regardless of the
+	# per-view "time" requested (judged blind in
+	# ralph/reports/JUDGE-VISUAL-2026-08-29.md, subject 6).
 	if weather != null and weather.has_method("set_weather"):
 		weather.call("set_weather", "clear")
+		weather.set_process(false)
+		weather.set_physics_process(false)
+	if look != null:
+		look.call("apply_time", "day")
+		look.set_process(false)
+		look.set_physics_process(false)
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	var field: RefCounted = HEIGHTFIELD.new()
 	var water_level := float(terrain_config.get("water", {}).get("level", 0.0))
+
+	# T1-SKY: raising SETTLE_AFTER_MOVE to 15 above closed most, not all, of
+	# the warm-up gap -- water-01 (the FIRST viewpoint shot after boot) still
+	# measured a sky-only patch at RGB(53,59,60) against water-02/03/04's
+	# 130-150 range, even though every viewpoint shares the identical frozen
+	# "day" state. The first-ever shadow-map/Terrain3D-stream population
+	# after a fresh scene boot appears to want more settle than a later
+	# camera jump between two already-warm viewpoints does. One extra
+	# one-time wait here, before the loop's own per-viewpoint settle, rather
+	# than raising SETTLE_AFTER_MOVE further for every viewpoint.
+	for i in 30:
+		await physics_frame
 
 	var failures: Array[String] = []
 	for entry: Variant in viewpoints:
@@ -254,10 +293,16 @@ func _place_actor(player: Node3D, field: RefCounted, camera: Camera3D, view: Dic
 	if player == null:
 		return
 	if not view.has("actor"):
-		# Parked straight down from the eye, inside the streamed region — see
-		# tools/survey.gd's _place_actor for why never far outside the world.
+		# STRANDED-P3 (see tools/survey_band2.gd's _place_actor and
+		# tools/_capture_day_night_transition.gd): -500m straight down is
+		# read by water.gd as fully submerged -- head depth below the water
+		# surface has no floor -- so a body parked that far under a pond
+		# viewpoint can ramp the drowning vignette across the whole capture.
+		# Park far off to the side in XZ AND above ground instead, so it is
+		# out of frame without tripping the water-hazard check.
 		var eye_xz: Vector2 = view["eye"]
-		player.global_position = Vector3(eye_xz.x, field.height_at(eye_xz.x, eye_xz.y) - 500.0, eye_xz.y)
+		var far_xz := eye_xz + Vector2(5000.0, 5000.0)
+		player.global_position = Vector3(far_xz.x, field.height_at(far_xz.x, far_xz.y) + 1.0, far_xz.y)
 		return
 	var xz: Vector2 = view["actor"]
 	player.global_position = Vector3(xz.x, field.height_at(xz.x, xz.y) + 0.4, xz.y)
