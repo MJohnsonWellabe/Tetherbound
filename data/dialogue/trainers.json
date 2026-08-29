@@ -203,6 +203,22 @@
         "Fine. You're not the one I was posted to stop anyway.",
         "Watch the ruin overhead — something's denned in it that isn't ours."
       ]
+    },
+    "pasture_drover_juno_challenge": {
+      "speaker": "Juno",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Everyone who comes up this road is walking toward Halder whether they know it or not.",
+        "Beat mine first. Cheaper lesson than his."
+      ]
+    },
+    "pasture_drover_juno_defeated": {
+      "speaker": "Juno",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Good. You'll want that against a Captain, not just against me.",
+        "Field's just up the road. Go find out if it was enough."
+      ]
     }
   },
   "_comment_stronghold": "SG38. The three stronghold gauntlet trainers. Same two-or-three-line rule as everyone above -- the fight is the content. What they say is Sec33's Warden read down the ladder: none of them is gloating, all three would rather the player stopped, and Keeper Hald says outright that the Warden wants to be understood rather than obeyed. None of them reveals what the machine is; that is SG40's, inside the stronghold and nowhere earlier.",

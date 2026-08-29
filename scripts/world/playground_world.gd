@@ -36,6 +36,7 @@ const BURROW_WARRENS := preload("res://scripts/world/burrow_warrens.gd")
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const LANDMARK := preload("res://scripts/world/landmark.gd")
+const WATCHTOWER_LANDMARK := preload("res://scripts/world/watchtower_landmark.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
 const TM_PICKUP := preload("res://scripts/world/tm_pickup.gd")
@@ -171,6 +172,17 @@ const SIGIL_GATE_YAW_DEG := -28.6
 const SIGIL_ITEM_IDS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const SIGIL_GATE_FLAG := "hall_approach_open"
 
+## T3-BAND4: the ruined watchtower at the Band4->Band5 seam (see
+## watchtower_landmark.gd's own header). Sited at the flattest of six
+## candidates measured with tools/_probe_t3band4_sites.gd along the
+## corridor's own worst authored-content gap after Captain Vess
+## (h=2.16m, 1.67m spread, worst slope 10.6 degrees over a 7m pad).
+## `facing_deg` is the yaw looking back down the road toward the captains,
+## the same atan2(dx,dz) convention `trainers.json`'s own siting notes use,
+## derived from the spine's own travel direction at this point.
+const WATCHTOWER_AT := Vector2(40.0, 6800.0)
+const WATCHTOWER_FACING_DEG := -123.7
+
 ## A few metres off the well (village.json stands it at the square's exact
 ## centre, [10,-10], which is also where every route in `paths.routes`
 ## starts) so the signpost has its own footing instead of sharing the well's.
@@ -226,6 +238,23 @@ const TM_AT := {
 	# a TM sphere", and finding one requires the same curiosity-driven detour
 	# into the grove interior that order 1046's own comment already banked on.
 	"tm_wind_blade": Vector2(336.0, 786.0),
+	# NOTE (LAND-0829A): T3-BAND4 also placed tm_wind_blade at
+	# Vector2(70.0, 6245.0), 768m before Captain Vess, to close the
+	# interior band-4 gap with an Air move before an Air captain. That
+	# collided with T3-BRIDGE's band-1 placement above -- this dict is
+	# keyed by TM id, so one TM can sit in exactly one place. Band 1's
+	# placement wins because band 1 had ZERO TM pickups over its whole
+	# 2,384m span, which is the more severe gap. Band 4's Air
+	# preparation beat before Captain Vess is therefore STILL UNMET and
+	# wants a different Air TM -- see ralph/reports/
+	# finding-post-tournament-cadence-2026-08-29.md.
+	# T3-BAND4: Water, at the base of the ruined watchtower (WATCHTOWER_AT),
+	# the landmark reward the cadence finding's band4->band5 seam asks for.
+	# Water rather than another Air/Ground disc — band 4 otherwise preps
+	# every type but the one Captain Riverwatch (band 3) already tested, and
+	# a cache a Team Tether patrol never got to ship out is the honest
+	# in-fiction reason an upper-ridge ruin holds a river-region TM.
+	"tm_riptide_lance": Vector2(33.0, 6795.0),
 }
 
 ## Where Grandpa's house stands: the west building pad in
@@ -854,6 +883,11 @@ func _build_settlement() -> void:
 
 	_build_road_gate()
 	_build_sigil_gate()
+
+	var watchtower: Node3D = WATCHTOWER_LANDMARK.new()
+	watchtower.name = "RuinedWatchtower"
+	add_child(watchtower)
+	watchtower.call("build", self, WATCHTOWER_AT, WATCHTOWER_FACING_DEG)
 
 	# SC14: the South Bridge over the south gully, and the leaf across it.
 	# After the road gate so the two gates build in the order the player meets
