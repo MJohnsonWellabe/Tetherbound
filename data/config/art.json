@@ -155,6 +155,12 @@
         "sun_angle_max_deg": 14.0,
         "sun_curve": 0.35,
         "energy": 0.75,
+        "_comment_sun_glow_t1_light": "T1-LIGHT. A blind pass on the golden->night BLEND (hour 21, i.e. between this preset and golden, not either keyframe alone) caught a huge blown-out white disc dominating a quarter of the sky -- 'reads as an exposure/bloom bug, not a sunset'. shaders/sky_clouds.gdshader's sun_glow/sun_size (the disc/glow term additive to the base sky colour) and cloud_sun_gain (the cloud rim highlight) are, like every value in this comment, never set by ANY time-of-day preset in this file, so none of the three ever faded with the hour -- energy and yaw moved, the disc's own size and brightness did not. A first attempt trimmed sun_size 0.022 -> 0.016 (~27%) and read as NO visible change; that measured a real property of the shader, not a dead end -- the disc's edges sit at `smoothstep(1-sun_size, 1-sun_size*0.35, sun_dot)`, and near sun_dot=1 the angular radius scales roughly with sqrt(sun_size), so a 27% cut in the raw value is only a ~15% cut in the size actually on screen: far too small to see. A second (scratch, not committed) test at sun_size=0.001/sun_glow=0/cloud_sun_gain=0 confirmed this: the blob shrank to a small, clean, moon-sized disc, proving the mechanism right and only the earlier magnitude wrong. Landed short of fully off, at a size worth actually seeing as a small moon rather than nothing, and re-verified at these exact numbers on the flagged frame (outward-dusk, hour 21): a modest pale disc with a soft, contained glow, no dominant bright mass. cloud_lit/cloud_shade (the cloud's own lit-face colour, independent of the rim highlight and also never time-of-day-driven, default near-white) dimmed and cooled the same way as a secondary, complementary fix -- confirmed on its own it did NOT meaningfully shrink the blob, but sun-facing clouds now read as dim and cool rather than lit-white regardless.",
+        "sun_glow": 0.05,
+        "sun_size": 0.006,
+        "cloud_sun_gain": 0.15,
+        "cloud_lit": "#5a6890",
+        "cloud_shade": "#232c47",
         "_comment_panorama": "Explicitly empty. The base `sky` block above names day.hdr; _merged() layers this dict on top of that one, so without this the night preset would silently inherit the DAY panorama instead of falling back to the procedural gradient.",
         "panorama": ""
       },
