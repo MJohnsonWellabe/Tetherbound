@@ -71,6 +71,45 @@ against whatever DOES engage, UI/menu/map/build/gather behaviour, save
 handoff, and travel/pacing measurements stay legitimate; anything gated on
 `tournament_entered`/`tournament_won`/party size 3+ is not.
 
+## Open finding, not chased further this run: the South Bridge gate still never opens even with RIG-13/14 fixed
+
+S05 re-ran clean under RIG-13/14/18's understanding (real creature deployment
+confirmed by `S05-09a`, a distinct exit save) and the South Bridge grunt
+fight STILL never starts: `S05-48`'s `input_context` stays `narrative_modal`,
+`south_bridge_open` stays unset, and the dialogue lines the encounter plays
+are `south_bridge_grunt_beaten`'s own text ("Take it, I'll tell them you had
+a key already" / "Straight over and don't stop on the span...") on a
+completely fresh approach -- `defeated_south_bridge_grunt` does not appear
+anywhere in `S04-exit.json` or anywhere in S05's own telemetry before this
+point. `trainer_npc.gd::_on_challenged` (line 172) picks `defeated` text
+whenever `can_challenge()` is false for ANY of its four reasons -- already
+beaten, mid-fight, no ally, or a fainted ally -- so seeing that text is not
+proof the grunt is (incorrectly) marked beaten; it is equally consistent
+with `can_challenge()` failing on the ally check again despite RIG-13's
+`creature_recall` press at segment start, for a reason not yet isolated
+(the deployed-ally state living for a whole segment rather than surviving a
+single load, an intervening region transition un-deploying it, or something
+else `can_challenge()` checks). The telemetry also shows the same
+world<->narrative_modal auto-flicker (several transitions with no button
+press between them) first seen and left unanswered in earlier segments'
+`BLOCKER.md` notes, which is consistent with either explanation and does not
+settle it.
+
+**Not chased further in this run.** RIG-13 through RIG-18 already cost several
+re-run cycles each; isolating this one needs either a live probe of
+`can_challenge()`'s own four booleans at the moment of the press (a harness
+capability that does not exist yet) or reading `EncounterDirector`'s full
+region-transition handling end to end, and section 0.6 is clear that another
+guess-and-re-run cycle without a way to observe the actual boolean is not
+converging evidence, it is more of the same trial the last six RIG numbers
+already were. Recorded here as an **open, unresolved question** for the next
+pass, with the concrete probe it needs named rather than guessed at again:
+whether `_ally`/`_ally.fainted`/`_ally_body`/`is_instance_valid(_ally_body)`
+are true or false at the exact frame `S05-45`'s `interact` press lands.
+Until that is answered, `south_bridge_open` and everything gated behind it
+in S05 onward is undetermined between a residual RIG gap and a real GAME
+defect -- neither may be claimed from this run's evidence alone.
+
 ## What is NOT superseded
 
 S01 and S02 ran to completion against `0bd8781` and are **kept**. CD-7c changes
