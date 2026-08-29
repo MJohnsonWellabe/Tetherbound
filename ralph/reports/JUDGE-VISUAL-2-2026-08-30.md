@@ -465,3 +465,179 @@ What reads wrong:
   regions" is still not something the terrain itself says.
 
 ---
+
+## 12. Colour and material — the weighted synthesis
+
+This round's coordinator focus, written from the samples above rather
+than repeated impressions.
+
+**The world's value structure is broken at both ends, with a screaming
+middle.** In one representative daylight set: castle lit wall **luma
+~200** (211,202,185), stronghold gate wall **luma 23** (25,22,16), and
+the grass between them **(119,128,42)** — a blue channel at a third of
+green. The two hero buildings sit at opposite clipping ends of the value
+range while the ground that fills 60 % of every frame runs lime-yellow at
+near-full saturation. The keyart never does any of these three things:
+its stone is mid-value warm grey, its darkest masses keep legible hue,
+and its greens carry blue. Individually each surface has an excuse;
+together in one camera pan they are why frames read "AI-built prototype"
+even where composition is genuinely good.
+
+**The grass tint is the cheapest, biggest single win.** Every open-field
+sample this pass has B ≈ G/3 (42–57 against 128–160). Palworld's fields
+and the keyart's both sit closer to B ≈ G/2. This is one material/tint
+decision applied everywhere, and it would move every outdoor frame at
+once. (ACES caveat, flagged as before: verify on final pixels, not on
+the albedo arithmetic.)
+
+**Rock languages: better inside one frame, still plural across the
+world.** The Warrens mouth now agrees with its own boulders — the
+round's cleanest cohesion fix. But the world still speaks at least four
+rock dialects: warm granite at the Warrens ((147,143,123)), near-black
+faceted low-poly lumps with painted moss tops on the open meadow
+(`01-spawn-outward`, `02-valley-floor`), puffy bevel cobble at the
+stronghold, and smooth pale facet-rock on the rise
+(`03-rise-overlook`). No two of these would be cast in the same game by
+a viewer who saw them side by side.
+
+**Saturation discipline splits by asset class.** Creatures: excellent —
+board-true, controlled, nothing fluorescent. Team Tether: correct —
+oxblood + cyan reserved and consistent. Flora: still the weak class —
+plastic-lime ferns/aloe and sticker-flat purple flowers survive at the
+Warrens mouth, and the blade carpet's tint pushes everything toward
+lawn-fluorescence in full sun.
+
+**Aerial perspective exists only from altitude.** `03-rise-overlook`
+shows real distance desaturation from an elevated camera; at eye level
+(`C-02`, distant field (154,160,112)) the horizon still renders at
+near-field saturation. The fog preset proves distance haze is available
+to the shipped renderer; the clear-day sky just doesn't use it.
+
+---
+
+## Did the previously-named defects actually move?
+
+Named against `JUDGE-VISUAL-2026-08-29.md`, one line each:
+
+1. Castle wall off-white/no coursing — **NO.** (211,202,185) vs last
+   round's (212,203,185); identical to the pixel.
+2. Castle plinth floating — **YES.** Seated in all four frames, real
+   moulding, board-true colour.
+3. Miniature mid-wall turrets — **NO.**
+4. Untextured placeholder masses in hero vistas — **NO.** One face of
+   one mass gained a texture; `C-04`'s (74,87,91)-std-2.5 slab and the
+   near-black plane in `C-02` remain, and band 5's skyline still
+   carries blank boxes.
+5. Stronghold featureless black box — **YES, moved to ACCEPTABLE.**
+   Crenellation, energy windows, flags, base course, framed gate.
+6. Stronghold cobble scale collision at the approach — **NO.**
+7. Warrens three unrelated rock languages — **YES.** One granite family
+   at the mouth now; facade (138,134,115) vs boulders (147,143,123).
+8. Warrens chamfered-cube boulder silhouettes — **NO.**
+9. Warrens plastic fern/aloe/flower confetti — **NO.**
+10. Warrens interior GOOD — **HELD.** Guardian silhouette watch item
+    improved (white blaze reads).
+11. One grass species everywhere — **NO** (bushes/flowers vary; the
+    blade carpet doesn't), and near-black blades still mix into lit
+    clumps at grazing angles.
+12. Mid-distance smear tier tracking the camera — **NO**, plus a new
+    striping artefact inside the smear at night.
+13. Dashed seam lines on the terrain — **NO**, and they glow at night.
+14. Floating path pebbles — **PARTIAL.** Seated on the crust now; none
+    embedded in it.
+15. Black-rendering NPC/grunt — **YES on material** (oxblood, straps,
+    faces read; villagers clean on the stage rig); **watch on
+    presentation** (grunt mean body luma 13 in sun still reads as a
+    black speck at distance).
+16. Golden hour never on the driven clock — **YES, closed.** 17:54 and
+    18:06 render warm with long shadows.
+17. Deep night unverified (red vignette) — **RESOLVED in the tool,
+    judged for the first time**: 22:00 is GOOD; new defect — night
+    brightens monotonically from 20:30 to a pale-mint 02:00 (ground
+    luma 43 → 78).
+18. Sun a flat white ellipse in the golden snap — **YES, fixed** (real
+    halo falloff, std 57 across the disc patch).
+19. Sky/ground weather disagreement (navy ink-blots over sun) —
+    **MOSTLY.** Softened to tan/cream streaks; traces remain in band 4.
+20. Fog preset rendering nothing — **YES, fixed** (mean abs diff 55 vs
+    day).
+21. Night foliage self-lit canopies at dusk — **NO.** 20:00 canopies
+    still render near-daylight green over a dusk ground.
+22. No aerial perspective at eye level — **NO.**
+23. River riprap/canal banks — **NO.**
+24. Stream invisible from its own bank — **NO.**
+25. Pond's ownerless rectangular shadow — **NO.**
+
+Scorecard flavour: the sky/light lane and the Warrens-cohesion and
+stronghold-articulation work genuinely landed. The castle colour — the
+owner's own named complaint, and the subject of two prior rounds — did
+not move at all, and the world-scale ground defects (seams, smear,
+stream, river banks, horizon boxes) are all still standing.
+
+## §25's target question
+
+> *Would someone seeing 30 seconds of normal gameplay, with no
+> explanation, think this is a deliberately art-directed finished
+> stylised game rather than an AI-built prototype?*
+
+**If the 30 seconds stay in bands 1–3 in daylight or at 22:00 — closer
+than ever, genuinely plausible.** The trainer, the creature roster, the
+path language, the pond, the grove and the new night are all pulling the
+same direction now, and the HUD doesn't break the spell.
+
+**Over any 30 seconds that includes a building, the horizon, or
+02:00 — no.** The castle answers the question by itself: a white
+maquette at luma 200 next to a blank grey slab reads as placeholder in
+one glance, and the approach march aims the camera at exactly that. The
+dashed seams and the smear tier are the tells everywhere else.
+
+So: **no overall**, by a narrower margin than the first pass, and for
+the first time the "no" is concentrated in a shortlist you could
+actually burn down: castle wall values, horizon boxes, seams, smear
+tier, grass tint, 02:00.
+
+## The two bar questions
+
+**A. Do these frames belong to the keyart's world?** **No — but bands
+1–3, the pond, the 22:00 night and the whole creature roster
+individually do.** What breaks belonging is unchanged in kind from the
+first pass: the built architecture (castle above all) and now the
+post-midnight wash. The list of belonging frames got meaningfully
+longer this round; the list of breaking causes barely shrank.
+
+**B. Beside the Palworld references, would someone say this is trying
+to be the same kind of game?** **Yes for the open world and the
+creatures — no overall, and the flip still happens the moment a
+structure enters frame.** `ground-03-…-day` and `_portraits.png` beside
+`palworld-02`/`-01` read as the same genre at a comparable ambition;
+`C-01` beside `palworld-04`'s tower still reads as blockout beside a
+believable mass. Since the chapter's climax is architecture, the
+overall answer stays no.
+
+## Fixable by changing the scene vs. needs art not in the build
+
+**Scene-fixable (materials, tints, lighting, composition on existing
+meshes):** the castle wall value-ladder retune (the plinth already
+demonstrates the correct target colour — sample it and drive the wall
+there on final pixels); the grass B-channel tint; the dashed seams; the
+smear-tier boundary and its night striping; the post-midnight
+brightening curve; dusk canopy self-lighting; aerial-perspective haze
+on clear days (the fog preset proves the machinery exists); re-tinting
+or replacing the meadow's low-poly moss-top boulders and the rise's
+pale facet rock toward one family; the Warrens fern/aloe/flower
+confetti; the stream channel cut and banks; the river bank texture
+scale; the pond's ownerless shadow; the stronghold approach cobble
+scales and a mid-value stone tier + brass trim on its facade; the
+starter picker's creature facing; the gate daylight leak; textures on
+the remaining blank faces of the placeholder masses (or their removal
+from hero sightlines).
+
+**Needs art that is not in the build:** a weathered stone material set
+with coursing-scale detail and openings/gate modules for the castle kit
+(unchanged from the first judge's list — nothing landed against it);
+proper boulder meshes (the chamfered-cube silhouettes cannot be
+material-fixed); and a second grass species/tuft asset for the carpet.
+Everything else that failed this round failed on placement, tint or
+lighting, not on missing assets.
+
+---
