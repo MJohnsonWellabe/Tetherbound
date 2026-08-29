@@ -268,9 +268,9 @@ func active_matchup() -> int:
 	if creature == null or _enemy == null or _moves == null:
 		return 0
 	var defending := str(_enemy.creature_type)
-	var best := TYPE_CHART.multiplier(_moves.type_of(str(creature.move_quick)), defending)
+	var quick := TYPE_CHART.multiplier(_moves.type_of(str(creature.move_quick)), defending)
 	var charged := TYPE_CHART.multiplier(_moves.type_of(str(creature.move_charged)), defending)
-	return TYPE_CHART.classify(maxf(best, charged))
+	return TYPE_CHART.classify(maxf(quick, charged))
 
 
 ## SequenceDirector owns whether the current fight is the authored tutorial.
