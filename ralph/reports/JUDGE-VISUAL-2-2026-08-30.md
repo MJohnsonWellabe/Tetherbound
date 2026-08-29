@@ -212,4 +212,88 @@ Watch items (not failures):
   economy that fails outside, and it will fail here too if the interior
   ever gets brighter.
 
+## 5. Ground, grass and paths — bands 1–5
+
+Frames: `ground-01..05-*-day/golden/night.png` (pinned clock,
+`_capture_ground_and_sky.gd`), band 2 additionally cloudy/fog/rain.
+
+**Verdict: ACCEPTABLE, and closer to GOOD than any other outdoor
+subject.** Band 1's opening (`ground-01-…-day`) and band 3's crossing
+(`ground-03-…-day`) are the two best frames in the game: authored
+meandering path, pebble scatter, flowering accents at restrained density,
+the half-timbered house as a real landmark, the trainer sitting correctly
+in blade grass. Band 3's frame beside `palworld-02` reads as the same
+genre without apology. The golden snap (`ground-01-…-golden`) is warm and
+composed, and **the sun disc defect is fixed in it** — the sun now has a
+real halo gradient (patch [950,40]–[1150,200] std 57 across the falloff,
+where a sticker disc would sample near-flat). The night snap is blue and
+navigable (overall luma 36, std 28 — dark with a floor, per OP23).
+
+What still keeps the carpet from GOOD, sampled:
+
+- **The dashed seam lines are still there and they glow at night.**
+  Confirmed at zoom in `ground-01-…-day` (two dotted rows marching
+  diagonally across the right half) and, worse, clearly visible in the
+  night frame where the dots read *lighter than the ground around them*.
+  A player can literally steer by them. Unmoved from the first judge's
+  report.
+- **The mid-distance smear tier is unmoved.** Past ~30 m every band
+  collapses to a soft watercolour blur, and the blade/smear boundary
+  still tracks the camera (loud on the right of `ground-01-…-day`, and
+  the night frame adds a visible diagonal striping artefact inside the
+  smear tier).
+- **Blade grass is still one species.** The bushes and flower props vary,
+  but the carpet is the same vertical blade sprite in every band;
+  `water-02-river-grazing` shows the blades as flat angular polygon
+  strips with **a minority of near-black blades mixed into fully lit
+  clumps** — fewer than the first judge's frames showed, still present.
+- **Saturation discipline fails on the open field.** Near-grass samples:
+  `C-04` [100,600]–[1100,750] **(119,128,42)**, `S-ext-02`
+  (119,130,42), `W-ext-01` (127,137,48), band 5 (154,151,81). A blue
+  channel at a third of the green channel is a lime-lawn tint well past
+  the keyart's controlled greens (keyart fields carry visibly more blue
+  in every green). This is the single biggest reason open-field frames
+  read "video-gamey bright" beside the references, and it is everywhere,
+  which also makes it the cheapest single win available.
+- Path pebbles have improved from floating to *seated on* the crust —
+  contact is there at zoom (`ground-01` [330,470]–[560,650]) but almost
+  every pebble still sits proud on the surface; none are half-buried, so
+  the path top-crust reads sprinkled rather than worn.
+
+## 6. Water and shorelines
+
+Frames: `water-01-pond-eye/grazing`, `water-02-river-eye/grazing`,
+`water-03-stream-eye/grazing` (same pinned-clock tool, so colour is
+judgeable this round — the first judge's complaint that the dedicated
+water tool captured in a dusk wash does not apply here).
+
+**Verdict: pond GOOD, river ACCEPTABLE-at-best, stream BAD → overall
+ACCEPTABLE, unchanged in structure from the first judge's split.**
+
+- **Pond** (`water-01-pond-eye`): still the best water and the best
+  single environment frame in the game — turquoise shallows over
+  readable pebbles ((82,152,145) open water, believable), sand-to-grass
+  bank, far tree line composed. **The ownerless rectangular shadow on
+  the water is still there**, right of the trainer — same artefact the
+  first judge photographed, one round later.
+- **River** (`water-02-river-eye`): the channel still reads engineered —
+  both banks are uniform ~45° cuts in one speckled camo-noise cliff
+  texture with a hard turf line on top, and a pale uniform gravel strip
+  at the waterline. The water surface itself is fine. Nothing about the
+  bank language moved.
+- **Stream** (`water-03-stream-eye`): **still invisible from its own
+  authored bank point.** The frame is a meadow; there is no channel cut,
+  no bank vegetation, no visible water beyond a couple of far blue
+  pixels at the right edge. A player sent to this stream still cannot
+  find it. Unmoved.
+
+## 7. Weather presets (band 2 sweep)
+
+**Moved.** `fog` is no longer a no-op: it renders as occluded sun plus a
+mild milky distance haze (mean abs diff vs day 55.4/255 across the frame,
+where the first judge measured indistinguishability). `cloudy` and `rain`
+also produce real changes (34.5, 32.6). The fog is light-handed — more
+"overcast flattening" than the aerial-perspective fix the horizon needs —
+but the preset pipeline demonstrably reaches the shipped renderer now.
+
 ---
