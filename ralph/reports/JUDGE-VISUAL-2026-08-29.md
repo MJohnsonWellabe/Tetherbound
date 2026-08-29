@@ -280,11 +280,117 @@ viewpoint), plus the snap-preset `-golden`/`-night` frames from
   window; the midnight-wrap crossing (23.9 → 0.1) is continuous (both
   red, but continuous); the fixed frames show no snapping between
   adjacent hours short of the red window's entry.
-## 8. Terrain macro composition / landmarks — PENDING RENDER
+## 8. Terrain macro composition / landmarks / regional silhouettes
 
-(Verdicts land in this file as each capture completes; the render queue is
-`_capture_ground_and_sky.gd`, `capture_water.gd`,
-`_capture_day_night_transition.gd`, `_capture_far_panels.gd`, `survey.sh`.)
+Evidence: the wide/horizon reads across the frames above —
+`C-02-silhouette-far`, `ground-05-band5-approach-day`,
+`ground-01-band1-opening-day`, `ground-03-band3-crossing-day`,
+`water-02-river-eye`, `S-ext-02-flank-wide`. Capture note: the dedicated
+far-panel tool (`_capture_far_panels.gd`) stalled after 70+ minutes with no
+frame written and was killed (its two viewpoints re-shoot the 2026-08-23
+assessment's panels); `tools/survey.sh` was still rendering when this
+verdict was written. The macro verdict therefore rests on the named frames,
+which include band-1, band-3 and band-5 horizons.
+
+**Verdict: ACCEPTABLE as a skeleton, dragged down by what stands on it.**
+
+What works:
+
+- **The band-5 approach axis is real composition** (`ground-05`): a forked
+  path, the Team Tether pylon line marching toward the stronghold with
+  cyan tether cables strung between, crystal clusters flanking — a player
+  reads "that way is the endgame" from one frame. Best macro moment in
+  the set.
+- **The castle silhouette works as a landmark** (`C-02`): towers, keep and
+  crenellation read clearly against the sky at distance. The silhouette
+  language fails only when you get close enough to see the surfaces.
+- **Band 3's tall half-timbered house** (`ground-03`) is a genuine
+  mid-scale landmark; band 1's rolling hills with ridgeline tree stands
+  (`ground-01`) compose like the keyart's opening panel.
+
+What reads wrong:
+
+- **Untextured placeholder masses stand on the horizon.** The band-5 skyline
+  — the one the whole approach march aims at — carries plain grey
+  untextured boxes (`ground-05`, top of frame), and the stronghold reads
+  as a black slab from every angle (`S-ext-02`, `C-02` left). The macro
+  skeleton points the player at the two worst surfaces in the game.
+- **No aerial perspective.** Distant hills and treelines render at the
+  same saturation and value as the near field (`C-02`, `ground-01`) —
+  no haze gradient, so depth flattens and the horizon reads like a
+  backdrop a few hundred metres away. (The fog weather preset, which
+  might have supplied this, renders no visible fog at all —
+  `ground-02-…-fog` is indistinguishable from clear. Guess, flagged:
+  it relies on volumetrics the shipped Compatibility renderer doesn't
+  have.)
+- **Regional differentiation is prop-deep.** Bands 1, 3, 4 and 5 share the
+  same grass carpet, same tree family, same palette; they differ by what
+  is parked on them (house, crystals, pylons). Only band 2's grove has
+  its own light and colour identity. "Increasingly demanding regions"
+  is not yet something the terrain itself says.
+- **The river reads as a canal at macro scale** (`water-02-river-eye`):
+  uniform 45° cut, one bank texture, hard turf line along the top edge.
+
+---
+
+## The three things that most separate these frames from the references
+
+1. **The built structures.** The keyart's stronghold panel and the owner's
+   castle concept are weathered, layered, multi-elevation stone with
+   banners, scaffolds and machinery; `palworld-04`'s tower landmark is one
+   coherent silhouette. Tetherbound's castle is a bright-white maquette on
+   a floating concrete pedestal (`C-03-corner-close`) and its stronghold is
+   a featureless black box (`S-ext-02-flank-wide`). This is the single
+   widest gap, and the endgame march aims the player straight at it.
+2. **The live clock's colour script.** The keyart's identity is its light —
+   golden sunset panel, blue mysterious night. On the driven clock golden
+   hour never renders (`hour-17.90`) and deep night is a blood-red wash for
+   roughly four hours (`hour-23.90`), spending the Team Tether danger
+   colour on the whole safe world. Both intended looks demonstrably exist
+   in the snap presets; the blend never reaches them.
+3. **Material cohesion.** The references read as one fabric; these frames
+   keep breaking style within a single view — three unrelated rock
+   languages at the Warrens mouth (`W-ext-03`), untextured horizon boxes
+   (`ground-05`), riprap canal banks (`water-02-river-eye`), plastic-bright
+   fern/aloe confetti against muted ground. Any one frame contains the
+   evidence that three different games contributed assets.
+
+## The two bar questions
+
+**A. Do these frames read as belonging to the keyart's world?** **No** —
+but for the first time it is a near miss in places. The band-1/band-2
+meadows, the pond, and the trainer standing in blade grass
+(`ground-01-band1-opening-day`, `water-01-pond-eye`) are recognisably
+reaching for the keyart's palette and composition and getting close. What
+breaks belonging is everything built (castle, stronghold, Warrens mound)
+and the night/golden failures — the keyart's two signature moods.
+
+**B. Beside the Palworld shots, would someone say these are trying to be
+the same kind of game?** **Yes for the open-field frames — no overall.**
+`ground-01` and `water-01-pond-eye` beside `palworld-02` read as the same
+genre of world: third-person scale, blade grass, path, water, stylised
+character. The moment a structure enters frame (`C-01`, `S-ext-01`) the
+answer flips to no — Palworld's buildings are believable mass; these are
+blockout. Since the chapter's climax is architecture, the overall answer
+is no.
+
+**What is fixable by changing the scene** (density, palette, lighting,
+composition, scatter, materials on existing meshes): the crimson night and
+missing golden blend (WorldLook keyframe path); the sky/ground weather
+disagreement; the dashed ground seams; floating pebbles and the floating
+castle plinth; the black-rendering NPC; the invisible stream (carve the
+channel, dress the banks); river bank texture scale; second grass
+species/tufts; re-tinting the Warrens' mint rocks and ferns toward the
+granite palette; putting real materials on the stronghold shell and the
+horizon boxes; sun disc halo.
+
+**What needs art that is not in the build:** a weathered stone material
+set and gate/hoarding-scale detail modules for the castle kit, and an
+exterior facade language for the stronghold (banners, scaffolds, apparatus
+— the keyart panel's vocabulary). Both are material/kit work on existing
+meshes, consistent with the no-new-creature-mesh and reuse rules; neither
+needs a new hero mesh, but neither is achievable by re-scattering what is
+already placed.
 
 ---
 
