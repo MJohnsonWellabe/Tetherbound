@@ -51,13 +51,57 @@ exactly the hour the art board cares most about.
   ships, so this may not reproduce for a player at all.
 - A genuine in-game lighting failure at hour 18.0.
 
-## How to resolve it
+## Resolved 2026-08-29: it is not a lighting bug at all
 
-Cheapest decisive test: render this one viewpoint at `day`, `golden` and
-`night` in a single run with a generous settle, and compare. If only
-golden is black, it is the preset path; if golden is fine with more
-settle frames, it is the harness.
+`tools/_diag_golden_hour.gd` (built by the previous lane, run by
+`ralph/T1-LIGHT`) rendered this exact viewpoint at `day`/`golden`/`night`
+under four settle regimes (`survey`, `immediate`, `generous`, `frozen`) —
+13 trials in one continuous run, camera held fixed the whole time. **Every
+single trial rendered correctly**, `05-golden-survey` included (spread
+1.6302, the best of the twelve). The hour-drift hypothesis is refuted
+outright too: even the `generous` regime, after 275s of real wall clock
+under llvmpipe, moved the pinned hour by only 0.08-0.09 — nowhere near
+the "hours of drift" `_apply_blended()` theory required. `apply_time()`'s
+docstring claim stands; `_process()` is not overwriting the pin.
 
-Do NOT judge the game from this frame until that test has been run.
-This file exists so the next session does not re-derive the three
-hypotheses above.
+So the diagnostic could not reproduce the black frame, which meant the
+finding needed a different decisive test: run the real
+`tools/survey.gd`, not an isolated proxy. It still failed identically —
+`05-spawn-low-sun.png`, 5,320 bytes, `spread 0.0000`, same as the
+original report.
+
+Two follow-up probes (scratch, not committed) isolated the real cause:
+
+1. A copy of `survey.gd` with shot 5's `"time"` changed from `"golden"` to
+   `"day"` — identical preset to shot 1 — **still went black.** Golden
+   hour has nothing to do with it.
+2. A copy of `survey.gd` stripped down to just shot 1's viewpoint,
+   captured twice in a row with no teleport in between (skipping shots
+   02-04 entirely) — **both captures rendered fine** (spread 1.477, 1.487).
+
+So the failure needs BOTH conditions: the exact same viewpoint as an
+earlier shot, reached only after several large camera teleports through
+other regions in between (shot 1 at (-9,-7) -> shot 2 at (-120,130) ->
+shot 3 at (172,-88) -> shot 4 at (70,40) -> back to (-9,-7)). Being called
+fifth is incidental; what matters is "revisit a position after the camera
+has been teleported far away and back several times in one continuous
+run." That is `survey.gd`'s own comment made literal: `terrain.set_camera()`
+hands Terrain3D a moving camera and the regions stream/unstream around it
+as it teleports — this looks like a region re-streaming or capture-timing
+defect in that path, most likely Terrain3D itself or the interaction
+between it and this harness's fixed 24-frame settle-after-teleport, not
+anything time-of-day or lighting owns.
+
+**This is not Track 1 (aesthetics) scope.** No `art.json` value or
+`world_look.gd` code was touched to "fix" this, because none of them are
+the cause — tuning golden hour further would not have changed anything.
+Recorded here so the next session (Track 2/reliability, whoever owns
+Terrain3D streaming and `tools/survey.gd`) does not re-derive the four
+hypotheses above; start from "reproduce with day-only, no golden
+involved" and "isolate whether it's teleport COUNT, teleport DISTANCE, or
+specifically returning to a previously-visited region."
+
+The Track 1 lighting/time-of-day work this file used to gate proceeded
+using `tools/_diag_golden_hour.gd`'s own frames (single fixed viewpoint,
+unaffected by this streaming defect) and fresh single-viewpoint captures,
+not `survey.gd`'s multi-teleport sequence.
