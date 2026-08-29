@@ -4056,11 +4056,36 @@ func _step_seed_save(args: Dictionary) -> String:
 		# The comment below this block already stated the intent -- "resolves
 		# against this run's own saves/ directory" -- so this is the documented
 		# behaviour, restored, not a new one. Looks in the run root first, then
-		# in each segment's own saves/, which is where `save_out` actually puts
-		# them.
+		# in the OWNING segment's own saves/ (the id named by `want` itself,
+		# e.g. "S05-exit.json" -> "S05/saves/"), which is where `save_out`
+		# actually puts them.
+		#
+		# RIG-12 (2026-08-29): the scan below this used to walk every directory
+		# in the run root and take whichever candidate it saw LAST, with no
+		# ordering guarantee from `DirAccess.list_dir_begin()`. When a restart
+		# leaves a `-superseded-N/` directory sitting beside the real one --
+		# exactly what `RESTARTS.md` says happens -- and BOTH carry a
+		# same-named exit save (a segment superseded after it reached its own
+		# save step), the scan could hand a segment its predecessor's
+		# SUPERSEDED save instead of the kept one. That is what happened to
+		# this run's own first S06 attempt: it loaded
+		# `S05-superseded-2/saves/S05-exit.json` (1 flag, party 1) instead of
+		# the kept `S05/saves/S05-exit.json` (4 flags). The owning-directory
+		# check below closes it deterministically for the normal case; the
+		# fallback scan is kept only for a save whose owning directory is
+		# named differently than its filename, and now skips
+		# `-superseded-` directories and stops at the first match rather than
+		# overwriting it.
 		var want := from.trim_prefix("run://")
 		var run_root := _out_dir.get_base_dir()
 		from = run_root.path_join("saves").path_join(want)
+		if not FileAccess.file_exists(from):
+			var owning_id := want.get_basename()
+			if owning_id.ends_with("-exit"):
+				owning_id = owning_id.substr(0, owning_id.length() - "-exit".length())
+			var owned := run_root.path_join(owning_id).path_join("saves").path_join(want)
+			if not owning_id.is_empty() and FileAccess.file_exists(owned):
+				from = owned
 		if not FileAccess.file_exists(from):
 			var found := ""
 			var dir := DirAccess.open(run_root)
@@ -4068,9 +4093,9 @@ func _step_seed_save(args: Dictionary) -> String:
 				dir.list_dir_begin()
 				var entry := dir.get_next()
 				while entry != "":
-					if dir.current_is_dir() and not entry.begins_with("."):
+					if dir.current_is_dir() and not entry.begins_with(".") and not entry.contains("-superseded-"):
 						var candidate := run_root.path_join(entry).path_join("saves").path_join(want)
-						if FileAccess.file_exists(candidate):
+						if FileAccess.file_exists(candidate) and found.is_empty():
 							found = candidate
 					entry = dir.get_next()
 				dir.list_dir_end()
