@@ -164,14 +164,14 @@
       "team": [
         {
           "species": "burrowback",
-          "level": 12
+          "level": 13
         },
         {
           "species": "mudsnout",
-          "level": 12
+          "level": 13
         }
       ],
-      "_why_team": "Both already resident in this band (spawns.json orders 4002/4003) and one level under Halder's own weakest (burrowback 13) -- a real fight, not a formality, but a step below the captain it is warming the player up for rather than a duplicate of him.",
+      "_why_team": "Both already resident in this band (spawns.json orders 4002/4003). Originally one level under Halder's own weakest (12, against his burrowback 13) -- WARRENS-LAND-0829A: that undershot chapter_curve.json's own band4_upper_meadows_ironwood floor of 13 (test_chapter_curve.gd::test_every_trainer_fights_at_their_own_regions_strength), which every other trainer in this file (11/13/14/15, 14/15/16, 13/14) already respects. 13 is the lowest level inside the band, so it is still a step below Halder's own 14/15 members without being a duplicate of his weakest -- the intended 'warm-up, not a formality' reading survives at the floor.",
       "reward": {
         "coins": 35,
         "items": [
