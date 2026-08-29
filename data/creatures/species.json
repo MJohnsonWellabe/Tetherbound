@@ -156,10 +156,11 @@
         "height": 1.0,
         "radius": 0.325,
         "footprint_allowance": 2.2,
-        "model": "res://assets/creatures/tetherbound/bramblebun/models/creature_bramblebun_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Produced by tools/art_pipeline from the owner's wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. Replaces the Plumberry duck that stood in for it. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_redesign_0830": "T3-INSTALL, 2026-08-30. `model` repointed from the old bramblebun/ mesh to bramblebun_redesign/ per the creature-expansion brief section 6 ('REDO AS NEW MESHY CREATURE... this is a replacement asset for the same canonical species'). `height`/`radius`/`footprint_allowance` are UNCHANGED, exactly as _comment_scale_0830 instructed the mesh lane not to also inflate them: the redesign's own bounding box (1.58w x 1.71h x 2.00d before fit) sits comfortably inside footprint_allowance 2.2 at height 1.0m with no clamp triggered, so the substantial-mass brief is satisfied by the mesh's own bulk and silhouette, not by a data change. Same animation-rig caveat as the four new species: this mesh carries no AnimationPlayer/skin, so it stands but does not play idle/walk/attack/hit/faint clips yet.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
@@ -704,7 +705,6 @@
         }
       }
     },
-
     "nightburrow": {
       "display_name": "Nightburrow",
       "type": "ground",
@@ -878,6 +878,155 @@
           "hit": "hit",
           "faint": "faint"
         }
+      }
+    },
+    "sparkit": {
+      "display_name": "Sparkit",
+      "type": "electric",
+      "_why": "Sheet 3, brief section 3. Pure Electric, 'fast striker' -- the highest attack-to-defence ratio in the game (2.0) and the second-lowest defence, which is the brief's 'noticeably quicker and more aggressive than most early Ground creatures' expressed as a statline rather than as a speed stat this build does not have. `aggressive` is FALSE: the brief gives it no hostile behaviour, and in this build that flag means specifically 'will start a fight on its own' (GAME_DESIGN.md 14).",
+      "base_hp": 88.0,
+      "base_attack": 26.0,
+      "base_defence": 13.0,
+      "catch_rate": 0.45,
+      "aggressive": false,
+      "moves": {
+        "quick": "spark_bite",
+        "charged": "arc_lash"
+      },
+      "best_creature": {
+        "id": "static_charge",
+        "kind": "energy",
+        "value": 0.15
+      },
+      "placeholder": {
+        "colour": "#e8c65a",
+        "height": 0.85,
+        "radius": 0.288,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/sparkit/models/creature_sparkit_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_art": "T3-INSTALL, 2026-08-30. Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. The mesh has no AnimationPlayer/skin -- a static single-mesh export, not yet rigged -- so the creature stands in the world at its correct scale and material but does not play idle/walk/attack/hit/faint clips; creature_body.gd::_build_animator() warns and no-ops rather than failing. A rig pass is follow-up work, not a data problem; see the T3-INSTALL handover."
+      }
+    },
+    "cindercub": {
+      "display_name": "Cindercub",
+      "type": "fire",
+      "type_secondary": "ground",
+      "_why": "Sheet 4, brief section 4. Fire/Ground, 'balanced' role and the most even statline of the new creatures on purpose -- the brief asks for 'personality rather than simply functioning as an enemy'. `aggressive` FALSE: 'curious; moderately territorial; not automatically hyper-aggressive... sometimes resting/sleeping near warm objects'. Its charged is Ground (`rootquake`) against a Fire quick so both halves of its typing are visible in play.",
+      "base_hp": 108.0,
+      "base_attack": 22.0,
+      "base_defence": 19.0,
+      "catch_rate": 0.35,
+      "aggressive": false,
+      "moves": {
+        "quick": "ember_bite",
+        "charged": "rootquake"
+      },
+      "best_creature": {
+        "id": "ember_hide",
+        "kind": "survivability",
+        "value": 0.14
+      },
+      "placeholder": {
+        "colour": "#b5552c",
+        "height": 1.4,
+        "radius": 0.467,
+        "footprint_allowance": 3.2,
+        "model": "res://assets/creatures/tetherbound/cindercub/models/creature_cindercub_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_art": "T3-INSTALL, 2026-08-30. Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. The mesh has no AnimationPlayer/skin -- a static single-mesh export, not yet rigged -- so the creature stands in the world at its correct scale and material but does not play idle/walk/attack/hit/faint clips; creature_body.gd::_build_animator() warns and no-ops rather than failing. A rig pass is follow-up work, not a data problem; see the T3-INSTALL handover."
+      }
+    },
+    "shadelet": {
+      "display_name": "Shadelet",
+      "type": "dark",
+      "_why": "Sheet 5, brief section 5. Pure Dark, 'stealth/balanced'. The sheet is emphatic that it must NOT be tiny -- 'roughly monitor-lizard / medium dog length... must read clearly from normal gameplay camera distance' -- so 1.60m, larger than Trailpup and Mosshell and just under Burrowback. `footprint_allowance` is 4.0, the highest in the game: this is a long-bodied lizard with a 'long tail for balance' per the sheet, and creature_body._fit() would otherwise scale the whole model DOWN to fit a quadruped-shaped allowance. `aggressive` FALSE -- 'cautious; stalks around cover; may freeze and watch player; moderate aggression rather than charging immediately'.",
+      "base_hp": 98.0,
+      "base_attack": 21.0,
+      "base_defence": 17.0,
+      "catch_rate": 0.4,
+      "aggressive": false,
+      "moves": {
+        "quick": "shadow_nip",
+        "charged": "gloom_surge"
+      },
+      "best_creature": {
+        "id": "shadow_step",
+        "kind": "energy",
+        "value": 0.14
+      },
+      "placeholder": {
+        "colour": "#232a45",
+        "height": 1.6,
+        "radius": 0.5,
+        "footprint_allowance": 4.0,
+        "model": "res://assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_art": "T3-INSTALL, 2026-08-30. Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. The mesh has no AnimationPlayer/skin -- a static single-mesh export, not yet rigged -- so the creature stands in the world at its correct scale and material but does not play idle/walk/attack/hit/faint clips; creature_body.gd::_build_animator() warns and no-ops rather than failing. A rig pass is follow-up work, not a data problem; see the T3-INSTALL handover."
+      }
+    },
+    "frostclaw": {
+      "display_name": "Frostclaw",
+      "type": "ice",
+      "_why": "Sheet 9, brief section 9. Pure Ice, 'agile striker' and the only new species with `aggressive` TRUE: 'Predator. Solitary; stalks prey; observes player from distance; territorial if approached; fast burst movement.' Second-highest attack in the wild roster after Stormtrail, and 2.00m makes it the third-largest wild creature -- 'larger than Bramblebun and Sparkit, smaller than the largest Alpha predators', which is exactly where the size guide puts it.",
+      "base_hp": 112.0,
+      "base_attack": 29.0,
+      "base_defence": 16.0,
+      "catch_rate": 0.22,
+      "aggressive": true,
+      "moves": {
+        "quick": "frost_claw",
+        "charged": "glacier_break"
+      },
+      "best_creature": {
+        "id": "cold_burst",
+        "kind": "energy",
+        "value": 0.17
+      },
+      "placeholder": {
+        "colour": "#cdd6dd",
+        "height": 2.0,
+        "radius": 0.69,
+        "footprint_allowance": 3.4,
+        "model": "res://assets/creatures/tetherbound/frostclaw/models/creature_frostclaw_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        },
+        "_comment_art": "T3-INSTALL, 2026-08-30. Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. The mesh has no AnimationPlayer/skin -- a static single-mesh export, not yet rigged -- so the creature stands in the world at its correct scale and material but does not play idle/walk/attack/hit/faint clips; creature_body.gd::_build_animator() warns and no-ops rather than failing. A rig pass is follow-up work, not a data problem; see the T3-INSTALL handover."
       }
     }
   },
