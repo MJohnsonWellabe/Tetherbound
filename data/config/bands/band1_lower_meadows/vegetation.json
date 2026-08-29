@@ -133,8 +133,8 @@
       "order": 6,
       "x": -1.5,
       "z": -9.0,
-      "radius": 6.5,
-      "_why": "R7.9: the inn, 6x10m plus walls (half-diagonal 5.83m) -- same footprint class as Grandpa's house above and given the same margin. Found the same way Grandpa's own entry was: a tools/capture_inn.gd render showed grass standing on the common room's floor and rug. Site moved once already (village.json's own `_why` on the `inn` structure records why); this entry has to move with it or it excludes nothing the inn actually stands on."
+      "radius": 7.8,
+      "_why": "R7.9: the inn, 6x10m plus walls (half-diagonal 5.83m) -- same footprint class as Grandpa's house above and given the same margin. Found the same way Grandpa's own entry was: a tools/capture_inn.gd render showed grass standing on the common room's floor and rug. Site moved once already (village.json's own `_why` on the `inn` structure records why); this entry has to move with it or it excludes nothing the inn actually stands on. T1-VILLAGE 2026-08-30: widened 6.5 -> 7.8. This pass's own door-canopy addition (building_prefabs.json `inn`, Overhang_Roof_Plaster + Roof_FrontSupports at the front gable) pushed the recipe's own combined AABB out to a 7.76m half-diagonal (probed: local X half 4.12, Z -5.90..6.58), past the old 5.83m-derived radius -- a tree or rock scattered under a canopy that did not exist when this entry was written."
     }
   ]
 }

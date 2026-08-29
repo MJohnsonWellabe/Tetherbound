@@ -335,6 +335,19 @@
         "_why": "the well and its paved apron"
       },
       {
+        "_comment_t1village": "T1-VILLAGE 2026-08-30. The inn (R7.9, added 2026-08-16 -- after this apron system was authored) never got a footprint here: it is the one square building JUDGE-VISUAL-2026-08-29's 'no ground-material response at all' finding and the earlier VISUAL_LOCATIONS_2026-08-23 twins frame ('buildings and props sit on untouched uniform lawn') can actually be pinned on, verified by grep against every entry in this array before adding this one. half_extents follow the same rule every other entry here derived from (tools/_probe_prefabs.gd's combined-AABB + 0.2m, matching cottage_a/cottage_b/well/ranger_station exactly): the inn's own local-frame combined AABB (probed 2026-08-30, same building_prefabs.gd::combined_aabb call, after this pass's own door-canopy addition) is X half 4.12, Z -5.90..6.58 -- asymmetric because the new entry canopy projects further past the door gable than the roof already overhung on the back eave. Took the LARGER Z half (6.58) rather than the true centre-offset rectangle, the same symmetric-box simplification every other footprint in this array already makes.",
+        "centre": [
+          -1.5,
+          -9.0
+        ],
+        "half_extents": [
+          4.32,
+          6.78
+        ],
+        "yaw_deg": 90.0,
+        "_why": "the inn"
+      },
+      {
         "_comment_ow5d": "OW5D relocation (footprints[5], named explicitly in docs/MEADOWS_MACRO_LAYOUT.md section 10.2): (-132,107) -> (-382,514), same (-250,+407) offset as the mill.",
         "centre": [
           -382.0,

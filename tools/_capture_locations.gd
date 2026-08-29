@@ -143,7 +143,14 @@ const SITES := [
 			 "_why": "stopped at the well on the square's south side, looking north across it at the workshop -- where the four dirt paths meet"},
 			{"label": "twins", "mode": "detail", "at": [-11.5, -21.0], "look": [-11.5, -12.0],
 			 "back": 15.0, "up": 2.6,
-			 "_why": "the inn [-1.5,-9] and Grandpa's farmhouse_shell [-22,-16] in ONE frame, 20.5m apart, camera far enough back to hold both. VISUAL_STRUCTURES round 1: 'the inn IS farmhouse_shell with a hue-shifted roof, and they stand side by side as visible twins'. This eye exists to make that claim checkable or refute it."}
+			 "_why": "the inn [-1.5,-9] and Grandpa's farmhouse_shell [-22,-16] in ONE frame, 20.5m apart, camera far enough back to hold both. VISUAL_STRUCTURES round 1: 'the inn IS farmhouse_shell with a hue-shifted roof, and they stand side by side as visible twins'. This eye exists to make that claim checkable or refute it."},
+			{"label": "grandpa-yard", "mode": "standing", "marker": ["GrandpaHouse", "outside"],
+			 "look_marker": ["GrandpaHouse", "door"],
+			 "_why": "T1-VILLAGE 2026-08-30. The opening's own establishing shot: standing in Grandpa's yard at the house's own `outside` marker (~7.5m off the door, the point the starter row already stands at) looking back at the door. TETHERBOUND_VISUAL_STUNNING_PASS.md sec6/sec16 name this exact yard/house pair a priority and no existing capture in this file stands here."},
+			{"label": "tournament", "mode": "standing", "at": [14.0, 5.0], "look": [20.0, 15.0],
+			 "_why": "T1-VILLAGE 2026-08-30. tournament.json `board.position` [20,15], `facing_deg` 205 -- the north field behind the square, Bryn's practice ground (playground_world.gd's own comment). Eye stands on the walk-up line from the well toward the board, which is also roughly the bearing `board.facing_deg` 205 was tuned to be read head-on from. sec16 names 'the village tournament area' a priority alongside Grandpa's house and no existing capture in this file has ever stood here."},
+			{"label": "route-out", "mode": "standing", "at": [10.0, -10.0], "look": [-14.0, 14.0],
+			 "_why": "T1-VILLAGE 2026-08-30. Standing at the well (paths.routes' own hub) looking down the FIRST leg of the 'Pond' route (terrain_playground.json paths.routes[2]: [10,-10] -> [-14,14] -> ... -> [-105,115]), the bearing toward the pond valley and the open basin band1/spawns.json's own comment calls Creek Hollow. sec12 asks for a composed sightline out of the village toward the early-adventure route; this is the one this file has never shot."}
 		]
 	},
 	{
