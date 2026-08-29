@@ -305,6 +305,12 @@ var _disk: Dictionary = {}
 
 # --- live counters -----------------------------------------------------------
 
+## RIG-10. slot (int) -> md5 hex string of the slot file's content at the
+## moment `seed_save` last wrote it. `save_out` compares against this to tell
+## a segment that genuinely saved through the Save tab from one that is just
+## handing back the save it was seeded with.
+var _seeded_slot_md5: Dictionary = {}
+
 var _probe: RefCounted = null
 ## Wall clock origin (the box) and PLAY clock origin (the game). Two clocks,
 ## kept apart on purpose since the run-2 BLOCKER: see `_wall_t()`/`_play_t()`.
@@ -4028,6 +4034,17 @@ func _step_save_out(args: Dictionary) -> String:
 		return "HARNESS-ERROR no live save system to ask for slot %d's path" % slot
 	if not FileAccess.file_exists(src):
 		return "FAIL slot %d has no file at %s -- did the Save tab actually write?" % [slot, src]
+	# RIG-10. A `seed_save` earlier in this segment already put a file at `src`
+	# -- the file-exists check above can never fail on a segment that skipped
+	# the Save tab entirely, because it is looking at seed_save's own leftover
+	# file. Compare content against the hash recorded when that seed happened:
+	# unchanged bytes mean this segment never actually wrote through the Save
+	# tab, whatever else in it reported PASS.
+	if _seeded_slot_md5.has(slot):
+		var current_md5 := FileAccess.get_md5(src)
+		if current_md5 == _seeded_slot_md5[slot]:
+			return ("FAIL slot %d's content is byte-identical to what seed_save wrote at the start "
+				+ "of this segment -- the Save tab was never actually used") % slot
 	if not _telemetry_on():
 		return "slot %d exists at %s (not copied: telemetry off)" % [slot, src]
 	var name := str(args.get("name", "slot_%d.json" % slot))
@@ -4126,6 +4143,9 @@ func _step_seed_save(args: Dictionary) -> String:
 		return "HARNESS-ERROR could not write %s" % dst
 	out.store_buffer(bytes)
 	out.close()
+	# RIG-10. Record what this slot looks like right now, so a later save_out
+	# can tell whether the Save tab actually changed it or just handed it back.
+	_seeded_slot_md5[slot] = FileAccess.get_md5(dst)
 	_emit("load", {"observation": "seeded slot %d from %s (%d bytes)" % [slot, from, bytes.size()]})
 	return "seeded slot %d from %s (%d bytes)" % [slot, from, bytes.size()]
 
@@ -4152,6 +4172,13 @@ func _step_wipe_saves(args: Dictionary) -> String:
 			if not slot_kept:
 				dir.remove(name)
 				removed += 1
+				# RIG-10. The file a seed_save hash referred to is gone; a slot
+				# reused after this wipe needs a fresh seed_save (or none) before
+				# save_out can compare against it again.
+				if name.begins_with("slot_") and name.ends_with(".json"):
+					var slot_num := name.trim_prefix("slot_").trim_suffix(".json")
+					if slot_num.is_valid_int():
+						_seeded_slot_md5.erase(int(slot_num))
 		name = dir.get_next()
 	dir.list_dir_end()
 	return "wiped %d files from %s (kept slots %s)" % [removed, dir_path, str(keep)]
