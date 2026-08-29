@@ -485,7 +485,11 @@ def write_grid(spec: dict, out_dir: pathlib.Path) -> pathlib.Path:
         draw.line([(0, y), (w, y)], fill=(0, 90, 255), width=2)
         draw.text((3, y + 3), str(y), fill=(0, 90, 255))
     out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / f"grid_{spec['file']}"
+    # `spec["file"]` may carry a subdirectory (the wild sheets live under
+    # `wild/`, the expansion sheets under `creature-expansion-2026-08-30/`) --
+    # take just the basename, or the naive f-string below builds a path whose
+    # parent was never created and `sheet.save` fails.
+    path = out_dir / f"grid_{pathlib.Path(spec['file']).name}"
     sheet.save(path)
     return path
 
