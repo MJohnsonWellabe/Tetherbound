@@ -641,3 +641,122 @@ Everything else that failed this round failed on placement, tint or
 lighting, not on missing assets.
 
 ---
+
+## Lane-report reconciliation — WRITTEN LAST, after all verdicts
+
+Read after every verdict above was committed and pushed: all nine
+`handover-*-2026-08-30.md` files, `HALL_DESIGN_2026-08-30.md`'s handover,
+and the ten branches' commit logs. Both sides of every disagreement are
+recorded; nothing above was rewritten.
+
+### Where the reports and my frames agree
+
+- **T1-GROUND's grunt fix is real and its honesty is exact.** Its
+  before/after (band 2's picket, "Dorn") matches my zoom precisely —
+  collar, straps, mask now read — and its own caveat ("Dorn is still a
+  fairly dark figure… if the owner wants him brighter, the next lever is
+  a rim/ambient floor, not another palette push") is my measured luma-13
+  finding, said in advance. One identification correction falls out for
+  free: the figure the first judge logged as a **villager** rendering
+  black on the band-2 path was almost certainly this same Team Tether
+  grunt — no villager material path was ever broken (my stage rig shows
+  all five villagers clean).
+- **T1-SKY's account matches the sweep I rendered.** Golden hour on the
+  driven clock: fixed by config (weather leak + sun disc + cloud tint),
+  and my 17:54/18:06 frames confirm it. Deep night: blue, real, first
+  time judged — its parking fix is why. Its analysis that the ranger-camp
+  stand "was never a sky beauty shot" also matches what I saw: warm and
+  correct, not the keyart sunset, and that is now a composition question,
+  not a lighting bug. Its fog measurement (the visible change is
+  `shadow_opacity` removal, not distance haze) **refines my subject-7
+  verdict**: I recorded fog as "moved"; it did move, but T1-SKY is right
+  that nothing in it yet reads as *air* — both statements stand.
+- **T1-WARRENS-EXT's four fixes are all visible in my blind frames**:
+  one granite family at the mouth (my sample pair (138,134,115) vs
+  (147,143,123)), no mint rock, no crimson bush, no checkerboard
+  aliasing, and a real lintel/jamb on the mouth door. My remaining
+  complaints (chamfered-cube silhouettes, one noise frequency, the
+  bright fern/flower confetti) are exactly the items its handover did
+  not claim to fix.
+- **T1-GROUND's unfixed items match my unmoved verdicts** — stream
+  (root-caused as a siting problem plus zero bank dressing; not fixed),
+  river bank angle (measured 59–77° along all 19 points; deliberately
+  not touched), dashed seams (reproduced, two hypotheses, not
+  isolated). My "did not move" lines on those are its own honesty
+  confirmed, not a contradiction.
+- **T1-HALL-DESIGN explains the castle.** The owner has directed a
+  merge: the castle IS the Meadows Hall IS the stronghold — one
+  location, redesigned (design doc complete, implementation not
+  started; the detached castle at (150,7595) is slated to retire). **No
+  lane worked the castle walls this round**, so my "identical to the
+  pixel" measurement is expected, not a third failed fix — but it
+  should stop being read as a queue of failed retints and start being
+  read as the strongest argument for building the merged Hall soon: the
+  white maquette is still what the player sees today, and its material
+  scheme in the design (one textured `T_UnevenBrick` stone with
+  value-checked retints) is aimed at precisely the defect my samples
+  re-measured.
+
+### Where a report claims more than the frames show
+
+- **T1-WARRENS-EXT (implicitly): vegetation confetti at the mouth.**
+  The skirt-placer fix dropped `Plant_1` and retinted the skirt flora,
+  and the specific crimson bush is gone — but plastic-lime ferns and
+  flat purple flower sprites still sit in the foreground of my
+  `W-ext-01/02` frames, evidently from a different scatter layer. The
+  confetti finding is narrowed, not closed.
+- **T1-GROUND's pebble fix was "done-but-under-verified" by its own
+  admission** — my frames partially close that: pebbles now sit seated
+  on the path crust (improvement verified in-world), but none are
+  half-buried, so the "sprinkled, not worn" read remains.
+- **T1-GROUND's groundmat/clover restore is still unverified.** I
+  cannot confirm a visible clover mid-layer in any band frame I
+  rendered; whether 145k restored placements actually read on screen
+  needs its own deliberate before/after look.
+- **T1-SKY's "weather disagreement not reproduced" is nearly right.**
+  Band 3's day sky is clean in my frames too; band 4's day frame still
+  carries dark smudge clouds in the top-left over sunlit ground.
+  Softened materially; not fully gone.
+
+### Where the repo's evidence overturned or nuanced my blind read
+
+- **The starter picker's back-facing creatures**: T1-UI records round
+  3's attribution — the preview turntables spin ~69°/frame against
+  software-render frame timing, so a still capture catches arbitrary
+  facings; a live player sees rotating creatures. My observation stands
+  as a fact about stills but drops as a HUD defect. Counterpoint kept:
+  two independent captures have now caught **all three** back-turned at
+  once, so if the spin phase is deterministic at boot, the first
+  rendered impression may genuinely be three rumps — one deliberate
+  start-angle would erase the question.
+- **The Warrens mouth "office lobby" doorway**: the lintel band and
+  jamb I photographed are the new, intended door frame working — my
+  residual complaint is only that the liner panels behind it read flat
+  grey, not that the doorway lacks depth.
+- **My castle framing needed the design context above** — "did not
+  move" is true of the pixels and misleading as an indictment of this
+  round's lanes; recorded both ways.
+
+### Findings no lane report mentions (new this pass)
+
+- **Night runs backwards after midnight** — ground luma climbs 43 → 78
+  from 20:30 to 02:00, ending in a flat pale-mint shadowless wash
+  (subject 7a). T1-SKY's own hour-02.00 was used only for the canopy
+  check; nobody names the brightening.
+- The dashed terrain seams **glow lighter than the ground at night**,
+  and the night smear tier carries a diagonal striping artefact.
+- Daylight leaks across the top of the stronghold's open gate interior
+  (`S-ext-01` zoom).
+- The pond's ownerless rectangular shadow survived the round.
+- The open meadow's dark low-poly moss-top boulders
+  (`01-spawn-outward`, `02-valley-floor`) are a fourth rock language no
+  lane owns.
+- The practice meadow still shows flat plastic-green ground, a giant
+  hard-edged shadow polygon, and a floating white prompt quad
+  (`habitat/practice-meadow-cluster.png`) — with the capture-rig caveat
+  flagged in subject 9.
+- Moonlit shadow boundaries at 22:00 quantise into large stair-steps
+  (llvmpipe caveat attached; block size well above "fine lighting").
+- `tools/survey.gd`'s `05-spawn-low-sun` stand rendered a flat frame
+  ("nothing rendered", the tool's own FAIL line) — one more capture
+  stand needing the streaming/settle fix its siblings got.
