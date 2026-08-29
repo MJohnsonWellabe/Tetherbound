@@ -80,8 +80,24 @@ func _run() -> void:
 	# Evidence frames must be comparable across runs. WorldWeather randomises
 	# its later cycle, and a long software-rendered world build can consume a
 	# meaningful part of that clock before the first capture.
+	#
+	# FREEZE-ONCE, same as tools/_capture_ground_and_sky.gd: apply_time()/
+	# set_weather() are ordinary direct method calls that write node
+	# properties immediately, not through a per-frame tween, so they do not
+	# need a live _process to take effect. A pin that is never frozen wears
+	# off across a multi-viewpoint pass -- WorldLook's own passive clock kept
+	# advancing between this call and the shutter, which is why every frame
+	# from this tool came back in a dusk/night wash regardless of the
+	# per-view "time" requested (judged blind in
+	# ralph/reports/JUDGE-VISUAL-2026-08-29.md, subject 6).
 	if weather != null and weather.has_method("set_weather"):
 		weather.call("set_weather", "clear")
+		weather.set_process(false)
+		weather.set_physics_process(false)
+	if look != null:
+		look.call("apply_time", "day")
+		look.set_process(false)
+		look.set_physics_process(false)
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	var field: RefCounted = HEIGHTFIELD.new()
 	var water_level := float(terrain_config.get("water", {}).get("level", 0.0))
@@ -254,10 +270,16 @@ func _place_actor(player: Node3D, field: RefCounted, camera: Camera3D, view: Dic
 	if player == null:
 		return
 	if not view.has("actor"):
-		# Parked straight down from the eye, inside the streamed region — see
-		# tools/survey.gd's _place_actor for why never far outside the world.
+		# STRANDED-P3 (see tools/survey_band2.gd's _place_actor and
+		# tools/_capture_day_night_transition.gd): -500m straight down is
+		# read by water.gd as fully submerged -- head depth below the water
+		# surface has no floor -- so a body parked that far under a pond
+		# viewpoint can ramp the drowning vignette across the whole capture.
+		# Park far off to the side in XZ AND above ground instead, so it is
+		# out of frame without tripping the water-hazard check.
 		var eye_xz: Vector2 = view["eye"]
-		player.global_position = Vector3(eye_xz.x, field.height_at(eye_xz.x, eye_xz.y) - 500.0, eye_xz.y)
+		var far_xz := eye_xz + Vector2(5000.0, 5000.0)
+		player.global_position = Vector3(far_xz.x, field.height_at(far_xz.x, far_xz.y) + 1.0, far_xz.y)
 		return
 	var xz: Vector2 = view["actor"]
 	player.global_position = Vector3(xz.x, field.height_at(xz.x, xz.y) + 0.4, xz.y)

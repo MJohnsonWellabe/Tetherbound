@@ -76,6 +76,7 @@ func _run() -> void:
 	camera.make_current()
 
 	var look: Node = world.get_node_or_null(^"WorldLook")
+	var weather: Node = world.get_node_or_null(^"WorldWeather")
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	var field: RefCounted = HEIGHTFIELD.new()
 	var terrain: Node = world.get_node_or_null(^"Terrain")
@@ -87,8 +88,35 @@ func _run() -> void:
 		quit(1)
 		return
 
+	# Pin AND freeze WorldWeather, same as tools/_capture_ground_and_sky.gd.
+	# Left running, it rolls a new weather preset every 4-8 real seconds x60
+	# (data/config/weather.json cycle_seconds_min/max = 240-480) on its own
+	# real-time timer, independent of anything this tool drives. The initial
+	# SETTLE_FRAMES alone, at ~2.4s per awaited software-rendered frame (see
+	# tools/_capture_ground_and_sky.gd's own measured budget), can exceed that
+	# window before the first hour is even shot, and the sweep's later hours
+	# certainly do. "cloudy" -- the heaviest-weighted non-clear preset -- sets
+	# sky top/horizon colour to #5f7386/#9aabb5, a flat grey-blue: the exact
+	# look the hour-17.5/17.9/18.1 frames showed instead of golden's warm
+	# amber, without one line here ever being touched. This was never a
+	# blend-math bug in world_look.gd; it was uncontrolled weather layered on
+	# top of a correct blend by a node this tool never told to hold still.
+	if weather != null:
+		if weather.has_method("set_weather"):
+			weather.call("set_weather", "clear")
+		weather.set_process(false)
+		weather.set_physics_process(false)
+
 	if player != null:
-		player.global_position = Vector3(EYE.x + 5000.0, -500.0, EYE.y + 5000.0)
+		# Park far off to the side AND above ground, not straight down at
+		# -500m: a body that deep reads as fully submerged to water.gd, which
+		# ramps a red drowning vignette over the whole frame (this is exactly
+		# what produced the crimson hour-22/23.9/0.1/2.0 frames judged blind
+		# on 2026-08-29 -- see ralph/reports/JUDGE-VISUAL-2026-08-29.md and
+		# ralph/DONE.md's SURVEY_BAND2 entry). Parked far away in XZ too so it
+		# throws no shadow into the framed viewpoint.
+		var far_xz := EYE + Vector2(5000.0, 5000.0)
+		player.global_position = Vector3(far_xz.x, field.height_at(far_xz.x, far_xz.y) + 1.0, far_xz.y)
 
 	var eye_ground: float = field.height_at(EYE.x, EYE.y)
 	var target_ground: float = field.height_at(TARGET.x, TARGET.y)
