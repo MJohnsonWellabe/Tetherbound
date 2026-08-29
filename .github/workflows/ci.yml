@@ -950,7 +950,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    # This is an investigation probe, not a release gate: it is explicitly
+    # allowed to fail and currently repeats a costly whole-world opening drive
+    # already covered by the two required opening smoke jobs above. Running it
+    # on every push made normal CI slower while producing no actionable pass/
+    # fail signal. Keep the exact command available to a deliberate manual
+    # dispatch, where a developer can inspect its known-red result.
+    if: github.event_name == 'workflow_dispatch' && needs.changes.outputs.code == 'true'
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4

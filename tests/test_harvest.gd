@@ -78,17 +78,18 @@ func test_gather_of_an_untool_gated_resource_always_pays_the_full_amount() -> vo
 	assert_eq(int(result["required_slot"]), -1)
 
 
-# --- OF30: the set Tam hands over --------------------------------------
+# --- Opening tool handovers ---------------------------------------------
 
 ## The tool gate has been correct since R2.1 and unreachable since R2.1: no
 ## axe, pickaxe or knife existed anywhere in the world, so "the right tool" was
-## a rule the player could only ever fail. OF30 makes the blacksmith the source
-## of all three. This is the yield side of that — the exact set he gives,
-## against the exact resources they gate, with nothing else in the satchel.
+## a rule the player could only ever fail. The opening now gives the axe and
+## pickaxe through Mira's required visit, then the knife through Tam's follow-up.
+## This is the yield side of that route — the exact combined set, against the
+## exact resources they gate, with nothing else in the satchel.
 ##
 ## `tests/test_dialogue_runner.gd` is what checks he really gives THESE three;
 ## this checks that having them changes anything.
-func test_the_smiths_set_covers_every_tool_gated_meadow_resource() -> void:
+func test_the_opening_tool_handoffs_cover_every_tool_gated_meadow_resource() -> void:
 	const HANDOVER := {"axe": "wood", "pickaxe": "stone", "knife": "fiber"}
 	for tool_id: String in HANDOVER:
 		var resource: String = HANDOVER[tool_id]
@@ -108,10 +109,10 @@ func test_the_smiths_set_covers_every_tool_gated_meadow_resource() -> void:
 			"'%s' should be the tool that wears down" % tool_id)
 
 
-## Tam's complete set must cover every gated meadow resource when the matching
-## member is equipped. Merely carrying the set is checked separately above and
-## no longer authorizes a mismatched visible swing.
-func test_equipping_each_member_of_his_set_gathers_everything_the_meadow_offers() -> void:
+## The complete opening set must cover every gated meadow resource when the
+## matching member is equipped. Merely carrying the set is checked separately
+## above and no longer authorizes a mismatched visible swing.
+func test_equipping_each_member_of_the_opening_set_gathers_everything_the_meadow_offers() -> void:
 	bag.add("axe", 1)
 	bag.add("pickaxe", 1)
 	bag.add("knife", 1)
@@ -123,20 +124,21 @@ func test_equipping_each_member_of_his_set_gathers_everything_the_meadow_offers(
 
 
 ## The generalisation of the case above, so a NEW tool-gated resource added
-## later cannot quietly become unreachable: whatever the smith hands over must
-## cover every resource in items.json that gates on a tool. Read straight off
-## the dialogue data rather than restated here.
-func test_nothing_the_smith_gives_leaves_a_tool_gated_resource_stranded() -> void:
+## later cannot quietly become unreachable: the combined mandatory opening
+## handovers must cover every resource in items.json that gates on a tool. Read
+## straight off the dialogue data rather than restated here.
+func test_nothing_the_opening_handoffs_give_leaves_a_tool_gated_resource_stranded() -> void:
 	const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 	var owned: RefCounted = INVENTORY.new(db)
-	var conversation: Dictionary = RUNNER.table().get("village_tam_tools", {})
-	for raw: Variant in (conversation.get("lines", []) as Array):
-		if not raw is Dictionary:
-			continue
-		for effect: Variant in ((raw as Dictionary).get("effects", []) as Array):
-			var parts: Array = RUNNER.parse_effect(str(effect))
-			if str(parts[0]) == "give":
-				owned.add(str(parts[1]).split(":")[0], 1)
+	for conversation_id in ["village_mira_shop_intro", "village_tam_tools"]:
+		var conversation: Dictionary = RUNNER.table().get(conversation_id, {})
+		for raw: Variant in (conversation.get("lines", []) as Array):
+			if not raw is Dictionary:
+				continue
+			for effect: Variant in ((raw as Dictionary).get("effects", []) as Array):
+				var parts: Array = RUNNER.parse_effect(str(effect))
+				if str(parts[0]) == "give":
+					owned.add(str(parts[1]).split(":")[0], 1)
 
 	for id: Variant in db.ids():
 		var resource := str(id)
@@ -145,7 +147,7 @@ func test_nothing_the_smith_gives_leaves_a_tool_gated_resource_stranded() -> voi
 		var required: String = str(db.gathered_with(resource))
 		var result: Dictionary = HARVEST_LOGIC.gather(resource, 2, owned, db, required)
 		assert_eq(int(result["amount"]), 2,
-			"'%s' gates on '%s', which Tam's handover does not include -- with his other tools in hand it now pays nothing at all" % [
+			"'%s' gates on '%s', which the mandatory opening handovers do not include -- with the other tools in hand it now pays nothing at all" % [
 				resource, db.gathered_with(resource)])
 
 

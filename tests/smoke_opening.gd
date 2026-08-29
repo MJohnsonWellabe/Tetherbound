@@ -119,9 +119,9 @@ func _run() -> void:
 	await _the_trainer_gets_up_from_the_bed()
 	await _the_door_is_gated_until_grandpa_is_heard()
 	await _grandpa_says_his_piece()
-	_grandpa_handed_over_the_pack()
 	await _a_starter_can_be_chosen()
 	await _the_creature_is_named_on_the_grid()
+	_grandpa_handed_over_the_orbs()
 	_the_named_creature_is_in_the_real_party()
 	_the_party_still_holds_at_most_five()
 	await _the_road_gate_stops_until_the_key_is_found()
@@ -349,23 +349,16 @@ func _the_trainer_gets_up_from_the_bed() -> void:
 	print("wake: got up from the bed, beat is now '%s', standing again" % str(_director.call("beat")))
 
 
-## The gifts. Grandpa's conversation carries give: effects on the lines that
-## speak them; if the words play and the satchel stays empty, the opening
-## promised a pack and handed over nothing.
-func _grandpa_handed_over_the_pack() -> void:
+## Grandpa gives the catch-up supply after the starter is named, not during the
+## first briefing. The new opening deliberately promises only generous Basic
+## Orbs here; potions and revives are no longer part of this handover.
+func _grandpa_handed_over_the_orbs() -> void:
 	var inventory: RefCounted = _game.get("inventory")
 	var orbs := int(inventory.call("count", "orb_basic"))
-	var potions := int(inventory.call("count", "potion_small"))
-	var revives := int(inventory.call("count", "revive"))
-	if orbs < 15:
-		_fail("Grandpa's talk ended with %d orbs in the satchel; his pack carries 15" % orbs)
-	elif potions < 3:
-		_fail("Grandpa's talk ended with %d potions in the satchel; his pack carries 3" % potions)
-	elif revives < 2:
-		_fail("Grandpa's talk ended with %d revives in the satchel; his pack carries 2 (D40)" % revives)
+	if orbs < 10 or orbs > 15:
+		_fail("naming the starter left %d Basic Orbs in the satchel; the opening catch supply must be 10-15" % orbs)
 	else:
-		print("the pack: %d orbs, %d potions, %d revives, %d berries in the satchel" % [
-			orbs, potions, revives, int(inventory.call("count", "berries"))])
+		print("the opening catch supply: %d Basic Orbs" % orbs)
 
 
 ## SA2 (spec sec1D): "the player cannot leave Grandpa's house until the
