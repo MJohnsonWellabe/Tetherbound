@@ -420,16 +420,41 @@ type-tell colours.
 | `--only=test_type_chart` | **23 tests, 0 failed** |
 | `--only=test_dual_type` | **15 tests, 431 assertions, 0 failed** |
 | `--only=test_type_chart,test_dual_type` | **41 tests, 856 assertions, 0 failed** |
-| `--only=test_type_chart,test_dual_type,test_combat,test_moves,test_creature,test_trainers` | see §8.1 |
-| `tests/smoke_combat.gd` | see §8.1 |
-| `tests/smoke_relay.gd` | see §8.1 |
-| `tests/smoke_stronghold.gd` | see §8.1 |
-| `tests/smoke_stronghold_reload.gd` | see §8.1 |
-| `tests/smoke_gate_e_finale.gd` | see §8.1 |
+| `--only=test_type_chart,test_dual_type,test_combat,test_moves,test_creature,test_trainers,test_hud` | **252 tests, 2977 assertions, 1 failed** — the one failure is inherited, see §8.1 |
+| `tests/smoke_combat.gd` | **OK** — "a fight can be entered, piloted, won and left" |
+| `tests/smoke_relay.gd` | **OK** — captain beaten, captive freed, Gear carried |
+| `tests/smoke_stronghold.gd` | **OK** — "stronghold smoke test passed" |
+| `tests/smoke_stronghold_reload.gd` | **OK** — "stronghold reload smoke test passed" |
+| `tests/smoke_gate_e_finale.gd` | see §8.2 |
+| `tools/capture_type_tell.gd` | **OK** — nine frames, arrows 1 / −1 / 0 as the chart predicts |
 
-### 8.1 Runs completed after this document was first written
+### 8.1 The one red test on this branch is not mine, and whoever lands it should know
 
-*(filled in below once each finished — see the final section of this file.)*
+`test_hud_widgets.gd :: test_every_installed_species_has_the_hud_portrait_it_resolves`
+fails with:
+
+```
+nightburrow portrait missing: res://assets/ui/portraits/creatures/nightburrow.png
+stormtrail  portrait missing: ...
+riftfrill   portrait missing: ...
+ashtusk     portrait missing: ...
+```
+
+**Inherited from the `origin/ralph/T3-CREATURES` merge**, which added those four
+species (`361eb23a`) without portraits; there are 34 portraits on disk and none
+for them. Established rather than assumed: my own commits after the merge touch
+exactly ten files — `type_chart.json`, four test/tool files, three UI scripts and
+two reports — and **nothing under `assets/` or `data/creatures/`**. Portrait art
+is not this lane's ownership and I have not touched it. Flagging it because it
+will be red on this branch at land time and somebody will otherwise spend the
+time I just spent proving whose it is.
+
+### 8.2 Run still in flight when this was written
+
+`smoke_gate_e_finale.gd` — the most load-bearing of the five, since it drives
+real trainer fights frame by frame through the Warden and out the far side of
+the chapter ending. Every hit in it goes through the chart. Result appended
+below.
 
 ---
 
