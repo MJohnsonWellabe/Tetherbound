@@ -354,7 +354,32 @@ hit it twice. Every other comment in both files lives at top level and now I kno
 why. Anyone documenting those files inline should put the comment beside its
 object, not inside it.
 
-**8. `--only=` needs a `--` separator.** `--script tests/run_tests.gd --only=x`
+**8. The five new types have no UI colour, and that file is not mine.** Both
+type-colour sites match on the three live types with a `_` fallback:
+`playground_hud.gd::_type_colour()` returns `UITokens.TEXT_SECONDARY`, and
+`combat_hud.gd:428` does the same. So a Fire, Electric, Ice, Psychic or Dark
+creature will render its type word in **neutral grey**.
+
+**This does not affect the four creatures I shipped** — Nightburrow, Stormtrail
+and Ashtusk are Ground-primary and Riftfrill is Water-primary, and every UI site
+reads the primary only, so all four display correctly today. It bites when the
+**pending five** land: Sparkit is Electric-primary, Shadelet Dark, Frostclaw Ice,
+Cindercub Fire, and all four would be grey. `scripts/ui/**` is explicitly not
+this lane's, so I did not add the tokens — but whoever lands those meshes needs
+five colours added in two `match` statements, and the palettes are already
+authored as move VFX colours in `moves.json` (§8 of this handover) so they can be
+lifted straight across and the creature will match its own attack.
+
+Worth noting the same gap has a second face: a dual-typed creature's UI shows
+only its primary type anywhere in the game. Nightburrow reads as "GROUND". The
+Dark half is real in the damage formula and invisible in the interface. That is
+a deliberate consequence of the additive representation (§3) rather than an
+oversight — widening the type tag is a UI decision with a real cost in a
+controller-first, glanceable HUD, and `T3-TYPECHART` already spent care on that
+tag's legibility. But it should be a decision somebody takes, not something that
+stays true by default.
+
+**9. `--only=` needs a `--` separator.** `--script tests/run_tests.gd --only=x`
 silently runs the entire suite; `--script tests/run_tests.gd -- --only=x`
 filters. I lost about twenty minutes to a "targeted" run that was the full suite.
 The file documents this correctly at line 7; I did not read it first.
