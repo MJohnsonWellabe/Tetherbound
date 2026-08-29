@@ -401,10 +401,15 @@ this lane's ownership or this session's investigated scope.
   re-baked manifest).
 - `tests/run_tests.gd -- --only=test_scatter_rules.gd` — 27 tests, 965908
   assertions, 0 failed.
-- `tests/run_tests.gd -- --only=test_veg_corridor.gd` — run, see this
-  handover's own commit history for the result if not inlined here (started
-  after `test_scatter_rules.gd`; both are the "expensive tail" the brief
-  named, and this session budgeted for both).
+- `tests/run_tests.gd -- --only=test_veg_corridor.gd` — 6 tests, 1408263
+  assertions, 0 failed.
+
+Both "expensive tail" tests the brief specifically named are green. Full
+`tests/run_tests.gd` (all 114 files, ~30 min per its own header) was not run
+this session — these two plus the scoped suites above cover everything this
+branch's changes could plausibly affect (scatter placement, corridor fill,
+water/reeds, scatter freshness); nothing here touches combat, creatures,
+UI, or story systems.
 
 ## What I would do next, in priority order
 
