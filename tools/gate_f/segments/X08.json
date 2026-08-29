@@ -8,6 +8,8 @@
   "_diag": "This is a DIAG segment. Every teleport step carries \"diag\": true, and protocol 0.6 travels with every number here: no pacing, navigation, difficulty or economy claim may ever be sourced from a DIAG segment.",
   "_owner_only": "E.9, verbatim: 'Explicitly recorded as [OWNER-ONLY], unverified: handheld frame rate, GPU frame time, VRAM, battery/thermal. The report states the CPU-shape numbers and the structural counts and stops there. No test in this protocol may output a \"device FPS\" number, because no honest one can exist here.' Nothing in this segment produces one, and SEGMENT_SCHEMA.md records that the harness has no code path that could.",
   "_two_modes": "E.9 asks for tools/perf_profile.gd at its six sites in BOTH modes: --headless for CPU frame/physics and directly-timed subsystem costs, and --mode=render under xvfb for draw calls/primitives. Those are separate invocations of a separate tool (instrumentation request section 10 forbids modifying it), not steps in this file; this segment's own contribution is the harness-side frame-time shape at the same six sites, taken through the same live world the journey ran in.",
+  "evidence_lane": "logic",
+  "_comment_evidence_lane": "X08 (the performance audit) plans no §G frame and already sets record_hz 0, because §H's own last clause says the perf audit runs WITHOUT capture -- a framebuffer readback in the middle of a frame-time measurement measures the readback. Declaring the lane makes that explicit rather than incidental.",
   "steps": [
     {
       "id": "X08-001",

@@ -268,12 +268,18 @@ var _cost_gated := false
 ## §H/§G evidence split, owner decision 2026-08-27. "logic" | "capture" | "both".
 ## `both` is what every segment written before the split means, and is the
 ## default, so an unconverted segment keeps its old meaning exactly.
+var _objective_ids: Dictionary = {}
 var _evidence_lane := "both"
 ## On a logic lane: who owes the §G frames this lane is not taking, and which
 ## ids they are. A delegation that nobody has accepted is a BLOCKER at step 1 --
 ## the whole point of writing the debt down is that it cannot evaporate.
 var _capture_lane := ""
 var _delegated_captures: Array = []
+## RIG-9. The §H continuous-record WINDOWS a logic lane handed to its capture
+## lane, kept apart from `_delegated_captures` because a window is not a §G id
+## and must not be checked against the capture lane's `owes` list, which names
+## frames. Same rule though: debt transferred and recorded, never erased.
+var _delegated_records: Array = []
 ## On a capture lane: the §G ids it accepts responsibility for.
 var _segment_owes: Array = []
 ## The step list and where in it we are, so a re-price can cost the REMAINDER
@@ -288,6 +294,9 @@ var _cost_window_usec := 0
 ## moved rather than one number that happened to be the last.
 var _reprices: Array = []
 var _cost_rechecks := 0
+## CD-7c: an in-play sample over the ceiling arms a refusal that the NEXT
+## window confirms or clears. See `_apply_price`.
+var _cost_over_armed := false
 ## 0 = not asked yet, 1 = inside a work tree, -1 = not. See `_inside_work_tree`.
 var _work_tree_cached := 0
 ## Largest evidence PNG actually written. See `_note_png_bytes`.
@@ -784,6 +793,43 @@ func _play(segment: Dictionary) -> void:
 ## Static so `tests/test_gate_f_rig.gd` can call it directly. A SceneTree
 ## subclass cannot be instantiated in a unit test, and the alternative --
 ## grepping the source for the behaviour -- tests the spelling, not the rule.
+## `objective_is` speaks the protocol's id space; the probe speaks the game's.
+##
+## Two different ids name one beat. `data/progression/objectives.json` gives
+## each main entry an `id` -- `opening_first_catch` -- and a `flag_id` -- the
+## progression flag that closes it, `opening:beat:road`. §E.5 tracks "24 main-
+## chain objectives from `opening_first_catch`", so every `objective_is` in
+## every segment was transcribed in ENTRY ids. `gate_f_probe.gd::tracked_
+## objective()` returns the FLAG id, deliberately and under its own smoke test
+## (`tests/smoke_gate_f_probe.gd`), because a flag id is what Phase B can cite
+## and check against the store.
+##
+## Neither side is wrong and neither should move: the probe's contract is
+## tested, and rewriting the segments into flag ids would make them stop
+## matching the protocol they were transcribed from. So the COMPARISON
+## resolves, and says in its own `actual` text which space it matched on.
+##
+## Found on the first segment of run 3: S01-12 asserted `opening_first_catch`,
+## the game was tracking exactly the right beat with exactly the right text,
+## and the step recorded FAIL. Twenty-six asserts across ten segments would
+## have failed the same way -- a whole run of findings about the instrument
+## wearing the shape of findings about the game, which is the specific failure
+## round 2 of this rig exists to stop repeating.
+func _objective_flag_id(entry_id: String) -> String:
+	if entry_id.is_empty():
+		return ""
+	if _objective_ids.is_empty():
+		var doc := _read_json("res://data/progression/objectives.json")
+		for raw: Variant in (doc.get("main", []) as Array):
+			if typeof(raw) != TYPE_DICTIONARY:
+				continue
+			var entry := raw as Dictionary
+			var id := str(entry.get("id", ""))
+			if not id.is_empty():
+				_objective_ids[id] = str(entry.get("flag_id", ""))
+	return str(_objective_ids.get(entry_id, ""))
+
+
 static func _plan_captures(steps: Array) -> Array:
 	var out: Array = []
 	for raw: Variant in steps:
@@ -1203,6 +1249,27 @@ func _check_evidence_lane(steps: Array) -> String:
 			+ "accept: %s. An unaccepted delegation is how a segment would become "
 			+ "capture-incomplete forever without anything ever saying so.") % [
 				unaccepted.size(), _capture_lane, str(unaccepted)]
+	# RIG-9's other half. A §H continuous-record window is a second kind of
+	# evidence debt and it needs the same guarantee the §G ids get: the lane it
+	# is handed to has to actually open one. Checked structurally, by looking for
+	# `record_start` in the capture lane's own steps, because "the capture lane
+	# will surely record something" is the assumption CD-1 already paid for once.
+	var windows := 0
+	for raw: Variant in steps:
+		if typeof(raw) == TYPE_DICTIONARY and str((raw as Dictionary).get("action", "")) == "record_start":
+			windows += 1
+	if windows > 0:
+		var target_windows := 0
+		for raw: Variant in (target.get("steps", []) as Array):
+			if typeof(raw) == TYPE_DICTIONARY \
+					and str((raw as Dictionary).get("action", "")) == "record_start":
+				target_windows += 1
+		if target_windows == 0:
+			return ("evidence_lane=logic declares %d §H continuous-record window(s) and hands them "
+				+ "to \"%s\", which opens none. §H.1 lets a capture lane run BOUNDED record "
+				+ "windows around a named state -- that is where these belong. A window handed "
+				+ "to a lane that never records is a debt that has quietly stopped existing."
+				) % [windows, _capture_lane]
 	return ""
 
 
@@ -1459,7 +1526,8 @@ func _write_inventory() -> void:
 			"owes": _segment_owes,
 			"rows": rows},
 		"frames": {"baseline_hz": _record_baseline_hz, "written": _record_written,
-			"absent": _record_absent, "absent_reasons": frames_absent_reasons},
+			"absent": _record_absent, "absent_reasons": frames_absent_reasons,
+			"delegated_windows": _delegated_records},
 		"uncommittable": uncommittable,
 		"git_check": _git_check,
 		"steps": {"total": _step_total, "ran": _step_ran, "refused": _step_refused,
@@ -1481,17 +1549,23 @@ func _write_inventory() -> void:
 	# finished cleanly is COMPLETE for what it owed, and a reader scanning the
 	# run directory must still be able to see, without opening anything, that
 	# frames are owed elsewhere. `run_inventory.py` is what checks they arrived.
-	if _evidence_lane == "logic" and not _delegated_captures.is_empty():
+	if _evidence_lane == "logic" \
+			and not (_delegated_captures.is_empty() and _delegated_records.is_empty()):
 		var owed: Array[String] = []
 		for entry: Variant in _delegated_captures:
 			owed.append("- %s  (step %s)" % [str((entry as Dictionary).get("id", "")),
 				str((entry as Dictionary).get("step", ""))])
+		for entry: Variant in _delegated_records:
+			var rec := entry as Dictionary
+			owed.append("- §H continuous-record window \"%s\" at %.2f Hz  (step %s)" % [
+				str(rec.get("label", "")), float(rec.get("hz", 0.0)), str(rec.get("step", ""))])
 		_write_text(_out_dir.path_join("DELEGATED.md"),
-			("# %s is the LOGIC lane\n\n%d prescribed §G frame(s) are owed by capture lane `%s`, "
+			("# %s is the LOGIC lane\n\n%d item(s) of evidence are owed by capture lane `%s`, "
 			+ "not by this\nsegment. This segment is judged against what its lane owes; the debt "
 			+ "itself is\nchecked over the whole run directory by `tools/gate_f/run_inventory.py`, "
 			+ "which is\nthe level at which \"does this frame exist anywhere\" can be answered.\n\n%s\n")
-			% [_segment_id, _delegated_captures.size(), _capture_lane, "\n".join(owed)])
+			% [_segment_id, _delegated_captures.size() + _delegated_records.size(),
+				_capture_lane, "\n".join(owed)])
 	# A capture git will never carry is, from the run's point of view, a missing
 	# artefact: it lives on a container that gets reclaimed.
 	_evidence_missing = absent > 0 or not _blocked.is_empty() or _record_absent > 0 \
@@ -1588,6 +1662,35 @@ func _do_step(step: Dictionary) -> void:
 	# it. The verdict word is its own so it can never be read as either a PASS
 	# or a FAIL, and `run_inventory.py` is what turns the handover back into a
 	# debt at the level where it can actually be paid.
+	# RIG-9, found in this run at S05. `record_hz` is zeroed for a logic lane at
+	# segment load, but `record_start` set `_record_hz` from its own args and
+	# re-armed the recorder anyway -- so a headless lane spent the window asking
+	# for frames it cannot take, wrote 46 `absent` rows, and was marked
+	# INCOMPLETE. That is precisely the outcome §H.1 forbids: "A logic-lane
+	# segment is judged against what ITS LANE owes, and is not
+	# 'capture-incomplete forever' for a frame it never undertook to take."
+	# S06-S09 each declare the same two windows and would each have inherited it.
+	if _evidence_lane == "logic" and (action == "record_start" or action == "record_stop"):
+		var window := str(args.get("label", id))
+		if action == "record_start":
+			_delegated_records.append({"label": window, "step": id,
+				"hz": float(args.get("hz", _cfg["record_window_hz"]))})
+			actual = ("DELEGATED the §H record window \"%s\" to capture lane %s "
+				+ "(this is the logic lane; it keeps no continuous record)") % [window, _capture_lane]
+		else:
+			actual = ("DELEGATED the close of the §H record window to capture lane %s "
+				+ "(this is the logic lane; no window was opened here)") % _capture_lane
+		_verdicts["DELEGATED"] = int(_verdicts.get("DELEGATED", 0)) + 1
+		_emit("note", {"expected": expected, "actual": actual,
+			"observation": "evidence split: the logic lane keeps no §H continuous record"})
+		_note_line("### %s — %s" % [id, str(step.get("title", action))])
+		_note_line("- expected: %s" % expected)
+		_note_line("- actual: %s" % actual)
+		_note_line("- events: t=%.2f" % _play_t())
+		_note_line("- verdict: DELEGATED")
+		_note_line("")
+		return
+
 	if _evidence_lane == "logic" and (action == "capture" or action == "capture_seq"):
 		var handed := str(args.get("id", id))
 		actual = ("DELEGATED %s to capture lane %s (this is the logic lane; it takes no frames)"
@@ -1950,6 +2053,11 @@ func _reprice(reason: String, boot_ms: float = 0.0) -> String:
 		return ""
 	var before := _frame_cost_s
 	var now := await _measure_frame_cost()
+	# The scene has changed, so the rolling window either side of the change is
+	# not one price. Reset it here rather than in each caller: a window that
+	# straddles a boot or a load is the whole of CD-7c.
+	_cost_window_frames = 0
+	_cost_window_usec = 0
 	# From the step AFTER this one: the boot's own settle frames are spent, and
 	# its real cost is `boot_ms`, added separately. Charging both would price a
 	# 240-frame settle twice -- 1,560 s of phantom cost at the price the run-2
@@ -2009,9 +2117,38 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 		+ "= %.0f s against %.0f s of budget left") % [reason, now, before, remaining_frames,
 			boot_ms / 1000.0, predicted, budget]
 	if predicted <= budget and not disk_over_now:
+		# A window that came in under budget clears any armed refusal: the
+		# spike that armed it was a transient, which is the case this exists
+		# to tell apart from a scene that really is unaffordable.
+		_cost_over_armed = false
 		if verbose:
 			_emit("note", {"observation": "cost re-priced%s" % line})
 		return line
+	# CD-7c, second half. A boot/load re-price STOPS AND MEASURES a settled
+	# scene, so it may refuse immediately. The in-play recheck cannot: it
+	# divides wall already spent by frames already ticked, so any one-off cost
+	# inside its 120-frame window -- a world stand-up, a region streaming in --
+	# lands on every frame of that window. S01's own ledger shows the shape: an
+	# in-play sample of 0.671 s/frame, then 0.017 s/frame two seconds later. The
+	# first number is not a price, it is a construction.
+	#
+	# So an in-play sample that trips the ceiling ARMS the refusal and the next
+	# window decides it. A scene that is genuinely too expensive is still too
+	# expensive 120 frames later and still blocks, at a cost of about two
+	# seconds of play. A transient disarms itself. Disk is exempt: bytes on
+	# disk are not a transient.
+	if predicted > budget and reason == "in-play" and not disk_over_now and not _cost_over_armed:
+		_cost_over_armed = true
+		record["armed"] = ("in-play sample over budget: %.0f s predicted against %.0f s left. "
+			+ "Armed, not blocked -- an in-play price is an average over a window and a scene "
+			+ "stand-up inside one is a construction, not a per-frame cost. The next window "
+			+ "decides.") % [predicted, budget]
+		if not material:
+			_reprices.append(record)
+		return "; " + str(record["armed"])
+	if predicted <= budget:
+		_cost_over_armed = false
+
 	var why := ""
 	if predicted > budget:
 		why = ("re-priced at %s, the REST of this segment predicts %.0f s (%.1f h) against %.0f s "
@@ -3643,12 +3780,31 @@ func _step_assert(args: Dictionary) -> Dictionary:
 		"objective_is":
 			var want := str(args.get("id", ""))
 			var obj: Dictionary = _probe.call("tracked_objective")
-			return {"ok": str(obj.get("id", "")) == want,
-				"actual": "tracked objective id=%s text=%s (wanted %s)" % [
-					str(obj.get("id", "")), str(obj.get("text", "")), want]}
+			var have := str(obj.get("id", ""))
+			var resolved := _objective_flag_id(want)
+			var matched := "flag_id" if have == want else (
+				"entry id -> flag_id" if not resolved.is_empty() and have == resolved else "")
+			return {"ok": not matched.is_empty(),
+				"actual": "tracked objective id=%s text=%s (wanted %s%s)%s" % [
+					have, str(obj.get("text", "")), want,
+					"" if resolved.is_empty() or resolved == want else " = flag_id %s" % resolved,
+					"" if matched.is_empty() else " [matched on %s]" % matched]}
 		"party_size":
-			var want := int(args.get("equals", -1))
+			# RIG-15: catching is probabilistic (data/config/catching.json's own
+			# words -- "nothing is ever certain") and a step-script's catch
+			# attempt can miss on a real, non-buggy roll. `equals` demanded the
+			# team land on EXACTLY the milestone size, so a script that threw
+			# more than once to cover a miss (or one that simply caught an
+			# extra creature along the way) would FAIL a check that a bigger,
+			# perfectly healthy team should pass. `min` is what every one of
+			# these checks actually means -- "did the team reach at least N" --
+			# and is additive with `equals`, which stays for a caller that
+			# genuinely wants exact equality.
 			var have := (_probe.call("party_state") as Array).size()
+			if args.has("min"):
+				var want_min := int(args["min"])
+				return {"ok": have >= want_min, "actual": "party size %d (wanted >= %d)" % [have, want_min]}
+			var want := int(args.get("equals", -1))
 			return {"ok": have == want, "actual": "party size %d (wanted %d)" % [have, want]}
 		"region_is":
 			var want := str(args.get("equals", ""))
@@ -3838,7 +3994,19 @@ func _step_await_load(args: Dictionary, step_id: String) -> String:
 			_frame_ms.clear()
 			_emit("load", {"duration_ms": snappedf(ms, 0.01),
 				"observation": "a live Player exists %.0f ms after the Load press" % ms})
-			return "the world came up %.0f ms after the press" % ms
+			# CD-7c. §H's amendment says the harness "re-prices after EVERY
+			# boot" -- but a journey segment does not BOOT into its world, it
+			# LOADS into it, and nothing re-priced here. The consequence was
+			# measured on run 3's S03: the load spent 42.8 s of wall building
+			# the world, the in-play recheck divided that by the 122 physics
+			# frames that had ticked, got 0.351 s/frame -- 21x the real in-scene
+			# price -- projected it across 119,472 remaining frames, and refused
+			# a segment that costs minutes. So a load re-prices and resets the
+			# sampling window, for the same reason and in the same place a boot
+			# does: a scene has just CHANGED, and the history either side of the
+			# change is not one price.
+			var repriced := await _reprice("load", ms)
+			return "the world came up %.0f ms after the press%s" % [ms, repriced]
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
 	return ("FAIL no live Player within %.0f s of this step (step %s); input_context is '%s'. "
 		+ "The Load path did not reach a playable world.") % [timeout, step_id,
@@ -3901,11 +4069,36 @@ func _step_seed_save(args: Dictionary) -> String:
 		# The comment below this block already stated the intent -- "resolves
 		# against this run's own saves/ directory" -- so this is the documented
 		# behaviour, restored, not a new one. Looks in the run root first, then
-		# in each segment's own saves/, which is where `save_out` actually puts
-		# them.
+		# in the OWNING segment's own saves/ (the id named by `want` itself,
+		# e.g. "S05-exit.json" -> "S05/saves/"), which is where `save_out`
+		# actually puts them.
+		#
+		# RIG-12 (2026-08-29): the scan below this used to walk every directory
+		# in the run root and take whichever candidate it saw LAST, with no
+		# ordering guarantee from `DirAccess.list_dir_begin()`. When a restart
+		# leaves a `-superseded-N/` directory sitting beside the real one --
+		# exactly what `RESTARTS.md` says happens -- and BOTH carry a
+		# same-named exit save (a segment superseded after it reached its own
+		# save step), the scan could hand a segment its predecessor's
+		# SUPERSEDED save instead of the kept one. That is what happened to
+		# this run's own first S06 attempt: it loaded
+		# `S05-superseded-2/saves/S05-exit.json` (1 flag, party 1) instead of
+		# the kept `S05/saves/S05-exit.json` (4 flags). The owning-directory
+		# check below closes it deterministically for the normal case; the
+		# fallback scan is kept only for a save whose owning directory is
+		# named differently than its filename, and now skips
+		# `-superseded-` directories and stops at the first match rather than
+		# overwriting it.
 		var want := from.trim_prefix("run://")
 		var run_root := _out_dir.get_base_dir()
 		from = run_root.path_join("saves").path_join(want)
+		if not FileAccess.file_exists(from):
+			var owning_id := want.get_basename()
+			if owning_id.ends_with("-exit"):
+				owning_id = owning_id.substr(0, owning_id.length() - "-exit".length())
+			var owned := run_root.path_join(owning_id).path_join("saves").path_join(want)
+			if not owning_id.is_empty() and FileAccess.file_exists(owned):
+				from = owned
 		if not FileAccess.file_exists(from):
 			var found := ""
 			var dir := DirAccess.open(run_root)
@@ -3913,9 +4106,9 @@ func _step_seed_save(args: Dictionary) -> String:
 				dir.list_dir_begin()
 				var entry := dir.get_next()
 				while entry != "":
-					if dir.current_is_dir() and not entry.begins_with("."):
+					if dir.current_is_dir() and not entry.begins_with(".") and not entry.contains("-superseded-"):
 						var candidate := run_root.path_join(entry).path_join("saves").path_join(want)
-						if FileAccess.file_exists(candidate):
+						if FileAccess.file_exists(candidate) and found.is_empty():
 							found = candidate
 					entry = dir.get_next()
 				dir.list_dir_end()

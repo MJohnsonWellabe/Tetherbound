@@ -1,0 +1,61 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+=== DIAG-S02-ENCOUNTER =========================================
+candidate: the GAME at main@26f0db4; this file is rig and writes nothing
+--- PASS 4: live, a creature actually out, and the wander envelope -
+[s02] at boot: party = 0, ally_body = null
+[s02] adopt_starter("ripplet", "Moss") -> true
+[s02] director.ally_body() now         = AllyCreature
+[s02] standing at S02's own press point (26.78, -38.32). Sampling the offer
+[s02] the game makes there, once a play-second, for 30 s:
+      t     nearest wild   dist    offer
+       0   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+       1   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+       2   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+       3   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+       4   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+       5   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+       6   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+       7   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+       8   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+       9   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      10   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      11   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      12   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      13   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      14   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      15   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      16   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      17   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      18   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      19   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      20   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      21   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      22   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      23   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      24   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      25   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      26   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      27   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      28   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+      29   Wild_bramblebun_0_2      5.99  Engage Bramblebun
+[s02] === THE ANSWER ===========================================
+[s02] engage_range                        = 6.00 m
+[s02] nearest wild creature, over 30 s    = 5.99 m min, 5.99 m max
+[s02] samples where the game offered Engage = 30 of 30
+[s02] >>> The offer stood the whole time, so distance from THIS point
+[s02] >>> is not what stopped S02, and the cause is elsewhere.
+[s02] C. standing at S02's own press point, creature out: 26.78, -38.32  (5.99 m from the practice creature)
+[s02]    director.prompt()          = "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Engage Bramblebun"
+[s02]    director.owns_active_prompt= true
+[s02]    director.interaction_offer = {"actionable":true,"distance":5.99045133590698,"label":"Engage Bramblebun","priority":0}
+[s02]    arbiter.prompt()           = "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Engage Bramblebun"
+[s02]    arbiter.winning_provider() = res://scripts/combat/encounter_director.gd
+[s02]    pressed interact: is_fighting false -> true   >>> A FIGHT STARTED
+[s02] C. standing at arm's length, creature out: 25.40, -39.78  (2.35 m from the practice creature)
+[s02]    director.prompt()          = ""
+[s02]    director.owns_active_prompt= false
+[s02]    director.interaction_offer = {}
+[s02]    arbiter.prompt()           = ""
+[s02]    arbiter.winning_provider() = null
+[s02]    pressed interact: is_fighting true -> true   >>> NO FIGHT
+=== END DIAG-S02-ENCOUNTER =====================================

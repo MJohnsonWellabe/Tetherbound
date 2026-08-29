@@ -6,6 +6,10 @@
   "_comment_economy": "Section E.3: 'The authoritative run keeps free_build OFF everywhere'. Nothing in this file touches the Settings toggle; the whole home and all three beds are paid for out of the twenty village harvest nodes walked below. The owner directive of 2026-08-23 -- 'the village gatherable budget must afford three beds before sign-up' -- is verified by actually paying it, and the flag assertions are where a shortfall shows.",
   "_comment_catalogue": "AMBIGUITY: the protocol does not enumerate S03's build-catalogue navigation (section E.3 step 2 enumerates X02's 2x2 lab structure, not S03's home). The focus counts below are derived from data/items/buildables.json's category order and build_menu.gd's CATEGORY_ORDER, and from build_menu.gd remembering the last category and piece per session. They are a transcriber's derivation, not the protocol's words, and a focus_move that does not land FAILs loudly rather than silently selecting the wrong piece.",
   "_comment_answer_prompts": "answer_prompts stays OFF on every walk, per the schema's rule.",
+  "evidence_lane": "logic",
+  "capture_lane": "S03C",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S03C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S03C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the §H/§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because §H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- §H's prescribed frames move to S03C, which may run BOUNDED record windows around a named state.",
   "steps": [
     {
       "id": "S03-01",
@@ -94,6 +98,16 @@
       "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
     },
     {
+      "id": "S03-09a",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-13 (extending RIG-11 to the segments RIG-11's own fix never reached): a load restores the party and deploys nothing -- encounter_director.gd::can_challenge() returns false on a null/undeployed ally before checking whether a trainer is already beaten, so trainer_npc.gd falls back to its 'defeated' conversation line instead of the 'challenge' line that leads to combat. No trainer fight downstream of a load -- including this segment's Bryn practice match -- can start without this. creature_recall (RB) summons the active creature so this segment's fights can actually start."
+    },
+    {
       "id": "S03-10",
       "title": "the load restored the village arrival",
       "action": "assert",
@@ -113,9 +127,10 @@
       "action": "assert",
       "args": {
         "check": "party_size",
-        "equals": 2
+        "min": 2
       },
-      "expected": "the starter and the first catch: two of five"
+      "expected": "the starter and the first catch: two of five",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
     },
     {
       "id": "S03-12",
@@ -330,17 +345,29 @@
       "expected": "Section F's POI set for the dead-travel meter"
     },
     {
-      "id": "S03-32",
-      "title": "engage a wild creature",
-      "action": "press",
+      "id": "S03-32a",
+      "title": "walk to a live bramblebun (attempt 1)",
+      "action": "move_to_entity",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
       },
-      "expected": "a third entrant has to be caught, not granted"
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
     },
     {
-      "id": "S03-33",
+      "id": "S03-32a2",
+      "title": "challenge it (attempt 1)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33a",
       "title": "let the fight stage",
       "action": "wait",
       "args": {
@@ -349,29 +376,19 @@
       "expected": "the combat camera acquires both combatants"
     },
     {
-      "id": "S03-34",
-      "title": "combat owns input",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "combat"
-      },
-      "expected": "input_context is 'combat'"
-    },
-    {
-      "id": "S03-35",
+      "id": "S03-35a",
       "title": "weaken it",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 14,
+        "times": 20,
         "settle_frames": 30
       },
-      "expected": "Section E.2 CT-05: 'throw at full-HP moving wild vs weakened one; record shown percent vs result'"
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
     },
     {
-      "id": "S03-36",
+      "id": "S03-36a",
       "title": "begin the aim",
       "action": "press",
       "args": {
@@ -381,7 +398,7 @@
       "expected": "the throw is aimed, not commanded"
     },
     {
-      "id": "S03-37",
+      "id": "S03-37a",
       "title": "throw the orb",
       "action": "press",
       "args": {
@@ -391,7 +408,655 @@
       "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
     },
     {
-      "id": "S03-38",
+      "id": "S03-38a",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32b",
+      "title": "walk to a live bramblebun (attempt 2)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32b2",
+      "title": "challenge it (attempt 2)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33b",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35b",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36b",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37b",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38b",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32c",
+      "title": "walk to a live bramblebun (attempt 3)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32c2",
+      "title": "challenge it (attempt 3)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33c",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35c",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36c",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37c",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38c",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32d",
+      "title": "walk to a live bramblebun (attempt 4)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32d2",
+      "title": "challenge it (attempt 4)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33d",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35d",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36d",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37d",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38d",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32e",
+      "title": "walk to a live bramblebun (attempt 5)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32e2",
+      "title": "challenge it (attempt 5)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33e",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35e",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36e",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37e",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38e",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32f",
+      "title": "walk to a live bramblebun (attempt 6)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32f2",
+      "title": "challenge it (attempt 6)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33f",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35f",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36f",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37f",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38f",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32g",
+      "title": "walk to a live bramblebun (attempt 7)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32g2",
+      "title": "challenge it (attempt 7)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33g",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35g",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36g",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37g",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38g",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32h",
+      "title": "walk to a live bramblebun (attempt 8)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32h2",
+      "title": "challenge it (attempt 8)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33h",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35h",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36h",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37h",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38h",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32i",
+      "title": "walk to a live bramblebun (attempt 9)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32i2",
+      "title": "challenge it (attempt 9)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33i",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35i",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36i",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37i",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38i",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32j",
+      "title": "walk to a live bramblebun (attempt 10)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32j2",
+      "title": "challenge it (attempt 10)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33j",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35j",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36j",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37j",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38j",
       "title": "let the catch resolve",
       "action": "wait",
       "args": {
@@ -405,9 +1070,10 @@
       "action": "assert",
       "args": {
         "check": "party_size",
-        "equals": 3
+        "min": 3
       },
-      "expected": "`tournament.json` entry.min_party_size = 3, 'a team, not a favourite ... and leaves two slots free so the player is not forced to fill the cap before the tournament'"
+      "expected": "`tournament.json` entry.min_party_size = 3, 'a team, not a favourite ... and leaves two slots free so the player is not forced to fill the cap before the tournament'",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
     },
     {
       "id": "S03-40",

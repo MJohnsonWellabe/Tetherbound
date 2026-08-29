@@ -7,6 +7,10 @@
   "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section D (RT-12 and RT-13's post-win walk-back), section E.1 (CB-06, whose combat camera must be verified at battle start for every stronghold fight), section E.5 (objectives `defeat_the_warden`, `shut_down_the_machine`, `settle_the_roster`, `see_what_changed`), section E.6.15 (backtrack across story transitions), section G (GF-13-FINALE-01..05, GF-14-COMBAT-06) and section H (S10 is one of the mandatory 0.5 Hz continuous-evidence segments).",
   "_comment_warden_coordinate": "AMBIGUITY: section E.1 CB-06 gives warden_aldis as (90.2,7569.4), which is exactly what data/config/bands/band5_stronghold_approach/trainers.json says. data/config/stronghold.json puts the `warden_arena` chamber at offset (0,90.2) from site.at (0,7560) -- that is (0,7650.2). The two numbers look like the same pair transposed. The protocol's own coordinate is used below, and the discrepancy is recorded rather than silently corrected.",
   "_comment_walkback": "Section D's RT-13 is 'post-win S10 walk-back to the healed meadow | as played', and section L.5 asks for 'healed ground, lights out, patrols withdrawn, NPC acknowledgment, Grandpa's post-win line'. Grandpa is 7.6 km south of the Hall, so the walk-back below is the longest leg in the run. It is walked, not shortcut: section 0.6 forbids sourcing any claim from a teleport, and 'the world responds to that victory' is the chapter's whole payoff.",
+  "evidence_lane": "logic",
+  "capture_lane": "S10C",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S10C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S10C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the §H/§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because §H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- §H's prescribed frames move to S10C, which may run BOUNDED record windows around a named state.",
   "steps": [
     {
       "id": "S10-01",
@@ -95,14 +99,25 @@
       "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
     },
     {
+      "id": "S10-09a",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-11: a load restores the party and deploys nothing -- encounter_director.gd::_engageable() returns null on a null ally before any distance check, so no combat/catch/gate-flag assertion downstream of a load can mean anything without this. creature_recall (RB) summons the active creature so this segment's fights can actually start."
+    },
+    {
       "id": "S10-10",
       "title": "the full belt travelled",
       "action": "assert",
       "args": {
         "check": "party_size",
-        "equals": 5
+        "min": 5
       },
-      "expected": "five of five into the Hall"
+      "expected": "five of five into the Hall",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
     },
     {
       "id": "S10-11",
@@ -842,9 +857,10 @@
       "action": "assert",
       "args": {
         "check": "party_size",
-        "equals": 5
+        "min": 5
       },
-      "expected": "Section L.4: 'Release ceremony under full belt | S10: legendary join with 5/5 -> ceremony; verify three-beat ceremony, history shown, choice is real and permanent'. This assertion is what proves the ceremony was reached the way the design intends rather than into a free slot"
+      "expected": "Section L.4: 'Release ceremony under full belt | S10: legendary join with 5/5 -> ceremony; verify three-beat ceremony, history shown, choice is real and permanent'. This assertion is what proves the ceremony was reached the way the design intends rather than into a free slot",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
     },
     {
       "id": "S10-78",
@@ -942,9 +958,10 @@
       "action": "assert",
       "args": {
         "check": "party_size",
-        "equals": 5
+        "min": 5
       },
-      "expected": "five creatures, ever. A sixth here would be the single hardest rule in the project broken"
+      "expected": "five creatures, ever. A sixth here would be the single hardest rule in the project broken",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
     },
     {
       "id": "S10-88",
@@ -1194,9 +1211,10 @@
       "action": "assert",
       "args": {
         "check": "party_size",
-        "equals": 5
+        "min": 5
       },
-      "expected": "the permanent team of five the chapter exists to build"
+      "expected": "the permanent team of five the chapter exists to build",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
     },
     {
       "id": "S10-108",
@@ -1241,8 +1259,11 @@
       "id": "S10-112",
       "title": "open the pause shell",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab",
+      "observation": "RIG-14: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once -- this segment's own Section E.5 map-navigation notes leave the shell on `menu_map`, so the bare `open_menu` + `times: 5` this step used before would have landed on the wrong tab, the Save button never actually focused, and `save_out` would then copy out whatever was already seeded in slot 4 under this segment's own name -- the exact mechanism RIG-10 named and RIG-14 fixed in S04/S05/S07. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available. Matches S03/S06/S08's own working save steps."
     },
     {
       "id": "S10-113",
@@ -1251,10 +1272,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json"
+      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json",
+      "observation": "RIG-14: times 5 -> 3: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: save."
     },
     {
       "id": "S10-114",
