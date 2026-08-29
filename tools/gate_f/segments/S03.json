@@ -303,12 +303,12 @@
       "action": "move_to_entity",
       "args": {
         "entity": "Mira",
-        "within": 2.5,
+        "within": 1.0,
         "budget_frames": 3000,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE: move_to_entity/within replaces a raw authored coordinate so arrival is measured against Mira's own live position, not a point that may or may not be in her interaction range (CD-5)."
+      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE: move_to_entity/within replaces a raw authored coordinate so arrival is measured against Mira's own live position, not a point that may or may not be in her interaction range (CD-5). within tightened from 2.5 to 1.0 after a live replay found the wider radius left the player closer to a nearby door prop than to Mira herself, so the door's own \"Open Door\" prompt won interaction arbitration instead of hers."
     },
     {
       "id": "S03-53",
