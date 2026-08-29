@@ -417,6 +417,18 @@ func _spawn_creatures() -> void:
 ##                `ground_height_at` — the warrens' cave floor — parents its
 ##                creatures under itself so `creature_body.gd` finds it.
 ##   name       — the node name, so a log line or a remote tree can be matched
+##   wander_radius — overrides `wild_creature.gd`'s open-meadow default (7m)
+##                for THIS body. A hand-authored room is not the meadow: the
+##                Burrow Warrens vault is 8m across, and `_rng.randomize()` in
+##                `wild_creature.gd` means every boot rolls a different wander
+##                path with no way to predict where a resident ends up before
+##                `_quieten_the_residents()` freezes it in place. A resident
+##                spawned near a room's own passage can wander INTO it and get
+##                frozen there, mid-doorway, which is indistinguishable from a
+##                sealed passage to a player walking up to it. Named callers
+##                (`burrow_warrens.gd`) pass a radius that keeps their own
+##                residents inside their own walls; left unset, behaviour is
+##                unchanged for the open-world seeded population.
 func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D:
 	if not SPECIES.has(species):
 		push_error("spawn_wild('%s') names a species that is not in species.json" % species)
@@ -434,7 +446,11 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 		_set_fixed_level(wild, species, level)
 	if opts.has("aggressive"):
 		wild.set("aggressive", bool(opts["aggressive"]))
-	wild.call("configure", MATH.config().get("wild", {}))
+	var wild_cfg: Dictionary = MATH.config().get("wild", {})
+	if opts.has("wander_radius"):
+		wild_cfg = wild_cfg.duplicate()
+		wild_cfg["wander_radius"] = opts["wander_radius"]
+	wild.call("configure", wild_cfg)
 	# No `await` here, unlike the cluster loop: a placed creature's ground is
 	# the caller's own floor, which exists the moment the node is in the tree.
 	# The fallback keeps it out of the world origin if that ever fails.
