@@ -1,0 +1,57 @@
+Warrens vault regression — bisect datapoints so far
+===================================================
+Recorded by the coordinator, 2026-08-29 ~09:45 UTC, so the lane working
+this does not re-pay for runs already done.
+
+THE REGRESSION
+  tests/smoke_warrens.gd, CI job verify-regions-shard (warrens, 1).
+  The vault chamber becomes unreachable after clearing the Guardian.
+  This is the Burrow Warrens payoff the owner asked for by name.
+
+MEASURED RESULTS (each a full `godot --headless --path .
+--script tests/smoke_warrens.gd` run, read off a redirected file, not
+off the tail of a killed process):
+
+  origin/main .......................... PASS
+      pushed at the shut branch door; ended 6.2m from the vault
+      pushed at the open branch door; ended 1.0m from the vault
+      walked the whole cave, entrance to branch chamber: 52 m
+      warrens smoke test passed
+
+  main + ralph/T1-REGIONS .............. PASS
+      identical numbers to main: shut 6.2m, open 1.0m, walked 52 m.
+      >>> T1-REGIONS IS CLEARED. Do not spend a run re-testing it.
+      (An earlier attempt at this same run was killed by a short
+      timeout and produced no verdict; this is the completed rerun.)
+
+  ralph/LAND-0829A (all seven lanes) .... FAIL
+      pushed at the shut branch door; ended 6.2m from the vault
+      pushed at the open branch door; ended 5.0m from the vault
+      FAIL: the branch is still impassable after clearing (5.0m)
+      FAIL: walking the cave never reached 'vault' (stopped 4.5m short)
+
+WHAT THIS NARROWS IT TO
+  Six lanes remain: T1-WATER, T3-CADENCE, T3-BRIDGE, GRASS-FAR,
+  T3-BAND4, T1-GROUND-terrain-macro.
+
+  T3-CADENCE is reports and a probe script only — very unlikely to
+  place a collider, but cheap to rule out by inspection rather than a
+  run.
+
+  The two remaining terrain lanes are the strongest suspects now that
+  T1-REGIONS is out: T1-GROUND-terrain-macro (corridor terrain re-bake)
+  and T1-WATER (river wet-bed bake). Both change the height field the
+  Warrens site sits in.
+
+WHAT IS ALREADY RULED OUT
+  - Terrain intruding into chambers. The harness itself reports
+    "deepest the ground reaches into any chamber: 0.00 m" even on the
+    failing branch.
+  - The door mechanism. It opens: 6.2m shut -> 5.0m open. The PASSAGE
+    is blocked, not the door.
+  - Any single lane in isolation. All seven passed their own CI.
+
+NOTE ON METHOD
+  Give each run a generous timeout. A full warrens smoke takes about
+  four minutes here, and a short timeout yields a silent non-verdict
+  that is easy to mistake for a pass. Redirect to a file and grep it.
