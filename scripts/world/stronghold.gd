@@ -1410,6 +1410,17 @@ func _build_hall_waist() -> void:
 ## chambers behind them are never seen from the meadow at this range, and
 ## `interior_structure.gd`'s own `reveals` pass already gives THEM a window
 ## grammar from the inside.
+## T1-HALL-REBUILD amends the paragraph above. "The keep chambers are never
+## seen from the meadow" is not true of the merged Hall: the re-site put the
+## keep's own flanks in the H-05 and H-06 stands, and the great tower IS the
+## skyline the pylon line points at. The acceptance list's "no curtain run
+## > 12m without an opening" therefore bites on 24m and 28m keep faces that
+## carry none at all. So the keep gets design §4's OWN answer -- paired taller
+## lights (0.9 x 2.2), ranked up the tall faces -- rather than the yards'
+## military slit, which would read as the wrong scale on a hall wall.
+const KEEP_LIGHT_SIZE := Vector3(0.9, 2.2, 0.4)
+const KEEP_LIGHT_SPACING := 10.0
+const KEEP_LIGHT_PAIR_M := 1.9
 func _build_hall_slits() -> void:
 	for id in EXTERIOR_CHAMBERS:
 		if not _chambers.has(id):
@@ -1421,7 +1432,27 @@ func _build_hall_slits() -> void:
 		for side in ["-x", "+x"]:
 			if not _opening_on(id, side).is_empty():
 				continue
-			_slit_row(centre, size, height, side)
+			_slit_row(centre, size, height, side, SLIT_SIZE, SLIT_SPACING, 0.72)
+
+	for keep in KEEP_CHAMBERS:
+		if not _chambers.has(keep):
+			continue
+		var chamber2: Dictionary = _chambers[keep]
+		var centre2 := _local_of(chamber2.get("at", []))
+		var size2 := _size_of(chamber2.get("size", []))
+		var height2 := float(chamber2.get("height", 6.0))
+		# One rank per ~8m of wall height, so the low hall gets one, the great
+		# hall two and the great tower three -- the design's own "three ranks up
+		# the great tower", derived from the chamber rather than hard-coded per
+		# room, so a retune of any chamber's height cannot leave a blank face.
+		var ranks := clampi(int(round(height2 / 8.0)), 1, 3)
+		for side2 in ["-x", "+x", "-z", "+z"]:
+			if not _opening_on(keep, side2).is_empty():
+				continue
+			for rank in ranks:
+				var frac := 0.34 + 0.28 * float(rank)
+				_slit_row(centre2, size2, height2, side2, KEEP_LIGHT_SIZE,
+					KEEP_LIGHT_SPACING, frac, KEEP_LIGHT_PAIR_M)
 
 
 ## T1-HALL-REBUILD: EVERY DAYLIGHT OPENING IS FRAMED, and a slit is an
@@ -1439,32 +1470,58 @@ const SLIT_SPACING := 8.0
 const SLIT_SIZE := Vector3(0.4, 1.8, 0.35)
 const SLIT_SURROUND_M := 0.26
 const SLIT_PROUD_M := 0.22
-func _slit_row(centre: Vector3, size: Vector2, height: float, side: String) -> void:
+## `opening` is [depth into the wall, height, width along the run]; `pair_m`
+## splits each station into two lights that far apart (0 leaves it single).
+## Generalised over `along_x` because the keep's own -z/+z faces need the same
+## treatment and the yards only ever asked for -x/+x -- the one place in this
+## file where generalising WAS worth it, unlike `_dress_exterior_wall`'s
+## hardware section, whose header says why it stays x-only.
+func _slit_row(centre: Vector3, size: Vector2, height: float, side: String,
+		opening: Vector3 = SLIT_SIZE, spacing: float = SLIT_SPACING,
+		height_frac: float = 0.72, pair_m: float = 0.0) -> void:
+	var along_x := side == "-z" or side == "+z"
 	var sign_ := -1.0 if side.begins_with("-") else 1.0
-	var wall_face := centre.x + sign_ * (size.x * 0.5 + _wall_t * 0.5)
-	var void_x := wall_face + sign_ * (SLIT_SIZE.x * 0.5 - 0.05)
-	var frame_x := wall_face + sign_ * (SLIT_PROUD_M * 0.5 + SLIT_SIZE.x * 0.5)
-	var span := size.y
-	var count := maxi(1, int(floor(span / SLIT_SPACING)))
-	var start := centre.z - float(count - 1) * 0.5 * SLIT_SPACING
-	var slit_y := _floor_y + height * 0.72
+	var offset := (size.y if along_x else size.x) * 0.5 + _wall_t * 0.5
+	var wall_face := (centre.z if along_x else centre.x) + sign_ * offset
+	var void_out := wall_face + sign_ * (opening.x * 0.5 - 0.05)
+	var frame_out := wall_face + sign_ * (SLIT_PROUD_M * 0.5 + opening.x * 0.5)
+	var span := size.x if along_x else size.y
+	var count := maxi(1, int(floor(span / spacing)))
+	var start := (centre.x if along_x else centre.z) - float(count - 1) * 0.5 * spacing
+	var slit_y := _floor_y + height * height_frac
 	var void_material := _material(_stone_dark().darkened(0.55), 0.0, false)
 	var frame_material := _material(_stone_light(), 0.0, true)
-	var half_w := SLIT_SIZE.z * 0.5
-	var half_h := SLIT_SIZE.y * 0.5
+	var half_w := opening.z * 0.5
+	var half_h := opening.y * 0.5
+	var jamb := Vector3(SLIT_PROUD_M + opening.x, opening.y + SLIT_SURROUND_M * 2.0, SLIT_SURROUND_M)
+	var head := Vector3(SLIT_PROUD_M + opening.x, SLIT_SURROUND_M, opening.z + SLIT_SURROUND_M * 2.0)
+	var void_size := opening
+	if along_x:
+		# The run is along x, so the piece dimensions swap their x/z roles.
+		void_size = Vector3(opening.z, opening.y, opening.x)
+		jamb = Vector3(SLIT_SURROUND_M, opening.y + SLIT_SURROUND_M * 2.0, SLIT_PROUD_M + opening.x)
+		head = Vector3(opening.z + SLIT_SURROUND_M * 2.0, SLIT_SURROUND_M, SLIT_PROUD_M + opening.x)
+	var stations: Array[float] = [0.0] if pair_m <= 0.01 else [-pair_m * 0.5, pair_m * 0.5]
 	for i in count:
-		var z := start + float(i) * SLIT_SPACING
-		_box(SLIT_SIZE, Vector3(void_x, slit_y, z), void_material, false)
-		# Jambs, either side of the void along the wall's own run.
-		for s in [-1.0, 1.0]:
-			_box(Vector3(SLIT_PROUD_M + SLIT_SIZE.x, SLIT_SIZE.y + SLIT_SURROUND_M * 2.0, SLIT_SURROUND_M),
-				Vector3(frame_x, slit_y, z + s * (half_w + SLIT_SURROUND_M * 0.5)),
-				frame_material, false)
-		# Head and sill.
-		for s2 in [-1.0, 1.0]:
-			_box(Vector3(SLIT_PROUD_M + SLIT_SIZE.x, SLIT_SURROUND_M, SLIT_SIZE.z + SLIT_SURROUND_M * 2.0),
-				Vector3(frame_x, slit_y + s2 * (half_h + SLIT_SURROUND_M * 0.5), z),
-				frame_material, false)
+		var base := start + float(i) * spacing
+		for pair_offset: float in stations:
+			var d := base + pair_offset
+			var at := Vector3(d, slit_y, void_out) if along_x else Vector3(void_out, slit_y, d)
+			_box(void_size, at, void_material, false)
+			var frame_at := Vector3(d, slit_y, frame_out) if along_x else Vector3(frame_out, slit_y, d)
+			# Jambs, either side of the void along the wall's own run.
+			for s: float in [-1.0, 1.0]:
+				var jamb_at := frame_at
+				var shift: float = s * (half_w + SLIT_SURROUND_M * 0.5)
+				if along_x:
+					jamb_at.x += shift
+				else:
+					jamb_at.z += shift
+				_box(jamb, jamb_at, frame_material, false)
+			# Head and sill.
+			for s2: float in [-1.0, 1.0]:
+				_box(head, frame_at + Vector3(0.0, s2 * (half_h + SLIT_SURROUND_M * 0.5), 0.0),
+					frame_material, false)
 
 
 ## Design §6.1: "the single highest-value occupation object... the moment
@@ -1943,10 +2000,72 @@ func _build_yard_stairs() -> void:
 ## boulders sample the REAL terrain, so the line they make follows whatever the
 ## ground under the skirt actually does -- which is the whole reason a rubble
 ## line reads as ground contact and a straight authored one does not.
+## Design §5's foundation tier, and a real gap this pass found by reading the
+## geometry rather than the reports: the skirt is not its own box. Each
+## chamber's floor slab IS its skirt -- one `_box` 18m deep whose TOP face is
+## the room's walkable floor -- so it necessarily wears `_floor_material()`,
+## the ~0.3m cobble. That means the bottom several metres of the building, the
+## part that meets the meadow in every flank stand, currently renders as YARD
+## PAVING seen edge-on, at a stone scale smaller than the wall above it. The
+## slab cannot be retinted without repainting five interiors, so the fix is a
+## facing skin on its exposed faces only, in the darkest stone at the coarser
+## tile the design specifies (0.22 vs the walls' 0.28: bigger foundation
+## blocks), with a course at each end so the tier reads as built rather than
+## as a painted band. Same skin technique `_build_exterior_facing()` already
+## uses on the walls, for the same reason it is a skin there.
+func _skirt_material() -> StandardMaterial3D:
+	var key := "skirt_stone"
+	if _materials.has(key):
+		return _materials[key]
+	var material := _material(Color(str(_config.get("site", {})
+		.get("stone_skirt", "#8f8172"))), 0.0, true)
+	material.uv1_scale = Vector3.ONE * SKIRT_TILE
+	_materials[key] = material
+	return material
+
+
+const SKIRT_TILE := 0.22
+const SKIRT_SKIN := 0.07
+const SKIRT_COURSE_H := 0.7
+const SKIRT_COURSE_PROUD := 0.3
+func _build_skirt_facing(face_height: float) -> void:
+	if face_height <= 0.5:
+		return
+	var skin := _skirt_material()
+	var course := _material(_stone_dark(), 0.0, true)
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var half := _size_of(chamber.get("size", [])) * 0.5 + Vector2(_wall_t, _wall_t)
+		for side: String in ["-x", "+x", "-z", "+z"]:
+			if not _opening_on(id, side).is_empty():
+				continue
+			var along_x := side == "-z" or side == "+z"
+			var sign_ := -1.0 if side.begins_with("-") else 1.0
+			var span := (half.x if along_x else half.y) * 2.0
+			var face := Vector3(centre.x, _floor_y - face_height * 0.5,
+				centre.z + sign_ * (half.y + SKIRT_SKIN * 0.5))
+			var size := Vector3(span, face_height, SKIRT_SKIN)
+			if not along_x:
+				face = Vector3(centre.x + sign_ * (half.x + SKIRT_SKIN * 0.5), face.y, centre.z)
+				size = Vector3(SKIRT_SKIN, face_height, span)
+			_box(size, face, skin, false)
+			# String course under the wall's own foot, and a course at the
+			# skin's lower edge: the two ends that tell the eye where this tier
+			# starts and stops.
+			for edge in [_floor_y - SKIRT_COURSE_H * 0.5,
+					_floor_y - face_height + SKIRT_COURSE_H * 0.5]:
+				var c_at := Vector3(face.x, edge, face.z)
+				var c_size := Vector3(span, SKIRT_COURSE_H, SKIRT_SKIN + SKIRT_COURSE_PROUD * 2.0) \
+					if along_x else Vector3(SKIRT_SKIN + SKIRT_COURSE_PROUD * 2.0, SKIRT_COURSE_H, span)
+				_box(c_size, c_at, course, false)
+
+
 func _build_skirt_grounding() -> void:
 	var cfg: Dictionary = _occupation().get("grounding", {}) as Dictionary
 	if cfg.is_empty():
 		return
+	_build_skirt_facing(float(cfg.get("skirt_face_height_m", 8.0)))
 	var dark := _material(_stone_dark(), 0.0, true)
 	var b_w := float(cfg.get("buttress_width_m", 1.4))
 	var b_proud := float(cfg.get("buttress_proud_m", 0.9))
