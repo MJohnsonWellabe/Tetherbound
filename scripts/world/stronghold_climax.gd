@@ -260,6 +260,22 @@ func _place_legendary() -> void:
 	var spec: Dictionary = _config.get("legendary", {})
 	if spec.is_empty():
 		return
+	if _has_flag(_flag("legendary_settled")):
+		# A save from a PAST session already resolved the roster decision --
+		# joined the belt, or walked free after the player kept their five.
+		# `build()` runs again on every load (this is a fresh node, `_stage`
+		# reset to ""), and with no check here it would stand a caged copy of
+		# the very creature that already left this room straight back up,
+		# which contradicts both endings at once: one where it is walking
+		# around on the party belt right now, and one where the story says it
+		# is gone. `key_pickup.gd` and `meadow_healing.gd` already keep this
+		# same rule for their own one-time world state -- check the flag
+		# before spawning, not after -- and this chamber is that same kind of
+		# one-time thing. `_stage` is set to DONE so `_advance()` never tries
+		# to replay the sequence, and the machine prompt stays refused via
+		# `_sync_gate()`'s own `legendary_is_freed()` check.
+		_stage = STAGE_DONE
+		return
 	var at := _spot(spec)
 	var body: Node3D = CREATURE_SCENE.instantiate()
 	body.name = "BoundLegendary"
@@ -278,6 +294,24 @@ func _place_legendary() -> void:
 
 	_legendary = body
 	_build_cage(spec.get("bound", {}) as Dictionary)
+
+	if legendary_is_freed():
+		# Loaded from a save taken between the lever being pulled and the
+		# decision resolving -- the flag is set the instant the lever is
+		# pulled (`_free_the_legendary`), but the join offer and the ceremony
+		# still run through the DIALOGUE PANEL first, which (unlike the
+		# ceremony's own menu) does not pause the tree, so `_tick_autosave()`
+		# in `autoload/game_state.gd` can still land inside that window. Rare,
+		# but `_stage` resets to "" on every fresh `build()` regardless, and
+		# `_sync_gate()` refuses the machine prompt whenever the legendary is
+		# already freed -- so without this, a save taken in that exact window
+		# would come back caged, with no way to ever reach the join offer or
+		# the decision again. Show it freed, not caged, and resume at the
+		# join offer rather than replaying the chamber/free lines it has
+		# already heard.
+		_release_visual()
+		_chamber_told = true
+		_stage = STAGE_FREED
 
 
 ## Differentiation, half two: the containment VFX. A cold teal ring of light
