@@ -25,6 +25,27 @@ var species_id: String = ""
 var display_name: String = ""
 var creature_type: String = "ground"
 
+## T3-CREATURES. The second half of a dual-typed creature's typing, or "" for
+## the ordinary mono-typed case -- which is every species that existed before
+## the owner's creature-expansion brief.
+##
+## ADDITIVE ON PURPOSE. `creature_type` above keeps its name, its type and its
+## meaning (the PRIMARY type), because it is read in nine places that have
+## nothing to do with combat: save_game.gd writes and reads it as a string,
+## playground_hud.gd matches on it for the type colour, swap_panel.gd and
+## tab_creatures.gd display it, and tm_db.gd/teaching.gd key TM compatibility
+## on it. Turning it into an Array would have broken the save format and all
+## four UI sites to express something only the damage formula needs. An old
+## save loads with this empty and is repaired from species.json on the next
+## `apply_species_definition`, exactly like every other species-owned field.
+##
+## Consequence worth knowing, recorded rather than buried: a dual-typed
+## creature learns its PRIMARY type's TMs only. There are no fire/electric/
+## ice/psychic/dark TMs yet so it is unobservable today, but when there are,
+## somebody has to decide whether Nightburrow can learn Dark TMs. That is
+## T3-REWARD's surface, not this one's.
+var secondary_type: String = ""
+
 ## What the player called it, or empty for "it kept its species name".
 ##
 ## Empty rather than a copy of `display_name` on purpose. GAME_DESIGN.md 10:
@@ -214,6 +235,7 @@ static func from_species(
 	instance.species_id = id
 	instance.display_name = str(definition.get("display_name", id))
 	instance.creature_type = str(definition.get("type", "ground"))
+	instance.secondary_type = str(definition.get("type_secondary", ""))
 
 	instance.base_hp = float(definition.get("base_hp", 100.0))
 	instance.base_attack = float(definition.get("base_attack", 20.0))
@@ -466,6 +488,7 @@ func evolve_into(new_species_id: String, definition: Dictionary, cfg: Dictionary
 	species_id = new_species_id
 	display_name = str(definition.get("display_name", new_species_id))
 	creature_type = str(definition.get("type", creature_type))
+	secondary_type = str(definition.get("type_secondary", secondary_type))
 	base_hp = float(definition.get("base_hp", base_hp))
 	base_attack = float(definition.get("base_attack", base_attack))
 	base_defence = float(definition.get("base_defence", base_defence))

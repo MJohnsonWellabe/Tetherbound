@@ -11,11 +11,21 @@ extends "res://tests/test_case.gd"
 
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
 
 ## The Meadows' whole type vocabulary (data/creatures/species.json's own `type`
 ## values). A move's `type` field is flavour, not a gameplay check, but it
 ## still has to be a real type or it is just a typo nobody will ever see fail.
-const KNOWN_TYPES := ["ground", "water", "air"]
+## T3-CREATURES. The type vocabulary now has ONE source of truth --
+## data/config/type_chart.json's `types` -- because it used to be this literal,
+## duplicated in tests/test_moves.gd and tests/test_moves_data.gd, and the
+## owner's creature-expansion brief adds fire/electric/ice/psychic/dark. Widening
+## two hand-maintained copies is how they drift apart. This is still the same
+## assertion it always was (a move or TM may not name a type nobody declared);
+## it just no longer has a second opinion about what the answer is.
+## A `var` rather than a `const`: GDScript requires a constant expression for
+## `const`, and this one is read from data at load.
+var KNOWN_TYPES: Array = TYPE_CHART.known_types()
 
 var moves: RefCounted = null
 
