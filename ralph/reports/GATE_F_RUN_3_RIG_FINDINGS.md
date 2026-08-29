@@ -1,3 +1,23 @@
+> **STALE AS OF 2026-08-29 — DO NOT READ AS CURRENT.**
+>
+> This file is still in the state the run's THIRD session left it. Run 3's
+> own final session did not get to the findings write-up before the owner
+> stood the lane down, and said so explicitly in
+> `ralph/reports/handover-GATE-F-RUN-3-2026-08-29.md`.
+>
+> Known-wrong below: the text narrates RIG-11 as an open defect. **RIG-11 was
+> fixed and re-verified after S06.** In particular the claim that "there is
+> not one `combat_start` event in this run" was true when written and is
+> not true now — S07, S08 and S09 all carry real telemetry, and `party
+> size 1` throughout is attributable to the South Bridge stranding, not to
+> RIG-11.
+>
+> Current run state (S01-S09 complete, S10 BLOCKED on a cost gate, X02
+> complete, X03 killed, X01/X04-X08 never started) is in that handover and in
+> `ralph/STATE_OF_THE_THREE_TRACKS_2026-08-29.md`. Rewrite this file from
+> the run directory's own INVENTORY.json files before trusting any sentence
+> in it.
+
 # Gate F run 3 — findings about the RIG
 
 **Date:** 2026-08-28. **Branch:** `ralph/GATE-F-RUN-3`.

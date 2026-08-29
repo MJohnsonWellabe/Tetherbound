@@ -4,10 +4,49 @@ This is the **single current entry point for autonomous Meadows work**.
 
 If another document looks like a startup guide, milestone guide, handover, or old Ralph manual, do not treat it as current merely because it exists. Start here.
 
-## CURRENT STATE — 2026-08-28
+## CURRENT STATE — 2026-08-29
 
-**This section supersedes both dated sections below.** They are kept as
-history; do not open the lanes they name.
+**This section supersedes every dated section below it.** They are kept as
+history; do not open the lanes they name, and do not trust their `main` SHA.
+
+`main` was at `961a8c02` at the end of the 2026-08-29 production day.
+**`ralph/LAND-0829B` carries every lane branch in the repo** and was awaiting
+a job-level-green CI verdict when this was written — check whether it landed
+before assuming `main` is current.
+
+**Read these, in this order, before selecting work:**
+
+1. `CLAUDE.md`
+2. `docs/owner-direction/README.md` and BOTH documents it points to — the
+   three production tracks. Read them in full; two coordinators in a row were
+   corrected for skimming exactly these.
+3. **`ralph/STATE_OF_THE_THREE_TRACKS_2026-08-29.md`** — the evidence-backed
+   current state of the game against those three tracks. Start here for
+   "what is actually true right now".
+4. `ralph/COORDINATOR_HANDOVER_2026-08-29-B.md` — traps, mistakes worth not
+   repeating, and how to land an integration branch safely.
+5. `ralph/OWNER_FEEDBACK_2026-08-29_BUILDINGS.md` and
+   `ralph/OWNER_PLAYTEST_2026-08-28.md` — newest owner evidence. Under
+   `CLAUDE.md`'s precedence these outrank every other doc for what they cover.
+6. `ralph/ACTIVE_GAME_PLAN.md` — gate and package order.
+
+**No lanes are in flight.** Every lane was stopped and archived on 2026-08-29;
+each left a handover at `ralph/reports/handover-*-2026-08-29.md`. **Read those
+before restarting anything** — several found things not visible in their diffs.
+
+**The live owner directive:** the Stronghold and Meadows Hall become ONE
+location, redesigned from scratch, with Fable doing the design. See the
+cross-track section of the state document for the measured geometry, what
+reference art exists, and the two questions the owner has not yet answered.
+
+---
+
+## Superseded — CURRENT STATE 2026-08-28
+
+**Kept as history. The section above supersedes this one.** Its `main` SHA is
+stale, the four lanes it lists are all archived, and
+`ralph/COORDINATION_2026-08-27_POST_PHASE_B.md` was removed in the 2026-08-29
+documentation cleanup (recoverable from git history).
 
 `main` is at `883c0cf3`+. A Windows build of it is published and
 playable at the repo's `latest` release tag.
