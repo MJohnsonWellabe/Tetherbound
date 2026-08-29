@@ -16,13 +16,25 @@ const ROAD_GATE_OPEN_FLAG := "road_gate_open"
 
 var _item_id: String = ""
 var _label: String = ""
+var _shape: String = "key"
 var _visual: Node3D = null
 var _prompt: Node3D = null
 
 
-func setup(item_id: String, label: String) -> void:
+## `shape` picks the primitive `_build_visual()` builds: "key" (default, the
+## original shaft-and-ring, unchanged for `castle_gate_key`) or "stone" (a
+## faceted emissive sphere, D71/T3-SUNSTONE) -- a key-shaped Sunstone would
+## read as the wrong object entirely, and this class already knows how to
+## build a found-object prop, so a shape hint here beats either a bespoke
+## sibling script or forcing every future non-key pickup through key geometry.
+## The faceted-sphere technique itself is not new: it is
+## `burrow_warrens.gd::_build_prize`'s own gem, stripped of the plinth and
+## room light that prop's DARK CHAMBER specifically needed and this one, sitting
+## in open daylight, does not.
+func setup(item_id: String, label: String, shape: String = "key") -> void:
 	_item_id = item_id
 	_label = label
+	_shape = shape
 	add_to_group("progression_restore")
 	# The shaft lies along local +X with no yaw ever applied at the call
 	# site (`playground_world.gd` sets `position` only) — so on the road
@@ -33,7 +45,8 @@ func setup(item_id: String, label: String) -> void:
 	# reason: no silhouette change or material fix helps an object that is
 	# being viewed edge-on. A fixed off-axis yaw — a plausible "dropped,
 	# not placed" angle — keeps the shaft and ring broadside to a
-	# road-aligned approach instead of end-on to it.
+	# road-aligned approach instead of end-on to it. Only meaningful for the
+	# "key" shape; "stone" is round and does not care.
 	rotation.y = deg_to_rad(50.0)
 	_build_visual()
 	_prompt = INTERACTABLE.new()
@@ -79,6 +92,9 @@ func _deactivate() -> void:
 
 
 func _build_visual() -> void:
+	if _shape == "stone":
+		_build_stone_visual()
+		return
 	# A real key's own proportions (a thin shaft plus a ring), not the
 	# low-mound-in-slot-colour placeholder harvest_node.gd uses for a
 	# resource pile — the blind visual-judge pass named that shape (and the
@@ -156,6 +172,35 @@ func _build_visual() -> void:
 	ring.rotation.x = deg_to_rad(90.0)
 	ring.position = Vector3(-0.125, 0.0, 0.0)
 	_visual.add_child(ring)
+
+
+## A faceted emissive stone, resting directly on the ground with no plinth or
+## dedicated light -- `burrow_warrens.gd::_build_prize`'s gem sits in a dark
+## dungeon room that needs its own light source to read at all; this one sits
+## in open Meadows daylight and does not. Low radial/ring segment counts for
+## the same reason that prop uses them: an emissive surface ignores its own
+## normals at uniform lighting, so cutting the segment counts is what gives
+## flat renderer ambient something to shade differently across the surface.
+func _build_stone_visual() -> void:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = _item_colour()
+	material.metallic = 0.0
+	material.roughness = 0.35
+	material.emission_enabled = true
+	material.emission = _item_colour()
+	material.emission_energy_multiplier = 1.1
+
+	var gem := MeshInstance3D.new()
+	var sphere := SphereMesh.new()
+	sphere.radius = 0.16
+	sphere.height = 0.32
+	sphere.radial_segments = 7
+	sphere.rings = 4
+	gem.mesh = sphere
+	gem.material_override = material
+	gem.position = Vector3.UP * 0.16
+	_visual = gem
+	add_child(_visual)
 
 
 func _item_colour() -> Color:
