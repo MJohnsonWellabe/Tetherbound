@@ -673,6 +673,27 @@ func _band_blend(field: RefCounted, x: float, z: float, cfg: Dictionary) -> floa
 ## the flat water level IS underwater, see playground_heightfield.water_level)
 ## and off `stream_factor` for the channel, whose own water surface follows
 ## the carved bed downhill rather than sitting at one level.
+##
+## T1-WATER (§8): the river never earned this. `water.gd::_build_river`'s own
+## header records why it uses the pond's mechanism and not the stream's — the
+## channel is authored to hold ONE level, the same "height below a flat
+## surface is wet" shape the pond already uses here — but this function was
+## never extended to ask `river_level()`/`river_factor()`, so the river's bed
+## and banks bake with whatever the slope pick alone gives them: ordinary
+## grass or hillside rock, with no wet/mud transition where the water
+## actually sits. Owner brief calls this out directly as "mismatched
+## water-edge ecology" and asks for one baseline treatment across every body
+## of water, not an isolated pond.
+##
+## Gated by `river_factor(x, z)` (not a bare height test like the pond's):
+## the pond is one basin, so any nearby ground sharing its absolute elevation
+## IS the pond, but the river runs ~340m through terrain that swings 27m and
+## briefly crosses the SAME elevation as ground far from the channel. The
+## gate gets multiplied against the height term rather than substituted for
+## it, so a pixel has to be both near the channel horizontally (river_factor)
+## and near the water's height to read as wet — the same two-part shape
+## `_pond_surface_mask`/`_river_surface_mask` already use in water.gd for the
+## identical reason.
 func _wet_weight(field: RefCounted, height: float, x: float, z: float, water_level: float) -> float:
 	var wet := 0.0
 	if not is_nan(water_level):
@@ -683,6 +704,23 @@ func _wet_weight(field: RefCounted, height: float, x: float, z: float, water_lev
 		wet = 1.0 - smoothstep(water_level - 0.1, water_level + 0.35, height)
 	if field.has_method("stream_factor"):
 		wet = maxf(wet, float(field.stream_factor(x, z)))
+	if field.has_method("river_level") and field.has_method("river_factor"):
+		var river_level: float = field.river_level()
+		# Cheap reject before the expensive per-segment scan `river_factor`
+		# runs (measured ~4x `stream_factor`'s own per-call cost, and this is
+		# an unconditional per-pixel call across a 64-region corridor). Height
+		# above the wet band's own ceiling makes the result 0 regardless of
+		# the gate -- smoothstep saturates to 1 there, so `river_wet` is
+		# already 0 -- so skipping the scan changes nothing it would have
+		# added. Below `river_level - 0.1` cannot be skipped this way: the bed
+		# runs 6-9m under the rims through the middle reaches and every one of
+		# those pixels is genuinely wet, at `river_wet == 1.0` however far
+		# down they sit.
+		if not is_nan(river_level) and height <= river_level + 0.35:
+			var gate := float(field.river_factor(x, z))
+			if gate > 0.0:
+				var river_wet := 1.0 - smoothstep(river_level - 0.1, river_level + 0.35, height)
+				wet = maxf(wet, river_wet * gate)
 	return wet
 
 
