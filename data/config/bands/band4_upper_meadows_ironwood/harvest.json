@@ -191,6 +191,66 @@
       "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
       "model_scale": 0.85,
       "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: swift_tonic was shop-only at Mira's before this pass, no world presence. Near Captain Field's own position ((170,5590), trainers.json) -- readiness before the first of the three regional captains, matching the coordinator's own guidance that a temporary tonic suits a cache near a fight about to happen."
+    },
+    {
+      "order": 4025,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-263.7, 5369.1],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.30,
+      "_why_t3_density": "T3-DENSITY, Gap A. Band 4 is the chapter's longest band (3436m) and its OWN worst on-route resource gap ran a full 1380m (order 4006's stone to order 4010's fiber, spine points 3-10) -- close to a third of the band's whole length with no reachable crafting material on the required path, despite this being the region spec names as Ironwood's own tier. This is the first of three nodes splitting that single gap into four ~345m segments, each inside the owner's 60-90s/240-360m cadence band. 15m off the spine (`tools/_probe_gate_f_corridor.gd` point-to-segment geometry), ground-checked (`tools/_probe_density_sites.gd`, worst slope 12.9 degrees over a 2m pad -- inside the 3.5-13.9 degree range T3-PICKUPS' own siting pass already accepted for this band). TwistedTree_4 ONLY, pale variant, matching order 4000's `_comment_red_leak_d4b` finding exactly -- the scatter layer's material fixup only covers this one model, and any other TwistedTree number reintroduces the crimson-canopy bug two blind visual passes already spent fixing. Ironwood rather than wood/stone: the region's own signature material, with real Band-4 sinks (recipes_ironwood.json's `orb_prime` at 4, `ironwood_haft_axe`/`_pickaxe` at 3 each, `potion_large` at 2)."
+    },
+    {
+      "order": 4026,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [40.6, 5531.3],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0,
+      "_why_t3_density": "T3-DENSITY, Gap A. Second of the three nodes splitting the 1380m gap (see order 4025). 15m off the spine, ground-checked (worst slope 9.8 degrees, `tools/_probe_density_sites.gd`). Stone rather than a second ironwood -- material variety, and this segment sits closer to Captain Field's own approach (170,5590) than to the ironwood grove, so ordinary stone reads truer to the ground here."
+    },
+    {
+      "order": 4027,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [323.7, 5716.6],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_t3_density": "T3-DENSITY, Gap A. Third of the three nodes splitting the 1380m gap (see order 4025), landing near Captain Field's own position ((170,5590), trainers.json) -- a real 'gather before the fight' beat matching owner-direction section 9's preparation loop for every Captain. 15m off the spine, ground-checked (worst slope 5.5 degrees, `tools/_probe_density_sites.gd`)."
+    },
+    {
+      "order": 4028,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [82.3, 6201.2],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.34,
+      "_why_t3_density": "T3-DENSITY, Gap A. The band's second on-route resource gap, 986m (order 4009's stone to order 4020's stone, spine points 10-15) -- spanning the whole run from Captain Field's aftermath past Captain Ridge's own approach with no reachable crafting material. First of two nodes splitting it into three ~330m segments. 15m off the spine, ground-checked (worst slope 5.6 degrees, `tools/_probe_density_sites.gd`). TwistedTree_4 pale-variant only, per order 4000's own `_comment_red_leak_d4b`. Ironwood again, deliberately -- Captain Ridge's own reward is `elixir_guard` (T3-REWARD) rather than a tool/orb upgrade, so a player who wants the Prime Orb or a reinforced tool before that fight has to gather for it, and this is the only ironwood anywhere near his approach."
+    },
+    {
+      "order": 4029,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [-194.9, 6381.5],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why_t3_density": "T3-DENSITY, Gap A. Second of two nodes splitting the 986m gap (see order 4028). 15m off the spine, ground-checked (worst slope 3.5 degrees, `tools/_probe_density_sites.gd`, the flattest of every candidate this pass measured)."
+    },
+    {
+      "order": 4030,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [14.5, 6794.3],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.28,
+      "_why_t3_density": "T3-DENSITY, Gap A. The band's own tail: after order 4020's stone (spine point 15-16), nothing resource-kind was reachable for the remaining 510m to the band4/5 seam, right where the region hands off to the Stronghold Approach. Beside the ruined watchtower (playground_world.gd WATCHTOWER_AT (40,6800)) and order 4021's revive -- 'a Team Tether patrol never got to ship out' reads equally well for a felled ironwood as for a dropped revive. 15m off the spine, ground-checked (worst slope 4.7 degrees, `tools/_probe_density_sites.gd`). TwistedTree_4 pale-variant only, per order 4000's own `_comment_red_leak_d4b`. Splits the tail into ~245m/~265m, both inside the owner's 60-90s/240-360m cadence band; D70 leaves Band 5 itself alone, so this is the last place in the required path this fix belongs."
     }
   ]
 }
