@@ -113,6 +113,18 @@ func _run() -> void:
 	var field: RefCounted = HEIGHTFIELD.new()
 	var water_level := float(terrain_config.get("water", {}).get("level", 0.0))
 
+	# T1-SKY: raising SETTLE_AFTER_MOVE to 15 above closed most, not all, of
+	# the warm-up gap -- water-01 (the FIRST viewpoint shot after boot) still
+	# measured a sky-only patch at RGB(53,59,60) against water-02/03/04's
+	# 130-150 range, even though every viewpoint shares the identical frozen
+	# "day" state. The first-ever shadow-map/Terrain3D-stream population
+	# after a fresh scene boot appears to want more settle than a later
+	# camera jump between two already-warm viewpoints does. One extra
+	# one-time wait here, before the loop's own per-viewpoint settle, rather
+	# than raising SETTLE_AFTER_MOVE further for every viewpoint.
+	for i in 30:
+		await physics_frame
+
 	var failures: Array[String] = []
 	for entry: Variant in viewpoints:
 		var view: Dictionary = entry
