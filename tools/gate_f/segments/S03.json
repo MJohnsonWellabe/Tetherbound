@@ -354,7 +354,7 @@
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: the original fixed-coordinate `move_to` + blind `interact` reached the cluster centre (30,-40) but not necessarily a live individual -- three bramblebun wander a 15 m radius (data/config/bands/band1_lower_meadows/spawns.json) and the first RIG-15 re-run's own telemetry shows input_context stayed 'world' the whole cycle, meaning no creature was ever actually in range. `move_to_entity` tracks a live bramblebun's own position every frame instead of a fixed point."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
     },
     {
       "id": "S03-32a2",
@@ -364,7 +364,7 @@
         "expect_prompt": "Engage",
         "check_provider": false
       },
-      "expected": "RIG-17: the wild-engage prompt (\"Engage Bramblebun\") is owned by EncounterDirector, not by the bramblebun node itself -- check_provider's relatedness test (ancestor/descendant of the found entity) can never pass for a prompt owned by a separate manager node, so `entity: \"bramblebun\"` refused even the FIRST attempt's genuinely live \"Engage Bramblebun\" prompt. Matched on prompt text instead, with check_provider off, so this presses when a real engage offer is live and refuses (naming what it saw) when it is not -- including the \"Ripplet is out of the fight\" state a fainted-and-unswappable solo party leaves behind."
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
     },
     {
       "id": "S03-33a",
@@ -385,7 +385,7 @@
         "times": 20,
         "settle_frames": 30
       },
-      "expected": "RIG-15: raised from 14 to 20 taps for a lower HP fraction and a better catch_chance (data/config/catching.json: chance scales with hp_factor(hp_fraction))"
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
     },
     {
       "id": "S03-36a",
@@ -426,7 +426,7 @@
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: the original fixed-coordinate `move_to` + blind `interact` reached the cluster centre (30,-40) but not necessarily a live individual -- three bramblebun wander a 15 m radius (data/config/bands/band1_lower_meadows/spawns.json) and the first RIG-15 re-run's own telemetry shows input_context stayed 'world' the whole cycle, meaning no creature was ever actually in range. `move_to_entity` tracks a live bramblebun's own position every frame instead of a fixed point."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
     },
     {
       "id": "S03-32b2",
@@ -436,7 +436,7 @@
         "expect_prompt": "Engage",
         "check_provider": false
       },
-      "expected": "RIG-17: the wild-engage prompt (\"Engage Bramblebun\") is owned by EncounterDirector, not by the bramblebun node itself -- check_provider's relatedness test (ancestor/descendant of the found entity) can never pass for a prompt owned by a separate manager node, so `entity: \"bramblebun\"` refused even the FIRST attempt's genuinely live \"Engage Bramblebun\" prompt. Matched on prompt text instead, with check_provider off, so this presses when a real engage offer is live and refuses (naming what it saw) when it is not -- including the \"Ripplet is out of the fight\" state a fainted-and-unswappable solo party leaves behind."
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
     },
     {
       "id": "S03-33b",
@@ -457,7 +457,7 @@
         "times": 20,
         "settle_frames": 30
       },
-      "expected": "RIG-15: raised from 14 to 20 taps for a lower HP fraction and a better catch_chance (data/config/catching.json: chance scales with hp_factor(hp_fraction))"
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
     },
     {
       "id": "S03-36b",
@@ -498,7 +498,7 @@
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: the original fixed-coordinate `move_to` + blind `interact` reached the cluster centre (30,-40) but not necessarily a live individual -- three bramblebun wander a 15 m radius (data/config/bands/band1_lower_meadows/spawns.json) and the first RIG-15 re-run's own telemetry shows input_context stayed 'world' the whole cycle, meaning no creature was ever actually in range. `move_to_entity` tracks a live bramblebun's own position every frame instead of a fixed point."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
     },
     {
       "id": "S03-32c2",
@@ -508,7 +508,7 @@
         "expect_prompt": "Engage",
         "check_provider": false
       },
-      "expected": "RIG-17: the wild-engage prompt (\"Engage Bramblebun\") is owned by EncounterDirector, not by the bramblebun node itself -- check_provider's relatedness test (ancestor/descendant of the found entity) can never pass for a prompt owned by a separate manager node, so `entity: \"bramblebun\"` refused even the FIRST attempt's genuinely live \"Engage Bramblebun\" prompt. Matched on prompt text instead, with check_provider off, so this presses when a real engage offer is live and refuses (naming what it saw) when it is not -- including the \"Ripplet is out of the fight\" state a fainted-and-unswappable solo party leaves behind."
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
     },
     {
       "id": "S03-33c",
@@ -529,7 +529,7 @@
         "times": 20,
         "settle_frames": 30
       },
-      "expected": "RIG-15: raised from 14 to 20 taps for a lower HP fraction and a better catch_chance (data/config/catching.json: chance scales with hp_factor(hp_fraction))"
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
     },
     {
       "id": "S03-36c",
@@ -570,7 +570,7 @@
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: the original fixed-coordinate `move_to` + blind `interact` reached the cluster centre (30,-40) but not necessarily a live individual -- three bramblebun wander a 15 m radius (data/config/bands/band1_lower_meadows/spawns.json) and the first RIG-15 re-run's own telemetry shows input_context stayed 'world' the whole cycle, meaning no creature was ever actually in range. `move_to_entity` tracks a live bramblebun's own position every frame instead of a fixed point."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
     },
     {
       "id": "S03-32d2",
@@ -580,7 +580,7 @@
         "expect_prompt": "Engage",
         "check_provider": false
       },
-      "expected": "RIG-17: the wild-engage prompt (\"Engage Bramblebun\") is owned by EncounterDirector, not by the bramblebun node itself -- check_provider's relatedness test (ancestor/descendant of the found entity) can never pass for a prompt owned by a separate manager node, so `entity: \"bramblebun\"` refused even the FIRST attempt's genuinely live \"Engage Bramblebun\" prompt. Matched on prompt text instead, with check_provider off, so this presses when a real engage offer is live and refuses (naming what it saw) when it is not -- including the \"Ripplet is out of the fight\" state a fainted-and-unswappable solo party leaves behind."
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
     },
     {
       "id": "S03-33d",
@@ -601,7 +601,7 @@
         "times": 20,
         "settle_frames": 30
       },
-      "expected": "RIG-15: raised from 14 to 20 taps for a lower HP fraction and a better catch_chance (data/config/catching.json: chance scales with hp_factor(hp_fraction))"
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
     },
     {
       "id": "S03-36d",
@@ -642,7 +642,7 @@
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: the original fixed-coordinate `move_to` + blind `interact` reached the cluster centre (30,-40) but not necessarily a live individual -- three bramblebun wander a 15 m radius (data/config/bands/band1_lower_meadows/spawns.json) and the first RIG-15 re-run's own telemetry shows input_context stayed 'world' the whole cycle, meaning no creature was ever actually in range. `move_to_entity` tracks a live bramblebun's own position every frame instead of a fixed point."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
     },
     {
       "id": "S03-32e2",
@@ -652,7 +652,7 @@
         "expect_prompt": "Engage",
         "check_provider": false
       },
-      "expected": "RIG-17: the wild-engage prompt (\"Engage Bramblebun\") is owned by EncounterDirector, not by the bramblebun node itself -- check_provider's relatedness test (ancestor/descendant of the found entity) can never pass for a prompt owned by a separate manager node, so `entity: \"bramblebun\"` refused even the FIRST attempt's genuinely live \"Engage Bramblebun\" prompt. Matched on prompt text instead, with check_provider off, so this presses when a real engage offer is live and refuses (naming what it saw) when it is not -- including the \"Ripplet is out of the fight\" state a fainted-and-unswappable solo party leaves behind."
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
     },
     {
       "id": "S03-33e",
@@ -673,7 +673,7 @@
         "times": 20,
         "settle_frames": 30
       },
-      "expected": "RIG-15: raised from 14 to 20 taps for a lower HP fraction and a better catch_chance (data/config/catching.json: chance scales with hp_factor(hp_fraction))"
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
     },
     {
       "id": "S03-36e",
@@ -697,6 +697,366 @@
     },
     {
       "id": "S03-38e",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32f",
+      "title": "walk to a live bramblebun (attempt 6)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32f2",
+      "title": "challenge it (attempt 6)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33f",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35f",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36f",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37f",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38f",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32g",
+      "title": "walk to a live bramblebun (attempt 7)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32g2",
+      "title": "challenge it (attempt 7)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33g",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35g",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36g",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37g",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38g",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32h",
+      "title": "walk to a live bramblebun (attempt 8)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32h2",
+      "title": "challenge it (attempt 8)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33h",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35h",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36h",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37h",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38h",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32i",
+      "title": "walk to a live bramblebun (attempt 9)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32i2",
+      "title": "challenge it (attempt 9)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33i",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35i",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36i",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37i",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38i",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32j",
+      "title": "walk to a live bramblebun (attempt 10)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+    },
+    {
+      "id": "S03-32j2",
+      "title": "challenge it (attempt 10)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33j",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35j",
+      "title": "weaken it",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 30
+      },
+      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+    },
+    {
+      "id": "S03-36j",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the throw is aimed, not commanded"
+    },
+    {
+      "id": "S03-37j",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38j",
       "title": "let the catch resolve",
       "action": "wait",
       "args": {
