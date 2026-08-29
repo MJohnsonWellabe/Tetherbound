@@ -24,6 +24,7 @@ const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
+const ASPECT_VFX := preload("res://scripts/creatures/vfx/aspect_vfx.gd")
 
 ## CREATURE-IDENTITY-2 alpha presence. Warm gold rather than a warning red:
 ## an alpha is a bigger animal, not an attack telegraph, and combat already owns
@@ -89,6 +90,34 @@ var shiny: bool = false
 ##
 ## Set through `set_alpha()`, never decided here -- same rule as `shiny`.
 var alpha: bool = false
+
+## T1-CREATURE-ART. Non-empty for a body wearing an ASPECT VARIANT's recolor +
+## glow + VFX treatment (Nightburrow, Stormtrail, Riftfrill, Ashtusk --
+## docs/owner-direction/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md), independent
+## of `shiny`/`alpha`: an Aspect variant is its own species identity (own
+## typing, own catch data, owned by T3-CREATURES' species.json entries), not a
+## per-individual roll on an existing one, so it is never combined with the
+## vivid/shiny/alpha suffix logic below -- it replaces it outright.
+##
+## Read from `placeholder.aspect_variant` in `_build_placeholder()` when a
+## species entry declares one (dormant today: no species.json entry declares
+## it yet, see this lane's own handover for the exact contract), or set
+## directly through `set_aspect_variant()` for a caller that builds the
+## presentation without a species table entry -- this project's own capture
+## tooling does exactly that to prove the technique ahead of the data.
+var aspect_variant: String = ""
+
+## Which species' texture FOLDER an aspect variant's sibling colourway files
+## live in -- e.g. Stormtrail (species id, eventually, "stormtrail") is built
+## on Trailpup's own model and textures, so its `_stormtrail.png` siblings sit
+## next to Trailpup's shipped files, not in a "stormtrail" folder that does
+## not exist. Defaults to `species_id` when unset, which is correct for a
+## caller that never sets it (the source and the wearer are the same species).
+var _aspect_source_species: String = ""
+
+## The aspect variant's own idle VFX (flame/arcs/motes/embers), rebuilt
+## whenever the body is re-dressed -- same lifecycle as `_aura` below.
+var _aspect_vfx: Node3D = null
 
 var _height: float = 1.0
 var _radius: float = 0.4
@@ -221,6 +250,23 @@ func set_alpha(value: bool) -> void:
 	_refresh_shiny_tint()
 
 
+## T1-CREATURE-ART. Dress this body as an Aspect variant and re-dress it if
+## already built -- same shape as `set_shiny()`/`set_alpha()` above, and a
+## no-op when the variant has not actually changed for the same reason those
+## two are: a defensive caller must not re-swap (and re-cache) a material
+## every frame. `source_species` names whose texture folder the sibling
+## colourway files live in; left empty it defaults to this body's own
+## `species_id`, which is correct only when the wearer and the source are the
+## same species (never true for the four named variants, always true for a
+## test rig that wears its own species' colourway).
+func set_aspect_variant(variant_id: String, source_species: String = "") -> void:
+	if aspect_variant == variant_id:
+		return
+	aspect_variant = variant_id
+	_aspect_source_species = source_species
+	_refresh_shiny_tint()
+
+
 ## PW2 (BAND1-D1). An individual's gameplay size as a multiple of its
 ## species' own, for alpha/elder variants: 1.0 is an ordinary creature.
 ##
@@ -240,6 +286,16 @@ var body_scale: float = 1.0
 
 func _build_placeholder() -> void:
 	var look: Dictionary = SPECIES.placeholder(species_id)
+	# T1-CREATURE-ART contract (dormant until a species entry declares one --
+	# see set_aspect_variant()'s own comment): a species whose placeholder
+	# names `aspect_variant` wears that colourway/VFX instead of the ordinary
+	# vivid/shiny/alpha ladder. Only read here, never overwritten, so a caller
+	# that already set it programmatically (this lane's own capture tooling)
+	# is not clobbered by a species table that has no such field yet.
+	if aspect_variant == "":
+		aspect_variant = str(look.get("aspect_variant", ""))
+		if aspect_variant != "":
+			_aspect_source_species = str(look.get("aspect_source_species", ""))
 	var size_factor: float = maxf(body_scale, 0.01)
 	_height = float(look.get("height", 1.0)) * size_factor
 	_radius = float(look.get("radius", 0.4)) * size_factor
@@ -433,6 +489,20 @@ func _build_capsule(look: Dictionary) -> void:
 ## creature once rolled, so there is no "restore the original material" path
 ## to maintain.
 func _refresh_shiny_tint() -> void:
+	## T1-CREATURE-ART. An Aspect variant REPLACES the vivid/shiny/alpha
+	## ladder outright rather than adding a fourth rung to it -- see
+	## `aspect_variant`'s own comment for why. `alpha` can still be true at
+	## the same time (Nightburrow and Stormtrail both are, per the owner
+	## brief), so `_apply_alpha_presence()` still runs after the colourway
+	## swap to layer the rim/aura on top; `shiny` never applies to a variant
+	## that is already its own rare identity.
+	if aspect_variant != "":
+		var texture_species := _aspect_source_species if _aspect_source_species != "" else species_id
+		if _has_model:
+			_swap_colourway_textures(aspect_variant, texture_species)
+		_apply_aspect_vfx()
+		_apply_alpha_presence()
+		return
 	## OF28 (owner directive, quoted in ralph/BACKLOG.md): a colourway is a
 	## REPAINT, never a tint — "if our newt is blue, I want red. not blue
 	## with a red shade over it." tools/repaint_creature_textures.py writes
@@ -500,6 +570,26 @@ func _apply_alpha_presence() -> void:
 	if _has_model:
 		_rim_light_node(_model, ALPHA_RIM_STRENGTH, "alpha")
 	_aura = ALPHA_AURA.attach(self, _radius * 1.5, _height, ALPHA_AURA_COLOUR)
+
+
+## T1-CREATURE-ART. The Aspect variant's idle VFX -- purple flame
+## (Nightburrow), electric arcs (Stormtrail), rift motes (Riftfrill) or ember
+## smoke (Ashtusk), plus every variant's glowing-eyes billboard. Rebuilt
+## whenever the body is re-dressed, same reason `_aura` is in
+## `_apply_alpha_presence()`: a model rebuild (`apply_size_multiplier`) would
+## otherwise leave the old effect parented to art that no longer exists.
+##
+## Per Nightburrow's own reference sheet, this is not decorative: "the purple
+## flame effect is important. Without emissive/VFX treatment, this variant is
+## not successful." The other three boards ask for the same thing in their
+## own colour.
+func _apply_aspect_vfx() -> void:
+	if _aspect_vfx != null:
+		_aspect_vfx.queue_free()
+		_aspect_vfx = null
+	if aspect_variant == "" or not _has_model:
+		return
+	_aspect_vfx = ASPECT_VFX.attach(self, aspect_variant, _radius, _height)
 
 
 ## OWNER DIRECTIVE 2026-08-28 §2b: "creatures need to stand out in the grass.
@@ -570,15 +660,24 @@ func _rim_light_node(node: Node, strength: float, tag: String) -> void:
 ## a `_<suffix>` sibling on disk; swaps albedo+emission to the repainted pair
 ## on a cached duplicate material. Returns true if at least one surface
 ## swapped — a shiny caller falls back to the placeholder tint otherwise.
-func _swap_colourway_textures(suffix: String) -> bool:
+##
+## `texture_species` names whose texture folder the sibling files live in,
+## for the T1-CREATURE-ART aspect-variant case where that is NOT this body's
+## own `species_id` (Stormtrail's files sit beside Trailpup's). Empty
+## defaults to `species_id`, which is every pre-existing vivid/shiny/alpha
+## caller's behaviour, unchanged.
+func _swap_colourway_textures(suffix: String, texture_species: String = "") -> bool:
 	_colourway = suffix
+	_colourway_species = texture_species if texture_species != "" else species_id
 	return _swap_node_textures(_model)
 
 
-## Which colourway `_swap_node_textures` is currently applying. A plain field
-## rather than an argument threaded through the recursion, which would have to
-## reach the two static helpers as well for no benefit.
+## Which colourway `_swap_node_textures` is currently applying, and whose
+## texture folder it reads siblings from. Plain fields rather than arguments
+## threaded through the recursion, which would have to reach the two static
+## helpers as well for no benefit.
 var _colourway: String = "vivid"
+var _colourway_species: String = ""
 
 ## The alpha's drifting motes, freed and rebuilt whenever the body is re-dressed
 ## (a model rebuild through `apply_size_multiplier` is the live case -- without
@@ -609,7 +708,8 @@ func _swap_node_textures(node: Node) -> bool:
 			var source: Material = instance.get_active_material(surface)
 			if not (source is BaseMaterial3D):
 				continue
-			var replacement := _swapped_material(source as BaseMaterial3D, species_id, _colourway)
+			var texture_species := _colourway_species if _colourway_species != "" else species_id
+			var replacement := _swapped_material(source as BaseMaterial3D, texture_species, _colourway)
 			if replacement != null:
 				instance.set_surface_override_material(surface, replacement)
 				swapped = true
@@ -625,7 +725,7 @@ static var _shiny_swap_materials: Dictionary = {}
 
 
 static func _swapped_material(source: BaseMaterial3D, species: String, suffix: String) -> BaseMaterial3D:
-	var shiny_albedo := _texture_for(source.albedo_texture, species, suffix)
+	var shiny_albedo := _texture_for(source.albedo_texture, species, suffix, "base_color")
 	if shiny_albedo == null:
 		return null
 	var key := "%d:%s" % [source.get_instance_id(), suffix]
@@ -635,7 +735,7 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	copy.resource_name = "%s_%s" % [source.resource_name, suffix]
 	copy.albedo_texture = shiny_albedo
 	if copy.emission_enabled:
-		var shiny_emission := _texture_for(source.emission_texture, species, suffix)
+		var shiny_emission := _texture_for(source.emission_texture, species, suffix, "emissive")
 		copy.emission_texture = shiny_emission if shiny_emission != null else shiny_albedo
 		# CREATURE-PRESENTATION: these materials wire the painted albedo into
 		# the emission slot at full energy, so a creature in daylight renders as
@@ -647,12 +747,27 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	return copy
 
 
-## `<texture path minus .png>_shiny.png`, or null when no repaint exists —
+## `<texture path minus .png>_<suffix>.png`, or null when no repaint exists —
 ## the naming contract tools/repaint_creature_textures.py writes. A texture
 ## embedded inside a .glb has no usable resource_path; those species'
 ## repaints live at the tool's extracted-texture path instead, keyed by
 ## species id (the tool extracts the glb's images before repainting them).
-static func _texture_for(tex: Texture2D, species: String, suffix: String) -> Texture2D:
+##
+## `kind` ("base_color" or "emissive") names which of the two extracted
+## siblings the FALLBACK branch below should look for.
+##
+## T1-CREATURE-ART bugfix: this fallback branch used to hardcode
+## "base_color" regardless of which texture (`tex`) it was actually asked
+## about, so an "extracted"-convention species' EMISSIVE swap always
+## resolved to its base_color sibling and could never find a genuinely
+## different emissive file even if one existed on disk. That was silently
+## harmless for every species that shipped no colourway-specific emissive
+## (every one of them, until this lane wrote
+## `trailpup_extracted_emissive_stormtrail.png`) because the caller already
+## falls back to the base_color texture when this returns null -- same
+## rendered result either way. It stopped being harmless the moment a real
+## `..._extracted_emissive_<suffix>.png` file existed to be found.
+static func _texture_for(tex: Texture2D, species: String, suffix: String, kind: String = "base_color") -> Texture2D:
 	if tex == null:
 		return null
 	var path := tex.resource_path
@@ -660,7 +775,8 @@ static func _texture_for(tex: Texture2D, species: String, suffix: String) -> Tex
 	if path != "" and path.ends_with(".png"):
 		candidate = "%s_%s.png" % [path.get_basename(), suffix]
 	else:
-		candidate = "res://assets/creatures/tetherbound/%s/models/%s_extracted_base_color_%s.png" % [species, species, suffix]
+		candidate = "res://assets/creatures/tetherbound/%s/models/%s_extracted_%s_%s.png" % [
+			species, species, kind, suffix]
 	if not ResourceLoader.exists(candidate):
 		return null
 	return load(candidate) as Texture2D
