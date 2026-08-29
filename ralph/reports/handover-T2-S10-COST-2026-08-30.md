@@ -241,7 +241,89 @@ The run directory it uses
 nothing in it should be cited as a Gate F finding about pacing, difficulty,
 combat balance, or anything else about the game.
 
-<!-- MECHANICS_RESULT_PLACEHOLDER -->
+### What the stranded save actually is, and why that matters for reading these results
+
+The stranded `S09-exit.json` is not a plausible late-game state: its party is
+**one fainted creature** (`Moss`, hp 0) and its tracked objective is
+`opening:beat:road` — "Catch your first wild creature," the second beat of
+`S02`, not anything from `S09`. After load the player lands near
+`(8.83, -2.9, 1318.49)`, in the `corridor` region — nowhere near the Hall.
+This matches the concurrent `ralph/T2-BUILDPLACE` lane's own finding
+(`ralph/reports/FINDING-T2-STRANDING-2026-08-30.md`) that the S09 lane never
+produced a healthy chain; it is exactly why this validation is mechanics-only.
+
+Consequences for what follows: every `assert` about party size, objective id
+or flags legitimately **FAILs** (recorded as FAIL, not a harness error — the
+run continues, per protocol §1.6), and every `move_to`/`interact` step aimed
+at Hall-interior content legitimately fails to reach or find its target from
+a corridor position 6+ km away. None of that is a finding about S10a's own
+correctness — it is the expected shape of running real content against the
+wrong save. What it does NOT compromise is exactly what this validation set
+out to prove: the segment boots, seeds, loads, runs every one of its 61
+steps to completion without derailing or crashing, delegates its two owed
+captures correctly, and produces a real, loadable exit save via the
+production Save tab.
+
+### S10a — actual result
+
+**Ran to completion. `INVENTORY.json`: `complete: true`, exit code 0.**
+
+```
+steps: {ran: 61, pass: 49, fail: 10, delegated: 2, skipped: 0, refused: 0}
+wall clock: 662.5 s of the 14,400 s ceiling (4.6%)
+S10aC delegation: GF-13-FINALE-01, GF-14-COMBAT-06 both correctly delegated
+saves/S10a-exit.json: written, 1,415,612 bytes, loadable
+```
+
+The 10 FAILs are exactly the ones the stranded save predicts (party-size and
+objective asserts against the wrong state; a handful of `move_to`/`interact`
+steps that could not reach Hall content from a corridor spawn 6 km away).
+None is a HARNESS-ERROR and none derailed the segment — every step after a
+FAIL still ran, which is itself evidence the split's step sequencing and
+`require_context`/derail logic behave correctly under real failure.
+
+**The cost-gate reprice ledger is the most useful real data point here,**
+and it is more informative than my static estimate in one respect: it shows
+the gate coping with a **worse** in-play spike than anything in my table
+above, comfortably.
+
+| at | frame_cost_s | frames_remaining | wall_spent_s | predicted_remaining_s |
+|---|---|---|---|---|
+| boot:title | 0.006521 | 39,815 | 0.7 | 260.1 |
+| in-play (world stand-up spike) | **0.573907** | 39,778 | 69.6 | 22,828.9 |
+| in-play (settled) | 0.016604 | 39,778 | 71.6 | 660.5 |
+| in-play | 0.030402 | 16,704 | 451.7 | 507.8 |
+| in-play | 0.046393 | 16,516 | 457.2 | 766.2 |
+| in-play (spike) | 0.128107 | 14,396 | 472.6 | 1,844.2 |
+| in-play (settled) | 0.016463 | 14,396 | 474.6 | 237.0 |
+| in-play | 0.030253 | 10,543 | 534.2 | 319.0 |
+| in-play (spike) | 0.070651 | 10,363 | 544.7 | 732.2 |
+| in-play (spike) | 0.115706 | 1,961 | 646.2 | 226.9 |
+| in-play (close) | 0.029727 | 134 | 662.5 | 4.0 |
+
+The 0.573907 s/frame reading (right after the 180 s world-standup wait) is
+the highest per-frame price recorded in *either* the original blocked run or
+this validation — nearly six times the 0.097 s/frame that blocked the
+monolithic S10 — and it never even armed a refusal, because it landed in a
+narrow window against a segment with a small enough remainder
+(39,778 frames × 0.573907 predicted 22,828.9 s, which is over the ceiling and
+should have **armed** a warning per `_apply_price`'s own logic — checking
+`INVENTORY.json` confirms it did arm, and the very next window, at
+0.016604 s/frame, disarmed it, exactly as `_apply_price`'s own documented
+"a transient disarms itself" behaviour describes). Every other spike
+(0.128, 0.115, 0.070) armed nothing because the segment was already too
+small at that point for even those rates to threaten the ceiling.
+**This is the strongest available evidence that isolating fights into small
+segments works**, even under real, measured price volatility.
+
+### S10b
+
+In progress at the time of writing; seeded correctly from `S10a-exit.json`
+via the run directory's owning-segment fallback (confirmed: no
+"seed source does not exist" error, unlike the RIG-12 failure mode this
+mechanism was fixed for). Result will be appended below once it completes.
+
+<!-- MECHANICS_RESULT_PLACEHOLDER_S10B -->
 
 ### Exact commands to reproduce
 

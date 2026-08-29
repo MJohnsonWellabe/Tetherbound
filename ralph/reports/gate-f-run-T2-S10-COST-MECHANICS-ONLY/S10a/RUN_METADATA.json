@@ -1,0 +1,569 @@
+{
+  "blocked": "",
+  "capture_available": false,
+  "capture_lane": "S10aC",
+  "capture_preflight": {
+    "allow_no_capture": false,
+    "boot_cost_s": 0.48,
+    "capture_available": false,
+    "capture_lane": "S10aC",
+    "capture_requested": false,
+    "cost_rechecks": 272,
+    "delegated_captures": 2,
+    "display_server": "headless",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "headless",
+      "from": "/home/user/Tetherbound/ralph/reports/gate-f-run-T2-S10-COST-MECHANICS-ONLY/RUN_METADATA.json",
+      "key": "lanes.logic.display_server",
+      "lane": "logic"
+    },
+    "measured_frame_cost_s": 0.005922,
+    "measured_frame_cost_s_in_scene": 0.029727,
+    "planned_captures": 0,
+    "predicted_frames": 39848,
+    "predicted_segment_cost_s": 236.0,
+    "predicted_segment_cost_s_in_scene": 666.5,
+    "record_baseline_hz": 0.0,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.3,
+        "frame_cost_s": 0.006521,
+        "frames_remaining": 39815,
+        "predicted_remaining_s": 260.1,
+        "step_index": 3,
+        "wall_spent_s": 0.7,
+        "was_frame_cost_s": 0.005922
+      },
+      {
+        "armed": "in-play sample over budget: 22829 s predicted against 14330 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14330.4,
+        "frame_cost_s": 0.573907,
+        "frames_remaining": 39778,
+        "predicted_remaining_s": 22828.9,
+        "step_index": 8,
+        "wall_spent_s": 69.6,
+        "was_frame_cost_s": 0.006521
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14328.4,
+        "frame_cost_s": 0.016604,
+        "frames_remaining": 39778,
+        "predicted_remaining_s": 660.5,
+        "step_index": 8,
+        "wall_spent_s": 71.6,
+        "was_frame_cost_s": 0.573907
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13948.3,
+        "frame_cost_s": 0.030402,
+        "frames_remaining": 16704,
+        "predicted_remaining_s": 507.8,
+        "step_index": 19,
+        "wall_spent_s": 451.7,
+        "was_frame_cost_s": 0.016673
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13942.8,
+        "frame_cost_s": 0.046393,
+        "frames_remaining": 16516,
+        "predicted_remaining_s": 766.2,
+        "step_index": 23,
+        "wall_spent_s": 457.2,
+        "was_frame_cost_s": 0.030402
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13927.4,
+        "frame_cost_s": 0.128107,
+        "frames_remaining": 14396,
+        "predicted_remaining_s": 1844.2,
+        "step_index": 26,
+        "wall_spent_s": 472.6,
+        "was_frame_cost_s": 0.046393
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13925.4,
+        "frame_cost_s": 0.016463,
+        "frames_remaining": 14396,
+        "predicted_remaining_s": 237.0,
+        "step_index": 26,
+        "wall_spent_s": 474.6,
+        "was_frame_cost_s": 0.128107
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13865.8,
+        "frame_cost_s": 0.030253,
+        "frames_remaining": 10543,
+        "predicted_remaining_s": 319.0,
+        "step_index": 31,
+        "wall_spent_s": 534.2,
+        "was_frame_cost_s": 0.016816
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13863.7,
+        "frame_cost_s": 0.01687,
+        "frames_remaining": 10543,
+        "predicted_remaining_s": 177.9,
+        "step_index": 31,
+        "wall_spent_s": 536.3,
+        "was_frame_cost_s": 0.030253
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13855.3,
+        "frame_cost_s": 0.070651,
+        "frames_remaining": 10363,
+        "predicted_remaining_s": 732.2,
+        "step_index": 32,
+        "wall_spent_s": 544.7,
+        "was_frame_cost_s": 0.01687
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13843.7,
+        "frame_cost_s": 0.023966,
+        "frames_remaining": 8175,
+        "predicted_remaining_s": 195.9,
+        "step_index": 35,
+        "wall_spent_s": 556.3,
+        "was_frame_cost_s": 0.07215
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13841.7,
+        "frame_cost_s": 0.016714,
+        "frames_remaining": 8175,
+        "predicted_remaining_s": 136.6,
+        "step_index": 35,
+        "wall_spent_s": 558.3,
+        "was_frame_cost_s": 0.023966
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13771.9,
+        "frame_cost_s": 0.030362,
+        "frames_remaining": 3649,
+        "predicted_remaining_s": 110.8,
+        "step_index": 45,
+        "wall_spent_s": 628.1,
+        "was_frame_cost_s": 0.016746
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13753.8,
+        "frame_cost_s": 0.115706,
+        "frames_remaining": 1961,
+        "predicted_remaining_s": 226.9,
+        "step_index": 48,
+        "wall_spent_s": 646.2,
+        "was_frame_cost_s": 0.035141
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13751.0,
+        "frame_cost_s": 0.023459,
+        "frames_remaining": 941,
+        "predicted_remaining_s": 22.1,
+        "step_index": 49,
+        "wall_spent_s": 649.0,
+        "was_frame_cost_s": 0.115706
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13749.0,
+        "frame_cost_s": 0.01662,
+        "frames_remaining": 941,
+        "predicted_remaining_s": 15.6,
+        "step_index": 49,
+        "wall_spent_s": 651.0,
+        "was_frame_cost_s": 0.023459
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13737.5,
+        "frame_cost_s": 0.029727,
+        "frames_remaining": 134,
+        "predicted_remaining_s": 4.0,
+        "step_index": 57,
+        "wall_spent_s": 662.5,
+        "was_frame_cost_s": 0.016745
+      }
+    ],
+    "verdict": "not required",
+    "why": "segment declares no captures and no continuous record"
+  },
+  "capture_requested": false,
+  "clocks": {
+    "cost_gate_and_disk_gate": "wall (they are questions about the box)",
+    "duration_ms": "wall (a boot/save/load cost is a wall-clock fact)",
+    "events_jsonl_t": "play",
+    "frames_manifest_t": "play",
+    "play_seconds_elapsed": 596.42,
+    "route_csv_t": "play (Engine.get_physics_frames() / physics_ticks_per_second)",
+    "route_csv_wall": "wall datetime, so the two clocks can be lined up",
+    "trace_hz_and_record_hz": "play seconds",
+    "wall_seconds_elapsed": 663.08
+  },
+  "config_flags": {
+    "art.json": {
+      "environment.adjustment_enabled": true,
+      "environment.fog_enabled": true,
+      "environment.ssao_enabled": true,
+      "times.night.environment.adjustment_enabled": true,
+      "villager_farmer.hair.visible": true,
+      "villager_ranger.hair.visible": true,
+      "villager_smith.hair.visible": true
+    },
+    "burrow_warrens.json": {
+      "interior_rock.enabled": true,
+      "interior_structure.corners": true,
+      "interior_structure.course": true,
+      "interior_structure.enabled": true,
+      "interior_structure.ragged": true,
+      "interior_structure.reveals": true,
+      "interior_structure.ribs": true
+    },
+    "chapter_rewards.json": {
+      "invariants.every_tm_is_obtainable": true,
+      "invariants.no_orphan_materials": true
+    },
+    "combat.json": {
+      "impact.enabled": true,
+      "telegraph.enabled": true
+    },
+    "creature_condition.json": {
+      "rest.clear_on_faint": true
+    },
+    "grass_field.json": {
+      "enabled": true,
+      "far_cover.enabled": true,
+      "stones.enabled": true
+    },
+    "meadow_healing.json": {
+      "barriers.enabled": true,
+      "dead_ground.enabled": true,
+      "patrols.enabled": true,
+      "tether_lights.enabled": true,
+      "vegetation.enabled": true
+    },
+    "movement.json": {
+      "camera.invert_y": false,
+      "torch.auto_at_night": true,
+      "torch.shadows": false,
+      "unstick.enabled": true
+    },
+    "performance.json": {
+      "debug_overlay_on_boot": false,
+      "scatter_lod_ranges": false
+    },
+    "stronghold.json": {
+      "approach_drain.enabled": true,
+      "interior_structure.corners": true,
+      "interior_structure.course": true,
+      "interior_structure.enabled": true,
+      "interior_structure.ragged": false,
+      "interior_structure.reveals": true,
+      "interior_structure.ribs": true,
+      "machine.placeholder": false
+    },
+    "terrain_playground.json": {
+      "river.failsafe": true,
+      "shader.enable_macro_variation": true
+    },
+    "tether_relay.json": {
+      "dead_ground.enabled": true
+    },
+    "vegetation.json": {
+      "layers.bushes.collides": false,
+      "layers.deadfall.collides": false,
+      "layers.drygrass.casts_shadow": false,
+      "layers.drygrass.cleared_by_clearings": false,
+      "layers.drygrass.collides": false,
+      "layers.flowers.casts_shadow": false,
+      "layers.flowers.cleared_by_clearings": false,
+      "layers.flowers.collides": false,
+      "layers.grass.casts_shadow": false,
+      "layers.grass.cleared_by_clearings": false,
+      "layers.grass.collides": false,
+      "layers.groundmat.casts_shadow": false,
+      "layers.groundmat.cleared_by_clearings": false,
+      "layers.groundmat.collides": false,
+      "layers.grove.collides": true,
+      "layers.path_stones.align_to_slope": true,
+      "layers.path_stones.casts_shadow": false,
+      "layers.path_stones.cleared_by_clearings": false,
+      "layers.path_stones.collides": false,
+      "layers.path_stones.grows_on_paths": true,
+      "layers.rocks.align_to_slope": true,
+      "layers.rocks.collides": true,
+      "layers.saplings.collides": true,
+      "layers.trees.collides": true
+    },
+    "water.json": {
+      "dressing.boulders.collides": true,
+      "dressing.stones.collides": false,
+      "jetty.railing": true
+    },
+    "weather.json": {
+      "presets.clear.rain": false,
+      "presets.cloudy.rain": false,
+      "presets.fog.rain": false,
+      "presets.rain.rain": true
+    }
+  },
+  "config_flags_off": [
+    "movement.json:camera.invert_y",
+    "movement.json:torch.shadows",
+    "performance.json:debug_overlay_on_boot",
+    "performance.json:scatter_lod_ranges",
+    "stronghold.json:interior_structure.ragged",
+    "stronghold.json:machine.placeholder",
+    "vegetation.json:layers.bushes.collides",
+    "vegetation.json:layers.deadfall.collides",
+    "vegetation.json:layers.drygrass.casts_shadow",
+    "vegetation.json:layers.drygrass.cleared_by_clearings",
+    "vegetation.json:layers.drygrass.collides",
+    "vegetation.json:layers.flowers.casts_shadow",
+    "vegetation.json:layers.flowers.cleared_by_clearings",
+    "vegetation.json:layers.flowers.collides",
+    "vegetation.json:layers.grass.casts_shadow",
+    "vegetation.json:layers.grass.cleared_by_clearings",
+    "vegetation.json:layers.grass.collides",
+    "vegetation.json:layers.groundmat.casts_shadow",
+    "vegetation.json:layers.groundmat.cleared_by_clearings",
+    "vegetation.json:layers.groundmat.collides",
+    "vegetation.json:layers.path_stones.casts_shadow",
+    "vegetation.json:layers.path_stones.cleared_by_clearings",
+    "vegetation.json:layers.path_stones.collides",
+    "water.json:dressing.stones.collides",
+    "weather.json:presets.clear.rain",
+    "weather.json:presets.cloudy.rain",
+    "weather.json:presets.fog.rain"
+  ],
+  "cost_reprices": [
+    {
+      "at": "boot:title",
+      "budget_remaining_s": 14399.3,
+      "frame_cost_s": 0.006521,
+      "frames_remaining": 39815,
+      "predicted_remaining_s": 260.1,
+      "step_index": 3,
+      "wall_spent_s": 0.7,
+      "was_frame_cost_s": 0.005922
+    },
+    {
+      "armed": "in-play sample over budget: 22829 s predicted against 14330 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+      "at": "in-play",
+      "budget_remaining_s": 14330.4,
+      "frame_cost_s": 0.573907,
+      "frames_remaining": 39778,
+      "predicted_remaining_s": 22828.9,
+      "step_index": 8,
+      "wall_spent_s": 69.6,
+      "was_frame_cost_s": 0.006521
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 14328.4,
+      "frame_cost_s": 0.016604,
+      "frames_remaining": 39778,
+      "predicted_remaining_s": 660.5,
+      "step_index": 8,
+      "wall_spent_s": 71.6,
+      "was_frame_cost_s": 0.573907
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13948.3,
+      "frame_cost_s": 0.030402,
+      "frames_remaining": 16704,
+      "predicted_remaining_s": 507.8,
+      "step_index": 19,
+      "wall_spent_s": 451.7,
+      "was_frame_cost_s": 0.016673
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13942.8,
+      "frame_cost_s": 0.046393,
+      "frames_remaining": 16516,
+      "predicted_remaining_s": 766.2,
+      "step_index": 23,
+      "wall_spent_s": 457.2,
+      "was_frame_cost_s": 0.030402
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13927.4,
+      "frame_cost_s": 0.128107,
+      "frames_remaining": 14396,
+      "predicted_remaining_s": 1844.2,
+      "step_index": 26,
+      "wall_spent_s": 472.6,
+      "was_frame_cost_s": 0.046393
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13925.4,
+      "frame_cost_s": 0.016463,
+      "frames_remaining": 14396,
+      "predicted_remaining_s": 237.0,
+      "step_index": 26,
+      "wall_spent_s": 474.6,
+      "was_frame_cost_s": 0.128107
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13865.8,
+      "frame_cost_s": 0.030253,
+      "frames_remaining": 10543,
+      "predicted_remaining_s": 319.0,
+      "step_index": 31,
+      "wall_spent_s": 534.2,
+      "was_frame_cost_s": 0.016816
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13863.7,
+      "frame_cost_s": 0.01687,
+      "frames_remaining": 10543,
+      "predicted_remaining_s": 177.9,
+      "step_index": 31,
+      "wall_spent_s": 536.3,
+      "was_frame_cost_s": 0.030253
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13855.3,
+      "frame_cost_s": 0.070651,
+      "frames_remaining": 10363,
+      "predicted_remaining_s": 732.2,
+      "step_index": 32,
+      "wall_spent_s": 544.7,
+      "was_frame_cost_s": 0.01687
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13843.7,
+      "frame_cost_s": 0.023966,
+      "frames_remaining": 8175,
+      "predicted_remaining_s": 195.9,
+      "step_index": 35,
+      "wall_spent_s": 556.3,
+      "was_frame_cost_s": 0.07215
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13841.7,
+      "frame_cost_s": 0.016714,
+      "frames_remaining": 8175,
+      "predicted_remaining_s": 136.6,
+      "step_index": 35,
+      "wall_spent_s": 558.3,
+      "was_frame_cost_s": 0.023966
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13771.9,
+      "frame_cost_s": 0.030362,
+      "frames_remaining": 3649,
+      "predicted_remaining_s": 110.8,
+      "step_index": 45,
+      "wall_spent_s": 628.1,
+      "was_frame_cost_s": 0.016746
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13753.8,
+      "frame_cost_s": 0.115706,
+      "frames_remaining": 1961,
+      "predicted_remaining_s": 226.9,
+      "step_index": 48,
+      "wall_spent_s": 646.2,
+      "was_frame_cost_s": 0.035141
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13751.0,
+      "frame_cost_s": 0.023459,
+      "frames_remaining": 941,
+      "predicted_remaining_s": 22.1,
+      "step_index": 49,
+      "wall_spent_s": 649.0,
+      "was_frame_cost_s": 0.115706
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13749.0,
+      "frame_cost_s": 0.01662,
+      "frames_remaining": 941,
+      "predicted_remaining_s": 15.6,
+      "step_index": 49,
+      "wall_spent_s": 651.0,
+      "was_frame_cost_s": 0.023459
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13737.5,
+      "frame_cost_s": 0.029727,
+      "frames_remaining": 134,
+      "predicted_remaining_s": 4.0,
+      "step_index": 57,
+      "wall_spent_s": 662.5,
+      "was_frame_cost_s": 0.016745
+    }
+  ],
+  "delegated_captures": [
+    "GF-13-FINALE-01",
+    "GF-14-COMBAT-06"
+  ],
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false
+  },
+  "display_server": "headless",
+  "evidence_lane": "logic",
+  "frame_grab_ms": {},
+  "frames_absent": 0,
+  "frames_written": 0,
+  "godot": "4.7-stable (official)",
+  "harness_errors": [],
+  "instrumentation_overhead_note": "not measured in this run (--gatef-mode=overhead measures it)",
+  "measured_frame_cost_s": 0.029727,
+  "owes": [],
+  "planned_captures": 0,
+  "predicted_segment_cost_s": 666.5,
+  "record_baseline_hz": 0.0,
+  "rendering_driver": "headless",
+  "run_id": "gate-f-run-T2-S10-COST-MECHANICS-ONLY",
+  "segment": "S10a",
+  "segment_script": "tools/gate_f/segments/S10a.json",
+  "sha": "477a296acea784fa5bdb9b7da43be2e6ccfe1f56",
+  "started_wall": "2026-08-29 20:44:43",
+  "steps_ran": 61,
+  "steps_refused": 0,
+  "steps_total": 61,
+  "trace_hz": 2.0,
+  "trace_rows": 1171,
+  "verdicts": {
+    "DELEGATED": 2,
+    "FAIL": 10,
+    "PASS": 49,
+    "SKIP": 0
+  },
+  "viewport_size": [
+    1920,
+    1920
+  ]
+}
