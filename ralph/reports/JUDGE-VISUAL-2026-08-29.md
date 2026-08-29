@@ -246,20 +246,25 @@ viewpoint), plus the snap-preset `-golden`/`-night` frames from
 
 **Verdict: BAD**, on two grounds the still frames show unambiguously.
 
-- **Deep night is crimson.** From some point after 20:30 through at least
-  02:00, the *entire world* renders in a blood-red/oxblood wash —
-  `hour-22.00`, `hour-23.90`, `hour-00.10`, `hour-02.00` are red frames:
-  red sky, red-orange ground brighter than the 20:30 dusk, long
-  golden-hour-length shadows at midnight. The snap preset
-  `apply_time("night")` (`ground-02-…-night.png`) shows the *intended*
-  night — blue, moonlit patches, navigable, subtle glowing flowers, and it
-  is good. The driven clock does not land there. Beyond being wrong on its
-  own terms, it breaks the project's palette rule: oxblood is reserved for
-  Team Tether danger, and the passive clock paints the whole safe world
-  with it for a third of every day. Guess (flagged): the blended keyframe
-  path interpolates through, or clamps to, a sunset/danger colour whose hour
-  window is wrong, so midnight blends toward a red keyframe instead of the
-  night one the snap API uses.
+- **Deep night rendered crimson in this capture — attributed after
+  reconciliation to a KNOWN CAPTURE BUG, and the tool needs the ported
+  fix.** `hour-22.00`, `hour-23.90`, `hour-00.10`, `hour-02.00` came back
+  as blood-red frames: red sky, red-orange ground brighter than the 20:30
+  dusk. Written blind, this looked like the driven clock blending to a
+  danger colour. Post-verdict reconciliation found the true cause:
+  `tools/_capture_day_night_transition.gd:91` parks the Player at
+  y = −500 — 500 m underground — and `ralph/DONE.md` (SURVEY_BAND2 item)
+  documents precisely this anti-pattern: a submerged player makes
+  `water.gd` ramp a red drowning vignette over the whole frame, a fix
+  already ported into `survey_band2.gd`/`capture_band3_region.gd` but
+  **not** into this tool. The red frames are exactly the last four
+  captured, matching a ramp over capture wall-time rather than an hour
+  window. Consequence: **the real 22:00–02:00 look is unverified by this
+  pass** — the four red frames are evidence about the tool, not the sky.
+  The snap `apply_time("night")` (`ground-02-…-night.png`) is blue,
+  navigable and good, and is probably closer to the truth. Port the
+  above-ground parking fix into `_capture_day_night_transition.gd` and
+  re-run its last four hours before believing anything about deep night.
 - **Golden hour never happens on the driven clock.** The sweep brackets the
   18:00 keyframe (`hour-17.50/17.90/18.10`) and every one of those frames
   is a flat grey-blue overcast wash — no warm cast, no long warm shadows,
@@ -344,10 +349,12 @@ What reads wrong:
    widest gap, and the endgame march aims the player straight at it.
 2. **The live clock's colour script.** The keyart's identity is its light —
    golden sunset panel, blue mysterious night. On the driven clock golden
-   hour never renders (`hour-17.90`) and deep night is a blood-red wash for
-   roughly four hours (`hour-23.90`), spending the Team Tether danger
-   colour on the whole safe world. Both intended looks demonstrably exist
-   in the snap presets; the blend never reaches them.
+   hour never renders (`hour-17.90` straddles the 18:00 keyframe and is a
+   flat grey-blue wash), while the golden look demonstrably exists via the
+   snap preset. (The blood-red deep-night frames initially blamed here were
+   reattributed after reconciliation to the capture tool's own documented
+   submerged-player vignette bug — see subject 7 — so deep night is
+   unverified rather than condemned.)
 3. **Material cohesion.** The references read as one fabric; these frames
    keep breaking style within a single view — three unrelated rock
    languages at the Warrens mouth (`W-ext-03`), untextured horizon boxes
@@ -375,8 +382,10 @@ blockout. Since the chapter's climax is architecture, the overall answer
 is no.
 
 **What is fixable by changing the scene** (density, palette, lighting,
-composition, scatter, materials on existing meshes): the crimson night and
-missing golden blend (WorldLook keyframe path); the sky/ground weather
+composition, scatter, materials on existing meshes): the missing golden
+blend (WorldLook keyframe path — and port the above-ground player parking
+fix into `_capture_day_night_transition.gd` so deep night can actually be
+judged); the sky/ground weather
 disagreement; the dashed ground seams; floating pebbles and the floating
 castle plinth; the black-rendering NPC; the invisible stream (carve the
 channel, dress the banks); river bank texture scale; second grass
@@ -396,4 +405,84 @@ already placed.
 
 ## Lane-report reconciliation — WRITTEN LAST, after all verdicts
 
-(Deliberately empty until every verdict above is final.)
+Read after every verdict above was written: `T1-ARCH_buildings_2026-08-29.md`,
+`T1-CASTLE_castle_2026-08-29.md`, `t1-light-session-2026-08-29.md`,
+`ralph/DONE.md` (recent entries), and the landing branch's commit log.
+Where a report and my eyes disagree, both claims are stated.
+
+**Where the reports and the frames agree:**
+
+- **T1-ARCH's stronghold honesty is accurate.** It claims S-ext-01 "now
+  shows real warm-lit masonry, a large improvement over pure black" and
+  that S-ext-02's flank "is still mostly dark." Both match my frames
+  exactly. The lane also flagged `stronghold.json`'s `yaw_deg: 90` as
+  probably wrong for the current approach and a plausible contributor —
+  consistent with my "no articulation faces the player" read. No
+  disagreement; the verdict stays BAD because a readable-but-blank wall is
+  still a blank wall.
+- **T1-CASTLE predicted its own insufficiency.** Its report says the
+  metallic fix brightened the walls (~15–25 % measured) and warns that "if
+  the owner's next pass still reads the castle as too pale, the fix is
+  likely a value-ladder retune… not a reach for metallic again." That
+  next pass is this report: the castle now reads *whiter* than the tan
+  its albedo values intend (measured post-fix patch (212,203,185) —
+  essentially off-white), and my blind verdict called the walls
+  "near-white maquette." The predicted retune is now evidenced work.
+  Its C-01 capture-bug diagnosis also matches what I found and corrected
+  independently.
+- **T1-LIGHT's unaddressed list is confirmed by the frames.** Its blind
+  critic flagged, and left open: no aerial perspective at distance
+  (confirmed — subject 8), and night foliage staying saturated/day-lit
+  (confirmed at 19:00–20:50, canopies read self-lit). Its sun-disc fix
+  targeted the hour-21 blend, and my 19:00–20:50 frames indeed show no
+  blown disc — but the blown white ellipse is still present in the
+  **golden snap preset** (`ground-01-…-golden`), a state its fix did not
+  target.
+
+**Where the reports claim more than the frames show:**
+
+- **T1-ARCH: "the mound now shows real granite facet/fracture detail…
+  matching the interior's own bar."** The first half is true — the moss-
+  hedge multiply bug is genuinely gone; it is granite now. The second half
+  is not: the mound still fails (chamfered-cube silhouettes, one
+  noise-frequency everywhere, texture aliasing to checkerboard at
+  distance, and mint-green low-poly rocks plus saturated fern/aloe
+  confetti from a different style family sitting right at the mouth). The
+  material swap fixed the named defect and left the mound BAD for reasons
+  the fix was never aimed at. The interior's bar is not met.
+- **The castle round overall**: two lanes of accurate diagnosis and real
+  fixes (metallic, weathering octaves) have not moved the owner-level
+  verdict. The weathering variance is measurable (their std-dev 21.9→28.1)
+  and visible in my frames — as metre-scale smudges that read "stained
+  plaster," not masonry. Landed ≠ enough; the wall needs a value-ladder
+  retune plus coursing/openings-scale detail, not more octaves of blotch.
+- **DONE.md's black-NPC fix did not reach everything.** An additive
+  emission floor fix for dark rank tints is recorded as verified ("Hess
+  now reads with visible brown leather…"), yet a villager/NPC on the band-2
+  path renders 100 % black in full day in my frames
+  (`ground-02-…-day/-fog`), and the Team Tether grunt in `ground-04` is
+  a near-black mass. Either a different material path misses the floor,
+  or it regressed on the landing branch.
+
+**Where reconciliation overturned my own blind verdict (recorded, not
+erased):** the four blood-red deep-night frames. Blind, I attributed them
+to the driven clock; DONE.md's SURVEY_BAND2 entry documents the identical
+symptom as `water.gd`'s drowning vignette over a player parked underground,
+`_capture_day_night_transition.gd:91` parks the player at y = −500, and the
+red tracks capture order, not hour. Subject 7's text was corrected before
+finalising; the missing-golden-hour finding is in the clean early-capture
+window and stands. The lesson cuts both ways: my blind eyes caught what six
+rounds of prose missed elsewhere, and the repo's own prose caught my
+misattribution here. The tool still needs the parking fix ported before
+anyone judges deep night.
+
+**Findings no lane report mentions (new this pass):** dashed seam lines
+crossing the terrain in multiple daylight frames; floating path pebbles;
+the castle plinth's visible under-gap; the fog weather preset rendering no
+visible fog; the invisible stream at its own authored bank; the giant
+untextured horizon boxes on the band-5 skyline; `capture_water.gd`'s
+frames arriving in a dusk/night wash (it lacks the clock-pin fix its
+sibling tools carry); and `_capture_far_panels.gd` stalling >70 min
+without writing a frame (killed; possibly related to the Terrain3D
+streaming defect T1-LIGHT root-caused for the survey's black frame —
+guess, flagged).
