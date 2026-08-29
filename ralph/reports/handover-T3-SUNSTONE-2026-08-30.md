@@ -238,8 +238,27 @@ T3-CREATURES's.
 - `smoke_evolution.gd` — the real Team-screen ceremony (menu, focus, two-beat
   confirm, hand-back) still evolves a ready Mudsnout into Tuskroot end to end,
   unmodified
-- Full suite (`tests/run_tests.gd`, no `--only`) run to completion — see
-  final status below
+- **Full suite run to completion**: 1558 tests, 3,365,404 assertions, **4
+  failing test functions, all 4 pre-existing on the T3-CREATURES tip before
+  this lane touched anything** — verified directly, not assumed: I checked
+  out `5bdc2c6` into a separate worktree and re-ran the same test files
+  against it.
+  - `test_hud_widgets.gd::test_every_installed_species_has_the_hud_portrait_it_resolves`
+    — Nightburrow/Stormtrail/Riftfrill/Ashtusk have no HUD portrait art yet.
+    Identical failure, byte-for-byte, on the pre-merge tip. T1-CREATURE-ART's
+    gap, not this lane's.
+  - `test_wild_alphas.gd`'s three failures (alphas "not scaled up", one
+    missing `_why_alpha`, the alpha count exceeding "a handful") — also
+    present on the pre-merge tip, where the count read **12** and named
+    `band5_stronghold_approach` among the unscaled alphas (T3-CREATURES's
+    Ashtusk alpha block). Removing that cluster (§5) drops the count to
+    **11** and removes band5 from the unscaled list — a small, incidental
+    improvement, not a fix, and the test still fails on band2/3/4's
+    Nightburrow/Stormtrail alpha blocks, which this lane never touched.
+    T3-CREATURES's own design note explains why those blocks use
+    `scale: 1.0` deliberately; reconciling that against what this test
+    expects is a design question for whoever owns wild-alpha presentation,
+    not something to patch blind here.
 
 ### Done, verified live via a purpose-built probe (not a permanent test)
 
@@ -253,6 +272,10 @@ T3-CREATURES's.
 - The five pending-mesh creatures' Meshy generation (no `MESHY_API_KEY`)
 - T1-CREATURE-ART's recolour/VFX pass on all four aspect variants, Riftfrill
   and Ashtusk included
+- HUD portraits for all four T3-CREATURES aspect variants, and the wild-alpha
+  scale/count presentation issues in `test_wild_alphas.gd` — both pre-existing
+  on the T3-CREATURES tip, confirmed by direct re-run (§9), neither touched
+  by this lane's brief
 - The Ashtusk reference sheet's own build-path discrepancy ("VARIANT RECOLOR
   + RESIZE + VFX" on the image sheet vs. no-resize in the written brief and
   T3-CREATURES's data) — flagged in `D71`, not acted on: Ashtusk already
