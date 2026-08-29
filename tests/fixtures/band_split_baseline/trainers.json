@@ -509,6 +509,10 @@
           {
             "id": "potion_small",
             "count": 2
+          },
+          {
+            "id": "tm_earth_fist",
+            "count": 1
           }
         ],
         "flags": [],
@@ -516,7 +520,8 @@
       },
       "defeat_flag": "defeated_captain_field",
       "rechallenge": false,
-      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86.",
+      "_why_t3_reward": "T3-REWARD, owner-direction §14 ('Captain 1: Sigil + strong TM'). Field is the first of the three regional captains (see this entry's own `_comment`) and had no TM in its payout -- every Ground TM in the game came from a world pickup (tm_stone_rush/tm_burrow_strike, opening field) or Mira's shop (tm_rock_throw/tm_stone_spike/tm_earth_fist), never a fight. tm_earth_fist is the strongest Ground TM Mira sells (230 coins, power 1.4, one rung under the apex tm_earthshatter that is reserved for the off-spine Band 4 detour) -- a captain victory now hands over the same disc a player would otherwise have to save up for, which is what makes beating him feel like it paid for something beyond the Sigil. Still buyable at Mira's afterward for a second copy; nothing about the shop changed."
     },
     {
       "id": "captain_ridge",
@@ -560,6 +565,10 @@
           {
             "id": "revive",
             "count": 1
+          },
+          {
+            "id": "elixir_guard",
+            "count": 1
           }
         ],
         "flags": [],
@@ -567,7 +576,8 @@
       },
       "defeat_flag": "defeated_captain_ridge",
       "rechallenge": false,
-      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86.",
+      "_why_t3_reward": "T3-REWARD, owner-direction §14 ('Captain 2: Sigil + equipment/preparation improvement'). Ridge is the second captain. data/items/items.json's own elixir header says permanent stat boosters 'belong in the world -- a dungeon, a captain, a stronghold' and are deliberately kept out of Mira's stock so they stay rare; none of the three had ever actually been placed anywhere in the game before this. elixir_guard (permanent defence, capped by progression.json's elixirs.cap_per_stat) is the preparation reward: a one-time, non-refundable choice of who on the five gets stronger, which is what 'preparation improvement' means for an item that is not a TM and not consumed in one fight."
     },
     {
       "id": "captain_riverwatch",
@@ -611,6 +621,10 @@
           {
             "id": "orb_greater",
             "count": 2
+          },
+          {
+            "id": "elixir_vigour",
+            "count": 1
           }
         ],
         "flags": [],
@@ -618,7 +632,8 @@
       },
       "defeat_flag": "defeated_captain_riverwatch",
       "rechallenge": false,
-      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86.",
+      "_why_t3_reward": "T3-REWARD, owner-direction §14 ('Captain 3: Sigil + final preparation unlock/reward'). Riverwatch is the third of the three regional captains (see this entry's own `_comment`), and the last Sigil collected physically opens the Meadows Hall approach (Sec3's own 'the three physical Sigils open the old Hall/stronghold approach') -- so its own payout is the last thing the reward ladder can hand over before that gate. elixir_vigour (permanent max HP, capped by progression.json's elixirs.cap_per_stat) is the one of the three elixirs that reads as 'get ready for what is next' rather than 'get better at what you just did', which is what a final-preparation reward is for. Same unplaced-orphan gap tm_earth_fist and elixir_guard close on the other two captains: items.json's own header names elixirs as belonging 'in the world -- a dungeon, a captain, a stronghold' and none had ever actually been placed."
     },
     {
       "id": "warden_aldis",

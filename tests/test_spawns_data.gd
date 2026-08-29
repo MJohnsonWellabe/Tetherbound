@@ -372,3 +372,45 @@ func test_the_weather_gated_role_resolves_to_a_weather_gated_species() -> void:
 			var gate: Variant = spawn.get("weather", [])
 			found = gate is Array and not (gate as Array).is_empty()
 	assert_true(found, "the 'weather_gated' role names '%s', which carries no weather gate" % id)
+
+
+# --- roster temptation (owner-direction §11) ---------------------------------
+
+## Every major region needs at least one "reconsider the five" temptation a
+## player reaches on an ordinary walk-through, not only one hidden behind a
+## night gate. T3-REWARD found Band 2's only mechanically-tagged temptation
+## (the duskhush alpha, order 2006) was night-gated -- a player who never
+## explores after dark met zero of them in the one region whose whole purpose
+## (owner-direction §6) is testing whether the current five is good enough for
+## the Guardian. This does not require every band's desirability to be an
+## `alpha`/`elder` tag -- Bands 3, 4 and 5 also carry real temptation through
+## prose-authored `_why` framing on an ordinary cluster (a rideable species
+## otherwise unseen in the region, the chapter's one evolving species sited to
+## arrive near evolution level, a species that spawns wild nowhere else in the
+## game) -- but the mechanical tag is the one piece of this that is cheaply
+## and honestly machine-checkable, so this pins that floor rather than trying
+## to parse prose intent.
+func test_every_band_has_an_always_reachable_alpha_or_elder() -> void:
+	for band: String in BAND_CONTENT.BANDS:
+		var path := "res://data/config/bands/%s/spawns.json" % band
+		var file := FileAccess.open(path, FileAccess.READ)
+		assert_true(file != null, "%s is missing" % path)
+		if file == null:
+			continue
+		var parsed: Variant = JSON.parse_string(file.get_as_text())
+		assert_true(parsed is Dictionary, "%s did not parse as a JSON object" % path)
+		if not (parsed is Dictionary):
+			continue
+		var any_reachable := false
+		for entry: Variant in (parsed as Dictionary).get("spawns", []):
+			var spawn := entry as Dictionary
+			if not (spawn.has("alpha") or spawn.has("elder")):
+				continue
+			var weather_gate: Variant = spawn.get("weather", [])
+			var gated := str(spawn.get("time", "")) != "" \
+				or (weather_gate is Array and not (weather_gate as Array).is_empty())
+			if not gated:
+				any_reachable = true
+		assert_true(any_reachable,
+			("%s has no always-reachable alpha/elder spawn; owner-direction §11 wants every major "
+			+ "region to hold a credible roster temptation a player can actually find") % band)

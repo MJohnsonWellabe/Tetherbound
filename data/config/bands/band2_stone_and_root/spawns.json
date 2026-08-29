@@ -105,7 +105,12 @@
         2250.0
       ],
       "radius": 14.0,
-      "_why": "BAND2-63. A second Trailpup pocket, five levels up from the one near the South Bridge (order 2, same species) -- a meaningful alternative to whatever the player caught in Band 1, not a re-tour of it, and a chance to catch a fresh individual with better IVs/traits (spec Sec11's own reason to keep catching). Sited on the `ranger_camp_spur` loop, short of the camp itself (-259,2256) by ~80m so the pack reads as living near the abandoned site rather than living IN it."
+      "_why": "BAND2-63. A second Trailpup pocket, five levels up from the one near the South Bridge (order 2, same species) -- a meaningful alternative to whatever the player caught in Band 1, not a re-tour of it, and a chance to catch a fresh individual with better IVs/traits (spec Sec11's own reason to keep catching). Sited on the `ranger_camp_spur` loop, short of the camp itself (-259,2256) by ~80m so the pack reads as living near the abandoned site rather than living IN it.",
+      "alpha": {
+        "level_bonus": 3,
+        "scale": 1.3
+      },
+      "_why_alpha": "T3-REWARD, owner-direction §11. Before this the region's only mechanically-tagged roster temptation was the night-gated duskhush alpha (order 2006) -- a player who never explores after dark met zero always-reachable ones in the one region whose whole purpose (§6) is 'is my current team good enough for the Guardian?'. This entry's own `_why` already frames itself as 'a chance to catch a fresh individual with better IVs/traits'; alpha makes that promise visible rather than leaving it to a hidden IV roll -- a bigger, stronger Trailpup on the loop past the ranger camp, exactly where a player weighing their Ground answer against the Guardian is already walking."
     },
     {
       "order": 2012,
@@ -117,7 +122,12 @@
         2650.0
       ],
       "radius": 12.0,
-      "_why": "BAND2-63. The band's only other Meadowhart is 1250m back, at the South Bridge (order 5) -- a player who lost or never caught that one, or whose saddle broke, has no second chance at the region's rideable species until Band 4. One animal, not a herd (Meadowhart is a mount species, not a pack read), on the `warren_undertrail` loop past the Warrens' second mouth, where the ground opens out again after the dungeon."
+      "_why": "BAND2-63. The band's only other Meadowhart is 1250m back, at the South Bridge (order 5) -- a player who lost or never caught that one, or whose saddle broke, has no second chance at the region's rideable species until Band 4. One animal, not a herd (Meadowhart is a mount species, not a pack read), on the `warren_undertrail` loop past the Warrens' second mouth, where the ground opens out again after the dungeon.",
+      "alpha": {
+        "level_bonus": 3,
+        "scale": 1.3
+      },
+      "_why_alpha": "T3-REWARD, owner-direction §11's 'traversal role' bullet. The band's own second-chance Meadowhart, made into a genuinely better mount than the one the player likely already has (or lost) at the South Bridge rather than just an identical spare -- the credible reason to reconsider a slot even for a species the player may already own one of."
     },
     {
       "order": 2013,

@@ -186,12 +186,14 @@
       "items": [
         {"id": "rootstone", "count": 5},
         {"id": "orb_greater", "count": 2},
-        {"id": "revive", "count": 1}
+        {"id": "revive", "count": 1},
+        {"id": "hide_vest", "count": 1}
       ],
       "xp_bonus": 140,
       "message": "The guardian goes down and the warren goes quiet. The slab across the deep branch grinds into the floor -- something is lit back there."
     }
   },
+  "_why_t3_reward": "T3-REWARD, owner-direction §14 ('Warrens Guardian: Rootstone progression + useful TM/equipment/recipe'). CONTENT-0828 already fixed the payout's SIZE (this row used to pay less than the optional picket standing outside the door); what it still lacked was the literal 'TM/equipment/recipe' item this row of the ladder asks for. Every Ground TM already has an acquisition path (world pickup or Mira's shop, and Field's own Sigil reward now adds a third), so a TM here would be one more copy of something obtainable elsewhere rather than a new reason to clear the dungeon. hide_vest is the largest of the five armor pieces in items.json (0.14 defence, GAME_DESIGN.md 18's trainer-armor slots) and, like the elixirs the three captains now hand out, had no acquisition path anywhere in the game before this -- the chapter's one required dungeon is exactly where 'found in the depths, past what was guarding it' reads as earned rather than bought.",
   "_comment_deposits": "Rootstone in the walls -- Sec3 Band 2's own material, the first tier above wood/stone/fiber/berries. These are harvest_node.gd nodes with their specs written HERE rather than in data/config/harvest.json: that file is the first day's tutorial gathering out in the meadow (and the Old Quarry lane owns its own additions to it), and a deposit inside a dungeon has no business being in the same list. `at` is chamber-local [x, z] like everything above.",
   "_comment_deposit_models": "BAND2-63-WARRENS round 2. These carried no `model`, and `harvest_node.gd` falls back to `_box_visual()` when a spec has none -- so every rootstone deposit in the cave rendered as an untextured pale placeholder cube. The blind critic found it twice without being told what it was looking at ('a bare placeholder box ... a placeholder block in a frame offered for judgement is a defect, twice'). Rocks from the same nature family the outcrop outside uses, at deposit scale: the seam the player breaks is now made of the stone the hill is made of.",
   "deposits": [

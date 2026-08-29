@@ -299,3 +299,43 @@ func _assert_reward_flags_are_granted(activity: String, flags: Variant) -> void:
 			"the reward audit's '%s' row claims flag '%s', which no trainer in any "
 			% [activity, str(flag)] + "band actually grants -- an audited prize "
 			+ "nothing hands over")
+
+
+## T3-REWARD, owner-direction §14. Pins the reward-ladder SHAPE onto the real
+## trainer/dungeon data, the same way test_the_audited_tournament_prize_...
+## above pins the tournament final's coin figure -- an audit row is a claim,
+## this is the receipt. Before this pass none of the three captains paid a TM
+## or an elixir and the Warrens guardian paid no equipment at all, even though
+## items.json's own elixir/armor entries had been sitting unplaced since they
+## were built.
+func _reward_has_item(reward: Dictionary, item_id: String) -> bool:
+	for item: Variant in (reward.get("items", []) as Array):
+		if str((item as Dictionary).get("id", "")) == item_id:
+			return true
+	return false
+
+
+func test_the_three_captains_and_the_warrens_guardian_pay_the_ladder_shape() -> void:
+	var field := TRAINERS.trainer("captain_field")
+	assert_false(field.is_empty(), "captain_field is missing from the merged trainer table")
+	assert_true(_reward_has_item(field.get("reward", {}), "tm_earth_fist"),
+		"captain_field no longer pays tm_earth_fist; owner-direction §14 wants Captain 1 "
+		+ "to pay 'Sigil + strong TM'")
+
+	var ridge := TRAINERS.trainer("captain_ridge")
+	assert_false(ridge.is_empty(), "captain_ridge is missing from the merged trainer table")
+	assert_true(_reward_has_item(ridge.get("reward", {}), "elixir_guard"),
+		"captain_ridge no longer pays elixir_guard; owner-direction §14 wants Captain 2 "
+		+ "to pay 'Sigil + equipment/preparation improvement'")
+
+	var riverwatch := TRAINERS.trainer("captain_riverwatch")
+	assert_false(riverwatch.is_empty(), "captain_riverwatch is missing from the merged trainer table")
+	assert_true(_reward_has_item(riverwatch.get("reward", {}), "elixir_vigour"),
+		"captain_riverwatch no longer pays elixir_vigour; owner-direction §14 wants Captain 3 "
+		+ "to pay 'Sigil + final preparation unlock/reward'")
+
+	var warrens := _json("res://data/config/burrow_warrens.json")
+	var guardian_reward: Dictionary = (warrens.get("clear", {}) as Dictionary).get("reward", {})
+	assert_true(_reward_has_item(guardian_reward, "hide_vest"),
+		"the Burrow Warrens guardian no longer pays hide_vest; owner-direction §14 wants "
+		+ "'Rootstone progression + useful TM/equipment/recipe'")
