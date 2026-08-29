@@ -12,6 +12,14 @@ accurate as history — verified against the run's own artefacts below) and adds
 RIG-12 through RIG-18, which were found and mostly fixed *after* that draft was
 written, plus one still-open question this operator did not chase further.
 
+> **T2-GATEF-RUN4 update, 2026-08-30:** RIG-23 and RIG-24, appended below,
+> are new — found chasing why a real S03 replay (T2-BUILDPLACE round 3's
+> door/revive fix, plus this session's own GAME-0/T1 fixes) still does not
+> produce a healthy exit save. Neither is fixed. See the companion GAME
+> document's GAME-8/GAME-9 for the full mechanism and
+> `ralph/reports/handover-T2-GATEF-RUN4-2026-08-30.md` for the evidence
+> trail.
+
 **If you read one thing here: RIG-13 explains why S05 through S10 are
 dominated by a single repeated pattern (the South Bridge stranding) rather
 than five segments' worth of independent band content**, and the open
@@ -539,6 +547,52 @@ and had been since S03. T2-STRANDING's probe isolated exactly the
 `can_challenge()` booleans this document's prior draft said would need a
 live probe to distinguish, and found the fainted-ally branch, not the
 no-ally branch.
+
+---
+
+## RIG-23 — `stick_navigator.gd`'s generic wall-slide detour traps inside Mira's shop on the way OUT, even after the door fix that solved the way IN
+
+**Severity: BLOCKER for S03 evidence quality.** Not fixed. Found by
+`ralph/T2-GATEF-RUN4` re-running S03 with T2-BUILDPLACE round 3's door +
+revive fix and this session's own GAME-0/T1 fixes all in place — a real
+replay still ends with `home_built`/`creature_bed_built_3` unset and the
+party permanently fainted. Full mechanism and two new committed live
+probes (`tools/gate_f/probe_oskar_walk_trace.gd`,
+`tools/gate_f/probe_oskar_stuck_geometry.gd`) are in the companion GAME
+document's new **GAME-8** entry — recorded there rather than duplicated
+here because the underlying geometry (`shop_interior.gd`'s counter/shelf
+placement) is a real GAME-content question, not purely a harness one, even
+though the immediate symptom is `stick_navigator.gd`'s detour logic
+getting wedged in a ~0.3-0.4m gap between a shelf and the west wall.
+
+Worth recording here specifically: this is the SAME shape as RIG-13
+through RIG-22 above — a real, working fix (the door) that closed one gap
+and let the walk reach a NEW one immediately behind it, invisible until
+the first gap closed. A new staging step (`S03-59a`) that routes the exit
+leg through the same point the entry leg already uses cleanly did **not**
+converge, which rules out "the entry-leg staging point just needs
+reusing" as the fix — whoever picks this up next should read GAME-8's own
+account of what was tried (four different waypoints, all trapping at the
+same or a near-identical point) before spending more replay cycles on
+coordinate tuning.
+
+## RIG-24 — the tool-equip sequence's own isolated-probe PASS does not predict its behaviour inside a full segment replay
+
+**Severity: SHIP candidate, not root-caused.** Not fixed. Also found by
+`ralph/T2-GATEF-RUN4` in the same replay as RIG-23. `tools/gate_f/
+probe_tool_equip_sequence.gd` (T2-BUILDPLACE) proves the hotbar-assign
+sequence correct from a fresh `S02-exit.json` — but a real S03 replay
+after ~450 seconds of prior segment state (two fights, two revives, a
+third unhealed faint, the door detour) shows every one of six real
+`gather` attempts equipped with the identical `{hotbar_slot: 3, item:
+"knife"}`, never switching tools despite the segment's own
+`hotbar_2`/`hotbar_3`/`hotbar_4` presses between nodes. See GAME-9 in the
+companion document for the full account. Named here as the same general
+caution T2-BUILDPLACE's own handover already recorded once this run
+(a probe that exercises a mechanism from a clean/isolated start can pass
+while the same mechanism fails inside a long, stateful replay) — worth
+treating as a standing rule for this repo's own rig-validation practice,
+not just this one instance of it.
 
 ---
 

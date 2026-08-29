@@ -14,6 +14,20 @@ as `X03-killed-1/`), X04 now complete (see below), X01/X03/X05-X08 not yet
 run by this lane (X03 and X06 held on the T2-STRANDING verdict per the
 coordinator's 2026-08-29T16:06 correction).
 
+> **T2-GATEF-RUN4 update, 2026-08-30 (`ralph/T2-GATEF-RUN4`):** **GAME-0
+> (below) and T1 (dark-features inventory, `trainer_npc.gd`'s dialogue
+> collapse) are both fixed, live-tested, and pushed** — see the GAME-0
+> section for the fix shape and `tests/smoke_trainer_no_usable_ally.gd` for
+> the live proof. Neither fix produced a healthy `S03-exit.json` by itself:
+> chasing why surfaced two NEW, still-open findings — see **GAME-8** (the
+> Mira-shop exit walk traps the navigator against `shop_interior.gd`'s own
+> counter/shelf collision, unrelated to the door BUILDPLACE round 3 already
+> fixed) and **GAME-9** (the tool-equip sequence does not reliably keep the
+> intended tool equipped across a full segment replay's own gathering loop)
+> below, both new to this pass. **A healthy S03 -> S09 chain still does not
+> exist.** See `ralph/reports/handover-T2-GATEF-RUN4-2026-08-30.md` for the
+> full evidence trail.
+
 ---
 
 ## The headline finding: the player has been stranded at the South Bridge since partway through S05, and it dominates everything downstream
@@ -80,6 +94,26 @@ a healthy S03 onward is still needed.
 ---
 
 ## GAME-0 — a fainted-only party's "is out of the fight" interaction offer permanently outranks every other interaction in the world
+
+**FIXED 2026-08-30, `ralph/T2-GATEF-RUN4`, commit `7490fc18`.**
+`encounter_director.gd::interaction_offer()`'s fainted-ally statement now
+carries ordinary priority (0, matching `interactable.gd`'s own default) and
+a distance past any real interact radius (9999.0, was 0.0) instead of
+priority 100 / distance 0.0. It still wins — and still tells the player why
+nothing else is responding — when it is the only offer on the table, but
+now loses the arbiter's tie-break to any real, closer offer (a trainer
+prompt, a village greeting, a harvest node, a creature bed) instead of
+substituting for one. Live-confirmed both ways in
+`tests/smoke_trainer_no_usable_ally.gd`: a fainted, deployed ally at a
+never-fought trainer now opens the honest `trainer_no_usable_creature`
+line (see T1 below) instead of getting no response at all, and does not
+block gathering or building either — confirmed directly in a real S03
+segment replay (`ralph/reports/gate-f-run4-s03-validation-2/`), where six
+real `gather` events fire normally with Moss permanently fainted from
+`t=438` onward. **This does not, by itself, produce a healthy S03 exit
+save** — see GAME-8/GAME-9 below for what still blocks that.
+
+**Original finding, kept for history:**
 
 **Severity: SHIP, possibly higher.** Credit: found by the T2-BUILDPLACE lane
 (`origin/ralph/T2-BUILDPLACE@cb3e8b56`) while validating the S03
@@ -268,6 +302,24 @@ craft panel's actual `Control.has_focus()` state at this exact moment.
 
 ### GAME-5 — a player whose only creature faints gets no explanation and a trainer falsely claims a win that never happened
 
+**The trainer-dialogue half FIXED 2026-08-30, `ralph/T2-GATEF-RUN4`, commit
+`7490fc18`** (dark-features inventory item T1). Exactly the candidate shape
+described at the end of this entry: `encounter_director.gd::no_usable_ally()`
+is a new sibling query beside `can_challenge()` (which keeps its existing
+bare-bool contract, all 8+ call sites untouched), consumed by one new
+branch in `trainer_npc.gd::_on_challenged()` that opens a single generic
+conversation (`trainer_no_usable_creature`, `data/dialogue/trainers.json`)
+instead of the false `defeated` line — one line, shared by all ~27
+trainers, not per-trainer data. Live-confirmed both directions in
+`tests/smoke_trainer_no_usable_ally.gd`: a fainted ally gets the honest
+line and no fight starts; healing the same ally reopens the ordinary
+challenge conversation on the same trainer, same session. **Still open:**
+`encounter_director.gd`'s creature-control offer still shows no prompt at
+all when the only creature is fainted — not touched by this fix, a smaller
+remaining gap.
+
+**Original finding, kept for history:**
+
 **Severity: SHIP candidate.** Found by the T2-STRANDING lane while
 diagnosing the South Bridge stranding's root cause (RIG-21, companion doc),
 recorded here because it is a genuine player-facing gap independent of the
@@ -308,6 +360,79 @@ back out finds it does nothing, repeatably, regardless of which control was
 pressed immediately before it in the matrix. Independent of the stranding,
 independent of RIG-14's tab-cycle-count issue (this is about a press that
 should close the shell entirely, not about landing on the wrong tab).
+
+### GAME-8 — the walk back out of Mira's shop traps the harness's navigator against the counter/shelf collision, unrelated to the door BUILDPLACE round 3 already fixed
+
+**Severity: RIG for the harness's own walk, but the underlying geometry is
+a real GAME-side authoring question.** Found by `ralph/T2-GATEF-RUN4`
+chasing why a real S03 replay (with T2-BUILDPLACE round 3's door + revive
+fix, and this session's own GAME-0/T1 fixes, all in place) still ends with
+a permanently fainted party. `S03-60` ("walk past Oskar on the way back",
+`tools/gate_f/segments/S03.json`) fails identically to BUILDPLACE round
+3's own record — stuck ~4.3m short at world (18.76,-3.18) — **even after**
+a new staging step (`S03-59a`, this session) routes the walk through the
+same door-approach point `S03-52` already uses reliably on the way in.
+
+Live-engine diagnosis (`tools/gate_f/probe_oskar_walk_trace.gd`,
+`tools/gate_f/probe_oskar_stuck_geometry.gd`, both new this session,
+committed): the stuck point is local `(-1.37, 0.3..2.37)` in `cottage_a`'s
+own building space — pinned directly against the room's west wall
+(`INNER_HALF_W=1.69`) and the two stock-crate shelf boxes
+`shop_interior.gd::_build_counter()` places at local `(-1.3, 0.25/0.72,
+1.5)`. A physics shape-query at every recorded stuck position hits
+`cottage_a_3/Collision` (the exterior wall body) and one of
+`cottage_a_3/Interior/@StaticBody3D@*` (the counter or a shelf) every
+time. The counter itself (local x:[-1.6,0.9], z:[-0.6,-0.1]) sits directly
+on the straight line between Mira's own stand-behind-the-counter position
+(local `0,-1.4`) and the door (local x=1.0) — `tests/helpers/
+stick_navigator.gd`'s generic wall-slide detour logic, written for open
+outdoor obstacles, picks a side to slide around the counter and gets
+wedged in the ~0.3-0.4m gap between the shelf boxes and the wall instead
+of clearing it. **Every waypoint tried this session** (the raw target, the
+same door-staging point used for entry, an explicit door-lane point at
+local x=1.3 clear of the counter's own edge by 0.4m) reproduces the same
+stuck point or a near-identical one — this is not a coordinate-tuning
+problem the way the door was. One asymmetry worth noting for whoever picks
+this up: the ENTRY leg (`S03-52c`, door to Mira) is live-confirmed clean
+every time; only the EXIT leg (Mira back out past the counter) traps,
+which points at the detour's side-choice heuristic behaving differently by
+direction of travel rather than at the room being uniformly impassable.
+
+**Not fixed this session.** A real fix is either: (a) give the navigator a
+multi-point local route around known interior furniture (a per-room
+waypoint table, which `stick_navigator.gd`'s own header explicitly says it
+was built to avoid needing), or (b) revisit `shop_interior.gd`'s counter/
+shelf placement so a straight line from behind the counter to the door
+does not have to clip it at all (the counter comment already claims this
+is true for the ENTRY direction — "left of the door lane, so walking in
+never walks into it" — but the exit case was never checked). Recorded here
+rather than attempted blind, per this session's own budget.
+
+### GAME-9 — the tool-equip sequence does not reliably keep the intended tool equipped across a full segment replay
+
+**Severity: SHIP candidate, unconfirmed root cause.** Also found chasing
+the same S03 replay above. Six real `gather` events fire in
+`ralph/reports/gate-f-run4-s03-validation-2/S03/telemetry/events.jsonl`
+(GAME-0's fix means gathering is no longer blocked by the fainted-ally
+lockout at all — a genuine positive result) but `home_materials_gathered`
+never sets. Every one of those six events' own `equipped` field reads
+`{hotbar_slot: 3, item: "knife"}` — **the same tool, the same slot, for
+every single gather attempt**, despite `S03.json`'s own gathering loop
+(`S03-67-equip`, `S03-71-equip`, `S03-73-equip`, ...) pressing `hotbar_2`/
+`hotbar_3`/`hotbar_4` in rotation between nodes to switch tools for wood/
+stone/fiber in turn, and despite the tool-assign sequence
+(`S03-56c`..`S03-56i`) binding axe->slot 2, pickaxe->slot 3, knife->slot 4
+by the same shape `tools/gate_f/probe_tool_equip_sequence.gd` already
+proved PASS **in isolation from a fresh `S02-exit.json`**. Something about
+running that same sequence after ~450 seconds of real prior segment state
+(two real fights, two revives, a third unhealed faint, the Mira-door
+detour) leaves slot 3 bound to knife rather than pickaxe, or leaves the
+`hotbar_X` presses not actually switching the live equipped item — this
+session did not distinguish which. **Not fixed, not root-caused past this
+point** — the isolated probe's own PASS means whoever chases this next
+should look at what state persists across a full replay that a
+fresh-load probe never carries, the same lesson GAME-8 and the earlier
+BUILDPLACE rounds each independently relearned this run.
 
 ---
 
