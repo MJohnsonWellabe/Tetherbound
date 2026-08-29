@@ -51,6 +51,32 @@ Worked out against the tree, not guessed. An entry is an **anchor** if any rule 
 | **r7** carries `respawn_seconds` | T3-CREATURES' aspect variants | 0 — all five already caught by r2/r3 |
 | **r8** hand-placed outside the table | the Warrens Guardian and the vault's Elder Trailpup come through `spawn_wild()`. **Not touched.** The Elder Trailpup's wander leash fixes a real unreachability bug and was left alone. | — |
 
+### One rule from the design note was dropped, and it matters
+
+The design note listed a rule **r4: "an entry whose species answers a `roles` entry"**, and
+predicted ~190 rolled / ~76 anchored. Implementing it showed it was both over-broad and pointing
+at the wrong thing: it would have anchored **76 clusters** — every one of 30 Galecrest, 25
+Duskhush, 17 Bramblebun and 4 Reedwing — to protect a guarantee that only needs *one* cluster per
+role.
+
+And the guarantee it was protecting is not "this species is mostly anchored". It is
+"`_role_species()` can still find a live creature of this species at any seed". All four roles
+already satisfy that through r1 and r3: `practice`→bramblebun is order 0, `aggressor`→galecrest is
+order 12 (both in the frozen-mirror window), `nocturnal`→duskhush and `weather_gated`→reedwing are
+gated and therefore anchored.
+
+So the rule was replaced by **a test that asserts the invariant directly** —
+`test_every_role_species_keeps_an_anchored_cluster` — rather than by a data rule that
+over-anchored 76 clusters to make it true by accident. Final split: **208 rolled / 58 anchored.**
+
+A second test came out of the same reasoning and is not in the design note at all:
+`test_the_species_gameplay_systems_require_keep_anchored_clusters`. **A rolled population can
+make a species unobtainable, and unobtainable is a different problem from rare.** Meadowhart is
+the chapter's only rideable animal and the saddle is a Band 2/3 unlock; Mudsnout is the only
+species that evolves (D20). If a roll could take every reachable one, riding and evolution become
+dead ends with nothing failing anywhere. Both are derived from `species.json` rather than named,
+so a second rideable or a second evolution line is covered the day it lands.
+
 ### The case the brief flagged, and the decision
 
 > *a cluster whose `_why` comment frames it as "the region's team-building temptation" is doing
@@ -212,11 +238,24 @@ rather than left to authoring care.
 - every role species keeps an anchored cluster; the rideable and the evolvable species keep
   anchored **ungated** clusters — a night-gated cluster is not a guarantee
 - headcount unchanged at every seed (density is T3-DENSITY's)
+- **the world seed's save round-trip, and the VERSION 14 migration landing on 0.** The
+  save-format fake had no `world_seed`, so the field this whole design rests on was written and
+  read by nobody. The migration test dirties the field before loading, so a no-op migration fails
+  instead of passing by accident.
 
 **Verified failable, each failing only its own assertion** — because "it passes" proves nothing:
 disabling the seed-0 short-circuit, disabling scarce separation/caps, stopping authored alphas
-from spending the alpha budget, disabling alpha separation, and inverting the open table's tiers.
-Five deliberate breaks, five correct single failures.
+from spending the alpha budget, disabling alpha separation, inverting the open table's tiers, and
+dropping `world_seed` from the save payload. Six deliberate breaks, six correct single failures.
+
+### Verified in the running game
+
+- `smoke_combat`, `smoke_relay`, `smoke_stronghold`, `smoke_stronghold_reload`,
+  `smoke_gate_e_finale`, `smoke_aggression`, `smoke_warrens` — the combat-bearing set, which is
+  the only thing that reports an authored encounter having stopped happening.
+- **`TB_WORLD_SEED=7 tests/smoke_combat.gd` passes** — a fight entered, piloted, won and left in
+  a *rolled* world, through the real director path (plan → species → `populate()` → alpha →
+  gates). That is the one thing the pure-function tests cannot prove.
 
 ### Done, not verified in play
 
