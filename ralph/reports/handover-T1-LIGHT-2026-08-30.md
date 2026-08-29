@@ -126,6 +126,21 @@ flat additive material property, not a scene-lighting interaction), so a
 future tuning pass on this same mechanism can trust it without a full
 world capture every iteration.
 
+**Confirmed on a second, independent NPC too** — band 4's own close-range
+rank NPC, the second body Judge 2 measured at "luma 13" in daylight
+(`--only=band4 --states=day,night`, same tool). Day: **13 → 42.9/255**,
+and at this close range the improvement reads even more clearly than
+Dorn's — cap, mask, oxblood badge, belt pouches and boots are all legible
+at normal viewing distance, not just under zoom
+(`band4-officer-day-crop.png`). Night: 13.4/255 measured, but the actual
+frame reads considerably better than that number alone suggests — he
+stands out as a warm brown-toned figure against the cool moonlit scene,
+clearly not a black cutout; the low absolute number is partly this
+specific frame's own very dark local background (no moonbeam highlight
+nearby, unlike Dorn's stand) rather than the fix underperforming — flagged
+so the number isn't read as contradicting the visual, the same trap
+T1-SKY's own fog-preset measurement hit and named.
+
 **Trainer/Grandpa/villagers/captain/Warden are unaffected** — their tint
 luminance is always ≥ 0.95 (identity multiply), so the new gate still
 skips them; `tests/test_character_metallic.gd`'s 4 tests / 27 assertions
