@@ -132,6 +132,25 @@ var _respawn_timers: Dictionary = {}
 ## actually need a check.
 var _wild_gates: Dictionary = {}
 
+## T3-CREATURES. Per-creature respawn cooldown in seconds, for the wilds whose
+## spawns.json entry names one. Keyed by node exactly like `_wild_gates`, and
+## absent for every ordinary creature -- which is all 881 of them that existed
+## before the owner's creature-expansion brief, so the default path is
+## untouched.
+##
+## The brief's Spawn Protection Rules ask for "cooldowns after rare variant
+## spawns", and this is the ONE protection on that list the build did not
+## already have. Habitat, weather, time-of-day and geographic restriction are
+## all just where an entry is authored plus the `time`/`weather` gate that
+## already existed; a "weighted spawn table" has nothing to weight, because
+## this director does not ROLL a species -- every cluster names its own, so
+## rarity here is headcount, not probability (the reasoning is in
+## ralph/reports/handover-T3-CREATURES-2026-08-30.md). What genuinely could not
+## be expressed was "the one Nightburrow in the Meadows comes back on the same
+## 45-second timer as a Mudsnout", which would turn an apex encounter into a
+## farmable resource within a minute of beating it.
+var _wild_respawn: Dictionary = {}
+
 ## --- STREAM-D: distance-based activation ------------------------------------
 ##
 ## The owner has directed wild density up from ~70 to roughly 700-1100 across
@@ -378,6 +397,13 @@ func _spawn_creatures() -> void:
 			if not gate.is_empty():
 				_wild_gates[wild] = gate
 				wild.visible = _gate_active(gate)
+
+			# T3-CREATURES: the entry's own respawn cooldown, if it named one.
+			# Read here rather than looked up from the spawn table at respawn
+			# time because by then the only thing in hand is the node.
+			var cooldown := float(spawn.get("respawn_seconds", 0.0))
+			if cooldown > 0.0:
+				_wild_respawn[wild] = cooldown
 
 		_clusters.append(cluster)
 
@@ -761,6 +787,16 @@ func spawns_config() -> Dictionary:
 
 func _respawn_delay() -> float:
 	return float(spawns_config().get("respawn_seconds", DEFAULT_RESPAWN_DELAY))
+
+
+## How long THIS creature waits before coming back.
+##
+## Its spawn entry's own `respawn_seconds` when it declared one, and the table's
+## global delay otherwise -- so a creature with no override behaves exactly as
+## every creature did before this existed. See `_wild_respawn`'s comment for
+## why a rare aspect variant needs its own number.
+func _respawn_delay_for(wild: Node3D) -> float:
+	return float(_wild_respawn.get(wild, _respawn_delay()))
 
 
 ## Which species currently plays a ROLE — "practice", "aggressor". The roles
@@ -1468,7 +1504,7 @@ func _on_combat_exited(outcome: String) -> void:
 				# might have caught.
 				wild.call("notify_fainted")
 				_faint_timers[wild] = float(CATCH.config().get("faint", {}).get("linger_seconds", 4.0))
-				_respawn_timers[wild] = _respawn_delay()
+				_respawn_timers[wild] = _respawn_delay_for(wild)
 			CAUGHT:
 				_resolve_catch(_manager.call("caught_instance") as RefCounted)
 				wild.visible = false
@@ -1476,7 +1512,7 @@ func _on_combat_exited(outcome: String) -> void:
 				# usual delay — the caught instance now lives in the party (or
 				# on the ceremony's seam), and the meadow does not empty out
 				# one catch at a time.
-				_respawn_timers[wild] = _respawn_delay()
+				_respawn_timers[wild] = _respawn_delay_for(wild)
 
 	# R2.5: the M2 auto-heal above this comment used to run here. It was a
 	# placeholder for a healing system, camp rest and potions that did not

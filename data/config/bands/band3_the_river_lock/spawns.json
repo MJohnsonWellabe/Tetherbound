@@ -1,5 +1,6 @@
 {
   "_comment": "BAND-SPLIT. Band-local wild population for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. New entries take an unused order in this band's reserved range 3000-3999, which no other band can collide with.",
+  "_comment_aspect_variant_0830": "T3-CREATURES, from the owner's creature-expansion brief. This entry is an ASPECT VARIANT -- a rare individual whose environmental exposure changed its typing, authored as a species in data/creatures/species.json with a `variant_of` back-link. Read the brief's 'Spawn Protection Rules' section before touching count, gates or placement: its stated failure mode is exact -- 'Avoid a situation where the player walks through one clearing and sees Sparkit + Cindercub + Shadelet + Frostclaw + Nightburrow. That would destroy the rarity.' RARITY HERE IS HEADCOUNT, NOT PROBABILITY. This director does not roll a species per encounter; every cluster names its own and spawns it deterministically at load, so the brief's percentages are translated into how MANY individuals exist, WHERE, and behind WHICH gates. The chapter holds 881 wild creatures across 261 clusters, so one individual is 0.11% of the world. `respawn_seconds` overrides the table's global 45s so a rare encounter does not become a farmable resource a minute after it is beaten.",
   "_comment_why_this_file_was_empty": "WILD-ECOLOGY. This file existed with an empty `spawns` array, which prompt 60 names directly: 'Current Band 3 spawns.json being empty is not acceptable for a finished region.' The consequence was not only an empty region. GATEC-CURVE had just authored this band a wild level range of [9, 12] in data/config/chapter_curve.json and wired encounter_director to resolve it from a cluster's world z -- and with no clusters here, that band was inert: a correctly-built escalation rule applied to nothing. Between the Burrow Warrens and the Upper Meadows the player crossed 1580m of river country in which no wild creature existed at all, which is also the stretch where the team is supposed to have reached its full five and be weighing them against each other.",
   "_comment_habitat": "The region's identity is the gorge (data/config/terrain_playground.json's `river`, running east-west at z~4200, 10-15m deep, narrowing to a 3.6m half-width at the Old Mill Crossing) and Team Tether's occupation of the relay. Air species own the gorge because a 15m trench is where updraft lives and where a silhouette reads from a long way off; water species are sited at the crossing, the one place on the route where the water is actually reachable; ground species are pushed onto the spoil the relay dug rather than the drained ground itself. Levels are NOT set here -- encounter_director resolves them from chapter_curve.json's band for this z, so retuning the region retunes its field.",
   "_comment_gate_d3_density": "GATE-D3, owner directive 2026-08-22: 'I think you're going to need a lot more than 24 creatures in a band. look at Pokemon density and palworld density. even valheim deer and boar density it's far more.' The original 8-cluster/18-creature population (one creature per ~79m) was built to prove the habitat logic above, not to be the finished density -- this pass keeps every original cluster and every rule in `_comment_habitat` unchanged (air owns the gorge, water sits at the reachable crossing, ground works the spoil) and adds 41 more clusters at that same logic, walked along the corridor roughly every 40-46m with lateral offsets so the route reads as inhabited country rather than a conveyor belt of named encounters -- on-route clusters at the spine itself, off-route pockets 18-36m to either side so leaving the road finds something too. Orders 3009-3049. `pipwing` (catch_rate 0.55, the region's commonest species) fills the gaps between the named habitat sites the way it already does in Bands 1 and 2. Every new cluster keeps clear of the four relay trainers' and Captain Oreth's own arenas (20m+) and of the existing hand-placed clusters (24m+), so nothing here contests a fight's footing. Fifty clusters, 155 creatures, one creature per ~10m of route -- inside the owner's 38-50 cluster / 140-210 creature target. `encounter_director.gd` currently instantiates and ticks every spawn in the whole corridor with no distance-based activation; the coordinator is dispatching a dedicated streaming lane for that (`_spawn_creatures`/`wild_creature.gd::_physics_process`) rather than this band owning it -- a boot/frame-time cost from this density is expected and not fixed here.",
@@ -449,6 +450,37 @@
       "centre": [-6.0, 0.0, 4740.1],
       "radius": 14.0,
       "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the grazing herd species, the north bank run out toward Band 4."
+    },
+    {
+      "order": 3100,
+      "species": "stormtrail",
+      "count": 1,
+      "habitat": "tether_machinery",
+      "centre": [318.0, 0.0, 3830.0],
+      "radius": 12.0,
+      "weather": [
+        "rain"
+      ],
+      "respawn_seconds": 600.0,
+      "alpha": {
+        "level_bonus": 4,
+        "scale": 1.0
+      },
+      "_why": "Brief section 2, first of two. On Team Tether's own ground behind the Relay -- the brief's eligible list names 'old Tether machinery, damaged pylons or structures' directly, and the Burrowback cluster at (275,3890) is annotated 'Behind the Tether Relay'. Open ground, not forest, per 'Should not spawn deep inside forests'.",
+      "_why_weather": "THE BRIEF ASKS FOR STORMS AND THIS BUILD HAS NO STORM. data/config/weather.json declares exactly four presets -- clear, cloudy, fog, rain -- and scripts/world/world_weather.gd's own header states 'thunderstorms are explicitly out of scope here'. `rain` is the nearest thing that exists and it still delivers the mechanic the brief actually wants: 'extremely rare normally, considerably more likely during storms' becomes 'absent in clear weather, present in rain', so the player still learns that weather is worth going out in. It is NOT what the owner asked for and is flagged as such in ralph/reports/handover-T3-CREATURES-2026-08-30.md. When a storm preset exists, name it in this array and the creature needs no other edit.",
+      "_why_alpha": "Alpha variant per the brief. `scale` 1.0 for the same reason as Nightburrow: the 10-15% resize sheet 2 asks for is already in species.json's 1.45m against Trailpup's 1.28m."
+    },
+    {
+      "order": 3101,
+      "species": "riftfrill",
+      "count": 1,
+      "habitat": "still_pool",
+      "centre": [-176.0, 0.0, 4098.0],
+      "radius": 8.0,
+      "time": "night",
+      "respawn_seconds": 600.0,
+      "_why": "Brief section 7. Night-gated, one individual, in the still water below the Old Mill Crossing beside the Paddlenewt cluster at (-145,4116) -- the brief wants 'secluded ponds, still pools... water near ancient ruins, water near Rift/Tether phenomena' and explicitly NOT 'every ordinary stream', and band 3 is the region Team Tether occupies, which is where the Rift association lives. Band 3 rather than the band 1 pond on purpose: this band's wild level range is [9,12] against band 1's low single digits, and a rare prize the player finds at level 3 is not a prize. NO `alpha` block -- the brief calls Riftfrill a 'Rare Variant' and names only Nightburrow and Stormtrail as alphas. Its 8m radius against the region's usual 14-16m keeps it in the pool rather than scattered up the bank.",
+      "_why_rarity": "The brief says '1% or less of qualifying Paddlenewt spawns'. Applied literally that is ZERO: the whole chapter holds SIX Paddlenewts, and 1% of six is 0.06. This is the clearest case in the expansion of a per-encounter percentage meeting an authored population and producing nothing at all, so the brief's own alternative is what is built -- 'Potentially higher around specifically authored mysterious pools': one authored individual at one authored pool."
     }
   ],
   "_comment_alpha": "WILD-ECOLOGY (prompt 60): 'a handful of special encounters across the chapter' -- one per band from band 2 on, never in band 1, which is the tutorial meadow prompt 71 keeps gentle. The `alpha` block turns a cluster's FIRST member into a bigger, higher-level individual of a species the player already knows; the rest of the cluster is untouched. `level_bonus` is ADDED to whatever the band's own roll produced, so an alpha is always ahead of its neighbours instead of naming an absolute level that would drift when chapter_curve.json moves. Presentation is scale, per CLAUDE.md's rule that Meadows creatures are differentiated by materials, scale, behaviour and encounter context rather than by new meshes. TUNABLE."

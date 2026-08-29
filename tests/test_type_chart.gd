@@ -256,34 +256,121 @@ func test_an_apex_tm_at_type_advantage_does_not_one_shot_the_warden() -> void:
 # --- the chart against the data it will actually be asked about --------------
 
 
-## Every type any live species claims is a type the chart has a row for.
+## Every type any live species claims is a type the chart DECLARES.
 ##
-## A species typed as something the chart does not name is not an error -- it
-## resolves to neutral by design -- but in THIS chapter it would mean a
-## creature silently exempt from a system the whole midgame is built around.
-func test_every_species_type_is_named_by_the_chart() -> void:
-	var chart := _json(CHART_PATH)
-	var matchups: Dictionary = chart.get("matchups", {})
+## AMENDED BY T3-CREATURES, and the amendment is worth understanding rather
+## than skimming. This test used to require a chart ROW for every species type.
+## That was right when the game had three types and all three had rows, but it
+## contradicted the chart's own design note, which states that the owner
+## board's planned types are "deliberately NOT stubbed" and that "a new type is
+## playable at 1.00 the moment a species or move claims one and becomes
+## interesting when someone authors its rows". The owner's creature-expansion
+## brief then landed creatures carrying five of those types, and the two
+## documents could not both be obeyed.
+##
+## What the assertion protects is a TYPO -- a species whose type is misspelt,
+## or missing, resolving to neutral forever with no error anywhere. That is now
+## checked against `types` in type_chart.json, which is a hand-authored
+## vocabulary: a misspelt type is not in it, and "" is not in it, so the typo is
+## still caught. Adding a genuinely new type still takes a deliberate data edit
+## in the chart itself.
+##
+## The coverage that WOULD have been lost -- "the live chapter's types all have
+## rows" -- is not lost; it moved into
+## `test_the_chapters_own_types_all_still_have_rows` below, where it is stated
+## directly instead of as a side effect.
+##
+## Full argument: ralph/reports/DUALTYPE_DESIGN_2026-08-30.md section 5.
+func test_every_species_type_is_declared_by_the_chart() -> void:
+	var declared := CHART.known_types()
+	assert_false(declared.is_empty(),
+		"type_chart.json must declare `types`; without it this test proves nothing")
 	for id: String in _species():
 		var definition: Variant = _species()[id]
 		if not definition is Dictionary:
 			continue
-		var t := str((definition as Dictionary).get("type", ""))
-		assert_true(matchups.has(t),
-			"species '%s' is type '%s', which the chart has no row for" % [id, t])
+		# Both halves: T3-CREATURES made a species' typing potentially two
+		# strings, and a typo in the SECOND one would be even quieter than in
+		# the first, because the creature would still work.
+		for key: String in ["type", "type_secondary"]:
+			var t := str((definition as Dictionary).get(key, ""))
+			if key == "type_secondary" and t.is_empty():
+				continue
+			assert_true(declared.has(t),
+				"species '%s' has %s '%s', which type_chart.json does not declare" % [id, key, t])
 
 
-## Every move's type likewise. This is the offensive half: a move whose type
-## the chart does not name would be permanently neutral, which is a dead move
-## in a system where coverage is the point.
-func test_every_move_type_is_named_by_the_chart() -> void:
+## The chapter's own three types must all still have rows.
+##
+## Stated on its own because the tests either side of it now check a VOCABULARY
+## rather than the matchup table, and without this the whole matchup block could
+## be emptied and most of this file would stay green -- the same evaporation
+## trap `test_evolution_links.gd` guards against for evolution links. Ground,
+## water and air are what the Meadows actually fights with; the five the
+## expansion brought in are foreshadowing for regions that do not exist yet and
+## are neutral on purpose.
+func test_the_chapters_own_types_all_still_have_rows() -> void:
 	var chart := _json(CHART_PATH)
 	var matchups: Dictionary = chart.get("matchups", {})
+	for t: String in LIVE_TYPES:
+		assert_true(matchups.has(t),
+			"'%s' is a live chapter type and the chart must have a row for it" % t)
+
+
+## Every move's type likewise -- declared, not necessarily rowed.
+##
+## AMENDED BY T3-CREATURES for the reason on the species test above. The
+## original comment here made a real point that is worth keeping on the record
+## rather than deleting: "a move whose type the chart does not name would be
+## permanently neutral, which is a dead move in a system where coverage is the
+## point." That is TRUE of the ten new-type moves, and it was weighed rather
+## than waved away.
+##
+## The conclusion was that permanently neutral is not dead, it is FLAT: against
+## an air defender a ground move is worth 1.25 and a dark move 1.00, and against
+## a water defender a ground move is worth 0.80 and a dark move 1.00. So an
+## unrowed move is a hedge -- never the best answer, never the worst. That is a
+## reasonable thing for a wild creature the player has just caught out of a
+## thunderstorm to be holding, and it is strictly SAFER for balance than the
+## alternative, since an unrowed move cannot roll an advantage at all.
+##
+## It stops being flat the day someone authors those rows, which is exactly what
+## the chart was built to allow. The thing to check before doing it is
+## `tests/test_dual_type.gd`'s reachability pin, because authoring a fire or
+## dark row makes the first double weakness (1.5625) reachable, past the 1.5
+## that TYPECHART_DESIGN_2026-08-30.md section 3.2 measured as folding the
+## Warden.
+func test_every_move_type_is_declared_by_the_chart() -> void:
+	var declared := CHART.known_types()
+	assert_false(declared.is_empty(),
+		"type_chart.json must declare `types`; without it this test proves nothing")
 	var moves: RefCounted = MOVE_DB.load_default()
 	for id: Variant in moves.call("move_ids"):
 		var t := str(moves.call("type_of", str(id)))
-		assert_true(matchups.has(t),
-			"move '%s' is type '%s', which the chart has no row for" % [id, t])
+		assert_true(declared.has(t),
+			"move '%s' is type '%s', which type_chart.json does not declare" % [id, t])
+
+
+## Every type the chart has ROWS for must be one it also declares.
+##
+## The other direction of the vocabulary check, and the one that stops `types`
+## from drifting into decoration: a matchup row for a type absent from `types`
+## would mean the two halves of this file disagree about what exists, and the
+## vocabulary tests above would be checking against an incomplete list.
+func test_the_matchup_table_never_names_an_undeclared_type() -> void:
+	var chart := _json(CHART_PATH)
+	var matchups: Dictionary = chart.get("matchups", {})
+	var declared := CHART.known_types()
+	for attacking: String in matchups:
+		assert_true(declared.has(attacking),
+			"the chart has rows for '%s' but does not declare it in `types`" % attacking)
+		var row: Variant = matchups[attacking]
+		if not row is Dictionary:
+			continue
+		for defending: String in (row as Dictionary):
+			assert_true(declared.has(defending),
+				"the '%s' row names defender '%s', which `types` does not declare" % [
+					attacking, defending])
 
 
 ## The keying decision, asserted against the data that makes it non-degenerate.
