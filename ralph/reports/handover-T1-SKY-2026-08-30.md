@@ -43,17 +43,35 @@ the clearest evidence: it went from what the 2026-08-29 judge blind-called
 navigable navy-blue night with visible tree silhouettes and a readable path.
 Frames: `ralph/reports/T1-SKY/shots/day_night_run1_after_parking_and_weather_fix/`.
 
-**2. `capture_water.gd`'s clock-pin defect — real bug, fixed, not
-re-rendered.** Unlike `_capture_ground_and_sky.gd`, this tool called
-`weather.set_weather("clear")` once but never froze `WorldLook`/
-`WorldWeather`'s `_process`, so the passive clock kept advancing between each
-`apply_time()` call and the shutter across a 4-viewpoint pass. Fixed by
-freezing both nodes right after finding them (the "freeze-once" pattern
-`_capture_ground_and_sky.gd`'s own header documents and justifies). **I did
-not re-render this tool** — the fix is small, mechanical, and matches an
-already-proven pattern exactly, but budget went to the day/night tool and
-the sky config since those were the stated priorities. Worth a quick
-re-render before the next water-focused lane trusts its frames.
+**2. `capture_water.gd`'s clock-pin defect — real bug, fixed, and verified
+across three re-render iterations.** Unlike `_capture_ground_and_sky.gd`,
+this tool called `weather.set_weather("clear")` once but never froze
+`WorldLook`/`WorldWeather`'s `_process`, so the passive clock kept advancing
+between each `apply_time()` call and the shutter across a 4-viewpoint pass.
+Fixed by freezing both nodes right after finding them (the "freeze-once"
+pattern `_capture_ground_and_sky.gd`'s own header documents and justifies).
+
+Re-rendering surfaced a **second, different bug** the clock-drift issue had
+been masking: `water-01`/`water-02` (the first two of four viewpoints) still
+rendered measurably darker than `water-03`/`water-04` despite every
+viewpoint sharing the identical frozen `"day"` state. A sky-only pixel patch
+(terrain shadow geometry cannot reach the sky) ruled out a scene-shadow
+explanation and confirmed a real, progressive render-state warm-up gap: sky
+avg RGB (21,24,24) → (67,74,75) → (130,133,128) → (114,139,148) on the first
+re-render. Root cause: this tool repositions the camera by large XZ jumps
+between viewpoints on only `SETTLE_AFTER_MOVE=4` frames — far stingier than
+the 15 frames `_capture_ground_and_sky.gd` budgets for the same kind of jump
+to let Terrain3D's region stream and the sun's shadow map catch up. Raised
+`SETTLE_AFTER_MOVE` to 15 (closed most of the gap: water-01 sky went
+21→53) and added a one-time 30-frame post-boot warm-up before the viewpoint
+loop starts (closed the rest: water-01 sky went 53→102, now in the same
+band as the other three). **Final state, verified by direct image
+inspection, not just pixel averages:** all four water viewpoints now read
+as normal, consistent daylight — `water-01-bank-closeup` in particular now
+matches the report's own praise for the pond ("turquoise shallows, sand-to-
+grass bank transition, reeds at the waterline") instead of the near-black
+frame originally judged. Evidence:
+`ralph/reports/T1-SKY/shots/water_run3_final/`.
 
 **3. Golden hour — root cause found, fixed, and the remaining question
 resolved by direct A/B rendering.** Three real, independent bugs, all fixed:
@@ -271,6 +289,12 @@ xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
 xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
   --rendering-driver opengl3 --resolution 1280x800 \
   --script tools/_capture_ground_and_sky.gd -- --only=band3 --states=day
+
+# Water viewpoints (pond/river/stream)
+xvfb-run -a -s "-screen 0 1280x720x24" godot --path . \
+  --rendering-driver opengl3 --resolution 1280x720 \
+  --script tools/capture_water.gd
+# -> res://shots/gate_a/water/water-0{1..4}-*.png
 ```
 
 ## What I learned that is NOT visible in the diff
@@ -324,7 +348,9 @@ xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
 ## Full file footprint
 
 - `tools/_capture_day_night_transition.gd` — parking fix, weather pin/freeze.
-- `tools/capture_water.gd` — parking fix, WorldLook/WorldWeather freeze.
+- `tools/capture_water.gd` — parking fix, WorldLook/WorldWeather freeze,
+  `SETTLE_AFTER_MOVE` 4→15, one-time post-boot warm-up. All re-rendered and
+  verified (three iterations).
 - `tools/_probe_golden_snap.gd` (+ `.uid`) — new, committed diagnostic tool
   (same convention as `_diag_golden_hour.gd`, `_judge_capture_arch_0829.gd`,
   etc.): snaps `apply_time("golden")` at the day/night tool's exact
@@ -342,17 +368,15 @@ xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
 
 ## What I would do next
 
-1. Re-render `capture_water.gd` (fixed but not re-verified this session) and
-   fold the result into the next water-focused lane's evidence set.
-2. Hand item 5 (foliage albedo) to whoever owns `vegetation.gd` next, with
+1. Hand item 5 (foliage albedo) to whoever owns `vegetation.gd` next, with
    the specific diagnosis above — it needs a canopy-albedo darkening pass
    analogous to R9.4's grass pass, not anything on the lighting side.
-3. Hand item 7 (aerial perspective) to T1-GROUND with the specific
+2. Hand item 7 (aerial perspective) to T1-GROUND with the specific
    diagnosis: a terrain-material distance gradient, not a fog-density
    increase (already tried, already rejected).
-4. If someone wants a genuinely misty "fog" weather preset, propose a
+3. If someone wants a genuinely misty "fog" weather preset, propose a
    concrete density/colour number *with a fresh render* before landing it —
    don't just re-raise the old value.
-5. A full, unscoped `_capture_ground_and_sky.gd` pass (~35 min) would be the
+4. A full, unscoped `_capture_ground_and_sky.gd` pass (~35 min) would be the
    right next full evidence set for a fresh Fable judge pass over all of
    Track 1's current state, now that the day/night/sun/cloud fixes are in.
