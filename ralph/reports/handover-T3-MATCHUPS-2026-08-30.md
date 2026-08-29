@@ -425,7 +425,7 @@ type-tell colours.
 | `tests/smoke_relay.gd` | **OK** — captain beaten, captive freed, Gear carried |
 | `tests/smoke_stronghold.gd` | **OK** — "stronghold smoke test passed" |
 | `tests/smoke_stronghold_reload.gd` | **OK** — "stronghold reload smoke test passed" |
-| `tests/smoke_gate_e_finale.gd` | see §8.2 |
+| `tests/smoke_gate_e_finale.gd` | **OK** — "gate E finale smoke test passed"; roster decision recorded, region answered |
 | `tools/capture_type_tell.gd` | **OK** — nine frames, arrows 1 / −1 / 0 as the chart predicts |
 
 ### 8.1 The one red test on this branch is not mine, and whoever lands it should know
@@ -449,12 +449,20 @@ is not this lane's ownership and I have not touched it. Flagging it because it
 will be red on this branch at land time and somebody will otherwise spend the
 time I just spent proving whose it is.
 
-### 8.2 Run still in flight when this was written
+### 8.2 Every run finished, and the only red one is the inherited portrait test
 
-`smoke_gate_e_finale.gd` — the most load-bearing of the five, since it drives
-real trainer fights frame by frame through the Warden and out the far side of
-the chapter ending. Every hit in it goes through the chart. Result appended
-below.
+**All five combat-bearing smoke tests the brief named are green.** The most
+load-bearing is `smoke_gate_e_finale.gd`, which drives real trainer fights frame
+by frame through the Warden and out the far side of the chapter ending — every
+hit in it goes through the chart, and the authored ladder still resolves:
+"the decision resolved: 'Kettle' released, the legendary on a belt of five …
+the Meadows acknowledged the victory and the objective chain terminated."
+
+That is the strongest available confirmation of §3.2's "+0 % on 27 of 27 rungs"
+— the arithmetic said the authored ladder does not move, and playing it through
+to the ending agrees.
+
+Nothing was left in flight.
 
 ---
 
