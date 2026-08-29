@@ -47,29 +47,55 @@ static func config() -> Dictionary:
 ## throughout combat_manager.gd, so it keeps its name and the new multiplier
 ## takes this one instead. Every move ships at 1.0 (D30), so
 ## `move_power * power == power` for every call site that does not pass it.
-static func base_damage(power: float, attack: float, defence: float, move_power: float = 1.0) -> float:
+##
+## `type_mult` is T3-TYPECHART's type-effectiveness multiplier, layered on in
+## exactly the same shape and for the same reason: it defaults to 1.0, so every
+## call site that does not pass one is byte-for-byte unchanged. It is a
+## MULTIPLIER RATHER THAN A TERM on purpose — a flat +N would be worth
+## everything at level 3 and nothing at level 20, which is the same argument
+## `creature_instance.gd::boost_hp` makes in the opposite direction for elixirs.
+##
+## Deliberately NOT looked up here. This function is arithmetic over the
+## numbers it is handed and knows nothing about species, moves or the chart;
+## `scripts/combat/type_chart.gd` owns the lookup and `combat_manager.gd`
+## performs it, which is what keeps the multiplier that gets APPLIED and the
+## one the HUD TELLS THE PLAYER ABOUT the same single value.
+static func base_damage(
+	power: float, attack: float, defence: float, move_power: float = 1.0,
+	type_mult: float = 1.0
+) -> float:
 	var cfg: Dictionary = config().get("damage", {})
 	var scale := float(cfg.get("scale", 2.0))
 	var minimum := float(cfg.get("minimum", 1.0))
 
 	var total := attack + defence
 	if total <= 0.0:
-		return maxf(minimum, power * move_power * scale * 0.5)
-	return maxf(minimum, power * move_power * scale * attack / total)
+		return maxf(minimum, power * move_power * type_mult * scale * 0.5)
+	return maxf(minimum, power * move_power * type_mult * scale * attack / total)
 
 
 ## Damage with the random spread applied. `roll` is 0..1, supplied by the
 ## caller so tests can pin it and the result stays reproducible. `move_power`
-## is the same D30 multiplier `base_damage` takes; see its comment.
+## and `type_mult` are the same two multipliers `base_damage` takes; see its
+## comment.
+##
+## The type multiplier goes in BEFORE the variance roll rather than after, so
+## the spread stays a proportion of the hit that was actually dealt. Applied
+## afterwards it would be arithmetically identical here — but the moment
+## anything clamps or rounds between the two it would stop being, and a hit's
+## variance being a fixed band around the neutral damage rather than around its
+## own is not what `variance`'s config comment promises ("every hit lands
+## between 90% and 110%").
 static func rolled_damage(
-	power: float, attack: float, defence: float, roll: float, move_power: float = 1.0
+	power: float, attack: float, defence: float, roll: float, move_power: float = 1.0,
+	type_mult: float = 1.0
 ) -> float:
 	var cfg: Dictionary = config().get("damage", {})
 	var variance := float(cfg.get("variance", 0.1))
 	var minimum := float(cfg.get("minimum", 1.0))
 	# roll 0 -> lowest, 0.5 -> exact, 1 -> highest.
 	var multiplier := 1.0 + (clampf(roll, 0.0, 1.0) * 2.0 - 1.0) * variance
-	return maxf(minimum, base_damage(power, attack, defence, move_power) * multiplier)
+	return maxf(minimum, base_damage(power, attack, defence, move_power, type_mult) * multiplier)
 
 
 ## --- aiming ---------------------------------------------------------------

@@ -1,5 +1,6 @@
 {
   "_comment": "BAND-SPLIT. Band-local spawns for band2_stone_and_root. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 2000-2999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_aspect_variant_0830": "T3-CREATURES, from the owner's creature-expansion brief. This entry is an ASPECT VARIANT -- a rare individual whose environmental exposure changed its typing, authored as a species in data/creatures/species.json with a `variant_of` back-link. Read the brief's 'Spawn Protection Rules' section before touching count, gates or placement: its stated failure mode is exact -- 'Avoid a situation where the player walks through one clearing and sees Sparkit + Cindercub + Shadelet + Frostclaw + Nightburrow. That would destroy the rarity.' RARITY HERE IS HEADCOUNT, NOT PROBABILITY. This director does not roll a species per encounter; every cluster names its own and spawns it deterministically at load, so the brief's percentages are translated into how MANY individuals exist, WHERE, and behind WHICH gates. The chapter holds 881 wild creatures across 261 clusters, so one individual is 0.11% of the world. `respawn_seconds` overrides the table's global 45s so a rare encounter does not become a farmable resource a minute after it is beaten.",
   "_comment_species_variety": "BAND2-63. All 195 field creatures below draw from five species: burrowback, mudsnout and trailpup (the region's own Ground trio, `MEADOWS_PROGRESSION_SPEC.md` section 5's table: Burrowback/Mudsnout/Tuskroot -> Band 2, Trailpup carried from Band 1's oak ring), plus meadowhart (the rideable species, SH47's deliberate early placement) and duskhush (the nocturnal Air pocket, giving the band a day/night contrast). This is DELIBERATE, not a shortfall of authoring effort at the new density target: prompt 63 asks for 'meaningful alternatives to early-team members', and the alternative this band offers is BULK and STRENGTH within an honest Ground identity (this is the quarry and the warrens, not a second grove), not a wider species catalogue that would blur the region's own read. The one deliberately rare exception is `burrow_warrens.json`'s vault encounter (Terrapup) -- wild-spawned nowhere in the field, on purpose, so it stays a genuine find rather than becoming the sixth ordinary species here.",
   "_comment_alpha": "WILD-ECOLOGY (prompt 60): 'a handful of special encounters across the chapter' -- one per band from band 2 on, never in band 1, which is the tutorial meadow prompt 71 keeps gentle. The `alpha` block turns a cluster's FIRST member into a bigger, higher-level individual of a species the player already knows; the rest of the cluster is untouched. `level_bonus` is ADDED to whatever the band's own roll produced, so an alpha is always ahead of its neighbours instead of naming an absolute level that would drift when chapter_curve.json moves. Presentation is scale, per CLAUDE.md's rule that Meadows creatures are differentiated by materials, scale, behaviour and encounter context rather than by new meshes. TUNABLE.",
   "_comment_alpha_merge": "BAND2-63-WARRENS merge: main's WILD-ECOLOGY alpha block and this lane's density pass landed on the same file from two branches. Both are kept -- the alpha rides order 2006 exactly as main authored it, and the 50 clusters this lane added keep their own orders, which main never used. The Burrow Warrens guardian has its own `art_scale` in burrow_warrens.json rather than an `alpha` block: it is a hand-placed body spawned through `spawn_wild()`, not a member of a scattered cluster, so the two mechanisms do not overlap even though they say the same thing about presentation being scale.",
@@ -701,6 +702,27 @@
       ],
       "radius": 16.0,
       "_why": "deep_oak zone, on the road -- see order 2054's _why_zone for the zone's own reasoning"
+    },
+    {
+      "order": 2100,
+      "species": "nightburrow",
+      "count": 1,
+      "habitat": "cave_mouth_rock",
+      "centre": [
+        -168.0,
+        0.0,
+        2940.0
+      ],
+      "radius": 10.0,
+      "time": "night",
+      "respawn_seconds": 900.0,
+      "alpha": {
+        "level_bonus": 5,
+        "scale": 1.0
+      },
+      "_why": "Brief section 1. The ONE Nightburrow in the Meadows -- the brief asks for 'one active Nightburrow maximum in the Meadows at a time', and with an authored population that is simply one cluster of one, guaranteed structurally rather than by a runtime singleton this architecture does not have. Sited on the deep western rock of band 2, the region this repo's own band file calls 'the quarry and the warrens', 56m from the Burrowback cluster at (-140,2996): the brief wants 'deeper Burrow Warrens sections, cave entrances, rocky ravines' and says explicitly it should NOT roam Grandpa's starting fields, which is band 1. Night-gated, the brief's 'primarily night'. The brief's alternative figure lands in the same place from the other direction: '0.25-0.75% of qualifying Burrowback-area spawn opportunities', and there are 123 Burrowbacks in the chapter, so 0.5% of 123 is 0.6 -- one individual IS the owner's number.",
+      "_why_alpha": "The brief directs that Nightburrow and Stormtrail 'specifically should be treated as Alpha variants', so this composes the two concepts rather than choosing between them: the SPECIES entry carries the aspect (Ground/Dark typing, 2.10m body, its own statline) and this `alpha` block carries the individual (+5 levels over whatever band 2's own roll produced, plus the alpha rim presentation encounter_director already applies). `scale` is deliberately 1.0, NOT the 1.3-1.4 the other alphas in this file use: Nightburrow's size is already in species.json at 2.10m against Burrowback's 1.70m, and scaling again here would apply the owner's 15-25% band twice and produce a 2.7m creature no sheet asked for.",
+      "_why_respawn": "900s against the table's global 45s. Beating the chapter's apex wild encounter and having it stand back up twenty times in a session is the fastest way to destroy the rarity the brief exists to protect. TUNABLE."
     }
   ]
 }

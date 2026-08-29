@@ -18,6 +18,10 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const MATH := preload("res://scripts/combat/combat_math.gd")
+## T3-TYPECHART. Read independently of the manager so this file can grade the
+## manager rather than echo it.
+const CHART := preload("res://scripts/combat/type_chart.gd")
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 
 ## Long enough for the terrain to load, collision to build, and the director to
 ## place both creatures.
@@ -38,6 +42,8 @@ var _ally: Node3D = null
 var _misses: int = 0
 var _hits_on_enemy: int = 0
 var _hits_on_ally: int = 0
+## T3-TYPECHART. `[on_enemy, effectiveness]` for every hit that landed this run.
+var _effectiveness_seen: Array = []
 
 
 func _init() -> void:
@@ -73,6 +79,11 @@ func _run() -> void:
 	await _a_swing_at_empty_air_misses()
 	await _a_swing_at_the_enemy_connects()
 	await _the_enemy_closes_and_hits_back()
+	# BEFORE the fight is resolved, not after: `_fight_to_a_finish` runs the
+	# enemy to zero and the manager drops it, so this has to read both fighters
+	# while they are both still standing. By here hits have landed in both
+	# directions, which is what it needs.
+	_the_type_chart_reaches_a_real_fight()
 	await _fight_to_a_finish()
 	await _hp_is_not_auto_healed_after_the_fight()
 	await _exploration_is_restored()
@@ -125,6 +136,11 @@ func _collect_nodes() -> bool:
 			_hits_on_enemy += 1
 		else:
 			_hits_on_ally += 1)
+	# T3-TYPECHART. Every verdict the fight actually emitted, so
+	# `_the_type_chart_reaches_a_real_fight` below can check them against an
+	# independent lookup instead of trusting one code path to grade itself.
+	_manager.connect("hit_effectiveness", func(on_enemy: bool, effectiveness: int) -> void:
+		_effectiveness_seen.append([on_enemy, effectiveness]))
 
 	_wild = _director.call("wild_creature") as Node3D
 	if _wild == null:
@@ -452,6 +468,87 @@ func _a_swing_at_the_enemy_connects() -> void:
 	# charged attack to positioning rather than to button-mashing.
 	if creature.energy <= energy_before:
 		_fail("a landed quick attack built no energy (%.1f -> %.1f)" % [energy_before, creature.energy])
+
+
+## T3-TYPECHART's integration seam, checked against a real fight rather than
+## against the arithmetic alone.
+##
+## `tests/test_type_chart.gd` owns the chart's own behaviour: the table, the
+## magnitudes, the multiplier's path through combat_math. What it structurally
+## CANNOT check is the two lines in `combat_manager.gd` that look the
+## multiplier up and hand it to `rolled_damage` -- delete either argument and
+## every one of those 270 assertions still passes while the mechanic is silently
+## switched off in the shipped game. That is exactly the failure this repo has
+## collected before: a system that exists, is tested, and never reaches the
+## player.
+##
+## So this asserts AGREEMENT rather than a particular outcome. Which types meet
+## here depends on what the director spawned, so demanding a strong hit would
+## be flaky; demanding that the verdict the fight emitted matches an
+## independent lookup over the same two creatures is deterministic whatever
+## spawns, and it is false the moment the manager stops consulting the chart or
+## starts consulting it with the wrong arguments.
+func _the_type_chart_reaches_a_real_fight() -> void:
+	if _effectiveness_seen.is_empty():
+		_fail("the fight landed %d hits and emitted no type verdict at all -- "
+			% (_hits_on_enemy + _hits_on_ally)
+			+ "combat_manager is not consulting the type chart")
+		return
+
+	var foe: RefCounted = _manager.call("enemy")
+	var creature: RefCounted = _director.call("ally_instance")
+	if foe == null or creature == null:
+		return
+
+	# The same lookup the manager performs, done here from the raw data.
+	var moves: RefCounted = MOVE_DB.load_default()
+	var on_foe := CHART.effectiveness(
+		str(moves.call("type_of", str(creature.move_quick))), str(foe.creature_type))
+	var on_ally := CHART.effectiveness(
+		str(moves.call("type_of", str(foe.move_quick))), str(creature.creature_type))
+
+	for entry: Variant in _effectiveness_seen:
+		var on_enemy: bool = bool((entry as Array)[0])
+		var reported: int = int((entry as Array)[1])
+		var expected: int = on_foe if on_enemy else on_ally
+		# The player's CHARGED move can be a different type from its quick one
+		# (Mosshell and Reedwing ship that way, and any TM creates it), so a
+		# player-side hit is allowed to report the charged move's verdict too.
+		# The enemy AI has one attack and no such latitude.
+		if on_enemy and reported != expected:
+			var charged := CHART.effectiveness(
+				str(moves.call("type_of", str(creature.move_charged))), str(foe.creature_type))
+			if reported == charged:
+				continue
+		if reported != expected:
+			_fail("the fight reported effectiveness %d for a hit %s, but %s vs %s is %d"
+				% [reported, "on the enemy" if on_enemy else "on the ally",
+					str(creature.creature_type), str(foe.creature_type), expected])
+			return
+
+	# The HUD's own accessor, checked on the same pair. This is the arrow the
+	# player reads before committing, and it is a different code path from the
+	# per-hit verdict above -- it takes the BEST of the two equipped moves,
+	# where a hit reports the one actually thrown.
+	var quick := CHART.multiplier(
+		str(moves.call("type_of", str(creature.move_quick))), str(foe.creature_type))
+	var charged_mult := CHART.multiplier(
+		str(moves.call("type_of", str(creature.move_charged))), str(foe.creature_type))
+	var expected_arrow := CHART.classify(maxf(quick, charged_mult))
+	var reported_arrow: int = int(_manager.call("active_matchup"))
+	if reported_arrow != expected_arrow:
+		_fail("the HUD's matchup arrow reports %d for %s vs %s; the chart says %d"
+			% [reported_arrow, str(creature.creature_type), str(foe.creature_type), expected_arrow])
+		return
+
+	# Printed rather than asserted: WHICH types meet here is the director's
+	# choice, not this test's, so a mirror matchup (verdicts all 0) is a
+	# legitimate run. What is asserted above is that the fight and the chart
+	# agree; that the chart itself produces non-neutral verdicts is
+	# tests/test_type_chart.gd's job, where the pairing can be pinned.
+	print("type chart reached the fight: %d verdicts, ally %s vs foe %s (hit %d / %d, arrow %d)"
+		% [_effectiveness_seen.size(), str(creature.creature_type), str(foe.creature_type),
+			on_foe, on_ally, reported_arrow])
 
 
 ## Without this the fight is a punching bag with a health bar.

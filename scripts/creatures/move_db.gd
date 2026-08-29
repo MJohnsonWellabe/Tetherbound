@@ -64,5 +64,22 @@ func power(id: String) -> float:
 	return float(move(id).get("power", UNKNOWN_POWER))
 
 
+## The move's own elemental type (ground|water|air, and whatever the board's
+## six planned types are called when they arrive).
+##
+## T3-TYPECHART made this a MECHANIC. It was flavour when this file was
+## written — moves.json's header still says so, and says the type is
+## deliberately not cross-checked against the wielding species' own, which is
+## the property the chart is built on: a move's type is what decides its
+## effectiveness, so a creature's coverage is what it has been TAUGHT rather
+## than what it was born as.
+##
+## "" for an unknown id or a definition with no `type`, which
+## `type_chart.gd::multiplier` resolves to neutral — the same "an unknown move
+## reads as ordinary, not broken" position `UNKNOWN_POWER` takes above.
+func type_of(id: String) -> String:
+	return str(move(id).get("type", ""))
+
+
 func slot(id: String) -> String:
 	return str(move(id).get("slot", ""))

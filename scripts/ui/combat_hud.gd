@@ -112,6 +112,33 @@ var _last_reticle_screen_pos: Vector2 = Vector2.ZERO
 ## `_party_strip_position()`.
 var _party_strip: Control = null
 
+## --- T3-TYPECHART: the per-hit type verdict ---------------------------------
+##
+## Its own transient widget rather than the `_miss_text` channel every other
+## short combat message uses, and the reason is a real defect that channel
+## would have introduced: `_draw_grid` sets `_grid_panel.visible = false`
+## whenever a message is up. That is correct for a miss or a refused throw --
+## rare, and the player should read the message rather than the buttons -- but
+## a type verdict fires on EVERY landed hit in a non-neutral matchup, which is
+## most hits of most fights once this chart exists. Routed through there it
+## would blink the action grid out of the fight almost continuously.
+##
+## Built in code and mounted on `$Root` rather than added to
+## `scenes/combat/combat_hud.tscn`, the same convention `_orb_cluster` and
+## `_party_strip` above already follow.
+var _effect_banner: Label = null
+var _effect_left: float = 0.0
+
+## Clear space kept between the enemy plate's real bottom edge and the verdict
+## banner. Enough that the two read as separate elements rather than as one
+## overflowing panel.
+const EFFECT_BANNER_GAP := 16.0
+
+## How long the verdict stays up. Short: it is confirming a blow the player
+## already threw, not asking them to change what they are doing, and a fight
+## lands hits faster than a line of text can be read twice.
+const EFFECT_BANNER_SECONDS := 0.7
+
 @onready var _root: Control = $Root
 @onready var _enemy_panel: PanelContainer = $Root/EnemyPanel
 @onready var _enemy_eyebrow: Label = $Root/EnemyPanel/EnemyVBox/Eyebrow
@@ -198,12 +225,14 @@ func _ready() -> void:
 	_party_strip.call("set_rest_position", _party_strip_position())
 
 	_build_orb_cluster()
+	_build_effect_banner()
 
 	UITokens.make_text_legible($Root)
 
 	if _manager != null:
 		_manager.connect("exited", _on_exited)
 		_manager.connect("attack_missed", _on_missed)
+		_manager.connect("hit_effectiveness", _on_hit_effectiveness)
 		_manager.connect("catch_refused", _on_catch_refused)
 		_manager.connect("catch_resolved", _on_catch_resolved)
 		_manager.connect("creature_switched", _on_creature_switched)
@@ -241,6 +270,69 @@ func _build_orb_cluster() -> void:
 	$Root.add_child(_orb_cluster)
 
 
+## T3-TYPECHART's per-hit verdict banner. See `_effect_banner`'s own comment for
+## why it is a separate widget from the `_miss_text` channel.
+##
+## Sited directly UNDER THE ENEMY PLATE, which is where the player is already
+## looking when a hit lands -- the foe's health bar is in the same glance. The
+## plate occupies y 32..224 (scenes/combat/combat_hud.tscn), so this sits just
+## below it and never overlaps the action grid at the bottom of the screen or
+## the ally plate.
+##
+## Centred and anchored top like the plate it hangs from, so it stays put at
+## every handheld aspect ratio rather than drifting with the safe margin.
+func _build_effect_banner() -> void:
+	_effect_banner = Label.new()
+	_effect_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_effect_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_effect_banner.add_theme_font_size_override("font_size", 26)
+	_effect_banner.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_effect_banner.offset_left = -280.0
+	_effect_banner.offset_right = 280.0
+	_effect_banner.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_effect_banner.visible = false
+	$Root.add_child(_effect_banner)
+	_position_effect_banner()
+
+
+## Sit the banner under the enemy plate's REAL bottom edge, not the one
+## `combat_hud.tscn`'s offsets declare.
+##
+## Same trap `_party_strip_position()` below documents at length, hit again
+## here: `EnemyPanel` is a `PanelContainer`, so it grows to fit its content and
+## a Control forced past its minimum size does not write that growth back to
+## its offsets. The .tscn says the plate ends at 224; rendered, it ends around
+## 258 — and a banner placed at the authored 232 straddled the plate's bottom
+## edge, half on the panel and half on the world, which reads as a layout bug
+## rather than as a deliberate element. Caught by actually rendering the frame,
+## which is the entire argument for `ralph/conventions.md`'s render-before-done
+## rule.
+##
+## Falls back to the authored offset when called from `_ready()`, before the
+## panel has been laid out and while its rect is still degenerate — the same
+## fallback, for the same reason, that `_party_strip_position()` keeps.
+func _position_effect_banner() -> void:
+	if _effect_banner == null:
+		return
+	var top := 232.0
+	if _enemy_panel != null and _enemy_panel.size.y > 1.0:
+		top = _enemy_panel.position.y + _enemy_panel.size.y + EFFECT_BANNER_GAP
+	_effect_banner.offset_top = top
+	_effect_banner.offset_bottom = top + 40.0
+
+
+## Age the verdict banner out. Same shape as `_tick_go_text`/`_tick_outcome`
+## above it: a plain countdown rather than a Tween, because the thing it drives
+## is one boolean and a Tween that outlives the fight is how a HUD element gets
+## stuck on screen.
+func _tick_effect_banner(delta: float) -> void:
+	if _effect_left <= 0.0:
+		return
+	_effect_left = maxf(0.0, _effect_left - delta)
+	if _effect_left <= 0.0 and _effect_banner != null:
+		_effect_banner.visible = false
+
+
 ## The health-bar track/fill treatment, shared by both bars. Split out of the
 ## old per-bar `_style`/`_dress` pair now that `UITokens.fill_box` already
 ## builds the fill half — this only still needs to own the track.
@@ -273,6 +365,7 @@ func _process(delta: float) -> void:
 	_tick_outcome(delta)
 	_tick_xp(delta)
 	_tick_go_text(delta)
+	_tick_effect_banner(delta)
 	_miss_left = maxf(0.0, _miss_left - delta)
 	_draw_prompt()
 
@@ -303,6 +396,12 @@ func _show_fight(visible_now: bool) -> void:
 			_party_strip.call("set_pinned", false)
 		if _orb_cluster != null:
 			_orb_cluster.visible = false
+		# T3-TYPECHART. Cleared with the rest of the fight, not left to age out
+		# on its own timer -- a verdict about a fight that has ended would sit
+		# over the world for up to 0.7s after control came back.
+		if _effect_banner != null:
+			_effect_banner.visible = false
+		_effect_left = 0.0
 		if _capture_reticle != null:
 			_capture_reticle.call("update_target", Vector2.ZERO, 0.0, false)
 		_enemy_panel.modulate.a = 1.0
@@ -335,6 +434,42 @@ func _type_color(type_id: String) -> Color:
 			return UITokens.GROUND_OCHRE
 
 
+## T3-TYPECHART's readiness tell: the foe's type, plus how the creature the
+## player is currently piloting fares into it.
+##
+## THE ARROW RIDES THE TAG THAT WAS ALREADY THERE. This panel has drawn the
+## enemy's type in its type colour since the fight HUD was built; a matchup is
+## a fact about that type, so a second widget for it would be a second thing to
+## find on a 7-inch handheld mid-fight. Owner-direction section 10 asks for
+## readiness communicated without a hard lock, and section 9 for "enough
+## information that preparation feels intelligent rather than random" while not
+## naming the creature to use -- one arrow on the creature already out says the
+## matchup is favoured without ranking the other four.
+##
+## COLOUR CARRIES THE MATCHUP ONLY WHEN THERE IS ONE. At neutral -- the common
+## case, and every fight in the game before this landed -- the tag is exactly
+## what it always was: the type word in the type's own colour. When the matchup
+## is not neutral the colour switches to the verdict, because colour is the
+## fastest channel on screen and the thing that CHANGES deserves it more than
+## the thing that is also written in words right beside it. The type is never
+## lost: it is the word.
+##
+## Read at a glance rather than at leisure, which is the constraint a
+## real-time, directly-piloted fight puts on every HUD element here.
+func _draw_type_tag(foe_type: String) -> void:
+	var matchup: int = int(_manager.call("active_matchup"))
+	var glyph := ""
+	var colour := _type_color(foe_type)
+	if matchup > 0:
+		glyph = "  ▲"
+		colour = UITokens.SUCCESS
+	elif matchup < 0:
+		glyph = "  ▼"
+		colour = UITokens.WARNING
+	_enemy_type_tag.text = foe_type.to_upper() + glyph
+	_enemy_type_tag.add_theme_color_override("font_color", colour)
+
+
 func _draw_enemy() -> void:
 	var foe: RefCounted = _manager.call("enemy")
 	if foe == null:
@@ -350,8 +485,7 @@ func _draw_enemy() -> void:
 	# has renamed is called what they called it when it is on the other side of
 	# a fight, which is the same rule the ally plate above already follows.
 	_enemy_name.text = str(foe.label())
-	_enemy_type_tag.text = str(foe.creature_type).to_upper()
-	_enemy_type_tag.add_theme_color_override("font_color", _type_color(str(foe.creature_type)))
+	_draw_type_tag(str(foe.creature_type))
 
 	var fraction: float = foe.hp_fraction()
 	_enemy_health.value = fraction * 100.0
@@ -791,6 +925,56 @@ func _tick_go_text(delta: float) -> void:
 
 
 ## --- moments (signal-driven) -------------------------------------------------
+
+## T3-TYPECHART's teaching signal: the hit that just landed was type-advantaged
+## or type-disadvantaged, and the player is told at the exact moment it
+## mattered.
+##
+## THIS IS HOW THE CHART IS LEARNED. Nothing anywhere teaches the triangle --
+## no tutorial, no matchup screen, and section 9 rules out naming the creature
+## to use. What a player gets instead is confirmation: they swung, and the game
+## said whether it was the right swing. A dozen fights of that is the chart,
+## learned the way a player actually learns one.
+##
+## Silent at neutral, which is most hits. A banner that fires on every blow is
+## a banner nobody reads.
+##
+## Rides the same transient message channel as `_on_missed` below rather than
+## opening a second one. A swing either lands or misses, never both, so the two
+## cannot contend for the same event; across swings, whichever spoke last is
+## the one still relevant. Deliberately SHORTER-lived than a miss (0.7s against
+## 0.9s): a miss is telling the player to change what they are doing, this is
+## confirming what they already did.
+##
+## Phrased from the player's side in both directions -- "you hit a weakness" /
+## "it shrugged that off" -- because "WEAK" alone is ambiguous about who is
+## weak, and an ambiguous tell in a fast fight is worse than no tell.
+func _on_hit_effectiveness(on_enemy: bool, effectiveness: int) -> void:
+	if effectiveness == 0 or _effect_banner == null:
+		return
+	var text := ""
+	var colour := UITokens.SUCCESS
+	if on_enemy:
+		if effectiveness > 0:
+			text = "▲  STRONG — you hit a weakness"
+		else:
+			text = "▼  WEAK — it shrugged that off"
+			colour = UITokens.WARNING
+	else:
+		if effectiveness > 0:
+			text = "▼  it hit YOUR weakness"
+			colour = UITokens.DANGER
+		else:
+			text = "▲  your type held — that barely landed"
+	_effect_banner.text = text
+	_effect_banner.add_theme_color_override("font_color", colour)
+	# Re-measured every time it is shown rather than once at build: the plate
+	# above it is a PanelContainer whose height follows its content, and the
+	# telegraph line inside it appears and disappears during a fight.
+	_position_effect_banner()
+	_effect_banner.visible = true
+	_effect_left = EFFECT_BANNER_SECONDS
+
 
 ## A miss has to be legible or it reads as the game dropping the input.
 func _on_missed(by_player: bool) -> void:
