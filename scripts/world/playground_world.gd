@@ -611,7 +611,24 @@ func _apply_ground_shader(material: Object) -> void:
 	# which is the only reason it was noticed at all. If a value here appears to
 	# do nothing, check which side of this line it is on before tuning it further.
 	const PROPERTIES := ["world_background", "texture_filtering"]
-	const COLOURS := ["macro_variation1", "macro_variation2"]
+	const COLOURS := ["macro_variation1", "macro_variation2", "aerial_fade_colour"]
+
+	# T1-GROUND-2, Job 2: aerial perspective. shaders/terrain_ground.gdshader
+	# is Terrain3D's own auto-generated shader (see its own header for how it
+	# was captured) plus a distance desaturate/haze block Terrain3D's stock
+	# auto-shader has no equivalent for. Installed BEFORE the config loop
+	# below so the aerial_fade_* uniforms it declares are already part of
+	# the shader's known-uniform list by the time that loop's
+	# `_get_shader_parameters()` check runs — installing after would land
+	# every aerial_fade_* config key in `ignored`. Confirmed (throwaway
+	# probe, not committed) that `set_shader_override()` survives a later
+	# `enable_shader_override(true)` call rather than being clobbered by it.
+	var override_shader := load("res://shaders/terrain_ground.gdshader") as Shader
+	if override_shader != null and material.has_method("set_shader_override") and material.has_method("enable_shader_override"):
+		material.call("set_shader_override", override_shader)
+		material.call("enable_shader_override", true)
+	else:
+		push_warning("terrain aerial-perspective shader could not be installed; ground falls back to Terrain3D's stock auto-shader with no distance haze")
 
 	var cfg: Dictionary = _load_terrain_config().get("shader", {})
 	if cfg.is_empty():
