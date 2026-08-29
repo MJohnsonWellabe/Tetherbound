@@ -93,6 +93,23 @@ func _run() -> void:
 	await _shoot_matchup("type_tell_psychic", "ripplet", "riftfrill")
 	await _shoot_matchup("type_tell_fire", "ripplet", "ashtusk")
 
+	# The double weakness, which is the whole reason the tag now writes both
+	# halves: a Water move into Ashtusk (Ground/Fire) is 1.5625, the only
+	# pairing in the game that reaches it. Before this the plate read "GROUND"
+	# and the player had no way to tell why the hit landed harder here than
+	# against the Burrowback behind them.
+	await _shoot_matchup("type_tell_dual_word", "ripplet", "ashtusk")
+
+	# THE ONE PLACE THE NEW COLOURS ARE REACHABLE TODAY, and the reason this
+	# frame exists rather than being assumed: the enemy tag paints the VERDICT
+	# colour whenever the matchup is non-neutral, and all four live dual-typed
+	# creatures have a ground or water PRIMARY -- so no shipped foe can put a
+	# fire/electric/ice/psychic/dark colour on that tag at all. The action
+	# grid's move hairlines can. Stormtrail's quick is `spark_bite` (Electric),
+	# so piloting it draws ELECTRIC_GOLD under the quick cell where it used to
+	# draw GROUND_OCHRE, which was the fallback bug.
+	await _shoot_matchup("type_tell_move_hairline", "stormtrail", "mudsnout")
+
 	# The banner, on the same advantaged pairing that produces it in play.
 	_manager.set_pair(_make("ripplet", 12), _make("mudsnout", 12))
 	for i in 10:

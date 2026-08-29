@@ -255,10 +255,45 @@ both cost something:
 **Nature and Light deliberately have no colour.** They have no species, no move
 and no row; a colour for a type nothing can be is a stub.
 
-`tools/capture_type_tell.gd` gained four frames — Dark, Electric, Psychic and
-Fire foes against a Ripplet ally — because whether ICE_FROST reads as separable
-from two existing blues, and whether DARK_VIOLET and PSYCHIC_LILAC are two
-colours or one, are questions about pixels that no unit test can answer.
+### 5.1 Rendering them found a second, larger gap — the one that actually mattered
+
+`tools/capture_type_tell.gd` gained frames for Dark, Electric, Psychic and Fire
+foes. **Rendering them immediately showed the colours never appear**, and the
+reason is worth more than the colours were:
+
+> **The enemy type tag only ever wrote the foe's PRIMARY type.** Ashtusk drew as
+> `GROUND`. Nightburrow as `GROUND`. Riftfrill as `WATER`.
+
+`combat_manager.gd` has resolved damage through `multiplier_dual` since
+T3-CREATURES — both call sites *and* `active_matchup()` — so the arithmetic was
+always right. Only the *tell* was mono-typed. That was invisible while the five
+new types had no rows and every second half was worth exactly 1.0. **This lane
+is what made it visible**: the game's first double weakness is a Water move into
+Ashtusk at 1.5625, and a player seeing only `GROUND` had no way to tell why that
+hit landed harder here than on the Burrowback behind them.
+
+Fixed: the tag now reads **`GROUND/FIRE`** when a second half exists. A slash
+rather than a second widget, for the same reason the arrow rides this tag rather
+than getting its own — real-time, directly piloted, 7-inch handheld; the plate
+has room for one more word, not one more element. **Rendered and inspected at
+1920×1080**: it fits on one line and does not overflow the plate.
+
+And the colours turn out to be **latent on the enemy tag but live on the action
+grid**, which I would not have known without looking:
+
+- The tag paints the *verdict* colour whenever a matchup is non-neutral, and
+  all four live dual-typed creatures have a ground or water primary — so **no
+  shipped foe can put a new colour on that tag**. It becomes reachable when
+  Sparkit, Cindercub, Shadelet or Frostclaw ship, all of which have a new
+  *primary* type and all of which are mesh-blocked.
+- The action grid's move hairlines read `_type_color(_move_type(...))` on the
+  **player's** creature, and the ten new-type moves are on creatures that exist.
+  Rendered: piloting Stormtrail draws **ELECTRIC_GOLD** under `Spark Bite` where
+  it used to draw GROUND_OCHRE, clearly separable from the ochre Ground hairline
+  under its own charged `Trailblaze` in the same grid.
+
+So the fallback bug was real and is fixed on the surface a player can reach
+today; the rest is correctly in place for the meshes that are coming.
 
 ---
 
@@ -351,12 +386,19 @@ type-tell colours.
 
 ### Still open
 
-- **The four new HUD-colour frames have not been judged at handheld
-  resolution.** They render at 1920×1080. The type tag is a pre-existing 19px
-  label and I changed only its colour, so it stays above
-  `smoke_hud_handheld_legibility.gd`'s floor — but the ICE_FROST-vs-AIR_SKY and
-  DARK_VIOLET-vs-PSYCHIC_LILAC separations are exactly the judgement that could
-  fail at 1280×800 on the ROG Ally proxy, and nobody has looked.
+- **The HUD frames have not been judged at handheld resolution.** They render at
+  1920×1080. The type tag is a pre-existing 19px label whose *colour* I changed
+  and whose *text* is now up to one word longer, so it stays above
+  `smoke_hud_handheld_legibility.gd`'s cap-height floor — but `GROUND/ELECTRIC`
+  is the longest string that label has ever had to hold, and the
+  ICE_FROST-vs-AIR_SKY and DARK_VIOLET-vs-PSYCHIC_LILAC separations are exactly
+  the judgements that could fail at 1280×800 on the ROG Ally proxy. Nobody has
+  looked. **`GROUND/ELECTRIC` (Stormtrail) is the string to check first**; the
+  frame I rendered is the shorter `GROUND/FIRE`.
+- **ICE_FROST, PSYCHIC_LILAC and DARK_VIOLET have never been rendered**, because
+  no shipped foe can put them on the tag (§5.1) and no shipped creature carries
+  an Ice move. They are reasoned, not seen. The first Frostclaw or Shadelet
+  build should re-run `tools/capture_type_tell.gd` before anything else.
 - **No fight in any test has ever resolved a non-neutral NEW-type matchup.**
   `smoke_combat.gd`'s director draws ground-vs-ground (T3-TYPECHART §6 records
   this); the new rows' arithmetic is covered by unit tests where the pairing can
