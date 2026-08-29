@@ -309,6 +309,20 @@ is cheap.
   miss, and a real defect for anything that fires per-hit — I nearly shipped the
   type verdict through it. Anyone adding frequent combat feedback to this HUD
   should build their own widget, as the orb cluster and party strip already do.
+- **`tools/_probe_pacing.py` now has a stale damage model, and it is the tool
+  the xp curve was tuned with.** It reimplements `base_damage` in Python
+  (line 164: `dmg = (quicks * q["power"] + c["power"]) * scale * 0.5`) and has
+  no notion of a type multiplier. `progression.json`'s own
+  `_comment_curve_sh47` records that the chapter's entire xp curve — exponent
+  1.6 → 1.15, the single largest lever in that file — was retuned "measured by
+  `tools/_probe_pacing.py` against the shipped critical path". Anyone re-running
+  it to re-tune pacing after this branch will get fight lengths that ignore the
+  chart, and against a 57.6 % Ground ladder that error is not small or
+  symmetric. **This is not a test failure and nothing is broken today** — the
+  probe is not on any CI path — but it is a duplicated model that has now
+  drifted from the one it mirrors, which is the same class of problem as the
+  stale prose this repo keeps rediscovering. Whoever next owns pacing should
+  either teach it the chart or make it call the real formula.
 - **`hit_landed` has nine two-argument callables across tests and tools.**
   Godot errors when a signal emits more arguments than a connected callable
   accepts, so widening it would have broken six files. Hence a separate
