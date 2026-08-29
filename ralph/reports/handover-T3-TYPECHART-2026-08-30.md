@@ -387,12 +387,15 @@ type).
 | `tests/smoke_relay.gd` | **OK** — captain beaten, captive freed, Gear carried |
 | `tests/smoke_stronghold.gd` | **OK** — "stronghold smoke test passed" |
 | `tests/smoke_stronghold_reload.gd` | **OK** — "stronghold reload smoke test passed" |
-| `tests/smoke_gate_e_finale.gd` | *(running at time of writing — see §12)* |
+| `tests/smoke_gate_e_finale.gd` | **OK** — "gate E finale smoke test passed"; roster decision recorded, region answered |
 | full `tests/run_tests.gd` | *(running at time of writing — see §12)* |
 | `tools/capture_type_tell.gd` | **OK** — four frames, arrows 1 / −1 / 0 as the chart predicts |
 
-All five combat-bearing smoke tests the brief named were run. Every one that
-has finished is green. §12 carries whatever was still in flight.
+**All five combat-bearing smoke tests the brief named are green**, plus
+`smoke_boss.gd`. The most load-bearing of them is `smoke_gate_e_finale.gd`,
+which drives real trainer fights frame-by-frame through the Warden and out the
+other side of the chapter ending — every hit in it now goes through the chart,
+and the authored ladder still resolves. §12 carries the one run still in flight.
 
 ---
 
@@ -415,13 +418,18 @@ has finished is green. §12 carries whatever was still in flight.
 
 ## 12. Runs still in flight when this was written
 
-`smoke_gate_e_finale.gd` and the full unfiltered `tests/run_tests.gd` were
-still running when this document was first pushed.
-**Their results are appended by the final commit on this branch** — if this
-section still says "in flight", that commit did not happen and the runs should
-be repeated before the branch is trusted:
+Every smoke test finished and is recorded in §10. The **full unfiltered
+`tests/run_tests.gd`** was still running when this was written.
+**Its result is appended by the final commit on this branch** — if this section
+still says "in flight", that commit did not happen and the run should be
+repeated before the branch is trusted:
 
 ```
-godot --headless --path . --script tests/smoke_gate_e_finale.gd
 godot --headless --path . --script tests/run_tests.gd
 ```
+
+Note that the filtered run `--only=test_combat,test_creature,test_moves,
+test_progression,test_trainers` (249 tests, 2122 assertions) already covers
+every unit test touching the systems this branch changes; the full run is
+looking for collateral damage elsewhere in the suite, not for a combat
+regression.
