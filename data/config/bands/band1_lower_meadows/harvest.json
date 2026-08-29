@@ -357,6 +357,45 @@
    ],
    "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
    "model_scale": 1.3
+  },
+  {
+   "order": 1028,
+   "item": "potion_small",
+   "amount": 1,
+   "label": "A stashed potion",
+   "at": [
+    -478.0,
+    535.0
+   ],
+   "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+   "model_scale": 0.85,
+   "_why_t3_pickups": "Owner directive 2026-08-29: scatter findable consumables off-path, 'enough that going off-path to find them is worth doing'. Sited in the same damp hollow as the band's own elder Mosshell (spawns.json order ~, centre (-490,555)) -- a potion beside the one fight in Band 1 that is 'a real fight and not a wall' per that entry's own comment. 43m off the spine, well past owner-direction's 30m notice radius, so this is a curiosity-driven find rather than a roadside pickup. Reuses harvest_node.gd's existing generic gather mechanism (respawns like any other resource -- fine for a stack:10 consumable, matching wood/stone/berries' own renewable convention) -- no new system."
+  },
+  {
+   "order": 1029,
+   "item": "orb_basic",
+   "amount": 2,
+   "label": "A cache of orbs",
+   "at": [
+    -245.0,
+    935.0
+   ],
+   "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+   "model_scale": 0.85,
+   "_why_t3_pickups": "Owner directive 2026-08-29. Beside the bramblebun off-route pocket (spawns.json order 1047, centre (-260,950)) which 'rewards cutting the corner instead of following the road's own longer arc' -- the same corner-cut now pays twice, catch temptation and orb supply together."
+  },
+  {
+   "order": 1030,
+   "item": "travel_pack",
+   "amount": 1,
+   "label": "A dropped travel pack",
+   "at": [
+    515.0,
+    1035.0
+   ],
+   "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+   "model_scale": 0.85,
+   "_why_t3_pickups": "T3-REWARD found `travel_pack` (items.json) fully modelled with zero acquisition path anywhere in the game. Placed beside the galecrest off-route pocket (spawns.json order 1048, centre (500,1050)), the 'upper ridge' aggressor sighting -- a pack left by whoever was here before, on the same detour. stack:1 gear, so a respawning crate is harmless: nothing is farmable that changes the equip once worn."
   }
  ],
  "_why_gate_b_three_beds": "OWNER DIRECTIVE 2026-08-23 \u00a71: three creature beds must be affordable before tournament sign-up, and the gatherable budget is raised NEAR THE VILLAGE to pay for them rather than by sending the player further afield. Orders 1020-1027 are that raise: +12 wood and +20 fiber on the practice-path loop the first day already walks. The arithmetic it has to cover is house 39 wood / 34 stone, three creature beds 18 wood / 24 fiber (6 + 8 each, data/items/buildables.json), and the camp 12 wood / 8 stone / 10 fiber -- 69 / 42 / 34, which is tests/helpers/gate_a_material_route.gd's TARGET_STOCK. The old 57 / 42 / 18 bought exactly one bed against an entry gate that wants three rested entrants (tournament.gd::condition_ready, creature_bed.gd's single occupant)."

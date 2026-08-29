@@ -85,6 +85,16 @@
       "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
       "model_scale": 1.0,
       "_why": "BAND5-DEADTRAVEL. The second beat placed into the 123m empty diagonal the driven run measured (see spawns.json order 5022). Stone rather than another fiber/wood pair because the five nodes at `the_waystop` already cover a builder's needs at the camp; this one is 130m earlier, on the exposed leg, and its job is to be a reason to break stride rather than a reason to stop and build. Model and amount follow the band1/band2 stone vocabulary -- no new asset."
+    },
+    {
+      "order": 5008,
+      "item": "revive",
+      "amount": 1,
+      "label": "A stashed revive",
+      "at": [165.0, 7480.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner directive 2026-08-29, and owner-direction section 15's 'final preparation opportunity'. Beside the off-spine galecrest hunting pocket (spawns.json order 5021, 'well clear of the checkpoint and the doorstep gauntlet') in the last stretch before the Hall -- one more reason to walk the edges of the approach before committing to the gauntlet."
     }
   ]
 }

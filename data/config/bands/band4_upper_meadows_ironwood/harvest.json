@@ -151,6 +151,46 @@
       "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
       "model_scale": 1.05,
       "_why": "T3-RELAY, band4-seams follow-up. The band4/5 seam gap (852m in the original finding; `ralph/T3-BAND4` had already cut it to 475m, Captain Ridge -> this branch's own RuinedWatchtower/tm_riptide_lance beat, before this pass merged that work in) is closed further here rather than left at 475m. Sited on the spine's own points 15->16 (`terrain_playground.json`), checked against `tools/_probe_gate_f_corridor.gd`'s own 30m/spine-segment geometry the way T3-BAND4's own siting-bug writeup insists on -- entry at chapter distance ~10329, splitting the gap into ~210m/~265m, both inside the owner's 60-90s/240-360m cadence band. Rock_Medium_3 rather than _1/_2 (already used at orders 4006/4009) for the same visual-variety reason band3's own stone nodes vary their model."
+    },
+    {
+      "order": 4021,
+      "item": "revive",
+      "amount": 1,
+      "label": "A stashed revive",
+      "at": [55.0, 6815.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner directive 2026-08-29. Beside the ruined watchtower (playground_world.gd WATCHTOWER_AT (40,6800)) and its own tm_riptide_lance -- 'a Team Tether patrol never got to ship out' its own TM comment says, and neither did this. A fight was fought here; a revive is what a player finds picking through it."
+    },
+    {
+      "order": 4022,
+      "item": "potion_large",
+      "amount": 1,
+      "label": "A stashed tonic",
+      "at": [-270.0, 5240.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner directive 2026-08-29. Deep in the ironwood grove's night-duskhush pocket -- a genuine detour off the tree-line stand, not visible from the spine."
+    },
+    {
+      "order": 4023,
+      "item": "hide_helm",
+      "amount": 1,
+      "label": "A dropped helm",
+      "at": [-358.0, 5058.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "T3-REWARD found `hide_helm` fully modelled with zero acquisition path anywhere in the game. Beside the tree-line ironwood stand -- gear left where the region's own first-crossing beat already stops the player. stack:1; a respawning crate is harmless."
+    },
+    {
+      "order": 4024,
+      "item": "swift_tonic",
+      "amount": 1,
+      "label": "A stashed tonic",
+      "at": [155.0, 5605.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: swift_tonic was shop-only at Mira's before this pass, no world presence. Near Captain Field's own position ((170,5590), trainers.json) -- readiness before the first of the three regional captains, matching the coordinator's own guidance that a temporary tonic suits a cache near a fight about to happen."
     }
   ]
 }

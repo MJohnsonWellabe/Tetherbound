@@ -40,6 +40,7 @@ const WATCHTOWER_LANDMARK := preload("res://scripts/world/watchtower_landmark.gd
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
 const TM_PICKUP := preload("res://scripts/world/tm_pickup.gd")
+const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 const SOUTH_BRIDGE := preload("res://scripts/world/south_bridge.gd")
 const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
@@ -255,7 +256,54 @@ const TM_AT := {
 	# a cache a Team Tether patrol never got to ship out is the honest
 	# in-fiction reason an upper-ridge ruin holds a river-region TM.
 	"tm_riptide_lance": Vector2(33.0, 6795.0),
+	# T3-PICKUPS. The 768m gap this dict's own note above (tm_wind_blade)
+	# names as "STILL UNMET" -- band 4's Air-prep beat before Captain Vess
+	# (captain_ridge), immediately before him at chapter distance ~10,119.
+	# tm_wind_blade is taken (Band 1), so this is the "different Air TM" the
+	# note asks for. tm_aerial_flash rather than tm_cyclone: both are
+	# unplaced in the world (both shop-only at Mira's, data/config/trade.json
+	# -- verified before writing this, `test_every_tm_in_the_game_can_actually_be_obtained`
+	# already passed for both), and this adds a second, free acquisition
+	# path, the same "any one of the three makes it obtainable" shape
+	# tm_wind_blade's own Band-1 placement already establishes. Sited near
+	# the wild cluster at (60,6230) — T3-BAND4's own note calls this "the
+	# ordinary herd" the special encounter 84m south stands apart from —
+	# rather than on the spine itself, 39m off that cluster's centre and
+	# clear of it and of every other node measured with
+	# tools/_probe_pickups_sites.gd (worst slope 4.5 degrees over a 2m pad).
+	"tm_aerial_flash": Vector2(85.0, 6260.0),
 }
+
+## T3-PICKUPS. One-time world finds for items with no renewable/rare tension
+## reason to be a harvest node (`item_cache_pickup.gd`; see its own header for
+## why this exists beside key_pickup.gd/tm_pickup.gd rather than reusing
+## either). Keyed by item id, same one-item-one-place contract TM_AT already
+## uses.
+##
+## `elixir_might` is the only entry: D47's own comment in items.json says
+## permanent stat boosters are deliberately kept OUT of Mira's stock so they
+## "stay rare", and a 60s-respawn harvest node (this file's other new
+## pickups all use one) would let a player farm past
+## data/config/progression.json's `elixirs.cap_per_stat` (24, i.e. 4 copies)
+## in under 20 minutes standing still -- the opposite of what D47 asked for.
+## A one-time find is the honest reading of "belongs in the world -- a
+## dungeon, a captain, a stronghold" (items.json's own `_comment_elixirs`).
+##
+## Sited in the Band 5 off-spine warren pocket (spawns.json order 5016,
+## centre (-145,7085), "leaving the road here is rewarded, not just
+## scenery") pushed a further 22m into the pocket -- owner-direction
+## section 15's "final tempting roster opportunity" region, and exactly the
+## "genuinely off-path, worth the detour" placement the brief asked for a
+## permanent elixir to get. MEASURED, tools/_probe_pickups_sites.gd: worst
+## slope 7.3 degrees over a 2m pad, clear of every other authored node.
+const CACHE_AT := {
+	"elixir_might": Vector2(-165.0, 7065.0),
+}
+const CACHE_LABEL := {
+	"elixir_might": "Take the elixir",
+}
+const CACHE_MODEL := "res://assets/props/quaternius_fantasy/Barrel.gltf"
+const CACHE_MODEL_SCALE := 0.9
 
 ## Where Grandpa's house stands: the west building pad in
 ## data/config/terrain_playground.json's `flats`. One source of truth would be
@@ -948,6 +996,7 @@ func _build_settlement() -> void:
 	_place_harvest_nodes()
 	_place_farm_plots()
 	_place_tms()
+	_place_item_caches()
 	_build_burrow_warrens()
 	_build_stronghold()
 	_build_stronghold_climax()
@@ -1115,6 +1164,32 @@ func _spawn_tm(tm_id: String) -> void:
 	pickup.call("setup", tm_id)
 
 
+## T3-PICKUPS. One-time item finds (CACHE_AT/item_cache_pickup.gd), the same
+## one-time-prop shape `_place_tms()` above already establishes: a
+## `cache:<id>` flag means "taken", and a reload cannot mint a second copy.
+func _place_item_caches() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	for item_id: String in CACHE_AT:
+		if ITEM_CACHE_PICKUP.was_taken(game, item_id):
+			continue
+		_spawn_item_cache(item_id)
+
+
+func _spawn_item_cache(item_id: String) -> void:
+	if get_node_or_null(NodePath("Cache_%s" % item_id)) != null:
+		return
+	var at: Vector2 = CACHE_AT[item_id]
+	var ground := ground_height_at(at.x, at.y)
+	if is_nan(ground):
+		push_error("no ground under item cache '%s' at %.0f, %.0f" % [item_id, at.x, at.y])
+		return
+	var pickup: Node3D = ITEM_CACHE_PICKUP.new()
+	pickup.name = "Cache_%s" % item_id
+	pickup.position = Vector3(at.x, ground, at.y)
+	add_child(pickup)
+	pickup.call("setup", item_id, CACHE_LABEL.get(item_id, "Take it"), CACHE_MODEL, CACHE_MODEL_SCALE)
+
+
 ## RG7. Loading through the in-world Save tab does not rebuild the scene. Make
 ## authored one-shot props match the newly loaded flags in both directions:
 ## consumed props disappear immediately, and an earlier save can restore a prop
@@ -1133,6 +1208,13 @@ func restore_progression_from_game(game: Node) -> void:
 				pickup.call("restore_progression_from_game", game)
 		elif pickup == null:
 			_spawn_tm(tm_id)
+	for item_id: String in CACHE_AT:
+		var cache := get_node_or_null(NodePath("Cache_%s" % item_id)) as Node3D
+		if ITEM_CACHE_PICKUP.was_taken(game, item_id):
+			if cache != null and cache.has_method("restore_progression_from_game"):
+				cache.call("restore_progression_from_game", game)
+		elif cache == null:
+			_spawn_item_cache(item_id)
 
 
 ## SD17: the Burrow Warrens, dug into the flank of the rocky rise out in the

@@ -146,8 +146,26 @@ func test_no_material_the_world_yields_is_an_orphan() -> void:
 				consumed[str((cost as Dictionary).get("id", ""))] = "recipe input"
 	var buildables := FileAccess.get_file_as_string(BUILDABLES_PATH)
 	var trade := FileAccess.get_file_as_string(TRADE_PATH)
+	var items: Dictionary = _json(ITEMS_PATH).get("items", {})
 
+	# T3-PICKUPS. Prompt 58's own wording is "every introduced MATERIAL must
+	# have understandable current uses" -- a recipe/build/shop sink is what
+	# stops a crafting material (kind `resource`) from being a dead-end
+	# collectible, because picking one up is not, by itself, a use. A
+	# potion, orb, revive or armor piece yielded by a harvest node is a
+	# different shape: it IS its own use (drunk, thrown, worn) the moment a
+	# player picks it up, the same as any of these ids already sitting in a
+	# trainer's `reward.items` -- nothing there is required to also have a
+	# recipe/build/shop sink, and a harvest node granting one is not a new
+	# kind of grant, only a second acquisition path (`chapter_rewards.json`'s
+	# own `_comment_no_new_systems`). So this check stays strict for
+	# resource-kind materials -- wood/stone/fiber/rootstone/ironwood all
+	# still need one -- and does not ask a consumable/elixir/armor/gear/food
+	# pickup to also justify itself with a sink it was never going to need.
 	for material: String in yielded.keys():
+		var kind := str((items.get(material, {}) as Dictionary).get("kind", ""))
+		if kind != "resource":
+			continue
 		var quoted := "\"%s\"" % material
 		assert_true(consumed.has(material) or buildables.contains(quoted) or trade.contains(quoted),
 			("the world yields '%s' and nothing consumes it — no recipe, no build cost, no shop. "
