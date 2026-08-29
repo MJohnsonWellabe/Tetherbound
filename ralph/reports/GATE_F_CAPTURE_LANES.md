@@ -121,9 +121,15 @@ On such a host the order that gets the most for the least is:
    any save with teleport permitted, so it is also the least coupled to the
    journey's state.
 5. **`S04C` and `S10C`** — 111 frames between them, the tournament final and the
-   finale. Both are **blocked on `RIG-11` being fixed first**, because a capture
-   lane seeds from the logic lane's save and neither of those states exists in
-   this run: the tournament was never fought and the finale never reached.
+   finale. **`RIG-11` was fixed and re-verified after this note was written**
+   (`GATE_F_RUN_3_RIG_FINDINGS.md`), but neither state exists in this run for a
+   different reason now: RIG-21 (same document) found the tournament's own
+   entry save carries a permanently fainted party from S03, so it was never
+   fought regardless, and S10 separately hit a real cost-gate BLOCKER at
+   step 27/121 before reaching its own finale states. **Both blockers are now:
+   a healthy `S03-exit` for S04C, and that plus a resolved cost ceiling (or a
+   split segment) for S10C** — added 2026-08-30, correcting the stale RIG-11
+   attribution without rewriting the rest of this document.
 
 That last point is the one to carry: **fixing the instrument comes before buying
 the GPU.** Photographing the states this run actually produced would photograph a
