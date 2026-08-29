@@ -414,7 +414,42 @@ harness's own documented rule ("a logic lane with prescribed captures and no
 capture_lane is a BLOCKER") correctly does **not** fire for a segment that
 plans zero captures.
 
-<!-- S10D_RETRY_RESULT_PLACEHOLDER -->
+**It did not finish, and I terminated it manually after ~25 minutes** (kill
+`-TERM`, exit status 143) rather than let it run further against this
+session's time budget. It never derailed, never harness-errored, and never
+tripped the cost gate — it was still inside its first `move_to` (toward the
+Tether Relay), with the player oscillating in a small area a few metres wide
+around `(x≈2-10, z≈1316-1323)` for the whole 25 minutes, per `route.csv`.
+
+**Reading this honestly:** this is very likely `stick_navigator.gd` stuck
+against geometry at this exact spawn point — the same `(≈8, -2.9, ≈1318)`
+corridor position every one of these mechanics runs has landed at, because
+every one of them is ultimately seeded from the same stranded save's
+position (S10a and S10b's own entry points happened not to require walking
+away from a position with this problem; S10d's first move is a 2.4 km walk
+away from it, which apparently is enough to expose it). It is **not**
+evidence that `S10d.json` itself is wrong, and it is **not** a cost-gate
+finding — the gate was never even close to tripping (25 minutes real time
+against a 14,400 s / 4-hour ceiling). It is exactly the kind of artefact §0.6
+warns a mechanics-only run seeded from the wrong state will produce, and I
+am recording it rather than either hiding it or over-claiming it as a real
+finding about the game or the split. `S10a`'s and `S10b`'s own asserts
+(`party_size`, `objective_is`) walked/interacted successfully from a
+comparable starting position with no such stall, which is why I read this as
+a spawn-geometry quirk of this particular stranded/synthetic save rather
+than a `move_to`/navigator defect worth chasing down inside this lane's
+scope.
+
+**What this attempt still proved, despite not finishing:** `seed_save`
+correctly resolved the synthetic `S10c-exit.json` stand-in (no repeat of the
+first attempt's clean FAIL), the segment booted, loaded, stood the world up,
+and ran its own entry asserts and the walk-back objective/nav-note steps
+without any harness error, for the full 25 minutes — i.e., every mechanic
+this validation cares about except "did the very last step finish" behaved
+correctly. Whoever runs the real evidence pass will not inherit this
+specific stall: a healthy `S09-exit.json` will place the player at the
+actual end of `S09`'s own content, not at this stranded save's corridor
+position.
 
 ### S10e
 
@@ -485,5 +520,16 @@ the obvious next boundary), not a ceiling increase.
    current `main`. It predates this lane and is out of this lane's declared
    scope, but it means `derive_capture_lane.py --check` is currently red on
    `main` for reasons unrelated to S10.
-4. The capture lanes (`S10aC`/`S10bC`/`S10cC`) still need a GPU host to run
+4. `S10d`'s mechanics run against the synthetic stand-in stalled for ~25
+   minutes oscillating a few metres from its spawn point before I terminated
+   it for this session's time budget, without ever threatening the cost
+   gate or derailing. I read this as a `stick_navigator.gd` geometry snag at
+   this specific stranded-save spawn position, not a defect in `S10d.json`
+   or the split (see the "S10d — second attempt" section above for the
+   reasoning); it is unlikely to recur against a healthy `S09-exit.json`
+   spawning where `S09`'s own content actually ends. If the real evidence
+   run hits the same stall at a *different* position, that would be a
+   genuine navigator finding worth its own report — but this run alone
+   is not enough to claim that.
+5. The capture lanes (`S10aC`/`S10bC`/`S10cC`) still need a GPU host to run
    at all — that has not changed, and is not this lane's problem to solve.
