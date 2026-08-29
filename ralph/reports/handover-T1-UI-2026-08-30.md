@@ -158,40 +158,82 @@ touching anything this list names.
 
 ## Evidence captured
 
-The full `tools/_capture_ui_survey.gd` sweep (23 frames, `--rendering-driver
-opengl3` under `xvfb-run`) was **still in flight when this handover was
-written** — the world phase alone runs ~90 boot/settle frames against the
-full Meadows scene (143k+ props, 315k grass tufts) before its first shoot,
-and this environment's software GL is slower than the tool's own measured
-baseline. Two frames were already spot-checked directly against the r1/r2
-fixes above (both confirmed working — see those items). If the survey
-finished after this was written, the frames are under `shots/ui/` (gitignored
-at repo root) and should be copied to `ralph/reports/T1-UI/shots/` per the
-brief before anyone else relies on them; if it did not finish, re-run:
+`ralph/reports/T1-UI/shots/` holds 6 of the survey's 23 frames:
+`01-title`, `02-starter-picker`, `03-name-prompt`, `05-hud-exploration`,
+`08-party-strip`, `09-stamina-arc`.
+
+**The full sweep did not finish, and the reason is worth recording.** The
+`timeout 1500` (25 minutes) wrapping the run expired mid-flight — the world
+phase's own 90-frame boot/settle against the full Meadows scene (143k+
+props, 315k grass tufts, under `xvfb-run` + `--rendering-driver opengl3`
+software GL) took roughly **24 minutes on its own** just to reach the FIRST
+world-phase shoot (`05-hud-exploration`), against the tool's own header
+estimate of ~12 minutes for the entire world phase. The wrapping shell
+command (`... ; echo "EXIT:$?"; tail -60 ...`) reported exit code 0 because
+that is the exit status of the trailing `tail`, not of the timed-out `godot`
+process — worth knowing before trusting an "exited 0" on a `timeout`-wrapped
+capture run again. **Re-run with a much longer timeout (60+ minutes) to get
+the remaining 17 frames** — the command is unchanged:
 
     xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . \
       --rendering-driver opengl3 --resolution 1920x1080 \
       --script tools/_capture_ui_survey.gd
 
-**The party-strip crop fix below was made AFTER the in-flight survey run
-started**, so that run's own `08-party-strip.png` does not reflect it — only
-a fresh run will. Re-run before trusting that specific frame.
+**The party-strip crop fix was made AFTER this run had already started with
+the old code**, so `08-party-strip.png` in this evidence set does NOT
+reflect it (the r1 position fix does — see below). Re-run and re-check that
+frame's right edge before trusting it.
+
+Despite being partial, the six frames are real and worth reading:
+
+- **`08-party-strip.png` / `09-stamina-arc.png`** — visual confirmation of
+  the r1/r2 fixes: the party strip now shows all five rows, portraits, HP
+  bars, the KO badge and the REST tag (previously a blank near-black
+  frame); the stamina arc now shows both its dark track and teal fill
+  clearly against the new mid-grey backdrop (previously "a bracket, not a
+  meter").
+- **`05-hud-exploration.png`** — a full real-scale render of the
+  exploration HUD (party roster, HP/food bars, minimap, objective panel,
+  hotbar, bottom legend) over real terrain. First-hand evidence relevant to
+  the owner's repeated "the hud on screen is way too big" report
+  (`ralph/OWNER_PLAYTEST_2026-08-28.md` item 3): at this 1920x1080 desktop
+  capture resolution the HUD elements do occupy a large fraction of the
+  frame edges. Not acted on here — this is exactly the named, unresolved
+  tension between "too big" and the `MIN_PHYSICAL_GLYPH_PX` 7-inch-handheld
+  legibility floor (`smoke_hud_handheld_legibility.gd` passes both before
+  and after this session's changes), and resolving it needs either owner
+  clarification of what "too big" means (glyph SIZE vs. how much of the
+  frame the roster/hotbar occupy) or a judged call on trading legibility
+  margin for screen space — not a UI lane's unilateral guess.
+- **`02-starter-picker.png`** — confirms two already-documented, non-actionable
+  findings still hold: the "look" prompt's d-pad glyphs read as red
+  first-aid crosses (`VIS-UI-r8`, recorded as needing owner-supplied
+  direction art, no suitable asset exists in either the vendored or raw
+  Kenney packs); and the three creature turntables are posed facing away
+  from camera, which round 3's own report attributes to the preview's
+  ~69°/frame spin colliding with software-rendering frame timing during the
+  capture, not a real posing defect.
+- **`01-title.png`** — confirms the title screen's controller-only prompts
+  ("A Select · D-Pad Navigate") are still correct, no keyboard bleed.
 
 ## Done-and-verified vs done-but-unverified vs still-open
 
 **Done and verified:**
 - Hotbar allow-list (item 1) — passing smoke tests, both directly exercising
-  the new refusal.
-- Capture-tool r1/r2 fixes — visually confirmed against regenerated frames.
+  the new refusal, plus a clean 149-test/1211-assertion full UI unit-test run.
+- Capture-tool r1/r2 fixes — visually confirmed against regenerated frames
+  (`ralph/reports/T1-UI/shots/08-party-strip.png`,
+  `09-stamina-arc.png`).
 
 **Made but not yet re-rendered:**
 - Capture-tool party-strip crop fix (`PARTY_STRIP.ROW_SIZE.x`/`TOTAL_HEIGHT`
   instead of the stale hardcoded `250x540`) — reasoned from the widget's own
   constants (confirmed via source: `ROW_SIZE.x` is 336, crop was 250+120
   margin = 370 wide, so the fix is real by arithmetic), but made after the
-  in-flight survey run had already started with the old code, so it has not
-  been confirmed by a fresh render the way r1/r2 were. Re-run the survey and
-  check `08-party-strip.png`'s right edge before treating this as verified.
+  survey run had already started with the old code, so it has not been
+  confirmed by a fresh render the way r1/r2 were. Re-run the survey (needs a
+  much longer timeout, see "Evidence captured") and check
+  `08-party-strip.png`'s right edge before treating this as verified.
 
 **Done but only reasoned from source, not rendered:** none shipped in this
 category — everything above was either test-verified or frame-verified,
@@ -251,15 +293,14 @@ deliberately, after the r4 lesson.
 - `tests/smoke_menu.gd` (quick-slot bind check moved off `orb_basic`)
 - `tools/_capture_ui_survey.gd` (r1/r2 capture bugs + party-strip crop fix)
 - `ralph/reports/handover-T1-UI-2026-08-30.md` (this file)
-- `ralph/reports/T1-UI/shots/` — created, empty at handover time; the capture
-  survey (see "Evidence captured" above) had not finished, so nothing was
-  copied in yet. `shots/` at repo root is gitignored per the brief's own
-  warning that a prior lane lost evidence there — copy frames INTO the
-  reports path, not just leave them at repo root, before relying on them.
+- `ralph/reports/T1-UI/shots/` — 6 of 23 survey frames (see "Evidence
+  captured" above for why the run is partial and how to finish it).
 
 ## What I would do next
 
-1. Re-run the full UI capture survey with the crop fix in and hand the
+1. Re-run the full UI capture survey with a 60+ minute timeout (this
+   environment's software GL made the world-phase boot alone take ~24
+   minutes, well past the tool's own ~12-minute estimate) and hand the
    frames to a Fable judge for the blind read this file cannot substitute
    for.
 2. If the owner confirms level-up deserves a real celebration (not just
