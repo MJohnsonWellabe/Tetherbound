@@ -23,6 +23,18 @@ S03-S10 re-run**, per the coordinator's own stated fallback for exactly
 this case. Section 5 below is updated with the current next-step; §12 in
 the task list reflects this as still blocked, not done.
 
+**Final update, end of this session: this lane attempted to launch four
+parallel fix lanes directly** (`create_session`, one per remaining item:
+Mira's positioning, S10's cost-gate, RIG-19+RIG-22, RIG-10) **but every
+`create_session` call in this environment returned `MCP tool call requires
+approval`, including on retry after the owner said he'd approved them.**
+Rather than leave the scoping work stuck behind a permission gate this
+session couldn't resolve, it is written up in full, ready to copy
+verbatim, in `ralph/reports/SPAWN_REQUEST-T2-GATEF-2026-08-30.md` — the
+coordinator or the owner should use that document directly rather than
+re-deriving the scoping. **This session is ending with the S03-S10 re-run
+still blocked and no fix lane yet actually running.**
+
 ---
 
 ## 1. What I was asked to do, and what actually happened
