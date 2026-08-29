@@ -92,9 +92,9 @@
     {
       "id": "head_to_south_bridge",
       "flag_id": "south_bridge_open",
-      "label": "Cross the South Bridge into the Lower Meadows.",
-      "how": "Oskar the Bridgehand holds the key. Beat him, then take the road south out of the village.",
-      "_comment": "Real flag, already wired: Oskar (Bridgehand) hands over `south_bridge_key` on defeat (data/config/bands/band1_lower_meadows/trainers.json), which `gated_crossing.gd`/`south_bridge.gd` reads to set `south_bridge_open` the moment the gate opens. This is the opening ladder's actual handoff into the wider Meadows -- Gate C/D1 own everything past it, so this file's chain stops here, and so does the guided `how` line: OP23-04's directive is the opening \"until tournament entry\", and a chapter-wide hint pass is not this lane's to invent."
+      "label": "Reach South Bridge -- Team Tether holds the crossing.",
+      "how": "A Team Tether grunt has the key now, not Oskar. Take the road south out of the village and beat him at the crossing.",
+      "_comment": "Real flag, already wired: the South Bridge gatekeeper (`south_bridge_grunt`, data/config/bands/band1_lower_meadows/trainers.json) hands over `south_bridge_key` on defeat, which `gated_crossing.gd`/`south_bridge.gd` reads to set `south_bridge_open` the moment the gate opens. This is the opening ladder's actual handoff into the wider Meadows -- Gate C/D1 own everything past it, so this file's chain stops here, and so does the guided `how` line: OP23-04's directive is the opening \"until tournament entry\", and a chapter-wide hint pass is not this lane's to invent.\n\nT3-BRIDGE, 2026-08-29: this line was still naming Oskar as the gatekeeper. The 2026-08-22 owner directive (TOURNAMENT-1) moved that role to a Team Tether grunt so Oskar could be the tournament final, and Oskar's own `village_oskar_challenge` line already says so in character ('Tether took the key off my belt in the spring and put one of their own on the near landing') -- but this objective's `how` line never followed, so the guided quest log was telling the player to fight the wrong person for a week of shipped content. Fixed to match both the actual reward owner and owner-direction §4's ask that the player understand up front that Team Tether, not a villager, is the obstacle at the bridge."
     },
     {
       "id": "clear_the_burrow_warrens",
