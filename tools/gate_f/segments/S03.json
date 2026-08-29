@@ -314,6 +314,15 @@
       "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE: reverted from move_to_entity back to the original authored coordinate -- two live replays showed a straight-line walk to Mira's own live node position gets stuck on her building's wall (stopped 6.9 m short, 120 held frames) and lands nearer a door prop than her, exactly the known 'every straight-line walk in this project failed on the same village wall' limitation _walk_loop's own header names. The original coordinate is a proven-reachable spot outside that building (0 held frames in every prior run); S03-53's interact_with is what actually makes this safe now, by verifying the live prompt before pressing rather than pressing blind."
     },
     {
+      "id": "S03-52a",
+      "title": "let the arbiter settle after arrival",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "T2-BUILDPLACE: a live replay reached the walk's own target and still read \"Put Moss away\" (encounter_director.gd's companion-status fallback) instead of Mira's greeting on the very next step -- a live probe (probe_mira_position_check.gd) confirms her greeting DOES win at this exact coordinate, with or without a deployed ally, so this is most likely the arbiter not yet having re-evaluated on the frame right after the walk loop's own single settle frame. A full second is cheap next to another failed replay."
+    },
+    {
       "id": "S03-53",
       "title": "greet Mira",
       "action": "interact_with",
