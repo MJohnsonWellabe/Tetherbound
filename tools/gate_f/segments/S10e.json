@@ -1,0 +1,366 @@
+{
+  "id": "S10e",
+  "_comment_split": "SPLIT from the monolithic S10.json (2026-08-30, ralph/T2-S10-COST). See S10a.json's header for the full rationale. This is the FIFTH and LAST of five sub-segments: the final third of the post-win walk-back, ending back at Grandpa's house where the chapter's 24-objective main chain terminates. Its final save is still named `S10-exit.json`, unchanged from the original monolithic file, because downstream consumers (X05's save/session lifecycle study, ralph/GATE_F_MASTER_PROTOCOL.md's own references to 'every S0n-exit') address the chapter's terminal save by that name.",
+  "_comment_boundary": "Entry: seeded from S10d-exit (arrival at the South Bridge). Covers the walk into the village (60,750 budget frames), dialogue with a villager, the walk home to Grandpa's (3,000 budget frames), his post-win line, the four pacing/chain-closing asserts, and the FINAL production save-out. Frame budget including boot overhead (~11,500) and the final save-out (~700) is roughly 76,650 frames -- comfortably the cheapest of the walk-back sub-segments. At the quiet per-frame rate this run actually measured before combat (0.017-0.028 s/frame) this prices at 1,303-2,146 s (9-15% of the 14,400 s ceiling); even at the worst MEASURED rate anywhere in the blocked run (0.097118 s/frame, from mid-combat, which nothing in this sub-segment resembles) it is 7,443 s (52%).",
+  "record_hz": 0.5,
+  "title": "Finale V: world healing III -- the village, Grandpa's house, chain terminates",
+  "lane": "journey",
+  "_comment": "Transcribed verbatim from the original S10.json (steps S10-99..S10-120, renumbered S10e-99..), which was itself transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B ('chain terminates'), section D (RT-13), section E.6.15 (return home mid-chapter; Grandpa's dialogue state), section L.5 (post-win NPC acknowledgment, Grandpa's post-win line) and section B's save-handoff pattern (the production Save tab, slot 4).",
+  "evidence_lane": "logic",
+  "_comment_evidence_lane": "§H.1 evidence split. This sub-segment plans no §G frame -- every prescribed S10 shot was already taken in S10a/S10b/S10c -- so it hands nothing over and needs no capture_lane, exactly as X06/X08 declare no capture lane in the un-split protocol (see derive_capture_lane.py's NO_CAPTURE_LANE). It is still declared `evidence_lane: logic` for the other half of that declaration: without it the segment would inherit §H's default 0.1 Hz continuous record, which is the per-rendered-frame recording the whole evidence split exists to avoid paying for.",
+  "steps": [
+    {
+      "id": "S10e-01",
+      "title": "how this segment is entered",
+      "action": "note",
+      "args": {
+        "text": "This is the FIFTH and LAST of S10's five split sub-segments (S10a..S10e; see S10a.json's header). Its entry save is `S10d-exit`, a split-introduced handoff (arrival at the South Bridge) rather than one section B names in the original monolithic file. The three steps below are the standard handoff mechanics used at every S0n boundary: wipe, seed, boot, Load."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10e-02",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer"
+    },
+    {
+      "id": "S10e-03",
+      "title": "seed slot 4 from the previous sub-segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S10d-exit.json"
+      },
+      "expected": "Section B's handoff pattern, applied at this split-introduced boundary: the next segment boots fresh, restores S10d's exit file into `user://`, and loads it through the production title-screen Load path"
+    },
+    {
+      "id": "S10e-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused and Load Game enabled, because a save now exists"
+    },
+    {
+      "id": "S10e-05",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses its first button; without focus a controller cannot reach Load Game at all"
+    },
+    {
+      "id": "S10e-06",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "S10e-07",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+    },
+    {
+      "id": "S10e-08",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
+    },
+    {
+      "id": "S10e-09",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+    },
+    {
+      "id": "S10e-09a",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-11: a load restores the party and deploys nothing. No combat is expected in this sub-segment, but the deploy is kept for consistency with every other S0n entry."
+    },
+    {
+      "id": "S10e-10",
+      "title": "the belt survived the handoff",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 5
+      },
+      "expected": "five of five, unchanged since S10d",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+    },
+    {
+      "id": "S10e-11",
+      "title": "the walk-back is still tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "see_what_changed"
+      },
+      "expected": "Section E.5 objective 24/24, unchanged since S10d. Surviving the S10d/S10e handoff is itself evidence that the flag persisted through a real save/load"
+    },
+    {
+      "id": "S10e-99",
+      "title": "walk back into the village",
+      "action": "move_to",
+      "args": {
+        "at": [
+          10.0,
+          -10.0
+        ],
+        "budget_frames": 60750,
+        "close_enough": 5.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "Section L.5's post-win row: NPC acknowledgment in the place the chapter started",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S10e-100",
+      "title": "the village region contains the arrival",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "grandpas_village"
+      },
+      "expected": "map_state.gd's containment puts the player back in `grandpas_village` -- the same region the journey's first arrival frame was taken in"
+    },
+    {
+      "id": "S10e-101",
+      "title": "speak to a villager",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section L.5: 'NPC acknowledgment'"
+    },
+    {
+      "id": "S10e-102",
+      "title": "hear them out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 20
+      },
+      "expected": "record whether the village knows what happened"
+    },
+    {
+      "id": "S10e-103",
+      "title": "walk home to Grandpa",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -22.0,
+          -16.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Section E.6.15: 'return home mid-chapter; verify Grandpa's dialogue state advances with the chapter (home-relevance check)'. Section L.5: 'Grandpa's post-win line'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S10e-104",
+      "title": "talk to Grandpa",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the chapter's last conversation"
+    },
+    {
+      "id": "S10e-105",
+      "title": "hear his post-win line out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 14,
+        "settle_frames": 20
+      },
+      "expected": "Section L.5: 'Post-win world change | S10 walk-back: healed ground, lights out, patrols withdrawn, NPC acknowledgment, Grandpa's post-win line'"
+    },
+    {
+      "id": "S10e-106",
+      "title": "the chain terminates",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "meadows_acknowledged"
+      },
+      "expected": "`meadows_acknowledged` closes section E.5 objective 24/24 and, with it, the 24-objective main chain. Section B: S10's span ends at 'chain terminates'"
+    },
+    {
+      "id": "S10e-107",
+      "title": "the team that finished the chapter is five",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 5
+      },
+      "expected": "the permanent team of five the chapter exists to build",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+    },
+    {
+      "id": "S10e-108",
+      "title": "the whole walk-back was actually walked",
+      "action": "assert",
+      "args": {
+        "check": "distance_above",
+        "metres": 3000.0
+      },
+      "expected": "Section 0.6: no pacing, navigation, difficulty or economy claim may come from a shortcut. This sub-segment alone (South Bridge to Grandpa's house) is roughly 3.5 km; the SPLIT COST NOTE below records why the original whole-walk-back distance assertion (>= 7000 m) is now spread across S10c/S10d/S10e rather than checked once here.",
+      "observation": "SPLIT NOTE: the original monolithic S10-108 asserted `distance_above: 7000` once, over the WHOLE walk-back (approach through Grandpa's, ~7.6 km). Splitting the walk into S10c/S10d/S10e means no single sub-segment's own `route.csv` sees the full distance, so that one assertion is replaced by a distance floor on EACH sub-segment (S10c/S10d implicitly via their own move_to budgets and this segment's own 3000 m floor here), and the handover report is where the reassembled total across all three is reported and compared against the original 7000 m bar -- a claim about the whole walk-back, not about any one file, needs the whole run's saves/route.csv stitched together, not a single segment's assert."
+    },
+    {
+      "id": "S10e-109",
+      "title": "the 2 Hz trace ran throughout this sub-segment",
+      "action": "assert",
+      "args": {
+        "check": "route_rows_at_least",
+        "rows": 500
+      },
+      "expected": "Section C.2, scaled down from the original monolithic segment's 6000-row floor (which covered the ENTIRE finale, boot to close) to this sub-segment's own share of it"
+    },
+    {
+      "id": "S10e-110",
+      "title": "this sub-segment's longest empty stretch is on the record",
+      "action": "assert",
+      "args": {
+        "check": "dead_travel_peak_above",
+        "metres": 150.0
+      },
+      "expected": "Section D: '>= 250 m is a finding; 150-250 m is a watch item'. Threshold lowered from the original monolithic segment's 250 m (measured over the WHOLE 7.6 km walk-back) to this sub-segment's own shorter share of it, still inside the 'watch item' band; the handover report is where the reassembled peak across S10c/S10d/S10e is compared against the original 250 m bar"
+    },
+    {
+      "id": "S10e-111",
+      "title": "Section B save handoff",
+      "action": "note",
+      "args": {
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, three RB presses to the Save tab (from the `map` shortcut, RIG-14's deterministic starting point), focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B calls this one `S10-exit` (post-win) -- the name is UNCHANGED by the split, because X05 and other downstream consumers address the chapter's terminal save by this name, not by `S10e-exit`."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10e-112",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Map tab -- the deterministic starting point regardless of whatever tab a previous menu use left open (RIG-14, matching S03/S06/S08/S10a/S10b/S10c/S10d's own working save steps)"
+    },
+    {
+      "id": "S10e-113",
+      "title": "cycle right to the Save tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 12
+      },
+      "expected": "three RB presses move from Map (index 2) to Save (index 5), the sixth tab in data/config/menu.json",
+      "observation": "RIG-14: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: save."
+    },
+    {
+      "id": "S10e-114",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S10e-115",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S10e-116",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S10e-117",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
+    },
+    {
+      "id": "S10e-118",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S10-exit.json"
+      },
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S10-exit.json` -- the chapter's terminal save, named unchanged by the split"
+    },
+    {
+      "id": "S10e-119",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "closes the shell and hands the world back"
+    },
+    {
+      "id": "S10e-120",
+      "title": "close the journey",
+      "action": "note",
+      "args": {
+        "text": "S10-exit written and copied. The journey lane is complete: S01 through S10 (S10 itself split into S10a..S10e for cost reasons; see S10a.json's header), one naturalistic fresh-save playthrough in player order, production paths only, chained by save handoff, with no teleport in any of the fifteen files."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

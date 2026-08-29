@@ -226,7 +226,11 @@ in slots 1–3.
 | S07 | River & Relay / Band 3 | river arrival → relay pickets → officer → relay captain → captive → Old Mill Crossing restored | `S06-exit` | `S07-exit` |
 | S08 | Upper Meadows / Band 4 | crossing → ironwood → saddle & riding → three captains → three Sigils | `S07-exit` | `S08-exit` |
 | S09 | Stronghold approach / Band 5 | Sigil gate → outer watch → checkpoint → final camp decision → Hall threshold | `S08-exit` | `S09-exit` |
-| S10 | Finale | Hall entry → gauntlet → recovery → elite → Warden → legendary → release ceremony → world healing → chain terminates | `S09-exit` | `S10-exit` (post-win) |
+| S10a | Finale I: Hall gauntlet | Hall entry → gauntlet → recovery → elite | `S09-exit` | `S10a-exit` |
+| S10b | Finale II: the climax | Warden → legendary → release ceremony | `S10a-exit` | `S10b-exit` |
+| S10c | Finale III: world healing I | approach drain → Old Mill Crossing | `S10b-exit` | `S10c-exit` |
+| S10d | Finale IV: world healing II | Tether Relay → Burrow Warrens → South Bridge | `S10c-exit` | `S10d-exit` |
+| S10e | Finale V: world healing III | village → Grandpa's house → chain terminates | `S10d-exit` | `S10-exit` (post-win) |
 | X01 | Controller/menu exhaustion matrix (§8) | matrix over all contexts | `S03-exit` (all systems unlocked in village) + `S08-exit` (riding/late menus) | none |
 | X02 | Build/craft/gather lab (§7) | 2×2 enclosed structure, dismantle, refunds | `S03-exit` | none |
 | X03 | Catching lab (§6) | throw physics, edge cases, party-full | `S05-exit` (band 1 field) + `S08-exit` (party of 5) | none |
@@ -249,6 +253,47 @@ order. `tools/gate_f_chapter_run.py`'s existing head/corridor/tail chaining
 and `tools/_probe_gate_f_corridor.gd`'s cross-band dead-walk counter remain
 valid instruments and are reused inside §D and X08 — they are inputs to,
 not substitutes for, this protocol.
+
+**Amended 2026-08-30 (ralph/T2-S10-COST): S10 is split into S10a–S10e.**
+Gate F run 3 (`ralph/reports/gate-f-run-20260828T183531Z`) blocked S10 at
+step 26 of 121: the cost gate (§H.3/§0.8) re-priced the scene at 0.097 s/frame
+right after a real combat exchange and, applying that price to the segment's
+own remaining 413,884 planned frames, predicted 40,195 s against the 14,400 s
+ceiling — 11.2 hours over budget in a single segment. The dominant cost is
+**not** combat: S10's own post-win walk-back (the original steps
+S10-89…S10-106, "world healing") is 378,750 of S10's 439,336 total planned
+frames (86%), because §0.6 forbids sourcing the chapter's payoff from a
+shortcut and the walk-back genuinely retraces ~7.6 km of the Meadows on foot.
+Putting a combat-inflated per-frame price against that walk-back inside one
+segment is exactly what blocked the run — `operator_harness.gd`'s in-play
+reprice (`_apply_price`) charges a scene's **current** measured rate against
+**everything left in the same segment**, so a fight early in a segment can
+condemn an unrelated, expensive walk later in the same file.
+
+The fix is the split a prior operator proposed and this lane implemented:
+five sub-segments chained by save handoff exactly like S01–S09 (`seed_save` →
+`boot` → `await_load`, `save_out` at each new segment's own quiet close),
+each individually costed comfortably under the ceiling using both the run's
+own measured quiet-walk rate (0.017–0.028 s/frame, measured on this same
+scene before any combat happened) and a doubled, deliberately conservative
+estimate. S10a and S10b isolate the three gauntlet fights and the Warden
+fight respectively, so a combat price spike can only ever be charged against
+that fight's own small remainder rather than the walk-back ahead of it. S10c,
+S10d and S10e split the walk-back at the same landmarks S05–S09 already use
+as their own outbound-journey boundaries (Old Mill Crossing, South Bridge),
+so the return trip's cuts mirror the outbound one rather than being invented
+fresh. Full frame-budget arithmetic, the residual risk this static analysis
+cannot rule out (a per-frame cost for pure walking sustained near
+combat-tier levels, which no completed run has ever measured), and exact
+reproduction commands are in
+`ralph/reports/handover-T2-S10-COST-2026-08-30.md`.
+
+A useful side effect: splitting S10 also shrinks each piece's own derived
+CAPTURE lane (`tools/gate_f/derive_capture_lane.py` keeps every step up to a
+segment's *own* last capture, dropping everything after it) — S10a's capture
+lane fell from 84 steps to 22 and S10c's to 15, because a capture no longer
+has to be carried through fights and walks that belong to a *different*
+sub-segment's file.
 
 ---
 
