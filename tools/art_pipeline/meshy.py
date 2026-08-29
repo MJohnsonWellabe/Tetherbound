@@ -118,6 +118,11 @@ DROP_FOR_SPECIES = {
     "meadowhart": ("long legs, ", "tall slender body, ", "clothing, ", "armor, ", "accessories, "),
     "brooktail": ("paddle tail, ", "beaver tail, "),
     "trailpup": ("bushy tail, ", "fox proportions"),
+    # Sparkit is canonically fox-and-coyote proportioned (owner board
+    # 03_Sparkit.png calls it a "Stormlands Wanderer" with an explicit
+    # fox-coyote build) -- the same fight NEGATIVE_CREATURE's ban already
+    # cost Trailpup once, one creature later.
+    "sparkit": ("fox proportions",),
 }
 NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weapons, "
             "sword, staff, gun, cape, robe, extra fingers, fused fingers, "
@@ -808,6 +813,77 @@ SPECIES_PROMPTS = {
         "corner folded back, coarse woven rope lashing visible at every "
         "joint, weathered worn wood, roughly 2 metres long, PLAIN "
         "UNDECORATED FABRIC WITH NO PRINT OR SYMBOL"),
+
+    # ---------------------------------------------------------------------
+    # T1-CREATURE-MESH. The Meadows Creature Expansion (owner brief
+    # 2026-08-30, docs/owner-direction/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md),
+    # the five NEW-MESH creatures out of the nine named there -- the other
+    # four (Nightburrow, Stormtrail, Riftfrill, Ashtusk) are recolor/VFX
+    # passes on existing meshes and never reach this dict. Written from each
+    # creature's own per-creature reference sheet
+    # (docs/art/reference/creature-expansion-2026-08-30/), which states its
+    # own Pipeline Note, Meshy Realism note and Flavor Note -- folded in here
+    # as the positive-prompt clauses this file's own convention uses
+    # (Terrapup's "never bushy, never curled up" is the precedent for
+    # stating a realism warning as a positive instruction rather than
+    # leaving it to the shared negative list alone). Signature feature
+    # first, in capitals, per this file's own established rule. Sizes are
+    # the master sheet's own size-guide row against its 1.8m player figure,
+    # not the brief's rounder numbers, per the brief's own instruction to
+    # read the real figures off the sheet.
+    "sparkit": (
+        "small electric fox-coyote creature, stormlands wanderer, roughly "
+        "0.6m body length. OVERSIZED READABLE EARS with dark tufted tips, "
+        "LONG TAIL ENDING IN A JAGGED LIGHTNING-BOLT SHAPE, a spiky charged "
+        "fur ridge running from crown to tail base. Cream and pale "
+        "lightning-gold body with graphite-black markings across the face, "
+        "back and legs, bright blue eyes, black nose, slender alert fox-like "
+        "build. Keep the fur simple and broad -- NO tiny whisker detail, NO "
+        "over-complicated fur clumps -- so the ears, tail and body mass all "
+        "read clearly at a glance"),
+    "cindercub": (
+        "small fire-ground cub creature, compact and sturdy, roughly 1.4m "
+        "body length. GLOWING EMBER TAIL TUFT like a small contained flame "
+        "at the tip, dark soot-black paws and lower legs, a few subtle "
+        "glowing ember cracks across the shoulders and back. Terracotta-rust "
+        "fur body with a cream face blaze and chest, bright orange eyes, "
+        "black nose, short rounded muzzle, compact stocky cub build with a "
+        "strong readable head shape. Keep the fire language simple -- "
+        "glowing tail tuft and a few ember cracks only, NOT flames covering "
+        "the whole body -- contained and believable rather than an inferno"),
+    "shadelet": (
+        "medium dark lizard creature, nocturnal wanderer, roughly 1.6m body "
+        "length, NOT a tiny gecko. LONG CURLING TAIL that coils into a tight "
+        "spiral, a ridge of low broad spikes running from crown down the "
+        "spine and tail, OVERSIZED AMBER-GOLD EYES with an alert forward "
+        "gaze. Midnight-purple and shadow-blue scaled body with a subtle "
+        "violet sheen, broad flat readable head, sturdy four-legged lizard "
+        "stance, dark clawed feet. Keep scale patterns broad and simple -- "
+        "large readable plates rather than fine texture -- body sized like "
+        "a monitor lizard, never small or thin"),
+    "bramblebun_redesign": (
+        "meadow guardian rabbit creature, larger and more substantial than "
+        "an ordinary warren rabbit, roughly 1.0m body length. OVERSIZED "
+        "DRAMATIC EARS with woody branch-like antler tips and thorny vine "
+        "wrapping partway up each ear, LIVING BRAMBLE AND LEAF GROWTH across "
+        "the back and shoulders with small reddish thorn accents, a "
+        "bramble-tufted tail. Earth-brown and cream fur body with muted "
+        "leaf-green mossy patches over the back, dark expressive eyes, "
+        "sturdy round body and strong hind legs, cream chest and face "
+        "markings. Silhouette first: broad readable forms with detail "
+        "concentrated only in the ears, tail, bramble growths and face "
+        "markings -- NOT an unreadable pile of foliage, the rabbit body "
+        "must still read clearly beneath the plant growth"),
+    "frostclaw": (
+        "medium-large ice predator feline, lynx and snow-leopard influence, "
+        "roughly 2.0m body length, NOT an ordinary real-world cat. TUFTED "
+        "BLACK-TIPPED EARS, OVERSIZED PAWS with pale blue ice-crystal claws, "
+        "a few BROAD ICE-CRYSTAL ACCENTS at the shoulders and cheeks, "
+        "frosted whisker shapes framing the muzzle. Pale gray-white fur with "
+        "slate-gray spotted markings, bright icy-blue eyes, black nose, "
+        "sturdy predator build with a long thick tail. Use only a few large "
+        "readable icy forms -- NOT hundreds of small crystals -- and keep it "
+        "reading as a Tetherbound creature rather than a photoreal wildcat"),
 }
 
 
