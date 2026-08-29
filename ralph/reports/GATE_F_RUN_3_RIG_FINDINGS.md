@@ -19,23 +19,44 @@ question at the end of this file is the one thing standing between "rig
 defect, now fixed" and "this might still be a real game defect."
 
 **Correction to the coordinator's 2026-08-29T16:06 segment-exposure table,
-found while X04 was already running against it.** The coordinator's table
-listed X04's `S06-exit` entry save as pre-stranding ("S04, S06
-(pre-stranding), S09-exit"). It is not. This operator checked `S06`'s own
-`route.csv`/`events.jsonl` directly: `S06-exit`'s last recorded player
-position is `(12.8, -5.53, 1324.5)`, region `corridor` — inside the exact
-South Bridge stranding cluster (x∈[0,16], z∈[1314,1326]) named in RIG-13
-above, not a clean pre-stranding state. Of X04's three `seed_save` points
-(`X04-007` from `S04-exit`, `X04-086` from `S06-exit`, `X04-103` from
-`S09-exit`), only the first is genuinely unexposed (`S04-exit`'s last
-position is `(18.67, 0.19, 12.71)` in `grandpas_village`, well clear of the
-corridor). **Both the S06-exit and S09-exit thirds of X04 start from an
-already-stranded position**, same as X03 and X06 would. This does not change
-the recommendation to run X04 (it was already in flight, and its first third
-is clean, high-value combat evidence), but it does change how its results
-should be read: attribute every X04 finding to which `seed_save` produced it
-(see the GAME findings document's per-block table), and do not read the
-S06/S09 thirds as clean control data the way the coordinator's table implied.
+found while X04 was already running against it — itself superseded a few
+hours later, see the boxed update below.** The coordinator's table listed
+X04's `S06-exit` entry save as pre-stranding ("S04, S06 (pre-stranding),
+S09-exit"). It is not, *positionally*: this operator checked `S06`'s own
+`route.csv`/`events.jsonl` directly and found `S06-exit`'s last recorded
+player position is `(12.8, -5.53, 1324.5)`, region `corridor` — inside the
+exact South Bridge stranding cluster (x∈[0,16], z∈[1314,1326]) named in
+RIG-13 above. `S04-exit`'s last position, by contrast, genuinely is clear
+of the corridor: `(18.67, 0.19, 12.71)` in `grandpas_village`.
+
+> **This positional check was correct as far as it went, and still
+> incomplete in a way that mattered more.** `ralph/reports/
+> FINDING-T2-STRANDING-2026-08-30.md` (`origin/ralph/T2-STRANDING@08506512`)
+> checked exit-save **party contents**, not just position, and found the
+> real boundary is earlier and simpler: **every exit save from `S03-exit`
+> onward — including `S04-exit`** — carries a party of one creature (Moss)
+> permanently fainted (`hp: 0.0`), from a fair combat loss during S03's own
+> catch loop that nothing in the run ever healed. A fainted-only party
+> cannot be summoned (`encounter_director.gd::summon_active_creature()`
+> correctly refuses), so `can_challenge()` correctly refuses every
+> trainer/gate fight regardless of the player's *position* — which is also
+> the root cause of the position-stranding itself: the South Bridge gate is
+> a real, correctly-locked physical barrier that only opens on defeating
+> `south_bridge_grunt`, that fight can never start with no usable creature,
+> so every `move_to` past S04 is asking the harness to walk through a
+> permanently locked gate, which is what drives it into the carve and the
+> `severed_spokes` recovery loop. **One root cause explains both symptoms.**
+> So: `S04-exit`'s position is genuinely clean, but its **party is not**,
+> and X04 has no clean entry point by either measure. See RIG-21 below for
+> the full finding, credited to the T2-STRANDING lane, and
+> `X04/CONTAMINATED_ENTRY_SAVES.md` for how this changes X04's own results.
+
+This does not change the fact that X04 was already in flight when this was
+found, or that its telemetry is worth keeping (a real record of a fainted
+party correctly failing to fight, which is itself a narrow positive result).
+It does mean **none of X04's combat assertions may be read as evidence about
+combat, camera, faint-recovery, or switching** — see RIG-19 and RIG-21 and
+the GAME findings document's revised per-segment table.
 
 ---
 
@@ -360,44 +381,120 @@ above.
 
 ---
 
-## Open finding, inherited and NOT resolved by this rewrite: does the South Bridge gate ever actually open?
+## RIG-21 — the South Bridge stranding's root cause, found and verdicted by the concurrent T2-STRANDING lane: RIG, not GAME
 
-S05, re-run clean under the RIG-13/14/18 understanding (real creature
-deployment confirmed at S05's own settle step), still shows the South Bridge
-grunt fight never starting: the encounter plays `south_bridge_grunt_beaten`'s
-own dialogue text on a completely fresh approach, `south_bridge_open` never
-sets, and `defeated_south_bridge_grunt` never appears in `S04-exit.json` or
-anywhere in S05's own telemetry before this point.
-`trainer_npc.gd::_on_challenged` picks the `defeated` line whenever
-`can_challenge()` is false for **any** of four reasons — already beaten,
-mid-fight, no ally, or a fainted ally — so seeing that text is equally
-consistent with a residual ally-deployment gap (the deployed-ally state not
-surviving a region transition, or something else `can_challenge()` checks
-that `creature_recall` at segment start does not cover) as with something
-about the encounter's own state.
+**Severity: BLOCKER, root cause of RIG-13.** Credit: this finding, its
+live-engine verification, and its fix are entirely T2-STRANDING's work
+(`ralph/reports/FINDING-T2-STRANDING-2026-08-30.md`,
+`origin/ralph/T2-STRANDING@08506512`), summarized here because it resolves
+the open question this document's RIG-13 section and the companion GAME
+document both left open. **This operator did not do this diagnosis** — the
+credit belongs with T2-STRANDING, and this summary should not be read as
+independent confirmation beyond the exit-save table this operator can and
+did check directly (see the boxed correction above).
 
-**This operator did not chase it further either**, for the same reason the
-prior session gave: isolating it needs a live probe of `can_challenge()`'s
-four booleans (`_ally`, `_ally.fainted`, `_ally_body`,
-`is_instance_valid(_ally_body)`) at the exact frame the challenge press
-lands, and the harness has no such capability yet. **A concurrent
-T2-STRANDING lane is actively diagnosing this specific question** (per this
-lane's own brief) — whether the multi-kilometre `move_to` stalls are a rig
-primitive failing to navigate around a legitimate hazard, or a genuine
-walkable-path defect at the South Bridge corridor. This document
-deliberately does not pre-judge that question; it records the evidence
-(the position clustering above, confirmed directly by this rewrite) and
-leaves the open question open, exactly as inherited.
+**Verdict: RIG, confirmed live in the running engine, not a broken game
+system.** T2-STRANDING's own probe (`tools/gate_f/probe_stranding_cause.gd`,
+run against this run's real `S05-exit.json`) reproduces the exact block and
+its exact cure in one script: loading the save shows `active creature: Moss
+fainted=true`; `can_challenge(south_bridge_grunt)` is `false`; healing the
+one creature the way a creature bed does (`heal_fully()`) — nothing else
+touched — flips `can_challenge()` to `true`. The chain, each link verified
+against source:
+
+1. S03's own catch loop fainted the player's only creature on a fair,
+   non-buggy roll (`S03/telemetry/events.jsonl`, `t=256.0`, "Moss fainted",
+   `hp: 0.0/1.18`) — RIG-18 checked the catch odds were fair but never
+   checked the player's own creature's HP during those same fights.
+2. `encounter_director.gd::summon_active_creature()` correctly refuses to
+   deploy a fainted creature (line 864).
+3. `can_challenge()` correctly refuses every trainer/gate fight with no
+   deployed ally (line 1568) — this is why "Old Bram" in S05 (S05-34..38)
+   and the South Bridge grunt three minutes later both show only `dialogue`
+   events, never `combat_start`, despite the step-script's presses landing.
+4. `trainer_npc.gd::_on_challenged()` cannot distinguish "no usable
+   creature" from "already beaten" and shows the `defeated` line for both —
+   which is why the grunt's post-victory dialogue appeared on a completely
+   fresh approach in `RESTARTS.md`'s own open finding. **A real, minor,
+   player-facing UX gap** (flagged for Track 3, not the stranding's cause):
+   `autoload/party.gd::all_fainted()` has zero callers anywhere in the
+   codebase, so nothing auto-heals or explains the state to a real player
+   either — though a real player is never physically stuck (creature beds,
+   built during S03's own tutorial, are an always-available recovery path;
+   human movement is never gated on creature state, by hard rule), just
+   confused by a trainer falsely claiming a win that never happened.
+5. The South Bridge gate is a real, correctly-locked physical collision
+   barrier; `south_bridge_key` is exclusively the grunt's combat reward. The
+   fight never starting means the gate never opens — the intended design,
+   working correctly.
+6. Every `move_to` from S05 onward targeting a point past the bridge is
+   asking the harness to walk through a permanently, legitimately locked
+   gate. `severed_spokes.gd`'s carve failsafe is a real, correctly-
+   functioning recovery system, firing on a genuine loop the walker cannot
+   break out of on its own — not malfunctioning, just triggered relentlessly.
+
+**The fix** (pushed alongside the finding, to `tools/gate_f/segments/
+S03.json` only — no game code, data, or content path touched): five new
+steps immediately after S03's three creature beds are confirmed built and
+before its existing sleep sequence, walking to a bed and assigning the
+fainted creature to it before sleeping, so the existing sleep step's heal
+actually has something to heal. **Rig-only, per this lane's own file
+ownership rules T2-STRANDING is not exempt from either** — confirmed by
+this operator's own read of the pushed diff, touching only the segment
+step-script.
+
+**Independent discovery, found validating the fix, not itself resolved:**
+a full S03 re-run under the fix still produced a fainted exit save, because
+`S03-205` — pre-existing, unmodified by the fix — FAILs
+(`creature_bed_built_3 NOT set`) **in both the original run and the
+fix-validation run identically**: the tutorial's analog-stick-driven ghost
+placement does not register with `home_progress.gd` in this environment, so
+no bed ever actually gets built for the new steps to use. T2-STRANDING
+validated the new steps' own correctness in isolation instead
+(`tools/gate_f/probe_bed_rest_sequence.gd`, building a real `creature_bed.gd`
+the way `build_placer.gd` does): PASS end to end, HP restored, `fainted`
+cleared. **This build-placement registration gap is a separate, pre-existing
+defect, not introduced by and not fixed by this pass** — flagged by
+T2-STRANDING as worth its own ticket, and worth naming here because it is
+very likely inflating S03's own already-recorded FAIL count for reasons
+that have nothing to do with the stranding, and blocks the S03 re-run this
+whole chain needs before S04 onward can be re-run clean.
+
+**Status at the time of this rewrite: the unblock is NOT complete.** A
+healthy S03 exit save does not yet exist. **X03 and X06 remain correctly
+held** (per the coordinator's gate) until a real healthy chain exists — do
+not run them against the currently-stranded saves, and do not treat a
+future run against saves produced before this fix as current evidence.
+**S05 through S10's existing evidence in this run describes the stranding
+itself, not bands 2-5**, and does not become valid retroactively; a real
+re-run from a healthy S03 onward is still needed for band 2-5 content
+evidence.
 
 ---
 
-## What these nineteen have in common
+## RESOLVED — does the South Bridge gate ever actually open? (formerly an open finding, closed by RIG-21)
+
+**This was open in the previous draft and in this rewrite's own first pass.
+It is resolved now: see RIG-21 above.** The prior text asked whether
+`trainer_npc.gd::_on_challenged` showing the `defeated` line meant a
+residual ally-deployment gap or something about the encounter's own state.
+It was neither, precisely — it was `can_challenge()`'s fourth reason
+(`_ally.fainted`), not the third (`_ally == null`) the RIG-11/RIG-13
+`creature_recall` fix addressed. The ally *was* deployed; it was fainted,
+and had been since S03. T2-STRANDING's probe isolated exactly the
+`can_challenge()` booleans this document's prior draft said would need a
+live probe to distinguish, and found the fainted-ally branch, not the
+no-ally branch.
+
+---
+
+## What these twenty-one have in common
 
 Read together, RIG-1 through RIG-12 are mostly *instrument* defects: they
 would be misread as findings about the game if taken at face value (26
 objectives that never advance, a chapter too expensive to play, a village
 with a spot you cannot walk out of, an opening whose first fight never
-happens). RIG-13 through RIG-19 are a different shape: real fixes that
+happens). RIG-13 through RIG-21 are a different shape: real fixes that
 **worked exactly as intended and still did not produce the evidence they were
 fixed to produce**, because each fix closed one gap and the next segment hit
 a different one — no ally deployed (RIG-11), only some segments fixed

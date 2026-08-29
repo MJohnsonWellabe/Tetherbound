@@ -50,15 +50,32 @@ Track 2 for bands 2-5, and it is worth stating plainly: **this run cannot
 speak to whether Stone & Root, River & Relay, Upper Meadows, or the Stronghold
 approach are fun, fair, or well-paced, because the player was not there.**
 
-**Whether this is a rig defect (the harness's straight-line `move_to`
-primitive failing to navigate a real, legitimate obstacle a free-roaming
-player would walk around) or a genuine game defect (the walkable path is
-actually broken or absent at this exact spot) is an open question, not
-settled by this run.** `ralph/GATE_F_RUN_3_RIG_FINDINGS.md`'s RIG-13 section
-has the full mechanical detail and the concurrent T2-STRANDING lane is
-actively diagnosing it. This document does not pre-judge which it is — but
-notes that a player-facing verdict on bands 2-5 is on hold until that
-question resolves, whichever way it goes.
+**RESOLVED since this document's first rewrite: this is a RIG defect, not a
+GAME defect, confirmed live in the engine.** Credit for this diagnosis
+belongs entirely to the concurrent T2-STRANDING lane
+(`ralph/reports/FINDING-T2-STRANDING-2026-08-30.md`,
+`origin/ralph/T2-STRANDING@08506512`); `ralph/GATE_F_RUN_3_RIG_FINDINGS.md`'s
+RIG-21 has the full mechanism. In one line: **S03's own catch loop fainted
+the player's only creature on a fair, non-buggy roll, and no step-script
+from S03 onward ever assigns it to one of the three creature beds S03 itself
+builds before sleeping — so the heal that would have fixed everything never
+happens.** A fainted-only party cannot be summoned into the world, every
+gate/trainer fight downstream correctly refuses to start without a usable
+creature, the South Bridge gate is a real and correctly-locked physical
+barrier that only opens on beating its guard, and every `move_to` past that
+point is asking the harness to walk through a permanently shut gate — which
+is what drives it into the carve edges and the recovery-volume loop above.
+**A real player is never stuck here**: creature beds are an always-available
+recovery path and human movement is never gated on creature state (hard
+rule). The actual player-facing gap is narrower and is recorded as GAME-5
+below. The fix (a rig step-script change only, `tools/gate_f/segments/
+S03.json`) is pushed but **not yet validated end to end** — a separate,
+pre-existing defect in the tutorial's own build-placement steps (not
+introduced by this fix) still prevents an automated run from ever completing
+a creature bed, so a healthy S03 exit save does not exist yet. **S05 through
+S10's evidence in this run describes this one root cause, not bands 2-5's
+own content, and does not become valid retroactively** — a real re-run from
+a healthy S03 onward is still needed.
 
 ---
 
@@ -188,6 +205,31 @@ else that happened to also pay for and grant the axe. Not chased further this
 pass — flagged for whoever next has capture-lane or live-probe access to the
 craft panel's actual `Control.has_focus()` state at this exact moment.
 
+### GAME-5 — a player whose only creature faints gets no explanation and a trainer falsely claims a win that never happened
+
+**Severity: SHIP candidate.** Found by the T2-STRANDING lane while
+diagnosing the South Bridge stranding's root cause (RIG-21, companion doc),
+recorded here because it is a genuine player-facing gap independent of the
+stranding itself. `autoload/party.gd::all_fainted()` exists and has zero
+callers anywhere in the codebase — nothing auto-heals, blacks out, or
+otherwise intervenes when a player's only usable creature faints.
+`trainer_npc.gd::_on_challenged()` cannot distinguish "no usable creature"
+from "already beaten" and shows the same `defeated` conversation line for
+both, so a trainer a player has never fought will claim a win that never
+happened. Separately, `encounter_director.gd`'s creature-control offer shows
+no prompt at all — not even an explanatory one — when the only creature is
+fainted. **Not a soft-lock**: creature beds (built during the S03 tutorial
+before the player ever leaves for the first fight) are always available and
+human movement is never gated on creature state, so a player can always
+backtrack and heal. But the game gives no indication this is what's needed
+— a player without genre knowledge could sit confused at a locked gate for
+a while, misled by dialogue that claims a fight already happened. Recorded
+here as a candidate fix scope, not implemented by this run: the smallest
+safe shape (per T2-STRANDING's own assessment) is a new query beside
+`can_challenge()` (e.g. `no_usable_ally()`) consumed by one new branch in
+`_on_challenged()`, since `can_challenge()`'s existing boolean contract has
+8+ call sites depending on it as a bare bool.
+
 ---
 
 ## Per-segment summary
@@ -205,7 +247,7 @@ craft panel's actual `Control.has_focus()` state at this exact moment.
 | S09 | 76 | 56 | 12 | 8 | South Bridge stranding |
 | S10 | 27/121 (BLOCKED) | 19 | 6 | 2 | stranding through step 22; genuine cost-gate BLOCKER at step 27 |
 | X02 | 170 | 146 | 20 | 4 | build-catalogue focus defect (GAME-3), craft-panel context ambiguity (GAME-4), RIG-14 tab-cycle shape (see companion doc) |
-| X04 | 124 | 104 | 12 | 8 | **zero combat_start events** — every move_to undershoots its combat site, on all three entry saves, including the one (S04-exit) confirmed clear of the stranding (RIG-19, see companion doc) |
+| X04 | 124 | 104 | 12 | 8 | **zero combat_start events, entry saves compromised** — all three of X04's entry saves carry a permanently fainted party (RIG-21) and its own move_to steps separately undershoot every combat site regardless (RIG-19); see `X04/CONTAMINATED_ENTRY_SAVES.md` — none of its combat/faint/switching assertions are readable as findings |
 
 `HANDOFF_PROVENANCE.md` in the run directory records which entry save each
 segment actually had — not in every case the one §B names (RIG-10/RIG-12).
@@ -231,16 +273,18 @@ itself says would just mean fights do not resolve.
 ## What this run still cannot conclude
 
 1. **Nothing about bands 2 through 5's own content, pacing, or difficulty** —
-   the player never arrived (South Bridge stranding, open question between
-   rig and game).
+   the player never arrived. **Root cause resolved as RIG, not GAME**
+   (RIG-21, companion doc): S03's own catch loop fainted the player's only
+   creature on a fair roll, and no step-script ever healed it before sleeping,
+   so every trainer/gate fight downstream correctly refused to start. A real
+   re-run from a healthy S03 is still needed; this run's S05-S10 evidence
+   describes this one root cause, not bands 2-5.
 2. **Nothing about combat at all, anywhere past S03.** Zero `combat_start`
-   events in S04 through S10, and — now that X04 has run — zero in X04 too,
-   despite RIG-11 (the fix that was supposed to unblock exactly this) being
-   confirmed fixed. X04's own `move_to` steps undershoot every one of its
-   three combat sites, on all three entry saves, including the one
-   (`S04-exit`) independently confirmed clear of the stranding — a separate
-   defect (RIG-19, companion doc) from the stranding itself. **This run has
-   no combat evidence whatsoever past S03's three lucky (if all-missed)
+   events in S04 through S10, and zero in X04 too — **X04's entry saves are
+   all fainted-party saves** (RIG-21), so none of its combat assertions are
+   readable regardless of its own separate `move_to` budget defect (RIG-19,
+   companion doc) which would have undershot every combat site anyway. **This
+   run has no combat evidence whatsoever past S03's three real (if all-missed)
    catch attempts.** Difficulty, fairness, camera behavior during a fight,
    faint/recovery, and switching under pressure remain completely
    unevidenced by this run.
