@@ -60,9 +60,17 @@ DEFAULT_BUDGET = 60
 ## actually cost 60 and the guard sat four times too high to ever fire: the
 ## three Warden text candidates alone spent a quarter of what was left. Any
 ## future correction belongs here, and belongs measured the same way.
+##
+## T1-NPC-CAST, 2026-08-30: `image_refine` corrected 40 -> 30, the same way --
+## balance checked before/after 15 separate refine-tier `generate` calls
+## (one candidate each, across two batches), every single one landing at
+## exactly a 30-credit drop (1440->1230 over 7, 1230->990 over 8). Estimator
+## text elsewhere still prints "roughly 40" against this old figure in a few
+## comments/docstrings that were not re-swept; the number that matters, this
+## dict, is fixed.
 COSTS = {
     "image_preview": 20,
-    "image_refine": 40,
+    "image_refine": 30,
     "text_preview": 20,
     "retexture": 30,
 }
@@ -131,8 +139,29 @@ NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weap
 ## `warden_head` is the Warden's head as its own subject (board 16). It is a
 ## HUMAN for negative-prompt purposes -- the creature list bans "humanoid
 ## anatomy" and would tell the generator to fight the thing being made.
+## T1-NPC-CAST, owner directive 2026-08-30 ("NPCs are going to be the same.
+## just generate the people on the original art"): the reuse-only plan this
+## lane first proposed did not survive a render (see
+## tools/_capture_rank_variety.gd and ralph/reports/NPC_CAST_PLAN_2026-08-30.md's
+## CORRECTION section -- eleven named grunts/officers/captains rendered
+## through the real placement path came back as the same body wearing
+## the same clothes with only a colour shift and a badge). These 24 are the
+## Meadows NPC Design Board's own cast, one generation per board panel,
+## matching the board's own 3 grunt / 2 officer / 2 captain body variants
+## (reused across many named individuals via the existing rank/palette
+## system exactly as today, not one generation per named grunt) plus the 17
+## distinct village/trail identities. The Warden (board panel 8) is
+## DELIBERATELY EXCLUDED -- CLAUDE.md and docs/art/HUMANOID_ASSET_INVENTORY.md
+## are explicit that he is already rebuilt from board 16 and must not be
+## regenerated or reopened.
 HUMANS = {"trainer", "grandpa", "warden", "villager_female", "villager_male", "grunt",
-          "warden_head", "warden_body"}
+          "warden_head", "warden_body",
+          "grunt_a", "grunt_b", "grunt_c", "officer_a", "officer_b",
+          "captain_a", "captain_b",
+          "innkeeper", "inn_helper", "trader", "craftsperson", "creature_caretaker",
+          "farmer", "local_historian", "young_trainer", "traveling_merchant",
+          "rival_trainer", "field_researcher", "wandering_trainer", "lost_traveler",
+          "campfire_traveler", "alpha_tracker", "courier", "former_tether_member"}
 
 ## The three hero objects D24 reserves Meshy for are STRUCTURES, and both the
 ## creature and human lists ban "base, pedestal" — which, sent with the Tether
@@ -884,6 +913,226 @@ SPECIES_PROMPTS = {
         "sturdy predator build with a long thick tail. Use only a few large "
         "readable icy forms -- NOT hundreds of small crystals -- and keep it "
         "reading as a Tetherbound creature rather than a photoreal wildcat"),
+
+    # T1-NPC-CAST, owner directive 2026-08-30 -- see the HUMANS set comment
+    # above for why these 24 exist. First-pass prompts, written against this
+    # lane's own crops at assets/characters/<slug>/reference/board_panel.png
+    # (one crop per board panel, not yet split into per-view front/side/back
+    # files the way crop_views.py's band+centres convention wants -- see
+    # ralph/reports/NPC_CAST_PLAN_2026-08-30.md's Job 3 section). Palette
+    # names below are the board's own COLOR PALETTE GUIDE swatches,
+    # pixel-sampled directly because the board's own printed hex captions
+    # are illegible AI-generated text: Tether Purple #8650D6, Dark Charcoal
+    # #3A3834, Meadows Green #6C7735, Warm Brown #8B6138, Sky Blue #74B5D4,
+    # Cream/Linen #E4D6C2, Ember Orange #F38A37, Slate Gray #6B6B68.
+    # Scale: the board's SCALE REFERENCE panel gives grunt 1.7m, officer
+    # 1.8m, captain 1.9m against a 1.75m average player -- close to but not
+    # identical to the installed grunt rig's own measured 1.80m
+    # (data/config/art.json); fit final height in art.json as usual rather
+    # than trusting the generator's own scale.
+    #
+    # Team Tether: THREE grunt bodies, TWO officer bodies, TWO captain
+    # bodies -- matching the board's own panel count, not one body per
+    # named individual (Dorn/Pell/Kest etc. keep reusing whichever of these
+    # three grunt bodies is chosen, via the existing rank/palette system,
+    # exactly as the single grunt body is reused across eight-plus named
+    # grunts today).
+    "grunt_a": (
+        "stylised human Team Tether grunt, young male, short dark hair, "
+        "black tactical cap with a small purple Tether insignia stud, "
+        "black balaclava/face mask covering nose and mouth, alert narrow "
+        "eyes. Fitted black tactical jacket with a crossed strap harness, "
+        "Tether Purple accent piping, dark cargo trousers, black combat "
+        "boots, leather utility belt with pouches, fingerless gloves. Six "
+        "heads tall, athletic ready stance, no visible weapon"),
+    "grunt_b": (
+        "stylised human Team Tether grunt, young female, dark hair in a "
+        "short ponytail with a purple-streaked fringe, black balaclava "
+        "covering the lower face, sharp confident eyes. Same black "
+        "tactical uniform FAMILY as the faction's other grunts -- fitted "
+        "jacket, crossed strap harness, Tether Purple accent piping, cargo "
+        "trousers, combat boots, utility belt -- differentiated from her "
+        "fellow grunts by hairstyle and build, not by a different uniform. "
+        "Six heads tall, alert stance"),
+    "grunt_c": (
+        "stylised human Team Tether grunt, young male, short spiked "
+        "blue-grey hair, black balaclava, narrow determined eyes. Same "
+        "black tactical uniform family as the faction's other grunts -- "
+        "fitted jacket, crossed harness straps, Tether Purple accent "
+        "piping, cargo trousers, combat boots, belt pouches. Six heads "
+        "tall, alert stance, leaner build than grunt_a"),
+    "officer_a": (
+        "stylised human Team Tether officer, adult male, short dark hair, "
+        "NO MASK -- face fully visible, stern angular jaw, confident "
+        "stance. Fitted black long-coat uniform with Tether Purple accent "
+        "piping and a stand-up collar, layered command pieces over the "
+        "base grunt uniform (extra shoulder strap, chest harness), dark "
+        "trousers, tall boots. Six and a quarter heads tall, visibly more "
+        "armoured than a grunt but shorter coat than a captain's"),
+    "officer_b": (
+        "stylised human Team Tether officer, adult female, dark hair "
+        "pulled into a high tied bun with loose front strands, NO MASK, "
+        "composed authoritative expression. Same black long-coat command "
+        "uniform family as officer_a -- Tether Purple accent piping, "
+        "stand-up collar, layered chest harness -- with a flared coat "
+        "skirt reaching mid-thigh. Six and a quarter heads tall, poised "
+        "confident stance"),
+    "captain_a": (
+        "stylised human Team Tether captain, adult male, shoulder-length "
+        "silver-white hair swept back, NO MASK, sharp features, one eye "
+        "marked with a dark tactical patch/paint stripe. LONG FULL-LENGTH "
+        "TRAILING CAPE reaching past the knees over a fitted black "
+        "high-collar coat with layered purple-and-gold command trim, tall "
+        "boots, fingerless gloves. THE CAPE AND COAT LENGTH ARE THE "
+        "DEFINING SILHOUETTE -- distinctly longer and heavier than the "
+        "officer's short coat, this is what must read as \"captain\" from "
+        "a distance without seeing a badge. Six and a quarter heads tall, "
+        "commanding posture"),
+    "captain_b": (
+        "stylised human Team Tether captain, adult male, short dark hair "
+        "and a full trimmed beard, NO MASK, weathered rugged face. LONG "
+        "FULL-LENGTH TRAILING HOODED CLOAK reaching past the knees, over a "
+        "fitted black high-collar coat with purple-and-gold command trim "
+        "and heavier shoulder armour plates than the officer rank. Tall "
+        "boots, wide belt. THE CLOAK, HOOD AND SHOULDER PLATES ARE THE "
+        "DEFINING SILHOUETTE -- distinctly bulkier than the officer's "
+        "coat. Six and a quarter heads tall, broad commanding stance"),
+
+    # Village & Settlement -- one distinct identity per board panel, each a
+    # named individual (Innkeeper is Bram, Craftsperson reads as Tam's
+    # role, etc. -- see the plan doc's classification table for the mapping
+    # this generation replaces).
+    "innkeeper": (
+        "stylised human male innkeeper, heavyset warm build, thick brown "
+        "beard and curly hair, warm hazel eyes, friendly open smile. Green "
+        "scarf knotted at the throat over a rolled-sleeve brown shirt, "
+        "blue trousers held by a wide belt with pouches, cream half-apron, "
+        "sturdy brown boots. Warm Brown and Meadows Green palette. Six "
+        "heads tall, welcoming relaxed stance, empty hands"),
+    "inn_helper": (
+        "stylised human young female inn helper, short bobbed brown hair "
+        "with a simple ribbon, bright cheerful expression. Mustard-yellow "
+        "dress with a cream apron over it, simple flat shoes. Warm "
+        "Brown/Ember Orange family palette, echoing the innkeeper's own "
+        "warm tones. Five and a half heads tall (younger and shorter than "
+        "an adult villager), cheerful ready-to-help stance, empty hands"),
+    "trader": (
+        "stylised human male trader, weathered middle-aged face, short "
+        "beard, a deep hood drawn up shadowing the upper face. Long "
+        "Meadows Green hooded traveling coat over a Warm Brown tunic, "
+        "crossed satchel straps carrying two bags at the hip, sturdy "
+        "boots. Muted practical palette, not bright. Six heads tall, "
+        "watchful stance, hands visible and empty"),
+    "craftsperson": (
+        "stylised human male craftsperson, stocky build, thick ginger "
+        "beard and moustache, tan flat cap with brass goggles pushed up "
+        "on the forehead. Leather apron over a rolled-sleeve shirt, wide "
+        "tool belt with visible pouches and a hammer loop, sturdy boots, "
+        "fingerless work gloves. Warm Brown/Slate Gray palette. Six heads "
+        "tall, confident working stance, empty hands -- tools are a "
+        "separate prop, not part of this body"),
+    "creature_caretaker": (
+        "stylised human young female creature caretaker, shoulder-length "
+        "teal-green hair, gentle warm expression. Sage-green short-sleeve "
+        "tunic with a small leaf pendant at the throat, olive shorts, a "
+        "satchel bag slung across the body, simple boots. Meadows Green "
+        "palette. Six heads tall, caring approachable stance, empty hands"),
+    "farmer": (
+        "stylised human young male farmer, short sandy-brown hair, wide "
+        "straw sunhat, friendly sun-weathered face. Rolled-sleeve cream "
+        "shirt under brown dungarees, sturdy work boots. Warm Brown "
+        "palette with a straw-yellow hat accent. Six heads tall, relaxed "
+        "working stance, empty hands -- the pitchfork in the reference is "
+        "a separate accessory, not part of this body"),
+    "local_historian": (
+        "stylised human elderly male local historian, thin build, round "
+        "wire-frame glasses, short white hair, neat white beard, "
+        "thoughtful scholarly expression. Long muted Meadows Green hooded "
+        "traveling coat over simple robes, a small satchel at the hip. "
+        "Slate Gray/Meadows Green palette -- echoes Grandpa's colour "
+        "family but a distinctly thinner, more scholarly silhouette and "
+        "its own coat cut, NOT Grandpa's own face or build. Six heads "
+        "tall, contemplative stance, leaning slightly forward -- the cane "
+        "in the reference is a separate accessory"),
+    "young_trainer": (
+        "stylised human boy, youthful round face, short brown hair under "
+        "a baseball-style cap worn backward, eager excited expression. "
+        "Navy zip jacket over a cream shirt, olive-brown cargo shorts, a "
+        "small creature-training backpack with visible straps, sturdy "
+        "boots. Warm Brown/Sky Blue palette. Five and a half heads tall "
+        "(a child, shorter than the trainer), energetic eager stance"),
+    "traveling_merchant": (
+        "stylised human adult female traveling merchant, short brown bob "
+        "with a loose side-swept fringe, warm shrewd smile. Olive-green "
+        "short jacket over a cream blouse, cream apron-skirt, a brown "
+        "leather satchel bag and pouches at the hip, sturdy boots. Warm "
+        "Brown/Meadows Green palette. Six heads tall, confident welcoming "
+        "stance -- the two-wheeled hand-cart in the reference is a "
+        "SEPARATE PROP, generate the person alone, no cart geometry"),
+
+    # Trail & Wilderness.
+    "rival_trainer": (
+        "stylised human boy, spiky sandy-blond hair, confident smirking "
+        "expression, freckled face. Rust-orange short-sleeve jacket over "
+        "a cream shirt, olive cargo shorts, a creature-training backpack, "
+        "sturdy boots. Ember Orange palette, distinct from the player "
+        "trainer's own teal jacket. Five and a half heads tall (same age "
+        "as the player), cocky confident stance"),
+    "field_researcher": (
+        "stylised human young female field researcher, straight dark hair "
+        "in a low ponytail, round glasses, curious focused expression. "
+        "Olive-green field jacket with many visible pockets, a canvas "
+        "satchel across the body, simple trousers, sturdy boots. Meadows "
+        "Green/Slate Gray palette. Six heads tall, alert observant stance, "
+        "empty hands"),
+    "wandering_trainer": (
+        "stylised human adult male wandering trainer, short dark hair, "
+        "wide-brimmed dark travel hat, weathered easygoing expression, "
+        "light stubble. Long tan traveling coat over a dark shirt, wide "
+        "belt, sturdy boots, a bedroll strapped across the back. Warm "
+        "Brown/Slate Gray palette. Six heads tall, relaxed nomadic stance "
+        "-- generate the human alone, his companion creature is an "
+        "existing roster species and not part of this generation"),
+    "lost_traveler": (
+        "stylised human young male lost traveler, tousled dark hair, "
+        "anxious tired expression, a travel-worn dark Meadows Green cloak "
+        "over plain clothes. Simple belt, a large travel backpack with a "
+        "bedroll strapped to it, worn boots. Meadows Green/Slate Gray "
+        "palette, deliberately more ragged and muted than the settled "
+        "village NPCs. Six heads tall, weary uncertain stance"),
+    "campfire_traveler": (
+        "stylised human young female campfire traveler, dark hair loosely "
+        "tied back, warm storytelling expression. Ember Orange scarf over "
+        "a dark green hooded travel cloak, layered practical travel "
+        "clothes, simple boots. Ember Orange/Meadows Green palette. Six "
+        "heads tall, relaxed stance, hands gesturing slightly as if "
+        "mid-story"),
+    "alpha_tracker": (
+        "stylised human adult male alpha tracker, short dark hair under a "
+        "wide-brimmed forest-green hat, focused weathered expression, "
+        "light stubble. Olive-green ranger jacket with a bandolier of "
+        "pouches across the chest, cargo trousers, sturdy boots. Meadows "
+        "Green/Warm Brown palette. Six heads tall, alert scouting stance "
+        "-- binoculars/bow are separate accessories, not part of this "
+        "body"),
+    "courier": (
+        "stylised human young male courier, short reddish-brown hair "
+        "under a flat courier's cap, energetic focused expression. Warm "
+        "Brown short jacket over a cream shirt, a satchel/scroll-case bag "
+        "slung diagonally across the chest, practical trousers, sturdy "
+        "boots built for walking distance. Warm Brown/Cream palette. Six "
+        "heads tall, purposeful walking stance"),
+    "former_tether_member": (
+        "stylised human young adult, deliberately ambiguous gender "
+        "presentation, most of the face shadowed by a deep dark hood, "
+        "only eyes and nose visible, guarded wary expression. Dark "
+        "Charcoal hooded cloak over a fitted dark tunic -- similar cut "
+        "and material language to the Team Tether uniform family but "
+        "with ALL PURPLE TETHER INSIGNIA AND ACCENT PIPING DELIBERATELY "
+        "ABSENT, replaced by plain undecorated dark cloth, signalling a "
+        "defector who has stripped the faction's markings. Dark "
+        "Charcoal/Slate Gray palette, no Tether Purple anywhere. Six "
+        "heads tall, closed-off wary stance"),
 }
 
 

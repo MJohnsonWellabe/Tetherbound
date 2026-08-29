@@ -416,5 +416,401 @@
       "sprint": 8.6
     },
     "animation_libraries": []
+  },
+  "grunt_a": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/grunt_a/grunt_a_lod0.glb",
+    "height": 1.7,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "grunt_b": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/grunt_b/grunt_b_lod0.glb",
+    "height": 1.7,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "grunt_c": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/grunt_c/grunt_c_lod0.glb",
+    "height": 1.7,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "officer_a": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/officer_a/officer_a_lod0.glb",
+    "height": 1.8,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "officer_b": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/officer_b/officer_b_lod0.glb",
+    "height": 1.8,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "captain_a": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/captain_a/captain_a_lod0.glb",
+    "height": 1.9,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "captain_b": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/captain_b/captain_b_lod0.glb",
+    "height": 1.9,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "innkeeper": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/innkeeper/innkeeper_lod0.glb",
+    "height": 1.78,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "inn_helper": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/inn_helper/inn_helper_lod0.glb",
+    "height": 1.5,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "trader": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/trader/trader_lod0.glb",
+    "height": 1.75,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "craftsperson": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/craftsperson/craftsperson_lod0.glb",
+    "height": 1.78,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "creature_caretaker": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/creature_caretaker/creature_caretaker_lod0.glb",
+    "height": 1.72,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "farmer": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/farmer/farmer_lod0.glb",
+    "height": 1.75,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "local_historian": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/local_historian/local_historian_lod0.glb",
+    "height": 1.65,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "young_trainer": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
+    "height": 1.5,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "rival_trainer": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/rival_trainer/rival_trainer_lod0.glb",
+    "height": 1.6,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "field_researcher": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+    "height": 1.7,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "wandering_trainer": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+    "height": 1.78,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "lost_traveler": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/lost_traveler/lost_traveler_lod0.glb",
+    "height": 1.72,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "alpha_tracker": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/alpha_tracker/alpha_tracker_lod0.glb",
+    "height": 1.78,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "courier": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/courier/courier_lod0.glb",
+    "height": 1.55,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
+  },
+  "former_tether_member": {
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "model": "res://assets/characters/former_tether_member/former_tether_member_lod0.glb",
+    "height": 1.7,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
+    "animation_libraries": []
   }
 }

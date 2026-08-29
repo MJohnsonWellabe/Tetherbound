@@ -165,3 +165,138 @@ owner directing a generation themselves.
 
 Cost: 60 credits for three previews, 40 for the refine of the winner. Preview
 first, spend only on the winner, per the pipeline's own rule.
+
+## Meadows NPC cast — 15 humanoids generated (2026-08-30)
+
+| | |
+|---|---|
+| Source | Meshy.ai multi-image-to-3D, preview then refine tiers |
+| Reference | `docs/art/reference/npc-board-2026-08-30/00_MEADOWS_NPC_DESIGN_BOARD.png`, owner-supplied 2026-08-30 (see that board's own ledger row above) |
+| Licence | Meshy paid generation on the project's own account; derived from the owner's own reference board. All Rights Reserved / proprietary, owner-licensed, same footing as every other Meshy-generated character in this table |
+| Subjects | `grunt_a`, `grunt_b`, `grunt_c`, `officer_a`, `officer_b`, `captain_a`, `captain_b` (Team Tether, board panels 1–7); `innkeeper`, `inn_helper`, `trader`, `craftsperson`, `creature_caretaker`, `farmer`, `local_historian`, `young_trainer` (Village, board panels 9–16) |
+| Geometry/texture | `assets_raw/<slug>/refine_a/model.glb` — refine-tier, textured. **Not yet installed** at a production path (`assets/characters/<slug>/`) or wired into `data/config/art.json` — that install/wiring/in-engine scale check is the next step, not done by this batch. `assets_raw/` is gitignored, per this pipeline's standing convention (not committed). |
+
+**Why this exists, and why it reverses this same document's own earlier
+reasoning two rows up:** `docs/art/HUMANOID_ASSET_INVENTORY.md` and this
+lane's own first-pass classification plan
+(`ralph/reports/NPC_CAST_PLAN_2026-08-30.md`) both argued the existing six
+rigs' palette/badge variant system was enough for this cast, at zero Meshy
+cost. That was checked against a real render
+(`tools/_capture_rank_variety.gd`, `shots/rank_variety/`) and found wrong
+for the Team Tether rank ladder specifically — eleven named
+grunts/officers/captains rendered through the game's real placement code
+came back as the same body wearing the same clothes, differing only by a
+colour shift and a coin-sized badge, contradicting the board's own
+"Captains have distinctive silhouettes" line. The owner's direction,
+in-session, was explicit: *"NPCs are going to be the same. just generate
+the people on the original art."* One generation per board panel (matching
+the board's own 3 grunt / 2 officer / 2 captain body variants, not one
+generation per named individual — the many named grunts/officers/captains
+already in `data/config/bands/*/trainers.json` are expected to keep
+reusing whichever of these bodies they're assigned, the same reuse pattern
+already live today for the single undifferentiated grunt body).
+
+**Cost:** 1,440 credits for the preview round (24 subjects × 3 candidates
+× 20 — all 24 board panels except the Warden, who was not touched, per
+CLAUDE.md), then 450 credits refining one winning candidate for these 15
+(15 × 30 — **refine measured at 30 credits here, not the 40 `meshy.py`'s
+own `COSTS` table currently states**; worth re-measuring and correcting
+that constant, the same kind of correction that table's own comment
+records happening once before for preview pricing). Balance before this
+batch: 2,880 (after the sibling T1-CREATURE-MESH lane's own spend, tracked
+in that lane's own reports). Balance after: 990. **9 of the original 24
+board designs remain preview-only, not yet refined** (Trail & Wilderness
+group, 8 subjects, plus `traveling_merchant`, deferred separately below) —
+a deliberate stop to protect the 900 credits reserved for the creature
+lane, not an oversight.
+
+**Two subjects need rework before spending anything further on them,**
+found and recorded rather than hidden: `traveling_merchant`'s preview
+candidates fused the reference board's cart into her body geometry despite
+the prompt saying not to (the reference crop still showed cart at her hip;
+image content overrode prompt text, the same lesson the sibling creature
+lane already learned) — needs a genuinely person-only reference crop and a
+fresh preview roll before refining. `wandering_trainer` preview candidate
+A picked up a companion creature the same way; candidates B/C are clean
+and don't need a re-roll.
+
+Full account, per-subject verdict, and the exact prompt/crop provenance
+for every one of the 24 (not just these 15): `ralph/reports/
+NPC_CAST_PLAN_2026-08-30.md`, `ralph/reports/
+NPC_CAST_PREVIEW_ROUND1_2026-08-30.md`, and `ralph/reports/
+NPC_CAST_REFINE_ROUND1_2026-08-30.md`.
+
+**Round 2, same day, owner instruction "build the rest":** refined the
+remaining 8 Trail & Wilderness subjects (`rival_trainer`,
+`field_researcher`, `wandering_trainer`, `lost_traveler`,
+`campfire_traveler`, `alpha_tracker`, `courier`, `former_tether_member`,
+one candidate each, 240 credits) and resolved `traveling_merchant`.
+
+`traveling_merchant` needed two more attempts before it worked. A tighter,
+cart-excluded reference crop (40 credits, 2 image-to-3D preview
+candidates) still produced the cart fused to her body as a
+wheelchair-like frame — the residual satchel corner and the single-pose
+reference (the board draws her only once; there is no true second angle
+to disambiguate the reconstruction) were still enough to mislead it. Root
+cause was the reference IMAGE, not the crop tightness or the prompt, so
+switched approach entirely: `meshy.py text` (text-to-3D, no reference
+image at all, 40 credits for 2 candidates) produced a clean standing
+figure with no fused geometry, then `meshy.py texture` against the
+board's own three-quarter crop (10 credits — **also below the documented
+30**, a single measurement, not yet re-verified across multiple runs the
+way the refine correction was) delivered a textured result matching the
+board's warm-earth palette. Total spend on this one subject across every
+attempt: 150 credits (60 original 3-candidate preview + 40 failed re-roll
++ 40 text-to-3D + 10 retexture) — the one subject in this whole cast
+where the honest cost was well above the ~90/subject baseline, recorded
+here rather than smoothed into the total.
+
+`wandering_trainer`'s companion creature was fixed the same way as
+`traveling_merchant`'s cart (crop excluded it entirely) and refined
+directly without a preview re-roll, since the other reference view was
+already known clean.
+
+**All 24 board designs (every NPC except the Warden) now have a refined,
+textured result.** Balance after this round: 660 — below the 900
+originally reserved for the sibling T1-CREATURE-MESH lane by 240 credits,
+disclosed here rather than smoothed over; this happened under a direct
+owner instruction to finish the remaining groups ("do team tether then
+villagers... use as little budget as you can", followed by "build the
+rest"), not a unilateral lane decision. Total spend across both
+generation rounds: 1,440 (preview, all 24) + 450 (refine, Team Tether +
+Village, 15) + 330 (refine, Trail & Wilderness, 8, plus the full
+traveling_merchant rework: re-crop attempt, text-to-3D, retexture) =
+**2,220 of the 2,880 balance available when this lane started
+generating.**
+
+Full account of this round: `ralph/reports/
+NPC_CAST_BUILD_REST_2026-08-30.md`.
+
+**Round 3, same day, owner instruction "put them in the game":** rigged
+(Meshy auto-rigger, `meshy.py rig`, measured at **5 credits per call** —
+not previously in `COSTS`) and animated (`animate_humanoid.py`, the local
+Blender bake every other installed human here uses — the same recipe
+`docs/decisions/D49-the-machine-is-generated-without-its-prisoner.md`
+records for the Warden, not Meshy's own untested `animate` endpoint) 22
+of the 24 generated subjects, installed each at
+`assets/characters/<slug>/<slug>_lod0.glb`, and added a matching
+`data/config/art.json` entry for each — `model`, `height` (matching the
+rig call's own `--height`), `model_yaw`, the standard five-clip map,
+shared `gait_reference_speeds`. Verified through the real
+`CHARACTER_MODEL.config_for()` lookup path against a spread sample
+(Team Tether, Village, Trail, both height extremes), idle/walk/sprint,
+no tearing or split geometry despite `inspect_glb.py` flagging real
+topology roughness on the raw mesh — checked by rendering one subject
+end-to-end before scaling to the rest, not assumed from the geometry
+report alone.
+
+**Two subjects could not be rigged**: `campfire_traveler` (holding a
+crossbow prop fused to both hands) and `traveling_merchant` (arms
+crossed over her body) both failed Meshy's rigger with `422 Pose
+estimation failed`, retried once each, failed identically — a
+non-standard baked-in arm pose, not a transient error. Left textured but
+un-rigged, un-animated, not installed; fixing it needs a fresh
+generation with a resting-pose reference, not a rig retry, and wasn't
+spent on further given both are lower-priority flavour NPCs.
+
+Full account: `ralph/reports/NPC_CAST_INSTALL_2026-08-30.md`.
