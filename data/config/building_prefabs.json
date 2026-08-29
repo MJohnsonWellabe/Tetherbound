@@ -1266,6 +1266,26 @@
           "_why": "mirrored twin, 2cm lower: the platform is a stair-top piece, solid on two faces only, and the twin closes the open pair without z-fighting the slab"
         },
         {
+          "module": "Stairs_Exterior_Platform",
+          "at": [
+            0.0,
+            -0.04,
+            0.0
+          ],
+          "yaw_deg": 90.0,
+          "_why": "T1-VILLAGE 2026-08-30: the 0/180 pair's own `_why` names the module 'solid on two faces only' -- true, and the two faces it closes are the ones on the axis it does NOT stand open across. A blind visual judge's crop confirmed it: viewed from due north or south the curb is a tunnel, the plaza paving visible straight through underneath, because 0/180 both leave the SAME axis open (they are mirror images across it, not rotations off it). Yawed 90 from the first pair, this closes that axis instead -- its solid faces land where the open ones were."
+        },
+        {
+          "module": "Stairs_Exterior_Platform",
+          "at": [
+            0.0,
+            -0.06,
+            0.0
+          ],
+          "yaw_deg": 270.0,
+          "_why": "T1-VILLAGE 2026-08-30: mirrored twin of the 90-yaw piece above, same 2cm-per-layer stagger the original pair uses to keep four overlapping platform slabs from z-fighting."
+        },
+        {
           "module": "Corner_ExteriorWide_Wood",
           "at": [
             -0.85,
@@ -2315,7 +2335,8 @@
       "_why_retint": "warm pane instead of a black hole -- same colour every other building in the square carries"
     },
     "inn": {
-      "_why": "R7.9, owner-requested 2026-08-16: an inn where the villagers can stay. No inn/tavern prefab exists in the Medieval Village MegaKit (D24 -- the one civilian architectural family), so this clones farmhouse_shell's own 75-module two-storey massing -- the closest existing shape, per the backlog item's own text -- rather than inventing an off-family landmark (village.json's own note on the removed TowerWindmill records exactly why that would repeat D24's split-the-difference failure). Unlike farmhouse_shell this authors a real openable door leaf and wall colliders with a doorway hole (R7.8's door verb, scripts/world/village_door.gd), because an inn is entered by strangers on an ordinary interact, not gated by a story beat the way Grandpa's is. Footprint 6m (x) by 10m (z), front = +z. The interior (scripts/world/inn_interior.gd, attached by village.gd from village.json's `interior: \"inn\"` key) caps the walkable space at the FIRST storey only -- a flat ceiling collider blocks the upper course and roof shell, which stays facade-only. A real second floor is Grandpa's one bespoke cost in this settlement (loft, stairs, rail) and an ordinary inn does not obviously owe the same investment just because its shell is two storeys.",
+      "_why": "R7.9, owner-requested 2026-08-16: an inn where the villagers can stay. No inn/tavern prefab exists in the Medieval Village MegaKit (D24 -- the one civilian architectural family), so this clones farmhouse_shell's own two-storey massing -- the closest existing shape, per the backlog item's own text -- rather than inventing an off-family landmark (village.json's own note on the removed TowerWindmill records exactly why that would repeat D24's split-the-difference failure). Unlike farmhouse_shell this authors a real openable door leaf and wall colliders with a doorway hole (R7.8's door verb, scripts/world/village_door.gd), because an inn is entered by strangers on an ordinary interact, not gated by a story beat the way Grandpa's is. Footprint 6m (x) by 10m (z), front = +z. The interior (scripts/world/inn_interior.gd, attached by village.gd from village.json's `interior: \"inn\"` key) caps the walkable space at the FIRST storey only -- a flat ceiling collider blocks the upper course and roof shell, which stays facade-only. A real second floor is Grandpa's one bespoke cost in this settlement (loft, stairs, rail) and an ordinary inn does not obviously owe the same investment just because its shell is two storeys.",
+      "_why_t1village": "T1-VILLAGE 2026-08-30. HIST-164/VIS_LOCATIONS_2026-08-23 named this recipe a visible twin of farmhouse_shell -- identical module histogram down to the wall/window/roof layout, differing only by a door leaf and (after a prior lane's partial fix) a second chimney and a few retints. That prior fix changed COLOUR but not MASSING or FENESTRATION, so the two still read as one building from the square's own three-quarter view. This pass changes the front elevation itself: windows flank the door on BOTH sides now (farmhouse keeps its single window + blank wall pattern, which is correct for a private home and wrong for a place strangers are meant to walk into), and a small entry canopy on posts marks the door as a public threshold rather than a private one -- ralph/reports/T1-VILLAGE/shots/ has the before/after. No new mesh: every added module is already in assets/buildings/quaternius_medieval/ and unused by any other recipe (tools/_probe_village_kit_modules.gd measured the candidates before this edit).",
       "modules": [
         {
           "module": "Wall_UnevenBrick_Door_Flat",
@@ -2371,13 +2392,34 @@
           "_why": "shutters on the front window the square actually sees"
         },
         {
-          "module": "Wall_UnevenBrick_Straight",
+          "module": "Wall_UnevenBrick_Window_Wide_Flat",
           "at": [
             2.0,
             0.0,
             5.0
           ],
-          "yaw_deg": 0.0
+          "yaw_deg": 0.0,
+          "_why": "T1-VILLAGE: was Wall_UnevenBrick_Straight, the exact panel farmhouse_shell keeps blank. A window on BOTH sides of the door is the one-line difference between a house and a place strangers are meant to walk into, and it is the ground-floor front elevation's only asymmetry against the twin recipe."
+        },
+        {
+          "module": "Window_Wide_Flat1",
+          "at": [
+            2.0,
+            0.0,
+            5.0
+          ],
+          "yaw_deg": 0.0,
+          "_why": "T1-VILLAGE: pairs with the new window frame above"
+        },
+        {
+          "module": "WindowShutters_Wide_Flat_Open",
+          "at": [
+            2.0,
+            0.0,
+            5.0
+          ],
+          "yaw_deg": 0.0,
+          "_why": "T1-VILLAGE: matches the -2 window's own open shutters"
         },
         {
           "module": "Wall_Plaster_WoodGrid",
@@ -2416,6 +2458,26 @@
             5.0
           ],
           "yaw_deg": 0.0
+        },
+        {
+          "module": "Overhang_Roof_Plaster",
+          "at": [
+            0.0,
+            2.55,
+            5.35
+          ],
+          "yaw_deg": 0.0,
+          "_why": "T1-VILLAGE: a small entry canopy over the door, projecting toward the square (+z is outward per tools/_probe_village_kit_modules.gd's own AABB read: local z runs -1.02 embedded in the wall to +1.00 projecting out). Sits just above the 2.3m door head, below the upper-floor window sill (3.12) -- a real threshold marker a farmhouse door does not have."
+        },
+        {
+          "module": "Roof_FrontSupports",
+          "at": [
+            0.0,
+            1.15,
+            5.95
+          ],
+          "yaw_deg": 0.0,
+          "_why": "T1-VILLAGE: the canopy's own support beam, standing proud of the door so the overhang reads as carried on posts rather than glued to the wall -- the same 'nothing floats' discipline interior_structure.gd's bays/capitals pass uses indoors."
         },
         {
           "module": "Wall_UnevenBrick_Straight",
