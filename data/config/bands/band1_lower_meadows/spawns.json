@@ -36,9 +36,10 @@
         0.0,
         528.0823
       ],
-      "radius": 14.0,
+      "radius": 0.4,
       "_why_ow5d": "pond species, moves with the pond per section 10.2's own row (same (-250,+407) offset as `water.pond_centre`).",
-      "_comment_depth_0829": "T1-CREATURE §15. The OW5D offset landed this centre on terrain height -20.3m against water.level -17.0 -- 3.3m of lakebed, with paddlenewt's own 1.15m body height never breaking the surface at all. A render from the shore showed exactly that: an indistinct pale smudge seen through the water rather than a visible creature, failing §15's 'water creatures read near shore'. Moved 12m within the same hollow to the nearest point (grid-searched against the live analytic heightfield) where the lakebed sits close enough to the surface (-17.23m) that most of the body clears it -- still genuinely in the water, now actually visible from the bank. Species/count/radius/habitat tag unchanged; this is a depth correction, not a redesign."
+      "_comment_depth_0829": "T1-CREATURE §15. The OW5D offset landed this centre on terrain height -20.3m against water.level -17.0 -- 3.3m of lakebed, with paddlenewt's own 1.15m body height never breaking the surface at all. A render from the shore showed exactly that: an indistinct pale smudge seen through the water rather than a visible creature, failing §15's 'water creatures read near shore'. Moved 12m within the same hollow to the nearest point (grid-searched against the live analytic heightfield) where the lakebed sits close enough to the surface (-17.23m) that most of the body clears it -- still genuinely in the water, now actually visible from the bank. Species/count/radius/habitat tag unchanged; this is a depth correction, not a redesign.",
+      "_comment_disc_0830": "T1-CAST §15 follow-up, flagged open by T1-CREATURE's own handover. The centre fix above only checked the CENTRE point; encounter_director.gd's scatter draw (`distance = radius * sqrt(rng.randf())`) is a uniform-AREA sample over the whole disc, which puts MOST of a large disc's probability mass near its OUTER edge, not the centre it was verified at. Direct reproduction of the real seed (hash(\"wild_spawn_6\"), tools/_probe_creek_edge_scatter_depth.gd) showed individual 1 landing 13.8m out at depth 3.38m -- fully submerged, deeper than the ORIGINAL pre-fix defect this same cluster shipped with. A full-disc grid probe (tools/_probe_creek_edge_disc_depth.gd) found the lakebed drops off steeply in one direction from this centre (worst-case depth grows roughly monotonically with radius, 0.66m at r=0.5 to 4.2m at r=11-14), so no radius large enough to look like a real 'scatter' also clears the water -- the centre sits right at the top of a real drop-off, not in the middle of a flat shallow shelf. 14.0 -> 0.4m keeps both individuals within the shelf itself (re-verified against the real seed: ind1 55% of body clear, ind2 100%); a larger radius put ind1 underwater again by r=1.0. Species/count/habitat/centre unchanged; mirrored in tests/fixtures/band_split_baseline/spawns.json per that fixture's TRACKED MIRROR policy, since `radius` feeds the same seeded scatter identity `centre` does."
     },
     {
       "order": 7,
@@ -50,9 +51,10 @@
         0.0,
         562.9456
       ],
-      "radius": 10.0,
+      "radius": 3.0,
       "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above.",
-      "_comment_depth_0829": "T1-CREATURE §15, same defect and fix as paddlenewt's own note. Terrain height here was -19.9m, 2.9m under water.level -17.0 -- deeper than mosshell's own 1.40m body, so it rendered as a barely-visible ghost seen through the water rather than a basking turtle at the shore. Moved 14m to the nearest shallow point (-17.45m) found against the live heightfield. Species/count/radius/habitat tag unchanged."
+      "_comment_depth_0829": "T1-CREATURE §15, same defect and fix as paddlenewt's own note. Terrain height here was -19.9m, 2.9m under water.level -17.0 -- deeper than mosshell's own 1.40m body, so it rendered as a barely-visible ghost seen through the water rather than a basking turtle at the shore. Moved 14m to the nearest shallow point (-17.45m) found against the live heightfield. Species/count/radius/habitat tag unchanged.",
+      "_comment_disc_0830": "T1-CAST §15 follow-up -- see paddlenewt's own `_comment_disc_0830` for the full mechanism (the centre-only depth check does not bound the disc's own scatter). This cluster's single individual actually reads fine at its real seeded position even at the old 10.0m radius (69% of body clear, tools/_probe_creek_edge_scatter_depth.gd), so this is a bound against a FUTURE reroll (a `count` change) rather than a fix for an observed bad frame: a full-disc probe (tools/_probe_creek_edge_disc_depth.gd) found the worst point on the old 10m disc at only 0% clear. 10.0 -> 3.0m keeps the worst point on the disc at 7% clear and the actual current seed at 68% -- barely moved from today's real placement, just no longer able to roll a submerged individual on a future reroll. Species/count/centre/habitat unchanged; mirrored in tests/fixtures/band_split_baseline/spawns.json."
     },
     {
       "order": 8,
@@ -64,9 +66,10 @@
         0.0,
         516.158
       ],
-      "radius": 14.0,
+      "radius": 2.0,
       "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above.",
-      "_comment_depth_0829": "T1-CREATURE §15, same defect and fix as paddlenewt's own note. Terrain height here was -18.77m, only 1.77m under water.level -17.0 -- shallow enough that this one was the least broken of the three (a faint but real head-and-back read at the surface), but still under by most of its own 1.05m body height. Moved 7m, within the cluster's own 14m radius, to -17.30m, where roughly three-quarters of the body clears the surface instead of a quarter."
+      "_comment_depth_0829": "T1-CREATURE §15, same defect and fix as paddlenewt's own note. Terrain height here was -18.77m, only 1.77m under water.level -17.0 -- shallow enough that this one was the least broken of the three (a faint but real head-and-back read at the surface), but still under by most of its own 1.05m body height. Moved 7m, within the cluster's own 14m radius, to -17.30m, where roughly three-quarters of the body clears the surface instead of a quarter.",
+      "_comment_disc_0830": "T1-CAST §15 follow-up -- see paddlenewt's own `_comment_disc_0830` for the mechanism. Direct reproduction of the real seed showed this single individual landing 11.1m out at depth 1.65m -- fully submerged, the exact failure the centre fix above was meant to close, just not at the centre point that was checked. A full-disc probe found the old 14m disc's worst point at 0% clear from r=2.5m outward. 14.0 -> 2.0m keeps the worst point on the disc at 58% clear (the real seed now lands at 58% clear too, since the same fractional draw scales down with the radius). Species/count/centre/habitat unchanged; mirrored in tests/fixtures/band_split_baseline/spawns.json."
     },
     {
       "order": 10,

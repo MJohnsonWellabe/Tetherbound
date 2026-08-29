@@ -96,6 +96,19 @@ func _mesh_instances(node: Node) -> Array[MeshInstance3D]:
 	return found
 
 
+## T1-CAST (§17). Read-only access to the placed module's own mesh
+## instances, for a caller that needs to apply an override beyond the
+## generic legal/illegal ghost tint above -- e.g. `creature_bed.gd`
+## differentiating its own placement from another caller of the SAME mesh
+## path. Returns an empty array before the piece is built. No new behaviour;
+## `_spawn` already builds this list internally for the collision AABB pass,
+## this just exposes it.
+func mesh_instances() -> Array[MeshInstance3D]:
+	if _model == null or not is_instance_valid(_model):
+		return []
+	return _mesh_instances(_model)
+
+
 ## OF24: `{color, energy, range, flicker}` off the buildable's own JSON entry
 ## -- the torch's `light` block first, but generic on purpose (see this
 ## file's own top-of-class comment). Sits at the placed model's

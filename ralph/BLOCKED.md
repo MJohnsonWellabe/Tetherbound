@@ -6,6 +6,50 @@ design decision rather than inventing one.
 
 ---
 
+## T1-CAST — Bramblebun's grass-field contrast: two candidate fixes, both an owner decision
+
+Flagged in commit `2f3deedb` and reconfirmed by T1-CREATURE's 2026-08-29
+handover; never formally recorded here, so this is that recording, not a new
+finding.
+
+**The measurement.** Bramblebun (`species.json`, `height: 0.96`) was raised
+from 0.78m to 0.96m specifically to clear `grass_field.json`'s tallest tuft
+(0.86m) — a real fix for the "too short to see over the grass" defect §15
+also names. Even at the corrected height, it still measures **1.08:1
+luminance against the field** (measured by a prior lane, reconfirmed by
+T1-CREATURE's own report — not re-measured by this lane) — barely above
+parity, the weakest silhouette separation of any early-roster species (compare
+pipwing's own 1.73:1 at a similar production step, `species.json`'s own
+`_comment_height_0828`). This is a **colour** problem, not a size problem: the
+species is tall enough now, it just does not read as a different value/hue
+from the grass it stands in.
+
+**Two fixes exist, both owner decisions, not something to invent:**
+
+1. **Repaint Bramblebun's colourway.** This is an established creature's
+   canon appearance, sourced from an owner reference sheet
+   (`docs/art/wild/`) — `CLAUDE.md` treats a repaint of settled creature art
+   as a design decision, not a rendering fix, and no lane has owner
+   authorisation to change it.
+2. **A stronger silhouette rim, once an alpha's own rim-tell is
+   re-differentiated from an ordinary individual's.** `creature_body.gd`
+   already has a per-species opt-in rim (`_apply_field_separation`,
+   `placeholder.field_rim` in `species.json`) and alpha individuals get their
+   own stronger rim/aura (`_apply_alpha_presence`) — turning Bramblebun's own
+   rim up risks making an ordinary Bramblebun read as an alpha at a glance,
+   which is exactly the "larger/rare individuals catch the eye" promise §15
+   also makes for the SPECIES' alpha variant specifically. Fixing this
+   requires deciding how an alpha's tell stays distinct first.
+
+Three lanes in a row (the original height fix, T1-CREATURE, T1-CAST) have
+each independently re-confirmed the number and each declined to invent the
+fix. Untouched again this lane, on purpose.
+
+*What would clear it:* the owner picking one of the two levers above, or
+naming a third.
+
+---
+
 ## VIS-CAST — the "grunt armband" defect does not exist on this branch
 
 Recorded so a future round does not spend a finding rediscovering that there is

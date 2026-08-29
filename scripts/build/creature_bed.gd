@@ -56,6 +56,50 @@ const REST_ANCHOR := Vector3(0.0, 0.42, 0.0)
 ## mattress top as built, which now sits 0.215m higher than before.
 const BED_SINK_LIFT := 0.215
 
+## T1-CAST (§17). `camp.gd`'s player bedroll now places this SAME mesh
+## (`PLAYER_BED` there, added by T1-CAMP round 2) a few metres away in the
+## same small camp. A blind Fable pass on the assembled kit called the reuse
+## "a mistake, not a shared-gear story" -- the two beds render pixel-
+## identical, including a human pillow at the head of the creature's own
+## bed, which is the specific tell. `camp_bed.glb` carries its whole model
+## on ONE mesh surface (confirmed: tools/_probe_camp_bed_surfaces.gd), so
+## there is no separate "pillow" or "blanket" surface to hide or retint in
+## isolation -- the only lever available without a second Meshy generation
+## (banned without owner reference art) is a whole-object tint, the same
+## "one mesh, many materials" economy `docs/ASSET_LEDGER.md` already uses
+## for `tm_orb`. Cooler than the player's own warm bed, so the two read as
+## "companion gear from the same maker" rather than a duplicate. Colour
+## only, deliberately -- a scale change would also move
+## REST_ANCHOR/BED_SINK_LIFT (both measured against this mesh's UNSCALED
+## geometry, and load-bearing for tests/smoke_gate_a_rest_torch.gd's real
+## resting-creature placement), and re-deriving both under a new scale is a
+## bigger, riskier change than a judge asking for "reuse doesn't read as a
+## mistake" justifies on its own. Applied via `set_surface_override_material`
+## (BUILD_PIECE.mesh_instances(), added for exactly this) so the shared Mesh
+## resource used by every OTHER placement of camp_bed.glb -- the player's
+## own bed and the authored trail_camp's sleeping surface -- is untouched.
+## Round 1 (0.74, 0.86, 0.80) measured as a real shift (pillow (166,138,107)
+## -> (113,113,84), sampled directly off rendered frames) but was too subtle
+## to register as "a different bed" at a glance, only as a slightly darker
+## one -- a genuine hue shift needs more separation between channels than a
+## near-uniform multiply gives. Pushed further apart so the same pillow
+## comes out an actual moss-green rather than a dimmed tan.
+const CREATURE_BED_TINT := Color(0.55, 0.85, 0.62)
+
+
+func _tint_creature_bed() -> void:
+	if _piece == null or not is_instance_valid(_piece):
+		return
+	for instance: MeshInstance3D in _piece.call("mesh_instances"):
+		var mesh: Mesh = instance.mesh
+		if mesh == null:
+			continue
+		for i in mesh.get_surface_count():
+			var source := mesh.surface_get_material(i) as StandardMaterial3D
+			var material := source.duplicate() as StandardMaterial3D if source != null else StandardMaterial3D.new()
+			material.albedo_color = CREATURE_BED_TINT
+			instance.set_surface_override_material(i, material)
+
 ## GATE-E: the bed-index namespace, written down because two kinds of bed now
 ## share it and only one of them is in the build store.
 ##
@@ -87,6 +131,7 @@ func build_ghost() -> void:
 	add_child(_piece)
 	_piece.position.y = BED_SINK_LIFT
 	_piece.call("build_ghost", MESH_PATH)
+	_tint_creature_bed()
 
 
 ## `player_built` is what decides whether this placement answers the chapter's
@@ -103,6 +148,7 @@ func build_real(player_built: bool = true) -> void:
 	add_child(_piece)
 	_piece.position.y = BED_SINK_LIFT
 	_piece.call("build_real", MESH_PATH)
+	_tint_creature_bed()
 	var prompt: Node3D = INTERACTABLE.new()
 	prompt.name = "Interactable"
 	prompt.position = Vector3(0.0, 0.6, 0.7)
