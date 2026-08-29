@@ -357,7 +357,7 @@ func _palette_node(node: Node, palette: Dictionary) -> void:
 			if hex == "":
 				hex = "#ffffff"
 			instance.set_surface_override_material(
-				surface, _shared_variant_material(source, name, Color(hex)))
+				surface, _shared_variant_material(source, name, Color(hex), {}, true))
 	for child in node.get_children():
 		_palette_node(child, palette)
 
@@ -398,12 +398,16 @@ func _palette_node(node: Node, palette: Dictionary) -> void:
 ## a fully white emission untouched by a "*" wildcard tint of `#ffffff`
 ## renders identically to before, and any other tint now visibly lands.
 func _shared_variant_material(source: Material, name: String, colour: Color,
-		finish: Dictionary = {}) -> Material:
+		finish: Dictionary = {}, body: bool = false) -> Material:
 	# `finish` joins the cache key because it changes the rendered material as
 	# much as `colour` does; two accessories sharing a name and a colour but
 	# asking for different metal would otherwise silently share one instance.
-	var key := "%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
-		("" if finish.is_empty() else "%s/%s" % [finish.get("metallic", ""), finish.get("roughness", "")])]
+	# `body` joins it for the same reason: it turns on the emission-floor
+	# revival below, so a body surface and an accessory that happened to share
+	# a name and colour must not share the resulting material.
+	var key := "%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
+		("" if finish.is_empty() else "%s/%s" % [finish.get("metallic", ""), finish.get("roughness", "")]),
+		str(body)]
 	if _variant_materials.has(key):
 		return _variant_materials[key]
 	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
@@ -456,6 +460,32 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 		material.metallic = 0.0
 	if finish.has("roughness"):
 		material.roughness = float(finish["roughness"])
+	# T1-LIGHT, 2026-08-30: the `if material.emission_enabled:` gate below was
+	# the entire additive-floor mechanism STRANDED-P3 built, and GF-B-010's own
+	# header already says it is dead on every rig shipping today (source
+	# `emission_enabled` is false on all six). Confirmed the multiply-only
+	# retune this same gate left `npc_ranks.json` doing (grunt/officer pushed
+	# toward identity, `0.54x`/`0.76x` -> `0.86x`/`0.93x`) barely moves a
+	# rendered pixel: `ground-02-band2-grunt-AFTER.png` reads within a couple
+	# of blind-judge luma points of the unfixed frame (measured mean body
+	# luma 13/255 in full daylight, JUDGE-VISUAL-2-2026-08-30.md subject 8) --
+	# consistent with world_look.gd's own NIGHT-LIGHT history, which found the
+	# ACES tonemap's toe flattens small multiplicative nudges near the bottom
+	# of the range to nothing. A straight albedo multiply on an
+	# already-near-black texture (grunt's own median 0.137) cannot cross that
+	# toe without going bright enough to erase the rank ladder it exists to
+	# preserve. `body` (new parameter, set only by `_palette_node`'s body
+	# surface call) revives exactly the additive floor STRANDED-P3 already
+	# designed and tuned for this -- additive light bypasses the multiply
+	# ceiling the same way NIGHT-LIGHT's own ambient/exposure fix had to,
+	# without touching global lighting and so without moving anything the
+	# trainer/Grandpa/villagers/captain/Warden render (their tint luminance is
+	# always >= 0.95, so the gate below still skips them, unchanged). Scoped to
+	# `body` (not hair, not accessories) because a rank badge already gets its
+	# own legibility fix via `finish`'s metal, and an emission floor on hair
+	# was never the reported defect.
+	if body and colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722 < 0.95:
+		material.emission_enabled = true
 	if material.emission_enabled:
 		# STRANDED-P3: a dark tint (a Team Tether rank palette, e.g. the grunt's
 		# original #4a5049) darkens the SAME colour into both albedo and this
@@ -534,7 +564,28 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 		# 7.5x contrast ratio and produced the "washed, blacks lifted to grey"
 		# reading a blind round gave the whole ranked cast. An additive floor is
 		# the right tool for a crushing shadow and the wrong tool for a palette.
-		const EMISSION_FLOOR_ADD := 0.06
+		#
+		# T1-LIGHT, 2026-08-30: 0.18, up from 0.06 -- that 0.06 was written for
+		# a version of this gate that never actually ran (see the block comment
+		# above, "the entire additive-floor mechanism ... dead on every rig
+		# shipping today"), so it was never render-verified against what the
+		# ACES toe does to a small add. Measured with
+		# `tools/_probe_grunt_luminance.gd` + `tools/_sample_npc_luma.py` (real
+		# world_look.gd day/night config, grunt/officer/captain plus a lit-crate
+		# control, background-relative luma so the number is the BODY's own,
+		# not a guessed crop box): at 0.06, grunt/officer read 17.0/20.0 out of
+		# 255 in day, 15.0/18.4 at night -- barely above the in-world 13/255
+		# JUDGE-VISUAL-2-2026-08-30.md measured on the unrevived gate, because
+		# 0.06 is itself deep in the toe on a 0.86-0.93x-multiplied near-black
+		# texture. At 0.18: 30.6/35.4 day, 51.7/59.5 night (the night jump is
+		# bigger because there is far less competing direct-light signal for
+		# the toe to already be fighting) -- checked visually too, not just the
+		# numbers: collar, straps, mask and boot folds stay readable, nothing
+		# flattens toward one grey slab the way 0.30's own history warns a
+		# floor can. Landed short of the lit crate's own control values
+		# (66.1/54.1) on purpose -- the uniform is meant to read dark, just not
+		# unlit-black.
+		const EMISSION_FLOOR_ADD := 0.18
 		var tint_luminance := colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722
 		if tint_luminance < 0.95:
 			material.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
