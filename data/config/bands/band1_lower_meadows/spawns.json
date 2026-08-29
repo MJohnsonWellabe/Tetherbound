@@ -32,12 +32,13 @@
       "count": 2,
       "habitat": "creek_edge",
       "centre": [
-        -370.0,
+        -378.0296,
         0.0,
-        537.0
+        528.0823
       ],
       "radius": 14.0,
-      "_why_ow5d": "pond species, moves with the pond per section 10.2's own row (same (-250,+407) offset as `water.pond_centre`)."
+      "_why_ow5d": "pond species, moves with the pond per section 10.2's own row (same (-250,+407) offset as `water.pond_centre`).",
+      "_comment_depth_0829": "T1-CREATURE §15. The OW5D offset landed this centre on terrain height -20.3m against water.level -17.0 -- 3.3m of lakebed, with paddlenewt's own 1.15m body height never breaking the surface at all. A render from the shore showed exactly that: an indistinct pale smudge seen through the water rather than a visible creature, failing §15's 'water creatures read near shore'. Moved 12m within the same hollow to the nearest point (grid-searched against the live analytic heightfield) where the lakebed sits close enough to the surface (-17.23m) that most of the body clears it -- still genuinely in the water, now actually visible from the bank. Species/count/radius/habitat tag unchanged; this is a depth correction, not a redesign."
     },
     {
       "order": 7,
@@ -45,12 +46,13 @@
       "count": 1,
       "habitat": "rock_overhang",
       "centre": [
-        -380.0,
+        -371.2711,
         0.0,
-        552.0
+        562.9456
       ],
       "radius": 10.0,
-      "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above."
+      "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above.",
+      "_comment_depth_0829": "T1-CREATURE §15, same defect and fix as paddlenewt's own note. Terrain height here was -19.9m, 2.9m under water.level -17.0 -- deeper than mosshell's own 1.40m body, so it rendered as a barely-visible ghost seen through the water rather than a basking turtle at the shore. Moved 14m to the nearest shallow point (-17.45m) found against the live heightfield. Species/count/radius/habitat tag unchanged."
     },
     {
       "order": 8,
@@ -58,12 +60,13 @@
       "count": 1,
       "habitat": "water_edge",
       "centre": [
-        -360.0,
+        -356.1437,
         0.0,
-        522.0
+        516.158
       ],
       "radius": 14.0,
-      "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above."
+      "_why_ow5d": "pond species, moves with the pond -- see paddlenewt above.",
+      "_comment_depth_0829": "T1-CREATURE §15, same defect and fix as paddlenewt's own note. Terrain height here was -18.77m, only 1.77m under water.level -17.0 -- shallow enough that this one was the least broken of the three (a faint but real head-and-back read at the surface), but still under by most of its own 1.05m body height. Moved 7m, within the cluster's own 14m radius, to -17.30m, where roughly three-quarters of the body clears the surface instead of a quarter."
     },
     {
       "order": 10,
