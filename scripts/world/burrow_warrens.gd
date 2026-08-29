@@ -344,8 +344,21 @@ func _floor_colour() -> Color:
 ## because a floor is seen at a grazing angle across its whole length and a
 ## tight tile reads as noise at that angle -- the wall is seen face-on and
 ## wants the finer grain.
-func _floor_material() -> StandardMaterial3D:
-	var key := "floor"
+## `exterior` selects a distinct, less-lerped tint for the approach ramp --
+## see T1-WARRENS-EXT, judge evidence "a plain grey concrete walk slab...
+## sits on the grass with no edge blend". The 0.42 lerp toward the near-white
+## `ROCK_TINT` below was tuned, across three measured rounds, to stop the
+## interior floor either bleaching sandy or crushing the room's whole value
+## histogram -- a problem that only exists indoors, where these shadowless
+## omnis are the only light in the room and the floor is competing with the
+## walls for midtone mass. Outdoors under a real sun there is no histogram to
+## protect and no wall value to sit under; the same near-white lerp instead
+## reads as an unweathered, textureless slab beside boulders that carry real
+## facet contrast. `exterior=true` pulls the lerp back toward the source
+## photo's own dirt/pebble colour instead, the same direction
+## `_wear_the_cave_stone`'s `exterior` split already goes for the rock.
+func _floor_material(exterior := false) -> StandardMaterial3D:
+	var key := "floor_ext" if exterior else "floor"
 	if _materials.has(key):
 		return _materials[key]
 	var m := StandardMaterial3D.new()
@@ -368,24 +381,26 @@ func _floor_material() -> StandardMaterial3D:
 	# fixing the sandiness. 0.42 reads as packed dirt DARKER than the wall
 	# above it without emptying the histogram -- between round 2's beach and
 	# round 3's hole.
-	m.albedo_color = _floor_colour().lerp(ROCK_TINT, 0.42)
+	m.albedo_color = _floor_colour().lerp(ROCK_TINT, 0.12 if exterior else 0.42)
 	m.normal_enabled = true
 	m.normal_texture = FLOOR_NORMAL
 	m.normal_scale = 1.8
 	m.uv1_triplanar = true
 	m.uv1_scale = Vector3.ONE * FLOOR_UV_SCALE
+	if exterior:
+		m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	_materials[key] = m
 	return m
 
 
 ## A box whose material is supplied rather than derived from a colour -- the
 ## floor is the one surface in this cave that is not made of the wall's stone.
-func _floor_box(size: Vector3, at: Vector3) -> void:
+func _floor_box(size: Vector3, at: Vector3, exterior := false) -> void:
 	var mesh := MeshInstance3D.new()
 	var box := BoxMesh.new()
 	box.size = size
 	mesh.mesh = box
-	mesh.material_override = _floor_material()
+	mesh.material_override = _floor_material(exterior)
 	mesh.position = at
 	add_child(mesh)
 	var body := StaticBody3D.new()
@@ -745,12 +760,14 @@ func _build_approach_apron() -> void:
 		var t := (float(i) + 0.5) / float(steps)
 		var z := outer_z - t * run
 		var top: float = lerpf(_floor_y, end_local, t)
-		# Same dirt as the chambers' own floors. This ramp is OUTDOORS, in
-		# daylight, beside textured terrain and the mound's own boulders, and
-		# a flat untextured colour reads worse out there than it does in the
-		# dark -- it is the last thing a player sees before going in.
+		# Same dirt as the chambers' own floors, but the EXTERIOR tint -- this
+		# ramp is OUTDOORS, in daylight, beside textured terrain and the
+		# mound's own boulders. T1-WARRENS-EXT: the interior-tuned lerp read
+		# as "a plain grey concrete walk slab" out here (judge evidence); see
+		# `_floor_material()`'s own header for why the two need different
+		# values, not just a duplicate.
 		_floor_box(Vector3(width, _skirt, run / float(steps) + 0.15),
-			Vector3(0.0, top - _skirt * 0.5, z))
+			Vector3(0.0, top - _skirt * 0.5, z), true)
 
 	# GRASS-INDOORS, owner 2026-08-28. The runtime ground cover
 	# (`scripts/world/grass_field.gd`) is procedural and camera-relative, so it
