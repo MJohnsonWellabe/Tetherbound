@@ -5,18 +5,40 @@
     "S02",
     "S03",
     "S03-superseded-1",
+    "S03-superseded-2",
+    "S03-superseded-3",
+    "S03-superseded-4",
+    "S03-superseded-5",
+    "S03-superseded-6",
     "S04",
+    "S04-superseded-2",
+    "S04-superseded-3",
     "S05",
-    "S05-superseded-2"
+    "S05-superseded-2",
+    "S05-superseded-3",
+    "S06",
+    "S06-superseded-2",
+    "S07",
+    "S07-superseded-1",
+    "S08",
+    "S08-superseded-3",
+    "S09",
+    "S10",
+    "X01",
+    "X02",
+    "X04",
+    "X07",
+    "X08"
   ],
   "segments_incomplete": [
     "S03-superseded-1",
-    "S05-superseded-2"
+    "S05-superseded-2",
+    "S10"
   ],
   "captures": {
-    "planned": 70,
+    "planned": 259,
     "present": 0,
-    "absent": 70,
+    "absent": 259,
     "rows": [
       {
         "id": "GF-01-TITLE-01",
@@ -101,6 +123,31 @@
             "segment": "S03-superseded-1",
             "to": "S03C",
             "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-2",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-3",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-4",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-5",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-6",
+            "to": "S03C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -113,6 +160,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -129,6 +186,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -141,6 +208,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -162,6 +239,30 @@
             "segment": "S05-superseded-2",
             "to": "S05C",
             "lane": "logic"
+          },
+          {
+            "segment": "S05-superseded-3",
+            "to": "S05C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-05-MEADOW-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S08",
+            "to": "S08C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S08-superseded-3",
+            "to": "S08C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -179,6 +280,11 @@
           },
           {
             "segment": "S05-superseded-2",
+            "to": "S05C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S05-superseded-3",
             "to": "S05C",
             "lane": "logic"
           }
@@ -200,6 +306,11 @@
             "segment": "S05-superseded-2",
             "to": "S05C",
             "lane": "logic"
+          },
+          {
+            "segment": "S05-superseded-3",
+            "to": "S05C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -217,6 +328,11 @@
           },
           {
             "segment": "S05-superseded-2",
+            "to": "S05C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S05-superseded-3",
             "to": "S05C",
             "lane": "logic"
           }
@@ -237,6 +353,280 @@
           {
             "segment": "S05-superseded-2",
             "to": "S05C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S05-superseded-3",
+            "to": "S05C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-08-QUARRY-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S06",
+            "to": "S06C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S06-superseded-2",
+            "to": "S06C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-09-WARRENS-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S06",
+            "to": "S06C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S06-superseded-2",
+            "to": "S06C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-09-WARRENS-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S06",
+            "to": "S06C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S06-superseded-2",
+            "to": "S06C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-09-WARRENS-03",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S06",
+            "to": "S06C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S06-superseded-2",
+            "to": "S06C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-10-RELAY-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S07",
+            "to": "S07C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S07-superseded-1",
+            "to": "S07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-10-RELAY-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S07",
+            "to": "S07C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S07-superseded-1",
+            "to": "S07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-10-RELAY-03",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S07",
+            "to": "S07C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S07-superseded-1",
+            "to": "S07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-11-UPPER-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S08",
+            "to": "S08C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S08-superseded-3",
+            "to": "S08C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-11-UPPER-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S08",
+            "to": "S08C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S08-superseded-3",
+            "to": "S08C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-12-APPR-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S09",
+            "to": "S09C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-12-APPR-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S09",
+            "to": "S09C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-13-FINALE-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-13-FINALE-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-13-FINALE-03",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-13-FINALE-04",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-13-FINALE-05",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
             "lane": "logic"
           }
         ],
@@ -271,6 +661,31 @@
             "segment": "S03-superseded-1",
             "to": "S03C",
             "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-2",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-3",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-4",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-5",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-6",
+            "to": "S03C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -283,6 +698,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -304,6 +729,143 @@
             "segment": "S05-superseded-2",
             "to": "S05C",
             "lane": "logic"
+          },
+          {
+            "segment": "S05-superseded-3",
+            "to": "S05C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-04b",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S06",
+            "to": "S06C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S06-superseded-2",
+            "to": "S06C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-04c",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S07",
+            "to": "S07C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S07-superseded-1",
+            "to": "S07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-04d",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S08",
+            "to": "S08C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S08-superseded-3",
+            "to": "S08C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-04e",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S09",
+            "to": "S09C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-05",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S06",
+            "to": "S06C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S06-superseded-2",
+            "to": "S06C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-06",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-07",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X04",
+            "to": "X04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-08",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X04",
+            "to": "X04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -317,6 +879,133 @@
           {
             "segment": "S04",
             "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-09b",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X04",
+            "to": "X04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-10",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X04",
+            "to": "X04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-10-stronghold",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X04",
+            "to": "X04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-10-warrens",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X04",
+            "to": "X04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-11",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X04",
+            "to": "X04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-12a",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S08",
+            "to": "S08C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S08-superseded-3",
+            "to": "S08C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-12b",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X04",
+            "to": "X04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-13-weather",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
             "lane": "logic"
           }
         ],
@@ -336,6 +1025,45 @@
           {
             "segment": "S03-superseded-1",
             "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-2",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-3",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-4",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-5",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-6",
+            "to": "S03C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-13b",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
             "lane": "logic"
           }
         ],
@@ -372,6 +1100,81 @@
         "present": false
       },
       {
+        "id": "GF-16-GATHER-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X02",
+            "to": "X02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-16-GATHER-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S06",
+            "to": "S06C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S06-superseded-2",
+            "to": "S06C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-17-BUILD-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X02",
+            "to": "X02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-17-BUILD-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X02",
+            "to": "X02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-17-BUILD-03",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X02",
+            "to": "X02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
         "id": "GF-18-MAP-01",
         "owed_by": [],
         "delegated_by": [
@@ -383,6 +1186,50 @@
           {
             "segment": "S03-superseded-1",
             "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-2",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-3",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-4",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-5",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-6",
+            "to": "S03C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-18-MAP-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S08",
+            "to": "S08C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S08-superseded-3",
+            "to": "S08C",
             "lane": "logic"
           }
         ],
@@ -403,6 +1250,109 @@
             "segment": "S05-superseded-2",
             "to": "S05C",
             "lane": "logic"
+          },
+          {
+            "segment": "S05-superseded-3",
+            "to": "S05C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-19-UI-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X01",
+            "to": "X01C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-19-UI-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X01",
+            "to": "X01C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-19-UI-03",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X01",
+            "to": "X01C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-19-UI-04",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X01",
+            "to": "X01C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-19-UI-05",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X01",
+            "to": "X01C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-19-UI-06",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X01",
+            "to": "X01C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-19-UI-07",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X01",
+            "to": "X01C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -422,6 +1372,44 @@
             "segment": "S05-superseded-2",
             "to": "S05C",
             "lane": "logic"
+          },
+          {
+            "segment": "S05-superseded-3",
+            "to": "S05C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-19-UI-08b",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X01",
+            "to": "X01C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-19-UI-09",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S08",
+            "to": "S08C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S08-superseded-3",
+            "to": "S08C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -439,6 +1427,31 @@
           },
           {
             "segment": "S03-superseded-1",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-2",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-3",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-4",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-5",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-6",
             "to": "S03C",
             "lane": "logic"
           }
@@ -460,6 +1473,31 @@
             "segment": "S03-superseded-1",
             "to": "S03C",
             "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-2",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-3",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-4",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-5",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-6",
+            "to": "S03C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -477,6 +1515,31 @@
           },
           {
             "segment": "S03-superseded-1",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-2",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-3",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-4",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-5",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-6",
             "to": "S03C",
             "lane": "logic"
           }
@@ -512,6 +1575,1136 @@
             "segment": "S05-superseded-2",
             "to": "S05C",
             "lane": "logic"
+          },
+          {
+            "segment": "S05-superseded-3",
+            "to": "S05C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-21-WEATHER-03",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S07",
+            "to": "S07C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S07-superseded-1",
+            "to": "S07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-21-WEATHER-04",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S09",
+            "to": "S09C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-grandpas_village-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-grandpas_village-ecology",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-grandpas_village-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-grandpas_village-landmark",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-grandpas_village-night-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-grandpas_village-night-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-grandpas_village-terrain",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-grandpas_village-vegetation",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-grandpas_village-weather-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-grandpas_village-weather-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-hall-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-hall-ecology",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-hall-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-hall-landmark",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-hall-terrain",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-hall-vegetation",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-stronghold_approach-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-stronghold_approach-ecology",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-stronghold_approach-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-stronghold_approach-landmark",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-stronghold_approach-night-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-stronghold_approach-night-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-stronghold_approach-terrain",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-stronghold_approach-vegetation",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-stronghold_approach-weather-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-stronghold_approach-weather-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_burrow_warrens-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_burrow_warrens-ecology",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_burrow_warrens-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_burrow_warrens-landmark",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_burrow_warrens-terrain",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_burrow_warrens-vegetation",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ironwood_grove-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ironwood_grove-ecology",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ironwood_grove-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ironwood_grove-landmark",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ironwood_grove-terrain",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ironwood_grove-vegetation",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_long_water-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_long_water-ecology",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_long_water-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_long_water-landmark",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_long_water-terrain",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_long_water-vegetation",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_old_quarry-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_old_quarry-ecology",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_old_quarry-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_old_quarry-landmark",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_old_quarry-terrain",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_old_quarry-vegetation",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_pond-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_pond-ecology",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_pond-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_pond-landmark",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_pond-night-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_pond-night-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_pond-terrain",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_pond-vegetation",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_pond-weather-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_pond-weather-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ridgeline_watch-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ridgeline_watch-ecology",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ridgeline_watch-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ridgeline_watch-landmark",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ridgeline_watch-terrain",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_ridgeline_watch-vegetation",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_rise-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_rise-ecology",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_rise-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_rise-landmark",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_rise-terrain",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_rise-vegetation",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_tether_relay-arrival",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_tether_relay-ecology",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_tether_relay-gameplay",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_tether_relay-landmark",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_tether_relay-terrain",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-AUD-the_tether_relay-vegetation",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "X07",
+            "to": "X07C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -524,6 +2717,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -540,6 +2743,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -552,6 +2765,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -568,6 +2791,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -580,6 +2813,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -596,6 +2839,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -608,6 +2861,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -624,6 +2887,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -636,6 +2909,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -652,6 +2935,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -664,6 +2957,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -680,6 +2983,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -692,6 +3005,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -708,6 +3031,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -720,6 +3053,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -736,6 +3079,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -748,6 +3101,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -764,6 +3127,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -776,6 +3149,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -792,6 +3175,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -804,6 +3197,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -820,6 +3223,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -832,6 +3245,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -848,6 +3271,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -860,6 +3293,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -876,6 +3319,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -888,6 +3341,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -904,6 +3367,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -916,6 +3389,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -932,6 +3415,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -944,6 +3437,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -960,6 +3463,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -972,6 +3485,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -988,6 +3511,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -1000,6 +3533,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -1016,6 +3559,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -1028,6 +3581,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -1044,6 +3607,16 @@
             "segment": "S04",
             "to": "S04C",
             "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
           }
         ],
         "taken_by": [],
@@ -1056,6 +3629,16 @@
         "delegated_by": [
           {
             "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
             "to": "S04C",
             "lane": "logic"
           }
@@ -1071,6 +3654,856 @@
           {
             "segment": "S04",
             "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-2",
+            "to": "S04C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S04-superseded-3",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-000",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-001",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-002",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-003",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-004",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-005",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-006",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-007",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-008",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-009",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-010",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-011",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-012",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-013",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-014",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-015",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-016",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-017",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-018",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-019",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-020",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-021",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-022",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-023",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-024",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-025",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-026",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-027",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-028",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-029",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-030",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-031",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-032",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-033",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-034",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-035",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-036",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-037",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-038",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-039",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-040",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-041",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-042",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-043",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-044",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-045",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-046",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-047",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-048",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-049",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-050",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-051",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-052",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-053",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-054",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-055",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-056",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-057",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-058",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S10-SEQ-warden-059",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S10",
+            "to": "S10C",
             "lane": "logic"
           }
         ],
@@ -1124,8 +4557,50 @@
       "target_ran": false
     },
     {
+      "id": "GF-03-VILLAGE-02",
+      "delegated_by": "S03-superseded-2",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-03-VILLAGE-02",
+      "delegated_by": "S03-superseded-3",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-03-VILLAGE-02",
+      "delegated_by": "S03-superseded-4",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-03-VILLAGE-02",
+      "delegated_by": "S03-superseded-5",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-03-VILLAGE-02",
+      "delegated_by": "S03-superseded-6",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
       "id": "GF-04-TOURN-01",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-04-TOURN-01",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-04-TOURN-01",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1136,8 +4611,32 @@
       "target_ran": false
     },
     {
+      "id": "GF-04-TOURN-02",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-04-TOURN-02",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "GF-04-TOURN-03",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-04-TOURN-03",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-04-TOURN-03",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1154,6 +4653,24 @@
       "target_ran": false
     },
     {
+      "id": "GF-05-MEADOW-01",
+      "delegated_by": "S05-superseded-3",
+      "to": "S05C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-05-MEADOW-02",
+      "delegated_by": "S08",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-05-MEADOW-02",
+      "delegated_by": "S08-superseded-3",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
       "id": "GF-06-POND-01",
       "delegated_by": "S05",
       "to": "S05C",
@@ -1162,6 +4679,12 @@
     {
       "id": "GF-06-POND-01",
       "delegated_by": "S05-superseded-2",
+      "to": "S05C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-06-POND-01",
+      "delegated_by": "S05-superseded-3",
       "to": "S05C",
       "target_ran": false
     },
@@ -1178,6 +4701,12 @@
       "target_ran": false
     },
     {
+      "id": "GF-06-POND-02",
+      "delegated_by": "S05-superseded-3",
+      "to": "S05C",
+      "target_ran": false
+    },
+    {
       "id": "GF-07-BRIDGE-01",
       "delegated_by": "S05",
       "to": "S05C",
@@ -1186,6 +4715,12 @@
     {
       "id": "GF-07-BRIDGE-01",
       "delegated_by": "S05-superseded-2",
+      "to": "S05C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-07-BRIDGE-01",
+      "delegated_by": "S05-superseded-3",
       "to": "S05C",
       "target_ran": false
     },
@@ -1199,6 +4734,162 @@
       "id": "GF-07-BRIDGE-02",
       "delegated_by": "S05-superseded-2",
       "to": "S05C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-07-BRIDGE-02",
+      "delegated_by": "S05-superseded-3",
+      "to": "S05C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-08-QUARRY-01",
+      "delegated_by": "S06",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-08-QUARRY-01",
+      "delegated_by": "S06-superseded-2",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-09-WARRENS-01",
+      "delegated_by": "S06",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-09-WARRENS-01",
+      "delegated_by": "S06-superseded-2",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-09-WARRENS-02",
+      "delegated_by": "S06",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-09-WARRENS-02",
+      "delegated_by": "S06-superseded-2",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-09-WARRENS-03",
+      "delegated_by": "S06",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-09-WARRENS-03",
+      "delegated_by": "S06-superseded-2",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-10-RELAY-01",
+      "delegated_by": "S07",
+      "to": "S07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-10-RELAY-01",
+      "delegated_by": "S07-superseded-1",
+      "to": "S07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-10-RELAY-02",
+      "delegated_by": "S07",
+      "to": "S07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-10-RELAY-02",
+      "delegated_by": "S07-superseded-1",
+      "to": "S07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-10-RELAY-03",
+      "delegated_by": "S07",
+      "to": "S07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-10-RELAY-03",
+      "delegated_by": "S07-superseded-1",
+      "to": "S07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-11-UPPER-01",
+      "delegated_by": "S08",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-11-UPPER-01",
+      "delegated_by": "S08-superseded-3",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-11-UPPER-02",
+      "delegated_by": "S08",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-11-UPPER-02",
+      "delegated_by": "S08-superseded-3",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-12-APPR-01",
+      "delegated_by": "S09",
+      "to": "S09C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-12-APPR-02",
+      "delegated_by": "S09",
+      "to": "S09C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-13-FINALE-01",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-13-FINALE-02",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-13-FINALE-03",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-13-FINALE-04",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-13-FINALE-05",
+      "delegated_by": "S10",
+      "to": "S10C",
       "target_ran": false
     },
     {
@@ -1220,8 +4911,50 @@
       "target_ran": false
     },
     {
+      "id": "GF-14-COMBAT-02",
+      "delegated_by": "S03-superseded-2",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-02",
+      "delegated_by": "S03-superseded-3",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-02",
+      "delegated_by": "S03-superseded-4",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-02",
+      "delegated_by": "S03-superseded-5",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-02",
+      "delegated_by": "S03-superseded-6",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
       "id": "GF-14-COMBAT-03",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-03",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-03",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1238,9 +4971,153 @@
       "target_ran": false
     },
     {
+      "id": "GF-14-COMBAT-04a",
+      "delegated_by": "S05-superseded-3",
+      "to": "S05C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-04b",
+      "delegated_by": "S06",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-04b",
+      "delegated_by": "S06-superseded-2",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-04c",
+      "delegated_by": "S07",
+      "to": "S07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-04c",
+      "delegated_by": "S07-superseded-1",
+      "to": "S07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-04d",
+      "delegated_by": "S08",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-04d",
+      "delegated_by": "S08-superseded-3",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-04e",
+      "delegated_by": "S09",
+      "to": "S09C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-05",
+      "delegated_by": "S06",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-05",
+      "delegated_by": "S06-superseded-2",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-06",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-07",
+      "delegated_by": "X04",
+      "to": "X04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-08",
+      "delegated_by": "X04",
+      "to": "X04C",
+      "target_ran": false
+    },
+    {
       "id": "GF-14-COMBAT-09a",
       "delegated_by": "S04",
       "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-09a",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-09a",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-09b",
+      "delegated_by": "X04",
+      "to": "X04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-10",
+      "delegated_by": "X04",
+      "to": "X04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-10-stronghold",
+      "delegated_by": "X04",
+      "to": "X04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-10-warrens",
+      "delegated_by": "X04",
+      "to": "X04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-11",
+      "delegated_by": "X04",
+      "to": "X04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-12a",
+      "delegated_by": "S08",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-12a",
+      "delegated_by": "S08-superseded-3",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-12b",
+      "delegated_by": "X04",
+      "to": "X04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-13-weather",
+      "delegated_by": "X07",
+      "to": "X07C",
       "target_ran": false
     },
     {
@@ -1253,6 +5130,42 @@
       "id": "GF-14-COMBAT-13a",
       "delegated_by": "S03-superseded-1",
       "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-13a",
+      "delegated_by": "S03-superseded-2",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-13a",
+      "delegated_by": "S03-superseded-3",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-13a",
+      "delegated_by": "S03-superseded-4",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-13a",
+      "delegated_by": "S03-superseded-5",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-13a",
+      "delegated_by": "S03-superseded-6",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-13b",
+      "delegated_by": "X07",
+      "to": "X07C",
       "target_ran": false
     },
     {
@@ -1268,6 +5181,42 @@
       "target_ran": false
     },
     {
+      "id": "GF-16-GATHER-01",
+      "delegated_by": "X02",
+      "to": "X02C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-16-GATHER-02",
+      "delegated_by": "S06",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-16-GATHER-02",
+      "delegated_by": "S06-superseded-2",
+      "to": "S06C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-17-BUILD-01",
+      "delegated_by": "X02",
+      "to": "X02C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-17-BUILD-02",
+      "delegated_by": "X02",
+      "to": "X02C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-17-BUILD-03",
+      "delegated_by": "X02",
+      "to": "X02C",
+      "target_ran": false
+    },
+    {
       "id": "GF-18-MAP-01",
       "delegated_by": "S03",
       "to": "S03C",
@@ -1277,6 +5226,48 @@
       "id": "GF-18-MAP-01",
       "delegated_by": "S03-superseded-1",
       "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-18-MAP-01",
+      "delegated_by": "S03-superseded-2",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-18-MAP-01",
+      "delegated_by": "S03-superseded-3",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-18-MAP-01",
+      "delegated_by": "S03-superseded-4",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-18-MAP-01",
+      "delegated_by": "S03-superseded-5",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-18-MAP-01",
+      "delegated_by": "S03-superseded-6",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-18-MAP-02",
+      "delegated_by": "S08",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-18-MAP-02",
+      "delegated_by": "S08-superseded-3",
+      "to": "S08C",
       "target_ran": false
     },
     {
@@ -1292,6 +5283,54 @@
       "target_ran": false
     },
     {
+      "id": "GF-18-MAP-03",
+      "delegated_by": "S05-superseded-3",
+      "to": "S05C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-01",
+      "delegated_by": "X01",
+      "to": "X01C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-02",
+      "delegated_by": "X01",
+      "to": "X01C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-03",
+      "delegated_by": "X01",
+      "to": "X01C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-04",
+      "delegated_by": "X01",
+      "to": "X01C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-05",
+      "delegated_by": "X01",
+      "to": "X01C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-06",
+      "delegated_by": "X01",
+      "to": "X01C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-07",
+      "delegated_by": "X01",
+      "to": "X01C",
+      "target_ran": false
+    },
+    {
       "id": "GF-19-UI-08a",
       "delegated_by": "S05",
       "to": "S05C",
@@ -1304,6 +5343,30 @@
       "target_ran": false
     },
     {
+      "id": "GF-19-UI-08a",
+      "delegated_by": "S05-superseded-3",
+      "to": "S05C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-08b",
+      "delegated_by": "X01",
+      "to": "X01C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-09",
+      "delegated_by": "S08",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-09",
+      "delegated_by": "S08-superseded-3",
+      "to": "S08C",
+      "target_ran": false
+    },
+    {
       "id": "GF-19-UI-10",
       "delegated_by": "S03",
       "to": "S03C",
@@ -1312,6 +5375,36 @@
     {
       "id": "GF-19-UI-10",
       "delegated_by": "S03-superseded-1",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-10",
+      "delegated_by": "S03-superseded-2",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-10",
+      "delegated_by": "S03-superseded-3",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-10",
+      "delegated_by": "S03-superseded-4",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-10",
+      "delegated_by": "S03-superseded-5",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-10",
+      "delegated_by": "S03-superseded-6",
       "to": "S03C",
       "target_ran": false
     },
@@ -1328,6 +5421,36 @@
       "target_ran": false
     },
     {
+      "id": "GF-20-NIGHT-01",
+      "delegated_by": "S03-superseded-2",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-01",
+      "delegated_by": "S03-superseded-3",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-01",
+      "delegated_by": "S03-superseded-4",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-01",
+      "delegated_by": "S03-superseded-5",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-01",
+      "delegated_by": "S03-superseded-6",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
       "id": "GF-20-NIGHT-02",
       "delegated_by": "S03",
       "to": "S03C",
@@ -1336,6 +5459,36 @@
     {
       "id": "GF-20-NIGHT-02",
       "delegated_by": "S03-superseded-1",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-02",
+      "delegated_by": "S03-superseded-2",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-02",
+      "delegated_by": "S03-superseded-3",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-02",
+      "delegated_by": "S03-superseded-4",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-02",
+      "delegated_by": "S03-superseded-5",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-02",
+      "delegated_by": "S03-superseded-6",
       "to": "S03C",
       "target_ran": false
     },
@@ -1358,8 +5511,512 @@
       "target_ran": false
     },
     {
+      "id": "GF-21-WEATHER-02",
+      "delegated_by": "S05-superseded-3",
+      "to": "S05C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-21-WEATHER-03",
+      "delegated_by": "S07",
+      "to": "S07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-21-WEATHER-03",
+      "delegated_by": "S07-superseded-1",
+      "to": "S07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-21-WEATHER-04",
+      "delegated_by": "S09",
+      "to": "S09C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-grandpas_village-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-grandpas_village-ecology",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-grandpas_village-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-grandpas_village-landmark",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-grandpas_village-night-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-grandpas_village-night-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-grandpas_village-terrain",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-grandpas_village-vegetation",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-grandpas_village-weather-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-grandpas_village-weather-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-hall-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-hall-ecology",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-hall-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-hall-landmark",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-hall-terrain",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-hall-vegetation",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-stronghold_approach-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-stronghold_approach-ecology",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-stronghold_approach-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-stronghold_approach-landmark",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-stronghold_approach-night-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-stronghold_approach-night-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-stronghold_approach-terrain",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-stronghold_approach-vegetation",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-stronghold_approach-weather-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-stronghold_approach-weather-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_burrow_warrens-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_burrow_warrens-ecology",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_burrow_warrens-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_burrow_warrens-landmark",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_burrow_warrens-terrain",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_burrow_warrens-vegetation",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ironwood_grove-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ironwood_grove-ecology",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ironwood_grove-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ironwood_grove-landmark",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ironwood_grove-terrain",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ironwood_grove-vegetation",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_long_water-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_long_water-ecology",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_long_water-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_long_water-landmark",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_long_water-terrain",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_long_water-vegetation",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_old_quarry-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_old_quarry-ecology",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_old_quarry-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_old_quarry-landmark",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_old_quarry-terrain",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_old_quarry-vegetation",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_pond-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_pond-ecology",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_pond-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_pond-landmark",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_pond-night-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_pond-night-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_pond-terrain",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_pond-vegetation",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_pond-weather-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_pond-weather-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ridgeline_watch-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ridgeline_watch-ecology",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ridgeline_watch-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ridgeline_watch-landmark",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ridgeline_watch-terrain",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_ridgeline_watch-vegetation",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_rise-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_rise-ecology",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_rise-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_rise-landmark",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_rise-terrain",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_rise-vegetation",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_tether_relay-arrival",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_tether_relay-ecology",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_tether_relay-gameplay",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_tether_relay-landmark",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_tether_relay-terrain",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-AUD-the_tether_relay-vegetation",
+      "delegated_by": "X07",
+      "to": "X07C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-000",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-000",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-000",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1370,8 +6027,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-001",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-001",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-002",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-002",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-002",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1382,8 +6063,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-003",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-003",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-004",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-004",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-004",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1394,8 +6099,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-005",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-005",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-006",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-006",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-006",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1406,8 +6135,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-007",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-007",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-008",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-008",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-008",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1418,8 +6171,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-009",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-009",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-010",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-010",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-010",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1430,8 +6207,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-011",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-011",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-012",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-012",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-012",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1442,8 +6243,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-013",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-013",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-014",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-014",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-014",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1454,8 +6279,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-015",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-015",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-016",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-016",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-016",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1466,8 +6315,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-017",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-017",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-018",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-018",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-018",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1478,8 +6351,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-019",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-019",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-020",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-020",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-020",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1490,8 +6387,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-021",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-021",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-022",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-022",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-022",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1502,8 +6423,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-023",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-023",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-024",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-024",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-024",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1514,8 +6459,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-025",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-025",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-026",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-026",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-026",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1526,8 +6495,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-027",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-027",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-028",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-028",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-028",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1538,8 +6531,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-029",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-029",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-030",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-030",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-030",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1550,8 +6567,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-031",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-031",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-032",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-032",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-032",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1562,8 +6603,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-033",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-033",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-034",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-034",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-034",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1574,8 +6639,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-035",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-035",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-036",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-036",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-036",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1586,8 +6675,32 @@
       "target_ran": false
     },
     {
+      "id": "S04-SEQ-final-037",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-037",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
       "id": "S04-SEQ-final-038",
       "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-038",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-038",
+      "delegated_by": "S04-superseded-3",
       "to": "S04C",
       "target_ran": false
     },
@@ -1595,6 +6708,378 @@
       "id": "S04-SEQ-final-039",
       "delegated_by": "S04",
       "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-039",
+      "delegated_by": "S04-superseded-2",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-039",
+      "delegated_by": "S04-superseded-3",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-000",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-001",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-002",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-003",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-004",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-005",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-006",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-007",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-008",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-009",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-010",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-011",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-012",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-013",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-014",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-015",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-016",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-017",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-018",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-019",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-020",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-021",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-022",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-023",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-024",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-025",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-026",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-027",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-028",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-029",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-030",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-031",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-032",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-033",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-034",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-035",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-036",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-037",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-038",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-039",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-040",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-041",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-042",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-043",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-044",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-045",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-046",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-047",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-048",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-049",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-050",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-051",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-052",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-053",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-054",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-055",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-056",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-057",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-058",
+      "delegated_by": "S10",
+      "to": "S10C",
+      "target_ran": false
+    },
+    {
+      "id": "S10-SEQ-warden-059",
+      "delegated_by": "S10",
+      "to": "S10C",
       "target_ran": false
     }
   ],
