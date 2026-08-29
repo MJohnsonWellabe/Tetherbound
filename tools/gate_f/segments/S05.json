@@ -97,6 +97,16 @@
       "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
     },
     {
+      "id": "S05-09a",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-13 (extending RIG-11 to the segments RIG-11's own fix never reached): a load restores the party and deploys nothing -- encounter_director.gd::can_challenge() returns false on a null/undeployed ally before checking whether a trainer is already beaten, so trainer_npc.gd falls back to its 'defeated' conversation line instead of the 'challenge' line that leads to combat. No trainer/gate fight downstream of a load -- including this segment's mandatory South Bridge gatekeeper -- can start without this. creature_recall (RB) summons the active creature so this segment's fights can actually start."
+    },
+    {
       "id": "S05-10",
       "title": "the team travelled",
       "action": "assert",
@@ -768,8 +778,11 @@
       "id": "S05-63",
       "title": "open the pause shell",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab",
+      "observation": "RIG-14: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once -- this segment's own Section E.5 map-navigation notes leave the shell on `menu_map`, so the bare `open_menu` + `times: 5` this step used before landed on the wrong tab, the Save button was never actually focused, and `save_out` then copied out whatever was already seeded in slot 4 under this segment's own name -- the exact mechanism RIG-10 named without yet fixing. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available. Matches S03/S06/S08's own working save steps."
     },
     {
       "id": "S05-64",
@@ -778,10 +791,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json"
+      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json",
+      "observation": "RIG-14: times 5 -> 3: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: save."
     },
     {
       "id": "S05-65",

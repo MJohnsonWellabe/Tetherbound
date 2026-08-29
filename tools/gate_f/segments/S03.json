@@ -98,6 +98,16 @@
       "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
     },
     {
+      "id": "S03-09a",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-13 (extending RIG-11 to the segments RIG-11's own fix never reached): a load restores the party and deploys nothing -- encounter_director.gd::can_challenge() returns false on a null/undeployed ally before checking whether a trainer is already beaten, so trainer_npc.gd falls back to its 'defeated' conversation line instead of the 'challenge' line that leads to combat. No trainer fight downstream of a load -- including this segment's Bryn practice match -- can start without this. creature_recall (RB) summons the active creature so this segment's fights can actually start."
+    },
+    {
       "id": "S03-10",
       "title": "the load restored the village arrival",
       "action": "assert",
