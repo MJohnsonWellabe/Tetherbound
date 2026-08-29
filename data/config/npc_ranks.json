@@ -9,11 +9,11 @@
     "grunt": {
       "label": "Grunt",
       "base": "grunt",
-      "_comment_palette": "A NEUTRAL DARKENING MULTIPLY, not a colour. The faction's oxblood is now painted into the rig's own texture (tools/repaint_grunt_faction.py), which is where it belongs and where it survives -- so the palette here has one job left, the value ladder, and darkening is precisely what a multiply does correctly.\n\nThis replaces two failed attempts to manufacture the faction colour at runtime, and the reason both failed is worth keeping because it is arithmetic rather than taste. The grunt texture is near-black: median value 0.114, only 3.2% above 0.35, against tan leather straps near 0.60 -- a 7.5x contrast ratio. A constant additive floor of 0.13 makes that 0.21 vs 0.73, halving the contrast, which a blind round called 'washed, blacks lifted to grey... the faction the player fights most looks like the least finished art in the game'. A 4x multiply makes it 0.32 vs 2.40 and blows the straps off the top. No single material parameter can lift a near-black texture into a readable band without flattening its darks or clipping its lights, because the texture's own dynamic range is the constraint. Fix the range where it lives.\n\nThe captain is #ffffff -- a deliberate identity multiply, which also skips character_model.gd's emission floor entirely (it is gated at luminance 0.95), so the top of the grunt-rig ladder renders the repainted texture exactly as authored.",
+      "_comment_palette": "T1-GROUND, 2026-08-30: WAS a neutral darkening multiply (#8a8a8a, 0.54x) on the theory that character_model.gd's additive emission floor would keep the result legible -- see `_comment_palette_crush` below for that mechanism, kept for the record. It stopped being true: `character_model.gd`'s own GF-B-010 header (2026-08-27, newer than this comment) confirms `emission_enabled` is FALSE on every one of today's six rigs' body materials, so that floor is dead code for the grunt rig same as every other. Measured directly (`assets/characters/grunt/grunt_lod0_texture_0.png` post-repaint): median value 0.137, not the brighter number a working floor would have produced. Multiplying an already near-black texture by 0.54 with nothing to lift the result back up is exactly the 'crush' this file's own history already diagnosed and fixed once, just reintroduced by a rig rebuild nobody re-checked this against -- a blind visual pass caught it as 'a villager NPC renders as a 100% black silhouette in full daylight' on Band 2's own picket Dorn. Brought close to identity (0.86x) so the value ladder survives as a faint step rather than a second darkening pass on top of a texture that does not have the range to survive one; see officer's own note for its matching step. The captain stays #ffffff -- see its own comment, unaffected by this.",
       "palette": {
-        "*": "#8a8a8a"
+        "*": "#dcdcdc"
       },
-      "_comment_palette_crush": "STRANDED-P3, confirmed game bug (kept for the mechanism, not the old hex -- see character_model.gd's `_shared_variant_material` for the actual fix): a straight albedo*colour multiply can only ever DARKEN a source pixel, and this rig's shared material also copies the same rank colour into the self-lit emission channel, so a dark tint crushes both channels toward black at once. character_model.gd's ADDITIVE emission floor (lerp toward the tint colour whenever tint luminance < 0.95) is what actually keeps a dark uniform legible; this hex is chosen with headroom above that floor's comfortable range on top, not as a substitute for it.",
+      "_comment_palette_crush": "STRANDED-P3, confirmed game bug (kept for the mechanism, not the old hex -- see character_model.gd's `_shared_variant_material` for the fix as it existed THEN): a straight albedo*colour multiply can only ever DARKEN a source pixel, and on the rigs of that era the same material also copied the rank colour into a self-lit emission channel, so a dark tint crushed both channels toward black at once. character_model.gd's additive emission floor (lerp toward the tint colour whenever tint luminance < 0.95) kept a dark uniform legible on THOSE rigs. It does not on today's -- see `_comment_palette` above -- which is why this rank's own multiply had to move rather than lean on that floor again.",
       "badges": [
         {
           "shape": "sphere",
@@ -34,9 +34,9 @@
     "officer": {
       "label": "Officer",
       "base": "grunt",
-      "_comment_palette": "One value step above grunt on the same neutral ladder. See grunt's note.",
+      "_comment_palette": "T1-GROUND, 2026-08-30: one value step above grunt on the same neutral ladder -- see grunt's own `_comment_palette` for why this moved from #c2c2c2 (0.76x) to near-identity. #c2c2c2 on a 0.137-median texture with no emission floor to lift it renders barely brighter than grunt's own old crushed result; #eeeeee keeps officer reading a visible step lighter than grunt's corrected #dcdcdc without asking a multiply to do the range-recovery job this file's own history says no multiply can do.",
       "palette": {
-        "*": "#c2c2c2"
+        "*": "#eeeeee"
       },
       "badges": [
         {
