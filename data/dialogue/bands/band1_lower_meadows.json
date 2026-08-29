@@ -142,6 +142,7 @@
       "lines": [
         "Far side's closed. Company business. Go back up the road.",
         "No, I don't know what's over there either. I know what I'm paid to stand in front of.",
+        "Two of mine, nothing special. If that string at your heel is worth anything at all, this won't take long.",
         {
           "text": "You're not walking round me and you're not talking round me. Fine. Beat me and the key's yours; that's not company policy, that's mine.",
           "effect": "battle:south_bridge_grunt"

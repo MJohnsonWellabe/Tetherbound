@@ -74,6 +74,7 @@
       "lines": [
         "You've come a long way to be told something simple, so I'll be plain about it: this station is necessary, and it stays.",
         "Every road you found closed was closed on purpose, by people who weighed the cost and paid it. Your village is safe because of what we do here.",
+        "Three of mine, and I don't send the weakest out first. If your five are still worn from the walk up here, that was the place to fix it, not this one.",
         "I'd rather you understood that than fought me. But I'll take the fight if that's the only language left."
       ]
     },
@@ -99,6 +100,7 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "Fine. You're better than the orders account for.",
+        "Three of us stand between here and the Warden, and none of us fields less than the last. Bring your whole five in, not just your best one.",
         "There's a yard past the gate and someone in it who won't say that."
       ]
     },
