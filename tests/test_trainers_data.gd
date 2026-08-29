@@ -675,6 +675,52 @@ func test_each_captains_challenge_signals_its_own_kind_of_readiness() -> void:
 		seen_lines.append(joined)
 
 
+## §10, across the rest of spec §3's ten-rung ladder: South Bridge (the first
+## Team Tether confrontation), the Warrens Guardian (reached past
+## `warrens_watch_pell`), Captain Vance at the Relay, and the Meadows Hall
+## gauntlet (reached past `stronghold_patrol`). Same carrier as the captains
+## -- one line in a conversation the player already reads, no new stat, no
+## level lock. The Warden is deliberately NOT in this list: `stronghold_
+## elite_defeated` ("Rest your five first. He fields more than I do, and
+## he'll wait") already carries the same kind of signal -- a rest
+## recommendation and a team-size expectation -- delivered at exactly the
+## right point (the last conversation before him), so this only pins that
+## the existing line still says so rather than adding a second one on top
+## of an already-adequate signal.
+const LADDER_SIGNALS := {
+	"south_bridge_grunt_challenge": ["nothing special"],
+	"warrens_pell_defeated": ["bigger", "one answer"],
+	"relay_captain_challenge": ["don't send the weakest", "worn from the walk"],
+	"stronghold_patrol_defeated": ["none of us fields less", "whole five"],
+	"stronghold_elite_defeated": ["rest your five", "fields more than i do"],
+}
+
+func test_the_wider_ladder_carries_its_own_readiness_signal() -> void:
+	for id: String in LADDER_SIGNALS:
+		var convo: Dictionary = RUNNER.table().get(id, {})
+		assert_false(convo.is_empty(), "'%s' is not in the dialogue table at all" % id)
+		var joined := _joined_conversation_text(convo).to_lower()
+		assert_false(joined.is_empty(), "'%s' opens no lines at all" % id)
+		for phrase: String in LADDER_SIGNALS[id]:
+			assert_true(joined.contains(phrase),
+				"'%s' should still signal readiness ('%s'); got: %s" % [id, phrase, joined])
+
+
+## Lines can be a plain String or a `{text, effect}` Dictionary (the latter is
+## how a conversation triggers its own battle) -- `dialogue_runner.gd::line()`
+## already draws this same distinction; this mirrors it rather than assuming
+## every line is a String, which `south_bridge_grunt_challenge`'s own
+## battle-triggering last line is not.
+func _joined_conversation_text(convo: Dictionary) -> String:
+	var parts: Array[String] = []
+	for raw: Variant in (convo.get("lines", []) as Array):
+		if raw is Dictionary:
+			parts.append(str((raw as Dictionary).get("text", "")))
+		else:
+			parts.append(str(raw))
+	return " ".join(parts)
+
+
 ## The done-when, at the data level: sealed at 2/3, open at 3/3, using the real
 ## reward table and the real gate class. The scene-tree half of this is
 ## `tests/smoke_trainer_battle.gd`.
