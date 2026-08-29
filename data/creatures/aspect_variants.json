@@ -1,0 +1,279 @@
+{
+  "_comment": "T1-CREATURE-ART. Presentation-only recolor/emissive spec for the four Aspect variants named in docs/owner-direction/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md and drawn on docs/art/reference/creature-expansion-2026-08-30/{01,02,07,08}_*.png: Nightburrow (Burrowback), Stormtrail (Trailpup), Riftfrill (Paddlenewt), Ashtusk (Tuskroot). This file is presentation data ONLY -- no typing, rarity, habitat or spawn behaviour, which is data/creatures/species.json's job and T3-CREATURES' lane, not this one's. Consumed by tools/generate_aspect_variant_textures.py, which writes `<source texture basename>_<variant id>.png` siblings next to each source species' own textures -- the exact naming contract scripts/creatures/creature_body.gd::_texture_for() already uses for vivid/shiny/alpha, generalised in creature_body.gd's set_aspect_variant()/_aspect_variant hook to take an arbitrary suffix plus an explicit source species (needed because the live variant's own eventual species id, e.g. 'stormtrail', is not the folder its textures live in).",
+  "_comment_glow": "Each variant also gets a synthetic EMISSIVE map -- the shipped burrowback/paddlenewt/tuskroot emissive textures are 4x4 near-black stubs (confirmed by direct probe, tools/_probe_aspect_source_materials.gd) and trailpup's real emissive is a plain copy of its albedo, so none of the four have an authored glow to repaint; the `glow` list below AUTHORS one from nothing rather than recolouring an existing map. Each glow layer selects pixels either by `select: feature` (darkest N-percentile of the ALREADY-RECOLOURED albedo within `where`'s anatomy mask -- this is what finds armour-plate/scale seams and grout lines, the same percentile trick data/creatures/shiny_colourways.json's own finish pass uses to find eyes/nostrils) or `select: match` (an HSV band within `where`, for a feature that is PALE rather than dark -- Ashtusk's ivory tusks are the reason this mode exists; a darkest-pixel search would never find them). `where` uses the same anatomy predicate vocabulary as tools/creature_overlays.py (y/x/z/radial/up, all 0..1 in the mesh's own bounding box) -- unit sign conventions (which end is head vs tail) are NOT assumed here; every `where` block was chosen loosely and then narrowed by rendering the real 3D creature, never by eyeballing the UV-space texture (UV islands are scattered by the auto-unwrapper and carry no spatial locality a human eye can read, confirmed by comparing tools/creature_anatomy_maps.py's own false-colour dump against the shipped albedo). Glowing EYES are deliberately NOT attempted here -- see scripts/creatures/vfx/aspect_vfx.gd's eye-glow billboard instead; a billboard tuned by rendering is more reliable than guessing a `where` band tight enough to hit two small pupils and nothing else.",
+  "variants": {
+    "nightburrow": {
+      "display_name": "Nightburrow",
+      "source_species": "burrowback",
+      "board": "docs/art/reference/creature-expansion-2026-08-30/01_Nightburrow_alpha_burrowback.png",
+      "_comment": "Board palette: Charcoal Stone / Obsidian Fur / Violet Glow / Amethyst Flame. Burrowback's own existing `vivid_rules` (data/creatures/shiny_colourways.json) already push toward cold grey stone over a near-black body for unrelated reasons (OF28's badger-vs-badger differentiation from terrapup) -- close enough to Nightburrow's own base palette that this variant's rules mostly DEEPEN that same direction (more charcoal, more obsidian, less grey) rather than reinventing it, which matches the board's own pipeline note ('Darken fur and armor') and leaves the identity work to the emissive/VFX layer, exactly as the sheet insists it must: 'Without emissive/VFX treatment, this variant is not successful.'",
+      "rules": [
+        {
+          "_why": "The badger's pale face/chest stripe -- keep it a stripe, not erase it into the charcoal. Slight darken only.",
+          "match": {
+            "sat_max": 0.12,
+            "val_min": 0.72
+          },
+          "set_sat": 0.03,
+          "val_scale": 0.9
+        },
+        {
+          "match": {
+            "sat_max": 0.3,
+            "val_min": 0.5
+          },
+          "set_hue": 264,
+          "set_sat": 0.06,
+          "val_scale": 0.52
+        },
+        {
+          "match": {
+            "sat_max": 0.45,
+            "val_min": 0.26,
+            "val_max": 0.5
+          },
+          "set_hue": 268,
+          "set_sat": 0.09,
+          "val_scale": 0.42
+        },
+        {
+          "match": {
+            "val_max": 0.26
+          },
+          "set_hue": 270,
+          "set_sat": 0.05,
+          "val_scale": 0.6
+        }
+      ],
+      "finish": {
+        "feature_percentile": 3.0,
+        "feature_max_val": 0.05,
+        "feature_set_val": 0.02
+      },
+      "glow": [
+        {
+          "id": "armor_cracks",
+          "_why": "'strong purple emissive cracks through armor' + 'purple flame... rising from... armor seams'. Darkest-pixel seams within the plated back/flank, never the belly or legs.",
+          "select": "feature",
+          "where": {
+            "y_min": 0.3,
+            "up_min": 0.12
+          },
+          "percentile": 7.0,
+          "max_val": 0.14,
+          "color": "#a855f7",
+          "intensity": 1.8,
+          "softness": 0.1
+        }
+      ]
+    },
+    "stormtrail": {
+      "display_name": "Stormtrail",
+      "source_species": "trailpup",
+      "board": "docs/art/reference/creature-expansion-2026-08-30/02_Stormtrail_alpha_trailpup.png",
+      "_comment": "Board palette: Thunder Tan / Storm Fur / Volt Glow / Static Blue. 'Do not overbuild this asset. Most of its identity should come from color + emissive + electricity' -- so the coat darkens toward storm-gray-brown (both fur bands) and the ONE new paint element is a thin gold lightning-vein overlay down the spine/flank, not a full repaint. Live albedo/emission on this species are external .jpg (probed directly), so creature_body._texture_for() falls to its species-keyed extracted-PNG convention -- the generator writes against trailpup_extracted_base_color.png regardless.",
+      "rules": [
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
+            "sat_min": 0.08,
+            "val_min": 0.35
+          },
+          "set_hue": 32,
+          "set_sat": 0.26,
+          "val_scale": 0.58
+        },
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
+            "sat_min": 0.08,
+            "val_max": 0.35
+          },
+          "set_hue": 28,
+          "set_sat": 0.2,
+          "val_scale": 0.52
+        }
+      ],
+      "overlays": [
+        {
+          "id": "lightning_marks",
+          "_why": "'bright yellow-gold lightning markings'. tint (not grow) so the streaks follow the fur's own value detail instead of sitting on top of it as a flat decal. Narrow radial band keeps it a spine/flank marking, not a full recolour.",
+          "where": {
+            "y_min": 0.4,
+            "up_min": 0.12,
+            "radial_max": 0.4
+          },
+          "mode": "tint",
+          "color": "#f7c948",
+          "sat_floor": 0.7,
+          "val_scale": 1.2,
+          "coverage": 0.32,
+          "grain": 9.0,
+          "clump_softness": 0.06,
+          "softness": 0.08
+        }
+      ],
+      "finish": {
+        "feature_percentile": 3.0,
+        "feature_max_val": 0.05,
+        "feature_set_val": 0.02
+      },
+      "glow": [
+        {
+          "id": "storm_veins",
+          "_why": "'occasional electricity moving over coat/tail'. Same darkest-seam trick as Nightburrow, coloured static blue -- the STILL glow; the moving arc is scripts/creatures/vfx/aspect_vfx.gd's job, not the texture's.",
+          "select": "feature",
+          "where": {
+            "y_min": 0.32,
+            "up_min": 0.1
+          },
+          "percentile": 6.0,
+          "max_val": 0.13,
+          "color": "#5aa7ff",
+          "intensity": 1.6,
+          "softness": 0.1
+        }
+      ]
+    },
+    "riftfrill": {
+      "display_name": "Riftfrill",
+      "source_species": "paddlenewt",
+      "board": "docs/art/reference/creature-expansion-2026-08-30/07_Riftfrill_paddlenewt_variant.png",
+      "_comment": "Board palette: River Teal / Lilac Frill / Rift Glow / Mist White. 'Preserve the main silhouette. Let the frills, patterning, and effects carry most of the variant identity' -- so the body goes deeper teal (paddlenewt's own vivid is already a bright cyan-turquoise at hue 186; this pushes it darker/deeper rather than re-hueing it) and the ONE new paint element is a lilac tint on whatever the model's own dorsal/frill geometry is.",
+      "rules": [
+        {
+          "match": {
+            "sat_min": 0.08
+          },
+          "set_hue": 196,
+          "set_sat": 0.5,
+          "val_scale": 0.82
+        },
+        {
+          "match": {
+            "sat_max": 0.08,
+            "val_min": 0.5
+          },
+          "set_hue": 210,
+          "set_sat": 0.04,
+          "val_scale": 0.92
+        }
+      ],
+      "overlays": [
+        {
+          "id": "lilac_frill",
+          "_why": "'lilac/translucent frills'. tint over the dorsal ridge/up-facing surfaces near the spine top -- the same up_min+y_min shape burrowback's own plate_moss and tuskroot's moss_mantle use for 'the part of the back a grown accent sits on'.",
+          "where": {
+            "y_min": 0.5,
+            "up_min": 0.28
+          },
+          "mode": "tint",
+          "color": "#c9a0ff",
+          "sat_floor": 0.35,
+          "val_scale": 1.08,
+          "coverage": 0.55,
+          "grain": 5.0,
+          "softness": 0.12
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.06,
+        "feature_set_val": 0.03
+      },
+      "glow": [
+        {
+          "id": "rift_markings",
+          "_why": "'cyan/violet body markings'. Feature-select still works here even though the body is not dark-charcoal like the other three -- it is the DARKEST-relative-to-its-own-region pixels that carry pattern line-work on every one of these paintings (shiny_colourways.json's own finish-pass comment says the same thing about eyes/nostrils/outlines), so it still isolates markings rather than skin.",
+          "select": "feature",
+          "where": {
+            "y_min": 0.2
+          },
+          "percentile": 5.0,
+          "max_val": 0.22,
+          "color": "#a855f7",
+          "intensity": 1.3,
+          "softness": 0.12
+        }
+      ]
+    },
+    "ashtusk": {
+      "display_name": "Ashtusk",
+      "source_species": "tuskroot",
+      "board": "docs/art/reference/creature-expansion-2026-08-30/08_Ashtusk_tuskroot_variant.png",
+      "_comment": "Board palette: Ash Brown / Basalt / Ember Glow / Soot Black. 'The body should NOT be engulfed in flames. It should feel like a creature that has spent years around volcanic heat' -- so the recolour deepens tuskroot's own already-dark vivid direction toward basalt/soot rather than adding new paint, and the glow stays a crack pattern (few, large, readable) plus the tusks themselves, not a general body wash.",
+      "rules": [
+        {
+          "match": {
+            "hue": [
+              15,
+              70
+            ],
+            "sat_min": 0.08,
+            "val_min": 0.32
+          },
+          "set_hue": 22,
+          "set_sat": 0.28,
+          "val_scale": 0.55
+        },
+        {
+          "match": {
+            "hue": [
+              15,
+              70
+            ],
+            "sat_min": 0.08,
+            "val_max": 0.32
+          },
+          "set_hue": 20,
+          "set_sat": 0.2,
+          "val_scale": 0.62
+        },
+        {
+          "match": {
+            "sat_max": 0.08
+          },
+          "val_scale": 0.6
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.05,
+        "feature_set_val": 0.025
+      },
+      "glow": [
+        {
+          "id": "armor_cracks",
+          "_why": "'orange glowing cracks' through the basalt plates. Restricted off the legs/belly the same way Nightburrow's are.",
+          "select": "feature",
+          "where": {
+            "y_min": 0.28,
+            "up_min": 0.12
+          },
+          "percentile": 6.0,
+          "max_val": 0.12,
+          "color": "#ff7a1a",
+          "intensity": 1.7,
+          "softness": 0.1
+        },
+        {
+          "id": "tusks",
+          "_why": "'ember-glowing tusks'. Tusks are painted PALE/ivory, not dark -- a darkest-pixel search would never find them, so this layer selects by colour (low saturation, high value) instead of by percentile.",
+          "select": "match",
+          "where": {},
+          "sat_max": 0.12,
+          "val_min": 0.6,
+          "color": "#ffb347",
+          "intensity": 1.2,
+          "softness": 0.1
+        }
+      ]
+    }
+  }
+}
