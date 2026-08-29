@@ -149,3 +149,53 @@ NOTE ON METHOD
   lines the test itself prints — the entombment failsafe's own log line
   was the actual location of the bug and does not appear in
   smoke_warrens.gd's output at all.
+
+FOLLOW-ON (same session): CI still red after the fix push, different cause
+=============================================================================
+Pushed the fix above as 1656a71 and watched CI (run 33248833291). The
+Warrens shard (verify-regions-shard (warrens, 1)) PASSED this time. The
+run still failed overall, in verify-unit-tests (4):
+
+  test_scatter_perf_budget.gd :: test_playground_bake_is_committed_and_fresh
+    — expected true, got false (data/scatter/playground is missing or
+    stale against the live config)
+
+This is NOT a regression from the Warrens fix. It never ran before:
+every prior CI run on this branch had the warrens shard fail first, and
+GitHub's own fail-fast behaviour cancelled the rest of the matrix
+(compare the 48b3e8e run's job list — only 4 of the unit-tests shards
+ever started). Fixing Warrens let the pipeline run far enough to hit a
+second, independent pre-existing bug for the first time.
+
+Root cause: `scatter_bake.gd::config_fingerprint()` hashes
+terrain_playground.json (+ vegetation.json + band files) and stamps the
+result into the committed bake's manifest. T1-REGIONS and
+T1-GROUND-terrain-macro each edited terrain_playground.json on their own
+separate branches; T1-GROUND's own commit re-baked and committed
+data/scatter/playground, but only against ITS OWN branch's config —
+T1-REGIONS' peak re-site was not present when that bake ran. Once both
+lanes merged onto ralph/LAND-0829A, the merged terrain_playground.json
+no longer fingerprints the same as the bake committed under it. A real
+integration gap between two lanes (unlike the Warrens bug), just not one
+that touches terrain height or geometry — the bake's own DATA is stale,
+not the world.
+
+Fixed (commit d55d400): re-ran
+`scripts/world/bake_playground_scatter.gd` against the current merged
+config and committed the 256 regions + manifest it produced.
+
+A full `tests/run_tests.gd` (no --only filter) then came back at 1512
+tests, 3355988 assertions, 1 failed — everything else this session
+touched is green, and the one remaining failure
+(`test_chapter_curve.gd :: test_every_trainer_fights_at_their_own_regions_strength`)
+is unrelated to both fixes in this file: `chapter_curve.json` diffs empty
+against origin/main, and the failure is against a trainer
+(`pasture_drover_juno`) T3-BAND4 authored from scratch in
+`data/config/bands/band4_upper_meadows_ironwood/trainers.json`, whose own
+comment explains it was DELIBERATELY given a team one level under its
+region's captain ("a step below the captain it is warming the player up
+for") — which happens to sit one level under the region's own authored
+13-16 band. That is a T3-BAND4 content call, not a lane-interaction
+regression, and left for whichever lane owns T3-BAND4's content to
+reconcile (bump the team a level, or widen the band, or adjust the
+test) rather than reworked here.
