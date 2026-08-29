@@ -1,4 +1,29 @@
 {
   "_comment": "BAND-SPLIT-2. This band's own dialogue container -- see band1_lower_meadows.json in this same directory for the full reasoning. Same `{\"conversations\": {...}}` shape as opening.json/village.json/trainers.json/relay.json/stronghold.json/meadows_freed.json, merged onto the same table by scripts/story/dialogue_runner.gd::table() (EXTRA_DIALOGUE_PATHS).",
-  "conversations": {}
+  "conversations": {
+    "lost_creature_rue_challenge": {
+      "speaker": "Rue",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Lost Creature: track and recover a villager's missing bonded Creature'. Same one-character-is-the-giver shape Old Bram established: the first line is the flag `revealed_by` waits on, and it names whose creature this is.",
+      "lines": [
+        {
+          "text": "That's far enough. Whatever the Pasture Drover told you, that Meadowhart's mine now -- finders keepers, out here.",
+          "effect": "flag:lost_creature_rue_met"
+        },
+        "It wandered off her land and I caught it fair. If you want to argue the point, argue it with my team instead.",
+        {
+          "text": "Come on, then.",
+          "effect": "battle:lost_creature_rue"
+        }
+      ]
+    },
+    "lost_creature_rue_defeated": {
+      "speaker": "Rue",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "All right, all right. Fair's fair -- you beat me for it.",
+        "It's not tacked up or trained to anyone; it'll walk straight home if you point it that way. Tell her it wasn't hurt."
+      ]
+    }
+  }
 }

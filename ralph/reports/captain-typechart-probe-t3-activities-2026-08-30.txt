@@ -1,0 +1,14 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+--- captain_field: air, ground, ground ---
+  water  challenger: dealt avg x1.100, taken avg x0.950  [in=[0.8, 1.25, 1.25] out=[1.25, 0.8, 0.8]]
+  ground challenger: dealt avg x1.083, taken avg x0.933  [in=[1.25, 1.0, 1.0] out=[0.8, 1.0, 1.0]]
+  air    challenger: dealt avg x0.867, taken avg x1.167  [in=[1.0, 0.8, 0.8] out=[1.0, 1.25, 1.25]]
+--- captain_ridge: ground, air, air ---
+  water  challenger: dealt avg x0.950, taken avg x1.100  [in=[1.25, 0.8, 0.8] out=[0.8, 1.25, 1.25]]
+  ground challenger: dealt avg x1.167, taken avg x0.867  [in=[1.0, 1.25, 1.25] out=[1.0, 0.8, 0.8]]
+  air    challenger: dealt avg x0.933, taken avg x1.083  [in=[0.8, 1.0, 1.0] out=[1.25, 1.0, 1.0]]
+--- captain_riverwatch: water, ground, water ---
+  water  challenger: dealt avg x1.083, taken avg x0.933  [in=[1.0, 1.25, 1.0] out=[1.0, 0.8, 1.0]]
+  ground challenger: dealt avg x0.867, taken avg x1.167  [in=[0.8, 1.0, 0.8] out=[1.25, 1.0, 1.25]]
+  air    challenger: dealt avg x1.100, taken avg x0.950  [in=[1.25, 0.8, 1.25] out=[0.8, 1.25, 0.8]]
