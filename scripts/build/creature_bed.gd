@@ -42,6 +42,20 @@ const CREATURE_BED_FLAG := "creature_bed_built"
 const MESH_PATH := "res://assets/props/generated_camp/camp_bed.glb"
 const REST_ANCHOR := Vector3(0.0, 0.42, 0.0)
 
+## T1-CAMP: measured (tools/_probe_t1_camp.gd) -- camp_bed.glb's own local
+## origin sits 0.215m above its own geometric base, the same glTF-export
+## quirk `docs/ASSET_LEDGER.md` already documents a `sink_m: -0.21`
+## compensation for on this mesh's AUTHORED placement
+## (band1_lower_meadows/props.json). `_piece` here is positioned at this
+## node's own local origin with no such compensation, so a player-placed
+## Creature Bed was sinking a fifth of a metre into the ground -- visible as
+## a squashed, half-buried mattress rather than the raised log-frame bed the
+## reference board shows. `_piece.position.y` below restores true ground
+## contact; `REST_ANCHOR` (the sleeping creature's own local seat) does not
+## need the same correction, since it is already measured to land on the
+## mattress top as built, which now sits 0.215m higher than before.
+const BED_SINK_LIFT := 0.215
+
 ## GATE-E: the bed-index namespace, written down because two kinds of bed now
 ## share it and only one of them is in the build store.
 ##
@@ -71,6 +85,7 @@ var _last_occupant: int = -2
 func build_ghost() -> void:
 	_piece = BUILD_PIECE.new()
 	add_child(_piece)
+	_piece.position.y = BED_SINK_LIFT
 	_piece.call("build_ghost", MESH_PATH)
 
 
@@ -86,6 +101,7 @@ func build_ghost() -> void:
 func build_real(player_built: bool = true) -> void:
 	_piece = BUILD_PIECE.new()
 	add_child(_piece)
+	_piece.position.y = BED_SINK_LIFT
 	_piece.call("build_real", MESH_PATH)
 	var prompt: Node3D = INTERACTABLE.new()
 	prompt.name = "Interactable"

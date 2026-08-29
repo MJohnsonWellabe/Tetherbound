@@ -31,18 +31,69 @@ const BONFIRE := "res://assets/props/quaternius_survival/Bonfire_Fire.obj"
 ## vendored `Textures/colormap.png` their MTL/glTF both point at.
 const BEDROLL := "res://assets/props/kenney_survival/bedroll.obj"
 const BEDROLL_SCALE := 2.6
+## T1-CAMP/§17 investigated and deliberately NOT changed: `bedroll.obj`
+## samples the Kenney Survival Kit's shared palette atlas
+## (`Textures/colormap.png`) at a bright red/near-white column pair, which
+## reads as a saturated, cartoonish object beside the Meshy tent's weathered
+## earth-tone canvas -- a real "share one material/style family" gap. A
+## runtime `albedo_color` multiply (the mechanism `build_material_finish.gd`
+## already uses project-wide) was tried and measured
+## (tools/_probe_t1_camp.gd's own capture, sampled with PIL): under this
+## scene's ACES tonemap, multiplying the bright near-white pillow region
+## DOWN made it read MORE saturated red, not less -- the R channel stays
+## clipped at 255 while G/B fall, the opposite of the intended dulling, at
+## two different multiply strengths. Reverted rather than shipped backwards.
+## Fixing this for real needs either a genuinely different UV/atlas column
+## (this mesh's geometry chooses the column; nothing here can move it) or a
+## tonemap-aware grade, neither of which fits this session -- left as a
+## named, measured gap rather than a silent one.
 ## FIRST-HOUR-FUN-REBUILD. The player-built Camp is the compact mandatory
 ## campsite, so it must visibly carry the promised shelter as well as the fire
 ## and bedroll it already had. This owner-reference-derived tent is already
 ## installed and used by authored Meadows camps; BUILD_PIECE instantiates its
 ## glb scene with the same collision/ghost behavior as other placeables.
 const TENT := "res://assets/props/generated_camp/camp_tent.glb"
-const TENT_POSITION := Vector3(-1.65, 0.0, -0.85)
+## T1-CAMP: measured (tools/_probe_t1_camp.gd) -- camp_tent.glb's own local
+## origin sits 0.611m above its own geometric base, the same glTF-export
+## quirk `docs/ASSET_LEDGER.md` already documents a `sink_m: -0.64`
+## compensation for on this same mesh's AUTHORED placement
+## (band1_lower_meadows/props.json). That compensation lives in props.gd's
+## scatter path; camp.gd positions this node directly with no such support,
+## so the player-built tent was sitting with its own origin AT ground level
+## -- meaning the visible mesh's true base was 0.611m BELOW the ground
+## plane, burying roughly half the tent's height and reading as a
+## knee-high toy in an otherwise human-scale camp. The y term below restores
+## true ground contact.
+const TENT_POSITION := Vector3(-1.65, 0.611, -0.85)
+
+## T1-CAMP: the campfire had no stone ring at all -- every AUTHORED camp in
+## the game (band1/band3/band4's trail_camp clusters, the stronghold rest
+## point) pairs `Bonfire_Fire` with this same Meshy-generated ring, but the
+## PLAYER-built camp (this file) never did, so the one campsite every player
+## actually places read as bare logs dropped on grass while every scripted
+## one nearby looked deliberately built. Same asset family as the tent
+## (both from the owner-directed camp-set generation, docs/ASSET_LEDGER.md),
+## so this also directly serves §17's "share one material/style family".
+const STONE_RING := "res://assets/props/generated_camp/campfire_stone_ring.glb"
+## Measured (tools/_probe_t1_camp.gd): the ring is a flat 2.00m-diameter
+## mesh. The authored trail_camp scales it to 1.05 (~2.1m) around a
+## Bonfire_Fire at scale 0.45 (~0.98m footprint) in open ground with room to
+## spare. This camp's own layout is tighter (TENT_POSITION above sits only
+## 0.85m from the fire's own centre once its footprint is subtracted) and
+## its Bonfire_Fire runs at FIRE_SCALE (0.55, ~1.1m footprint) -- 0.8
+## (~1.6m) is the largest scale that clears the tent's edge with a small
+## margin while still leaving the fire's own footprint a believable ~20cm
+## gap to the stones, the same "logs inside an empty ring; the glow is
+## `ignite()`, not this mesh" composition the authored recipe's own `_why`
+## describes.
+const STONE_RING_SCALE := 0.8
+const FIRE_SCALE := 0.55
 
 const FADE_SECONDS := 1.2
 
 var _ghost_meshes: Array[MeshInstance3D] = []
 var _ghost_tent: Node3D = null
+var _ghost_ring: Node3D = null
 ## R2.4. Instantiated once, on the first "Craft" activation — most camps are
 ## visited for rest and never opened for crafting, so building the panel's
 ## whole node tree up front would be work most players never see the result
@@ -89,6 +140,7 @@ func build_real() -> void:
 func _spawn_meshes(solid: bool) -> void:
 	_ghost_meshes.clear()
 	_ghost_tent = null
+	_ghost_ring = null
 	var tent := BUILD_PIECE.new()
 	add_child(tent)
 	tent.position = TENT_POSITION
@@ -97,7 +149,14 @@ func _spawn_meshes(solid: bool) -> void:
 	else:
 		tent.call("build_ghost", TENT)
 		_ghost_tent = tent
-	var fire := _mesh(BONFIRE, Vector3.ZERO, 0.55)
+	var ring := BUILD_PIECE.new()
+	add_child(ring)
+	if solid:
+		ring.call("build_real", STONE_RING, {}, Vector3.ONE * STONE_RING_SCALE)
+	else:
+		ring.call("build_ghost", STONE_RING, Vector3.ONE * STONE_RING_SCALE)
+		_ghost_ring = ring
+	var fire := _mesh(BONFIRE, Vector3.ZERO, FIRE_SCALE)
 	# The bonfire mesh's own `Fire` surface, lit. `Bonfire_Fire.obj` was long
 	# believed to be one combined mesh whose flame could not be addressed --
 	# true of the OBJ file, false of what Godot imports, since the OBJ loader
@@ -156,6 +215,8 @@ func tint_ghost(ok: bool) -> void:
 		m.material_override = material
 	if _ghost_tent != null and is_instance_valid(_ghost_tent):
 		_ghost_tent.call("tint_ghost", ok)
+	if _ghost_ring != null and is_instance_valid(_ghost_ring):
+		_ghost_ring.call("tint_ghost", ok)
 
 
 ## Rest: fade out, new day, everyone healed, fade in. The fade is the same
