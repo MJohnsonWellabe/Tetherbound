@@ -570,7 +570,13 @@ func _shoot_party_strip_closeup() -> void:
 
 	var strip: Control = PARTY_STRIP.new()
 	stage[1].add_child(strip)
-	var strip_crop := _place_widget(strip, Vector2(250.0, 540.0), 60.0)
+	# The hardcoded `Vector2(250.0, 540.0)` this replaced was stale against the
+	# widget's OWN authored size (`party_strip.gd`'s own header: "WIDTH grows
+	# 250 -> 420" -- current `ROW_SIZE.x` is 336, `TOTAL_HEIGHT` 308) and cropped
+	# the strip's real right edge (the HP bars) out of the frame. Read live off
+	# the widget's own constants so a future resize cannot go stale here again.
+	var strip_crop := _place_widget(
+		strip, Vector2(PARTY_STRIP.ROW_SIZE.x, PARTY_STRIP.TOTAL_HEIGHT), 60.0)
 
 	var entries: Array = [
 		{"label": "Biscuit", "level": 12, "hp_fraction": 1.0, "tint": Color(0.55, 0.75, 0.45),
