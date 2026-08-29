@@ -1243,6 +1243,7 @@ func _build_hall_massing() -> void:
 	_weather_hall_massing(massing)
 	_build_hall_waist()
 	_build_hall_slits()
+	_build_cable_landing()
 
 
 ## The SAME technique `landmark.gd::_weather_castle` uses on the same kit, for
@@ -1356,6 +1357,77 @@ func _slit_row(centre: Vector3, size: Vector2, height: float, side: String) -> v
 	for i in count:
 		var z := start + float(i) * SLIT_SPACING
 		_box(SLIT_SIZE, Vector3(face_x, slit_y, z), slit_material, false)
+
+
+## Design §6.1: "the single highest-value occupation object... the moment
+## the judge's praised pylons and the condemned building become one
+## system." One `severed_spokes.gd`-style conduit span from the last
+## approach pylon's own head to a brass anchor on the north-west bailey
+## tower (`meadows_hall`'s own gatehouse-adjacent corner tower, the same
+## corner `_build_hall_massing()`'s generator sited at the outer_works'
+## own NW wall corner). `severed_spokes.gd::_conduit_span` is reused rather
+## than re-implemented, the same way `_build_approach_conduits()` above
+## already reuses `_build_pylons` wholesale -- a throwaway instance, freed
+## the moment this function returns, exactly like `_load_palette()`'s.
+##
+## Parented to the WORLD: both ends are real world coordinates (the pylon's
+## own siting, and this node's own `to_global` of the tower corner), and a
+## sagging cable is drawn as a chain of world-space cylinder segments, not
+## as chamber-local geometry.
+func _build_cable_landing() -> void:
+	if _world == null:
+		return
+	var config: Dictionary = _config.get("approach_pylons", {})
+	var list: Array = config.get("list", [])
+	if list.is_empty():
+		return
+	var last: Dictionary = list[list.size() - 1] as Dictionary
+	var last_at: Array = last.get("at", [])
+	if last_at.size() < 2:
+		return
+	var pylon_x := float(last_at[0])
+	var pylon_z := float(last_at[1])
+	var pylon_height := float(config.get("height", 12.0))
+	var pylon_ground: float = float(_world.call("ground_height_at", pylon_x, pylon_z))
+	if is_nan(pylon_ground):
+		return
+	# CONDUIT_ATTACH (0.66) matches severed_spokes.gd's own pylon-head
+	# attachment fraction, so this span leaves the pylon at the same point
+	# its own conduit run does, not a seam a player can see from the trail.
+	var pylon_head := Vector3(pylon_x, pylon_ground + pylon_height * 0.66, pylon_z)
+
+	# The NW bailey tower corner, in this node's own local frame -- the same
+	# point `tools/_gen_meadows_hall.py`'s generator sited the tower at
+	# (outer_works' own wall corner), nudged 1m proud on both faces so the
+	# anchor sits on the tower's own stone rather than buried inside it.
+	var ow: Dictionary = _chambers.get("outer_works", {})
+	if ow.is_empty():
+		return
+	var ow_half := _size_of(ow.get("size", [])) * 0.5
+	var corner_local := Vector3(-(ow_half.x + _wall_t) - 1.0, 12.0, -(ow_half.y + _wall_t) - 1.0)
+	var anchor := to_global(corner_local)
+
+	# A brass-and-oxblood bracket at the anchor -- the fitting the cable
+	# actually terminates on, not a cable ending in mid-air against stone.
+	var bracket_mat := StandardMaterial3D.new()
+	bracket_mat.albedo_color = Color("#8a6f3a")
+	bracket_mat.metallic = 0.55
+	bracket_mat.roughness = 0.45
+	var bracket := MeshInstance3D.new()
+	bracket.name = "CableAnchorBracket"
+	var bracket_box := BoxMesh.new()
+	bracket_box.size = Vector3(0.5, 0.35, 0.5)
+	bracket_box.material = bracket_mat
+	bracket.mesh = bracket_box
+	bracket.position = corner_local
+	add_child(bracket)
+
+	var builder := Node3D.new()
+	builder.name = "HallCableLanding"
+	_world.add_child(builder)
+	var spokes: Node3D = SEVERED_SPOKES.new()
+	spokes.call("_conduit_span", builder, 0, pylon_head, anchor, _live_material(), 1.0)
+	spokes.free()
 
 
 ## CONTENT-0828B. The shared constructed-interior method, in the fortress's own
