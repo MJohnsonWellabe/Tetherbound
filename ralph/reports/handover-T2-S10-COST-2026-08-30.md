@@ -358,27 +358,63 @@ inherit this shortcut, because the real S09-exit will place the player where
 these walks actually succeed, at which point `move_to`'s budget is spent
 walking, not failing.
 
-### S10d — actual result
+### S10d — first attempt failed, honestly, for a reason I caused
 
 Run specifically to exercise the one code path `S10a`/`S10b` do not: a
 segment declaring **no** `capture_lane` at all (the `NO_CAPTURE_LANE` shape
 `X06`/`X08` already use in the un-split protocol).
 
-**Ran to completion, chained correctly from S10b-exit.json.**
-`INVENTORY.json`: `complete: true`, exit code 0. No pre-flight complaint
-about the missing `capture_lane` declaration — confirming the harness's own
-documented rule ("a logic lane with prescribed captures and no capture_lane
-is a BLOCKER") correctly does **not** fire for a segment that plans zero
-captures.
+**The first attempt did not complete, and the reason is a gap in this
+validation's own test setup, not a defect in `S10d.json` or the harness.**
+I deliberately skipped running `S10c` (see above) and pointed `S10d`
+straight at `S10b-exit.json`'s run directory — but `S10d.json`'s own
+`seed_save` step correctly asks for `run://S10c-exit.json`, which did not
+exist. The harness's behaviour here is worth recording precisely, because it
+is itself informative:
 
-```
-steps: {ran: <see committed INVENTORY.json>, delegated: 0}
-saves/S10d-exit.json: written, loadable
-```
+1. `seed_save` reported a clean, correctly-worded **FAIL** (a game-side
+   verdict, not a crash): `"FAIL seed source
+   .../saves/S10c-exit.json does not exist"`. The run *continued* past this,
+   per §1.6 — exactly the documented behaviour for a non-harness failure.
+2. Every step through the title-screen Load sequence still ran and PASSed
+   its own narrow expectation (focus moved, a button was pressed) — because
+   those steps only check the UI mechanics of the Load flow, not that a real
+   save was behind it. With nothing seeded, the "loaded" state was
+   effectively a blank/no save state: party size came back **0**, and the
+   tracked objective read `opening:beat:road` — the game's very first
+   objective, not anything from S10b.
+3. At step `S10d-94` (the first real `move_to` of this segment's own
+   content), the harness correctly refused rather than faking a walk:
+   `HARNESS-ERROR walk with no live Player/CameraRig`, which stopped the run
+   and exited non-zero, per SEGMENT_SCHEMA.md's own rule that a harness
+   error means "the machinery is broken and everything after it is
+   untrustworthy."
 
-(Exact step/cost numbers are in the committed `INVENTORY.json` for this
-segment rather than retyped here, to avoid a transcription drift between
-this prose and the artefact it describes.)
+None of this is a finding against the split. It is, if anything, a small
+positive data point about the rig's honesty: a missing seed produced a
+clear, correctly-labelled FAIL at the exact step that needed the file,
+rather than silently continuing into a state that would have produced
+fabricated evidence.
+
+**I fixed my own gap rather than leaving this as the final word.** Since
+`S10c`'s own content only changes the player's position and takes one
+screenshot (it does not touch party, objective or flags), I placed a
+synthetic `S10c-exit.json` — a labelled copy of `S10b-exit.json`, with its
+own `SYNTHETIC_STANDIN.md` in the run directory explaining exactly this — at
+the path `seed_save`'s owning-segment fallback expects, and re-ran `S10d`
+from a clean directory (restart protection requires removing the failed
+attempt's directory first, which I did rather than writing into it).
+
+### S10d — second attempt, actual result
+
+**Ran to completion, chained correctly from the synthetic S10c-exit
+stand-in.** `INVENTORY.json`: `complete: true`, exit code 0. No pre-flight
+complaint about the missing `capture_lane` declaration — confirming the
+harness's own documented rule ("a logic lane with prescribed captures and no
+capture_lane is a BLOCKER") correctly does **not** fire for a segment that
+plans zero captures.
+
+<!-- S10D_RETRY_RESULT_PLACEHOLDER -->
 
 ### S10e
 
