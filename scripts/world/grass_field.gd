@@ -32,6 +32,7 @@ const CONFIG_PATH := "res://data/config/grass_field.json"
 const SHADER_PATH := "res://shaders/grass_field.gdshader"
 const STONE_SHADER_PATH := "res://shaders/stone_field.gdshader"
 const COVER_SHADER_PATH := "res://shaders/cover_tier.gdshader"
+const FAR_SHADER_PATH := "res://shaders/far_cover.gdshader"
 ## Read for its `footprints` list and nothing else -- see the BUILT GROUND note
 ## below. The two systems have to exclude the same building ground, and the way
 ## to guarantee that is to read one list rather than keep two in step.
@@ -61,6 +62,11 @@ var _stone_material: ShaderMaterial = null
 ## binding, centring and winding them is one loop rather than one branch per
 ## tier.
 var _cover_materials: Array[ShaderMaterial] = []
+## The far tier. One MeshInstance3D, not a MultiMesh -- see FAR COVER below --
+## riding as a child of this node so the camera-follow moves it too, with its
+## own offset so its vertices stay on their own coarser world grid.
+var _far: MeshInstance3D = null
+var _far_material: ShaderMaterial = null
 var _bound := false
 var _wind := 0.0
 ## The lattice cell the ring is currently anchored to. The node only moves when
@@ -406,6 +412,7 @@ func _build() -> void:
 	# built first it copied the default zero AABB instead.
 	_build_stones(cfg, radius)
 	_build_cover_tiers(cfg, radius)
+	_build_far_cover(cfg)
 	_apply_clearing(cfg)
 
 
@@ -485,6 +492,200 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 			str(tier.get("name", "tier")), placed, plan.size(), count])
 	if not _cover_materials.is_empty():
 		print("[grass_field] %d cover tier(s) up" % _cover_materials.size())
+
+
+# ---------------------------------------------------------------------------
+# FAR COVER. The cheap tier BEYOND the grass ring, and the one place in this
+# file that is not instances.
+#
+# THE DEFECT. The ring reaches `field_radius` 72m and fades from `fade_start`
+# 42m. Past that the meadow is painted terrain carrying whatever scatter is
+# still allowed on it, and from an overlook the world visibly ends at a line
+# you can read across the hill. `_comment_ring` in the config records the two
+# answers already spent on that line -- the ring pushed 40 -> 56 -> 72m, the
+# last step a 43% vertex increase on the most expensive tier in the game and
+# unmeasured on the device -- and the owner has since said the grass already
+# feels expensive on the Ally. So the ring does not move a third time.
+#
+# THE INSTRUMENT. A ground-colour blend, laid over the terrain from inside the
+# grass ring's own fade out to the haze. It carries the meadow's cover READ --
+# hue, value, drifts, mottle -- and none of its geometry. At the distances it
+# is visible, that is all real blades would have been contributing anyway.
+#
+# WHY A SHEET AND NOT MORE INSTANCES. Every other tier here is a MultiMesh on
+# the lattice, and copying that would have been the smaller diff. It is the
+# wrong shape for this one. Flat cards lie flat while the ground under them
+# does not, so they cut into every slope or float off it; they overlap, and
+# overlapping blended quads inside one MultiMesh have no sort order, so they
+# double-darken in a pattern that follows the camera; and a card has a boundary
+# for the eye to find. A single sheet samples the terrain height at each of its
+# own vertices, never overlaps itself, and carries one continuous world-space
+# noise field with nothing to tile.
+#
+# THE FAR LATTICE, and why the node's offset is compensated for. The sheet is a
+# fixed grid in its own local space, so if it simply rode this node it would
+# move in `snap` (2m) steps while its grid is `far_cell` (4m) -- every step
+# would move its sampling points to different places on the terrain and the
+# surface would swim exactly the way the whole STABLE RING note above exists to
+# stop. `far_cell` is therefore forced to a multiple of `snap`, and the child
+# is offset by the difference between this node's anchor and the same position
+# snapped to `far_cell`. The sheet's vertices then land on one fixed world grid
+# and stay there however far the player walks.
+#
+# COST. One instance, one material, one draw. `_build_far_cover` prints the
+# vertex and triangle count it stood up; for the shipped numbers it is tens of
+# thousands of triangles against the grass tier's fourteen million. The fill is
+# a single blended layer over ground the frame was already drawing. NOT
+# MEASURED ON THE DEVICE -- `PERF-ROG-GPU` records that no container in this
+# project can measure GPU cost, and that has not changed.
+# ---------------------------------------------------------------------------
+
+## The far sheet, from `far_cover` in the config. Absent entirely when the block
+## is missing or disabled, the same way every other tier here is: a tier that is
+## off is not a cheap tier, it is no tier.
+func _build_far_cover(cfg: Dictionary) -> void:
+	var far_cfg: Dictionary = cfg.get("far_cover", {})
+	if not bool(far_cfg.get("enabled", false)):
+		return
+	var cell := far_lattice_cell(cfg)
+	var outer := maxf(float(far_cfg.get("far_radius", 640.0)), cell * 4.0)
+	var fade_in_start := float(far_cfg.get("fade_in_start", 52.0))
+	# The hole in the middle. Cut a couple of cells inside where the sheet
+	# starts to become visible, not AT it: the mesh is anchored to the snapped
+	# node while the fade is measured from the true eye, so the two disagree by
+	# up to a cell on each axis and a hole cut to the exact radius would open a
+	# crescent of missing cover on whichever side the camera has drifted toward.
+	var inner := maxf(fade_in_start - cell * 2.0, 0.0)
+
+	var mesh := _far_mesh(inner, outer, cell)
+	_far = MeshInstance3D.new()
+	_far.name = "FarCover"
+	_far.mesh = mesh
+	# A blended overlay must not cast anything. The grass, stone and cover tiers
+	# are all shadow-off for their own reasons; this one has no geometry a
+	# shadow could describe.
+	_far.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# The sheet is authored around the origin and moved, and it reaches far
+	# past the grass ring's own AABB, so it needs its own.
+	_far.custom_aabb = AABB(Vector3(-outer - cell, -400.0, -outer - cell),
+			Vector3((outer + cell) * 2.0, 800.0, (outer + cell) * 2.0))
+
+	_far_material = ShaderMaterial.new()
+	_far_material.shader = load(FAR_SHADER_PATH)
+	# Before every other transparent material in the world. The sheet lies ON
+	# the ground, and water is drawn over ground; left to the default priority
+	# the two sort by origin distance and the wash can end up painted over the
+	# pond it is supposed to be under.
+	_far_material.render_priority = -1
+	_far.material_override = _far_material
+	add_child(_far)
+
+	for key: String in [
+		"fade_in_start", "fade_in_end", "fade_out_start", "far_radius",
+		"strength", "lift", "ground_blend", "mottle_scale", "mottle_strength",
+		"mottle_value", "mottle_detail", "mottle_detail_range",
+	]:
+		if far_cfg.has(key):
+			_far_material.set_shader_parameter(key, float(far_cfg[key]))
+	for key2: String in ["tint_base", "tint_tip"]:
+		if far_cfg.has(key2):
+			_far_material.set_shader_parameter(key2, Color(str(far_cfg[key2])))
+	_far_material.set_shader_parameter("far_cell", cell)
+	# The GRASS TIER'S drift field, by its own numbers, not a second one shaped
+	# to look similar. The far ground's open patches have to be the same
+	# world-space patches the near field's are, or the hand-over is two
+	# different meadows meeting -- which is the line, with a softer edge.
+	_far_material.set_shader_parameter("drift_scale", float(cfg.get("clump_scale", 0.11)))
+	_far_material.set_shader_parameter("drift_contrast", float(cfg.get("clump_contrast", 0.78)))
+	# Same ground refusal as the grass, by NAME, and for the sharper reason
+	# here: a green wash over the paths at distance erases the lines the chapter
+	# is navigated by.
+	var names := _terrain_texture_names()
+	var forbidden: Array = far_cfg.get("forbidden_ground", cfg.get("forbidden_ground", ["rock", "path"]))
+	var mask := 0
+	for i in names.size():
+		if str(names[i]) in forbidden:
+			mask |= 1 << i
+	_far_material.set_shader_parameter("forbidden_base_mask", mask)
+
+	var drawn := 0
+	var used := 0
+	if mesh.get_surface_count() > 0:
+		drawn = mesh.surface_get_array_index_len(0) / 3
+		used = mesh.surface_get_array_len(0)
+	print("[grass_field] far cover: 1 sheet, %d tris, %d verts, %.0fm cell, %.0f-%.0fm reach" % [
+		drawn, used, cell, inner, outer])
+	if drawn == 0:
+		push_warning("[grass_field] far cover built an empty sheet; nothing beyond the ring")
+
+
+## The sheet's grid step. Forced to a whole multiple of the lattice cell, which
+## is what makes the node's own 2m hop compensable into an exact offset -- see
+## the FAR LATTICE note above. A step that did not divide would leave the sheet
+## sampling different ground every time the ring moved.
+static func far_lattice_cell(cfg: Dictionary) -> float:
+	var base := lattice_cell()
+	var want := maxf(float(cfg.get("far_cover", {}).get("far_cell", 6.0)), base)
+	return base * maxf(round(want / base), 1.0)
+
+
+## A terrain-following annulus on a `cell` grid.
+##
+## Vertices are generated for the whole square that bounds the disc and indexed
+## only where they are used: an unreferenced vertex costs memory in the buffer
+## and nothing on the GPU, which is the cheaper trade than the arithmetic to
+## renumber a ragged grid. Heights are NOT baked in -- every vertex is placed
+## onto the terrain in the vertex shader, the same way every other tier here is,
+## so the sheet costs nothing when the terrain streams and needs no rebuild when
+## the player walks somewhere else.
+##
+## A quad is included when its CENTRE is inside the ring, so the sheet's own
+## outer boundary is ragged at the cell scale rather than a drawn circle. That
+## is free and it helps: the alpha is already near zero out there, and a ragged
+## edge under a noise field has nothing for the eye to lock onto.
+func _far_mesh(inner: float, outer: float, cell: float) -> ArrayMesh:
+	var steps := int(ceil(outer / cell))
+	var side := steps * 2 + 1
+	var verts := PackedVector3Array()
+	var normals := PackedVector3Array()
+	verts.resize(side * side)
+	normals.resize(side * side)
+	for ix in side:
+		for iz in side:
+			var at := Vector3(float(ix - steps) * cell, 0.0, float(iz - steps) * cell)
+			verts[ix * side + iz] = at
+			# Overwritten per vertex in the shader from the height data. Supplied
+			# because a surface with no normal array is lit as if it faced the
+			# camera, which would show for the one frame before the shader runs
+			# and in any tool that reads the mesh rather than renders it.
+			normals[ix * side + iz] = Vector3.UP
+	var indices := PackedInt32Array()
+	var inner_sq := inner * inner
+	var outer_sq := outer * outer
+	for ix in side - 1:
+		for iz in side - 1:
+			var cx := (float(ix - steps) + 0.5) * cell
+			var cz := (float(iz - steps) + 0.5) * cell
+			var d := cx * cx + cz * cz
+			if d < inner_sq or d > outer_sq:
+				continue
+			var a := ix * side + iz
+			var b := (ix + 1) * side + iz
+			var c := ix * side + iz + 1
+			var e := (ix + 1) * side + iz + 1
+			# Wound so the sheet faces up. `cull_disabled` in the shader means a
+			# mistake here would not show as a hole, only as a normal pointing
+			# into the ground, which is the harder failure to see.
+			indices.append_array([a, c, b, b, c, e])
+
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_INDEX] = indices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return mesh
 
 
 ## The meshes the cover tiers use, generated rather than imported so no asset
@@ -1048,13 +1249,11 @@ func _bind_terrain() -> void:
 		push_warning("[grass_field] terrain has no data; the field cannot find the ground")
 		return
 
-	var rids: Array[RID] = [_material.get_rid()]
-	if _stone_material != null:
-		rids.append(_stone_material.get_rid())
-	for cover: ShaderMaterial in _cover_materials:
-		rids.append(cover.get_rid())
-	for rid: RID in rids:
-		_bind_maps(rid, data)
+	# Every tier, through the one list, so a tier added later cannot be left
+	# unbound -- which does not error, it renders the tier at whatever an
+	# unbound sampler2DArray returns, kilometres off the ground.
+	for material: ShaderMaterial in _field_materials():
+		_bind_maps(material.get_rid(), data)
 	_bind_region_uniforms(data)
 
 	# Say out loud whether the stone tier actually got the terrain, because the
@@ -1097,11 +1296,7 @@ func _bind_region_uniforms(data: Object) -> void:
 	for i in region_map.size():
 		map[i] = int(region_map[i])
 
-	var all: Array[ShaderMaterial] = [_material, _stone_material]
-	all.append_array(_cover_materials)
-	for mat: ShaderMaterial in all:
-		if mat == null:
-			continue
+	for mat: ShaderMaterial in _field_materials():
 		mat.set_shader_parameter("_region_size", region_size)
 		mat.set_shader_parameter("_region_texel_size", 1.0 / region_size)
 		mat.set_shader_parameter("_region_map_size", int(sqrt(float(region_map.size()))))
@@ -1304,6 +1499,8 @@ func _field_materials() -> Array[ShaderMaterial]:
 	if _stone_material != null:
 		out.append(_stone_material)
 	out.append_array(_cover_materials)
+	if _far_material != null:
+		out.append(_far_material)
 	return out
 
 func _process(delta: float) -> void:
@@ -1336,6 +1533,8 @@ func _process(delta: float) -> void:
 		_stone_material.set_shader_parameter("field_centre", eye)
 	for cover: ShaderMaterial in _cover_materials:
 		cover.set_shader_parameter("field_centre", eye)
+	if _far_material != null:
+		_far_material.set_shader_parameter("field_centre", eye)
 
 	var cell := lattice_cell()
 	var anchor := Vector3(snappedf(at.x, cell), 0.0, snappedf(at.z, cell))
@@ -1343,6 +1542,15 @@ func _process(delta: float) -> void:
 		return
 	_centre = anchor
 	global_position = anchor
+	# The far sheet keeps its own coarser grid. Offsetting it by the difference
+	# between this node's anchor and the same point snapped to `far_cell` puts
+	# its vertices on one fixed world grid and holds them there -- without it
+	# the sheet would resample the terrain every 2m step and the far ground
+	# would swim, which is the defect the STABLE RING note above exists for,
+	# reintroduced one tier further out.
+	if _far != null:
+		var far_cell := far_lattice_cell(config())
+		_far.position = Vector3(snappedf(at.x, far_cell), 0.0, snappedf(at.z, far_cell)) - anchor
 	# Which buildings the ring can currently see. Done on the ring's own move
 	# rather than every frame: the list can only change when the ring has
 	# travelled, and a player laying a floor panel is standing still inside the

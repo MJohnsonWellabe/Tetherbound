@@ -52,11 +52,12 @@
       },
       {
         "centre": [
-          -165.0,
-          -150.0
+          741.2,
+          1829.9
         ],
         "radius": 58.0,
-        "height": 34.0
+        "height": 34.0,
+        "_why": "T1-REGIONS, 2026-08-29. Re-sited from the pre-corridor coordinate (-165,-150) onto the corridor's Band 2 (Stone & Root), where `spokes.routes` already describes this exact landform: the mountain_trail spoke's own `_why` calls its rockslide blocker 'at the foot of `rises.peaks[1]`', and terrain_playground.json's spokes comment says 'the fire spoke climbs toward `rises.peaks[1]`' -- both written as present-tense fact about a peak that, until this change, was not physically near either the spoke or the corridor at all (OW5D moved the map; this peak did not move with it, the gap the Burrow Warrens `_why` above names). New centre sits one radius beyond the mountain_trail blocker (683.32,1825.71) along the road's own final bearing (unit (0.997,0.072) from the road's last two points), so the blocker rockslide sits right on the peak's own skirt -- 'a slide off the mountain has buried it' becomes literally true instead of aspirational -- and the peak reads as a real Band 2 scarp landmark (docs/owner-direction/TETHERBOUND_VISUAL_STUNNING_PASS.md section 10's 'more exposed earth and stone, fractured rock, tighter compositions') visible from the Old Quarry approach at (400,1800), ~340m clear of the quarry's own footprint. Radius/height unchanged from the pre-move value; only centre moved. NOT render-verified this pass -- no Godot binary was available in this session; `_rise_cone`/`_rise_relief` (playground_heightfield.gd) are additive and exactly zero outside `radius`, so the move cannot disturb any other authored feature, but a capture pass should confirm the silhouette actually reads from the quarry road before this is called done."
       },
       {
         "centre": [
@@ -64,20 +65,21 @@
           175.0
         ],
         "radius": 44.0,
-        "height": 25.0
+        "height": 25.0,
+        "_why": "NOT moved this pass. `spokes.routes[blighted_road]`'s own `_comment_sf33` describes an already-tuned composition that depends on this peak's position -- dead pylons hidden 'behind the wall' because 'peaks[2]'s outer skirt falls away faster than their tops rise', a payoff for a player who climbs the peak's west skirt. That composition was built pre-corridor (its own text still checks pylon radii against 'world_perimeter.gd's 232m minimum', the retired ring, not the corridor rectangle), so it is stale in the same way peaks[1]/[3]/[4] were -- but re-siting it blind risks breaking a tuned hide/reveal relationship this session cannot render to re-verify. Left in place and flagged rather than guessed at; see this branch's report for the follow-up this leaves open."
       },
       {
         "centre": [
-          78.4,
-          -184.2
+          726.8,
+          5936.5
         ],
         "radius": 24.0,
         "height": 21.0
       },
       {
         "centre": [
-          24.4,
-          -198.8
+          672.8,
+          5921.9
         ],
         "radius": 24.0,
         "height": 19.0
@@ -89,10 +91,10 @@
         ],
         "radius": 30.0,
         "height": 8.0,
-        "_why": "OW5E. The Burrow Warrens (burrow_warrens.json site.at (-420,2470), yaw 54.5) relocated per docs/MEADOWS_MACRO_LAYOUT.md section 10.2, and section 10.2's own note that a new coordinate is the layout's intent, not surveyed ground, was right about this one: the corridor pass moved the site onto ground with no relief at all -- tests/smoke_warrens.gd caught `den` sitting ABOVE the terrain that was supposed to be overhead (terrain -4.2 vs floor -3.8), a dungeon poking out of a flat field. Centred and radiused to probe clean against `scripts/world/playground_heightfield.gd::height_at`: 38.0m from the mouth (outside this radius, zero contribution -- the entrance apron stays at grade, exactly as `_build_approach_apron`'s doc comment assumes) but only 7-9m from `den`/`vault` (well inside, strong contribution), giving den clearance ~3.1m over the 2.0m floor the test asks for and leaving the `warren_undertrail` loop road (nearest authored point (-380,2540), 52m away) untouched. NOT a relocation of `rises.peaks[1..4]` -- those four are still sitting at their pre-corridor coordinates despite section 10.2 calling for them to move to 'Band 2 scarp and Band 4 wind ridge'; that is a real, separate gap, flagged in ralph/NOTES.md rather than solved here, since nothing in this CI run's six failures needs it fixed and picking real sites for four landform-scale hills is its own task."
+        "_why": "OW5E. The Burrow Warrens (burrow_warrens.json site.at (-420,2470), yaw 54.5) relocated per docs/MEADOWS_MACRO_LAYOUT.md section 10.2, and section 10.2's own note that a new coordinate is the layout's intent, not surveyed ground, was right about this one: the corridor pass moved the site onto ground with no relief at all -- tests/smoke_warrens.gd caught `den` sitting ABOVE the terrain that was supposed to be overhead (terrain -4.2 vs floor -3.8), a dungeon poking out of a flat field. Centred and radiused to probe clean against `scripts/world/playground_heightfield.gd::height_at`: 38.0m from the mouth (outside this radius, zero contribution -- the entrance apron stays at grade, exactly as `_build_approach_apron`'s doc comment assumes) but only 7-9m from `den`/`vault` (well inside, strong contribution), giving den clearance ~3.1m over the 2.0m floor the test asks for and leaving the `warren_undertrail` loop road (nearest authored point (-380,2540), 52m away) untouched. T1-REGIONS (2026-08-29) resited peaks[1]/[3]/[4] onto the corridor (Band 2 scarp / the High Pass's two shoulders); peaks[2] stayed put -- see its own `_why` -- so this entry's old blanket 'those four are still sitting at their pre-corridor coordinates' is no longer accurate and has been split three-against-one above."
       }
     ],
-    "_comment_high_pass": "SA4 stage 2: peaks[3] and peaks[4] are the High Pass's two shoulders, not scenery. The ice spoke's road ends at [49.7,-185.4] and spec 1E calls that a PASS, which needs a saddle to be one. They sit +-28m either side of the blocker along its own axis (15 degrees) with radius 24, so the 22m saddle between them stays open ground the road climbs through, and the scree pile is what closes it. Kept small and kept inside 225m from the origin so world_perimeter.gd's 235m ring never has to climb them. TUNABLE."
+    "_comment_high_pass": "SA4 stage 2: peaks[3] and peaks[4] are the High Pass's two shoulders, not scenery. T1-REGIONS (2026-08-29): re-sited onto the corridor, where the ice spoke's road now actually is -- the spoke's own `blocker._comment_pass` already said the shoulders existed 'either side of the road end', which was true at the OLD road end (49.7,-185.4) and had gone stale the moment OW5D moved the road to (698.07,5935.25) without moving these two peaks. Re-sited by translating both centres by the exact delta from the old road-end coordinate to the new blocker centre (698.07,5935.25) - (49.7,-185.4) = (648.37,6120.65), which preserves the original tuned relationship (each still ~28m from the blocker along its axis, the two still ~56m apart) rather than re-deriving it from scratch. Still +-28m either side of the blocker along its own axis (15 degrees) with radius 24, so the 22m saddle between them stays open ground the road climbs through, and the scree pile is what closes it -- 'kept inside 225m from the origin so world_perimeter.gd's 235m ring never has to climb them' is retired history now that the ring is a corridor (world_perimeter.gd's own header), not a live constraint. NOT render-verified this pass -- no Godot binary was available in this session; flagged for a capture pass to confirm the saddle actually reads before this is called done. TUNABLE."
   },
   "_comment_rock_form": "OF11. The rises' rock FORM, and a replacement for -- not an extension of -- `colour.relief_amplitude`/`relief_frequency`, which were removed. Those added one smooth FBM bump to a smooth analytic cone; a blind critic on the result still read 'a single smooth, continuous, unbroken curve,' and five rounds before that only ever repainted the same dome. Smooth noise cannot produce stone at any amplitude: FBM's extrema are rounded, so its surfaces are swells, and a swell painted grey is a stain. This block builds the two things a rock hillside actually has and a swell does not, both of them DISCONTINUITIES: creased ribs and gullies (a RIDGED fractal, domain-warped so the ribs meander and pinch out rather than tiling) and bedding planes (`terrace_*`, which quantises the rise's own height into near-level ledges separated by steep risers -- the plateau in docs/reference/palworld-04 and the crags in the key art are made of exactly this). See playground_heightfield.gd::_rise_relief. Everything here is faded out at the rim (`rim_in`/`rim_out`) so `rises` alone still decides each landform's footprint and the roads at its foot are untouched. ALL TUNABLE.",
   "rock_form": {
@@ -1582,7 +1584,7 @@
       {
         "id": "mountain_trail",
         "type": "fire",
-        "_why": "North-west, at the foot of `rises.peaks[1]` (centre [-165,-150], radius 58). The trail runs out to where the ground starts to climb and a slide off the mountain has buried it. Spec 1E: 'Fire: mountain trail'; 29's blocker: rockslide. No carve -- this one is props and collision only, so it costs no terrain re-bake.",
+        "_why": "North-west, at the foot of `rises.peaks[1]` (T1-REGIONS, 2026-08-29: re-sited to centre [741.2,1829.9], radius 58, one radius beyond this spoke's own blocker along the road's final bearing -- was [-165,-150], a pre-corridor coordinate nowhere near this road, until this pass). The trail runs out to where the ground starts to climb and a slide off the mountain has buried it. Spec 1E: 'Fire: mountain trail'; 29's blocker: rockslide. No carve -- this one is props and collision only, so it costs no terrain re-bake.",
         "bearing_deg": 10.0,
         "built": true,
         "road": [
@@ -1812,7 +1814,7 @@
       {
         "id": "high_pass",
         "type": "ice",
-        "_why": "North, the last long clear bearing. Spec 1E: 'Ice: high pass'. NOT YET BUILT, and this one needs terrain work before props: a pass needs a saddle to be a pass, and there is no relief on this bearing today -- see the handoff.",
+        "_why": "North, the last long clear bearing. Spec 1E: 'Ice: high pass'. Props built (blocker/sign below); the saddle terrain the blocker's own `_comment_pass` describes had gone stale after OW5D moved this spoke without its two shoulder-peaks -- T1-REGIONS (2026-08-29) re-sited `rises.peaks[3]`/`[4]` onto this blocker, restoring the saddle. Not render-verified this pass; see `rises._comment_high_pass`.",
         "bearing_deg": 19.0,
         "built": true,
         "road": [
@@ -1861,7 +1863,7 @@
             5935.25
           ],
           "axis_deg": 15.0,
-          "_comment_pass": "SA4 stage 2. A pass needs a saddle, and this bearing had no relief at all, so `rises.peaks` gained two small shoulders either side of the road end (see their own _comment) and the road now climbs between them. The blocker itself is the same collapsed scree the mountain trail uses -- the pass has fallen in. It reuses `rockslide` deliberately: one mechanism, two sites, and the two read differently because one lies at a mountain's foot and this one fills a gap between two shoulders. Snow dressing is NOT here; the ice reading currently rests on altitude and bare rock alone. Honest limit.",
+          "_comment_pass": "SA4 stage 2. A pass needs a saddle, and this bearing had no relief at all, so `rises.peaks` gained two small shoulders either side of the road end (see their own _comment) and the road now climbs between them. T1-REGIONS (2026-08-29): those two shoulders (peaks[3]/[4]) were built for this blocker's PRE-corridor position and had gone stale when OW5D moved this spoke here without moving them -- 'there is no relief on this bearing today' below was true again the moment that happened. Re-sited peaks[3]/[4] onto this blocker (698.07,5935.25); see their own `_why`/`_comment_high_pass`. The blocker itself is the same collapsed scree the mountain trail uses -- the pass has fallen in. It reuses `rockslide` deliberately: one mechanism, two sites, and the two read differently because one lies at a mountain's foot and this one fills a gap between two shoulders. Snow dressing is NOT here; the ice reading currently rests on altitude and bare rock alone. Honest limit.",
           "span": 22.0,
           "height": 5.0,
           "blocks": 12,
@@ -2532,14 +2534,16 @@
     "path_edge_jitter": 0.36,
     "_comment_verge_cut_r2": "GROUND-REBUILD round 2: 0.62->0.58, paired with dry_colour_strength below -- macro variation was reading in only two of five bands; both push it above threshold everywhere.",
     "_comment_verge_cut_correction": "GROUND-REBUILD round 2 correction. 0.58 -> 0.70. Round 2 lowered this from 0.62 to 0.58 to get dry patches into the three bands that had none, and at the same time raised dry_gain 1.4 -> 1.9 to steepen the dryness distribution. Each was defensible alone; together they pushed far more of the field past the cut and the bake measured verge at 35.7-39.0% of the region against the 14% the art direction asks for. The meadow rendered as sand. Raised to 0.70, which is ABOVE the pre-round value rather than merely back to it, because the steeper dry_gain is being kept -- a steeper distribution needs a higher cut to yield the same coverage. This is the number to re-check whenever dry_gain moves: the two are not independent, and the bake prints the percentage precisely so the pair is verified by reading rather than by eye. TUNABLE.",
-    "verge_cut": 0.7,
+    "_comment_verge_cut_t1_ground": "T1-GROUND, 2026-08-29. 0.70 -> 0.64. Diagnosed rather than guessed: tools/_diag_macro_dry.gd (scratch, not committed) confirmed dry_here itself has real spread across the 03-rise-overlook footprint (min 0.15, max 0.85, std 0.13 over ~6000 samples) -- the noise field is not the problem. tools/_diag_colour_bake.gd then read the ACTUAL baked colour map back and found luminance only spans 0.75-0.93 (std 0.03) there, because colour.dry_colour_strength can only ever DARKEN a base that is already near-white (grass_low/high both sit above #f7 -- see colour's own top comment on why) and dry_tint's own luminance (~0.69) is not far enough below it to read as a second material once it is diluted by dry_here's own 0.15-0.85 range and rendered under flat midday light. Raising dry_colour_strength alone (0.60->0.80, this same pass, kept) measurably widened that std but stayed visually subtle in a re-render -- a colour LERP cannot buy more contrast than the two endpoints allow. The verge grass TEXTURE swap this cut gates is a real second material (its own albedo/normal, not a tint) and is the one lever with headroom left, so this is that lever, not another colour push. The regions this pass re-baked (see build_playground_terrain.gd's --regions flag) measured 7.3-10.9% verge coverage at 0.70 -- UNDER the 14% target already, unlike the 0.58 measurement that blew past it to 35-39%. 0.64 sits at roughly the same fractional distance below 0.70 that 0.58 sat below the ORIGINAL 0.62 (a quarter of the step that produced the blowout, not the same step), and the bake's own printed verge-dry percentage is read before any further render time is spent, per this section's own standing rule. TUNABLE -- if the printed percentage overshoots 14% by a wide margin, move this back toward 0.70 rather than pushing dry_colour_strength further.",
+    "verge_cut": 0.64,
     "_comment_slope_raggedness": "GROUND-REBUILD. How far the grass/verge/rock slope thresholds wander, as a multiple of colour.blend_deg. The slope bands used to be partial control blends, which do not draw here -- so the transition was always a hard line and a noisy slope field crossing it aliased into isolated 2m squares on rock faces. This wanders the threshold with coherent noise instead, turning that line into a raveled edge. Above about 2.0 the boundary starts to detach from the landform and read as noise; at 0 it is a clean iso-contour. TUNABLE.",
     "_comment_slope_raggedness_r2": "GROUND-REBUILD round 2: 1.6->2.0, the documented detach-from-landform ceiling above -- pushed to the ceiling rather than past it, since beyond this the boundary stops following the terrain and reads as noise.",
     "slope_raggedness": 2.0,
     "_comment_dry_colour": "GROUND-LAYERS round 3. The macro dryness is now a COLOUR-MAP lerp, not a control-map texture swap, because control ids cannot interpolate and an elevated frame showed the 2m cells rendering as hard rectangular steps. dry_tint is what dry ground multiplies toward: warmer and a little darker than colour.grass_low (#c2d492), in the same straw family as the drygrass texture that is now held in reserve. dry_colour_strength is how far a fully dry pixel goes; short of 1.0 so the ground keeps some of its own slope colouring underneath. TUNABLE -- this is the main knob for how strongly the meadow varies, and unlike everything tried before it, it renders.",
     "dry_tint": "#cdbc86",
     "_comment_dry_colour_strength_r2": "GROUND-REBUILD round 2: 0.45->0.60, paired with macro.verge_cut above -- macro variation was reading in only two of five bands; both push it above threshold everywhere.",
-    "dry_colour_strength": 0.6,
+    "_comment_dry_colour_strength_t1_ground": "T1-GROUND, 2026-08-29. 0.60->0.80. A blind pass on tools/survey.sh's 03-rise-overlook frame (the one framing that shows the most open ground at distance) read the far plain as a single continuous fine speckle with 'zero larger colour structure... reads as tiled procedural noise, not a lit, materially-varied field' -- the exact camouflage failure mode this file has been chasing since GROUND-LAYERS. Measured against the colour system's own ceiling (this map only DARKENS, ceiling 1.0, and grass_low/high already sit near-white): at 0.60 a fully-dry pixel (dry_max 0.85) only reaches about half way to dry_tint, which is not enough contrast for a 180m/53m-period drift to read as a patch rather than as grain once it is sitting under the same bright flat midday light as the fine shader-level macro_variation1/2 anti-tiling noise (18-45m period) right next to it. Raised to 0.80, still short of 1.0 (the ground keeps a fifth of its own slope colouring underneath, per the original design intent above) but closer to the ceiling the near-white palette actually has to work with. Did NOT touch verge_cut, dry_gain or edge_raggedness -- those shape the CONTROL-map texture swap (verge grass), which GROUND-REBUILD round 2's own comment records overcorrecting hard (35.7-39% coverage against a 14% target) the last time two of that group's numbers moved together; this is a single-lever, colour-map-only change so it cannot alias into a hard edge the way a control-map change can. TUNABLE further if a re-render still reads flat.",
+    "dry_colour_strength": 0.8,
     "dry_max": 0.85,
     "_comment_path_wobble_metres": "GROUND-REBUILD round 2 / C2 (playground_heightfield.gd::path_factor). Threshold-space jitter (path_edge_jitter above) mathematically cannot move a path edge a full 2m texel -- it would need +-0.7 on a 0-1 field just to do that, which would also blow past path_edge_jitter's own ceiling. To decorrelate the 2m control-map staircase the edge has to wander in METRES, at least +-1 texel, so this is a separate distance-space wobble amplitude read directly by path_factor() instead of being derived from `shoulder`. 2.0m is that +-1-texel wander. TUNABLE.",
     "path_wobble_metres": 2.0,

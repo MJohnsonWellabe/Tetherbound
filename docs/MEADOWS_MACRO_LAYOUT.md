@@ -1465,7 +1465,7 @@ Band 0 and the village are **unmoved by design** (§3). Everything else moves.
 | stronghold trainers Verrick, Solene, Hald, Warden Aldis | `trainers.json` | around (141.8,−215.4) | around (0, 7560) |
 | three regional captains Halder, Vess, Oreth | `trainers.json` | unplaced/near village | **(170,5590) / (−280,6460) / (−100,4350)** |
 | seven spokes (`road`, `blocker.carve`, `sign`) | `spokes.routes` | radial, 160–200 m | §7 table |
-| `rises.peaks[1..4]` | `terrain_playground.json` | (−165,−150) (60,175) (78.4,−184.2) (24.4,−198.8) | re-sited as Band 2 scarp and Band 4 wind ridge |
+| `rises.peaks[1..4]` | `terrain_playground.json` | (−165,−150) (60,175) (78.4,−184.2) (24.4,−198.8) | **T1-REGIONS, 2026-08-29: three done.** `peaks[1]` → (741.2,1829.9), the mountain_trail spoke's own foot (Band 2 scarp). `peaks[3]`/`[4]` → (726.8,5936.5) / (672.8,5921.9), translated onto the high_pass spoke's current blocker, restoring the saddle its own `_comment_pass` already claimed. `peaks[2]` (Band 4 wind ridge / the blighted_road spoke) is left at (60,175) on purpose — `blighted_road`'s own `_comment_sf33` describes an already-tuned pylon hide/reveal composition keyed to this peak's position, and re-siting it blind (no Godot binary in this session, no render to verify) risks breaking that rather than fixing the gap; still open. |
 | all remaining `spawns.json` entries | `spawns.json` | within ±150 m | to their band per spec §13 (§5 above) |
 | `props.json` clusters ×5 | `props.json` | near village | per band |
 | perimeter | `world_perimeter.gd` | circle r235 | §6, D51 |

@@ -156,6 +156,45 @@
       },
       "defeat_flag": "defeated_patrol_ridgeline",
       "rechallenge": false
+    },
+    {
+      "order": 4001,
+      "id": "pasture_drover_juno",
+      "name": "Juno",
+      "config_key": "villager_ranger",
+      "_comment": "T3-BAND4. ralph/reports/finding-post-tournament-cadence-2026-08-29.md named an 818m authored-content gap right before Captain Halder (trainers.json order 11, Ground-focused, high pasture at 170,5590) -- the last stretch before the first of the three captains had nothing to prepare with. docs/owner-direction/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 9 wants every captain to close a learn-prepare-challenge loop; a wayside trainer whose own team is Halder's own species one level down is a warm-up fight a player can read as practice for the real one. Independent (no `rank`), matching Bryn/Mira/Oskar/Tam's convention rather than another Team Tether grunt -- patrol_ridgeline already covers this band's one Team Tether beat, and spec section 3 Band 4 names a 'trainer road' as its own separate identity feature, distinct from the patrol-camp one. Spends no new mesh: `config_key: villager_ranger` reuses the same installed rig `data/config/art.json` already gives every wayside villager trainer, matching Oskar/Tam's own `villager_keeper`/`villager_smith` pattern -- an outdoor herder's config for an outdoor herder, not a new character.",
+      "position": [
+        -225.0,
+        5400.0
+      ],
+      "facing_deg": -122.0,
+      "_why_here": "The high pasture between the ironwood tree line and Captain Halder's own field, on the spine's own approach -- MEASURED, flattest of five candidates (h=-5.50m, 0.77m spread, worst slope 7.5 degrees over a 6m pad, tools/_probe_t3band4_sites.gd). `facing_deg` is the yaw looking back down the road toward the village, atan2(dx,dz) from the spine's own travel direction at this point -- the same convention every other entry in this file uses.",
+      "challenge": "pasture_drover_juno_challenge",
+      "defeated": "pasture_drover_juno_defeated",
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 13
+        },
+        {
+          "species": "mudsnout",
+          "level": 13
+        }
+      ],
+      "_why_team": "Both already resident in this band (spawns.json orders 4002/4003). Originally one level under Halder's own weakest (12, against his burrowback 13) -- WARRENS-LAND-0829A: that undershot chapter_curve.json's own band4_upper_meadows_ironwood floor of 13 (test_chapter_curve.gd::test_every_trainer_fights_at_their_own_regions_strength), which every other trainer in this file (11/13/14/15, 14/15/16, 13/14) already respects. 13 is the lowest level inside the band, so it is still a step below Halder's own 14/15 members without being a duplicate of his weakest -- the intended 'warm-up, not a formality' reading survives at the floor.",
+      "reward": {
+        "coins": 35,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 40
+      },
+      "defeat_flag": "defeated_pasture_drover_juno",
+      "rechallenge": false
     }
   ]
 }
