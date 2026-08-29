@@ -132,6 +132,71 @@ pure `Vector3` offset changes with zero new geometry. This is a reasoned
 expectation of no meaningful cost, not a measurement — worth a real-hardware
 sanity check per §21.
 
+## Round 2 (post-coordinator check-in, same branch, main merged to `961a8c02`)
+
+Coordinator accepted round 1's ground-sink fixes and asked for §17's actual
+object-level bar next, in order: shared family first, then readability,
+scale, usefulness, composition, complexity.
+
+**Fixed: the player bedroll's material-language mismatch, for real this
+time.** `tools/_capture_t1_camp_assets.gd` (new — one close, well-lit frame
+per priority asset, same stage rig) put the tent, campfire ring, player
+bedroll, creature bed and workbench side by side. The tent and creature bed
+both show real weathered-fabric/rope/wood-grain detail; the Kenney bedroll
+was flat-shaded solid colour blocks with no texture at all — the actual
+shape of round 1's "share one material/style family" gap, which a colour
+tint was never going to reach (you cannot texture-grade a texture that
+is not there). Replaced `BEDROLL` (`kenney_survival/bedroll.obj`) with
+`PLAYER_BED` = `generated_camp/camp_bed.glb` — the same mesh
+`creature_bed.gd` already places, and the mesh the AUTHORED trail_camp
+already uses as its generic camp sleeping surface (not an exclusively
+creature-bed asset — see that cluster's own `_why` in
+`band1_lower_meadows/props.json`). No new sourcing, no new provenance row,
+no Meshy credit; a real fix was already installed and already ledgered.
+Re-verified: 42 tests / 854 assertions clean, `smoke_gate_a_rest_torch.gd`
+passes clean on the merged `main`.
+
+**Investigated and deliberately deferred: `Bonfire_Fire`'s flat-shaded
+logs.** Same close-frame comparison shows the fire logs (Quaternius
+Survival, `Wood`/`LightWood`/`Fire` materials) as solid `Kd` colour with no
+texture at all (confirmed in the `.mtl` directly — there is no
+`map_Kd` line on any of the three materials; this is not an import
+defect, the pack genuinely ships no texture here). This is the one
+remaining "no real surface" object in the kit. Not fixed this round: this
+exact untouched asset is what every AUTHORED trail_camp/river_lock/
+upper_meadows/stronghold fire already uses, so a texture graft scoped to
+only the player-built camp's own instance would fix the family gap here
+while creating a new one against every other campfire in the game — the
+opposite of §17's own goal. A fix that does not create that regression has
+to change the shared asset or a shared code path both `camp.gd` and
+`props.gd` route through, which is a bigger and riskier change than this
+lane's own footprint should take without the coordinator's steer, and
+`campfire_glow.gd::ignite()` name-matches the `Fire` surface by string, so
+any such change also has to prove it does not break every existing
+campfire's glow. Flagging it named rather than leaving it implicit.
+
+**Investigated and deliberately left alone: the Workbench.** Re-checked
+against the same close-frame comparison. `Workbench.gltf`
+(Quaternius Fantasy) reads as a warmer, more saturated wood than the tent
+or creature bed, but it is real PBR wood-grain with metal corner
+brackets — not a material-language collision the way the old bedroll or
+the bare fire logs were. It is also the SAME prop family already used for
+every other buildable and generic scatter prop across the entire game
+(`Bench`, `Crate_Wooden`, `Barrel`, dozens of authored placements), and its
+`MI_Trim_Furniture`/`MI_Trim_Metal` materials already get the correct
+metallic-factor fix via `build_material_finish.gd`. Regrading just this one
+instance to match the camp-set's cooler palette would fix a mild variance
+here while breaking consistency with its own much larger family everywhere
+else it appears — not a net win. Left untouched, same call as round 1,
+now with the side-by-side comparison to back it.
+
+Frames for round 2 (all under `shots/`, not committed —
+`.gitignore` excludes it): `t1_camp_assets/01-tent.png` … `05-workbench.png`
+(the per-object close comparison) and `t1_camp_bed_v2/01-camp-establishing.png`
+/ `02-camp-close.png` (the composed camp with the bed swap). This session
+does not self-judge these; per the coordinator's own instruction they are
+ready to route to the Fable visual-judge pass.
+
 ## Not touched (ownership boundaries respected)
 
 Ground/terrain materials, lighting/`art.json`, regional identity/landmarks,
