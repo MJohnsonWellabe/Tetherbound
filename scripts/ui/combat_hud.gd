@@ -1086,6 +1086,11 @@ func _set_xp_line() -> void:
 	# strip names nobody), and the new NUMBER is the thing a player is actually
 	# tracking. Both were already in hand here: `creature.label()` and
 	# `creature.level` sit one line above and were simply not being read.
+	# §20's celebration-moment ask: a level-up used to be plain text,
+	# indistinguishable from an ordinary "+3 XP" line. This adds a scale/colour
+	# pop on the level-up branch only -- no new node, no new scene, the same
+	# `_xp_line` Label this function already writes to.
+	_celebrate_level_up()
 	var line := "%s reached Lv %d" % [creature.label(), int(creature.level)]
 	# The unlock, when the same fight bought one. `trait_unlocked()` is the
 	# only thing levelling actually opens, and it turns on bond nodes rather
@@ -1107,6 +1112,37 @@ func _set_xp_line() -> void:
 		line += "   ·   trait unlocked"
 	_xp_line.text = "+%d XP   ·   %s" % [xp, line]
 	_xp_left = 2.4
+
+
+## A brief scale pop plus a flash to the WARNING accent, back to whatever
+## colour `_xp_line` was actually authored with (read live rather than
+## hard-coded, so a future palette change here does not need a matching edit).
+## Guarded by `is_inside_tree()`: `create_tween()` requires the node be in a
+## SceneTree, and `test_level_up_announcement.gd` drives `_set_xp_line()` on a
+## bare, untethered `combat_hud.gd` instance to check the built STRING only --
+## it never adds the node to a tree, by design (GATE-E's own header explains
+## why that test exists at all). Same kill-before-restart pattern `_pulse()`
+## above uses, so a second level-up landing mid-animation retriggers cleanly
+## instead of stacking.
+func _celebrate_level_up() -> void:
+	if not is_inside_tree():
+		return
+	var key: int = _xp_line.get_instance_id()
+	if _pulse_tweens.has(key):
+		var old: Tween = _pulse_tweens[key]
+		if old != null and old.is_valid():
+			old.kill()
+	var base_color: Color = _xp_line.get("theme_override_colors/font_color")
+	_xp_line.pivot_offset = _xp_line.size / 2.0
+	_xp_line.scale = Vector2.ONE
+	var tw := create_tween()
+	_pulse_tweens[key] = tw
+	tw.tween_property(_xp_line, "scale", Vector2(1.22, 1.22), UITokens.T_DAMAGE_FLASH) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(_xp_line, "theme_override_colors/font_color", UITokens.WARNING, UITokens.T_DAMAGE_FLASH)
+	tw.tween_property(_xp_line, "scale", Vector2.ONE, UITokens.T_CAPTURE_PULSE) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(_xp_line, "theme_override_colors/font_color", base_color, UITokens.T_TOOLTIP)
 
 
 func _tick_outcome(delta: float) -> void:

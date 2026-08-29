@@ -325,6 +325,13 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	var name := Label.new()
 	name.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	name.text = str(recipe.get("name", id))
+	# VIS-UI-r5: this label had no overrun handling, so `button.clip_contents`
+	# (above) chopped a long recipe name off mid-word at the row edge with no
+	# affordance -- "Ironwood Haft (Axe" and nothing to signal more text
+	# existed. Same ellipsis pattern `cost_label` already uses below.
+	name.autowrap_mode = TextServer.AUTOWRAP_OFF
+	name.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	name.clip_text = true
 	name.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
 	name.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	text_col.add_child(name)
