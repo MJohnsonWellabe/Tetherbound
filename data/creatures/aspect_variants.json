@@ -202,6 +202,78 @@
           "softness": 0.12
         }
       ]
+    },
+    "ashtusk": {
+      "display_name": "Ashtusk",
+      "source_species": "tuskroot",
+      "board": "docs/art/reference/creature-expansion-2026-08-30/08_Ashtusk_tuskroot_variant.png",
+      "_comment": "Board palette: Ash Brown / Basalt / Ember Glow / Soot Black. 'The body should NOT be engulfed in flames. It should feel like a creature that has spent years around volcanic heat' -- so the recolour deepens tuskroot's own already-dark vivid direction toward basalt/soot rather than adding new paint, and the glow stays a crack pattern (few, large, readable) plus the tusks themselves, not a general body wash.",
+      "rules": [
+        {
+          "match": {
+            "hue": [
+              15,
+              70
+            ],
+            "sat_min": 0.08,
+            "val_min": 0.32
+          },
+          "set_hue": 22,
+          "set_sat": 0.28,
+          "val_scale": 0.55
+        },
+        {
+          "match": {
+            "hue": [
+              15,
+              70
+            ],
+            "sat_min": 0.08,
+            "val_max": 0.32
+          },
+          "set_hue": 20,
+          "set_sat": 0.2,
+          "val_scale": 0.62
+        },
+        {
+          "match": {
+            "sat_max": 0.08
+          },
+          "val_scale": 0.6
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.05,
+        "feature_set_val": 0.025
+      },
+      "glow": [
+        {
+          "id": "armor_cracks",
+          "_why": "'orange glowing cracks' through the basalt plates. Restricted off the legs/belly the same way Nightburrow's are.",
+          "select": "feature",
+          "where": {
+            "y_min": 0.28,
+            "up_min": 0.12
+          },
+          "percentile": 6.0,
+          "max_val": 0.12,
+          "color": "#ff7a1a",
+          "intensity": 1.7,
+          "softness": 0.1
+        },
+        {
+          "id": "tusks",
+          "_why": "'ember-glowing tusks'. Tusks are painted PALE/ivory, not dark -- a darkest-pixel search would never find them, so this layer selects by colour (low saturation, high value) instead of by percentile.",
+          "select": "match",
+          "where": {},
+          "sat_max": 0.12,
+          "val_min": 0.6,
+          "color": "#ffb347",
+          "intensity": 1.2,
+          "softness": 0.1
+        }
+      ]
     }
   }
 }
