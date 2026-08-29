@@ -4,10 +4,56 @@ This is the **single current entry point for autonomous Meadows work**.
 
 If another document looks like a startup guide, milestone guide, handover, or old Ralph manual, do not treat it as current merely because it exists. Start here.
 
-## CURRENT STATE — 2026-08-29
+## CURRENT STATE — 2026-08-30
 
 **This section supersedes every dated section below it.** They are kept as
 history; do not open the lanes they name, and do not trust their `main` SHA.
+
+### Open work: the dark-features inventory
+
+`ralph/reports/DARK_FEATURES_INVENTORY_2026-08-30.md`, on branch
+`ralph/DARK-FEATURES`, is the audited list of everything **built but
+unreachable in play** — the owner's 2026-08-30 directive, *"if we built it,
+turn it on, put it on the game, make it playable."*
+
+**Nine open items, ranked by player impact.** Each says what it is, where it
+lives, what it would take, and what was actually verified. Read it before
+opening an install lane; it is the current install work list. It is deliberately
+**not** appended to `ralph/BACKLOG.md` — Gate F regenerates that file and its
+reviewer must receive the run evidence blind (protocol §16.2), so appending
+would contaminate it.
+
+Highest-priority open items, in order:
+
+| id | open item | first blocker |
+|---|---|---|
+| **O1** | The owner's 2026-08-30 directives, D70, and the creature-expansion brief exist **only** on `claude/tetherbound-coordinator-onboard-7pz3ah`, unmerged. The repo's top-precedence document is invisible from `main`. | land or cherry-pick those three docs |
+| **I1** | `ralph/T3-SUNSTONE` conflicts with landed `T3-PICKUPS` in `playground_world.gd`. The conflict is **purely additive**, so `--ours`/`--theirs` silently deletes either the Sunstone (Ashtusk becomes unreachable) or the elixir cache, with no test to catch it. | must be handled **during** the landing |
+| **T1** | `can_challenge()` returns false for four distinct reasons and `trainer_npc.gd:172` collapses them into one, so all 27 trainers — the Warden included — can speak their post-defeat line before being beaten. | needs a third conversation state (~27 lines) |
+| **E1** | `roll_new_worlds` ships `false`; the whole rolled-world system is reachable only via `TB_WORLD_SEED`. Owner wants it ON. | **precondition:** Gate F re-baselines first (D-0830-1) |
+| **C1** | Four fully-authored species in `data/creatures/species_pending.json`, which has zero code readers. Takes the Ice type and four moves with it. | blocked on a Meshy generation; **no mesh exists** |
+| **B1** | Tonic buffs apply real stat scaling and the HUD never shows them. | a buff indicator was never built |
+| **P1 / K1 / Z1** | 18 config keys with no reader (incl. three ROG collision-streaming levers whose doc comment falsely claims they are tunable), plus dead code and orphan assets. | each is wire-it-or-delete-it |
+
+**Closed by that lane:** **D1** — the four Aspect variants (Nightburrow,
+Stormtrail, Riftfrill, Ashtusk) were rendering in their base species' textures.
+Fixed in `6698ad3d`; **cherry-pick that SHA**, do not land `ralph/DARK-FEATURES`
+as an integration branch (its merges exist only to anchor the fix).
+**A render pass is still owed on it** — the wiring is verified, nobody has
+looked at it.
+
+⚠️ Nothing in that report was confirmed by running the game; its author had no
+Godot. Two items (D1, T1) name the specific play-test that would confirm them.
+
+---
+
+### Carried forward from 2026-08-29 — still current except where noted
+
+⚠️ **The `main` SHA in the next paragraph is stale.** As of 2026-08-30 `main`
+is at **`477a296a`**, and `ralph/LAND-0830` has landed. Seven lane branches are
+**not** on `main`: `T3-ENCOUNTER`, `T3-CREATURES`, `T3-MATCHUPS`, `T3-SUNSTONE`,
+`T3-DENSITY`, `T1-CREATURE-ART`, `T1-CREATURE-MESH`. (`ralph/LAND-0830B` does
+not exist.)
 
 `main` was at `961a8c02` at the end of the 2026-08-29 production day.
 **`ralph/LAND-0829B` carries every lane branch in the repo** and was awaiting
