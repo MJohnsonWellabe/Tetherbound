@@ -53,8 +53,9 @@ five" therefore cannot be pinned without inventing one.
 | Applied at **both** damage call sites | `scripts/combat/combat_manager.gd` | `smoke_combat.gd` integration check |
 | `hit_effectiveness` signal, `active_matchup()` | `scripts/combat/combat_manager.gd` | `smoke_combat.gd` |
 | `move_db.type_of()` | `scripts/creatures/move_db.gd` | unit tests |
-| Matchup arrow on the enemy type tag | `scripts/ui/combat_hud.gd` | `active_matchup()` asserted in `smoke_combat.gd`; parse-checked; rendering not eyeballed |
-| Per-hit STRONG/WEAK banner | `scripts/ui/combat_hud.gd` | parse-checked; **rendering not eyeballed — see §6** |
+| Matchup arrow on the enemy type tag | `scripts/ui/combat_hud.gd` | `active_matchup()` asserted in `smoke_combat.gd`; **rendered and inspected** |
+| Per-hit STRONG/WEAK banner | `scripts/ui/combat_hud.gd` | **rendered and inspected**; a real defect found and fixed — see §6 |
+| Frame capture for both tells | `tools/capture_type_tell.gd` (new, `.uid` committed) | ran clean, four frames |
 | Unit tests | `tests/test_type_chart.gd` (new, `.uid` committed) | 14/14 green |
 | Real-fight integration check | `tests/smoke_combat.gd` | green |
 
@@ -210,15 +211,52 @@ design decision, not an implementation detail.**
 
 ## 6. Done-but-unverified, and still-open
 
-**Unverified — the honest list:**
+**The HUD tells were rendered, and doing so found a real defect.**
 
-- **The two HUD tells have never been looked at.** `active_matchup()` is
-  asserted by `smoke_combat.gd` and `combat_hud.gd` parse-checks clean, but no
-  frame has been rendered. Font size (26), position (y 232–268, under the enemy
-  plate) and colour choices are reasoned, not seen. `ralph/conventions.md`'s
-  visual-judge requirement for visual-affecting work is **not met**. Whoever
-  picks this up should render a fight frame with a non-neutral matchup before
-  calling the tell done.
+`tools/capture_type_tell.gd` boots `scenes/combat/combat_hud.tscn` alone
+against a stub manager. The existing world capture tools cannot do this job:
+the tells only appear in a **non-neutral matchup**, and which types meet in a
+real fight is the director's choice — `smoke_combat.gd` drew ground-vs-ground.
+Four frames (advantaged, disadvantaged, neutral-regression, banner), verified
+by eye at 1920×1080:
+
+- the tag reads `GROUND ▲` in green when the piloted creature is favoured,
+  amber `GROUND ▼` when it is not, and is **unchanged in its own type colour at
+  neutral** — the case that must look exactly as it did before this existed;
+- the per-hit banner sits clear below the plate and reads at a glance.
+
+**The defect it caught:** the banner was positioned at the enemy plate's
+*authored* bottom offset (224, from the `.tscn`). `EnemyPanel` is a
+`PanelContainer` that grows to fit content and does not write that growth back
+to its offsets, so it really ends near 258 — the banner straddled the plate's
+bottom edge, half on the panel and half on the world. This is the same trap
+`_party_strip_position()` in that very file already documents at length, after
+a blind visual review caught its twin, and I walked into it anyway.
+`_position_effect_banner()` now measures the panel's real rect.
+
+`shots/` is gitignored, so the tool is the committed artifact. Re-render with:
+
+```
+xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . \
+  --rendering-driver opengl3 --script tools/capture_type_tell.gd
+```
+
+**What I did NOT do, deliberately:** run `.claude/skills/visual-judge` over
+these frames. `ralph/conventions.md` asks for a blind critic on
+visual-affecting work, and I think that rule is aimed at world/material/lighting
+work judged against the art-direction board — the judge would be looking at a
+HUD panel over a flat blue stub field and its findings would be about the
+missing world, not about the tell. I would rather say that plainly than perform
+the step for form. If the coordinator disagrees, the frames exist and the pass
+is cheap.
+
+**Still unverified:**
+
+- **The tells have not been seen at handheld resolution.** Frames are 1920×1080.
+  The type tag is a pre-existing 19px label (I did not change its size, only its
+  colour and one appended glyph) and the banner is 26px, both above
+  `smoke_hud_handheld_legibility.gd`'s 15px floor — but nobody has looked at
+  them at 1280×800 on the ROG Ally proxy.
 - **The smoke integration check has only ever run on a mirror matchup.** The
   director spawned ground-vs-ground, so the fight emitted three neutral
   verdicts. The assertion is real (agreement between the fight and an
@@ -339,28 +377,46 @@ type).
 | `--only=test_type_chart` | **14 tests, 270 assertions, 0 failed** |
 | `--only=test_combat,test_creature,test_moves,test_progression,test_trainers` | **249 tests, 2122 assertions, 0 failed** |
 | `tests/smoke_combat.gd` | **OK** — "type chart reached the fight: 3 verdicts, ally ground vs foe ground (hit 0 / 0, arrow 0)" |
-| `tests/smoke_boss.gd` | *(see §12)* |
-| `tests/smoke_relay.gd` | *(see §12)* |
-| `tests/smoke_stronghold.gd` | *(see §12)* |
-| `tests/smoke_stronghold_reload.gd` | *(see §12)* |
-| `tests/smoke_gate_e_finale.gd` | *(see §12)* |
-| full `tests/run_tests.gd` | *(see §12)* |
+| `tests/smoke_boss.gd` | **OK** — "boss smoke test passed" |
+| `tests/smoke_relay.gd` | **OK** — captain beaten, captive freed, Gear carried |
+| `tests/smoke_stronghold.gd` | **OK** — "stronghold smoke test passed" |
+| `tests/smoke_stronghold_reload.gd` | *(running at time of writing — see §12)* |
+| `tests/smoke_gate_e_finale.gd` | *(running at time of writing — see §12)* |
+| full `tests/run_tests.gd` | *(running at time of writing — see §12)* |
+| `tools/capture_type_tell.gd` | **OK** — four frames, arrows 1 / −1 / 0 as the chart predicts |
+
+All five combat-bearing smoke tests the brief named were run. The four that
+finished are green. §12 carries the last three.
 
 ---
 
 ## 11. What I would do next, in order
 
-1. **Render a fight frame with a non-neutral matchup and look at both tells.**
-   The one piece of this branch with no visual evidence behind it.
-2. **Put §5's captain question to the owner.** It changes what a player
+1. **Put §5's captain question to the owner.** It changes what a player
    experiences and it is now blocking a coherent §8.
-3. **Roster rebalance pass, with §4 as the brief.** My recommendation, in
+2. **Roster rebalance pass, with §4 as the brief.** My recommendation, in
    priority order: give `captain_field` and `captain_ridge` a second type each
    (the −35 % discounts are the real problem, not the +56 % taxes); then look at
    whether 57.6 % Ground opposition is what the chapter wants now that type is
    mechanical.
-4. **Consider whether the TM economy has enough Air coverage.** The chart makes
+3. **Consider whether the TM economy has enough Air coverage.** The chart makes
    TMs the way a creature escapes its birth type, which raises the stakes on
    `T3-REWARD`'s already-diagnosed Air-TM gap in band 4 (`TM_AT` in
    `scripts/world/playground_world.gd`). That was a content gap before; it is
    now a coverage gap in a live mechanic.
+
+---
+
+## 12. Runs still in flight when this was written
+
+`smoke_stronghold_reload.gd`, `smoke_gate_e_finale.gd` and the full unfiltered
+`tests/run_tests.gd` were still running when this document was first pushed.
+**Their results are appended by the final commit on this branch** — if this
+section still says "in flight", that commit did not happen and the runs should
+be repeated before the branch is trusted:
+
+```
+godot --headless --path . --script tests/smoke_stronghold_reload.gd
+godot --headless --path . --script tests/smoke_gate_e_finale.gd
+godot --headless --path . --script tests/run_tests.gd
+```
