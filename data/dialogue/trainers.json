@@ -140,6 +140,7 @@
       "lines": [
         "Far as the pasture, no further. That's the posting, and I've kept it eleven years.",
         "You've seen what walks in off the high ground when a fence goes down. I've buried the difference.",
+        "No trick to this ground and none to mine. Whoever's strongest walks off it.",
         "Sigil's on my belt and it stays there unless you take it properly. Bring them out."
       ]
     },
@@ -149,7 +150,7 @@
       "lines": [
         "Clean. No arguing with clean.",
         "Take it — that's the rule and I'd not be worth the badge if I bent it.",
-        "Two more of us up the road. Vess won't like the wind doing your aiming for you."
+        "Vess is up the road yet, if you haven't already met her wind."
       ]
     },
     "captain_ridge_challenge": {
@@ -158,6 +159,7 @@
       "lines": [
         "Careful. Crosswind on this shoulder has taken better-footed than you off it.",
         "People call the ridge line cruel. It's a wall, and a wall is the kindest thing we've built up here.",
+        "You got up here already breathing hard, I'd wager. Good — whatever's left in your five is what fights mine.",
         "Mine fly it every day. Let's see yours."
       ]
     },
@@ -167,7 +169,7 @@
       "lines": [
         "You read the gusts. Most don't bother.",
         "The Ridge Sigil, then. I'd sooner it went to someone who watches the sky.",
-        "Oreth's down in the draw. He's the patient one — don't let him tire you into a mistake."
+        "Oreth's down in the draw, if the river didn't have him first. He's the patient one — don't let him tire you into a mistake."
       ]
     },
     "captain_riverwatch_challenge": {
@@ -184,7 +186,7 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "A plan, then. Good.",
-        "That's the third. The Hall approach reads all three or it reads none — no bargaining with a lock.",
+        "However many you're carrying now, that's one more. The Hall approach reads all three or it reads none — no bargaining with a lock.",
         "Go on up. I hope you're right about whatever you think is in there."
       ]
     },

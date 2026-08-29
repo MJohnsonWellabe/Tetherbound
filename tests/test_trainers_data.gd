@@ -587,6 +587,94 @@ func test_captain_teams_sit_in_the_bands_own_level_range() -> void:
 				"'%s' fields a level %d creature; §3 puts this band at roughly 10-16" % [id, level])
 
 
+## T3-CAPTAINS, owner-direction §8: "different aspects of team-building, not
+## escalating stat blocks." There is no type-effectiveness system anywhere in
+## this combat build to check that against -- `creature_instance.gd::
+## effective_attack`/`effective_defence` read level, bond and buffs, never a
+## type chart, and species carry a `type` tag used for flavour/habitat only.
+## So "did you build a balanced five" cannot be pinned by a rock-paper-scissors
+## matchup here without inventing one, which CLAUDE.md reserves as an owner
+## decision. What the rosters DO already carry, and what this guards, is real
+## base-stat archetype variety: Halder's team should read as the bulkiest of
+## the three (average base HP+defence, not merely level), Vess's as the
+## frailest and hardest-hitting. A future edit that quietly re-levels one
+## captain to feel "harder" without touching its roster's shape would pass
+## every other captain test in this file and still be exactly the "same
+## fight, larger HP" spec §3 forbids -- this is the one check that would
+## catch it.
+func test_the_three_captains_read_as_different_team_shapes_not_just_levels() -> void:
+	var bulk := {}
+	var punch := {}
+	var spread := {}
+	for id: String in CAPTAINS:
+		var team: Array = TRAINERS.trainer(id).get("team", [])
+		var hp_total := 0.0
+		var def_total := 0.0
+		var atk_total := 0.0
+		var member_bulk: Array[float] = []
+		for member: Variant in team:
+			var def: Dictionary = SPECIES.definition(str((member as Dictionary).get("species", "")))
+			var this_hp := float(def.get("base_hp", 0.0))
+			var this_def := float(def.get("base_defence", 0.0))
+			hp_total += this_hp
+			def_total += this_def
+			atk_total += float(def.get("base_attack", 0.0))
+			member_bulk.append(this_hp + this_def)
+		var count := maxf(1.0, float(team.size()))
+		bulk[id] = (hp_total + def_total) / count
+		punch[id] = atk_total / count
+		var lo := float(member_bulk.min()) if not member_bulk.is_empty() else 0.0
+		var hi := float(member_bulk.max()) if not member_bulk.is_empty() else 0.0
+		spread[id] = hi - lo
+	# Halder: bulkiest team on average, the "raw strength, no trick" test.
+	assert_true(float(bulk["captain_field"]) > float(bulk["captain_ridge"]) + 10.0,
+		("Captain Halder's team (avg base HP+DEF %.1f) should read noticeably bulkier than "
+			+ "Captain Vess's (%.1f); right now they are distinguished by level alone")
+			% [float(bulk["captain_field"]), float(bulk["captain_ridge"])])
+	# Vess: the other half of the same contrast -- frail, hard-hitting, and the
+	# test is finishing them fast before their own attack tells.
+	assert_true(float(punch["captain_ridge"]) > float(punch["captain_field"]),
+		"Captain Vess's team (avg base attack %.1f) should hit harder on average than "
+			% float(punch["captain_ridge"])
+			+ "Captain Halder's (%.1f), the other half of the same contrast" % float(punch["captain_field"]))
+	# Oreth: the roster itself is the test, not its average -- a lone bulky
+	# wall alongside genuinely frailer attackers in the SAME three, so no
+	# single answer (all-tank, all-glass) covers the whole fight. Pinned as
+	# the widest per-member bulk spread of the three, which is what "not all
+	# one type -- you'll want a plan" is actually describing mechanically.
+	assert_true(float(spread["captain_riverwatch"]) > float(spread["captain_field"]),
+		("Captain Oreth's team (member bulk spread %.1f) should be more internally mixed than "
+			+ "Captain Halder's uniform one (%.1f); a composition test needs a roster with more than "
+			+ "one shape in it") % [float(spread["captain_riverwatch"]), float(spread["captain_field"])])
+
+
+## §10: "a lightweight readiness communication layer... approximate expected
+## level range, whether varied types are recommended, whether it is an
+## endurance sequence." Not a new stat and not a level lock -- a line in the
+## challenge conversation the player already reads before the fight starts.
+## Oreth's line already did this ("Not all one type -- you'll want a plan,
+## not a favourite"); this pins that all three now carry their own signal and
+## that the three are not interchangeable boilerplate.
+func test_each_captains_challenge_signals_its_own_kind_of_readiness() -> void:
+	var signal_words := {
+		"captain_field": ["strongest", "trick"],
+		"captain_ridge": ["breathing", "left in your five"],
+		"captain_riverwatch": ["not all one type", "plan"],
+	}
+	var seen_lines: Array[String] = []
+	for id: String in CAPTAINS:
+		var challenge := str(TRAINERS.trainer(id).get("challenge", ""))
+		var convo: Dictionary = RUNNER.table().get(challenge, {})
+		var lines: Array = convo.get("lines", [])
+		var joined := " ".join(lines).to_lower()
+		assert_false(joined.is_empty(), "'%s' opens no lines at all" % challenge)
+		for word: String in signal_words[id]:
+			assert_true(joined.contains(word),
+				"'%s' should signal its own readiness ('%s'); got: %s" % [challenge, word, joined])
+		assert_false(seen_lines.has(joined), "'%s' repeats another captain's challenge text verbatim" % challenge)
+		seen_lines.append(joined)
+
+
 ## The done-when, at the data level: sealed at 2/3, open at 3/3, using the real
 ## reward table and the real gate class. The scene-tree half of this is
 ## `tests/smoke_trainer_battle.gd`.
