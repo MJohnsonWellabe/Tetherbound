@@ -60,9 +60,17 @@ DEFAULT_BUDGET = 60
 ## actually cost 60 and the guard sat four times too high to ever fire: the
 ## three Warden text candidates alone spent a quarter of what was left. Any
 ## future correction belongs here, and belongs measured the same way.
+##
+## T1-NPC-CAST, 2026-08-30: `image_refine` corrected 40 -> 30, the same way --
+## balance checked before/after 15 separate refine-tier `generate` calls
+## (one candidate each, across two batches), every single one landing at
+## exactly a 30-credit drop (1440->1230 over 7, 1230->990 over 8). Estimator
+## text elsewhere still prints "roughly 40" against this old figure in a few
+## comments/docstrings that were not re-swept; the number that matters, this
+## dict, is fixed.
 COSTS = {
     "image_preview": 20,
-    "image_refine": 40,
+    "image_refine": 30,
     "text_preview": 20,
     "retexture": 30,
 }
