@@ -18,6 +18,25 @@ than five segments' worth of independent band content**, and the open
 question at the end of this file is the one thing standing between "rig
 defect, now fixed" and "this might still be a real game defect."
 
+**Correction to the coordinator's 2026-08-29T16:06 segment-exposure table,
+found while X04 was already running against it.** The coordinator's table
+listed X04's `S06-exit` entry save as pre-stranding ("S04, S06
+(pre-stranding), S09-exit"). It is not. This operator checked `S06`'s own
+`route.csv`/`events.jsonl` directly: `S06-exit`'s last recorded player
+position is `(12.8, -5.53, 1324.5)`, region `corridor` — inside the exact
+South Bridge stranding cluster (x∈[0,16], z∈[1314,1326]) named in RIG-13
+above, not a clean pre-stranding state. Of X04's three `seed_save` points
+(`X04-007` from `S04-exit`, `X04-086` from `S06-exit`, `X04-103` from
+`S09-exit`), only the first is genuinely unexposed (`S04-exit`'s last
+position is `(18.67, 0.19, 12.71)` in `grandpas_village`, well clear of the
+corridor). **Both the S06-exit and S09-exit thirds of X04 start from an
+already-stranded position**, same as X03 and X06 would. This does not change
+the recommendation to run X04 (it was already in flight, and its first third
+is clean, high-value combat evidence), but it does change how its results
+should be read: attribute every X04 finding to which `seed_save` produced it
+(see the GAME findings document's per-block table), and do not read the
+S06/S09 thirds as clean control data the way the coordinator's table implied.
+
 ---
 
 ## RIG-1 through RIG-11 — unchanged from the prior draft, verified still accurate
