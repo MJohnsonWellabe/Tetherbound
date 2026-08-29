@@ -386,13 +386,13 @@ type).
 | `tests/smoke_boss.gd` | **OK** — "boss smoke test passed" |
 | `tests/smoke_relay.gd` | **OK** — captain beaten, captive freed, Gear carried |
 | `tests/smoke_stronghold.gd` | **OK** — "stronghold smoke test passed" |
-| `tests/smoke_stronghold_reload.gd` | *(running at time of writing — see §12)* |
+| `tests/smoke_stronghold_reload.gd` | **OK** — "stronghold reload smoke test passed" |
 | `tests/smoke_gate_e_finale.gd` | *(running at time of writing — see §12)* |
 | full `tests/run_tests.gd` | *(running at time of writing — see §12)* |
 | `tools/capture_type_tell.gd` | **OK** — four frames, arrows 1 / −1 / 0 as the chart predicts |
 
-All five combat-bearing smoke tests the brief named were run. The four that
-finished are green. §12 carries the last three.
+All five combat-bearing smoke tests the brief named were run. Every one that
+has finished is green. §12 carries whatever was still in flight.
 
 ---
 
@@ -415,14 +415,13 @@ finished are green. §12 carries the last three.
 
 ## 12. Runs still in flight when this was written
 
-`smoke_stronghold_reload.gd`, `smoke_gate_e_finale.gd` and the full unfiltered
-`tests/run_tests.gd` were still running when this document was first pushed.
+`smoke_gate_e_finale.gd` and the full unfiltered `tests/run_tests.gd` were
+still running when this document was first pushed.
 **Their results are appended by the final commit on this branch** — if this
 section still says "in flight", that commit did not happen and the runs should
 be repeated before the branch is trusted:
 
 ```
-godot --headless --path . --script tests/smoke_stronghold_reload.gd
 godot --headless --path . --script tests/smoke_gate_e_finale.gd
 godot --headless --path . --script tests/run_tests.gd
 ```
