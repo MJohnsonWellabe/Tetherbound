@@ -284,27 +284,8 @@
       ],
       "radius": 18.0,
       "_why": "BAND5-DEADTRAVEL. This lane's driven run (`tools/_probe_band5_approach.gd`) walked the authored spine and measured a 123m stretch with nothing within reach of the road -- the whole eastward diagonal from (-6,7267) to (73,7361), the longest dead-travel interval in the region and the one the player crosses immediately before the gate. The density pass above added 65 creatures but sited six of its clusters OFF-spine on purpose, and this leg is where that left the road itself bare. Centred on the leg rather than beside it. Duskhush because the two nearest clusters are already duskhush (orders 5002, 5012) and the band's habitat note calls this the ground that is hunted rather than dug into -- one more of the same animal reads as a range, where a fifth species here would read as a menu."
-    },
-    {
-      "order": 5100,
-      "species": "ashtusk",
-      "count": 1,
-      "habitat": "scorched_industrial",
-      "centre": [
-        118.0,
-        0.0,
-        7340.0
-      ],
-      "radius": 10.0,
-      "respawn_seconds": 900.0,
-      "alpha": {
-        "level_bonus": 3,
-        "scale": 1.0
-      },
-      "_why": "Brief section 8. One individual on Team Tether's industrial ground by the Sigil gate, beside the Duskhush cluster at (85,7375) this band file annotates 'Roosting at the Sigil gate'. The brief's location list is the most restrictive in the expansion -- 'scorched terrain, warm stone, burned clearings, Team Tether industrial sites' -- and band 5 is the only region in the chapter that is all four. Band 5's wild range is [14,17], the strongest field in the game, and +3 on top answers 'Higher than normal Tuskroot... This should be a serious fight'. UNGATED by time or weather on purpose: the brief gives Ashtusk no time or weather restriction, and its rarity is carried entirely by geography -- the strongest of the protections, because the player cannot wait it out.",
-      "_why_rarity": "The brief says '0.5-1% of qualifying Tuskroot opportunities'. That is undefined here: TUSKROOT HAS NO WILD SPAWNS ANYWHERE IN THE CHAPTER -- it is authored only as Mudsnout's evolution and on trainer rosters, so the qualifying set is empty and the percentage is 0/0. The brief anticipated exactly this and gave the answer: 'Could also be handled as one or two semi-authored roaming individuals instead of ordinary RNG.' One authored individual. A consequence worth knowing: this makes Ashtusk the only wild creature of the Tuskroot family the player can meet in the Meadows at all.",
-      "_why_alpha": "'Rare Variant / mini-Alpha tier', so it gets an alpha block -- but +3 rather than Nightburrow's +5, and `scale` 1.0 because sheet 8's build path is 'VARIANT RECOLOR + VFX' with no resize, unlike sheets 1 and 2 which both name RESIZE explicitly."
     }
   ],
+  "_comment_ashtusk_removed": "D71/T3-SUNSTONE, 2026-08-30. The wild Ashtusk cluster T3-CREATURES placed here (order 5100, one individual at (118,0,7340), the scorched-industrial ground by the Sigil gate) is REMOVED. The owner directed Ashtusk to be reached by evolving a Mudsnout with a Sunstone instead ('there should just be some kind of sunstone... to get the Ashtusk'), which gives Ashtusk `evolves_from: mudsnout` -- and tests/test_spawns_data.gd::test_no_evolved_form_spawns_wild already forbids any evolved-form species from spawning wild (D20: 'an evolution you can just walk up to and catch makes evolving pointless'). Keeping this cluster would have meant weakening that test, which this lane's brief explicitly forbids. The site is NOT abandoned: scripts/world/playground_world.gd now places the Sunstone pickup in this same pocket, so the ground keeps its narrative payload (this is where a fire-touched Tuskroot comes from) and the encounter becomes a genuine five-creature-slot choice rather than a catch. See ralph/reports/SUNSTONE_DESIGN_2026-08-30.md section 4 for the options considered and docs/decisions/D71 for the full record.",
   "_comment_density_pass": "BAND5-DENSITY. Owner directive, 2026-08-22: 'you're going to need a lot more than 24 creatures in a band... look at Pokemon density and Palworld density... Valheim deer and boar density it's far more.' The original five clusters/10 creatures above (plus the mudsnout special encounter) were sited against the OLD floor and are kept unchanged, positions and reasoning both -- this is an addition, not a rewrite. Orders 5005-5021 add 17 clusters/65 creatures: a cluster roughly every 35m of the spine's own ~650m length (skipping stations that already fell on an existing cluster, the outer watch or the checkpoint trainer, or landed short of the band's own z=7000 boundary), thinner (3-4, not 5) across the exposed stretch between the mouth and the Sigil gate where the original _comment_habitat's own reasoning already called the ground more dangerous than populous, plus six off-spine pockets (orders 5016-5021) so leaving the road is rewarded rather than the route reading as a conveyor belt. Total: 22 clusters, 75 creatures over ~530m of authored spine -- inside the owner's 18-28/70-110 target, toward its lower-middle rather than its ceiling, because `encounter_director.gd` instantiates and ticks every spawn in the whole 7.5km corridor with no distance-based streaming yet (a separate lane is landing that; band5 does not own either file). Species stay the four the region already established (burrowback/galecrest/duskhush/trailpup) plus mudsnout (already introduced by the special encounter, order 5004) for the direct route; the off-spine pockets add pipwing and meadowhart, both already-validated non-evolved roster species used wild elsewhere in the chapter, for the ecological variety a detour should be rewarded with."
 }
