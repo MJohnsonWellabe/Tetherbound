@@ -1086,13 +1086,100 @@
     },
     {
       "id": "S03-39b",
-      "title": "recall (dismiss) the active creature, fainted or not",
+      "title": "cycle to a live party member before challenging Bryn",
       "action": "press",
       "args": {
-        "control": "creature_recall",
+        "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "encounter_director.gd::_read_creature_control_input(): creature_recall on a currently-deployed ally calls dismiss_active_creature(), which sets both _ally and _ally_body to null -- the ONLY in-session way (short of a save/load) to clear the blanket \"is out of the fight\" override this segment's own catch loop can trigger. A rig-side mitigation for a GAME defect this lane does not own, not a fix for it."
+      "expected": "T2-BUILDPLACE ROUND 2 (FINDING-T2-BUILDPLACE-2026-08-30.md, round 3): replaces the round-2 fix's blind creature_recall dismiss here. That dismiss cleared the blanket \"is out of the fight\" override (still true and still needed -- see the note below) but ALSO zeroed _ally, and encounter_director.gd::can_challenge() refuses a null ally exactly like a fainted one (line ~1568). Live-confirmed this round: with the dismiss in place, Bryn's own _on_challenged() (trainer_npc.gd) read can_challenge()==false and opened his 'defeated' conversation instead of 'challenge' for every subsequent replay -- no fight ever started, so S03-48/S03-50's combat_quick presses hit nothing, S03-51a's level-up capture had no level-up to catch, and the training rung's own evidence (Section L.4 T05/T06, GF-14-COMBAT-02) was never real. autoload/party.gd::cycle_active() skips fainted/resting members and is a documented no-op when the active creature is already the only healthy one (returns false, revision untouched), so pressing it here is safe regardless of outcome: if the catch loop's deployed ally fainted, this moves `active` to a live party member and encounter_director.gd::_sync_active_creature() (polled every frame off party.revision in _process()) dismisses the fainted body and summons the new active one; if the ally did not faint, this just cycles to a different live member, which costs nothing. Either way _ally ends up live (non-null, non-fainted) before Bryn's challenge, clearing interaction_offer()'s blanket override the same way the old dismiss did, without breaking can_challenge()."
+    },
+    {
+      "id": "S03-39c",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async (awaits _spawn_ally_body's ground placement); the newly-active creature's body needs a few frames to actually stand up before Bryn's challenge prompt is read."
+    },
+    {
+      "id": "S03-39d",
+      "title": "T2-BUILDPLACE ROUND 3: party_cycle alone is not enough when the party never grew past one",
+      "action": "note",
+      "args": {
+        "text": "Two full replays of this round's own fix both left party_size==1 at S03-39 with the sole starter fainted -- the catch loop's own real, RIG-15-acknowledged possible outcome (10 real throws, all missed or the wild creature's own retaliation across 10 fights wore the one deployed attacker down), reproduced identically both times against this segment's own deterministic scripted input against S02-exit's seed. party.gd::cycle_active() (S03-39b) cannot help here: there is no second party member to cycle to. data/items/items.json's `revive` item (creature_instance.gd::revive(), granted x2 in the opening satchel per tools/gate_f/probe_tool_equip_sequence.gd's own read of a real S02-exit.json) is the game's own designed answer to a fainted creature outside a bed -- 'the only thing that raises a creature back up once it's fainted' (its own blurb). S03-39e..S03-39j below use it through the real Satchel UI (scripts/ui/tab_backpack.gd), the same way a real player would, live-verified end to end (tools/gate_f/probe_revive_menu_flow.gd) in BOTH directions before being added here: pressing `interact` on the Revive slot when nobody is fainted safely refuses ('Nobody needs reviving.', no state change) and a stray `ui_accept` after it merely PICKS UP the stack (Godot's ordinary grid pick-up-then-place gesture) rather than doing anything destructive; pressing `interact` when the sole party member IS fainted opens the target picker with focus already on the only eligible row, and `ui_accept` confirms it, clearing `fainted` on the SAME creature instance `_ally` points to (immediate, no dismiss/resummon needed) and consuming one Revive. The probe also confirmed the exact unconditional 4-press close sequence below (`interact`, `ui_accept`, `menu_cancel`, `menu_cancel`) reaches a closed shell in BOTH branches with no leftover held/targeting state, which is what makes this safe to run every time regardless of party state, with no conditional the step-script format cannot express anyway."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-39e",
+      "title": "open the Satchel",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() always grabs tab_backpack.gd::first_focus() (_buttons[0]) on open, so focus starts at slot 0 (orb_basic) every time regardless of any earlier open/close -- confirmed live, this does not disturb S03-56d's own later 'focus_move right x4' assumption."
+    },
+    {
+      "id": "S03-39f",
+      "title": "focus the Revive draught",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "The satchel fills in acquisition order from S02's opening -- orb_basic, potion_small, berries, revive -- then Tam's knife and torch (already given by S03-26 before this point), matching S03-56d's own read of the same grid. Revive sits 3 cells right of slot 0."
+    },
+    {
+      "id": "S03-39g",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use() (USE_ACTION = \"interact\"): opens the target picker if any party member is fainted (`_any_eligible_target`), or refuses harmlessly ('Nobody needs reviving.') with no state change otherwise. Either way this press alone changes nothing that could be lost."
+    },
+    {
+      "id": "S03-39h",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "If the picker opened, focus already sits on the only eligible (fainted) row (_first_eligible_target_row()), and this is the SAME button the grid's own pick-up-then-place uses (Button.pressed) to confirm it -- `_on_target_row()` calls creature.revive(0.5) and consumes one Revive. If the picker did NOT open (nobody fainted), this press instead picks the Revive stack up off the grid (Godot's ordinary carry gesture) -- live-confirmed non-destructive, corrected by S03-39i below."
+    },
+    {
+      "id": "S03-39i",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "If S03-39h picked the stack up (nothing was fainted), tab_backpack.gd::_read_held_cancel() reads menu_cancel as 'put it back' while the shell stays open. If S03-39h instead confirmed a revive, targeting already ended and the shell is in ordinary grid focus, so this press is read as Close instead."
+    },
+    {
+      "id": "S03-39j",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Whichever branch S03-39g/h took, the shell is in ordinary (non-held, non-targeting) grid focus by now, so this closes it -- live-confirmed `shell.is_open == false` after this exact 4-press sequence in both the fainted and the nobody-fainted case. A plain `press` step does not itself check for a state change, so the branch where S03-39i already closed the shell (making this press a harmless no-op in world context) needs no special declaration here."
+    },
+    {
+      "id": "S03-39k",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "Both branches of S03-39e..S03-39j converge on a closed shell; the world must have input back before Bryn's challenge can be attempted."
     },
     {
       "id": "S03-40",
@@ -1243,16 +1330,136 @@
     },
     {
       "id": "S03-51b",
-      "title": "T2-BUILDPLACE: why Mira is visited here, and why the ally was recalled",
+      "title": "T2-BUILDPLACE: why Mira's door has to be opened by hand, and why the ally is re-checked here too",
       "action": "note",
       "args": {
-        "text": "FINDING-T2-BUILDPLACE-2026-08-30.md, round 2: scripts/combat/encounter_director.gd::interaction_offer() and its _creature_control_offer() fallback both compete for the SAME interact button Mira's own greeting needs, and BOTH lose to a village NPC's priority-0 offer only when the tracked `_ally` is either null or genuinely absent from the offer pool -- an `_ally_body` that is still deployed (dismissed or not) can otherwise leave a stray \"Put <ally> away\"/\"<ally> is out of the fight\" line contending for the same prompt depending on exactly where the walk stops. `S03-39b`'s creature_recall press (right after the catch loop, before Bryn) clears `_ally`/`_ally_body` to null; Bryn's own challenge attempt reads a null ally and falls back to its defeated-line dialogue without re-summoning anything (can_challenge() never calls summon_active_creature()), so the ally is still dismissed by the time this step runs. An earlier attempt moved Mira's visit to right after Tam instead, before the catch loop could risk a faint at all -- that introduced a NEW walking path (Tam's position to Mira's) that a live replay showed getting physically stuck on geometry (120 held frames, stopped 2.7m short of the target in a straight line the walker could not complete), landing the player somewhere without a clean line to Mira. Kept in its ORIGINAL position (right after Bryn, before Oskar) instead, on a walking path already proven clean in every prior run (0 held frames), with the recall press doing the actual work of clearing the blocking prompt."
+        "text": "FINDING-T2-BUILDPLACE-2026-08-30.md, round 3. Two separate things previously blocked this walk, and both are handled now: (1) scripts/combat/encounter_director.gd::interaction_offer()'s blanket \"<ally> is out of the fight\" override (round 2's finding, still not owned/fixed by this lane -- scripts/combat/** is T3-TYPECHART's) outranks every prompt in the world whenever the tracked `_ally` is fainted. Bryn's fight is now REAL (S03-39b/c), so the ally could have fainted there instead of in the catch loop; `S03-51c` below re-runs the SAME safe party_cycle used before Bryn, for the same reason. (2) The actual, previously undiagnosed cause of every prior round's 'walked near Mira and still got refused/stuck 2-5m short' symptom: OF31 moved Mira INSIDE cottage_a, behind a shut door (data/config/village_npcs.json:47, scripts/world/village_door.gd). A live probe confirmed the door defaults CLOSED (`is_open() == false` at boot) with a real solid `Gate` StaticBody3D collider spanning the doorway (`village_door.gd::setup()`, 1.6m x 2.3m x 0.45m) that a raw physics raycast from outside to inside actually hits -- this blocks BOTH the player's walk (the stick_navigator has no way to open a door, so it slides along the shut leaf and can wander metres off course hunting for a gap that is not there) AND the line-of-sight check Mira's own Interactable prompt needs (interactable.gd::_has_line_of_sight refuses through the same collider), which is why some earlier attempts read as a geometry/LOS problem rather than a closed door. `S03-52`..`S03-52c` below open it first, the same way a real player would (walk up, read 'Open Door', press interact) -- confirmed live end-to-end (tools/gate_f/probe_mira_walk_trace.gd and a standalone segment replay): once open, a straight walk from just outside the door to Mira's own live position converges in well under 100 frames with 0 held, and her real 'Greet Mira' prompt wins immediately."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S03-51c",
+      "title": "cycle to a live party member again, in case Bryn's fight cost one",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "Same safe operation as S03-39b, re-run because Bryn's fight (now real) can faint the active ally same as the catch loop can. A no-op if the active creature is still healthy (party.gd::cycle_active() refuses to move off an already-fine active member)."
+    },
+    {
+      "id": "S03-51d",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "Same reason as S03-39c: summon_active_creature() is async and needs a few frames."
+    },
+    {
+      "id": "S03-51e",
+      "title": "open the Satchel to check for a fainted party member, again",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "Same reasoning as S03-39d: Bryn's fight is now real (S03-39b/c), so the active ally could have fainted there instead of in the catch loop, and S03-51c's party_cycle only helps if a second live party member exists to cycle to."
+    },
+    {
+      "id": "S03-51f",
+      "title": "focus the Revive draught",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "Same grid position as S03-39f: nothing between the two openings adds an item ahead of Revive's slot 3."
+    },
+    {
+      "id": "S03-51g",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Same as S03-39g: opens the target picker if anyone is fainted, or refuses harmlessly otherwise."
+    },
+    {
+      "id": "S03-51h",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Same as S03-39h."
+    },
+    {
+      "id": "S03-51i",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Same as S03-39i."
+    },
+    {
+      "id": "S03-51j",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Same as S03-39j -- live-confirmed closed in both branches."
+    },
+    {
+      "id": "S03-51k",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "The world must have input back before walking to Mira's door."
+    },
+    {
       "id": "S03-52",
-      "title": "walk to Mira",
+      "title": "walk to just outside Mira's shut door",
+      "action": "move_to",
+      "args": {
+        "at": [14.464, -4.121],
+        "budget_frames": 3150,
+        "close_enough": 1.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "T2-BUILDPLACE round 3: a FIXED world coordinate 1m outside cottage_a's door on its own approach lane (local (1.0, 4.0) of the building's own placement in data/config/village.json -- at [18,-2], yaw -135 -- via the same world_x/world_z rotation formula data/config/village_npcs.json's own innkeeper comment gives), chosen specifically to be independent of exactly where Bryn's fight left the player (RNG-varied start was the round-1/round-2 theory for the short-arrival symptom; the real cause, per S03-51b, was the shut door, and a fixed staging point removes the RNG variable regardless). Live-confirmed clean in every replay tried (0 held, ~150-160 walking frames from Bryn's own position), and close enough (1.0m tolerance on a point already only ~1.0m from the door) to guarantee landing within the door's own 3.0m interact radius (village_door.gd) however the tolerance is spent."
+    },
+    {
+      "id": "S03-52a",
+      "title": "open Mira's door",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Door",
+        "expect_change": false
+      },
+      "expected": "village_door.gd::_on_activated(): toggles _open and disables the Gate collider IMMEDIATELY (the leaf's visual swing is a cosmetic tween on top of that), so the doorway is walkable and see-through from this press onward. `expect_change:false` because opening a door touches none of the harness's own tracked delta fields (context/focus/inventory/build/party/flags/active_creature) -- a live replay confirmed the press lands correctly (prompt read \"Open Door\", provider 'Prompt') and the walk immediately afterward went straight through with 0 held, so this is a real, working press the change-detector simply has nothing to say about, not a silent no-op."
+    },
+    {
+      "id": "S03-52b",
+      "title": "let the gate open",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "The gate collider is already disabled synchronously, but the leaf's own swing tween (village_door.gd::SWING_TIME, 0.45s) is given a moment to clear the opening visually before walking through it."
+    },
+    {
+      "id": "S03-52c",
+      "title": "walk in to Mira",
       "action": "move_to_entity",
       "args": {
         "entity": "Mira",
@@ -1261,16 +1468,16 @@
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE, final: the authored coordinate proved unreliable across replays (RNG in the catch loop changes Bryn's own outcome and therefore the player's exact starting point for this walk, so the same fixed target lands a different real distance from Mira each time -- 2.70m one run, 4.9m short the next). move_to_entity against Mira's own LIVE position already walked cleanly here once before this segment also carried a creature_recall dismiss (run 3 of this validation: 'walked 12.2m ... 961 frames, 0 held', the only prompt problem that run was the fainted-ally line S03-39b now clears before this step runs). The wall-stuck failure that first moved this lane off move_to_entity was on a DIFFERENT approach path (from Tam's position, before the block was moved back here) -- not this one."
+      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. With the door open (S03-52a) there is nothing left to obstruct a straight walk to her own live position -- live-confirmed converging in well under 100 walking frames with 0 held, from the exact staging point S03-52 reaches."
     },
     {
-      "id": "S03-52a",
+      "id": "S03-52d",
       "title": "let the arbiter settle after arrival",
       "action": "wait",
       "args": {
         "seconds": 1
       },
-      "expected": "T2-BUILDPLACE: a live replay reached the walk's own target and still read \"Put Moss away\" (encounter_director.gd's companion-status fallback) instead of Mira's greeting on the very next step -- a live probe (probe_mira_position_check.gd) confirms her greeting DOES win at this exact coordinate, with or without a deployed ally, so this is most likely the arbiter not yet having re-evaluated on the frame right after the walk loop's own single settle frame. A full second is cheap next to another failed replay."
+      "expected": "A full second of settle before reading the live prompt, cheap next to another failed replay."
     },
     {
       "id": "S03-53",
