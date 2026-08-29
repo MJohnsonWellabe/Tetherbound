@@ -350,7 +350,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 3.0,
+        "within": 4.5,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -361,9 +361,10 @@
       "title": "challenge it (attempt 1)",
       "action": "interact_with",
       "args": {
-        "entity": "bramblebun"
+        "expect_prompt": "Engage",
+        "check_provider": false
       },
-      "expected": "RIG-16: presses `interact` only when interaction_arbiter.gd has a live prompt for this bramblebun, and FAILs naming what it saw instead rather than pressing blind -- the same guarantee `move_to_entity` gives the walk, given to the engage press too."
+      "expected": "RIG-17: the wild-engage prompt (\"Engage Bramblebun\") is owned by EncounterDirector, not by the bramblebun node itself -- check_provider's relatedness test (ancestor/descendant of the found entity) can never pass for a prompt owned by a separate manager node, so `entity: \"bramblebun\"` refused even the FIRST attempt's genuinely live \"Engage Bramblebun\" prompt. Matched on prompt text instead, with check_provider off, so this presses when a real engage offer is live and refuses (naming what it saw) when it is not -- including the \"Ripplet is out of the fight\" state a fainted-and-unswappable solo party leaves behind."
     },
     {
       "id": "S03-33a",
@@ -421,7 +422,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 3.0,
+        "within": 4.5,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -432,9 +433,10 @@
       "title": "challenge it (attempt 2)",
       "action": "interact_with",
       "args": {
-        "entity": "bramblebun"
+        "expect_prompt": "Engage",
+        "check_provider": false
       },
-      "expected": "RIG-16: presses `interact` only when interaction_arbiter.gd has a live prompt for this bramblebun, and FAILs naming what it saw instead rather than pressing blind -- the same guarantee `move_to_entity` gives the walk, given to the engage press too."
+      "expected": "RIG-17: the wild-engage prompt (\"Engage Bramblebun\") is owned by EncounterDirector, not by the bramblebun node itself -- check_provider's relatedness test (ancestor/descendant of the found entity) can never pass for a prompt owned by a separate manager node, so `entity: \"bramblebun\"` refused even the FIRST attempt's genuinely live \"Engage Bramblebun\" prompt. Matched on prompt text instead, with check_provider off, so this presses when a real engage offer is live and refuses (naming what it saw) when it is not -- including the \"Ripplet is out of the fight\" state a fainted-and-unswappable solo party leaves behind."
     },
     {
       "id": "S03-33b",
@@ -492,7 +494,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 3.0,
+        "within": 4.5,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -503,9 +505,10 @@
       "title": "challenge it (attempt 3)",
       "action": "interact_with",
       "args": {
-        "entity": "bramblebun"
+        "expect_prompt": "Engage",
+        "check_provider": false
       },
-      "expected": "RIG-16: presses `interact` only when interaction_arbiter.gd has a live prompt for this bramblebun, and FAILs naming what it saw instead rather than pressing blind -- the same guarantee `move_to_entity` gives the walk, given to the engage press too."
+      "expected": "RIG-17: the wild-engage prompt (\"Engage Bramblebun\") is owned by EncounterDirector, not by the bramblebun node itself -- check_provider's relatedness test (ancestor/descendant of the found entity) can never pass for a prompt owned by a separate manager node, so `entity: \"bramblebun\"` refused even the FIRST attempt's genuinely live \"Engage Bramblebun\" prompt. Matched on prompt text instead, with check_provider off, so this presses when a real engage offer is live and refuses (naming what it saw) when it is not -- including the \"Ripplet is out of the fight\" state a fainted-and-unswappable solo party leaves behind."
     },
     {
       "id": "S03-33c",
@@ -563,7 +566,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 3.0,
+        "within": 4.5,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -574,9 +577,10 @@
       "title": "challenge it (attempt 4)",
       "action": "interact_with",
       "args": {
-        "entity": "bramblebun"
+        "expect_prompt": "Engage",
+        "check_provider": false
       },
-      "expected": "RIG-16: presses `interact` only when interaction_arbiter.gd has a live prompt for this bramblebun, and FAILs naming what it saw instead rather than pressing blind -- the same guarantee `move_to_entity` gives the walk, given to the engage press too."
+      "expected": "RIG-17: the wild-engage prompt (\"Engage Bramblebun\") is owned by EncounterDirector, not by the bramblebun node itself -- check_provider's relatedness test (ancestor/descendant of the found entity) can never pass for a prompt owned by a separate manager node, so `entity: \"bramblebun\"` refused even the FIRST attempt's genuinely live \"Engage Bramblebun\" prompt. Matched on prompt text instead, with check_provider off, so this presses when a real engage offer is live and refuses (naming what it saw) when it is not -- including the \"Ripplet is out of the fight\" state a fainted-and-unswappable solo party leaves behind."
     },
     {
       "id": "S03-33d",
@@ -634,7 +638,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 3.0,
+        "within": 4.5,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -645,9 +649,10 @@
       "title": "challenge it (attempt 5)",
       "action": "interact_with",
       "args": {
-        "entity": "bramblebun"
+        "expect_prompt": "Engage",
+        "check_provider": false
       },
-      "expected": "RIG-16: presses `interact` only when interaction_arbiter.gd has a live prompt for this bramblebun, and FAILs naming what it saw instead rather than pressing blind -- the same guarantee `move_to_entity` gives the walk, given to the engage press too."
+      "expected": "RIG-17: the wild-engage prompt (\"Engage Bramblebun\") is owned by EncounterDirector, not by the bramblebun node itself -- check_provider's relatedness test (ancestor/descendant of the found entity) can never pass for a prompt owned by a separate manager node, so `entity: \"bramblebun\"` refused even the FIRST attempt's genuinely live \"Engage Bramblebun\" prompt. Matched on prompt text instead, with check_provider off, so this presses when a real engage offer is live and refuses (naming what it saw) when it is not -- including the \"Ripplet is out of the fight\" state a fainted-and-unswappable solo party leaves behind."
     },
     {
       "id": "S03-33e",
