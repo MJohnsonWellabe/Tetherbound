@@ -1,5 +1,64 @@
 # Handover — T1-NPC-CAST, 2026-08-30
 
+## CORRECTION, same session — the captain finding below was wrong until it was rendered
+
+This handover originally matched the plan doc's first pass: zero Meshy
+spend across all 25 NPCs, captains included, reasoned from reading
+`npc_ranks.json`'s own code comments. The owner read that conclusion,
+didn't buy it, and asked directly: build the three grunts, then officers,
+then captains, and prove it. That was the right challenge — reasoning from
+code comments about a palette/badge system is exactly the kind of claim
+this codebase's own culture says to render before trusting (`ralph/
+conventions.md`'s visual-judge discipline, and `npc_ranks.json`'s own
+history of two prior blind-render corrections to this same rank system).
+
+**Built it.** Installed Godot, wrote `tools/_capture_rank_variety.gd`
+(mirrors the existing `_capture_character_cast.gd` staging pattern), and
+rendered all eleven named grunts/officers/captains from
+`data/config/bands/*/trainers.json` through the real
+`trainer_npc.gd::model_config()` placement path — the same code that
+places them in the actual game. Sent the lineup and portrait renders
+directly to the owner.
+
+**Result: the captain classification was wrong.** Every one of the eleven
+figures — three grunts, three officers, five captains — is the same cap,
+the same face mask, the same coat, the same boots. The only differences
+anywhere in the set are a body colour/value shift and a coin-sized chest
+badge that changes colour and grows slightly with rank. Pixel-sampling the
+badge and torso confirmed the rank *config* genuinely differs per
+individual (badge red-channel climbs cleanly grunt ~103–132 → officer
+~146–158 → captain ~162–165) — not a script bug where everything silently
+renders as grunt — but colour and a small badge are the *entire*
+differentiation. The board's own TEAM TETHER NOTES line, *"Captains have
+distinctive silhouettes,"* is not met. This directly overturns this
+session's first-pass "already fully served" call for captains.
+
+**Grunt/officer conclusion holds**, and the render is why: uniform,
+anonymous rank-and-file across named individuals is consistent with this
+codebase's own established intent elsewhere (`npc_ranks.json`'s own
+comments call this out as the point, not a bug, for grunts), and nothing
+in the board or the render argues otherwise for those two ranks.
+
+**Revised recommendation:** one small, bounded Meshy spend —
+~90–100 credits for a single coat/cape accessory mesh, generated once
+against the board's own captain reference panels and reused across all
+five named captains (the same "one mesh, many uses" economy the TM orb and
+tether pylon already use in this project), not a new humanoid body and not
+five separate generations. Reference crops prepared at
+`assets/characters/captain_accessory/reference/`. A matching small
+`character_model.gd` change (to accept a real mesh accessory, not only a
+primitive shape) is needed to actually attach it, and is flagged rather
+than made — it sits outside this lane's file ownership.
+
+Every section below this point is the **original**, since-corrected
+account, kept rather than rewritten so the correction has something
+concrete to point at. Where a section's conclusion changed, that's called
+out inline; do not treat the "zero mandatory spend" framing in the
+sections below as current for captains — the box above and the plan doc
+(`ralph/reports/NPC_CAST_PLAN_2026-08-30.md`) are current.
+
+---
+
 ## What was asked
 
 Coordinator brief: classify all 25 NPCs on the owner's Meadows NPC Design
@@ -149,18 +208,34 @@ Meshy work even though the captain one is the board's own strongest
 argument for something new, because the actual fix lives in accessory
 geometry/engineering, not generation.
 
-## Full file footprint
+## Full file footprint (UPDATED — supersedes the paragraph above, which predates the correction)
 
-- **Added:** `ralph/reports/NPC_CAST_PLAN_2026-08-30.md` (classification
-  table + plan, pushed first).
-- **Added:** `ralph/reports/handover-T1-NPC-CAST-2026-08-30.md` (this file).
-- **Not touched:** `docs/art/reference/npc-board-2026-08-30/` (read only —
-  no crops were cut, since no NPC needed one), any `views.json`/`meshy.py`
-  entries (none needed), `docs/ASSET_LEDGER.md` (no asset was produced, so
-  there is nothing to add a row for), `assets/characters/**` (nothing
-  generated), `assets/props/**` (the optional cart was not pursued this
-  session), any dialogue/trainer/village-placement data (explicitly out of
-  this lane's file ownership).
-- Scratch work only, not committed: pixel-sampling script and cropped
-  panel previews used to read the board, under this session's own
-  `/tmp` scratchpad — not part of the repo.
+- **Added/updated:** `ralph/reports/NPC_CAST_PLAN_2026-08-30.md` (classification
+  table + plan, pushed first, then revised in place after the render — see
+  its own CORRECTION section).
+- **Added/updated:** `ralph/reports/handover-T1-NPC-CAST-2026-08-30.md` (this
+  file).
+- **Added:** `tools/_capture_rank_variety.gd` — the evidence-render tool,
+  committed (this repo's convention keeps `_capture_*.gd`/`_probe_*.gd`
+  tools in the tree, unlike their PNG output).
+- **Added:** `assets/characters/captain_accessory/reference/
+  board_captain_a_turnaround.png` and `board_captain_b_turnaround.png` —
+  reference crops for the recommended coat/cape generation, cut from the
+  board's own panels 6–7. Not yet re-cut to a final Meshy-ready isolation
+  (that's for whoever runs the generation, against the exact crop they
+  choose to cut).
+- **Not touched:** `views.json`/`meshy.py` prompt blocks (deliberately not
+  added — see the plan doc's Job 3 section for why), `docs/ASSET_LEDGER.md`
+  (no asset was actually generated this session, only reference crops
+  saved; a ledger row belongs to whoever runs the generation), `assets/
+  props/**` (the optional cart was not pursued), any dialogue/trainer/
+  village-placement data (explicitly out of this lane's file ownership).
+- **Not committed, by repo convention:** `shots/rank_variety/*.png` (top-level
+  `shots/` is gitignored — render evidence, not a shipped asset). Sent
+  directly to the owner instead via file delivery; referenced by path
+  throughout both report docs for anyone who needs to regenerate it
+  (`xvfb-run -a -s "-screen 0 1280x800x24" godot --path . --rendering-driver
+  opengl3 --resolution 1280x800 --script tools/_capture_rank_variety.gd`).
+- Scratch work only, not committed: pixel-sampling scripts and cropped
+  panel previews used to read the board and verify the render, under this
+  session's own `/tmp` scratchpad — not part of the repo.
