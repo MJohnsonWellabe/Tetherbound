@@ -87,12 +87,13 @@
         "rootstone": 5,
         "orb_greater": 2,
         "revive": 1,
+        "hide_vest": 1,
         "xp_bonus": 140,
         "heartstone": 1
       },
-      "enables": "Plus 4 rootstone and 1 stone from the cave's own wall deposits. Two Greater Orbs the moment the branch door goes down, with the game's only wild Terrapup standing behind it; rootstone for the saddle and the Greater Orb recipe; and the Heartstone that gates the chapter's one evolution (Mudsnout -> Tuskroot).",
+      "enables": "Plus 4 rootstone and 1 stone from the cave's own wall deposits. Two Greater Orbs the moment the branch door goes down, with the game's only wild Terrapup standing behind it; rootstone for the saddle and the Greater Orb recipe; the Heartstone that gates the chapter's one evolution (Mudsnout -> Tuskroot); and a Hide Vest, the guardian's own armor and the first equipment reward in the chapter.",
       "understood_when_received": true,
-      "note": "CONTENT-0828, owner playtest 2026-08-28 (\"there needs to be a point to going in the burrows warren\"). This row is where that complaint shows up as a number. The old payout was 45 coins, 4 rootstone and 60 xp \u2014 the chapter's ONE REQUIRED DUNGEON, five resident fights and a level-14 guardian at a measured 5-9 minutes, paying LESS than Pell, the optional picket standing 35 m outside its own door (40 coins, 2 potions, 3 orbs), and under a third of relay_captain Vance one band later. A boss that pays picket money is a boss with no point. Same reward SHAPE as every other row here \u2014 no second economy, per this file's own _comment_no_new_systems \u2014 at boss scale. The Greater Orbs are the deliberate part and they follow this region's own established logic: trainers.json says Pell pays BASIC orbs because \"the reward for clearing the door is the means to catch what is behind it\", so the guardian pays GREATER orbs because what is behind HIM, through the door his defeat just opened, is the only wild Terrapup in the game (burrow_warrens.json _comment_spawns_special) at level 13. The Heartstone's use is legible at the moment it is taken \u2014 BAND2-63-WARRENS put the evolution lead into the pickup line itself \u2014 which is what flips understood_when_received; the earlier false predates that change."
+      "note": "CONTENT-0828, owner playtest 2026-08-28 (\"there needs to be a point to going in the burrows warren\"). This row is where that complaint shows up as a number. The old payout was 45 coins, 4 rootstone and 60 xp \u2014 the chapter's ONE REQUIRED DUNGEON, five resident fights and a level-14 guardian at a measured 5-9 minutes, paying LESS than Pell, the optional picket standing 35 m outside its own door (40 coins, 2 potions, 3 orbs), and under a third of relay_captain Vance one band later. A boss that pays picket money is a boss with no point. Same reward SHAPE as every other row here \u2014 no second economy, per this file's own _comment_no_new_systems \u2014 at boss scale. The Greater Orbs are the deliberate part and they follow this region's own established logic: trainers.json says Pell pays BASIC orbs because \"the reward for clearing the door is the means to catch what is behind it\", so the guardian pays GREATER orbs because what is behind HIM, through the door his defeat just opened, is the only wild Terrapup in the game (burrow_warrens.json _comment_spawns_special) at level 13. The Heartstone's use is legible at the moment it is taken \u2014 BAND2-63-WARRENS put the evolution lead into the pickup line itself \u2014 which is what flips understood_when_received; the earlier false predates that change. T3-REWARD added hide_vest per owner-direction \u00a714 ('Warrens Guardian: Rootstone progression + useful TM/equipment/recipe'); armor had no acquisition path anywhere in the game before this."
     },
     {
       "activity": "relay_picket_hess",
@@ -143,9 +144,10 @@
         "coins": 50,
         "river_sigil": 1,
         "orb_greater": 2,
+        "elixir_vigour": 1,
         "xp_bonus": 80
       },
-      "enables": "River Sigil (progression) plus Greater Orbs.",
+      "enables": "River Sigil (progression) plus Greater Orbs and a permanent HP elixir — owner-direction §14's 'Captain 3: Sigil + final preparation unlock/reward', added by T3-REWARD. Riverwatch is the last of the three Sigils, so this is the last thing the ladder hands over before the Meadows Hall gate opens.",
       "understood_when_received": true
     },
     {
@@ -155,9 +157,10 @@
         "coins": 40,
         "field_sigil": 1,
         "potion_small": 2,
+        "tm_earth_fist": 1,
         "xp_bonus": 60
       },
-      "enables": "Field Sigil (progression) plus potions.",
+      "enables": "Field Sigil (progression), potions, and a strong Ground TM — owner-direction §14's 'Captain 1: Sigil + strong TM', added by T3-REWARD. Was previously the one captain reward with no TM in it; every existing Ground TM came from a world pickup or Mira's shop, never a fight.",
       "understood_when_received": true
     },
     {
@@ -167,9 +170,10 @@
         "coins": 45,
         "ridge_sigil": 1,
         "revive": 1,
+        "elixir_guard": 1,
         "xp_bonus": 70
       },
-      "enables": "Ridge Sigil (progression) plus a Revive.",
+      "enables": "Ridge Sigil (progression), a Revive, and a permanent defence elixir — owner-direction §14's 'Captain 2: Sigil + equipment/preparation improvement', added by T3-REWARD.",
       "understood_when_received": true
     },
     {

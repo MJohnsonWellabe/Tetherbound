@@ -217,11 +217,16 @@
           {
             "id": "orb_greater",
             "count": 2
+          },
+          {
+            "id": "elixir_vigour",
+            "count": 1
           }
         ],
         "flags": [],
         "xp_bonus": 80
       },
+      "_why_t3_reward": "T3-REWARD, owner-direction §14 ('Captain 3: Sigil + final preparation unlock/reward'). Riverwatch is the third of the three regional captains (see this entry's own `_comment`), and the last Sigil collected physically opens the Meadows Hall approach (Sec3's own 'the three physical Sigils open the old Hall/stronghold approach') -- so its own payout is the last thing the reward ladder can hand over before that gate. elixir_vigour (permanent max HP, capped by progression.json's elixirs.cap_per_stat) is the one of the three elixirs that reads as 'get ready for what is next' rather than 'get better at what you just did', which is what a final-preparation reward is for. Same unplaced-orphan gap tm_earth_fist and elixir_guard close on the other two captains: items.json's own header names elixirs as belonging 'in the world -- a dungeon, a captain, a stronghold' and none had ever actually been placed.",
       "defeat_flag": "defeated_captain_riverwatch",
       "rechallenge": false,
       "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
