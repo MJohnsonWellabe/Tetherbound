@@ -1,5 +1,6 @@
 {
   "_comment": "BAND-SPLIT. Band-local spawns for band4_upper_meadows_ironwood. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 4000-4999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_aspect_variant_0830": "T3-CREATURES, from the owner's creature-expansion brief. This entry is an ASPECT VARIANT -- a rare individual whose environmental exposure changed its typing, authored as a species in data/creatures/species.json with a `variant_of` back-link. Read the brief's 'Spawn Protection Rules' section before touching count, gates or placement: its stated failure mode is exact -- 'Avoid a situation where the player walks through one clearing and sees Sparkit + Cindercub + Shadelet + Frostclaw + Nightburrow. That would destroy the rarity.' RARITY HERE IS HEADCOUNT, NOT PROBABILITY. This director does not roll a species per encounter; every cluster names its own and spawns it deterministically at load, so the brief's percentages are translated into how MANY individuals exist, WHERE, and behind WHICH gates. The chapter holds 881 wild creatures across 261 clusters, so one individual is 0.11% of the world. `respawn_seconds` overrides the table's global 45s so a rare encounter does not become a farmable resource a minute after it is beaten.",
   "spawns": [
     {
       "order": 4,
@@ -945,6 +946,27 @@
       },
       "_why_alpha": "T3-BAND4. The tree-line grove (harvest.json orders 4011-4013) is the 'the ground itself just changed' moment ralph/reports/finding-post-tournament-cadence-2026-08-29.md asks for at the band3/4 seam, and docs/owner-direction/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 11's test is 'could a reasonable player see something here and think I might want that instead of one of mine'. Meadowhart is spec section 3's named riding creature (docs/MEADOWS_PROGRESSION_SPEC.md Band 4 'Riding unlock') -- a visibly larger, four-level elder standing alone at the exact point the region changes gives that temptation a face on sight, not a stat sheet. Not a starter and not a duplicate of the ordinary herd already at (60,0,6230): solitary, in cover at the grove rather than in the open pasture. Catchable because it is wild, never trainer-owned. MEASURED: 1.9m off the spine, well inside the corridor probe's own 30m notice radius -- the first siting pass (-30,4880) missed distance-to-spine and sat 75.8m off it, corrected here.",
       "_why": "T3-BAND4. Beside the tree-line grove, 11m from harvest.json order 4011 -- the resource, the rare catch and the region's first ironwood trees read as one place with three reasons to stop rather than three unrelated additions, the same grouping order 4007's own burrowback elder already uses 280m south."
+    },
+    {
+      "order": 4100,
+      "species": "stormtrail",
+      "count": 1,
+      "habitat": "exposed_ridge",
+      "centre": [
+        -440.0,
+        0.0,
+        5210.0
+      ],
+      "radius": 12.0,
+      "weather": [
+        "rain"
+      ],
+      "respawn_seconds": 600.0,
+      "alpha": {
+        "level_bonus": 4,
+        "scale": 1.0
+      },
+      "_why": "Brief section 2, second of two, and the reason there are two: the brief says 'only one Stormtrail should normally occupy a local spawn cluster', which constrains DENSITY per locality, not the total. One at the Relay in band 3 and one on the far western ridge here -- 1380m apart, in different regions, at different level bands -- means the player can never see two at once, which is the protection that sentence is actually asking for. The western ridge at (-420,5140) is the spine's far point and this band file already calls it 'the exposed western high ground the region is built to be seen across'; 'exposed trails, ridgelines' is the brief's own eligible list. Rain-gated for the reason recorded on the band 3 entry."
     }
   ],
   "_comment_why_so_few": "WILD-ECOLOGY. This band held ONE cluster (the Meadowhart herd below) across z 4760-7000 -- 2240m, the longest region in the chapter and the one the probe measures as its longest single travel leg. Prompt 60's population rule is 'still prevalent enough that wanting another creature does not require a barren search', and one herd over 2.2km is the barren search. The seven entries added below sit on the spine's own points so the ecology is met by walking the route, not by leaving it. Levels are resolved from chapter_curve.json's band for this z ([11, 14]), never set here.",
