@@ -137,6 +137,76 @@ static func ignite(prop: Node) -> int:
 	return lit
 
 
+## T1-CAST (§17). `Bonfire_Fire.obj`'s `Wood`/`LightWood` surfaces are
+## genuinely textureless in the source pack -- confirmed by reading
+## `Bonfire_Fire.mtl` directly, `Kd` colour only, no `map_Kd` line on either
+## material -- so every log pile in the game (this player-built camp AND
+## every authored trail_camp/river_lock/upper_meadows/stronghold rest point
+## that places the same asset via `props.gd`'s `glow: "campfire"` branch)
+## reads as flat faceted colour blocks rather than wood. A blind Fable pass
+## on the assembled camp kit called this "flat-shaded, untextured, mauve-pink
+## low-poly blocks that read as plastic, not wood" and named it the kit's
+## single worst asset. Textures a genuinely different, ALREADY-INSTALLED
+## asset's own diffuse/normal maps onto these surfaces instead of the flat
+## `Kd` colour -- `generated_camp/camp_firewood_*` was generated for a whole
+## rejected replacement MESH (`camp_firewood.glb`, two Fable reviews called
+## its own SHAPE "flat slabs" or "a rock cairn", `props.json`'s own `_why`
+## on this asset already records that history) but its TEXTURE is a real,
+## tileable cut-log/bark diffuse that was never the rejected part. No new
+## Meshy spend, no shape change to the log geometry that already reads fine
+## -- same "one mesh, many materials" reuse this codebase already uses
+## elsewhere (`docs/ASSET_LEDGER.md`'s `tm_orb` entry). Called from every
+## site that also calls `ignite()` on the same prop (`camp.gd`'s player-built
+## fire, `props.gd`'s `glow: "campfire"` branch for every authored fire), so
+## the fix is shared rather than scoped to one caller -- the exact mistake
+## both T1-CAMP and T1-CREATURE's own predecessors flagged and declined to
+## repeat. Uses `set_surface_override_material`, same reason as `ignite()`
+## above: the loaded Mesh resource is shared across every instance.
+const LOG_SURFACE_NAMES := ["Wood", "LightWood"]
+const LOG_ALBEDO := "res://assets/props/generated_camp/camp_firewood_base_color.jpg"
+const LOG_NORMAL := "res://assets/props/generated_camp/camp_firewood_normal.jpg"
+
+static func texture_logs(prop: Node) -> int:
+	var textured := 0
+	var albedo: Texture2D = load(LOG_ALBEDO) if ResourceLoader.exists(LOG_ALBEDO) else null
+	if albedo == null:
+		return 0
+	var normal: Texture2D = load(LOG_NORMAL) if ResourceLoader.exists(LOG_NORMAL) else null
+	for instance in _meshes(prop):
+		var mesh: Mesh = instance.mesh
+		if mesh == null:
+			continue
+		for i in mesh.get_surface_count():
+			if not LOG_SURFACE_NAMES.has(mesh.surface_get_name(i)):
+				continue
+			var source := mesh.surface_get_material(i) as StandardMaterial3D
+			var material := source.duplicate() as StandardMaterial3D if source != null else StandardMaterial3D.new()
+			material.albedo_color = Color(1.0, 1.0, 1.0)
+			material.albedo_texture = albedo
+			# Round 1 (a plain UV-mapped texture) came back from a blind pass
+			# "no bark, no grain... a single lighter tone" -- confirmed why
+			# with tools/_probe_bonfire_uvs.gd: `surface_get_arrays()`
+			# returns a NULL `ARRAY_TEX_UV` for these surfaces, so the OBJ
+			# import genuinely carries no UV1 data to map a texture onto --
+			# not a scale problem, there is no UV space for a scale to tile
+			# over, which is also why round 1's uv1_scale bump changed
+			# nothing (re-rendered, pixel-identical to round 0). Triplanar
+			# projects the texture from world/object-space position instead
+			# of UV coordinates, which is exactly the tool for a mesh with no
+			# usable UVs, and is a real StandardMaterial3D feature rather
+			# than a new asset.
+			material.uv1_triplanar = true
+			material.uv1_scale = Vector3(2.0, 2.0, 2.0)
+			if normal != null:
+				material.normal_enabled = true
+				material.normal_texture = normal
+			material.metallic = 0.0
+			material.roughness = 0.9
+			instance.set_surface_override_material(i, material)
+			textured += 1
+	return textured
+
+
 ## No default `into` parameter here, deliberately. GDScript evaluates a
 ## default Array argument ONCE and shares that same instance across every
 ## call, exactly like Python's mutable-default-argument trap -- so a second

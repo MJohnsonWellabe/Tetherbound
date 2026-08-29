@@ -182,6 +182,7 @@ func _spawn_meshes(solid: bool) -> void:
 	# ghost is meant to read as a preview, not as a fire already burning.
 	if fire != null and solid:
 		CAMPFIRE_GLOW.ignite(fire)
+		CAMPFIRE_GLOW.texture_logs(fire)
 	if not solid:
 		if fire != null:
 			_ghost_meshes.append(fire)

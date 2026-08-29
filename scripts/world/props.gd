@@ -221,6 +221,7 @@ func place(into: Node3D, spec: Dictionary) -> void:
 		var lit := CAMPFIRE_GLOW.ignite(root)
 		if lit == 0:
 			push_warning("prop '%s' has glow:\"campfire\" but no `Fire` surface to light" % model)
+		CAMPFIRE_GLOW.texture_logs(root)
 		var overlay: Node3D = CAMPFIRE_GLOW.new()
 		if not is_zero_approx(scale_factor):
 			overlay.scale = Vector3.ONE / scale_factor
