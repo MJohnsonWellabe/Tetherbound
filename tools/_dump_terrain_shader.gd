@@ -8,12 +8,20 @@ extends SceneTree
 ##   godot --headless --path . --script tools/_dump_terrain_shader.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
+# playground_world.gd's own _ready() is a coroutine (awaits process_frame
+# itself before data_directory assignment, collision setup, THEN ground
+# materials/shader). Two frames -- this tool's original wait -- reads the
+# terrain material long before _apply_ground_shader has even run, so a
+# "fresh" read looks identical to no override at all. Matches
+# _capture_ground_and_sky.gd's own BOOT_FRAMES, the value proven to outlast
+# world boot for a real capture.
+const BOOT_FRAMES := 90
 
 func _init() -> void:
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
-	await process_frame
-	await process_frame
+	for i in BOOT_FRAMES:
+		await process_frame
 
 	var terrain: Node = world.get_node_or_null(^"Terrain")
 	if terrain == null:
