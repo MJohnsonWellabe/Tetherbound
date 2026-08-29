@@ -268,3 +268,32 @@ generating.**
 
 Full account of this round: `ralph/reports/
 NPC_CAST_BUILD_REST_2026-08-30.md`.
+
+**Round 3, same day, owner instruction "put them in the game":** rigged
+(Meshy auto-rigger, `meshy.py rig`, measured at **5 credits per call** —
+not previously in `COSTS`) and animated (`animate_humanoid.py`, the local
+Blender bake every other installed human here uses — the same recipe
+`docs/decisions/D49-the-machine-is-generated-without-its-prisoner.md`
+records for the Warden, not Meshy's own untested `animate` endpoint) 22
+of the 24 generated subjects, installed each at
+`assets/characters/<slug>/<slug>_lod0.glb`, and added a matching
+`data/config/art.json` entry for each — `model`, `height` (matching the
+rig call's own `--height`), `model_yaw`, the standard five-clip map,
+shared `gait_reference_speeds`. Verified through the real
+`CHARACTER_MODEL.config_for()` lookup path against a spread sample
+(Team Tether, Village, Trail, both height extremes), idle/walk/sprint,
+no tearing or split geometry despite `inspect_glb.py` flagging real
+topology roughness on the raw mesh — checked by rendering one subject
+end-to-end before scaling to the rest, not assumed from the geometry
+report alone.
+
+**Two subjects could not be rigged**: `campfire_traveler` (holding a
+crossbow prop fused to both hands) and `traveling_merchant` (arms
+crossed over her body) both failed Meshy's rigger with `422 Pose
+estimation failed`, retried once each, failed identically — a
+non-standard baked-in arm pose, not a transient error. Left textured but
+un-rigged, un-animated, not installed; fixing it needs a fresh
+generation with a resting-pose reference, not a rig retry, and wasn't
+spent on further given both are lower-priority flavour NPCs.
+
+Full account: `ralph/reports/NPC_CAST_INSTALL_2026-08-30.md`.
