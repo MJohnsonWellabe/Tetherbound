@@ -300,15 +300,18 @@
     {
       "id": "S03-52",
       "title": "walk to Mira",
-      "action": "move_to_entity",
+      "action": "move_to",
       "args": {
-        "entity": "Mira",
-        "within": 1.0,
+        "at": [
+          18.99,
+          -1.01
+        ],
         "budget_frames": 3000,
+        "close_enough": 3.0,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE: move_to_entity/within replaces a raw authored coordinate so arrival is measured against Mira's own live position, not a point that may or may not be in her interaction range (CD-5). within tightened from 2.5 to 1.0 after a live replay found the wider radius left the player closer to a nearby door prop than to Mira herself, so the door's own \"Open Door\" prompt won interaction arbitration instead of hers."
+      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE: reverted from move_to_entity back to the original authored coordinate -- two live replays showed a straight-line walk to Mira's own live node position gets stuck on her building's wall (stopped 6.9 m short, 120 held frames) and lands nearer a door prop than her, exactly the known 'every straight-line walk in this project failed on the same village wall' limitation _walk_loop's own header names. The original coordinate is a proven-reachable spot outside that building (0 held frames in every prior run); S03-53's interact_with is what actually makes this safe now, by verifying the live prompt before pressing rather than pressing blind."
     },
     {
       "id": "S03-53",
