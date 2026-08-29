@@ -76,6 +76,23 @@ func _run() -> void:
 	await _shoot_matchup("type_tell_weak", "galewisp", "mudsnout")
 	await _shoot_matchup("type_tell_neutral", "terrapup", "mudsnout")
 
+	# T3-MATCHUPS. The five expansion types had no colour of their own, so the
+	# enemy tag drew every one of them in GROUND_OCHRE -- the GROUND colour,
+	# under a matchup verdict that is now real. These three frames are the ones
+	# that check the new colours against each other and against the three that
+	# were already there, which is the thing a unit test cannot do: whether
+	# ICE_FROST reads as separable from WATER_BLUE and AIR_SKY, and whether
+	# DARK_VIOLET and PSYCHIC_LILAC are two colours or one, is a question about
+	# pixels.
+	#
+	# Ripplet is the ally throughout so the arrow varies with the row rather
+	# than staying constant: water is neutral into dark, 1.25 into fire and
+	# 1.00 into psychic under this chart.
+	await _shoot_matchup("type_tell_dark", "ripplet", "nightburrow")
+	await _shoot_matchup("type_tell_electric", "ripplet", "stormtrail")
+	await _shoot_matchup("type_tell_psychic", "ripplet", "riftfrill")
+	await _shoot_matchup("type_tell_fire", "ripplet", "ashtusk")
+
 	# The banner, on the same advantaged pairing that produces it in play.
 	_manager.set_pair(_make("ripplet", 12), _make("mudsnout", 12))
 	for i in 10:
