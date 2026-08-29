@@ -1260,11 +1260,11 @@
           -1.01
         ],
         "budget_frames": 3000,
-        "close_enough": 3.0,
+        "close_enough": 1.2,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE: reverted from move_to_entity back to the original authored coordinate -- two live replays showed a straight-line walk to Mira's own live node position gets stuck on her building's wall (stopped 6.9 m short, 120 held frames) and lands nearer a door prop than her, exactly the known 'every straight-line walk in this project failed on the same village wall' limitation _walk_loop's own header names. The original coordinate is a proven-reachable spot outside that building (0 held frames in every prior run); S03-53's interact_with is what actually makes this safe now, by verifying the live prompt before pressing rather than pressing blind."
+      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE: reverted from move_to_entity back to the original authored coordinate -- a live replay targeting Mira's own live node position got stuck on her building's wall on a different approach path. On THIS proven-clean Bryn-to-Mira path (75 walking frames, no hard block), a live replay still stopped 2.70m from Mira with close_enough:3.0 -- outside whatever her Interactable actually needs, no prompt live at all. Tightened to 1.2 to force the walker genuinely close to her rather than merely within the old, apparently too-generous tolerance."
     },
     {
       "id": "S03-52a",
