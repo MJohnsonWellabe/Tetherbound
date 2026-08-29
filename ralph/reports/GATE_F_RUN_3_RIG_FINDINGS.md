@@ -278,6 +278,55 @@ independent finding about band 2-5 content.
 
 ---
 
+## RIG-19 — X04's own `move_to` budgets are far too small for the distances between its entry saves and its own named combat sites, so the combat lab produced zero real fights
+
+**Severity: BLOCKER for evidence quality.** Not fixed (out of this operator's
+scope — `tools/gate_f/` rig primitives belong to a concurrent lane).
+
+Found running X04 to completion in this pass: **every one of X04's seven
+`move_to` steps FAILed, across all three of its entry saves, including the
+one entry (`S04-exit`) that is genuinely clean of the South Bridge
+stranding.** None of X04's steps specify an explicit `budget_frames`, so
+each uses the harness's apparent default of 2400 frames (~40 s of game
+time, roughly 150-500 m of ground at this run's measured walking speeds) —
+nowhere near enough for the actual distances involved:
+
+| step | target (combat site) | from | short by |
+|---|---|---|---:|
+| X04-019 | South Bridge grunt (14, 1314) | `S04-exit`, village | 1109.6 m |
+| X04-030/058/066/078 | band 1 field (195, 905) | continuing from X04-019's stop | 530→402→283→110 m (4 hops, still short) |
+| X04-094 | Warrens mouth (-420, 2470) | `S06-exit` (already at the stranding corridor per the correction above) | 1224.5 m |
+| X04-111 | Hall threshold (150, 7595) | `S09-exit` (also stranded) | 6278.2 m |
+
+The 195/905 target's four consecutive hops do show real cumulative
+progress (1109→530→402→283→110 m short) — confirming `move_to` genuinely
+resumes from the player's current position rather than resetting — but the
+script only budgets four attempts, and four is not enough. **This means
+X04's own `S04-exit` third, the one entry save this pass confirmed is
+completely clear of the stranding, still never got a single fight to
+start** — a defect independent of RIG-13, found for the first time in this
+run because X04 had never been run before this pass.
+
+**Consequence: `combat_start` count for the entirety of X04 is 0.** Every
+one of X04's thirteen CB test cases (intentional loss, faint mid-fight,
+switching under pressure, camera stress, arena-edge stress, size/range
+spread, lighting variants) FAILed at the `input_context=world (wanted
+combat)` assert that follows its unreached move_to, because no fight ever
+started. **This run now has zero combat evidence anywhere past S03** — not
+because of the stranding alone, but because the one segment purpose-built
+to route around the stranding (partially, via `S04-exit`) has its own,
+separate travel-budget defect.
+
+**Recommended fix**, for whoever owns `tools/gate_f/segments/X04.json`:
+either give each of these `move_to` steps an explicit `budget_frames` sized
+to the real distance (matching the journey segments' own practice of
+`args.budget_frames` scaled to distance), or use `debug_teleport` if X04 is
+judged to be enough of a study/lab segment to permit it (protocol §0.1
+allows teleport only in `DIAG-` prefixed segments; X04 is not one, so this
+would need an explicit protocol exception, not a quiet workaround).
+
+---
+
 ## Open finding, inherited and NOT resolved by this rewrite: does the South Bridge gate ever actually open?
 
 S05, re-run clean under the RIG-13/14/18 understanding (real creature
@@ -309,13 +358,13 @@ leaves the open question open, exactly as inherited.
 
 ---
 
-## What these seventeen-plus have in common
+## What these nineteen have in common
 
 Read together, RIG-1 through RIG-12 are mostly *instrument* defects: they
 would be misread as findings about the game if taken at face value (26
 objectives that never advance, a chapter too expensive to play, a village
 with a spot you cannot walk out of, an opening whose first fight never
-happens). RIG-13 through RIG-18 are a different shape: real fixes that
+happens). RIG-13 through RIG-19 are a different shape: real fixes that
 **worked exactly as intended and still did not produce the evidence they were
 fixed to produce**, because each fix closed one gap and the next segment hit
 a different one — no ally deployed (RIG-11), only some segments fixed
@@ -323,16 +372,24 @@ a different one — no ally deployed (RIG-11), only some segments fixed
 strict to read a real outcome (RIG-15), a blind press at the wrong target
 (RIG-16), a relatedness check refusing a valid prompt (RIG-17) — six fixes
 deep before a single real combat_start event appeared anywhere in this run,
-and even then, only in S03. **Every journey segment from S04 onward has zero
-real combat evidence in this run**, not because any one thing is broken, but
-because the chain of things that all have to work is longer than any one fix
-addressed at a time.
+and even then, only in S03.
+
+**X04 was this run's attempt to cash that fix in, and it did not work
+either — for a seventh reason.** RIG-19 (above) found that X04's own
+`move_to` steps carry no `budget_frames` and default to a value nowhere
+near sufficient for the real distances between its entry saves and its own
+named combat sites, so every one of its seven `move_to` steps FAILed,
+across all three entry saves including the one (`S04-exit`) confirmed clean
+of the stranding. **`combat_start` is now confirmed at zero for every
+segment in this run from S04 through X04** — the entirety of the run past
+S03's ten catch attempts. Seven fixes deep, and the chapter's actual combat
+— difficulty, fairness, camera behavior, faint/recovery, switching — remains
+completely unevidenced.
 
 The corollary from the prior draft still holds and sharpens further: fixing
 the instrument one gap at a time, verified only by the next re-run finding
-the *next* gap, is expensive (this run alone: RIG-9 through RIG-18 across
+the *next* gap, is expensive (this run alone: RIG-9 through RIG-19 across
 several 30-90 minute re-run cycles) and still has not produced the thing all
-of it was for. **X04 — seeded from three already-complete saves, purpose-built
-as a combat lab — is the cheapest remaining way to find out whether combat
-itself works once a fight can actually start**, without paying for another
-multi-kilometre stranding walk first.
+of it was for. Getting real combat evidence now needs either a budget fix to
+`X04.json` (RIG-19, out of this operator's scope) or a re-run of X04 once
+that lands — not another journey segment against the same stranded chain.

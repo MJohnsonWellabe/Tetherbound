@@ -10,7 +10,9 @@ what makes this run hard to read is there, not here.
 
 **Run state at rewrite time:** S01-S09 complete, S10 BLOCKED at step 27/121 on
 a genuine cost gate, X02 complete, X03 killed mid-run (not evidence, preserved
-as `X03-killed-1/`), X01/X04-X08 not yet run by this lane.
+as `X03-killed-1/`), X04 now complete (see below), X01/X03/X05-X08 not yet
+run by this lane (X03 and X06 held on the T2-STRANDING verdict per the
+coordinator's 2026-08-29T16:06 correction).
 
 ---
 
@@ -203,6 +205,7 @@ craft panel's actual `Control.has_focus()` state at this exact moment.
 | S09 | 76 | 56 | 12 | 8 | South Bridge stranding |
 | S10 | 27/121 (BLOCKED) | 19 | 6 | 2 | stranding through step 22; genuine cost-gate BLOCKER at step 27 |
 | X02 | 170 | 146 | 20 | 4 | build-catalogue focus defect (GAME-3), craft-panel context ambiguity (GAME-4), RIG-14 tab-cycle shape (see companion doc) |
+| X04 | 124 | 104 | 12 | 8 | **zero combat_start events** — every move_to undershoots its combat site, on all three entry saves, including the one (S04-exit) confirmed clear of the stranding (RIG-19, see companion doc) |
 
 `HANDOFF_PROVENANCE.md` in the run directory records which entry save each
 segment actually had — not in every case the one §B names (RIG-10/RIG-12).
@@ -230,10 +233,17 @@ itself says would just mean fights do not resolve.
 1. **Nothing about bands 2 through 5's own content, pacing, or difficulty** —
    the player never arrived (South Bridge stranding, open question between
    rig and game).
-2. **Almost nothing about combat** — zero `combat_start` events anywhere from
-   S04 through S10, despite RIG-11 (the fix that was supposed to unblock this)
-   being confirmed fixed. X04, not yet run, is this run's best remaining
-   chance at real combat evidence.
+2. **Nothing about combat at all, anywhere past S03.** Zero `combat_start`
+   events in S04 through S10, and — now that X04 has run — zero in X04 too,
+   despite RIG-11 (the fix that was supposed to unblock exactly this) being
+   confirmed fixed. X04's own `move_to` steps undershoot every one of its
+   three combat sites, on all three entry saves, including the one
+   (`S04-exit`) independently confirmed clear of the stranding — a separate
+   defect (RIG-19, companion doc) from the stranding itself. **This run has
+   no combat evidence whatsoever past S03's three lucky (if all-missed)
+   catch attempts.** Difficulty, fairness, camera behavior during a fight,
+   faint/recovery, and switching under pressure remain completely
+   unevidenced by this run.
 3. **Nothing about how the game looks.** No pixels were captured; every
    prescribed §G frame is delegated and unpaid — see `GATE_F_CAPTURE_LANES.md`.
 4. **Nothing about the chapter's finale, the Warden fight, or the legendary
