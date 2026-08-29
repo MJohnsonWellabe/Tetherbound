@@ -1753,6 +1753,19 @@ func _on_prize_taken() -> void:
 
 ## The population and the guardian, through the encounter director's own
 ## spawner so these are ordinary wild creatures in every respect.
+## VAULT-BLOCK-REGRESSION. `spec`/`guardian`'s own `wander_radius` (below) caps
+## `wild_creature.gd`'s open-meadow default (7m) for residents whose room is a
+## fraction of that. Without it, the guardian and the vault's own Elder
+## Trailpup -- both spawned within a few metres of the ONE gated passage this
+## dungeon has -- can each roll (their `_rng` is `randomize()`d, so this is a
+## different draw every boot) a wander target on the far side of that doorway,
+## walk into the passage under their own idle AI during the settle window, and
+## be frozen there by `_quieten_the_residents()`/simple standing-still before
+## combat ever starts. The result is indistinguishable from a sealed passage
+## to a player who has just beaten the guardian for exactly this room: the
+## door is open and the way in is still blocked by a motionless resident. Only
+## the two spawns that actually flank the gate carry an override; the rest of
+## the cave's population was never observed doing this and is left alone.
 func _spawn_population(director: Node) -> void:
 	if not director.has_method("spawn_wild"):
 		push_error("the encounter director has no spawn_wild(); the warrens will be empty")
@@ -1775,12 +1788,15 @@ func _spawn_population(director: Node) -> void:
 				centre.x + offset.x + sin(angle) * spread,
 				_floor_y + 0.5,
 				centre.z + offset.z + cos(angle) * spread)
-			var body: Node3D = director.call("spawn_wild", str(spec.get("species", "")), to_global(at), {
+			var spawn_opts := {
 				"level": int(spec.get("level", 0)),
 				"aggressive": bool(spec.get("aggressive", false)),
 				"parent": self,
 				"name": "Warrens_%s_%d" % [str(spec.get("species", "")), n + 1],
-			})
+			}
+			if spec.has("wander_radius"):
+				spawn_opts["wander_radius"] = float(spec.get("wander_radius"))
+			var body: Node3D = director.call("spawn_wild", str(spec.get("species", "")), to_global(at), spawn_opts)
 			if body != null:
 				# CONTENT-0828 / FIRST-HOUR-FUN-REBUILD. Optional, and used by
 				# exactly one entry today: the vault's Elder Trailpup is the
@@ -1805,13 +1821,16 @@ func _spawn_population(director: Node) -> void:
 		return
 	var g_centre := _local_of((_chambers[g_chamber] as Dictionary).get("at", []))
 	var g_offset := _local_of(guardian.get("offset", [0.0, 0.0]))
+	var guardian_opts := {
+		"level": int(guardian.get("level", 15)),
+		"aggressive": true,
+		"parent": self,
+		"name": "WarrenGuardian",
+	}
+	if guardian.has("wander_radius"):
+		guardian_opts["wander_radius"] = float(guardian.get("wander_radius"))
 	_guardian = director.call("spawn_wild", str(guardian.get("species", "")),
-		to_global(Vector3(g_centre.x + g_offset.x, _floor_y + 0.5, g_centre.z + g_offset.z)), {
-			"level": int(guardian.get("level", 15)),
-			"aggressive": true,
-			"parent": self,
-			"name": "WarrenGuardian",
-		})
+		to_global(Vector3(g_centre.x + g_offset.x, _floor_y + 0.5, g_centre.z + g_offset.z)), guardian_opts)
 	if _guardian != null:
 		_guardian_seen_alive = true
 		_dress_the_guardian(guardian)
