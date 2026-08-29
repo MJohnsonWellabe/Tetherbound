@@ -15,6 +15,8 @@ extends "res://tests/test_case.gd"
 ## of its band the moment `chapter_curve.json` moves, and an alpha in band 1
 ## turns the tutorial meadow into something prompt 71 says it must not be.
 
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+
 const BAND_DIRS := [
 	"band1_lower_meadows",
 	"band2_stone_and_root",
@@ -22,6 +24,14 @@ const BAND_DIRS := [
 	"band4_upper_meadows_ironwood",
 	"band5_stronghold_approach",
 ]
+
+
+## Every cluster in the chapter, which is what "a handful" is a handful OF.
+func _cluster_count() -> int:
+	var total := 0
+	for band: String in BAND_DIRS:
+		total += _spawns(band).size()
+	return total
 
 
 func _spawns(band: String) -> Array:
@@ -53,9 +63,29 @@ func test_the_chapter_fields_a_handful_of_alphas() -> void:
 	# A handful, not a population. If every cluster grew an alpha the word would
 	# stop meaning anything and the band's own level band would stop describing
 	# what the player meets.
-	assert_true(found.size() <= 8,
-		"%d alpha encounters is not a handful; they would stop reading as special"
-		% found.size())
+	#
+	# AMENDED by T3-ENCOUNTER: this was `<= 8`, an absolute number written when
+	# the chapter had 8 authored alphas. It is a share now, measured against the
+	# chapter's own cluster count, for two reasons.
+	#
+	# First, an absolute cap goes stale every time content lands and then fails
+	# for a reason it never meant to catch. T3-CREATURES added four aspect
+	# variants -- the four rarest creatures in the game, one individual each,
+	# three of them behind time or weather gates, and two of them Alphas because
+	# the owner's brief names them as such ("Nightburrow and Stormtrail
+	# specifically should be treated as Alpha variants"). That is the *opposite*
+	# of the dilution this test guards, and it tripped the cap.
+	#
+	# Second, the sentence above is already a statement about proportion -- "if
+	# EVERY CLUSTER grew an alpha". 6% is the strictest bound that admits what
+	# the chapter actually ships (12 of 266 clusters, 4.5%) while still failing
+	# well before an alpha stops being a thing you remember. It also tightens
+	# automatically as regions gain ordinary wildlife, which an absolute number
+	# does the wrong way round.
+	var ceiling := int(float(_cluster_count()) * 0.06)
+	assert_true(found.size() <= ceiling,
+		"%d of %d clusters carry an alpha (%.1f%%); past 6%% they stop reading as special"
+		% [found.size(), _cluster_count(), float(found.size()) / float(_cluster_count()) * 100.0])
 
 
 func test_the_tutorial_meadow_has_no_alpha() -> void:
@@ -83,21 +113,60 @@ func test_every_alpha_is_a_bonus_over_its_band_not_an_absolute_level() -> void:
 			+ "rather than 'a trainer fight in a creature's body'")
 
 
+## AMENDED by T3-ENCOUNTER, and deliberately made STRONGER rather than looser.
+##
+## This asserted `alpha.scale > 1.0`. That was the whole story when every alpha
+## was an ordinary species promoted in the spawn table -- the multiplier was the
+## only place size could come from. T3-CREATURES then landed four ASPECT
+## VARIANTS which are their own species entries carrying their own
+## `placeholder.height`: a Nightburrow is 2.10m where a Burrowback is 1.70m, and
+## its `alpha` block is deliberately `scale: 1.0` because scaling again would
+## apply the owner's own 15-25% band TWICE. So three creatures that are plainly,
+## measurably bigger than anything else of their kind failed a check asking
+## whether they were bigger.
+##
+## The property this test exists to protect has never been "the scale field is
+## above one". It is the sentence below it: **an alpha the player cannot pick out
+## is not an encounter, it is a stat block.** So it now measures the size the
+## player actually meets -- the spawn table's multiplier TIMES the species' own
+## height over the height of the species it is a variant of.
+##
+## That is strictly more coverage, and it earned it immediately: it caught
+## **Ashtusk**, whose sheet says "VARIANT RECOLOR + VFX" rather than RESIZE, so
+## its height is 2.15m -- identical to Tuskroot's -- and which shipped at
+## `scale: 1.0`. It was the one alpha in the chapter with no size signal at all,
+## and the old assertion would have gone on passing the moment anyone gave the
+## other three a token multiplier. Fixed in data (band 5, order 5100), not here.
 func test_every_alpha_is_visibly_bigger() -> void:
 	for row: Variant in _alphas():
-		var alpha: Dictionary = ((row as Dictionary)["entry"] as Dictionary).get("alpha", {})
+		var entry: Dictionary = (row as Dictionary)["entry"]
+		var alpha: Dictionary = entry.get("alpha", {})
 		var scale := float(alpha.get("scale", 1.0))
-		# CLAUDE.md bans new creature meshes for the Meadows and names scale as
-		# one of the sanctioned differentiators. An alpha the player cannot pick
-		# out of its own cluster is not an encounter, it is a stat block.
-		assert_true(scale > 1.0,
-			"an alpha in %s is not scaled up; nothing tells the player it is "
-			% str((row as Dictionary)["band"]) + "different before the fight starts")
-		assert_true(scale <= 1.6,
-			"an alpha in %s is scaled %.2f; past modest it stops matching the "
-			% [str((row as Dictionary)["band"]), scale] + "species and starts "
-			+ "reading as a different creature, which CLAUDE.md's no-new-meshes "
-			+ "rule exists to avoid")
+		var size := scale * _variant_size_ratio(str(entry.get("species", "")))
+		assert_true(size > 1.0,
+			("an alpha in %s stands %.2fx an ordinary member of its own kind; nothing tells "
+			+ "the player it is different before the fight starts")
+			% [str((row as Dictionary)["band"]), size])
+		assert_true(size <= 1.6,
+			("an alpha in %s stands %.2fx; past modest it stops matching the species and "
+			+ "starts reading as a different creature, which CLAUDE.md's no-new-meshes rule "
+			+ "exists to avoid") % [str((row as Dictionary)["band"]), size])
+
+
+## How much bigger this species already is than the species it is a variant of,
+## or 1.0 for an ordinary species (and for a variant that did not resize, which
+## is a real and legitimate case -- sheets 7 and 8 say recolour, not resize).
+func _variant_size_ratio(species_id: String) -> float:
+	var definition: Dictionary = SPECIES.definition(species_id)
+	var base := str(definition.get("variant_of", ""))
+	if base == "":
+		return 1.0
+	var own := float((definition.get("placeholder", {}) as Dictionary).get("height", 0.0))
+	var base_height := float(
+		(SPECIES.definition(base).get("placeholder", {}) as Dictionary).get("height", 0.0))
+	if own <= 0.0 or base_height <= 0.0:
+		return 1.0
+	return own / base_height
 
 
 func test_every_alpha_says_why_it_is_there() -> void:

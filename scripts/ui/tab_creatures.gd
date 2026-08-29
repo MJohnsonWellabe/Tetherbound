@@ -942,7 +942,7 @@ func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: in
 	# `_row_portraits`'s own header for why the swatch is left drawing
 	# underneath rather than replaced.
 	var portrait_texture: Texture2D = null
-	var portrait_path := "%s%s.png" % [PORTRAIT_DIR, str(creature.get("species_id"))]
+	var portrait_path := _portrait_path(str(creature.get("species_id")))
 	if ResourceLoader.exists(portrait_path):
 		portrait_texture = load(portrait_path) as Texture2D
 	(_row_portraits[i] as TextureRect).texture = portrait_texture
@@ -1767,3 +1767,22 @@ func _history_line(creature: RefCounted) -> String:
 	if parts.is_empty():
 		return ""
 	return " " + ", ".join(parts).capitalize() + "."
+
+
+## The same aspect-variant fallback `playground_hud.gd::_species_portrait_path()`
+## makes, kept here rather than reached across because these two screens have no
+## shared parent -- the identical reason `PORTRAIT_DIR`'s own header gives for
+## duplicating the path format. An aspect variant (T3-CREATURES: nightburrow,
+## stormtrail, riftfrill, ashtusk) has no portrait of its own and reuses its base
+## species', exactly as it already reuses that species' mesh. Without this the
+## roster showed a bare swatch for the four rarest creatures in the chapter --
+## the two screens drifting apart again, which is what that header exists to
+## prevent.
+func _portrait_path(species_id: String) -> String:
+	if species_id.is_empty():
+		return ""
+	var path := "%s%s.png" % [PORTRAIT_DIR, species_id]
+	if ResourceLoader.exists(path):
+		return path
+	var base := str(SPECIES.definition(species_id).get("variant_of", ""))
+	return "%s%s.png" % [PORTRAIT_DIR, base] if base != "" else path

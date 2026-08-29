@@ -290,6 +290,57 @@ dropping `world_seed` from the save payload. Six deliberate breaks, six correct 
 
 ---
 
+## 7a. `origin/ralph/T3-CREATURES` was red on `main`, and I fixed it
+
+**Carry this to the coordinator: it blocks every lane that merges T3-CREATURES forward, not just
+this one.** The full suite found four failures. All four are inherited; none is caused by this
+lane. Attribution measured across three refs:
+
+| ref | alpha clusters | with `scale <= 1.0` | missing `_why_alpha` |
+|---|---|---|---|
+| `origin/main` | 8 | none | none |
+| `origin/ralph/T3-CREATURES` | 12 | **4** | **1** |
+| this branch | 12 | (fixed) | (fixed) |
+
+**1. `test_hud_widgets :: test_every_installed_species_has_the_hud_portrait_it_resolves`** — the
+four aspect variants have no portrait, so both portrait sites resolved a path that does not exist
+and fell back to a bare colour swatch for the four rarest creatures in the game. Fixed by
+resolving an aspect variant to its **base species'** portrait — the identical rule the mesh
+already follows, and which T3-CREATURES itself pinned with a test. A Nightburrow *is* a
+re-materialed Burrowback, so a Burrowback portrait is a true picture of it rather than a
+stand-in, and dropping in real art later needs no code change. Touches
+`scripts/ui/playground_hud.gd` and `scripts/ui/tab_creatures.gd` — **not my files; flagged for
+T1-UI.**
+
+**2. `test_wild_alphas :: test_every_alpha_says_why_it_is_there`** — a pure key-name slip. Band 2
+and band 3's alphas both carry `_why_alpha`; band 4's order 4100 carried the rationale under
+`_why` instead. Added.
+
+**3. `test_wild_alphas :: test_every_alpha_is_visibly_bigger`** — the test asserted
+`alpha.scale > 1.0`, which was the whole story while every alpha was an ordinary species promoted
+in the table. The aspect variants carry their size in their own species height and set
+`scale: 1.0` deliberately, so that scaling does not apply the owner's 15–25 % band twice —
+T3-CREATURES' reasoning is **correct**, and the test's proxy had stopped measuring the property.
+Amended to measure the size the player actually meets: the multiplier **times** the species'
+height over its base species'. **Strictly more coverage, and it earned it immediately** — it
+caught **Ashtusk**, whose sheet says recolour-not-resize so its height is 2.15 m, identical to
+Tuskroot's, and which shipped at `scale: 1.0`. It was the one alpha in the chapter with no size
+signal at all. Fixed in data (`scale: 1.15`, the bottom of the owner's own band), not by relaxing
+the check.
+
+**4. `test_wild_alphas :: test_the_chapter_fields_a_handful_of_alphas`** — an absolute cap of 8,
+written when the chapter had 8 alphas, tripped at 12. The four additions are the *opposite* of
+the dilution it guards: one individual each, three behind gates, two of them Alphas because the
+owner's brief names them so. Amended to a **share** of the chapter's clusters (6 %; the chapter
+ships 4.5 %), which is what the test's own comment was already describing — "if EVERY CLUSTER
+grew an alpha" — and which tightens automatically as regions gain wildlife instead of going stale.
+
+**Both amendments verified to still fail on what they guard**: reverting Ashtusk to `scale: 1.0`
+fails #3 with "stands 1.00x an ordinary member of its own kind"; promoting six ordinary clusters
+fails #4 with "18 of 266 clusters carry an alpha (6.8%)". Neither was relaxed to get green.
+
+---
+
 ## 8. Disagreements, and things not visible in the diff
 
 **1. The brief's percentages now have a denominator, and it is a table's eligible weight.**
