@@ -182,6 +182,58 @@ func test_the_shipped_evolution_catalyst_is_a_real_item() -> void:
 		"progression.json's evolution catalyst '%s' is not defined in items.json" % item_id)
 
 
+## --- D71/T3-SUNSTONE: Mudsnout branches on which stone is held -------------
+##
+## These read the REAL species.json link (`mudsnout.evolves_into_variants`),
+## the same way the file's header already justifies doing for the primary
+## Heartstone/Tuskroot link -- this IS the thing that would rot silently if
+## nothing exercised it. CFG_WITH_ITEM is reused unchanged: the branch design
+## deliberately keeps progression.json's shape exactly as SD17 shipped it,
+## only species.json gained a new field.
+
+func test_sunstone_branch_evolves_into_ashtusk_and_consumes_only_the_sunstone() -> void:
+	var creature := _mudsnout(15, 55)
+	var inventory := FakeInventory.new()
+	inventory.counts["sunstone"] = 1
+	var result := EVOLUTION.check(creature, CFG_WITH_ITEM, inventory)
+	assert_true(bool(result.get("eligible")), "holding only the Sunstone should open the Ashtusk branch")
+	assert_eq(str(result.get("target")), "ashtusk")
+	assert_true(EVOLUTION.evolve(creature, CFG_WITH_ITEM, inventory))
+	assert_eq(creature.get("species_id"), "ashtusk")
+	assert_eq(inventory.count("sunstone"), 0, "evolving must consume the Sunstone")
+
+
+func test_holding_both_stones_refuses_as_ambiguous_and_spends_nothing() -> void:
+	var creature := _mudsnout(15, 55)
+	var inventory := FakeInventory.new()
+	inventory.counts["heartstone"] = 1
+	inventory.counts["sunstone"] = 1
+	var result := EVOLUTION.check(creature, CFG_WITH_ITEM, inventory)
+	assert_false(bool(result.get("eligible")), "carrying both catalysts must refuse rather than silently pick one")
+	assert_true(str(result.get("reason")).length() > 0, "the refusal must say what is wrong, not fail silently")
+	assert_false(EVOLUTION.evolve(creature, CFG_WITH_ITEM, inventory))
+	assert_eq(creature.get("species_id"), "mudsnout", "a refused evolve must change nothing")
+	assert_eq(inventory.count("heartstone"), 1, "a refused evolve must spend nothing")
+	assert_eq(inventory.count("sunstone"), 1, "a refused evolve must spend nothing")
+
+
+func test_holding_neither_stone_still_reports_tuskroot_as_the_default_target() -> void:
+	# Unchanged behaviour for the common case: a Mudsnout with no catalyst in
+	# hand still shows the primary (Heartstone) path as its target, exactly as
+	# it did before this species gained a second branch.
+	var req := EVOLUTION.requirements("mudsnout", CFG_WITH_ITEM)
+	assert_eq(str(req.get("target")), "tuskroot")
+
+
+func test_refusal_with_no_catalyst_names_both_stones() -> void:
+	var creature := _mudsnout(15, 55)
+	var result := EVOLUTION.check(creature, CFG_WITH_ITEM, FakeInventory.new())
+	assert_false(bool(result.get("eligible")))
+	var reason := str(result.get("reason"))
+	assert_true(reason.contains("Heartstone") and reason.contains("Sunstone"),
+		"a refusal with no stone held should name the whole fork, not one branch of it: '%s'" % reason)
+
+
 func test_the_shipped_gate_refuses_without_the_catalyst_and_allows_with_it() -> void:
 	var cfg := _shipped_config()
 	var entry: Dictionary = cfg.get("evolution", {}).get("mudsnout", {}) as Dictionary

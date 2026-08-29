@@ -257,18 +257,31 @@ func test_every_variant_names_a_real_base_species_and_reuses_its_mesh() -> void:
 
 
 func test_no_aspect_variant_is_reachable_by_evolving() -> void:
-	# The rarity argument, pinned. Every one of these is authored as one or two
-	# individuals behind a habitat, time or weather gate. If a variant were also
-	# an evolution target, the player could manufacture one from a common
-	# creature and the gates would be decoration.
+	# The rarity argument, pinned -- amended by D71/T3-SUNSTONE. Every one of
+	# these is authored as one or two individuals behind a habitat, time or
+	# weather gate. If a variant were also an evolution target, the player
+	# could manufacture one from a common creature and the gates would be
+	# decoration -- UNLESS the species deliberately opts in with
+	# `evolution_authorized: true`, the owner's own directed exception: "there
+	# should just be some kind of sunstone you get then you evolve a Mudsnout
+	# using the stone to get the Ashtusk." That flag is the whole carve-out,
+	# visible in the data rather than a hardcoded species id living quietly
+	# inside this test -- a species without it is held to the original rule
+	# exactly as before.
 	for species_id: String in SPECIES.table().keys():
 		var definition: Dictionary = SPECIES.definition(species_id)
 		if str(definition.get("variant_of", "")).is_empty():
 			continue
-		assert_false(definition.has("evolves_from"),
-			"aspect variant '%s' must not be an evolution target; it would bypass its own rarity gates" % species_id)
 		assert_false(definition.has("evolves_into"),
 			"aspect variant '%s' must not evolve; that would launder a rare find into another species" % species_id)
+		if bool(definition.get("evolution_authorized", false)):
+			assert_true(definition.has("evolves_from"),
+				("'%s' declares evolution_authorized but names no evolves_from -- " +
+				"the flag with nothing behind it is dead data") % species_id)
+			continue
+		assert_false(definition.has("evolves_from"),
+			("aspect variant '%s' must not be an evolution target; it would bypass its own rarity gates " +
+			"(set `evolution_authorized: true` for a deliberate, owner-directed exception)") % species_id)
 
 
 func test_every_species_move_exists_and_matches_one_of_its_own_types() -> void:
