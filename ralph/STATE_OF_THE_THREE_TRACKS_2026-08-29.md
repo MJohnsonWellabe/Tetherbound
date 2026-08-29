@@ -47,10 +47,54 @@ independently reproduced the owner's prior verdicts. Frames are in
 | 5 | Open Meadows ground and grass | **ACCEPTABLE** |
 | 6 | Water and shorelines | pond GOOD, river ACCEPTABLE, stream BAD → **ACCEPTABLE** |
 | 7 | Sky and sun across the day cycle | **BAD** |
-| 8 | Terrain macro composition / landmarks | **NOT RENDERED** — lane stood down first |
+| 8 | Terrain macro composition / landmarks | **ACCEPTABLE as a skeleton, dragged down by what stands on it** |
 
-**The headline: a full day of castle and stronghold visual work moved neither
-verdict.** Both were BAD before the work and BAD after, judged blind.
+**The review is complete — all eight subjects.** Two headlines:
+
+**A full day of castle and stronghold visual work moved neither verdict.** Both
+were BAD before the work and BAD after, judged blind.
+
+**The macro skeleton points the player at the two worst surfaces in the game.**
+Band 5's approach axis is the best composition in the set — a forked path, the
+pylon line marching toward the stronghold, cyan cables, crystal flanking; a
+player reads "that way is the endgame" from one frame. And what it aims at is
+untextured grey boxes on the skyline and a stronghold that reads as a black
+slab from every angle. The composition is doing its job; the surfaces are not.
+
+### The judge's own bar questions, answered
+
+- **Do these frames read as belonging to the keyart's world?** **No — but for
+  the first time it is a near miss in places.** The band-1/band-2 meadows, the
+  pond and the trainer in blade grass are recognisably reaching for the keyart
+  and getting close. What breaks belonging is *everything built* plus the
+  night/golden failures — the keyart's two signature moods.
+- **Beside the Palworld references, same kind of game?** **Yes for the
+  open-field frames, no overall.** Open meadow and pond read as the same genre.
+  "The moment a structure enters frame the answer flips to no." Since the
+  chapter's climax is architecture, the overall answer is no.
+
+### The judge's split of what is fixable, and what needs new art
+
+**Fixable by changing the scene** (materials on existing meshes, lighting,
+composition, scatter): crimson night and the missing golden blend; sky/ground
+weather disagreement; dashed ground seams; floating pebbles and the floating
+castle plinth; the black-rendering NPC; the invisible stream; river bank
+texture scale; a second grass species; re-tinting the Warrens' mint rocks;
+real materials on the stronghold shell and the horizon boxes; the sun halo.
+
+**Needs art not in the build:** a weathered stone material set with
+gate/hoarding-scale detail modules for the castle kit, and an exterior facade
+language for the stronghold (banners, scaffolds, apparatus). Both are
+material/kit work on existing meshes — **no new hero mesh required**, so this
+stays inside the reuse and no-new-mesh rules — but neither is achievable by
+re-scattering what is already placed.
+
+Two further macro defects worth naming: **no aerial perspective** (distant
+hills render at near-field saturation, so depth flattens and the horizon reads
+like a backdrop), and **regional differentiation is prop-deep** — bands 1, 3, 4
+and 5 share one grass carpet, one tree family, one palette, differing only by
+what is parked on them. Only band 2's grove has its own light identity.
+"Increasingly demanding regions" is not yet something the terrain itself says.
 
 ### The most serious open visual defect: the day cycle
 
