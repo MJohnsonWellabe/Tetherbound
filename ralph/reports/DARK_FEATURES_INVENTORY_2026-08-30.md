@@ -1,7 +1,11 @@
 # Dark Features Inventory — 2026-08-30
 
-Lane: `ralph/DARK-FEATURES`. Read-mostly audit. **Nothing was fixed** — see §6
-for why, including the one item I was tempted by.
+Lane: `ralph/DARK-FEATURES`. Read-mostly audit.
+
+**One item was fixed: D1**, in commit `6698ad3d`, after the owner pushed back on
+an inventory that found unwired things and left them unwired. Everything else is
+listed, not fixed — §6 says exactly what each remaining item needs and why it
+could not be closed here.
 
 Owner directive this serves (2026-08-30):
 
@@ -44,6 +48,12 @@ specific play-test that would confirm them.
 **I disproved two things I expected to confirm** — see §5. That section exists
 so install lanes do not re-spend time on ground that is already solid.
 
+**Shape of this branch.** `ralph/DARK-FEATURES` is this report off `main`, plus
+merges of `ralph/T3-CREATURES` and `ralph/T1-CREATURE-ART` (both clean, zero
+conflicts) that exist **only** to give the D1 fix somewhere to attach — see D1.
+This is not a competing integration branch and should not be landed as one.
+Take the report, and cherry-pick `6698ad3d`.
+
 ---
 
 ## 1. Correction to the brief's premise — read this first
@@ -79,7 +89,7 @@ an owner decision, not an install task. It is item **C1** below.
 
 Ranked by player impact.
 
-### D1 — All four Aspect variants render as their base species
+### D1 — All four Aspect variants render as their base species — **FIXED, `6698ad3d`**
 
 | | |
 |---|---|
@@ -110,9 +120,41 @@ name. So the wiring genuinely works; only the declaration is missing.
 > file is T3-CREATURES' own … once T3-CREATURES lands … adding these two
 > placeholder keys is the [remaining step]"*
 
-T3-CREATURES then landed the four species entries without them. Neither lane
-was wrong; the work simply fell between them. **This is the single highest
-player-impact item in this report and the cheapest to close.**
+T3-CREATURES then landed the four species entries without them.
+
+**Why neither lane could have closed it, which I got wrong on my first pass.**
+My first draft blamed the missing render pass. The real reason is structural
+and more useful: **the two halves were never on the same branch.**
+
+| | species entries | variant textures |
+|---|---|---|
+| `origin/main` | ✗ | ✗ |
+| `origin/ralph/T3-CREATURES` | ✓ | ✗ |
+| `origin/ralph/T1-CREATURE-ART` | ✗ | ✓ |
+
+Neither lane held both halves, so neither *could* declare the link, and on
+`main` there was nothing to edit — the species entries do not exist there. D1
+was a post-integration task by construction, and the integration had not
+happened. That is why it fell through: not negligence, but a gap no single lane
+could see.
+
+**What I did.** The two lanes merge with zero conflicts, so I merged them,
+added the 12 lines, and committed the fix **as one self-contained commit**
+(`6698ad3d`) so the landing lane can cherry-pick that SHA rather than inherit
+this branch's merges.
+
+**Verified, short of a render** (no Godot here): every texture path the code
+computes resolves to a committed file, exercising *both* branches of
+`_texture_for()` — the external-png branch for burrowback/paddlenewt/tuskroot
+and the `_extracted_` fallback for trailpup; all 8 PNGs have `.import` siblings
+and are git-tracked, so `ResourceLoader.exists()` will find them;
+`aspect_source_species` equals each entry's existing `variant_of`;
+`aspect_vfx.gd` carries a preset for all four ids; and no test pinned the
+contract as dormant.
+
+⚠️ **Still required: a render pass.** `CLAUDE.md` wants visual-judge evidence
+for visual-affecting work. The wiring is verified correct; **nobody has looked
+at it.**
 
 ---
 
@@ -389,17 +431,34 @@ install lane spends a session re-deriving it.
 
 ---
 
-## 6. What I changed
+## 6. What I changed, and why the rest is still listed rather than fixed
 
-**Nothing.** No code, no data, no config — this report is the only file added.
+**Changed: D1 only** — `6698ad3d`, 12 added lines in
+`data/creatures/species.json`, no logic touched. Details in D1 above.
 
-I was tempted by **D1**: it is 8 JSON keys, the values are already sitting in
-the same entries, and it is the highest-impact item here. I left it because
-`CLAUDE.md` requires rendered visual-judge evidence for visual-affecting work,
-and **Godot is not installed in this container**, so I could not render the
-result. Making a change to how four creatures look and pushing it unverified is
-the exact failure mode this repo keeps paying for. It is a ~15-minute task for
-a lane that can boot the engine.
+This lane's brief said *"your job is the inventory, not the fixes."* The owner
+pushed back on that, correctly: the standing directive is *"if we built it,
+turn it on."* So D1 is done. The rest is not, and here is the specific reason
+for each — none of them is "I ran out of time".
+
+| item | why it is not fixed here |
+|---|---|
+| **C1** — five pending species | **Blocked on a Meshy generation that has not happened.** No mesh exists (§1). Under `CLAUDE.md` a new creature mesh is exceptional and needs an owner directive. Not an install task — an owner decision. |
+| **E1** — `roll_new_worlds` | **Explicitly must not be flipped yet.** D-0830-1 records the precondition: Gate F re-baselines first, because flipping it mid-run invalidates that run's evidence. The owner wants it on; the owner also wrote the precondition. |
+| **T1** — trainer defeated line | **Needs a design decision and ~27 dialogue lines.** The bug is that four distinct states collapse into one; separating them requires a third conversation state that does not exist. Writing the Warden's "I can't fight you like that" line is authoring, not wiring. |
+| **O1** — stranded owner docs | **Requires a push to `main`** (or landing another lane's branch). Outside this lane's branch, and a coordinator action. |
+| **I1** — SUNSTONE × PICKUPS | **Not a fix — a merge instruction.** It must be executed *during* the landing, by whoever lands it. I verified the union resolves cleanly; §3 says how. |
+| **B1** — invisible buffs | **A HUD feature that was never built.** Real UI work with a design question attached (icon? timer? where?), and unverifiable here without a render. |
+| **P1 / K1** — 18 dead config keys | Each is a genuine two-way choice — wire the key to the code, or delete the key as a lie. Deleting `collision_stream_*` when the owner has an open ROG performance complaint is exactly the call I should not make alone. |
+| **Z1** — dead code / orphan assets | `boot.tscn` and the six orphan meshes are deletions. Deleting committed assets is a licensing and `ASSET_LEDGER.md` question, and `all_fainted()` may be a *missing feature* rather than dead code — see its entry. |
+
+**The honest general rule I applied:** I fixed the one item where the correct
+end state was unambiguous and I could verify it without guessing. Everything
+above needs either a decision that is the owner's, a capability this container
+lacks (a render, a Godot run), or an action on a branch that is not mine.
+
+⚠️ **Nothing in this report, D1 included, has been seen running.** Godot is not
+installed here.
 
 ---
 
@@ -410,8 +469,8 @@ Player impact, not effort:
 0. **O1** — do this first and it costs minutes. Until those three docs are on
    `main`, every lane below is working without the owner's top-precedence
    instructions, including the one that ordered this work.
-1. **D1** — 8 JSON keys + a render pass. Four creatures stop being reskin-less
-   copies. Cheapest high-impact item in the repo right now.
+1. **D1** — ~~8 JSON keys~~ **done in `6698ad3d`; cherry-pick that SHA.** What
+   remains is the render pass to confirm the four actually look right.
 2. **I1** — must be handled *during* the T3-SUNSTONE landing, not after. Get it
    wrong and you delete a feature with no test to catch it.
 3. **T1** — needs a design call on the third conversation state first.
