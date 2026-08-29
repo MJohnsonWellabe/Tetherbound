@@ -21,8 +21,19 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/gate_a/water"
 
 const READY_TIMEOUT_FRAMES := 240
-const POSE_FRAMES := 4
-const SETTLE_AFTER_MOVE := 4
+const POSE_FRAMES := 6
+## T1-SKY: was 4. A same-run pixel check (sky-only patch, so terrain shadow
+## cannot explain it) found the first two of four viewpoints rendering
+## measurably darker than the last two -- sky avg RGB (21,24,24) and
+## (67,74,75) against (130,133,128) and (114,139,148) -- despite every
+## viewpoint sharing the identical frozen "day" state. Not a time-of-day
+## bug (the clock is pinned; see the freeze-once comment below) but a
+## render-state warm-up one: this tool repositions the camera by large XZ
+## jumps between viewpoints, and 4 frames is far stingier than the 15
+## tools/_capture_ground_and_sky.gd budgets for the same kind of jump
+## (its own ARRIVE_FRAMES/REFRAME_FRAMES) to let Terrain3D's region stream
+## and the sun's shadow map catch up. Matched to that proven budget.
+const SETTLE_AFTER_MOVE := 15
 const FOV := 70.0
 
 func _init() -> void:
