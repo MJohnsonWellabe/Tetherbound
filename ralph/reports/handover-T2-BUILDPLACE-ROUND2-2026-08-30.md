@@ -12,12 +12,32 @@ findings (see §2 below).
 
 ---
 
-## 1. The headline: a healthy `S03-exit.json` was reached
+## 1. The headline: NOT a healthy `S03-exit.json` yet — read this before anything else
 
-**Two full, real S03 segment replays this session both completed cleanly
-through the fix and into the gathering loop with no derail.** [FILL IN
-after the final validation run: exact party HP from `S03-exit.json`, or
-the run's own conclusion if it diverged.]
+**Both defects this session set out to fix (Mira's shut door, and a
+solo-member fainted party) are fixed, live-verified, and hold in two full
+real segment replays end to end. The kept `S03-exit.json` from the final
+replay is still NOT healthy: `party_size == 1`, that one creature
+`hp: 0.0`, `fainted: true`.** The harness's own `INVENTORY.json` reports
+`"complete": true` with zero derail for this run — which is exactly the
+trap the task brief warned about ("do not trust `"complete": true` ... as
+proof of a healthy party"), and I want it stated as plainly as the brief
+asked rather than left for someone to discover by reading the save
+themselves.
+
+The reason is a FOURTH cause, found live while proving the first two
+fixes end to end, sitting well outside this lane's original brief
+(`S03-60`, hundreds of lines past where Mira's own sequence ends) — see
+§2.4 and `FINDING-T2-BUILDPLACE-2026-08-30.md`'s own "Round 3 — still
+open" section for the full chain. In short: the Satchel's 2 Revives get
+spent correctly on two real, expected faints (the catch loop, then Bryn's
+now-real fight) — both are exactly what they're supposed to do, working
+as designed — and then a THIRD, unanticipated fight (Mira's own Band-1
+challenge, triggered by surprise when a later, unrelated walk gets stuck
+near her building and `answer_prompts` presses `interact` while stuck)
+faints the now-Revive-less party a third time, with nothing left in the
+segment to recover it. A candidate fix is sketched but NOT run or
+verified — see §4 and §7.
 
 ---
 
@@ -88,30 +108,63 @@ one thing round 2's own fix broke without noticing:**
   normal XP/level-up progression, none of which happened under round 2's
   own fix (see §2.3).
 
-## 4. Still open / not this lane's to fix
+## 4. Still open — THIS is what stands between here and a healthy exit save
+
+**#1, the actual blocker (see §1): `S03-60`'s walk from Mira's shop back
+out to Oskar (22,-6) gets stuck 4.5m short after its full 3000-frame
+budget, `0 held`, without ever leaving the vicinity of her building.**
+While stuck, `S03-60`'s own `answer_prompts: true` presses `interact`
+every 20 held frames — which, this time, lands on MIRA AGAIN (still in
+range, still offering something) and advances her now-available
+Band-1 challenge conversation (`mira_shop_open` is true, `defeated_mira`
+is false), ending in a real, unplanned fight
+(`village_mira_challenge`/`battle:trainer_mira`). The party — already
+down to its one Revive-less starter after two earlier, legitimate uses —
+takes a hit and faints for good. Everything after that (beds never built,
+sleep never reached) is a consequence of this, not a separate cause.
+
+This is the reason `S03-60` was never live-tested from this starting
+position before now: no earlier round's replay ever got the player
+through Mira's door at all, so `S03-60` always started from wherever an
+earlier failure left the walker, never from genuinely inside her shop. My
+own fix is what exposed it.
+
+A **candidate fix, sketched but not run or verified**, is the last two
+blocks of `tools/gate_f/probe_mira_walk_trace.gd`: route `S03-60`'s walk
+through the same door-approach staging point `S03-52` already uses on the
+way in (`local(1.0, 5.0)` of cottage_a → world `(14.464, -4.121)`) before
+continuing to Oskar, on the theory that the exit leg clips the same
+counter/doorway geometry the entry leg did, in reverse. **Run the probe
+and read both new blocks' output before trusting this** — this session
+ran out of time before executing it. If it converges, mirror `S03-52`'s
+own staging-point pattern immediately before `S03-60` in `S03.json`, then
+re-run a full replay and read the save's `party` array directly (not
+`"complete": true`) to confirm health.
+
+**Everything below this was already open before this session and remains
+so, not touched:**
 
 - **The catch loop's own pacing** (`S03-32a`..`S03-38j`, pre-existing,
   unowned by this lane): two independent full replays against the same
   seed and the same scripted input both produced `party_size == 1` with
-  the starter fainted by the end of it. That is not "unlucky twice" — it
-  reads as the deterministic outcome of driving these exact ten catch
-  attempts (one attacker, ten fights, no rest between them) against this
-  exact save. Whether that pacing is itself a finding is a question for
-  whoever owns that loop; named here, not touched.
+  the starter fainted by the end of the catch loop alone. That is not
+  "unlucky twice" — it reads as the deterministic outcome of driving these
+  exact ten catch attempts (one attacker, ten fights, no rest between
+  them) against this exact save. Whether that pacing is itself a finding
+  is a question for whoever owns that loop; named here, not touched. It is
+  also WHY the Satchel's 2 Revives are both already spent by the time
+  `S03-60` triggers a third fight — a party that grew past one member, or
+  a catch loop that cost the ally less HP, would have left slack here.
 - **`scripts/combat/encounter_director.gd`'s blanket fainted-ally
   override** (round 2's own GAME finding): still real, still not owned by
   this lane (`scripts/combat/**` is T3-TYPECHART's), still not fixed here.
   This round's fix works AROUND it (keep the ally alive rather than
   dismissing it) rather than fixing the override itself.
-- **Two unrelated `move_to`/`move_to_entity` FAILs seen in the gathering
-  loop** during this round's replays (`did not reach (22, -6)` — Oskar's
-  own coordinate per `stick_navigator.gd`'s own header comment — and
-  `did not reach (36, -16)`), both in pre-existing steps this lane did not
-  touch. Worth flagging: the SAME shape (a walk that stalls short near a
-  building) is exactly what the Mira door bug looked like, so whoever owns
-  the gathering loop next should check whether Oskar's own building has a
-  similarly shut door nobody is opening, rather than assuming it is a
-  fresh, unrelated positioning problem.
+- **A second, separate `move_to` FAIL later in the gathering loop**
+  (`did not reach (36, -16)` — a different location, not Oskar's), seen in
+  an earlier attempt this session, not diagnosed. Possibly the same class
+  of "closed door/tight geometry" bug recurring elsewhere; possibly
+  unrelated. Not investigated.
 
 ## 5. File footprint
 
@@ -131,7 +184,11 @@ one thing round 2's own fix broke without noticing:**
   caution about this).
 - `tools/gate_f/probe_mira_walk_trace.gd` (+ `.uid`) — new. Single-boot,
   multi-candidate live walk tracer using the real `stick_navigator.gd`;
-  this is what actually found and proved the closed-door cause.
+  this is what actually found and proved the closed-door cause. Its last
+  two blocks (reproducing and candidate-fixing `S03-60`'s own exit-leg
+  failure, §4) were added at the very end of this session and are
+  UNVERIFIED — the file parses cleanly but has not been executed to
+  completion or read. Run it before trusting either block's claims.
 - `tools/gate_f/probe_revive_menu_flow.gd` (+ `.uid`) — new. Validates the
   Satchel Revive-item UI flow in both branches before it was trusted in a
   real segment.
@@ -208,3 +265,14 @@ background or with a longer timeout rather than assuming a hang).
    silently working around it with the revive fallback and calling it
    solved — the revive fallback is a genuine, intended mechanic, but its
    necessity here twice in a row is itself information.
+3. **I am NOT claiming this session converged, and I want that
+   unambiguous given the coordinator's own note that this lane gates the
+   other three.** The door and revive fixes are real, done, and proven —
+   but the actual deliverable ("a healthy `S03-exit.json`, HP pasted from
+   the real save") was not reached, because a fourth cause was found one
+   step further downstream than this session had time to also fix and
+   re-verify with the same rigour. I chose to stop and document rather
+   than push a guessed-at `S03-60` fix into the segment and claim success
+   on an unread replay — the same mistake the task's own brief was written
+   to prevent (a probe/fix that "passed" without being checked against a
+   real save once already cost a full round here).

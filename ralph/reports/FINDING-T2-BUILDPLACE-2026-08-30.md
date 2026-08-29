@@ -290,6 +290,97 @@ real one, live-confirmed in both full replays (`combat_quick` presses land
 against a live opponent, `party_cycle` mid-fight swaps a real pilot, XP and
 level-up fire normally).
 
+## Round 3 — still open: the kept `S03-exit.json` is NOT healthy, and a fourth cause was found (not fixed)
+
+**Stated plainly, per this lane's own brief: the fix above is real, live-
+confirmed, and does not converge on a healthy exit save by itself.** The
+final full replay this round (`ralph/reports/gate-f-buildplace-round3-
+validation/S03/saves/S03-exit.json`) ends with `party_size == 1`
+(still never grew past the starter, all segment long) and that one
+creature `fainted: true`, `hp: 0.0`. Reading `events.jsonl` end to end
+finds the actual chain, and it is downstream of everything fixed above,
+not a failure of it:
+
+1. Moss faints in the catch loop (t≈271s) — the S03-39d revive fallback
+   catches it (t≈341s, `revive -1`).
+2. Moss faints again in Bryn's now-real fight (t≈356s) — the S03-51e
+   revive fallback catches it too (t≈377s, `revive -1`). The satchel now
+   holds zero Revives (it started with exactly 2).
+3. Mira's door opens, the walk in succeeds, her first-visit conversation
+   completes, the tool-equip sequence runs — all of this lane's own fixed
+   ground, and all of it held.
+4. **`S03-60`** (pre-existing, several hundred lines further into the
+   segment, never touched by this lane — "walk past Oskar on the way
+   back", `move_to` (22,-6) with `answer_prompts: true`) FAILs: `did not
+   reach (22, -6) in 3000 walking frames; stopped 4.5m short at
+   (19.0, -3.0), 0 held` — i.e. it spent its ENTIRE budget stuck right
+   next to Mira's own building without ever leaving. While stuck,
+   `answer_prompts`'s own stuck-mashing behaviour (§`_walk_loop`, presses
+   `interact`/`menu_confirm` every 20 held frames) pressed `interact`
+   against Mira again. Because `mira_shop_open` is already true and
+   `defeated_mira` is false, her SECOND-visit branch answers this time —
+   her own Band-1 challenge conversation
+   (`village_mira_challenge`/`battle:trainer_mira`,
+   `data/config/village_npcs.json:31-34`) — which a completely
+   undefended, unrevivable (0 Revives left) Moss then takes a real hit in
+   and faints for the last time (t≈440s, `combat_hit`/`faint`), with
+   nothing left in the segment to heal it. The Satchel's own Revive stack
+   was legitimately spent twice already, correctly, on two real prior
+   faints; there was nothing wrong with spending it, there was simply
+   nothing left when a THIRD, unanticipated fight started.
+5. Everything after that (`tournament_build_creature_beds`,
+   `creature_bed_built_3` never set, and a much later `move_to
+   creature_bed.gd` FAIL — "stopped 7603.7m short", i.e. no reachable bed
+   exists) reads as consequences of #4 rather than new causes: no bed ever
+   gets built (the gathering/building loop past this point is unowned by
+   this lane and not audited here), so the sleep step this whole chapter's
+   original finding named as "nothing ever heals it before the tutorial's
+   sleep step" never gets a chance to run either.
+
+**This is the SAME class of bug as the Mira door, one level further out**:
+`S03-60`'s own walk starts from wherever `S03-56j` left the player, which
+after this round's fix is now genuinely INSIDE Mira's shop (past the
+counter, near her own tile) for the first time ever — a state no earlier
+round's replay ever reached, because no earlier round ever got the player
+through the door at all. `S03-60` was written and (apparently) never
+live-tested from that starting position, and a straight line from inside
+the shop back out to Oskar likely clips the same counter/doorway geometry
+the entry leg did, now in reverse. **Not fixed this round** — found while
+proving the door+revive fix end to end, past this lane's own scope
+(`S03-60` sits well outside the `S03-39`..`S03-56` range this lane was
+asked to look at), and out of remaining time to diagnose and prove a fix
+for with the same rigour the door and revive fixes got.
+
+A candidate fix (untested, do not trust without a live probe run first)
+is sketched at the bottom of `tools/gate_f/probe_mira_walk_trace.gd`: route
+`S03-60`'s walk through the same door-approach staging point
+(`local(1.0, 5.0)` of cottage_a, world `(14.464, -4.121)`) this round's
+`S03-52` already uses on the way in, before continuing to Oskar — on the
+theory that the exit leg fails for the same reason the entry leg did
+(a straight line from inside the shop to a distant point clips the counter
+or door frame) and the same "step outside onto open ground first" fix
+should work in reverse. **This has not been run to completion or verified
+live** — the probe script parses and the two new test blocks are written,
+but this session ran out of time before executing and reading the result.
+Whoever picks this up next should:
+
+1. Run `godot --headless --path . --script
+   tools/gate_f/probe_mira_walk_trace.gd` and read the two new blocks'
+   output (`--- S03-60 reproduction ---` and `--- S03-60 candidate fix
+   ---`) to confirm the reproduction actually fails the same way live,
+   and whether the staged fix actually converges.
+2. If it converges, add the same staging step to `S03.json` immediately
+   before `S03-60` (mirroring `S03-52`'s own pattern) and re-run a full
+   segment replay to confirm a genuinely healthy `S03-exit.json` — this
+   time reading the party's `hp`/`fainted` fields directly from the save,
+   not trusting `"complete": true` (this round's own replay showed
+   `"complete": true` with a fainted, zero-HP party, which is exactly the
+   trap the original task brief warned against).
+3. If it does not converge, the underlying counter/doorway geometry
+   inside `cottage_a`'s shop interior may need a look from whoever owns
+   `scripts/world/shop_interior.gd` — not touched or further diagnosed
+   here.
+
 ## Why this matters beyond S03
 
 Both defects share the same shape as the South Bridge stranding

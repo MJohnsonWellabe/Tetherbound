@@ -1,9 +1,19 @@
 extends SceneTree
 
-## T2-BUILDPLACE round 2: single-boot diagnostic that walks several candidate
-## routes into Mira's shop with the SAME `stick_navigator.gd` the real harness
-## uses, printing a position trace every few frames so a wall-slide gone wrong
-## is visible directly instead of inferred from a FAIL message's own summary.
+## T2-BUILDPLACE: single-boot diagnostic that walks several candidate routes
+## into (and, at the bottom, back OUT of) Mira's shop with the SAME
+## `stick_navigator.gd` the real harness uses, printing a position trace every
+## few frames so a wall-slide gone wrong is visible directly instead of
+## inferred from a FAIL message's own summary.
+##
+## The last two blocks (added round 3, NOT yet run to completion -- see
+## FINDING-T2-BUILDPLACE-2026-08-30.md's own "still open" section) reproduce
+## a real S03-60 replay failure: walking from Mira's own position back out to
+## Oskar (22,-6) got stuck 4.5m short after its entire 3000-frame budget, 0
+## held, right next to her building -- the same shape as the door problem
+## this file was originally written to diagnose, but on the EXIT leg instead
+## of the entry leg. The second block tries routing through the same door
+## staging point used on the way in, as a candidate fix, unverified.
 ##
 ##   godot --headless --path . --script tools/gate_f/probe_mira_walk_trace.gd
 
@@ -72,11 +82,28 @@ func _run() -> void:
 		for i in 15:
 			await physics_frame
 		await _traced_walk(target, 900, 2.5)
-		var d := _player.global_position.distance_to(_mira.global_position)
-		var los: bool = bool(_interactable.call("_has_line_of_sight", _player.global_position + Vector3.UP * 0.0)) if _interactable != null else false
-		var offer: Dictionary = _interactable.call("interaction_offer", _player.global_position) if _interactable != null else {}
-		print("  final: %s  dist_to_mira=%.2f  los=%s  offer=%s" % [
-			str(_player.global_position), d, los, str(offer.get("label", "(none)"))])
+
+	# S03-60 (real segment, unowned by this lane's original brief) FAILed a
+	# real replay walking from Mira's own position back OUT to Oskar (22,-6)
+	# -- 0 held, stuck 4.5m short after the ENTIRE 3000-frame budget, ending
+	# still right next to Mira. Test the exact same leg: does walking OUT
+	# through the (now open) door, straight at a distant target, hit the
+	# same counter/doorway snag as walking IN did before the door was ever
+	# considered?
+	print("")
+	print("--- S03-60 reproduction: from Mira's own position, straight to Oskar (22,-6) ---")
+	_teleport(_mira.global_position)
+	for i in 15:
+		await physics_frame
+	await _traced_walk(Vector3(22.0, 0.9, -6.0), 900, 3.5)
+
+	print("")
+	print("--- S03-60 candidate fix: from Mira's own position, via the door staging point, then Oskar ---")
+	_teleport(_mira.global_position)
+	for i in 15:
+		await physics_frame
+	await _traced_walk(_local_to_world(1.0, 5.0), 400, 2.0)
+	await _traced_walk(Vector3(22.0, 0.9, -6.0), 900, 3.5)
 
 	quit(0)
 
