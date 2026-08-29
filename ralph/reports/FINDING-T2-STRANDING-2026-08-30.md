@@ -114,6 +114,32 @@ already-scripted sleep then completes the heal, so the S03 exit save carries
 a healthy party into S04 onward — which should resolve the stranding for
 every segment downstream, since nothing else in the chain needed to change.
 
+## Impact on other lanes / comparability of prior results
+
+**The fix touches only `tools/gate_f/segments/S03.json` — a rig step-script.
+No file under `scripts/`, `data/`, or any other game-code/content path was
+touched.** It changes what actions the harness performs (it now assigns the
+party's fainted creature to a bed before the segment's existing sleep step);
+it does not change the game or the world in any way.
+
+Consequences for comparability, stated directly per the coordinator's ask:
+
+- **Every result T2-GATEF collects on X07, X08, X05, X01 and X04 stays fully
+  valid and comparable**, before or after this fix lands: none of those
+  segments' entry saves or step-scripts are touched by it, and the fix
+  changes nothing about game behaviour they could observe.
+- **X03 and X06 are correctly held back** — both depend on saves at or after
+  the stranding, and those saves will change once S03 (and everything
+  chained after it) is re-run with a healthy party. Do
+  not run them against the current stranded saves; do not run them against
+  saves produced before this fix landed and call that current evidence.
+- **S05 through S10's existing evidence describes the stranding, not bands
+  2-5**, exactly as flagged in this session's own handover — that evidence
+  does not become valid retroactively; it needs a real re-run from a
+  healthy S03 onward. This was already known going in; this fix is what
+  makes that re-run possible, not a change to what those nine "complete"
+  segments already recorded.
+
 ## What is NOT yet independently re-verified by a full run
 
 The probe confirms the underlying game mechanism, not the new step-script's
