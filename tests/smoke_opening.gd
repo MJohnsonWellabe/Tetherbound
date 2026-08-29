@@ -726,15 +726,34 @@ func _the_road_gate_stops_until_the_key_is_found() -> void:
 		_fail("no RoadGate in the world; SA7's gate was never built")
 		return
 
-	# A straight line from wherever beat 5 leaves the player clips either the
-	# yard fence (`village.json`, `[3,-18]`, yaw 100° — measured directly: a
-	# 5m wall whose long axis runs roughly north-south, spanning z -15.5 to
-	# -20.5 at x~3, not just a point) or the ChickenCoop (`[21,-14]`, a small
-	# ~1.5m-radius footprint but sitting almost on `paths.routes`' own
-	# "toward the rocky rise" leg). A real player rounds a fence and a coop
-	# without thinking about it; this homing walk does not, so it goes north
-	# of both — over the fence's tip, well clear of the coop — before
-	# dropping back down to the gate.
+	# The first-catch return (`_grandpa_hands_over_the_first_catch_orbs`) leaves
+	# the player standing next to Grandpa, INSIDE the house — the door is only
+	# open from here because `beat:first_encounter` just fired. A beeline from
+	# there straight to the gate's approach points below clips `Table2`,
+	# `_build_furniture()`'s solid second table by the door: that table is
+	# deliberately kept off the straight stairs-to-Grandpa and Grandpa-to-door
+	# lanes grandpa_house.gd documents and checks, but a line from Grandpa
+	# toward the north-easterly gate waypoints below is a third lane nobody
+	# swept, and it wedges a homing walk on the table's corner solidly enough
+	# to eat the whole frame budget without moving (measured: 900 frames, 0m).
+	# A real player just walks around a table they can see; this homing walk
+	# cannot, so it leaves the same way `_the_door_is_gated_until_grandpa_is_heard`
+	# already does — through the house's own door and outside markers — before
+	# ever aiming at a point outdoors.
+	var house := _world.get_node_or_null(^"GrandpaHouse")
+	if house != null:
+		await _walk_toward_point(house.call("marker", "door"), 400)
+		await _walk_toward_point(house.call("marker", "outside"), 400)
+
+	# A straight line from just outside the house still clips either the yard
+	# fence (`village.json`, `[3,-18]`, yaw 100° — measured directly: a 5m wall
+	# whose long axis runs roughly north-south, spanning z -15.5 to -20.5 at
+	# x~3, not just a point) or the ChickenCoop (`[21,-14]`, a small ~1.5m-radius
+	# footprint but sitting almost on `paths.routes`' own "toward the rocky
+	# rise" leg). A real player rounds a fence and a coop without thinking
+	# about it; this homing walk does not, so it goes north of both — over the
+	# fence's tip, well clear of the coop — before dropping back down to the
+	# gate.
 	await _walk_toward_point(Vector3(14.0, 0.0, -13.0), 900)
 	await _walk_toward_point(Vector3(18.0, 0.0, -10.0), 900)
 	await _walk_toward_point(Vector3(26.0, 0.0, -10.0), 900)
