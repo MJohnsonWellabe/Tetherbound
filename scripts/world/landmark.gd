@@ -276,10 +276,134 @@ func build(world: Node) -> void:
 	castle.name = "Castle"
 	castle.position = Vector3(0.0, PLINTH_TOP, 0.0)
 	add_child(castle)
+	_weather_castle(castle)
 
 	_build_castle_colliders(prefabs)
 	_build_ramp()
 	_build_occupation(world)
+
+
+## T1-CASTLE (2026-08-29). `ralph/reports/T1-ARCH_buildings_2026-08-29.md`
+## diagnosed the owner's "up close the castle reads pale, flat and
+## plastic/toylike" verdict (`ralph/OWNER_FEEDBACK_2026-08-29_BUILDINGS.md`)
+## as real and NOT a broken retint: a wall face pixel-samples to the authored
+## `LightRock` colour, correctly brightened by direct sun. The report's own
+## conclusion was that the Quaternius kit is solid-colour and no-texture, with
+## "no middle scale of visual interest ... nothing between 'wall' and
+## 'crenellation'" -- the exact defect `interior_structure.gd`'s header
+## already names for constructed interiors, and the exact defect this same
+## file's own `_stone_material()`/STRONGHOLD-R2 already fixed once, for the
+## plinth, with a generated triplanar detail texture (the plinth's own boxes
+## have no UVs either; a direct probe of `WallBricks.obj` found the castle
+## kit's geometry has NONE at all -- 0 `vt` lines -- so triplanar is not a
+## style choice here, it is the only mapping this geometry supports).
+##
+## This reuses that exact proven technique on the castle's own stone
+## surfaces, rather than inventing a second mechanism: a small generated
+## grayscale multiply, triplanar-mapped, is set directly onto the ACTIVE
+## material `building_prefabs.gd::_apply_retint` already put on every wall/
+## tower/keep surface -- safe to mutate in place (not duplicate again) because
+## `prefabs` above is a composer LOCAL to this one `build()` call, used for no
+## prefab but `castle`, so nothing outside this landmark shares these
+## material instances. Two octaves: a fine mineral grain (the same scale of
+## effect as the plinth's own mottle) and a coarser, darken-only blotch layer
+## standing in for the grime/staining a real quarried stone face weathers
+## unevenly with -- real per-crevice curvature AO would need actual mesh
+## analysis this lane did not have time to build safely, and an isotropic
+## multiply is the cheap, already-shipped-on-this-kit alternative the report
+## itself named as an acceptable route. `Banner`/`Celing`/`LightWood` are
+## deliberately left out: the reserved heraldic cloth should stay clean and
+## vivid (STRONGHOLD-R2's own reservation), and the small wood/ceiling trim
+## has no `_why_retint`-documented "toy" complaint against it and needs no
+## widened scope.
+##
+## Cost: one more StandardMaterial3D with `uv1_triplanar` set, the same flag
+## the plinth's own material already carries in this exact scene -- a single
+## extra texture sample per pixel of stone, not a shader, and shared by every
+## wall/tower surface via one texture and up to eight material instances
+## (mutated, not duplicated per-surface). Not measured on ROG Ally hardware --
+## this environment has only the software (llvmpipe) renderer -- but the
+## technique is the SAME class of cost the plinth already pays in this same
+## frame, so it is not a new performance category for this scene, only more
+## surface area paying a cost already present. Worth a real device check
+## before calling this closed.
+const WEATHER_TEXTURE_SIZE := 96
+## Metres per tile -- wider than the plinth's own 3.0 (STONE_TEXTURE_METRES)
+## since the castle's wall faces run much longer before repeating would show.
+const WEATHER_TEXTURE_METRES := 5.0
+## Fine mineral-grain swing, either side of neutral -- same order of magnitude
+## as the plinth's own STONE_MOTTLE (0.13).
+const WEATHER_GRAIN_AMOUNT := 0.16
+## Coarse grime-blotch swing. DARKEN-ONLY (clamped below), because dirt and
+## weathering stain a stone face darker, not lighter -- an evenly two-sided
+## swing here would read as random noise rather than as grime.
+const WEATHER_BLOTCH_AMOUNT := 0.26
+const WEATHER_MATERIALS := [
+	"LightRock", "LightRock.001", "LightRock.002",
+	"DarkRock", "DarkRock.001",
+	"Black", "Black.001", "Black.002",
+]
+
+var _weather_texture_cache: ImageTexture = null
+
+
+func _weather_castle(castle: Node3D) -> void:
+	var texture := _weather_texture()
+	var done: Dictionary = {}
+	for mi in _weather_mesh_instances(castle):
+		if mi.mesh == null:
+			continue
+		for surface in mi.mesh.get_surface_count():
+			var mat := mi.get_active_material(surface)
+			if mat == null or not mat is StandardMaterial3D:
+				continue
+			var std := mat as StandardMaterial3D
+			if not WEATHER_MATERIALS.has(std.resource_name):
+				continue
+			if done.has(std.get_instance_id()):
+				continue
+			done[std.get_instance_id()] = true
+			std.albedo_texture = texture
+			std.uv1_triplanar = true
+			std.uv1_scale = Vector3.ONE / WEATHER_TEXTURE_METRES
+			# The kit's own materials import fully rough already (roughness
+			# 1.0 -- confirmed by direct probe); `maxf` only ever holds that
+			# or raises it, never sharpens a surface that isn't already flat.
+			std.roughness = maxf(std.roughness, 0.92)
+
+
+func _weather_mesh_instances(node: Node) -> Array[MeshInstance3D]:
+	var found: Array[MeshInstance3D] = []
+	if node is MeshInstance3D:
+		found.append(node as MeshInstance3D)
+	for child in node.get_children():
+		found.append_array(_weather_mesh_instances(child))
+	return found
+
+
+func _weather_texture() -> ImageTexture:
+	if _weather_texture_cache != null:
+		return _weather_texture_cache
+	var grain := FastNoiseLite.new()
+	grain.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	grain.seed = 20260829
+	grain.frequency = 0.12
+	grain.fractal_octaves = 3
+	var blotch := FastNoiseLite.new()
+	blotch.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	blotch.seed = 20260830
+	blotch.frequency = 0.03
+	blotch.fractal_octaves = 2
+	var image := Image.create_empty(
+		WEATHER_TEXTURE_SIZE, WEATHER_TEXTURE_SIZE, false, Image.FORMAT_RGB8)
+	for y in WEATHER_TEXTURE_SIZE:
+		for x in WEATHER_TEXTURE_SIZE:
+			var grain_value := grain.get_noise_2d(float(x), float(y)) * WEATHER_GRAIN_AMOUNT
+			var blotch_value := minf(blotch.get_noise_2d(float(x), float(y)), 0.0) * WEATHER_BLOTCH_AMOUNT
+			var value: float = clampf(1.0 + grain_value + blotch_value, 0.6, 1.15)
+			image.set_pixel(x, y, Color(value, value, value))
+	_weather_texture_cache = ImageTexture.create_from_image(image)
+	return _weather_texture_cache
 
 
 ## GATE-E-STRONGHOLD-ART (2026-08-23): the site is HELD, and until this pass
