@@ -233,6 +233,9 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 	_build_structure()
 	_build_conduits()
 	_build_lights()
+	_build_exterior_facing()
+	_build_exterior_dressing()
+	_build_gate_frame()
 	_build_interior_area()
 	_build_machine()
 	_build_recovery_point()
@@ -366,6 +369,55 @@ func _size_of(raw: Variant) -> Vector2:
 ## chamber wall, and how far it stands proud of the wall face. TUNABLE.
 const BASE_COURSE_H := 0.9
 const BASE_COURSE_PROUD := 0.35
+
+## T1-ARCH (2026-08-29). Two independent blind passes -- the owner, then a
+## Fable judge rendering `S-ext-02-flank-wide.png` cold, having read nothing
+## either lane wrote -- called the same thing: from any side but the gate
+## this building is "a featureless near-black box... no roofline
+## articulation, no openings, no banners, no machinery, no propaganda... an
+## unlit warehouse dropped on the meadow." A prior T1-ARCH pass fixed the
+## VALUE half of that on the gate face only (`stronghold.json`'s
+## `_comment_lights_exterior` fire+sky-fill recipe) and said outright in its
+## own report that the flank was untouched and a "full occupation-scale
+## dressing pass... is a separate task." This is that task, plus the texture
+## -scale collision the same judge frame named: "the wall ahead is a flat
+## slab of the same kind of cobble texture at 2-3x the scale... the two
+## scales collide at the junction" (the floor's own `STONE_TILE *
+## floor_tile_scale` against the bare `STONE_TILE` every chamber wall wears).
+##
+## Only the two OPEN yards (`outer_works`, `courtyard`) are dressed -- the
+## three roofed rooms behind them are never seen from the meadow, and
+## `_opening_on(id, side).is_empty()` is the same test `_build_wall` already
+## uses to find a TRUE perimeter face (one with no passage cut through it),
+## so this can never dress a wall the player actually walks through.
+const EXTERIOR_CHAMBERS: Array[String] = ["outer_works", "courtyard"]
+
+## The castle's own reused, oxblood-retinted banner module
+## (`stronghold_occupation.gd`'s header already establishes it as the
+## castle's banner, no new asset, no new colour) -- second building, same
+## mesh, same tint.
+const BANNER_MODEL := "res://assets/buildings/quaternius_castle/Banner.obj"
+const BANNER_COLOUR := Color("#7a2430")
+const BANNER_SCALE := 2.2
+
+## A thin decorative skin flush against the TRUE exterior wall faces only,
+## at a finer tile than the shared `_wall_material(true)` every chamber wall
+## (interior rooms included) wears. It is a skin rather than a retune of
+## that shared material so the already-tuned roofed interiors
+## (CONTENT-0828B rounds 1-6) cannot drift: nothing about the real wall, its
+## collision, or any other room's material changes, only what is glued to
+## the two yards' outward faces.
+const EXTERIOR_FACE_TILE_MULT := 1.8
+const EXTERIOR_FACE_SKIN := 0.06
+
+## Roofline: a proud cap at the wall HEAD, the same cue `BASE_COURSE_*`
+## already gives the wall's FOOT, plus a broken merlon row on top of it --
+## the "no roofline articulation beyond one step" the judge named.
+const COPING_H := 0.5
+const COPING_PROUD := 0.3
+const MERLON_W := 1.0
+const MERLON_H := 0.9
+const MERLON_GAP := 1.4
 
 
 ## --- materials --------------------------------------------------------------
@@ -630,10 +682,13 @@ func _side_toward(a_id: String, b_id: String) -> String:
 	return "+z" if b.z > a.z else "-z"
 
 
-## One wall, in up to three pieces: two flanks either side of the opening and a
-## lintel over it. A gap that was never cut is a wall, whatever the mesh shows.
-func _build_wall(centre: Vector3, size: Vector2, height: float, side: String,
-		opening: Dictionary) -> void:
+## The wall geometry for one side, as the list of pieces `_build_wall` builds
+## (a single full-span entry when there is no opening, else two flanks and a
+## lintel). Shared with the exterior facing/dressing passes below so neither
+## can place a skin or a banner somewhere the real wall is not -- the same
+## reason `_footprint`/`_opening_on` are computed once and read everywhere.
+func _wall_rects(centre: Vector3, size: Vector2, height: float, side: String,
+		opening: Dictionary) -> Array:
 	var along_x := side == "-z" or side == "+z"
 	var span := (size.x if along_x else size.y) + _wall_t * 2.0
 	var offset := (size.y if along_x else size.x) * 0.5 + _wall_t * 0.5
@@ -646,16 +701,32 @@ func _build_wall(centre: Vector3, size: Vector2, height: float, side: String,
 	var wall_h := height + 1.4
 
 	if opening.is_empty():
-		_wall_piece(along_x, wall_centre, span, wall_h, 0.0)
-		return
+		return [{"along_x": along_x, "sign": sign_, "at": wall_centre, "span": span,
+			"height": wall_h, "base": 0.0}]
 
 	var gap := float(opening.get("width", 3.0))
 	var gap_h := minf(float(opening.get("height", 4.0)), height)
 	var flank := (span - gap) * 0.5
+	var out: Array = []
 	if flank > 0.05:
-		_wall_piece(along_x, _shift(wall_centre, along_x, -(gap * 0.5 + flank * 0.5)), flank, wall_h, 0.0)
-		_wall_piece(along_x, _shift(wall_centre, along_x, gap * 0.5 + flank * 0.5), flank, wall_h, 0.0)
-	_wall_piece(along_x, wall_centre, gap, wall_h - gap_h, gap_h)
+		out.append({"along_x": along_x, "sign": sign_,
+			"at": _shift(wall_centre, along_x, -(gap * 0.5 + flank * 0.5)),
+			"span": flank, "height": wall_h, "base": 0.0})
+		out.append({"along_x": along_x, "sign": sign_,
+			"at": _shift(wall_centre, along_x, gap * 0.5 + flank * 0.5),
+			"span": flank, "height": wall_h, "base": 0.0})
+	out.append({"along_x": along_x, "sign": sign_, "at": wall_centre, "span": gap,
+		"height": wall_h - gap_h, "base": gap_h})
+	return out
+
+
+## One wall, in up to three pieces: two flanks either side of the opening and a
+## lintel over it. A gap that was never cut is a wall, whatever the mesh shows.
+func _build_wall(centre: Vector3, size: Vector2, height: float, side: String,
+		opening: Dictionary) -> void:
+	for rect: Dictionary in _wall_rects(centre, size, height, side, opening):
+		_wall_piece(bool(rect["along_x"]), rect["at"] as Vector3, float(rect["span"]),
+			float(rect["height"]), float(rect["base"]))
 
 
 func _shift(at: Vector3, along_x: bool, by: float) -> Vector3:
@@ -890,6 +961,215 @@ func _build_trim() -> void:
 				push_warning("stronghold.json trim has an unknown kind '%s'" % str(spec.get("kind", "")))
 
 
+## --- exterior dressing (T1-ARCH) ---------------------------------------------
+
+## The texture-scale collision half of the judge's finding: a thin decorative
+## skin flush against every TRUE exterior wall face (`_wall_rects` for a side
+## `_opening_on` calls empty, i.e. no passage cut through it -- the entrance
+## counts too, its two flank pieces ARE true exterior wall), at a finer tile
+## than the shared `_wall_material(true)` every chamber wall wears. See this
+## file's `EXTERIOR_FACE_TILE_MULT` for why this is a skin and not a retune
+## of that shared material.
+func _build_exterior_facing() -> void:
+	for id in EXTERIOR_CHAMBERS:
+		if not _chambers.has(id):
+			continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 6.0))
+		var sides := ["-x", "+x", "-z"] if id == _order[0] else ["-x", "+x"]
+		for side in sides:
+			var opening := _opening_on(id, side)
+			for rect: Dictionary in _wall_rects(centre, size, height, side, opening):
+				_face_rect(rect)
+
+
+func _exterior_face_material() -> StandardMaterial3D:
+	var key := "exterior_face_stone"
+	if _materials.has(key):
+		return _materials[key]
+	var m: StandardMaterial3D = _material(_stone_light(), 0.0, true).duplicate() as StandardMaterial3D
+	m.uv1_scale = Vector3.ONE * (STONE_TILE * EXTERIOR_FACE_TILE_MULT)
+	_materials[key] = m
+	return m
+
+
+func _face_rect(rect: Dictionary) -> void:
+	var along_x: bool = rect["along_x"]
+	var at: Vector3 = rect["at"]
+	var span: float = rect["span"]
+	var ht: float = rect["height"]
+	var base: float = rect["base"]
+	var sign_: float = rect["sign"]
+	if span <= 0.05 or ht <= 0.05:
+		return
+	var facing_at := at
+	var size: Vector3
+	if along_x:
+		facing_at.z += sign_ * (_wall_t * 0.5 + EXTERIOR_FACE_SKIN * 0.5)
+		size = Vector3(span, ht, EXTERIOR_FACE_SKIN)
+	else:
+		facing_at.x += sign_ * (_wall_t * 0.5 + EXTERIOR_FACE_SKIN * 0.5)
+		size = Vector3(EXTERIOR_FACE_SKIN, ht, span)
+	facing_at.y = _floor_y + base + ht * 0.5
+	_box(size, facing_at, _exterior_face_material(), false)
+
+
+## The occupation half: hardware, banners and a broken roofline on the two
+## FLANK faces (`-x`/`+x`) of each open yard -- the walls a player crossing
+## the meadow actually sees, and the ones `_build_trim()` above has never
+## reached because its bands and pillars mount 0.35m onto a wall's INNER
+## face. `hardware` is false for the gate face's own flank pieces (dressed by
+## `_build_gate_frame()` instead, which wants the coping/roofline read without
+## competing with the jambs it plants right where a girder would land).
+func _build_exterior_dressing() -> void:
+	for id in EXTERIOR_CHAMBERS:
+		if not _chambers.has(id):
+			continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 6.0))
+		for side in ["-x", "+x"]:
+			if not _opening_on(id, side).is_empty():
+				continue
+			_dress_exterior_wall(centre, size, height, side, true)
+
+
+## `along_x`-general for the coping/merlon roofline pass, which
+## `_build_gate_frame()` also calls (with `side: "-z"`) to close the roofline
+## over the gate face's own flank pieces. `hardware` is only ever true for a
+## `-x`/`+x` call (`_build_exterior_dressing()`'s own loop), so that section
+## stays written in this function's ORIGINAL x-only terms deliberately --
+## generalising code that never runs the other way would just be more
+## surface for a mistake to hide in.
+func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: String,
+		hardware: bool) -> void:
+	var along_x := side == "-z" or side == "+z"
+	var span := (size.x if along_x else size.y) + _wall_t * 2.0
+	var offset := (size.y if along_x else size.x) * 0.5 + _wall_t * 0.5
+	var sign_ := -1.0 if side.begins_with("-") else 1.0
+	var wall_centre := centre
+	if along_x:
+		wall_centre.z += sign_ * offset
+	else:
+		wall_centre.x += sign_ * offset
+	var wall_centre_x := wall_centre.x
+	var face_x := wall_centre_x + sign_ * (_wall_t * 0.5)
+	var wall_top := _floor_y + height + 1.4
+
+	# Coping, and a broken merlon row on top of it -- the roofline the judge
+	# asked for a second step of, past the one `_build_wall`'s parapet lip
+	# already gives.
+	var coping_size := Vector3(span, COPING_H, _wall_t + COPING_PROUD * 2.0) if along_x \
+		else Vector3(_wall_t + COPING_PROUD * 2.0, COPING_H, span)
+	_box(coping_size, Vector3(wall_centre.x, wall_top + COPING_H * 0.5, wall_centre.z),
+		_material(_stone_dark(), 0.0, true), false)
+	var count := maxi(1, int(floor(span / (MERLON_W + MERLON_GAP))))
+	var start := -float(count - 1) * 0.5 * (MERLON_W + MERLON_GAP)
+	for i in count:
+		var d := start + float(i) * (MERLON_W + MERLON_GAP)
+		var merlon_size := Vector3(MERLON_W, MERLON_H, _wall_t * 0.8) if along_x \
+			else Vector3(_wall_t * 0.8, MERLON_H, MERLON_W)
+		var merlon_at := Vector3(wall_centre.x + d, wall_top + COPING_H + MERLON_H * 0.5, wall_centre.z) \
+			if along_x else Vector3(wall_centre.x, wall_top + COPING_H + MERLON_H * 0.5, wall_centre.z + d)
+		_box(merlon_size, merlon_at, _material(_stone_light(), 0.0, true), false)
+
+	if not hardware:
+		return
+
+	# Team Tether hardware, bolted proud of the OUTER face this time -- the
+	# same faction paint `_build_trim()` already wears, in the one place a
+	# player approaching from the meadow can actually see it. Only ever
+	# reached for `-x`/`+x` (see this function's own header), so `centre.z`/
+	# `face_x` are the right axis pair without checking `along_x` again.
+	var girder_y := minf(height * 0.55, height - 1.0)
+	_box(Vector3(0.5, 0.5, span * 0.62), Vector3(face_x + sign_ * 0.35, _floor_y + girder_y, centre.z),
+		_tether_material(), false)
+	for f in [-0.30, 0.30]:
+		_box(Vector3(0.6, height, 0.6),
+			Vector3(face_x + sign_ * 0.35, _floor_y + height * 0.5, centre.z + f * span * 0.5),
+			_tether_material(), false)
+	# A live conduit climbing to the parapet -- "the deeper you go the more of
+	# the room is machine" (`_comment_language`), now readable from outside.
+	_box(Vector3(0.3, height * 0.85, 0.3),
+		Vector3(face_x + sign_ * 0.35, _floor_y + height * 0.42, centre.z), _live_material(), false)
+
+	for f2 in [-0.22, 0.22]:
+		_hang_banner(Vector3(face_x, _floor_y + height * 0.6, centre.z + f2 * span),
+			0.0 if sign_ > 0.0 else PI)
+
+
+## `yaw_rad` rotates the model's local +X onto the direction the mount should
+## project. Read directly off `Banner.obj`'s own vertex data rather than
+## assumed: it is a wall-bracket flagpole, a short vertical post near local
+## origin (x~0) with a horizontal arm reaching to x=0.673 that carries the
+## flag at its TIP -- so this asset's "forward" is +X, not Godot's usual -Z,
+## and a caller wants local +X pointing along the wall's own OUTWARD NORMAL
+## so the pole projects away from the stone rather than lying flat along it.
+## `Vector3(1,0,0).rotated(UP, yaw_rad) == (cos(yaw_rad), 0, -sin(yaw_rad))`:
+## `0` points +X (an east wall's own outward normal), `PI` points -X (west),
+## `PI/2` points -Z (south, the gate).
+func _hang_banner(at: Vector3, yaw_rad: float) -> void:
+	if not ResourceLoader.exists(BANNER_MODEL):
+		return
+	var mesh: Mesh = load(BANNER_MODEL) as Mesh
+	if mesh == null:
+		return
+	var instance := MeshInstance3D.new()
+	instance.name = "ExteriorBanner"
+	instance.mesh = mesh
+	var material := StandardMaterial3D.new()
+	material.albedo_color = BANNER_COLOUR
+	material.roughness = 0.9
+	instance.material_override = material
+	instance.scale = Vector3.ONE * BANNER_SCALE
+	instance.position = at
+	instance.rotation.y = yaw_rad
+	add_child(instance)
+
+
+## The gate: "a plain rectangular hole with no gatehouse, frame, reveal or
+## depth" per the judge. Proud jambs either side of the entrance plus a
+## lintel bridging them turn that hole into an actual doorway with a real
+## shadow line, and a banner on each jamb claims the one spot in the complex
+## every player is guaranteed to look at. Coping/merlons on the two flank
+## pieces beside it (`hardware: false`) close the roofline the same way the
+## flanks get it, without a girder run competing with the jambs.
+func _build_gate_frame() -> void:
+	if _order.is_empty():
+		return
+	var first: String = _order[0]
+	var chamber: Dictionary = _chambers[first]
+	var centre := _local_of(chamber.get("at", []))
+	var size := _size_of(chamber.get("size", []))
+	var height := float(chamber.get("height", 6.0))
+	_dress_exterior_wall(centre, size, height, "-z", false)
+
+	var opening := _opening_on(first, "-z")
+	if opening.is_empty():
+		return
+	var lateral := centre.x
+	var width: float = float(opening.get("width", 4.0))
+	var op_height: float = float(opening.get("height", 4.5))
+	var outer_face_z := _mouth_outer_z() - _wall_t
+	var jamb_w := 0.9
+	var jamb_proud := 1.0
+	var jamb_h := op_height + 0.6
+	var jamb_z := outer_face_z + _wall_t * 0.5 - jamb_proud * 0.5
+	for s in [-1.0, 1.0]:
+		_box(Vector3(jamb_w, jamb_h, _wall_t + jamb_proud),
+			Vector3(lateral + s * (width * 0.5 + jamb_w * 0.5), _floor_y + jamb_h * 0.5, jamb_z),
+			_material(_stone_dark(), 0.0, true), false)
+	_box(Vector3(width + jamb_w * 2.0, 0.6, jamb_proud + _wall_t),
+		Vector3(lateral, _floor_y + jamb_h + 0.3, jamb_z),
+		_material(_stone_dark(), 0.0, true), false)
+	for s2 in [-1.0, 1.0]:
+		_hang_banner(Vector3(lateral + s2 * (width * 0.5 + jamb_w + 0.35), _floor_y + op_height * 0.7,
+			outer_face_z), PI * 0.5)
+
+
 ## CONTENT-0828B. The shared constructed-interior method, in the fortress's own
 ## vocabulary.
 ##
@@ -998,7 +1278,12 @@ func _build_conduits() -> void:
 
 
 func _build_lights() -> void:
-	for entry: Variant in _config.get("lights", []):
+	# T1-ARCH-STRONGHOLD: `lights_flanks` is the gate-face fire+sky-fill recipe
+	# (`lights` above) re-aimed at the two `-x`/`+x` walls it never reached --
+	# kept as its own config array (see `_comment_lights_flanks`) rather than
+	# spliced into `lights` by hand, so a future diff on either block stays
+	# readable.
+	for entry: Variant in _config.get("lights", []) + _config.get("lights_flanks", []):
 		var spec: Dictionary = entry as Dictionary
 		var at := _local_of(spec.get("at", []))
 		var light := OmniLight3D.new()
