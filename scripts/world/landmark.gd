@@ -327,28 +327,33 @@ func build(world: Node) -> void:
 ## frame, so it is not a new performance category for this scene, only more
 ## surface area paying a cost already present. Worth a real device check
 ## before calling this closed.
-const WEATHER_TEXTURE_SIZE := 96
-## Metres per tile -- wider than the plinth's own 3.0 (STONE_TEXTURE_METRES)
-## since the castle's wall faces run much longer before repeating would show.
-const WEATHER_TEXTURE_METRES := 5.0
-## Fine mineral-grain swing, either side of neutral -- same order of magnitude
-## as the plinth's own STONE_MOTTLE (0.13).
-const WEATHER_GRAIN_AMOUNT := 0.16
-## Coarse grime-blotch swing. DARKEN-ONLY (clamped below), because dirt and
-## weathering stain a stone face darker, not lighter -- an evenly two-sided
-## swing here would read as random noise rather than as grime.
-const WEATHER_BLOTCH_AMOUNT := 0.26
+## T1-HALL-BUILD (2026-08-30), `ralph/reports/HALL_DESIGN_2026-08-30.md` §5.
+## The generated 96px noise texture above (kept in history via git, not in
+## this file) was a flat-value multiply and, per the design doc's diagnosis,
+## "a flat colour at any value cannot produce coursing" -- it is isotropic
+## grain/blotch, not stone shape, so no distance reads it as masonry. The
+## works walls (`stronghold.gd`) already prove the real fix: a real
+## photographic stone texture (`T_UnevenBrick`, the SAME cut stone, reused
+## rather than re-picked -- D24 one family), triplanar-mapped at the works'
+## own measured `STONE_TILE` = 0.28 (that file's own header has the tiling-
+## collision math this number resolves). The castle kit has zero UVs (a
+## direct probe of `WallBricks.obj` found 0 `vt` lines), so triplanar is not
+## a style choice, it is the only mapping this geometry supports -- exactly
+## the plinth's own precedent this function already followed.
+const STONE_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
+const STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
+const STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
+const STONE_TILE := 0.28
+## `Black` (openings/iron slots) stays a FLAT retint, no stone texture --
+## design §5's table calls it "flat", and a void/iron surface reading as
+## quarried stone would be the wrong material story on a gate mouth.
 const WEATHER_MATERIALS := [
 	"LightRock", "LightRock.001", "LightRock.002",
 	"DarkRock", "DarkRock.001",
-	"Black", "Black.001", "Black.002",
 ]
-
-var _weather_texture_cache: ImageTexture = null
 
 
 func _weather_castle(castle: Node3D) -> void:
-	var texture := _weather_texture()
 	var done: Dictionary = {}
 	for mi in _weather_mesh_instances(castle):
 		if mi.mesh == null:
@@ -363,9 +368,12 @@ func _weather_castle(castle: Node3D) -> void:
 			if done.has(std.get_instance_id()):
 				continue
 			done[std.get_instance_id()] = true
-			std.albedo_texture = texture
+			std.albedo_texture = STONE_ALBEDO
+			std.normal_enabled = true
+			std.normal_texture = STONE_NORMAL
+			std.roughness_texture = STONE_ROUGHNESS
 			std.uv1_triplanar = true
-			std.uv1_scale = Vector3.ONE / WEATHER_TEXTURE_METRES
+			std.uv1_scale = Vector3.ONE * STONE_TILE
 			# The kit's own materials import fully rough already (roughness
 			# 1.0 -- confirmed by direct probe); `maxf` only ever holds that
 			# or raises it, never sharpens a surface that isn't already flat.
@@ -379,31 +387,6 @@ func _weather_mesh_instances(node: Node) -> Array[MeshInstance3D]:
 	for child in node.get_children():
 		found.append_array(_weather_mesh_instances(child))
 	return found
-
-
-func _weather_texture() -> ImageTexture:
-	if _weather_texture_cache != null:
-		return _weather_texture_cache
-	var grain := FastNoiseLite.new()
-	grain.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
-	grain.seed = 20260829
-	grain.frequency = 0.12
-	grain.fractal_octaves = 3
-	var blotch := FastNoiseLite.new()
-	blotch.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
-	blotch.seed = 20260830
-	blotch.frequency = 0.03
-	blotch.fractal_octaves = 2
-	var image := Image.create_empty(
-		WEATHER_TEXTURE_SIZE, WEATHER_TEXTURE_SIZE, false, Image.FORMAT_RGB8)
-	for y in WEATHER_TEXTURE_SIZE:
-		for x in WEATHER_TEXTURE_SIZE:
-			var grain_value := grain.get_noise_2d(float(x), float(y)) * WEATHER_GRAIN_AMOUNT
-			var blotch_value := minf(blotch.get_noise_2d(float(x), float(y)), 0.0) * WEATHER_BLOTCH_AMOUNT
-			var value: float = clampf(1.0 + grain_value + blotch_value, 0.6, 1.15)
-			image.set_pixel(x, y, Color(value, value, value))
-	_weather_texture_cache = ImageTexture.create_from_image(image)
-	return _weather_texture_cache
 
 
 ## GATE-E-STRONGHOLD-ART (2026-08-23): the site is HELD, and until this pass
