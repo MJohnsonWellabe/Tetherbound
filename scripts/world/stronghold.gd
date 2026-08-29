@@ -1144,7 +1144,7 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 ## `Vector3(1,0,0).rotated(UP, yaw_rad) == (cos(yaw_rad), 0, -sin(yaw_rad))`:
 ## `0` points +X (an east wall's own outward normal), `PI` points -X (west),
 ## `PI/2` points -Z (south, the gate).
-func _hang_banner(at: Vector3, yaw_rad: float) -> void:
+func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR, scale: float = BANNER_SCALE) -> void:
 	if not ResourceLoader.exists(BANNER_MODEL):
 		return
 	var mesh: Mesh = load(BANNER_MODEL) as Mesh
@@ -1154,13 +1154,31 @@ func _hang_banner(at: Vector3, yaw_rad: float) -> void:
 	instance.name = "ExteriorBanner"
 	instance.mesh = mesh
 	var material := StandardMaterial3D.new()
-	material.albedo_color = BANNER_COLOUR
+	material.albedo_color = colour
 	material.roughness = 0.9
 	instance.material_override = material
-	instance.scale = Vector3.ONE * BANNER_SCALE
+	instance.scale = Vector3.ONE * scale
 	instance.position = at
 	instance.rotation.y = yaw_rad
 	add_child(instance)
+
+
+## Design §6.2's one invented story beat: a single faded Meadows-blue banner,
+## torn, half-height, under a fresh oxblood one -- the seizure, read in one
+## glance, at zero new asset cost (the same `Banner.obj` every other banner
+## in this file already uses, just re-tinted and stood shorter). Placed on
+## the west bailey wall (`outer_works`' own `-x` flank), where a player
+## walking the approach sees it beside the ordinary oxblood rhythm
+## `_dress_exterior_wall`'s hardware section already hangs there.
+const BLUE_RELIC_COLOUR := Color("#3d4a63")
+func _build_blue_relic_banner() -> void:
+	var ow: Dictionary = _chambers.get("outer_works", {})
+	if ow.is_empty():
+		return
+	var centre := _local_of(ow.get("at", []))
+	var half := _size_of(ow.get("size", [])) * 0.5
+	var face_x := centre.x - (half.x + _wall_t * 0.5)
+	_hang_banner(Vector3(face_x, _floor_y + 3.2, centre.z), PI, BLUE_RELIC_COLOUR, BANNER_SCALE * 0.65)
 
 
 ## The gate: "a plain rectangular hole with no gatehouse, frame, reveal or
@@ -1244,6 +1262,7 @@ func _build_hall_massing() -> void:
 	_build_hall_waist()
 	_build_hall_slits()
 	_build_cable_landing()
+	_build_blue_relic_banner()
 
 
 ## The SAME technique `landmark.gd::_weather_castle` uses on the same kit, for
