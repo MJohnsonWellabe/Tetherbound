@@ -166,7 +166,11 @@ static func plan_for(
 	var separation := float(protection.get("min_separation_m", 0.0))
 	var caps: Dictionary = protection.get("max_per_region", {}) as Dictionary
 	var alpha_cap := int(protection.get("alpha_max_per_region", 0))
+	var alpha_separation := float(protection.get("alpha_min_separation_m", 0.0))
 	var placed_rare: Array = []  # world positions of rare-or-above results so far
+	# Authored alphas first: the chapter's own alphas are never the thing a
+	# separation rule pushes aside.
+	var placed_alphas: Array = _authored_alpha_positions(ordered)
 
 	var plan := {}
 	for entry: Variant in ordered:
@@ -226,9 +230,15 @@ static func plan_for(
 		if not spawn.has("alpha") and not spawn.has("elder"):
 			var alpha_spent := int((budgets.get(region, {}) as Dictionary).get("alpha", 0))
 			var chance := float(chosen.get("alpha_chance", 0.0))
-			if alpha_roll < chance and alpha_spent < alpha_cap:
+			# The separation, not the cap, is what actually expresses the brief's
+			# "one major Alpha within a local region at a time" -- see
+			# spawn_tables.json's `_comment_alpha_separation` for the measurement
+			# that decided it.
+			if alpha_roll < chance and alpha_spent < alpha_cap \
+					and not _too_close(centre, placed_alphas, alpha_separation):
 				result["alpha"] = (cfg.get("alpha_promotion", {}) as Dictionary).duplicate()
 				_spend(budgets, region, "alpha")
+				placed_alphas.append(centre)
 
 		plan[order] = result
 	return plan
@@ -253,6 +263,21 @@ static func _authored_budgets(ordered: Array, regions_cfg: Dictionary, exception
 		if exceptional_species.has(str(spawn.get("species", ""))):
 			_spend(budgets, region, "exceptional")
 	return budgets
+
+
+## Where the AUTHORED alphas stand, for the separation rule below.
+##
+## Seeded before any roll for the same reason the budgets are: an authored alpha
+## is the story's, and the roll gives way to it rather than the other way round.
+static func _authored_alpha_positions(ordered: Array) -> Array:
+	var out: Array = []
+	for entry: Variant in ordered:
+		var spawn: Dictionary = entry
+		if str(spawn.get("table", "")) != "":
+			continue
+		if spawn.has("alpha") or spawn.has("elder"):
+			out.append(_centre_of(spawn))
+	return out
 
 
 ## Weighted draw over the table's eligible entries.

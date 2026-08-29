@@ -385,6 +385,108 @@ func test_a_rolled_alpha_never_crowds_an_authored_one() -> void:
 					world_seed, int(counts[region]), region, cap])
 
 
+func test_a_rolled_alpha_is_never_crowded_against_another_alpha() -> void:
+	# The brief's "one major Alpha within a local region at a time", expressed as
+	# distance rather than as a per-band count -- because the authored chapter
+	# puts two of its own alphas 67m apart, so a cap tight enough to mean "one
+	# per region" would either be violated by the authored world or would refuse
+	# every rolled alpha outside Band 1. Authored alphas are the fixed points; a
+	# ROLLED one has to stand clear of all of them and of each other.
+	var separation := float((_cfg().get("protection", {}) as Dictionary).get("alpha_min_separation_m", 0.0))
+	assert_true(separation > 0.0, "spawn_tables.json declares no minimum separation between alphas")
+	var authored := _entry_by_order()
+	for world_seed: int in SEEDS:
+		var plan := _plan(world_seed)
+		var fixed: Array[Vector3] = []
+		for entry: Variant in _spawns():
+			var spawn: Dictionary = entry
+			if spawn.has("alpha") or spawn.has("elder"):
+				fixed.append(_centre_of(spawn))
+		for order: Variant in plan:
+			if not (plan[order] as Dictionary).has("alpha"):
+				continue
+			var at := _centre_of(authored[order])
+			for other: Vector3 in fixed:
+				assert_true(at.distance_to(other) >= separation,
+					"seed %d promoted an alpha at order %s, %.0fm from another alpha; the floor is %.0fm" % [
+						world_seed, str(order), at.distance_to(other), separation])
+			fixed.append(at)
+
+
+func test_a_rolled_alpha_never_lands_on_a_cluster_that_authored_its_own() -> void:
+	# The owner's own words -- "some of the alphas and such will always get
+	# placed in the same spots as that's part of the storyline". An authored
+	# alpha block is that promise, and a promotion that overwrote one would break
+	# it silently, since both end up as an `alpha` key on the same entry.
+	var authored := _entry_by_order()
+	for world_seed: int in SEEDS:
+		var plan := _plan(world_seed)
+		for order: Variant in plan:
+			if not (plan[order] as Dictionary).has("alpha"):
+				continue
+			var spawn: Dictionary = authored[order]
+			assert_false(spawn.has("alpha") or spawn.has("elder"),
+				"seed %d promoted order %s, which already authors its own alpha/elder" % [
+					world_seed, str(order)])
+
+
+func test_a_rolled_world_is_still_the_ground_dominant_meadows() -> void:
+	# The brief's Population Philosophy is a constraint on the whole system, not
+	# a note: "The Meadows should still visually read as: Ground biome with ponds,
+	# waterways and flying wildlife", and "A normal traversal through the Meadows
+	# should mostly show Ground creatures, Water creatures near water, and Air
+	# creatures overhead."
+	#
+	# A rolled population is exactly the thing that could drift that without
+	# anybody editing a species entry, and no other test in the repo would notice.
+	# Measured against the authored world's own shape (60.0% ground / 36.2% air /
+	# 3.7% water, T3-CREATURES handover 7.5) with room for a roll to move it.
+	var authored := _entry_by_order()
+	for world_seed: int in SEEDS:
+		var plan := _plan(world_seed)
+		var by_type := {"ground": 0, "air": 0, "water": 0}
+		var population := 0
+		for entry: Variant in _spawns():
+			var spawn: Dictionary = entry
+			var order := int(spawn.get("order", -1))
+			var species := str((plan.get(order, {}) as Dictionary).get("species", spawn.get("species", "")))
+			var creature_type := str(SPECIES.definition(species).get("type", ""))
+			var count := int(spawn.get("count", 1))
+			population += count
+			if by_type.has(creature_type):
+				by_type[creature_type] = int(by_type[creature_type]) + count
+		assert_true(population > 0, "seed %d produced no population at all" % world_seed)
+		var ground_share := float(by_type["ground"]) / float(population) * 100.0
+		assert_true(ground_share >= 50.0,
+			"seed %d left the Meadows only %.1f%% Ground; the brief keeps this the Ground-dominant biome" % [
+				world_seed, ground_share])
+		assert_true(float(by_type["air"]) / float(population) * 100.0 <= 45.0,
+			"seed %d filled %.1f%% of the Meadows with Air creatures" % [
+				world_seed, float(by_type["air"]) / float(population) * 100.0])
+
+
+func test_a_rolled_world_keeps_the_same_headcount() -> void:
+	# Density is T3-DENSITY's file and its problem. The roll decides WHAT stands
+	# at a cluster and never HOW MANY, so the chapter's authored 886 must survive
+	# every seed untouched -- a roll that also moved density would silently
+	# undo another lane's tuning pass.
+	var authored_population := 0
+	for entry: Variant in _spawns():
+		authored_population += int((entry as Dictionary).get("count", 1))
+	for world_seed: int in SEEDS:
+		var population := 0
+		var plan := _plan(world_seed)
+		for entry: Variant in _spawns():
+			var spawn: Dictionary = entry
+			# The plan carries no `count`; this reads the authored one back for
+			# every cluster, rolled or not, which is the property under test.
+			assert_false((plan.get(int(spawn.get("order", -1)), {}) as Dictionary).has("count"),
+				"seed %d rolled a headcount; density is not this system's to change" % world_seed)
+			population += int(spawn.get("count", 1))
+		assert_eq(population, authored_population,
+			"seed %d changed the chapter's wild headcount" % world_seed)
+
+
 func test_a_rolled_species_never_appears_in_a_region_its_table_excludes() -> void:
 	# The brief's geographic restriction, enforced rather than intended. Band 1
 	# in particular must keep its gentle roster: no burrowback strays onto the

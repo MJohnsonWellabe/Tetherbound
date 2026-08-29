@@ -23,8 +23,10 @@
       "exceptional": 1
     },
     "min_separation_m": 220.0,
-    "alpha_max_per_region": 2
+    "alpha_max_per_region": 6,
+    "alpha_min_separation_m": 400.0
   },
+  "_comment_alpha_separation": "Measured, not guessed. The authored world puts its 13 alpha/elder clusters as close as 67m apart (tools/_probe_rolled_population.gd and a direct pairwise measure), so 'one major Alpha within a local region at a time' is a rule the CHAPTER deliberately does not obey at a fine grain -- and a per-band cap tight enough to express it would have refused every rolled alpha outside Band 1, which is the half of the owner's sentence this system exists to deliver. So the cap is loose and SEPARATION does the real work: a rolled alpha must stand at least this far from any other alpha, authored or rolled. Authored alphas seed that list first, so an authored one is never the thing that gets moved.",
 
   "_comment_alpha": "The other half of the owner's sentence. 'Some of the alphas' are authored and always in the same place; the rest are rolled. A table's `alpha_chance` is the probability a rolled cluster is promoted to carry an alpha, using the SAME `alpha` block shape spawns.json already authors and the same encounter_director._make_alpha() path -- no second alpha mechanism. Promotion is refused once a region's alpha budget is spent, and authored alphas spend it first.",
   "alpha_promotion": {
@@ -51,7 +53,7 @@
       "alpha_chance": 0.06,
       "entries": [
         {"species": "burrowback", "tier": "common", "_why": "the quarry/warrens resident; owner brief 1 puts the whole family in 'Burrow Warrens / cave-mouth country'"},
-        {"species": "mudsnout", "tier": "common", "_why": "ground ambient across the whole chapter"},
+        {"species": "mudsnout", "tier": "uncommon", "_why": "ground ambient across the whole chapter, but the quarry and the warrens are Burrowback's country -- at common the two split the rock clusters evenly and the chapter's signature large digger fell from 123 individuals to ~60 (tools/_probe_rolled_population.gd)"},
         {"species": "trailpup", "tier": "uncommon", "_why": "ranges over rock as readily as field"},
         {"species": "galecrest", "tier": "uncommon", "regions": ["band3_the_river_lock", "band4_upper_meadows_ironwood", "band5_stronghold_approach"], "_why": "the aggressor role, an updraft species: ridges and gorges. Held out of Bands 1-2 so an ambush stays where the chapter authored it -- Band 1's galecrest is anchored at order 12 for smoke_aggression's own walk budget."},
         {"species": "mosshell", "tier": "rare", "_why": "a rock-overhang basker (its own Creek Hollow entry carries habitat 'rock_overhang'), and one of the three Water species the wild population is desperately short of -- see the T3-CREATURES handover 7.5"}
@@ -73,8 +75,8 @@
       "alpha_chance": 0.04,
       "entries": [
         {"species": "pipwing", "tier": "common", "_why": "the ordinary small bird of the whole chapter"},
-        {"species": "duskhush", "tier": "uncommon", "_why": "the nocturnal role's species. Its NIGHT-GATED clusters are anchored, so the role always resolves; this entry is its ordinary daytime presence."},
-        {"species": "galecrest", "tier": "uncommon", "regions": ["band3_the_river_lock", "band4_upper_meadows_ironwood", "band5_stronghold_approach"], "_why": "same progression gate as the rock table's: the chapter's aggressive flier belongs to the later regions"}
+        {"species": "duskhush", "tier": "common", "regions": ["band2_stone_and_root", "band3_the_river_lock", "band4_upper_meadows_ironwood", "band5_stronghold_approach"], "_why": "the nocturnal role's species. Its NIGHT-GATED clusters are anchored, so the role always resolves; this entry is its ordinary daytime presence. Held out of Band 1, which is where the chapter itself put it: OW5D moved Duskhush 'deeper into Band 2's forest' for its closed canopy, and the authored table has no Band 1 Duskhush at all. Ungated it also swelled from 85 individuals to 130-159 across five seeds and became the second most common creature in the chapter (tools/_probe_rolled_population.gd), because the air table is only three species deep and two of them are region-gated."},
+        {"species": "galecrest", "tier": "common", "regions": ["band3_the_river_lock", "band4_upper_meadows_ironwood", "band5_stronghold_approach"], "_why": "same progression gate as the rock table's: the chapter's aggressive flier belongs to the later regions. COMMON, not uncommon, and measured rather than guessed: at uncommon the chapter's aggressor population fell from 100 individuals to 27-50 across five seeds (tools/_probe_rolled_population.gd), which halves how often the world comes at the player -- GAME_DESIGN.md pillar 3. Its scarcity is expressed by the region gate, not by its weight."}
       ]
     }
   },
