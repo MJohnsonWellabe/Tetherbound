@@ -40,11 +40,15 @@ const CLEAR_ENOUGH := 6.0
 ## every real shore approach on the first attempt.
 const WATER_LEVEL := -17.0
 
-## [habitat tag, look-at centre, cluster radius from spawns.json]
+## [habitat tag, look-at centre, cluster radius from spawns.json]. The three
+## water centres were moved 0829 (T1-CREATURE §15, spawns.json's own
+## _comment_depth_0829) off the lakebed and into water shallow enough for the
+## creature to actually clear the surface -- kept in sync with that file
+## rather than the original OW5D offsets.
 const CLUSTERS := [
-	["creek_edge", Vector2(-370.0, 537.0), 14.0],
-	["rock_overhang", Vector2(-380.0, 552.0), 10.0],
-	["water_edge", Vector2(-360.0, 522.0), 14.0],
+	["creek_edge", Vector2(-378.0296, 528.0823), 14.0],
+	["rock_overhang", Vector2(-371.2711, 562.9456), 10.0],
+	["water_edge", Vector2(-356.1437, 516.158), 14.0],
 	["open_basin", Vector2(-432.2, 485.5), 14.2],
 	["rocky_shoulder", Vector2(-345.0, 595.0), 15.6],
 	["grove", Vector2(-383.7, 597.0), 17.0],
