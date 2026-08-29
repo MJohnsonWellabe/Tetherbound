@@ -140,6 +140,68 @@
           "softness": 0.1
         }
       ]
+    },
+    "riftfrill": {
+      "display_name": "Riftfrill",
+      "source_species": "paddlenewt",
+      "board": "docs/art/reference/creature-expansion-2026-08-30/07_Riftfrill_paddlenewt_variant.png",
+      "_comment": "Board palette: River Teal / Lilac Frill / Rift Glow / Mist White. 'Preserve the main silhouette. Let the frills, patterning, and effects carry most of the variant identity' -- so the body goes deeper teal (paddlenewt's own vivid is already a bright cyan-turquoise at hue 186; this pushes it darker/deeper rather than re-hueing it) and the ONE new paint element is a lilac tint on whatever the model's own dorsal/frill geometry is.",
+      "rules": [
+        {
+          "match": {
+            "sat_min": 0.08
+          },
+          "set_hue": 196,
+          "set_sat": 0.5,
+          "val_scale": 0.82
+        },
+        {
+          "match": {
+            "sat_max": 0.08,
+            "val_min": 0.5
+          },
+          "set_hue": 210,
+          "set_sat": 0.04,
+          "val_scale": 0.92
+        }
+      ],
+      "overlays": [
+        {
+          "id": "lilac_frill",
+          "_why": "'lilac/translucent frills'. tint over the dorsal ridge/up-facing surfaces near the spine top -- the same up_min+y_min shape burrowback's own plate_moss and tuskroot's moss_mantle use for 'the part of the back a grown accent sits on'.",
+          "where": {
+            "y_min": 0.5,
+            "up_min": 0.28
+          },
+          "mode": "tint",
+          "color": "#c9a0ff",
+          "sat_floor": 0.35,
+          "val_scale": 1.08,
+          "coverage": 0.55,
+          "grain": 5.0,
+          "softness": 0.12
+        }
+      ],
+      "finish": {
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.06,
+        "feature_set_val": 0.03
+      },
+      "glow": [
+        {
+          "id": "rift_markings",
+          "_why": "'cyan/violet body markings'. Feature-select still works here even though the body is not dark-charcoal like the other three -- it is the DARKEST-relative-to-its-own-region pixels that carry pattern line-work on every one of these paintings (shiny_colourways.json's own finish-pass comment says the same thing about eyes/nostrils/outlines), so it still isolates markings rather than skin.",
+          "select": "feature",
+          "where": {
+            "y_min": 0.2
+          },
+          "percentile": 5.0,
+          "max_val": 0.22,
+          "color": "#a855f7",
+          "intensity": 1.3,
+          "softness": 0.12
+        }
+      ]
     }
   }
 }
