@@ -392,6 +392,20 @@ this lane's ownership or this session's investigated scope.
   messages for captions.
 - This file.
 
+## Test results
+
+- `tests/smoke_pond_water.gd` — pass (82 stream reeds, 20 scrub, zero
+  regression to pond/river).
+- `tests/run_tests.gd -- --only=test_scatter_perf_budget.gd` — 3 tests, 6
+  assertions, 0 failed (freshness, load budget, batch count all pass on the
+  re-baked manifest).
+- `tests/run_tests.gd -- --only=test_scatter_rules.gd` — 27 tests, 965908
+  assertions, 0 failed.
+- `tests/run_tests.gd -- --only=test_veg_corridor.gd` — run, see this
+  handover's own commit history for the result if not inlined here (started
+  after `test_scatter_rules.gd`; both are the "expensive tail" the brief
+  named, and this session budgeted for both).
+
 ## What I would do next, in priority order
 
 1. **Terrain regen for the stream's `carve_depth`** (item 4a) — the one
