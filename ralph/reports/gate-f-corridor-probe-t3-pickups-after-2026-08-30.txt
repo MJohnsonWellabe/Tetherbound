@@ -1,0 +1,751 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _build_terrain (res://scripts/world/playground_world.gd:596)
+         [1] _ready (res://scripts/world/playground_world.gd:357)
+WARNING: Terrain3DTextureAsset#1851:set_albedo_texture:79: Texture 'meadow_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:757)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+WARNING: Terrain3DTextureAsset#1851:set_normal_texture:100: Texture 'meadow_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:760)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+WARNING: Terrain3DTextureAsset#9129:set_albedo_texture:79: Texture 'verge_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:757)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+WARNING: Terrain3DTextureAsset#9129:set_normal_texture:100: Texture 'verge_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:760)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+WARNING: Terrain3DTextureAsset#1695:set_albedo_texture:79: Texture 'rock_scree_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:757)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+WARNING: Terrain3DTextureAsset#1695:set_normal_texture:100: Texture 'rock_scree_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:760)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+WARNING: Terrain3DTextureAsset#4260:set_albedo_texture:79: Texture 'dirt_path_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:757)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+WARNING: Terrain3DTextureAsset#4260:set_normal_texture:100: Texture 'dirt_path_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:760)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+WARNING: Terrain3DTextureAsset#6825:set_albedo_texture:79: Texture 'wet_earth_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:757)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+WARNING: Terrain3DTextureAsset#6825:set_normal_texture:100: Texture 'wet_earth_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:760)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+WARNING: Terrain3DTextureAsset#9390:set_albedo_texture:79: Texture 'forest_floor_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:757)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+WARNING: Terrain3DTextureAsset#9390:set_normal_texture:100: Texture 'forest_floor_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:760)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:620)
+         [2] _ready (res://scripts/world/playground_world.gd:376)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 101095 placements, 661188 skipped]=392 reorder[11 layers]=73
+[vegetation] grass field is on; 661188 placements across 4 layers left unbuilt (grass, drygrass, flowers, groundmat)
+[vegetation] boot phases (ms): placements=523 mark_harvestable=52 group_by_model=82 register_mesh_assets=58 build_batches_total=4249 (of which harvest_points[56436 nodes]=3660, initial_collision_stream[51584 solid]=185) update_mmis=613
+[grass_field] grass ring: 315232 instances over 9 lattice layers (tuft_count asked for 300000)
+[grass_field] stone ring: 93236 instances over 9 lattice layers (count 90000)
+[grass_field] cover tier bushes   15052 instances over 7 lattice layers (count 14800)
+[grass_field] cover tier flowers  15052 instances over 7 lattice layers (count 14800)
+[grass_field] cover tier litter   48716 instances over 9 lattice layers (count 49000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 315232 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 100845 props in 29 batches (56436 harvestable, 0 already chopped, 152/51584 collision resident)
+[water] pond quads 2538, stream points 46, reeds 152, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 49, jetty 18, level -17.0
+[water] river quads 390, bank reeds 159, bank scrub 57
+[village] placed 14 structures
+[props] placed 128 props in 19 clusters
+[village_npcs] placed 6 of 8
+[relay_site] placed 1 of 1
+[trainers] placed 17 trainer(s)
+[quarry] 2 foundations, 4 pylons standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 105 harvest nodes
+[playground] placed 6 farm plots
+[warrens] cleared 31 scattered trees/rocks inside the 30m site radius
+[warrens] planted 141 pieces of ground cover around the site
+[warrens] 181 pieces of interior rock across 5 chambers
+[warrens] 185 structural members across 5 chambers
+[approach-drain] 626 drained quads over the approach corridor
+[stronghold] approach ramp: 2.7m of rise over 26m (6 degrees)
+[stronghold] 407 structural members across 5 spaces
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=8.56, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+GATEF corridor probe -- world contains 951 points of interest in total
+
+== band1_lower_meadows ==
+  walked 2403 m (0 -> 2403 along the chapter), ~10.0 min at 4.0 m/s
+  met 122 new things: gather 22, key 1, tm 2, trainer 2, wild 95
+  longest stretch meeting nothing new, inside this band: 106 m
+GATEF-METRIC band=band1_lower_meadows metres=2403 minutes=10.0 met=122 worst_gap_m=106 gather=22 key=1 tm=2 trainer=2 wild=95
+
+== band2_stone_and_root ==
+  walked 2653 m (2403 -> 5056 along the chapter), ~11.1 min at 4.0 m/s
+  met 101 new things: gather 23, trainer 2, wild 76
+  longest stretch meeting nothing new, inside this band: 165 m
+GATEF-METRIC band=band2_stone_and_root metres=2653 minutes=11.1 met=101 worst_gap_m=165 gather=23 trainer=2 wild=76
+
+== band3_the_river_lock ==
+  walked 2375 m (5056 -> 7431 along the chapter), ~9.9 min at 4.0 m/s
+  met 107 new things: gather 11, trainer 5, wild 91
+  longest stretch meeting nothing new, inside this band: 163 m
+GATEF-METRIC band=band3_the_river_lock metres=2375 minutes=9.9 met=107 worst_gap_m=163 gather=11 trainer=5 wild=91
+
+== band4_upper_meadows_ironwood ==
+  walked 3436 m (7431 -> 10867 along the chapter), ~14.3 min at 4.0 m/s
+  met 206 new things: gather 16, landmark 1, tm 1, trainer 3, wild 185
+  longest stretch meeting nothing new, inside this band: 156 m
+GATEF-METRIC band=band4_upper_meadows_ironwood metres=3436 minutes=14.3 met=206 worst_gap_m=156 gather=16 landmark=1 tm=1 trainer=3 wild=185
+
+== band5_stronghold_approach ==
+  walked 651 m (10867 -> 11519 along the chapter), ~2.7 min at 4.0 m/s
+  met 53 new things: gather 2, trainer 3, wild 48
+  longest stretch meeting nothing new, inside this band: 64 m
+GATEF-METRIC band=band5_stronghold_approach metres=651 minutes=2.7 met=53 worst_gap_m=64 gather=2 trainer=3 wild=48
+
+== chapter ==
+corridor walked: 11519 m  (~48.0 min at 4.0 m/s)
+things met within 30 m of the route: 589
+by kind: gather 74, key 1, landmark 1, tm 3, trainer 15, wild 495
+longest stretch meeting nothing new: 165 m (~0.7 min), ending at 4782 m along, in band2_stone_and_root
+tail after the last thing met: 21 m
+GATEF-METRIC band=CHAPTER metres=11519 minutes=48.0 met=589 worst_gap_m=165 worst_gap_at_m=4782 worst_gap_band=band2_stone_and_root tail_m=21 gather=74 key=1 landmark=1 tm=3 trainer=15 wild=495
+
+dead-walk intervals >= 250 m (0):
+
+cadence -- every new thing, in the order a player walking the chapter meets it:
+       4 m  (+   4 m)  wild     Bramblebun  (L5)
+       4 m  (+   0 m)  wild     Bramblebun  (L4)
+       4 m  (+   0 m)  TRAINER practice_trainer
+       4 m  (+   0 m)  key      GateKey
+       4 m  (+   0 m)  gather   wood
+       4 m  (+   0 m)  gather   wood
+       4 m  (+   0 m)  gather   wood
+       4 m  (+   0 m)  gather   stone
+       4 m  (+   0 m)  gather   stone
+       4 m  (+   0 m)  gather   fiber
+       4 m  (+   0 m)  gather   fiber
+       4 m  (+   0 m)  gather   berries
+       4 m  (+   0 m)  gather   berries
+       4 m  (+   0 m)  gather   wood
+       4 m  (+   0 m)  gather   wood
+       4 m  (+   0 m)  gather   fiber
+       4 m  (+   0 m)  gather   fiber
+       4 m  (+   0 m)  gather   fiber
+       4 m  (+   0 m)  TM       TM_tm_stone_rush
+       4 m  (+   0 m)  TM       TM_tm_burrow_strike
+      26 m  (+  21 m)  gather   wood
+      63 m  (+  38 m)  wild     Bramblebun  (L2)
+      67 m  (+   4 m)  wild     Bramblebun  (L3)
+      67 m  (+   0 m)  wild     Bramblebun  (L4)
+      76 m  (+   8 m)  wild     Pipwing  (L3)
+      88 m  (+  12 m)  wild     Pipwing  (L2)
+      96 m  (+   8 m)  wild     Pipwing  (L3)
+     113 m  (+  16 m)  wild     Mudsnout  (L4)
+     117 m  (+   4 m)  wild     Mudsnout  (L3)
+     137 m  (+  20 m)  gather   fiber
+     170 m  (+  33 m)  wild     Pipwing  (L3)
+     190 m  (+  20 m)  wild     Galecrest  (L2)
+     203 m  (+  12 m)  wild     Galecrest  (L5)
+     203 m  (+   0 m)  wild     Galecrest  (L4)
+     255 m  (+  52 m)  wild     Bramblebun  (L5)
+     259 m  (+   4 m)  wild     Bramblebun  (L5)
+     259 m  (+   0 m)  wild     Bramblebun  (L5)
+     275 m  (+  16 m)  wild     Bramblebun  (L4)
+     335 m  (+  60 m)  wild     Mudsnout  (L4)
+     355 m  (+  20 m)  wild     Pipwing  (L6)
+     367 m  (+  12 m)  wild     Pipwing  (L3)
+     367 m  (+   0 m)  wild     Pipwing  (L5)
+     372 m  (+   4 m)  gather   fiber
+     428 m  (+  57 m)  wild     Galecrest  (L5)
+     436 m  (+   8 m)  wild     Galecrest  (L3)
+     436 m  (+   0 m)  wild     Galecrest  (L3)
+     481 m  (+  45 m)  wild     Bramblebun  (L4)
+     530 m  (+  49 m)  wild     Mudsnout  (L6)
+     534 m  (+   4 m)  wild     Mudsnout  (L5)
+     538 m  (+   4 m)  wild     Mudsnout  (L5)
+     600 m  (+  62 m)  wild     Pipwing  (L3)
+     604 m  (+   4 m)  wild     Pipwing  (L6)
+     604 m  (+   0 m)  wild     Pipwing  (L6)
+     710 m  (+ 106 m)  wild     Bramblebun  (L3)
+     754 m  (+  44 m)  wild     Paddlenewt  (L4)
+     786 m  (+  32 m)  wild     Paddlenewt  (L4)
+     794 m  (+   8 m)  wild     Mosshell  (L4)
+     839 m  (+  44 m)  wild     Mudsnout  (L3)
+     927 m  (+  88 m)  wild     Bramblebun  (L3)
+     931 m  (+   4 m)  wild     Bramblebun  (L5)
+     939 m  (+   8 m)  gather   fiber
+     943 m  (+   4 m)  wild     Bramblebun  (L3)
+     943 m  (+   0 m)  wild     Bramblebun  (L4)
+     983 m  (+  40 m)  wild     Mudsnout  (L3)
+    1015 m  (+  32 m)  wild     Pipwing  (L3)
+    1023 m  (+   8 m)  wild     Pipwing  (L4)
+    1039 m  (+  16 m)  wild     Pipwing  (L6)
+    1083 m  (+  44 m)  wild     Galecrest  (L5)
+    1087 m  (+   4 m)  wild     Galecrest  (L5)
+    1099 m  (+  12 m)  wild     Galecrest  (L2)
+    1163 m  (+  64 m)  wild     Pipwing  (L4)
+    1176 m  (+  12 m)  wild     Pipwing  (L4)
+    1248 m  (+  72 m)  wild     Mudsnout  (L5)
+    1256 m  (+   8 m)  wild     Mudsnout  (L5)
+    1264 m  (+   8 m)  wild     Mudsnout  (L3)
+    1308 m  (+  44 m)  wild     Pipwing  (L3)
+    1312 m  (+   4 m)  wild     Pipwing  (L5)
+    1348 m  (+  36 m)  wild     Bramblebun  (L5)
+    1380 m  (+  32 m)  wild     Bramblebun  (L6)
+    1452 m  (+  72 m)  wild     Mudsnout  (L5)
+    1456 m  (+   4 m)  wild     Mudsnout  (L2)
+    1480 m  (+  24 m)  wild     Mudsnout  (L5)
+    1517 m  (+  36 m)  wild     Pipwing  (L3)
+    1525 m  (+   8 m)  wild     Pipwing  (L5)
+    1525 m  (+   0 m)  wild     Pipwing  (L2)
+    1609 m  (+  84 m)  gather   wood
+    1633 m  (+  24 m)  wild     Galecrest  (L4)
+    1633 m  (+   0 m)  gather   stone
+    1633 m  (+   0 m)  gather   fiber
+    1645 m  (+  12 m)  wild     Galecrest  (L3)
+    1649 m  (+   4 m)  wild     Mudsnout  (L6)
+    1649 m  (+   0 m)  wild     Galecrest  (L2)
+    1674 m  (+  24 m)  wild     Mudsnout  (L6)
+    1702 m  (+  29 m)  wild     Bramblebun  (L6)
+    1715 m  (+  12 m)  wild     Bramblebun  (L2)
+    1715 m  (+   0 m)  wild     Bramblebun  (L3)
+    1723 m  (+   8 m)  wild     Bramblebun  (L4)
+    1804 m  (+  81 m)  wild     Mudsnout  (L4)
+    1808 m  (+   4 m)  wild     Mudsnout  (L5)
+    1848 m  (+  40 m)  wild     Pipwing  (L5)
+    1860 m  (+  12 m)  wild     Pipwing  (L5)
+    1864 m  (+   4 m)  wild     Pipwing  (L5)
+    1904 m  (+  40 m)  wild     Galecrest  (L5)
+    1908 m  (+   4 m)  wild     Galecrest  (L6)
+    1981 m  (+  73 m)  wild     Bramblebun  (L4)
+    2013 m  (+  32 m)  wild     Mudsnout  (L6)
+    2017 m  (+   4 m)  wild     Mudsnout  (L2)
+    2025 m  (+   8 m)  wild     Mudsnout  (L3)
+    2025 m  (+   0 m)  gather   stone
+    2074 m  (+  48 m)  wild     Pipwing  (L4)
+    2098 m  (+  24 m)  wild     Pipwing  (L3)
+    2167 m  (+  69 m)  wild     Bramblebun  (L3)
+    2175 m  (+   8 m)  wild     Bramblebun  (L4)
+    2195 m  (+  20 m)  wild     Bramblebun  (L4)
+    2240 m  (+  44 m)  wild     Mudsnout  (L2)
+    2240 m  (+   0 m)  wild     Mudsnout  (L5)
+    2244 m  (+   4 m)  wild     Mudsnout  (L3)
+    2252 m  (+   8 m)  wild     Mudsnout  (L4)
+    2352 m  (+ 100 m)  TRAINER south_bridge_grunt
+    2394 m  (+  42 m)  wild     Trailpup  (L8)
+    2398 m  (+   4 m)  wild     Trailpup  (L7)
+    2403 m  (+   4 m)  wild     Trailpup  (L6)
+    2407 m  (+   4 m)  wild     Trailpup  (L8)
+    2427 m  (+  20 m)  wild     Burrowback  (L8)
+    2431 m  (+   4 m)  wild     Burrowback  (L8)
+    2440 m  (+   8 m)  wild     Burrowback  (L7)
+    2444 m  (+   4 m)  wild     Meadowhart  (L7)
+    2452 m  (+   8 m)  wild     Meadowhart  (L7)
+    2545 m  (+  94 m)  wild     Trailpup  (L7)
+    2566 m  (+  20 m)  wild     Trailpup  (L8)
+    2566 m  (+   0 m)  wild     Trailpup  (L7)
+    2574 m  (+   8 m)  wild     Trailpup  (L8)
+    2634 m  (+  61 m)  gather   berries
+    2659 m  (+  24 m)  wild     Trailpup  (L7)
+    2659 m  (+   0 m)  wild     Trailpup  (L6)
+    2659 m  (+   0 m)  wild     Trailpup  (L7)
+    2667 m  (+   8 m)  wild     Trailpup  (L7)
+    2788 m  (+ 121 m)  wild     Burrowback  (L7)
+    2804 m  (+  16 m)  wild     Burrowback  (L8)
+    2812 m  (+   8 m)  wild     Burrowback  (L8)
+    2820 m  (+   8 m)  TRAINER quarry_picket_dorn
+    2971 m  (+ 150 m)  gather   rootstone
+    2975 m  (+   4 m)  gather   rootstone
+    2979 m  (+   4 m)  gather   rootstone
+    2983 m  (+   4 m)  gather   rootstone
+    2987 m  (+   4 m)  gather   rootstone
+    3084 m  (+  97 m)  wild     Burrowback  (L7)
+    3088 m  (+   4 m)  wild     Burrowback  (L7)
+    3169 m  (+  81 m)  gather   potion_large
+    3221 m  (+  52 m)  wild     Trailpup  (L6)
+    3229 m  (+   8 m)  wild     Trailpup  (L7)
+    3233 m  (+   4 m)  wild     Trailpup  (L6)
+    3233 m  (+   0 m)  wild     Trailpup  (L7)
+    3237 m  (+   4 m)  wild     Trailpup  (L6)
+    3257 m  (+  20 m)  wild     Mudsnout  (L7)
+    3285 m  (+  28 m)  wild     Mudsnout  (L7)
+    3333 m  (+  48 m)  gather   stone
+    3365 m  (+  32 m)  wild     Burrowback  (L8)
+    3369 m  (+   4 m)  wild     Burrowback  (L7)
+    3373 m  (+   4 m)  wild     Burrowback  (L7)
+    3491 m  (+ 118 m)  gather   stone
+    3528 m  (+  37 m)  wild     Mudsnout  (L7)
+    3528 m  (+   0 m)  wild     Mudsnout  (L8)
+    3532 m  (+   4 m)  wild     Mudsnout  (L6)
+    3540 m  (+   8 m)  wild     Mudsnout  (L6)
+    3577 m  (+  37 m)  wild     Trailpup  (L7)
+    3585 m  (+   8 m)  wild     Trailpup  (L8)
+    3589 m  (+   4 m)  wild     Trailpup  (L8)
+    3597 m  (+   8 m)  wild     Trailpup  (L7)
+    3605 m  (+   8 m)  wild     Trailpup  (L7)
+    3712 m  (+ 106 m)  gather   hide_boots
+    3740 m  (+  28 m)  wild     Trailpup  (L9)
+    3752 m  (+  12 m)  wild     Trailpup  (L7)
+    3813 m  (+  61 m)  gather   wood
+    3825 m  (+  12 m)  gather   fiber
+    3881 m  (+  57 m)  wild     Mudsnout  (L8)
+    3922 m  (+  40 m)  wild     Trailpup  (L7)
+    3926 m  (+   4 m)  wild     Trailpup  (L6)
+    3938 m  (+  12 m)  wild     Trailpup  (L8)
+    3954 m  (+  16 m)  wild     Burrowback  (L6)
+    3958 m  (+   4 m)  wild     Burrowback  (L7)
+    4055 m  (+  97 m)  gather   fiber
+    4084 m  (+  28 m)  wild     Burrowback  (L7)
+    4133 m  (+  49 m)  wild     Trailpup  (L7)
+    4133 m  (+   0 m)  wild     Trailpup  (L7)
+    4153 m  (+  20 m)  wild     Trailpup  (L7)
+    4181 m  (+  29 m)  gather   ironwood
+    4194 m  (+  12 m)  gather   ironwood
+    4210 m  (+  16 m)  gather   stoneguard_brew
+    4222 m  (+  12 m)  TRAINER warrens_watch_pell
+    4230 m  (+   8 m)  wild     Burrowback  (L7)
+    4235 m  (+   4 m)  wild     Mudsnout  (L9)
+    4251 m  (+  16 m)  gather   ironwood
+    4263 m  (+  12 m)  gather   ironwood
+    4267 m  (+   4 m)  gather   ironwood
+    4275 m  (+   8 m)  wild     Mudsnout  (L8)
+    4283 m  (+   8 m)  wild     Trailpup  (L7)
+    4287 m  (+   4 m)  wild     Trailpup  (L6)
+    4291 m  (+   4 m)  wild     Mudsnout  (L7)
+    4291 m  (+   0 m)  wild     Mudsnout  (L7)
+    4295 m  (+   4 m)  wild     Trailpup  (L7)
+    4392 m  (+  96 m)  wild     Burrowback  (L6)
+    4400 m  (+   8 m)  wild     Burrowback  (L7)
+    4404 m  (+   4 m)  wild     Burrowback  (L8)
+    4404 m  (+   0 m)  wild     Burrowback  (L7)
+    4456 m  (+  52 m)  gather   revive
+    4460 m  (+   4 m)  wild     Trailpup  (L6)
+    4460 m  (+   0 m)  wild     Trailpup  (L7)
+    4472 m  (+  12 m)  wild     Trailpup  (L7)
+    4545 m  (+  73 m)  wild     Burrowback  (L7)
+    4549 m  (+   4 m)  wild     Burrowback  (L8)
+    4553 m  (+   4 m)  wild     Burrowback  (L8)
+    4557 m  (+   4 m)  wild     Burrowback  (L7)
+    4561 m  (+   4 m)  wild     Burrowback  (L7)
+    4617 m  (+  57 m)  gather   wood
+    4782 m  (+ 165 m)  gather   berries
+    4795 m  (+  12 m)  gather   wood
+    4875 m  (+  81 m)  wild     Meadowhart  (L7)
+    4887 m  (+  12 m)  wild     Meadowhart  (L8)
+    4992 m  (+ 105 m)  wild     Mudsnout  (L7)
+    5016 m  (+  24 m)  wild     Mudsnout  (L6)
+    5024 m  (+   8 m)  wild     Mudsnout  (L8)
+    5024 m  (+   0 m)  wild     Mudsnout  (L7)
+    5060 m  (+  36 m)  wild     Bramblebun  (L10)
+    5068 m  (+   8 m)  wild     Bramblebun  (L9)
+    5101 m  (+  33 m)  wild     Mudsnout  (L10)
+    5118 m  (+  16 m)  gather   fiber
+    5122 m  (+   4 m)  wild     Mudsnout  (L10)
+    5142 m  (+  20 m)  wild     Pipwing  (L10)
+    5163 m  (+  20 m)  wild     Pipwing  (L9)
+    5167 m  (+   4 m)  wild     Pipwing  (L10)
+    5191 m  (+  25 m)  wild     Pipwing  (L10)
+    5199 m  (+   8 m)  wild     Pipwing  (L10)
+    5212 m  (+  12 m)  wild     Pipwing  (L9)
+    5216 m  (+   4 m)  wild     Burrowback  (L10)
+    5224 m  (+   8 m)  wild     Burrowback  (L11)
+    5281 m  (+  57 m)  wild     Bramblebun  (L12)
+    5286 m  (+   4 m)  wild     Bramblebun  (L10)
+    5290 m  (+   4 m)  wild     Bramblebun  (L10)
+    5298 m  (+   8 m)  wild     Bramblebun  (L11)
+    5387 m  (+  90 m)  wild     Pipwing  (L10)
+    5400 m  (+  12 m)  wild     Pipwing  (L9)
+    5436 m  (+  36 m)  gather   berries
+    5501 m  (+  65 m)  wild     Bramblebun  (L12)
+    5509 m  (+   8 m)  wild     Bramblebun  (L10)
+    5513 m  (+   4 m)  wild     Bramblebun  (L12)
+    5517 m  (+   4 m)  wild     Bramblebun  (L10)
+    5569 m  (+  53 m)  wild     Mudsnout  (L10)
+    5586 m  (+  16 m)  wild     Mudsnout  (L12)
+    5610 m  (+  24 m)  wild     Pipwing  (L11)
+    5610 m  (+   0 m)  wild     Pipwing  (L10)
+    5666 m  (+  57 m)  wild     Pipwing  (L10)
+    5707 m  (+  40 m)  wild     Mudsnout  (L12)
+    5707 m  (+   0 m)  gather   wood
+    5735 m  (+  28 m)  wild     Burrowback  (L10)
+    5743 m  (+   8 m)  wild     Burrowback  (L9)
+    5751 m  (+   8 m)  wild     Burrowback  (L9)
+    5751 m  (+   0 m)  wild     Burrowback  (L9)
+    5791 m  (+  40 m)  wild     Pipwing  (L9)
+    5799 m  (+   8 m)  wild     Pipwing  (L9)
+    5799 m  (+   0 m)  gather   attack_tonic
+    5807 m  (+   8 m)  wild     Pipwing  (L11)
+    5811 m  (+   4 m)  wild     Pipwing  (L10)
+    5811 m  (+   0 m)  TRAINER relay_picket_hess
+    5864 m  (+  53 m)  TRAINER relay_picket_orrin
+    5900 m  (+  36 m)  wild     Burrowback  (L11)
+    5945 m  (+  45 m)  TRAINER relay_officer_dell
+    5945 m  (+   0 m)  TRAINER relay_captain
+    6013 m  (+  68 m)  wild     Mudsnout  (L11)
+    6021 m  (+   8 m)  wild     Mudsnout  (L10)
+    6025 m  (+   4 m)  wild     Mudsnout  (L10)
+    6037 m  (+  12 m)  wild     Mudsnout  (L10)
+    6057 m  (+  20 m)  gather   fiber
+    6073 m  (+  16 m)  wild     Trailpup  (L10)
+    6081 m  (+   8 m)  wild     Trailpup  (L12)
+    6081 m  (+   0 m)  wild     Trailpup  (L11)
+    6089 m  (+   8 m)  wild     Burrowback  (L12)
+    6109 m  (+  20 m)  wild     Burrowback  (L12)
+    6134 m  (+  24 m)  wild     Pipwing  (L9)
+    6202 m  (+  69 m)  wild     Mudsnout  (L12)
+    6215 m  (+  12 m)  wild     Mudsnout  (L10)
+    6219 m  (+   4 m)  wild     Mudsnout  (L9)
+    6247 m  (+  28 m)  wild     Trailpup  (L10)
+    6271 m  (+  24 m)  wild     Trailpup  (L10)
+    6287 m  (+  16 m)  wild     Trailpup  (L9)
+    6296 m  (+   8 m)  gather   stone
+    6348 m  (+  53 m)  wild     Galecrest  (L12)
+    6357 m  (+   8 m)  wild     Galecrest  (L11)
+    6462 m  (+ 106 m)  wild     Mosshell  (L11)
+    6478 m  (+  16 m)  wild     Mosshell  (L12)
+    6478 m  (+   0 m)  wild     Brooktail  (L11)
+    6478 m  (+   0 m)  wild     Brooktail  (L11)
+    6510 m  (+  32 m)  gather   berries
+    6531 m  (+  20 m)  wild     Brooktail  (L11)
+    6555 m  (+  24 m)  wild     Galecrest  (L11)
+    6563 m  (+   8 m)  wild     Galecrest  (L11)
+    6611 m  (+  48 m)  gather   potion_small
+    6675 m  (+  65 m)  wild     Galecrest  (L11)
+    6675 m  (+   0 m)  wild     Galecrest  (L10)
+    6679 m  (+   4 m)  wild     Galecrest  (L9)
+    6679 m  (+   0 m)  wild     Galecrest  (L12)
+    6736 m  (+  57 m)  gather   stone
+    6757 m  (+  20 m)  wild     Pipwing  (L10)
+    6765 m  (+   8 m)  wild     Meadowhart  (L9)
+    6781 m  (+  16 m)  wild     Pipwing  (L9)
+    6805 m  (+  24 m)  TRAINER captain_riverwatch
+    6931 m  (+ 126 m)  wild     Meadowhart  (L11)
+    6943 m  (+  12 m)  wild     Meadowhart  (L11)
+    6952 m  (+   8 m)  wild     Meadowhart  (L11)
+    7000 m  (+  49 m)  wild     Pipwing  (L10)
+    7000 m  (+   0 m)  wild     Pipwing  (L9)
+    7126 m  (+ 126 m)  wild     Trailpup  (L11)
+    7134 m  (+   8 m)  gather   fiber
+    7138 m  (+   4 m)  wild     Trailpup  (L11)
+    7142 m  (+   4 m)  gather   hide_leggings
+    7146 m  (+   4 m)  wild     Meadowhart  (L11)
+    7150 m  (+   4 m)  wild     Meadowhart  (L9)
+    7179 m  (+  28 m)  wild     Meadowhart  (L9)
+    7195 m  (+  16 m)  wild     Meadowhart  (L9)
+    7235 m  (+  41 m)  wild     Pipwing  (L11)
+    7235 m  (+   0 m)  wild     Pipwing  (L9)
+    7235 m  (+   0 m)  wild     Pipwing  (L12)
+    7398 m  (+ 163 m)  wild     Meadowhart  (L10)
+    7402 m  (+   4 m)  wild     Meadowhart  (L11)
+    7402 m  (+   0 m)  wild     Mudsnout  (L11)
+    7410 m  (+   8 m)  wild     Meadowhart  (L12)
+    7410 m  (+   0 m)  wild     Meadowhart  (L10)
+    7410 m  (+   0 m)  wild     Mudsnout  (L10)
+    7415 m  (+   4 m)  wild     Mudsnout  (L11)
+    7419 m  (+   4 m)  wild     Mudsnout  (L11)
+    7447 m  (+  28 m)  wild     Galecrest  (L12)
+    7447 m  (+   0 m)  wild     Galecrest  (L12)
+    7451 m  (+   4 m)  wild     Galecrest  (L13)
+    7467 m  (+  16 m)  wild     Galecrest  (L12)
+    7467 m  (+   0 m)  wild     Meadowhart  (L17)
+    7471 m  (+   4 m)  wild     Galecrest  (L13)
+    7479 m  (+   8 m)  gather   fiber
+    7488 m  (+   8 m)  gather   ironwood
+    7500 m  (+  12 m)  gather   ironwood
+    7601 m  (+ 101 m)  wild     Trailpup  (L12)
+    7605 m  (+   4 m)  wild     Trailpup  (L13)
+    7613 m  (+   8 m)  wild     Trailpup  (L13)
+    7613 m  (+   0 m)  wild     Trailpup  (L12)
+    7621 m  (+   8 m)  wild     Trailpup  (L11)
+    7709 m  (+  88 m)  wild     Mudsnout  (L11)
+    7709 m  (+   0 m)  wild     Mudsnout  (L12)
+    7717 m  (+   8 m)  wild     Mudsnout  (L14)
+    7717 m  (+   0 m)  wild     Mudsnout  (L13)
+    7749 m  (+  32 m)  wild     Mudsnout  (L14)
+    7765 m  (+  16 m)  wild     Mudsnout  (L12)
+    7769 m  (+   4 m)  wild     Mudsnout  (L14)
+    7777 m  (+   8 m)  wild     Trailpup  (L13)
+    7809 m  (+  32 m)  wild     Trailpup  (L13)
+    7809 m  (+   0 m)  wild     Trailpup  (L14)
+    7849 m  (+  40 m)  wild     Pipwing  (L13)
+    7865 m  (+  16 m)  wild     Pipwing  (L12)
+    7869 m  (+   4 m)  gather   ironwood
+    7873 m  (+   4 m)  wild     Pipwing  (L12)
+    7873 m  (+   0 m)  wild     Pipwing  (L14)
+    7873 m  (+   0 m)  gather   hide_helm
+    7877 m  (+   4 m)  gather   ironwood
+    7885 m  (+   8 m)  gather   ironwood
+    7889 m  (+   4 m)  gather   ironwood
+    7905 m  (+  16 m)  gather   ironwood
+    7925 m  (+  20 m)  gather   stone
+    7961 m  (+  36 m)  wild     Galecrest  (L14)
+    7969 m  (+   8 m)  wild     Galecrest  (L12)
+    7981 m  (+  12 m)  wild     Galecrest  (L14)
+    7985 m  (+   4 m)  wild     Galecrest  (L16)
+    8141 m  (+ 156 m)  wild     Trailpup  (L13)
+    8141 m  (+   0 m)  wild     Trailpup  (L13)
+    8161 m  (+  20 m)  wild     Burrowback  (L13)
+    8161 m  (+   0 m)  wild     Burrowback  (L13)
+    8181 m  (+  20 m)  wild     Burrowback  (L13)
+    8181 m  (+   0 m)  wild     Burrowback  (L14)
+    8181 m  (+   0 m)  wild     Burrowback  (L13)
+    8217 m  (+  36 m)  wild     Galecrest  (L12)
+    8221 m  (+   4 m)  wild     Galecrest  (L13)
+    8221 m  (+   0 m)  wild     Galecrest  (L12)
+    8306 m  (+  84 m)  wild     Pipwing  (L12)
+    8310 m  (+   4 m)  wild     Pipwing  (L12)
+    8314 m  (+   4 m)  wild     Pipwing  (L11)
+    8314 m  (+   0 m)  TRAINER pasture_drover_juno
+    8322 m  (+   8 m)  wild     Pipwing  (L11)
+    8326 m  (+   4 m)  wild     Pipwing  (L12)
+    8350 m  (+  24 m)  wild     Trailpup  (L12)
+    8374 m  (+  24 m)  wild     Trailpup  (L13)
+    8382 m  (+   8 m)  wild     Trailpup  (L12)
+    8386 m  (+   4 m)  wild     Trailpup  (L13)
+    8476 m  (+  90 m)  wild     Burrowback  (L13)
+    8476 m  (+   0 m)  wild     Burrowback  (L14)
+    8480 m  (+   4 m)  wild     Burrowback  (L13)
+    8492 m  (+  12 m)  wild     Burrowback  (L13)
+    8521 m  (+  29 m)  wild     Burrowback  (L11)
+    8554 m  (+  33 m)  wild     Burrowback  (L11)
+    8558 m  (+   4 m)  wild     Burrowback  (L11)
+    8566 m  (+   8 m)  wild     Burrowback  (L14)
+    8634 m  (+  68 m)  wild     Mudsnout  (L14)
+    8650 m  (+  16 m)  wild     Mudsnout  (L14)
+    8654 m  (+   4 m)  wild     Mudsnout  (L13)
+    8654 m  (+   0 m)  wild     Mudsnout  (L11)
+    8662 m  (+   8 m)  wild     Mudsnout  (L13)
+    8711 m  (+  48 m)  wild     Meadowhart  (L14)
+    8715 m  (+   4 m)  wild     Meadowhart  (L12)
+    8719 m  (+   4 m)  wild     Meadowhart  (L14)
+    8719 m  (+   0 m)  wild     Meadowhart  (L12)
+    8723 m  (+   4 m)  wild     Meadowhart  (L12)
+    8743 m  (+  20 m)  wild     Burrowback  (L14)
+    8743 m  (+   0 m)  TRAINER captain_field
+    8747 m  (+   4 m)  gather   swift_tonic
+    8751 m  (+   4 m)  wild     Burrowback  (L13)
+    8763 m  (+  12 m)  wild     Pipwing  (L14)
+    8816 m  (+  53 m)  wild     Pipwing  (L11)
+    8820 m  (+   4 m)  wild     Pipwing  (L12)
+    8832 m  (+  12 m)  wild     Pipwing  (L13)
+    8864 m  (+  32 m)  wild     Meadowhart  (L13)
+    8868 m  (+   4 m)  wild     Meadowhart  (L12)
+    8884 m  (+  16 m)  wild     Meadowhart  (L14)
+    8884 m  (+   0 m)  wild     Meadowhart  (L12)
+    8889 m  (+   4 m)  wild     Meadowhart  (L12)
+    8929 m  (+  40 m)  wild     Mudsnout  (L12)
+    8933 m  (+   4 m)  wild     Mudsnout  (L12)
+    8945 m  (+  12 m)  wild     Mudsnout  (L12)
+    8977 m  (+  32 m)  wild     Galecrest  (L12)
+    8981 m  (+   4 m)  wild     Galecrest  (L13)
+    8981 m  (+   0 m)  wild     Galecrest  (L14)
+    9001 m  (+  20 m)  wild     Galecrest  (L12)
+    9005 m  (+   4 m)  wild     Galecrest  (L13)
+    9021 m  (+  16 m)  wild     Pipwing  (L12)
+    9025 m  (+   4 m)  wild     Pipwing  (L13)
+    9033 m  (+   8 m)  wild     Pipwing  (L11)
+    9041 m  (+   8 m)  wild     Pipwing  (L12)
+    9049 m  (+   8 m)  wild     Pipwing  (L12)
+    9057 m  (+   8 m)  wild     Pipwing  (L14)
+    9061 m  (+   4 m)  wild     Pipwing  (L13)
+    9105 m  (+  44 m)  wild     Pipwing  (L13)
+    9129 m  (+  24 m)  wild     Mudsnout  (L12)
+    9141 m  (+  12 m)  wild     Mudsnout  (L12)
+    9157 m  (+  16 m)  wild     Mudsnout  (L12)
+    9210 m  (+  52 m)  wild     Galecrest  (L13)
+    9214 m  (+   4 m)  wild     Galecrest  (L12)
+    9214 m  (+   0 m)  wild     Galecrest  (L11)
+    9218 m  (+   4 m)  wild     Galecrest  (L12)
+    9222 m  (+   4 m)  wild     Trailpup  (L13)
+    9222 m  (+   0 m)  wild     Trailpup  (L14)
+    9222 m  (+   0 m)  wild     Trailpup  (L12)
+    9230 m  (+   8 m)  wild     Trailpup  (L11)
+    9230 m  (+   0 m)  wild     Trailpup  (L12)
+    9262 m  (+  32 m)  wild     Burrowback  (L14)
+    9262 m  (+   0 m)  wild     Burrowback  (L12)
+    9262 m  (+   0 m)  wild     Galecrest  (L14)
+    9266 m  (+   4 m)  wild     Galecrest  (L13)
+    9286 m  (+  20 m)  wild     Galecrest  (L13)
+    9295 m  (+   8 m)  gather   fiber
+    9303 m  (+   8 m)  wild     Burrowback  (L12)
+    9303 m  (+   0 m)  wild     Galecrest  (L12)
+    9311 m  (+   8 m)  gather   wood
+    9315 m  (+   4 m)  wild     Mudsnout  (L12)
+    9319 m  (+   4 m)  wild     Mudsnout  (L12)
+    9323 m  (+   4 m)  wild     Burrowback  (L12)
+    9323 m  (+   0 m)  wild     Mudsnout  (L13)
+    9331 m  (+   8 m)  wild     Burrowback  (L12)
+    9343 m  (+  12 m)  wild     Mudsnout  (L12)
+    9343 m  (+   0 m)  wild     Trailpup  (L14)
+    9351 m  (+   8 m)  gather   stone
+    9375 m  (+  24 m)  wild     Trailpup  (L11)
+    9375 m  (+   0 m)  wild     Trailpup  (L13)
+    9383 m  (+   8 m)  wild     Trailpup  (L13)
+    9383 m  (+   0 m)  wild     Trailpup  (L13)
+    9403 m  (+  20 m)  wild     Burrowback  (L13)
+    9407 m  (+   4 m)  wild     Burrowback  (L12)
+    9415 m  (+   8 m)  wild     Burrowback  (L12)
+    9439 m  (+  24 m)  wild     Meadowhart  (L12)
+    9447 m  (+   8 m)  wild     Meadowhart  (L13)
+    9471 m  (+  24 m)  wild     Pipwing  (L14)
+    9471 m  (+   0 m)  wild     Meadowhart  (L13)
+    9476 m  (+   4 m)  wild     Pipwing  (L12)
+    9480 m  (+   4 m)  wild     Pipwing  (L11)
+    9488 m  (+   8 m)  wild     Pipwing  (L13)
+    9504 m  (+  16 m)  wild     Pipwing  (L14)
+    9520 m  (+  16 m)  wild     Galecrest  (L13)
+    9524 m  (+   4 m)  wild     Galecrest  (L13)
+    9524 m  (+   0 m)  wild     Galecrest  (L11)
+    9536 m  (+  12 m)  wild     Mudsnout  (L12)
+    9540 m  (+   4 m)  wild     Mudsnout  (L13)
+    9560 m  (+  20 m)  wild     Mudsnout  (L12)
+    9564 m  (+   4 m)  wild     Mudsnout  (L13)
+    9644 m  (+  80 m)  wild     Meadowhart  (L11)
+    9644 m  (+   0 m)  wild     Meadowhart  (L13)
+    9648 m  (+   4 m)  wild     Meadowhart  (L13)
+    9652 m  (+   4 m)  wild     Meadowhart  (L13)
+    9676 m  (+  24 m)  wild     Meadowhart  (L12)
+    9716 m  (+  40 m)  wild     Meadowhart  (L14)
+    9728 m  (+  12 m)  wild     Meadowhart  (L13)
+    9793 m  (+  65 m)  wild     Galecrest  (L13)
+    9793 m  (+   0 m)  wild     Galecrest  (L12)
+    9801 m  (+   8 m)  wild     Galecrest  (L14)
+    9906 m  (+ 105 m)  wild     Pipwing  (L14)
+    9926 m  (+  20 m)  wild     Pipwing  (L12)
+   10031 m  (+ 104 m)  wild     Trailpup  (L11)
+   10035 m  (+   4 m)  wild     Trailpup  (L11)
+   10119 m  (+  84 m)  TRAINER captain_ridge
+   10191 m  (+  73 m)  wild     Galecrest  (L14)
+   10208 m  (+  16 m)  wild     Galecrest  (L11)
+   10212 m  (+   4 m)  wild     Galecrest  (L14)
+   10216 m  (+   4 m)  wild     Galecrest  (L13)
+   10216 m  (+   0 m)  wild     Galecrest  (L14)
+   10224 m  (+   8 m)  wild     Pipwing  (L12)
+   10244 m  (+  20 m)  wild     Pipwing  (L13)
+   10301 m  (+  57 m)  wild     Galecrest  (L13)
+   10309 m  (+   8 m)  wild     Galecrest  (L13)
+   10333 m  (+  24 m)  gather   stone
+   10429 m  (+  96 m)  wild     Trailpup  (L13)
+   10437 m  (+   8 m)  wild     Trailpup  (L11)
+   10513 m  (+  76 m)  wild     Trailpup  (L13)
+   10513 m  (+   0 m)  wild     Trailpup  (L13)
+   10525 m  (+  12 m)  wild     Trailpup  (L13)
+   10541 m  (+  16 m)  wild     Trailpup  (L11)
+   10585 m  (+  44 m)  wild     Pipwing  (L13)
+   10594 m  (+   8 m)  wild     Pipwing  (L14)
+   10594 m  (+   0 m)  wild     Pipwing  (L12)
+   10594 m  (+   0 m)  TM       TM_tm_riptide_lance
+   10598 m  (+   4 m)  wild     Galecrest  (L11)
+   10602 m  (+   4 m)  landmark RuinedWatchtower
+   10606 m  (+   4 m)  wild     Pipwing  (L13)
+   10610 m  (+   4 m)  wild     Galecrest  (L11)
+   10626 m  (+  16 m)  gather   revive
+   10634 m  (+   8 m)  wild     Trailpup  (L11)
+   10638 m  (+   4 m)  wild     Trailpup  (L11)
+   10710 m  (+  72 m)  wild     Trailpup  (L12)
+   10726 m  (+  16 m)  wild     Trailpup  (L13)
+   10730 m  (+   4 m)  wild     Trailpup  (L11)
+   10791 m  (+  61 m)  wild     Trailpup  (L14)
+   10815 m  (+  24 m)  wild     Trailpup  (L13)
+   10819 m  (+   4 m)  wild     Trailpup  (L12)
+   10819 m  (+   0 m)  wild     Trailpup  (L12)
+   10883 m  (+  64 m)  wild     Burrowback  (L16)
+   10891 m  (+   8 m)  wild     Burrowback  (L16)
+   10891 m  (+   0 m)  wild     Burrowback  (L16)
+   10895 m  (+   4 m)  wild     Burrowback  (L15)
+   10911 m  (+  16 m)  wild     Galecrest  (L15)
+   10923 m  (+  12 m)  wild     Galecrest  (L16)
+   10927 m  (+   4 m)  wild     Galecrest  (L14)
+   10927 m  (+   0 m)  wild     Galecrest  (L16)
+   10927 m  (+   0 m)  wild     Galecrest  (L14)
+   10943 m  (+  16 m)  wild     Duskhush  (L15)
+   10959 m  (+  16 m)  wild     Duskhush  (L14)
+   10971 m  (+  12 m)  gather   fiber
+   10975 m  (+   4 m)  wild     Duskhush  (L15)
+   10999 m  (+  24 m)  wild     Burrowback  (L16)
+   10999 m  (+   0 m)  wild     Burrowback  (L15)
+   11008 m  (+   8 m)  TRAINER stronghold_outer_watch
+   11069 m  (+  61 m)  wild     Trailpup  (L16)
+   11073 m  (+   4 m)  wild     Trailpup  (L16)
+   11077 m  (+   4 m)  wild     Mudsnout  (L15)
+   11089 m  (+  12 m)  wild     Mudsnout  (L15)
+   11093 m  (+   4 m)  wild     Mudsnout  (L15)
+   11110 m  (+  16 m)  wild     Mudsnout  (L15)
+   11118 m  (+   8 m)  wild     Galecrest  (L15)
+   11138 m  (+  20 m)  wild     Galecrest  (L19)
+   11142 m  (+   4 m)  wild     Galecrest  (L16)
+   11163 m  (+  20 m)  wild     Burrowback  (L16)
+   11187 m  (+  24 m)  wild     Galecrest  (L16)
+   11195 m  (+   8 m)  wild     Galecrest  (L15)
+   11199 m  (+   4 m)  wild     Duskhush  (L15)
+   11211 m  (+  12 m)  wild     Galecrest  (L14)
+   11211 m  (+   0 m)  wild     Duskhush  (L15)
+   11215 m  (+   4 m)  wild     Duskhush  (L16)
+   11231 m  (+  16 m)  wild     Trailpup  (L17)
+   11231 m  (+   0 m)  wild     Trailpup  (L14)
+   11235 m  (+   4 m)  wild     Duskhush  (L15)
+   11235 m  (+   0 m)  wild     Duskhush  (L15)
+   11235 m  (+   0 m)  gather   stone
+   11243 m  (+   8 m)  wild     Duskhush  (L14)
+   11247 m  (+   4 m)  wild     Trailpup  (L16)
+   11275 m  (+  28 m)  wild     Trailpup  (L14)
+   11299 m  (+  24 m)  wild     Duskhush  (L14)
+   11299 m  (+   0 m)  wild     Duskhush  (L16)
+   11323 m  (+  24 m)  wild     Mudsnout  (L17)
+   11331 m  (+   8 m)  wild     Mudsnout  (L15)
+   11335 m  (+   4 m)  wild     Mudsnout  (L16)
+   11351 m  (+  16 m)  wild     Mudsnout  (L15)
+   11363 m  (+  12 m)  TRAINER stronghold_checkpoint
+   11416 m  (+  53 m)  wild     Trailpup  (L16)
+   11420 m  (+   4 m)  wild     Trailpup  (L16)
+   11453 m  (+  33 m)  wild     Burrowback  (L15)
+   11453 m  (+   0 m)  wild     Burrowback  (L16)
+   11461 m  (+   8 m)  wild     Burrowback  (L14)
+   11498 m  (+  37 m)  TRAINER stronghold_patrol
+
+grounding: 0 of 889 wild bodies are >2m under their terrain (0.0%), worst 0m
+GATEF-METRIC band=GROUNDING wilds=889 underground=0 pct=0.0 worst_m=0
