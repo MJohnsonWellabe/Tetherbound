@@ -40,11 +40,32 @@ const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 ## file's.
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+## T3-TYPECHART. Type effectiveness, keyed on the ATTACKING MOVE's type against
+## the DEFENDING CREATURE's species type — see its own header for why that
+## keying rather than species-against-species. Pure config reader, no scene
+## tree, same shape as PROGRESSION above.
+const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
 
 signal entered()
 signal exited(outcome: String)
 signal state_changed()
 signal hit_landed(on_enemy: bool, amount: float)
+## T3-TYPECHART. The type verdict for the hit `hit_landed` is about to report:
+## 1 advantaged, -1 disadvantaged, 0 neutral. Emitted IMMEDIATELY BEFORE
+## `hit_landed` for the same hit, and only for hits that actually landed.
+##
+## A SEPARATE SIGNAL rather than a third parameter on `hit_landed` on purpose.
+## Nine callables across tests and tools (`smoke_gate_e_finale`, `smoke_boss`,
+## `smoke_combat`, `_probe_combat_hit_rate`, `_capture_combat_moments`,
+## `survey_combat`) connect two-argument handlers to that signal, and Godot
+## errors when a signal emits more arguments than a connected callable accepts.
+## Widening it would have broken six files to save one connection, and none of
+## them wants this value.
+##
+## `effectiveness` is `type_chart.gd::classify` over the multiplier that was
+## ACTUALLY APPLIED to the damage, not a second lookup — so what the player is
+## told can never disagree with what the fight did.
+signal hit_effectiveness(on_enemy: bool, effectiveness: int)
 signal attack_missed(by_player: bool)
 ## A throw finished resolving. `shakes` is how many times the orb wobbled, and
 ## comes from the single decision made when it landed — it is never re-rolled.
@@ -218,6 +239,38 @@ func active_creature() -> RefCounted:
 
 func enemy() -> RefCounted:
 	return _enemy
+
+
+## T3-TYPECHART's readiness tell, as a number the HUD can draw an arrow from:
+## 1 the creature currently piloted is advantaged into this foe, -1
+## disadvantaged, 0 neither (and 0 whenever there is no fight, no creature or
+## no foe, so a caller never has to null-check before asking).
+##
+## THE BEST OF THE TWO EQUIPPED MOVES, not the creature's own species type.
+## The chart is keyed on moves (see `type_chart.gd`), and a creature's two
+## slots can hold two different types -- Mosshell and Reedwing ship that way
+## today and any TM creates it. Reporting the species type here would tell the
+## player something the fight does not actually do. Reporting the BEST of the
+## two is the honest summary of "is this the right creature to have out", which
+## is the question an arrow on a nameplate is answering; the per-hit
+## `hit_effectiveness` signal then reports the move actually thrown, so a
+## player who sees an advantage arrow and then a WEAK hit has just been taught
+## that their two moves are different types -- which is the coverage mechanic
+## teaching itself, with no tutorial and no menu.
+##
+## Owner-direction section 9 is the constraint this is written against: "do not
+## tell the player exactly which creature to use", while giving "enough
+## information that preparation feels intelligent rather than random". One
+## arrow on the creature that is already out says the matchup is favoured; it
+## does not rank the other four.
+func active_matchup() -> int:
+	var creature: RefCounted = active_creature()
+	if creature == null or _enemy == null or _moves == null:
+		return 0
+	var defending := str(_enemy.creature_type)
+	var quick := TYPE_CHART.multiplier(_moves.type_of(str(creature.move_quick)), defending)
+	var charged := TYPE_CHART.multiplier(_moves.type_of(str(creature.move_charged)), defending)
+	return TYPE_CHART.classify(maxf(quick, charged))
 
 
 ## SequenceDirector owns whether the current fight is the authored tutorial.
@@ -714,10 +767,19 @@ func _resolve_player_strike() -> void:
 	var cfg: Dictionary = PROGRESSION.config()
 	var is_best := _is_best(creature)
 	var ability: Dictionary = SPECIES.best_creature_ability(creature.species_id) if is_best else {}
+	# T3-TYPECHART. The move the player actually threw against the species the
+	# foe actually is. `move_id` can be "" for a creature with no named move in
+	# that slot (`creature_instance.gd` documents "" as a legitimate value), and
+	# `type_of` then returns "" and the chart returns neutral — so a moveless
+	# creature fights at exactly today's numbers rather than crashing or getting
+	# free damage.
+	var type_mult: float = TYPE_CHART.multiplier(
+		_moves.type_of(move_id), str(_enemy.creature_type)
+	)
 	var damage: float = MATH.rolled_damage(
 		float(_pending_move.get("power", 9.0)),
 		creature.effective_attack(cfg), _enemy.effective_defence(cfg), _rng.randf(),
-		_moves.power(move_id)
+		_moves.power(move_id), type_mult
 	)
 	var killed: bool = _enemy.take_damage(damage)
 	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
@@ -755,6 +817,7 @@ func _resolve_player_strike() -> void:
 	if is_quick:
 		creature.gain_energy_from_quick(creature.quick_energy_multiplier(is_best, ability))
 
+	hit_effectiveness.emit(true, TYPE_CHART.classify(type_mult))
 	hit_landed.emit(true, damage)
 	state_changed.emit()
 	if killed:
@@ -1064,16 +1127,26 @@ func _on_enemy_strike() -> void:
 	var prog_cfg: Dictionary = PROGRESSION.config()
 	var is_best := _is_best(creature)
 	var ability: Dictionary = SPECIES.best_creature_ability(creature.species_id) if is_best else {}
+	# T3-TYPECHART, the other half. The chart is symmetric across both call
+	# sites deliberately: what makes a matchup a real decision is the EXCHANGE
+	# ratio -- dealing 1.25 while taking 0.80 is a 1.56x swing, where a chart
+	# that only ever helped the player would be a flat damage buff with a type
+	# name on it. The move is the one the AI just swung with, which is the same
+	# `move_quick` id the power lookup on the next line already stands in for.
+	var type_mult: float = TYPE_CHART.multiplier(
+		_moves.type_of(_enemy.move_quick), str(creature.creature_type)
+	)
 	var damage: float = MATH.rolled_damage(
 		float(cfg.get("power", 8.0)),
 		_enemy.effective_attack(prog_cfg), creature.effective_defence(prog_cfg, is_best, ability),
-		_rng.randf(), _moves.power(_enemy.move_quick)
+		_rng.randf(), _moves.power(_enemy.move_quick), type_mult
 	)
 	var killed: bool = creature.take_damage(damage)
 	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
 	_ally_body.call("play_faint" if killed else "play_hit")
 	_flash_at(_ally_body.call("centre"), false)
 
+	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))
 	hit_landed.emit(false, damage)
 	state_changed.emit()
 	if killed:

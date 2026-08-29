@@ -1,0 +1,29 @@
+{
+  "_comment": "T3-TYPECHART. The Meadows type-effectiveness chart. Read by scripts/combat/type_chart.gd and multiplied into every hit both fighters land (combat_manager.gd's two rolled_damage call sites). Design note and the full argument for every number here: ralph/reports/TYPECHART_DESIGN_2026-08-30.md. ALL TUNABLE -- this file is the whole mechanic, and a rebalance should be an edit here rather than a code change.",
+
+  "_comment_keyed_on_the_move": "The chart is keyed on the ATTACKING MOVE's type against the DEFENDING CREATURE's species type -- NOT attacker-species against defender-species. This is the load-bearing decision and it is why a three-type chart is not degenerate. data/moves/moves.json already gives every move its own `type`, independent of who wields it ('Reedwing borrows an air-flavoured charged move on purpose'), so coverage is a property of what a party can DO -- ten move slots across five creatures -- rather than of which five bodies it happens to contain. Against a species-keyed chart the correct answer is 'carry one of each type and switch', which is a chore; against this one it is 'make sure your five, between them, can hit everything', which is a decision, and the lever for changing the answer is the TM economy the owner's own board already specifies. Two species already exercise this on day one: Mosshell (Water, charged tremor_roll is Ground) and Reedwing (Water, charged sky_rend is Air).",
+
+  "_comment_magnitude": "1.25 advantage / 0.80 disadvantage (reciprocal: 0.80 = 1/1.25), NOT Pokemon's 2.0/0.5. Three measurements back it, all in the design note. (1) The owner board's TM ladder runs 1.1x-2.0x with '2.0x = very rare'; a type advantage is permanent and applies to every hit, where a TM is a one-time scarce purchase, so pricing the always-on modifier at roughly ONE TM RUNG (shipped stone_spike is 1.3x) keeps it from outranking the reward economy it sits beside. (2) Compounding: against the real warden_aldis roster a 2.0x apex TM already dominates the damage curve, and 1.25 on top moves a kill by at most one charged hit and never produces a one-shot -- 1.5 does, and folds the chapter's final exam. (3) Ground is 57.6% of all 66 authored trainer creatures in the chapter, so any chart lands on a monoculture; at 1.25/0.80 the best-to-worst spread in damage-exchange ratio across the whole ladder is 1.38x (water 1.143, ground 1.055, air 0.829), where 1.5/0.667 gives 1.77x and turns the Galewisp start into a trap over more than half the chapter. Reversing the triangle only moves the deficit to a different starter -- the skew is demographic, not chart-shaped.",
+
+  "_comment_triangle": "A FULL reciprocal triangle: water > ground > air > water. Partial charts -- dropping one edge to neutral -- were measured against the current roster census rather than assumed, and the result is worth recording honestly because it does NOT uniformly favour the triangle: dropping the ground>air edge gives a per-type exchange spread of 1.223 and dropping water>ground gives 1.364, both NARROWER than the full triangle's 1.380, while dropping air>water gives 1.671, wider. So a partial chart can look flatter on today's numbers. The triangle is still the right answer, for a reason that is structural rather than numerical. First, a missing edge leaves one type carrying a weakness with no advantage and another an advantage with no weakness, which is unfair by construction however the arithmetic lands. Second, and decisively: a partial chart's fairness depends entirely on the CURRENT census, and that census -- 57.6% ground -- is itself a known content defect scheduled for repair (see the handover's section 4). A chart tuned to a distribution that is about to be corrected would be wrong the moment it was. The triangle is symmetric under ANY roster distribution. Asymmetry should come from rosters and encounters, not from a lopsided chart.",
+
+  "_comment_future_types": "The owner board names six planned types: fire, ice, nature, light, shadow, electric. They are deliberately NOT stubbed here. `neutral` below is what any pairing this table does not name resolves to, so a species or move introduced with a new type is playable at 1.00 the moment it exists and becomes interesting when someone authors its rows -- a data edit, never a code change. Nothing in scripts/combat/type_chart.gd enumerates the three live types.",
+
+  "neutral": 1.0,
+
+  "_comment_matchups": "Outer key is the ATTACKING MOVE's type, inner key is the DEFENDING CREATURE's species type. Only non-neutral pairings need an entry; the mirror matchups (ground vs ground and so on) are neutral by omission.",
+  "matchups": {
+    "ground": {
+      "air": 1.25,
+      "water": 0.8
+    },
+    "water": {
+      "ground": 1.25,
+      "air": 0.8
+    },
+    "air": {
+      "water": 1.25,
+      "ground": 0.8
+    }
+  }
+}
