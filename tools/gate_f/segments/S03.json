@@ -2985,6 +2985,57 @@
       "expected": "`creature_bed_built_3` is the third of `home_progress.gd::CREATURE_BED_FLAGS`, and the objective's count reads 3/3"
     },
     {
+      "id": "S03-205a",
+      "title": "walk to one of the three beds just built",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "creature_bed.gd",
+        "within": 3.0,
+        "budget_frames": 1800
+      },
+      "expected": "one of the three creature beds built above is reachable nearby"
+    },
+    {
+      "id": "S03-205b",
+      "title": "put a creature to bed",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Rest a Creature",
+        "check_provider": false
+      },
+      "expected": "RIG-19: nothing before this point in this segment ever assigned a creature to a bed. This segment's own catch loop (S03-32a..38j, RIG-18) can faint the player's only creature on a real, non-buggy roll -- exactly what this run's own telemetry shows happened at t=256 ('Moss fainted', combat_hit, hp 0.0/1.18) -- and `encounter_director.gd::summon_active_creature()` (L864) refuses to deploy a fainted creature, so `can_challenge()` (L1568) then refuses EVERY trainer/gate fight for the rest of the game, with no error and no on-screen explanation (`trainer_npc.gd::_on_challenged` L171-172 falls back to the trainer's `defeated` conversation line whenever `can_challenge()` is false for ANY reason, not only an actual prior win). This is not a movement or collision defect: the South Bridge gate (`gated_crossing.gd`) is a real, correctly-locked physical barrier that only opens once its trainer is beaten, and a `move_to` step asked to walk through it can never succeed while the party's only creature stays fainted -- see `ralph/reports/handover-T2-STRANDING-2026-08-30.md`. `data/config/progression.json`'s own `creature_bed` comment: 'sleeping through the night completes any occupied bed immediately.' This step and the three after it assign the party's only creature to a bed here, before this segment's own S03-223..227 sleep step, so the sleep that was already going to happen actually revives it -- the same recovery a real player reaches by walking to the beds this segment just built for exactly this."
+    },
+    {
+      "id": "S03-205c",
+      "title": "the rest panel is open",
+      "action": "assert",
+      "args": {
+        "check": "context_prefix",
+        "prefix": "panel"
+      },
+      "expected": "creature_bed_panel.gd opened over the world -- the same shape X02-092 already exercises for the same panel"
+    },
+    {
+      "id": "S03-205d",
+      "title": "confirm the only row -- the party has one creature (RIG-18)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "creature_bed_panel.gd::_on_rest_row(0) -> creature_bed.gd::assign_creature(0); party size is 1 here, so index 0 is unambiguous"
+    },
+    {
+      "id": "S03-205e",
+      "title": "close the rest panel",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the panel closes; the bed now shows the creature resting (creature_bed.gd::_sync_rest_body) and it heals continuously from here (autoload/game_state.gd::_tick_creature_bed_recovery, full_heal_seconds 120.0) even before tonight's sleep completes it outright"
+    },
+    {
       "id": "S03-206",
       "title": "the sleep rung is tracked",
       "action": "assert",
