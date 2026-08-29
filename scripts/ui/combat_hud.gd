@@ -129,6 +129,11 @@ var _party_strip: Control = null
 var _effect_banner: Label = null
 var _effect_left: float = 0.0
 
+## Clear space kept between the enemy plate's real bottom edge and the verdict
+## banner. Enough that the two read as separate elements rather than as one
+## overflowing panel.
+const EFFECT_BANNER_GAP := 16.0
+
 ## How long the verdict stays up. Short: it is confirming a blow the player
 ## already threw, not asking them to change what they are doing, and a fight
 ## lands hits faster than a line of text can be read twice.
@@ -284,11 +289,36 @@ func _build_effect_banner() -> void:
 	_effect_banner.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	_effect_banner.offset_left = -280.0
 	_effect_banner.offset_right = 280.0
-	_effect_banner.offset_top = 232.0
-	_effect_banner.offset_bottom = 268.0
 	_effect_banner.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	_effect_banner.visible = false
 	$Root.add_child(_effect_banner)
+	_position_effect_banner()
+
+
+## Sit the banner under the enemy plate's REAL bottom edge, not the one
+## `combat_hud.tscn`'s offsets declare.
+##
+## Same trap `_party_strip_position()` below documents at length, hit again
+## here: `EnemyPanel` is a `PanelContainer`, so it grows to fit its content and
+## a Control forced past its minimum size does not write that growth back to
+## its offsets. The .tscn says the plate ends at 224; rendered, it ends around
+## 258 — and a banner placed at the authored 232 straddled the plate's bottom
+## edge, half on the panel and half on the world, which reads as a layout bug
+## rather than as a deliberate element. Caught by actually rendering the frame,
+## which is the entire argument for `ralph/conventions.md`'s render-before-done
+## rule.
+##
+## Falls back to the authored offset when called from `_ready()`, before the
+## panel has been laid out and while its rect is still degenerate — the same
+## fallback, for the same reason, that `_party_strip_position()` keeps.
+func _position_effect_banner() -> void:
+	if _effect_banner == null:
+		return
+	var top := 232.0
+	if _enemy_panel != null and _enemy_panel.size.y > 1.0:
+		top = _enemy_panel.position.y + _enemy_panel.size.y + EFFECT_BANNER_GAP
+	_effect_banner.offset_top = top
+	_effect_banner.offset_bottom = top + 40.0
 
 
 ## Age the verdict banner out. Same shape as `_tick_go_text`/`_tick_outcome`
@@ -938,6 +968,10 @@ func _on_hit_effectiveness(on_enemy: bool, effectiveness: int) -> void:
 			text = "▲  your type held — that barely landed"
 	_effect_banner.text = text
 	_effect_banner.add_theme_color_override("font_color", colour)
+	# Re-measured every time it is shown rather than once at build: the plate
+	# above it is a PanelContainer whose height follows its content, and the
+	# telegraph line inside it appears and disappears during a fight.
+	_position_effect_banner()
 	_effect_banner.visible = true
 	_effect_left = EFFECT_BANNER_SECONDS
 
