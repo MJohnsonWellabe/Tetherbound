@@ -1260,16 +1260,17 @@ func _species_portrait_path(species_id: String) -> String:
 	return "res://assets/ui/portraits/creatures/%s.png" % species_id
 
 
+## T3-MATCHUPS: the five expansion types (fire, electric, ice, psychic, dark)
+## previously fell through to TEXT_SECONDARY here and to GROUND_OCHRE on the
+## fight HUD -- two hand-written `match` statements that had already drifted
+## apart on the fallback alone. Both now read one table in `ui_tokens.gd`.
+##
+## TEXT_SECONDARY stays the fallback here, and the difference from the fight
+## HUD's is deliberate rather than leftover: out in the field an unrecognised
+## type should recede into ordinary label text, while mid-fight the tag has to
+## stay readable on the enemy plate.
 func _type_colour(creature_type: String) -> Color:
-	match creature_type:
-		"ground":
-			return UITokens.GROUND_OCHRE
-		"water":
-			return UITokens.WATER_BLUE
-		"air":
-			return UITokens.AIR_SKY
-		_:
-			return UITokens.TEXT_SECONDARY
+	return UITokens.type_colour(creature_type, UITokens.TEXT_SECONDARY)
 
 
 # --- party strip -----------------------------------------------------------------

@@ -424,14 +424,18 @@ func _draw_prompt() -> void:
 	_prompt.text = str(_director.call("prompt"))
 
 
+## T3-MATCHUPS: was a three-branch `match` whose default arm returned
+## GROUND_OCHRE, so every one of the five types the creature expansion added --
+## fire, electric, ice, psychic, dark -- drew as the GROUND colour. Harmless
+## while those types were mechanically inert; actively misleading now that they
+## have chart rows, because this tag is what the matchup arrow rides on and it
+## was naming the wrong type underneath a real verdict.
+##
+## GROUND_OCHRE stays the fallback rather than a neutral grey: an unknown type
+## here is a typo or a species built by a test, and the tag must stay legible
+## against the enemy plate. Losing the type is better than losing the word.
 func _type_color(type_id: String) -> Color:
-	match type_id:
-		"water":
-			return UITokens.WATER_BLUE
-		"air":
-			return UITokens.AIR_SKY
-		_:
-			return UITokens.GROUND_OCHRE
+	return UITokens.type_colour(type_id, UITokens.GROUND_OCHRE)
 
 
 ## T3-TYPECHART's readiness tell: the foe's type, plus how the creature the

@@ -15,12 +15,14 @@ extends "res://tests/test_case.gd"
 ## fiction.
 ##
 ## The most important test in this file is
-## `test_the_worst_multiplier_the_real_data_can_produce_is_still_one_advantage`.
-## Read its comment before "fixing" it.
+## `test_the_worst_multiplier_the_real_data_can_produce_is_one_double_weakness`.
+## Read its comment before "fixing" it -- it carries the record of T3-MATCHUPS
+## deliberately changing the pin this lane originally set, and why.
 
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
 ## What the chart pays a single type advantage. Not hardcoded anywhere else in
 ## this file -- read from the chart itself, so retuning the magnitude in data
@@ -33,6 +35,25 @@ var moves: RefCounted = null
 
 func before_each() -> void:
 	moves = MOVE_DB.new()
+
+
+func _json(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	assert_true(file != null, "missing data file: %s" % path)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## Every band's trainers file, from `band_content.gd`'s own band list rather
+## than a copy of it -- a band added there and not here would silently drop out
+## of the census below, which is the failure mode this repo keeps rediscovering.
+func _trainer_files() -> Array:
+	var out: Array = []
+	for band: String in BAND_CONTENT.BANDS:
+		out.append("res://data/config/bands/%s/trainers.json" % band)
+	return out
 
 
 func _species_types(definition: Dictionary) -> Array:
@@ -84,17 +105,48 @@ func test_opposed_halves_cancel_to_exactly_neutral() -> void:
 
 
 func test_an_unauthored_second_type_changes_nothing() -> void:
-	# THE WHOLE ARGUMENT FOR MULTIPLYING, as an assertion. Every one of the five
-	# dual-typed creatures in the brief pairs an authored type with an
-	# unauthored one, so if this ever stops holding, the rule has stopped being
-	# neutral-preserving and five creatures have silently changed difficulty.
-	for unauthored: String in ["fire", "electric", "ice", "psychic", "dark"]:
+	# THE WHOLE ARGUMENT FOR MULTIPLYING, as an assertion: `neutral` must be an
+	# IDENTITY, so a second type nothing has an opinion about cannot move the
+	# result. Under "take the more favourable" or "average" it would, and by an
+	# amount that depends on how much of the chart has been written.
+	#
+	# AMENDED BY T3-MATCHUPS. This used to iterate fire/electric/ice/psychic/
+	# dark, because when it was written all five were unauthored and every
+	# dual-typed creature paired an authored type with one of them -- which was
+	# that lane's evidence that dual typing moved no damage number in the
+	# shipped game. Those five now have rows, so naming them here would assert
+	# the opposite of what the chart does.
+	#
+	# The property is unchanged and is now tested where it still applies:
+	# `nature` and `light` are what remains unauthored, and the second loop
+	# below generalises the identity to EVERY pairing rather than a hand-listed
+	# few -- a strictly wider assertion than the one it replaces.
+	for unauthored: String in ["nature", "light", "definitely_not_a_type"]:
 		for move_type: String in ["ground", "water", "air"]:
 			for primary: String in ["ground", "water", "air"]:
 				assert_eq(TYPE_CHART.multiplier_dual(move_type, primary, unauthored),
 					TYPE_CHART.multiplier(move_type, primary),
 					"'%s' has no authored rows, so it must not move a '%s' move against '%s'" % [
 						unauthored, move_type, primary])
+
+	# The general form: wherever the SECOND half is neutral -- whether because
+	# the type is unauthored or because the chart simply has no opinion about
+	# that pairing -- the dual answer must equal the single one exactly.
+	var declared: Array = TYPE_CHART.config().get("types", [])
+	for move_type: String in declared:
+		for primary: String in declared:
+			for secondary: String in declared:
+				if primary == secondary:
+					continue
+				if not is_equal_approx(
+					TYPE_CHART.multiplier(move_type, secondary), TYPE_CHART.neutral()
+				):
+					continue
+				assert_eq(TYPE_CHART.multiplier_dual(move_type, primary, secondary),
+					TYPE_CHART.multiplier(move_type, primary),
+					("'%s' into '%s' is neutral, so a '%s/%s' defender must resolve exactly as a "
+					+ "mono-typed '%s' one. Neutral has stopped being an identity.")
+						% [move_type, secondary, primary, secondary, primary])
 
 
 func test_order_does_not_matter() -> void:
@@ -141,49 +193,139 @@ func test_the_configured_cap_bounds_the_result() -> void:
 
 # --- the guard that matters -------------------------------------------------
 
-func test_the_worst_multiplier_the_real_data_can_produce_is_still_one_advantage() -> void:
+func test_the_worst_multiplier_the_real_data_can_produce_is_one_double_weakness() -> void:
 	# READ THIS BEFORE CHANGING IT.
 	#
-	# Every move in moves.json against every species in species.json. Today the
-	# answer is that the largest multiplier the real game can produce is a
-	# single advantage -- exactly what a mono-typed creature already produced
-	# before dual typing existed -- because all five dual-typed creatures pair
-	# an authored type with an unauthored one. That is the evidence that this
-	# whole change moves no damage number in the shipped game.
+	# WHAT THIS TEST USED TO SAY, AND WHY IT NO LONGER SAYS IT.
 	#
-	# WHEN THIS FAILS, someone has authored the first true double weakness, and
-	# the number they have just created is `advantage * advantage` = 1.5625.
-	# `ralph/reports/TYPECHART_DESIGN_2026-08-30.md` section 3.2 measured 1.5 as
-	# the point where the Warden fight folds -- at that magnitude a 2.0x apex TM
-	# starts producing two-hit kills across his roster. So 1.5625 is past a line
-	# somebody already measured, and it becomes reachable the moment a fire or
-	# dark row is written (Cindercub is Fire/Ground, so an authored water->fire
-	# would do it on its own).
+	# T3-CREATURES pinned the maximum at a SINGLE advantage (1.25), because
+	# every dual-typed creature then paired an authored type (ground/water/air)
+	# with an unauthored one, so the second half was always a 1.0 no-op. Its
+	# comment said: "when this fails, someone has authored the first true double
+	# weakness ... the right response is NOT to delete this test or widen its
+	# bound. It is to decide, deliberately, whether the game wants double
+	# weaknesses -- and if it does, to re-measure the Warden against the new
+	# maximum."
 	#
-	# The right response is NOT to delete this test or widen its bound. It is to
-	# decide, deliberately, whether the game wants double weaknesses -- and if
-	# it does, to re-measure the Warden against the new maximum and tune
-	# `dual_type.max` in data/config/type_chart.json to whatever that says.
+	# T3-MATCHUPS is that day, that decision was taken deliberately, and the
+	# Warden WAS re-measured. The full account is
+	# `ralph/reports/MATCHUPS_DESIGN_2026-08-30.md` sections 5.1 and 5.2. The
+	# three things that decided it:
+	#
+	# 1. IT IS FORCED, not chosen. `water > ground` is shipped and tuned;
+	#    `water > fire` is one of the owner's five fixed pairs, quoted verbatim
+	#    in type_chart.json; Ashtusk's Ground/Fire typing is settled owner
+	#    direction. Honouring all three makes 1.5625 reachable. There is no
+	#    version of this chart that obeys the owner and avoids it, short of
+	#    gutting dual typing with a clamp.
+	# 2. THE INHERITED ALARM POINTS SOMEWHERE ELSE. 1.5625 is past the 1.5 that
+	#    TYPECHART_DESIGN section 3.2 measured as the point where the Warden
+	#    folds -- but that threshold was measured on the Warden's own five, and
+	#    NONE of them is dual-typed. Nor is any creature on any of the 27
+	#    authored trainer rosters (asserted below, so it cannot drift silently).
+	#    The Warden fight is bit-for-bit identical under this chart.
+	# 3. IT COSTS NO HITS. Worst compounded case is 1.5625 x the 2.0x apex water
+	#    TM = 3.125, against a shipped ceiling of 2.5. Measured against wild
+	#    Ashtusk at L16 (289 hp) that is 3 charged hits either way.
+	#
+	# So this is a STRONGER pin than the one it replaces, not a weakened one: it
+	# asserts the number AND that exactly one pairing reaches it AND that the
+	# pairing is the specific one the design note argues for. If a second
+	# pairing appears, or a different one, this fails and the reasoning above
+	# has to be redone rather than the bound widened. Cindercub (Fire/Ground) is
+	# expected to join Ashtusk here the day its mesh lands and it enters
+	# species.json -- that is a second name in the list below, not a new number.
+	var double_weakness: float = _advantage * _advantage
 	var worst := 0.0
-	var worst_why := ""
+	var worst_pairings: Array = []
 	var best_resist := 999.0
 	for species_id: String in SPECIES.table().keys():
 		var types := _species_types(SPECIES.definition(species_id))
 		var primary: String = types[0]
 		var secondary: String = types[1] if types.size() > 1 else ""
 		for move_id: Variant in moves.move_ids():
-			var mult := TYPE_CHART.multiplier_dual(moves.type_of(str(move_id)), primary, secondary)
-			if mult > worst:
+			var move_type: String = str(moves.type_of(str(move_id)))
+			var mult := TYPE_CHART.multiplier_dual(move_type, primary, secondary)
+			if mult > worst + 0.0001:
 				worst = mult
-				worst_why = "%s (%s) hit by %s" % [species_id, "/".join(types), move_id]
+				worst_pairings = ["%s move into %s (%s)" % [move_type, species_id, "/".join(types)]]
+			elif is_equal_approx(mult, worst):
+				var entry := "%s move into %s (%s)" % [move_type, species_id, "/".join(types)]
+				if not worst_pairings.has(entry):
+					worst_pairings.append(entry)
 			best_resist = minf(best_resist, mult)
 
-	assert_almost_eq(worst, _advantage, 0.0001,
-		("the largest type multiplier the real roster can produce is %.4f (%s), but a single advantage "
-		+ "is %.4f. A double weakness has become reachable -- read this test's comment, do not widen it.") % [
-			worst, worst_why, _advantage])
+	assert_almost_eq(worst, double_weakness, 0.0001,
+		("the largest type multiplier the real roster can produce is %.4f via %s; the design note "
+		+ "argues for exactly one double weakness at %.4f. Read this test's comment before changing "
+		+ "the bound -- the number is not the point, the reasoning is.") % [
+			worst, worst_pairings, double_weakness])
+
+	# Exactly one species reaches it, and it is the one the design note names.
+	# This is the half of the assertion that would catch a chart edit that
+	# quietly made a second creature double-weak.
+	assert_eq(worst_pairings.size(), 1,
+		("%d pairings reach the double weakness (%s). MATCHUPS_DESIGN section 5.1 argues for exactly "
+		+ "one, forced by the owner's `water beats fire` meeting the shipped `water beats ground`. "
+		+ "A second one is a new design decision, not a side effect.") % [
+			worst_pairings.size(), worst_pairings])
+	assert_true(str(worst_pairings[0]).begins_with("water move into ashtusk"),
+		("the double weakness is reached by '%s'; the design note argues it should be a water move "
+		+ "into Ashtusk (Ground/Fire), which is the pairing the owner's fixed pairs force")
+			% worst_pairings[0])
+
+	# The floor did NOT move. No creature resists the same attacker on both
+	# halves, so the natural double resistance (0.64) stays unreachable and a
+	# dual-typed creature can never become a wall.
 	assert_almost_eq(best_resist, _disadvantage, 0.0001,
-		"the strongest resistance the real roster can produce should still be a single disadvantage")
+		("the strongest resistance the real roster can produce is %.4f; it should still be a single "
+		+ "disadvantage. A reachable double RESIST is the mirror of the hazard above and wants the "
+		+ "same deliberate decision.") % best_resist)
+
+
+## No creature on any authored trainer roster is dual-typed -- which is why the
+## double weakness above cannot reach a single authored fight.
+##
+## This is the load-bearing fact behind MATCHUPS_DESIGN section 4.2's "+0% on 27
+## of 27 rungs" and section 4.3's bit-for-bit-identical Warden, and it was
+## previously recorded nowhere. It is a property of the CONTENT, not of the
+## chart, so it can be broken by a roster edit in a lane that has never heard of
+## this file. When it breaks, the reachability pin above stops being a statement
+## about optional wild encounters and starts being a statement about the
+## chapter's critical path, and both need re-measuring together.
+func test_no_trainer_roster_creature_is_dual_typed() -> void:
+	var offenders: Array = []
+	var seen := 0
+	for path: String in _trainer_files():
+		var parsed := _json(path)
+		var entries: Variant = parsed.get("trainers", [])
+		if not entries is Array:
+			continue
+		for entry: Variant in entries as Array:
+			if not entry is Dictionary:
+				continue
+			var team: Variant = (entry as Dictionary).get("team", [])
+			if not team is Array:
+				continue
+			for member: Variant in team as Array:
+				if not member is Dictionary:
+					continue
+				var species_id := str((member as Dictionary).get("species", ""))
+				if species_id.is_empty():
+					continue
+				seen += 1
+				var definition := SPECIES.definition(species_id)
+				if definition.is_empty():
+					continue
+				if not str(definition.get("type_secondary", "")).is_empty():
+					offenders.append("%s fields %s (%s/%s)" % [
+						str((entry as Dictionary).get("id", "?")), species_id,
+						definition.get("type", ""), definition.get("type_secondary", "")])
+	assert_true(seen > 0, "found no trainer roster creatures at all; the census walk is broken")
+	assert_true(offenders.is_empty(),
+		("%d authored trainer creatures scanned and these are dual-typed: %s. Read "
+		+ "ralph/reports/MATCHUPS_DESIGN_2026-08-30.md sections 4.2 and 5.2 -- the type chart's "
+		+ "claim that it changes no authored fight rests on this being empty.") % [seen, offenders])
 
 
 # --- the data the rule reads ------------------------------------------------

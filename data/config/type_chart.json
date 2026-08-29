@@ -7,6 +7,8 @@
 
   "_comment_triangle": "A FULL reciprocal triangle: water > ground > air > water. Partial charts -- dropping one edge to neutral -- were measured against the current roster census rather than assumed, and the result is worth recording honestly because it does NOT uniformly favour the triangle: dropping the ground>air edge gives a per-type exchange spread of 1.223 and dropping water>ground gives 1.364, both NARROWER than the full triangle's 1.380, while dropping air>water gives 1.671, wider. So a partial chart can look flatter on today's numbers. The triangle is still the right answer, for a reason that is structural rather than numerical. First, a missing edge leaves one type carrying a weakness with no advantage and another an advantage with no weakness, which is unfair by construction however the arithmetic lands. Second, and decisively: a partial chart's fairness depends entirely on the CURRENT census, and that census -- 57.6% ground -- is itself a known content defect scheduled for repair (see the handover's section 4). A chart tuned to a distribution that is about to be corrected would be wrong the moment it was. The triangle is symmetric under ANY roster distribution. Asymmetry should come from rosters and encounters, not from a lopsided chart.",
 
+  "_comment_future_types_SUPERSEDED_BY_T3_MATCHUPS": "HISTORICAL, kept because its reasoning is still the reasoning. Five of the six named here (fire, ice, electric, plus dark and psychic) now HAVE rows -- see _comment_matchups_t3_matchups below. Two corrections to this paragraph, both from newer owner direction and both recorded in ralph/reports/MATCHUPS_DESIGN_2026-08-30.md section 1: the board's 'shadow' is the earlier label for what shipped as DARK (species.json says `dark`, and the owner's matchup instruction says Dark), so it is not a ninth type; and PSYCHIC is not on the board at all -- the creature-expansion brief introduced it with Riftfrill. NATURE and LIGHT are the two that remain planned and unpopulated: no species, no move, no row, playable at 1.00 the moment something claims one. That is the extension point, and turning five types on did not spend it. Anyone authoring from the board alone should note the shadow/dark trap: `shadow` rows against a `dark` roster would silently do nothing forever, which is exactly the failure mode neutral-by-omission makes invisible. The `types` vocabulary above is the guard.",
+
   "_comment_future_types": "The owner board names six planned types: fire, ice, nature, light, shadow, electric. They are deliberately NOT stubbed here. `neutral` below is what any pairing this table does not name resolves to, so a species or move introduced with a new type is playable at 1.00 the moment it exists and becomes interesting when someone authors its rows -- a data edit, never a code change. Nothing in scripts/combat/type_chart.gd enumerates the three live types.",
 
   "neutral": 1.0,
@@ -22,6 +24,19 @@
   },
 
   "_comment_matchups": "Outer key is the ATTACKING MOVE's type, inner key is the DEFENDING CREATURE's species type. Only non-neutral pairings need an entry; the mirror matchups (ground vs ground and so on) are neutral by omission.",
+
+  "_comment_matchups_t3_matchups": "T3-MATCHUPS turned the five new types ON. They shipped typed but mechanically inert -- every pairing neutral -- because `neutral`-by-omission is what let T3-CREATURES add them as data with no code. These rows are that data. Owner instruction, verbatim: 'Fire beats Ice, Water beats Fire, Electric beats Water, Ground resists Electric, Dark or Psychic beat Electric. Just make a circle basically of types beating other types and resisting some. Every type doesn't have to be equal -- for example Dark could beat multiple and only be weak to one making it a stronger type.' Those five pairs are FIXED POINTS and are implemented literally; 'Dark OR Psychic' is taken as BOTH, the safe reading. Full argument, every measurement, and the per-rung/per-starter impact: ralph/reports/MATCHUPS_DESIGN_2026-08-30.md.",
+
+  "_comment_the_circle": "It is a circle -- two of them, sharing exactly one edge, and that edge is one of the owner's own pairs. ELEMENTAL RING: water > fire > ice > ground > air > water. STORM/MIND RING: dark > psychic > electric > water > fire > dark. All ten of those edges are 1.25. Two CHORDS sit outside the rings and are where the owner's requested asymmetry lives: `dark > electric` (his fixed pair, and Dark's second advantage) and `electric > air` (Electric's second advantage, paying for its two weaknesses). Result, and it is the owner's own worked example implemented literally: DARK beats two, is weak to one, and resists the one it beats. Fire lands in the same place without anyone deciding it should -- it is the hinge both rings pass through. The one structural property the asymmetry was NOT allowed to eat: every type has at least one advantage and at least one weakness. No dead ends, no invulnerables.",
+
+  "_comment_resist_is_not_advantage": "The owner named Ground as RESISTING Electric rather than beating it, and that distinction is preserved across the whole chart: `ground > electric` has no entry and resolves to 1.00. A type can be defensively tough without being offensively strong. It is also the correct balance call -- ground is 57.6% of all 66 authored trainer creatures in the chapter, so an offensive edge for ground would be the single most inflationary entry this table could hold. Three more non-reciprocal entries do the same job in the other direction: `water > ice` 0.8 (ice resists water, without ice beating water), `ice > ground` 1.25 and `electric > air` 1.25 (advantages with no matching resist).",
+
+  "_comment_magnitudes_unchanged": "1.25/0.80 UNIFORMLY, for all eight types, with no per-type magnitudes. The anchor is the owner board's TM ladder and the board's own heading is 'TM SYSTEM (ALL TYPES)' -- shipped data/moves/tms.json confirms it, with ground, water and air all running the same shape and all three topping out at exactly 2.0x. A per-type chart magnitude would have nothing to be calibrated against, and it would make the one sentence a designer can hold in their head ('matching type is worth about one TM rung') false for five of eight types. Second reason, and the deciding one: the owner asked for asymmetry BETWEEN types, and asymmetry is already fully expressible in the graph -- dark is stronger than psychic because it has two advantages, one weakness and a resist, not because its arrows are bigger. Buying strength with magnitude instead of topology would also be unreadable: `damage.variance` in combat.json is 0.1, so every hit already swings +/-10%, which swallows a 1.25-vs-1.35 distinction whole.",
+
+  "_comment_the_three_shipped_types_are_untouched": "LOAD-BEARING, AND PINNED BY A TEST (tests/test_type_chart.gd). All NINE cells of the {ground,water,air} x {ground,water,air} block are byte-identical to what T3-TYPECHART shipped and tuned. Extending the chart to eight types is an EXTENSION, not a rewrite -- every number that lane measured and argued survives. The `water` row gains two entries, `fire` (owner-fixed) and `ice`, but both name NEW types. The `ground` and `air` rows gain nothing at all: ground's and air's new defensive exposure lives entirely in the new types' own rows (`electric > ground` 0.8, `ice > ground` 1.25, `electric > air` 1.25), which is where a new type's opinions belong. Measured consequence: +0% on 27 of 27 authored trainer rungs for all three starters, per-starter exchange ratios unchanged to three decimals (terrapup 1.055, ripplet 1.143, galewisp 0.829), and the warden_aldis fight bit-for-bit identical.",
+
+  "_comment_the_one_double_weakness": "The maximum multiplier the real roster can produce rises 1.25 -> 1.5625, and it is reachable by EXACTLY ONE pairing: a Water move into Ashtusk (Ground/Fire). It is forced -- `water > ground` is shipped and tuned, `water > fire` is an owner fixed point, and Ashtusk's typing is settled owner direction. Cindercub (Fire/Ground) joins it the day its mesh lands. The inherited warning that 1.5625 is past the 1.5 at which the Warden folds does NOT apply: that threshold was measured on the Warden's own five, and none of them is dual-typed -- verified, along with the fact that NO creature on ANY trainer roster is. Worst compounded case this chart makes reachable is 1.5625 x the 2.0x apex water TM = 3.125, against a shipped ceiling of 2.5, and it does not change hits-to-kill (Ashtusk L16 has 289 hp; 3 charged either way). `dual_type.min`/`max` above are unchanged and still non-binding. Nature and Light remain unauthored, so the extension point this chart was built on is NOT spent.",
+
   "matchups": {
     "ground": {
       "air": 1.25,
@@ -29,11 +44,35 @@
     },
     "water": {
       "ground": 1.25,
-      "air": 0.8
+      "air": 0.8,
+      "fire": 1.25,
+      "ice": 0.8
     },
     "air": {
       "water": 1.25,
       "ground": 0.8
+    },
+    "fire": {
+      "ice": 1.25,
+      "dark": 1.25,
+      "water": 0.8
+    },
+    "electric": {
+      "water": 1.25,
+      "air": 1.25,
+      "ground": 0.8
+    },
+    "ice": {
+      "ground": 1.25,
+      "fire": 0.8
+    },
+    "psychic": {
+      "electric": 1.25,
+      "dark": 0.8
+    },
+    "dark": {
+      "electric": 1.25,
+      "psychic": 1.25
     }
   }
 }
