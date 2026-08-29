@@ -1,12 +1,17 @@
-Warrens vault regression — bisect datapoints so far
-===================================================
-Recorded by the coordinator, 2026-08-29 ~09:45 UTC, so the lane working
-this does not re-pay for runs already done.
+Warrens vault regression — bisect result and root cause
+=========================================================
+Started by the coordinator, 2026-08-29 ~09:45 UTC; finished by the lane
+that picked it up. The bisect datapoints below (main, main+T1-REGIONS,
+ralph/LAND-0829A at 48b3e8e) are as originally recorded. What follows is
+what actually caused it, which is NOT a lane interaction.
 
 THE REGRESSION
-  tests/smoke_warrens.gd, CI job verify-regions-shard (warrens, 1).
-  The vault chamber becomes unreachable after clearing the Guardian.
-  This is the Burrow Warrens payoff the owner asked for by name.
+  tests/smoke_warrens.gd, CI job verify-regions-shard (warrens, 1),
+  ralph/LAND-0829A run https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/33244295847
+  (head 48b3e8e). The vault chamber becomes unreachable after clearing
+  the Guardian. This is the Burrow Warrens payoff the owner asked for by
+  name: "there needs to be a point to going in the burrow warrens, like
+  a prize at the bottom".
 
 MEASURED RESULTS (each a full `godot --headless --path .
 --script tests/smoke_warrens.gd` run, read off a redirected file, not
@@ -20,38 +25,127 @@ off the tail of a killed process):
 
   main + ralph/T1-REGIONS .............. PASS
       identical numbers to main: shut 6.2m, open 1.0m, walked 52 m.
-      >>> T1-REGIONS IS CLEARED. Do not spend a run re-testing it.
-      (An earlier attempt at this same run was killed by a short
-      timeout and produced no verdict; this is the completed rerun.)
 
-  ralph/LAND-0829A (all seven lanes) .... FAIL
+  ralph/LAND-0829A (all seven lanes), CI, head 48b3e8e ... FAIL
       pushed at the shut branch door; ended 6.2m from the vault
       pushed at the open branch door; ended 5.0m from the vault
       FAIL: the branch is still impassable after clearing (5.0m)
       FAIL: walking the cave never reached 'vault' (stopped 4.5m short)
 
-WHAT THIS NARROWS IT TO
-  Six lanes remain: T1-WATER, T3-CADENCE, T3-BRIDGE, GRASS-FAR,
-  T3-BAND4, T1-GROUND-terrain-macro.
+  ralph/LAND-0829A, same head 48b3e8e, run TWICE more locally ... PASS
+  both times, with main's own numbers (open door 1.0m, 52m walked).
 
-  T3-CADENCE is reports and a probe script only — very unlikely to
-  place a collider, but cheap to rule out by inspection rather than a
-  run.
+THAT LAST LINE IS THE TELL. Same commit, same code, same config, three
+different outcomes. `data/config/burrow_warrens.json`,
+`scripts/world/burrow_warrens.gd` and `scripts/world/interior_structure.gd`
+diff EMPTY against origin/main on this branch (`git diff origin/main --
+<those three paths>` — zero lines) — none of the seven lanes touch the
+Warrens' own build code or config. Chamber layout, passage width, doorway
+position: all of it is local-space arithmetic off that unchanged config,
+so it cannot differ between main and this branch. The three lanes that
+looked like the strongest suspects (T1-REGIONS, T1-WATER,
+T1-GROUND-terrain-macro) turned out on inspection to change colour/texture
+bakes and a re-sited peak 207m+ from every named site — none of them
+touch the height field under the Warrens either.
 
-  The two remaining terrain lanes are the strongest suspects now that
-  T1-REGIONS is out: T1-GROUND-terrain-macro (corridor terrain re-bake)
-  and T1-WATER (river wet-bed bake). Both change the height field the
-  Warrens site sits in.
+ROOT CAUSE
+  `scripts/creatures/wild_creature.gd:68` calls `_rng.randomize()` in
+  `_ready()` — every wild creature's own RNG is seeded from OS entropy,
+  never fixed. That is correct for the open meadow (SC/GATE-D's whole
+  point is a scatter that no two players see wander identically), and
+  wrong for a hand-placed dungeon resident standing 3.8m from the one
+  gated passage in an 8m-wide vault.
 
-WHAT IS ALREADY RULED OUT
+  The failing CI run's own log (job 99079045880) has the actual crime
+  scene in it, one line most people would read past:
+
+    [player] entombed at -377.23, 4.15, 2645.21 -- recovering to
+    -381.56, 4.15, 2640.26
+
+  That is `player_controller.gd`'s entombment failsafe
+  (GATE-F-DEFECT-FIX) firing — the player's own capsule got physically
+  sealed inside solid geometry with no way out in any of 8 swept
+  directions, and had to be teleported clear. Converting that world
+  position into the Warrens' own local space (site at [-357, 2610],
+  yaw 315°) puts it at local (10.6, 39.2) — inside the den→vault
+  passage's own built floor slab, x∈[6.8,12.2] z∈[38.8,41.2].
+
+  `tools/_probe_warrens_blockage.gd` (added this pass, kept for the next
+  time this class of bug needs eyes on it) dumps every node whose global
+  position falls inside that same box, before and after clearing. It
+  found one: the vault's own "Elder Trailpup"
+  (`data/config/burrow_warrens.json` spawns, chamber "vault", old offset
+  [-2.0,-1.5]) — spawned at local (13, 38.5), only 3.8m from the passage
+  centre, which is already inside `interior_structure.gd`'s own 4.3m
+  doorway clearance disc. In 90 physics frames of ordinary idle-wander
+  AI (`wild_creature.gd::_wander`, radius 7m — the open-meadow default,
+  never overridden for a room a fraction of that), it walked from
+  (13,38.5) to (11.85,39.34): straight toward, and nearly into, the
+  passage. `smoke_warrens.gd::_quieten_the_residents()` freezes
+  `physics_process` on every resident right after the 240-frame settle,
+  but does NOT remove colliders (deliberately — the guardian has to stay
+  a real body for the door test). Whatever position the RNG walked a
+  resident to at that instant is where its capsule stays, permanently,
+  collidable, for the rest of the boot.
+
+  So: not a lane interaction. A pre-existing, always-present hazard in
+  the Warrens' own encounter placement, that any boot (CI, a real
+  player's save, this session's own local runs) can roll into by chance,
+  because the one creature standing closest to the one gated passage in
+  the cave was never given a leash short enough to keep it out of that
+  passage. The 2026-08-29 CI run rolled badly; three local re-runs of
+  the exact same pre-fix commit rolled fine, which is why the "lane
+  interaction" framing looked plausible until the entombment line and
+  the probe made it not a guessing game.
+
+WHAT IS ALREADY RULED OUT (still true)
   - Terrain intruding into chambers. The harness itself reports
-    "deepest the ground reaches into any chamber: 0.00 m" even on the
-    failing branch.
-  - The door mechanism. It opens: 6.2m shut -> 5.0m open. The PASSAGE
-    is blocked, not the door.
-  - Any single lane in isolation. All seven passed their own CI.
+    "deepest the ground reaches into any chamber: 0.00 m" on every run,
+    passing or failing.
+  - The door mechanism. It opens: 6.2m shut -> 5.0m (or 0.7-0.9m,
+    post-fix) open, every time. The PASSAGE was blocked, not the door.
+  - Any single lane, or any combination of lanes. None of the seven
+    touch Warrens code, Warrens config, or wild_creature.gd/
+    encounter_director.gd's spawn path.
+
+FIX (this pass)
+  1. `scripts/combat/encounter_director.gd::spawn_wild()` — `opts` grows
+     a `wander_radius` key that overrides `wild_creature.gd`'s 7m
+     open-meadow default for one spawned body, unset by default so the
+     seeded meadow population is untouched.
+  2. `scripts/world/burrow_warrens.gd::_spawn_population()` — passes a
+     per-spawn/per-guardian `wander_radius` through to `spawn_wild()`
+     when the config names one.
+  3. `data/config/burrow_warrens.json` —
+       - the vault's Elder Trailpup: offset moved from [-2.0,-1.5] to
+         [1.5,0.0] (the vault's own back half, away from the door) and
+         `wander_radius: 1.2` added. Worst-case reach (radius + a
+         generous 0.6m body radius) stays ~2.5m clear of the passage's
+         actual 2.4m-wide opening.
+       - the guardian: `wander_radius: 1.5` added (den, offset [3,4],
+         ~4.7m from the same passage's nearest corner with margin to
+         spare at that radius).
+     The mouth/hall/warren spawns were left untouched: none of them were
+     implicated by the entombment coordinate or the probe, and the
+     `interior_structure.gd` doorway-clearance disc a couple of them sit
+     near is a generous decoration keep-out (1.6m padding over the
+     tunnel's own half-width), not the tunnel's actual collidable
+     footprint the probe measured against.
+
+VERIFICATION
+  - `tests/smoke_warrens.gd`, post-fix, run THREE times (the same
+    nondeterminism that hid this bug means one green run is not
+    evidence): all three report "pushed at the open branch door;
+    ended 0.7-0.9m from the vault" and "warrens smoke test passed",
+    matching main's own numbers.
+  - `tests/run_tests.gd -- --only=test_spawns_data,test_chapter_rewards`:
+    26 tests, 1514 assertions, 0 failed.
 
 NOTE ON METHOD
   Give each run a generous timeout. A full warrens smoke takes about
   four minutes here, and a short timeout yields a silent non-verdict
   that is easy to mistake for a pass. Redirect to a file and grep it.
+  And read the FULL CI log for a failing shard, not just the assertion
+  lines the test itself prints — the entombment failsafe's own log line
+  was the actual location of the bug and does not appear in
+  smoke_warrens.gd's output at all.
