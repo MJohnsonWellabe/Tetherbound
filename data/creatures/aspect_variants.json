@@ -1,0 +1,71 @@
+{
+  "_comment": "T1-CREATURE-ART. Presentation-only recolor/emissive spec for the four Aspect variants named in docs/owner-direction/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md and drawn on docs/art/reference/creature-expansion-2026-08-30/{01,02,07,08}_*.png: Nightburrow (Burrowback), Stormtrail (Trailpup), Riftfrill (Paddlenewt), Ashtusk (Tuskroot). This file is presentation data ONLY -- no typing, rarity, habitat or spawn behaviour, which is data/creatures/species.json's job and T3-CREATURES' lane, not this one's. Consumed by tools/generate_aspect_variant_textures.py, which writes `<source texture basename>_<variant id>.png` siblings next to each source species' own textures -- the exact naming contract scripts/creatures/creature_body.gd::_texture_for() already uses for vivid/shiny/alpha, generalised in creature_body.gd's set_aspect_variant()/_aspect_variant hook to take an arbitrary suffix plus an explicit source species (needed because the live variant's own eventual species id, e.g. 'stormtrail', is not the folder its textures live in).",
+  "_comment_glow": "Each variant also gets a synthetic EMISSIVE map -- the shipped burrowback/paddlenewt/tuskroot emissive textures are 4x4 near-black stubs (confirmed by direct probe, tools/_probe_aspect_source_materials.gd) and trailpup's real emissive is a plain copy of its albedo, so none of the four have an authored glow to repaint; the `glow` list below AUTHORS one from nothing rather than recolouring an existing map. Each glow layer selects pixels either by `select: feature` (darkest N-percentile of the ALREADY-RECOLOURED albedo within `where`'s anatomy mask -- this is what finds armour-plate/scale seams and grout lines, the same percentile trick data/creatures/shiny_colourways.json's own finish pass uses to find eyes/nostrils) or `select: match` (an HSV band within `where`, for a feature that is PALE rather than dark -- Ashtusk's ivory tusks are the reason this mode exists; a darkest-pixel search would never find them). `where` uses the same anatomy predicate vocabulary as tools/creature_overlays.py (y/x/z/radial/up, all 0..1 in the mesh's own bounding box) -- unit sign conventions (which end is head vs tail) are NOT assumed here; every `where` block was chosen loosely and then narrowed by rendering the real 3D creature, never by eyeballing the UV-space texture (UV islands are scattered by the auto-unwrapper and carry no spatial locality a human eye can read, confirmed by comparing tools/creature_anatomy_maps.py's own false-colour dump against the shipped albedo). Glowing EYES are deliberately NOT attempted here -- see scripts/creatures/vfx/aspect_vfx.gd's eye-glow billboard instead; a billboard tuned by rendering is more reliable than guessing a `where` band tight enough to hit two small pupils and nothing else.",
+  "variants": {
+    "nightburrow": {
+      "display_name": "Nightburrow",
+      "source_species": "burrowback",
+      "board": "docs/art/reference/creature-expansion-2026-08-30/01_Nightburrow_alpha_burrowback.png",
+      "_comment": "Board palette: Charcoal Stone / Obsidian Fur / Violet Glow / Amethyst Flame. Burrowback's own existing `vivid_rules` (data/creatures/shiny_colourways.json) already push toward cold grey stone over a near-black body for unrelated reasons (OF28's badger-vs-badger differentiation from terrapup) -- close enough to Nightburrow's own base palette that this variant's rules mostly DEEPEN that same direction (more charcoal, more obsidian, less grey) rather than reinventing it, which matches the board's own pipeline note ('Darken fur and armor') and leaves the identity work to the emissive/VFX layer, exactly as the sheet insists it must: 'Without emissive/VFX treatment, this variant is not successful.'",
+      "rules": [
+        {
+          "_why": "The badger's pale face/chest stripe -- keep it a stripe, not erase it into the charcoal. Slight darken only.",
+          "match": {
+            "sat_max": 0.12,
+            "val_min": 0.72
+          },
+          "set_sat": 0.03,
+          "val_scale": 0.9
+        },
+        {
+          "match": {
+            "sat_max": 0.3,
+            "val_min": 0.5
+          },
+          "set_hue": 264,
+          "set_sat": 0.06,
+          "val_scale": 0.52
+        },
+        {
+          "match": {
+            "sat_max": 0.45,
+            "val_min": 0.26,
+            "val_max": 0.5
+          },
+          "set_hue": 268,
+          "set_sat": 0.09,
+          "val_scale": 0.42
+        },
+        {
+          "match": {
+            "val_max": 0.26
+          },
+          "set_hue": 270,
+          "set_sat": 0.05,
+          "val_scale": 0.6
+        }
+      ],
+      "finish": {
+        "feature_percentile": 3.0,
+        "feature_max_val": 0.05,
+        "feature_set_val": 0.02
+      },
+      "glow": [
+        {
+          "id": "armor_cracks",
+          "_why": "'strong purple emissive cracks through armor' + 'purple flame... rising from... armor seams'. Darkest-pixel seams within the plated back/flank, never the belly or legs.",
+          "select": "feature",
+          "where": {
+            "y_min": 0.3,
+            "up_min": 0.12
+          },
+          "percentile": 7.0,
+          "max_val": 0.14,
+          "color": "#a855f7",
+          "intensity": 1.8,
+          "softness": 0.1
+        }
+      ]
+    }
+  }
+}
