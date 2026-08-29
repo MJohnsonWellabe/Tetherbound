@@ -33,7 +33,40 @@
     "_comment_alpha": "Stream-only override over surface.alpha_shallow — see water.gd's build() for the measurement that split them. TUNABLE.",
     "flow_speed": 1.1,
     "flow_stretch": 0.6,
-    "_comment_flow": "EV5-remainder: the flowing-water variant. The ribbon writes its course into UV2 and the shader scrolls the wave normals downstream along it (the parameterisation IS the flow map — water.gd already computed per-sample tangents, exactly the plumbing the backlog item named). flow_speed is metres of course per second; flow_stretch < 1 elongates ripples along the flow. Both TUNABLE."
+    "_comment_flow": "EV5-remainder: the flowing-water variant. The ribbon writes its course into UV2 and the shader scrolls the wave normals downstream along it (the parameterisation IS the flow map — water.gd already computed per-sample tangents, exactly the plumbing the backlog item named). flow_speed is metres of course per second; flow_stretch < 1 elongates ripples along the flow. Both TUNABLE.",
+    "_comment_dressing": "T1-GROUND-2. The stream had ZERO bank dressing — pond and river both get `reeds`/`bank_scrub`, the stream got neither, which is most of why a blind critic standing at its own authored bank point saw only meadow grass. `_build_plant_band` (the same function pond/river use) is gated on the member `_level`, the POND's flat surface; the stream's bed keeps falling along its own short course, so water.gd::_build_stream_reeds swaps `_level` to the LOCAL bed height at a handful of stations along the trimmed centreline instead of once for the whole body. `clumps`/`per_clump` below are deliberately small relative to river's (90/14): each station calls _build_plant_band once, the ~90m authored course trims to well under that once the head ramp and pond mouth are cut, and stations sit ~8m apart, so a river-sized clump count here would over-place badly. TUNABLE — if the bank still reads bare, raise clumps/per_clump before adding stations.",
+    "reeds": {
+      "models": [
+        "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf",
+        "res://assets/environment/stylized_nature/Grass_Wispy_Short.gltf"
+      ],
+      "tint": "#7a9460",
+      "clumps": 2,
+      "per_clump": 5,
+      "clump_radius": 1.8,
+      "band_below": 0.35,
+      "band_above": 0.4,
+      "scale_min": 0.5,
+      "scale_max": 1.0,
+      "max_bank_slope_deg": 40.0,
+      "seed": 20260830
+    },
+    "bank_scrub": {
+      "models": [
+        "res://assets/environment/stylized_nature/Fern_1.gltf",
+        "res://assets/environment/stylized_nature/Plant_1_Big.gltf"
+      ],
+      "tint": "#6f9153",
+      "clumps": 2,
+      "per_clump": 2,
+      "clump_radius": 2.6,
+      "band_below": -0.25,
+      "band_above": 1.4,
+      "scale_min": 0.45,
+      "scale_max": 0.85,
+      "max_bank_slope_deg": 40.0,
+      "seed": 20260831
+    }
   },
   "_comment_reeds": "Bible §15: 'vegetation/reeds at banks'. Placed by the water composer itself — it marches the actual shoreline (the height isoline the level defines) and stands clumps in a band straddling the waterline, so the reeds always hug the real shore no matter how the level is tuned. Meshes are the SAME Quaternius wispy grass the drygrass layer uses (one nature family, D24) at taller scale and a deep marsh-green tint — a different plant read from material and context, not a new asset. NOT routed through vegetation.json because those two models already belong to the drygrass layer, and vegetation.gd groups batches by model — listing them in a second layer there silently loses one layer's tint (its own documented failure mode).",
   "reeds": {
