@@ -157,3 +157,102 @@ root is gitignored per its own comment about exactly this class of loss):
 `shots/creature_presentation/` (working captures, not carried — regenerate
 with `tools/capture_creature_presentation.gd` and
 `tools/_probe_creek_hollow_habitat.gd` as needed).
+
+---
+
+## Session 2: the Warrens Guardian's lost silhouette
+
+Fable's blind pass (`ralph/reports/JUDGE-VISUAL-2026-08-29.md` sec4,
+`ralph/JUDGE-VISUAL`) called the Warrens den interior GOOD overall — the one
+architecture verdict in the world that passed, protect it — but logged one
+watch item, squarely §15:
+
+> The guardian's dark shell merges into the shadowed back wall
+> (`W-int-01-den-wide.png`) — its silhouette is nearly lost at the exact
+> moment the room wants you to see it. A rim of warmer bounce or a lighter
+> back wall behind the den would protect the read.
+
+### Root cause
+
+`data/config/burrow_warrens.json`'s den already carries a warm key light
+(`{"at":[3.0,43.0],"y":3.1,"energy":1.5,"range":13.0,"colour":"#d9a05c"}`)
+sited right alongside the guardian's own stand (den centre `[0,40]` +
+guardian `offset:[3,4]` = `[3,44]`) — a broad wash chosen deliberately over a
+tight spotlight because the guardian is a wandering wild body
+(`_comment_lights_authored`'s own round-1 lesson). That light lights the
+guardian's *near* side but leaves the wall directly behind it — and
+therefore the guardian's silhouette against that wall — exactly as dark as
+the rest of the room.
+
+### Fix
+
+One more data-only light, no `.gd` changes: `burrow_warrens.gd::_build_lights`
+is already fully generic over the `lights` array, so this is a single JSON
+entry, `{"at":[3.0,46.0],"y":1.8,"energy":0.55,"range":6.0,"colour":"#c9814a"}`
+— sited just short of the den's far wall (depth 14 centred on z=40 puts the
+wall at z≈47) and at the guardian's own body height rather than ceiling
+height (the exact mistake round 1 of the key light made — "the frames
+showed it lighting the CEILING while the guardian went to silhouette"), so
+it backlights the silhouette and lifts the wall value at the same time,
+without needing to track the guardian's 1.5m wander on a leash. Warm but a
+shade duskier than the key so it reads as bounce, not a second sun.
+`interior_structure.gd` and `burrow_warrens.gd` are both untouched.
+
+### Verification
+
+Rendered with the judge's own tool/stand
+(`tools/capture_warrens_63.gd`'s `06-den-and-guardian`, `aim_guardian: true`).
+The guardian is a live wandering wild body with an unseeded wander target
+(`_comment_vault_trailpup_wander` already documents this for a different
+resident), so the resulting camera angle is not pixel-identical to the
+judge's own capture instant — the full frame shows a different facing, not
+the same composition. Judging the silhouette-vs-wall read on its own merits
+instead, cropped to the guardian at comparable scale in each:
+
+- `guardian-den-BEFORE-full.png` / `guardian-silhouette-BEFORE-crop.png` —
+  the judge's own frame. The wall behind the guardian is nearly the same
+  dark value as the guardian's own shadowed underside; only the moss
+  highlights separate at all.
+- `guardian-den-AFTER-full.png` / `guardian-silhouette-AFTER-crop.png` —
+  this fix, same tool/stand. The wall behind the guardian is visibly
+  lighter and warmer, with legible stone-joint texture, giving real value
+  separation around the whole silhouette edge; the white muzzle/chest patch
+  reads clearly against it.
+
+Per conventions.md, this lane does not grade its own fix — before/after
+evidence above is ready to route back to the independent judge.
+
+---
+
+## Session 2 continued: sampling Band 2 for the same class of defect
+
+Coordinator's hypothesis: bands 2 and 4 carry the most vegetation and the
+most rock, so a creature silhouette is most likely to fail there the way
+Creek Hollow's water creatures failed against the pond. Band 2/4's own
+`spawns.json` carry no `habitat` tag and no water species at all (every
+entry is Ground/Air: trailpup, burrowback, meadowhart, duskhush, mudsnout,
+galecrest, pipwing), so the exact "standing below the water line" defect
+class does not apply there by construction — there is nothing to
+depth-check. All species heights were already confirmed clear of
+`grass_field.json`'s tallest tuft in session 1's table above.
+
+That leaves rock-background silhouette contrast as the open question. Wrote
+`tools/_probe_band2_rock_silhouette.gd` (same clear-vantage instrument,
+generalised past Creek Hollow) and sampled the two Band 2 spawns nearest The
+Old Quarry's worked rock face (`map_landmarks.json` centre ~[400,1800]):
+order 2029 (burrowback, 45m out) and order 2027 (burrowback, ~215m out, the
+next-nearest).
+
+**No defect found at either sampled point** — `band2-quarry-near-2029.png`,
+`band2-quarry-near-2027.png`. Both burrowbacks read with strong contrast:
+dark grey/black bodies with a white face patch, clearly separated against
+open hillside grass and tree trunks. Neither spawn actually stands on the
+quarry's own rock terrain — that dressing is localised to the quarry's exact
+working-face props (`data/config/bands/band2_stone_and_root/props.json`'s
+`quarry_station` cluster), not the surrounding hillside the nearby wild
+spawns occupy. The "band 2 is rock-heavy so creatures fail there" hypothesis
+does not hold at these two points; a two-point sample does not clear the
+whole band (55 spawn clusters), but it does not support spending more
+render budget chasing this specific theory without a more specific lead.
+Band 4 was not sampled this session — no comparable "nearest landmark"
+anchor was identified for it in the time available.
