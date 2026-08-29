@@ -1016,9 +1016,18 @@ func _check_backpack_move_and_quick_bar() -> void:
 		print("a stack moves to the CHOSEN slot and says so: \"%s\"" % status.text)
 
 	# --- place onto a quick slot -------------------------------------------
-	var moved: int = int(inventory.call("find_slot", "orb_basic"))
+	# T1-UI/HOTBAR-1: an orb is `kind: gear` -- thrown through combat's own
+	# throw_aim.gd, never pressed off the bar -- and the owner board
+	# ("UI / SYSTEM FIXES CHECKLIST": "Hotbar: consumables + tools only") no
+	# longer allows it onto a quick slot at all. This half of the check moves
+	# to a `kind: consumable` item so it keeps proving the BIND mechanic
+	# (pick up, place on a chip, satchel unchanged) without asserting the
+	# behaviour the hotbar rule now exists to prevent.
+	inventory.call("add", "potion_small", 1)
+	var bound_item := "potion_small"
+	var moved: int = int(inventory.call("find_slot", bound_item))
 	if moved < 0:
-		_fail("lost the orbs somewhere between the move and the bind check")
+		_fail("lost the potion somewhere between granting it and the bind check")
 		return
 	if bar_buttons.size() != 5:
 		# Already failed above. Everything past here presses a chip that does
@@ -1039,7 +1048,7 @@ func _check_backpack_move_and_quick_bar() -> void:
 	await _press("ui_accept")
 
 	var bar: Array = game.get("hotbar") as Array
-	if str(bar[3]) != "orb_basic":
+	if str(bar[3]) != bound_item:
 		_fail("placing a held stack onto quick slot 4 did not bind it (slot 4 holds '%s')" % str(bar[3]))
 	elif int(body.get("_held")) != -1:
 		_fail("binding to a quick slot did not release the held stack")
@@ -1049,8 +1058,8 @@ func _check_backpack_move_and_quick_bar() -> void:
 		print("a held stack binds to the chosen quick slot: \"%s\"" % status.text)
 
 	# The satchel must be UNCHANGED by a bind -- the bar holds item ids, and a
-	# player who thought his orbs had left the bag would be right to panic.
-	if str((inventory.call("stack_at", moved) as Dictionary).get("id", "")) != "orb_basic":
+	# player who thought his potion had left the bag would be right to panic.
+	if str((inventory.call("stack_at", moved) as Dictionary).get("id", "")) != bound_item:
 		_fail("binding an item to the quick bar removed it from the satchel")
 
 	# --- a raw material is refused, out loud, without dropping the stack ----

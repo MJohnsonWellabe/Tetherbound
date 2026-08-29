@@ -319,6 +319,16 @@ func _the_hotbar_heals_a_creature(world: Node) -> Array[String]:
 		found.append("wood was allowed onto an action slot; raw materials must be refused")
 		return found
 
+	# Owner board (docs/reference/owner-board-2026-08-15-systems-and-castle.png,
+	# "UI / SYSTEM FIXES CHECKLIST"): "Hotbar: consumables + tools only". An
+	# orb (`kind: gear`) is thrown through combat's own throw_aim.gd, never
+	# the bar, and `_use_hotbar_slot()` has no branch for `gear` at all -- a
+	# hotbar slot would only ever answer "is not something you can use here."
+	if bool(game.call("assign_hotbar", 1, "orb_basic")):
+		found.append("orb_basic (kind: gear) was allowed onto an action slot; " +
+			"only tool/consumable/food may occupy the hotbar")
+		return found
+
 	var hud: CanvasLayer = world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
 	if hud == null:
 		return ["no PlaygroundHUD in the scene"] as Array[String]

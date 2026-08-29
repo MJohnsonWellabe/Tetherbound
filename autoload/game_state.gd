@@ -208,13 +208,24 @@ var farm_plots: Array = []
 ## that is what makes "I keep potions on 2" a stable habit rather than a
 ## coincidence of bag order.
 ##
-## `HOTBAR_KINDS_REFUSED` is the material rule, applied at assignment time.
+## `HOTBAR_KINDS_ALLOWED` is the material rule, applied at assignment time.
 var hotbar: Array[String] = ["", "", "", "", ""]
 
-## Item kinds that may never occupy an action slot. `resource` is wood/stone/
-## fiber and `currency` is coins: things you spend from the satchel or that a
-## shop reads, never things you press a button to use.
-const HOTBAR_KINDS_REFUSED := ["resource", "currency"]
+## Item kinds that may occupy an action slot — an allow-list, not a refusal
+## list. Owner board (docs/reference/owner-board-2026-08-15-systems-and-castle
+## .png, "UI / SYSTEM FIXES CHECKLIST"): "Hotbar: consumables + tools only (no
+## wood/stone/etc.)". `tool` is a held/equipped item (`_use_hotbar_slot()`'s
+## own equip branch); `consumable` and `food` are the two kinds
+## `_use_hotbar_slot()` actually knows how to spend on press (heal/revive/
+## creature_buff, and satiety). Everything else this project's items carry a
+## kind for — `resource` (wood/stone/fiber), `currency` (coin), `gear` (orbs,
+## thrown through combat's own `throw_aim.gd`, never the bar; a saddle),
+## `key`, `material` (saddle_frame), `tm` and `elixir` (both taught/drunk
+## through the backpack's own target-picker onto a chosen creature, never a
+## single field press) and `armor` — has no use-path in `_use_hotbar_slot()`
+## at all, so assigning one used to load the bar with a dead button that only
+## ever answers "is not something you can use here."
+const HOTBAR_KINDS_ALLOWED := ["tool", "consumable", "food"]
 const HOTBAR_SLOTS := 5
 
 ## The tool the trainer is holding, as an item id, or "" for empty-handed.
@@ -785,7 +796,7 @@ func hotbar_can_hold(item_id: String) -> bool:
 	var definition := items.call("definition", item_id) as Dictionary
 	if definition.is_empty():
 		return false
-	return not HOTBAR_KINDS_REFUSED.has(str(items.call("kind", item_id)))
+	return HOTBAR_KINDS_ALLOWED.has(str(items.call("kind", item_id)))
 
 
 ## Put `item_id` on `slot`. Passing "" clears the slot. Returns false (and
