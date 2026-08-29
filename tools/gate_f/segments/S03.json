@@ -1225,93 +1225,162 @@
     {
       "id": "S03-52",
       "title": "walk to Mira",
-      "action": "move_to",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          18.99,
-          -1.01
-        ],
+        "entity": "Mira",
+        "within": 2.5,
         "budget_frames": 3000,
-        "close_enough": 3.0,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE: move_to_entity/within replaces a raw authored coordinate so arrival is measured against Mira's own live position, not a point that may or may not be in her interaction range (CD-5)."
     },
     {
       "id": "S03-53",
-      "title": "challenge Mira",
-      "action": "press",
+      "title": "greet Mira",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "entity": "Mira",
+        "expect_prompt": "Mira"
       },
-      "expected": "the second half of CB-02"
+      "expected": "T2-BUILDPLACE: the live prompt must actually name Mira before pressing -- interact_with refuses (not presses) on a mismatched or absent prompt, which is the difference between a real greeting and 20 silent no-op presses at the wrong thing."
     },
     {
       "id": "S03-54",
-      "title": "hear the challenge out",
-      "action": "press",
+      "title": "hear her out",
+      "action": "advance_dialogue_until_closed",
+      "args": {},
+      "expected": "data/config/village_npcs.json:26-28: village_mira_shop_intro is unconditional on `unless_flag: mira_shop_open`, so this is her FIRST-VISIT conversation regardless of party/combat state. Its effects (data/dialogue/village.json:29-39) hand over an axe, a pickaxe, 30 coin and flag:mira_shop_open, then queue shop:goods:mira the moment the dialogue box closes."
+    },
+    {
+      "id": "S03-54a",
+      "title": "Mira's tools landed",
+      "action": "assert",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "check": "flag_set",
+        "flag": "mira_shop_open"
       },
-      "expected": "trainer flow stages send-out"
+      "expected": "T2-BUILDPLACE finding (FINDING-T2-BUILDPLACE-2026-08-30.md): this is the ONLY source of axe/pickaxe anywhere in the game -- Tam's own gift (village.json:181) is knife+torch only. If this flag is unset here, wood and stone can never be gathered downstream no matter what else this segment does."
     },
     {
       "id": "S03-55",
-      "title": "let the fight stage",
+      "title": "let her shop open",
       "action": "wait",
       "args": {
-        "seconds": 3
+        "seconds": 2
       },
-      "expected": "the combat camera acquires both combatants"
+      "expected": "village_mira_shop_intro's own last line carries shop:goods:mira (sequence_director.gd::_queue_shop), queued the instant the dialogue box closes."
     },
     {
       "id": "S03-56",
-      "title": "fight Mira",
+      "title": "close Mira's shop without buying anything",
       "action": "press",
       "args": {
-        "control": "combat_quick",
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "S03 does not exercise trading (that is X-lab/journey-later territory); back out to world control with nothing bought or sold."
+    },
+    {
+      "id": "S03-56a",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "closing the shop hands input back to the world before the segment moves on to Oskar and the gathering loop."
+    },
+    {
+      "id": "S03-56b",
+      "title": "T2-BUILDPLACE: why the tools need binding by hand",
+      "action": "note",
+      "args": {
+        "text": "FINDING-T2-BUILDPLACE-2026-08-30.md: wood/stone/fiber are all tool-gated (harvest_logic.gd, gathered_with) and carrying a tool in the satchel is not enough -- it must be visibly EQUIPPED on the hotbar (tests/test_harvest.gd::test_gather_with_no_equipped_tool_is_refused, and this segment's own kept S03-exit.json is the live proof: zero wood/stone/fiber ever gathered). Grandpa's opening gift already fills the hotbar (autofill_hotbar fires once, on the very first all-empty poll, per probe_tool_equip_sequence.gd's own read of this run's real S02-exit.json), so Tam's knife and Mira's axe/pickaxe never land on the bar on their own. The sequence below is the same production gesture X02.json's own proven build lab already uses (backpack_assign, L3): open the Satchel, focus an item, press backpack_assign, which cycles it unbound -> slot 1 -> slot 2 -> ... -> off. Assigning knife (4 presses -> slot 4) and pickaxe (3 presses -> slot 3) before axe (2 presses -> slot 2) is the order live-verified not to clobber an earlier assignment, because a never-before-bound item's FIRST press always lands at slot 1 regardless of what already occupies it."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-56c",
+      "title": "open the Satchel",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "the `inventory` shortcut (data/config/menu.json) opens directly onto the Satchel tab regardless of which tab was last open -- sidesteps the reopens-on-last-tab defect S03-121 already recorded for the Build tab."
+    },
+    {
+      "id": "S03-56d",
+      "title": "focus the knife",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 4
+      },
+      "expected": "the satchel fills in acquisition order: orb_basic, potion_small, berries, revive (S02's opening), then knife (Tam) -- 4 cells right of the grid's opening focus, in the 6-column grid (data/config/menu.json)."
+    },
+    {
+      "id": "S03-56e",
+      "title": "assign the knife to hotbar slot 4",
+      "action": "press",
+      "args": {
+        "control": "backpack_assign",
         "hold": "tap",
-        "times": 28,
-        "settle_frames": 30
+        "times": 4,
+        "settle_frames": 10
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "backpack_assign cycles unbound -> 1 -> 2 -> 3 -> 4; four presses land the knife on hotbar slot 4."
     },
     {
-      "id": "S03-57",
-      "title": "a charged attack",
-      "action": "press",
+      "id": "S03-56f",
+      "title": "focus the pickaxe",
+      "action": "focus_move",
       "args": {
-        "control": "combat_charged",
-        "hold": "long"
+        "direction": "left",
+        "times": 3
       },
-      "expected": "Section E.4 probes the charged verb's hold edge"
+      "expected": "torch (Tam), axe, then pickaxe (Mira) fill the next three cells after knife; three left from the knife's cell reaches the pickaxe's, wrapping up a grid row."
     },
     {
-      "id": "S03-58",
-      "title": "finish it",
+      "id": "S03-56g",
+      "title": "assign the pickaxe to hotbar slot 3",
       "action": "press",
       "args": {
-        "control": "combat_quick",
+        "control": "backpack_assign",
         "hold": "tap",
-        "times": 16,
-        "settle_frames": 30
+        "times": 3,
+        "settle_frames": 10
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "backpack_assign cycles unbound -> 1 -> 2 -> 3; three presses land the pickaxe on hotbar slot 3."
     },
     {
-      "id": "S03-59",
-      "title": "let the fight end",
-      "action": "wait",
+      "id": "S03-56h",
+      "title": "focus the axe",
+      "action": "focus_move",
       "args": {
-        "seconds": 6
+        "direction": "left",
+        "times": 1
       },
-      "expected": "rewards and control return"
+      "expected": "axe sits one cell left of the pickaxe (Mira hands them over axe-then-pickaxe, village.json:33-34)."
+    },
+    {
+      "id": "S03-56i",
+      "title": "assign the axe to hotbar slot 2",
+      "action": "press",
+      "args": {
+        "control": "backpack_assign",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 10
+      },
+      "expected": "backpack_assign cycles unbound -> 1 -> 2; two presses land the axe on hotbar slot 2."
+    },
+    {
+      "id": "S03-56j",
+      "title": "close the Satchel",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes and the world is live again, with axe on hotbar_2, pickaxe on hotbar_3, knife on hotbar_4 -- live-verified end to end (equip + real gather of wood/stone/fiber each) by tools/gate_f/probe_tool_equip_sequence.gd."
     },
     {
       "id": "S03-60",
@@ -1399,6 +1468,16 @@
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-67-equip",
+      "title": "equip the knife",
+      "action": "press",
+      "args": {
+        "control": "hotbar_4",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
       "id": "S03-67",
       "title": "gather fiber at (12, -22)",
       "action": "move_to",
@@ -1457,6 +1536,16 @@
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-71-equip",
+      "title": "equip the pickaxe",
+      "action": "press",
+      "args": {
+        "control": "hotbar_3",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
       "id": "S03-71",
       "title": "gather stone at (22, -34)",
       "action": "move_to",
@@ -1484,6 +1573,16 @@
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-73-equip",
+      "title": "equip the knife",
+      "action": "press",
+      "args": {
+        "control": "hotbar_4",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
     {
       "id": "S03-73",
@@ -1515,6 +1614,16 @@
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-75-equip",
+      "title": "equip the axe",
+      "action": "press",
+      "args": {
+        "control": "hotbar_2",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
       "id": "S03-75",
       "title": "gather wood at (36, -16)",
       "action": "move_to",
@@ -1542,6 +1651,16 @@
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-77-equip",
+      "title": "equip the knife",
+      "action": "press",
+      "args": {
+        "control": "hotbar_4",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
     {
       "id": "S03-77",
@@ -1573,6 +1692,16 @@
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-79-equip",
+      "title": "equip the axe",
+      "action": "press",
+      "args": {
+        "control": "hotbar_2",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
       "id": "S03-79",
       "title": "gather wood at (44, -24)",
       "action": "move_to",
@@ -1600,6 +1729,16 @@
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-81-equip",
+      "title": "equip the pickaxe",
+      "action": "press",
+      "args": {
+        "control": "hotbar_3",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
     {
       "id": "S03-81",
@@ -1660,6 +1799,16 @@
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-85-equip",
+      "title": "equip the knife",
+      "action": "press",
+      "args": {
+        "control": "hotbar_4",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
       "id": "S03-85",
       "title": "gather fiber at (46, -40)",
       "action": "move_to",
@@ -1687,6 +1836,16 @@
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-87-equip",
+      "title": "equip the axe",
+      "action": "press",
+      "args": {
+        "control": "hotbar_2",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
     {
       "id": "S03-87",
@@ -1718,6 +1877,16 @@
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-89-equip",
+      "title": "equip the knife",
+      "action": "press",
+      "args": {
+        "control": "hotbar_4",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
       "id": "S03-89",
       "title": "gather fiber at (34, -46)",
       "action": "move_to",
@@ -1747,6 +1916,16 @@
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-91-equip",
+      "title": "equip the axe",
+      "action": "press",
+      "args": {
+        "control": "hotbar_2",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
       "id": "S03-91",
       "title": "gather wood at (6, -34)",
       "action": "move_to",
@@ -1774,6 +1953,16 @@
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-93-equip",
+      "title": "equip the knife",
+      "action": "press",
+      "args": {
+        "control": "hotbar_4",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
     {
       "id": "S03-93",
@@ -1834,6 +2023,16 @@
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-97-equip",
+      "title": "equip the axe",
+      "action": "press",
+      "args": {
+        "control": "hotbar_2",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
       "id": "S03-97",
       "title": "gather wood at (-14, -8)",
       "action": "move_to",
@@ -1861,6 +2060,16 @@
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-99-equip",
+      "title": "equip the knife",
+      "action": "press",
+      "args": {
+        "control": "hotbar_4",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
     {
       "id": "S03-99",
@@ -1892,6 +2101,16 @@
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-101-equip",
+      "title": "equip the pickaxe",
+      "action": "press",
+      "args": {
+        "control": "hotbar_3",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
       "id": "S03-101",
       "title": "gather stone at (-18, 6)",
       "action": "move_to",
@@ -1919,6 +2138,16 @@
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-103-equip",
+      "title": "equip the axe",
+      "action": "press",
+      "args": {
+        "control": "hotbar_2",
+        "hold": "tap"
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
     {
       "id": "S03-103",
