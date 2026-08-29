@@ -94,9 +94,17 @@ reproduce this — see the commands below to rebuild them if needed.
 
 `test_gate_f_rig.gd` and `test_gate_f_instrumentation.gd` (66 tests, 35,568
 assertions) — 0 failed, including `test_a_save_and_a_load_can_carry_a_measured_duration`.
-Full repo suite (`tests/run_tests.gd`, no filter) run in the background;
-see the tail of this handover / commit log for its result if this line
-wasn't updated before it finished — ask if it isn't recorded below.
+
+A full unfiltered `tests/run_tests.gd` run was also attempted as extra due
+diligence, but timed out at 15 minutes with no useful partial output (this
+suite is known-slow: CLAUDE.md/run_tests.gd's own comments note
+`test_harvest.gd` alone carries 684,231 assertions and CI budgets the whole
+suite well past 10 minutes). Given this lane's ~2-hour budget, it was not
+re-run to completion. This change touches only three save-handoff step
+functions with no interaction with the rest of the harness's control flow or
+game code, so the scoped gate_f test files above are the tests actually
+exercising this code path; the untargeted full-suite run would only have
+caught something unrelated to this diff.
 
 ## RIG-4 (secondary, optional)
 
