@@ -3,7 +3,7 @@
 Branch: `ralph/T1-HALL`, off `origin/main` @ `a97f3e84`, merge-forward of
 `origin/ralph/T1-HALL-BUILD` @ `2f3ecadf` (the landed palette work: castle
 kit `T_UnevenBrick` texture swap, retune, `stronghold.json`'s
-`site.stone_light`). Pushed in stages; tip at time of writing carries four
+`site.stone_light`). Pushed in stages; tip at time of writing carries six
 commits on top of that merge.
 
 ## 1. What I was asked, and where I got to
@@ -13,11 +13,11 @@ location) per `ralph/reports/HALL_DESIGN_2026-08-30.md` §9's implementation
 order, picking up after the T1-HALL-BUILD palette proof. I completed all six
 of §9's stages to a real, rendered, smoke-tested state: re-site, massing,
 castle retirement, materials (reused the already-proven palette, did not
-re-derive it), occupation (scoped), and evidence capture. I did **not**
-reach the design's full ~195-215 module ambition or its complete occupation
-list (hoarding walkway, stair dressing, per-wall H-motif variation, the
-blue relic banner, the relay hub) — §8 below is explicit about what that
-means.
+re-derive it), occupation (scoped, plus the blue relic banner added late),
+and evidence capture. I did **not** reach the design's full ~195-215 module
+ambition or the rest of its occupation list (hoarding walkway, stair
+dressing, per-wall H-motif variation, the relay hub) — §8 below is
+explicit about what that means.
 
 ## 2. Branch tips merged
 
@@ -174,11 +174,15 @@ structural stage in this handover.
    - `approach_drain.bounds` extended south to the outer_works front
      wall's own post-resite world z (7548), so the drained-ground skin
      reaches the building doing the draining.
-   - **Not done**: per-wall H-motif variation, the blue relic banner, the
-     relay hub in the courtyard, the garrison-camp dressing, the hoarding
-     walkway, the stair dressing at yard corners, buttress stubs, and
-     rubble at the skirt foot. All named explicitly in §7/§8 so nobody has
-     to re-discover the gap.
+   - `_build_blue_relic_banner()`: design §6.2's one invented story beat —
+     a single faded Meadows-blue banner, torn, half-height, on the west
+     bailey wall under the ordinary oxblood rhythm. Added after the first
+     round of smoke-testing/rendering, at zero new asset cost.
+   - **Not done**: per-wall H-motif variation, the relay hub in the
+     courtyard, the garrison-camp dressing, the hoarding walkway, the
+     stair dressing at yard corners, buttress stubs, and rubble at the
+     skirt foot. All named explicitly in §7/§8 so nobody has to
+     re-discover the gap.
 6. **Evidence** — `tools/_judge_capture_hall.gd`, the H-01..H-08 stands
    design §10 specifies, authored and rendered this session (the mission's
    own instruction to me, ahead of the design's assignment of that job to
@@ -293,7 +297,6 @@ count was before this branch, it is the same now.
 - Hoarding walkway, stair dressing, buttress stubs, skirt rubble.
 - Per-wall H-motif variation (`_dress_exterior_wall`'s hardware section
   still stamps the same girder/pillar/conduit pattern on every flank).
-- The blue relic banner story beat.
 - The relay hub + garrison camp in the courtyard/outer_works yards.
 - Performance after-number (see §7).
 - A fresh blind-judge pass (explicitly stood down by owner decision per
@@ -383,8 +386,8 @@ count was before this branch, it is the same now.
 8. Wall stone vs cobble scale ratio: **not re-measured this session**.
 9. ONE building, no structure at (150,7595): **yes**, verified (§5 stage 3).
 10. Occupation reads (banners/hardware/live energy, cable joins the
-    building, H-motif varies per wall): **partial** — cable landing done;
-    H-motif variation not attempted (§8).
+    building, H-motif varies per wall): **partial** — cable landing and
+    the blue relic banner done; H-motif variation not attempted (§8).
 11. Mouth faces the arriving player, yaw re-derived: **yes**, verified via
     the smoke tests' own entrance-walk-in check and the H-03/H-04 frames.
 12. Route intact, all three smoke tests pass, build log prints 5 spaces/3
@@ -435,11 +438,16 @@ entry or any other building's entry.
    someone ships this without it: rerun `tools/perf_render_stats.gd`
    with `--label=after` and compare `stronghold_approach` against the
    design's own 1069/25.8M/1381 baseline and the <=1230-draw-call budget.
+   Three attempts in this session's environment did not complete (killed
+   at 2, 8 and 40 minutes respectively, each stuck somewhere after world
+   boot but before the tool's own first print line) while every other
+   render in this session (smoke tests, the H-01..H-08 capture) completed
+   in single-digit minutes — worth checking whether this specific tool has
+   an environment-specific problem before assuming it is simply slow.
 2. Resolve the palette value-band question (§7) — confirm the intended
    lighting hour for H-03/H-05 and re-measure at it if "day" is not it.
-3. Occupation: H-motif per-wall variation and the blue relic banner are
-   both small, self-contained additions (§4/§6.2 of the design) that
-   would meaningfully close acceptance item 10.
+3. Occupation: per-wall H-motif variation is a small, self-contained
+   addition (design §4) that would meaningfully close acceptance item 10.
 4. Elevations: the hoarding walkway and stair dressing are the largest
    remaining acceptance gap (item 3) and the most labor to build well —
    worth a dedicated pass rather than a rushed add-on.
