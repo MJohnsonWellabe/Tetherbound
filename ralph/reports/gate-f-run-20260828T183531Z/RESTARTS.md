@@ -25,6 +25,52 @@ segment directory is renamed `<segment>-superseded-<n>`, never deleted."
 
 | S03 | (RIG-17-fixed rig) | pending re-run | RIG-17's fix worked -- real combat happened twice (attempts 1 and 5 both PASSed their engage and their walk) -- but both real throws missed (`Moss fainted` at t=282.42, and attempts 2-4 all correctly refused on a live "Put Moss away"/fainted-ally prompt rather than a fresh engage offer, confirming a solo, unswappable party spends several attempts unable to re-engage after every real fight while its one creature recovers). This is not a new rig defect: catching two-for-two misses at whatever this species/orb combination's real chance is is ordinary variance, not a bug, and section 0.6 forbids reading anything into a small sample as if it were a verdict about the odds themselves. What IS a legitimate methodology gap, recorded rather than silently retried again: five attempts only ever produced two REAL throws, because a solo party recovers slowly between fights and most attempts in the run above were spent refusing a stale prompt rather than throwing. `S03.json`'s ten attempts (`a` through `j`) replace the five; nothing else changes. `S03-superseded-6` is this attempt: its two real engage/combat/throw cycles are genuine evidence (a missed catch is not itself a finding), but nothing from `S03-39` onward may be read since the team-of-three milestone was not reached. |
 
+## RIG-18 (open, not fixed) -- why S03's team stayed at one, and why this run stops trying to fix it
+
+The ten-attempt re-run (kept as `S03/`, not superseded) got three real
+engage/combat/throw cycles (attempts 1, 2 and 5) and every other attempt
+correctly refused a stale fainted-ally prompt rather than misfiring (RIG-17
+working as intended). All three real throws still missed the team-of-three
+milestone. Telemetry narrows *why* further than "bad luck": attempt 1's own
+`combat` snapshots show the wild bramblebun at 6.98/124.2 HP (~5.6%, close to
+`catching.json`'s `hp_factor_empty` ideal) at the moment of the throw --
+a fair, well-weakened attempt that still missed -- but attempt 2 re-engaged
+the SAME already-weakened survivor and its own snapshots show `opponent_hp:
+[0.0]` by the time its throw fired, i.e. the fixed `combat_quick x20` "weaken"
+pass does not know the target's current HP and can finish off a creature
+its own previous attempt already brought low, wasting that throw on a
+target that can no longer be caught at all. Separately, `throw_aim.gd`'s own
+comment describes a real aim-and-reticle system ("orb.gd's own miss case for
+throws that never reach the body at all") that this segment's `press
+interact` / `press interact` pair does not drive at all -- the operator
+harness has no step primitive that aims a throw the way `tests/
+smoke_catching.gd`'s test-only `_aim_camera_along()` does, so whether any of
+these three throws had a body-reaching trajectory at all is unmeasured.
+
+**This is recorded as RIG-18 and left OPEN.** Diagnosing and fixing it
+properly needs either a new step primitive that aims a throw at a resolved
+entity (mirroring `move_to_entity`'s live tracking, for the reticle rather
+than the feet) or a per-attempt HP check the step-script does not have a
+way to express, and further guessing at combat_quick counts across another
+several 30-45 minute re-runs was not converging (RIG-15 at 14, RIG-15's
+own retry unchanged, RIG-16 unchanged, RIG-17 fixed the engage but not the
+throw, this pass at 20 -- three different tap counts, zero catches). Per
+section 0.6, a small sample of misses is not itself a verdict about the
+game's odds, and this run stops re-rolling it.
+
+**Consequence, stated plainly:** `S03/` is kept as this run's final S03 --
+real combat, real dialogue, three real weaken/aim/throw cycles, an honest
+miss each time -- and its exit save carries a team of ONE into S04 onward.
+Every tournament/team-size-gated assertion from S04 forward that FAILs on
+team size is a **direct, expected consequence of RIG-18, not a new finding
+about band 2-5 content**, in exactly the same way S05's stranded-at-the-
+bridge FAILs were a consequence of RIG-13/14 rather than independent findings
+about bands 2-4. GAME findings from S04 onward are readable ONLY where they
+do not depend on a team size the run never reached -- combat mechanics
+against whatever DOES engage, UI/menu/map/build/gather behaviour, save
+handoff, and travel/pacing measurements stay legitimate; anything gated on
+`tournament_entered`/`tournament_won`/party size 3+ is not.
+
 ## What is NOT superseded
 
 S01 and S02 ran to completion against `0bd8781` and are **kept**. CD-7c changes
