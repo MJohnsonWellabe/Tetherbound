@@ -79,6 +79,52 @@ a healthy S03 onward is still needed.
 
 ---
 
+## GAME-0 — a fainted-only party's "is out of the fight" interaction offer permanently outranks every other interaction in the world
+
+**Severity: SHIP, possibly higher.** Credit: found by the T2-BUILDPLACE lane
+(`origin/ralph/T2-BUILDPLACE@cb3e8b56`) while validating the S03
+build-placement fix above, not by this operator. Recorded here at the top of
+this document because it is, on its face, more severe than the stranding
+itself: it is a real, live-engine-confirmed defect in
+`scripts/combat/encounter_director.gd::interaction_offer()`, not a rig
+step-script gap.
+
+**The mechanism:** whenever the player's tracked ally has fainted,
+`interaction_offer()` unconditionally returns a priority-100, distance-0
+statement (`"<ally> is out of the fight."`) with **no proximity gate** —
+checked before the function's own `_engageable()` distance logic runs at
+all. `prompt_arbiter.gd` ranks by priority before distance, always, so this
+one line **outranks every other interaction in the world**: every NPC
+greeting, every harvest node, every creature bed's own rest prompt — for the
+rest of the live session. It does not clear on its own; only a fresh
+save/load resets the tracked ally reference (per RIG-13/RIG-21's own
+finding elsewhere in this run).
+
+**Player-facing consequence, stated plainly: a real player whose only
+creature faints during the opening catch attempts — an ordinary, expected
+outcome of catching a wild creature, not a rare edge case — becomes unable
+to interact with anything in the world afterward, with no in-game hint that
+a reload is the fix.** They cannot reach the creature beds that would heal
+their party (GAME-5, above), cannot talk to any NPC, cannot gather, cannot
+open a door. The only way out is knowledge external to the game: quit and
+reload. This is a stronger claim than GAME-5's "confusing, not a soft-lock"
+— GAME-5 was about one specific trainer's dialogue; this is about *every*
+interaction surface in the game simultaneously, discovered because it is
+the exact state this run's own fainted-Moss saves have been in since S03.
+
+**Not fixed, and correctly not fixed by either lane that found pieces of
+it**: `scripts/combat/encounter_director.gd` belongs to neither
+T2-STRANDING nor T2-BUILDPLACE's file ownership (a concurrent T3-TYPECHART
+lane is actively editing it), so both lanes named it loudly rather than
+touching it. **This operator did not verify it independently** — it is
+relayed here from T2-BUILDPLACE's own commit message, which states it was
+confirmed via a real segment replay (Mira's `interact_with` FAILing on
+exactly this prompt) rather than inferred. Whoever owns
+`scripts/combat/encounter_director.gd` next should treat this as the
+highest-priority item in this document.
+
+---
+
 ## What this run DOES establish about the game, positively
 
 ### GAME-OK-1 — the front door is sound
