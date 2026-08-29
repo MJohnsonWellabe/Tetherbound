@@ -1,0 +1,40 @@
+
+=== C-03-corner-close_lit-wall  (C-03-corner-close.png, region (545, 345, 760, 445)) ===
+  cell (545, 345, 609, 409): RGB=( 164.8, 150.2, 119.7) luma= 151.1 sd=  34.5
+  cell (609, 345, 673, 409): RGB=( 169.8, 155.6, 124.9) luma= 156.4 sd=  32.0
+  cell (673, 345, 737, 409): RGB=( 171.3, 157.2, 126.8) luma= 158.0 sd=  29.6
+  -- 3 cells --
+  aggregate mean RGB=(168.6,154.3,123.8)  mean luma=155.2 (range 151.1-158.0)  mean sd=32.0 (range 29.6-34.5)
+
+=== C-04-wall-close-ground_wall  (C-04-wall-close-ground.png, region (705, 195, 900, 350)) ===
+  cell (705, 195, 769, 259): RGB=(  72.0,  70.7,  58.3) luma=  70.1 sd=  13.4
+  cell (769, 195, 833, 259): RGB=(  70.7,  69.2,  56.3) luma=  68.6 sd=  12.0
+  cell (833, 195, 897, 259): RGB=(  74.4,  78.3,  68.6) luma=  76.8 sd=  23.1
+  cell (705, 259, 769, 323): RGB=(  71.5,  70.1,  57.3) luma=  69.4 sd=  13.3
+  cell (769, 259, 833, 323): RGB=(  72.7,  71.5,  58.9) luma=  70.8 sd=  12.8
+  cell (833, 259, 897, 323): RGB=(  72.9,  71.7,  58.9) luma=  71.0 sd=  12.4
+  -- 6 cells --
+  aggregate mean RGB=(72.4,71.9,59.7)  mean luma=71.1 (range 68.6-76.8)  mean sd=14.5 (range 12.0-23.1)
+
+=== C-01-approach-gate-FIXED_wall-L  (C-01-approach-gate-FIXED.png, region (350, 330, 470, 395)) ===
+  cell (350, 330, 414, 394): RGB=( 185.9, 173.0, 146.6) luma= 173.8 sd=  26.8
+  -- 1 cells --
+  aggregate mean RGB=(185.9,173.0,146.6)  mean luma=173.8 (range 173.8-173.8)  mean sd=26.8 (range 26.8-26.8)
+
+=== C-01-approach-gate-FIXED_wall-R  (C-01-approach-gate-FIXED.png, region (760, 330, 880, 395)) ===
+  cell (760, 330, 824, 394): RGB=( 188.2, 173.1, 147.4) luma= 174.4 sd=  26.6
+  -- 1 cells --
+  aggregate mean RGB=(188.2,173.1,147.4)  mean luma=174.4 (range 174.4-174.4)  mean sd=26.6 (range 26.6-26.6)
+
+=== S-ext-02-flank-wide_wall  (S-ext-02-flank-wide.png, region (540, 140, 660, 260)) ===
+  cell (540, 140, 604, 204): RGB=(  55.9,  43.0,  31.1) luma=  44.9 sd=   6.5
+  -- 1 cells --
+  aggregate mean RGB=(55.9,43.0,31.1)  mean luma=44.9 (range 44.9-44.9)  mean sd=6.5 (range 6.5-6.5)
+
+=== S-ext-01-approach-ramp-foot_gate-face  (S-ext-01-approach-ramp-foot.png, region (340, 20, 500, 180)) ===
+  cell (340, 20, 404, 84): RGB=(  39.0,  35.9,  27.8) luma=  36.0 sd=   5.5
+  cell (404, 20, 468, 84): RGB=(  39.7,  36.3,  28.0) luma=  36.4 sd=   5.7
+  cell (340, 84, 404, 148): RGB=(  38.5,  35.8,  27.8) luma=  35.8 sd=   6.1
+  cell (404, 84, 468, 148): RGB=(  38.4,  35.5,  27.5) luma=  35.6 sd=   5.6
+  -- 4 cells --
+  aggregate mean RGB=(38.9,35.9,27.8)  mean luma=36.0 (range 35.6-36.4)  mean sd=5.7 (range 5.5-6.1)
