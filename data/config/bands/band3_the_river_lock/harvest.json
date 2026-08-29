@@ -202,6 +202,36 @@
       "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
       "model_scale": 0.85,
       "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: 'found in world / merchants' -- attack_tonic/swift_tonic/stoneguard_brew (items.json's own TEMPORARY tonic trio) were shop-only at Mira's (trade.json) before this pass, with no world presence at all. Beside the riverwatch_rest staging camp (props.json order 3000, centre (211,3700)) -- the one authored recovery/staging point before the Relay's own gauntlet, matching the coordinator's own guidance that a temporary tonic suits a cache near where a fight is about to go badly."
+    },
+    {
+      "order": 3020,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [-111.1, 3490.1],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why_t3_density": "T3-DENSITY, Gap A. `tools/_probe_gate_f_corridor.gd` (2026-08-30 census) counts every harvest node within 30m of the spine, of any kind; narrowed to `kind: resource` items only (items.json), the band's ON-ROUTE crafting-material density is 6 nodes/2375m -- less than a third of Band 1's -- and the specific gap this closes ran a full 588m (spine points 0-6) with not one reachable crafting material on the required path, the worst resource-specific gap in the band. Placed 15m off the spine's own segment 3-4 (checked against `tools/_probe_gate_f_corridor.gd`'s own point-to-segment geometry, not eyeballed) and ground-checked (`tools/_probe_density_sites.gd`, worst slope 9.2 degrees over a 2m pad), splitting the gap into ~294m/~294m -- both inside the owner's 60-90s/240-360m cadence band already used elsewhere in this file. Fiber, matching the region's own established rotation and the saddle recipe's own real sink (recipes_rootstone.json's `saddle`, 8 fiber -- 'the one baseline material a player has no other Band-3 sink for')."
+    },
+    {
+      "order": 3021,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [-82.2, 4086.9],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_t3_density": "T3-DENSITY, Gap A. The band's second-worst on-route resource gap, 453m (order 3013's stone to order 3009's stone, spine points 8-9) -- more than a minute of walking with no reachable crafting material despite passing directly through the Old Mill Crossing approach. 15m off the spine (`tools/_probe_gate_f_corridor.gd` geometry), ground-checked (worst slope 10.8 degrees, `tools/_probe_density_sites.gd`), splitting the gap into ~227m/~227m. Wood rather than another stone, for material variety against its two stone neighbours either side."
+    },
+    {
+      "order": 3022,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [5.0, 4430.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.1,
+      "_why_t3_density": "T3-DENSITY, Gap A. The band's third on-route resource gap, 402m (order 3009's stone to order 3015's fiber, spine points 9-11), on the run north out of the region toward Band 4. On the spine itself (`tools/_probe_gate_f_corridor.gd` geometry places this within a few metres of the centreline, not a detour), ground-checked (worst slope 7.1 degrees at (5,4430) -- an earlier 15m-off candidate at (-11,4445) measured 16.4 degrees and was moved onto this flatter spot instead, `tools/_probe_density_sites.gd`), splitting the gap into ~201m/~201m."
     }
   ]
 }

@@ -272,6 +272,29 @@ const TM_AT := {
 	# clear of it and of every other node measured with
 	# tools/_probe_pickups_sites.gd (worst slope 4.5 degrees over a 2m pad).
 	"tm_aerial_flash": Vector2(85.0, 6260.0),
+	# T3-DENSITY, Gap B. Of the chapter's 14 TMs, 8 were already placed in the
+	# world before this pass -- but region-by-region, every one of them sat in
+	# Band 1 (3), Band 3 (1, the apex leviathan_surge detour) or Band 4 (3);
+	# Band 2 (Stone & Root -- the Old Quarry, the Burrow Warrens, the region
+	# spec section 6 names as the roster-improvement test) had NONE, on-route
+	# or off. tm_stone_spike was one of five TMs sitting shop-only at Mira's
+	# with no world alternative at all (data/config/trade.json; verified
+	# unplaced in this dict and in every band's trainers.json before writing
+	# this); this adds a second, free acquisition path, the same shape every
+	# other TM_AT entry already establishes and
+	# test_every_tm_in_the_game_can_actually_be_obtained already covers. A
+	# Ground TM, matching the quarry's own working stone (GAME_DESIGN.md 8's
+	# Ground-dominant Meadows) and a real ladder step above the two starting
+	# TMs (stone_rush 1.0/burrow_strike 1.1 power, data/moves/moves.json) below
+	# earth_fist (1.4, Captain Field's trainer reward) and earthshatter (2.0,
+	# apex). Sited on the quarry_rim_overlook loop (docs/MEADOWS_MACRO_LAYOUT.md
+	# row 2: departs (310,1660), rejoins (330,1950)), further into the loop
+	# than the rejoin's own potion_large (harvest.json order 2013) so the two
+	# don't crowd one spot -- MEASURED, tools/_probe_density_sites.gd: worst
+	# slope 3.8 degrees over a 2m pad, the flattest of four candidates walked
+	# across the loop, clear of quarry_station/Dorn/the rejoin cluster by
+	# 100m+.
+	"tm_stone_spike": Vector2(230.0, 1870.0),
 }
 
 ## T3-PICKUPS. One-time world finds for items with no renewable/rare tension
