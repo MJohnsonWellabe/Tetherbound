@@ -6,6 +6,12 @@
 > **Burrowback must not read as Terrapup** — and a hard constraint that all
 > such separation is done by material and palette, never by regenerating a
 > mesh.
+>
+> This file's "the twelve Meadows wild species and the one evolution" is
+> amended by D71 (owner instruction, 2026-08-30): Mudsnout now evolves into
+> Tuskroot **or** Ashtusk, depending on which catalyst stone is spent. The
+> biome still has exactly one evolving species; that species no longer has
+> exactly one destination.
 > Vocabulary note: written when the game called its creatures "pals"; R1.1 (2026-08-14) renamed the term to "creature" throughout the codebase without rewriting this historical record.
 
 **Status:** accepted, in full. The scale conflict below was put to the owner
