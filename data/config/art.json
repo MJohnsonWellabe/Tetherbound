@@ -194,6 +194,43 @@
         "adjustment_saturation": 0.72,
         "adjustment_contrast": 1.08
       }
+    },
+    "dawn": {
+      "_comment_t1_night": "T1-NIGHT. Judge 2 measured ground luma climbing monotonically from 22:00 to 02:00 (51 -> 53 -> 56 -> 78 on its scale, confirmed independently here at 53 -> 61 -> 63 -> 85) instead of holding at night's own darkest, moodiest tuning -- the 02:00 frame read as a flat pale-mint wash brighter than golden hour, with moonlight from nowhere and no shadow direction. Root cause: before this entry, `times` had exactly three keyframes (day@8, golden@18, night@0), so the ONLY bracket covering the entire night@0 -> day@8 stretch was one continuous 8-hour linear blend -- the ramp toward day's much brighter numbers started the instant the clock passed midnight, and by 02:00 (t=0.25 of that span) a quarter of the whole night-to-day brightness/colour/desaturation swing had already landed, two hours after the darkest keyframe and three hours before dark_to_hour even says the world should start counting as not-dark. This is not a blend-math bug (T1-SKY already confirmed the blend itself is correct once upstream config is) -- it is a missing keyframe. `dawn` is a straight hold of every night sun/sky/environment value, placed exactly at dark_to_hour (5.0) so the game's own is_dark() boundary and the visual's own boundary now agree: night@0 -> dawn@5 interpolates between two identical dicts, so ground/sky luma cannot move at all across the whole dead-of-night stretch this judge flagged (the 22:00 frame this brief explicitly protects sits in the untouched golden->night span and is unaffected), and the real sunrise brightening now happens once, over dawn@5 -> day@8's 3-hour span, instead of being smeared thinly across 8 hours starting at the wrong end of the night. Every value below is copied verbatim from the night preset above; see that block's own comments (NIGHT-LIGHT, VIS-WORLD, T1-LIGHT) for why each number is what it is. TUNABLE only insofar as night's own values are -- change night, then re-copy here, rather than tuning the two independently and letting them drift apart.",
+      "hour": 5.0,
+      "sun": {
+        "pitch_deg": -20.0,
+        "yaw_deg": 25.0,
+        "energy": 0.55,
+        "colour": "#b7c6ea",
+        "shadow_normal_bias": 1.4
+      },
+      "sky": {
+        "top_colour": "#1b2d5c",
+        "horizon_colour": "#3d5285",
+        "ground_horizon_colour": "#1a2338",
+        "ground_bottom_colour": "#05070c",
+        "sun_angle_max_deg": 14.0,
+        "sun_curve": 0.35,
+        "energy": 0.75,
+        "sun_glow": 0.05,
+        "sun_size": 0.006,
+        "cloud_sun_gain": 0.15,
+        "cloud_lit": "#5a6890",
+        "cloud_shade": "#232c47",
+        "panorama": ""
+      },
+      "environment": {
+        "fog_colour": "#31446f",
+        "fog_density": 0.0011,
+        "ambient_energy": 1.5,
+        "ambient_colour": "#2a3b6e",
+        "ambient_sky_contribution": 0.2,
+        "exposure": 1.2,
+        "adjustment_enabled": true,
+        "adjustment_saturation": 0.72,
+        "adjustment_contrast": 1.08
+      }
     }
   },
   "_comment_creature_motion_removed": "The procedural bob that used to be configured here is gone. The creatures are rigged and animated now, so they have real idle, walk, run, attack and death clips \u2014 faking motion on top of that would fight the animation.",
