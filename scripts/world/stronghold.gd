@@ -60,6 +60,11 @@ const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const APPROACH_DRAIN := preload("res://scripts/world/approach_drain_skin.gd")
+## T1-HALL (2026-08-30). `building_prefabs.gd` is the same composer
+## `landmark.gd`'s (retiring) castle and every settlement building already go
+## through -- see `_build_hall_massing()` below for why this building needs it
+## too, now that the castle IS this building.
+const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 
 ## CONTENT-0828B. The shared constructed-interior method. The owner named the
 ## castle and the Warrens together as "the lame looking locations. basically
@@ -235,7 +240,9 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 	_build_lights()
 	_build_exterior_facing()
 	_build_exterior_dressing()
+	_build_keep_parapets()
 	_build_gate_frame()
+	_build_hall_massing()
 	_build_interior_area()
 	_build_machine()
 	_build_recovery_point()
@@ -1037,6 +1044,32 @@ func _build_exterior_dressing() -> void:
 			_dress_exterior_wall(centre, size, height, side, true)
 
 
+## T1-HALL (2026-08-30). Design acceptance item 6: "continuous parapet line".
+## `_build_exterior_dressing()` above only ever reached the two OPEN yards'
+## flank walls; the three roofed keep chambers behind them (the ones the
+## judge's "no roofline articulation beyond one step" and "one flat
+## roofline" verdicts are actually about) never got a coping/merlon pass at
+## all. `_dress_exterior_wall(..., hardware: false)` already handles any
+## side safely with no opening cut through it (`_build_gate_frame()` proves
+## this calling it on a "-z" face); this just widens the same call to every
+## side of every keep chamber, skipping only what `_build_exterior_dressing`/
+## `_build_gate_frame` already dress (outer_works' -x/+x/-z, courtyard's
+## -x/+x) so nothing doubles a coping box onto itself. `hardware` stays false
+## here -- the occupation layer's girders/banners concentrate on the gate
+## and the cable landing (`_build_hall_massing()`), not on every keep wall.
+const KEEP_CHAMBERS: Array[String] = ["tether_approach", "warden_arena", "legendary_chamber"]
+func _build_keep_parapets() -> void:
+	for id in KEEP_CHAMBERS:
+		if not _chambers.has(id):
+			continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 6.0))
+		for side in ["-x", "+x", "-z", "+z"]:
+			_dress_exterior_wall(centre, size, height, side, false)
+
+
 ## `along_x`-general for the coping/merlon roofline pass, which
 ## `_build_gate_frame()` also calls (with `side: "-z"`) to close the roofline
 ## over the gate face's own flank pieces. `hardware` is only ever true for a
@@ -1168,6 +1201,161 @@ func _build_gate_frame() -> void:
 	for s2 in [-1.0, 1.0]:
 		_hang_banner(Vector3(lateral + s2 * (width * 0.5 + jamb_w + 0.35), _floor_y + op_height * 0.7,
 			outer_face_z), PI * 0.5)
+
+
+## T1-HALL (2026-08-30). HALL_DESIGN_2026-08-30.md §4/§9 step 2: the castle
+## kit's own massing, standing on the works instead of 154m away as a second
+## building (`landmark.gd`'s castle, which retires once this lands --
+## `playground_world.gd` stops calling it). `meadows_hall`
+## (`building_prefabs.json`) is authored in the SAME local frame this file's
+## own chambers are (x=lateral, z=depth), derived from their real `at`/`size`
+## values rather than guessed, so it adds as one child at local
+## `(0, _floor_y, 0)` -- no rotation, no per-piece transform math here, the
+## same `add_child` composition every other placement in this file already
+## relies on. Gatehouse flankers, bailey corner and mid-wall towers (real
+## girth this time -- the direct fix for the judge's "sandcastle decoration"
+## finding on the retiring castle's own skinny mid-wall towers), the great
+## tower over the legendary chamber, and the tether_approach roof. The waist
+## wall closes the one real gap in the flank silhouette this kit pass alone
+## cannot reach (`_build_hall_waist()` below); openings are `_build_hall_slits()`.
+const HALL_PREFAB := "meadows_hall"
+var _hall_prefabs: RefCounted = null
+
+
+func _build_hall_massing() -> void:
+	_hall_prefabs = PREFABS.new()
+	if not _hall_prefabs.call("load_recipes"):
+		push_error("no building recipes; the Hall's massing cannot stand")
+		return
+	var template_holder := Node3D.new()
+	template_holder.name = "HallPrefabTemplates"
+	template_holder.visible = false
+	add_child(template_holder)
+	_hall_prefabs.call("set_template_holder", template_holder)
+
+	var massing: Node3D = _hall_prefabs.call("instantiate", HALL_PREFAB)
+	if massing == null:
+		push_error("meadows_hall prefab missing: %s" % HALL_PREFAB)
+		return
+	massing.name = "HallMassing"
+	massing.position = Vector3(0.0, _floor_y, 0.0)
+	add_child(massing)
+	_weather_hall_massing(massing)
+	_build_hall_waist()
+	_build_hall_slits()
+
+
+## The SAME technique `landmark.gd::_weather_castle` uses on the same kit, for
+## the same reason: the castle kit's stone surfaces ship with zero UVs (a
+## direct probe of `WallBricks.obj` found 0 `vt` lines), so triplanar is the
+## only mapping this geometry supports, and `T_UnevenBrick` at the works' own
+## measured `STONE_TILE` = 0.28 is "one stone, one scale, one value ladder,
+## both kits" (design §5) rather than a second texture re-picked for this
+## pass. `building_prefabs.gd::_apply_retint` already set the flat colours;
+## this mutates the SAME material instances (safe: `_hall_prefabs` above is a
+## composer local to this one massing pass, shared by no other prefab) to
+## carry the real stone photo under them.
+const HALL_WEATHER_MATERIALS := [
+	"LightRock", "LightRock.001", "LightRock.002",
+	"DarkRock", "DarkRock.001",
+]
+func _weather_hall_massing(massing: Node3D) -> void:
+	var done: Dictionary = {}
+	for mi in _weather_hall_mesh_instances(massing):
+		if mi.mesh == null:
+			continue
+		for surface in mi.mesh.get_surface_count():
+			var mat := mi.get_active_material(surface)
+			if mat == null or not mat is StandardMaterial3D:
+				continue
+			var std := mat as StandardMaterial3D
+			if not HALL_WEATHER_MATERIALS.has(std.resource_name):
+				continue
+			if done.has(std.get_instance_id()):
+				continue
+			done[std.get_instance_id()] = true
+			std.albedo_texture = STONE_ALBEDO
+			std.normal_enabled = true
+			std.normal_texture = STONE_NORMAL
+			std.roughness_texture = STONE_ROUGHNESS
+			std.uv1_triplanar = true
+			std.uv1_scale = Vector3.ONE * STONE_TILE
+			std.roughness = maxf(std.roughness, 0.92)
+
+
+func _weather_hall_mesh_instances(node: Node) -> Array[MeshInstance3D]:
+	var found: Array[MeshInstance3D] = []
+	if node is MeshInstance3D:
+		found.append(node as MeshInstance3D)
+	for child in node.get_children():
+		found.append_array(_weather_hall_mesh_instances(child))
+	return found
+
+
+## The waist: the real gap in the flank silhouette between `courtyard`'s back
+## wall and `tether_approach`'s front wall (their own wall footprints do not
+## touch -- design §4's "wrap with ONE course of TallWallBricks so bailey and
+## keep read as one building"). Built directly, the same way every other
+## chamber wall in this file is (`_wall_material`/`_box`), rather than as
+## more kit modules: it is a short, flat infill panel, not an accented piece,
+## and this file already owns the exact masonry material the panel needs to
+## match.
+func _build_hall_waist() -> void:
+	var courtyard: Dictionary = _chambers.get("courtyard", {})
+	var tether: Dictionary = _chambers.get("tether_approach", {})
+	if courtyard.is_empty() or tether.is_empty():
+		return
+	var cy_z1: float = _local_of(courtyard.get("at", [])).z + _size_of(courtyard.get("size", [])).y * 0.5 + _wall_t
+	var ta_z0: float = _local_of(tether.get("at", [])).z - _size_of(tether.get("size", [])).y * 0.5 - _wall_t
+	if ta_z0 <= cy_z1:
+		return
+	var mid := (cy_z1 + ta_z0) * 0.5
+	var length := ta_z0 - cy_z1
+	var height := (float(courtyard.get("height", 9.0)) + float(tether.get("height", 6.5))) * 0.5
+	var cy_half_x: float = _size_of(courtyard.get("size", [])).x * 0.5 + _wall_t
+	var ta_half_x: float = _size_of(tether.get("size", [])).x * 0.5 + _wall_t
+	for s in [-1.0, 1.0]:
+		var wall_x: float = (cy_half_x + ta_half_x) * 0.5 * float(s)
+		_box(Vector3(_wall_t, height + _skirt, length),
+			Vector3(wall_x, _floor_y + height * 0.5 - _skirt * 0.5, mid),
+			_wall_material(true), false)
+
+
+## The "no arrow slits along entire wall runs" fix (design §4). Recessed dark
+## boxes at upper-course height along the two open yards' true flank walls --
+## the same `_box(..., false)` decoration-only technique every trim/hardware
+## piece in this file already uses, so a slit can never become a ledge or a
+## collider a fight snags on. Only the two yards: the three roofed keep
+## chambers behind them are never seen from the meadow at this range, and
+## `interior_structure.gd`'s own `reveals` pass already gives THEM a window
+## grammar from the inside.
+const SLIT_SPACING := 8.0
+const SLIT_SIZE := Vector3(0.4, 1.8, 0.35)
+func _build_hall_slits() -> void:
+	for id in EXTERIOR_CHAMBERS:
+		if not _chambers.has(id):
+			continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 6.0))
+		for side in ["-x", "+x"]:
+			if not _opening_on(id, side).is_empty():
+				continue
+			_slit_row(centre, size, height, side)
+
+
+func _slit_row(centre: Vector3, size: Vector2, height: float, side: String) -> void:
+	var sign_ := -1.0 if side.begins_with("-") else 1.0
+	var face_x := centre.x + sign_ * (size.x * 0.5 + _wall_t * 0.5 + SLIT_SIZE.x * 0.5 - 0.05)
+	var span := size.y
+	var count := maxi(1, int(floor(span / SLIT_SPACING)))
+	var start := centre.z - float(count - 1) * 0.5 * SLIT_SPACING
+	var slit_y := _floor_y + height * 0.72
+	var slit_material := _material(_stone_dark(), 0.0, false)
+	for i in count:
+		var z := start + float(i) * SLIT_SPACING
+		_box(SLIT_SIZE, Vector3(face_x, slit_y, z), slit_material, false)
 
 
 ## CONTENT-0828B. The shared constructed-interior method, in the fortress's own

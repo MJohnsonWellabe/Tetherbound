@@ -876,10 +876,15 @@ func _build_settlement() -> void:
 
 	_build_trailhead_signposts()
 
-	var landmark: Node3D = LANDMARK.new()
-	landmark.name = "StrongholdSilhouette"
-	add_child(landmark)
-	landmark.call("build", self)
+	# T1-HALL (2026-08-30): the detached castle silhouette this call built at
+	# `landmark.gd`'s own `SITE` (150,7595) retired. The owner's directive is
+	# that the castle IS the Meadows Hall IS the stronghold -- one location,
+	# not two buildings 154m apart sharing a vista. `scripts/world/stronghold.gd`
+	# now builds the whole merged complex's massing itself
+	# (`_build_hall_massing()`), on the works' own re-sited footprint. Nothing
+	# stands at (150,7595) any more. `landmark.gd` stays in the tree as
+	# history per repo convention (see its own header); it is simply never
+	# instantiated from here again.
 
 	_build_road_gate()
 	_build_sigil_gate()
