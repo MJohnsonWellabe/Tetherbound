@@ -173,6 +173,19 @@ const SIGIL_GATE_YAW_DEG := -28.6
 const SIGIL_ITEM_IDS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const SIGIL_GATE_FLAG := "hall_approach_open"
 
+## D71/T3-SUNSTONE: the Sunstone, the second Mudsnout evolution catalyst
+## (species.json's `mudsnout.evolves_into_variants`). Sited a few metres off
+## the centre of the wild Ashtusk cluster T3-CREATURES placed and this lane
+## removed ((118,0,7340), band5_stronghold_approach/spawns.json's
+## `_comment_ashtusk_removed`) -- the same scorched Team Tether industrial
+## ground by the Sigil gate, already proven walkable by the creature that used
+## to stand there. A `key_pickup.gd` one-time physical pickup, the same class
+## `castle_gate_key` below already uses, because the brief restricts this
+## family of item to open-world geography ("scorched terrain, warm stone,
+## burned clearings, Team Tether industrial sites"), not a dungeon `prize`
+## block -- there is no dungeon here to hang that mechanism on.
+const SUNSTONE_AT := Vector2(121.0, 7336.0)
+
 ## T3-BAND4: the ruined watchtower at the Band4->Band5 seam (see
 ## watchtower_landmark.gd's own header). Sited at the flattest of six
 ## candidates measured with tools/_probe_t3band4_sites.gd along the
@@ -1037,6 +1050,7 @@ func _build_settlement() -> void:
 	_place_farm_plots()
 	_place_tms()
 	_place_item_caches()
+	_place_sunstone()
 	_build_burrow_warrens()
 	_build_stronghold()
 	_build_stronghold_climax()
@@ -1230,6 +1244,31 @@ func _spawn_item_cache(item_id: String) -> void:
 	pickup.call("setup", item_id, CACHE_LABEL.get(item_id, "Take it"), CACHE_MODEL, CACHE_MODEL_SCALE)
 
 
+## D71/T3-SUNSTONE: the Sunstone, a one-time physical pickup exactly like
+## `castle_gate_key` above (`KEY_PICKUP`, not a bespoke class) -- see
+## `SUNSTONE_AT`'s own comment for why this item is a ground pickup rather
+## than a dungeon `prize` block or a `harvest.json` node.
+func _place_sunstone() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if KEY_PICKUP.was_taken(game, "sunstone"):
+		return
+	_spawn_sunstone()
+
+
+func _spawn_sunstone() -> void:
+	if get_node_or_null(^"Sunstone") != null:
+		return
+	var ground := ground_height_at(SUNSTONE_AT.x, SUNSTONE_AT.y)
+	if is_nan(ground):
+		push_error("no ground under the sunstone at %.0f, %.0f" % [SUNSTONE_AT.x, SUNSTONE_AT.y])
+		return
+	var pickup: Node3D = KEY_PICKUP.new()
+	pickup.name = "Sunstone"
+	pickup.position = Vector3(SUNSTONE_AT.x, ground, SUNSTONE_AT.y)
+	add_child(pickup)
+	pickup.call("setup", "sunstone", "Take the sunstone", "stone")
+
+
 ## RG7. Loading through the in-world Save tab does not rebuild the scene. Make
 ## authored one-shot props match the newly loaded flags in both directions:
 ## consumed props disappear immediately, and an earlier save can restore a prop
@@ -1241,6 +1280,12 @@ func restore_progression_from_game(game: Node) -> void:
 			key.call("restore_progression_from_game", game)
 	elif key == null:
 		_spawn_gate_key()
+	var sunstone := get_node_or_null(^"Sunstone") as Node3D
+	if KEY_PICKUP.was_taken(game, "sunstone"):
+		if sunstone != null and sunstone.has_method("restore_progression_from_game"):
+			sunstone.call("restore_progression_from_game", game)
+	elif sunstone == null:
+		_spawn_sunstone()
 	for tm_id: String in TM_AT:
 		var pickup := get_node_or_null(NodePath("TM_%s" % tm_id)) as Node3D
 		if TM_PICKUP.was_taken(game, tm_id):

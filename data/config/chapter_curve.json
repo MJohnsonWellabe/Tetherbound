@@ -29,9 +29,9 @@
       "team": {"enter": 8, "exit": 10, "expected_members": 4},
       "wild_band": [6, 8],
       "trainer_levels": [9, 14],
-      "tools": ["rootstone recipes", "riding saddle", "greater orb", "heartstone (Mudsnout evolution)"],
+      "tools": ["rootstone recipes", "riding saddle", "greater orb", "heartstone (Mudsnout -> Tuskroot)"],
       "xp_sources": ["warrens residents", "warrens guardian", "quarry field fights"],
-      "temptations": "Mudsnout's evolution gate (level 15 + bond 55 + heartstone) is decided here even though it fires later, and the Meadowhart met just past the South Bridge is the traversal slot arriving while the party is still filling.",
+      "temptations": "Mudsnout's evolution gate (level 15 + bond 55 + a catalyst stone) is decided here even though it fires later -- this band names one of its two destinations (D71 added a second, band 5's Sunstone -> Ashtusk) -- and the Meadowhart met just past the South Bridge is the traversal slot arriving while the party is still filling.",
       "tuning": "The field band tops out at 8, one below the Warrens' weakest resident: burrow_warrens.json's hand-placed levels (9, 10, 10, 11, guardian 14) sit strictly ABOVE the ridge outside on purpose -- a dungeon that fights at field strength is not a dungeon -- and tests/test_chapter_curve.gd fails the build if that ordering is ever lost. `trainer_levels` covers the warrens too, because it is this region's authored opposition; the band has no trainers of its own, which is prompt 59's gap, not this file's."
     },
     {
@@ -65,9 +65,9 @@
       "team": {"enter": 16, "exit": 20, "expected_members": 5},
       "wild_band": [14, 17],
       "trainer_levels": [15, 20],
-      "tools": ["everything the chapter has", "full-bond perks", "Best Creature"],
+      "tools": ["everything the chapter has", "full-bond perks", "Best Creature", "sunstone (Mudsnout -> Ashtusk)"],
       "xp_sources": ["patrol", "courtyard", "elite", "the Warden"],
-      "temptations": "The legendary join offer lands here against five creatures that have each been carried the length of the chapter. If a player can name a filler creature at this point, prompt 67 has failed upstream of the Hall, not in it.",
+      "temptations": "The legendary join offer lands here against five creatures that have each been carried the length of the chapter. If a player can name a filler creature at this point, prompt 67 has failed upstream of the Hall, not in it. D71/T3-SUNSTONE adds a second one, cheaper to act on: the Sunstone sits in the scorched Team Tether ground by the Sigil gate, and a player who already has a bonded Mudsnout has to decide, in the same band that hands them the legendary offer, whether a SECOND Mudsnout raised from nothing is worth one of their five holders for an Ashtusk.",
       "tuning": "Wild top (17) stays under the Warden's ace (20) and under the elite (19): the approach is drained, occupied land, not a place that out-levels the boss it leads to."
     }
   ],
