@@ -8,6 +8,21 @@ the full S03-S10 re-run) is blocked on a fix landing on `ralph/T2-BUILDPLACE`.
 I am continuing to watch for it; this document will be updated or superseded
 once it lands and the re-run happens.
 
+**Update, later the same session: `T2-BUILDPLACE`'s handover landed
+(`ralph/reports/handover-T2-BUILDPLACE-2026-08-30.md`), and the unblock is
+still NOT complete.** It fixed the S03 build-placement RIG defect this
+document's §4 already described (confirmed live: the gathering loop never
+equipped a tool before harvesting tool-gated resources) and independently
+re-derived GAME-0 (below) while proving the fix out — real corroboration
+from a second, unrelated investigation, not restated hearsay. **But ten
+full-segment replays did not converge on a reliable walk to one NPC
+(Mira)** — upstream RNG in the catch loop varies the player's exact
+approach position enough that no tolerance setting tried held up run to
+run. **No healthy `S03-exit.json` exists. I am explicitly NOT starting the
+S03-S10 re-run**, per the coordinator's own stated fallback for exactly
+this case. Section 5 below is updated with the current next-step; §12 in
+the task list reflects this as still blocked, not done.
+
 ---
 
 ## 1. What I was asked to do, and what actually happened
@@ -92,15 +107,27 @@ operator, and both changed how the findings documents read:
   a player. Not a soft-lock (creature beds are always reachable), just
   confusing.
 
-## 5. What I would do next, concretely, in order
+## 5. What I would do next, concretely, in order (updated after T2-BUILDPLACE's handover)
 
-1. **Keep watching `origin/ralph/T2-BUILDPLACE`** for its fix to land and
-   for `ralph/reports/handover-T2-BUILDPLACE-2026-08-30.md`. As of this
-   writing it is at commit `9275e3b4` (a full S03 replay was in flight to
-   confirm a healthy exit save; no confirmation had landed yet).
-2. **When it lands, verify the save myself before trusting it** — per
-   T2-STRANDING's own stated lesson, read `S03-exit.json`'s actual party HP,
-   do not infer health from `"complete": true`.
+1. **`T2-BUILDPLACE`'s handover has landed and did NOT produce a healthy
+   `S03-exit.json`.** Its own final commit is `967c7dc9`. The remaining gap
+   is narrow and specific: reaching Mira reliably during S03's tool-granting
+   visit, blocked by upstream RNG (from the catch loop) varying the
+   player's exact approach position run to run. T2-BUILDPLACE's own
+   handover names the exact next diagnostic: replicate `interactable.gd::
+   _has_line_of_sight`'s clearance-trimmed raycast in a probe, or add
+   temporary logging inside `interaction_offer()` itself — not another
+   round of guessing at `move_to`/`move_to_entity` tolerances. **Watch for
+   either `T2-BUILDPLACE` resuming past `967c7dc9`, or a new follow-up lane
+   taking this specific diagnostic on** (no such lane existed as of this
+   writing — checked `git ls-remote --heads origin` for anything naming
+   BUILDPLACE/Mira/S03 beyond the existing branch).
+2. **When a healthy save is claimed, verify it myself before trusting it**
+   — per T2-STRANDING's own stated lesson (echoed again by T2-BUILDPLACE's
+   own experience: an isolated probe passed clean while the real bug lived
+   in a different system's cached state), read `S03-exit.json`'s actual
+   party HP directly, do not infer health from `"complete": true` or from
+   a probe's own PASS.
 3. **Then own the S03-S10 re-run**, seeding each segment from the previous
    segment's freshly-produced healthy exit, superseding (never deleting) the
    existing S03-S09 directories per `RESTARTS.md`'s own convention, with an
