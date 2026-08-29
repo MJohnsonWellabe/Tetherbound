@@ -204,9 +204,11 @@
         "at": [
           14.0,
           1314.0
-        ]
+        ],
+        "budget_frames": 60000
       },
-      "expected": "the player walks to south_bridge_grunt (14,1314), band 1's gate fight"
+      "expected": "the player walks to south_bridge_grunt (14,1314), band 1's gate fight",
+      "observation": "RIG-19: the harness's default walk budget is 2400 frames. S04-exit's own saved position (18.67,12.71) is ~1301 m from this target in x/z, which the default cannot cover at any real walking speed. 60000 frames is sized generously above that straight-line distance (roughly the ~40-50 frames/m this project's own S06/S09 move_to legs are budgeted at) so the walk can afford real pathing overhead and still arrive; move_to already stops the instant it is close_enough, so an oversized budget costs nothing when arrival comes early."
     },
     {
       "id": "X04-020",
@@ -316,9 +318,11 @@
         "at": [
           195.0,
           905.0
-        ]
+        ],
+        "budget_frames": 60000
       },
-      "expected": "the player walks to the band 1 field"
+      "expected": "the player walks to the band 1 field",
+      "observation": "RIG-19: this leg starts wherever the intentional-loss defeat (X04-023/024) actually respawned the player, not at the S04-exit save position, so the real distance is not knowable from the entry save alone. S04-exit's own position is already ~910 m from this target in x/z; a respawn point is not guaranteed to be closer. Sized to 60000 frames -- well above that floor -- rather than the harness's 2400-frame default, on the same over-budget-is-free reasoning as X04-019."
     },
     {
       "id": "X04-031",
@@ -613,9 +617,11 @@
         "at": [
           195.0,
           905.0
-        ]
+        ],
+        "budget_frames": 20000
       },
-      "expected": "the player walks the band 1 field looking for a smallest wild"
+      "expected": "the player walks the band 1 field looking for a smallest wild",
+      "observation": "RIG-19: by this step the player should already be at or near (195,905) from X04-030's own arrival; 20000 frames covers a full re-walk of the earlier ~910 m leg with room to spare, in case the intervening forced-switch fight (X04-039..046) drifted the player away from the field, rather than leaving this on the harness's 2400-frame default."
     },
     {
       "id": "X04-059",
@@ -701,9 +707,11 @@
         "at": [
           195.0,
           905.0
-        ]
+        ],
+        "budget_frames": 20000
       },
-      "expected": "the player walks the band 1 field looking for a largest wild"
+      "expected": "the player walks the band 1 field looking for a largest wild",
+      "observation": "RIG-19: same reasoning as X04-058 -- the smallest-wild fight (X04-060..065) is expected to leave the player close to (195,905) already, but 20000 frames is kept in reserve above the harness's 2400-frame default in case that fight's own movement (backing off to ranged distance) carried the player away from the field."
     },
     {
       "id": "X04-067",
@@ -830,9 +838,11 @@
         "at": [
           195.0,
           905.0
-        ]
+        ],
+        "budget_frames": 20000
       },
-      "expected": "the player walks to a large tree/rock in the band 1 field"
+      "expected": "the player walks to a large tree/rock in the band 1 field",
+      "observation": "RIG-19: same reasoning as X04-058/066 -- the largest-wild fight (X04-068..073) is expected to leave the player close to (195,905) already, but 20000 frames is kept in reserve above the harness's 2400-frame default rather than assuming the prior fight left the player exactly on the mark."
     },
     {
       "id": "X04-079",
@@ -1008,9 +1018,11 @@
         "at": [
           -420.0,
           2470.0
-        ]
+        ],
+        "budget_frames": 60000
       },
-      "expected": "the player walks to the Burrow Warrens mouth (-420,2470), RT-06's last anchor"
+      "expected": "the player walks to the Burrow Warrens mouth (-420,2470), RT-06's last anchor",
+      "observation": "RIG-19: S06-exit's own saved position (13.08,1323.54) is ~1226 m from this target in x/z. tools/gate_f/segments/S06.json's own S06-50 walks this exact same coordinate and budgets 44100 frames for a shorter (~1065 m) leg of the same trip; 60000 frames here covers the longer fresh-load distance with the same margin, rather than the harness's 2400-frame default."
     },
     {
       "id": "X04-095",
@@ -1198,9 +1210,11 @@
         "at": [
           150.0,
           7595.0
-        ]
+        ],
+        "budget_frames": 70000
       },
-      "expected": "the player walks to Meadows Hall (150,7595), RT-11's end anchor"
+      "expected": "the player walks to Meadows Hall (150,7595), RT-11's end anchor",
+      "observation": "RIG-19: S09-exit's own saved position (8.83,1318.49) is ~6278 m from this target in x/z -- the largest single leg in this segment, and the harness's 2400-frame default cannot come close. tools/gate_f/segments/S09.json's own S09-17 walks a comparable ~6081 m causeway leg toward the same approach on a budget of 49500 frames; 70000 frames here keeps a healthy margin above that precedent for the full distance."
     },
     {
       "id": "X04-112",

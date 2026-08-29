@@ -148,8 +148,11 @@
       "id": "X05-014",
       "title": "open the pause shell (S02-exit)",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button opens the pause shell"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button opens the pause shell",
+      "observation": "RIG-22: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED (game_menu.gd), so a fixed press count from an assumed Backpack start lands on the wrong tab in any segment -- like this one -- that opens the menu more than once. In gate-f-run-20260828T183531Z at least 7 of 8 completed save-verification blocks landed on menu_backpack/menu_quest_log/menu_creatures/menu_settings instead of menu_save, and the save-write assertion downstream then failed for the wrong reason -- not because saving is broken, but because the Save tab was never reached. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available; S06.json's own S06-90/91 and S08.json's own equivalent already fixed the identical defect (there RIG-14) with this same pattern."
     },
     {
       "id": "X05-015",
@@ -158,10 +161,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
+      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
     },
     {
       "id": "X05-016",
@@ -399,8 +403,11 @@
       "id": "X05-040",
       "title": "open the pause shell (S03-exit)",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button opens the pause shell"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button opens the pause shell",
+      "observation": "RIG-22: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED (game_menu.gd), so a fixed press count from an assumed Backpack start lands on the wrong tab in any segment -- like this one -- that opens the menu more than once. In gate-f-run-20260828T183531Z at least 7 of 8 completed save-verification blocks landed on menu_backpack/menu_quest_log/menu_creatures/menu_settings instead of menu_save, and the save-write assertion downstream then failed for the wrong reason -- not because saving is broken, but because the Save tab was never reached. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available; S06.json's own S06-90/91 and S08.json's own equivalent already fixed the identical defect (there RIG-14) with this same pattern."
     },
     {
       "id": "X05-041",
@@ -409,10 +416,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
+      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
     },
     {
       "id": "X05-042",
@@ -650,8 +658,11 @@
       "id": "X05-066",
       "title": "open the pause shell (S04-exit)",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button opens the pause shell"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button opens the pause shell",
+      "observation": "RIG-22: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED (game_menu.gd), so a fixed press count from an assumed Backpack start lands on the wrong tab in any segment -- like this one -- that opens the menu more than once. In gate-f-run-20260828T183531Z at least 7 of 8 completed save-verification blocks landed on menu_backpack/menu_quest_log/menu_creatures/menu_settings instead of menu_save, and the save-write assertion downstream then failed for the wrong reason -- not because saving is broken, but because the Save tab was never reached. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available; S06.json's own S06-90/91 and S08.json's own equivalent already fixed the identical defect (there RIG-14) with this same pattern."
     },
     {
       "id": "X05-067",
@@ -660,10 +671,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
+      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
     },
     {
       "id": "X05-068",
@@ -901,8 +913,11 @@
       "id": "X05-092",
       "title": "open the pause shell (S05-exit)",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button opens the pause shell"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button opens the pause shell",
+      "observation": "RIG-22: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED (game_menu.gd), so a fixed press count from an assumed Backpack start lands on the wrong tab in any segment -- like this one -- that opens the menu more than once. In gate-f-run-20260828T183531Z at least 7 of 8 completed save-verification blocks landed on menu_backpack/menu_quest_log/menu_creatures/menu_settings instead of menu_save, and the save-write assertion downstream then failed for the wrong reason -- not because saving is broken, but because the Save tab was never reached. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available; S06.json's own S06-90/91 and S08.json's own equivalent already fixed the identical defect (there RIG-14) with this same pattern."
     },
     {
       "id": "X05-093",
@@ -911,10 +926,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
+      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
     },
     {
       "id": "X05-094",
@@ -1152,8 +1168,11 @@
       "id": "X05-118",
       "title": "open the pause shell (S06-exit)",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button opens the pause shell"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button opens the pause shell",
+      "observation": "RIG-22: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED (game_menu.gd), so a fixed press count from an assumed Backpack start lands on the wrong tab in any segment -- like this one -- that opens the menu more than once. In gate-f-run-20260828T183531Z at least 7 of 8 completed save-verification blocks landed on menu_backpack/menu_quest_log/menu_creatures/menu_settings instead of menu_save, and the save-write assertion downstream then failed for the wrong reason -- not because saving is broken, but because the Save tab was never reached. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available; S06.json's own S06-90/91 and S08.json's own equivalent already fixed the identical defect (there RIG-14) with this same pattern."
     },
     {
       "id": "X05-119",
@@ -1162,10 +1181,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
+      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
     },
     {
       "id": "X05-120",
@@ -1403,8 +1423,11 @@
       "id": "X05-144",
       "title": "open the pause shell (S07-exit)",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button opens the pause shell"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button opens the pause shell",
+      "observation": "RIG-22: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED (game_menu.gd), so a fixed press count from an assumed Backpack start lands on the wrong tab in any segment -- like this one -- that opens the menu more than once. In gate-f-run-20260828T183531Z at least 7 of 8 completed save-verification blocks landed on menu_backpack/menu_quest_log/menu_creatures/menu_settings instead of menu_save, and the save-write assertion downstream then failed for the wrong reason -- not because saving is broken, but because the Save tab was never reached. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available; S06.json's own S06-90/91 and S08.json's own equivalent already fixed the identical defect (there RIG-14) with this same pattern."
     },
     {
       "id": "X05-145",
@@ -1413,10 +1436,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
+      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
     },
     {
       "id": "X05-146",
@@ -1664,8 +1688,11 @@
       "id": "X05-171",
       "title": "open the pause shell (S08-exit)",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button opens the pause shell"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button opens the pause shell",
+      "observation": "RIG-22: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED (game_menu.gd), so a fixed press count from an assumed Backpack start lands on the wrong tab in any segment -- like this one -- that opens the menu more than once. In gate-f-run-20260828T183531Z at least 7 of 8 completed save-verification blocks landed on menu_backpack/menu_quest_log/menu_creatures/menu_settings instead of menu_save, and the save-write assertion downstream then failed for the wrong reason -- not because saving is broken, but because the Save tab was never reached. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available; S06.json's own S06-90/91 and S08.json's own equivalent already fixed the identical defect (there RIG-14) with this same pattern."
     },
     {
       "id": "X05-172",
@@ -1674,10 +1701,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
+      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
     },
     {
       "id": "X05-173",
@@ -1915,8 +1943,11 @@
       "id": "X05-197",
       "title": "open the pause shell (S09-exit)",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button opens the pause shell"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button opens the pause shell",
+      "observation": "RIG-22: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED (game_menu.gd), so a fixed press count from an assumed Backpack start lands on the wrong tab in any segment -- like this one -- that opens the menu more than once. In gate-f-run-20260828T183531Z at least 7 of 8 completed save-verification blocks landed on menu_backpack/menu_quest_log/menu_creatures/menu_settings instead of menu_save, and the save-write assertion downstream then failed for the wrong reason -- not because saving is broken, but because the Save tab was never reached. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available; S06.json's own S06-90/91 and S08.json's own equivalent already fixed the identical defect (there RIG-14) with this same pattern."
     },
     {
       "id": "X05-198",
@@ -1925,10 +1956,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
+      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
     },
     {
       "id": "X05-199",
@@ -2166,8 +2198,11 @@
       "id": "X05-223",
       "title": "open the pause shell (S10-exit)",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button opens the pause shell"
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button opens the pause shell",
+      "observation": "RIG-22: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED (game_menu.gd), so a fixed press count from an assumed Backpack start lands on the wrong tab in any segment -- like this one -- that opens the menu more than once. In gate-f-run-20260828T183531Z at least 7 of 8 completed save-verification blocks landed on menu_backpack/menu_quest_log/menu_creatures/menu_settings instead of menu_save, and the save-write assertion downstream then failed for the wrong reason -- not because saving is broken, but because the Save tab was never reached. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available; S06.json's own S06-90/91 and S08.json's own equivalent already fixed the identical defect (there RIG-14) with this same pattern."
     },
     {
       "id": "X05-224",
@@ -2176,10 +2211,11 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "five RB presses reach Save, the sixth tab in data/config/menu.json"
+      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
+      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
     },
     {
       "id": "X05-225",
