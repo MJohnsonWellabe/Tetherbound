@@ -17,36 +17,40 @@ const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 const BONFIRE := "res://assets/props/quaternius_survival/Bonfire_Fire.obj"
-## BAND1-D1: was `quaternius_furniture/BedTwin.obj` scaled to 0.45 -- an
-## indoor bed frame standing in for a bedroll, which is what was available
-## when this shipped. A real bedroll is now vendored (Kenney Survival Kit,
-## CC0, docs/ASSET_LEDGER.md) because the authored trail camp needed one, and
-## the player-built camp wanted exactly the same prop. Authored small, so its
-## scale below is 2.6 where the bed frame's was 0.45.
-## The .obj rather than the .glb sibling beside it, deliberately: `_mesh()`
-## below loads a bare Mesh, which is what Godot's OBJ import produces, while
-## a .glb arrives as a PackedScene and would not load here at all. The .glb
-## stays for `props.gd`, which instantiates scenes and keeps multi-part props
-## intact. Both are the same model from the same fetch and share the one
-## vendored `Textures/colormap.png` their MTL/glTF both point at.
-const BEDROLL := "res://assets/props/kenney_survival/bedroll.obj"
-const BEDROLL_SCALE := 2.6
-## T1-CAMP/§17 investigated and deliberately NOT changed: `bedroll.obj`
-## samples the Kenney Survival Kit's shared palette atlas
-## (`Textures/colormap.png`) at a bright red/near-white column pair, which
-## reads as a saturated, cartoonish object beside the Meshy tent's weathered
-## earth-tone canvas -- a real "share one material/style family" gap. A
-## runtime `albedo_color` multiply (the mechanism `build_material_finish.gd`
-## already uses project-wide) was tried and measured
-## (tools/_probe_t1_camp.gd's own capture, sampled with PIL): under this
-## scene's ACES tonemap, multiplying the bright near-white pillow region
-## DOWN made it read MORE saturated red, not less -- the R channel stays
-## clipped at 255 while G/B fall, the opposite of the intended dulling, at
-## two different multiply strengths. Reverted rather than shipped backwards.
-## Fixing this for real needs either a genuinely different UV/atlas column
-## (this mesh's geometry chooses the column; nothing here can move it) or a
-## tonemap-aware grade, neither of which fits this session -- left as a
-## named, measured gap rather than a silent one.
+## T1-CAMP/§17: was `kenney_survival/bedroll.obj` at scale 2.6. Investigated
+## and rejected first as a MATERIAL problem, then fixed as the actual
+## COMPOSITION problem it was. Side by side with the Meshy tent and creature
+## bed (tools/_capture_t1_camp_assets.gd's own close frames), the Kenney
+## bedroll was the one flat-shaded, textureless object in an otherwise
+## richly-textured kit -- no fabric weave, no stitching, no wood-grain tie
+## detail, just solid colour blocks. A runtime `albedo_color` multiply (the
+## mechanism `build_material_finish.gd` already uses project-wide) was tried
+## first and measured with pixel sampling (PIL) to make it read MORE
+## saturated red under this scene's ACES tonemap, not less, at two
+## strengths -- reverted (see the git history on this line for that
+## finding). Tinting a flat-shaded asset was never going to fix a
+## flat-shaded asset; the fix is to stop using it.
+##
+## `camp_bed.glb` already IS the game's answer to "a sleeping surface at a
+## Meshy-camp-set site": `band1_lower_meadows/props.json`'s own authored
+## trail_camp places this exact mesh as the generic camp sleeping surface
+## ("matching the board's own PAL BED panel", `docs/ASSET_LEDGER.md`), not
+## exclusively as a creature prop -- `scripts/build/creature_bed.gd` is a
+## second, independent use of the same installed asset, not the asset's only
+## intended role. Reusing it here for the player's own sleeping spot is the
+## same "reuse what's installed" move, gives the player's bedroll the exact
+## same weathered-fabric/lashed-log finish as the tent beside it, and needs
+## no new sourcing, no new provenance row, and no Meshy credit.
+const PLAYER_BED := "res://assets/props/generated_camp/camp_bed.glb"
+## Measured (tools/_probe_t1_camp.gd): camp_bed.glb is 1.229 x 0.409 x 1.901m
+## raw (needs no scaling, same as its creature_bed.gd use) with its own
+## origin 0.215m above its geometric base -- the same sink compensation
+## creature_bed.gd now carries. Positioned clear of STONE_RING_SCALE's own
+## ~0.8m radius from the fire and away from TENT_POSITION's footprint on the
+## opposite side, in the same "beside the fire, outside the tent" spot the
+## old bedroll held.
+const PLAYER_BED_POSITION := Vector3(2.3, 0.215, 0.7)
+const PLAYER_BED_ROTATION_DEG := 20.0
 ## FIRST-HOUR-FUN-REBUILD. The player-built Camp is the compact mandatory
 ## campsite, so it must visibly carry the promised shelter as well as the fire
 ## and bedroll it already had. This owner-reference-derived tent is already
@@ -94,6 +98,7 @@ const FADE_SECONDS := 1.2
 var _ghost_meshes: Array[MeshInstance3D] = []
 var _ghost_tent: Node3D = null
 var _ghost_ring: Node3D = null
+var _ghost_bed: Node3D = null
 ## R2.4. Instantiated once, on the first "Craft" activation — most camps are
 ## visited for rest and never opened for crafting, so building the panel's
 ## whole node tree up front would be work most players never see the result
@@ -141,6 +146,7 @@ func _spawn_meshes(solid: bool) -> void:
 	_ghost_meshes.clear()
 	_ghost_tent = null
 	_ghost_ring = null
+	_ghost_bed = null
 	var tent := BUILD_PIECE.new()
 	add_child(tent)
 	tent.position = TENT_POSITION
@@ -156,6 +162,15 @@ func _spawn_meshes(solid: bool) -> void:
 	else:
 		ring.call("build_ghost", STONE_RING, Vector3.ONE * STONE_RING_SCALE)
 		_ghost_ring = ring
+	var bed := BUILD_PIECE.new()
+	add_child(bed)
+	bed.position = PLAYER_BED_POSITION
+	bed.rotation.y = deg_to_rad(PLAYER_BED_ROTATION_DEG)
+	if solid:
+		bed.call("build_real", PLAYER_BED)
+	else:
+		bed.call("build_ghost", PLAYER_BED)
+		_ghost_bed = bed
 	var fire := _mesh(BONFIRE, Vector3.ZERO, FIRE_SCALE)
 	# The bonfire mesh's own `Fire` surface, lit. `Bonfire_Fire.obj` was long
 	# believed to be one combined mesh whose flame could not be addressed --
@@ -167,15 +182,11 @@ func _spawn_meshes(solid: bool) -> void:
 	# ghost is meant to read as a preview, not as a fire already burning.
 	if fire != null and solid:
 		CAMPFIRE_GLOW.ignite(fire)
-	var roll := _mesh(BEDROLL, Vector3(1.8, 0.0, 0.6), BEDROLL_SCALE)
-	if roll != null:
-		roll.rotation.y = deg_to_rad(30.0)
 	if not solid:
-		for m in [fire, roll]:
-			if m != null:
-				_ghost_meshes.append(m)
+		if fire != null:
+			_ghost_meshes.append(fire)
 		return
-	for m in [fire, roll]:
+	for m in [fire]:
 		if m == null:
 			continue
 		var aabb: AABB = (m.mesh as Mesh).get_aabb()
@@ -217,6 +228,8 @@ func tint_ghost(ok: bool) -> void:
 		_ghost_tent.call("tint_ghost", ok)
 	if _ghost_ring != null and is_instance_valid(_ghost_ring):
 		_ghost_ring.call("tint_ghost", ok)
+	if _ghost_bed != null and is_instance_valid(_ghost_bed):
+		_ghost_bed.call("tint_ghost", ok)
 
 
 ## Rest: fade out, new day, everyone healed, fade in. The fade is the same
