@@ -318,6 +318,16 @@
       "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
       "model_scale": 0.85,
       "_why_t3_pickups": "T3-REWARD found `hide_boots` fully modelled with zero acquisition path anywhere in the game. Near the ranger camp spur (-150,2210) -- a ranger's own boots, left at the camp. stack:1 gear; a respawning crate is harmless."
+    },
+    {
+      "order": 2016,
+      "item": "stoneguard_brew",
+      "amount": 1,
+      "label": "A stashed tonic",
+      "at": [-345.0, 2585.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: stoneguard_brew was shop-only at Mira's before this pass, no world presence. Just outside the Burrow Warrens mouth (burrow_warrens.json site.at (-357,2610)) -- a defence tonic where a player braces before the Guardian, matching the coordinator's own guidance that a temporary tonic suits a cache near where a fight is about to go badly."
     }
   ]
 }

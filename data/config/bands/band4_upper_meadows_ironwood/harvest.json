@@ -181,6 +181,16 @@
       "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
       "model_scale": 0.85,
       "_why_t3_pickups": "T3-REWARD found `hide_helm` fully modelled with zero acquisition path anywhere in the game. Beside the tree-line ironwood stand -- gear left where the region's own first-crossing beat already stops the player. stack:1; a respawning crate is harmless."
+    },
+    {
+      "order": 4024,
+      "item": "swift_tonic",
+      "amount": 1,
+      "label": "A stashed tonic",
+      "at": [155.0, 5605.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: swift_tonic was shop-only at Mira's before this pass, no world presence. Near Captain Field's own position ((170,5590), trainers.json) -- readiness before the first of the three regional captains, matching the coordinator's own guidance that a temporary tonic suits a cache near a fight about to happen."
     }
   ]
 }
