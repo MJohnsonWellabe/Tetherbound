@@ -161,8 +161,82 @@ Watch items (not failures):
   separate by geometry only; it holds at this light level but is the same
   noise-texture economy that fails outside.
 
-## 5. Open Meadows ground and grass, near to far — PENDING RENDER
-## 6. Water and shorelines — PENDING RENDER
+## 5. Open Meadows ground and grass, near to far
+
+Frames: `shots/ground/ground-0{1..5}-*-day.png` (bands 1–5, pinned day,
+clear; band 2 also carries the weather sweep), rendered via
+`xvfb-run … --script tools/_capture_ground_and_sky.gd`. Far tier verdict
+continues under subject 8 (far panels/survey pending at time of writing).
+
+**Verdict: ACCEPTABLE — a real and visible step toward the bar, with
+specific defects that keep it from GOOD.** The near field finally reads
+like the keyart's world: tall blade grass with parallax, flowering bushes
+with restrained purple/white accents, believable dirt paths with pebble
+scatter, the trainer sitting correctly in it (the trainer model itself is
+genuinely strong — expressive, well-proportioned, reads as the game's own
+art). Band 2's grove (`ground-02-…-day`) has real mood: shaded path, purple
+bells, dappled dark. This is the closest any Tetherbound frame gets to
+`palworld-02`.
+
+What keeps it from GOOD:
+
+- **One grass species everywhere.** Every band uses the same vertical
+  blade sprite at the same density; bands differ only by tree props and
+  flower confetti. Palworld's fields read as mixed groundcover (tufts,
+  broadleaf, bare patches); here the blades read as a uniform carpet of
+  wheat sprouts, and several blades render near-black in full daylight
+  (visible in `water-02-river-grazing.png`) — unlit/shadow-sampled blades
+  mixed into lit clumps.
+- **The mid-distance smear tier.** Past ~30 m the ground collapses into a
+  soft green-yellow blur with no detail texture, and the boundary between
+  blade-grass tier and smear tier is a visible band that tracks the camera
+  (right edge of `ground-01`, lower third of `ground-01-golden`).
+- **Dashed seam lines on the ground.** Faint dotted/dashed lines cross the
+  terrain in multiple frames (`ground-01-day` bottom-right,
+  `ground-01-golden` right, `W-ext-01` bottom-left). They read as region
+  or scatter-cell seams and are visible enough for a player to steer by.
+  Guess (flagged): Terrain3D region borders or a scatter-cell debug edge
+  surviving into the shipped material.
+- **Floating path pebbles.** The light-grey low-poly pebbles along paths
+  hover a few cm above the dirt in most path frames (`ground-01`,
+  `ground-04`), reading as scattered rather than embedded.
+- **The black NPC.** In band 2's frames a villager/NPC on the path renders
+  as a 100 % black silhouette in full day (`ground-02-…-day`, `-fog`).
+  Whatever material path lights the trainer correctly is not being applied
+  to this NPC.
+- **"Day" sky disagrees with day ground** in bands 3–5 — see subject 7.
+
+## 6. Water and shorelines
+
+Frames: `shots/ground/water-01/02/03-*.png` (pinned day — primary
+evidence); `shots/gate_a/water/water-0{1..4}.png` (dedicated tool,
+**compromised** — see below).
+
+**Verdict: pond GOOD, river ACCEPTABLE, stream BAD → subject overall
+ACCEPTABLE.**
+
+- **The pond is the best water in the game** (`water-01-pond-eye`):
+  turquoise shallows graduating to depth, submerged pebbles readable
+  through the surface, sparkle at the right scale, sand-to-grass bank
+  transition, reeds at the waterline. It would not embarrass a Palworld
+  comparison. One artefact: a hard-edged dark rectangular shadow lies on
+  the water right of the trainer — a quad's shadow with no visible owner.
+- **The river reads engineered, not natural** (`water-02-river-eye`): both
+  banks are uniform ~45° cuts faced in one large hex/pebble texture, like
+  riprap on a canal levee, with a hard turf line where the meadow resumes.
+  The water itself (deep navy, moving surface) is fine; the channel is the
+  problem. Shore stones float at the waterline.
+- **The stream is invisible from its own bank** (`water-03-stream-eye`):
+  the capture stands at the stream's authored bank point and the frame
+  shows only meadow grass — no channel cut, no water surface, no bank
+  vegetation. If a player was led to this stream they would not find it.
+- **Tool defect to fix, separate from the scene:** the dedicated
+  `tools/capture_water.gd` frames all came back in a dusk/night wash
+  (`water-01-bank-closeup` is near-black; `water-04-approach` sits under a
+  flat blue veil). That tool does not pin/freeze the clock the way
+  `_capture_ground_and_sky.gd` does, so its frames are unusable for colour
+  judgement. Composition read through the veil of `water-04` is actually
+  promising (framed path, big tree, house across the pond).
 ## 7. Sky and sun across the day cycle — PENDING RENDER
 ## 8. Terrain macro composition / landmarks — PENDING RENDER
 
