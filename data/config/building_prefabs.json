@@ -934,7 +934,11 @@
       ],
       "door": {
         "leaf_module": "Door_1_Flat",
-        "at": [1.0, 0.0, 3.0],
+        "at": [
+          1.0,
+          0.0,
+          3.0
+        ],
         "_why": "R7.8. Doorway centre matches the DoorFrame/Wall_..Door_Flat modules' own `at`, not the leaf's hinge point -- village.gd finds the leaf itself by its module name in this same recipe (building_prefabs.gd::door_leaf_index)."
       },
       "retint": {
@@ -1213,17 +1217,105 @@
       ],
       "_why_colliders": "R7.8: was a solid AABB brick (this prefab authored no colliders at all). Same shape as cottage_a's own doorway hole, scaled to this cottage's smaller 4m x 4m footprint (wall lines x=+-2 / z=+-2) and its own door at x=1 with a 1.6m clear opening, so the front wall is two pieces and a lintel around x in [0.2, 1.8].",
       "colliders": [
-        { "at": [-2.0, 1.56, 0.0], "size": [0.45, 3.12, 4.4], "_why": "west wall (local -x)" },
-        { "at": [2.0, 1.56, 0.0], "size": [0.45, 3.12, 4.4], "_why": "east wall (local +x)" },
-        { "at": [0.0, 1.56, -2.0], "size": [4.4, 3.12, 0.45], "_why": "back wall" },
-        { "at": [-1.0, 1.56, 2.0], "size": [2.4, 3.12, 0.45], "_why": "front, left of the doorway (x -2.2 to 0.2)" },
-        { "at": [2.0, 1.56, 2.0], "size": [0.4, 3.12, 0.45], "_why": "front, the short return right of the doorway (x 1.8 to 2.2)" },
-        { "at": [1.0, 2.71, 2.0], "size": [1.6, 0.82, 0.45], "_why": "the lintel over the 2.3m doorway; below it is the way in" },
-        { "at": [0.0, 4.1, 0.0], "size": [4.4, 2.2, 4.4], "_why": "roof and gables -- bottom (y 3.0) is the room's ceiling, so this blocks nothing a player can stand on" }
+        {
+          "at": [
+            -2.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            4.4
+          ],
+          "_why": "west wall (local -x)"
+        },
+        {
+          "at": [
+            2.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            4.4
+          ],
+          "_why": "east wall (local +x)"
+        },
+        {
+          "at": [
+            0.0,
+            1.56,
+            -2.0
+          ],
+          "size": [
+            4.4,
+            3.12,
+            0.45
+          ],
+          "_why": "back wall"
+        },
+        {
+          "at": [
+            -1.0,
+            1.56,
+            2.0
+          ],
+          "size": [
+            2.4,
+            3.12,
+            0.45
+          ],
+          "_why": "front, left of the doorway (x -2.2 to 0.2)"
+        },
+        {
+          "at": [
+            2.0,
+            1.56,
+            2.0
+          ],
+          "size": [
+            0.4,
+            3.12,
+            0.45
+          ],
+          "_why": "front, the short return right of the doorway (x 1.8 to 2.2)"
+        },
+        {
+          "at": [
+            1.0,
+            2.71,
+            2.0
+          ],
+          "size": [
+            1.6,
+            0.82,
+            0.45
+          ],
+          "_why": "the lintel over the 2.3m doorway; below it is the way in"
+        },
+        {
+          "at": [
+            0.0,
+            4.1,
+            0.0
+          ],
+          "size": [
+            4.4,
+            2.2,
+            4.4
+          ],
+          "_why": "roof and gables -- bottom (y 3.0) is the room's ceiling, so this blocks nothing a player can stand on"
+        }
       ],
       "door": {
         "leaf_module": "Door_1_Flat",
-        "at": [1.0, 0.0, 2.0],
+        "at": [
+          1.0,
+          0.0,
+          2.0
+        ],
         "_why": "R7.8. Doorway centre matches the Wall_UnevenBrick_Door_Flat/DoorFrame modules' own `at`."
       },
       "room": {
@@ -2359,7 +2451,11 @@
         },
         {
           "module": "Door_1_Flat",
-          "at": [-0.55, 0.0, 5.0],
+          "at": [
+            -0.55,
+            0.0,
+            5.0
+          ],
           "yaw_deg": 0.0,
           "_why": "R7.9: a real openable leaf, shut by default -- cottage_a/cottage_b's own leaf-offset convention (leaf x = frame x - 0.55) carried over onto the farmhouse gable's door position"
         },
@@ -3074,17 +3170,105 @@
       ],
       "_why_colliders": "R7.9. Same shape as cottage_a/cottage_b's own doorway-hole colliders, scaled up to this shell's 6x10 footprint (wall lines x=+-3/z=+-5): the front wall is authored as two pieces either side of a 1.6m clear opening centred on the door module's own x=0, plus a lintel over it. The ceiling box's bottom sits at y=3.12 -- the ground-floor wall top -- so it caps the walkable space at the first storey without touching anything below; its top (y=9.6) clears the ridge and the chimney (Prop_Chimney2 tops out at y~9.7) with room to spare, and its footprint (6.4x10.4) covers the roof overhang the same 0.2m the walls themselves overshoot.",
       "colliders": [
-        { "at": [-3.0, 1.56, 0.0], "size": [0.45, 3.12, 10.4], "_why": "west wall (local -x)" },
-        { "at": [3.0, 1.56, 0.0], "size": [0.45, 3.12, 10.4], "_why": "east wall (local +x)" },
-        { "at": [0.0, 1.56, -5.0], "size": [6.4, 3.12, 0.45], "_why": "back wall (no doorway)" },
-        { "at": [-2.0, 1.56, 5.0], "size": [2.4, 3.12, 0.45], "_why": "front, left of the doorway (x -3.2 to -0.8)" },
-        { "at": [2.0, 1.56, 5.0], "size": [2.4, 3.12, 0.45], "_why": "front, right of the doorway (x 0.8 to 3.2)" },
-        { "at": [0.0, 2.71, 5.0], "size": [1.6, 0.82, 0.45], "_why": "the lintel over the 1.6m doorway; below it is the way in" },
-        { "at": [0.0, 6.36, 0.0], "size": [6.4, 6.48, 10.4], "_why": "ceiling and everything above it -- bottom (y 3.12) is the ground-floor room's ceiling, so this blocks nothing the interior walks on; top (y 9.6) clears the roof and chimney. Caps the second storey and roof shell as facade-only, same scope decision grandpa_house.gd's own bespoke loft avoided repeating here." }
+        {
+          "at": [
+            -3.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            10.4
+          ],
+          "_why": "west wall (local -x)"
+        },
+        {
+          "at": [
+            3.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            10.4
+          ],
+          "_why": "east wall (local +x)"
+        },
+        {
+          "at": [
+            0.0,
+            1.56,
+            -5.0
+          ],
+          "size": [
+            6.4,
+            3.12,
+            0.45
+          ],
+          "_why": "back wall (no doorway)"
+        },
+        {
+          "at": [
+            -2.0,
+            1.56,
+            5.0
+          ],
+          "size": [
+            2.4,
+            3.12,
+            0.45
+          ],
+          "_why": "front, left of the doorway (x -3.2 to -0.8)"
+        },
+        {
+          "at": [
+            2.0,
+            1.56,
+            5.0
+          ],
+          "size": [
+            2.4,
+            3.12,
+            0.45
+          ],
+          "_why": "front, right of the doorway (x 0.8 to 3.2)"
+        },
+        {
+          "at": [
+            0.0,
+            2.71,
+            5.0
+          ],
+          "size": [
+            1.6,
+            0.82,
+            0.45
+          ],
+          "_why": "the lintel over the 1.6m doorway; below it is the way in"
+        },
+        {
+          "at": [
+            0.0,
+            6.36,
+            0.0
+          ],
+          "size": [
+            6.4,
+            6.48,
+            10.4
+          ],
+          "_why": "ceiling and everything above it -- bottom (y 3.12) is the ground-floor room's ceiling, so this blocks nothing the interior walks on; top (y 9.6) clears the roof and chimney. Caps the second storey and roof shell as facade-only, same scope decision grandpa_house.gd's own bespoke loft avoided repeating here."
+        }
       ],
       "door": {
         "leaf_module": "Door_1_Flat",
-        "at": [0.0, 0.0, 5.0],
+        "at": [
+          0.0,
+          0.0,
+          5.0
+        ],
         "_why": "R7.9. Doorway centre matches the Wall_UnevenBrick_Door_Flat/DoorFrame modules' own `at`, same convention cottage_a/cottage_b's `door` key already uses."
       },
       "room": {
@@ -4782,20 +4966,56 @@
       "_why_retint_backlit": "GATE-E-STRONGHOLD-ART (2026-08-23). Every stone value in this block was raised roughly one and a half stops; the value LADDER between them is unchanged. Two blind critics called the stronghold 'untextured', 'unlit-looking', 'a flat black slab', and the cause is not a broken material path -- it is that these albedos were chosen against a LIT face and the player never sees one. The sun is authored at pitch -44/yaw -40 (data/config/art.json), which puts it in the NORTH sky; the ramp, the gate and the whole approach are on the SOUTH side (landmark.gd::_build_ramp), so the hero face of the endgame landmark is backlit at every hour the chapter is played, lit by ambient alone. Measured on main with tools/frame_stats.py: near-field luma 0.012 on `gate-close` and 0.053 on `silhouette-approach`, against the 0.49-0.60 this file's own art.json comments quote from the Palworld references -- ten to forty times under. An albedo of #786d5e under ambient-only fill lands near black no matter how correct it looks in a lit test render. The earlier pass that DARKENED these (recorded in landmark.gd's PLINTH_COLOUR history) was answering a washed-out-at-distance complaint from the era when this was a long-range wayfinding silhouette; OF13 moved the site out of long-range view entirely and landmark.gd's own header says that argument is no longer load-bearing, so the darkening it bought can be given back. `Black` is lifted off near-void for the same reason: an absolute black reads as a hole in the render rather than as a shadowed recess. Banner keeps Team Tether's reserved oxblood untouched. TUNABLE, and the first thing to re-check if the stronghold ever reads washed out from a genuinely sunlit angle.",
       "_why_retint_panel_noise": "STRONGHOLD-R2. `DarkRock` #6b5f52 -> #8b7c6b and `Black` #221d18 -> #3a3229. The blind critique on the round-1 frames named 'noise-rectangle windows floating mid-wall, some half over edges'. They are not decals and nothing is misplaced: `WallBricks`/`TallWallBricks` carry their brick panels in DarkRock and their openings in Black, and at a stop and a half below the LightRock face those panels stopped reading as masonry and started reading as rectangles pasted onto a blank wall -- the eye sorts a high-contrast rectangle on an otherwise flat field as a separate OBJECT, not as texture. Closing the gap (DarkRock now about 0.6 of a stop under LightRock instead of ~1.5; Black lifted further off void, the same move round 1 made for the same reason) puts them back into the same surface. The value LADDER is unchanged and still holds in both directions: LightRock #a3907a > DarkRock #8b7c6b > Black #3a3229 > landmark.gd's PLINTH_COLOUR #524a41, so the foundation is still the darkest stone on the site and still grounds the mass. This does NOT fix a window that straddles a module boundary -- that is the gatehouse flanker overlapping the curtain run, and closing it needs the massing re-authored, not a colour -- it stops that window being the loudest thing on the wall. TUNABLE; if the castle ever reads flat and detail-less at range, this pair is the first place to widen again.",
       "_why_retint_metallic": "T1-CASTLE (2026-08-29). Every material in this kit's MTLs -- not just the albedo `_why_retint` already found flat -- shares the identical placeholder block (`Ks 0.500000`), confirmed by direct probe of the imported StandardMaterial3D: LightRock and DarkRock both come in at `metallic=0.5, roughness=1.0`. That is the exact same class of kit-export gap `BASELINE_RETINT` above already found and fixed for `MI_RockTrim` (a different, glTF kit) -- Godot's OBJ importer has no specular workflow to put `Ks` into, so it lands in `metallic` instead, and a half-metal dielectric-shaped surface with no reflection probes (Compatibility renderer, real-time lighting only) has nowhere to put the specular half of its response, so it renders desaturated and value-flattened relative to real stone/wood/cloth -- a real, measurable contributor to the owner's 'pale, flat, plastic/toylike' verdict on the castle up close (`ralph/OWNER_FEEDBACK_2026-08-29_BUILDINGS.md`), independent of the albedo values `_why_retint`/`_why_retint_backlit`/`_why_retint_panel_noise` already tuned. Every material name in the kit (`Banner` included -- cloth has no more business being half-metal than stone does) gets `metallic: 0.0` here; nothing else in this block changes.",
-      "_why_retint_hall_design": "T1-HALL-BUILD (2026-08-30), `ralph/reports/HALL_DESIGN_2026-08-30.md` §5. The metallic fix above corrected the specular gap but not the diagnosis: the judge measured the lit wall at (212,203,185) -- essentially off-white, whiter than the tan `#a3907a` albedo intended, because a flat colour multiplied by nothing still has nowhere to put shape. `landmark.gd::_weather_castle` now multiplies these slots by the works' own real `T_UnevenBrick` photo texture (identical to `stronghold.gd`'s wall material) instead of a generated grayscale multiply, and these colours are re-derived against that texture's measured ~0.49 average luminance (design doc's pre-multiplied arithmetic) so the SAME visual target lands through a texture instead of through a flat value. `Black` drops out of the texture pass (design table: 'flat', voids/iron should not read as quarried stone) and keeps a flat retint at a slightly lighter value so a shaded opening stays a shadowed recess rather than a void. Kill criteria (design §5/§11): lit wall patch mean in [150,185], patch std-dev ≥ 35 -- pixel-sampled from `_judge_capture_arch_0829.gd`'s own stands before this is trusted.",
+      "_why_retint_hall_design": "T1-HALL-BUILD (2026-08-30), `ralph/reports/HALL_DESIGN_2026-08-30.md` \u00a75. The metallic fix above corrected the specular gap but not the diagnosis: the judge measured the lit wall at (212,203,185) -- essentially off-white, whiter than the tan `#a3907a` albedo intended, because a flat colour multiplied by nothing still has nowhere to put shape. `landmark.gd::_weather_castle` now multiplies these slots by the works' own real `T_UnevenBrick` photo texture (identical to `stronghold.gd`'s wall material) instead of a generated grayscale multiply, and these colours are re-derived against that texture's measured ~0.49 average luminance (design doc's pre-multiplied arithmetic) so the SAME visual target lands through a texture instead of through a flat value. `Black` drops out of the texture pass (design table: 'flat', voids/iron should not read as quarried stone) and keeps a flat retint at a slightly lighter value so a shaded opening stays a shadowed recess rather than a void. Kill criteria (design \u00a75/\u00a711): lit wall patch mean in [150,185], patch std-dev \u2265 35 -- pixel-sampled from `_judge_capture_arch_0829.gd`'s own stands before this is trusted.",
       "retint": {
-        "LightRock": {"color": "#f2e9da", "metallic": 0.0},
-        "LightRock.001": {"color": "#f2e9da", "metallic": 0.0},
-        "LightRock.002": {"color": "#f2e9da", "metallic": 0.0},
-        "DarkRock": {"color": "#c4b39e", "metallic": 0.0},
-        "DarkRock.001": {"color": "#c4b39e", "metallic": 0.0},
-        "Black": {"color": "#332c24", "metallic": 0.0},
-        "Black.001": {"color": "#332c24", "metallic": 0.0},
-        "Black.002": {"color": "#332c24", "metallic": 0.0},
-        "Celing": {"color": "#6f4f33", "metallic": 0.0},
-        "Celing.001": {"color": "#6f4f33", "metallic": 0.0},
-        "LightWood": {"color": "#6f4f33", "metallic": 0.0},
-        "Banner": {"color": "#7a2430", "metallic": 0.0}
+        "LightRock": {
+          "color": "#f2e9da",
+          "metallic": 0.0
+        },
+        "LightRock.001": {
+          "color": "#f2e9da",
+          "metallic": 0.0
+        },
+        "LightRock.002": {
+          "color": "#f2e9da",
+          "metallic": 0.0
+        },
+        "DarkRock": {
+          "color": "#c4b39e",
+          "metallic": 0.0
+        },
+        "DarkRock.001": {
+          "color": "#c4b39e",
+          "metallic": 0.0
+        },
+        "Black": {
+          "color": "#332c24",
+          "metallic": 0.0
+        },
+        "Black.001": {
+          "color": "#332c24",
+          "metallic": 0.0
+        },
+        "Black.002": {
+          "color": "#332c24",
+          "metallic": 0.0
+        },
+        "Celing": {
+          "color": "#6f4f33",
+          "metallic": 0.0
+        },
+        "Celing.001": {
+          "color": "#6f4f33",
+          "metallic": 0.0
+        },
+        "LightWood": {
+          "color": "#6f4f33",
+          "metallic": 0.0
+        },
+        "Banner": {
+          "color": "#7a2430",
+          "metallic": 0.0
+        }
       }
     },
     "road_gate_leaf": {
@@ -5541,18 +5761,118 @@
       ],
       "_why_colliders_gate_a": "Gate A owner-play fix. The mill always had a real Door_1_Flat leaf at its front centre, but its collider was one 6.3x9.4x6.3 solid box, so the visible door could never become a real entrance. This uses the same doorway-hole contract as cottage_a/cottage_b/ranger_station/inn: side and rear walls, two front returns, a lintel, then a ceiling/upper-facade box whose bottom begins at first-storey wall-top. The water-wheel collider remains independent.",
       "colliders": [
-        { "at": [-3.0, 1.56, 0.0], "size": [0.45, 3.12, 6.4], "_why": "west ground-floor wall" },
-        { "at": [3.0, 1.56, 0.0], "size": [0.45, 3.12, 6.4], "_why": "east ground-floor wall" },
-        { "at": [0.0, 1.56, -3.0], "size": [6.4, 3.12, 0.45], "_why": "rear ground-floor wall" },
-        { "at": [-2.0, 1.56, 3.0], "size": [2.4, 3.12, 0.45], "_why": "front wall left of the 1.6m doorway" },
-        { "at": [2.0, 1.56, 3.0], "size": [2.4, 3.12, 0.45], "_why": "front wall right of the 1.6m doorway" },
-        { "at": [0.0, 2.71, 3.0], "size": [1.6, 0.82, 0.45], "_why": "lintel above the 2.3m doorway" },
-        { "at": [0.0, 6.26, 0.0], "size": [6.4, 6.28, 6.4], "_why": "ceiling and upper facade; bottom is y=3.12 so the ground-floor room stays walkable" },
-        { "at": [-4.0, 2.1, 0.0], "size": [0.9, 4.4, 4.6], "_why": "water wheel, for player and camera arm" }
+        {
+          "at": [
+            -3.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            6.4
+          ],
+          "_why": "west ground-floor wall"
+        },
+        {
+          "at": [
+            3.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            6.4
+          ],
+          "_why": "east ground-floor wall"
+        },
+        {
+          "at": [
+            0.0,
+            1.56,
+            -3.0
+          ],
+          "size": [
+            6.4,
+            3.12,
+            0.45
+          ],
+          "_why": "rear ground-floor wall"
+        },
+        {
+          "at": [
+            -2.0,
+            1.56,
+            3.0
+          ],
+          "size": [
+            2.4,
+            3.12,
+            0.45
+          ],
+          "_why": "front wall left of the 1.6m doorway"
+        },
+        {
+          "at": [
+            2.0,
+            1.56,
+            3.0
+          ],
+          "size": [
+            2.4,
+            3.12,
+            0.45
+          ],
+          "_why": "front wall right of the 1.6m doorway"
+        },
+        {
+          "at": [
+            0.0,
+            2.71,
+            3.0
+          ],
+          "size": [
+            1.6,
+            0.82,
+            0.45
+          ],
+          "_why": "lintel above the 2.3m doorway"
+        },
+        {
+          "at": [
+            0.0,
+            6.26,
+            0.0
+          ],
+          "size": [
+            6.4,
+            6.28,
+            6.4
+          ],
+          "_why": "ceiling and upper facade; bottom is y=3.12 so the ground-floor room stays walkable"
+        },
+        {
+          "at": [
+            -4.0,
+            2.1,
+            0.0
+          ],
+          "size": [
+            0.9,
+            4.4,
+            4.6
+          ],
+          "_why": "water wheel, for player and camera arm"
+        }
       ],
       "door": {
         "leaf_module": "Door_1_Flat",
-        "at": [0.0, 0.0, 3.0],
+        "at": [
+          0.0,
+          0.0,
+          3.0
+        ],
         "_why": "Gate A: the existing mill leaf now uses village_door.gd exactly like the other enterable village/pond buildings."
       },
       "retint": {
@@ -6047,17 +6367,105 @@
       ],
       "_why_colliders": "R7.8: was a solid AABB brick. Same footprint as cottage_a (wall lines x=+-2/z=+-3) and the same door position (x=1, front wall z=3), so the collider set is cottage_a's own, unchanged.",
       "colliders": [
-        { "at": [-2.0, 1.56, 0.0], "size": [0.45, 3.12, 6.4], "_why": "west wall (local -x)" },
-        { "at": [2.0, 1.56, 0.0], "size": [0.45, 3.12, 6.4], "_why": "east wall (local +x)" },
-        { "at": [0.0, 1.56, -3.0], "size": [4.4, 3.12, 0.45], "_why": "back wall" },
-        { "at": [-1.0, 1.56, 3.0], "size": [2.4, 3.12, 0.45], "_why": "front, left of the doorway (x -2.2 to 0.2)" },
-        { "at": [2.0, 1.56, 3.0], "size": [0.4, 3.12, 0.45], "_why": "front, the short return right of the doorway (x 1.8 to 2.2)" },
-        { "at": [1.0, 2.71, 3.0], "size": [1.6, 0.82, 0.45], "_why": "the lintel over the 2.3m doorway; below it is the way in" },
-        { "at": [0.0, 4.1, 0.0], "size": [4.4, 2.2, 6.4], "_why": "roof and gables -- bottom (y 3.0) is the room's ceiling, so this blocks nothing a player can stand on" }
+        {
+          "at": [
+            -2.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            6.4
+          ],
+          "_why": "west wall (local -x)"
+        },
+        {
+          "at": [
+            2.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            6.4
+          ],
+          "_why": "east wall (local +x)"
+        },
+        {
+          "at": [
+            0.0,
+            1.56,
+            -3.0
+          ],
+          "size": [
+            4.4,
+            3.12,
+            0.45
+          ],
+          "_why": "back wall"
+        },
+        {
+          "at": [
+            -1.0,
+            1.56,
+            3.0
+          ],
+          "size": [
+            2.4,
+            3.12,
+            0.45
+          ],
+          "_why": "front, left of the doorway (x -2.2 to 0.2)"
+        },
+        {
+          "at": [
+            2.0,
+            1.56,
+            3.0
+          ],
+          "size": [
+            0.4,
+            3.12,
+            0.45
+          ],
+          "_why": "front, the short return right of the doorway (x 1.8 to 2.2)"
+        },
+        {
+          "at": [
+            1.0,
+            2.71,
+            3.0
+          ],
+          "size": [
+            1.6,
+            0.82,
+            0.45
+          ],
+          "_why": "the lintel over the 2.3m doorway; below it is the way in"
+        },
+        {
+          "at": [
+            0.0,
+            4.1,
+            0.0
+          ],
+          "size": [
+            4.4,
+            2.2,
+            6.4
+          ],
+          "_why": "roof and gables -- bottom (y 3.0) is the room's ceiling, so this blocks nothing a player can stand on"
+        }
       ],
       "door": {
         "leaf_module": "Door_1_Flat",
-        "at": [1.0, 0.0, 3.0],
+        "at": [
+          1.0,
+          0.0,
+          3.0
+        ],
         "_why": "R7.8. Doorway centre matches the Wall_UnevenBrick_Door_Flat/DoorFrame modules' own `at`."
       },
       "room": {
@@ -6369,7 +6777,7 @@
       ]
     },
     "quarry_foundation": {
-      "_why": "SD16, spec §3 Band 2's 'old foundations'. A building the meadow has taken back: a brick floor, one long wall course and two stub returns, all of them the SAME `Wall_UnevenBrick_Straight` the village's own cottages are built from (D24) but SUNK so only the bottom metre stands. That is the whole trick and it is deliberate -- a ruin drawn from the same family as the living buildings is what makes the quarry read as older than the village rather than as a different game's asset pack. Vines on the standing course, brick rubble where the rest of it went.",
+      "_why": "SD16, spec \u00a73 Band 2's 'old foundations'. A building the meadow has taken back: a brick floor, one long wall course and two stub returns, all of them the SAME `Wall_UnevenBrick_Straight` the village's own cottages are built from (D24) but SUNK so only the bottom metre stands. That is the whole trick and it is deliberate -- a ruin drawn from the same family as the living buildings is what makes the quarry read as older than the village rather than as a different game's asset pack. Vines on the standing course, brick rubble where the rest of it went.",
       "_comment_sink": "The kit's walls are 3.12m tall with their origin at the base, so y = -2.1 leaves ~1.0m proud and y = -2.45 leaves ~0.67m. Sinking rather than modelling a broken top edge: the kit ships no ruined pieces, and a wall cut off by the ground plane reads as a buried course, which is what an old foundation IS.",
       "modules": [
         {
@@ -6600,6 +7008,273 @@
           "yaw_deg": 180.0
         }
       ]
+    },
+    "meadows_hall": {
+      "_why": "T1-HALL (2026-08-30), HALL_DESIGN_2026-08-30.md sec4. The castle-kit massing standing on top of the works (scripts/world/stronghold.gd) instead of a separate detached castle (scripts/world/landmark.gd, retired). Authored in the SAME local frame as stronghold.json's chambers -- x=lateral, z=depth, both unchanged by this design -- so stronghold.gd adds this prefab as one child at local (0, floor_y, 0), no further transform. Every position below is derived from the chambers' own at/size + site.wall_thickness (this generator's own working: tools history, not re-committed) rather than guessed; if a chamber's at/size ever changes this prefab needs regenerating, the same maintenance contract building_prefabs.json's castle recipe already has.",
+      "modules": [
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -5.5,
+            0.0,
+            -14.1
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.4
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            5.5,
+            0.0,
+            -14.1
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.4
+        },
+        {
+          "module": "WatchTowerWRoof",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            8.0,
+            0.0,
+            -12.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.8
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -10.6,
+            0.0,
+            -12.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.0
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            10.6,
+            0.0,
+            -12.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.0
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -11.6,
+            0.0,
+            46.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.0
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            11.6,
+            0.0,
+            46.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.0
+        },
+        {
+          "module": "WatchTowerWRoof",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -11.1,
+            0.0,
+            15.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.8
+        },
+        {
+          "module": "WatchTowerWRoof",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            11.1,
+            0.0,
+            15.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.8
+        },
+        {
+          "module": "LargeTower",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -12.6,
+            0.0,
+            76.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.2
+        },
+        {
+          "module": "LargeTower",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            12.6,
+            0.0,
+            76.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.2
+        },
+        {
+          "module": "LargeTower",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -12.6,
+            0.0,
+            103.8
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.2
+        },
+        {
+          "module": "LargeTower",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            12.6,
+            0.0,
+            103.8
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.2
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -46.6,
+            0.0,
+            75.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 5.2
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -17.4,
+            0.0,
+            104.8
+          ],
+          "yaw_deg": 0.0,
+          "scale": 5.2
+        },
+        {
+          "module": "PointyTower",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -46.6,
+            0.0,
+            104.8
+          ],
+          "yaw_deg": 0.0,
+          "scale": 5.2
+        },
+        {
+          "module": "WatchTowerWRoof",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -17.4,
+            0.0,
+            75.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.0
+        },
+        {
+          "module": "Banner",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -46.6,
+            22.5,
+            103.8
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "Roof_RoundTiles_4x8",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [
+            0.0,
+            8.583,
+            64.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.1
+        }
+      ],
+      "retint": {
+        "LightRock": {
+          "color": "#f2e9da",
+          "metallic": 0.0
+        },
+        "LightRock.001": {
+          "color": "#f2e9da",
+          "metallic": 0.0
+        },
+        "LightRock.002": {
+          "color": "#f2e9da",
+          "metallic": 0.0
+        },
+        "DarkRock": {
+          "color": "#c4b39e",
+          "metallic": 0.0
+        },
+        "DarkRock.001": {
+          "color": "#c4b39e",
+          "metallic": 0.0
+        },
+        "Black": {
+          "color": "#332c24",
+          "metallic": 0.0
+        },
+        "Black.001": {
+          "color": "#332c24",
+          "metallic": 0.0
+        },
+        "Black.002": {
+          "color": "#332c24",
+          "metallic": 0.0
+        },
+        "Celing": {
+          "color": "#6f4f33",
+          "metallic": 0.0
+        },
+        "Celing.001": {
+          "color": "#6f4f33",
+          "metallic": 0.0
+        },
+        "LightWood": {
+          "color": "#6f4f33",
+          "metallic": 0.0
+        },
+        "Banner": {
+          "color": "#7a2430",
+          "metallic": 0.0
+        },
+        "MI_RoundTiles": {
+          "color": "#2a8c94"
+        }
+      }
     }
   }
 }

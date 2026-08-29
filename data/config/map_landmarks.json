@@ -54,11 +54,12 @@
       "id": "stronghold",
       "display_name": "Meadows Hall",
       "icon": "stronghold",
-      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: temporarily set to the table's explicit new stronghold coordinate (0,7560) -- a simplification the macro-layout doc itself makes, since the OLD value here (229.8,-144.4) was the actual castle silhouette placed by scripts/world/landmark.gd and NOT the same point as stronghold.json's `site.at`. Flagged for the reviewer rather than silently assumed identical.",
-      "_comment_gate_e2": "GATE-E2 (2026-08-23, owner directive 'move the castle to the end'): resolves the flag above. `landmark.gd`'s `RISE_CENTRE + OFFSET` had been left behind on the pre-corridor map at (229.8,-144.4) when OW5D moved everything else -- the castle stood 7.5km from the stronghold it is meant to loom behind. It now has a real, re-derived `SITE`, (150.0,7595.0), east of the stronghold's own built footprint (see landmark.gd's own header for the siting math). `silhouette: true` on this entry means it is the CASTLE pin, not the walkable route's entrance -- so it now points at the castle again, the same relationship this landmark had to `landmark.gd` before OW5D, not at stronghold.json's `site.at`.",
+      "_comment_ow5d": "Historical: OW5D temporarily pinned this at the table's explicit stronghold coordinate (0,7560), a simplification since the castle silhouette (`landmark.gd`) and the walkable route (`stronghold.json`) were then two unrelated buildings. GATE-E2 then pointed it at the castle's own re-derived `SITE` instead. Both are superseded below.",
+      "_comment_gate_e2": "Historical: GATE-E2 (2026-08-23) pointed this pin at `landmark.gd`'s then-detached castle SITE (150,7595), 154m from the stronghold's own route -- correct for a world with two buildings, superseded now that there is one.",
+      "_comment_t1_hall": "T1-HALL (2026-08-30): the castle and the stronghold are one location (`HALL_DESIGN_2026-08-30.md`); `landmark.gd`'s silhouette at (150,7595) retires and nothing stands there any more. This pin now marks the merged complex's own centre of mass -- `stronghold.json`'s `site.at` (8,7560) offset toward the courtyard/keep half of the built footprint, not the outer works' own centre -- so the map marker sits over the middle of the actual building rather than its front gate. `silhouette: true` is kept: this is still a landmark seen from across the meadow before it is reached, exactly the role it played for the castle pin.",
       "position": [
-        150.0,
-        7595.0
+        8.0,
+        7590.0
       ],
       "discover_radius": 60.0,
       "category": "major",

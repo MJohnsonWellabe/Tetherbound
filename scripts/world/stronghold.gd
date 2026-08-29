@@ -60,6 +60,11 @@ const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const APPROACH_DRAIN := preload("res://scripts/world/approach_drain_skin.gd")
+## T1-HALL (2026-08-30). `building_prefabs.gd` is the same composer
+## `landmark.gd`'s (retiring) castle and every settlement building already go
+## through -- see `_build_hall_massing()` below for why this building needs it
+## too, now that the castle IS this building.
+const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 
 ## CONTENT-0828B. The shared constructed-interior method. The owner named the
 ## castle and the Warrens together as "the lame looking locations. basically
@@ -235,7 +240,9 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 	_build_lights()
 	_build_exterior_facing()
 	_build_exterior_dressing()
+	_build_keep_parapets()
 	_build_gate_frame()
+	_build_hall_massing()
 	_build_interior_area()
 	_build_machine()
 	_build_recovery_point()
@@ -1037,6 +1044,32 @@ func _build_exterior_dressing() -> void:
 			_dress_exterior_wall(centre, size, height, side, true)
 
 
+## T1-HALL (2026-08-30). Design acceptance item 6: "continuous parapet line".
+## `_build_exterior_dressing()` above only ever reached the two OPEN yards'
+## flank walls; the three roofed keep chambers behind them (the ones the
+## judge's "no roofline articulation beyond one step" and "one flat
+## roofline" verdicts are actually about) never got a coping/merlon pass at
+## all. `_dress_exterior_wall(..., hardware: false)` already handles any
+## side safely with no opening cut through it (`_build_gate_frame()` proves
+## this calling it on a "-z" face); this just widens the same call to every
+## side of every keep chamber, skipping only what `_build_exterior_dressing`/
+## `_build_gate_frame` already dress (outer_works' -x/+x/-z, courtyard's
+## -x/+x) so nothing doubles a coping box onto itself. `hardware` stays false
+## here -- the occupation layer's girders/banners concentrate on the gate
+## and the cable landing (`_build_hall_massing()`), not on every keep wall.
+const KEEP_CHAMBERS: Array[String] = ["tether_approach", "warden_arena", "legendary_chamber"]
+func _build_keep_parapets() -> void:
+	for id in KEEP_CHAMBERS:
+		if not _chambers.has(id):
+			continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 6.0))
+		for side in ["-x", "+x", "-z", "+z"]:
+			_dress_exterior_wall(centre, size, height, side, false)
+
+
 ## `along_x`-general for the coping/merlon roofline pass, which
 ## `_build_gate_frame()` also calls (with `side: "-z"`) to close the roofline
 ## over the gate face's own flank pieces. `hardware` is only ever true for a
@@ -1111,7 +1144,7 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 ## `Vector3(1,0,0).rotated(UP, yaw_rad) == (cos(yaw_rad), 0, -sin(yaw_rad))`:
 ## `0` points +X (an east wall's own outward normal), `PI` points -X (west),
 ## `PI/2` points -Z (south, the gate).
-func _hang_banner(at: Vector3, yaw_rad: float) -> void:
+func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR, scale: float = BANNER_SCALE) -> void:
 	if not ResourceLoader.exists(BANNER_MODEL):
 		return
 	var mesh: Mesh = load(BANNER_MODEL) as Mesh
@@ -1121,13 +1154,31 @@ func _hang_banner(at: Vector3, yaw_rad: float) -> void:
 	instance.name = "ExteriorBanner"
 	instance.mesh = mesh
 	var material := StandardMaterial3D.new()
-	material.albedo_color = BANNER_COLOUR
+	material.albedo_color = colour
 	material.roughness = 0.9
 	instance.material_override = material
-	instance.scale = Vector3.ONE * BANNER_SCALE
+	instance.scale = Vector3.ONE * scale
 	instance.position = at
 	instance.rotation.y = yaw_rad
 	add_child(instance)
+
+
+## Design §6.2's one invented story beat: a single faded Meadows-blue banner,
+## torn, half-height, under a fresh oxblood one -- the seizure, read in one
+## glance, at zero new asset cost (the same `Banner.obj` every other banner
+## in this file already uses, just re-tinted and stood shorter). Placed on
+## the west bailey wall (`outer_works`' own `-x` flank), where a player
+## walking the approach sees it beside the ordinary oxblood rhythm
+## `_dress_exterior_wall`'s hardware section already hangs there.
+const BLUE_RELIC_COLOUR := Color("#3d4a63")
+func _build_blue_relic_banner() -> void:
+	var ow: Dictionary = _chambers.get("outer_works", {})
+	if ow.is_empty():
+		return
+	var centre := _local_of(ow.get("at", []))
+	var half := _size_of(ow.get("size", [])) * 0.5
+	var face_x := centre.x - (half.x + _wall_t * 0.5)
+	_hang_banner(Vector3(face_x, _floor_y + 3.2, centre.z), PI, BLUE_RELIC_COLOUR, BANNER_SCALE * 0.65)
 
 
 ## The gate: "a plain rectangular hole with no gatehouse, frame, reveal or
@@ -1168,6 +1219,234 @@ func _build_gate_frame() -> void:
 	for s2 in [-1.0, 1.0]:
 		_hang_banner(Vector3(lateral + s2 * (width * 0.5 + jamb_w + 0.35), _floor_y + op_height * 0.7,
 			outer_face_z), PI * 0.5)
+
+
+## T1-HALL (2026-08-30). HALL_DESIGN_2026-08-30.md §4/§9 step 2: the castle
+## kit's own massing, standing on the works instead of 154m away as a second
+## building (`landmark.gd`'s castle, which retires once this lands --
+## `playground_world.gd` stops calling it). `meadows_hall`
+## (`building_prefabs.json`) is authored in the SAME local frame this file's
+## own chambers are (x=lateral, z=depth), derived from their real `at`/`size`
+## values rather than guessed, so it adds as one child at local
+## `(0, _floor_y, 0)` -- no rotation, no per-piece transform math here, the
+## same `add_child` composition every other placement in this file already
+## relies on. Gatehouse flankers, bailey corner and mid-wall towers (real
+## girth this time -- the direct fix for the judge's "sandcastle decoration"
+## finding on the retiring castle's own skinny mid-wall towers), the great
+## tower over the legendary chamber, and the tether_approach roof. The waist
+## wall closes the one real gap in the flank silhouette this kit pass alone
+## cannot reach (`_build_hall_waist()` below); openings are `_build_hall_slits()`.
+const HALL_PREFAB := "meadows_hall"
+var _hall_prefabs: RefCounted = null
+
+
+func _build_hall_massing() -> void:
+	_hall_prefabs = PREFABS.new()
+	if not _hall_prefabs.call("load_recipes"):
+		push_error("no building recipes; the Hall's massing cannot stand")
+		return
+	var template_holder := Node3D.new()
+	template_holder.name = "HallPrefabTemplates"
+	template_holder.visible = false
+	add_child(template_holder)
+	_hall_prefabs.call("set_template_holder", template_holder)
+
+	var massing: Node3D = _hall_prefabs.call("instantiate", HALL_PREFAB)
+	if massing == null:
+		push_error("meadows_hall prefab missing: %s" % HALL_PREFAB)
+		return
+	massing.name = "HallMassing"
+	massing.position = Vector3(0.0, _floor_y, 0.0)
+	add_child(massing)
+	_weather_hall_massing(massing)
+	_build_hall_waist()
+	_build_hall_slits()
+	_build_cable_landing()
+	_build_blue_relic_banner()
+
+
+## The SAME technique `landmark.gd::_weather_castle` uses on the same kit, for
+## the same reason: the castle kit's stone surfaces ship with zero UVs (a
+## direct probe of `WallBricks.obj` found 0 `vt` lines), so triplanar is the
+## only mapping this geometry supports, and `T_UnevenBrick` at the works' own
+## measured `STONE_TILE` = 0.28 is "one stone, one scale, one value ladder,
+## both kits" (design §5) rather than a second texture re-picked for this
+## pass. `building_prefabs.gd::_apply_retint` already set the flat colours;
+## this mutates the SAME material instances (safe: `_hall_prefabs` above is a
+## composer local to this one massing pass, shared by no other prefab) to
+## carry the real stone photo under them.
+const HALL_WEATHER_MATERIALS := [
+	"LightRock", "LightRock.001", "LightRock.002",
+	"DarkRock", "DarkRock.001",
+]
+func _weather_hall_massing(massing: Node3D) -> void:
+	var done: Dictionary = {}
+	for mi in _weather_hall_mesh_instances(massing):
+		if mi.mesh == null:
+			continue
+		for surface in mi.mesh.get_surface_count():
+			var mat := mi.get_active_material(surface)
+			if mat == null or not mat is StandardMaterial3D:
+				continue
+			var std := mat as StandardMaterial3D
+			if not HALL_WEATHER_MATERIALS.has(std.resource_name):
+				continue
+			if done.has(std.get_instance_id()):
+				continue
+			done[std.get_instance_id()] = true
+			std.albedo_texture = STONE_ALBEDO
+			std.normal_enabled = true
+			std.normal_texture = STONE_NORMAL
+			std.roughness_texture = STONE_ROUGHNESS
+			std.uv1_triplanar = true
+			std.uv1_scale = Vector3.ONE * STONE_TILE
+			std.roughness = maxf(std.roughness, 0.92)
+
+
+func _weather_hall_mesh_instances(node: Node) -> Array[MeshInstance3D]:
+	var found: Array[MeshInstance3D] = []
+	if node is MeshInstance3D:
+		found.append(node as MeshInstance3D)
+	for child in node.get_children():
+		found.append_array(_weather_hall_mesh_instances(child))
+	return found
+
+
+## The waist: the real gap in the flank silhouette between `courtyard`'s back
+## wall and `tether_approach`'s front wall (their own wall footprints do not
+## touch -- design §4's "wrap with ONE course of TallWallBricks so bailey and
+## keep read as one building"). Built directly, the same way every other
+## chamber wall in this file is (`_wall_material`/`_box`), rather than as
+## more kit modules: it is a short, flat infill panel, not an accented piece,
+## and this file already owns the exact masonry material the panel needs to
+## match.
+func _build_hall_waist() -> void:
+	var courtyard: Dictionary = _chambers.get("courtyard", {})
+	var tether: Dictionary = _chambers.get("tether_approach", {})
+	if courtyard.is_empty() or tether.is_empty():
+		return
+	var cy_z1: float = _local_of(courtyard.get("at", [])).z + _size_of(courtyard.get("size", [])).y * 0.5 + _wall_t
+	var ta_z0: float = _local_of(tether.get("at", [])).z - _size_of(tether.get("size", [])).y * 0.5 - _wall_t
+	if ta_z0 <= cy_z1:
+		return
+	var mid := (cy_z1 + ta_z0) * 0.5
+	var length := ta_z0 - cy_z1
+	var height := (float(courtyard.get("height", 9.0)) + float(tether.get("height", 6.5))) * 0.5
+	var cy_half_x: float = _size_of(courtyard.get("size", [])).x * 0.5 + _wall_t
+	var ta_half_x: float = _size_of(tether.get("size", [])).x * 0.5 + _wall_t
+	for s in [-1.0, 1.0]:
+		var wall_x: float = (cy_half_x + ta_half_x) * 0.5 * float(s)
+		_box(Vector3(_wall_t, height + _skirt, length),
+			Vector3(wall_x, _floor_y + height * 0.5 - _skirt * 0.5, mid),
+			_wall_material(true), false)
+
+
+## The "no arrow slits along entire wall runs" fix (design §4). Recessed dark
+## boxes at upper-course height along the two open yards' true flank walls --
+## the same `_box(..., false)` decoration-only technique every trim/hardware
+## piece in this file already uses, so a slit can never become a ledge or a
+## collider a fight snags on. Only the two yards: the three roofed keep
+## chambers behind them are never seen from the meadow at this range, and
+## `interior_structure.gd`'s own `reveals` pass already gives THEM a window
+## grammar from the inside.
+const SLIT_SPACING := 8.0
+const SLIT_SIZE := Vector3(0.4, 1.8, 0.35)
+func _build_hall_slits() -> void:
+	for id in EXTERIOR_CHAMBERS:
+		if not _chambers.has(id):
+			continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 6.0))
+		for side in ["-x", "+x"]:
+			if not _opening_on(id, side).is_empty():
+				continue
+			_slit_row(centre, size, height, side)
+
+
+func _slit_row(centre: Vector3, size: Vector2, height: float, side: String) -> void:
+	var sign_ := -1.0 if side.begins_with("-") else 1.0
+	var face_x := centre.x + sign_ * (size.x * 0.5 + _wall_t * 0.5 + SLIT_SIZE.x * 0.5 - 0.05)
+	var span := size.y
+	var count := maxi(1, int(floor(span / SLIT_SPACING)))
+	var start := centre.z - float(count - 1) * 0.5 * SLIT_SPACING
+	var slit_y := _floor_y + height * 0.72
+	var slit_material := _material(_stone_dark(), 0.0, false)
+	for i in count:
+		var z := start + float(i) * SLIT_SPACING
+		_box(SLIT_SIZE, Vector3(face_x, slit_y, z), slit_material, false)
+
+
+## Design §6.1: "the single highest-value occupation object... the moment
+## the judge's praised pylons and the condemned building become one
+## system." One `severed_spokes.gd`-style conduit span from the last
+## approach pylon's own head to a brass anchor on the north-west bailey
+## tower (`meadows_hall`'s own gatehouse-adjacent corner tower, the same
+## corner `_build_hall_massing()`'s generator sited at the outer_works'
+## own NW wall corner). `severed_spokes.gd::_conduit_span` is reused rather
+## than re-implemented, the same way `_build_approach_conduits()` above
+## already reuses `_build_pylons` wholesale -- a throwaway instance, freed
+## the moment this function returns, exactly like `_load_palette()`'s.
+##
+## Parented to the WORLD: both ends are real world coordinates (the pylon's
+## own siting, and this node's own `to_global` of the tower corner), and a
+## sagging cable is drawn as a chain of world-space cylinder segments, not
+## as chamber-local geometry.
+func _build_cable_landing() -> void:
+	if _world == null:
+		return
+	var config: Dictionary = _config.get("approach_pylons", {})
+	var list: Array = config.get("list", [])
+	if list.is_empty():
+		return
+	var last: Dictionary = list[list.size() - 1] as Dictionary
+	var last_at: Array = last.get("at", [])
+	if last_at.size() < 2:
+		return
+	var pylon_x := float(last_at[0])
+	var pylon_z := float(last_at[1])
+	var pylon_height := float(config.get("height", 12.0))
+	var pylon_ground: float = float(_world.call("ground_height_at", pylon_x, pylon_z))
+	if is_nan(pylon_ground):
+		return
+	# CONDUIT_ATTACH (0.66) matches severed_spokes.gd's own pylon-head
+	# attachment fraction, so this span leaves the pylon at the same point
+	# its own conduit run does, not a seam a player can see from the trail.
+	var pylon_head := Vector3(pylon_x, pylon_ground + pylon_height * 0.66, pylon_z)
+
+	# The NW bailey tower corner, in this node's own local frame -- the same
+	# point `tools/_gen_meadows_hall.py`'s generator sited the tower at
+	# (outer_works' own wall corner), nudged 1m proud on both faces so the
+	# anchor sits on the tower's own stone rather than buried inside it.
+	var ow: Dictionary = _chambers.get("outer_works", {})
+	if ow.is_empty():
+		return
+	var ow_half := _size_of(ow.get("size", [])) * 0.5
+	var corner_local := Vector3(-(ow_half.x + _wall_t) - 1.0, 12.0, -(ow_half.y + _wall_t) - 1.0)
+	var anchor := to_global(corner_local)
+
+	# A brass-and-oxblood bracket at the anchor -- the fitting the cable
+	# actually terminates on, not a cable ending in mid-air against stone.
+	var bracket_mat := StandardMaterial3D.new()
+	bracket_mat.albedo_color = Color("#8a6f3a")
+	bracket_mat.metallic = 0.55
+	bracket_mat.roughness = 0.45
+	var bracket := MeshInstance3D.new()
+	bracket.name = "CableAnchorBracket"
+	var bracket_box := BoxMesh.new()
+	bracket_box.size = Vector3(0.5, 0.35, 0.5)
+	bracket_box.material = bracket_mat
+	bracket.mesh = bracket_box
+	bracket.position = corner_local
+	add_child(bracket)
+
+	var builder := Node3D.new()
+	builder.name = "HallCableLanding"
+	_world.add_child(builder)
+	var spokes: Node3D = SEVERED_SPOKES.new()
+	spokes.call("_conduit_span", builder, 0, pylon_head, anchor, _live_material(), 1.0)
+	spokes.free()
 
 
 ## CONTENT-0828B. The shared constructed-interior method, in the fortress's own
@@ -1622,7 +1901,25 @@ func _place_gauntlet() -> void:
 		var at := to_global(Vector3(centre.x + offset.x, _floor_y, centre.z + offset.z))
 		var trainer := str(spec.get("trainer", ""))
 		positions[trainer] = Vector2(at.x, at.z)
-		facings[trainer] = float(spec.get("facing_deg", 0.0))
+		# T1-HALL (2026-08-30): `facing_deg` is authored in the complex's own
+		# LOCAL frame (the same frame `offset`/`at` above are), but the Trainers
+		# node these bodies land under is parented to the WORLD, unrotated --
+		# `trainer_npc.gd::_spawn` sets `npc.rotation.y` from this value
+		# directly as a WORLD angle, with no yaw composition of its own. Every
+		## OTHER placement in this function goes through `to_global()`, which DOES
+		## carry the site's `yaw_deg` -- position was always yaw-safe, facing was
+		## not. That was invisible while `yaw_deg` stayed 90 for this content's
+		## whole life (the authored facing_deg values were tuned to look right at
+		## that one yaw and nobody ever changed it), and it broke silently the
+		## moment T1-HALL's re-site moved `yaw_deg` 90 -> 0: `smoke_gate_e_finale`
+		## started reporting the elite's and the Warden's own fights forming
+		## metres under the floor, because the trainer's wrong-by-90-degrees
+		## facing put the player's engagement position somewhere this room's
+		## narrower footprint had never been exercised against. Adding the site's
+		## own rotation composes it back, exactly the way `add_child`'s ordinary
+		## parent-child rotation composition already does for free everywhere
+		## else in this file (the recovery bed, every wall, every prop).
+		facings[trainer] = float(spec.get("facing_deg", 0.0)) + rad_to_deg(rotation.y)
 		_markers["trainer_%s" % trainer] = at
 
 	_trainers = TRAINER_NPCS.new()
@@ -1749,11 +2046,32 @@ func ground_height_at(x: float, z: float) -> float:
 ##
 ## That is a gauntlet fight held seven metres below the room it started in.
 ## `scripts/world/built_floor.gd` is the reader; its header carries the rest.
+##
+## T1-HALL (2026-08-30): the margin below grew from `_wall_t` (1.2m) alone to
+## `_wall_t + FLOOR_CLAIM_MARGIN_M`. `combat_manager.gd::_place_fighters()`
+## (owned by `scripts/combat/**`, not this file) can place a fight up to
+## `deploy_offset + separation` (~7.6m by default) past wherever the player
+## engaged from, and a multi-creature trainer battle re-places its next
+## fighter from wherever the PREVIOUS one ended up, so successive rounds can
+## walk a fight several more metres in the same direction -- a pre-existing
+## combat-placement characteristic, not something this file's re-site
+## introduced. `smoke_gate_e_finale` measured it landing a genuine 5-6m past
+## the ORIGINAL 1.2m pad for `stronghold_elite` (tether_approach, the
+## smallest roofed chamber) and the Warden (a multi-creature battle in
+## warden_arena), and the historical example quoted above (`foe(77.2, ...)`)
+## shows the same class of overflow already living in this codebase before
+## this pass touched it. This function only answers "whose floor is this",
+## never where a fighter may stand or how far a fight may drift -- containing
+## that drift is `combat_manager.gd`'s own arena-bounds job and stays there;
+## widening this margin only stops a fight that has already drifted past a
+## wall from being told its floor is metres of open meadow below it.
+const FLOOR_CLAIM_MARGIN_M := 10.0
 func built_floor_height_at(x: float, z: float) -> float:
 	var local := to_local(Vector3(x, 0.0, z))
+	var margin := _wall_t + FLOOR_CLAIM_MARGIN_M
 	for rect: Array in _footprint:
-		if local.x >= float(rect[0]) - _wall_t and local.x <= float(rect[2]) + _wall_t \
-				and local.z >= float(rect[1]) - _wall_t and local.z <= float(rect[3]) + _wall_t:
+		if local.x >= float(rect[0]) - margin and local.x <= float(rect[2]) + margin \
+				and local.z >= float(rect[1]) - margin and local.z <= float(rect[3]) + margin:
 			return global_position.y + _floor_y
 	return NAN
 
