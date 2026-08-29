@@ -164,14 +164,13 @@ Prompt:
 
 Good result: a medium, substantial-looking lizard, not a palm-sized gecko —
 this is the owner brief's single named risk for this species. Tail coils
-into a clean spiral rather than trailing straight. One thing to check on
-the actual mesh, not assumed from the crop: the reference's own `side.png`
-draws the tail with a visible gap in its coil (confirmed against the
-master sheet, not a cropping defect — see the handover) — if the generator
-reproduces that gap as a literal break in the mesh rather than a tail
-curling out of view behind itself, that candidate should be rejected and
-re-rolled, since a physically disconnected tail is not something a texture
-pass fixes.
+into a clean spiral rather than trailing straight. (An earlier version of
+this plan flagged the `side.png` crop as showing the tail with a gap in its
+coil and called that the source art rather than a defect — that was wrong,
+caught on review: it was a stray decorative flourish from the sheet
+bleeding into the crop, now masked out; see the handover for the full
+correction. All four crops show one complete, correctly-attached tail —
+nothing further to watch for on this front.)
 
 If promising: 2 refine candidates (80 credits).
 

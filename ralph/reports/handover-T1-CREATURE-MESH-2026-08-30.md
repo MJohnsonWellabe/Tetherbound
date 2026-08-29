@@ -168,17 +168,45 @@ take just the basename. I did not verify whether anyone has actually run
 latent bug rather than a regression I introduced, but it's fixed either way
 and the fix is in this branch's diff.
 
-**Shadelet's `side.png` has a tail that looks disconnected — it isn't, it's
-the source art.** The reference draws the tail's spiral curl with a visible
-gap between the near coil and the tip, which reads at a glance like two
-separate floating pieces. I checked this against the original master sheet
-(not just my crop) and confirmed the gap is in the artist's own
-illustration, not a cropping artifact. Recorded in both `views.json`'s
-comment and the generation plan, since whoever reviews the first generated
-candidate should know to judge that feature against the source, not assume
-the crop broke it — and should still watch for the generator reproducing
-it as a literal mesh disconnection, which the plan document flags as a
-reject condition.
+**Shadelet's `side.png` originally shipped with what looked like a
+disconnected tail fragment, and my first read of it was wrong.** I initially
+judged the gap as the artist's own illustration and said so, in this
+document and in the plan, without looking hard enough at the source. The
+user caught this and asked me to look again. On a proper re-check (a
+connected-component analysis of the source pixels, not just eyeballing a
+crop) it turned out to be a real defect: this sheet draws a small,
+unrelated decorative spiral flourish in the blank gap between the SIDE and
+BACK cells — the sheet's own page decoration, not part of any creature —
+and it was riding into `side.png` because `content_rows()` shares one
+top/bottom across all three views in a band, and BACK's own tail
+legitimately reaches y≈498, which dragged SIDE's crop down far enough to
+sweep up the flourish sitting below SIDE's own real content (which itself
+ends around y≈451). My first attempted fix — a `mask` rectangle over the
+flourish — made things worse before it got better: rendering it out showed
+the mask's own background-fill sampling had picked up enough of BACK's
+dark ink from a near-touching edge to paint a solid dark rectangle into
+`back.png`. The actual fix was to stop using band+centres for this species
+and switch to explicit hand-measured `boxes` per view (the same escape
+hatch `grandpa`/`veridian` already use in this file) — SIDE's box stops
+well above the flourish, BACK's starts well clear of it, and neither
+rectangle touches it at all. All four crops (front/side/back/top) were
+re-inspected after this and show one complete, correctly-attached tail on
+every view; there is nothing left to caveat about Shadelet's tail. One
+accepted, documented trade-off from the box-based fix: FRONT's own tail
+curl is clipped by about half, because FRONT's tail and SIDE's head sit
+close enough in x that no single rectangle could hold all of FRONT's tail
+without also reaching into SIDE's head — judged the smaller cost, and
+BACK's box (plus the TOP view) still shows the tail's full, uncropped
+length. Full detail in `views.json`'s own `shadelet` comment, written as a
+two-stage correction so the mistake stays visible rather than quietly
+overwritten.
+
+**The lesson worth generalizing:** I looked at a crop, saw something odd,
+and reached for "that's the source art" instead of tracing it back to the
+actual source pixels. That's backwards — a claim that a defect is
+intentional needs the same evidence a claim that it's a bug does, and here
+I only supplied that evidence after being asked to look again, not before
+writing it down the first time.
 
 ## Disagreements / things I'd push back on if asked
 
