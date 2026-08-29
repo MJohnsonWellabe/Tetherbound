@@ -237,7 +237,49 @@ ACCEPTABLE.**
   `_capture_ground_and_sky.gd` does, so its frames are unusable for colour
   judgement. Composition read through the veil of `water-04` is actually
   promising (framed path, big tree, house across the pond).
-## 7. Sky and sun across the day cycle — PENDING RENDER
+## 7. Sky and sun across the day cycle
+
+Frames: `shots/day_night/hour-*.png` (the driven passive clock —
+`tools/_capture_day_night_transition.gd`, 12 hours at one fixed ranger-camp
+viewpoint), plus the snap-preset `-golden`/`-night` frames from
+`_capture_ground_and_sky.gd`.
+
+**Verdict: BAD**, on two grounds the still frames show unambiguously.
+
+- **Deep night is crimson.** From some point after 20:30 through at least
+  02:00, the *entire world* renders in a blood-red/oxblood wash —
+  `hour-22.00`, `hour-23.90`, `hour-00.10`, `hour-02.00` are red frames:
+  red sky, red-orange ground brighter than the 20:30 dusk, long
+  golden-hour-length shadows at midnight. The snap preset
+  `apply_time("night")` (`ground-02-…-night.png`) shows the *intended*
+  night — blue, moonlit patches, navigable, subtle glowing flowers, and it
+  is good. The driven clock does not land there. Beyond being wrong on its
+  own terms, it breaks the project's palette rule: oxblood is reserved for
+  Team Tether danger, and the passive clock paints the whole safe world
+  with it for a third of every day. Guess (flagged): the blended keyframe
+  path interpolates through, or clamps to, a sunset/danger colour whose hour
+  window is wrong, so midnight blends toward a red keyframe instead of the
+  night one the snap API uses.
+- **Golden hour never happens on the driven clock.** The sweep brackets the
+  18:00 keyframe (`hour-17.50/17.90/18.10`) and every one of those frames
+  is a flat grey-blue overcast wash — no warm cast, no long warm shadows,
+  no sun presence. The snap preset `apply_time("golden")`
+  (`ground-01-…-golden.png`) produces a genuinely lovely warm frame, so the
+  look exists in the keyframe set; the continuous blend never displays it.
+  A player free-running the clock gets grey → blue → **red**, and never
+  the keyart's sunset panel.
+- Secondary defects: the golden snap's **sun is a flat white ellipse** — a
+  blown sticker-disc with no halo gradient (`ground-01-…-golden`); in
+  bands 3–5 the "day" sky carries dark navy ink-blot clouds over fully
+  sunlit terrain, so sky and ground disagree about the weather
+  (`ground-03/04-…-day`, `water-03-stream-eye`); and at 19:00–20:50 tree
+  canopies stay near-daylight green over an already-dark ground, reading
+  self-lit.
+- **What works:** the 19:00–20:50 dusk slide itself is smooth, blue and
+  navigable — the OP23 "night has a floor" goal visibly holds in that
+  window; the midnight-wrap crossing (23.9 → 0.1) is continuous (both
+  red, but continuous); the fixed frames show no snapping between
+  adjacent hours short of the red window's entry.
 ## 8. Terrain macro composition / landmarks — PENDING RENDER
 
 (Verdicts land in this file as each capture completes; the render queue is
