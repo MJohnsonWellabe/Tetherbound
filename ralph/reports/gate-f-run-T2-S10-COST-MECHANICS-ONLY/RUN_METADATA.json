@@ -1,0 +1,21 @@
+{
+  "_comment": "MECHANICS-ONLY freeze record for ralph/T2-S10-COST's own validation of the S10 split (S10a..S10e). This is NOT a Gate F evidence run: it exists solely to prove the harness mechanics of the split (seed_save/save_out chaining, cost-gate pricing) using the STRANDED S09-exit.json from ralph/reports/gate-f-run-20260828T183531Z/S09/saves/S09-exit.json. See MECHANICS_ONLY.md in this directory and ralph/reports/handover-T2-S10-COST-2026-08-30.md for what this run does and does not prove.",
+  "candidate_sha": "477a296acea784fa5bdb9b7da43be2e6ccfe1f56",
+  "candidate_ref": "ralph/T2-S10-COST",
+  "godot_version": "4.7",
+  "lanes": {
+    "logic": {
+      "display_server": "headless",
+      "renderer": "none -- godot --headless --path . --script, NO --rendering-driver"
+    },
+    "capture": {
+      "display_server": "X11 under xvfb-run",
+      "renderer": "opengl3 / Compatibility under xvfb — llvmpipe software rasterisation",
+      "_comment": "Declared, not exercised. No capture lane is run by this mechanics-only validation."
+    }
+  },
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "seeded from a STRANDED S09-exit.json, not a fresh user:// dir -- mechanics validation only",
+  "operator": "claude-sonnet-5 agent, ralph/T2-S10-COST",
+  "free_build": false
+}

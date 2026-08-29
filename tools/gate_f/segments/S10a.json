@@ -1,0 +1,656 @@
+{
+  "id": "S10a",
+  "_comment_split": "SPLIT from the monolithic S10.json (2026-08-30, ralph/T2-S10-COST). The original single S10 step-script asks for 439,336 planned frames; measured in-play at 0.097 s/frame (right after a real combat exchange) that prices the segment's own remainder at 40,195 s against a 14,400 s per-segment ceiling -- see ralph/reports/gate-f-run-20260828T183531Z/S10/BLOCKER.md. The dominant cost is NOT combat: the S10-89..S10-106 post-win walk-back alone is 378,750 of those 439,336 planned frames (86%), because it retraces roughly 7.6 km of the whole Meadows on foot per section 0.6's no-shortcut rule. S10 is split into five sub-segments chained by save handoff exactly like S01-S09, each individually costed comfortably under the ceiling: S10a (this file, Hall entry -> gauntlet -> recovery -> elite), S10b (Warden -> legendary -> release ceremony), S10c/S10d/S10e (the walk-back, cut at the same landmarks S05-S09's own segment boundaries already use -- Old Mill Crossing and South Bridge -- so the return trip's cuts mirror the outbound journey's). See ralph/reports/handover-T2-S10-COST-2026-08-30.md for the full frame-budget analysis and the reprice mechanics (operator_harness.gd's _apply_price) that motivated exactly this split.",
+  "_comment_boundary": "Ends at 'the elite is beaten' (original step S10-50), immediately before the Warden is tracked as an objective. Frame budget at worst MEASURED per-frame rate from the blocked run (0.097118 s/frame, itself measured during this segment's own most expensive fight) is roughly 38,400 frames * 0.097 = ~3,725 s, 26% of the 14,400 s ceiling -- comfortable even without assuming any improvement from a fresh reprice window.",
+  "record_hz": 0.5,
+  "title": "Finale I: Hall entry -> gauntlet -> recovery -> elite",
+  "lane": "journey",
+  "_comment": "Transcribed verbatim from the original S10.json (steps S10-01..S10-50, renumbered S10a-01..), which was itself transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section E.1 (CB-06), section G (GF-13-FINALE-01, GF-14-COMBAT-06) and section H.",
+  "_comment_warden_coordinate": "AMBIGUITY carried over from S10.json, unaffected by the split: section E.1 CB-06 gives warden_aldis as (90.2,7569.4), which is exactly what data/config/bands/band5_stronghold_approach/trainers.json says. data/config/stronghold.json puts the `warden_arena` chamber at offset (0,90.2) from site.at (0,7560) -- that is (0,7650.2). The two numbers look like the same pair transposed. The discrepancy is recorded rather than silently corrected; it does not affect this segment (the Warden fight itself is in S10b).",
+  "evidence_lane": "logic",
+  "capture_lane": "S10aC",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, ralph/GATE_F_MASTER_PROTOCOL.md §H.1. LOGIC lane: headless, mechanics/telemetry/step verdicts. Its own §G ids (GF-13-FINALE-01, GF-14-COMBAT-06) are DELEGATED to S10aC. The harness refuses to start this segment if S10aC does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it.",
+  "steps": [
+    {
+      "id": "S10a-01",
+      "title": "how this segment is entered",
+      "action": "note",
+      "args": {
+        "text": "This is the FIRST of S10's five split sub-segments (S10a..S10e; see this file's header). Its entry save is `S09-exit`, unchanged from the original monolithic S10 -- the split adds new handoff points AFTER this one, it does not move the chapter's real entry. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10a-02",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer"
+    },
+    {
+      "id": "S10a-03",
+      "title": "seed slot 4 from the previous segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S09-exit.json"
+      },
+      "expected": "Section B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
+    },
+    {
+      "id": "S10a-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused and Load Game enabled, because a save now exists"
+    },
+    {
+      "id": "S10a-05",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses its first button; without focus a controller cannot reach Load Game at all"
+    },
+    {
+      "id": "S10a-06",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "S10a-07",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+    },
+    {
+      "id": "S10a-08",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
+    },
+    {
+      "id": "S10a-09",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+    },
+    {
+      "id": "S10a-09a",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-11: a load restores the party and deploys nothing -- encounter_director.gd::_engageable() returns null on a null ally before any distance check, so no combat/catch/gate-flag assertion downstream of a load can mean anything without this. creature_recall (RB) summons the active creature so this segment's fights can actually start."
+    },
+    {
+      "id": "S10a-10",
+      "title": "the full belt travelled",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 5
+      },
+      "expected": "five of five into the Hall",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+    },
+    {
+      "id": "S10a-11",
+      "title": "the Hall is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "fight_through_the_hall"
+      },
+      "expected": "Section E.5 objective 20/24 `fight_through_the_hall`"
+    },
+    {
+      "id": "S10a-12",
+      "title": "Section H cadence for this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 'Mandatory for the highest-risk segments: ... CB-06 + CB-07 + Warden (representative combat) ... S10 (finale)' at 0.5 Hz. The vocabulary has no background-recorder action; the bounded `capture_seq` over the Warden fight is in S10b, not here. This segment's own high-risk coverage is CB-06's patrol/courtyard/elite legs."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10a-13",
+      "title": "walk in through the Outer Works",
+      "action": "move_to",
+      "args": {
+        "at": [
+          0.0,
+          7560.0
+        ],
+        "budget_frames": 9000,
+        "close_enough": 5.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "data/config/stronghold.json's `outer_works` chamber at site.at (0,7560). Section D RT-12: 'Stronghold/finale interior | Hall spaces'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S10a-14",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "the Hall's own content joins the POI set"
+    },
+    {
+      "id": "S10a-15",
+      "title": "capture GF-13-FINALE-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-13-FINALE-01",
+        "class": "13",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "Hall interior gauntlet space, Outer Works/Courtyard",
+        "intended_proof": "occupation/industrialization read"
+      },
+      "expected": "Section G: Hall interior gauntlet space, Outer Works/Courtyard -- occupation/industrialization read"
+    },
+    {
+      "id": "S10a-16",
+      "title": "walk to the patrol in the Outer Works",
+      "action": "move_to",
+      "args": {
+        "at": [
+          6.0,
+          7560.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "stronghold_patrol, Patrolman Verrick at (6,7560) -- the first of the gauntlet's three",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S10a-17",
+      "title": "challenge the patrol",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.1 CB-06: 'Stronghold fights | patrol -> courtyard -> elite -> warden_aldis'"
+    },
+    {
+      "id": "S10a-18",
+      "title": "hear him out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 20
+      },
+      "expected": "the gauntlet's first rung"
+    },
+    {
+      "id": "S10a-19",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S10a-20",
+      "title": "combat owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S10a-21",
+      "title": "capture GF-14-COMBAT-06",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-06",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-06: stronghold fights, patrol -> courtyard -> elite -> warden_aldis",
+        "intended_proof": "per-case: combat camera verified at battle start for every stronghold fight -- target_on_screen at t=0 and every switch"
+      },
+      "expected": "Section G: CB-06: stronghold fights, patrol -> courtyard -> elite -> warden_aldis -- per-case: combat camera verified at battle start for every stronghold fight -- target_on_screen at t=0 and every switch"
+    },
+    {
+      "id": "S10a-22",
+      "title": "CB-06's camera clause",
+      "action": "note",
+      "args": {
+        "text": "Section E.1 CB-06's own clause, quoted so the operator applies it to every fight in this segment: 'combat camera must be verified at battle start for every stronghold fight: target_on_screen at t=0 and every switch'. The `combat` object on every `combat_start` and `combat_switch` event carries `target_on_screen`; section L.6 T05's stronghold clause is named there as one of the two highest-priority collision probes in the whole protocol."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10a-23",
+      "title": "fight the patrol",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 38,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10a-24",
+      "title": "switch pilot",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "CB-06: target_on_screen has to hold at every switch"
+    },
+    {
+      "id": "S10a-25",
+      "title": "keep fighting",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 24,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10a-26",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return with no stuck modal"
+    },
+    {
+      "id": "S10a-27",
+      "title": "the patrol is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_stronghold_patrol"
+      },
+      "expected": "`defeated_stronghold_patrol`, the first of objective 20/24's three `count_flags`"
+    },
+    {
+      "id": "S10a-28",
+      "title": "walk into the Courtyard",
+      "action": "move_to",
+      "args": {
+        "at": [
+          36.0,
+          7564.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "stronghold.json's `courtyard` chamber; stronghold_courtyard is Warder Solene at (36,7564)",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S10a-29",
+      "title": "challenge the courtyard warder",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the gauntlet's second rung"
+    },
+    {
+      "id": "S10a-30",
+      "title": "hear her out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 20
+      },
+      "expected": "the escalation inside the Hall"
+    },
+    {
+      "id": "S10a-31",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "CB-06: verify target_on_screen at t=0"
+    },
+    {
+      "id": "S10a-32",
+      "title": "fight the courtyard warder",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 40,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10a-33",
+      "title": "a charged attack",
+      "action": "press",
+      "args": {
+        "control": "combat_charged",
+        "hold": "long"
+      },
+      "expected": "the charged verb's hold edge"
+    },
+    {
+      "id": "S10a-34",
+      "title": "finish her",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 24,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10a-35",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return"
+    },
+    {
+      "id": "S10a-36",
+      "title": "the courtyard is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_stronghold_courtyard"
+      },
+      "expected": "`defeated_stronghold_courtyard`, the second of the three `count_flags`"
+    },
+    {
+      "id": "S10a-37",
+      "title": "Section B's recovery beat",
+      "action": "note",
+      "args": {
+        "text": "Section B's span names a 'recovery' beat between the gauntlet and the elite. stronghold.json carries a `recovery` block and `creature_bed.gd::AUTHORED_STRONGHOLD_REST` is a bed that belongs to the world rather than to the player. The steps below use it. Section L.4: 'Creature care/rest; bed occupancy/unavailability/overnight recovery'."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10a-38",
+      "title": "use the Hall's recovery point",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the authored rest inside the complex -- the one place the chapter lets a player repair a team mid-gauntlet"
+    },
+    {
+      "id": "S10a-39",
+      "title": "let the recovery panel open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the creature-bed panel takes input"
+    },
+    {
+      "id": "S10a-40",
+      "title": "rest the team",
+      "action": "press",
+      "args": {
+        "control": "menu_confirm",
+        "hold": "tap"
+      },
+      "expected": "Section L.4's care row; record the bed's unavailability window"
+    },
+    {
+      "id": "S10a-41",
+      "title": "let the recovery resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "the team's condition is restored per the rules"
+    },
+    {
+      "id": "S10a-42",
+      "title": "walk to the elite",
+      "action": "move_to",
+      "args": {
+        "at": [
+          69.0,
+          7557.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "stronghold_elite, Keeper Hald at (69,7557) -- the gauntlet's third rung, standing in front of the Tether blast shutter",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S10a-43",
+      "title": "challenge the elite",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section L.5's gate row: 'Hall shutter before the elite'. The shutter lifts when the elite in front of it has been beaten"
+    },
+    {
+      "id": "S10a-44",
+      "title": "hear him out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 20
+      },
+      "expected": "the last thing between the player and the Warden"
+    },
+    {
+      "id": "S10a-45",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "CB-06: verify target_on_screen at t=0"
+    },
+    {
+      "id": "S10a-46",
+      "title": "fight the elite",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 44,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10a-47",
+      "title": "switch pilot",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "CB-06: target_on_screen has to hold at every switch"
+    },
+    {
+      "id": "S10a-48",
+      "title": "keep fighting",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 30,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S10a-49",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 12
+      },
+      "expected": "the blast shutter lifts"
+    },
+    {
+      "id": "S10a-50",
+      "title": "the elite is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_stronghold_elite"
+      },
+      "expected": "`defeated_stronghold_elite` closes section E.5 objective 20/24"
+    },
+    {
+      "id": "S10a-111",
+      "title": "Section B save handoff",
+      "action": "note",
+      "args": {
+        "text": "This is a SPLIT-introduced handoff point, not one section B names in the original monolithic S10 -- the elite has just been beaten and the shutter to the Warden has just lifted, a quiet state exactly like every other rig save point in S01-S09. The steps below save it, driven as a player drives it -- the pause shell (opened via the `map` shortcut, RIG-14's deterministic starting point regardless of whatever tab was last open), three RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10a-112",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell; the `map` shortcut is used because it is one of only two tabs with a shortcut in data/config/menu.json and is therefore a deterministic starting point regardless of whatever tab a previous menu use left open (RIG-14)"
+    },
+    {
+      "id": "S10a-113",
+      "title": "cycle right to the Save tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 12
+      },
+      "expected": "three RB presses move from Map (index 2) to Save (index 5) in data/config/menu.json's tab order"
+    },
+    {
+      "id": "S10a-114",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S10a-115",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S10a-116",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S10a-117",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
+    },
+    {
+      "id": "S10a-118",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S10a-exit.json"
+      },
+      "expected": "the resulting `user://` slot file is copied into the run directory as `saves/S10a-exit.json`, for S10b to seed from"
+    },
+    {
+      "id": "S10a-119",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "closes the shell and hands the world back"
+    },
+    {
+      "id": "S10a-120",
+      "title": "this sub-segment is complete",
+      "action": "note",
+      "args": {
+        "text": "S10a-exit written and copied. Hall entry, gauntlet, recovery and elite are all evidenced. S10b picks up the chapter's climax from here."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

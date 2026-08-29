@@ -1,0 +1,283 @@
+{
+  "id": "S10c",
+  "_comment_split": "SPLIT from the monolithic S10.json (2026-08-30, ralph/T2-S10-COST). See S10a.json's header for the full rationale. This is the THIRD of five sub-segments and the first third of the post-win walk-back, which at 378,750 planned frames is 86% of the ORIGINAL S10's entire budget. The walk-back is cut at the same landmarks S05-S09 already use as their own segment boundaries for the OUTBOUND journey -- Old Mill Crossing (end of this segment) and South Bridge (end of S10d) -- so the return trip's cuts mirror the outbound one rather than being invented fresh.",
+  "_comment_boundary": "Entry: seeded from S10b-exit (roster just settled). Covers the approach_drain walk (31,500 budget frames) and the walk to Old Mill Crossing (132,750 budget frames) -- the single largest atomic move_to in the whole protocol, because it retraces the longest leg of the outbound journey. Ends on arrival at the Crossing. Frame budget including boot overhead (~11,500 frames for wipe/seed/boot/load/180s stand-up) and this sub-segment's own save-out (~500 frames) is roughly 207,750 frames. At the quiet, non-combat per-frame rate this exact run actually measured on this exact walk BEFORE any combat happened (0.017-0.028 s/frame, see the blocked run's own reprices at step_index 8/19), this prices at 3,530-5,817 s (24-40% of the 14,400 s ceiling). At a doubled, deliberately conservative walking rate (0.05 s/frame, to cover the possibility that a longer walk through varied terrain costs more than the short one actually measured) it is 10,388 s (72%). See the handover report for the honest caveat: this estimate is NOT a measurement of a 200,000-frame pure walk, because no run has ever completed one -- it is an extrapolation from a much shorter measured quiet period in the same scene, and the harness's own periodic in-play recheck (every 120 ticked frames) will catch and report honestly if the real cost runs higher than this.",
+  "record_hz": 0.5,
+  "title": "Finale III: world healing I -- the drained approach and Old Mill Crossing",
+  "lane": "journey",
+  "_comment": "Transcribed verbatim from the original S10.json (steps S10-89..S10-93, renumbered S10c-89..), which was itself transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B ('world healing'), section D (RT-13, the post-win walk-back), section E.5 (objective `see_what_changed`), section E.6.15 (backtrack across story transitions) and section G (GF-13-FINALE-05).",
+  "evidence_lane": "logic",
+  "capture_lane": "S10cC",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, ralph/GATE_F_MASTER_PROTOCOL.md §H.1. LOGIC lane: headless, mechanics/telemetry/step verdicts. Its own §G id (GF-13-FINALE-05, the healed meadow) is DELEGATED to S10cC. Because that capture happens right after the short approach_drain walk and BEFORE the giant Crossing walk, S10cC's own derived capture lane does not have to walk the Crossing leg either (tools/gate_f/derive_capture_lane.py keeps only up to a segment's LAST capture) -- a beneficial side effect of the split noted in the handover report.",
+  "steps": [
+    {
+      "id": "S10c-01",
+      "title": "how this segment is entered",
+      "action": "note",
+      "args": {
+        "text": "This is the THIRD of S10's five split sub-segments (S10a..S10e; see S10a.json's header). Its entry save is `S10b-exit`, a split-introduced handoff (the roster ceremony just concluded) rather than one section B names in the original monolithic file. The three steps below are the standard handoff mechanics used at every S0n boundary: wipe, seed, boot, Load."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10c-02",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer"
+    },
+    {
+      "id": "S10c-03",
+      "title": "seed slot 4 from the previous sub-segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S10b-exit.json"
+      },
+      "expected": "Section B's handoff pattern, applied at this split-introduced boundary: the next segment boots fresh, restores S10b's exit file into `user://`, and loads it through the production title-screen Load path"
+    },
+    {
+      "id": "S10c-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused and Load Game enabled, because a save now exists"
+    },
+    {
+      "id": "S10c-05",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses its first button; without focus a controller cannot reach Load Game at all"
+    },
+    {
+      "id": "S10c-06",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "S10c-07",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+    },
+    {
+      "id": "S10c-08",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
+    },
+    {
+      "id": "S10c-09",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+    },
+    {
+      "id": "S10c-09a",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-11: a load restores the party and deploys nothing. No combat is expected in this sub-segment, but the deploy is kept for consistency with every other S0n entry and because a wild encounter along the walk-back is not ruled out."
+    },
+    {
+      "id": "S10c-10",
+      "title": "the belt survived the handoff",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 5
+      },
+      "expected": "five of five, unchanged since S10b",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+    },
+    {
+      "id": "S10c-89",
+      "title": "the walk-back is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "see_what_changed"
+      },
+      "expected": "Section E.5 objective 24/24 `see_what_changed`, 'Go back through the Meadows and see what changed.' -- the last of the 24 and the one that terminates the chain. Surviving the S10b/S10c handoff is itself evidence that the flag S10b set persisted through a real save/load"
+    },
+    {
+      "id": "S10c-90",
+      "title": "Section E.5 nav note -- see_what_changed",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 24/24 `see_what_changed`. Wording: 'Go back through the Meadows and see what changed.' It names WHAT and a WHERE that is the whole chapter. Player-visible information: everything the player has walked. Route decision: walk the chapter backwards -- approach, crossing, bridge, village, home -- because the objective's own verb is 'go back through'. Reasoned from every arrival frame in S05 through S09. Section D RT-13 records this as 'as played'."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10c-91",
+      "title": "walk back down the drained approach",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -8.0,
+          7100.0
+        ],
+        "budget_frames": 31500,
+        "close_enough": 8.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "stronghold.json's `approach_drain` runs z 6990-7530 under the pylon line, and its own comments call the healing out. Section L.5: 'healed ground, lights out, patrols withdrawn'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S10c-92",
+      "title": "capture GF-13-FINALE-05",
+      "action": "capture",
+      "args": {
+        "id": "GF-13-FINALE-05",
+        "class": "13",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "healed meadow post-win, S10 walk-back",
+        "intended_proof": "visible world healing"
+      },
+      "expected": "Section G: healed meadow post-win, S10 walk-back -- visible world healing"
+    },
+    {
+      "id": "S10c-93",
+      "title": "walk back to the Old Mill Crossing",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -152.0,
+          4203.0
+        ],
+        "budget_frames": 132750,
+        "close_enough": 8.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-13: 'Backtrack: ... post-win S10 walk-back to the healed meadow | as played'. Section E.6.15: 'Backtrack across story transitions'. This is the single longest leg of the walk-back and the reason this sub-segment ends here rather than continuing further -- the same landmark (Old Mill Crossing) that already separates S07/S08 on the outbound journey",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S10c-111",
+      "title": "Section B save handoff",
+      "action": "note",
+      "args": {
+        "text": "This is a SPLIT-introduced handoff point -- arrival at Old Mill Crossing, a quiet state and the same landmark that separates S07/S08 on the outbound journey. The steps below save it, driven as a player drives it -- the pause shell (opened via the `map` shortcut, RIG-14's deterministic starting point), three RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10c-112",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell; the `map` shortcut is used because it is one of only two tabs with a shortcut in data/config/menu.json and is therefore a deterministic starting point regardless of whatever tab a previous menu use left open (RIG-14)"
+    },
+    {
+      "id": "S10c-113",
+      "title": "cycle right to the Save tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 12
+      },
+      "expected": "three RB presses move from Map (index 2) to Save (index 5) in data/config/menu.json's tab order"
+    },
+    {
+      "id": "S10c-114",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S10c-115",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S10c-116",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S10c-117",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
+    },
+    {
+      "id": "S10c-118",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S10c-exit.json"
+      },
+      "expected": "the resulting `user://` slot file is copied into the run directory as `saves/S10c-exit.json`, for S10d to seed from"
+    },
+    {
+      "id": "S10c-119",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "closes the shell and hands the world back"
+    },
+    {
+      "id": "S10c-120",
+      "title": "this sub-segment is complete",
+      "action": "note",
+      "args": {
+        "text": "S10c-exit written and copied. The drained approach and the longest single leg of the walk-back (to Old Mill Crossing) are behind us. S10d continues through the Tether Relay, the Burrow Warrens and the South Bridge."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

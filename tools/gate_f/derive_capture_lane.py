@@ -336,25 +336,52 @@ NOTES: dict[str, dict] = {
    "land in frame, mid-RT-11 -- past the gate this segment opens."),
  }},
 
-"S10": {
- "title": "S10 CAPTURE lane: the Hall, the Warden, the legendary choice",
+"S10a": {
+ "title": "S10a CAPTURE lane: the Hall gauntlet",
  "lane_note":
-  "CAPTURE lane for S10, seeded from run://S09-exit.json. §H names the Warden "
-  "on the mandatory continuous-evidence list; under the split that becomes "
-  "S10-SEQ-warden, a bounded sixty-frame sequence over the fight.",
+  "CAPTURE lane for S10a, seeded from run://S09-exit.json. S10a is the FIRST "
+  "of S10's five split sub-segments (ralph/T2-S10-COST, 2026-08-30; see "
+  "tools/gate_f/segments/S10a.json's header for the split's full rationale). "
+  "Splitting S10 also shrinks each piece's OWN capture lane: this generator "
+  "keeps every step up to a segment's LAST capture, so S10a's capture lane no "
+  "longer has to walk through the courtyard fight, the recovery beat, the "
+  "elite fight, the Warden, the legendary chamber or the ceremony to reach its "
+  "two frames -- all of that was retained in the old monolithic S10C only "
+  "because a LATER capture (GF-13-FINALE-02, now in S10b) forced it to be kept.",
  "cost_note":
-  "The most expensive capture lane in the protocol, and it is worth saying why "
-  "rather than only that it is: EVERY ONE of its frames is class D. The Hall "
-  "interior, the pre-fight dialogue, the fight, the legendary chamber, the "
-  "release ceremony and the healed meadow are all behind the Warden, and the "
-  "Warden is behind the gauntlet. There is no save between S09-exit and the "
-  "end of the chapter, so S10C is the finale played through. Whatever host "
-  "runs the capture lanes has to be able to afford that one entire.",
+  "Both frames are class D -- the Hall interior and the patrol fight are both "
+  "behind the gauntlet, which S09-exit does not carry -- but the split ends "
+  "this capture lane at the patrol fight's own camera-verification shot "
+  "(GF-14-COMBAT-06) rather than carrying it through two more fights, a rest "
+  "beat and the chapter's climax the way the un-split S10C did.",
  "frames": {
   "GF-13-FINALE-01": ("D", "the Hall interior gauntlet space -- inside the "
    "Outer Works, which S09-exit is not."),
   "GF-14-COMBAT-06": ("D", "CB-06: patrol -> courtyard -> elite -> "
-   "warden_aldis. A fight chain, inside."),
+   "warden_aldis. A fight chain, inside. Only the patrol leg is staged by "
+   "S10a's own capture lane; the courtyard, elite and Warden legs are staged "
+   "by S10b's, once each is reached by that segment's own production path."),
+ }},
+
+"S10b": {
+ "title": "S10b CAPTURE lane: the Warden, the legendary choice, the ceremony",
+ "lane_note":
+  "CAPTURE lane for S10b, seeded from run://S10a-exit.json -- a split-"
+  "introduced handoff (the elite just beaten, shutter lifted) rather than a "
+  "save section B names in the original monolithic file. §H names the Warden "
+  "on the mandatory continuous-evidence list; under the split that is "
+  "S10-SEQ-warden, a bounded sixty-frame sequence over the fight, unchanged "
+  "from the original.",
+ "cost_note":
+  "Every frame here is class D, and this is now the most expensive single "
+  "capture lane in the protocol: the Warden fight, the legendary chamber and "
+  "the release ceremony are each reached only by playing through the previous "
+  "one, and there is no save between S10a-exit and S10b's own close. Whatever "
+  "host runs the capture lanes has to be able to afford this one entire, same "
+  "as the old monolithic S10C had to for the whole chapter -- the split moved "
+  "the boundary, it did not remove this particular cost, because the Warden "
+  "through the ceremony genuinely has no cheaper save point along the way.",
+ "frames": {
   "GF-13-FINALE-02": ("D", "the Warden's pre-fight dialogue in the arena."),
   "SEQ:S10-SEQ-warden": ("D",
    "sixty frames at the clamped 1 Hz over the chapter's climax "
@@ -363,8 +390,27 @@ NOTES: dict[str, dict] = {
    "after the Warden falls."),
   "GF-13-FINALE-04": ("D", "the release ceremony decision screen. A UI state "
    "that exists once, at the end of the chapter."),
+ }},
+
+"S10c": {
+ "title": "S10c CAPTURE lane: the healed meadow",
+ "lane_note":
+  "CAPTURE lane for S10c, seeded from run://S10b-exit.json -- a split-"
+  "introduced handoff (the roster ceremony just concluded) rather than a save "
+  "section B names in the original monolithic file.",
+ "cost_note":
+  "One frame, and the split's cleanest saving: the healed-meadow capture sits "
+  "right after the short approach_drain walk and BEFORE S10c's own giant walk "
+  "to Old Mill Crossing (132,750 budget frames in the logic lane), so this "
+  "generator -- which keeps only up to a segment's LAST capture -- drops that "
+  "entire leg from the capture lane. The old monolithic S10C had to carry this "
+  "frame at the END of playing the Warden and the ceremony first; split out on "
+  "its own, it costs a load plus one short walk.",
+ "frames": {
   "GF-13-FINALE-05": ("D", "the healed meadow on the walk back. The world's "
-   "post-victory dressing, which nothing before the victory carries."),
+   "post-victory dressing, which nothing before the victory carries -- still "
+   "class D because it is behind the Warden, not because of anything in this "
+   "sub-segment's own short walk."),
  }},
 
 "X01": {
@@ -521,6 +567,18 @@ NOTES: dict[str, dict] = {
 # `evidence_lane: "logic"` is what forces `record_hz` to 0 -- and X06's default
 # 0.1 Hz continuous record is precisely the thing §H.1 removed.
 NO_CAPTURE_LANE = {
+ "S10d":
+  "S10d (ralph/T2-S10-COST split, 2026-08-30) is the fourth of S10's five "
+  "split sub-segments -- the Tether Relay, the Burrow Warrens and the South "
+  "Bridge leg of the post-win walk-back. It plans no §G frame: GF-13-FINALE-05 "
+  "was already taken in S10c and nothing else in the original S10 protocol "
+  "prescribes a shot along this leg, so it hands nothing over and needs no "
+  "capture lane, the same shape as X06/X08 below.",
+ "S10e":
+  "S10e (ralph/T2-S10-COST split, 2026-08-30) is the fifth and last of S10's "
+  "split sub-segments -- the village, Grandpa's house, and the chapter's "
+  "terminal save. Every prescribed S10 frame was already taken in S10a/S10b/"
+  "S10c, so it hands nothing over and needs no capture lane.",
  "X06":
   "X06 (abuse and failure cases) plans no §G frame, so it hands nothing over "
   "and needs no capture lane -- the harness allows exactly that. It is "
