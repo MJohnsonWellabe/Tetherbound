@@ -71,10 +71,16 @@ five" therefore cannot be pinned without inventing one.
    already ship off-type charged moves; the chart gives their existing quirk a
    payoff instead of retconning it.
 
-2. **Full reciprocal triangle, water → ground → air → water.** I tried partial
-   charts (dropping the thematically weakest edge to neutral) and they are
-   measurably worse: one type ends up carrying a weakness with no advantage and
-   the per-type spread widens.
+2. **Full reciprocal triangle, water → ground → air → water.** I measured the
+   three partial charts rather than assuming, and **an earlier draft of the
+   design note was wrong about them**: two of the three are actually *flatter*
+   on today's census (dropping `ground → air` gives a spread of 1.223 against
+   the triangle's 1.380). The triangle still wins, on two structural grounds —
+   a missing edge leaves one type with a weakness and no advantage however the
+   arithmetic lands, and, decisively, a partial chart's fairness depends
+   entirely on the current census, which §4 argues is a defect due for repair.
+   The triangle is symmetric under *any* roster distribution. Both documents
+   now carry the corrected table.
 
 3. **1.25 / 0.80, not 2.0 / 0.5.** Three measurements, all in the design note:
    it prices a permanent advantage at roughly one TM rung against the owner

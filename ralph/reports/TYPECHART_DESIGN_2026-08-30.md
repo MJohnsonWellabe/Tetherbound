@@ -95,13 +95,30 @@ every player arrives already knowing it, which is worth more here than novelty.
 
 ### Why a full triangle rather than a partial chart
 
-I tried partial charts (dropping the weakest link, `air → water`, to a neutral).
-They are *worse*: with one edge missing, one type has an advantage and no
-weakness while another has a weakness and no advantage, and the exchange-ratio
-spread between the three types **widens** rather than narrows. The triangle's
-symmetry is the thing keeping the three types comparable. Every asymmetry the
-game actually has should come from rosters and encounters, not from a lopsided
-chart.
+**Correcting an earlier draft of this note**, which claimed partial charts
+always widen the per-type spread. Measured against the real roster census (§3.3)
+rather than assumed, that is false, and the true numbers are worth having:
+
+| chart | ground | water | air | spread |
+|---|---|---|---|---|
+| full triangle | 1.055 | 1.143 | 0.829 | **1.380** |
+| drop `ground → air` | 0.934 | 1.143 | 1.070 | **1.223** |
+| drop `water → ground` | 1.130 | 0.885 | 0.829 | 1.364 |
+| drop `air → water` | 1.055 | 1.293 | 0.774 | 1.671 |
+
+So two of the three partial charts are *flatter* on today's numbers. The
+triangle is still right, for two reasons that are structural rather than
+numerical:
+
+1. **A missing edge is unfair by construction**, however the arithmetic lands —
+   one type carries a weakness with no advantage, another an advantage with no
+   weakness.
+2. **Decisively: a partial chart's fairness depends entirely on the current
+   census, and that census is a known defect scheduled for repair.** §4 argues
+   57.6 % Ground opposition should be diversified. A chart tuned to a
+   distribution that is about to change would be wrong the moment it changed.
+   The triangle is symmetric under *any* roster distribution — that is the
+   property worth buying, and it is worth 0.16 of spread today.
 
 ---
 
