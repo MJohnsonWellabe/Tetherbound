@@ -1266,6 +1266,26 @@
           "_why": "mirrored twin, 2cm lower: the platform is a stair-top piece, solid on two faces only, and the twin closes the open pair without z-fighting the slab"
         },
         {
+          "module": "Stairs_Exterior_Platform",
+          "at": [
+            0.0,
+            -0.04,
+            0.0
+          ],
+          "yaw_deg": 90.0,
+          "_why": "T1-VILLAGE 2026-08-30: the 0/180 pair's own `_why` names the module 'solid on two faces only' -- true, and the two faces it closes are the ones on the axis it does NOT stand open across. A blind visual judge's crop confirmed it: viewed from due north or south the curb is a tunnel, the plaza paving visible straight through underneath, because 0/180 both leave the SAME axis open (they are mirror images across it, not rotations off it). Yawed 90 from the first pair, this closes that axis instead -- its solid faces land where the open ones were."
+        },
+        {
+          "module": "Stairs_Exterior_Platform",
+          "at": [
+            0.0,
+            -0.06,
+            0.0
+          ],
+          "yaw_deg": 270.0,
+          "_why": "T1-VILLAGE 2026-08-30: mirrored twin of the 90-yaw piece above, same 2cm-per-layer stagger the original pair uses to keep four overlapping platform slabs from z-fighting."
+        },
+        {
           "module": "Corner_ExteriorWide_Wood",
           "at": [
             -0.85,

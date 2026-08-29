@@ -1,17 +1,23 @@
 # Handover — T1-VILLAGE — 2026-08-30
 
 **Branch:** `ralph/T1-VILLAGE`, off `origin/main` at `a97f3e84`.
-**HEAD at handover time:** `620b9232` (pushed to `origin/ralph/T1-VILLAGE`,
-confirmed with `git rev-parse HEAD` == `git rev-parse origin/ralph/T1-VILLAGE`
-immediately before writing this file). Working tree clean.
+**HEAD at handover time:** see the final commit on this branch (pushed to
+`origin/ralph/T1-VILLAGE` before this file's last update). Working tree
+clean at handover.
 
 ```
-620b9232 T1-VILLAGE: differentiate the inn from Grandpa's house, ground the inn's footprint
-a97f3e84 <- main at branch time>
+<this file's own commit>  T1-VILLAGE: close the well's hollow underside, finalize handover with judge verdict
+113d196a  T1-VILLAGE: handover draft + contact sheet, judge verdict pending
+620b9232  T1-VILLAGE: differentiate the inn from Grandpa's house, ground the inn's footprint
+a97f3e84  <- main at branch time>
 ```
 
-One commit, 289 files (3 source configs, 1 tool, 11 terrain region `.res`
-files, 256 scatter `.bin` files + `manifest.json`, 18 PNG frames).
+Three commits. The first does the inn/apron work (289 files: 3 source
+configs, 1 tool, 11 terrain region `.res` files, 256 scatter `.bin` files +
+`manifest.json`, 18 PNG frames). The second is the handover draft + contact
+sheet, written before the blind judge returned. The third is the well fix
+this section describes, added **after** reading the judge's verdict below —
+the judge found it, not me.
 
 ## What I was asked to do
 
@@ -143,11 +149,44 @@ judge — getting it there was named as one of this lane's real deliverables.
 
 8. **A blind Fable judge reviewed the pushed frames** — the village's first
    time in front of a blind critic, per this lane's own stated deliverable.
-   [FILL IN: verdict summary — see the judge's full report, not
-   paraphrased, for the actual verdict. If this line still reads as a
-   placeholder, the judge run had not returned when this file was written;
-   check `ralph/reports/T1-VILLAGE/` for a `JUDGE-*` file or ask the
-   coordinator whether JUDGE-2 also picked up these frames independently.]
+   Full verdict is reproduced verbatim in its own section below (not
+   paraphrased, per the visual-judge skill's own rule against grading my
+   own work). Summary of the two bar questions: **(A) yes, narrowly, by day
+   only** — the building language, meadow palette and warm-window night
+   mood are recognisably the keyart's world; what pulls against it is
+   settlement dressing (worn ground, a real well shaft, smoke, clutter),
+   an empty horizon with no landmark silhouette, and crushed nights — all
+   named as scene-fixable, none needing new art. **(B) no** — beside the
+   Palworld references this reads as a cozy village-life game, not a
+   creature-adventure one, chiefly because **zero creatures appear in any
+   of the 18 frames** (a finding entirely outside this lane's own
+   ownership — spawns/encounters are `T3-PICKUPS`/content territory, not
+   village architecture — but worth relaying loudly, because it is named
+   as the single largest "lived-in" gap in the whole verdict).
+
+9. **Acted on one of the judge's bug-class findings within the session**:
+   the well (`building_prefabs.json` `well` recipe) is a hollow shell open
+   through its north-south axis — the judge's crop caught the plaza paving
+   visible straight through underneath the curb, "a market kiosk" rather
+   than a well. Verified myself with a fast isolated four-angle probe
+   before touching the real village (a scratch tool, not committed — see
+   `well-{N,S,E,W,low-under}-before.png` under this report's `shots/` for
+   the confirmation renders): the curb's two `Stairs_Exterior_Platform`
+   copies (yaw 0/180, the original author's own `_why` calls the module
+   "solid on two faces only") are mirror images across the SAME axis, not
+   rotations off it, so both leave the north-south faces open — confirmed
+   by rendering the east face solid and the north face a tunnel in the
+   same probe pass. Fixed by adding two more copies of the same module at
+   yaw 90/270 (each 2cm lower than the last, following the original pair's
+   own z-fighting-avoidance stagger), which lands their solid faces
+   exactly where the open ones were. Re-verified from all four cardinal
+   angles plus a low three-quarter angle — solid from every angle, no
+   z-fighting, no doubled top-slab artifact. `smoke_village_trade` and
+   `smoke_traversal` both still green afterward (the well has no dedicated
+   script and no door/interior logic; collision was already an explicit
+   box in `colliders`, unaffected by the module change). Before/after
+   frames for this fix are also under this report's `shots/` directory,
+   named `well-*-before.png` / `well-*-after.png`.
 
 ### Done but NOT independently re-verified after the fact
 
@@ -168,9 +207,53 @@ judge — getting it there was named as one of this lane's real deliverables.
 
 ## Still open — did not attempt
 
+**New findings from the blind judge, none touched, roughly ordered by how
+squarely they sit inside this lane's own file ownership:**
+
+- **Signpost label text overlaps its own arrow plank and is illegible** —
+  "Practice Mead…" collides with its own arrow in
+  `01-village-standing-day-after.png`, per the judge's zoomed crop, and
+  "Grandpa's House" does the same. `scripts/world/signpost.gd` is shared
+  wayfinding infrastructure used at every trailhead in the game, not
+  village-specific, so I did not touch it blind — but it is squarely a
+  legibility bug and the first words a player reads in the world. Whoever
+  owns `signpost.gd` should look at `_add_arm()`'s label placement against
+  its own arrow geometry.
+- **The well's stone lid showed a dither/halftone pattern** in the judge's
+  crop, separate from the hollow-underside bug I fixed (item 9 above). I
+  could not reproduce this in my own isolated probe renders (see
+  `well-*-after.png`) — it may be a compression artifact in the judge's
+  own crop, or something that only shows under the real village's
+  lighting/shadow conditions rather than my neutral test stage. Not
+  independently confirmed; not touched.
+- **Oxblood-adjacent roof colour on two friendly buildings.** The judge
+  flagged the farmhouse's crimson roof (visible in `01-village-twins-*.png`
+  and the central house in `01-village-approach-day-after.png`) as the
+  closest colour in the whole survey to the oxblood the project reserves
+  for Team Tether danger, and recommended shifting it toward the
+  terracotta family. I did not touch `farmhouse_shell`'s retint — it
+  predates this pass entirely and re-tuning it is a colour-palette call
+  I'd want to render-verify rather than guess at with budget already spent.
+- **Zero creatures appear in any of the 18 frames.** Named by the judge as
+  the single largest "lived-in" gap, ahead of any material or lighting
+  issue. This is spawn/encounter placement, not architecture — outside
+  this lane's ownership (`T3-PICKUPS`/content territory) — but it's worth
+  relaying with weight, since it's the top item in the judge's own ranked
+  list of what separates these frames from the references.
+- **The purple flower clump on Grandpa's own path**
+  (`01-village-grandpa-yard-day-after.png`) is, per the judge, the single
+  most saturated object in the whole survey, with petals reading larger
+  than the trainer's head. I traced this as far as confirming it is NOT
+  an authored prop from `band1_lower_meadows/props.json` (checked — no
+  flower cluster entry near Grandpa's house coordinates), which means it
+  is very likely the world-wide flower scatter layer, `T1-GROUND`'s
+  ownership, not mine to retune.
 - **The village tournament ground reads as an empty field with a board in
-  it**, not a purposeful event space. Verified in
-  `01-village-tournament-day-after.png`: the bracket board itself (which I
+  it**, not a purposeful event space — **independently confirmed by the
+  blind judge**, who additionally caught that at night the space vanishes
+  entirely (no lighting on the board, no braziers) and that the two NPCs
+  standing in it read as "lost, not as participants or officials." The
+  bracket board itself (which I
   read in code before rendering — `scripts/world/tournament.gd` — and found
   already well-detailed: timber posts, top/bottom rails, five planks with
   seams, a mitred trim border, a real painted bracket rather than a text
@@ -325,16 +408,186 @@ inputs was touched by this branch.
 
 ## What I would do next
 
-1. Read the blind judge's verdict (below, or wherever it lands if this file
-   was written before the judge run returned) and act on anything concrete
-   and cheap.
+1. Act on the remaining judge findings listed under "Still open" above,
+   roughly in the order given.
 2. Fix the `route-out` shot's framing (see above) and re-run
-   `--only=01-village` if a future session has the wall-clock budget.
+   `--only=01-village` if a future session has the wall-clock budget —
+   ideally bundled with a re-render of the tournament/twins/grandpa-yard
+   frames too, so there's a true final "after" sweep that includes the
+   well fix in full-village context (my well evidence is from an isolated
+   probe stage, not the real village render — verified low-risk via smoke
+   tests, but never seen in situ).
 3. Consider the roof-dormer differentiation for the inn if the twins fix is
-   judged insufficient at distance — needs an iterate-by-render loop.
+   judged insufficient at distance — needs an iterate-by-render loop. The
+   judge's own verdict (below) says the twins fix is real but incomplete:
+   roofline silhouette is still identical between the two buildings, and
+   an inn wants a distinct silhouette move (L-wing, dormer, porch roof)
+   that a ground-floor window swap does not provide.
 4. Decide whether the tournament ground gets spectator dressing, after
    someone who owns the combat-arena system confirms the safe clearance —
-   I did not want to guess at that boundary.
+   I did not want to guess at that boundary. The judge's independent
+   confirmation raises the priority of this one.
 5. Re-derive `farmhouse_shell`'s own `building_apron` entry against
    `combined_aabb`+0.2m and decide whether it's worth the churn to fix a
    latent inconsistency that isn't currently a visible defect.
+6. Route the "zero creatures in the village" finding to whichever lane
+   owns band-1 spawns/encounters — it's the single largest gap the judge
+   named, and it's entirely outside this lane's file ownership.
+
+---
+
+## The blind judge's full verdict, verbatim
+
+Produced by a Fable sub-agent (model `claude-fable-5`) given the contact
+sheet, all 18 individual frames, the keyart board and the five Palworld
+reference frames, and the `visual-judge` skill's standing rubric — told
+nothing about what changed, what this lane was, or what any developer
+hoped to hear. Reproduced in full and unedited, per this project's own
+"do not grade your own visual work" rule: the developer's job is to read
+this and act on it, not to summarise it into agreement.
+
+> # Visual verdict — T1-VILLAGE survey (18 frames)
+>
+> ## 1. Silhouette and readability at small size (contact sheet)
+>
+> **Day frames pass this test; night frames fail it.** At sheet scale the day village reads instantly: staggered red/orange gables against green, the trainer's teal-and-tan separates from the grass, the path draws the eye to the buildings (`01-village-approach-day-after.png` is the best composition in the set — the fence line, path curve, and three-roof stagger read as a village from a glance).
+>
+> Defects:
+>
+> - `01-village-tournament-night-after.png` — the trainer is a pure black cutout on near-black grass. At sheet size the frame contains a moon and nothing else. A player glancing at this cannot find themselves.
+> - `01-village-twins-night-after.png` and `01-village-twins-night-before.png` — the bottom 40% of the frame is a featureless black wedge. The lit windows carry the frame; everything else is void.
+> - `01-village-approach-night-after.png` vs `01-village-twins-night-after.png` — the night frames disagree about how dark night is. The approach frames keep a readable blue-green ambient on the meadow; the twins and tournament frames crush the same ground to black. Two frames of the same night read as different times.
+> - `01-village-tournament-day-after.png` — at sheet size this frame is indistinguishable from open wilderness. Nothing in the silhouette says "village event ground" (see point 9).
+>
+> ## 2. Colour and value structure
+>
+> The day frames do read as one place — the stone/half-timber/terracotta recipe is consistent, the grass tint is consistent, and the warm lit windows at night are genuinely cozy. Real problems:
+>
+> - **The meadow is one value.** In `01-village-twins-day-after.png` and `01-village-tournament-day-after.png` the grass is a single saturated mid-green from the camera to the horizon, with no worn ground, no dry patches, no value modulation. The keyart's settlement panel builds its ground out of ochre dirt, olive grass, and flower drifts; the Palworld frames (`palworld-02`, `palworld-05`) alternate dirt, short turf, and flower carpet. These frames have exactly one ground material with grass on top.
+> - **Oxblood caution.** The deepest red in the survey is the roof of the left "twin" farmhouse (`01-village-twins-day-after.png`) and the central house in `01-village-approach-day-after.png` — a dark crimson clearly separated from the terracotta of every other roof. If oxblood-red is reserved for Team Tether danger, the closest colour to it in the village currently sits on two friendly civilian roofs. Shift those toward the terracotta family and keep the dark red out of the settlement.
+> - `01-village-grandpa-yard-day-after.png` — the purple flower cluster on the path is the most saturated object in the entire survey, more saturated than anything in the keyart palette strip, and it is a decorative doodad, not a point of interest. It outshouts the front door of the player's home.
+> - `01-village-twins-day-after.png` — the right building's ground-floor and upper windows glow warm amber **in full daylight**. Lit windows at noon read as an error, and it also spends the one cue ("warm window = night coziness") the night frames rely on.
+>
+> ## 3. Intentionality
+>
+> The well square is the only area that reads authored. The rest reads placed-then-abandoned:
+>
+> - `01-village-twins-day-after.png` — two houses standing in unbroken chest-high hay, grass to the footings, with **no path connecting them, no yard, no fence, no woodpile, no laundry, nothing between them**. This is the frame that most reads "meshes dropped into a field." The keyart settlement panel surrounds every building with worn dirt, fences, clutter, and a shade tree.
+> - `01-village-approach-day-after.png` — the fence at left starts and stops enclosing nothing, and the dead twig-saplings are scattered at even intervals across the mid-ground. The barrel/crate cluster by the trainer is good; it is nearly the only prop cluster in 18 frames.
+> - No chimney smoke anywhere, no birds, no creatures, no animals — in a creature-training game, across 18 frames of its starting village, **not one creature appears**. Every Palworld reference frame has Pals in it; the keyart day/night panels put a creature at the player's side. This is the single largest "lived-in" gap and it is scene-fixable with installed meshes.
+> - `01-village-tournament-day-after.png` — the boulders on the left horizon sit in a rough evenly-spaced line, and the mid-ground brush tufts repeat at similar spacing. Reads scattered, not composed.
+>
+> ## 4. Lighting
+>
+> - Day sun direction reads on the buildings (good gable shading in `01-village-standing-day-after.png`), but **the terrain is flat-lit everywhere**: the hills in `01-village-tournament-day-after.png` have no form shadow at all, just a smooth green-yellow felt.
+> - `01-village-twins-day-after.png` — neither house casts a readable ground shadow; both sit slightly "pasted" on the grass. The trainer in the same frame has no visible contact shadow.
+> - `01-village-standing-night-after.png` — the well and foreground stone are lit by a strong cool light with no visible source, and the stone picks up a wet plastic specular. The moon is behind cloud on the left; the light comes from the right.
+> - `01-village-grandpa-yard-night-after.png` — the hard diagonal shadow across the gable is unmotivated (nothing in frame could cast it) and reads as an artefact.
+> - Night moon (`01-village-twins-night-after.png`, `01-village-tournament-night-after.png`) is a uniformly blurred white disc with a hard-edged halo — reads as a sticker, not a light source; nothing on the ground is visibly moonlit from its direction.
+> - Night clouds (`01-village-standing-night-after.png`) are brighter than the sky and smeared into long diagonal streaks; they read as smoke or motion blur rather than night cloud.
+>
+> ## 5. Horizon and depth
+>
+> - `01-village-tournament-day-after.png` — a **visible detail ring**: fine grass and flowers stop abruptly ~30–40 m out, beyond which the terrain is smooth untextured colour. The band cuts across the left of the frame and reads as a draw-distance seam.
+> - Same frame — the mountain is a smooth low-poly blob with moss decals, far below the detail level of the foreground; it pops as a different fidelity tier. The keyart uses its mountain as a composed landmark; Palworld (`palworld-04`) puts a readable tower silhouette on the horizon. This survey's horizon contains nothing to walk toward — no mill, no tower, no stronghold silhouette, though the keyart's settlement panels show exactly those.
+> - `01-village-approach-day-after.png` — the right-hand distant tree line is a uniform strip of identical-height, identical-tint trees; reads as a hedge texture, not a forest edge.
+> - Day frames have almost no aerial perspective; distance is the same saturation as foreground. The keyart hazes its distance blue-green.
+>
+> ## 6. Artefacts
+>
+> - **The well is a hollow shell** (`01-village-route-out-day-after.png`, confirmed in crop): it has no shaft, no hole, no rope, no winch. It is a flat slab lid on a three-sided brick skirt, **open underneath — you can see the plaza paving continue under it through the open side**. The bucket sits on the closed lid. The village's central landmark reads as an unfinished market counter under a bus-shelter roof. The keyart settlement panel's well (shingled roof, visible shaft, winch) is the target and this is not it.
+> - The well lid in the same crop shows a **dither/halftone screen pattern** on the grey top surface — reads as transparency dithering, i.e. a rendering bug visible at conversational distance.
+> - **The inn's ground-floor bay reads as a hole in the building.** In `01-village-standing-day-after.png` and `01-village-route-out-day-after.png` the open-shuttered opening left of the door has near-black backing and a dark recessed band running under the window row; at night (`01-village-route-out-night-after.png`, confirmed in crop) the entire bay is a black cavity with no interior, no counter, no light — while the windows either side glow warm. It reads as missing wall geometry. Note: `01-village-standing-day-before.png` shows the same wall intact (door + window + vine), so whichever state is intended, the open-bay version is the one that reads broken.
+> - **Signpost labels are debug UI in the world** (`01-village-standing-day-after.png`, confirmed in crop): flat cream rectangles, default bold sans-serif, floating off the post — and the second label ("Practice Mead…") **renders on top of its own arrow plank and is illegible**. "Grandpa's House" also collides with its arrow. These are the first words a player reads in the world.
+> - `01-village-approach-day-after.png` — the large tree at left has hard-edged glossy leaf cards with specular highlights; it reads as plastic confetti next to the hand-painted buildings. Same foliage on the vine cards in `01-village-grandpa-yard-day-after.png`, which float a few centimetres off the wall and are a flat lime that matches nothing else.
+> - Plaza slabs (`01-village-route-out-day-after.png`) end in sharp raised edges hovering over grass — the paving does not meet the terrain.
+>
+> ## 7. Scale agreement (trainer = 1.80 m)
+>
+> Buildings mostly agree with each other and with the trainer: the inn door (`01-village-route-out-day-after.png`) is ~2.2–2.4 m, Grandpa's door (`01-village-grandpa-yard-day-after.png`) ~2.1 m, sills at sensible heights. Defects:
+>
+> - `01-village-grandpa-yard-day-after.png` — the purple flowers: individual petals are ~40 cm across, bigger than the trainer's head, lying on the path. They read as giant fallen petals from an off-screen megaflora, not wildflowers, and they clash with the small blue flowers used everywhere else.
+> - Chest-high grass **everywhere, including the village interior** (`01-village-twins-day-after.png`, `01-village-tournament-day-after.png`). Villagers do not let hay grow to the front step. This is simultaneously a scale, intentionality, and readability problem — the girl NPC in `01-village-tournament-day-after.png` is grass-deep to the waist.
+> - The well's bricks are ~40 cm each — cinderblock scale, contributing to the "new construction kiosk" read.
+> - The trainer's proportions are ~3.5 heads tall. That is a style choice, not an error, but be aware the "1.80 m" ruler does not read: next to the buildings the trainer reads as a child of ~1.2 m, which makes every building read larger than intended. Palworld's characters are full anime proportion; anyone comparing side-by-side will register the proportion language as a different genre (see bar question B).
+>
+> ## 8. The twins — farmhouse vs inn (`01-village-twins-day-after.png`, `01-village-twins-night-after.png`)
+>
+> **They read as sibling variants of one house, not as a home and a public inn.**
+>
+> What differentiates them (and it is real, in daylight, side by side): roof colour — dark crimson vs orange terracotta; timber tone — dark chocolate vs honey; massing — the right building is ~30% wider with a taller ground storey; fenestration — the right building has more and larger mullioned windows.
+>
+> What does **not** differentiate them, and why they still read as twins:
+>
+> - **Identical roofline.** Same simple gable, same pitch, same ridge orientation, same two-storey box. Silhouette is the strongest identifier at distance, and their silhouettes are the same shape at two scales. An inn wants a different silhouette move — an L-wing, a dormer, a porch roof, a taller gable-end sign bracket — anything.
+> - **Same wall recipe** top to bottom: rubble stone base course + half-timber upper + white cobble chimney, the same chimney mesh on both.
+> - **Neither has an entrance treatment.** From this angle neither door is visible; there is no hanging inn sign, no lantern, no bench, no porch, no barrel stack, no stable, no smoke. Nothing says "the public one." The only "inn" cue in the whole survey is a signpost plaque elsewhere.
+> - **At night the differentiation collapses to window count** (`01-village-twins-night-after.png`) — roof colour and timber tone go black, and they read as two identical dark boxes with lit windows.
+> - Aggravating both: they stand in unconnected hay (point 3) with lit windows in daytime (point 2), so neither reads inhabited enough for the distinction to matter.
+>
+> Fixable without new meshes: hanging sign with icon, lantern by the door, benches/barrels at the inn front, chimney smoke on the inn only, worn path from the square to the inn door, and pushing the farmhouse roof from crimson toward brown-terracotta.
+>
+> ## 9. The tournament ground (`01-village-tournament-day-after.png`, `01-village-tournament-night-after.png`)
+>
+> **It reads as an empty field with a sign in it.** Confirmed in the board crop:
+>
+> - The board is a small parchment poster frame, half-occluded by the trainer's own head at conversational distance, text illegible, standing in chest-high grass with no clearing at its base.
+> - There is no arena: no worn or flattened ground, no perimeter (rope, posts, low fence, chalk), no banners, no seating, no torch stands, no scale contrast with the meadow around it. The keyart marks its settlement gathering space with a large banner and a clearing; this frame marks it with nothing.
+> - The two NPCs stand idle, waist-deep in grass, facing arbitrary directions. They read as lost, not as participants or officials.
+> - At night (`01-village-tournament-night-after.png`) the space vanishes entirely: no lighting on the board, no braziers — a player could not find the tournament ground after dark, in a game whose keyart promises "day and night create different moods."
+>
+> The minimum for "purposeful event space," using existing props: a cleared/worn ellipse of dirt or short grass, a fence or post-and-rope perimeter, two or four banner posts, the board doubled in size at the entrance to the clearing, and a brazier or two for night.
+>
+> ---
+>
+> # Verdict
+>
+> ## The three things that most separate these frames from the references, ranked
+>
+> **1. The ground plane is one uniform grass carpet; the references build settlements on varied, worn ground.** Sharpest in `01-village-twins-day-after.png` (houses to their footings in hay, no connecting path) and `01-village-tournament-day-after.png` (event ground indistinguishable from wilderness). The keyart settlement panel and `palworld-02`/`palworld-05` alternate worn dirt, short turf, flower drifts, and paving that meets the terrain — the ground itself tells you where people walk and live. Here only the well square attempts it, and its paving floats.
+>
+> **2. The world is empty of life.** Zero creatures in 18 frames of a creature-training game's home village; no smoke, no animals, two or three static villagers standing in tall grass (`01-village-tournament-day-after.png`, `01-village-twins-day-after.png`). Every Palworld reference frame is full of Pals doing things; the keyart puts a creature beside the player in both its day and night panels. This, more than any material or lighting gap, is why the frames read as a diorama rather than a place.
+>
+> **3. Night is a crushed black void, not "mysterious."** `01-village-tournament-night-after.png` (unreadable player, invisible venue) and `01-village-twins-night-after.png` (bottom 40% pure black) versus the keyart night panel, which keeps a readable blue landscape with warm fire accents. The warm windows are the one thing night currently does right; everything below the horizon line needs a floor on its exposure, a moon that actually lights the moon-side of objects, and one or two warm ground-level sources (lantern, brazier, inn door).
+>
+> ## Bar questions
+>
+> **A. Do these frames read as belonging to the keyart world? Yes — narrowly, and only by day.** The stone/half-timber/terracotta building language, the wildflower meadow palette, the rolling green horizon, and the warm-window night coziness are all recognizably the same world as the board's settlement panel. What pulls against it: the settlement dressing (worn ground, banners, well with an actual shaft, smoke, clutter, shade trees inside the village), the empty horizon with no landmark silhouette, and the crushed nights. Every one of those gaps is scene-fixable with existing meshes, scatter, and lighting — none requires art that is not in the build.
+>
+> **B. Beside the Palworld screenshots, would someone say these are trying to be the same kind of game? No.** They would say cozy village-life game — Portia or Fae Farm — not creature-adventure. Three reasons: no creatures anywhere in frame (Palworld's frames are defined by them); the uniform passive meadow versus Palworld's varied, event-marked spaces (arena wear, bases, camps, landmark towers); and the chibi ~3.5-head character proportion versus Palworld's full anime-proportioned adults, which alone re-genres the image at a glance. Split: creatures-in-frame, ground variety, event dressing, and night lighting are scene-fixable now with installed assets. The character proportion language is **not** scene-fixable — it is baked into the rigged cast, and if the owner's bar genuinely requires reading as Palworld's kind of game at a glance, that is the one gap in this survey that needs art the build does not have. If the chibi cast is a settled style choice, then the answer to B can still become "yes" through the fixable three, because Palworld's frames are carried by creatures and lived-in ground far more than by their humans.
+>
+> ## Bug-class items that should be fixed regardless of any bar
+>
+> 1. The well has no shaft and is open underneath — hollow shell visible in `01-village-route-out-day-after.png`, plus dither pattern on its lid.
+> 2. The inn ground-floor bay reads as missing wall geometry, worst at night (`01-village-route-out-night-after.png`).
+> 3. Signpost label "Practice Mead…" renders over its own arrow and is illegible (`01-village-standing-day-after.png`).
+> 4. Daylight-lit windows on the right twin (`01-village-twins-day-after.png`).
+> 5. Unmotivated hard gable shadow (`01-village-grandpa-yard-night-after.png`) and unmotivated cool foreground light (`01-village-standing-night-after.png`).
+> 6. Grass detail ring / draw-distance band cutting across `01-village-tournament-day-after.png`.
+
+### Post-verdict correction — the "inn's ground-floor bay" finding
+
+Bug-class item 2 above names "the inn's ground-floor bay" as a hole in the
+building, citing `01-village-standing-day-after.png` and
+`01-village-route-out-day-after.png`. **The building filling frame in both
+of those shots is the workshop (`village.json`, at `[2, 2]`), not the
+inn** — the inn (`[-1.5, -9]`) is not in either frame's field of view at
+all; I confirmed this from the eye/look coordinates each shot was taken
+from. What the judge is actually describing is almost certainly the
+workshop's own open `Wall_Arch` work bay — an intentional feature per its
+own recipe comment ("an open Wall_Arch work bay for bible sec12's 'broader
+doors'"), not a missing wall. The underlying visual observation may still
+be real (a dark, undressed opening reading as unfinished rather than as a
+working smithy's open door), but the building identification is wrong, and
+I did not act on this one for that reason — it needs someone to look at
+the workshop's arch bay specifically, not the inn.
+
+The dark window the judge may be describing on the actual inn (visible in
+`01-village-twins-day-after.png` and `01-village-route-out-day-after.png`'s
+right-hand building) is the **pre-existing** `-2` front window — present
+identically on `farmhouse_shell` before this pass ever touched the recipe
+(confirmed: `Prop_Vine2`, at `[1.9, 2.6, 5.12]`, sits directly on my new
+`+2` window, and that one reads fine and vine-dressed in every frame; the
+darker one is the original, unmodified by me). Worth fixing, but it is not
+something this pass introduced, and it affects Grandpa's house identically
+if it's real.
