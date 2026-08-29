@@ -354,7 +354,10 @@ func _the_trainer_gets_up_from_the_bed() -> void:
 ## The Basic Orbs arrive in that required follow-up conversation, not during
 ## the starter choice or as a hidden automatic reward.
 func _grandpa_hands_over_the_first_catch_orbs() -> void:
-	var grandpa := _find_interactable_matching(["grandpa", "talk"])
+	# The village also has generic "Talk" offers. This required return must
+	# target Grandpa specifically, not whichever NPC happens to be first in the
+	# scene tree once the naming panel closes.
+	var grandpa := _find_interactable_matching(["grandpa"])
 	if grandpa == null:
 		_fail("nothing offers Grandpa's required first-catch conversation")
 		return
