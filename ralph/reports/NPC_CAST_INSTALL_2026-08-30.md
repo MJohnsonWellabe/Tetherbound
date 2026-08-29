@@ -162,3 +162,27 @@ real and installed.
 - **Not committed (gitignored):** `assets_raw/**` (rig/animate
   intermediates), `shots/npc_install_test/`, `shots/
   npc_install_verify.png` (render evidence).
+
+## Addendum — a delayed coordinator check-in arrived after this was already done
+
+A notification queued mid-session (timestamped 20:45:46Z, delivered much
+later) asked this lane to commit the refined meshes before spending
+further, and separately relayed an owner directive to install everything
+and make it playable. Both were already done by the time the notification
+was actually read — this report is that work. Two things from it worth
+recording since they weren't otherwise confirmed in-session:
+
+- **The 900-credit creature-lane reserve was released** ("the creature
+  meshes are finished and cost nothing further") — retroactively covers
+  the dip below 900 this lane already disclosed plainly in
+  `NPC_CAST_BUILD_REST_2026-08-30.md` rather than hid. No action needed;
+  recorded for the audit trail.
+- **`ralph/LAND-0830B` is integrating 16 branches in parallel right now**
+  — confirms staying on `ralph/T1-NPC-CAST` and not merging/rebasing onto
+  `main` is correct, which this lane was already doing.
+
+The notification's own balance figures (990 → 630) were stale by the time
+it was read — actual balance at that point was already lower, from the
+rigging round this same report documents. Not a discrepancy to chase;
+async notifications in this setup lag real session state, confirmed
+twice now in this lane.
