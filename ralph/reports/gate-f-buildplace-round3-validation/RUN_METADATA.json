@@ -1,0 +1,14 @@
+{
+  "_comment": "T2-BUILDPLACE round-3 ad hoc validation run, NOT canonical Gate F. Own RUN_METADATA.json so operator_harness.gd's capture pre-flight reads this honest logic-mode declaration instead of the stale global ralph/reports/gate-f-candidate/RUN_METADATA.json.",
+  "candidate_ref": "ralph/T2-BUILDPLACE",
+  "run_dir": "ralph/reports/gate-f-buildplace-round3-validation",
+  "purpose": "validate the T2-BUILDPLACE round-3 S03.json fix: real Bryn fight (party_cycle instead of dismiss) + Mira's door opened before walking in",
+  "display_server": "headless (logic lane, no display server -- honest, matches this process)",
+  "renderer": "none (logic lane, no rendering)",
+  "lanes": {
+    "logic": {
+      "display_server": "headless (logic lane, no display server)",
+      "renderer": "none (logic lane)"
+    }
+  }
+}

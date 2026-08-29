@@ -1,0 +1,15 @@
+{
+  "_comment": "T2-BUILDPLACE ad hoc validation run, NOT a canonical Gate F run. Own RUN_METADATA.json written for this run directory specifically so operator_harness.gd's capture pre-flight (CD-8b) reads THIS honest logic-mode declaration instead of falling through to the stale global ralph/reports/gate-f-candidate/RUN_METADATA.json (frozen 2026-08-27, claims X11 under xvfb-run for every lane with no `lanes` block) -- the exact contradiction the T2-STRANDING lane already recorded hitting and named out of its own file ownership (handover-T2-STRANDING-2026-08-30.md section 4). This file touches nothing shared; it exists only inside this scratch run directory.",
+  "candidate_sha": "7988a903265048cf5dd4baf05cf585fd2d015636",
+  "candidate_ref": "ralph/T2-BUILDPLACE",
+  "run_dir": "ralph/reports/gate-f-buildplace-validation",
+  "purpose": "validate the T2-BUILDPLACE S03.json fix (FINDING-T2-BUILDPLACE-2026-08-30.md): Mira's tools grant + hotbar tool-equip steps, replayed for real against the S02-exit seed",
+  "display_server": "headless (logic lane, no display server -- honest, matches this process)",
+  "renderer": "none (logic lane, no rendering)",
+  "lanes": {
+    "logic": {
+      "display_server": "headless (logic lane, no display server)",
+      "renderer": "none (logic lane)"
+    }
+  }
+}
