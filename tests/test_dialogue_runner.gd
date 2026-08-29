@@ -290,7 +290,9 @@ func test_the_torch_is_handed_over_in_words_and_as_an_item() -> void:
 
 
 ## Every `flag:` effect anywhere in the dialogue table has to be a usable flag
-## id. An empty one is a silent no-op at the director.
+## id. An empty one is a silent no-op at the director. Namespaced save facts
+## such as `opening:mira_visited` are valid: the existing progression store
+## uses that namespace to distinguish sequence state from gameplay facts.
 func test_every_flag_effect_names_a_flag() -> void:
 	var found := 0
 	for id: String in RUNNER.table():
@@ -299,9 +301,12 @@ func test_every_flag_effect_names_a_flag() -> void:
 			if str(parts[0]) != "flag":
 				continue
 			found += 1
-			assert_ne(str(parts[1]), "", "'%s' has a flag: effect with no flag id" % id)
-			assert_false(str(parts[1]).contains(":"),
-				"'%s' writes flag '%s'; a flag id is one word, not a payload" % [id, str(parts[1])])
+			var flag_id := str(parts[1])
+			assert_ne(flag_id, "", "'%s' has a flag: effect with no flag id" % id)
+			for segment: String in flag_id.split(":"):
+				assert_ne(segment, "", "'%s' writes malformed flag '%s'" % [id, flag_id])
+				assert_eq(segment, segment.strip_edges(), "'%s' writes whitespace in flag '%s'" % [id, flag_id])
+				assert_false(segment.contains(" "), "'%s' writes malformed flag '%s'" % [id, flag_id])
 	assert_true(found >= 2, "OF30 adds two flag: effects; found %d" % found)
 
 
