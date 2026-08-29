@@ -1,12 +1,35 @@
 # FINDING — the South Bridge stranding is a RIG defect, not a GAME defect
 
-**Verdict: RIG.** The world is behaving exactly as designed at every point in
-this chain. The fix is in `tools/gate_f/segments/S03.json` (pushed alongside
-this finding); full mechanism and evidence below. A live-engine probe against
-this run's own `S05-exit.json` save is running to confirm the mechanism
-end-to-end; this document will be updated if it disagrees with anything
-below, but the source-code and telemetry evidence is already conclusive on
-its own.
+**Verdict: RIG, confirmed live in the engine.** The world is behaving exactly
+as designed at every point in this chain. The fix is in
+`tools/gate_f/segments/S03.json` (pushed alongside this finding); full
+mechanism and evidence below.
+
+## Live-engine confirmation
+
+`tools/gate_f/probe_stranding_cause.gd`, run against this run's own real
+`S05-exit.json` (`godot --headless --path . --script
+tools/gate_f/probe_stranding_cause.gd`), reproduces the exact block and its
+exact cure:
+
+```
+load_slot(4) applied: true
+party size after load: 1
+active creature: Moss  fainted=true  hp=0.0/1.18
+--- pressing creature_recall (RIG-13's S05-09a step: summon_active_creature()) ---
+summon_active_creature() returned: false
+can_challenge(south_bridge_grunt) BEFORE healing: false
+--- healing the party's only creature the way a creature bed does (heal_fully()) ---
+active creature after heal_fully(): fainted=false hp=1.18/1.18
+summon_active_creature() after heal returned: true
+can_challenge(south_bridge_grunt) AFTER healing: true
+PROBE PASS
+```
+
+Nothing else changed between the two `can_challenge()` calls — not position,
+not the gate, not any flag. Healing the party's one creature is the entire
+difference between permanently blocked and immediately able to fight the
+South Bridge grunt.
 
 ## The chain, each link verified against source and this run's own telemetry
 
@@ -93,12 +116,11 @@ every segment downstream, since nothing else in the chain needed to change.
 
 ## What is NOT yet independently re-verified by a full run
 
-This finding is pushed now, per instruction, ahead of a full S03-S10 re-run
-(which costs hours per the run's own timing notes). A live-engine probe
-(`tools/gate_f/probe_stranding_cause.gd`) against this run's actual
-`S05-exit.json` is confirming `summon_active_creature()`/`can_challenge()`
-flip from refused to permitted purely from healing the party's one creature,
-with no other change — see the handover for its result. A full re-run of
-S03 onward to produce a real, healthy exit-save chain is recommended next but
-was not completed in this session; see the handover for exactly how far this
-session got.
+The probe confirms the underlying game mechanism, not the new step-script's
+own execution. `S03-205a`..`S03-205e` mirror `X02.json`'s own already-working
+`interact -> panel -> ui_accept -> menu_cancel` bed sequence
+(`X02-091`..`X02-094`, part of a segment that finished 146/170 PASS with
+nothing flagged wrong in that sequence), but a full S03 re-run to confirm the
+new steps execute correctly end-to-end and produce a healthy exit save was
+not completed by the time this finding was written — see the handover for
+whether it finished by the end of the session.
