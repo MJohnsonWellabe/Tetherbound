@@ -402,7 +402,7 @@ type).
 | `tests/smoke_stronghold.gd` | **OK** — "stronghold smoke test passed" |
 | `tests/smoke_stronghold_reload.gd` | **OK** — "stronghold reload smoke test passed" |
 | `tests/smoke_gate_e_finale.gd` | **OK** — "gate E finale smoke test passed"; roster decision recorded, region answered |
-| full `tests/run_tests.gd` | *(running at time of writing — see §12)* |
+| full `tests/run_tests.gd` | **1535 tests, 3,365,040 assertions, 0 failed** (exit 0) |
 | `tools/capture_type_tell.gd` | **OK** — four frames, arrows 1 / −1 / 0 as the chart predicts |
 
 **All five combat-bearing smoke tests the brief named are green**, plus
@@ -430,20 +430,22 @@ and the authored ladder still resolves. §12 carries the one run still in flight
 
 ---
 
-## 12. Runs still in flight when this was written
+## 12. Every run finished, and every run is green
 
-Every smoke test finished and is recorded in §10. The **full unfiltered
-`tests/run_tests.gd`** was still running when this was written.
-**Its result is appended by the final commit on this branch** — if this section
-still says "in flight", that commit did not happen and the run should be
-repeated before the branch is trusted:
+Nothing was left in flight. The full unfiltered suite completed at **1535
+tests / 3,365,040 assertions / 0 failed**, exit 0, and all six smoke tests
+passed — including `smoke_gate_e_finale.gd`, which drives real trainer fights
+frame-by-frame through the Warden and out the other side of the chapter ending.
 
-```
-godot --headless --path . --script tests/run_tests.gd
-```
+Two notes for whoever reads the raw logs:
 
-Note that the filtered run `--only=test_combat,test_creature,test_moves,
-test_progression,test_trainers` (249 tests, 2122 assertions) already covers
-every unit test touching the systems this branch changes; the full run is
-looking for collateral damage elsewhere in the suite, not for a combat
-regression.
+- The suite prints a wall of `Leaked instance dependency` / `ObjectDB instances
+  were leaked` / `RID allocations … leaked at exit` lines **after** its result
+  line. That is Godot's ordinary headless shutdown noise on this project, not a
+  fault introduced here — the filtered 249-test run produced the same pattern
+  before any of this branch's code was reachable from it, and the process still
+  exits 0. Judge the run by the `N tests, N assertions, 0 failed` line.
+- `smoke_combat.gd` reports `type chart reached the fight: 3 verdicts, ally
+  ground vs foe ground (hit 0 / 0, arrow 0)`. Those zeroes are correct — the
+  director drew a mirror matchup — and §6 explains why that is a real but
+  weaker check than a non-neutral fight would be.
