@@ -122,6 +122,36 @@
       "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
       "model_scale": 0.22,
       "_why": "the last stretch before Band 4, by the trailpup cluster that closes the region out"
+    },
+    {
+      "order": 3012,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [-60.0, 3240.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "T3-RELAY (ralph/reports/finding-post-tournament-cadence-2026-08-29.md): the region's own entrance carried nothing authored for 380m of its own territory before this pass -- the first authored beat a player met after crossing from Band 2 sat at order 3003, well past the region's own start point (0,3180). Seated directly on the spine's own first leg (point0->point1, `tools/_probe_gate_f_corridor.gd` measured min_dist ~0m), roughly midway along it, splitting the old 641m dead stretch measured at the band2/3 seam into two ~320m halves -- both inside the owner's 60-90s/240-360m cadence band. A stone's throw past bramblebun/mudsnout order 3009/3010's own western-approach clusters, so the region reads as populated from the seam itself rather than only once the relay road begins."
+    },
+    {
+      "order": 3013,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [110.0, 3960.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0,
+      "_why": "T3-RELAY. The measured 679m dead stretch ran from the relay's own back-leg gathering (order 3006) straight through the four-trainer gauntlet's aftermath to the Old Mill Crossing's own approach (order 3009) with nothing authored in between -- exactly the ground the player crosses right after beating Captain Vance, which is the worst place in the region for the world to go quiet on a victory. Sited on the relay's own spoil ground, the same disturbed ground order 3002/3005/3006 already read off Team Tether's excavation."
+    },
+    {
+      "order": 3014,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [-60.0, 4110.0],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why": "T3-RELAY. The second half of the same 679m stretch, on the near-bank approach to the Old Mill Crossing itself -- the gear Sela hands over on rescue is what reopens this exact crossing, so gathering here is the first thing the player does on ground that was Team Tether's a few minutes ago and is the player's own again now."
     }
   ]
 }
