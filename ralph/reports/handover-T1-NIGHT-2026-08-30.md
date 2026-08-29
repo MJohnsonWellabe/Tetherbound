@@ -92,7 +92,74 @@ produced "the best night frame the game has produced" changed.
 
 ## Stair-step artefact at 22:00 — conclusion
 
-<!-- FILLED IN AFTER THE SHADOW ATLAS A/B PROBE -->
+**Real, reproducible, and NOT explained by shadow-map resolution alone —
+raising it changes the artefact's shape rather than removing it.**
+
+`tools/_probe_shadow_atlas.gd` renders the exact hour-22.00 ranger-camp
+viewpoint twice in one process — identical scene, camera, lighting, weather —
+first at the shipped `directional_shadow/size` (2048), then again after
+calling `RenderingServer.directional_shadow_atlas_set_size(4096, true)` at
+runtime (no project.godot edit, no restart: this is a live render-target
+resize, so nothing else in the frame can have changed between the two
+shots). Evidence: `ralph/reports/T1-NIGHT/shots/shadow_atlas_probe/`.
+
+- **Atlas size is a real, measurable factor, not a llvmpipe fluke**: 32.6% of
+  pixels differ by more than a rounding amount between the two renders
+  (mean abs diff 2.29/255 overall, max 151/255), concentrated exactly where
+  Judge 2 flagged it — bottom-left quadrant mean diff 11.0 against 2.9-9.1
+  elsewhere, frac-changed 5.3% against 1.6-4.3% elsewhere. Two renders of the
+  same frozen scene do not differ by that much unless the changed setting is
+  doing something real.
+- **But it does not clean the artefact up — it changes its shape.**
+  `full-left-quadrant-{2048,4096}.png` and the tighter `edge-crop-
+  {2048,4096}.png` (same crop, nearest-neighbour zoomed) show a
+  near-camera shadow boundary (something casting onto the lit path, out of
+  frame to the right) that is a fairly smooth diagonal at 2048 and grows a
+  new, still-blocky rectangular notch at 4096 — the higher-resolution atlas
+  *revealed* a blockier feature it wasn't previously resolving, rather than
+  smoothing an existing block pattern away. A second boundary (the terrain/
+  sky-adjacent edge in `full-left-quadrant`'s upper portion) shows the same
+  direction of change: a small sawtooth appears at 4096 that the 2048 render
+  blurred into a clean curve.
+- **This matches a cause this file's own history already names, better than
+  "atlas too small" does.** `art.json`'s NIGHT-LIGHT comment on the `night`
+  preset records that round 1 of tuning the moon put it at a grazing -8°
+  pitch and a blind pass called out "a hard value seam... reads as a light
+  falloff/attenuation cliff... an artifact, which is what a near-horizontal
+  light does to gentle terrain undulation" — steepened to -20° specifically
+  to reduce (not eliminate) that risk, the same tradeoff the day preset's own
+  R9.4 comment independently rejected a shallower sun for. Night's moon at
+  -20° is still far shallower than day's -44°, and shallow-angle light on
+  undulating terrain is exactly the geometry that produces long, thin,
+  texel-quantised self-shadow acne — a real effect that a higher-resolution
+  shadow map resolves in finer, still-visible detail rather than removing,
+  which is precisely what these frames show.
+- There is also a documented precedent in this same file for NOT assuming
+  atlas size (`_comment_exposure_ev4_lighting`: raising it to 4096 for a
+  *different* shadow artefact near the Barn produced a "pixel-identical
+  edge," ruling it out there) — this probe is the same kind of direct test,
+  it just found the opposite answer for this artefact: a real, measurable
+  effect, just not a clean fix.
+
+**Conclusion for the coordinator:** this is not simply "raise
+`directional_shadow/size` back toward 4096 and the stair-steps go away" —
+the same probe shows they do not go away, they relocate. The more likely
+lever is night's moon pitch (-20°, still grazing) interacting with terrain
+undulation, which is a lighting-mood tradeoff this file's own history
+already fought hard to avoid re-opening (round 1's -8° was rejected for
+exactly this class of artefact), not a free resolution bump. `directional_
+shadow/size` is also a global `project.godot` rendering setting that costs
+real VRAM across every time of day, not a night-cycle-specific value in my
+`art.json` ownership, and SA1's own comment there already anticipated this
+exact question ("raise it back if shadow edges visibly stair-step on
+device; that is the trade being made here") — reversing that deliberate
+ROG Ally memory trade is a Performance/Track-2 decision, not mine to make
+from this lane. I did not touch `project.godot` or night's sun pitch.
+Per the brief's own instruction, this needs one look on real hardware
+before anyone spends either the VRAM or the mood tradeoff chasing it
+further — the software-GL comparison here is trustworthy for "does the
+setting do anything" (yes) but not for "does raising it look better to a
+human eye" (unclear, and arguably no, on this evidence).
 
 ## Done-verified vs done-unverified vs still-open
 
