@@ -217,6 +217,16 @@
         6490.0
       ],
       "radius": 55.0
+    },
+    {
+      "id": "the_broken_tower",
+      "display_name": "The Broken Tower",
+      "_why": "T3-BAND4. ralph/reports/finding-post-tournament-cadence-2026-08-29.md's second-worst authored-content gap (852m) sits between Captain Vess and the Stronghold Approach, where the route runs empty. `watchtower_landmark.gd` builds the actual ruin there (WATCHTOWER_AT in playground_world.gd); this names it on the map, same pattern as `the_ridgeline_watch` above -- a single built structure, not a broad area, so the radius stays tight rather than matching a region's usual 45-62m. No icon, matching every other landform/ruin entry in this list; a dedicated map icon is presentation work for the visual lane, not this pin's job. Separation checked: 424m from The Ridgeline Watch (band 4's other named ruin), comfortably clear -- these are the region's 'occupation traces' spec §3 names as recurring, not one feature repeated.",
+      "centre": [
+        40.0,
+        6800.0
+      ],
+      "radius": 30.0
     }
   ],
   "_comment_the_tether_relay": "SE23, and D36's rule applied the same way the quarry applies it: few and LARGE. ONE region for the whole station -- the approach road, the compound, the pad and the three conduit runs converging on it -- not one per feature. Its centre sits between the compound centre ([108,34]) and the apparatus pad ([104.5,23.1]) so the map label lands over the site rather than off one edge of it, and 48m carries the outermost pylon on every run. Separation: 111m to Grandpa's Village and 145m to The Old Quarry, both clear of any overlap. The Rise is the exception and the first authored overlap on this map -- 75m between centres against 55+48m of radius, so their rims cross in a 28m band. That is deliberate rather than sloppy: shrinking this region enough to avoid it entirely (20m) would stop it covering its own compound. map_state.gd::_region_at already defines the answer -- the nearest centre among every region you are inside wins -- so the band resolves on the midline and neither label moves. The two LABELS are 75m apart, which is the thing the first regions cut got wrong (three names 15-35m apart, printed on top of each other). Discovery is by ENTERING it (map_state.gd::update_region), which for this region means having gone past the quarry on the stronghold bearing. TUNABLE.",
