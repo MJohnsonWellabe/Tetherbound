@@ -4,6 +4,13 @@ Branch `ralph/CONTENT-0828B`. Two owner complaints from
 `ralph/OWNER_PLAYTEST_2026-08-28.md`: the Burrow Warrens payoff (§6) and
 "constructed spaces look lame" (§4a).
 
+> **First-hour reconciliation (2026-08-28).** This report records the remote
+> branch as reviewed. Newer owner direction makes the three opening starters
+> unique to that choice, so the continuation replaces its catchable vault
+> Terrapup with an optional level-13 **Elder Trailpup**. It is deliberately a
+> different species from the Burrowback guardian; the guardian, door, payout,
+> and Heartstone structure remain unchanged.
+
 ---
 
 ## 1. The Burrow Warrens payoff — ALREADY ON `main`, now verified and asserted

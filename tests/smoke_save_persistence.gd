@@ -1,7 +1,8 @@
 extends SceneTree
 
-## RG7. Real Meadows save/load lifecycle: production opening grant, production
-## villager gift, physical one-shot pickups, exact trainer/view pose, and live
+## RG7. Real Meadows save/load lifecycle: production opening grant, Mira's
+## required tool/Orb-recipe handoff, physical one-shot pickups, exact trainer/
+## view pose, and live
 ## control after an in-world load.
 ##
 ##   godot --headless --path . --script tests/smoke_save_persistence.gd
@@ -18,7 +19,8 @@ const SETTLE_FRAMES := 300
 const STARTER_NAME := "Keepsake"
 const TM_ID := "tm_stone_rush"
 const TM_NODE := ^"TM_tm_stone_rush"
-const GIFT_FLAG := "tam_tools_given"
+const MIRA_GIFT_FLAG := "mira_shop_open"
+const MIRA_VISITED_FLAG := "opening:mira_visited"
 
 var _failures: Array[String] = []
 var _world: Node3D = null
@@ -55,7 +57,7 @@ func _run() -> void:
 	_game.set("save_system", SAVE_GAME.new(TEST_DIR))
 
 	await _earn_the_starter_through_the_production_sequence()
-	await _receive_tams_real_one_time_gift()
+	await _receive_miras_real_one_time_gift()
 	await _take_authored_one_shot_pickups()
 	await _round_trip_the_live_world()
 
@@ -129,15 +131,22 @@ func _earn_the_starter_through_the_production_sequence() -> void:
 		_fail("the opening did not reach its post-starter world state")
 
 
-func _receive_tams_real_one_time_gift() -> void:
+func _receive_miras_real_one_time_gift() -> void:
 	var inventory: RefCounted = _game.get("inventory")
-	var before := int(inventory.call("count", "axe"))
-	await _play_conversation("village_tam_tools")
-	if int(inventory.call("count", "axe")) != before + 1:
-		_fail("Tam's production conversation did not grant its real tool gift")
+	var axe_before := int(inventory.call("count", "axe"))
+	var pickaxe_before := int(inventory.call("count", "pickaxe"))
+	await _play_conversation("village_mira_shop_intro")
+	if int(inventory.call("count", "axe")) != axe_before + 1:
+		_fail("Mira's required production conversation did not grant its axe")
+	if int(inventory.call("count", "pickaxe")) != pickaxe_before + 1:
+		_fail("Mira's required production conversation did not grant its pickaxe")
 	var progression: RefCounted = _game.get("progression")
-	if not bool(progression.call("has", GIFT_FLAG)):
-		_fail("Tam's gift did not write %s before saving" % GIFT_FLAG)
+	if not bool(progression.call("has", MIRA_GIFT_FLAG)):
+		_fail("Mira's gift did not write %s before saving" % MIRA_GIFT_FLAG)
+	if not bool(progression.call("has", MIRA_VISITED_FLAG)):
+		_fail("Mira's required visit did not write %s before saving" % MIRA_VISITED_FLAG)
+	if not bool(progression.call("has", "recipe_orb_basic")):
+		_fail("Mira's required visit did not unlock the Basic Orb recipe before saving")
 
 
 func _take_authored_one_shot_pickups() -> void:
@@ -221,9 +230,9 @@ func _round_trip_the_live_world() -> void:
 	if int((_game.get("party") as RefCounted).call("size")) != 1:
 		_fail("starter state did not restore as exactly one owned creature")
 
-	var tam_greeting := VILLAGE_NPCS.greeting_for(_tam(), progression)
-	if tam_greeting == "village_tam_tools":
-		_fail("Tam offered his one-time tool gift again after load")
+	var mira_greeting := VILLAGE_NPCS.greeting_for(_mira(), progression)
+	if mira_greeting == "village_mira_shop_intro":
+		_fail("Mira offered her one-time tools/Orb recipe again after load")
 	if int((_game.get("inventory") as RefCounted).call("count", TM_ID)) != expected_tm_count:
 		_fail("the consumed TM duplicated or disappeared across load")
 	if _world.get_node_or_null(TM_NODE) != null:
@@ -300,7 +309,7 @@ func _finish_open_conversation() -> void:
 		_fail("a production conversation never closed")
 
 
-func _tam() -> Dictionary:
+func _mira() -> Dictionary:
 	var file := FileAccess.open("res://data/config/village_npcs.json", FileAccess.READ)
 	if file == null:
 		return {}
@@ -308,7 +317,7 @@ func _tam() -> Dictionary:
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return {}
 	for raw: Variant in ((parsed as Dictionary).get("villagers", []) as Array):
-		if raw is Dictionary and str((raw as Dictionary).get("name", "")) == "Tam":
+		if raw is Dictionary and str((raw as Dictionary).get("name", "")) == "Mira":
 			return raw as Dictionary
 	return {}
 

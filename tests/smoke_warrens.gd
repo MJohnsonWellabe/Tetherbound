@@ -482,7 +482,7 @@ func _the_story_reward_pays_once(warrens: Node3D, inventory: RefCounted,
 	# CONTENT-0828. Coin and rootstone alone are not the payout any more, and
 	# checking only those two would have missed the part the design turns on.
 	# The clear pays two Greater Orbs on purpose: the door the guardian's
-	# defeat just opened has the only wild Terrapup in the game behind it
+	# defeat just opened has the named Elder Trailpup behind it
 	# (burrow_warrens.json `_comment_spawns_special`), so the reward for
 	# beating the alpha is the means to catch what it was standing in front
 	# of. An item id typo'd in that file pushes an error and pays nothing, and

@@ -15,6 +15,7 @@ extends "res://tests/test_case.gd"
 ## job. This file owns the TABLE those tests and that code read.
 
 const SPAWNS_PATH := "res://data/config/spawns.json"
+const WARRENS_PATH := "res://data/config/burrow_warrens.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const ALIGNMENT := preload("res://scripts/world/terrain_region_alignment.gd")
 const WEATHER_PATH := "res://data/config/weather.json"
@@ -59,6 +60,29 @@ func _spawned_species() -> Array[String]:
 		if not out.has(id):
 			out.append(id)
 	return out
+
+
+func _warrens_spawned_species() -> Array[String]:
+	var file := FileAccess.open(WARRENS_PATH, FileAccess.READ)
+	if file == null:
+		return []
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return []
+	var out: Array[String] = []
+	for entry: Variant in (parsed as Dictionary).get("spawns", []):
+		var id := str((entry as Dictionary).get("species", ""))
+		if not out.has(id):
+			out.append(id)
+	return out
+
+
+func _warrens_config() -> Dictionary:
+	var file := FileAccess.open(WARRENS_PATH, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
 
 
 # --- the table is well-formed ------------------------------------------------
@@ -166,11 +190,27 @@ func test_no_evolved_form_spawns_wild() -> void:
 
 func test_starter_species_never_spawn_in_the_ordinary_wild_population() -> void:
 	# First-Hour Fun Rebuild: the first creature of each starter species must be
-	# the opening choice. This reads the merged band table, so it covers every
-	# field pocket including Creek Hollow rather than only the original head file.
-	for id: String in _spawned_species():
+	# the opening choice. This reads every merged outdoor band plus the Warrens'
+	# own spawn table, because its runtime uses the same catchable wild spawner.
+	var ordinary_wilds := _spawned_species()
+	for id: String in _warrens_spawned_species():
+		if not ordinary_wilds.has(id):
+			ordinary_wilds.append(id)
+	for id: String in ordinary_wilds:
 		assert_false(STARTER_SPECIES.has(id),
 			"'%s' is a starter species and must remain unique to the opening choice, not an ordinary wild" % id)
+
+
+func test_warrens_elder_is_not_a_second_guardian() -> void:
+	var config := _warrens_config()
+	var guardian := config.get("guardian", {}) as Dictionary
+	var guardian_species := str(guardian.get("species", ""))
+	for entry: Variant in config.get("spawns", []):
+		var spawn := entry as Dictionary
+		if not str(spawn.get("nickname", "")).begins_with("Elder "):
+			continue
+		assert_ne(str(spawn.get("species", "")), guardian_species,
+			"the optional named elder must be a distinct species from the Warrens guardian")
 
 
 # --- respawn -----------------------------------------------------------------

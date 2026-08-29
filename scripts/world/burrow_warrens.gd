@@ -1760,12 +1760,9 @@ func _spawn_population(director: Node) -> void:
 				"name": "Warrens_%s_%d" % [str(spec.get("species", "")), n + 1],
 			})
 			if body != null:
-				# CONTENT-0828. Optional, and used by exactly one entry today:
-				# the vault's Terrapup is the ONLY wild Terrapup in the whole
-				# game (`_comment_spawns_special`), and nothing told the player
-				# that. It read as one more aggressive animal in a dark room,
-				# so a player who fled it or beat it never learned they had
-				# just passed the rarest catch in the chapter. A name is the
+				# CONTENT-0828 / FIRST-HOUR-FUN-REBUILD. Optional, and used by
+				# exactly one entry today: the vault's Elder Trailpup is the
+				# strong encounter behind the guardian. A name is the
 				# cheapest honest signal and it is the same two-object write
 				# `_dress_the_guardian()` documents at length: the BODY's
 				# `display_name` is what the engage prompt shows, the INSTANCE's
