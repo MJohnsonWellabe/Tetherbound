@@ -57,6 +57,10 @@ const REED_SINK := 0.14
 var _field: RefCounted = null
 var _water_cfg: Dictionary = {}
 var _level: float = NAN
+## The stream's own trimmed centreline (post head-ramp, pre-pond-mouth — the
+## same span `_build_stream` meshes), kept for `_build_stream_reeds` so bank
+## dressing can walk the identical course instead of re-resampling it.
+var _stream_samples: Array[Vector2] = []
 
 ## OP21-20 hazard state. `_hazard_cfg` is `water_hazard.json`'s `submersion`
 ## block; `_hazard_state` is the mutable `{submerged_s, tick_s, damage}` dict
@@ -89,6 +93,9 @@ var _stats := {
 	"driftwood": 0, "lilypads": 0, "jetty_pieces": 0,
 	# SE21 — the river is a second body of water in the same layer.
 	"river_quads": 0, "river_reeds": 0, "river_scrub": 0,
+	# T1-GROUND-2 — the stream had zero bank dressing at all; see
+	# _build_stream_reeds.
+	"stream_reeds": 0, "stream_scrub": 0,
 }
 
 
@@ -140,6 +147,8 @@ func build() -> void:
 	stream_material.set_shader_parameter("flow_stretch", float(surface_cfg.get("flow_stretch", 0.6)))
 	_build_stream(stream_material, stream)
 	BOOT_LOG.phase("water: stream")
+	_build_stream_reeds(_water_cfg.get("stream", {}))
+	BOOT_LOG.phase("water: stream bank dressing")
 
 	_build_river()
 	BOOT_LOG.phase("water: river")
@@ -159,6 +168,9 @@ func build() -> void:
 		_stats["pond_quads"], _stats["stream_points"], _stats["reeds"],
 		_stats["marginals"], _stats["bank_flowers"], _stats["rocks"], _stats["driftwood"],
 		_stats["lilypads"], _stats["jetty_pieces"], _level
+	])
+	print("[water] stream bank reeds %d, bank scrub %d" % [
+		_stats["stream_reeds"], _stats["stream_scrub"]
 	])
 	print("[water] river quads %d, bank reeds %d, bank scrub %d" % [
 		_stats["river_quads"], _stats["river_reeds"], _stats["river_scrub"]
@@ -1092,6 +1104,8 @@ func _build_stream(material: ShaderMaterial, stream: Dictionary) -> void:
 	if end_index < 2:
 		return
 
+	_stream_samples = samples.slice(0, end_index)
+
 	# EV5-remainder: cumulative distance along the course, written into UV2.x
 	# per vertex (UV2.y is signed metres across). The shader scrolls its wave
 	# normals along this axis when flow_enabled — the flow direction IS the
@@ -1134,6 +1148,54 @@ func _build_stream(material: ShaderMaterial, stream: Dictionary) -> void:
 	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(node)
 	_stats["stream_points"] = end_index
+
+
+## The stream had zero bank dressing: `_build_plant_band` gates every
+## candidate against the member `_level`, which is the POND's flat surface
+## and nowhere near the stream's own falling grade -- off the pond, every
+## single placement attempt silently failed the elevation gate (found by a
+## T1-GROUND probe of `height_at`/`stream_factor` along the bank, recorded in
+## its handover). `_build_river` already works around the same mismatch by
+## swapping `_level` to the river's own `water_level` once for the whole
+## body; the stream cannot do that in one swap because its bed keeps falling
+## along the course, so this swaps `_level` to the LOCAL bed height at a
+## series of stations instead, reusing `_build_plant_band` unchanged at each
+## one with a one-point "shore". Stations, not one call per centreline
+## sample: the course is short (~90m authored, roughly half that once the
+## head ramp and pond mouth are trimmed) but `_build_plant_band` already
+## loops `clumps` times per call, so calling it every ~1.5m sample would
+## multiply the configured density by the sample count for free.
+const STREAM_REED_STATION_STEP := 8.0
+
+func _build_stream_reeds(cfg: Dictionary) -> void:
+	var reeds_cfg: Dictionary = cfg.get("reeds", {})
+	var scrub_cfg: Dictionary = cfg.get("bank_scrub", {})
+	if reeds_cfg.is_empty() and scrub_cfg.is_empty():
+		return
+	if _stream_samples.size() < 2:
+		return
+
+	var previous := _level
+	var reed_total := 0
+	var scrub_total := 0
+	var travelled := 0.0
+	for i in _stream_samples.size():
+		var p := _stream_samples[i]
+		var is_last := i == _stream_samples.size() - 1
+		if i > 0:
+			travelled += _stream_samples[i - 1].distance_to(p)
+		if i > 0 and not is_last and travelled < STREAM_REED_STATION_STEP:
+			continue
+		travelled = 0.0
+		_level = float(_field.call("height_at", p.x, p.y))
+		var here: Array[Vector2] = [p]
+		if not reeds_cfg.is_empty():
+			reed_total += _build_plant_band(reeds_cfg, here)
+		if not scrub_cfg.is_empty():
+			scrub_total += _build_plant_band(scrub_cfg, here)
+	_level = previous
+	_stats["stream_reeds"] = reed_total
+	_stats["stream_scrub"] = scrub_total
 
 
 ## 0.75..1.25 width multiplier along the stream, two sine waves at
