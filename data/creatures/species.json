@@ -731,6 +731,9 @@
         "model": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0.glb",
         "_comment_model": "Deliberately the SAME mesh as burrowback. This is an aspect variant, not a new creature: CLAUDE.md's rule that Meadows creatures are differentiated by materials, textures, modest scale, animation, VFX, habitat, behaviour, traits and encounter context IS the build path the owner's sheet specifies for it ('VARIANT RECOLOR'). The recolour, emissive and VFX treatment belongs to the T1-CREATURE-ART lane; this entry is the identity it attaches to. Do NOT repoint this at a new .glb without an owner directive -- the expansion brief names a new mesh for five OTHER creatures and explicitly not for this one.",
         "model_scale": 1.0,
+        "aspect_variant": "nightburrow",
+        "aspect_source_species": "burrowback",
+        "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain burrowback. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
         "animations": {
           "idle": "idle",
@@ -771,6 +774,9 @@
         "model": "res://assets/creatures/tetherbound/trailpup/models/creature_trailpup_lod0.glb",
         "_comment_model": "Deliberately the SAME mesh as trailpup. This is an aspect variant, not a new creature: CLAUDE.md's rule that Meadows creatures are differentiated by materials, textures, modest scale, animation, VFX, habitat, behaviour, traits and encounter context IS the build path the owner's sheet specifies for it ('VARIANT RECOLOR'). The recolour, emissive and VFX treatment belongs to the T1-CREATURE-ART lane; this entry is the identity it attaches to. Do NOT repoint this at a new .glb without an owner directive -- the expansion brief names a new mesh for five OTHER creatures and explicitly not for this one.",
         "model_scale": 1.0,
+        "aspect_variant": "stormtrail",
+        "aspect_source_species": "trailpup",
+        "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain trailpup. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
         "animations": {
           "idle": "idle",
@@ -811,6 +817,9 @@
         "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
         "_comment_model": "Deliberately the SAME mesh as paddlenewt. This is an aspect variant, not a new creature: CLAUDE.md's rule that Meadows creatures are differentiated by materials, textures, modest scale, animation, VFX, habitat, behaviour, traits and encounter context IS the build path the owner's sheet specifies for it ('VARIANT RECOLOR'). The recolour, emissive and VFX treatment belongs to the T1-CREATURE-ART lane; this entry is the identity it attaches to. Do NOT repoint this at a new .glb without an owner directive -- the expansion brief names a new mesh for five OTHER creatures and explicitly not for this one.",
         "model_scale": 1.0,
+        "aspect_variant": "riftfrill",
+        "aspect_source_species": "paddlenewt",
+        "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain paddlenewt. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
         "animations": {
           "idle": "idle",
@@ -851,6 +860,9 @@
         "model": "res://assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb",
         "_comment_model": "Deliberately the SAME mesh as tuskroot. This is an aspect variant, not a new creature: CLAUDE.md's rule that Meadows creatures are differentiated by materials, textures, modest scale, animation, VFX, habitat, behaviour, traits and encounter context IS the build path the owner's sheet specifies for it ('VARIANT RECOLOR'). The recolour, emissive and VFX treatment belongs to the T1-CREATURE-ART lane; this entry is the identity it attaches to. Do NOT repoint this at a new .glb without an owner directive -- the expansion brief names a new mesh for five OTHER creatures and explicitly not for this one.",
         "model_scale": 1.0,
+        "aspect_variant": "ashtusk",
+        "aspect_source_species": "tuskroot",
+        "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain tuskroot. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
         "animations": {
           "idle": "idle",
