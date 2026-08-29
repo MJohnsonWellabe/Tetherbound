@@ -339,7 +339,98 @@ also produce real changes (34.5, 32.6). The fog is light-handed — more
 "overcast flattening" than the aerial-perspective fix the horizon needs —
 but the preset pipeline demonstrably reaches the shipped renderer now.
 
-## 9. Terrain macro composition and landmarks
+## 8. The black-rendering humanoids
+
+Evidence: real-world — the path figure in `ground-02-…-day/-fog`
+(zoomed), the roadside figure in `ground-04-…-day`; stage rig —
+`village_npcs.png` (`capture_village_npcs.gd`, five village NPCs through
+the world's own character-model path).
+
+**Verdict: the material hole is fixed; the grunt presentation is still
+borderline-dark. Partially moved.**
+
+- Both dark figures in my world frames are **Team Tether grunts**, and
+  neither is a paint-black cutout any more: at zoom the band-2 figure
+  shows oxblood jacket, straps, mask and cap detail, and the band-4
+  grunt at close range in full sun reads leather browns, an insignia cap
+  and a red medallion. The oxblood is correctly reserved danger colour.
+- The five villagers on the stage rig all render fully lit — white
+  shirts, green/brown kit, readable faces. No black-rendering path
+  survives in the villager materials. (In-world villager evidence at
+  close range did not occur in this frame set; the villages only appear
+  at distance in `02-valley-floor`.)
+- Still watch: the band-4 grunt's *mean* body sample in full daylight is
+  (17,12,6) — luma 13. The detail read comes from highlights, so at 20+
+  metres a grunt still collapses to a black speck (`ground-02` shows
+  exactly this at path distance, worsened there by a tree-shadow band).
+  The uniform is supposed to be dark; luma 13 mean is darker than any
+  intentional oxblood. llvmpipe's weak fill light is part of this — but
+  it is the shipped renderer, so it is the shipped read.
+
+## 9. Creature presentation
+
+Frames: `creature_presentation/_portraits.png`, `_field_thumbs.png`
+(17 species, world light, trainer-height bar in frame), plus
+`habitat/pond-shoreline.png`, `habitat/practice-meadow-cluster.png`; and
+the Warrens interior residents from subject 4.
+
+**Verdict: GOOD — the strongest asset class in the game, and now the
+owner's colour board made real.** Portrait for portrait, the roster
+matches the board's stated identities: bramblebun's forest greens,
+mudsnout's rich browns, burrowback's stone-plate badger, duskhush's
+midnight-and-glow owl, mosshell's teal-and-moss shell, veridian's
+verdant-glow stag. Faces are expressive, materials read as fur/feather/
+shell rather than flat tint, and relative scale against the 1.8 m bar is
+role-appropriate (tuskroot/mudsnout large, terrapup small). At 30 %
+thumb size every species still separates from the keyed meadow ground —
+including the camouflage-risk species (bramblebun, veridian) which
+separate on value. The pond shoreline shot shows a brooktail reading
+near shore against turquoise water — close-toned but carried by its
+white face.
+
+Watch items:
+
+- The field-thumb rig's ground is a flat keyed green, deliberately
+  matched to measured grass tone — it answers colourway separation, not
+  occlusion by blade geometry. The in-world frames I have (Warrens
+  residents, pond brooktail, band-2 distance) all support the GOOD read,
+  but tall-grass occlusion of small species remains unphotographed this
+  pass.
+- `habitat/practice-meadow-cluster.png` shows the practice meadow's
+  bramblebuns on a **flat plastic-green ground with no blade carpet**,
+  under a giant hard-edged black shadow blob, beside a floating white
+  prompt-card quad — that one frame still looks like the pre-pass test
+  environment. (Caveat, flagged: I cannot rule out the habitat rig
+  suppressing scatter itself; the same flat look does not appear in the
+  band frames.)
+
+## 10. UI / HUD
+
+Frames: `ui/01-title … 09-stamina-arc` (1920×1080,
+`_capture_ui_survey.gd`).
+
+**Verdict: ACCEPTABLE — legible and consistent, not yet styled.** The
+exploration HUD reads at a glance: team strip with portraits/levels/KO,
+HP and FOOD bars, minimap, objective card, hotbar, controller footer,
+all on one dark-teal panel language with sane margins and safe areas.
+Nothing misleads, nothing collides, glyphs are controller-first. What
+keeps it from GOOD:
+
+- Every element is the same untextured dark rounded rectangle; the
+  panels carry none of the world's material language (timber/stone/
+  Tether teal), so the HUD reads default-theme rather than
+  art-directed.
+- **The starter picker shows all three starters from behind** — the
+  player's first impression of their three companions is three rumps
+  (`02-starter-picker.png`). The orbs, title and selection ring are
+  fine; the creatures need to face the camera.
+- Party strip nits (`08-party-strip.png`): "Brookta" truncates with no
+  ellipsis; the REST row's layout shifts its level column out of line
+  with the other rows.
+- The FOOD bar's label sits on top of its fill percentage in the
+  exploration HUD, muddying an otherwise clean block.
+
+## 11. Terrain macro composition and landmarks
 
 Evidence: the wide reads across `ground-05-band5-approach-day/golden`,
 `C-02-silhouette-far`, `ground-01/03-…-day`, `S-ext-02-flank-wide`,
