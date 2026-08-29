@@ -107,14 +107,32 @@ xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
   AFTER — a framed gate with proud jambs, a lintel and banners; finer wall
   tile at the approach.
 
-## Performance
+## Performance — NOT MEASURED, lane stopped mid-run
 
-Measured with `tools/perf_render_stats.gd` (structural draw
-calls/primitives/objects — the counters that carry to the ROG Ally target;
-llvmpipe's own frame TIME does not, per that tool's own header), the
-`stronghold_approach` view, before (stashed) vs after this branch's changes:
+This lane was stood down (coordination tooling dropped out) before this
+step completed. `tools/perf_render_stats.gd` already has a
+`stronghold_approach` view built in for exactly this comparison. An
+"after" run was started and killed mid-flight when the stand-down landed
+(log shows it reached the view loop but printed no numbers before being
+killed). A "before" run (via `git stash` on just the two changed files,
+`scripts/world/stronghold.gd` + `data/config/stronghold.json`, then
+`git stash pop`) was never started. See the handover doc for the exact
+command to run this — it is the same command already in this file's own
+history, just needs to actually finish:
 
-[FILLED IN BELOW ONCE THE MEASUREMENT RUNS]
+```
+xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
+  --resolution 1280x720 --script tools/perf_render_stats.gd -- --label=after-t1arch-stronghold
+```
+
+Cost estimate by node count, NOT measured: this branch adds roughly 16
+OmniLights (12 fire + 4 sky-fill, all `shadow_enabled = false`), ~60
+decorative (non-solid) BoxMesh pieces (coping/merlons/hardware/facing
+skins) and 8 `Banner.obj` instances, all static (built once at world
+boot, no per-frame cost beyond draw calls). Worth checking against a real
+budget before calling this done — 16 more unshadowed omnis stacking on
+top of the existing ~12 in this one building is the number I would look at
+first.
 
 ## Not attempted / flagged for a future lane
 
