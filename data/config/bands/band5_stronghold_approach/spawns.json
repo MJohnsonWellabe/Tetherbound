@@ -7,6 +7,7 @@
     {
       "order": 5000,
       "species": "burrowback",
+      "table": "meadows_rock",
       "count": 2,
       "centre": [
         -85.0,
@@ -14,7 +15,8 @@
         7125.0
       ],
       "radius": 18.0,
-      "_why": "The mouth of the approach ((-80,7120) is the spine's first point past the band boundary). A burrowing ground species is the believable survivor of drained ground -- it went under it. First thing met in the region, and the least dangerous of the four."
+      "_why": "The mouth of the approach ((-80,7120) is the spine's first point past the band boundary). A burrowing ground species is the believable survivor of drained ground -- it went under it. First thing met in the region, and the least dangerous of the four.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
     },
     {
       "order": 5001,
@@ -36,6 +38,7 @@
     {
       "order": 5002,
       "species": "duskhush",
+      "table": "meadows_air",
       "count": 2,
       "centre": [
         85.0,
@@ -43,7 +46,8 @@
         7375.0
       ],
       "radius": 18.0,
-      "_why": "Roosting at the Sigil gate (playground_world.gd's SIGIL_GATE_AT, (0,7400)) on Team Tether's own masonry -- the image the region is for. Deliberately NOT night-gated: the gate is a fixed beat every player passes through once, and a nocturnal cluster there would simply be absent for most players."
+      "_why": "Roosting at the Sigil gate (playground_world.gd's SIGIL_GATE_AT, (0,7400)) on Team Tether's own masonry -- the image the region is for. Deliberately NOT night-gated: the gate is a fixed beat every player passes through once, and a nocturnal cluster there would simply be absent for most players.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before."
     },
     {
       "order": 5003,
@@ -72,6 +76,7 @@
     {
       "order": 5005,
       "species": "burrowback",
+      "table": "meadows_rock",
       "count": 4,
       "centre": [
         -31.1,
@@ -79,11 +84,13 @@
         7021.4
       ],
       "radius": 16.0,
-      "_why": "40m past the band boundary, west flank -- dug in before the mouth cluster proper"
+      "_why": "40m past the band boundary, west flank -- dug in before the mouth cluster proper",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
     },
     {
       "order": 5006,
       "species": "galecrest",
+      "table": "meadows_air",
       "count": 5,
       "centre": [
         -23.9,
@@ -91,11 +98,13 @@
         7068.2
       ],
       "radius": 18.0,
-      "_why": "east flank of the mouth stretch, a second hunting pack answering the first"
+      "_why": "east flank of the mouth stretch, a second hunting pack answering the first",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
     },
     {
       "order": 5007,
       "species": "duskhush",
+      "table": "meadows_air",
       "count": 4,
       "centre": [
         -76.5,
@@ -103,11 +112,13 @@
         7075.2
       ],
       "radius": 16.0,
-      "_why": "roosting close behind the outer watch (trainers.json order 5005) -- the post did not clear the ground around it"
+      "_why": "roosting close behind the outer watch (trainers.json order 5005) -- the post did not clear the ground around it",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before."
     },
     {
       "order": 5008,
       "species": "trailpup",
+      "table": "meadows_open",
       "count": 3,
       "centre": [
         -28.8,
@@ -115,11 +126,13 @@
         7168.8
       ],
       "radius": 14.0,
-      "_why": "past the outer watch, west flank, thinning into the exposed stretch"
+      "_why": "past the outer watch, west flank, thinning into the exposed stretch",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being trailpup -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up trailpup exactly as before."
     },
     {
       "order": 5009,
       "species": "mudsnout",
+      "table": "meadows_open",
       "count": 4,
       "centre": [
         -50.5,
@@ -127,11 +140,13 @@
         7217.4
       ],
       "radius": 16.0,
-      "_why": "west flank of the exposed stretch"
+      "_why": "west flank of the exposed stretch",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
     },
     {
       "order": 5010,
       "species": "burrowback",
+      "table": "meadows_rock",
       "count": 3,
       "centre": [
         18.0,
@@ -139,11 +154,13 @@
         7250.0
       ],
       "radius": 14.0,
-      "_why": "east flank, clear of the aggressor cluster's own 22m ring"
+      "_why": "east flank, clear of the aggressor cluster's own 22m ring",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
     },
     {
       "order": 5011,
       "species": "galecrest",
+      "table": "meadows_air",
       "count": 3,
       "centre": [
         3.2,
@@ -151,11 +168,13 @@
         7312.2
       ],
       "radius": 14.0,
-      "_why": "a second, smaller aggressive pocket on the exposed stretch -- thin, not empty"
+      "_why": "a second, smaller aggressive pocket on the exposed stretch -- thin, not empty",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
     },
     {
       "order": 5012,
       "species": "duskhush",
+      "table": "meadows_air",
       "count": 4,
       "centre": [
         62.5,
@@ -163,11 +182,13 @@
         7308.3
       ],
       "radius": 16.0,
-      "_why": "east flank ahead of the Sigil gate"
+      "_why": "east flank ahead of the Sigil gate",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before."
     },
     {
       "order": 5013,
       "species": "trailpup",
+      "table": "meadows_open",
       "count": 4,
       "centre": [
         35.0,
@@ -175,11 +196,13 @@
         7345.0
       ],
       "radius": 16.0,
-      "_why": "closing on the gate, clear of the roost at the gate itself (order 5002)"
+      "_why": "closing on the gate, clear of the roost at the gate itself (order 5002)",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being trailpup -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up trailpup exactly as before."
     },
     {
       "order": 5014,
       "species": "mudsnout",
+      "table": "meadows_open",
       "count": 4,
       "centre": [
         73.6,
@@ -187,11 +210,13 @@
         7419.3
       ],
       "radius": 16.0,
-      "_why": "past the gate, east flank, ahead of the checkpoint (trainers.json order 5006)"
+      "_why": "past the gate, east flank, ahead of the checkpoint (trainers.json order 5006)",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
     },
     {
       "order": 5015,
       "species": "burrowback",
+      "table": "meadows_rock",
       "count": 5,
       "centre": [
         -20.0,
@@ -199,11 +224,13 @@
         7505.0
       ],
       "radius": 18.0,
-      "_why": "west flank of the last stretch before the Hall, the densest ordinary cluster in the band's second half"
+      "_why": "west flank of the last stretch before the Hall, the densest ordinary cluster in the band's second half",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
     },
     {
       "order": 5016,
       "species": "burrowback",
+      "table": "meadows_rock",
       "count": 4,
       "centre": [
         -145.0,
@@ -211,11 +238,13 @@
         7085.0
       ],
       "radius": 18.0,
-      "_why": "off-spine warren pocket, west of the mouth -- leaving the road here is rewarded, not just scenery"
+      "_why": "off-spine warren pocket, west of the mouth -- leaving the road here is rewarded, not just scenery",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
     },
     {
       "order": 5017,
       "species": "mudsnout",
+      "table": "meadows_open",
       "count": 3,
       "centre": [
         65.0,
@@ -223,11 +252,13 @@
         7055.0
       ],
       "radius": 14.0,
-      "_why": "off-spine pocket, east of the mouth"
+      "_why": "off-spine pocket, east of the mouth",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
     },
     {
       "order": 5018,
       "species": "pipwing",
+      "table": "meadows_air",
       "count": 4,
       "centre": [
         172.0,
@@ -235,11 +266,13 @@
         7255.0
       ],
       "radius": 18.0,
-      "_why": "off-spine flock over the tm_heavenfall detour (playground_world.gd TM_AT) -- a third reason to leave the road at the same spot as the apex TM and the mudsnout special encounter"
+      "_why": "off-spine flock over the tm_heavenfall detour (playground_world.gd TM_AT) -- a third reason to leave the road at the same spot as the apex TM and the mudsnout special encounter",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
     },
     {
       "order": 5019,
       "species": "meadowhart",
+      "table": "meadows_open",
       "count": 3,
       "centre": [
         -165.0,
@@ -247,11 +280,13 @@
         7345.0
       ],
       "radius": 14.0,
-      "_why": "a grazing remnant well off the west flank -- the land still trying to live on ground this drained, the one un-hostile pocket in the band"
+      "_why": "a grazing remnant well off the west flank -- the land still trying to live on ground this drained, the one un-hostile pocket in the band",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being meadowhart -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up meadowhart exactly as before."
     },
     {
       "order": 5020,
       "species": "duskhush",
+      "table": "meadows_air",
       "count": 4,
       "centre": [
         -95.0,
@@ -259,11 +294,13 @@
         7395.0
       ],
       "radius": 18.0,
-      "_why": "off-spine roost west of the Sigil gate"
+      "_why": "off-spine roost west of the Sigil gate",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before."
     },
     {
       "order": 5021,
       "species": "galecrest",
+      "table": "meadows_air",
       "count": 4,
       "centre": [
         150.0,
@@ -271,11 +308,13 @@
         7495.0
       ],
       "radius": 18.0,
-      "_why": "off-spine hunting pocket east of the final stretch, well clear of the checkpoint and the doorstep gauntlet"
+      "_why": "off-spine hunting pocket east of the final stretch, well clear of the checkpoint and the doorstep gauntlet",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
     },
     {
       "order": 5022,
       "species": "duskhush",
+      "table": "meadows_air",
       "count": 3,
       "centre": [
         30.0,
@@ -283,7 +322,8 @@
         7308.0
       ],
       "radius": 18.0,
-      "_why": "BAND5-DEADTRAVEL. This lane's driven run (`tools/_probe_band5_approach.gd`) walked the authored spine and measured a 123m stretch with nothing within reach of the road -- the whole eastward diagonal from (-6,7267) to (73,7361), the longest dead-travel interval in the region and the one the player crosses immediately before the gate. The density pass above added 65 creatures but sited six of its clusters OFF-spine on purpose, and this leg is where that left the road itself bare. Centred on the leg rather than beside it. Duskhush because the two nearest clusters are already duskhush (orders 5002, 5012) and the band's habitat note calls this the ground that is hunted rather than dug into -- one more of the same animal reads as a range, where a fifth species here would read as a menu."
+      "_why": "BAND5-DEADTRAVEL. This lane's driven run (`tools/_probe_band5_approach.gd`) walked the authored spine and measured a 123m stretch with nothing within reach of the road -- the whole eastward diagonal from (-6,7267) to (73,7361), the longest dead-travel interval in the region and the one the player crosses immediately before the gate. The density pass above added 65 creatures but sited six of its clusters OFF-spine on purpose, and this leg is where that left the road itself bare. Centred on the leg rather than beside it. Duskhush because the two nearest clusters are already duskhush (orders 5002, 5012) and the band's habitat note calls this the ground that is hunted rather than dug into -- one more of the same animal reads as a range, where a fifth species here would read as a menu.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before."
     }
   ],
   "_comment_ashtusk_removed": "D71/T3-SUNSTONE, 2026-08-30. The wild Ashtusk cluster T3-CREATURES placed here (order 5100, one individual at (118,0,7340), the scorched-industrial ground by the Sigil gate) is REMOVED. The owner directed Ashtusk to be reached by evolving a Mudsnout with a Sunstone instead ('there should just be some kind of sunstone... to get the Ashtusk'), which gives Ashtusk `evolves_from: mudsnout` -- and tests/test_spawns_data.gd::test_no_evolved_form_spawns_wild already forbids any evolved-form species from spawning wild (D20: 'an evolution you can just walk up to and catch makes evolving pointless'). Keeping this cluster would have meant weakening that test, which this lane's brief explicitly forbids. The site is NOT abandoned: scripts/world/playground_world.gd now places the Sunstone pickup in this same pocket, so the ground keeps its narrative payload (this is where a fire-touched Tuskroot comes from) and the encounter becomes a genuine five-creature-slot choice rather than a catch. See ralph/reports/SUNSTONE_DESIGN_2026-08-30.md section 4 for the options considered and docs/decisions/D71 for the full record.",

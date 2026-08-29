@@ -1254,10 +1254,28 @@ func _distinct_tint(members: Array, index: int) -> Color:
 ## Meadows ships a curated runtime copy of the owner-supplied render for every
 ## installed creature. Reusing it here gives the field HUD real species
 ## identity without adding portrait art or coupling the strip to 3D spawning.
+## T3-CREATURES landed four ASPECT VARIANTS -- nightburrow, stormtrail,
+## riftfrill, ashtusk -- which carry a `variant_of` and deliberately reuse their
+## base species' `.glb` (a test now fails if a variant acquires a mesh of its
+## own). They have no portrait of their own for the same reason, so this
+## resolved four paths that do not exist and both portrait sites fell back to a
+## bare colour swatch.
+##
+## An aspect variant falls back to its BASE species' portrait, which is the
+## identical rule the mesh already follows: a Nightburrow IS a re-materialed
+## Burrowback, so a Burrowback portrait is a true picture of it rather than a
+## stand-in. Resolved rather than duplicated on disk, so landing a real portrait
+## later is dropping in one file with no code change.
 func _species_portrait_path(species_id: String) -> String:
 	if species_id.is_empty():
 		return ""
-	return "res://assets/ui/portraits/creatures/%s.png" % species_id
+	var path := "res://assets/ui/portraits/creatures/%s.png" % species_id
+	if ResourceLoader.exists(path):
+		return path
+	var base := str(CREATURE_SPECIES.definition(species_id).get("variant_of", ""))
+	if base != "":
+		return "res://assets/ui/portraits/creatures/%s.png" % base
+	return path
 
 
 ## T3-MATCHUPS: the five expansion types (fire, electric, ice, psychic, dark)

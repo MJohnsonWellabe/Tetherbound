@@ -1,0 +1,91 @@
+{
+  "_comment": "T3-ENCOUNTER. The weighted spawn tables the rolled population draws from. Owner directive 2026-08-30: 'We should build the new encounter system that spawns the creatures randomly, but some of the alphas and such will always get placed in the same spots as that's part of the storyline.' Design note: ralph/reports/ENCOUNTER_DESIGN_2026-08-30.md. ALL TUNABLE.",
+
+  "_comment_how_it_works": "A spawns.json entry that names a `table` is ROLLED: encounter_director.gd draws that cluster's species from the named table here instead of standing up the species the entry names. An entry with no `table` is an ANCHOR and is untouched -- anchor is the default, so a cluster cannot become rolled by accident, only by an edit that shows up in a diff. A rolled entry KEEPS its `species` field: at world seed 0 that authored species is exactly what stands there, so seed 0 reproduces the pre-rolled world byte-for-byte. See `world_seed` below.",
+
+  "_comment_world_seed": "DETERMINISM. The roll is a pure function of (world_seed, order). `world_seed` is save state (save_game.gd VERSION 15; an older save migrates to 0). Seed 0 is the AUTHORED world: the roller is never entered, every rolled entry resolves to its own `species`, and every smoke test, Gate F segment and screenshot sees the world it has always seen. Any other seed rolls. The roll uses its own RandomNumberGenerator seeded hash('wild_species_%d_%d' % [world_seed, order]) -- it never draws from the per-cluster rng that produces scatter position, level, IVs, traits and shiny, so those land on identical numbers at every seed. `TB_WORLD_SEED` in the environment overrides the seed for one process, which is how you play or capture a rolled world without touching save data.",
+
+  "roll_new_worlds": false,
+  "_comment_roll_new_worlds": "Whether a NEW GAME rolls itself a world seed instead of taking 0. Ships FALSE, deliberately: turning a global determinism switch on the same day nine branches land, with a Gate F run in flight and no time to re-baseline the protocol, is the version that does not land. Everything behind this flag is built, tested and playable via TB_WORLD_SEED. Flip it in coordination with T2-GATEF, not underneath it -- see the design note's 'What a Gate F operator must do differently'.",
+
+  "_comment_tiers": "Rarity tiers, and the weights that give the owner's brief its missing denominator. The brief (docs/owner-direction/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md, 'Core Rarity Structure') asks for Common as the overwhelming majority, Uncommon at 5-10% of eligible habitat encounters, Rare at 1-3%, Exceptional/Alpha well below 1%. Those are percentages of a table's eligible weight, which is what a table finally makes real. Worked against a typical table of three commons plus two uncommons: an uncommon lands at 25/350 = 7.1%, a rare at 7/357 = 2.0%, an exceptional at 2/359 = 0.6%. All three sit inside the owner's bands. The brief calls these 'directional rather than locked balance values'.",
+  "tiers": {
+    "common": 100.0,
+    "uncommon": 25.0,
+    "rare": 7.0,
+    "exceptional": 2.0
+  },
+
+  "_comment_protection": "The brief's Spawn Protection Rules, as enforced mechanism rather than authoring convention. `max_per_region` caps how many clusters of a tier may exist in one chapter region (chapter_curve.json's regions); AUTHORED clusters are counted first and spend the budget, so a rolled alpha can never crowd one the story placed. `min_separation_m` is the direct answer to the owner's named failure -- 'the player walks through one clearing and sees Sparkit + Cindercub + Shadelet + Frostclaw + Nightburrow' -- a rare-or-above result suppresses further rare-or-above results within that radius. A suppressed roll falls back to the table's common pool rather than leaving the cluster empty.",
+  "protection": {
+    "max_per_region": {
+      "rare": 3,
+      "exceptional": 1
+    },
+    "min_separation_m": 220.0,
+    "alpha_max_per_region": 6,
+    "alpha_min_separation_m": 400.0
+  },
+  "_comment_alpha_separation": "Measured, not guessed. The authored world puts its 13 alpha/elder clusters as close as 67m apart (tools/_probe_rolled_population.gd and a direct pairwise measure), so 'one major Alpha within a local region at a time' is a rule the CHAPTER deliberately does not obey at a fine grain -- and a per-band cap tight enough to express it would have refused every rolled alpha outside Band 1, which is the half of the owner's sentence this system exists to deliver. So the cap is loose and SEPARATION does the real work: a rolled alpha must stand at least this far from any other alpha, authored or rolled. Authored alphas seed that list first, so an authored one is never the thing that gets moved.",
+
+  "_comment_alpha": "The other half of the owner's sentence. 'Some of the alphas' are authored and always in the same place; the rest are rolled. A table's `alpha_chance` is the probability a rolled cluster is promoted to carry an alpha, using the SAME `alpha` block shape spawns.json already authors and the same encounter_director._make_alpha() path -- no second alpha mechanism. Promotion is refused once a region's alpha budget is spent, and authored alphas spend it first.",
+  "alpha_promotion": {
+    "level_bonus": 3,
+    "scale": 1.25
+  },
+
+  "_comment_tables": "One table per ecological role. A rolled cluster's table is chosen by the role the cluster's AUTHORED species occupied, which is what keeps the biome reading the way the brief's Population Philosophy demands -- 'Ground creatures, Water creatures near water, and Air creatures overhead'. A pond cluster draws from meadows_water and cannot roll a Burrowback. `regions` on an entry is a hard geographic gate naming the chapter regions it may roll in; absent means every region. `time`/`weather` on an entry are hard gates in exactly the sense spawns.json already uses them.",
+  "tables": {
+    "meadows_open": {
+      "_comment": "Open country: fields, spine, trails, clearings, high pasture. The Meadows' default read.",
+      "alpha_chance": 0.04,
+      "entries": [
+        {"species": "bramblebun", "tier": "common", "_why": "the signature Meadows species (owner brief 6: 'Very common in fields, brush, forest edges, berry patches, trails')"},
+        {"species": "mudsnout", "tier": "common", "_why": "native ground ambient, and the chapter's one evolving species"},
+        {"species": "trailpup", "tier": "common", "_why": "open-country ground ambient; the brief's own Stormtrail note calls the family 'open-country'"},
+        {"species": "meadowhart", "tier": "uncommon", "_why": "the herd animal and the only rideable species; uncommon so meeting one still reads as a find. Its GUARANTEED availability is anchored, not rolled -- see the anchor rules."},
+        {"species": "pipwing", "tier": "uncommon", "_why": "small air over open ground; the brief wants 'Air creatures overhead' as part of the normal read"},
+        {"species": "burrowback", "tier": "uncommon", "regions": ["band2_stone_and_root", "band3_the_river_lock", "band4_upper_meadows_ironwood", "band5_stronghold_approach"], "_why": "a large digger straying onto open ground reads fine from the quarry region onward; gated out of Band 1 so the opening meadow keeps its gentle roster"}
+      ]
+    },
+    "meadows_rock": {
+      "_comment": "Quarry, warrens country, rocky shoulders, ravines, scree. Where the chapter's heavier ground animals live.",
+      "alpha_chance": 0.06,
+      "entries": [
+        {"species": "burrowback", "tier": "common", "_why": "the quarry/warrens resident; owner brief 1 puts the whole family in 'Burrow Warrens / cave-mouth country'"},
+        {"species": "mudsnout", "tier": "uncommon", "_why": "ground ambient across the whole chapter, but the quarry and the warrens are Burrowback's country -- at common the two split the rock clusters evenly and the chapter's signature large digger fell from 123 individuals to ~60 (tools/_probe_rolled_population.gd)"},
+        {"species": "trailpup", "tier": "uncommon", "_why": "ranges over rock as readily as field"},
+        {"species": "galecrest", "tier": "uncommon", "regions": ["band3_the_river_lock", "band4_upper_meadows_ironwood", "band5_stronghold_approach"], "_why": "the aggressor role, an updraft species: ridges and gorges. Held out of Bands 1-2 so an ambush stays where the chapter authored it -- Band 1's galecrest is anchored at order 12 for smoke_aggression's own walk budget."},
+        {"species": "mosshell", "tier": "rare", "_why": "a rock-overhang basker (its own Creek Hollow entry carries habitat 'rock_overhang'), and one of the three Water species the wild population is desperately short of -- see the T3-CREATURES handover 7.5"}
+      ]
+    },
+    "meadows_water": {
+      "_comment": "Pond, creek, river bank, still pools, mill water. The brief: 'Water creatures near water'.",
+      "alpha_chance": 0.03,
+      "entries": [
+        {"species": "brooktail", "tier": "common", "_why": "the running-water species; the Old Mill Crossing individual is anchored separately"},
+        {"species": "paddlenewt", "tier": "common", "_why": "the still-water species"},
+        {"species": "mosshell", "tier": "uncommon", "_why": "basks at the water edge rather than in it"},
+        {"species": "reedwing", "tier": "uncommon", "_why": "reed-bank Water/air-reading species; its weather-gated clusters stay anchored so the 'weather_gated' role keeps resolving"},
+        {"species": "mudsnout", "tier": "uncommon", "_why": "mud, banks and shallows -- the one ground species that belongs at a waterline"}
+      ]
+    },
+    "meadows_air": {
+      "_comment": "Overhead, canopy, ridgelines. Kept a small table on purpose: the chapter has three Air species and two of them carry roles.",
+      "alpha_chance": 0.04,
+      "entries": [
+        {"species": "pipwing", "tier": "common", "_why": "the ordinary small bird of the whole chapter"},
+        {"species": "duskhush", "tier": "common", "regions": ["band2_stone_and_root", "band3_the_river_lock", "band4_upper_meadows_ironwood", "band5_stronghold_approach"], "_why": "the nocturnal role's species. Its NIGHT-GATED clusters are anchored, so the role always resolves; this entry is its ordinary daytime presence. Held out of Band 1, which is where the chapter itself put it: OW5D moved Duskhush 'deeper into Band 2's forest' for its closed canopy, and the authored table has no Band 1 Duskhush at all. Ungated it also swelled from 85 individuals to 130-159 across five seeds and became the second most common creature in the chapter (tools/_probe_rolled_population.gd), because the air table is only three species deep and two of them are region-gated."},
+        {"species": "galecrest", "tier": "common", "regions": ["band3_the_river_lock", "band4_upper_meadows_ironwood", "band5_stronghold_approach"], "_why": "same progression gate as the rock table's: the chapter's aggressive flier belongs to the later regions. COMMON, not uncommon, and measured rather than guessed: at uncommon the chapter's aggressor population fell from 100 individuals to 27-50 across five seeds (tools/_probe_rolled_population.gd), which halves how often the world comes at the player -- GAME_DESIGN.md pillar 3. Its scarcity is expressed by the region gate, not by its weight."}
+      ]
+    }
+  },
+
+  "_comment_pending": "NOT LIVE DATA. The five mesh-blocked creatures from the owner's expansion brief (data/creatures/species_pending.json, which nothing loads; smoke_art.gd rightly refuses a species.json entry whose model does not exist on disk). Their tier placements are recorded here so that landing a mesh is a table edit rather than a design pass -- move the entry into the table named by `table`, and the brief's percentage is already satisfied by the tier weight. Bramblebun is not listed: its redesign is a mesh swap for a species that already ships as a common.",
+  "_pending": [
+    {"species": "sparkit", "table": "meadows_open", "tier": "uncommon", "weather": ["rain"], "_why": "brief 3: '~2% ordinary eligible spawn chance; 5-8% during storms'. Uncommon (7.1%) is the storm figure; the ordinary figure wants a second rain-less entry at tier rare (2.0%). There is no storm preset in this game -- data/config/weather.json declares clear/cloudy/fog/rain only -- so `rain` is the nearest thing that exists, the same substitution T3-CREATURES made and flagged."},
+    {"species": "cindercub", "table": "meadows_rock", "tier": "rare", "regions": ["band5_stronghold_approach"], "_why": "brief 4: '1-2% of qualifying warm-area wildlife spawns', and 'Only around sources of warmth ... later-game Team Tether industrial areas'. rare = 2.0%."},
+    {"species": "shadelet", "table": "meadows_rock", "tier": "uncommon", "time": "night", "_why": "brief 5: 'At night: roughly 3-5% of qualifying dark-habitat spawns. During daylight: close to zero'. The night gate delivers the daylight half outright; uncommon (7.1%) is a touch above the brief's night band and should be tuned down to a dedicated weight when the mesh lands."},
+    {"species": "frostclaw", "table": "meadows_rock", "tier": "rare", "regions": ["band4_upper_meadows_ironwood"], "weather": ["rain", "fog"], "_why": "brief 9: '1-2% of eligible cold-edge spawns', geographically constrained to the cold-region edge, 'Higher probability during rain, cold-looking weather, fog'. rare = 2.0%."}
+  ]
+}

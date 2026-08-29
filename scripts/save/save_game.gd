@@ -154,7 +154,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 14
+const VERSION := 15
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -209,6 +209,7 @@ func save(game: Object, slot: int) -> bool:
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
 		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
 		"harvested_vegetation": (game.get("harvested_vegetation") as Dictionary).duplicate(true),
+		"world_seed": int(game.get("world_seed")) if game.get("world_seed") != null else 0,
 		"felled_vegetation": (game.get("felled_vegetation") as Dictionary).duplicate(true),
 		"player_pose": _sanitise_player_pose(game.get("saved_player_pose")),
 	}
@@ -247,6 +248,7 @@ func load_slot(game: Object, slot: int) -> bool:
 	game.set("placed_buildings", (data.get("placed_buildings", []) as Array).duplicate(true))
 	game.set("farm_plots", (data.get("farm_plots", []) as Array).duplicate(true))
 	game.set("death_satchels", (data.get("death_satchels", []) as Array).duplicate(true))
+	game.set("world_seed", int(data.get("world_seed", 0)))
 	var harvested_raw: Variant = data.get("harvested_vegetation", {})
 	game.set("harvested_vegetation", (harvested_raw as Dictionary).duplicate(true) if typeof(harvested_raw) == TYPE_DICTIONARY else {})
 	var felled_raw: Variant = data.get("felled_vegetation", {})
@@ -557,6 +559,24 @@ func _migrate_v11(data: Dictionary) -> Dictionary:
 ## migration; it breaks loading for EVERY existing save, back to version 1,
 ## because the chain cannot get past 13. That is exactly what happened when the
 ## history counters landed, and `test_save_format.gd` caught it.
+## VERSION 15 — the world seed (T3-ENCOUNTER)
+##
+## `game_state.gd::world_seed` did not exist before this. The same "nothing to
+## migrate FROM" answer every step above gives its own new field, and here it is
+## also the *right* answer rather than merely the safe one: 0 is the AUTHORED
+## world, the one where `encounter_director.gd` never enters the roller and every
+## cluster stands up the species `spawns.json` names. So a save written before
+## rolled populations existed comes back into exactly the world it was saved
+## from -- not an approximation of it, and with no population snapshot to
+## reconstruct, because the population is derived from this integer rather than
+## stored.
+func _migrate_v14(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 15
+	migrated["world_seed"] = 0
+	return migrated
+
+
 func _migrate_v13(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
 	migrated["version"] = 14
