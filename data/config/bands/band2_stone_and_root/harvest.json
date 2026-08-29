@@ -279,6 +279,55 @@
       "model_scale": 1.3,
       "_why": "same camp-siting reasoning as the wood node above -- a build needs fiber as often as it needs wood, and this is the only field camp in the band",
       "_comment_renumber": "BAND2-63-WARRENS merge: authored on this lane as order 2009, which main independently used for a fiber node while this branch was out. `order` is identity and neither may take the other's, so the later-merged entry moves -- this one. Nothing about the node itself changed."
+    },
+    {
+      "order": 2013,
+      "item": "potion_large",
+      "amount": 1,
+      "label": "A stashed tonic",
+      "at": [
+        350.0,
+        1968.0
+      ],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner directive 2026-08-29. On the quarry_rim_overlook loop's own rejoin (330,1950) -- an overlook worth walking out to for the view already, now worth it twice."
+    },
+    {
+      "order": 2014,
+      "item": "revive",
+      "amount": 1,
+      "label": "A stashed revive",
+      "at": [
+        -165.0,
+        2745.0
+      ],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner directive 2026-08-29: a revive wants to sit 'where a fight just went badly or is about to'. On the warren_undertrail loop's own rejoin (-180,2730), just past the Burrow Warrens' second mouth -- the ground where a player who fought their way through the vault and the Guardian first steps back into daylight."
+    },
+    {
+      "order": 2015,
+      "item": "hide_boots",
+      "amount": 1,
+      "label": "A dropped pair of boots",
+      "at": [
+        -165.0,
+        2225.0
+      ],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "T3-REWARD found `hide_boots` fully modelled with zero acquisition path anywhere in the game. Near the ranger camp spur (-150,2210) -- a ranger's own boots, left at the camp. stack:1 gear; a respawning crate is harmless."
+    },
+    {
+      "order": 2016,
+      "item": "stoneguard_brew",
+      "amount": 1,
+      "label": "A stashed tonic",
+      "at": [-345.0, 2585.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: stoneguard_brew was shop-only at Mira's before this pass, no world presence. Just outside the Burrow Warrens mouth (burrow_warrens.json site.at (-357,2610)) -- a defence tonic where a player braces before the Guardian, matching the coordinator's own guidance that a temporary tonic suits a cache near where a fight is about to go badly."
     }
   ]
 }
