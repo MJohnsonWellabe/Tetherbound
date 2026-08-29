@@ -50,6 +50,13 @@ class FakeGame:
 	var harvested_vegetation: Dictionary = {}
 	## RG9 / VERSION 11. Chopped-but-not-yet-gathered felled pickups.
 	var felled_vegetation: Dictionary = {}
+	## T3-ENCOUNTER / VERSION 15. Which world this save's rolled wild population
+	## is. Present on the fake precisely because the whole rolled-population
+	## design rests on it round-tripping: the population is DERIVED from this one
+	## integer, so a seed that failed to survive a save would silently hand the
+	## player a different world on every reload, with every creature they had
+	## walked to somewhere else.
+	var world_seed: int = 0
 	var saved_player_pose: Dictionary = {}
 	var map: RefCounted = null
 	var progression: RefCounted = null
@@ -322,6 +329,57 @@ func test_v9_save_migrates_with_nothing_harvested() -> void:
 
 	assert_eq(read.day, 11)
 	assert_eq(read.harvested_vegetation, {}, "a save predating HARVEST-ALL has nothing chopped yet")
+
+
+## T3-ENCOUNTER / VERSION 15. The world seed IS the rolled wild population:
+## `encounter_director.gd` derives every rolled cluster's species from
+## (world_seed, order) rather than storing it, which is what lets a rolled world
+## need no per-creature persistence. The whole of that rests on this one integer
+## surviving a save.
+func test_save_then_load_round_trips_the_world_seed() -> void:
+	var written := _game()
+	written.world_seed = 90210
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_eq(read.world_seed, 90210,
+		"the world seed did not survive a save; every reload would build a different world")
+
+
+## And the migration, which is the case that actually ships: 0 is the AUTHORED
+## world -- the seed at which the roller is never entered -- so a save written
+## before rolled populations existed comes back into exactly the world it was
+## saved from rather than an approximation of it.
+func test_a_save_predating_rolled_populations_loads_the_authored_world() -> void:
+	var v14_data := {
+		"version": 14,
+		"day": 11,
+		"party": [],
+		"inventory": [],
+		"hotbar": [],
+		"placed_buildings": [],
+		"farm_plots": [],
+		"death_satchels": [],
+		"satiety": 80.0,
+		"map": {},
+		"progression": {},
+		"harvested_vegetation": {},
+		"felled_vegetation": {},
+	}
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify(v14_data))
+	file = null
+
+	var read := _game(false)
+	read.map = MAP_STATE.new()
+	read.map.configure({})
+	read.progression = PROGRESSION_STATE.new()
+	read.world_seed = 4242  # deliberately dirty, so a no-op migration would show
+	assert_true(saver.load_slot(read, 1))
+	assert_eq(read.world_seed, 0,
+		"a save predating rolled populations must load the authored world, not whatever was in memory")
 
 
 ## RG9 / VERSION 11. A tree chopped but never picked up must come back on
