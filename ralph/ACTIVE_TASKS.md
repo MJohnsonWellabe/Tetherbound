@@ -1,6 +1,40 @@
 # Active Tasks — compact Meadows manifest
 
-## STATE AS OF 2026-08-28 — READ THIS BLOCK FIRST
+## STATE AS OF 2026-08-30 — READ THIS BLOCK FIRST
+
+`main` is at `07b3e2aa` (`ralph/LAND-0830B` landed; every 0829/0830 lane
+branch is on `main`). The current work map is the coordinator's epic board in
+`ralph/START_HERE.md`'s top section, executed by four in-flight lanes:
+
+- **`ralph/T1-HALL-REBUILD`** — Meadows Hall rebuild (owner directive; design
+  contract `ralph/reports/HALL_DESIGN_2026-08-30.md`). Blind judge dispatched
+  by the coordinator; does not close on a BAD verdict.
+- **`ralph/T2-GATEF-RUN4`** — Gate F completion: S03 ghost-placement rig fix,
+  trainer_npc dialogue defect (dark-features T1), healthy S03→S09 chain, then
+  X04, X07/X08, X01, X06, X05, S10; findings docs rewritten from
+  INVENTORY.json; backlog regeneration per protocol §16.2 follows it.
+- **`ralph/T3-ACTIVITIES`** — five new optional activities (Lost Creature,
+  Broken Cart, Night Watch, River Nest, Meadowhart Herd), orphaned
+  elixir/armour reachability, captain second-type rebalance
+  (owner-approved 2026-08-29).
+- **`ralph/T3-INSTALL`** — owner directive D-0830-2: five installed creature
+  meshes wired to the live roster, four variants placed, NPC cast verified in
+  world, tonic buff HUD, reader-less-config sweep.
+
+After these land: visual-bar pass (second grass species, seams, stream, aerial
+perspective, golden hour, black-NPC closure with luminance evidence, full
+capture + blind judge), `roll_new_worlds` flip (D-0830-1, gated on Gate F
+re-baseline), then the final continuous full-chapter run against the 3–4h
+target and a fresh release.
+
+Gate status corrections that remain true: Gate E PASSES
+(`smoke_gate_e_finale.gd` drives real fights through the Warden); Gate F has
+run three times (never "not started"). Open flake ticket: `tests/smoke_relay.gd`
+~1-in-5 "pressing interact opened nothing", pre-existing before the landing.
+
+---
+
+## STATE AS OF 2026-08-28 — historical
 
 **Everything below the next horizontal rule is dated 2026-08-23 and is
 five days stale. It is kept for its P1-P6 package vocabulary and its

@@ -4,7 +4,44 @@ This is the **single current entry point for autonomous Meadows work**.
 
 If another document looks like a startup guide, milestone guide, handover, or old Ralph manual, do not treat it as current merely because it exists. Start here.
 
-## CURRENT STATE — 2026-08-30
+## CURRENT STATE — 2026-08-30 (coordinator update, post-LAND-0830B)
+
+**This section supersedes every dated section below it**, including the
+dark-features section immediately following.
+
+- **`main` is at `07b3e2aa` — `ralph/LAND-0830B` LANDED** (fast-forward ref
+  push, CI verified at job level: 53 success, 2 expected skips, 0 failures;
+  `release.yml` dispatched). It absorbed every remaining lane branch:
+  T1-VILLAGE, T1-NIGHT, T1-CAST, T1-HALL, T1-HALL-BUILD, T1-GROUND-2,
+  T1-CREATURE-ART, T1-CREATURE-MESH, T1-NPC-CAST, T2-BUILDPLACE, T2-GATEF,
+  T2-GATEF-RIGFIXES, T2-S10-COST, T2-RIG10, T3-CREATURES, T3-DENSITY,
+  T3-MATCHUPS, T3-SUNSTONE, T3-ENCOUNTER, JUDGE-2, DARK-FEATURES, and the
+  coordinator-onboard branch. **No unlanded lane branches remain from the
+  0829/0830 cohorts.**
+- Dark-features items **O1 and I1 below are CLOSED** by that landing: the
+  owner directives (`ralph/OWNER_DIRECTIVES_2026-08-30.md`, D70, the
+  creature-expansion brief) are on `main`, and the Sunstone + elixir-cache
+  additive conflict resolution was verified to keep both.
+- **Four lanes are IN FLIGHT** (trigger-fired sessions, coordinated by the
+  "Tetherbound coordination and roadmap" session, which holds sole landing
+  rights):
+  `ralph/T1-HALL-REBUILD` (Meadows Hall rebuild per
+  `ralph/reports/HALL_DESIGN_2026-08-30.md`),
+  `ralph/T2-GATEF-RUN4` (Gate F completion + rig fixes; owns dark-features
+  T1, the trainer dialogue defect),
+  `ralph/T3-ACTIVITIES` (five new optional activities, reward reachability,
+  captain rebalance — owner-approved 2026-08-29),
+  `ralph/T3-INSTALL` (owner directive D-0830-2: creature expansion, variants,
+  NPC cast verification, tonic HUD, config sweep).
+- `roll_new_worlds` (D-0830-1) stays OFF until Gate F re-baselines; the
+  coordinator sequences it after `T2-GATEF-RUN4` lands.
+- Known pre-existing flake, not a landing blocker: `tests/smoke_relay.gd`
+  fails ~1-in-5 with "pressing interact opened nothing"; reproduced on
+  unmerged main before the landing. Root cause unknown — open ticket.
+- Correction to a claim further down: `ralph/COORDINATION_2026-08-27_POST_PHASE_B.md`
+  was **not** removed; it exists and is still cited.
+
+### Historical: dark-features inventory (partially superseded above)
 
 **This section supersedes every dated section below it.** They are kept as
 history; do not open the lanes they name, and do not trust their `main` SHA.
@@ -49,11 +86,10 @@ Godot. Two items (D1, T1) name the specific play-test that would confirm them.
 
 ### Carried forward from 2026-08-29 — still current except where noted
 
-⚠️ **The `main` SHA in the next paragraph is stale.** As of 2026-08-30 `main`
-is at **`477a296a`**, and `ralph/LAND-0830` has landed. Seven lane branches are
-**not** on `main`: `T3-ENCOUNTER`, `T3-CREATURES`, `T3-MATCHUPS`, `T3-SUNSTONE`,
-`T3-DENSITY`, `T1-CREATURE-ART`, `T1-CREATURE-MESH`. (`ralph/LAND-0830B` does
-not exist.)
+⚠️ **The `main` SHA in the next paragraph is stale, and so was this
+paragraph's own earlier text**: `main` is now `07b3e2aa` (`ralph/LAND-0830B`
+landed — see the current-state section at the top). No lane branches from the
+0829/0830 cohorts remain unlanded.
 
 `main` was at `961a8c02` at the end of the 2026-08-29 production day.
 **`ralph/LAND-0829B` carries every lane branch in the repo** and was awaiting
