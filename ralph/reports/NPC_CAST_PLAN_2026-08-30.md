@@ -4,6 +4,101 @@
 **Envelope:** up to 1,800 credits (of a 3,410 balance; 900 reserved for the concurrent T1-CREATURE-MESH lane).
 **Board:** `docs/art/reference/npc-board-2026-08-30/00_MEADOWS_NPC_DESIGN_BOARD.png` (1536×1024, read in full, panel by panel).
 
+## SECOND CORRECTION — owner directive: generate the cast directly, not one accessory
+
+After the render (below) proved the reuse-only plan wrong for captains, the
+owner's direction was blunt and went further than this plan had: *"NPCs are
+going to be the same. just generate the people on the original art."*
+Read as what it is — the render's own lesson applied to the whole cast, not
+just the one rank this plan had already conceded — not as a narrower ask
+than the captain-only fix already proposed.
+
+**Current plan: generate all 24 non-Warden board designs directly, one
+generation per board panel** — not one generation per named individual.
+The board itself only draws 3 grunt bodies, 2 officer bodies and 2 captain
+bodies (7 Team Tether designs total); the many named individuals within
+each rank (Dorn, Pell, Kest, Hess, Orrin... ; Dell, Solene, Ness; Vance,
+Oreth, Halder, Vess, Hald) keep reusing whichever of those bodies they're
+assigned, through the existing rank/palette system — exactly the reuse
+pattern already live today for the single grunt body, just with real
+bodies to reuse instead of one undifferentiated one. Village and Trail add
+17 more one-off named identities (Innkeeper, Inn Helper, Trader,
+Craftsperson, Creature Caretaker, Farmer, Local Historian, Young Trainer,
+Traveling Merchant, Rival Trainer, Field Researcher, Wandering Trainer,
+Lost Traveler, Campfire Traveler, Alpha Tracker, Courier, Former Tether
+Member). **24 designs total = every board panel except the Warden**, who
+stays untouched per CLAUDE.md.
+
+**This supersedes the captain-accessory-only proposal below** (the
+"~90–100 credits for one coat/cape accessory" plan). Generating `captain_a`
+and `captain_b` as full bodies — with the cape/coat built into the mesh
+itself, per the new prompts below — gets the same distinctive-silhouette
+outcome more directly than a bolt-on accessory would, and the owner's
+direction was to generate the people, not engineer around not generating
+them. The `assets/creatures/tetherbound/captain_accessory/reference/`
+crops from the first correction are left in place as a cheap fallback if a
+full captain-body generation round underperforms, not deleted, but they
+are not the primary plan anymore.
+
+**What's actually prepared, this pass (all committed):**
+- **24 reference crops**, one per board panel, cut from precisely measured
+  panel boundaries (the board's own divider lines, detected programmatically
+  rather than eyeballed — see Job 3 below for the method and the exact pixel
+  boundaries) — `assets/creatures/tetherbound/<slug>/reference/
+  board_panel_source.png` for each of the 24 slugs listed above.
+- **24 new prompt blocks** in `tools/art_pipeline/meshy.py`'s
+  `SPECIES_PROMPTS` dict, written against those crops, following the
+  board's ART & STYLE GUIDE text and the pixel-sampled palette (not the
+  board's own illegible printed hex captions).
+- **24 new slugs added to `meshy.py`'s `HUMANS` set**, so the human
+  negative-prompt list applies instead of the creature one.
+
+**What's still not done, and is not this lane's to do:** actually calling
+`meshy.py generate <slug>` — this lane does not hold the Meshy API key,
+by design, and was told plainly not to seek, guess, or work around that.
+Also not done: splitting these whole-panel crops into the per-view
+front/side/back/three-quarter files `crop_views.py`'s band+centres
+convention wants (the panels are small — some as narrow as 140px holding
+2–4 tiny figures — and getting that sub-division right without the
+`--grid`/`--check` verification loop this file's own history says it
+needs would risk feeding a bad crop into a real credit spend). The
+whole-panel crop is still usable as-is: Meshy's image-to-3D pipeline has
+taken a single multi-pose reference before in this project (the original
+Warden board before it was properly split; the TM orb's single-panel
+generation). Whoever runs this should decide per-subject whether the
+whole panel is good enough or whether it's worth the extra crop-tuning
+pass first.
+
+**Revised budget, using `meshy.py`'s own measured `COSTS` and its own
+stated discipline (cheap preview across every candidate, refine only the
+winners):**
+
+| Phase | What | Credits |
+|---|---|---|
+| 1 — preview all 24 | 3 preview candidates × 20 credits × 24 subjects | 1,440 |
+| 2 — refine winners | up to 40 credits × 24, in practice fewer — not every subject will need it | 0–960 |
+| **Total, worst case (every subject refined)** | | **2,400** |
+| **Total, realistic (some ship from preview tier)** | | **~1,700–2,100** |
+
+Balance is 3,410. Worst case (2,400) still leaves 1,010 — **more than the
+900 reserved for the T1-CREATURE-MESH lane**, so this fits without touching
+that reserve, with only thin headroom (110 credits) for a bad round. The
+safer sequence is **preview all 24 first (1,440), stop, look at the
+contact sheet, and only then decide how many actually need the refine
+pass** — the same "spend on the winner, not speculatively" rule this
+pipeline already runs on for every other asset in this project.
+`docs/ASSET_LEDGER.md` gets a row once something is actually generated,
+same as every other entry in it; nothing has been generated by this lane.
+
+Everything below this point, down to "Job 3 (prepare Meshy inputs)," is
+this plan's **first-pass classification and its render-based captain
+correction** — kept for the evidence trail (the render, the pixel
+sampling, the palette measurement, the per-NPC design reasoning) rather
+than deleted, but its "0 credits" / "reuse is enough" framing for every
+NPC except the captain accessory is **superseded** by this section. The
+Job 3 section further down has also been updated to describe what's
+actually been prepared under this directive.
+
 ## Bottom line, first — REVISED after rendering (see below for what changed)
 
 **Recommended spend: ~90–100 credits for one captain-silhouette accessory (one mesh, reused across all five named captains), 0 elsewhere mandatory, ~90 more optional (Traveling Merchant's cart, sourced-first).**
@@ -333,48 +428,92 @@ board's own colour family rather than drifting into an already-used hex
 (`art.json` already discourages colour collisions explicitly in its own
 comments — see Halda's).
 
-## Job 3 (prepare Meshy inputs) — one real item now, after the correction
+## Job 3 (prepare Meshy inputs) — SUPERSEDED, see the SECOND CORRECTION at the top
 
-**Captain coat/cape accessory.** Reference crops saved at
-`assets/characters/captain_accessory/reference/board_captain_a_turnaround.png`
-and `board_captain_b_turnaround.png` — each is a clean 4-view turnaround
-(front, 3/4, side, back) plus a head close-up, cropped straight from the
-board's panels 6 and 7. The back view on both is the useful one: a
-full-length trailing cape/coat with a stood-up collar, clearly a garment
-distinct from anything on the grunt base today. This satisfies CLAUDE.md's
-"never a Meshy generation without owner-supplied reference art" the same
-way every other board-derived generation in `docs/ASSET_LEDGER.md` does.
-**Not yet cut to `views.json`'s per-figure convention** (single-figure
-crops with a measured `band`/`centres`, like the six sheets that file
-already documents) — this is a garment, not a character turnaround, so
-`crop_prop_views.py`'s prop path (the one used for `tether_pylon`/
-`relay_apparatus`, front/side/rear crops of one object) is the closer fit,
-and the coordinator or executing lane should re-crop tightly to just the
-coat once a generation is actually approved, rather than this lane
-guessing at the isolation Meshy will want. A `meshy.py` prompt block was
-**not** added either, for the same reason — it's a small enough prompt
-that whoever runs the generation should write it against the exact crop
-they cut, following `NEGATIVE_PROP`/`STYLE_PROP`'s existing shape (a worn
-garment, not a freestanding prop, so it will want its own style line
-rather than reusing `STYLE_PROP` verbatim — e.g. "stylised cloth/leather
-coat and cape, worn open over a humanoid torso, clean readable drape,
-no character, no head, no hands").
+The captain-only accessory prep described in this section (originally)
+is kept below for the record, but the owner's later direction ("just
+generate the people on the original art") replaced it with generating all
+24 board designs directly. **What that prep actually looks like now:**
 
-The Traveling Merchant cart (#17) is unchanged from the first pass: sourcing-first, ~90 credits if that fails, not committed.
+**24 reference crops**, measured programmatically rather than eyeballed.
+Panel boundaries were found by detecting the board's own divider lines —
+for each row, sampling a vertical span of the row and finding columns
+where the pixel differs from the panel background across nearly the whole
+row height (a continuous divider line reads that way; a character
+silhouette, even a tall one, does not span quite the full title-to-icon
+height). Measured boundaries (pixel x, original 1536×1024 board):
+
+- Row 1 (grunts/officers, y 30–232): dividers at x = 267, 485, 673, 856,
+  1089, 1311 → `grunt_a` [267,485], `grunt_b` [485,673], `grunt_c`
+  [673,856], `officer_a` [856,1089], `officer_b` [1089,1311].
+- Row 2 (captains, y 245–445): dividers at x = 214, 477, 782, 1161 →
+  `captain_a` [214,477], `captain_b` [477,782] (Warden panel, [782,1161],
+  deliberately not cropped or touched).
+- Row 3 (village, y 452–660): dividers at x = 9, 149, 285, 425, 567, 711,
+  849, 993, 1134, 1310 → `innkeeper`, `inn_helper`, `trader`,
+  `craftsperson`, `creature_caretaker`, `farmer`, `local_historian`,
+  `young_trainer`, `traveling_merchant`, in that order across the ten
+  boundaries.
+- Row 4 (trail, y 702–915): dividers at x = 9, 169, 338, 502, 658, 822,
+  987, 1134, 1310 → `rival_trainer`, `field_researcher`,
+  `wandering_trainer`, `lost_traveler`, `campfire_traveler`,
+  `alpha_tracker`, `courier`, `former_tether_member`, in that order.
+
+Every crop was spot-checked by eye after cutting (several per row,
+including the narrowest village/trail panels) — clean, no bleed from a
+neighbouring panel, nothing cropped off. Saved at
+`assets/creatures/tetherbound/<slug>/reference/board_panel_source.png` —
+that path, not `assets/characters/`, because that's what
+`meshy.py`'s own `REFERENCE_ROOT` and `reference_views()` actually read
+(`tools/art_pipeline/meshy.py:34,1099` — checked directly rather than
+assumed, after finding the first draft of this prep in the wrong place).
+
+**Named `board_panel_source.png`, not `front.png`/`side.png`/etc.,
+deliberately** — each crop still holds the whole panel (every view the
+board draws for that NPC, together in one image: 3–4 body poses plus a
+head bust for Team Tether, 2 poses for Village/Trail), not yet split into
+the individual per-view files `crop_views.py`'s band+centres convention
+produces for the four starter/trainer sheets. That finer split needs the
+`--grid`/`--check` verification loop this file's own history says a crop
+this fiddly actually needs, and getting it wrong costs real credits on a
+bad batch — better left to whoever runs the generation, against a source
+crop that is already isolated from its neighbours and already usable as
+one reference image if a finer split turns out not to be worth it for a
+given subject.
+
+**24 prompt blocks**, added to `SPECIES_PROMPTS` in
+`tools/art_pipeline/meshy.py`, and all 24 slugs added to that file's
+`HUMANS` set (so `NEGATIVE_HUMAN` applies, not the creature negative list —
+this exact mistake shipped once before on the first trainer batch and had
+to be resubmitted, per that file's own header comment). Each prompt names
+build, face, hair, key garments and the board's own measured palette,
+written directly against the crop for that subject. First-pass prompts,
+same as this project's own convention for a subject's first generation
+round (the trainer prompt itself only reached its current wording after a
+critique-and-revise round) — expect these to need a round 2 after the
+first contact sheet comes back, not to be final as written.
+
+**Not done, and not this lane's to do:** actually running
+`meshy.py generate <slug>` for any of the 24 — this lane does not hold the
+API key. **Also not done:** the Traveling Merchant cart (#17) is unchanged
+from the first pass — a prop, not a humanoid, sourcing-first, ~90 credits
+if that fails, not committed either way.
 
 ## Running total against the envelope
 
-| Item | Credits | Committed? |
+| Item | Credits | Status |
 |---|---|---|
-| 24 of 25 humanoid NPCs (all classifications except captains) | 0 | — |
-| **Captain coat/cape accessory (one mesh, all five named captains)** | **~90–100** | **Recommended — render-confirmed gap** |
+| 24 board designs — preview round (3 candidates × 20 × 24) | 1,440 | Prepared (crops + prompts), not run |
+| 24 board designs — refine winners (up to 40 × 24) | 0–960 | Decide after the preview contact sheet |
+| **Total, 24-design generation** | **~1,440–2,400** | **Recommended, owner-directed** |
 | Traveling Merchant cart (prop, sourcing-first) | 0–90 | Optional, not committed |
-| **Total against 1,800 envelope** | **~90–100 recommended, up to ~190 with the optional cart** | |
-| **Handed back to the coordinator** | **~1,610–1,710 of 1,800** | |
+| **Against the 3,410 balance** (900 reserved for T1-CREATURE-MESH) | worst case 2,490 spent, 920 left | Clears the reserve, thin (20 credit) headroom in the worst case |
 
-Still nowhere near the full envelope, and this is deliberately not "spend
-it because it exists" — the captain spend is the one item in this whole
-25-NPC board that survived being rendered and checked rather than assumed.
-Everything else here held up under that same scrutiny at zero cost; this
-one didn't, and the number changed because of that, not because 1,800 was
-sitting there to spend.
+The 1,800-credit *envelope* this lane was originally given is now the
+wrong number to check against — the owner's direction moved the target
+from "stay inside 1,800" to "get the cast right," and the real constraint
+that still matters is the 900 credits reserved for the sibling creature
+lane. Worst case (every one of 24 needs a refine pass) still clears that
+reserve by 20 credits; realistically, previewing all 24 first and refining
+only the ones that need it should land well inside it. That preview-first
+sequencing is the actual recommendation, not spending all ~2,400 at once.
