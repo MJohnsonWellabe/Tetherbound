@@ -78,7 +78,7 @@ never set (`S03-173`, `S03-205`).
    it (`menu.call("_pick", 1)` directly) rather than re-diagnosing a
    second, separate focus bug while answering the RIG-or-GAME question.
 
-## A secondary thread, opened but not closed: Mira's axe/pickaxe grant
+## Round 2 — a SEVERE, previously-undiscovered GAME defect, found while proving the fix end to end
 
 Chasing "why is the satchel never affordable" one layer further: Tam's own
 gift (`data/dialogue/village.json:181`, `tam_tools_given`) is **only**
@@ -89,35 +89,69 @@ from Mira's unconditional first-visit conversation
 `data/config/village_npcs.json:26-28` purely by `unless_flag:
 mira_shop_open` — no combat/ally-state gate at all.
 
-The run's own `S03-exit.json` has **no axe, no pickaxe, and no
-`mira_shop_open`/`opening:mira_visited` flag** — Mira's mandatory first-
-visit grant never landed. `tools/gate_f/probe_mira_intro_grant.gd`
-reproduces `S03-53`/`S03-54`'s exact button sequence (`interact` tap x1,
-then x10 at 20-frame settle) against a real Mira, **twice** — once with a
-fresh party, once with a real deployed-then-fainted active creature
-(matching this run's own state at t=372, well after Moss's t=256 faint) —
-and in **both** cases the grant lands cleanly and survives the segment's
-own subsequent `S03-55`..`59` "fight" presses (`PROBE PASS` both times;
-live prompt reads `"Greet Mira"`, never a fainted-ally refusal). So the
-fainted party is **not** why the real run missed this grant, ruling out
-the most obvious hypothesis by direct live test rather than by inference.
+The first pass of this finding left this open, having ruled out the
+fainted-party hypothesis by an isolated probe. A live, full-segment replay
+of the fix (10 attempts, `ralph/reports/gate-f-buildplace-validation/`)
+answered it, and the answer is much bigger than a Mira-specific bug:
 
-**Not resolved in this pass.** The remaining, most likely candidate —
-untested here for time — is that `S03.json`'s `move_to` steps for the
-village NPCs (Tam/Bryn/Mira/Oskar) use a raw authored coordinate rather
-than `move_to_entity`, the pattern `ralph/conventions.md`'s own CD-5 fix
-introduced specifically because a coordinate-only "arrived" check does not
-guarantee the player is within a live entity's actual interaction range —
-and this segment predates that fix for its village-NPC stops (unlike its
-own later bramblebun catch loop, which already uses the safer
-prompt-text-matching pattern from RIG-17). Tam's own gift landing
-correctly is not a counter-example — line-of-sight/range at one authored
-building-front coordinate proves nothing about another's. **Whoever picks
-this up next**: rerun `probe_mira_intro_grant.gd`'s exact button sequence
-but replace the teleport with the segment's own recorded walk (from
-Bryn's practice ground, `(13,9)`, to `(19,-1)`) and print the live prompt
-text at arrival, the same way `probe_stranding_cause.gd` and this session's
-own catalogue probe did — that is the one step this pass did not take.
+**`scripts/combat/encounter_director.gd::interaction_offer()` (line ~1037)
+returns a priority-100, distance-0 `"<ally> is out of the fight."`
+statement UNCONDITIONALLY whenever the tracked `_ally` has fainted — no
+proximity gate, checked before `_engageable()`.** `prompt_arbiter.gd`
+ranks priority before distance always ("a status line about the creature
+at their heels... still has to beat a creature nine metres away" — the
+file's own comment), so this one line outranks **every other interaction
+in the world**: not just re-engaging a wild creature, but every village
+NPC greeting, every harvest node, every creature bed's own rest prompt —
+for as long as `_ally` stays non-null and fainted, which only a fresh
+save/load clears (confirmed: `_ally`/`_ally_body` are never cleared by
+ordinary play, matching RIG-13's own finding that a load resets them).
+
+**A real player whose only starter faints during the tutorial's own first
+catch attempts (a normal, RIG-15-acknowledged possible outcome) becomes
+unable to interact with anything in the game world afterward** — cannot
+catch a replacement creature (catching is `interaction_offer()`-gated too,
+and `_engageable()` is checked *after* the blanket clause), cannot talk to
+any NPC, cannot gather, and cannot reach a creature bed's rest prompt —
+for the rest of that play session, with no in-game affordance suggesting
+a save+reload is the way out. This reads as a genuine soft-lock risk in
+the opening tutorial. **Out of this lane's ownership**
+(`scripts/combat/**`, actively edited by T3-TYPECHART) and **not fixed
+here** — flagged loudly, per this lane's brief, for whoever owns that
+file.
+
+The one in-session mitigation available from the rig side:
+`encounter_director.gd::_read_creature_control_input()` toggles
+`creature_recall` between `summon_active_creature()` and
+`dismiss_active_creature()`; pressing it while a fainted ally is still
+deployed calls the latter, which sets both `_ally` and `_ally_body` back
+to null and clears the blanket override. `S03.json` now presses this
+right after the catch loop (`S03-39b`), before Bryn's own challenge
+attempt (which reads the now-null ally and falls back to dialogue without
+re-summoning anything).
+
+**Still open after this pass**: even with the blocking prompt cleared,
+getting the walker reliably next to Mira specifically has not converged.
+Across the ten replays: a `move_to_entity` walk against her own live
+position once completed cleanly (`0 held`, reached within `2.5m`) but
+another time got stuck on her building's wall (`120 held`, stopped `6.9m`
+short); the original authored coordinate (`18.99,-1.01`, which is in fact
+her exact configured spawn point) lands anywhere from `0` to `120 held`
+frames and `2.27m` to `4.9m` short of her depending on the catch loop's
+own RNG-varied outcome upstream. The last diagnostic taken
+(`interactable.gd::_has_line_of_sight`'s own raycast, read directly) shows
+every candidate approach point as "blocked," but that reading is not
+trustworthy as recorded — a quick from-scratch raycast probe does not
+replicate the two clearance trims the real function applies at each end
+specifically to avoid a prompt occluding itself, so it likely just hit
+Mira's own collision body, not a real wall. **The honest state: Mira's
+own interaction radius (`npc_body.gd::add_prompt`, default `3.8m`) should
+comfortably cover every stop point recorded, and it is not doing so for a
+reason this pass did not pin down.** Whoever picks this up next should
+read `_has_line_of_sight`'s two clearance constants and either replicate
+them exactly in a probe, or add temporary debug logging to
+`interaction_offer()` itself to print the actual refusal reason
+(radius vs. line-of-sight) at the walker's real stop point.
 
 ## Why this matters beyond S03
 
