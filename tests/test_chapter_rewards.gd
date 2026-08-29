@@ -339,3 +339,39 @@ func test_the_three_captains_and_the_warrens_guardian_pay_the_ladder_shape() -> 
 	assert_true(_reward_has_item(guardian_reward, "hide_vest"),
 		"the Burrow Warrens guardian no longer pays hide_vest; owner-direction §14 wants "
 		+ "'Rootstone progression + useful TM/equipment/recipe'")
+
+
+## T3-REWARD, owner-direction §12 audit. The audit's PROSE can drift from the
+## world it describes without any existing check noticing, because prose is
+## not data -- which is exactly what happened here: FIRST-HOUR-FUN-REBUILD
+## (landed on main 2026-08-29) swapped the Burrow Warrens vault's wild
+## Terrapup for a named Elder Trailpup (Terrapup is a starter species and
+## cannot be an ordinary wild -- see test_starter_species_never_spawn_...
+## in test_spawns_data.gd), and this file's own "Burrow Warrens clear" row
+## went on describing a Terrapup that no longer existed in the data until
+## this pass caught it. Not re-deriving the whole species from
+## burrow_warrens.json here (that is the audit's own prose to write) --
+## just pinning the one fact this exact drift proved unsafe to trust.
+func test_the_audited_warrens_prize_names_the_real_vault_species() -> void:
+	var warrens := _json("res://data/config/burrow_warrens.json")
+	var vault_species := ""
+	for entry: Variant in warrens.get("spawns", []):
+		var spawn := entry as Dictionary
+		if str(spawn.get("chamber", "")) == "vault" and str(spawn.get("nickname", "")) != "":
+			vault_species = str(spawn.get("species", ""))
+	assert_ne(vault_species, "",
+		"burrow_warrens.json has no named vault encounter any more; the audit's own row "
+		+ "describing it needs a fresh look")
+
+	var audit := _audit()
+	var warrens_note := ""
+	for row: Variant in audit.get("activities", []):
+		if row is Dictionary and str((row as Dictionary).get("activity", "")) == "Burrow Warrens clear":
+			warrens_note = str((row as Dictionary).get("enables", "")) + " " + str((row as Dictionary).get("note", ""))
+	assert_false(warrens_note.is_empty(), "the audit has no 'Burrow Warrens clear' row to check")
+	assert_true(warrens_note.to_lower().contains(vault_species),
+		("the audit's Burrow Warrens row does not name '%s', the vault's real species -- "
+		+ "the same drift this exact test exists to catch") % vault_species)
+	assert_false(warrens_note.contains("only wild Terrapup"),
+		"the audit still claims the vault holds a wild Terrapup; that species was removed "
+		+ "because starter species cannot be ordinary wilds")
