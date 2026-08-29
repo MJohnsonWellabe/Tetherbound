@@ -1,0 +1,11 @@
+{
+  "service": "Meshy",
+  "endpoint": "retexture",
+  "task_id": "01a04f05-b7e1-7149-9cdd-faa75191d45c",
+  "created_at": 1788032170639,
+  "finished_at": 1788032225277,
+  "prompt": null,
+  "negative_prompt": "",
+  "art_style": "realistic",
+  "texture_richness": null
+}
