@@ -934,17 +934,17 @@
       "species": "meadowhart",
       "count": 1,
       "centre": [
-        -30.0,
+        -45.0,
         0.0,
-        4880.0
+        4793.0
       ],
       "radius": 8.0,
       "alpha": {
         "level_bonus": 4,
         "scale": 1.3
       },
-      "_why_alpha": "T3-BAND4. The tree-line grove (harvest.json orders 4011-4013) is the 'the ground itself just changed' moment ralph/reports/finding-post-tournament-cadence-2026-08-29.md asks for at the band3/4 seam, and docs/owner-direction/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 11's test is 'could a reasonable player see something here and think I might want that instead of one of mine'. Meadowhart is spec section 3's named riding creature (docs/MEADOWS_PROGRESSION_SPEC.md Band 4 'Riding unlock') -- a visibly larger, four-level elder standing alone at the exact point the region changes gives that temptation a face on sight, not a stat sheet. Not a starter and not a duplicate of the ordinary herd already at (60,0,6230): solitary, in cover at the grove rather than in the open pasture. Catchable because it is wild, never trainer-owned.",
-      "_why": "T3-BAND4. Beside the tree-line grove, 34m from harvest.json order 4011 -- the resource, the rare catch and the region's first ironwood trees read as one place with three reasons to stop rather than three unrelated additions, the same grouping order 4007's own burrowback elder already uses 280m south."
+      "_why_alpha": "T3-BAND4. The tree-line grove (harvest.json orders 4011-4013) is the 'the ground itself just changed' moment ralph/reports/finding-post-tournament-cadence-2026-08-29.md asks for at the band3/4 seam, and docs/owner-direction/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 11's test is 'could a reasonable player see something here and think I might want that instead of one of mine'. Meadowhart is spec section 3's named riding creature (docs/MEADOWS_PROGRESSION_SPEC.md Band 4 'Riding unlock') -- a visibly larger, four-level elder standing alone at the exact point the region changes gives that temptation a face on sight, not a stat sheet. Not a starter and not a duplicate of the ordinary herd already at (60,0,6230): solitary, in cover at the grove rather than in the open pasture. Catchable because it is wild, never trainer-owned. MEASURED: 1.9m off the spine, well inside the corridor probe's own 30m notice radius -- the first siting pass (-30,4880) missed distance-to-spine and sat 75.8m off it, corrected here.",
+      "_why": "T3-BAND4. Beside the tree-line grove, 11m from harvest.json order 4011 -- the resource, the rare catch and the region's first ironwood trees read as one place with three reasons to stop rather than three unrelated additions, the same grouping order 4007's own burrowback elder already uses 280m south."
     }
   ],
   "_comment_why_so_few": "WILD-ECOLOGY. This band held ONE cluster (the Meadowhart herd below) across z 4760-7000 -- 2240m, the longest region in the chapter and the one the probe measures as its longest single travel leg. Prompt 60's population rule is 'still prevalent enough that wanting another creature does not require a barren search', and one herd over 2.2km is the barren search. The seven entries added below sit on the spine's own points so the ecology is met by walking the route, not by leaving it. Levels are resolved from chapter_curve.json's band for this z ([11, 14]), never set here.",

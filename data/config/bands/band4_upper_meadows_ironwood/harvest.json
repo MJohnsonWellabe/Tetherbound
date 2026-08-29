@@ -117,30 +117,30 @@
       "item": "ironwood",
       "amount": 3,
       "label": "Fell an ironwood",
-      "at": [-60.0, 4850.0],
+      "at": [-56.0, 4818.0],
       "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
       "model_scale": 0.32,
-      "_why": "T3-BAND4. ralph/reports/finding-post-tournament-cadence-2026-08-29.md's single biggest authored-content gap (1,064m) sat right where Band 3's river country becomes Band 4's Ironwood -- the region's own name-tier resource was 280m further in (order 4000's stand) with nothing announcing the change at the boundary itself. This is that announcement: the first three ironwood trees a player crosses, at the tree line (0,4760 is the band3/4 spine seam). Same TwistedTree_4/pale-variant-only choice order 4000's own `_comment_red_leak_d4b` fixes the whole stand to, so this reads as the same species rather than a second tree that happens to drop the same item. MEASURED, flattest of six candidates (tools/_probe_t3band4_sites.gd): h=-0.03m, 0.95m spread, worst slope 6.4 degrees over a 5m pad."
+      "_why": "T3-BAND4. ralph/reports/finding-post-tournament-cadence-2026-08-29.md's single biggest authored-content gap (1,064m) sat right where Band 3's river country becomes Band 4's Ironwood -- the region's own name-tier resource was 280m further in (order 4000's stand) with nothing announcing the change at the boundary itself. This is that announcement: the first three ironwood trees a player crosses, at the tree line (band3/4 spine seam runs 0,4760 -> -140,4870). Same TwistedTree_4/pale-variant-only choice order 4000's own `_comment_red_leak_d4b` fixes the whole stand to, so this reads as the same species rather than a second tree that happens to drop the same item. MEASURED, flattest candidate within the corridor probe's own 30m notice radius (tools/_probe_t3band4_grove2.gd; the first siting pass measured slope/height only and missed distance-to-spine, corrected here -- h=0.24m, 0.62m spread, worst slope 6.5 degrees over a 4m pad, 11.0m off the route)."
     },
     {
       "order": 4012,
       "item": "ironwood",
       "amount": 3,
       "label": "Fell an ironwood",
-      "at": [-52.0, 4858.0],
+      "at": [-63.0, 4826.0],
       "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
       "model_scale": 0.38,
-      "_why": "T3-BAND4. Second of the tree-line trio, 9.5m from order 4011 -- clustered rather than a line, the same 'a grove is a mass, not evenly spaced repeats' lesson order 4000's own `_comment_stand_d4b` already paid for."
+      "_why": "T3-BAND4. Second of the tree-line trio, 11m from order 4011 -- clustered rather than a line, the same 'a grove is a mass, not evenly spaced repeats' lesson order 4000's own `_comment_stand_d4b` already paid for. 13.0m off the route."
     },
     {
       "order": 4013,
       "item": "fiber",
       "amount": 3,
       "label": "Cut fiber",
-      "at": [-68.0, 4842.0],
+      "at": [-50.0, 4812.0],
       "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
       "model_scale": 1.1,
-      "_why": "T3-BAND4. The tree-line grove's understorey, so the beat is 'a place with more than one reason to stop' rather than a single resource type -- the same layered-discovery shape docs/owner-direction/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 13 asks for, kept small on purpose."
+      "_why": "T3-BAND4. The tree-line grove's understorey, so the beat is 'a place with more than one reason to stop' rather than a single resource type -- the same layered-discovery shape docs/owner-direction/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 13 asks for, kept small on purpose. 10.0m off the route."
     }
   ]
 }
