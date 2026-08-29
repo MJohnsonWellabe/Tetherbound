@@ -1253,18 +1253,15 @@
     {
       "id": "S03-52",
       "title": "walk to Mira",
-      "action": "move_to",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          18.99,
-          -1.01
-        ],
+        "entity": "Mira",
+        "within": 2.5,
         "budget_frames": 3000,
-        "close_enough": 1.2,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE: reverted from move_to_entity back to the original authored coordinate -- a live replay targeting Mira's own live node position got stuck on her building's wall on a different approach path. On THIS proven-clean Bryn-to-Mira path (75 walking frames, no hard block), a live replay still stopped 2.70m from Mira with close_enough:3.0 -- outside whatever her Interactable actually needs, no prompt live at all. Tightened to 1.2 to force the walker genuinely close to her rather than merely within the old, apparently too-generous tolerance."
+      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. T2-BUILDPLACE, final: the authored coordinate proved unreliable across replays (RNG in the catch loop changes Bryn's own outcome and therefore the player's exact starting point for this walk, so the same fixed target lands a different real distance from Mira each time -- 2.70m one run, 4.9m short the next). move_to_entity against Mira's own LIVE position already walked cleanly here once before this segment also carried a creature_recall dismiss (run 3 of this validation: 'walked 12.2m ... 961 frames, 0 held', the only prompt problem that run was the fainted-ally line S03-39b now clears before this step runs). The wall-stuck failure that first moved this lane off move_to_entity was on a DIFFERENT approach path (from Tam's position, before the block was moved back here) -- not this one."
     },
     {
       "id": "S03-52a",
