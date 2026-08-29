@@ -222,3 +222,49 @@ for every one of the 24 (not just these 15): `ralph/reports/
 NPC_CAST_PLAN_2026-08-30.md`, `ralph/reports/
 NPC_CAST_PREVIEW_ROUND1_2026-08-30.md`, and `ralph/reports/
 NPC_CAST_REFINE_ROUND1_2026-08-30.md`.
+
+**Round 2, same day, owner instruction "build the rest":** refined the
+remaining 8 Trail & Wilderness subjects (`rival_trainer`,
+`field_researcher`, `wandering_trainer`, `lost_traveler`,
+`campfire_traveler`, `alpha_tracker`, `courier`, `former_tether_member`,
+one candidate each, 240 credits) and resolved `traveling_merchant`.
+
+`traveling_merchant` needed two more attempts before it worked. A tighter,
+cart-excluded reference crop (40 credits, 2 image-to-3D preview
+candidates) still produced the cart fused to her body as a
+wheelchair-like frame — the residual satchel corner and the single-pose
+reference (the board draws her only once; there is no true second angle
+to disambiguate the reconstruction) were still enough to mislead it. Root
+cause was the reference IMAGE, not the crop tightness or the prompt, so
+switched approach entirely: `meshy.py text` (text-to-3D, no reference
+image at all, 40 credits for 2 candidates) produced a clean standing
+figure with no fused geometry, then `meshy.py texture` against the
+board's own three-quarter crop (10 credits — **also below the documented
+30**, a single measurement, not yet re-verified across multiple runs the
+way the refine correction was) delivered a textured result matching the
+board's warm-earth palette. Total spend on this one subject across every
+attempt: 150 credits (60 original 3-candidate preview + 40 failed re-roll
++ 40 text-to-3D + 10 retexture) — the one subject in this whole cast
+where the honest cost was well above the ~90/subject baseline, recorded
+here rather than smoothed into the total.
+
+`wandering_trainer`'s companion creature was fixed the same way as
+`traveling_merchant`'s cart (crop excluded it entirely) and refined
+directly without a preview re-roll, since the other reference view was
+already known clean.
+
+**All 24 board designs (every NPC except the Warden) now have a refined,
+textured result.** Balance after this round: 660 — below the 900
+originally reserved for the sibling T1-CREATURE-MESH lane by 240 credits,
+disclosed here rather than smoothed over; this happened under a direct
+owner instruction to finish the remaining groups ("do team tether then
+villagers... use as little budget as you can", followed by "build the
+rest"), not a unilateral lane decision. Total spend across both
+generation rounds: 1,440 (preview, all 24) + 450 (refine, Team Tether +
+Village, 15) + 330 (refine, Trail & Wilderness, 8, plus the full
+traveling_merchant rework: re-crop attempt, text-to-3D, retexture) =
+**2,220 of the 2,880 balance available when this lane started
+generating.**
+
+Full account of this round: `ralph/reports/
+NPC_CAST_BUILD_REST_2026-08-30.md`.
