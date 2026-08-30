@@ -74,6 +74,28 @@ const VIEWS := {
 	"stronghold_approach": [0.0, 7420.0, 26.0, 0.0],
 }
 
+## T1-LIGHT (landed on `main` the same day this tool was written) added the
+## Burrow Warrens den's first REAL shadow-casting light
+## (`data/config/burrow_warrens.json` guardian key light, `"shadow": true`) --
+## exactly the new cost the coordinator flagged as untested by this tool's
+## exterior-only VIEWS above. An interior chamber cannot use the
+## ground-height + fixed-pitch convention VIEWS relies on (Terrain3D's
+## heightfield is the HILL the cave is buried under, not the cave floor), so
+## this is a second, small set of views with a pre-resolved eye/look-at pair
+## instead of an x/z + ground offset. Coordinates read once via
+## `tools/_probe_warrens_markers.gd` (`BurrowWarrens.marker("den")`/
+## `marker("guardian")`) rather than hand-derived from the site's yaw/offset
+## math, which is exactly the kind of arithmetic this repo's own
+## `stronghold.gd` review already warns is easy to get backwards. Re-run that
+## probe and update the two Vector3 literals below if the Warrens are ever
+## re-sited.
+const ABSOLUTE_VIEWS := {
+	"warrens_den": {
+		"eye": Vector3(-385.28, 4.1484 + 1.7, 2638.28 - 3.0),
+		"look_at": Vector3(-385.99, 4.1484 + 1.4, 2643.23),
+	},
+}
+
 ## Times of day to sample. "day" is the design baseline everything else is
 ## measured against; "night" is named in the T1-PERF brief as the likely
 ## worst case because it ADDS lights (braziers, window glow, occupation
@@ -166,39 +188,17 @@ func _run() -> void:
 			player.global_position = Vector3(spot.x, ground + 1.5, spot.z)
 		camera.global_position = spot
 		camera.global_rotation = Vector3(deg_to_rad(-8.0), deg_to_rad(float(spec[3])), 0.0)
-		for i in RESETTLE_FRAMES:
-			await physics_frame
+		report[name] = await _measure_and_print(world, look, name, spot)
 
-		var site_report: Dictionary = {}
-		for time_name: String in _times:
-			if look != null:
-				look.call("apply_time", time_name)
-			for i in TIME_SETTLE_FRAMES:
-				await physics_frame
-
-			var draws := 0.0
-			var prims := 0.0
-			var objs := 0.0
-			for i in SAMPLE_FRAMES:
-				await RenderingServer.frame_post_draw
-				draws += Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
-				prims += Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
-				objs += Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME)
-			var n := float(SAMPLE_FRAMES)
-
-			var light_counts := _lights_reaching(world, spot)
-			print("%-22s %-6s %10.0f %14.0f %10.0f %8d %8d" % [
-				name, time_name, draws / n, prims / n, objs / n,
-				light_counts["total"], light_counts["shadowed"]])
-
-			site_report[time_name] = {
-				"draw_calls": draws / n,
-				"primitives": prims / n,
-				"objects": objs / n,
-				"lights_reaching": light_counts["total"],
-				"lights_shadowed": light_counts["shadowed"],
-			}
-		report[name] = site_report
+	for name: String in ABSOLUTE_VIEWS.keys():
+		var av: Dictionary = ABSOLUTE_VIEWS[name]
+		var eye: Vector3 = av["eye"]
+		var look_at: Vector3 = av["look_at"]
+		if player != null:
+			player.global_position = eye
+		camera.global_position = eye
+		camera.look_at(look_at, Vector3.UP)
+		report[name] = await _measure_and_print(world, look, name, eye)
 
 	if _json_path != "":
 		var f := FileAccess.open(_json_path, FileAccess.WRITE)
@@ -208,6 +208,46 @@ func _run() -> void:
 			print("\nwrote %s" % _json_path)
 
 	quit(0)
+
+
+## Shared by the VIEWS loop (ground-relative, fixed pitch/yaw, already posed
+## by the caller) and the ABSOLUTE_VIEWS loop (pre-resolved eye/look-at,
+## already posed by the caller) -- both just need "sit here RESETTLE_FRAMES,
+## then sample draw calls/primitives/objects/lights at each time of day".
+func _measure_and_print(world: Node, look: Node, name: String, spot: Vector3) -> Dictionary:
+	for i in RESETTLE_FRAMES:
+		await physics_frame
+
+	var site_report: Dictionary = {}
+	for time_name: String in _times:
+		if look != null:
+			look.call("apply_time", time_name)
+		for i in TIME_SETTLE_FRAMES:
+			await physics_frame
+
+		var draws := 0.0
+		var prims := 0.0
+		var objs := 0.0
+		for i in SAMPLE_FRAMES:
+			await RenderingServer.frame_post_draw
+			draws += Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
+			prims += Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
+			objs += Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME)
+		var n := float(SAMPLE_FRAMES)
+
+		var light_counts := _lights_reaching(world, spot)
+		print("%-22s %-6s %10.0f %14.0f %10.0f %8d %8d" % [
+			name, time_name, draws / n, prims / n, objs / n,
+			light_counts["total"], light_counts["shadowed"]])
+
+		site_report[time_name] = {
+			"draw_calls": draws / n,
+			"primitives": prims / n,
+			"objects": objs / n,
+			"lights_reaching": light_counts["total"],
+			"lights_shadowed": light_counts["shadowed"],
+		}
+	return site_report
 
 
 ## Every OmniLight3D/SpotLight3D in the tree whose own authored range covers
