@@ -16,20 +16,41 @@ which is what the audit directive permits and requires.
 
 ---
 
-## 1. The answer, in one paragraph
+## 1. The answer
 
-**The chapter runs for about 26 minutes of play and then stops in the village,
-and it stops for game reasons, not instrument ones.** S01 and S02 are healthy:
-the front door, the starter, the first fight, the first catch, the key and the
-gate all work, and S02's exit save is the good entry save six earlier Gate F
-runs could not produce. S03, the village tutorial ladder, cannot finish — the
-player's starter loses the team-building fight, the team never reaches three,
-`tournament.json` requires three, and the home is never built, so nothing sleeps
-and nothing is fed. Behind that sits a defect that would have stopped the
-chapter later even if S03 had passed: **every creature loaded from a save has
-silently lost its species base stats, and the first level-up after that reduces
-it to about one hit point.** The Meadows chapter is a chain of save handoffs;
-that defect sits in the joint of every one of them.
+**Five of fourteen journey segments ran. The chapter's progression stops at the
+village, and it stops for game reasons, not instrument ones.**
+
+S01 and S02 are healthy: the front door, the starter, the first fight, the first
+catch, the key and the gate all work, and S02's exit save is the good entry save
+six earlier Gate F runs could not produce. **S03, the village tutorial ladder,
+completes its 422 steps and cannot do its job** — the starter loses the
+team-building fight, the team never reaches three, and the home is never built,
+so nothing sleeps and nothing is fed. **S04 then confirms the wall from the
+other side**: it runs all 77 steps and advances the chapter by *zero flags*,
+because the tournament correctly refuses a team of two that is untrained,
+unrested and unfed. **S05 walks 1.3 km of the Meadows on production paths and
+stops 12.6 m short of the South Bridge** — the same wall a third time, because
+a fainted party cannot challenge the grunt, so the bridge never opens.
+
+**S06–S10e were not attempted, deliberately.** They would re-exercise a party
+already diagnosed as broken, against a bridge already known to be shut, and
+would add no evidence about the chapter.
+
+### The three things that have to be fixed before a Gate F run can measure the chapter at all
+
+All three are **outside this lane's mandate** — game code and data are frozen
+for audit lanes — and are handed to the coordinator and the plan, with full
+evidence and a proposed fix each in `ralph/reports/gate-f-full/DEFECTS.md`:
+
+| | what | severity | shape of the fix |
+|---|---|---|---|
+| **GAME-F4** | A creature loaded from a save has silently lost its species base stats, and the first level-up after that cuts it to ~1 HP, ~1 attack, ~1 defence. The chapter is a chain of save handoffs; this sits in the joint of every one. **It is in sixteen previous run directories and no lane ever named it.** | **BLOCKER** | a real code fix in `save_game.gd::_array_to_party`, plus the one test that would have caught it |
+| **GAME-F2** | The practice-fight level pin is gone from `main` — deleted by a revert whose own message says it left the pin untouched — so the chapter's teaching fight rolls its band level again. This run paid the cost: the starter left the opening at 38% health and lost the next fight. | SHIP | **a one-line data fix** plus its fixture mirror |
+| **GAME-F5** | One sweep of the village's twenty authored harvest nodes does not pay for the home and three creature beds, on the game's own minimum. | SHIP candidate — **a tuning call** | data, or a decision that the ladder is two passes |
+
+Until GAME-F4 and GAME-F2 are fixed, **no Gate F evidence past S02 means
+anything**, which is the reading that explains six previous runs.
 
 ---
 
@@ -40,8 +61,8 @@ that defect sits in the joint of every one of them.
 | S01 | 14 | 13 | 0 | 1 | 180 s | 262 s | 80 s | **none** | complete |
 | S02 | 90 | 77 | 5 | 8 | 297 s | 346 s | 48 s | yes | complete |
 | S03 | 422 | 383 | 32 | 7 | 1115 s | 1167 s | 40 s | yes | complete |
-| S04 | — | — | — | — | — | — | — | — | **not run** |
-| S05 | — | — | — | — | — | — | — | — | **not run** |
+| S04 | 77 | 53 | 18 | 6 | 327 s | 366 s | 39 s | yes | complete |
+| S05 | 82 | 59 | 10 | 13 | 779 s | 818 s | 37 s | yes | complete |
 | S06 | — | — | — | — | — | — | — | — | **not run** |
 | S07 | — | — | — | — | — | — | — | — | **not run** |
 | S08 | — | — | — | — | — | — | — | — | **not run** |
@@ -51,13 +72,47 @@ that defect sits in the joint of every one of them.
 | S10c | — | — | — | — | — | — | — | — | **not run** |
 | S10d | — | — | — | — | — | — | — | — | **not run** |
 | S10e | — | — | — | — | — | — | — | — | **not run** |
-| **total** | | | | | **1592 s (26.5 min)** | **1775 s (29.6 min)** | | | |
+| **total** | | | | | **2699 s (45.0 min)** | **2959 s (49.3 min)** | | | |
 
-`S03-superseded-1/` is a complete first attempt at S03, preserved per protocol
-§A and cited throughout `DEFECTS.md`; `RESTARTS.md` says why it was restarted.
-S04 onward run against a party that **cannot legally enter the tournament**, and
-their verdicts describe a degraded state rather than the chapter. No pacing,
-cadence or progression claim in this report is drawn from them.
+Play clock, not wall: 45.0 minutes of game time across the five, in a run whose
+wall clock was 49.3 minutes because each segment pays one cold world stand-up of
+37–80 s and nothing else (§4).
+
+**What each segment's verdict means, since a PASS count alone would mislead:**
+
+- **S01 — clean.** 13 PASS, 0 FAIL. Process start to an interactive title in
+  **492 ms**, focus on Start New Game, straight into the world with no overwrite
+  prompt, and the correct first objective tracked.
+- **S02 — healthy, and its five FAILs are all the instrument.** Two were the
+  catch asserts firing 0.53 s of play before the catch resolved (RIG-F1, fixed);
+  two are stale floors this run is the second to trip (RIG-F3, deliberately not
+  moved); one is an aim assert reading a toggle at the wrong parity (RIG-F2,
+  recorded). **The exit save is good** — party 2 (Moss the L3 ripplet and a
+  caught bramblebun), `road_gate_open` set, the key taken and consumed.
+- **S03 — completes, and cannot do its job.** 383 PASS / 32 FAIL over 422 steps.
+  Two attempts were run; the first is preserved as `S03-superseded-1/` and is
+  the evidence for GAME-F1, GAME-F3 and GAME-F4, and `RESTARTS.md` says why it
+  was restarted. In the second, the engage ladder works and the starter loses
+  the fight. Exit save: party 2, **both fainted**, no home, no beds, no sleep,
+  no feed.
+- **S04 — the refusal is correct, and that is the finding.** 53 PASS / 18 FAIL
+  over all 77 steps, and **zero flags gained**. `tournament_team_ready`,
+  `tournament_training_ready`, `tournament_condition_ready` and
+  `tournament_entered` all stayed unset, because the team is two, untrained,
+  unrested and unfed — exactly the three things S03 could not do. **Nothing here
+  is a tournament defect.**
+- **S05 — the instrument is not what is broken.** 59 PASS / 10 FAIL, complete,
+  and it walked **1.3 km** on production paths with no teleport: village →
+  PondGate → the spine → the pond → Old Bram → the Trail Camp → the bridge road
+  → 12.6 m from the South Bridge, where a fainted party cannot challenge the
+  grunt, so `south_bridge_open` stays unset and the bridge is solid.
+
+**S06–S10e: not attempted.** A deliberate stop with a stated cause, recorded in
+`RESTARTS.md`. S06 begins on the near side of a bridge that never opened, with a
+party that S04 has already correctly refused; every walk in it would fail against
+a solid body and every fight would be refused by `can_challenge()`. That is the
+same wall diagnosed twice already, from two directions. Its partial directory is
+kept as `S06-aborted-1/` and is **not** an S06 result.
 
 **No study segment (X01–X08) was run.** They branch from journey saves — X01 and
 X02 from `S03-exit`, X03 from `S05-exit`, X04 from `S04`/`S06`/`S09` — and this
@@ -68,10 +123,31 @@ S06**, per run 5's finding, which is still unchallenged.
 
 ---
 
-## 3. What stopped it, in the order it matters
+## 3. Every finding, and where its evidence is
 
-Full evidence, telemetry paths and proposed fixes for every one of these is in
-`ralph/reports/gate-f-full/DEFECTS.md`. Ranked by what it costs the chapter.
+`ralph/reports/gate-f-full/DEFECTS.md` carries all of these in full — the
+telemetry paths, the arithmetic, the git archaeology and a proposed fix for
+each. This is the index, ranked by what it costs the chapter, followed by the
+five that need more than a line.
+
+| id | severity | one line | fixed here? |
+|---|---|---|---|
+| **GAME-F4** | **BLOCKER** | A creature loaded from a save loses its species base stats; the first level-up after that cuts it to ~1 HP. In sixteen previous run directories, never named. | no — `scripts/` frozen |
+| **GAME-F2** | SHIP | The practice-fight level pin is gone from `main`, deleted by a revert that says it kept it. The starter leaves the opening at 38% health and loses the next fight. | no — `data/` frozen |
+| **GAME-F5** | SHIP candidate | One sweep of the village's twenty harvest nodes does not pay for the home and three beds, on the game's own minimum. | no — a tuning call |
+| **GAME-F3** | SHIP candidate | Engage and harvest are both priority 0 and the tie goes to distance, so in a meadow the meadow can win the interact button. | no — an owner's call, four options costed |
+| **GAME-F1** | SHIP, minor | Two of the twenty first-day harvest nodes fell outside the 2026-08-30 village fence; nothing checks for it. | no — `data/` frozen |
+| **PROGRESSION-F7** | — | Where the chapter's progression actually stops: the tournament gate, refusing correctly. | n/a — a boundary marker |
+| **TRAVERSAL-F8** | — | With the fence routed, the rig walks 1.3 km to the South Bridge and the game stops it 12.6 m short, for the same root cause. | n/a — the run's best positive result |
+| **MEASURED-F6** | — | There is no village frame-cost regression. COST-T5-5 settled with the second and third samples run 7 asked for. | n/a — a measurement |
+| **RIG-F1** | RIG | The catch asserts read the world 0.53 s of play before the catch resolved. | **fixed** — `wait_until` |
+| **RIG-F4** | RIG | S03's ten-attempt engage ladder resolved the same creature ten times and pressed from the identical spot. | **fixed** — `rank` |
+| **RIG-F6** | RIG | The journey walked into the village fence at both ends of the chapter. | **fixed** — routed through the gates, **plus a test** |
+| **RIG-F2** | RIG | The aim assert reads a toggle at the wrong parity. | no — needs a primitive this protocol lacks |
+| **RIG-F3** | RIG | S02's distance and route-row floors are stale; this run is the second data point, not a derivation. | no — moving a floor to match what tripped it is how a floor stops meaning anything |
+| **RIG-F5** | RIG | Two side-effects of this lane's own ladder fix, written down against itself. | no — a second change mid-audit would leave nobody able to say which version produced which number |
+
+The five that need more than a line:
 
 ### 3.1 GAME-F4 — a loaded creature loses its base stats; the next level-up destroys it. **BLOCKER**
 
@@ -203,9 +279,11 @@ twice.
 **The data does not support an estimate for a first clear, and I am not going to
 produce one.** Three disqualifiers, each sufficient on its own:
 
-1. **The chapter does not complete.** Three of fourteen journey segments
-   produced a healthy exit save. Nothing about four of the five bands, the
-   Warrens, the river, the Stronghold or the finale has been played.
+1. **The chapter does not complete.** Five of fourteen journey segments ran and
+   **not one of them advanced the chapter past the village**: S04 gained zero
+   flags and S05 stopped 12.6 m short of the bridge. Nothing about four of the
+   five bands, the Warrens, the river, the Stronghold or the finale has been
+   played.
 2. **The state the later segments would be measured from is invalid.** A party
    of two, both fainted, cannot enter the tournament, so any time measured after
    it is time spent in a game the player could not be in.
@@ -226,15 +304,25 @@ produce one.** Three disqualifiers, each sufficient on its own:
   S02 297 s) — bedroom, Grandpa, starter, naming, practice fight, first catch,
   key, gate, arrival in the village.
 - **The village ladder is 18.6 minutes** and does not finish.
+- **The whole of what ran is 45.0 minutes of play clock** — the opening, the
+  village, the refused tournament and the walk to the bridge — against a target
+  of 3–4 hours for a first clear. That is a floor for a fifth of the chapter's
+  segments and roughly a sixth of its planned frames, and it is not an
+  extrapolation.
 - **The harness's own planned worst case for the whole journey chain is 419
-  minutes (7.0 h)**, and the two walk-heavy segments that ran came in at
-  **0.43 and 0.40** of their plan. Extending that ratio would give roughly
-  170–180 minutes of harness play clock for the chapter. **That is not an
-  estimate and must not be read as one**: both samples come from segments
-  confined to the village, and S05–S09 are dominated by kilometres of open
-  travel this run never touched, where a walk budget behaves nothing like it
-  does across a village square. It is offered only so a planner can see the
-  shape of what is and is not known.
+  minutes (7.0 h)**, and the three walk-bearing segments that ran came in at
+  **0.43 (S02), 0.39 (S03) and 0.40 (S05)** of their plan — tight agreement
+  across a village square, a village tutorial and a 1.3 km cross-country leg.
+  Extending 0.40 gives roughly **168 minutes** of harness play clock for the
+  whole journey chain. **That is not a first-clear estimate and must not be read
+  as one.** It is what an instrument that never hesitates, never reads a line at
+  human speed, never gets lost and never explores would take to walk the
+  chapter's own route, on a chapter that currently cannot be finished at all. A
+  real player's multiplier over that floor is unknown and is exactly the thing
+  [OWNER-ONLY] covers. It is offered only so a planner can see the shape of what
+  is and is not known — and the shape is that the *route* is not obviously too
+  long for the 3–4 hour target, while nothing whatever is known about how long
+  the *content* takes, because none of it has been played.
 
 A human first-clear time remains **[OWNER-ONLY]**, as protocol §K has always
 said, and it cannot be approached at all until a run finishes.
@@ -322,9 +410,11 @@ Named so the gap is not mistaken for a verdict:
   **0 of 61 prescribed frames present on disk**, itemised in
   `ralph/reports/gate-f-full/RUN_INCOMPLETE.md`. That debt is recorded, not
   discharged — which is the distinction CD-2 exists to keep.
-- **Everything from the tournament onward.** S04–S10e, five of six bands, the
-  Warrens, the river, the Stronghold, the Warden, the legendary choice and the
-  world healing are all unplayed at this candidate.
+- **Everything from the tournament onward.** S04 and S05 ran, but neither
+  played its content: the tournament refused entry and the bridge never opened,
+  so **no tournament round, no band-2 through band-5 content, no Warrens, no
+  river, no Stronghold, no Warden, no legendary choice and no world healing has
+  been played at this candidate.** S06–S10e were not attempted.
 - **Every study.** X01's controller/menu exhaustion matrix, X02's build lab,
   X03's catch lab, X04's combat lab, X05's save lifecycle, X06's abuse sweep,
   X07's world audit and X08's performance audit are unrun, for the reason in §2.
