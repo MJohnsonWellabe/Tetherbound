@@ -10,41 +10,6 @@
       "_why": "the_waystop -- keeps trees and boulders off the bench/log seating and the wood/stone/fiber nodes around them, the same treatment every other authored clearing in the chapter gives a place the player is meant to stand and interact rather than push through undergrowth"
     },
     {
-      "order": 10,
-      "x": 8.0,
-      "z": 7510.0,
-      "radius": 5.0,
-      "_why": "T1-HALL-3, answering JUDGE-5 D11: \"foliage clips through the ramp -- plants growing out of the cobble deck\" in H-03-ramp-foot. The causeway is 40m of authored stone laid across ground the scatter has always been free to plant, and nothing ever told the scatter it was there. Deliberately FIVE SMALL discs down the deck's own centreline rather than one big one: the same judge praised H-03's \"dense foreground planting\" and called the ramp approach one of the rebuild's real gains, and a single radius-26 clearing over the whole causeway would have deleted exactly that. r=5.0 at x=8.0 covers the ~7m deck and its kerbs and stops there, so the banks either side keep their planting. Centres step 9m from the ramp foot (world z ~7507) to the mouth sill (~7547), derived from site.at z 7560, the outer_works face and site.ramp_run 40."
-    },
-    {
-      "order": 11,
-      "x": 8.0,
-      "z": 7519.0,
-      "radius": 5.0,
-      "_why": "the_causeway -- see order 10."
-    },
-    {
-      "order": 12,
-      "x": 8.0,
-      "z": 7528.0,
-      "radius": 5.0,
-      "_why": "the_causeway -- see order 10."
-    },
-    {
-      "order": 13,
-      "x": 8.0,
-      "z": 7537.0,
-      "radius": 5.0,
-      "_why": "the_causeway -- see order 10."
-    },
-    {
-      "order": 14,
-      "x": 8.0,
-      "z": 7546.0,
-      "radius": 5.0,
-      "_why": "the_causeway -- see order 10."
-    },
-    {
       "order": 15,
       "x": 1.4,
       "z": 7230.0,
@@ -84,37 +49,79 @@
     {
       "order": 5000,
       "x": 8.0,
-      "z": 7510.0,
-      "radius": 4.5,
-      "_why": "T1-HALL-3, the CORRECT mechanism for JUDGE-5 D11 (\"foliage clips through the ramp -- plants growing out of the cobble deck\"). This lane's first attempt used `clearings` and it did not work, which the re-render showed plainly: plants were still standing in the causeway cobbles. scatter_rules.gd says why, in a comment written for this exact failure -- a clearing only culls layers that flag `cleared_by_clearings`, and grass, drygrass, flowers, path_stones and groundmat are DELIBERATELY exempt so that a wide clearing does not leave the meadow bald. The things growing through the deck are grass and flowers, so clearings could never have removed them. Footprints are the mechanism for this and the file already says so: \"narrower and unconditional, unlike clearings above ... that exemption also let them grow straight through a building's own floor and roof, since a footprint's few metres are not 'near a structure' the way a 16m clearing is -- they ARE the structure\" (found once before as grass tufts inside Grandpa's house, on the rug). The causeway is 40m of authored stone and is exactly that case. r=4.5 covers the ~7m deck and its kerbs and stops there, so the planted banks either side -- which the same judge praised as \"dense foreground planting\" -- keep their cover. Centres step 9m from the ramp foot (world z ~7507) to the mouth sill (~7547), derived from site.at z 7560, the outer_works face and site.ramp_run 40. The five wider `clearings` on the same line stay: they keep TREES off the ramp banks, which footprints this narrow would not reach. Orders are in the 5000 range, matching the per-band convention the other bands' clearings already use (band2 2001+, band3 3000, band4 4000+). The first cut numbered these 0-4 and collided with band1's own footprints 0-6: band_content.gd merges every band's array into one and treats a duplicated `order` as an error -- non-fatal (its sort keeps the merge deterministic) but real, and for a seeded array like spawns.json a shared order means a shared seed. Caught in a perf run's log, not by reading the file."
+      "z": 7508.0,
+      "radius": 3.0,
+      "_why": "T1-HALL-3, JUDGE-5 D11 (\"foliage clips through the ramp\"), THIRD and correct sizing -- recorded in full because two earlier attempts were wrong in opposite directions and the second one did real damage. Attempt 1 used `clearings`, which cannot work: scatter_rules.gd exempts grass, drygrass, flowers and path_stones from clearings by design, and the things standing in the cobbles are grass and flowers. Attempt 2 used `footprints` (the right mechanism -- narrow and unconditional, added once before because grass grew through Grandpa's floor) but at r=4.5 on the deck centreline, which covers x 3-13 against a deck only 7m wide (_build_approach_ramp: first passage width 4.0 + 3.0, half-width 3.5). That stripped the BANKS either side -- and the near-field bank planting is content JUDGE-5 explicitly praised in this exact frame, \"dense foreground planting\", one of the rebuild's named gains. Compared against the judge's own H-03: its bank carries grass blades, leafy plants, flowers and pebbles; attempt 2's is bare terrain. That is a regression traded for a fix, which is not a trade. r=3.0 on a 4m pitch instead. Between two centres the covered strip pinches to +/-2.24m, so the WALKING SURFACE is clear -- which is where 'growing out of the cobbles' is egregious -- while the kerbs and banks keep their planting, where greenery against a stone edge is what the frame wants anyway. Method note for the next lane: a green-pixel percentage is NOT a test for this. It tracks exposure, not vegetation -- the day and golden frames of this stand read 5.5% and 55% off IDENTICAL bare ground, which briefly convinced this lane the content was fine. Crop the region and look at it."
     },
     {
       "order": 5001,
       "x": 8.0,
-      "z": 7519.0,
-      "radius": 4.5,
-      "_why": "the_causeway_deck -- see order 0."
+      "z": 7512.0,
+      "radius": 3.0,
+      "_why": "the_causeway_deck -- see order 5000."
     },
     {
       "order": 5002,
       "x": 8.0,
-      "z": 7528.0,
-      "radius": 4.5,
-      "_why": "the_causeway_deck -- see order 0."
+      "z": 7516.0,
+      "radius": 3.0,
+      "_why": "the_causeway_deck -- see order 5000."
     },
     {
       "order": 5003,
       "x": 8.0,
-      "z": 7537.0,
-      "radius": 4.5,
-      "_why": "the_causeway_deck -- see order 0."
+      "z": 7520.0,
+      "radius": 3.0,
+      "_why": "the_causeway_deck -- see order 5000."
     },
     {
       "order": 5004,
       "x": 8.0,
-      "z": 7546.0,
-      "radius": 4.5,
-      "_why": "the_causeway_deck -- see order 0."
+      "z": 7524.0,
+      "radius": 3.0,
+      "_why": "the_causeway_deck -- see order 5000."
+    },
+    {
+      "order": 5005,
+      "x": 8.0,
+      "z": 7528.0,
+      "radius": 3.0,
+      "_why": "the_causeway_deck -- see order 5000."
+    },
+    {
+      "order": 5006,
+      "x": 8.0,
+      "z": 7532.0,
+      "radius": 3.0,
+      "_why": "the_causeway_deck -- see order 5000."
+    },
+    {
+      "order": 5007,
+      "x": 8.0,
+      "z": 7536.0,
+      "radius": 3.0,
+      "_why": "the_causeway_deck -- see order 5000."
+    },
+    {
+      "order": 5008,
+      "x": 8.0,
+      "z": 7540.0,
+      "radius": 3.0,
+      "_why": "the_causeway_deck -- see order 5000."
+    },
+    {
+      "order": 5009,
+      "x": 8.0,
+      "z": 7544.0,
+      "radius": 3.0,
+      "_why": "the_causeway_deck -- see order 5000."
+    },
+    {
+      "order": 5010,
+      "x": 8.0,
+      "z": 7548.0,
+      "radius": 3.0,
+      "_why": "the_causeway_deck -- see order 5000."
     }
   ]
 }

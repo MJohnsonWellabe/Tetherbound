@@ -509,3 +509,43 @@ Two notes on honesty rather than on the number:
 - **No container here has ROG Ally hardware.** This is a draw-call count against
   a reasoned ceiling, not a frame-rate claim. The budget document says the same
   about itself.
+
+## 8. Correction — a wrong conclusion this lane published, and the method error behind it
+
+Earlier in this lane I recorded, in a commit message and in §2 above, that
+`H-03-ramp-foot`'s missing bank planting was **a capture artifact, not a
+content regression**, on the evidence that the golden variant from the identical
+camera position measured 55% green cover against the day frame's 5.5%.
+
+**That was wrong, and the frames say so.** Cropping the same region out of both
+and looking at it shows the two frames contain the *same bare terrain*; the only
+difference between them is exposure. A green-pixel percentage tracks how bright
+the ground is, not whether anything is growing on it — the day key blows that
+slope out to (181,182,145) and the golden key leaves it olive, and my test
+scored the second as "vegetated".
+
+The regression was real and it was mine. `footprints` was the right mechanism
+for D11, but at r=4.5 on the deck centreline it covers x 3–13 against a deck
+only 7 m wide, so it stripped the banks either side — and the near-field bank
+planting is content JUDGE-5 explicitly praised in this exact frame. Held against
+the judge's own H-03, its bank carries grass blades, leafy plants, flowers and
+pebbles; mine was bare ground. Fixed by sizing the discs to the deck (r=3.0 on a
+4 m pitch, so the covered strip pinches to ±2.24 m between centres) and deleting
+the five r=5 clearings, which could never have culled grass and were doing
+nothing but collateral damage.
+
+Three things worth carrying out of this:
+
+1. **A colour-ratio metric is not a test for vegetation.** It is a test for
+   exposure. Where a claim is about whether something is *present*, crop the
+   region and look at it; keep the numbers for things that are genuinely
+   photometric, like D6's hue relationship.
+2. **I nearly fixed the wrong thing twice on this one defect** — first with a
+   mechanism that could not work, then with a correct mechanism at a size that
+   destroyed praised content. Both passed a plausible-sounding check.
+3. **The settle-frame work in §2 was chasing a phantom.** Doubling the settle
+   changed nothing because nothing was ever unsettled. The change is harmless
+   and the `--only=` filter it came with is genuinely useful, but the reasoning
+   that produced it was built on the same bad metric. The standing note about
+   `capture_check` having no test for a partially-streamed field is still true
+   and still worth doing; it just is not what happened here.
