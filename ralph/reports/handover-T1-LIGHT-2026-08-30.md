@@ -253,3 +253,182 @@ box mistake T1-NIGHT's own report warns against. Left `project.godot` and
 3. `tools/_probe_grunt_luminance.gd` generalises past this one fix —
    worth reaching for whenever a future rank/faction palette needs
    tuning against real lighting without a full world boot.
+
+---
+
+## Round 2 — coordinator work order, JUDGE-3-2026-08-30.md sec1b/1e/2b/3
+
+A second work order arrived mid-session (round 1's work was already being
+landed via `ralph/LAND-0830D`). Merged `origin/main` forward first (no-op,
+main had not moved). Three items routed here.
+
+### Campfire light (sec1b) — fixed, but not where I first looked
+
+The complaint: "an unshaped blown-out disc on the ground... brighter at
+its centre than the sky, in daylight. The point light has no daylight
+attenuation." First fix attempt: `scripts/world/campfire_glow.gd`'s
+`OmniLight3D` got `omni_attenuation 1.8` (softer falloff, same class of
+fix as `torch.gd`'s `spot_attenuation`) and a day/night energy scale
+(`DAY_ENERGY_SCALE 0.16`, full energy at night, read from
+`world_look.gd::is_dark()` via the same lazy "day_cycle"-group lookup
+`torch.gd`'s own OF18 fix uses).
+
+**That fix was real but not the one the judged evidence needed.** A
+same-tool before/after pixel diff of `tools/_capture_t1_camp.gd`'s
+`01-camp-establishing.png` (the exact frame JUDGE-3 cited) came back at
+0.01 mean-abs-diff — essentially nothing moved. Root cause:
+`scripts/build/camp.gd::build_real()` (the PLAYER-BUILT camp, which is
+what this evidence tool renders) never instantiates `CampfireGlow` at
+all — it only calls its `ignite()`/`texture_logs()` static mesh-tinting
+helpers, and builds its own **separate** `OmniLight3D` (energy 2.8,
+default attenuation, no day/night gating) inline. That second, unrelated
+light is what the judge actually photographed.
+
+Applied the identical pair of fixes to `camp.gd`'s own light (new
+`_process()`, same lazy "day_cycle" lookup, `FIRE_LIGHT_DAY_SCALE 0.16`,
+`omni_attenuation 1.8`). Also found and fixed a second gap while
+verifying: `tools/_capture_t1_camp.gd`'s own rig (`_capture_structures.gd`'s
+isolated flat-sun stage) has no `WorldLook` at all, so neither fix could
+ever be observed there — added `tools/_capture_day_stub.gd`, a two-line
+node that answers `is_dark() -> false` (this stage's fixed sun is always
+daytime), registered in the "day_cycle" group before the camp builds.
+
+**Verified, same tool, before/after:** the ground disc is visually gone
+(`ralph/reports/T1-LIGHT/shots/campfire/01-camp-establishing-{BEFORE,AFTER}.png`);
+near-fire ground sampled +5.7 brighter than a control patch before, -14.7
+darker (shadow-only) after. Separately re-verified the AUTHORED trail_camp
+(real world, real `WorldLook`, `tools/capture_trail_camp.gd`) was already
+clean with just the `campfire_glow.gd` half of the fix — no light-pool
+blowout at that campfire either
+(`ralph/reports/T1-LIGHT/shots/campfire/trail-camp-day-AFTER.png`), so
+that fix is separately correct for every authored rest-point fire
+(`props.gd`'s `glow: "campfire"` branch — trail_camp, river_lock, upper
+meadows, stronghold) even though it wasn't what the judged frame needed.
+The flame mesh itself (yellow faceted cones, no gradient) is unchanged —
+content lane's own item, per the brief.
+
+### Guardian den — fixed, real contact shadow now exists
+
+The complaint (sec1e/sec3): "the guardian is a near-black lump... the rim
+does not separate the animal from the wall" and "no contact shadow of any
+kind... reads as sitting IN the ground" — measured on
+`guardian-den-0830-full.png`, the SAME frame `burrow_warrens.json`'s own
+`_comment_guardian_stand_wash_verified_0830` recorded a DIFFERENT blind
+judge calling "yes, legible" one round earlier. Both verdicts are real;
+recorded rather than silently overwritten — see that comment's own
+successor, `_comment_guardian_shadow_and_wall_0830_t1_light`, for the full
+account.
+
+Root cause, found by reading `burrow_warrens.gd::_build_lights()`: every
+light in the file was `shadow_enabled = false` by design ("shadowless
+omni, broad wash" — the file's own `_comment_lights`). A cave interior has
+no sun reaching in, so with every light shadowless, **nothing standing in
+the room could ever cast a real contact shadow, at any energy** — the
+three prior rounds (CONTENT-0828, T1-CREATURE's backlight, T1-CAST's
+floor-wash) were all trying to solve a shadow-shaped problem with more
+wash, which structurally cannot produce one.
+
+Fix: `_build_lights()` now reads an opt-in `"shadow": true` key per light
+(default false, so every other light's cost is unchanged); set it on the
+guardian's own key light only, the same bounded-VRAM-cost pattern already
+shipping in `cottage_interior.gd`/`grandpa_house.gd`/`inn_interior.gd`/
+`shop_interior.gd`. Also moved the backlight and general den-fill energies
+for the first time since CONTENT-0828 authored them (0.55→1.2, 0.4→0.6) —
+the same ACES-toe reasoning `world_look.gd`'s own NIGHT-LIGHT history
+already documents: three rounds of small energy nudges near the bottom of
+the tonemap's flat region is why the room's own history shows an
+inconsistent judged result on the identical mechanism.
+
+**Verified with a same-viewpoint, same-stand-in-torch before/after**
+(`tools/_probe_guardian_den_light.gd`, new — a single-stand fast rig
+matching `capture_warrens_63.gd`'s `06-den-and-guardian` exactly, so
+directly comparable to the committed evidence; guardian's wander put it
+within 0.4m of its baseline position, a fair same-stand comparison):
+
+| | before | after |
+|---|---|---|
+| guardian body luma | 26.6 | 43.6 (+64%) |
+| wall behind guardian | 47.3 | 62.6 (+32%, now warm not flat grey) |
+| floor at guardian's base | 53.0 (brighter than the wall — no shadow) | 49.8 |
+| floor further from guardian | (not sampled) | 94.9 |
+
+The floor number is the one that matters most: before, the base was
+slightly *brighter* than the wall (no shadow pooling anywhere in the
+room); after, there is a real ~45-point gap between the floor right at
+the guardian's feet and the floor a few metres away — a genuine contact
+shadow, not a value nudge. Visually the guardian now shows real
+shell-plate texture and colour variation instead of a flat black cutout,
+and the wall/ceiling behind it read warm and lit. Evidence:
+`ralph/reports/T1-LIGHT/shots/guardian_den/guardian-den-{BEFORE,AFTER}-round2.png`.
+
+### Contact shadows, general (sec2b) — investigated, not further fixed here
+
+JUDGE-3's Creek Hollow evidence (`far_water_edge-CROP-embedded.png`) shows
+two creatures "reading as cutouts pasted on the hillside" with no contact
+shadow, routed to both ground (spawn Y/terrain-snap) and light. Checked:
+Godot's directional sun already ships `shadow_enabled: true` by default
+(`world_look.gd::_apply_sun`), SSAO is already on
+(`art.json`'s `ssao_enabled: true`), and no creature/VFX script sets a
+`cull_mask` or `light_cull_mask` that would exclude creature meshes from
+shadow casting — grepped `scripts/creatures/`, `scripts/combat/`,
+`scripts/world/encounter_director.gd` directly, found only VFX/aura
+overlays correctly marked `SHADOW_CASTING_SETTING_OFF`, nothing on a
+creature's own body mesh. I found no separate outdoor lighting-mechanism
+gap to fix beyond what's already correctly configured.
+
+The two specific creatures JUDGE-3 photographed are both described as
+partly submerged in the terrain (one "lying completely flat with zero
+volume," one "sunk into the slope from the hindquarters back") — if a
+creature's mesh root sits below the ground plane, whatever sliver of
+geometry pokes through casts a negligible shadow onto ground it's already
+inside of, correctly rather than as a bug. That reads as a direct
+consequence of the placement/embedding defect the report's own routing
+already sends to ground, not a second, independent light defect. Did not
+invent a fix for a mechanism I could not find broken; the guardian-den fix
+above is the one confirmed, real "no shadow-casting light source at all"
+gap this round found, and it is fixed.
+
+### Full file footprint, round 2
+
+- `scripts/world/campfire_glow.gd` — `omni_attenuation`, day/night energy
+  scale (superseded as the fix for the judged frame, kept because it's
+  correct for the authored rest-point fires).
+- `scripts/build/camp.gd` — the actual fix: same pair of changes on its
+  own separate `OmniLight3D`.
+- `tools/_capture_t1_camp.gd` — registers the new day-stub so its own
+  rig can demonstrate the daylight fix.
+- `tools/_capture_day_stub.gd` — new, two-line `is_dark()` stand-in for
+  isolated capture rigs with no `WorldLook`.
+- `scripts/world/burrow_warrens.gd` — `_build_lights()` reads an opt-in
+  `shadow` key per light.
+- `data/config/burrow_warrens.json` — guardian key light gets
+  `"shadow": true`; backlight and den-fill energies raised (see the new
+  `_comment_guardian_shadow_and_wall_0830_t1_light`).
+- `tools/_probe_guardian_den_light.gd` — new, single-stand fast
+  iteration rig for this den, same viewpoint/torch as
+  `capture_warrens_63.gd`'s `06-den-and-guardian`.
+- `ralph/reports/T1-LIGHT/shots/campfire/`,
+  `ralph/reports/T1-LIGHT/shots/guardian_den/` — before/after evidence.
+- Not touched: `scripts/creatures/*`, `scripts/world/encounter_director.gd`
+  (checked, found no gap), any ground/terrain/scatter file (Creek Hollow
+  embedding is ground-lane's), `species.json`, objectives/trainers.
+- Tests: `tests/test_character_metallic.gd` (4/27), `test_build_catalogue.gd`
+  (8/128), `tests/smoke_warrens.gd` all green.
+
+### What I would do next, round 2
+
+1. If a future judge still finds the Creek Hollow creatures shadowless
+   AFTER the ground lane's own spawn-Y/terrain-snap fix lands, re-check
+   contact shadows then — this round's read is that the embedding was
+   the whole explanation, but that's unverified until the embedding fix
+   exists to test against.
+2. `tools/_capture_day_stub.gd` is a small, generic pattern (a
+   `WorldLook`-shaped stub for isolated capture rigs) — worth reaching
+   for again the next time an isolated rig needs to demonstrate a
+   day/night-gated fix rather than silently falling back to "no day
+   cycle exists."
+3. Watch for other places that build their own standalone `OmniLight3D`
+   for a fire/torch/lantern rather than going through `campfire_glow.gd`
+   or `torch.gd` — `camp.gd`'s own light was exactly this pattern, found
+   only by chasing a pixel diff that showed zero movement rather than by
+   reading the call graph first.
