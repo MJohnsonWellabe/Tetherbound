@@ -542,3 +542,38 @@ One run cannot tell which, and it changes the number above materially. **A
 lane wanting to settle the economy should start here**, because until it is
 settled the measured shortfall and the authored shortfall are not the same
 claim.
+
+---
+
+## MEASURED-F6 — there is no village frame-cost regression. Settling COST-T5-5 with the second and third samples it asked for
+
+**Not a defect.** Recorded because `ralph/reports/handover-GATE-F-RUN7-2026-08-30.md`
+§9.6 names it as the thing that will stop the next run, and asks for exactly
+this measurement: *"Settle COST-T5-5 with a second measurement. It currently
+rests on one lane's one sample."*
+
+`route.csv` carries play time and wall time on every row, so the sustained rate
+can be read directly. Three segments on this box, this candidate:
+
+| segment | play | wall | the one stand-up in it | wall−stand-up ÷ play |
+|---|---:|---:|---:|---:|
+| S01 | 180.3 s | 262.0 s | 80.4 s | **1.007** |
+| S02 | 296.5 s | 346.0 s | 48.4 s | **1.004** |
+| S03 (attempt 1) | 1114.3 s | 1174.0 s | 44.2 s | **1.014** |
+
+**The game runs at real time, headless, in the village, for the whole of every
+segment.** All the excess wall clock in a segment is one cold world stand-up of
+44–80 s, paid once, before the first step.
+
+`ralph/T5-PLAY`'s COST-T5-5 reached the same conclusion from one lane's samples
+and was left explicitly unreplicated by run 7, which had no number of its own.
+These are the samples it wanted, taken independently on a different box and a
+later candidate, and they agree: **the `measured_frame_cost_s_in_scene` figures
+that read 0.20 s/frame are single 120-frame windows containing a one-off, not a
+measurement of the world.** The village is not expensive. The cost gate's CD-7d
+median fix is doing its job — it refused nothing in this run.
+
+**What this does NOT settle:** anything about the game's cost on real hardware
+with a real renderer. This is a headless logic lane and every number here is
+about simulation, not about frames on a screen. Device frame rate, GPU time,
+VRAM and thermals remain [OWNER-ONLY].
