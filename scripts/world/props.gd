@@ -28,8 +28,14 @@ const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 ## site, without sourcing or generating a second banner mesh.
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
+## T5-CADENCE. A cluster MAY carry a `rest` block, which turns an authored camp
+## from a mesh arrangement into a place the player can actually sleep and
+## craft. See `rest_point.gd`'s own header for what that offers and for the
+## audit finding it closes; this file's only job is to notice the key.
+const REST_POINT := preload("res://scripts/world/rest_point.gd")
 
 var _placed := 0
+var _rest_points := 0
 var _prefabs: RefCounted = null
 
 
@@ -49,7 +55,26 @@ func build() -> void:
 		for entry: Variant in (cluster as Dictionary).get("props", []):
 			if entry is Dictionary:
 				place(group, entry as Dictionary)
-	print("[props] placed %d props in %d clusters" % [_placed, parsed.get("clusters", []).size()])
+		# After the props, not before: the rest point samples ground the same
+		# way they do, and building it last keeps the camp's own meshes ahead
+		# of it in the tree so a probe or a remote tree reads the site in the
+		# order it was authored.
+		var rest: Variant = (cluster as Dictionary).get("rest", {})
+		if rest is Dictionary and not (rest as Dictionary).is_empty():
+			var point: Node3D = REST_POINT.new()
+			point.name = "%s_Rest" % cluster_name
+			group.add_child(point)
+			point.call("build", rest as Dictionary)
+			_rest_points += 1
+	print("[props] placed %d props in %d clusters (%d usable rest points)"
+		% [_placed, parsed.get("clusters", []).size(), _rest_points])
+
+
+## How many authored camps stood up a working rest offer this run. Read by
+## `tests/smoke_authored_camps.gd`, which is the difference between "the data
+## says these camps are rest points" and "the world built them".
+func rest_points() -> int:
+	return _rest_points
 
 
 func placed() -> int:

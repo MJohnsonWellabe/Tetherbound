@@ -228,6 +228,26 @@
         6800.0
       ],
       "radius": 30.0
+    },
+    {
+      "id": "the_stonewater_reach",
+      "display_name": "The Stonewater Reach",
+      "_comment": "T5-CADENCE, and D36's rule the same way The Long Water and The Tether Relay apply it: few and LARGE, one name for a whole stretch of country rather than one per feature. This is band 3's opening -- the ground where Stone & Root's uplands drain north and the water first gathers, from the band seam at (0,3180) to the bend onto the relay road. T4-REGIONS scored this stretch's route hierarchy PARTIAL with the reason in plain numbers: 'the band's first 668m and last 519m have no landmark at all', and criterion 12 FAIL at 668m of structurally empty spine. Three authored sites now stand in it -- the haulage wreck, the Lockwater Overlook and the Springhead (band3 props.json orders 3005-3007) -- and this is the name of the country they are in. The name is earned by the Springhead rather than invented over it: stone country whose water starts here.\n\nSEPARATION, checked and not assumed, because that is the mistake this file's own `_comment_regions` records: 492m to The Tether Relay, 780m to The Long Water, 996m to The Burrow Warrens. No two labels can crowd. 70m carries all three sites; discovery is by ENTERING (map_state.gd::update_region), which for this region means crossing out of Stone & Root, which is the moment the audit says nothing currently acknowledges. TUNABLE.",
+      "centre": [
+        -120.0,
+        3420.0
+      ],
+      "radius": 70.0
+    },
+    {
+      "id": "the_highfield",
+      "display_name": "The Highfield",
+      "_comment": "T5-CADENCE. The eastern sweep of band 4, the 1161m T4-REGIONS measured as the longest structurally empty stretch in the game and named as the place a player who quits the Meadows will quit it. Three of this lane's four new band-4 sites sit inside it (the stock camp, the herd bull and the severed conduit post), and the audit's route-hierarchy finding is what this row answers: band 4's three existing regions 'cluster at the band's two ends ... The 1161m between has no landmark.'\n\nTHE NAME is the chapter's own, not new world-building: data/items/items.json's `field_sigil` calls the Field Captain's posting 'the high pasture posting', `pasture_drover_juno` works this road, and the herd this region is authored around is the band's 30 meadowhart. The high summer pasture, named.\n\nSEPARATION, checked: 902m to The Ridgeline Watch, 968m to The Broken Tower, 1160m to The Ironwood Grove -- the most comfortable clearance of any region on this map, because the whole finding is that nothing is here. 65m carries the stock camp's own site and the herd ground; discovery is by ENTERING. TUNABLE.",
+      "centre": [
+        400.0,
+        5900.0
+      ],
+      "radius": 65.0
     }
   ],
   "_comment_the_tether_relay": "SE23, and D36's rule applied the same way the quarry applies it: few and LARGE. ONE region for the whole station -- the approach road, the compound, the pad and the three conduit runs converging on it -- not one per feature. Its centre sits between the compound centre ([108,34]) and the apparatus pad ([104.5,23.1]) so the map label lands over the site rather than off one edge of it, and 48m carries the outermost pylon on every run. Separation: 111m to Grandpa's Village and 145m to The Old Quarry, both clear of any overlap. The Rise is the exception and the first authored overlap on this map -- 75m between centres against 55+48m of radius, so their rims cross in a 28m band. That is deliberate rather than sloppy: shrinking this region enough to avoid it entirely (20m) would stop it covering its own compound. map_state.gd::_region_at already defines the answer -- the nearest centre among every region you are inside wins -- so the band resolves on the midline and neither label moves. The two LABELS are 75m apart, which is the thing the first regions cut got wrong (three names 15-35m apart, printed on top of each other). Discovery is by ENTERING it (map_state.gd::update_region), which for this region means having gone past the quarry on the stronghold bearing. TUNABLE.",

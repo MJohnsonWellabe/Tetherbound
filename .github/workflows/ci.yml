@@ -892,6 +892,15 @@ jobs:
             retries: 1
           - smoke: gate_a_rest_torch
             retries: 1
+          # T5-CADENCE. The authored camps -- trail_camp, ranger_camp,
+          # riverwatch_rest, the Highfield stock camp and the waystop -- are
+          # only rest points because `props.gd` reads a `rest` block and
+          # `rest_point.gd` stands one up. A unit test cannot see the defect
+          # this closes: every prop at those camps was already correct and
+          # there was still no way to use one. So this boots the world, walks
+          # the player to each camp and presses the button.
+          - smoke: authored_camps
+            retries: 1
           - smoke: post_modal_control
             retries: 1
           - smoke: tournament_bracket

@@ -232,6 +232,78 @@
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 1.1,
       "_why_t3_density": "T3-DENSITY, Gap A. The band's third on-route resource gap, 402m (order 3009's stone to order 3015's fiber, spine points 9-11), on the run north out of the region toward Band 4. On the spine itself (`tools/_probe_gate_f_corridor.gd` geometry places this within a few metres of the centreline, not a detour), ground-checked (worst slope 7.1 degrees at (5,4430) -- an earlier 15m-off candidate at (-11,4445) measured 16.4 degrees and was moved onto this flatter spot instead, `tools/_probe_density_sites.gd`), splitting the gap into ~201m/~201m."
+    },
+    {
+      "order": 3023,
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [-64.0, 3247.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "_why": "T5-CADENCE, fixing T4-REGIONS' fifth-ranked chapter gap head-on: 'The resource ladder goes backwards. Band 2 introduces rootstone + ironwood; band 3 drops to wood/fiber/stone/berries.' MEADOWS_PROGRESSION_SPEC §10 and items.json's own `rootstone` comment agree there are exactly two tier materials in the whole biome, Rootstone then Ironwood, and a band that ships neither is a band whose economy is band 1's. Three deposits here and four Ironwood on the north bank (orders 3027-3030) put band 3 back on the ladder without turning it into a second Old Quarry: band 2 keeps five deposits and band 4 keeps ten trees, so the ladder still rises.\n\nSITED IN THE HAULAGE SPILL (props.json order 3005), not in open meadow, and that is the whole reason this is honest content rather than a number correction. items.json says Rootstone 'comes only from deep seams -- warrens, old quarry faces', and there is no seam in the river country; what there IS, is Team Tether's haul road out of Stone & Root. This is their load, off the sled and on the ground. Pickaxe-gated like all stone through `gathered_with` on the ITEM, never on the node."
+    },
+    {
+      "order": 3024,
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [-75.5, 3255.5],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "_why": "Second of the spilled deposits, on the far side of the wreck so the three are not a line -- 3.5m clear of the nearest prop collider, the same separation band 2's quarry deposits keep from theirs."
+    },
+    {
+      "order": 3025,
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [-66.2, 3257.6],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "_why": "Third, downhill of the sled where a rolling block would actually have come to rest. 3.9m from the nearest prop, so no two interact prompts contest."
+    },
+    {
+      "order": 3026,
+      "item": "orb_greater",
+      "amount": 1,
+      "label": "A stashed orb",
+      "at": [-133.5, 3454.5],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "_why": "T5-CADENCE. What the Lockwater Overlook (props.json order 3006) PAYS. Exit criterion G9: 'Every detour pays into preparation ... No empty rewards' -- an overlook that is only a view is exactly the empty reward that clause exists to forbid. A Greater Orb rather than another potion because T4-REGIONS scored this band's roster temptation PARTIAL ('a player who crosses this band in clear weather by day sees ZERO new species'), and the one thing that changes what a player can do about a creature they suddenly want is a better orb. Set behind the shelf's largest stone, 3.9m clear of it, so it is found by walking onto the overlook rather than seen from the trail."
+    },
+    {
+      "order": 3027,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [72.5, 4494.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "_why": "T5-CADENCE, the Ironwood half of the same fix -- see order 3023's note. Sited in the north-bank cutting (props.json order 3008), on the climb OUT of the river country toward the band the Ironwood Grove is named for, which is where items.json's 'old-growth stands' actually are. Four trees at 3 each: a taste and a foreshadow of band 4's ten, and enough to matter to a player who arrives at the crossing having spent their band-2 stock on the relay. Same TwistedTree models and same amount band 2's own ironwood uses; axe-gated through the item."
+    },
+    {
+      "order": 3028,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [84.5, 4494.5],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "_why": "Second of the north-bank stand, east of the cutting."
+    },
+    {
+      "order": 3029,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [71.0, 4506.5],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_3.gltf",
+      "_why": "Third, uphill and behind the cutting -- the stand continues past the felled round, which is what makes the site read as work interrupted rather than work finished."
+    },
+    {
+      "order": 3030,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [86.0, 4505.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "_why": "Fourth and last. All four sit 6-10m out from the cutting's own props so no tree collider touches a crate's."
     }
   ]
 }
