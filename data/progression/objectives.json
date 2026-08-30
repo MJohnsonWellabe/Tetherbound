@@ -96,41 +96,47 @@
       "flag_id": "south_bridge_open",
       "label": "Reach South Bridge -- Team Tether holds the crossing.",
       "how": "A Team Tether grunt has the key now, not Oskar. Take the road south out of the village and beat him at the crossing.",
-      "_comment": "Real flag, already wired: the South Bridge gatekeeper (`south_bridge_grunt`, data/config/bands/band1_lower_meadows/trainers.json) hands over `south_bridge_key` on defeat, which `gated_crossing.gd`/`south_bridge.gd` reads to set `south_bridge_open` the moment the gate opens. This is the opening ladder's actual handoff into the wider Meadows -- Gate C/D1 own everything past it, so this file's chain stops here, and so does the guided `how` line: OP23-04's directive is the opening \"until tournament entry\", and a chapter-wide hint pass is not this lane's to invent.\n\nT3-BRIDGE, 2026-08-29: this line was still naming Oskar as the gatekeeper. The 2026-08-22 owner directive (TOURNAMENT-1) moved that role to a Team Tether grunt so Oskar could be the tournament final, and Oskar's own `village_oskar_challenge` line already says so in character ('Tether took the key off my belt in the spring and put one of their own on the near landing') -- but this objective's `how` line never followed, so the guided quest log was telling the player to fight the wrong person for a week of shipped content. Fixed to match both the actual reward owner and owner-direction §4's ask that the player understand up front that Team Tether, not a villager, is the obstacle at the bridge."
+      "_comment": "Real flag, already wired: the South Bridge gatekeeper (`south_bridge_grunt`, data/config/bands/band1_lower_meadows/trainers.json) hands over `south_bridge_key` on defeat, which `gated_crossing.gd`/`south_bridge.gd` reads to set `south_bridge_open` the moment the gate opens. This is the opening ladder's actual handoff into the wider Meadows -- Gate C/D1 own everything past it.\n\nT5-STORY-2, 2026-08-30: this used to end 'and so does the guided `how` line: OP23-04's directive is the opening \"until tournament entry\", and a chapter-wide hint pass is not this lane's to invent.' The eleven rungs below then carried no `how` at all, which measured as sixteen of the chapter's thirty-two rungs offering a bare verb and no direction (tools/_probe_story_drive.gd). OP23-04 asked for the opening because the opening was what the owner had played; the reason the rule exists -- 'tell the player the NEXT thing to do' -- does not stop at the bridge, and the mechanism it built costs one string per rung. They are written now.\n\nT3-BRIDGE, 2026-08-29: this line was still naming Oskar as the gatekeeper. The 2026-08-22 owner directive (TOURNAMENT-1) moved that role to a Team Tether grunt so Oskar could be the tournament final, and Oskar's own `village_oskar_challenge` line already says so in character ('Tether took the key off my belt in the spring and put one of their own on the near landing') -- but this objective's `how` line never followed, so the guided quest log was telling the player to fight the wrong person for a week of shipped content. Fixed to match both the actual reward owner and owner-direction §4's ask that the player understand up front that Team Tether, not a villager, is the obstacle at the bridge."
     },
     {
       "id": "clear_the_burrow_warrens",
       "flag_id": "warrens_cleared",
       "label": "Clear the Burrow Warrens beneath the Old Quarry.",
+      "how": "Past South Bridge the Old Quarry is Team Tether's dig -- the warren beneath it is not. Take a team with more than one kind of answer; what is down the deep branch knows a heavier trick than the diggers do.",
       "_why": "The quarry has no flag of its own -- it is a harvest site, not a gate -- so it is named in the label of the beat it leads to rather than given a boolean it does not need."
     },
     {
       "id": "defeat_the_relay_captain",
       "flag_id": "relay_captain_defeated",
-      "label": "Defeat the Relay Captain."
+      "label": "Defeat the Relay Captain.",
+      "how": "Follow the conduits out of the quarry to the relay station on the river. Fight in past the pickets: the one standing at the console is the one who matters."
     },
     {
       "id": "rescue_the_captive",
       "flag_id": "captive_rescued",
       "label": "Find who Team Tether is holding at the relay.",
+      "how": "They are holding someone in the relay yard, and she would not say a word while the Captain was on his feet. {interact} with her now that he is not.",
       "_why": "Ordered after the captain because that is the real gating: data/config/relay_site.json puts the captive's rescue conversation behind `if_flag: relay_captain_defeated`. Out-of-order completion is safe regardless -- an entry whose flag is already set is simply done, and the tracked line moves to the first one that is not."
     },
     {
       "id": "disable_the_relay",
       "flag_id": "relay_disabled",
       "label": "Shut down the Tether Relay.",
+      "how": "The console in the relay yard runs the station. {interact} to shut it down and this stretch of the Meadows stops feeding whatever is at the far end of it.",
       "_why": "scripts/world/tether_relay.gd's console flag. Ordered after the captain to match data/config/tether_relay.json's own authored intent for the console's `requires_flag` seam."
     },
     {
       "id": "restore_the_mill_crossing",
       "flag_id": "mill_crossing_restored",
       "label": "Restore the Old Mill Crossing.",
-      "_why": "scripts/world/mill_crossing.gd's MILL_FLAG, opened by the gear the Relay Captain pays."
+      "how": "Sela's drive gear is the part they took out of the Old Mill Crossing. {interact} at the broken span to refit it -- a working bridge is the short way home and the way on into the Upper Meadows.",
+      "_why": "scripts/world/mill_crossing.gd's MILL_FLAG. This used to say the gear was 'the gear the Relay Captain pays'; it is not, and the `how` line above had to be true, so it was checked. `mill_bridge_gear` is granted by data/dialogue/relay.json's `relay_captive_freed` -- Sela hands it over on the same line she explains what it is, with `flag:captive_rescued` beside it. Beating the captain is what makes her talk (relay_site.json gates her rescue branch on `relay_captain_defeated`), which is presumably how the two got conflated."
     },
     {
       "id": "defeat_the_captains",
       "flag_id": "hall_approach_open",
       "label": "Defeat the Upper Meadows captains.",
+      "how": "Three captains hold the Upper Meadows: the field, the ridge, and the riverwatch above the river. Each of them carries a sigil, and the gate on the Hall road wants all three.",
       "count_flags": [
         "defeated_captain_field",
         "defeated_captain_ridge",
@@ -141,6 +147,7 @@
       "id": "fight_through_the_hall",
       "flag_id": "defeated_stronghold_elite",
       "label": "Fight through the guard inside Meadows Hall.",
+      "how": "Three ranks stand between the gate and the arena -- the patrol on the outer works, the guard in the courtyard, then the elite. They come one after another, so heal and restock before you go through the gate.",
       "count_flags": [
         "defeated_stronghold_patrol",
         "defeated_stronghold_courtyard",
@@ -151,24 +158,28 @@
     {
       "id": "defeat_the_warden",
       "flag_id": "defeated_warden",
-      "label": "Defeat the Meadows Warden."
+      "label": "Defeat the Meadows Warden.",
+      "how": "Read the maintenance board on the arena threshold before you speak to him. He would rather you had."
     },
     {
       "id": "shut_down_the_machine",
       "flag_id": "legendary_freed",
       "label": "Shut down what Team Tether built under the Hall.",
+      "how": "The chamber behind the arena is one room and one object, and the object is still running. Aldis told you what pulling it costs; he was not lying and it changes nothing.",
       "_why": "Deliberately does not name what the machine holds -- see _comment_no_spoilers. `legendary_freed` is the flag the climax already sets; only the wording here is new."
     },
     {
       "id": "settle_the_roster",
       "flag_id": "legendary_settled",
       "label": "Settle who walks with you.",
+      "how": "Five is the whole team and always was. If the belt is full, one of them has to be let go -- the roster screen shows what each of them has done beside you before you choose.",
       "_why": "GATE-E, prompt 68's finale line 'resolve join/release if roster is full'. The chapter's last decision is a decision and the HUD should say so while it is open. Waits on `legendary_settled` (scripts/world/stronghold_climax.gd::_settle) rather than `legendary_joined`, because BOTH answers finish this beat: five creatures the player will not give up is a legitimate ending under CLAUDE.md's hard cap, and keying this on the join would leave that player permanently tracking an objective they have already answered. Worded without naming what is offered -- see _comment_no_spoilers."
     },
     {
       "id": "see_what_changed",
       "flag_id": "meadows_acknowledged",
       "label": "Go back through the Meadows and see what changed.",
+      "how": "Walk back the way you came in. Everyone you passed on the road has something to say about it now.",
       "_why": "GATE-E, prompt 68's last finale line ('surface the post-Warden world-state acknowledgment / next-world hint without entering Biome 2') and prompt 69's 'post-win acknowledgment'. SG46 already wrote the words (data/dialogue/meadows_freed.json) and SG44/SG46 already change the world; what was missing was the one line that sends the player back out to meet them, so the ending is a walk home through a healed region rather than a fade after the last flag. Completed by ANY of those post-victory conversations -- each carries `flag:meadows_acknowledged` -- so the villagers, the foreman and the traveller at the storm road all satisfy it and none of them is a required stop. This is the chapter's last main entry on purpose: the tracked line goes empty after it, which quest_log.gd's own header documents as the finished state, and D23 forbids the next one from existing here."
     }
   ],

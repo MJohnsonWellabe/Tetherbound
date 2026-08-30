@@ -213,9 +213,13 @@ func _label(entry: Dictionary, progression: RefCounted) -> String:
 ## An entry's `how` line with its `{action}` placeholders replaced by the real
 ## bound button for the live device -- "{interact} at the gate" -> "X at the
 ## gate" on a pad, "E at the gate" on a keyboard. "" when the entry authors no
-## hint, which every beat past the opening ladder currently does: OP23-04's
-## directive is the opening "until tournament entry", and a caller must treat
-## an empty hint as "draw nothing", never as a blank line.
+## hint, and a caller must treat that as "draw nothing", never as a blank line.
+##
+## That used to read "which every beat past the opening ladder currently does".
+## It no longer does: T5-STORY-2 wrote the eleven missing ones, so every Main
+## Story rung in the chapter now carries a hint. The empty case is still real --
+## an entry may author none, and `local` entries do not -- so the contract is
+## unchanged and this is the only sentence about it that had to move.
 ##
 ## An unknown action id is left as the id itself rather than silently deleted,
 ## the same way `input_glyph.gd::icon()` shows "[typo]" instead of a gap: a
