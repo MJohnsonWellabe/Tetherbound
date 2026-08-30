@@ -158,7 +158,30 @@ def regrade(a: np.ndarray) -> np.ndarray:
     # reaches, in proportion to how much they were rotated.
     s_out = np.where(s > SAT_CEILING, s + (SAT_CEILING - s) * weight, s)
 
-    return np.clip(hsv_to_rgb(h_out, s_out, v), 0.0, 1.0)
+    # SECOND PASS: the cyan/blue hair. `grunt_c` (Pell, the Warrens watch) came
+    # out of the generator with bright cyan hair, which is wrong twice over.
+    # It is not a hair colour anyone else in the Meadows has, and
+    # `data/config/palette.json` RESERVES teal -- "it appears only where Team
+    # Tether's machinery is live -- pylon crystals, conduits, rift energy" -- so
+    # a teal-headed grunt spends a colour that is supposed to mean one specific
+    # thing at distance. Only `grunt_c` carries any (1.9% of its saturated
+    # pixels; every other subject measures 0.0%), so this pass is effectively
+    # about one head, and it is scoped to the Tether subjects, which is why it
+    # cannot touch the trainer's own legitimately teal jacket (6.5%).
+    #
+    # Hair is not rotated onto the uniform hue -- a grunt whose hair is the
+    # exact colour of their coat reads as a paint error. It goes to a desaturated
+    # dark brown, the plainest thing that is unmistakably hair.
+    h2, s2, v2 = rgb_to_hsv(np.clip(hsv_to_rgb(h_out, s_out, v), 0.0, 1.0))
+    cyan = np.clip(np.minimum(h2 - 158.0, 214.0 - h2) / 12.0, 0.0, 1.0)
+    cyan = cyan * cyan * (3.0 - 2.0 * cyan)
+    cyan = cyan * np.clip((s2 - SAT_FLOOR) / (0.30 - SAT_FLOOR), 0.0, 1.0)
+    h2 = h2 + (np.mod(26.0 - h2 + 180.0, 360.0) - 180.0) * cyan
+    s2 = s2 + (0.34 - s2) * cyan
+    # Cyan hair is also painted LIGHT; dark hair is what the rest of the cast has.
+    v2 = v2 * (1.0 - 0.42 * cyan)
+
+    return np.clip(hsv_to_rgb(h2, s2, v2), 0.0, 1.0)
 
 
 def main() -> int:

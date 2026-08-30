@@ -245,6 +245,10 @@
       "rank": "officer",
       "base": "officer_b",
       "_comment_base_t1_cast": "T1-CAST, 2026-08-30, owner directive: use the bodies that were generated. `officer_b` is the body JUDGE-5 (D2) condemned in the Warden's courtyard, and T1-HALL-3 answered that correctly for THAT frame -- the chapter's climax room is the last place to run an unresolved art-style risk -- but the answer left the asset standing nowhere, and the game's only two officer fights (Dell here in band 3, Ness here) were both wearing officer_a. This lane fixed the defect where it lived instead: `tools/regrade_tether_textures.py` measured the purple/magenta share of each generated Tether atlas against the hand-built rigs (production rigs 0.0-0.1%, generated cast 19.6-34.8%, officer_b worst at 34.8%) and rotated that band onto the hue the shipped `grunt` rig already sits at, bringing all seven to 0.0-0.4%. With the body in the faction's own colour, it can carry an officer fight. Placed at the Sigil-gate checkpoint rather than back in the courtyard: the courtyard keeps the shared oxblood grunt silhouette JUDGE-5 preferred, this spends the body one room earlier, and the two officers stop being the same person twice.",
+      "position": [
+        45.0,
+        7440.0
+      ],
       "facing_deg": 165.0,
       "_why_here": "Between spine waypoints (80,7370) and (20,7480), 44.1m past the three-Sigil gate along the player's own line of travel -- the first thing they see once the gate opens is this fight, not open meadow. BAND5-CONTENT correction: this read '25m past the Sigil gate on the bearing the gate's own leaf turns to face', which described a gate the road did not actually pass. This lane's driven run measured the gate at (0,7400) sitting 55.9m off the spine (and 60.2m from Ness), and moved it onto the road at (63.6,7400); the 44.1m above is measured from that site by `tools/_probe_band5_sigil_gate.gd`. His 4.0m prompt and the gate's 4.2m are nowhere near contesting. 55m clear of the duskhush cluster at the gate (order 5002, centre (85,7375) r18) and well outside the trailpup cluster ahead (order 5003, centre (20,7485) r16), so neither wild aggro nor either cluster's own radius contests his 4.0m challenge prompt.",
       "challenge": "stronghold_checkpoint_challenge",
@@ -280,8 +284,7 @@
       },
       "defeat_flag": "defeated_stronghold_checkpoint",
       "rechallenge": false,
-      "base": "officer_a",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_superseded": "T1-CAST, 2026-08-30. T3-INSTALL's `base: officer_a` was here, DUPLICATING the `base` key this entry now carries near the top -- a JSON object with the same key twice keeps the last one, so the override up there was silently dead until this was removed. Removed rather than moved: the reasoning it carried (give an individual a distinct generated body instead of the rank's shared silhouette, rank stays legible through the badge/palette layer) is unchanged and now lives on the surviving `base` key, which names `officer_b` so that the game's only two officer fights stop being the same body twice."
     }
   ]
 }
