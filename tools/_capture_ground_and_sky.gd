@@ -109,6 +109,16 @@ extends SceneTree
 ## well under a minute for a heavier 143,630-prop world stand-up).
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+## T1-WORLD. Every shutter in this file now goes through `capture_check`, which
+## did not exist when this tool was written. Its own header carries the full
+## argument; the short version is that this tool builds its own Camera3D and
+## calls `make_current()`, which is exactly the shape of the bug that had 123 of
+## this repo's 128 capture tools photographing a grass-free world. The source
+## fix (`grass_field.gd::_follow_camera`) means this tool's frames were probably
+## always fine -- but "probably fine" is what the whole JUDGE-3 section 0
+## episode was made of, and a whole-board pass that a judge is going to reason
+## about needs the frames to SAY they are the game rather than be assumed to be.
+const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/ground"
 
@@ -129,6 +139,28 @@ const GROUND_BACK := 2.2   # camera metres behind the player
 const GROUND_UP := 2.0     # camera metres above the ground
 const GROUND_AHEAD := 4.5  # how far ahead of the player the ground target sits
 const GROUND_TARGET_H := 0.0
+
+## VISTA framing (T1-WORLD, `--vista`). The two framings this tool already had
+## are both deliberately answers to "what is the GROUND doing": the walking
+## shot aims at a point 4.5m ahead at height zero, and `--elevated` climbs to
+## look at ground variation over tens of metres. Neither is the shot a player
+## actually spends the game inside -- eyes forward, horizon in frame, the
+## region's own shape and skyline doing the work.
+##
+## That is precisely the shot a whole-board cohesion pass needs. EXIT_CRITERION
+## J1 asks whether the chapter is "one art direction, not a gallery of lane
+## outputs", and section J's own framing of the question is whether band 2 and
+## band 4 look like the same world under the same sun. Two ground-down crops
+## cannot answer that: the thing being compared -- sky, horizon treatment,
+## aerial perspective (D7), regional silhouette (E1) -- is the part of the
+## frame both existing framings throw away.
+##
+## Same seat, same 1.80m ruler, camera only. Target is far enough out that the
+## middle distance is real and the horizon is in frame, and at head height
+## rather than at zero so the shot is level rather than pitched into the dirt.
+const VISTA_UP := 1.72     # a standing player's eye, not a raised survey camera
+const VISTA_AHEAD := 60.0  # how far out the look target sits
+const VISTA_TARGET_H := 1.6
 
 ## Water framing shares one shape for all three bodies: PLAYER stands on the
 ## dry bank throughout (never moved, so the ruler and the water-hazard safety
@@ -161,20 +193,40 @@ const GRAZE_TANGENT := 22.0       # grazing shot looks ALONG the shore, not acro
 ## scratch -- swapped in here rather than picking a third point, and the
 ## label renamed to match corridor's own name for it so nothing calls a
 ## relay checkpoint a river again.
+##
+## T1-WORLD added the two ENDS of the chapter (`ground-00-village` and
+## `ground-06-stronghold`), because a five-band list is not the board: the
+## village is where every player's first minutes are spent and the stronghold
+## is where the chapter ends, and neither was ever in this survey. The two
+## coordinates are `tools/perf_site_survey.gd::VIEWS`' own `village_high`
+## (10, -10) and `stronghold_approach` (0, 7420) rather than new points, so a
+## lane cross-referencing the perf numbers and these frames is looking at the
+## same seven stands. Village aim: the settlement is a ~25m cluster around
+## (10, -10) (`data/config/village.json`), so the stand is backed off to the
+## south-east corner and looks back THROUGH it -- standing in the square
+## looking 4.5m ahead photographs the square's dirt and nothing else.
 const GROUND_VIEWPOINTS := [
+	["ground-00-village",         Vector2(34.0, -34.0),    Vector2(4.0, 4.0)],
 	["ground-01-band1-opening",   Vector2(8.0, 90.0),      Vector2(-40.0, 180.0)],
 	["ground-02-band2-stone-root", Vector2(310.0, 1660.0), Vector2(400.0, 1800.0)],
 	["ground-03-band3-crossing",  Vector2(-152.0, 4170.0), Vector2(-100.0, 4350.0)],
 	["ground-04-band4-ironwood",   Vector2(170.0, 5590.0), Vector2(450.0, 5860.0)],
 	["ground-05-band5-approach",   Vector2(0.0, 7000.0),   Vector2(0.0, 7560.0)],
+	["ground-06-stronghold",      Vector2(0.0, 7420.0),    Vector2(0.0, 7700.0)],
 ]
 
-## Index into GROUND_VIEWPOINTS that also carries the weather sweep -- band 2,
-## `density_scale` 0.05 in vegetation.json's corridor_bands, ordinary
-## mid-corridor ground rather than a set piece. Weather is shot at ONE
-## viewpoint on purpose (the task's own instruction): every other axis held
-## fixed so the four presets differ in exactly one variable.
-const WEATHER_VIEWPOINT_INDEX := 1
+## The viewpoint that also carries the weather sweep -- band 2, `density_scale`
+## 0.05 in vegetation.json's corridor_bands, ordinary mid-corridor ground rather
+## than a set piece. Weather is shot at ONE viewpoint on purpose (the task's own
+## instruction): every other axis held fixed so the four presets differ in
+## exactly one variable.
+##
+## Matched by NAME, not by index. It was `WEATHER_VIEWPOINT_INDEX := 1` until
+## T1-WORLD put the village in front of band 1 -- an index into a list that
+## other lanes extend is a silent mis-aim waiting to happen, and the failure
+## mode (three weather frames shot at the wrong stand) looks exactly like a
+## correct run.
+const WEATHER_VIEWPOINT := "ground-02-band2-stone-root"
 
 ## [suffix, time-of-day name, weather preset name]. "day"+"clear" is shot as
 ## part of GROUND_STATES for every band; WEATHER_STATES supplies the three
@@ -184,6 +236,29 @@ const GROUND_STATES := [
 	["golden", "golden", "clear"],
 	["night", "night", "clear"],
 ]
+## LANDMARKS (T1-WORLD, `--landmarks`). A third framing, and the only one here
+## that points the camera AT a thing rather than down a walking line: eye
+## height, backed off far enough that the whole object is in frame against sky.
+##
+## It exists for one open item that neither other framing can settle. The
+## Warrens exterior mound was logged as needing GEOMETRY rather than another
+## material pass, and a silhouette claim is exactly the claim you cannot check
+## from a ground-down crop or from a vista that happens to have the outcrop
+## somewhere off to one side: silhouette is the object's outline against the
+## sky, so the shot has to be squared up on it with sky behind.
+##
+## `[name, eye_xz, target_xz, target height above ground]`. The Warrens eye is
+## derived, not eyeballed: `data/config/burrow_warrens.json` sites the cave at
+## (-357, 2610) with `yaw_deg` 315, and `burrow_warrens.gd::_build_mound` treats
+## LOCAL -Z as the mouth direction (`at.z < mouth_z + skip_front` is its own
+## test for "in front of the doorway"). Rotating (0, 0, -1) by 315 degrees about
+## Y gives world (+0.707, -0.707), so the stand below is 40m out along the
+## approach a player actually walks in on -- the outcrop face-on, not its back.
+const LANDMARK_VIEWPOINTS := [
+	["landmark-01-warrens-exterior", Vector2(-328.7, 2581.7), Vector2(-357.0, 2610.0), 6.0],
+]
+const LANDMARK_UP := 1.72
+
 const WEATHER_STATES := [
 	["cloudy", "day", "cloudy"],
 	["fog", "day", "fog"],
@@ -197,6 +272,12 @@ var _camera: Camera3D = null
 var _player: Node3D = null
 var _look: Node = null
 var _weather: Node = null
+## The weather preset the tool last ASKED for, so `capture_check` can compare it
+## against the one actually rendering. Tracked here rather than passed down
+## through every shoot function: `_apply_state` is the single place this tool
+## ever changes weather, so a member set there cannot drift out of step with the
+## world the way a parameter threaded through four call sites can.
+var _want_weather := "clear"
 var _failures: Array[String] = []
 
 
@@ -282,6 +363,16 @@ func _run() -> void:
 	#
 	# The full run is still the default and is still what a judged round uses:
 	# a blind critique of a subset is a critique of a subset.
+	## COMMA-SEPARATED, like `--states=` beside it. It was a single substring
+	## until T1-WORLD, and the shape of the problem that changed it is worth
+	## recording: a full board pass is ~75 shots and, measured on this
+	## container, ~50s each -- the readback and PNG encode dominate, not the
+	## render -- so a run that is interrupted or that times out leaves a TAIL
+	## of stands unshot. Recovering three unrelated names (a band, a landmark,
+	## a water body) with a single-substring filter means three separate runs,
+	## and each one pays the world stand-up again, which here is ~11 minutes.
+	## Three boots to re-shoot eighteen frames is most of an hour spent on
+	## nothing. One list-valued flag makes it one boot.
 	var only := ""
 	var states := ""
 	# `--elevated=<metres>` raises the camera and pitches it down at ground a
@@ -295,6 +386,13 @@ func _run() -> void:
 	# work were judged from a camera that could not show the thing being
 	# changed.
 	var elevated := 0.0
+	## `--vista` adds the eye-level horizon framing beside each ground shot.
+	## Opt-in rather than always-on so the default run stays the byte-identical
+	## ground survey earlier rounds were judged against.
+	var vista := false
+	## `--landmarks` adds the LANDMARK_VIEWPOINTS set. Same opt-in reasoning as
+	## `--vista`: the default run stays what earlier rounds were judged against.
+	var landmarks := false
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--only="):
 			only = arg.substr("--only=".length())
@@ -302,42 +400,63 @@ func _run() -> void:
 			states = arg.substr("--states=".length())
 		elif arg.begins_with("--elevated="):
 			elevated = float(arg.substr("--elevated=".length()))
+		elif arg == "--vista":
+			vista = true
+		elif arg == "--landmarks":
+			landmarks = true
 	var wanted_states := PackedStringArray()
 	if states != "":
 		wanted_states = states.split(",", false)
+	var wanted_names := PackedStringArray()
+	if only != "":
+		for piece in only.split(",", false):
+			wanted_names.append(piece.strip_edges())
 	if only != "" or states != "":
 		print("[ground] PARTIAL capture -- only=%s states=%s" % [
 			"*" if only == "" else only, "*" if states == "" else states])
 
 	for band_index in GROUND_VIEWPOINTS.size():
 		var entry: Array = GROUND_VIEWPOINTS[band_index]
-		if only != "" and not (only in str(entry[0])):
+		if not _name_wanted(str(entry[0]), wanted_names):
 			continue
 		var pos := await _arrive_ground(entry)
 		for state: Variant in GROUND_STATES:
 			if _state_wanted(state as Array, wanted_states):
 				await _shoot_ground_state(pos, state as Array)
+				if vista:
+					await _shoot_vista(pos, state as Array)
 				if elevated > 0.0:
 					await _shoot_elevated(pos, state as Array, elevated)
-		if band_index == WEATHER_VIEWPOINT_INDEX:
+		if str(entry[0]) == WEATHER_VIEWPOINT:
 			for state: Variant in WEATHER_STATES:
 				if _state_wanted(state as Array, wanted_states):
 					await _shoot_ground_state(pos, state as Array)
 
+	if landmarks:
+		for entry: Variant in LANDMARK_VIEWPOINTS:
+			if not _name_wanted(str((entry as Array)[0]), wanted_names):
+				continue
+			await _capture_landmark(entry as Array, wanted_states)
+
 	# The water section is a viewpoint set like any other, so `--only` filters
-	# it the same way rather than always paying for three more bodies.
-	if only == "" or "water" in only or "pond" in only or "river" in only or "stream" in only:
+	# it the same way rather than always paying for three more bodies. The
+	# three bodies' own frame names all begin `water-`, so the generic
+	# name filter covers them; the extra `pond`/`river`/`stream` aliases stay
+	# because they are what a caller naturally types for one body.
+	if _name_wanted("water", wanted_names) or _name_wanted("water-01-pond", wanted_names) \
+			or _name_wanted("water-02-river", wanted_names) \
+			or _name_wanted("water-03-stream", wanted_names):
 		# Reset to day/clear before the water section -- the last ground state
 		# shot may have left the world at night, in rain, or both.
 		_apply_state("day", "clear")
 		for i in STATE_SETTLE_FRAMES:
 			await physics_frame
 
-		if only == "" or "pond" in only or only == "water":
+		if _name_wanted("water-01-pond", wanted_names) or _name_wanted("water", wanted_names):
 			await _capture_pond()
-		if only == "" or "river" in only or only == "water":
+		if _name_wanted("water-02-river", wanted_names) or _name_wanted("water", wanted_names):
 			await _capture_river()
-		if only == "" or "stream" in only or only == "water":
+		if _name_wanted("water-03-stream", wanted_names) or _name_wanted("water", wanted_names):
 			await _capture_stream()
 
 	print("")
@@ -358,6 +477,7 @@ func _run() -> void:
 ## whatever the previous shot left running -- both nodes stay frozen the
 ## whole time (see header), so this is the ONLY thing that ever changes them.
 func _apply_state(time_name: String, weather_name: String) -> void:
+	_want_weather = weather_name
 	if _look != null:
 		_look.call("apply_time", time_name)
 	if _weather != null:
@@ -443,6 +563,88 @@ func _shoot_elevated(pos: Dictionary, state: Array, height: float) -> void:
 		await process_frame
 	await RenderingServer.frame_post_draw
 	_capture("%s-%s-high" % [pos["name"], str(state[0])])
+
+
+## The same seat at standing eye height, looking level down the walking
+## direction. Camera only -- the player is not moved, so the ruler stays in
+## frame and this is the same stand as the ground shot beside it, differing in
+## exactly one variable (where the eye is pointed). See the VISTA_* constants
+## for why a cohesion pass needs this framing and cannot use the other two.
+##
+## No STATE_SETTLE here: the caller has already applied and settled the state
+## for the ground shot at this stand, and nothing between the two shots touches
+## the clock or the weather.
+func _shoot_vista(pos: Dictionary, state: Array) -> void:
+	_hide_huds()
+	var cam_xz: Vector2 = pos["cam_xz"]
+	var target_xz: Vector2 = pos["target_xz"]
+	var forward := (target_xz - cam_xz).normalized()
+	var far_xz: Vector2 = cam_xz + forward * VISTA_AHEAD
+	_camera.global_position = Vector3(cam_xz.x, _surface(cam_xz) + VISTA_UP, cam_xz.y)
+	_camera.look_at(Vector3(far_xz.x, _surface(far_xz) + VISTA_TARGET_H, far_xz.y), Vector3.UP)
+	for i in POSE_FRAMES:
+		await process_frame
+	await RenderingServer.frame_post_draw
+	_capture("%s-%s-vista" % [pos["name"], str(state[0])])
+
+
+## Arrive at a landmark stand once, then shoot it in every wanted state.
+##
+## The two-pass arrival is the same as `_arrive_ground`'s and for the same
+## reason (Terrain3D has nothing to stream to until something stands there),
+## but the target is NOT reseated on the real surface between passes: the whole
+## point of this framing is that the target is a BUILT object standing above the
+## ground, so the aim point is the site's ground plus an authored height, and
+## raycasting it would drop the crosshair onto whatever the mound's own
+## collision happens to present at that XZ.
+func _capture_landmark(entry: Array, wanted_states: PackedStringArray) -> void:
+	var name: String = str(entry[0])
+	var eye_xz: Vector2 = entry[1]
+	var target_xz: Vector2 = entry[2]
+	var target_h: float = float(entry[3])
+	var forward := (target_xz - eye_xz).normalized()
+	eye_xz = _clear_of_bodies(eye_xz, forward, _surface(eye_xz))
+
+	_place(eye_xz, _field.height_at(eye_xz.x, eye_xz.y))
+	_camera.global_position = Vector3(eye_xz.x,
+		_field.height_at(eye_xz.x, eye_xz.y) + LANDMARK_UP, eye_xz.y)
+	for i in ARRIVE_FRAMES:
+		await physics_frame
+
+	var eye_ground := _surface(eye_xz)
+	var target_ground: float = _field.height_at(target_xz.x, target_xz.y)
+	_place(eye_xz, eye_ground)
+	for i in REFRAME_FRAMES:
+		await physics_frame
+	print("[ground] arrived %-28s eye(%.0f, %.1f, %.0f)" % [name, eye_xz.x, eye_ground, eye_xz.y])
+
+	for state: Variant in GROUND_STATES:
+		if not _state_wanted(state as Array, wanted_states):
+			continue
+		_apply_state(str((state as Array)[1]), str((state as Array)[2]))
+		for i in STATE_SETTLE_FRAMES:
+			await physics_frame
+		_hide_huds()
+		_camera.global_position = Vector3(eye_xz.x, eye_ground + LANDMARK_UP, eye_xz.y)
+		_camera.look_at(Vector3(target_xz.x, target_ground + target_h, target_xz.y), Vector3.UP)
+		for i in POSE_FRAMES:
+			await process_frame
+		await RenderingServer.frame_post_draw
+		_capture("%s-%s" % [name, str((state as Array)[0])])
+
+
+## True when `name` should be shot given `--only=`. An empty filter wants
+## everything, which keeps a default run byte-identical to what it was before
+## the filter became list-valued. Each entry is still a SUBSTRING, not an exact
+## name, so every single-value `--only=` a caller has in a shell history keeps
+## meaning exactly what it did.
+func _name_wanted(name: String, wanted: PackedStringArray) -> bool:
+	if wanted.is_empty():
+		return true
+	for piece: String in wanted:
+		if piece != "" and piece in name:
+			return true
+	return false
 
 
 func _state_wanted(state: Array, wanted: PackedStringArray) -> bool:
@@ -652,7 +854,26 @@ func _shoot_water_grazing(pos: Dictionary, level: float) -> void:
 	# Never below the real ground under the camera, never far above the
 	# water plane either -- a grazing shot standing head-height above the
 	# surface is just the eye shot again.
-	var cam_h: float = maxf(level + 0.35, graze_ground + 0.15)
+	#
+	# T1-WORLD: the floor was `graze_ground + 0.15`, and the whole-board pass
+	# failed `water-02-river-grazing` on it -- camera y=-3.51 against ground
+	# -3.66, reported as a below-ground shot. Two separate reasons, both real:
+	#
+	# 1. 0.15 is EXACTLY `capture_check.gd::GROUND_CLEARANCE_M`, and that check
+	#    is `pos.y <= ground + CLEARANCE`. A camera seated at precisely the
+	#    threshold fails by construction, so every grazing shot whose water
+	#    level sits below the bank was going to fail this check forever.
+	# 2. The two are not even measuring the same surface. This tool seats on
+	#    `_surface()` -- a raycast against real collision -- and the check reads
+	#    Terrain3D's baked heightfield. This file's own header records those two
+	#    disagreeing by up to 22m near the river channel, which is exactly where
+	#    this shot stands.
+	#
+	# So the floor needs margin over the threshold, not equality with it. 0.45m
+	# is still unambiguously a grazing shot (knee height against the 1.85m eye
+	# shot this framing exists to differ from) and clears both the check and any
+	# plausible disagreement between the two height sources at a bank.
+	var cam_h: float = maxf(level + 0.35, graze_ground + 0.45)
 
 	# VISUAL-CORRIDOR fix: `tangent` used to pick ONE fixed 90-degree
 	# rotation of `away` with no way to know whether THAT side of the shore
@@ -803,7 +1024,24 @@ func _hide_huds() -> void:
 			(node as CanvasLayer).visible = false
 
 
+## T1-WORLD. One choke point, so no framing added later can skip the check.
+##
+## `warn_only`, not `require`: `require` aborts the whole SceneTree, and a
+## 30-minute seven-stand pass that throws away twenty good frames because the
+## twenty-first was degraded is a worse instrument than one that records which
+## frame was bad and keeps going. The problems are recorded per frame, printed
+## at the shutter AND summarised at the end, and a run with any degraded frame
+## exits non-zero via `_failures` -- so a bad frame is impossible to commit as
+## evidence by accident, which is the whole point, while a bad frame also does
+## not cost the other twenty-three.
+func _check(name: String) -> void:
+	var problems := CAPTURE_CHECK.warn_only(self, _camera, _want_weather)
+	for line: String in problems:
+		_failures.append("%s: %s" % [name, line])
+
+
 func _capture(name: String) -> void:
+	_check(name)
 	var image := root.get_texture().get_image()
 	if image == null:
 		_failures.append("%s: viewport returned no image" % name)

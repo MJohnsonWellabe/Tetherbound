@@ -95,11 +95,11 @@
       "seed": 5512207,
       "centre_bias": 0.6,
       "item_size": 0.85,
-      "size_jitter": 0.5,
+      "size_jitter": 0.52,
       "sink": 0.06,
-      "density_gain": 0.3,
-      "drift_scale": 0.05,
-      "drift_contrast": 0.88,
+      "density_gain": 0.34,
+      "drift_scale": 0.075,
+      "drift_contrast": 1.0,
       "tint_base": "#3a4c1c",
       "tint_tip": "#6b8438",
       "tint_jitter": 0.2,
@@ -121,7 +121,10 @@
         "grass",
         "soil",
         "forest_floor"
-      ]
+      ],
+      "_comment_clumping_t1_world": "T1-WORLD, 2026-08-30. A blind whole-board pass read the ground scatter as generator output and named the mechanism correctly without seeing the shader: 'the broadleaf rosette repeats across the entire right-hand meadow at a near-constant ~1m interval. There is no clustering, no bare patch, no density gradient, no drift.' The shader says why. cover_tier.gdshader keeps each LATTICE site with probability `drift * density_gain`, where drift = mix(1.0, value_noise(xz*drift_scale), drift_contrast). That is a Bernoulli thinning of a jittered 2m grid, and a thinned grid cannot cluster: it has a minimum spacing by construction and no mechanism that ever puts two plants touching with bare ground around them. Lowering density made it sparser and just as even; raising it made it denser and just as even. Two numbers had to move together instead. (1) drift_contrast to 1.0 so drift spans the full 0..1 -- at 0.88 the floor was 0.12, so EVERY square metre of the meadow kept a non-zero chance of a plant and genuinely bare ground was unreachable. (2) drift_scale up so the noise wavelength lands near the plant spacing rather than far above it: at 0.05 the drift wavelength is ~20m, far coarser than the 2m lattice, so within any one patch the distribution was still flat. Then density_gain up, so INSIDE a patch most sites are kept and the patch reads as a thicket. COST: none in draw calls, and the instance buffer does not grow. `count` is the number of lattice slots in the ring and is unchanged; the shader discards the sites it does not keep, so raising the keep fraction fills slots already allocated and already paid for. docs/PERFORMANCE_BUDGET.md sec3.3 is the general form of this: under Compatibility, draw calls track MultiMesh batches in frustum, not the instances inside them. size_jitter up in the same edit for the other half of the same finding -- 'every rosette is the same size in every frame at every location; there are no seedlings and no large specimens'. ALL TUNABLE.",
+      "_comment_clumping_round2": "T1-WORLD round 2, corrected. Round 1 moved drift_contrast/drift_scale (the distribution) AND density_gain/size_jitter (the AMOUNT) at once, and the render said so: the village vista came back reading as a cabbage field rather than a meadow -- bushes crowding out the grass they are supposed to sit in. Two changes, one of them wrong, and bundling them made it look like the clumping was the mistake. It was not. The arithmetic that was missed: mean keep probability is density_gain * mean(drift), and raising drift_contrast to 1.0 CHANGES mean(drift) -- it was 0.12+0.88*0.5 = 0.56 and becomes 0.5. So holding the plant count while re-clustering needs density_gain scaled by the ratio, not raised. Bushes: old 0.30*0.56 = 0.168, so 0.168/0.5 = 0.34 holds the count exactly. Litter: old 0.70*0.65 = 0.455, so 0.455/0.50 = 0.91. The point of the change was never MORE plants, it was the same plants distributed as patches with dense cores and genuinely bare ground between, instead of a Bernoulli thinning of a jittered grid that has a minimum spacing by construction. Density is the cheap lever if a later round wants it (PERFORMANCE_BUDGET sec3.3 -- the ring's slots are already allocated and cost no draw calls), but it should be spent deliberately and judged on its own, not smuggled in on the back of a distribution fix. size_jitter also pulled back: at 0.85 the spread is item_size*[0.15,1.85] and the large outliers read as a different, bigger plant rather than as a mature specimen of the same one.",
+      "_comment_clumping_round3": "T1-WORLD round 3, measured. A blind before/after re-judge gridded the frames and counted: the round-2 clumping helped at band 1 (coefficient of variation 1.18 -> 1.37, near-empty cells 3 -> 9, total density unchanged) and made the village and band 4 MORE even, not less (village CV 2.90 -> 2.53, band 4 0.96 -> 0.86). Two of three stands went backwards, so round 2 was not a fix. The cause was drift_scale, moved in the wrong direction. drift_scale is a FREQUENCY: 0.17 is a 5.9m patch wavelength over a 2.0m lattice, about three cells per patch, which is fine mottling and averages out to uniform at any scale a viewer or a measuring grid actually looks at. The original 0.05 (20m) was a legible patch size and was never the problem -- drift_contrast was, because its 0.12 floor meant no square metre of meadow could ever be empty. So the correct edit was contrast alone, and round 2 changed both. Back to a legible wavelength here (13m/17m/9m), keeping contrast at 1.0 and keeping density_gain scaled to preserve the original plant count. size_jitter also pulled most of the way back: the same re-judge found the round-2 spread putting flat leaf-card saplings in the band-4 mid-ground that read as 'green paper stuck on bare brown twigs' and crowded the sightline behind the player, and a stand on the village ridge occluding a roofline. The large end of the spread is not buying variety, it is buying oversized cards."
     },
     {
       "_why": "Flower drifts. The defect this answers was measured rather than judged: a blind pass counted flowers appearing EXACTLY TWICE in twelve frames, both the same violet bush asset, each 'a single isolated ball of saturated violet with a hard base', against moong-02 running a pink drift across ~40% of frame width and the keyart putting purple, gold and white wildflowers in every panel. The numbers here are shaped by that: a LOW drift_scale (0.03) means broad patches rather than a sprinkle, and a high drift_contrast means genuinely empty ground between them. Prompt 72 asked for the same thing in its own words -- 'the reference pink drifts are tight and irregular'. Colour is the one place this tier deliberately leaves the meadow palette: palette.json reserves flower_gold #d9b340 as an accent and the keyart carries lilac, so the bloom is lilac over an olive stalk. It is NOT oxblood and must never drift toward it -- that red is reserved for Team Tether and three blind passes have confirmed the reservation is still clean.",
@@ -132,11 +135,11 @@
       "seed": 8830145,
       "centre_bias": 0.6,
       "item_size": 0.62,
-      "size_jitter": 0.3,
+      "size_jitter": 0.38,
       "sink": 0.04,
-      "density_gain": 0.34,
-      "drift_scale": 0.04,
-      "drift_contrast": 0.93,
+      "density_gain": 0.37,
+      "drift_scale": 0.06,
+      "drift_contrast": 1.0,
       "tint_base": "#4a5a26",
       "tint_tip": "#c2a8d4",
       "tint_jitter": 0.16,
@@ -147,7 +150,8 @@
       "ground": [
         "grass",
         "soil"
-      ]
+      ],
+      "_comment_clumping_t1_world": "T1-WORLD: same retune and same reasoning as the bushes tier above -- see its `_comment_clumping_t1_world`. Thinned-lattice evenness is a property of the placement rule, not of this tier's own numbers, so all three tiers carried it."
     },
     {
       "_why": "Forest litter. Band 2 is called forest floor and a blind pass found it carrying meadow grass and sand under the trees -- 'no leaf litter, no needles, no moss, no fungi, no fallen branches' -- and separately that 'a player walking these four bands would not know the region had changed'. This is the band-differentiating dressing, and it is restricted to the forest_floor ground type so it appears where the terrain already says there are trees rather than being scattered everywhere and hoping. slope_lie 1.0 lays it ON the ground following the gradient, which is what makes litter read as litter and not as flat cards standing on a slope; sway 0 because leaves on the ground do not move in a breeze.",
@@ -158,12 +162,12 @@
       "seed": 3341882,
       "centre_bias": 0.55,
       "item_size": 0.55,
-      "size_jitter": 0.6,
+      "size_jitter": 0.62,
       "sink": 0.0,
       "slope_lie": 1.0,
-      "density_gain": 0.7,
-      "drift_scale": 0.09,
-      "drift_contrast": 0.7,
+      "density_gain": 0.91,
+      "drift_scale": 0.11,
+      "drift_contrast": 0.95,
       "tint_base": "#4a3b23",
       "tint_tip": "#7a6134",
       "tint_jitter": 0.3,
@@ -176,7 +180,8 @@
       "sway": 0.0,
       "ground": [
         "forest_floor"
-      ]
+      ],
+      "_comment_clumping_t1_world": "T1-WORLD: same retune and same reasoning as the bushes tier above -- see its `_comment_clumping_t1_world`. Thinned-lattice evenness is a property of the placement rule, not of this tier's own numbers, so all three tiers carried it."
     }
   ],
   "_comment_far_cover": "FAR COVER, and the answer to the meadow ENDING at 72m. `field_radius` puts the last blade there and beyond it the ground is painted terrain with the surviving scatter on it, which from the `03-rise-overlook` viewpoint reads as a line across the hill -- the world stops where the ring does. `_comment_ring` above records the two answers already spent on that same line: the ring pushed 40 -> 56 -> 72m, the last step a 43% vertex increase on the most expensive tier in the game and UNMEASURED ON THE DEVICE. The owner has since played it on the Ally and said the grass already feels expensive, so the ring does not move a third time and nothing beyond it is made of blades. This is the cheap instrument instead: one terrain-following sheet, blended over the ground, carrying the meadow's cover READ -- hue, value, the same drifts, a mottle -- and none of its geometry. At the ranges it is visible that is all real grass would have been contributing anyway. ONE SHEET, ONE DRAW: `grass_field.gd` prints its triangle count at boot, and it is a fraction of a per cent of the grass tier's. What it costs that this box cannot measure is FILL -- one blended layer over ground the frame was already drawing -- and `PERF-ROG-GPU` records that GPU cost is exactly what no container here can measure. `enabled` false is the whole revert.",

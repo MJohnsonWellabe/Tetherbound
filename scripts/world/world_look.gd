@@ -16,6 +16,9 @@ extends Node
 const SKY_SHADER_PATH := "res://shaders/sky_clouds.gdshader"
 const CONFIG_PATH := "res://data/config/art.json"
 const DAY_CYCLE := preload("res://scripts/world/day_cycle.gd")
+## T1-WORLD: for the character emission floor only -- see `_apply_environment`.
+## Preloaded for its STATIC setter; this node never builds or owns a character.
+const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 
 const DEFAULT_TIME := "day"
 
@@ -502,6 +505,17 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 
 	# ACES holds highlights on sunlit grass instead of clipping them to white,
 	# which was the single worst thing about the previous prototype's look.
+	# T1-WORLD. The character emission floor is a lighting decision, so it
+	# belongs on the same clock as every other one here rather than frozen at
+	# whatever time of day the world booted at. `_blend_dict` blends this like
+	# any other numeric key -- which is why `art.json`'s BASE environment block
+	# carries an explicit 1.0 rather than leaving day/golden to inherit a
+	# missing key; see that file's own `_comment_adjustment_defaults_t1_sky`
+	# for the bug a missing base default causes (the blend snaps instead of
+	# ramping, because `av = a.get(key, bv)` silently defaults the FROM side to
+	# the TO side's value).
+	CHARACTER_MODEL.set_emission_floor_scale(float(cfg.get("character_emission_floor", 1.0)))
+
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env.tonemap_exposure = float(cfg.get("exposure", 1.0))
 	env.tonemap_white = float(cfg.get("white", 6.0))
