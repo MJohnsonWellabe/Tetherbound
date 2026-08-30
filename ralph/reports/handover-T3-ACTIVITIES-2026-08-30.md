@@ -5,6 +5,30 @@
 
 ---
 
+## 0. Post-handover follow-up (coordinator work order, second pass)
+
+After the §1-§9 work below was pushed, CI came back red on `29638d3c` and the
+coordinator sent a follow-up work order. Two parts:
+
+**Part A — fix CI. Done.** `tests/test_dual_type.gd::test_no_trainer_roster_
+creature_is_dual_typed` failed: `night_watch_farro` (my own Band 2 trainer,
+§2 below) fielded `nightburrow`, which the concurrent DARK-FEATURES/T3-
+MATCHUPS lane landed as Ground/Dark the same day. My own species-type check
+while designing that trainer only read `type`, never `type_secondary`, so I
+missed it. Per `ralph/reports/MATCHUPS_DESIGN_2026-08-30.md` sec4.4, keeping
+dual-typed creatures off every authored trainer roster is a deliberate
+invariant (it is the whole reason that design note can claim the authored
+ladder does not move at all) — not a bug to route around. Fixed by swapping
+`nightburrow` for `trailpup` (single-typed, Band-2-resident, not already used
+by Dorn/Pell/Kest in the same file). Re-verified: `test_dual_type.gd` and the
+rest of my own targeted suite are green, and `tests/smoke_local_requests.gd`
+still passes end to end with the new roster. Commit for this fix is separate
+from the original §1-§9 work so the fix is visible on its own.
+
+**Part B — three JUDGE-3 blind-pass findings routed to content.** See §10.
+
+---
+
 ## 1. What I was asked, and where I got to
 
 Owner-approved scope (2026-08-29), in priority order: five new optional

@@ -126,10 +126,10 @@
       "challenge": "night_watch_farro_challenge",
       "defeated": "night_watch_farro_defeated",
       "team": [
-        {"species": "nightburrow", "level": 12},
+        {"species": "trailpup", "level": 12},
         {"species": "duskhush", "level": 13}
       ],
-      "_why_team": "Duskhush is the species the activity exists to introduce; nightburrow is band2's other resident with a name that says what this fight is about, at the same level tier Kest's own pair uses. Deliberately not Kest's exact burrowback+duskhush loadout -- the two optional fights should not read as the same encounter twice.",
+      "_why_team": "Duskhush is the species the activity exists to introduce. First pick here was nightburrow (also band2-resident and a name that said what this fight is about) -- CI caught it: DARK-FEATURES/T3-MATCHUPS landed nightburrow as Ground/Dark the same day, and `tests/test_dual_type.gd::test_no_trainer_roster_creature_is_dual_typed` (per ralph/reports/MATCHUPS_DESIGN_2026-08-30.md sec4.4) is a deliberate invariant: no dual-typed creature sits on an authored trainer roster, which is the whole reason that design note can claim the authored ladder does not move. trailpup is band2-resident, single-typed, and not already used by Dorn/Pell/Kest in this file, so the two optional Band 2 fights still read as different encounters.",
       "reward": {
         "coins": 40,
         "items": [
