@@ -948,6 +948,21 @@ func ally_body() -> Node3D:
 	return _ally_body
 
 
+## The trainer's creature currently ON THE FIELD, or null between rounds.
+##
+## Beside `ally_body()` and for the same reason: something that needs the body
+## in the fight should be told which one it is rather than searching the tree
+## for it by name. `_on_trainer_round_ended()` deliberately leaves a beaten
+## creature standing in the world for a beat (`_trainer_fallen`, so it slumps
+## rather than blinking out), which means a `find_child("TrainerCreature_<id>_*")`
+## during round two returns the ROUND ONE corpse -- the oldest match in tree
+## order, not the one being fought.
+func trainer_body() -> Node3D:
+	if _trainer_body != null and is_instance_valid(_trainer_body):
+		return _trainer_body
+	return null
+
+
 func ally_instance() -> RefCounted:
 	return _ally
 
