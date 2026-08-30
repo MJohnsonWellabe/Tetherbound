@@ -75,3 +75,17 @@ func _fixture_state(game: Node) -> void:
 	# resources and checks the exact paid delta against these ordinary stacks.
 	inventory.call("add", "wood", 60)
 	inventory.call("add", "stone", 60)
+	# T5-CARE: and the hammer, which this wrapper is the right place to stage.
+	# Under CONTROLLER-MAP the hammer IS the pad route into build mode (select
+	# it on the quick bar, then interact), and `gate_a_build_segment.gd`
+	# deliberately refuses to grant one -- its own words: "the village's gift
+	# (camp_hammer_given) comes before any of this segment's work and is not
+	# this segment's to grant". The Foreman hands it over in the square
+	# (`data/config/village_npcs.json`) before the player ever reaches the
+	# build patch, so a fixture that stages a progressed opening and paid
+	# materials and NOT the hammer is staging a state no player is ever in.
+	#
+	# This gap was invisible until now: every run of this file died earlier, in
+	# the walk, on the runaway-velocity defect this branch fixes, so the segment
+	# had never once reached the press that asks for a hammer.
+	inventory.call("add", "hammer", 1)
