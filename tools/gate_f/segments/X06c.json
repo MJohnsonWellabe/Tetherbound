@@ -1,0 +1,992 @@
+{
+  "id": "X06c",
+  "title": "Abuse and failure sweep (protocol E.6 / section 2) -- Part 3 of 3 -- from S05-exit, cases 8, 1-continued, 14, 15",
+  "lane": "study",
+  "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.6, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry saves per protocol B: S03-exit and S05-exit.",
+  "_lane": "SEGMENT_SCHEMA.md lists `journey` and `diag` as the lane values. This segment is neither: protocol 0.1 names two lanes, JOURNEY (S01-S10) and STUDY/DIAG (X01-X08), and only the segments prefixed DIAG- inside that second lane may take a shortcut. `study` is that distinction written down rather than collapsed into `diag`, which would read as permission this segment does not have. The field is informational either way -- the per-step `diag` flag is what actually permits a shortcut, and no step here carries one.",
+  "_rule": "E.6's own preamble: 'All on production paths, each with expected/actual telemetry.' Nothing here is granted and free_build stays OFF.",
+  "_no_teleport": "X06 is not a DIAG segment and contains no teleport step. Every locked route below is approached by walking, because whether the world explains the lock diegetically on arrival is the whole point of case 11.",
+  "_defect_shots": "Protocol G: 'Defect shots (GF-22/DEF-...) are the only operator-added captures: context frame first, then a diagnostic close view if useful, at first occurrence, as-found.' They are therefore NOT pre-planned in this file. Case 6's 'record any clip/soft-lock with position (GF-22 defect shots)' is an instruction to the operator at the moment of a find, not a planned frame.",
+  "evidence_lane": "logic",
+  "_comment_evidence_lane": "X06 (abuse and failure cases) plans no §G frame, so it hands nothing over and needs no capture lane -- the harness allows exactly that. It is declared a logic lane anyway for the OTHER half of the declaration: without it the segment inherits §H's default 0.1 Hz continuous record, which under a 12.7 s rendered frame is the 4.6-million-frame recording the split was created to delete, and which headless would write as file:null rows while every step said PASS.",
+  "_split": "T2-GATEF-RUN6 cost split, the same remedy T2-S10-COST applied to S10 and the one T2-GATEF-RUN5's handover asked for (§8.3, §11.5). X06 whole was refused before step 1 by the harness capture pre-flight: 2,525,320 planned frames, predicted 14,960 s against the 14,400 s ceiling -- 4% over. Splitting at the segment's own entry-save seam is not enough on its own: part 1 (from S03-exit) prices at ~650 s but part 2 (from S05-exit) still prices at ~14,863 s. So part 2 is split again at its own `case 8` boundary, where the previous case has just closed its menu shell and nothing is carried in flight. Each part re-seeds its own entry save through the real title screen, exactly as the original did at X06-004 and X06-182, so no part depends on another having run. Nothing is dropped: the three parts are the original 314 steps plus one repeated 10-step load preamble.",
+  "steps": [
+    {
+      "id": "X06c-pre-181",
+      "title": "Part 2: from S05-exit",
+      "action": "note",
+      "args": {
+        "text": "The band 1+ cases: water, the later locked routes, the revisits and the backtracks."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06c-pre-182",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer and the auto-focus cannot land on an autosave"
+    },
+    {
+      "id": "X06c-pre-183",
+      "title": "seed slot 4 from S05-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S05-exit.json"
+      },
+      "expected": "the journey's S05-exit slot file is back in user://, so the title's Load Game finds it"
+    },
+    {
+      "id": "X06c-pre-184",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X06c-pre-185",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "X06c-pre-186",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "X06c-pre-187",
+      "title": "open the load slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot -- the seeded slot 4"
+    },
+    {
+      "id": "X06c-pre-188",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows: driven with synthetic input, this is itself save/load coverage (protocol B)"
+    },
+    {
+      "id": "X06c-pre-189",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container, and every assertion after this reads a live Player"
+    },
+    {
+      "id": "X06c-pre-190",
+      "title": "the world owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world': the study starts from a real player state rather than a granted one"
+    },
+    {
+      "id": "X06-242",
+      "title": "case 8",
+      "action": "note",
+      "args": {
+        "text": "'Throw orbs badly: at ground, at sky, at max range, into water, during cooldown spam.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-243",
+      "title": "engage a wild",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a wild fight starts; catching is available during wild combat"
+    },
+    {
+      "id": "X06-244",
+      "title": "enter aim (at the ground)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the aim reticle comes up"
+    },
+    {
+      "id": "X06-245",
+      "title": "point at the ground",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 45
+      },
+      "expected": "the aim is pointed at the ground"
+    },
+    {
+      "id": "X06-246",
+      "title": "throw at the ground",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the orb is thrown at the ground; the miss and the orb loss are recorded"
+    },
+    {
+      "id": "X06-247",
+      "title": "wait out the cooldown (at the ground)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "data/config/catching.json's cooldown is 0.9 s"
+    },
+    {
+      "id": "X06-248",
+      "title": "enter aim (at the sky)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the aim reticle comes up"
+    },
+    {
+      "id": "X06-249",
+      "title": "point at the sky",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 45
+      },
+      "expected": "the aim is pointed at the sky"
+    },
+    {
+      "id": "X06-250",
+      "title": "throw at the sky",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the orb is thrown at the sky; the miss and the orb loss are recorded"
+    },
+    {
+      "id": "X06-251",
+      "title": "wait out the cooldown (at the sky)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "data/config/catching.json's cooldown is 0.9 s"
+    },
+    {
+      "id": "X06-252",
+      "title": "enter aim (at max range)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the aim reticle comes up"
+    },
+    {
+      "id": "X06-253",
+      "title": "point at max range",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 180
+      },
+      "expected": "the aim is pointed at max range"
+    },
+    {
+      "id": "X06-254",
+      "title": "throw at max range",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the orb is thrown at max range; the miss and the orb loss are recorded"
+    },
+    {
+      "id": "X06-255",
+      "title": "wait out the cooldown (at max range)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "data/config/catching.json's cooldown is 0.9 s"
+    },
+    {
+      "id": "X06-256",
+      "title": "enter aim (into water)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the aim reticle comes up"
+    },
+    {
+      "id": "X06-257",
+      "title": "point into water",
+      "action": "stick",
+      "args": {
+        "stick": "right",
+        "x": 1.0,
+        "y": 0.0,
+        "frames": 45
+      },
+      "expected": "the aim is pointed into water"
+    },
+    {
+      "id": "X06-258",
+      "title": "throw into water",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the orb is thrown into water; the miss and the orb loss are recorded"
+    },
+    {
+      "id": "X06-259",
+      "title": "wait out the cooldown (into water)",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "data/config/catching.json's cooldown is 0.9 s"
+    },
+    {
+      "id": "X06-260",
+      "title": "spam throws during the cooldown",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 2
+      },
+      "expected": "twenty throw presses inside the 0.9 s cooldown; the cooldown must hold and no orb may be spent by a press it refused"
+    },
+    {
+      "id": "X06-261",
+      "title": "enter aim for the aim-cancel-frame save",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the aim reticle comes up"
+    },
+    {
+      "id": "X06-262",
+      "title": "cancel the aim",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the aim is cancelled and no orb is spent"
+    },
+    {
+      "id": "X06-263",
+      "title": "save on the aim-cancel frame",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the pause shell is opened on the frame the aim was cancelled"
+    },
+    {
+      "id": "X06-264",
+      "title": "cycle to the Save tab (aim-cancel)",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach the Save tab"
+    },
+    {
+      "id": "X06-265",
+      "title": "focus slot 1 (aim-cancel)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "focus reaches slot 1's Save button"
+    },
+    {
+      "id": "X06-266",
+      "title": "write the aim-cancel-frame save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "an awkward but legal save, taken during the aim-cancel frame"
+    },
+    {
+      "id": "X06-267",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X06-268",
+      "title": "copy the aim-cancel save out",
+      "action": "save_out",
+      "args": {
+        "slot": 1,
+        "name": "X06-awkward-during-aim-cancel-frame.json"
+      },
+      "expected": "the artefact is preserved for X05 to load"
+    },
+    {
+      "id": "X06-269",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    },
+    {
+      "id": "X06-270",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 90
+      },
+      "expected": "the fight resolves"
+    },
+    {
+      "id": "X06-271",
+      "title": "case 1 continued: the combat and region-transition edges",
+      "action": "note",
+      "args": {
+        "text": "'Mash all buttons during: ... combat start/end edge, save/load, region transitions ...'. The tournament round transitions and the release ceremony are journey beats (S04 and S10) and are mashed there; X06's entry saves reach neither."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-272",
+      "title": "engage a wild for the combat edges",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 30
+      },
+      "expected": "a wild fight starts"
+    },
+    {
+      "id": "X06-273",
+      "title": "mash all buttons on the same frame: the combat start edge",
+      "action": "press_multi",
+      "args": {
+        "controls": [
+          "jump",
+          "hotbar_1",
+          "interact",
+          "inventory",
+          "map",
+          "game_menu",
+          "sprint",
+          "camera_recenter",
+          "party_cycle",
+          "creature_recall",
+          "hotbar_3",
+          "hotbar_5",
+          "hotbar_2",
+          "hotbar_4",
+          "auto_run",
+          "combat_charged",
+          "combat_quick"
+        ],
+        "hold": "tap"
+      },
+      "expected": "every down edge of every physical control is delivered before a frame advances, during the combat start edge"
+    },
+    {
+      "id": "X06-274",
+      "title": "mash all buttons, 10 presses in 10 frames: the combat start edge",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "E.6 case 2's mash variant: 10 presses in 10 frames, during the combat start edge"
+    },
+    {
+      "id": "X06-275",
+      "title": "mash interact, 10 in 10 frames: the combat start edge",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of interact during the combat start edge"
+    },
+    {
+      "id": "X06-276",
+      "title": "mash game_menu, 10 in 10 frames: the combat start edge",
+      "action": "press",
+      "args": {
+        "control": "game_menu",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of game_menu during the combat start edge"
+    },
+    {
+      "id": "X06-277",
+      "title": "mash party_cycle, 10 in 10 frames: the combat start edge",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of party_cycle during the combat start edge"
+    },
+    {
+      "id": "X06-278",
+      "title": "mash creature_recall, 10 in 10 frames: the combat start edge",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of creature_recall during the combat start edge"
+    },
+    {
+      "id": "X06-279",
+      "title": "mash hotbar_1, 10 in 10 frames: the combat start edge",
+      "action": "press",
+      "args": {
+        "control": "hotbar_1",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of hotbar_1 during the combat start edge"
+    },
+    {
+      "id": "X06-280",
+      "title": "finish the fight",
+      "action": "wait",
+      "args": {
+        "seconds": 90
+      },
+      "expected": "the fight resolves"
+    },
+    {
+      "id": "X06-281",
+      "title": "mash all buttons on the same frame: the combat end edge",
+      "action": "press_multi",
+      "args": {
+        "controls": [
+          "jump",
+          "hotbar_1",
+          "interact",
+          "inventory",
+          "map",
+          "game_menu",
+          "sprint",
+          "camera_recenter",
+          "party_cycle",
+          "creature_recall",
+          "hotbar_3",
+          "hotbar_5",
+          "hotbar_2",
+          "hotbar_4",
+          "auto_run",
+          "combat_charged",
+          "combat_quick"
+        ],
+        "hold": "tap"
+      },
+      "expected": "every down edge of every physical control is delivered before a frame advances, during the combat end edge"
+    },
+    {
+      "id": "X06-282",
+      "title": "mash all buttons, 10 presses in 10 frames: the combat end edge",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "E.6 case 2's mash variant: 10 presses in 10 frames, during the combat end edge"
+    },
+    {
+      "id": "X06-283",
+      "title": "mash interact, 10 in 10 frames: the combat end edge",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of interact during the combat end edge"
+    },
+    {
+      "id": "X06-284",
+      "title": "mash game_menu, 10 in 10 frames: the combat end edge",
+      "action": "press",
+      "args": {
+        "control": "game_menu",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of game_menu during the combat end edge"
+    },
+    {
+      "id": "X06-285",
+      "title": "mash party_cycle, 10 in 10 frames: the combat end edge",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of party_cycle during the combat end edge"
+    },
+    {
+      "id": "X06-286",
+      "title": "mash creature_recall, 10 in 10 frames: the combat end edge",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of creature_recall during the combat end edge"
+    },
+    {
+      "id": "X06-287",
+      "title": "mash hotbar_1, 10 in 10 frames: the combat end edge",
+      "action": "press",
+      "args": {
+        "control": "hotbar_1",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of hotbar_1 during the combat end edge"
+    },
+    {
+      "id": "X06-288",
+      "title": "the world came back after the combat-edge mash",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal"
+    },
+    {
+      "id": "X06-289",
+      "title": "walk across a region boundary",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -342.0,
+          507.0
+        ],
+        "budget_frames": 200000,
+        "held_budget_frames": 7200
+      },
+      "expected": "the player walks back into The Pond region"
+    },
+    {
+      "id": "X06-290",
+      "title": "mash all buttons on the same frame: the region transition",
+      "action": "press_multi",
+      "args": {
+        "controls": [
+          "jump",
+          "hotbar_1",
+          "interact",
+          "inventory",
+          "map",
+          "game_menu",
+          "sprint",
+          "camera_recenter",
+          "party_cycle",
+          "creature_recall",
+          "hotbar_3",
+          "hotbar_5",
+          "hotbar_2",
+          "hotbar_4",
+          "auto_run",
+          "combat_charged",
+          "combat_quick"
+        ],
+        "hold": "tap"
+      },
+      "expected": "every down edge of every physical control is delivered before a frame advances, during the region transition"
+    },
+    {
+      "id": "X06-291",
+      "title": "mash all buttons, 10 presses in 10 frames: the region transition",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "E.6 case 2's mash variant: 10 presses in 10 frames, during the region transition"
+    },
+    {
+      "id": "X06-292",
+      "title": "mash interact, 10 in 10 frames: the region transition",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of interact during the region transition"
+    },
+    {
+      "id": "X06-293",
+      "title": "mash game_menu, 10 in 10 frames: the region transition",
+      "action": "press",
+      "args": {
+        "control": "game_menu",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of game_menu during the region transition"
+    },
+    {
+      "id": "X06-294",
+      "title": "mash party_cycle, 10 in 10 frames: the region transition",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of party_cycle during the region transition"
+    },
+    {
+      "id": "X06-295",
+      "title": "mash creature_recall, 10 in 10 frames: the region transition",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of creature_recall during the region transition"
+    },
+    {
+      "id": "X06-296",
+      "title": "mash hotbar_1, 10 in 10 frames: the region transition",
+      "action": "press",
+      "args": {
+        "control": "hotbar_1",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of hotbar_1 during the region transition"
+    },
+    {
+      "id": "X06-297",
+      "title": "the region transition survived the mash",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_pond"
+      },
+      "expected": "map_state.gd's own containment puts the player in The Pond and the transition held"
+    },
+    {
+      "id": "X06-298",
+      "title": "case 14",
+      "action": "note",
+      "args": {
+        "text": "'Revisit completed areas: tournament ground after winning, relay after clearing, Warrens after the guardian; record what re-offers, what is correctly spent, what dialogue acknowledges progress.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-299",
+      "title": "revisit the tournament ground after winning",
+      "action": "move_to",
+      "args": {
+        "at": [
+          23.5,
+          11.5
+        ],
+        "budget_frames": 200000,
+        "held_budget_frames": 7200
+      },
+      "expected": "the player walks back to the tournament ground the journey already won"
+    },
+    {
+      "id": "X06-300",
+      "title": "what the tournament ground re-offers",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 4,
+        "settle_frames": 20
+      },
+      "expected": "what re-offers, what is correctly spent, what dialogue acknowledges progress"
+    },
+    {
+      "id": "X06-300w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "X06-301",
+      "title": "revisit the Warrens after the guardian",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -420.0,
+          2470.0
+        ],
+        "budget_frames": 200000,
+        "held_budget_frames": 7200
+      },
+      "expected": "the player walks back to the Warrens the journey already cleared"
+    },
+    {
+      "id": "X06-302",
+      "title": "what the Warrens re-offers",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 4,
+        "settle_frames": 20
+      },
+      "expected": "what re-offers, what is correctly spent, what dialogue acknowledges progress"
+    },
+    {
+      "id": "X06-302w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "X06-303",
+      "title": "revisit the relay after clearing",
+      "action": "move_to",
+      "args": {
+        "at": [
+          350.0,
+          3760.0
+        ],
+        "budget_frames": 200000,
+        "held_budget_frames": 7200
+      },
+      "expected": "the player walks back to the Tether Relay the journey already cleared"
+    },
+    {
+      "id": "X06-304",
+      "title": "what the relay re-offers",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 4,
+        "settle_frames": 20
+      },
+      "expected": "what re-offers, what is correctly spent, what dialogue acknowledges progress"
+    },
+    {
+      "id": "X06-305",
+      "title": "case 15",
+      "action": "note",
+      "args": {
+        "text": "'Backtrack across story transitions: walk back over the South Bridge after crossing; return home mid-chapter; verify Grandpa's dialogue state advances with the chapter (home-relevance check).'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-304w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "X06-306",
+      "title": "walk back over the South Bridge after crossing",
+      "action": "move_to",
+      "args": {
+        "at": [
+          0.0,
+          1330.0
+        ],
+        "budget_frames": 200000,
+        "held_budget_frames": 7200
+      },
+      "expected": "the player walks back southbound over the bridge they already crossed"
+    },
+    {
+      "id": "X06-307",
+      "title": "the backtrack across the bridge held",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "this event's `pos` and `flags` record that the crossing stayed open behind the player"
+    },
+    {
+      "id": "X06-308",
+      "title": "return home mid-chapter",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -22.0,
+          -16.0
+        ],
+        "budget_frames": 200000,
+        "held_budget_frames": 7200
+      },
+      "expected": "the player walks all the way home to Grandpa's House (-22,-16), RT-01's start anchor"
+    },
+    {
+      "id": "X06-309",
+      "title": "Grandpa's dialogue state",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 8,
+        "settle_frames": 20
+      },
+      "expected": "Grandpa's dialogue state advances with the chapter: the home-relevance check"
+    },
+    {
+      "id": "X06-310",
+      "title": "the home-relevance check is recorded",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "grandpas_village"
+      },
+      "expected": "the player is home and this event's `flags` and `objective` are the state Grandpa's line has to match"
+    },
+    {
+      "id": "X06-311",
+      "title": "case 7 is X04's",
+      "action": "note",
+      "args": {
+        "text": "'Push a fight to the arena boundary and hold there 10 s (CB-11).' E.6 names CB-11, and CB-11 is sited in X04. It is not duplicated here."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-312",
+      "title": "case 9 is X03's",
+      "action": "note",
+      "args": {
+        "text": "'Invalid catches (CT-06).' E.6 names CT-06, and CT-06 is sited in X03. It is not duplicated here."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-313",
+      "title": "case 16 is the journey lane's",
+      "action": "note",
+      "args": {
+        "text": "'Play naturally through day->night->day at least twice in the journey (day is ~600 s): record the transition's continuity (no snap), night legibility with and without torch (GF-20), and dawn recovery.' Its own wording puts it in the journey, and protocol L.5 sites GF-20/21 there too. X06 stages none of it -- a day/night cycle waited out inside an abuse segment would not be 'naturally'."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-314",
+      "title": "segment close",
+      "action": "note",
+      "args": {
+        "text": "The awkward-state saves are in this run's saves/ directory as X06-awkward-*.json; X05 loads each one and verifies full restoration."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

@@ -322,6 +322,17 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S03-25w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S03-30",
       "title": "walk out to the practice meadow",
       "action": "move_to",
@@ -417,6 +428,17 @@
       "expected": "the `catch_result` event carries the outcome"
     },
     {
+      "id": "S03-32a2w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S03-32b",
       "title": "walk to a live bramblebun (attempt 2)",
       "action": "move_to_entity",
@@ -487,6 +509,17 @@
         "seconds": 6
       },
       "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32b2w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S03-32c",
@@ -561,6 +594,17 @@
       "expected": "the `catch_result` event carries the outcome"
     },
     {
+      "id": "S03-32c2w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S03-32d",
       "title": "walk to a live bramblebun (attempt 4)",
       "action": "move_to_entity",
@@ -631,6 +675,17 @@
         "seconds": 6
       },
       "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32d2w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S03-32e",
@@ -705,6 +760,17 @@
       "expected": "the `catch_result` event carries the outcome"
     },
     {
+      "id": "S03-32e2w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S03-32f",
       "title": "walk to a live bramblebun (attempt 6)",
       "action": "move_to_entity",
@@ -775,6 +841,17 @@
         "seconds": 6
       },
       "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32f2w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S03-32g",
@@ -849,6 +926,17 @@
       "expected": "the `catch_result` event carries the outcome"
     },
     {
+      "id": "S03-32g2w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S03-32h",
       "title": "walk to a live bramblebun (attempt 8)",
       "action": "move_to_entity",
@@ -921,6 +1009,17 @@
       "expected": "the `catch_result` event carries the outcome"
     },
     {
+      "id": "S03-32h2w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S03-32i",
       "title": "walk to a live bramblebun (attempt 9)",
       "action": "move_to_entity",
@@ -991,6 +1090,17 @@
         "seconds": 6
       },
       "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03-32i2w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S03-32j",
@@ -3659,6 +3769,17 @@
         "text": "Section E.1 CB-13: 'Lighting variants | at least one night fight (torch conditions) and one rain/fog fight, as natural play allows; else X07 pins and labels DIAG'. The night half is taken here, by torchlight, because this is the journey's first natural nightfall and CB-13's own condition is 'as natural play allows'. AMBIGUITY RECORDED: the rain/fog half cannot be scripted -- no journey segment can know when a preset will roll -- so if the journey never produces one, section E.1's own fallback applies and it becomes X07's pinned, DIAG-labelled frame."
       },
       "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-205bw",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S03-217",

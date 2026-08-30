@@ -715,6 +715,146 @@ Two things worth carrying forward:
 
 **Unaudited:** every other segment that triggers a shop, battle or picker
 effect. This one was found by tripping over it, not by looking.
+## RIG-26 — S02 engaged a coordinate, not a creature, and the margin was one centimetre (FIXED, T2-GATEF-RUN6)
+
+**Severity: RIG, fixed. This is the defect that produced "zero combat
+events" and it had been read as a possible game blocker since check-in 17
+of the lane log (2026-08-27), through six runs.** The lane log's own
+wording was *"the chapter's first fight never stages, and the first catch
+never happens,"* recorded with `severity_candidate: BLOCKER`.
+
+**The game was never at fault.** `tools/gate_f/diag/probe_s02_encounter.gd`
+pass 4, run live on this candidate, stands the player at S02's own recorded
+press point `(26.78, -38.32)` with a creature deployed and samples the
+offer once a play-second for thirty seconds:
+
+```
+[s02] engage_range                         = 6.00 m
+[s02] nearest wild creature, over 30 s     = 5.99 m min, 5.99 m max
+[s02] samples where the game offered Engage = 30 of 30
+[s02]    director.interaction_offer = {"actionable":true,"distance":5.99,"label":"Engage Bramblebun","priority":0}
+[s02]    pressed interact: is_fighting false -> true   >>> A FIGHT STARTED
+```
+
+**5.99 m against a 6.00 m `flow.engage_range`.** The run that recorded the
+blocker stood one centimetre inside the reach, and which side of that line
+a given boot lands on is decided by `_rng.randomize()` in
+`wild_creature.gd` — the same call `encounter_director.gd:549`'s own
+comment already warns *"means every boot rolls a different wander path with
+no way to predict where a resident ends up."*
+
+The step could not have been reliable. `S02-30` was
+`move_to {"at": [30,-40], "close_enough": 4.0}` — a hardcoded coordinate,
+with a four-metre arrival tolerance, aimed at a creature that roams a seven
+metre radius, to be engaged at six metres, followed by `S02-32` pressing
+`interact` **once**. And `S02-32` was a bare `press`, which asserts that
+input was injected and not that anything received it, so it PASSed into an
+unengaged world every time and pushed the visible failure four steps
+downstream where it read as "combat never took input ownership."
+
+**Fix**, and it is the pattern this protocol already had: `S02-31a` is a
+`move_to_entity` that resolves the live creature and re-reads its position
+every frame, and `S02-32` is now an `interact_with` asserting the `Engage`
+prompt before pressing. `S03-32a..j2` has engaged the same species this way
+for several runs. S02 was never updated.
+
+**Result:** S02 emits `combat_start`, `combat_hit`, `combat_end`,
+`catch_throw` and `catch_result` for the first time in this effort.
+
+**The general rule, and it is the same one RIG-25 states from the other
+side:** a bare `press` proves an injection, not an interaction. Any step
+whose whole point is that something received the press should be
+`interact_with`, which refuses with a reason instead of passing into
+nothing. This is the third distinct defect this run's segment set has hidden
+behind a step that PASSed while doing nothing.
+
+## RIG-27 — S02's attack script was tuned against damage numbers that no longer exist, and asserted the catch before the game owed it (FIXED, T2-GATEF-RUN6)
+
+**Severity: RIG, fixed.** Two separate staleness defects behind the same
+step block, both found by running it.
+
+**1. The damage note was stale by a factor of 2.3.** `S02-36` carried an
+authored observation reading *"MEASURED, not guessed: the bramblebun at
+opponent_hp 124.2 full, 43.1 after these 14 quick attacks (~5.8 damage
+each)"*. Measured on this candidate, a quick attack lands **~13.4** and the
+charged attack **~56**. Damage was rebalanced after that note was written
+and the note was never re-measured. Running the script as authored — six
+quick attacks then the charged — produced this:
+
+```
+104.3 -> 91.3 -> 78.0 -> 63.8 -> 49.4 -> 0.0
+combat_end at t=226.45
+```
+
+The charged attack **fainted the creature**, and the catch sequence that
+follows had nothing left to throw at. The segment then reported "party size
+1 (wanted 2)" — a catch failure — for a creature that was already dead.
+The charged attack is now taken first, at full health where it cannot faint
+anything, with quick attacks trimming afterwards.
+
+Check-in 17 already warned that this note *"must NOT be misread as this
+run's data"*. It was right, and the deeper problem is that an `observation`
+field carrying a measurement from a superseded build is indistinguishable
+from one carrying this run's. **Every tuning note of this shape in the
+segment set is suspect until re-measured.**
+
+**2. The catch was asserted one throw too early.** `S02-45`
+(`party_size == 2`) sat immediately after the first throw. But
+`data/config/opening.json` sets `max_catch_failures: 1`, and
+`combat_manager.gd:1273` applies that bound to **landed** throws, so the
+game's "cannot fail twice" promise is kept on the **second** throw. The
+assert was reading a legitimate, designed first failure as a defect. Moved
+to after the retry blocks.
+
+That correction is what exposed GAME-12: the retries re-enter the aim and
+never throw, so the guarantee cannot currently be reached at all.
+
+## RIG-25 audit — the open-without-close sweep RUN5 asked for (DONE, T2-GATEF-RUN6)
+
+RIG-25 recorded that *"every other segment that triggers a shop, battle or
+picker effect"* was unaudited for the missing close-and-assert pair, and
+that it had been found by tripping over it rather than by looking. Looked.
+
+Ten conversations open a pausing panel, all through
+`sequence_director.gd::_maybe_open_shop()`:
+
+| effect | conversations |
+|---|---|
+| `shop:goods:mira` | `village_mira_shop_intro`, `village_mira_shop`, `village_mira_beaten`, `village_mira_freed` |
+| `shop:goods:bram` | `village_bram_shop_intro`, `village_bram_shop` |
+| `shop:creatures:oskar` | `village_oskar_trade_intro`, `village_oskar_trade`, `village_oskar_beaten`, `village_oskar_freed` |
+
+Cross-referenced against every step in the segment set that greets one of
+those three. **One real gap, now closed:**
+
+- **`S03C-61` (Oskar) had neither the close nor the assert.** `S03.json`
+  received `S03-62a`/`S03-62b` from RUN5's GAME-10 fix; its capture-mode
+  twin `S03C.json` never did, so a capture run of S03C would have
+  reproduced GAME-10 in full — the same seventy-one-failure cascade, in the
+  lane whose whole purpose is the frames. Added both steps.
+
+**Cleared, with the evidence rather than by inspection:**
+
+- **S04's Mira and Oskar steps (`S04-26`, `S04-41`) are not a gap.** They
+  are tournament conversations, not the shop greetings. RUN5's own S04
+  telemetry settles it: the segment's entire `input_context` census is
+  `world` 77, `menu_map` 2, `menu_quest_log` 1, `menu_build` 1,
+  `menu_save` 8, and it returns to `world` at `menu_close`. No panel was
+  ever left holding input.
+- **X01's fourteen Bram/Oskar steps are not a gap.** X01 is the menu-cell
+  probe segment; its `probe_cell` steps drive and restore the panel
+  deliberately, and it carries 105 `input_context` asserts of its own.
+
+**And the `beaten`/`freed` conversations are an unrun risk, not a cleared
+one.** `village_mira_beaten` and `village_oskar_beaten` open the same
+panels after the tournament, and `village_*_freed` after the finale.
+Nothing in the segment set has reached them yet — S04 has never been won
+(GAME-11 starves it, see the per-segment notes) and the finale is S10. When
+a future run first wins the tournament, those two greetings will open a
+panel for the first time, and **the close-and-assert pair must be in place
+before that run, not after it.** That is the same order-of-discovery trap
+GAME-10 sprang on RUN5.
+
 
 ---
 
