@@ -174,18 +174,147 @@
           "max_slope_deg": 21.0,
           "scale_min": 1.4,
           "scale_max": 1.75
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            148.5,
+            7550.2
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            91.6,
+            7531.1
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -41.1,
+            7486.4
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -97.9,
+            7467.2
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            132.5,
+            7597.6
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            75.6,
+            7578.5
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -57.0,
+            7533.7
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -113.9,
+            7514.6
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            116.5,
+            7645.0
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            59.7,
+            7625.8
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -73.0,
+            7581.1
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -129.8,
+            7562.0
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -89.0,
+            7628.5
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -145.8,
+            7609.4
+          ],
+          "count": 18,
+          "max_slope_deg": 26.0,
+          "radius": 24.0
         }
-      ,
-        {"_why": "T1-HALL-4: band-5 mid-distance fill, off-trail (|x|>=170 against a trail that tops out at 80). JUDGE-6 defect 2.", "at": [-180.0, 7420.0], "radius": 26.0, "count": 20, "max_slope_deg": 26.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance fill, off-trail (|x|>=170 against a trail that tops out at 80). JUDGE-6 defect 2.", "at": [-240.0, 7480.0], "radius": 26.0, "count": 20, "max_slope_deg": 26.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance fill, off-trail (|x|>=170 against a trail that tops out at 80). JUDGE-6 defect 2.", "at": [-190.0, 7545.0], "radius": 26.0, "count": 20, "max_slope_deg": 26.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance fill, off-trail (|x|>=170 against a trail that tops out at 80). JUDGE-6 defect 2.", "at": [-260.0, 7600.0], "radius": 26.0, "count": 20, "max_slope_deg": 26.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance fill, off-trail (|x|>=170 against a trail that tops out at 80). JUDGE-6 defect 2.", "at": [-200.0, 7655.0], "radius": 26.0, "count": 20, "max_slope_deg": 26.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance fill, off-trail (|x|>=170 against a trail that tops out at 80). JUDGE-6 defect 2.", "at": [170.0, 7430.0], "radius": 26.0, "count": 20, "max_slope_deg": 26.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance fill, off-trail (|x|>=170 against a trail that tops out at 80). JUDGE-6 defect 2.", "at": [230.0, 7490.0], "radius": 26.0, "count": 20, "max_slope_deg": 26.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance fill, off-trail (|x|>=170 against a trail that tops out at 80). JUDGE-6 defect 2.", "at": [180.0, 7550.0], "radius": 26.0, "count": 20, "max_slope_deg": 26.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance fill, off-trail (|x|>=170 against a trail that tops out at 80). JUDGE-6 defect 2.", "at": [260.0, 7605.0], "radius": 26.0, "count": 20, "max_slope_deg": 26.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance fill, off-trail (|x|>=170 against a trail that tops out at 80). JUDGE-6 defect 2.", "at": [200.0, 7660.0], "radius": 26.0, "count": 20, "max_slope_deg": 26.0}
       ]
     },
     "grove": {
@@ -267,13 +396,57 @@
           "radius": 14.0,
           "count": 4,
           "max_slope_deg": 22.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            112.1,
+            7564.3
+          ],
+          "count": 9,
+          "max_slope_deg": 24.0,
+          "radius": 22.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -77.5,
+            7500.5
+          ],
+          "count": 9,
+          "max_slope_deg": 24.0,
+          "radius": 22.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            96.1,
+            7611.7
+          ],
+          "count": 9,
+          "max_slope_deg": 24.0,
+          "radius": 22.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -93.4,
+            7547.9
+          ],
+          "count": 9,
+          "max_slope_deg": 24.0,
+          "radius": 22.0
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -99.9,
+            7598.4
+          ],
+          "count": 9,
+          "max_slope_deg": 24.0,
+          "radius": 22.0
         }
-      ,
-        {"_why": "T1-HALL-4: band-5 mid-distance, the darker heavier form among the common canopy. JUDGE-6 defect 2.", "at": [-220.0, 7515.0], "radius": 26.0, "count": 10, "max_slope_deg": 24.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance, the darker heavier form among the common canopy. JUDGE-6 defect 2.", "at": [210.0, 7520.0], "radius": 26.0, "count": 10, "max_slope_deg": 24.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance, the darker heavier form among the common canopy. JUDGE-6 defect 2.", "at": [-250.0, 7640.0], "radius": 26.0, "count": 10, "max_slope_deg": 24.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance, the darker heavier form among the common canopy. JUDGE-6 defect 2.", "at": [240.0, 7635.0], "radius": 26.0, "count": 10, "max_slope_deg": 24.0},
-        {"_why": "T1-HALL-4: band-5 mid-distance, the darker heavier form among the common canopy. JUDGE-6 defect 2.", "at": [-160.0, 7590.0], "radius": 26.0, "count": 10, "max_slope_deg": 24.0}
       ]
     },
     "saplings": {
@@ -323,19 +496,28 @@
       "_comment_anchors_band2_floor": "BAND2-FLOOR: a blind critique of Band 2's forest floor named saplings by name as missing ('no leaf litter, undergrowth, fallen branches, saplings'). This layer's own corridor_fill already runs a rich trail-biased fill, but docs/reviews/band2/round-05 measured that random siting lands near none of Band 2's own survey viewpoints by chance -- these anchors guarantee young growth at the exact sites the critique's frames looked at, using this layer's own default models (no override needed).",
       "anchors": [
         {
-          "at": [142.0, 1550.0],
+          "at": [
+            142.0,
+            1550.0
+          ],
           "radius": 10.0,
           "count": 5,
           "_why": "early-forest: centred on harvest.json order 2005/2006 (135-145,1538-1543), tools/survey_band2.gd's 01-early-forest-day frame."
         },
         {
-          "at": [-408.0, 2443.0],
+          "at": [
+            -408.0,
+            2443.0
+          ],
           "radius": 10.0,
           "count": 5,
           "_why": "Burrow Warrens' forest approach: centred on harvest.json order 2010 (-420,2440), tools/survey_band2.gd's 04-warrens-mouth-day frame."
         },
         {
-          "at": [72.0, 2969.0],
+          "at": [
+            72.0,
+            2969.0
+          ],
           "radius": 10.0,
           "count": 5,
           "_why": "late-ridge: centred on harvest.json order 2004/2007 (68-76,2965-2972), tools/survey_band2.gd's 05-late-ridge-day frame."
@@ -385,7 +567,10 @@
           "_why": "SD16/D41: the standing dead around the quarry's conduit head. Half the drained-ground read is what is MISSING (the scatter thins itself out); this is the other half, the grey verticals that say something used to grow here."
         },
         {
-          "at": [142.0, 1550.0],
+          "at": [
+            142.0,
+            1550.0
+          ],
           "radius": 12.0,
           "count": 8,
           "models": [
@@ -396,7 +581,10 @@
           "_why": "early-forest litter: centred on harvest.json order 2005/2006 (135-145,1538-1543), the ground tools/survey_band2.gd's 01-early-forest-day frame looks at."
         },
         {
-          "at": [168.0, 2038.0],
+          "at": [
+            168.0,
+            2038.0
+          ],
           "radius": 10.0,
           "count": 6,
           "models": [
@@ -406,7 +594,10 @@
           "_why": "BAND2-FLOOR: ridge-trail litter between the Old Quarry and the ranger camp spur, centred on harvest.json order 2001 (168,2038)."
         },
         {
-          "at": [28.0, 2118.0],
+          "at": [
+            28.0,
+            2118.0
+          ],
           "radius": 10.0,
           "count": 6,
           "models": [
@@ -416,7 +607,10 @@
           "_why": "BAND2-FLOOR: same ridge-trail stretch, second beat -- centred on harvest.json order 2002 (28,2118)."
         },
         {
-          "at": [-408.0, 2443.0],
+          "at": [
+            -408.0,
+            2443.0
+          ],
           "radius": 12.0,
           "count": 8,
           "models": [
@@ -426,7 +620,10 @@
           "_why": "BAND2-FLOOR: the Burrow Warrens' forest approach, centred on harvest.json order 2010 (-420,2440), the ground tools/survey_band2.gd's 04-warrens-mouth-day frame looks at."
         },
         {
-          "at": [72.0, 2969.0],
+          "at": [
+            72.0,
+            2969.0
+          ],
           "radius": 10.0,
           "count": 6,
           "models": [
@@ -486,7 +683,9 @@
         "inner": 2.0,
         "band": 12.0
       },
-      "band_scale": {"band5_stronghold_approach": 2.4},
+      "band_scale": {
+        "band5_stronghold_approach": 2.4
+      },
       "max_slope_deg": 27.0,
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. Bushes reach nearer the waterline than trees but stay dry. TUNABLE.",
       "min_height": -21.9,
@@ -580,7 +779,10 @@
           "_why": "starter stream's lower bend, before the village approach"
         },
         {
-          "at": [142.0, 1550.0],
+          "at": [
+            142.0,
+            1550.0
+          ],
           "radius": 12.0,
           "count": 10,
           "models": [
@@ -591,7 +793,10 @@
           "_why": "early-forest floor: centred on harvest.json order 2005/2006 (135-145,1538-1543), the ground tools/survey_band2.gd's 01-early-forest-day frame looks at."
         },
         {
-          "at": [168.0, 2038.0],
+          "at": [
+            168.0,
+            2038.0
+          ],
           "radius": 10.0,
           "count": 8,
           "models": [
@@ -601,7 +806,10 @@
           "_why": "BAND2-FLOOR: ridge-trail forest floor between the Old Quarry and the ranger camp spur, centred on harvest.json order 2001 (168,2038)."
         },
         {
-          "at": [28.0, 2118.0],
+          "at": [
+            28.0,
+            2118.0
+          ],
           "radius": 10.0,
           "count": 8,
           "models": [
@@ -611,7 +819,10 @@
           "_why": "BAND2-FLOOR: same ridge-trail stretch, second beat -- centred on harvest.json order 2002 (28,2118)."
         },
         {
-          "at": [-408.0, 2443.0],
+          "at": [
+            -408.0,
+            2443.0
+          ],
           "radius": 12.0,
           "count": 10,
           "models": [
@@ -622,7 +833,10 @@
           "_why": "BAND2-FLOOR: the Burrow Warrens' approach, in the same forest ralph/BAND2_WARRENS_EVIDENCE_2026-08-23.md already records the cave mouth moved into -- centred on harvest.json order 2010 (-420,2440), the ground tools/survey_band2.gd's 04-warrens-mouth-day frame looks at. Plant_7_Big included here (not at the smaller sites) for a taller understorey beat right at the dungeon's own doorway."
         },
         {
-          "at": [72.0, 2969.0],
+          "at": [
+            72.0,
+            2969.0
+          ],
           "radius": 10.0,
           "count": 8,
           "models": [
@@ -645,7 +859,7 @@
       "_comment_model_scale_world_grass": "WORLD-GRASS. Per-model size, the lever scatter_rules.gd did not have until this lane added it (see its own note at the `model_scale` lookup). The layer's shared 0.26-0.58 range applies to all four species equally, so the 1.20m Wide_Short and the 1.84m Common_Tall could only ever differ by the 53% their raw meshes differ by -- and a blind critic looking at the result reported ONE asset: 'a single blade-fan type, always roughly knee height, always the same near-black green', and called the evenness generator output. These multipliers turn the four species into four real height classes: Wide_Short 0.25-0.56m, Common_Short 0.29-0.65m, Wide_Tall 0.46-1.02m, Common_Tall 0.57-1.28m. That is the mix the reference frames have -- mostly low mat with occasional standing clumps -- rather than four names for one silhouette. Common_Tall's own top of range is the number to watch: 1.28m is above R9.4's rejected ~1.2m MEAN, but it is a maximum on one of four models rather than the layer's centre, and the layer's mean tuft is 0.60m. If a critic calls pampas again, this multiplier is the one to cut, not the shared range. TUNABLE. ROUND 3: the two SHORT multipliers rose with scale_min (see the scale note above); the two tall ones are unchanged.",
       "model_scale": {
         "res://assets/environment/stylized_nature/Grass_Common_Short.gltf": 0.95,
-        "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf": 1.20,
+        "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf": 1.2,
         "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf": 0.92,
         "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf": 1.15
       },
@@ -702,10 +916,18 @@
       "_comment_variant_retint_vis_world": "VIS-WORLD. Four greens across the four grass models, replacing the per-instance jitter removed above. Keyed by model path because all four share the material name 'Grass', which is exactly the case variant_retint exists for (see the trees layer). Spread around palette.json's meadow green rather than invented: a short/tall and wide/narrow pair reading as slightly different species is more of the 'hue families' the ledger counts than one hue jittered 22% either side of itself. TUNABLE.",
       "variant_retint": {
         "_comment_vis_world_r3": "VIS-WORLD round 3. Round 2's values were a regression this round is undoing. A blind critic read them exactly: \"the neon-lime cutout tufts are 2-3 stops brighter and greener than the terrain they sit on, so they read as stickers, not growth\". Measured, that is literally true -- round 2's four tints ran value 0.525-0.706 while terrain_playground.json's own R9.4 comment records the ground grass RENDERING at value 0.199, so the tufts were 2.6x to 3.5x the brightness of the surface they grow out of. Scaled to land near 0.29-0.39: still lighter than the ground, because a blade catching light should be, but no longer a different material pasted on top of it. Hue and the four-way spread are unchanged -- those were not the complaint. TUNABLE, and re-derive against the ground's rendered value rather than by eye.",
-        "res://assets/environment/stylized_nature/Grass_Common_Short.gltf": { "Grass": "#55612f" },
-        "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf": { "Grass": "#4a5625" },
-        "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf": { "Grass": "#5f6837" },
-        "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf": { "Grass": "#404e21" }
+        "res://assets/environment/stylized_nature/Grass_Common_Short.gltf": {
+          "Grass": "#55612f"
+        },
+        "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf": {
+          "Grass": "#4a5625"
+        },
+        "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf": {
+          "Grass": "#5f6837"
+        },
+        "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf": {
+          "Grass": "#404e21"
+        }
       },
       "clear_radius": 1.5,
       "base_scale": 1.0,
@@ -795,14 +1017,18 @@
       "_comment_scale": "R7.1-remainder: raised alongside grass's own scale bump (same file, same reasoning) so the two layers stay in proportion to each other.",
       "_comment_scale_world_grass": "WORLD-GRASS: 0.13-0.33 -> 0.20-0.44, tracking grass's raise below it. Measured, not guessed: Grass_Wispy_Short/Tall are 1.07m and 1.67m tall in their own glTF accessors, so the old range put the mean wispy tuft at 0.31m and the new one at 0.44m. Deliberately still shorter than the green grass -- dry stalks standing taller than the crop they accent invert the read.",
       "_comment_scale_t1_ground_3": "T1-GROUND-3: 0.20-0.44 -> 0.30-0.62, and the note above is the reason rather than an objection to it. 'Shorter than the green grass' was derived against the `grass` SCATTER layer, which the grass field has since replaced and which grass_field.json still suppresses -- so the green this layer now reads against is the field's tuft ring, whose blades run height_near 0.40 to height_far 0.62m. At the old range the wispy meshes (1.07m and 1.67m raw, Wheat 1.78m at model_scale 0.72 = 1.28m) arrived at 0.21-0.47m / 0.33-0.73m / 0.26-0.56m -- AT or under the carpet's own height, which is what a second species must not be: a plant you cannot see over the first one is a texture, not a species. The new range puts the mean wispy tuft near 0.7m and the tallest near 1.04m against a 1.80m trainer -- knee-to-thigh tussocks breaking the carpet's top line, which is the silhouette the blind pass said the ground has none of. Still under the bushes tier (0.85m item_size) so the understorey ladder's order is unchanged. TUNABLE; if the meadow starts reading as overgrown rather than mixed, this is the axis that overshot, not the clump numbers.",
-      "scale_min": 0.30,
+      "scale_min": 0.3,
       "scale_max": 0.62,
       "_comment_colour_jitter_vis_world": "VIS-WORLD: removed for the same confirmed reason as grass above -- see that comment for the measured COLOR_0 gradient and the probe results. This layer already carries a `retint` that paints both its models straw; `variant_retint` below splits that into two straws so the removal costs no variety.",
       "_comment_variant_retint_vis_world": "VIS-WORLD: two straws rather than one, so dry grass reads as more than a single repeated sprite now that far more of it lands where the player walks. TUNABLE.",
       "variant_retint": {
         "_comment_vis_world_r3": "VIS-WORLD round 3: same sticker fix as grass above. Dry straw legitimately reads lighter than green grass, so these stay the brightest ground cover in the set -- but value 0.91 against a ground rendering at 0.199 was four and a half times the surface, which is a highlight, not straw. TUNABLE.",
-        "res://assets/environment/stylized_nature/Grass_Wispy_Short.gltf": { "Grass": "#998f66" },
-        "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf": { "Grass": "#8d7f54" }
+        "res://assets/environment/stylized_nature/Grass_Wispy_Short.gltf": {
+          "Grass": "#998f66"
+        },
+        "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf": {
+          "Grass": "#8d7f54"
+        }
       },
       "clear_radius": 2.0,
       "base_scale": 1.0,
@@ -899,7 +1125,9 @@
       "drain_suppression": 0.0,
       "min_slope_deg": 6.0,
       "_why_band_scale_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defect 2 -- the RIGHT lever, after two wrong ones. The band-wide `corridor_bands` density_scale was tried at 0.22 and reverted: `trees` carries `corridor_fill.trail_bias` 0.85, so most corridor fill is sited beside the authored trail, every approach stand stands on that trail, and the rise filled `H-01-approach-400` -- the chapter's 400m reveal -- with near-field trees until the fortress was not visible at all (evidence frame in ralph/reports/T1-HALL-4/). And the `lod_range` raise was inert, because `scatter_lod_ranges` is false in performance.json. Neither touched the defect. `band_scale` is per-LAYER, which is what both of those were missing. It lets band 5 gain mid-ground content from species that CANNOT occlude a sightline -- `rocks` are ground-hugging and align to slope, `bushes` run 0.45-1.0 scale -- while `trees`, `grove` and `saplings`, the three layers that actually block a view of a fortress, keep the band's own 0.07 exactly. That is the distinction the band-wide number cannot express and the reason this is the lever to reach for here. Sized against the draw-call budget rather than guessed: measured at the `hall_approach` stand this build sits at 3365 of `docs/PERFORMANCE_BUDGET.md`'s 4000, and draw calls count MultiMesh BATCHES rather than instances -- `village_high` moved 1995 -> 2011 calls (+0.8%) while its placements grew +73% -- so added density in existing layers is close to free on that axis. The cost that is NOT free is `test_scatter_perf_budget.gd`'s 900,000 placement ceiling; the count this lands at is in the lane's handover. NOTE for whoever tunes this next: it cannot reach the ground the judge was mostly looking at. `H-02b` looks south-west at a Hall standing at z 7560 and `world_perimeter.gd`'s south cap is at z 7680, so most of that frame's bald distance is OUTSIDE the authored corridor, where no scatter exists and none can be placed. This fills the in-corridor part; the rest is a world-extent problem (handover section 1b).",
-      "band_scale": {"band5_stronghold_approach": 3.0},
+      "band_scale": {
+        "band5_stronghold_approach": 3.0
+      },
       "max_slope_deg": 44.0,
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. DEEPER than the waterline on purpose: a boulder breaking the surface near the shore is one of the contact points the water's foam band exists for. TUNABLE.",
       "_comment_min_height_op21_19": "OP21-19 raised all ten layer floors by +5.5m to stop trees and bushes standing in the relocated pond, and the accompanying scatter_rules.gd change added a hard water_level()-0.5 floor as a GATE inside _consider. Both are REVERTED here and replaced by scatter_rules.gd::_drop_below_waterline, a filter over the finished list. The gate was the bug: _thin_by_drain's own header already states the rule it broke -- a rejection inside _consider happens BEFORE an instance's scale, model and yaw are drawn, so every later instance in that layer lands on different random numbers. The pond is ~0.02% of a 8192x2048m corridor and the re-roll was total: 257 region files changed, and it stood a rock and a pebble on a slope in the practice meadow at (59.7, -49.1) where smoke_traversal.gd's OF15 detector caught a held move_back dead-stopped for a full second. These per-layer floors are back at the values main shipped, because with the filter in place the raise bought nothing: the filter is stricter than any of them at the pond and touches nothing anywhere else. TUNABLE, but note that changing one re-rolls that layer across the whole map -- re-run tests/smoke_traversal.gd after touching a colliding layer (trees, grove, saplings, rocks).",
@@ -1150,24 +1378,217 @@
           "scale_min": 0.45,
           "scale_max": 0.85,
           "sink": 0.2
+        },
+        {
+          "_why": "Hall east wall foot -- rubble off the outer-works and courtyard flank (H-05's subject)",
+          "at": [
+            20.6,
+            7552.0
+          ],
+          "radius": 4.5,
+          "count": 7,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "scale_min": 0.25,
+          "scale_max": 0.7,
+          "sink": 0.42
+        },
+        {
+          "_why": "Hall east wall foot -- rubble off the outer-works and courtyard flank (H-05's subject)",
+          "at": [
+            20.6,
+            7566.0
+          ],
+          "radius": 4.5,
+          "count": 7,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "scale_min": 0.25,
+          "scale_max": 0.7,
+          "sink": 0.42
+        },
+        {
+          "_why": "Hall east wall foot -- rubble off the outer-works and courtyard flank (H-05's subject)",
+          "at": [
+            21.6,
+            7584.0
+          ],
+          "radius": 4.5,
+          "count": 7,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "scale_min": 0.25,
+          "scale_max": 0.7,
+          "sink": 0.42
+        },
+        {
+          "_why": "Hall east wall foot -- rubble off the outer-works and courtyard flank (H-05's subject)",
+          "at": [
+            21.6,
+            7600.0
+          ],
+          "radius": 4.5,
+          "count": 7,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "scale_min": 0.25,
+          "scale_max": 0.7,
+          "sink": 0.42
+        },
+        {
+          "_why": "Hall west keep foot -- rubble off the legendary chamber's west elevation (H-06's subject)",
+          "at": [
+            -40.6,
+            7640.0
+          ],
+          "radius": 4.5,
+          "count": 7,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "scale_min": 0.25,
+          "scale_max": 0.75,
+          "sink": 0.42
+        },
+        {
+          "_why": "Hall west keep foot -- rubble off the legendary chamber's west elevation (H-06's subject)",
+          "at": [
+            -40.6,
+            7654.0
+          ],
+          "radius": 4.5,
+          "count": 7,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "scale_min": 0.25,
+          "scale_max": 0.75,
+          "sink": 0.42
+        },
+        {
+          "_why": "Hall west keep foot -- rubble off the legendary chamber's west elevation (H-06's subject)",
+          "at": [
+            -40.6,
+            7664.0
+          ],
+          "radius": 4.5,
+          "count": 7,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "scale_min": 0.25,
+          "scale_max": 0.75,
+          "sink": 0.42
+        },
+        {
+          "_why": "Hall gate-face foot -- rubble either side of the causeway head, clear of its own footprints",
+          "at": [
+            -1.0,
+            7547.0
+          ],
+          "radius": 4.0,
+          "count": 6,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "scale_min": 0.25,
+          "scale_max": 0.6,
+          "sink": 0.42
+        },
+        {
+          "_why": "Hall gate-face foot -- rubble either side of the causeway head, clear of its own footprints",
+          "at": [
+            17.0,
+            7547.0
+          ],
+          "radius": 4.0,
+          "count": 6,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "scale_min": 0.25,
+          "scale_max": 0.6,
+          "sink": 0.42
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            58.4,
+            7535.7
+          ],
+          "count": 6,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "radius": 20.0,
+          "scale_min": 1.4,
+          "scale_max": 2.6,
+          "sink": 0.3
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -17.4,
+            7510.2
+          ],
+          "count": 6,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "radius": 20.0,
+          "scale_min": 1.4,
+          "scale_max": 2.6,
+          "sink": 0.3
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            47.2,
+            7584.7
+          ],
+          "count": 6,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "radius": 20.0,
+          "scale_min": 1.4,
+          "scale_max": 2.6,
+          "sink": 0.3
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -38.1,
+            7555.9
+          ],
+          "count": 6,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "radius": 20.0,
+          "scale_min": 1.4,
+          "scale_max": 2.6,
+          "sink": 0.3
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            35.9,
+            7633.7
+          ],
+          "count": 6,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "radius": 20.0,
+          "scale_min": 1.4,
+          "scale_max": 2.6,
+          "sink": 0.3
+        },
+        {
+          "_why": "T1-HALL-4: band-5 mid-distance fill for H-02b, sited by computing that stand's own frustum rather than by eye -- the lane's first attempt put these 'east and west of the Hall' in world terms and every one fell outside the view, because the stand looks south-south-west and its frame is a wedge along that axis. These sit 120-270m along the view axis at 70-130m lateral, clear of the Hall footprint (x -56..38, z 7524..7682 with skirt) and 60m+ off the trail. Nothing past z 7660: at this eye height frame row y=420 already looks 367m out, which is past world_perimeter.gd's z 7680 south cap, so the top of the judge's mid-band is outside the world and unfillable by any means. JUDGE-6 defect 2.",
+          "at": [
+            -58.8,
+            7601.7
+          ],
+          "count": 6,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 40.0,
+          "radius": 20.0,
+          "scale_min": 1.4,
+          "scale_max": 2.6,
+          "sink": 0.3
         }
-      ,
-        {"_why": "Hall east wall foot -- rubble off the outer-works and courtyard flank (H-05's subject)", "at": [20.6, 7552.0], "radius": 4.5, "count": 7, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 0.25, "scale_max": 0.7, "sink": 0.42},
-        {"_why": "Hall east wall foot -- rubble off the outer-works and courtyard flank (H-05's subject)", "at": [20.6, 7566.0], "radius": 4.5, "count": 7, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 0.25, "scale_max": 0.7, "sink": 0.42},
-        {"_why": "Hall east wall foot -- rubble off the outer-works and courtyard flank (H-05's subject)", "at": [21.6, 7584.0], "radius": 4.5, "count": 7, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 0.25, "scale_max": 0.7, "sink": 0.42},
-        {"_why": "Hall east wall foot -- rubble off the outer-works and courtyard flank (H-05's subject)", "at": [21.6, 7600.0], "radius": 4.5, "count": 7, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 0.25, "scale_max": 0.7, "sink": 0.42},
-        {"_why": "Hall west keep foot -- rubble off the legendary chamber's west elevation (H-06's subject)", "at": [-40.6, 7640.0], "radius": 4.5, "count": 7, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 0.25, "scale_max": 0.75, "sink": 0.42},
-        {"_why": "Hall west keep foot -- rubble off the legendary chamber's west elevation (H-06's subject)", "at": [-40.6, 7654.0], "radius": 4.5, "count": 7, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 0.25, "scale_max": 0.75, "sink": 0.42},
-        {"_why": "Hall west keep foot -- rubble off the legendary chamber's west elevation (H-06's subject)", "at": [-40.6, 7664.0], "radius": 4.5, "count": 7, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 0.25, "scale_max": 0.75, "sink": 0.42},
-        {"_why": "Hall gate-face foot -- rubble either side of the causeway head, clear of its own footprints", "at": [-1.0, 7547.0], "radius": 4.0, "count": 6, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 0.25, "scale_max": 0.6, "sink": 0.42},
-        {"_why": "Hall gate-face foot -- rubble either side of the causeway head, clear of its own footprints", "at": [17.0, 7547.0], "radius": 4.0, "count": 6, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 0.25, "scale_max": 0.6, "sink": 0.42}
-      ,
-        {"_why": "T1-HALL-4: band-5 mid-distance boulders -- large enough to read at 150m+, unlike the layer's ordinary rubble. JUDGE-6 defect 2.", "at": [-200.0, 7460.0], "radius": 26.0, "count": 6, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 1.4, "scale_max": 2.6, "sink": 0.3},
-        {"_why": "T1-HALL-4: band-5 mid-distance boulders -- large enough to read at 150m+, unlike the layer's ordinary rubble. JUDGE-6 defect 2.", "at": [190.0, 7470.0], "radius": 26.0, "count": 6, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 1.4, "scale_max": 2.6, "sink": 0.3},
-        {"_why": "T1-HALL-4: band-5 mid-distance boulders -- large enough to read at 150m+, unlike the layer's ordinary rubble. JUDGE-6 defect 2.", "at": [-230.0, 7570.0], "radius": 26.0, "count": 6, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 1.4, "scale_max": 2.6, "sink": 0.3},
-        {"_why": "T1-HALL-4: band-5 mid-distance boulders -- large enough to read at 150m+, unlike the layer's ordinary rubble. JUDGE-6 defect 2.", "at": [220.0, 7580.0], "radius": 26.0, "count": 6, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 1.4, "scale_max": 2.6, "sink": 0.3},
-        {"_why": "T1-HALL-4: band-5 mid-distance boulders -- large enough to read at 150m+, unlike the layer's ordinary rubble. JUDGE-6 defect 2.", "at": [-170.0, 7630.0], "radius": 26.0, "count": 6, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 1.4, "scale_max": 2.6, "sink": 0.3},
-        {"_why": "T1-HALL-4: band-5 mid-distance boulders -- large enough to read at 150m+, unlike the layer's ordinary rubble. JUDGE-6 defect 2.", "at": [250.0, 7650.0], "radius": 26.0, "count": 6, "min_slope_deg": 0.0, "max_slope_deg": 40.0, "scale_min": 1.4, "scale_max": 2.6, "sink": 0.3}
       ]
     },
     "path_stones": {
@@ -1259,9 +1680,15 @@
       "scale_max": 0.46,
       "_comment_retint": "Deliberately DARKER and less saturated than the grass tufts above. This tier is the one that reads as shadow under the taller growth, and the same blind critic's separate finding is that this build has 'no quarter-tone anywhere' -- bimodal blown sand against crushed black. A mat sitting a little under the tuft's own value is where a quarter-tone comes from. Two greens rather than one so the two clovers are not one repeated sprite, the same treatment `grass` and `drygrass` already carry. TUNABLE, and re-derive against the tufts rather than by eye.",
       "variant_retint": {
-        "res://assets/environment/stylized_nature/Clover_1.gltf": { "Leaves": "#485a2c" },
-        "res://assets/environment/stylized_nature/Clover_2.gltf": { "Leaves": "#3d4f26" },
-        "res://assets/environment/stylized_nature/Plant_1_Big.gltf": { "Leaves": "#546434" }
+        "res://assets/environment/stylized_nature/Clover_1.gltf": {
+          "Leaves": "#485a2c"
+        },
+        "res://assets/environment/stylized_nature/Clover_2.gltf": {
+          "Leaves": "#3d4f26"
+        },
+        "res://assets/environment/stylized_nature/Plant_1_Big.gltf": {
+          "Leaves": "#546434"
+        }
       },
       "clear_radius": 1.5,
       "base_scale": 1.0,
