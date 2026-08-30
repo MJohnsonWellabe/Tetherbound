@@ -5,24 +5,37 @@
 answered both bar questions **No**. The second list in that report — the one that
 needs art nobody has built — went to the owner and is deliberately untouched here.
 
-**Headline, the number the lane was asked for:**
+**Status: FINAL.**
 
-> **Fortress-vs-hill separation: +51.5.**
-> **Fortress vs the nearest-in-value ground beside it: +2.9 → +31.8**, against
-> the keyart's +32.0. The fortress is now the dark shape in its own frame.
-> Measured on the judge's stand with the judge's boxes; see §1.
+**Headline, the number the lane was asked for**, measured on JUDGE-6's own stand
+(`H-02b-sigil-gate-raised`) with JUDGE-6's own boxes:
 
-**And the finding that matters more than that number:** defect 2 (the bald
-mid-distance) is **not fixed and cannot be fixed the way it was framed**. Two
-reasons, both in §1b: `scatter_lod_ranges` is `false` in the shipped
-`performance.json`, so every `lod_range` in `vegetation.json` is **inert** and
-raising them changes nothing; and in `H-02b` most of that bald ground is
-*outside the authored world* — the Hall sits at z 7560 and
-`world_perimeter.gd`'s south cap is at z 7680. The "evenly spaced identical
-posts" the judge called "the edge of the map" **are** the map's edge.
+| | T1-HALL-3 (judged) | T1-HALL-4 | keyart |
+|---|---|---|---|
+| fortress mass | 133.4 | **115.7** | 72 |
+| bald hill right of it | 158.4 | 170.5 | 104 |
+| mid-ground left of it | 136.3 | 148.9 | — |
+| **fortress vs hill** | +25.0 | **+54.7** | +32.0 |
+| **fortress vs worst neighbour** | **+2.9** | **+33.1** | +32.0 |
 
-**Draw calls:** 3365 at `hall_approach` against a 4000 ceiling — 16% headroom.
-Measured with `scatter_lod_ranges=false`, i.e. the shipping configuration.
+> **The fortress is now the dark shape in its own frame.** Against the hill the
+> judge named, the separation is **+54.7**. Against the nearest-in-value ground
+> beside it — the harsher reading, and the one the judge's "within 5 luminance
+> points of the ground beside it" actually describes — it is **+2.9 → +33.1**,
+> against the keyart's +32.0.
+
+Both halves of the fix were needed: the building dropped 17.7 points and the
+ground it stands against rose 12.6.
+
+**Draw calls:** 3365 at `hall_approach` against `docs/PERFORMANCE_BUDGET.md`'s
+4000 ceiling — 16% headroom. **Scatter:** 837,204 placements against
+`test_scatter_perf_budget.gd`'s 900,000.
+
+**Defect 2 (the bald mid-distance) is NOT fixed, and roughly half of it is not
+fixable by any vegetation setting.** See §1b — the top of the judge's own
+mid-band looks 367 m down a corridor that ends at z 7680. That half belongs on
+the owner's list, not a scene lane's. The fillable half improved only slightly
+(texture energy 15.09 → 16.12 in rows 450–560).
 
 ---
 
@@ -76,24 +89,40 @@ would otherwise do:
 
 ## 1. The headline defect: silhouette contrast — **fixed, and measured**
 
-Measured on `H-02b-sigil-gate-raised`, the judge's own stand and the judge's own
-boxes, by `tools/_t1hall4_measure.py`:
+Numbers are in the header table. Two changes produced them and neither was
+sufficient alone.
 
-| | T1-HALL-3 (judged) | T1-HALL-4 | keyart |
-|---|---|---|---|
-| fortress mass | 133.4 | **113.2** | 72 |
-| bald hill right of it | 158.4 | 164.7 | 104 |
-| mid-ground left | 136.3 | 145.0 | — |
-| **separation (worst neighbour)** | **+2.9** | **+31.8** | **+32.0** |
+**The building dropped and cooled.** The whole stone family moved together —
+kit `LightRock` #d2c6b2 → #817f78 and `DarkRock` #ab9d89 → #68675f in
+`building_prefabs.json`, works walls' `stone_light` #9c9083 → #66655e in
+`stronghold.json` — so the ~1.27× ladder `_why_retint_t1_hall_3` tuned survives
+and only the family's *absolute* value moves. That is the axis JUDGE-6 said was
+never addressed: "the lane treated D3 as a massing problem and solved it as one …
+raising a pale object standing on a pale hill does not create a silhouette." The
+warm spread narrows from 32 points of R-over-B to 9, because the judge asked for
+cooler as well as darker.
 
-**The fortress-vs-hill separation is +51.5. The number that matters — the
-fortress against the nearest-in-value ground beside it — is +31.8, against the
-keyart's +32.0.**
+`stone` (#6a6157) is deliberately untouched — it is the *interior* tone, and
+`_ceiling_colour`'s note records the warden arena hitting 96.7% of pixels below
+luminance 40 the last time these rooms lost value.
 
-Both halves of the fix contributed and neither would have been enough alone: the
-building dropped 20.2 points and the ground it stands against rose 8.7. It is now
-unambiguously the dark shape in its own frame, which is what JUDGE-6 said makes a
-landmark.
+**The backdrop lifted and warmed.** `fog_colour` and `sky.horizon_colour` (kept
+identical, as the EV8 note requires) #b7ccc3 → #d3cebd, and the terrain's own
+`shader.aerial_fade_colour` #bec9ce → #d0c9b6. The terrain one does the real
+work: it lives in the ground shader's fragment tail, so it lifts what is *behind*
+the fortress without lifting the fortress — the judge's own "push a lighter warm
+haze behind it", and something env fog cannot do because fog reaches the building
+too.
+
+**A regression this caused, and its correction.** Round 1 took JUDGE-6's own
+defect-5 box (`H-06`, x 900–1280, y 0–620) from mean L 28.8 to 19.8 with
+high-pass texture sd 4.10 → 2.67 — darker, with *less* readable texture. The
+rank-1 fix had partly paid for itself out of the rank-5 defect below it. Two
+small corrections, neither touching the kit stone that carries the silhouette:
+`ambient_sky_contribution` 0.25 → 0.10, and `stone_light` giving back ~8% on the
+**works walls only** (#5f5e58 → #66655e), which is what that keep elevation is
+made of. The separation did not suffer — it rose, because lifting fill raises
+pale ground more than dark stone.
 
 ## 1b. Defect 2 is **not** fixed. Two reasons, and both matter
 
@@ -147,23 +176,55 @@ resembles a boundary. It **is** the boundary — `world_perimeter.gd`'s south ca
 posts at `JOIN_SPACING` 37 m. The judge read the frame exactly right, blind, and
 named the cause without knowing it.
 
-That reframes defect 2 completely. It is not a vegetation-density problem in this
-frame; it is a **world-extent and composition** problem, and the fix is one of:
+### How much of defect 2 is structural — for the owner's list, not a lane's
+
+The coordinator asked for this stated plainly, so: mapping each row of JUDGE-6's
+mid-band (y 380–560) to the ground it actually sees, from this stand's own rig
+(view dir (−0.319, 0.948), horizontal half-FOV 48.2°, eye 26 m):
+
+| frame row | ground distance | centre point | inside the world? |
+|---|---|---|---|
+| y=420 | 367 m | (−53.7, 7743) | **no — past z 7680** |
+| y=450 | 222 m | (−7.3, 7605) | yes |
+| y=480 | 159 m | (12.9, 7545) | yes |
+| y=510 | 123 m | (24.3, 7512) | yes |
+| y=540 | 100 m | (31.6, 7490) | yes |
+
+**Rows 380–420 of the band the judge measured are outside the authored world.**
+No `lod_range`, `density_scale`, `band_scale` or anchor can put anything there,
+because there is no ground there to put it on — only Terrain3D's procedural
+background and the perimeter fence. That is a **world-extent decision and belongs
+on the owner's list**, alongside the stone material and the ivy: it is not
+something a scene lane skipped.
+
+Rows 450–560 *are* fillable, and this lane filled them — 14 tree, 5 grove and 6
+boulder anchors at 120–270 m along the view axis, off-trail and clear of the Hall
+footprint. The gain is real but small: texture energy in those rows moved
+**15.09 → 16.12**. Honest read: this improves the near half of the band and does
+not change the frame's overall impression, because the part that dominates the
+eye is the part that is outside the world.
+
+The three ways to actually fix the frame, none of them this lane's to take:
 
 1. **Raise a landform behind the Hall** — `terrain_playground.json`'s
-   `rises.peaks`, a peak around (8, 7700) — so the boundary is occluded and the
-   fortress gains a backdrop to be dark against. Cheapest, and the only one that
-   is still scene tuning. **Not done here**: it moves terrain near the Hall, and
-   the building's floor level, causeway rise and massing feet are all sampled
-   from the live ground at build time, so it needs its own verify pass rather
-   than being tacked onto a lane whose render budget was already spent.
-2. Extend the corridor south past z 7680 (a bake and a world-bounds change).
-3. Move the Hall north, or re-aim the stand — both design decisions, not this
-   lane's to make.
+   `rises.peaks`, a peak near (8, 7700) — occluding the boundary and giving the
+   fortress a backdrop. Cheapest, and the only one still in scene-tuning
+   territory. Not done here because it moves terrain near the Hall, and the
+   building's floor level, causeway rise and massing feet are all sampled from
+   live ground at build time; it needs its own verify pass.
+2. Extend the corridor south past z 7680 — a world-bounds change and a re-bake.
+3. Move the Hall north, or re-aim the stand — design decisions.
 
 **This lane did not fix defect 2 and must not be read as having done so.** What
-it contributes is the diagnosis: the lever everyone will reach for first is
-switched off on purpose, and the ground in question is not in the world.
+it contributes is the diagnosis, and four levers ruled out with evidence so the
+next lane does not re-run them:
+
+| lever | result |
+|---|---|
+| `lod_range` raise | **inert** — `scatter_lod_ranges` is `false` in `performance.json` |
+| band-wide `density_scale` 0.07→0.22 | **occluded the 400 m reveal** — `trail_bias` 0.85 puts fill on the approach |
+| per-layer `band_scale` on rocks/bushes | baked, measured, **no visible change** — 0.5–2 m objects do not read at 150 m+ |
+| off-trail tree/grove/boulder anchors | **works, on the fillable rows only** — 15.09 → 16.12 |
 
 ## 2. Where JUDGE-6 is wrong, with the measurement
 
@@ -467,15 +528,46 @@ Stated plainly so the next lane does not have to rediscover it.
 
 ## 5. Budget
 
-- **Scatter placements:** the density experiment took this to 874,616 against
-  `test_scatter_perf_budget.gd`'s 900,000 — 97% of a guard that exists to catch
-  runaway density, which would have left it unable to catch much. Reverting band 5
-  returns the count to roughly the shipped 826,892 (the wall-foot anchors add 61),
-  so the headroom the guard needs is back. Recorded because the 97% figure was
-  briefly real and a later lane raising this band should know how little room
-  there is.
-- **Draw calls:** the cull-range raise is the change that spends here — it moves
-  no placement, so the instance count is untouched, but more MultiMeshInstances
-  are resident per frame. Measured at the `hall_approach` stand
-  (`tools/perf_render_stats.gd --views=hall_approach`) against
-  `docs/PERFORMANCE_BUDGET.md`'s 4000-call ceiling: see below.
+- **Draw calls: 3365** at `hall_approach` against `docs/PERFORMANCE_BUDGET.md`'s
+  4000 ceiling — 16% headroom. Measured with `tools/perf_render_stats.gd
+  --views=hall_approach` in the shipping configuration (`scatter_lod_ranges=false`).
+- **Scatter placements: 826,892 → 837,204** against
+  `test_scatter_perf_budget.gd`'s 900,000 — 63k headroom. The +10,312 is the
+  wall-foot rubble, the mid-distance anchors, and the rng-stream shift those
+  cause. Note for the record: the reverted band-5 density experiment briefly took
+  this to 874,616, i.e. 97% of a guard whose job is catching runaway density.
+- **Exterior omni lights: 18**, exactly the ceiling `_comment_braziers` states.
+  No lights added — see §0.5.
+
+---
+
+## 6. Frames
+
+`ralph/reports/T1-HALL-4/shots/` — all eleven stands, re-rendered on this branch,
+`tools/capture_check.gd` clean on every one.
+
+`ralph/reports/T1-HALL-4/EVIDENCE-band5-density-0.22-occludes-the-reveal.png` is
+not a stand: it is the rejected density experiment, kept because it is the
+evidence for why that lever is closed.
+
+---
+
+## 7. Honest assessment for the next blind pass
+
+Defect 1 is fixed and the number is the keyart's. Defects 3, 6, 7, 11, 12 and 13
+are addressed. Defect 5 is corrected back to roughly parity after this lane
+briefly made it worse. Defects 8 and 9 are declined with measurements that
+reproduce the judge's own pixel figures.
+
+**A third blind pass will most likely still answer No, and it should.** The
+reasons are on JUDGE-6's own second list and are unchanged by this lane: the
+stone material still has its highlight baked into the albedo with no per-stone
+variation; there is no ivy, no timber-and-iron retrofit, no broken wall-top set,
+no arch or portcullis, no roof asset, and no cloth-shaped banner. Those were
+routed to the owner and this lane deliberately did not work around them. The
+mid-distance will also still read thin, and §1b explains why roughly half of it
+cannot be fixed without a world-extent or composition decision.
+
+What has changed is that the fortress is now findable, dark, coherently coursed
+in one stone, and lit by fires that pool. That was the assignment; the rest is a
+purchase order.

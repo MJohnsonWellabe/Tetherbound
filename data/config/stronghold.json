@@ -5,7 +5,7 @@
   "_comment_ow5d_relocation": "OW5D moved `site.at` to (0,7560) with `yaw_deg` left at 90 UNCHANGED and flagged loudly as 'very likely WRONG' -- nobody had re-probed the ground or re-derived the approach bearing. T1-HALL (2026-08-30) does both, per `HALL_DESIGN_2026-08-30.md` §2: `tools/_probe_hall_site.gd` sampled an 8m grid over x[-72,40] z[7490,7682] against the LIVE heightfield (superseding the un-probed OW5D placeholder). Findings: the player arrives through a low bowl (trail at -6.9 around (20,7480), rising to -0.65 at the old terminus); a local rise peaks +4.8 around (8-16,7586-7602) -- inside the courtyard footprint, so the building genuinely sits on a hill; a western shoulder climbs to +7..+9 at x[-72,-40] to lean the keep against; a ravine drops to -8..-16 just north-west of the causeway, dressed rather than fought. `site.at` moved 8m east, to (8.0,7560.0), so the western shoulder's high ground (+5.6..+6.8) sits clear of the legendary chamber rather than under it, leaving the courtyard rise (+4.8) as the binding high point. `yaw_deg` moves 90 -> 0: local +z (route depth) now maps to world +z, so walking deeper walks SOUTH and the mouth (outer_works' own -z face) faces NORTH -- straight up the corridor the player actually arrives along, matching the trail's final leg (20,7480)->(0,7560) instead of standing side-on to it. This is a real cost, not a free win: `art.json`'s `sun.yaw_deg` is 140 (south sky), so the re-derived north-facing gate is a SHADED face at the day keyframe -- HALL_DESIGN_2026-08-30.md §2/§5/§6 own that deliberately (light stone tier + the proven fire/sky-fill recipe + self-lit occupation concentrated on this face; the sunlit flanks carry the coursing evidence instead). `ramp_run` moves 26 -> 40: mouth sill at floor +5.5, ramp-foot ground at (8,7508) ~ -4.8, so ~10.3m of rise over 40m is ~14.5 degrees, a real climb comfortably under the walkable bar (`_build_approach_ramp` self-derives the rise from the ground; only the run is authored). Everything already aimed at (0,7560) keeps working: the 15-pylon line ends at (-8,7505), 55m short of the new mouth and now pointing at the west half of the works, which is where the legendary chamber and the machine actually stand. The Sigil Gate, the waystop and the Band 5 trail need no edits. T1-HALL ALSO FOUND AND FIXED a real regression this re-site exposed but did not cause: `stronghold.gd::_place_gauntlet()` and `stronghold_climax.gd::_place_warden()` apply `facing_deg` directly as a WORLD angle to trainers parented to the world root (unlike every other placement in this file, which composes with the site's own rotation via `to_global`/parent-child transform) -- so a gauntlet trainer's or the Warden's facing did NOT rotate with the building when `yaw_deg` changed, and the resulting mismatch between a trainer's facing and its own room's new orientation was enough, in the tightest two rooms on the route, to push a fight's engagement geometry outside the footprint `built_floor_height_at()` recognises as this building's floor. See those two functions' own comments for the fix and `built_floor_height_at()` below for the margin this pass widened to keep the fix robust to the combat system's own multi-round placement drift, which is pre-existing and outside this file's ownership.",
   "_comment_value_drop_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defect 1. The works' own exterior half of the value drop described in building_prefabs.json's `_why_value_drop_t1_hall_4` -- read that first, it carries the measurement and the reasoning. `stone_light` #9c9083 -> #5f5e58 and `stone_skirt` #8f8172 -> #575147 are the SAME factor the kit's LightRock/DarkRock take, applied here so the ladder HALL_DESIGN sec5 authored and `_comment_stone_light`/`_comment_stone_skirt` below both describe survives the drop intact: skirt < works walls < DarkRock < LightRock is unchanged in order, and the works-to-LightRock step stays 1.36x where it was 1.35x. What moves is the family's absolute value, because JUDGE-6 measured the fortress at five luminance points off its own background and the reference at a 32-point separation with the fortress dark. `stone` (#6a6157) is DELIBERATELY NOT DROPPED and that is not an oversight. `_wall_material` hands `stone_light` to outer walls and `stone` to inner ones, so `stone` is an interior tone, and `_ceiling_colour`'s own note records what happened the last time this building's interiors lost value: the warden arena went to 96.7% of pixels below luminance 40 and a blind critic's first finding was the value crush. The exterior is now slightly darker than the interior, which is both the intended read (a weathered outside, lit rooms within) and the only way to take the silhouette without paying for it in the five rooms the player fights in. ROUND 2, same lane, after rendering: #5f5e58 -> #66655e, giving back about 8% of the drop on the WORKS WALLS ONLY. The kit's LightRock/DarkRock keep their full drop, so the fortress mass that carries the silhouette at range is unchanged. The reason is JUDGE-6 defect 5: the west keep elevation is works wall, it is the frame's shaded face, and the full drop took it to mean L 19.8 with a high-pass texture sd of 2.67 against 28.8/4.10 on the judged frames -- i.e. the value drop bought the silhouette partly at the cost of the defect immediately below it on the same list. This is the smaller half of the correction (see art.json's ambient_sky_contribution round-2 note for the larger half); it is deliberately small so the ladder this file's round-1 note describes still holds -- works-to-LightRock is 1.26x where round 1 put it at 1.36x and the shipped build had 1.35x, so the two stones still read as one fortress.",
   "_comment_stone_light": "T1-HALL-BUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §5's palette-proof step: `stone_light` (the works' own exterior wall / exterior-face-skin tone, `stronghold.gd::_stone_light`/`_exterior_face_material`) moves from the code default #786d5e to the design's #9c9083, so the works' true exterior wears the SAME value-ladder step as the castle kit's retuned walls -- 'one stone, one scale, one value ladder, both kits'. `stone`/`stone_dark`/`floor_colour` are interior tones this pass does not touch; nothing else in `site` changed.",
-  "_comment_stone_skirt": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md \u00a75's foundation tier -- the darkest step on the ladder (skirt < works walls < DarkRock < LightRock < coping), at the coarser 0.22 tile so the foundation reads as BIGGER blocks than the wall above it. It is worn by a facing skin (`stronghold.gd::_build_skirt_facing`), not by the skirt slab itself: each chamber's floor slab IS its skirt (one box 18m deep whose top face is the room's walkable floor), so retinting the slab would repaint five interiors. Before this the building's whole visible plinth rendered as yard cobble seen edge-on, at a smaller stone scale than the wall standing on it -- the exact scale collision \u00a75 resolves with a stated ladder.",
+  "_comment_stone_skirt": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §5's foundation tier -- the darkest step on the ladder (skirt < works walls < DarkRock < LightRock < coping), at the coarser 0.22 tile so the foundation reads as BIGGER blocks than the wall above it. It is worn by a facing skin (`stronghold.gd::_build_skirt_facing`), not by the skirt slab itself: each chamber's floor slab IS its skirt (one box 18m deep whose top face is the room's walkable floor), so retinting the slab would repaint five interiors. Before this the building's whole visible plinth rendered as yard cobble seen edge-on, at a smaller stone scale than the wall standing on it -- the exact scale collision §5 resolves with a stated ladder.",
   "site": {
     "at": [
       8.0,
@@ -34,31 +34,115 @@
     "_comment_round2": "Blind visual pass round 1 called the pylons \"the best thing in the survey\" and the wire between them \"a bezier debug line, not a hanging cable -- cables sag, they do not soar\", concluding \"the wire connecting them undoes them.\" So the fix is the wire. `severed_spokes.gd::_conduit_span` sags a span by `distance * 0.05 * sag_scale`, and sag is PROPORTIONAL TO SPAN -- the default 1.0 was tuned on the spokes' and the quarry's ~14m spans, where it droops 0.7m and reads; over this run's 35m spans it droops 1.8m over five times the length, which is a straight diagonal. 2.2 takes it to 11% of span.\n\nSag and ground clearance pull directly against each other, so both were swept together rather than either being guessed (`tools/_sweep_cable.gd`): at the old 10.0m height, 2.2 puts the cable 1.01m off the ground -- under a walking player. 12.0m is the height that buys the sag back, and it is the SMALLEST of the swept heights that keeps a 2.2x sag clear of 2.2m (worst 2.33m). The cost is a pylon 20% taller than the one the critic liked, which is the trade taken deliberately: a decisive fix that round 2 can actually see, over a timid one that changes nothing.",
     "_comment_height": "ROUND 2: 10.0 -> 12.0, see `_comment_round2` -- the height is now set by the CABLE, not by the pylon. Original reasoning, still true: against the quarry spur run's 4.6m. This is the trunk that feeds the Hall and it should out-scale every spur the player has met; 10.0 is also the measured floor for cable clearance (see `_comment_approach_pylons_measured`) rather than a number picked for drama. `_build_pylons` scales the one GLB uniformly, so a 10m pylon is a 4.6m pylon at 2.17x -- heavier as well as taller, which is the correct read for a trunk.",
     "list": [
-      { "at": [-40.00, 7010.0], "lit": true,
+      {
+        "at": [
+          -40.0,
+          7010.0
+        ],
+        "lit": true,
         "_why": "the first one, standing at the band boundary where the trail enters at (0,7000) -- the player crests into Band 5 and the line is ALREADY there, running away from them toward something they cannot see yet. That is the whole navigational job: the direction is answered before the question is asked."
       },
-      { "at": [-37.71, 7045.4], "lit": true },
-      { "at": [-35.43, 7080.7], "lit": true },
-      { "at": [-33.14, 7116.1], "lit": true,
+      {
+        "at": [
+          -37.71,
+          7045.4
+        ],
+        "lit": true
+      },
+      {
+        "at": [
+          -35.43,
+          7080.7
+        ],
+        "lit": true
+      },
+      {
+        "at": [
+          -33.14,
+          7116.1
+        ],
+        "lit": true,
         "_why": "abreast of Watchman Corr's outer watch (bands/band5_stronghold_approach/trainers.json order 5005, (-68,7140)) -- the first Team Tether body and the first Team Tether machinery in the same 40m, so the faction reads as one thing that both stands on this ground and takes from it."
       },
-      { "at": [-30.86, 7151.4], "lit": true },
-      { "at": [-28.57, 7186.8], "lit": true },
-      { "at": [-26.29, 7222.1], "lit": true },
-      { "at": [-24.00, 7257.5], "lit": true,
+      {
+        "at": [
+          -30.86,
+          7151.4
+        ],
+        "lit": true
+      },
+      {
+        "at": [
+          -28.57,
+          7186.8
+        ],
+        "lit": true
+      },
+      {
+        "at": [
+          -26.29,
+          7222.1
+        ],
+        "lit": true
+      },
+      {
+        "at": [
+          -24.0,
+          7257.5
+        ],
+        "lit": true,
         "_why": "the middle of the run and the middle of the region. The trail's own waypoint (80,7370) swings 100m EAST of here, so this is the stretch where the road and the line visibly diverge and the line is the one that keeps pointing at the Hall -- a bearing, not a handrail."
       },
-      { "at": [-21.71, 7292.9], "lit": true },
-      { "at": [-19.43, 7328.2], "lit": true },
-      { "at": [-17.14, 7363.6], "lit": true },
-      { "at": [-14.86, 7398.9], "lit": true,
+      {
+        "at": [
+          -21.71,
+          7292.9
+        ],
+        "lit": true
+      },
+      {
+        "at": [
+          -19.43,
+          7328.2
+        ],
+        "lit": true
+      },
+      {
+        "at": [
+          -17.14,
+          7363.6
+        ],
+        "lit": true
+      },
+      {
+        "at": [
+          -14.86,
+          7398.9
+        ],
+        "lit": true,
         "_why": "level with the three-Sigil gate's own latitude, z=7400. The gate itself sits at (63.6,7400) -- ON the road, after this lane moved it there (playground_world.gd SIGIL_GATE_AT) -- so the line passes 78m WEST of it. That separation is the point rather than an accident: the road's gate is the thing the player has to open, and the machinery runs past it untouched on its own bearing. Team Tether's power was never stopped by the door they make everybody else use."
       },
-      { "at": [-12.57, 7434.3], "lit": true },
-      { "at": [-10.29, 7469.6], "lit": true,
+      {
+        "at": [
+          -12.57,
+          7434.3
+        ],
+        "lit": true
+      },
+      {
+        "at": [
+          -10.29,
+          7469.6
+        ],
+        "lit": true,
         "_why": "in sight of `the_waystop` (props.json order 5001, (-25,7460)), 17.6m outside its 14m clearing. A player who stops at the last camp to sort their five looks up at the thing they are about to walk into. Deliberately just outside the clearing so it frames the camp rather than standing in it."
       },
-      { "at": [-8.00, 7505.0], "lit": true,
+      {
+        "at": [
+          -8.0,
+          7505.0
+        ],
+        "lit": true,
         "_why": "the last one before the works, 55.6m short of the outer works' centre and clear of the skirt. The run does not stop -- it arrives."
       }
     ]
@@ -66,7 +150,12 @@
   "_comment_approach_drain": "BAND5-CONTENT, prompt 66's environmental storytelling clause. The full reasoning, and an honest statement of the half of the effect this does NOT own, is in `scripts/world/approach_drain_skin.gd`'s header. The short version: `terrain_playground.json`'s `drains.stations` holds seven entries, four at the quarry (z~1790) and three at the relay (z~3749), and NONE in Band 5 -- so the drained ground got weaker the closer the player walked to the machine draining it. `bounds` is the corridor the fifteen `approach_pylons` run through, with margin; the skin's alpha is `playground_heightfield.drain_factor()` itself, so it paints exactly where a station says and NOTHING anywhere else. It therefore renders nothing today and says so in the build log: `drains.stations` is a file no Gate D lane may edit (GATE_D_LANE_CONTRACT §5), so the Band 5 stations are REQUESTED in this lane's report the same way a `density_scale` is, and this is shipped ahead of them so that granting the request is one edit to one data file rather than an edit plus a code change.",
   "approach_drain": {
     "enabled": true,
-    "bounds": [-62.0, 6990.0, 14.0, 7548.0],
+    "bounds": [
+      -62.0,
+      6990.0,
+      14.0,
+      7548.0
+    ],
     "cell": 4.0,
     "lift": 0.09,
     "tint": "#bfb6a0",
@@ -390,12 +479,72 @@
   "_comment_lights_flanks": "T1-ARCH-STRONGHOLD (2026-08-29). Same fire+sky-fill recipe as `_comment_lights_exterior` above, standing off the `-x`/`+x` flank walls instead of the `-z` gate face. `outer_works` is 20x24 (half-extent 10, wall_thickness 1.2, so the wall centreline sits at x=+-10.6 and its span runs z[-13.2,13.2]); `courtyard` is 22x28 centred at z=32 (wall centreline x=+-11.6, span z[16.8,47.2]). Fire stations spread every ~9-10m along each flank the same density the gate face uses (~5m clearance per station over a shorter wall); one sky-fill per flank, further out and high, mirroring the gate's own counterweight. `x` stands roughly 2m proud of the wall face -- close enough that the flank does not merely brighten by ambient bounce, the way the first (superseded) gate attempt did at range 18 from further off.",
   "_comment_lights_flanks_budget": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §7. The block below was TWELVE fire points plus FOUR sky-fills, sized when the flanks were the only lit exterior in the game and the wall values were a stop and a half darker than they are now. Two things changed under it: T1-HALL-BUILD raised the stone ladder (`site.stone_light`, the kit retints) so a flank no longer needs a fire every 9m to be legible at all, and the design's own measured budget caps the merged Hall at 18 exterior omnis, versus 21 on this branch's parent (4 gate fire + 1 gate sky-fill + 16 here). So: one fire PAIR per side spanning both yards (at the yards' own joint, z=16, where a 16m-range light reaches outer_works' back half AND courtyard's front half) plus one sky-fill per side moved to the same joint for the same reason -- 6 entries, not 16. The ten cut are paid for by §5's brighter walls, exactly as §7 says, and the ten omnis they free are what the causeway braziers and the yard fires in `hall_occupation` below are spent on. `stronghold.gd::_build_lights()` prints the live exterior count at build time and warns past 18, so this is a checked budget rather than a comment.",
   "lights_flanks": [
-    {"_comment": "West flank fire 1/2 -- outer_works' own half.", "at": [-13.0, -2.0], "y": 4.5, "energy": 2.8, "range": 18.0, "colour": "#ffab5e"},
-    {"_comment": "West flank fire 2/2 -- the yards' joint, reaching courtyard's front half.", "at": [-13.5, 22.0], "y": 5.0, "energy": 2.8, "range": 18.0, "colour": "#ffab5e"},
-    {"_comment": "West flank sky-fill, one for both yards.", "at": [-27.0, 14.0], "y": 22.0, "energy": 2.4, "range": 60.0, "colour": "#8fa6c8"},
-    {"_comment": "East flank fire 1/2 -- outer_works' own half.", "at": [13.0, -2.0], "y": 4.5, "energy": 2.8, "range": 18.0, "colour": "#ffab5e"},
-    {"_comment": "East flank fire 2/2 -- the yards' joint.", "at": [13.5, 22.0], "y": 5.0, "energy": 2.8, "range": 18.0, "colour": "#ffab5e"},
-    {"_comment": "East flank sky-fill, one for both yards.", "at": [27.0, 14.0], "y": 22.0, "energy": 2.4, "range": 60.0, "colour": "#8fa6c8"}
+    {
+      "_comment": "West flank fire 1/2 -- outer_works' own half.",
+      "at": [
+        -13.0,
+        -2.0
+      ],
+      "y": 4.5,
+      "energy": 2.8,
+      "range": 18.0,
+      "colour": "#ffab5e"
+    },
+    {
+      "_comment": "West flank fire 2/2 -- the yards' joint, reaching courtyard's front half.",
+      "at": [
+        -13.5,
+        22.0
+      ],
+      "y": 5.0,
+      "energy": 2.8,
+      "range": 18.0,
+      "colour": "#ffab5e"
+    },
+    {
+      "_comment": "West flank sky-fill, one for both yards.",
+      "at": [
+        -27.0,
+        14.0
+      ],
+      "y": 22.0,
+      "energy": 2.4,
+      "range": 60.0,
+      "colour": "#8fa6c8"
+    },
+    {
+      "_comment": "East flank fire 1/2 -- outer_works' own half.",
+      "at": [
+        13.0,
+        -2.0
+      ],
+      "y": 4.5,
+      "energy": 2.8,
+      "range": 18.0,
+      "colour": "#ffab5e"
+    },
+    {
+      "_comment": "East flank fire 2/2 -- the yards' joint.",
+      "at": [
+        13.5,
+        22.0
+      ],
+      "y": 5.0,
+      "energy": 2.8,
+      "range": 18.0,
+      "colour": "#ffab5e"
+    },
+    {
+      "_comment": "East flank sky-fill, one for both yards.",
+      "at": [
+        27.0,
+        14.0
+      ],
+      "y": 22.0,
+      "energy": 2.4,
+      "range": 60.0,
+      "colour": "#8fa6c8"
+    }
   ],
   "_comment_lights_outer_works_ambient": "T1-HALL-REBUILD (2026-08-30). The outer_works yard's own weak ambient omni (was `at [0,0], y 6, energy 0.35, range 18`) is RETIRED, not moved: `hall_occupation.braziers` now stands a real fire in this yard beside the garrison camp, and two more on the causeway kerbs a few metres outside the mouth. A yard lit by a fire the player can see burning is the whole point of the occupation layer; a colourless 0.35 ambient over the top of it is the thing that flattens it. Retiring it is also what brings the site to exactly the design's 18-omni ceiling (§7) with the causeway fires included.",
   "lights": [
@@ -530,17 +679,95 @@
     "_comment_brazier_reach_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defect 12, and read this BEFORE adding a light -- the lane very nearly did and it would have been wrong. The judge's words are \"the four braziers are lit, but the towers immediately behind them are uniformly dark with NO FALLOFF POOL AT ALL. The flames are unlit sprites\", and `torch_prop.gd`'s own header says it carries no light and that callers add their own -- which together read exactly like a missing OmniLight3D. They are not missing. `stronghold.gd::_build_hall_fire` has always given every entry in this list a real flickering light at the `energy` and `range` written here. What is wrong is the REACH and the SHAPE. The four causeway bowls sit at z -24 and -40; the gate towers they stand in front of rise from the plinth at z about -13, so their bodies are 10-30m from the nearest flame and a 15m range simply stops short of them. Range 15 -> 26 on those four only (the two yard fires are lighting a yard, and reach nothing by design). `energy` is deliberately NOT raised: the deck immediately around each bowl is already correctly exposed, and more energy would blow that out to fix something 20m away. `attenuation` 1.6 is the shape half. Godot's default 1.0 falls off almost linearly to the range edge, spreading a fire's contribution thinly over everything rather than pooling it; above 1.0 concentrates it near the source. A longer range at the default attenuation would have made the whole approach slightly warmer and still produced no pool, which is the defect. NO NEW LIGHTS. `_comment_braziers` above spends the section 7 budget down to its ceiling of 18 exactly, and `_report_light_budget` counts these six; a seventh omni here would breach a budget the design states in a number.",
     "_comment_braziers": "SIX exterior fires, and six is the number the §7 light budget can afford: 4 gate fire + 1 gate sky-fill (`lights`) + 4 flank fire + 2 flank sky-fill (`lights_flanks`) + 1 courtyard ambient + these 6 = 18, the design's ceiling exactly. The design's own split was '3 causeway pairs + 2 gate braziers' with a separate yard ambient; this is the same six omnis spent as 2 causeway pairs plus a fire IN each yard, because the gate face already carries four fire lights that had no visible source at all (`gate_source` below gives two of them one, at zero light cost) and a yard with a fire burning in it reads as held far better than a yard with a colourless 0.35 ambient over it. Energies match the retired castle's own measured brazier range (~1.7-3.0).",
     "braziers": [
-      {"_comment": "Causeway pair 1, west kerb.", "at": [-3.9, -24.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 26.0, "attenuation": 1.6},
-      {"_comment": "Causeway pair 1, east kerb.", "at": [3.9, -24.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 26.0, "attenuation": 1.6},
-      {"_comment": "Causeway pair 2, west kerb -- two thirds of the way down the 40m climb; the pair spacing spreads the lit stretch over the whole causeway rather than clustering both pairs near the gate, which is what the first night frame showed.", "at": [-3.9, -40.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 26.0, "attenuation": 1.6},
-      {"_comment": "Causeway pair 2, east kerb.", "at": [3.9, -40.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 26.0, "attenuation": 1.6},
-      {"_comment": "The garrison camp's own fire, in the outer_works yard. Clear of the patrol trainer's stand at (-5,6) and of the gate/passage lane x[-4,4].", "at": [-8.4, -1.0], "on_floor": true, "scale": 2.3, "energy": 3.0, "range": 16.0},
-      {"_comment": "The inner bailey's fire, beside the relay hub. Clear of the courtyard trainer's stand at (-4,36).", "at": [6.4, 30.6], "on_floor": true, "scale": 2.1, "energy": 2.7, "range": 15.0}
+      {
+        "_comment": "Causeway pair 1, west kerb.",
+        "at": [
+          -3.9,
+          -24.0
+        ],
+        "on_causeway": true,
+        "scale": 2.1,
+        "energy": 2.9,
+        "range": 26.0,
+        "attenuation": 1.6
+      },
+      {
+        "_comment": "Causeway pair 1, east kerb.",
+        "at": [
+          3.9,
+          -24.0
+        ],
+        "on_causeway": true,
+        "scale": 2.1,
+        "energy": 2.9,
+        "range": 26.0,
+        "attenuation": 1.6
+      },
+      {
+        "_comment": "Causeway pair 2, west kerb -- two thirds of the way down the 40m climb; the pair spacing spreads the lit stretch over the whole causeway rather than clustering both pairs near the gate, which is what the first night frame showed.",
+        "at": [
+          -3.9,
+          -40.0
+        ],
+        "on_causeway": true,
+        "scale": 2.1,
+        "energy": 2.9,
+        "range": 26.0,
+        "attenuation": 1.6
+      },
+      {
+        "_comment": "Causeway pair 2, east kerb.",
+        "at": [
+          3.9,
+          -40.0
+        ],
+        "on_causeway": true,
+        "scale": 2.1,
+        "energy": 2.9,
+        "range": 26.0,
+        "attenuation": 1.6
+      },
+      {
+        "_comment": "The garrison camp's own fire, in the outer_works yard. Clear of the patrol trainer's stand at (-5,6) and of the gate/passage lane x[-4,4].",
+        "at": [
+          -8.4,
+          -1.0
+        ],
+        "on_floor": true,
+        "scale": 2.3,
+        "energy": 3.0,
+        "range": 16.0
+      },
+      {
+        "_comment": "The inner bailey's fire, beside the relay hub. Clear of the courtyard trainer's stand at (-4,36).",
+        "at": [
+          6.4,
+          30.6
+        ],
+        "on_floor": true,
+        "scale": 2.1,
+        "energy": 2.7,
+        "range": 15.0
+      }
     ],
     "_comment_gate_source": "Two brazier BASKETS with no light of their own, standing at two of the four gate fire points `lights` already authors. The T1-ARCH gate recipe lit the curtain convincingly and put nothing in the frame that could be doing the lighting; these are that missing source, and they cost zero omnis because the light is already there.",
     "gate_source": [
-      {"at": [-8.0, -13.0], "on_floor": true, "scale": 2.3},
-      {"at": [8.0, -13.0], "on_floor": true, "scale": 2.3}
+      {
+        "at": [
+          -8.0,
+          -13.0
+        ],
+        "on_floor": true,
+        "scale": 2.3
+      },
+      {
+        "at": [
+          8.0,
+          -13.0
+        ],
+        "on_floor": true,
+        "scale": 2.3
+      }
     ],
     "_comment_causeway": "The 40m climb, dressed. Kerbs are code boxes following the ramp's own self-derived slope (nothing here authors the rise; `site.ramp_run` is still the only authored number). `rail_pitch_m` spaces `Prop_WoodenFence_Single` along the kerb tops -- the board's timber approach. `banner_pairs` are the z stations for oxblood banners on stone piers; the piers are what a banner needs to hang from out on open ground.",
     "causeway": {
@@ -549,55 +776,396 @@
       "rail_height_m": 1.0,
       "_comment_rail_pitch": "RETIRED as an authored value. `stronghold.gd::_build_causeway_dressing` now derives the spacing from `Prop_WoodenFence_Single`'s own measured length at the fitted height (2.06m native x, scaled), because an authored pitch of 2.6 against a fitted panel of 2.7 overlapped every panel with its neighbour.",
       "brazier_pier_m": 0.8,
-      "banner_pairs": [-19.0, -31.0],
+      "banner_pairs": [
+        -19.0,
+        -31.0
+      ],
       "pier_height_m": 3.4
     },
     "_comment_camp": "The garrison camp in the gatehouse yard -- the board's Inner Yard stalls with a hostile owner. Same prop family the retired castle's checkpoint used (`generated_camp` tents/firewood, `kenney_survival` bedroll, `quaternius_fantasy` crates/barrel), so this is the Meadows' one camp vocabulary rather than a new one. Every entry sits on the yard's own built floor. THE CLEARANCES THIS LIST OBEYS, because a prop that blocks the route is worse than no prop: the gate/passage lane x[-4.5,4.5] stays empty end to end, the patrol trainer's stand (-5,6) keeps a 5m radius, and nothing sits closer than 1m to the yard walls at x=+-10.",
     "_comment_camp_t1_hall_3": "T1-HALL-3, 2026-08-30. The 18 entries after the Workbench dress the COURTYARD; everything before it is the outer-works garrison camp and is unchanged. JUDGE-5 ranked D2 second of sixteen: \"the Warden arena is four untextured-looking tiled stone walls and a cobble floor -- no crates, no braziers, no banners, no apparatus, nothing that says anyone occupies it\", and named occupation the FIRST of the three things separating these frames from the reference key art (\"the reference stronghold is occupied; this one is empty\"). Two things were true at once. The courtyard genuinely had one object in it (the relay hub) -- and that object sits at local z 27.4 while the H-07 stand looks SOUTH from the courtyard trainer, so the room's only piece of dressing was directly BEHIND the camera in every frame ever shot of it. Placement obeys the room's own two constraints rather than filling it: the courtyard is a trainer FIGHT room, so the fight floor (x[-5,5], z[24,42]) stays clear and every prop hugs a wall, and nothing sits in either doorway line at x~0. Same prop families the outer-works camp already uses (D24's one-camp-vocabulary rule) -- no new assets, no Meshy generation. The warden_arena itself is left deliberately bare per HALL_DESIGN sec8: that fight owns its floor.",
-      "_comment_causeway_dressing_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defect 7: \"the causeway is 530px of EMPTY STONE in every frame that shows it ... from y 800 up to y 270 there is unbroken cobble with NOTHING ON IT -- no rubble, no crates, no barricade, no Tether machinery, no scorch, no wear track. The most important approach in the chapter is a bare ramp\", against a board whose stronghold foreground \"is littered -- a wheeled cart, cut stumps, an altar block, scattered rock\". Its conclusion is the one that decided this: \"empty ground in a game reads as 'the level isn't dressed yet'.\" Dressed from the prop family the garrison camp at the ramp foot already uses, per D24's one-vocabulary rule -- no new asset, and the oxblood `tint` is the same one those camp crates carry, so this reads as the same occupying force's stores rather than as generic clutter. Placement obeys the thing the causeway is FOR. It is the chapter's approach and the player walks up it, so the props hug the kerbs at local x -0.2 and 4.2 (the deck's interior runs x -1.3 to 5.3, from the ramp braziers' own stations) and the centre lane x 1.0-3.0 stays completely clear end to end -- a barricade the player has to path around would be a worse defect than the bare ramp. They also stop short of the gate head: `_build_causeway_dressing` puts banner piers at z -19 and -31, and stores standing in a banner pier read as a mistake. `on_causeway` is the flag `braziers` in this same block already uses, and it is not optional -- the deck climbs ~10m over its 40m run, so a prop placed at the floor plane is inside the slab. That is exactly the defect JUDGE-5's D1 spent its top-ranked finding on one lane ago, from the other end (a camera, not a crate). See `stronghold.gd::_build_garrison_camp`.",
+    "_comment_causeway_dressing_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defect 7: \"the causeway is 530px of EMPTY STONE in every frame that shows it ... from y 800 up to y 270 there is unbroken cobble with NOTHING ON IT -- no rubble, no crates, no barricade, no Tether machinery, no scorch, no wear track. The most important approach in the chapter is a bare ramp\", against a board whose stronghold foreground \"is littered -- a wheeled cart, cut stumps, an altar block, scattered rock\". Its conclusion is the one that decided this: \"empty ground in a game reads as 'the level isn't dressed yet'.\" Dressed from the prop family the garrison camp at the ramp foot already uses, per D24's one-vocabulary rule -- no new asset, and the oxblood `tint` is the same one those camp crates carry, so this reads as the same occupying force's stores rather than as generic clutter. Placement obeys the thing the causeway is FOR. It is the chapter's approach and the player walks up it, so the props hug the kerbs at local x -0.2 and 4.2 (the deck's interior runs x -1.3 to 5.3, from the ramp braziers' own stations) and the centre lane x 1.0-3.0 stays completely clear end to end -- a barricade the player has to path around would be a worse defect than the bare ramp. They also stop short of the gate head: `_build_causeway_dressing` puts banner piers at z -19 and -31, and stores standing in a banner pier read as a mistake. `on_causeway` is the flag `braziers` in this same block already uses, and it is not optional -- the deck climbs ~10m over its 40m run, so a prop placed at the floor plane is inside the slab. That is exactly the defect JUDGE-5's D1 spent its top-ranked finding on one lane ago, from the other end (a camera, not a crate). See `stronghold.gd::_build_garrison_camp`.",
     "camp": [
-      {"model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [-8.0, -6.4], "yaw_deg": 28.0, "scale": 1.0, "on_floor": true},
-      {"model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [7.8, -7.2], "yaw_deg": -34.0, "scale": 0.94, "on_floor": true},
-      {"model": "camp_firewood", "dir": "res://assets/props/generated_camp", "at": [-7.0, 1.4], "yaw_deg": -40.0, "scale": 1.0, "on_floor": true},
-      {"model": "bedroll", "dir": "res://assets/props/kenney_survival", "at": [-8.6, -3.6], "yaw_deg": 70.0, "scale": 1.0, "on_floor": true},
-      {"model": "Crate_Wooden", "at": [8.6, 2.6], "yaw_deg": 14.0, "scale": 1.0, "on_floor": true, "tint": "#5a2a2e"},
-      {"model": "Crate_Wooden", "at": [8.4, 4.0], "yaw_deg": -22.0, "scale": 1.0, "on_floor": true, "tint": "#5a2a2e"},
-      {"model": "Barrel", "at": [7.2, 5.4], "yaw_deg": 0.0, "scale": 1.0, "on_floor": true},
-      {"model": "Workbench", "at": [8.2, -2.4], "yaw_deg": -90.0, "scale": 1.0, "on_floor": true},
-      {"model": "Crate_Wooden", "at": [8.7, 22.4], "yaw_deg": 14.0, "scale": 1.0, "on_floor": true},
-      {"model": "Crate_Wooden", "at": [9.2, 24.1], "yaw_deg": -22.0, "scale": 0.92, "on_floor": true},
-      {"model": "FarmCrate_Empty", "at": [8.4, 25.9], "yaw_deg": 48.0, "scale": 1.0, "on_floor": true},
-      {"model": "Barrel", "at": [9.0, 29.4], "yaw_deg": 0.0, "scale": 1.0, "on_floor": true},
-      {"model": "Barrel", "at": [8.3, 30.9], "yaw_deg": 0.0, "scale": 0.95, "on_floor": true},
-      {"model": "Workbench", "at": [8.8, 34.9], "yaw_deg": -90.0, "scale": 1.0, "on_floor": true},
-      {"model": "Anvil_Log", "at": [8.6, 37.9], "yaw_deg": -74.0, "scale": 1.0, "on_floor": true},
-      {"model": "Bucket_Wooden_1", "at": [9.1, 39.6], "yaw_deg": 0.0, "scale": 1.0, "on_floor": true},
-      {"model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [-8.3, 32.8], "yaw_deg": 62.0, "scale": 0.96, "on_floor": true},
-      {"model": "camp_firewood", "dir": "res://assets/props/generated_camp", "at": [-8.8, 37.4], "yaw_deg": -18.0, "scale": 1.0, "on_floor": true},
-      {"model": "FarmCrate_Empty", "at": [-8.8, 23.0], "yaw_deg": -36.0, "scale": 1.0, "on_floor": true},
-      {"model": "Crate_Wooden", "at": [-8.4, 25.2], "yaw_deg": 20.0, "scale": 0.9, "on_floor": true},
-      {"model": "Barrel", "at": [-9.0, 27.9], "yaw_deg": 0.0, "scale": 1.0, "on_floor": true},
-      {"model": "Bench", "at": [-8.6, 41.0], "yaw_deg": 90.0, "scale": 1.0, "on_floor": true},
-      {"model": "Crate_Wooden", "at": [-4.9, 43.6], "yaw_deg": -8.0, "scale": 1.0, "on_floor": true},
-      {"model": "Rope_1", "at": [-6.1, 44.1], "yaw_deg": 30.0, "scale": 1.0, "on_floor": true},
-      {"model": "Barrel", "at": [4.7, 43.8], "yaw_deg": 0.0, "scale": 1.0, "on_floor": true},
-      {"model": "Bag", "at": [5.8, 43.0], "yaw_deg": -52.0, "scale": 1.0, "on_floor": true}
-    ,
-      {"model": "Crate_Wooden", "at": [-0.2, -21.0], "yaw_deg": 14.0, "scale": 1.0, "on_causeway": true, "tint": "#5a2a2e"},
-      {"model": "FarmCrate_Empty", "at": [4.3, -23.5], "yaw_deg": -28.0, "scale": 1.0, "on_causeway": true},
-      {"model": "Barrel", "at": [-0.3, -26.0], "yaw_deg": 0.0, "scale": 1.0, "on_causeway": true},
-      {"model": "Barrel", "at": [4.2, -27.2], "yaw_deg": 0.0, "scale": 0.95, "on_causeway": true},
-      {"model": "Bag", "at": [4.4, -33.0], "yaw_deg": 52.0, "scale": 1.0, "on_causeway": true},
-      {"model": "Crate_Wooden", "at": [-0.4, -34.5], "yaw_deg": -24.0, "scale": 0.92, "on_causeway": true, "tint": "#5a2a2e"},
-      {"model": "camp_firewood", "dir": "res://assets/props/generated_camp", "at": [4.2, -37.5], "yaw_deg": 36.0, "scale": 1.0, "on_causeway": true},
-      {"model": "Rope_1", "at": [-0.2, -39.0], "yaw_deg": 18.0, "scale": 1.0, "on_causeway": true},
-      {"model": "Bucket_Wooden_1", "at": [4.3, -41.5], "yaw_deg": 0.0, "scale": 1.0, "on_causeway": true},
-      {"model": "FarmCrate_Empty", "at": [-0.3, -43.5], "yaw_deg": 40.0, "scale": 0.95, "on_causeway": true, "tint": "#5a2a2e"}
+      {
+        "model": "camp_tent",
+        "dir": "res://assets/props/generated_camp",
+        "at": [
+          -8.0,
+          -6.4
+        ],
+        "yaw_deg": 28.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "camp_tent",
+        "dir": "res://assets/props/generated_camp",
+        "at": [
+          7.8,
+          -7.2
+        ],
+        "yaw_deg": -34.0,
+        "scale": 0.94,
+        "on_floor": true
+      },
+      {
+        "model": "camp_firewood",
+        "dir": "res://assets/props/generated_camp",
+        "at": [
+          -7.0,
+          1.4
+        ],
+        "yaw_deg": -40.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "bedroll",
+        "dir": "res://assets/props/kenney_survival",
+        "at": [
+          -8.6,
+          -3.6
+        ],
+        "yaw_deg": 70.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Crate_Wooden",
+        "at": [
+          8.6,
+          2.6
+        ],
+        "yaw_deg": 14.0,
+        "scale": 1.0,
+        "on_floor": true,
+        "tint": "#5a2a2e"
+      },
+      {
+        "model": "Crate_Wooden",
+        "at": [
+          8.4,
+          4.0
+        ],
+        "yaw_deg": -22.0,
+        "scale": 1.0,
+        "on_floor": true,
+        "tint": "#5a2a2e"
+      },
+      {
+        "model": "Barrel",
+        "at": [
+          7.2,
+          5.4
+        ],
+        "yaw_deg": 0.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Workbench",
+        "at": [
+          8.2,
+          -2.4
+        ],
+        "yaw_deg": -90.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Crate_Wooden",
+        "at": [
+          8.7,
+          22.4
+        ],
+        "yaw_deg": 14.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Crate_Wooden",
+        "at": [
+          9.2,
+          24.1
+        ],
+        "yaw_deg": -22.0,
+        "scale": 0.92,
+        "on_floor": true
+      },
+      {
+        "model": "FarmCrate_Empty",
+        "at": [
+          8.4,
+          25.9
+        ],
+        "yaw_deg": 48.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Barrel",
+        "at": [
+          9.0,
+          29.4
+        ],
+        "yaw_deg": 0.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Barrel",
+        "at": [
+          8.3,
+          30.9
+        ],
+        "yaw_deg": 0.0,
+        "scale": 0.95,
+        "on_floor": true
+      },
+      {
+        "model": "Workbench",
+        "at": [
+          8.8,
+          34.9
+        ],
+        "yaw_deg": -90.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Anvil_Log",
+        "at": [
+          8.6,
+          37.9
+        ],
+        "yaw_deg": -74.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Bucket_Wooden_1",
+        "at": [
+          9.1,
+          39.6
+        ],
+        "yaw_deg": 0.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "camp_tent",
+        "dir": "res://assets/props/generated_camp",
+        "at": [
+          -8.3,
+          32.8
+        ],
+        "yaw_deg": 62.0,
+        "scale": 0.96,
+        "on_floor": true
+      },
+      {
+        "model": "camp_firewood",
+        "dir": "res://assets/props/generated_camp",
+        "at": [
+          -8.8,
+          37.4
+        ],
+        "yaw_deg": -18.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "FarmCrate_Empty",
+        "at": [
+          -8.8,
+          23.0
+        ],
+        "yaw_deg": -36.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Crate_Wooden",
+        "at": [
+          -8.4,
+          25.2
+        ],
+        "yaw_deg": 20.0,
+        "scale": 0.9,
+        "on_floor": true
+      },
+      {
+        "model": "Barrel",
+        "at": [
+          -9.0,
+          27.9
+        ],
+        "yaw_deg": 0.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Bench",
+        "at": [
+          -8.6,
+          41.0
+        ],
+        "yaw_deg": 90.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Crate_Wooden",
+        "at": [
+          -4.9,
+          43.6
+        ],
+        "yaw_deg": -8.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Rope_1",
+        "at": [
+          -6.1,
+          44.1
+        ],
+        "yaw_deg": 30.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Barrel",
+        "at": [
+          4.7,
+          43.8
+        ],
+        "yaw_deg": 0.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Bag",
+        "at": [
+          5.8,
+          43.0
+        ],
+        "yaw_deg": -52.0,
+        "scale": 1.0,
+        "on_floor": true
+      },
+      {
+        "model": "Crate_Wooden",
+        "at": [
+          -0.2,
+          -21.0
+        ],
+        "yaw_deg": 14.0,
+        "scale": 1.0,
+        "on_causeway": true,
+        "tint": "#5a2a2e"
+      },
+      {
+        "model": "FarmCrate_Empty",
+        "at": [
+          4.3,
+          -23.5
+        ],
+        "yaw_deg": -28.0,
+        "scale": 1.0,
+        "on_causeway": true
+      },
+      {
+        "model": "Barrel",
+        "at": [
+          -0.3,
+          -26.0
+        ],
+        "yaw_deg": 0.0,
+        "scale": 1.0,
+        "on_causeway": true
+      },
+      {
+        "model": "Barrel",
+        "at": [
+          4.2,
+          -27.2
+        ],
+        "yaw_deg": 0.0,
+        "scale": 0.95,
+        "on_causeway": true
+      },
+      {
+        "model": "Bag",
+        "at": [
+          4.4,
+          -33.0
+        ],
+        "yaw_deg": 52.0,
+        "scale": 1.0,
+        "on_causeway": true
+      },
+      {
+        "model": "Crate_Wooden",
+        "at": [
+          -0.4,
+          -34.5
+        ],
+        "yaw_deg": -24.0,
+        "scale": 0.92,
+        "on_causeway": true,
+        "tint": "#5a2a2e"
+      },
+      {
+        "model": "camp_firewood",
+        "dir": "res://assets/props/generated_camp",
+        "at": [
+          4.2,
+          -37.5
+        ],
+        "yaw_deg": 36.0,
+        "scale": 1.0,
+        "on_causeway": true
+      },
+      {
+        "model": "Rope_1",
+        "at": [
+          -0.2,
+          -39.0
+        ],
+        "yaw_deg": 18.0,
+        "scale": 1.0,
+        "on_causeway": true
+      },
+      {
+        "model": "Bucket_Wooden_1",
+        "at": [
+          4.3,
+          -41.5
+        ],
+        "yaw_deg": 0.0,
+        "scale": 1.0,
+        "on_causeway": true
+      },
+      {
+        "model": "FarmCrate_Empty",
+        "at": [
+          -0.3,
+          -43.5
+        ],
+        "yaw_deg": 40.0,
+        "scale": 0.95,
+        "on_causeway": true,
+        "tint": "#5a2a2e"
+      }
     ],
     "_comment_relay_hub": "Design §6.4: one `relay_apparatus.glb` in the inner bailey as the Hall's own distribution hub, fitted to ~4m because board 14 draws a squat machine that is never taller than a hall. Fenced by four short tether girders in the reserved oxblood, the same fitting language the interior trim already speaks. Sited east of the courtyard's centre line so it is clear of both the trainer's stand (-4,36) and the x=0 passage lane, and so the player meets it side-on walking through.",
     "relay_hub": {
       "model": "res://assets/environment/team_tether/relay_apparatus.glb",
-      "at": [6.4, 27.4],
+      "at": [
+        6.4,
+        27.4
+      ],
       "yaw_deg": -24.0,
       "height": 4.0,
       "fence_radius_m": 3.2,
@@ -618,7 +1186,10 @@
     "_comment_stairs": "Design §4 tier 2: a flight against the courtyard's north-east interior corner, reading as the way up to the parapet without being one. Dressing, no collider -- same trade as the hoarding. Clear of the x=0 doorway lane and 14m from the courtyard trainer's stand. AUTHORED IN METRES rather than built from the kit's `Stairs_Exterior_*` modules: fitting a 2.0 x 1.20 x 2.08 stair block to a 4.6m rise scales its PLAN 3.8x too, and the first render had the flight driving straight through the courtyard's east wall and out the far side. `_fit_to_height` is right for a machine that only has to be a certain height and wrong for anything whose footprint matters.",
     "stairs": {
       "chamber": "courtyard",
-      "at": [8.6, 22.0],
+      "at": [
+        8.6,
+        22.0
+      ],
       "steps": 8,
       "rise_m": 0.55,
       "tread_m": 0.62,
@@ -626,20 +1197,574 @@
     },
     "_comment_grounding": "The 'fits the Meadows, not floating' half of the acceptance list. Buttress pilasters down the east skirt face (the one that shows tall -- the west is half-buried in the shoulder the design sited the Hall against) plus half-buried nature-pack boulders at the skirt foot, wearing the same granite the Warrens' own cave stone does. Boulders sample the REAL terrain, so they follow whatever the ground under the skirt actually does rather than a straight authored line.",
     "grounding": {
-      "buttress_sides": ["+x"],
+      "buttress_sides": [
+        "+x"
+      ],
       "buttress_pitch_m": 7.0,
       "buttress_width_m": 1.4,
       "buttress_proud_m": 0.9,
-      "boulders": ["rock_largeA", "rock_largeC", "rock_smallA", "rock_smallD", "rock_tallA"],
+      "boulders": [
+        "rock_largeA",
+        "rock_largeC",
+        "rock_smallA",
+        "rock_smallD",
+        "rock_tallA"
+      ],
       "boulder_dir": "res://assets/environment/nature",
-      "boulder_sides": ["+x", "-x"],
+      "boulder_sides": [
+        "+x",
+        "-x"
+      ],
       "boulder_pitch_m": 9.0,
       "boulder_scale": 2.6,
       "boulder_sink_m": 0.9,
       "boulder_seed": 91731,
       "_comment_skirt_face": "How far DOWN the skirt's own facing skin runs from the floor line. The skirt is 18m deep but only its top few metres ever clear the ground (floor sits ~6m above the meadow here), so 8m covers every visible face with margin and buries the rest rather than skinning 18m of underground slab.",
       "skirt_face_height_m": 8.0
-    }
+    },
+    "_comment_reclaim_t1_hall_art": "T1-HALL-ART, 2026-08-30. Layer 1 of the owner's Hall asset pack: the ancient ruin reclaimed by vegetation. Every model here is a Quaternius Medieval Village MegaKit module ALREADY INSTALLED at assets/buildings/quaternius_medieval/ -- the pack names that kit as its first free source and the project had shipped it since the village work, so this layer downloaded nothing, generated nothing and cost nothing. IVY HANGS FROM ITS ORIGIN: probed off the glTF, Prop_Vine1 runs 2.6m tall with the origin near the TOP (local z +0.48 to -2.12), so `y` is the height the ivy hangs FROM and it drapes ~2.1m below that. A band on a 9m courtyard wall therefore wants y about 8.4, not 0. Rubble sits ON the floor, so its `y` is near 0. Every band is one MultiMesh and therefore ONE draw call whatever `count` says; that is the whole reason this layer is dense while the retrofit layer below is sparse.",
+    "reclaim": {
+      "seed": 20260830,
+      "ivy": [
+        {
+          "model": "Prop_Vine1",
+          "along": "x",
+          "from": -9.6,
+          "to": 9.6,
+          "at": -13.05,
+          "y": 7.5,
+          "count": 49,
+          "clumps": 4,
+          "yaw_deg": 180,
+          "jitter": 0.1,
+          "y_jitter": 0.7,
+          "scale_min": 1.9,
+          "scale_max": 3.4,
+          "tint": "#1a5900",
+          "clump_spread": 0.7
+        },
+        {
+          "model": "Prop_Vine2",
+          "along": "x",
+          "from": -9.6,
+          "to": 9.6,
+          "at": -13.05,
+          "y": 4.6,
+          "count": 34,
+          "clumps": 3,
+          "yaw_deg": 180,
+          "jitter": 0.1,
+          "y_jitter": 0.6,
+          "scale_min": 1.9,
+          "scale_max": 3.4,
+          "tint": "#134400",
+          "clump_spread": 0.7
+        },
+        {
+          "model": "Prop_Vine1",
+          "along": "z",
+          "from": -11.5,
+          "to": 11.5,
+          "at": -11.05,
+          "y": 7.5,
+          "count": 38,
+          "clumps": 3,
+          "yaw_deg": -90,
+          "jitter": 0.1,
+          "y_jitter": 0.6,
+          "scale_min": 1.9,
+          "scale_max": 3.4,
+          "tint": "#1a5900",
+          "clump_spread": 0.7
+        },
+        {
+          "model": "Prop_Vine2",
+          "along": "z",
+          "from": -11.5,
+          "to": 11.5,
+          "at": 11.05,
+          "y": 7.5,
+          "count": 38,
+          "clumps": 3,
+          "yaw_deg": 90,
+          "jitter": 0.1,
+          "y_jitter": 0.6,
+          "scale_min": 1.9,
+          "scale_max": 3.4,
+          "tint": "#1a5900",
+          "clump_spread": 0.7
+        },
+        {
+          "model": "Prop_Vine1",
+          "along": "z",
+          "from": 18.5,
+          "to": 45.5,
+          "at": -12.05,
+          "y": 8.5,
+          "count": 57,
+          "clumps": 4,
+          "yaw_deg": -90,
+          "jitter": 0.1,
+          "y_jitter": 0.7,
+          "scale_min": 1.9,
+          "scale_max": 3.4,
+          "tint": "#1a5900",
+          "clump_spread": 0.7
+        },
+        {
+          "model": "Prop_Vine2",
+          "along": "z",
+          "from": 18.5,
+          "to": 45.5,
+          "at": 12.05,
+          "y": 8.5,
+          "count": 57,
+          "clumps": 4,
+          "yaw_deg": 90,
+          "jitter": 0.1,
+          "y_jitter": 0.7,
+          "scale_min": 1.9,
+          "scale_max": 3.4,
+          "tint": "#1a5900",
+          "clump_spread": 0.7
+        },
+        {
+          "model": "Prop_Vine2",
+          "along": "z",
+          "from": 18.5,
+          "to": 45.5,
+          "at": -12.05,
+          "y": 5.2,
+          "count": 41,
+          "clumps": 3,
+          "yaw_deg": -90,
+          "jitter": 0.1,
+          "y_jitter": 0.6,
+          "scale_min": 1.9,
+          "scale_max": 3.4,
+          "tint": "#134400",
+          "clump_spread": 0.7
+        },
+        {
+          "model": "Prop_Vine1",
+          "along": "z",
+          "from": 18.5,
+          "to": 45.5,
+          "at": 12.05,
+          "y": 5.2,
+          "count": 38,
+          "clumps": 3,
+          "yaw_deg": 90,
+          "jitter": 0.1,
+          "y_jitter": 0.6,
+          "scale_min": 1.9,
+          "scale_max": 3.4,
+          "tint": "#134400",
+          "clump_spread": 0.7
+        },
+        {
+          "model": "Prop_Vine1",
+          "along": "z",
+          "from": 19.0,
+          "to": 45.0,
+          "at": -10.4,
+          "y": 8.4,
+          "count": 26,
+          "clumps": 4,
+          "yaw_deg": -90,
+          "jitter": 0.25,
+          "y_jitter": 0.5,
+          "scale_min": 0.75,
+          "scale_max": 1.35,
+          "tint": "#1a5900"
+        },
+        {
+          "model": "Prop_Vine2",
+          "along": "z",
+          "from": 19.0,
+          "to": 45.0,
+          "at": 10.4,
+          "y": 8.4,
+          "count": 24,
+          "clumps": 3,
+          "yaw_deg": 90,
+          "jitter": 0.25,
+          "y_jitter": 0.5,
+          "scale_min": 0.75,
+          "scale_max": 1.3,
+          "tint": "#1a5900"
+        },
+        {
+          "model": "Prop_Vine1",
+          "along": "z",
+          "from": -11.0,
+          "to": 11.0,
+          "at": -9.4,
+          "y": 7.4,
+          "count": 18,
+          "clumps": 3,
+          "yaw_deg": -90,
+          "jitter": 0.22,
+          "y_jitter": 0.45,
+          "scale_min": 0.7,
+          "scale_max": 1.2,
+          "tint": "#1a5900"
+        },
+        {
+          "model": "Prop_Vine2",
+          "along": "z",
+          "from": -11.0,
+          "to": 11.0,
+          "at": 9.4,
+          "y": 7.4,
+          "count": 16,
+          "clumps": 3,
+          "yaw_deg": 90,
+          "jitter": 0.22,
+          "y_jitter": 0.45,
+          "scale_min": 0.7,
+          "scale_max": 1.2,
+          "tint": "#1a5900"
+        },
+        {
+          "model": "Prop_Vine1",
+          "along": "x",
+          "from": -9.5,
+          "to": 9.5,
+          "at": -12.6,
+          "y": 7.6,
+          "count": 41,
+          "clumps": 4,
+          "yaw_deg": 180,
+          "jitter": 0.2,
+          "y_jitter": 0.6,
+          "scale_min": 1.9,
+          "scale_max": 3.4,
+          "tint": "#1a5900",
+          "clump_spread": 0.7
+        },
+        {
+          "model": "Prop_Vine2",
+          "along": "z",
+          "from": 78.0,
+          "to": 102.0,
+          "at": -11.4,
+          "y": 10.3,
+          "count": 38,
+          "clumps": 3,
+          "yaw_deg": -90,
+          "jitter": 0.25,
+          "y_jitter": 0.6,
+          "scale_min": 1.9,
+          "scale_max": 3.4,
+          "tint": "#1a5900",
+          "clump_spread": 0.7
+        }
+      ],
+      "rubble": [
+        {
+          "model": "Prop_Brick1",
+          "along": "z",
+          "from": 19.0,
+          "to": 45.0,
+          "at": -9.9,
+          "y": 0.12,
+          "count": 24,
+          "clumps": 4,
+          "jitter": 1.15,
+          "y_jitter": 0.05,
+          "scale_min": 1.5,
+          "scale_max": 3.4,
+          "tint": "#5c5449"
+        },
+        {
+          "model": "Prop_Brick2",
+          "along": "z",
+          "from": 19.0,
+          "to": 45.0,
+          "at": 9.9,
+          "y": 0.12,
+          "count": 21,
+          "clumps": 3,
+          "jitter": 1.15,
+          "y_jitter": 0.05,
+          "scale_min": 1.5,
+          "scale_max": 3.4,
+          "tint": "#5c5449"
+        },
+        {
+          "model": "Prop_Brick2",
+          "along": "z",
+          "from": -11.0,
+          "to": 11.0,
+          "at": -8.9,
+          "y": 0.12,
+          "count": 18,
+          "clumps": 3,
+          "jitter": 1.15,
+          "y_jitter": 0.05,
+          "scale_min": 1.5,
+          "scale_max": 3.4,
+          "tint": "#5c5449"
+        },
+        {
+          "model": "Prop_Brick1",
+          "along": "z",
+          "from": -11.0,
+          "to": 11.0,
+          "at": 8.9,
+          "y": 0.12,
+          "count": 16,
+          "clumps": 3,
+          "jitter": 1.15,
+          "y_jitter": 0.05,
+          "scale_min": 1.5,
+          "scale_max": 3.4,
+          "tint": "#5c5449"
+        },
+        {
+          "model": "Prop_Brick1",
+          "along": "z",
+          "from": 78.0,
+          "to": 102.0,
+          "at": -10.9,
+          "y": 0.12,
+          "count": 19,
+          "clumps": 4,
+          "jitter": 1.15,
+          "y_jitter": 0.05,
+          "scale_min": 1.5,
+          "scale_max": 3.4,
+          "tint": "#5c5449"
+        },
+        {
+          "model": "Prop_Brick2",
+          "along": "z",
+          "from": 78.0,
+          "to": 102.0,
+          "at": 10.9,
+          "y": 0.12,
+          "count": 18,
+          "clumps": 3,
+          "jitter": 1.15,
+          "y_jitter": 0.05,
+          "scale_min": 1.5,
+          "scale_max": 3.4,
+          "tint": "#5c5449"
+        }
+      ],
+      "_comment_tint": "Tints are variations ON the kit's own MI_Vine baseColorFactor (0.102, 0.349, 0), not fresh picks. albedo_color REPLACES that factor rather than multiplying it, so a 'natural' mid-green hex here reads as washed-out grey ivy -- the first cut of this block made exactly that mistake. Lower courses take the darker value because they sit in the wall's own shadow.",
+      "_comment_exterior_offsets": "Exterior ivy sits clear of the BUTTRESS line, not merely clear of the wall face. stronghold.gd's BUTTRESS_PROUD is 0.8, so a band at the face +0.05 is behind pilasters for much of its run and half-buried by its own jitter for the rest. The first render of this layer showed no exterior ivy at all for that reason."
+    },
+    "_comment_retrofit_t1_hall_art": "T1-HALL-ART, 2026-08-30. Layer 2: Team Tether's industrial occupation, from the five bespoke props in the owner's boards. Models live in assets/environment/team_tether/hall/ and are authored by tools/art_pipeline/blender/build_hall_props.py against the boards' own scale bars -- read that script's header for why they are authored rather than generated (MESHY_API_KEY is unset in the build container). ORIENTATION: a prop's working face is toward -z at yaw 0, because the boards' props are authored front-toward-Blender-+Y and the glTF Y-up export maps that to -Z. yaw -90 faces +x, yaw 90 faces -x, yaw 180 faces +z. Get this wrong and a wall machine faces into the stone. NO COLLISION, deliberately: none of these meshes is named `-col`, so Godot builds no collider and nothing here can snag traversal or the Warden fight. PLACEMENT IS A STORY, not a scatter -- the pack asks for 'a coherent retrofit layer, not randomly scattered props'. Boilers sit where work happens (outer works, courtyard), pipes run FROM the boilers TO the siphons, scaffolds climb the faces that needed shoring, and the three siphons escalate along the player's route: one in the courtyard, one on the tether approach, and the hero one on the Warden arena wall.",
+    "retrofit": [
+      {
+        "model": "rift_siphon_wall_machine",
+        "at": [
+          -10.6,
+          26.0
+        ],
+        "yaw_deg": -90,
+        "lift": 0.0,
+        "core_energy": 2.4,
+        "light_energy": 1.5,
+        "light_range": 6.5
+      },
+      {
+        "model": "rift_siphon_wall_machine",
+        "at": [
+          7.6,
+          63.0
+        ],
+        "yaw_deg": 90,
+        "lift": 0.0,
+        "core_energy": 2.6,
+        "light_energy": 1.6,
+        "light_range": 7.0
+      },
+      {
+        "model": "rift_siphon_wall_machine",
+        "at": [
+          -11.6,
+          82.5
+        ],
+        "yaw_deg": -90,
+        "lift": 0.0,
+        "core_energy": 3.0,
+        "light_energy": 2.0,
+        "light_range": 8.0,
+        "_why": "clear of the legendary_chamber passage (z 87.7-92.7); the first placement stood in the doorway"
+      },
+      {
+        "model": "team_tether_boiler_chimney",
+        "at": [
+          8.4,
+          21.0
+        ],
+        "yaw_deg": 90,
+        "lift": 0.0
+      },
+      {
+        "model": "team_tether_boiler_chimney",
+        "at": [
+          -8.2,
+          7.4
+        ],
+        "yaw_deg": -90,
+        "lift": 0.0
+      },
+      {
+        "model": "team_tether_scaffold_tower",
+        "at": [
+          -7.4,
+          -13.43
+        ],
+        "yaw_deg": 0,
+        "lift": 0.0,
+        "on_causeway": true
+      },
+      {
+        "model": "team_tether_scaffold_tower",
+        "at": [
+          7.4,
+          -13.43
+        ],
+        "yaw_deg": 0,
+        "lift": 0.0,
+        "on_causeway": true
+      },
+      {
+        "model": "team_tether_scaffold_tower",
+        "at": [
+          -10.2,
+          20.5
+        ],
+        "yaw_deg": -90,
+        "lift": 0.0
+      },
+      {
+        "model": "team_tether_scaffold_tower",
+        "at": [
+          10.2,
+          42.0
+        ],
+        "yaw_deg": 90,
+        "lift": 0.0
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          -3.2,
+          -12.98
+        ],
+        "yaw_deg": 0,
+        "lift": 3.6,
+        "on_causeway": true
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          3.2,
+          -12.98
+        ],
+        "yaw_deg": 0,
+        "lift": 3.6,
+        "on_causeway": true
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          -11.98,
+          24.0
+        ],
+        "yaw_deg": -90,
+        "lift": 4.2
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          11.98,
+          44.0
+        ],
+        "yaw_deg": 90,
+        "lift": 4.2
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          -10.98,
+          -6.0
+        ],
+        "yaw_deg": -90,
+        "lift": 3.4
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          -10.65,
+          30.5
+        ],
+        "yaw_deg": -90,
+        "lift": 4.0
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          10.65,
+          20.5
+        ],
+        "yaw_deg": 90,
+        "lift": 4.0
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          -11.65,
+          95.0
+        ],
+        "yaw_deg": -90,
+        "lift": 5.0
+      }
+    ],
+    "_comment_pipe_runs_t1_hall_art": "T1-HALL-ART. Board 03's modular kit, authored as LINES rather than as a list of pieces -- stronghold.gd::_build_tether_pipe_runs lays straights end to end, drops a bracket every `bracket_pitch` pieces, puts one valve at `valve_at` along the run and caps both ends with an elbow. `y` is height above the chamber floor. These are the only part of the retrofit that is NOT batched -- each piece is its own draw call -- so the runs are deliberately short and few, and they exist to connect a boiler to a siphon so the machinery reads as one installed system rather than as unrelated props.",
+    "pipe_runs": [
+      {
+        "along": "z",
+        "from": 19.5,
+        "to": 29.0,
+        "at": -10.15,
+        "y": 3.1,
+        "valve_at": 0.62,
+        "bracket_pitch": 3
+      },
+      {
+        "along": "z",
+        "from": 20.0,
+        "to": 33.0,
+        "at": 10.15,
+        "y": 3.4,
+        "valve_at": 0.35,
+        "bracket_pitch": 3
+      },
+      {
+        "along": "z",
+        "from": -3.0,
+        "to": 9.0,
+        "at": -9.15,
+        "y": 2.9,
+        "valve_at": 0.5,
+        "bracket_pitch": 3
+      },
+      {
+        "along": "z",
+        "from": 56.0,
+        "to": 66.0,
+        "at": 7.15,
+        "y": 3.2,
+        "valve_at": 0.7,
+        "bracket_pitch": 3
+      }
+    ]
   },
   "_comment_machine": "PLACEHOLDER MASSING, AND IT MUST NOT BE MISTAKEN FOR THE ASSET. The Tether Machine has an owner-supplied board (docs/art/reference/15_Legendary_Tether_Machine.png, 2026-08-11) and is one of the three hero objects D24 reserves a Meshy generation for. The agent that built this route had no Meshy access, so what stands here is primitives plus the Tether materials, sized to the board's own ~15m scale bar, and the seam is left deliberately obvious: `placeholder: true` below, a name of `TetherMachinePlaceholder` in the scene tree, and no attempt at the board's surfacing. Replacing it is a one-object swap into `machine.model` -- the chamber, the lighting and the markers around it are all real and are what this item actually delivered. AND THE STANDING WARNING FROM THE BACKLOG: the board draws a legendary bound inside the containment ring because that is what the machine DOES to legendaries. The board licenses the MACHINE, never its occupant. Sec20/D23 forbid a new creature mesh at any credit balance, so the bound creature is an existing roster body or VFX placed by R8.4 -- there is no creature in this block and none may be added to it.",
   "machine": {
