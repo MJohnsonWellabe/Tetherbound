@@ -1569,13 +1569,14 @@
         "model": "rift_siphon_wall_machine",
         "at": [
           -11.6,
-          88.0
+          82.5
         ],
         "yaw_deg": -90,
         "lift": 0.0,
         "core_energy": 3.0,
         "light_energy": 2.0,
-        "light_range": 8.0
+        "light_range": 8.0,
+        "_why": "clear of the legendary_chamber passage (z 87.7-92.7); the first placement stood in the doorway"
       },
       {
         "model": "team_tether_boiler_chimney",
