@@ -31,7 +31,7 @@ const BODY := preload("res://scripts/creatures/creature_body.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const NPC_BODY := preload("res://scripts/npc/npc_body.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
-const OUT_DIR := "res://ralph/reports/T1-VARIANTS/shots"
+const OUT_DIR := "res://ralph/reports/T1-VARIANTS-2/shots"
 
 const TRAINER_HEIGHT := 1.8
 
@@ -52,9 +52,18 @@ const CAM_POS := Vector3(0.0, 1.55, 6.6)
 const CAM_LOOK := Vector3(0.0, 1.2, 0.0)
 const FOV := 42.0
 
-const CLOSE_CAM_POS := Vector3(0.0, 1.45, 2.7)
-const CLOSE_CAM_LOOK := Vector3(0.0, 1.15, 0.0)
-const CLOSE_FOV := 34.0
+## T1-VARIANTS-2 2026-08-30 (JUDGE-4 Q2-D12): the original 2.7/34 pairing put
+## either subject's snout past the frame edge whenever its forward-facing
+## rotation carried it outward from its seat offset (GAP * 0.55 = 0.74m) --
+## confirmed directly, both close crops for Stormtrail (the larger alpha
+## scale) showed only ONE eye in frame, the other cropped off-canvas
+## entirely. Camera pulled back and the seat offset tightened so both whole
+## heads clear the edge with margin, at a small cost to how tightly either
+## fills the frame.
+const CLOSE_CAM_POS := Vector3(0.0, 1.4, 3.1)
+const CLOSE_CAM_LOOK := Vector3(0.0, 1.12, 0.0)
+const CLOSE_FOV := 36.0
+const CLOSE_SEAT_FRACTION := 0.42
 
 const BOOT_FRAMES := 10
 const SETTLE_FRAMES := 10
@@ -202,8 +211,8 @@ func _shoot_stand(stand: Dictionary) -> void:
 		# and eye-glow actually resolve at gameplay-relevant scale.
 		base_body.rotation.y = 0.0
 		variant_body.rotation.y = 0.0
-		_seat_on_ground(base_body, Vector3(-GAP * 0.55, 0.0, 0.0))
-		_seat_on_ground(variant_body, Vector3(GAP * 0.55, 0.0, 0.0))
+		_seat_on_ground(base_body, Vector3(-GAP * CLOSE_SEAT_FRACTION, 0.0, 0.0))
+		_seat_on_ground(variant_body, Vector3(GAP * CLOSE_SEAT_FRACTION, 0.0, 0.0))
 		_trainer.visible = false
 		_camera.fov = CLOSE_FOV
 		_camera.global_position = CLOSE_CAM_POS

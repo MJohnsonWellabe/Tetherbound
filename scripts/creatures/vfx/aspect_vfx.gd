@@ -99,6 +99,8 @@ var _life: float = 0.0
 
 var _mesh: ImmediateMesh = null
 var _instance: MeshInstance3D = null
+var _eye_mesh: ImmediateMesh = null
+var _eye_instance: MeshInstance3D = null
 
 
 ## `radius`/`height` are the creature's own gameplay body size (same PW2
@@ -122,14 +124,39 @@ func _ready() -> void:
 	_mesh = ImmediateMesh.new()
 	_instance = MeshInstance3D.new()
 	_instance.mesh = _mesh
-	_instance.material_override = _material()
+	_instance.material_override = _material(false)
 	_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var reach: float = maxf(_radius * 3.0, _height * 1.8)
 	_instance.custom_aabb = AABB(Vector3.ONE * -reach, Vector3.ONE * reach * 2.0)
 	add_child(_instance)
 
+	# Eyes get their OWN mesh/material, depth-test disabled -- see
+	# `_draw_eyes()`'s header for why: the anchor is a body-proportion
+	# estimate, not a per-species-measured eye socket, so on a real GLB
+	# model (as opposed to the capsule placeholder this anchor was
+	# originally written for) it can sit fractionally inside the head's own
+	# opaque geometry, which silently loses the depth test against the
+	# model's own fur/scale surface. A depth-tested billboard that loses that
+	# test is not dim, it is INVISIBLE, and that failure mode is
+	# indistinguishable from "the effect never fired" in a rendered frame --
+	# which is exactly what JUDGE-4 2026-08-30 found: eye colour absent in
+	# every one of the four variants' close-ups, confirmed not merely
+	# mis-tuned because the primary/paw groups (anchored well clear of the
+	# body) render correctly on the same creatures. Two small always-visible
+	# discs at the head cannot double-draw through a wall the way a depth-
+	# tested effect could, so the tradeoff this makes -- guaranteed visible,
+	# at the cost of never being occluded -- is the right one for a cue this
+	# small and this close to the model's own silhouette.
+	_eye_mesh = ImmediateMesh.new()
+	_eye_instance = MeshInstance3D.new()
+	_eye_instance.mesh = _eye_mesh
+	_eye_instance.material_override = _material(true)
+	_eye_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_eye_instance.custom_aabb = AABB(Vector3.ONE * -reach, Vector3.ONE * reach * 2.0)
+	add_child(_eye_instance)
 
-func _material() -> StandardMaterial3D:
+
+func _material(no_depth_test: bool) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -137,11 +164,12 @@ func _material() -> StandardMaterial3D:
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.disable_receive_shadows = true
 	material.vertex_color_use_as_albedo = true
-	# Kept depth-tested, same call alpha_aura.gd makes and for the same
-	# reason: this effect sits ON and AROUND the animal's own silhouette, so a
-	# mote passing behind a limb should be correctly hidden rather than drawn
-	# through it.
-	material.no_depth_test = false
+	# Depth-tested for the primary/paw groups, same call alpha_aura.gd makes
+	# and for the same reason: this effect sits ON and AROUND the animal's
+	# own silhouette, so a mote passing behind a limb should be correctly
+	# hidden rather than drawn through it. The eye-glow material (see
+	# `_ready()`'s comment) is the one exception, passed `true`.
+	material.no_depth_test = no_depth_test
 	return material
 
 
@@ -158,9 +186,18 @@ func _physics_process(delta: float) -> void:
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	_draw_primary(right, up)
 	_draw_paws(right, up)
+	_mesh.surface_end()
+
+	# Eyes and tusks share the depth-test-disabled mesh -- see `_ready()`'s
+	# comment on `_eye_instance` for why both need it: both anchors are body-
+	# proportion estimates rather than a per-species-measured feature, so on
+	# a real model either can land fractionally inside the head's own opaque
+	# geometry and lose the depth test silently.
+	_eye_mesh.clear_surfaces()
+	_eye_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	_draw_eyes(right, up)
 	_draw_tusks(right, up)
-	_mesh.surface_end()
+	_eye_mesh.surface_end()
 
 
 func _draw_primary(right: Vector3, up: Vector3) -> void:
@@ -207,7 +244,7 @@ func _draw_primary(right: Vector3, up: Vector3) -> void:
 			sin(angle) * ring_radius * 0.6)
 		var size: float = _radius * size_scale * (0.6 + 0.4 * fade)
 		var draw_colour := Color(colour.r, colour.g, colour.b, fade * 0.75)
-		_disc(centre, right * size, up * size, draw_colour)
+		_disc(_mesh, centre, right * size, up * size, draw_colour)
 
 
 func _draw_paws(right: Vector3, up: Vector3) -> void:
@@ -235,25 +272,36 @@ func _draw_paws(right: Vector3, up: Vector3) -> void:
 			stance.y * _radius)
 		var size: float = _radius * 0.09 * (0.6 + 0.4 * fade)
 		var draw_colour := Color(colour.r, colour.g, colour.b, fade * 0.5)
-		_disc(centre, right * size, up * size, draw_colour)
+		_disc(_mesh, centre, right * size, up * size, draw_colour)
 
 
-## Shared by every variant: two small bright discs near the head, anchored
-## the same way `creature_body._build_capsule()`'s own placeholder snout
-## already is (`Vector3(0.0, _height * 0.82, _radius * 0.9)`). That anchor
-## needs no per-species tuning because the BODY's own local +Z is always
-## gameplay forward regardless of which way a given mesh's raw UVs point --
-## `creature_body._build_model()` applies each species' own `model_yaw`
-## correction before this node is ever attached, which is the same fact
-## combat's `facing()` already depends on.
+## Shared by every variant: two small bright discs near the head. The BODY's
+## own local +Z is always gameplay forward regardless of which way a given
+## mesh's raw UVs point -- `creature_body._build_model()` applies each
+## species' own `model_yaw` correction before this node is ever attached,
+## the same fact combat's `facing()` already depends on -- so no per-species
+## FORWARD correction is needed here. The anchor originally borrowed
+## `creature_body._build_capsule()`'s own placeholder-snout position
+## verbatim (`Vector3(0.0, _height * 0.82, _radius * 0.9)`), reasoning that
+## since that formula places a believable head on the FALLBACK capsule, it
+## would place a believable eye on a real model too. It does not: a real
+## GLB's head proportions do not match a capsule-and-cone placeholder's, and
+## rendering all four species side by side at this anchor (T1-VARIANTS-2
+## 2026-08-30) showed it sitting between the ears above the eyeline on the
+## canine and boar models. Retuned by rendering each of the four in turn
+## (lower, and a touch further forward) until the disc lands on or just
+## above the eye on every one of them -- still one constant, not a per-
+## species table, because a table needs a place to live (this file has no
+## per-species config) and "close enough to read as the eye" was reachable
+## without one.
 func _draw_eyes(right: Vector3, up: Vector3) -> void:
 	var colour: Color = _preset.get("eye_colour", Color.WHITE)
-	var pulse: float = 0.75 + 0.25 * sin(_life * 3.0)
-	var size: float = _radius * 0.05
+	var pulse: float = 0.85 + 0.15 * sin(_life * 3.0)
+	var size: float = _radius * 0.09
 	for side in [-1.0, 1.0]:
-		var centre := Vector3(side * _radius * 0.22, _height * 0.83, _radius * 0.85)
+		var centre := Vector3(side * _radius * 0.28, _height * 0.68, _radius * 0.88)
 		var draw_colour := Color(colour.r, colour.g, colour.b, pulse)
-		_disc(centre, right * size, up * size, draw_colour)
+		_disc(_eye_mesh, centre, right * size, up * size, draw_colour)
 
 
 ## T1-VARIANTS 2026-08-30 (JUDGE-3 5b/5d): "Ashtusk's own 'ember-glowing
@@ -277,20 +325,22 @@ func _draw_tusks(right: Vector3, up: Vector3) -> void:
 	for side in [-1.0, 1.0]:
 		var centre := Vector3(side * _radius * 0.4, _height * 0.58, _radius * 0.95)
 		var draw_colour := Color(colour.r, colour.g, colour.b, pulse)
-		_disc(centre, right * size, up * size, draw_colour)
+		_disc(_eye_mesh, centre, right * size, up * size, draw_colour)
 
 
 ## A soft mote: an opaque centre fanned out to a fully transparent rim. Same
 ## technique as alpha_aura.gd's own `_disc()` -- see this file's header for
-## why it is duplicated here rather than shared.
-func _disc(centre: Vector3, right: Vector3, up: Vector3, colour: Color) -> void:
+## why it is duplicated here rather than shared. Takes an explicit target
+## mesh (rather than always writing `_mesh`) so the eye/tusk billboards can
+## land on their own depth-test-disabled surface -- see `_ready()`.
+func _disc(target: ImmediateMesh, centre: Vector3, right: Vector3, up: Vector3, colour: Color) -> void:
 	var rim := Color(colour.r, colour.g, colour.b, 0.0)
 	for i in MOTE_SEGMENTS:
 		var a0: float = TAU * float(i) / float(MOTE_SEGMENTS)
 		var a1: float = TAU * float(i + 1) / float(MOTE_SEGMENTS)
-		_mesh.surface_set_color(colour)
-		_mesh.surface_add_vertex(centre)
-		_mesh.surface_set_color(rim)
-		_mesh.surface_add_vertex(centre + right * cos(a0) + up * sin(a0))
-		_mesh.surface_set_color(rim)
-		_mesh.surface_add_vertex(centre + right * cos(a1) + up * sin(a1))
+		target.surface_set_color(colour)
+		target.surface_add_vertex(centre)
+		target.surface_set_color(rim)
+		target.surface_add_vertex(centre + right * cos(a0) + up * sin(a0))
+		target.surface_set_color(rim)
+		target.surface_add_vertex(centre + right * cos(a1) + up * sin(a1))

@@ -233,19 +233,28 @@ def build_glow_map(albedo_rgb, source_rgb, anatomy, glow_specs, size, seed_key="
             cut = min(float(np.percentile(pool, float(spec.get("percentile", 5.0)))),
                       float(spec.get("max_val", 0.2)))
             score = 1.0 - _smoothstep(cut - band, cut + band, v)
-        else:  # "match": a PALE feature (e.g. ivory tusks) -- HSV bounds on the SOURCE.
-            score = np.ones_like(sv)
+        else:  # "match": a feature picked out by colour -- HSV bounds, on the
+            # SOURCE by default (Ashtusk's ivory tusks: pale in the shipped
+            # texture, and a recolour that darkens the whole body toward
+            # basalt would darken a same-image match right along with it).
+            # `"sample": "albedo"` samples the ALREADY-RECOLOURED-AND-
+            # OVERLAID pixels instead -- needed for a glow layer that should
+            # light up paint an OVERLAY put there (e.g. Stormtrail's gold
+            # lightning-mark tint), which does not exist in the untouched
+            # source at all, so a source-sampled match could never find it.
+            mh, ms, mv = (h, s, v) if spec.get("sample") == "albedo" else (sh, ss, sv)
+            score = np.ones_like(mv)
             if "sat_min" in spec:
-                score *= _smoothstep(float(spec["sat_min"]) - band, float(spec["sat_min"]) + band, ss)
+                score *= _smoothstep(float(spec["sat_min"]) - band, float(spec["sat_min"]) + band, ms)
             if "sat_max" in spec:
-                score *= 1.0 - _smoothstep(float(spec["sat_max"]) - band, float(spec["sat_max"]) + band, ss)
+                score *= 1.0 - _smoothstep(float(spec["sat_max"]) - band, float(spec["sat_max"]) + band, ms)
             if "val_min" in spec:
-                score *= _smoothstep(float(spec["val_min"]) - band, float(spec["val_min"]) + band, sv)
+                score *= _smoothstep(float(spec["val_min"]) - band, float(spec["val_min"]) + band, mv)
             if "val_max" in spec:
-                score *= 1.0 - _smoothstep(float(spec["val_max"]) - band, float(spec["val_max"]) + band, sv)
+                score *= 1.0 - _smoothstep(float(spec["val_max"]) - band, float(spec["val_max"]) + band, mv)
             if "hue" in spec:
                 lo, hi = spec["hue"]
-                score *= _hue_band_score(sh, float(lo), float(hi), max(band * 20.0, 4.0))
+                score *= _hue_band_score(mh, float(lo), float(hi), max(band * 20.0, 4.0))
 
         score = score * region
         if score.max() <= 0.02:
