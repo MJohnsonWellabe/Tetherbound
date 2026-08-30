@@ -369,7 +369,85 @@
       "_comment_reward": "Prompt 30: useful at the point found, never mandatory, and no new loot economy. Greater orbs are the deliberate choice over a TM -- they are the one item that makes the OTHER optional thing in this band reachable, the elder mosshell in the hollow west of the pond (spawns.json order 1900), which is a level-9 catch a player with basic orbs will probably fail. Beating the champion is how you get equipped to take the elder, and his defeated line is what tells you the elder is there. Two optional pieces that feed each other beat two unrelated icons.",
       "defeat_flag": "defeated_old_bram",
       "_comment_flags": "`defeat_flag` is the flag the combat system sets on a win and the one trainers.gd::already_beaten reads; `defeated` beside it is a CONVERSATION id, and the first cut of this entry conflated the two and shipped no defeat flag at all -- tests/test_trainers_data.gd caught it. `rechallenge` is a BOOLEAN, not a conversation id, and the first cut set it to one, which reads as truthy and made Bram infinitely re-fightable. That test's own words for it are 'that is an XP faucet', and an optional trainer who can be farmed is exactly the thing prompt 30's 'rewards persist and are idempotent' rule exists to prevent. `reward.flags` is empty because `defeat_flag` already records the win; a second flag saying the same thing is a second thing to keep in sync."
+    },
+    {
+      "order": 1020,
+      "id": "young_trainer",
+      "name": "Kip",
+      "_comment": "T1-CREATURE-RIG. One of the 3 rigged-but-unplaced Battle-role civilian bodies T3-INSTALL left dark (docs/ASSET_LEDGER.md's own T3-INSTALL entry). Own generated `young_trainer` body -- the board's own blurb, 'aspires to be a great trainer like you' -- fought as a standalone trainer_npc.gd placement, the same shape as Bryn/old_champion_bram, not through village_npcs.json's greeting flow.",
+      "config_key": "young_trainer",
+      "position": [5.0, 15.0],
+      "facing_deg": 126.9,
+      "_why_here": "The open north field behind the square, inside the same vegetation clearing Bryn's and Halda's own arenas already use but far from both of them: probed 10.00m from Bryn and 18.8m from Halda (tools/_probe_civilian_placement.gd), well past the two challenge prompts' radii added together, ground flat, off every path.",
+      "challenge": "young_trainer_challenge",
+      "defeated": "young_trainer_defeated",
+      "team": [
+        {"species": "bramblebun", "level": 3},
+        {"species": "pipwing", "level": 3}
+      ],
+      "_comment_team": "Band 1's authored trainer band is 2-7 (chapter_curve.json); pitched at the soft end, just above practice_trainer's own 2-3, matching an aspiring trainer who is still learning rather than a gate.",
+      "reward": {
+        "coins": 15,
+        "items": [
+          {"id": "potion_small", "count": 1}
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_young_trainer",
+      "rechallenge": false
+    },
+    {
+      "order": 1021,
+      "id": "rival_trainer",
+      "name": "Talon",
+      "_comment": "T1-CREATURE-RIG. Own generated `rival_trainer` body -- the board's blurb, 'friendly rival who challenges you throughout the story', implemented here as this chapter's single fought encounter with them (a repeat-appearance rival arc is a story-structure decision outside this lane's scope, flagged rather than guessed at).",
+      "config_key": "rival_trainer",
+      "position": [27.2, -29.6],
+      "facing_deg": 164.9,
+      "_why_here": "Beside the Practice Meadow route (village.json's own path from the square toward the opening's bramblebun clearing), offset ~4m off the road's own centreline so he stands beside it rather than in it -- probed path_factor 0.00, 6.02m clear of the nearest fence run, 10.67m from Ren, ground present (9.6deg slope, the meadow's own gentle roll toward the field).",
+      "challenge": "rival_trainer_challenge",
+      "defeated": "rival_trainer_defeated",
+      "team": [
+        {"species": "mudsnout", "level": 5},
+        {"species": "terrapup", "level": 6}
+      ],
+      "_comment_team": "Mid-band, matched against Mira/Tam's own 4-6 tier -- a rival is meant to feel like a real peer, not a pushover and not a wall. Both species within Band 1's own trainer band [2,7].",
+      "reward": {
+        "coins": 25,
+        "items": [
+          {"id": "potion_small", "count": 2}
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_rival_trainer",
+      "rechallenge": false
+    },
+    {
+      "order": 1022,
+      "id": "wandering_trainer",
+      "name": "Faye",
+      "_comment": "T1-CREATURE-RIG. Own generated `wandering_trainer` body -- the board's blurb, 'travels with a single trusted creature, enjoys friendly battles', which is why the team below is exactly one creature. `rechallenge: true` was tried here first (a wanderer who fights for fun reads like the one trainer worth meeting twice) and reverted: `tests/test_trainers_data.gd::test_a_beaten_trainer_cannot_be_challenged_again`/`test_a_beaten_trainer_greets_instead_of_challenging` assert every trainer in the table becomes genuinely unchallengeable once beaten, with no `rechallenge` exception, and old_champion_bram's own comment records the same call being made deliberately once already ('an optional trainer who can be farmed is exactly the thing prompt 30's rule exists to prevent'). Matching that existing convention rather than reopening it.",
+      "config_key": "wandering_trainer",
+      "position": [-38.0, 40.0],
+      "facing_deg": -54.5,
+      "_why_here": "Along the Pond route, out past the square where a wanderer would actually be met -- probed path_factor 0.00 (off the road itself), 48.2m clear of the nearest structure, 13m+ from the nearest other placed body, ground present (13.0deg slope, the pond valley's own descent).",
+      "challenge": "wandering_trainer_challenge",
+      "defeated": "wandering_trainer_defeated",
+      "team": [
+        {"species": "paddlenewt", "level": 6}
+      ],
+      "_comment_team": "One creature, per the board. Paddlenewt for the pond-route setting -- already a Band 1 resident (spawns.json) -- and level 6 sits inside the band's own [2,7] trainer range.",
+      "reward": {
+        "coins": 20,
+        "items": [
+          {"id": "orb_basic", "count": 2}
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_wandering_trainer",
+      "rechallenge": false
     }
   ],
-  "_comment_tournament": "TOURNAMENT-1. Orders 1000-1003 are this band's tournament block plus the South Bridge gatekeeper, taken from the band's own reserved 1000-1999 range so no other band can collide and no existing entry had to be renumbered. The bracket itself, the entry thresholds and the four simulated opponents live in data/config/tournament.json; only the fights live here."
+  "_comment_tournament": "TOURNAMENT-1. Orders 1000-1003 are this band's tournament block plus the South Bridge gatekeeper, taken from the band's own reserved 1000-1999 range so no other band can collide and no existing entry had to be renumbered. The bracket itself, the entry thresholds and the four simulated opponents live in data/config/tournament.json; only the fights live here.",
+  "_comment_t1_creature_rig": "T1-CREATURE-RIG, 2026-08-30. Orders 1020-1022 are the 3 Battle-role civilian bodies (young_trainer, rival_trainer, wandering_trainer) from the same T3-INSTALL install gap the 12 village_npcs.json placements close -- see that file's own `_comment_t1_creature_rig`. Appended past this band's baseline fixture size, per tests/test_band_content.gd's own documented rule that new content appends rather than inserts."
 }

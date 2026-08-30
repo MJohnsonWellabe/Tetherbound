@@ -354,3 +354,96 @@ still blocked on a fresh Meshy generation against a resting-pose reference,
 which this lane has no more ability to spend than the one that found it.
 
 Full account: `ralph/reports/NPC_CAST_INSTALL_2026-08-30.md`.
+
+## T1-CREATURE-RIG (2026-08-30) — the five creature rigs closed locally, the 15 civilian/trail bodies placed
+
+No new Meshy spend in this entry either.
+
+**All 15 civilian/trail bodies above are now placed in the live game.** 12
+non-battle roles (`innkeeper`, `inn_helper`, `trader`, `craftsperson`,
+`creature_caretaker`, `farmer`, `local_historian`, `lost_traveler`,
+`field_researcher`, `alpha_tracker`, `courier`, `former_tether_member`) are
+new entries in `data/config/village_npcs.json` with their own greeting
+conversations in `data/dialogue/village.json`; the 3 Battle roles
+(`young_trainer`, `rival_trainer`, `wandering_trainer`) are standalone
+`trainer_npc.gd` placements (the same shape as Bryn/old_champion_bram) in
+`data/config/bands/band1_lower_meadows/trainers.json` with authored teams
+(species already resident in Band 1, levels inside the band's own [2,7]
+trainer_levels range per `chapter_curve.json`) and challenge/defeated
+dialogue in `data/dialogue/bands/band1_lower_meadows.json`. Every position
+was checked with a new tool, `tools/_probe_civilian_placement.gd` — the
+real analytic terrain (`playground_heightfield.gd`, no bake needed) plus
+real building footprints (`building_prefabs.json`'s own module-extent
+formula, the same one `village.gd::_ground_clear_radius` uses at runtime)
+plus distance to every already-authored person — not eyeballed, the same
+standard `village_npcs.json`'s own `_comment_positions` set. Two of the
+twelve (Maren the field researcher, Sorrel the alpha tracker) fill the
+previously-empty `ranger_station`/mill-crossing buildings near the pond
+route rather than crowding the village square further. Evidence:
+`ralph/reports/T1-CREATURE-RIG/shots/` — real playground-world renders (the
+actual terrain and structures, not a neutral-backdrop lineup), through
+`tools/_capture_t1_creature_rig_npcs.gd`.
+
+**The five expansion-creature meshes' no-rig defect (Sparkit, Cindercub,
+Shadelet, Frostclaw, Bramblebun redesign) IS closed this pass, and by a
+different recipe than the brief itself guessed at.** `MESHY_API_KEY` was
+confirmed unset in this container early in this session (`python3
+tools/art_pipeline/meshy.py check` reported "MESHY_API_KEY is not set"),
+the same wall T3-INSTALL's own handover recorded hitting on this exact
+task. But `meshy.py`'s own `cmd_rig` docstring says plainly "Meshy
+documents this as HUMANOID-only" — the cloud auto-rigger was never the
+right tool for five quadrupeds — and `tools/art_pipeline/finish.py` (its
+own header: `finish.py rig bramblebun --kind quadruped`) already runs a
+LOCAL, offline recipe for exactly this case: `rig_quadruped.py` places a
+15-bone skeleton from the mesh's own geometry (leg clustering, spine along
+the long axis, no hand-placed bones) and skins it with Blender's automatic
+weights; `animate_quadruped.py` then authors the same six clips
+(idle/walk/run/attack/hit/faint) every other production creature ships,
+locally. Zero Meshy credits — this is the actual recipe every existing
+creature in the roster (Bramblebun's own original mesh included) already
+went through. The owner supplied a working `MESHY_API_KEY` mid-session
+(515 credits, verified) after this was already found, but it was not
+needed for the rig/animate steps themselves — only `finish.py texture`
+(not run here; every one of these five meshes already had its texture)
+touches Meshy.
+
+Run for all five: `mkdir -p assets_raw/<species>/build && cp
+assets/creatures/tetherbound/<species>/models/creature_<species>_lod0.glb
+assets_raw/<species>/build/textured.glb && python3
+tools/art_pipeline/finish.py rig <species> --kind quadruped && python3
+tools/art_pipeline/finish.py install <species>`. Sparkit, Shadelet and
+Bramblebun redesign rigged with 0 unweighted vertices; Cindercub (35/27342)
+and Frostclaw (20/26840) triggered `rig_quadruped.py`'s own
+"UNWEIGHTED VERTICES PRESENT — these will tear" warning, so neither was
+installed on the strength of that count alone — a new tool,
+`tools/art_pipeline/blender/pose_check.py`, renders a model at a named
+action/frame instead of its rest pose specifically to answer that question
+with a frame rather than a number, and both rendered clean at the attack
+clip's most extreme pose (frame 10, full rear-up/paws-down extension) with
+no visible tearing before being installed. Evidence, all five, posed:
+`ralph/reports/T1-CREATURE-RIG/shots/pose_check/`.
+
+**The Bramblebun redesign now ships.** `data/creatures/species.json`'s
+`bramblebun.placeholder.model` now points at
+`bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb` — the
+only reason it was reverted (a static, unrigged mesh regressing the game's
+most-seen creature) no longer applies, and the rendered posed frame shows
+a clean rig with the redesign's own larger, antlered silhouette per the
+owner's size guide.
+
+Also fixed along the way: the newly-installed `.glb` files did not reach
+Godot until `godot --headless --path . --import` was re-run — overwriting
+a `.glb` on disk leaves its stale `.godot/imported/` cache alone, exactly
+the trap `ralph/conventions.md`'s art-pipeline section already documents.
+The first `smoke_art.gd` run after installing still reported "bramblebun
+has no AnimationPlayer" against the OLD cached import; re-importing fixed
+that specific defect (confirmed: the re-run's world-build log is clean
+and the "no AnimationPlayer" warning is gone). `smoke_art.gd` itself could
+not be run to completion in this container even after that fix — see the
+handover's own Tests section for the full account and the substitute
+verification (`tools/preview_creatures.gd`, real creature staging with no
+full-world boot, all 25 species including the five rigged this pass).
+Recorded here since the import-cache trap will bite the next person who
+overwrites a creature `.glb` mid-session too.
+
+Full account: `ralph/reports/handover-T1-CREATURE-RIG-2026-08-30.md`.
