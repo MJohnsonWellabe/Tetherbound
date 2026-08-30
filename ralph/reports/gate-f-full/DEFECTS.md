@@ -826,3 +826,57 @@ to ask whether a point is inside it. A test that walks the rig's own authored
 legs against the fence would have caught both of these before a run, and would
 catch the next one. **That is the single cheapest instrument improvement
 available to the next lane.**
+
+---
+
+## TRAVERSAL-F8 — with the fence routed, the rig carries the chapter 1,300 m to the South Bridge, and the game stops it there
+
+**Not a defect. The most useful positive result of the run**, and it separates
+two questions that have been tangled for seven runs: *can the instrument drive
+the chapter?* and *can the chapter be played?*
+
+With RIG-F6 fixed, S05 ran **82 steps, 59 PASS / 10 FAIL, complete, exit save
+written**, and walked the whole band-1 corridor:
+
+```
+village well (10,-10) -> PondGate (-21,21) -> the spine (-40,180)
+   -> the pond (-342,507) -> Old Bram (195,905) -> Trail Camp (348,919)
+   -> the bridge road (14,1250) -> South Bridge (0,1330)
+exit pose: (3.6, -2.9, 1318.0)
+```
+
+That is roughly **1.3 km of the Meadows walked on foot, in one segment, on
+production paths, with no teleport** — the first time in this effort. The
+instrument is not what is broken.
+
+**What stopped it, 12.6 m from the bridge:**
+
+```
+S05-45..48  the South Bridge grunt: input_context=narrative_modal (wanted combat)
+            combat_running=false (wanted true)                       FAIL
+S05-49      flag south_bridge_open NOT set                           FAIL
+S05-56      did not reach (0, 1330) in 3000 walking frames;
+            stopped 12.6 m short at (4.0, -3.0, 1318.0)  (40 held)   FAIL
+```
+
+The fight never staged, so the gate never opened, so the bridge — a solid body
+until it does — was not crossable. And the fight never staged for the reason
+`ralph/reports/FINDING-T2-STRANDING-2026-08-30.md` established live and
+correctly: `can_challenge()` refuses without a deployable ally, and **both of
+this party's creatures are fainted.** They are fainted because of GAME-F2, and
+in a run that got past that they would be fainted again at their next level-up
+because of GAME-F4.
+
+**So the chapter's traversal boundary today is the South Bridge, and it is the
+same wall as the tournament gate**: a party the village could not build, kept
+down by a fight the opening should not have made this hard. Two defects, one
+wall, three places it shows up.
+
+**The three `narrative_modal` failures in this segment** (`S05-40`, `S05-45`,
+`S05-49`) are the modal-holds-locomotion class the protocol names, caught by the
+diagnostic asserts `4de89a11` added for exactly this. They are recorded, not
+diagnosed: this run cannot tell a modal that legitimately owns input at that
+moment from one that should have closed, and the segment's `answer_prompts` is
+on, which the schema says makes it unable to evidence "a modal blocked travel".
+**A lane wanting that finding needs a segment with `answer_prompts` off**, which
+is what S02's superseded attempts already carry.
