@@ -31,6 +31,9 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+## T3-COMBAT. Only for `combat.json`'s `effect_banner` block; this file resolves
+## no damage and reads no other part of that config.
+const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
 
@@ -137,7 +140,37 @@ const EFFECT_BANNER_GAP := 16.0
 ## How long the verdict stays up. Short: it is confirming a blow the player
 ## already threw, not asking them to change what they are doing, and a fight
 ## lands hits faster than a line of text can be read twice.
+##
+## Fallback only — `combat.json`'s `effect_banner` block owns the real value.
 const EFFECT_BANNER_SECONDS := 0.7
+
+## T3-COMBAT. The last verdict actually put on screen, as `"<side>:<tier>"`,
+## and the clock reading when it went up. Together these stop the banner
+## repeating a verdict the player is already looking at.
+##
+## MEASURED, not guessed. `tools/_probe_combat_matchup.gd` fought four real
+## non-mirror encounters and counted what this handler received:
+##
+##   ripplet into burrowback   11 hits, ALL of them `+1`, over a 10.2s fight
+##   galewisp into burrowback  16 hits at `-1` and 6 taken at `+1`, over 14.6s
+##
+## At 0.7s each that is 7.7 seconds of banner in a 10.2-second fight, and in
+## the second fight 22 banner events in 14.6 seconds — more banner-time than
+## fight-time, alternating between "WEAK — it shrugged that off" and "it hit
+## YOUR weakness". This file's own comment already said the rule: "a banner
+## that fires on every blow is a banner nobody reads". It was written for
+## neutral hits, and a non-neutral matchup makes EVERY hit fire it, so the rule
+## was true and unenforced.
+##
+## The verdict is a fact about the pairing, not about the swing: it cannot
+## change from one hit to the next unless the creature, the opponent or the
+## move changed. So it is said when it becomes true, said again if it changes
+## direction, and said again periodically in a long fight for a player who
+## looked away — and otherwise stays off the screen the player is trying to
+## fight in.
+var _effect_last_shown: Dictionary = {}
+var _effect_last_key: String = ""
+var _effect_clock: float = 0.0
 
 @onready var _root: Control = $Root
 @onready var _enemy_panel: PanelContainer = $Root/EnemyPanel
@@ -233,6 +266,11 @@ func _ready() -> void:
 		_manager.connect("exited", _on_exited)
 		_manager.connect("attack_missed", _on_missed)
 		_manager.connect("hit_effectiveness", _on_hit_effectiveness)
+		# T3-COMBAT. `entered` fires once per fight, and a trainer battle opens a
+		# fresh one for every creature its trainer sends out — so each new
+		# opponent gets told about, and none of them inherits the previous
+		# round's verdict.
+		_manager.connect("entered", _forget_the_last_verdict)
 		_manager.connect("catch_refused", _on_catch_refused)
 		_manager.connect("catch_resolved", _on_catch_resolved)
 		_manager.connect("creature_switched", _on_creature_switched)
@@ -326,6 +364,10 @@ func _position_effect_banner() -> void:
 ## is one boolean and a Tween that outlives the fight is how a HUD element gets
 ## stuck on screen.
 func _tick_effect_banner(delta: float) -> void:
+	# T3-COMBAT. Advanced FIRST and unconditionally: the repeat window is
+	# measured in fight time, and a clock that only ran while the banner was up
+	# would never let a verdict be said a second time.
+	_effect_clock += delta
 	if _effect_left <= 0.0:
 		return
 	_effect_left = maxf(0.0, _effect_left - delta)
@@ -935,6 +977,9 @@ func _on_creature_switched(_index: int) -> void:
 	var creature: RefCounted = _manager.call("active_creature") if _manager != null else null
 	_go_text.text = "GO, %s!" % creature.label() if creature != null else ""
 	_go_left = 1.2
+	# T3-COMBAT. A switch is the player asking a different question of the same
+	# opponent, and the answer is the first thing they need back.
+	_forget_the_last_verdict()
 	if _party_strip != null:
 		_party_strip.call("show_strip")
 
@@ -974,6 +1019,16 @@ func _tick_go_text(delta: float) -> void:
 func _on_hit_effectiveness(on_enemy: bool, effectiveness: int) -> void:
 	if effectiveness == 0 or _effect_banner == null:
 		return
+	# T3-COMBAT. Say it when it becomes true, not on every blow that keeps it
+	# true. See `_effect_last_shown` for the measurement that produced this.
+	var key := "%s:%d" % ["foe" if on_enemy else "you", effectiveness]
+	if key == _effect_last_key:
+		var since := _effect_clock - float(_effect_last_shown.get(key, -INF))
+		if since < _effect_banner_repeat_seconds():
+			return
+	_effect_last_key = key
+	_effect_last_shown[key] = _effect_clock
+
 	var text := ""
 	var colour := UITokens.SUCCESS
 	if on_enemy:
@@ -995,7 +1050,30 @@ func _on_hit_effectiveness(on_enemy: bool, effectiveness: int) -> void:
 	# telegraph line inside it appears and disappears during a fight.
 	_position_effect_banner()
 	_effect_banner.visible = true
-	_effect_left = EFFECT_BANNER_SECONDS
+	_effect_left = _effect_banner_seconds()
+
+
+## `combat.json`'s `effect_banner` block, with this file's own constants as the
+## fallback. Tunable there rather than here because how often a fight is allowed
+## to repeat itself is exactly the kind of number a playtest moves.
+func _effect_banner_seconds() -> float:
+	return float(COMBAT_MATH.config().get("effect_banner", {}).get(
+		"seconds", EFFECT_BANNER_SECONDS))
+
+
+func _effect_banner_repeat_seconds() -> float:
+	return float(COMBAT_MATH.config().get("effect_banner", {}).get("repeat_seconds", 6.0))
+
+
+## A new fight, or a new creature piloting it, is a new pairing: whatever the
+## chart said about the last one is no longer what the player needs told.
+##
+## Driven off the manager's own signals rather than polled, for the reason this
+## file's header gives about the outcome banner and the XP line: these are
+## moments, not state.
+func _forget_the_last_verdict() -> void:
+	_effect_last_key = ""
+	_effect_last_shown.clear()
 
 
 ## A miss has to be legible or it reads as the game dropping the input.
