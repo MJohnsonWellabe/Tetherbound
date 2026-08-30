@@ -200,13 +200,19 @@ What the frames show, stated as observation, not verdict:
   cyan eye dots are visible. In the day close-up the cyan eye glow is
   present but reads as a soft dot on/near the socket, not a crisp iris, and
   drifting aura motes are visible around the head.
-- `riftfrill-vs-paddlenewt-day-wide.png`: the frill crown, face and forelimb
-  region carry the lilac/violet move beside the base's uniform cyan; the two
-  no longer differ only in brightness. `-night-close`: the variant reads
-  violet against the base's blue with faint lilac filigree shimmer along the
-  jaw/frill; the violet eye gleam is present but subtle.
-- Ashtusk/Nightburrow frames: re-shot with the eye-glow fix; their texture
-  identity is unchanged from what JUDGE-4 already cleared.
+- `riftfrill-vs-paddlenewt-day-wide.png`/`-day-close.png` (after the D18
+  body push, `a81f7223`): the whole head and body now read as violet-blue
+  beside Paddlenewt's cyan, not just the frills — the close crop in
+  particular shows a clear hue difference across the face, not only a
+  brightness difference. `-night-close`: the variant reads violet against
+  the base's blue with lilac filigree shimmer along the jaw/frill; the
+  violet eye gleam is present.
+- `nightburrow-vs-burrowback-night-close.png` (after the D19 fix): the two
+  violet eye-glow discs now sit at eye height and read as round, not as a
+  second higher pair — the "four eyes" JUDGE-5 named is gone in this frame.
+- Ashtusk frames: re-shot with the eye-glow fix; texture identity unchanged
+  from what JUDGE-4 already cleared, ember eye-glow now guaranteed visible
+  rather than working "by luck" via texture rim colour alone.
 
 ### In-world frames (real Meadows, this round's addition)
 
@@ -261,7 +267,25 @@ frames after the D18/D19 fix was not done in this round — see Known limits.
 
 ## Tests run
 
-<!-- TEST_RESULTS -->
+- `godot --headless --path . --script tests/smoke_art.gd` (under
+  `xvfb-run`/`opengl3`, never `--headless` with a real driver) — **art: OK —
+  models loaded, sized to their colliders, and the meadow is dressed.**
+  Took roughly 39 minutes on this box: this box renders far slower than the
+  project's own documented figures for a "fast box" (see the in-world
+  capture section above), and this particular test's evolution-only-species
+  check in particular is the slow section — not a hang, just genuinely slow
+  software rendering, confirmed by letting a run go to completion with a
+  50-minute budget after two earlier attempts were cut off mid-test by a
+  shorter timeout.
+- `godot --headless --path . --script tests/run_tests.gd -- --only=test_creature,test_wild_alphas`
+  — **45 tests, 173 assertions, 0 failed.** Matches the predecessor lane's
+  own reported baseline exactly (same counts).
+- The 16 synthetic-stage lineup frames were re-rendered a final time after
+  the D18/D19 fix and eyeballed directly: Nightburrow's eye-glow now sits at
+  eye height, round, no longer reading as a second pair above the real eyes;
+  Riftfrill's whole head/body is now visibly violet-purple beside
+  Paddlenewt's cyan in the close crop, not just the frills. Both match what
+  the fix was meant to do.
 
 ## Known limits / honest gaps
 
