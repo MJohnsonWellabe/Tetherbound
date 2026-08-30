@@ -470,3 +470,42 @@ Three honest options, none of which this lane should pick unilaterally:
 
 The sightline clearings (§2) were needed either way: without them the fortress
 was not small at H-01, it was *invisible*.
+
+## 7. Performance
+
+Measured with `tools/perf_render_stats.gd` at the `hall_approach` stand — the
+one that looks **at** the Hall (yaw 180). Not `stronghold_approach`, which sits
+at the same point at yaw 0 and looks away from it; `docs/PERFORMANCE_BUDGET.md`
+§0.5 records that as a real mistake a previous lane built past.
+
+```
+view                     draw calls     primitives      objects
+hall_approach                  3048       23791675         3374
+```
+
+| | draw calls |
+|---|---|
+| T1-HALL-REBUILD, as JUDGE-5 saw it | 2743 |
+| after T1-PERF's keep-parapet fix (cherry-picked into this branch) | 2665 |
+| **this lane, measured** | **3048** |
+| ceiling (`docs/PERFORMANCE_BUDGET.md` §0.5) | 4000 |
+
+**+383 draw calls for the whole pass, at 76% of the ceiling, with ~950 of
+headroom left.**
+
+Two notes on honesty rather than on the number:
+
+- **This was measured before the last three commits** (yard banners, the gate
+  piers' stone, the footprint renumber). Those add roughly 50–60 boxes between
+  them, so the shipping figure is ~3100 and the conclusion is unchanged — but
+  it is an estimate on top of a measurement, and the next lane should re-run
+  rather than quote it.
+- **The original 2463 ceiling this lane was briefed against was wrong**, and the
+  correction arrived mid-lane. D3's silhouette was therefore solved with scale
+  and placement rather than added modules — chosen specifically to spend nothing
+  — which turns out to have been unnecessarily frugal. There is real room to add
+  the mass and dressing D3 and D5 still want; §6's three options are all
+  affordable.
+- **No container here has ROG Ally hardware.** This is a draw-call count against
+  a reasoned ceiling, not a frame-rate claim. The budget document says the same
+  about itself.
