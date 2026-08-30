@@ -70,12 +70,6 @@ func restore(data: Variant, db: RefCounted) -> void:
 ## `.scale` applies to the whole bag.
 func _build_visuals() -> void:
 	add_to_group(GROUP)
-	# OP-0830-3. A death satchel is the one pickup the player is actively
-	# HUNTING for, dropped wherever they happened to fall. The shared highlight
-	# (scripts/world/pickup_glow.gd) is what makes it findable in cover; the
-	# tint is the bag's own leather rather than an item colour, because a
-	# satchel is a container and has no single item to speak for it.
-	PICKUP_GLOW.attach(self, SATCHEL_GLOW_COLOUR)
 
 	if ResourceLoader.exists(MESH_PATH):
 		var resource: Resource = load(MESH_PATH)
@@ -98,6 +92,18 @@ func _build_visuals() -> void:
 	prompt.call("configure", "Open Satchel", 2.6, true)
 	prompt.connect("activated", _on_open)
 	add_child(prompt)
+
+	# OP-0830-3. A death satchel is the one pickup the player is actively
+	# HUNTING for, dropped wherever they happened to fall -- which is as likely
+	# to be deep cover as open road. The shared highlight
+	# (scripts/world/pickup_glow.gd) is what makes it findable; the tint is the
+	# bag's own leather rather than an item colour, because a satchel is a
+	# container and has no single item to speak for it.
+	#
+	# Registered AFTER the mesh, not before: `pickup_glow.gd` measures the
+	# prop's own crown to decide where the mote sits, and a satchel that had not
+	# built its bag yet would measure as flat.
+	PICKUP_GLOW.attach(self, SATCHEL_GLOW_COLOUR)
 
 
 func _on_open() -> void:

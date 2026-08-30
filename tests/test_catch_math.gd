@@ -57,12 +57,54 @@ func test_a_centred_hit_beats_a_clipped_one() -> void:
 
 
 func test_accuracy_saturates_rather_than_going_negative() -> void:
-	# An orb that grazed further out than the body radius should be worth the
-	# worst bonus, not a negative one that inverts the whole formula.
-	var edge: float = CATCH.accuracy_bonus(BODY, BODY)
-	var beyond: float = CATCH.accuracy_bonus(BODY * 4.0, BODY)
+	# An orb that grazed further out than a hit could possibly be should be worth
+	# the worst bonus, not a negative one that inverts the whole formula.
+	var scale: float = CATCH.accuracy_scale(BODY)
+	var edge: float = CATCH.accuracy_bonus(scale, BODY)
+	var beyond: float = CATCH.accuracy_bonus(scale * 4.0, BODY)
 	assert_almost_eq(beyond, edge, 0.001)
 	assert_true(beyond > 0.0)
+
+
+func test_the_placement_scale_is_the_distance_a_hit_can_actually_be_at() -> void:
+	# OP-0830-5, and the regression that stops it coming back. The bonus is
+	# graded over the envelope `orb.gd::_check_target()` tests against -- the
+	# body plus the orb's own radius. Scoring it over `body_radius` alone (which
+	# is what shipped, and what the owner reported as "way too hard") pins four
+	# throws in five at the worst possible placement, because a real assisted
+	# throw's median miss distance is already larger than a small creature's
+	# whole body.
+	var orb_radius := float(CATCH.config().get("throw", {}).get("radius", 0.6))
+	assert_true(CATCH.accuracy_scale(BODY) > BODY,
+		"placement is being judged on a scale no thrown orb can hold; the "
+		+ "envelope is body + orb radius, not the body alone")
+	assert_almost_eq(CATCH.accuracy_scale(BODY), BODY + orb_radius, 0.001)
+
+
+func test_a_throw_inside_the_body_is_not_scored_as_a_graze() -> void:
+	# The measured failure in one assertion: a Bramblebun-sized target, and a
+	# throw that passed a body's width off centre. That used to be worth exactly
+	# `edge_bonus` -- the same as an orb that barely clipped the collision
+	# sphere half a metre further out.
+	var body := 0.325
+	var close_throw: float = CATCH.accuracy_bonus(body, body)
+	var barely_a_hit: float = CATCH.accuracy_bonus(CATCH.accuracy_scale(body), body)
+	assert_true(close_throw > barely_a_hit + 0.1,
+		"a throw one body-radius off centre (%.3f) scores the same as one that "
+		% close_throw + "barely clipped the collision sphere (%.3f); aiming is "
+		% barely_a_hit + "decoration again")
+
+
+func test_the_ceiling_did_not_move() -> void:
+	# The fix is the SCALE, not the bonus: a dead-centre throw is worth what it
+	# has always been worth, and the worst legal placement is worth what it has
+	# always been worth. Anyone reading this as "catching was made easier by
+	# raising the odds" is reading it wrong.
+	var chance: Dictionary = CATCH.config().get("chance", {})
+	assert_almost_eq(CATCH.accuracy_bonus(0.0, BODY), float(chance.get("centre_bonus", 1.45)), 0.001)
+	assert_almost_eq(
+		CATCH.accuracy_bonus(CATCH.accuracy_scale(BODY), BODY),
+		float(chance.get("edge_bonus", 0.80)), 0.001)
 
 
 func test_accuracy_survives_a_zero_sized_target() -> void:
@@ -363,19 +405,47 @@ func test_placement_is_scored_on_the_trajectory_not_where_the_orb_stopped() -> v
 
 ## A throw genuinely passing wide still scores wide. The fix must make aiming
 ## matter, not make every throw free.
+##
+## OP-0830-5 moved where "wide" starts, and this test moved with it -- so the
+## reasoning is written out rather than left as a changed number.
+##
+## It used to assert that a throw passing **0.35 m** off a 0.312 m body scored
+## exactly `edge_bonus`, i.e. the worst placement possible. That reads as a
+## strict test and is in fact the defect the owner reported: `orb.gd` counts a
+## hit out to `body_radius + orb radius` (0.912 m here), so 0.35 m is not a wide
+## throw at all -- it is a throw inside the middle third of the envelope, and
+## `tools/_probe_catch_rate.gd` measured the MEDIAN real assisted throw at
+## 0.375 m. Pinning that at `edge_bonus` is what made 77% of landed throws score
+## as grazes and made aiming worth nothing.
+##
+## So the claim is kept and re-anchored: a throw at the far edge of what still
+## counts as a hit scores `edge_bonus`, a throw beyond it cannot score better,
+## and a throw a third of the way out scores strictly worse than dead centre.
+## Aiming still matters; it just is not all-or-nothing any more.
 func test_a_wide_trajectory_still_scores_at_the_edge() -> void:
 	var centre := Vector3.ZERO
 	var body_radius := 0.312
 	var heading := Vector3(-1.0, 0.0, 0.0)
-	var contact := Vector3(0.9, 0.0, 0.35)  ## passing 0.35m to the side
+	var scale: float = CATCH.accuracy_scale(body_radius)
 
-	var offset := ORB.closest_approach_ahead(contact, heading, centre)
-	assert_almost_eq(offset, 0.35, 0.001, "a throw passing 0.35m wide must measure 0.35m")
+	var wide_contact := Vector3(0.9, 0.0, scale)
+	var wide := ORB.closest_approach_ahead(wide_contact, heading, centre)
+	assert_almost_eq(wide, scale, 0.001, "a throw passing at the envelope must measure it")
 	assert_almost_eq(
-		CATCH.accuracy_bonus(minf(offset, body_radius), body_radius),
+		CATCH.accuracy_bonus(minf(wide, scale), body_radius),
 		float(CATCH.config().get("chance", {}).get("edge_bonus", 0.80)), 0.001,
-		"a trajectory outside the body must still score at edge_bonus"
+		"a trajectory at the outer edge of the hit envelope must score at edge_bonus"
 	)
+
+	# And the middle of the envelope is genuinely between the two, not pinned to
+	# either end. This is the assertion that would have caught the shipped
+	# defect.
+	var middling: float = CATCH.accuracy_bonus(0.35, body_radius)
+	assert_true(middling < CATCH.accuracy_bonus(0.0, body_radius),
+		"a throw 0.35m off centre must be worth less than a dead-centre one")
+	assert_true(middling > CATCH.accuracy_bonus(scale, body_radius) + 0.1,
+		"a throw 0.35m off centre (%.3f) is still being scored as a graze; that is "
+		% middling + "the OP-0830-5 defect")
 
 
 ## An orb already past the creature measures from where it is, never from a

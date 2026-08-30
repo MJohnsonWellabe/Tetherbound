@@ -95,13 +95,11 @@ void vertex() {
 	float pulse = 1.0 + pulse_depth * sin(TIME * pulse_hz * 6.2831853 + phase);
 	v_fade *= pulse;
 
-	if (v_fade <= 0.001) {
-		// Collapsed, so an out-of-band instance rasterises nothing at all.
-		// This is the whole reason one MultiMesh for the entire world is
-		// affordable.
-		VERTEX = vec3(0.0);
-		return;
-	}
+	// Collapsed to a point when out of band, so an instance nobody can see
+	// rasterises nothing at all. This is the whole reason one MultiMesh for the
+	// entire world is affordable. (Written as a multiplier rather than an early
+	// `return`, which Godot forbids in `vertex()`.)
+	float alive = step(0.001, v_fade);
 
 	if (billboard > 0.5) {
 		// Standard camera-facing basis, keeping the instance's translation.
@@ -111,9 +109,9 @@ void vertex() {
 		// it comes back through the vertex. `.x` of the instance basis carries
 		// the authored radius.
 		float authored = length(MODEL_MATRIX[0].xyz);
-		VERTEX *= authored * scale;
+		VERTEX *= authored * scale * alive;
 	} else {
-		VERTEX *= scale;
+		VERTEX *= scale * alive;
 	}
 }
 

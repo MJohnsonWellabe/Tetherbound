@@ -1732,9 +1732,15 @@ func catch_aim_offset(body_radius: float) -> float:
 	# `orb.gd::closest_approach_ahead()` makes at the moment of the strike. The
 	# reticle offset is only the honest estimate when the arc does NOT already
 	# answer the question.
+	# OP-0830-5: clamped at the placement SCALE, not at `body_radius`. Both this
+	# and the strike itself used to pin at the body, which meant the reticle
+	# reported the worst possible placement for every aim more than 0.325m off
+	# a Bramblebun's centre -- a range the aim spends most of its time in. See
+	# `catch_math.accuracy_bonus()` for the measurement.
+	var scale: float = CATCH.accuracy_scale(maxf(body_radius, 0.0))
 	if bool(report.get("trajectory_hits_target", false)):
-		return clampf(float(report.get("trajectory_offset", 0.0)), 0.0, maxf(body_radius, 0.0))
-	return clampf(float(report.get("reticle_offset", 0.0)), 0.0, maxf(body_radius, 0.0))
+		return clampf(float(report.get("trajectory_offset", 0.0)), 0.0, scale)
+	return clampf(float(report.get("reticle_offset", 0.0)), 0.0, scale)
 
 
 ## Whether the aim is genuinely ON the creature -- reticle inside the visible
