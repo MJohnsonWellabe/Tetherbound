@@ -1,0 +1,5 @@
+type chart reached the fight: 3 verdicts, ally water vs foe ground (hit 1 / -1, arrow 1)
+enemy fainted after 251 action frames; outcome 'won'
+tally: 6 hits on the enemy, 3 on the ally, 3 misses
+6 blows landed for 129.9 damage (the chart says 123.4; a chart-less fight would say 98.7)
+combat: OK — a fight can be entered, piloted, won and left.

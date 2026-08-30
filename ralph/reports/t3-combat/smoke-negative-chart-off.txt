@@ -1,0 +1,5 @@
+type chart reached the fight: 3 verdicts, ally water vs foe ground (hit 1 / -1, arrow 1)
+enemy fainted after 331 action frames; outcome 'won'
+tally: 9 hits on the enemy, 3 on the ally, 3 misses
+9 blows landed for 127.4 damage (the chart says 162.6; a chart-less fight would say 130.1)
+combat FAIL: 9 blows dealt 127.4 damage, but water into ground (quick x1.2500, charged x1.2500) should have dealt 162.6 — and a fight with no type chart at all would have dealt 130.1. The multiplier the HUD advertises is not the one the damage is resolved with.

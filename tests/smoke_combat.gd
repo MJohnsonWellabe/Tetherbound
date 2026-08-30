@@ -22,6 +22,9 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 ## manager rather than echo it.
 const CHART := preload("res://scripts/combat/type_chart.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+## T3-COMBAT. The same stat config `combat_manager.gd` resolves damage against,
+## so the prediction below is built from the numbers the fight actually used.
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
 ## Long enough for the terrain to load, collision to build, and the director to
 ## place both creatures.
@@ -44,6 +47,27 @@ var _hits_on_enemy: int = 0
 var _hits_on_ally: int = 0
 ## T3-TYPECHART. `[on_enemy, effectiveness]` for every hit that landed this run.
 var _effectiveness_seen: Array = []
+
+## T3-COMBAT. `[damage, was_quick]` for every blow that connected with the
+## enemy, so the magnitude the chart promised can be checked against the
+## magnitude the fight actually dealt.
+##
+## Both attacks, tagged, rather than quick ones only. Quick and charged have
+## different `power` in `combat.json` and can carry different move TYPES, so
+## they cannot be averaged together — but they can each be predicted separately
+## and the predictions summed. That matters: a first run of this check sampled
+## quick hits alone and got five of them out of a six-hit fight, which is enough
+## for the statistic but leaves nothing in hand if a low-rolled opponent dies in
+## three. Using every hit means the sample size is however many blows it took to
+## win, which is never small.
+var _damage_on_enemy: Array = []
+## Which attack the press now in flight was. Set by `_press()`; read by the
+## `hit_landed` handler, which fires synchronously from inside
+## `_resolve_player_strike`, so it is still describing the same swing.
+var _last_press_was_quick: bool = false
+## Snapshotted while both fighters are still standing, because the numbers the
+## prediction needs are gone by the time the fight has been won.
+var _fight_snapshot: Dictionary = {}
 
 
 func _init() -> void:
@@ -85,6 +109,7 @@ func _run() -> void:
 	# directions, which is what it needs.
 	_the_type_chart_reaches_a_real_fight()
 	await _fight_to_a_finish()
+	_the_advantage_was_worth_what_the_chart_promised()
 	await _hp_is_not_auto_healed_after_the_fight()
 	await _exploration_is_restored()
 	_report()
@@ -98,11 +123,32 @@ func _run() -> void:
 ## `default_starter` never spawns here either. Proving combat's WIRING does
 ## not need the opening's cast; it needs a creature, so this gets one directly,
 ## the same call `sequence_director.gd` makes once a name is confirmed.
+##
+## T3-COMBAT: the creature is a **Water** one, and that is the whole point.
+##
+## This used to be a `terrapup`. Terrapup is Ground, the practice cluster this
+## file walks to is Ground (`data/config/spawns.json`'s `roles.practice` ->
+## bramblebun), and Ground into Ground is 1.00 both ways — so every fight this
+## file has ever graded the type system on was a MIRROR, and
+## `_the_type_chart_reaches_a_real_fight` below said so in as many words: "a
+## mirror matchup (verdicts all 0) is a legitimate run". A check that passes on
+## a mirror is not protecting anything. Switch the chart off entirely, delete
+## the multiplier argument from either call site in `combat_manager.gd`, and a
+## mirror fight resolves to exactly the same numbers it did before.
+##
+## Ripplet is Water. Water into Ground is 1.25 and Ground into Water is 0.80,
+## so the same walk, the same engage and the same fight now carry a verdict in
+## BOTH directions, and `_the_advantage_was_worth_what_the_chart_promised()`
+## can measure whether the multiplier actually reached the damage.
+##
+## Nothing else about the fight changes: Ripplet is an ordinary starter-tier
+## species (`data/creatures/species.json`), and the opening's own starter choice
+## is unaffected — this file never drives the opening.
 func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	if director == null or director.call("ally_instance") != null:
 		return
-	await director.call("adopt_starter", "terrapup")
+	await director.call("adopt_starter", "ripplet")
 
 ## The opening's staging wakes the player in Grandpa's bed; this test bypasses
 ## the opening and needs open meadow between it and the wild creatures, not a
@@ -131,9 +177,10 @@ func _collect_nodes() -> bool:
 		return false
 
 	_manager.connect("attack_missed", func(_by_player: bool) -> void: _misses += 1)
-	_manager.connect("hit_landed", func(on_enemy: bool, _amount: float) -> void:
+	_manager.connect("hit_landed", func(on_enemy: bool, amount: float) -> void:
 		if on_enemy:
 			_hits_on_enemy += 1
+			_damage_on_enemy.append([amount, _last_press_was_quick])
 		else:
 			_hits_on_ally += 1)
 	# T3-TYPECHART. Every verdict the fight actually emitted, so
@@ -541,14 +588,77 @@ func _the_type_chart_reaches_a_real_fight() -> void:
 			% [reported_arrow, str(creature.creature_type), str(foe.creature_type), expected_arrow])
 		return
 
-	# Printed rather than asserted: WHICH types meet here is the director's
-	# choice, not this test's, so a mirror matchup (verdicts all 0) is a
-	# legitimate run. What is asserted above is that the fight and the chart
-	# agree; that the chart itself produces non-neutral verdicts is
-	# tests/test_type_chart.gd's job, where the pairing can be pinned.
 	print("type chart reached the fight: %d verdicts, ally %s vs foe %s (hit %d / %d, arrow %d)"
 		% [_effectiveness_seen.size(), str(creature.creature_type), str(foe.creature_type),
 			on_foe, on_ally, reported_arrow])
+
+	# T3-COMBAT. The check that has teeth, and the one this file did not have.
+	#
+	# Everything above asserts AGREEMENT: whatever verdict the fight emitted
+	# matches an independent lookup over the same two creatures. Agreement is
+	# necessary and it is not sufficient, because on a MIRROR matchup — which
+	# is what this file fought until T3-COMBAT gave it a Water creature — every
+	# expected value is 0, every reported value is 0, and the assertions pass
+	# just as happily with the type chart switched off entirely.
+	#
+	# So the pairing itself is now asserted. If a future edit to
+	# `spawns.json`'s `roles.practice`, or to either species' typing, collapses
+	# this fight back to a mirror, this fails and names the fix rather than
+	# quietly going back to grading nothing.
+	if on_foe == 0 and on_ally == 0:
+		_fail(("this fight is %s vs %s, which the chart is silent about in both "
+			+ "directions -- a mirror matchup cannot show whether the type system "
+			+ "does anything, which is why `_ensure_ally` brings a Water creature "
+			+ "to a Ground practice cluster. Re-pick the ally in `_ensure_ally` "
+			+ "against whatever `spawns.json`'s roles.practice now names.")
+			% [str(creature.creature_type), str(foe.creature_type)])
+		return
+	if reported_arrow == 0:
+		_fail("the HUD's matchup arrow is neutral on a %s vs %s fight; the player is told nothing"
+			% [str(creature.creature_type), str(foe.creature_type)])
+
+	# What each of the player's two attacks SHOULD deal here, from the real
+	# arithmetic over the real stats, with the chart and without it. Snapshotted
+	# now because `_fight_to_a_finish` runs the enemy to zero and the manager
+	# drops it; `_the_advantage_was_worth_what_the_chart_promised()` reads this.
+	#
+	# Safe to take the attacker's stats now and spend them on every later hit:
+	# `_resolve_player_strike` emits `hit_landed` BEFORE `_award_victory`, so no
+	# level-up can move `effective_attack` between a sample and its prediction.
+	var progression_cfg: Dictionary = PROGRESSION.config()
+	var attack: float = creature.effective_attack(progression_cfg)
+	var defence: float = foe.effective_defence(progression_cfg)
+	_fight_snapshot = {
+		"quick": _predict(
+			MATH.config().get("player_quick", {}), str(creature.move_quick),
+			moves, foe, attack, defence),
+		"charged": _predict(
+			MATH.config().get("player_charged", {}), str(creature.move_charged),
+			moves, foe, attack, defence),
+		"ally_type": str(creature.creature_type),
+		"foe_type": str(foe.creature_type),
+	}
+
+
+## What one blow of `block`'s kind SHOULD deal here, with the chart applied and
+## without it — from the real arithmetic over the real stats of the two
+## creatures that actually met.
+##
+## Quick and charged are predicted separately because they differ in `power` and
+## may differ in move TYPE: Mosshell and Reedwing both ship a charged move of a
+## different element from their quick one, and any TM creates the same split.
+func _predict(block: Dictionary, move_id: String, moves: RefCounted, foe: RefCounted,
+		attack: float, defence: float) -> Dictionary:
+	var power := float(block.get("power", 9.0))
+	var move_power: float = moves.call("power", move_id)
+	var multiplier := CHART.multiplier_dual(
+		str(moves.call("type_of", move_id)),
+		str(foe.creature_type), str(foe.get("secondary_type")))
+	return {
+		"with_chart": MATH.base_damage(power, attack, defence, move_power, multiplier),
+		"without_chart": MATH.base_damage(power, attack, defence, move_power, 1.0),
+		"multiplier": multiplier,
+	}
 
 
 ## Without this the fight is a punching bag with a health bar.
@@ -639,6 +749,72 @@ func _fight_to_a_finish() -> void:
 	])
 
 
+## T3-COMBAT. Did the advantage the HUD advertised change what the hits DID?
+##
+## This is the assertion that fails when the type system is switched off, and
+## the one no test in this repo had. `tests/test_type_chart.gd` proves the table
+## and the multiplier's path through `combat_math`. The agreement checks above
+## prove the manager consults the chart and reports the same verdict the chart
+## does. NONE of them notice if `combat_manager.gd::_resolve_player_strike`
+## stops passing `type_mult` into `rolled_damage` — the verdict signal would
+## still be emitted, the arrow would still be right, and every hit would quietly
+## land for neutral damage. That is precisely the failure this repo keeps
+## collecting: a system that exists, is tested, and never reaches the player.
+##
+## So this measures the damage. `_fight_snapshot` holds what one quick attack
+## should deal here with the chart applied and without it, computed from the
+## real `combat_math.base_damage` over the real stats of the two creatures that
+## actually met. `damage.variance` is 0.1, so an individual hit lands anywhere
+## in +/-10% of its own true value and a single sample proves nothing; the MEAN
+## over the fight's quick hits converges fast, and the gap between the two
+## predictions is the chart's own 1.25 (or 0.80), far outside that band.
+##
+## Asserted as a window around the with-chart prediction rather than as
+## "bigger than neutral", so it fails in both directions: a multiplier that
+## went missing, and a multiplier that got applied twice.
+func _the_advantage_was_worth_what_the_chart_promised() -> void:
+	if _fight_snapshot.is_empty():
+		return  # The fight never got far enough to snapshot; already failed above.
+	var samples := _damage_on_enemy.size()
+	if samples < 4:
+		_fail("only %d blows connected in the whole fight; too few to tell what a hit is worth"
+			% samples)
+		return
+
+	# Every blow, each against the prediction for its OWN kind of attack, summed.
+	var observed := 0.0
+	var with_chart := 0.0
+	var without_chart := 0.0
+	for entry: Variant in _damage_on_enemy:
+		var row: Array = entry as Array
+		var predicted: Dictionary = _fight_snapshot["quick" if bool(row[1]) else "charged"]
+		observed += float(row[0])
+		with_chart += float(predicted["with_chart"])
+		without_chart += float(predicted["without_chart"])
+
+	print("%d blows landed for %.1f damage (the chart says %.1f; a chart-less fight would say %.1f)"
+		% [samples, observed, with_chart, without_chart])
+
+	# The variance band is +/-10% on each hit; the mean of `samples` of them is
+	# far tighter than that, so 12% is loose enough never to flap and tight
+	# enough that a 25% multiplier cannot hide inside it.
+	var tolerance := 0.12
+	if absf(observed - with_chart) > with_chart * tolerance:
+		_fail(("%d blows dealt %.1f damage, but %s into %s (quick x%.4f, charged x%.4f) should "
+			+ "have dealt %.1f — and a fight with no type chart at all would have dealt %.1f. "
+			+ "The multiplier the HUD advertises is not the one the damage is resolved with.")
+			% [samples, observed, str(_fight_snapshot["ally_type"]),
+				str(_fight_snapshot["foe_type"]),
+				float((_fight_snapshot["quick"] as Dictionary)["multiplier"]),
+				float((_fight_snapshot["charged"] as Dictionary)["multiplier"]),
+				with_chart, without_chart])
+		return
+	if absf(with_chart - without_chart) < with_chart * tolerance:
+		_fail(("the chart moves this fight's damage by less than %.0f%%, which is too close to "
+			+ "neutral for the check above to mean anything. Re-pick the ally in `_ensure_ally` "
+			+ "against whatever `spawns.json`'s roles.practice now names.") % (tolerance * 100.0))
+
+
 ## R2.5: `encounter_director.gd` used to call `_ally.heal_fully()` on the way
 ## out of every fight, an M2 placeholder for a healing system, camp rest and
 ## potions that did not exist yet. All three exist now, so a win must leave
@@ -703,6 +879,11 @@ func _exploration_is_restored() -> void:
 ## scoped to the frame the press landed in, and pressing between frames can put
 ## it in the frame that has already run.
 func _press(action: String) -> void:
+	# T3-COMBAT: remembered before the press, so the `hit_landed` handler can
+	# tell a quick attack's damage from a charged one's. Combat's input buffer
+	# can fire a press up to `flow.input_buffer` later, and the flag deliberately
+	# stays set until the NEXT press for exactly that reason.
+	_last_press_was_quick = action == "combat_quick"
 	Input.action_press(action)
 	await physics_frame
 	await physics_frame

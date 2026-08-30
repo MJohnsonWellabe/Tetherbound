@@ -1,0 +1,26 @@
+  ripplet     vs burrowback  L12  advantage 1.25 (water->ground)          
+      outcome won      in  10.2s   arrow HUD +1 / chart +1
+      swings to kill  11   damage/hit  18.7   foe max hp 194.7
+      took   4 hits for  27.6 damage; ally left at 84.1% hp
+      verdicts to the player: on foe { 1: 11 }, on ally { -1: 4 }
+  ripplet     vs mosshell    L12  neutral 1.00 (water->water)             
+      outcome won      in  13.3s   arrow HUD +0 / chart +0
+      swings to kill  15   damage/hit  15.4   foe max hp 193.7
+      took   5 hits for  35.6 damage; ally left at 79.6% hp
+      verdicts to the player: on foe { 0: 15 }, on ally { 0: 5 }
+  galewisp    vs burrowback  L12  resisted 0.80 (air->ground)             
+      outcome won      in  14.6s   arrow HUD -1 / chart -1
+      swings to kill  16   damage/hit  12.2   foe max hp 194.7
+      took   6 hits for  69.2 damage; ally left at 54.7% hp
+      verdicts to the player: on foe { -1: 16 }, on ally { 1: 6 }
+  trailpup    vs burrowback  L12  neutral 1.00 (ground->ground)           
+      outcome won      in  14.2s   arrow HUD +0 / chart +0
+      swings to kill  15   damage/hit  15.3   foe max hp 194.7
+      took   2 hits for  16.9 damage; ally left at 90.3% hp
+      verdicts to the player: on foe { 0: 15 }, on ally { 0: 2 }
+  ripplet      vs ashtusk       ABANDONED: could not walk within engage range: 6.1m away after covering 8.6m from (48.0, -1.286541, -58.0)
+  burrowback   vs burrowback    ABANDONED: could not put a burrowback in the player's hands (holding 'ripplet')
+ROW	ripplet	burrowback	12	won	10.23	11	18.73	4	0.84	1	1
+ROW	ripplet	mosshell	12	won	13.33	15	15.39	5	0.80	0	0
+ROW	galewisp	burrowback	12	won	14.63	16	12.18	6	0.55	-1	-1
+ROW	trailpup	burrowback	12	won	14.15	15	15.29	2	0.90	0	0

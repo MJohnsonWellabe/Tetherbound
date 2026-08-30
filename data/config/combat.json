@@ -137,6 +137,11 @@
     "colour": "#ff5a3c",
     "radius": 1.1
   },
+  "effect_banner": {
+    "_comment": "T3-COMBAT. The type-verdict line combat_hud.gd puts under the enemy plate when a hit lands strong or weak. `seconds` is how long one showing lasts. `repeat_seconds` is how long the SAME verdict stays quiet before it may be said again, and it is the number this block exists for: a verdict is a fact about the pairing, not about the swing, so once the player has been told that Water beats this Ground creature, every subsequent hit of that fight was re-telling them. MEASURED in four real non-mirror fights by tools/_probe_combat_matchup.gd -- Ripplet into Burrowback landed 11 hits, all of them 'strong', in a 10.2-second fight, which at 0.7s each is 7.7 seconds of banner; Galewisp into Burrowback produced 22 verdict events in 14.6 seconds, alternating between 'it shrugged that off' and 'it hit YOUR weakness'. The banner is re-armed by a new fight (so every creature a trainer sends out is judged fresh) and by a mid-fight switch (a different creature is a different question), so lengthening this never silences a verdict the player has not already been given. TUNABLE, and the first number to move if a playtester says they did not notice a matchup.",
+    "seconds": 0.7,
+    "repeat_seconds": 6.0
+  },
   "switch": {
     "_comment": "D32: voluntary mid-combat creature switching. lockout_seconds is how long after ANY switch before another is allowed, so a press of `party_cycle` (LB, since CONTROLLER-MAP; two directional actions before that) cannot be spammed into a stutter of creatures. No auto-switch-on-faint: this only ever fires from the player's own choice. TUNABLE.",
     "lockout_seconds": 1.5
