@@ -723,3 +723,37 @@ than trusted.
 **None of those earlier findings is retracted here.** Their mechanisms were
 verified live and remain true. What changes is their *cause*, and therefore
 what fixing them is worth.
+
+---
+
+## PROGRESSION-F7 — where the chapter's progression actually stops: the tournament gate
+
+**Not a new defect** — the consequence of GAME-F2 and GAME-F3, recorded here as
+the run's own boundary marker so nobody has to infer it.
+
+S04 ran to completion (53 PASS / 18 FAIL, 77 steps) and **did not advance the
+chapter by one flag**. Its exit save carries the same seventeen flags S03's did.
+Every entry gate refused, correctly:
+
+```
+S04-10  party size 2 (wanted >= 3)                      FAIL
+S04-21  flag tournament_team_ready       NOT set        FAIL
+S04-22  flag tournament_training_ready   NOT set        FAIL
+S04-23  flag tournament_condition_ready  NOT set        FAIL
+S04-24  flag tournament_entered          NOT set        FAIL
+S04-28/36/43  combat owns input during the quarter/semi/final   FAIL x3
+```
+
+Three of those four flags are the three things S03 could not do — build a team
+of three, train it to `entry.min_level` 6, and have it rested and fed. The
+tournament is refusing an entry that genuinely does not qualify. **Nothing here
+is a tournament defect**; `tournament.gd::_write_entry_flags` is doing its job
+against a team the village ladder could not produce.
+
+**So the chapter's progression boundary on `453107fb` is the tournament gate,
+and the wall in front of it is the village ladder, not the tournament.**
+
+Everything from S05 on in this run is therefore **rig-health evidence only** —
+it answers "would the harness carry the chain if the game let it?", which is a
+useful and separate question, and it answers nothing about the chapter. Any
+verdict below S04 in this run's segment table must be read that way.
