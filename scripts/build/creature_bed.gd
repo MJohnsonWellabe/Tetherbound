@@ -37,68 +37,178 @@ const CREATURE_BED_FLAG := "creature_bed_built"
 ## changing a path. The rest is art that is not in the build, recorded as such in
 ## `ralph/reports/VISUAL_MAKE_LANE_FINDINGS_2026-08-23.md` rather than claimed here.
 ##
-## Raw size is 1.23 x 0.41 x 1.90m (that stand's own note), so it needs no scaling
-## and REST_ANCHOR's 0.42m still lands on the mattress rather than inside it.
 const MESH_PATH := "res://assets/props/generated_camp/camp_bed.glb"
-const REST_ANCHOR := Vector3(0.0, 0.42, 0.0)
+
+## JUDGE-3 sec1d (2026-08-30): the whole-object moss-green tint above this
+## constant's history (0.55, 0.85, 0.62) failed a blind pass twice over --
+## "same mattress mesh, same wrinkle topology, same fold at the foot and the
+## same pillow silhouette" as the player bedroll, and the tint "matches the
+## terrain in hue AND value; the frame disappears; only the near-black
+## mattress reads... a hole in the ground, not a bed." So this round stops
+## treating colour as the differentiator and changes the OBJECT instead:
+##
+##   - The camp bed is squashed to a squat, near-square PAD (PAD_SCALE
+##     below): ~1.17 x 1.05m instead of the player bed's 1.23 x 1.90m, so
+##     the two silhouettes no longer match and the creature's bed reads
+##     creature-sized rather than person-length.
+##   - The pad's baked mattress texture (dark navy/brown patchwork -- the
+##     "near-black" the judge measured at value ~0.12; no multiply can
+##     brighten navy into warmth) is REPLACED with a warm triplanar canvas
+##     material built from the camp set's own tent textures, so the cushion
+##     reads as stuffed canvas from the same maker as the tent.
+##   - A rim of gathered branches (procedural cylinders wearing
+##     `camp_firewood`'s diffuse/normal, the exact texture-reuse recipe
+##     `campfire_glow.gd::texture_logs` already shipped) rings the pad, so
+##     the object's silhouette is a NEST -- a raised stick ring with a soft
+##     centre -- not a rectangle. Warm wood against green ground separates
+##     in both hue and value.
+##
+## Still no new mesh and no Meshy spend: every triangle here is procedural
+## primitive or already-installed generated_camp geometry, and every texel
+## is a generated_camp texture. There is genuinely no basket/nest/straw mesh
+## anywhere in the build (re-verified 2026-08-30: everything landed since
+## the 08-23 check is creatures and NPC humanoids; the unused
+## kenney_survival bedrolls are the flat-shaded style camp.gd's own history
+## already rejected from this exact campsite).
+##
+## Pad scale: Z shortened hard, Y lowered, X near-raw. Raw camp_bed is
+## 1.229 x 0.409 x 1.901 (long axis Z), origin 0.215 above its base
+## (tools/_probe_t1_camp.gd); scaled it becomes ~1.17 x 0.29 x 1.05, and its
+## rectangle corners (0.58, 0.52) sit ~0.78 from centre -- ON the rim
+## ellipse's ~0.75 centreline at that angle, so the pad's frame legs embed
+## in the branch ring instead of poking visibly outside it (round 1, at
+## scale 1.12/0.62, had them a clear 0.1m proud of the rim on each diagonal).
+const PAD_SCALE := Vector3(0.95, 0.72, 0.55)
+
+## Mattress-top seat for the resting creature, re-derived for PAD_SCALE:
+## lifted pad base sits at ground (BED_SINK_LIFT * PAD_SCALE.y = 0.155), the
+## mesh's own top is +0.194 above its origin, so the mattress top lands at
+## (0.215 + 0.194) * 0.72 - PAD_SETTLE = 0.234; the previous unscaled anchor
+## (0.42) sat 0.011 above the unscaled top (0.409), preserved: 0.234 + 0.011,
+## rounded.
+const REST_ANCHOR := Vector3(0.0, 0.25, 0.0)
 
 ## T1-CAMP: measured (tools/_probe_t1_camp.gd) -- camp_bed.glb's own local
 ## origin sits 0.215m above its own geometric base, the same glTF-export
 ## quirk `docs/ASSET_LEDGER.md` already documents a `sink_m: -0.21`
 ## compensation for on this mesh's AUTHORED placement
-## (band1_lower_meadows/props.json). `_piece` here is positioned at this
-## node's own local origin with no such compensation, so a player-placed
-## Creature Bed was sinking a fifth of a metre into the ground -- visible as
-## a squashed, half-buried mattress rather than the raised log-frame bed the
-## reference board shows. `_piece.position.y` below restores true ground
-## contact; `REST_ANCHOR` (the sleeping creature's own local seat) does not
-## need the same correction, since it is already measured to land on the
-## mattress top as built, which now sits 0.215m higher than before.
+## (band1_lower_meadows/props.json). Without the lift a placed pad sinks a
+## fifth of a metre into the ground. RAW value -- multiplied by PAD_SCALE.y
+## wherever the pad is positioned, since the origin offset scales with the
+## mesh.
 const BED_SINK_LIFT := 0.215
 
-## T1-CAST (§17). `camp.gd`'s player bedroll now places this SAME mesh
-## (`PLAYER_BED` there, added by T1-CAMP round 2) a few metres away in the
-## same small camp. A blind Fable pass on the assembled kit called the reuse
-## "a mistake, not a shared-gear story" -- the two beds render pixel-
-## identical, including a human pillow at the head of the creature's own
-## bed, which is the specific tell. `camp_bed.glb` carries its whole model
-## on ONE mesh surface (confirmed: tools/_probe_camp_bed_surfaces.gd), so
-## there is no separate "pillow" or "blanket" surface to hide or retint in
-## isolation -- the only lever available without a second Meshy generation
-## (banned without owner reference art) is a whole-object tint, the same
-## "one mesh, many materials" economy `docs/ASSET_LEDGER.md` already uses
-## for `tm_orb`. Cooler than the player's own warm bed, so the two read as
-## "companion gear from the same maker" rather than a duplicate. Colour
-## only, deliberately -- a scale change would also move
-## REST_ANCHOR/BED_SINK_LIFT (both measured against this mesh's UNSCALED
-## geometry, and load-bearing for tests/smoke_gate_a_rest_torch.gd's real
-## resting-creature placement), and re-deriving both under a new scale is a
-## bigger, riskier change than a judge asking for "reuse doesn't read as a
-## mistake" justifies on its own. Applied via `set_surface_override_material`
-## (BUILD_PIECE.mesh_instances(), added for exactly this) so the shared Mesh
-## resource used by every OTHER placement of camp_bed.glb -- the player's
-## own bed and the authored trail_camp's sleeping surface -- is untouched.
-## Round 1 (0.74, 0.86, 0.80) measured as a real shift (pillow (166,138,107)
-## -> (113,113,84), sampled directly off rendered frames) but was too subtle
-## to register as "a different bed" at a glance, only as a slightly darker
-## one -- a genuine hue shift needs more separation between channels than a
-## near-uniform multiply gives. Pushed further apart so the same pillow
-## comes out an actual moss-green rather than a dimmed tan.
-const CREATURE_BED_TINT := Color(0.55, 0.85, 0.62)
+## Round 2 (rendered, tools/_capture_t1_camp_assets.gd): with the pad at
+## true ground contact its frame rails, lashings and corner posts rode
+## visibly ABOVE the branch rim -- "a rectangular bed inside a fence", which
+## is the exact same-object tell this rework exists to kill. A nest floor
+## pressed into the earth is also just truer: settle the pad this far below
+## ground contact so only the cushion reads through the rim opening.
+const PAD_SETTLE := 0.06
+
+## Nest rim: two courses of branch segments laid tangent to an ellipse just
+## outside the pad's footprint (pad half-extents 0.58 x 0.52). Deterministic
+## jitter so every placed bed is the same object, not a reroll.
+const RIM_RADIUS_X := 0.80
+const RIM_RADIUS_Z := 0.70
+const RIM_BRANCHES_PER_COURSE := 11
+const RIM_COURSE_HEIGHTS: Array[float] = [0.08, 0.21]
+const RIM_SEED := 20260830
+
+## generated_camp's own texture set, per the family rule -- `camp_firewood`'s
+## maps are "a real, tileable cut-log/bark diffuse that was never the
+## rejected part" of that asset (campfire_glow.gd's words, where they
+## already dress every campfire's logs); the tent maps are the set's one
+## fabric. Triplanar, because procedural primitives carry no authored UVs
+## worth trusting -- same reasoning as texture_logs().
+const RIM_WOOD_ALBEDO := "res://assets/props/generated_camp/camp_firewood_base_color.jpg"
+const RIM_WOOD_NORMAL := "res://assets/props/generated_camp/camp_firewood_normal.jpg"
+const PAD_CANVAS_ALBEDO := "res://assets/props/generated_camp/camp_tent_base_color.jpg"
+const PAD_CANVAS_NORMAL := "res://assets/props/generated_camp/camp_tent_normal.jpg"
+
+## Multipliers over the textures above, both deliberately WARM and both
+## lifting value: the judge's specific finding was that the old tint matched
+## grass in value so the object vanished. >1 channels are legal albedo
+## multipliers in Godot and are how a darkish source map comes out straw
+## rather than mud.
+const PAD_TINT := Color(1.35, 1.18, 0.92)
+const RIM_TINT := Color(1.25, 1.12, 0.98)
+
+var _rim_instances: Array[MeshInstance3D] = []
 
 
-func _tint_creature_bed() -> void:
+## Replaces the pad's baked bed texture (dark patchwork, human pillow baked
+## in) with the warm canvas cushion described above. material_override on
+## the instance, so the shared Mesh resource used by the player's own bed
+## and the authored trail_camp placement is untouched.
+func _dress_pad() -> void:
 	if _piece == null or not is_instance_valid(_piece):
 		return
+	var material := StandardMaterial3D.new()
+	material.albedo_color = PAD_TINT
+	if ResourceLoader.exists(PAD_CANVAS_ALBEDO):
+		material.albedo_texture = load(PAD_CANVAS_ALBEDO)
+	if ResourceLoader.exists(PAD_CANVAS_NORMAL):
+		material.normal_enabled = true
+		material.normal_texture = load(PAD_CANVAS_NORMAL)
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3(1.0, 1.0, 1.0)
+	material.metallic = 0.0
+	material.roughness = 0.95
 	for instance: MeshInstance3D in _piece.call("mesh_instances"):
-		var mesh: Mesh = instance.mesh
-		if mesh == null:
-			continue
-		for i in mesh.get_surface_count():
-			var source := mesh.surface_get_material(i) as StandardMaterial3D
-			var material := source.duplicate() as StandardMaterial3D if source != null else StandardMaterial3D.new()
-			material.albedo_color = CREATURE_BED_TINT
-			instance.set_surface_override_material(i, material)
+		instance.material_override = material
+
+
+func _build_rim() -> void:
+	_rim_instances.clear()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = RIM_SEED
+	var material := StandardMaterial3D.new()
+	material.albedo_color = RIM_TINT
+	if ResourceLoader.exists(RIM_WOOD_ALBEDO):
+		material.albedo_texture = load(RIM_WOOD_ALBEDO)
+	if ResourceLoader.exists(RIM_WOOD_NORMAL):
+		material.normal_enabled = true
+		material.normal_texture = load(RIM_WOOD_NORMAL)
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3(2.5, 2.5, 2.5)
+	material.metallic = 0.0
+	material.roughness = 0.9
+	var rim := Node3D.new()
+	rim.name = "NestRim"
+	add_child(rim)
+	for course in RIM_COURSE_HEIGHTS.size():
+		var course_y: float = RIM_COURSE_HEIGHTS[course]
+		# Half-phase offset so the upper course's branches bridge the lower
+		# course's joints, the way stacked sticks actually sit.
+		var phase := (TAU / RIM_BRANCHES_PER_COURSE) * 0.5 * float(course)
+		var inset := 0.02 * float(course)
+		for i in RIM_BRANCHES_PER_COURSE:
+			var t := TAU * float(i) / float(RIM_BRANCHES_PER_COURSE) + phase \
+					+ rng.randf_range(-0.04, 0.04)
+			var center := Vector3(
+					(RIM_RADIUS_X - inset) * cos(t),
+					course_y + rng.randf_range(-0.008, 0.008),
+					(RIM_RADIUS_Z - inset) * sin(t))
+			var tangent := Vector3(
+					-RIM_RADIUS_X * sin(t),
+					rng.randf_range(-0.05, 0.05),
+					RIM_RADIUS_Z * cos(t)).normalized()
+			var radius := rng.randf_range(0.050, 0.070)
+			var cylinder := CylinderMesh.new()
+			cylinder.top_radius = radius
+			cylinder.bottom_radius = radius
+			cylinder.height = rng.randf_range(0.44, 0.56)
+			cylinder.radial_segments = 10
+			cylinder.rings = 1
+			var instance := MeshInstance3D.new()
+			instance.mesh = cylinder
+			instance.material_override = material
+			var side := tangent.cross(Vector3.UP).normalized()
+			instance.transform = Transform3D(
+					Basis(side, tangent, side.cross(tangent)), center)
+			rim.add_child(instance)
+			_rim_instances.append(instance)
 
 ## GATE-E: the bed-index namespace, written down because two kinds of bed now
 ## share it and only one of them is in the build store.
@@ -129,9 +239,9 @@ var _last_occupant: int = -2
 func build_ghost() -> void:
 	_piece = BUILD_PIECE.new()
 	add_child(_piece)
-	_piece.position.y = BED_SINK_LIFT
-	_piece.call("build_ghost", MESH_PATH)
-	_tint_creature_bed()
+	_piece.position.y = BED_SINK_LIFT * PAD_SCALE.y - PAD_SETTLE
+	_piece.call("build_ghost", MESH_PATH, PAD_SCALE)
+	_build_rim()
 
 
 ## `player_built` is what decides whether this placement answers the chapter's
@@ -146,9 +256,10 @@ func build_ghost() -> void:
 func build_real(player_built: bool = true) -> void:
 	_piece = BUILD_PIECE.new()
 	add_child(_piece)
-	_piece.position.y = BED_SINK_LIFT
-	_piece.call("build_real", MESH_PATH)
-	_tint_creature_bed()
+	_piece.position.y = BED_SINK_LIFT * PAD_SCALE.y - PAD_SETTLE
+	_piece.call("build_real", MESH_PATH, {}, PAD_SCALE)
+	_dress_pad()
+	_build_rim()
 	var prompt: Node3D = INTERACTABLE.new()
 	prompt.name = "Interactable"
 	prompt.position = Vector3(0.0, 0.6, 0.7)
@@ -166,6 +277,14 @@ func build_real(player_built: bool = true) -> void:
 func tint_ghost(ok: bool) -> void:
 	if _piece != null and is_instance_valid(_piece):
 		_piece.call("tint_ghost", ok)
+	# The rim branches live outside _piece's model tree, so the ghost tint
+	# has to reach them here -- same shared per-state material build_piece.gd
+	# itself uses, so ghost pad and ghost rim always match.
+	var state: StringName = BUILD_PIECE.STATE_VALID if ok else BUILD_PIECE.STATE_INVALID
+	var material := BUILD_PIECE._material_for_state(state)
+	for instance in _rim_instances:
+		if is_instance_valid(instance):
+			instance.material_override = material
 
 
 func set_build_index(index: int) -> void:

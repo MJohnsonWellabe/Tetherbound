@@ -73,13 +73,13 @@ func _run() -> void:
 		await process_frame
 
 	var shots := [
-		# name, path, mode ("raw" / energy value), translucent
-		["flame-raw", FLAME, "raw", false],
-		["flame-ignite-0.5-translucent", FLAME, 0.5, true],
-		["flame-ignite-1.5-translucent", FLAME, 1.5, true],
-		["flame-ignite-3.0-translucent", FLAME, 3.0, true],
-		["flame-ignite-1.5-opaque", FLAME, 1.5, false],
-		["firewood-raw", FIREWOOD, "raw", false],
+		# name, path, mode ("raw" / energy value), translucent, emission tint
+		# override ("" keeps ignite_mesh's own FIRE_EMISSION)
+		["flame-mult-2.0", FLAME, 2.0, true, ""],
+		["flame-mult-3.5", FLAME, 3.5, true, ""],
+		["flame-mult-5.0", FLAME, 5.0, true, ""],
+		["flame-mult-3.5-warm", FLAME, 3.5, true, "warm"],
+		["flame-mult-5.0-warm", FLAME, 5.0, true, "warm"],
 	]
 
 	var printed_materials := {}
@@ -97,6 +97,16 @@ func _run() -> void:
 
 		if shot[2] is float:
 			CAMPFIRE_GLOW.ignite_mesh(node, float(shot[2]), bool(shot[3]))
+			if str(shot[4]) == "warm":
+				# Variant: a warm near-white emission modulate instead of
+				# FIRE_EMISSION's deep orange, letting the baked gradient's
+				# own hue range (dark red base to yellow tip) carry more of
+				# the colour story.
+				for mi in _meshes(node):
+					for si in mi.get_surface_override_material_count():
+						var m := mi.get_surface_override_material(si) as StandardMaterial3D
+						if m != null:
+							m.emission = Color(1.0, 0.82, 0.55)
 
 		var aabb := _combined_aabb(node)
 		# Rest the sculpt's base on the ground so the render shows what a

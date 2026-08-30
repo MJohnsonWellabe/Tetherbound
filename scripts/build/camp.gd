@@ -103,19 +103,30 @@ const FIRE_SCALE := 0.55
 ## reads as carved wood because nothing lit it. `ignite_mesh()` +
 ## `hide_fire_surface()` are the fix: the sculpt glows from its own baked
 ## warm-to-hot gradient and Bonfire_Fire's old faceted `Fire` cone (the
-## actual "crystal" in the judgement) is hidden underneath it. Energy 0.5 --
-## the same isolation pass showed 1.5 already clips the whole sculpt to
-## cream-white under the outdoor ACES tonemap, exactly the clipping
-## `campfire_glow.gd`'s own `ignite_mesh` header warned about.
+## actual "crystal" in the judgement) is hidden underneath it. Energy 3.5:
+## after `ignite_mesh` switched to a pure-emitter material with a MULTIPLIED
+## emission tint (see its own header for the round-2 white-out that forced
+## that), the isolation sweep read 2.0 as flat matte red-orange, 3.5 as an
+## orange flame with a genuinely hot pale core, and 5.0 as pale yellow
+## throughout -- the old 0.5 belongs to the pre-multiply material and would
+## render nearly black now.
 const CAMP_FLAME := "res://assets/props/generated_camp/camp_flame.glb"
 ## Raw sculpt is 2.00m tall x ~0.5m wide (isolation probe); the log pile it
 ## sits on tops out at 0.616m raw * FIRE_SCALE = ~0.34m world
-## (tools/_probe_flame_fit.gd). 0.7 gives a ~1.4m flame over a ~1.2m-wide
-## pile, and the base sinks below the pile's top so the flame emerges from
+## (tools/_probe_flame_fit.gd). 0.85 gives a ~1.7m flame over a ~1.2m-wide
+## pile -- up from a first-pass 0.7 after a blind judgement on the wider
+## gameplay-distance frame said the flame was "nearly invisible" inside its
+## own glow; the sculpt's silhouette, not the halo, has to be what carries
+## at range. The base sinks below the pile's top so the flame emerges from
 ## between the logs rather than balancing on them.
-const CAMP_FLAME_SCALE := 0.7
+const CAMP_FLAME_SCALE := 0.85
 const CAMP_FLAME_POSITION := Vector3(0.0, 0.18, 0.0)
-const CAMP_FLAME_ENERGY := 0.5
+const CAMP_FLAME_ENERGY := 3.5
+## See the overlay comment in `_spawn_meshes` -- a halo at 1.0 swallowed the
+## sculpt whole ("one additive yellow ball"), none left it hard-edged, and
+## 0.45 still read at distance as "a static glow/light blob" with the flame
+## lost inside it. 0.3 keeps just enough soft bloom at the flame's base.
+const HALO_FRACTION := 0.3
 
 const FADE_SECONDS := 1.2
 
@@ -139,13 +150,12 @@ func build_ghost() -> void:
 func build_real() -> void:
 	_spawn_meshes(true)
 
-	var light := OmniLight3D.new()
-	light.position = Vector3(0.0, 1.2, 0.0)
-	light.light_color = Color(1.0, 0.72, 0.45)
-	light.light_energy = 2.8
-	light.omni_range = 10.0
-	light.shadow_enabled = true
-	add_child(light)
+	# T1-CAST-FIX round 2: no standalone OmniLight here any more. It predates
+	# the CampfireGlow overlay this camp's fire now carries (which brings its
+	# own flickering fire light, the same one every authored campfire uses),
+	# and the two lights stacked -- a blind judgement on the doubled-up frame
+	# called the ground pool "much larger and brighter than the small visible
+	# flame geometry would justify."
 
 	var prompt: Node3D = INTERACTABLE.new()
 	prompt.name = "Interactable"
@@ -204,9 +214,17 @@ func _spawn_meshes(solid: bool) -> void:
 	# light/embers/smoke rig every authored campfire gets through props.gd's
 	# glow branches, built WITHOUT its billboard halo (`new(false)`) because
 	# the sculpt already supplies the flame's visible shape -- the exact
-	# pairing props.gd's `glow: "flame_mesh"` branch already ships. Child of
-	# `fire` itself (not of `self`) so the counter-scale cancels `FIRE_SCALE`
-	# the way props.gd counter-scales its own `scale_factor` -- the overlay's
+	# pairing props.gd's `glow: "flame_mesh"` branch shipped -- EXCEPT the
+	# halo, which stays on at HALO_FRACTION: a blind pass on the halo-less
+	# frame called the sculpt "a distinct, clean outline... rather than a
+	# soft, feathered/glowing falloff" (no bloom post-process exists under
+	# the Compatibility renderer, so an emissive mesh never glows on its
+	# own), and the FULL-size halo re-rendered as one additive yellow ball
+	# that swallowed the sculpt entirely. The fraction is the manual bloom
+	# in between: a soft edge hugging the sculpt without replacing its
+	# silhouette (`campfire_glow.gd`'s `halo_scale` header). Child of `fire`
+	# itself (not of `self`) so the counter-scale cancels `FIRE_SCALE` the
+	# way props.gd counter-scales its own `scale_factor` -- the overlay's
 	# sizes are absolute metres and must not shrink with the log pile
 	# (`campfire_glow.gd`'s own header).
 	if fire != null and solid:
@@ -220,7 +238,7 @@ func _spawn_meshes(solid: bool) -> void:
 			flame.scale = Vector3.ONE * CAMP_FLAME_SCALE
 			add_child(flame)
 			CAMPFIRE_GLOW.ignite_mesh(flame, CAMP_FLAME_ENERGY, true)
-		var overlay: Node3D = CAMPFIRE_GLOW.new(false)
+		var overlay: Node3D = CAMPFIRE_GLOW.new(true, HALO_FRACTION)
 		overlay.scale = Vector3.ONE / FIRE_SCALE
 		fire.add_child(overlay)
 	if not solid:

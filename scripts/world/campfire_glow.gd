@@ -93,10 +93,21 @@ var _light_time := 0.0
 ## lights it), so its caller passes `false` here -- two overlapping "flame"
 ## representations, a mesh AND a billboard, is closer to the toy look than
 ## either alone.
-func _init(include_halo: bool = true) -> void:
+##
+## `halo_scale` (T1-CAST-FIX): the player-built camp's fire pairs a
+## `camp_flame.glb` sculpt with this overlay, and blind judging pinned it
+## between two failures: with no halo the sculpt is "a distinct, clean
+## outline... rather than a soft, feathered/glowing falloff" (there is no
+## bloom post-process under the Compatibility renderer, so an emissive mesh
+## never glows on its own), and with the full-size halo the daytime frame
+## became one additive yellow ball that swallowed the sculpt entirely. A
+## fractional halo -- same quad, same height, scaled down in size AND energy
+## -- is the manual bloom in between: soft edge without replacing the
+## flame's silhouette. 1.0 keeps every existing caller pixel-identical.
+func _init(include_halo: bool = true, halo_scale: float = 1.0) -> void:
 	name = "CampfireGlow"
 	if include_halo:
-		_build_halo()
+		_build_halo(halo_scale)
 	_build_light()
 	_build_embers()
 	_build_smoke()
@@ -285,10 +296,49 @@ static func ignite_mesh(node: Node, energy: float = 0.5, translucent: bool = fal
 			if material.emission_texture == null and material.albedo_texture != null:
 				material.emission_texture = material.albedo_texture
 			material.emission = FIRE_EMISSION
+			# MULTIPLY, not the default ADD. With ADD the emission colour is
+			# summed onto the texture, so `FIRE_EMISSION`'s orange never
+			# actually tinted anything -- the bright half of the baked
+			# gradient plus a full-red emission channel clipped straight to
+			# cream-white at any energy above ~1 (T1-CAST-FIX round 2's blind
+			# "reads as smoke, not fire" verdict, and the real culprit behind
+			# this function's older white-clipping notes). Multiplied, the
+			# texture's own dark-base/bright-tip gradient is preserved and
+			# merely pushed through the flame hue.
+			material.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
 			material.emission_energy_multiplier = energy
+			# T1-CAST-FIX round 2 (blind judgement on the first camp_flame
+			# camp render): "almost entirely white/pale rather than
+			# orange-yellow, so it reads as smoke, not fire." The sculpt was
+			# orange in isolation at this same energy; in the assembled camp
+			# it sat inside the overlay's warm OmniLight AND full sun, and a
+			# SHADED material's sunlit albedo sums all of that on top of its
+			# own emission -- straight past orange into cream. A flame is an
+			# emitter, not a lit object, so the diffuse/specular channels are
+			# zeroed (black albedo, no specular) and the emission channel --
+			# reading the same baked warm-to-hot gradient via
+			# `emission_texture` -- is the ONLY thing that renders. Not
+			# `SHADING_MODE_UNSHADED`: unshaded discards emission entirely
+			# under this renderer (verified with an isolation energy sweep,
+			# 1.5 through 4.0 rendered pixel-identical near-black), so the
+			# "don't let lights touch it" material has to stay shaded and
+			# starve the lighting terms instead.
+			material.albedo_color.r = 0.0
+			material.albedo_color.g = 0.0
+			material.albedo_color.b = 0.0
+			material.metallic = 0.0
+			material.roughness = 1.0
+			material.metallic_specular = 0.0
 			if translucent:
 				material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-				material.albedo_color.a = 0.72
+				# 0.85, up from 0.72: at 0.72 the assembled camp's brightly
+				# sunlit fire-ring floor showed through strongly enough to
+				# wash the flame toward tan (the isolation rig's darker
+				# backdrop hid this), and a blind pass called the result
+				# "flat, uniformly colored". Still translucent enough that
+				# the logs' silhouette reads faintly through the base, which
+				# is the whole point of the option.
+				material.albedo_color.a = 0.85
 				material.cull_mode = BaseMaterial3D.CULL_DISABLED
 			instance.set_surface_override_material(i, material)
 
@@ -306,8 +356,8 @@ static func _collect_meshes(node: Node, into: Array[MeshInstance3D]) -> void:
 		_collect_meshes(child, into)
 
 
-func _build_halo() -> void:
-	var halo := _billboard_quad(HALO_SIZE, FLAME_COLOUR, 0.0, HALO_ENERGY, false)
+func _build_halo(halo_scale: float = 1.0) -> void:
+	var halo := _billboard_quad(HALO_SIZE * halo_scale, FLAME_COLOUR, 0.0, HALO_ENERGY * halo_scale, false)
 	halo.name = "FlameHalo"
 	halo.position = Vector3(0.0, HALO_HEIGHT, 0.0)
 	add_child(halo)
