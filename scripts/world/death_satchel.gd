@@ -13,10 +13,17 @@ extends Node3D
 
 const STORAGE_STATE := preload("res://scripts/world/storage_state.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const STORAGE_PANEL := preload("res://scripts/ui/storage_panel.gd")
 
 const MESH_PATH := "res://assets/props/quaternius_fantasy/Bag.gltf"
 const MESH_SCALE := 0.6
+
+## The bag's own leather, warmed. A satchel holds whatever the player was
+## carrying, so unlike every other pickup it has no single item colour to
+## borrow -- and a warm tan is what separates "your dropped bag" from the
+## cooler mineral tints the caches and deposits carry.
+const SATCHEL_GLOW_COLOUR := Color("#e0a860")
 
 ## R3.2. Every death satchel joins this group, the same pattern
 ## `build_placer.gd`'s `PLACED_GROUP` uses for placed buildings — it is what
@@ -63,6 +70,12 @@ func restore(data: Variant, db: RefCounted) -> void:
 ## `.scale` applies to the whole bag.
 func _build_visuals() -> void:
 	add_to_group(GROUP)
+	# OP-0830-3. A death satchel is the one pickup the player is actively
+	# HUNTING for, dropped wherever they happened to fall. The shared highlight
+	# (scripts/world/pickup_glow.gd) is what makes it findable in cover; the
+	# tint is the bag's own leather rather than an item colour, because a
+	# satchel is a container and has no single item to speak for it.
+	PICKUP_GLOW.attach(self, SATCHEL_GLOW_COLOUR)
 
 	if ResourceLoader.exists(MESH_PATH):
 		var resource: Resource = load(MESH_PATH)

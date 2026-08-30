@@ -21,6 +21,7 @@ extends Node3D
 ## item -- see that function's own comment for the migration note.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
 
 ## progression_state flag ids for TMs live in this namespace so a TM id and
@@ -72,6 +73,7 @@ func _deactivate() -> void:
 	# Disable immediately; queue_free alone leaves one actionable frame.
 	if _prompt != null and is_instance_valid(_prompt):
 		_prompt.call("set_enabled", false)
+	PICKUP_GLOW.detach(self)
 	visible = false
 	queue_free()
 
@@ -210,13 +212,21 @@ func _build_visual() -> void:
 	# light source the level is lit by. Emission alone paints the mesh and
 	# throws nothing under the Compatibility renderer, so without this the
 	# prop has no presence until the player is already on top of it.
-	var glow := OmniLight3D.new()
-	glow.name = "Glow"
-	glow.light_color = colour
-	glow.light_energy = 1.15
-	glow.omni_range = 4.0
-	glow.position = Vector3.UP * ORB_CENTRE_Y
-	add_child(glow)
+	# OP-0830-3. The header above argues for "a light of its own, not just
+	# emission", and the argument was right about the PROBLEM -- emission paints
+	# the mesh and throws nothing, so the prop had no presence until the player
+	# was on top of it. It was wrong about the instrument. An `OmniLight3D` per
+	# pickup does not survive contact with a world holding well over a hundred
+	# of them under an open ROG performance defect (OP-0830-6), and it was one
+	# of five different answers to the same question across five pickup scripts,
+	# which is why the owner's report is that most world items do not read at
+	# all.
+	#
+	# The shared highlight replaces it and keeps what the light was for: the
+	# TM's own type colour, presence from a distance, and no dependence on the
+	# Compatibility renderer's ambient. `height_override` puts the mote over the
+	# plinth-and-orb assembly rather than over the ground it stands on.
+	PICKUP_GLOW.attach(self, colour, ORB_CENTRE_Y + 0.95)
 
 	set_process(true)
 

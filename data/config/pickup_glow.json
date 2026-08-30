@@ -1,0 +1,44 @@
+{
+  "_comment": "PICKUP-GLOW. The one highlight every world pickup shares. Owner playtest 2026-08-30, OP-0830-3: 'all items in the grass like tms, potions, orbs whatever should glow so they're visible.' See scripts/world/pickup_glow.gd for the mechanism and shaders/pickup_glow.gdshader for why it is shaped this way. ALL OF THIS IS TUNABLE; `enabled` false is the whole revert.",
+
+  "_comment_scope": "Every pickup path registers: harvest_node.gd (the gathering nodes -- 114 of them across the five bands), key_pickup.gd (the castle gate key and the Sunstone), tm_pickup.gd, item_cache_pickup.gd, felled_resource.gd (what a chopped tree leaves on the ground) and death_satchel.gd. A sixth path that forgets to call `PICKUP_GLOW.attach` is what tests/test_pickup_glow.gd exists to catch.",
+
+  "enabled": true,
+
+  "_comment_mote": "The 'something is here' cue: a soft camera-facing mote riding ABOVE the object. `height` is the load-bearing number in this file and it is not an aesthetic choice -- grass_field.json's blades stand 0.40-0.62m with 0.38 height jitter, so the carpet tops out around 0.86m and the ground lane is currently RAISING density. Brightness cannot win against opaque geometry; clearance can. At 1.15m the mote sits about 0.3m proud of the tallest blade, which is what lets the depth test stay honest (this is still occluded by terrain, trees and walls, exactly as a glow should be) while still reading over a thickening carpet. Raising this further starts to detach the glow from the object it is marking, which is what the ground aura below is for. `radius` is the quad's authored world radius before the shader's distance compensation.",
+  "_comment_mote_clearance": "`height` is a FLOOR, not a fixed altitude. The same treatment marks a 20cm TM orb and a felled log, and a mote buried inside a two-metre prop reads as a rendering bug rather than a cue -- so pickup_glow.gd::prop_clearance_height() measures the prop's own crown and lifts the mote to `prop_clearance` above it when that is higher. `max_height` is where it stops: past about eye height a glow stops belonging to the object under it and starts being a waypoint marker, which is the loot-beam failure this file is trying not to commit.",
+  "mote": {
+    "height": 1.15,
+    "prop_clearance": 0.32,
+    "max_height": 2.2,
+    "radius": 0.34,
+    "core_power": 2.8,
+    "rim_gain": 0.38,
+    "strength": 0.95,
+    "pulse_hz": 0.5,
+    "pulse_depth": 0.2
+  },
+
+  "_comment_aura": "The 'it is exactly HERE' cue, and the reason the mote alone is not enough: a mote high enough to clear grass is by definition not where the item is, so without this the player walks to a floating light and then hunts at their feet. A flat additive disc at the object's base bleeds into the blade bottoms and puts the find back on the ground. Bigger and much softer than the mote on purpose -- it is a wash, not a second marker. `pulse_depth` 0 keeps it steady while the mote breathes, so the pair does not read as one flashing object.",
+  "aura": {
+    "height": 0.06,
+    "radius": 0.95,
+    "core_power": 1.5,
+    "rim_gain": 0.2,
+    "strength": 0.45,
+    "pulse_hz": 0.5,
+    "pulse_depth": 0.0
+  },
+
+  "_comment_distance": "Distance compensation, shared by both layers. A fixed-size world quad is a dinner plate at 2m and a sub-pixel speck at 40m, which is exactly backwards -- the far case is the one the owner reported. `reference_distance` is where the authored radius is used unscaled; nearer and further it is scaled toward a constant SCREEN size, clamped by `screen_min_scale`/`screen_max_scale` so it neither vanishes up close nor becomes a tree-sized billboard at range. `far_fade_*` is where it arrives from nothing rather than popping in. `near_fade_*` and `near_floor` are the anti-loot-beam rule: inside a few metres the player can SEE the object, so the glow steps down to `near_floor` of itself and gets out of the way rather than washing out the thing it was pointing at. It never goes to zero -- an item at your feet in tall grass is still the case being solved.",
+  "distance": {
+    "reference_distance": 12.0,
+    "screen_min_scale": 0.5,
+    "screen_max_scale": 2.4,
+    "far_fade_start": 34.0,
+    "far_fade_end": 46.0,
+    "near_fade_start": 4.5,
+    "near_fade_end": 1.5,
+    "near_floor": 0.32
+  }
+}
