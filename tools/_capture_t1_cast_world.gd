@@ -103,7 +103,10 @@ func _run() -> void:
 
 	var camera := Camera3D.new()
 	camera.fov = FOV
-	root.get_root().add_child(camera)
+	# `root` on a SceneTree IS the Window; parent the camera into the world the
+	# same way `_judge_capture_hall.gd` does, so `capture_check.gd` finds the
+	# grass field's own tree from it.
+	world.add_child(camera)
 	camera.make_current()
 
 	var field: RefCounted = HEIGHTFIELD.new()

@@ -81,8 +81,26 @@ TARGET_HUE = 354.7
 # this on the accents; dyed wool does not.
 SAT_CEILING = 0.46
 # Below this saturation a pixel is effectively neutral and is left alone --
-# rotating it would only introduce a tint where the painter put none.
-SAT_FLOOR = 0.12
+# rotating it would only introduce a tint where the painter put none. Round 1
+# used 0.12 with the ramp reaching full weight at 0.30, and the render showed
+# what that missed: the officers' and captains' chest chevrons and coat panels
+# are PALE lilac, high value and low chroma, so they sat near the bottom of that
+# ramp and barely rotated while the saturated uniform field moved fully. The
+# floor is the point where a pixel has no hue worth preserving, which is lower
+# than the point where a hue is vivid.
+# ROUND 3. 0.06/0.20 still missed the two things a render kept showing: the
+# officers' and captains' pale lilac chest chevrons and coat panels, and the
+# mint-green HIGHLIGHT SPECKLES scattered through Pell's hair once its brown
+# base had rotated correctly. Both are the same pixel class -- high value, low
+# chroma -- and both sat low on the ramp, so they rotated a fraction of the way
+# and parked at an intermediate hue, which is not an improvement over the
+# original, just a different wrong colour. A pale pixel with a real hue should
+# rotate FULLY: pale lilac and pale rose differ in nothing but hue, and a pixel
+# with no hue at all has `d < 1e-6` and is already excluded by rgb_to_hsv's own
+# guard. The ramp now exists only to keep quantisation noise near true grey out
+# of the selection, which is all it was ever needed for.
+SAT_FLOOR = 0.02
+SAT_RAMP = 0.06
 
 
 def rgb_to_hsv(a: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -148,7 +166,7 @@ def regrade(a: np.ndarray) -> np.ndarray:
     # Smoothstep, so there is no visible seam at the ends of the fade.
     depth = depth * depth * (3.0 - 2.0 * depth)
     # A near-neutral pixel has no meaningful hue to rotate.
-    weight = depth * np.clip((s - SAT_FLOOR) / (0.30 - SAT_FLOOR), 0.0, 1.0)
+    weight = depth * np.clip((s - SAT_FLOOR) / (SAT_RAMP - SAT_FLOOR), 0.0, 1.0)
 
     # Rotate along the short way round the wheel toward the target.
     delta = np.mod(TARGET_HUE - h + 180.0, 360.0) - 180.0
@@ -173,9 +191,14 @@ def regrade(a: np.ndarray) -> np.ndarray:
     # exact colour of their coat reads as a paint error. It goes to a desaturated
     # dark brown, the plainest thing that is unmistakably hair.
     h2, s2, v2 = rgb_to_hsv(np.clip(hsv_to_rgb(h_out, s_out, v), 0.0, 1.0))
-    cyan = np.clip(np.minimum(h2 - 158.0, 214.0 - h2) / 12.0, 0.0, 1.0)
+    # Band widened from [158,214] after round 1: at 158 the rotation toward
+    # brown stalled partway and left Pell's hair GREEN rather than cyan, which
+    # is not an improvement, just a different wrong colour. The band now covers
+    # everything from green-cyan through blue so a partial rotation cannot park
+    # inside it.
+    cyan = np.clip(np.minimum(h2 - 132.0, 232.0 - h2) / 14.0, 0.0, 1.0)
     cyan = cyan * cyan * (3.0 - 2.0 * cyan)
-    cyan = cyan * np.clip((s2 - SAT_FLOOR) / (0.30 - SAT_FLOOR), 0.0, 1.0)
+    cyan = cyan * np.clip((s2 - SAT_FLOOR) / (SAT_RAMP - SAT_FLOOR), 0.0, 1.0)
     h2 = h2 + (np.mod(26.0 - h2 + 180.0, 360.0) - 180.0) * cyan
     s2 = s2 + (0.34 - s2) * cyan
     # Cyan hair is also painted LIGHT; dark hair is what the rest of the cast has.

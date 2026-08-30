@@ -175,3 +175,107 @@ at distance without a marker." Seven bodies rendering magenta were not spending
 that reservation. JUDGE-5 said the courtyard swap "cost the Team Tether colour
 identity"; this is that cost measured and paid back.
 
+## 7. What was standing in the Warden's courtyard, and what stands there now
+
+**Was:** Warder Solene on `officer_b` — a generated Meshy body carrying an anime
+idiom and a purple-magenta palette with no oxblood in it, put there by
+T3-INSTALL's per-trainer `base` override.
+
+**Now:** Warder Solene on the rank's shared `grunt` production rig — masked and
+capped, in the faction's dusty oxblood with a sigil cap badge, crossed straps and
+a belt rig. Rendered on this branch, `ralph/reports/T1-CAST/shots/hall/H-07-courtyard.png`,
+`capture_check` passing ("grass field bound to this camera and drawing").
+
+Measured off that frame, so the "blown-out flat white face" claim is answered with
+numbers rather than a look:
+
+| region | mean luma | clipped (>0.95) |
+|---|---|---|
+| face/mask | 0.498 | **0.0%** |
+| torso uniform | 0.339 | 0.0% |
+| legs | 0.269 | 0.0% |
+| stone wall behind | 0.375 | 0.0% |
+| cobble floor | 0.259 | 0.0% |
+
+Nothing is clipped anywhere on the figure. The face is a pale cloth mask, lit, not
+blown. The torso sits between the wall (0.375) and the floor (0.259) — a person in
+clothing against the architecture, which is C1. The uniform reads against the
+oxblood banners above the doorway as the same faction.
+
+## 8. What did NOT get fixed, and why it is an owner question
+
+The regrade fixes colour. It cannot fix a face.
+
+The lineup render (`shots/rank_variety/12-lineup-all.png`, all eleven named
+grunt/officer/captain fights, post-regrade) shows the rank silhouette ladder
+working — grunts in short jackets, officers with chest chevrons, captains in full
+long coats with shoulder mantles, readable at lineup distance without a nameplate,
+which is C2. It also shows that **two of the seven generated bodies still do not
+belong in this world, and no material pass will change that**:
+
+- **`grunt_c` (Pell, the Warrens watch)** is a chibi-proportioned figure in cargo
+  shorts and ankle socks with oversized stylised eyes. Its cyan hair is fixed
+  (1.9% → 0.00% teal); its build and face are geometry.
+- **`grunt_b` (Dorn, the quarry picket)** has the same oversized-eye face and a
+  hair mass that regrades from magenta to rose but stays a bright hair mass.
+
+Both stand in Band 2, early, where the player is forming their first read of who
+Team Tether is. The colour identity is now right on both. The drawing idiom is not,
+and it is baked into the mesh and its face texture.
+
+**This is where I stop rather than invent.** `CLAUDE.md`: a new humanoid mesh is
+exceptional, must solve a real unmet player-facing need, and *still requires
+owner-supplied reference art* — and **never spend a Meshy generation without
+owner-supplied reference art.** I have none for these two. So, as an owner
+question rather than a spend:
+
+> `grunt_b` and `grunt_c` read as anime characters in a painted stylised-realism
+> world, in the mesh rather than the material. Three options: (a) leave them —
+> they are now in the faction's colour and only two of fourteen Tether fights are
+> affected; (b) bench both and let those two fights take the shared `grunt` rig,
+> which costs the per-individual identity T3-INSTALL added and puts two bodies
+> back on the shelf; (c) re-generate the two heads against owner-supplied
+> reference art, which is the only option that both keeps the bodies and fixes
+> the idiom, and which needs reference art I do not have.
+
+`rival_trainer`, `young_trainer` and `wandering_trainer` carry no such problem —
+they were drawn in the world's own idiom and are placed (§9).
+
+## 9. What this lane changed
+
+**Placement — every installed humanoid rig is now used somewhere.**
+
+| Body | Was | Now |
+|---|---|---|
+| `young_trainer` | nowhere | Bryn, the chapter's first trainer fight |
+| `wandering_trainer` | nowhere | Old Bram, the retired champion off the Band 1 road |
+| `rival_trainer` | nowhere | Juno, the Band 4 trainer road |
+| `officer_b` | nowhere | Warder Ness, the Sigil-gate checkpoint |
+
+No new trainer fight was added. T3-LADDER removed three fights that existed only
+to house meshes, and it was right to — the chapter's 24-opponent ceiling is
+enforced by `test_chapter_content_map.gd` and Band 1 was already the "monotonous
+trainer hallway" Prompt 59 warns about. Every placement here **reassigns an
+existing fight**, so the census is unchanged and the bodies are spent on
+characters the player already meets.
+
+It also fixes two things nobody had caught:
+- **Old Bram was wearing the female villager rig.** `villager_farmer` resolves to
+  `villager_female_lod0.glb`; the same character's `village_npcs.json` entry uses
+  the male one.
+- **Warder Ness had `base` declared twice** in one JSON object. The later key
+  wins, so T3-INSTALL's override was silently dead. Found by
+  `test_trainers_data.gd` after this lane's own edit collided with it; a scan of
+  every trainer table found no others.
+
+**Code and data.**
+- `data/config/npc_ranks.json` — new per-rank `emission_floor` (§5).
+- `scripts/characters/npc_ranks.gd` — carries it into the built config.
+- `scripts/characters/character_model.gd` — body-surface floor now reads the
+  rank's declared value instead of inferring one from tint luminance.
+- `tools/regrade_tether_textures.py` — new; the atlas regrade (§6), idempotent,
+  no Meshy spend.
+- `tools/_probe_rank_ladder.gd` — new; the ladder measurement (§5).
+- `tools/_capture_t1_cast_world.gd` — new; player-distance world frames of the
+  four reassignments, `capture_check` at every shutter.
+
