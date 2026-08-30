@@ -357,3 +357,132 @@ job: they name the cause at its origin instead of letting it surface later as a
 walk that "did not reach".
 
 ---
+## RIG-T5-7 — S03's build loop never cancels the armed ghost, and the whole rest of the chapter pays
+
+**Severity:** RIG, **BLOCKER for everything downstream of S03**.
+**NOT fixed by this lane** — `tools/gate_f/**` passed to GATE-F-RUN7 at 14:27Z.
+**Routed, per the coordinator's instruction to write down precisely what and why.**
+
+### The observable
+
+S03 completed all 406 steps (351 PASS / 48 FAIL) and handed S04 an exit save
+with **both creatures fainted**, party 2/5, no home, no beds, day 1:
+
+```
+Moss(ripplet)      L3  0/118  **FAINTED**
+Bramblebun         L5  0/124  **FAINTED**
+home_built                NOT set
+creature_bed_built_3      NOT set
+player_slept_at_home      NOT set
+tournament_team_fed       NOT set
+placed_buildings: [ floor ]          <- exactly one piece
+```
+
+`tournament.json` requires `min_party_size: 3`. **The tournament is unreachable
+from this state**, and every band after it inherits the same save.
+
+### It would be easy, and wrong, to report that as a ship blocker
+
+It is the rig. Established from telemetry, not from reading code: every one of
+the twelve `build_placement` failures carries the armed ghost in its own
+`input_state`:
+
+```
+t=1154 | pending_build='floor' | owner='' | ctx=build_placement
+t=1164 | pending_build='floor' | owner='' | ctx=build_placement
+   ... 12 occurrences, pending_build='floor' throughout
+```
+
+and `game_menu.gd::_read_actions()` refuses to open the shell in exactly that
+condition, **on purpose**, with the reason written down beside it:
+
+> *"An armed ghost owns the whole construction control strip, including Y for
+> Dismantle and B for Cancel. Menu shortcuts share those physical buttons, so
+> the shell must not open Backpack/Map and steal the action before the placer
+> sees it."*
+
+```gdscript
+if game != null and str(game.get("pending_build")) != "":
+    return
+```
+
+The placer stays armed after a placement because **repeat placement is a
+designed feature** (`40-BUILD-valheim-repeat-placement.md`). The exit is
+`build_cancel` (B), which `build_placer.gd` handles and which deliberately
+suppresses the pause shell reopening on that shared press.
+
+**So the game is behaving as specified.** S03 places the floor, leaves the ghost
+armed, and then presses `map` twelve times expecting the pause shell — which the
+game is documented not to give it. The first two failures at t=1144 are the
+adjacent case: `map` pressed while the build catalogue itself owned input
+(`owner='@CanvasLayer@67472'`), which the same function also stands aside for,
+also deliberately.
+
+### The cascade, in order
+
+1. **RIG** — S03 leaves the ghost armed and presses `map` between pieces
+2. → the Build tab never comes up for the wall
+3. → `home_built` and `creature_bed_built_3` never set
+4. → nothing to rest in, so no rest and no feed
+5. → the party ends S03 **fainted**
+6. → the tournament needs three; **S04 onward is running on invalid state**
+
+### What GATE-F-RUN7 needs to change
+
+In `tools/gate_f/segments/S03.json`, between each placement and the next
+`open_menu` for the Build tab, **press `build_cancel` and assert
+`pending_build == ""`** before reopening the shell. The harness already exposes
+`pending_build` in `input_state`, so the assert costs nothing new.
+
+The general form is worth more than the one fix: **an `open_menu` step that
+follows a placement must clear the ghost first**, and any step asserting a menu
+opened should check the ghost is down, or it will fail with the menu's symptom
+instead of the ghost's cause. This is the same shape as `S02-50a` — a `press`
+passes when input is *injected*, not when anything received it.
+
+### Consequence for this lane's evidence, stated plainly
+
+**S04 and everything after it in this run are executing against a party that
+cannot legally enter the tournament.** Their verdicts describe a degraded state,
+not the chapter. They are reported as such and no pacing, cadence or progression
+claim is drawn from them.
+
+---
+
+## SHIP-T5-8 — with a build ghost armed, Map and Backpack are silently dead
+
+**Severity:** SHIP, minor but real. **Not fixed** — game-side, and small enough
+that it belongs with whoever owns the build control strip.
+
+Falls directly out of RIG-T5-7. The refusal above is correct; what it does not
+do is **tell the player anything**:
+
+```gdscript
+if game != null and str(game.get("pending_build")) != "":
+    return          # no cue, no sound, no line
+```
+
+A player with a ghost armed who presses Map or Backpack gets **nothing at all** —
+not a sound, not a message. `_explain_refusal()` exists in the same file and is
+called on the paths where `open()` is attempted and declines; this branch returns
+before reaching it.
+
+**The project already fixed the identical case one file over**, and the reasoning
+transfers verbatim. `build_placer.gd`, RG4:
+
+> *"a build_place press swallowed here used to give no signal at all — the ghost
+> stays green (legal), nothing lands, and nothing says why, which reads as
+> 'builds don't work' rather than 'something else has your input right now'"*
+
+so a swallowed place press now plays `ui_error`. A swallowed *shell shortcut* is
+not different from those, and is still silent.
+
+This is the "silently swallows input" class the brief names. It did not strand
+this run — the rig's problem was sequencing, not feedback — but a player who
+does not know B cancels has no way to learn it from pressing Map.
+
+**Suggested:** play `ui_error`, or surface the control strip's Cancel hint, on a
+shell shortcut refused for `pending_build`. One line, same cue the neighbouring
+refusals already use.
+
+---
