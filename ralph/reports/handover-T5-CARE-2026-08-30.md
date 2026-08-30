@@ -114,14 +114,38 @@ standing 1.5m from a deadwood node, arbiter winner Interactable
 ```
 
 Under CONTROLLER-MAP, hammer + interact is the **only** pad route into build
-mode, and the interact press is forfeited to any actionable interaction-arbiter
+mode, and the interact press was forfeited to any actionable interaction-arbiter
 winner. This world scatters **57,967 harvestable nodes**, and the nearest one to
 the centre of the opening's own authored build clearing is **5.7 m away** — the
 clearing is only clear at its centre. So: step toward a bush and the build
-button silently stops being the build button. Nothing tells the player why, and
+button silently stopped being the build button. Nothing told the player why, and
 the recovery ("walk somewhere with no gatherable within 2.4 m") is not
 discoverable. This is `gate_a_build_segment.gd`'s own documented worry, and it
-reproduces on the first patch the chapter asks you to build on.
+reproduced on the first patch the chapter asks you to build on.
+
+And the press did not gather either: `harvest_logic.gd::gather()` refuses
+outright when the visibly equipped tool is not the resource's `gathered_with`,
+so with the hammer out the player got "Needs an Axe." and no catalogue. **Both
+verbs lost.**
+
+**Fixed** in `playground_hud.gd::_hammer_opens_the_catalogue()`, which now asks
+a narrower question: *would that offer refuse me?* A tool-gated resource whose
+tool is not in hand gives the press back to Build. A resource with no
+`gathered_with` (berries) keeps it — the player pressing interact beside a berry
+bush wants the berries. A conversation still wins, so a hammer in hand still
+talks to Grandpa.
+
+Fixed there rather than by giving build mode its own binding (the owner's
+fourteen-button map has no room and the directive bans a chord) or inside
+`interaction_arbiter.gd`, whose job is which offer is nearest and drawable, not
+equipment rules — teaching it about equipped tools would put gathering rules
+inside the thing that arbitrates prompts for conversations, doors, beds and orbs
+alike. Explicitly **not** fixed by clearing scatter around build sites, which
+treats the symptom and thins the world.
+
+**Verified in play:** the same harness, at the same spot, with the arbiter still
+reporting `Gather deadwood` as its winner —
+`H1 VERDICT: PASS — hammer in hand, one interact press opened Build.`
 
 **Ghost readability against grass — poor.** Real frames, `capture_check` clean
 on grass/terrain/ground/subject (`shots/t5-care/ghost-camp.png`,
