@@ -275,7 +275,7 @@ calling OP-0830-2 closed.
 
 | | |
 |---|---|
-| unit suite (118 files) | **1605 tests, 3,389,084 assertions, 0 failed** |
+| unit suite (119 files) | **1609 tests, 3,568,766 assertions, 0 failed** — re-run on the merged tree after the routed-finding work |
 | `test_village_boundary.gd` (new) | 5 tests, 22 assertions, pass |
 | `test_quest_log.gd` | 36 tests, 771 assertions, pass |
 | `smoke_gate_f_probe.gd` | pass — every accessor agrees with the live game, objective id included |
