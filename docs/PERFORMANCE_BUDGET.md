@@ -26,6 +26,69 @@ estimated.
   on-device test that would close it, per the exit criterion's own evidence
   rule: "an honest 'this needs a device run' beats an invented figure."
 
+## 0.5 THE HEADLINE NUMBER — what the Meadows Hall can afford
+
+**For `ralph/T1-HALL-3`, which is rebuilding the Hall's fortress geometry
+after `JUDGE-5-2026-08-30.md` failed it as "a dressed greybox": build to
+≤ 4000 draw calls at the `hall_approach` stand** (`tools/perf_render_stats.gd`,
+`(0, 7420, 26, yaw 180)` — the stand looking AT the Hall; the older
+`stronghold_approach` entry at the same point but yaw 0 looks away from it
+and is not the number to build against, a real mistake the previous lane
+made and caught only after building past it).
+
+**How this number was derived, not guessed:**
+
+- Measured this session, `main` @ `5d171130` + `ralph/T1-HALL-REBUILD`
+  merged, `hall_approach`: **2743 draw calls / 23.70M primitives / 3069
+  objects**, before any change this lane made. This matches
+  `handover-T1-HALL-REBUILD-2026-08-30.md` §5's own **2706** at the same
+  stand closely enough (both measured on a moving, re-baking tree) to trust
+  both.
+- This lane found and fixed one free, zero-visual-cost lever in the current
+  geometry — `_build_keep_parapets()` was building a full merlon/coping
+  roofline on all four sides of all three keep chambers even where two
+  chambers sit 4.2–6m apart in a straight line (`tether_approach` →
+  `warden_arena` → `legendary_chamber`, per `data/config/stronghold.json`'s
+  own `at`/`size`), so a parapet on the chamber-facing side sits behind the
+  next chamber's own wall from every camera position that can ever exist.
+  Skipping those 4 of 12 chamber-sides, verified before/after on the same
+  tree: **2743 → 2665 draw calls (−2.8%), 3069 → 2987 objects, primitives
+  unchanged (23.70M → 23.70M, as expected — coping/merlon boxes are cheap in
+  triangle count and this was never a GPU-throughput fix, only a draw-call
+  and object-count one)**. Smaller than the design doc's own "very likely
+  brings it inside the line" hope, but real and free — `T1-HALL-3` does not
+  need to re-add this geometry to get the visual read back.
+- The design's own original ceiling (2463 = old baseline + 15%) is
+  **retired, not extended**: `T1-HALL-REBUILD`'s own handover already showed
+  the baseline it was computed against never contained the building, and the
+  +15% margin was also already spent by an earlier pass before that baseline
+  was even taken. Continuing to chase a number derived from a view that
+  never saw the subject would be the same mistake with different digits.
+- **The replacement reasoning:** the highest draw-call count this session
+  measured ANYWHERE in the authored corridor is `band1_open` (open field,
+  dense scatter) at **5712–5929**, measured earlier this session on a since-
+  superseded, less-dense bake (`main` @ `1d7fc8e7`; the ground lane's newest
+  terrain regen + scatter re-bake happened after this number was taken and
+  it was not re-confirmed post-rebake before this document was written — a
+  real gap, named rather than papered over). Treating that as the corridor's
+  demonstrated worst case (a number the Ally must already survive, whatever
+  it currently is, since the game already ships it), **4000 draw calls
+  keeps the chapter's finale meaningfully below the open field's own
+  worst-case load** (≈68% of it, on the stale band1 number) while giving
+  `T1-HALL-3` real room to add the mass and detail `JUDGE-5` is asking for —
+  roughly **1300+ draw calls above the current fixed baseline**, more than
+  double what T1-HALL-REBUILD's own remaining-lever list (merlon rows done;
+  causeway railing; hoarding walkway) could plausibly still cost.
+- **This is a reasoned ceiling, not a measured hardware limit.** No
+  container here has ROG Ally hardware; nothing above is a frame-rate claim.
+  It is the most defensible number derivable without one: bounded below by
+  what the current fixed geometry already costs (2665), bounded above by
+  what the corridor's own worst already-shipping location demands (~5900,
+  itself due for re-confirmation), and it explicitly does NOT inherit the
+  retired baseline's flawed methodology. **Confirming it on a real ROG Ally
+  once `T1-HALL-3` lands is the one thing this container cannot do and the
+  next real gap to close.**
+
 ## 1. The one hardware fact that actually drives this budget
 
 `docs/decisions/D01-godot-version-and-renderer.md`: Tetherbound ships on
