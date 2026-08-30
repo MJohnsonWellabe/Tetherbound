@@ -626,3 +626,98 @@ Hall's entire massing is built from. This row covers only the four modules
 T1-HALL-ART newly ships. **The rest of both kits is still unrecorded**, and a
 licence audit before any public release will still have to close that; it is
 named here so the gap is a known item rather than an archaeology project.
+## T1-VILLAGERS (2026-08-30) — the body-allocation audit, and one wiring fix
+
+No new art, no Meshy spend, no new mesh. This entry records **what is actually
+wired today**, one wiring correction that shipped, and one reallocation that is
+**proposed and NOT applied** — it is an owner decision and the frames for it are
+in `ralph/reports/T1-VILLAGERS/shots/`.
+
+### Shipped here: `officer_b` wired, ending the only double-duty body
+
+`officer_a` was carrying two different characters — Officer Dell
+(`relay_officer_dell`, band 3) and Warder Ness (`stronghold_checkpoint`,
+band 5). `officer_b` was installed, rigged and standing nowhere. Ness now uses
+it.
+
+Not a re-litigation of `T1-HALL-3`: that lane pulled `officer_b`/`grunt_c`/
+`captain_a` off the three bodies **inside the Hall** after JUDGE-5 read them
+there, and those three are untouched. The checkpoint is past the Sigil gate but
+outside the Hall and was in none of the frames JUDGE-5 judged. One line in
+`data/config/bands/band5_stronghold_approach/trainers.json`; trivially
+revertible.
+
+### Recorded, not changed: the allocation inversion
+
+Measured against the shipping config, not against intent:
+
+- **Twelve named characters share two meshes.** Mira, Oskar, Tam, Bram, Old
+  Bram, Sela, the Quarry Foreman, Kell, Halda, Rae, Bryn and Juno all resolve
+  through `art.json`'s five `villager_*` keys to `villager_male_lod0.glb` or
+  `villager_female_lod0.glb`.
+- **Twelve walk-ons have a bespoke body each**, four of them duplicating a named
+  character's own job: Wilhelm (`innkeeper`) is Bram's inn staff, Ada
+  (`craftsperson`) works in a workshop that is not hers, Fenn
+  (`creature_caretaker`) minds the creatures Oskar trades, Garrick (`farmer`)
+  grows what Mira the Meadow Keeper supplies.
+
+`docs/art/reference/npc-board-2026-08-30/` is the owner board those bodies came
+from, and its Village & Settlement row reads as a portrait set for this
+village's named cast.
+
+### Two defects found while establishing role reads
+
+Both are wrong rather than merely generic, and neither was recorded anywhere:
+
+- **Tam is male and stands on the female rig.** Every comment in
+  `data/dialogue/village.json` says "him" — "Tam stays the smith OF30 made him".
+  `villager_smith` resolves to `villager_female_lod0.glb`.
+- **Old Bram, a retired champion and an old man, also stands on the female
+  rig**, with white hair painted over it to say "old".
+
+Also a **name collision**, not a bug but it will read as one to the next
+auditor: Bram the village innkeeper and Old Bram the retired champion at
+(195, 905) are two different people sharing a first name.
+
+### Measured: hair colour is a much weaker dial than the config assumes
+
+Spec §21 and this file's own history rest on "NPCs differ primarily by hair
+colour". Measured off the rendered frames at conversation distance:
+
+| | art.json says | renders as |
+|---|---|---|
+| Mira (`villager_farmer`) | `#5c3a22` (92,58,34) | (62.6, 36.1, 15.6) |
+| Tam (`villager_smith`) | `#8a8578` (138,133,120) | (30.7, 25.8, 18.4) |
+
+The tint is a straight `albedo * colour` multiply, which can only darken, so
+`villager_smith`'s **silver-grey renders near-black** rather than silver. Mira
+and Tam come out as "brown-haired" and "dark-haired" in *identical* faces and
+*identical* costumes. This is the same mechanism `npc_ranks.json`'s own
+`_comment_palette_crush` documents for body tints, on the hair channel.
+
+### The differentiator limits, for whoever plans the next cast
+
+- Only `villager_female` carries a separable `hair_ponytail` mesh (NP7).
+  `villager_male` has none, so two NPCs on it can differ by **body tint and
+  height only**.
+- The generated bodies are single fused meshes with no `hair_ponytail` either,
+  so a `hair` override on one of those entries makes
+  `character_model.gd::_apply_hair` attach a **primitive sphere** to the head.
+  Moving a character onto a generated body means **removing** the `hair` block,
+  not carrying it across.
+
+### `captain_accessory` is not a body
+
+`assets/characters/captain_accessory/` contains **no mesh**. Two reference
+turnarounds (`board_captain_a_turnaround.png`, `board_captain_b_turnaround.png`)
+behind a `.gdignore`, kept from the `captain_a`/`captain_b` generation. No
+`art.json` key because there is nothing to key. Correctly stored, correctly
+unreferenced — not a body waiting to be wired.
+
+### Still installed and standing nowhere
+
+`wandering_trainer`, `rival_trainer`, `young_trainer` — all rigged, animated and
+keyed. Four finished bodies were dark before this pass; `officer_b` leaves
+three. Check this list before any future humanoid is generated or sourced.
+
+Full account and frames: `ralph/reports/handover-T1-VILLAGERS-2026-08-30.md`.
