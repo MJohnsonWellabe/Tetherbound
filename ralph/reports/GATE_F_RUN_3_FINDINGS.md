@@ -501,6 +501,50 @@ should look at what state persists across a full replay that a
 fresh-load probe never carries, the same lesson GAME-8 and the earlier
 BUILDPLACE rounds each independently relearned this run.
 
+### GAME-10 — Oskar's creature-swap panel is opened by his greeting and never closed (FIXED in the segment, T2-GATEF-RUN5)
+
+**Severity: RIG (segment authoring), fixed. Recorded because of what it
+hid, not because it was hard.** Found by `ralph/T2-GATEF-RUN5` the moment
+GAME-8's fix let `S03-60` reach Oskar for the first time in five sessions.
+
+Oskar's greeting ends with `shop:creatures:oskar`
+(`data/dialogue/village.json`), which
+`sequence_director.gd::_maybe_open_shop()` opens as a **SwapPanel** the
+instant his dialogue box closes — exactly the way Mira's greeting opens her
+goods shop. Mira's is closed by `S03-56` and the world re-asserted by
+`S03-56a`. **Oskar's branch had neither step.**
+
+The run's telemetry pins `input_context` at `panel:SwapPanel` from
+`S03-62` to the end of the segment, and every downstream symptom is that
+one fact wearing a different hat:
+
+- every `hotbar_N` press was swallowed by
+  `playground_hud.gd::_world_input_allowed()`, so `equipped` read
+  `{hotbar_slot: -1, item: ""}` through the entire gathering loop **even
+  though the exit save shows the bar correctly bound** to
+  `["", "axe", "pickaxe", "knife", ""]`. GAME-9's fix had landed and the
+  tools still could not be drawn — a reader looking only at `equipped`
+  would have concluded GAME-9 was not fixed;
+- every walk reported **`0 held` while never leaving `(19,-6)`**, because a
+  panel owning input is not the same thing as locomotion being disabled and
+  `stick_navigator.gd::can_walk()` cannot tell the difference. That is worth
+  noting on its own: **"0 held" does not mean "the body was free to move."**
+- 71 of 393 steps FAILed, all of them here.
+
+**Fix:** `S03-62a` (`menu_cancel`) and `S03-62b`
+(`assert input_context == "world"`), mirroring Mira's own pair. The assert
+is the half that matters for next time: without it a single stuck panel
+reports as seventy-one unrelated-looking failures. **71 FAIL -> 48 FAIL,
+315 PASS -> 340 PASS**, with real materials gathered and one building
+placed for the first time.
+
+**The general lesson, third instance this run:** a segment step that opens
+a pausing panel needs a matching close AND a context assert. Mira's branch
+has both; Oskar's had neither; nobody could see it while GAME-8 meant his
+dialogue never ran. Any other `shop:` / `battle:` effect reached for the
+first time by a future fix should be audited for the same pair before the
+replay is trusted.
+
 ---
 
 ## Per-segment summary

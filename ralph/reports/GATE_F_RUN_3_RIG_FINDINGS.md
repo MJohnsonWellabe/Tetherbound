@@ -683,6 +683,39 @@ while the same mechanism fails inside a long, stateful replay) — worth
 treating as a standing rule for this repo's own rig-validation practice,
 not just this one instance of it.
 
+
+## RIG-25 — a segment step that opens a pausing panel needs a matching close AND a context assert (T2-GATEF-RUN5)
+
+**Severity: RIG, fixed in S03, unaudited elsewhere.** The full account is
+GAME-10 in the companion document. Named here because it is a rule about
+how these segments are written, not a fact about Oskar.
+
+Mira's shop is opened by her greeting, closed by `S03-56`, and the world
+re-asserted by `S03-56a`. Oskar's creature swap is opened the same way by
+the same machinery (`sequence_director.gd::_maybe_open_shop()`) and had
+**neither** step. It went unnoticed for four sessions only because RIG-23
+meant the walk to Oskar never arrived and his dialogue never ran.
+
+Two things worth carrying forward:
+
+1. **The assert is the half that pays.** Without `S03-62b`, one stuck panel
+   reported as 71 unrelated-looking failures spread across the rest of the
+   segment — walks that "did not reach", hotbar presses that equipped
+   nothing, menu opens that found the wrong context. With it, the segment
+   stops at the real cause. Every `shop:` / `battle:` / picker effect a
+   segment triggers should be followed by a close and an
+   `assert input_context`.
+2. **`0 held` does not mean the body was free to move.** The walker reported
+   `0 held` for every failed leg while never leaving `(19,-6)`, because
+   `stick_navigator.gd::can_walk()` reads `locomotion_enabled` — and a panel
+   owning input leaves locomotion nominally enabled while swallowing the
+   stick. Prior write-ups (including BUILDPLACE round 3's, already corrected
+   once by RUN4 on a related point) have read `0 held` as evidence that
+   nothing was blocking the player. It is not that evidence.
+
+**Unaudited:** every other segment that triggers a shop, battle or picker
+effect. This one was found by tripping over it, not by looking.
+
 ---
 
 ## What these twenty-two have in common
