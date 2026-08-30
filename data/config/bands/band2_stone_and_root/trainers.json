@@ -39,7 +39,9 @@
         "flags": []
       },
       "defeat_flag": "defeated_quarry_dorn",
-      "rechallenge": false
+      "rechallenge": false,
+      "base": "grunt_b",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 2001,
@@ -86,7 +88,9 @@
       },
       "_why_reward": "Orbs rather than coins alone: the warrens is immediately behind him and this band's field is the strongest the player has met, so the reward for clearing the door is the means to catch what is behind it. Same shape as trainer_tam's orb payout in Band 1, one band up.",
       "defeat_flag": "defeated_warrens_pell",
-      "rechallenge": false
+      "rechallenge": false,
+      "base": "grunt_c",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 2002,
@@ -94,25 +98,39 @@
       "name": "Kest",
       "_comment": "See `_comment_band2_63_third_picket` above. Levels 12-12, above Pell's 10-11 and still inside Band 2's authored trainer band [9,14] -- the third and final step in this band's own escalation before the region hands off to Band 3's relay pickets (9-10) and captain (11-12), so the ladder climbs steadily rather than resetting at the band seam. TUNABLE.",
       "rank": "grunt",
-      "position": [0.0, 2980.0],
+      "position": [
+        0.0,
+        2980.0
+      ],
       "facing_deg": -142.4,
       "_why_here": "Deep in the oak forest past the Warrens' second mouth (`warren_undertrail` loop rejoins at -180,2730), on the spine's own approach from (-100,2850) -- derived the same way Dorn's facing was, from the previous spine point. Standing this far past the dungeon, on the road toward the River Lock, is the point of him: Team Tether's presence in this band did not end at the warrens door, it is still moving south.",
       "challenge": "band2_kest_challenge",
       "defeated": "band2_kest_defeated",
       "team": [
-        {"species": "burrowback", "level": 12},
-        {"species": "duskhush", "level": 12}
+        {
+          "species": "burrowback",
+          "level": 12
+        },
+        {
+          "species": "duskhush",
+          "level": 12
+        }
       ],
       "_why_team": "Ground and Air again, the same pairing Pell used one fight back -- Kest is not a harder LESSON than Pell, he is the same lesson held at a higher level, which is what a third picket in one band should be rather than inventing a new type problem the band's own field never poses.",
       "reward": {
         "coins": 45,
         "items": [
-          {"id": "potion_small", "count": 2}
+          {
+            "id": "potion_small",
+            "count": 2
+          }
         ],
         "flags": []
       },
       "defeat_flag": "defeated_band2_outrider_kest",
-      "rechallenge": false
+      "rechallenge": false,
+      "base": "grunt_a",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     }
   ],
   "_comment_why_this_band_had_none": "TRAINER-JOURNEY. This band's `trainers` array was empty. Prompt 59's acceptance names the consequence directly -- 'no major region is simply wild traversal followed by one boss' -- and Band 2 was exactly that: 1820m of quarry and warrens whose only opposition was the dungeon's own residents and its guardian. It also left a hole in the chapter's ladder. Prompt 59 orders that ladder locals -> tournament -> route trainers -> FIRST TEAM TETHER GRUNTS/PATROLS -> officers -> Captain Vance -> regional captains -> stronghold -> Warden, and the first Team Tether personnel the player was ever stopped by stood at the relay picket in Band 3, at z=3775. So the faction whose works the player has been walking through since the quarry only became an opponent 1300m after the region that introduces it. MEADOWS_PROGRESSION_SPEC.md's own reveal ladder puts Team Tether at the quarry first ('the quarry shows conduits'; the Quarry Foreman in the village square says outright that 'Team Tether's been working the old rootstone seams south of here'), so this is where their first picket belongs."

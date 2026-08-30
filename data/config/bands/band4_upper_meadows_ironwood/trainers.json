@@ -58,7 +58,9 @@
       "_why_t3_reward": "T3-REWARD, owner-direction §14 ('Captain 1: Sigil + strong TM'). Field is the first of the three regional captains (see this entry's own `_comment`) and had no TM in its payout -- every Ground TM in the game came from a world pickup (tm_stone_rush/tm_burrow_strike, opening field) or Mira's shop (tm_rock_throw/tm_stone_spike/tm_earth_fist), never a fight. tm_earth_fist is the strongest Ground TM Mira sells (230 coins, power 1.4, one rung under the apex tm_earthshatter that is reserved for the off-spine Band 4 detour) -- a captain victory now hands over the same disc a player would otherwise have to save up for, which is what makes beating him feel like it paid for something beyond the Sigil. Still buyable at Mira's afterward for a second copy; nothing about the shop changed.",
       "defeat_flag": "defeated_captain_field",
       "rechallenge": false,
-      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86.",
+      "base": "captain_a",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 12,
@@ -117,7 +119,9 @@
       "_why_t3_reward": "T3-REWARD, owner-direction §14 ('Captain 2: Sigil + equipment/preparation improvement'). Ridge is the second captain. data/items/items.json's own elixir header says permanent stat boosters 'belong in the world -- a dungeon, a captain, a stronghold' and are deliberately kept out of Mira's stock so they stay rare; none of the three had ever actually been placed anywhere in the game before this. elixir_guard (permanent defence, capped by progression.json's elixirs.cap_per_stat) is the preparation reward: a one-time, non-refundable choice of who on the five gets stronger, which is what 'preparation improvement' means for an item that is not a TM and not consumed in one fight.",
       "defeat_flag": "defeated_captain_ridge",
       "rechallenge": false,
-      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86.",
+      "base": "captain_b",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 4000,
@@ -155,7 +159,9 @@
         "xp_bonus": 35
       },
       "defeat_flag": "defeated_patrol_ridgeline",
-      "rechallenge": false
+      "rechallenge": false,
+      "base": "grunt_b",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 4001,
