@@ -337,3 +337,68 @@ purple, so a desaturated maroon under the bare stage's cool fill is what is
 reading lilac. Another regrade round cannot touch it, and the stage's lighting is
 not the game's.
 
+## 11. Evidence
+
+All frames on this branch under `ralph/reports/T1-CAST/shots/`, plus
+`shots/rank_variety/` for the controlled ladder set.
+
+| Frame | What it shows | capture_check |
+|---|---|---|
+| `shots/hall/H-07-courtyard.png` | the Warden's courtyard as it now ships | pass |
+| `shots/world/01-bryn-practice-field.png` | Bryn on `young_trainer`, village practice field | pass |
+| `shots/world/02-bram-off-road.png` | Old Bram on `wandering_trainer`, Band 1 clearing | pass |
+| `shots/world/03-juno-trainer-road.png` | Juno on `rival_trainer`, Band 4 road | pass |
+| `shots/world/04-ness-sigil-checkpoint.png` | Warder Ness on regraded `officer_b`, Hall visible behind | pass |
+| `shots/rank_variety/12-lineup-all.png` | all eleven named grunt/officer/captain fights together | n/a (bare stage) |
+
+**`capture_check` earned its keep twice on this lane, on my own tool.** Round 1 of
+`_capture_t1_cast_world.gd` did not hand Terrain3D the capture camera and did not
+pin the weather, and the check refused the frames for exactly that. Round 2 tripped
+"the capture camera's own position is inside 'Player'" — that one is the tool's own
+doing (it parks the hidden player at the camera so the grass ring and terrain
+bubble stream to the stand, the same trick `_judge_capture_hall.gd` uses), so the
+player is now passed in `ignore_bodies` the way that tool passes it, and the check
+still applies to every other body.
+
+The tool also carries `_judge_capture_hall.gd`'s hard-won settle lesson: **two
+settle passes with a real drawn frame between them, not one long one.** Frame count
+was never the lever — that tool measured the same stand at 5.5% and 54.6% green
+cover seconds apart in one run, because what a stand waits on is Terrain3D
+streaming the region in, and `grass_field` places its tufts in a shader off the
+live height and region maps.
+
+At player distance (8-9m, where the challenge prompt comes up) all four
+reassignments read as people who live in this world, and the grass field is dense
+and present in every frame.
+
+## 12. Acceptance — section C
+
+- **C1, NPCs read as people in clothing, never silhouette cutouts.** Was **not**
+  met on this branch despite being recorded as closed: captains rendered at 0.093
+  against grunts' 0.242-0.273. Now met, measured — captains lift to 0.273, and the
+  courtyard officer measures 0.339 torso against a 0.375 wall with 0.0% clipping
+  anywhere on the figure.
+- **C2, rank readable on sight.** Met, and now monotonic: rank defaults ascend
+  0.273 / 0.296 / 0.317. The lineup shows the silhouette ladder doing the primary
+  work as designed — grunts in short jackets, officers with chest chevrons,
+  captains in full long coats with shoulder mantles.
+- **C3, the cast is varied enough that the Meadows feels populated.** Improved:
+  four bodies that stood nowhere now stand somewhere, and the nine non-Tether
+  trainer fights no longer share two villager rigs between them.
+- **C4, named characters visually individual.** Improved: Bryn, Old Bram, Juno and
+  Warder Ness each have their own body instead of a repaint, and Old Bram is no
+  longer on the female villager rig.
+
+## 13. Open — for the owner
+
+1. **`grunt_b` and `grunt_c` are anime in the mesh** (§8). Three options laid out
+   there; the only one that both keeps the bodies and fixes the idiom needs
+   owner-supplied reference art, and `CLAUDE.md` forbids spending a Meshy
+   generation without it. **No generation was spent on this lane.**
+2. **`captain_accessory` is installed but is not a rig** and was not audited here;
+   it appears to be a prop rather than a body.
+3. The chapter is at its **24-opponent ceiling** (`test_chapter_content_map.gd`).
+   Every placement here reassigned an existing fight for that reason. If a rival
+   rung is ever authored — T3-LADDER flagged it as a real story-structure decision
+   and deliberately left it to whoever shapes the escalation — the census has to be
+   spent deliberately, not inherited because a mesh existed.

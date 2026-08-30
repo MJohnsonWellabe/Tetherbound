@@ -176,7 +176,13 @@ func _run() -> void:
 			for i in POSE_FRAMES:
 				await process_frame
 
-		var problems: Array = CAPTURE_CHECK.warn_only(self, camera)
+		# The player is IGNORED for the inside-a-body check, the same way
+		# `_judge_capture_hall.gd` ignores it: this tool deliberately parks it at
+		# the camera so the grass ring and terrain bubble stream to the stand, so
+		# "the camera is inside 'Player'" is this tool's own doing and not a
+		# frame defect. It stays in the check for every OTHER body.
+		var problems: Array = CAPTURE_CHECK.warn_only(self, camera, "clear", null,
+			[player] if player != null else [])
 		if not problems.is_empty():
 			failures.append("%s: %s" % [view["name"], ", ".join(problems)])
 
