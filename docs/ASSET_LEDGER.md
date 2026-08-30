@@ -354,3 +354,73 @@ still blocked on a fresh Meshy generation against a resting-pose reference,
 which this lane has no more ability to spend than the one that found it.
 
 Full account: `ralph/reports/NPC_CAST_INSTALL_2026-08-30.md`.
+
+## T1-RIG-2 (2026-08-30) — the five expansion creatures are rigged and animated
+
+**No Meshy spend. Balance 515 credits before this lane and 515 after**, checked
+against the live endpoint at the start of the session (`meshy.py check`, the
+only Meshy API call this lane made — one `GET` on the balance endpoint, which
+costs nothing). Nothing here generated, refined, retextured or rigged anything
+through Meshy.
+
+**What changed.** `sparkit`, `cindercub`, `shadelet`, `frostclaw` and
+`bramblebun_redesign` shipped as static single-mesh exports — `skins: 0`, empty
+`animations` array — which the T3-INSTALL follow-up entry above records
+plainly. All five now carry a 15-bone quadruped skeleton and the six clips
+(`idle`, `walk`, `run`, `attack`, `hit`, `faint`) every other production
+creature ships. Same files, same paths, same textures; only the rig and the
+clips are new.
+
+**How, and why it cost nothing.** `tools/art_pipeline/finish.py rig <species>
+--kind quadruped`, which is a LOCAL Blender pipeline — `rig_quadruped.py`
+places the skeleton from the mesh's own geometry and skins it with automatic
+weights, `animate_quadruped.py` authors the clips. Meshy's auto-rigger is
+documented humanoid-only (`meshy.py::cmd_rig`'s own docstring) and would not
+have taken a quadruped anyway; more to the point, `CLAUDE.md` forbids a Meshy
+generation for a Meadows creature outright, and this needed none. Every
+production creature already in the roster went through this same path.
+
+**A latent skinning defect closed — honestly, a latent one, not a visible one.**
+Automatic weights left 35 vertices on cindercub and 20 on frostclaw with no bone
+influence at all. Those do not simply stay put: Blender's glTF exporter invents
+a static `neutral_bone` at the armature origin and binds them to it, so the
+patch hangs in bind pose while the body moves, which is the tear
+`rig_quadruped.py`'s own `weight_report` docstring says to reject before
+animating. `repair_unweighted()` now gives each orphan vertex the weights of its
+nearest weighted neighbour. All five report `0 unweighted` and a 15-bone skin
+with no `neutral_bone`.
+
+**What it did not do, measured rather than assumed.** Both cindercub rigs — with
+and without the repair — were rendered through `pose_test.py`'s four extreme
+poses and differenced pixel by pixel: seven of the eight views are identical,
+the eighth differs by ten pixels. So the orphan patch was **not** producing a
+visible artefact at these poses, and any claim that it was would be wrong. The
+repair is worth keeping because it removes a latent failure at no cost and lets
+the rigger's own zero-unweighted contract actually hold; it is not the fix for a
+bug a player was seeing. Before/after frames are both kept under
+`ralph/reports/T1-RIG-2/pose_test/` so the comparison is re-checkable.
+
+The pass touches nothing that already carries weight: the three meshes that came
+back clean from automatic weights export **byte-identically** with it in place,
+confirmed by checksum.
+
+**`bramblebun` now uses the redesign mesh.** `placeholder.model` points at
+`bramblebun_redesign/`, which is what the creature-expansion brief asked for
+and what T3-INSTALL tried and reverted on 2026-08-30 — for one reason, that the
+redesign was unrigged and the game's most-seen creature would have become a
+frozen mesh. That reason no longer holds. The old `bramblebun` mesh stays on
+disk, untouched.
+
+**Evidence is in the shipping world, not a preview stage.**
+`ralph/reports/T1-RIG-2/shots/` — the real Meadows (`meadows_playground.tscn`,
+real terrain, real grass, real light), five wild creatures spawned through
+`encounter_director.spawn_wild()`, every shutter gated on
+`tools/capture_check.gd` so a frame that silently lost the grass field aborts
+the run instead of being filed as evidence. `motion.json` beside the frames
+carries each creature's clip and a per-shot skeleton pose signature, so "it
+animates" is checkable as a number and not only as two similar-looking PNGs.
+
+**Still not done:** `campfire_traveler` and `traveling_merchant`. See the
+T1-RIG-2 handover — the inherited one-line diagnosis for these two is wrong in
+a way that changes what to do about them, and both now need an owner decision
+before any credit is spent.
