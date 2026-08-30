@@ -1024,7 +1024,10 @@ func _on_catch_resolved(success: bool, shakes: int) -> void:
 		var foe: RefCounted = _manager.call("enemy")
 		_outcome.text = "Caught %s!" % (str(foe.display_name) if foe != null else "it")
 		_outcome.add_theme_color_override("font_color", UITokens.TEAL)
-		_outcome_left = 2.4
+		# T3-INSTALL, K1: `resolve.success_banner` had no reader -- 2.4 was a
+		# duplicate hardcoded literal, not a fallback. Reading it here means a
+		# config edit actually changes how long the banner holds.
+		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
 		return
 	var most := int(CATCH.config().get("resolve", {}).get("max_shakes_on_failure", 3))
 	if shakes >= most:

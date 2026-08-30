@@ -544,7 +544,8 @@ const HUD_SENTENCE_FONT_SIZE := 32
 ## `smoke_exploration_legend.gd` checks.
 const LEGEND_SIZE := Vector2(940.0, 76.0)
 
-const MAX_BUFF_CHIPS := 3
+const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
+const DEFAULT_MAX_BUFF_CHIPS := 3
 const BUFF_CHIP_SIZE := 20.0  ## HUD-SCALE: 28 -> 20, matching PARTY_PIP_SIZE as it always has.
 ## HUD-POPUP task 2: 18 -> 28, matching `BUFF_CHIP_SIZE`'s own footprint. A
 ## blind critic measured the old 18-authored pips at ~13 physical px with a
@@ -630,6 +631,14 @@ var _creature_hp_value_label: Label = null
 var _creature_header_out_last := false ## -1-state forces the first header write
 var _creature_header_has_creature_last := false
 
+## T3-INSTALL, B1: the active creature's tonic buffs (`creature_instance.gd::
+## apply_buff`/`active_buffs`) had no HUD indicator anywhere -- a player could
+## drink a tonic, see the one-time toast, and then never know the buff was
+## still running or had ended. Same chip visual as `_buff_chips` above.
+var _creature_buff_chips: Array[Panel] = []
+var _creature_buff_chip_labels: Array[Label] = []
+var _creature_buff_overflow_label: Label = null
+
 ## Small always-on "how many, who's active" readout, five pips wide -- never
 ## more, never fewer, same "five rows always exist" discipline
 ## `party_strip.gd`'s own header documents, just persistent instead of a
@@ -657,6 +666,12 @@ var _party_strip_last_active_label := ""
 var _party_strip_last_active_out := true
 
 ## --- player vitals cluster ----------------------------------------------------
+
+## T3-INSTALL, B1: `vitals.json`'s `buffs.max_visible_icons` used to have no
+## reader anywhere -- both this row and the creature buff row below now size
+## themselves from it instead of a hardcoded 3, loaded once in `_ready()`
+## before either row is built.
+var _max_buff_chips := DEFAULT_MAX_BUFF_CHIPS
 
 var _vitals_cluster: Control = null
 var _buff_chips: Array[Panel] = []
@@ -752,6 +767,7 @@ func _ready() -> void:
 	if _arbiter != null and _arbiter.has_signal("prompt_changed"):
 		_arbiter.connect("prompt_changed", _on_prompt_changed)
 
+	_load_buff_config()
 	_build_creature_block()
 	_mount_party_strip()
 	_build_vitals_cluster()
@@ -1074,6 +1090,8 @@ func _build_creature_block() -> void:
 	_creature_energy_bar.add_theme_stylebox_override("fill", _creature_energy_fill)
 	_creature_content.add_child(_creature_energy_bar)
 
+	_build_creature_buff_row()
+
 	_creature_no_creature_label = Label.new()
 	_creature_no_creature_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_creature_no_creature_label.text = "No creature out"
@@ -1081,6 +1099,72 @@ func _build_creature_block() -> void:
 	_creature_no_creature_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	_creature_no_creature_label.visible = false
 	vbox.add_child(_creature_no_creature_label)
+
+
+## T3-INSTALL, B1. Same chip-row visual as `_build_buff_row()`, but laid out
+## in an `HBoxContainer` rather than by hand: `_creature_content` is already a
+## `VBoxContainer`, so a child added here simply stacks below the energy bar
+## instead of needing its own manually-tracked x/y.
+func _build_creature_buff_row() -> void:
+	var row := HBoxContainer.new()
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_theme_constant_override("separation", UITokens.GAP)
+	_creature_content.add_child(row)
+
+	for i in _max_buff_chips:
+		var chip := Panel.new()
+		chip.mouse_filter = Control.MOUSE_FILTER_PASS  ## needs to receive the tooltip
+		chip.custom_minimum_size = Vector2(BUFF_CHIP_SIZE, BUFF_CHIP_SIZE)
+		var box := StyleBoxFlat.new()
+		box.bg_color = UITokens.TEAL
+		box.corner_radius_top_left = UITokens.RADIUS_SLOT
+		box.corner_radius_top_right = UITokens.RADIUS_SLOT
+		box.corner_radius_bottom_left = UITokens.RADIUS_SLOT
+		box.corner_radius_bottom_right = UITokens.RADIUS_SLOT
+		chip.add_theme_stylebox_override("panel", box)
+		chip.visible = false
+		row.add_child(chip)
+		_creature_buff_chips.append(chip)
+
+		var label := Label.new()
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		label.custom_minimum_size = Vector2(BUFF_CHIP_SIZE, BUFF_CHIP_SIZE)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+		chip.add_child(label)
+		_creature_buff_chip_labels.append(label)
+
+	_creature_buff_overflow_label = Label.new()
+	_creature_buff_overflow_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_buff_overflow_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_creature_buff_overflow_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	_creature_buff_overflow_label.visible = false
+	row.add_child(_creature_buff_overflow_label)
+
+
+## Stat initial in the chip (A/D/H...), full detail in the tooltip -- the same
+## "letter now, detail on inspection" split `_update_buff_row()` uses for food
+## buffs, which this HUD had no equivalent of for a creature's own tonics.
+func _update_creature_buff_row(creature: RefCounted) -> void:
+	var buffs: Array = creature.get("active_buffs")
+	var count := buffs.size()
+	for i in _max_buff_chips:
+		var show := i < count
+		_creature_buff_chips[i].visible = show
+		if not show:
+			continue
+		var buff: Dictionary = buffs[i]
+		var stat := str(buff.get("stat", ""))
+		_creature_buff_chip_labels[i].text = stat.substr(0, 1).to_upper() if stat.length() > 0 else "?"
+		_creature_buff_chips[i].tooltip_text = "%s %+.0f%% -- %ds left" % [
+			stat.capitalize(), (float(buff.get("scale", 0.0)) - 1.0) * 100.0,
+			int(ceil(float(buff.get("remaining_s", 0.0)))),
+		]
+	var overflow := count - _max_buff_chips
+	_creature_buff_overflow_label.visible = overflow > 0
+	if overflow > 0:
+		_creature_buff_overflow_label.text = "+%d" % overflow
 
 
 func _update_creature_block() -> void:
@@ -1125,6 +1209,8 @@ func _update_creature_block() -> void:
 	_creature_energy_bar.visible = energy > 0.0
 	if _creature_energy_bar.visible:
 		_creature_energy_bar.value = clampf(float(creature.call("energy_fraction")), 0.0, 1.0)
+
+	_update_creature_buff_row(creature)
 
 
 ## Two independent critics both flagged the same contradiction: this block
@@ -1695,9 +1781,28 @@ func _build_vitals_cluster() -> void:
 	_vitals_cluster.add_child(_satiety_state_label)
 
 
+## T3-INSTALL, B1 (`ralph/reports/DARK_FEATURES_INVENTORY_2026-08-30.md`):
+## `vitals.json`'s `buffs` block had no reader anywhere in `scripts/ui/`.
+## Wires it to both buff rows' chip count instead of deleting it -- the key
+## already named a real, useful dial (how many stacked buffs the HUD shows
+## before collapsing to "+N"), it was just never read.
+func _load_buff_config() -> void:
+	var file := FileAccess.open(VITALS_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("vitals.json missing at %s; buff row defaults to %d icons" % [
+			VITALS_CONFIG_PATH, DEFAULT_MAX_BUFF_CHIPS])
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return
+	var buffs: Variant = (parsed as Dictionary).get("buffs", {})
+	if buffs is Dictionary and (buffs as Dictionary).has("max_visible_icons"):
+		_max_buff_chips = maxi(1, int((buffs as Dictionary)["max_visible_icons"]))
+
+
 func _build_buff_row(parent: Control) -> void:
 	var x := 0.0
-	for i in MAX_BUFF_CHIPS:
+	for i in _max_buff_chips:
 		var chip := Panel.new()
 		chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		chip.position = Vector2(x, 0.0)
@@ -1736,14 +1841,14 @@ func _build_buff_row(parent: Control) -> void:
 func _update_buff_row(vitals: RefCounted) -> void:
 	var buffs: Array = vitals.active_buffs
 	var count := buffs.size()
-	for i in MAX_BUFF_CHIPS:
+	for i in _max_buff_chips:
 		var show := i < count
 		_buff_chips[i].visible = show
 		if show:
 			var buff: Dictionary = buffs[i]
 			var id := str(buff.get("id", ""))
 			_buff_chip_labels[i].text = id.substr(0, 1).to_upper() if id.length() > 0 else "?"
-	var overflow := count - MAX_BUFF_CHIPS
+	var overflow := count - _max_buff_chips
 	_buff_overflow_label.visible = overflow > 0
 	if overflow > 0:
 		_buff_overflow_label.text = "+%d" % overflow

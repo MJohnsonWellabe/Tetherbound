@@ -192,7 +192,9 @@
         "flags": []
       },
       "defeat_flag": "defeated_south_bridge_grunt",
-      "rechallenge": false
+      "rechallenge": false,
+      "base": "grunt_a",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 1001,

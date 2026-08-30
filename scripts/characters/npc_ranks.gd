@@ -34,14 +34,25 @@ static func rank_ids() -> Array:
 ## names none) with that rank's palette (if any) and badge accessory laid over
 ## it. Empty if the rank, or its base config, is missing, so a caller can fail
 ## loudly rather than build a rankless body.
-static func config_for(rank: String) -> Dictionary:
+##
+## `base_override`, when non-empty, replaces the rank's own `base` key for
+## this one call only — T3-INSTALL, 2026-08-30. Wires the seven generated-but-
+## unused NPC meshes (`grunt_a/b/c`, `officer_a/b`, `captain_a/b`,
+## `docs/ASSET_LEDGER.md`) into the rank ladder: every grunt/officer/captain
+## in the game shared exactly one body per rank before this, which is the
+## same "one character repainted four times" defect NP2-grunt-wire already
+## fixed once for ranks vs the Warden, just one rung down. A trainer entry
+## opts in with its own `"base"` key (`trainer_npc.gd::model_config()` reads
+## it and passes it here); a trainer that names none keeps the rank's shared
+## body exactly as before, so this is additive, not a ladder rewrite.
+static func config_for(rank: String, base_override: String = "") -> Dictionary:
 	var ranks: Dictionary = _read().get("ranks", {})
 	var entry: Variant = ranks.get(rank, {})
 	if not entry is Dictionary or (entry as Dictionary).is_empty():
 		return {}
 	var rank_entry := entry as Dictionary
 
-	var base_key := str(rank_entry.get("base", WARDEN_KEY))
+	var base_key := base_override if base_override != "" else str(rank_entry.get("base", WARDEN_KEY))
 	var base := CHARACTER_MODEL.config_for(base_key)
 	if base.is_empty():
 		return {}

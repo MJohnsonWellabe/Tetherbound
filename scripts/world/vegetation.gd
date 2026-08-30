@@ -196,7 +196,13 @@ var _next_mesh_id: int = 0
 ## player can already see coming (SpringArm3D camera collision, sprint stops
 ## being a surprise-corner problem long before this), not derived from a
 ## measurement.
-const COLLISION_STREAM_RADIUS := 100.0
+## T3-INSTALL, P1: was a hardcoded const with no reader for
+## `performance.json`'s `collision_stream_radius_m` despite that key existing
+## and this doc comment (further down, on `COLLISION_STREAM_CELL`) claiming
+## it was tunable there. `_load_performance_overrides()`, called once at the
+## top of `build()`, applies the override; the literal below is now only the
+## fallback when the key is absent.
+var COLLISION_STREAM_RADIUS := 100.0
 
 ## PERF-ROG / OP23-01: the grid `_stream_batch()` walks instead of every solid
 ## placement in the world.
@@ -217,10 +223,12 @@ const COLLISION_STREAM_RADIUS := 100.0
 ## full sweep would have. Only the placements the old loop would have
 ## examined and left alone are skipped.
 ##
-## Tunable in `data/config/performance.json`. Cell size trades cells-walked
-## against placements-per-cell; anything well under the bubble radius is
-## sane.
-const COLLISION_STREAM_CELL := 32.0
+## Tunable in `data/config/performance.json` (`collision_stream_cell_m`) --
+## T3-INSTALL, P1: this comment used to say so while the key had zero
+## readers, which is the exact "tunable lever that is a lie" the ROG
+## performance sweep flagged. Cell size trades cells-walked against
+## placements-per-cell; anything well under the bubble radius is sane.
+var COLLISION_STREAM_CELL := 32.0
 
 ## One entry per `_add_collision()` call: `body` (the StaticBody3D that holds
 ## whatever is currently resident), `radius` (the layer's shape radius,
@@ -235,7 +243,23 @@ var _collision_batches: Array[Dictionary] = []
 ## Build the whole scatter. `world_size` should match the terrain's.
 ## `terrain` is the live Terrain3D node — its instancer, assets and data are
 ## where every placement below actually ends up.
+## T3-INSTALL, P1: `performance.json`'s `collision_stream_radius_m` and
+## `collision_stream_cell_m` had zero readers -- `interaction_arbiter.gd`'s
+## own `interaction_grid_cell_m` is the sibling key that was already wired
+## the right way, and this copies that pattern rather than inventing a new
+## one. Called once at the top of `build()`, before anything reads either
+## var, so a config edit takes effect on the next world load without a
+## rebuild.
+func _load_performance_overrides() -> void:
+	var cfg := PERF_CONFIG.config()
+	if cfg.has("collision_stream_radius_m"):
+		COLLISION_STREAM_RADIUS = maxf(1.0, float(cfg["collision_stream_radius_m"]))
+	if cfg.has("collision_stream_cell_m"):
+		COLLISION_STREAM_CELL = maxf(1.0, float(cfg["collision_stream_cell_m"]))
+
+
 func build(world_size: float, terrain: Node) -> void:
+	_load_performance_overrides()
 	for child in get_children():
 		child.queue_free()
 	_placed = 0
