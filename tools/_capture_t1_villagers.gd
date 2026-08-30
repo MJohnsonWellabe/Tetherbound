@@ -309,19 +309,56 @@ func _park_player() -> void:
 ## walk up to them from.
 func _stand_for(body: Node3D) -> Vector3:
 	var chest := body.global_position + Vector3(0.0, LOOK_HEIGHT, 0.0)
-	var front := -body.global_transform.basis.z
+	# +basis.z, NOT -basis.z. Godot's own convention is that -Z is forward, but
+	# these rigs are authored facing +Z and imported with `model_yaw: 0.0`, so
+	# the engine convention is the wrong one to trust here. Established by
+	# render, not by reading: the Tether lineup below poses its bodies at
+	# `rotation.y = 0` and shoots them from +Z, and those frames show faces. The
+	# first two rounds of this tool used -basis.z and photographed the backs of
+	# four villagers' heads.
+	var front := body.global_transform.basis.z
 	var space: PhysicsDirectSpaceState3D = _world.get_world_3d().direct_space_state
-	# 0 first, so a villager whose front IS clear is still shot from the front.
-	for turn in [0.0, 30.0, -30.0, 60.0, -60.0, 90.0, -90.0, 130.0, -130.0, 180.0]:
-		var dir := front.rotated(Vector3.UP, deg_to_rad(turn))
-		var stand := body.global_position + dir * TALK_RANGE
-		var eye := stand
-		eye.y = _ground(stand) + EYE_HEIGHT
-		var query := PhysicsRayQueryParameters3D.create(eye, chest)
-		query.exclude = [body.get_rid()] if body is CollisionObject3D else []
-		var hit: Dictionary = space.intersect_ray(query)
-		if hit.is_empty() or hit.get("collider") == body:
-			return stand
+	# The subject's OWN colliders, so the sightline test is not failed by the
+	# person it is testing the sightline to. npc_body.gd builds its collider as
+	# a child, so excluding `body` itself is not enough -- that is what sent
+	# every candidate angle to the fallback and stood the camera in a wall.
+	var mine: Array[RID] = []
+	for node in body.find_children("*", "CollisionObject3D", true, false):
+		mine.append((node as CollisionObject3D).get_rid())
+	if body is CollisionObject3D:
+		mine.append((body as CollisionObject3D).get_rid())
+
+	# Range is searched as well as angle, because some of this cast is INDOORS.
+	# Mira is the case that forced it: OF31 moved the merchant behind her own
+	# counter inside cottage_a, so every 3.8m stand around her is on the far
+	# side of a wall and the first framed round photographed the inside of that
+	# wall at 1280x800. Stepping in to 2.4m puts the camera in the room with
+	# her, which is also where the player stands to use the shop.
+	#
+	# Full range first at every angle, then closer -- an outdoor villager is
+	# still shot at conversation distance, and only someone with no clear line
+	# at 3.8m gets the tighter framing.
+	var ranges: Array[float] = [TALK_RANGE, 2.9, 2.4]
+	var turns: Array[float] = [0.0, 30.0, -30.0, 60.0, -60.0, 90.0, -90.0, 130.0, -130.0, 180.0]
+	for range_m in ranges:
+		# 0 first, so a villager whose front IS clear is shot from the front.
+		for turn in turns:
+			var dir := front.rotated(Vector3.UP, deg_to_rad(turn))
+			var stand := body.global_position + dir * range_m
+			var eye := stand
+			eye.y = _ground(stand) + EYE_HEIGHT
+			# Cast OUT from the chest, so a camera that ended up inside a
+			# building is rejected by the wall between them rather than missed
+			# because the ray started on the far side of it.
+			var query := PhysicsRayQueryParameters3D.create(chest, eye)
+			query.exclude = mine
+			var hit: Dictionary = space.intersect_ray(query)
+			if hit.is_empty():
+				if range_m < TALK_RANGE:
+					print("[t1-villagers] '%s' has no clear line at %.1fm; shot at %.1fm" % [
+						body.name, TALK_RANGE, range_m])
+				return stand
+	print("[t1-villagers] no clear angle on '%s' at any range; shooting the front anyway" % body.name)
 	return body.global_position + front * TALK_RANGE
 
 
