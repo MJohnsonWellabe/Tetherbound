@@ -732,18 +732,19 @@
     },
     {
       "id": "S02-49",
+      "_comment_anchor": "RIG-T5-3, fixed by ralph/T5-PLAY 2026-08-30. This walked to [31.2, -8.4], which is where `playground_world.gd::GATE_KEY_AT` used to be. `ralph/T5-OPENING` (7da75ac7, 'the village gate now gates, because the village has an edge') moved the key to [30.7, -15.9] and nobody re-ran S02, so both lanes landed into ralph/LAND-0830I individually correct and jointly broken -- MEADOWS_EXIT_CRITERION section K4's integration rule, exactly. The old anchor stood 7.5 m from the key against its 2.4 m interact radius (the radius is deliberate; see GATE_KEY_AT's own comment on prompt contest with the 4.0 m gate), so S02-50's press hit nothing, S02-52 tried a gate with no key, and `road_gate_open` was left unset in the exit save EVERY downstream segment inherits. The gate is a StaticBody3D with sealed wings, so a closed gate is a hard block: the chapter cannot be left. Keep this coordinate equal to GATE_KEY_AT.",
       "title": "walk to the old key",
       "action": "move_to",
       "args": {
         "at": [
-          31.2,
-          -8.4
+          30.7,
+          -15.9
         ],
         "budget_frames": 4050,
         "close_enough": 2.0,
         "held_budget_frames": 7200
       },
-      "expected": "SA7's own done-when: 'near-field and low-stakes, so the player understands early that gated things have keys'. The key sits a short detour off the road toward the square"
+      "expected": "SA7's own done-when: 'near-field and low-stakes, so the player understands early that gated things have keys'. The key sits a short detour off the road toward the square, at `playground_world.gd::GATE_KEY_AT`"
     },
     {
       "id": "S02-50",
@@ -756,18 +757,30 @@
       "expected": "`key_pickup.gd` offers 'Take the old key'; taking it is what removes it from play"
     },
     {
+      "id": "S02-50a",
+      "_comment": "RIG-T5-3's second half. A `press` step passes when input is INJECTED, not when anything received it -- the same shape as the engage-assert root cause T5-FEEL named. Without this, a key that was never picked up is silent for five steps and then surfaces as 'flag road_gate_open NOT set' at S02-54, which reads as a gate defect and is not one. `key_pickup.gd::FLAG_PREFIX` is 'pickup:', so taking this key sets `pickup:castle_gate_key`. Assert it where it happens.",
+      "title": "the key is actually in the satchel",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "pickup:castle_gate_key"
+      },
+      "expected": "`key_pickup.gd` writes `pickup:castle_gate_key` when the key is taken. If this fails, the walk anchor and GATE_KEY_AT have drifted apart again -- fix the anchor, not the gate"
+    },
+    {
       "id": "S02-51",
+      "_comment_anchor": "RIG-T5-4, fixed by ralph/T5-PLAY 2026-08-30, and the SECOND half of the same integration failure as S02-49's. This walked to [27.5, -16.0] = `playground_world.gd::GATE_AT`, which `ralph/T5-OPENING` (7da75ac7) turned into DEAD CODE: the constant is still declared but places nothing. The gate is now built by `village_boundary.gd::_build_gates` from `data/config/village_boundary.json`, whose RoadGate entry sits at the COMPUTED road/outline intersection [38.7, -19.9] with yaw -71.6 (the old 71.0 was eyeballed and stood at 38 degrees to the road it was meant to bar). Measured live by tools/gate_f/diag/probe_road_gate.gd: the gate node is at (38.7, -2.66, -19.9), 11.9 m from the anchor this step used, against a 4.0 m prompt radius -- so S02-52 pressed at open ground. THE GAME IS NOT AT FAULT: that same probe, standing the player 2.9 m out with the key in the satchel, got arbiter.activate()=true, road_gate_open=true and the key consumed. Keep this coordinate equal to the config's RoadGate `at`, not to GATE_AT. close_enough tightened 3.0 -> 2.0 because the probe's sweep shows a nearby TM pickup ('Learn TM: Stone Rush') outbids the gate from 4.0 m out; at 2.9 m and closer the gate wins.",
       "title": "walk to the road gate",
       "action": "move_to",
       "args": {
         "at": [
-          27.5,
-          -16.0
+          38.7,
+          -19.9
         ],
         "budget_frames": 3000,
-        "close_enough": 3.0
+        "close_enough": 2.0
       },
-      "expected": "the gate stands square across the road (`playground_world.gd::GATE_AT`)"
+      "expected": "the gate stands square across the road at `data/config/village_boundary.json`'s RoadGate entry"
     },
     {
       "id": "S02-52",
