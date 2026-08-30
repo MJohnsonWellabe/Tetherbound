@@ -121,7 +121,7 @@ func _release_stick() -> void:
 
 func _find_placer(world: Node) -> Node:
 	for node in world.find_children("*", "", true, false):
-		var script := node.get_script()
-		if script != null and str(script.resource_path).ends_with("build_placer.gd"):
+		var script := node.get_script() as Script
+		if script != null and script.resource_path.ends_with("build_placer.gd"):
 			return node
 	return null
