@@ -3,10 +3,17 @@
 Branch: `ralph/T1-HALL-REBUILD`, off `origin/main` @ `cba700b5`. Pushed.
 Lane: LANE-VIS Hall, working to `ralph/reports/HALL_DESIGN_2026-08-30.md`.
 
-**Verified green on the pushed tree:** `smoke_stronghold`, `smoke_boss`,
-`smoke_gate_e_finale` all exit 0. Build log prints `5 spaces on the route
-… 3 gauntlet trainer(s), 15 approach pylon(s)` and `18 exterior omni
+**Smokes:** `smoke_stronghold` and `smoke_boss` green. `smoke_gate_e_finale`
+is green but **intermittently red** — see §10, which is the most important
+section in this file for whoever lands it. Build log prints `5 spaces on the
+route … 3 gauntlet trainer(s), 15 approach pylon(s)` and `18 exterior omni
 light(s) at the Hall (budget 18), 6 of them flickering fires`.
+
+**Against the exit criterion:** this lane is `MEADOWS_EXIT_CRITERION.md` E2,
+"important structures look deliberately authored", which names the Hall as
+the live test. E3 (Team Tether presence visibly changes the land) is also
+touched — the occupation layer and the cable landing are its evidence at
+this site.
 
 Evidence: `ralph/reports/T1-HALL-REBUILD/shots/` — 11 frames, design §10's
 H-01..H-08 plus the golden/night H-03 variants §10 requires and one new
@@ -136,28 +143,60 @@ tower's north-east corner 4.0 (still stepping down from its three 5.2
 siblings). The great tower's banner is rebuilt in cloth by
 `_build_tower_banner()`.
 
-## 5. Performance (brief item 7)
+## 5. Performance — MEASURED, AND OVER THE DESIGN'S LINE
 
 **`stronghold_approach` does not look at the stronghold.** Godot yaw 0 faces
 −Z; that view stands at z 7420 and looks toward decreasing z, back up the
 corridor the player just walked, with the Hall at z 7560 behind the camera.
 The entire Hall design's draw-call budget is written against that counter.
 Measured, not inferred: a before/after pair across this branch's whole diff
-returned **1090 draw calls / 1402 objects on BOTH sides, to the object**.
+returned **1090 draw calls / 1402 objects on BOTH sides, to the object** —
+which is what a view containing none of the changed geometry looks like.
 
-So I added `hall_approach` — the same stand turned around — and left the old
+So I added `hall_approach`, the same stand turned around, and left the old
 entry untouched so its historical series stays comparable. Both runs used
 `--views=`, a new flag on `perf_render_stats.gd`; the first Hall build pass
 killed this tool at 40 minutes with nothing printed, and a single-view run
-finishes comfortably.
+finishes in about twelve.
 
-| view (measured this session) | draw calls | primitives | objects |
+| `hall_approach` | draw calls | primitives | objects |
 |---|---|---|---|
-| `hall_approach`, `origin/main` (before) | 2142 | 23,465,154 | 2455 |
-| `hall_approach`, this branch (after) | see §8 | | |
-| `stronghold_approach` before / after | 1090 / 1090 | — | 1402 / 1402 |
+| before (`origin/main` @ `cba700b5`) | 2142 | 23,465,154 | 2455 |
+| after (this branch, merged) | **2706** | 23,625,965 | 3019 |
+| budget (before + 15%) | 2463 | | |
 
-Budget: before + 15% = **2463**.
+**This is +26.3%, over the design's line by 243 draw calls, and I am
+reporting it rather than trimming to hit it.** Three things the coordinator
+needs in order to decide:
+
+1. **The line was computed against a view that never contained the
+   building.** There has never been a measured budget for a view that sees
+   the Hall; I created that view today. The +15% figure was also premised on
+   the retiring castle's 132 modules paying for the new massing — and that
+   netting was already consumed by T1-HALL, before my baseline was taken. So
+   my delta is pure addition against an already-spent allowance.
+2. **I already took the cheap cuts.** Opening surrounds went from five boxes
+   to two (a dressed plaque with the void recessed into it), and keep lights
+   are single rather than paired on faces other than the north one: 1255 →
+   1103 mesh instances on the built node, 2962 → 2706 draw calls. The
+   five-box surround was the single largest thing this lane added.
+3. **The remaining levers, in the order I would spend them** — which is NOT
+   the design's own cut order, because the design's order was written
+   without this measurement: (a) the merlon rows are **177 boxes**, the
+   largest single block at this site, and they are T1-HALL's
+   `_build_keep_parapets()` putting merlons on all four sides of all three
+   keep chambers, most of which are never seen; (b) the causeway railing
+   (~26 kit props, each multi-surface); (c) the hoarding walkway. Cutting
+   (a) alone would very likely bring the site inside the line without
+   touching anything this lane added.
+
+One caveat I could not close: the `before` was measured on `cba700b5` and
+the `after` on the merged tree, which also carries T3-INSTALL, T1-UI-SURVEY
+and T1-LIGHT. Some unknown share of the +564 is theirs, not mine. Re-running
+`--views=hall_approach` with `scripts/world/stronghold.gd`,
+`data/config/stronghold.json` and `data/config/building_prefabs.json`
+reverted to `origin/main` on the current tree isolates it exactly, and is one
+twelve-minute command.
 
 ## 6. Capture stands: one that has never worked
 
@@ -240,3 +279,84 @@ actually been judged.** Two changes:
 Not touched: `interior_structure.gd`, `stronghold_occupation.gd`,
 `landmark.gd`, `scripts/combat/**`, `art.json`, terrain/scatter config,
 `rift_collapse.gd`, `approach_drain_skin.gd`.
+
+## 10. The one red smoke, and what I can and cannot say about it
+
+`smoke_gate_e_finale` failed twice, then passed seven times, on trees that
+included the whole of this change. The failure is always the same assertion
+and always the same numbers:
+
+```
+FAIL: 'warden_aldis''s creature is fighting 'warden_aldis' 5.7m BELOW
+'warden_arena''s floor (y=0.52 against a floor at y=6.17)
+```
+
+Everything before it passes — the walk-in, all three gauntlet fights, the
+recovery point, the shutter, the reveal, the Warden, the release ceremony,
+the region's response, the objective chain terminating. It is the last check
+in the run.
+
+**What I did, in order, and what it is worth:**
+
+1. Ran it against `origin/main`'s versions of my three gameplay files on
+   this same tree: **passed**. That looked like proof the failure was mine.
+2. Bisected: occupation layer off → passed. Occupation on, grounding pass
+   off → passed. Grounding on, skirt facing off → passed. Three clean steps
+   pointing at `_build_skirt_facing()`, which is also the only occupation
+   pass that touches the arena chambers at all. A tidy story.
+3. **The story was wrong.** I re-enabled everything to instrument the
+   failure and it passed — then passed three more times, then three more.
+   Nine runs, two failures, both at the start. Every "bisect result" above
+   is a run in which the intermittent failure simply did not fire, and the
+   single `origin/main` run that "cleared" main is worth exactly as much.
+
+So: **I have not established that this branch causes it, and I have not
+established that it doesn't.** The two identical failures are suggestive of
+determinism and the seven passes contradict that; I could not reconcile
+them in the runs I had.
+
+**What the failure most likely is.** `handover-T1-HALL-2026-08-30.md` §4
+documents this exact class already: `combat_manager.gd::_place_fighters()`
+re-anchors each round from wherever the previous round's fighter ended up
+(`deploy_offset + separation`, ~7.6m a round), so a multi-creature battle in
+a tight room can walk several metres past a wall. That lane treated the
+symptom by widening `built_floor_height_at()`'s claim margin to 10m and said
+plainly that the cause lives in `scripts/combat/**`, which neither that lane
+nor this one owns. A drift that only sometimes exceeds 10m is exactly what
+an intermittent version of this failure looks like.
+
+**What the coordinator should know before landing:**
+
+- `ci.yml` gives `gate_e_finale` a single attempt. At the rate observed here
+  it will redden CI intermittently, on this branch or any other.
+- I did not skip, quarantine or retry-wrap the test, and I did not widen the
+  margin again to make it go away — widening a symptom threshold twice, on a
+  cause nobody has looked at, is how the margin got to 10m.
+- The failure message now carries the fighter's position and the building's
+  own floor claim at that position (`tests/smoke_gate_e_finale.gd`). One run
+  that reproduces it will now say whether the fighter drifted outside the
+  claimed footprint or the claim itself is wrong — the difference between a
+  combat bug and a building bug. That is the cheapest next step and it needs
+  someone who owns `scripts/combat/**`.
+
+## 11. Capture harness: the grass defect is fixed, with evidence
+
+The coordinator flagged a known defect where frames come out with no grass
+geometry and a milky haze. It has a cause: `grass_field.gd` builds its tuft
+ring around the **player** (72m radius, per its own build log) and
+Terrain3D's streaming bubble follows the player too — and this capture tool
+parked the player in Band 2 and then shot the Hall at z 7560, four
+kilometres away. Every stand rendered on bare far-cover ground.
+`perf_render_stats.gd` had already solved the same problem and says so in
+its own comment: the player goes where the camera goes.
+
+The player now travels to each stand (still hidden, still frozen) and the
+per-stand settle went 8 → 40 physics frames. **Verified by eye** on H-03's
+foreground before treating the frames as evidence: real tuft geometry —
+individual blades, leaf clusters, a flower — not far-cover. The committed
+frames are clean and the judge can use them.
+
+One thing the frames show that I did not fix: grass grows over the causeway
+cobbles. The design asks for a worn-earth suppression ring at the ramp foot
+(`props.json` clearing orders) and that was never authored. Small, and not
+attempted here.
