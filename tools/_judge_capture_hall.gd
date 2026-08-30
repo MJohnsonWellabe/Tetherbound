@@ -39,12 +39,34 @@ func _hide_canvas_layers(node: Node) -> void:
 
 
 var _out_dir := DEFAULT_OUT_DIR
+## Stand-name substrings to restrict this run to; empty means every stand.
+var _only: Array[String] = []
+
+
+## Does this stand run? Empty `--only` means yes, as it always did.
+func _wanted(name_value: String) -> bool:
+	if _only.is_empty():
+		return true
+	for want: String in _only:
+		if name_value.contains(want):
+			return true
+	return false
 
 
 func _run() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--out="):
 			_out_dir = a.substr("--out=".length())
+		elif a.begins_with("--only="):
+			# Re-shoot named stands without re-running the whole set. A full pass
+			# is ~45 minutes of software GL, and a single stand that came back
+			# degraded should not cost that -- which is exactly the situation
+			# that motivated this: `H-03-ramp-foot` needed one re-shoot after the
+			# streaming fix and the other ten frames were already good. Substring
+			# match, so `--only=H-03` catches the stand and its golden/night
+			# variants together.
+			for name in a.substr("--only=".length()).split(",", false):
+				_only.append(name.strip_edges())
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	var packed: PackedScene = load(SCENE)
 	if packed == null:
@@ -238,6 +260,8 @@ func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 		eye: Vector3, target: Vector3, name_value: String,
 		written: Array[String], failures: Array[String], hour: String = "day",
 		player: Node3D = null) -> void:
+	if not _wanted(name_value):
+		return
 	camera.global_position = eye
 	camera.look_at(target, Vector3.UP)
 	# Carry the grass ring and the terrain bubble to the stand, then give them
@@ -262,8 +286,22 @@ func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 	# The cheap half of the answer is here: give the ring real time. The
 	# expensive half -- a stability poll on the field's own coverage -- belongs
 	# in `capture_check` where every tool gets it, not in this one tool.
-	for i in 110:
-		await physics_frame
+	# TWO settle passes with a real drawn frame between them, not one long one.
+	# Frame count was never the lever: `H-03-ramp-foot` came back at 5.3% green
+	# cover on a bank where `H-03-ramp-foot-golden` -- the very next shot, same
+	# camera, same everything -- reads 53.6%. The variant succeeds because it is
+	# the SECOND visit to that position, and what it is really waiting on is
+	# Terrain3D streaming the region in: `grass_field`'s tufts are placed in a
+	# shader off the live height and region maps, so until the region is
+	# resident the field has nothing to stand on and quietly draws almost
+	# nothing. Raising 40 -> 110 frames did not fix it; giving the stand a
+	# second pass after a completed draw does.
+	for pass_index in 2:
+		for i in 60:
+			await physics_frame
+		for i in POSE_FRAMES:
+			await process_frame
+		await RenderingServer.frame_post_draw
 	if look != null:
 		if look.has_method("set_weather"):
 			look.call("set_weather", {})
