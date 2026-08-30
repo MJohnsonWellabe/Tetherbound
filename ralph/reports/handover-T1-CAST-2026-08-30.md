@@ -70,3 +70,108 @@ painted eye/mouth, and hair as a solid magenta mass. That is what the blind
 judge read as "from a different game" — and it is a property of the seven
 atlases, not of the one figure that happened to be standing in the courtyard.
 
+## 4. The regression in the Warden's courtyard — what put her there, and what stands there now
+
+**What put her there.** `data/config/bands/band5_stronghold_approach/trainers.json`,
+entry `stronghold_courtyard` (Warder Solene). T3-INSTALL gave that entry a
+`base: "officer_b"` override, which `trainer_npc.gd::model_config()` passes to
+`npc_ranks.gd::config_for()` as `base_override`, replacing the rank's own default
+body for that one trainer. The rank's default *is* `grunt` for grunt, officer and
+captain alike, so before T3-INSTALL the courtyard fielded the oxblood grunt
+silhouette JUDGE-5 preferred.
+
+**It was already fixed on this branch before this lane started, and this lane
+verified rather than assumed it.** T1-HALL-3 deleted the override for the three
+bodies standing inside the Hall (`stronghold_courtyard`, `stronghold_patrol`,
+`stronghold_elite`) after reading JUDGE-5 D2. The courtyard therefore returns to
+the rank's shared `grunt` production rig. See §7 for the rendered frame.
+
+**But the fix stranded the asset, and the defect was never cast-wide fixed.**
+Deleting the override took `officer_b` out of the game entirely (§1) and left the
+other six generated Tether bodies — all carrying the same idiom — standing in
+fourteen fights across bands 1-5. JUDGE-5 read one figure; the property it
+condemned belongs to seven.
+
+## 5. The black-NPC defect did NOT hold. It reopened on the captains.
+
+`ralph/MEADOWS_EXIT_CRITERION.md` C1 records the defect as "closed 2026-08-30
+with measurements — grunts 13→31.5/255 day, 15→51.7 night". Those numbers are
+real and this lane reproduces them. They cover two ranks of three.
+
+`character_model.gd`'s additive emission floor is gated on **tint luminance
+< 0.95**. The captain's palette multiply is `#ffffff` *by design* — it is the
+identity step of the value ladder, "the brightest of the three grunt-rig ranks IS
+the texture as painted". So the gate reads the captain as a bright character
+needing no help. T1-LIGHT's own comment says as much, and treats it as correct:
+the floor "still skips the trainer/Grandpa/villagers/captain/Warden, unchanged".
+
+That is right for four of those five. They have their own bright textures. It is
+wrong for the captain, who is on the **same near-black grunt-family texture the
+floor exists to rescue** (`captain_a`/`captain_b` median 0.093 — the darkest
+character atlases in the game).
+
+Measured through the real build path, `tools/_probe_rank_ladder.gd` (new, this lane):
+
+| rank | individual | texMedian | albedoMul | emissAdd | **effective** |
+|---|---|---|---|---|---|
+| grunt | Dorn / Pell / Kest | 0.101-0.113 | 0.863 | 0.155 | 0.242-0.253 |
+| officer | Dell / Ness | 0.102 | 0.933 | 0.168 | 0.263 |
+| captain | **Vance / Oreth / Halder / Vess** | 0.093 | 1.000 | **0.000** | **0.093** |
+
+**The ladder ran backwards.** The four captains the player actually fights
+rendered at roughly a third of the officers below them, and were the darkest
+humans in the game — the exact defect C1 claims closed, on the rank carrying the
+most story weight.
+
+**Fix.** The floor is now declared by the rank (`npc_ranks.json`'s own
+`emission_floor`, 0.18 — T1-LIGHT's own render-verified constant) instead of
+inferred from how bright the albedo multiply happens to be. `npc_ranks.gd`
+carries it into the config; `character_model.gd` applies it to body surfaces when
+the config declares one. A character with no rank has no key, gets 0.0, and takes
+the untouched branch — so nothing outside the three Tether ranks moves.
+
+After, same probe:
+
+| rank | individual | **effective** |
+|---|---|---|
+| grunt | Dorn / Pell / Kest | 0.242-0.253 |
+| officer | Dell / Ness | 0.263 |
+| captain | Vance / Oreth / Halder / Vess | **0.273** |
+| grunt / officer / captain | rank defaults | 0.273 / 0.296 / **0.317** |
+
+Grunt and officer are unchanged to the third decimal — their adds are still
+0.155/0.168 — so T1-LIGHT's measured result is preserved exactly. The captains
+lift 0.093 → 0.273, and the ladder ascends by rank.
+
+## 6. The idiom split, fixed in the atlas rather than by benching the bodies
+
+Purple/magenta share of saturated pixels, before → after
+(`tools/regrade_tether_textures.py --check`):
+
+| rig | before | after |
+|---|---|---|
+| production rigs (trainer, villagers, grandpa, grunt) | 0.0-0.1% | *(reference, untouched)* |
+| grunt_a | 2.7% | 0.0% |
+| grunt_b | 24.5% | 0.0% |
+| grunt_c | 4.7% | 0.2% |
+| officer_a | 24.3% | 0.3% |
+| officer_b | **34.8%** | 0.2% |
+| captain_a | 20.9% | 0.0% |
+| captain_b | 19.6% | 0.4% |
+
+The tool rotates only that hue band, toward the hue the hand-built `grunt` rig
+already sits at (median 354.7°, measured off the faction's own shipped body, not
+picked), weighted by depth-into-band and by saturation so nothing near-neutral
+steps and no banding appears at the selection edges. Skin, leather, metal, cream
+and the reserved tether teal are untouched. No Meshy spend, no new mesh, no
+re-rig — `CLAUDE.md` names materials and textures as the sanctioned lever, and
+`npc_ranks.json` had already used it once when it moved the faction colour "into
+the texture".
+
+`data/config/palette.json` reserves `tether_oxblood` (#332228) and says why:
+"it appears only on Team Tether banners, equipment and uniforms, never on
+friendly or neutral elements. A reserved colour is what lets a player read threat
+at distance without a marker." Seven bodies rendering magenta were not spending
+that reservation. JUDGE-5 said the courtyard swap "cost the Team Tether colour
+identity"; this is that cost measured and paid back.
+
