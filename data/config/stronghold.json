@@ -528,10 +528,10 @@
   "hall_occupation": {
     "_comment_braziers": "SIX exterior fires, and six is the number the §7 light budget can afford: 4 gate fire + 1 gate sky-fill (`lights`) + 4 flank fire + 2 flank sky-fill (`lights_flanks`) + 1 courtyard ambient + these 6 = 18, the design's ceiling exactly. The design's own split was '3 causeway pairs + 2 gate braziers' with a separate yard ambient; this is the same six omnis spent as 2 causeway pairs plus a fire IN each yard, because the gate face already carries four fire lights that had no visible source at all (`gate_source` below gives two of them one, at zero light cost) and a yard with a fire burning in it reads as held far better than a yard with a colourless 0.35 ambient over it. Energies match the retired castle's own measured brazier range (~1.7-3.0).",
     "braziers": [
-      {"_comment": "Causeway pair 1, west kerb.", "at": [-3.9, -22.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 15.0},
-      {"_comment": "Causeway pair 1, east kerb.", "at": [3.9, -22.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 15.0},
-      {"_comment": "Causeway pair 2, west kerb -- two thirds of the way down the 40m climb.", "at": [-3.9, -34.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 15.0},
-      {"_comment": "Causeway pair 2, east kerb.", "at": [3.9, -34.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 15.0},
+      {"_comment": "Causeway pair 1, west kerb.", "at": [-3.9, -24.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 15.0},
+      {"_comment": "Causeway pair 1, east kerb.", "at": [3.9, -24.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 15.0},
+      {"_comment": "Causeway pair 2, west kerb -- two thirds of the way down the 40m climb; the pair spacing spreads the lit stretch over the whole causeway rather than clustering both pairs near the gate, which is what the first night frame showed.", "at": [-3.9, -40.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 15.0},
+      {"_comment": "Causeway pair 2, east kerb.", "at": [3.9, -40.0], "on_causeway": true, "scale": 2.1, "energy": 2.9, "range": 15.0},
       {"_comment": "The garrison camp's own fire, in the outer_works yard. Clear of the patrol trainer's stand at (-5,6) and of the gate/passage lane x[-4,4].", "at": [-8.4, -1.0], "on_floor": true, "scale": 2.3, "energy": 3.0, "range": 16.0},
       {"_comment": "The inner bailey's fire, beside the relay hub. Clear of the courtyard trainer's stand at (-4,36).", "at": [6.4, 30.6], "on_floor": true, "scale": 2.1, "energy": 2.7, "range": 15.0}
     ],
@@ -544,7 +544,9 @@
     "causeway": {
       "kerb_width_m": 0.8,
       "kerb_height_m": 0.9,
-      "rail_pitch_m": 2.6,
+      "rail_height_m": 1.0,
+      "_comment_rail_pitch": "RETIRED as an authored value. `stronghold.gd::_build_causeway_dressing` now derives the spacing from `Prop_WoodenFence_Single`'s own measured length at the fitted height (2.06m native x, scaled), because an authored pitch of 2.6 against a fitted panel of 2.7 overlapped every panel with its neighbour.",
+      "brazier_pier_m": 0.8,
       "banner_pairs": [-19.0, -31.0],
       "pier_height_m": 3.4
     },
@@ -580,13 +582,14 @@
       "bracket_pitch_m": 3.5,
       "rail_pitch_m": 2.4
     },
-    "_comment_stairs": "Design §4 tier 2: `Stairs_Exterior_Straight` + `Stairs_Exterior_Platform` against the courtyard's north-east interior corner, reading as the way up to the parapet without being one. Dressing, no collider -- same trade as the hoarding. Clear of the x=0 doorway lane and 15m from the courtyard trainer's stand.",
+    "_comment_stairs": "Design §4 tier 2: a flight against the courtyard's north-east interior corner, reading as the way up to the parapet without being one. Dressing, no collider -- same trade as the hoarding. Clear of the x=0 doorway lane and 14m from the courtyard trainer's stand. AUTHORED IN METRES rather than built from the kit's `Stairs_Exterior_*` modules: fitting a 2.0 x 1.20 x 2.08 stair block to a 4.6m rise scales its PLAN 3.8x too, and the first render had the flight driving straight through the courtyard's east wall and out the far side. `_fit_to_height` is right for a machine that only has to be a certain height and wrong for anything whose footprint matters.",
     "stairs": {
       "chamber": "courtyard",
-      "at": [8.4, 24.0],
-      "yaw_deg": 90.0,
-      "run_height_m": 4.6,
-      "platform_height_m": 4.6
+      "at": [8.6, 22.0],
+      "steps": 8,
+      "rise_m": 0.55,
+      "tread_m": 0.62,
+      "width_m": 2.4
     },
     "_comment_grounding": "The 'fits the Meadows, not floating' half of the acceptance list. Buttress pilasters down the east skirt face (the one that shows tall -- the west is half-buried in the shoulder the design sited the Hall against) plus half-buried nature-pack boulders at the skirt foot, wearing the same granite the Warrens' own cave stone does. Boulders sample the REAL terrain, so they follow whatever the ground under the skirt actually does rather than a straight authored line.",
     "grounding": {

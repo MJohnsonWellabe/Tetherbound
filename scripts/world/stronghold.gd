@@ -405,7 +405,6 @@ const EXTERIOR_CHAMBERS: Array[String] = ["outer_works", "courtyard"]
 ## (`stronghold_occupation.gd`'s header already establishes it as the
 ## castle's banner, no new asset, no new colour) -- second building, same
 ## mesh, same tint.
-const BANNER_MODEL := "res://assets/buildings/quaternius_castle/Banner.obj"
 const BANNER_COLOUR := Color("#7a2430")
 const BANNER_SCALE := 2.2
 
@@ -1172,39 +1171,137 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 		_box(Vector3(0.3, height * 0.85, 0.3),
 			Vector3(face_x + sign_ * 0.35, _floor_y + height * 0.42, run_z), _live_material(), false)
 
-	var stations: Array = [-0.22, 0.22] if banners == 2 else [0.28 * signf(float(kind) - 1.5)]
+	var stations: Array = [-0.15, 0.15] if banners == 2 else [0.16 * signf(float(kind) - 1.5)]
+	# Hung from just under the parapet: `at` is the CROSSBAR now, and cloth
+	# falls from it, so a mid-wall mount would leave the banner's tails
+	# dangling round the base course.
+	#
+	# Two things the first cloth render needed. The banner is SIZED so its hem
+	# stops above this wall's own girder -- a hardware run crossing the middle
+	# of a hanging banner reads as a mistake in both directions, and the girder
+	# height already varies per `variant`, so the drop has to be derived from it
+	# rather than authored. And the stations are pulled in to 0.15/0.16 of the
+	# span so a banner does not land on top of a `_build_hall_slits()` opening:
+	# the slits run at a fixed 8m pitch from the wall's centre, and the old
+	# 0.22/0.28 offsets put cloth within half a metre of one.
+	var banner_top := _floor_y + height * (0.94 if kind != 3 else 0.86)
+	var drop := banner_top - (_floor_y + girder_y) - 0.55
+	var banner_scale := clampf(drop / BANNER_CLOTH_H, 1.15, BANNER_SCALE)
 	for f2: float in stations:
-		_hang_banner(Vector3(face_x, _floor_y + height * (0.6 if kind != 3 else 0.72),
-			centre.z + f2 * span), 0.0 if sign_ > 0.0 else PI)
+		_hang_banner(Vector3(face_x, banner_top, centre.z + f2 * span),
+			0.0 if sign_ > 0.0 else PI, BANNER_COLOUR, banner_scale)
 
 
-## `yaw_rad` rotates the model's local +X onto the direction the mount should
-## project. Read directly off `Banner.obj`'s own vertex data rather than
-## assumed: it is a wall-bracket flagpole, a short vertical post near local
-## origin (x~0) with a horizontal arm reaching to x=0.673 that carries the
-## flag at its TIP -- so this asset's "forward" is +X, not Godot's usual -Z,
-## and a caller wants local +X pointing along the wall's own OUTWARD NORMAL
-## so the pole projects away from the stone rather than lying flat along it.
-## `Vector3(1,0,0).rotated(UP, yaw_rad) == (cos(yaw_rad), 0, -sin(yaw_rad))`:
-## `0` points +X (an east wall's own outward normal), `PI` points -X (west),
-## `PI/2` points -Z (south, the gate).
-func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR, scale: float = BANNER_SCALE) -> void:
-	if not ResourceLoader.exists(BANNER_MODEL):
-		return
-	var mesh: Mesh = load(BANNER_MODEL) as Mesh
-	if mesh == null:
-		return
-	var instance := MeshInstance3D.new()
-	instance.name = "ExteriorBanner"
-	instance.mesh = mesh
-	var material := StandardMaterial3D.new()
-	material.albedo_color = colour
-	material.roughness = 0.9
-	instance.material_override = material
-	instance.scale = Vector3.ONE * scale
-	instance.position = at
-	instance.rotation.y = yaw_rad
-	add_child(instance)
+## OWNER, 2026-08-30, on the first T1-HALL-REBUILD frames: "the red flags look
+## like cheap toys and need to go." They did, and they are gone. The castle
+## kit's `Banner.obj` is a wall-bracket FLAGPOLE -- a short post with a
+## horizontal arm carrying a small pennant at its tip -- and at any scale that
+## keeps the pole sane the cloth is a hand-sized triangle stuck on a stone wall
+## twenty metres tall. Retinting it, rescaling it and re-aiming it were all
+## tried by earlier passes and none of them could fix the SHAPE. The mesh does
+## not appear anywhere in this building any more.
+##
+## What replaces it is what the reference board actually draws (its MEADOWS
+## CASTLE CONCEPT panel: "a tall heraldic banner flat against the curtain"):
+## cloth hung from a timber crossbar, hanging DOWN the wall face rather than
+## sticking out of it, with a swallowtail cut in the bottom edge so the
+## silhouette is a banner and not a rectangle. Built from boxes because this
+## file already owns the exact stone, timber and reserved-oxblood materials it
+## needs, and because a banner whose every dimension is authored in metres
+## cannot come out toy-sized the way a kit prop fitted by guess can.
+##
+## `at` is where the banner HANGS FROM -- the crossbar, not the cloth's centre;
+## the cloth falls from there. `yaw_rad` points local +X along the wall's own
+## OUTWARD NORMAL: `0` for an east (`+x`) face, `PI` for a west (`-x`) face,
+## `PI/2` for the north (`-z`) gate face. `scale` multiplies the base cloth
+## (0.9m wide x 2.0m tall), so the default 2.2 hangs a 2.0 x 4.4m war banner.
+## The base cloth, multiplied by each caller's `scale`. WIDE, deliberately:
+## the first cloth pass used 0.9 x 2.0 and the flank banners -- whose drop is
+## capped by the girder they must clear -- came out as narrow ribbons, which is
+## the toy read arriving by a second route. A heraldic banner on a curtain wall
+## is broad; 1.35 x 2.0 keeps it broad at every drop this building asks for.
+const BANNER_CLOTH_W := 1.35
+const BANNER_CLOTH_H := 2.0
+const BANNER_CLOTH_T := 0.07
+func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
+		scale: float = BANNER_SCALE, torn: bool = false) -> void:
+	var holder := Node3D.new()
+	holder.name = "ExteriorBanner"
+	holder.position = at
+	holder.rotation.y = yaw_rad
+	add_child(holder)
+
+	var width := BANNER_CLOTH_W * scale
+	var height := BANNER_CLOTH_H * scale
+	var cloth := StandardMaterial3D.new()
+	cloth.albedo_color = colour
+	cloth.roughness = 0.95
+	# Cloth is thin and lit from one side on a shaded face; without this the
+	# back of a banner on the gate (the north, shaded face -- design §2) is a
+	# black rectangle rather than a banner seen from behind.
+	cloth.cull_mode = BaseMaterial3D.CULL_DISABLED
+
+	# The crossbar it hangs from, in the Hall's own timber.
+	var bar := MeshInstance3D.new()
+	bar.name = "BannerBar"
+	var bar_box := BoxMesh.new()
+	bar_box.size = Vector3(0.18, 0.18, width * 1.16)
+	bar.mesh = bar_box
+	bar.material_override = _material(_timber(), 0.0, false)
+	bar.position = Vector3(BANNER_CLOTH_T * 2.0, 0.0, 0.0)
+	holder.add_child(bar)
+
+	# The field: the top three quarters is one panel, the bottom quarter is two
+	# tails with a notch between them. Three boxes buy a silhouette no amount of
+	# retinting the old pennant could.
+	var body_h := height * 0.74
+	var tail_h := height - body_h
+	var panel := MeshInstance3D.new()
+	panel.name = "BannerCloth"
+	var panel_box := BoxMesh.new()
+	panel_box.size = Vector3(BANNER_CLOTH_T, body_h, width)
+	panel.mesh = panel_box
+	panel.material_override = cloth
+	panel.position = Vector3(BANNER_CLOTH_T * 0.5, -body_h * 0.5 - 0.09, 0.0)
+	holder.add_child(panel)
+
+	# Two darker selvage stripes down the field's edges. A war banner is woven
+	# cloth with a border, and one uniform rectangle of saturated colour is a
+	# large part of what read as toy in the first pass -- the shape was only
+	# half of it. Two boxes buy the field an inside and an outside.
+	var selvage := StandardMaterial3D.new()
+	selvage.albedo_color = colour.darkened(0.34)
+	selvage.roughness = 0.95
+	selvage.cull_mode = BaseMaterial3D.CULL_DISABLED
+	for edge: float in [-1.0, 1.0]:
+		var strip := MeshInstance3D.new()
+		strip.name = "BannerSelvage"
+		var strip_box := BoxMesh.new()
+		strip_box.size = Vector3(BANNER_CLOTH_T * 1.2, body_h, width * 0.085)
+		strip.mesh = strip_box
+		strip.material_override = selvage
+		strip.position = Vector3(BANNER_CLOTH_T * 0.55, -body_h * 0.5 - 0.09,
+			edge * width * 0.452)
+		holder.add_child(strip)
+
+	var tails: Array[float] = []
+	if torn:
+		# The relic banner (§6.2) has ONE tail left. Same three-box banner, one
+		# box removed -- the seizure read in a silhouette rather than in a tint.
+		tails.append(-1.0)
+	else:
+		tails.append(-1.0)
+		tails.append(1.0)
+	for side: float in tails:
+		var tail := MeshInstance3D.new()
+		tail.name = "BannerTail"
+		var tail_box := BoxMesh.new()
+		tail_box.size = Vector3(BANNER_CLOTH_T, tail_h * (0.6 if torn else 1.0), width * 0.42)
+		tail.mesh = tail_box
+		tail.material_override = cloth
+		tail.position = Vector3(BANNER_CLOTH_T * 0.5,
+			-body_h - 0.09 - tail_h * (0.3 if torn else 0.5), side * width * 0.29)
+		holder.add_child(tail)
 
 
 ## Design §6.2's one invented story beat: a single faded Meadows-blue banner,
@@ -1222,7 +1319,13 @@ func _build_blue_relic_banner() -> void:
 	var centre := _local_of(ow.get("at", []))
 	var half := _size_of(ow.get("size", [])) * 0.5
 	var face_x := centre.x - (half.x + _wall_t * 0.5)
-	_hang_banner(Vector3(face_x, _floor_y + 3.2, centre.z), PI, BLUE_RELIC_COLOUR, BANNER_SCALE * 0.65)
+	var height := float(ow.get("height", 8.0))
+	# Below the fresh oxblood rhythm, not beside it: the Meadows' own banner
+	# left hanging where it was, with the occupier's flying above it. `torn`
+	# drops one of its two tails, so the seizure reads in the SILHOUETTE and
+	# not only in the tint -- which is the whole point of the beat.
+	_hang_banner(Vector3(face_x, _floor_y + height * 0.56, centre.z), PI,
+		BLUE_RELIC_COLOUR, BANNER_SCALE * 0.62, true)
 
 
 ## The gate: "a plain rectangular hole with no gatehouse, frame, reveal or
@@ -1260,9 +1363,13 @@ func _build_gate_frame() -> void:
 	_box(Vector3(width + jamb_w * 2.0, 0.6, jamb_proud + _wall_t),
 		Vector3(lateral, _floor_y + jamb_h + 0.3, jamb_z),
 		_material(_stone_dark(), 0.0, true), false)
+	# The gate pair hangs from above the lintel, down the flanking curtain
+	# either side of the arch -- the one spot every player is guaranteed to
+	# look at, and the face design §2 makes self-lit rather than sunlit.
 	for s2 in [-1.0, 1.0]:
-		_hang_banner(Vector3(lateral + s2 * (width * 0.5 + jamb_w + 0.35), _floor_y + op_height * 0.7,
-			outer_face_z), PI * 0.5)
+		_hang_banner(Vector3(lateral + s2 * (width * 0.5 + jamb_w + 0.55),
+			_floor_y + jamb_h + 0.45, outer_face_z), PI * 0.5, BANNER_COLOUR,
+			BANNER_SCALE * 1.3)
 
 	# T1-HALL-REBUILD, design §4 tier 1: a blind arch over the lintel, in the
 	# board's dark timber. The jamb-and-lintel pair turns the hole into a
@@ -1320,6 +1427,7 @@ func _build_hall_massing() -> void:
 	massing.position = Vector3(0.0, _floor_y, 0.0)
 	add_child(massing)
 	_weather_hall_massing(massing)
+	_build_tower_banner()
 	_build_hall_waist()
 	_build_hall_slits()
 	_build_cable_landing()
@@ -1371,6 +1479,26 @@ func _weather_hall_mesh_instances(node: Node) -> Array[MeshInstance3D]:
 	for child in node.get_children():
 		found.append_array(_weather_hall_mesh_instances(child))
 	return found
+
+
+## The chapter's highest banner, on the great tower's north face -- the mass
+## the pylon line points at and the one the whole approach reads the keep
+## against (design §4/§6.2). It used to be the `meadows_hall` prefab's `Banner`
+## module; that mesh is retired with the rest of the kit's toy pennants (see
+## `_hang_banner`), so the tower's banner is built here instead, at the scale a
+## 22m tower deserves rather than the scale a 2.6x flagpole happened to give.
+func _build_tower_banner() -> void:
+	var keep: Dictionary = _chambers.get("legendary_chamber", {})
+	if keep.is_empty():
+		return
+	var centre := _local_of(keep.get("at", []))
+	var half := _size_of(keep.get("size", [])) * 0.5
+	var height := float(keep.get("height", 22.0))
+	# The north (-z) face: the one the causeway, the Sigil Gate and the 400m
+	# crest all see. `_hang_banner` wants local +X along the outward normal, so
+	# a -z face is -PI/2.
+	_hang_banner(Vector3(centre.x, _floor_y + height * 0.92,
+		centre.z - (half.y + _wall_t)), -PI * 0.5, BANNER_COLOUR, BANNER_SCALE * 2.6)
 
 
 ## The waist: the real gap in the flank silhouette between `courtyard`'s back
@@ -1449,10 +1577,25 @@ func _build_hall_slits() -> void:
 		for side2 in ["-x", "+x", "-z", "+z"]:
 			if not _opening_on(keep, side2).is_empty():
 				continue
-			for rank in ranks:
+			# The design ranks lights UP one face, not up all of them: "two
+			# pairs on the arena east/west faces, three ranks up the great
+			# tower's NORTH face". The north face is the one the whole approach
+			# reads the keep against. Ranking every face instead built 80 more
+			# decoration boxes; re-measuring `hall_approach` after this trim
+			# returned the SAME 2432 draw calls, because the great tower's other
+			# faces are not in that frustum at all. So this is design fidelity,
+			# not a saving -- stated that way round because the measurement
+			# said so and the guess would have said otherwise.
+			# PAIRED on the north face, SINGLE elsewhere -- same reasoning as
+			# the rank count above, and the same draw-call arithmetic as the
+			# surround cut: a paired light is two openings, and the flanks are
+			# read at range where one opening per bay already breaks the run.
+			var side_ranks := ranks if side2 == "-z" else 1
+			var pair: float = KEEP_LIGHT_PAIR_M if side2 == "-z" else 0.0
+			for rank in side_ranks:
 				var frac := 0.34 + 0.28 * float(rank)
 				_slit_row(centre2, size2, height2, side2, KEEP_LIGHT_SIZE,
-					KEEP_LIGHT_SPACING, frac, KEEP_LIGHT_PAIR_M)
+					KEEP_LIGHT_SPACING, frac, pair)
 
 
 ## T1-HALL-REBUILD: EVERY DAYLIGHT OPENING IS FRAMED, and a slit is an
@@ -1467,9 +1610,28 @@ func _build_hall_slits() -> void:
 ## near-black is what carries the read, which matters because the gate face is
 ## the SHADED face at the day keyframe (design §2).
 const SLIT_SPACING := 8.0
-const SLIT_SIZE := Vector3(0.4, 1.8, 0.35)
-const SLIT_SURROUND_M := 0.26
-const SLIT_PROUD_M := 0.22
+const SLIT_SIZE := Vector3(0.4, 1.8, 0.4)
+## Widened from 0.26 after the first render. A slit's own opening is 0.4m
+## across by design; at the H-05 stand (40m out, 1280px) that is three pixels,
+## so what has to carry "there is an opening here" at any distance past arm's
+## reach is the SURROUND, not the void. At 0.38 the dressed frame is ~1.2m
+## across overall -- a mark the eye finds on a 28m wall, in the same tier the
+## merlons already prove readable at that range in the same frame.
+const SLIT_SURROUND_M := 0.38
+## How far the surround plate stands off the wall. Deeper than the void's own
+## 0.4 reach minus its 0.05 bite, so the dark opening sits RECESSED in the
+## dressed plate rather than flush with it -- which is what gives it a shadow
+## line in sun and a value step in shade.
+const SLIT_SURROUND_D := 0.46
+const SLIT_PROUD_M := 0.24
+
+
+## The dressed-stone tier: coping, string courses, opening surrounds. Design
+## §5's lightest step (#f8f0e0 against the walls' #f2e9da family), derived from
+## `_stone_light()` rather than authored separately so a retune of the wall
+## tone carries its own dressing with it and the LADDER cannot invert.
+func _stone_dressed() -> Color:
+	return _stone_light().lightened(0.30)
 ## `opening` is [depth into the wall, height, width along the run]; `pair_m`
 ## splits each station into two lights that far apart (0 leaves it single).
 ## Generalised over `along_x` because the keep's own -z/+z faces need the same
@@ -1481,27 +1643,63 @@ func _slit_row(centre: Vector3, size: Vector2, height: float, side: String,
 		height_frac: float = 0.72, pair_m: float = 0.0) -> void:
 	var along_x := side == "-z" or side == "+z"
 	var sign_ := -1.0 if side.begins_with("-") else 1.0
-	var offset := (size.y if along_x else size.x) * 0.5 + _wall_t * 0.5
+	# THE OUTER FACE, not the centreline. `_wall_rects` puts a wall's CENTRE at
+	# half-extent + `_wall_t * 0.5` and the wall is `_wall_t` thick, so its
+	# outer face is half-extent + `_wall_t` -- a full 0.6m further out. This row
+	# inherited the centreline formula, which put every slit INSIDE the 1.2m
+	# masonry it was supposed to pierce. That is why no opening has ever been
+	# visible on any yard wall in any capture of this building, on this branch
+	# or on main: they were all built, all buried. `_dress_exterior_wall` has
+	# had the correct `+ _wall_t * 0.5` past the wall centre all along, which is
+	# why the hardware on the same walls reads and the slits never did.
+	var offset := (size.y if along_x else size.x) * 0.5 + _wall_t
 	var wall_face := (centre.z if along_x else centre.x) + sign_ * offset
 	var void_out := wall_face + sign_ * (opening.x * 0.5 - 0.05)
-	var frame_out := wall_face + sign_ * (SLIT_PROUD_M * 0.5 + opening.x * 0.5)
+	var frame_out := wall_face + sign_ * (SLIT_SURROUND_D * 0.5)
 	var span := size.x if along_x else size.y
 	var count := maxi(1, int(floor(span / spacing)))
 	var start := (centre.x if along_x else centre.z) - float(count - 1) * 0.5 * spacing
 	var slit_y := _floor_y + height * height_frac
 	var void_material := _material(_stone_dark().darkened(0.55), 0.0, false)
-	var frame_material := _material(_stone_light(), 0.0, true)
-	var half_w := opening.z * 0.5
-	var half_h := opening.y * 0.5
-	var jamb := Vector3(SLIT_PROUD_M + opening.x, opening.y + SLIT_SURROUND_M * 2.0, SLIT_SURROUND_M)
-	var head := Vector3(SLIT_PROUD_M + opening.x, SLIT_SURROUND_M, opening.z + SLIT_SURROUND_M * 2.0)
+	# The DRESSED tier, not the wall tier. First render: the surround was
+	# `_stone_light()`, which is the exact colour `_wall_material(true)` paints
+	# the wall behind it, so a framed opening was a light frame on a light wall
+	# and the yard slits read as nothing at all from the H-05 stand. A frame
+	# only frames if it separates from what it is set into -- which is the same
+	# finding `_structure_colour()`'s own header already records for the
+	# interior members, arrived at again from outside.
+	var frame_material := _material(_stone_dressed(), 0.0, true)
+	# ONE surround box, not four. Measured: at five boxes per opening (void,
+	# two jambs, head, sill) the 44 openings on this building were 208 mesh
+	# instances and the single largest thing this lane added -- enough on their
+	# own to put `hall_approach` over the design's own +15% line. A plaque of
+	# dressed stone standing slightly proud of the wall with the dark void
+	# recessed into its face reads the same at every range the acceptance list
+	# cares about (H-02b at 200m, H-05 at 40m); the separate jamb/sill
+	# articulation only survives at H-08's arm's length, and it is not worth
+	# three quarters of the site's draw-call headroom to have it there.
+	var surround := Vector3(SLIT_SURROUND_D, opening.y + SLIT_SURROUND_M * 2.0,
+		opening.z + SLIT_SURROUND_M * 2.0)
 	var void_size := opening
 	if along_x:
 		# The run is along x, so the piece dimensions swap their x/z roles.
 		void_size = Vector3(opening.z, opening.y, opening.x)
-		jamb = Vector3(SLIT_SURROUND_M, opening.y + SLIT_SURROUND_M * 2.0, SLIT_PROUD_M + opening.x)
-		head = Vector3(opening.z + SLIT_SURROUND_M * 2.0, SLIT_SURROUND_M, SLIT_PROUD_M + opening.x)
-	var stations: Array[float] = [0.0] if pair_m <= 0.01 else [-pair_m * 0.5, pair_m * 0.5]
+		surround = Vector3(opening.z + SLIT_SURROUND_M * 2.0,
+			opening.y + SLIT_SURROUND_M * 2.0, SLIT_SURROUND_D)
+	# Built element by element, NOT as `Array[float] = cond if a else b`. That
+	# form parses clean and then fails at RUNTIME ("trying to assign an array of
+	# type Array to a variable of type Array[float]"), because a ternary's
+	# result is an untyped Array; the assignment is refused, `stations` stays
+	# empty, and the loop below silently builds nothing. Every opening on this
+	# building was missing from two full capture passes for exactly that reason,
+	# and `--check-only` reports the file as fine. A typed local wants a typed
+	# literal or an append.
+	var stations: Array[float] = []
+	if pair_m <= 0.01:
+		stations.append(0.0)
+	else:
+		stations.append(-pair_m * 0.5)
+		stations.append(pair_m * 0.5)
 	for i in count:
 		var base := start + float(i) * spacing
 		for pair_offset: float in stations:
@@ -1509,19 +1707,7 @@ func _slit_row(centre: Vector3, size: Vector2, height: float, side: String,
 			var at := Vector3(d, slit_y, void_out) if along_x else Vector3(void_out, slit_y, d)
 			_box(void_size, at, void_material, false)
 			var frame_at := Vector3(d, slit_y, frame_out) if along_x else Vector3(frame_out, slit_y, d)
-			# Jambs, either side of the void along the wall's own run.
-			for s: float in [-1.0, 1.0]:
-				var jamb_at := frame_at
-				var shift: float = s * (half_w + SLIT_SURROUND_M * 0.5)
-				if along_x:
-					jamb_at.x += shift
-				else:
-					jamb_at.z += shift
-				_box(jamb, jamb_at, frame_material, false)
-			# Head and sill.
-			for s2: float in [-1.0, 1.0]:
-				_box(head, frame_at + Vector3(0.0, s2 * (half_h + SLIT_SURROUND_M * 0.5), 0.0),
-					frame_material, false)
+			_box(surround, frame_at, frame_material, false)
 
 
 ## Design §6.1: "the single highest-value occupation object... the moment
@@ -1691,7 +1877,10 @@ func _build_causeway_dressing() -> void:
 	var rise := _floor_y - _ramp_foot_y
 	var angle := atan2(rise, _ramp_run_m)
 	var length := sqrt(_ramp_run_m * _ramp_run_m + rise * rise)
-	var stone := _material(_stone_dark(), 0.0, true)
+	# The foundation tier, not the near-black interior stone the first render
+	# used: a kerb is the causeway's own footing and belongs on the same step of
+	# §5's ladder as the skirt it runs up to.
+	var stone := _skirt_material()
 	for s in [-1.0, 1.0]:
 		# One tilted box per kerb, the same construction `_build_approach_ramp`
 		# uses for the slab itself, so the kerb cannot drift off the slope.
@@ -1706,24 +1895,62 @@ func _build_causeway_dressing() -> void:
 		mesh.rotation.x = -angle
 		add_child(mesh)
 
-	# Timber railing along the kerb tops. `Prop_WoodenFence_Single` is fitted
-	# by its own measured bounds rather than by a guessed scale, the same way
-	# `_fit_to_height` already sizes the machine.
-	var pitch := maxf(1.0, float(cfg.get("rail_pitch_m", 2.6)))
+	# Timber railing along the kerb tops -- the board's timber approach.
+	#
+	# TWO THINGS THE FIRST RENDER GOT WRONG, both about the module's own axes.
+	# `Prop_WoodenFence_Single` measures 2.06 x 0.84 x 0.12: its LENGTH is
+	# local X and it is paper-thin in Z. Dropped in unrotated on a causeway that
+	# runs along Z, every panel lay ACROSS the climb instead of along it; and
+	# the pitch was authored (2.6) rather than derived, so at the fitted scale
+	# the panels also overlapped each other. Both are fixed by asking the module
+	# what size it actually is: an inner node yaws it a quarter turn so its
+	# length runs along the climb, an outer holder carries the ramp's own tilt
+	# (two levels, because Godot composes `rotation` as YXZ and a single node
+	# would tilt about the wrong axis once yawed), and the spacing comes from
+	# the measured length rather than a number somebody liked.
+	var rail_h := float(cfg.get("rail_height_m", 1.0))
+	var probe := _load_prop(MEDIEVAL_KIT, "Prop_WoodenFence_Single")
+	if probe == null:
+		return
+	var probe_holder := Node3D.new()
+	probe_holder.add_child(probe)
+	_fit_to_height(probe, rail_h)
+	var panel_len: float = _visual_bounds(probe).size.x
+	probe_holder.queue_free()
+	if panel_len < 0.5:
+		return
+	var pitch := panel_len * 1.04
 	var rail_count := maxi(1, int(floor(_ramp_run_m / pitch)))
+	var fires: Array = _occupation().get("braziers", []) as Array
 	for i in rail_count:
 		var z := _ramp_foot_z + (float(i) + 0.5) * (_ramp_run_m / float(rail_count))
+		# Break the railing where a brazier stands on the kerb, rather than
+		# building a fence through it -- which is what buried the causeway
+		# fires in the first render, and is also how a real gate torch is set.
+		var blocked := false
+		for entry2: Variant in fires:
+			var spec: Dictionary = entry2 as Dictionary
+			if not bool(spec.get("on_causeway", false)):
+				continue
+			if absf(_local_of(spec.get("at", [])).z - z) < pitch * 0.75:
+				blocked = true
+				break
+		if blocked:
+			continue
 		for s2 in [-1.0, 1.0]:
 			var rail := _load_prop(MEDIEVAL_KIT, "Prop_WoodenFence_Single")
 			if rail == null:
 				continue
 			var holder := Node3D.new()
 			holder.name = "CausewayRail"
-			holder.add_child(rail)
-			_fit_to_height(rail, 1.1)
 			holder.position = Vector3(lateral + s2 * kerb_x, _causeway_y(z) + kerb_h, z)
 			holder.rotation.x = -angle
 			add_child(holder)
+			var turn := Node3D.new()
+			turn.rotation.y = PI * 0.5
+			holder.add_child(turn)
+			turn.add_child(rail)
+			_fit_to_height(rail, rail_h)
 			_tint_node(rail, _timber())
 
 	# Banner piers: a banner out on open ground needs something to hang from.
@@ -1737,8 +1964,8 @@ func _build_causeway_dressing() -> void:
 				_material(_stone_light(), 0.0, true), false)
 			# `_hang_banner`'s own header: local +X must point along the mount's
 			# OUTWARD normal, so a west pier faces PI and an east pier faces 0.
-			_hang_banner(Vector3(lateral + s3 * (kerb_x + 0.35), base + pier_h * 0.78, bz),
-				0.0 if s3 > 0.0 else PI, BANNER_COLOUR, BANNER_SCALE * 0.8)
+			_hang_banner(Vector3(lateral + s3 * (kerb_x + 0.35), base + pier_h * 0.95, bz),
+				0.0 if s3 > 0.0 else PI, BANNER_COLOUR, BANNER_SCALE * 0.6)
 
 
 ## Six fires with lights, two without. The two without stand at gate fire
@@ -1778,8 +2005,16 @@ func _brazier(holder: Node3D, spec: Dictionary, index: int) -> Node3D:
 	var scale_factor := float(spec.get("scale", 2.1))
 	var y := _floor_y
 	if bool(spec.get("on_causeway", false)):
-		y = _causeway_y(at.z) + float(_occupation().get("causeway", {})
-			.get("kerb_height_m", 0.9))
+		var causeway: Dictionary = _occupation().get("causeway", {}) as Dictionary
+		y = _causeway_y(at.z) + float(causeway.get("kerb_height_m", 0.9))
+		# A pier under a causeway fire, so its bowl clears the railing running
+		# along the same kerb and the flame stands against the sky rather than
+		# inside the timber.
+		var pier := float(causeway.get("brazier_pier_m", 0.8))
+		if pier > 0.05:
+			_box(Vector3(0.62, pier, 0.62), Vector3(at.x, y + pier * 0.5, at.z),
+				_material(_stone_dressed(), 0.0, true), false)
+			y += pier
 	var brazier := Node3D.new()
 	brazier.name = "Brazier_%d" % index
 	brazier.position = Vector3(at.x, y, at.z)
@@ -1968,30 +2203,41 @@ func _build_hoarding() -> void:
 ## Stair dressing at the courtyard's north-east interior corner -- the way up
 ## to the parapet, without being one (§4's stated trade, again). Sited clear of
 ## the x=0 doorway lane and well outside the courtyard trainer's own stand.
+##
+## BUILT FROM BOXES, NOT FROM THE KIT'S STAIR MODULES, and the first render is
+## why. `Stairs_Exterior_Straight` is 2.0 x 1.20 x 2.08 native; fitting it to a
+## 4.6m rise scales it 3.8x in EVERY axis, so its 2m footprint becomes 7.6m and
+## the flight drove straight through the courtyard's east wall and out the
+## other side -- visible in the H-05 stand as a pale kit object protruding from
+## the masonry. `_fit_to_height` is the right tool for a machine that only has
+## to be a certain height; it is the wrong tool for anything whose PLAN matters,
+## because the kit's own module scale is not this building's. A flight in
+## metres cannot make that mistake: every dimension below is authored, so the
+## steps stay inside the room they are dressing.
 func _build_yard_stairs() -> void:
 	var cfg: Dictionary = _occupation().get("stairs", {}) as Dictionary
 	if cfg.is_empty():
 		return
+	var id := str(cfg.get("chamber", "courtyard"))
+	if not _chambers.has(id):
+		return
 	var at := _local_of(cfg.get("at", []))
-	var yaw := deg_to_rad(float(cfg.get("yaw_deg", 90.0)))
-	var flight := _load_prop(MEDIEVAL_KIT, "Stairs_Exterior_Straight")
-	if flight != null:
-		var holder := Node3D.new()
-		holder.name = "YardStairs"
-		holder.add_child(flight)
-		_fit_to_height(flight, float(cfg.get("run_height_m", 4.6)))
-		holder.position = Vector3(at.x, _floor_y, at.z)
-		holder.rotation.y = yaw
-		add_child(holder)
-	var platform := _load_prop(MEDIEVAL_KIT, "Stairs_Exterior_Platform")
-	if platform != null:
-		var pad := Node3D.new()
-		pad.name = "YardStairPlatform"
-		pad.add_child(platform)
-		_fit_to_height(platform, float(cfg.get("platform_height_m", 4.6)))
-		pad.position = Vector3(at.x, _floor_y, at.z - 3.4)
-		pad.rotation.y = yaw
-		add_child(pad)
+	var steps := maxi(2, int(cfg.get("steps", 8)))
+	var rise := float(cfg.get("rise_m", 0.55))
+	var tread := float(cfg.get("tread_m", 0.62))
+	var width := float(cfg.get("width_m", 2.4))
+	var stone := _material(_stone_light(), 0.0, true)
+	var trim := _material(_stone_dressed(), 0.0, true)
+	for i in steps:
+		var h := rise * float(i + 1)
+		_box(Vector3(width, h, tread),
+			Vector3(at.x, _floor_y + h * 0.5, at.z + float(i) * tread), stone, false)
+	# A landing at the top, in the dressed tier, so the flight arrives
+	# somewhere instead of stopping in mid-air.
+	var top := rise * float(steps)
+	_box(Vector3(width, 0.35, tread * 2.6),
+		Vector3(at.x, _floor_y + top + 0.175, at.z + float(steps - 1) * tread + tread * 1.6),
+		trim, false)
 
 
 ## The "fits the Meadows, not floating" half of the acceptance list. Buttress

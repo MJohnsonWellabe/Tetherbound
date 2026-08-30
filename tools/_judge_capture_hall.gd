@@ -110,9 +110,36 @@ func _run() -> void:
 
 	# design §10's H-01..H-08, world coordinates, eye +1.7m above ground
 	# unless the stand itself says otherwise.
+	# T1-HALL-REBUILD: the two LONG stands aim at the Hall itself rather than
+	# at a fixed compass bearing. H-02 stood at the Sigil Gate (63.6, 7395)
+	# looking south-west on a hard-coded (-1,1); the Hall is at (8, 7560),
+	# which from that point bears about 18 degrees west of south, not 45 -- so
+	# the frame came back full of fence and treeline with the building off the
+	# right edge entirely. Three acceptance items (2, 7 and 10) are judged at
+	# H-02, and none of them can be judged in a frame the building is not in.
+	# `aim_hall` points the stand at the complex's own courtyard marker, so the
+	# stands follow the site instead of needing re-derivation every time it
+	# moves.
+	var hall_at: Vector3 = stronghold.call("marker", "courtyard") \
+		if bool(stronghold.call("has_marker", "courtyard")) else stronghold.global_position
 	var stands := [
-		{"name": "H-01-approach-400", "at": Vector2(0.0, 7160.0), "eye_h": 8.0, "dir": Vector2(0.0, 1.0)},
-		{"name": "H-02-sigil-gate", "at": Vector2(63.6, 7395.0), "eye_h": 1.7, "dir": Vector2(-1.0, 1.0)},
+		{"name": "H-01-approach-400", "at": Vector2(0.0, 7160.0), "eye_h": 8.0,
+			"dir": Vector2(0.0, 1.0), "aim_hall": true},
+		{"name": "H-02-sigil-gate", "at": Vector2(63.6, 7395.0), "eye_h": 1.7,
+			"dir": Vector2(-1.0, 1.0), "aim_hall": true},
+		# H-02b, added T1-HALL-REBUILD. At the authored 1.7m eye height the
+		# Sigil Gate stand sees NOTHING of the Hall -- Band 5's treeline fills
+		# the frame end to end, and it did in the previous lane's capture of
+		# this same stand too, so acceptance items 2, 7 and 10 (three-tier read,
+		# coursing at range, occupation reads) have never actually been judged
+		# at the range they are written for. This is the same stand with its eye
+		# above the canopy: not a nicer angle, the only one from which the item
+		# is answerable. The 1.7m frame is KEPT alongside it, because what it
+		# shows -- the chapter's climax reveal, fully occluded from the gate the
+		# player opens to earn it -- is a real finding about the approach, and
+		# deleting the frame would delete the finding.
+		{"name": "H-02b-sigil-gate-raised", "at": Vector2(63.6, 7395.0), "eye_h": 26.0,
+			"dir": Vector2(-1.0, 1.0), "aim_hall": true},
 		{"name": "H-03-ramp-foot", "at": Vector2(8.0, 7505.0), "eye_h": 1.7, "dir": Vector2(0.0, 1.0)},
 		{"name": "H-05-east-flank", "at": Vector2(48.0, 7590.0), "eye_h": 6.0, "dir": Vector2(-1.0, 0.0)},
 		{"name": "H-06-west-keep", "at": Vector2(-60.0, 7630.0), "eye_h": 10.0, "dir": Vector2(1.0, 0.0)},
@@ -128,6 +155,10 @@ func _run() -> void:
 		var eye := Vector3(at.x, ground + float(s["eye_h"]), at.y)
 		var dir: Vector2 = s["dir"]
 		var target := eye + Vector3(dir.x, 0.0, dir.y).normalized() * 40.0
+		if bool(s.get("aim_hall", false)):
+			# Raise the aim point off the floor so the tiers fill the frame
+			# rather than the ground in front of them.
+			target = hall_at + Vector3(0.0, 10.0, 0.0)
 		await _shoot(camera, look, torch, false, eye, target, str(s["name"]), written, failures)
 		# Design §10: the gate face is the SHADED face at the day keyframe, so
 		# its self-lit dusk/night read is part of the design and has to be
