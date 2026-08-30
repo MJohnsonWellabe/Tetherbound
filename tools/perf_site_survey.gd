@@ -189,11 +189,19 @@ func _run() -> void:
 		if is_nan(ground):
 			ground = 0.0
 		var spot := Vector3(float(spec[0]), ground + float(spec[2]), float(spec[1]))
+		# Lights are checked against the PLAYER's ground-level position, not
+		# the elevated camera `spot` -- these views are elevated specifically
+		# to get distant scatter in frame (see VIEWS' own comment), and a
+		# light's short omni_range reaching 24-28m into the air is not the
+		# same question as "what lights touch a player standing here". First
+		# run of this tool reported 0 lights reaching every VIEWS entry,
+		# which is that bug, not a real finding -- caught before trusting it.
+		var ground_spot := Vector3(spot.x, ground + 1.5, spot.z)
 		if player != null:
-			player.global_position = Vector3(spot.x, ground + 1.5, spot.z)
+			player.global_position = ground_spot
 		camera.global_position = spot
 		camera.global_rotation = Vector3(deg_to_rad(-8.0), deg_to_rad(float(spec[3])), 0.0)
-		report[name] = await _measure_and_print(world, look, name, spot)
+		report[name] = await _measure_and_print(world, look, name, ground_spot)
 
 	for name: String in ABSOLUTE_VIEWS.keys():
 		var av: Dictionary = ABSOLUTE_VIEWS[name]
