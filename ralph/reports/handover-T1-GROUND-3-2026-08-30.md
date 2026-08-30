@@ -25,6 +25,7 @@ session spent itself on.
 
 | Item | Outcome |
 | --- | --- |
+| **0. Capture integrity** (routed mid-session, top priority) | **Root-caused and fixed.** Not "the capture path generally" and not software GL — the grass field was bound to the gameplay camera, so 123 of 128 free-camera tools photographed ground it was not dressing. Fixed at source + a loud pre-shutter check. Verified on the judge's own tool. |
 | 1. A genuine second grass species | **Done.** `drygrass` un-suppressed and retuned into a real second species, plus a new per-layer band gradient so it thickens toward the stronghold. Re-baked. |
 | 2. Dashed terrain seam lines | **Both standing hypotheses positively RULED OUT with measurements**; one real, measured, lattice-aligned artefact source found and fixed; the residual is characterised but not closed. Honest partial. |
 | 3b. Stream visible from its own bank | **Done and measured** — from occluded by 0.363m to clear by 0.218m, against ground *plus grass*, at the capture tool's own stand. Terrain regen + `smoke_traversal.gd`. |
@@ -68,6 +69,111 @@ a render round each.
 `_capture_ground_and_sky.gd` at the same pinned day state (five bands, pond,
 river, stream), plus three diagnostic crops. I have deliberately **not** run a
 visual judgement over them; per the brief that is a blind pass's job.
+
+---
+
+## 0. CAPTURE INTEGRITY — root-caused and fixed (routed mid-session)
+
+Routed to this lane after the rest of the work below had landed, as the
+highest-priority item: JUDGE-3 section 0 found that committed lane evidence
+shows ground with **no grass geometry at all**, and the owner said the same in
+his own words — *"some of those renders are just a bad shot not actual game.
+the game doesn't have the haze and has real grass."* The judge saw it in two
+unrelated tools and concluded it was "in the capture path generally (or
+software GL)".
+
+**It is neither the capture path in general nor software GL. It is one
+binding, and it is now fixed.**
+
+`playground_world.gd::_stand_up_the_grass_field` binds the field to the
+**gameplay** camera, and its own comment already spelled out the failure mode:
+*"handed the wrong one it centres its ring somewhere the player is not and the
+ground goes bare exactly where they are standing."* A capture tool that builds
+its own `Camera3D` and calls `make_current()` does exactly that — the ring
+stays parked on the gameplay camera and the tool photographs ground the field
+is not dressing. The baked scatter is placed in world space and does not care,
+so the frame comes back as bushes, reeds and fern cards on a bare splat. That
+is the artefact, precisely.
+
+**Measured blast radius: 128 scripts in `tools/` construct their own
+`Camera3D`; five of them rebind the grass field.** So 123 capture tools could
+silently produce grass-free evidence. The ones that are fine are fine by
+accident — `_capture_ground_and_sky.gd`'s frames (including this lane's own
+before/afters) have grass only because it stands the **player** at every shot,
+which drags the gameplay camera along with it.
+
+**One correction to the brief, and it matters for how much of the backlog is
+suspect:** the coordinator's order said "your own before/afters are suspect
+until then." They are not, and I checked rather than assumed — every frame in
+`ralph/reports/T1-GROUND-3/shots/` is dense with blade grass, for the reason
+above. The frames that are unusable are the ones from tools that pose a free
+camera without moving the player.
+
+### The fix, in two parts
+
+1. **`grass_field.gd::_follow_camera`** — the field now follows whichever
+   camera is actually rendering, and pushes one loud warning the first time
+   that is not the one `bind()` was given. Fixing 123 tools by hand would not
+   hold (tool 129 reintroduces it), and following the rendering eye is simply
+   more correct: this node's whole job is to dress the ground being drawn. It
+   costs one viewport lookup per frame. `bind()` stays the authority; this only
+   redirects the follow, and a genuine mis-binding in *gameplay* is still loud.
+
+2. **`tools/capture_check.gd`** (new) — the loud failure the order asked for.
+   `require(self, camera)` refuses to write a frame, and
+   `warn_only(self, camera)` reports without aborting. It checks that the posed
+   camera is the current one; that the grass field exists when config says it
+   should, is following this camera, and holds instances; that Terrain3D is
+   streaming around this camera; and that the weather is the pinned one the
+   shot asked for and is actually frozen. It deliberately judges nothing about
+   how the frame *looks* — that stays a blind pass's job.
+
+**Placement matters and cost me a round:** the check belongs at the **shutter**,
+not next to `make_current()`. The redirect happens in the field's own
+`_process`, so a check in the same frame as `make_current()` fires before the
+world has ticked — a false alarm on exactly the frame the fix is working. It is
+now the last thing before `get_image()` in `_probe_creek_hollow_habitat.gd`,
+and that placement is documented in both files.
+
+### Verified end to end on the judge's own tool
+
+`tools/_probe_creek_hollow_habitat.gd` is the tool the judge used for its own
+fresh Creek Hollow captures, so it is the right thing to prove this on.
+
+- **Before:** `shots/capture-integrity/creekhollow-open_basin-BEFORE-no-grass.png`
+  (the judge's committed frame) — bare splat, ferns and bushes standing on
+  nothing.
+- **After:** `…-AFTER-grass-restored.png`, same tool, same stand — full blade
+  carpet, cover tiers, and the new straw tussocks visible in it.
+- The check itself was proven to **fail** correctly first (it caught
+  `"the GrassField is following 'Camera3D', not the capture camera"` and
+  aborted), then to pass once the redirect had ticked:
+  `[capture_check] ok -- grass field bound to this camera and drawing`.
+
+### On the milky haze — a correction, and an open question
+
+The haze is **not** the aerial-perspective shader T1-GROUND-2 landed, and I
+want that on the record before someone reverts a good feature chasing this.
+The judge's own fresh captures run on the same `main`, with that shader on,
+and came back with *"real cloud detail, real value range, no milky horizon."*
+Same build, same day, different tool. So the haze tracks the **tool**, not the
+build — and the tools without it are the ones that pin *and freeze* weather,
+which is the failure `_capture_ground_and_sky.gd`'s own header states in
+capitals and which `capture_water.gd` is already on record for shipping.
+
+`capture_check.gd`'s weather check covers that shape. I have **not** proven it
+is the cause in the specific T1-CAST band24 frames — that needs whoever owns
+that tool to run the check against it, which is now a one-line change.
+
+### What the next lane should do with this
+
+The source fix is global, so **no tool needs changing to get grass back**. But
+the check only protects tools that call it, and one tool calls it today. Adding
+`CAPTURE_CHECK.require(self, camera)` at the shutter of the capture tools whose
+frames get committed as evidence is cheap and is the thing that stops this
+recurring. **Every frame committed as evidence before 2026-08-30 that came from
+a free-camera tool should be treated as unreliable about ground cover** —
+including the T1-CAST band24 set and the day/night set the judge named.
 
 ---
 
