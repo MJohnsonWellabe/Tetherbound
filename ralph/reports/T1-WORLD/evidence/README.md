@@ -23,11 +23,11 @@ dominated by viewport readback and PNG encode, not by rendering.
 | `board-vista-day.jpg` | the whole board, eye level, all seven stands under one sun — the frame set section J's question is actually asked of |
 | `board-vista-night.jpg` | the same seven at night |
 | `board-high-day.jpg` | the same seven elevated; this is the sheet the aerial-perspective finding came from |
-| `fix-before.jpg` / `fix-after.jpg` | three stands, nine matched frames, before and after the scatter / aerial / emission-floor changes |
+| `fix-before.jpg` / `fix-after.jpg` | three stands, nine matched frames, before and after. NOTE: the "after" here is the **intermediate** round the blind re-judge measured, not the final state — its scatter settings were reverted and its night floor was corrected afterwards. Kept because the re-judge's numbers refer to exactly these two sheets. |
 | `warrens-day.jpg` | the Warrens mound, lit — shows the material is fine |
 | `warrens-golden.jpg` | the same mound as near-pure silhouette, which is the frame that proves the remaining defect is shape and not texture |
 | `npc-night-before.jpg` | the trainer NPC self-lit at night beside a correctly dark player |
-| `npc-night-after.jpg` | the same frame after the emission floor was put on the clock |
+| `npc-night-after.jpg` | the same frame after the emission floor was put on the clock, at its final 0.5 night value (the first attempt, 0.25, clipped 59% of the coat to literal black and was corrected) |
 
 Every frame here passed `tools/capture_check.gd` at the shutter. One frame of
 the original 75 did not (`water-02-river-grazing`, shot from below the terrain);
