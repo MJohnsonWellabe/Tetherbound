@@ -146,3 +146,60 @@ the 2.4 m radius and the gate are all as their authors intended.
 same drift can happen again on the next lane that nudges the village edge.
 
 ---
+## RIG-T5-4 — the gate moved too, and `GATE_AT` is now dead code
+
+**Severity:** RIG. **Same integration failure as RIG-T5-3, second half.**
+**Fixed by this lane, because it blocks the run.** **The game is not at fault
+and this was proved, not assumed.**
+
+With RIG-T5-3 fixed, the S02 re-run took the key correctly
+(`pickup:castle_gate_key` set, `castle_gate_key n=1` in the satchel) and the
+gate *still* did not open — and the key was **still in the satchel** in the exit
+save. `item_gate.gd::try_open` consumes the key on success, so an unconsumed key
+proves `_on_tried` never ran: the press never reached the gate.
+
+**Measured, not reasoned** — `tools/gate_f/diag/probe_road_gate.gd`, added by
+this lane, on this candidate:
+
+```
+gate node   : RoadGate at (38.70, -2.66, -19.90)
+gate prompt : radius=4.00  label=Try the gate  enabled=true
+gate key    : (30.70, 0.48, -15.90)
+
+stand-off |   3D dist | offer | drawn | winning label
+     0.8  |      1.15 |   YES |   YES | Try the gate
+     2.9  |      2.90 |   YES |   YES | Try the gate
+     3.6  |      3.61 |   YES |   YES | Try the gate
+     4.0  |      4.03 |    no | other | Learn TM: Stone Rush
+
+PASS 3 — key in hand, pressed through the real arbiter at 2.9 m:
+  arbiter.activate()=true   road_gate_open=true   key held=0
+```
+
+**The gate works.** Given the key and a player within reach, it opens, says its
+line and consumes the key. What failed is where the rig stood:
+
+| | position |
+|---|---|
+| gate, as actually built | **(38.7, −19.9)** — `data/config/village_boundary.json`, RoadGate entry, the computed road/outline intersection |
+| `S02-51` walk target | **(27.5, −16.0)** = `playground_world.gd::GATE_AT` |
+
+**11.9 m apart, against a 4.0 m prompt radius.** The press landed on open ground.
+
+**`GATE_AT` is now dead code.** `ralph/T5-OPENING` replaced the hand-placed gate
+with the config-driven village boundary; the constant is still declared in
+`playground_world.gd:90` and places nothing. Its neighbouring comment — *"far
+enough from `GATE_AT` that the two interactables' radii (4.0 m gate, 2.4 m key)
+do not overlap"* — now describes a geometry that no longer exists. A dead
+constant that still reads like the answer is exactly the trap the rig fell into.
+
+**Fix applied (instrument only):** `S02-51` walks to the config's RoadGate `at`,
+and `close_enough` tightened 3.0 → 2.0 because the probe shows a neighbouring TM
+pickup outbidding the gate from 4.0 m out.
+
+**Recommended, not done here (game-side, out of this lane's scope):** delete
+`playground_world.gd::GATE_AT` and its stale comment, or make it read the config.
+Leaving a dead coordinate that names the chapter's first gate will catch the
+next reader too.
+
+---

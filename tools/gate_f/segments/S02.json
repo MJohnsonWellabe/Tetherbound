@@ -768,17 +768,18 @@
     },
     {
       "id": "S02-51",
+      "_comment_anchor": "RIG-T5-4, fixed by ralph/T5-PLAY 2026-08-30, and the SECOND half of the same integration failure as S02-49's. This walked to [27.5, -16.0] = `playground_world.gd::GATE_AT`, which `ralph/T5-OPENING` (7da75ac7) turned into DEAD CODE: the constant is still declared but places nothing. The gate is now built by `village_boundary.gd::_build_gates` from `data/config/village_boundary.json`, whose RoadGate entry sits at the COMPUTED road/outline intersection [38.7, -19.9] with yaw -71.6 (the old 71.0 was eyeballed and stood at 38 degrees to the road it was meant to bar). Measured live by tools/gate_f/diag/probe_road_gate.gd: the gate node is at (38.7, -2.66, -19.9), 11.9 m from the anchor this step used, against a 4.0 m prompt radius -- so S02-52 pressed at open ground. THE GAME IS NOT AT FAULT: that same probe, standing the player 2.9 m out with the key in the satchel, got arbiter.activate()=true, road_gate_open=true and the key consumed. Keep this coordinate equal to the config's RoadGate `at`, not to GATE_AT. close_enough tightened 3.0 -> 2.0 because the probe's sweep shows a nearby TM pickup ('Learn TM: Stone Rush') outbids the gate from 4.0 m out; at 2.9 m and closer the gate wins.",
       "title": "walk to the road gate",
       "action": "move_to",
       "args": {
         "at": [
-          27.5,
-          -16.0
+          38.7,
+          -19.9
         ],
         "budget_frames": 3000,
-        "close_enough": 3.0
+        "close_enough": 2.0
       },
-      "expected": "the gate stands square across the road (`playground_world.gd::GATE_AT`)"
+      "expected": "the gate stands square across the road at `data/config/village_boundary.json`'s RoadGate entry"
     },
     {
       "id": "S02-52",
