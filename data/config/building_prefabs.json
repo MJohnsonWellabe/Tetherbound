@@ -7211,26 +7211,27 @@
           "scale": 2.1
         }
       ],
+      "_why_value_drop_t1_hall_4": "T1-HALL-4, 2026-08-30, answering JUDGE-6 defect 1 -- the single most expensive finding in that report and the one it opens with. Measured on the frames T1-HALL-3 shipped: the fortress mass reads L=133 against the mid-ground it stands on at L=136 and the hill beside it at L=158. Five points off its own background is not a silhouette, and the judge's consequence is the sentence this pass exists to delete: at 400m 'an ordinary meadow tree is taller on screen than the entire fortress ... the climax location of the chapter loses a silhouette contest to a tree'. The reference measures 72 against 104 -- a 32-point separation with the fortress as the DARK shape, which is what makes it a landmark. So the whole kit family drops and cools together: LightRock #d2c6b2 -> #817f78, DarkRock #ab9d89 -> #68675f, with the works walls' own stone_light dropping by the same factor in stronghold.json. Dropping them TOGETHER is the point, and it is why this is not a re-open of the seam D7 raised: the ladder _why_retint_t1_hall_3 tuned to ~1.27x is preserved exactly (129/104 = 1.24 against the previous 210/171 = 1.23, and 1.36 against the works walls where it was 1.35), so the two stones still read as one fortress. Only the family's absolute value moves, which is the axis JUDGE-6 says was never addressed: 'the lane treated D3 as a massing problem and solved it as one ... but the defect is a value contrast problem, and raising a pale object standing on a pale hill does not create a silhouette'. The warm spread narrows too (32 points of R-over-B down to 9), because the judge asked for cooler as well as darker and because the kit's cream warmth is a large part of what reads as 'a stock asset-pack castle' beside a reference whose stronghold is grey stone. MI_RoundTiles #2a8c94 -> #2b423f is the same finding's second half: the jade tile roof was, measured, 'the only strongly saturated hue on the whole building and there is nothing like it anywhere in the reference palette strip'. It stays a roof and keeps a trace of its hue; it stops being the most saturated object in the frame. Celing #6f4f33 -> #57402c drops with the family so the spire cap does not become the light shape by default once the stone around it darkens -- see stronghold.gd::ROOF_WEATHER_MATERIALS, which also gives that cap the texture it has never had.",
       "_why_retint_t1_hall_3": "T1-HALL-3, 2026-08-30. LightRock #f2e9da -> #d2c6b2 and DarkRock #c4b39e -> #ab9d89, narrowing the kit's step down toward the works walls' own #9c9083. HALL_DESIGN sec5 authored the wider ladder deliberately (kit stone rendering ~165-175 lit against the works walls' ~100-115) and JUDGE-5 read the result as a defect, not a ladder: D7, ranked 6th, calls the west keep \"two materials butted with a hard vertical seam ... pale cream facing on the left, dark brown block on the right, no trim, no shared lighting\" and says it \"reads as a bug, not a choice\". Confirmed in this lane's own re-render at the same stand. A ~1.55x value step between two surfaces of ONE building, meeting edge-to-edge with no trim course between them, cannot read as a ladder -- it reads as two buildings. The step is now ~1.27x: still a ladder (kit stone stays the light end, works walls the dark), but inside the range a viewer reads as one fortress in two stones rather than as a seam. The value RELATIONSHIP sec5 calls \"the design\" is preserved; only its magnitude changes.",
     "retint": {
         "LightRock": {
-          "color": "#d2c6b2",
+          "color": "#817f78",
           "metallic": 0.0
         },
         "LightRock.001": {
-          "color": "#d2c6b2",
+          "color": "#817f78",
           "metallic": 0.0
         },
         "LightRock.002": {
-          "color": "#d2c6b2",
+          "color": "#817f78",
           "metallic": 0.0
         },
         "DarkRock": {
-          "color": "#ab9d89",
+          "color": "#68675f",
           "metallic": 0.0
         },
         "DarkRock.001": {
-          "color": "#ab9d89",
+          "color": "#68675f",
           "metallic": 0.0
         },
         "Black": {
@@ -7246,19 +7247,19 @@
           "metallic": 0.0
         },
         "Celing": {
-          "color": "#6f4f33",
+          "color": "#57402c",
           "metallic": 0.0
         },
         "Celing.001": {
-          "color": "#6f4f33",
+          "color": "#57402c",
           "metallic": 0.0
         },
         "LightWood": {
-          "color": "#6f4f33",
+          "color": "#57402c",
           "metallic": 0.0
         },
         "MI_RoundTiles": {
-          "color": "#2a8c94"
+          "color": "#2b423f"
         }
       },
       "_why_towers_t1_hall_rebuild": "OWNER, 2026-08-30, on the first T1-HALL-REBUILD frames: the mid-wall tower \"between the two parts of the castle\" is \"the untextured beige hut thing\" and \"looks like shit\". That is a real property of the module, not a tuning miss. `WatchTowerWRoof.obj` is built ENTIRELY from the kit's `Celing` and `LightWood` slots -- probed directly, those are the only two `usemtl` lines in the file -- and carries no stone slot at all. `stronghold.gd`'s `HALL_WEATHER_MATERIALS` pass, the thing that puts real `T_UnevenBrick` on this kit (which ships zero UVs and placeholder-grey materials), is stone-only by design, so this module can NEVER receive a texture from it. No retint, scale or placement fixes a flat beige hut on stilts standing at the joint of a coursed-stone fortress; the module had to go. All four instances (gatehouse guard post, the two mid-wall towers, the great tower's north-east corner) are now `LargeSquareTowerBricks` -- `LightRock.001`/`DarkRock`/`Black.001`, and therefore textured by that same pass; it is the module every tower in the frames that reads as real masonry already uses. Scales preserve the design's own girth rule (native girth 1.288-1.371, measured off the OBJ): the mid-wall pair at 3.15 gives 4.06-4.32m against the corner towers' 3.86-4.11m at 3.0, so mid-wall girth still EXCEEDS corner girth -- the direct fix for the judge's 'sandcastle decoration' finding -- and the taller mid-wall shaft adds the roofline break the 400m stand wants. The guard post drops to 2.6 to stay subordinate to the 3.4 gatehouse flankers; the great tower's north-east corner takes 4.0 so it still steps down from its three 5.2 siblings. The `Banner` module goes with them, same owner pass, same verdict: see `stronghold.gd::_hang_banner`, which now builds hanging cloth instead of standing the kit's toy pennant on a stick.",

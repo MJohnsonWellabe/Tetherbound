@@ -470,6 +470,10 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 		["cloud_sharpness", "sharpness"], ["cloud_scale", "scale"],
 		["cloud_height", "height"], ["cloud_sun_gain", "sun_gain"],
 		["sun_size", "sun_size"], ["sun_glow", "sun_glow"],
+		# T1-HALL-4: how hard the celestial body's rim is. See
+		# `sky_clouds.gdshader`'s own note -- the night sky's "moon" was reading
+		# as a lens bloom because the disc was two-thirds gradient.
+		["sun_disc_edge", "disc_edge"],
 	]:
 		if cfg.has(str(pair[0])):
 			mat.set_shader_parameter(str(pair[1]), float(cfg[str(pair[0])]))

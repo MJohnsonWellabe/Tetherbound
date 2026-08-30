@@ -57,6 +57,10 @@ uniform float sun_gain : hint_range(0.0, 3.0) = 1.1;
 // The sun disc the gradient sky never had.
 uniform float sun_size : hint_range(0.0, 0.2) = 0.022;
 uniform float sun_glow : hint_range(0.0, 1.0) = 0.35;
+// How much of the disc's radius is falloff. 1.0 is a razor edge, 0.0 a full
+// gradient from centre to rim. See the `disc` line in sky() for why this became
+// a uniform (JUDGE-6: "a soft blurry ellipse with no disc edge").
+uniform float disc_edge : hint_range(0.0, 0.99) = 0.35;
 uniform vec3 sun_colour : source_color = vec3(1.0, 0.96, 0.86);
 
 float hash12(vec2 p) {
@@ -134,8 +138,19 @@ void sky() {
 	}
 
 	// The sun disc, which the gradient sky never had at all.
+	//
+	// T1-HALL-4, JUDGE-6 defect 11: at night this body "is a soft blurry ellipse
+	// with no disc edge -- it reads as a LENS BLOOM rather than an object", and
+	// the fix asked for is "replace the moon bloom with a disc". The hard-coded
+	// 0.35 is why: the falloff ran from the disc's own edge all the way in to
+	// 35% of its radius, so nearly two thirds of the body was gradient and there
+	// was no edge anywhere in it. `disc_edge` is that number, now a uniform, so a
+	// time of day can ask for a crisp body (night, where a moon needs a rim) or a
+	// soft one (golden hour, where the sun is meant to bloom) instead of every
+	// hour of the day sharing one shape. Default preserves the previous
+	// behaviour exactly, so any preset that does not set it is unchanged.
 	float sun_dot = dot(dir, normalize(LIGHT0_DIRECTION));
-	float disc = smoothstep(1.0 - sun_size, 1.0 - sun_size * 0.35, sun_dot);
+	float disc = smoothstep(1.0 - sun_size, 1.0 - sun_size * disc_edge, sun_dot);
 	float glow = pow(clamp(sun_dot, 0.0, 1.0), 24.0) * sun_glow;
 	colour += sun_colour * (disc + glow) * LIGHT0_ENERGY;
 
