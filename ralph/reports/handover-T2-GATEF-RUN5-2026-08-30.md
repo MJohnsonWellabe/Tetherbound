@@ -23,9 +23,19 @@ Neither cause was what four sessions of notes said it was. A third defect
 that those two were hiding is also found and fixed. **Segments ran for the
 first time in this whole effort** — the table is in §2.
 
-The chain still does not produce a healthy `S03-exit.json`, and §5 says why
-in one sentence: **the entry save it starts from carries a one-creature
-party.** That is upstream of everything this lane was pointed at.
+**Six segments ran** (X08, X07, S03 twice, S04, X04, X06's refusal). X08 is
+the first Gate F segment anywhere in this effort to finish with zero
+failures.
+
+Two things the table does not fix, both upstream of this lane:
+
+1. The chain still does not produce a healthy `S03-exit.json`, and §6 says
+   why in one sentence: **the entry save it starts from carries a
+   one-creature party.**
+2. **X04's combat evidence is still zero** — but this session found out why,
+   and the reason contradicts the plan it was given: X04 re-seeds from
+   `S06-exit.json` partway through, so it is **chain-gated, not
+   entry-save-gated.** "X04 first" was not a runnable ordering. See §2.
 
 ---
 
@@ -37,8 +47,9 @@ party.** That is upstream of everything this lane was pointed at.
 | **X07** | 266 | **183** | **3** | 80 | **COMPLETE** | `ralph/reports/gate-f-run5-chain/X07/` |
 | **S03** | 395 | **340** | **48** | 7 | COMPLETE, exit save unhealthy | `ralph/reports/gate-f-run5-chain/S03/` |
 | S03 (1st) | 393 | 315 | 71 | 7 | superseded — exposed the Oskar panel | `.../S03-superseded-1/` |
-| **X06** | — | — | — | — | **BLOCKED by the harness cost gate** | `.../X06/INCOMPLETE.md` |
-| S04 | — | — | — | — | see §7 (running at handover time) | `.../S04/` |
+| **S04** | 73 | **52** | **15** | 6 | **COMPLETE**, produced `S04-exit.json` | `.../S04/` |
+| **X04** | 124 | **78** | **11** | 6 | INCOMPLETE — stopped at step 96 | `.../X04/INCOMPLETE.md` |
+| **X06** | 314 | — | — | — | **BLOCKED by the harness cost gate** | `.../X06/INCOMPLETE.md` |
 
 X08 is the first Gate F segment anywhere in this effort to finish with zero
 failures.
@@ -52,6 +63,31 @@ failures.
 The last two are the gap X07's own step note already predicted:
 `data/config/map_landmarks.json` has no region for either the Stronghold
 approach or the Hall. That is a data gap to close, not a rig fault.
+
+**X04 ran, and its combat evidence is STILL zero.** This was the brief's
+number-one segment priority and the oldest debt in the run-3 record, so the
+result matters even though it is negative. 78 PASS / 11 FAIL, stopped at
+step 96 of 124. **No `combat_start` event anywhere in its 128 events.** The
+11 defects say why, and none of them is a combat defect:
+
+- an **unanswered narrative modal held locomotion for 3601 frames** while
+  the walk was 446.5 m short of `(195, 905)`, stranded at
+  `(14.0, -3.0, 1313.0)` — recorded four times. This is RIG-5's already-known
+  shape recurring, not something new;
+- `input_context=narrative_modal (wanted combat)` four times, and
+  `(wanted world)` once — every combat step after the modal fired into a
+  modal instead;
+- **`FAIL seed source .../saves/S06-exit.json does not exist`** — X04's
+  later blocks re-seed from **S06-exit**, not just S04-exit. Getting X04 to
+  its combat content needs the chain out to S06, not the two segments this
+  session produced;
+- then the run fell to `title` and the harness errored
+  `step X04-094: walk with no live Player/CameraRig`.
+
+**So X04's combat debt is not payable from an S04-exit alone**, which is
+worth knowing before the next session spends a slot on it: the run-3
+handover's ordering ("X04 first") assumed entry saves that do not exist yet.
+The honest sequence is chain-first, X04 after S06.
 
 **X06 is BLOCKED, legitimately.** The harness's capture pre-flight refuses
 it: predicted 14,960 s (4.2 h) against the 14,400 s ceiling, 2,525,320
@@ -333,12 +369,9 @@ at one target, not a system.
 
 ## 7. Segments not run, and honestly why
 
-- **X04** (the brief's #1: post-RIG-11 combat evidence is zero) needs
-  `S04-exit.json`, which needs S04, which needs S03-exit. S04 was launched
-  from the new S03-exit at handover time; with a fainted one-creature party
-  its tournament entry check will fail on team size exactly as run 3 recorded
-  (RIG-18). Its directory is `.../S04/` — read its `INVENTORY.json` rather
-  than trusting this sentence.
+- **X04 ran** — see §2. It is INCOMPLETE and its combat evidence is still
+  zero, blocked by a narrative-modal stranding and by needing an
+  `S06-exit.json` that this session's chain never reached.
 - **X01** takes `run://S03-exit.json` and could have run, but X01, S04 and
   X05 all `wipe_saves` and `seed_save` into **slot 4**, so they cannot run
   concurrently without corrupting each other's entry. They must be serialised,
@@ -432,6 +465,12 @@ player trap — see §3); `roll_new_worlds`; every segment outside S03.
 2. Re-run S03 from that entry save. Expect one more defect behind the ones
    fixed here — that has been the pattern three sessions running (§5) — and
    budget for the loop rather than for a single fix.
-3. Then S04 → X04, serialised (§7), because X04's combat evidence is still
-   zero and is the oldest outstanding debt in the run-3 record.
-4. Split X06 the way `T2-S10-COST` split S10; it is 4% over the ceiling.
+3. Chain S05 → S06 **before** attempting X04 again. This session proved
+   X04 re-seeds from `S06-exit.json` partway through, so "X04 first" (the
+   run-3 handover's ordering, and this session's brief) is not actually
+   runnable from an S04-exit — X04's combat debt is chain-gated, not
+   entry-save-gated as assumed.
+4. Chase the narrative-modal stranding that held X04's locomotion for 3601
+   frames (RIG-5's shape). It cost X04 its whole combat block and will cost
+   S05-S09 the same way.
+5. Split X06 the way `T2-S10-COST` split S10; it is 4% over the ceiling.
