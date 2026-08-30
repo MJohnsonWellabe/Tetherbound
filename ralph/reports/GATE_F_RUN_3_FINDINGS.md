@@ -361,7 +361,45 @@ pressed immediately before it in the matrix. Independent of the stranding,
 independent of RIG-14's tab-cycle-count issue (this is about a press that
 should close the shell entirely, not about landing on the wrong tab).
 
-### GAME-8 — the walk back out of Mira's shop traps the harness's navigator against the counter/shelf collision, unrelated to the door BUILDPLACE round 3 already fixed
+### GAME-8 — RESOLVED (T2-GATEF-RUN5): the exit leg was pointed at a target behind a wall, and the room is not a player trap
+
+> **T2-GATEF-RUN5, 2026-08-30.** Fixed, and the original diagnosis below is
+> kept because it is right about the symptom and wrong about the cause in a
+> way worth not repeating.
+>
+> **Cause.** `S03-59a` already asked for the right point (cottage_a's door
+> staging point, building-local (1.0, 4.0)) but its `close_enough` was 2.0 m
+> and the doorway is 1.9 m away, so the leg returned true standing INSIDE
+> the shop at local (0.78, 2.15). `S03-60` then aimed at Oskar, who is at
+> building-local **(-5.66, 0)** — due west, through the wall the crates are
+> stacked against, 180 degrees from the door. Every waypoint tried across
+> four sessions reproduced the same wedge because none of them changed that
+> fact. Fixed by tightening `close_enough` to 0.8 (budget 400 -> 1500) so
+> the leg cannot end until the body is outside the building.
+>
+> **`stick_navigator.gd` fixed too, and it needed it.** Its clearance probe
+> was one hairline ray at hip height: blind to the crates (tops 0.50 m and
+> 0.945 m), grazing the counter (top 1.00 m), and blind to width, so the
+> 0.14 m wall/crate gap read as open corridor. Measured live at the wedge
+> point it reported 1.50 m where the body has 0.25 m. It now sweeps the
+> body's own volume (nine rays, three heights by three lateral offsets,
+> lowest above `STEP_HEIGHT` so a kerb is not a wall), refuses a side
+> narrower than the body, backs out of a pocket, and drops a detour that
+> has stopped moving the body.
+>
+> **The open question in this entry is answered: NO, a real player cannot
+> get stuck there.** From four starts inside the pocket, holding the stick
+> at the door with no detour logic, all four escape to the door lane
+> (`tools/gate_f/probe_shop_exit_clearance.gd`, question 3). A 0.14 m gap
+> does not admit a 0.8 m-wide body. `shop_interior.gd` is unchanged and
+> needs no change.
+>
+> **Evidence.** `tools/gate_f/probe_shop_exit_clearance.gd`: from behind
+> Mira's counter, out to the staging point ARRIVES in 38 walking frames and
+> Oskar ARRIVES in 79 more, against a 3000-frame budget exhaustion for the
+> direct line.
+
+#### Original entry (T2-GATEF-RUN4), kept for the record
 
 **Severity: RIG for the harness's own walk, but the underlying geometry is
 a real GAME-side authoring question.** Found by `ralph/T2-GATEF-RUN4`
@@ -408,7 +446,36 @@ is true for the ENTRY direction — "left of the door lane, so walking in
 never walks into it" — but the exit case was never checked). Recorded here
 rather than attempted blind, per this session's own budget.
 
-### GAME-9 — the tool-equip sequence does not reliably keep the intended tool equipped across a full segment replay
+### GAME-9 — RESOLVED (T2-GATEF-RUN5): the tool bindings were addressed by press count, and `ui_left` does not wrap a grid row
+
+> **T2-GATEF-RUN5, 2026-08-30.** Root-caused, reproduced exactly, fixed.
+>
+> The isolated probe and the segment were never running the same recipe.
+> `probe_tool_equip_sequence.gd` looks the item's slot up
+> (`inventory.find_slot`) and drives the cursor there; `S03.json` pressed
+> `ui_right` four times, counting cells along a FRESH save's fill order. Two
+> things break that count, and the second is decisive: the bag is not fresh
+> (both Revives spent, potions 3 -> 1, before a tool is bound), and
+> **`ui_left` does not wrap up a grid row**, so from the knife's cell the
+> three left presses walked backwards along row 0 instead of reaching the
+> pickaxe on row 1 of a 6-column grid. `S03-56f`'s own note asserted that
+> wrap; it does not happen.
+>
+> `tools/gate_f/probe_tool_equip_depleted_bag.gd` rebuilds run 4's own
+> depleted bag and runs both schemes against it. The shipped counts leave
+> the hotbar `["", "", "potion_small", "knife", ""]` — **precisely the
+> `{hotbar_slot: 3, item: "knife"}` all six gathers reported.** The
+> slot-addressed scheme on the same bag leaves `["", "axe", "pickaxe",
+> "knife", ""]`.
+>
+> Fix: new harness action `focus_item` (`operator_harness.gd`,
+> `tools/gate_f/SEGMENT_SCHEMA.md`) backed by `gate_f_probe.gd::
+> satchel_slot_of()`/`satchel_focus()`/`satchel_columns()`. Same real `ui_*`
+> events; it reads the cursor between them and navigates column-then-row.
+> `S03-56d/f/h` name the item now. An unreachable cell or an absent item
+> FAILs loudly instead of binding the wrong thing in silence.
+
+#### Original entry (T2-GATEF-RUN4), kept for the record
 
 **Severity: SHIP candidate, unconfirmed root cause.** Also found chasing
 the same S03 replay above. Six real `gather` events fire in

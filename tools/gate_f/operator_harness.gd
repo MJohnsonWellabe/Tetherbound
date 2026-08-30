@@ -1312,7 +1312,8 @@ static func _predict_frames(steps: Array) -> int:
 				total += int(args.get("budget_frames", 240))
 			"press":
 				total += maxi(1, int(args.get("times", 1))) * (int(args.get("settle_frames", 8)) + 4)
-			"press_multi", "focus_move", "open_menu", "close_menu", "probe_cell", "interact_with":
+			"press_multi", "focus_move", "focus_item", "open_menu", "close_menu", "probe_cell", \
+					"interact_with":
 				total += 12
 			"advance_dialogue_until_closed":
 				total += int(args.get("max_presses", 60)) * 4
@@ -1741,6 +1742,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_close_menu(args, id)
 		"focus_move":
 			actual = await _step_focus_move(args, id)
+		"focus_item":
+			actual = await _step_focus_item(args, id)
 		"advance_dialogue_until_closed":
 			actual = await _step_advance_dialogue(args, id)
 		"assert_context":
@@ -3174,6 +3177,80 @@ func _step_focus_move(args: Dictionary, step_id: String) -> String:
 			and str(before.get("focus_text", "")) == str(after.get("focus_text", "")):
 		return "FAIL %d x %s did not move focus off %s" % [times, control, _focus_name(before)]
 	return "%d x %s moved focus %s -> %s" % [times, control, _focus_name(before), _focus_name(after)]
+
+
+## Move the satchel cursor onto the cell holding a named ITEM.
+##
+## GAME-9 / RIG-24. `focus_move` counts presses, and a count is only ever right
+## for one arrangement of the bag. S03 binds its three tools by counting cells
+## from the grid's opening focus along the order a FRESH save fills the satchel
+## in -- and the run-4 evidence
+## (`ralph/reports/gate-f-run4-s03-validation-2/S03/telemetry/events.jsonl`)
+## shows the bag it actually meets: both Revive draughts spent on the two live
+## revives, potions down from three to one, before a single tool is bound. The
+## presses all landed, the focus all moved, every step reported PASS -- onto the
+## wrong items. Six real gathers then carried the same wrong tool and
+## `home_materials_gathered` never set. Nothing about that failure is visible
+## from a fresh-load probe, which is why `probe_tool_equip_sequence.gd` PASSed
+## the same sequence in isolation.
+##
+## Still production input. Every move below is a real `ui_left`/`ui_right`
+## through the live InputMap, the same events `focus_move` sends; the only thing
+## that changes is that the harness reads WHERE THE CURSOR IS between presses
+## instead of assuming. That is what a player does: they can see the bag.
+##
+## Navigated in ROWS AND COLUMNS, not by walking a linear index. `ui_left` at a
+## row's start does not wrap up to the previous row's end and `ui_right` at a
+## row's end does not wrap down -- S03 assumed both ("wrapping up a grid row")
+## and that assumption is the second half of GAME-9: even reading the cursor,
+## a linear walk sits at the row edge pressing a direction that will never
+## move. Column first, then row, is `probe_tool_equip_sequence.gd`'s own proven
+## navigation, which is exactly why that probe PASSed while S03 did not.
+##
+## The cursor is re-read from the live grid after every press rather than
+## tracked in a local, so a press that does not land shows up as a FAIL here
+## instead of as a wrong binding three steps later.
+func _step_focus_item(args: Dictionary, step_id: String) -> String:
+	var item := str(args.get("item", ""))
+	if item.is_empty():
+		return "HARNESS-ERROR focus_item step %s has no item:\"...\"" % step_id
+	var max_moves := int(args.get("max_moves", 60))
+	var target: int = int(_probe.call("satchel_slot_of", item))
+	if target < 0:
+		return ("FAIL focus_item '%s': the satchel does not hold it at all. Carrying: %s"
+			% [item, JSON.stringify(_probe.call("inventory_snapshot"))])
+	var start: Dictionary = _probe.call("satchel_focus")
+	if not bool(start.get("ok", false)):
+		return ("FAIL focus_item '%s': the Satchel is not the surface holding focus "
+			+ "(input_context '%s'). Open it first.") % [item, str(_probe.call("input_context"))]
+	var columns: int = int(_probe.call("satchel_columns"))
+	if columns <= 0:
+		return "FAIL focus_item '%s': the satchel grid reports no columns" % item
+	var moves := 0
+	while moves < max_moves:
+		var slot := int((_probe.call("satchel_focus") as Dictionary).get("slot", -1))
+		if slot == target:
+			return "focus_item '%s': cursor on cell %d after %d move(s) (from cell %d)" % [
+				item, slot, moves, int(start.get("slot", -1))]
+		if slot < 0:
+			return "FAIL focus_item '%s': the satchel cursor is nowhere (cell %d)" % [item, slot]
+		var control := ""
+		if slot % columns != target % columns:
+			control = "ui_right" if target % columns > slot % columns else "ui_left"
+		else:
+			control = "ui_down" if target / columns > slot / columns else "ui_up"
+		var sent := await _inject(control, HOLD_TAP)
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		for f in 3:
+			await process_frame
+		moves += 1
+		if int((_probe.call("satchel_focus") as Dictionary).get("slot", -1)) == slot:
+			return ("FAIL focus_item '%s': %s did not move the cursor off cell %d "
+				+ "(wanted cell %d, %d columns)") % [item, control, slot, target, columns]
+	var final: Dictionary = _probe.call("satchel_focus")
+	return "FAIL focus_item '%s': %d moves did not reach cell %d (cursor on cell %d, holding '%s')" % [
+		item, max_moves, target, int(final.get("slot", -1)), str(final.get("item", ""))]
 
 
 ## A focused control's label if it has one, its node name otherwise.
