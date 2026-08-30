@@ -2117,7 +2117,49 @@ func _build_occupation() -> void:
 	_build_relay_hub()
 	_build_hoarding()
 	_build_yard_stairs()
+	_build_yard_banners()
 	_build_skirt_grounding()
+
+
+## JUDGE-5 D2, the half that props alone did not answer. With the courtyard
+## dressed and the right body back in it, the re-render still read as a bare
+## room: 18 props along the walls of a 22x28m yard are small against that much
+## masonry, and the judge's complaint was never really about object COUNT --
+## it was "nothing that says anyone OCCUPIES it", and its first named separator
+## from the reference was "the reference stronghold is occupied; this one is
+## empty".
+##
+## Banners are what the key art actually hangs in its Inner Yard panel, and
+## they are the cheapest thing in the vocabulary that says "this is held, and
+## by whom" at a glance: large, high on the wall, in the faction's colour, with
+## the faction's mark on them. Hung INWARD on the two open yards' own walls --
+## the faces a player standing in the fight actually looks at, which
+## `_dress_exterior_wall` never touches because it only ever dresses outward.
+##
+## `_hang_banner`'s cloth faces its holder's local +X, so the yaw per face is
+## the rotation that carries +X to the inward normal: 0 for a -x wall looking
+## east, PI for a +x wall looking west, PI/2 for a +z wall looking north.
+func _build_yard_banners() -> void:
+	for id in EXTERIOR_CHAMBERS:
+		if not _chambers.has(id):
+			continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var half := _size_of(chamber.get("size", [])) * 0.5
+		var height := float(chamber.get("height", 9.0))
+		var top := _floor_y + height * 0.86
+		# The far (+z) wall, well clear of the doorway on its centreline -- this
+		# is the wall the H-07 stand looks straight at.
+		for s: float in [-1.0, 1.0]:
+			_hang_banner(Vector3(centre.x + s * half.x * 0.52, top,
+				centre.z + half.y - _wall_t * 0.5), PI * 0.5,
+				BANNER_COLOUR, BANNER_SCALE * 1.25)
+		# One per flank, inward, set back from the corner so it does not read
+		# as a corner decoration.
+		for s2: float in [-1.0, 1.0]:
+			_hang_banner(Vector3(centre.x + s2 * (half.x - _wall_t * 0.5), top,
+				centre.z + half.y * 0.18), 0.0 if s2 < 0.0 else PI,
+				BANNER_COLOUR, BANNER_SCALE * 1.25)
 
 
 ## The 40m climb, dressed: kerbs following the ramp's own slope, a timber rail

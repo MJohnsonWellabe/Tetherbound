@@ -196,7 +196,14 @@ func _run() -> void:
 		# the ground above, and the gate nowhere in it. The deck height is
 		# sampled from the real ground at build time, so it cannot be re-derived
 		# here -- ask the stronghold where its own walking surface is.
-		var eye4 := entrance + toward * 34.0
+		# 34m up a 40m causeway put the eye 6m off the sill, and the first
+		# correctly-exposed frame of this stand showed why that is too close:
+		# the gate fills the frame edge to edge and the "four-plane stack" the
+		# design asks this stand to prove (yard floor -> camp -> far wall ->
+		# keep above) is cropped down to two. 24m leaves 16m of run in front of
+		# the camera, so the gatehouse reads as a threshold being approached
+		# rather than as a passage already entered.
+		var eye4 := entrance + toward * 24.0
 		eye4.y = float(stronghold.call("causeway_surface_y", eye4.x, eye4.z)) + 1.7
 		# Look level and slightly UP the remaining climb rather than at a point
 		# 20m dead ahead on the old (buried) eye plane: the gate sill is above
