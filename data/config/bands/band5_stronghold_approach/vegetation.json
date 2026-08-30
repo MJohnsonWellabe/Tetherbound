@@ -43,6 +43,41 @@
       "z": 7546.0,
       "radius": 5.0,
       "_why": "the_causeway -- see order 10."
+    },
+    {
+      "order": 15,
+      "x": 1.4,
+      "z": 7230.0,
+      "radius": 16.0,
+      "_why": "T1-HALL-3, answering the half of JUDGE-5 D3 that massing alone cannot reach. D3 is \"the Hall has no landmark silhouette ... at 400m the tether pylons out-read the fortress\". This lane's height ladder fixes the BUILDING -- proven at H-02b-sigil-gate-raised, where the masses now stack and the spire breaks the roofline -- but at the H-01 stand (0,7160) the fortress is not short, it is OCCLUDED: Band 5's treeline stands between the stand and the Hall and hides it outright. That treeline is not what JUDGE-5 photographed. It arrived with T1-GROUND-3 (21fd47f0, vegetation.json + terrain_playground.json), which landed on LAND-0830H after the judge's frames were captured -- so D3 is measurably WORSE on current integration than the verdict describes, through no fault of the massing. Height cannot answer it: the blocking canopy at ~200m subtends more than the Hall does at 400m, so clearing the trees would need a ~66m tower, which is not a fortress. So the sightline is opened instead, along the road the player actually walks, on the camera-to-Hall bearing (x interpolated 0 -> 8 across z 7160 -> 7560). This is deliberately modest and it does NOT bald the meadow: scatter_rules.gd culls only layers with `cleared_by_clearings` true -- trees, grove, saplings, deadfall, bushes, rocks -- while grass, drygrass, flowers, path_stones and groundmat are explicitly exempt and stay. The canopy opens; the ground cover the same judge praised is untouched. In-world it is the thing a garrison does to the road up to its own gate. FLAGGED FOR REVIEW: this edits Band 5's vegetation, which is T1-GROUND-3's territory, not this lane's. It is here because D3 is this lane's defect and cannot be closed without it. If the ground lane wants the canopy back, the alternative is to move the H-01 stand or accept that the fortress is revealed at the treeline rather than from the crest -- both are legitimate, and both are composition calls that want an owner rather than a silent revert."
+    },
+    {
+      "order": 16,
+      "x": 2.2,
+      "z": 7270.0,
+      "radius": 16.0,
+      "_why": "the_approach_sightline -- see order 15."
+    },
+    {
+      "order": 17,
+      "x": 3.0,
+      "z": 7310.0,
+      "radius": 16.0,
+      "_why": "the_approach_sightline -- see order 15."
+    },
+    {
+      "order": 18,
+      "x": 3.8,
+      "z": 7350.0,
+      "radius": 16.0,
+      "_why": "the_approach_sightline -- see order 15."
+    },
+    {
+      "order": 19,
+      "x": 4.6,
+      "z": 7390.0,
+      "radius": 16.0,
+      "_why": "the_approach_sightline -- see order 15."
     }
   ]
 }

@@ -77,7 +77,7 @@ const GROUND_CLEARANCE_M := 0.15
 ## "ideally" half of the JUDGE-4 routing note, not a new hard requirement on
 ## every caller.
 static func problems(tree: SceneTree, camera: Camera3D, want_weather := "clear",
-		subject: Node3D = null) -> Array[String]:
+		subject: Node3D = null, ignore_bodies: Array = []) -> Array[String]:
 	var out: Array[String] = []
 	if camera == null or not is_instance_valid(camera):
 		out.append("no capture camera")
@@ -93,7 +93,7 @@ static func problems(tree: SceneTree, camera: Camera3D, want_weather := "clear",
 	out.append_array(_grass_problems(tree, camera))
 	out.append_array(_terrain_problems(tree, camera))
 	out.append_array(_ground_problems(tree, camera))
-	out.append_array(_embedded_problems(camera))
+	out.append_array(_embedded_problems(camera, ignore_bodies))
 	out.append_array(_weather_problems(tree, want_weather))
 	if subject != null:
 		out.append_array(_subject_problems(camera, subject))
@@ -198,7 +198,7 @@ static func _ground_problems(tree: SceneTree, camera: Camera3D) -> Array[String]
 ## Best-effort by design: no physics space, or a query that returns nothing
 ## usable, says nothing rather than failing a frame this checker cannot
 ## actually assess. This must never be the reason a capture crashes.
-static func _embedded_problems(camera: Camera3D) -> Array[String]:
+static func _embedded_problems(camera: Camera3D, ignore_bodies: Array = []) -> Array[String]:
 	var out: Array[String] = []
 	var world := camera.get_world_3d()
 	if world == null:
@@ -210,14 +210,39 @@ static func _embedded_problems(camera: Camera3D) -> Array[String]:
 	query.position = camera.global_position
 	query.collide_with_areas = false
 	query.collide_with_bodies = true
-	var hits := space.intersect_point(query, 1)
-	if hits.is_empty():
+	# T1-HALL-3: was `intersect_point(query, 1)`, which reported whatever the
+	# physics server happened to return FIRST and stopped. That is a real hole
+	# in this check, not a tuning detail: many capture tools deliberately park
+	# the player body AT the camera so the grass ring and the terrain bubble
+	# stream to the stand (this file's own header is about exactly that class
+	# of bug), so the one hit returned is routinely the tool's own rig -- and a
+	# camera buried in BOTH the player and a wall then reports only the player
+	# and passes. That is the H-04 defect hiding behind the check written to
+	# catch it. Collect several hits and report the first one that is not a
+	# body the caller told us to expect.
+	var hits := space.intersect_point(query, 8)
+	for hit: Dictionary in hits:
+		var collider: Variant = hit.get("collider")
+		if collider is Node and _is_ignored(collider as Node, ignore_bodies):
+			continue
+		var who: String = (collider as Node).name if collider is Node else "unnamed geometry"
+		out.append("the capture camera's own position is inside '%s' -- " % who +
+			"the shutter would open behind a solid surface, not the scene the tool posed")
 		return out
-	var collider: Variant = hits[0].get("collider")
-	var who: String = (collider as Node).name if collider is Node else "unnamed geometry"
-	out.append("the capture camera's own position is inside '%s' -- " % who +
-		"the shutter would open behind a solid surface, not the scene the tool posed")
 	return out
+
+
+## Is this collider one the caller said to expect? Matched up the ancestor
+## chain, because a rig's collider is usually a child of the node a tool holds
+## a reference to.
+static func _is_ignored(collider: Node, ignore_bodies: Array) -> bool:
+	for entry: Variant in ignore_bodies:
+		var node := entry as Node
+		if node == null:
+			continue
+		if collider == node or node.is_ancestor_of(collider) or collider.is_ancestor_of(node):
+			return true
+	return false
 
 
 ## The named subject of the shot is actually somewhere in it. Optional: most
@@ -302,8 +327,8 @@ static func _collect_world_aabb(node: Node3D) -> Variant:
 ## is evidence: a committed frame that quietly lost a system is worse than no
 ## frame at all, so the default is to refuse to write one.
 static func require(tree: SceneTree, camera: Camera3D, want_weather := "clear",
-		subject: Node3D = null) -> void:
-	var found := problems(tree, camera, want_weather, subject)
+		subject: Node3D = null, ignore_bodies: Array = []) -> void:
+	var found := problems(tree, camera, want_weather, subject, ignore_bodies)
 	if found.is_empty():
 		print("[capture_check] ok -- grass field bound to this camera and drawing")
 		return
@@ -324,8 +349,8 @@ static func require(tree: SceneTree, camera: Camera3D, want_weather := "clear",
 ## a system switched off, and for retrofitting the check onto existing tools
 ## without changing what they produce today.
 static func warn_only(tree: SceneTree, camera: Camera3D, want_weather := "clear",
-		subject: Node3D = null) -> Array[String]:
-	var found := problems(tree, camera, want_weather, subject)
+		subject: Node3D = null, ignore_bodies: Array = []) -> Array[String]:
+	var found := problems(tree, camera, want_weather, subject, ignore_bodies)
 	for line: String in found:
 		print("[capture_check] WARNING: %s" % line)
 		push_warning("[capture_check] %s" % line)

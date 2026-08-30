@@ -255,7 +255,15 @@ func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 	# Exterior stands promote any problem to a run failure, so the exit code
 	# still refuses to call a degraded set "evidence"; the interior stand only
 	# reports.
-	var checked := CAPTURE_CHECK.warn_only(self, camera)
+	# The player is EXPECTED to be inside the camera here: `_shoot` parks it at
+	# the eye on purpose, so the grass ring and the terrain bubble stream to the
+	# stand rather than staying wherever the gameplay rig was left. Declaring it
+	# is what lets the embed check stay strict about everything else -- it now
+	# walks several hits instead of reporting only the first, so "buried in the
+	# ramp AND standing in the player" reports the ramp, which is the whole
+	# point of running it here.
+	var checked := CAPTURE_CHECK.warn_only(self, camera, "clear", null,
+		[player] if player != null else [])
 	for line: String in checked:
 		if interior:
 			print("[capture_check] (interior stand %s -- reported, not fatal)" % name_value)
