@@ -273,13 +273,15 @@ calling OP-0830-2 closed.
 
 | | |
 |---|---|
-| unit suite (118 files) | pass |
+| unit suite (118 files) | **1605 tests, 3,389,084 assertions, 0 failed** |
 | `test_village_boundary.gd` (new) | 5 tests, 22 assertions, pass |
 | `test_quest_log.gd` | 35 tests, 767 assertions, pass |
 | `test_gateb_objective_chain.gd` | 4 tests, 54 assertions, pass |
 | `smoke_opening.gd` | pass |
 | `smoke_wake_softlock.gd` | pass (and verified red against the pre-fix code) |
 | `smoke_gate_a_opening_segment.gd` | pass |
+| `smoke_gate_a_rest_torch.gd` | pass |
+| `smoke_gate_a_build_house.gd` | pass |
 | `smoke_traversal.gd` | pass — the world perimeter, the South Bridge, the Old Mill Crossing and the Sigil Gate all still hold |
 
 Three unit files needed reconciling with the new ladder, and it is worth being
@@ -295,6 +297,9 @@ have written.
 
 ### Failures that are not this lane's, said plainly
 
+Attribution here was **established, not assumed**: each was re-run on a detached
+`origin/main` at `1d7fc8e7` and fails there identically.
+
 * **`smoke_gate_a_build_segment_meadows.gd`** — fails on *"there is no hammer in
   the satchel"*. Pre-existing and structural: `build_open` has no pad button by
   owner directive (`OWNER_DIRECTIVES_2026-08-22` §22), so the reusable segment
@@ -303,6 +308,10 @@ have written.
   `ralph/reports/gate-f-historical-snapshot.md` names it among the tests left
   unwired because *"a red job added blind is worse than an unwired test"*. Nothing
   in this branch touches the hammer, the fixture or the bindings.
+* **`smoke_gate_a_map_cycle.gd`** — *"minimap heading 3.142 does not match resolved
+  travel 2.096"*. The check pushes the left stick full-right for 70 frames and
+  compares the minimap's heading against resolved world displacement; the
+  displacement comes out deflected. Reproduces byte-identically on `origin/main`.
 * **`smoke_gate_b_continuous.gd`** — fails at *"Mira's required opening visit left
   'recipe_orb_basic' unset"*. **Attribution established, not assumed**: the same
   run was done on a detached `origin/main` at `1d7fc8e7` and it fails there,
@@ -367,10 +376,10 @@ merged tree:
 
 | | |
 |---|---|
-| `test_village_boundary.gd` | 5 tests, 22 assertions, pass |
-| `tools/_probe_village_gate_escape.gd` | see below |
-| `smoke_opening.gd` | see below |
-| `smoke_wake_softlock.gd` | see below |
+| `test_village_boundary.gd` | 5 tests, 22 assertions, 0 failed |
+| `tools/_probe_village_gate_escape.gd` | `escaped the village on 0 of 16 bearings: []`, and with the key `walked to (66.6, -2.2, -29.5) -- 29.5m past the gate ... (THROUGH)` |
+| `smoke_opening.gd` | `OK` — tracked line, hint card and the `return_starter` door callout all still as quoted above |
+| `smoke_wake_softlock.gd` | `OK` — all four gated beats still report `shut in, and told` |
 
 One thing that lane found is worth reading before trusting any capture from this
 round: *"capture integrity — the grass was never missing, the binding was"*
