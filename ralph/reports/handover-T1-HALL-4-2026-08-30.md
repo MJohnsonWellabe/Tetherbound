@@ -101,8 +101,238 @@ invent" list. Left alone, and flagged rather than quietly skipped.
 
 ## 3. What changed, by defect
 
-*(filled in)*
+JUDGE-6's fix list is numbered here as the brief numbered it.
+
+### 1 — Silhouette contrast *(ranked 1st)*
+
+Two moves, because the defect has two sides and only doing the building would
+have left the backdrop fighting it.
+
+**The building drops and cools.** `building_prefabs.json`'s `meadows_hall`
+retint takes `LightRock` #d2c6b2 → #817f78 and `DarkRock` #ab9d89 → #68675f;
+`stronghold.json` takes the works walls' `stone_light` #9c9083 → #5f5e58 and
+`stone_skirt` #8f8172 → #575147. The whole family moves **by the same factor**,
+which is what keeps this from re-opening the seam JUDGE-5's D7 raised: the
+~1.27× ladder `_why_retint_t1_hall_3` tuned is preserved to two decimal places
+(129/104 = 1.24 where it was 210/171 = 1.23; 1.36 against the works walls where
+it was 1.35). Only the family's absolute value moves — the axis JUDGE-6 says was
+never addressed. The warm spread narrows from 32 points of R-over-B to 9, because
+the judge asked for cooler as well as darker.
+
+`stone` (#6a6157) is deliberately **not** dropped. `_wall_material` hands
+`stone_light` to outer walls and `stone` to inner ones, so it is an interior
+tone, and `_ceiling_colour`'s own note records what happened last time these
+rooms lost value: the warden arena went to 96.7% of pixels below luminance 40 and
+a blind critic's first finding was the value crush. The exterior is now slightly
+darker than the interior, which is both the right read and the only way to buy
+the silhouette without paying for it in the five rooms the player fights in.
+
+**The backdrop lifts and warms.** `art.json`'s `fog_colour` and
+`sky.horizon_colour` (which the EV8 note requires stay identical, and do) go
+#b7ccc3 → #d3cebd, and `terrain_playground.json`'s `shader.aerial_fade_colour`
+goes #bec9ce → #d0c9b6. The terrain one is the useful one: it lives in
+`terrain_ground.gdshader`'s fragment tail, so it lifts the ground *behind* the
+fortress without lifting the fortress — which is exactly the judge's "push a
+lighter warm haze behind it so it reads as the dark shape", and something env
+fog cannot do because fog reaches the building too.
+
+The jade roof went with it: `MI_RoundTiles` #2a8c94 → #2b423f, killing what the
+judge measured as "the only strongly saturated hue on the whole building".
+
+### 2 — The bald mid-distance *(ranked 2nd)*
+
+**The hard cull line was never a content gap.** The trees past 260 m existed and
+were being distance-culled by `vegetation.gd`'s `lod_range`, which feeds
+Terrain3D's own `instance_geometry_set_visibility_range`. `H-02b`'s subject sits
+165 m from the stand and the horizon runs several hundred metres beyond, so the
+cull was landing in the middle of the chapter's establishing shot. Six layers
+raised — trees 260→620, grove 220→520, rocks 150→360, bushes 110→300,
+saplings/deadfall →320 — with fade margins widened so the new edge is a fade and
+not a second hard line. The five sub-metre ground layers are deliberately not
+raised: a 0.4 m tuft at 300 m is smaller than a pixel and would spend render
+budget for nothing.
+
+**And the ground past it gets content.** Band 5's `density_scale` 0.07 → 0.22.
+The two existing notes on that number are about the *drain* contrast, and raising
+the healthy floor strengthens both sides of that comparison rather than weakening
+it — but see §5, this spent most of the bake's remaining headroom.
+
+### 3 — Stone UV scale and the hard seams *(ranked 3rd)*
+
+One property: `uv1_world_triplanar = true`, in `_material()` and in
+`_weather_hall_massing`. Object-space triplanar multiplies `uv1_scale` by the
+*local* vertex position, so a mesh's node scale scales its texture with it — and
+`meadows_hall` runs its modules at 2.1× to 7.0×. That is the whole of "one
+material, four scales, one frame", and of `H-06`'s near tower at "roughly 4× the
+wall's scale" where "the stones become 120 px soap-smears … it reads as wet clay,
+not masonry": that tower is `LargeSquareTowerBricks` at scale 4.0 against curtain
+walls built as unit boxes. 4× the node, 4× the stone, exactly as measured. In
+world space the projection is independent of node scale, so every surface —
+kit module, procedural wall, merlon, causeway kerb — courses at one real-world
+stone size and the seams stop existing. Same material, same texture, same draw
+call.
+
+This does **not** fix the material itself. The baked highlight, the missing
+per-stone variation and the visible tile repeat are the judge's "single highest
+value purchase" and are on the owner's list, not this one.
+
+### 5 — The near-black tree and keep face
+
+Diagnosed, and it is not quite what the judge thought. Magnified, the `H-05`
+"tree rendering as near-black" beside an identical lit one is a *different
+variant*: `vegetation.json` gives `CommonTree_2`'s leaves #325f3c against
+`CommonTree_1`'s #78c86e, and the dark one is standing in the curtain wall's
+shadow while the bright one catches sun. Not two identical trees, and not a
+per-instance lighting bug.
+
+But the judge is right that it reads as one, and the cause is real: shaded
+surfaces have almost no fill. `ambient_sky_contribution` 0.5 → 0.25 is the fix,
+and note it raises fill **without touching `ambient_energy`** — that number has
+oscillated twice in this file already (1.02 → 1.5 → 2.1, and cut once the other
+way) and a third swing would be the wrong move. `art.json`'s own
+`_comment_ambient` says why the sky half is free to spend: "sky radiance does not
+reach the terrain under the Compatibility renderer". At 0.5, half the ambient
+budget was going to a term that contributes nothing to any frame anyone has
+judged. Moving it to 0.25 hands that half to the explicit `ambient_colour`, which
+does reach, so shaded faces gain ~1.5× fill while sunlit surfaces barely move and
+the blown-highlight fix from EV4 is not at risk.
+
+### 6 — The flat grey slabs, and the floating plinth
+
+The slabs, inspected at 4×, are the `path_stones` layer, and the judge is half
+right in a useful way: they **do** have thickness — their side faces are visible.
+What they have no trace of is contact, because `casts_shadow` was `false`. That
+was inherited from the sub-metre layers the key was written for, where switching
+it off is correct ("a tuft's shadow is not information at this scale; a tree's
+is"). A 0.6–1.4 scale flagstone is on the tree side of that line. Shadows on,
+and `sink` 0.03 → 0.10 so the slab beds into the turf instead of resting on it.
+
+The **floating plinth** is not fixed — see §4.
+
+### 7 — The bare causeway
+
+Ten props from the garrison camp's own family (D24's one-vocabulary rule, no new
+asset), with the same oxblood `tint` those camp crates carry so this reads as the
+same occupying force's stores. Placement obeys what the causeway is *for*: the
+player walks up it, so props hug the kerbs at local x −0.2 and 4.2 (the deck
+interior runs −1.3 to 5.3, taken from the ramp braziers' own stations) and the
+centre lane stays clear end to end. A barricade the player has to path around
+would be a worse defect than a bare ramp. They also stop clear of the banner
+piers at z −19/−31.
+
+`on_causeway` is the flag the braziers in the same config block already use, and
+it is not optional: the deck climbs ~10 m over its 40 m run, so a prop at the
+floor plane is *inside* the slab. That is JUDGE-5's D1 from the other end — a
+crate instead of a camera.
+
+### 8 / 10 — Banner scale
+
+`BANNER_SCALE` 2.2 → 3.6, **and** the girders drop from [0.55, 0.55, 0.68, 0.42]
+to [0.34, 0.34, 0.42, 0.28] of wall height. The second half is the one that
+matters: `banner_scale` is clamped by the drop between the parapet and that
+wall's girder (cloth must stop above the hardware), so with the girder at
+mid-wall the tallest banner a 12 m wall could hang was ~4 m and most hit the 1.15
+floor. **Raising the constant alone would have been a no-op against that clamp** —
+which is the trap worth recording. A girder in the wall's lower third also reads
+better on its own terms: hardware across the base of a wall is load-bearing
+retrofit, hardware across its middle is a belt.
+
+A new width clamp caps each banner at 30% of its wall's span so the pair cannot
+meet in the middle of a short wall.
+
+### 9 — Cyan
+
+Partially declined, with a measurement — see §2.
+
+### 11 — The moon
+
+`sky_clouds.gdshader`'s disc falloff was hard-coded to run from the rim all the
+way in to 35% of the radius, so two thirds of the body was gradient and there was
+no edge anywhere in it. That is the "lens bloom rather than an object" exactly.
+`disc_edge` is now a uniform (default preserves old behaviour), night and dawn set
+0.93, and `sun_size` 0.006 → 0.0024. Day and golden do not set it, so golden
+hour's sun still blooms.
+
+### 12 — The braziers, and the blank banner
+
+**The fires had no light at all.** `torch_prop.gd` is a billboard flame plus
+embers and says so in its own header — "callers add their OWN OmniLight3D". Every
+other caller in the project does; `_brazier` never did. So "four fires light
+nothing" was literally true of the code. Each brazier now carries an
+`OmniLight3D` with `omni_attenuation` 1.6 (concentrating the falloff near the
+source, which is what makes a fire read as a *pool with an edge* rather than a
+flat wash), driven from config, shadows off for budget.
+
+**The blank red banner and the "pink diagonal hatching" are one bug with one
+cause**, and it is a cause this repo has already diagnosed once — `STONE_TILE`'s
+header records it: *a thin, bright, high-contrast feature minified with no mip
+chain*. `ImageTexture.create_from_image` builds no mipmaps unless the Image
+carries them, and the sigil is a ring 5.8 px thick in a 128 px image. Past a few
+tens of metres the sampler hits or misses it per pixel — hit rows and missed rows
+in alternation **are** the diagonal hatching, and a banner whose every sample
+misses **is** the blank red rectangle. Fixed with `generate_mipmaps()`, 256 px
+source, and ~40% heavier strokes (filtering alone would have cured the noise by
+fading the mark to nothing).
+
+The field also went **transparent**. It was opaque white, so the device's quad —
+standing 0.012 m off the cloth — was painting a lightened rectangle over 62% of
+every banner. The mark is now a mark, in bleached linen against the oxblood,
+which is what the board's banners carry.
+
+### 13 — The wall foot
+
+Nine rock anchors on the three wall feet the judged stands actually look at,
+derived from the chambers' own `at`/`size` plus wall thickness rather than
+eyeballed. The judge was explicit this can be scatter, not meshes, so it is the
+layer that already owns loose stone, using the anchor mechanism it already uses
+sixteen times.
+
+`min_slope_deg` is overridden to 0 on all nine and that override is load-bearing:
+the layer's own floor is 6°, and a wall foot is flat made ground, so without it
+every draw is rejected and the anchors render nothing at all.
+
+---
 
 ## 4. What this lane did NOT fix
 
-*(filled in)*
+Stated plainly so the next lane does not have to rediscover it.
+
+- **Ambient occlusion (defect 4).** Cannot be delivered from config under this
+  renderer — see §0.2. Sun shadows are the only contact this build has, which is
+  why the actionable part turned out to be `path_stones`' `casts_shadow`. Real
+  contact occlusion needs baked AO or contact geometry, or a renderer change
+  (D01, locked).
+- **The floating plinth in `H-06` (defect 6).** Confirmed present at 4× — a
+  cobble ledge with grass visible behind and under its outer end. Not chased:
+  it is a skirt-facing/terrain interaction that wants its own diagnosis, and the
+  lane's budget went to the two defects ranked above it. The rubble skirt (§3.13)
+  lands near it and may partially disguise it, which is **not** the same as
+  fixing it.
+- **The emissive quad clipping in `H-07` (defect 9).** Not chased.
+- **The cable anchors (defect 9).** Not chased.
+- **The stone material itself (defect 3's other half)**, ivy/overgrowth, the
+  retrofit props, the broken wall-top set, the arch and portcullis, a roof asset,
+  cloth-shaped banners, and a courtyard dressing set. These are JUDGE-6's second
+  list. They went to the owner and this lane deliberately did not work around
+  them — the one thing done in that neighbourhood is texturing the spire cap and
+  roofs with the already-installed `T_UnevenBrick` (`ROOF_WEATHER_MATERIALS`),
+  because "the worst individual asset in the set" was flat-shaded purely because
+  the pass that textures this kit was stone-only and could never reach `Celing`.
+  That is the scene-side half; it is not the roof asset the judge asked for.
+- **The tree leaf-retint spread.** `CommonTree_2` at #325f3c is dark enough that
+  in shade it goes near-black. Left alone deliberately: recolouring a species to
+  hide a lighting problem is the wrong lever, and the ambient fix addresses the
+  cause. If it still reads badly, that retint is where to look.
+
+---
+
+## 5. Budget
+
+- **Scatter placements: 826,892 → 874,616.** `test_scatter_perf_budget.gd` allows
+  900,000, so band 5's density spent 47,724 of the 73,108 that were free and
+  leaves **25,384**. That guard exists to catch an accidental density explosion,
+  and at 97% of its ceiling it can no longer catch much. Keeping the density —
+  the growth is authored and measured, which is the condition that comment sets —
+  but **the next lane that wants density here needs a deliberate look at the
+  ceiling, not another guess from this bake.**
+- **Draw calls:** see below.

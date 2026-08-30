@@ -2371,6 +2371,16 @@ func _build_hall_fire() -> void:
 		light.name = "Fire"
 		light.light_color = FIRE_COLOUR
 		light.omni_range = float(spec.get("range", 15.0))
+		# T1-HALL-4, JUDGE-6 defect 12. Godot's default attenuation of 1.0 falls
+		# off nearly linearly across the whole range, which spreads a fire's
+		# contribution thinly to its edge instead of pooling it -- so a brazier
+		# reads as a faint wash over everything nearby rather than as a fire with
+		# a lit circle around it. Above 1.0 concentrates the falloff near the
+		# source, which is the difference between the judge's complaint ("no
+		# falloff pool at all") and the key art's "single campfire pooling warm
+		# light on the ground" it is measured against. Data-driven, defaulting to
+		# Godot's own value, so a brazier that does not ask is unchanged.
+		light.omni_attenuation = float(spec.get("attenuation", 1.0))
 		light.shadow_enabled = false
 		light.position = Vector3(0.0, _bowl_rim(float(spec.get("scale", 2.1)))
 			+ BRAZIER_FLAME_LIFT * float(spec.get("scale", 2.1)), 0.0)
@@ -2422,44 +2432,6 @@ func _brazier(holder: Node3D, spec: Dictionary, index: int) -> Node3D:
 		+ BRAZIER_FLAME_LIFT * scale_factor, 0.0)
 	brazier.add_child(torch)
 
-	# The light the fire has never cast. T1-HALL-4, JUDGE-6 defect 12.
-	#
-	# Measured on `H-03-ramp-foot-night`: "the four braziers are lit, but the
-	# towers immediately behind them are uniformly dark with NO FALLOFF POOL AT
-	# ALL. The flames are unlit sprites. The key art's night panel gets a great
-	# deal out of a single campfire pooling warm light on the ground; here four
-	# fires light nothing."
-	#
-	# That is exactly true of the code and `torch_prop.gd` says so in its own
-	# header -- it is a billboard flame plus embers and deliberately carries no
-	# light, because "callers add their OWN OmniLight3D from their own data
-	# source". Every other caller in the project does. This one never did, so
-	# the Hall's fires have always been decals.
-	#
-	# `light_energy`/`omni_range` are taken from `stronghold_occupation.json`'s
-	# causeway block so the night read is tunable without a code edit, which is
-	# the form the rest of this building's numbers already take. The default
-	# range is deliberately larger than a hand torch's: these bowls stand on
-	# 0.8m piers flanking a 40m causeway and the pool the judge is asking for is
-	# the one that lands on the deck and up the tower faces behind them.
-	var glow := OmniLight3D.new()
-	glow.name = "BrazierGlow"
-	var fires: Dictionary = _occupation().get("causeway", {}) as Dictionary
-	glow.light_energy = float(fires.get("brazier_light_energy", 3.1))
-	glow.omni_range = float(fires.get("brazier_light_range_m", 16.0)) * (scale_factor / 2.1)
-	# Attenuation above 1 concentrates the falloff near the source, which is what
-	# makes a fire read as a POOL with an edge rather than as a flat wash over
-	# everything within range -- the difference the judge is naming.
-	glow.omni_attenuation = 1.6
-	glow.light_color = Color(str(fires.get("brazier_light_colour", "#ffb066")))
-	# Shadows off, and the reason is a budget one rather than a taste one: these
-	# are 4-8 point lights standing among the most geometry in the chapter, and
-	# `docs/PERFORMANCE_BUDGET.md` gives the Hall a ceiling this lane is already
-	# spending against. An unshadowed warm pool is the whole of the defect;
-	# shadow-casting braziers are not.
-	glow.shadow_enabled = false
-	glow.position = Vector3(0.0, _bowl_rim(scale_factor) + BRAZIER_FLAME_LIFT * scale_factor, 0.0)
-	brazier.add_child(glow)
 	return brazier
 
 
