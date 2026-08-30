@@ -1,0 +1,462 @@
+{
+  "shots": [
+    {
+      "creatures": {
+        "bramblebun": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.261,
+          "signature": 68.740731
+        },
+        "cindercub": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.261,
+          "signature": 67.583266
+        },
+        "frostclaw": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.261,
+          "signature": 64.20153
+        },
+        "shadelet": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.261,
+          "signature": 64.581759
+        },
+        "sparkit": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.261,
+          "signature": 69.781937
+        }
+      },
+      "phase": "idle",
+      "tag": "idle-0"
+    },
+    {
+      "creatures": {
+        "bramblebun": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.927,
+          "signature": 68.816788
+        },
+        "cindercub": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.927,
+          "signature": 67.656308
+        },
+        "frostclaw": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.927,
+          "signature": 64.280362
+        },
+        "shadelet": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.927,
+          "signature": 64.656882
+        },
+        "sparkit": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.927,
+          "signature": 69.854073
+        }
+      },
+      "phase": "idle",
+      "tag": "idle-1"
+    },
+    {
+      "creatures": {
+        "bramblebun": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 1.594,
+          "signature": 68.702085
+        },
+        "cindercub": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 1.594,
+          "signature": 67.543859
+        },
+        "frostclaw": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 1.594,
+          "signature": 64.150395
+        },
+        "shadelet": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 1.594,
+          "signature": 64.530135
+        },
+        "sparkit": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 1.594,
+          "signature": 69.74987
+        }
+      },
+      "phase": "idle",
+      "tag": "idle-2"
+    },
+    {
+      "creatures": {
+        "bramblebun": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.0,
+          "signature": 69.669177
+        },
+        "cindercub": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.0,
+          "signature": 68.419955
+        },
+        "frostclaw": {
+          "bones": 15,
+          "clip": "walk",
+          "paused": false,
+          "position": 0.0,
+          "signature": 64.792722
+        },
+        "shadelet": {
+          "bones": 15,
+          "clip": "idle",
+          "paused": false,
+          "position": 0.0,
+          "signature": 65.350718
+        },
+        "sparkit": {
+          "bones": 15,
+          "clip": "walk",
+          "paused": false,
+          "position": 0.133,
+          "signature": 73.163843
+        }
+      },
+      "phase": "locomotion",
+      "tag": "walk-live"
+    },
+    {
+      "creatures": {
+        "bramblebun": {
+          "bones": 15,
+          "clip": "walk",
+          "paused": true,
+          "position": 0.344,
+          "signature": 72.338316
+        },
+        "cindercub": {
+          "bones": 15,
+          "clip": "walk",
+          "paused": true,
+          "position": 0.344,
+          "signature": 71.052124
+        },
+        "frostclaw": {
+          "bones": 15,
+          "clip": "walk",
+          "paused": true,
+          "position": 0.344,
+          "signature": 67.617346
+        },
+        "shadelet": {
+          "bones": 15,
+          "clip": "walk",
+          "paused": true,
+          "position": 0.344,
+          "signature": 67.930966
+        },
+        "sparkit": {
+          "bones": 15,
+          "clip": "walk",
+          "paused": true,
+          "position": 0.344,
+          "signature": 73.183538
+        }
+      },
+      "phase": "locomotion",
+      "tag": "walk-held"
+    },
+    {
+      "creatures": {
+        "bramblebun": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 72.338316
+        },
+        "cindercub": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 71.052124
+        },
+        "frostclaw": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 67.617346
+        },
+        "shadelet": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 67.930966
+        },
+        "sparkit": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 73.183538
+        }
+      },
+      "phase": "attack",
+      "tag": "attack"
+    },
+    {
+      "creatures": {
+        "bramblebun": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 60.507952
+        },
+        "cindercub": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 58.839533
+        },
+        "frostclaw": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 53.93167
+        },
+        "shadelet": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 57.905206
+        },
+        "sparkit": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 60.669989
+        }
+      },
+      "phase": "attack",
+      "tag": "close-sparkit"
+    },
+    {
+      "creatures": {
+        "bramblebun": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 60.507952
+        },
+        "cindercub": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 58.839533
+        },
+        "frostclaw": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 53.93167
+        },
+        "shadelet": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 57.905206
+        },
+        "sparkit": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 60.669989
+        }
+      },
+      "phase": "attack",
+      "tag": "close-cindercub"
+    },
+    {
+      "creatures": {
+        "bramblebun": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 60.507952
+        },
+        "cindercub": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 58.839533
+        },
+        "frostclaw": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 53.93167
+        },
+        "shadelet": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 57.905206
+        },
+        "sparkit": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 60.669989
+        }
+      },
+      "phase": "attack",
+      "tag": "close-shadelet"
+    },
+    {
+      "creatures": {
+        "bramblebun": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 60.507952
+        },
+        "cindercub": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 58.839533
+        },
+        "frostclaw": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 53.93167
+        },
+        "shadelet": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 57.905206
+        },
+        "sparkit": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 60.669989
+        }
+      },
+      "phase": "attack",
+      "tag": "close-frostclaw"
+    },
+    {
+      "creatures": {
+        "bramblebun": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 60.507952
+        },
+        "cindercub": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 58.839533
+        },
+        "frostclaw": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 53.93167
+        },
+        "shadelet": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 57.905206
+        },
+        "sparkit": {
+          "bones": 15,
+          "clip": "attack",
+          "paused": true,
+          "position": 0.335,
+          "signature": 60.669989
+        }
+      },
+      "phase": "attack",
+      "tag": "close-bramblebun"
+    }
+  ],
+  "species": [
+    "sparkit",
+    "cindercub",
+    "shadelet",
+    "frostclaw",
+    "bramblebun"
+  ]
+}

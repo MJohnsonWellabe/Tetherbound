@@ -68,11 +68,25 @@ DEFAULT_BUDGET = 60
 ## text elsewhere still prints "roughly 40" against this old figure in a few
 ## comments/docstrings that were not re-swept; the number that matters, this
 ## dict, is fixed.
+##
+## T1-RIG-2, 2026-08-30: added `rig`, which had no entry here at all despite
+## being measured. T1-NPC-CAST ran the humanoid auto-rigger 22 times plus one
+## resubmit and recorded 5 credits per call, checked against the balance
+## endpoint the same way as the two corrections above; its own report named the
+## missing entry as worth adding and no lane had. A `rig` call costing nothing
+## in this table is how a rig round gets costed at zero in a plan.
+##
+## `retexture` is left at 30 deliberately. The same report measured ONE
+## retexture call at 10 and explicitly declined to correct the table on a single
+## data point -- unlike the two corrections above, which each rest on 15+ calls
+## with no variance. Re-measure on the next retexture this project makes rather
+## than trusting either number.
 COSTS = {
     "image_preview": 20,
     "image_refine": 30,
     "text_preview": 20,
     "retexture": 30,
+    "rig": 5,
 }
 
 ## What every Tetherbound creature must be, and must not be. Section 8's two

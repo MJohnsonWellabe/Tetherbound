@@ -31,7 +31,7 @@ import pathlib
 import sys
 
 import bpy
-from mathutils import Vector
+from mathutils import Vector, kdtree
 
 ## Fraction of the body's height, from the ground up, whose vertices count as
 ## "leg" for the quadrant clustering. A quarter reaches the whole lower leg on
@@ -252,6 +252,58 @@ def skin(body: bpy.types.Object, rig: bpy.types.Object) -> None:
     bpy.ops.object.parent_set(type="ARMATURE_AUTO")
 
 
+def repair_unweighted(body: bpy.types.Object) -> int:
+    """Give every zero-weight vertex the weights of its nearest weighted neighbour.
+
+    Automatic weights leaves a handful of vertices with no influence at all on
+    some meshes — typically a seam the bone heat diffusion could not reach
+    through, such as a fold buried inside the silhouette. Left alone they do
+    not simply stay put: Blender's glTF exporter invents a static `neutral_bone`
+    at the armature origin and binds them to it, so the patch hangs in bind pose
+    while the body around it moves. That is the tear `weight_report` warns about.
+
+    How bad it looks depends entirely on where the patch lands and how far that
+    part of the body travels, and on the two meshes that motivated this it was
+    not bad at all: cindercub's 35 orphans were rendered through `pose_test.py`'s
+    four extreme poses with and without this pass and seven of the eight views
+    came out pixel-identical (T1-RIG-2, frames kept under
+    `ralph/reports/T1-RIG-2/pose_test/`). So this is not advertised as fixing a
+    visible artefact. It is here because an orphan vertex is a latent failure
+    that costs nothing to close, and because leaving it means `weight_report`'s
+    own "reject before anyone animates" contract can never actually be met.
+
+    Copying the nearest weighted vertex's groups is the smallest correct answer:
+    the patches are small and enclosed by properly weighted surface, so the
+    neighbour's influence is the right one by construction. Vertices that
+    already carry weight are never touched, so a mesh that comes back clean
+    from automatic weights exports byte-identically with or without this pass.
+
+    Returns the number of vertices repaired.
+    """
+    weighted: list[int] = []
+    orphans: list[int] = []
+    for vert in body.data.vertices:
+        if sum(group.weight for group in vert.groups) < 1e-4:
+            orphans.append(vert.index)
+        else:
+            weighted.append(vert.index)
+    if not orphans or not weighted:
+        return 0
+
+    tree = kdtree.KDTree(len(weighted))
+    for slot, index in enumerate(weighted):
+        tree.insert(body.data.vertices[index].co, slot)
+    tree.balance()
+
+    for index in orphans:
+        _, slot, _ = tree.find(body.data.vertices[index].co)
+        donor = body.data.vertices[weighted[slot]]
+        for group in donor.groups:
+            if group.weight > 0.0:
+                body.vertex_groups[group.group].add([index], group.weight, "REPLACE")
+    return len(orphans)
+
+
 def weight_report(body: bpy.types.Object) -> dict:
     """How many vertices each bone owns, and how many nobody owns.
 
@@ -287,8 +339,10 @@ def main() -> None:
     legs = find_legs(body)
     rig = build_armature(body, legs)
     skin(body, rig)
+    repaired = repair_unweighted(body)
 
     report = weight_report(body)
+    report["repaired_vertices"] = repaired
     report["bones"] = [b.name for b in rig.data.bones]
     report["legs_found_at"] = {k: [round(c, 4) for c in v] for k, v in legs.items()}
 
@@ -304,7 +358,7 @@ def main() -> None:
     bad = report["unweighted_vertices"]
     print(f"\nrigged {model.name} -> {out.name}")
     print(f"  {len(report['bones'])} bones, {report['total_vertices']} vertices, "
-          f"{bad} unweighted")
+          f"{bad} unweighted, {repaired} repaired")
     if bad:
         print("  UNWEIGHTED VERTICES PRESENT — these will tear in animation. "
               "Inspect before using.")
