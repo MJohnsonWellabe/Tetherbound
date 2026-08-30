@@ -803,8 +803,8 @@ func _play(segment: Dictionary) -> void:
 ##
 ## Two different ids name one beat. `data/progression/objectives.json` gives
 ## each main entry an `id` -- `opening_first_catch` -- and a `flag_id` -- the
-## progression flag that closes it, `opening:beat:road`. §E.5 tracks "24 main-
-## chain objectives from `opening_first_catch`", so every `objective_is` in
+## progression flag that closes it, `opening:beat:road`. §E.5 tracks "27 main-
+## chain objectives from `opening_hear_grandpa`", so every `objective_is` in
 ## every segment was transcribed in ENTRY ids. `gate_f_probe.gd::tracked_
 ## objective()` returns the FLAG id, deliberately and under its own smoke test
 ## (`tests/smoke_gate_f_probe.gd`), because a flag id is what Phase B can cite
@@ -821,6 +821,15 @@ func _play(segment: Dictionary) -> void:
 ## have failed the same way -- a whole run of findings about the instrument
 ## wearing the shape of findings about the game, which is the specific failure
 ## round 2 of this rig exists to stop repeating.
+##
+## 2026-08-30 (ralph/GATE-F-E5): the §E.5 quote above moved from 24 rungs to 27
+## and its first rung from `opening_first_catch` to `opening_hear_grandpa`,
+## because OP-0830-4 added three rungs ahead of the catch. This function needed
+## NO change -- it builds the id map by reading `objectives.json` at call time,
+## so it absorbed a reordered chain without being touched, which is what it was
+## written for. Only the three segment steps that named the old first rung by
+## hand had to move. If a future rung is added, this stays correct and the
+## transcription is again the thing to check.
 func _objective_flag_id(entry_id: String) -> String:
 	if entry_id.is_empty():
 		return ""
