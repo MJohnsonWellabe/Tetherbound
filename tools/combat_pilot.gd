@@ -188,10 +188,21 @@ func fight_to_the_end() -> Dictionary:
 	fight_frames += frames
 	Input.action_release("move_forward")
 	Input.action_release("move_back")
+	# The gap at the bell, so a round that ran out of frames can say WHY. A
+	# timeout at two metres is a fight that would not resolve; a timeout at
+	# forty is two creatures that were never put near each other.
+	var final_gap := -1.0
+	var foe: Node3D = manager.call("enemy_body") as Node3D
+	if ally_body != null and is_instance_valid(ally_body) \
+			and foe != null and is_instance_valid(foe):
+		var apart := foe.global_position - ally_body.global_position
+		apart.y = 0.0
+		final_gap = apart.length()
 	return {
 		"outcome": str(manager.call("outcome")),
 		"frames": frames,
 		"timed_out": frames >= FIGHT_FRAME_LIMIT,
+		"final_gap": final_gap,
 	}
 
 

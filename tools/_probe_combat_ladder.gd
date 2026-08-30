@@ -236,6 +236,17 @@ func _fight_rung(rung: Dictionary) -> Dictionary:
 	for entry: Variant in opposing:
 		top_level = maxi(top_level, int((entry as Dictionary).get("level", 1)))
 
+	# Back to the same patch of ground for every rung.
+	#
+	# `combat_manager.gd::_stand_the_trainer_aside()` moves the trainer at the
+	# start of every fight, so across a 29-rung ladder they drift — and the
+	# trainer's position is where `_send_out_spot()` puts the opposing creature.
+	# Six rungs in, an un-restaged run produced a round with 0 hits in either
+	# direction over the full two-minute limit: the two creatures had been placed
+	# somewhere they never met. Re-standing is staging, not play, and it keeps
+	# every rung measured on the ground the first one was.
+	await _stand_at_the_stage()
+
 	var in_hand: RefCounted = _director.call("ally_instance")
 	print("  %-24s player L%d x%d, leading with %s" % [
 		id, level, int(_party.call("size")),
@@ -258,13 +269,20 @@ func _fight_rung(rung: Dictionary) -> Dictionary:
 			print("      round %d vs %s: %s after %.1fs%s" % [
 				rounds, foe_name, str(round_result["outcome"]),
 				float(round_result["frames"]) / 60.0,
-				"  (HIT THE FRAME LIMIT)" if bool(round_result["timed_out"]) else ""])
+				"  (HIT THE FRAME LIMIT, %.1fm apart)" % float(round_result["final_gap"])
+					if bool(round_result["timed_out"]) else ""])
 			if bool(round_result["timed_out"]):
 				break
 		else:
 			await physics_frame
 			frames += 1
 	Input.action_release("move_forward")
+
+	# A round that ran out of frames leaves the battle OPEN, and
+	# `can_challenge()` refuses every later trainer while one is running — so an
+	# unfinished rung used to abandon all 23 rungs behind it. Disengaged through
+	# the real button rather than by reaching into the director.
+	await _leave_any_battle_still_running()
 
 	for i in 40:
 		await physics_frame
@@ -308,6 +326,22 @@ func _fight_rung(rung: Dictionary) -> Dictionary:
 
 ## The five (or three, or four) the curve says the player has here, at full
 ## health, through `Game.party` — the same store the party screen writes.
+## `combat_run` is the disengage a player has (`combat_manager::_flee_pressed`),
+## and running from a round is one of the ways a trainer battle ends — so this
+## is the same exit the player would take, not a reach into the director.
+func _leave_any_battle_still_running() -> void:
+	for attempt in 4:
+		if not bool(_director.call("trainer_battle_active")) \
+				and not bool(_manager.call("is_fighting")):
+			return
+		if bool(_manager.call("is_fighting")):
+			await _pilot.press("combat_run")
+		for i in 120:
+			await physics_frame
+			if not bool(_director.call("trainer_battle_active")):
+				return
+
+
 func _build_the_party(level: int, members: int) -> void:
 	var cfg: Dictionary = PROGRESSION.config()
 	var recipe: Array = TEAMS[_team_name]
