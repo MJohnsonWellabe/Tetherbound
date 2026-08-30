@@ -144,4 +144,141 @@ and a bad matchup is roughly one extra blow in fifteen. That is real, and it is
 below the resolution of a health bar. Changing either the magnitudes or adding
 damage numbers is an owner call — flagged in §8, not made here.
 
-*(sections 4 onward: the ladder, the captains, the verdict)*
+## 4. Did the captain rebalance change the fights?
+
+`tools/_probe_captain_rebalance.gd`. Each captain fought twice, back to back,
+same challenger at level 15 (the level `chapter_curve.json` puts the player at
+when they reach Band 4's captains), same pilot, same ground. The "pre-rebalance"
+roster is the swap the trainers file's own `_why_t3_typechart_rebalance` note
+describes, put back.
+
+### Field Captain, met by the mono-Water team the rebalance exists to stop
+
+| roster | result | fight | party HP left | faints | damage taken | verdicts on them |
+|---|---|---|---|---|---|---|
+| **shipped** (duskhush / tuskroot / meadowhart) | won | 30.2s | **93.9 %** | 0 | 35.5 over 5 hits | 22 strong, 12 weak |
+| **pre-rebalance** (burrowback / tuskroot / meadowhart) | won | 30.0s | **93.1 %** | 0 | 40.2 over 6 hits | 32 strong, 0 weak |
+
+**The config moved and the fight did not.** The verdict mix changed exactly as
+designed — a third of the player's hits went from strong to resisted — and the
+outcome moved by **0.2 seconds and 0.8 percentage points of health**. A Water
+team sweeps the Field Captain either way, without losing a creature, at
+94 % health.
+
+So the honest answer to *"does the captain rebalance actually change the fights
+it was authored to change, or only the config?"* is: **only the config.** Not
+because the swap was wrong — it does what it says — but because a −35 % discount
+is not what was making that fight easy. The fight has no threat in it to
+discount.
+
+### Ridge Captain, met by the mono-Ground team
+
+| roster | result | fight | party HP left | damage taken |
+|---|---|---|---|---|
+| **shipped** (trailpup / duskhush / galecrest) | won | 32.1s | **100.0 %** | **0.0 over 0 hits** |
+
+A three-round fight against one of the chapter's three Sigil captains, and the
+captain **did not land a single blow**. That is not a type-chart problem. See §5.
+
+---
+
+## 5. The thing under all of it: 0.5 metres beats every attack in the game
+
+This is the largest finding of the lane, and it explains most of the numbers
+above.
+
+`combat_ai.gd` commits the opponent to its wind-up on purpose, and says why:
+*"An enemy that can cancel its own telegraph makes the telegraph worthless."*
+`combat_manager.gd::_on_enemy_strike()` then tests whether the blow connects
+from the position the creature was standing in when the wind-up finished.
+D07 is explicit that this is the design — *"There is still no dodge button:
+movement is the dodge."*
+
+The trouble is how little movement that takes. Working it out for the two
+creatures the Ridge fight actually put on the field, from `combat.json`:
+
+- the opponent holds station at `preferred_range`, floored to
+  `(r_mine + r_theirs) × body_clearance` — for Trailpup (0.43) and Galecrest
+  (0.65) that is **2.97 m**;
+- its swing reaches `preferred_range + 0.5` = **3.47 m**;
+- so the gap between where it stands and where its reach ends is **0.5 m**,
+  and it always is, for every pair of creatures in the game, because both
+  numbers are derived from the same product;
+- a creature moves at `creature_movement.speed` 5.6 m/s, and the wind-up lasts
+  `enemy.telegraph` 0.55 s — **3.08 m of travel available to cover a 0.5 m
+  requirement.**
+
+A player who learns one thing — *step back when the ring lights* — becomes
+literally unhittable, with six times the movement they need. That is what the
+SPACER pilot is: not a superhuman reflex test, a creature walking backwards for
+a third of a second. It took **zero** damage from a regional captain.
+
+**This is flagged, not fixed.** Every way of closing it changes a combat
+mechanic: making the strike resolve from the post-lunge position would give
+attacks tracking; shortening the telegraph or widening reach trades against
+readability; and `CLAUDE.md` names dodge/block as an owner decision, which this
+is the other side of. The numbers above are what an owner would need to pick
+between those.
+
+What it means for everything else in this report: **the ladder's difficulty is
+almost entirely "have you noticed the wind-up ring yet"**, and type advantage,
+levels and team composition are all second-order to it. §6 measures both sides
+of that.
+
+---
+
+## 6. `smoke_combat.gd`: a check that can now actually fail
+
+### What was wrong with it
+
+The file adopted a `terrapup` (Ground) and walked to the practice cluster
+(`spawns.json`'s `roles.practice` → `bramblebun`, Ground). **Ground into Ground
+is 1.00 in both directions**, so every fight this file has ever graded the type
+system on was a mirror — and its own comment said so:
+
+> *"a mirror matchup (verdicts all 0) is a legitimate run"*
+
+Its type assertions all check **agreement**: the verdict the fight emitted equals
+an independent lookup. On a mirror, every expected value is 0 and every reported
+value is 0, so they pass identically with the type system switched off.
+
+### What it does now
+
+1. `_ensure_ally()` adopts a **`ripplet`** — Water into Ground is 1.25 one way
+   and 0.80 the other, so the same walk, the same engage and the same fight now
+   carry a verdict in both directions. **No extra runtime**: it is the same
+   fight, against the same opponent, at the same point in the file.
+2. The pairing itself is asserted. If a `spawns.json` role edit or a typing
+   change collapses this fight back to a mirror, it **fails and names the fix**
+   rather than quietly grading nothing again.
+3. `_the_advantage_was_worth_what_the_chart_promised()` measures the **damage**.
+   Every blow that lands is recorded with which button threw it, and summed
+   against a prediction built from the real `combat_math.base_damage` over the
+   real stats of the two creatures that actually met — once with the chart, once
+   without.
+
+### Proof that it fails
+
+Both damage call sites in `combat_manager.gd` were patched to pass `1.0` instead
+of `type_mult` — leaving the verdict signals and the HUD arrow completely
+untouched, which is the regression shape the old check could not see — and the
+test was run:
+
+```
+type chart reached the fight: 3 verdicts, ally water vs foe ground (hit 1 / -1, arrow 1)
+9 blows landed for 127.4 damage (the chart says 162.6; a chart-less fight would say 130.1)
+combat FAIL: 9 blows dealt 127.4 damage, but water into ground (quick x1.2500,
+  charged x1.2500) should have dealt 162.6 — and a fight with no type chart at
+  all would have dealt 130.1. The multiplier the HUD advertises is not the one
+  the damage is resolved with.
+```
+
+Observed 127.4 against a chart-less prediction of 130.1: a 2 % match to the
+broken build, 22 % away from the correct one. **Every pre-existing assertion in
+the file passed on that patched build** — the verdicts were still emitted, the
+arrow was still `+1` — and only the new check caught it. `combat_manager.gd` was
+restored from backup immediately afterwards and is byte-identical to `main`.
+
+---
+
+*(section 7 onward: the ladder, and the verdict)*
