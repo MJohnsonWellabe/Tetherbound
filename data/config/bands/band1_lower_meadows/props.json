@@ -201,6 +201,19 @@
     {
       "order": 1000,
       "name": "trail_camp",
+      "rest": {
+        "_why": "T5-CADENCE, closing T4-REGIONS' third-ranked chapter gap (ralph/reports/REGION_AUDIT_2026-08-30.md: 'Camps are set dressing'). This is the best-dressed camp in the game -- 18 props, a bed, a lit bonfire, a bench and a stool -- and it is a named map landmark (`band1_trail_camp`), and until this block it could not be used for anything. The audit's exit-criterion verdict for band 1's camp/recovery row was FAIL, with the reason written as 'a map landmark that promises rest and delivers scenery'. `scripts/world/rest_point.gd` is what reads this; the offer it stands up is the SAME one the player-built Camp makes, not a better one.\n\nSITED at the fire, 1.6m east of it, because the fire is what makes this read as a camp from the trail and because that is exactly where `camp.gd` hangs its own rest prompt relative to its own fire. The fire ring is ~2.1m across (campfire_stone_ring at scale 1.05), so 1.6m clears the stones.",
+        "at": [345.6, 935.4],
+        "radius": 3.2,
+        "label": "Rest until morning",
+        "craft_at": [342.4, 935.0],
+        "creature_bed": {
+          "_why": "The camp's own creature bed, and the half of this that makes 'recovery' mean anything 900m from home: `game_state.gd::_tick_creature_bed_recovery()` heals an occupant gradually whether or not the player is standing here, so a creature bedded down at the trail camp is genuinely unavailable and genuinely recovering -- exit criterion H3.\n\nADDED rather than converted. The `camp_bed` prop already in this cluster stays exactly where it is, inside the tent's mouth, as the TRAINER's own sleeping surface; a trail camp a trainer keeps has a place for the team as well as for the person, and that is one more instance of an already-installed mesh rather than a new asset. Sited south-east of the fire in the one genuinely open quarter of the camp: 3.2m from the fire, 2.8m from the firewood log, 2.3m from the tall-grass tuft, and clear of the tent/bed footprint on the opposite side. Yaw turns its long axis toward the fire the way the bench and stool already face it. VISUAL NOTE: sited from the measured prop layout, not from a frame -- worth a look when this camp is next captured.",
+          "at": [347.0, 934.0],
+          "yaw_deg": 55.0,
+          "bed_index": -11
+        }
+      },
       "props": [
         {
           "model": "Bonfire_Fire",
