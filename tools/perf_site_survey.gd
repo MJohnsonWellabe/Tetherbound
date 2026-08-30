@@ -89,9 +89,14 @@ const VIEWS := {
 ## `stronghold.gd` review already warns is easy to get backwards. Re-run that
 ## probe and update the two Vector3 literals below if the Warrens are ever
 ## re-sited.
+## `eye` is the den chamber's own centre marker (open floor by construction --
+## `burrow_warrens.gd` files each chamber's marker at its centroid, not at an
+## arbitrary offset that risks landing inside a wall the way a hand-picked
+## "step back from the guardian" offset would without knowing the room's
+## actual (yaw-rotated) wall positions).
 const ABSOLUTE_VIEWS := {
 	"warrens_den": {
-		"eye": Vector3(-385.28, 4.1484 + 1.7, 2638.28 - 3.0),
+		"eye": Vector3(-385.28, 4.1484 + 1.7, 2638.28),
 		"look_at": Vector3(-385.99, 4.1484 + 1.4, 2643.23),
 	},
 }
