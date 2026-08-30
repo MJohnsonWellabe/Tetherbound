@@ -551,7 +551,8 @@
       "pier_height_m": 3.4
     },
     "_comment_camp": "The garrison camp in the gatehouse yard -- the board's Inner Yard stalls with a hostile owner. Same prop family the retired castle's checkpoint used (`generated_camp` tents/firewood, `kenney_survival` bedroll, `quaternius_fantasy` crates/barrel), so this is the Meadows' one camp vocabulary rather than a new one. Every entry sits on the yard's own built floor. THE CLEARANCES THIS LIST OBEYS, because a prop that blocks the route is worse than no prop: the gate/passage lane x[-4.5,4.5] stays empty end to end, the patrol trainer's stand (-5,6) keeps a 5m radius, and nothing sits closer than 1m to the yard walls at x=+-10.",
-    "camp": [
+    "_comment_camp_t1_hall_3": "T1-HALL-3, 2026-08-30. The 18 entries after the Workbench dress the COURTYARD; everything before it is the outer-works garrison camp and is unchanged. JUDGE-5 ranked D2 second of sixteen: \"the Warden arena is four untextured-looking tiled stone walls and a cobble floor -- no crates, no braziers, no banners, no apparatus, nothing that says anyone occupies it\", and named occupation the FIRST of the three things separating these frames from the reference key art (\"the reference stronghold is occupied; this one is empty\"). Two things were true at once. The courtyard genuinely had one object in it (the relay hub) -- and that object sits at local z 27.4 while the H-07 stand looks SOUTH from the courtyard trainer, so the room's only piece of dressing was directly BEHIND the camera in every frame ever shot of it. Placement obeys the room's own two constraints rather than filling it: the courtyard is a trainer FIGHT room, so the fight floor (x[-5,5], z[24,42]) stays clear and every prop hugs a wall, and nothing sits in either doorway line at x~0. Same prop families the outer-works camp already uses (D24's one-camp-vocabulary rule) -- no new assets, no Meshy generation. The warden_arena itself is left deliberately bare per HALL_DESIGN sec8: that fight owns its floor.",
+      "camp": [
       {"model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [-8.0, -6.4], "yaw_deg": 28.0, "scale": 1.0, "on_floor": true},
       {"model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [7.8, -7.2], "yaw_deg": -34.0, "scale": 0.94, "on_floor": true},
       {"model": "camp_firewood", "dir": "res://assets/props/generated_camp", "at": [-7.0, 1.4], "yaw_deg": -40.0, "scale": 1.0, "on_floor": true},
@@ -559,7 +560,25 @@
       {"model": "Crate_Wooden", "at": [8.6, 2.6], "yaw_deg": 14.0, "scale": 1.0, "on_floor": true, "tint": "#5a2a2e"},
       {"model": "Crate_Wooden", "at": [8.4, 4.0], "yaw_deg": -22.0, "scale": 1.0, "on_floor": true, "tint": "#5a2a2e"},
       {"model": "Barrel", "at": [7.2, 5.4], "yaw_deg": 0.0, "scale": 1.0, "on_floor": true},
-      {"model": "Workbench", "at": [8.2, -2.4], "yaw_deg": -90.0, "scale": 1.0, "on_floor": true}
+      {"model": "Workbench", "at": [8.2, -2.4], "yaw_deg": -90.0, "scale": 1.0, "on_floor": true},
+      {"model": "Crate_Wooden", "at": [8.7, 22.4], "yaw_deg": 14.0, "scale": 1.0, "on_floor": true},
+      {"model": "Crate_Wooden", "at": [9.2, 24.1], "yaw_deg": -22.0, "scale": 0.92, "on_floor": true},
+      {"model": "FarmCrate_Empty", "at": [8.4, 25.9], "yaw_deg": 48.0, "scale": 1.0, "on_floor": true},
+      {"model": "Barrel", "at": [9.0, 29.4], "yaw_deg": 0.0, "scale": 1.0, "on_floor": true},
+      {"model": "Barrel", "at": [8.3, 30.9], "yaw_deg": 0.0, "scale": 0.95, "on_floor": true},
+      {"model": "Workbench", "at": [8.8, 34.9], "yaw_deg": -90.0, "scale": 1.0, "on_floor": true},
+      {"model": "Anvil_Log", "at": [8.6, 37.9], "yaw_deg": -74.0, "scale": 1.0, "on_floor": true},
+      {"model": "Bucket_Wooden_1", "at": [9.1, 39.6], "yaw_deg": 0.0, "scale": 1.0, "on_floor": true},
+      {"model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [-8.3, 32.8], "yaw_deg": 62.0, "scale": 0.96, "on_floor": true},
+      {"model": "camp_firewood", "dir": "res://assets/props/generated_camp", "at": [-8.8, 37.4], "yaw_deg": -18.0, "scale": 1.0, "on_floor": true},
+      {"model": "FarmCrate_Empty", "at": [-8.8, 23.0], "yaw_deg": -36.0, "scale": 1.0, "on_floor": true},
+      {"model": "Crate_Wooden", "at": [-8.4, 25.2], "yaw_deg": 20.0, "scale": 0.9, "on_floor": true},
+      {"model": "Barrel", "at": [-9.0, 27.9], "yaw_deg": 0.0, "scale": 1.0, "on_floor": true},
+      {"model": "Bench", "at": [-8.6, 41.0], "yaw_deg": 90.0, "scale": 1.0, "on_floor": true},
+      {"model": "Crate_Wooden", "at": [-4.9, 43.6], "yaw_deg": -8.0, "scale": 1.0, "on_floor": true},
+      {"model": "Rope_1", "at": [-6.1, 44.1], "yaw_deg": 30.0, "scale": 1.0, "on_floor": true},
+      {"model": "Barrel", "at": [4.7, 43.8], "yaw_deg": 0.0, "scale": 1.0, "on_floor": true},
+      {"model": "Bag", "at": [5.8, 43.0], "yaw_deg": -52.0, "scale": 1.0, "on_floor": true}
     ],
     "_comment_relay_hub": "Design §6.4: one `relay_apparatus.glb` in the inner bailey as the Hall's own distribution hub, fitted to ~4m because board 14 draws a squat machine that is never taller than a hall. Fenced by four short tether girders in the reserved oxblood, the same fitting language the interior trim already speaks. Sited east of the courtyard's centre line so it is clear of both the trainer's stand (-4,36) and the x=0 passage lane, and so the player meets it side-on walking through.",
     "relay_hub": {

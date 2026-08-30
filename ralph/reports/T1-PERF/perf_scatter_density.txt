@@ -1,0 +1,145 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+=== T1-PERF scatter density by band (measured footprint) ===
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _build_terrain (res://scripts/world/playground_world.gd:641)
+         [1] _ready (res://scripts/world/playground_world.gd:398)
+WARNING: Terrain3DTextureAsset#8806:set_albedo_texture:79: Texture 'meadow_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#8806:set_normal_texture:100: Texture 'meadow_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#6948:set_albedo_texture:79: Texture 'verge_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#6948:set_normal_texture:100: Texture 'verge_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#6974:set_albedo_texture:79: Texture 'rock_scree_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#6974:set_normal_texture:100: Texture 'rock_scree_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#2891:set_albedo_texture:79: Texture 'dirt_path_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#2891:set_normal_texture:100: Texture 'dirt_path_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#0313:set_albedo_texture:79: Texture 'wet_earth_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#0313:set_normal_texture:100: Texture 'wet_earth_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#2878:set_albedo_texture:79: Texture 'forest_floor_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#2878:set_normal_texture:100: Texture 'forest_floor_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 249559 placements, 517829 skipped]=941 reorder[13 layers]=223
+[vegetation] grass field is on; 517829 placements across 3 layers left unbuilt (grass, drygrass, flowers)
+[vegetation] boot phases (ms): placements=1325 mark_harvestable=96 group_by_model=265 register_mesh_assets=41 build_batches_total=4965 (of which harvest_points[56436 nodes]=3667, initial_collision_stream[51584 solid]=187) update_mmis=678
+[grass_field] grass ring: 315232 instances over 9 lattice layers (tuft_count asked for 300000)
+[grass_field] stone ring: 93236 instances over 9 lattice layers (count 90000)
+[grass_field] cover tier bushes   15052 instances over 7 lattice layers (count 14800)
+[grass_field] cover tier flowers  15052 instances over 7 lattice layers (count 14800)
+[grass_field] cover tier litter   48716 instances over 9 lattice layers (count 49000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 315232 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 248542 props in 32 batches (56436 harvestable, 0 already chopped, 152/51584 collision resident)
+[water] pond quads 2538, stream points 46, reeds 152, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 49, jetty 18, level -17.0
+[water] stream bank reeds 82, bank scrub 20
+[water] river quads 390, bank reeds 159, bank scrub 57
+[village] placed 14 structures
+[props] placed 128 props in 19 clusters
+[village_npcs] placed 6 of 8
+[relay_site] placed 1 of 1
+[trainers] placed 17 trainer(s)
+[quarry] 2 foundations, 4 pylons standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 114 harvest nodes
+[playground] placed 6 farm plots
+[warrens] cleared 375 scattered trees/rocks inside the 30m site radius
+[warrens] planted 134 pieces of ground cover around the site
+[warrens] 181 pieces of interior rock across 5 chambers
+[warrens] 188 structural members across 5 chambers
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.2m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+total scattered placements with a recorded position: 248167
+
+band              count   x-spread m    z-run m   footprint ha      density /ha
+village           14279       2047.9      511.6        104.761            136.3
+band1             71653       2046.9     1359.9        278.371            257.4
+band2             52985       2047.6     1820.0        372.662            142.2
+band3             38044       2047.6     1580.0        323.507            117.6
+band4             61599       2047.4     2239.9        458.597            134.3
+band5              8682       2041.1      547.8        111.820             77.6
+stronghold          925       2042.6      131.9         26.945             34.3
+
+NOTE: 'footprint ha' is the bounding box of this band's OWN placements,
+not an authored corridor width (none exists as a single number -- see
+this file's header). A band whose scatter clusters in a few dense
+clumps with wide empty gaps between will UNDER-state density here,
+since the empty gaps still count toward the bounding box.
+
+--- local density at the exact points perf_profile.gd/perf_site_survey.gd sample ---
+(circle of radius 60m around each point, 1.131 ha)
+site              count      density /ha
+village             617            545.5
+band1              1322           1168.9
+band2               272            240.5
+band3               358            316.5
+band4                20             17.7
+band5               554            489.8
+stronghold          757            669.3

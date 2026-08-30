@@ -19,6 +19,14 @@ extends Node3D
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const LEAF_PREFAB := "road_gate_leaf"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const TETHER_SIGIL := preload("res://scripts/world/tether_sigil.gd")
+## The same stone set and the same measured tile the Hall's own walls use
+## (`stronghold.gd`'s STONE_* / STONE_TILE), so the checkpoint reads as an
+## outpost of the building at the end of the road rather than as its own idea.
+const STONE_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
+const STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
+const STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
+const STONE_TILE := 0.28
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
 
 const KEY_ITEM_ID := "castle_gate_key"
@@ -54,6 +62,32 @@ var prompt_text := "Try the gate"
 ## Set above the causeway half-width so the wings bury their ends in the gorge
 ## rims rather than stopping flush with a walkable edge.
 var seal_half_width := 0.0
+
+## T1-HALL-3 / JUDGE-5 D4, ranked 8th of sixteen and read blind as: the "sigil
+## gate" "has NEITHER sigil NOR gate ... a three-rail farm fence with a small
+## yellow padlock. No sigil, no banner, no gatehouse, no Team Tether mark of any
+## kind. Nothing tells the player they have crossed into hostile ground."
+##
+## That is a fair description of `road_gate_leaf` -- which is correct for the
+## VILLAGE road gate this script was written for, and wrong for the threshold of
+## the chapter's final location. Opt-in rather than automatic, and defaulted OFF,
+## so the village gate is untouched: only the caller that knows it is building
+## Team Tether's checkpoint asks for Team Tether's dressing.
+##
+## What it adds is deliberately the smallest thing that answers both halves of
+## the finding -- two stone piers and a lintel (a GATE, not a fence), and a
+## sigil banner on each pier (the MARK, shared with the Hall's own banners
+## through `tether_sigil.gd`). It is built from boxes in the same masonry
+## vocabulary the Hall uses; no new asset, no Meshy generation.
+var faction_dressing := false
+## The reserved oxblood, in the render-space-corrected value `stronghold.gd`'s
+## `BANNER_COLOUR` header explains at length -- blue below green so no light
+## level can push it to magenta (D6).
+const FACTION_CLOTH := Color("#6b2a20")
+const PIER_W := 1.5
+const PIER_D := 1.5
+const PIER_H := 6.2
+const LINTEL_H := 0.9
 
 var _mesh: Node3D = null
 var _shape: CollisionShape3D = null
@@ -169,6 +203,8 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	add_child(body)
 
 	_build_wings(world, prefabs, at, aabb)
+	if faction_dressing:
+		_build_faction_gatehouse(aabb)
 
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
@@ -338,3 +374,124 @@ func _say(conversation_id: String) -> void:
 	if bool(panel.call("is_open")):
 		return
 	panel.call("start", conversation_id)
+
+
+## --- Team Tether's checkpoint (JUDGE-5 D4) -----------------------------------
+
+## Turn the leaf into a threshold. See `faction_dressing` above for the finding
+## this answers and why it is opt-in.
+##
+## Nothing here is a child of `_mesh`: the piers, the lintel and the banners are
+## the GATEHOUSE and must stand still when the leaf swings, exactly as
+## `_build_wings` already documents for the wings. Nothing here carries a
+## collider either -- the leaf and the wings already seal this line, and a pier
+## with a body on it would be a new thing for `smoke_traversal.gd`'s walk to
+## catch on either side of a gate the player is meant to pass through.
+func _build_faction_gatehouse(aabb: AABB) -> void:
+	var half := aabb.size.x * 0.5 + PIER_W * 0.5
+	# The Hall's own curtain tone AND its actual stone, triplanar at the same
+	# measured tile. The first cut set only `albedo_color` and the frame showed
+	# exactly what that is: two smooth pale slabs reading as painted concrete
+	# beside a fully textured world -- the "white maquette" failure
+	# HALL_DESIGN sec5 diagnoses at length ("a flat colour at any value cannot
+	# produce coursing"), reintroduced at the one object in the chapter whose
+	# whole job is to say "you have crossed into hostile ground". Triplanar
+	# because these are BoxMeshes with box UVs; the Hall's own kit is mapped the
+	# same way for the same reason.
+	var stone := StandardMaterial3D.new()
+	stone.albedo_color = Color("#9c9083")
+	stone.albedo_texture = STONE_ALBEDO
+	stone.normal_enabled = true
+	stone.normal_texture = STONE_NORMAL
+	stone.roughness_texture = STONE_ROUGHNESS
+	stone.uv1_triplanar = true
+	stone.uv1_scale = Vector3.ONE * STONE_TILE
+	stone.roughness = 0.95
+	var timber := StandardMaterial3D.new()
+	timber.albedo_color = Color("#5d4529")
+	timber.albedo_texture = STONE_ALBEDO
+	timber.uv1_triplanar = true
+	timber.uv1_scale = Vector3.ONE * STONE_TILE * 1.4
+	timber.roughness = 0.95
+
+	for side: float in [-1.0, 1.0]:
+		var pier := MeshInstance3D.new()
+		pier.name = "GatePier%s" % ("L" if side < 0.0 else "R")
+		var pier_box := BoxMesh.new()
+		# Sunk a metre so an uneven causeway cannot open a gap under a pier --
+		# the same reason `_build_wings` buries its wing bases.
+		pier_box.size = Vector3(PIER_W, PIER_H + 1.0, PIER_D)
+		pier.mesh = pier_box
+		pier.material_override = stone
+		pier.position = Vector3(side * half, (PIER_H + 1.0) * 0.5 - 1.0, 0.0)
+		add_child(pier)
+
+		# A capstone, proud on all four faces: the one cheap cue that reads as
+		# dressed masonry rather than as an extruded box.
+		var cap := MeshInstance3D.new()
+		cap.name = "GatePierCap%s" % ("L" if side < 0.0 else "R")
+		var cap_box := BoxMesh.new()
+		cap_box.size = Vector3(PIER_W + 0.34, 0.34, PIER_D + 0.34)
+		cap.mesh = cap_box
+		cap.material_override = stone
+		cap.position = Vector3(side * half, PIER_H + 0.17, 0.0)
+		add_child(cap)
+
+		_hang_sigil_banner(Vector3(side * half, PIER_H - 0.55, -PIER_D * 0.5 - 0.05))
+
+	# The lintel across the top: this is what makes the thing a GATE in
+	# silhouette instead of a fence with two posts beside it.
+	var lintel := MeshInstance3D.new()
+	lintel.name = "GateLintel"
+	var lintel_box := BoxMesh.new()
+	lintel_box.size = Vector3(half * 2.0 + PIER_W, LINTEL_H, PIER_D * 0.62)
+	lintel.mesh = lintel_box
+	lintel.material_override = timber
+	lintel.position = Vector3(0.0, PIER_H - LINTEL_H * 0.5 - 0.4, 0.0)
+	add_child(lintel)
+
+
+## The same three-box banner the Hall hangs (body, selvage edges, two tails),
+## wearing the shared compass sigil. Kept small and local rather than reaching
+## into `stronghold.gd`: that file's `_hang_banner` is bound to the Hall's own
+## floor/skirt frame, and this gate is 160 m away on open ground.
+const GATE_BANNER_W := 1.05
+const GATE_BANNER_H := 2.6
+const GATE_BANNER_T := 0.06
+func _hang_sigil_banner(at: Vector3) -> void:
+	var holder := Node3D.new()
+	holder.name = "SigilBanner"
+	holder.position = at
+	add_child(holder)
+
+	var cloth := TETHER_SIGIL.cloth_material(FACTION_CLOTH)
+	var body_h := GATE_BANNER_H * 0.74
+	var panel := MeshInstance3D.new()
+	panel.name = "BannerCloth"
+	var panel_box := BoxMesh.new()
+	panel_box.size = Vector3(GATE_BANNER_W, body_h, GATE_BANNER_T)
+	panel.mesh = panel_box
+	panel.material_override = cloth
+	panel.position = Vector3(0.0, -body_h * 0.5, 0.0)
+	holder.add_child(panel)
+
+	# The mark, on its own quad. See `tether_sigil.gd::cloth_material` for why it
+	# is not baked into the panel's material. The banner hangs on the pier's -Z
+	# face, which is the side the road arrives from, so that is its outward
+	# normal in this holder's frame.
+	var device := TETHER_SIGIL.device(
+		Vector2(GATE_BANNER_W * 0.66, body_h * 0.6), FACTION_CLOTH.lightened(0.06),
+		Vector3.FORWARD, GATE_BANNER_T * 0.62)
+	device.position += Vector3(0.0, -body_h * 0.46, 0.0)
+	holder.add_child(device)
+
+	var tail_h := GATE_BANNER_H - body_h
+	for side: float in [-1.0, 1.0]:
+		var tail := MeshInstance3D.new()
+		tail.name = "BannerTail"
+		var tail_box := BoxMesh.new()
+		tail_box.size = Vector3(GATE_BANNER_W * 0.42, tail_h, GATE_BANNER_T)
+		tail.mesh = tail_box
+		tail.material_override = cloth
+		tail.position = Vector3(side * GATE_BANNER_W * 0.29, -body_h - tail_h * 0.5, 0.0)
+		holder.add_child(tail)
