@@ -86,7 +86,7 @@ CONTROLLER-MAP the hammer *is* the pad route into build mode. One line in
 
 ## Verdict per loop
 
-### Building — H1. **Placement works. Getting INTO build mode does not.**
+### Building — H1. **Placement works. Getting into build mode was broken; now fixed.**
 
 What passes, played with a pad:
 
@@ -102,7 +102,7 @@ What passes, played with a pad:
   strip beside the full control list — "Something is already here", "Too steep
   to build here", "Can't afford this — check the build menu for what's short".
 
-**The failure, and it is the worst thing I found in section H:**
+**The failure, and it was the worst thing in section H — now fixed and re-verified:**
 
 ```
 standing on the clearing, arbiter winner <none>
@@ -148,6 +148,10 @@ Nothing resembling a production chain: a small catalogue, and the chapter's
 whole ask is a Camp (tent + fire + bedroll) plus one Creature Bed.
 
 ### Gathering and crafting — I4. **PASS, with one doc/code drift.**
+
+(Corrected twice on the way here. My first verdict said gathering silently did
+nothing — I had checked only the inventory count. My second stood 2.6 m from a
+node whose prompt radius is 2.4 m. Both were the harness, not the game.)
 
 Gathering is tool-gated and **says so**: with no axe equipped, the prompt is
 offered and actionable, the press is refused, and `harvest_node.gd` pushes
@@ -204,11 +208,35 @@ include them. It works from the hotbar, if they know to put berries there. The
 `tests/test_food.gd::test_every_food_item_restores_satiety` passes throughout,
 because it calls `vitals.eat()` directly and never touches the routing.
 
-**Proposed patch, not applied:** give the picker a player row when the focused
-item has both `satiety` and `creature_food`. That touches `_eligible`,
-`_ineligible_reason`, `_apply_to_creature` and the row builder in a picker
-shared by potions, tonics, elixirs and TMs — bigger than "clear and local", so
-it is written up rather than jammed in beside a physics fix.
+**Fixed.** The picker now carries the trainer's own row, so "Who eats it?"
+includes the person asking. A row rather than a reorder: D68 is right that
+berries are the team's food and "the team is the reason the tournament asks you
+to gather them", so swapping the two branches would just break the other half.
+The screen was already asking the right question; it was missing an answer.
+
+Two things fell out of doing it:
+
+- **An empty belt refused food outright.** `_open_target_picker()` began with an
+  unconditional "Nobody on the belt yet." — so before the first catch, which is
+  most of the opening, the hungry player could not eat at all. Food now passes
+  that guard; potions, revives, tonics, elixirs and TMs genuinely need a
+  creature and keep it. Found by the new test, not by reading.
+- **`_targeting_food` / `_targeting_tonic` / `_targeting_elixir` were never
+  cleared when a picker closed** — only on a full tab rebuild. `_eligible()`
+  tests them in order with food second, so feeding a creature and then using a
+  potion evaluated the potion's picker under the food rule. Latent before this
+  task; no longer latent once a stale `_targeting_food` also draws a trainer
+  row. Cleared in `_end_targeting()` where the other four already were.
+
+**And the test that hid it.** `test_food.gd` passed throughout, because it calls
+`vitals.eat()` directly; its own comment claimed it drove the path "exactly the
+way `tab_backpack.gd`'s `_read_use()` does it", which had stopped being true.
+Added `tests/smoke_backpack_player_eats.gd`: real joypad presses through the
+live InputMap, the real menu shell, the real tab, and no `eat()` call anywhere.
+**Verified to fail cleanly against the unfixed code** ("tab_backpack.gd has no
+trainer row in its target picker…", exit 1) and pass against the fix. Wired into
+`ci.yml`'s smoke matrix — it needs no world build, so it costs seconds.
+`test_food.gd`'s comment now says what it does and does not cover.
 
 ### Injury, beds and rest — H3. **PASS.**
 
@@ -223,10 +251,19 @@ it is written up rather than jammed in beside a physics fix.
   `creature_bed.gd::build_real(player_built)` correctly refuses to credit the
   chapter's objective for world-owned beds.
 
-**Gap:** I did not play a camp rest myself. The authored camps are newly real on
-this branch and `tests/smoke_authored_camps.gd` drives the full night at one —
-but that is somebody else's evidence, not mine, and the brief asked me to
-exercise them. **Unevidenced by this lane.**
+**Camps — played, and they work.** Ran `tests/smoke_authored_camps.gd` against
+the real world: five authored camps carry a rest block and every one of them
+stood up with **rest + craft + a creature bed** — `trail_camp` (346, 935),
+`ranger_camp` (-256, 2260), `riverwatch_rest` (215, 3697),
+`highfield_stockcamp` (277, 5652), `the_waystop` (-21, 7457). Each offers
+"Rest until morning" where the player stands, and pressing it passed the night:
+**day 1 → 2, and the bedded creature woke at full HP.** H5's "recovery and
+crafting" is real at every one.
+
+Worth noting for pacing rather than as a defect: all five sit in bands 2–5, the
+nearest about a kilometre from the village. Band 1 has no authored camp — the
+opening's answer to rest is the camp you build yourself, which is what the
+build ladder teaches.
 
 ### The five-creature limit — G4. **PASS, and it is the best-shaped thing in my scope.**
 
@@ -301,17 +338,24 @@ and five bound actions). Its own comment admits "nothing reads it yet".
 
 1. `player_controller.gd::_clamp_runaway_velocity()` + `movement.json`
    `locomotion.max_speed` — the 7,000,000 m launch.
-2. The hammer in `smoke_gate_a_build_segment_meadows.gd`'s fixture.
-3. The T5 harnesses, including a fix to their own navigator callback signature
+2. `playground_hud.gd::_hammer_opens_the_catalogue()` — build mode no longer
+   forfeits its only pad route to an offer that would refuse the press.
+3. `tab_backpack.gd` — the trainer's row in the eater picker, the empty-belt
+   food guard, and the uncleared targeting state.
+4. `tests/smoke_backpack_player_eats.gd` + its `ci.yml` matrix entry — the
+   reachability test `test_food.gd` was never going to be.
+5. The hammer in `smoke_gate_a_build_segment_meadows.gd`'s fixture.
+6. The T5 harnesses, including a fix to their own navigator callback signature
    (`stick_navigator.gd`'s fourth argument is the stick driver and takes two
    floats; a no-arg callback meant the navigator pushed nothing and two runs
    reported walks that never happened).
-4. `shots/t5-care/*.png` — four real ghost frames, `capture_check` clean.
+7. `shots/t5-care/*.png` — four real ghost frames, `capture_check` clean.
 
 ## What is still owed on section H
 
-- The Build-press theft by nearby gatherables (H1) — the one I would fix first.
-- Ghost contrast and its position behind the player (H1).
-- Dismantle and refund, played (H1).
-- A camp rest, played (H5).
-- A second death, played, for the multiple-satchel rule.
+- **Ghost contrast and its position behind the player** (H1) — a teal wireframe
+  in the grass's own hue family, drawn 3 m ahead where the over-the-shoulder
+  camera puts the player's body in front of it. Frames are in `shots/t5-care/`.
+- **Dismantle and refund, played** (H1) — repro in this file; ten minutes for
+  someone who can watch the highlight.
+- **A second death, played**, for the multiple-satchel rule.

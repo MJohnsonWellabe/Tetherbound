@@ -2037,6 +2037,17 @@ func _end_targeting() -> void:
 	_targeting_heal = 0.0
 	_targeting_revive = 0.0
 	_targeting_tm = ""
+	# T5-CARE: these three were cleared only by `_build()`, i.e. on a full tab
+	# rebuild, so they survived a closed picker. `_eligible()` tests them in
+	# order and `_targeting_food` comes second, ahead of elixir, TM and heal --
+	# so feeding a creature and then using a POTION evaluated the potion's
+	# picker under the food rule. Latent before this task (a fresh session has
+	# them empty, and only that exact order of two uses reaches it) and no
+	# longer latent now that a non-empty `_targeting_food` also draws the
+	# trainer's row. Cleared where the other four already are.
+	_targeting_food = ""
+	_targeting_tonic = ""
+	_targeting_elixir = ""
 	menu.call("hold_input", false)
 	menu.call("override_footer", "")
 	_target_panel.visible = false
