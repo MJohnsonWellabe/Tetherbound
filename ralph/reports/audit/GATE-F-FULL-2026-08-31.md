@@ -302,9 +302,11 @@ Named so the gap is not mistaken for a verdict:
 - **Anything about how the chapter looks.** No frames were taken. The capture
   lane was not run: this container has no GPU, and Gate F run 2 measured a
   rendered 1920×1080 frame at 12.7 s, which prices the capture lane in hundreds
-  of hours. Every prescribed shot in S01–S03 was **delegated** to its capture
-  lane and remains owed by the run — 16 of them, listed per segment in each
-  `DELEGATED.md`.
+  of hours. Every prescribed shot was **delegated** to its capture lane and
+  remains owed by the run: `tools/gate_f/run_inventory.py` reports
+  **0 of 61 prescribed frames present on disk**, itemised in
+  `ralph/reports/gate-f-full/RUN_INCOMPLETE.md`. That debt is recorded, not
+  discharged — which is the distinction CD-2 exists to keep.
 - **Everything from the tournament onward.** S04–S10e, five of six bands, the
   Warrens, the river, the Stronghold, the Warden, the legendary choice and the
   world healing are all unplayed at this candidate.
