@@ -93,6 +93,30 @@ const STONE_RING := "res://assets/props/generated_camp/campfire_stone_ring.glb"
 const STONE_RING_SCALE := 0.8
 const FIRE_SCALE := 0.55
 
+## T1-CAST-FIX (JUDGE-3 sec1b: the lit fire "reads as a yellow crystal
+## cluster, not a fire"). The visible flame is now the Meshy-generated flame
+## sculpt that has sat unused under generated_camp/ since the authored
+## trail_camp reverted it -- props.json's `_why` records that revert as "an
+## opaque carved spire with no emissive light cast", which an isolation
+## render (tools/_capture_flame_isolation.gd) showed was never a SHAPE
+## problem: raw, the sculpt is a genuinely flame-shaped swirl that merely
+## reads as carved wood because nothing lit it. `ignite_mesh()` +
+## `hide_fire_surface()` are the fix: the sculpt glows from its own baked
+## warm-to-hot gradient and Bonfire_Fire's old faceted `Fire` cone (the
+## actual "crystal" in the judgement) is hidden underneath it. Energy 0.5 --
+## the same isolation pass showed 1.5 already clips the whole sculpt to
+## cream-white under the outdoor ACES tonemap, exactly the clipping
+## `campfire_glow.gd`'s own `ignite_mesh` header warned about.
+const CAMP_FLAME := "res://assets/props/generated_camp/camp_flame.glb"
+## Raw sculpt is 2.00m tall x ~0.5m wide (isolation probe); the log pile it
+## sits on tops out at 0.616m raw * FIRE_SCALE = ~0.34m world
+## (tools/_probe_flame_fit.gd). 0.7 gives a ~1.4m flame over a ~1.2m-wide
+## pile, and the base sinks below the pile's top so the flame emerges from
+## between the logs rather than balancing on them.
+const CAMP_FLAME_SCALE := 0.7
+const CAMP_FLAME_POSITION := Vector3(0.0, 0.18, 0.0)
+const CAMP_FLAME_ENERGY := 0.5
+
 const FADE_SECONDS := 1.2
 
 var _ghost_meshes: Array[MeshInstance3D] = []
@@ -172,17 +196,33 @@ func _spawn_meshes(solid: bool) -> void:
 		bed.call("build_ghost", PLAYER_BED)
 		_ghost_bed = bed
 	var fire := _mesh(BONFIRE, Vector3.ZERO, FIRE_SCALE)
-	# The bonfire mesh's own `Fire` surface, lit. `Bonfire_Fire.obj` was long
-	# believed to be one combined mesh whose flame could not be addressed --
-	# true of the OBJ file, false of what Godot imports, since the OBJ loader
-	# splits by material (BAND1-D1, tools/_probe_bonfire_fire.gd). Until this,
-	# the player-built camp's fire was a pile of unlit logs with a light
-	# floating above it, which is the same defect the authored trail camp
-	# failed a blind judgement on. Only on the real thing: the drag-around
-	# ghost is meant to read as a preview, not as a fire already burning.
+	# The fire, lit -- only on the real thing: the drag-around ghost is meant
+	# to read as a preview, not as a fire already burning. Bonfire_Fire's own
+	# faceted `Fire` cone is hidden and the generated flame sculpt stands in
+	# its place (see CAMP_FLAME's header for the JUDGE-3 history that forced
+	# this); the logs keep the shared bark retexture. The overlay is the same
+	# light/embers/smoke rig every authored campfire gets through props.gd's
+	# glow branches, built WITHOUT its billboard halo (`new(false)`) because
+	# the sculpt already supplies the flame's visible shape -- the exact
+	# pairing props.gd's `glow: "flame_mesh"` branch already ships. Child of
+	# `fire` itself (not of `self`) so the counter-scale cancels `FIRE_SCALE`
+	# the way props.gd counter-scales its own `scale_factor` -- the overlay's
+	# sizes are absolute metres and must not shrink with the log pile
+	# (`campfire_glow.gd`'s own header).
 	if fire != null and solid:
-		CAMPFIRE_GLOW.ignite(fire)
+		CAMPFIRE_GLOW.hide_fire_surface(fire)
 		CAMPFIRE_GLOW.texture_logs(fire)
+		var flame_scene := load(CAMP_FLAME) as PackedScene
+		if flame_scene != null:
+			var flame := flame_scene.instantiate() as Node3D
+			flame.name = "CampFlame"
+			flame.position = CAMP_FLAME_POSITION
+			flame.scale = Vector3.ONE * CAMP_FLAME_SCALE
+			add_child(flame)
+			CAMPFIRE_GLOW.ignite_mesh(flame, CAMP_FLAME_ENERGY, true)
+		var overlay: Node3D = CAMPFIRE_GLOW.new(false)
+		overlay.scale = Vector3.ONE / FIRE_SCALE
+		fire.add_child(overlay)
 	if not solid:
 		if fire != null:
 			_ghost_meshes.append(fire)

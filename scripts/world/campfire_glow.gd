@@ -137,6 +137,36 @@ static func ignite(prop: Node) -> int:
 	return lit
 
 
+## T1-CAST-FIX: hides `Bonfire_Fire.obj`'s own `Fire` surface entirely, for a
+## caller replacing it with a real flame sculpt (`camp_flame.glb` +
+## `ignite_mesh()` below). JUDGE-3 sec1b called the ignite()'d cone "opaque
+## flat yellow polygonal cones... reads as a yellow crystal cluster", and two
+## follow-up rounds of making that same cone translucent (uniform alpha 0.78
+## then 0.32, plus layered soft billboard cards around it) were each
+## blind-judged straight back to "hard-edged... broken glass... cut from
+## cardboard" -- a uniform alpha never softens a hard polygon edge, it only
+## fades how visible that same crisp edge is. The fix that finally moved the
+## verdict was not tuning this cone at all but swapping in the generated
+## flame sculpt that already existed for exactly this purpose; this function
+## is the half of that swap that retires the cone. A transparent override
+## material rather than deleting geometry: the Mesh resource is shared across
+## every instance (same reason `ignite()` overrides instead of mutating), and
+## the authored campfires that still use `ignite()` must keep their cone.
+static func hide_fire_surface(prop: Node) -> void:
+	for instance in _meshes(prop):
+		var mesh: Mesh = instance.mesh
+		if mesh == null:
+			continue
+		for i in mesh.get_surface_count():
+			if mesh.surface_get_name(i) != FIRE_SURFACE_NAME:
+				continue
+			var material := StandardMaterial3D.new()
+			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			material.albedo_color = Color(0.0, 0.0, 0.0, 0.0)
+			material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+			instance.set_surface_override_material(i, material)
+
+
 ## T1-CAST (§17). `Bonfire_Fire.obj`'s `Wood`/`LightWood` surfaces are
 ## genuinely textureless in the source pack -- confirmed by reading
 ## `Bonfire_Fire.mtl` directly, `Kd` colour only, no `map_Kd` line on either
