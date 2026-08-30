@@ -757,3 +757,72 @@ Everything from S05 on in this run is therefore **rig-health evidence only** —
 it answers "would the harness carry the chain if the game let it?", which is a
 useful and separate question, and it answers nothing about the chapter. Any
 verdict below S04 in this run's segment table must be read that way.
+
+---
+
+## RIG-F6 — the journey walked into the village fence, at both ends of the chapter
+
+**Severity:** RIG, **BLOCKER-shaped for the chain**. **Fixed by this lane.**
+**Predicted from config before the run reached it, then measured.**
+
+`data/config/village_boundary.json` gave the village a closed edge on
+2026-08-30 — after most of these segments were written — and
+`village_boundary.gd` builds it as sealed `StaticBody3D` panels with a hole only
+at each gate (`gate_clear_m` 3.4). Two journey walks still crossed that line
+where there is no gate.
+
+### S05-19, leaving the village
+
+Straight line from the tournament ground to the band-1 spine at (−40, 180). It
+crosses the outline at **(16.6, 21.5)**, **37.6 m from the nearest gate**.
+Measured:
+
+```
+S05-19  FAIL did not reach (-40, 180) in 11700 walking frames;
+        stopped 155.8 m short at (-15.0, 1.0, 26.0)   (0 held)
+S05-23  FAIL did not reach (-282, 314) in 9000 walking frames;
+        stopped 393.0 m short at (-15.0, 1.0, 26.0)   (0 held)
+```
+
+**(−15, 26) is the outline's own `[-15, 27]` vertex.** The player was pinned
+against the fence, and every remaining walk in the segment would have failed
+identically from the same spot after burning its full budget. The segment was
+stopped rather than left to grind (`RESTARTS.md`, `S05-aborted-1/`).
+
+### S10e-99, coming home
+
+The chapter's last walk, South Bridge → the village well, crosses at
+**(9.7, 23.8)**, **30.9 m from the nearest gate**. Never reached by any run, but
+it is the same defect, and it would have put the final beat of the Meadows
+against a fence panel.
+
+### This is not a game defect, and that was checked rather than assumed
+
+`road_gate_open` is set from S02's key and `village_boundary.gd` swings **both**
+gates on that one flag, so a player leaves and returns freely.
+`terrain_playground.json`'s third authored route is
+`(10,−10) → (−14,14) → (−45,45) → (−105,115)` — the Pond road — and it crosses
+the outline **at PondGate (−21, 21)**, which is the whole point of a gate being
+computed from a road/outline intersection. The player has a door. Only the
+instrument was walking through walls.
+
+### Fixed
+
+S05, its capture twin S05C, and S10e now walk it in three legs — up to the gate,
+through it, then on — and every leg was checked against the outline before
+authoring: **the only crossing on any of them is the gate itself.** The capture
+twin is mirrored in the same commit, because run 7's handover records a twin
+being left behind after its journey lane was repaired as a mistake this project
+has now made three times.
+
+### The general form, which is worth more than the two fixes
+
+**Every straight-line instrument in this repository that crosses the village
+outline is now wrong, and nothing checks for it.** This lane found these two by
+running the outline against every `move_to` leg in all fourteen journey
+segments, which is fifteen lines of Python and could be a test:
+`tests/test_village_boundary.gd` already loads the outline and already knows how
+to ask whether a point is inside it. A test that walks the rig's own authored
+legs against the fence would have caught both of these before a run, and would
+catch the next one. **That is the single cheapest instrument improvement
+available to the next lane.**
