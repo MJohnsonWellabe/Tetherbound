@@ -200,7 +200,7 @@ func _act(ally_body: Node3D, foe_body: Node3D) -> void:
 	var to := foe_body.global_position - ally_body.global_position
 	to.y = 0.0
 	var gap := to.length()
-	var reach := _reach()
+	var reach := _reach(ally_body, foe_body)
 
 	if use_switching and _should_switch():
 		if bool(manager.call("cycle_active", 1)):
@@ -212,7 +212,7 @@ func _act(ally_body: Node3D, foe_body: Node3D) -> void:
 	# The whole difference between the two pilots. SPACER treats the wind-up
 	# ring as information; BRAWLER never looks at it.
 	if pilot == Pilot.SPACER and bool(manager.call("enemy_is_winding_up")) \
-			and gap < _enemy_reach() + 0.8:
+			and gap < _enemy_reach(ally_body, foe_body) + 0.8:
 		aim_along(-to)
 		Input.action_press("move_forward")
 		await tree.physics_frame
@@ -220,7 +220,9 @@ func _act(ally_body: Node3D, foe_body: Node3D) -> void:
 		return
 
 	aim_along(to)
-	if gap > reach * 0.6:
+	# Comfortably inside reach rather than on its edge, so a knockback or the
+	# opponent's own step does not turn the swing into a whiff.
+	if gap > reach * 0.8:
 		Input.action_press("move_forward")
 		await tree.physics_frame
 		Input.action_release("move_forward")
@@ -257,18 +259,53 @@ func _should_switch() -> bool:
 	return not options.is_empty()
 
 
-func _reach() -> float:
-	var cfg: Dictionary = _config().get("player_quick", {})
-	return float(cfg.get("range", 2.6))
+## How far the player's quick attack ACTUALLY reaches between these two bodies.
+##
+## Not `combat.json`'s flat `player_quick.range`. `combat_manager.gd::
+## _with_reach_for_the_bodies()` grows the reach with the two creatures' radii,
+## because `enemy.body_clearance` (2.75) already holds them that far apart:
+## against a Meadowhart the real reach is 4.63m, not the configured 2.6m.
+##
+## This cost the lane a whole ladder run and is worth recording. A pilot closing
+## to a fraction of the FLAT 2.6m is trying to stand 1.56m from a creature whose
+## own capsule stops it at 1.50m — so against a large opponent it walks into the
+## body forever and never presses attack. The symptom in the log was a rung
+## reported as a loss with **0 hits dealt and 22 taken in 59.8 seconds**, which
+## reads exactly like a brutal fight and was actually a broken measurement. Any
+## probe that closes on a distance must ask the same question the manager asks.
+func _reach(ally_body: Node3D, foe_body: Node3D) -> float:
+	return _spaced(float(_config().get("player_quick", {}).get("range", 2.6)),
+		ally_body, foe_body)
 
 
-func _enemy_reach() -> float:
-	var cfg: Dictionary = _config().get("enemy", {})
-	return float(cfg.get("range", 2.6))
+## The same, for the opponent's swing — `wild_creature.gd::_spaced_config()`
+## floors its `range` off the identical clearance rule, so the distance SPACER
+## has to be outside of to dodge a wind-up grows with the bodies too.
+func _enemy_reach(ally_body: Node3D, foe_body: Node3D) -> float:
+	return _spaced(float(_config().get("enemy", {}).get("range", 2.6)),
+		ally_body, foe_body)
+
+
+func _spaced(base: float, ally_body: Node3D, foe_body: Node3D) -> float:
+	var mine := 0.5
+	var theirs := 0.5
+	if ally_body != null and ally_body.has_method("body_radius"):
+		mine = float(ally_body.call("body_radius"))
+	if foe_body != null and foe_body.has_method("body_radius"):
+		theirs = float(foe_body.call("body_radius"))
+	var clearance := float(_config().get("enemy", {}).get("body_clearance", 1.35))
+	return maxf(base, (mine + theirs) * clearance + 0.5)
+
+
+## `combat_math.gd` caches the parsed file itself, but this is read four times
+## per physics frame across a whole ladder, so the script lookup is held too.
+var _math: GDScript = null
 
 
 func _config() -> Dictionary:
-	return (load("res://scripts/combat/combat_math.gd") as GDScript).call("config")
+	if _math == null:
+		_math = load("res://scripts/combat/combat_math.gd") as GDScript
+	return _math.call("config")
 
 
 ## Hold for two physics frames before releasing: `is_action_just_pressed` is
