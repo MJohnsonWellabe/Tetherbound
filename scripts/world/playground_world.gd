@@ -16,6 +16,7 @@ extends Node3D
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
+const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const WATER := preload("res://scripts/world/water.gd")
 const VILLAGE := preload("res://scripts/world/village.gd")
@@ -386,6 +387,10 @@ var _spawn_position: Vector3 = Vector3.ZERO
 
 
 func _ready() -> void:
+	var perf_cfg := PERF_CONFIG.config()
+	if perf_cfg.has("collision_stream_interval_s"):
+		COLLISION_STREAM_INTERVAL = maxf(0.05, float(perf_cfg["collision_stream_interval_s"]))
+
 	# RG7. Mid-session Load restores persistent flags into an already-built
 	# Meadows scene; this world owns reconciling its authored one-shot props.
 	add_to_group("progression_restore")
@@ -479,7 +484,11 @@ func _apply_dynamic_collision() -> void:
 ## `COLLISION_STREAM_INTERVAL`'s own comment for why a periodic sweep is
 ## enough. `_place_player()`/`_dress_the_meadow()` cover frame one; this
 ## covers every frame after the player actually moves.
-const COLLISION_STREAM_INTERVAL := 0.5
+##
+## T3-INSTALL, P1: `performance.json`'s `collision_stream_interval_s` had no
+## reader. Read once in `_ready()` (below `COLLISION_STREAM_INTERVAL`'s own
+## fallback default), same pattern as `vegetation.gd`'s two sibling levers.
+var COLLISION_STREAM_INTERVAL := 0.5
 var _collision_stream_elapsed: float = 0.0
 
 

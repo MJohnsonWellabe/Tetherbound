@@ -376,7 +376,7 @@ static func creature_for(entry: Dictionary) -> RefCounted:
 ## human.
 static func model_config(spec: Dictionary) -> Dictionary:
 	var rank := str(spec.get("rank", ""))
-	var cfg := NPC_RANKS.config_for(rank) if rank != "" \
+	var cfg := NPC_RANKS.config_for(rank, str(spec.get("base", ""))) if rank != "" \
 		else CHARACTER_MODEL.config_for(str(spec.get("config_key", "")))
 	if cfg.is_empty():
 		return cfg

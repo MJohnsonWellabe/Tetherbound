@@ -261,18 +261,30 @@ func test_the_worst_multiplier_the_real_data_can_produce_is_one_double_weakness(
 		+ "the bound -- the number is not the point, the reasoning is.") % [
 			worst, worst_pairings, double_weakness])
 
-	# Exactly one species reaches it, and it is the one the design note names.
-	# This is the half of the assertion that would catch a chart edit that
-	# quietly made a second creature double-weak.
-	assert_eq(worst_pairings.size(), 1,
+	# T3-INSTALL, 2026-08-30: Cindercub's mesh landed and it entered
+	# species.json, which is the exact, named-in-advance second name this
+	# test's own comment above said to expect -- "a second name in the list
+	# below, not a new number". Ashtusk and Cindercub are both Fire/Ground,
+	# so both are forced into the double weakness by the same owner fixed
+	# pair (`water beats fire`) meeting the same shipped edge
+	# (`water beats ground`); there is no version of the chart that honours
+	# the owner and keeps only one of them. A THIRD name would still be a new
+	# design decision and should still fail this test.
+	assert_eq(worst_pairings.size(), 2,
 		("%d pairings reach the double weakness (%s). MATCHUPS_DESIGN section 5.1 argues for exactly "
-		+ "one, forced by the owner's `water beats fire` meeting the shipped `water beats ground`. "
-		+ "A second one is a new design decision, not a side effect.") % [
+		+ "Ashtusk and Cindercub (both Fire/Ground), forced by the owner's `water beats fire` meeting "
+		+ "the shipped `water beats ground`. Any other count is a new design decision, not a side effect.") % [
 			worst_pairings.size(), worst_pairings])
-	assert_true(str(worst_pairings[0]).begins_with("water move into ashtusk"),
-		("the double weakness is reached by '%s'; the design note argues it should be a water move "
-		+ "into Ashtusk (Ground/Fire), which is the pairing the owner's fixed pairs force")
-			% worst_pairings[0])
+	var pairing_species: Array = []
+	for pairing: Variant in worst_pairings:
+		pairing_species.append(str(pairing).split(" into ")[1].split(" (")[0])
+	pairing_species.sort()
+	assert_eq(pairing_species, ["ashtusk", "cindercub"],
+		("the double weakness should be reached by water moves into ashtusk and cindercub (both "
+		+ "Ground/Fire); got %s instead") % [worst_pairings])
+	for pairing: Variant in worst_pairings:
+		assert_true(str(pairing).begins_with("water move into"),
+			"the double weakness should be reached by a WATER move; got '%s'" % pairing)
 
 	# The floor did NOT move. No creature resists the same attacker on both
 	# halves, so the natural double resistance (0.64) stays unreachable and a

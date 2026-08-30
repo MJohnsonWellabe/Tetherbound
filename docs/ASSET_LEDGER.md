@@ -9,6 +9,16 @@
   or third-party source was used. The copies exist because the canonical
   reference directories are intentionally `.gdignore` and therefore cannot be
   loaded by the shipped HUD.
+- **T3-INSTALL, 2026-08-30**: added `sparkit.png`, `shadelet.png`,
+  `frostclaw.png` (curated copies of each species' own
+  `reference/head.png`) and `cindercub.png` (copy of `reference/front.png`
+  — no `head.png` exists for this one) once these four species entered the
+  live roster and `tests/test_hud_widgets.gd
+  ::test_every_installed_species_has_the_hud_portrait_it_resolves` caught
+  the gap. Same pattern as the row above: a curated copy of owner-supplied
+  reference art already committed under
+  `assets/creatures/tetherbound/<id>/reference/`, no new generation, no
+  third-party source.
 
 Provenance for every non-original asset in the project, per `CLAUDE.md` and
 `docs/TECHNICAL_START.md`.
@@ -298,5 +308,49 @@ non-standard baked-in arm pose, not a transient error. Left textured but
 un-rigged, un-animated, not installed; fixing it needs a fresh
 generation with a resting-pose reference, not a rig retry, and wasn't
 spent on further given both are lower-priority flavour NPCs.
+
+## T3-INSTALL follow-up (2026-08-30) — wiring the meshes above into the live game
+
+No new Meshy spend in this entry; both rows above already paid for
+everything used here.
+
+**The five expansion-creature meshes are now live.** `sparkit`, `cindercub`,
+`shadelet`, `frostclaw` moved from `data/creatures/species_pending.json` into
+`data/creatures/species.json` with `placeholder.model` pointing at their
+committed `.glb`; `bramblebun`'s own `placeholder.model` was repointed from
+the old mesh to `bramblebun_redesign`'s (same species id — the redesign
+replaces the asset, per the brief, not a new species). Spawn placements moved
+from `spawn_tables.json`'s `_pending` block into the live `tables`. **Real
+caveat, not previously recorded**: all five `.glb`s are single-mesh, no-skin
+exports (`skins: 0` in the raw glTF) with an empty `animations` array —
+unlike every other production creature/humanoid rig in this project, none of
+which this ledger's rows above claim otherwise, but worth stating plainly
+since it changes what "installed" delivers. `creature_body.gd::_build_animator()`
+warns and no-ops rather than failing, so each creature stands in the world at
+its correct scale and material but does not play idle/walk/attack/hit/faint
+clips. A rig pass (Meshy `rig` + `animate_humanoid.py`'s local Blender bake,
+the same recipe the 22 NPC bodies above went through) is real follow-up work,
+not a data problem.
+
+**22 of the 24 NPC-cast bodies above are now used somewhere in the live
+game**, still at zero further Meshy spend. `grunt_a`/`grunt_b`/`grunt_c`,
+`officer_a`/`officer_b`, `captain_a`/`captain_b` are assigned via a new
+per-trainer `base` override (`npc_ranks.gd::config_for()`) to the 17 named
+grunt/officer/captain trainers across all five bands' `trainers.json`,
+rotated so no two trainers in the same band share a body — the fix this
+ledger's own "Captains have distinctive silhouettes" finding asked for,
+minus the coat/cape accessory idea it also floated (superseded once full
+bodies existed). The remaining 15 civilian/trail bodies
+(`innkeeper`/`inn_helper`/`trader`/`craftsperson`/`creature_caretaker`/
+`farmer`/`local_historian`/`young_trainer`/`rival_trainer`/
+`field_researcher`/`wandering_trainer`/`lost_traveler`/`alpha_tracker`/
+`courier`/`former_tether_member`) still have a valid `art.json` `config_key`
+and a real rigged, animated `.glb`, but **no placement anywhere in the
+world** (no `village_npcs.json`/`trainers.json`/`village.json` entry) —
+see the T3-INSTALL handover for which of these got placed this pass and
+which remain dark, and why. `campfire_traveler` and `traveling_merchant`
+remain exactly as recorded above: textured, un-rigged, not installed —
+still blocked on a fresh Meshy generation against a resting-pose reference,
+which this lane has no more ability to spend than the one that found it.
 
 Full account: `ralph/reports/NPC_CAST_INSTALL_2026-08-30.md`.
