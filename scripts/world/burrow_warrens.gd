@@ -2078,7 +2078,8 @@ func _dress_the_guardian(spec: Dictionary) -> void:
 	# AFTER set_alpha(), because it edits the per-body material duplicates that
 	# call creates.
 	_let_the_guardian_carry_its_own_light(
-		float(spec.get("glow_energy", 0.0)), float(spec.get("rim", 0.0)))
+		float(spec.get("glow_energy", 0.0)), float(spec.get("rim", 0.0)),
+		Color(str(spec.get("glow_tint", "#ffffff"))))
 	_stand_the_guardian_in_its_own_light(spec.get("aura_light", {}) as Dictionary)
 	# Same marker `_make_alpha()` sets, so anything asking "is this an alpha"
 	# gets one answer for the field and the dungeon alike.
@@ -2129,12 +2130,13 @@ func _dress_the_guardian(spec: Dictionary) -> void:
 ## finally has a light to work with, so the boss runs it at full strength --
 ## on its own duplicates only, never on the shared alpha material, so field
 ## alphas keep their 0.65 identity tell. 0 leaves set_alpha()'s value alone.
-func _let_the_guardian_carry_its_own_light(energy: float, rim: float = 0.0) -> void:
+func _let_the_guardian_carry_its_own_light(
+		energy: float, rim: float = 0.0, tint: Color = Color.WHITE) -> void:
 	if (energy <= 0.0 and rim <= 0.0) or _guardian == null:
 		return
 	var model: Node = _guardian.get_node_or_null(^"Model")
 	if model != null:
-		_wire_self_light(model, energy, rim)
+		_wire_self_light(model, energy, rim, tint)
 
 
 ## The other half of the same blind round's verdict: "no special FX, no glow,
@@ -2164,7 +2166,8 @@ func _stand_the_guardian_in_its_own_light(cfg: Dictionary) -> void:
 	_guardian.add_child(light)
 
 
-func _wire_self_light(node: Node, energy: float, rim: float = 0.0) -> void:
+func _wire_self_light(
+		node: Node, energy: float, rim: float = 0.0, tint: Color = Color.WHITE) -> void:
 	if node is MeshInstance3D:
 		var instance := node as MeshInstance3D
 		var mesh: Mesh = instance.mesh
@@ -2181,17 +2184,20 @@ func _wire_self_light(node: Node, energy: float, rim: float = 0.0) -> void:
 				instance.set_surface_override_material(surface, material)
 			if energy > 0.0:
 				material.emission_enabled = true
-				# White modulate so the albedo's own painted colours carry the
-				# glow untinted; the energy is the whole lever and lives in
-				# data.
-				material.emission = Color(1.0, 1.0, 1.0)
+				# The modulate is a colour TEMPERATURE, not a repaint: a blind
+				# round read the untinted white glow as "lit in a different
+				# scene and dropped into this frame" against the den's warm
+				# torch light, so the self-light wears the den's own warmth
+				# (data: `glow_tint`) while the albedo still carries the
+				# painted moss/plate/blaze values underneath.
+				material.emission = tint
 				material.emission_texture = material.albedo_texture
 				material.emission_energy_multiplier = energy
 			if rim > 0.0:
 				material.rim_enabled = true
 				material.rim = rim
 	for child in node.get_children():
-		_wire_self_light(child, energy, rim)
+		_wire_self_light(child, energy, rim, tint)
 
 
 ## --- clearing --------------------------------------------------------------
