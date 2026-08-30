@@ -74,7 +74,7 @@ func _run() -> void:
 	print("  placed at the Village Square apron, settled to %s (ground_height_at=%.2f)" % [
 		str(_player.global_position), ground])
 
-	_nav = NAVIGATOR.new(self, _player, _rig, Callable(self, "_sample"))
+	_nav = NAVIGATOR.new(self, _player, _rig, Callable(self, "_drive_stick"))
 
 	for i in range(1, ROUTE.size()):
 		var xz := ROUTE[i] as Vector2
@@ -116,3 +116,22 @@ func _sample() -> void:
 		_worst_at = p
 	if below > FALL_MARGIN:
 		_fell = true
+
+
+## The stick, the way `gate_a_build_segment.gd::_parse_move_stick` drives it:
+## `stick_navigator.gd` calls this every frame with the x/y it wants held, so
+## it must take two floats. A no-argument callback here silently means the
+## navigator never pushes anything and the player never moves.
+func _drive_stick(x: float, y: float) -> void:
+	Input.action_press(&"move_right", clampf(x, 0.0, 1.0))
+	Input.action_press(&"move_left", clampf(-x, 0.0, 1.0))
+	Input.action_press(&"move_back", clampf(y, 0.0, 1.0))
+	Input.action_press(&"move_forward", clampf(-y, 0.0, 1.0))
+	# The altitude sample rides along here rather than on its own callback:
+	# the navigator has exactly one hook and it is this one.
+	_sample()
+
+
+func _release_stick_actions() -> void:
+	for action: StringName in [&"move_right", &"move_left", &"move_back", &"move_forward"]:
+		Input.action_release(action)
