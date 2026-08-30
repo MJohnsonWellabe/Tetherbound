@@ -43,20 +43,31 @@ const CLEAR_ENOUGH := 6.0
 ## group rather than off its centre point.
 const SITES := [
 	["band0-home-hook", Vector2(60.0, 46.0), 12.0],
-	["band1-grove-interior", Vector2(269.0, 894.0), 14.0],
-	["band1-camp-grove", Vector2(338.0, 961.0), 14.0],
+	["band1-grove-interior", Vector2(265.0, 897.0), 14.0],
+	["band1-camp-grove", Vector2(337.0, 965.0), 14.0],
 ]
 
 
+var _t0: int = 0
+
+
+func _elapsed() -> String:
+	return "%6.1fs" % ((Time.get_ticks_msec() - _t0) / 1000.0)
+
+
 func _init() -> void:
+	_t0 = Time.get_ticks_msec()
 	_run()
 
 
 func _run() -> void:
+	print("[%s] instantiating world" % _elapsed())
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
+	print("[%s] world added; settling %d frames" % [_elapsed(), SETTLE_FRAMES])
 	for _i in SETTLE_FRAMES:
 		await process_frame
+	print("[%s] settled" % _elapsed())
 
 	# The HUD is not the subject and it covers the ground the subject stands on.
 	var stack: Array[Node] = [world]
@@ -95,7 +106,7 @@ func _run() -> void:
 		camera.global_position = eye
 		camera.look_at(look_at, Vector3.UP)
 		print("")
-		print("%s: vantage clearance %.1fm" % [tag, float(placement[2])])
+		print("[%s] %s: vantage clearance %.1fm" % [_elapsed(), tag, float(placement[2])])
 		for preset: String in ["day", "night"]:
 			await _shoot(world, look, director, camera, tag, preset, centre, radius)
 	quit(0)
@@ -114,7 +125,8 @@ func _shoot(world: Node, look: Node, director: Node, camera: Camera3D,
 	# PNG to know whether the pair proves anything.
 	var showing := _visible_night_bodies_near(director, centre, radius)
 	var dark := look != null and bool(look.call("is_dark"))
-	print("  %-6s is_dark=%-5s night bodies visible near site: %d" % [preset, str(dark), showing])
+	print("  [%s] %-6s is_dark=%-5s night bodies visible near site: %d" % [
+		_elapsed(), preset, str(dark), showing])
 
 	for _i in PER_SHOT_SETTLE:
 		await process_frame
@@ -124,7 +136,7 @@ func _shoot(world: Node, look: Node, director: Node, camera: Camera3D,
 	if image != null:
 		var path := "%s/%s-%s.png" % [OUT, tag, preset]
 		image.save_png(path)
-		print("  wrote %s" % path)
+		print("  [%s] wrote %s" % [_elapsed(), path])
 
 
 ## Night-gated bodies standing within the frame's subject area and currently

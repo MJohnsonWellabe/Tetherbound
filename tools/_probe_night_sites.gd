@@ -62,48 +62,27 @@ func _report(label: String, x: float, z: float, r: float = 12.0) -> void:
 
 func _init() -> void:
 	_field = HEIGHTFIELD.new()
-	# Band 0 -- the home meadow. The candidate has to be close enough to the
-	# village that a player standing at home after dark can see it, and clear
-	# of every vegetation clearing (band1 vegetation.json clearings 0-4: spawn
-	# r16, square r22, Grandpa r16, practice meadow r16, trainer ground r14),
-	# because a clearing is where the trees are NOT and an owl wants cover.
-	print("--- band 0: home meadow, night hook ---")
-	_report("village_east_treeline", 52.0, 58.0)
-	_report("village_east alt", 60.0, 46.0)
-	_report("north_of_square", -8.0, 152.0)
-	_report("north_of_square alt", 4.0, 160.0)
-	_report("west_hedge", -62.0, 96.0)
-	# Band 1 -- the oak grove ring loop, whose own terrain feature
-	# (data/config/terrain_playground.json id `oak_grove_ring`) carries the
-	# _why "Duskhush at night, the trainer circuit's second fight, wood at
-	# scale". Loop points: (230,830) (300,880) (370,950) (400,1040) (370,1100)
-	# (330,1130). The trail camp sits at (344,935), inside the loop.
-	print("--- band 1: oak grove ring loop ---")
-	_report("ring_mouth", 262.0, 852.0)
-	_report("ring_mouth alt", 275.0, 862.0)
-	_report("grove_interior_s", 322.0, 900.0)
-	_report("grove_interior_s alt", 310.0, 892.0)
-	_report("camp_grove_edge", 382.0, 986.0)
-	_report("camp_grove_edge alt", 392.0, 998.0)
-	_report("ring_far_side", 402.0, 1052.0)
-	_report("ring_far_side alt", 392.0, 1064.0)
-	_report("ring_north", 352.0, 1108.0)
-	_report("ring_north alt", 344.0, 1118.0)
-	# The pipwing grove pocket (spawns order 1046) and the tm_wind_blade
-	# pickup (playground_world.gd) already bank on the grove interior south of
-	# the ring mouth being worth a detour; a night population there is the same
-	# ground rewarding the same curiosity after dark.
-	print("--- band 1: grove pocket south of the ring mouth ---")
-	_report("pipwing_pocket_night", 326.0, 796.0)
-	_report("pipwing_pocket alt", 318.0, 806.0)
-	print("--- FINAL candidates: separation-swept ring sites ---")
-	_report("f_ring_mouth", 247.0, 806.0)
-	_report("f_grove_west", 269.0, 894.0)
-	_report("f_grove_east", 342.0, 880.0)
-	_report("f_camp_grove", 338.0, 961.0)
-	_report("f_ring_far", 365.0, 1043.0)
-	_report("f_ring_north", 382.0, 1128.0)
-	print("--- FINAL candidates: band 0 ---")
-	_report("f_home_east", 60.0, 46.0)
-	_report("f_home_north", 4.0, 160.0)
+	# BAND 0 -- the home meadow. Close enough to the village that a player
+	# standing at home after dark can see it, and clear of every vegetation
+	# clearing (band1 vegetation.json clearings 0-4), because a clearing is
+	# where the trees are NOT and an owl wants cover.
+	print("--- band 0: home meadow, the night hook ---")
+	_report("home_east      (1050)", 60.0, 46.0)
+	_report("home_north     (1051)", 4.0, 160.0)
+	# BAND 1 -- the oak grove ring. docs/MEADOWS_MACRO_LAYOUT.md: "grove
+	# (Trailpup/Duskhush/Burrowback) in Band 1's oak ring and Band 2". Band 1
+	# held NEITHER named grove species. Both halves go in here: Duskhush gated
+	# to night, Trailpup ungated as the ring's ordinary resident population.
+	# Every site below cleared >=38 m from every pre-existing cluster centre in
+	# the band, >=46 m from each other and >=25 m from the trail camp clearing,
+	# swept over the ring polyline before being probed.
+	print("--- band 1: oak grove ring -- Duskhush, night-gated ---")
+	_report("grove_west     (1052)", 265.0, 897.0)
+	_report("camp_grove     (1053)", 337.0, 965.0)
+	_report("ring_rejoin    (1054)", 382.0, 1133.0)
+	print("--- band 1: oak grove ring -- Trailpup, ungated ---")
+	_report("ring_mouth     (1058)", 251.0, 803.0)
+	_report("grove_east     (1059)", 347.0, 879.0)
+	_report("far_side_west  (1060)", 362.0, 1041.0)
+	_report("far_side_east  (1061)", 416.0, 1048.0)
 	quit(0)

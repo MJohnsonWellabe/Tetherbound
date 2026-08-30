@@ -103,72 +103,107 @@ in a game shipping a real day/night clock that band 2 uses twelve times.
 Criterion 13 of `ralph/MEADOWS_EXIT_CRITERION.md` section E is a **per-region**
 requirement, and band 2 was the only region in the chapter meeting it.
 
-### This was specified three times and built zero times
+### It was specified twice over, and built neither time
 
-The single most useful thing found this lane: **none of this is a design
-invention.** The population was already named, by location and by species, in
-three separate places, and never placed.
+The single most useful thing found this lane: **none of this was a design
+invention, and the part I nearly missed matters more than the part I was sent
+for.**
 
-1. `data/config/terrain_playground.json` — the `oak_grove_ring` terrain feature
-   (band 1, leaves `(230,830)`, rejoins `(330,1130)`) carries, in its own
-   `_why` field: **"Duskhush at night, the trainer circuit's second fight, wood
-   at scale"**. Two of those three existed. The Duskhush did not.
-2. `docs/MEADOWS_MACRO_LAYOUT.md` §10's band-loop table — the same loop, the
-   same sentence, verbatim, as the player's reason to take the detour.
-3. `docs/MEADOWS_PROGRESSION_SPEC.md` §13's ecology table — Grove =
-   Trailpup / **Duskhush at night** / Burrowback.
+`docs/MEADOWS_MACRO_LAYOUT.md`'s ecology paragraph reads:
 
-Plus `data/config/spawns.json`'s `roles.nocturnal`, which is already `duskhush`.
+> grove (**Trailpup/Duskhush/Burrowback**) in **Band 1's oak ring** and Band 2
 
-Per `CLAUDE.md`, implementing a documented owner directive is ordinary work, not
-invention. So the species was not a choice this lane made, and the location was
-not either.
+`docs/MEADOWS_PROGRESSION_SPEC.md` §13 says the same: Grove = Trailpup /
+**Duskhush at night** / Burrowback. And `data/config/terrain_playground.json`'s
+`oak_grove_ring` feature — a real terrain feature, band 1, leaves `(230,830)`,
+rejoins `(330,1130)` — carries in its own `_why` field:
+
+> "Duskhush at night, the trainer circuit's second fight, wood at scale"
+
+**Band 1 held neither named grove species.** Zero Duskhush, and zero Trailpup —
+against 47 Trailpup in band 2, 9 in band 3, 51 in band 4 and 9 in band 5.
+`band2/spawns.json`'s own order-2 entry even describes its Trailpup as *"carried
+from Band 1's oak ring"* — carried from a population that was never placed.
+
+The audit found the Duskhush half. The Trailpup half was invisible to it,
+because a missing ungated species does not show up as a missing `time` gate.
 
 ### What shipped
 
-Eight clusters, 22 individuals, orders 1050–1057, in
-`data/config/bands/band1_lower_meadows/spawns.json` (bands 0 and 1 share that
-file — the audit's own note is that band 0 has no directory of its own).
+Nine clusters in `data/config/bands/band1_lower_meadows/spawns.json` (bands 0
+and 1 share that file — the audit's own note is that band 0 has no directory of
+its own). Both halves of the same sentence.
 
-| order | site | count | why there |
-|---|---|---:|---|
+**Duskhush, night-gated — orders 1050–1054, 12 individuals**
+
+| order | site | n | why there |
+|---|---|--:|---|
 | 1050 | band 0, treed ground east of the village | 1 | the hook: band 0 is where the player actually sleeps on night one (`tournament_sleep`), so it is the one place night content is guaranteed to be *seen* rather than merely reachable |
-| 1051 | band 0/1 seam, the road north out of the village | 2 | for the player who leaves after dark instead of sleeping through it — on the route, because the finding is that the road reads the same by day and by night |
-| 1052 | oak grove ring, the mouth at `(230,830)` | 3 | first thing on the loop, so the detour explains itself within 20 m |
-| 1053 | grove interior, west | 4 | deepest inside the ring — the centre of the pocket |
-| 1054 | grove interior, east | 3 | between the ring path and Old Bram's ground |
-| 1055 | the camp grove, 27 m from `trail_camp` | 4 | **see below** |
-| 1056 | the ring's far side at `(400,1040)` | 3 | the loop's turn back toward the spine |
-| 1057 | the rejoin at `(330,1130)` | 2 | thinning out — a pocket with edges, not a uniform sprinkle |
+| 1051 | band 0/1 seam, the road north out of the village | 2 | for the player who leaves after dark instead of sleeping through it — **on** the route, because the finding is that the road reads the same by day and by night |
+| 1052 | oak ring, interior west | 3 | deepest inside the loop, furthest from open ground |
+| 1053 | **the camp grove**, 31 m from `trail_camp` | 4 | **see below** |
+| 1054 | the ring's rejoin at `(330,1130)` | 2 | thinning out — a pocket with edges, not a uniform sprinkle |
 
-**Order 1055 is the one that ties the lane together.** The trail camp only
+**Trailpup, ungated — orders 1058–1061, 18 individuals**, at the ring mouth,
+the grove's east side by Old Bram's ground, and both ends of the far side.
+Ungated because only Duskhush carries "at night" in either document. Trailpup is
+the ring's ordinary daytime resident, and **the contrast between the two is what
+makes the grove read differently after dark instead of merely emptier.**
+
+**Order 1053 is the one that ties the lane together.** The trail camp only
 became a place a player can stop at in T5-CADENCE's work, merged in this same
 branch. Before that it was scenery, and night content beside it would have had
 nobody standing there to see it. Now both halves exist: you stop at the camp
 because you can, and the grove around it is awake in a way it is not by day.
 That is criterion 13 delivered as a *place* rather than as a config flag.
 
-**Calibrated against the audit's own protected example.** The audit names band
-2's night ecology as one of two things "worth protecting" and the template for
-everyone else. Band 2 runs 12 clusters / 40 individuals over 2653 m; this runs
-8 / 22 over 2403 m — deliberately lighter, because band 1 is the tutorial meadow
-`prompt 71` keeps gentle, and because Duskhush is `species.json`'s
-**non-aggressive** watcher/scout (`aggressive: false`), which is why it is the
-right night species for a band that must not start ambushing new players after
-dark.
+### The finding this lane did not go looking for: the chapter has no room for Air
 
-**No alpha anywhere in this pass.** `band2/spawns.json`'s own `_comment_alpha`
-records the standing rule: alphas run "one per band from band 2 on, **never in
-band 1**". **No `table` either** — these are anchors, so the ecology those three
-documents asked for is what stands there at every world seed.
+**This is the most important thing in this report for whoever works here next.**
+
+The night pocket, shipped alone at 22 Duskhush, turned
+`tests/test_spawn_tables.gd::test_a_rolled_world_is_still_the_ground_dominant_meadows`
+red at three of its rolled seeds. That test enforces the brief's Population
+Philosophy — *"the Meadows should still visually read as a Ground biome"* — as
+**≥50% Ground at every world seed**.
+
+Measured, not predicted:
+
+| | worst rolled seed | verdict |
+|---|---:|---|
+| before this lane | **50.17%** Ground | PASS, by **three creatures** |
+| \+ 22 Duskhush (Air), alone | **49.0%** | **FAIL** |
+| \+ 12 Duskhush, \+ 18 Trailpup (Ground) | **50.5%** | PASS |
+
+So the chapter was sitting three creatures above its own biome-identity floor
+before this lane touched it, and **that margin — not any lane's scope — is now
+the binding constraint on adding Air content anywhere in the Meadows.** Any
+future Air placement needs roughly one Ground creature added per Air creature
+(measured: `G ≥ A − 3` to hold 50.0%, `G ≈ A + 3` to hold 50.3%).
+
+Two things worth saying plainly about how that was resolved:
+
+- **The Trailpup was not padding.** Had the balance needed a species the grove
+  had no claim to, the honest move would have been to shrink the night pocket
+  and flag the collision. It did not: the balancing species is Ground, is named
+  for this exact location by two documents, and was missing. The type
+  arithmetic and the design answer happened to be the same answer.
+- **The test was not touched.** There is a real argument that counting
+  night-gated clusters as permanent biome composition overstates Air — band 2's
+  40 night Duskhush are already counted as always-present — and that the measure
+  should weight or exclude gated spawns. That may well be right. It is another
+  lane's test and a canon-adjacent judgment, and editing a threshold to make my
+  own change pass is exactly the move that should never be made quietly. Flagged
+  here instead, as the obvious next question.
 
 ### Sited by measurement, not by taste
 
-Every candidate had to clear **≥38 m from every existing cluster centre in the
-band** and **≥25 m from the trail camp clearing**, swept programmatically over
-the ring polyline, and was then ground-probed with `tools/_probe_night_sites.gd`
-(committed). Worst local slope across the eight sites is 17.2°, worst relief
-3.33 m over a 12 m ring — all comfortably walkable.
+Every one of the nine sites had to clear **≥38 m from every pre-existing cluster
+centre in the band**, **≥46 m from each other** and **≥25 m from the trail camp
+clearing**, swept programmatically over the ring polyline, and was then
+ground-probed with `tools/_probe_night_sites.gd` (committed). Worst local slope
+across all nine is 17.2°, worst relief 4.22 m over a 12 m ring — all comfortably
+walkable.
 
 The specific failure being guarded against is recorded in
 `data/config/spawns.json`'s own `_comment_placement`: Galecrest and Burrowback
@@ -238,7 +273,21 @@ like**, and nothing in the image would say so.
 
 ## 4. Verification run
 
-<!--VERIFICATION_TABLE-->
+| check | result |
+|---|---|
+| `tests/smoke_authored_camps.gd` (T5-CADENCE's, on the merged tree) | **passed** — 5 camps, all offering rest, night passed, bedded creature woke at full HP |
+| `tests/smoke_night_ecology.gd` (new) | **passed** — 5 night clusters / 12 owls, hidden by day, present after dark, "Engage Duskhush" offered where the player stands |
+| `tools/region_cadence_probe.py` | all five bands PASS at all three tiers; band 3 218 m, band 4 342 m |
+| `run_tests.gd -- --only=spawn_tables` | **27 tests, 6425 assertions, 0 failed** — including the ground-dominance test this lane first broke and then fixed |
+| full `run_tests.gd` | **1603 tests, 3570004 assertions** — see note below |
+
+**On the full-suite number.** The first full run of this lane was
+**1603 tests / 1 failed**, and the failure was mine:
+`test_a_rolled_world_is_still_the_ground_dominant_meadows`, caught exactly as
+described in §2. It is fixed and re-verified through `--only=spawn_tables`.
+Note that a bare `run_tests.gd` runs more than CI's unit job does — CI passes a
+skip list, and T5-CADENCE's handover reports 1545 tests against this run's 1603
+— so the two numbers are not directly comparable.
 
 ---
 
