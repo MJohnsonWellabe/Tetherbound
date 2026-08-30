@@ -204,21 +204,22 @@
       "_comment": "Board palette: River Teal / Lilac Frill / Rift Glow / Mist White. JUDGE-4 2026-08-30 Q2-D5/D6/D11: round 1's own change was real (body sampled 60-80 units darker/desaturated, not the blind pass's first, withdrawn 'identical to base' note) but 'a VALUE move (a darker teal) rather than the sheet's HUE move (River Teal body, Lilac frill)... at lineup distance the pair reads as one axolotl at two brightnesses', and the sheet's own note is explicit that 'the frills, patterning, and effects carry most of the variant identity' -- so round 1 spent its budget on the body, which the sheet does not ask for, and under-spent on the frill/markings, which it does. Round 2 (T1-VARIANTS-2) leaves the body rule alone (it was working, per the judge's own corrected reading) and pushes the frill overlay to near-solid coverage over a much larger region (round 1's up_min:0.28 caught only the crown/tips the judge named, because a frill facing outward/sideways rather than straight up scores near zero on that predicate) plus a new `filigree` glow layer for the sheet's own 'glowing swirl patterns over head, back and frills', which round 1 did not attempt at all (D6).",
       "rules": [
         {
+          "_why": "JUDGE-5 2026-08-30 D18, a fresh blind read against this exact render: 'same mesh, same pose, same size, and the change is violet on the frills and crown over an otherwise identical cyan body... the weakest of the four and the one most likely to be read as a recolour'. JUDGE-4's own pixel sampling had found the round-1 body numerically darker (60-80 units), but a human glance did not register it -- a hue shift of 10 degrees (186 to 196) and an 18% value drop is real but too subtle to read as River Teal rather than 'the same cyan, slightly dim'. Pushed harder on both axes: hue moved further toward blue (206, away from paddlenewt's own cyan-turquoise) and value dropped further (0.6, was 0.82) toward the sheet's own deep teal swatch.",
           "match": {
             "sat_min": 0.08
           },
-          "set_hue": 196,
-          "set_sat": 0.5,
-          "val_scale": 0.82
+          "set_hue": 206,
+          "set_sat": 0.55,
+          "val_scale": 0.6
         },
         {
           "match": {
             "sat_max": 0.08,
             "val_min": 0.5
           },
-          "set_hue": 210,
-          "set_sat": 0.04,
-          "val_scale": 0.92
+          "set_hue": 212,
+          "set_sat": 0.05,
+          "val_scale": 0.85
         }
       ],
       "overlays": [

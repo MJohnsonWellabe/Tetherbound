@@ -29,7 +29,20 @@ extends Node3D
 ## short function. Flagged in this lane's own handover as a live "reuse vs.
 ## risk" call rather than silently duplicated.
 
-const MOTE_SEGMENTS := 8
+## JUDGE-5 2026-08-30 D19: at 8 segments a close-range disc's facets showed as
+## a visible hexagon/octagon rather than a round glow ("visibly hexagonal
+## rather than round" on Nightburrow's eye sprites specifically). Doubled --
+## negligible cost (an unshaded, un-textured, screen-space-tiny triangle fan)
+## for a silhouette that reads as a soft point light at any zoom level this
+## project's cameras use.
+const MOTE_SEGMENTS := 16
+
+## Default eye-glow anchor as (lateral, height, forward) fractions of
+## (radius, height, radius) -- see `_draw_eyes()`. Per-species override lives
+## in that species' own PRESETS entry as `eye_anchor` (same three fractions),
+## for a species whose head shape puts the default noticeably off the real
+## eye -- Nightburrow needed one, see its own entry below.
+const DEFAULT_EYE_ANCHOR := Vector3(0.28, 0.68, 0.88)
 
 ## Per-preset tuning, one entry per Aspect variant. `primary_*` is the
 ## dominant effect every board leads with (back flame / spine arcs / floating
@@ -49,6 +62,16 @@ const PRESETS := {
 		"paw_colour": Color(0.62, 0.25, 0.95),
 		"paw_count": 4,
 		"eye_colour": Color(0.82, 0.55, 1.0),
+		# JUDGE-5 2026-08-30 D19: the shared default anchor sat on this
+		# species' forehead well above its real eyes -- "two pink glow
+		# sprites... on the forehead... the animal's actual eyes are below
+		# them" -- reading as a second, higher pair of eyes. Burrowback's
+		# head is rounder and squatter than the other three species' (the
+		## default was tuned mainly against the two longer-snouted canines/
+		# boar), so its eyeline sits at a lower height fraction and closer to
+		# the centreline than the shared default assumes. Lowered and pulled
+		# in, checked by rendering this species specifically.
+		"eye_anchor": Vector3(0.16, 0.46, 0.82),
 	},
 	"stormtrail": {
 		"primary_colour": Color(0.55, 0.78, 1.0),
@@ -289,17 +312,22 @@ func _draw_paws(right: Vector3, up: Vector3) -> void:
 ## rendering all four species side by side at this anchor (T1-VARIANTS-2
 ## 2026-08-30) showed it sitting between the ears above the eyeline on the
 ## canine and boar models. Retuned by rendering each of the four in turn
-## (lower, and a touch further forward) until the disc lands on or just
-## above the eye on every one of them -- still one constant, not a per-
-## species table, because a table needs a place to live (this file has no
-## per-species config) and "close enough to read as the eye" was reachable
-## without one.
+## (lower, and a touch further forward) until the disc landed on or just
+## above the eye on every one of them at that pass's render checks -- but
+## JUDGE-5's blind pass caught what those checks missed on Nightburrow
+## specifically: "two pink glow sprites... on the forehead... the animal's
+## actual eyes are below them", reading as a second, higher pair of eyes
+## (D19). One shared constant could not fit both the two longer-snouted
+## canine/boar models AND a shorter, rounder badger head, so `eye_anchor` is
+## now an optional per-species override in PRESETS (`DEFAULT_EYE_ANCHOR`
+## when absent) -- Nightburrow's own entry documents its retune.
 func _draw_eyes(right: Vector3, up: Vector3) -> void:
 	var colour: Color = _preset.get("eye_colour", Color.WHITE)
 	var pulse: float = 0.85 + 0.15 * sin(_life * 3.0)
 	var size: float = _radius * 0.09
+	var anchor: Vector3 = _preset.get("eye_anchor", DEFAULT_EYE_ANCHOR)
 	for side in [-1.0, 1.0]:
-		var centre := Vector3(side * _radius * 0.28, _height * 0.68, _radius * 0.88)
+		var centre := Vector3(side * _radius * anchor.x, _height * anchor.y, _radius * anchor.z)
 		var draw_colour := Color(colour.r, colour.g, colour.b, pulse)
 		_disc(_eye_mesh, centre, right * size, up * size, draw_colour)
 
