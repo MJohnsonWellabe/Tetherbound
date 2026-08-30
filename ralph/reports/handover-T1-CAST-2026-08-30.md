@@ -426,6 +426,8 @@ and Juno). That is a readability observation about the grass, not about the cast
 | `tests/smoke_art.gd` | **OK** — models loaded, sized to their colliders, meadow dressed |
 | `tests/smoke_stronghold.gd` | **passed** |
 | `tests/smoke_village_trainer.gd` | **OK** — greet, challenge, fight, beat, shop |
+| `tests/smoke_boss.gd` | **passed** — the Warden challenge opens and the climax resolves |
+| `tests/smoke_trainer_battle.gd` | **OK** — this is the one that drives **Bryn**, the trainer whose rig this lane changed, through the real placement-and-prompt path end to end: challenged, fought through the team, beaten once, and not again |
 
 `test_trainers_data.gd` caught a real mistake mid-lane: my first edit to Warder Ness
 dropped her `position` key. It also surfaced the duplicate-`base` bug (§9) when the
