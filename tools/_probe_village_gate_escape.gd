@@ -67,7 +67,7 @@ func _run() -> void:
 		int(inventory.call("count", "castle_gate_key")) if inventory != null else -1,
 		str(progression.call("has", "road_gate_open")) if progression != null else "?"])
 
-	var gate := _world.get_node_or_null(^"RoadGate") as Node3D
+	var gate := _world.find_child("RoadGate", true, false) as Node3D
 	if gate != null:
 		print("RoadGate at %s   open=%s" % [
 			str(gate.global_position.snapped(Vector3.ONE * 0.1)), str(gate.call("is_open"))])
@@ -100,6 +100,49 @@ func _run() -> void:
 			deg, out, str(here.snapped(Vector3.ONE * 0.1)), verdict])
 
 	print("\nescaped the village on %d of 16 bearings: %s" % [escaped.size(), str(escaped)])
+
+	# The other half of the owner's sentence, and the half a barrier test that
+	# only ever measures "held" can never see: WITH the key, the gate opens and
+	# the same walk goes through.
+	print("\n--- now take the key and try the gate ---")
+	if gate == null or inventory == null or progression == null:
+		print("  no gate/inventory/progression; cannot test the unlock")
+		quit(0)
+		return
+	inventory.call("add", "castle_gate_key", 1)
+	print("  key held: %d" % int(inventory.call("count", "castle_gate_key")))
+	gate.call("_on_tried")
+	for i in 30:
+		await physics_frame
+	print("  gate open: %s   road_gate_open flag: %s" % [
+		str(gate.call("is_open")), str(progression.call("has", "road_gate_open"))])
+	# The gate says a line when it opens, and an open dialogue panel locks
+	# locomotion (`sequence_director.gd::_refresh_lockout`). Left running, the
+	# walk below moves exactly zero metres and reads as a barrier that is still
+	# shut -- which is what the first run of this probe reported.
+	var panel := _world.get_tree().get_first_node_in_group("dialogue_panel")
+	if panel != null and bool(panel.call("is_open")):
+		panel.call("close")
+		for i in 20:
+			await physics_frame
+
+	# Through the opening, on the road, the way a player leaves. The direction
+	# "out" is taken from the village square rather than from the gate's own
+	# basis: the sign of `(sin yaw, cos yaw)` says which half of an infinite line
+	# a point is on and is not "away from the village" in any intuitive sense
+	# (`tools/_probe_key_site.gd`'s own note on the same trap).
+	var gate_at := gate.global_position
+	var out_dir := (gate_at - SQUARE)
+	out_dir.y = 0.0
+	out_dir = out_dir.normalized()
+	await _teleport(gate_at - out_dir * 8.0)
+	await _walk_toward(gate_at + out_dir * 30.0, FAN_FRAMES)
+	var out_at := _player.global_position
+	var travelled: float = out_dir.dot(out_at - gate_at)
+	print("  walked to %s -- %.1fm past the gate, %.1fm from the square (%s)" % [
+		str(out_at.snapped(Vector3.ONE * 0.1)), travelled,
+		Vector2(out_at.x - SQUARE.x, out_at.z - SQUARE.z).length(),
+		"THROUGH" if travelled > 2.0 else "STILL BLOCKED"])
 	quit(0)
 
 

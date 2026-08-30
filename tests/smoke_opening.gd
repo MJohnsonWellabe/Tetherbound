@@ -805,7 +805,9 @@ func _the_road_gate_stops_until_the_key_is_found() -> void:
 			_fail("Grandpa's reply after naming would not close after %d presses; the opening never hands back control" % closed)
 			return
 
-	var gate := _world.get_node_or_null(^"RoadGate") as Node3D
+	# OP-0830-1: the gate is a hole in the village fence now, so it hangs under
+	# `VillageBoundary` rather than off the world root.
+	var gate := _world.find_child("RoadGate", true, false) as Node3D
 	if gate == null:
 		_fail("no RoadGate in the world; SA7's gate was never built")
 		return
