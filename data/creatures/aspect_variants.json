@@ -53,17 +53,20 @@
       "glow": [
         {
           "id": "armor_cracks",
-          "_why": "'strong purple emissive cracks through armor' + 'purple flame... rising from... armor seams'. Darkest-pixel seams within the plated back/flank, never the belly or legs.",
+          "_why": "'strong purple emissive cracks through armor' + 'purple flame... rising from... armor seams'. Darkest-pixel seams within the plated back/flank, never the belly or legs. T1-VARIANTS 2026-08-30 (JUDGE-3 5a/5b): the old flat #a855f7 at intensity 1.8 rendered as a saturated magenta blotch, well past the board's own Violet Glow/Amethyst Flame swatches (both a cooler, less pink violet) -- desaturated and shifted a few degrees toward blue, and eased off intensity so the additive emission does not clip toward hot pink. `clump_grain`/`clump_coverage` break the percentile selection into a vein network instead of one solid blob (the mirrored/blotchy look JUDGE-3 named); the generator's own pupil exclusion (module header, tools/generate_aspect_variant_textures.py) keeps this off the eyes without a position band, since a badger's own black mask/legs are too broadly dark for a position cut to help here.",
           "select": "feature",
           "where": {
             "y_min": 0.3,
             "up_min": 0.12
           },
-          "percentile": 7.0,
-          "max_val": 0.14,
-          "color": "#a855f7",
-          "intensity": 1.8,
-          "softness": 0.1
+          "percentile": 8.0,
+          "max_val": 0.16,
+          "color": "#8f6bf0",
+          "intensity": 1.45,
+          "softness": 0.1,
+          "clump_grain": 5.0,
+          "clump_coverage": 0.5,
+          "clump_softness": 0.16
         }
       ]
     },
@@ -71,52 +74,81 @@
       "display_name": "Stormtrail",
       "source_species": "trailpup",
       "board": "docs/art/reference/creature-expansion-2026-08-30/02_Stormtrail_alpha_trailpup.png",
-      "_comment": "Board palette: Thunder Tan / Storm Fur / Volt Glow / Static Blue. 'Do not overbuild this asset. Most of its identity should come from color + emissive + electricity' -- so the coat darkens toward storm-gray-brown (both fur bands) and the ONE new paint element is a thin gold lightning-vein overlay down the spine/flank, not a full repaint. Live albedo/emission on this species are external .jpg (probed directly), so creature_body._texture_for() falls to its species-keyed extracted-PNG convention -- the generator writes against trailpup_extracted_base_color.png regardless.",
+      "_comment": "Board palette: Thunder Tan / Storm Fur / Volt Glow / Static Blue. JUDGE-4 2026-08-30 Q2-D2/D4/D11, blind pass against round 1: 'the coat is still the base's tan... four of five specified changes are absent' and the lightning was 'a soft gold patch on the left shoulder... on one side only', not the sheet's head-to-tail network -- round 1's own coverage/percentile retunes (see git history) never crossed that bar because a single sparse clumped layer can land its noise unevenly between the two flanks by chance, and a `val_scale` in the 0.5-0.6 range deepens tan without leaving tan. Round 2 (T1-VARIANTS-2): the coat rule now desaturates and darkens hard toward Storm Fur (a value/saturation move, not a hue deepen), and the lightning overlay is split into two layers -- a near-solid spine bolt (guarantees the head-to-tail line the sheet actually draws) plus a wide, still-high-coverage flank/leg network (coverage 0.58, not 0.32-0.65's own history of one-sided luck) -- so both flanks paint regardless of where the clump noise happens to peak. Live albedo/emission on this species are external .jpg (probed directly), so creature_body._texture_for() falls to its species-keyed extracted-PNG convention -- the generator writes against trailpup_extracted_base_color.png regardless.",
       "rules": [
         {
+          "_why": "Round 1 kept val_scale in the 0.5-0.6 range, which deepens the source tan without leaving tan -- JUDGE-4's exact complaint. Pushed to 0.28-0.3 and desaturated hard (set_sat 0.1-0.13) so the body reads as the sheet's near-black Storm Fur, not a darker version of Trailpup's own coat.",
           "match": {
             "hue": [
-              20,
-              70
+              15,
+              75
             ],
-            "sat_min": 0.08,
-            "val_min": 0.35
+            "sat_min": 0.05,
+            "val_min": 0.4
           },
-          "set_hue": 32,
-          "set_sat": 0.26,
-          "val_scale": 0.58
+          "set_hue": 30,
+          "set_sat": 0.13,
+          "val_scale": 0.28
         },
         {
           "match": {
             "hue": [
-              20,
-              70
+              15,
+              75
             ],
-            "sat_min": 0.08,
-            "val_max": 0.35
+            "sat_min": 0.05,
+            "val_max": 0.4
           },
-          "set_hue": 28,
-          "set_sat": 0.2,
-          "val_scale": 0.52
+          "set_hue": 25,
+          "set_sat": 0.1,
+          "val_scale": 0.4
+        },
+        {
+          "_why": "Trailpup's pale chest/muzzle patches (near-zero saturation, high value) were untouched by both bands above -- left alone they stay bright cream next to a now-near-black coat, reading as a much BIGGER pale patch than the base ever showed. A light darken keeps them a highlight, not a beacon.",
+          "match": {
+            "sat_max": 0.06,
+            "val_min": 0.55
+          },
+          "set_sat": 0.02,
+          "val_scale": 0.62
         }
       ],
       "overlays": [
         {
-          "id": "lightning_marks",
-          "_why": "'bright yellow-gold lightning markings'. tint (not grow) so the streaks follow the fur's own value detail instead of sitting on top of it as a flat decal. Narrow radial band keeps it a spine/flank marking, not a full recolour.",
+          "id": "spine_bolt",
+          "_why": "'bright yellow-gold lightning markings... network running head-to-tail along the spine' -- the sheet's dominant, named identity element. Deliberately near-solid (coverage 0.88) in a narrow band centred on the spine rather than left to clump-noise placement like round 1's single layer was, which is what produced a shoulder patch instead of a line: a narrow region at high coverage IS a line; a wide region at moderate coverage is a scatter that can miss either flank.",
           "where": {
-            "y_min": 0.4,
-            "up_min": 0.12,
-            "radial_max": 0.4
+            "y_min": 0.42,
+            "up_min": 0.0,
+            "radial_max": 0.22,
+            "z_max": 0.85
           },
           "mode": "tint",
           "color": "#f7c948",
-          "sat_floor": 0.7,
+          "sat_floor": 0.8,
+          "val_scale": 1.35,
+          "coverage": 0.88,
+          "grain": 7.0,
+          "clump_softness": 0.08,
+          "softness": 0.09
+        },
+        {
+          "id": "lightning_branches",
+          "_why": "Lightning down the flanks and legs, per the board's side view -- wider and lower than spine_bolt (legs included via a low y_min), coverage still high (0.58, not round 1's 0.32-0.65) specifically so BOTH flanks paint rather than whichever one the clump noise happens to favour -- JUDGE-4 Q2-D4's exact finding was one shoulder marked, the other bare.",
+          "where": {
+            "y_min": 0.08,
+            "up_min": -0.2,
+            "radial_max": 0.62,
+            "z_max": 0.85
+          },
+          "mode": "tint",
+          "color": "#f2c23f",
+          "sat_floor": 0.65,
           "val_scale": 1.2,
-          "coverage": 0.32,
-          "grain": 9.0,
-          "clump_softness": 0.06,
-          "softness": 0.08
+          "coverage": 0.58,
+          "grain": 11.0,
+          "clump_softness": 0.08,
+          "softness": 0.1
         }
       ],
       "finish": {
@@ -126,18 +158,42 @@
       },
       "glow": [
         {
+          "id": "lightning_glow",
+          "_why": "Round 1 shipped the gold marking as daylight-only paint with no matching night glow -- Volt Glow is meant to GLOW. `sample: albedo` (generate_aspect_variant_textures.py's build_glow_map) matches the gold hue on the ALREADY-TINTED albedo, so this tracks spine_bolt/lightning_branches exactly rather than guessing a second independent region that might not line up with the paint.",
+          "select": "match",
+          "sample": "albedo",
+          "where": {
+            "y_min": 0.08,
+            "up_min": -0.2,
+            "radial_max": 0.62,
+            "z_max": 0.85
+          },
+          "hue": [
+            38,
+            58
+          ],
+          "sat_min": 0.4,
+          "color": "#ffcf3d",
+          "intensity": 1.7,
+          "softness": 0.1
+        },
+        {
           "id": "storm_veins",
-          "_why": "'occasional electricity moving over coat/tail'. Same darkest-seam trick as Nightburrow, coloured static blue -- the STILL glow; the moving arc is scripts/creatures/vfx/aspect_vfx.gd's job, not the texture's.",
+          "_why": "'occasional electricity moving over coat/tail'. Same darkest-seam trick as Nightburrow, coloured static blue -- the STILL glow; the moving arc is scripts/creatures/vfx/aspect_vfx.gd's job, not the texture's. T1-VARIANTS 2026-08-30: colour moved from a plain sky-cyan toward the board's own more indigo 'Static Blue' swatch, coverage/percentile raised across two render-checked passes since a sparse crack map is not the full-body self-lit copy `emission_scale` was tamed for -- see `scripts/creatures/creature_body.gd`'s own `ASPECT_EMISSION_BOOST`. `z_max: 0.85` measured directly off the anatomy map (this species' darkest 0.3% of source pixels -- eyes/nose -- sit at unit z p10-p90 = 0.84-0.99).",
           "select": "feature",
           "where": {
-            "y_min": 0.32,
-            "up_min": 0.1
+            "y_min": 0.28,
+            "up_min": 0.05,
+            "z_max": 0.85
           },
-          "percentile": 6.0,
-          "max_val": 0.13,
-          "color": "#5aa7ff",
-          "intensity": 1.6,
-          "softness": 0.1
+          "percentile": 14.0,
+          "max_val": 0.24,
+          "color": "#6d76ea",
+          "intensity": 1.5,
+          "softness": 0.1,
+          "clump_grain": 5.0,
+          "clump_coverage": 0.75,
+          "clump_softness": 0.16
         }
       ]
     },
@@ -145,41 +201,43 @@
       "display_name": "Riftfrill",
       "source_species": "paddlenewt",
       "board": "docs/art/reference/creature-expansion-2026-08-30/07_Riftfrill_paddlenewt_variant.png",
-      "_comment": "Board palette: River Teal / Lilac Frill / Rift Glow / Mist White. 'Preserve the main silhouette. Let the frills, patterning, and effects carry most of the variant identity' -- so the body goes deeper teal (paddlenewt's own vivid is already a bright cyan-turquoise at hue 186; this pushes it darker/deeper rather than re-hueing it) and the ONE new paint element is a lilac tint on whatever the model's own dorsal/frill geometry is.",
+      "_comment": "Board palette: River Teal / Lilac Frill / Rift Glow / Mist White. JUDGE-4 2026-08-30 Q2-D5/D6/D11: round 1's own change was real (body sampled 60-80 units darker/desaturated, not the blind pass's first, withdrawn 'identical to base' note) but 'a VALUE move (a darker teal) rather than the sheet's HUE move (River Teal body, Lilac frill)... at lineup distance the pair reads as one axolotl at two brightnesses', and the sheet's own note is explicit that 'the frills, patterning, and effects carry most of the variant identity' -- so round 1 spent its budget on the body, which the sheet does not ask for, and under-spent on the frill/markings, which it does. Round 2 (T1-VARIANTS-2) leaves the body rule alone (it was working, per the judge's own corrected reading) and pushes the frill overlay to near-solid coverage over a much larger region (round 1's up_min:0.28 caught only the crown/tips the judge named, because a frill facing outward/sideways rather than straight up scores near zero on that predicate) plus a new `filigree` glow layer for the sheet's own 'glowing swirl patterns over head, back and frills', which round 1 did not attempt at all (D6).",
       "rules": [
         {
+          "_why": "JUDGE-5 2026-08-30 D18, a fresh blind read against this exact render: 'same mesh, same pose, same size, and the change is violet on the frills and crown over an otherwise identical cyan body... the weakest of the four and the one most likely to be read as a recolour'. JUDGE-4's own pixel sampling had found the round-1 body numerically darker (60-80 units), but a human glance did not register it -- a hue shift of 10 degrees (186 to 196) and an 18% value drop is real but too subtle to read as River Teal rather than 'the same cyan, slightly dim'. Pushed harder on both axes: hue moved further toward blue (206, away from paddlenewt's own cyan-turquoise) and value dropped further (0.6, was 0.82) toward the sheet's own deep teal swatch.",
           "match": {
             "sat_min": 0.08
           },
-          "set_hue": 196,
-          "set_sat": 0.5,
-          "val_scale": 0.82
+          "set_hue": 206,
+          "set_sat": 0.55,
+          "val_scale": 0.6
         },
         {
           "match": {
             "sat_max": 0.08,
             "val_min": 0.5
           },
-          "set_hue": 210,
-          "set_sat": 0.04,
-          "val_scale": 0.92
+          "set_hue": 212,
+          "set_sat": 0.05,
+          "val_scale": 0.85
         }
       ],
       "overlays": [
         {
           "id": "lilac_frill",
-          "_why": "'lilac/translucent frills'. tint over the dorsal ridge/up-facing surfaces near the spine top -- the same up_min+y_min shape burrowback's own plate_moss and tuskroot's moss_mantle use for 'the part of the back a grown accent sits on'.",
+          "_why": "'lilac/translucent frills' -- Lilac Frill, and the sheet's own note that the frill should carry most of the identity, so this is now near-solid (coverage 0.92, was 0.55) over a region widened on two axes: `y_min` dropped from 0.5 to 0.4 (the frill sheet shows running lower down the back than just the crown) and `up_min` dropped from 0.28 to -0.1 (round 1's high up_min only scored the parts of the frill facing straight up, i.e. the crown/tips JUDGE-4 named -- a frill that flares outward or sideways has a normal with little/no upward component and scored near zero under the old threshold). `sat_floor` raised so the lilac reads as the sheet's saturated purple rather than a pastel wash.",
           "where": {
-            "y_min": 0.5,
-            "up_min": 0.28
+            "y_min": 0.4,
+            "up_min": -0.1
           },
           "mode": "tint",
-          "color": "#c9a0ff",
-          "sat_floor": 0.35,
-          "val_scale": 1.08,
-          "coverage": 0.55,
-          "grain": 5.0,
-          "softness": 0.12
+          "color": "#b073ff",
+          "sat_floor": 0.55,
+          "val_scale": 1.12,
+          "coverage": 0.92,
+          "grain": 4.0,
+          "clump_softness": 0.1,
+          "softness": 0.14
         }
       ],
       "finish": {
@@ -189,17 +247,38 @@
       },
       "glow": [
         {
-          "id": "rift_markings",
-          "_why": "'cyan/violet body markings'. Feature-select still works here even though the body is not dark-charcoal like the other three -- it is the DARKEST-relative-to-its-own-region pixels that carry pattern line-work on every one of these paintings (shiny_colourways.json's own finish-pass comment says the same thing about eyes/nostrils/outlines), so it still isolates markings rather than skin.",
+          "id": "filigree",
+          "_why": "'glowing swirl patterns over head, back and frills' (Rift Glow) -- named on the sheet, absent from round 1 entirely (JUDGE-4 Q2-D6). Same `where` shape as lilac_frill so the glow concentrates where the sheet puts the identity (head/back/frill), not spread across the whole body the way rift_markings below already is.",
           "select": "feature",
           "where": {
-            "y_min": 0.2
+            "y_min": 0.4,
+            "up_min": -0.1
           },
-          "percentile": 5.0,
-          "max_val": 0.22,
+          "percentile": 10.0,
+          "max_val": 0.3,
+          "color": "#c084fc",
+          "intensity": 1.6,
+          "softness": 0.12,
+          "clump_grain": 6.0,
+          "clump_coverage": 0.55,
+          "clump_softness": 0.14
+        },
+        {
+          "id": "rift_markings",
+          "_why": "'cyan/violet body markings'. Feature-select still works here even though the body is not dark-charcoal like the other three -- it is the DARKEST-relative-to-its-own-region pixels that carry pattern line-work on every one of these paintings (shiny_colourways.json's own finish-pass comment says the same thing about eyes/nostrils/outlines), so it still isolates markings rather than skin. T1-VARIANTS 2026-08-30 (JUDGE-3 5b): 'isolated aliased single pixels that read as dead pixels' and 'a stray dark squiggle drawn across each iris' -- the old boolean threshold gave single-texel islands with no anti-aliasing, and nothing kept the selection off the eyes. `z_max: 0.8` measured directly off this species' own anatomy map (its darkest 0.3% source pixels -- eyes -- sit at unit z p10-p90 = 0.84-0.89), and the generator's own model-space clump (see tools/generate_aspect_variant_textures.py) turns single stray texels into a continuous rift-vein pattern instead of dead-pixel noise.",
+          "select": "feature",
+          "where": {
+            "y_min": 0.2,
+            "z_max": 0.8
+          },
+          "percentile": 5.5,
+          "max_val": 0.24,
           "color": "#a855f7",
-          "intensity": 1.3,
-          "softness": 0.12
+          "intensity": 1.2,
+          "softness": 0.12,
+          "clump_grain": 4.0,
+          "clump_coverage": 0.6,
+          "clump_softness": 0.18
         }
       ]
     },
@@ -250,28 +329,37 @@
       "glow": [
         {
           "id": "armor_cracks",
-          "_why": "'orange glowing cracks' through the basalt plates. Restricted off the legs/belly the same way Nightburrow's are.",
+          "_why": "'orange glowing cracks' through the basalt plates. Restricted off the legs/belly the same way Nightburrow's are. T1-VARIANTS 2026-08-30 (JUDGE-3 5b): 'the yellow is spread evenly across the whole back... reads as camouflage netting rather than ember cracks; embers should concentrate in the valleys between plates and at the joints'. Tightened percentile (fewer, deeper texels qualify) and a coarser clump so the result is a sparser network of veins rather than an even wash, matching the board's own 'few, large, readable' cracks rather than a body-wide glow.",
           "select": "feature",
           "where": {
             "y_min": 0.28,
             "up_min": 0.12
           },
-          "percentile": 6.0,
-          "max_val": 0.12,
+          "percentile": 4.0,
+          "max_val": 0.11,
           "color": "#ff7a1a",
-          "intensity": 1.7,
-          "softness": 0.1
+          "intensity": 1.75,
+          "softness": 0.1,
+          "clump_grain": 4.0,
+          "clump_coverage": 0.42,
+          "clump_softness": 0.16
         },
         {
           "id": "tusks",
-          "_why": "'ember-glowing tusks'. Tusks are painted PALE/ivory, not dark -- a darkest-pixel search would never find them, so this layer selects by colour (low saturation, high value) instead of by percentile.",
+          "_why": "'ember-glowing tusks'. Tusks are painted PALE/ivory, not dark -- a darkest-pixel search would never find them, so this layer selects by colour (low saturation, high value) instead of by percentile. T1-VARIANTS 2026-08-30 (JUDGE-3 5b/5d): 'did not read at all' -- measured directly (this lane's own k-means over the `sat_max/val_min` selection in unit space) that the old bounds also matched the model's own grey basalt/stone armour patches, which cover far more surface than the ivory tusks and diluted the read into a generic pale wash. A `sat_min` floor plus a warm hue band keeps only the cream/ivory tusk colour (stone is closer to neutral grey, near-zero saturation); `y_max` keeps it off the dorsal plate region where the stone patches concentrate. Coverage is still not perfectly isolated to the two tusks alone (no per-vertex mask exists for them without new geometry) -- scripts/creatures/vfx/aspect_vfx.gd's own new tusk-glow billboard (anchored at the mouth the same way its eye-glow already is) is the guaranteed-visible half of this fix; this texture layer is the ambient half.",
           "select": "match",
-          "where": {},
-          "sat_max": 0.12,
-          "val_min": 0.6,
+          "where": {
+            "y_max": 0.78
+          },
+          "sat_min": 0.03,
+          "sat_max": 0.22,
+          "val_min": 0.68,
+          "hue": [18, 55],
           "color": "#ffb347",
-          "intensity": 1.2,
-          "softness": 0.1
+          "intensity": 1.9,
+          "softness": 0.12,
+          "blur_px": 3,
+          "clump_coverage": 1.0
         }
       ]
     }

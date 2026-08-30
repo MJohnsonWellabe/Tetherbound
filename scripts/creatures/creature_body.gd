@@ -733,6 +733,31 @@ func _swap_node_textures(node: Node) -> bool:
 static var _shiny_swap_materials: Dictionary = {}
 
 
+## T1-VARIANTS 2026-08-30 (JUDGE-3 5b: Stormtrail's markings "too small to
+## read... at 30% this is simply a grey wolf", the same rendered-too-faint
+## complaint would apply to any of the four at gameplay distance). Unlike the
+## ordinary vivid/shiny/alpha colourways above -- which wire a full-body
+## COPY of the albedo into the emission slot, and `emission_scale` exists
+## specifically to tame that so a creature does not wash out pale in
+## daylight -- an Aspect variant's emission texture is a mostly-BLACK
+## synthesised glow map (tools/generate_aspect_variant_textures.py): a sparse
+## network of cracks/veins over an otherwise-dark canvas, not a second copy
+## of the whole animal. Taming it by the same shared 0.5 multiplier crushes
+## the one thing that is supposed to read as supernatural glow. Rendered and
+## measured directly (ralph/reports/T1-VARIANTS/shots/*-close.png,
+## *-night-close.png): at the shared scale alone, Stormtrail's veins were
+## essentially invisible at night with nothing but the VFX eye/mote
+## billboards showing. This multiplies ON TOP of `VISUAL.emission_scale()`,
+## only for an aspect-variant suffix -- every ordinary colourway is
+## byte-for-byte unaffected.
+const ASPECT_EMISSION_BOOST := {
+	"nightburrow": 1.7,
+	"stormtrail": 2.2,
+	"riftfrill": 1.6,
+	"ashtusk": 1.7,
+}
+
+
 static func _swapped_material(source: BaseMaterial3D, species: String, suffix: String) -> BaseMaterial3D:
 	var shiny_albedo := _texture_for(source.albedo_texture, species, suffix, "base_color")
 	if shiny_albedo == null:
@@ -752,6 +777,7 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 		# turns a saturated mid-brown map into a pale peach animal and flattens
 		# the value contrast a face needs. Tunable in creatures_visual.json.
 		copy.emission_energy_multiplier *= VISUAL.emission_scale()
+		copy.emission_energy_multiplier *= float(ASPECT_EMISSION_BOOST.get(suffix, 1.0))
 	_shiny_swap_materials[key] = copy
 	return copy
 
