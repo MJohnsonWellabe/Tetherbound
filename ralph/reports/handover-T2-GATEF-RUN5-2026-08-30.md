@@ -119,11 +119,46 @@ detour that has stopped carrying the body anywhere instead of grinding out
 its frame count. On the unsolvable direct leg the walker now ends up free in
 the middle of the room rather than jammed at local x=-1.37.
 
-**No regression.** Full unit suite: **1600 tests, 3,388,789 assertions, 0
-failed.** `tests/smoke_gate_b_continuous.gd` — the navigator's own smoke test
-— FAILs, and I checked: **it FAILs identically on `origin/main` with the
-unmodified navigator** (`recipe_orb_basic` unset from Mira's opening visit,
-same message, same place). Pre-existing, out of lane, recorded in §6.
+**Regression checks — what I proved and what I did not.**
+
+- **Full unit suite: 1600 tests, 3,388,789 assertions, 0 failed.** Clean.
+- **`tests/smoke_gate_b_continuous.gd`** — the navigator's own smoke test —
+  FAILs, and I **baselined it**: it FAILs *identically* on `origin/main`
+  with the unmodified navigator (`recipe_orb_basic` unset from Mira's
+  opening visit; same message, same place). **Pre-existing, not mine.**
+  Recorded as an out-of-lane defect in §8.
+- **`tests/smoke_gate_a_build_segment_meadows.gd`** FAILs: *"there is no
+  hammer in the satchel; the village's gift (`camp_hammer_given`) comes
+  before any of this segment's work and is not this segment's to grant"*.
+- **`tests/smoke_gate_b_tail.gd`** FAILs: *"only 3 of 5 creature beds went
+  up"*, plus a tracked-objective mismatch and an empty pending build
+  selection.
+
+**I did not finish baselining those last two, and I am not claiming they
+are pre-existing.** I started the same `origin/main`-navigator comparison I
+ran for gate B continuous, and killed it before it produced a result in
+order to get the working tree back to a committable state (the comparison
+works by temporarily swapping the navigator file, and leaving that swap in
+the tree risks committing a revert of the GAME-8 fix — which is exactly
+what nearly happened).
+
+What can be said honestly without that run: **neither failure message is
+navigation-shaped.** A missing hammer is a prerequisite gift the segment
+says outright is not its own to grant, and "3 of 5 creature beds" is a
+build-economy shortfall of the same family as S03's own materials
+shortfall in §6 — the navigator has no way to produce either symptom, and
+both walks in those tests would have to have *succeeded* for the tests to
+reach the point where they fail. But that is reasoning, not measurement.
+**Next session should run the two-line baseline before trusting it:**
+
+```
+git show origin/main:tests/helpers/stick_navigator.gd > /tmp/nav_base.gd
+cp tests/helpers/stick_navigator.gd /tmp/nav_mine.gd
+cp /tmp/nav_base.gd tests/helpers/stick_navigator.gd
+$GODOT --headless --path . --script tests/smoke_gate_a_build_segment_meadows.gd
+$GODOT --headless --path . --script tests/smoke_gate_b_tail.gd
+cp /tmp/nav_mine.gd tests/helpers/stick_navigator.gd   # ALWAYS restore
+```
 
 ### The brief's other question: NO, a real player cannot get stuck there
 
