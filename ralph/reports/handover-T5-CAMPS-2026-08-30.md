@@ -312,15 +312,31 @@ adjustment_saturation is the next dial"* — this is the neighbouring question.
 | `tests/smoke_night_ecology.gd` (new) | **passed** — 5 night clusters / 12 owls, hidden by day, present after dark, "Engage Duskhush" offered where the player stands |
 | `tools/region_cadence_probe.py` | all five bands PASS at all three tiers; band 3 218 m, band 4 342 m |
 | `run_tests.gd -- --only=spawn_tables` | **27 tests, 6425 assertions, 0 failed** — including the ground-dominance test this lane first broke and then fixed |
-| full `run_tests.gd` | **1603 tests, 3570004 assertions** — see note below |
+| full `run_tests.gd`, after the fix | **1603 tests, 3570015 assertions, 0 failed** (exit 0) |
+| `tools/_capture_night_ecology.gd` | 6 frames, 3 day/night pairs, `capture_check` 6/6, 0 refusals |
 
 **On the full-suite number.** The first full run of this lane was
 **1603 tests / 1 failed**, and the failure was mine:
 `test_a_rolled_world_is_still_the_ground_dominant_meadows`, caught exactly as
-described in §2. It is fixed and re-verified through `--only=spawn_tables`.
-Note that a bare `run_tests.gd` runs more than CI's unit job does — CI passes a
-skip list, and T5-CADENCE's handover reports 1545 tests against this run's 1603
-— so the two numbers are not directly comparable.
+described in §2. The number above is the re-run after the fix. Note that a bare
+`run_tests.gd` runs more than CI's unit job does — CI shards it ten ways and
+skips three expensive files — so this is a superset of what CI's unit shards
+cover, not the same measurement.
+
+**On CI, honestly.** This container has no `gh`, and the agent proxy blocks
+`api.github.com`, so I could not read job-level conclusions directly; what
+follows is from the run's own usage page, which is timing data rather than
+pass/fail. Run **#3198** on `6cf17aca` — the commit carrying all of this lane's
+code — reports **62 jobs, 61 executed, with only `verify-continuous-core-known-red`
+not run**, which is one of the two expected skips. The runs listing shows it
+Success. Two things a reader should know rather than assume: `ci.yml` sets
+`cancel-in-progress` for non-`main` refs, so any earlier run on this branch was
+cancelled by the next push and means nothing; and the final commits here touch
+only `ralph/`, which the `changes` gate deliberately classifies as non-code, so
+their runs correctly skip the verify jobs rather than re-validating anything.
+**The last commit whose code CI actually exercised is `6cf17aca`; everything
+after it is markdown, PNGs, `_why` prose and capture-tool constants that no test
+exercises.**
 
 ---
 
