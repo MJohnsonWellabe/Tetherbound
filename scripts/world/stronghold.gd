@@ -2513,7 +2513,17 @@ func _build_garrison_camp() -> void:
 			continue
 		node.name = str(spec.get("model", "CampProp"))
 		var at := _local_of(spec.get("at", []))
-		node.position = Vector3(at.x, _floor_y + float(spec.get("lift", 0.0)), at.z)
+		# T1-HALL-4, JUDGE-6 defect 7. `on_causeway` here is the same flag
+		# `_brazier` already takes, for the same reason: the ramp deck is not the
+		# floor plane, it climbs ~10m over its 40m run, and a prop placed at
+		# `_floor_y` on the causeway is buried in it. `causeway_surface_y` is the
+		# only way to ask -- `_build_approach_ramp` samples the rise from the live
+		# ground, so no caller can re-derive the deck height (that is D1's whole
+		# story, one lane ago, when the H-04 camera sat 7m inside the slab).
+		var base_y := _floor_y
+		if bool(spec.get("on_causeway", false)):
+			base_y = _causeway_y(at.z)
+		node.position = Vector3(at.x, base_y + float(spec.get("lift", 0.0)), at.z)
 		node.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		node.scale = Vector3.ONE * float(spec.get("scale", 1.0))
 		holder.add_child(node)
