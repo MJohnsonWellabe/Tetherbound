@@ -31,6 +31,8 @@ session spent itself on.
 | 3b. Stream visible from its own bank | **Done and measured** — from occluded by 0.363m to clear by 0.218m, against ground *plus grass*, at the capture tool's own stand. Terrain regen + `smoke_traversal.gd`. |
 | 3c. River as engineered canal | **Partially done, capped by gameplay — and STILL OPEN.** Rims and half-widths varied within the limit the river's blocker role allows; the AFTER frame still reads as a levee. Do not let the re-bake close this item. |
 | 6. Mid-distance smear tier | Not attempted. T1-GROUND could not reproduce it as described and I had no budget left to re-litigate that. |
+| **Creatures buried in slopes** (JUDGE-3 §2b, routed) | **Fixed.** `place_on_ground` seated the root on one sampled point; on a slope that buries the uphill half of the body. Now seats over the footprint. |
+| **"Scatter reads procedural"** (JUDGE-3 §1f, routed) | **Deliberately NOT changed**, with the argument written out: two of its four ground findings describe a frame missing the whole ground-cover system (§0), and the bush row does not survive a crop at the given coordinates. Re-judge on a fixed capture first. |
 
 **Branch state:** pushed to `origin/ralph/T1-GROUND-3`. One work commit
 (`21fd47f0`) plus a forward merge of `origin/main` at `bf815014`, which landed
@@ -758,21 +760,28 @@ budgeted for two bands. One terrain region bakes in 22 s.
 
 ## What I would do next, in priority order
 
-1. **Judge the second species.** It is placed, measured and tested, but the
+1. **Re-judge §1f's "scatter reads procedural" on a post-§0 capture**, before
+   anyone retunes clumping against the compromised frames. One render settles
+   it, and the bushes layer is already clumped and trail-sited.
+2. **Judge the second species.** It is placed, measured and tested, but the
    only thing that decides whether 130,547 tussocks read as a second grass or
    as clutter is a blind pass over the AFTER frames in
    `ralph/reports/T1-GROUND-3/shots/`. If it reads as clutter, the first knob
    is `drygrass.verge.count`, then `corridor_fill.density_scale` — not the
    clump numbers, which are chapter-wide.
-2. **Finish the dashed seam lines** with the clipmap test named in item 2 —
+3. **Finish the dashed seam lines** with the clipmap test named in item 2 —
    one render with Terrain3D's `mesh_lods`/`mesh_size` changed. Much cheaper
    than the debug overlay two lanes have proposed, and it is the last
    candidate standing.
-3. **The river's hard turf line** — per-metre noise on the rim inside
+4. **The river's hard turf line** — per-metre noise on the rim inside
    `_river_carve`. This is the remaining half of the canal read and the one
    that does *not* require touching the bank angle. Needs a terrain regen.
-4. **The 30,000 wasted `grass` verge placements**, which are baked and never
+5. **The 30,000 wasted `grass` verge placements**, which are baked and never
    rendered while the layer is suppressed. Free headroom under the ceiling for
    whoever needs it next.
-5. **Mid-distance smear tier** (brief item 6), still un-reproduced by two
+6. **Add `CAPTURE_CHECK.require` to the capture tools whose frames get
+   committed as evidence.** The §0 source fix is global so no tool needs it to
+   get grass back, but only the tool that calls the check is protected against
+   the next system that breaks this way. One line each, at the shutter.
+7. **Mid-distance smear tier** (brief item 6), still un-reproduced by two
    lanes now.
