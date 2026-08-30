@@ -752,6 +752,28 @@
       "_derived_from": "S03-62"
     },
     {
+      "id": "S03C-62a",
+      "title": "close Oskar's creature swap without trading",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "his greeting ends with `shop:creatures:oskar`, which opens a SwapPanel; this closes it the way Mira's shop is closed by S03C-56",
+      "observation": "T2-GATEF-RUN6, RIG-25 audit: S03.json carries S03-62a/62b (close Oskar's swap panel, then assert the world owns input) from T2-GATEF-RUN5's GAME-10 fix. The C-variant was never given the same pair, so a capture-mode S03C would reproduce GAME-10 in full: `sequence_director.gd::_maybe_open_shop()` opens Oskar's SwapPanel the instant his dialogue closes, and nothing here closed it."
+    },
+    {
+      "id": "S03C-62b",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is `world`; without this guard a stuck panel reports as dozens of unrelated-looking downstream failures rather than as one cause",
+      "observation": "T2-GATEF-RUN6, RIG-25 audit: S03.json carries S03-62a/62b (close Oskar's swap panel, then assert the world owns input) from T2-GATEF-RUN5's GAME-10 fix. The C-variant was never given the same pair, so a capture-mode S03C would reproduce GAME-10 in full: `sequence_director.gd::_maybe_open_shop()` opens Oskar's SwapPanel the instant his dialogue closes, and nothing here closed it."
+    },
+    {
       "id": "S03C-65",
       "title": "gather wood at (16, -28)",
       "action": "move_to",
