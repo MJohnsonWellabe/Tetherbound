@@ -617,3 +617,18 @@ the Warden's five creatures on `--only=warden_aldis`, on the **unfixed** build:
 `arena` block predicts. This is measured in the open meadow, where there is
 ground everywhere and the fight merely walks; in the Warden Arena the same 21 m
 carries it off the slab, which is the reported defect.
+
+**With the anchor, on the same fight:**
+
+```
+[drift] round 1 opens with the trainer at 54.0, -61.9 — 0.00m from where round 0 opened
+[drift] round 2 opens with the trainer at 54.0, -61.9 — 0.00m from where round 1 opened
+[drift] round 3 opens with the trainer at 54.0, -61.9 — 0.00m from where round 2 opened
+[drift] round 4 opens with the trainer at 54.0, -61.9 — 0.00m from where round 3 opened
+[drift] round 5 opens with the trainer at 54.0, -61.9 — 0.00m from where round 4 opened
+  b5 warden_aldis  warden  player L20 x5  vs 5 creatures to L20  WON
+```
+
+**21.2 m of travel becomes 0.00 m**, every round of the Warden's battle forms in
+the same place, and the fight is still won — the anchor changes where the fight
+happens, not how it goes.
