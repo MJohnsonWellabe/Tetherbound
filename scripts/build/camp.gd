@@ -95,10 +95,33 @@ const FIRE_SCALE := 0.55
 
 const FADE_SECONDS := 1.2
 
+const FIRE_LIGHT_BASE_ENERGY := 2.8
+## T1-LIGHT, JUDGE-3 sec1b: same fix as campfire_glow.gd's own
+## `DAY_ENERGY_SCALE`, see that constant's comment for the full reasoning
+## (a permanently-lit ground fire cannot switch fully off in daylight
+## without looking broken, so this scales the disc down below ambient
+## daylight instead of hiding it).
+const FIRE_LIGHT_DAY_SCALE := 0.16
+
 var _ghost_meshes: Array[MeshInstance3D] = []
 var _ghost_tent: Node3D = null
 var _ghost_ring: Node3D = null
 var _ghost_bed: Node3D = null
+## T1-LIGHT, JUDGE-3 sec1b. This fire's own light, built below, is a SEPARATE
+## OmniLight3D from campfire_glow.gd's -- the player-built camp never
+## instantiates that class at all, only its `ignite()`/`texture_logs()`
+## static helpers for the mesh's own Fire surface, so fixing
+## campfire_glow.gd (its day/night energy scale, its softer
+## omni_attenuation) never touched this light. Confirmed this is the actual
+## source of the judged "unshaped blown-out disc... brighter at its centre
+## than the sky, in daylight" (`tools/_capture_t1_camp.gd`'s own
+## `01-camp-establishing.png`/`02-camp-close.png`, built via
+## `build_real()`): a same-image pixel diff against a rebuilt
+## campfire_glow.gd showed zero change here, and the fire mesh this rig
+## renders never goes through `CAMPFIRE_GLOW.ignite()`'s own OmniLight
+## instantiation at all -- this is it.
+var _fire_light: OmniLight3D = null
+var _fire_light_world_look: Node = null
 ## R2.4. Instantiated once, on the first "Craft" activation — most camps are
 ## visited for rest and never opened for crafting, so building the panel's
 ## whole node tree up front would be work most players never see the result
@@ -115,13 +138,16 @@ func build_ghost() -> void:
 func build_real() -> void:
 	_spawn_meshes(true)
 
-	var light := OmniLight3D.new()
-	light.position = Vector3(0.0, 1.2, 0.0)
-	light.light_color = Color(1.0, 0.72, 0.45)
-	light.light_energy = 2.8
-	light.omni_range = 10.0
-	light.shadow_enabled = true
-	add_child(light)
+	_fire_light = OmniLight3D.new()
+	_fire_light.position = Vector3(0.0, 1.2, 0.0)
+	_fire_light.light_color = Color(1.0, 0.72, 0.45)
+	_fire_light.light_energy = FIRE_LIGHT_BASE_ENERGY
+	_fire_light.omni_range = 10.0
+	# Same reasoning as campfire_glow.gd's own LIGHT_ATTENUATION: the default
+	# 1.0 exponent reads as a hard-ish edge at `omni_range`'s own cutoff.
+	_fire_light.omni_attenuation = 1.8
+	_fire_light.shadow_enabled = true
+	add_child(_fire_light)
 
 	var prompt: Node3D = INTERACTABLE.new()
 	prompt.name = "Interactable"
@@ -200,6 +226,22 @@ func _spawn_meshes(solid: bool) -> void:
 		body.position = m.position + Vector3(0.0, aabb.size.y * 0.5 * m.scale.x, 0.0)
 		body.rotation.y = m.rotation.y
 		add_child(body)
+
+
+## Lazy-looked-up every tick, not cached at `build_real()` time -- the same
+## `torch.gd::_is_on()` OF18 lesson `campfire_glow.gd::_daylight_scale()`
+## already restates: a camp can be built and placed before `world_look.gd`
+## has joined the "day_cycle" group, and caching null at that moment would
+## leave the fire at full daylight energy forever.
+func _process(_delta: float) -> void:
+	if _fire_light == null:
+		return
+	if _fire_light_world_look == null or not is_instance_valid(_fire_light_world_look):
+		_fire_light_world_look = get_tree().get_first_node_in_group(&"day_cycle")
+	var is_dark := true
+	if _fire_light_world_look != null and _fire_light_world_look.has_method("is_dark"):
+		is_dark = bool(_fire_light_world_look.call("is_dark"))
+	_fire_light.light_energy = FIRE_LIGHT_BASE_ENERGY * (1.0 if is_dark else FIRE_LIGHT_DAY_SCALE)
 
 
 func _mesh(path: String, at: Vector3, scale_factor: float) -> MeshInstance3D:

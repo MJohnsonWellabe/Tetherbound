@@ -42,6 +42,15 @@ func _run() -> void:
 
 	var world := _stage(20.0)
 
+	# T1-LIGHT: this rig has no WorldLook/day-cycle node, so campfire_glow.gd's
+	# daylight energy scale (JUDGE-3 sec1b, "the point light has no daylight
+	# attenuation") would otherwise never engage here -- this stage's fixed
+	# sun IS daytime by construction, so tell anything that asks.
+	var day_stub := Node.new()
+	day_stub.set_script(load("res://tools/_capture_day_stub.gd"))
+	day_stub.add_to_group(&"day_cycle")
+	world.add_child(day_stub)
+
 	# Camp at origin, exactly as camp.gd::build_real() composes it.
 	var camp := CAMP.new()
 	world.add_child(camp)
