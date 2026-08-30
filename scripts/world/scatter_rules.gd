@@ -420,6 +420,31 @@ static func _place_verge(
 	# vegetation.json.
 	var inner := float(verge.get("inner", 1.5))
 	var band := maxf(float(verge.get("band", 4.0)), 0.0)
+	# T1-GROUND-3: the verge honours `layer.band_scale` too, and it is the half
+	# that matters most for reading a region change -- corridor_fill spreads
+	# over 16.8 km2 the camera never sees, while every verge draw lands within
+	# `inner + band` metres of an authored route, which is the ground the
+	# player is standing on when they notice what the region is made of.
+	#
+	# Normalised by the layer's own LARGEST weight rather than applied raw:
+	# a raw keep-roll would clip every weight at or above 1.0 to "keep
+	# everything", collapsing exactly the distinction between the bands the
+	# species belongs to. So the draw is scaled up by that maximum and each
+	# candidate kept with weight/maximum, which preserves the ratios between
+	# all five bands and leaves `count` meaning what it always did: the number
+	# placed where the layer is at its thickest.
+	#
+	# A layer with no `band_scale` takes neither branch and consumes no extra
+	# rng call, so its placements stay bit-identical to before this existed --
+	# which is what lets the re-bake this shipped with be read as "the second
+	# species moved" rather than "the whole meadow reshuffled".
+	var band_gain := 1.0
+	var layer_bands: Dictionary = layer.get("band_scale", {})
+	var bands: Array = config().get("corridor_bands", [])
+	if not layer_bands.is_empty():
+		for weight: Variant in layer_bands.values():
+			band_gain = maxf(band_gain, float(weight))
+		count = int(round(float(count) * band_gain))
 	for i in count:
 		var u := rng.randf() * total
 		var segment := segment_length.size() - 1
@@ -432,6 +457,9 @@ static func _place_verge(
 		var along := segment_a[segment] + tangent * u
 		var side := -1.0 if rng.randf() < 0.5 else 1.0
 		var spot := along + Vector2(-tangent.y, tangent.x) * side * (inner + band * rng.randf())
+		if not layer_bands.is_empty():
+			if rng.randf() > _layer_band_scale_at(spot.y, bands, layer_bands) / band_gain:
+				continue
 		_consider(out, layer, field, models, spot, half, rng)
 
 
@@ -515,6 +543,9 @@ static func _place_corridor_fill(
 	if layer_scale <= 0.0:
 		return
 	var bands: Array = config().get("corridor_bands", [])
+	# T1-GROUND-3: this layer's own per-band weight on top of the band table.
+	# See `_layer_band_scale_at` for why the two tables are separate.
+	var layer_bands: Dictionary = layer.get("band_scale", {})
 
 	var clumps := int(layer.get("clumps", 0))
 	var per_clump := int(layer.get("per_clump", 0))
@@ -551,7 +582,8 @@ static func _place_corridor_fill(
 			var near_trail := _sample_near_trail(rng, trail_segments, trail_offset_min, trail_offset_max)
 			if near_trail != Vector2.INF:
 				centre = near_trail
-		var keep_chance := layer_scale * _band_scale_at(centre.y, bands)
+		var keep_chance := layer_scale * _band_scale_at(centre.y, bands) \
+			* _layer_band_scale_at(centre.y, bands, layer_bands)
 		if rng.randf() > keep_chance:
 			continue
 		if absf(centre.x) <= half and absf(centre.y) <= half:
@@ -564,7 +596,8 @@ static func _place_corridor_fill(
 
 	for s in candidate_strays:
 		var spot := Vector2(rng.randf_range(min_x, max_x), rng.randf_range(min_z, max_z))
-		var keep_chance := layer_scale * _band_scale_at(spot.y, bands)
+		var keep_chance := layer_scale * _band_scale_at(spot.y, bands) \
+			* _layer_band_scale_at(spot.y, bands, layer_bands)
 		if rng.randf() > keep_chance:
 			continue
 		if absf(spot.x) <= half and absf(spot.y) <= half:
@@ -640,6 +673,43 @@ static func _band_scale_at(z: float, bands: Array) -> float:
 		var band: Dictionary = entry
 		if z >= float(band.get("z_min", -INF)) and z < float(band.get("z_max", INF)):
 			return clampf(float(band.get("density_scale", 1.0)), 0.0, 1.0)
+	return 1.0
+
+
+## T1-GROUND-3. A layer's OWN per-band weight, multiplied on top of the
+## chapter-wide `corridor_bands` table above. Optional and defaulting to 1.0,
+## so every layer that does not carry the key places exactly what it placed
+## before this existed.
+##
+## The two tables answer different questions and neither can answer the
+## other's. `corridor_bands.density_scale` is how much scatter a band can
+## AFFORD -- one number for all eleven layers, tuned against boot cost and the
+## placement ceiling, which is why it is clamped to 0..1 and why a content lane
+## moves it for budget reasons. `layer.band_scale` is which SPECIES that band
+## is made of, which is a look question with no budget content: shifting a
+## layer's share from band 1 to band 5 costs the same placements either way.
+##
+## Without it, "regional differentiation is prop-deep -- bands 1, 3, 4 and 5
+## share the same grass carpet, same tree family, same palette; they differ by
+## what is parked on them" (2026-08-29 blind pass, subject 8) is not reachable
+## from config at all: the only per-band lever was one scalar that thins every
+## layer together, so a band could be sparser or denser but never made of
+## different plants. This is the lever that lets the dry species thicken toward
+## the stronghold while the green stays where it is.
+##
+## Keyed by the band's own `id` in `corridor_bands` rather than by index, so a
+## band inserted or reordered cannot silently move a weight onto its
+## neighbour. NOT clamped to 1.0 -- unlike the affordability table above, a
+## value over 1 is meaningful here (this band is where the species belongs);
+## the product still passes through `randf() > keep_chance`, so anything at or
+## over 1 simply keeps every candidate the affordability table already allowed.
+static func _layer_band_scale_at(z: float, bands: Array, band_scale: Dictionary) -> float:
+	if band_scale.is_empty():
+		return 1.0
+	for entry: Variant in bands:
+		var band: Dictionary = entry
+		if z >= float(band.get("z_min", -INF)) and z < float(band.get("z_max", INF)):
+			return maxf(float(band_scale.get(str(band.get("id", "")), 1.0)), 0.0)
 	return 1.0
 
 

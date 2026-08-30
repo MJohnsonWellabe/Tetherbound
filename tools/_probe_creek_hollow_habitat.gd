@@ -27,6 +27,7 @@ extends SceneTree
 ## back off a wall rather than clip through it.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT := "res://shots/creature_presentation/habitat"
 const SETTLE_FRAMES := 30
@@ -91,6 +92,19 @@ func _run() -> void:
 	camera.make_current()
 	if world.get("_terrain") != null and (world.get("_terrain") as Node).has_method("set_camera"):
 		(world.get("_terrain") as Node).call("set_camera", camera)
+	# T1-GROUND-3. This tool's own frames are the ones JUDGE-3 section 0 used to
+	# establish that the harness produces grass-free evidence -- "bushes, reeds,
+	# flower clumps and fern cards on a splat, and no blades". The cause was the
+	# line above having no counterpart for the grass field: Terrain3D got told
+	# about this camera and the field did not, so its ring stayed parked on the
+	# gameplay camera and this tool photographed ground it was not dressing.
+	# `grass_field.gd::_follow_camera` now redirects the ring to whichever camera
+	# is rendering, which fixes this tool and the other 122 like it. The
+	# CAPTURE_CHECK below is what makes a future regression of the same shape
+	# loud instead of silent; it sits at the SHUTTER rather than here, because
+	# the redirect happens in the field's own `_process` and a check run in the
+	# same frame as `make_current()` fires before the world has had a tick to
+	# settle -- which is a false alarm on exactly the frame the fix is working.
 
 	var wanted: Array = OS.get_cmdline_user_args()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
@@ -112,6 +126,11 @@ func _run() -> void:
 		for _i in PER_SHOT_SETTLE:
 			await process_frame
 		await RenderingServer.frame_post_draw
+		# Last thing before the shutter, once the world is posed and settled:
+		# refuse to write a frame that is missing a whole rendering system.
+		# See tools/capture_check.gd and JUDGE-3 section 0 -- this tool's own
+		# earlier frames are the evidence that motivated it.
+		CAPTURE_CHECK.require(self, camera)
 		var image := root.get_texture().get_image()
 		if image != null:
 			image.save_png("%s/creekhollow-%s.png" % [OUT, tag])
