@@ -578,8 +578,20 @@ Measured across four RUN6 runs of S02 on this candidate:
 | practice bramblebun, roll B | **124.2 HP**, recorded **level 5** in the exit save |
 | design intent, per `progression.json` | **level 2** |
 
-**The starter loses.** RUN6's fourth run is the clean case, with the full
-attack script (a charged attack plus three quick attacks) spent:
+**The starter loses, and it is not an unlucky roll.** Across **five** RUN6
+runs of S02 on this candidate, with the rig defects fixed and the fight
+staging every time:
+
+| | |
+|---|---|
+| runs where the fight staged | **5 of 5** |
+| runs where the starter FAINTED | **4 of 5** |
+| runs where the catch landed | **1 of 5** |
+
+The one success threw at 80% opponent HP and got a favourable roll; it did
+not survive the fight so much as end it early. The fourth run is the clean
+losing case, with the full attack script (a charged attack plus three quick
+attacks) spent:
 
 ```
 t=219.25  combat_start   my_hp=117.6   opponent_hp=104.3
@@ -587,8 +599,17 @@ t=266.35  faint          my_hp=0.0     opponent_hp=76.1
 t=267.97  combat_end
 ```
 
-Forty-seven seconds, no `catch_throw` at all, and the player's creature
-died having removed 28 of the opponent's 104 HP — most of the scripted
+and the fifth run shows the same shape with a throw in it, thrown far too
+late because the script is still trading blows while the starter is dying:
+
+```
+t=219.27  combat_start   my_hp=117.6   opponent_hp=104.3
+t=254.22  catch_throw    my_hp=26.6    opponent_hp=65.2    <- throw fails
+t=269.72  faint          my_hp=0.0     opponent_hp=65.2
+```
+
+Forty-seven seconds in the fourth run, no `catch_throw` at all, and the
+player's creature died having removed 28 of the opponent's 104 HP — most of the scripted
 attacks missed a target that moves (`player_quick.range` 2.6 m,
 `cone_degrees` 100). A level-3 creature with 117 HP is being asked to beat a
 level-5 creature with 124 HP, in the fight the game uses to teach combat,
