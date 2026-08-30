@@ -2687,17 +2687,35 @@ func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 		# `nearest` (the default) picks the closest to the player and SAYS it
 		# did, with the count -- so a segment that meant a specific one can see
 		# from the note that it was ambiguous.
+		#
+		# `rank` (RIG-F4, ralph/GATE-F-FULL 2026-08-30) picks the Nth-nearest
+		# instead of the nearest, and it exists because a RETRY LADDER THAT
+		# ALWAYS RESOLVES THE SAME THING IS NOT A RETRY LADDER. S03's engage
+		# ladder walks to "a live bramblebun" ten times; every attempt resolved
+		# the same nearest creature, the walker reported "walked 0.0 m" because
+		# the player was already inside `within`, and all ten attempts pressed
+		# from the identical spot and lost the interaction arbiter to the same
+		# deadwood node at (26,-44) -- ten identical failures over 180 s of
+		# play, and a team that never reached three. Varying the rank makes each
+		# attempt a genuinely different attempt.
+		#
+		# Out-of-range ranks CLAMP rather than fail, and the note says the rank
+		# was clamped: a ladder authored for five candidates must not blow up in
+		# a boot that spawned three.
 		var player := _probe.call("player") as Node3D
-		var best: Node3D = hits[0]
+		var ordered: Array[Node3D] = hits.duplicate()
 		if player != null:
-			var best_d := INF
-			for node in hits:
-				var d := player.global_position.distance_to(node.global_position)
-				if d < best_d:
-					best_d = d
-					best = node
-		return {"ok": true, "node": best,
-			"how": "%s, nearest of %d (%s)" % [str(pair[1]), hits.size(), _names_of(hits)]}
+			var origin := player.global_position
+			ordered.sort_custom(func(a: Node3D, b: Node3D) -> bool:
+				return origin.distance_to(a.global_position) < origin.distance_to(b.global_position))
+		var rank := clampi(int(args.get("rank", 0)), 0, ordered.size() - 1)
+		var asked := int(args.get("rank", 0))
+		var how := "%s, nearest of %d (%s)" % [str(pair[1]), hits.size(), _names_of(hits)]
+		if asked != 0:
+			how = "%s, #%d nearest of %d%s (%s)" % [str(pair[1]), rank + 1, hits.size(),
+				"" if rank == asked else " [rank %d clamped to %d]" % [asked, rank],
+				_names_of(hits)]
+		return {"ok": true, "node": ordered[rank], "how": how}
 	var how := "of point-of-interest kind" if not want_kind.is_empty() \
 		else ("running the script" if lowered.ends_with(".gd") \
 		else "named, grouped, labelled or speciesed")
