@@ -564,7 +564,7 @@ tracked-mirror rule:
 bash tools/art_pipeline/setup.sh godot        # -> /root/.cache/tetherbound-art/godot
 godot --headless --path . --import            # twice; second is clean
 
-# The three new diagnostics -- seconds each, no renderer, no bake
+# The four new diagnostics -- seconds each, no renderer, no bake
 godot --headless --path . --script tools/_probe_ground_seams.gd
 godot --headless --path . --script tools/_probe_stream_sightline.gd
 godot --headless --path . --script tools/_probe_stream_sightline.gd -- --sweep
