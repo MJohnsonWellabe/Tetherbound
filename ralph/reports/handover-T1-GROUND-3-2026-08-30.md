@@ -175,6 +175,71 @@ recurring. **Every frame committed as evidence before 2026-08-30 that came from
 a free-camera tool should be treated as unreliable about ground cover** —
 including the T1-CAST band24 set and the day/night set the judge named.
 
+### The other two items routed with it
+
+**Creatures flattened into sloped ground (JUDGE-3 §2b) — FIXED.** The judge
+found creatures "sunk into the slope from the hindquarters back, cut off by
+the ground plane", 100m from any water, and correctly said this is ground
+placement rather than the water-spawn path. It is one line of seating:
+`creature_body.gd::place_on_ground` sampled the ground at **one point** and put
+the root there. A creature stands level, so on a slope the uphill half of a
+body `_radius` wide sits below ground by about `radius × tan(slope)` — 0.4 m of
+radius on a 25° hillside buries 19 cm, which on a small creature is the
+hindquarters.
+
+This is the same defect T1-GROUND measured and fixed for `path_stones` one
+system over: a rigid shape sampled at its centre and laid on a slope. New
+`_seat_over_footprint` seats on the **highest** ground under the footprint
+(four axis samples) instead of the centre. The asymmetry is deliberate: a small
+gap under one flank reads as a standing animal, a body sliced off by the ground
+plane reads as a bug — and a creature that activates closes the gap on its
+first `move_and_slide`, while nothing ever un-buries it, which is why the
+frames show it. Falls back to the old behaviour whenever the world cannot
+answer.
+
+**Blast radius to watch:** this is `scripts/creatures/creature_body.gd`, not a
+ground file, and `place_on_ground` is also used by combat arrangement and
+respawn. It can only ever raise a body, never lower it. `smoke_wild_streaming`
+and `smoke_creature_control` were run.
+
+I did **not** touch the judge's other §2b observation — a creature "lying
+completely flat with zero volume". That is a different and larger symptom than
+slope seating explains, and I would rather leave it open than claim the seat
+fix covers it. Contact shadows were routed to the light lane and are untouched.
+
+**"Scatter reads procedural — seven identical bushes in a row" (JUDGE-3 §1f) —
+NOT changed, deliberately, and here is the argument.** Two of its four ground
+findings are artefacts of §0's grass bug rather than of the scatter:
+
+- *"five trees … with no undergrowth at their bases at all — they plant
+  straight into bare ground"* and *"about 60% of the frame is empty ground with
+  nothing in it"* are **descriptions of a frame with the entire ground-cover
+  system missing.** The undergrowth at a tree base in this build is grass field
+  tufts, cover-tier bushes and now straw tussocks — none of which were
+  rendering in those frames.
+- The bush row itself: I cropped `band4-4038-meadowhart-15deg.png` at the
+  coordinates given. The bushes follow a ridge crest and are neither evenly
+  spaced nor collinear on inspection — near a horizon at a grazing angle, any
+  scattered distribution compresses into an apparent line. And they are seven
+  dark blobs on bare ground *because the ground cover between them is missing*.
+
+The `bushes` layer is already clustered (44 clumps × 15 at a 13 m radius) and
+already trail-sited (`density_scale` 6.0, `trail_bias` 0.85). Retuning that
+against evidence which is compromised in exactly the dimension being judged is
+how this repo has previously spent whole rounds. **Re-judge this on a frame
+captured after the §0 fix before touching the numbers** — that costs one render
+and settles it either way.
+
+The one §1f finding I could not resolve and am passing on intact: *"the terrain
+grass splat is painted across the vertical faces of the rock cluster"*.
+Terrain3D calls this `enable_projection` (not "triplanar"); it is **on** in
+`shaders/terrain_ground.gdshader` with `projection_threshold 0.8`, so a
+vertical face should be projected. That means either the cluster is a scattered
+rock *prop* rather than terrain (in which case the splat is not on it at all
+and the finding is about the prop's own material), or the threshold is not
+doing what its name suggests. Needs the specific frame and a stand at that
+rock; I did not have one.
+
 ---
 
 ## 1. A genuine second grass species — DONE
