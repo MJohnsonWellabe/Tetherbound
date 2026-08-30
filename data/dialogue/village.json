@@ -178,11 +178,7 @@
         "You've been at the oaks and the outcrops with nothing but your hands, haven't you. It shows.",
         {
           "text": "Mira has you set for gathering. This knife and torch are for the work that runs long: clean fiber, then see your way home.",
-          "effects": [
-            "give:knife:1",
-            "give:torch:1",
-            "flag:tam_tools_given"
-          ]
+          "effects": ["give:knife:1", "give:torch:1", "flag:tam_tools_given"]
         },
         "Come back when they're blunt. I'll see to them."
       ]
