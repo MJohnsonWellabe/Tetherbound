@@ -125,7 +125,7 @@
         "check": "objective_is",
         "id": "head_to_south_bridge"
       },
-      "expected": "Section E.5 objective 13/24 `head_to_south_bridge`, 'Cross the South Bridge into the Lower Meadows.'"
+      "expected": "Section E.5 objective 16/27 `head_to_south_bridge`, 'Cross the South Bridge into the Lower Meadows.'"
     },
     {
       "id": "S05-12",
@@ -206,7 +206,7 @@
       "title": "Section E.5 nav note -- head_to_south_bridge",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 13/24 `head_to_south_bridge`. Wording: 'Cross the South Bridge into the Lower Meadows.' It names WHAT and a WHERE that is a named landmark -- the strongest objective line in the chapter so far. Player-visible information: `south_bridge` is a `major` map landmark at (0,1330); the fresh reveal covers the village and its roads only, so whether the bridge is a visible pin before it is discovered is the thing to record. The road runs south out of the village. Route decision: follow the road south, because the objective names a crossing and roads lead to crossings. Reasoned from GF-18-MAP-03 and GF-19-UI-08. Operator: record what the map ACTUALLY showed -- fog-of-war reveal as rendered, not as the config claims (section E.5's own instruction)."
+        "text": "Section E.5 navigation record, objective 16/27 `head_to_south_bridge`. Wording: 'Cross the South Bridge into the Lower Meadows.' It names WHAT and a WHERE that is a named landmark -- the strongest objective line in the chapter so far. Player-visible information: `south_bridge` is a `major` map landmark at (0,1330); the fresh reveal covers the village and its roads only, so whether the bridge is a visible pin before it is discovered is the thing to record. The road runs south out of the village. Route decision: follow the road south, because the objective names a crossing and roads lead to crossings. Reasoned from GF-18-MAP-03 and GF-19-UI-08. Operator: record what the map ACTUALLY showed -- fog-of-war reveal as rendered, not as the config claims (section E.5's own instruction)."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -702,7 +702,7 @@
         "check": "flag_set",
         "flag": "south_bridge_open"
       },
-      "expected": "`south_bridge_open` closes section E.5 objective 13/24"
+      "expected": "`south_bridge_open` closes section E.5 objective 16/27"
     },
     {
       "id": "S05-46w",

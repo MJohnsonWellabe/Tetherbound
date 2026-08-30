@@ -205,7 +205,7 @@
         "check": "objective_is",
         "id": "tournament_enter"
       },
-      "expected": "Section E.5 objective 11/24 `tournament_enter`, 'Enter the village tournament.'",
+      "expected": "Section E.5 objective 14/27 `tournament_enter`, 'Enter the village tournament.'",
       "_derived_from": "S04-11"
     },
     {
@@ -347,7 +347,7 @@
         "check": "flag_set",
         "flag": "tournament_entered"
       },
-      "expected": "`tournament_entered` closes objective 11/24",
+      "expected": "`tournament_entered` closes objective 14/27",
       "_derived_from": "S04-24"
     },
     {

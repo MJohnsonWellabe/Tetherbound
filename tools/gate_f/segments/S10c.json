@@ -125,14 +125,14 @@
         "check": "objective_is",
         "id": "see_what_changed"
       },
-      "expected": "Section E.5 objective 24/24 `see_what_changed`, 'Go back through the Meadows and see what changed.' -- the last of the 24 and the one that terminates the chain. Surviving the S10b/S10c handoff is itself evidence that the flag S10b set persisted through a real save/load"
+      "expected": "Section E.5 objective 27/27 `see_what_changed`, 'Go back through the Meadows and see what changed.' -- the last of the 27 and the one that terminates the chain. Surviving the S10b/S10c handoff is itself evidence that the flag S10b set persisted through a real save/load"
     },
     {
       "id": "S10c-90",
       "title": "Section E.5 nav note -- see_what_changed",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 24/24 `see_what_changed`. Wording: 'Go back through the Meadows and see what changed.' It names WHAT and a WHERE that is the whole chapter. Player-visible information: everything the player has walked. Route decision: walk the chapter backwards -- approach, crossing, bridge, village, home -- because the objective's own verb is 'go back through'. Reasoned from every arrival frame in S05 through S09. Section D RT-13 records this as 'as played'."
+        "text": "Section E.5 navigation record, objective 27/27 `see_what_changed`. Wording: 'Go back through the Meadows and see what changed.' It names WHAT and a WHERE that is the whole chapter. Player-visible information: everything the player has walked. Route decision: walk the chapter backwards -- approach, crossing, bridge, village, home -- because the objective's own verb is 'go back through'. Reasoned from every arrival frame in S05 through S09. Section D RT-13 records this as 'as played'."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },

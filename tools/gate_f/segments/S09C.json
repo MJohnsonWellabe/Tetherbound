@@ -155,7 +155,7 @@
         "check": "objective_is",
         "id": "fight_through_the_hall"
       },
-      "expected": "Section E.5 objective 20/24 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.' with the n/3 count appended",
+      "expected": "Section E.5 objective 23/27 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.' with the n/3 count appended",
       "_derived_from": "S09-11"
     },
     {

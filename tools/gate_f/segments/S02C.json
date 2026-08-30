@@ -165,9 +165,9 @@
       "action": "assert",
       "args": {
         "check": "objective_is",
-        "id": "opening_first_catch"
+        "id": "opening_hear_grandpa"
       },
-      "expected": "Section E.5's first of 24 main-chain objectives: `opening_first_catch`, 'Catch your first wild creature.'",
+      "expected": "Section E.5's first of 27 main-chain objectives: `opening_hear_grandpa`, 'Go down and hear Grandpa out.' RETARGETED 2026-08-30 (ralph/GATE-F-E5) from `opening_first_catch`, which OP-0830-4 demoted to rung 4 of 27 -- see the ladder table in ralph/GATE_F_MASTER_PROTOCOL.md section E.5",
       "_derived_from": "S02-11"
     },
     {

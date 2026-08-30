@@ -126,7 +126,7 @@
         "check": "objective_is",
         "id": "tournament_enter"
       },
-      "expected": "Section E.5 objective 11/24 `tournament_enter`, 'Enter the village tournament.'"
+      "expected": "Section E.5 objective 14/27 `tournament_enter`, 'Enter the village tournament.'"
     },
     {
       "id": "S04-12",
@@ -142,7 +142,7 @@
       "title": "Section E.5 nav note -- tournament_enter",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 11/24 `tournament_enter`. Wording: 'Enter the village tournament.' It names WHAT and a WHERE only as specific as 'the village'. Player-visible information: the painted tournament board stands in the practice arena's own clearing north of the square (data/config/tournament.json's `board`, facing back toward the square so a player walking up from the well reads it head-on), and the player has already fought Bryn on that ground. Route decision: walk north from the square to the cleared arena, because the board is the only thing in the village that names a tournament. Reasoned from GF-03-VILLAGE-02 and GF-18-MAP-01 (both S03). Operator: record whether the board was legible before it was reached, and the time to the decision."
+        "text": "Section E.5 navigation record, objective 14/27 `tournament_enter`. Wording: 'Enter the village tournament.' It names WHAT and a WHERE only as specific as 'the village'. Player-visible information: the painted tournament board stands in the practice arena's own clearing north of the square (data/config/tournament.json's `board`, facing back toward the square so a player walking up from the well reads it head-on), and the player has already fought Bryn on that ground. Route decision: walk north from the square to the cleared arena, because the board is the only thing in the village that names a tournament. Reasoned from GF-03-VILLAGE-02 and GF-18-MAP-01 (both S03). Operator: record whether the board was legible before it was reached, and the time to the decision."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -275,7 +275,7 @@
         "check": "flag_set",
         "flag": "tournament_entered"
       },
-      "expected": "`tournament_entered` closes objective 11/24"
+      "expected": "`tournament_entered` closes objective 14/27"
     },
     {
       "id": "S04-25",
@@ -671,7 +671,7 @@
         "check": "objective_is",
         "id": "head_to_south_bridge"
       },
-      "expected": "Section E.5 objective 13/24 `head_to_south_bridge`, 'Cross the South Bridge into the Lower Meadows.' section B: S04's span ends at the South Bridge objective"
+      "expected": "Section E.5 objective 16/27 `head_to_south_bridge`, 'Cross the South Bridge into the Lower Meadows.' section B: S04's span ends at the South Bridge objective"
     },
     {
       "id": "S04-56w",

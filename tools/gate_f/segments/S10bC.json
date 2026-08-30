@@ -225,7 +225,7 @@
         "check": "objective_is",
         "id": "defeat_the_warden"
       },
-      "expected": "Section E.5 objective 21/24 `defeat_the_warden`, 'Defeat the Meadows Warden.' -- surviving the S10a/S10b handoff is itself evidence that the flag S10a set persisted through a real save/load",
+      "expected": "Section E.5 objective 24/27 `defeat_the_warden`, 'Defeat the Meadows Warden.' -- surviving the S10a/S10b handoff is itself evidence that the flag S10a set persisted through a real save/load",
       "_derived_from": "S10b-51"
     },
     {
@@ -424,7 +424,7 @@
         "check": "flag_set",
         "flag": "defeated_warden"
       },
-      "expected": "`defeated_warden` closes section E.5 objective 21/24",
+      "expected": "`defeated_warden` closes section E.5 objective 24/27",
       "_derived_from": "S10b-67"
     },
     {
@@ -435,7 +435,7 @@
         "check": "objective_is",
         "id": "shut_down_the_machine"
       },
-      "expected": "Section E.5 objective 22/24 `shut_down_the_machine`, 'Shut down what Team Tether built under the Hall.'",
+      "expected": "Section E.5 objective 25/27 `shut_down_the_machine`, 'Shut down what Team Tether built under the Hall.'",
       "_derived_from": "S10b-68"
     },
     {
@@ -514,7 +514,7 @@
         "check": "flag_set",
         "flag": "legendary_freed"
       },
-      "expected": "`legendary_freed` closes section E.5 objective 22/24",
+      "expected": "`legendary_freed` closes section E.5 objective 25/27",
       "_derived_from": "S10b-74"
     },
     {
@@ -525,7 +525,7 @@
         "check": "objective_is",
         "id": "settle_the_roster"
       },
-      "expected": "Section E.5 objective 23/24 `settle_the_roster`, 'Settle who walks with you.'",
+      "expected": "Section E.5 objective 26/27 `settle_the_roster`, 'Settle who walks with you.'",
       "_derived_from": "S10b-75"
     },
     {

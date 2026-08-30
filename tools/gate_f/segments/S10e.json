@@ -1,6 +1,6 @@
 {
   "id": "S10e",
-  "_comment_split": "SPLIT from the monolithic S10.json (2026-08-30, ralph/T2-S10-COST). See S10a.json's header for the full rationale. This is the FIFTH and LAST of five sub-segments: the final third of the post-win walk-back, ending back at Grandpa's house where the chapter's 24-objective main chain terminates. Its final save is still named `S10-exit.json`, unchanged from the original monolithic file, because downstream consumers (X05's save/session lifecycle study, ralph/GATE_F_MASTER_PROTOCOL.md's own references to 'every S0n-exit') address the chapter's terminal save by that name.",
+  "_comment_split": "SPLIT from the monolithic S10.json (2026-08-30, ralph/T2-S10-COST). See S10a.json's header for the full rationale. This is the FIFTH and LAST of five sub-segments: the final third of the post-win walk-back, ending back at Grandpa's house where the chapter's 27-objective main chain terminates. Its final save is still named `S10-exit.json`, unchanged from the original monolithic file, because downstream consumers (X05's save/session lifecycle study, ralph/GATE_F_MASTER_PROTOCOL.md's own references to 'every S0n-exit') address the chapter's terminal save by that name.",
   "_comment_boundary": "Entry: seeded from S10d-exit (arrival at the South Bridge). Covers the walk into the village (60,750 budget frames), dialogue with a villager, the walk home to Grandpa's (3,000 budget frames), his post-win line, the four pacing/chain-closing asserts, and the FINAL production save-out. Frame budget including boot overhead (~11,500) and the final save-out (~700) is roughly 76,650 frames -- comfortably the cheapest of the walk-back sub-segments. At the quiet per-frame rate this run actually measured before combat (0.017-0.028 s/frame) this prices at 1,303-2,146 s (9-15% of the 14,400 s ceiling); even at the worst MEASURED rate anywhere in the blocked run (0.097118 s/frame, from mid-combat, which nothing in this sub-segment resembles) it is 7,443 s (52%).",
   "record_hz": 0.5,
   "title": "Finale V: world healing III -- the village, Grandpa's house, chain terminates",
@@ -124,7 +124,7 @@
         "check": "objective_is",
         "id": "see_what_changed"
       },
-      "expected": "Section E.5 objective 24/24, unchanged since S10d. Surviving the S10d/S10e handoff is itself evidence that the flag persisted through a real save/load"
+      "expected": "Section E.5 objective 27/27, unchanged since S10d. Surviving the S10d/S10e handoff is itself evidence that the flag persisted through a real save/load"
     },
     {
       "id": "S10e-99",
@@ -233,7 +233,7 @@
         "check": "flag_set",
         "flag": "meadows_acknowledged"
       },
-      "expected": "`meadows_acknowledged` closes section E.5 objective 24/24 and, with it, the 24-objective main chain. Section B: S10's span ends at 'chain terminates'"
+      "expected": "`meadows_acknowledged` closes section E.5 objective 27/27 and, with it, the 27-objective main chain. Section B: S10's span ends at 'chain terminates'"
     },
     {
       "id": "S10e-107",

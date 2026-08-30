@@ -189,7 +189,7 @@
         "check": "objective_is",
         "id": "village_tools"
       },
-      "expected": "Section E.5 objective 3/24 `village_tools`, 'Meet Tam in the village and take his tools.'",
+      "expected": "Section E.5 objective 6/27 `village_tools`, 'Meet Tam in the village and take his tools.'",
       "_derived_from": "S03-12"
     },
     {
@@ -355,7 +355,7 @@
         "check": "objective_is",
         "id": "tournament_build_team"
       },
-      "expected": "Section E.5 objective 4/24 `tournament_build_team`",
+      "expected": "Section E.5 objective 7/27 `tournament_build_team`",
       "_derived_from": "S03-28"
     },
     {
@@ -501,7 +501,7 @@
         "check": "objective_is",
         "id": "tournament_train_team"
       },
-      "expected": "Section E.5 objective 5/24 `tournament_train_team`, 'Train with your team before the tournament.'",
+      "expected": "Section E.5 objective 8/27 `tournament_train_team`, 'Train with your team before the tournament.'",
       "_derived_from": "S03-41"
     },
     {
@@ -1456,7 +1456,7 @@
         "check": "objective_is",
         "id": "tournament_build_home"
       },
-      "expected": "Section E.5 objective 7/24 `tournament_build_home`, 'Build a small home of your own.'",
+      "expected": "Section E.5 objective 10/27 `tournament_build_home`, 'Build a small home of your own.'",
       "_derived_from": "S03-106"
     },
     {
@@ -2212,7 +2212,7 @@
         "check": "objective_is",
         "id": "tournament_build_creature_beds"
       },
-      "expected": "Section E.5 objective 8/24 `tournament_build_creature_beds`, 'Build a Creature Bed for each of your entrants.' with the 1/3 count appended",
+      "expected": "Section E.5 objective 11/27 `tournament_build_creature_beds`, 'Build a Creature Bed for each of your entrants.' with the 1/3 count appended",
       "_derived_from": "S03-174"
     },
     {
@@ -2561,7 +2561,7 @@
         "check": "objective_is",
         "id": "tournament_sleep"
       },
-      "expected": "Section E.5 objective 9/24 `tournament_sleep`, 'Sleep until morning in your new home.'",
+      "expected": "Section E.5 objective 12/27 `tournament_sleep`, 'Sleep until morning in your new home.'",
       "_derived_from": "S03-206"
     },
     {

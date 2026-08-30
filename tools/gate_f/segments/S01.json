@@ -126,9 +126,9 @@
       "action": "assert",
       "args": {
         "check": "objective_is",
-        "id": "opening_first_catch"
+        "id": "opening_hear_grandpa"
       },
-      "expected": "Section E.5 tracks 24 main-chain objectives from `opening_first_catch`; the quest log tracks the first main entry whose flag is not set, so a fresh game tracks that one"
+      "expected": "Section E.5 tracks 27 main-chain objectives from `opening_hear_grandpa`; the quest log tracks the first main entry whose flag is not set, so a fresh game tracks that one. RETARGETED 2026-08-30 (ralph/GATE-F-E5): this step asserted `opening_first_catch` until OP-0830-4 added three rungs ahead of it. It still asserts the chain's FIRST rung by id rather than being weakened to 'any rung' -- catching a silent reordering of the opening is the whole reason it exists, and it caught this one"
     },
     {
       "id": "S01-13",

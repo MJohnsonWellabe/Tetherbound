@@ -664,8 +664,8 @@ genuinely blind human navigator and is flagged as such in §K** — but it
 still detects the big failures: objectives that name nothing findable,
 maps that show nothing, signage that points nowhere.
 
-At each of the 24 main-chain objectives (`data/progression/objectives.json`:
-`opening_first_catch` … `see_what_changed`), record: objective wording
+At each of the 27 main-chain objectives (`data/progression/objectives.json`:
+`opening_hear_grandpa` … `see_what_changed`), record: objective wording
 (verbatim), does it say **what** and **where**; visible landmarks from the
 player's position; minimap usefulness (what it actually shows there);
 full-map usefulness (open Map tab, zoom in/out with LT/RT, verify pan/
@@ -678,6 +678,47 @@ the 2026-08-22 ruling is the current design intent — record what IS
 visible, as rendered, not what the config claims) and how reveal grows
 along the journey. Exploration vs confusion is Fable's Phase B
 distinction; the operator records the raw signals.
+
+**The ladder this section counts, and why it is 27 and not 24.** The
+chain is `data/progression/objectives.json`'s `main` array, in order:
+
+| # | id | # | id |
+|---|---|---|---|
+| 1 | `opening_hear_grandpa` | 15 | `tournament_win` |
+| 2 | `opening_take_starter` | 16 | `head_to_south_bridge` |
+| 3 | `opening_show_grandpa` | 17 | `clear_the_burrow_warrens` |
+| 4 | `opening_first_catch` | 18 | `defeat_the_relay_captain` |
+| 5 | `open_road_gate` | 19 | `rescue_the_captive` |
+| 6 | `village_tools` | 20 | `disable_the_relay` |
+| 7 | `tournament_build_team` | 21 | `restore_the_mill_crossing` |
+| 8 | `tournament_train_team` | 22 | `defeat_the_captains` |
+| 9 | `tournament_gather_materials` | 23 | `fight_through_the_hall` |
+| 10 | `tournament_build_home` | 24 | `defeat_the_warden` |
+| 11 | `tournament_build_creature_beds` | 25 | `shut_down_the_machine` |
+| 12 | `tournament_sleep` | 26 | `settle_the_roster` |
+| 13 | `tournament_feed_team` | 27 | `see_what_changed` |
+| 14 | `tournament_enter` | | |
+
+Until 2026-08-30 this section said *"24 main-chain objectives from
+`opening_first_catch`"*. Rungs 1–3 are new. They were added by
+`ralph/T5-OPENING` in answer to the owner playtest defect **OP-0830-4**
+(`ralph/OWNER_PLAYTEST_2026-08-30.md`): from the first frame of a new
+game — in bed, upstairs, behind a door that stays solid until
+`opening:beat:walk_out` — the tracked line read *"Catch your first wild
+creature."*, an action the player cannot take for another three beats,
+and nothing on screen named the conversation that releases them. The
+ladder was asking for a rung the player was three rungs below. The
+three new entries are guidance the chain was assumed to already carry,
+not new gameplay: each binds to a flag `sequence_director.gd` already
+wrote.
+
+This means **`opening_first_catch` is no longer the chain's first
+objective**, and any transcription that asserts it is one is now
+asserting the defect. The three Gate F steps that did
+(`S01-12`, `S02-11`, `S02C-11`) were retargeted to
+`opening_hear_grandpa` on `ralph/GATE-F-E5`; they still assert a
+first rung, which is the point of them — they exist to catch exactly
+this kind of silent chain reordering, and they caught it.
 
 ### E.6 Abuse and failure cases (§2) — X06 and embedded
 
@@ -1309,7 +1350,7 @@ sweep (E.6) or matrix (E.4).
 |---|---|---|---|
 | Torch / day/night / weather | E.6.16; GF-20/21; torch redraw after holster | journey | events + shots |
 | Tournament qualification, bracket, win, representative failure ✻ | S04 full; E.6.12 unready states; X04 optional: lose a round and record the offered path | S04/X06 | events + GF-04 |
-| Every required story conversation / objective transition | all 24 main-chain objectives traversed with E.5 record at each | journey | objective events |
+| Every required story conversation / objective transition | all 27 main-chain objectives traversed with E.5 record at each | journey | objective events |
 | Every gate/crossing | road gate, South Bridge, Warrens vault, Mill Crossing, sigil gate, Hall shutter — each locked-probe (E.6.11) then legitimately opened | journey/X06 | events + shots |
 | Every meaningful named location/region | journey arrivals + X07 grid over all 9 regions + Hall | journey/X07 | GF-03…13, GF-AUD |
 | Stronghold/Warden/legendary/resolution | S10 full path incl. recovery point | S10 | GF-13 set |

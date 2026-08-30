@@ -4,7 +4,8 @@
   "record_hz": 0.5,
   "title": "Opening: wake upstairs -> starter caught & named -> first wild catch -> road gate open",
   "lane": "journey",
-  "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span and handoff), section D (RT-01), section E.2 (CT-01), section E.5 (navigation record at objectives `opening_first_catch` and `open_road_gate`), section G (GF-02, GF-03-VILLAGE-01, GF-14-01, GF-15-01/02, GF-21-WEATHER-01) and section H (mandatory 0.5 Hz segment).",
+  "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span and handoff), section D (RT-01), section E.2 (CT-01), section E.5 (navigation record at objectives `opening_hear_grandpa`, `opening_first_catch` and `open_road_gate`), section G (GF-02, GF-03-VILLAGE-01, GF-14-01, GF-15-01/02, GF-21-WEATHER-01) and section H (mandatory 0.5 Hz segment).",
+  "_gap_e5_opening_rungs": "\u00a7E.5 GAP, recorded rather than quietly dropped (ralph/GATE-F-E5, 2026-08-30). OP-0830-4 added three rungs ahead of `opening_first_catch`: 1 `opening_hear_grandpa`, 2 `opening_take_starter`, 3 `opening_show_grandpa`. \u00a7E.5 asks for a navigation record at EACH main-chain objective. This segment carries one for rung 1 (S02-12) and one for rung 4 (S02-29), because those two records already existed and only needed retargeting to the rungs they actually describe. Rungs 2 and 3 have NO \u00a7E.5 record here, and none was invented: this lane corrected a transcription, it did not play the segment, and a navigation record is a played observation (what was legible on screen, time-to-route-decision, the frame it was reasoned from) that cannot honestly be written from a diff. Both rungs are in-house modal beats -- the starter picker and the naming grid draw their own prompts -- so the likely finding is `no navigation decision exists at this rung`, but that is a prediction, not a record. Owed to the Gate F lane on the next S02 run.",
   "_comment_answer_prompts": "Every move_to in this file leaves `answer_prompts` OFF. The schema is explicit that it 'must stay off in any segment whose subject is whether something blocks travel', and this segment's subject IS the opening's conversations -- a harness quietly answering Grandpa would hide the finding. Every dialogue below is advanced by its own explicit press step.",
   "_comment_no_teleport": "Section 0.6 / section J: production paths only, teleport is DIAG-only. Every position in this file is reached by walking.",
   "evidence_lane": "logic",
@@ -121,16 +122,16 @@
       "action": "assert",
       "args": {
         "check": "objective_is",
-        "id": "opening_first_catch"
+        "id": "opening_hear_grandpa"
       },
-      "expected": "Section E.5's first of 24 main-chain objectives: `opening_first_catch`, 'Catch your first wild creature.'"
+      "expected": "Section E.5's first of 27 main-chain objectives: `opening_hear_grandpa`, 'Go down and hear Grandpa out.' RETARGETED 2026-08-30 (ralph/GATE-F-E5) from `opening_first_catch`, which OP-0830-4 demoted to rung 4 of 27 -- see the ladder table in ralph/GATE_F_MASTER_PROTOCOL.md section E.5"
     },
     {
       "id": "S02-12",
-      "title": "Section E.5 nav note -- opening_first_catch",
+      "title": "Section E.5 nav note -- opening_hear_grandpa",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 1/24 `opening_first_catch`. Objective wording: 'Catch your first wild creature.' It says WHAT and not WHERE. Player-visible information at this point is the bedroom itself (GF-02-START-01) -- there is no map, no minimap landmark and no signage inside the house, and the only interactable the beat offers is the bed's own 'Get up' prompt. Route decision: the only affordance is the prompt in front of the player, so the route is 'get up and go downstairs', which is not navigation at all. Reasoned from GF-02-START-01. Operator: record in `actual` what was actually legible on screen."
+        "text": "Section E.5 navigation record, objective 1/27 `opening_hear_grandpa`. Objective wording: 'Go down and hear Grandpa out.' It says WHAT, and its `how` line says WHERE ('He is waiting at the table downstairs.'). RETARGETED 2026-08-30 (ralph/GATE-F-E5): this record was transcribed against `opening_first_catch`, 'Catch your first wild creature.', because that was the chain's first rung when it was written. OP-0830-4 is the defect that wording produced -- at THIS beat the tracked line named an action three rungs away, which is exactly why the route decision below had to be reasoned from the bed prompt instead of from the objective. The observation is unchanged and now agrees with the rung it is filed under. Player-visible information at this point is the bedroom itself (GF-02-START-01) -- there is no map, no minimap landmark and no signage inside the house, and the only interactable the beat offers is the bed's own 'Get up' prompt. Route decision: the only affordance is the prompt in front of the player, so the route is 'get up and go downstairs', which is not navigation at all. Reasoned from GF-02-START-01. Operator: record in `actual` what was actually legible on screen."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -371,7 +372,7 @@
       "title": "Section E.5 nav note -- to the first encounter",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 1/24 continued. Player-visible information: Grandpa's line points down the path past the rise; the starter is now following. No map has been opened yet and the objective still reads 'Catch your first wild creature.' Route decision: follow the direction the dialogue named, south-east out of the dooryard onto the practice meadow, because the conversation is the only player-visible pointer that exists at this moment. Reasoned from GF-02-START-01 and GF-02-START-02."
+        "text": "Section E.5 navigation record, objective 4/27 `opening_first_catch`. Objective wording: 'Catch your first wild creature.' It says WHAT and not WHERE. RETARGETED 2026-08-30 (ralph/GATE-F-E5): filed as '1/24 continued' when the catch WAS rung 1; it is now that rung's own record, reached at this point because rungs 1-3 close on the two Grandpa conversations and the starter choice this segment has just played. Player-visible information: Grandpa's line points down the path past the rise; the starter is now following. No map has been opened yet and the objective still reads 'Catch your first wild creature.' Route decision: follow the direction the dialogue named, south-east out of the dooryard onto the practice meadow, because the conversation is the only player-visible pointer that exists at this moment. Reasoned from GF-02-START-01 and GF-02-START-02."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -725,7 +726,7 @@
       "title": "Section E.5 nav note -- open_road_gate",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 2/24 `open_road_gate`. Objective wording: 'Open the village gate and follow the road in.' It names WHAT (a gate) and a WHERE that is only as specific as 'the village gate'. Player-visible information: the fresh-save fog-of-war reveal (data/config/map_landmarks.json's `starting_reveal`) covers the village and its roads, and the `road_gate` landmark is a `minor` map pin; the dirt road Grandpa pointed down is visible on the ground. Route decision: follow the road east out of the dooryard to the gate, and look for a key near it, because the objective's own verb is 'open' and the gate is the only thing on that road. Reasoned from GF-02-START-01 and the frames of this walk. Operator: record whether the map was consulted, what it actually showed, and the time to the decision."
+        "text": "Section E.5 navigation record, objective 5/27 `open_road_gate`. Objective wording: 'Open the village gate and follow the road in.' It names WHAT (a gate) and a WHERE that is only as specific as 'the village gate'. Player-visible information: the fresh-save fog-of-war reveal (data/config/map_landmarks.json's `starting_reveal`) covers the village and its roads, and the `road_gate` landmark is a `minor` map pin; the dirt road Grandpa pointed down is visible on the ground. Route decision: follow the road east out of the dooryard to the gate, and look for a key near it, because the objective's own verb is 'open' and the gate is the only thing on that road. Reasoned from GF-02-START-01 and the frames of this walk. Operator: record whether the map was consulted, what it actually showed, and the time to the decision."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },

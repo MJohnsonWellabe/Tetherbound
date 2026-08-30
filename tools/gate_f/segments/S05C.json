@@ -186,7 +186,7 @@
         "check": "objective_is",
         "id": "head_to_south_bridge"
       },
-      "expected": "Section E.5 objective 13/24 `head_to_south_bridge`, 'Cross the South Bridge into the Lower Meadows.'",
+      "expected": "Section E.5 objective 16/27 `head_to_south_bridge`, 'Cross the South Bridge into the Lower Meadows.'",
       "_derived_from": "S05-11"
     },
     {
@@ -741,7 +741,7 @@
         "check": "flag_set",
         "flag": "south_bridge_open"
       },
-      "expected": "`south_bridge_open` closes section E.5 objective 13/24",
+      "expected": "`south_bridge_open` closes section E.5 objective 16/27",
       "_derived_from": "S05-55"
     },
     {

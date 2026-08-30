@@ -125,7 +125,7 @@
         "check": "objective_is",
         "id": "fight_through_the_hall"
       },
-      "expected": "Section E.5 objective 20/24 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.' with the n/3 count appended"
+      "expected": "Section E.5 objective 23/27 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.' with the n/3 count appended"
     },
     {
       "id": "S09-12",
@@ -178,7 +178,7 @@
       "title": "Section E.5 nav note -- fight_through_the_hall",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 20/24 `fight_through_the_hall`. Wording: 'Fight through the guard inside Meadows Hall. n/3' -- it names WHAT, a count, and a named WHERE. Player-visible information: `stronghold` is a `major` map landmark with `silhouette: true`, meaning it is the castle pin rather than a route entrance; the Hall itself is meant to be visible on the horizon from the approach, and Team Tether's pylon line runs north along the causeway with drained ground under it. Route decision: follow the causeway north under the pylons toward the silhouette, because a landmark you can see is a better instruction than any line of text. Reasoned from GF-18-MAP-02 (S08) and GF-12-APPR-02 below. Operator: record whether the Hall was actually visible before it was reached -- that is what GF-12-APPR-02 exists to prove or disprove."
+        "text": "Section E.5 navigation record, objective 23/27 `fight_through_the_hall`. Wording: 'Fight through the guard inside Meadows Hall. n/3' -- it names WHAT, a count, and a named WHERE. Player-visible information: `stronghold` is a `major` map landmark with `silhouette: true`, meaning it is the castle pin rather than a route entrance; the Hall itself is meant to be visible on the horizon from the approach, and Team Tether's pylon line runs north along the causeway with drained ground under it. Route decision: follow the causeway north under the pylons toward the silhouette, because a landmark you can see is a better instruction than any line of text. Reasoned from GF-18-MAP-02 (S08) and GF-12-APPR-02 below. Operator: record whether the Hall was actually visible before it was reached -- that is what GF-12-APPR-02 exists to prove or disprove."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },

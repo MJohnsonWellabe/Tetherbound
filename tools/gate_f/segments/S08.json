@@ -124,7 +124,7 @@
         "check": "objective_is",
         "id": "defeat_the_captains"
       },
-      "expected": "Section E.5 objective 19/24 `defeat_the_captains`, 'Defeat the Upper Meadows captains.' with the n/3 count appended -- one of only two counted entries in the chain"
+      "expected": "Section E.5 objective 22/27 `defeat_the_captains`, 'Defeat the Upper Meadows captains.' with the n/3 count appended -- one of only two counted entries in the chain"
     },
     {
       "id": "S08-12",
@@ -245,7 +245,7 @@
       "title": "Section E.5 nav note -- defeat_the_captains",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 19/24 `defeat_the_captains`. Wording: 'Defeat the Upper Meadows captains. n/3' -- it names WHAT, a count, and a WHERE only as wide as a whole region. Player-visible information: `the_ironwood_grove` and `the_ridgeline_watch` are named regions on the late map (GF-18-MAP-02), the ground climbs north from the crossing into high pasture, and the count tells the player there are three of something to find. Route decision: work north through the grove and then the high pasture, letting the named regions be the waypoints, because three captains spread over a region cannot be routed to any more precisely than that. Reasoned from GF-11-UPPER-01 and GF-18-MAP-02. Operator: record whether 'n/3' actually helped, and how long the player spent not knowing where a captain was."
+        "text": "Section E.5 navigation record, objective 22/27 `defeat_the_captains`. Wording: 'Defeat the Upper Meadows captains. n/3' -- it names WHAT, a count, and a WHERE only as wide as a whole region. Player-visible information: `the_ironwood_grove` and `the_ridgeline_watch` are named regions on the late map (GF-18-MAP-02), the ground climbs north from the crossing into high pasture, and the count tells the player there are three of something to find. Route decision: work north through the grove and then the high pasture, letting the named regions be the waypoints, because three captains spread over a region cannot be routed to any more precisely than that. Reasoned from GF-11-UPPER-01 and GF-18-MAP-02. Operator: record whether 'n/3' actually helped, and how long the player spent not knowing where a captain was."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -1323,7 +1323,7 @@
         "check": "flag_set",
         "flag": "hall_approach_open"
       },
-      "expected": "`hall_approach_open` is objective 19/24's own flag: three Sigils, three captains. Section B: S08's span ends at 'three Sigils'"
+      "expected": "`hall_approach_open` is objective 22/27's own flag: three Sigils, three captains. Section B: S08's span ends at 'three Sigils'"
     },
     {
       "id": "S08-116",
@@ -1333,7 +1333,7 @@
         "check": "objective_is",
         "id": "fight_through_the_hall"
       },
-      "expected": "Section E.5 objective 20/24 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.'"
+      "expected": "Section E.5 objective 23/27 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.'"
     },
     {
       "id": "S08-117",
