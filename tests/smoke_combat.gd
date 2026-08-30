@@ -617,10 +617,14 @@ func _the_type_chart_reaches_a_real_fight() -> void:
 		_fail("the HUD's matchup arrow is neutral on a %s vs %s fight; the player is told nothing"
 			% [str(creature.creature_type), str(foe.creature_type)])
 
-	# What the player's quick attack SHOULD deal here, taken from the real
+	# What each of the player's two attacks SHOULD deal here, from the real
 	# arithmetic over the real stats, with the chart and without it. Snapshotted
 	# now because `_fight_to_a_finish` runs the enemy to zero and the manager
 	# drops it; `_the_advantage_was_worth_what_the_chart_promised()` reads this.
+	#
+	# Safe to take the attacker's stats now and spend them on every later hit:
+	# `_resolve_player_strike` emits `hit_landed` BEFORE `_award_victory`, so no
+	# level-up can move `effective_attack` between a sample and its prediction.
 	var progression_cfg: Dictionary = PROGRESSION.config()
 	var attack: float = creature.effective_attack(progression_cfg)
 	var defence: float = foe.effective_defence(progression_cfg)
