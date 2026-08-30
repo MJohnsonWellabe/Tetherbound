@@ -16,9 +16,9 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://ralph/reports/T1-CREATURE-RIG/shots"
 
-const SETTLE_FRAMES := 240
-const STREAM_SETTLE_FRAMES := 90
-const POSE_FRAMES := 6
+const SETTLE_FRAMES := 30
+const STREAM_SETTLE_FRAMES := 20
+const POSE_FRAMES := 3
 
 const VIEWS := [
 	{
