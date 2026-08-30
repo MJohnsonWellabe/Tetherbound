@@ -1,0 +1,24 @@
+  captain_field  shipped (duskhush/tuskroot/meadowhart — Air, Ground, Ground)
+        challenger ripplet, brooktail, paddlenewt at L15
+        WON in  30.9s over 3 rounds; party hp left  95.3%, faints 0
+        dealt 673.5 over 35 hits, took  27.4 over 4 hits
+        verdicts on them { -1: 13, 1: 22 }, on you { -1: 4 }
+  captain_field  pre-rebalance (burrowback/tuskroot/meadowhart — Ground x3)
+        challenger ripplet, brooktail, paddlenewt at L15
+        WON in  29.0s over 3 rounds; party hp left  92.5%, faints 0
+        dealt 658.5 over 32 hits, took  43.7 over 6 hits
+        verdicts on them { 1: 32 }, on you { -1: 6 }
+  captain_ridge  shipped (trailpup/duskhush/galecrest — Ground, Air, Air)
+        challenger trailpup, terrapup, tuskroot at L15
+        WON in  32.4s over 3 rounds; party hp left 100.0%, faints 0
+        dealt 628.6 over 30 hits, took   0.0 over 0 hits
+        verdicts on them { 0: 11, 1: 19 }, on you {  }
+  captain_ridge  pre-rebalance (pipwing/duskhush/galecrest — Air x3)
+        challenger trailpup, terrapup, tuskroot at L15
+        WON in  27.7s over 3 rounds; party hp left 100.0%, faints 0
+        dealt 572.3 over 25 hits, took   0.0 over 0 hits
+        verdicts on them { 1: 25 }, on you {  }
+TSV	captain_field	shipped (duskhush/tuskroot/meadowhart — Air, Ground, Ground)	won	30.9	0.953	0	27.4	4
+TSV	captain_field	pre-rebalance (burrowback/tuskroot/meadowhart — Ground x3)	won	29.0	0.925	0	43.7	6
+TSV	captain_ridge	shipped (trailpup/duskhush/galecrest — Ground, Air, Air)	won	32.4	1.000	0	0.0	0
+TSV	captain_ridge	pre-rebalance (pipwing/duskhush/galecrest — Air x3)	won	27.7	1.000	0	0.0	0

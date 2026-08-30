@@ -309,4 +309,171 @@ should pass and fails what should fail.**
 
 ---
 
-*(section 7 onward: the ladder, and the verdict)*
+## 7. The ladder, walked twice
+
+All 29 authored rungs, in route order, at the level and party size
+`chapter_curve.json` says the player arrives with, at full health, fought
+through `begin_trainer_battle()`. Once with **SPACER** (backs out of the wind-up,
+spends the meter into the recovery) and once with **BRAWLER** (walks in and
+hits, never looks at the telegraph). Same team both times: terrapup, bramblebun,
+mudsnout, trailpup, meadowhart — the Ground team a player who catches what is in
+front of them ends up with.
+
+**"Lead HP left" is the number that matters.** Switching was off in both runs and
+no creature ever fainted, so only the lead creature ever fights and the party
+average hides what the fight cost. It is derived from the party average and the
+party size, which is exact when the bench is untouched — and it was.
+
+### 7.1 The headline
+
+| | BRAWLER | SPACER |
+|---|---|---|
+| rungs lost | **0 of 29** | **0 of 29** |
+| creatures fainted | **0** | **0** |
+| median fight | 23s | 28s |
+| median lead HP left | 73 % | 88 % |
+| worst rung | **39 %** — `tournament_final_oskar` | **70 %** — `warden_aldis` |
+
+**58 authored trainer battles were fought and not one of them was lost, by
+either pilot.** The five-creature belt never came out: no fight in the chapter
+put the lead creature low enough to need it.
+
+### 7.2 Where it is trivial, where it is a wall, and where it stops teaching
+
+**There is no wall.** The whole ladder, for a naive player, is a band between
+95 % and 39 % lead health, and it never crosses into losing.
+
+**The peak is in the first hour.** For BRAWLER the most expensive fight in the
+chapter is `tournament_final_oskar` — a **Band 1** village tournament final, at
+39 % — and nothing in the remaining four bands is harder. The Warden is second
+at 44 %.
+
+**The curve saws rather than rises.** `relay_picket_hess` (Band 3) leaves the
+lead at 84 %, easier than `practice_trainer` (Band 1, 78 %). `captain_riverwatch`
+(Band 3, 46 %) is harder than both Band 4 captains (66 % and 76 %) and harder
+than `stronghold_elite` (69 %). A player is not steadily meeting more.
+
+**It stops teaching after Band 1.** Bands 2–4 for the SPACER pilot sit between
+79 % and 94 % lead health — twelve consecutive rungs where nothing the player
+does or fails to do changes the outcome. That is where combat stops being
+interesting, and it is a long way from the end.
+
+**The Warden is, structurally, the event it should be.** It is the longest fight
+in the chapter by a wide margin (61s / 73s against a 23s / 28s median), the only
+five-creature roster, and — for the skilled pilot — the single most expensive
+fight, at 70 % against a next-worst of 78 %. It is also the fight where **playing
+well matters most**: the gap between the two pilots is 26 points there
+(44 % vs 70 %), the widest on the ladder. What it is not is dangerous: neither
+pilot ever came close to losing a creature.
+
+### 7.3 Is there skill in it?
+
+Yes, and it is worth about fifteen points of health.
+
+SPACER finishes with a median of 88 % lead HP against BRAWLER's 73 %, so reading
+the telegraph roughly halves the damage taken. It costs tempo — SPACER's fights
+run about 20 % longer and it misses swings BRAWLER never does (BRAWLER records
+**zero** misses on 24 of 29 rungs, because it simply stands inside reach) — which
+is a real and well-shaped trade.
+
+But the skill never decides anything, because nothing was ever at stake. And
+per §5 the "skill" is 0.5 m of backward movement during a 0.55-second wind-up,
+with 3.08 m of travel available to do it in.
+
+### 7.4 Is switching a real decision?
+
+**No — and not because the mechanic is broken.** `switchable_indices()`,
+`can_switch()` and `cycle_active()` all work, and D32's lockout is enforced. The
+problem is that no fight in 58 battles ever produced a reason to press it: the
+lead creature never fainted, never dropped below 39 %, and the four creatures
+behind it never came out.
+
+Two things compound into that:
+
+1. **A single faint ends the whole trainer battle.**
+   `encounter_director.gd::_on_trainer_round_ended()` treats any non-win outcome
+   as the end of the battle, so the belt is not a gauntlet buffer — it is only
+   useful if the player switches *before* a creature falls. `combat.json`'s
+   `switch` block documents "no auto-switch-on-faint" as deliberate (D32), and
+   `GAME_DESIGN.md` §14 says "trainer fights are team-vs-team", which the
+   trainer's side is and the player's side is not. **Flagged, not changed** —
+   whether a faint should cost the round or the battle is an owner decision.
+2. **Nothing gets low enough to switch out.** Even if it did, the player would be
+   switching a healthy creature in, which the current numbers never reward.
+
+This is the finding with the most weight for the chapter's own premise. The
+five-creature limit exists so each creature matters (`CLAUDE.md`, VISION §6);
+in combat as played, one creature carries all 29 rungs and the other four are
+XP-share recipients.
+
+---
+
+## 8. What this means, and what is an owner's call
+
+### 8.1 Fixed in this lane
+
+| what | where |
+|---|---|
+| The type verdict banner fired on **every blow** — 22 events in a 14.6s fight, more banner-time than fight-time. Now said once per verdict, re-armed by a new fight, a new opponent and a mid-fight switch, with a tunable repeat window. | `scripts/ui/combat_hud.gd`, `data/config/combat.json` |
+| `smoke_combat.gd` graded the type system on a **mirror matchup** and said so. Now fights Water into Ground and **measures the damage**, verified to fail when the chart is switched off. | `tests/smoke_combat.gd` |
+
+### 8.2 Flagged, not changed — these are owner decisions
+
+1. **0.5 m of retreat beats every attack in the game** (§5). Closing it means
+   giving attacks tracking, or shortening the telegraph, or widening the
+   spacing — all of them changes to how dodging works, which `CLAUDE.md` puts
+   on the owner's side of the line. The arithmetic and both pilots' numbers are
+   in §5 and §7.3.
+2. **A single faint ends a whole trainer battle** (§7.4), against
+   `GAME_DESIGN.md` §14's "team-vs-team".
+3. **The difficulty curve peaks in Band 1** (§7.2). Raising the back half is
+   ordinary tuning, but which rungs and by how much is a design call that should
+   be made against the intended 3–4 hour shape, not by this lane.
+4. **Type magnitudes (1.25 / 0.80) sit below the resolution of a health bar**
+   (§3.3). The chart is correct, reaches the damage, and is announced — the
+   player still cannot feel the size of it, because there are no damage numbers.
+   Changing either is a type-system or HUD decision.
+5. **Nine rungs still field mono-Ground teams** (§2), the same shape the captain
+   rebalance was written to fix on two. If that rebalance is worth repeating, it
+   should be repeated with §4's finding in hand: the swap changed the
+   multipliers and not the fight.
+
+### 8.3 The one-line answer
+
+**Combat works, reads and has a real skill in it — and it is never dangerous.**
+It stops being interesting at the end of Band 1, around the village tournament,
+and the four bands after it are twelve rungs where nothing the player does
+changes the outcome. The Warden pulls it back at the very end: it is the longest
+fight, the only full five, and the one place playing well is worth 26 points of
+health. But nothing between the tournament and the stronghold gate asks the
+player for anything.
+
+---
+
+## 9. The raw evidence
+
+`ralph/reports/t3-combat/` holds the output every table above was built from:
+
+| file | what |
+|---|---|
+| `ladder-ground-spacer.tsv` | all 29 rungs, SPACER pilot |
+| `ladder-ground-brawler.tsv` | all 29 rungs, BRAWLER pilot |
+| `captains.txt` | both captains × both rosters |
+| `matchup-spacer.txt` | the four staged non-mirror wild fights |
+| `smoke-negative-chart-off.txt` | `smoke_combat.gd` failing with the chart patched out |
+| `smoke-positive-shipping.txt` | the same test passing on shipping code |
+
+To reproduce any of it (Godot 4.7, `--headless`):
+
+```
+godot --headless --path . --script tools/_probe_combat_matchup.gd
+godot --headless --path . --script tools/_probe_combat_ladder.gd -- --team=ground
+godot --headless --path . --script tools/_probe_combat_ladder.gd -- --team=ground --pilot=brawler
+godot --headless --path . --script tools/_probe_captain_rebalance.gd
+godot --headless --path . --script tests/smoke_combat.gd
+```
+
+Every one of them runs at wall-clock speed — headless Godot still steps physics
+at 60 Hz — so a full ladder is about half an hour of real time. That is the cost
+of driving the real input path, and it is the reason this lane's evidence is
+fights rather than assertions.
