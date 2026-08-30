@@ -151,9 +151,23 @@ func _gathering() -> void:
 	if gained > 0:
 		_notes.append("I4 VERDICT: PASS — walked %.1fm, %d interact press(es), got %d x %s."
 			% [best_d, presses, gained, item])
+		return
+	# A refusal is not a failure. `harvest_logic.gd::gather()` returns 0 unless
+	# the VISIBLY equipped tool is the resource's `gathered_with`, and
+	# `harvest_node.gd` says so on the HUD ("Needs an Axe."). An earlier run of
+	# this file reported "8 presses gathered nothing" as a defect; it was the
+	# designed tool gate, and the harness had checked only the inventory count.
+	var db: RefCounted = _game.get("items")
+	var required := str(db.call("gathered_with", item)) if db != null else ""
+	var equipped := str(_game.get("equipped_tool"))
+	if not required.is_empty() and required != equipped:
+		_notes.append(("I4 VERDICT: PASS (refused, correctly) — %s is gated on the %s and the "
+			+ "player is holding '%s', so the press is refused and the HUD says \"Needs a %s.\". "
+			+ "Tool gating with feedback, not a silent no-op.") % [
+			item, required, equipped if not equipped.is_empty() else "nothing", required])
 	else:
-		_notes.append("I4 VERDICT: FAIL — standing %.1fm from the node, %d interact presses "
-			% [away, presses] + "gathered nothing.")
+		_notes.append("I4 VERDICT: FAIL — standing %.1fm from the node with the right hand "
+			% away + "(%d presses), nothing was gathered and nothing was refused." % presses)
 
 
 ## THE question for H1: does the only pad route into Build actually open Build?
