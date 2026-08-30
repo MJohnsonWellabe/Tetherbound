@@ -48,10 +48,25 @@ const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
 ## harness may only press what a pad can press, so it presses that.
 const THROW_ACTION := &"interact"
 const CHOSEN_NAME := "Bud"
-## Degrees of angular error inside which the aim stick eases off, and the
-## smallest deflection it eases to. See `_aim_strength()`.
-const AIM_FINE_DEGREES := 6.0
-const AIM_FINE_FLOOR := 0.18
+## Inside this the aim is on the creature and the loop stops. Per axis, because
+## that is how the rig splits the two sticks.
+const AIM_WINDOW_DEGREES := 1.0
+## How long the aim controller may spend converging before it reports that it
+## could not.
+##
+## T2-FLAKE: this was a FRAME COUNT (360, and 240 for the re-aims), and a frame
+## count is the wrong unit for it. What the loop is waiting for is the camera
+## physically turning, and `camera_rig.gd::_apply_look()` turns it in degrees
+## per SECOND. A physics frame here measures 16.6ms unloaded and was measured at
+## 300ms under CI-like load, so "360 frames" is a budget that silently changes
+## by 18x on the machine that needs it most. Seconds of real time do not.
+const AIM_CONVERGE_SECONDS := 12.0
+## The same ceiling for the re-aims that follow a step aside, which start from a
+## much smaller error and should not be given the full slew budget.
+const AIM_REAIM_SECONDS := 8.0
+## Below this a sample bought no camera movement at all: the deflection is under
+## a deadzone. See `_calibrated_deflection()`.
+const AIM_STILL_DEGREES := 0.02
 ## How far, and how many times, the aim steps back from a creature it cannot
 ## look down at. See `_aim_at_wild()`.
 const AIM_BACKOFF_METRES := 2.0
@@ -83,6 +98,17 @@ var _catch_results: Array[bool] = []
 var _weakened_hp := -1.0
 var _throw_strikes := 0
 var _throw_misses := 0
+## The aim controller's calibration. Carried BETWEEN calls on purpose: it is a
+## measurement of how fast this machine is turning the camera, and that does not
+## reset because the loop was re-entered. See `_calibrated_deflection()`.
+var _aim_deflection := 1.0
+var _aim_forward_before := Vector3.ZERO
+var _aim_sampled_usec := 0
+var _aim_has_history := false
+## What one sample actually bought, kept for the failure message: a run that
+## could not converge should say what the machine was giving it.
+var _aim_sample_turn := 0.0
+var _aim_sample_seconds := 0.0
 
 
 func run(tree: SceneTree) -> Dictionary:
@@ -467,7 +493,7 @@ func _catch_with_real_throws() -> bool:
 				launches, _why_the_aim_would_not_open(),
 			])
 			return false
-		if not await _aim_at_wild(360):
+		if not await _aim_at_wild():
 			_fail("right-stick aim could not line up the real throw reticle")
 			return false
 		# Do not throw into a rock.
@@ -513,7 +539,7 @@ func _catch_with_real_throws() -> bool:
 		# this did: strike rates fell from a measured 22% to 1-2 strikes per
 		# 30-40 launches once the step-aside landed, which is the signature of
 		# aiming and then walking away from the aim.
-		if not await _aim_at_wild(360):
+		if not await _aim_at_wild():
 			_fail("right-stick aim could not line up after stepping clear on "
 				+ "launch %d" % launches)
 			return false
@@ -672,12 +698,21 @@ func _target_is_out_cold() -> bool:
 ## (`reason=reticle_outside_body`). That is the whole of the "eight launches, 1
 ## strike, 7 misses" signature the Gate B evidence doc filed as a catching
 ## defect: the throws were aimed at nothing, by the harness, not by the player.
-func _aim_camera_at(target: Node3D, budget: int) -> bool:
+##
+## T2-FLAKE rewrote how it DRIVES that error to zero. See
+## `_calibrated_deflection()` for the measurement that forced it; the short of
+## it is that this loop samples once per frame and the plant it is steering
+## integrates real seconds, so its step size was a function of machine load and
+## the loop could not stop on a busy runner. It is now sampled on the frame the
+## camera actually turns on, and its step is measured rather than assumed.
+func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bool:
 	var camera := _rig.get_node_or_null(^"Camera3D") as Camera3D
 	if camera == null:
 		return false
+	_aim_has_history = false
+	var deadline := Time.get_ticks_msec() + int(seconds * 1000.0)
 	var last_error := 0.0
-	for _i in budget:
+	while Time.get_ticks_msec() < deadline:
 		# Re-read the live camera transform every frame: moving the stick moves
 		# the camera, so an error computed once is stale immediately.
 		var to := (target.call("centre") as Vector3) - camera.global_position
@@ -686,49 +721,118 @@ func _aim_camera_at(target: Node3D, budget: int) -> bool:
 			return true
 		var forward := -camera.global_transform.basis.z
 		var wanted := to.normalized()
-		# Split the one angular error into the two axes the sticks drive, in
-		# CAMERA space, so each stick is corrected by its own component.
+		# The one angular error, resolved onto the two axes the stick drives, in
+		# CAMERA space. These give the DIRECTION to push; the magnitude is one
+		# number for both, decided below.
 		var right := camera.global_transform.basis.x
 		var up := camera.global_transform.basis.y
 		var yaw_error := atan2(wanted.dot(right), wanted.dot(forward))
 		var pitch_error := atan2(wanted.dot(up), wanted.dot(forward))
 		last_error = rad_to_deg(forward.angle_to(wanted))
-		if absf(yaw_error) < deg_to_rad(1.0) and absf(pitch_error) < deg_to_rad(1.0):
+		if absf(yaw_error) < deg_to_rad(AIM_WINDOW_DEGREES) \
+				and absf(pitch_error) < deg_to_rad(AIM_WINDOW_DEGREES):
 			_stop_right_stick()
 			return true
-		# The target keeps circling while aim owns the trainer, so the stick goes
-		# to FULL deflection while there is real angle to cover -- proportional
-		# easing across the whole range fell behind a live target and was
-		# correctly removed. It comes back only inside the last few degrees:
-		# `catching.json`'s aim profile runs the rig at `sensitivity_scale` 0.55
-		# with a `response_exponent` of 2.0, which still turns the camera further
-		# in one physics frame than the 1-degree window this loop is trying to
-		# stop inside. Bang-bang cannot settle in a window narrower than its own
-		# step; it limit-cycles across it, which is a run that walks its error
-		# down to about two degrees and then never returns true.
-		_send_axis(JOY_AXIS_RIGHT_X, signf(yaw_error) * _aim_strength(yaw_error))
-		_send_axis(JOY_AXIS_RIGHT_Y, -signf(pitch_error) * _aim_strength(pitch_error))
-		await _tree.physics_frame
+		# One deflection, split across the two axes by the direction of the
+		# error rather than per-axis. `camera_rig.gd::_apply_look()` bends the
+		# stick by its LENGTH (`response_exponent`) and scales it by the same
+		# length again (`aim_assist_scale`), so the two axes are already coupled
+		# through it; correcting them independently meant neither one was the
+		# quantity the rig actually responds to.
+		var deflection := _calibrated_deflection(forward, last_error)
+		var direction := Vector2(yaw_error, pitch_error).normalized()
+		_send_axis(JOY_AXIS_RIGHT_X, direction.x * deflection)
+		_send_axis(JOY_AXIS_RIGHT_Y, -direction.y * deflection)
+		# The camera turns in `_process`, so that is the frame this samples on.
+		# Sampling on `physics_frame` meant every process frame in between
+		# applied the same stale stick, and the loop only ever saw the sum.
+		await _tree.process_frame
 	_stop_right_stick()
 	var camera_pitch := rad_to_deg(camera.global_rotation.x)
-	print(("aim convergence stopped %.2f° off the body "
-		+ "(camera pitch %.1f°, target %.2fm away and %.2fm below the lens)") % [
-		last_error, camera_pitch,
+	print(("aim convergence stopped %.2f° off the body after %.0fs "
+		+ "(camera pitch %.1f°, target %.2fm away and %.2fm below the lens; "
+		+ "one sample = %.2f° in %.0fms at deflection %.2f)") % [
+		last_error, seconds, camera_pitch,
 		_player.global_position.distance_to(target.global_position),
-		camera.global_position.y - (target.call("centre") as Vector3).y])
+		camera.global_position.y - (target.call("centre") as Vector3).y,
+		_aim_sample_turn, _aim_sample_seconds * 1000.0, _aim_deflection])
 	return false
 
 
-## Stick deflection for an angular error: all of it until the last few degrees,
-## then proportional so the loop can actually stop. Floored so a small error
-## still moves the camera at all against the rig's own response curve.
-func _aim_strength(error: float) -> float:
-	var degrees := absf(rad_to_deg(error))
-	if degrees < 1.0:
-		return 0.0
-	if degrees >= AIM_FINE_DEGREES:
-		return 1.0
-	return maxf(AIM_FINE_FLOOR, degrees / AIM_FINE_DEGREES)
+## How far to push the stick this sample, measured rather than assumed.
+##
+## T2-FLAKE. This replaces a fixed response curve -- full deflection above six
+## degrees of error, proportional below it, floored at 0.18 -- and that curve is
+## the whole of the opening segment's flake. The reason it is not a tuning
+## mistake but a category one:
+##
+## `camera_rig.gd::_apply_look()` turns the camera by `f(|stick|) * sensitivity
+## * delta` degrees, where `delta` is REAL SECONDS. This loop reads the error
+## once per frame, so the turn it gets per sample is proportional to how long a
+## frame took -- 16.6ms on an idle machine here, measured at 300ms under
+## CI-like load. The old curve's step at error `e` was therefore `104.5 *
+## (e/6)^2 * delta` degrees, which shrinks the error only while
+## `e < 0.689 / delta`. Unloaded that bound is 41 degrees and everything
+## converges. At a 157ms frame it is 4.4 degrees, and the loop limit-cycles
+## there forever -- which is exactly, to two decimal places, what the failing
+## runs printed: "aim convergence stopped 4.44° off the body", four times over,
+## before failing with "right-stick aim could not line up the real throw
+## reticle". The game was fine; the harness's controller was tuned to a frame
+## rate.
+##
+## So this measures the plant instead of assuming it: `turned` is how far the
+## camera actually moved for the deflection commanded last sample, and the
+## correction is the ratio of what is left to what that bought. Nothing here
+## knows the rig's sensitivity, its response exponent, its assist curve or its
+## two deadzones, and it does not need to -- it observes their product, which is
+## also the only form in which they can change underneath it.
+##
+## The correction is the SQUARE ROOT of that ratio, not the ratio. The rig's
+## response is convex (`catching.json`'s aim profile squares the deflection), so
+## a linear correction overshoots whenever it asks for more turn and the loop
+## rings; the root is exact for that profile and under-corrective for any
+## gentler one, which converges from above instead of oscillating.
+func _calibrated_deflection(forward: Vector3, error_degrees: float) -> float:
+	var turned := 0.0
+	var seconds := 0.0
+	if _aim_has_history:
+		turned = rad_to_deg(_aim_forward_before.angle_to(forward))
+		seconds = float(Time.get_ticks_usec() - _aim_sampled_usec) / 1000000.0
+	_aim_forward_before = forward
+	_aim_sampled_usec = Time.get_ticks_usec()
+	_aim_has_history = true
+	if turned <= AIM_STILL_DEGREES:
+		# The stick bought nothing. Either this is the first sample of the call
+		# and there is no history to calibrate against, or the deflection has
+		# fallen under a deadzone -- the `look_*` actions carry their own (0.2
+		# in project.godot, rescaling what survives) and `camera_rig.gd` applies
+		# a second one on top. Open the stick up rather than sit at a value the
+		# rig discards.
+		_aim_deflection = clampf(_aim_deflection * 2.0, _smallest_live_deflection(), 1.0)
+		return _aim_deflection
+	_aim_sample_turn = turned
+	_aim_sample_seconds = seconds
+	_aim_deflection = clampf(_aim_deflection * sqrt(error_degrees / turned),
+		_smallest_live_deflection(), 1.0)
+	return _aim_deflection
+
+
+## The smallest stick deflection that is an input at all.
+##
+## Read off the two deadzones in force rather than written down: the `look_*`
+## InputMap actions drop anything shorter than their own deadzone and rescale
+## the remainder, and `camera_rig.gd` then drops anything shorter than the
+## profile's `stick_deadzone`. A constant here would be a third copy of two
+## tunables and would go stale the first time either moved.
+func _smallest_live_deflection() -> float:
+	var action := 0.2
+	if InputMap.has_action(&"look_right"):
+		action = InputMap.action_get_deadzone(&"look_right")
+	var rig := 0.18
+	if _rig != null and _rig.get("_deadzone") != null:
+		rig = float(_rig.get("_deadzone"))
+	# Undo `Input.get_vector()`'s rescale, then leave a little over the edge.
+	return minf(0.99, action + rig * (1.0 - action) + 0.01)
 
 
 ## Aim at the wild creature, and MOVE if standing still cannot line the shot up.
@@ -753,8 +857,8 @@ func _aim_strength(error: float) -> float:
 ## `launch_assist_diagnostics().eligible` is what actually decides whether the
 ## throw gets its assist, and when the game says the reticle is on the creature
 ## this loop's tighter one-degree window has no standing to disagree.
-func _aim_at_wild(budget: int) -> bool:
-	if await _aim_camera_at(_wild, budget):
+func _aim_at_wild(seconds: float = AIM_CONVERGE_SECONDS) -> bool:
+	if await _aim_camera_at(_wild, seconds):
 		return true
 	if _shot_is_eligible():
 		return true
@@ -777,7 +881,7 @@ func _aim_at_wild(budget: int) -> bool:
 			_stop_left_stick()
 			for _i in 6:
 				await _tree.physics_frame
-		if await _aim_camera_at(_wild, budget):
+		if await _aim_camera_at(_wild, seconds):
 			return true
 		if _shot_is_eligible():
 			return true
@@ -1111,7 +1215,7 @@ func _wander_for_a_new_angle() -> void:
 	_stop_left_stick()
 	for _i in 10:
 		await _tree.physics_frame
-	await _aim_camera_at(_wild, 240)
+	await _aim_camera_at(_wild, AIM_REAIM_SECONDS)
 
 
 ## How close the trainer wants to be before hunting sideways for a clear line.
@@ -1150,7 +1254,7 @@ func _step_until_the_shot_is_clear() -> bool:
 		# stepping aside" while the Bramblebun drifted from 21m to 36m, because
 		# each sidestep is 3m of travel spent not closing.
 		if is_instance_valid(_wild) and blocked_by.begins_with(str(_wild.name)):
-			if await _aim_at_wild(240):
+			if await _aim_at_wild(AIM_REAIM_SECONDS):
 				continue
 			print("re-aim on the creature itself failed (%s); stepping aside" % reason)
 		# CLOSE FIRST, strafe second.
@@ -1182,7 +1286,7 @@ func _step_until_the_shot_is_clear() -> bool:
 		_stop_left_stick()
 		for _i in 6:
 			await _tree.physics_frame
-		if not await _aim_camera_at(_wild, 240):
+		if not await _aim_camera_at(_wild, AIM_REAIM_SECONDS):
 			continue
 	var final: Dictionary = throw.call("launch_assist_diagnostics")
 	return bool(final.get("eligible", false))
