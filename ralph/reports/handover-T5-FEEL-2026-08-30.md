@@ -288,7 +288,68 @@ honest claim is the draw-call count and the absence of lights, not a frame rate.
 
 ### Evidence
 
-<!-- SHOTS-TABLE -->
+`tools/capture_pickup_glow.gd` (new) shoots through the **gameplay camera**, not
+a free one. That is the fix for the capture defect the lane order warned about:
+`grass_field.gd` is *bound* to one camera (`bind(terrain, camera)`), so a tool
+that builds its own `Camera3D` photographs ground the field is not dressing and
+gets a bare frame. This tool moves the player, lets the rig follow, and shoots
+through the camera the field is actually following — which is also the only
+camera a player ever looks through.
+
+Every frame is verified twice before the shutter: `tools/capture_check.gd`
+(the ground lane's own shared check, merged from `main`) refuses a frame that
+would not show the build, and this tool's `_grass_verdict()` writes the tuft
+count and the ring's distance from the lens into the contact log, so the
+evidence carries the number rather than a pass/fail to be taken on trust.
+Weather is pinned and frozen, so a multi-stand pass cannot photograph the same
+pickup under two different skies.
+
+`ralph/reports/T5-FEEL/shots/`, matched BEFORE/AFTER pairs at six authored
+pickups. **Every frame reports `grass ok: 315232 tufts`** — the real tuft ring,
+following the capture camera. No frame in this set was taken on undressed
+ground.
+
+| Stand | What it is for |
+|---|---|
+| `01-gate-key-far` | the key at 14 m — the range a player on the road decides whether to detour |
+| `02-gate-key-near` | the same key at 4 m — the glow must step *down* here, not wash the key out |
+| `03-tm-stone-rush` | a TM orb: the owner's own example, and a 20 cm object |
+| `04-harvest-fiber` | a gathering node in open meadow — the case that must not read as loot spam |
+| `05-harvest-stone` | a low rock deposit, the prop most easily lost in a thickening carpet |
+| `06-deadwood` | a tall prop: the halo sits in its body, not over its head |
+
+`01-gate-key-far-BEFORE.png` is the defect in one picture: dense real grass, the
+key 14 m ahead, and nothing whatsoever telling the player it is there.
+
+**One frame in this set is weaker than the others and it is worth saying which.**
+`05-harvest-stone`'s committed frame has the trainer's backpack across its
+foreground: the default south-east approach puts the *camera* hard against the
+village fence, and the `SpringArm3D` correctly collapses into the player's back.
+That is a real camera behaviour producing an unusable photograph, not a glow
+failure — the distant pickups in the same frame read fine. The stand now carries
+an open-meadow `bearing` override so a future pass frames it properly; the
+committed frame predates that fix.
+
+Also committed: `_isolated-glow-{near,mid,far}.png` from
+`tools/_probe_pickup_glow_isolated.gd` — one prop per frame at 3 m, 11 m and
+24 m, which is where the "item still readable inside its own halo" claim is
+easiest to check.
+
+### Honest limits on the look
+
+- **Brightness is the owner's dial, and it is one file.** The pass that shipped
+  errs toward restraint: at 16 m+ the glow is a soft warm patch rather than a
+  beacon, and a reasonable person could want it stronger. `mote.strength` and
+  `mote.radius` in `data/config/pickup_glow.json` are the two numbers; the
+  regression test constrains the radius from below (grass reach) and nothing
+  constrains the strength, so it can be raised freely. The version *before* this
+  one blew out to solid white and swallowed several metres of grass around each
+  pickup, which is the failure mode to watch for going the other way.
+- **Software rendering.** These frames are `--rendering-driver opengl3` under
+  `xvfb`, so composition, silhouette and readability are trustworthy and
+  lighting quality is not. That cuts the right way for this question but it is
+  not a device screenshot.
+- **No frame-time number.** See the perf note above.
 
 ---
 
@@ -317,7 +378,9 @@ this one while it ran.
 | `shaders/pickup_glow.gdshader` | **new** — billboard mote + flat aura, distance compensation, per-instance tint and phase |
 | `data/config/pickup_glow.json` | **new** — every tunable, `enabled` false is the revert |
 | `tests/test_pickup_glow.gd` | **new** — coverage, the grass-clearance rule, the no-lights rule, restraint |
-| `tools/capture_pickup_glow.gd` | **new** — evidence frames through the *gameplay* camera, with a per-frame grass verdict |
+| `tools/capture_pickup_glow.gd` | **new** — evidence frames through the *gameplay* camera, with a per-frame grass verdict and `capture_check` at every shutter |
+| `tools/_probe_pickup_glow_isolated.gd` | **new** — one prop per frame at three ranges; the fast loop the look was tuned in |
+| `tools/_probe_pickup_glow_coverage.gd` | **new** — proves every pickup the world *builds* is registered, not just every pickup script |
 | `tools/_probe_catch_rate.gd` | **new** — the OP-0830-5 measurement harness |
 | `scripts/world/key_pickup.gd` | attaches/detaches the shared highlight |
 | `scripts/world/tm_pickup.gd` | `OmniLight3D` → shared highlight |
@@ -347,6 +410,36 @@ this one while it ran.
   `objectives.json`, camp files, `performance.json`, or the opening/item-gate
   files.**
 - **Did not claim a device frame-time.** See the perf note above.
+
+## Also answered this session
+
+The coordinator routed a separate, higher-priority question mid-session: two
+instrumented Gate F segments (S02, X04) logged **zero** combat and catch events
+between them, and the question was whether the first fight stages at all for a
+real player.
+
+**It does.** Full write-up in `ralph/reports/T5-FEEL-COMBAT-ENGAGES-2026-08-30.md`
+— 99 orb throws, 88 strikes and 21 wild catches through the real input path
+across the six measurement runs above, plus `smoke_gate_a_opening_segment`
+passing *"title through natural catch ... continuously with parsed controller
+input"*. It is a rig defect. The report is explicit about what it does **not**
+prove (the probe bypasses the opening) and recommends the engage step assert
+`CombatManager.is_fighting()` rather than that input was injected — which is the
+defect S02's own finding already names.
+
+## Verification
+
+All run locally on this branch, on the merge of `origin/main` at `5d171130`:
+
+| | |
+|---|---|
+| Unit suite | **1620 tests, 3,568,676 assertions, 0 failed** |
+| `smoke_catching` | OK |
+| `smoke_controller_catching` | OK |
+| `smoke_combat` | OK |
+| `smoke_aggression` | OK |
+| `smoke_boss` | OK |
+| `smoke_gate_a_opening_segment` | OK |
 
 ## Next
 

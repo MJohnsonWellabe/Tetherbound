@@ -100,6 +100,12 @@ const STANDS := [
 		"name": "05-harvest-stone",
 		"at": Vector2(22.0, -34.0),
 		"from": 12.0,
+		# The default south-east approach puts this one's camera against the
+		# village fence, and the SpringArm3D correctly collapses into the
+		# trainer's back -- a real camera behaviour producing a frame that is
+		# 40% backpack. Approached from the open meadow instead. Committed
+		# frames named in the handover predate this and say so.
+		"bearing": Vector3(-0.7, 0.0, 0.72),
 		"why": "a low rock deposit, the prop most easily lost in a thickening carpet",
 	},
 	{
@@ -183,9 +189,14 @@ func _shoot(stand: Dictionary) -> void:
 	var ground := float(_world.call("ground_height_at", at.x, at.y))
 	var target := Vector3(at.x, ground, at.y)
 
-	# Approach from the south-east, which is where the road runs past these
-	# sites; a stand chosen to flatter the shot would not be evidence.
-	var bearing := Vector3(0.72, 0.0, 0.69).normalized()
+	# Approach from the south-east by default, which is where the road runs past
+	# these sites; a stand chosen to flatter the shot would not be evidence. A
+	# stand may override it where the default bearing puts the CAMERA somewhere
+	# a player would never stand -- inside a building, or hard against a fence
+	# where the spring arm collapses into the trainer's back. That is a framing
+	# correction, not a flattering one: the pickup and its distance do not move.
+	var bearing: Vector3 = stand.get("bearing", Vector3(0.72, 0.0, 0.69))
+	bearing = bearing.normalized()
 	var stand_at := target + bearing * distance
 	stand_at.y = float(_world.call("ground_height_at", stand_at.x, stand_at.z)) + 0.1
 	_player.global_position = stand_at
