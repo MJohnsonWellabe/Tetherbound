@@ -148,7 +148,48 @@ wall must not be able to snag a boss fight.
 
 ## 4. Evidence
 
-*(filled in below — renders, measurement, and test results)*
+### 4.1 `smoke_stronghold` — a FAILURE that is NOT this lane's, isolated and proved
+
+`tests/smoke_stronghold.gd` fails on this branch:
+
+```
+warden_arena -> legendary_chamber: ended 21.5m from its centre (allowed 16.0)
+FAIL: walking from 'warden_arena' toward 'legendary_chamber' never got there (21.5m short)
+```
+
+**It is not mine, and that is established by measurement rather than by
+argument.** The test was re-run with this lane's three layers switched off at
+the config (`reclaim`, `retrofit` and `pipe_runs` emptied, which is all three
+builders' no-op condition) and everything else identical:
+
+| Run | Result |
+|---|---|
+| This lane's layers **on** | `ended 21.5m from its centre` — FAIL |
+| This lane's layers **off** | `ended 21.5m from its centre` — FAIL |
+
+**The identical number to one decimal place.** The Hall's route is bit-for-bit
+unaffected by everything this lane adds, which is the expected result for a
+change that introduces no colliders — none of the nine GLBs is named `-col`, so
+Godot's importer builds no collision for any of them, and `MultiMeshInstance3D`
+has none either.
+
+**What the failure actually is**, for whoever picks it up: the player is stopped
+at x ≈ −10.5 walking west out of the Warden's arena, whose west wall is at
+x = −12. The `warden_arena → legendary_chamber` passage is 5.0 m wide and the
+walk is a straight push along z = 90.2 for 600 frames — at ~4 m/s that is ~40 m
+of budget against a 32 m journey, so this is a **blocked walk, not an exhausted
+frame budget**. The three earlier legs all pass. That points at the passage
+opening or its door, not at the walker. The brief mentioned a separate lane is
+fixing a real placement bug under the finale; this may well be the same bug seen
+from the other side.
+
+**One thing this lane did change as a result**, even though it could not have
+caused the failure: the hero siphon was authored at z 88.0 on the arena's west
+wall, and that passage opening spans z 87.7–92.7. The machine was standing *in
+the doorway to the Legendary Chamber*. It has no collider so it blocked nothing,
+but it was wrong to look at, and it now sits at z 82.5, clear of the opening.
+
+### 4.2 Renders and the silhouette measurement
 
 ---
 
