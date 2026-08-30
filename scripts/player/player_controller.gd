@@ -44,6 +44,8 @@ var _ground_accel: float = 42.0
 var _ground_friction: float = 38.0
 var _air_accel: float = 9.0
 var _turn_speed: float = 11.0
+## The runaway ceiling. See `_clamp_runaway_velocity()`.
+var _max_speed: float = 120.0
 
 var _jump_velocity: float = 7.0
 var _gravity: float = 26.0
@@ -159,6 +161,7 @@ func _load_config() -> void:
 	var loco: Dictionary = config.get("locomotion", {})
 	_walk_speed = float(loco.get("walk_speed", _walk_speed))
 	_sprint_speed = float(loco.get("sprint_speed", _sprint_speed))
+	_max_speed = float(loco.get("max_speed", _max_speed))
 	_ground_accel = float(loco.get("ground_acceleration", _ground_accel))
 	_ground_friction = float(loco.get("ground_friction", _ground_friction))
 	_air_accel = float(loco.get("air_acceleration", _air_accel))
@@ -223,6 +226,8 @@ func _physics_process(delta: float) -> void:
 	_apply_movement(delta, input_owned)
 	_try_jump(input_owned)
 
+	_clamp_runaway_velocity()
+
 	var falling_speed := -velocity.y
 	# Captured BEFORE move_and_slide: sliding against a wall zeroes the
 	# into-wall component of velocity, which is precisely the motion the
@@ -237,6 +242,46 @@ func _physics_process(delta: float) -> void:
 
 	vitals.tick(delta, _sprinting and velocity.length() > 0.5)
 	vitals.tick_satiety(delta)
+
+
+## T5-CARE. A ceiling on how fast this body can be travelling, whatever put the
+## number there.
+##
+## Measured, not theorised. Booting the real Meadows with `opening:beat:
+## free_play` set -- the ordinary post-opening state -- put the player at the
+## world origin while `playground_world.gd` was still building the settlement
+## around them, and `tools/_probe_t5_launch.gd` caught what happened next:
+##
+##   frame  14  pos (0.0, 2.90, 0.0)            vel (0, 0, 0)      on_floor=false
+##   frame  17  pos (-23721.0, 3079.46, 7468.8) vel (-1444690, 368, 454877) on_floor=true
+##
+## 1.44 MILLION metres per second, arriving in one frame with the body reporting
+## `on_floor`. That is Godot's platform-velocity inheritance: the body was
+## resting on a collider at the instant the world moved it, and 24km of collider
+## motion in one 60Hz frame is exactly 1.44e6 m/s. Three frames later the player
+## is past the perimeter guard, which prints "player fell below the world ...
+## returning to spawn", and the run never recovers.
+##
+## The cost of that is not academic: it is why
+## `tests/smoke_gate_a_build_segment_meadows.gd` -- the canonical proof that a
+## controller can BUILD in the real Meadows -- cannot complete a run on this
+## branch, and therefore why exit-criterion section H had no evidence behind it.
+##
+## Deliberately a CLAMP and not a fix to whatever moved the collider. The race
+## is between world construction and the physics step, there is more than one
+## thing in the Meadows that gets built under a standing body, and a body in
+## this game has no legitimate reason to exceed this speed: sprint is 8.6 m/s
+## (`movement.json`) and `vitals.json` calls a 34 m/s landing lethal. So this is
+## the general guard, and the direction is preserved rather than zeroed -- a
+## clamp keeps a real fall falling, where a zero would hang the player in the
+## air. TUNABLE via `movement.json::locomotion.max_speed`.
+func _clamp_runaway_velocity() -> void:
+	var speed := velocity.length()
+	if speed <= _max_speed:
+		return
+	push_warning("[player] velocity %.0f m/s exceeded the %.0f m/s ceiling at %.1f, %.1f, %.1f; clamped" % [
+		speed, _max_speed, global_position.x, global_position.y, global_position.z])
+	velocity = velocity / speed * _max_speed
 
 
 ## OF15: slide around what you walk into instead of pinning against it.

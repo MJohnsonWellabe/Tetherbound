@@ -4,6 +4,8 @@
   "locomotion": {
     "walk_speed": 5.0,
     "sprint_speed": 8.6,
+    "_comment_max_speed": "T5-CARE. A hard ceiling on the player body's speed, applied every physics frame before move_and_slide. Not a movement tuning number -- nothing the player does approaches it (sprint is 8.6 and vitals.json calls a 34 m/s landing lethal). It is a failsafe against velocity arriving from outside locomotion: a body resting on a collider that the world MOVES inherits that motion as platform velocity, and world construction moving a collider 24km in one 60Hz frame handed the player 1,444,690 m/s and threw them seven million metres out of the Meadows (tools/_probe_t5_launch.gd). Raise it only if some legitimate motion ever needs to exceed it. TUNABLE.",
+    "max_speed": 120.0,
     "_comment_accel": "Metres per second squared. Ground acceleration high enough that the character does not feel like it is on ice, air acceleration low enough that mid-jump direction changes read as momentum rather than flight.",
     "ground_acceleration": 42.0,
     "ground_friction": 38.0,
