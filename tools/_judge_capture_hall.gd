@@ -82,11 +82,17 @@ func _run() -> void:
 			look.call("set_weather", {})
 		look.call("apply_time", "day")
 
+	# T1-HALL-REBUILD: the player is HIDDEN and frozen, but it is NOT parked
+	# 4km away any more. `grass_field.gd` builds its tuft ring around the
+	# player (72m radius, its own build log says so) and Terrain3D's streaming
+	# bubble follows it too, so parking the player in Band 2 while shooting the
+	# Hall at z 7560 renders every stand on bare far-cover ground with no grass
+	# geometry in it at all -- which is exactly the "no grass plus a milky
+	# haze" capture defect this harness is known for. `perf_render_stats.gd`
+	# already solved it the same way and says so in its own comment: the player
+	# goes where the camera goes. `_shoot` moves it per stand.
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	if player != null:
-		var park := Vector2(-357.0 + 900.0, 2610.0 + 900.0)
-		var park_y := float(world.call("ground_height_at", park.x, park.y))
-		player.global_position = Vector3(park.x, park_y + 0.2, park.y)
 		player.visible = false
 		player.set_physics_process(false)
 		if player is CharacterBody3D:
@@ -159,7 +165,7 @@ func _run() -> void:
 			# Raise the aim point off the floor so the tiers fill the frame
 			# rather than the ground in front of them.
 			target = hall_at + Vector3(0.0, 10.0, 0.0)
-		await _shoot(camera, look, torch, false, eye, target, str(s["name"]), written, failures)
+		await _shoot(camera, look, torch, false, eye, target, str(s["name"]), written, failures, "day", player)
 		# Design §10: the gate face is the SHADED face at the day keyframe, so
 		# its self-lit dusk/night read is part of the design and has to be
 		# judged too. Only H-03 gets the variants -- it is the stand the gate
@@ -168,7 +174,7 @@ func _run() -> void:
 		if str(s["name"]) == "H-03-ramp-foot":
 			for hour: String in ["golden", "night"]:
 				await _shoot(camera, look, torch, false, eye, target,
-					"H-03-ramp-foot-%s" % hour, written, failures, hour)
+					"H-03-ramp-foot-%s" % hour, written, failures, hour, player)
 
 	# H-04 gate-mouth: on the ramp, looking S through the gate. Use the
 	# stronghold's own ramp_foot/entrance marker plus a step up the slope
@@ -183,14 +189,14 @@ func _run() -> void:
 		toward = toward.normalized()
 		var eye4 := entrance + toward * 34.0 + Vector3(0.0, 1.7, 0.0)
 		var target4 := eye4 + toward * 20.0
-		await _shoot(camera, look, torch, false, eye4, target4, "H-04-gate-mouth", written, failures)
+		await _shoot(camera, look, torch, false, eye4, target4, "H-04-gate-mouth", written, failures, "day", player)
 
 	# H-07 courtyard: inside, at the courtyard trainer, looking S.
 	if stronghold.has_method("has_marker") and bool(stronghold.call("has_marker", "trainer_stronghold_courtyard")):
 		var trainer_at: Vector3 = stronghold.call("marker", "trainer_stronghold_courtyard")
 		var eye7 := trainer_at + Vector3(0.0, 1.7, -2.0)
 		var target7 := trainer_at + Vector3(0.0, 1.4, 10.0)
-		await _shoot(camera, look, torch, true, eye7, target7, "H-07-courtyard", written, failures)
+		await _shoot(camera, look, torch, true, eye7, target7, "H-07-courtyard", written, failures, "day", player)
 
 	print("")
 	print("%d frames -> %s" % [written.size(), _out_dir])
@@ -202,12 +208,18 @@ func _run() -> void:
 
 func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 		eye: Vector3, target: Vector3, name_value: String,
-		written: Array[String], failures: Array[String], hour: String = "day") -> void:
+		written: Array[String], failures: Array[String], hour: String = "day",
+		player: Node3D = null) -> void:
 	camera.global_position = eye
 	camera.look_at(target, Vector3.UP)
+	# Carry the grass ring and the terrain bubble to the stand, then give them
+	# real time to rebuild -- 8 frames was tuned for a camera that never moved
+	# far from a parked player and is not enough for a 4km jump.
+	if player != null:
+		player.global_position = Vector3(eye.x, eye.y, eye.z)
 	torch.visible = interior
 	torch.global_position = eye + Vector3(0.0, 0.35, 0.0)
-	for i in 8:
+	for i in 40:
 		await physics_frame
 	if look != null:
 		if look.has_method("set_weather"):
