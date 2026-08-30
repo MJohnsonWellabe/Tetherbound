@@ -42,6 +42,8 @@ const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
 const TM_PICKUP := preload("res://scripts/world/tm_pickup.gd")
 const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
+const CART_REPAIR := preload("res://scripts/world/cart_repair.gd")
+const RIVER_NEST_CLEAR := preload("res://scripts/world/river_nest_clear.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 const SOUTH_BRIDGE := preload("res://scripts/world/south_bridge.gd")
 const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
@@ -341,6 +343,21 @@ const CACHE_LABEL := {
 }
 const CACHE_MODEL := "res://assets/props/quaternius_fantasy/Barrel.gltf"
 const CACHE_MODEL_SCALE := 0.9
+
+## T3-ACTIVITIES. Band 1's "Broken Cart" Local Request (spec sec6). Off the
+## South Bridge approach, on the village side -- ground-checked flat with
+## tools/_probe_activities_sites.gd (worst local slope 10.5 degrees over a 3m
+## pad); no authored content within 20m.
+const BROKEN_CART_AT := Vector2(80.0, 1240.0)
+const BROKEN_CART_YAW_DEG := 40.0
+
+## T3-ACTIVITIES / CI-TRAINER-CENSUS. Band 3's "River Nest" Local Request.
+## Same site `river_nest_doss` was ground-checked at when it was still a
+## trainers.json row (worst local slope 3.1 degrees over a 3m pad,
+## tools/_probe_activities_sites.gd) -- only the resolution mechanism moved,
+## not the place.
+const RIVER_NEST_AT := Vector2(66.0, 3988.0)
+const RIVER_NEST_FACING_DEG := 30.0
 
 ## Where Grandpa's house stands: the west building pad in
 ## data/config/terrain_playground.json's `flats`. One source of truth would be
@@ -998,6 +1015,8 @@ func _build_settlement() -> void:
 
 	_build_road_gate()
 	_build_sigil_gate()
+	_build_broken_cart()
+	_build_river_nest_clear()
 
 	var watchtower: Node3D = WATCHTOWER_LANDMARK.new()
 	watchtower.name = "RuinedWatchtower"
@@ -1149,6 +1168,26 @@ func _build_road_gate() -> void:
 	if KEY_PICKUP.was_taken(game, "castle_gate_key"):
 		return
 	_spawn_gate_key()
+
+
+## T3-ACTIVITIES. Band 1's "Broken Cart" Local Request -- see cart_repair.gd's
+## own header for why it reuses item_gate.gd/building_prefabs.gd rather than a
+## new mechanism.
+func _build_broken_cart() -> void:
+	var cart: Node3D = CART_REPAIR.new()
+	cart.name = "BrokenCart"
+	add_child(cart)
+	cart.call("build", self, BROKEN_CART_AT, BROKEN_CART_YAW_DEG)
+
+
+## T3-ACTIVITIES / CI-TRAINER-CENSUS. Band 3's "River Nest" Local Request --
+## see river_nest_clear.gd's own header for why this is a gather-and-give
+## NPC rather than a trainers.json row.
+func _build_river_nest_clear() -> void:
+	var doss: Node3D = RIVER_NEST_CLEAR.new()
+	doss.name = "RiverNestClear"
+	add_child(doss)
+	doss.call("build", self, _player, RIVER_NEST_AT, RIVER_NEST_FACING_DEG)
 
 
 func _spawn_gate_key() -> void:

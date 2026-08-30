@@ -741,6 +741,32 @@
       "respawn_seconds": 600.0,
       "_why": "Brief section 7. Night-gated, one individual, in the still water below the Old Mill Crossing beside the Paddlenewt cluster at (-145,4116) -- the brief wants 'secluded ponds, still pools... water near ancient ruins, water near Rift/Tether phenomena' and explicitly NOT 'every ordinary stream', and band 3 is the region Team Tether occupies, which is where the Rift association lives. Band 3 rather than the band 1 pond on purpose: this band's wild level range is [9,12] against band 1's low single digits, and a rare prize the player finds at level 3 is not a prize. NO `alpha` block -- the brief calls Riftfrill a 'Rare Variant' and names only Nightburrow and Stormtrail as alphas. Its 8m radius against the region's usual 14-16m keeps it in the pool rather than scattered up the bank.",
       "_why_rarity": "The brief says '1% or less of qualifying Paddlenewt spawns'. Applied literally that is ZERO: the whole chapter holds SIX Paddlenewts, and 1% of six is 0.06. This is the clearest case in the expansion of a per-encounter percentage meeting an authored population and producing nothing at all, so the brief's own alternative is what is built -- 'Potentially higher around specifically authored mysterious pools': one authored individual at one authored pool."
+    },
+    {
+      "order": 3102,
+      "species": "brooktail",
+      "count": 1,
+      "centre": [8.0, 0.0, 3560.0],
+      "radius": 12.0,
+      "alpha": {
+        "level_bonus": 4,
+        "scale": 1.3
+      },
+      "_why": "T5-CADENCE. The Springhead's own occupant (props.json order 3007), and the third beat closing T4-REGIONS' 668m dead run at this band's opening. Brooktail is already the band's water animal (8 individuals across band 3); this is the one that holds the source.",
+      "_why_alpha": "T4-REGIONS scored this band's team-building temptation PARTIAL and said why: its two new species, Stormtrail and Riftfrill, are 'conditional singletons ... gated behind weather and time the player does not control', so 'a player who crosses this band in clear weather by day sees ZERO new species.' This alpha is the unconditional answer -- not a new species, but a visibly larger, four-level individual of the band's own water type, standing alone at a spring pool on the route, catchable by anyone who walks past it in any weather at any hour. Fun-rebuild §11's test is 'could a reasonable player see something here and think I might want that instead of one of mine', and a 1.3x Brooktail at the head of the river the region is named for is a yes that does not depend on the sky. Scale and level bonus match band 4's own solitary-elder convention (orders 4007, 4075) rather than inventing a third."
+    },
+    {
+      "order": 3103,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [152.0, 0.0, 4552.0],
+      "radius": 12.0,
+      "alpha": {
+        "level_bonus": 3,
+        "scale": 1.3
+      },
+      "_why": "T5-CADENCE. On the north-bank bluff at the spine's apex out of this band (arc 2097), inside T4-REGIONS' measured 519m dead run to the band 4 seam. Galecrest is already band 3's air animal (10 individuals) and band 4's dominant one (48) -- an alpha pair on the last high ground before the Upper Meadows is the ecological handover between the two bands, said in creatures rather than in a sign.",
+      "_why_alpha": "The band's exit stretch had no alpha, no elder and no trainer over 519m, in the chapter's back half where VISION §3 asks the player to keep meeting creatures they want and cannot justify keeping. Sited on exposed high ground for the same reason band 4's own galecrest alpha is (order 4001's note: 'the aggressor role's presence in the high country, on open ground where a hostile silhouette reads across the long sightlines'), and one level bonus lower than the springhead's because the player meets this one later and better-prepared, so the escalation is in the setting rather than in the number."
     }
   ],
   "_comment_alpha": "WILD-ECOLOGY (prompt 60): 'a handful of special encounters across the chapter' -- one per band from band 2 on, never in band 1, which is the tutorial meadow prompt 71 keeps gentle. The `alpha` block turns a cluster's FIRST member into a bigger, higher-level individual of a species the player already knows; the rest of the cluster is untouched. `level_bonus` is ADDED to whatever the band's own roll produced, so an alpha is always ahead of its neighbours instead of naming an absolute level that would drift when chapter_curve.json moves. Presentation is scale, per CLAUDE.md's rule that Meadows creatures are differentiated by materials, scale, behaviour and encounter context rather than by new meshes. TUNABLE."

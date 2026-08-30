@@ -114,7 +114,7 @@
       "name": "Creature Bed",
       "category": "furniture",
       "blurb": "Somewhere for a creature to rest at home.",
-      "_comment_mesh": "The camp set's bed, not the furniture pack's twin bed -- see scripts/build/creature_bed.gd::MESH_PATH for why, and for what it still does not fix. Kept in step with that constant deliberately: this key builds the placement GHOST and the menu thumbnail, so a mismatch would show the player one bed while placing another.", "mesh": "res://assets/props/generated_camp/camp_bed.glb",
+      "_comment_mesh": "The camp set's bed -- but since the JUDGE-3 sec1d rework, creature_bed.gd COMPOSES the placed object (and its ghost) at runtime: this mesh becomes a squashed bedding pad inside a procedural canvas bolster ring. This key no longer builds the ghost (build_placer.gd instantiates creature_bed.gd for that, which composes the full nest); it still feeds the MENU THUMBNAIL, which therefore shows the plain camp bed rather than the composed nest -- a known, recorded mismatch until tools/render_build_thumbnails.gd learns to render composed pieces.", "mesh": "res://assets/props/generated_camp/camp_bed.glb",
       "thumbnail": "res://assets/ui/icons/buildables/creature_bed.png",
       "cost": [
         { "id": "wood", "n": 6 },

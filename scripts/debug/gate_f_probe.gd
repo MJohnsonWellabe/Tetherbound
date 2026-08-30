@@ -278,6 +278,94 @@ func inventory_snapshot() -> Dictionary:
 	return out
 
 
+## Which satchel CELL a given item is sitting in, or -1 when it is not carried.
+##
+## GAME-9 / RIG-24. `inventory_snapshot()` above deliberately throws slot
+## geometry away, and for the evidence schema that is right. But a step that
+## wants to bind the pickaxe to a hotbar slot has to put the cursor on the
+## pickaxe's own cell first, and the only way S03 had to say that was a
+## hardcoded count of `ui_right` presses derived from the order a FRESH save
+## happens to fill the bag in.
+##
+## That count is wrong the moment the bag differs, and after a real 450-second
+## replay it always differs: the run-4 evidence shows both Revive draughts
+## spent and two of three potions drunk before the tools are ever bound, so
+## every cell after the gap has moved and the presses land on the wrong items
+## in silence. Six real gathers then reported the same wrong tool and
+## `home_materials_gathered` never set.
+##
+## Cells, not stacks: a split stack of the same item occupies two cells and the
+## first one found is the one the cursor can reach by counting from here.
+func satchel_slot_of(item_id: String) -> int:
+	var g := game()
+	if g == null:
+		return -1
+	var inventory: Variant = g.get("inventory")
+	if inventory == null:
+		return -1
+	for i in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", i)
+		if str(stack.get("id", "")) == item_id:
+			return i
+	return -1
+
+
+## How many cells wide the satchel grid is, read off the live grid rather than
+## `data/config/menu.json`, so a caller stepping the cursor row by row is
+## stepping the grid that exists. 0 when the Satchel is not built.
+##
+## Load-bearing for `satchel_focus()`'s callers: the cursor moves in rows and
+## columns, and `ui_left` at a row's start does NOT wrap up to the previous
+## row's end. S03 assumed it did ("three left from the knife's cell reaches the
+## pickaxe's, wrapping up a grid row") and that single wrong assumption is what
+## put `potion_small` on hotbar 3 and left the pickaxe unbound — GAME-9's
+## `{hotbar_slot: 3, item: "knife"}` in full.
+func satchel_columns() -> int:
+	var tab := _satchel_tab()
+	if tab == null:
+		return 0
+	var grid: Variant = tab.get("_grid")
+	if grid == null or not (grid is GridContainer):
+		return 0
+	return maxi(1, (grid as GridContainer).columns)
+
+
+## `{slot, item, ok}` — where the satchel cursor actually is, and what is under
+## it. `ok` is false when the Satchel is not the surface holding focus, which is
+## a different answer from "the cursor is on an empty cell" and must not be
+## confused with it.
+##
+## Read off `tab_backpack.gd`'s own `_focused`, which its per-button
+## `focus_entered` handler sets, rather than by matching the focused Control
+## against the grid's children here: the tab already knows, and a second copy of
+## "which cell is this" is a second answer that can disagree.
+func satchel_focus() -> Dictionary:
+	var out := {"slot": -1, "item": "", "ok": false}
+	var tab := _satchel_tab()
+	if tab == null:
+		return out
+	var slot := int(tab.get("_focused"))
+	out["slot"] = slot
+	out["ok"] = true
+	var g := game()
+	var inventory: Variant = g.get("inventory") if g != null else null
+	if inventory == null or slot < 0 or slot >= int(inventory.call("slot_count")):
+		return out
+	var stack: Dictionary = inventory.call("stack_at", slot)
+	out["item"] = str(stack.get("id", ""))
+	return out
+
+
+func _satchel_tab() -> Node:
+	if _tree == null or _tree.root == null:
+		return null
+	for node: Node in _descendants(_tree.root):
+		var script: Script = node.get_script() as Script
+		if script != null and script.resource_path.ends_with("tab_backpack.gd"):
+			return node
+	return null
+
+
 ## `{hotbar_slot, item}` — which quick-bar slot holds the tool currently in
 ## hand, and what it is. `hotbar_slot` is -1 with nothing equipped, matching
 ## `game_state.gd::hotbar_slot_of()`'s own miss value.

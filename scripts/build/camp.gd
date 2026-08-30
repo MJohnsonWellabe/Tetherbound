@@ -93,35 +93,47 @@ const STONE_RING := "res://assets/props/generated_camp/campfire_stone_ring.glb"
 const STONE_RING_SCALE := 0.8
 const FIRE_SCALE := 0.55
 
-const FADE_SECONDS := 1.2
+## T1-CAST-FIX (JUDGE-3 sec1b: the lit fire "reads as a yellow crystal
+## cluster, not a fire"). The visible flame is now the Meshy-generated flame
+## sculpt that has sat unused under generated_camp/ since the authored
+## trail_camp reverted it -- props.json's `_why` records that revert as "an
+## opaque carved spire with no emissive light cast", which an isolation
+## render (tools/_capture_flame_isolation.gd) showed was never a SHAPE
+## problem: raw, the sculpt is a genuinely flame-shaped swirl that merely
+## reads as carved wood because nothing lit it. `ignite_mesh()` +
+## `hide_fire_surface()` are the fix: the sculpt glows from its own baked
+## warm-to-hot gradient and Bonfire_Fire's old faceted `Fire` cone (the
+## actual "crystal" in the judgement) is hidden underneath it. Energy 3.5:
+## after `ignite_mesh` switched to a pure-emitter material with a MULTIPLIED
+## emission tint (see its own header for the round-2 white-out that forced
+## that), the isolation sweep read 2.0 as flat matte red-orange, 3.5 as an
+## orange flame with a genuinely hot pale core, and 5.0 as pale yellow
+## throughout -- the old 0.5 belongs to the pre-multiply material and would
+## render nearly black now.
+const CAMP_FLAME := "res://assets/props/generated_camp/camp_flame.glb"
+## Raw sculpt is 2.00m tall x ~0.5m wide (isolation probe); the log pile it
+## sits on tops out at 0.616m raw * FIRE_SCALE = ~0.34m world
+## (tools/_probe_flame_fit.gd). 0.85 gives a ~1.7m flame over a ~1.2m-wide
+## pile -- up from a first-pass 0.7 after a blind judgement on the wider
+## gameplay-distance frame said the flame was "nearly invisible" inside its
+## own glow; the sculpt's silhouette, not the halo, has to be what carries
+## at range. The base sinks below the pile's top so the flame emerges from
+## between the logs rather than balancing on them.
+const CAMP_FLAME_SCALE := 0.85
+const CAMP_FLAME_POSITION := Vector3(0.0, 0.18, 0.0)
+const CAMP_FLAME_ENERGY := 3.5
+## See the overlay comment in `_spawn_meshes` -- a halo at 1.0 swallowed the
+## sculpt whole ("one additive yellow ball"), none left it hard-edged, and
+## 0.45 still read at distance as "a static glow/light blob" with the flame
+## lost inside it. 0.3 keeps just enough soft bloom at the flame's base.
+const HALO_FRACTION := 0.3
 
-const FIRE_LIGHT_BASE_ENERGY := 2.8
-## T1-LIGHT, JUDGE-3 sec1b: same fix as campfire_glow.gd's own
-## `DAY_ENERGY_SCALE`, see that constant's comment for the full reasoning
-## (a permanently-lit ground fire cannot switch fully off in daylight
-## without looking broken, so this scales the disc down below ambient
-## daylight instead of hiding it).
-const FIRE_LIGHT_DAY_SCALE := 0.16
+const FADE_SECONDS := 1.2
 
 var _ghost_meshes: Array[MeshInstance3D] = []
 var _ghost_tent: Node3D = null
 var _ghost_ring: Node3D = null
 var _ghost_bed: Node3D = null
-## T1-LIGHT, JUDGE-3 sec1b. This fire's own light, built below, is a SEPARATE
-## OmniLight3D from campfire_glow.gd's -- the player-built camp never
-## instantiates that class at all, only its `ignite()`/`texture_logs()`
-## static helpers for the mesh's own Fire surface, so fixing
-## campfire_glow.gd (its day/night energy scale, its softer
-## omni_attenuation) never touched this light. Confirmed this is the actual
-## source of the judged "unshaped blown-out disc... brighter at its centre
-## than the sky, in daylight" (`tools/_capture_t1_camp.gd`'s own
-## `01-camp-establishing.png`/`02-camp-close.png`, built via
-## `build_real()`): a same-image pixel diff against a rebuilt
-## campfire_glow.gd showed zero change here, and the fire mesh this rig
-## renders never goes through `CAMPFIRE_GLOW.ignite()`'s own OmniLight
-## instantiation at all -- this is it.
-var _fire_light: OmniLight3D = null
-var _fire_light_world_look: Node = null
 ## R2.4. Instantiated once, on the first "Craft" activation — most camps are
 ## visited for rest and never opened for crafting, so building the panel's
 ## whole node tree up front would be work most players never see the result
@@ -138,16 +150,12 @@ func build_ghost() -> void:
 func build_real() -> void:
 	_spawn_meshes(true)
 
-	_fire_light = OmniLight3D.new()
-	_fire_light.position = Vector3(0.0, 1.2, 0.0)
-	_fire_light.light_color = Color(1.0, 0.72, 0.45)
-	_fire_light.light_energy = FIRE_LIGHT_BASE_ENERGY
-	_fire_light.omni_range = 10.0
-	# Same reasoning as campfire_glow.gd's own LIGHT_ATTENUATION: the default
-	# 1.0 exponent reads as a hard-ish edge at `omni_range`'s own cutoff.
-	_fire_light.omni_attenuation = 1.8
-	_fire_light.shadow_enabled = true
-	add_child(_fire_light)
+	# T1-CAST-FIX round 2: no standalone OmniLight here any more. It predates
+	# the CampfireGlow overlay this camp's fire now carries (which brings its
+	# own flickering fire light, the same one every authored campfire uses),
+	# and the two lights stacked -- a blind judgement on the doubled-up frame
+	# called the ground pool "much larger and brighter than the small visible
+	# flame geometry would justify."
 
 	var prompt: Node3D = INTERACTABLE.new()
 	prompt.name = "Interactable"
@@ -198,17 +206,41 @@ func _spawn_meshes(solid: bool) -> void:
 		bed.call("build_ghost", PLAYER_BED)
 		_ghost_bed = bed
 	var fire := _mesh(BONFIRE, Vector3.ZERO, FIRE_SCALE)
-	# The bonfire mesh's own `Fire` surface, lit. `Bonfire_Fire.obj` was long
-	# believed to be one combined mesh whose flame could not be addressed --
-	# true of the OBJ file, false of what Godot imports, since the OBJ loader
-	# splits by material (BAND1-D1, tools/_probe_bonfire_fire.gd). Until this,
-	# the player-built camp's fire was a pile of unlit logs with a light
-	# floating above it, which is the same defect the authored trail camp
-	# failed a blind judgement on. Only on the real thing: the drag-around
-	# ghost is meant to read as a preview, not as a fire already burning.
+	# The fire, lit -- only on the real thing: the drag-around ghost is meant
+	# to read as a preview, not as a fire already burning. Bonfire_Fire's own
+	# faceted `Fire` cone is hidden and the generated flame sculpt stands in
+	# its place (see CAMP_FLAME's header for the JUDGE-3 history that forced
+	# this); the logs keep the shared bark retexture. The overlay is the same
+	# light/embers/smoke rig every authored campfire gets through props.gd's
+	# glow branches, built WITHOUT its billboard halo (`new(false)`) because
+	# the sculpt already supplies the flame's visible shape -- the exact
+	# pairing props.gd's `glow: "flame_mesh"` branch shipped -- EXCEPT the
+	# halo, which stays on at HALO_FRACTION: a blind pass on the halo-less
+	# frame called the sculpt "a distinct, clean outline... rather than a
+	# soft, feathered/glowing falloff" (no bloom post-process exists under
+	# the Compatibility renderer, so an emissive mesh never glows on its
+	# own), and the FULL-size halo re-rendered as one additive yellow ball
+	# that swallowed the sculpt entirely. The fraction is the manual bloom
+	# in between: a soft edge hugging the sculpt without replacing its
+	# silhouette (`campfire_glow.gd`'s `halo_scale` header). Child of `fire`
+	# itself (not of `self`) so the counter-scale cancels `FIRE_SCALE` the
+	# way props.gd counter-scales its own `scale_factor` -- the overlay's
+	# sizes are absolute metres and must not shrink with the log pile
+	# (`campfire_glow.gd`'s own header).
 	if fire != null and solid:
-		CAMPFIRE_GLOW.ignite(fire)
+		CAMPFIRE_GLOW.hide_fire_surface(fire)
 		CAMPFIRE_GLOW.texture_logs(fire)
+		var flame_scene := load(CAMP_FLAME) as PackedScene
+		if flame_scene != null:
+			var flame := flame_scene.instantiate() as Node3D
+			flame.name = "CampFlame"
+			flame.position = CAMP_FLAME_POSITION
+			flame.scale = Vector3.ONE * CAMP_FLAME_SCALE
+			add_child(flame)
+			CAMPFIRE_GLOW.ignite_mesh(flame, CAMP_FLAME_ENERGY, true)
+		var overlay: Node3D = CAMPFIRE_GLOW.new(true, HALO_FRACTION)
+		overlay.scale = Vector3.ONE / FIRE_SCALE
+		fire.add_child(overlay)
 	if not solid:
 		if fire != null:
 			_ghost_meshes.append(fire)
@@ -226,22 +258,6 @@ func _spawn_meshes(solid: bool) -> void:
 		body.position = m.position + Vector3(0.0, aabb.size.y * 0.5 * m.scale.x, 0.0)
 		body.rotation.y = m.rotation.y
 		add_child(body)
-
-
-## Lazy-looked-up every tick, not cached at `build_real()` time -- the same
-## `torch.gd::_is_on()` OF18 lesson `campfire_glow.gd::_daylight_scale()`
-## already restates: a camp can be built and placed before `world_look.gd`
-## has joined the "day_cycle" group, and caching null at that moment would
-## leave the fire at full daylight energy forever.
-func _process(_delta: float) -> void:
-	if _fire_light == null:
-		return
-	if _fire_light_world_look == null or not is_instance_valid(_fire_light_world_look):
-		_fire_light_world_look = get_tree().get_first_node_in_group(&"day_cycle")
-	var is_dark := true
-	if _fire_light_world_look != null and _fire_light_world_look.has_method("is_dark"):
-		is_dark = bool(_fire_light_world_look.call("is_dark"))
-	_fire_light.light_energy = FIRE_LIGHT_BASE_ENERGY * (1.0 if is_dark else FIRE_LIGHT_DAY_SCALE)
 
 
 func _mesh(path: String, at: Vector3, scale_factor: float) -> MeshInstance3D:

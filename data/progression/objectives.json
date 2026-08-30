@@ -177,6 +177,41 @@
       "revealed_by": "old_champion_met",
       "label": "Beat Old Bram in the eastern fields.",
       "_comment": "BAND1-D1, prompt 30's Old Champion and band1's entry in a `local` array that was previously EMPTY -- the chapter had a twelve-beat Main Story and not one Local Request anywhere in it. `revealed_by` (new, see scripts/world/quest_log.gd) keeps him out of the log until the player has actually met him, so finding him stays a discovery and the log stays a record of what the player knows rather than a list of what the designer put in the world. `flag_id` is his `defeat_flag`, which the combat system sets the moment the fight is won, so the tick is the fight and not a walk back to him. It is deliberately NOT a second flag in his `reward.flags`: one fact, one flag. The elder mosshell he names in his defeated line gets NO entry here on purpose: wild creatures set no flags, so an entry for it could never tick, and a permanently unticked line is worse than no line."
+    },
+    {
+      "id": "band1_meadowhart_herd",
+      "flag_id": "band1_meadowhart_herd_found",
+      "revealed_by": "band1_meadowhart_herd_met",
+      "label": "See what Rae is watching, west of the road.",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Meadowhart Herd: discovery activity that points toward the Riding Saddle progression'. The herd itself already exists (spawns.json order 1005, BAND1-D1's own off-spine Meadowhart cluster) -- this gives the sighting a giver and a tick rather than authoring a second herd. `flag_id` is set on the SAME line as `revealed_by`, on Rae's one-time reward line (data/config/village_npcs.json's `meadowhart_herd_sighting` conversation) -- her greeting is discovery, not repair, so there is nothing later for a second flag to gate."
+    },
+    {
+      "id": "band1_broken_cart",
+      "flag_id": "band1_broken_cart_repaired",
+      "revealed_by": "broken_cart_met",
+      "label": "Help Coll repair his cart on the South Bridge road.",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Broken Cart: gather materials to repair a bridgehand's cart'. `broken_cart_met` is set the moment the player first reaches him (scripts/world/cart_repair.gd); `band1_broken_cart_repaired` is item_gate.gd's own flag, set the moment wood/stone/fiber are actually handed over -- the doable path is the gather verb every Band 1 harvest node already teaches, not a new mechanic."
+    },
+    {
+      "id": "band2_night_watch",
+      "flag_id": "defeated_night_watch_farro",
+      "revealed_by": "night_watch_farro_met",
+      "label": "Find out what has the Duskhush stirred up after dark.",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Night Watch: investigate nighttime activity and introduce Duskhush'. Same shape as Old Bram: one character is both the giver (his own challenge line frames the mystery) and the fight, `revealed_by` keeps him off the log until found, `flag_id` is his `defeat_flag`."
+    },
+    {
+      "id": "band3_river_nest",
+      "flag_id": "river_nest_doss_cleared",
+      "revealed_by": "river_nest_doss_met",
+      "label": "Clear whatever is blocking Doss's fishing spot.",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. CI-TRAINER-CENSUS, 2026-08-30: originally a trainer battle whose team WAS the aggressive pair; rebuilt as a gather-and-give resolution (scripts/world/river_nest_clear.gd, item_gate.gd) to stay under the chapter's 24-distinct-trainer ceiling -- see that script's header. `flag_id` is item_gate's own flag, set the moment wood/fiber are handed over, same shape as `band1_broken_cart`."
+    },
+    {
+      "id": "band4_lost_creature",
+      "flag_id": "defeated_lost_creature_rue",
+      "revealed_by": "lost_creature_rue_met",
+      "label": "Get the stolen Meadowhart back from Team Tether.",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Lost Creature: track and recover a villager's missing bonded Creature'. The challenge line names whose creature it is; beating the patrol is the recovery. CI-TRAINER-CENSUS, 2026-08-30: label updated from 'Rue' to 'Team Tether' -- the trainer's own `name`/`speaker` moved to 'Tether Patrol' (band4_upper_meadows_ironwood/trainers.json's `_comment_ci_trainer_census`); `id`/`flag_id` are unchanged bookkeeping."
     }
   ],
   "_comment_chain": "CHAPTER-OBJECTIVES (prompt 68). This list was TWO entries -- the village gate and the Upper Meadows captains -- for a 3-4 hour chapter, so everything between the opening and Band 4 (the South Bridge, the quarry, the warrens, the captive, the relay, the crossing) and everything after the captains (the Hall, the Warden, the machine) was untracked. A player who put the game down mid-chapter had no line telling them what they were in the middle of. The eleven entries below are all built from flags the game ALREADY sets -- no new boolean was invented for any of them, per the prompt's 'avoid redundant booleans where real game state can answer completion' -- and the architecture is untouched: still DONE-or-not-yet, still first-unset-in-file-order for the tracked line, still no prerequisites and no branching (spec sec19 and CLAUDE.md both ban a quest engine).",

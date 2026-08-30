@@ -34,9 +34,30 @@ const VIEWS := {
 	"band1_open": [0.0, 700.0, 24.0, 0.0],
 	"band4_ironwood": [0.0, 6000.0, 28.0, 0.0],
 	"stronghold_approach": [0.0, 7420.0, 26.0, 0.0],
+	## T1-HALL-REBUILD (2026-08-30). `stronghold_approach` ABOVE DOES NOT LOOK
+	## AT THE STRONGHOLD, and the whole Hall design's draw-call budget is
+	## written against it. Godot yaw 0 faces -Z; that view stands at z 7420 and
+	## looks toward DECREASING z -- back up the corridor the player just walked,
+	## with the Hall (z 7560) squarely behind the camera. Measured, not
+	## inferred: a before/after pair across the entire T1-HALL-REBUILD diff
+	## returned 1090 draw calls / 1402 objects on BOTH sides, to the object,
+	## which is what a view containing none of the changed geometry looks like.
+	## The old entry is left exactly as it is so its historical series stays
+	## comparable; this is the same stand turned around to face its subject, and
+	## it is the number any future Hall budget should be written against.
+	"hall_approach": [0.0, 7420.0, 26.0, 180.0],
 }
 
 var _label := ""
+## T1-HALL-REBUILD (2026-08-30). `--views=a,b` restricts the run to a subset.
+## The four views cost 240 settle + 180 resettle each + 30 sample frames, and
+## on llvmpipe that is the difference between a run that finishes in a session
+## and one a lane kills at 40 minutes with nothing printed (which is exactly
+## what happened to the first Hall build pass, leaving the design's own
+## draw-call budget unverified). A single-view run measures the one counter the
+## Hall's budget is written against in a fraction of the time; the default is
+## still all four, so nothing that already calls this tool changes.
+var _views: Array[String] = []
 
 
 func _init() -> void:
@@ -47,6 +68,9 @@ func _run() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--label="):
 			_label = a.substr("--label=".length())
+		elif a.begins_with("--views="):
+			for v in a.substr("--views=".length()).split(",", false):
+				_views.append(v.strip_edges())
 
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
@@ -70,6 +94,8 @@ func _run() -> void:
 	print("%-22s %12s %14s %12s" % ["view", "draw calls", "primitives", "objects"])
 
 	for name: String in VIEWS.keys():
+		if not _views.is_empty() and not _views.has(name):
+			continue
 		var spec: Array = VIEWS[name]
 		var ground := 0.0
 		if world.has_method("ground_height_at"):

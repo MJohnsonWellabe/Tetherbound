@@ -772,9 +772,22 @@ func _both_fighters_are_in_the_room(id: String, room: String, ally: Node3D,
 		var body := pair[1] as Node3D
 		var drop := floor_y - body.global_position.y
 		if drop > ROOM_FLOOR_TOLERANCE_M:
+			# T1-HALL-REBUILD: the position and the building's own claim at that
+			# position are part of the message now. This failure is INTERMITTENT
+			# (two consecutive failures then seven consecutive passes on an
+			# identical tree, 2026-08-30), and without the coordinates there is
+			# nothing in the log to tell the next reader whether the fighter
+			# drifted outside the claimed footprint or the claim itself is
+			# wrong -- which is the difference between a combat-placement bug
+			# and a building bug. One run that reproduces it is worth a lot more
+			# with them than without.
 			_fail(("%s is fighting '%s' %.1fm BELOW '%s''s floor (y=%.2f against a floor at "
-				+ "y=%.2f) -- the fight is under the building, not in the room")
-				% [who, id, drop, room, body.global_position.y, floor_y])
+				+ "y=%.2f) -- the fight is under the building, not in the room "
+				+ "[at %.1f, %.2f, %.1f; the building's floor claim there is %.2f]")
+				% [who, id, drop, room, body.global_position.y, floor_y,
+				body.global_position.x, body.global_position.y, body.global_position.z,
+				float(_hold.call("built_floor_height_at", body.global_position.x,
+					body.global_position.z))])
 			return true
 	return false
 

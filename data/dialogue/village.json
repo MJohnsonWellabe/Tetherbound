@@ -273,6 +273,102 @@
         "Field. Ridge. Riverwatch. Three discs go into the plate and stay there.",
         "The leaf swings back off the road. Meadows Hall is up the rise, and nothing is between you and it now."
       ]
+    },
+    "village_innkeeper": {
+      "speaker": "Wilhelm",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Bram runs the counter, I run everything Bram doesn't have time for. Rooms, rumours, the ledger nobody wants to keep.",
+        "Ask me what's been said around the fire lately and I'll tell you straight. Ask me to remember who said it and you'll be waiting."
+      ]
+    },
+    "village_inn_helper": {
+      "speaker": "Nessa",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Kitchen's mine most mornings. Wilhelm handles the front, I handle whatever's on fire.",
+        "Come back hungry. I mean that as an instruction, not a greeting."
+      ]
+    },
+    "village_trader": {
+      "speaker": "Corin",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Supplies, potions, the odd thing worth more than it looks. The wagon's my whole shopfront and I like it that way.",
+        "Nothing fancy today, just the usual honest stock. Ask me again after I've made a run east."
+      ]
+    },
+    "village_craftsperson": {
+      "speaker": "Ada",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Anything with a hinge, a handle or a hole in it, bring it here first. Half of what people call broken just needs someone patient.",
+        "The workshop's not mine, but the mess in it mostly is."
+      ]
+    },
+    "village_creature_caretaker": {
+      "speaker": "Fenn",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Oskar swaps them, I look after them in between. Bonding's not a trick, it's just paying attention long enough that they notice.",
+        "A creature that trusts you fights different. Slower to panic, quicker to listen. Worth the time it takes."
+      ]
+    },
+    "village_farmer": {
+      "speaker": "Garrick",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Berries mostly, whatever else the ground allows. Half the square eats off this fence line one way or another.",
+        "Good year so far. Ask me again after the first real frost."
+      ]
+    },
+    "village_local_historian": {
+      "speaker": "Old Perrin",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "I've walked every road out of this square that still counts as a road, and a few that stopped being one.",
+        "Ask an old man about the old paths and you'll get more answer than you wanted. Ask me about the new ones and I've nothing -- Team Tether laid those, not the meadows."
+      ]
+    },
+    "village_lost_traveler": {
+      "speaker": "Tobin",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "This used to go somewhere. I remember it going somewhere.",
+        "The Rifts took the road out from under half the county and nobody's fixed the maps to match. I'll find my way eventually. Or I won't, and I'll just live out here now."
+      ]
+    },
+    "village_field_researcher": {
+      "speaker": "Maren",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Field notes, mostly. Which creatures den where, what the water route actually looks like once you're standing in it rather than reading about it.",
+        "The station was empty a long while before I took it. Good desk. Better view."
+      ]
+    },
+    "village_alpha_tracker": {
+      "speaker": "Sorrel",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "I track the ones that lead, not the ones that follow. An alpha moves different -- slower, surer, like it knows the herd's watching.",
+        "The mill crossing's a good place to wait. Water brings everything past eventually."
+      ]
+    },
+    "village_courier": {
+      "speaker": "Lark",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Letters, mostly. A parcel now and then, if it's small enough to run.",
+        "South road's clear today. Can't promise that for tomorrow -- Team Tether's checkpoint moves less than it used to, which I don't love."
+      ]
+    },
+    "village_former_tether_member": {
+      "speaker": "Ren",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "I wore the purple once. Don't ask me to explain that here, not where anyone walking past can hear it.",
+        "I'll say this much: whatever they told you they're doing out there, it isn't the whole of it. I knew more than they'd have liked, and I left before that became a problem."
+      ]
     }
   },
   "_comment_se30": "SE30 (spec Sec32's reveal ladder, plus D41's own new rung). The ladder is: villagers know travel and trade are controlled AND that the ground near Team Tether's works is dying, without knowing why; the quarry shows conduits; the relay shows energy routed and an investigator held; the rescued captive knows the separation is MADE and that power runs toward the stronghold, and no further; the Upper Meadows shows the scale of it; and the stronghold, and nowhere before it, names the legendary as the source. The drain lines added to Mira/Tam/Oskar/the foreman are the rung D41 created and nobody had spoken: the world had 2737 painted pixels of dying ground and not one line of dialogue admitting it. Each speaker reports what their own trade would notice -- rows that won't take, creatures that won't den, seams that go bad, a verge that used to be waist high -- and none of them offers a cause. tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary enforces the top of the ladder across every dialogue file, not just the captive's.",

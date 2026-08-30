@@ -49,6 +49,31 @@
         "Go on, then. Not like I'm the last one you'll run into between here and the river.",
         "Tell whoever's paying you attention that the seams don't end at the warrens door."
       ]
+    },
+    "night_watch_farro_challenge": {
+      "speaker": "Tether Grunt",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Night Watch: investigate nighttime activity and introduce Duskhush'. Old Bram's own shape reused rather than a separate giver NPC: the first line is the flag `revealed_by` waits on (a player who has not walked up on him at night has not found the activity yet, same as Old Bram staying out of the log until met), and the fight itself is the introduction -- his team is the flavour text. CI-TRAINER-CENSUS, 2026-08-30: speaker/`name` moved from 'Farro' to 'Tether Grunt' (band2_stone_and_root/trainers.json's own `_comment_ci_trainer_census`); the dialogue keeps its own voice unchanged.",
+      "lines": [
+        {
+          "text": "Not authorised past this line after dark. Company equipment, Company business.",
+          "effect": "flag:night_watch_farro_met"
+        },
+        "You want to know what's had every bird in this stretch awake and shrieking for a week? Ask nothing. Walk away, or find out the hard way.",
+        {
+          "text": "Didn't think so.",
+          "effect": "battle:night_watch_farro"
+        }
+      ]
+    },
+    "night_watch_farro_defeated": {
+      "speaker": "Tether Grunt",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Fine. FINE. Not like the readings were any good with you standing in them anyway.",
+        "The gear's rigged to run after dark because Duskhush roost thick through here and daylight traffic kept scattering them before the instruments finished. That's the whole secret you just fought me for.",
+        "Go tell the birds they're welcome."
+      ]
     }
   },
   "_comment_trainers": "TRAINER-JOURNEY, then BAND2-63. The band's third Team Tether picket (data/config/bands/band2_stone_and_root/trainers.json order 2002) added a third pair of lines to the same shape the first two already use. Doctrine, not lore dump (prompt 59): two lines each, talking about the job, no legendary name (tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary enforces that everywhere). Kest's own lines are the one place in this file that looks FORWARD rather than at the door behind him -- 'between here and the river' is the region handing the player off to Band 3 the same way Dorn handed off to Pell."

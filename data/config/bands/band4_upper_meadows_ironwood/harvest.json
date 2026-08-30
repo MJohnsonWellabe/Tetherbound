@@ -251,6 +251,15 @@
       "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
       "model_scale": 0.28,
       "_why_t3_density": "T3-DENSITY, Gap A. The band's own tail: after order 4020's stone (spine point 15-16), nothing resource-kind was reachable for the remaining 510m to the band4/5 seam, right where the region hands off to the Stronghold Approach. Beside the ruined watchtower (playground_world.gd WATCHTOWER_AT (40,6800)) and order 4021's revive -- 'a Team Tether patrol never got to ship out' reads equally well for a felled ironwood as for a dropped revive. 15m off the spine, ground-checked (worst slope 4.7 degrees, `tools/_probe_density_sites.gd`). TwistedTree_4 pale-variant only, per order 4000's own `_comment_red_leak_d4b`. Splits the tail into ~245m/~265m, both inside the owner's 60-90s/240-360m cadence band; D70 leaves Band 5 itself alone, so this is the last place in the required path this fix belongs."
+    },
+    {
+      "order": 4031,
+      "item": "orb_greater",
+      "amount": 1,
+      "label": "A stashed orb",
+      "at": [206.8, 6144.4],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "_why": "T5-CADENCE. What the Wind Overlook (props.json order 4003) pays. Exit criterion G9 forbids an empty reward and G4 asks that 'every major region creates genuine roster temptation' -- T4-REGIONS scored band 4's temptation FAIL outright ('zero new species across 3436m'), which this lane cannot fix from a harvest node, but an orb the band otherwise has none of is the one thing that changes what a player can DO about the alpha two hundred metres back. Tucked behind the outcrop, 2.4m clear of the nearest stone, so it is found by walking up to the markers rather than seen from the road."
     }
   ]
 }

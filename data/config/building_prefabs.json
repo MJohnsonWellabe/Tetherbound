@@ -7035,7 +7035,7 @@
           "scale": 3.4
         },
         {
-          "module": "WatchTowerWRoof",
+          "module": "LargeSquareTowerBricks",
           "dir": "res://assets/buildings/quaternius_castle",
           "at": [
             8.0,
@@ -7043,7 +7043,7 @@
             -12.6
           ],
           "yaw_deg": 0.0,
-          "scale": 2.8
+          "scale": 2.6
         },
         {
           "module": "LargeSquareTowerBricks",
@@ -7090,7 +7090,7 @@
           "scale": 3.0
         },
         {
-          "module": "WatchTowerWRoof",
+          "module": "LargeSquareTowerBricks",
           "dir": "res://assets/buildings/quaternius_castle",
           "at": [
             -11.1,
@@ -7098,10 +7098,10 @@
             15.0
           ],
           "yaw_deg": 0.0,
-          "scale": 2.8
+          "scale": 3.15
         },
         {
-          "module": "WatchTowerWRoof",
+          "module": "LargeSquareTowerBricks",
           "dir": "res://assets/buildings/quaternius_castle",
           "at": [
             11.1,
@@ -7109,7 +7109,7 @@
             15.0
           ],
           "yaw_deg": 0.0,
-          "scale": 2.8
+          "scale": 3.15
         },
         {
           "module": "LargeTower",
@@ -7189,7 +7189,7 @@
           "scale": 5.2
         },
         {
-          "module": "WatchTowerWRoof",
+          "module": "LargeSquareTowerBricks",
           "dir": "res://assets/buildings/quaternius_castle",
           "at": [
             -17.4,
@@ -7197,18 +7197,7 @@
             75.6
           ],
           "yaw_deg": 0.0,
-          "scale": 3.0
-        },
-        {
-          "module": "Banner",
-          "dir": "res://assets/buildings/quaternius_castle",
-          "at": [
-            -46.6,
-            22.5,
-            103.8
-          ],
-          "yaw_deg": 0.0,
-          "scale": 2.6
+          "scale": 4.0
         },
         {
           "module": "Roof_RoundTiles_4x8",
@@ -7267,14 +7256,11 @@
           "color": "#6f4f33",
           "metallic": 0.0
         },
-        "Banner": {
-          "color": "#7a2430",
-          "metallic": 0.0
-        },
         "MI_RoundTiles": {
           "color": "#2a8c94"
         }
-      }
+      },
+      "_why_towers_t1_hall_rebuild": "OWNER, 2026-08-30, on the first T1-HALL-REBUILD frames: the mid-wall tower \"between the two parts of the castle\" is \"the untextured beige hut thing\" and \"looks like shit\". That is a real property of the module, not a tuning miss. `WatchTowerWRoof.obj` is built ENTIRELY from the kit's `Celing` and `LightWood` slots -- probed directly, those are the only two `usemtl` lines in the file -- and carries no stone slot at all. `stronghold.gd`'s `HALL_WEATHER_MATERIALS` pass, the thing that puts real `T_UnevenBrick` on this kit (which ships zero UVs and placeholder-grey materials), is stone-only by design, so this module can NEVER receive a texture from it. No retint, scale or placement fixes a flat beige hut on stilts standing at the joint of a coursed-stone fortress; the module had to go. All four instances (gatehouse guard post, the two mid-wall towers, the great tower's north-east corner) are now `LargeSquareTowerBricks` -- `LightRock.001`/`DarkRock`/`Black.001`, and therefore textured by that same pass; it is the module every tower in the frames that reads as real masonry already uses. Scales preserve the design's own girth rule (native girth 1.288-1.371, measured off the OBJ): the mid-wall pair at 3.15 gives 4.06-4.32m against the corner towers' 3.86-4.11m at 3.0, so mid-wall girth still EXCEEDS corner girth -- the direct fix for the judge's 'sandcastle decoration' finding -- and the taller mid-wall shaft adds the roofline break the 400m stand wants. The guard post drops to 2.6 to stay subordinate to the 3.4 gatehouse flankers; the great tower's north-east corner takes 4.0 so it still steps down from its three 5.2 siblings. The `Banner` module goes with them, same owner pass, same verdict: see `stronghold.gd::_hang_banner`, which now builds hanging cloth instead of standing the kit's toy pennant on a stick."
     }
   }
 }

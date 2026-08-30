@@ -14,8 +14,14 @@ extends SceneTree
 ##
 ## NEVER --headless with a rendering driver: hangs forever.
 
+## T1-HALL-REBUILD (2026-08-30) extends this tool rather than forking it: the
+## same stands, plus the design §10 requirement its author flagged as unmet --
+## "H-03 repeated at `golden` and `night` (the gate face is the SHADED face --
+## §2 -- so its dusk/night self-lit read is part of the design and must be
+## judged, not just the noon state)". `--out=` lets a lane write its own frames
+## without overwriting a previous lane's evidence.
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://shots/hall0830"
+const DEFAULT_OUT_DIR := "res://shots/hall0830"
 const SETTLE_FRAMES := 90
 const POSE_FRAMES := 3
 const FOV := 70.0
@@ -31,8 +37,14 @@ func _hide_canvas_layers(node: Node) -> void:
 		_hide_canvas_layers(child)
 
 
+var _out_dir := DEFAULT_OUT_DIR
+
+
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--out="):
+			_out_dir = a.substr("--out=".length())
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	var packed: PackedScene = load(SCENE)
 	if packed == null:
 		push_error("could not load %s" % SCENE)
@@ -70,11 +82,17 @@ func _run() -> void:
 			look.call("set_weather", {})
 		look.call("apply_time", "day")
 
+	# T1-HALL-REBUILD: the player is HIDDEN and frozen, but it is NOT parked
+	# 4km away any more. `grass_field.gd` builds its tuft ring around the
+	# player (72m radius, its own build log says so) and Terrain3D's streaming
+	# bubble follows it too, so parking the player in Band 2 while shooting the
+	# Hall at z 7560 renders every stand on bare far-cover ground with no grass
+	# geometry in it at all -- which is exactly the "no grass plus a milky
+	# haze" capture defect this harness is known for. `perf_render_stats.gd`
+	# already solved it the same way and says so in its own comment: the player
+	# goes where the camera goes. `_shoot` moves it per stand.
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	if player != null:
-		var park := Vector2(-357.0 + 900.0, 2610.0 + 900.0)
-		var park_y := float(world.call("ground_height_at", park.x, park.y))
-		player.global_position = Vector3(park.x, park_y + 0.2, park.y)
 		player.visible = false
 		player.set_physics_process(false)
 		if player is CharacterBody3D:
@@ -98,9 +116,36 @@ func _run() -> void:
 
 	# design §10's H-01..H-08, world coordinates, eye +1.7m above ground
 	# unless the stand itself says otherwise.
+	# T1-HALL-REBUILD: the two LONG stands aim at the Hall itself rather than
+	# at a fixed compass bearing. H-02 stood at the Sigil Gate (63.6, 7395)
+	# looking south-west on a hard-coded (-1,1); the Hall is at (8, 7560),
+	# which from that point bears about 18 degrees west of south, not 45 -- so
+	# the frame came back full of fence and treeline with the building off the
+	# right edge entirely. Three acceptance items (2, 7 and 10) are judged at
+	# H-02, and none of them can be judged in a frame the building is not in.
+	# `aim_hall` points the stand at the complex's own courtyard marker, so the
+	# stands follow the site instead of needing re-derivation every time it
+	# moves.
+	var hall_at: Vector3 = stronghold.call("marker", "courtyard") \
+		if bool(stronghold.call("has_marker", "courtyard")) else stronghold.global_position
 	var stands := [
-		{"name": "H-01-approach-400", "at": Vector2(0.0, 7160.0), "eye_h": 8.0, "dir": Vector2(0.0, 1.0)},
-		{"name": "H-02-sigil-gate", "at": Vector2(63.6, 7395.0), "eye_h": 1.7, "dir": Vector2(-1.0, 1.0)},
+		{"name": "H-01-approach-400", "at": Vector2(0.0, 7160.0), "eye_h": 8.0,
+			"dir": Vector2(0.0, 1.0), "aim_hall": true},
+		{"name": "H-02-sigil-gate", "at": Vector2(63.6, 7395.0), "eye_h": 1.7,
+			"dir": Vector2(-1.0, 1.0), "aim_hall": true},
+		# H-02b, added T1-HALL-REBUILD. At the authored 1.7m eye height the
+		# Sigil Gate stand sees NOTHING of the Hall -- Band 5's treeline fills
+		# the frame end to end, and it did in the previous lane's capture of
+		# this same stand too, so acceptance items 2, 7 and 10 (three-tier read,
+		# coursing at range, occupation reads) have never actually been judged
+		# at the range they are written for. This is the same stand with its eye
+		# above the canopy: not a nicer angle, the only one from which the item
+		# is answerable. The 1.7m frame is KEPT alongside it, because what it
+		# shows -- the chapter's climax reveal, fully occluded from the gate the
+		# player opens to earn it -- is a real finding about the approach, and
+		# deleting the frame would delete the finding.
+		{"name": "H-02b-sigil-gate-raised", "at": Vector2(63.6, 7395.0), "eye_h": 26.0,
+			"dir": Vector2(-1.0, 1.0), "aim_hall": true},
 		{"name": "H-03-ramp-foot", "at": Vector2(8.0, 7505.0), "eye_h": 1.7, "dir": Vector2(0.0, 1.0)},
 		{"name": "H-05-east-flank", "at": Vector2(48.0, 7590.0), "eye_h": 6.0, "dir": Vector2(-1.0, 0.0)},
 		{"name": "H-06-west-keep", "at": Vector2(-60.0, 7630.0), "eye_h": 10.0, "dir": Vector2(1.0, 0.0)},
@@ -116,7 +161,20 @@ func _run() -> void:
 		var eye := Vector3(at.x, ground + float(s["eye_h"]), at.y)
 		var dir: Vector2 = s["dir"]
 		var target := eye + Vector3(dir.x, 0.0, dir.y).normalized() * 40.0
-		await _shoot(camera, look, torch, false, eye, target, str(s["name"]), written, failures)
+		if bool(s.get("aim_hall", false)):
+			# Raise the aim point off the floor so the tiers fill the frame
+			# rather than the ground in front of them.
+			target = hall_at + Vector3(0.0, 10.0, 0.0)
+		await _shoot(camera, look, torch, false, eye, target, str(s["name"]), written, failures, "day", player)
+		# Design §10: the gate face is the SHADED face at the day keyframe, so
+		# its self-lit dusk/night read is part of the design and has to be
+		# judged too. Only H-03 gets the variants -- it is the stand the gate
+		# fills, and three frames of one stand is a comparison a judge can use
+		# where eighteen frames of everything is a pile.
+		if str(s["name"]) == "H-03-ramp-foot":
+			for hour: String in ["golden", "night"]:
+				await _shoot(camera, look, torch, false, eye, target,
+					"H-03-ramp-foot-%s" % hour, written, failures, hour, player)
 
 	# H-04 gate-mouth: on the ramp, looking S through the gate. Use the
 	# stronghold's own ramp_foot/entrance marker plus a step up the slope
@@ -131,17 +189,17 @@ func _run() -> void:
 		toward = toward.normalized()
 		var eye4 := entrance + toward * 34.0 + Vector3(0.0, 1.7, 0.0)
 		var target4 := eye4 + toward * 20.0
-		await _shoot(camera, look, torch, false, eye4, target4, "H-04-gate-mouth", written, failures)
+		await _shoot(camera, look, torch, false, eye4, target4, "H-04-gate-mouth", written, failures, "day", player)
 
 	# H-07 courtyard: inside, at the courtyard trainer, looking S.
 	if stronghold.has_method("has_marker") and bool(stronghold.call("has_marker", "trainer_stronghold_courtyard")):
 		var trainer_at: Vector3 = stronghold.call("marker", "trainer_stronghold_courtyard")
 		var eye7 := trainer_at + Vector3(0.0, 1.7, -2.0)
 		var target7 := trainer_at + Vector3(0.0, 1.4, 10.0)
-		await _shoot(camera, look, torch, true, eye7, target7, "H-07-courtyard", written, failures)
+		await _shoot(camera, look, torch, true, eye7, target7, "H-07-courtyard", written, failures, "day", player)
 
 	print("")
-	print("%d frames -> %s" % [written.size(), OUT_DIR])
+	print("%d frames -> %s" % [written.size(), _out_dir])
 	if not failures.is_empty():
 		for line in failures:
 			print("FAIL: %s" % line)
@@ -150,17 +208,23 @@ func _run() -> void:
 
 func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 		eye: Vector3, target: Vector3, name_value: String,
-		written: Array[String], failures: Array[String]) -> void:
+		written: Array[String], failures: Array[String], hour: String = "day",
+		player: Node3D = null) -> void:
 	camera.global_position = eye
 	camera.look_at(target, Vector3.UP)
+	# Carry the grass ring and the terrain bubble to the stand, then give them
+	# real time to rebuild -- 8 frames was tuned for a camera that never moved
+	# far from a parked player and is not enough for a 4km jump.
+	if player != null:
+		player.global_position = Vector3(eye.x, eye.y, eye.z)
 	torch.visible = interior
 	torch.global_position = eye + Vector3(0.0, 0.35, 0.0)
-	for i in 8:
+	for i in 40:
 		await physics_frame
 	if look != null:
 		if look.has_method("set_weather"):
 			look.call("set_weather", {})
-		look.call("apply_time", "day")
+		look.call("apply_time", hour)
 	for i in POSE_FRAMES:
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -168,7 +232,7 @@ func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 	if image == null:
 		failures.append("%s: viewport returned no image" % name_value)
 		return
-	var path := "%s/%s.png" % [OUT_DIR, name_value]
+	var path := "%s/%s.png" % [_out_dir, name_value]
 	if image.save_png(path) != OK:
 		failures.append("%s: save_png failed" % name_value)
 		return
