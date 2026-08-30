@@ -1,0 +1,222 @@
+{
+  "blocked": "predicted cost 14960 s (4.2 h) exceeds the 14400 s ceiling: 2525320 planned frames at a MEASURED 0.006 s/frame on this box. The protocol's waits are not the problem -- they exist so fights resolve -- so this segment needs a GPU or a split evidence lane, not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in. NOTE this number is the EMPTY TREE price and is the optimistic one: the re-price after each boot is the honest one.",
+  "capture_available": false,
+  "capture_lane": "",
+  "capture_preflight": {
+    "allow_no_capture": false,
+    "capture_available": false,
+    "capture_lane": "",
+    "capture_requested": false,
+    "delegated_captures": 0,
+    "display_server": "headless",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "headless (logic lane, no display server)",
+      "from": "ralph/reports/gate-f-run5-chain/RUN_METADATA.json",
+      "key": "lanes.logic.display_server",
+      "lane": "logic"
+    },
+    "measured_frame_cost_s": 0.005924,
+    "planned_captures": 0,
+    "predicted_frames": 2525320,
+    "predicted_segment_cost_s": 14959.9,
+    "record_baseline_hz": 0.0,
+    "verdict": "BLOCKER",
+    "why": "predicted cost 14960 s (4.2 h) exceeds the 14400 s ceiling: 2525320 planned frames at a MEASURED 0.006 s/frame on this box. The protocol's waits are not the problem -- they exist so fights resolve -- so this segment needs a GPU or a split evidence lane, not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in. NOTE this number is the EMPTY TREE price and is the optimistic one: the re-price after each boot is the honest one."
+  },
+  "capture_requested": false,
+  "clocks": {
+    "cost_gate_and_disk_gate": "wall (they are questions about the box)",
+    "duration_ms": "wall (a boot/save/load cost is a wall-clock fact)",
+    "events_jsonl_t": "play",
+    "frames_manifest_t": "play",
+    "play_seconds_elapsed": 0.25,
+    "route_csv_t": "play (Engine.get_physics_frames() / physics_ticks_per_second)",
+    "route_csv_wall": "wall datetime, so the two clocks can be lined up",
+    "trace_hz_and_record_hz": "play seconds",
+    "wall_seconds_elapsed": 0.12
+  },
+  "config_flags": {
+    "art.json": {
+      "environment.adjustment_enabled": true,
+      "environment.fog_enabled": true,
+      "environment.ssao_enabled": true,
+      "times.dawn.environment.adjustment_enabled": true,
+      "times.night.environment.adjustment_enabled": true,
+      "villager_farmer.hair.visible": true,
+      "villager_ranger.hair.visible": true,
+      "villager_smith.hair.visible": true
+    },
+    "burrow_warrens.json": {
+      "interior_rock.enabled": true,
+      "interior_structure.corners": true,
+      "interior_structure.course": true,
+      "interior_structure.enabled": true,
+      "interior_structure.ragged": true,
+      "interior_structure.reveals": true,
+      "interior_structure.ribs": true
+    },
+    "chapter_rewards.json": {
+      "invariants.every_tm_is_obtainable": true,
+      "invariants.no_orphan_materials": true
+    },
+    "combat.json": {
+      "impact.enabled": true,
+      "telegraph.enabled": true
+    },
+    "creature_condition.json": {
+      "rest.clear_on_faint": true
+    },
+    "grass_field.json": {
+      "enabled": true,
+      "far_cover.enabled": true,
+      "stones.enabled": true
+    },
+    "meadow_healing.json": {
+      "barriers.enabled": true,
+      "dead_ground.enabled": true,
+      "patrols.enabled": true,
+      "tether_lights.enabled": true,
+      "vegetation.enabled": true
+    },
+    "movement.json": {
+      "camera.invert_y": false,
+      "torch.auto_at_night": true,
+      "torch.shadows": false,
+      "unstick.enabled": true
+    },
+    "performance.json": {
+      "debug_overlay_on_boot": false,
+      "scatter_lod_ranges": false
+    },
+    "spawn_tables.json": {
+      "roll_new_worlds": false
+    },
+    "stronghold.json": {
+      "approach_drain.enabled": true,
+      "interior_structure.corners": true,
+      "interior_structure.course": true,
+      "interior_structure.enabled": true,
+      "interior_structure.ragged": false,
+      "interior_structure.reveals": true,
+      "interior_structure.ribs": true,
+      "machine.placeholder": false
+    },
+    "terrain_playground.json": {
+      "river.failsafe": true,
+      "shader.enable_macro_variation": true
+    },
+    "tether_relay.json": {
+      "dead_ground.enabled": true
+    },
+    "vegetation.json": {
+      "layers.bushes.collides": false,
+      "layers.deadfall.collides": false,
+      "layers.drygrass.casts_shadow": false,
+      "layers.drygrass.cleared_by_clearings": false,
+      "layers.drygrass.collides": false,
+      "layers.flowers.casts_shadow": false,
+      "layers.flowers.cleared_by_clearings": false,
+      "layers.flowers.collides": false,
+      "layers.grass.casts_shadow": false,
+      "layers.grass.cleared_by_clearings": false,
+      "layers.grass.collides": false,
+      "layers.groundmat.casts_shadow": false,
+      "layers.groundmat.cleared_by_clearings": false,
+      "layers.groundmat.collides": false,
+      "layers.grove.collides": true,
+      "layers.path_stones.align_to_slope": true,
+      "layers.path_stones.casts_shadow": false,
+      "layers.path_stones.cleared_by_clearings": false,
+      "layers.path_stones.collides": false,
+      "layers.path_stones.grows_on_paths": true,
+      "layers.rocks.align_to_slope": true,
+      "layers.rocks.collides": true,
+      "layers.saplings.collides": true,
+      "layers.trees.collides": true
+    },
+    "water.json": {
+      "dressing.boulders.collides": true,
+      "dressing.stones.collides": false,
+      "jetty.railing": true
+    },
+    "weather.json": {
+      "presets.clear.rain": false,
+      "presets.cloudy.rain": false,
+      "presets.fog.rain": false,
+      "presets.rain.rain": true
+    }
+  },
+  "config_flags_off": [
+    "movement.json:camera.invert_y",
+    "movement.json:torch.shadows",
+    "performance.json:debug_overlay_on_boot",
+    "performance.json:scatter_lod_ranges",
+    "spawn_tables.json:roll_new_worlds",
+    "stronghold.json:interior_structure.ragged",
+    "stronghold.json:machine.placeholder",
+    "vegetation.json:layers.bushes.collides",
+    "vegetation.json:layers.deadfall.collides",
+    "vegetation.json:layers.drygrass.casts_shadow",
+    "vegetation.json:layers.drygrass.cleared_by_clearings",
+    "vegetation.json:layers.drygrass.collides",
+    "vegetation.json:layers.flowers.casts_shadow",
+    "vegetation.json:layers.flowers.cleared_by_clearings",
+    "vegetation.json:layers.flowers.collides",
+    "vegetation.json:layers.grass.casts_shadow",
+    "vegetation.json:layers.grass.cleared_by_clearings",
+    "vegetation.json:layers.grass.collides",
+    "vegetation.json:layers.groundmat.casts_shadow",
+    "vegetation.json:layers.groundmat.cleared_by_clearings",
+    "vegetation.json:layers.groundmat.collides",
+    "vegetation.json:layers.path_stones.casts_shadow",
+    "vegetation.json:layers.path_stones.cleared_by_clearings",
+    "vegetation.json:layers.path_stones.collides",
+    "water.json:dressing.stones.collides",
+    "weather.json:presets.clear.rain",
+    "weather.json:presets.cloudy.rain",
+    "weather.json:presets.fog.rain"
+  ],
+  "cost_reprices": [],
+  "delegated_captures": [],
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {},
+  "display_server": "headless",
+  "evidence_lane": "logic",
+  "frame_grab_ms": {},
+  "frames_absent": 0,
+  "frames_written": 0,
+  "godot": "4.7-stable (official)",
+  "harness_errors": [
+    "capture pre-flight BLOCKER: predicted cost 14960 s (4.2 h) exceeds the 14400 s ceiling: 2525320 planned frames at a MEASURED 0.006 s/frame on this box. The protocol's waits are not the problem -- they exist so fights resolve -- so this segment needs a GPU or a split evidence lane, not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 hours in. NOTE this number is the EMPTY TREE price and is the optimistic one: the re-price after each boot is the honest one."
+  ],
+  "instrumentation_overhead_note": "not measured in this run (--gatef-mode=overhead measures it)",
+  "measured_frame_cost_s": 0.005924,
+  "owes": [],
+  "planned_captures": 0,
+  "predicted_segment_cost_s": 14959.9,
+  "record_baseline_hz": 0.0,
+  "rendering_driver": "headless",
+  "run_id": "gate-f-run5-chain",
+  "segment": "X06",
+  "segment_script": "tools/gate_f/segments/X06.json",
+  "sha": "69366d781606d3d2f64e616953bf176f66c9cd0f",
+  "started_wall": "2026-08-30 02:27:40",
+  "steps_ran": 0,
+  "steps_refused": 0,
+  "steps_total": 314,
+  "trace_hz": 2.0,
+  "trace_rows": 0,
+  "verdicts": {
+    "DELEGATED": 0,
+    "FAIL": 0,
+    "PASS": 0,
+    "SKIP": 0
+  },
+  "viewport_size": [
+    1920,
+    1920
+  ]
+}
