@@ -632,3 +632,41 @@ carries it off the slab, which is the reported defect.
 **21.2 m of travel becomes 0.00 m**, every round of the Warden's battle forms in
 the same place, and the fight is still won — the anchor changes where the fight
 happens, not how it goes.
+
+### 10.4 The finale's pass rate, before and after
+
+**A second, unrelated defect had to be cleared before the rate could be measured
+at all on this branch.** `smoke_gate_e_finale.gd` sets a list of flags to stand
+the player at Meadows Hall without replaying three hours. T5-STORY-2 (already
+merged into `ralph/LAND-0830I`) added three new rungs to the head of
+`data/progression/objectives.json` — `opening_hear_grandpa`,
+`opening_take_starter`, `opening_show_grandpa` — and that list was never updated.
+`quest_log.tracked_text()` reports the FIRST unset rung, so the test read
+*"Go down and hear Grandpa out."* at the climax, and `_run()`'s
+`_failures.is_empty()` guard bailed **immediately after
+`_bring_a_full_five_to_the_hall()`**.
+
+So on the integration branch, **the finale never reached the Warden at all** —
+not once, in any run. T2-FLAKE's 4-in-9 was measured on `main`, which does not
+carry those rungs. Confirmed by diffing `objectives.json` between `main` and
+`LAND-0830I`. Fixed here by adding the three `flag_id` values from the data.
+
+**With the finale able to reach the Warden again:**
+
+| | result |
+|---|---|
+| before the placement fix, on `main` (T2-FLAKE's measurement, corrected harness) | **5 passed / 4 failed of 9** |
+| before the placement fix, on `LAND-0830I` | **0 of 9 reached the Warden** — bailed at the Hall |
+| **after both fixes, on `LAND-0830I`** | **9 passed / 0 failed of 9** |
+
+Nine consecutive clean runs of the chapter's finale, each one walking the
+stronghold, fighting the gauntlet and the Warden's five creatures, pulling the
+lever and taking the release decision.
+
+### 10.5 Landing
+
+T2-FLAKE's held commit (`ca20fb80`) is **cherry-picked onto this branch** and
+sits directly beneath the placement fix, which is what its own §6b asks for:
+the two land together. Its harness correction is what makes the numbers above
+mean anything — without `trainer_body()` the floor check reads a corpse from
+round two on.
