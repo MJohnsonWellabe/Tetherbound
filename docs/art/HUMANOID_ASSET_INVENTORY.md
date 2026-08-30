@@ -8,7 +8,18 @@ It supersedes older availability/status statements in `docs/art/HUMANOIDS_PRODUC
 
 ## Current production humanoid rigs
 
-Current `main` contains six independently baked humanoid production rigs/models:
+> **Amended by T1-VILLAGERS, 2026-08-30.** The "six rigs" figure below was
+> accurate when written and is now **the smaller half of the picture**. Current
+> `main` carries **28 installed humanoid `.glb` bodies**, not six: the six
+> original rigs, plus the 22 that `T1-NPC-CAST`/`T3-INSTALL` generated, rigged,
+> animated and keyed into `data/config/art.json`. A pass that reads only the
+> table below will conclude the village has two civilian bodies to work with
+> when it actually has fifteen, and that is exactly the mistake this file exists
+> to prevent. The full list is in the **All 28 installed humanoid bodies**
+> section further down; the six below remain the *base* families and the
+> paragraph about reusing them still governs.
+
+The six original independently baked humanoid production rigs/models:
 
 | Archetype | Installed model | Current role/use |
 |---|---|---|
@@ -22,6 +33,47 @@ Current `main` contains six independently baked humanoid production rigs/models:
 These six were all rebaked through the shared humanoid locomotion pipeline in the MQ1A locomotion rebuild. Treat them as live production assets, not abandoned experiments.
 
 `assets/characters/Ranger.glb` and the `Rig_Medium_*` files also exist at the character root as older/source/generic assets. Do not count or choose them as a new production archetype merely because they are present; inspect current config/scene usage before relying on them.
+
+## All 28 installed humanoid bodies (T1-VILLAGERS, 2026-08-30)
+
+Every one of these is a real `.glb` under `assets/characters/<slug>/`, rigged and
+carrying the standard five clips. All but `villager_male`/`villager_female` have
+their own `data/config/art.json` key. **None of them costs a generation to use
+— they are already paid for and already installed.**
+
+| Group | Bodies | Notes |
+|---|---|---|
+| Base families | `trainer`, `grandpa`, `warden`, `villager_male`, `villager_female`, `grunt` | The six above. `villager_male`/`villager_female` are reached through the five `villager_*` preset keys, not directly. |
+| Team Tether | `grunt_a`, `grunt_b`, `grunt_c`, `officer_a`, `officer_b`, `captain_a`, `captain_b` | Assigned per-individual via a trainer entry's `base` override, which `npc_ranks.gd::config_for()` lays the rank palette and badge on top of. |
+| Village & settlement | `innkeeper`, `inn_helper`, `trader`, `craftsperson`, `creature_caretaker`, `farmer`, `local_historian`, `young_trainer` | Generated from `docs/art/reference/npc-board-2026-08-30/`, whose Village & Settlement row reads as a portrait set for this village's named cast. |
+| Trail & wilderness | `rival_trainer`, `field_researcher`, `wandering_trainer`, `lost_traveler`, `alpha_tracker`, `courier`, `former_tether_member` | Same board, Trail & Wilderness row. |
+
+**Installed, rigged, and standing nowhere in the game** as of this pass:
+`officer_b`, `wandering_trainer`, `rival_trainer`, `young_trainer`. Before
+generating or sourcing any humanoid, check this list first — four finished
+bodies are currently dark.
+
+**Two things that are NOT bodies, so nobody hunts for them again:**
+
+- `assets/characters/captain_accessory/` contains **no mesh**. It holds two
+  reference turnarounds behind a `.gdignore`, kept from the
+  `captain_a`/`captain_b` generation. It has no `art.json` key because there is
+  nothing to key.
+- `campfire_traveler` and `traveling_merchant` are textured but **un-rigged and
+  not installed** — both failed Meshy's rigger on a baked-in arm pose. See the
+  T1-RIG-2 handover; they need a fresh generation, not a rig retry.
+
+### The one differentiator limit worth knowing before planning a cast
+
+Only `villager_female` carries a **separable `hair_ponytail` mesh** (NP7).
+`villager_male` has none, so `character_model.gd::_apply_hair` falls through to
+attaching a primitive sphere to the head bone. Two NPCs sharing the
+`villager_male` rig can therefore differ by **body tint and height only** — one
+and a half dials, against the female rig's hair-plus-tint. The generated bodies
+in the table above are single fused meshes with no `hair_ponytail` either, so a
+`hair` block on one of those entries also produces a primitive sphere: when
+moving a character onto a generated body, **remove any `hair` override rather
+than carrying it across**.
 
 ## NPC production rule
 
