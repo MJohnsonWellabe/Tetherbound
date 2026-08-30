@@ -144,6 +144,7 @@ func _fight_row(row: Dictionary) -> Dictionary:
 	var foe_species := str(row["foe"])
 	var level := int(row["level"])
 
+	await _leave_any_fight_still_running()
 	await _stand_the_player_at_the_stage()
 	_quiet_the_neighbours()
 	await _give_the_player(ally_species, level)
@@ -168,16 +169,22 @@ func _fight_row(row: Dictionary) -> Dictionary:
 	# player.
 	var engage_range := float(_combat_config().get("flow", {}).get("engage_range", 6.0))
 	var walk_from := _player.global_position
+	# The BODY, not its position: an aggressive species closes on the trainer
+	# while the trainer is walking at it, and a snapshotted coordinate is a spot
+	# it has already left.
 	var closed: float = await _pilot.walk_trainer_to(
-		_player, foe_body.global_position, engage_range * 0.6, 900)
+		_player, foe_body, engage_range * 0.6, 900)
 	if closed > engage_range:
-		_free(foe_body)
+		_retire(foe_body)
 		return _abandoned(row, "could not walk within engage range: %.1fm away after covering %.1fm from %s"
 			% [closed, walk_from.distance_to(_player.global_position), str(walk_from)])
 
-	await _engage()
+	# An aggressive opponent may already have opened the fight on the approach;
+	# that is a legitimate way in (GAME_DESIGN §14) and does not need a press.
 	if not bool(_manager.call("is_fighting")):
-		_free(foe_body)
+		await _engage()
+	if not bool(_manager.call("is_fighting")):
+		_retire(foe_body)
 		return _abandoned(row, "the engage press did not open a fight")
 	if _manager.call("enemy_body") != foe_body:
 		var wrong: Node3D = _manager.call("enemy_body") as Node3D
@@ -225,7 +232,7 @@ func _fight_row(row: Dictionary) -> Dictionary:
 	record["damage_per_hit"] = _pilot.damage_dealt / maxf(float(_pilot.hits_dealt), 1.0)
 	record["swings_to_kill"] = float(_pilot.hits_dealt)
 
-	_free(foe_body)
+	_retire(foe_body)
 	for i in 30:
 		await physics_frame
 	return record
@@ -248,6 +255,21 @@ func _independent_arrow(ally: RefCounted, foe_species: String) -> int:
 func _abandoned(row: Dictionary, why: String) -> Dictionary:
 	_failures.append("%s vs %s: %s" % [str(row["ally"]), str(row["foe"]), why])
 	return {"ally": str(row["ally"]), "foe": str(row["foe"]), "abandoned": why}
+
+
+## A row cannot be set up while a fight is running: `_sync_active_creature()`
+## refuses to swap the deployed creature mid-fight, and rightly so. An aggressive
+## species that opened a fight on the previous row's approach is the way this
+## happens, so the previous fight is left through the real disengage button
+## rather than by reaching into the manager.
+func _leave_any_fight_still_running() -> void:
+	if not bool(_manager.call("is_fighting")):
+		return
+	await _pilot.press("combat_run")
+	for i in 180:
+		await physics_frame
+		if not bool(_manager.call("is_fighting")):
+			break
 
 
 func _stand_the_player_at_the_stage() -> void:
@@ -274,13 +296,19 @@ func _quiet_the_neighbours() -> void:
 		wild.set("home", wild.global_position)
 
 
-func _free(body: Node3D) -> void:
+## Take a used opponent out of the staging area.
+##
+## MOVED, not freed. `encounter_director.gd` keeps its own respawn clock keyed
+## on the body (`_faint_timers`), and freeing a body it is still counting down
+## on floods `_tick_respawn` with invalid-instance errors every frame for the
+## rest of the run. Its lifecycle is its own; this only needs the body out of
+## `_engageable()`'s reach, which is exactly what `_quiet_the_neighbours` does
+## to the meadow's own population.
+func _retire(body: Node3D) -> void:
 	if body == null or not is_instance_valid(body):
 		return
-	var creatures: Array = _director.call("wild_creatures")
-	if creatures.has(body):
-		creatures.erase(body)
-	body.queue_free()
+	body.global_position = body.global_position + Vector3(0.0, 0.0, 200.0)
+	body.set("home", body.global_position)
 
 
 ## Swap the player's active creature to `species` at `level`, through the party

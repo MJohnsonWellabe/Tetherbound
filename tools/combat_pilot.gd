@@ -136,10 +136,19 @@ func aim_along(direction: Vector3) -> void:
 ## Walk the TRAINER to a world position under real stick input. Used to reach a
 ## staged encounter rather than teleporting onto it, because a creature standing
 ## somewhere the player cannot walk to is a fight that does not exist.
-func walk_trainer_to(player: CharacterBody3D, target: Vector3, within: float,
+## `target` may be a Vector3 or a Node3D. Pass the NODE when walking to a
+## creature: a wild creature wanders, and an aggressive one closes on the
+## trainer, so a position snapshotted before the walk is a spot the creature has
+## already left by the time you arrive. That cost this lane one probe row —
+## "6.1m away after covering 8.6m" against an Ashtusk that had walked out from
+## under its own coordinates.
+func walk_trainer_to(player: CharacterBody3D, target: Variant, within: float,
 		max_frames: int = 1200) -> float:
 	for i in max_frames:
-		var to := target - player.global_position
+		# A creature that started the fight itself has already ended the walk.
+		if manager != null and bool(manager.call("is_fighting")):
+			break
+		var to := _where(target) - player.global_position
 		to.y = 0.0
 		if to.length() <= within:
 			break
@@ -149,9 +158,15 @@ func walk_trainer_to(player: CharacterBody3D, target: Vector3, within: float,
 	Input.action_release("move_forward")
 	for i in 6:
 		await tree.physics_frame
-	var flat := target - player.global_position
+	var flat := _where(target) - player.global_position
 	flat.y = 0.0
 	return flat.length()
+
+
+func _where(target: Variant) -> Vector3:
+	if target is Node3D and is_instance_valid(target as Node3D):
+		return (target as Node3D).global_position
+	return target as Vector3 if target is Vector3 else Vector3.ZERO
 
 
 ## Fight the fight that is already running, to its end.
