@@ -155,6 +155,14 @@ func _fight(row: Dictionary) -> Dictionary:
 	if roster is Array:
 		spec["team"] = (roster as Array).duplicate(true)
 
+	# Same ground for every row. `combat_manager::_stand_the_trainer_aside()`
+	# moves the trainer at the start of each fight, and the trainer's position is
+	# where the opposing creature is sent out — so without this the rows drift
+	# apart and eventually the two creatures are placed somewhere they never
+	# meet. That is exactly what happened to the fourth row of the first run:
+	# 120 seconds, zero hits in either direction.
+	await _stand_at_the_stage()
+
 	_build_the_party(row["team"] as Array)
 	await _wait_for_the_body(str((row["team"] as Array)[0]))
 	var flag := str(spec.get("defeat_flag", ""))
@@ -179,6 +187,17 @@ func _fight(row: Dictionary) -> Dictionary:
 			await physics_frame
 			frames += 1
 	Input.action_release("move_forward")
+	# A round that ran out of frames leaves the battle open, and `can_challenge()`
+	# refuses every later one while it is.
+	for attempt in 4:
+		if not bool(_director.call("trainer_battle_active")):
+			break
+		if bool(_manager.call("is_fighting")):
+			await _pilot.press("combat_run")
+		for i in 120:
+			await physics_frame
+			if not bool(_director.call("trainer_battle_active")):
+				break
 	for i in 40:
 		await physics_frame
 
