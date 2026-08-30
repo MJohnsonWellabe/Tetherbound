@@ -220,7 +220,30 @@ T1-RIG-2 costed. The arms still rest close to the hips, which is the same class
 of limb-landmark problem as the coat, so it may still fail — but it is the
 cheapest possible decisive test and it has never been run.
 
-### Revised owner question
+### OWNER DECISION, 2026-08-30: closed — the two are written off
+
+The owner was shown the options below and answered plainly: *"I think it's fine
+if we lost two characters."*
+
+**So no credits are to be spent on `campfire_traveler` or `traveling_merchant`.
+Option B′ was not taken, B was not taken, and neither subject gets a bespoke
+mesh.** This closes a question that three separate lanes have now re-diagnosed
+and re-costed from scratch, which is exactly the loop this repository keeps
+paying for — do not reopen it without newer owner direction.
+
+The options are kept below as the record of what was declined and at what price,
+not as live work.
+
+**One narrower thing this decision does not settle**, left open deliberately
+rather than assumed: whether the two *roles* should be filled by an installed
+body (option A — `lost_traveler` for the campfire traveller, `trader` or
+`courier` for the merchant, per `CLAUDE.md`'s NPC production rule) or left
+unplaced entirely. "We lost two characters" reads as accepting the loss of the
+two bespoke meshes; it does not obviously mean the campfire and the market stall
+should stand empty. That is a placement question for whoever owns the NPC cast,
+costs nothing either way, and should not be decided by a rigging lane.
+
+### The options that were declined
 
 Balance **515 credits**, unchanged. Costs: rig 5, retexture 10, preview 20,
 refine 30.

@@ -424,6 +424,19 @@ animates" is checkable as a number and not only as two similar-looking PNGs.
 T1-RIG-2 handover — the inherited one-line diagnosis for these two is wrong in
 a way that changes what to do about them, and both now need an owner decision
 before any credit is spent.
+
+**CLOSED — owner decision, 2026-08-30 (T1-RIG-3):** *"I think it's fine if we
+lost two characters."* **No Meshy credits are to be spent on either subject.**
+Neither gets a bespoke mesh; both are written off. T1-RIG-3 established that
+`traveling_merchant`'s geometry is still recoverable free from Meshy and that a
+second, never-rigged candidate exists with a near-rest pose (~15 credits to
+try) — the owner declined that too, so treat the cheaper price as declined
+rather than as an unexplored option. Full record and the declined option table:
+`ralph/reports/handover-T1-RIG-3-2026-08-30.md` §3. **Do not reopen or re-cost
+this without newer owner direction** — three lanes have now diagnosed it
+independently. Still genuinely open, and separate: whether the two *roles* get
+an installed body under `CLAUDE.md`'s NPC reuse rule or stay unplaced. That is
+free either way and belongs to the NPC-cast owner, not to a rigging lane.
 ## T1-CREATURE-RIG (2026-08-30) — the five creature rigs closed locally, the 15 civilian/trail bodies placed
 
 No new Meshy spend in this entry either.
