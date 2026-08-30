@@ -120,6 +120,401 @@
           "_why": "SITE-DRESSING: third stepping stone, closing the line onto the camp's own supply pile -- the arriving path connection the ridge camp had none of."
         }
       ]
+    },
+    {
+      "order": 4001,
+      "name": "highfield_stockcamp",
+      "_why": "T5-CADENCE. The first of four beats closing T4-REGIONS' worst measurement in the chapter -- 1161m of structurally empty spine (232s walking, 166s at sprint cruise) through the middle of the longest band, robust at 3x notice radii, immediately before the endgame. The audit's own verdict: 'A player who is going to put the Meadows down will put it down here.'\n\nIt also closes the band's OTHER standing FAIL. Until this cluster, band 4 had exactly ONE prop cluster in 3436m -- `ridge_patrol_camp`, which is Team Tether's own posting at the far end -- so the Upper Meadows offered nowhere to stop, and exit criterion E's 'a sensible camp/recovery opportunity' had no candidate at all. This is a camp, and (see its `rest` block) it works.\n\nWHOSE CAMP. `pasture_drover_juno` already stands on this road at arc 899 and `captain_field` takes his title from the high pasture (data/items/items.json's `field_sigil`: 'the ploughed-furrow device of the high pasture posting'). This is the other end of Juno's road: the summer stock camp the drovers keep while the herd is up. Still in use, unlike the ranger camp and the quarry -- which is the point, because the chapter's back half needs one place that is not abandoned.\n\nSITED at (275.0,5653.7): the flattest 7m pad within 26m of the spine here, measured at 0.70m of relief and 9.0 degrees worst slope by tools/_probe_cadence_flat.gd. Band 1's trail camp took three relocations to learn that a camp on a 1.2m drop reads as a slope with objects on it; this one was swept first.",
+      "rest": {
+        "_why": "The Upper Meadows' rest point. See `scripts/world/rest_point.gd` for what the offer is and why every authored camp now makes it. Sited 1.9m south-east of the fire, clear of the ring (scale 1.0, ~2.0m across) and on the opposite side from the bench, exactly the geometry `camp.gd` uses for its own.",
+        "at": [276.7, 5652.5],
+        "radius": 3.2,
+        "label": "Rest until morning",
+        "craft_at": [273.4, 5654.9],
+        "creature_bed": {
+          "_why": "A working creature bed on the far side of the fire from the tent. This is the only one between the band 3 crossing and the stronghold, which makes it the place a player prepares for two captains and three Sigils -- exit criterion H3's expedition decision, in the band VISION §3 says should be pressing hardest on the five. 4.6m from the fire, 2.2m from the stool, and its own quarter of the camp so the sleeping body is never inside another prop.",
+          "at": [278.6, 5656.4],
+          "yaw_deg": 300.0,
+          "bed_index": -14
+        }
+      },
+      "props": [
+        {
+          "model": "campfire_stone_ring",
+          "at": [275.0, 5653.7],
+          "yaw_deg": 15.0,
+          "scale": 1.0,
+          "sink_m": 0.04,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "the camp's centre. The owner-referenced ring already committed under assets/props/generated_camp (docs/ASSET_LEDGER.md) and already used by band 1's trail camp and band 4's own ridge posting -- third use, nothing generated. Scale 1.0 (~2.0m) sits between band 1's rest camp (1.05) and the patrol posting's (0.55): a working camp, not a picket's brazier."
+        },
+        {
+          "model": "Bonfire_Fire",
+          "at": [275.0, 5653.7],
+          "yaw_deg": -25.0,
+          "scale": 0.45,
+          "sink_m": 0.02,
+          "dir": "res://assets/props/quaternius_survival",
+          "glow": "campfire",
+          "_why": "the fire inside it -- Bonfire_Fire.obj's real `Fire` surface lit through `glow: campfire`, plus campfire_glow.gd's light, embers and smoke. The smoke column is what makes this camp findable from the trail 7m below it, which is the whole reason a camp closes a dead stretch rather than merely sitting in one."
+        },
+        {
+          "model": "camp_tent",
+          "at": [274.4, 5658.6],
+          "yaw_deg": 10.0,
+          "scale": 1.0,
+          "sink_m": -0.64,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "the drovers' shelter, mouth turned toward the fire. Same owner-referenced tent mesh band 1 and band 4's ridge camp already place, at band 1's own scale rather than the patrol's smaller 0.85 -- people live up here for a season. `sink_m` is band 1's measured compensation for this mesh's raised local origin."
+        },
+        {
+          "model": "Bench",
+          "at": [272.3, 5652.6],
+          "yaw_deg": 100.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "a long seat facing the fire across it, tangential so its 2.78m length runs perpendicular to the radius -- band 1's trail-camp rule, for the same reason"
+        },
+        {
+          "model": "Stool",
+          "at": [276.6, 5655.6],
+          "yaw_deg": 20.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "dir": "res://assets/props/quaternius_furniture",
+          "_why": "a second, smaller seat on the fire's other side; two ways to sit is what `ranger_camp`'s round 3 identified as the difference between a camp and a supply drop"
+        },
+        {
+          "model": "Barrel",
+          "at": [271.4, 5656.4],
+          "yaw_deg": 60.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "water, kept at the tent's end rather than the fire's"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [270.9, 5655.0],
+          "yaw_deg": -25.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "stores, touching the barrel so the pair reads as one load"
+        },
+        {
+          "model": "Bag",
+          "at": [271.8, 5657.4],
+          "yaw_deg": 170.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "somebody's kit against the crate -- and set down rather than dropped, because this camp is tended"
+        },
+        {
+          "model": "Whetstone",
+          "at": [277.2, 5651.4],
+          "yaw_deg": 15.0,
+          "sink_m": 0.02,
+          "scale": 1.0,
+          "_why": "a drover's own tool, and the piece that makes the Craft offer at this fire read as something the site supports"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [273.2, 5650.4],
+          "yaw_deg": -50.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "upright and within reach of the bench"
+        },
+        {
+          "model": "tree-log-small",
+          "at": [276.9, 5652.8],
+          "yaw_deg": 40.0,
+          "pitch_deg": 4.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "firewood, radial to the fire rather than tangential -- the opposite rule from the seats, for the opposite reason (band 1's own note). Kenney's textured log, the CC0 mesh band 1's camp uses after the untextured nature-pack one was replaced."
+        },
+        {
+          "model": "Bush_Common",
+          "at": [281.0, 5658.2],
+          "yaw_deg": 0.0,
+          "scale": 0.42,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the clearing's own edge, past the bed so the camp has a back to it"
+        },
+        {
+          "model": "Grass_Wide_Tall",
+          "at": [268.9, 5651.8],
+          "yaw_deg": 0.0,
+          "scale": 0.5,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "tall tuft on the trail side -- the foreground the camp is seen past on the approach"
+        }
+      ]
+    },
+    {
+      "order": 4002,
+      "name": "severed_conduit_post",
+      "_why": "T5-CADENCE, third beat of the band-4 dead run (the second is the herd bull, spawns.json order 4101). Exit criterion E3: 'Team Tether presence visibly changes the land -- pylons, hardware, drained ground escalating toward the stronghold', and fun-rebuild §12's vocabulary names 'Team Tether pylon' and 'Team Tether camp' outright. Band 4 had neither anywhere in the 1161m: the player crosses the whole eastern sweep of the band before the endgame without meeting one thing that says the faction is ahead of them.\n\nThis is a cable post on the high ground -- crates, two coils of conduit line, an anchor stone and a staked banner -- on the run that carried the Meadows' drained energy toward the Hall, cut and abandoned. It deliberately does NOT stand a pylon: `severed_spokes.gd::_build_pylons` is the shared builder for those (borrowed already by old_quarry.gd and stronghold.gd) and hanging a 12m pylon run here is a code change in a file this lane could not verify visually. Recorded as the better version of this beat in ralph/reports/handover-T5-CADENCE-2026-08-30.md rather than half-built.\n\nSited at (372,6068), 0.78m of relief over a 6m pad (tools/_probe_cadence_sites.gd) -- the flattest ground measured in the eastern sweep, which is where a cable anchor would actually be set.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [371.0, 6067.0],
+          "yaw_deg": 30.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the post's own crate, upright and squared to the run"
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [373.6, 6066.4],
+          "yaw_deg": -15.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "emptied and left -- the line's spares went where the line's crew went"
+        },
+        {
+          "model": "Barrel",
+          "at": [370.4, 6069.6],
+          "yaw_deg": 70.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "water for a crew on ground with none, touching the crate"
+        },
+        {
+          "model": "Rope_1",
+          "at": [372.6, 6069.4],
+          "yaw_deg": 110.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "a coil of the conduit line itself, off the drum and never run"
+        },
+        {
+          "model": "Rope_1",
+          "at": [373.9, 6068.6],
+          "yaw_deg": 20.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "name": "conduit_coil_2",
+          "_why": "a second coil beside the first. Its own `name` because props.gd would otherwise let Godot rename the duplicate to an unreadable id, which is invisible in the world and useless in a probe."
+        },
+        {
+          "model": "Banner",
+          "at": [369.4, 6065.6],
+          "yaw_deg": 48.0,
+          "pitch_deg": -14.0,
+          "sink_m": -0.1,
+          "scale": 2.6,
+          "dir": "res://assets/buildings/quaternius_castle",
+          "retint": {
+            "Banner": "#7a2430"
+          },
+          "_why": "Team Tether's mark, staked at the post and leaning. Same castle Banner module and same oxblood hex (#7a2430) as this chapter's other three faction sites -- one mesh, one colour, no new asset."
+        },
+        {
+          "model": "Rock_Medium_1",
+          "at": [375.2, 6069.8],
+          "yaw_deg": 120.0,
+          "sink_m": 0.05,
+          "scale": 0.3,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the anchor stone the line was set against, at the meadow scatter's own 0.3 so it reads as the ground's rather than as brought here"
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [368.6, 6070.4],
+          "yaw_deg": 250.0,
+          "sink_m": 0.04,
+          "scale": 0.24,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "a second stone on the far side, different mesh and rotation"
+        },
+        {
+          "model": "Pickaxe_Bronze",
+          "at": [374.4, 6065.2],
+          "yaw_deg": 62.0,
+          "pitch_deg": -70.0,
+          "sink_m": 0.02,
+          "scale": 1.0,
+          "_why": "leaning against the crate, for setting anchors into hard ground -- the tool that names the work, the same lean `quarry_station` and the haulage wreck both use"
+        }
+      ]
+    },
+    {
+      "order": 4003,
+      "name": "the_wind_overlook",
+      "_why": "T5-CADENCE, fourth beat of the band-4 dead run. Fun-rebuild §12's 'overlook' and 'landmark with visible reward'; exit criterion E1, which asks that a player can answer 'where did I come from / where can I go' without the minimap. T4-REGIONS scored band 4's route hierarchy PARTIAL for exactly that reason -- its three named regions 'cluster at the band's two ends ... The 1161m between has no landmark, and the watchtower -- the one thing built to be seen from far off -- sits past the dead stretch, not inside it.'\n\nThis is the crest where the road turns off the Highfield and the Ridgeline Watch first comes into view ahead: bedrock the trail bends around, two taller marker stones a drover set to keep the road findable in hill fog, and somebody's pack. Old, ordinary, and nobody's faction -- deliberately NOT invented lore. The Meadows has drovers and a drove road; waymarkers are what drove roads have.\n\nTHE MARKER STONES USE `scale_xyz`, which is the one thing here worth flagging. Rock_Medium_* are boulders, raw 3.2 x 2.3 x 3.0m (measured), and uniform scale can only ever produce a bigger or smaller boulder. props.gd's `scale_xyz` exists for precisely this ('a shape correction no single uniform number can express' -- its own header), so the two markers are narrowed and raised into standing-stone proportions instead of a new mesh being sourced. It does stretch their normal maps, and that is a real cost: VISUAL NOTE for the judge lane, flagged rather than hidden.\n\nIT PAYS (exit criterion G9): harvest.json order 4031, a Greater Orb, the one band 4 had none of.",
+      "props": [
+        {
+          "model": "Rock_Medium_1",
+          "at": [205.0, 6140.0],
+          "yaw_deg": 40.0,
+          "sink_m": 0.15,
+          "scale": 0.95,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the crest's own bedrock, the largest thing here and what the trail bends around. Scale 0.95 (~3.1 x 2.1 x 2.8m) -- far past the meadow scatter's 0.14-0.19, which is the point: this is geology, not a stone in the grass."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [208.4, 6142.6],
+          "yaw_deg": 215.0,
+          "sink_m": 0.12,
+          "scale": 0.8,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "second of the outcrop, downwind side"
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [201.8, 6137.8],
+          "yaw_deg": 310.0,
+          "sink_m": 0.12,
+          "scale": 0.85,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "third, on the uphill approach, so the group has a near side and a far side rather than reading as a pile"
+        },
+        {
+          "model": "Rock_Medium_1",
+          "at": [203.4, 6143.6],
+          "yaw_deg": 18.0,
+          "sink_m": 0.2,
+          "scale_xyz": [0.46, 1.1, 0.46],
+          "dir": "res://assets/environment/stylized_nature",
+          "name": "waymarker_north",
+          "_why": "the first of the two set markers: same boulder mesh, narrowed and raised through `scale_xyz` into a 1.5 x 2.5 x 1.4m standing stone. Taller than the trainer, which is what makes it read as placed rather than fallen, and what carries it from the trail below. Its own `name` for the duplicate-model reason props.gd documents."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [207.2, 6136.2],
+          "yaw_deg": -35.0,
+          "sink_m": 0.18,
+          "scale_xyz": [0.42, 0.95, 0.42],
+          "dir": "res://assets/environment/stylized_nature",
+          "name": "waymarker_south",
+          "_why": "the second marker, the pair that makes a line and therefore a direction. Shorter than its sibling and turned across it, because two identical stones read as a gate and a gate is a different thing from a waymark."
+        },
+        {
+          "model": "Bag",
+          "at": [204.4, 6138.6],
+          "yaw_deg": 130.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "set down between the markers and the bedrock -- a traveller stopped here, which is the difference between a rock formation and a place"
+        },
+        {
+          "model": "Grass_Wide_Tall",
+          "at": [210.2, 6139.2],
+          "yaw_deg": 0.0,
+          "scale": 0.55,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "tall tuft on the open side, so the stones stand in something"
+        },
+        {
+          "model": "Bush_Common",
+          "at": [200.2, 6141.6],
+          "yaw_deg": 0.0,
+          "scale": 0.42,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the crest's scrubby uphill edge"
+        }
+      ]
+    },
+    {
+      "order": 4004,
+      "name": "ridge_road_picket",
+      "_why": "T5-CADENCE, fifth and last beat of the band-4 dead run, and the one that hands the player over to the Ridge Captain. Exit criterion F2 asks that Team Tether escalate 'rumor -> evidence -> confrontation -> operation -> hierarchy -> Warden, never as unrelated fights': the severed conduit post 500m back is the operation, and this is the hierarchy closing in -- a roadblock across the trainer road, 300m below `captain_ridge` and the ridge patrol camp.\n\nCrates and a felled log dragged across the road, a brazier still ringed, a stool, and the banner staked square to the road bearing. Same castle Banner module, same oxblood, same fire-and-ring pair every other posting in the chapter uses; nothing here is a new mesh.\n\nUNMANNED, and that is a file-ownership fact, not a design one. A picket standing on this barricade is the obviously better version and it is one row in data/config/bands/band4_upper_meadows_ironwood/trainers.json -- a file two other lanes hold this session (ralph/T3-ACTIVITIES and ralph/T1-CREATURE-RIG). This lane stayed off it and recorded the row it would have written in ralph/reports/handover-T5-CADENCE-2026-08-30.md. T4-REGIONS' eighth finding -- band 4 runs one trainer per 859m, the sparsest in the chapter -- is still open, and this site is where the cheapest fix for it goes.\n\nSited at (-6.7,6299.7), the flattest 5m pad within 22m of the spine here (0.88m relief, tools/_probe_cadence_flat.gd) -- a barricade wants level ground, or it reads as debris that slid there.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [-7.9, 6298.4],
+          "yaw_deg": 35.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the barricade's own crate, squared to the road bearing rather than to the world -- a thing stacked on purpose"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [-6.0, 6297.6],
+          "yaw_deg": 35.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "name": "barricade_crate_2",
+          "_why": "the second crate of the pair, same bearing, touching the first so the two read as one wall. Its own `name` for the duplicate-model reason props.gd documents."
+        },
+        {
+          "model": "tree-log",
+          "at": [-5.2, 6300.8],
+          "yaw_deg": 128.0,
+          "sink_m": 0.05,
+          "scale": 1.2,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "a felled log dragged across the road behind the crates -- the piece that makes this a block rather than a supply stack. Kenney's textured CC0 log, as at band 1's camp and the north-bank cutting."
+        },
+        {
+          "model": "Barrel",
+          "at": [-9.2, 6300.4],
+          "yaw_deg": -20.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "water for a posting that has to stand here all day"
+        },
+        {
+          "model": "Banner",
+          "at": [-3.6, 6297.2],
+          "yaw_deg": 128.0,
+          "pitch_deg": -6.0,
+          "sink_m": -0.1,
+          "scale": 2.6,
+          "dir": "res://assets/buildings/quaternius_castle",
+          "retint": {
+            "Banner": "#7a2430"
+          },
+          "_why": "staked at the barricade's open end and squared to the same road bearing (128) as the log. Whose road this is, said the way the chapter says it everywhere else: the castle kit's Banner retinted oxblood (#7a2430)."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [-8.6, 6302.4],
+          "yaw_deg": -20.0,
+          "scale": 0.5,
+          "sink_m": 0.02,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "the picket's brazier ring, scaled to a held checkpoint's small fire the way `relay_approach_checkpoint`'s is (0.5) rather than a rest camp's"
+        },
+        {
+          "model": "Bonfire_Fire",
+          "at": [-8.6, 6302.4],
+          "yaw_deg": 40.0,
+          "scale": 0.38,
+          "sink_m": 0.02,
+          "dir": "res://assets/props/quaternius_survival",
+          "glow": "campfire",
+          "_why": "the fire in it -- the same solved combination every other posting uses, and at night the thing that tells the player from 200m down the road that the way ahead is held"
+        },
+        {
+          "model": "Stool",
+          "at": [-6.8, 6302.6],
+          "yaw_deg": 200.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "dir": "res://assets/props/quaternius_furniture",
+          "_why": "one seat by the brazier, on the barricade's own side of it"
+        },
+        {
+          "model": "Bag",
+          "at": [-9.6, 6301.4],
+          "yaw_deg": 150.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "a picket's kit, against the barrel"
+        },
+        {
+          "model": "Rope_1",
+          "at": [-4.4, 6299.6],
+          "yaw_deg": 60.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "what dragged the log across, still tied to nothing"
+        }
+      ]
     }
   ]
 }

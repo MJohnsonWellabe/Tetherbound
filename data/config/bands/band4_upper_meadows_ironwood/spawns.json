@@ -1102,6 +1102,19 @@
       },
       "_why_alpha": "T3-ENCOUNTER, closing a gap T3-CREATURES left: its band 2 and band 3 alphas both carry a `_why_alpha` and this one carries only `_why`, so tests/test_wild_alphas.gd's siting-rationale check failed on it alone. The rationale itself was never missing -- it is in `_why` above. Stated here in the key the test reads: this is the chapter's SECOND Stormtrail and the western one, on an exposed ridge 1380m from the band 3 Relay individual and in a different level band, so the brief's 'only one Stormtrail should normally occupy a local spawn cluster' holds by geography. The alpha block gives it +4 over band 4's own roll rather than an absolute level; its SIZE comes from the species (1.45m against Trailpup's 1.28m, +13%) and the block is deliberately scale 1.0 so the owner's 15-25% band is not applied twice.",
       "_why": "Brief section 2, second of two, and the reason there are two: the brief says 'only one Stormtrail should normally occupy a local spawn cluster', which constrains DENSITY per locality, not the total. One at the Relay in band 3 and one on the far western ridge here -- 1380m apart, in different regions, at different level bands -- means the player can never see two at once, which is the protection that sentence is actually asking for. The western ridge at (-420,5140) is the spine's far point and this band file already calls it 'the exposed western high ground the region is built to be seen across'; 'exposed trails, ridgelines' is the brief's own eligible list. Rain-gated for the reason recorded on the band 3 entry."
+    },
+    {
+      "order": 4101,
+      "species": "meadowhart",
+      "count": 1,
+      "centre": [425.0, 0.0, 5844.0],
+      "radius": 12.0,
+      "alpha": {
+        "level_bonus": 4,
+        "scale": 1.35
+      },
+      "_why": "T5-CADENCE. The herd bull of the Highfield, and the second beat inside T4-REGIONS' 1161m dead run (arc 1703, on the eastern sweep). Band 4 holds 30 meadowhart and all four of its existing alphas sit in the WESTERN third -- the entire eastern half of the longest band in the chapter had no exceptional individual at all.",
+      "_why_alpha": "Fun-rebuild §12's own example of a beat that satisfies the cadence without any fight being required: 'a visible herd on a ridge'. Meadowhart is spec §3's named riding creature, so a visibly larger bull standing over the band's biggest herd is the one silhouette in the Upper Meadows a player is most likely to change direction for -- which is exactly what §12 asks a cadence beat to be. Scale 1.35 and level_bonus 4 match order 4075's tree-line elder, the band's own convention for a solitary temptation, rather than inventing a third pair of numbers. It is a second individual of a species already here rather than a new one: T4-REGIONS' second-ranked chapter gap (zero new species in bands 4 and 5) is a ROSTER question owned by the creature lane, and this lane deliberately did not reach into species.json or the spawn tables to answer it."
     }
   ],
   "_comment_why_so_few": "WILD-ECOLOGY. This band held ONE cluster (the Meadowhart herd below) across z 4760-7000 -- 2240m, the longest region in the chapter and the one the probe measures as its longest single travel leg. Prompt 60's population rule is 'still prevalent enough that wanting another creature does not require a barren search', and one herd over 2.2km is the barren search. The seven entries added below sit on the spine's own points so the ecology is met by walking the route, not by leaving it. Levels are resolved from chapter_curve.json's band for this z ([11, 14]), never set here.",

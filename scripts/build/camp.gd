@@ -16,6 +16,9 @@ const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
+## T5-CADENCE. What a night costs and pays, shared with the authored camps --
+## see `_on_rest()` below and `night_rest.gd`'s own header.
+const NIGHT_REST := preload("res://scripts/world/night_rest.gd")
 const BONFIRE := "res://assets/props/quaternius_survival/Bonfire_Fire.obj"
 ## T1-CAMP/§17: was `kenney_survival/bedroll.obj` at scale 2.6. Investigated
 ## and rejected first as a MATERIAL problem, then fixed as the actual
@@ -275,30 +278,18 @@ func tint_ghost(ok: bool) -> void:
 		_ghost_bed.call("tint_ghost", ok)
 
 
-## Rest: fade out, new day, everyone healed, fade in. The fade is the same
-## two-node canvas the opening's wake uses, built here because a camp can
-## exist in a world with no sequence director.
+## Rest: fade out, new day, everyone healed, fade in.
+##
+## T5-CADENCE moved the body of this out to `scripts/world/night_rest.gd`. It
+## is unchanged -- same fade, same day advance, same `player_slept_at_home`,
+## same completed creature-bed rests, same trainer heal, same morning reset,
+## same autosave -- and it moved for one reason: the AUTHORED camps in the
+## Meadows (`trail_camp`, `ranger_camp`, `riverwatch_rest`) now offer rest too,
+## through `rest_point.gd`, and T4-REGIONS' audit is a standing warning about
+## what happens when the world has two half-answers to one question. There is
+## one definition of what a night costs and pays, and both callers use it.
 func _on_rest() -> void:
-	var game := get_node_or_null(^"/root/Game")
-	if game == null:
-		push_error("no Game autoload; the night cannot pass")
-		return
-
-	var layer := CanvasLayer.new()
-	layer.layer = 15
-	var rect := ColorRect.new()
-	rect.color = Color(0, 0, 0, 0)
-	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
-	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	layer.add_child(rect)
-	add_child(layer)
-
-	var tween := create_tween()
-	tween.tween_property(rect, "color:a", 1.0, FADE_SECONDS * 0.5)
-	tween.tween_callback(func() -> void: _pass_the_night(game))
-	tween.tween_interval(0.4)
-	tween.tween_property(rect, "color:a", 0.0, FADE_SECONDS * 0.5)
-	tween.tween_callback(layer.queue_free)
+	NIGHT_REST.rest(self)
 
 
 ## R2.4. Open the craft screen — data/recipes/recipes.json's base tier,
@@ -310,34 +301,9 @@ func _on_craft() -> void:
 	_craft_panel.call("open")
 
 
+## Kept as a thin forward: `tests/` and `tools/gate_f/probe_bed_rest_sequence.gd`
+## call this directly to pass a night without waiting on a tween, and the point
+## of the move above was to have ONE body, not to break the callers that pass a
+## night the fast way.
 func _pass_the_night(game: Node) -> void:
-	var day := int(game.call("advance_day"))
-	# GATEB-FLAGS: `player_slept_at_home`, data/progression/objectives.json's
-	# ladder. Set here, on the actual completed rest, not on the interact
-	# prompt firing -- the objective asks for the sleep itself, not the
-	# attempt to start one.
-	var progression: RefCounted = game.get("progression")
-	if progression != null:
-		progression.call("set_flag", "player_slept_at_home")
-	# Gate A creature-bed contract: sleep completes only pals physically put
-	# to bed. Non-resting party members keep their current HP, which is the
-	# meaningful preparation tradeoff the bed is supposed to create.
-	game.call("complete_creature_bed_rests")
-	# The trainer too — find them by the vitals they carry.
-	var world := get_parent()
-	var player := world.get_node_or_null(^"Player")
-	if player != null:
-		var vitals: RefCounted = player.get("vitals")
-		if vitals != null and vitals.has_method("rest"):
-			vitals.call("rest")
-	# "rest to morning" (R5.1) — by group rather than a direct reference, so a
-	# camp in a scene with no day/night setup (a test scene, say) still rests
-	# fine with nothing to reset.
-	for look: Node in get_tree().get_nodes_in_group("day_cycle"):
-		if look.has_method("reset_to_morning"):
-			look.call("reset_to_morning")
-	# R3.1. "Frequent autosave" — resting is the natural checkpoint this game
-	# already asks the player to return to, the same precedent survival games
-	# with a sleep beat use for it.
-	game.call("save_game", int(game.call("autosave_slot")))
-	print("[camp] rested; day %d" % day)
+	NIGHT_REST.pass_the_night(self, game)
