@@ -189,57 +189,6 @@
         "I've never been able to take it. You might. Mind it sees you coming a long way off."
       ]
     },
-    "young_trainer_challenge": {
-      "speaker": "Kip",
-      "portrait": "res://assets/ui/portraits/trainer.png",
-      "_comment": "T1-CREATURE-RIG. Standalone trainer_npc.gd challenge, same plain-lines shape practice_trainer_challenge uses (data/dialogue/trainers.json) -- no `battle:` effect needed, `trainer_npc.gd::_on_conversation_finished` starts the fight the moment this conversation closes.",
-      "lines": [
-        "You look like you know what you're doing out here. I'm still working that part out.",
-        "Two of mine. Go easy -- actually, don't. I'd rather lose to someone trying."
-      ]
-    },
-    "young_trainer_defeated": {
-      "speaker": "Kip",
-      "portrait": "res://assets/ui/portraits/trainer.png",
-      "lines": [
-        "Well, that answers that.",
-        "Someday I'll be the one people talk about like they talk about you. Today's just not that day."
-      ]
-    },
-    "rival_trainer_challenge": {
-      "speaker": "Talon",
-      "portrait": "res://assets/ui/portraits/trainer.png",
-      "_comment": "T1-CREATURE-RIG. Board blurb: 'friendly rival who challenges you throughout the story.' A repeat-appearance rival arc is a story-structure decision this lane did not invent one out of; this is the one fought encounter with him this chapter ships.",
-      "lines": [
-        "Didn't expect to see you out this far. Good -- saves me the walk.",
-        "I've been building a real team while you've been busy being everyone's favourite. Let's see whose training actually holds up."
-      ]
-    },
-    "rival_trainer_defeated": {
-      "speaker": "Talon",
-      "portrait": "res://assets/ui/portraits/trainer.png",
-      "lines": [
-        "...Right. Okay.",
-        "Don't get used to it. Next time I'll have an answer for that."
-      ]
-    },
-    "wandering_trainer_challenge": {
-      "speaker": "Faye",
-      "portrait": "res://assets/ui/portraits/trainer.png",
-      "_comment": "T1-CREATURE-RIG. Board blurb: 'travels with a single trusted creature, enjoys friendly battles'.",
-      "lines": [
-        "Oh, hello! Don't get many people all the way out here.",
-        "It's just the one of us, but we don't lose much. Fancy a friendly one?"
-      ]
-    },
-    "wandering_trainer_defeated": {
-      "speaker": "Faye",
-      "portrait": "res://assets/ui/portraits/trainer.png",
-      "lines": [
-        "Ha! Good one.",
-        "We'll be around if you want another go later. We're not in any hurry to be anywhere."
-      ]
-    },
     "meadowhart_herd_sighting": {
       "speaker": "Rae",
       "portrait": "res://assets/ui/portraits/trainer.png",
@@ -253,7 +202,10 @@
         "For now, just look a while. It's worth the walk out here.",
         {
           "text": "Here -- I've got no use for these, but you might.",
-          "effects": ["give:orb_basic:3", "flag:band1_meadowhart_herd_found"]
+          "effects": [
+            "give:orb_basic:3",
+            "flag:band1_meadowhart_herd_found"
+          ]
         }
       ]
     },
