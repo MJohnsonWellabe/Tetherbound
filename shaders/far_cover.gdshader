@@ -103,6 +103,50 @@ uniform float strength : hint_range(0.0, 1.0) = 0.55;
 // the sheet in patches. Small enough to be sub-pixel at the ranges this is
 // visible from.
 uniform float lift = 0.35;
+// T1-GROUND-3. THE DASHED SEAM LINES, and why `lift` alone was never going to
+// be the fix for them.
+//
+// Two blind passes reported "faint dotted/dashed lines cross the terrain...
+// visible enough for a player to steer by" and two ground lanes left it
+// unattributed. `tools/_probe_ground_seams.gd` measures both hypotheses that
+// were on record and settles them: the sin-dot hash in the terrain bake is
+// NOT aliasing (mean 0.5003, sd 0.2889, worst autocorrelation r = -0.013 over
+// lags 1..39 -- white to the noise floor), and this sheet IS breaching. At the
+// five capture viewpoints, 3.3% of its cells have terrain standing above them,
+// 10.6% of them at band 1 -- the exact frame the artefact was reported in.
+//
+// The mechanism is that `lift` is measured from the vertex's OWN height sample
+// while the sheet between vertices is a chord, and the ground bulges over that
+// chord. So the breaches sit on this sheet's fixed, world-axis-aligned grid,
+// and at a grazing angle a grid of holes in a wash reads as rows of dashes
+// converging in perspective. Note this is not the ruling-out already on
+// record: GRASS_HANDOVER_2026-08-26 hid "the field's own MultiMeshes" and saw
+// the lines survive, but the far cover is a single MeshInstance3D, so that
+// check could not have hidden it.
+//
+// Neither obvious knob is a good trade, and both were swept before this was
+// written. A smaller `far_cell` buys it with triangles on the tier whose GPU
+// cost no container in this project can measure (PERF-ROG-GPU); a bigger
+// `lift` buys it by floating the wash off the ground everywhere, including the
+// 52-84m hand-over where the sheet is nearest the eye. Measured: cell 4.0m
+// plus lift 1.20m reaches 0.95% for 2.25x the triangles and +0.85m of float on
+// ground that is already flat.
+//
+// `dilate_lift` is the narrow fix instead: raise each vertex above its own
+// half-cell NEIGHBOURHOOD maximum rather than above its own sample -- a
+// morphological dilation at exactly the radius the chord spans. On flat ground
+// the neighbourhood max IS the vertex's own height, so the wash still sits at
+// `lift` where a parallax offset would show; it rises only where the ground is
+// genuinely lumpy, which is where it has to. Measured at cell 6.0m/lift 0.35m:
+// 3.28% -> 1.19% of cells breaching, for eight texture fetches per VERTEX
+// (never per fragment) on a vertex already doing seven, no triangles and no
+// global offset.
+//
+// The cap is what stops a cliff lifting a whole cell by the cliff's own height
+// and floating the wash over the low side; the worst faces are `rock` anyway,
+// which `forbidden_base_mask` already excludes. 0.0 disables the dilation and
+// restores exactly the previous behaviour. TUNABLE.
+uniform float dilate_lift = 1.5;
 
 // Colour. Same shape as the grass tier's: a two-tone tint MULTIPLIED by the
 // terrain's own colour map rather than mixed toward it -- that map is a
@@ -301,7 +345,29 @@ void vertex() {
 
 	// Sit the sheet on the ground it sampled. `lift` is why the depth test does
 	// not eat it between samples; see the uniform's own note.
-	VERTEX.y = ground_h + lift;
+	//
+	// T1-GROUND-3: and `dilate_lift` is why it does not eat it BETWEEN them
+	// either -- see that uniform's own note for the measurement. Eight fresh
+	// fetches at HALF the cell step, which is the radius the chord actually
+	// spans; the normal's four are at the FULL step and cannot be reused for
+	// this, since a neighbouring vertex's own height says nothing about the
+	// bulge halfway to it. Clamped to the cap so a cliff cannot carry a whole
+	// cell up with it.
+	float seat = ground_h;
+	if (dilate_lift > 0.0) {
+		float half_cell = far_cell * 0.5;
+		float around = ground_h;
+		around = max(around, ground_height(world_xz + vec2(half_cell, 0.0), ground_h));
+		around = max(around, ground_height(world_xz - vec2(half_cell, 0.0), ground_h));
+		around = max(around, ground_height(world_xz + vec2(0.0, half_cell), ground_h));
+		around = max(around, ground_height(world_xz - vec2(0.0, half_cell), ground_h));
+		around = max(around, ground_height(world_xz + vec2(half_cell, half_cell), ground_h));
+		around = max(around, ground_height(world_xz + vec2(half_cell, -half_cell), ground_h));
+		around = max(around, ground_height(world_xz + vec2(-half_cell, half_cell), ground_h));
+		around = max(around, ground_height(world_xz + vec2(-half_cell, -half_cell), ground_h));
+		seat += min(around - ground_h, dilate_lift);
+	}
+	VERTEX.y = seat + lift;
 }
 
 void fragment() {

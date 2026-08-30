@@ -27,7 +27,8 @@
   },
   "_comment_stream": "The stream surface is a ribbon following the carved bed at `surface_depth` above it, clamped so it only ever descends, ending at the pond's own level. Width comes from the terrain config's stream block (the same width the carve and the scatter exclusion use).",
   "stream": {
-    "surface_depth": 0.35,
+    "_comment_surface_depth_t1_ground_3": "T1-GROUND-3: 0.35 -> 0.62, tracking the channel that got deeper and much wider (terrain_playground.json `water.stream`, whose own comment carries the measurement and the reasoning). Held BELOW the carve's own 1.1m so the bed still shows as wet bank either side of the ribbon rather than the water reaching the rim, and raised in proportion so a trough four times as wide does not read as a puddle at the bottom of a ditch. This is the axis to move if the stream reads as a dry gully -- more water, not a deeper cut. TUNABLE.",
+    "surface_depth": 0.62,
     "sample_step": 1.5,
     "alpha_shallow": 0.78,
     "_comment_alpha": "Stream-only override over surface.alpha_shallow — see water.gd's build() for the measurement that split them. TUNABLE.",
