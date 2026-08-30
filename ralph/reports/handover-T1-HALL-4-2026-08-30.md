@@ -166,10 +166,34 @@ not a second hard line. The five sub-metre ground layers are deliberately not
 raised: a 0.4 m tuft at 300 m is smaller than a pixel and would spend render
 budget for nothing.
 
-**And the ground past it gets content.** Band 5's `density_scale` 0.07 → 0.22.
-The two existing notes on that number are about the *drain* contrast, and raising
-the healthy floor strengthens both sides of that comparison rather than weakening
-it — but see §5, this spent most of the bake's remaining headroom.
+**Band 5's `density_scale` was raised 0.07 → 0.22, rendered, and reverted.**
+Evidence committed as
+`ralph/reports/T1-HALL-4/EVIDENCE-band5-density-0.22-occludes-the-reveal.png`.
+
+The reasoning for raising it was sound and it baked cleanly (826,892 → 874,616,
+under the guard). Then it broke the frame it was meant to help:
+`H-01-approach-400` — the 400 m reveal, the stand whose entire job is the player
+first seeing the Hall — came back as a **wall of near-field trees with the
+fortress not visible at all**. The judged frame it replaced at least had the
+fortress in it as a pale nub. That is strictly worse on defect 1 in exchange for
+defect 2, and defect 1 is ranked first.
+
+The mechanism is worth writing down because it generalises: `trees`'
+`corridor_fill.trail_bias` is **0.85**, so most corridor fill is sited *beside
+the authored trail* — and every approach stand stands on that trail. A band-wide
+density rise therefore lands hardest on exactly the sightlines the region's
+establishing shots are made of. That is not a bad choice of number at 0.22; it is
+the shape of this lever on this band, and any figure big enough to fill the
+mid-distance will also fill the approach.
+
+So defect 2 is answered from the other direction only: the cull range, which adds
+far content (small on screen, no sightline cost) and removes the hard line the
+judge actually measured, plus the 61 hand-sited rubble stones at the wall feet.
+If a later lane wants more mid-ground content here, the lever is a per-layer
+`band_scale` on `rocks`/`bushes` — ground-hugging species that cannot occlude a
+400 m sightline from an 8 m eye — not the band-wide number, which moves the
+trees. Note that adding `band_scale` to a layer re-rolls that layer's draws
+corridor-wide, so it is not free either.
 
 ### 3 — Stone UV scale and the hard seams *(ranked 3rd)*
 
@@ -350,11 +374,15 @@ Stated plainly so the next lane does not have to rediscover it.
 
 ## 5. Budget
 
-- **Scatter placements: 826,892 → 874,616.** `test_scatter_perf_budget.gd` allows
-  900,000, so band 5's density spent 47,724 of the 73,108 that were free and
-  leaves **25,384**. That guard exists to catch an accidental density explosion,
-  and at 97% of its ceiling it can no longer catch much. Keeping the density —
-  the growth is authored and measured, which is the condition that comment sets —
-  but **the next lane that wants density here needs a deliberate look at the
-  ceiling, not another guess from this bake.**
-- **Draw calls:** see below.
+- **Scatter placements:** the density experiment took this to 874,616 against
+  `test_scatter_perf_budget.gd`'s 900,000 — 97% of a guard that exists to catch
+  runaway density, which would have left it unable to catch much. Reverting band 5
+  returns the count to roughly the shipped 826,892 (the wall-foot anchors add 61),
+  so the headroom the guard needs is back. Recorded because the 97% figure was
+  briefly real and a later lane raising this band should know how little room
+  there is.
+- **Draw calls:** the cull-range raise is the change that spends here — it moves
+  no placement, so the instance count is untouched, but more MultiMeshInstances
+  are resident per frame. Measured at the `hall_approach` stand
+  (`tools/perf_render_stats.gd --views=hall_approach`) against
+  `docs/PERFORMANCE_BUDGET.md`'s 4000-call ceiling: see below.
