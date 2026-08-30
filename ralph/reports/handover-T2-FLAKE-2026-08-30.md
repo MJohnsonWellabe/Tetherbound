@@ -1,7 +1,8 @@
 # T2-FLAKE — the opening segment's flake, found and fixed
 
 `branch: ralph/T2-FLAKE` · `area: tests/helpers/gate_a_opening_drive.gd, tools/`
-· `tests: smoke_gate_a_opening_segment.gd x35, smoke_gate_e_finale.gd x9`
+· `tests: smoke_gate_a_opening_segment.gd x36, smoke_gate_e_finale.gd x18,
+run_tests.gd`
 
 **Measured pass rate: 10/12 before, 23/23 after.** The failure had one cause,
 it is a harness defect rather than a game one, and it is fixed rather than
@@ -215,8 +216,9 @@ what the wildcard was reporting.
 y=6.17) ... creature bodies in the world: TrainerCreature_warden_aldis_13 y=0.52 (live)
 ```
 
-Same body, same height, every time. The chain, and `stronghold.gd:3096`
-already describes most of it:
+Every failing run names the same body at the same height, and it is the LIVE
+one -- the creature the player is fighting, not a corpse. The chain, most of
+which `stronghold.gd:3096` already describes:
 
 1. `combat_manager.gd::_place_fighters()` anchors both fighters off
    `_player.global_position`, and `_stand_the_trainer_aside()` then moves the
@@ -293,6 +295,17 @@ half that is ready. Land it together with the `scripts/combat/**` fix.
   The finale's actual defect is in `combat_manager.gd::_place_fighters()` and
   is written up in §5 rather than patched by a reliability lane at the end of
   its budget.
+
+## 7b. Regression check
+
+`tests/run_tests.gd` on this tree: **0 failed** (1586 `ok` lines at the point
+the run was read; a full run of the same tree exited 0). The one game file
+this branch touches gains a method and changes no behaviour.
+
+Pre-existing and untouched: every boot of a smoke through `--script` prints
+five `SCRIPT ERROR: Cannot call method 'call' on a null value` from
+`game_state.gd:1046` via `title_screen.gd::_refresh_load_button`. It is on
+`main` at the same count and is not this branch's.
 
 ## 8. Files
 
