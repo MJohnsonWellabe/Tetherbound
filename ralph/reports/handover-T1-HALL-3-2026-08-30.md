@@ -282,3 +282,61 @@ at are a blend of two lanes' in-progress states. The consolidation can merge bot
 branches cleanly.
 
 ---
+
+## 3. What this lane did NOT fix, and why
+
+Stated plainly so the next lane does not have to rediscover the boundary. Each
+of these is a real, open defect — none is "done".
+
+| Defect | Why not |
+|---|---|
+| **D8 close-range wall material** ("no normal map, the wall is mushy and flat") and **D5's ~2 m visible tiling** | Texture-authoring work on the *shared* stone material. `HALL_DESIGN` §5 is explicit that `STONE_TILE` = 0.28 is hard-won and deliberately shared by both kits and the works walls, and its header records the exact failure a re-pick caused before. Changing it reaches past this location, so it wants its own lane with its own before/after at several ranges. |
+| **D9 far terrain bald and splat-seamed**, **D10 ground scatter on a grid** | World-level ground/scatter systems (`T1-GROUND-3`'s territory), not the fortress. The judge filed them under the Hall set because that is where it saw them, but the fix is in the scatter rules and the splat maps, and doing it here would collide with that lane. |
+| **D12 night is unresolved** (moon has no disc, braziers throw no pooled light) | This is a lighting setup — `world_look.gd`'s night keyframe and the brazier light ranges — and `T1-LIGHT` owns it. Changing the night key here would change every night frame in the chapter to fix one stand. |
+| **D14's second half** — "a storm front that large and that close would change the light on the Hall in front of it" | Correct, and it is a coupling between `rift_collapse.gd` and the world sun/ambient. Same argument: it would alter the light on every frame in the chapter. The *structural* half of D14 (colourless, no lit rim) is fixed here. |
+| **D3's "move the pylons out of the approach sightline"** | The judge's own suggested fix, and I did not take it. The pylon line is authored to converge on the Hall deliberately (`HALL_DESIGN` §3: "the pylon line converges toward the tallest mass") and the judge separately praised the pylons as the one thing at this site that reads correctly. Raising the fortress so it out-reads them is the fix that keeps both; moving them is available if raising proves insufficient. |
+| **`stronghold_outer_watch` / `stronghold_checkpoint` bodies** | Same Meshy idiom as the three reverted, but they stand outside the Hall and in no frame the judge read. Reverting the whole cast is an owner/T3-INSTALL decision about the project's humanoid direction, not a call this lane should make unilaterally. |
+
+## 4. Reproducing the evidence
+
+```bash
+# frames (NEVER --headless with a rendering driver: hangs forever)
+xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
+  --rendering-driver opengl3 --resolution 1280x800 \
+  --script tools/_judge_capture_hall.gd -- --out=res://shots/t1hall3
+
+# the numbers behind the claims above
+python3 tools/_t1hall3_measure.py shots/t1hall3 <a-previous-set>
+
+# draw calls at the Hall
+xvfb-run -a -s "-screen 0 1280x720x24" godot --path . \
+  --rendering-driver opengl3 --resolution 1280x720 \
+  --script tools/perf_render_stats.gd -- --label=t1hall3 --views=hall_approach
+
+# the route must stay green
+godot --headless --path . --script tests/smoke_stronghold.gd
+godot --headless --path . --script tests/smoke_boss.gd
+godot --headless --path . --script tests/smoke_gate_e_finale.gd   # intermittent; re-run before believing a red
+```
+
+The capture tool now runs `tools/capture_check.gd` at every stand and fails the
+run on any exterior-stand problem, so a set that silently lost the grass field
+or buried a camera cannot be committed as evidence without the exit code
+saying so.
+
+## 5. Files
+
+| File | What changed |
+|---|---|
+| `scripts/world/stronghold.gd` | `causeway_surface_y()` (D1); `_ground_hall_massing()` + `_module_bounds()` (D7); generalised `_build_hall_waist()` (D8); merlon variation + buttresses (D5); banner hue + device (D6) |
+| `scripts/world/tether_sigil.gd` | **new** — the generated compass device and banner cloth, shared by the Hall and the Sigil Gate |
+| `scripts/world/road_gate.gd` | opt-in `faction_dressing`: piers, capstones, lintel, sigil banners (D4) |
+| `scripts/world/playground_world.gd` | sets `faction_dressing` on the Sigil Gate only |
+| `scripts/world/rift_collapse.gd` | storm mask: anvil, lit rim, rain shafts (D13, D14) |
+| `data/config/building_prefabs.json` | the massing height ladder and the spire's move (D3) |
+| `data/config/stronghold.json` | 18 courtyard props (D2) |
+| `data/config/rift_collapse.json` | storm reach and yaw spread (D15, D16) |
+| `data/config/bands/band5_stronghold_approach/trainers.json` | three body overrides reverted (D2) |
+| `data/config/bands/band5_stronghold_approach/vegetation.json` | five causeway clearings (D11) |
+| `tools/_judge_capture_hall.gd` | H-04 stands on the deck; `capture_check` at every stand |
+| `tools/_t1hall3_measure.py` | **new** — re-measures the judge's own quantities |
