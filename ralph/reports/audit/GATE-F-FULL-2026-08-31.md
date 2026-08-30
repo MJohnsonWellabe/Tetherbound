@@ -249,9 +249,24 @@ said, and it cannot be approached at all until a run finishes.
 |---|---|
 | **RIG-F1** | Added `wait_until` to `operator_harness.gd` — CD-3's rule ("reach a state, then assert it") applied to waiting instead of pressing. Polls `assert`'s own `check` vocabulary, priced at its full budget by the cost gate, SKIPs an unevaluable check rather than polling it. S02-45/46 and their capture twins now use it. They had been reading the world **0.53 s of play before the catch resolved** and recording a healthy catch as two FAILs — the third run to report that shape. |
 | **RIG-F4** | Added `rank` to `move_to_entity` — pick the Nth-nearest match, clamped, and say so. S03's ten-attempt engage ladder had resolved the same creature ten times and pressed from the identical spot every time; it now varies rank and tolerance, and attempt 1 engages cleanly. |
+| **RIG-F6** | **The journey walked into the village fence at both ends of the chapter.** `S05-19` crossed the outline 37.6 m from the nearest gate and stopped 155.8 m short against its `[-15,27]` vertex, pinning the player there for every walk that followed; `S10e-99`, the homecoming, crosses 30.9 m from a gate and would have ended the chapter's last beat against a panel; and S03's gather ladder could not walk back in from the two nodes outside the wall. All three now go through a gate, in legs checked against the outline before authoring. Not a game defect — both gates open on `road_gate_open` and the authored Pond road crosses the outline *at* PondGate. |
 
-Both are documented in `tools/gate_f/SEGMENT_SCHEMA.md`. `tools/gate_f/diag/probe_base_stats_after_load.gd`
-was added as GAME-F4's one-second reproduction.
+The first two are documented in `tools/gate_f/SEGMENT_SCHEMA.md`.
+`tools/gate_f/diag/probe_base_stats_after_load.gd` was added as GAME-F4's
+one-second reproduction.
+
+**And RIG-F6 got a test, because it will happen again.**
+`tests/test_gate_f_instrumentation.gd::test_no_journey_walk_crosses_the_village_fence_away_from_a_gate`
+joins the chain's `move_to` legs in play order **across** segments — S05's first
+walk begins where S04's last one ended, and that is exactly the pair that broke,
+so a per-segment check would have missed it — and asserts none of the 96 legs
+crosses the outline further than `gate_clear_m` from a gate. It is the same
+check `test_every_road_leaves_through_a_gate` already makes for the authored
+roads. **It was proved to fail without the fix**: with `S05.json` checked out
+from `453107fb` it goes red and names the leg (*"the walk S04-58 → S05-19
+((20, 15) to (−40, 180)) crosses the village fence at (17.8, 21.1), 38.8 m from
+the nearest gate"*), and green again once restored. The file's 18 tests pass.
+Finding these two cost a run each; finding the next one costs a second.
 
 **Not fixed, deliberately:** every GAME-F item above. `scripts/`, `data/`,
 `scenes/`, `assets/` and `shaders/` are untouched, and each defect carries a
