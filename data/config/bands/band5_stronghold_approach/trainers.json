@@ -39,8 +39,7 @@
       },
       "defeat_flag": "defeated_stronghold_patrol",
       "rechallenge": false,
-      "base": "grunt_c",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_t1_hall_3": "T1-HALL-3, 2026-08-30. REVERTED to the rank's shared oxblood grunt silhouette. JUDGE-5 (D2, ranked 2nd of 16) read the officer_b body in H-07-courtyard blind and called it \"from a different game\": cel-shaded anime, flat blown-out white face, painted eye and mouth, hair as a solid magenta mass, in a world of painted stylised realism -- and said the swap away from hall0830's oxblood grunt \"cost style cohesion and cost the Team Tether colour identity\". That is a property of the generated atlas, not of the override mechanism: the three Meshy cast bodies used inside the Hall (grunt_c/officer_b/captain_a) all carry the same anime idiom and a purple-magenta palette with no oxblood in it (measured: mean lit RGB (76,57,60) for officer_b against the grunt rig's (73,52,52) maroon). The rank system's own default base IS `grunt` for all three ranks, so deleting the override restores the body the judge preferred with no other change; rank stays legible through the badge/palette layer exactly as before. T3-INSTALL's per-individual identity goal is sound and is not reopened for NPCs outside the Hall -- this reverts only the three bodies standing in the frames JUDGE-5 condemned."
     },
     {
       "order": 9,
@@ -88,8 +87,7 @@
       },
       "defeat_flag": "defeated_stronghold_courtyard",
       "rechallenge": false,
-      "base": "officer_b",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_t1_hall_3": "T1-HALL-3, 2026-08-30. REVERTED to the rank's shared oxblood grunt silhouette. JUDGE-5 (D2, ranked 2nd of 16) read the officer_b body in H-07-courtyard blind and called it \"from a different game\": cel-shaded anime, flat blown-out white face, painted eye and mouth, hair as a solid magenta mass, in a world of painted stylised realism -- and said the swap away from hall0830's oxblood grunt \"cost style cohesion and cost the Team Tether colour identity\". That is a property of the generated atlas, not of the override mechanism: the three Meshy cast bodies used inside the Hall (grunt_c/officer_b/captain_a) all carry the same anime idiom and a purple-magenta palette with no oxblood in it (measured: mean lit RGB (76,57,60) for officer_b against the grunt rig's (73,52,52) maroon). The rank system's own default base IS `grunt` for all three ranks, so deleting the override restores the body the judge preferred with no other change; rank stays legible through the badge/palette layer exactly as before. T3-INSTALL's per-individual identity goal is sound and is not reopened for NPCs outside the Hall -- this reverts only the three bodies standing in the frames JUDGE-5 condemned."
     },
     {
       "order": 10,
@@ -137,8 +135,7 @@
       },
       "defeat_flag": "defeated_stronghold_elite",
       "rechallenge": false,
-      "base": "captain_a",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_t1_hall_3": "T1-HALL-3, 2026-08-30. REVERTED to the rank's shared oxblood grunt silhouette. JUDGE-5 (D2, ranked 2nd of 16) read the officer_b body in H-07-courtyard blind and called it \"from a different game\": cel-shaded anime, flat blown-out white face, painted eye and mouth, hair as a solid magenta mass, in a world of painted stylised realism -- and said the swap away from hall0830's oxblood grunt \"cost style cohesion and cost the Team Tether colour identity\". That is a property of the generated atlas, not of the override mechanism: the three Meshy cast bodies used inside the Hall (grunt_c/officer_b/captain_a) all carry the same anime idiom and a purple-magenta palette with no oxblood in it (measured: mean lit RGB (76,57,60) for officer_b against the grunt rig's (73,52,52) maroon). The rank system's own default base IS `grunt` for all three ranks, so deleting the override restores the body the judge preferred with no other change; rank stays legible through the badge/palette layer exactly as before. T3-INSTALL's per-individual identity goal is sound and is not reopened for NPCs outside the Hall -- this reverts only the three bodies standing in the frames JUDGE-5 condemned."
     },
     {
       "order": 14,

@@ -8,6 +8,41 @@
       "z": 7460.0,
       "radius": 14.0,
       "_why": "the_waystop -- keeps trees and boulders off the bench/log seating and the wood/stone/fiber nodes around them, the same treatment every other authored clearing in the chapter gives a place the player is meant to stand and interact rather than push through undergrowth"
+    },
+    {
+      "order": 10,
+      "x": 8.0,
+      "z": 7510.0,
+      "radius": 5.0,
+      "_why": "T1-HALL-3, answering JUDGE-5 D11: \"foliage clips through the ramp -- plants growing out of the cobble deck\" in H-03-ramp-foot. The causeway is 40m of authored stone laid across ground the scatter has always been free to plant, and nothing ever told the scatter it was there. Deliberately FIVE SMALL discs down the deck's own centreline rather than one big one: the same judge praised H-03's \"dense foreground planting\" and called the ramp approach one of the rebuild's real gains, and a single radius-26 clearing over the whole causeway would have deleted exactly that. r=5.0 at x=8.0 covers the ~7m deck and its kerbs and stops there, so the banks either side keep their planting. Centres step 9m from the ramp foot (world z ~7507) to the mouth sill (~7547), derived from site.at z 7560, the outer_works face and site.ramp_run 40."
+    },
+    {
+      "order": 11,
+      "x": 8.0,
+      "z": 7519.0,
+      "radius": 5.0,
+      "_why": "the_causeway -- see order 10."
+    },
+    {
+      "order": 12,
+      "x": 8.0,
+      "z": 7528.0,
+      "radius": 5.0,
+      "_why": "the_causeway -- see order 10."
+    },
+    {
+      "order": 13,
+      "x": 8.0,
+      "z": 7537.0,
+      "radius": 5.0,
+      "_why": "the_causeway -- see order 10."
+    },
+    {
+      "order": 14,
+      "x": 8.0,
+      "z": 7546.0,
+      "radius": 5.0,
+      "_why": "the_causeway -- see order 10."
     }
   ]
 }

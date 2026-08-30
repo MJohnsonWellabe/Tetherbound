@@ -4966,7 +4966,7 @@
       "_why_retint_backlit": "GATE-E-STRONGHOLD-ART (2026-08-23). Every stone value in this block was raised roughly one and a half stops; the value LADDER between them is unchanged. Two blind critics called the stronghold 'untextured', 'unlit-looking', 'a flat black slab', and the cause is not a broken material path -- it is that these albedos were chosen against a LIT face and the player never sees one. The sun is authored at pitch -44/yaw -40 (data/config/art.json), which puts it in the NORTH sky; the ramp, the gate and the whole approach are on the SOUTH side (landmark.gd::_build_ramp), so the hero face of the endgame landmark is backlit at every hour the chapter is played, lit by ambient alone. Measured on main with tools/frame_stats.py: near-field luma 0.012 on `gate-close` and 0.053 on `silhouette-approach`, against the 0.49-0.60 this file's own art.json comments quote from the Palworld references -- ten to forty times under. An albedo of #786d5e under ambient-only fill lands near black no matter how correct it looks in a lit test render. The earlier pass that DARKENED these (recorded in landmark.gd's PLINTH_COLOUR history) was answering a washed-out-at-distance complaint from the era when this was a long-range wayfinding silhouette; OF13 moved the site out of long-range view entirely and landmark.gd's own header says that argument is no longer load-bearing, so the darkening it bought can be given back. `Black` is lifted off near-void for the same reason: an absolute black reads as a hole in the render rather than as a shadowed recess. Banner keeps Team Tether's reserved oxblood untouched. TUNABLE, and the first thing to re-check if the stronghold ever reads washed out from a genuinely sunlit angle.",
       "_why_retint_panel_noise": "STRONGHOLD-R2. `DarkRock` #6b5f52 -> #8b7c6b and `Black` #221d18 -> #3a3229. The blind critique on the round-1 frames named 'noise-rectangle windows floating mid-wall, some half over edges'. They are not decals and nothing is misplaced: `WallBricks`/`TallWallBricks` carry their brick panels in DarkRock and their openings in Black, and at a stop and a half below the LightRock face those panels stopped reading as masonry and started reading as rectangles pasted onto a blank wall -- the eye sorts a high-contrast rectangle on an otherwise flat field as a separate OBJECT, not as texture. Closing the gap (DarkRock now about 0.6 of a stop under LightRock instead of ~1.5; Black lifted further off void, the same move round 1 made for the same reason) puts them back into the same surface. The value LADDER is unchanged and still holds in both directions: LightRock #a3907a > DarkRock #8b7c6b > Black #3a3229 > landmark.gd's PLINTH_COLOUR #524a41, so the foundation is still the darkest stone on the site and still grounds the mass. This does NOT fix a window that straddles a module boundary -- that is the gatehouse flanker overlapping the curtain run, and closing it needs the massing re-authored, not a colour -- it stops that window being the loudest thing on the wall. TUNABLE; if the castle ever reads flat and detail-less at range, this pair is the first place to widen again.",
       "_why_retint_metallic": "T1-CASTLE (2026-08-29). Every material in this kit's MTLs -- not just the albedo `_why_retint` already found flat -- shares the identical placeholder block (`Ks 0.500000`), confirmed by direct probe of the imported StandardMaterial3D: LightRock and DarkRock both come in at `metallic=0.5, roughness=1.0`. That is the exact same class of kit-export gap `BASELINE_RETINT` above already found and fixed for `MI_RockTrim` (a different, glTF kit) -- Godot's OBJ importer has no specular workflow to put `Ks` into, so it lands in `metallic` instead, and a half-metal dielectric-shaped surface with no reflection probes (Compatibility renderer, real-time lighting only) has nowhere to put the specular half of its response, so it renders desaturated and value-flattened relative to real stone/wood/cloth -- a real, measurable contributor to the owner's 'pale, flat, plastic/toylike' verdict on the castle up close (`ralph/OWNER_FEEDBACK_2026-08-29_BUILDINGS.md`), independent of the albedo values `_why_retint`/`_why_retint_backlit`/`_why_retint_panel_noise` already tuned. Every material name in the kit (`Banner` included -- cloth has no more business being half-metal than stone does) gets `metallic: 0.0` here; nothing else in this block changes.",
-      "_why_retint_hall_design": "T1-HALL-BUILD (2026-08-30), `ralph/reports/HALL_DESIGN_2026-08-30.md` \u00a75. The metallic fix above corrected the specular gap but not the diagnosis: the judge measured the lit wall at (212,203,185) -- essentially off-white, whiter than the tan `#a3907a` albedo intended, because a flat colour multiplied by nothing still has nowhere to put shape. `landmark.gd::_weather_castle` now multiplies these slots by the works' own real `T_UnevenBrick` photo texture (identical to `stronghold.gd`'s wall material) instead of a generated grayscale multiply, and these colours are re-derived against that texture's measured ~0.49 average luminance (design doc's pre-multiplied arithmetic) so the SAME visual target lands through a texture instead of through a flat value. `Black` drops out of the texture pass (design table: 'flat', voids/iron should not read as quarried stone) and keeps a flat retint at a slightly lighter value so a shaded opening stays a shadowed recess rather than a void. Kill criteria (design \u00a75/\u00a711): lit wall patch mean in [150,185], patch std-dev \u2265 35 -- pixel-sampled from `_judge_capture_arch_0829.gd`'s own stands before this is trusted.",
+      "_why_retint_hall_design": "T1-HALL-BUILD (2026-08-30), `ralph/reports/HALL_DESIGN_2026-08-30.md` §5. The metallic fix above corrected the specular gap but not the diagnosis: the judge measured the lit wall at (212,203,185) -- essentially off-white, whiter than the tan `#a3907a` albedo intended, because a flat colour multiplied by nothing still has nowhere to put shape. `landmark.gd::_weather_castle` now multiplies these slots by the works' own real `T_UnevenBrick` photo texture (identical to `stronghold.gd`'s wall material) instead of a generated grayscale multiply, and these colours are re-derived against that texture's measured ~0.49 average luminance (design doc's pre-multiplied arithmetic) so the SAME visual target lands through a texture instead of through a flat value. `Black` drops out of the texture pass (design table: 'flat', voids/iron should not read as quarried stone) and keeps a flat retint at a slightly lighter value so a shaded opening stays a shadowed recess rather than a void. Kill criteria (design §5/§11): lit wall patch mean in [150,185], patch std-dev ≥ 35 -- pixel-sampled from `_judge_capture_arch_0829.gd`'s own stands before this is trusted.",
       "retint": {
         "LightRock": {
           "color": "#f2e9da",
@@ -6777,7 +6777,7 @@
       ]
     },
     "quarry_foundation": {
-      "_why": "SD16, spec \u00a73 Band 2's 'old foundations'. A building the meadow has taken back: a brick floor, one long wall course and two stub returns, all of them the SAME `Wall_UnevenBrick_Straight` the village's own cottages are built from (D24) but SUNK so only the bottom metre stands. That is the whole trick and it is deliberate -- a ruin drawn from the same family as the living buildings is what makes the quarry read as older than the village rather than as a different game's asset pack. Vines on the standing course, brick rubble where the rest of it went.",
+      "_why": "SD16, spec §3 Band 2's 'old foundations'. A building the meadow has taken back: a brick floor, one long wall course and two stub returns, all of them the SAME `Wall_UnevenBrick_Straight` the village's own cottages are built from (D24) but SUNK so only the bottom metre stands. That is the whole trick and it is deliberate -- a ruin drawn from the same family as the living buildings is what makes the quarry read as older than the village rather than as a different game's asset pack. Vines on the standing course, brick rubble where the rest of it went.",
       "_comment_sink": "The kit's walls are 3.12m tall with their origin at the base, so y = -2.1 leaves ~1.0m proud and y = -2.45 leaves ~0.67m. Sinking rather than modelling a broken top edge: the kit ships no ruined pieces, and a wall cut off by the ground plane reads as a buried course, which is what an old foundation IS.",
       "modules": [
         {
@@ -7076,7 +7076,7 @@
             46.6
           ],
           "yaw_deg": 0.0,
-          "scale": 3.0
+          "scale": 4.0
         },
         {
           "module": "LargeSquareTowerBricks",
@@ -7087,7 +7087,7 @@
             46.6
           ],
           "yaw_deg": 0.0,
-          "scale": 3.0
+          "scale": 4.0
         },
         {
           "module": "LargeSquareTowerBricks",
@@ -7098,7 +7098,7 @@
             15.0
           ],
           "yaw_deg": 0.0,
-          "scale": 3.15
+          "scale": 3.6
         },
         {
           "module": "LargeSquareTowerBricks",
@@ -7109,7 +7109,7 @@
             15.0
           ],
           "yaw_deg": 0.0,
-          "scale": 3.15
+          "scale": 3.6
         },
         {
           "module": "LargeTower",
@@ -7120,7 +7120,7 @@
             76.6
           ],
           "yaw_deg": 0.0,
-          "scale": 3.2
+          "scale": 4.6
         },
         {
           "module": "LargeTower",
@@ -7131,7 +7131,7 @@
             76.6
           ],
           "yaw_deg": 0.0,
-          "scale": 3.2
+          "scale": 4.6
         },
         {
           "module": "LargeTower",
@@ -7142,7 +7142,7 @@
             103.8
           ],
           "yaw_deg": 0.0,
-          "scale": 3.2
+          "scale": 4.6
         },
         {
           "module": "LargeTower",
@@ -7153,29 +7153,7 @@
             103.8
           ],
           "yaw_deg": 0.0,
-          "scale": 3.2
-        },
-        {
-          "module": "LargeSquareTowerBricks",
-          "dir": "res://assets/buildings/quaternius_castle",
-          "at": [
-            -46.6,
-            0.0,
-            75.6
-          ],
-          "yaw_deg": 0.0,
-          "scale": 5.2
-        },
-        {
-          "module": "LargeSquareTowerBricks",
-          "dir": "res://assets/buildings/quaternius_castle",
-          "at": [
-            -17.4,
-            0.0,
-            104.8
-          ],
-          "yaw_deg": 0.0,
-          "scale": 5.2
+          "scale": 4.6
         },
         {
           "module": "PointyTower",
@@ -7183,10 +7161,32 @@
           "at": [
             -46.6,
             0.0,
+            75.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 7.0
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -17.4,
+            0.0,
             104.8
           ],
           "yaw_deg": 0.0,
-          "scale": 5.2
+          "scale": 6.4
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -46.6,
+            0.0,
+            104.8
+          ],
+          "yaw_deg": 0.0,
+          "scale": 6.4
         },
         {
           "module": "LargeSquareTowerBricks",
@@ -7197,7 +7197,7 @@
             75.6
           ],
           "yaw_deg": 0.0,
-          "scale": 4.0
+          "scale": 5.4
         },
         {
           "module": "Roof_RoundTiles_4x8",
@@ -7260,7 +7260,8 @@
           "color": "#2a8c94"
         }
       },
-      "_why_towers_t1_hall_rebuild": "OWNER, 2026-08-30, on the first T1-HALL-REBUILD frames: the mid-wall tower \"between the two parts of the castle\" is \"the untextured beige hut thing\" and \"looks like shit\". That is a real property of the module, not a tuning miss. `WatchTowerWRoof.obj` is built ENTIRELY from the kit's `Celing` and `LightWood` slots -- probed directly, those are the only two `usemtl` lines in the file -- and carries no stone slot at all. `stronghold.gd`'s `HALL_WEATHER_MATERIALS` pass, the thing that puts real `T_UnevenBrick` on this kit (which ships zero UVs and placeholder-grey materials), is stone-only by design, so this module can NEVER receive a texture from it. No retint, scale or placement fixes a flat beige hut on stilts standing at the joint of a coursed-stone fortress; the module had to go. All four instances (gatehouse guard post, the two mid-wall towers, the great tower's north-east corner) are now `LargeSquareTowerBricks` -- `LightRock.001`/`DarkRock`/`Black.001`, and therefore textured by that same pass; it is the module every tower in the frames that reads as real masonry already uses. Scales preserve the design's own girth rule (native girth 1.288-1.371, measured off the OBJ): the mid-wall pair at 3.15 gives 4.06-4.32m against the corner towers' 3.86-4.11m at 3.0, so mid-wall girth still EXCEEDS corner girth -- the direct fix for the judge's 'sandcastle decoration' finding -- and the taller mid-wall shaft adds the roofline break the 400m stand wants. The guard post drops to 2.6 to stay subordinate to the 3.4 gatehouse flankers; the great tower's north-east corner takes 4.0 so it still steps down from its three 5.2 siblings. The `Banner` module goes with them, same owner pass, same verdict: see `stronghold.gd::_hang_banner`, which now builds hanging cloth instead of standing the kit's toy pennant on a stick."
+      "_why_towers_t1_hall_rebuild": "OWNER, 2026-08-30, on the first T1-HALL-REBUILD frames: the mid-wall tower \"between the two parts of the castle\" is \"the untextured beige hut thing\" and \"looks like shit\". That is a real property of the module, not a tuning miss. `WatchTowerWRoof.obj` is built ENTIRELY from the kit's `Celing` and `LightWood` slots -- probed directly, those are the only two `usemtl` lines in the file -- and carries no stone slot at all. `stronghold.gd`'s `HALL_WEATHER_MATERIALS` pass, the thing that puts real `T_UnevenBrick` on this kit (which ships zero UVs and placeholder-grey materials), is stone-only by design, so this module can NEVER receive a texture from it. No retint, scale or placement fixes a flat beige hut on stilts standing at the joint of a coursed-stone fortress; the module had to go. All four instances (gatehouse guard post, the two mid-wall towers, the great tower's north-east corner) are now `LargeSquareTowerBricks` -- `LightRock.001`/`DarkRock`/`Black.001`, and therefore textured by that same pass; it is the module every tower in the frames that reads as real masonry already uses. Scales preserve the design's own girth rule (native girth 1.288-1.371, measured off the OBJ): the mid-wall pair at 3.15 gives 4.06-4.32m against the corner towers' 3.86-4.11m at 3.0, so mid-wall girth still EXCEEDS corner girth -- the direct fix for the judge's 'sandcastle decoration' finding -- and the taller mid-wall shaft adds the roofline break the 400m stand wants. The guard post drops to 2.6 to stay subordinate to the 3.4 gatehouse flankers; the great tower's north-east corner takes 4.0 so it still steps down from its three 5.2 siblings. The `Banner` module goes with them, same owner pass, same verdict: see `stronghold.gd::_hang_banner`, which now builds hanging cloth instead of standing the kit's toy pennant on a stick.",
+      "_why_silhouette_t1_hall_3": "T1-HALL-3, 2026-08-30, answering JUDGE-5 D3 (ranked 3rd of 16) -- read blind: \"the entire stronghold is a pale ~60px smudge ... smaller and lower-contrast than the tether pylons flanking it, which read first ... a single symmetric mass on a bald hill, one roofline, no towers breaking upward\". Measured against the authored scales, the judge is describing an arithmetic fact: of the 18 massing modules, 13 stood between 12.5m and 14.4m above the floor, so there was effectively ONE roofline, and the only masses that broke it (the great tower group) sat at the far south-west corner where every nearer mass occludes them from the north approach. This pass buys the silhouette with SCALE and PLACEMENT, not with modules: the count stays 18 and the draw calls stay flat, which the lane's inherited draw-call overrun (2706 against a 2463 ceiling) makes non-negotiable. Heights above floor now ladder 10.8 / 12.5 / 14.2 (gatehouse, unchanged and deliberately the LOW near mass) / 15.0 / 16.7 (bailey) / 20.7 (arena) / 22.5 / 26.7 (great tower corners) / 37.7 (the spire) -- the design's own \"masses step DOWN eastward\" and \"the roofline must break at least four times\" (HALL_DESIGN sec3), which the previous build did not deliver. The spire also moves from the legendary chamber's SOUTH-west corner to its NORTH-west one, where the west shoulder still backs it (the probed shoulder runs z 7546-7602, which is the NORTH half of the site) but the arriving player can actually see it. This deliberately exceeds HALL_DESIGN sec3's \"+27...+33 absolute\" cap for the tower caps: that number produced the building the judge could not find, and the spire now tops out near +44. The design's stated INTENT -- a landmark legible from the approach -- wins over its arithmetic, and the deviation is recorded here rather than left for the next lane to rediscover."
     }
   }
 }

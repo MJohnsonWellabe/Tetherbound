@@ -59,6 +59,7 @@ const CONFIG_PATH := "res://data/config/stronghold.json"
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
+const TETHER_SIGIL := preload("res://scripts/world/tether_sigil.gd")
 const APPROACH_DRAIN := preload("res://scripts/world/approach_drain_skin.gd")
 ## T1-HALL (2026-08-30). `building_prefabs.gd` is the same composer
 ## `landmark.gd`'s (retiring) castle and every settlement building already go
@@ -405,7 +406,26 @@ const EXTERIOR_CHAMBERS: Array[String] = ["outer_works", "courtyard"]
 ## (`stronghold_occupation.gd`'s header already establishes it as the
 ## castle's banner, no new asset, no new colour) -- second building, same
 ## mesh, same tint.
-const BANNER_COLOUR := Color("#7a2430")
+## T1-HALL-3 / JUDGE-5 D6, a RENDER-SPACE correction, not a new faction colour.
+## The judge measured these banners reading "hot magenta, not oxblood" under the
+## day key while "the same banners in H-03-ramp-foot-golden sit correctly at a
+## deep muted red", and told the next lane to chase the golden read. Measured on
+## its own frames: H-05's cloth renders at (155,44,60) and (161,46,60) -- red
+## blown a third above the authored albedo by the day sun through the ACES
+## tonemap, and, decisively, BLUE ABOVE GREEN, which is what makes the eye call
+## it magenta rather than oxblood. The nominal faction hex #7a2430 has that
+## B>G relationship baked in (48 vs 36); at golden-hour intensity it never
+## surfaces, under a bright key it dominates.
+##
+## So the albedo is re-authored to land ON the intended oxblood after the
+## tonemap instead of before it: value down ~15% so the day key stops pushing it
+## into the decorative range, and blue pulled BELOW green so no light level can
+## make it read magenta. Team Tether's reserved oxblood is unchanged as a design
+## fact and `_tether_material`'s girders are untouched -- this is the cloth's
+## albedo only, chosen so that what the player SEES is the colour the palette
+## always meant.
+const BANNER_COLOUR := Color("#6b2a20")
+const BANNER_NOMINAL_OXBLOOD := Color("#7a2430")
 const BANNER_SCALE := 2.2
 
 ## A thin decorative skin flush against the TRUE exterior wall faces only,
@@ -426,6 +446,17 @@ const COPING_PROUD := 0.3
 const MERLON_W := 1.0
 const MERLON_H := 0.9
 const MERLON_GAP := 1.4
+
+## Buttresses (JUDGE-5 D5). Pilaster stubs proud of a long wall run, seated on
+## the skirt so they read as the wall's own structure reaching the ground rather
+## than as applied decoration. All TUNABLE; the relationship that matters is
+## that they stand PROUD of `_wall_t` and stop short of the parapet, so the
+## coping line stays unbroken above them.
+const BUTTRESS_MIN_SPAN := 13.0
+const BUTTRESS_PITCH := 9.0
+const BUTTRESS_W := 1.6
+const BUTTRESS_PROUD := 0.8
+const BUTTRESS_HEIGHT_FRAC := 0.80
 
 
 ## --- materials --------------------------------------------------------------
@@ -1121,15 +1152,58 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 		else Vector3(_wall_t + COPING_PROUD * 2.0, COPING_H, span)
 	_box(coping_size, Vector3(wall_centre.x, wall_top + COPING_H * 0.5, wall_centre.z),
 		_material(_stone_dark(), 0.0, true), false)
+	# JUDGE-5 D5: "the crenellations are IDENTICAL CUBES at IDENTICAL SPACING".
+	# They were: one constant width, one constant height, one constant pitch,
+	# for every merlon on every wall of the fortress. A real crenellated parapet
+	# is cut stone that has stood through weather and, at a seized fortress,
+	# through use -- so the row now varies in width, height and seating, and
+	# every so often a merlon is BROKEN DOWN to a stub or missing outright.
+	# Seeded off the wall's own position so it is stable across rebuilds and
+	# saves (nothing here may be frame-random), and costs not one extra draw
+	# call: it is the same box count, with different numbers in it.
 	var count := maxi(1, int(floor(span / (MERLON_W + MERLON_GAP))))
 	var start := -float(count - 1) * 0.5 * (MERLON_W + MERLON_GAP)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash(Vector3i(int(wall_centre.x * 8.0), int(wall_top * 8.0),
+		int(wall_centre.z * 8.0)))
 	for i in count:
-		var d := start + float(i) * (MERLON_W + MERLON_GAP)
-		var merlon_size := Vector3(MERLON_W, MERLON_H, _wall_t * 0.8) if along_x \
-			else Vector3(_wall_t * 0.8, MERLON_H, MERLON_W)
-		var merlon_at := Vector3(wall_centre.x + d, wall_top + COPING_H + MERLON_H * 0.5, wall_centre.z) \
-			if along_x else Vector3(wall_centre.x, wall_top + COPING_H + MERLON_H * 0.5, wall_centre.z + d)
+		var d := start + float(i) * (MERLON_W + MERLON_GAP) + rng.randf_range(-0.16, 0.16)
+		var w := MERLON_W * rng.randf_range(0.82, 1.18)
+		var h := MERLON_H * rng.randf_range(0.86, 1.12)
+		# One in roughly nine is a broken crenel: a stub at a third height, or
+		# gone. The reference key art puts "broken crenels" on every surface.
+		var roll := rng.randf()
+		if roll < 0.055:
+			continue
+		if roll < 0.13:
+			h *= 0.34
+		var merlon_size := Vector3(w, h, _wall_t * 0.8) if along_x \
+			else Vector3(_wall_t * 0.8, h, MERLON_W)
+		if not along_x:
+			merlon_size.z = w
+		var merlon_at := Vector3(wall_centre.x + d, wall_top + COPING_H + h * 0.5, wall_centre.z) \
+			if along_x else Vector3(wall_centre.x, wall_top + COPING_H + h * 0.5, wall_centre.z + d)
 		_box(merlon_size, merlon_at, _material(_stone_light(), 0.0, true), false)
+
+	# JUDGE-5 D5, the other half: "the wall has no batter, no buttress, no
+	# parapet thickness ... single planes". Buttresses are the cheapest of the
+	# three to give it and the one that actually breaks the plane in silhouette,
+	# which is what the frame is short of. Pilaster stubs on a long run only --
+	# a short wall with buttresses on it reads as a buttress with a wall
+	# between. One box each, decoration-only (`solid: false`) so no buttress can
+	# ever become a ledge or snag a fight, exactly like the slits and the trim.
+	if span >= BUTTRESS_MIN_SPAN:
+		var b_count := maxi(2, int(round(span / BUTTRESS_PITCH)))
+		var b_start := -span * 0.5 + span / float(b_count + 1)
+		var b_step := span / float(b_count + 1)
+		for i in b_count:
+			var d := b_start + float(i) * b_step
+			var b_h := (wall_top - _floor_y + _skirt) * BUTTRESS_HEIGHT_FRAC
+			var b_size := Vector3(BUTTRESS_W, b_h, _wall_t + BUTTRESS_PROUD) if along_x \
+				else Vector3(_wall_t + BUTTRESS_PROUD, b_h, BUTTRESS_W)
+			var b_at := Vector3(wall_centre.x + d, _floor_y - _skirt + b_h * 0.5, wall_centre.z) \
+				if along_x else Vector3(wall_centre.x, _floor_y - _skirt + b_h * 0.5, wall_centre.z + d)
+			_box(b_size, b_at, _material(_stone_dark(), 0.0, true), false)
 
 	if not hardware:
 		return
@@ -1233,9 +1307,13 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 
 	var width := BANNER_CLOTH_W * scale
 	var height := BANNER_CLOTH_H * scale
-	var cloth := StandardMaterial3D.new()
-	cloth.albedo_color = colour
-	cloth.roughness = 0.95
+	# JUDGE-5 D6: "no sigil ... the key art's banners carry the compass sigil".
+	# The mark rides in the cloth's own albedo rather than on added geometry, so
+	# every banner in the complex costs ONE shared cached image and not a single
+	# extra draw call -- the lane inherited a draw-call overrun and a sigil built
+	# from boxes would have cost ~5 calls per banner. Shared with the Sigil Gate
+	# (D4) through `tether_sigil.gd` so the faction's mark is drawn in one place.
+	var cloth := TETHER_SIGIL.cloth_material(colour)
 	# Cloth is thin and lit from one side on a shaded face; without this the
 	# back of a banner on the gate (the north, shaded face -- design §2) is a
 	# black rectangle rather than a banner seen from behind.
@@ -1427,11 +1505,107 @@ func _build_hall_massing() -> void:
 	massing.position = Vector3(0.0, _floor_y, 0.0)
 	add_child(massing)
 	_weather_hall_massing(massing)
+	_ground_hall_massing(massing)
 	_build_tower_banner()
 	_build_hall_waist()
 	_build_hall_slits()
 	_build_cable_landing()
 	_build_blue_relic_banner()
+
+
+## JUDGE-5 D7, ranked 6th: "the pale facade's bottom edge stops in mid-air at
+## y≈590 with the dark base visible below and behind it ... reads as a bug, not
+## a choice". It is a bug, and a structural one rather than a bad number. Every
+## kit module in the `meadows_hall` prefab is authored at local y = 0, which is
+## the complex FLOOR -- but the floor stands on an 18 m skirt, so on any face
+## where the skirt is visible (the whole west keep elevation, which is the stand
+## the judge was looking at) the module's base plane hangs in the air with the
+## skirt's darker stone showing underneath and behind it.
+##
+## Fixed once, generically, rather than by nudging the four towers the frame
+## happened to catch: every module gets a shaft of the skirt's own stone dropped
+## from its footprint down to the skirt foot. A tower now MEETS the building it
+## stands on. Modules already sunk to or below the skirt foot get nothing, and
+## the shaft is inset slightly so it reads as the mass continuing rather than as
+## a second box bolted under the first.
+##
+## Cost: one box per module that needs one, ~1 draw call each, all sharing the
+## single cached skirt material -- deliberately the cheapest fix that exists,
+## because the lane inherited a draw-call overrun.
+##
+## `_visual_bounds` is NOT usable here and the reason is a trap worth naming:
+## it collects `find_children(... "VisualInstance3D" ...)`, which searches
+## DESCENDANTS ONLY. The castle kit ships OBJ, and `building_prefabs.gd`'s OBJ
+## path builds a bare `MeshInstance3D` with no children at all -- so every one
+## of the 17 castle modules returns an empty AABB from it, while the single
+## glTF module (the medieval roof) returns a real one. Measured, not reasoned:
+## the first run of this pass printed "1 module foot shaft" and the one it
+## found was the ROOF, which is the only module here that must never get a
+## shaft. Hence a local bounds walk that counts the node itself.
+##
+## Modules are also gated on standing ON the floor plane: a roof seated at
+## local y 8.58 is not a mass that reaches the ground and must not be given a
+## 27 m shaft down to the skirt.
+const MASSING_FOOT_INSET := 0.35
+const MASSING_FOOT_MAX_BASE := 1.5
+func _ground_hall_massing(massing: Node3D) -> void:
+	var skirt_foot := -absf(float(_config.get("site", {}).get("skirt", 18.0)))
+	var material := _skirt_material()
+	var grounded := 0
+	for child in massing.get_children():
+		if child is not Node3D:
+			continue
+		var bounds := _module_bounds(child as Node3D)
+		if bounds.size.y <= 0.01 or bounds.size.x <= 0.01:
+			continue
+		# `_visual_bounds` answers in the CHILD's frame; the module's own
+		# transform puts it in the massing's frame, which is floor-relative.
+		var here := (child as Node3D).transform * bounds
+		var base_y := here.position.y
+		if base_y <= skirt_foot + 0.05:
+			continue
+		# Only masses that actually stand on the complex floor. See the note
+		# above: the roof module rides at local y 8.58 and is not one.
+		if base_y > MASSING_FOOT_MAX_BASE:
+			continue
+		var shaft := MeshInstance3D.new()
+		shaft.name = "MassingFoot"
+		var box := BoxMesh.new()
+		box.size = Vector3(
+			maxf(0.4, here.size.x - MASSING_FOOT_INSET * 2.0),
+			base_y - skirt_foot,
+			maxf(0.4, here.size.z - MASSING_FOOT_INSET * 2.0))
+		shaft.mesh = box
+		shaft.material_override = material
+		shaft.position = Vector3(
+			here.get_center().x,
+			(base_y + skirt_foot) * 0.5,
+			here.get_center().z)
+		massing.add_child(shaft)
+		grounded += 1
+	print("[stronghold] massing grounded: %d of %d module foot shaft(s) to skirt y=%.1f" % [
+		grounded, massing.get_child_count(), skirt_foot])
+
+
+## A module's own visual bounds INCLUDING the node itself, in its own frame.
+## `_visual_bounds` deliberately walks descendants for the machine's generated
+## scene; the kit's OBJ modules are bare `MeshInstance3D`s with no descendants
+## at all, so they need this instead. See `_ground_hall_massing`'s note.
+func _module_bounds(node: Node3D) -> AABB:
+	var total := AABB()
+	var seeded := false
+	var visuals: Array[Node] = []
+	if node is VisualInstance3D:
+		visuals.append(node)
+	visuals.append_array(node.find_children("*", "VisualInstance3D", true, false))
+	for entry in visuals:
+		var visual := entry as VisualInstance3D
+		var box := visual.get_aabb()
+		if visual != node:
+			box = (node.global_transform.affine_inverse() * visual.global_transform) * box
+		total = box if not seeded else total.merge(box)
+		seeded = true
+	return total
 
 
 ## The SAME technique `landmark.gd::_weather_castle` uses on the same kit, for
@@ -1509,25 +1683,53 @@ func _build_tower_banner() -> void:
 ## more kit modules: it is a short, flat infill panel, not an accented piece,
 ## and this file already owns the exact masonry material the panel needs to
 ## match.
+## T1-HALL-3 / JUDGE-5 D8: "at the far left edge sky and grass are visible
+## THROUGH the wall -- a gap between segments". They are, and it is not a seam or
+## a z-fight: it is a hole. This function closed exactly ONE of the route's
+## inter-chamber gaps (courtyard -> tether_approach) while the route has three,
+## and the one it skipped is `outer_works` -> `courtyard` -- the joint standing
+## directly in the H-08 stand's frame, and the only one a player walks past on
+## the outside at close range. `outer_works` ends at local z 12 and `courtyard`
+## starts at 18, so ~3.6 m of each flank was open sky with the passage's own
+## narrow side walls the only thing in it.
+##
+## Now every consecutive pair on the route is wrapped, by the same rule, so a
+## fourth chamber or a re-sized one cannot silently reopen the hole. Pairs that
+## are not stacked along z (the legendary chamber sits BESIDE the arena, not
+## behind it) are skipped by the overlap test rather than by naming them.
 func _build_hall_waist() -> void:
-	var courtyard: Dictionary = _chambers.get("courtyard", {})
-	var tether: Dictionary = _chambers.get("tether_approach", {})
-	if courtyard.is_empty() or tether.is_empty():
-		return
-	var cy_z1: float = _local_of(courtyard.get("at", [])).z + _size_of(courtyard.get("size", [])).y * 0.5 + _wall_t
-	var ta_z0: float = _local_of(tether.get("at", [])).z - _size_of(tether.get("size", [])).y * 0.5 - _wall_t
-	if ta_z0 <= cy_z1:
-		return
-	var mid := (cy_z1 + ta_z0) * 0.5
-	var length := ta_z0 - cy_z1
-	var height := (float(courtyard.get("height", 9.0)) + float(tether.get("height", 6.5))) * 0.5
-	var cy_half_x: float = _size_of(courtyard.get("size", [])).x * 0.5 + _wall_t
-	var ta_half_x: float = _size_of(tether.get("size", [])).x * 0.5 + _wall_t
-	for s in [-1.0, 1.0]:
-		var wall_x: float = (cy_half_x + ta_half_x) * 0.5 * float(s)
-		_box(Vector3(_wall_t, height + _skirt, length),
-			Vector3(wall_x, _floor_y + height * 0.5 - _skirt * 0.5, mid),
-			_wall_material(true), false)
+	var wrapped := 0
+	for i in _order.size() - 1:
+		var a: Dictionary = _chambers.get(_order[i], {})
+		var b: Dictionary = _chambers.get(_order[i + 1], {})
+		if a.is_empty() or b.is_empty():
+			continue
+		var a_at := _local_of(a.get("at", []))
+		var b_at := _local_of(b.get("at", []))
+		var a_size := _size_of(a.get("size", []))
+		var b_size := _size_of(b.get("size", []))
+		# Only wrap a pair that is genuinely stacked along the route's depth:
+		# their x runs must overlap, or the "waist" is not a waist at all.
+		var overlap := minf(a_at.x + a_size.x * 0.5, b_at.x + b_size.x * 0.5) \
+			- maxf(a_at.x - a_size.x * 0.5, b_at.x - b_size.x * 0.5)
+		if overlap <= 0.5:
+			continue
+		var a_z1: float = a_at.z + a_size.y * 0.5 + _wall_t
+		var b_z0: float = b_at.z - b_size.y * 0.5 - _wall_t
+		if b_z0 <= a_z1 + 0.05:
+			continue
+		var mid := (a_z1 + b_z0) * 0.5
+		var length := b_z0 - a_z1
+		var height := (float(a.get("height", 9.0)) + float(b.get("height", 6.5))) * 0.5
+		var a_half_x: float = a_size.x * 0.5 + _wall_t
+		var b_half_x: float = b_size.x * 0.5 + _wall_t
+		for s in [-1.0, 1.0]:
+			var wall_x: float = (a_half_x + b_half_x) * 0.5 * float(s)
+			_box(Vector3(_wall_t, height + _skirt, length),
+				Vector3(wall_x, _floor_y + height * 0.5 - _skirt * 0.5, mid),
+				_wall_material(true), false)
+		wrapped += 1
+	print("[stronghold] waist: %d inter-chamber gap(s) wrapped on both flanks" % wrapped)
 
 
 ## The "no arrow slits along entire wall runs" fix (design §4). Recessed dark
@@ -3148,6 +3350,21 @@ func combat_arena_bounds_at(x: float, z: float) -> float:
 		var usable := maxf(0.5, clearance - ARENA_WALL_MARGIN)
 		best = usable if best < 0.0 else minf(best, usable)
 	return best
+
+
+## The approach causeway's own WALKING SURFACE height, in world space, under a
+## world point. JUDGE-5's D1: `H-04-gate-mouth` has never once been a frame of
+## the gate. The stand walks 34 m up the causeway from `entrance` (= `ramp_foot`)
+## but takes its eye height from the FOOT marker's y, and the ramp has climbed
+## ~9 m by then -- so every H-04 ever captured was shot from inside the slab,
+## looking at its underside. The ramp's rise is SAMPLED from the ground rather
+## than authored (`_build_approach_ramp`), so no caller can re-derive the deck
+## height from config; it has to ask the thing that built it. Public for that
+## reason -- `_causeway_y` is local-space and private, and the capture tools
+## live outside this node.
+func causeway_surface_y(world_x: float, world_z: float) -> float:
+	var local := to_local(Vector3(world_x, 0.0, world_z))
+	return to_global(Vector3(local.x, _causeway_y(local.z), local.z)).y
 
 
 ## Global position of a named place: any chamber id, any `marks` id, plus

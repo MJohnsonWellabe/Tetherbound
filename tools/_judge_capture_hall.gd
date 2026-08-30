@@ -20,6 +20,7 @@ extends SceneTree
 ## §2 -- so its dusk/night self-lit read is part of the design and must be
 ## judged, not just the noon state)". `--out=` lets a lane write its own frames
 ## without overwriting a previous lane's evidence.
+const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const DEFAULT_OUT_DIR := "res://shots/hall0830"
 const SETTLE_FRAMES := 90
@@ -187,8 +188,21 @@ func _run() -> void:
 		var toward := (outer_works - entrance)
 		toward.y = 0.0
 		toward = toward.normalized()
-		var eye4 := entrance + toward * 34.0 + Vector3(0.0, 1.7, 0.0)
+		# T1-HALL-3 / JUDGE-5 D1. This stand walks 34m UP the causeway, and the
+		# causeway climbs ~9m over its 40m run -- but the eye height was taken
+		# from `entrance`, which is the ramp FOOT. Every H-04 ever captured was
+		# therefore shot from ~7m inside the slab, which is exactly what the
+		# frame shows: cobble underside below, grass seen edge-on from beneath
+		# the ground above, and the gate nowhere in it. The deck height is
+		# sampled from the real ground at build time, so it cannot be re-derived
+		# here -- ask the stronghold where its own walking surface is.
+		var eye4 := entrance + toward * 34.0
+		eye4.y = float(stronghold.call("causeway_surface_y", eye4.x, eye4.z)) + 1.7
+		# Look level and slightly UP the remaining climb rather than at a point
+		# 20m dead ahead on the old (buried) eye plane: the gate sill is above
+		# the stand, and a level aim put the arch's head out of frame.
 		var target4 := eye4 + toward * 20.0
+		target4.y = float(stronghold.call("causeway_surface_y", target4.x, target4.z)) + 4.0
 		await _shoot(camera, look, torch, false, eye4, target4, "H-04-gate-mouth", written, failures, "day", player)
 
 	# H-07 courtyard: inside, at the courtyard trainer, looking S.
@@ -227,6 +241,27 @@ func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 		look.call("apply_time", hour)
 	for i in POSE_FRAMES:
 		await process_frame
+	# T1-HALL-3. This tool shipped two rounds of evidence without ever calling
+	# the checker that exists to catch exactly what was wrong with it.
+	# `capture_check._embedded_problems` was WRITTEN by T1-STORMWALL in response
+	# to the JUDGE-4 H-04-gate-mouth defect -- a camera buried in the ramp -- and
+	# `_ground_problems` names that frame in its own failure text. Neither ever
+	# ran here, so JUDGE-5 was handed the same broken frame a second time and
+	# spent its top-ranked finding on it.
+	#
+	# `warn_only` rather than `require`: `require` quits the whole run on the
+	# first problem, and this tool legitimately shoots one INTERIOR stand
+	# (H-07, inside the courtyard) where the grass field is correctly absent.
+	# Exterior stands promote any problem to a run failure, so the exit code
+	# still refuses to call a degraded set "evidence"; the interior stand only
+	# reports.
+	var checked := CAPTURE_CHECK.warn_only(self, camera)
+	for line: String in checked:
+		if interior:
+			print("[capture_check] (interior stand %s -- reported, not fatal)" % name_value)
+		else:
+			failures.append("%s: %s" % [name_value, line])
+
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
 	if image == null:

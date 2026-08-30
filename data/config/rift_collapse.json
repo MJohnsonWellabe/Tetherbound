@@ -15,10 +15,11 @@
     "_comment": "BEFORE. The rift, from 200m of open meadow away: a slate wall of weather standing across the whole eastern sky behind the broken bridge, with land visible nowhere past it. Three overlapping slabs at slightly different distances and yaws rather than one flat card, so the near edge does not read as a billboard and the horizon has depth. Unshaded (D-lighting on a thing that is meant to BE the light level of that sky reads as cardboard) and drawn with alpha so it can go away.",
     "distance": 300.0,
     "spread_deg": 26.0,
+    "_comment_t1_hall_3": "T1-HALL-3, 2026-08-30, answering JUDGE-5 D15 and D16. D15: the storm \"sits under the cloud layer -- the warm cirrus runs above and across it, so the storm occupies a band LOWER in the sky than ordinary fair-weather cloud\", and the judge called that inversion \"a large part of why it reads as ground haze\". The cause was not these heights, it was the mask: rift_collapse.gd's old alpha profile faded the top THIRD of every slab to nothing, so a 150m slab showed ~105m of weather and its visible crest sat near 10 degrees of elevation against the cirrus band's ~15. The mask now gives each slab a defined, noise-displaced anvil, so its authored height is the height the player SEES; these numbers add headroom on top of that so the crest clears the cirrus with margin rather than tying with it. D16: \"too small to be an event -- it spans about half the frame width and stops well short of the right side\". Widths up ~33%, and the yaw spread opened from [-13,0,15] to [-22,0,24] so the three banks cover the skyline instead of stacking near the axis. Distances, bases, alphas, colours and the pulse are untouched: this is reach, not a re-authoring.",
     "slabs": [
-      { "distance": 300.0, "yaw_deg": 0.0, "width": 420.0, "height": 150.0, "base": -46.0, "colour": "#39404f", "alpha": 0.94 },
-      { "distance": 356.0, "yaw_deg": -13.0, "width": 460.0, "height": 190.0, "base": -46.0, "colour": "#2b3140", "alpha": 0.88 },
-      { "distance": 262.0, "yaw_deg": 15.0, "width": 360.0, "height": 122.0, "base": -46.0, "colour": "#454d5d", "alpha": 0.72 }
+      { "distance": 300.0, "yaw_deg": -22.0, "width": 560.0, "height": 185.0, "base": -46.0, "colour": "#39404f", "alpha": 0.94 },
+      { "distance": 356.0, "yaw_deg": 0.0, "width": 620.0, "height": 225.0, "base": -46.0, "colour": "#2b3140", "alpha": 0.88 },
+      { "distance": 262.0, "yaw_deg": 24.0, "width": 520.0, "height": 150.0, "base": -46.0, "colour": "#454d5d", "alpha": 0.72 }
     ],
     "pulse_seconds": 5.5,
     "_comment_pulse": "A slow brightness breathe so the wall reads as live weather rather than as a painted backdrop. Small -- this is the thing the player stops noticing after hour one, which is the whole point of it being gone later."
