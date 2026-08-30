@@ -2719,6 +2719,28 @@
       "expected": "Section E.3: the piece is paid for at its `data/items/buildables.json` cost -- free_build is OFF for the whole authoritative run"
     },
     {
+      "id": "S03-118x",
+      "_comment": "RIG-T5-7, added by ralph/T5-PLAY 2026-08-30 at the owner's direction. Repeat placement is a DESIGNED feature (docs/ralph-prompts/40-BUILD-valheim-repeat-placement.md): `build_placer.gd` keeps the ghost armed after a placement so the next piece can be planted without reopening anything. `game_menu.gd::_read_actions()` then REFUSES to open the pause shell while `pending_build != \"\"`, deliberately and with its reason written beside it -- 'an armed ghost owns the whole construction control strip, including Y for Dismantle and B for Cancel'. So the `open_menu` that follows each placement in this segment was pressing `map` at a shell the game is documented not to give it. Measured, not read: all twelve build_placement failures in ralph/reports/gate-f-run-T5-PLAY/S03-superseded-1 carry `pending_build='floor'` in their own input_state. The cascade cost the whole chapter -- no home, no beds, so no rest and no feed, so BOTH creatures ended S03 fainted and the tournament's min_party_size of 3 was unreachable. `build_cancel` is the game's own exit and already suppresses the shared-B pause reopen (build_placer.gd). Uses only existing step vocabulary: no harness change.",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
+    },
+    {
+      "id": "S03-118y",
+      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
+    },
+    {
       "id": "S03-119",
       "title": "let the placement register",
       "action": "wait",
@@ -2853,6 +2875,28 @@
       "expected": "Section E.3: the piece is paid for at its `data/items/buildables.json` cost -- free_build is OFF for the whole authoritative run"
     },
     {
+      "id": "S03-131x",
+      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
+    },
+    {
+      "id": "S03-131y",
+      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
+    },
+    {
       "id": "S03-132",
       "title": "let the placement register",
       "action": "wait",
@@ -2983,6 +3027,28 @@
         "hold": "tap"
       },
       "expected": "Section E.3: the piece is paid for at its `data/items/buildables.json` cost -- free_build is OFF for the whole authoritative run"
+    },
+    {
+      "id": "S03-144x",
+      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
+    },
+    {
+      "id": "S03-144y",
+      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
     },
     {
       "id": "S03-145",
@@ -3117,6 +3183,28 @@
       "expected": "Section E.3: the piece is paid for at its `data/items/buildables.json` cost -- free_build is OFF for the whole authoritative run"
     },
     {
+      "id": "S03-157x",
+      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
+    },
+    {
+      "id": "S03-157y",
+      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
+    },
+    {
       "id": "S03-158",
       "title": "let the placement register",
       "action": "wait",
@@ -3247,6 +3335,28 @@
         "hold": "tap"
       },
       "expected": "Section E.3: the piece is paid for at its `data/items/buildables.json` cost -- free_build is OFF for the whole authoritative run"
+    },
+    {
+      "id": "S03-170x",
+      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
+    },
+    {
+      "id": "S03-170y",
+      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
     },
     {
       "id": "S03-171",
@@ -3392,6 +3502,28 @@
       "expected": "owner directive 2026-08-23: a bed per entrant, three of them, before sign-up"
     },
     {
+      "id": "S03-184x",
+      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
+    },
+    {
+      "id": "S03-184y",
+      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
+    },
+    {
       "id": "S03-185",
       "title": "let the placement register",
       "action": "wait",
@@ -3484,6 +3616,28 @@
       "expected": "owner directive 2026-08-23: a bed per entrant, three of them, before sign-up"
     },
     {
+      "id": "S03-193x",
+      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
+    },
+    {
+      "id": "S03-193y",
+      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
+    },
+    {
       "id": "S03-194",
       "title": "let the placement register",
       "action": "wait",
@@ -3574,6 +3728,28 @@
         "hold": "tap"
       },
       "expected": "owner directive 2026-08-23: a bed per entrant, three of them, before sign-up"
+    },
+    {
+      "id": "S03-202x",
+      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
+    },
+    {
+      "id": "S03-202y",
+      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
     },
     {
       "id": "S03-203",

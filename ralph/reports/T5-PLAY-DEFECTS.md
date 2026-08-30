@@ -203,12 +203,15 @@ Leaving a dead coordinate that names the chapter's first gate will catch the
 next reader too.
 
 ---
-## COST-T5-5 — the village now costs 4× what it cost at run 5, and it stops the chapter
+## COST-T5-5 — the cost gate refuses affordable segments, and it stopped the chapter
 
-**Severity:** BLOCKER for the run. **Open question — game or instrument —
-being measured, not asserted.**
+**Severity:** RIG, **BLOCKER** — it is what stops the run reaching the Warden.
+**Fixed by this lane.** **There is no game performance regression. I said there
+was; I was wrong, and the correction is below.**
 
-S03 stopped at **step 136 of 406** on the harness's own cost gate:
+### What happened
+
+S03 stopped at **step 136 of 406**:
 
 ```
 BLOCKER — S03 is too expensive to finish here
@@ -217,38 +220,80 @@ against 13354 s of the 14400 s ceiling left: 101063 planned frames at a
 MEASURED 0.203 s/frame in THIS scene.
 ```
 
-**The measured frame cost, same box, same binary, same instrument:**
+### What I claimed first, and why it was wrong
 
-| segment | where the player is | in-scene s/frame |
+I read `measured_frame_cost_s_in_scene` across the segments and reported a
+world-performance regression:
+
+| segment | in-scene s/frame | what I said |
 |---|---|---|
-| S01 | Grandpa's house / dooryard | **0.0167** |
-| S02 | village edge, meadow, road gate | **0.0473** |
-| S03 | the village proper | **0.2027** |
-| *run 5's S04, 2026-08-30* | *the village proper* | *0.0479* |
+| S01 | 0.0167 | Grandpa's house |
+| S02 | 0.0473 | village edge |
+| S03 | 0.2027 | "the village proper — 4.3× the edge" |
+| run 5's S04 | 0.0479 | "so the village got 4.2× more expensive" |
 
-Two readings of the same number, and they are not the same finding:
+**Every one of those numbers is an artefact of the defect, not a measurement of
+the world.** They are single 120-frame windows that happened to contain a
+one-off cost. Comparing two of them compares two artefacts.
 
-- **Within this run**, walking from the village edge into the village proper
-  costs **4.3×** more per frame. That is location, not drift.
-- **Against run 5**, the village proper costs **4.2×** what it cost days ago on
-  the same container with the same instrument.
+### What is actually true, measured from both clocks
 
-`ralph/LAND-0830I` landed T1-VILLAGE, T1-HALL-3, T1-CAST, T1-RIG-2,
-T1-VARIANTS-2, T3-DENSITY, T3-ACTIVITIES and T5-CAMPS between those two
-measurements.
+`route.csv` carries play time and wall time on every row, so the sustained rate
+can be read directly rather than inferred:
 
-**This is not yet a claim about the game**, and one obvious explanation is
-already dead. The harness's `_tick` calls `gate_f_probe.gd::nearest_poi_dist`
-every physics frame, which is O(POIs) with an `instance_from_id` per entry — so
-"T3-DENSITY and T5-CAMPS added POIs and the instrument scales with them" was the
-first hypothesis, and it had a motive. **Measured: 1,045 POIs at run 5 against
-1,090 here — plus four percent.** That cannot produce 4×. The POI scan is ruled
-out.
+```
+=== S03: 891 rows ===
+  play_s   wall_s   ratio  s/frame  region
+      38      485    13.1   0.2185  grandpas_village   <- the world stand-up
+      75      522     1.0   0.0167  grandpas_village
+     186      634     1.0   0.0169  grandpas_village
+     348      799     1.0   0.0169  grandpas_village
+     588     1044     1.0   0.0168  grandpas_village
+```
 
-`--gatef-mode=overhead` (telemetry off vs on vs recording, six windows, order
-reversed to cancel drift) is running to settle instrument-vs-game properly.
-**No device claim is made either way**: this is CPU frame time on this
-container, headless, software only. ROG Ally frame rate is [OWNER-ONLY].
+**Wall/play ratio 1.0.** The game runs at real time, headless, in the village,
+for the whole segment. The only expensive interval is the first sample, which
+contains the ~450 s cold world stand-up — a cost the segment had already fully
+paid before the gate fired.
+
+**Sustained cost: 0.0167–0.0172 s/frame.** True cost of S03's remaining 101,063
+frames: **about 29 minutes**, not 5.7 hours. The gate was wrong by ~12×.
+
+S02 shows the identical shape (first sample 0.330, then a flat 0.0163–0.0176),
+which is why its `in_scene` figure reads 0.047 while its sustained rate is the
+same 0.017 as everything else. **The village is not expensive. Nothing is.**
+
+### The mechanism
+
+`_apply_price` predicts as `remaining_frames × now`, where `now` is one
+120-frame window from `_cost_recheck`. Any one-off inside that window — a fight
+staging, an arena build, a region streaming in — becomes the price of every
+remaining frame.
+
+CD-7c already saw this coming and added an arm-then-confirm: an over-budget
+in-play sample arms, and the next window decides. **That was not enough**, and
+S03 is the proof: a one-off that spans *more* than 120 frames reads high in two
+consecutive windows, and the second confirms the first.
+
+### The fix (CD-7d, instrument only)
+
+1. The prediction now uses the **median of the last nine** in-play windows
+   instead of the latest one. A sustained cost still refuses — capture mode's
+   10.5 s/frame is sustained, so its median is 10.5 — while one or two spikes
+   move a nine-sample median by nothing.
+2. A refusal additionally requires **at least three samples**, so the first
+   window after a scene change cannot decide a whole segment.
+3. The raw window price is still written to the ledger as `observed_window_s`
+   beside the median. **Smoothing a spike out of the evidence would hide a real
+   regression starting**, which is the opposite of the point.
+
+### Why this matters beyond one segment
+
+This gate is a plausible contributor to Gate F's six unfinished attempts. It
+refuses *late* — 136 steps in, after the expensive world stand-up is already
+paid — so every attempt pays full price for a segment and then throws it away,
+and the refusal names "a GPU or a split evidence lane", which sends the reader
+after capacity that was never the problem.
 
 ---
 
@@ -310,5 +355,134 @@ the world owns input before this walk  ->  FAIL: input_context=combat_aim
 Both are the diagnostic asserts `4de89a11` added for exactly this, doing their
 job: they name the cause at its origin instead of letting it surface later as a
 walk that "did not reach".
+
+---
+## RIG-T5-7 — S03's build loop never cancels the armed ghost, and the whole rest of the chapter pays
+
+**Severity:** RIG, **BLOCKER for everything downstream of S03**.
+**NOT fixed by this lane** — `tools/gate_f/**` passed to GATE-F-RUN7 at 14:27Z.
+**Routed, per the coordinator's instruction to write down precisely what and why.**
+
+### The observable
+
+S03 completed all 406 steps (351 PASS / 48 FAIL) and handed S04 an exit save
+with **both creatures fainted**, party 2/5, no home, no beds, day 1:
+
+```
+Moss(ripplet)      L3  0/118  **FAINTED**
+Bramblebun         L5  0/124  **FAINTED**
+home_built                NOT set
+creature_bed_built_3      NOT set
+player_slept_at_home      NOT set
+tournament_team_fed       NOT set
+placed_buildings: [ floor ]          <- exactly one piece
+```
+
+`tournament.json` requires `min_party_size: 3`. **The tournament is unreachable
+from this state**, and every band after it inherits the same save.
+
+### It would be easy, and wrong, to report that as a ship blocker
+
+It is the rig. Established from telemetry, not from reading code: every one of
+the twelve `build_placement` failures carries the armed ghost in its own
+`input_state`:
+
+```
+t=1154 | pending_build='floor' | owner='' | ctx=build_placement
+t=1164 | pending_build='floor' | owner='' | ctx=build_placement
+   ... 12 occurrences, pending_build='floor' throughout
+```
+
+and `game_menu.gd::_read_actions()` refuses to open the shell in exactly that
+condition, **on purpose**, with the reason written down beside it:
+
+> *"An armed ghost owns the whole construction control strip, including Y for
+> Dismantle and B for Cancel. Menu shortcuts share those physical buttons, so
+> the shell must not open Backpack/Map and steal the action before the placer
+> sees it."*
+
+```gdscript
+if game != null and str(game.get("pending_build")) != "":
+    return
+```
+
+The placer stays armed after a placement because **repeat placement is a
+designed feature** (`40-BUILD-valheim-repeat-placement.md`). The exit is
+`build_cancel` (B), which `build_placer.gd` handles and which deliberately
+suppresses the pause shell reopening on that shared press.
+
+**So the game is behaving as specified.** S03 places the floor, leaves the ghost
+armed, and then presses `map` twelve times expecting the pause shell — which the
+game is documented not to give it. The first two failures at t=1144 are the
+adjacent case: `map` pressed while the build catalogue itself owned input
+(`owner='@CanvasLayer@67472'`), which the same function also stands aside for,
+also deliberately.
+
+### The cascade, in order
+
+1. **RIG** — S03 leaves the ghost armed and presses `map` between pieces
+2. → the Build tab never comes up for the wall
+3. → `home_built` and `creature_bed_built_3` never set
+4. → nothing to rest in, so no rest and no feed
+5. → the party ends S03 **fainted**
+6. → the tournament needs three; **S04 onward is running on invalid state**
+
+### What GATE-F-RUN7 needs to change
+
+In `tools/gate_f/segments/S03.json`, between each placement and the next
+`open_menu` for the Build tab, **press `build_cancel` and assert
+`pending_build == ""`** before reopening the shell. The harness already exposes
+`pending_build` in `input_state`, so the assert costs nothing new.
+
+The general form is worth more than the one fix: **an `open_menu` step that
+follows a placement must clear the ghost first**, and any step asserting a menu
+opened should check the ghost is down, or it will fail with the menu's symptom
+instead of the ghost's cause. This is the same shape as `S02-50a` — a `press`
+passes when input is *injected*, not when anything received it.
+
+### Consequence for this lane's evidence, stated plainly
+
+**S04 and everything after it in this run are executing against a party that
+cannot legally enter the tournament.** Their verdicts describe a degraded state,
+not the chapter. They are reported as such and no pacing, cadence or progression
+claim is drawn from them.
+
+---
+
+## SHIP-T5-8 — with a build ghost armed, Map and Backpack are silently dead
+
+**Severity:** SHIP, minor but real. **Not fixed** — game-side, and small enough
+that it belongs with whoever owns the build control strip.
+
+Falls directly out of RIG-T5-7. The refusal above is correct; what it does not
+do is **tell the player anything**:
+
+```gdscript
+if game != null and str(game.get("pending_build")) != "":
+    return          # no cue, no sound, no line
+```
+
+A player with a ghost armed who presses Map or Backpack gets **nothing at all** —
+not a sound, not a message. `_explain_refusal()` exists in the same file and is
+called on the paths where `open()` is attempted and declines; this branch returns
+before reaching it.
+
+**The project already fixed the identical case one file over**, and the reasoning
+transfers verbatim. `build_placer.gd`, RG4:
+
+> *"a build_place press swallowed here used to give no signal at all — the ghost
+> stays green (legal), nothing lands, and nothing says why, which reads as
+> 'builds don't work' rather than 'something else has your input right now'"*
+
+so a swallowed place press now plays `ui_error`. A swallowed *shell shortcut* is
+not different from those, and is still silent.
+
+This is the "silently swallows input" class the brief names. It did not strand
+this run — the rig's problem was sequencing, not feedback — but a player who
+does not know B cancels has no way to learn it from pressing Map.
+
+**Suggested:** play `ui_error`, or surface the control strip's Cancel hint, on a
+shell shortcut refused for `pending_build`. One line, same cue the neighbouring
+refusals already use.
 
 ---

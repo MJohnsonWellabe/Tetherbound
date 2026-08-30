@@ -290,6 +290,35 @@ var _step_index := 0
 ## the top of the current sampling window.
 var _cost_window_frames := 0
 var _cost_window_usec := 0
+
+## CD-7d (T5-PLAY, 2026-08-30). The last few in-play window prices, so the
+## PREDICTION can use a median instead of the single most recent sample.
+##
+## Why: `_apply_price` multiplies `remaining_frames` by one observed price, and
+## `_cost_recheck` observes over a 120-frame window. A window that happens to
+## contain a one-off scene cost -- a fight staging, a region load, an arena
+## build -- reads that cost as the price of EVERY remaining frame.
+##
+## Measured, on this lane's own S03: the gate refused the segment at step 136 of
+## 406, predicting 5.7 h from a window that priced 0.2027 s/frame. The segment's
+## own route.csv, which carries both clocks, says the sustained rate either side
+## of it was 0.0167-0.0172 s/frame at a wall/play ratio of 1.0 -- the game runs
+## at real time headless. The true remaining cost was about 29 minutes. The run
+## had already paid for the whole world stand-up before that window opened, so
+## this is not the boot being double-charged (`_reprice` resets the window for
+## exactly that); it is a transient inside one window being extrapolated.
+##
+## A median over nine windows still refuses a segment that is GENUINELY too
+## expensive -- capture mode's 10.5 s/frame is sustained, so its median is
+## 10.5 -- while a single spike moves the median by nothing. The raw sample is
+## still recorded in the ledger, so a spike stays visible rather than smoothed
+## away.
+const COST_SAMPLE_WINDOW := 9
+## Samples needed before an in-play price may REFUSE a segment. Three windows is
+## 360 frames, about six seconds of play: cheap insurance against the first
+## window after a scene change deciding the whole segment.
+const COST_SAMPLES_BEFORE_REFUSAL := 3
+var _cost_samples: Array[float] = []
 ## Every re-price this segment took, in order, so the notes show a cost that
 ## moved rather than one number that happened to be the last.
 var _reprices: Array = []
@@ -2089,7 +2118,7 @@ func _reprice(reason: String, boot_ms: float = 0.0) -> String:
 ## COMPLETED step passes the next one; the in-play recheck passes the current
 ## one, because a step half-spent may still spend the rest of its budget.
 func _apply_price(reason: String, now: float, boot_ms: float, before: float,
-		verbose: bool, from_index: int) -> String:
+		verbose: bool, from_index: int, observed_raw: float = -1.0) -> String:
 	var remaining_frames := _predict_frames_from(_steps, from_index)
 	var spent := _wall_t()
 	var ceiling := float(_cfg["segment_cost_ceiling_s"])
@@ -2110,6 +2139,12 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 		"budget_remaining_s": snappedf(budget, 0.1),
 		"predicted_remaining_s": snappedf(predicted, 0.1),
 	}
+	# CD-7d: what THIS window actually measured, beside the median the
+	# prediction used. A spike must stay visible in the evidence -- smoothing it
+	# out of the record would hide a real regression starting.
+	if observed_raw >= 0.0:
+		record["observed_window_s"] = snappedf(observed_raw, 0.000001)
+		record["samples"] = _cost_samples.size()
 	# The ledger records a price that MOVED, not a heartbeat. A recheck every
 	# 120 frames over a 12,000-frame segment is a hundred rows saying the same
 	# 16.6 ms, which buries the two rows that matter -- the boot re-price and
@@ -2155,7 +2190,17 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 	# expensive 120 frames later and still blocks, at a cost of about two
 	# seconds of play. A transient disarms itself. Disk is exempt: bytes on
 	# disk are not a transient.
-	if predicted > budget and reason == "in-play" and not disk_over_now and not _cost_over_armed:
+	# CD-7d widens CD-7c's arming from one window to a median, because arming
+	# alone was not enough: a one-off cost that spans MORE than one 120-frame
+	# window -- a fight staging, an arena build -- reads high in two consecutive
+	# windows, and the second confirms the first. That is what refused S03 here
+	# at step 136 of 406, predicting 5.7 h against a sustained rate its own
+	# route.csv puts at 0.0167 s/frame. So a refusal now also requires enough
+	# samples for the median to mean anything.
+	var too_few_samples := reason == "in-play" \
+		and _cost_samples.size() < COST_SAMPLES_BEFORE_REFUSAL
+	if predicted > budget and reason == "in-play" and not disk_over_now \
+			and (not _cost_over_armed or too_few_samples):
 		_cost_over_armed = true
 		record["armed"] = ("in-play sample over budget: %.0f s predicted against %.0f s left. "
 			+ "Armed, not blocked -- an in-play price is an average over a window and a scene "
@@ -2211,7 +2256,27 @@ func _cost_recheck() -> void:
 	var observed := elapsed / float(_cost_window_frames)
 	_cost_window_frames = 0
 	_cost_window_usec = Time.get_ticks_usec()
-	_apply_price("in-play", observed, 0.0, _frame_cost_s, false, _step_index)
+	# CD-7d: predict from the median of recent windows, not from this one. See
+	# `_cost_samples`. The raw observation still reaches the ledger through
+	# `_apply_price`'s `observed_raw`, so a spike is recorded, not hidden.
+	_cost_samples.append(observed)
+	while _cost_samples.size() > COST_SAMPLE_WINDOW:
+		_cost_samples.remove_at(0)
+	_apply_price("in-play", _cost_median(), 0.0, _frame_cost_s, false, _step_index, observed)
+
+
+## Median of the recent in-play window prices. Median rather than mean because
+## one 12x outlier drags a nine-sample mean by more than a third and leaves the
+## same refusal in place; it moves a median not at all.
+func _cost_median() -> float:
+	if _cost_samples.is_empty():
+		return _frame_cost_s
+	var sorted := _cost_samples.duplicate()
+	sorted.sort()
+	var n := sorted.size()
+	if n % 2 == 1:
+		return float(sorted[n / 2])
+	return (float(sorted[n / 2 - 1]) + float(sorted[n / 2])) * 0.5
 
 
 ## Frames this segment has still to advance, from `at` onward.
