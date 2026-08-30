@@ -382,6 +382,62 @@ func _check_all_enabled_controls_are_reachable() -> void:
 			return
 
 	print("physical D-pad reaches all %d binding actions plus all always-visible Settings actions; scrolling follows" % (_rows.size() * 3))
+	await _check_the_dpad_reaches_the_audio_rows()
+
+
+## T1-AUDIO. The Audio section sits at the top of the focus chain, above the
+## Gameplay toggles the walk above just finished on, so continuing UP from
+## `_free_build_button` must land on the volume reset and then on every volume
+## row. Without this the section could be drawn, wired and completely
+## unreachable on a pad, and the walk above would still pass -- it stops at
+## free build.
+##
+## Then left/right, because reaching a volume row is only half the contract:
+## the row IS the slider (see tab_settings.gd's `_build_audio`), and if
+## `ui_left`/`ui_right` moved focus instead of the value, the whole section
+## would be inert in exactly the way nothing else would notice.
+func _check_the_dpad_reaches_the_audio_rows() -> void:
+	var rows: Array = _tab.get("_volume_rows")
+	var reset: Button = _tab.get("_volume_reset_button")
+	if rows.is_empty() or reset == null:
+		_fail("the Settings screen has no Audio section")
+		return
+
+	await _tap_pad(JOY_BUTTON_DPAD_UP)
+	if _focused() != reset:
+		_fail("D-pad could not reach the volume reset above the Gameplay toggles")
+		return
+
+	# Up through the rows in reverse: the chain runs first row -> ... -> reset.
+	for i in range(rows.size() - 1, -1, -1):
+		await _tap_pad(JOY_BUTTON_DPAD_UP)
+		var button: Button = (rows[i] as Dictionary)["button"]
+		if _focused() != button:
+			_fail("D-pad skipped the '%s' volume row" % str((rows[i] as Dictionary)["bus"]))
+			return
+
+	# Focus is on the first row. It is the loudest bus on the page and the one a
+	# player reaches for first, so it is the right one to prove the verb on.
+	var audio: Object = preload("res://scripts/audio/audio_manager.gd")
+	var bus := str((rows[0] as Dictionary)["bus"])
+	var before: float = audio.call("bus_percent", bus)
+
+	await _tap_pad(JOY_BUTTON_DPAD_LEFT)
+	var lowered: float = audio.call("bus_percent", bus)
+	if lowered >= before:
+		_fail("D-pad left on the '%s' row did not lower it (%.2f -> %.2f)" % [bus, before, lowered])
+		return
+	if _focused() != (rows[0] as Dictionary)["button"]:
+		_fail("D-pad left on a volume row moved focus instead of changing the volume")
+		return
+
+	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
+	var restored: float = audio.call("bus_percent", bus)
+	if not is_equal_approx(restored, before):
+		_fail("D-pad right did not put '%s' back (%.2f, was %.2f)" % [bus, restored, before])
+		return
+
+	print("physical D-pad reaches all %d volume rows; left/right changes the value and keeps focus" % rows.size())
 
 
 func _check_a_key_can_be_rebound() -> void:
