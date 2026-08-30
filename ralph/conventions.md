@@ -144,6 +144,28 @@ done
 
 Merge them in ascending conflict order and push once.
 
+### Save CI for the commit you actually want verified
+
+Owner directive, 2026-08-30. A consolidation is worth a full 55-job run. A WIP
+checkpoint is not, and when ten lanes each push three of them, the consolidation
+starves behind them.
+
+**Put `[skip ci]` in the commit message of every WIP or checkpoint push.** Push
+freely — pushing is how a lane survives its own container dying, and that safety
+is why WIP pushes exist. Just do not spend a CI round on a commit whose results
+you are not going to read. Drop the marker on the commit you want verified.
+
+Measured the night this rule was written: `ralph/LAND-0830G` sat 43 minutes in
+`queued` without dispatching a single job while lane WIP runs executed ahead of
+it. Cancelling four lane runs freed the queue; the consolidation still had to be
+re-triggered, because a run stuck in `queued` does not recover on its own — see
+below.
+
+**A run stuck in `queued` is not a slow run.** If a newer run on another branch
+is `in_progress` while yours has not started a single job, yours is stuck, not
+waiting. Cancel it and re-trigger with a fresh push; re-running does not help a
+run that never dispatched.
+
 **What does NOT belong in a consolidation.** A branch whose conflict is
 *generated state* rather than source. Measured the same day: `ralph/WORLD-GRASS`
 and `ralph/GRASS-FIELD` each merge onto `main` with **zero** conflicts, but
