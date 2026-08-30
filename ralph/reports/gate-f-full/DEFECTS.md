@@ -658,3 +658,68 @@ Both are cheap to fix and both are this lane's own doing. Written down rather
 than adjusted, because the ladder has now been changed once mid-audit and a
 second change would leave nobody able to say which version produced which
 number.
+
+---
+
+## GAME-F4, the history — this defect is in sixteen previous run directories and was never once named
+
+Written after the finding, because it changes what the finding *is*. GAME-F4 is
+not new on `453107fb`. It has been in this repository's own evidence since at
+least **2026-08-28**, in plain numbers, and every lane that met it read it as
+something else.
+
+A sweep of every Gate F run directory in `ralph/reports/` for a party member
+with `max_hp` under 5:
+
+```
+gate-f-run-20260828T183531Z/S03  t=219.1   L4  max_hp 1.18
+gate-f-run-20260828T183531Z/S04  t=1.1     L4  max_hp 1.18
+gate-f-run-20260828T183531Z/S05  t=1.0     L4  max_hp 1.18
+gate-f-run-20260828T183531Z/S06  t=1.1     L4  max_hp 1.18
+gate-f-run-20260828T183531Z/S07  t=1.1     L4  max_hp 1.18
+gate-f-run-20260828T183531Z/S08  t=1.1     L4  max_hp 1.18
+gate-f-run-20260828T183531Z/S09  t=1.1     L4  max_hp 1.18
+gate-f-run5-chain/S03            t=412.5   L4  max_hp 1.18
+gate-f-run5-chain/S04            t=1.1     L4  max_hp 1.18
+gate-f-run4-s03-validation{,-2}/S03         L4  max_hp 1.18
+gate-f-buildplace{,-round3}-validation/S03  L4  max_hp 1.18
+gate-f-run-T5-PLAY/S03-superseded-2         L4  max_hp 1.18
+...16 run directories in total
+```
+
+**Always level 4.** Level 4 is the first level-up after the S02 → S03 save
+handoff, which is the first load in the chain. The number is the same in every
+one of them because it is not a roll — it is `1.0 × (1 + 0.06 × 3)`.
+
+**Gate F run 3 reached S09 with a one-hit-point starter, and every segment from
+S04 on begins at `t≈1.1` — the moment of load — already carrying it.** That run
+is the deepest any Gate F attempt has got. Its evidence from S04 to S09 describes
+a chapter being played by a creature that dies to anything.
+
+`ralph/reports/FINDING-T2-STRANDING-2026-08-30.md` came closest. Its own probe
+output, printed in the finding and never questioned, is:
+
+```
+active creature: Moss  fainted=true  hp=0.0/1.18
+--- healing the party's only creature the way a creature bed does (heal_fully()) ---
+active creature after heal_fully(): fainted=false hp=1.18/1.18
+```
+
+**A fully healed starter with 1.18 hit points.** That lane's conclusion — that
+the South Bridge stranding was a RIG defect, because a fainted creature cannot
+be deployed and cannot challenge — is *correct on its own terms* and its
+mechanism is sound. But it answers "why is the creature fainted" with "the catch
+loop fainted it" and stops, and the question it does not ask is the one its own
+output is shouting: **why does healing this creature to full give it 1.18 HP?**
+
+This is worth saying plainly, because it is the audit's whole thesis in one
+example: **the evidence was there, in sixteen directories, for three days, and
+what was missing was somebody asking why a number was small.** Several findings
+filed as RIG defects — creatures fainting "on a real, non-buggy roll", a party
+that could not challenge, a starter that needed a Revive before the first
+trainer — are downstream of this one, and should be re-read against it rather
+than trusted.
+
+**None of those earlier findings is retracted here.** Their mechanisms were
+verified live and remain true. What changes is their *cause*, and therefore
+what fixing them is worth.
