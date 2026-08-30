@@ -189,7 +189,75 @@ wall, and that passage opening spans z 87.7–92.7. The machine was standing *in
 the doorway to the Legendary Chamber*. It has no collider so it blocked nothing,
 but it was wrong to look at, and it now sits at z 82.5, clear of the opening.
 
-### 4.2 Renders and the silhouette measurement
+### 4.2 Renders — and the rendering trap that cost this lane most of its time
+
+**Frames:** `ralph/reports/T1-HALL-ART/shots/F-01..F-05`, from
+`tools/_probe_hall_art_fast.gd` (new).
+
+**The trap, because it is written down in this repo and I still walked into it.**
+`ralph/conventions.md` line 246 says, in bold, that `--headless` **hangs forever**
+with a real rendering driver and calls it "the single most expensive trap in this
+repo", listing four abandoned capture attempts on 2026-08-22 alone. I spent
+several rounds re-running `_judge_capture_hall.gd` with `--headless`, watched it
+print `[playground] spawned` and go silent every time, and misdiagnosed it twice
+— first as CPU contention, then as processes being restarted by something — before
+reading the convention that names the exact symptom. The correct invocation drops
+`--headless` and keeps `xvfb-run`. **Read `ralph/conventions.md` before your first
+capture, not after your fourth.** The zombie processes that file also warns about
+were real and were mine.
+
+**The fast rig.** `tools/_judge_capture_hall.gd` boots the entire Meadows
+playground — Terrain3D, ~130k scattered props, the village, the NPC cast — which
+is 5–8 minutes before a shutter opens, plus two 60-frame settle passes per stand
+waiting for grass and terrain streaming. That cost is correct for the judge's
+stands, because what is judged there is the fortress *against its landscape*.
+It is entirely wasted when the question is "is the asset layer right". So
+`_probe_hall_art_fast.gd` builds **only** `stronghold.gd` under `art.json`'s own
+sun, sky and tonemap and shoots five stands in **seconds**. It turned a
+multi-round guessing loop into four render-and-look iterations.
+
+**Its frames are deliberately NOT evidence for the JUDGE-6 silhouette
+measurement**, and the script header says so: there is no hill, no ground and no
+scatter in them, so `_t1hall4_measure.py`'s fortress/hill boxes have nothing to
+compare against and any luminance number off them would be meaningless. **That
+measurement is therefore NOT closed by this lane** — see §6.
+
+**What the frames do show, and what four rounds of them fixed:**
+
+| Round | Defect found in the frame | Fix |
+|---|---|---|
+| 1 | ~260 rubble bricks read as **bright white polystyrene cubes** | `MI_RockTrim` imports at `metallic=1.0` — a defect `building_prefabs.json` already records for this exact material. Forced to 0.0, tinted to the Hall's own `site.stone`, and scaled up 1.5–3.4× (fallen blocks off a 9 m wall are head-sized) |
+| 1 | Two flank scaffolds **hanging 18 m in the air** | `site.skirt` is 18.0, so the complex floor is 18 m above the ground outside the flank walls. Scaffolds need ground; they were removed rather than dropped to the skirt foot. Banners stay — a bracketed banner needs no ground |
+| 2 | **No exterior ivy at all** | Bands sat at ±11.68 against a face at ±11.63, so half of every band was inside the wall and the rest behind buttresses that stand 0.8 m proud. Moved clear of the *buttress* line, not the wall line |
+| 3 | Exterior ivy read as **specks** at flank range | The kit's vine is 2.6 m and the flank stand is ~45 m out. Scaled 1.9–3.4× and count raised 1.9×. Free: a band is one MultiMesh whatever `count` says |
+| 4 | A courtyard scaffold **standing in front of the yard's emblem banner** | Moved south, clear of it |
+
+**Measured on the final build, by the rig itself rather than estimated:**
+
+```
+reclaim: 631 instances / 20 batches
+retrofit: 17 props, 64 surfaces, 3 siphon cores, 3 lights
+pipes:   68 pieces, 124 surfaces
+DRAW CALLS ADDED: 208
+```
+
+208 against 635 of headroom (3365 measured by T1-HALL-4, 4000 ceiling) → **~3573**.
+All three siphon cores resolve, so all three glow.
+
+### 4.3 A pre-existing artifact this lane found but did not cause
+
+Thin **bright cyan-white vertical bars** hang beside several wall banners on the
+exterior flanks (visible in `F-02` and `F-05`). I suspected my own brass and spent
+a round dropping metallic to chase them. They are **not mine**: re-rendered with
+`retrofit` and `pipe_runs` emptied, the bars are still there. They are almost
+certainly the existing `_live_material()` teal conduits — `tether_teal` (#3fe8c4)
+emissive at energy 1.4 blowing out to white under ACES. Flagged, not fixed;
+it is outside this lane's asset scope and belongs to whoever owns the conduits.
+
+*(The metallic drop was kept anyway — iron 0.65 → 0.05, brass 0.8 → 0.12. It was
+the right change for a different reason: `gl_compatibility` has no reflection
+probes, which is the same finding `building_prefabs.json` records for
+`MI_RockTrim`, and high-metallic surfaces render flat rather than metallic.)*
 
 ---
 
@@ -219,6 +287,22 @@ If the owner would rather the siphons ran teal, it is one constant
 ---
 
 ## 6. What is NOT done, honestly
+
+- **The JUDGE-6 silhouette number is NOT re-measured, and this lane does not
+  claim it.** That measurement needs the full-world capture
+  (`_judge_capture_hall.gd`) because it compares the fortress against the hill
+  and ground beside it, and the fast rig has no landscape in it. Every
+  full-world attempt this session was lost to the `--headless` trap in §4.2, and
+  by the time that was diagnosed the remaining budget went into the four
+  render-and-fix rounds that the fast rig made possible — which I judged the
+  better trade, because they fixed four real defects and the measurement would
+  have confirmed a number T1-HALL-4 had already moved. **The one command that
+  closes it** is:
+
+      xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
+        --rendering-driver opengl3 --resolution 1280x800 \
+        --script tools/_judge_capture_hall.gd -- --only=H-02b
+      python3 tools/_t1hall4_measure.py shots/hall0830
 
 - **No Meshy generation happened**, so §1's micro-detail gap is real and open.
 - **Broken wall tops and collapsed parapets were not built.** The pack asks for

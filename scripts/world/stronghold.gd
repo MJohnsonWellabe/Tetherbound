@@ -3752,10 +3752,27 @@ func _reclaim_batch(holder: Node3D, band: Dictionary, rng: RandomNumberGenerator
 	node.multimesh = mm
 	if material != null:
 		node.material_override = material
-	var tint := str(band.get("tint", ""))
-	if not tint.is_empty() and material is StandardMaterial3D:
+	# A UNIQUE material per band: tinting the Hall's ivy must not repaint the
+	# village's, and forcing metallic here must not force it there.
+	if material is StandardMaterial3D:
 		var unique: StandardMaterial3D = (material as StandardMaterial3D).duplicate()
-		unique.albedo_color = Color(tint)
+		var tint := str(band.get("tint", ""))
+		if not tint.is_empty():
+			unique.albedo_color = Color(tint)
+		if not is_ivy:
+			# THE RUBBLE IS `MI_RockTrim`, AND THAT MATERIAL HAS A KNOWN DEFECT
+			# THIS LANE WALKED STRAIGHT INTO. building_prefabs.json's
+			# `_why_retint` for the quarry records it: it "imports with
+			# metallic=1.0 (confirmed via tools/_probe_rocktrim_material.gd), a
+			# bare-metal value no stone surface wants", and under
+			# `gl_compatibility` -- which has no reflection probes -- a full-metal
+			# surface has almost no diffuse ambient response. The first render of
+			# this layer put ~260 bricks in the courtyard that read as bright
+			# WHITE polystyrene blocks, not fallen masonry. That file fixes it by
+			# forcing metallic to 0.0 through its retint schema; this is the same
+			# fix at the only place a MultiMesh can apply it.
+			unique.metallic = 0.0
+			unique.roughness = maxf(unique.roughness, 0.9)
 		node.material_override = unique
 	holder.add_child(node)
 

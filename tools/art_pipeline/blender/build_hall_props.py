@@ -101,11 +101,21 @@ def M_timber():
 
 
 def M_iron():
-    return mat("TT_Iron", IRON, rough=0.72, metal=0.65)
+    # METALLIC IS DELIBERATELY LOW, and this is not a taste call. project.godot
+    # ships gl_compatibility (D01, locked), which has no reflection probes, so a
+    # high-metallic surface has almost no diffuse ambient response and renders
+    # flat and blown-out rather than metallic. building_prefabs.json already
+    # records this exact failure against the kit's own MI_RockTrim ("imports with
+    # metallic=1.0, a bare-metal value no stone surface wants") and fixes it by
+    # forcing 0.0. The first cut of these props shipped iron at 0.65 and brass at
+    # 0.8, and the banner rigs' brass selvage rendered as bright WHITE vertical
+    # bars on the fortress wall -- visible in shots/_hall_art_fast/F-02.
+    return mat("TT_Iron", IRON, rough=0.78, metal=0.05)
 
 
 def M_brass():
-    return mat("TT_Brass", BRASS, rough=0.55, metal=0.8)
+    # See M_iron: same renderer, same reason.
+    return mat("TT_Brass", BRASS, rough=0.62, metal=0.12)
 
 
 def M_rope():
