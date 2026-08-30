@@ -274,6 +274,29 @@ twice.
 
 ---
 
+## 3a. Team progression, which is the chapter's own subject
+
+`tools/gate_f/chain_party.py` over this run's exit saves. The chapter is about
+building and caring for a permanent team of five:
+
+| after | size | day | roster | flags |
+|---|---|---|---|---|
+| S02 | **2/5** | 1 | Moss (ripplet) L3 45/118 · Bramblebun L5 84/124 | 12 |
+| S03 | **2/5** | 1 | Moss L3 **0/118 FAINTED** · Bramblebun L5 **0/124 FAINTED** | 17 |
+| S04 | **2/5** | 1 | unchanged, both fainted | 17 |
+| S05 | **2/5** | 1 | unchanged, both fainted | 17 |
+
+**The team never grows past two, never heals, and never sees day 2.** Five
+flags are gained across the whole village ladder and then none at all: S04 and
+S05 add nothing. Bond is the one number that moves (0 → 8 and 15 → 31), which is
+the care model working on creatures that cannot fight.
+
+That table is the chapter's own failure stated in its own terms, and it is why
+no pacing, reward-economy or encounter-cadence claim is made anywhere in this
+report. Those questions need a team, and the run never had one.
+
+---
+
 ## 4. The wall-clock question
 
 **The data does not support an estimate for a first clear, and I am not going to
