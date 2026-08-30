@@ -15,6 +15,7 @@
 [ext_resource type="Script" path="res://scripts/story/sequence_director.gd" id="13_director"]
 [ext_resource type="PackedScene" path="res://scenes/ui/starter_picker.tscn" id="14_starter_picker"]
 [ext_resource type="Script" path="res://scripts/world/riding_controller.gd" id="16_riding"]
+[ext_resource type="Script" path="res://scripts/audio/world_audio.gd" id="17_audio"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -90,6 +91,15 @@ environment_path = NodePath("../WorldEnvironment")
 script = ExtResource("15_weather")
 look_path = NodePath("../WorldLook")
 player_path = NodePath("../Player")
+
+; T1-AUDIO. The world's soundscape: per-region ambience beds, footsteps, music
+; and every sound that answers a combat signal. Beside WorldLook/WorldWeather
+; because it is the same kind of node -- it reads data/config/audio.json and
+; applies it to a world it does not own. It finds Player/WorldLook/CombatManager
+; /Water by name from its parent and disables only the features whose node is
+; missing, so a partial world loses footsteps rather than all audio.
+[node name="WorldAudio" type="Node" parent="."]
+script = ExtResource("17_audio")
 
 [node name="PlaygroundHUD" parent="." instance=ExtResource("2_hud")]
 

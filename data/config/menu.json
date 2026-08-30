@@ -62,7 +62,7 @@
     "tile_height": 92
   },
 
-  "_comment_settings": "The settings screen, section by section. `sections` is the running order; today it holds Controls alone. Display and audio are entries here plus a builder in scripts/ui/tab_settings.gd when someone actually writes them — the tab already loops this list, so neither is a rewrite.",
+  "_comment_settings": "The settings screen, section by section. `sections` is the running order; today it holds Audio and Controls, plus the temporary Gameplay block which build() always draws last wherever it is listed. Display is still an entry here plus a builder in scripts/ui/tab_settings.gd when someone writes it — the tab already loops this list, so it is not a rewrite. Audio was added by T1-AUDIO and is what that shape looks like once used.",
   "_comment_controls": "`groups` is what the Controls section draws, in order, and it is the ONLY list of what the player may rebind. Nothing that starts with `ui_` may ever be added: those are Godot's focus navigation, they are what drives this very screen with a stick, and a player who rebound `ui_down` could not reach the control that would undo it. tests/test_controls.gd enforces both that rule and that every action named here is really in the input map.",
   "_comment_glyphs": "Button names for an Xbox-layout pad, which is what the ROG Ally is. A PlayStation glyph set is a swap of this block and nothing else. Keys are the stored binding codes from scripts/ui/key_bindings.gd.",
   "_comment_gameplay": "TEMPORARY, and meant to be deleted. `free_build` is a development convenience the owner asked for — build without spending materials until the real game launches. To remove the whole feature: delete this block and the gameplay entry in `sections`, `_build_gameplay` in scripts/ui/tab_settings.gd, the free-build block in autoload/game_state.gd, and the banner in scripts/ui/tab_build.gd. See docs/decisions/D16.",
@@ -70,8 +70,15 @@
   "settings": {
     "sections": [
       { "id": "gameplay", "label": "Gameplay" },
+      { "id": "audio", "label": "Audio" },
       { "id": "controls", "label": "Controls" }
     ],
+
+    "audio": {
+      "_comment": "T1-AUDIO. One row per bus in data/config/audio.json's `buses.order`, drawn by tab_settings.gd::_build_audio. The bus names, their player-facing labels and the step size live in audio.json, next to the mix they belong to; only the wording specific to THIS SCREEN is here. Listed above Controls, and drawn there too -- `gameplay` is the only section build() defers to the bottom.",
+      "note": "Left and right on a row change that volume. Changes apply as you make them, and are saved with your controls.",
+      "reset_label": "Put every volume back to its default"
+    },
 
     "gameplay": {
       "free_build_label": "Free build",

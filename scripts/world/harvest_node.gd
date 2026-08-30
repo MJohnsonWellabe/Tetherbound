@@ -316,6 +316,11 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 	# authored amount.
 	var item_name := str(items.call("item_name", _item_id)) if items != null else _item_id.capitalize()
 	game.call("push_world_message", "+%d %s" % [actual_amount, item_name])
+	# T1-AUDIO. Two sounds, because two things happened: the tool worked the
+	# node, and something went into the satchel. Keyed off the resource's own
+	# `gathered_with` tool rather than its id, so a new ore or bush inherits the
+	# right sound with no audio change -- see audio.json's `sfx.gather_sound`.
+	_play_gather_audio(items)
 	# R2.2: only a full-yield gather with the right tool wears it down --
 	# a bare-handed or wrong-tool gather has no tool in play to damage.
 	if required_slot >= 0:
@@ -352,3 +357,24 @@ func _ready() -> void:
 func gather(equipped_tool: Variant = null) -> void:
 	_on_gathered(equipped_tool)
 
+
+
+# --- T1-AUDIO ----------------------------------------------------------------
+
+
+const AUDIO_MANAGER := preload("res://scripts/audio/audio_manager.gd")
+
+
+## The gather's own sound, plus the pickup that follows it.
+##
+## Positional for the work (the axe is at the tree) and non-positional for the
+## pickup (it is the player's own satchel, and should not get quieter because
+## they harvested at arm's length). Silent for an unmapped tool rather than
+## falling back to a wrong one -- a missing entry in `sfx.gather_sound` should
+## be noticed as a gap, not disguised as a knife.
+func _play_gather_audio(items: Object) -> void:
+	var tool_id := str(items.call("gathered_with", _item_id)) if items != null else ""
+	var table: Dictionary = AUDIO_MANAGER.section("sfx").get("gather_sound", {}) as Dictionary
+	if table.has(tool_id):
+		AUDIO_MANAGER.play_at(str(table[tool_id]), global_position)
+	AUDIO_MANAGER.play("pickup_item")

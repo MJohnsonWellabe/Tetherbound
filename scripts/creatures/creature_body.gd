@@ -172,8 +172,17 @@ func has_model() -> bool:
 	return _has_model
 
 
+## T1-AUDIO. Every creature body joins this so `scripts/audio/world_audio.gd`
+## can find the ones near the player to give an idle call, without a per-creature
+## audio node or a registry either side has to keep in step. Same shape as
+## `world_look.gd`'s own `day_cycle` group: the thing that wants to be found
+## announces itself, and the thing doing the finding asks the tree.
+const AUDIO_GROUP := &"creature_voice"
+
+
 func _ready() -> void:
 	_load_config()
+	add_to_group(AUDIO_GROUP)
 	visibility_changed.connect(_on_visibility_changed)
 	_on_visibility_changed()
 	if species_id != "" and _body != null:

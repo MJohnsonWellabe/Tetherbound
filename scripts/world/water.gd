@@ -181,6 +181,17 @@ func stats() -> Dictionary:
 	return _stats
 
 
+## The world-space Y of the water surface, or NAN if the meadow has no water.
+##
+## Added for `scripts/audio/world_audio.gd`, which needs to know whether the
+## player is standing IN water to pick the right footstep set. `_level` was
+## already computed here and read nowhere outside this file; exposing it is
+## cheaper and far less brittle than a second reader of the heightfield's own
+## `water_level()`, which would have to rebuild the field to ask.
+func water_level() -> float:
+	return _level
+
+
 # --- OP21-20: full-submersion hazard -----------------------------------------
 #
 # Split the way player_vitals.gd splits stamina/satiety arithmetic from

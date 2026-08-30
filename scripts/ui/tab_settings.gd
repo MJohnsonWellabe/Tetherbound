@@ -147,6 +147,8 @@ func build() -> void:
 			continue
 		var section := entry as Dictionary
 		match str(section.get("id", "")):
+			"audio":
+				_build_audio(list, section, settings.get("audio", {}) as Dictionary)
 			"controls":
 				_build_controls(list, section, settings.get("controls", {}) as Dictionary)
 			"gameplay":
@@ -359,6 +361,151 @@ func _on_teleport(display_name: String, position: Vector2) -> void:
 		menu.call("close")
 
 
+# --- the Audio section ------------------------------------------------------
+#
+# T1-AUDIO. One row per bus in data/config/audio.json's `buses.order`. This is
+# the shape this file's own header describes for "display and audio": a JSON
+# entry in `settings.sections` plus a `_build_*` here, with no change to the
+# menu shell.
+#
+# EVERY ROW IS A BUTTON, AND LEFT/RIGHT ON IT IS THE WHOLE INTERACTION. Not a
+# Godot `HSlider`: a slider's grab handle is a mouse affordance, its keyboard
+# step and its focus behaviour both differ from the Buttons that make up the
+# rest of this screen, and CLAUDE.md's rule is controller first. A Button whose
+# left/right focus neighbours point at itself receives `ui_left`/`ui_right`
+# instead of losing focus to them, which turns the D-pad into a volume control
+# with no new input handling and no new focus rules -- the same trick
+# `_link_horizontal_to_self` already uses for the toggles above.
+
+
+## Volume rows: [{bus, button}]. Held for the same reason `_rows` is -- a test
+## drives this screen with a pad and cannot grab_focus() a button it has no
+## handle on.
+var _volume_rows: Array = []
+var _volume_reset_button: Button = null
+const AUDIO_MANAGER := preload("res://scripts/audio/audio_manager.gd")
+## Preloaded rather than reached through the `AudioCues` global class name, to
+## match game_menu.gd / build_menu.gd / playground_hud.gd / build_placer.gd,
+## which all take the cue set this way.
+const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
+
+
+func _build_audio(list: VBoxContainer, section: Dictionary, audio: Dictionary) -> void:
+	_volume_rows.clear()
+	_volume_reset_button = null
+
+	var heading := Label.new()
+	heading.add_theme_font_size_override("font_size", 30)
+	heading.text = str(section.get("label", "Audio"))
+	list.add_child(heading)
+
+	var note := Label.new()
+	note.add_theme_font_size_override("font_size", 22)
+	note.add_theme_color_override("font_color", COLOUR_QUIET)
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	note.custom_minimum_size = Vector2(1100, 0)
+	note.text = str(audio.get("note", ""))
+	list.add_child(note)
+
+	# The bus list comes from audio.json, not from here: the mix and the screen
+	# that edits it must not be able to disagree about which buses exist.
+	var buses: Dictionary = AUDIO_MANAGER.section("buses")
+	var order: Variant = buses.get("order", [])
+	if typeof(order) != TYPE_ARRAY or (order as Array).is_empty():
+		var broken := Label.new()
+		broken.text = "Audio settings are unavailable: the mixer config did not load."
+		list.add_child(broken)
+		return
+	var labels: Dictionary = buses.get("labels", {}) as Dictionary
+
+	for entry: Variant in order as Array:
+		var bus := str(entry)
+		var button := Button.new()
+		button.custom_minimum_size = Vector2(560, 56)
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.focus_mode = Control.FOCUS_ALL
+		# Pressing a volume row does nothing on purpose -- A is not "set to
+		# zero" and not "mute", both of which are surprises. Left and right are
+		# the verb, and the row says so.
+		button.focus_entered.connect(func() -> void: _keep_visible(button))
+		list.add_child(button)
+		_volume_rows.append({
+			"bus": bus,
+			"label": str(labels.get(bus, bus)),
+			"button": button,
+		})
+
+	_volume_reset_button = Button.new()
+	_volume_reset_button.custom_minimum_size = Vector2(560, 56)
+	_volume_reset_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_volume_reset_button.focus_mode = Control.FOCUS_ALL
+	_volume_reset_button.text = "  %s" % str(audio.get("reset_label", "Put every volume back"))
+	_volume_reset_button.pressed.connect(_on_reset_volumes)
+	_volume_reset_button.focus_entered.connect(func() -> void: _keep_visible(_volume_reset_button))
+	list.add_child(_volume_reset_button)
+
+
+## Left/right on the focused volume row. Polled rather than handled in `_input`
+## because this screen already polls every frame and because `_input` here is
+## owned by the rebind capture, which must keep seeing raw events untouched.
+func _poll_audio() -> void:
+	if _volume_rows.is_empty():
+		return
+	var buses: Dictionary = AUDIO_MANAGER.section("buses")
+	var step := float(int(buses.get("step_percent", 10))) / 100.0
+
+	for record in _volume_rows:
+		var bus := str(record["bus"])
+		var button: Button = record["button"]
+		if button.has_focus() and not _capturing and _settle <= 0:
+			var delta := 0.0
+			if Input.is_action_just_pressed("ui_right"):
+				delta = step
+			elif Input.is_action_just_pressed("ui_left"):
+				delta = -step
+			if not is_zero_approx(delta):
+				var wanted := clampf(AUDIO_MANAGER.bus_percent(bus) + delta, 0.0, 1.0)
+				AUDIO_MANAGER.set_bus_percent(bus, wanted)
+				_save_volumes()
+				# Audible feedback on the bus being changed, so the player hears
+				# the level they just chose rather than reading a number. On the
+				# bus itself, deliberately: dragging Music down should make the
+				# confirmation quieter too, which is the whole point.
+				AUDIO_CUES.play(&"ui_focus")
+
+		var percent := int(round(AUDIO_MANAGER.bus_percent(bus) * 100.0))
+		button.text = "  %s:  %s  %d%%" % [str(record["label"]), _volume_bar(percent), percent]
+		button.add_theme_color_override(
+			"font_color", COLOUR_QUIET if percent == 0 else COLOUR_DEFAULT
+		)
+
+
+## A drawn bar, because a bare percentage on a handheld at arm's length is not a
+## volume control -- the same reasoning as the toggles above putting their state
+## in the text rather than only in the pressed style.
+func _volume_bar(percent: int) -> String:
+	var filled := int(round(float(percent) / 10.0))
+	return "[%s%s]" % ["|".repeat(filled), " ".repeat(10 - filled)]
+
+
+func _on_reset_volumes() -> void:
+	for record in _volume_rows:
+		AUDIO_MANAGER.set_bus_percent(str(record["bus"]), 1.0)
+	_save_volumes()
+	say("Every volume is back to its default.")
+
+
+## Volumes live in the same `user://settings.json` the controls do, in their own
+## `audio` section -- see key_bindings.gd's `audio` and `save()`. One file, one
+## writer (D15).
+func _save_volumes() -> void:
+	var bindings: RefCounted = _bindings()
+	if bindings == null:
+		return
+	AUDIO_MANAGER.store_volumes(bindings)
+	bindings.call("save")
+
+
 # --- the Controls section ---------------------------------------------------
 
 
@@ -562,6 +709,54 @@ func _wire_focus_graph(teleport_visible: bool) -> void:
 		reset.focus_neighbor_left = reset.get_path_to(keyboard)
 		reset.focus_neighbor_right = reset.get_path_to(reset)
 
+	# LAST, not first: this re-points `_free_build_button`'s top neighbour, which
+	# the Gameplay block at the top of this function has just set to itself.
+	# Wiring the volume lane before it would simply be overwritten.
+	_wire_volume_graph()
+
+
+## The Audio section's own lane in the focus graph.
+##
+## The left/right neighbours point each volume row AT ITSELF, which is what
+## frees `ui_left`/`ui_right` to be the volume verb instead of focus movement --
+## see the section's header comment.
+##
+## The lane is inserted at the TOP of the existing chain (above `_free_build_button`,
+## which previously pointed up at itself), NOT between the Controls reset and the
+## Gameplay toggles. That is deliberate and worth explaining, because the
+## alternative looks more natural and is wrong:
+##
+## This screen's focus graph already runs Gameplay -> Controls, while `build()`
+## DRAWS Gameplay last, below Controls. That inversion predates this section and
+## is not this lane's to fix. Splicing Audio into the middle of that chain would
+## have re-pointed `_reset_all_button`'s top neighbour and broken the
+## always-visible-actions walk in `tests/smoke_settings.gd`, which asserts
+## reset_all -> debug_teleport -> free_build going up. Prepending leaves every
+## existing link exactly as it was and simply gives the chain a new head, so the
+## new section is fully reachable and nothing else moves.
+func _wire_volume_graph() -> void:
+	if _volume_rows.is_empty() or _volume_reset_button == null or _free_build_button == null:
+		return
+	for i in _volume_rows.size():
+		var button: Button = (_volume_rows[i] as Dictionary)["button"]
+		# The first row points up at itself: it is the top of the page, and up
+		# from it should stop rather than wrap somewhere surprising.
+		var above: Control = button if i == 0 else (_volume_rows[i - 1] as Dictionary)["button"]
+		var below: Control = _volume_reset_button if i + 1 == _volume_rows.size() \
+			else (_volume_rows[i + 1] as Dictionary)["button"]
+		_link_vertical(button, above, below)
+		_link_horizontal_to_self(button)
+
+	_link_vertical(
+		_volume_reset_button,
+		(_volume_rows[_volume_rows.size() - 1] as Dictionary)["button"],
+		_free_build_button
+	)
+	_link_horizontal_to_self(_volume_reset_button)
+	# The only existing link this changes: free build used to point up at itself
+	# as the head of the chain, and is no longer the head.
+	_free_build_button.focus_neighbor_top = _free_build_button.get_path_to(_volume_reset_button)
+
 
 func _link_vertical(control: Control, above: Control, below: Control) -> void:
 	control.focus_neighbor_top = control.get_path_to(above)
@@ -594,6 +789,7 @@ func revision() -> int:
 
 func poll() -> void:
 	_poll_gameplay()
+	_poll_audio()
 
 	var bindings: RefCounted = _bindings()
 	if bindings == null:
