@@ -8,8 +8,11 @@ extends RefCounted
 ## drift out of sync with `progression`.
 ##
 ## Deliberately NOT a quest engine (spec §19, CLAUDE.md): no branching, no
-## prerequisites. An entry is DONE the instant its own `flag_id` is set; the
-## tracked line is just the first "main" entry not yet done, in file order.
+## prerequisites. An entry is DONE the instant its own `flag_id` is set -- or,
+## for the one entry carrying `retired_by` (T5-STORY-2), once that single flag
+## says its moment has passed; see `_done()` for the measured chapter-scale
+## failure that answer exists for. The tracked line is still just the first
+## "main" entry not yet done, in file order.
 ##
 ## TUTORIAL-CHAIN (OP23-04) added the second and third, both PRESENTATION and
 ## neither a prerequisite:
@@ -98,17 +101,59 @@ func _entries(source: Array, progression: RefCounted) -> Array:
 		# own empty state says "Nothing outstanding right now", which is a
 		# promise that what is listed is something the player actually knows
 		# about.
-		var revealed_by := str(entry.get("revealed_by", ""))
-		if not revealed_by.is_empty() and not bool(progression.call("has", revealed_by)):
+		if _hidden(entry, progression):
 			continue
-		var flag_id := str(entry.get("flag_id", ""))
-		var done := not flag_id.is_empty() and bool(progression.call("has", flag_id))
 		out.append({
 			"label": _label(entry, progression),
-			"done": done,
+			"done": _done(entry, progression),
 			"how": hint_text(entry),
 		})
 	return out
+
+
+## Is this entry not yet part of the player's world at all? `revealed_by`
+## (optional, BAND1-D1) is the only thing that can say so; see `_entries()`.
+func _hidden(entry: Dictionary, progression: RefCounted) -> bool:
+	var revealed_by := str(entry.get("revealed_by", ""))
+	return not revealed_by.is_empty() and not bool(progression.call("has", revealed_by))
+
+
+## Is this entry behind the player?
+##
+## Normally that is exactly its own `flag_id`, and for every entry in the file
+## but one it still is. `retired_by` (optional, T5-STORY-2) adds the second
+## answer: **this rung's moment has passed**, whatever its own flag says now.
+##
+## It exists because of one measured, chapter-scale failure.
+## `tournament_team_fed` is the chain's one VOLATILE flag -- `tournament.gd`'s
+## `_process` rewrites it from the live team once a second, for the whole game,
+## with no gate on whether the tournament is still ahead. `tracked_text()` is
+## "first unset flag in file order", so the moment a team goes hungry -- which,
+## on a ~1.1/min satiety drain across a three-to-four-hour chapter, is most of
+## it -- the HUD's one tracked line snaps back to "Feed your team before you
+## sign up" and STAYS there. Measured by `tools/_probe_story_drive.gd`: walking
+## the chapter's own flags in order, that string was the tracked line at every
+## rung from the tournament run-up to the end of the chapter, the Warden and the
+## freeing included. The game's single answer to "what now" spent the last two
+## thirds of its own story naming a tutorial about food.
+##
+## `retired_by` is deliberately the same shape as `revealed_by` above and not a
+## gram more: ONE flag id, checked with `has`, no arrays, no `unless`, no
+## nesting, no per-entry visibility beyond the one `revealed_by` already
+## established. It is the mirror of it -- one says "not yet", this says "no
+## longer" -- and it is not the prerequisite graph spec sec19 and CLAUDE.md ban,
+## because it cannot express an order the file does not already have.
+##
+## A retired rung reads as DONE rather than vanishing. That is the honest
+## reading: a player standing at the Warden with `tournament_entered` set did
+## feed their team before they signed up, months of game-time ago, and the log
+## is a record of what they have done.
+func _done(entry: Dictionary, progression: RefCounted) -> bool:
+	var retired_by := str(entry.get("retired_by", ""))
+	if not retired_by.is_empty() and bool(progression.call("has", retired_by)):
+		return true
+	var flag_id := str(entry.get("flag_id", ""))
+	return not flag_id.is_empty() and bool(progression.call("has", flag_id))
 
 
 ## The guided view (TUTORIAL-CHAIN / OP23-04): every Main Story entry the
@@ -168,9 +213,13 @@ func _label(entry: Dictionary, progression: RefCounted) -> String:
 ## An entry's `how` line with its `{action}` placeholders replaced by the real
 ## bound button for the live device -- "{interact} at the gate" -> "X at the
 ## gate" on a pad, "E at the gate" on a keyboard. "" when the entry authors no
-## hint, which every beat past the opening ladder currently does: OP23-04's
-## directive is the opening "until tournament entry", and a caller must treat
-## an empty hint as "draw nothing", never as a blank line.
+## hint, and a caller must treat that as "draw nothing", never as a blank line.
+##
+## That used to read "which every beat past the opening ladder currently does".
+## It no longer does: T5-STORY-2 wrote the eleven missing ones, so every Main
+## Story rung in the chapter now carries a hint. The empty case is still real --
+## an entry may author none, and `local` entries do not -- so the contract is
+## unchanged and this is the only sentence about it that had to move.
 ##
 ## An unknown action id is left as the id itself rather than silently deleted,
 ## the same way `input_glyph.gd::icon()` shows "[typo]" instead of a gap: a
@@ -224,11 +273,9 @@ func tracked_hint(progression: RefCounted) -> String:
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var entry := raw as Dictionary
-		var revealed_by := str(entry.get("revealed_by", ""))
-		if not revealed_by.is_empty() and not bool(progression.call("has", revealed_by)):
+		if _hidden(entry, progression):
 			continue
-		var flag_id := str(entry.get("flag_id", ""))
-		if flag_id.is_empty() or not bool(progression.call("has", flag_id)):
+		if not _done(entry, progression):
 			return hint_text(entry)
 	return ""
 
@@ -242,7 +289,6 @@ func tracked_text(progression: RefCounted) -> String:
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var entry := raw as Dictionary
-		var flag_id := str(entry.get("flag_id", ""))
-		if flag_id.is_empty() or not bool(progression.call("has", flag_id)):
+		if not _done(entry, progression):
 			return _label(entry, progression)
 	return ""

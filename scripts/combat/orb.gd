@@ -569,17 +569,35 @@ func _check_target(from: Vector3) -> bool:
 	_velocity = Vector3.ZERO
 	if _orb_material != null:
 		_orb_material.emission_energy_multiplier = REST_EMISSION
-	# Still clamped at the body's own radius, for the original reason: the
-	# accuracy bonus is scored against the CREATURE, not against the orb's
-	# generous collision sphere, so widening `radius` to forgive the input must
-	# not silently make every throw count as dead centre.
-	# Both numbers, because the clamped one alone is what hid the endpoint-only
-	# defect for so long: every strike logged `offset=0.312` and that looked
-	# like a plausible edge hit rather than a saturated clamp.
+	# OP-0830-5. This used to clamp at `body_radius` before emitting, on the
+	# reasoning that the accuracy bonus is scored against the CREATURE rather
+	# than against the orb's generous collision sphere -- so widening `radius`
+	# to forgive the input must not silently make every throw count as dead
+	# centre.
+	#
+	# That guard was aimed at the right failure and produced the opposite one.
+	# `body_radius` is 0.325 m on a Bramblebun and the median real placement of
+	# an ASSISTED, correctly-aimed throw measured 0.375 m
+	# (`tools/_probe_catch_rate.gd`, 47 landed throws): the clamp fired on 77%
+	# of them, so almost every throw in the game was reported at exactly the
+	# worst placement it is possible to have and scored the full edge penalty.
+	# The owner's report that catching is far too hard is that clamp.
+	#
+	# The offset is now reported as measured, clamped only at the envelope that
+	# actually defines a hit -- the same `body_radius + _radius` the test above
+	# uses. `catch_math.accuracy_bonus()` judges it on that same scale, so a
+	# dead-centre throw is worth exactly what it was worth before and a graze at
+	# the edge of the sphere is worth exactly `edge_bonus`. Nothing in between is
+	# pinned to either end any more.
+	#
+	# Both numbers still printed, because the clamped one alone is what hid the
+	# endpoint-only defect for so long: every strike logged `offset=0.312` and
+	# that looked like a plausible edge hit rather than a saturated clamp.
+	var envelope := body_radius + _radius
 	print("catch launch: placement closest=%.3f clamped=%.3f body_radius=%.3f orb_radius=%.2f" % [
-		offset, minf(offset, body_radius), body_radius, _radius,
+		offset, minf(offset, envelope), body_radius, _radius,
 	])
-	struck.emit(_target, minf(offset, body_radius))
+	struck.emit(_target, minf(offset, envelope))
 	return true
 
 

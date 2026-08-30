@@ -37,6 +37,7 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
+const AUDIO_MANAGER := preload("res://scripts/audio/audio_manager.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 ## Ids placed by their own hand-authored script rather than build_piece.gd's
@@ -636,6 +637,11 @@ func _place(game: Node, armed: String) -> void:
 	# location; costs and registration still happen once per fresh Place edge.
 	# Only explicit Cancel or choosing another catalogue entry clears/replaces it.
 	AUDIO_CUES.play(&"build_place")
+	# T1-AUDIO. The UI blip above confirms the PRESS, on the UI bus; this is the
+	# piece actually landing in the world, positional and on SFX. Two sounds for
+	# one press on purpose -- conflating them is why placing a building used to
+	# read as weightless. See tools/audio/gen_sfx.py::build_place_thud.
+	AUDIO_MANAGER.play_at("build_place_thud", placed.global_position)
 	# GATEB-FLAGS: `home_built`. Checked after every real placement, not just
 	# ones for a "home" piece -- cheap (a handful of dictionary counts) and it
 	# is the only way an out-of-order build (structure piece before the last

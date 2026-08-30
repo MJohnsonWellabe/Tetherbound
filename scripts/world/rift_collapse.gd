@@ -246,27 +246,81 @@ const _MASK_SIZE := Vector2i(160, 72)
 ## across identical rectangles -- the same "asymmetric, not mirrored" note
 ## JUDGE-3/JUDGE-4 already made about the creature variants' own crack
 ## networks applies here.
+## T1-HALL-3 (2026-08-30) -- JUDGE-5's D13/D14/D16 on the mask this replaces.
+## The T1-STORMWALL pass above was called "the cleanest fix of the three sets"
+## and is not reopened in its diagnosis; the judge's complaint is that it
+## OVERSHOT: "it reads as a distant smoke or haze bank, not as a storm ... a
+## single near-uniform neutral grey with almost no value variation ... a diffuse
+## top that just fades out ... no anvil, no shelf, no rain shafts, no lit rim".
+##
+## Three things in the old profile caused exactly that, and each is answered:
+##
+## 1. `smoothstep(0.0, 0.3, v)` faded the top THIRD of every slab to nothing, so
+##    a 150 m slab showed ~105 m of weather with no boundary at all -- which is
+##    both why it has no anvil (D13) and why it appeared to sit BELOW the fair-
+##    weather cirrus (D15): the geometry's top was already invisible. The top is
+##    now a NOISE-DISPLACED HARD-ISH BOUNDARY -- billowing, never straight, but
+##    a real edge -- so the slab reads to its authored height.
+## 2. The RGB channel was `shade = 0.8 + 0.4n` in all three channels: a grey
+##    multiplier over a blue-grey albedo, which is precisely "colourless"
+##    (D14). It now carries a warm LIT RIM in the band just under the anvil
+##    (the sun is in the south sky at the day keyframe -- `art.json` sun.yaw
+##    140 -- so a front standing behind the Hall is backlit along its top) and
+##    cools/darkens toward the base.
+## 3. Nothing varied along u except the edge feather, so there were no rain
+##    shafts (D13). A separate high-frequency-in-u, low-frequency-in-v noise
+##    now drives vertical shafts through the lower half.
+##
+## Still UNSHADED and still alpha-only in the animation path, so `_scale_group`,
+## `_cover()` and `horizon()` are all unaffected exactly as before.
+const _RIM_COLOUR := Color(1.32, 1.20, 1.02)   # >1: this multiplies the slab albedo
+const _BASE_COLOUR := Color(0.62, 0.66, 0.78)  # cooler and darker toward the ground
 static func _slab_mask(seed_value: int) -> ImageTexture:
 	var noise := FastNoiseLite.new()
 	noise.seed = seed_value
 	noise.frequency = 0.05
 	noise.fractal_octaves = 3
 	noise.fractal_gain = 0.55
+	# The anvil's own outline: low frequency in u so the top billows in a few
+	# big masses rather than fizzing.
+	var crest := FastNoiseLite.new()
+	crest.seed = seed_value * 7 + 13
+	crest.frequency = 0.022
+	crest.fractal_octaves = 2
+	# Rain shafts: narrow in u, stretched in v.
+	var shafts := FastNoiseLite.new()
+	shafts.seed = seed_value * 31 + 5
+	shafts.frequency = 0.16
+	shafts.fractal_octaves = 2
 	var image := Image.create(_MASK_SIZE.x, _MASK_SIZE.y, false, Image.FORMAT_RGBA8)
-	for y in _MASK_SIZE.y:
-		var v := float(y) / float(_MASK_SIZE.y - 1)
-		# Denser toward the top, thinning toward the base -- a wall of weather
-		# settles into ground fog, it does not end on a visible straight sill.
-		var vertical := smoothstep(0.0, 0.3, v) * (1.0 - 0.45 * smoothstep(0.72, 1.0, v))
-		for x in _MASK_SIZE.x:
-			var u := float(x) / float(_MASK_SIZE.x - 1)
-			# The mesh boundary itself must never read as an edge -- feather
-			# both sides into a cloud bank rather than a card.
-			var edge := smoothstep(0.0, 0.18, u) * smoothstep(1.0, 0.82, u)
+	for x in _MASK_SIZE.x:
+		var u := float(x) / float(_MASK_SIZE.x - 1)
+		# The mesh boundary itself must never read as an edge -- feather both
+		# sides into a cloud bank rather than a card. (Unchanged, it worked.)
+		var edge := smoothstep(0.0, 0.18, u) * smoothstep(1.0, 0.82, u)
+		# Where this column's anvil top sits, in v. Never 0 (the slab would clip
+		# its own mesh edge) and never so low the slab loses its height.
+		var top := 0.05 + 0.20 * (crest.get_noise_2d(float(x), 0.0) * 0.5 + 0.5)
+		var shaft_u := shafts.get_noise_2d(float(x) * 3.0, 0.0) * 0.5 + 0.5
+		for y in _MASK_SIZE.y:
+			var v := float(y) / float(_MASK_SIZE.y - 1)
 			var n := noise.get_noise_2d(x, y) * 0.5 + 0.5
-			var shade := 0.8 + 0.4 * n
-			var alpha := clampf(edge * vertical * (0.5 + 0.5 * n), 0.0, 1.0)
-			image.set_pixel(x, y, Color(shade, shade, shade, alpha))
+			# A defined top: ~4% of the slab's height, not 30%.
+			var vertical := smoothstep(top - 0.005, top + 0.042, v)
+			# ... and a base that still settles into ground haze rather than
+			# ending on a sill.
+			vertical *= 1.0 - 0.42 * smoothstep(0.80, 1.0, v)
+			# Rain shafts, lower half only, and only where a shaft column is.
+			var below := smoothstep(0.42, 0.72, v)
+			var shaft := 1.0 - below * 0.42 * smoothstep(0.55, 0.95, shaft_u) \
+				* (0.55 + 0.45 * (shafts.get_noise_2d(float(x) * 3.0, float(y) * 0.35) * 0.5 + 0.5))
+			var alpha := clampf(edge * vertical * shaft * (0.62 + 0.38 * n), 0.0, 1.0)
+			# The lit rim: a narrow band immediately under the anvil boundary.
+			var rim := smoothstep(top + 0.10, top + 0.015, v) * smoothstep(top - 0.01, top + 0.02, v)
+			var body := (0.86 + 0.30 * n)
+			var tint := Color(body, body, body).lerp(_BASE_COLOUR, smoothstep(0.35, 1.0, v))
+			tint = tint.lerp(_RIM_COLOUR, rim * 0.85)
+			image.set_pixel(x, y, Color(tint.r, tint.g, tint.b, alpha))
 	return ImageTexture.create_from_image(image)
 
 

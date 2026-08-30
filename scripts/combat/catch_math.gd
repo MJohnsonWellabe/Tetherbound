@@ -52,21 +52,65 @@ static func hp_factor(hp_fraction: float) -> float:
 	return lerpf(full, empty, hurt)
 
 
+## The scale a throw's placement is judged on: how far off centre the orb may
+## pass and still be a hit at all.
+##
+## OP-0830-5, and the whole of it. See `accuracy_bonus()` below.
+static func accuracy_scale(body_radius: float) -> float:
+	var cfg := config()
+	var orb_radius := float(cfg.get("throw", {}).get("radius", 0.60))
+	var span := float(cfg.get("chance", {}).get("accuracy_span", 1.0))
+	return maxf(body_radius + orb_radius * span, 0.001)
+
+
 ## What a throw's placement is worth, from how far off centre it struck.
 ##
-## `offset` is metres from the target's centre of mass; `body_radius` is what
-## counts as a clean hit. A dead-centre strike is worth `centre_bonus`, a hit
-## that barely clipped the edge is worth `edge_bonus`.
+## `offset` is metres from the target's centre of mass. A strike dead on the
+## centre is worth `centre_bonus`; one passing at the very edge of what still
+## counts as a hit is worth `edge_bonus`. If those two were equal, aiming would
+## be decoration and this mechanic would have no subject.
 ##
-## If those two were equal, aiming would be decoration and this milestone would
-## have no subject. tests/test_catch_math.gd asserts they are not.
+## ## OWNER PLAYTEST, 2026-08-30 (OP-0830-5): *"catching is way too hard."*
+##
+## This function was the cause, and it was not the odds being low -- it was this
+## term being **stuck at its worst value on nearly every throw the game can
+## actually produce.**
+##
+## It used to divide by `body_radius`, on the reasoning that the bonus is scored
+## against the CREATURE rather than against the orb's generous collision sphere.
+## The reasoning is sound and the number was wrong, because `body_radius` is not
+## a distance a real throw can hold. A Bramblebun's is **0.325 m**. Measured
+## over 47 landed throws in real fights (`tools/_probe_catch_rate.gd`, three
+## runs at two health tiers, every one of them with the launch assist committed
+## and aiming at the predicted body centre):
+##
+##   * median real placement **0.375 m** -- already outside the whole scale;
+##   * **77% of landed throws saturated the clamp** and scored the full
+##     `edge_bonus` penalty;
+##   * mean multiplier **0.845**, against a `centre_bonus` of 1.45 that this
+##     config's own comment calls "the ONLY reason the aiming skill exists".
+##
+## So a perfectly aimed, assisted throw was scored as a graze roughly four times
+## in five, the term varied by almost nothing, and every landed throw silently
+## lost about 40% of the odds the HUD was advertising. The residual 0.375 m is
+## not player error: it is the target moving during the orb's flight, which the
+## launch prediction leads but cannot cancel.
+##
+## The fix is the SCALE, not the bonus. Placement is now judged over the
+## envelope that defines a hit in the first place -- `body_radius` plus the
+## orb's own radius, which is exactly the distance `orb.gd::_check_target()`
+## tests against. A throw that passes dead centre still earns the full
+## `centre_bonus`; one that only just clipped the envelope still earns
+## `edge_bonus`; and everything between them now grades, which is what the term
+## was written to do. Nothing here raises the ceiling: a dead-centre throw is
+## worth exactly what it was worth before.
 static func accuracy_bonus(offset: float, body_radius: float) -> float:
 	var cfg: Dictionary = config().get("chance", {})
 	var centre := float(cfg.get("centre_bonus", 1.45))
 	var edge := float(cfg.get("edge_bonus", 0.75))
 	if body_radius <= 0.0:
 		return centre
-	return lerpf(centre, edge, clampf(offset / body_radius, 0.0, 1.0))
+	return lerpf(centre, edge, clampf(offset / accuracy_scale(body_radius), 0.0, 1.0))
 
 
 static func orb_multiplier(orb_id: String) -> float:

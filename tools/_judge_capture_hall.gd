@@ -20,10 +20,11 @@ extends SceneTree
 ## §2 -- so its dusk/night self-lit read is part of the design and must be
 ## judged, not just the noon state)". `--out=` lets a lane write its own frames
 ## without overwriting a previous lane's evidence.
+const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const DEFAULT_OUT_DIR := "res://shots/hall0830"
 const SETTLE_FRAMES := 90
-const POSE_FRAMES := 3
+const POSE_FRAMES := 10
 const FOV := 70.0
 
 func _init() -> void:
@@ -38,12 +39,34 @@ func _hide_canvas_layers(node: Node) -> void:
 
 
 var _out_dir := DEFAULT_OUT_DIR
+## Stand-name substrings to restrict this run to; empty means every stand.
+var _only: Array[String] = []
+
+
+## Does this stand run? Empty `--only` means yes, as it always did.
+func _wanted(name_value: String) -> bool:
+	if _only.is_empty():
+		return true
+	for want: String in _only:
+		if name_value.contains(want):
+			return true
+	return false
 
 
 func _run() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--out="):
 			_out_dir = a.substr("--out=".length())
+		elif a.begins_with("--only="):
+			# Re-shoot named stands without re-running the whole set. A full pass
+			# is ~45 minutes of software GL, and a single stand that came back
+			# degraded should not cost that -- which is exactly the situation
+			# that motivated this: `H-03-ramp-foot` needed one re-shoot after the
+			# streaming fix and the other ten frames were already good. Substring
+			# match, so `--only=H-03` catches the stand and its golden/night
+			# variants together.
+			for name in a.substr("--only=".length()).split(",", false):
+				_only.append(name.strip_edges())
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	var packed: PackedScene = load(SCENE)
 	if packed == null:
@@ -131,7 +154,14 @@ func _run() -> void:
 	var stands := [
 		{"name": "H-01-approach-400", "at": Vector2(0.0, 7160.0), "eye_h": 8.0,
 			"dir": Vector2(0.0, 1.0), "aim_hall": true},
-		{"name": "H-02-sigil-gate", "at": Vector2(63.6, 7395.0), "eye_h": 1.7,
+		# T1-HALL-3: 7395 stood 5m off the gate, which was fine while the gate
+		# was a fence and stopped being fine the moment D4 gave it 6.2m piers --
+		# the first frame with them in it has the piers cut off by the top edge
+		# and eating both sides, with the Hall (what this stand is FOR: "full
+		# massing, three tiers, cable landing", design sec10) reduced to a slot
+		# between them. Backed off to 22m, where the gate frames the Hall
+		# instead of replacing it. Same bearing, same eye height, same subject.
+		{"name": "H-02-sigil-gate", "at": Vector2(63.6, 7378.0), "eye_h": 1.7,
 			"dir": Vector2(-1.0, 1.0), "aim_hall": true},
 		# H-02b, added T1-HALL-REBUILD. At the authored 1.7m eye height the
 		# Sigil Gate stand sees NOTHING of the Hall -- Band 5's treeline fills
@@ -187,8 +217,28 @@ func _run() -> void:
 		var toward := (outer_works - entrance)
 		toward.y = 0.0
 		toward = toward.normalized()
-		var eye4 := entrance + toward * 34.0 + Vector3(0.0, 1.7, 0.0)
+		# T1-HALL-3 / JUDGE-5 D1. This stand walks 34m UP the causeway, and the
+		# causeway climbs ~9m over its 40m run -- but the eye height was taken
+		# from `entrance`, which is the ramp FOOT. Every H-04 ever captured was
+		# therefore shot from ~7m inside the slab, which is exactly what the
+		# frame shows: cobble underside below, grass seen edge-on from beneath
+		# the ground above, and the gate nowhere in it. The deck height is
+		# sampled from the real ground at build time, so it cannot be re-derived
+		# here -- ask the stronghold where its own walking surface is.
+		# 34m up a 40m causeway put the eye 6m off the sill, and the first
+		# correctly-exposed frame of this stand showed why that is too close:
+		# the gate fills the frame edge to edge and the "four-plane stack" the
+		# design asks this stand to prove (yard floor -> camp -> far wall ->
+		# keep above) is cropped down to two. 24m leaves 16m of run in front of
+		# the camera, so the gatehouse reads as a threshold being approached
+		# rather than as a passage already entered.
+		var eye4 := entrance + toward * 24.0
+		eye4.y = float(stronghold.call("causeway_surface_y", eye4.x, eye4.z)) + 1.7
+		# Look level and slightly UP the remaining climb rather than at a point
+		# 20m dead ahead on the old (buried) eye plane: the gate sill is above
+		# the stand, and a level aim put the arch's head out of frame.
 		var target4 := eye4 + toward * 20.0
+		target4.y = float(stronghold.call("causeway_surface_y", target4.x, target4.z)) + 4.0
 		await _shoot(camera, look, torch, false, eye4, target4, "H-04-gate-mouth", written, failures, "day", player)
 
 	# H-07 courtyard: inside, at the courtyard trainer, looking S.
@@ -210,6 +260,8 @@ func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 		eye: Vector3, target: Vector3, name_value: String,
 		written: Array[String], failures: Array[String], hour: String = "day",
 		player: Node3D = null) -> void:
+	if not _wanted(name_value):
+		return
 	camera.global_position = eye
 	camera.look_at(target, Vector3.UP)
 	# Carry the grass ring and the terrain bubble to the stand, then give them
@@ -219,14 +271,72 @@ func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 		player.global_position = Vector3(eye.x, eye.y, eye.z)
 	torch.visible = interior
 	torch.global_position = eye + Vector3(0.0, 0.35, 0.0)
-	for i in 40:
-		await physics_frame
+	# T1-HALL-3: 40 was still not enough, and the failure is quiet enough to be
+	# worth naming. Two frames of THE SAME STAND in one run --
+	# `H-03-ramp-foot` and `H-03-ramp-foot-golden`, identical camera, seconds
+	# apart -- came back with 5.5% and 54.6% green cover on the same bank. The
+	# first is not a content change and not a scatter edit: it is the grass ring
+	# still rebuilding when the shutter opened. `capture_check` passes it,
+	# because `_grass_problems` asks whether the field EXISTS, follows this
+	# camera and holds instances -- all true of a field that is half-built. A
+	# partially-streamed field is exactly the "silently degraded frame" that
+	# file was written about, and it currently has no test for it; flagged in
+	# the handover as the next thing that checker wants.
+	#
+	# The cheap half of the answer is here: give the ring real time. The
+	# expensive half -- a stability poll on the field's own coverage -- belongs
+	# in `capture_check` where every tool gets it, not in this one tool.
+	# TWO settle passes with a real drawn frame between them, not one long one.
+	# Frame count was never the lever: `H-03-ramp-foot` came back at 5.3% green
+	# cover on a bank where `H-03-ramp-foot-golden` -- the very next shot, same
+	# camera, same everything -- reads 53.6%. The variant succeeds because it is
+	# the SECOND visit to that position, and what it is really waiting on is
+	# Terrain3D streaming the region in: `grass_field`'s tufts are placed in a
+	# shader off the live height and region maps, so until the region is
+	# resident the field has nothing to stand on and quietly draws almost
+	# nothing. Raising 40 -> 110 frames did not fix it; giving the stand a
+	# second pass after a completed draw does.
+	for pass_index in 2:
+		for i in 60:
+			await physics_frame
+		for i in POSE_FRAMES:
+			await process_frame
+		await RenderingServer.frame_post_draw
 	if look != null:
 		if look.has_method("set_weather"):
 			look.call("set_weather", {})
 		look.call("apply_time", hour)
 	for i in POSE_FRAMES:
 		await process_frame
+	# T1-HALL-3. This tool shipped two rounds of evidence without ever calling
+	# the checker that exists to catch exactly what was wrong with it.
+	# `capture_check._embedded_problems` was WRITTEN by T1-STORMWALL in response
+	# to the JUDGE-4 H-04-gate-mouth defect -- a camera buried in the ramp -- and
+	# `_ground_problems` names that frame in its own failure text. Neither ever
+	# ran here, so JUDGE-5 was handed the same broken frame a second time and
+	# spent its top-ranked finding on it.
+	#
+	# `warn_only` rather than `require`: `require` quits the whole run on the
+	# first problem, and this tool legitimately shoots one INTERIOR stand
+	# (H-07, inside the courtyard) where the grass field is correctly absent.
+	# Exterior stands promote any problem to a run failure, so the exit code
+	# still refuses to call a degraded set "evidence"; the interior stand only
+	# reports.
+	# The player is EXPECTED to be inside the camera here: `_shoot` parks it at
+	# the eye on purpose, so the grass ring and the terrain bubble stream to the
+	# stand rather than staying wherever the gameplay rig was left. Declaring it
+	# is what lets the embed check stay strict about everything else -- it now
+	# walks several hits instead of reporting only the first, so "buried in the
+	# ramp AND standing in the player" reports the ramp, which is the whole
+	# point of running it here.
+	var checked := CAPTURE_CHECK.warn_only(self, camera, "clear", null,
+		[player] if player != null else [])
+	for line: String in checked:
+		if interior:
+			print("[capture_check] (interior stand %s -- reported, not fatal)" % name_value)
+		else:
+			failures.append("%s: %s" % [name_value, line])
+
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
 	if image == null:

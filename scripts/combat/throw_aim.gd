@@ -643,8 +643,8 @@ func launch_assist_diagnostics() -> Dictionary:
 		return report
 	var query := PhysicsRayQueryParameters3D.create(eye, centre)
 	query.collide_with_areas = false
-	if _player is CollisionObject3D:
-		query.exclude = [(_player as CollisionObject3D).get_rid()]
+	# The same exclusions the orb itself flies with -- see `_sight_exclusions()`.
+	query.exclude = _sight_exclusions()
 	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
 	var collider := hit.get("collider") as Node
 	if collider != null:
@@ -682,13 +682,40 @@ func _target_is_visible(eye: Vector3, centre: Vector3) -> bool:
 		return false
 	var query := PhysicsRayQueryParameters3D.create(eye, centre)
 	query.collide_with_areas = false
-	if _player is CollisionObject3D:
-		query.exclude = [(_player as CollisionObject3D).get_rid()]
+	query.exclude = _sight_exclusions()
 	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
 	if hit.is_empty():
 		return true
 	var collider := hit.get("collider") as Node
 	return collider == _target or (collider != null and _target.is_ancestor_of(collider))
+
+
+## What this ray is allowed to ignore, and why the list is not just the trainer.
+##
+## OP-0830-5. `_release()` hands the orb an ignore list built from `_player` plus
+## `_pass_through` -- which `combat_manager.gd` sets to the player's OWN creature
+## -- so an orb flies straight through your creature and hits the target behind
+## it. The eligibility check did not, so a creature standing between the camera
+## and the thing it is fighting reported `line_of_sight_blocked` and the assist
+## was refused, on a throw the physics would have delivered perfectly.
+##
+## That is not a rare geometry. Combat is piloted: your creature is *supposed* to
+## be in the opponent's face, which is exactly where it occludes it. It showed up
+## in `tests/smoke_catching.gd`'s own launch log before this lane existed (one of
+## four commits in a real fight refused for it) and again in the OP-0830-5
+## measurement run.
+##
+## The ray and the orb now agree about what is solid. This does not widen the
+## assist: a reticle genuinely off the body is still ineligible, and anything
+## that is not the trainer or the trainer's creature still blocks.
+func _sight_exclusions() -> Array[RID]:
+	var out: Array[RID] = []
+	if _player is CollisionObject3D:
+		out.append((_player as CollisionObject3D).get_rid())
+	for body: Node3D in _pass_through:
+		if body != null and is_instance_valid(body) and body is CollisionObject3D:
+			out.append((body as CollisionObject3D).get_rid())
+	return out
 
 
 func _launch_direction(camera: Camera3D, origin: Vector3) -> Vector3:
@@ -879,6 +906,10 @@ static func miss_message(reason: String, closest: float, needed: float) -> Strin
 	if closest == INF or closest < 0.0:
 		return "the orb went wide"
 	var gap := maxf(0.0, closest - needed)
+	if gap < 0.05:
+		# Rounding "0.005m" to "0.0m" printed a miss that read as a bug. A throw
+		# this close missed by less than the message can express, so it says so.
+		return "so close — a hand's width wide"
 	if gap <= 0.35:
 		return "so close — %.1fm wide" % gap
 	if reason == "ground":

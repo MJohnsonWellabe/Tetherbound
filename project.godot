@@ -47,6 +47,20 @@ window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[audio]
+
+; T1-AUDIO. res://default_bus_layout.tres is already Godot's default path for
+; this setting, so naming it here changes no behaviour -- it is written out for
+; the same reason the shadow settings below are: a value nobody can find is a
+; value nobody maintains, and the mixer is now something the game depends on
+; rather than an empty Master bus.
+;
+; Six buses: Master, Music, Ambience, SFX, Creatures, UI. The layout is
+; GENERATED, by tools/audio/make_bus_layout.gd -- edit that and rerun it rather
+; than hand-editing the .tres. Per-bus authored levels and the player's own
+; volume settings both live in data/config/audio.json.
+buses/default_bus_layout="res://default_bus_layout.tres"
+
 [input_devices]
 
 ; The Ally's sticks rest slightly off-centre. 0.2 is a starting value and is

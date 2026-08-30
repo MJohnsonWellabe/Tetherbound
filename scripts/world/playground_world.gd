@@ -1255,6 +1255,12 @@ func _build_sigil_gate() -> void:
 	# skip any offset with no ground under it, so this cannot hang panels over
 	# the carve.
 	gate.set("seal_half_width", 16.0)
+	# T1-HALL-3 / JUDGE-5 D4: piers, a lintel and two sigil banners, so this
+	# reads as Team Tether's checkpoint rather than as "a three-rail farm fence
+	# with a small yellow padlock". Opt-in on this gate only -- the village road
+	# gate keeps the plain leaf it is supposed to have. See `road_gate.gd`'s
+	# `faction_dressing`.
+	gate.set("faction_dressing", true)
 	add_child(gate)
 	gate.call("build", self, SIGIL_GATE_AT, SIGIL_GATE_YAW_DEG)
 

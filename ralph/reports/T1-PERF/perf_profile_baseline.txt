@@ -1,0 +1,208 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+=== PERF-ROG profile (OP23-01) ===
+label=none  sites=village, band1, band2, band3, band4, stronghold  frames/site=120
+NOTE: container hardware, not a ROG Ally. Read the RANKING, never the absolutes.
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _build_terrain (res://scripts/world/playground_world.gd:641)
+         [1] _ready (res://scripts/world/playground_world.gd:398)
+WARNING: Terrain3DTextureAsset#8806:set_albedo_texture:79: Texture 'meadow_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#8806:set_normal_texture:100: Texture 'meadow_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#6948:set_albedo_texture:79: Texture 'verge_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#6948:set_normal_texture:100: Texture 'verge_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#6974:set_albedo_texture:79: Texture 'rock_scree_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#6974:set_normal_texture:100: Texture 'rock_scree_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#2891:set_albedo_texture:79: Texture 'dirt_path_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#2891:set_normal_texture:100: Texture 'dirt_path_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#0313:set_albedo_texture:79: Texture 'wet_earth_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#0313:set_normal_texture:100: Texture 'wet_earth_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#2878:set_albedo_texture:79: Texture 'forest_floor_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:819)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+WARNING: Terrain3DTextureAsset#2878:set_normal_texture:100: Texture 'forest_floor_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:822)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:665)
+         [2] _ready (res://scripts/world/playground_world.gd:417)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 249559 placements, 517829 skipped]=1503 reorder[13 layers]=409
+[vegetation] grass field is on; 517829 placements across 3 layers left unbuilt (grass, drygrass, flowers)
+[vegetation] boot phases (ms): placements=2120 mark_harvestable=117 group_by_model=299 register_mesh_assets=42 build_batches_total=6440 (of which harvest_points[56436 nodes]=4960, initial_collision_stream[51584 solid]=259) update_mmis=1187
+[grass_field] grass ring: 315232 instances over 9 lattice layers (tuft_count asked for 300000)
+[grass_field] stone ring: 93236 instances over 9 lattice layers (count 90000)
+[grass_field] cover tier bushes   15052 instances over 7 lattice layers (count 14800)
+[grass_field] cover tier flowers  15052 instances over 7 lattice layers (count 14800)
+[grass_field] cover tier litter   48716 instances over 9 lattice layers (count 49000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 315232 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 248542 props in 32 batches (56436 harvestable, 0 already chopped, 152/51584 collision resident)
+[water] pond quads 2538, stream points 46, reeds 152, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 49, jetty 18, level -17.0
+[water] stream bank reeds 82, bank scrub 20
+[water] river quads 390, bank reeds 159, bank scrub 57
+[village] placed 14 structures
+[props] placed 128 props in 19 clusters
+[village_npcs] placed 6 of 8
+[relay_site] placed 1 of 1
+[trainers] placed 17 trainer(s)
+[quarry] 2 foundations, 4 pylons standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 114 harvest nodes
+[playground] placed 6 farm plots
+[warrens] cleared 375 scattered trees/rocks inside the 30m site radius
+[warrens] planted 134 pieces of ground cover around the site
+[warrens] 181 pieces of interior rock across 5 chambers
+[warrens] 188 structural members across 5 chambers
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.2m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+world booted and settled in 44.8s
+--- world totals (built once, same at every site) ---
+scatter        248167 placements in 32 batches, 51584 solid, 56436 harvest points
+nodes          161413 nodes, 202588 objects, 2048 MB static
+render bodies  28560 MultiMeshInstance3D, 6630 MeshInstance3D, 1202 StaticBody3D, 25 Area3D
+skinned        924 Skeleton3D (15580 bones total), 924 AnimationPlayer (39 playing)
+wild           893 creatures, 8 ticking here
+lights/fx      67 point lights, 4 particle systems
+scatter layers groundmat=147697, trees=42745, bushes=39786, path_stones=9341, rocks=5733, saplings=2829, grove=277, deadfall=134
+
+--- village  (10, -10) ---
+frame cpu      process mean 8.39 ms  p95 8.71  max 8.71  |  physics mean 9.09  max 9.19
+physics             13 active bodies, 386 collision pairs, 13 islands
+  collision_streaming       1.266 ms/call       2.53 ms/s   vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide
+  collision_resident          151       live CollisionShape3D nodes in the streaming bubble at this site
+  wild_cluster_sweep        0.275 ms/call      16.50 ms/s   encounter_director._tick_streaming(), every frame, over 265 clusters
+  wild_ticking                 11       wild bodies running _physics_process at this site
+  animating_bodies             42       AnimationPlayers advancing this frame, world-wide
+  hud_process               0.208 ms/call      12.48 ms/s   playground_hud._process(), every frame
+  interaction_arbiter       0.046 ms/call       2.77 ms/s   interaction_arbiter._process(), every frame
+
+--- band1  (0, 700) ---
+frame cpu      process mean 9.72 ms  p95 10.08  max 10.08  |  physics mean 9.67  max 9.69
+physics             12 active bodies, 481 collision pairs, 12 islands
+  collision_streaming       1.894 ms/call       3.79 ms/s   vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide
+  collision_resident          410       live CollisionShape3D nodes in the streaming bubble at this site
+  wild_cluster_sweep        0.184 ms/call      11.04 ms/s   encounter_director._tick_streaming(), every frame, over 265 clusters
+  wild_ticking                 10       wild bodies running _physics_process at this site
+  animating_bodies             44       AnimationPlayers advancing this frame, world-wide
+  hud_process               0.216 ms/call      12.97 ms/s   playground_hud._process(), every frame
+  interaction_arbiter       0.044 ms/call       2.66 ms/s   interaction_arbiter._process(), every frame
+
+--- band2  (0, 2200) ---
+frame cpu      process mean 10.21 ms  p95 10.31  max 10.31  |  physics mean 7.14  max 7.29
+physics             10 active bodies, 389 collision pairs, 10 islands
+  collision_streaming       0.855 ms/call       1.71 ms/s   vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide
+  collision_resident           92       live CollisionShape3D nodes in the streaming bubble at this site
+  wild_cluster_sweep        0.235 ms/call      14.10 ms/s   encounter_director._tick_streaming(), every frame, over 265 clusters
+  wild_ticking                  8       wild bodies running _physics_process at this site
+  animating_bodies             44       AnimationPlayers advancing this frame, world-wide
+  hud_process               0.228 ms/call      13.69 ms/s   playground_hud._process(), every frame
+  interaction_arbiter       0.020 ms/call       1.21 ms/s   interaction_arbiter._process(), every frame
+
+--- band3  (0, 4000) ---
+frame cpu      process mean 11.82 ms  p95 11.95  max 11.95  |  physics mean 19.21  max 21.01
+physics             10 active bodies, 463 collision pairs, 10 islands
+  collision_streaming       1.850 ms/call       3.70 ms/s   vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide
+  collision_resident          325       live CollisionShape3D nodes in the streaming bubble at this site
+  wild_cluster_sweep        0.290 ms/call      17.40 ms/s   encounter_director._tick_streaming(), every frame, over 265 clusters
+  wild_ticking                  8       wild bodies running _physics_process at this site
+  animating_bodies             44       AnimationPlayers advancing this frame, world-wide
+  hud_process               0.210 ms/call      12.58 ms/s   playground_hud._process(), every frame
+  interaction_arbiter       0.024 ms/call       1.44 ms/s   interaction_arbiter._process(), every frame
+
+--- band4  (0, 6000) ---
+frame cpu      process mean 6.07 ms  p95 6.05  max 9.02  |  physics mean 10.34  max 10.64
+physics             10 active bodies, 493 collision pairs, 10 islands
+  collision_streaming       0.379 ms/call       0.76 ms/s   vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide
+  collision_resident           22       live CollisionShape3D nodes in the streaming bubble at this site
+  wild_cluster_sweep        0.205 ms/call      12.30 ms/s   encounter_director._tick_streaming(), every frame, over 265 clusters
+  wild_ticking                  8       wild bodies running _physics_process at this site
+  animating_bodies             44       AnimationPlayers advancing this frame, world-wide
+  hud_process               0.237 ms/call      14.23 ms/s   playground_hud._process(), every frame
+  interaction_arbiter       0.023 ms/call       1.40 ms/s   interaction_arbiter._process(), every frame
+
+--- stronghold  (0, 7500) ---
+frame cpu      process mean 5.61 ms  p95 5.61  max 5.61  |  physics mean 7.55  max 7.55
+physics             17 active bodies, 422 collision pairs, 17 islands
+  collision_streaming       0.915 ms/call       1.83 ms/s   vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide
+  collision_resident          304       live CollisionShape3D nodes in the streaming bubble at this site
+  wild_cluster_sweep        0.365 ms/call      21.90 ms/s   encounter_director._tick_streaming(), every frame, over 265 clusters
+  wild_ticking                 15       wild bodies running _physics_process at this site
+  animating_bodies             51       AnimationPlayers advancing this frame, world-wide
+  hud_process               0.212 ms/call      12.73 ms/s   playground_hud._process(), every frame
+  interaction_arbiter       0.019 ms/call       1.16 ms/s   interaction_arbiter._process(), every frame
+
+=== RANKED per-frame cost, worst site (container CPU, not device) ===
+  wild_cluster_sweep        21.90 ms/s  (0.365 ms/call, worst at stronghold) = 2.2% of a 60fps CPU second
+  hud_process               14.23 ms/s  (0.237 ms/call, worst at band4) = 1.4% of a 60fps CPU second
+  collision_streaming        3.79 ms/s  (1.894 ms/call, worst at band1) = 0.4% of a 60fps CPU second
+  interaction_arbiter        2.77 ms/s  (0.046 ms/call, worst at village) = 0.3% of a 60fps CPU second
+
+A 60fps second has 16.7 ms of frame budget per frame and 1000 ms in total.
+Percentages above are of that whole second, on THIS box. A handheld's
+small cores run GDScript roughly 3-6x slower; multiply before judging.
+
+wrote /tmp/claude-0/-home-user-Tetherbound/70748b2e-e330-5093-92b2-73f0815a1840/scratchpad/perf_profile_baseline.json

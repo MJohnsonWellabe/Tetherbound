@@ -25,6 +25,7 @@ extends Node3D
 ## shares.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 
 const FLAG_PREFIX := "cache:"
 
@@ -74,8 +75,20 @@ func restore_progression_from_game(game: Node) -> void:
 func _deactivate() -> void:
 	if _prompt != null and is_instance_valid(_prompt):
 		_prompt.call("set_enabled", false)
+	PICKUP_GLOW.detach(self)
 	visible = false
 	queue_free()
+
+
+## The find's own colour, from `data/items/items.json` -- the same source
+## `key_pickup.gd::_item_colour()` reads, so two pickup props marking the same
+## item can never disagree about what colour it is.
+func _item_colour() -> Color:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return Color(0.85, 0.72, 0.35)
+	var items: RefCounted = game.get("items")
+	return items.call("colour", _item_id) if items != null else Color(0.85, 0.72, 0.35)
 
 
 ## Same PackedScene-vs-Mesh branch harvest_node.gd::_build_visual() and
@@ -104,16 +117,21 @@ func _build_visual() -> void:
 		push_warning("item_cache_pickup: '%s' did not load as a Mesh or PackedScene" % _model_path)
 	add_child(_visual)
 
-	# A light of its own, the same short-range presence cue tm_pickup.gd's
-	# own header argues for: this is a one-time find worth noticing, met at
-	# dusk or in cover as often as in the open.
-	var glow := OmniLight3D.new()
-	glow.name = "Glow"
-	glow.light_color = Color(0.85, 0.72, 0.35)
-	glow.light_energy = 0.7
-	glow.omni_range = 3.0
-	glow.position = Vector3.UP * 0.5
-	add_child(glow)
+	# OP-0830-3. This used to carry an `OmniLight3D` of its own -- the
+	# "short-range presence cue" tm_pickup.gd's header argues for, and the
+	# reasoning was sound: a one-time find is met at dusk or in cover as often
+	# as in the open. What was wrong with it is that it was THIS PROP'S answer.
+	# Five pickup scripts each had a different one (or none), so whether a find
+	# was visible depended on which script drew it, and the owner's report is
+	# that most of them are not. It also does not scale: the world holds well
+	# over a hundred pickups and OP-0830-6 is an open ROG performance defect, so
+	# a light each is exactly the thing this lane's order rules out by name.
+	#
+	# Replaced by the shared highlight, which is two MultiMeshes for every
+	# pickup in the game and rides ABOVE the grass canopy rather than trying to
+	# out-shine it. The item's own colour still drives the tint, so a cache
+	# still reads as its own find rather than as a generic marker.
+	PICKUP_GLOW.attach(self, _item_colour())
 
 
 func _on_picked_up() -> void:

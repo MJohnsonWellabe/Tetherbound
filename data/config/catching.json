@@ -15,6 +15,9 @@
     "centre_bonus": 1.45,
     "edge_bonus": 0.80,
 
+    "_comment_accuracy_span_0830": "OWNER PLAYTEST 2026-08-30, OP-0830-5: 'catching is way too hard.' The cause was measured, not guessed, and it was NOT that the odds were low -- it was that `accuracy_bonus` was pinned at `edge_bonus` on nearly every throw the game can produce. It divided by `body_radius`, which is 0.325m on a Bramblebun; `tools/_probe_catch_rate.gd` drove 47 landed throws in real fights, every one with the launch assist committed and aiming at the predicted body centre, and measured a MEDIAN placement of 0.375m -- already off the end of the scale -- with 77% of throws saturating the clamp and a mean multiplier of 0.845 against the 1.45 this block calls 'the ONLY reason the aiming skill exists'. The residual is the target moving during the orb's flight, which the launch prediction leads but cannot cancel; it is not player error and no amount of aiming removes it.\n\nSo placement is now judged over the envelope that DEFINES a hit -- `body_radius + throw.radius * accuracy_span`, the same distance `orb.gd::_check_target()` tests against. `accuracy_span` is the tunable: 1.0 means 'the whole collision sphere grades', below 1.0 tightens the scale back toward the body, above 1.0 would be more forgiving than the hit test itself and is not meaningful. This raises NOTHING at the top -- a dead-centre throw is worth exactly 1.45 as before, and a throw at the very edge of the sphere is worth exactly 0.80 as before. It only stops four throws in five being scored as the worst one possible.",
+    "accuracy_span": 1.0,
+
     "min": 0.02,
     "max": 0.95
   },
