@@ -3,7 +3,42 @@
 Published to GitHub Pages by `.github/workflows/release.yml` on every push to
 `main`, alongside the Windows build it links to.
 
-## 2026-08-30 redesign
+## 2026-08-30 redesign, second pass: the page IS the mock
+
+A same-day owner directive superseded the sectioned rebuild below: the site
+is now a single image, `site/img/page-board.jpg` — a crop of the LEFT panel
+of `docs/website/redesign-2026-08-30/02_WEBSITE_ART_BOARD_FINAL.png` (the
+approved page mock: no Steam branding, "DOWNLOAD TETHERBOUND" baked in —
+not the older mock with Steam/wishlist elements) — shown full width, with
+four transparent `position:absolute` links overlaid on its baked-in buttons
+(hero download, hero "follow development", footer download banner, nav
+"DOWNLOAD" word). `site/index.html` has no sections, no palette CSS, no nav
+markup: the picture is the page.
+
+**The mock is concept/target art, not an in-game capture.** The trainer,
+creature, castle and landscape imagery in `page-board.jpg` illustrates the
+redesign brief's intended look — a viewer could easily mistake it for a
+current-build screenshot, so don't caption or link it as one.
+
+**To regenerate the crop** (Python + Pillow):
+
+```python
+from PIL import Image, ImageDraw
+img = Image.open("docs/website/redesign-2026-08-30/02_WEBSITE_ART_BOARD_FINAL.png").convert("RGB")
+crop = img.crop((27, 30, 1003, 986))  # 976x956, the left (page-mock) panel
+# paint out the baked "placeholder" footer note with the sampled footer background colour
+ImageDraw.Draw(crop).rectangle([748, 905, 976, 956], fill=(9, 13, 14))
+crop.save("site/img/page-board.jpg", quality=92)
+```
+
+The four `<a class="hit">` overlay rectangles in `index.html` are positioned
+in percentages of the 976×956 crop so they track any scale. If the art board
+or crop box ever changes, re-measure each button's corners against the new
+crop (open it at full resolution, or overlay a coordinate grid) before
+trusting the old percentages — an overlay that misses its baked button by
+more than a few pixels is a defect.
+
+## 2026-08-30 redesign, first pass (superseded, kept for history)
 
 The page was rebuilt from scratch per
 `docs/website/redesign-2026-08-30/01_CLAUDE_PROMPT_REDO_WEBSITE.md` (the
@@ -49,7 +84,11 @@ addresses the release by tag instead; the tag is literally `latest` and the
 workflow re-points it at every push, so this form is exactly as permanent and
 does not care about the prerelease flag.
 
-## What each section uses today
+## What each section uses today (first-pass markup — not the current page)
+
+This table documents the first-pass sectioned rebuild's image choices for
+historical/reuse reference. The current page (see above) uses only
+`page-board.jpg`; none of the table below is wired into `index.html` today.
 
 | Section | Image(s) | Source |
 |---|---|---|
@@ -156,13 +195,18 @@ and camera framing, and not trustworthy for fine judgements about lighting
 quality or post-processing. On a machine with a real GPU, switch to `vulkan`
 and the caveat lifts.
 
-## Colours
+## Colours (first-pass markup — not the current page)
 
-`index.html` uses `data/config/palette.json` verbatim, the same file the game's
-materials, lighting and UI read. The site and the build cannot drift apart in
-palette without somebody editing that file.
+The current page has no CSS palette; it's near-black (`#0a0d0e`) behind one
+image. The `data/config/palette.json` wiring described below only applied to
+the first-pass sectioned rebuild's CSS custom properties, which no longer
+ship.
 
-`--tether-teal` and `--oxblood` keep their in-game reservation: teal only in
+`index.html` used `data/config/palette.json` verbatim, the same file the game's
+materials, lighting and UI read. The site and the build could not drift apart
+in palette without somebody editing that file.
+
+`--tether-teal` and `--oxblood` kept their in-game reservation: teal only in
 the Team Tether story band, oxblood only as that band's ground tint.
 
 ## One-time setup
