@@ -3,7 +3,7 @@
   "title": "River & Relay / Band 3: river arrival -> relay pickets -> officer -> relay captain -> captive -> Old Mill Crossing restored",
   "lane": "journey",
   "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section D (RT-08, RT-09), section E.1 (CB-04's band 3 fights: relay ladder + relay_captain), section E.5 (objectives `defeat_the_relay_captain`, `rescue_the_captive`, `disable_the_relay`, `restore_the_mill_crossing`), section G (GF-10-RELAY-01/02/03, GF-21-WEATHER-03, GF-14-COMBAT-04c) and section H (0.1 Hz plus the band handoff window).",
-  "_comment_objective_order": "objectives.json's main chain runs defeat_the_relay_captain (15/24), rescue_the_captive (16/24), disable_the_relay (17/24), restore_the_mill_crossing (18/24). Section B's span for S07 names the captain, the captive and the crossing and does not name disable_the_relay; it is transcribed in the chain's own order because the chain is what the quest log tracks.",
+  "_comment_objective_order": "objectives.json's main chain runs defeat_the_relay_captain (18/27), rescue_the_captive (19/27), disable_the_relay (20/27), restore_the_mill_crossing (21/27). Section B's span for S07 names the captain, the captive and the crossing and does not name disable_the_relay; it is transcribed in the chain's own order because the chain is what the quest log tracks.",
   "evidence_lane": "logic",
   "capture_lane": "S07C",
   "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S07C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S07C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
@@ -124,7 +124,7 @@
         "check": "objective_is",
         "id": "defeat_the_relay_captain"
       },
-      "expected": "Section E.5 objective 15/24 `defeat_the_relay_captain`, 'Defeat the Relay Captain.'"
+      "expected": "Section E.5 objective 18/27 `defeat_the_relay_captain`, 'Defeat the Relay Captain.'"
     },
     {
       "id": "S07-12",
@@ -177,7 +177,7 @@
       "title": "Section E.5 nav note -- defeat_the_relay_captain",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 15/24 `defeat_the_relay_captain`. Wording: 'Defeat the Relay Captain.' It names WHAT and no WHERE at all -- it names a person and a place-word ('Relay') that the player may or may not have on the map yet. Player-visible information: `the_tether_relay` is a `major` map landmark at (350,3760) with its own relay icon; the ground ahead falls toward a river. Route decision: continue north to the river and follow the near bank east to the relay pin, because the objective's only locational word is the relay's own name. Reasoned from the map frame taken above and from GF-09-WARRENS-01 (S06). Operator: record whether the relay was a pin before it was discovered."
+        "text": "Section E.5 navigation record, objective 18/27 `defeat_the_relay_captain`. Wording: 'Defeat the Relay Captain.' It names WHAT and no WHERE at all -- it names a person and a place-word ('Relay') that the player may or may not have on the map yet. Player-visible information: `the_tether_relay` is a `major` map landmark at (350,3760) with its own relay icon; the ground ahead falls toward a river. Route decision: continue north to the river and follow the near bank east to the relay pin, because the objective's only locational word is the relay's own name. Reasoned from the map frame taken above and from GF-09-WARRENS-01 (S06). Operator: record whether the relay was a pin before it was discovered."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -602,7 +602,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "Section E.5 objective 15/24's own target"
+      "expected": "Section E.5 objective 18/27's own target"
     },
     {
       "id": "S07-51",
@@ -708,7 +708,7 @@
         "check": "flag_set",
         "flag": "relay_captain_defeated"
       },
-      "expected": "`relay_captain_defeated` closes section E.5 objective 15/24"
+      "expected": "`relay_captain_defeated` closes section E.5 objective 18/27"
     },
     {
       "id": "S07-61",
@@ -718,14 +718,14 @@
         "check": "objective_is",
         "id": "rescue_the_captive"
       },
-      "expected": "Section E.5 objective 16/24 `rescue_the_captive`, 'Find who Team Tether is holding at the relay.'"
+      "expected": "Section E.5 objective 19/27 `rescue_the_captive`, 'Find who Team Tether is holding at the relay.'"
     },
     {
       "id": "S07-62",
       "title": "Section E.5 nav note -- rescue_the_captive",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 16/24 `rescue_the_captive`. Wording: 'Find who Team Tether is holding at the relay.' It names WHAT and a WHERE the player is already standing in. Player-visible information: the compound itself, now that its ladder is beaten. Route decision: search the compound; no travel decision exists. Reasoned from GF-10-RELAY-02."
+        "text": "Section E.5 navigation record, objective 19/27 `rescue_the_captive`. Wording: 'Find who Team Tether is holding at the relay.' It names WHAT and a WHERE the player is already standing in. Player-visible information: the compound itself, now that its ladder is beaten. Route decision: search the compound; no travel decision exists. Reasoned from GF-10-RELAY-02."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -790,7 +790,7 @@
         "check": "flag_set",
         "flag": "captive_rescued"
       },
-      "expected": "`captive_rescued` closes section E.5 objective 16/24"
+      "expected": "`captive_rescued` closes section E.5 objective 19/27"
     },
     {
       "id": "S07-68",
@@ -800,14 +800,14 @@
         "check": "objective_is",
         "id": "disable_the_relay"
       },
-      "expected": "Section E.5 objective 17/24 `disable_the_relay`, 'Shut down the Tether Relay.'"
+      "expected": "Section E.5 objective 20/27 `disable_the_relay`, 'Shut down the Tether Relay.'"
     },
     {
       "id": "S07-69",
       "title": "Section E.5 nav note -- disable_the_relay",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 17/24 `disable_the_relay`. Wording: 'Shut down the Tether Relay.' It names WHAT and a WHERE the player is standing in. Player-visible information: the relay apparatus and its pylons, in frame in GF-10-RELAY-02. Route decision: no travel; find the apparatus in the compound. AMBIGUITY RECORDED: section B's S07 span does not name this rung at all, so the protocol gives no site for the interaction; it is transcribed at the compound centre, which is where the apparatus stands."
+        "text": "Section E.5 navigation record, objective 20/27 `disable_the_relay`. Wording: 'Shut down the Tether Relay.' It names WHAT and a WHERE the player is standing in. Player-visible information: the relay apparatus and its pylons, in frame in GF-10-RELAY-02. Route decision: no travel; find the apparatus in the compound. AMBIGUITY RECORDED: section B's S07 span does not name this rung at all, so the protocol gives no site for the interaction; it is transcribed at the compound centre, which is where the apparatus stands."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -858,7 +858,7 @@
         "check": "flag_set",
         "flag": "relay_disabled"
       },
-      "expected": "`relay_disabled` closes section E.5 objective 17/24"
+      "expected": "`relay_disabled` closes section E.5 objective 20/27"
     },
     {
       "id": "S07-74",
@@ -868,14 +868,14 @@
         "check": "objective_is",
         "id": "restore_the_mill_crossing"
       },
-      "expected": "Section E.5 objective 18/24 `restore_the_mill_crossing`, 'Restore the Old Mill Crossing.'"
+      "expected": "Section E.5 objective 21/27 `restore_the_mill_crossing`, 'Restore the Old Mill Crossing.'"
     },
     {
       "id": "S07-75",
       "title": "Section E.5 nav note -- restore_the_mill_crossing",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 18/24 `restore_the_mill_crossing`. Wording: 'Restore the Old Mill Crossing.' It names WHAT and a named WHERE. Player-visible information: `old_mill_crossing` is a `major` map landmark at (-152,4203) with a bridge icon, upstream and west of the relay; the river is the barrier the whole band is built around. Route decision: follow the bank west and upstream to the crossing pin. Reasoned from GF-10-RELAY-01, GF-10-RELAY-02 and the map frame taken at the top of this segment."
+        "text": "Section E.5 navigation record, objective 21/27 `restore_the_mill_crossing`. Wording: 'Restore the Old Mill Crossing.' It names WHAT and a named WHERE. Player-visible information: `old_mill_crossing` is a `major` map landmark at (-152,4203) with a bridge icon, upstream and west of the relay; the river is the barrier the whole band is built around. Route decision: follow the bank west and upstream to the crossing pin. Reasoned from GF-10-RELAY-01, GF-10-RELAY-02 and the map frame taken at the top of this segment."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -944,7 +944,7 @@
         "check": "flag_set",
         "flag": "mill_crossing_restored"
       },
-      "expected": "`mill_crossing_restored` closes section E.5 objective 18/24 and section B's S07 span"
+      "expected": "`mill_crossing_restored` closes section E.5 objective 21/27 and section B's S07 span"
     },
     {
       "id": "S07-80a",

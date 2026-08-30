@@ -174,7 +174,7 @@
         "check": "objective_is",
         "id": "clear_the_burrow_warrens"
       },
-      "expected": "Section E.5 objective 14/24 `clear_the_burrow_warrens`, 'Clear the Burrow Warrens beneath the Old Quarry.'",
+      "expected": "Section E.5 objective 17/27 `clear_the_burrow_warrens`, 'Clear the Burrow Warrens beneath the Old Quarry.'",
       "_derived_from": "S06-11"
     },
     {

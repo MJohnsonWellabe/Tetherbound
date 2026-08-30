@@ -140,7 +140,7 @@
         "check": "objective_is",
         "id": "village_tools"
       },
-      "expected": "Section E.5 objective 3/24 `village_tools`, 'Meet Tam in the village and take his tools.'"
+      "expected": "Section E.5 objective 6/27 `village_tools`, 'Meet Tam in the village and take his tools.'"
     },
     {
       "id": "S03-13",
@@ -236,7 +236,7 @@
       "title": "Section E.5 nav note -- village_tools",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 3/24 `village_tools`. Wording: 'Meet Tam in the village and take his tools.' It names WHAT (Tam, tools) and a WHERE only as specific as 'in the village'; it does not say which building or which side. Player-visible information: the fresh-save reveal shows the village and its roads, and GF-18-MAP-01 is the record of what that map actually offers -- whether Tam is a pin at all. Route decision: cross the village square westward along the spine, because the objective names no landmark and the square is the only place the map marks. Reasoned from GF-18-MAP-01 and GF-03-VILLAGE-01 (S02). Operator: record time-to-route-decision and whether the map named Tam."
+        "text": "Section E.5 navigation record, objective 6/27 `village_tools`. Wording: 'Meet Tam in the village and take his tools.' It names WHAT (Tam, tools) and a WHERE only as specific as 'in the village'; it does not say which building or which side. Player-visible information: the fresh-save reveal shows the village and its roads, and GF-18-MAP-01 is the record of what that map actually offers -- whether Tam is a pin at all. Route decision: cross the village square westward along the spine, because the objective names no landmark and the square is the only place the map marks. Reasoned from GF-18-MAP-01 and GF-03-VILLAGE-01 (S02). Operator: record time-to-route-decision and whether the map named Tam."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -310,14 +310,14 @@
         "check": "objective_is",
         "id": "tournament_build_team"
       },
-      "expected": "Section E.5 objective 4/24 `tournament_build_team`"
+      "expected": "Section E.5 objective 7/27 `tournament_build_team`"
     },
     {
       "id": "S03-29",
       "title": "Section E.5 nav note -- tournament_build_team",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 4/24 `tournament_build_team`. Wording: 'Catch and raise a team for the village tournament.' It names WHAT and no WHERE at all -- there is nowhere named to go. Player-visible information: the minimap and the world itself; wild creatures are visible individuals on the meadow south-east of the village (the practice meadow the opening already used). Route decision: return to the practice meadow because it is the only ground the player has already seen wild creatures on. Reasoned from GF-18-MAP-01 and GF-03-VILLAGE-02. Operator: record whether an objective that names no place left the player uncertain, and for how long."
+        "text": "Section E.5 navigation record, objective 7/27 `tournament_build_team`. Wording: 'Catch and raise a team for the village tournament.' It names WHAT and no WHERE at all -- there is nowhere named to go. Player-visible information: the minimap and the world itself; wild creatures are visible individuals on the meadow south-east of the village (the practice meadow the opening already used). Route decision: return to the practice meadow because it is the only ground the player has already seen wild creatures on. Reasoned from GF-18-MAP-01 and GF-03-VILLAGE-02. Operator: record whether an objective that names no place left the player uncertain, and for how long."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -1198,14 +1198,14 @@
         "check": "objective_is",
         "id": "tournament_train_team"
       },
-      "expected": "Section E.5 objective 5/24 `tournament_train_team`, 'Train with your team before the tournament.'"
+      "expected": "Section E.5 objective 8/27 `tournament_train_team`, 'Train with your team before the tournament.'"
     },
     {
       "id": "S03-42",
       "title": "Section E.5 nav note -- tournament_train_team",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 5/24 `tournament_train_team`. Wording: 'Train with your team before the tournament.' It names WHAT and no WHERE. Player-visible information: the practice arena's clearing north of the square, and Bryn standing in it, are visible from the village spine; the tournament board stands in the same clearing. Route decision: walk back into the village and north to the practice ground, because a trainer standing in a cleared arena is the only 'training' affordance the world shows. Reasoned from GF-03-VILLAGE-02 and GF-18-MAP-01."
+        "text": "Section E.5 navigation record, objective 8/27 `tournament_train_team`. Wording: 'Train with your team before the tournament.' It names WHAT and no WHERE. Player-visible information: the practice arena's clearing north of the square, and Bryn standing in it, are visible from the village spine; the tournament board stands in the same clearing. Route decision: walk back into the village and north to the practice ground, because a trainer standing in a cleared arena is the only 'training' affordance the world shows. Reasoned from GF-03-VILLAGE-02 and GF-18-MAP-01."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -1708,7 +1708,7 @@
       "title": "Section E.5 nav note -- tournament_gather_materials",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 6/24 `tournament_gather_materials`. Wording: 'Gather wood and stone for a home.' It names WHAT and no WHERE. Player-visible information: harvest nodes are visible props with their own prompts ('Gather deadwood', 'Prise loose stones', 'Strip meadow grass') scattered through the fields around the village, and Grandpa's own send-off named the verges of the road. Route decision: work the ring of nodes around the village clockwise from the square, because they are visible from the spine and the objective names no site. Reasoned from GF-03-VILLAGE-02."
+        "text": "Section E.5 navigation record, objective 9/27 `tournament_gather_materials`. Wording: 'Gather wood and stone for a home.' It names WHAT and no WHERE. Player-visible information: harvest nodes are visible props with their own prompts ('Gather deadwood', 'Prise loose stones', 'Strip meadow grass') scattered through the fields around the village, and Grandpa's own send-off named the verges of the road. Route decision: work the ring of nodes around the village clockwise from the square, because they are visible from the spine and the objective names no site. Reasoned from GF-03-VILLAGE-02."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -2479,14 +2479,14 @@
         "check": "objective_is",
         "id": "tournament_build_home"
       },
-      "expected": "Section E.5 objective 7/24 `tournament_build_home`, 'Build a small home of your own.'"
+      "expected": "Section E.5 objective 10/27 `tournament_build_home`, 'Build a small home of your own.'"
     },
     {
       "id": "S03-107",
       "title": "Section E.5 nav note -- tournament_build_home",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 7/24 `tournament_build_home`. Wording: 'Build a small home of your own.' It names WHAT and no WHERE -- the site is the player's choice, which is the point. Player-visible information: clear meadow south of the village, off the road and clear of the harvest ring. Route decision: build on the flat ground at (-6,-40), because it is open, close to the square and to the practice meadow, and Grandpa's send-off said to make camp before dark. Reasoned from GF-03-VILLAGE-02."
+        "text": "Section E.5 navigation record, objective 10/27 `tournament_build_home`. Wording: 'Build a small home of your own.' It names WHAT and no WHERE -- the site is the player's choice, which is the point. Player-visible information: clear meadow south of the village, off the road and clear of the harvest ring. Route decision: build on the flat ground at (-6,-40), because it is open, close to the square and to the practice meadow, and Grandpa's send-off said to make camp before dark. Reasoned from GF-03-VILLAGE-02."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -3177,14 +3177,14 @@
         "check": "objective_is",
         "id": "tournament_build_creature_beds"
       },
-      "expected": "Section E.5 objective 8/24 `tournament_build_creature_beds`, 'Build a Creature Bed for each of your entrants.' with the 1/3 count appended"
+      "expected": "Section E.5 objective 11/27 `tournament_build_creature_beds`, 'Build a Creature Bed for each of your entrants.' with the 1/3 count appended"
     },
     {
       "id": "S03-175",
       "title": "Section E.5 nav note -- tournament_build_creature_beds",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 8/24 `tournament_build_creature_beds`. Wording: 'Build a Creature Bed for each of your entrants. n/3' -- the one entry in the chain that carries a count, because 'DONE or not-yet' genuinely fails a three-part objective. It names WHAT and a WHERE implied by the home just built. Route decision: stay on the home site. Reasoned from the frames of this build."
+        "text": "Section E.5 navigation record, objective 11/27 `tournament_build_creature_beds`. Wording: 'Build a Creature Bed for each of your entrants. n/3' -- the one entry in the chain that carries a count, because 'DONE or not-yet' genuinely fails a three-part objective. It names WHAT and a WHERE implied by the home just built. Route decision: stay on the home site. Reasoned from the frames of this build."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -3555,14 +3555,14 @@
         "check": "objective_is",
         "id": "tournament_sleep"
       },
-      "expected": "Section E.5 objective 9/24 `tournament_sleep`, 'Sleep until morning in your new home.'"
+      "expected": "Section E.5 objective 12/27 `tournament_sleep`, 'Sleep until morning in your new home.'"
     },
     {
       "id": "S03-207",
       "title": "Section E.5 nav note -- tournament_sleep",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 9/24 `tournament_sleep`. Wording: 'Sleep until morning in your new home.' It names WHAT and a WHERE the player themselves chose. Route decision: the camp just placed is the sleep spot. Reasoned from the frames of this build."
+        "text": "Section E.5 navigation record, objective 12/27 `tournament_sleep`. Wording: 'Sleep until morning in your new home.' It names WHAT and a WHERE the player themselves chose. Route decision: the camp just placed is the sleep spot. Reasoned from the frames of this build."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -3803,14 +3803,14 @@
         "check": "objective_is",
         "id": "tournament_feed_team"
       },
-      "expected": "Section E.5 objective 10/24 `tournament_feed_team`, 'Feed your team before you sign up.'"
+      "expected": "Section E.5 objective 13/27 `tournament_feed_team`, 'Feed your team before you sign up.'"
     },
     {
       "id": "S03-230",
       "title": "Section E.5 nav note -- tournament_feed_team",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 10/24 `tournament_feed_team`. Wording: 'Feed your team before you sign up.' It names WHAT and no WHERE, because feeding happens in the satchel rather than in a place. objectives.json's own note on the ORDER is the design being tested here: 'rest and food are the two rungs immediately before sign-up because both expire'. Route decision: no travel; open the Satchel. Reasoned from the objective line alone, which is itself the finding to record."
+        "text": "Section E.5 navigation record, objective 13/27 `tournament_feed_team`. Wording: 'Feed your team before you sign up.' It names WHAT and no WHERE, because feeding happens in the satchel rather than in a place. objectives.json's own note on the ORDER is the design being tested here: 'rest and food are the two rungs immediately before sign-up because both expire'. Route decision: no travel; open the Satchel. Reasoned from the objective line alone, which is itself the finding to record."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },

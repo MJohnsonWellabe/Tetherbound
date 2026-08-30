@@ -154,7 +154,7 @@
         "check": "objective_is",
         "id": "fight_through_the_hall"
       },
-      "expected": "Section E.5 objective 20/24 `fight_through_the_hall`",
+      "expected": "Section E.5 objective 23/27 `fight_through_the_hall`",
       "_derived_from": "S10a-11"
     },
     {

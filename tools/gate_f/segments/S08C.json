@@ -174,7 +174,7 @@
         "check": "objective_is",
         "id": "defeat_the_captains"
       },
-      "expected": "Section E.5 objective 19/24 `defeat_the_captains`, 'Defeat the Upper Meadows captains.' with the n/3 count appended -- one of only two counted entries in the chain",
+      "expected": "Section E.5 objective 22/27 `defeat_the_captains`, 'Defeat the Upper Meadows captains.' with the n/3 count appended -- one of only two counted entries in the chain",
       "_derived_from": "S08-11"
     },
     {

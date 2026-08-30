@@ -125,7 +125,7 @@
         "check": "objective_is",
         "id": "clear_the_burrow_warrens"
       },
-      "expected": "Section E.5 objective 14/24 `clear_the_burrow_warrens`, 'Clear the Burrow Warrens beneath the Old Quarry.'"
+      "expected": "Section E.5 objective 17/27 `clear_the_burrow_warrens`, 'Clear the Burrow Warrens beneath the Old Quarry.'"
     },
     {
       "id": "S06-12",
@@ -190,7 +190,7 @@
       "title": "Section E.5 nav note -- clear_the_burrow_warrens",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 14/24 `clear_the_burrow_warrens`. Wording: 'Clear the Burrow Warrens beneath the Old Quarry.' It names WHAT and a WHERE relative to a second named place -- the strongest form in the chapter, because it tells the player to find the quarry first. Player-visible information: `the_old_quarry` and `the_burrow_warrens` are named regions on the map; the quarry is a visible landform north-east of the bridge. Route decision: follow the road north-east to the quarry, then look for the Warrens beneath it, because the objective's own wording orders the two. Reasoned from GF-07-BRIDGE-02 (S05) and the map frame taken above. Operator: record whether the map named either place before it was discovered, and the time to the decision."
+        "text": "Section E.5 navigation record, objective 17/27 `clear_the_burrow_warrens`. Wording: 'Clear the Burrow Warrens beneath the Old Quarry.' It names WHAT and a WHERE relative to a second named place -- the strongest form in the chapter, because it tells the player to find the quarry first. Player-visible information: `the_old_quarry` and `the_burrow_warrens` are named regions on the map; the quarry is a visible landform north-east of the bridge. Route decision: follow the road north-east to the quarry, then look for the Warrens beneath it, because the objective's own wording orders the two. Reasoned from GF-07-BRIDGE-02 (S05) and the map frame taken above. Operator: record whether the map named either place before it was discovered, and the time to the decision."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -917,7 +917,7 @@
         "check": "flag_set",
         "flag": "warrens_cleared"
       },
-      "expected": "`warrens_cleared` closes section E.5 objective 14/24"
+      "expected": "`warrens_cleared` closes section E.5 objective 17/27"
     },
     {
       "id": "S06-81",

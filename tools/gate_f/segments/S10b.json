@@ -126,14 +126,14 @@
         "check": "objective_is",
         "id": "defeat_the_warden"
       },
-      "expected": "Section E.5 objective 21/24 `defeat_the_warden`, 'Defeat the Meadows Warden.' -- surviving the S10a/S10b handoff is itself evidence that the flag S10a set persisted through a real save/load"
+      "expected": "Section E.5 objective 24/27 `defeat_the_warden`, 'Defeat the Meadows Warden.' -- surviving the S10a/S10b handoff is itself evidence that the flag S10a set persisted through a real save/load"
     },
     {
       "id": "S10b-52",
       "title": "Section E.5 nav note -- defeat_the_warden",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 21/24 `defeat_the_warden`. Wording: 'Defeat the Meadows Warden.' It names WHAT and no WHERE, inside a complex with one spine and no branches. Player-visible information: the shutter that lifted at the end of S10a, and the arena beyond it. Route decision: go through the door that just opened, because stronghold.json's passages are 'one spine, in route order, no branches'. Reasoned from GF-13-FINALE-01."
+        "text": "Section E.5 navigation record, objective 24/27 `defeat_the_warden`. Wording: 'Defeat the Meadows Warden.' It names WHAT and no WHERE, inside a complex with one spine and no branches. Player-visible information: the shutter that lifted at the end of S10a, and the arena beyond it. Route decision: go through the door that just opened, because stronghold.json's passages are 'one spine, in route order, no branches'. Reasoned from GF-13-FINALE-01."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -308,7 +308,7 @@
         "check": "flag_set",
         "flag": "defeated_warden"
       },
-      "expected": "`defeated_warden` closes section E.5 objective 21/24"
+      "expected": "`defeated_warden` closes section E.5 objective 24/27"
     },
     {
       "id": "S10b-68",
@@ -318,14 +318,14 @@
         "check": "objective_is",
         "id": "shut_down_the_machine"
       },
-      "expected": "Section E.5 objective 22/24 `shut_down_the_machine`, 'Shut down what Team Tether built under the Hall.'"
+      "expected": "Section E.5 objective 25/27 `shut_down_the_machine`, 'Shut down what Team Tether built under the Hall.'"
     },
     {
       "id": "S10b-69",
       "title": "Section E.5 nav note -- shut_down_the_machine",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 22/24 `shut_down_the_machine`. Wording: 'Shut down what Team Tether built under the Hall.' It names WHAT and a WHERE relative to the building the player is standing in. Player-visible information: the Legendary Chamber opens off the Warden Arena, and the machine is the thing in it. Route decision: take the one remaining door. Reasoned from GF-13-FINALE-02."
+        "text": "Section E.5 navigation record, objective 25/27 `shut_down_the_machine`. Wording: 'Shut down what Team Tether built under the Hall.' It names WHAT and a WHERE relative to the building the player is standing in. Player-visible information: the Legendary Chamber opens off the Warden Arena, and the machine is the thing in it. Route decision: take the one remaining door. Reasoned from GF-13-FINALE-02."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -390,7 +390,7 @@
         "check": "flag_set",
         "flag": "legendary_freed"
       },
-      "expected": "`legendary_freed` closes section E.5 objective 22/24"
+      "expected": "`legendary_freed` closes section E.5 objective 25/27"
     },
     {
       "id": "S10b-75",
@@ -400,14 +400,14 @@
         "check": "objective_is",
         "id": "settle_the_roster"
       },
-      "expected": "Section E.5 objective 23/24 `settle_the_roster`, 'Settle who walks with you.'"
+      "expected": "Section E.5 objective 26/27 `settle_the_roster`, 'Settle who walks with you.'"
     },
     {
       "id": "S10b-76",
       "title": "Section E.5 nav note -- settle_the_roster",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 23/24 `settle_the_roster`. Wording: 'Settle who walks with you.' It names WHAT and no WHERE, because the choice is on a screen rather than in a place. Player-visible information: the belt is at 5/5 and a sixth creature has just been freed. Route decision: none; the ceremony opens itself. This is the chapter's core choice and CLAUDE.md's hardest rule -- five creatures, ever, no storage, no hidden sixth slot -- meeting each other. Reasoned from GF-13-FINALE-03 and GF-19-UI-09 (S08)."
+        "text": "Section E.5 navigation record, objective 26/27 `settle_the_roster`. Wording: 'Settle who walks with you.' It names WHAT and no WHERE, because the choice is on a screen rather than in a place. Player-visible information: the belt is at 5/5 and a sixth creature has just been freed. Route decision: none; the ceremony opens itself. This is the chapter's core choice and CLAUDE.md's hardest rule -- five creatures, ever, no storage, no hidden sixth slot -- meeting each other. Reasoned from GF-13-FINALE-03 and GF-19-UI-09 (S08)."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -531,7 +531,7 @@
         "check": "flag_set",
         "flag": "legendary_settled"
       },
-      "expected": "`legendary_settled` closes section E.5 objective 23/24"
+      "expected": "`legendary_settled` closes section E.5 objective 26/27"
     },
     {
       "id": "S10b-111",

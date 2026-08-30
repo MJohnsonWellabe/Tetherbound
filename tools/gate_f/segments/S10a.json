@@ -126,7 +126,7 @@
         "check": "objective_is",
         "id": "fight_through_the_hall"
       },
-      "expected": "Section E.5 objective 20/24 `fight_through_the_hall`"
+      "expected": "Section E.5 objective 23/27 `fight_through_the_hall`"
     },
     {
       "id": "S10a-12",
@@ -306,7 +306,7 @@
         "check": "flag_set",
         "flag": "defeated_stronghold_patrol"
       },
-      "expected": "`defeated_stronghold_patrol`, the first of objective 20/24's three `count_flags`"
+      "expected": "`defeated_stronghold_patrol`, the first of objective 23/27's three `count_flags`"
     },
     {
       "id": "S10a-28",
@@ -555,7 +555,7 @@
         "check": "flag_set",
         "flag": "defeated_stronghold_elite"
       },
-      "expected": "`defeated_stronghold_elite` closes section E.5 objective 20/24"
+      "expected": "`defeated_stronghold_elite` closes section E.5 objective 23/27"
     },
     {
       "id": "S10a-111",

@@ -162,7 +162,7 @@
         "check": "objective_is",
         "id": "defeat_the_relay_captain"
       },
-      "expected": "Section E.5 objective 15/24 `defeat_the_relay_captain`, 'Defeat the Relay Captain.'",
+      "expected": "Section E.5 objective 18/27 `defeat_the_relay_captain`, 'Defeat the Relay Captain.'",
       "_derived_from": "S07-11"
     },
     {
@@ -652,7 +652,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "Section E.5 objective 15/24's own target",
+      "expected": "Section E.5 objective 18/27's own target",
       "_derived_from": "S07-50"
     },
     {
@@ -768,7 +768,7 @@
         "check": "flag_set",
         "flag": "relay_captain_defeated"
       },
-      "expected": "`relay_captain_defeated` closes section E.5 objective 15/24",
+      "expected": "`relay_captain_defeated` closes section E.5 objective 18/27",
       "_derived_from": "S07-60"
     },
     {
@@ -779,7 +779,7 @@
         "check": "objective_is",
         "id": "rescue_the_captive"
       },
-      "expected": "Section E.5 objective 16/24 `rescue_the_captive`, 'Find who Team Tether is holding at the relay.'",
+      "expected": "Section E.5 objective 19/27 `rescue_the_captive`, 'Find who Team Tether is holding at the relay.'",
       "_derived_from": "S07-61"
     },
     {

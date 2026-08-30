@@ -124,7 +124,7 @@
         "check": "objective_is",
         "id": "see_what_changed"
       },
-      "expected": "Section E.5 objective 24/24, unchanged since S10c. Surviving the S10c/S10d handoff is itself evidence that the flag persisted through a real save/load"
+      "expected": "Section E.5 objective 27/27, unchanged since S10c. Surviving the S10c/S10d handoff is itself evidence that the flag persisted through a real save/load"
     },
     {
       "id": "S10d-94",
