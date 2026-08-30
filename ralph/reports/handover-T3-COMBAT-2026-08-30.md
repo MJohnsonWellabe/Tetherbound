@@ -543,3 +543,77 @@ Every one of them runs at wall-clock speed — headless Godot still steps physic
 at 60 Hz — so a full ladder is about half an hour of real time. That is the cost
 of driving the real input path, and it is the reason this lane's evidence is
 fights rather than assertions.
+
+---
+
+## 10. The Warden's creatures were fighting under the arena floor
+
+Routed to this lane by the coordinator after the reliability lane (T2-FLAKE)
+found it and correctly declined to guess at a `scripts/combat/**` fix at the end
+of its budget. Their diagnosis is in
+`ralph/reports/handover-T2-FLAKE-2026-08-30.md` §5; I verified it against the
+code and reproduced it before changing anything.
+
+### 10.1 What it is
+
+`combat_manager.gd::_place_fighters()` anchors both fighters off
+`_player.global_position`, and `_stand_the_trainer_aside()` — the last thing that
+same call does — then **moves the player**. A trainer battle calls
+`combat_manager.begin()` once per creature, and the manager has no idea a
+previous round existed, so round two anchors off wherever round one left the
+trainer, round three off round two, and so on.
+
+With the shipped `arena` block (`deploy_offset` 2.6, `separation` 5.0,
+`radius` 11.0) the sidestep is `centre + side × 6.05 − forward × 1.2`, which is
+**about 7.2 m of displacement per round**. The Warden fields five creatures.
+
+Out past the room's slab, `built_floor.gd`'s deliberately generous 10 m claim
+margin still answers the Warden Arena's floor height, so `place_on_ground()`
+sets the body down on a floor that has no collider under it — and
+`creature_body._physics_process()`, which grounds on `is_on_floor()` rather than
+on the claim, drops it the 5.6 m to the terrain below.
+
+**The margin is not the bug and I did not touch it**, per T2-FLAKE's explicit
+warning: 10 m is already wide enough to hand a body a floor that is not there,
+which is step two of the chain. The drift is the bug.
+
+### 10.2 The fix
+
+`encounter_director.gd` now records `_trainer_battle_anchor` — where the trainer
+was standing when the battle was accepted — and restores the player to it at the
+top of `_send_out_next_creature()`, **before** anything is staged off their
+position (`_send_out_spot()` reads it, and so does `_place_fighters()` a few
+lines later through `_start_fight()`).
+
+The director is the right owner: it is the only thing that knows a trainer
+battle is one encounter with several creatures in it. The manager stays
+round-agnostic, and single wild fights are untouched.
+
+The anchor is restored verbatim, Y included, rather than re-asking the world for
+a ground height. This is not a horizontal move to somewhere new — which is what
+D09's "ask the world, never carry a Y" is about — but a return to a spot the
+player stood on moments earlier in the same scene, and re-asking would invite a
+different answer inside a building, which is the failure being fixed.
+
+It is deliberately **not** used to teleport the player home when the battle
+ends: the trainer still finishes standing beside the fight they just won.
+
+### 10.3 Measured
+
+**The drift, measured in a played fight.** `tools/_probe_combat_ladder.gd` now
+prints where the trainer is standing as each round of a battle opens. Fighting
+the Warden's five creatures on `--only=warden_aldis`, on the **unfixed** build:
+
+```
+[drift] round 1 opens with the trainer at 54.0, -61.9 — 0.00m from where round 0 opened
+[drift] round 2 opens with the trainer at 60.1, -65.8 — 7.23m from where round 1 opened
+[drift] round 3 opens with the trainer at 66.2, -69.7 — 7.37m from where round 2 opened
+[drift] round 4 opens with the trainer at 71.8, -73.5 — 10.18m from where round 3 opened
+[drift] round 5 opens with the trainer at 70.5, -75.2 — 2.44m from where round 4 opened
+```
+
+**The Warden fight travels 21.2 m between its first round and its last** — from
+(54.0, −61.9) to (70.5, −75.2) — and the per-round steps match the 7.2 m the
+`arena` block predicts. This is measured in the open meadow, where there is
+ground everywhere and the fight merely walks; in the Warden Arena the same 21 m
+carries it off the slab, which is the reported defect.
