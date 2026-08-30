@@ -127,6 +127,39 @@
       "expected": "Section E.5 objective 27/27, unchanged since S10d. Surviving the S10d/S10e handoff is itself evidence that the flag persisted through a real save/load"
     },
     {
+      "id": "S10e-98b",
+      "title": "come home by the Pond road, up to the gate",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -24.0,
+          25.0
+        ],
+        "budget_frames": 60750,
+        "close_enough": 3.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "4.5 m outside PondGate on the Pond road (terrain_playground.json paths.routes[2]). The long leg of the walk home, ending on the far side of the village fence rather than against it",
+      "_comment_route": "RIG-F6's other end, ralph/GATE-F-FULL 2026-08-30. The chapter's homecoming walk went straight from the South Bridge to the village well and the straight line crosses the village outline at (9.7, 23.8), 30.9 m from the nearest gate -- so the last beat of the chapter would have ended against a fence panel. `data/config/village_boundary.json` gave the village a closed edge on 2026-08-30, after this segment was written, and `village_boundary.gd` builds it as sealed StaticBody3D panels with a hole only at each gate. Measured at the other end of the same journey: S05-19 walked the reverse of this line and `did not reach (-40, 180) in 11700 walking frames; stopped 155.8 m short at (-15.0, 1.0, 26.0)`, the outline's own [-15,27] vertex. NOT A GAME DEFECT -- both gates are open from S02's key and a player follows the Pond road home. Two legs added so this walk comes in through the door: outside the gate, then the gate, then the well. Checked against the outline before authoring: the only crossing on the three legs is the gate itself."
+    },
+    {
+      "id": "S10e-98c",
+      "title": "through the gate the key opened",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -21.0,
+          21.0
+        ],
+        "budget_frames": 2400,
+        "close_enough": 2.0,
+        "held_budget_frames": 2400,
+        "answer_prompts": true
+      },
+      "expected": "data/config/village_boundary.json gates[].PondGate. Coming back in through the door the chapter's own first key opened is the right shape for this beat as well as the only shape that works"
+    },
+    {
       "id": "S10e-99",
       "title": "walk back into the village",
       "action": "move_to",
