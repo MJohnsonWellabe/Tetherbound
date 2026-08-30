@@ -34,6 +34,15 @@
           "_why": "SC12/SC13. Her Band-1 challenge -- the introduction (spec sec3). Offered every greeting once the shop has opened, for as long as she is unbeaten. Ends on `battle:trainer_mira`."
         },
         {
+          "if_flag": [
+            "captive_rescued",
+            "mira_shop_open"
+          ],
+          "unless_flag": "legendary_freed",
+          "conversation": "village_mira_road",
+          "_why": "T5-STORY-2. Home stays relevant (MEADOWS_EXIT_CRITERION F3). Measured gap: tools/_probe_story_drive.gd walked the chapter's own flags against a live village and every villager said the IDENTICAL thing at every rung from the tournament to the ending -- the whole back half of a three-to-four-hour chapter, with nothing at home acknowledging South Bridge, the quarry, the warrens, the relay, the captains or the Hall. The only mid-chapter change in the entire village was the rescued ranger appearing.\n\n`captive_rescued` is the beat that sends someone home (relay.json: 'I'll walk to your village'), so it is the one a shopkeeper would have heard about. Paired with `mira_shop_open` for the same reason her ending branch is: a player who never opened the stall must still get that one-time introduction. `unless legendary_freed` so the ending branch above still wins outright rather than relying on list order alone.\n\nPlaced immediately ABOVE her `defeated_mira` branch and BELOW her challenge branch, which is the placement that costs nothing: while she is unbeaten the challenge still matches first (it is higher and `unless defeated_mira`), and once beaten this supersedes her repeat-visit line for this window only. Carries `shop:goods:mira`, per D39 -- a vendor branch is never lost, only carried forward."
+        },
+        {
           "if_flag": "defeated_mira",
           "conversation": "village_mira_beaten",
           "_why": "SC13/D39. Her permanent steady state once beaten -- carries the SAME `shop:goods:mira` effect the standing branch below always has, so the store stays reachable forever. Ahead of that branch in the list for exactly that reason."
@@ -76,6 +85,15 @@
           "_why": "SC12/SC13/SC14. His Band-1 challenge -- the gate (spec sec3): a sturdier team than Mira's, and the fight the South Bridge Key is won from. Offered every greeting once the swap is open, for as long as he is unbeaten. Ends on `battle:trainer_oskar`."
         },
         {
+          "if_flag": [
+            "south_bridge_open",
+            "oskar_trade_open"
+          ],
+          "unless_flag": "legendary_freed",
+          "conversation": "village_oskar_bridge",
+          "_why": "T5-STORY-2, same measured gap as Mira's entry above. `south_bridge_open` because the key that opened it was HIS -- his own `village_oskar_challenge` line already says Team Tether took it off his belt in the spring -- and the game never let him find out it had come back. Same placement rule and same reasoning: above `defeated_oskar`, below the challenge, below the ending, carrying `shop:creatures:oskar` so the pen is never lost."
+        },
+        {
           "if_flag": "defeated_oskar",
           "conversation": "village_oskar_beaten",
           "_why": "SC13/D39. His permanent steady state once beaten -- precedes, and carries the same `shop:creatures:oskar` effect, the standing swap branch below has always had, so the pen stays reachable forever. Ahead of that branch in the list for exactly that reason -- 'the swap branch still fires' because this entry now fires it."
@@ -116,6 +134,15 @@
           "unless_flag": "defeated_tam",
           "conversation": "village_tam_challenge",
           "_why": "SC12/SC13. His Band-1 challenge -- the switching lesson (spec sec3): two creatures of different types. Offered every greeting once BOTH of his one-time gifts are spent, for as long as he is unbeaten. Ends on `battle:trainer_tam`."
+        },
+        {
+          "if_flag": [
+            "hall_approach_open",
+            "tam_tools_given"
+          ],
+          "unless_flag": "legendary_freed",
+          "conversation": "village_tam_hall",
+          "_why": "T5-STORY-2, same measured gap. `hall_approach_open` is set by playground_world.gd once all three captain sigils are held, so this fires at the exact moment the player is equipped to walk at the stronghold -- the chapter's last time home before the Hall, and a smith is the one villager who would read a sigil on sight. Paired with `tam_tools_given` so his one-time handover can never be swallowed by this branch, the same guard his own gift branches already rely on. No effect to carry: his `defeated_tam` entry's own `_why` records that he has no standing vendor branch."
         },
         {
           "if_flag": "defeated_tam",

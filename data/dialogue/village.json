@@ -178,7 +178,11 @@
         "You've been at the oaks and the outcrops with nothing but your hands, haven't you. It shows.",
         {
           "text": "Mira has you set for gathering. This knife and torch are for the work that runs long: clean fiber, then see your way home.",
-          "effects": ["give:knife:1", "give:torch:1", "flag:tam_tools_given"]
+          "effects": [
+            "give:knife:1",
+            "give:torch:1",
+            "flag:tam_tools_given"
+          ]
         },
         "Come back when they're blunt. I'll see to them."
       ]
@@ -272,6 +276,42 @@
       "lines": [
         "Field. Ridge. Riverwatch. Three discs go into the plate and stay there.",
         "The leaf swings back off the road. Meadows Hall is up the rise, and nothing is between you and it now."
+      ]
+    },
+    "village_mira_road": {
+      "_comment": "T5-STORY-2. Mira's MID-CHAPTER branch, and the first line anyone at home says about the war between the tournament and the Warden. Measured gap: tools/_probe_story_drive.gd walked the chapter's flags against a live village and every NPC said the identical thing at every rung from the tournament to the ending -- `village_mira_shop_intro`, `village_oskar_trade_intro`, `village_bram_shop_intro`, `tournament_halda_champion`, unchanged for the whole back half. MEADOWS_EXIT_CRITERION F3 is 'home stays relevant ... returning is worth it', and returning was worth exactly one repeated sentence.\n\nGated on `captive_rescued` because that is the beat that physically sends someone home: Sela's own last line in data/dialogue/relay.json is 'I'll walk to your village', and `village_rescued_ranger` is already placed there by it. Mira is the one who would notice a stranger arrive. Carries the same `shop:goods:mira` effect every other Mira branch carries -- D39's rule, a vendor branch is never lost, only ever carried forward -- so this replaces her repeat-visit line for that window without costing the stall.\n\nSays nothing the player has not already been told to their face: Sela says the seams are cut, in those words, in the conversation that sets this flag. Spec sec32's ladder is not moved and the legendary is not named.",
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Your surveyor walked in off the south road. Thin as a rake and asking for paper before she'd sit down.",
+        "She says the seams were cut. Cut, like a quarry face, by somebody, on purpose. I have lived under them my whole life and nobody has ever once said that out loud in this square.",
+        {
+          "text": "So take what you need and don't count it too carefully. I'd sooner be short of stock than short of you.",
+          "effect": "shop:goods:mira"
+        }
+      ]
+    },
+    "village_oskar_bridge": {
+      "_comment": "T5-STORY-2, and the same measured gap `village_mira_road` documents. Gated on `south_bridge_open` because the key that opens it was HIS -- his own `village_oskar_challenge` line already says so ('Tether took the key off my belt in the spring and put one of their own on the near landing'), and until now the game never let him find out it had come back. That is F3's 'returning is worth it' in one branch.\n\nCarries `shop:creatures:oskar`, per D39, so the pen stays reachable. Placed above his `defeated_oskar` branch and below his `legendary_freed` one, so his challenge (which sits higher and is `unless defeated_oskar`) is untouched and the ending still wins.",
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "The near landing's clear. Tam's boy ran the whole way back to tell me and he hasn't run anywhere since he was nine.",
+        "That was my key on that man's belt. They took it off me in the spring and I let them, because what was I going to do — and I have been quietly ashamed of it every day since.",
+        {
+          "text": "Pen's open. Take a proper look this time, and pick something that can stand still and take a hit. Whatever's up that road is not a grunt on a bridge.",
+          "effect": "shop:creatures:oskar"
+        }
+      ]
+    },
+    "village_tam_hall": {
+      "_comment": "T5-STORY-2, the third of the mid-chapter branches and deliberately the last one before the Hall. Gated on `hall_approach_open`, which `playground_world.gd` sets when all three captain sigils are in hand -- so this fires at the exact moment the player is equipped to walk at the stronghold and is the chapter's last chance for home to say goodbye. A smith is the one villager who would know a sigil on sight.\n\nNo effect: Tam has no vendor branch to carry (his own `_beaten` entry's `_why` says so -- both his gifts are one-time and long spent by here), so this is flavour, like that one. Nothing here names what is under the Hall; spec sec32's ladder holds.",
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Three sigils. I've held one of those, once — a man came through buying nails and wouldn't say what for, and I've thought about it every year since.",
+        "Nobody carries three for any other reason. You're going to the Hall.",
+        "Then go the way you'd finish a weld. Rested, and all at once. Not tired, and not in pieces."
       ]
     }
   },
