@@ -261,6 +261,17 @@
       "_derived_from": "S10a-20"
     },
     {
+      "id": "S10aC-20f",
+      "title": "a fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "CombatManager::is_fighting() is true -- the engage was received, not merely pressed",
+      "observation": "T2-GATEF-RUN6 / RIG-26, and the fix T5-FEEL's played-path evidence independently recommended: assert that a fight is RUNNING, not merely that combat-shaped input is owned. `input_context == \"combat\"` was the strongest claim these segments made after an engage, and it is not the same claim -- it is why two instrumented segments produced 128 events with zero `combat_start` and it read as a candidate GAME blocker for six runs."
+    },
+    {
       "id": "S10aC-21",
       "title": "capture GF-14-COMBAT-06",
       "action": "capture",

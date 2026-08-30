@@ -146,6 +146,69 @@ orb resupply before the gate.
 
 ---
 
+## 3b. Routed in mid-session by the coordinator, and acted on
+
+A scheduled routing brought T5-FEEL's independent verdict — **combat
+engages; RIG, not game**, from 99 throws / 88 strikes / 21 catches on a real
+played path. It agrees with §2, reached by a different route. Three things
+came with it and all three are now done:
+
+**Its recommended fix, generalised.** T5-FEEL's point was that an engage
+step asserting *injection* rather than *a fight* is the root of the whole
+class. `input_context == "combat"` — the strongest claim these segments
+made after an engage — is not the same claim either: it says something
+combat-shaped owns input, not that `CombatManager` is running a fight. So
+this branch adds a **`combat_running` assert** to the harness
+(`_step_assert`, reading the `combat_running` field
+`gate_f_probe.gd::input_state()` already published), documents it in
+`SEGMENT_SCHEMA.md`, and applies it after **every** combat-context assert in
+the segment set — **43 asserts across 22 segments**.
+
+**Its untested question, answered.** T5-FEEL was explicit that its probe
+bypasses the opening, so *"the opening fails to deliver the player to their
+first fight"* was untested and unowned. **It is tested now and the answer is
+no.** Every RUN6 S02 run boots the real title screen, starts a new game and
+plays the opening through — and the fight staged **5 of 5 times** once
+RIG-26 was fixed. The opening delivers the player to the fight. What it
+delivers them to is GAME-11.
+
+**The modal-holds-locomotion class, which the routing assigned to this
+lane.** Audited the same way as RIG-25's panels, and it is the same rule:
+**60 walks across the segment set begin after a dialogue-opening press with
+no `assert input_context == world` between them.** That is X04's stop cause
+(a modal holding locomotion for 3601 frames) as a category rather than an
+incident, and RUN6's own `S02-49` was a live instance — *"did not reach
+(31,-8) ... stopped 6.9 m short ... **(420 held)**"*, i.e. locomotion
+disabled by a modal the previous step's blind press count had not finished
+closing.
+
+Two changes, deliberately different in kind:
+
+- **56 diagnostic `assert input_context == world` steps** added before those
+  walks, set-wide. These change no behaviour; they turn a silent cascade
+  into one named cause at its origin. One of them earned its place on the
+  first run: `S02-47w` reports `input_context=combat`, a condition nothing
+  in the segment had ever surfaced.
+- **`S02-28` switched from a blind 12-press count to
+  `advance_dialogue_until_closed`**, which advances by predicate and refuses
+  the over-press signature. **This is what fixed `S02-49` and `S02-54`:**
+  the key walk and the road gate both now PASS.
+
+`S02-47` was deliberately **left** as a tolerant press count and not made
+strict. Grandpa's road line only exists once the catch has advanced the
+beat, so a strict close there BLOCKERs whenever GAME-11's coin toss goes the
+wrong way — measured, at the cost of 26 skipped steps and the exit save, on
+a run whose only real defect was upstream. Its assert still names the
+condition. Make it strict once GAME-11 is fixed.
+
+**S02 now runs 77 PASS / 4 FAIL, complete, nothing skipped** — from 68 PASS
+/ 7 FAIL when this session started. The four remaining are the catch
+(GAME-11), the objective that waits on it, the `combat` context `S02-47w`
+newly surfaced, and a route-row count that is short because the segment did
+less.
+
+---
+
 ## 4. The RIG-25 audit RUN5 asked for — done
 
 RUN5 recorded that every shop/battle/picker effect other than Oskar's was
@@ -327,7 +390,10 @@ same top-level key set as the `X06.json` they were split from.
 
 ## 9. File footprint
 
-**Segment data:** `tools/gate_f/segments/S02.json`, `S02C.json` (engage via
+**Harness:** `tools/gate_f/operator_harness.gd` (new `combat_running`
+assert check), `tools/gate_f/SEGMENT_SCHEMA.md` (documents it).
+
+**Segment data:** 24 files — `S02.json`, `S02C.json` (engage via
 `move_to_entity`/`interact_with`; attack block re-ordered and re-measured;
 three catch retry blocks; party assert moved after them),
 `S03C.json` (RUN5's `S03-62a`/`62b` pair, which it never received),
@@ -340,7 +406,8 @@ audit), this file.
 **Evidence:** `ralph/reports/gate-f-run6-chain/` — S02 and its
 `RUN_METADATA.json`.
 
-**Not touched:** no game code, data or config. `git diff <base>..HEAD --
+**Not touched:** no game code, data or config — the changes are rig
+(`tools/`) and reports (`ralph/`) only. `git diff <base>..HEAD --
 . ':(exclude)ralph/' ':(exclude)tools/gate_f/segments/'` is empty. GAME-11
 and GAME-12 are both reported rather than fixed, deliberately: the first is
 a design call, the second is not root-caused.

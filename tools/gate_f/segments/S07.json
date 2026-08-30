@@ -263,6 +263,17 @@
       "expected": "the window opens before the walk on to the bank, so the approach to the river is inside it -- GF-10-RELAY-01's whole point is whether the river reads as a regional barrier before it is reached"
     },
     {
+      "id": "S07-19w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S07-23",
       "title": "walk on to the river bank",
       "action": "move_to",
@@ -410,6 +421,17 @@
       "expected": "rewards and control return"
     },
     {
+      "id": "S07-29w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S07-34",
       "title": "walk to the second relay picket",
       "action": "move_to",
@@ -491,6 +513,17 @@
         "intended_proof": "Team Tether occupation escalation"
       },
       "expected": "Section G: relay compound approach, pylons in frame, (350,3760) approach -- Team Tether occupation escalation"
+    },
+    {
+      "id": "S07-36w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S07-41",
@@ -578,6 +611,17 @@
       "expected": "rewards and control return"
     },
     {
+      "id": "S07-45w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S07-49",
       "title": "walk to Captain Vance",
       "action": "move_to",
@@ -634,6 +678,17 @@
         "equals": "combat"
       },
       "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S07-53f",
+      "title": "a fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "CombatManager::is_fighting() is true -- the engage was received, not merely pressed",
+      "observation": "T2-GATEF-RUN6 / RIG-26, and the fix T5-FEEL's played-path evidence independently recommended: assert that a fight is RUNNING, not merely that combat-shaped input is owned. `input_context == \"combat\"` was the strongest claim these segments made after an engage, and it is not the same claim -- it is why two instrumented segments produced 128 events with zero `combat_start` and it read as a candidate GAME blocker for six runs."
     },
     {
       "id": "S07-54",
@@ -730,6 +785,17 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S07-51w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S07-63",
       "title": "walk to the captive",
       "action": "move_to",
@@ -810,6 +876,17 @@
         "text": "Section E.5 navigation record, objective 17/24 `disable_the_relay`. Wording: 'Shut down the Tether Relay.' It names WHAT and a WHERE the player is standing in. Player-visible information: the relay apparatus and its pylons, in frame in GF-10-RELAY-02. Route decision: no travel; find the apparatus in the compound. AMBIGUITY RECORDED: section B's S07 span does not name this rung at all, so the protocol gives no site for the interaction; it is transcribed at the compound centre, which is where the apparatus stands."
       },
       "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S07-65w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S07-70",

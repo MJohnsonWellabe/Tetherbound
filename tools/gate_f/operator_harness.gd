@@ -3850,6 +3850,23 @@ func _step_assert(args: Dictionary) -> Dictionary:
 			var want := str(args.get("prefix", ""))
 			var have := str(_probe.call("input_context"))
 			return {"ok": have.begins_with(want), "actual": "input_context=%s (wanted prefix %s)" % [have, want]}
+		"combat_running":
+			# T2-GATEF-RUN6 / RIG-26. The engage steps in this protocol asserted
+			# that `interact` was INJECTED, not that a fight received it, so a
+			# press into an unengaged world PASSed and the visible failure
+			# surfaced several steps later as "combat never took input
+			# ownership". Two instrumented segments produced 128 events with
+			# zero `combat_start` in them that way, and it was read as a
+			# candidate GAME blocker for six runs. `input_context == "combat"`
+			# is close but not the same claim: it says something combat-shaped
+			# owns input, not that CombatManager is actually running a fight.
+			# This asks CombatManager directly, through the `combat_running`
+			# field `gate_f_probe.gd::input_state()` already publishes.
+			var want_fight := bool(args.get("equals", true))
+			var st: Dictionary = _probe.call("input_state")
+			var running := bool(st.get("combat_running", false))
+			return {"ok": running == want_fight,
+				"actual": "combat_running=%s (wanted %s)" % [running, want_fight]}
 		"focus_owned":
 			var state: Dictionary = _probe.call("input_state")
 			var who := str(state.get("focus_owner", ""))

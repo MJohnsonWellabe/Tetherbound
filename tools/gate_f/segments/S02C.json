@@ -387,18 +387,39 @@
       "_derived_from": "S02-27b"
     },
     {
-      "id": "S02C-28",
-      "title": "hear `grandpa_named` out",
+      "id": "S02C-28o",
+      "title": "open the conversation",
       "action": "press",
       "args": {
         "control": "interact",
         "hold": "tap",
-        "times": 4,
+        "settle_frames": 30
+      },
+      "expected": "one press opens the conversation; advancing it is the next step's job",
+      "observation": "T2-GATEF-RUN6: `advance_dialogue_until_closed` advances an ALREADY-OPEN modal and BLOCKERs if none is open -- correctly, since advancing nothing sends the button into the world. RUN6's first attempt replaced the whole blind press count with it and derailed here with 'no narrative modal is open ... input_context is world'. The opening press is a separate act from advancing: one `interact` opens the conversation, then the predicate-driven advance closes it without a guessed count."
+    },
+    {
+      "id": "S02C-28",
+      "title": "hear `grandpa_named` out",
+      "action": "advance_dialogue_until_closed",
+      "args": {
+        "max_presses": 60,
         "settle_frames": 30
       },
       "expected": "beat 5: 'the director runs `grandpa_named` with $name substituted -- the first time in this game a line says a word the player wrote' -- and points down the path at the practice bramblebun",
-      "observation": "times reduced 12 -> 20 -> 4. `grandpa_named` is THREE lines (data/dialogue/opening.json), and Grandpa stays re-talkable, so every tap past the third can re-open the conversation the previous tap just closed. 4 taps is three lines plus one. Recorded rather than silently retuned: attempts 2 and 3 both ended with a DialoguePanel owning input for exactly 7201 frames.",
+      "observation": "T2-GATEF-RUN6: this was a BLIND PRESS COUNT on a narrative modal, and the modal-holds-locomotion class is what it feeds. X04's own stop cause was an unanswered narrative modal holding locomotion for 3601 frames, and RUN6's S02-49 is the same shape one beat earlier: 'did not reach (31,-8) ... stopped 6.9 m short ... (420 held)' -- 420 HELD frames, i.e. locomotion disabled by a modal the previous step's press count did not finish closing. `advance_dialogue_until_closed` advances by predicate instead: it reads the panel's own line, presses, waits for the line to change or the panel to close, and stops the moment it closes. It also FAILs on the over-press signature (closed then re-opened), which is the exact hazard this step's own authored note describes for a re-talkable NPC. || T2-GATEF-RUN6: `advance_dialogue_until_closed` advances an ALREADY-OPEN modal and BLOCKERs if none is open -- correctly, since advancing nothing sends the button into the world. RUN6's first attempt replaced the whole blind press count with it and derailed here with 'no narrative modal is open ... input_context is world'. The opening press is a separate act from advancing: one `interact` opens the conversation, then the predicate-driven advance closes it without a guessed count.",
       "_derived_from": "S02-28"
+    },
+    {
+      "id": "S02C-28w",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "the modal is closed and locomotion is the player's again before anything walks",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S02C-30",
@@ -472,6 +493,17 @@
       },
       "expected": "input_context is 'combat'",
       "_derived_from": "S02-34"
+    },
+    {
+      "id": "S02C-34f",
+      "title": "a fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "CombatManager::is_fighting() is true -- the engage was received, not merely pressed",
+      "observation": "T2-GATEF-RUN6 / RIG-26, and the fix T5-FEEL's played-path evidence independently recommended: assert that a fight is RUNNING, not merely that combat-shaped input is owned. `input_context == \"combat\"` was the strongest claim these segments made after an engage, and it is not the same claim -- it is why two instrumented segments produced 128 events with zero `combat_start` and it read as a candidate GAME blocker for six runs."
     },
     {
       "id": "S02C-35",
@@ -737,7 +769,19 @@
         "settle_frames": 20
       },
       "expected": "docs/OPENING_SEQUENCE.md beat 9: 'follow the dirt road out, gather what the verges offer, and make camp before dark'. His final line emits `beat:free_play`",
-      "_derived_from": "S02-47"
+      "_derived_from": "S02-47",
+      "observation": "T2-GATEF-RUN6: deliberately left as a tolerant press count, unlike S02-28. Grandpa's road line only exists once the first catch has advanced the beat, so whether a modal is open here is downstream of GAME-11's coin toss. `advance_dialogue_until_closed` is strict and BLOCKERs when nothing is open, which derailed the segment and cost 26 steps and the exit save on a run whose only real defect was upstream. The following `assert input_context == world` still names a modal that is left holding locomotion, which is what the audit is for -- it records the condition without throwing the rest of the segment away. Revisit once GAME-11 is fixed and the catch is reliable; then this can be strict too."
+    },
+    {
+      "id": "S02C-47w",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "the modal is closed and locomotion is the player's again before anything walks",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S02C-49",

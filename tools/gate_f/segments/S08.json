@@ -958,6 +958,17 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S08-79w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S08-88",
       "title": "walk south to Captain Oreth",
       "action": "move_to",
@@ -1071,6 +1082,17 @@
       "expected": "AMBIGUITY RECORDED: the band 4 -> band 5 handoff is NOT a spatial crossing inside S08. Section B ends this segment on the third captain -- the Sigils open the gate, and the walk through it happens in S09. So this pair sits on the last region transition S08 actually crosses, into `the_ridgeline_watch`, which is the ground the sigil gate stands beyond; the band boundary itself is covered by S09's first window"
     },
     {
+      "id": "S08-90w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "S08-97",
       "title": "walk north to Captain Vess on the ridgeline",
       "action": "move_to",
@@ -1180,6 +1202,17 @@
         "seconds": 8
       },
       "expected": "rewards and control return"
+    },
+    {
+      "id": "S08-102w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S08-106",
