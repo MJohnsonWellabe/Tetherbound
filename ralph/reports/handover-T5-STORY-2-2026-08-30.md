@@ -44,12 +44,16 @@ build would put on a real player's screen.
 > bypasses the opening, so "the opening never delivers the player to their first
 > fight" is untested and unowned.*
 
-It is tested now. `tests/smoke_gate_a_opening_segment.gd` already plays exactly
-that path — title screen through the natural first catch, every action a parsed
-physical joypad event through the live InputMap, no teleporting, no seeded
-inventory, no granted beats. **It was not run; it exists and it passes.**
+**The premise is mistaken, and that is the useful finding: this path is not
+untested and not unowned.** `tests/smoke_gate_a_opening_segment.gd` plays exactly
+it — title screen through the natural first catch, every action a parsed physical
+joypad event through the live InputMap, no teleporting, no seeded inventory, no
+granted beats — and `.github/workflows/ci.yml:985` runs it on every CI round, in
+its longer `--gate-a-continuous-core` form. What was missing was not coverage but
+the connection between that job and the open question.
 
-Four runs on current `main`. Three passed. Timeline of the first:
+So do not open a lane for it. I ran it four times on current `main` to say what
+it actually reports. Three passed. Timeline of the first:
 
 ```
 +70.66s  wake / Get Up complete
@@ -66,11 +70,14 @@ Four runs on current `main`. Three passed. Timeline of the first:
 So: **the opening does deliver the player to their first fight and their first
 catch, continuously.** The chapter has a ladder for the story to climb.
 
-**Honest caveat.** Run 2 of 4 failed: `right-stick aim could not line up the real
-throw reticle`. That is the harness's own aim-convergence loop, a flake class
-the harness file documents at length in its own comments. I did not attribute it
-to the game and I did not chase it — but 3/4 is the number, not 4/4, and
-whoever owns opening reliability should have it.
+**Honest caveat, and it is the one thing here worth acting on.** Run 2 of 4
+failed: `right-stick aim could not line up the real throw reticle`. That is the
+harness's own aim-convergence loop, a flake class the harness file documents at
+length in its own comments, and I did not attribute it to the game. But 3/4 is
+the number, not 4/4 — which means this CI job has a roughly 25% false-failure
+rate on a container like this one, and a job that cries wolf one round in four is
+a job people learn to re-run without reading. That belongs to whoever owns
+opening reliability, not to a narrative lane, but it is real and unfiled.
 
 **Not duplicated:** OP-0830-4 (trapped in Grandpa's house) is fixed on
 `origin/ralph/T5-OPENING`, which adds three new opening rungs
@@ -365,7 +372,7 @@ tools/_probe_story_drive.gd         NEW — the instrument
 
 1. **Grandpa** (§5). Highest value remaining on this axis.
 2. Run a full CI round on this branch.
-3. The opening drive's 1-in-4 aim flake (§1) — belongs to whoever owns opening
-   reliability, not to a narrative lane, but it is real and it is unfiled.
+3. The opening drive's 1-in-4 aim flake (§1). It is a CI job
+   (`ci.yml:985`), so this is a live false-failure rate, not a curiosity.
 4. `_probe_story_drive.gd` is cheap to extend. Any lane adding a beat can run it
    and see, in one page, exactly what the game will tell a player at that beat.
