@@ -237,59 +237,78 @@ Two readings of the same number, and they are not the same finding:
 T1-VARIANTS-2, T3-DENSITY, T3-ACTIVITIES and T5-CAMPS between those two
 measurements.
 
-**This is not yet a claim about the game.** The harness's own per-frame
-telemetry tick walks the party, the quest log and the point-of-interest cache
-every frame, and T3-DENSITY and T5-CAMPS both add POIs — so an instrument that
-scales with content is a live hypothesis with a motive. `--gatef-mode=overhead`
-(telemetry off vs on vs recording, six windows, order reversed to cancel drift)
-is running to separate them. **No device claim is made either way**: this is CPU
-frame time on this container, headless, software only. ROG Ally frame rate is
-[OWNER-ONLY].
+**This is not yet a claim about the game**, and one obvious explanation is
+already dead. The harness's `_tick` calls `gate_f_probe.gd::nearest_poi_dist`
+every physics frame, which is O(POIs) with an `instance_from_id` per entry — so
+"T3-DENSITY and T5-CAMPS added POIs and the instrument scales with them" was the
+first hypothesis, and it had a motive. **Measured: 1,045 POIs at run 5 against
+1,090 here — plus four percent.** That cannot produce 4×. The POI scan is ruled
+out.
+
+`--gatef-mode=overhead` (telemetry off vs on vs recording, six windows, order
+reversed to cancel drift) is running to settle instrument-vs-game properly.
+**No device claim is made either way**: this is CPU frame time on this
+container, headless, software only. ROG Ally frame rate is [OWNER-ONLY].
 
 ---
 
-## GAME-T5-6 — the starter faints in the village and the team never reaches three
+## GAME-T5-6 — the starter faints early, and recovery costs one of two Revives
 
-**Severity:** SHIP candidate. **Observed, not yet root-caused** — S03 was cut
-off at step 136 by COST-T5-5, so this is what 136 steps showed, not a verdict.
+**Severity:** SHIP candidate, **downgraded from my own first reading of it** —
+see "what I got wrong" below. **Observed, not root-caused**: S03 was cut off at
+step 136 of 406 by COST-T5-5.
 
-During the village team-building ladder, with the party at 2 (Moss the L3
-ripplet and the caught L5 bramblebun), the run recorded **eight consecutive**
-engage refusals of the same shape:
+**What the run recorded.** During the village team-building ladder, with the
+party at 2 (Moss the L3 ripplet, and the caught L5 bramblebun), eight
+consecutive engage attempts were refused with the same shape:
 
 ```
 the live prompt is "Ripplet is out of the fight.", which does not contain
 "Engage" -- pressing here would activate a different provider. Not pressed.
 ```
 
-followed by:
+and `S03-39 the team is three` failed at `party size 2 (wanted >= 3)`.
+
+**What I got wrong, corrected against the rest of the same segment.** I first
+logged this as the "fainted party that nothing ever heals" stranding. It is not,
+on this evidence. The very next steps ran the game's own designed answer, through
+the real Satchel UI a player would use, and **all of them passed**:
 
 ```
-the team is three   ->  FAIL: party size 2 (wanted >= 3)
+S03-39e  open the Satchel                          PASS
+S03-39f  focus the Revive draught                  PASS
+S03-39g  try to use it on whoever needs it         PASS
+S03-39h  confirm the target if a picker opened     PASS
+S03-39k  the world owns input again                PASS
 ```
 
-The starter is down, the prompt the world offers is the fainted-ally line rather
-than an engage offer, and the third catch never happens. The tracked objective
-at that moment reads *"Build your full team of five for the village tournament"*
-— clear direction the player cannot act on.
+and the run then walked to Bryn on the practice ground, challenged him, staged
+the fight and **switched pilot mid-fight** — every one of those a PASS — before
+the cost gate stopped it mid-fight at S03-51.
 
-This is the same shape `ralph/reports/SPAWN_REQUEST-T2-GATEF-2026-08-30.md`
-described as *"a fainted party from S03 that nothing ever heals"*, reproducing
-on a newer candidate.
+**So the honest finding is narrower and still worth having:** the chapter's own
+first hour leans on the Revive draught, of which the opening satchel grants
+**two**. The starter going down is not an edge case — `ralph/T2-GATEF-RUN6`
+measured the opening fight fainting the starter in 4 of 5 runs (GAME-11), and
+this run's own village stretch spent one Revive before the first trainer. Two
+consumables, no resupply named before the tournament, against a failure mode
+that reproduces. Whether that is tuned or merely survivable is a **pacing and
+economy question for a tuning lane**, and it needs the rest of S03 — the beds,
+the sleep, the feeding — which has not run.
 
-**What is not yet established, and matters:** whether a player would be stranded
-or would simply heal and continue. S03 contains creature beds, sleep and feeding
-later in its script — past step 136. Whether the recovery the chapter offers
-arrives *before* the tournament demands three is exactly the question the rest of
-S03 answers, and it has not run. **Do not close or escalate this on the evidence
-here.**
+**Do not close, and do not escalate, on the evidence here.**
 
-Also recorded from the same partial run, one live instance of the
-modal-holds-locomotion class the brief names:
+**Also recorded** from the same partial run, two live instances of the
+modal-holds-locomotion class the brief names — a walk step beginning while
+something other than the world owned input:
 
 ```
 the world owns input before this walk  ->  FAIL: input_context=narrative_modal
 the world owns input before this walk  ->  FAIL: input_context=combat_aim
 ```
+
+Both are the diagnostic asserts `4de89a11` added for exactly this, doing their
+job: they name the cause at its origin instead of letting it surface later as a
+walk that "did not reach".
 
 ---
