@@ -571,3 +571,134 @@ cannot be fixed without a world-extent or composition decision.
 What has changed is that the fortress is now findable, dark, coherently coursed
 in one stone, and lit by fires that pool. That was the assignment; the rest is a
 purchase order.
+
+---
+
+## 8. Cold-read summary — closures, openings, and the owner split
+
+For a lane that has never read JUDGE-6. "Closed" means a rendered frame shows
+the change and, where the defect carried a number, the number moved. **A config
+edit on its own is not a closure and is not counted as one below.**
+
+### 8.1 The central charge, answered with the number
+
+JUDGE-6's charge, verbatim: the fortress mass measures **137.6** against a bald
+hill at **162.5**, where the keyart's stronghold runs **72 against 104 with the
+fortress dark** — a 32-point separation. Its consequence: "the climax location of
+the chapter loses a silhouette contest to a tree."
+
+**It moved. On the same stand with the same boxes:**
+
+| | judged frames | now | keyart |
+|---|---|---|---|
+| fortress mass | 137.6 *(reproduced here at 133.4)* | **115.7** | 72 |
+| bald hill right of it | 162.5 *(reproduced at 158.4)* | **170.5** | 104 |
+| mid-ground left of it | 143.1 *(reproduced at 136.3)* | **148.9** | — |
+
+- **Fortress vs the hill: +54.7** (was +25.0; keyart +32.0).
+- **Fortress vs the nearest-in-value ground beside it: +2.9 → +33.1.**
+
+**One correction to how the charge is usually restated,** because it changes what
+a future lane should chase. The separation was never "32 points the wrong way
+round" — on the judged frames the fortress was *already* 25 points darker than
+that hill. The defect lived in the other pair the judge names in the same
+sentence: the fortress at 137.6 against the **mid-ground it actually stands on**
+at 143.1, i.e. five points. That is why this handover's headline metric is
+`min(hill, midground) − fortress`. A lane optimising fortress-vs-hill alone could
+have declared success on day one without touching anything.
+
+### 8.2 The fifteen scene-fixable defects
+
+| # | defect | status | evidence |
+|---|---|---|---|
+| 1 | Silhouette contrast | **closed** | +2.9 → +33.1; §8.1 |
+| 2 | Bald mid-distance | **open** — half unfixable | §1b; four levers ruled out |
+| 3 | Stone UV scale / seams | **closed** (scale), open (material) | H-08 largest scale step 2.74 → 1.69; H-04 3.75 → 2.99; the 4× tower now courses with its wall |
+| 4 | Contact shadows / AO | **not deliverable** | SSAO is a no-op under `gl_compatibility` (D01); only the `path_stones` half was actionable |
+| 5 | Near-black tree / keep face | **closed to parity** | briefly regressed (28.8→19.8, texture sd 4.10→2.67), corrected via ambient fill + partial works-wall restore |
+| 6 | Floating plinth; flat grey slabs | **half closed** | slabs: `casts_shadow` on, `sink` 0.03→0.10. Plinth: still present, not chased |
+| 7 | Bare causeway | **closed** | 10 props on the deck, centre lane clear, `on_causeway` deck-height placement |
+| 8 | Prop scale (bench) | **declined, with measurement** | bench is 2.78×0.53 m; rig arithmetic reproduces the judge's own pixel figures — §2 |
+| 9 | Cyan hierarchy / cable anchors / clipping | **declined (chroma), open (rest)** | oxblood chroma 93.9→100.6 vs cyan 59.4→57.9; teal is palette-reserved |
+| 10 | Sky/haze vs sun; self-shadowing | **closed** | fog + horizon + terrain aerial warmed together; `shadow_max_distance` 220 → 420 |
+| 11 | Moon disc; brazier falloff | **closed** | `disc_edge` uniform, night/dawn 0.93; brazier range 15→26 with attenuation 1.6 |
+| 12 | Blank banner everywhere | **closed** | mipmaps + 256px + transparent field + heavier stroke; one bug behind both the blank rectangle and the "pink hatching" |
+| 13 | Wall foot / rubble skirt | **closed** | 61 anchored stones on the three visible wall feet |
+| — | Banner scale (8/10) | **closed** | `BANNER_SCALE` 2.2→3.6 *and* girders lowered, which is what the clamp actually required |
+
+**Closed: 9. Half or partial: 2. Declined with evidence: 2. Open: 2.**
+
+### 8.3 The eight art-dependent defects — what this lane touched
+
+Untouched by design, except where noted. **This lane did not work around any of
+them**, which is deliberate: a scene workaround for missing art makes the art
+harder to drop in later.
+
+| art item | touched? |
+|---|---|
+| Weathered stone material (normal map, per-stone variation, no baked highlight) | **no** — the UV fix normalises *scale*, not the material |
+| Ivy / moss / overgrowth | **no** |
+| Team Tether retrofit props (scaffolds, pipes, wheels, chimney) | **no** |
+| Broken/decayed wall-top set | **no** |
+| Arched gate with keystone; portcullis or door | **no** |
+| Roof asset (cone turret + jade tiles) | **partially** — the cap and roofs now take the installed `T_UnevenBrick` at their own tile (`ROOF_WEATHER_MATERIALS`), because they carried *no* texture at all and the pass that texturises this kit was stone-only. This is not the roof asset; it stops the spire being a flat gradient |
+| Cloth-shaped banner (folds, curved hem) | **no** — scale and sigil only |
+| Courtyard dressing set (crates, racks, cages, forge) | **no** |
+
+### 8.4 The split: scene lane vs owner
+
+**A future scene lane can still fix, without any new art:**
+
+- The floating plinth in `H-06` (defect 6) — a skirt-facing/terrain interaction.
+- The cyan cable anchors and the emissive quad clipping in `H-07` (defect 9).
+- A landform behind the Hall (`rises.peaks` near (8, 7700)) to occlude the world
+  boundary and give the fortress a backdrop — the cheapest real move on defect 2,
+  needing its own verify pass because the building samples live ground at build
+  time.
+- Further mid-distance anchor work on rows 450–560 of `H-02b`.
+
+**Needs an owner decision or owner-supplied reference art:**
+
+- All eight items in §8.3 — the material above all, which JUDGE-6 calls "the
+  single highest-value purchase".
+- **The world's south extent.** The Hall stands at z 7560; `world_perimeter.gd`'s
+  south cap is z 7680. Rows 380–420 of the judge's own mid-band look 367 m down a
+  corridor that ends 120 m behind the building, so that ground cannot be dressed
+  by any vegetation setting. Extending the corridor, moving the Hall, or re-aiming
+  the establishing stand are all decisions above a scene lane.
+- Whether `scatter_lod_ranges` should be `true` at all. It is `false` today and
+  PERF-ROG's measurements say the lever "is not where the frames are"; every
+  `lod_*` value in `vegetation.json` is therefore inert.
+
+---
+
+## 9. For `ralph/T1-HALL-ART` — what not to undo
+
+That lane is working the same building from the owner's uploaded asset pack. If
+it replaces meshes or materials, four things here are load-bearing and are not
+style preferences:
+
+1. **The stone value family, and that it moves together.** `LightRock` #817f78,
+   `DarkRock` #68675f, `site.stone_light` #66655e, `site.stone_skirt` #575147.
+   The whole silhouette result is these four. If new art arrives with its own
+   albedo, **re-measure with `tools/_t1hall4_measure.py` and re-tint to keep
+   `min(hill, midground) − fortress` near +32** — and move the family together,
+   or the seam JUDGE-5's D7 raised comes back. `site.stone` (#6a6157) is the
+   interior tone and must NOT be dropped with the others.
+2. **`uv1_world_triplanar = true`** in `stronghold.gd::_material` and
+   `_weather_hall_massing`. Object-space triplanar scales the texture with the
+   node, and this kit runs modules at 2.1×–7.0×. Reverting it restores "one
+   material, four scales, one frame". Any new mesh placed at a non-unit scale
+   needs the same treatment.
+3. **The sigil texture's mipmaps and transparent field** (`tether_sigil.gd`). A
+   hairline mark with no mip chain is why banners read as blank red rectangles at
+   range and as pink hatching where they resolved. Any replacement banner asset
+   must carry a mip chain.
+4. **The brazier light budget: 18 exterior omnis, and `_report_light_budget`
+   counts them.** The fires already have lights; what was fixed is reach (15→26 m)
+   and attenuation (1.6). Do not add a light per brazier — that trap is written up
+   in §0.5.
+
+Safe to discard freely: the roof/cap texturing in `ROOF_WEATHER_MATERIALS` exists
+only because those slots had no texture; a real roof asset should replace it
+outright.
