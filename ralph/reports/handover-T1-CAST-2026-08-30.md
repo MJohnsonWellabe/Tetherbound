@@ -279,3 +279,61 @@ It also fixes two things nobody had caught:
 - `tools/_capture_t1_cast_world.gd` — new; player-distance world frames of the
   four reassignments, `capture_check` at every shutter.
 
+## 10. The regrade took three rounds; here is what each one actually bought
+
+Convergence, not a round count (`ralph/conventions.md`). Each round was judged
+against a re-rendered `shots/rank_variety` set, not against the atlas thumbnails.
+
+**Round 1** — hue band `[258,342]` with a triangular falloff from the band centre,
+chroma ramp `0.12 → 0.30`. Measured the purple share down to 0.0-0.4% at the
+`s>0.30` threshold and the render confirmed the uniform FIELDS had moved. Two
+things it did not fix, both visible in the lineup: `grunt_c` (Pell) still had
+bright cyan hair, and the officers' and captains' chest chevrons and coat panels
+were still pale lilac.
+
+*Note on the falloff:* a triangular weight from the band centre was the first
+attempt and it barely moved anything — `grunt_b` went 24.5% → 23.7% — because its
+purple sits out near the band edges where a triangle has no weight left. Replaced
+with a plateau plus soft shoulders before round 1 was judged.
+
+**Round 2** — added a second pass for the cyan/blue band, chroma ramp lowered to
+`0.06 → 0.20`. Marginal. Pell's hair rotated *partway* and parked at green, which
+is not an improvement over cyan, just a different wrong colour; the pale lilac
+panels moved barely at all.
+
+**Round 3** — one root cause explained both leftovers. The chroma ramp was gating
+out exactly the pixel class that was failing: **high value, low chroma** — the pale
+panels, and the mint highlight speckles scattered through Pell's hair once its
+brown base had rotated. Those sat at the bottom of the ramp and rotated a fraction
+of the way. A pale pixel with a real hue should rotate fully — pale lilac and pale
+rose differ in nothing but hue, and a pixel with no hue at all is already excluded
+by `rgb_to_hsv`'s own `d < 1e-6` guard. Ramp dropped to `0.02 → 0.06`; the cyan band
+widened to `[132,232]` so a partial rotation cannot park inside it.
+
+Result, measured at the low-chroma threshold `s>0.04` where the residue actually
+lives:
+
+| rig | purple/magenta | cyan/blue |
+|---|---|---|
+| grunt_b | 0.05% | 0.00% |
+| grunt_c | 1.26% | 0.63% |
+| officer_a | 0.19% | 0.00% |
+| officer_b | 0.20% | 0.00% |
+| captain_a | 0.11% | 0.00% |
+| captain_b | 0.40% | 0.00% |
+| *`grunt`, the production reference* | *17.16%* | *0.12%* |
+| *`trainer`, not a subject* | *0.27%* | *8.90%* |
+
+The production `grunt` rig reads 17% "purple" at this threshold because oxblood at
+low chroma sits right on the red/purple boundary — which is the point: the
+generated cast is now well inside the range of the body the project built by hand.
+The trainer's own teal jacket (8.90%) is untouched, because the pass is scoped to
+the seven Tether subjects and never sees him.
+
+**Stopped here.** Pell's hair is plain brown at 5× magnification, cyan and speckles
+both gone. What is left in the lineup is a mauve cast on the chevrons and coat
+panels — and that is **lighting, not texture**: the atlases measure 0.11-0.20%
+purple, so a desaturated maroon under the bare stage's cool fill is what is
+reading lilac. Another regrade round cannot touch it, and the stage's lighting is
+not the game's.
+
