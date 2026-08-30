@@ -28,13 +28,46 @@ session spent itself on.
 | 1. A genuine second grass species | **Done.** `drygrass` un-suppressed and retuned into a real second species, plus a new per-layer band gradient so it thickens toward the stronghold. Re-baked. |
 | 2. Dashed terrain seam lines | **Both standing hypotheses positively RULED OUT with measurements**; one real, measured, lattice-aligned artefact source found and fixed; the residual is characterised but not closed. Honest partial. |
 | 3b. Stream visible from its own bank | **Done and measured** — from occluded by 0.363m to clear by 0.218m, against ground *plus grass*, at the capture tool's own stand. Terrain regen + `smoke_traversal.gd`. |
-| 3c. River as engineered canal | **Partially done, capped by gameplay.** Rim and half-width varied within the limit the river's blocker role allows; the remaining canal read needs an owner decision. Stated plainly below. |
+| 3c. River as engineered canal | **Partially done, capped by gameplay — and STILL OPEN.** Rims and half-widths varied within the limit the river's blocker role allows; the AFTER frame still reads as a levee. Do not let the re-bake close this item. |
 | 6. Mid-distance smear tier | Not attempted. T1-GROUND could not reproduce it as described and I had no budget left to re-litigate that. |
 
-Three new headless probes are committed. They are the reusable part of this
+**Branch state:** pushed to `origin/ralph/T1-GROUND-3`. One work commit
+(`21fd47f0`) plus a forward merge of `origin/main` at `bf815014`, which landed
+clean and touched none of this branch's files (`npc_ranks.json` and
+`trainer_npc.gd` only) — `test_scatter_perf_budget.gd`'s freshness assertion
+was re-run **after** the merge and still passes, so the committed bakes match
+the merged config. Working tree clean; CI not yet observed. This lane holds no
+GitHub Actions tools, so consolidation is the coordinator's — per
+`ralph/conventions.md`, a green `ralph/**` branch sits until somebody
+dispatches a sweep, and nothing lands by itself.
+
+**Consolidation warning, and it is the one in `conventions.md`'s own words.**
+This branch carries a **terrain regen and a scatter re-bake**. It is exactly
+the shape of branch that section names as *not* belonging in a shared
+consolidation: any other branch that touches `vegetation.json`,
+`terrain_playground.json` or either bake will conflict on generated state, and
+resolving that is a re-bake plus a config decision, not a merge. **Land this
+one on its own, against a settled `main`, and if anything else has to come
+with it, re-bake both terrain and scatter on the merged config rather than
+trusting either side's output.** The scatter fingerprint covers the whole of
+`vegetation.json`, so even a comment-only edit there invalidates it.
+
+Four new headless probes are committed. They are the reusable part of this
 session: each replaces a 12–30 minute boot-and-render round with seconds of
-arithmetic, and two of them answered questions that had already cost two
-lanes a render round each.
+arithmetic, and three of them answered questions that had already cost a lane
+a render round each.
+
+| Tool | Answers, in seconds, with no renderer |
+| --- | --- |
+| `tools/_probe_ground_seams.gd` | Is the sin-dot hash aliasing? Is the far-cover sheet breaching, where, and what fixes it cheapest? |
+| `tools/_probe_stream_sightline.gd` | From the capture's own stand, is the water visible over ground *plus grass*? `--sweep` scores cross-sections before a bake. |
+| `tools/_probe_layer_count.gd` | How many instances does one scatter layer place, split per band, and how much ceiling is left? |
+| `tools/_probe_control_map_dump.gd` | What did the control-map bake actually write? (False-colour image + dropout census.) |
+
+**Evidence:** `ralph/reports/T1-GROUND-3/shots/` — 11 BEFORE/AFTER pairs from
+`_capture_ground_and_sky.gd` at the same pinned day state (five bands, pond,
+river, stream), plus three diagnostic crops. I have deliberately **not** run a
+visual judgement over them; per the brief that is a blind pass's job.
 
 ---
 
@@ -153,6 +186,40 @@ the *real* config so a typo'd or dropped band id — which falls back to 1.0 and
 silently flattens the gradient — fails a test; another asserts the **product**
 rises monotonically along z, which is the assertion that would have caught (b)
 and which pinning `band_scale` alone would not.
+
+### What the final frames measure
+
+Straw's share of lit ground pixels, near/mid band, trainer column excluded:
+
+| band | BEFORE | first cut | FINAL | net |
+| --- | --- | --- | --- | --- |
+| 1 lower meadows | 65.76 | 65.97 | 65.92 | +0.16 |
+| 2 stone and root | 39.87 | 51.28 | 52.87 | +13.00 |
+| 3 river lock | 51.94 | 51.93 | 51.57 | −0.37 |
+| 4 upper meadows | 44.87 | 44.99 | 51.18 | **+6.31** |
+| 5 stronghold approach | 33.63 | 34.50 | 35.21 | +1.58 |
+
+Read this carefully rather than as a scoreboard. Band 4 is the honest signal
+— it is where the retune was aimed and it moved 50× more than the first cut
+did. Band 1 and band 3 barely moving is the gradient working as designed, not
+a failure. **Band 2's +13 is not tussocks** — that band's canopy and treeline
+also moved, for the reason in the RNG note below, and I would not cite it as
+evidence of anything.
+
+Two things I checked because they are hard project rules, not because they
+looked wrong:
+
+- **Oxblood is still reserved.** The rendered tussocks measure hue 47.8 —
+  amber straw. Team Tether's oxblood is hue 351.6. 0.2–7% of warm pixels dip
+  below hue 20 and none reach red.
+- **They are not stickers.** Rendered saturation/value is 0.75 / 0.53 against
+  the green blades they stand in at 0.73 / 0.47, in the same frame. That is
+  the failure mode this file's own VIS-WORLD history records (tufts "2–3 stops
+  brighter and greener than the terrain they sit on"), and it is not
+  happening here.
+
+**I have not judged whether this reads well.** That is the blind pass's job
+and the frames are in `ralph/reports/T1-GROUND-3/shots/`.
 
 ---
 
@@ -326,6 +393,14 @@ the grass line: the capture tool stands at `width/2 + shoulder + 6.0`, so
 widening the shoulder pushes the camera further down the same hillside that
 caused this, and the sweep shows it going backwards every time.
 
+**Confirmed in the frame, and this one is unambiguous.**
+`water-03-stream-eye-BEFORE.png` is meadow grass edge to edge with no water
+anywhere in it — the defect exactly as reported, still present on current
+`main` after two lanes. `water-03-stream-eye-AFTER.png` shows a water ribbon
+crossing the mid-ground with a sand-and-pebble bank and T1-GROUND-2's reed
+clumps standing on the far side of it, with the trainer on the near bank
+looking at it. This item is closed.
+
 Traversal-safe by construction: 1.4m over a 10.0m half-width is an 8-degree
 mean bank, ~12 degrees at the smoothstep's steepest, nowhere near the
 45-degree floor limit. Widening a carve can only make ground more walkable.
@@ -368,6 +443,20 @@ water. The remaining lever for that line is per-metre noise on the rim inside
 `_river_carve` so the edge wanders — code rather than data, and not attempted
 here. **If a later pass still reads this as a levee, that noise is the next
 instrument, not a shallower bank.**
+
+**And it does still read as a levee, in my own AFTER frame.**
+`water-02-river-eye-AFTER.png` shows the far bank as a uniform grey wall with
+a hard turf line along its top edge, essentially as before. That is the
+predicted result of a change the gameplay constraint capped at 60°, not a
+surprise — but it means **this item should stay open on the routing docs**,
+with the rim-noise fix as its next step and the bank angle explicitly off the
+table. I am flagging it rather than letting a re-baked terrain read as
+"river: done".
+
+`smoke_pond_water.gd` shows the side effect worth knowing: river bank reeds
+went 159 → 130 and scrub 57 → 60 as the banks moved. Healthy, but if a later
+pass widens rims further, watch that count — `max_bank_slope_deg: 78` is what
+sites them.
 
 ---
 
