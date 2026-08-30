@@ -34,6 +34,18 @@ const VIEWS := {
 	"band1_open": [0.0, 700.0, 24.0, 0.0],
 	"band4_ironwood": [0.0, 6000.0, 28.0, 0.0],
 	"stronghold_approach": [0.0, 7420.0, 26.0, 0.0],
+	## T1-HALL-REBUILD (2026-08-30). `stronghold_approach` ABOVE DOES NOT LOOK
+	## AT THE STRONGHOLD, and the whole Hall design's draw-call budget is
+	## written against it. Godot yaw 0 faces -Z; that view stands at z 7420 and
+	## looks toward DECREASING z -- back up the corridor the player just walked,
+	## with the Hall (z 7560) squarely behind the camera. Measured, not
+	## inferred: a before/after pair across the entire T1-HALL-REBUILD diff
+	## returned 1090 draw calls / 1402 objects on BOTH sides, to the object,
+	## which is what a view containing none of the changed geometry looks like.
+	## The old entry is left exactly as it is so its historical series stays
+	## comparable; this is the same stand turned around to face its subject, and
+	## it is the number any future Hall budget should be written against.
+	"hall_approach": [0.0, 7420.0, 26.0, 180.0],
 }
 
 var _label := ""
