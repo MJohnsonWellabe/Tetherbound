@@ -276,8 +276,20 @@ combat FAIL: 9 blows dealt 127.4 damage, but water into ground (quick x1.2500,
 Observed 127.4 against a chart-less prediction of 130.1: a 2 % match to the
 broken build, 22 % away from the correct one. **Every pre-existing assertion in
 the file passed on that patched build** — the verdicts were still emitted, the
-arrow was still `+1` — and only the new check caught it. `combat_manager.gd` was
-restored from backup immediately afterwards and is byte-identical to `main`.
+arrow was still `+1` — and only the new check caught it.
+
+`combat_manager.gd` was then restored from backup (`git diff` clean, byte-
+identical to the branch point) and the same test re-run on the shipping code:
+
+```
+type chart reached the fight: 3 verdicts, ally water vs foe ground (hit 1 / -1, arrow 1)
+6 blows landed for 129.9 damage (the chart says 123.4; a chart-less fight would say 98.7)
+combat: OK — a fight can be entered, piloted, won and left.
+```
+
+Observed within 5.3 % of the correct prediction against a 12 % tolerance, and
+32 % clear of the chart-less one. Both directions verified: **it passes what
+should pass and fails what should fail.**
 
 ---
 
