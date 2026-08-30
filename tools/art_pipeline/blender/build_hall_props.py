@@ -241,9 +241,16 @@ def build_scaffold():
         # ledger beams under the deck, front and back
         for sy in (-1, 1):
             box("Ledger", (W + 0.3, 0.14, 0.16), (0.0, sy * (D / 2 - post), y - 0.12), t)
-        # a guard rail on the outer edge of the upper deck only
+        # A guard rail on the outer edge of the upper deck only. It needs POSTS and
+        # it has to stop below the uprights' heads: the first cut floated a bare
+        # bar at deck+0.95, which is above H, so it rendered as a beam hanging in
+        # the air over the tower with nothing holding it.
         if lvl == 1:
-            box("Rail", (W, 0.08, 0.08), (0.0, D / 2 - post, y + 0.95), t)
+            rail_z = H - 0.09
+            box("Rail", (W, 0.08, 0.08), (0.0, D / 2 - post, rail_z), t)
+            for sx in (-1, 1):
+                box("RailPost", (0.07, 0.07, rail_z - y),
+                    (sx * (W / 2 - post - 0.3), D / 2 - post, (y + rail_z) / 2), t)
 
     # cross braces: an X on the front and back faces of each level. A brace runs
     # corner to corner, so its length is the diagonal and its pitch is the angle
@@ -281,11 +288,16 @@ def build_scaffold():
         torus("Lashing", 0.17, 0.035, (sx * (W / 2 - post), D / 2 - post, 2.6), r,
               rot=(math.pi / 2, 0, 0))
 
-    # lantern on an arm off the upper deck
-    box("LanternArm", (0.9, 0.09, 0.09), (W / 2 + 0.45, D / 2 - post, 4.3), t)
-    cyl("LanternChain", 0.02, 0.34, (W / 2 + 0.85, D / 2 - post, 4.1), i)
-    box("LanternBody", (0.22, 0.22, 0.3), (W / 2 + 0.85, D / 2 - post, 3.8), i)
-    box("LanternGlass", (0.15, 0.15, 0.2), (W / 2 + 0.85, D / 2 - post, 3.8), M_heat())
+    # Lantern on a short arm off the upper deck. The arm is deliberately stubby and
+    # seated AT the deck line: the first cut ran it 0.9m at z 4.3, above the top of
+    # the uprights, and it rendered as a beam floating free of the tower.
+    ax = W / 2 + 0.26
+    box("LanternArm", (0.62, 0.09, 0.09), (ax, D / 2 - post, 3.98), t)
+    box("LanternArmBrace", (0.3, 0.08, 0.3), (W / 2 + 0.08, D / 2 - post, 3.82), t,
+        rot=(0, math.pi / 4, 0))
+    cyl("LanternChain", 0.02, 0.24, (ax + 0.2, D / 2 - post, 3.82), i, verts=6)
+    box("LanternBody", (0.2, 0.2, 0.26), (ax + 0.2, D / 2 - post, 3.57), i)
+    box("LanternGlass", (0.14, 0.14, 0.17), (ax + 0.2, D / 2 - post, 3.57), M_heat())
 
     # oxblood strip -- board 01 hangs one narrow pennant, not a full banner
     box("Pennant", (0.34, 0.03, 1.15), (-W / 2 + 0.3, D / 2 - post - 0.05, 3.05), M_cloth())
@@ -351,9 +363,16 @@ def build_boiler():
     for k in range(6):
         box("Rung", (0.48, 0.05, 0.04), (0, -R - 0.16, 0.35 + k * 0.34), i)
 
-    # guy wires from the stack to the body shoulder, as thin rods
+    # Guy wires, stack collar down to the dome shoulder. Both ends have to LAND on
+    # the prop: the first cut centred them at z 2.55 with a 1.15 length and they
+    # stood off the top of the stack like a pair of antennae. Derived instead from
+    # the two points they actually connect, so the geometry cannot drift again.
+    top = Vector((0.0, 0.0, 2.35 + SH * 0.62))          # high on the stack
     for sx in (-1, 1):
-        cyl("Guy", 0.018, 1.15, (sx * 0.38, 0, 2.55), i, rot=(0, sx * 0.42, 0), verts=6)
+        foot = Vector((sx * 0.66, 0.0, 2.02))            # out on the dome shoulder
+        span = foot - top
+        cyl("Guy", 0.016, span.length, tuple((top + foot) / 2.0), i,
+            rot=(0, math.atan2(span.x, span.z), 0), verts=6)
 
     # oxblood strip, as on the board's side elevation
     box("Pennant", (0.3, 0.02, 0.85), (-1.28, 0.2, 1.5), M_cloth())

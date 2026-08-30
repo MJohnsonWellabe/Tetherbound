@@ -2203,6 +2203,9 @@ func _build_occupation() -> void:
 	_build_yard_stairs()
 	_build_yard_banners()
 	_build_skirt_grounding()
+	_build_ruin_reclaim()
+	_build_tether_retrofit()
+	_build_tether_pipe_runs()
 
 
 ## JUDGE-5 D2, the half that props alone did not answer. With the courtyard
@@ -3623,6 +3626,286 @@ func approach_pylons() -> int:
 ## by duck-typing rather than through here; this is for tests and captures.
 func approach_drain() -> Node3D:
 	return _approach_drain
+
+
+## --- T1-HALL-ART: the ruin layer and Team Tether's retrofit ------------------
+##
+## The owner's Hall asset pack (`docs/art/reference/hall-asset-pack-2026-08-30/`)
+## states the defect in one line: the Hall "currently reads as a clean cream
+## castle instead of an ancient weathered ruin reclaimed by nature with Team
+## Tether industry bolted onto it", and asks for two layers rather than one.
+## Everything below builds those two and NOTHING else -- no wall moves, no
+## chamber changes size, no collider is added anywhere in this section. That is
+## deliberate and it is the pack's own first integration instruction ("Preserve
+## gameplay geometry and traversal. This is an art upgrade, not a Hall
+## redesign"), and it is also why none of these props carry collision: Godot's
+## glTF importer only builds a collider for a node whose name ends in `-col`,
+## and not one mesh in `assets/environment/team_tether/hall/` is named that way.
+## A player can walk through a siphon. That is the correct trade -- a 0.75m
+## machine bolted to the inside of the Warden's arena wall must not be able to
+## snag a boss fight.
+##
+## WHY MULTIMESH FOR THE VEGETATION AND RUBBLE, and it is the whole reason this
+## layer is affordable. The Hall's draw-call ceiling is 4000 and T1-HALL-4
+## measured it at 3365 on the approach. A MultiMeshInstance3D is ONE draw call
+## regardless of instance count -- the same measurement that lane recorded
+## (placements +73% for draw calls +0.8%). So ivy and rubble are placed by the
+## hundred out of two batches, while each distinct retrofit prop below costs its
+## own. That asymmetry is why the ruin layer is dense and the machine layer is
+## deliberately sparse: 3 siphons, 2 boilers, 4 scaffolds, 5 banners.
+const HALL_PROPS := "res://assets/environment/team_tether/hall"
+
+
+## Ivy, moss and fallen masonry, from the kit already installed. `Prop_Vine1/2`
+## and `Prop_Brick1/2` are Quaternius Medieval Village MegaKit modules already
+## in `assets/buildings/quaternius_medieval/` -- the pack names that kit as its
+## first free source and it turned out the project had shipped it since the
+## village work, so this layer downloaded nothing and cost nothing.
+##
+## The vines hang: probed off the glTF, `Prop_Vine1` spans 2.6m tall with its
+## origin near the TOP (local z +0.48 down to -2.12), so an entry's `y` is the
+## height the ivy hangs FROM, not the ground it stands on.
+func _build_ruin_reclaim() -> void:
+	var cfg: Dictionary = _occupation().get("reclaim", {}) as Dictionary
+	if cfg.is_empty():
+		return
+	var rng := RandomNumberGenerator.new()
+	# Seeded, so a re-render is comparable with the frame before it. An unseeded
+	# scatter makes every judge frame a different world and no defect reproducible.
+	rng.seed = int(cfg.get("seed", 20260830))
+	var holder := Node3D.new()
+	holder.name = "RuinReclaim"
+	add_child(holder)
+	for band: Variant in (cfg.get("ivy", []) as Array):
+		_reclaim_batch(holder, band as Dictionary, rng, true)
+	for band: Variant in (cfg.get("rubble", []) as Array):
+		_reclaim_batch(holder, band as Dictionary, rng, false)
+
+
+## One MultiMesh per band. A band is a wall run: an axis, a span along it, the
+## fixed coordinate of the wall face, and how many instances to spread there.
+func _reclaim_batch(holder: Node3D, band: Dictionary, rng: RandomNumberGenerator,
+		is_ivy: bool) -> void:
+	var count := int(band.get("count", 0))
+	if count <= 0:
+		return
+	var model := str(band.get("model", "Prop_Vine1" if is_ivy else "Prop_Brick1"))
+	var source := _load_prop(MEDIEVAL_KIT, model)
+	if source == null:
+		return
+	var meshes := _weather_hall_mesh_instances(source)
+	if meshes.is_empty():
+		source.queue_free()
+		return
+	# The kit modules are single-surface, so the first MeshInstance3D IS the prop.
+	var mesh: Mesh = meshes[0].mesh
+	var material: Material = meshes[0].get_active_material(0)
+	source.queue_free()
+	if mesh == null:
+		return
+
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = mesh
+	mm.instance_count = count
+
+	var along_x := str(band.get("along", "z")) == "x"
+	var from := float(band.get("from", 0.0))
+	var to := float(band.get("to", 0.0))
+	var fixed := float(band.get("at", 0.0))
+	var y := float(band.get("y", 0.0))
+	var jitter := float(band.get("jitter", 0.35))
+	var y_jitter := float(band.get("y_jitter", 0.0))
+	var scale_lo := float(band.get("scale_min", 0.8))
+	var scale_hi := float(band.get("scale_max", 1.25))
+	var yaw := deg_to_rad(float(band.get("yaw_deg", 0.0)))
+	# Clustering, not even spacing. The pack asks for overgrowth "with deliberate
+	# clustering, especially joints, wall bases, damaged tops, shaded faces" --
+	# and JUDGE-6's own complaint about the mid-distance was "evenly spaced
+	# identical posts". `clump` biases each instance toward one of a few centres
+	# instead of walking the span at a constant pitch.
+	var clumps := maxi(1, int(band.get("clumps", 3)))
+	var clump_at: Array[float] = []
+	for k in clumps:
+		clump_at.append(lerpf(from, to, (float(k) + 0.5) / float(clumps)
+			+ rng.randf_range(-0.08, 0.08)))
+	var spread := absf(to - from) / float(clumps) * float(band.get("clump_spread", 0.55))
+
+	for i in count:
+		var centre: float = clump_at[i % clumps]
+		var t := clampf(centre + rng.randfn(0.0, spread), minf(from, to), maxf(from, to))
+		var off := rng.randf_range(-jitter, jitter)
+		var pos := Vector3(
+			fixed + off if not along_x else t,
+			_floor_y + y + rng.randf_range(-y_jitter, y_jitter),
+			t if not along_x else fixed + off)
+		var basis := Basis(Vector3.UP, yaw + rng.randf_range(-0.22, 0.22))
+		if not is_ivy:
+			# Rubble tumbles; ivy hangs plumb.
+			basis = basis * Basis(Vector3.RIGHT, rng.randf_range(-0.5, 0.5))
+			basis = basis * Basis(Vector3.FORWARD, rng.randf_range(-0.5, 0.5))
+		basis = basis.scaled(Vector3.ONE * rng.randf_range(scale_lo, scale_hi))
+		mm.set_instance_transform(i, Transform3D(basis, pos))
+
+	var node := MultiMeshInstance3D.new()
+	node.name = "%s_%s" % ["Ivy" if is_ivy else "Rubble", model]
+	node.multimesh = mm
+	if material != null:
+		node.material_override = material
+	var tint := str(band.get("tint", ""))
+	if not tint.is_empty() and material is StandardMaterial3D:
+		var unique: StandardMaterial3D = (material as StandardMaterial3D).duplicate()
+		unique.albedo_color = Color(tint)
+		node.material_override = unique
+	holder.add_child(node)
+
+
+## The five bespoke props, placed as a coherent retrofit rather than scattered.
+## Each entry names a model in `assets/environment/team_tether/hall/`, a local
+## (x, z), a yaw and a lift.
+##
+## ORIENTATION, and it is the one thing easy to get wrong here. Every
+## wall-mounted prop in `build_hall_props.py` is authored with its working face
+## toward Blender +Y; the glTF Y-up export maps that to **-Z**. So a prop at yaw
+## 0 faces -z (back down the hall toward the causeway), yaw -90 faces +x, yaw 90
+## faces -x, yaw 180 faces +z.
+func _build_tether_retrofit() -> void:
+	var list: Array = _occupation().get("retrofit", []) as Array
+	if list.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "TetherRetrofit"
+	add_child(holder)
+	for entry: Variant in list:
+		var spec: Dictionary = entry as Dictionary
+		var model := str(spec.get("model", ""))
+		var node := _load_prop(HALL_PROPS, model)
+		if node == null:
+			continue
+		node.name = model
+		var at := _local_of(spec.get("at", []))
+		var base_y := _floor_y
+		if bool(spec.get("on_causeway", false)):
+			base_y = _causeway_y(at.z)
+		node.position = Vector3(at.x, base_y + float(spec.get("lift", 0.0)), at.z)
+		node.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		node.scale = Vector3.ONE * float(spec.get("scale", 1.0))
+		holder.add_child(node)
+		if model.begins_with("rift_siphon"):
+			_light_the_siphon(node, spec)
+
+
+## The signature prop's glow, added in Godot rather than baked into the mesh --
+## the pack is explicit about that ("Do not bake a giant complex purple particle
+## effect into the geometry. Build a readable chamber so Claude/Godot can add
+## emissive material and particles afterward").
+##
+## RESERVED-COLOUR NOTE, because this is the one place the pack and
+## `palette.json` disagree and a later lane will want to know it was noticed.
+## palette.json reserves `tether_teal` (#3fe8c4) as "Team Tether's ENERGY
+## colour ... pylon crystals, conduits, rift energy". Board 04 and the pack's
+## integration instructions both call for PURPLE here, twice ("Purple Rift-energy
+## core", "Keep purple Rift glow selective"). Read as one system those conflict;
+## read as two they do not, and the boards themselves say which: the siphon
+## exists to "siphon, stabilize, or redirect Rift energy", so the purple is the
+## RIFT's, and the teal stays Team Tether's own. The reservation therefore holds
+## unbroken -- no teal appears on this prop, and the purple appears on nothing
+## else in the Hall. It is flagged in the handover for the owner all the same.
+const SIPHON_CORE_NODE := "RiftCore"
+const SIPHON_RIFT := Color("#a24bd8")
+func _light_the_siphon(node: Node3D, spec: Dictionary) -> void:
+	var core: Node = node.find_child(SIPHON_CORE_NODE, true, false)
+	if core is MeshInstance3D:
+		var mi := core as MeshInstance3D
+		# A UNIQUE material per placement -- the same trap `_tint_node` documents.
+		# Three siphons sharing the imported resource would pulse in lockstep and,
+		# worse, a later per-siphon energy change would repaint all of them.
+		var mat := StandardMaterial3D.new()
+		mat.albedo_color = SIPHON_RIFT
+		mat.emission_enabled = true
+		mat.emission = SIPHON_RIFT
+		mat.emission_energy_multiplier = float(spec.get("core_energy", 2.4))
+		mi.material_override = mat
+	if not bool(spec.get("core_light", true)):
+		return
+	# ONE omni per siphon, and the budget is the reason this is opt-out per entry.
+	# `_comment_braziers` spends the design's §7 exterior light budget to its
+	# stated ceiling of 18 exactly, so these are authored as INTERIOR fills at
+	# short range and are counted in the handover rather than smuggled in.
+	var light := OmniLight3D.new()
+	light.name = "SiphonGlow"
+	light.light_color = SIPHON_RIFT
+	light.light_energy = float(spec.get("light_energy", 1.5))
+	light.omni_range = float(spec.get("light_range", 6.5))
+	light.omni_attenuation = 1.8
+	light.shadow_enabled = false
+	light.position = Vector3(0.0, 1.72, -0.35)   # the chamber's own centre
+	node.add_child(light)
+
+
+## Pipe runs bolted along the ancient walls, from the modular kit board 03 asks
+## for. A run is authored as a LINE, not as a list of pieces: the builder lays
+## straights end to end, drops a bracket every `bracket_pitch`, and puts one
+## valve at `valve_at` along the run. Fourteen hand-placed pieces in config
+## would be fourteen chances to leave a gap in a pipe.
+##
+## Each piece is its own MeshInstance3D and therefore its own draw call, so runs
+## are kept short and few on purpose -- see the MultiMesh note above for why the
+## ivy can afford to be dense and this cannot.
+const PIPE_PIECE_LEN := 1.0
+func _build_tether_pipe_runs() -> void:
+	var runs: Array = _occupation().get("pipe_runs", []) as Array
+	if runs.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "TetherPipes"
+	add_child(holder)
+	for entry: Variant in runs:
+		var run: Dictionary = entry as Dictionary
+		var along_x := str(run.get("along", "z")) == "x"
+		var from := float(run.get("from", 0.0))
+		var to := float(run.get("to", 0.0))
+		var fixed := float(run.get("at", 0.0))
+		var y := _floor_y + float(run.get("y", 2.0))
+		var length := absf(to - from)
+		if length < PIPE_PIECE_LEN:
+			continue
+		var dir := signf(to - from)
+		# A straight is authored running along its own local X, so a run down the
+		# world Z axis needs a quarter turn; the pieces' collars then line up.
+		var yaw := 0.0 if along_x else PI * 0.5
+		var pieces := int(floor(length / PIPE_PIECE_LEN))
+		var valve_index := int(clampf(float(run.get("valve_at", 0.5)), 0.0, 1.0)
+			* float(maxi(pieces - 1, 0)))
+		var bracket_pitch := maxi(1, int(run.get("bracket_pitch", 3)))
+		for i in pieces:
+			var t := from + dir * (float(i) + 0.5) * PIPE_PIECE_LEN
+			var pos := Vector3(t if along_x else fixed, y, fixed if along_x else t)
+			var model := "tt_pipe_valve" if i == valve_index else "tt_pipe_straight"
+			var piece := _load_prop(HALL_PROPS, model)
+			if piece == null:
+				continue
+			piece.position = pos
+			piece.rotation.y = yaw
+			holder.add_child(piece)
+			if i % bracket_pitch == 0:
+				var bracket := _load_prop(HALL_PROPS, "tt_pipe_bracket")
+				if bracket != null:
+					bracket.position = pos + Vector3(
+						0.0 if along_x else -signf(fixed) * 0.16, -0.02,
+						-signf(fixed) * 0.16 if along_x else 0.0)
+					bracket.rotation.y = yaw + (0.0 if signf(fixed) < 0.0 else PI)
+					holder.add_child(bracket)
+		# An elbow closes each end so a run reads as plumbing that goes somewhere
+		# rather than as a pipe sawn off in mid-air.
+		for end_t: float in [from, to]:
+			var elbow := _load_prop(HALL_PROPS, "tt_pipe_elbow")
+			if elbow == null:
+				continue
+			elbow.position = Vector3(
+				end_t if along_x else fixed, y, fixed if along_x else end_t)
+			elbow.rotation.y = yaw + (0.0 if end_t == from else PI)
+			holder.add_child(elbow)
 
 
 func recovery_point() -> Node3D:
