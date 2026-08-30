@@ -357,8 +357,23 @@ func build() -> void:
 	_viewport = CREATURE_VIEWPORT.new()
 	row.add_child(_viewport)
 
+	# VIS-UI-r5: `_detail_panel` (moves, bond meter, appraisal...) is a plain
+	# VBoxContainer with no height clamp, so a creature whose detail column is
+	# taller than the panel forced the whole shell (Body -> Panel -> Frame)
+	# taller to fit it -- pushing `Footer` off the bottom of a fixed 1920x1080
+	# screen entirely and cutting the detail column's own last line off at the
+	# real screen edge, not at any container's clip boundary. Wrapping it in a
+	# ScrollContainer clips it to the row's actual height and lets the
+	# overflow scroll instead of growing the shell. `_detail_panel` itself is
+	# unchanged -- every other reference here only toggles `.visible`, which
+	# still works with an empty scroll area underneath.
+	var detail_scroll := ScrollContainer.new()
+	detail_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	detail_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	detail_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	row.add_child(detail_scroll)
 	_detail_panel = _build_detail()
-	row.add_child(_detail_panel)
+	detail_scroll.add_child(_detail_panel)
 
 	_evolution_panel = _build_evolution_panel()
 	_evolution_panel.visible = false

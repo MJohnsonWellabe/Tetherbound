@@ -394,6 +394,13 @@ func _row(db: RefCounted, item_id: String, name_text: String, price_text: String
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	name_label.text = name_text
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	# VIS-UI-r5: `clip_text` alone clips at the label edge with no affordance --
+	# every TM name got beheaded once the price column took its own fixed
+	# width. `text_overrun_behavior` adds the ellipsis; `clip_text` still
+	# needed alongside it or the label keeps requesting its full unclipped
+	# width from the row.
+	name_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	name_label.clip_text = true
 	name_label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
 	name_label.add_theme_color_override(
