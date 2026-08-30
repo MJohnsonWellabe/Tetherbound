@@ -402,3 +402,32 @@ and present in every frame.
    rung is ever authored — T3-LADDER flagged it as a real story-structure decision
    and deliberately left it to whoever shapes the escalation — the census has to be
    spent deliberately, not inherited because a mesh existed.
+### A nuance the world frames add to §8
+
+At the distance the challenge prompt actually comes up — 8-9m, where a figure is
+roughly 60px tall in a 1280×800 frame — **the anime idiom does not read.** All four
+reassignments, `officer_b` included, sit in the scene as people in clothing; what
+separates them is silhouette and colour, both of which are now right. The idiom
+break is a close-range problem, which matters because a Team Tether trainer *is*
+met close: the challenge conversation and the battle camera both bring the player
+in much nearer than a road-side glance. So the §8 question is real, but it is
+scoped to two bodies at conversation range, not to how the world reads while
+walking through it.
+
+Also worth naming from these frames, outside this lane's scope: the meadow grass is
+tall enough at these stands to partially occlude a standing NPC (clearest on Bryn
+and Juno). That is a readability observation about the grass, not about the cast.
+
+## 14. Tests
+
+| Suite | Result |
+|---|---|
+| `tests/run_tests.gd --only=character,trainers_data,chapter_content_map,npc` (5 files) | 66 tests, 1396 assertions, **0 failed** |
+| `tests/smoke_art.gd` | **OK** — models loaded, sized to their colliders, meadow dressed |
+| `tests/smoke_stronghold.gd` | **passed** |
+| `tests/smoke_village_trainer.gd` | **OK** — greet, challenge, fight, beat, shop |
+
+`test_trainers_data.gd` caught a real mistake mid-lane: my first edit to Warder Ness
+dropped her `position` key. It also surfaced the duplicate-`base` bug (§9) when the
+restored key collided with the dead one. Both fixed; a duplicate-key scan across
+every trainer table found no others.
