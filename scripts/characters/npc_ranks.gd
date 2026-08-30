@@ -60,6 +60,16 @@ static func config_for(rank: String, base_override: String = "") -> Dictionary:
 	var cfg := base.duplicate(true)
 	if rank_entry.has("palette"):
 		cfg["palette"] = rank_entry["palette"]
+	# T1-CAST: the rank's own additive emission floor, read by
+	# `character_model.gd::_shared_variant_material()` for body surfaces only.
+	# Carried on the RANK rather than inferred from the palette multiply,
+	# because the two answer different questions -- the multiply is where this
+	# rank sits on the value ladder, the floor is how much lift the rig's
+	# painted texture needs to clear the tonemap's toe at all, and the captain
+	# is the case where a bright multiply and a near-black texture coincide.
+	# A rank that declares none gets no floor, same as every unranked NPC.
+	if rank_entry.has("emission_floor"):
+		cfg["emission_floor"] = rank_entry["emission_floor"]
 	# `badges` (an ordered list, back to front) or the single legacy `badge`.
 	# The list exists so a rank can layer a rim behind its own face -- a ring and
 	# a disc read as insignia where a lone disc read as a decal.
