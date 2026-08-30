@@ -101,6 +101,17 @@ const REVEAL_FLAG := "learned_legendary_is_the_source"
 ## file covers the FINALE segment, and re-playing the preceding three hours to
 ## reach it would be a different (and much slower) test.
 const ARRIVED_AT_THE_HALL := [
+	# T3-COMBAT: the three opening beats BEFORE the first catch. T5-STORY-2 added
+	# `opening_hear_grandpa`, `opening_take_starter` and `opening_show_grandpa`
+	# to the head of `data/progression/objectives.json`'s `main` chain, and this
+	# list was written against the chain as it stood before them. That is the
+	# exact failure the comment below already describes, one rung earlier: with
+	# them unset, `tracked_text()` returned "Go down and hear Grandpa out." at
+	# the climax, `_run()` bailed at its `_failures.is_empty()` guard straight
+	# after `_bring_a_full_five_to_the_hall()`, and **the finale never reached
+	# the Warden at all** on any branch carrying that story work. Taken from the
+	# data rather than guessed: these are rungs 0-2's own `flag_id` values.
+	"opening:beat:choose", "opening:beat:return_starter", "opening:beat:walk_out",
 	"opening:beat:road", "road_gate_open",
 	# TUTORIAL-CHAIN (OP23-04) added two rungs to the opening ladder and made
 	# the bed rung a count of three (owner directives 2026-08-23 sections 1
@@ -679,7 +690,16 @@ func _fight_to_the_end(id: String, room: String) -> void:
 		var mine: RefCounted = _manager.call("active_creature")
 		if mine != null:
 			mine.hp = mine.max_hp
-		var opponent := _world.find_child("TrainerCreature_%s_*" % id, true, false) as Node3D
+		# T2-FLAKE: ask the director which body is IN the fight, the same way the
+		# ally is asked for one line down. This used to be
+		# `find_child("TrainerCreature_%s_*")`, which returns the oldest match in
+		# tree order -- and `encounter_director._on_trainer_round_ended()` leaves
+		# each beaten creature standing in the world for a beat before clearing
+		# it, so from round two onward that wildcard matched a CORPSE while the
+		# live creature fought on unmeasured. Everything downstream read the
+		# wrong body: the floor check below, the closing-distance gap, and the
+		# stall report's "opponent at x,y,z".
+		var opponent: Node3D = _director.call("trainer_body") as Node3D
 		var ally: Node3D = _director.call("ally_body") as Node3D
 		if opponent == null or ally == null:
 			await physics_frame
@@ -781,15 +801,43 @@ func _both_fighters_are_in_the_room(id: String, room: String, ally: Node3D,
 			# wrong -- which is the difference between a combat-placement bug
 			# and a building bug. One run that reproduces it is worth a lot more
 			# with them than without.
-			_fail(("%s is fighting '%s' %.1fm BELOW '%s''s floor (y=%.2f against a floor at "
+			# T2-FLAKE adds the body's NAME and every other creature body in the
+			# world beside it. The position and the floor claim answered the
+			# previous question (drifted outside the footprint, or a wrong
+			# claim: neither -- it is inside a claim it is not standing on).
+			# The next question is which body this is, because until this run
+			# the check searched for it by name and could match a corpse.
+			_fail(("%s ('%s') is fighting '%s' %.1fm BELOW '%s''s floor (y=%.2f against a floor at "
 				+ "y=%.2f) -- the fight is under the building, not in the room "
-				+ "[at %.1f, %.2f, %.1f; the building's floor claim there is %.2f]")
-				% [who, id, drop, room, body.global_position.y, floor_y,
+				+ "[at %.1f, %.2f, %.1f; the building's floor claim there is %.2f; "
+				+ "creature bodies in the world: %s]")
+				% [who, body.name, id, drop, room, body.global_position.y, floor_y,
 				body.global_position.x, body.global_position.y, body.global_position.z,
 				float(_hold.call("built_floor_height_at", body.global_position.x,
-					body.global_position.z))])
+					body.global_position.z)),
+				_creature_bodies_with_heights()])
 			return true
 	return false
+
+
+## Every trainer creature body standing in the world, with its height.
+##
+## T2-FLAKE. `_on_trainer_round_ended()` leaves a beaten creature in the world
+## for a beat, so during a multi-creature battle there is more than one body
+## with the same name prefix. When the floor check fires, which of them it fired
+## on is the whole question, and a list of all of them answers it in the run
+## that reproduces rather than in the one after.
+func _creature_bodies_with_heights() -> String:
+	var seen: Array[String] = []
+	for child in _world.get_children():
+		if not str(child.name).begins_with("TrainerCreature_"):
+			continue
+		var body := child as Node3D
+		if body == null:
+			continue
+		seen.append("%s y=%.2f%s" % [body.name, body.global_position.y,
+			" (live)" if body == _director.call("trainer_body") else ""])
+	return ", ".join(seen) if not seen.is_empty() else "none"
 
 
 ## Everything worth knowing about a fight that stopped moving, in one line.

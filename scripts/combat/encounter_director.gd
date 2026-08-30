@@ -244,6 +244,33 @@ var _trainer_cleanup_delay: float = 0.0
 ## `_send_out_next_creature()` for why it is not derived from a list that empties.
 var _trainer_sent: int = 0
 
+## T3-COMBAT. Where the trainer was standing when this battle was accepted, and
+## where every round of it re-forms from.
+##
+## A trainer battle is ONE encounter that happens to have several creatures in
+## it, but `combat_manager.begin()` is called once per creature and has no idea
+## the previous round existed. Its `_place_fighters()` anchors both fighters off
+## `_player.global_position`, and `_stand_the_trainer_aside()` at the end of that
+## same call MOVES the player — about 3.9m forward and 6.05m to the side with the
+## shipped `arena` block, roughly 7.2m per round. So round two anchored off where
+## round one had left the trainer, round three off round two, and the fight
+## walked out of the room it started in.
+##
+## Five rounds of that is what put the Warden's creatures ~5.6m under the Warden
+## Arena's floor: out past the slab, `built_floor.gd`'s deliberately generous
+## 10m claim margin still answers the room's floor height, so `place_on_ground()`
+## sets the body down on a floor that has no collider under it and
+## `creature_body._physics_process()` — which grounds on `is_on_floor()`, not on
+## the claim — drops it to the terrain below. Found and diagnosed by T2-FLAKE
+## (`ralph/reports/handover-T2-FLAKE-2026-08-30.md` §5).
+##
+## The margin is NOT the bug and must not be widened again; the drift is. This
+## anchor removes it by giving every round of a battle the same starting point,
+## which is also what the player sees: the arena stays where they accepted the
+## challenge instead of creeping across the room between creatures.
+var _trainer_battle_anchor: Vector3 = Vector3.ZERO
+var _has_trainer_battle_anchor: bool = false
+
 
 func _ready() -> void:
 	_engage_range = float(MATH.config().get("flow", {}).get("engage_range", 6.0))
@@ -946,6 +973,21 @@ func _wild_of_species(id: String) -> Node3D:
 
 func ally_body() -> Node3D:
 	return _ally_body
+
+
+## The trainer's creature currently ON THE FIELD, or null between rounds.
+##
+## Beside `ally_body()` and for the same reason: something that needs the body
+## in the fight should be told which one it is rather than searching the tree
+## for it by name. `_on_trainer_round_ended()` deliberately leaves a beaten
+## creature standing in the world for a beat (`_trainer_fallen`, so it slumps
+## rather than blinking out), which means a `find_child("TrainerCreature_<id>_*")`
+## during round two returns the ROUND ONE corpse -- the oldest match in tree
+## order, not the one being fought.
+func trainer_body() -> Node3D:
+	if _trainer_body != null and is_instance_valid(_trainer_body):
+		return _trainer_body
+	return null
 
 
 func ally_instance() -> RefCounted:
@@ -1755,6 +1797,12 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 	_trainer_node = trainer
 	_trainer_send_delay = 0.0
 	_trainer_cleanup_delay = 0.0
+	# Taken BEFORE the first round places anyone, so it is where the player was
+	# actually standing when they accepted — not where the first fight's
+	# `_stand_the_trainer_aside()` will shortly put them. See
+	# `_trainer_battle_anchor`.
+	_trainer_battle_anchor = _player.global_position if _player != null else Vector3.ZERO
+	_has_trainer_battle_anchor = _player != null
 	if not _send_out_next_creature():
 		_finish_trainer_battle(false)
 		return false
@@ -1773,6 +1821,24 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 func _send_out_next_creature() -> bool:
 	if _trainer_queue.is_empty():
 		return false
+
+	# Put the trainer back where the battle started, BEFORE anything is placed
+	# off their position. `_send_out_spot()` below reads it, and so does
+	# `combat_manager._place_fighters()` a few lines later through
+	# `_start_fight()` — so this has to happen first or the round is already
+	# staged from the last one's leftovers. See `_trainer_battle_anchor` for
+	# what that drift did to the Warden.
+	#
+	# Restored verbatim, Y included, rather than re-asking the world for a
+	# ground height: this is not a horizontal move to somewhere new (which is
+	# what D09 is about) but a return to a spot the player was standing on
+	# moments ago in this same scene. Asking again would invite a different
+	# answer inside a building, which is the failure this is fixing.
+	if _has_trainer_battle_anchor and _player != null:
+		_player.global_position = _trainer_battle_anchor
+		if _player is CharacterBody3D:
+			(_player as CharacterBody3D).velocity = Vector3.ZERO
+
 	var creature: RefCounted = _trainer_queue.pop_front()
 
 	var body: Node3D = CREATURE_SCENE.instantiate()
@@ -1888,6 +1954,11 @@ func _finish_trainer_battle(won: bool) -> void:
 	_trainer_queue.clear()
 	_trainer_send_delay = 0.0
 	_trainer_cleanup_delay = float(TRAINERS.flow().get("linger_seconds", 2.4))
+	# The battle is over, so the anchor stops applying. Deliberately NOT used to
+	# teleport the player home on the way out: the trainer stays where the last
+	# round left them, exactly as they did before this change, so winning a
+	# battle still ends with the player standing beside the fight they just won.
+	_has_trainer_battle_anchor = false
 	_set_exploration_active(true)
 	if won:
 		_record_trainer_defeat(spec)

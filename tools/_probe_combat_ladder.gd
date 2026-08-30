@@ -120,6 +120,9 @@ var _pilot_mode: String = "spacer"
 var _switching: bool = false
 var _only: String = ""
 
+## T3-COMBAT drift check: where the previous round of the current battle opened.
+var _last_round_spot: Vector3 = Vector3.ZERO
+
 var _curve: Array = []
 var _results: Array = []
 var _failures: Array[String] = []
@@ -263,6 +266,18 @@ func _fight_rung(rung: Dictionary) -> Dictionary:
 		if bool(_manager.call("is_fighting")):
 			var foe: RefCounted = _manager.call("enemy")
 			var foe_name := str(foe.get("species_id")) if foe != null else "?"
+			# T3-COMBAT drift check. `combat_manager._place_fighters()` anchors
+			# both fighters off the trainer and `_stand_the_trainer_aside()`
+			# then moves the trainer, so without an anchor every round re-forms
+			# from the last one's end and the whole fight walks. In the open
+			# meadow that is only untidy; inside the Warden Arena it is what put
+			# his creatures under the floor (T2-FLAKE §5). Measured here per
+			# round, so the fix can be shown to zero it.
+			var here := _player.global_position
+			var moved := 0.0 if rounds == 0 else here.distance_to(_last_round_spot)
+			print("      [drift] round %d opens with the trainer at %.1f, %.1f — %.2fm from where round %d opened" % [
+				rounds + 1, here.x, here.z, moved, rounds])
+			_last_round_spot = here
 			var round_result: Dictionary = await _pilot.fight_to_the_end()
 			frames += int(round_result["frames"])
 			rounds += 1

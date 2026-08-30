@@ -543,3 +543,130 @@ Every one of them runs at wall-clock speed — headless Godot still steps physic
 at 60 Hz — so a full ladder is about half an hour of real time. That is the cost
 of driving the real input path, and it is the reason this lane's evidence is
 fights rather than assertions.
+
+---
+
+## 10. The Warden's creatures were fighting under the arena floor
+
+Routed to this lane by the coordinator after the reliability lane (T2-FLAKE)
+found it and correctly declined to guess at a `scripts/combat/**` fix at the end
+of its budget. Their diagnosis is in
+`ralph/reports/handover-T2-FLAKE-2026-08-30.md` §5; I verified it against the
+code and reproduced it before changing anything.
+
+### 10.1 What it is
+
+`combat_manager.gd::_place_fighters()` anchors both fighters off
+`_player.global_position`, and `_stand_the_trainer_aside()` — the last thing that
+same call does — then **moves the player**. A trainer battle calls
+`combat_manager.begin()` once per creature, and the manager has no idea a
+previous round existed, so round two anchors off wherever round one left the
+trainer, round three off round two, and so on.
+
+With the shipped `arena` block (`deploy_offset` 2.6, `separation` 5.0,
+`radius` 11.0) the sidestep is `centre + side × 6.05 − forward × 1.2`, which is
+**about 7.2 m of displacement per round**. The Warden fields five creatures.
+
+Out past the room's slab, `built_floor.gd`'s deliberately generous 10 m claim
+margin still answers the Warden Arena's floor height, so `place_on_ground()`
+sets the body down on a floor that has no collider under it — and
+`creature_body._physics_process()`, which grounds on `is_on_floor()` rather than
+on the claim, drops it the 5.6 m to the terrain below.
+
+**The margin is not the bug and I did not touch it**, per T2-FLAKE's explicit
+warning: 10 m is already wide enough to hand a body a floor that is not there,
+which is step two of the chain. The drift is the bug.
+
+### 10.2 The fix
+
+`encounter_director.gd` now records `_trainer_battle_anchor` — where the trainer
+was standing when the battle was accepted — and restores the player to it at the
+top of `_send_out_next_creature()`, **before** anything is staged off their
+position (`_send_out_spot()` reads it, and so does `_place_fighters()` a few
+lines later through `_start_fight()`).
+
+The director is the right owner: it is the only thing that knows a trainer
+battle is one encounter with several creatures in it. The manager stays
+round-agnostic, and single wild fights are untouched.
+
+The anchor is restored verbatim, Y included, rather than re-asking the world for
+a ground height. This is not a horizontal move to somewhere new — which is what
+D09's "ask the world, never carry a Y" is about — but a return to a spot the
+player stood on moments earlier in the same scene, and re-asking would invite a
+different answer inside a building, which is the failure being fixed.
+
+It is deliberately **not** used to teleport the player home when the battle
+ends: the trainer still finishes standing beside the fight they just won.
+
+### 10.3 Measured
+
+**The drift, measured in a played fight.** `tools/_probe_combat_ladder.gd` now
+prints where the trainer is standing as each round of a battle opens. Fighting
+the Warden's five creatures on `--only=warden_aldis`, on the **unfixed** build:
+
+```
+[drift] round 1 opens with the trainer at 54.0, -61.9 — 0.00m from where round 0 opened
+[drift] round 2 opens with the trainer at 60.1, -65.8 — 7.23m from where round 1 opened
+[drift] round 3 opens with the trainer at 66.2, -69.7 — 7.37m from where round 2 opened
+[drift] round 4 opens with the trainer at 71.8, -73.5 — 10.18m from where round 3 opened
+[drift] round 5 opens with the trainer at 70.5, -75.2 — 2.44m from where round 4 opened
+```
+
+**The Warden fight travels 21.2 m between its first round and its last** — from
+(54.0, −61.9) to (70.5, −75.2) — and the per-round steps match the 7.2 m the
+`arena` block predicts. This is measured in the open meadow, where there is
+ground everywhere and the fight merely walks; in the Warden Arena the same 21 m
+carries it off the slab, which is the reported defect.
+
+**With the anchor, on the same fight:**
+
+```
+[drift] round 1 opens with the trainer at 54.0, -61.9 — 0.00m from where round 0 opened
+[drift] round 2 opens with the trainer at 54.0, -61.9 — 0.00m from where round 1 opened
+[drift] round 3 opens with the trainer at 54.0, -61.9 — 0.00m from where round 2 opened
+[drift] round 4 opens with the trainer at 54.0, -61.9 — 0.00m from where round 3 opened
+[drift] round 5 opens with the trainer at 54.0, -61.9 — 0.00m from where round 4 opened
+  b5 warden_aldis  warden  player L20 x5  vs 5 creatures to L20  WON
+```
+
+**21.2 m of travel becomes 0.00 m**, every round of the Warden's battle forms in
+the same place, and the fight is still won — the anchor changes where the fight
+happens, not how it goes.
+
+### 10.4 The finale's pass rate, before and after
+
+**A second, unrelated defect had to be cleared before the rate could be measured
+at all on this branch.** `smoke_gate_e_finale.gd` sets a list of flags to stand
+the player at Meadows Hall without replaying three hours. T5-STORY-2 (already
+merged into `ralph/LAND-0830I`) added three new rungs to the head of
+`data/progression/objectives.json` — `opening_hear_grandpa`,
+`opening_take_starter`, `opening_show_grandpa` — and that list was never updated.
+`quest_log.tracked_text()` reports the FIRST unset rung, so the test read
+*"Go down and hear Grandpa out."* at the climax, and `_run()`'s
+`_failures.is_empty()` guard bailed **immediately after
+`_bring_a_full_five_to_the_hall()`**.
+
+So on the integration branch, **the finale never reached the Warden at all** —
+not once, in any run. T2-FLAKE's 4-in-9 was measured on `main`, which does not
+carry those rungs. Confirmed by diffing `objectives.json` between `main` and
+`LAND-0830I`. Fixed here by adding the three `flag_id` values from the data.
+
+**With the finale able to reach the Warden again:**
+
+| | result |
+|---|---|
+| before the placement fix, on `main` (T2-FLAKE's measurement, corrected harness) | **5 passed / 4 failed of 9** |
+| before the placement fix, on `LAND-0830I` | **0 of 9 reached the Warden** — bailed at the Hall |
+| **after both fixes, on `LAND-0830I`** | **9 passed / 0 failed of 9** |
+
+Nine consecutive clean runs of the chapter's finale, each one walking the
+stronghold, fighting the gauntlet and the Warden's five creatures, pulling the
+lever and taking the release decision.
+
+### 10.5 Landing
+
+T2-FLAKE's held commit (`ca20fb80`) is **cherry-picked onto this branch** and
+sits directly beneath the placement fix, which is what its own §6b asks for:
+the two land together. Its harness correction is what makes the numbers above
+mean anything — without `trainer_body()` the floor check reads a corpse from
+round two on.
