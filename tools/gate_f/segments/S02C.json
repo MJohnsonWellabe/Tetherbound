@@ -507,12 +507,12 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 2,
+        "times": 3,
         "settle_frames": 30
       },
       "expected": "Section E.4: `combat_charged` is a hold-to-charge verb; the long hold is what distinguishes it from the quick attack",
       "_derived_from": "S02-37",
-      "observation": "T2-GATEF-RUN6 MEASURED, twice, superseding this step's stale note (~5.8 dmg/hit -- damage was rebalanced since it was written). Quick attacks land ~12-13.4; the charged lands ~56; the practice bramblebun rolls 104-124 HP depending on the boot. RUN6 attempt 1 ran 6 quick then the charged: 104.3 -> 91.3 -> 78.0 -> 63.8 -> 49.4 -> 0.0, the charged FAINTED it and the catch had nothing to throw at. Attempt 2 ran 1 quick then the charged, the charged missed (cone 75 deg, range 3.0, the target had moved), the throw went at 90% HP where `catching.json`'s hp_factor is 0.10, and it failed. So the charged is now taken FIRST, at full health where it cannot faint anything, and the quick attacks trim afterwards: charged ~56 then 2 quick ~25 leaves 23-43 HP (23-35%) on either roll -- alive on both, and well up the hp_factor curve."
+      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
     },
     {
       "id": "S02C-38",
@@ -530,10 +530,13 @@
       "action": "press",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 20
       },
       "expected": "docs/OPENING_SEQUENCE.md beat 8: 'The catch is a physical act you aim'. CONTROLLER-MAP put the orb on the hotbar and throws it with interact, so X reaches `_try_throw` through `interact`",
-      "_derived_from": "S02-39"
+      "_derived_from": "S02-39",
+      "observation": "T2-GATEF-RUN6, third measurement: `combat_manager.gd:1273` applies `catch_math.apply_failure_bound()` once `_tutorial_catch_failure_bound >= 0`, so with `max_catch_failures: 1` the SECOND LANDED throw is forced to succeed. The binding constraint is therefore not catch odds -- it is keeping the fight alive long enough for two throws to land. A lvl-3 starter (117 HP) against a practice bramblebun that rolls lvl 5 / 124 HP loses a long exchange: one RUN6 run ended with Moss at 0.0 HP and the fight over before the retries could throw. So the pre-catch damage is cut to the charged attack plus a single quick (both verbs still exercised for section E.4, ~69 dmg, leaving 34-44% HP on either roll), and the throw sequence is entered sooner and retried three times."
     },
     {
       "id": "S02C-40",
@@ -588,10 +591,12 @@
       "action": "press",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 20
       },
       "expected": "the orb is re-aimed for landed throw 2; `max_catch_failures` 1 means the game owes the player a success by throw 2",
-      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
     },
     {
       "id": "S02C-43e",
@@ -620,10 +625,12 @@
       "action": "press",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 20
       },
       "expected": "the orb is re-aimed for landed throw 3; `max_catch_failures` 1 means the game owes the player a success by throw 2",
-      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
     },
     {
       "id": "S02C-43g",
@@ -645,6 +652,40 @@
       },
       "expected": "the orb flies, lands and resolves",
       "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+    },
+    {
+      "id": "S02C-43h",
+      "title": "aim again (throw 4)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 20
+      },
+      "expected": "re-aim for a fourth landed throw",
+      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
+    },
+    {
+      "id": "S02C-43i",
+      "title": "throw again (throw 4)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "a fourth landed throw resolves",
+      "observation": "T2-GATEF-RUN6, third measurement: `combat_manager.gd:1273` applies `catch_math.apply_failure_bound()` once `_tutorial_catch_failure_bound >= 0`, so with `max_catch_failures: 1` the SECOND LANDED throw is forced to succeed. The binding constraint is therefore not catch odds -- it is keeping the fight alive long enough for two throws to land. A lvl-3 starter (117 HP) against a practice bramblebun that rolls lvl 5 / 124 HP loses a long exchange: one RUN6 run ended with Moss at 0.0 HP and the fight over before the retries could throw. So the pre-catch damage is cut to the charged attack plus a single quick (both verbs still exercised for section E.4, ~69 dmg, leaving 34-44% HP on either roll), and the throw sequence is entered sooner and retried three times."
+    },
+    {
+      "id": "S02C-43iw",
+      "title": "let throw 4 resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the orb flies, lands and resolves",
+      "observation": "T2-GATEF-RUN6, third measurement: `combat_manager.gd:1273` applies `catch_math.apply_failure_bound()` once `_tutorial_catch_failure_bound >= 0`, so with `max_catch_failures: 1` the SECOND LANDED throw is forced to succeed. The binding constraint is therefore not catch odds -- it is keeping the fight alive long enough for two throws to land. A lvl-3 starter (117 HP) against a practice bramblebun that rolls lvl 5 / 124 HP loses a long exchange: one RUN6 run ended with Moss at 0.0 HP and the fight over before the retries could throw. So the pre-catch damage is cut to the charged attack plus a single quick (both verbs still exercised for section E.4, ~69 dmg, leaving 34-44% HP on either roll), and the throw sequence is entered sooner and retried three times."
     },
     {
       "id": "S02C-45",

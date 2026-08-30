@@ -544,6 +544,124 @@ has both; Oskar's had neither; nobody could see it while GAME-8 meant his
 dialogue never ran. Any other `shop:` / `battle:` effect reached for the
 first time by a future fix should be audited for the same pair before the
 replay is trusted.
+### GAME-11 — the chapter's first fight is one the starter can lose, and the practice creature is not a tutorial creature (OPEN, T2-GATEF-RUN6)
+
+**Severity: BLOCKER candidate. Found by fixing the rig defects that had been
+hiding it for six runs.** Once S02 could actually stage its fight (RIG-26),
+the fight itself became observable for the first time, and it is not the
+forgiving tutorial the opening documents describe.
+
+`docs/OPENING_SEQUENCE.md` beats 6-8 are the chapter's first piloted fight
+and first catch, and `data/config/opening.json` is explicit about the
+intent: the species is chosen because it has *"the highest catch_rate in
+species.json (0.60), chosen for the opening's forgiving first catch"*, and
+`max_catch_failures: 1` exists so that *"the tutorial catch cannot fail
+twice."* `data/config/progression.json`'s own tuning comment states the
+enemy levels the chapter fields as running **"2 at the practice fight"** up
+to 22 in the stronghold gauntlet.
+
+**None of that is what the opening actually stages.** There is no dedicated,
+level-pinned practice creature. `encounter_director.gd::wild_creature()` is
+`_wild_of_species(_role_species("practice"))` — it returns whichever member
+of the world's ordinary seeded bramblebun population happens to be nearest.
+`tools/gate_f/diag/probe_s02_encounter.gd` resolved that name against **64
+live bramblebuns**, and `data/config/bands/band1_lower_meadows/spawns.json`
+pins no level on any of the fourteen bramblebun clusters, so each one takes
+the band's ordinary level roll.
+
+Measured across four RUN6 runs of S02 on this candidate:
+
+| | |
+|---|---|
+| starter (`starter_level` 3) | 117.6 HP |
+| practice bramblebun, roll A | 104.3 HP |
+| practice bramblebun, roll B | **124.2 HP**, recorded **level 5** in the exit save |
+| design intent, per `progression.json` | **level 2** |
+
+**The starter loses.** RUN6's fourth run is the clean case, with the full
+attack script (a charged attack plus three quick attacks) spent:
+
+```
+t=219.25  combat_start   my_hp=117.6   opponent_hp=104.3
+t=266.35  faint          my_hp=0.0     opponent_hp=76.1
+t=267.97  combat_end
+```
+
+Forty-seven seconds, no `catch_throw` at all, and the player's creature
+died having removed 28 of the opponent's 104 HP — most of the scripted
+attacks missed a target that moves (`player_quick.range` 2.6 m,
+`cone_degrees` 100). A level-3 creature with 117 HP is being asked to beat a
+level-5 creature with 124 HP, in the fight the game uses to teach combat,
+before the player has any second creature, any potion beyond one, or any
+way to retreat.
+
+This also explains why the first catch is a coin toss even with the rig
+fixed: the throw has to happen while the fight is still alive, and the
+fight is frequently not alive long enough. Of four RUN6 runs, the catch
+landed once.
+
+**What this is not.** It is not the catch odds — those are T5-FEEL's
+OP-0830-5 and were separately diagnosed and fixed at the accuracy scale on
+`ralph/T5-FEEL`. It is not the rig: RIG-26 and RIG-27 below are fixed, and
+the fight now stages, is piloted, deals damage and emits its full event
+trail.
+
+**Two candidate fixes, and the choice is a design one, not a coding one.**
+Either the opening spawns its own practice creature at a pinned low level
+(the `level` key `spawn_wild()`'s own `opts` already supports, which would
+make `progression.json`'s "2 at the practice fight" true), or the band roll
+near the opening meadow is floored so the first thing a player meets cannot
+outclass the starter. The first is narrower and matches the documented
+intent; it is what I would recommend, but it is the owner's call and I have
+not made it.
+
+### GAME-12 — after a failed catch the aim re-opens and the throw never fires (OPEN, T2-GATEF-RUN6)
+
+**Severity: HIGH candidate. Newly observable, for the same reason GAME-11
+is.** `combat_manager.gd:1273` applies `catch_math.apply_failure_bound()`
+whenever `_tutorial_catch_failure_bound >= 0`, so with
+`max_catch_failures: 1` the **second landed throw is forced to succeed**.
+That guarantee is the opening's stated promise that "the tutorial catch
+cannot fail twice."
+
+**It is currently unreachable, because there is no second landed throw.**
+RUN6 added three retry blocks to S02 (re-aim, throw, wait). The telemetry
+shows every one of them re-entering the aim and none of them throwing:
+
+```
+t=227.22  ctx=combat_aim   pressed interact x2      <- aim entered
+t=227.32  ctx=combat       pressed interact x1
+t=227.70  catch_throw                               <- throw 1 fires
+t=230.08  catch_result                              <- throw 1 fails
+
+t=233.67  ctx=combat_aim   pressed interact x2      <- aim entered again
+t=233.75  ctx=combat       pressed interact x1
+          (no catch_throw)
+t=240.08  ctx=combat_aim   pressed interact x2      <- and again
+t=240.17  ctx=combat       pressed interact x1
+          (no catch_throw)
+t=246.50  ctx=combat_aim   pressed interact x2      <- and again
+t=246.58  ctx=combat       pressed interact x1
+          (no catch_throw)
+```
+
+Three re-aims, zero throws, reproduced across two runs. The party had 13+
+orbs, so `throw_aim.gd::try_begin_aim()`'s "no orbs left" refusal is not
+it. **Not root-caused this session** — I did not get a focused probe onto
+it, and I am not going to guess between "the aim is entered and cancelled
+by the second tap of the same press", "a post-resolution lockout the retry
+lands inside", and "the throw is refused for a reason nothing surfaces."
+Each is testable in one live probe of the shape
+`probe_s02_encounter.gd` already uses.
+
+**Why it matters beyond the rig:** if a real player's first throw fails —
+which at these HP levels is the common case, see GAME-11 — this is the
+mechanism that is supposed to catch them. A player who cannot land a second
+throw, in the beat that gates the road gate, with fifteen orbs and no
+resupply before the gate, is stranded exactly the way
+`sequence_director.gd:1128-1134`'s own comment worries about for the miss
+case.
+
 
 ---
 
