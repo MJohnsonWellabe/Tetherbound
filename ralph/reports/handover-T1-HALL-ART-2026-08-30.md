@@ -261,6 +261,59 @@ probes, which is the same finding `building_prefabs.json` records for
 
 ---
 
+## 4.4 PLACED IN THE WORLD vs merely present in the repo
+
+An asset that is committed but not placed is not an improvement, so this table
+separates the two honestly.
+
+**Placed, and therefore actually visible to a player:**
+
+| Asset | Placements | Where |
+|---|---|---|
+| `rift_siphon_wall_machine` | **3** | courtyard west wall, tether approach east wall, Warden arena west wall — escalating core energy along the route |
+| `team_tether_banner_rig` | **8** | gate face ×2 (on the causeway), exterior flanks ×3, courtyard ×2, Warden arena ×1 |
+| `team_tether_scaffold_tower` | **4** | south elevation ×2 (on the causeway), courtyard ×2 |
+| `team_tether_boiler_chimney` | **2** | courtyard east, outer works west |
+| `tt_pipe_straight` / `_valve` / `_bracket` / `_elbow` | **68 pieces** across 4 runs | boiler → siphon, along ancient walls |
+| `Prop_Vine1` / `Prop_Vine2` (ivy) | **515 instances**, 14 MultiMesh bands | courtyard/outer-works/Warden interiors + south elevation and both exterior flanks |
+| `Prop_Brick1` / `Prop_Brick2` (rubble) | **116 instances**, 6 MultiMesh bands | interior wall feet |
+
+**In the repo but NOT placed anywhere:**
+
+- **`tt_pipe_tee.glb`.** Board 03 asks for a T-junction and one was built, but
+  `_build_tether_pipe_runs()` lays a run as a straight line and emits only
+  straights, a valve, brackets and end elbows. **Nothing in the Hall uses it
+  today.** It is 604 triangles of dead weight until a run branches. Either give
+  the run builder a branch, or delete the asset — do not leave it looking like
+  shipped content.
+
+**Corrected cost numbers.** An earlier note in this lane quoted *574 instances /
+20 batches / 218 draw calls*. Those were superseded twice, and the **final
+measured figures** (printed by `_probe_hall_art_fast.gd` on the shipped build,
+not estimated) are:
+
+```
+reclaim: 631 instances / 20 batches
+retrofit: 17 props, 64 surfaces, 3 siphon cores, 3 lights
+pipes:   68 pieces, 124 surfaces
+DRAW CALLS ADDED: 208
+```
+
+The instance count went **up** (574 → 631) because the exterior ivy was scaled
+and multiplied to read at flank range; the draw calls went **down** (218 → 208)
+because two floating flank scaffolds were removed. That divergence is the lane's
+central budget lesson in one line: **instances are nearly free, distinct props
+are not.** 208 against 635 of headroom (3365 measured by T1-HALL-4, 4000
+ceiling) → **~3573**.
+
+**3 new OmniLights** (one per siphon, short-range interior fills). Note
+`stronghold.json`'s `_comment_braziers` states the §7 *exterior* light budget is
+spent to its ceiling of 18 exactly; these are interior and are declared here
+rather than smuggled in, but a lane that re-counts that budget should know they
+exist. They are opt-out per entry via `core_light: false`.
+
+---
+
 ## 5. The reserved-colour conflict, flagged for the owner
 
 **This is the one thing in the lane that is genuinely the owner's call, and it is
@@ -320,3 +373,54 @@ If the owner would rather the siphons ran teal, it is one constant
   lane could not measure in time.
 - **`assets/buildings/` has no ledger coverage beyond the four modules this lane
   ships.** Pre-existing gap, named in `docs/ASSET_LEDGER.md` rather than glossed.
+
+---
+
+## 7. What the next lane should do first
+
+The owner's pack now lives permanently at
+`docs/art/reference/hall-asset-pack-2026-08-30/`. It is the contract; read
+`HALL_ASSET_IMPLEMENTATION.md` and **look at the five boards as images** before
+touching anything.
+
+In priority order:
+
+1. **Close the JUDGE-6 silhouette measurement.** It is the one number the brief
+   asked for that this lane did not deliver (§6). Two commands, both in §6.
+   Do this before any new art, because it tells you whether the asset layer
+   moved the number the owner and the judge actually care about.
+
+2. **Read `ralph/conventions.md` line 246 before your first capture.** `--headless`
+   plus a real rendering driver hangs forever. It cost this lane most of its
+   session and it has now cost at least two lanes. Use
+   `tools/_probe_hall_art_fast.gd` for iteration (seconds) and
+   `tools/_judge_capture_hall.gd` only for judged evidence (5–8 min boot).
+
+3. **Resolve `tt_pipe_tee`** — branch a pipe run through it or delete it (§4.4).
+   Small, but it is the one place this lane left something that looks shipped
+   and is not.
+
+4. **Broken wall tops and collapsed parapets.** The pack asks for them
+   explicitly ("use broken masonry pieces to destroy the 'perfect finished
+   castle' silhouette") and the Quaternius kit ships no ruined modules. Rubble
+   at the wall feet currently *implies* collapse the parapets don't show.
+   Cutting ruined variants procedurally out of the installed castle kit in
+   Blender is free, cohesive by construction, and is the highest-value remaining
+   Layer 1 item. This is real work, not a tweak.
+
+5. **Moss in the mortar joints.** A material/decal job on the stone, not a prop
+   job. Second-highest Layer 1 value.
+
+6. **The pre-existing cyan-white bars on the exterior flanks** (§4.3) — almost
+   certainly `_live_material()`'s teal conduits blowing out under ACES. Not an
+   asset problem; belongs to whoever owns the conduits.
+
+7. **Do not re-litigate the free-asset layer.** The pack's named sources were
+   already in the tree. If you need ruin pieces the kit lacks, author them from
+   the installed kit before spending anything — the $0 result here was not luck,
+   it was that `assets/buildings/quaternius_medieval/` already had 64 modules.
+
+**If a Meshy budget is authorised:** boards **02 (boiler)** and **04 (rift
+siphon)** are the two worth it. The other three are shape-dominated and the
+authored versions lose little. Never spend a generation without the owner's
+reference art — the boards are that art, and they are now permanent in the repo.
