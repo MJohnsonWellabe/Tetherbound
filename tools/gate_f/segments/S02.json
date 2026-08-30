@@ -334,17 +334,38 @@
       "expected": "`grandpa_named` is 3 lines (data/dialogue/opening.json) and opens the moment the name is confirmed, not when the player next talks to him. Measured on attempt 2: the 12 taps of S02-28 landed inside the naming prompt's own close and the conversation then sat open for its full 120 s held budget, stalling the walk to the bramblebun. This wait is a transition allowance, deliberately NOT `answer_prompts` on the walk -- that flag is off by default precisely so a harness cannot hide something blocking travel."
     },
     {
-      "id": "S02-28",
-      "title": "hear `grandpa_named` out",
+      "id": "S02-28o",
+      "title": "open the conversation",
       "action": "press",
       "args": {
         "control": "interact",
         "hold": "tap",
-        "times": 4,
+        "settle_frames": 30
+      },
+      "expected": "one press opens the conversation; advancing it is the next step's job",
+      "observation": "T2-GATEF-RUN6: `advance_dialogue_until_closed` advances an ALREADY-OPEN modal and BLOCKERs if none is open -- correctly, since advancing nothing sends the button into the world. RUN6's first attempt replaced the whole blind press count with it and derailed here with 'no narrative modal is open ... input_context is world'. The opening press is a separate act from advancing: one `interact` opens the conversation, then the predicate-driven advance closes it without a guessed count."
+    },
+    {
+      "id": "S02-28",
+      "title": "hear `grandpa_named` out",
+      "action": "advance_dialogue_until_closed",
+      "args": {
+        "max_presses": 60,
         "settle_frames": 30
       },
       "expected": "beat 5: 'the director runs `grandpa_named` with $name substituted -- the first time in this game a line says a word the player wrote' -- and points down the path at the practice bramblebun",
-      "observation": "times reduced 12 -> 20 -> 4. `grandpa_named` is THREE lines (data/dialogue/opening.json), and Grandpa stays re-talkable, so every tap past the third can re-open the conversation the previous tap just closed. 4 taps is three lines plus one. Recorded rather than silently retuned: attempts 2 and 3 both ended with a DialoguePanel owning input for exactly 7201 frames."
+      "observation": "T2-GATEF-RUN6: this was a BLIND PRESS COUNT on a narrative modal, and the modal-holds-locomotion class is what it feeds. X04's own stop cause was an unanswered narrative modal holding locomotion for 3601 frames, and RUN6's S02-49 is the same shape one beat earlier: 'did not reach (31,-8) ... stopped 6.9 m short ... (420 held)' -- 420 HELD frames, i.e. locomotion disabled by a modal the previous step's press count did not finish closing. `advance_dialogue_until_closed` advances by predicate instead: it reads the panel's own line, presses, waits for the line to change or the panel to close, and stops the moment it closes. It also FAILs on the over-press signature (closed then re-opened), which is the exact hazard this step's own authored note describes for a re-talkable NPC. || T2-GATEF-RUN6: `advance_dialogue_until_closed` advances an ALREADY-OPEN modal and BLOCKERs if none is open -- correctly, since advancing nothing sends the button into the world. RUN6's first attempt replaced the whole blind press count with it and derailed here with 'no narrative modal is open ... input_context is world'. The opening press is a separate act from advancing: one `interact` opens the conversation, then the predicate-driven advance closes it without a guessed count."
+    },
+    {
+      "id": "S02-28w",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "the modal is closed and locomotion is the player's again before anything walks",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S02-29",
@@ -379,14 +400,31 @@
       "expected": "Section F's POI set is what the dead-travel meter resets on; rescanned here because the opening adds the encounter's wild creature to the world"
     },
     {
+      "id": "S02-31a",
+      "title": "close the last few metres onto the live bramblebun",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": false
+      },
+      "expected": "beat 6: the walk arrives at the creature itself rather than at a coordinate near where it was once seen. `within` 4.5 sits comfortably inside `flow.engage_range` 6.0 so arrival cannot land on the boundary.",
+      "observation": "T2-GATEF-RUN6: S02's engage was a hardcoded coordinate plus one blind press. `S02-30` aims at (30,-40) with close_enough 4.0 and the run stopped at (26.8,-38.3); `flow.engage_range` is 6.00 m and DIAG-S02-ENCOUNTER pass 4 measured the practice bramblebun at 5.99 m from that exact point -- a 1 cm margin, decided per boot by `_rng.randomize()` in wild_creature.gd. From that same point with a creature out the probe pressed interact and `is_fighting` went false -> true: the GAME stages the fight. The step could not reach it reliably. This closes the last few metres onto the live creature and asserts the Engage prompt before pressing, the pattern S03-32a..j2 already uses for the same species. || T2-GATEF-RUN6: `close_3d` left at its default refused this arrival -- 4.49 m in plan view but 4.55 m in 3D with 0.72 m of it vertical (the practice meadow slopes). Walking genuinely cannot close a vertical gap, so the refusal is correct in general; here it is not load-bearing because the very next step is `interact_with`, which presses only when the arbiter is showing a live Engage prompt and refuses with a reason otherwise. The prompt assert is the real guard."
+    },
+    {
       "id": "S02-32",
       "title": "engage the bramblebun",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "entity": "bramblebun",
+        "expect_prompt": "Engage",
+        "check_provider": false
       },
-      "expected": "beat 6: 'Targeting; wild creatures are individuals, not spawns'"
+      "expected": "beat 6: 'Targeting; wild creatures are individuals, not spawns'",
+      "observation": "T2-GATEF-RUN6: S02's engage was a hardcoded coordinate plus one blind press. `S02-30` aims at (30,-40) with close_enough 4.0 and the run stopped at (26.8,-38.3); `flow.engage_range` is 6.00 m and DIAG-S02-ENCOUNTER pass 4 measured the practice bramblebun at 5.99 m from that exact point -- a 1 cm margin, decided per boot by `_rng.randomize()` in wild_creature.gd. From that same point with a creature out the probe pressed interact and `is_fighting` went false -> true: the GAME stages the fight. The step could not reach it reliably. This closes the last few metres onto the live creature and asserts the Engage prompt before pressing, the pattern S03-32a..j2 already uses for the same species."
     },
     {
       "id": "S02-33",
@@ -408,6 +446,17 @@
       "expected": "input_context is 'combat'"
     },
     {
+      "id": "S02-34f",
+      "title": "a fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "CombatManager::is_fighting() is true -- the engage was received, not merely pressed",
+      "observation": "T2-GATEF-RUN6 / RIG-26, and the fix T5-FEEL's played-path evidence independently recommended: assert that a fight is RUNNING, not merely that combat-shaped input is owned. `input_context == \"combat\"` was the strongest claim these segments made after an engage, and it is not the same claim -- it is why two instrumented segments produced 128 events with zero `combat_start` and it read as a candidate GAME blocker for six runs."
+    },
+    {
       "id": "S02-35",
       "title": "capture GF-14-COMBAT-01",
       "action": "capture",
@@ -423,26 +472,27 @@
     },
     {
       "id": "S02-36",
-      "title": "trade quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 6,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 CB-01 records duration, attacks/damage exchanges, camera corrections, target_on_screen dropouts and the difficulty read. Combat is real-time and directly piloted (D07)",
-      "observation": "times 14 -> 6. MEASURED, not guessed: S02's own telemetry has the bramblebun at opponent_hp 124.2 full, 43.1 after these 14 quick attacks (~5.8 damage each), and 0.0 after the charged attack that follows -- combat_end at t=283.6, then the aim and throw steps pressed into an empty world and party_size never reached 2. The chapter's whole objective chain then stalls at 'Catch your first wild creature', which is what pinned every downstream objective assert in S02-S05. The catch is supposed to WEAKEN the target, not kill it. 6 quick (~35 damage) leaves ~89, and the charged attack that follows takes it to roughly 30-46 of 124 -- weakened, alive, catchable -- while still exercising the charged-attack verb the next step covers."
-    },
-    {
-      "id": "S02-37",
-      "title": "one charged attack",
+      "title": "open with the charged attack, at full health",
       "action": "press",
       "args": {
         "control": "combat_charged",
         "hold": "long"
       },
-      "expected": "Section E.4: `combat_charged` is a hold-to-charge verb; the long hold is what distinguishes it from the quick attack"
+      "expected": "Section E.1 CB-01 records duration, attacks/damage exchanges, camera corrections, target_on_screen dropouts and the difficulty read. Combat is real-time and directly piloted (D07)",
+      "observation": "T2-GATEF-RUN6 MEASURED, twice, superseding this step's stale note (~5.8 dmg/hit -- damage was rebalanced since it was written). Quick attacks land ~12-13.4; the charged lands ~56; the practice bramblebun rolls 104-124 HP depending on the boot. RUN6 attempt 1 ran 6 quick then the charged: 104.3 -> 91.3 -> 78.0 -> 63.8 -> 49.4 -> 0.0, the charged FAINTED it and the catch had nothing to throw at. Attempt 2 ran 1 quick then the charged, the charged missed (cone 75 deg, range 3.0, the target had moved), the throw went at 90% HP where `catching.json`'s hp_factor is 0.10, and it failed. So the charged is now taken FIRST, at full health where it cannot faint anything, and the quick attacks trim afterwards: charged ~56 then 2 quick ~25 leaves 23-43 HP (23-35%) on either roll -- alive on both, and well up the hp_factor curve."
+    },
+    {
+      "id": "S02-37",
+      "title": "trim with quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 30
+      },
+      "expected": "Section E.4: `combat_charged` is a hold-to-charge verb; the long hold is what distinguishes it from the quick attack",
+      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
     },
     {
       "id": "S02-38",
@@ -459,9 +509,12 @@
       "action": "press",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 20
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 8: 'The catch is a physical act you aim'. CONTROLLER-MAP put the orb on the hotbar and throws it with interact, so X reaches `_try_throw` through `interact`"
+      "expected": "docs/OPENING_SEQUENCE.md beat 8: 'The catch is a physical act you aim'. CONTROLLER-MAP put the orb on the hotbar and throws it with interact, so X reaches `_try_throw` through `interact`",
+      "observation": "T2-GATEF-RUN6, third measurement: `combat_manager.gd:1273` applies `catch_math.apply_failure_bound()` once `_tutorial_catch_failure_bound >= 0`, so with `max_catch_failures: 1` the SECOND LANDED throw is forced to succeed. The binding constraint is therefore not catch odds -- it is keeping the fight alive long enough for two throws to land. A lvl-3 starter (117 HP) against a practice bramblebun that rolls lvl 5 / 124 HP loses a long exchange: one RUN6 run ended with Moss at 0.0 HP and the fight over before the retries could throw. So the pre-catch damage is cut to the charged attack plus a single quick (both verbs still exercised for section E.4, ~69 dmg, leaving 34-44% HP on either roll), and the throw sequence is entered sooner and retried three times."
     },
     {
       "id": "S02-40",
@@ -507,6 +560,130 @@
       "expected": "the orb flies, lands and resolves; `catch_throw` and `catch_result` events carry the distance and the shown percent"
     },
     {
+      "id": "S02-43d",
+      "title": "aim again (throw 2)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 20
+      },
+      "expected": "the orb is re-aimed for landed throw 2; `max_catch_failures` 1 means the game owes the player a success by throw 2",
+      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
+    },
+    {
+      "id": "S02-43e",
+      "title": "throw again (throw 2)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "landed throw 2 resolves; a `catch_throw` and a `catch_result` are emitted for it",
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+    },
+    {
+      "id": "S02-43ew",
+      "title": "let throw 2 resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the orb flies, lands and resolves",
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+    },
+    {
+      "id": "S02-43f",
+      "title": "aim again (throw 3)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 20
+      },
+      "expected": "the orb is re-aimed for landed throw 3; `max_catch_failures` 1 means the game owes the player a success by throw 2",
+      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
+    },
+    {
+      "id": "S02-43g",
+      "title": "throw again (throw 3)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "landed throw 3 resolves; a `catch_throw` and a `catch_result` are emitted for it",
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+    },
+    {
+      "id": "S02-43gw",
+      "title": "let throw 3 resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the orb flies, lands and resolves",
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+    },
+    {
+      "id": "S02-43h",
+      "title": "aim again (throw 4)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 20
+      },
+      "expected": "re-aim for a fourth landed throw",
+      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
+    },
+    {
+      "id": "S02-43i",
+      "title": "throw again (throw 4)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "a fourth landed throw resolves",
+      "observation": "T2-GATEF-RUN6, third measurement: `combat_manager.gd:1273` applies `catch_math.apply_failure_bound()` once `_tutorial_catch_failure_bound >= 0`, so with `max_catch_failures: 1` the SECOND LANDED throw is forced to succeed. The binding constraint is therefore not catch odds -- it is keeping the fight alive long enough for two throws to land. A lvl-3 starter (117 HP) against a practice bramblebun that rolls lvl 5 / 124 HP loses a long exchange: one RUN6 run ended with Moss at 0.0 HP and the fight over before the retries could throw. So the pre-catch damage is cut to the charged attack plus a single quick (both verbs still exercised for section E.4, ~69 dmg, leaving 34-44% HP on either roll), and the throw sequence is entered sooner and retried three times."
+    },
+    {
+      "id": "S02-43iw",
+      "title": "let throw 4 resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the orb flies, lands and resolves",
+      "observation": "T2-GATEF-RUN6, third measurement: `combat_manager.gd:1273` applies `catch_math.apply_failure_bound()` once `_tutorial_catch_failure_bound >= 0`, so with `max_catch_failures: 1` the SECOND LANDED throw is forced to succeed. The binding constraint is therefore not catch odds -- it is keeping the fight alive long enough for two throws to land. A lvl-3 starter (117 HP) against a practice bramblebun that rolls lvl 5 / 124 HP loses a long exchange: one RUN6 run ended with Moss at 0.0 HP and the fight over before the retries could throw. So the pre-catch damage is cut to the charged attack plus a single quick (both verbs still exercised for section E.4, ~69 dmg, leaving 34-44% HP on either roll), and the throw sequence is entered sooner and retried three times."
+    },
+    {
+      "id": "S02-45",
+      "title": "the catch counted",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 2
+      },
+      "expected": "Section E.2 CT-08: 'verify party count increments'. Two of five: the starter and the first catch",
+      "observation": "T2-GATEF-RUN6: this assert used to sit immediately after the FIRST throw. With `max_catch_failures: 1` the game's promise is kept on the second landed throw, so asserting after throw 1 reads a legitimate first failure as a defect -- which is exactly how this segment reported 'party size 1 (wanted 2)' in a run whose own exit save carried a party of 2. Moved to after the retry blocks, where the promise is actually due."
+    },
+    {
+      "id": "S02-46",
+      "title": "the chain advanced to the road",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "open_road_gate"
+      },
+      "expected": "Section L.5 T15: 'tracked line advances immediately; guided ladder surfaces exactly the next rung'. The next rung is `open_road_gate`, 'Open the village gate and follow the road in.'",
+      "observation": "T2-GATEF-RUN6: this assert used to sit immediately after the FIRST throw. With `max_catch_failures: 1` the game's promise is kept on the second landed throw, so asserting after throw 1 reads a legitimate first failure as a defect -- which is exactly how this segment reported 'party size 1 (wanted 2)' in a run whose own exit save carried a party of 2. Moved to after the retry blocks, where the promise is actually due."
+    },
+    {
       "id": "S02-44",
       "title": "capture GF-15-CATCH-02",
       "action": "capture",
@@ -521,26 +698,6 @@
       "expected": "Section G: CT-01 resolve frame (tutorial/required catch, S02, production path) -- throw/feedback quality"
     },
     {
-      "id": "S02-45",
-      "title": "the catch counted",
-      "action": "assert",
-      "args": {
-        "check": "party_size",
-        "equals": 2
-      },
-      "expected": "Section E.2 CT-08: 'verify party count increments'. Two of five: the starter and the first catch"
-    },
-    {
-      "id": "S02-46",
-      "title": "the chain advanced to the road",
-      "action": "assert",
-      "args": {
-        "check": "objective_is",
-        "id": "open_road_gate"
-      },
-      "expected": "Section L.5 T15: 'tracked line advances immediately; guided ladder surfaces exactly the next rung'. The next rung is `open_road_gate`, 'Open the village gate and follow the road in.'"
-    },
-    {
       "id": "S02-47",
       "title": "hear `grandpa_road` out",
       "action": "press",
@@ -550,7 +707,19 @@
         "times": 12,
         "settle_frames": 20
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 9: 'follow the dirt road out, gather what the verges offer, and make camp before dark'. His final line emits `beat:free_play`"
+      "expected": "docs/OPENING_SEQUENCE.md beat 9: 'follow the dirt road out, gather what the verges offer, and make camp before dark'. His final line emits `beat:free_play`",
+      "observation": "T2-GATEF-RUN6: deliberately left as a tolerant press count, unlike S02-28. Grandpa's road line only exists once the first catch has advanced the beat, so whether a modal is open here is downstream of GAME-11's coin toss. `advance_dialogue_until_closed` is strict and BLOCKERs when nothing is open, which derailed the segment and cost 26 steps and the exit save on a run whose only real defect was upstream. The following `assert input_context == world` still names a modal that is left holding locomotion, which is what the audit is for -- it records the condition without throwing the rest of the segment away. Revisit once GAME-11 is fixed and the catch is reliable; then this can be strict too."
+    },
+    {
+      "id": "S02-47w",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "the modal is closed and locomotion is the player's again before anything walks",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
       "id": "S02-48",

@@ -149,6 +149,17 @@
       "expected": "CD-3's own regression, verbatim: after any dialogue step, input_context must not be 'narrative_modal'"
     },
     {
+      "id": "SC-R-12w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
       "id": "SC-R-14",
       "title": "walk to a harvest node, resolved by point-of-interest kind",
       "action": "move_to_entity",

@@ -346,6 +346,7 @@ directory copies from the directory it actually used.
 | `check` | Args | Passes when |
 |---|---|---|
 | `input_context` | `equals` | The probe's context name matches exactly. |
+| `combat_running` | `equals` (default `true`) | `CombatManager::is_fighting()`. Use this after any engage step: `input_context == "combat"` says something combat-shaped owns input, this says a fight is actually running. A bare `press` on an engage asserts only that input was injected, which is how S02 PASSed its engage step into an unengaged world for six runs (RIG-26). |
 | `context_prefix` | `prefix` | It starts with `prefix` — `"menu"` matches `menu_backpack`, `menu_map`, … |
 | `focus_owned` | — | Some Control holds GUI focus. The check a controller-only build lives or dies on. |
 | `flag_set` | `flag` | That progression flag is set. |
