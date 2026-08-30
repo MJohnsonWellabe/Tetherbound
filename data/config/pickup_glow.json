@@ -12,10 +12,10 @@
     "body_fraction": 0.55,
     "max_height": 1.30,
     "radius": 0.70,
-    "core_inner": 0.30,
-    "core_power": 1.3,
-    "rim_gain": 0.6,
-    "strength": 1.5,
+    "core_inner": 0.10,
+    "core_power": 1.7,
+    "rim_gain": 0.42,
+    "strength": 0.68,
     "behind": 0.06,
     "pulse_hz": 0.5,
     "pulse_depth": 0.2
@@ -24,11 +24,11 @@
   "_comment_aura": "The 'it is exactly HERE' cue, and the reason the mote alone is not enough: a mote high enough to clear grass is by definition not where the item is, so without this the player walks to a floating light and then hunts at their feet. A flat additive disc at the object's base bleeds into the blade bottoms and puts the find back on the ground. Bigger and much softer than the mote on purpose -- it is a wash, not a second marker. `pulse_depth` 0 keeps it steady while the mote breathes, so the pair does not read as one flashing object.",
   "aura": {
     "height": 0.06,
-    "radius": 0.95,
+    "radius": 0.70,
     "core_inner": 0.22,
     "core_power": 1.3,
     "rim_gain": 0.3,
-    "strength": 0.8,
+    "strength": 0.45,
     "pulse_hz": 0.5,
     "pulse_depth": 0.0
   },
@@ -41,9 +41,9 @@
 
   "_comment_distance": "Distance compensation, shared by both layers. A fixed-size world quad is a dinner plate at 2m and a sub-pixel speck at 40m, which is exactly backwards -- the far case is the one the owner reported. `reference_distance` is where the authored radius is used unscaled; nearer and further it is scaled toward a constant SCREEN size, clamped by `screen_min_scale`/`screen_max_scale` so it neither vanishes up close nor becomes a tree-sized billboard at range. `far_fade_*` is where it arrives from nothing rather than popping in. `near_fade_*` and `near_floor` are the anti-loot-beam rule: inside a few metres the player can SEE the object, so the glow steps down to `near_floor` of itself and gets out of the way rather than washing out the thing it was pointing at. It never goes to zero -- an item at your feet in tall grass is still the case being solved.",
   "distance": {
-    "reference_distance": 12.0,
+    "reference_distance": 9.0,
     "screen_min_scale": 0.5,
-    "screen_max_scale": 2.4,
+    "screen_max_scale": 1.30,
     "far_fade_start": 34.0,
     "far_fade_end": 46.0,
     "near_fade_start": 4.5,

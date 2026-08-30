@@ -55,7 +55,16 @@ const SETTLE_DRAW_FRAMES := 6
 ## Physics frames to let the rig arrive at the new stand, then draw frames so
 ## the grass ring has actually followed and the shutter is not photographing the
 ## previous stand's cover.
-const POSE_PHYSICS_FRAMES := 24
+##
+## 120, not the 24 this started at, and the number is the SpringArm3D's. Moving
+## the player between stands teleports them, which collapses the arm on
+## intrusion; `camera_rig.gd` eases it back out at `_recover_speed` 4 m/s, so
+## recovering the full 5.2m boom takes about 1.3 seconds -- 78 physics frames.
+## At 24 the shutter opened while the camera was still inside the trainer's
+## backpack, and three of six frames in the first pass were unusable for that
+## reason alone. Physics frames cost nothing here; only the draw frames below
+## are expensive.
+const POSE_PHYSICS_FRAMES := 120
 const POSE_DRAW_FRAMES := 10
 
 ## Each stand: a real authored pickup, the distance the shot is taken from, and
@@ -97,7 +106,7 @@ const STANDS := [
 		"name": "06-deadwood",
 		"at": Vector2(16.0, -28.0),
 		"from": 15.0,
-		"why": "a TALL prop: proves the mote rides over its crown rather than inside it",
+		"why": "a TALL prop: proves the halo sits in its body rather than over its head",
 	},
 ]
 
@@ -105,6 +114,8 @@ var _world: Node = null
 var _player: CharacterBody3D = null
 var _rig: Node3D = null
 var _tag: String = "AFTER"
+## Stand names to shoot, empty meaning all of them. See `--only=` below.
+var _only: PackedStringArray = PackedStringArray()
 var _log: Array[String] = []
 var _failures: Array[String] = []
 
@@ -114,6 +125,13 @@ func _init() -> void:
 	for raw: String in OS.get_cmdline_user_args():
 		if raw.begins_with("--tag="):
 			_tag = raw.substr(6)
+		elif raw.begins_with("--only="):
+			# Iteration. A full six-stand pass under software GL is most of an
+			# hour, which is too slow to tune a look against -- and tuning a look
+			# against anything other than the real world is what produced a glow
+			# calibrated on a flat untextured test plane and blown out to white
+			# in an actual meadow.
+			_only = raw.substr(7).split(",", false)
 		elif raw == "--glow=off":
 			glow = false
 	if not glow:
@@ -142,15 +160,14 @@ func _run() -> void:
 		print("[glow-capture] no Player/CameraRig; nothing to shoot")
 		quit(1)
 		return
+	_pin_the_weather()
 
 	for stand: Dictionary in STANDS:
+		if not _only.is_empty() and not _only.has(str(stand["name"])):
+			continue
 		await _shoot(stand)
 
 	var contact := "\n".join(_log) + "\n"
-	var path := "%s/pickup-glow-%s.log" % [OUT_DIR, _tag]
-	var file := FileAccess.open(path, FileAccess.WRITE)
-	if file != null:
-		file.store_string(contact)
 	print("")
 	print(contact)
 	for failure: String in _failures:
@@ -202,7 +219,37 @@ func _shoot(stand: Dictionary) -> void:
 		"", stand["why"],
 		"", path,
 	])
+	# Written after EVERY shot, not once at the end. A software-GL pass over the
+	# whole stand list runs long enough to hit a wall-clock timeout, and the
+	# first version lost the entire contact log to that -- the frames survived
+	# and the record of what they were and whether their grass checked out did
+	# not, which is the half that makes them evidence.
+	_write_contact()
 	print("[glow-capture] %s -> %s | %s" % [stand["name"], path, grass])
+
+
+func _write_contact() -> void:
+	var file := FileAccess.open("%s/pickup-glow-%s.log" % [OUT_DIR, _tag], FileAccess.WRITE)
+	if file != null:
+		file.store_string("\n".join(_log) + "\n")
+
+
+## Pin AND freeze `WorldWeather`, the same idiom
+## `tools/_capture_day_night_transition.gd` and `_capture_ground_and_sky.gd`
+## already use, and the thing `capture_check.gd` refuses a frame without.
+##
+## Left running it rolls a new preset on its own real-time timer, independent of
+## anything this tool drives -- so a six-stand pass can photograph the same
+## pickup under different weather and the BEFORE/AFTER pair stops being a
+## comparison of the glow and starts being a comparison of the sky.
+func _pin_the_weather() -> void:
+	var weather: Node = _world.get_node_or_null(^"WorldWeather")
+	if weather == null:
+		print("[glow-capture] no WorldWeather node to pin")
+		return
+	if weather.has_method("set_weather"):
+		weather.call("set_weather", "clear")
+	weather.set_process(false)
 
 
 ## Is the ground in this frame actually dressed?

@@ -129,7 +129,43 @@ Three smaller defects found in the same measurement and fixed with it:
 
 ### AFTER
 
-<!-- AFTER-TABLE -->
+Same probe, same species, same stands, same seeds.
+
+| Tier | Real throws | Orb landed | Caught | **Catches per throw** |
+|---|---|---|---|---|
+| 50% health, aim converged on the body | 14 | 12 | 6 | **42.9%** (was 17.6%) |
+| 50% health, 2.5° aim error | 15 | 15 | 5 | **33.3%** (was 25.0%) |
+| Full health, 2.5° aim error | 19 | 14 | 1 | **5.3%** (was 11.1%) |
+
+**Pooled at 50% health — the tier a player actually throws from — 21.2% → 37.9%
+catches per throw, a 1.79× improvement.** That number is worth a second look:
+the discrepancy the clamp was creating was 1.81× (0.428 advertised against 0.236
+resolved). Recovering almost exactly that factor is the strongest evidence that
+the diagnosis was right — the fix did not *add* odds, it stopped throwing away
+the odds the HUD had been promising all along.
+
+**Full health did not meaningfully move, and should not have.** 2/18 before and
+1/19 after are both samples of a ~7% event; they are statistically
+indistinguishable, and `GAME_DESIGN.md` §15 asks for full-health throws to be
+extremely difficult. Nothing in this change was aimed at them.
+
+### The same result without the dice
+
+Per-tier samples of 14–19 throws are small, so the sample rates above carry real
+noise. The placement data does not, and it says the same thing far more tightly.
+The orb's own `catch launch: placement` logging, across every run:
+
+| | BEFORE | AFTER |
+|---|---|---|
+| Landed throws measured | 47 | 29 |
+| Median real placement | 0.375 m | 0.357 m |
+| **Throws saturating the accuracy clamp** | **36/47 = 77%** | **0/29 = 0%** |
+| Mean accuracy multiplier | 0.845 | 1.195 |
+| Expected chance per landed throw, bramblebun at 50% | 0.249 | 0.353 |
+
+The median placement barely moved (0.375 → 0.357), which is exactly right: the
+fix does not change how the orb flies, only how a throw that already landed is
+scored. What changed is that no throw is pinned at the floor any more.
 
 ---
 
@@ -166,48 +202,70 @@ One shared system, registered from all six paths:
 
 Adding a seventh pickup path is one call: `PICKUP_GLOW.attach(self, colour)`.
 
-### Height, not brightness — and why that is the load-bearing decision
+### The shape, and the two owner directives that produced it
 
-The lane order named the trap: the ground lane is **raising grass density**, so a
-treatment tuned against today's carpet stops working when theirs ships.
+The first version put a soft mote **1.15 m above** each pickup, clear of the
+grass canopy, on the reasoning that blades are opaque geometry and no amount of
+emission gets you through one. The reasoning about grass is correct. The answer
+was not, and the owner said so on sight:
 
-**Brightness cannot beat opaque geometry.** A grass blade in front of a glow
-occludes it whatever its emission is, which is why four rounds of emission work
-on the key did not fix the key. `grass_field.json`'s blades stand 0.40–0.62 m
-with 0.38 height jitter — about **0.86 m** at the tallest. So the mote rides at
-**1.15 m**, clear of the canopy, and the depth test is left **on**: this is still
-occluded by terrain, trees and walls, exactly as a glow should be. It beats grass
-by standing over it, not by cheating depth.
+> **"glow on the actual item, not floating in the air above it"**
 
-`tests/test_pickup_glow.gd` asserts that clearance **against
-`grass_field.json`'s own numbers**, not against a constant copied out of them. If
-the ground lane raises blade height or jitter, that test fails and names the
-number to move. That is the coupling the order asked for, made mechanical.
+A light hanging in the air over an object is a waypoint marker. It is precisely
+the loot-beam register this treatment was supposed to avoid, and it does not tell
+the player *what* is there — only roughly where.
 
-A second, flat **ground aura** sits at the object's foot. The mote alone is not
-enough precisely *because* it clears the grass — a mote high enough to be seen is
-by definition not where the item is, so without the aura the player walks to a
-floating light and then hunts at their feet.
+So the halo is centred on the **prop's own measured body**
+(`pickup_glow.gd::prop_glow_height`): a 20 cm TM orb glows through its middle, a
+felled log glows through its trunk. Grass is beaten by **radius** instead of
+altitude — a halo centred at 0.28 m with a 0.70 m radius still reaches well above
+the 0.86 m canopy `grass_field.json`'s own numbers produce, but it reaches *up out
+of the object* rather than hovering over it.
 
-For a tall prop (a felled log, a rootstone deposit) the mote is lifted to the
-prop's own crown plus a clearance, capped at 2.2 m — a mote inside a two-metre
-prop reads as a rendering bug, and one above head height reads as a waypoint.
+The second directive shaped the draw:
 
-### Restraint
+> **"don't make it take over the items actual geometry or design. just add the
+> glow to them"**
 
-It is not a loot beam, and the config is explicit about the three levers that
-keep it that way:
+A camera-facing quad centred on a small prop paints straight over it, so the
+player sees a bright disc where the object used to be — the item stops being
+visible at exactly the moment it is meant to be noticed. The halo is therefore
+pushed **behind** the prop along the view axis, by half that prop's own crown
+(per-instance, through MultiMesh custom data). The item is opaque and writes
+depth, so it occludes the middle of its own glow and only the halo escapes around
+its silhouette. **The item is drawn whole, with light coming out from behind it.**
+Nothing about any pickup's mesh, material, scale or animation was changed.
 
-- **Distance compensation.** A fixed-size world quad is a dinner plate at 2 m and
-  a sub-pixel speck at 40 m, which is exactly backwards — the far case is the one
-  the owner reported. The quad scales toward a constant *screen* size, clamped at
-  both ends.
-- **`near_floor` 0.32.** Inside a few metres the player can see the object, so
-  the glow steps down to a third of itself rather than washing out the thing it
-  was pointing at. It never goes to zero: an item at your feet in tall grass is
-  still the case being solved.
-- **`far_fade_end` 46 m.** A pickup glow readable across the whole meadow is a
-  quest marker, not an affordance.
+### The grass coupling, kept mechanical
+
+`tests/test_pickup_glow.gd` asserts the glow's **reach** (centre + radius) against
+`grass_field.json`'s own blade numbers, and separately forbids the centre from
+rising above the canopy. So if the ground lane raises blade height or jitter, the
+test fails and names the right knob — `mote.radius`, explicitly *not*
+`mote.height`, because raising the height is how the rejected version worked.
+
+### Two bugs that were quietly falsifying the evidence
+
+Both were found by rendering, and both are worth recording because each one made
+a frame lie:
+
+1. **`pickup_glow.json` was malformed** (a missing comma), so `config()` fell
+   through to `{}` and every lookup returned a **code default**. The world
+   rendered the glow at pre-tuning size and brightness, the AFTER capture came
+   out identical to BEFORE, and the obvious reading — "the shader is not
+   drawing" — was wrong. `config()` now `push_error`s with the line number
+   rather than silently running on defaults.
+2. **`QuadMesh.size` defaults to 1×1**, putting corners at ±0.5, so every
+   authored `radius` rendered at **half** the size the config said. That is most
+   of why an early tuning round kept concluding "too faint" and reaching for
+   `strength`. The quad is 2×2 now and a radius is a radius.
+
+`tools/_probe_pickup_glow_isolated.gd` is what caught both: one prop per frame at
+three distances against a bright meadow ground, about a minute a pass against the
+full-world capture's twenty-plus. It renders a **real prop** at every stand — an
+earlier version registered empty markers and was therefore structurally incapable
+of showing whether the glow covers the item, which is the exact question the
+owner asked.
 
 ### Perf
 
