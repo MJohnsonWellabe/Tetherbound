@@ -1,0 +1,65 @@
+
+=== BEFORE  (ralph/reports/T1-HALL-4/shots) ===
+ D1 silhouette contrast, H-02b-sigil-gate-raised:
+  luminance                      fortress L=115.7 (sd 15.0)
+                                 hill     L=170.5 (sd 52.1)   -> +54.7
+                                 midgrnd  L=148.9 (sd 30.2)   -> +33.1
+                                 foreground L= 41.5
+                                 SEPARATION (worst neighbour) = +33.1  -> fortress is the DARK shape
+                                 (T1-HALL-3 judged frames +2.9; keyart +32.0)
+ D2 mid-distance content, H-02b:
+  mid band y380-560              band L=131.6 sd=48.7, bare pale ground 36.4% of band
+                                 topmost row holding vegetation-dark pixels: y=354
+  value structure                whole-frame L sd=47.5  p5= 20 p50=125 p95=175
+  colour hierarchy               cyan n= 74201 chroma= 54.6 | oxblood n=  6360 chroma= 73.5  oxblood leads
+ D1 at 400m, H-01-approach-400:
+  value structure                whole-frame L sd=46.4  p5= 17 p50=120 p95=169
+  mid band y380-560              band L= 76.9 sd=52.0, bare pale ground 5.0% of band
+                                 topmost row holding vegetation-dark pixels: y=174
+ D5 near-black tree, H-05-east-flank:
+  near-black                     near-black (<26) = 4.0% of frame
+  value structure                whole-frame L sd=33.1  p5= 29 p50= 90 p95=138
+ D5 near-black keep face, H-06-west-keep:
+  near-black                     near-black (<26) = 24.1% of frame
+ D3 stone UV scale, H-08-wall-close:
+  seam profile                   texture-frequency profile: mean=1.48, largest scale step=1.77
+  value structure                whole-frame L sd=22.5  p5= 20 p50= 70 p95=103
+ D3 stone UV scale, H-04-gate-mouth:
+  seam profile                   texture-frequency profile: mean=3.06, largest scale step=2.93
+ D9 colour hierarchy, H-07-courtyard:
+  colour hierarchy               cyan n=  3679 chroma= 57.4 | oxblood n=199909 chroma= 96.4  oxblood leads
+  value structure                whole-frame L sd=38.0  p5= 22 p50= 71 p95=154
+
+=== AFTER  (shots/audit_j_hall) ===
+ D1 silhouette contrast, H-02b-sigil-gate-raised:
+  luminance                      fortress L=115.0 (sd 15.2)
+                                 hill     L=154.5 (sd 49.3)   -> +39.5
+                                 midgrnd  L=126.7 (sd 23.2)   -> +11.6
+                                 foreground L= 41.0
+                                 SEPARATION (worst neighbour) = +11.6  -> no separation
+                                 (T1-HALL-3 judged frames +2.9; keyart +32.0)
+ D2 mid-distance content, H-02b:
+  mid band y380-560              band L=118.9 sd=42.3, bare pale ground 13.2% of band
+                                 topmost row holding vegetation-dark pixels: y=354
+  value structure                whole-frame L sd=45.3  p5= 20 p50=121 p95=168
+  colour hierarchy               cyan n= 88200 chroma= 54.1 | oxblood n=  6194 chroma= 73.2  oxblood leads
+ D1 at 400m, H-01-approach-400:
+  value structure                whole-frame L sd=46.6  p5= 17 p50=123 p95=169
+  mid band y380-560              band L= 75.9 sd=50.7, bare pale ground 3.4% of band
+                                 topmost row holding vegetation-dark pixels: y=107
+ D5 near-black tree, H-05-east-flank:
+  near-black                     near-black (<26) = 3.1% of frame
+  value structure                whole-frame L sd=33.3  p5= 33 p50= 94 p95=137
+ D5 near-black keep face, H-06-west-keep:
+  near-black                     near-black (<26) = 23.9% of frame
+ D3 stone UV scale, H-08-wall-close:
+  seam profile                   texture-frequency profile: mean=1.48, largest scale step=1.75
+  value structure                whole-frame L sd=22.5  p5= 20 p50= 70 p95=103
+ D3 stone UV scale, H-04-gate-mouth:
+  seam profile                   texture-frequency profile: mean=3.17, largest scale step=3.00
+ D9 colour hierarchy, H-07-courtyard:
+  colour hierarchy               cyan n=  3679 chroma= 57.4 | oxblood n=199607 chroma= 96.3  oxblood leads
+  value structure                whole-frame L sd=38.1  p5= 22 p50= 71 p95=154
+
+=== HEADLINE ===
+  fortress-vs-hill separation: +33.1 -> +11.6  (-21.5)
