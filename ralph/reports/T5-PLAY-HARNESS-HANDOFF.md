@@ -111,3 +111,39 @@ what the harness's own comment demands ("a run that wants a logic lane must SAY
 SO IN THE FREEZE RECORD BEFORE THE RUN"). **Routing this to you rather than
 patching it**: either give the global record a `lanes` block, or have
 `run_segment.sh` write a run-local one from the invocation it is about to make.
+
+---
+
+## ADDENDUM 2026-08-30, after the boundary — `segments/S03.json`, at the owner's direction
+
+**I edited a file that is yours. Recording it rather than hiding it.**
+
+At 14:27Z you took `tools/gate_f/**` and I stopped. The owner then read the S04+
+prognosis — every downstream segment running on a party of two fainted creatures
+against a tournament needing three — and directed: *"fix s03 first."* Under
+`CLAUDE.md`'s precedence an explicit newer owner directive outranks a lane
+boundary, so I did it. **If this collides with your work, yours wins.**
+
+**The change is eight identical insertions and nothing else.** After each of
+S03's eight `press build_place` steps:
+
+```
+S03-<n>x   press   build_cancel     drop the armed ghost
+S03-<n>y   assert  input_context == world
+```
+
+`git diff --stat`: **176 insertions, 0 deletions.** No existing step, id,
+argument or comment was modified, so this should merge cleanly against any edit
+of yours that is not itself in those eight gaps.
+
+**It needs no harness change.** I considered adding a `pending_build` assert
+check to `_step_assert` and deliberately did not — that is your file and the
+existing `input_context` check answers the same question. The full reasoning is
+in the `_comment` on `S03-118x`, and the finding is `RIG-T5-7` in
+`ralph/reports/T5-PLAY-DEFECTS.md`.
+
+**What I did NOT do**, because it treats the symptom: grant more Revive
+draughts. The party is not fainted for want of revives — it is fainted because
+the home and the beds are never built, so the chapter's designed recovery
+(sleep + feed) never runs at all. Papering over it with consumables would make
+the run look healthier while leaving rest completely untested.
