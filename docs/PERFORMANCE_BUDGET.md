@@ -146,11 +146,33 @@ only way to see whether a density change actually happened.
 
 ### 3.2 All seven authored locations, day and night
 
-`tools/perf_site_survey.gd`, `--label=T1-PERF-2026-08-30`:
+`tools/perf_site_survey.gd`, `--label=T1-PERF-2026-08-30`, `main` @
+`1d7fc8e7`. Filling in live as this (slow — see §7's own note on render-tool
+cost in this container) run completes; rows below are committed as they
+land, not held back:
 
 ```
-<FILL — full table from the survey run>
+view                   time   draw calls     primitives    objects   lights shadowed
+village_high           day          2011       26892017       2214        0        0
+village_high           night        1815       27451889       2018        0        0
+band1_open             day          5712       31587550       4671        0        0
+band1_open             night        5929       29728138       4888        0        0
+band2_stone            day          1319       29522759       1570        0        0
+band2_stone            night        1412       29679136       1663        0        0
+band3_river            day          2516       29609302       2436        0        0
+band3_river            night        2649       29879031       2569        0        0
+band4_ironwood         <pending>
+band5_approach         <pending>
+stronghold_approach    <pending>
+warrens_den            <pending>
 ```
+
+Zero lights reaching the sampled ground point at every location so far,
+day and night, is itself a running finding, not (yet) a tool defect — see
+§4.2's discussion. `band1_open` night has slightly MORE draw calls than day
+(5929 vs 5712) despite no lights reaching the point; this is very likely
+Terrain3D/grass shader variation between the day and night material states
+rather than noise, but is not yet chased down.
 
 ### 3.3 The budget line
 
@@ -187,25 +209,23 @@ today.
 
 ### 4.2 Measured, current `main`
 
-`tools/perf_site_survey.gd`'s light-reachability count (total / shadowed),
-checked against the player's ground-level position (day and night, all
-seven locations plus the Warrens den — survey in progress, this table fills
-in as it completes):
+The `lights`/`shadowed` columns of §3.2's table ARE this measurement (one
+survey run produces both at once) — see that table rather than a duplicate
+one here.
 
-```
-site                   time   lights   shadowed
-village_high           day         0          0
-village_high           night       0          0
-```
-
-**Already worth noting, not yet a complete picture:** zero lights reach
-`village_high`'s exact sampled point (10, -10) at EITHER time of day. That
-is a real reachability-count result, not a tool bug (the tool's first run
-had a real bug — checking the elevated camera position instead of the
-player's ground position — caught and fixed before trusting any number; see
-`ralph/reports/T1-PERF/`). It most likely means this specific point simply
-isn't within any light's authored range (Grandpa's house and any camp fire
-are lit, but apparently not within reach of this exact coordinate) — an
+**Already worth noting, not yet a complete picture:** zero lights reach ANY
+of the four locations measured so far (village, band1-3) at EITHER time of
+day. That is a real reachability-count result, not a tool bug (the tool's
+first run had a real bug — checking the elevated camera position instead of
+the player's ground position — caught and fixed before trusting any number;
+see `ralph/reports/T1-PERF/`). It most likely means these specific sampled
+points simply aren't within any light's authored range — the open bands are
+genuinely dark corridors outdoors by day, and this session has not yet found
+a location where a light IS in reach to confirm the mechanism finds one
+(the Warrens den, with its known new shadow-casting light, and the
+stronghold/Hall, with its known light rigs, are the two locations that
+should show a nonzero count — both still pending). Read this as "lights near
+the sampled POINT", not "lights anywhere in the named area", once the
 argument for reading this table as "lights near the sampled POINT", not
 "lights anywhere in the named area", once the rest of the table is in.
 
