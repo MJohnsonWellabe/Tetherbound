@@ -103,11 +103,47 @@ func _run() -> void:
 
 	var camera := Camera3D.new()
 	camera.fov = FOV
+	camera.far = 3000.0
 	# `root` on a SceneTree IS the Window; parent the camera into the world the
 	# same way `_judge_capture_hall.gd` does, so `capture_check.gd` finds the
 	# grass field's own tree from it.
 	world.add_child(camera)
 	camera.make_current()
+
+	# Hand Terrain3D and the weather/look rig to THIS camera, exactly as
+	# `_judge_capture_hall.gd` does. Round 1 of this tool skipped both and
+	# `capture_check` refused the frames for it -- "Terrain3D is streaming
+	# around 'Camera3D', not the capture camera" and "WorldWeather is still
+	# processing -- the weather pin will drift across a multi-shot pass". That
+	# is the check earning its keep: without it these would have been committed
+	# as cast evidence while streaming around the wrong camera, which is the
+	# precise failure that invalidated this project's earlier visual evidence.
+	var terrain: Node = world.get("_terrain") as Node
+	if terrain != null and terrain.has_method("set_camera"):
+		terrain.call("set_camera", camera)
+	var weather: Node = world.get_node_or_null(^"WorldWeather")
+	if weather != null:
+		weather.set_process(false)
+		weather.set_physics_process(false)
+	var look: Node = world.get_node_or_null(^"WorldLook")
+	if look != null:
+		look.set_process(false)
+		look.set_physics_process(false)
+		if look.has_method("set_weather"):
+			look.call("set_weather", {})
+		look.call("apply_time", "day")
+
+	# `grass_field.gd` builds its tuft ring around the PLAYER, and Terrain3D's
+	# streaming bubble follows it too, so a stand 7km up the map from spawn
+	# renders on bare far-cover ground with no grass in it -- the exact "no
+	# grass" defect that invalidated this project's earlier evidence. The
+	# player goes where the camera goes; it is hidden and frozen either way.
+	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
+	if player != null:
+		player.visible = false
+		player.set_physics_process(false)
+		if player is CharacterBody3D:
+			(player as CharacterBody3D).velocity = Vector3.ZERO
 
 	var field: RefCounted = HEIGHTFIELD.new()
 	var written := 0
@@ -121,13 +157,24 @@ func _run() -> void:
 		var target := Vector3(target_xz.x, target_ground + float(view["target_h"]), target_xz.y)
 		camera.global_position = eye
 		camera.look_at(target, Vector3.UP)
-		# The world streams terrain and scatter around the camera; a shutter
-		# fired before that settles is exactly the degraded-evidence class
-		# capture_check.gd exists to catch.
-		for i in STREAM_SETTLE_FRAMES:
-			await physics_frame
-		for i in POSE_FRAMES:
-			await process_frame
+		# Carry the grass ring and the terrain bubble to the stand.
+		if player != null:
+			player.global_position = eye
+		# TWO settle passes with a real drawn frame between them, not one long
+		# one. `_judge_capture_hall.gd` paid for this lesson: frame count was
+		# never the lever -- the same stand shot twice in one run came back at
+		# 5.5% and 54.6% green cover, because what a stand is really waiting on
+		# is Terrain3D streaming the region in, and `grass_field` places its
+		# tufts in a shader off the live height and region maps. Until the
+		# region is resident the field has nothing to stand on and quietly draws
+		# almost nothing -- and `capture_check` passes it, because it asks
+		# whether the field exists and follows this camera, both true of a
+		# half-built one.
+		for pass_index in 2:
+			for i in STREAM_SETTLE_FRAMES:
+				await physics_frame
+			for i in POSE_FRAMES:
+				await process_frame
 
 		var problems: Array = CAPTURE_CHECK.warn_only(self, camera)
 		if not problems.is_empty():
