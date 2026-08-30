@@ -6,42 +6,41 @@
 
 ## Why this lane existed
 
-Section H was entirely unevidenced. Over a long night of parallel work, lanes
-covered visuals, terrain, story, content, combat, performance, reliability and
-audio; nobody verified building, survival or creature care by playing them. It
-is also the part of the game the player touches most often between fights.
+Section H was entirely unevidenced. Lanes covered visuals, terrain, story,
+content, combat, performance, reliability and audio; nobody verified building,
+survival or creature care by playing them. It is also the part of the game the
+player touches most often between fights.
 
 ## Method
 
-Godot 4.7-stable — the version `ci.yml` pins — installed into the session and
-the project imported clean (exit 0). Every run below boots the real
+Godot 4.7-stable — the version `ci.yml` pins — installed into the session, the
+project imported clean (exit 0). Every run boots the real
 `scenes/world/meadows_playground.tscn` and drives it with parsed physical
-`InputEventJoypadButton`/`InputEventJoypadMotion` events through the live
-InputMap, in the style of `tests/helpers/gate_a_build_segment.gd`. Where a
-number is quoted it was measured in that running world, not read from config.
+`InputEventJoypadButton` / `InputEventJoypadMotion` events through the live
+InputMap. Where a number is quoted it was measured in that running world.
+Renders are real frames of the real armed placer over the real grass field,
+with `tools/capture_check.gd` run at every shutter.
 
-Harnesses added by this lane, all runnable and all committed:
+Harnesses added, all committed and runnable:
 
-| tool | what it plays |
+| tool | plays |
 |---|---|
 | `tools/_play_t5_care.gd` | satiety, eating from both screens, team feeding, bed rest, the sixth catch |
-| `tools/_play_t5_gather_craft.gd` | gather node → item → use, recipe discoverability, death satchels |
-| `tools/_play_t5_strand.gd` | walling the player in and trying to get out |
-| `tools/_play_t5_walk_build_route.gd` | the opening's build route, watching the floor |
+| `tools/_play_t5_freeplay.gd` | gathering, the hammer+interact Build press, place/dismantle, deaths |
+| `tools/_play_t5_deaths.gd` | two deaths and an aimed dismantle, instrumented |
+| `tools/_probe_t5_launch.gd`, `_probe_t5_spawn.gd` | the launch defect, isolated and traced frame by frame |
 | `tools/_probe_t5_ground.gd`, `_probe_t5_holes.gd`, `_probe_t5_holes2.gd` | terrain height vs. real collision |
-| `tools/_probe_t5_spawn.gd`, `_probe_t5_launch.gd` | the spawn defect below, isolated and traced |
 | `tools/_play_t5_respawn.gd` | where death and the fall-rescue actually put you |
-| `tools/capture_t5_build_ghost.gd` | real frames of the real armed ghost over real grass |
+| `tools/_play_t5_strand.gd` | walling the player in and trying to get out |
+| `tools/capture_t5_build_ghost.gd` | `shots/t5-care/*.png` — the ghost against grass |
 
 ---
 
-## The headline: the player is thrown 7,000,000 metres out of the world
-
-**Found, traced, fixed, and verified fixed on this branch.**
+## The one fix that had to ship: the player is thrown 7,000,000 m out of the world
 
 Booting the real Meadows with `opening:beat:free_play` set — the ordinary
 post-opening state — reproducibly threw the player out of the world. Traced
-frame by frame with `tools/_probe_t5_launch.gd`:
+frame by frame:
 
 ```
 frame  14  pos (      0.0,    2.90,      0.0)  vel (0, 0, 0)               on_floor=false
@@ -50,195 +49,269 @@ frame  17  pos ( -23721.0, 3079.46,   7468.8)  vel (-1444690, 368, 454877) on_fl
 final      (-6813751.5, 2683.75, 2145383.5)
 ```
 
-**1.44 million metres per second, arriving in a single frame, with the body
-reporting `on_floor`.** That is Godot's platform-velocity inheritance: the body
-was resting on a collider at the instant world construction moved it, and 24 km
-of collider motion in one 60 Hz frame is exactly 1,444,690 m/s. Three frames
-later the player is past the world perimeter, which prints
+**1,444,690 m/s, arriving in one frame, with the body reporting `on_floor`.**
+Godot platform-velocity inheritance: the body was resting on a collider at the
+instant world construction moved it, and 24 km of collider motion in one 60 Hz
+frame is exactly that number. Three frames later the player is past the world
+perimeter, which prints `player fell below the world at 14, -133, -19 --
+returning to spawn`, and the session never recovers.
 
-```
-[world_perimeter_corridor] player fell below the world at 14, -133, -19 -- returning to spawn
-```
+**This is why section H had no evidence.**
+`tests/smoke_gate_a_build_segment_meadows.gd` — the canonical proof that a
+controller can build in the real Meadows — sets exactly that flag in its
+fixture. It could not complete a run, and it failed as a *walk timeout*
+("stopped 28.35m short"), which reads as a navigation problem, not a physics
+one. The one automated thing that would have exercised building has never run.
 
-and the session never recovers.
+**Fixed:** `player_controller.gd::_clamp_runaway_velocity()`, every physics
+frame before `move_and_slide()`, ceiling in `movement.json::locomotion.max_speed`
+(120 m/s). Clamped rather than chased to source: the race is between world
+construction and the physics step, more than one thing in the Meadows is built
+under a standing body, and nothing legitimate comes near the ceiling (sprint
+8.6 m/s; a 34 m/s landing is lethal). Direction preserved, so a real fall keeps
+falling.
 
-**This is why section H had no evidence.** `tests/smoke_gate_a_build_segment_meadows.gd`
-— the canonical proof that a controller can build in the real Meadows — sets
-exactly that flag in its fixture. It could not complete a run on this branch, so
-the one automated thing that would have exercised building never ran, and
-nobody noticed because it fails as a walk timeout ("stopped 28.35m short")
-rather than as a crash.
+Verified three ways: the free-play boot now ends at `(-13.8, 1.16, -5.4)` on the
+ground in the village; the canonical build segment logged the guard firing
+(`velocity 1514610 m/s exceeded the 120 m/s ceiling ... clamped`) and then
+walked its route for the first time; 54 player/food/death unit tests pass.
 
-**Fix shipped:** `player_controller.gd::_clamp_runaway_velocity()`, called every
-physics frame before `move_and_slide()`, with the ceiling in
-`movement.json::locomotion.max_speed` (120 m/s). Clamped rather than chased to
-its source: the race is between world construction and the physics step, more
-than one thing in the Meadows is built under a standing body, and nothing the
-player legitimately does comes near the ceiling (sprint is 8.6 m/s;
-`vitals.json` calls a 34 m/s landing lethal). Direction is preserved rather than
-zeroed, so a real fall keeps falling.
-
-Verified: the same free-play boot that ended at `(-6789673, 2686, 2137802)` now
-ends at `(-13.8, 1.16, -5.4)`, standing on the ground in the village.
-
-### Two things this is NOT
-
-Being precise, because two plausible-looking claims did not survive testing:
-
-- **Not a hole in the world.** A first sweep found 87 columns near the village
-  where a downward raycast hit nothing. Dropping a real capsule down every one
-  of them landed on terrain (`tools/_probe_t5_holes2.gd`). Terrain3D simply does
-  not answer a long ray from y=400; the world is solid. Had I stopped at the
-  raycast I would have filed a fabricated defect.
-- **Not the respawn point.** `_spawn_position` is `(0, 2.9, 0)` — the world
-  origin — and `player_death.gd` and the perimeter rescue both teleport there,
-  which looked alarming given `village.json` puts the `workshop` at `(2, 2)`.
-  Played it (`tools/_play_t5_respawn.gd`): zero bodies overlap a player capsule
-  at that point, and a player put there comes to rest at y=0.90 and stays.
-  **PASS.** The launch needs the world-construction race specifically.
+A second, smaller fix followed from it: with the walk working, the build segment
+reached the press that opens Build and stopped, because the wrapper staged a
+progressed opening and paid materials but **no hammer** — and under
+CONTROLLER-MAP the hammer *is* the pad route into build mode. One line in
+`smoke_gate_a_build_segment_meadows.gd::_fixture_state`.
 
 ---
 
-## Verdicts, one per question the lane was asked
+## Verdict per loop
 
-### Building — H1, H2
+### Building — H1. **Placement works. Getting INTO build mode does not.**
 
-*Verdict pending the re-run of the build segment; see "Status" at the end.*
+What passes, played with a pad:
 
-What is settled from the played runs and the shipping code:
+- Quick-bar press puts the hammer in hand.
+- Both `camp` and `creature_bed` ghosts arm, report `refusal reason: (none —
+  placeable)`, and place: **2 records, 18 wood spent.**
+- **`home_built=true` and `creature_bed_built=true` both registered through
+  stick/pad-driven placement.** That closes the repeat defect the brief named.
+  (`home_progress.gd::maybe_set_creature_beds()` is called from both placement
+  paths — `build_placer.gd:655` and `:700`. The objective data was additionally
+  rewritten to require ONE bed, so the 3/3 rung no longer ships.)
+- Refusals are good: three reasons, each plain English in a persistent hint
+  strip beside the full control list — "Something is already here", "Too steep
+  to build here", "Can't afford this — check the build menu for what's short".
 
-- Placement refuses for exactly three reasons, each with plain-English text
-  shown in red in a persistent hint strip alongside the full control list
-  (`build_placer.gd::evaluate_placement`, `_hint_text`): "Something is already
-  here", "Too steep to build here", "Can't afford this — check the build menu
-  for what's short". That is good: the refusal never leaves the player guessing.
-- **There is no refusal for "this would seal the player in."** Stranding is not
-  prevented at placement time; it is caught downstream by
-  `player_controller.gd::_recover_if_entombed`. Played result in the stranding
-  section below.
-- The reported Gate F defect blaming `creature_bed_built_3` on stick-driven
-  placement needs no fix here: `home_progress.gd::maybe_set_creature_beds()` IS
-  called from both placement paths (`build_placer.gd:655` in `_place`, `:700` in
-  `restore_from_game`). The objective data has additionally been rewritten
-  (FIRST-HOUR-FUN-REBUILD) to require ONE bed, so the 3/3 rung no longer ships
-  at all. Bookkeeping, not a defect.
+**The failure, and it is the worst thing I found in section H:**
 
-### Care and satiety — H4. **PASS on the model, FAIL on one screen.**
+```
+standing on the clearing, arbiter winner <none>
+  -> PASS: hammer in hand, one interact press opened Build.
 
-Measured in the running game (`tools/_play_t5_care.gd`):
+standing 1.5m from a deadwood node, arbiter winner Interactable
+  { "label": "Gather deadwood", "distance": 1.54, "actionable": true }
+  -> FAIL: hammer in hand, the interact press did NOT open Build.
+```
+
+Under CONTROLLER-MAP, hammer + interact is the **only** pad route into build
+mode, and the interact press is forfeited to any actionable interaction-arbiter
+winner. This world scatters **57,967 harvestable nodes**, and the nearest one to
+the centre of the opening's own authored build clearing is **5.7 m away** — the
+clearing is only clear at its centre. So: step toward a bush and the build
+button silently stops being the build button. Nothing tells the player why, and
+the recovery ("walk somewhere with no gatherable within 2.4 m") is not
+discoverable. This is `gate_a_build_segment.gd`'s own documented worry, and it
+reproduces on the first patch the chapter asks you to build on.
+
+**Ghost readability against grass — poor.** Real frames, `capture_check` clean
+on grass/terrain/ground/subject (`shots/t5-care/ghost-camp.png`,
+`ghost-creature-bed.png`): the ghost is a **teal wireframe in the same hue
+family as the grass field**, drawn transparent so blades read straight through
+it, with no ground decal marking the footprint. Worse, it sits 3 m ahead of the
+player, which from the default over-the-shoulder camera puts it **directly
+behind the player's own body** — in the creature-bed frame the ghost is almost
+entirely occluded by the trainer. The player is aiming at something they can
+barely see, positioned where they can least see it.
+
+**Dismantle — unresolved, with a repro.** Placed a `creature_bed` at
+(30.0, 0.2, -42.0), stood 3 m south facing it, held the dismantle button for a
+second: `build_placer._dismantle_target` was `<none>` and the record stayed.
+Tried from two stances across two runs. I am not confident enough to call this a
+defect rather than my aim being wrong — the placer picks its target from what
+the player's own -Z ray finds within `DISMANTLE_RANGE` (8 m), and a bed is a low
+flat pad the ray may pass over. **Refund therefore also unverified in play.**
+Worth ten minutes from someone who can watch the highlight.
+
+### Building as a factory game — H2. **PASS.**
+
+Nothing resembling a production chain: a small catalogue, and the chapter's
+whole ask is a Camp (tent + fire + bedroll) plus one Creature Bed.
+
+### Gathering and crafting — I4. **PASS, with one doc/code drift.**
+
+Gathering is tool-gated and **says so**: with no axe equipped, the prompt is
+offered and actionable, the press is refused, and `harvest_node.gd` pushes
+"Needs an Axe." to the HUD. (An earlier verdict of mine said gathering silently
+did nothing — that was wrong; I had checked only the inventory count, not the
+message.) 57,967 nodes means supply is never the problem; the nearest to the
+build patch is 5.7 m, so the walk is short and the return (4 wood) is fine.
+
+7 recipes exist and **a fresh save knows all 7** — nothing needs outside
+documentation, but nothing is a discovery either. That is a design observation,
+not a defect.
+
+**Drift:** `data/items/items.json`'s own comment says "no tool gives a reduced
+bare-handed amount (BAREHANDED_FRACTION, tunable)". `harvest_logic.gather()`
+returns `amount: 0` on any mismatch, empty hands included, and always passes
+`has_tool = true` to `harvest_yield()` — so the documented bare-handed fraction
+is unreachable. Either the comment or the gate is stale. Not fixed blind: which
+one is wrong is a design call.
+
+### Care and satiety — H4. **PASS on the model. FAIL on the screen the player looks in.**
+
+Measured in the running game:
 
 ```
 hungry at 82 min of play, critical at 107 min, empty at 126 min
 at ZERO satiety: stamina regen x0.35, move speed x0.92, health 100, is_dead=false
 ```
 
-CLAUDE.md's rule is met exactly. A player who ignores food entirely for a whole
-3–4 hour chapter is slowed 8% and regenerates stamina at a third rate. They are
-inconvenienced, never punished, and **nothing touches health**. There is no
-starvation death path in the code and none was added.
+CLAUDE.md's rule is met exactly. A player who ignores food for a whole chapter
+is slowed 8% and regenerates stamina at a third rate — inconvenienced, never
+punished, **health untouched**. No starvation path exists and none was added.
 
-**But the player cannot eat from the screen they would look in.** Played, with
-a real pad press of the Use verb on Berries in the real Satchel tab:
+But, played with a real pad press of Use on Berries in the real Satchel tab:
 
 ```
-H4 satchel: the Use verb opened the CREATURE target picker; the player's own
-satiety was untouched (40). picker rows: [1. T0 HP 120/120, 2. empty, 3. empty,
-4. empty, 5. empty]
-H4 hotbar: PASS — the same berry from the quick bar DID feed the player
-(satiety 40 -> 58, berries 10 -> 9)
+satchel: the Use verb opened the CREATURE target picker; the player's own
+satiety was untouched (40). picker rows: [1. T0 HP 120/120, 2. empty, ...]
+hotbar: the same berry from the quick bar DID feed the player (40 -> 58)
 ```
 
 `tab_backpack.gd::_read_use()` tests `creature_food` **before** the player's own
-`satiety` branch. `berries` is the only item in `data/items/items.json` carrying
-a `satiety` value and it also carries `creature_food`, so the backpack always
-routes to the creature picker and the player-eating branch below it is dead code
-from that screen. The picker offers party creatures only — there is no player
-row. `playground_hud.gd`'s own comment still asserts "the backpack could always
-eat berries", which the D68 creature-feeding change silently falsified.
+`satiety` branch. `berries` is the **only** item in the game carrying a
+`satiety` value and it also carries `creature_food`, so the backpack always
+routes to the creature picker and the player-eating branch below is dead code
+from that screen. The picker lists creatures only. `playground_hud.gd`'s comment
+still claims "the backpack could always eat berries" — the D68 creature-feeding
+change falsified it silently.
 
-Player-facing effect: the FOOD bar goes down, the player opens their satchel,
-selects the only food in the game, presses Use, and is asked *"Who eats it?"*
-with a list that does not include them. The `berry_verve` player buff
-(stamina regen ×1.15) is unreachable by that route too. It works from the
-hotbar — if they know to put berries there.
+So: the FOOD bar drops, the player opens their satchel, selects the only food in
+the game, presses Use, and is asked *"Who eats it?"* by a list that does not
+include them. It works from the hotbar, if they know to put berries there. The
+`berry_verve` player buff is unreachable by the satchel route too.
 
-**Proposed patch (not applied — see Scope note):** in `_read_use()`, when the
-focused item has BOTH `satiety` and `creature_food`, the picker should carry the
-player as its first row. That is a change to a shared target picker used by
-potions, tonics, elixirs and TMs, and getting the eligibility and ineligibility
-text right for a non-creature row touches `_eligible`, `_ineligible_reason`,
-`_apply_to_creature` and the row builder. It is bigger than "clear and local",
-so it is written up rather than jammed in beside a physics fix.
+`tests/test_food.gd::test_every_food_item_restores_satiety` passes throughout,
+because it calls `vitals.eat()` directly and never touches the routing.
 
-### Care as a chore — H6. **Concern, not a failure.**
-
-Measured with five creatures owned:
-
-```
-a creature fed to full is hungry again 64 min later
-five-creature team = 5 target-picker trips (Use press + pick, one creature per
-press) every 64 min
-there is no feed-all verb
-```
-
-64 minutes is a generous cadence and the drain is genuinely light. The cost is
-the interaction shape, not the frequency: feeding the team is five separate
-open-menu → focus item → Use → choose row sequences, because the picker takes
-one creature per press. Over a 3–4 hour chapter that is roughly 15–20 such
-sequences. It never threatens the creature journey (H6's actual test) but it is
-the least interesting minute in the game, repeated.
+**Proposed patch, not applied:** give the picker a player row when the focused
+item has both `satiety` and `creature_food`. That touches `_eligible`,
+`_ineligible_reason`, `_apply_to_creature` and the row builder in a picker
+shared by potions, tonics, elixirs and TMs — bigger than "clear and local", so
+it is written up rather than jammed in beside a physics fix.
 
 ### Injury, beds and rest — H3. **PASS.**
 
-- Completing a rest sets `rested` and moves happiness to 0.61 — above the 0.6
-  `happy_at` gate, so a night's rest is what makes a creature tournament-eligible.
-- `rested` expires after 45 minutes of awake time, so "well rested" describes
-  today rather than a box ticked once.
-- `resting_drain_scale: 0.0` means a bed also feeds — a night's rest is not a
+- Completing a rest sets `rested` and lifts happiness to 0.61, just over the
+  0.6 `happy_at` gate — so a night's rest is what makes a creature
+  tournament-eligible.
+- `rested` expires after 45 min awake, so it describes today.
+- `resting_drain_scale: 0.0` — a bed also feeds; a night's rest is not a
   night's hunger.
-- Six creature beds already stand in the loaded world before the player builds
-  one (the stronghold's authored recovery point plus the authored camps), and
+- Six creature beds already stand in the world before the player builds one
+  (stronghold recovery point plus authored camps), and
   `creature_bed.gd::build_real(player_built)` correctly refuses to credit the
   chapter's objective for world-owned beds.
 
-### The five-creature limit as an experience — G4. **PASS, and it is good.**
+**Gap:** I did not play a camp rest myself. The authored camps are newly real on
+this branch and `tests/smoke_authored_camps.gd` drives the full night at one —
+but that is somebody else's evidence, not mine, and the brief asked me to
+exercise them. **Unevidenced by this lane.**
 
-Played: filled the party to five, made a sixth creature, handed it to the same
-`Game.pending_catch` slot `encounter_director.gd::_resolve_catch` uses when the
-belt is full.
+### The five-creature limit — G4. **PASS, and it is the best-shaped thing in my scope.**
+
+Filled the party to five, handed a sixth to the same `Game.pending_catch` slot
+`encounter_director.gd::_resolve_catch` uses when the belt is full:
 
 ```
-G4: party.add() refused the sixth, as the cap requires
-G4: the shell opened the Creatures tab by itself, release stage 'choose'
+party.add() refused the sixth, as the cap requires
+the shell opened the Creatures tab by itself, release stage 'choose'
 ```
 
-The sixth catch forces the release ceremony; play cannot resume with six owned.
-Nothing here resembles storage, a reserve box or a hidden slot, and none was
-added. The ceremony itself is well written — the farewell screen restates the
-creature's level, bond nodes and its actual history with the player at the exact
-press that gives it up, and says plainly that a released creature does not come
-back. This is the part of section H in the best shape.
+Play cannot resume with six owned. Nothing resembling storage, a reserve box or
+a hidden slot exists, and none was added. The ceremony is well written: the
+farewell restates the creature's level, bond nodes and its **actual history with
+the player** at the exact press that gives it up, and says plainly that a
+released creature does not come back.
 
-### Gathering, crafting and inventory
+### Care as a chore — H6. **Concern, not a failure.**
 
-*Verdict pending; see "Status".*
+```
+a creature fed to full is hungry again 64 min later
+five owned = 5 target-picker trips (Use press + pick, one per press) every 64 min
+there is no feed-all verb
+```
+
+64 minutes is generous and the drain is genuinely light — this never competes
+with the creature journey, which is H6's actual test. The cost is the
+interaction shape: feeding the team is five separate open → focus → Use →
+choose sequences, roughly 15–20 of them across a chapter. It is the least
+interesting minute in the game, repeated.
+
+### Inventory and death satchels. **Partly evidenced.**
+
+Slot/stack, 24 slots, no carry weight — as the hard rule requires.
+
+One played death drops one satchel, correctly: the inventory drained, and the
+record carried the death position
+(`{"position": [-14.07, 1.20, -8.05], "state": []}`).
+
+**Not verified: that MULTIPLE satchels persist.** I could not stage a second
+death in the free-play world — dropping the player 120 m produced
+`landed on frame 11 at -0 m/s, health 100`, i.e. the teleport never became a
+fall, twice. That is a harness limitation I ran out of runway to diagnose, not
+evidence against the rule. `tests/test_satchel.gd` covers multi-satchel
+persistence and the save round trip at unit level, but that is not a played
+path. **Stated as a gap rather than a pass.**
 
 ---
 
-## Scope note
+## Two claims of mine that testing killed
 
-Two findings are written up rather than patched, per the brief's instruction to
-propose rather than widen:
+Recorded because the evidence rule cuts both ways:
 
-1. The backpack/player-eating routing (above) — a shared-picker change.
-2. No feed-all verb — a design question about care's interaction shape, not a
-   defect.
+- **Not a hole in the world.** A sweep found 87 columns near the village where a
+  downward raycast hit nothing. Dropping a real capsule down every one landed on
+  terrain — Terrain3D simply does not answer a long ray from y=400. Had I
+  stopped at the raycast I would have filed a fabricated defect.
+- **Not a bad respawn point.** `_spawn_position` is the world origin and
+  `village.json` puts the workshop at (2,2), which looked alarming. Played it:
+  zero bodies overlap a player capsule there, and a player put there rests at
+  y=0.90 and stays. The launch needs the world-construction race specifically.
 
-The one fix applied is the velocity clamp, because it is local, it is a
-reliability failure of the kind section I9 forbids outright, and without it the
-lane could not gather the evidence it exists to gather.
+A third, smaller one: the "[Shift] Snap step" in the ghost frames is not a
+controller-first defect — `build_snap_cycle` has joypad button 11; my capture
+just never pinned the device to gamepad.
 
-## Status
+Also noted, wire-it-or-delete-it class: `inventory.gd::HOTBAR_SLOTS := 6`
+disagrees with the real quick bar (5, per `game_state.gd`, `playground_hud.gd`
+and five bound actions). Its own comment admits "nothing reads it yet".
 
-Runs still in flight at the time of writing are marked *pending* above and are
-filled in by the final commit on this branch.
+## What shipped on this branch
+
+1. `player_controller.gd::_clamp_runaway_velocity()` + `movement.json`
+   `locomotion.max_speed` — the 7,000,000 m launch.
+2. The hammer in `smoke_gate_a_build_segment_meadows.gd`'s fixture.
+3. The T5 harnesses, including a fix to their own navigator callback signature
+   (`stick_navigator.gd`'s fourth argument is the stick driver and takes two
+   floats; a no-arg callback meant the navigator pushed nothing and two runs
+   reported walks that never happened).
+4. `shots/t5-care/*.png` — four real ghost frames, `capture_check` clean.
+
+## What is still owed on section H
+
+- The Build-press theft by nearby gatherables (H1) — the one I would fix first.
+- Ghost contrast and its position behind the player (H1).
+- Dismantle and refund, played (H1).
+- A camp rest, played (H5).
+- A second death, played, for the multiple-satchel rule.

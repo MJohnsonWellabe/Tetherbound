@@ -36,11 +36,12 @@ const PATCH := Vector2(30.0, -40.0)
 
 ## One shot per piece the opening's camp needs, plus the creature bed the care
 ## lesson needs. `valid`/`invalid` is the ghost's own tint state.
+## Trimmed to the two pieces the chapter actually requires (the camp and the
+## creature bed) so one render run fits inside a single foreground budget --
+## software GL at 1280x720 on top of a full Meadows build is the cost here.
 const SHOTS: Array = [
 	["ghost-camp", "camp"],
 	["ghost-creature-bed", "creature_bed"],
-	["ghost-floor", "floor"],
-	["ghost-wall", "wall"],
 ]
 
 
