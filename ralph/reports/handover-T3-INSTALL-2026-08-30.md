@@ -376,6 +376,87 @@ above — the shipped value matches).
    items (table above). Of the original 18 P1/K1 keys the audit found, this
    lane wired 5 (the three ROG collision levers, `buffs.max_visible_icons`,
    `catching.json`'s `success_banner`).
+7. The four Aspect variants' shared, aliased, mirrored, unlit decal mask
+   (`JUDGE-3` §5) — needs real per-species painted markings, a content-lane
+   item, not wiring. See the addendum above.
+8. Camp kit style break + scale disagreements (`JUDGE-3` §1/§4) — the style
+   break needs an owner reference-art decision before any Meshy spend; the
+   scale/position items are install-tier but unexplored by this lane. See
+   the addendum above.
+
+## Addendum — coordinator work order routing JUDGE-3 findings (received after the above was written and pushed)
+
+`ralph/reports/JUDGE-3-2026-08-30.md` (branch `ralph/JUDGE-3`) ran a real
+blind visual-judge pass and routed four items to this lane. Evaluated each
+against this lane's actual scope and capability; **none were actioned this
+pass**, for reasons specific to each:
+
+**Aspect variants (JUDGE-3 §5, "my item 2"): the judge's verdict supersedes
+this handover's §2 above, and I'm not going to pretend otherwise.** Working
+from `T1-CREATURE-ART/shots/` (mood-lit close-ups, not the small lineup shot
+this lane worked from), the judge found all four variants share **one
+aliased, mirrored, unlit decal mask, hue-swapped four times** — hard
+pixel-staircase mask boundaries, a UV seam down the face centreline, the
+mask bleeding over the eyes on Ashtusk, zero material response (flat paint,
+no glow), and Nightburrow's magenta sitting off the reference board's own
+palette strip. **I looked at the actual texture file
+(`creature_tuskroot_lod0_emissive_ashtusk.png`) and confirmed it firsthand:
+it is a thresholded noise pattern scattered uniformly across the UV
+island, not painted markings concentrated at joints/plate valleys the way
+the brief asked for.** This is a real, correctly-diagnosed defect my own
+`roster.png` render (a small side-by-side lineup, not a close-up) was never
+going to catch — §2 above should be read as "the data wiring renders
+correctly and the recolour is visible at a glance," which is still true and
+still worth having confirmed, not as "the art is good," which it is not.
+
+**Why this lane didn't touch the texture itself: the judge's own follow-up
+routing note (§3, written after reading the lane handovers) sends this
+specifically to *content*, not *install*** — "a content decision to reopen
+before more variants are wired, not a placement follow-up." I agree with
+that routing on the merits, not just because it's convenient: fixing a
+mirrored, unauthored noise mask needs either a proper Meshy retexture pass
+per creature (against real per-species reference art showing where cracks/
+markings should sit, which `docs/art/reference/creature-expansion-2026-08-30/`
+may or may not already have) or manual texture painting with real 3D
+tooling — both real content-authoring decisions this lane has neither the
+authority nor the tools to make safely. A blind edge-blur or hue-nudge from
+here would cosmetically soften the symptom (staircasing) while leaving the
+judge's actual complaint (mirrored, unauthored, un-form-following markings)
+completely intact, which is exactly the "placeholder ugliness as evidence
+it's good enough" trap `CLAUDE.md` warns against — so I did not do it.
+
+**Camp kit (JUDGE-3 §1, §4): out of scope for this pass, not fixed.** This
+lane never touched `scripts/build/camp.gd`, the workbench buildable, or any
+camp asset before this work order arrived, and a first read of
+`camp.gd` shows the kit spans at least two separate systems (the tent/bed/
+fire trio it owns directly, plus a workbench buildable defined elsewhere) —
+real, unfamiliar surface area, not a bounded numeric tweak. More
+importantly, the judge's **own post-blind routing note already gates the
+headline defect (the painted-stylised-vs-scanned-PBR style break) on an
+**owner decision**: *"If any owner reference art is going to be supplied
+for a Meshy generation, the camp kit is the strongest candidate this pass
+found for spending it on... Routes to: owner decision, then install."*
+The scale/position items (§1g — floating tent peg, bed not fitting the
+tent, workbench interpenetrating the bed) are genuinely install-tier and
+could in principle be fixed without new art, but doing that correctly needs
+its own measure-fix-render-rejudge cycle against unfamiliar code, which
+this already-large pass did not have the remaining budget to do responsibly
+on top of everything above. Flagging rather than rushing it.
+
+**Evidence-integrity rule (JUDGE-3 §0): checked against this lane's own
+renders, no changes needed.** The rule is about terrain captures silently
+shipping without grass/with haze; every render this lane produced
+(`roster.png`, `rank_variety/*.png`, `buff_hud.png`) is either a purpose-
+built neutral-backdrop stage (no terrain at all, so the grass question does
+not apply) or the real Meadows HUD/UI layer (not a ground-level terrain
+shot). Nothing here claims anything about how a creature reads against real
+grass, so nothing needed re-shooting.
+
+**Net effect on this handover:** §2's creature-expansion/variant-render
+claims stand for what they actually verified (data wiring, scale, gross
+colour difference); the "still dark" list below gains the aspect-variant
+mask redesign as a named, content-lane item. Camp kit stays entirely
+outside this lane's reports.
 
 ## Suggested next step, if a rig pass becomes available
 
