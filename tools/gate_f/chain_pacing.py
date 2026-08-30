@@ -89,14 +89,30 @@ def segment_report(run_dir, seg):
     if not r["present"]:
         return r
 
+    # Step verdicts are not in the event stream -- the harness puts its own
+    # tally in INVENTORY.json and the per-step verdict lines in notes/. Read the
+    # tally rather than re-deriving one that could disagree with the segment.
     verd = {}
+    inv_path = os.path.join(d, "INVENTORY.json")
+    if os.path.exists(inv_path):
+        try:
+            inv = json.load(open(inv_path))
+            s = inv.get("steps", {})
+            verd = {"PASS": s.get("pass", 0), "FAIL": s.get("fail", 0),
+                    "SKIP": s.get("skipped", 0), "DELEGATED": s.get("delegated", 0),
+                    "TOTAL": s.get("total", 0)}
+            r["derailed"] = inv.get("derailed") or ""
+            r["derailed_at"] = inv.get("derailed_at") or ""
+            r["complete"] = inv.get("complete")
+            r["harness_errors"] = inv.get("harness_errors") or []
+        except (ValueError, OSError):
+            pass
+
     defects = []
     cadence = {}
     marks = []          # (play_t, type) for every meaningful event
     for e in ev:
         t = e.get("type")
-        if t == "step":
-            verd[e.get("verdict", "?")] = verd.get(e.get("verdict", "?"), 0) + 1
         if t == "defect":
             defects.append(e)
         if t in MEANINGFUL:

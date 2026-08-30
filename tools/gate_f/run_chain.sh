@@ -55,23 +55,16 @@ for seg in "${SEGMENTS[@]}"; do
 	rc=${PIPESTATUS[0]}
 	wall=$((SECONDS - t0))
 
-	# Verdict counts come from the segment's own events, so the chain log agrees
-	# with the segment's notes rather than re-deriving them.
-	counts="$(python3 - "$RUN_DIR/$seg/telemetry/events.jsonl" <<'PY'
-import json, sys, collections
-c = collections.Counter()
+	# Verdict counts come from the segment's own INVENTORY.json, which is what
+	# the harness itself computed -- not re-derived here, so the chain log and
+	# the segment agree by construction.
+	counts="$(python3 - "$RUN_DIR/$seg/INVENTORY.json" <<'PY'
+import json, sys
 try:
-    with open(sys.argv[1]) as fh:
-        for line in fh:
-            try:
-                e = json.loads(line)
-            except ValueError:
-                continue
-            if e.get("type") == "step":
-                c[e.get("verdict", "?")] += 1
-except OSError:
-    pass
-print("%d\t%d\t%d" % (c["PASS"], c["FAIL"], c["SKIP"]))
+    s = json.load(open(sys.argv[1]))["steps"]
+    print("%d\t%d\t%d" % (s.get("pass", 0), s.get("fail", 0), s.get("skipped", 0)))
+except Exception:
+    print("?\t?\t?")
 PY
 )"
 	printf '%s\t%s\t%d\t%d\t%s\n' "$seg" "$started" "$wall" "$rc" "$counts" >> "$LOG"
