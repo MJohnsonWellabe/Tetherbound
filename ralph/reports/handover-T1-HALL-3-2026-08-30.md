@@ -369,6 +369,12 @@ gaps wrapped where the previous build wrapped one (D8).
 `smoke_boss`, and `smoke_gate_e_finale`, the last on its first attempt despite
 being the intermittent one.
 
+**Re-verified at the end, against the shipping state.** The run above was taken
+early, and `stronghold.gd` changed four more times afterwards (yard banners,
+buttress material, foot-shaft material, plus the Sigil Gate work). Carrying an
+early green forward would have been the same class of mistake this lane spent
+its time finding, so all three were re-run on the final tree and all three pass.
+
 ### Read by eye, at the stands
 
 - **`H-04-gate-mouth` is a frame of the gate.** For the first time: the deck
