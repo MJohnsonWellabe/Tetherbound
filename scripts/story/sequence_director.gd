@@ -292,7 +292,7 @@ func _set_beat(target: String) -> void:
 		push_warning("refused to move the opening back from '%s' to '%s'" % [_beat, target])
 		return
 	_beat = target
-	_persist_opening_fact(OPENING_BEAT_PREFIX + _beat)
+	_persist_beat_history(_beat)
 	beat_changed.emit(_beat)
 	if _beat == BEATS.CHOOSE:
 		# Not opened here directly: this fires while `_drain_effects` is still
@@ -360,9 +360,33 @@ func _force_restore_beat(target: String) -> void:
 	var changed := target != _beat
 	_beat = target
 	_picker_pending = _beat == BEATS.CHOOSE
-	_persist_opening_fact(OPENING_BEAT_PREFIX + _beat)
+	_persist_beat_history(_beat)
 	if changed:
 		beat_changed.emit(_beat)
+
+
+## Every beat at or before `beat`, not just `beat` itself.
+##
+## OP-0830-4. The beat flags were only ever written one at a time, as the
+## machine stepped through them, which is correct for the machine's own resume
+## (`_restore_opening_beat` takes the LAST one set). It is wrong for anything
+## that reads them as history — and `data/progression/objectives.json` now
+## does, because the opening's rungs are those flags. Two ways a save reaches a
+## beat without having written the ones before it: the compatibility inference
+## in `_restore_opening_beat` (a party of one with no beat flags at all resumes
+## straight at `walk_out`), and a mid-session Load. Either left the guided
+## objective ladder pointing at "Go down and hear Grandpa out" for a player
+## already outside with a named creature.
+##
+## The beats are a strictly ordered list nobody may skip, so "reached beat N"
+## genuinely does mean "passed 1..N-1"; this writes what was already true.
+func _persist_beat_history(beat: String) -> void:
+	var reached := BEATS.index_of(beat)
+	if reached < 0:
+		return
+	var order := BEATS.order()
+	for i in reached + 1:
+		_persist_opening_fact(OPENING_BEAT_PREFIX + order[i])
 
 
 func _persist_opening_fact(flag_id: String) -> void:
@@ -725,23 +749,40 @@ func _refresh_prompts() -> void:
 ## here — the player is meant to walk toward the door, get called back, and
 ## end up in the conversation naturally, not read an error about it.
 ##
-## Restricted to the `house` beat specifically, not every beat the gate
-## covers. `choose` and `name` are also before `walk_out` (the door stays
-## physically shut through both, correctly), but their own conversations
-## are incidental ("Still deciding?"), not the required one — and the
-## player is standing right where the briefing left them, close enough to
-## the door to be back inside the callout radius the instant a panel closes.
-## Triggering on every gated beat reopens a new conversation the moment the
-## last one's box clears, which starves `_maybe_open_picker()` of the
-## closed-dialogue frame it needs and the starter picker never opens.
+## Restricted to the beats whose own conversation is a REQUIRED one, not
+## every beat the gate covers. `choose` and `name` are also before
+## `walk_out` (the door stays physically shut through both, correctly), but
+## their own conversation is incidental ("Still deciding?"), not required —
+## and the player is standing right where the briefing left them, close
+## enough to the door to be back inside the callout radius the instant a
+## panel closes. Triggering on those two reopens a new conversation the
+## moment the last one's box clears, which starves `_maybe_open_picker()` of
+## the closed-dialogue frame it needs and the starter picker never opens.
+##
+## OP-0830-4, 2026-08-30 owner playtest: "after the first conversation with
+## grandpa you're trapped in his house with nothing telling you to talk to
+## him again before you can go." `return_starter` is the SECOND required
+## conversation — `grandpa_first_catch`, whose last line carries
+## `beat:first_encounter` and is therefore the only thing in the game that
+## opens this door. It was not in this list, so from that beat onward the
+## doorway was a silent invisible wall: the player pushed on it and nothing
+## at all happened, no callout, no line, no prompt (Grandpa's own 4m radius
+## does not reach the door). It behaves like `house` now, which is what spec
+## §1D describes and never restricted to the first conversation: walk at the
+## door, be called back, end up in the conversation naturally. No picker is
+## pending on this beat, so the starvation reasoning above does not apply.
+const DOOR_CALLOUT_BEATS := [BEATS.HOUSE, BEATS.RETURN_STARTER]
+
 func _refresh_door_gate() -> void:
 	if _house == null or not is_instance_valid(_house):
 		return
 	var door_open := BEATS.at_or_after(_beat, BEATS.WALK_OUT)
 	_house.call("set_door_open", door_open)
-	if door_open or _beat != BEATS.HOUSE:
+	if door_open or not DOOR_CALLOUT_BEATS.has(_beat):
 		return
-	if bool(_dialogue.call("is_open")) or _adopting:
+	if bool(_dialogue.call("is_open")) or _adopting or _picker_pending:
+		return
+	if bool(_name_prompt.call("is_open")) or bool(_starter_picker.call("is_open")):
 		return
 	var door: Vector3 = _house.call("marker", "door")
 	if _player.global_position.distance_to(door) > DOOR_CALLOUT_RADIUS:

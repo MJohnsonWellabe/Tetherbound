@@ -1,108 +1,121 @@
 extends SceneTree
-## Grid-search a GATE_KEY_AT site clear of everything solid near the village
-## road gate, on the correct side of its seal. Written for the SIGIL-SEAL
-## fallout (2026-08-25): the old (24,-10) key sat 6.8m along the gate's own
-## fence line, inside `_build_wings()`'s new `seal_half_width` 12.0m reach, so
-## the wing panel it now builds there blocked every approach to the key's own
-## prompt radius. Kept for the next time a gate or a fence near here moves.
+## Grid-search a `GATE_KEY_AT` site: inside the village boundary, clear of
+## everything solid and of every other prompt, and as close to the gate as those
+## allow.
 ##
-## THE SIDE CONVENTION, worth recording because it cost two wrong runs to pin
-## down: `smoke_opening.gd`'s crossing check projects onto `through =
-## (sin(yaw), cos(yaw))` (perpendicular to the gate's own fence line) and
-## compares sign before/after. That sign is NOT "toward the village" in any
-## intuitive sense -- it is which half of an INFINITE line through the gate a
-## point falls on, and two points that both read as "near the village" can
-## land on opposite halves (the well projects negative, the gate's own
-## approach waypoint (26,-10) projects positive) because the line runs at the
-## gate's yaw, not along any village-relative axis. What matters is only
-## matching the sign of the player's actual pre-gate position, so this probe
-## takes that from the same waypoint `smoke_opening.gd` uses.
+##   godot --headless --path . --script tools/_probe_key_site.gd
+##
+## Rewritten for OP-0830-1. The version this replaces searched a fixed list of
+## seven hand-copied landmark coordinates and reasoned about `seal_half_width`
+## wings that no longer exist -- the settlement has an authored fence line now
+## (`data/config/village_boundary.json`) and the gate is a hole in it. Two
+## things changed in kind, not just in numbers:
+##
+##   * **INSIDE is now a real question.** The key must be on the village side of
+##     the fence: the whole point of OP-0830-1 is that the player is held in
+##     until they find it, and a key outside the wall is a key they cannot
+##     reach. `village_boundary.gd::contains()` answers it against the same
+##     polygon the fence is built from.
+##   * **The neighbours are queried live.** Every enabled `interactable.gd` in
+##     the world and every fence panel collider, read off the built scene rather
+##     than transcribed. The old list went stale the moment anything moved, and
+##     a probe that reasons about a world that no longer exists is worse than no
+##     probe.
+##
+## Diagnostic only. Prints; never asserts.
+
+const BOUNDARY := preload("res://scripts/world/village_boundary.gd")
+
+## Two prompts whose radii overlap contest for the one interact line, and the
+## nearer always wins -- which is how an earlier key placement became
+## unreachable behind "Pick berries". The key's own radius is 2.4m; 5.0m of
+## separation clears the widest neighbour prompt in the village (4.0m) with a
+## little to spare.
+const PROMPT_CLEARANCE := 5.0
+## The fence panel colliders are 0.5m thick and the player is a 0.4m capsule; at
+## less than this the key is in the ditch behind the fence rather than in the
+## grass beside the road.
+const FENCE_CLEARANCE := 3.0
+
 
 func _init() -> void:
 	var world: Node = load("res://scenes/world/meadows_playground.tscn").instantiate()
 	root.add_child(world)
-	for i in 240:
+	for i in 300:
 		await physics_frame
 
-	var gate: Node3D = world.get_node_or_null(^"RoadGate") as Node3D
+	var gate: Node3D = world.find_child("RoadGate", true, false) as Node3D
 	if gate == null:
-		print("NO RoadGate"); quit(1); return
+		print("NO RoadGate in the world")
+		quit(1)
+		return
+	var gate_at := Vector2(gate.global_position.x, gate.global_position.z)
+	print("gate at (%.2f, %.2f), yaw %.1f deg" % [gate_at.x, gate_at.y, rad_to_deg(gate.rotation.y)])
 
-	# Wing collision box centres, queried live from the built node rather than
-	# re-derived by hand -- `_build_wings()` is the one source of truth for
-	# where they actually land.
-	var wing_centers: Array[Vector2] = []
-	for child in gate.get_children():
-		if child is StaticBody3D and String(child.name).begins_with("GateWingCollision"):
-			var c: Vector3 = gate.to_global(child.position)
-			wing_centers.append(Vector2(c.x, c.z))
-
-	var landmarks := {
-		"gate_leaf": Vector2(27.5, -16.0),
-		"cottage_b": Vector2(21.0, -14.0),
-		"cottage_a": Vector2(18.0, -2.0),
-		"harvest_20_-16": Vector2(20.0, -16.0),
-		"square_oak_a": Vector2(25.5, -9.5),
-		"fence_14_-20": Vector2(14.0, -20.0),
-		"fence_19.5_-25.5": Vector2(19.5, -25.5),
-	}
-
-	var gate_at := Vector2(27.5, -16.0)
-	var yaw := gate.rotation.y
-	var across := Vector2(cos(yaw), -sin(yaw))   # the fence line itself
-	var through := Vector2(sin(yaw), cos(yaw))   # perpendicular -- the crossing direction
-
-	# The player's real pre-gate waypoint (`smoke_opening.gd`'s own last stop
-	# before it starts the blocked-approach check) -- whichever sign THIS
-	# projects to is the side a candidate must match to be reachable without
-	# crossing the seal.
-	var approach_side: float = signf(through.dot(Vector2(26.0, -10.0) - gate_at))
-
-	var best_score := -INF
-	var best: Vector2 = Vector2.ZERO
-	for xi in range(-6, 7):
-		for zi in range(2, 9):
-			var c: Vector2 = gate_at + float(xi) * across + float(zi) * through * approach_side
-			var ground: float = float(world.call("ground_height_at", c.x, c.y))
-			if is_nan(ground) or ground < 0.5:
-				continue
-			var min_wing_dist := INF
-			for wc: Vector2 in wing_centers:
-				min_wing_dist = min(min_wing_dist, wc.distance_to(c))
-			var d_gate: float = c.distance_to(landmarks["gate_leaf"])
-			var margins: Array[float] = [
-				min_wing_dist - 6.0,
-				d_gate - 6.4,   # matches this gate's own 4.0m + the key's 2.4m prompt radii
-				c.distance_to(landmarks["harvest_20_-16"]) - 4.8,
-				c.distance_to(landmarks["cottage_b"]) - 3.0,
-				c.distance_to(landmarks["fence_14_-20"]) - 4.0,
-				c.distance_to(landmarks["fence_19.5_-25.5"]) - 4.0,
-				c.distance_to(landmarks["square_oak_a"]) - 2.5,
-			]
-			var worst: float = margins[0]
-			for m: float in margins:
-				worst = min(worst, m)
-			if worst < 0.0:
-				continue  # fails at least one clearance
-			# Among every fully-clear site, prefer the one closest to the gate
-			# -- SA7 wants "a short detour," not a hike back to the square.
-			var score: float = -d_gate
-			if score > best_score:
-				best_score = score
-				best = c
-
-	if best_score == -INF:
-		print("NO feasible site found in the searched grid")
+	var outline := BOUNDARY.outline(BOUNDARY.load_config())
+	if outline.size() < 3:
+		print("no village boundary outline; nothing to be inside of")
 		quit(1)
 		return
 
-	print("BEST candidate: (%.2f, %.2f), %.2fm from the gate" % [best.x, best.y, -best_score])
-	var min_wing_dist := INF
-	for wc: Vector2 in wing_centers:
-		min_wing_dist = min(min_wing_dist, wc.distance_to(best))
-	print("  ground=%.2f min_wing_center_dist=%.2f" % [
-		float(world.call("ground_height_at", best.x, best.y)), min_wing_dist])
-	for key in landmarks:
-		print("  %s=%.2f" % [key, (landmarks[key] as Vector2).distance_to(best)])
+	var prompts: Array[Vector2] = []
+	_collect_prompts(world, prompts)
+	var fences: Array[Vector2] = []
+	_collect_fences(world, fences)
+	print("%d live prompts and %d fence panels in the world" % [prompts.size(), fences.size()])
 
+	var best := Vector2.INF
+	var best_d := INF
+	for xi in range(-40, 41):
+		for zi in range(-40, 41):
+			var c := gate_at + Vector2(float(xi) * 0.5, float(zi) * 0.5)
+			var d := c.distance_to(gate_at)
+			if d < 4.0 or d > 14.0 or d >= best_d:
+				continue
+			if not BOUNDARY.contains(outline, c):
+				continue
+			var ground: float = float(world.call("ground_height_at", c.x, c.y))
+			if is_nan(ground):
+				continue
+			if _nearest(prompts, c) < PROMPT_CLEARANCE:
+				continue
+			if _nearest(fences, c) < FENCE_CLEARANCE:
+				continue
+			best = c
+			best_d = d
+
+	if best_d == INF:
+		print("NO feasible site in the searched grid")
+		quit(1)
+		return
+	print("BEST candidate: (%.2f, %.2f), %.2fm from the gate" % [best.x, best.y, best_d])
+	print("  inside the boundary: %s" % str(BOUNDARY.contains(outline, best)))
+	print("  ground %.2f   nearest prompt %.2fm   nearest fence panel %.2fm" % [
+		float(world.call("ground_height_at", best.x, best.y)),
+		_nearest(prompts, best), _nearest(fences, best)])
 	quit(0)
+
+
+func _nearest(points: Array[Vector2], at: Vector2) -> float:
+	var best := INF
+	for p: Vector2 in points:
+		best = minf(best, p.distance_to(at))
+	return best
+
+
+func _collect_prompts(node: Node, out: Array[Vector2]) -> void:
+	for child: Node in node.get_children():
+		var script: Script = child.get_script()
+		if script != null and str(script.resource_path).ends_with("interactable.gd"):
+			if bool(child.get("enabled")):
+				var at: Vector3 = (child as Node3D).global_position
+				out.append(Vector2(at.x, at.z))
+		_collect_prompts(child, out)
+
+
+func _collect_fences(node: Node, out: Array[Vector2]) -> void:
+	for child: Node in node.get_children():
+		if child is StaticBody3D and str(child.name).begins_with("FencePanelCollision"):
+			var at: Vector3 = (child as Node3D).global_position
+			out.append(Vector2(at.x, at.z))
+		_collect_fences(child, out)

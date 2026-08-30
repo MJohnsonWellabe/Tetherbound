@@ -18,7 +18,8 @@
     "art": "grandpa",
     "display_name": "Grandpa Elias",
     "prompt": "Talk to Grandpa",
-    "prompt_radius": 4.0
+    "_comment_prompt_radius": "OP-0830-4. Raised 4.0 -> 5.0. The ground floor of the rebuilt farmhouse is 9.4m x 5.4m and he stands 2.4m west of its centre, so at 4.0 the east third of the room -- including the whole approach to the door -- offered no prompt at all. It is not the fix for the trapped-in-the-house defect (the door callout in sequence_director.gd::_refresh_door_gate is), but a player who turns round and walks back should find him offering before they are standing on him. TUNABLE; outdoors he stands alone in the meadow and contests nothing at this radius.",
+    "prompt_radius": 5.0
   },
 
   "starters": {
