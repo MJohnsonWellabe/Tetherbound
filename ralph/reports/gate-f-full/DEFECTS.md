@@ -250,3 +250,73 @@ from"* — and this run is the second data point, not the derivation.
 three or four S02 runs (~7 min each on this box), the distance and row count
 from each, and a floor set below the observed minimum with the run ids written
 into the step's `expected`. Two samples is not a floor.
+
+---
+
+## GAME-F3 — the chapter's teaching fight shares its ground with a gathering node, and the node wins the button
+
+**Severity:** SHIP candidate, **needs an owner's judgement rather than a fix**.
+**Measured, ten times in one segment.** **Not fixed** — `data/` is frozen for
+this lane, and the mechanism is behaving as documented.
+
+### What happened
+
+S03's team-building ladder walks to a wild bramblebun in the Practice Meadow
+and challenges it, up to ten times. All ten refused:
+
+```
+walked 0.7 m to bramblebun  ... player at (27.27, -44.89)
+FAIL the live prompt is "  Gather deadwood", which does not contain
+"Engage" -- pressing here would activate a different provider. Not pressed.
+```
+
+and then, for the remaining eight, from a standstill at **(26.03, −44.01)**.
+
+**That is the deadwood node's own coordinate.** `data/config/bands/band1_lower_meadows/harvest.json`
+order 1: `{"item": "wood", "label": "Gather deadwood", "at": [26.0, -44.0]}`.
+It sits 5.7 m from the practice cluster's authored centre (30,−40), well inside
+the cluster's 15 m radius, so a bramblebun can and did spawn beside it.
+
+### Why the node wins
+
+`scripts/world/prompt_arbiter.gd`: *"Highest priority first, then nearest, then
+first registered."* `encounter_director.gd`'s engage offer carries **priority 0**
+— deliberately, and the comment above it explains why: it used to carry priority
+100 and that made a fainted-ally line outrank every prompt in the world (GAME-0).
+`interactable.gd`'s default is also 0. So engage and gather are peers, and the
+tie goes to distance: a node at ~0 m beats a creature at 1–4 m, every time.
+
+### What it costs a player
+
+The player standing on the deadwood is offered the deadwood. Stepping back a
+metre would fix it, and a human would. But the chapter's own first team-building
+lesson happens on this ground, and the game gives no way to cycle the offer —
+one button, one winner, chosen by distance. The failure mode is silent: nothing
+says "there is also a creature here."
+
+**This run's cascade was total.** The team stayed at 2, `S03-39` ("the team is
+three") failed, and `tournament.json` requires `min_party_size: 3` — so the exit
+save S04 would inherit cannot enter the tournament. The chain was stopped here
+rather than run on it.
+
+### What is honestly unknown
+
+Whether a human player hits this at all. The cluster is randomised per boot
+(`wild_creature.gd` randomises spawn positions), so how often a member lands
+within a metre or two of (26,−44) is a question about the seed distribution,
+and one run cannot answer it. **What is certain is that it can happen and that
+nothing recovers from it except the player moving.**
+
+### Options, for the owner rather than for this lane
+
+1. Move the deadwood node out of the practice cluster's disk — it is one
+   coordinate in `harvest.json` and the meadow has nineteen other nodes.
+2. Give the engage offer a small priority edge over a harvest node *within
+   engage range only*. Cheap, but priority is the mechanism GAME-0 was caused by
+   and the comment in `encounter_director.gd` is a warning worth heeding.
+3. Accept it: a player steps back. The cost is a confusing first minute in the
+   one place the chapter is teaching.
+
+Recorded, not chosen. Option 3 is defensible and the other two are one-line
+changes; that is precisely the shape of decision this audit is meant to hand
+over rather than make.
