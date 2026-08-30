@@ -3074,12 +3074,19 @@ func _use_hotbar_slot(slot_index: int) -> void:
 	var heal := float(definition.get("heal", 0.0))
 	var revive_fraction := float(definition.get("revive", 0.0))
 
-	# Food. The backpack could always eat berries (`tab_backpack.gd`'s Use verb
-	# reads `satiety` the same way) and the hotbar could not -- pressing them
-	# here answered "Berries is not something you can use here", which is the
-	# kind of inconsistency that teaches a player the bar is unreliable. Same
-	# call, same buff dictionary, so one food item cannot behave two ways
-	# depending on which screen reached it.
+	# Food. This bar could not eat berries at all once -- pressing them here
+	# answered "Berries is not something you can use here", which is the kind of
+	# inconsistency that teaches a player the bar is unreliable. Same call, same
+	# buff dictionary, so one food item cannot behave two ways depending on
+	# which screen reached it.
+	#
+	# T5-CARE: the sentence that used to open this comment -- "the backpack
+	# could always eat berries" -- had stopped being true. D68 gave berries a
+	# `creature_food` key and `tab_backpack.gd::_read_use()` tests that BEFORE
+	# `satiety`, so from the satchel the only food in the game routed to a
+	# creature picker with no row for the player, and this bar became the only
+	# way to eat. The satchel's picker now carries the trainer's own row, so the
+	# two screens agree again.
 	var satiety := float(definition.get("satiety", 0.0))
 	if satiety > 0.0:
 		var vitals := _game.call("player_vitals") as RefCounted
@@ -3382,9 +3389,68 @@ func _hammer_opens_the_catalogue() -> bool:
 	# owner's "building doesn't work" report: not a fight for the button, but a
 	# forfeit to something that was not asking for it.
 	if _arbiter != null and is_instance_valid(_arbiter) \
-			and PROMPTS.is_actionable(_arbiter.call("winner")):
+			and PROMPTS.is_actionable(_arbiter.call("winner")) \
+			and not _winner_would_refuse_this_hand():
 		return false
 	return true
+
+
+## Is the winning offer one that CANNOT fire with what is currently in hand?
+##
+## T5-CARE. The forfeit above is right for a real competing intent -- standing
+## in front of Grandpa with a hammer still talks to Grandpa -- and wrong for an
+## offer that is going to refuse the press anyway. Measured in the shipping
+## world (`tools/_play_t5_freeplay.gd`):
+##
+##   standing on the clearing, arbiter winner <none>
+##     -> one interact press opened Build
+##   standing 1.5m from a deadwood node, arbiter winner Interactable
+##     { "label": "Gather deadwood", "distance": 1.54, "actionable": true }
+##     -> the same press did NOT open Build
+##
+## and the press did not gather either: `harvest_logic.gd::gather()` refuses
+## outright when the visibly equipped tool is not the resource's
+## `gathered_with`, so with the hammer out the player got the HUD line "Needs an
+## Axe." and no catalogue. Both verbs lost. Under CONTROLLER-MAP hammer +
+## interact is the ONLY pad route into build mode, and this world scatters
+## 57,967 harvestable nodes -- the nearest is 5.7m from the centre of the
+## opening's own authored build clearing. So the primary build verb was blocked
+## by standing near a bush, chapter-wide, with nothing to tell the player why.
+##
+## Fixed HERE, in the hammer's own question, rather than by giving build mode a
+## new binding: the owner's fourteen-button map has no room for one and the
+## directive bans a chord, so a new binding cannot be spent on this. Fixed here
+## rather than inside `interaction_arbiter.gd` too -- the arbiter's job is to
+## decide which offer is nearest and drawable, and teaching it about equipped
+## tools would put gathering rules inside the thing that arbitrates prompts for
+## conversations, doors, beds and orbs alike. This is the one caller that needs
+## the distinction, and it asks a narrow question: *would that offer refuse me?*
+##
+## Deliberately narrow in the other direction as well. A resource with no
+## `gathered_with` (berries, `data/items/items.json`) gathers with anything,
+## hammer included, so that offer is REAL and keeps the button -- the player
+## pressing interact beside a berry bush wants the berries. Only a tool-gated
+## resource whose tool is not the one in hand gives the press back to Build.
+## And NOT solved by clearing scatter around build sites: that treats the
+## symptom and thins the world.
+func _winner_would_refuse_this_hand() -> bool:
+	if _arbiter == null or not is_instance_valid(_arbiter):
+		return false
+	var provider: Object = _arbiter.call("winning_provider")
+	if not (provider is Node) or not is_instance_valid(provider):
+		return false
+	# `harvest_node.gd` parents its own prompt, so the node offering the gather
+	# is the Interactable's parent.
+	var offering := (provider as Node).get_parent()
+	if offering == null or not offering.has_method("resource_item"):
+		return false
+	var items: RefCounted = _game.get("items") if _game != null else null
+	if items == null:
+		return false
+	var required := str(items.call("gathered_with", str(offering.call("resource_item"))))
+	if required.is_empty():
+		return false
+	return required != str(_game.get("equipped_tool"))
 
 
 ## Swing the equipped tool at whatever is in front of the trainer.

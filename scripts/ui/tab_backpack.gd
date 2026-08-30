@@ -647,7 +647,32 @@ func _build_target_panel() -> VBoxContainer:
 	_target_header.add_theme_font_size_override("font_size", 24)
 	panel.add_child(_target_header)
 
-	for i in PARTY.MAX_CREATURES:
+	# PARTY.MAX_CREATURES creature rows, then ONE more: the trainer.
+	#
+	# T5-CARE. `berries` is the only item in `data/items/items.json` carrying a
+	# `satiety` value and it ALSO carries `creature_food`, and `_read_use()`
+	# tests `creature_food` first -- so from this screen the player-eating
+	# branch below it was unreachable and this picker listed creatures only.
+	# Played, with a real pad press of Use on Berries in the real Satchel tab:
+	#
+	#   the Use verb opened the CREATURE target picker; the player's own satiety
+	#   was untouched (40). picker rows: [1. T0 HP 120/120, 2. empty, ...]
+	#
+	# So the FOOD bar dropped, the player opened their satchel, selected the
+	# only food in the game, pressed Use, and was asked "Who eats it?" by a list
+	# that did not include them. It worked from the quick bar
+	# (`playground_hud.gd`) and nowhere else -- and that file's own comment
+	# still claimed "the backpack could always eat berries", which the D68
+	# creature-feeding change had silently falsified.
+	#
+	# Fixed with a row rather than by reordering the two branches: D68 is right
+	# that berries are the team's food and "the team is the reason the
+	# tournament asks you to gather them", so a reorder would just break the
+	# other half. The screen already asks the right question; it was missing an
+	# answer. The extended-row shape (an index past MAX_CREATURES meaning
+	# somebody who is not on the belt) is the one `tab_creatures.gd`'s release
+	# ceremony already uses.
+	for i in PARTY.MAX_CREATURES + 1:
 		var button := Button.new()
 		button.custom_minimum_size = Vector2(620, 64)
 		button.clip_text = true
@@ -659,6 +684,64 @@ func _build_target_panel() -> VBoxContainer:
 		_target_rows.append(button)
 
 	return panel
+
+
+## The trainer's own row in the target picker: the last one, past the belt.
+func _trainer_row_index() -> int:
+	return PARTY.MAX_CREATURES
+
+
+## Eat the targeted food yourself. Reads the stack under `_targeting` the same
+## way `_apply_to_creature()` does, so a stack that emptied underneath the
+## picker refuses rather than granting satiety for nothing.
+func _eat_it_myself() -> void:
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	var stack: Dictionary = inventory.call("stack_at", _targeting)
+	if stack.is_empty():
+		_end_targeting()
+		return
+	var id := str(stack.get("id", ""))
+	var def := db.call("definition", id) as Dictionary
+	var satiety := float(def.get("satiety", 0.0))
+	var vitals := _player_vitals()
+	if satiety <= 0.0 or vitals == null:
+		say("Nothing to eat that here.")
+		_end_targeting()
+		return
+	vitals.call("eat", satiety, def.get("buff", {}))
+	inventory.call("remove", id, 1)
+	say("You ate the %s." % str(db.call("item_name", id)).to_lower())
+	_end_targeting()
+
+
+## Is the item being targeted something the PLAYER can eat? Only food with a
+## real `satiety` value; a tonic, a potion, an elixir or a TM is never offered
+## to the trainer, and neither is a creature food with no satiety of its own.
+func _player_satiety_of_targeted() -> float:
+	if _targeting_food.is_empty():
+		return 0.0
+	var db: RefCounted = _items()
+	if db == null:
+		return 0.0
+	return float((db.call("definition", _targeting_food) as Dictionary).get("satiety", 0.0))
+
+
+## Eligible when the item feeds the player at all and they are not already
+## full -- the same "refusing the full ones is what stops a berry being spent
+## for nothing" rule `_eligible()` applies to creatures.
+func _trainer_row_eligible() -> bool:
+	if _player_satiety_of_targeted() <= 0.0:
+		return false
+	var vitals := _player_vitals()
+	if vitals == null:
+		return false
+	return float(vitals.call("satiety_fraction")) < 1.0
+
+
+func _player_vitals() -> RefCounted:
+	var player := _player_node()
+	return player.get("vitals") as RefCounted if player != null else null
 
 
 ## Two rows, built once for the same focus-survival reason as the target
@@ -1219,6 +1302,13 @@ func _read_use() -> void:
 	# RG19-spec/D68. Food a creature can eat picks its eater the same way a
 	# tonic does. Checked BEFORE the player's own satiety because berries are
 	# both, and the team is the reason the tournament asks you to gather them.
+	#
+	# T5-CARE: which meant the `satiety > 0.0` branch below was UNREACHABLE for
+	# the only item in the game that has a satiety value, because berries carry
+	# both keys. The picker now carries the trainer's own row
+	# (`_trainer_row_index()`), so "Who eats it?" includes the person asking and
+	# this ordering keeps its D68 meaning. The branch below still serves any
+	# future food that feeds only the player.
 	if def.has("creature_food"):
 		_targeting_food = id
 		_open_target_picker(
@@ -1299,7 +1389,14 @@ func _open_target_picker(
 	heal: float, revive: float, tm: String, refusal: String, footer: String
 ) -> void:
 	var party: RefCounted = _party()
-	if party == null or int(party.call("size")) == 0:
+	# T5-CARE: an empty belt is not a reason to refuse FOOD. This guard used to
+	# be unconditional, so before the first catch -- which is most of the
+	# opening -- pressing Use on berries answered "Nobody on the belt yet." and
+	# the player, who was the hungry one, could not eat. Everything else the
+	# picker serves (potions, revives, tonics, elixirs, TMs) genuinely needs a
+	# creature, so those keep the refusal; the eligibility check below is what
+	# actually decides, and it now counts the trainer.
+	if party == null or (int(party.call("size")) == 0 and not _trainer_row_eligible()):
 		say("Nobody on the belt yet.")
 		return
 
@@ -1679,7 +1776,9 @@ func _any_eligible_target(party: RefCounted, heal: float, revive: float, tm: Str
 	for i in PARTY.MAX_CREATURES:
 		if _eligible(party.call("at", i), heal, revive, tm):
 			return true
-	return false
+	# T5-CARE: a hungry trainer is a reason to open the picker on their own, so
+	# a player whose whole team is full can still eat.
+	return _trainer_row_eligible()
 
 
 ## The first ELIGIBLE row, so opening the picker focuses something the player
@@ -1692,6 +1791,10 @@ func _first_eligible_target_row() -> Control:
 	if party == null:
 		return null
 	for i in _target_rows.size():
+		if i == _trainer_row_index():
+			if _trainer_row_eligible():
+				return _target_rows[i]
+			continue
 		if _eligible(party.call("at", i), _targeting_heal, _targeting_revive, _targeting_tm):
 			return _target_rows[i]
 	return null
@@ -1718,6 +1821,29 @@ func _refresh_target_panel() -> void:
 
 	for i in _target_rows.size():
 		var button: Button = _target_rows[i]
+		# T5-CARE: the trainer's row. Hidden outright for anything the player
+		# cannot eat, so a potion or a TM still shows exactly the belt.
+		if i == _trainer_row_index():
+			var offered := _player_satiety_of_targeted() > 0.0
+			button.visible = offered
+			if not offered:
+				button.focus_mode = Control.FOCUS_NONE
+				button.disabled = true
+				continue
+			var eats := _trainer_row_eligible()
+			var vitals := _player_vitals()
+			var percent := int(round(float(vitals.call("satiety_fraction")) * 100.0)) \
+				if vitals != null else 100
+			button.text = "  You                 FOOD %d%%" % percent
+			if not eats:
+				button.text += "  (already full)"
+			button.disabled = not eats
+			button.focus_mode = Control.FOCUS_ALL if eats else Control.FOCUS_NONE
+			button.add_theme_color_override(
+				"font_color",
+				Color(0.87, 0.89, 0.84) if eats else Color(0.38, 0.39, 0.37)
+			)
+			continue
 		var creature: RefCounted = party.call("at", i)
 		var eligible := _eligible(creature, _targeting_heal, _targeting_revive, _targeting_tm)
 		if creature == null:
@@ -1776,6 +1902,12 @@ func _ineligible_row_message(creature: RefCounted) -> String:
 ## (ui_accept via Button.pressed), not `interact` — see the header comment.
 func _on_target_row(index: int) -> void:
 	if _targeting < 0:
+		return
+	# T5-CARE: the trainer eats it themselves. Same spend, same buff and the
+	# same `player_vitals.gd::eat()` the quick bar calls, so one berry cannot
+	# behave two ways depending on which screen reached it.
+	if index == _trainer_row_index():
+		_eat_it_myself()
 		return
 	var party: RefCounted = _party()
 	var creature: RefCounted = party.call("at", index) if party != null else null

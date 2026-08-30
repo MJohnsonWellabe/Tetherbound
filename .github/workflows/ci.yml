@@ -577,6 +577,17 @@ jobs:
           # spawn/pathing variance `catching` above is already retried for.
           - smoke: audio
             retries: 2
+          # T5-CARE. Cheap (no world build -- it stands up a two-node stand-in
+          # scene, which is all `tab_backpack.gd::_player_node()` reads) and it
+          # guards a defect that shipped under a green suite: berries carry both
+          # `satiety` and `creature_food`, `_read_use()` tests `creature_food`
+          # first, and berries are the only item in the game with a satiety
+          # value -- so the player could not eat from the Satchel at all while
+          # `test_food.gd` passed, because that file calls `eat()` directly.
+          # This one presses the buttons instead. No retries: it touches no
+          # spawning, no pathing and no fight, so a failure here is real.
+          - smoke: backpack_player_eats
+            retries: 1
     steps:
       - uses: actions/checkout@v4
         with:

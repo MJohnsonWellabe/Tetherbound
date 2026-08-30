@@ -48,8 +48,20 @@ func test_every_food_item_restores_satiety() -> void:
 	assert_true(saw_a_food_item, "no food-kind item found in items.json -- nothing to test")
 
 
-## The real berries entry, fed through the real vitals object exactly the way
-## tab_backpack.gd's _read_use() does it: satiety first, then the buff.
+## The real berries entry, fed through the real vitals object with the same
+## arguments the UI passes: satiety first, then the buff.
+##
+## T5-CARE: this comment used to claim the call was made "exactly the way
+## tab_backpack.gd's _read_use() does it", and that claim is what let a real
+## defect ship under a green test. It was never true of the ROUTE — D68 gave
+## berries a `creature_food` key, `_read_use()` tests that before `satiety`, and
+## berries are the only item in the game with a satiety value, so from the
+## Satchel the player could not eat at all while every assertion here passed.
+## A test that calls `eat()` proves the arithmetic and says nothing about
+## whether a player can reach it. `tests/smoke_backpack_player_eats.gd` is the
+## one that proves the route, with real joypad presses through the real tab;
+## this file deliberately stays the arithmetic half and must not be read as
+## covering reachability.
 func test_eating_real_berries_restores_satiety_and_applies_its_buff() -> void:
 	var def: Dictionary = _db.definition("berries")
 	assert_eq(str(def.get("kind", "")), "food", "berries must stay a food item")
