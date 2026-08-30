@@ -76,10 +76,13 @@ genuinely competitive or better. That is the bulk of the set.
 including the nine pre-existing UI cues). Godot's default `compress/mode=2`
 gives QOA for free, which is where the ~5× comes from.
 
-**Determinism is a hard property.** Every generator takes an explicit seed and
-its own `numpy.random.Generator`. `python3 tools/audio/gen_all.py` with no
-source change produces byte-identical files, so `git status` after a run is the
-honest answer to "has anyone hand-edited an asset". numpy is tool-time only —
+**Determinism is a hard property, and it is verified, not asserted.** Every
+generator takes an explicit seed and its own `numpy.random.Generator`. Running
+`python3 tools/audio/gen_all.py` against the committed tree and then
+`git status --porcelain assets/audio` returns **0 changed files** — so `git
+status` after a run is the honest answer to "has anyone hand-edited an asset",
+and the committed binary diff stays proportional to the source change that
+caused it. numpy is tool-time only —
 the `.wav`s are committed, nothing in CI or an export runs these scripts, and
 numpy is already a dependency of ten other `tools/*.py`.
 
