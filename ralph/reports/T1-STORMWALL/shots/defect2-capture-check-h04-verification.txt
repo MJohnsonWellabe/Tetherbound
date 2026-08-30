@@ -1,0 +1,9 @@
+# capture_check.gd verification against origin/ralph/T1-HALL-REBUILD (bc70c2e2)
+# Reproduces _judge_capture_hall.gd's H-03-ramp-foot (known-good) and H-04-gate-mouth (known-bad, JUDGE-4) camera poses exactly, then runs CAPTURE_CHECK.problems() against each.
+
+H-03-ramp-foot (known-good) eye=(8.0, -3.539567, 7505.0) ground_here=-5.24
+  capture_check: PASS (no problems)
+
+H-04-gate-mouth (known-bad, JUDGE-4) eye=(8.0, -3.367165, 7542.0) ground_here=-1.67
+  capture_check: FAIL (correct) --
+    * the capture camera sits at y=-3.37, at or below the terrain height -1.67 at its own XZ (0.15m clearance required) -- this is a below-ground shot, the JUDGE-4 H-04-gate-mouth.png defect (ralph/reports/JUDGE-4-2026-08-30.md)
