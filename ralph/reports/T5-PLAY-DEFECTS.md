@@ -87,3 +87,62 @@ front door is not one: it is fast, it focuses a control, and Start New Game
 goes straight into the world with no overwrite prompt on a fresh install.
 
 ---
+## RIG-T5-3 — the chapter's first gate never opens, because two landed lanes disagree about where the key is
+
+**Severity:** RIG (a stale rig coordinate) with **BLOCKER consequence** for the
+chapter. **Fixed by this lane, because it blocks the run.**
+
+**What happened.** S02 played the whole opening correctly — starter chosen and
+named, first fight staged and won, first catch landed, party 2/5 — walked 36.5 m
+to the key, pressed interact, walked to the gate, pressed interact, and ended
+with:
+
+```
+S02-54  the road gate is open  ->  FAIL: flag road_gate_open NOT set
+```
+
+The exit save carries 12 orbs and **no key**.
+
+**Root cause, and it is an integration failure, not a bug in either lane.**
+
+| | key position |
+|---|---|
+| `playground_world.gd::GATE_KEY_AT` (current) | **(30.7, −15.9)** |
+| `tools/gate_f/segments/S02.json` step S02-49 walk target | **(31.2, −8.4)** |
+
+`ralph/T5-OPENING` moved the key in `7da75ac7` — *"OP-0830-1: the village gate
+now gates, because the village has an edge"*. `ralph/T2-GATEF-RUN6` fixed S02's
+fight and catch on a branch that still carried the old coordinate. Both landed
+into `ralph/LAND-0830I`. **Each lane was individually correct; together they
+leave the chapter's first gate shut** — which is precisely the failure
+`MEADOWS_EXIT_CRITERION.md` §K4 names: *"do not accumulate individually-successful
+changes that fail together."* This is the first time anything has run far enough
+to notice.
+
+The old anchor stands **7.5 m** from the key against its **2.4 m** interact
+radius, so the press hit nothing at all.
+
+**Why it stops the chapter rather than costing one assert.** `road_gate.gd`
+builds a `StaticBody3D` leaf with sealed wings out to `seal_half_width`. A
+closed gate is a *hard physical block*, not a flag. `road_gate_open` unset in
+S02's exit save is inherited by S03 → S04 → S05, and S05's whole span is
+"leave village". The run cannot leave band 0.
+
+**Fix applied (instrument only, no game code):**
+
+1. `S02-49`'s anchor now reads `GATE_KEY_AT`'s current value.
+2. New step **`S02-50a`** asserts `pickup:castle_gate_key` immediately after the
+   press. A `press` step passes when input is *injected*, not when anything
+   received it — the same root shape T5-FEEL named for the engage asserts — so
+   without this the failure stays silent for five steps and then surfaces at
+   S02-54 looking like a gate defect, which is what it did here and what it is
+   not. If the two coordinates drift apart again, the run now fails at the key.
+
+**Not fixed, and deliberately:** nothing in the game moved. The key placement,
+the 2.4 m radius and the gate are all as their authors intended.
+
+**Standing risk this leaves open, for someone else to decide.** No test ties
+`GATE_KEY_AT` to the rig anchor, and none ties it to anything else either. The
+same drift can happen again on the next lane that nudges the village edge.
+
+---
