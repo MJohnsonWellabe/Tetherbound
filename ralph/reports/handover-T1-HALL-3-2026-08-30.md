@@ -426,3 +426,47 @@ lane wants the canopy back, the alternatives are moving the H-01 stand, or
 accepting that the fortress is revealed at the treeline rather than from the
 crest. Both are legitimate composition calls and both want an owner rather than
 a silent revert by whoever touches this next.
+
+## 6. D3 at 400 m — the honest limit, with the arithmetic
+
+The massing is fixed. `H-02b-sigil-gate-raised` and `H-03-ramp-foot` show a
+fortress with a broken roofline, stacked masses and a spire standing clear —
+against the same stands that previously showed one symmetric block. That part of
+D3 is answered.
+
+**At the H-01 stand it is improved but it does not dominate, and it cannot be
+made to at that range without ceasing to be a castle.** Worth stating with
+numbers rather than leaving the next lane to re-derive them. Against the H-01
+eye (ground ≈ −5, +8 m), in a 1280×800 frame at 70° horizontal (≈17 px per
+degree of elevation):
+
+| mass | top | distance | subtends | on screen |
+|---|---|---|---|---|
+| gatehouse flanker | +20.4 m | 386 m | 2.58° | ~44 px |
+| arena tower | +26.9 m | 477 m | 2.87° | ~49 px |
+| **spire** | **+43.9 m** | 476 m | **4.91°** | **~84 px** |
+
+So the tallest thing in the chapter is an 84 px object at this stand — and the
+masses that would carry a "landmark" read are the *far* ones, because the route's
+own chamber order puts the great tower 100 m behind the gatehouse and that order
+is gameplay, not composition. Doubling the spire again would buy the frame and
+lose the building.
+
+Three honest options, none of which this lane should pick unilaterally:
+
+1. **Accept the 400 m read as a distant skyline.** This is what `HALL_DESIGN` §3
+   actually asks for in its own words — "a skyline, not a building" — and the
+   frame now delivers stacked masses at that range where it previously delivered
+   an occluded smudge. The acceptance item that does *not* survive is §11.2's
+   "roofline breaks ≥ 4 times **at H-01**"; it demonstrably does break ≥ 4 times,
+   just at H-02b's range rather than H-01's.
+2. **Move the landmark stand in to ~150–200 m**, where the building genuinely
+   dominates, and keep H-01 as an "approach context" frame rather than the
+   landmark test.
+3. **Re-site the great tower toward the north end** so the tall mass leads. That
+   is a chamber-layout change and therefore a route change — `smoke_stronghold`,
+   `smoke_boss` and `smoke_gate_e_finale` all walk that order — so it is a
+   deliberate design decision, not a tuning pass.
+
+The sightline clearings (§2) were needed either way: without them the fortress
+was not small at H-01, it was *invisible*.
