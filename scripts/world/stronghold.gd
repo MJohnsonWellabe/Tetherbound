@@ -251,6 +251,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 	_build_marks()
 	_place_gauntlet()
 	_sync_doors()
+	_clear_the_ground_the_hall_stands_on()
 
 	# The entrance is the ramp's own foot when there is one -- the point of a
 	# marker is that a caller lands somewhere they can stand.
@@ -3207,9 +3208,28 @@ func _visual_bounds(node: Node) -> AABB:
 	for child in node.find_children("*", "VisualInstance3D", true, false):
 		var visual := child as VisualInstance3D
 		var box := visual.get_aabb()
-		# Into the instance's own space, so a nested exporter transform counts.
-		var here := (node as Node3D).global_transform.affine_inverse() \
-			* visual.global_transform
+		# Into the instance's own space, so a nested exporter transform counts,
+		# composed by WALKING UP to `node` rather than through
+		# `global_transform`.
+		#
+		# This used to read `global_transform` on both, and every caller here
+		# fits a freshly loaded prop that is not in the tree yet -- so Godot
+		# logged `Condition "!is_inside_tree()" is true` and handed back an
+		# identity transform, silently. The bounds were then measured as if
+		# every nested exporter transform were the identity, which is exactly
+		# what `_fit_to_height` must not get wrong: it divides the authored
+		# height by `bounds.size.y`. `_build_causeway_dressing` is the clearest
+		# case -- it fits a probe panel it never adds to the tree at all, purely
+		# to measure `size.x` for the rail pitch.
+		#
+		# Walking the parent chain gives the same answer in the tree and out of
+		# it, so a caller no longer has to add a node before it can size it.
+		var here := Transform3D.IDENTITY
+		var step: Node = visual
+		while step != null and step != node:
+			if step is Node3D:
+				here = (step as Node3D).transform * here
+			step = step.get_parent()
 		box = here * box
 		total = box if not seeded else total.merge(box)
 		seeded = true
@@ -3952,3 +3972,41 @@ func _mouth_outer_z() -> float:
 func _progression() -> RefCounted:
 	var game := get_node_or_null(^"/root/Game")
 	return game.get("progression") if game != null else null
+
+
+## Nothing grows through a fortress.
+##
+## The same defect `burrow_warrens.gd::_clear_the_ground_the_cave_stands_on()`
+## documents one building over, and it arrived here the same way: the corridor's
+## baked scatter does not know the Hall's rooms exist, so a rock can stand on the
+## interior floor. `smoke_stronghold.gd` caught it as a route failure -- pushed
+## from the Warden Arena toward the Legendary Chamber the player travelled 10.5m
+## of a 32m hop and stopped dead, and `tools/_probe_hall_chamber_passage.gd`
+## named what it was standing against: `Pebble_Round_3_Collision`, on the arena
+## floor, on the walking line to the chapter's climax.
+##
+## Cleared PER CHAMBER rather than over the whole complex, and the difference
+## matters. One circle covering the Hall would need a ~114m radius from the
+## site origin to reach the Legendary Chamber's far corner, which would strip
+## the landscape the fortress is meant to sit in -- including the mid-distance
+## anchors T1-HALL-4 added for JUDGE-6 defect 2, whose nearest placements are
+## 41.8m out. A circle per room clears the rooms and nothing else.
+##
+## Radius is each room's own half-diagonal plus a metre, so it covers the floor
+## the player can stand on and stops at its walls.
+func _clear_the_ground_the_hall_stands_on() -> void:
+	if _world == null or not is_instance_valid(_world):
+		return
+	var vegetation: Node = _world.get_node_or_null(^"Vegetation")
+	if vegetation == null or not vegetation.has_method("clear_area"):
+		return
+	var removed := 0
+	for id: String in _order:
+		var chamber: Dictionary = _chambers.get(id, {}) as Dictionary
+		var size := _size_of(chamber.get("size", []))
+		if size.x <= 0.0 or size.y <= 0.0:
+			continue
+		var centre: Vector3 = _markers.get(id, Vector3.ZERO)
+		removed += int(vegetation.call("clear_area", centre, size.length() * 0.5 + 1.0))
+	if removed > 0:
+		print("[stronghold] cleared %d scattered prop(s) standing inside the five spaces" % removed)
