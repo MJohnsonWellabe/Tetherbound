@@ -119,9 +119,14 @@ func _gathering() -> void:
 	var inventory: RefCounted = _game.get("inventory")
 	var before := int(inventory.call("count", item))
 	var target := best.global_position
-	var stand := target + (here - target).normalized() * 1.5
+	# harvest_node.gd:65 configures its prompt at radius 2.4m. An earlier run
+	# stopped 2.6m out and reported "8 presses gathered nothing", which was the
+	# harness standing outside the prompt, not the game refusing to gather. Aim
+	# for 1.0m and require arrival within 0.6m so the stance is unambiguously
+	# inside it.
+	var stand := target + (here - target).normalized() * 1.0
 	stand.y = _player.global_position.y
-	var arrived: bool = await _nav.walk_to(stand, 2400, 1.2)
+	var arrived: bool = await _nav.walk_to(stand, 1200, 0.6)
 	_release_stick_actions()
 	var away := Vector2(_player.global_position.x, _player.global_position.z) \
 		.distance_to(Vector2(target.x, target.z))
@@ -129,6 +134,12 @@ func _gathering() -> void:
 		_notes.append("I4 VERDICT: could not reach a node %.1fm away in 40s of stick "
 			% best_d + "(stopped %.1fm off)." % away)
 		return
+	var arbiter_at_node: Node = get_first_node_in_group(&"interaction_arbiter")
+	var offering := "<no arbiter>"
+	if arbiter_at_node != null:
+		offering = str(arbiter_at_node.call("winner"))
+	_notes.append("I4: standing %.2fm from the node (prompt radius 2.4m); arbiter offers %s" % [
+		away, offering])
 	var button := _pad_button_for(INTERACT_ACTION)
 	var presses := 0
 	for attempt in 8:
@@ -237,6 +248,26 @@ func _place_and_dismantle() -> void:
 
 	# Dismantle: aim at what was just placed and press the dismantle button.
 	if placed > 0:
+		# Aim at it. `build_placer.gd` picks its dismantle target by what the
+		# player is looking at within DISMANTLE_RANGE (8m); an earlier run
+		# pressed the button standing 6m away facing elsewhere and removed
+		# nothing, which says nothing about whether dismantle works.
+		var last: Dictionary = (_game.get("placed_buildings") as Array).back()
+		var lp: Array = last.get("position", [])
+		if lp.size() == 3:
+			var piece_at := Vector3(float(lp[0]), float(lp[1]), float(lp[2]))
+			var to_piece := piece_at - _player.global_position
+			to_piece.y = 0.0
+			if to_piece.length() > 0.01:
+				_player.global_position = piece_at - to_piece.normalized() * 2.5
+				_player.global_position.y = float(_world.call("ground_height_at",
+					_player.global_position.x, _player.global_position.z)) + 1.0
+				_player.look_at(Vector3(piece_at.x, _player.global_position.y, piece_at.z),
+					Vector3.UP)
+				_player.rotation.y += PI
+			for f in 40:
+				await physics_frame
+			_notes.append("H1 dismantle: stood %.1fm from the last piece and faced it" % 2.5)
 		var wood_pre := int(inventory.call("count", "wood"))
 		var n_pre := (_game.get("placed_buildings") as Array).size()
 		await _pad(_pad_button_for("build_dismantle"))
@@ -262,12 +293,15 @@ func _two_deaths() -> void:
 		spots.append(here)
 		_player.global_position = here + Vector3.UP * 90.0
 		_player.velocity = Vector3.ZERO
-		for f in 400:
+		for f in 300:
 			await physics_frame
 			if float((_player.get("vitals") as RefCounted).get("health")) <= 0.0:
 				break
-		for f in 240:
+		for f in 150:
 			await physics_frame
+		var hp := float((_player.get("vitals") as RefCounted).get("health"))
+		_notes.append("H/inventory: death %d — health after the 90m fall was %.0f (dead=%s)" % [
+			i + 1, hp, str(hp <= 0.0)])
 		(_player.get("vitals") as RefCounted).set("health", 100.0)
 		# Move somewhere else for the second death so the two satchels are
 		# distinguishable, the way two real deaths would be.
