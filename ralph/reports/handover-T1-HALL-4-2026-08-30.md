@@ -41,7 +41,21 @@ would otherwise do:
    one-character change to a `lod_range`. `scatter_bake.config_fingerprint()`
    hashes the whole file text, so `test_scatter_perf_budget.gd`'s freshness
    assertion fails until you re-run `scripts/world/bake_playground_scatter.gd`.
-   Budget the ~10 minutes.
+   Budget the ~5 minutes.
+5. **The braziers already had lights. I nearly shipped a duplicate set, and the
+   trap is worth knowing.** JUDGE-6 says "the flames are unlit sprites … four
+   fires light nothing", and `torch_prop.gd`'s own header says it carries no
+   light and that *callers add their own*. Two independent sources pointing at a
+   missing `OmniLight3D`. I checked the function that builds the brazier body
+   (`_brazier`), found it adds none, and stopped there — but `_build_hall_fire`,
+   its own immediate caller, has always added a real flickering light per config
+   entry. Adding another would have put eight uncounted omnis into a budget
+   `_comment_braziers` spends to its stated ceiling of 18 exactly. Reverted; the
+   real defect was *reach* (a 15 m range against towers 10–30 m away) and
+   *shape* (Godot's default attenuation spreads a fire instead of pooling it).
+   **When a judge says a thing is missing, find the code that would build it and
+   confirm it does not run — do not confirm that one plausible function does not
+   do it.**
 
 ---
 
@@ -255,13 +269,21 @@ hour's sun still blooms.
 
 ### 12 — The braziers, and the blank banner
 
-**The fires had no light at all.** `torch_prop.gd` is a billboard flame plus
-embers and says so in its own header — "callers add their OWN OmniLight3D". Every
-other caller in the project does; `_brazier` never did. So "four fires light
-nothing" was literally true of the code. Each brazier now carries an
-`OmniLight3D` with `omni_attenuation` 1.6 (concentrating the falloff near the
-source, which is what makes a fire read as a *pool with an edge* rather than a
-flat wash), driven from config, shadows off for budget.
+**The fires' reach, not their existence** — see §0.5 for the mistake this
+started as. The four causeway bowls sit at local z −24 and −40; the gate towers
+the judge measured as dark rise from the plinth at z ≈ −13, so their bodies are
+10–30 m from the nearest flame and the authored 15 m range stops short of them.
+Range 15 → 26 on those four only (the two yard fires light a yard and reach
+nothing by design). `energy` is deliberately **not** raised: the deck around each
+bowl is already correctly exposed, and more energy would blow that out to fix
+something 20 m away.
+
+`attenuation` 1.6 is the shape half, and it is the more important one. Godot's
+default 1.0 falls off almost linearly to the range edge, spreading a fire's
+contribution thinly over everything nearby instead of pooling it — so a longer
+range at the default attenuation would have made the whole approach slightly
+warmer and still produced no pool, which *is* the defect. Data-driven, defaulting
+to Godot's own value, so any brazier that does not ask is unchanged.
 
 **The blank red banner and the "pink diagonal hatching" are one bug with one
 cause**, and it is a cause this repo has already diagnosed once — `STONE_TILE`'s
