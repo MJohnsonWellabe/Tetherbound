@@ -13,11 +13,16 @@ needs art nobody has built — went to the owner and is deliberately untouched h
 > Measured on the judge's stand with the judge's boxes; see §1.
 
 **And the finding that matters more than that number:** defect 2 (the bald
-mid-distance) is **not fixed and cannot be fixed the way it was framed**. In
-`H-02b` most of that bald ground is *outside the authored world* — the Hall sits
-at z 7560 and `world_perimeter.gd`'s south cap is at z 7680. The "evenly spaced
-identical posts" the judge called "the edge of the map" **are** the map's edge.
-See §1b.
+mid-distance) is **not fixed and cannot be fixed the way it was framed**. Two
+reasons, both in §1b: `scatter_lod_ranges` is `false` in the shipped
+`performance.json`, so every `lod_range` in `vegetation.json` is **inert** and
+raising them changes nothing; and in `H-02b` most of that bald ground is
+*outside the authored world* — the Hall sits at z 7560 and
+`world_perimeter.gd`'s south cap is at z 7680. The "evenly spaced identical
+posts" the judge called "the edge of the map" **are** the map's edge.
+
+**Draw calls:** 3365 at `hall_approach` against a 4000 ceiling — 16% headroom.
+Measured with `scatter_lod_ranges=false`, i.e. the shipping configuration.
 
 ---
 
@@ -90,15 +95,42 @@ building dropped 20.2 points and the ground it stands against rose 8.7. It is no
 unambiguously the dark shape in its own frame, which is what JUDGE-6 said makes a
 landmark.
 
-## 1b. Defect 2 is **not** fixed, and the reason is structural
+## 1b. Defect 2 is **not** fixed. Two reasons, and both matter
 
-This is the most useful thing in this handover and it should change what the next
-lane does.
+This is the most useful section in this handover and it should change what the
+next lane does.
 
-The cull-range raise landed and moved the numbers barely at all: bare pale ground
-in the mid-band went 37.5% → 36.0%, and the topmost row holding vegetation-dark
-pixels rose from y=364 to y=354. Ten pixels. I went looking for why, and the
-answer is in `scripts/world/world_perimeter.gd`:
+### The cull range is a dead lever, and it was already known to be
+
+The obvious suspect for a "hard vegetation cull line" is `vegetation.json`'s
+`lod_range`, since `vegetation.gd` feeds it to Terrain3D's own
+`instance_geometry_set_visibility_range`. I raised all six content layers (trees
+260→620, and five others), re-baked, re-rendered, and measured: bare pale ground
+in the mid-band moved 37.5% → 36.0%, and the topmost vegetation-dark row rose
+from y=364 to y=354. **Ten pixels.**
+
+The reason is one line in `data/config/performance.json`:
+
+```
+"scatter_lod_ranges": false,
+```
+
+`vegetation.gd` only applies those keys when that flag is on. **Under the shipped
+configuration every `lod_*` value in `vegetation.json` is inert** — it changes no
+frame, in game or in capture. And the flag is false *deliberately*: its own
+comment records PERF-ROG measuring the authored ranges as changing draw calls by
+less than measurement noise, and forcing every range to 20 m as removing only
+5–16%, concluding "the lever works; it is just not where the frames are."
+
+I have **reverted** the raise rather than leave inert config sitting in the file
+looking like a fix. The cost of finding this out was a bake and most of a render
+pass; the finding is written into `vegetation.json` beside the keys so the next
+lane measures instead of re-deriving it, which is exactly what that flag's own
+comment asked for and what I failed to do.
+
+### The bald ground is outside the world
+
+The real cause, from `scripts/world/world_perimeter.gd`:
 
 ```
 ##   south cap   z = +7680,  x: -1024 -> 1024  (past the stronghold)
@@ -129,10 +161,9 @@ frame; it is a **world-extent and composition** problem, and the fix is one of:
 3. Move the Hall north, or re-aim the stand — both design decisions, not this
    lane's to make.
 
-The cull-range raise is kept regardless: it is correct on its own terms, it costs
-no placements, and it will pay off on every stand that looks *along* the corridor
-rather than off its end. But nobody should expect it to fix `H-02b`, and this
-lane should not be read as having fixed defect 2.
+**This lane did not fix defect 2 and must not be read as having done so.** What
+it contributes is the diagnosis: the lever everyone will reach for first is
+switched off on purpose, and the ground in question is not in the world.
 
 ## 2. Where JUDGE-6 is wrong, with the measurement
 
@@ -224,47 +255,38 @@ fog cannot do because fog reaches the building too.
 The jade roof went with it: `MI_RoundTiles` #2a8c94 → #2b423f, killing what the
 judge measured as "the only strongly saturated hue on the whole building".
 
-### 2 — The bald mid-distance *(ranked 2nd)*
+### 2 — The bald mid-distance *(ranked 2nd)* — **not fixed**
 
-**The hard cull line was never a content gap.** The trees past 260 m existed and
-were being distance-culled by `vegetation.gd`'s `lod_range`, which feeds
-Terrain3D's own `instance_geometry_set_visibility_range`. `H-02b`'s subject sits
-165 m from the stand and the horizon runs several hundred metres beyond, so the
-cull was landing in the middle of the chapter's establishing shot. Six layers
-raised — trees 260→620, grove 220→520, rocks 150→360, bushes 110→300,
-saplings/deadfall →320 — with fade margins widened so the new edge is a fade and
-not a second hard line. The five sub-metre ground layers are deliberately not
-raised: a 0.4 m tuft at 300 m is smaller than a pixel and would spend render
-budget for nothing.
+Both attempts failed and both failures are worth more than the attempts. The cull
+range is inert config; the density raise occluded the reveal. See §1b for the
+diagnosis and for what would actually work.
 
 **Band 5's `density_scale` was raised 0.07 → 0.22, rendered, and reverted.**
 Evidence committed as
 `ralph/reports/T1-HALL-4/EVIDENCE-band5-density-0.22-occludes-the-reveal.png`.
+It baked cleanly and then broke the frame it was for: `H-01-approach-400` — the
+400 m reveal, the stand whose entire job is the player first seeing the Hall —
+came back as a **wall of near-field trees with the fortress not visible at all**.
+The judged frame it replaced at least had the fortress in it as a pale nub. That
+is strictly worse on defect 1 in exchange for defect 2, and defect 1 is ranked
+first.
 
-The reasoning for raising it was sound and it baked cleanly (826,892 → 874,616,
-under the guard). Then it broke the frame it was meant to help:
-`H-01-approach-400` — the 400 m reveal, the stand whose entire job is the player
-first seeing the Hall — came back as a **wall of near-field trees with the
-fortress not visible at all**. The judged frame it replaced at least had the
-fortress in it as a pale nub. That is strictly worse on defect 1 in exchange for
-defect 2, and defect 1 is ranked first.
+The mechanism generalises: `trees`' `corridor_fill.trail_bias` is **0.85**, so
+most corridor fill is sited *beside the authored trail* — and every approach
+stand stands on that trail. A band-wide density rise therefore lands hardest on
+exactly the sightlines the region's establishing shots are made of. 0.22 was not
+a badly chosen number; it is the shape of this lever on this band, and any figure
+big enough to fill the mid-distance will also fill the approach.
 
-The mechanism is worth writing down because it generalises: `trees`'
-`corridor_fill.trail_bias` is **0.85**, so most corridor fill is sited *beside
-the authored trail* — and every approach stand stands on that trail. A band-wide
-density rise therefore lands hardest on exactly the sightlines the region's
-establishing shots are made of. That is not a bad choice of number at 0.22; it is
-the shape of this lever on this band, and any figure big enough to fill the
-mid-distance will also fill the approach.
-
-So defect 2 is answered from the other direction only: the cull range, which adds
-far content (small on screen, no sightline cost) and removes the hard line the
-judge actually measured, plus the 61 hand-sited rubble stones at the wall feet.
-If a later lane wants more mid-ground content here, the lever is a per-layer
+If a later lane wants mid-ground content here, the lever is a per-layer
 `band_scale` on `rocks`/`bushes` — ground-hugging species that cannot occlude a
 400 m sightline from an 8 m eye — not the band-wide number, which moves the
 trees. Note that adding `band_scale` to a layer re-rolls that layer's draws
-corridor-wide, so it is not free either.
+corridor-wide, so it is not free either. And note it will still not reach the
+ground past z 7680, because that ground does not exist.
+
+The one thing that did land here: **61 hand-sited rubble stones at the wall
+feet** (defect 13, below).
 
 ### 3 — Stone UV scale and the hard seams *(ranked 3rd)*
 
