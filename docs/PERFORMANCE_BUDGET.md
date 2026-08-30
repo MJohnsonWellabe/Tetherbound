@@ -146,25 +146,38 @@ only way to see whether a density change actually happened.
 
 ### 3.2 All seven authored locations, day and night
 
-`tools/perf_site_survey.gd`, `--label=T1-PERF-2026-08-30`, `main` @
-`1d7fc8e7`. Filling in live as this (slow — see §7's own note on render-tool
-cost in this container) run completes; rows below are committed as they
-land, not held back:
+**Status note (2026-08-30, mid-session):** the rows below labelled
+`PRE-REBAKE` were measured on `main` @ `1d7fc8e7`. Partway through this
+survey, the ground lane landed a terrain regen + full scatter re-bake
+(`main` now at `5d171130`, merged into this branch) that changes instance
+counts world-wide, so those numbers are **superseded as an exact current
+count** — kept only because the density-vs-draw-calls RATIO finding they
+support (§3.1: draw calls barely move when density rises substantially) is
+a methodological point, not a bake-specific one, and re-deriving it after
+every re-bake would waste time better spent on coverage. `stronghold_approach`
+and `warrens_den` — the two locations that actually matter for tonight's
+landing decision (the Hall lane's rebuild reports 2962 draw calls at its own
+`hall_approach` stand, a different camera pose, against the documented 1069
+baseline for `stronghold_approach` — the coordinator needs a same-tree,
+same-tool number to compare against, not a re-guess) — are measured
+**POST-REBAKE**, on current `main` @ `5d171130`, and are the numbers this
+budget actually stands behind.
 
 ```
-view                   time   draw calls     primitives    objects   lights shadowed
-village_high           day          2011       26892017       2214        0        0
-village_high           night        1815       27451889       2018        0        0
-band1_open             day          5712       31587550       4671        0        0
-band1_open             night        5929       29728138       4888        0        0
-band2_stone            day          1319       29522759       1570        0        0
-band2_stone            night        1412       29679136       1663        0        0
-band3_river            day          2516       29609302       2436        0        0
-band3_river            night        2649       29879031       2569        0        0
-band4_ironwood         <pending>
-band5_approach         <pending>
-stronghold_approach    <pending>
-warrens_den            <pending>
+view                   time   draw calls     primitives    objects   lights shadowed   bake
+village_high           day          2011       26892017       2214        0        0   PRE-REBAKE
+village_high           night        1815       27451889       2018        0        0   PRE-REBAKE
+band1_open             day          5712       31587550       4671        0        0   PRE-REBAKE
+band1_open             night        5929       29728138       4888        0        0   PRE-REBAKE
+band2_stone            day          1319       29522759       1570        0        0   PRE-REBAKE
+band2_stone            night        1412       29679136       1663        0        0   PRE-REBAKE
+band3_river            day          2516       29609302       2436        0        0   PRE-REBAKE
+band3_river            night        2649       29879031       2569        0        0   PRE-REBAKE
+band4_ironwood         day           833       28239147       1146        0        0   PRE-REBAKE
+band4_ironwood         night         931       27740757       1243        0        0   PRE-REBAKE
+band5_approach         <not measured this session>
+stronghold_approach    <measuring now, post-rebake, priority>
+warrens_den            <measuring now, post-rebake, priority>
 ```
 
 Zero lights reaching the sampled ground point at every location so far,
