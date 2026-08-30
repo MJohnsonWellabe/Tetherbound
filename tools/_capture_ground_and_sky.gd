@@ -363,6 +363,16 @@ func _run() -> void:
 	#
 	# The full run is still the default and is still what a judged round uses:
 	# a blind critique of a subset is a critique of a subset.
+	## COMMA-SEPARATED, like `--states=` beside it. It was a single substring
+	## until T1-WORLD, and the shape of the problem that changed it is worth
+	## recording: a full board pass is ~75 shots and, measured on this
+	## container, ~50s each -- the readback and PNG encode dominate, not the
+	## render -- so a run that is interrupted or that times out leaves a TAIL
+	## of stands unshot. Recovering three unrelated names (a band, a landmark,
+	## a water body) with a single-substring filter means three separate runs,
+	## and each one pays the world stand-up again, which here is ~11 minutes.
+	## Three boots to re-shoot eighteen frames is most of an hour spent on
+	## nothing. One list-valued flag makes it one boot.
 	var only := ""
 	var states := ""
 	# `--elevated=<metres>` raises the camera and pitches it down at ground a
@@ -397,13 +407,17 @@ func _run() -> void:
 	var wanted_states := PackedStringArray()
 	if states != "":
 		wanted_states = states.split(",", false)
+	var wanted_names := PackedStringArray()
+	if only != "":
+		for piece in only.split(",", false):
+			wanted_names.append(piece.strip_edges())
 	if only != "" or states != "":
 		print("[ground] PARTIAL capture -- only=%s states=%s" % [
 			"*" if only == "" else only, "*" if states == "" else states])
 
 	for band_index in GROUND_VIEWPOINTS.size():
 		var entry: Array = GROUND_VIEWPOINTS[band_index]
-		if only != "" and not (only in str(entry[0])):
+		if not _name_wanted(str(entry[0]), wanted_names):
 			continue
 		var pos := await _arrive_ground(entry)
 		for state: Variant in GROUND_STATES:
@@ -420,24 +434,29 @@ func _run() -> void:
 
 	if landmarks:
 		for entry: Variant in LANDMARK_VIEWPOINTS:
-			if only != "" and not (only in str((entry as Array)[0])):
+			if not _name_wanted(str((entry as Array)[0]), wanted_names):
 				continue
 			await _capture_landmark(entry as Array, wanted_states)
 
 	# The water section is a viewpoint set like any other, so `--only` filters
-	# it the same way rather than always paying for three more bodies.
-	if only == "" or "water" in only or "pond" in only or "river" in only or "stream" in only:
+	# it the same way rather than always paying for three more bodies. The
+	# three bodies' own frame names all begin `water-`, so the generic
+	# name filter covers them; the extra `pond`/`river`/`stream` aliases stay
+	# because they are what a caller naturally types for one body.
+	if _name_wanted("water", wanted_names) or _name_wanted("water-01-pond", wanted_names) \
+			or _name_wanted("water-02-river", wanted_names) \
+			or _name_wanted("water-03-stream", wanted_names):
 		# Reset to day/clear before the water section -- the last ground state
 		# shot may have left the world at night, in rain, or both.
 		_apply_state("day", "clear")
 		for i in STATE_SETTLE_FRAMES:
 			await physics_frame
 
-		if only == "" or "pond" in only or only == "water":
+		if _name_wanted("water-01-pond", wanted_names) or _name_wanted("water", wanted_names):
 			await _capture_pond()
-		if only == "" or "river" in only or only == "water":
+		if _name_wanted("water-02-river", wanted_names) or _name_wanted("water", wanted_names):
 			await _capture_river()
-		if only == "" or "stream" in only or only == "water":
+		if _name_wanted("water-03-stream", wanted_names) or _name_wanted("water", wanted_names):
 			await _capture_stream()
 
 	print("")
@@ -612,6 +631,20 @@ func _capture_landmark(entry: Array, wanted_states: PackedStringArray) -> void:
 			await process_frame
 		await RenderingServer.frame_post_draw
 		_capture("%s-%s" % [name, str((state as Array)[0])])
+
+
+## True when `name` should be shot given `--only=`. An empty filter wants
+## everything, which keeps a default run byte-identical to what it was before
+## the filter became list-valued. Each entry is still a SUBSTRING, not an exact
+## name, so every single-value `--only=` a caller has in a shell history keeps
+## meaning exactly what it did.
+func _name_wanted(name: String, wanted: PackedStringArray) -> bool:
+	if wanted.is_empty():
+		return true
+	for piece: String in wanted:
+		if piece != "" and piece in name:
+			return true
+	return false
 
 
 func _state_wanted(state: Array, wanted: PackedStringArray) -> bool:
