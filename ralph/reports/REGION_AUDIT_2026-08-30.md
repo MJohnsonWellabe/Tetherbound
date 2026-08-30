@@ -380,3 +380,37 @@ restating their coordinates, so it cannot silently drift from the world it
 measures. Every metre in this report came out of it; every file reference was
 read directly. No claim here rests on a rendered frame, and none should be read
 as one.
+
+---
+
+## Coordinator correction — 2026-08-30, appended after the audit was written
+
+**This audit was run against `main`, and a large amount of relevant content was
+in flight on unlanded lane branches at the time. Two classes of finding are
+therefore stale on arrival. The audit is not wrong about what it measured; it
+measured a world that was already being changed.**
+
+**1. Optional activities.** The audit reports one `local` objective in the whole
+game. `ralph/T3-ACTIVITIES` has since built **five more** — Meadowhart Herd,
+Broken Cart, Night Watch, River Nest and Lost Creature — each played-path
+verified in `tests/smoke_local_requests.gd`. That takes the chapter from 1 to 6
+against the spec's 6-10 band. Every "zero tracked optional objectives" and
+"spec §6's X is unimplemented" line in this document must be re-checked against
+that branch before being actioned. In particular **Night Watch and River Nest,
+named as unimplemented in bands 0/1 and 3, now exist.**
+
+**2. Anything visual.** Repeated "visual read not judged — no frames" notes are
+correct as written; the audit was told not to spend its budget on captures.
+Those belong to the blind judge, not here.
+
+**What is NOT invalidated, and is the real value of this document:** the
+measured cadence failures (band 3's 668 m dead opening and 1187 m of 2375 m
+structurally empty; band 4's 1161 m), the non-interactable camp defect across
+bands 1/2/3, band 3's resource-tier regression, the trainer clustering, and the
+zero-night-spawn finding for bands 0/1. Those are measurements against real
+placement data and stand regardless of what lands.
+
+The lesson for future audit lanes, which is the coordinator's error and not the
+auditor's: an audit run during heavy parallel work must be pointed at the
+in-flight branches as well as `main`, or it will faithfully measure a world
+nobody is going to ship.
