@@ -436,8 +436,14 @@ Godot until `godot --headless --path . --import` was re-run — overwriting
 a `.glb` on disk leaves its stale `.godot/imported/` cache alone, exactly
 the trap `ralph/conventions.md`'s art-pipeline section already documents.
 The first `smoke_art.gd` run after installing still reported "bramblebun
-has no AnimationPlayer" against the OLD cached import; re-importing and
-re-running fixed it. Recorded here since it will bite the next person who
+has no AnimationPlayer" against the OLD cached import; re-importing fixed
+that specific defect (confirmed: the re-run's world-build log is clean
+and the "no AnimationPlayer" warning is gone). `smoke_art.gd` itself could
+not be run to completion in this container even after that fix — see the
+handover's own Tests section for the full account and the substitute
+verification (`tools/preview_creatures.gd`, real creature staging with no
+full-world boot, all 25 species including the five rigged this pass).
+Recorded here since the import-cache trap will bite the next person who
 overwrites a creature `.glb` mid-session too.
 
 Full account: `ralph/reports/handover-T1-CREATURE-RIG-2026-08-30.md`.

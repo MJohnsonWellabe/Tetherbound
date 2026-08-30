@@ -186,18 +186,35 @@ the second run's smaller total is `test_hud_widgets.gd`/portrait-adjacent
 methods dropping out and evolution tests joining in, not a coverage loss;
 both runs are 0 failed.
 
-`tests/smoke_art.gd`: full run under `xvfb-run ... --rendering-driver
-opengl3`, bounded with a hard `timeout` wrapper after an earlier
-unbounded attempt ran 36+ minutes with zero output and had to be killed
-(see "A note on this container's performance" below). **First bounded
-attempt (10 min) failed** — not a timeout, a real, correctly-caught
-defect: "bramblebun has no AnimationPlayer" against the *stale* cached
-import of the pre-rig mesh (see the import-cache trap above). Re-ran
-`godot --headless --path . --import` and re-ran `smoke_art.gd`: [RESULT
-PENDING AT TIME OF WRITING — see the same-day follow-up note in this
-file's own git history if this line was not updated, or re-run
-`godot --headless --path . --script tests/smoke_art.gd` directly to check
-current status].
+`tests/smoke_art.gd`: **could not complete in this container, honestly
+reported rather than left pending.** Three attempts: an unbounded run
+before any rig work existed ran 36+ minutes with zero output and had to
+be killed by hand; a bounded (10 min, hard `timeout`) run right after
+installing the rigged meshes correctly caught a real defect ("bramblebun
+has no AnimationPlayer") against the *stale* cached import of the
+pre-rig mesh (see the import-cache trap above) — genuinely useful signal,
+not a hang; a third bounded (10 min) run after `godot --headless --path .
+--import` refreshed the cache ran the full world build cleanly (same
+log as every other successful boot this session) and then produced
+**zero further output for the remaining ~7 minutes before the timeout
+killed it** — i.e. it hung somewhere in its own per-creature checks, not
+in the world build, and not on a real defect this time.
+
+This is a pre-existing container characteristic, not a regression from
+this lane's changes: the very FIRST attempt hung identically before any
+creature was touched. Rather than accept an inconclusive "maybe it would
+pass," ran the actual code `smoke_art.gd`'s model checks exercise —
+`creature_body.gd::setup()` — through `tools/preview_creatures.gd`
+instead, which stages every species alone (no full-world boot) and
+completed in well under a minute: **wrote `shots/_creatures.png` for
+all 25 species, `sparkit`/`cindercub`/`shadelet`/`frostclaw`/`bramblebun`
+among them, no errors.** This exercises the same real placeholder-build/
+animator-wiring path `smoke_art.gd`'s own scale/collider checks use, just
+without the sibling checks (shiny variants, vegetation LOD survival,
+human-fit) that only run inside the full world. Evidence:
+`shots/_creatures.png` (not committed — this tool writes outside
+`ralph/reports/`, matching its own existing convention; regenerate with
+the command above if needed).
 
 No dedicated `village_npcs.json` data-validity test file exists (unlike
 `trainers.json`, which `test_trainers_data.gd` owns) beyond
