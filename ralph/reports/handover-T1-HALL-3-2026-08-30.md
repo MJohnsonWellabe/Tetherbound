@@ -586,3 +586,36 @@ Corollary already noted in §8 and worth repeating here because it caused two of
 those wrong arguments: **a green-pixel ratio is a test for exposure, not for
 vegetation.** The day and golden frames of this stand scored 5.5% and 55% off
 identical bare ground.
+
+## 10. The frame set, and its provenance
+
+`ralph/reports/T1-HALL-3/shots/` — eleven frames, the design §10 stands.
+All eleven passed `tools/capture_check.gd` at the shutter with no failures.
+
+**Provenance, stated because evidence should say where it came from.** Eight
+frames are from one full pass; the three `H-03-*` variants were re-shot
+afterwards with `--only=H-03` once the causeway footprints were sized correctly
+(§9). Nothing else changed between the two runs, and the only thing the
+footprint sizing can affect is causeway vegetation — which appears in no other
+stand's foreground. If a reviewer wants a single-run set, one full pass
+reproduces it with the command in §4.
+
+**D11 is partially fixed, and the remainder is a deliberate trade.** The
+elevated deck is clear. Plants still stand on the *near* deck, around the
+coordinates JUDGE-5 named — because removing them is what strips the foreground
+planting the same judge counted as a gain, proven three times over in §9. D11
+ranks 15th of 16; the planting is named as one of the rebuild's real
+improvements. Anyone who disagrees can move the footprint run down to z 7510 in
+one config line, and should look at the near bank afterwards before believing it
+worked.
+
+### Final numbers, against the frames JUDGE-5 actually read
+
+| Defect | Before | After | |
+|---|---|---|---|
+| **D1** gate mouth | 45.8% near-black, 0.1% sky | **9.2% / 18.6%** | a real frame of the gate |
+| **D6** banner cloth | (160,51,62), blue **above** green | **(139,60,45)**, blue below green | magenta → oxblood |
+| **D8** wall strip | 17.8% sky-like pixels | **0.0%** | the hole is closed |
+| **D2** oxblood in the arena | 2,227 px (her magenta hair) | **101,222 px** (faction banners) | the room is held |
+| **D5** wall patch std-dev | 27.6 | 27.8 | **NOT fixed** — 0.2 is noise |
+| **draw calls** | 2743 → 2665 (T1-PERF) | **3048** | ceiling 4000 |
