@@ -2,15 +2,15 @@
   "_comment": "BAND-SPLIT-2. This band's own dialogue container -- see band1_lower_meadows.json in this same directory for the full reasoning. Same `{\"conversations\": {...}}` shape as opening.json/village.json/trainers.json/relay.json/stronghold.json/meadows_freed.json, merged onto the same table by scripts/story/dialogue_runner.gd::table() (EXTRA_DIALOGUE_PATHS).",
   "conversations": {
     "lost_creature_rue_challenge": {
-      "speaker": "Rue",
+      "speaker": "Tether Patrol",
       "portrait": "res://assets/ui/portraits/trainer.png",
-      "_comment": "T3-ACTIVITIES, spec sec6's 'Lost Creature: track and recover a villager's missing bonded Creature'. Same one-character-is-the-giver shape Old Bram established: the first line is the flag `revealed_by` waits on, and it names whose creature this is.",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Lost Creature: track and recover a villager's missing bonded Creature'. Same one-character-is-the-giver shape Old Bram established: the first line is the flag `revealed_by` waits on, and it names whose creature this is. CI-TRAINER-CENSUS, 2026-08-30: this was originally an unrelated poacher named 'Rue'. Rewritten as Team Tether -- band4_upper_meadows_ironwood/trainers.json's own `_comment_ci_trainer_census` on `lost_creature_rue` has the full reasoning, but the short version is that Team Tether taking a bonded creature for 'instrumentation' fits the faction's established MO (Farro's own 'Company equipment, Company business' in Band 2, the relay captive, the machine under the Hall) at least as well as an unrelated poacher did, and it let this fight reuse the 'Tether Patrol' identity Band 4 already has instead of adding a new one.",
       "lines": [
         {
-          "text": "That's far enough. Whatever the Pasture Drover told you, that Meadowhart's mine now -- finders keepers, out here.",
+          "text": "That's far enough. Company's requisitioning anything that walks off unclaimed ground, and that Meadowhart wandered plenty far.",
           "effect": "flag:lost_creature_rue_met"
         },
-        "It wandered off her land and I caught it fair. If you want to argue the point, argue it with my team instead.",
+        "Filed as strayed livestock the moment it crossed our line. If you want to argue the paperwork, argue it with my team instead.",
         {
           "text": "Come on, then.",
           "effect": "battle:lost_creature_rue"
@@ -18,11 +18,11 @@
       ]
     },
     "lost_creature_rue_defeated": {
-      "speaker": "Rue",
+      "speaker": "Tether Patrol",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "All right, all right. Fair's fair -- you beat me for it.",
-        "It's not tacked up or trained to anyone; it'll walk straight home if you point it that way. Tell her it wasn't hurt."
+        "All right, all right. Keep the paperwork if you want it that badly.",
+        "It's not tacked up or trained to anyone here; it'll walk straight home if you point it that way. Tell her Company regrets nothing, if she asks."
       ]
     }
   }

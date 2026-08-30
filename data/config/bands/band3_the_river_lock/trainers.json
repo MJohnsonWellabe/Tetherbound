@@ -230,36 +230,7 @@
       "defeat_flag": "defeated_captain_riverwatch",
       "rechallenge": false,
       "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
-    },
-    {
-      "order": 3000,
-      "id": "river_nest_doss",
-      "name": "Doss",
-      "config_key": "villager_ranger",
-      "hair": {
-        "visible": true,
-        "color": "#4a5c3d"
-      },
-      "_comment": "T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. A civilian ranger rather than Team Tether -- no `rank` -- reusing the villager_ranger rig Sela already wears (CLAUDE.md: reuse before generating), differentiated by hair colour the same way Old Bram was differentiated from every other villager_farmer.",
-      "position": [66.0, 3988.0],
-      "facing_deg": 30.0,
-      "_why_here": "Between the relay picket line (z 3680-3763) and Captain Riverwatch (z 4350, x -100), on a stretch of the river the spine passes but does not stop at. Ground-checked flat with tools/_probe_activities_sites.gd (worst local slope 3.1 degrees over a 3m pad); no authored content within 20m.",
-      "challenge": "river_nest_doss_challenge",
-      "defeated": "river_nest_doss_defeated",
-      "team": [
-        {"species": "paddlenewt", "level": 13},
-        {"species": "galecrest", "level": 14}
-      ],
-      "_why_team": "Water and Air, exactly the pair spec sec6 names, both already resident to Band 3 (spawns.json). Levels sit near the band's own team-exit level (13) rather than its ceiling -- this is a worthwhile detour, not the region's hardest fight.",
-      "reward": {
-        "coins": 45,
-        "items": [
-          {"id": "potion_large", "count": 1}
-        ],
-        "flags": []
-      },
-      "defeat_flag": "defeated_river_nest_doss",
-      "rechallenge": false
     }
-  ]
+  ],
+  "_comment_river_nest_doss": "CI-TRAINER-CENSUS, 2026-08-30. `river_nest_doss` (order 3000) briefly lived here as Band 3's 'River Nest' Local Request -- spec sec6's 'aggressive Water/Air creatures block a fishing location', with Doss's own paddlenewt/galecrest team standing for the pair. It was removed the same day it was added: it was the third brand-new distinct trainer opponent T3-ACTIVITIES tried to add in one pass, and `tests/test_chapter_content_map.gd::test_the_chapter_fields_the_number_of_trainers_it_is_aiming_for` caps the chapter at 24 distinct opponents with no headroom left (see that test's own header on why the ceiling is the wrong lever to move). Doss still exists -- same site, same character, same reward -- as a gather-and-give NPC built by `scripts/world/river_nest_clear.gd` instead of a trainers.json row; see that file's header for the full reasoning."
 }

@@ -164,7 +164,7 @@
       "id": "pasture_drover_juno",
       "name": "Juno",
       "config_key": "villager_ranger",
-      "_comment": "T3-BAND4. ralph/reports/finding-post-tournament-cadence-2026-08-29.md named an 818m authored-content gap right before Captain Halder (trainers.json order 11, Ground-focused, high pasture at 170,5590) -- the last stretch before the first of the three captains had nothing to prepare with. docs/owner-direction/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 9 wants every captain to close a learn-prepare-challenge loop; a wayside trainer whose own team is Halder's own species one level down is a warm-up fight a player can read as practice for the real one. Independent (no `rank`), matching Bryn/Mira/Oskar/Tam's convention rather than another Team Tether grunt -- patrol_ridgeline already covers this band's one Team Tether beat, and spec section 3 Band 4 names a 'trainer road' as its own separate identity feature, distinct from the patrol-camp one. Spends no new mesh: `config_key: villager_ranger` reuses the same installed rig `data/config/art.json` already gives every wayside villager trainer, matching Oskar/Tam's own `villager_keeper`/`villager_smith` pattern -- an outdoor herder's config for an outdoor herder, not a new character.",
+      "_comment": "T3-BAND4. ralph/reports/finding-post-tournament-cadence-2026-08-29.md named an 818m authored-content gap right before Captain Halder (trainers.json order 11, Ground-focused, high pasture at 170,5590) -- the last stretch before the first of the three captains had nothing to prepare with. docs/owner-direction/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 9 wants every captain to close a learn-prepare-challenge loop; a wayside trainer whose own team is Halder's own species one level down is a warm-up fight a player can read as practice for the real one. Independent (no `rank`), matching Bryn/Mira/Oskar/Tam's convention rather than another Team Tether grunt -- patrol_ridgeline was this band's one Team Tether beat at the time this entry was written (CI-TRAINER-CENSUS, 2026-08-30 later added a second, `lost_creature_rue`, reusing patrol_ridgeline's own 'Tether Patrol' identity rather than a new one -- see that entry's own comment), and spec section 3 Band 4 names a 'trainer road' as its own separate identity feature, distinct from the patrol-camp one. Spends no new mesh: `config_key: villager_ranger` reuses the same installed rig `data/config/art.json` already gives every wayside villager trainer, matching Oskar/Tam's own `villager_keeper`/`villager_smith` pattern -- an outdoor herder's config for an outdoor herder, not a new character.",
       "position": [
         -225.0,
         5400.0
@@ -201,13 +201,10 @@
     {
       "order": 4002,
       "id": "lost_creature_rue",
-      "name": "Rue",
-      "config_key": "villager_keeper",
-      "hair": {
-        "visible": true,
-        "color": "#2e2a24"
-      },
-      "_comment": "T3-ACTIVITIES, spec sec6's 'Lost Creature: track and recover a villager's missing bonded Creature'. A poacher rather than Team Tether -- no `rank` -- reusing the villager_keeper rig Oskar/Bram/Kell already wear, differentiated by hair colour the same way every other reused-rig NPC in this chapter is.",
+      "name": "Tether Patrol",
+      "rank": "grunt",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Lost Creature: track and recover a villager's missing bonded Creature'.",
+      "_comment_ci_trainer_census": "CI-TRAINER-CENSUS, 2026-08-30. Originally authored as 'Rue', a poacher with no `rank`, wearing the villager_keeper rig (config_key/hair, since removed). `tests/test_chapter_content_map.gd::test_the_chapter_fields_the_number_of_trainers_it_is_aiming_for` caps the chapter at 24 distinct trainer opponents, on purpose, and the chapter was already at that ceiling with no headroom before this lane's three new Local Request fights. Reframed as Team Tether instead -- they requisition the stolen Meadowhart for instrumentation, which fits the faction's established pattern (Farro's own 'Company equipment, Company business' in Band 2, the relay captive, the machine under the Hall) at least as well as an unrelated poacher did -- and given `rank: grunt` and `name: 'Tether Patrol'`, reusing the exact identity `patrol_ridgeline` (order 4000, this same file) already carries. No new mesh either way: both entries already reused Team Tether's own rank-based rig convention (`patrol_ridgeline`'s own `_comment`: 'Team Tether ranks reuse the Warden's rig geometry until NP4-rig installs a dedicated grunt body'); this only removes the `config_key`/`hair` override that gave Rue her own separate look.",
       "position": [-300.0, 5870.0],
       "facing_deg": 160.0,
       "_why_here": "Deep in the ironwood stand between Captain Halder (z 5590) and Captain Vess (z 6460) -- off the spine, the kind of ground a stolen creature would actually be kept out of sight on. Ground-checked flat with tools/_probe_activities_sites.gd (worst local slope 12.3 degrees over a 3m pad); no authored content within 20m.",
@@ -217,7 +214,7 @@
         {"species": "burrowback", "level": 14},
         {"species": "trailpup", "level": 15}
       ],
-      "_why_team": "Rue's own guard creatures, not the stolen Meadowhart -- the player is not asked to fight the animal they are here to recover. Both species are already resident to Band 4 (spawns.json); levels sit mid-band, inside chapter_curve.json's [13,16] floor/ceiling for this region.",
+      "_why_team": "The patrol's own creatures, not the stolen Meadowhart -- the player is not asked to fight the animal they are here to recover. Both species are already resident to Band 4 (spawns.json); levels sit mid-band, inside chapter_curve.json's [13,16] floor/ceiling for this region.",
       "reward": {
         "coins": 50,
         "items": [

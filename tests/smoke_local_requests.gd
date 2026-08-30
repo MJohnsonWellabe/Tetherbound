@@ -16,15 +16,25 @@ extends SceneTree
 ##   - talking to them reaches the real `battle:`/`give:`/`flag:` effects
 ##     through the real dialogue panel and sequence_director drain, the same
 ##     path `smoke_village_smith.gd` proved for Tam's tool handover
-##   - for the three combat activities, the fight actually RUNS through the
-##     real encounter_director/combat_manager pipeline and can be WON (the
-##     same HP-floor allowance `smoke_boss.gd`/`smoke_trainer_battle.gd`
-##     make for the same reason: this is about wiring, not balance)
+##   - for the two combat activities (Night Watch, Lost Creature), the fight
+##     actually RUNS through the real encounter_director/combat_manager
+##     pipeline and can be WON (the same HP-floor allowance
+##     `smoke_boss.gd`/`smoke_trainer_battle.gd` make for the same reason:
+##     this is about wiring, not balance); River Nest and Broken Cart drive
+##     the real `item_gate.gd` contract instead (empty-handed refusal, then a
+##     paid hand-over), the same shape `test_item_cache_pickup.gd` proves for
+##     the mechanism in isolation
 ##   - beating/finishing each one sets the real defeat/completion flag and
 ##     pays the real reward
 ##   - and `scripts/world/quest_log.gd` -- the actual HUD/log reader, not a
 ##     restatement of its rules -- reports each Local Request as done once
 ##     its own flag is set, having been invisible before that
+##
+## CI-TRAINER-CENSUS, 2026-08-30: River Nest was originally a third combat
+## activity (`_play_local_trainer` on `river_nest_doss`, the same shape Night
+## Watch and Lost Creature still use). It moved to the item_gate shape when
+## `river_nest_doss` was pulled out of trainers.json entirely -- see
+## `scripts/world/river_nest_clear.gd`'s own header for why.
 ##
 ## Deliberately does NOT walk the player to any of these five: the button-to-
 ## prompt half is smoke_opening.gd's job and is unrelated to what these five
@@ -115,12 +125,6 @@ func _night_watch() -> void:
 	await _play_local_trainer(
 		"night_watch_farro", "night_watch_farro_challenge",
 		"defeated_night_watch_farro", "night_watch_farro_met", "band2_night_watch")
-
-
-func _river_nest() -> void:
-	await _play_local_trainer(
-		"river_nest_doss", "river_nest_doss_challenge",
-		"defeated_river_nest_doss", "river_nest_doss_met", "band3_river_nest")
 
 
 func _lost_creature() -> void:
@@ -295,6 +299,61 @@ func _meadowhart_herd() -> void:
 	var after_local := _local_entry("band1_meadowhart_herd", progression)
 	if not after_local.get("present", false) or not bool(after_local.get("done", false)):
 		_fail("meadowhart_herd: the Local Request never reads done in quest_log after the sighting")
+
+
+## --- River Nest: the real item_gate contract, on a gather-and-give NPC -------
+
+func _river_nest() -> void:
+	var doss := _world.get_node_or_null(^"RiverNestClear")
+	if doss == null or not is_instance_valid(doss):
+		_fail("river_nest: not placed anywhere in the real world")
+		return
+
+	var progression := _progression()
+	var inventory := _inventory()
+	if bool(progression.call("has", "river_nest_doss_cleared")):
+		_fail("river_nest: already cleared before this test touched it")
+		return
+
+	# Empty-handed: the real gate must refuse, but the meeting must still be
+	# recorded so the Local Request is revealed in the log.
+	doss.call("_on_greeted")
+	if not bool(progression.call("has", "river_nest_doss_met")):
+		_fail("river_nest: greeting Doss empty-handed did not set 'river_nest_doss_met'")
+	if bool(progression.call("has", "river_nest_doss_cleared")):
+		_fail("river_nest: the gate opened with no materials handed over at all")
+	var after_meeting := _local_entry("band3_river_nest", progression)
+	if not after_meeting.get("present", false):
+		_fail("river_nest: the Local Request never appeared in the log after the first greeting")
+	elif bool(after_meeting.get("done", false)):
+		_fail("river_nest: the Local Request reads done before any material was handed over")
+
+	# Now the real gather verb and the real reward payout.
+	var coins_before := int(inventory.call("count", "coin"))
+	var potions_before := int(inventory.call("count", "potion_large"))
+	var wood_before := int(inventory.call("count", "wood"))
+	var fiber_before := int(inventory.call("count", "fiber"))
+	inventory.call("add", "wood", 1)
+	inventory.call("add", "fiber", 1)
+
+	doss.call("_on_greeted")
+
+	if not bool(progression.call("has", "river_nest_doss_cleared")):
+		_fail("river_nest: handed over wood/fiber and the gate still did not open")
+		return
+	if int(inventory.call("count", "wood")) != wood_before or \
+			int(inventory.call("count", "fiber")) != fiber_before:
+		_fail("river_nest: the gate opened but did not consume exactly what was handed over")
+	if int(inventory.call("count", "coin")) != coins_before + 45:
+		_fail("river_nest: expected +45 coin, got %d -> %d" % [
+			coins_before, int(inventory.call("count", "coin"))])
+	if int(inventory.call("count", "potion_large")) != potions_before + 1:
+		_fail("river_nest: expected +1 potion_large, got %d -> %d" % [
+			potions_before, int(inventory.call("count", "potion_large"))])
+
+	var after_clear := _local_entry("band3_river_nest", progression)
+	if not after_clear.get("present", false) or not bool(after_clear.get("done", false)):
+		_fail("river_nest: the Local Request never reads done in quest_log after clearing it")
 
 
 ## --- Broken Cart: the real item_gate contract, empty-handed then paid -------

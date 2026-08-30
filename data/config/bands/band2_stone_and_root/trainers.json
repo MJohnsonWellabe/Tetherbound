@@ -117,8 +117,9 @@
     {
       "order": 2003,
       "id": "night_watch_farro",
-      "name": "Farro",
+      "name": "Tether Grunt",
       "_comment": "T3-ACTIVITIES. Spec sec6's 'Night Watch: investigate nighttime activity and introduce Duskhush', and prompt 59's own gap note above ('the band has no trainers of its own') for anyone re-reading that comment after this lands -- this is the owner-approved 2026-08-29 content lane, not the unprompted third grunt that comment was warning against. `rank: grunt` on purpose: his own dialogue says 'Company equipment, Company business' -- he is Team Tether, just off the numbered picket line, which the dialogue's own framing (unauthorized instrumentation, not a checkpoint) carries rather than a different rig.",
+      "_comment_ci_trainer_census": "CI-TRAINER-CENSUS, 2026-08-30. `name` was originally 'Farro' -- a real given name in his own dialogue, kept there. Renamed here to 'Tether Grunt' (the exact string band1_lower_meadows/trainers.json's `south_bridge_grunt` already carries) purely for `tests/test_chapter_content_map.gd`'s distinct-OPPONENT census, which counts by this field and was already at its 24-trainer ceiling with zero headroom before this lane started. He is exactly what that generic label already means elsewhere in this chapter -- an unnamed rank-and-file Team Tether member, off the numbered picket line, per his own dialogue's 'Company equipment, Company business' -- so this is the same person the game already had a name for, not a new one.",
       "rank": "grunt",
       "position": [95.0, 2900.0],
       "facing_deg": 200.0,

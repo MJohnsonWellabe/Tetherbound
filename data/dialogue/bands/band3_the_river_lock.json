@@ -4,24 +4,17 @@
     "river_nest_doss_challenge": {
       "speaker": "Doss",
       "portrait": "res://assets/ui/portraits/trainer.png",
-      "_comment": "T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. Same one-character-is-the-giver shape Old Bram established: the first line is the flag `revealed_by` waits on.",
+      "_comment": "CI-TRAINER-CENSUS, 2026-08-30. T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. No `flag:`/`give:` effect here on purpose -- `river_nest_clear.gd` owns the actual gather-and-hand-over check (item_gate.gd, the same contract cart_repair.gd uses for Broken Cart) and only opens the dialogue panel to report the result; this is what a player sees before they are carrying everything. Same one-character-is-the-giver shape Old Bram established: the first line is the flag `revealed_by` waits on.",
       "lines": [
-        {
-          "text": "Don't bother casting past the bend. Been trying to get that pair to settle for a week and they've decided the whole nest is theirs now.",
-          "effect": "flag:river_nest_doss_met"
-        },
-        "Every line I put in the water they take as a challenge. If you can put them in their place, the fishing's yours again -- and I'd genuinely like to see it done.",
-        {
-          "text": "Go on, then. Show me.",
-          "effect": "battle:river_nest_doss"
-        }
+        "Don't bother casting past the bend. Been trying to get that pair to settle for a week and they've decided the whole nest is theirs now.",
+        "Driftwood stakes and good lashings would pen them back out of the shallows -- wood and fiber, if you've got some to spare. I'd genuinely like to see the spot open again."
       ]
     },
     "river_nest_doss_defeated": {
       "speaker": "Doss",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Ha! That's the first quiet water I've seen off that bend all week.",
+        "That'll hold them. First quiet water I've seen off that bend all week.",
         "Cast wherever you like now. I mean it -- you earned the spot more than I did."
       ]
     }

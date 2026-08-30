@@ -201,17 +201,17 @@
     },
     {
       "id": "band3_river_nest",
-      "flag_id": "defeated_river_nest_doss",
+      "flag_id": "river_nest_doss_cleared",
       "revealed_by": "river_nest_doss_met",
       "label": "Clear whatever is blocking Doss's fishing spot.",
-      "_comment": "T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. Doss's own team IS the aggressive pair; the fight itself opens the spot back up."
+      "_comment": "T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. CI-TRAINER-CENSUS, 2026-08-30: originally a trainer battle whose team WAS the aggressive pair; rebuilt as a gather-and-give resolution (scripts/world/river_nest_clear.gd, item_gate.gd) to stay under the chapter's 24-distinct-trainer ceiling -- see that script's header. `flag_id` is item_gate's own flag, set the moment wood/fiber are handed over, same shape as `band1_broken_cart`."
     },
     {
       "id": "band4_lost_creature",
       "flag_id": "defeated_lost_creature_rue",
       "revealed_by": "lost_creature_rue_met",
-      "label": "Get the stolen Meadowhart back from Rue.",
-      "_comment": "T3-ACTIVITIES, spec sec6's 'Lost Creature: track and recover a villager's missing bonded Creature'. Rue's challenge line names whose creature it is; beating her is the recovery."
+      "label": "Get the stolen Meadowhart back from Team Tether.",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Lost Creature: track and recover a villager's missing bonded Creature'. The challenge line names whose creature it is; beating the patrol is the recovery. CI-TRAINER-CENSUS, 2026-08-30: label updated from 'Rue' to 'Team Tether' -- the trainer's own `name`/`speaker` moved to 'Tether Patrol' (band4_upper_meadows_ironwood/trainers.json's `_comment_ci_trainer_census`); `id`/`flag_id` are unchanged bookkeeping."
     }
   ],
   "_comment_chain": "CHAPTER-OBJECTIVES (prompt 68). This list was TWO entries -- the village gate and the Upper Meadows captains -- for a 3-4 hour chapter, so everything between the opening and Band 4 (the South Bridge, the quarry, the warrens, the captive, the relay, the crossing) and everything after the captains (the Hall, the Warden, the machine) was untracked. A player who put the game down mid-chapter had no line telling them what they were in the middle of. The eleven entries below are all built from flags the game ALREADY sets -- no new boolean was invented for any of them, per the prompt's 'avoid redundant booleans where real game state can answer completion' -- and the architecture is untouched: still DONE-or-not-yet, still first-unset-in-file-order for the tracked line, still no prerequisites and no branching (spec sec19 and CLAUDE.md both ban a quest engine).",

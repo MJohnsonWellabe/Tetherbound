@@ -51,9 +51,9 @@
       ]
     },
     "night_watch_farro_challenge": {
-      "speaker": "Farro",
+      "speaker": "Tether Grunt",
       "portrait": "res://assets/ui/portraits/trainer.png",
-      "_comment": "T3-ACTIVITIES, spec sec6's 'Night Watch: investigate nighttime activity and introduce Duskhush'. Old Bram's own shape reused rather than a separate giver NPC: the first line is the flag `revealed_by` waits on (a player who has not walked up on him at night has not found the activity yet, same as Old Bram staying out of the log until met), and the fight itself is the introduction -- Farro's team is the flavour text.",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Night Watch: investigate nighttime activity and introduce Duskhush'. Old Bram's own shape reused rather than a separate giver NPC: the first line is the flag `revealed_by` waits on (a player who has not walked up on him at night has not found the activity yet, same as Old Bram staying out of the log until met), and the fight itself is the introduction -- his team is the flavour text. CI-TRAINER-CENSUS, 2026-08-30: speaker/`name` moved from 'Farro' to 'Tether Grunt' (band2_stone_and_root/trainers.json's own `_comment_ci_trainer_census`); the dialogue keeps its own voice unchanged.",
       "lines": [
         {
           "text": "Not authorised past this line after dark. Company equipment, Company business.",
@@ -67,7 +67,7 @@
       ]
     },
     "night_watch_farro_defeated": {
-      "speaker": "Farro",
+      "speaker": "Tether Grunt",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "Fine. FINE. Not like the readings were any good with you standing in them anyway.",
