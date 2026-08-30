@@ -22,6 +22,7 @@ extends Node3D
 ## on this either. The pile/mound IS the affordance.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 
@@ -78,6 +79,11 @@ func setup(spec: Dictionary) -> void:
 	add_child(_prompt)
 
 	add_child(_build_visual())
+	# OP-0830-3. A felled pile is the single most grass-lost pickup in the game:
+	# it is created wherever the tree happened to fall, at ankle height, in
+	# whatever cover is already there. Same shared treatment as every other
+	# pickup -- see scripts/world/pickup_glow.gd.
+	PICKUP_GLOW.attach(self, _pile_colour())
 
 
 ## Read-only identity for a controller route that must collect the specific
@@ -270,7 +276,18 @@ func _on_gathered() -> void:
 	var vegetation := get_parent()
 	if vegetation != null and vegetation.has_method("clear_felled") and not _felled_key.is_empty():
 		vegetation.call("clear_felled", _felled_key)
+	PICKUP_GLOW.detach(self)
 	queue_free()
+
+
+## What the pile is made of, for the shared highlight's tint. Falls back to the
+## rubble grey this file already uses when the item database is unavailable.
+func _pile_colour() -> Color:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return RUBBLE_COLOUR
+	var items: RefCounted = game.get("items")
+	return items.call("colour", _item_id) if items != null else RUBBLE_COLOUR
 
 
 func _ready() -> void:

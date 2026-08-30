@@ -11,6 +11,7 @@ extends Node3D
 ## seed spots or disappear — either is fine, nothing else depends on them.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
@@ -117,6 +118,13 @@ func _build_visual() -> void:
 	else:
 		_visual = _box_visual()
 	add_child(_visual)
+	# OP-0830-3. Attached to `_visual` rather than to `self` on purpose: a
+	# gathered node hides its visual and keeps the script alive for the respawn
+	# timer (`_process` below), so `_visual` is the node whose visibility
+	# actually answers "is there something here to pick up right now" -- and
+	# pickup_glow.gd tracks that, so a depleted node stops glowing and a
+	# respawned one starts again with no extra wiring on either side.
+	PICKUP_GLOW.attach(_visual, _item_colour())
 
 
 ## MAT-BLOCKOUT. The Old Quarry's rootstone deposits (`Rock_Medium_1/3.gltf`,

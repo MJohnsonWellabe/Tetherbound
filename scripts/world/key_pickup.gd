@@ -8,6 +8,8 @@ extends Node3D
 ## not this script.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+## OP-0830-3: the one shared pickup highlight. See scripts/world/pickup_glow.gd.
+const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 
 const FLAG_PREFIX := "pickup:"
 ## Compatibility for saves written before physical pickups recorded their own
@@ -49,6 +51,15 @@ func setup(item_id: String, label: String, shape: String = "key") -> void:
 	# "key" shape; "stone" is round and does not care.
 	rotation.y = deg_to_rad(50.0)
 	_build_visual()
+	# OP-0830-2/OP-0830-3. Four blind rounds of shape, scale, metallic and
+	# emission work on this prop (see `_build_visual()`'s own comments) each
+	# ended with a critic calling it a small smear at range -- because every one
+	# of them was trying to make an 18cm object legible in a meadow using the
+	# object itself. The shared highlight is the lever those rounds kept naming
+	# and none of them had: it does not depend on the key's silhouette, its
+	# material, or the Compatibility renderer's ambient, and it is the SAME cue
+	# the player learns on every other pickup in the game.
+	PICKUP_GLOW.attach(self, _item_colour())
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
 	_prompt.position = Vector3.UP * 0.6
@@ -87,6 +98,7 @@ func restore_progression_from_game(game: Node) -> void:
 func _deactivate() -> void:
 	if _prompt != null and is_instance_valid(_prompt):
 		_prompt.call("set_enabled", false)
+	PICKUP_GLOW.detach(self)
 	visible = false
 	queue_free()
 
