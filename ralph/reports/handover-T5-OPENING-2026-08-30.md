@@ -7,7 +7,9 @@ played-path measurement below was re-run on the merged tree — see **After the
 merge** at the end.
 
 Items: **OP-0830-4** (trapped in Grandpa's house), **OP-0830-1** (the village
-gate does not gate), **OP-0830-2** (the key does not glow).
+gate does not gate), **OP-0830-2** (the key does not glow), plus the two halves
+of the Gate F S02 finding routed here mid-session — see **Routed context** near
+the end.
 
 Everything below was measured on the real world before it was changed, and
 measured again after. Where a claim rests on a config assertion rather than on a
@@ -275,7 +277,8 @@ calling OP-0830-2 closed.
 |---|---|
 | unit suite (118 files) | **1605 tests, 3,389,084 assertions, 0 failed** |
 | `test_village_boundary.gd` (new) | 5 tests, 22 assertions, pass |
-| `test_quest_log.gd` | 35 tests, 767 assertions, pass |
+| `test_quest_log.gd` | 36 tests, 771 assertions, pass |
+| `smoke_gate_f_probe.gd` | pass — every accessor agrees with the live game, objective id included |
 | `test_gateb_objective_chain.gd` | 4 tests, 54 assertions, pass |
 | `smoke_opening.gd` | pass |
 | `smoke_wake_softlock.gd` | pass (and verified red against the pre-fix code) |
@@ -363,6 +366,104 @@ Attribution here was **established, not assumed**: each was re-run on a detached
   `tests/test_gateb_objective_chain.gd`, `tests/helpers/gate_a_material_route.gd`
 - `tools/_probe_key_site.gd`, `tools/_probe_road_gate.gd` — `RoadGate` now hangs
   under `VillageBoundary`, so the lookups search rather than index the world root
+
+---
+
+## Routed context: the Gate F S02 finding (check-in 17, 2026-08-27)
+
+The coordinator routed two halves of a three-day-old Gate F finding to this lane.
+Both are answered below. The fight/catch half of that finding belongs to
+`T5-FEEL` and is untouched here.
+
+### 1. Does the opening chain degrade safely? · **YES, and one real corruption is repaired**
+
+Asked against the state the rig actually handed off, not a hypothetical one.
+`ralph/reports/gate-f-run-20260827T025303Z/S02/saves/S02-exit.json` carries a
+party of one and seven flags:
+
+```
+opening:beat:wake, opening:beat:house, opening:beat:choose,
+opening:starter_granted, opening:beat:name, tournament_team_fed,
+opening:beat:walk_out
+```
+
+**Two things are wrong with that set, and the first is one this lane already
+fixed without knowing this evidence existed.** `opening:beat:return_starter` is
+missing while `opening:beat:walk_out` is present — a beat skipped in the middle
+of a strictly ordered chain. That is exactly what OP-0830-4's
+`_persist_beat_history()` was written for. `tools/_probe_degraded_opening.gd`
+loads that flag set through the director's real restore path and measures it:
+
+```
+opening:beat:return_starter   save=false now=true   <- HEALED (was missing in the handed-off save)
+opening:beat:road             save=false now=false  <- still unset
+```
+
+So a save carrying that corruption self-heals on load. Without the fix, the new
+ladder would have shown such a player *"Choose your first creature and give it a
+name"* forever, while they stood outside holding a named creature.
+
+The rest of the answer, measured on the same run:
+
+| question | answer |
+|---|---|
+| what is the player told? | `Catch your first wild creature.` + `Wear it down in the fight first, then pick an orb on the hotbar and press F.` |
+| Grandpa's door | open — the house no longer holds them |
+| are they inside the village boundary? | yes |
+| is the practice bramblebun inside it? | yes, (30, −40) |
+| is the gate key inside it? | yes, (30.7, −15.9) |
+| does the gate need the catch? | **no** — it needs the key |
+
+So the failure mode the finding worried about does not occur: **the player is not
+confined without direction.** The tracked line names an action they can take, its
+target is inside the fence with them, and the way out is a key rather than a
+catch — taking it sets `road_gate_open` and the chain continues. This is
+deliberately *not* the same shape as OP-0830-4, and the measurement is what
+establishes that rather than an argument.
+
+Pinned as `test_quest_log.gd::test_the_recorded_degraded_opening_state_does_not_strand_the_ladder`,
+which copies that flag list verbatim and requires the tracked line to be neither
+blank (the HUD hides its objective block on an empty line — the player would be
+told nothing at all) nor a rung whose own flag is already set (an instruction to
+redo a finished beat).
+
+### 2. The objective id mismatch · **already fixed on 2026-08-29, two days after the run**
+
+`S02-11` reports the tracked objective as `opening:beat:road` where §E.5 names
+`opening_first_catch`. The finding is stale, and the reconciliation is
+deliberate and documented: `operator_harness.gd::_objective_flag_id()` translates
+the protocol's entry ids into the game's flag ids, landed in `c7c21ed2`
+(2026-08-29), against a run that started `2026-08-27 03:11:23`. Its own comment
+records the same discovery from `S01-12` and concludes *"Neither side is wrong
+and neither should move."*
+
+Verified rather than taken on trust: `tests/smoke_gate_f_probe.gd` passes on this
+branch — *"every accessor agreed with the live game it reads"* — and the map
+still resolves `opening_first_catch → opening:beat:road` with the three new
+entries present. **Nothing to fix; the bookkeeping is the deliverable.**
+
+### But this lane HAS invalidated three Gate F steps, and they are not mine to edit
+
+This is the finding to carry forward, and it is a consequence of OP-0830-4 rather
+than of the id question. Adding three rungs ahead of the catch means
+`opening_first_catch` **is no longer the chain's first objective**. Of the 48
+`objective_is` assertions across all 26 segment scripts, exactly three assert it
+at the start of a fresh-save opening segment and will now legitimately fail:
+
+| step | title | asserts |
+|---|---|---|
+| `S01-12` | "the first tracked objective is the chain's first" | `opening_first_catch` |
+| `S02-11` | "the opening's first rung is tracked" | `opening_first_catch` |
+| `S02C-11` | "the opening's first rung is tracked" | `opening_first_catch` |
+
+The other 45 all assert a rung at or after `open_road_gate` and are unaffected —
+checked, not assumed. `tools/gate_f/segments/*.json` is the Gate F lane's
+transcription of a protocol document (§E.5's *"24 main-chain objectives from
+`opening_first_catch`"*), so this lane has deliberately **not** edited them: the
+protocol describes the older ladder and it is §E.5 that now needs updating, which
+is a call for whoever owns it. The correct new expectation for all three is
+`opening_hear_grandpa` ("Go down and hear Grandpa out."), and the chain is now 27
+main entries rather than 24.
 
 ---
 

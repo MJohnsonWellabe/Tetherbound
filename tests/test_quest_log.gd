@@ -28,6 +28,52 @@ func _through_the_opening() -> void:
 		progression.set_flag("opening:beat:" + beat)
 
 
+## The exact flag set the Gate F rig handed off from S02 on 2026-08-27, copied
+## verbatim from
+## `ralph/reports/gate-f-run-20260827T025303Z/S02/saves/S02-exit.json`.
+##
+## That run recorded zero `combat_*` and zero `catch_throw` events -- the
+## chapter's first fight never staged and the first wild catch never happened --
+## and the segment handed off anyway (check-in 17). So this is not a
+## hypothetical partial state, it is a real one that a real save file carries,
+## and it has two things wrong with it at once: `opening:beat:return_starter` is
+## missing while `opening:beat:walk_out` is present (a beat skipped in the
+## middle of an ordered chain), and neither `opening:beat:road` nor
+## `road_gate_open` is set.
+const S02_EXIT_FLAGS := ["opening:beat:wake", "opening:beat:house",
+	"opening:beat:choose", "opening:starter_granted", "opening:beat:name",
+	"tournament_team_fed", "opening:beat:walk_out"]
+
+
+## OP-0830-4's own defect shape, asked of a state nobody authored: a player who
+## somehow does not complete the first catch must not be left with a tracked
+## line that is blank, or that names something they have already done.
+##
+## Blank is the dead end -- `tracked_text()` returns "" only when every main
+## entry is complete, and a partial opening reaching that state would mean the
+## HUD's objective block hides itself (`playground_hud.gd::_update_objective`)
+## and the player is told nothing at all, which is precisely how they were left
+## standing in Grandpa's house.
+##
+## The second half matters as much and is easier to get wrong: the tracked rung
+## must be one whose own flag is UNSET. An entry keyed on a flag this state
+## already carries would be an instruction to redo a finished beat.
+func test_the_recorded_degraded_opening_state_does_not_strand_the_ladder() -> void:
+	for flag: String in S02_EXIT_FLAGS:
+		progression.set_flag(flag)
+	var tracked: String = log_reader.tracked_text(progression)
+	assert_false(tracked.strip_edges().is_empty(),
+		"the S02-exit state tracks NO objective at all; the HUD block hides itself and the player is told nothing")
+	for raw: Variant in (_objectives().get("main", []) as Array):
+		var entry: Dictionary = raw as Dictionary
+		if str(log_reader._label(entry, progression)) != tracked:
+			continue
+		assert_false(progression.has(str(entry.get("flag_id", ""))),
+			"the tracked line reads '%s', whose own flag is already set; it is telling the player to redo a finished beat" % tracked)
+		return
+	assert_true(false, "the tracked line '%s' matches no authored main entry" % tracked)
+
+
 func test_objectives_data_parses_and_has_at_least_one_main_entry() -> void:
 	var entries: Array = log_reader.main_entries(progression)
 	assert_true(entries.size() >= 1, "data/progression/objectives.json's main list is empty")
