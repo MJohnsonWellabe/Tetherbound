@@ -569,6 +569,14 @@ jobs:
             retries: 3
           - smoke: catching
             retries: 2
+          # T1-AUDIO. Boots the real world and asserts on what reached the
+          # mixer: an ambience bed playing, footsteps firing from real movement
+          # with real variant spread, a fought fight producing combat audio, and
+          # two bands sounding different. Two retries because its last section
+          # walks to a wild creature and fights it, which carries the same
+          # spawn/pathing variance `catching` above is already retried for.
+          - smoke: audio
+            retries: 2
     steps:
       - uses: actions/checkout@v4
         with:

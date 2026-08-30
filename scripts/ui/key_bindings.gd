@@ -63,6 +63,16 @@ var glyphs: Dictionary = {}
 ## reads it as absent, which is the same as off.
 var gameplay: Dictionary = {}
 
+## Bus name -> volume as a 0..1 fraction of the authored mix, owned by
+## `scripts/audio/audio_manager.gd`.
+##
+## A sibling of `gameplay` above rather than more keys inside it, because
+## `save()`'s payload already reserved a named `audio` section for exactly this
+## -- see its comment -- and because the two have different owners. Same rule
+## applies: this class is the only writer of the file, so anything with a
+## preference to store hands it here rather than opening a second one.
+var audio: Dictionary = {}
+
 var _path: String = SETTINGS_PATH
 ## action -> {keyboard: InputEvent|null, gamepad: InputEvent|null, extra: Array}
 var _defaults: Dictionary = {}
@@ -365,6 +375,7 @@ func save() -> bool:
 		"version": FORMAT_VERSION,
 		"controls": controls,
 		"gameplay": gameplay,
+		"audio": audio,
 	}
 	var directory := _path.get_base_dir()
 	if not directory.is_empty() and not DirAccess.dir_exists_absolute(directory):
@@ -388,6 +399,7 @@ func load_overrides() -> int:
 	# Anything not adopted below is absent, and absent is the shipped default for
 	# every non-control preference too — see `gameplay`.
 	gameplay.clear()
+	audio.clear()
 	if not FileAccess.file_exists(_path):
 		return LOAD_MISSING
 
@@ -438,6 +450,9 @@ func load_overrides() -> int:
 	var extras: Variant = data.get("gameplay", {})
 	if typeof(extras) == TYPE_DICTIONARY:
 		gameplay = (extras as Dictionary).duplicate()
+	var volumes: Variant = data.get("audio", {})
+	if typeof(volumes) == TYPE_DICTIONARY:
+		audio = (volumes as Dictionary).duplicate()
 	return LOAD_OK
 
 
