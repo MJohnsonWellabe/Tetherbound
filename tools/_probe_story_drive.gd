@@ -50,8 +50,23 @@ const CHAPTER: Array = [
 	["opening:beat:walk_out", "showed Grandpa the starter; the door opens"],
 	["opening:beat:road", "caught the first wild creature"],
 	["road_gate_open", "opened the village gate"],
+	# Mira's visit is a REQUIRED opening beat, not optional colour: Grandpa's
+	# `grandpa_after_first_catch` sends the player to her by name and the beat
+	# machine waits on `opening:mira_visited`. Her conversation sets all three of
+	# these on one line. Without them a probe walks the chapter as a player who
+	# never met her, and every villager ladder answers the wrong question.
+	["mira_shop_open", "met Mira; the stall and the Orb recipe open"],
+	["recipe_orb_basic", "learned the Basic Orb recipe"],
+	["opening:mira_visited", "the opening's Mira beat closes"],
 	["tam_tools_given", "took Tam's tools"],
+	["oskar_trade_open", "Oskar explained the swap"],
 	["tournament_team_ready", "team of five assembled"],
+	# The training rung's own `how` line names these three: "Villagers who offer
+	# a fight are the training". A player arrives at the tournament having beaten
+	# them, so their ladders are past the challenge branch by here.
+	["defeated_mira", "beat Mira"],
+	["defeated_oskar", "beat Oskar"],
+	["defeated_tam", "beat Tam"],
 	["tournament_training_ready", "trained the team"],
 	["home_materials_gathered", "gathered camp materials"],
 	["home_built", "made camp"],
