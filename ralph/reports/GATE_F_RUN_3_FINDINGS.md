@@ -544,7 +544,7 @@ has both; Oskar's had neither; nobody could see it while GAME-8 meant his
 dialogue never ran. Any other `shop:` / `battle:` effect reached for the
 first time by a future fix should be audited for the same pair before the
 replay is trusted.
-### GAME-11 — the chapter's first fight is one the starter can lose, and the practice creature is not a tutorial creature (OPEN, T2-GATEF-RUN6)
+### GAME-11 — the chapter's first fight is one the starter can lose, and the practice creature is not a tutorial creature (RESOLVED, GATE-F-RUN7)
 
 **Severity: BLOCKER candidate. Found by fixing the rig defects that had been
 hiding it for six runs.** Once S02 could actually stage its fight (RIG-26),
@@ -635,6 +635,70 @@ near the opening meadow is floored so the first thing a player meets cannot
 outclass the starter. The first is narrower and matches the documented
 intent; it is what I would recommend, but it is the owner's call and I have
 not made it.
+
+---
+
+**RESOLVED by `ralph/GATE-F-RUN7`, 2026-08-30, and measured on a real fresh
+save rather than argued.**
+
+**This was not treated as a design call.** `progression.json`'s award comment
+already states the number — the chapter's enemy levels *"run 2 at the practice
+fight to 22 in the stronghold gauntlet"* — and
+`tests/test_trainers_data.gd::test_the_critical_path_alone_pays_for_the_warden_ready_level`
+is calibrated against that curve. The data simply did not honour tuning the
+repo had written down. Making it honour that is a defect fix; inventing a
+different number would have been the design call.
+
+**RUN6's recommended fix would not have worked as written, and this is worth
+knowing before anyone reaches for it again.** It named "the `level` key
+`spawn_wild()`'s own `opts` already supports". That key is real, but it is on
+the *imperative* spawn path. The clustered scatter in
+`encounter_director.gd::_seed_spawns()` calls `_roll_wild_level()`
+unconditionally and never reads a per-entry `level` at all, so authoring one
+into `spawns.json` would have changed nothing and failed silently.
+
+**What was actually changed — two lines of intent, in two files:**
+
+- `encounter_director.gd` gained an optional per-entry `level` on a
+  `spawns.json` cluster, applied **after** `_roll_wild_level()` rather than
+  instead of it. That ordering is the whole design of the fix.
+  `_roll_wild_level()` draws seven values from the cluster's shared `rng`
+  (level, three IVs, two traits, shiny), and that same generator goes on to
+  scatter and roll every later member. `_set_fixed_level()` carries its own
+  name-seeded rng and consumes nothing from the shared one, so substituting it
+  would have left those seven draws untaken and silently moved, relevelled and
+  rerolled every creature after it — the exact hazard the spawn table's own
+  `order` header warns about. Overriding the finished instance costs no draw.
+  `_apply_elder()`'s `level_bonus` already took this approach; `level` is its
+  absolute counterpart.
+- `data/config/bands/band1_lower_meadows/spawns.json` pins **cluster order 0
+  only** — the Practice Meadow, centre (30, −40), the anchor the opening's own
+  walk targets — at level 2. Every other band-1 cluster still rolls.
+
+**Measured on this candidate, one fresh save through the real title screen:**
+
+| | RUN6 (5 fresh saves) | RUN7 (this run) |
+|---|---|---|
+| practice opponent level | rolled 2–6; recorded **5** | **2** |
+| practice opponent max HP | 124.2 at level 5 | **93.7** |
+| starter after the fight | **FAINTED in 4 of 5** | **survived, 67.9 / 117.6** |
+| catch landed | **1 of 5** | **yes** |
+| exit-save party | 1 (2 once, unreproducibly) | **2** — Ripplet L3, Bramblebun L2 |
+
+**The consequence is the finding.** GAME-11 was never only about one fight.
+A lost first fight means no catch, which means a one-creature party, which
+means the tournament S04 gates on can never be entered, which is why six runs
+could not produce a healthy chain entry save. `ralph/reports/gate-f-run7/S02/`
+carries the first one this effort has made: party 2, `road_gate_open` set,
+`pickup:castle_gate_key` consumed, all eight opening beats.
+
+**What is still NOT established, and should not be read into the above.** This
+is one run. RUN6's 4-of-5 was five runs, and the honest comparison is one
+sample against five. The pin removes the roll, so the level is now
+deterministic and the variance that produced 4-of-5 is gone by construction —
+but "the starter reliably wins" is a claim that wants a handful of repeats, and
+nobody has taken them. GAME-12 (below) is untouched by this and remains open.
+
 
 ### GAME-12 — after a failed catch the aim re-opens and the throw never fires (OPEN, T2-GATEF-RUN6)
 
