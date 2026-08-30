@@ -282,7 +282,8 @@
       },
       "defeat_flag": "defeated_stronghold_checkpoint",
       "rechallenge": false,
-      "base": "officer_a",
+      "base": "officer_b",
+      "_comment_base_t1_villagers": "T1-VILLAGERS, 2026-08-30. WAS officer_a, which relay_officer_dell in band 3 also uses -- so Officer Dell and Warder Ness fought the player wearing one body across two bands, the only case of a Team Tether body doing double duty. officer_b was installed, rigged and unplaced. This is NOT a re-litigation of T1-HALL-3: that lane pulled officer_b/grunt_c/captain_a off the three bodies standing INSIDE the Hall after JUDGE-5 read them there, and those three are untouched. This checkpoint is past the Sigil gate but outside the Hall and was in none of the frames JUDGE-5 judged. The officer rank's palette and badge still lay on top, so rank reads as before -- see the T1-VILLAGERS handover for the rendered check of both, and for the officer_b face-lighting defect this lane did NOT retune.",
       "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     }
   ]

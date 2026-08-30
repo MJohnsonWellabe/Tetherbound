@@ -533,110 +533,98 @@ T1-RIG-2 handover — the inherited one-line diagnosis for these two is wrong in
 a way that changes what to do about them, and both now need an owner decision
 before any credit is spent.
 
-## T1-VILLAGERS (2026-08-30) — who wears which installed body
+## T1-VILLAGERS (2026-08-30) — the body-allocation audit, and one wiring fix
 
-No new art, no Meshy spend, no new mesh. Every body named here was already
-built, rigged, animated and installed by `T1-NPC-CAST`/`T3-INSTALL`. This entry
-records a **reallocation** of those bodies between characters, and closes out
-the two installed-but-unused assets the audit named.
+No new art, no Meshy spend, no new mesh. This entry records **what is actually
+wired today**, one wiring correction that shipped, and one reallocation that is
+**proposed and NOT applied** — it is an owner decision and the frames for it are
+in `ralph/reports/T1-VILLAGERS/shots/`.
 
-### The inversion this corrects
+### Shipped here: `officer_b` wired, ending the only double-duty body
 
-`T3-INSTALL` wired the 24 generated bodies onto whoever had a config slot free,
-and `T1-CAST` then placed twelve civilians. The result, measured against the
-shipping config rather than against intent:
+`officer_a` was carrying two different characters — Officer Dell
+(`relay_officer_dell`, band 3) and Warder Ness (`stronghold_checkpoint`,
+band 5). `officer_b` was installed, rigged and standing nowhere. Ness now uses
+it.
 
-- **Nine named characters shared two meshes.** Mira, Oskar, Tam, Bram, Sela,
-  the Quarry Foreman, Kell, Halda and Rae all resolved through
-  `data/config/art.json`'s five `villager_*` keys to `villager_male_lod0.glb`
-  or `villager_female_lod0.glb` with a tint and, on the female rig only, a hair
-  colour.
-- **Twelve walk-ons had a bespoke body each**, including four whose greeting
-  duplicates a named character's own role: Wilhelm (`innkeeper`) is Bram's inn
-  staff, Ada (`craftsperson`) works in a workshop that is not hers, Fenn
+Not a re-litigation of `T1-HALL-3`: that lane pulled `officer_b`/`grunt_c`/
+`captain_a` off the three bodies **inside the Hall** after JUDGE-5 read them
+there, and those three are untouched. The checkpoint is past the Sigil gate but
+outside the Hall and was in none of the frames JUDGE-5 judged. One line in
+`data/config/bands/band5_stronghold_approach/trainers.json`; trivially
+revertible.
+
+### Recorded, not changed: the allocation inversion
+
+Measured against the shipping config, not against intent:
+
+- **Twelve named characters share two meshes.** Mira, Oskar, Tam, Bram, Old
+  Bram, Sela, the Quarry Foreman, Kell, Halda, Rae, Bryn and Juno all resolve
+  through `art.json`'s five `villager_*` keys to `villager_male_lod0.glb` or
+  `villager_female_lod0.glb`.
+- **Twelve walk-ons have a bespoke body each**, four of them duplicating a named
+  character's own job: Wilhelm (`innkeeper`) is Bram's inn staff, Ada
+  (`craftsperson`) works in a workshop that is not hers, Fenn
   (`creature_caretaker`) minds the creatures Oskar trades, Garrick (`farmer`)
   grows what Mira the Meadow Keeper supplies.
 
-So the four characters the player deals with through the whole chapter — and
-fights in all three rounds of the village tournament — were the generic ones,
-standing next to two-line walk-ons wearing bodies designed for the named
-characters' own jobs. `docs/art/reference/npc-board-2026-08-30/` is the owner
-board those bodies were generated from, and its Village & Settlement row is
-essentially a portrait set for this village's named cast.
+`docs/art/reference/npc-board-2026-08-30/` is the owner board those bodies came
+from, and its Village & Settlement row reads as a portrait set for this
+village's named cast.
 
-### The reallocation
+### Two defects found while establishing role reads
 
-Role read comes from each character's own first dialogue line
-(`data/dialogue/village.json`), not from the stale config-key name:
+Both are wrong rather than merely generic, and neither was recorded anywhere:
 
-| Character | Their own words | Now wears | Board panel |
-|---|---|---|---|
-| Mira | "Meadow Keeper's what they call me" + the village store | `creature_caretaker` | 13 |
-| Tam | "Field Scout when I'm out past the fence. Smith when I'm in." | `craftsperson` | 12 |
-| Oskar | "Bridgehand's my trade — I keep the old crossing in one piece" | `wandering_trainer` | 20 |
-| Bram | "Innkeeper's the whole of it." | `innkeeper` | 9 |
-| Old Bram | the retired champion, an old man | `local_historian` | 15 |
+- **Tam is male and stands on the female rig.** Every comment in
+  `data/dialogue/village.json` says "him" — "Tam stays the smith OF30 made him".
+  `villager_smith` resolves to `villager_female_lod0.glb`.
+- **Old Bram, a retired champion and an old man, also stands on the female
+  rig**, with white hair painted over it to say "old".
 
-Three of those free a body from a walk-on who is that character's own
-subordinate or duplicate; **`wandering_trainer` was installed and unplaced**, so
-Oskar cost nobody anything.
+Also a **name collision**, not a bug but it will read as one to the next
+auditor: Bram the village innkeeper and Old Bram the retired champion at
+(195, 905) are two different people sharing a first name.
 
-Displaced walk-ons take the shared villager rigs, which is the right way round:
+### Measured: hair colour is a much weaker dial than the config assumes
 
-| Walk-on | Now wears | Differentiator |
+Spec §21 and this file's own history rest on "NPCs differ primarily by hair
+colour". Measured off the rendered frames at conversation distance:
+
+| | art.json says | renders as |
 |---|---|---|
-| Wilhelm | `villager_keeper` (villager_male) | body tint |
-| Ada | `villager_smith` (villager_female) | hair colour |
-| Fenn | `villager_ranger` (villager_female) | hair colour |
-| Old Perrin | `villager_quarryman` (villager_male) | body tint + height 1.66 |
+| Mira (`villager_farmer`) | `#5c3a22` (92,58,34) | (62.6, 36.1, 15.6) |
+| Tam (`villager_smith`) | `#8a8578` (138,133,120) | (30.7, 25.8, 18.4) |
 
-**Honest limit, re-confirmed rather than assumed.** Only `villager_female`
-carries a separable `hair_ponytail` mesh (NP7). `villager_male` has none, so
-`character_model.gd::_apply_hair` would attach a primitive sphere — the male
-walk-ons above are therefore differentiated by body tint and height alone, which
-is one dial, not two. That is a real constraint on how many male walk-ons this
-village can hold before they start reading as the same man; it is not created by
-this pass, but this pass puts two more characters against it.
+The tint is a straight `albedo * colour` multiply, which can only darken, so
+`villager_smith`'s **silver-grey renders near-black** rather than silver. Mira
+and Tam come out as "brown-haired" and "dark-haired" in *identical* faces and
+*identical* costumes. This is the same mechanism `npc_ranks.json`'s own
+`_comment_palette_crush` documents for body tints, on the hair channel.
 
-**`old_champion_bram`'s `hair` block was removed, not moved.** These generated
-bodies are single fused meshes with no `hair_ponytail`, so a `hair` override on
-one attaches a primitive sphere to the head bone. His white hair now comes from
-the `local_historian` body's own texture. He was previously an old male champion
-rendering on the **female** villager rig with white hair painted on — a sex
-mismatch nothing in the repo had recorded.
+### The differentiator limits, for whoever plans the next cast
 
-### `officer_b` — installed, and now wired
+- Only `villager_female` carries a separable `hair_ponytail` mesh (NP7).
+  `villager_male` has none, so two NPCs on it can differ by **body tint and
+  height only**.
+- The generated bodies are single fused meshes with no `hair_ponytail` either,
+  so a `hair` override on one of those entries makes
+  `character_model.gd::_apply_hair` attach a **primitive sphere** to the head.
+  Moving a character onto a generated body means **removing** the `hair` block,
+  not carrying it across.
 
-Not unreferenced, but not placed either: `T1-HALL-3` (2026-08-30) deliberately
-removed it from `stronghold_courtyard` along with `grunt_c` and `captain_a`,
-because JUDGE-5 read the officer_b body inside the Hall and called it "from a
-different game". That decision stands and those three Hall bodies are untouched.
+### `captain_accessory` is not a body
 
-`officer_b` is now wired to `stronghold_checkpoint` (Warder Ness), which is a
-roadside checkpoint **outside** the Hall and was not in a frame JUDGE-5 judged.
-This ends `officer_a` doing double duty for Officer Dell and Warder Ness — two
-characters who fought the player wearing one body across two bands.
+`assets/characters/captain_accessory/` contains **no mesh**. Two reference
+turnarounds (`board_captain_a_turnaround.png`, `board_captain_b_turnaround.png`)
+behind a `.gdignore`, kept from the `captain_a`/`captain_b` generation. No
+`art.json` key because there is nothing to key. Correctly stored, correctly
+unreferenced — not a body waiting to be wired.
 
-### `captain_accessory` — not a body, and never was
+### Still installed and standing nowhere
 
-`assets/characters/captain_accessory/` contains **no mesh**. It holds two
-reference turnarounds (`board_captain_a_turnaround.png`,
-`board_captain_b_turnaround.png`) behind a `.gdignore`, kept from the
-`captain_a`/`captain_b` generation. It has no `art.json` key because there is
-nothing to key. It is reference material, correctly stored and correctly
-unreferenced — not a body waiting to be wired, and no future pass should spend
-time looking for the mesh that its name implies.
+`wandering_trainer`, `rival_trainer`, `young_trainer` — all rigged, animated and
+keyed. Four finished bodies were dark before this pass; `officer_b` leaves
+three. Check this list before any future humanoid is generated or sourced.
 
-### `young_trainer` and `rival_trainer` remain installed and unplaced
-
-Both are rigged, animated and keyed in `art.json`, and both are deliberately
-left dark. `rival_trainer` is board 18's "friendly rival who challenges you
-throughout the story" and `young_trainer` is board 16's aspiring child — neither
-role exists in the chapter's current cast, and inventing a character to justify
-a body is the wrong direction. Bryn, the one candidate, is a teacher rather than
-a rival ("I've nothing left to teach you out here") and keeps `villager_farmer`,
-which is now uncontested on that rig since Mira moved off it.
-
-Evidence: `ralph/reports/T1-VILLAGERS/shots-before/` and
-`ralph/reports/T1-VILLAGERS/shots/`, matched pairs from the same camera rules in
-the real Meadows, every shutter gated on `tools/capture_check.gd`.
+Full account and frames: `ralph/reports/handover-T1-VILLAGERS-2026-08-30.md`.
