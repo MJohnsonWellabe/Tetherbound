@@ -18,6 +18,62 @@ func before_each() -> void:
 	log_reader = QUEST_LOG.new()
 
 
+## Every rung of the scripted opening, in order, as the sequence director itself
+## writes them (`OPENING_BEAT_PREFIX + <beat>`, and since OP-0830-4 as history
+## rather than one at a time). What a test means by "the player has finished the
+## opening" -- the state most of the checks below actually want as their start.
+func _through_the_opening() -> void:
+	for beat: String in ["wake", "house", "choose", "name", "return_starter",
+			"walk_out", "encounter", "road"]:
+		progression.set_flag("opening:beat:" + beat)
+
+
+## The exact flag set the Gate F rig handed off from S02 on 2026-08-27, copied
+## verbatim from
+## `ralph/reports/gate-f-run-20260827T025303Z/S02/saves/S02-exit.json`.
+##
+## That run recorded zero `combat_*` and zero `catch_throw` events -- the
+## chapter's first fight never staged and the first wild catch never happened --
+## and the segment handed off anyway (check-in 17). So this is not a
+## hypothetical partial state, it is a real one that a real save file carries,
+## and it has two things wrong with it at once: `opening:beat:return_starter` is
+## missing while `opening:beat:walk_out` is present (a beat skipped in the
+## middle of an ordered chain), and neither `opening:beat:road` nor
+## `road_gate_open` is set.
+const S02_EXIT_FLAGS := ["opening:beat:wake", "opening:beat:house",
+	"opening:beat:choose", "opening:starter_granted", "opening:beat:name",
+	"tournament_team_fed", "opening:beat:walk_out"]
+
+
+## OP-0830-4's own defect shape, asked of a state nobody authored: a player who
+## somehow does not complete the first catch must not be left with a tracked
+## line that is blank, or that names something they have already done.
+##
+## Blank is the dead end -- `tracked_text()` returns "" only when every main
+## entry is complete, and a partial opening reaching that state would mean the
+## HUD's objective block hides itself (`playground_hud.gd::_update_objective`)
+## and the player is told nothing at all, which is precisely how they were left
+## standing in Grandpa's house.
+##
+## The second half matters as much and is easier to get wrong: the tracked rung
+## must be one whose own flag is UNSET. An entry keyed on a flag this state
+## already carries would be an instruction to redo a finished beat.
+func test_the_recorded_degraded_opening_state_does_not_strand_the_ladder() -> void:
+	for flag: String in S02_EXIT_FLAGS:
+		progression.set_flag(flag)
+	var tracked: String = log_reader.tracked_text(progression)
+	assert_false(tracked.strip_edges().is_empty(),
+		"the S02-exit state tracks NO objective at all; the HUD block hides itself and the player is told nothing")
+	for raw: Variant in (_objectives().get("main", []) as Array):
+		var entry: Dictionary = raw as Dictionary
+		if str(log_reader._label(entry, progression)) != tracked:
+			continue
+		assert_false(progression.has(str(entry.get("flag_id", ""))),
+			"the tracked line reads '%s', whose own flag is already set; it is telling the player to redo a finished beat" % tracked)
+		return
+	assert_true(false, "the tracked line '%s' matches no authored main entry" % tracked)
+
+
 func test_objectives_data_parses_and_has_at_least_one_main_entry() -> void:
 	var entries: Array = log_reader.main_entries(progression)
 	assert_true(entries.size() >= 1, "data/progression/objectives.json's main list is empty")
@@ -28,8 +84,14 @@ func test_tracked_text_names_the_first_undone_main_objective() -> void:
 	assert_false(text.is_empty(), "a fresh game should always have something to track")
 
 
+## OP-0830-4. `_through_the_opening()` rather than one flag: the ladder gained
+## three in-house rungs ahead of the catch, and a test that sets only
+## `opening:beat:road` is now standing on the third rung of a ladder whose first
+## two are still outstanding -- so the tracked line reads "Go down and hear
+## Grandpa out" and never moves, which is a true statement about a player who has
+## not left the bedroom, not a defect in the road gate.
 func test_completing_the_road_gate_objective_changes_the_tracked_text() -> void:
-	progression.set_flag("opening:beat:road")
+	_through_the_opening()
 	var before: String = log_reader.tracked_text(progression)
 	progression.set_flag("road_gate_open")
 	var after: String = log_reader.tracked_text(progression)
@@ -187,6 +249,14 @@ const WORLD_FLAGS := {
 	# flags, so `_trainer_defeat_flags()` can never see them -- real writers,
 	# just not that kind.
 	"opening:beat:road": "scripts/story/sequence_director.gd (_set_beat(BEATS.ROAD), OPENING_BEAT_PREFIX + \"road\")",
+	# OP-0830-4. The three in-house rungs. Written by the same
+	# `OPENING_BEAT_PREFIX + <beat>` line as `opening:beat:road` above -- and,
+	# since that change, by `_persist_beat_history()` for every beat at or
+	# before the one reached, so a restored save cannot own a later rung while
+	# an earlier one reads outstanding.
+	"opening:beat:choose": "scripts/story/sequence_director.gd (_set_beat, on the `beat:starter_choice` effect ending Grandpa's briefing)",
+	"opening:beat:return_starter": "scripts/story/sequence_director.gd::_adopt() (the named creature reaches the party)",
+	"opening:beat:walk_out": "scripts/story/sequence_director.gd (_set_beat, on the `beat:first_encounter` effect ending `grandpa_first_catch`)",
 	# TUTORIAL-CHAIN (OP23-04). Two new rungs and one new count; every one of
 	# them is written by something that ships, which is exactly what this
 	# registry is for.
@@ -685,7 +755,7 @@ func test_finishing_a_later_beat_early_neither_strands_nor_spoils_the_chain() ->
 			"a beat the player has not reached is being shown because its flag happens to be set")
 
 	# And when they do get there, it is already done and the line steps over it.
-	progression.set_flag("opening:beat:road")
+	_through_the_opening()
 	progression.set_flag("road_gate_open")
 	assert_true(log_reader.tracked_text(progression).find("Tam") == -1,
 		"the tracked line went back to a beat that was already finished")

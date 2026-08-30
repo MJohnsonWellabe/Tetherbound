@@ -1,0 +1,72 @@
+{
+  "_comment": "OP-0830-1. The edge of the home settlement, as an authored closed line, so that the village gate is the door of something rather than a panel standing in open grass.",
+
+  "_why": "2026-08-30 owner playtest: 'the village gate is pointless. it doesn't keep you in. it should keep you in until you find the key.' Measured before changing anything (tools/_probe_village_gate_escape.gd): standing in the square with no key, a player walked clear of the village on NINE of sixteen bearings, up to 79m out. tools/_probe_village_layout.gd says why -- across 36 bearings at 20-90m from the well there was no solid body at all on 24 of them. The gate's own wings sealed roughly 24m of one bearing and the settlement was open on every other side, so the key, the search for it and the gate all meant nothing. MEADOWS_PROGRESSION_SPEC sec1E is the rule this satisfies: a believable physical perimeter of walls, ranch fencing, hedgerows and ridges, with invisible collision only SUPPORTING a visible boundary and never being it.",
+
+  "_why_not_terrain": "The pattern that works elsewhere is `gated_crossing.gd` -- an authored gully in `terrain_playground.json`'s `crossings[]` that the world itself cannot be walked across, with a bridge in it. That is the better mechanism and it is not available here: this lane may not edit the terrain config, and a gorge around the family farm would be absurd geography anyway. A village wall is what a village gate belongs to.",
+
+  "outline": {
+    "_comment": "A closed polygon in world (x,z) metres, walked in order and closed from the last point back to the first. Everything Band 0 needs is inside it: Grandpa's farmhouse and its plots, the whole village square and its cast, the tournament ground, and the practice meadow the opening's first catch happens in (`band1_lower_meadows/spawns.json`'s bramblebun at [30,-40]). Verified point by point, not by eye -- `tests/test_village_boundary.gd` fails if any of them falls outside.",
+    "_comment_shape": "Deliberately a rounded blob rather than a circle: the farm is 34m west of the well and the practice meadow 36m south-east of it, and no circle centred anywhere contains both while still passing through a gate the player meets on the road. TUNABLE -- every number here is a fence line, not a mechanic.",
+    "points": [
+      [40.0, -16.0],
+      [37.0, -2.0],
+      [30.0, 11.0],
+      [18.0, 21.0],
+      [3.0, 26.0],
+      [-15.0, 27.0],
+      [-27.0, 15.0],
+      [-38.0, 6.0],
+      [-42.0, -9.0],
+      [-41.0, -24.0],
+      [-33.0, -37.0],
+      [-18.0, -46.0],
+      [0.0, -54.0],
+      [20.0, -52.0],
+      [36.0, -46.0],
+      [36.0, -28.0]
+    ]
+  },
+
+  "gates": {
+    "_comment": "One lock, one key, one flag -- and a leaf wherever an authored road crosses the line, so no road in the village dead-ends at a fence. Both are `road_gate.gd`, the body SA7 already wrote and `smoke_traversal.gd` already tests; opening either one sets `road_gate_open` and `village_boundary.gd` swings the other on the same frame.",
+    "_comment_positions": "Both `at` values are the COMPUTED intersection of the road with the outline above, and both `yaw_deg` values put the leaf along the outline at that point (which is also across the road, because the outline is authored perpendicular to each road where it crosses). Recomputed and pinned by tests/test_village_boundary.gd rather than eyeballed -- `playground_world.gd`'s old GATE_YAW_DEG carried its own note that it 'was tuned by eye against a render rather than computed', and it was 71.0 where the perpendicular is -71.6: the leaf stood at 38 degrees to the road it was supposed to bar.",
+    "entries": [
+      {
+        "id": "RoadGate",
+        "route": "The Rise",
+        "at": [38.7, -19.9],
+        "yaw_deg": -71.6,
+        "prompt": "Try the gate",
+        "locked_conversation": "road_gate_locked",
+        "unlocked_conversation": "road_gate_unlocked"
+      },
+      {
+        "id": "PondGate",
+        "route": "The Pond",
+        "at": [-21.0, 21.0],
+        "yaw_deg": 135.0,
+        "prompt": "Try the gate",
+        "locked_conversation": "road_gate_locked",
+        "unlocked_conversation": "road_gate_unlocked"
+      }
+    ]
+  },
+
+  "key_item": "castle_gate_key",
+  "flag": "road_gate_open",
+
+  "_comment_wall": "How the line is dressed. `fence_run` is the settlement's own rustic fencing (D24: one village family) and is already placed by `village.json`, so the boundary reads as the same property line the player has walked past inside the village rather than as a new kind of object. Two courses, because one course of it is a knee rail and a knee rail is scenery, not an edge.",
+  "wall": {
+    "prefab": "fence_run",
+    "panel_length_m": 6.15,
+    "courses": 2,
+    "course_rise_m": 0.62,
+    "sink_m": 0.12,
+    "gate_clear_m": 3.4,
+    "_comment_gate_clear": "Half-width of the hole left in the wall at each gate, metres. The `road_gate_leaf` panel is 4.07m wide, so 3.4 leaves the leaf a little over half a metre of jamb either side -- enough that the leaf reads as filling the opening and not enough for a player to slide past it. Checked by walking it, not by arithmetic.",
+    "bury_m": 1.0,
+    "footprint_samples": 5,
+    "_comment_collision": "`bury_m` and `footprint_samples` are `road_gate.gd`'s own wing lesson, imported wholesale rather than relearned: a collider sized from the ground under a panel's CENTRE leaks wherever the ground falls across the panel's span, which is how the Sigil Gate was walked around at +6m off centre while its span check reported a contiguous barrier. Each panel's box is sized from the lowest and highest ground its whole footprint spans, sunk `bury_m` below the lowest, and topped a full panel height above the highest."
+  }
+}

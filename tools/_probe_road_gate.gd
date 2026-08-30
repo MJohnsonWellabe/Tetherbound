@@ -6,7 +6,7 @@ func _init() -> void:
 	root.add_child(world)
 	for i in 240:
 		await physics_frame
-	var gate: Node3D = world.get_node_or_null(^"RoadGate") as Node3D
+	var gate: Node3D = world.find_child("RoadGate", true, false) as Node3D
 	if gate == null:
 		print("NO RoadGate node"); quit(1); return
 	print("RoadGate at ", gate.global_position, " yaw=", rad_to_deg(gate.rotation.y))

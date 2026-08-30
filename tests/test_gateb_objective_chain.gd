@@ -21,7 +21,15 @@ const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 ## new rungs (Mira's tools, feeding the team) and the compact camp now needs
 ## one player-built Creature Bed. The rungs either side of it are unchanged,
 ## wording included, so this remains a direct check of the production ladder.
+## OP-0830-4 added the three in-house rungs at the top. They are not new flags:
+## `sequence_director.gd` has always written `opening:beat:<beat>` as the
+## machine passes each one, and until 2026-08-30 nothing read them as a ladder,
+## which is exactly how a player could be shut in Grandpa's house with the
+## tracked line telling them to go and catch something.
 const CHAIN := [
+	["opening:beat:choose", "hear Grandpa out"],
+	["opening:beat:return_starter", "Choose your first creature"],
+	["opening:beat:walk_out", "Show Grandpa your creature"],
 	["opening:beat:road", "first wild creature"],
 	["road_gate_open", "village gate"],
 	["tam_tools_given", "Tam"],

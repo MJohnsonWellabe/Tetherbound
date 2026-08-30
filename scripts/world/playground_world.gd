@@ -39,6 +39,8 @@ const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const LANDMARK := preload("res://scripts/world/landmark.gd")
 const WATCHTOWER_LANDMARK := preload("res://scripts/world/watchtower_landmark.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
+## OP-0830-1: the village's own fence line, and the gates in it.
+const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
 const TM_PICKUP := preload("res://scripts/world/tm_pickup.gd")
 const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
@@ -69,6 +71,22 @@ const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 ## the arbiter kept offering "Pick berries" instead of the gate. Moved
 ## further out along the same leg for clearance rather than moving the
 ## harvest node, which R2.1's tutorial route already depends on.
+##
+## OP-0830-1, 2026-08-30. BOTH VALUES ARE NOW READ FROM
+## `data/config/village_boundary.json`, not from here, and the two below are
+## kept only as the pre-boundary record of where this gate stood and why. The
+## owner's report is that the gate "doesn't keep you in"; it did not, because it
+## stood in open meadow with a 24m seal and the settlement was open on every
+## other bearing (see `village_boundary.gd`'s header for the measurements). A
+## gate is now a hole in the village's own fence line, so its position is the
+## point where that line crosses this road — (38.7, -19.9) — and its yaw is the
+## line's own direction there.
+##
+## The yaw is worth its own line. The comment above says this one was "tuned by
+## eye against a render, not computed", and the eye got the SIGN: 71.0 puts the
+## leaf's own local +X on (0.33, -0.95), which is 38 degrees off square to a road
+## running (0.95, -0.32). The perpendicular is -71.6. The gate the owner walked
+## past was standing at an angle to the road it was supposed to bar.
 const GATE_AT := Vector2(27.5, -16.0)
 const GATE_YAW_DEG := 71.0
 
@@ -97,7 +115,21 @@ const GATE_YAW_DEG := 71.0
 ## and the square oak (>2.5m) -- then, among every point that cleared all of
 ## those, the one closest to the gate, so the detour stays "short." Verified
 ## clear at every margin; see the probe's own output for the full table.
-const GATE_KEY_AT := Vector2(31.2, -8.4)
+##
+## OP-0830-1, 2026-08-30. Re-sited to (30.7, -15.9) by the same probe, rewritten
+## for the world that exists now: `tools/_probe_key_site.gd` searches for a point
+## INSIDE the village boundary (`village_boundary.gd::contains`), on real ground,
+## at least 5m from every live prompt in the world and 3m from every fence panel,
+## and closest to the gate among all of those. It reads its neighbours off the
+## built scene rather than from a transcribed list, which is what the old version
+## did and why it went stale.
+##
+## Inside is the part that matters and the part that is new. The owner's ask is
+## that the gate "keep you in until you find the key" — a key on the far side of
+## the wall is a key the confined player cannot reach, and the old (31.2,-8.4)
+## fell outside the new line. Measured result: 8.94m from the gate, 5.26m to the
+## nearest other prompt, 9.20m to the nearest fence panel, ground 0.48.
+const GATE_KEY_AT := Vector2(30.7, -15.9)
 
 ## SF34: the Meadows Hall approach, the chapter's last gate (spec §3 Band 4).
 ## Three Sigils, one lock — sealed at two of three, open at three. The body is
@@ -1142,27 +1174,19 @@ func _build_trailhead_signposts() -> void:
 		i += 1
 
 
-## SA7: the road out toward the stronghold is gated, and its key sits a few
-## metres off to the side rather than behind any real obstacle.
+## SA7, rewritten by OP-0830-1: the settlement has an edge, and the gates are
+## the holes in it. The key still sits a few metres off the road, inside.
+##
+## The old shape of this function -- one leaf in open grass, with
+## `seal_half_width` wings guessing how far a sliding player would go -- is what
+## the 2026-08-30 owner playtest reports as pointless, and the guess had already
+## been raised 12.0 -> 20.0 once and still lost. `village_boundary.gd` owns the
+## line and both leaves now; this only stands it up and drops the key.
 func _build_road_gate() -> void:
-	var gate: Node3D = ROAD_GATE.new()
-	gate.name = "RoadGate"
-	# SIGIL-SEAL / owner ruling 2026-08-25: "gates have to be physically sealed
-	# -- there needs to actually be something keeping a player from walking
-	# around it". This gate's own header claimed it stood in a fence line that
-	# ran off both its ends; it does not. The nearest `fence_run` in
-	# village.json sits 12m away and cottage_b 6.7m off one side, so the leaf
-	# was a 4m panel with open meadow beside it, and a player who slid along it
-	# simply walked round -- exactly the hole this session found and closed at
-	# the Sigil Gate.
-	# Raised 12.0 -> 20.0. At 12 the wings ran out at (31.4,-27.3) and CI walked
-	# round the end of them to (33.0,-29.8) -- "walked to within 2.1m of a point
-	# 15m past the gate; the road is not physically blocked". Same lesson the
-	# Sigil Gate taught at 8.5: a seal sized to the ROAD only stops someone
-	# walking down the road, and a sliding player does not.
-	gate.set("seal_half_width", 12.0)
-	add_child(gate)
-	gate.call("build", self, GATE_AT, GATE_YAW_DEG)
+	var boundary: Node3D = VILLAGE_BOUNDARY.new()
+	boundary.name = "VillageBoundary"
+	add_child(boundary)
+	boundary.call("build", self)
 
 	var game := get_node_or_null(^"/root/Game")
 	if KEY_PICKUP.was_taken(game, "castle_gate_key"):

@@ -140,7 +140,9 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 ## key or opened the gate, and neither is a failure -- the same rule
 ## `_harvest_authored_stop` uses for an already-spent stop.
 func _unlock_road_gate() -> bool:
-	var gate: Node3D = _world.get_node_or_null(^"RoadGate") as Node3D
+	# OP-0830-1: the gate is a hole in the village fence now, so it hangs under
+	# `VillageBoundary` rather than off the world root.
+	var gate: Node3D = _world.find_child("RoadGate", true, false) as Node3D
 	if gate == null:
 		transcript.append("no road gate in this world; nothing to unlock")
 		return true

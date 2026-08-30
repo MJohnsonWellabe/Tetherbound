@@ -79,6 +79,7 @@ func _run() -> void:
 
 	await _walk_off_the_bed_without_pressing_it()
 	await _grandpa_is_reachable_anyway()
+	await _no_gated_beat_is_a_silent_wall()
 	_finish()
 
 
@@ -178,6 +179,161 @@ func _grandpa_is_reachable_anyway() -> void:
 		_fail("pressed interact on Grandpa's prompt ('%s') and no conversation opened" % offered)
 		return
 	print("interact opened Grandpa's conversation — the opening is completable")
+
+
+## OP-0830-4. The house door is shut for FIVE beats, not one, and this file
+## only ever tested the first of them.
+##
+## 2026-08-30 owner playtest: *"after the first conversation with grandpa
+## you're trapped in his house with nothing telling you to talk to him again
+## before you can go."* Both this file and `smoke_opening.gd` were green.
+## They were green because between them they cover the `wake` beat's exit and
+## the two conversations themselves, and never once asked what the player is
+## looking at while the door is solid.
+##
+## So this is the general form of the invariant, checked at EVERY beat the
+## door gate covers rather than at the two somebody remembered:
+##
+##   **a beat that physically confines the player must tell them what ends
+##   it.**
+##
+## "Tell them" is deliberately generous — any of these counts, because any of
+## them is a real answer on screen:
+##
+##   * a modal panel is up (the starter picker, the naming grid): the thing
+##     the player has to do is the only thing on screen.
+##   * walking into the doorway starts the beat's required conversation
+##     (spec §1D's own callout).
+##   * the tracked objective names it.
+##
+## What does NOT count, and is the exact shape of the reported defect: a
+## tracked line describing an action the player cannot take from in here
+## (the catch), plus a doorway that answers a shove with nothing at all.
+##
+## Beats are forced through the director's own restore seam rather than
+## replayed, because replaying the picker and the naming grid is
+## `smoke_opening.gd`'s job and doing it twice buys nothing; what is under
+## test here is the STATE, not the route into it.
+func _no_gated_beat_is_a_silent_wall() -> void:
+	if not _failures.is_empty():
+		return
+	var house := _find_named(_world, "GrandpaHouse")
+	if house == null:
+		print("no house in this world; nothing confines the player and there is nothing to check")
+		return
+	var quest_log: RefCounted = null
+	var progression: RefCounted = null
+	var game := _world.get_tree().root.get_node_or_null(^"Game")
+	if game != null:
+		quest_log = game.get("quest_log")
+		progression = game.get("progression")
+	if quest_log == null or progression == null:
+		_fail("no quest_log/progression on the Game autoload; the tracked objective cannot be read")
+		return
+
+	var door: Vector3 = house.call("marker", "door")
+	for beat: String in GATED_BEATS:
+		_director.call("_force_restore_beat", beat)
+		for i in 20:
+			await physics_frame
+		if str(_director.call("beat")) != beat:
+			# The director refuses beats it does not know. Say so rather than
+			# silently reporting a pass for a beat that never happened.
+			_fail("could not put the director on the '%s' beat; it stayed on '%s'" % [beat, str(_director.call("beat"))])
+			continue
+		if _door_is_open(house):
+			_fail("the door gate is OPEN on beat '%s'; spec §1D says the player cannot leave until the required interaction is done" % beat)
+			continue
+
+		var tracked := str(quest_log.call("tracked_text", progression))
+		var told_by_objective := not tracked.strip_edges().is_empty() \
+			and not tracked.to_lower().contains("catch")
+
+		# A modal owns the screen on these two; the player is not walking
+		# anywhere and the panel IS the instruction.
+		var modal := _a_modal_panel_is_open()
+		var told_by_door := false
+		if not modal:
+			await _walk_toward_point(door, 400)
+			told_by_door = bool(_dialogue.call("is_open"))
+			if told_by_door:
+				# Leave the next beat's check a clean screen.
+				for i in 40:
+					if not bool(_dialogue.call("is_open")):
+						break
+					await _press("interact")
+
+		if modal or told_by_door or told_by_objective:
+			print("beat '%s': shut in, and told — objective='%s' door_callout=%s modal=%s" % [
+				beat, tracked, str(told_by_door), str(modal)])
+			# A modal opened by the beat we just forced stays open across the
+			# next force, and would then read as that beat's own answer. Shut it
+			# rather than letting it vouch for a beat it has nothing to do with:
+			# the first cut of this check reported `return_starter` as "told by a
+			# modal" when what was actually on screen was the starter picker left
+			# over from `choose`.
+			_close_modals()
+			continue
+		_fail(
+			"SILENT WALL on beat '%s': the door is solid, no modal is up, walking into the doorway does nothing, " % beat
+			+ "and the tracked objective reads '%s'. The player has been confined and told nothing that ends it. This is OP-0830-4." % tracked
+		)
+
+
+## The beats the house door gate covers — everything before the one that opens
+## it. Read from the opening's own data rather than listed here, so a beat
+## inserted into `data/config/opening.json` is covered the day it is added
+## instead of the day somebody remembers this file.
+##
+## `wake` is deliberately excluded, and only `wake`: it is the one beat the
+## director will not hold once the player is out of bed
+## (`_check_left_the_bed`), and the two acts above this one are already the
+## whole test of it.
+const BEATS := preload("res://scripts/story/opening_beats.gd")
+static var GATED_BEATS: Array[String] = _gated_beats()
+
+
+static func _gated_beats() -> Array[String]:
+	var out: Array[String] = []
+	for beat: String in BEATS.order():
+		if BEATS.at_or_after(beat, BEATS.WALK_OUT):
+			break
+		if beat == BEATS.WAKE:
+			continue
+		out.append(beat)
+	return out
+
+
+func _close_modals() -> void:
+	for property: String in ["_starter_picker", "_name_prompt"]:
+		var panel: Object = _director.get(property)
+		if panel != null and panel.has_method("is_open") and bool(panel.call("is_open")):
+			panel.call("close")
+
+
+func _door_is_open(house: Node) -> bool:
+	var gate := house.get_node_or_null(^"DoorGate")
+	if gate == null:
+		return true
+	for child: Node in gate.get_children():
+		if child is CollisionShape3D:
+			return (child as CollisionShape3D).disabled
+	return true
+
+
+func _a_modal_panel_is_open() -> bool:
+	for method: String in ["is_open"]:
+		for group: String in ["starter_picker", "name_prompt"]:
+			var node := _world.get_tree().get_first_node_in_group(group)
+			if node != null and node.has_method(method) and bool(node.call(method)):
+				return true
+	# Neither panel advertises a group today, so fall back to the director's own
+	# wiring: it holds both and both answer `is_open`.
+	for property: String in ["_starter_picker", "_name_prompt"]:
+		var panel: Object = _director.get(property)
+		if panel != null and panel.has_method("is_open") and bool(panel.call("is_open")):
+			return true
+	return false
 
 
 ## --- helpers, deliberately the same shape as smoke_opening's ----------------
