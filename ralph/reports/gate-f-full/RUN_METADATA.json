@@ -1,0 +1,23 @@
+{
+  "_comment": "GATE-F-FULL: the full-chapter instrumented playthrough commissioned by ralph/NEXT_COORDINATOR_FULL_STATE_AUDIT.md Lane 12. LOGIC LANE. This run-local freeze record exists because operator_harness.gd::_freeze_display_claim reads the run directory's own RUN_METADATA.json first and the global ralph/reports/gate-f-candidate/RUN_METADATA.json second; the global one is the 2026-08-27 freeze, claims a flat display_server=X11 under xvfb-run, and therefore CD-8b-refuses every headless segment before step 1 (RIG-T5-1, found by ralph/T5-PLAY). Written BEFORE the run started and never amended mid-run, which is what the harness's own comment requires.",
+  "candidate_sha": "453107fb247d2207352d6fc5024cd47804364932",
+  "candidate_ref": "ralph/GATE-F-FULL, branched from origin/main at 453107fb (LAND-0830J landed 2026-08-30)",
+  "run_dir": "ralph/reports/gate-f-full",
+  "godot_version": "4.7.stable.official.5b4e0cb0f",
+  "binary": "$HOME/godot-bin/godot, linux x86_64 editor build, installed from the release URL .github/workflows/ci.yml pins (GODOT_VERSION: 4.7-stable)",
+  "operator": "sonnet-agent (lane GATE-F-FULL)",
+  "input_mode": "synthetic joypad + keyboard via parse_input_event",
+  "save_state": "fresh user:// dir at S01; every later segment seeded from the previous segment's exit save",
+  "free_build": false,
+  "date": "2026-08-31",
+  "display_server": "headless (logic lane, no display server -- honest, matches this process)",
+  "renderer": "none (logic lane, no rendering)",
+  "lanes": {
+    "logic": {
+      "display_server": "headless (logic lane, no display server)",
+      "renderer": "none (logic lane)"
+    }
+  },
+  "purpose": "Run the journey chain S01 -> S10e in one save lineage and report how far the Meadows chapter actually runs today, what stops it, and whether the evidence supports a wall-clock estimate for a first clear against the 3-4 hour target. Per the audit directive the GAME is frozen: no changes under scripts/, scenes/, data/, assets/ or shaders/. Only the rig (tools/), tests/ and docs may be fixed.",
+  "_what_this_run_can_and_cannot_show": "Measured: mechanics, progression, flags, party state, pacing in PLAY seconds, encounter cadence, reliability failures and swallowed input. NOT measured and NOT claimed in either direction: how the chapter LOOKS (the capture lane is not run -- this container has no GPU and a rendered 1920x1080 frame was measured at 12.7 s by Gate F run 2, pricing the capture lane at ~301 hours), device frame rate, GPU time, VRAM, thermals -- all [OWNER-ONLY] per protocol section K. Wall clock on this container is a rig number dominated by a software rasteriser and a cold world stand-up; the play clock is the pacing number."
+}
