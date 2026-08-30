@@ -320,3 +320,145 @@ nothing recovers from it except the player moving.**
 Recorded, not chosen. Option 3 is defensible and the other two are one-line
 changes; that is precisely the shape of decision this audit is meant to hand
 over rather than make.
+
+---
+
+## GAME-F4 — every creature loaded from a save loses its base stats, and the first level-up after that destroys it
+
+**Severity: BLOCKER.** **Measured in play, reproduced in one second, and
+confirmed by arithmetic to four significant figures.** **Not fixed** —
+`scripts/` is frozen for this lane. This is the most consequential thing this
+run found and, on the evidence below, it is very likely a large part of why six
+previous Gate F attempts produced downstream evidence that did not mean
+anything.
+
+### What the chapter did
+
+S03 loads S02's exit save through the production title-screen Load path, which
+is how every segment after S01 begins and how every real player begins a second
+session. Moss, the chapter's starter, then won a fight and levelled up:
+
+```
+t=496.6   party ((Moss, L3, hp 18.27, max_hp 117.60), (Bramblebun, L5, 28.15, 124.22))
+t=498.0   level_up  "Moss reached level 4"
+t=498.0   party ((Moss, L4, hp  0.18, max_hp   1.18), (Bramblebun, L5, 28.15, 124.22))
+```
+
+**117.60 → 1.18.** One hit ended it. `attack` went 26.40 → 1.15 and `defence`
+18.70 → 1.15 in the same frame. Both of the player's creatures were fainted by
+the end of the segment, `encounter_director.gd::summon_active_creature()`
+refuses to deploy a fainted creature, and the rest of the village ladder — the
+beds, the sleep, the feeding — could not run. Evidence:
+`ralph/reports/gate-f-full/S03-superseded-1/telemetry/events.jsonl` and
+`saves/S03-exit.json`, which records `{"level": 4, "hp": 0.0, "max_hp": 1.18,
+"attack": 1.15, "defence": 1.15}`.
+
+### Why
+
+`scripts/save/save_game.gd::_party_to_array` writes 34 keys per creature. Three
+that `creature_instance.gd` needs are **not among them**: `base_hp`,
+`base_attack`, `base_defence`. `_array_to_party` therefore never sets them, and
+`creature_instance.gd:62` declares the class default:
+
+```gdscript
+var base_hp: float = 1.0
+var base_attack: float = 1.0
+var base_defence: float = 1.0
+```
+
+The loader restores the *stored* `max_hp`, `attack` and `defence` directly, so a
+freshly loaded creature looks completely correct — right level, right HP, right
+name. The damage is latent. It lands the first time anything calls
+`_apply_level_stats()`, which recomputes every stat **from the base stats** and
+not from itself (deliberately — D30, so growth does not compound):
+
+```gdscript
+max_hp = PROGRESSION.stat_at_level(base_hp, level, growth.hp)
+       * PROGRESSION.individuality_multiplier(iv_hp, cfg) + boost_hp
+```
+
+With `base_hp = 1.0`, level 4 and `growth.hp = 0.06`, that is
+`1.0 × (1 + 0.06 × 3) × 1.0 = 1.18`. The observed value is **1.18**. With
+ripplet's real `base_hp` of 105.0 it is **123.90**. Attack: `1.15` observed
+against `27.60` expected. Defence: `1.15` against `19.55`. Every figure matches
+to the last digit printed.
+
+**Four things call `_apply_level_stats()`, and all four are ordinary play:**
+`gain_xp` (winning a fight), `set_level`, `drink_elixir` (D47's vitality
+elixirs), and `evolve_into`.
+
+### The repair that two comments promise and nobody wrote
+
+`save_game.gd:751` says the missing field is *"repaired from species.json the
+same way every other species-owned field on this class is repaired ... on the
+next `apply_species_definition`."* `creature_instance.gd:40` says the same.
+
+**`apply_species_definition` does not exist.** A grep of every `.gd` file in the
+repository returns exactly two hits, and both are those comments. There is no
+such function, nothing calls one, and the repair described in two places has
+never been implemented. That is why nothing looked wrong to a reader of either
+file: each one points at the other's promise.
+
+### Reproduction — one command, about one second, no world
+
+`tools/gate_f/diag/probe_base_stats_after_load.gd`, added by this lane:
+
+```
+godot --headless --path . --script tools/gate_f/diag/probe_base_stats_after_load.gd
+```
+
+```
+fresh  L3  base_hp=105.0  max_hp=117.60  attack=26.40  defence=18.70
+loaded L3  base_hp=1.0    max_hp=117.60  attack=26.40  defence=18.70
+levelled +1 -> L4         max_hp=  1.18  attack= 1.15  defence= 1.15
+expected     L4           max_hp=123.90  attack=27.60  defence=19.55
+```
+
+It drives the production `_party_to_array` / `_array_to_party` pair and the real
+`gain_xp`, with `autoload/party.gd` as the container — not a copy of any of
+them. Exit code 1 while the defect stands, 0 when it is fixed.
+
+### What it costs a player
+
+Everything, from their second session onwards. A save/load is not an edge case
+in this game: it is how a session ends and how the next one starts, and the
+Meadows chapter is explicitly built around it. The failure is silent at the
+moment of loading and arrives later, attached to a *reward* — the player wins a
+fight, sees "reached level 4", and their creature is now a one-hit kill with no
+message, no cue, and nothing in the UI that says a stat changed for the worse.
+There is no in-game recovery: the base stats are gone from the instance and the
+next save writes the collapsed numbers back out, so the damage is **persisted**
+and compounds on the following load.
+
+### Why no test caught it
+
+`tests/smoke_save_persistence.gd` exercises the real save/load lifecycle and
+checks that a creature comes back — which it does, correctly. Nothing in the
+suite **levels a creature up after loading it**, which is the only moment the
+defect is observable. That is the whole gap, and it is one test.
+
+### Suggested fix (game-side, not made here)
+
+Two changes, both small, and the second is the one that matters:
+
+1. **Restore the base stats on load.** The save already carries `species_id`,
+   so no format change is needed and no old save is lost:
+   `_array_to_party` reads `creature_species.definition(species_id)` and sets
+   `base_hp` / `base_attack` / `base_defence` from it — which is exactly the
+   `apply_species_definition` the two comments describe. Writing that function
+   on `creature_instance.gd` and calling it from the loader would also make both
+   comments true for the first time, and would repair `secondary_type` and
+   `creature_type` on old saves the same way, which is what they were written
+   about.
+2. **Make the missing test exist.** `tools/gate_f/diag/probe_base_stats_after_load.gd`
+   is the shape of it and needs no world: round-trip a creature through the
+   production pair, level it up, and assert its stats equal the same creature
+   levelled without a save. Promote it to `tests/` as the fix's acceptance
+   criterion. Without it this comes back the moment somebody adds a field.
+
+**A note on scope, since it is tempting.** Sourcing the base stats from
+`species.json` on load is correct for every creature the game currently makes,
+because base stats are species-owned and nothing mutates them — `evolve_into` is
+the only writer and it sets them from the new species' own definition. If that
+ever stops being true, the base stats have to be written into the save instead,
+and the round-trip test above is what would catch the difference.
