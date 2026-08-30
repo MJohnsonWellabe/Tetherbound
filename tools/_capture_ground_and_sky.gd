@@ -236,6 +236,29 @@ const GROUND_STATES := [
 	["golden", "golden", "clear"],
 	["night", "night", "clear"],
 ]
+## LANDMARKS (T1-WORLD, `--landmarks`). A third framing, and the only one here
+## that points the camera AT a thing rather than down a walking line: eye
+## height, backed off far enough that the whole object is in frame against sky.
+##
+## It exists for one open item that neither other framing can settle. The
+## Warrens exterior mound was logged as needing GEOMETRY rather than another
+## material pass, and a silhouette claim is exactly the claim you cannot check
+## from a ground-down crop or from a vista that happens to have the outcrop
+## somewhere off to one side: silhouette is the object's outline against the
+## sky, so the shot has to be squared up on it with sky behind.
+##
+## `[name, eye_xz, target_xz, target height above ground]`. The Warrens eye is
+## derived, not eyeballed: `data/config/burrow_warrens.json` sites the cave at
+## (-357, 2610) with `yaw_deg` 315, and `burrow_warrens.gd::_build_mound` treats
+## LOCAL -Z as the mouth direction (`at.z < mouth_z + skip_front` is its own
+## test for "in front of the doorway"). Rotating (0, 0, -1) by 315 degrees about
+## Y gives world (+0.707, -0.707), so the stand below is 40m out along the
+## approach a player actually walks in on -- the outcrop face-on, not its back.
+const LANDMARK_VIEWPOINTS := [
+	["landmark-01-warrens-exterior", Vector2(-328.7, 2581.7), Vector2(-357.0, 2610.0), 6.0],
+]
+const LANDMARK_UP := 1.72
+
 const WEATHER_STATES := [
 	["cloudy", "day", "cloudy"],
 	["fog", "day", "fog"],
@@ -357,6 +380,9 @@ func _run() -> void:
 	## Opt-in rather than always-on so the default run stays the byte-identical
 	## ground survey earlier rounds were judged against.
 	var vista := false
+	## `--landmarks` adds the LANDMARK_VIEWPOINTS set. Same opt-in reasoning as
+	## `--vista`: the default run stays what earlier rounds were judged against.
+	var landmarks := false
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--only="):
 			only = arg.substr("--only=".length())
@@ -366,6 +392,8 @@ func _run() -> void:
 			elevated = float(arg.substr("--elevated=".length()))
 		elif arg == "--vista":
 			vista = true
+		elif arg == "--landmarks":
+			landmarks = true
 	var wanted_states := PackedStringArray()
 	if states != "":
 		wanted_states = states.split(",", false)
@@ -389,6 +417,12 @@ func _run() -> void:
 			for state: Variant in WEATHER_STATES:
 				if _state_wanted(state as Array, wanted_states):
 					await _shoot_ground_state(pos, state as Array)
+
+	if landmarks:
+		for entry: Variant in LANDMARK_VIEWPOINTS:
+			if only != "" and not (only in str((entry as Array)[0])):
+				continue
+			await _capture_landmark(entry as Array, wanted_states)
 
 	# The water section is a viewpoint set like any other, so `--only` filters
 	# it the same way rather than always paying for three more bodies.
@@ -533,6 +567,51 @@ func _shoot_vista(pos: Dictionary, state: Array) -> void:
 		await process_frame
 	await RenderingServer.frame_post_draw
 	_capture("%s-%s-vista" % [pos["name"], str(state[0])])
+
+
+## Arrive at a landmark stand once, then shoot it in every wanted state.
+##
+## The two-pass arrival is the same as `_arrive_ground`'s and for the same
+## reason (Terrain3D has nothing to stream to until something stands there),
+## but the target is NOT reseated on the real surface between passes: the whole
+## point of this framing is that the target is a BUILT object standing above the
+## ground, so the aim point is the site's ground plus an authored height, and
+## raycasting it would drop the crosshair onto whatever the mound's own
+## collision happens to present at that XZ.
+func _capture_landmark(entry: Array, wanted_states: PackedStringArray) -> void:
+	var name: String = str(entry[0])
+	var eye_xz: Vector2 = entry[1]
+	var target_xz: Vector2 = entry[2]
+	var target_h: float = float(entry[3])
+	var forward := (target_xz - eye_xz).normalized()
+	eye_xz = _clear_of_bodies(eye_xz, forward, _surface(eye_xz))
+
+	_place(eye_xz, _field.height_at(eye_xz.x, eye_xz.y))
+	_camera.global_position = Vector3(eye_xz.x,
+		_field.height_at(eye_xz.x, eye_xz.y) + LANDMARK_UP, eye_xz.y)
+	for i in ARRIVE_FRAMES:
+		await physics_frame
+
+	var eye_ground := _surface(eye_xz)
+	var target_ground: float = _field.height_at(target_xz.x, target_xz.y)
+	_place(eye_xz, eye_ground)
+	for i in REFRAME_FRAMES:
+		await physics_frame
+	print("[ground] arrived %-28s eye(%.0f, %.1f, %.0f)" % [name, eye_xz.x, eye_ground, eye_xz.y])
+
+	for state: Variant in GROUND_STATES:
+		if not _state_wanted(state as Array, wanted_states):
+			continue
+		_apply_state(str((state as Array)[1]), str((state as Array)[2]))
+		for i in STATE_SETTLE_FRAMES:
+			await physics_frame
+		_hide_huds()
+		_camera.global_position = Vector3(eye_xz.x, eye_ground + LANDMARK_UP, eye_xz.y)
+		_camera.look_at(Vector3(target_xz.x, target_ground + target_h, target_xz.y), Vector3.UP)
+		for i in POSE_FRAMES:
+			await process_frame
+		await RenderingServer.frame_post_draw
+		_capture("%s-%s" % [name, str((state as Array)[0])])
 
 
 func _state_wanted(state: Array, wanted: PackedStringArray) -> bool:
