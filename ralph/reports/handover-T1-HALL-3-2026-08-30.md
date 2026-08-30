@@ -1,0 +1,284 @@
+# HANDOVER — T1-HALL-3, 2026-08-30
+
+**Branch:** `ralph/T1-HALL-3`, off `origin/ralph/LAND-0830H`.
+**Brief:** JUDGE-5's ranked defect list for the Meadows Hall (D1–D12) plus the
+inherited StormWall follow-up (D13–D16). The verdict this lane exists to answer:
+
+> "**No. It reads as a dressed greybox.** The rebuild put a real meadow around
+> the Hall and left the Hall itself almost untouched. Ground, vegetation, sky
+> and the ramp approach are markedly better than `hall0830`. The fortress is
+> not."
+
+The previous lane spent its budget outside the walls. This one spent it on the
+fortress.
+
+---
+
+## 0. Read this first if you are the next lane
+
+Three things in here are worth more than the defect list, because each one is a
+trap that cost a previous lane a whole judging round:
+
+1. **`H-04-gate-mouth` was broken for three rounds, and the checker that
+   catches it already existed.** `tools/capture_check.gd::_embedded_problems`
+   was written by T1-STORMWALL *specifically* for the JUDGE-4 version of this
+   defect, and `_ground_problems`' failure text names the frame by filename.
+   `_judge_capture_hall.gd` never called either. A tool that produces evidence
+   should be running the evidence checker; this one now does.
+2. **A `BoxMesh` cannot carry a centred texture.** Godot packs the six faces
+   into one UV atlas and the face a banner is read through spans u
+   [0.333, 1.000]. Anything centred in its own image renders cropped and
+   stretched. Probe the mesh, do not assume.
+3. **`_visual_bounds()` searches DESCENDANTS only.** The castle kit is OBJ, and
+   `building_prefabs.gd`'s OBJ path produces a bare `MeshInstance3D` with no
+   children — so `_visual_bounds` returns an empty AABB for every castle module
+   and a real one for the single glTF module. A pass written against it
+   silently skips 17 of 18 modules and acts on the one that should have been
+   excluded.
+
+All three were caught by measuring, and all three would have shipped as
+"finished work" if I had trusted the code's shape instead.
+
+---
+
+## 1. What changed, by defect
+
+### D1 (ranked 1/16) — `H-04-gate-mouth` is not a frame of the gate
+
+**Root cause, confirmed against the frame.** The stand walks 34 m up the
+causeway from the `entrance` marker but took its eye height from that marker's
+own y — and `entrance` resolves to `ramp_foot`. The causeway climbs ~9 m over
+its 40 m run, so the camera sat ~7 m *inside* the slab. That is exactly what the
+frame shows: cobble underside across the lower two thirds, grass seen edge-on
+from below ground, and a black unlit column where the ramp's shadow is.
+
+**Fix.** `stronghold.gd` gains `causeway_surface_y(world_x, world_z)`. It has to
+be public and it has to be asked: `_build_approach_ramp` *samples* the ramp's
+rise from the live ground rather than reading it from config (`site.ramp_run` is
+the only authored number), so no caller can re-derive the deck height. The stand
+now sits on the deck and aims up the remaining climb, because the gate sill is
+above it and a level aim put the arch's head out of frame.
+
+**And the process fix:** `_judge_capture_hall.gd` now calls
+`capture_check.warn_only` at every stand. `warn_only`, not `require` — the tool
+legitimately shoots one interior stand (H-07) where the grass field is correctly
+absent, and `require` would abort the run on it. Exterior stands promote any
+problem to a run failure, so the exit code still refuses to call a degraded set
+"evidence".
+
+### D2 (2/16) — the courtyard is an empty box with a figure from another game
+
+Two independent problems, both fixed.
+
+**The body.** `data/config/bands/band5_stronghold_approach/trainers.json`
+carried `"base": "officer_b"` on `stronghold_courtyard`, added by T3-INSTALL
+earlier the same day to give the individual a distinct silhouette. The judge
+read the result blind as "cel-shaded anime: flat white blown-out face, painted
+eye and mouth, hair as a solid magenta mass" in a world of painted stylised
+realism, and said the swap away from `hall0830`'s oxblood grunt "cost style
+cohesion and cost the Team Tether colour identity".
+
+That is a property of the generated atlas, not of the override mechanism —
+measured directly off the textures: the grunt rig's lit mean is (73,52,52), a
+maroon; `officer_b`'s is (76,57,60) over a purple-magenta atlas with no oxblood
+anywhere in it. Every rank's own default `base` is already `grunt`, so
+**deleting the override is the whole fix** and rank stays legible through the
+badge/palette layer exactly as before.
+
+Reverted for the three trainers standing inside the Hall — `stronghold_patrol`
+(`grunt_c`), `stronghold_courtyard` (`officer_b`), `stronghold_elite`
+(`captain_a`) — because all three share the idiom and all three appear in these
+stands. **Deliberately NOT reverted** for `stronghold_outer_watch` and
+`stronghold_checkpoint`: they stand outside the Hall, they are not in any frame
+the judge saw, and T3-INSTALL's per-individual identity goal is sound. That is a
+call the owner or T3-INSTALL may want to revisit for the whole cast rather than
+have this lane make it for them.
+
+**The room.** The courtyard genuinely had one object in it — the relay hub — and
+that object sits at local z 27.4 while the H-07 stand looks *south* from the
+courtyard trainer. The room's only dressing has been directly behind the camera
+in every frame ever shot of it. 18 props added along the walls, from the prop
+families the outer-works garrison camp already uses (D24's one-vocabulary rule,
+no new assets): stores, a workbench and an anvil down the working side, a stall,
+firewood and a bench down the living side, and material stacked either side of
+the door the player leaves through.
+
+Placement obeys the room's own constraints rather than filling it: the courtyard
+is a trainer **fight** room, so the fight floor (x[-5,5], z[24,42]) stays clear
+and every prop hugs a wall, clear of both doorway lines. `warden_arena` itself is
+left deliberately bare per `HALL_DESIGN` §8 — that fight owns its floor.
+
+### D3 (3/16) — no landmark silhouette
+
+The judge measured the whole stronghold as "a pale ~60px smudge, smaller and
+lower-contrast than the tether pylons flanking it, which read first ... a single
+symmetric mass on a bald hill, one roofline, no towers breaking upward".
+
+That is an arithmetic fact about the authored massing. Of the 18 modules in the
+`meadows_hall` prefab, **13 stood between 12.5 m and 14.4 m above the floor** —
+so there was effectively one roofline. The only masses that broke it (the great
+tower group) sat at the legendary chamber's far **south-west** corner, which is
+the furthest point in the complex from the arriving player and is occluded by
+every mass in front of it.
+
+Fixed with **scale and placement, not modules**: the count stays 18 and draw
+calls stay flat, which the inherited draw-call overrun makes non-negotiable.
+Heights above floor now ladder
+
+```
+10.8  12.5  14.2   (gatehouse — unchanged, deliberately the LOW near mass)
+15.0  16.7         (bailey)
+20.7  22.5         (arena)
+26.7               (great tower corners)
+37.7               (the spire)
+```
+
+and the spire moves to the legendary chamber's **north-west** corner, where the
+probed west shoulder still backs it (that shoulder runs z 7546–7602, the *north*
+half of the site) but the approach can actually see it.
+
+**Stated deviation:** this exceeds `HALL_DESIGN` §3's "+27…+33 absolute" cap for
+the tower caps — the spire now tops near +44. That cap produced the building the
+judge could not find. The design's stated *intent* — a landmark legible from the
+approach — wins over its arithmetic, and the deviation is recorded here and in
+`building_prefabs.json` rather than left for the next lane to rediscover.
+
+### D5 + D8 (5/16) — the walls
+
+- **Crenellations were identical cubes at identical spacing** — one constant
+  width, height and pitch for every merlon in the fortress. The row now varies
+  in all three, seeded off the wall's own position so it is stable across
+  rebuilds and saves, and roughly one merlon in nine is a broken crenel (a stub,
+  or gone). Same box count, different numbers in it: no draw-call cost.
+- **No buttress** — long runs now carry pilaster stubs proud of the wall face,
+  seated on the skirt. Decoration-only (`solid: false`) so a buttress can never
+  become a ledge or snag a fight, exactly like the slits and the trim.
+- **"Sky and grass visible THROUGH the wall"** was a *hole*, not a seam.
+  `_build_hall_waist()` closed exactly one of the route's three inter-chamber
+  gaps and skipped the one standing in the H-08 frame: `outer_works` ends at
+  local z 12 and `courtyard` starts at 18, leaving ~3.6 m of open sky on each
+  flank with the passage's own narrow side walls the only thing in it. Now
+  **every** consecutive pair on the route is wrapped by rule, with pairs that
+  are not stacked along z (the legendary chamber sits *beside* the arena) skipped
+  by an overlap test rather than by naming them — so a fourth chamber or a
+  resized one cannot silently reopen the hole.
+
+**Not fixed:** D8's "no normal map at close range, the wall is mushy and flat"
+and D5's ~2 m visible texture tiling. Both are texture-authoring work on the
+shared stone material, and `HALL_DESIGN` §5 is explicit that the tiling number
+(`STONE_TILE` 0.28) is hard-won and shared with the works walls. Changing it is a
+decision that reaches past this location. Left open, called out in §4 below.
+
+### D7 (6/16) — the keep is a broken mesh with a facade ending in mid-air
+
+Structural, not a bad number. Every kit module in the prefab is authored at
+local y = 0, which is the complex **floor** — but the floor stands on an 18 m
+skirt, so on any face where the skirt shows (the whole west keep elevation,
+which is the stand the judge was looking at) a module's base plane hangs in the
+air with the skirt's darker stone visible underneath and behind it.
+
+Fixed generically: every module that stands on the floor now gets a shaft of the
+skirt's own stone dropped from its footprint to the skirt foot. A tower now
+*meets* the building it stands on. One box each, sharing one cached material.
+
+This is the pass that caught trap #3 above — its first run reported "1 module
+foot shaft" and the one module it found was the roof, the only one that must
+never get a shaft.
+
+### D6 (7/16) — banners are flat sigil-less quads in the wrong red
+
+**Hue.** The judge's own diagnostic did the work: the same banners read "hot
+magenta" under the day key and "a deep muted red" in `H-03-ramp-foot-golden`.
+Measured on its frames, H-05's cloth renders at (155,44,60) and (161,46,60) —
+red blown a third above the authored albedo by the day sun through the ACES
+tonemap and, decisively, **blue above green**, which is what makes the eye call
+it magenta. The nominal faction hex `#7a2430` has that B>G relationship baked in
+(48 vs 36); at golden-hour intensity it never surfaces, under a bright key it
+dominates. The albedo is re-authored to land *on* the intended oxblood after the
+tonemap: value down ~15%, blue pulled below green. Team Tether's reserved
+oxblood is unchanged as a design fact and `_tether_material`'s girders are
+untouched — this is the cloth's albedo, chosen so what the player sees is the
+colour the palette always meant.
+
+**Sigil.** A generated compass device — a ring, four cardinal arms, a longer
+north arm for orientation — in a new `scripts/world/tether_sigil.gd`, shared by
+the Hall's banners and the Sigil Gate so the faction's mark is drawn in one
+place. Generated rather than painted because the lane's constraints are explicit
+(no Meshy without owner reference art, and Meshy is reserved for hero objects —
+a device on a flag is not one). It rides on its own quad, for the reason in
+trap #2 above.
+
+### D4 (8/16) — the "sigil gate" has neither sigil nor gate
+
+`road_gate.gd` gains an **opt-in** `faction_dressing` flag, defaulted off, set
+only by `_build_sigil_gate()`. The village road gate — which this script was
+written for, and for which a plain leaf is correct — is untouched. The Hall's
+checkpoint gains two stone piers with capstones, a timber lintel across the top
+(this is what makes it a *gate* in silhouette rather than a fence with posts
+beside it), and a sigil banner on each pier. Boxes in the Hall's own masonry
+vocabulary; no new asset. Nothing carries a collider: the leaf and wings already
+seal the line, and a pier with a body on it is a new thing for
+`smoke_traversal.gd`'s walk to catch on.
+
+### D11 (15/16) — foliage clipping through the ramp deck
+
+The causeway is 40 m of authored stone laid across ground the scatter was always
+free to plant, and nothing ever told the scatter it was there. Five **small**
+clearings down the deck's centreline rather than one large one: the same judge
+praised H-03's "dense foreground planting" and called the ramp approach one of
+the rebuild's real gains, and a single disc over the causeway would have deleted
+exactly that. r = 5.0 covers the ~7 m deck and its kerbs and stops there.
+
+### D13–D16 — the StormWall
+
+T1-STORMWALL's fix was called "the cleanest fix of the three sets" and its
+diagnosis is not reopened. The complaint is that it **overshot**: "a distant
+smoke or haze bank, not a storm ... a single near-uniform neutral grey ... a
+diffuse top that just fades out ... no anvil, no shelf, no rain shafts, no lit
+rim", sitting *below* the fair-weather cirrus.
+
+Three properties of the old mask caused all of it:
+
+- `smoothstep(0.0, 0.3, v)` faded the top **third** of every slab to nothing, so
+  a 150 m slab showed ~105 m of weather with no boundary at all. That is both
+  why it had no anvil (D13) **and** why it appeared to sit under the cirrus
+  (D15): the geometry's top was already invisible, putting its visible crest near
+  10° of elevation against the cirrus band's ~15°. The top is now a
+  noise-displaced boundary — billowing, never straight, but a real edge — so a
+  slab reads to its authored height.
+- The RGB channel was a grey multiplier in all three channels, which is precisely
+  "colourless" (D14). It now carries a warm lit rim in the band under the anvil
+  (the sun is in the south sky at the day keyframe, so a front standing behind
+  the Hall is backlit along its top) and cools toward the base.
+- Nothing varied along u but the edge feather, so there were no rain shafts. A
+  separate high-frequency-in-u noise now drives shafts through the lower half.
+
+Config adds headroom on top: widths up ~33% and the yaw spread opened from
+[-13, 0, 15] to [-22, 0, 24] so the three banks cover the skyline instead of
+stacking near the axis (D16). Distances, bases, alphas, colours and the pulse are
+untouched — this is reach, not a re-authoring. `_scale_group`, `_cover()` and
+`horizon()` are unaffected: the animation path still writes only
+`albedo_color.a`.
+
+**Not fixed:** D14's second half — "a storm front that large and that close would
+change the light on the thing in front of it". That is a coupling between
+`rift_collapse.gd` and the world's sun/ambient, and it would change the light on
+every frame in the chapter, not just this one. It belongs with T1-LIGHT, not
+here. Called out in §4.
+
+### Coordination with T1-PERF
+
+Cherry-picked `f4e4dbef` unchanged: it gates `_build_keep_parapets()` (the
+site's largest single block of boxes, 177) on the four chamber-sides that face
+into a 4.2–6 m inter-chamber gap and are occluded by the next chamber's own wall
+from every camera position that can exist. It composes with this lane's work —
+this lane edits `_dress_exterior_wall`'s merlon row and buttresses, not
+`_build_keep_parapets`.
+
+Deliberately a cherry-pick and **not** a merge of `ralph/T1-PERF`: that branch is
+mid-flight WIP carrying ~325 files of unrelated survey tooling, and pulling it
+wholesale into an evidence branch would mean the frames a blind judge is pointed
+at are a blend of two lanes' in-progress states. The consolidation can merge both
+branches cleanly.
+
+---
