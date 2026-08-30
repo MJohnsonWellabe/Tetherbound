@@ -132,7 +132,14 @@ func _run() -> void:
 	var stands := [
 		{"name": "H-01-approach-400", "at": Vector2(0.0, 7160.0), "eye_h": 8.0,
 			"dir": Vector2(0.0, 1.0), "aim_hall": true},
-		{"name": "H-02-sigil-gate", "at": Vector2(63.6, 7395.0), "eye_h": 1.7,
+		# T1-HALL-3: 7395 stood 5m off the gate, which was fine while the gate
+		# was a fence and stopped being fine the moment D4 gave it 6.2m piers --
+		# the first frame with them in it has the piers cut off by the top edge
+		# and eating both sides, with the Hall (what this stand is FOR: "full
+		# massing, three tiers, cable landing", design sec10) reduced to a slot
+		# between them. Backed off to 22m, where the gate frames the Hall
+		# instead of replacing it. Same bearing, same eye height, same subject.
+		{"name": "H-02-sigil-gate", "at": Vector2(63.6, 7378.0), "eye_h": 1.7,
 			"dir": Vector2(-1.0, 1.0), "aim_hall": true},
 		# H-02b, added T1-HALL-REBUILD. At the authored 1.7m eye height the
 		# Sigil Gate stand sees NOTHING of the Hall -- Band 5's treeline fills

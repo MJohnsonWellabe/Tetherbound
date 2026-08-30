@@ -20,6 +20,13 @@ const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const LEAF_PREFAB := "road_gate_leaf"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const TETHER_SIGIL := preload("res://scripts/world/tether_sigil.gd")
+## The same stone set and the same measured tile the Hall's own walls use
+## (`stronghold.gd`'s STONE_* / STONE_TILE), so the checkpoint reads as an
+## outpost of the building at the end of the road rather than as its own idea.
+const STONE_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
+const STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
+const STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
+const STONE_TILE := 0.28
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
 
 const KEY_ITEM_ID := "castle_gate_key"
@@ -382,13 +389,29 @@ func _say(conversation_id: String) -> void:
 ## catch on either side of a gate the player is meant to pass through.
 func _build_faction_gatehouse(aabb: AABB) -> void:
 	var half := aabb.size.x * 0.5 + PIER_W * 0.5
+	# The Hall's own curtain tone AND its actual stone, triplanar at the same
+	# measured tile. The first cut set only `albedo_color` and the frame showed
+	# exactly what that is: two smooth pale slabs reading as painted concrete
+	# beside a fully textured world -- the "white maquette" failure
+	# HALL_DESIGN sec5 diagnoses at length ("a flat colour at any value cannot
+	# produce coursing"), reintroduced at the one object in the chapter whose
+	# whole job is to say "you have crossed into hostile ground". Triplanar
+	# because these are BoxMeshes with box UVs; the Hall's own kit is mapped the
+	# same way for the same reason.
 	var stone := StandardMaterial3D.new()
-	# The Hall's own curtain tone, so the checkpoint reads as an outpost of the
-	# building at the end of the road rather than as unrelated masonry.
 	stone.albedo_color = Color("#9c9083")
+	stone.albedo_texture = STONE_ALBEDO
+	stone.normal_enabled = true
+	stone.normal_texture = STONE_NORMAL
+	stone.roughness_texture = STONE_ROUGHNESS
+	stone.uv1_triplanar = true
+	stone.uv1_scale = Vector3.ONE * STONE_TILE
 	stone.roughness = 0.95
 	var timber := StandardMaterial3D.new()
 	timber.albedo_color = Color("#5d4529")
+	timber.albedo_texture = STONE_ALBEDO
+	timber.uv1_triplanar = true
+	timber.uv1_scale = Vector3.ONE * STONE_TILE * 1.4
 	timber.roughness = 0.95
 
 	for side: float in [-1.0, 1.0]:
