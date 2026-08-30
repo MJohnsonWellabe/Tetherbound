@@ -182,9 +182,52 @@ def band_pois(band):
     return out
 
 
+def code_placed_pois():
+    """POIs that live in scripts/world/playground_world.gd, not in the band configs.
+
+    Parsed out of the GDScript rather than duplicated here, so this probe cannot
+    silently drift from the world it is measuring. These are real, one-time,
+    high-value finds (TM discs, item caches, the Sunstone, the ruined watchtower,
+    the gates) and leaving them out would overstate dead travel.
+    """
+    import re
+
+    src = open(os.path.join(REPO, "scripts/world/playground_world.gd")).read()
+    out = []
+
+    m = re.search(r"const TM_AT := \{(.*?)\n\}", src, re.S)
+    if m:
+        for tid, x, z in re.findall(
+            r'"(tm_[a-z_]+)":\s*Vector2\(([-\d.]+),\s*([-\d.]+)\)', m.group(1)
+        ):
+            out.append(("pickup_tm", tid, (float(x), float(z)), 0.0, {}))
+
+    m = re.search(r"const CACHE_AT := \{(.*?)\n\}", src, re.S)
+    if m:
+        for cid, x, z in re.findall(
+            r'"([a-z_]+)":\s*Vector2\(([-\d.]+),\s*([-\d.]+)\)', m.group(1)
+        ):
+            out.append(("pickup_cache", cid, (float(x), float(z)), 0.0, {}))
+
+    for name, kind in [
+        ("SUNSTONE_AT", "pickup_cache"),
+        ("GATE_KEY_AT", "pickup_cache"),
+        ("WATCHTOWER_AT", "structure"),
+        ("SIGIL_GATE_AT", "structure"),
+        ("GATE_AT", "structure"),
+        ("SIGNPOST_AT", "signpost"),
+        ("HOUSE_AT", "structure"),
+    ]:
+        mm = re.search(r"const %s := Vector2\(([-\d.]+),\s*([-\d.]+)\)" % name, src)
+        if mm:
+            out.append((kind, name, (float(mm.group(1)), float(mm.group(2))), 0.0, {}))
+
+    return out
+
+
 def global_pois():
     """Landmarks and named regions -- the 'anticipate something visible ahead' tier."""
-    out = []
+    out = code_placed_pois()
     m = load("data/config/map_landmarks.json")
     for l in m["landmarks"]:
         p = l["position"]
@@ -236,6 +279,10 @@ NOTICE = {
     "spawn_alpha": 70.0,
     "spawn": 40.0,          # ordinary creature cluster
     "harvest": 22.0,        # a bush, a deadwood pile, an ore lump
+    "structure": 250.0,     # watchtower, gate, house -- built to be seen far off
+    "signpost": 40.0,
+    "pickup_tm": 35.0,      # a disc on the ground
+    "pickup_cache": 30.0,
 }
 
 # Which kinds count for which cadence tier.
@@ -243,7 +290,8 @@ NOTICE = {
 #       direction for. This is what "the Meadows feels dead" is actually about.
 #   B = A plus gathering.
 #   C = everything, ordinary respawning wildlife included.
-TIER_A = {"landmark", "region", "prop_cluster", "trainer", "spawn_elder", "spawn_alpha"}
+TIER_A = {"landmark", "region", "prop_cluster", "trainer", "spawn_elder", "spawn_alpha",
+          "structure", "signpost", "pickup_tm", "pickup_cache"}
 TIER_B = TIER_A | {"harvest"}
 TIER_C = TIER_B | {"spawn"}
 TIERS = {"A_structural": TIER_A, "B_plus_gathering": TIER_B, "C_everything": TIER_C}
