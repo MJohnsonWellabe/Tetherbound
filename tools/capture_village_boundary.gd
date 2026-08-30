@@ -156,6 +156,14 @@ func _run() -> void:
 			field.height_at(target_xz.x, target_xz.y) + float(view["target_h"]), target_xz.y)
 		camera.global_position = eye
 		camera.look_at(target, Vector3.UP)
+		# Re-applied per frame, not once before the loop. Under software
+		# rendering a seven-viewpoint pass takes ~8 minutes of wall clock and
+		# `day_cycle.gd` keeps running through it: the first run of this tool
+		# produced frames 01-03 at midday and 04-06 at sunset, which makes any
+		# colour comparison between them meaningless and reads at a glance like
+		# the harness haze this file's own header warns about.
+		if look != null:
+			look.call("apply_time", "day")
 
 		for i in 20:
 			await physics_frame
