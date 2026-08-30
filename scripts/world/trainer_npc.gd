@@ -41,6 +41,12 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
 const CONFIG_PATH := "res://data/config/trainers.json"
 
+## Dark-features T1: one generic id every trainer opens (data/dialogue/
+## trainers.json) when the player has no usable creature to fight with right
+## now -- not a per-trainer pair, so this reaches all ~27 trainers without
+## touching every band's own trainers.json.
+const NO_USABLE_CREATURE_CONVERSATION := "trainer_no_usable_creature"
+
 ## BAND-SPLIT. The `trainers` array is cut per corridor band under
 ## `data/config/bands/<band>/trainers.json`; `flow` and `prompts` are global
 ## and stay in the head file. `band_content.gd` merges them back.
@@ -169,7 +175,20 @@ func _on_challenged(spec: Dictionary) -> void:
 
 	var director := _director()
 	var challenging: bool = director != null and bool(director.call("can_challenge", spec))
-	var conversation := str(spec.get("challenge" if challenging else "defeated", ""))
+	var conversation: String
+	if challenging:
+		conversation = str(spec.get("challenge", ""))
+	elif director != null and bool(director.call("no_usable_ally")) \
+			and not already_beaten(spec, _progression()):
+		# Dark-features T1: `can_challenge()` is false for four distinct
+		# reasons (already beaten, no usable ally, mid-battle, malformed
+		# spec) and used to collapse all of them into the "defeated" line.
+		# This is the one of those four that is actually a common, ordinary
+		# player state (a fainted starter) rather than a real win -- so it
+		# gets its own, honest, generic line instead of a false "defeated".
+		conversation = NO_USABLE_CREATURE_CONVERSATION
+	else:
+		conversation = str(spec.get("defeated", ""))
 	if conversation == "":
 		return
 	if not bool(panel.call("start", conversation)):
@@ -208,6 +227,15 @@ func _on_conversation_finished(conversation_id: String) -> void:
 func _director() -> Node:
 	var world := get_parent()
 	return world.get_node_or_null(^"EncounterDirector") if world != null else null
+
+
+## `Game.progression`, SB9's flat flag store -- same null-tolerant `/root/Game`
+## lookup `encounter_director.gd::_progression()` uses, needed here so
+## `_on_challenged` can tell a genuinely-beaten trainer apart from one the
+## player simply has no usable creature for right now.
+func _progression() -> RefCounted:
+	var game := get_node_or_null(^"/root/Game")
+	return game.get("progression") if game != null else null
 
 
 func _prompt_for(spec: Dictionary) -> String:
@@ -348,7 +376,7 @@ static func creature_for(entry: Dictionary) -> RefCounted:
 ## human.
 static func model_config(spec: Dictionary) -> Dictionary:
 	var rank := str(spec.get("rank", ""))
-	var cfg := NPC_RANKS.config_for(rank) if rank != "" \
+	var cfg := NPC_RANKS.config_for(rank, str(spec.get("base", ""))) if rank != "" \
 		else CHARACTER_MODEL.config_for(str(spec.get("config_key", "")))
 	if cfg.is_empty():
 		return cfg

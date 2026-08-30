@@ -3,7 +3,16 @@
   "_comment_battle_start": "The BATTLE is not an effect in here. scripts/world/trainer_npc.gd starts it when the challenge conversation closes -- the words are the challenge, and a `battle:` effect would put trainer fights inside the opening's beat machine (sequence_director.gd), which is the one state machine they are not part of.",
   "_comment_relay": "SE25. Team Tether at the relay station. The register is OFFICIOUS, not cartoonish: these are people doing a job they believe in, who think the barriers are necessary and that the player is interfering with important work. Nobody gloats, nobody monologues, and nobody threatens. They also never explain what the relay is FOR -- spec 32's ladder puts the explanation two rungs above this one, and a grunt who knew would be a grunt who tells you.",
   "_comment_short": "Two or three lines. A trainer who monologues is a trainer the player skips, and the fight is the content.",
+  "_comment_no_usable_creature": "T2-GATEF-RUN4 / dark-features T1. ONE generic id, not a per-trainer pair -- every trainer in the table (27 of them, the Warden included) opens THIS conversation instead of their own 'defeated' line when scripts/combat/encounter_director.gd::no_usable_ally() is true and they are not actually beaten, so a player whose only creature just fainted gets told the truth (go heal it) rather than a false 'you already won'. Generic because the fix has to reach every trainer without touching ~20 trainer.json entries one at a time.",
   "conversations": {
+    "trainer_no_usable_creature": {
+      "speaker": "Trainer",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Your creature can't fight like this. Get it back on its feet first — a bed will do it, or something to revive it on the spot.",
+        "Come find me again once you've got something to send out."
+      ]
+    },
     "trainer_practice_challenge": {
       "speaker": "Bryn",
       "portrait": "res://assets/ui/portraits/trainer.png",
