@@ -190,6 +190,35 @@ gate open: true   road_gate_open flag: true
 walked to (66.6, -2.2, -29.5) -- 29.5m past the gate, 59.8m from the square (THROUGH)
 ```
 
+### What it looks like
+
+`tools/capture_village_boundary.gd`, six frames under
+`ralph/reports/T5-OPENING/shots/`. §1E's requirement is not "the collider holds" —
+it is that the boundary be *visible*, with collision only supporting it.
+
+* **`04-gate-from-outside.png` is the frame that answers the owner.** The village
+  reads as an enclosed settlement on a rise: one continuous fence line along the
+  crest, a cottage roof and a tree behind it, and the dirt road climbing to a gap
+  in the line. That is a gate being the door of something.
+* **`02` and `03`** confirm the line runs off both ends of the leaf — the thing
+  SA7's own header claimed and the world did not have.
+
+**The honest criticism, unfixed:** the gate leaf is built from the same fence
+family as the wall either side of it, and at approach range it reads as *more
+fence* rather than as a door. `road_gate.gd` does put a brass padlock on it, but
+at 10m that is a few pixels. The gate is findable because the road runs to it,
+not because it looks like a gate. Worth a taller post or a lintel over the
+opening; not attempted here because it is presentation polish on top of a defect
+that is now actually fixed, and this lane had three items.
+
+**Two harness caveats, recorded rather than papered over.** The coordinator's
+warning about grassless frames did not bite — every frame has real grass. A
+different one did: the day cycle kept running through an ~8-minute software
+pass, so frames 01–03 are midday and 04–06 are at sunset, which is where the
+pink cast on the later frames comes from. `capture_village_boundary.gd` now
+re-applies `apply_time("day")` per viewpoint. The run was also cut off by its own
+timeout after six of seven viewpoints (`07-the-line-itself` is missing).
+
 `tests/test_village_boundary.gd` pins the *shape* without booting a world, which
 is where a boundary goes wrong silently:
 
@@ -219,6 +248,15 @@ to be inside the wall), and `tools/capture_village_boundary.gd`'s frame
 `05-the-key-from-the-road` looks at it from the range and angle a player actually
 approaches on the road, which is the one thing the T5-FEEL lane could not have
 framed.
+
+And it is worth saying what that frame currently shows, because it is the
+clearest argument for the shared highlight anyone has produced:
+`shots/05-the-key-from-the-road.png`, taken on THIS branch (no glow merged), at
+7m from the key on the road the player walks — **the key is not visible at all.**
+Not small, not dim: absent. Four blind rounds of shape, scale, metallic and
+emission work on that prop each ended with a critic calling it a smear, and this
+frame is why: every one of them tried to make an 18cm object legible in meadow
+grass using the object itself.
 
 **Open, for whoever lands both branches:** the glow and the new key position have
 not been seen *together* — they are on two branches. Re-run

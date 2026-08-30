@@ -18,6 +18,16 @@ func before_each() -> void:
 	log_reader = QUEST_LOG.new()
 
 
+## Every rung of the scripted opening, in order, as the sequence director itself
+## writes them (`OPENING_BEAT_PREFIX + <beat>`, and since OP-0830-4 as history
+## rather than one at a time). What a test means by "the player has finished the
+## opening" -- the state most of the checks below actually want as their start.
+func _through_the_opening() -> void:
+	for beat: String in ["wake", "house", "choose", "name", "return_starter",
+			"walk_out", "encounter", "road"]:
+		progression.set_flag("opening:beat:" + beat)
+
+
 func test_objectives_data_parses_and_has_at_least_one_main_entry() -> void:
 	var entries: Array = log_reader.main_entries(progression)
 	assert_true(entries.size() >= 1, "data/progression/objectives.json's main list is empty")
@@ -28,8 +38,14 @@ func test_tracked_text_names_the_first_undone_main_objective() -> void:
 	assert_false(text.is_empty(), "a fresh game should always have something to track")
 
 
+## OP-0830-4. `_through_the_opening()` rather than one flag: the ladder gained
+## three in-house rungs ahead of the catch, and a test that sets only
+## `opening:beat:road` is now standing on the third rung of a ladder whose first
+## two are still outstanding -- so the tracked line reads "Go down and hear
+## Grandpa out" and never moves, which is a true statement about a player who has
+## not left the bedroom, not a defect in the road gate.
 func test_completing_the_road_gate_objective_changes_the_tracked_text() -> void:
-	progression.set_flag("opening:beat:road")
+	_through_the_opening()
 	var before: String = log_reader.tracked_text(progression)
 	progression.set_flag("road_gate_open")
 	var after: String = log_reader.tracked_text(progression)
@@ -187,6 +203,14 @@ const WORLD_FLAGS := {
 	# flags, so `_trainer_defeat_flags()` can never see them -- real writers,
 	# just not that kind.
 	"opening:beat:road": "scripts/story/sequence_director.gd (_set_beat(BEATS.ROAD), OPENING_BEAT_PREFIX + \"road\")",
+	# OP-0830-4. The three in-house rungs. Written by the same
+	# `OPENING_BEAT_PREFIX + <beat>` line as `opening:beat:road` above -- and,
+	# since that change, by `_persist_beat_history()` for every beat at or
+	# before the one reached, so a restored save cannot own a later rung while
+	# an earlier one reads outstanding.
+	"opening:beat:choose": "scripts/story/sequence_director.gd (_set_beat, on the `beat:starter_choice` effect ending Grandpa's briefing)",
+	"opening:beat:return_starter": "scripts/story/sequence_director.gd::_adopt() (the named creature reaches the party)",
+	"opening:beat:walk_out": "scripts/story/sequence_director.gd (_set_beat, on the `beat:first_encounter` effect ending `grandpa_first_catch`)",
 	# TUTORIAL-CHAIN (OP23-04). Two new rungs and one new count; every one of
 	# them is written by something that ships, which is exactly what this
 	# registry is for.
@@ -685,7 +709,7 @@ func test_finishing_a_later_beat_early_neither_strands_nor_spoils_the_chain() ->
 			"a beat the player has not reached is being shown because its flag happens to be set")
 
 	# And when they do get there, it is already done and the line steps over it.
-	progression.set_flag("opening:beat:road")
+	_through_the_opening()
 	progression.set_flag("road_gate_open")
 	assert_true(log_reader.tracked_text(progression).find("Tam") == -1,
 		"the tracked line went back to a beat that was already finished")
