@@ -267,7 +267,40 @@ failed fix; the *pair* is the evidence, not either frame.
 to skip it: **"dark and bare" is exactly what a silently-degraded frame looks
 like**, and nothing in the image would say so.
 
-<!--CAPTURE_RESULTS-->
+Six frames, in `ralph/reports/t5-camps-night-ecology/`. Three sites, each shot
+twice from an identical camera with nothing changed but the clock.
+**`capture_check` passed 6/6, refused 0.**
+
+| site | day | night |
+|---|--:|--:|
+| `band0-home-hook` (60, 46) | `is_dark=false`, **0** owls | `is_dark=true`, **1** owl |
+| `band1-grove-interior` (265, 897) | `is_dark=false`, **0** owls | `is_dark=true`, **3** owls |
+| `band1-camp-grove` (337, 965) | `is_dark=false`, **0** owls | `is_dark=true`, **4** owls |
+
+Those counts are read off the live scene nodes at the moment of the shutter,
+not off the config, and they match orders 1050, 1052 and 1053 exactly.
+
+**What the frames prove, and what they do not.** They prove capture integrity —
+the grass field is bound and drawing in every one, so this is the shipping build
+and not the bare-splat frame the evidence rule was written about — and they
+prove the world genuinely changes state: the night frames read as night, not as
+dim-day, with lit windows on Grandpa's house and blue night flowers.
+
+**They do not show the owls, and I am not going to claim they do.** Duskhush is
+a 1.28 m non-emissive body coloured `#3d4270` (`species.json`'s own placeholder
+slate/lavender), and at the ~18 m standoff these vantages use it is not
+separable from dark ground in night lighting at 960×600. The counts above are
+what establishes presence; the played path in `smoke_night_ecology.gd` is what
+establishes reachability.
+
+**That is worth someone's attention as a finding in its own right.** Criterion
+13 is *day/night readability*, and a nocturnal species the player may not be
+able to see after dark meets the ecology half of it while leaving the readability
+half open. Three things would settle it and none belong to this lane: a vantage
+at player distance (the engage prompt fires at ~1.8 m, not 18 m), a GPU machine
+at 1280×800, and the judgement of `.claude/skills/visual-judge`. `art.json`'s own
+night comments already end at *"if this still reads as dim-day rather than night,
+adjustment_saturation is the next dial"* — this is the neighbouring question.
 
 ---
 
@@ -295,6 +328,13 @@ skip list, and T5-CADENCE's handover reports 1545 tests against this run's 1603
 
 Written so the next lane does not re-derive it.
 
+- **Whether Duskhush is legible at night at all.** This lane put the night
+  ecology in and proved the player can reach and engage it. It did not establish
+  that the player can SEE it: at 18 m in night lighting a 1.28 m slate-coloured
+  body is not separable from the ground in the frames above. That is criterion
+  13's readability half, it wants a GPU, a player-distance vantage and
+  `visual-judge`, and it is the single most likely way this content quietly
+  fails to land.
 - **Band 5's resource FAIL.** 8 nodes of band-1-tier material in the region
   whose whole purpose is final preparation. Outside this brief's four findings.
   CADENCE established the pattern (tier material sited in fiction, not scattered)
@@ -328,6 +368,7 @@ Written so the next lane does not re-derive it.
 tests/smoke_night_ecology.gd     played-path evidence for the night ecology
 tools/_capture_night_ecology.gd  day/night frame pairs, capture-checked
 tools/_probe_night_sites.gd      ground/relief/slope at every candidate site
+ralph/reports/t5-camps-night-ecology/   6 frames, 3 day/night pairs, check 6/6
 ralph/reports/handover-T5-CAMPS-2026-08-30.md
 ```
 
