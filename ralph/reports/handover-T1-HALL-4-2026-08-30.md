@@ -7,7 +7,17 @@ needs art nobody has built — went to the owner and is deliberately untouched h
 
 **Headline, the number the lane was asked for:**
 
-> *(filled in from the rendered frames — see §1)*
+> **Fortress-vs-hill separation: +51.5.**
+> **Fortress vs the nearest-in-value ground beside it: +2.9 → +31.8**, against
+> the keyart's +32.0. The fortress is now the dark shape in its own frame.
+> Measured on the judge's stand with the judge's boxes; see §1.
+
+**And the finding that matters more than that number:** defect 2 (the bald
+mid-distance) is **not fixed and cannot be fixed the way it was framed**. In
+`H-02b` most of that bald ground is *outside the authored world* — the Hall sits
+at z 7560 and `world_perimeter.gd`'s south cap is at z 7680. The "evenly spaced
+identical posts" the judge called "the edge of the map" **are** the map's edge.
+See §1b.
 
 ---
 
@@ -59,9 +69,70 @@ would otherwise do:
 
 ---
 
-## 1. The headline defect: silhouette contrast
+## 1. The headline defect: silhouette contrast — **fixed, and measured**
 
-*(filled in from the rendered frames)*
+Measured on `H-02b-sigil-gate-raised`, the judge's own stand and the judge's own
+boxes, by `tools/_t1hall4_measure.py`:
+
+| | T1-HALL-3 (judged) | T1-HALL-4 | keyart |
+|---|---|---|---|
+| fortress mass | 133.4 | **113.2** | 72 |
+| bald hill right of it | 158.4 | 164.7 | 104 |
+| mid-ground left | 136.3 | 145.0 | — |
+| **separation (worst neighbour)** | **+2.9** | **+31.8** | **+32.0** |
+
+**The fortress-vs-hill separation is +51.5. The number that matters — the
+fortress against the nearest-in-value ground beside it — is +31.8, against the
+keyart's +32.0.**
+
+Both halves of the fix contributed and neither would have been enough alone: the
+building dropped 20.2 points and the ground it stands against rose 8.7. It is now
+unambiguously the dark shape in its own frame, which is what JUDGE-6 said makes a
+landmark.
+
+## 1b. Defect 2 is **not** fixed, and the reason is structural
+
+This is the most useful thing in this handover and it should change what the next
+lane does.
+
+The cull-range raise landed and moved the numbers barely at all: bare pale ground
+in the mid-band went 37.5% → 36.0%, and the topmost row holding vegetation-dark
+pixels rose from y=364 to y=354. Ten pixels. I went looking for why, and the
+answer is in `scripts/world/world_perimeter.gd`:
+
+```
+##   south cap   z = +7680,  x: -1024 -> 1024  (past the stronghold)
+```
+
+**The Hall stands at z 7560. The world ends at z 7680 — 120 m behind it.**
+
+So in `H-02b`, which looks south-west *at* the Hall, most of the "bald
+mid-distance" is ground beyond the authored corridor: no scatter is baked there,
+none ever will be, and no `lod_range` or `density_scale` can put content on it.
+And the judge's "hard dark rim with **evenly spaced identical pale posts** along
+it … it says *edge of the map*" is not a procedural-looking artefact that
+resembles a boundary. It **is** the boundary — `world_perimeter.gd`'s south cap,
+posts at `JOIN_SPACING` 37 m. The judge read the frame exactly right, blind, and
+named the cause without knowing it.
+
+That reframes defect 2 completely. It is not a vegetation-density problem in this
+frame; it is a **world-extent and composition** problem, and the fix is one of:
+
+1. **Raise a landform behind the Hall** — `terrain_playground.json`'s
+   `rises.peaks`, a peak around (8, 7700) — so the boundary is occluded and the
+   fortress gains a backdrop to be dark against. Cheapest, and the only one that
+   is still scene tuning. **Not done here**: it moves terrain near the Hall, and
+   the building's floor level, causeway rise and massing feet are all sampled
+   from the live ground at build time, so it needs its own verify pass rather
+   than being tacked onto a lane whose render budget was already spent.
+2. Extend the corridor south past z 7680 (a bake and a world-bounds change).
+3. Move the Hall north, or re-aim the stand — both design decisions, not this
+   lane's to make.
+
+The cull-range raise is kept regardless: it is correct on its own terms, it costs
+no placements, and it will pay off on every stand that looks *along* the corridor
+rather than off its end. But nobody should expect it to fix `H-02b`, and this
+lane should not be read as having fixed defect 2.
 
 ## 2. Where JUDGE-6 is wrong, with the measurement
 
