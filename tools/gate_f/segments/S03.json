@@ -1684,6 +1684,26 @@
       "expected": "record what the line acknowledges about the player's progress"
     },
     {
+      "id": "S03-62a",
+      "title": "close Oskar's creature swap without trading",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "S03 does not exercise creature trading (that is X-lab territory); back out to world control with nothing swapped. T2-GATEF-RUN5. Oskar's greeting ends with `shop:creatures:oskar` (data/dialogue/village.json), which sequence_director.gd::_maybe_open_shop() opens as a SwapPanel the moment his dialogue box closes -- exactly the way Mira's greeting opens her goods shop. Mira's is closed by S03-56 and the world re-asserted by S03-56a; Oskar's was never closed at all. Nobody noticed for four sessions because GAME-8 meant the walk to Oskar never arrived and his dialogue never ran. With GAME-8 fixed, this run's telemetry shows `input_context` pinned at 'panel:SwapPanel' from S03-62 to the end of the segment: every hotbar_N press after it was swallowed by playground_hud.gd::_world_input_allowed() (so equipped stayed {hotbar_slot: -1, item: \"\"} despite a correctly bound bar), and every walk reported '0 held' while never leaving (19,-6), because a panel owning input is not the same thing as locomotion being disabled. Same shape as RIG-13..RIG-22: a real fix closing one gap and the next one behind it becoming visible for the first time."
+    },
+    {
+      "id": "S03-62b",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "The world must own input before the gathering loop begins. This assert is the guard the Oskar branch never had: with the SwapPanel still up, every walk and every hotbar press below is silently swallowed and the segment reports 71 FAILs that all have one cause."
+    },
+    {
       "id": "S03-63",
       "title": "Section E.5 nav note -- tournament_gather_materials",
       "action": "note",
