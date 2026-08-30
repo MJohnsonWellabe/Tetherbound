@@ -191,7 +191,7 @@ func _build_group(group_name: String, slabs: Array, into: Array[MeshInstance3D],
 		var authored := clampf(float(slab.get("alpha", 0.9)), 0.0, 1.0)
 		var colour := Color(str(slab.get("colour", "#39404f")))
 		colour.a = authored * scale
-		instance.material_override = _slab_material(colour)
+		instance.material_override = _slab_material(colour, hash("%s_%d" % [group_name, index]))
 		instance.position = Vector3(at.x, _base_height + float(slab.get("base", 0.0)) + height * 0.5, at.y)
 		# Face back along its own bearing, at the road the player stands on.
 		instance.rotation.y = atan2(-direction.x, -direction.y)
@@ -202,9 +202,79 @@ func _build_group(group_name: String, slabs: Array, into: Array[MeshInstance3D],
 		index += 1
 
 
-func _slab_material(colour: Color) -> StandardMaterial3D:
+## T1-STORMWALL (2026-08-30) -- WHY THIS SLAB NOW CARRIES A TEXTURE.
+## `T1-HALL`'s re-site (`data/config/stronghold.json::_comment_ow5d_relocation`)
+## put the Hall's `site.at` at (8,7560), 62.7m from this spoke's own road end
+## (-33.99,7513.46) and 74.2m from `_origin` -- so close that JUDGE-4, the Hall
+## lane and the lane before it all independently traced "four huge untextured
+## grey slabs behind the Hall" back to this file (`ralph/reports/
+## JUDGE-4-2026-08-30.md`, evidence-validity section). Measured, not assumed
+## (`tools/_probe_stormwall_hall.gd`, this task): the three `storm_wall` slabs
+## sit 332-409m from the Hall, inside the very range this file's own GATE-E-
+## STRONGHOLD-ART comment above already names as the effect's designed sweet
+## spot -- "at the seam the effect works -- 365-461m out" -- and close to
+## on-axis (the Hall sits ~7 degrees off the forward bearing at that range,
+## comfortably inside a single slab's own 26-degree spread). So this is NOT
+## the visibility/lifecycle bug GATE-E-STRONGHOLD-ART fixed: `visible_within_
+## metres` cannot discriminate "seen from the seam, as designed" from "seen
+## from the Hall" because, geometrically, the Hall now sits almost exactly
+## where the seam already put a viewer. Shrinking the visibility band would
+## also blank the wall at the storm road's own dead end, deleting the read
+## this file's header says is "what the player has looked at across the
+## broken bridge for the entire chapter."
+##
+## What actually changed is CONTEXT, not distance: at the seam this is the
+## only thing in the shot, across 200m of open meadow, with nothing to compare
+## it to. Next to the Hall's coursed, lit, textured stone, the same flat
+## single-colour unshaded quad this file has always drawn reads as exactly
+## what it is under that comparison -- a hard-edged rectangle -- rather than
+## as weather. So the fix is materials: a procedurally generated mask (no new
+## asset, no Meshy generation, same rule the rest of this file already follows
+## for its own geometry) that (1) feathers the rectangle's edges into a cloud
+## silhouette instead of a hard-edged card, (2) thins the base so the wall
+## settles toward the ground fog instead of ending in a visible sill, and (3)
+## adds internal noise-driven variation so the surface reads as volume rather
+## than flat paint. `_scale_group`'s animation is untouched -- it still only
+## writes `albedo_color.a`, which multiplies with this mask's own alpha, so
+## the breathing pulse and the collapse/reveal fade work exactly as before and
+## `_cover()`/`horizon()` (mesh area times `albedo_color.a`) are unaffected by
+## a texture that never appears in that arithmetic.
+const _MASK_SIZE := Vector2i(160, 72)
+
+## One seeded, deterministic soft-edged noise mask per slab, so the storm wall
+## reads as several irregular banks of weather rather than one texture tiled
+## across identical rectangles -- the same "asymmetric, not mirrored" note
+## JUDGE-3/JUDGE-4 already made about the creature variants' own crack
+## networks applies here.
+static func _slab_mask(seed_value: int) -> ImageTexture:
+	var noise := FastNoiseLite.new()
+	noise.seed = seed_value
+	noise.frequency = 0.05
+	noise.fractal_octaves = 3
+	noise.fractal_gain = 0.55
+	var image := Image.create(_MASK_SIZE.x, _MASK_SIZE.y, false, Image.FORMAT_RGBA8)
+	for y in _MASK_SIZE.y:
+		var v := float(y) / float(_MASK_SIZE.y - 1)
+		# Denser toward the top, thinning toward the base -- a wall of weather
+		# settles into ground fog, it does not end on a visible straight sill.
+		var vertical := smoothstep(0.0, 0.3, v) * (1.0 - 0.45 * smoothstep(0.72, 1.0, v))
+		for x in _MASK_SIZE.x:
+			var u := float(x) / float(_MASK_SIZE.x - 1)
+			# The mesh boundary itself must never read as an edge -- feather
+			# both sides into a cloud bank rather than a card.
+			var edge := smoothstep(0.0, 0.18, u) * smoothstep(1.0, 0.82, u)
+			var n := noise.get_noise_2d(x, y) * 0.5 + 0.5
+			var shade := 0.8 + 0.4 * n
+			var alpha := clampf(edge * vertical * (0.5 + 0.5 * n), 0.0, 1.0)
+			image.set_pixel(x, y, Color(shade, shade, shade, alpha))
+	return ImageTexture.create_from_image(image)
+
+
+func _slab_material(colour: Color, seed_value: int) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
+	material.albedo_texture = _slab_mask(seed_value)
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
