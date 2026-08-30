@@ -721,8 +721,9 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
 			return true
 		var forward := -camera.global_transform.basis.z
 		var wanted := to.normalized()
-		# Split the one angular error into the two axes the sticks drive, in
-		# CAMERA space, so each stick is corrected by its own component.
+		# The one angular error, resolved onto the two axes the stick drives, in
+		# CAMERA space. These give the DIRECTION to push; the magnitude is one
+		# number for both, decided below.
 		var right := camera.global_transform.basis.x
 		var up := camera.global_transform.basis.y
 		var yaw_error := atan2(wanted.dot(right), wanted.dot(forward))
