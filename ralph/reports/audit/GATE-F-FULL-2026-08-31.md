@@ -110,6 +110,25 @@ save/load lifecycle and correctly finds the creature comes back. Nothing in the
 suite levels a creature up **after** loading it, which is the only moment the
 defect is observable. That is the whole gap, and it is one test.
 
+**And it is not new. It is in sixteen previous run directories, and no lane ever
+named it.** A sweep of every Gate F run in `ralph/reports/` for a party member
+with `max_hp` under 5 returns sixteen hits, **all at level 4** — the first
+level-up after the S02 → S03 handoff, the chain's first load — and **all at
+exactly 1.18**, because it is not a roll. Gate F run 3, the deepest any attempt
+has reached, begins S04, S05, S06, S07, S08 **and S09** at `t≈1.1` already
+carrying it; its evidence from the tournament onward describes a chapter being
+played by a creature that dies to anything.
+`ralph/reports/FINDING-T2-STRANDING-2026-08-30.md` prints, in its own probe
+output, *"after `heal_fully()`: fainted=false hp=**1.18/1.18**"* — a fully
+healed starter with one hit point — and reasons past it to a RIG verdict that is
+correct on its own terms and downstream of this. **The evidence was there for
+three days in sixteen directories; what was missing was somebody asking why a
+number was small.** Findings filed as RIG defects about fainting starters,
+parties that could not challenge, and Revives spent before the first trainer
+should be re-read against this rather than trusted. None of them is retracted
+here — their mechanisms were verified live — but their *cause* changes, and so
+does what fixing them is worth.
+
 ### 3.2 GAME-F2 — the practice-fight level pin is gone from `main`. **SHIP**
 
 `scripts/combat/encounter_director.gd:438` still reads the per-cluster `level`
