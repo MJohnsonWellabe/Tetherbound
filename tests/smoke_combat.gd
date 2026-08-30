@@ -48,12 +48,19 @@ var _hits_on_ally: int = 0
 ## T3-TYPECHART. `[on_enemy, effectiveness]` for every hit that landed this run.
 var _effectiveness_seen: Array = []
 
-## T3-COMBAT. Damage dealt by every QUICK attack that connected with the enemy,
-## so the magnitude the chart promised can be checked against the magnitude the
-## fight actually dealt. Quick attacks only, because quick and charged have
-## different `power` in `combat.json` and averaging the two together would
-## measure the mix rather than the multiplier.
-var _quick_damage_on_enemy: Array[float] = []
+## T3-COMBAT. `[damage, was_quick]` for every blow that connected with the
+## enemy, so the magnitude the chart promised can be checked against the
+## magnitude the fight actually dealt.
+##
+## Both attacks, tagged, rather than quick ones only. Quick and charged have
+## different `power` in `combat.json` and can carry different move TYPES, so
+## they cannot be averaged together — but they can each be predicted separately
+## and the predictions summed. That matters: a first run of this check sampled
+## quick hits alone and got five of them out of a six-hit fight, which is enough
+## for the statistic but leaves nothing in hand if a low-rolled opponent dies in
+## three. Using every hit means the sample size is however many blows it took to
+## win, which is never small.
+var _damage_on_enemy: Array = []
 ## Which attack the press now in flight was. Set by `_press()`; read by the
 ## `hit_landed` handler, which fires synchronously from inside
 ## `_resolve_player_strike`, so it is still describing the same swing.
@@ -173,8 +180,7 @@ func _collect_nodes() -> bool:
 	_manager.connect("hit_landed", func(on_enemy: bool, amount: float) -> void:
 		if on_enemy:
 			_hits_on_enemy += 1
-			if _last_press_was_quick:
-				_quick_damage_on_enemy.append(amount)
+			_damage_on_enemy.append([amount, _last_press_was_quick])
 		else:
 			_hits_on_ally += 1)
 	# T3-TYPECHART. Every verdict the fight actually emitted, so
@@ -615,22 +621,39 @@ func _the_type_chart_reaches_a_real_fight() -> void:
 	# arithmetic over the real stats, with the chart and without it. Snapshotted
 	# now because `_fight_to_a_finish` runs the enemy to zero and the manager
 	# drops it; `_the_advantage_was_worth_what_the_chart_promised()` reads this.
-	var quick_cfg: Dictionary = MATH.config().get("player_quick", {})
 	var progression_cfg: Dictionary = PROGRESSION.config()
-	var move_power: float = moves.call("power", str(creature.move_quick))
 	var attack: float = creature.effective_attack(progression_cfg)
 	var defence: float = foe.effective_defence(progression_cfg)
-	var multiplier := CHART.multiplier_dual(
-		str(moves.call("type_of", str(creature.move_quick))),
-		str(foe.creature_type), str(foe.get("secondary_type")))
 	_fight_snapshot = {
-		"with_chart": MATH.base_damage(
-			float(quick_cfg.get("power", 9.0)), attack, defence, move_power, multiplier),
-		"without_chart": MATH.base_damage(
-			float(quick_cfg.get("power", 9.0)), attack, defence, move_power, 1.0),
-		"multiplier": multiplier,
+		"quick": _predict(
+			MATH.config().get("player_quick", {}), str(creature.move_quick),
+			moves, foe, attack, defence),
+		"charged": _predict(
+			MATH.config().get("player_charged", {}), str(creature.move_charged),
+			moves, foe, attack, defence),
 		"ally_type": str(creature.creature_type),
 		"foe_type": str(foe.creature_type),
+	}
+
+
+## What one blow of `block`'s kind SHOULD deal here, with the chart applied and
+## without it — from the real arithmetic over the real stats of the two
+## creatures that actually met.
+##
+## Quick and charged are predicted separately because they differ in `power` and
+## may differ in move TYPE: Mosshell and Reedwing both ship a charged move of a
+## different element from their quick one, and any TM creates the same split.
+func _predict(block: Dictionary, move_id: String, moves: RefCounted, foe: RefCounted,
+		attack: float, defence: float) -> Dictionary:
+	var power := float(block.get("power", 9.0))
+	var move_power: float = moves.call("power", move_id)
+	var multiplier := CHART.multiplier_dual(
+		str(moves.call("type_of", move_id)),
+		str(foe.creature_type), str(foe.get("secondary_type")))
+	return {
+		"with_chart": MATH.base_damage(power, attack, defence, move_power, multiplier),
+		"without_chart": MATH.base_damage(power, attack, defence, move_power, 1.0),
+		"multiplier": multiplier,
 	}
 
 
@@ -748,20 +771,24 @@ func _fight_to_a_finish() -> void:
 func _the_advantage_was_worth_what_the_chart_promised() -> void:
 	if _fight_snapshot.is_empty():
 		return  # The fight never got far enough to snapshot; already failed above.
-	var samples := _quick_damage_on_enemy.size()
+	var samples := _damage_on_enemy.size()
 	if samples < 4:
-		_fail("only %d quick attacks connected in the whole fight; too few to tell what a hit is worth"
+		_fail("only %d blows connected in the whole fight; too few to tell what a hit is worth"
 			% samples)
 		return
 
-	var total := 0.0
-	for sample: float in _quick_damage_on_enemy:
-		total += sample
-	var observed := total / float(samples)
-	var with_chart := float(_fight_snapshot["with_chart"])
-	var without_chart := float(_fight_snapshot["without_chart"])
+	# Every blow, each against the prediction for its OWN kind of attack, summed.
+	var observed := 0.0
+	var with_chart := 0.0
+	var without_chart := 0.0
+	for entry: Variant in _damage_on_enemy:
+		var row: Array = entry as Array
+		var predicted: Dictionary = _fight_snapshot["quick" if bool(row[1]) else "charged"]
+		observed += float(row[0])
+		with_chart += float(predicted["with_chart"])
+		without_chart += float(predicted["without_chart"])
 
-	print("quick attacks: %d landed, mean %.2f damage (chart says %.2f, a chart-less fight would say %.2f)"
+	print("%d blows landed for %.1f damage (the chart says %.1f; a chart-less fight would say %.1f)"
 		% [samples, observed, with_chart, without_chart])
 
 	# The variance band is +/-10% on each hit; the mean of `samples` of them is
@@ -769,16 +796,19 @@ func _the_advantage_was_worth_what_the_chart_promised() -> void:
 	# enough that a 25% multiplier cannot hide inside it.
 	var tolerance := 0.12
 	if absf(observed - with_chart) > with_chart * tolerance:
-		_fail(("quick attacks averaged %.2f damage, but %s into %s at x%.4f should average "
-			+ "%.2f (a fight with no type chart at all would average %.2f). The multiplier "
-			+ "the HUD advertises is not the one the damage is resolved with.")
-			% [observed, str(_fight_snapshot["ally_type"]), str(_fight_snapshot["foe_type"]),
-				float(_fight_snapshot["multiplier"]), with_chart, without_chart])
+		_fail(("%d blows dealt %.1f damage, but %s into %s (quick x%.4f, charged x%.4f) should "
+			+ "have dealt %.1f — and a fight with no type chart at all would have dealt %.1f. "
+			+ "The multiplier the HUD advertises is not the one the damage is resolved with.")
+			% [samples, observed, str(_fight_snapshot["ally_type"]),
+				str(_fight_snapshot["foe_type"]),
+				float((_fight_snapshot["quick"] as Dictionary)["multiplier"]),
+				float((_fight_snapshot["charged"] as Dictionary)["multiplier"]),
+				with_chart, without_chart])
 		return
 	if absf(with_chart - without_chart) < with_chart * tolerance:
-		_fail(("this fight's type multiplier is %.4f, which is too close to neutral for the "
-			+ "damage check to mean anything. Re-pick the ally in `_ensure_ally`.")
-			% float(_fight_snapshot["multiplier"]))
+		_fail(("the chart moves this fight's damage by less than %.0f%%, which is too close to "
+			+ "neutral for the check above to mean anything. Re-pick the ally in `_ensure_ally` "
+			+ "against whatever `spawns.json`'s roles.practice now names.") % (tolerance * 100.0))
 
 
 ## R2.5: `encounter_director.gd` used to call `_ally.heal_fully()` on the way
