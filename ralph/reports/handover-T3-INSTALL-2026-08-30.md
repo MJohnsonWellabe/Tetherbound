@@ -42,13 +42,12 @@ about that.
 **Player-reachable now.** Moved all four new-mesh species out of
 `data/creatures/species_pending.json` (which nothing loaded) into
 `data/creatures/species.json`, pointing `placeholder.model` at their
-committed `.glb`. Repointed `bramblebun`'s own `placeholder.model` at
-`bramblebun_redesign`'s mesh (same species id — a redesign replaces the
-asset, not a new species, per the brief). Moved their pre-authored
-placements out of `spawn_tables.json`'s `_pending` block into the live
-`tables` (`meadows_open`/`meadows_rock`, with the same tier/weather/region
-gates the pending block already specified). Stats, types, moves, catch
-rates were already fully authored by T3-CREATURES — untouched.
+committed `.glb`. Moved their pre-authored placements out of
+`spawn_tables.json`'s `_pending` block into the live `tables`
+(`meadows_open`/`meadows_rock`, with the same tier/weather/region gates the
+pending block already specified). Stats, types, moves, catch rates were
+already fully authored by T3-CREATURES — untouched. (Bramblebun's own
+redesign was tried and reverted in this same pass — see below.)
 
 Orb/summon path: nothing species-specific to wire — catching, party slots
 and the field-summon hotbar all key off `species.json` generically, so
@@ -68,11 +67,34 @@ idle/walk/attack/hit/faint. This is a real, separate follow-up item — a
 Meshy `rig` + `animate_humanoid.py` bake, the same recipe the 22 NPC bodies
 already went through — not a data problem this lane could close.
 
+**Bramblebun's redesign mesh was NOT wired in, and this matters for how to
+read the rest of this section.** It was tried in this same pass and reverted
+after `tests/smoke_art.gd` caught it: `bramblebun_redesign`'s `.glb` shares
+the same no-rig defect as the four new species, and Bramblebun is the
+single most common, most-seen creature in the Meadows (the "practice
+creature" every player throws orbs at repeatedly). Swapping the most-seen
+creature in the game to a frozen static pose is a regression, not an
+install, so `bramblebun.placeholder.model` stays on the original animated
+mesh. The four brand-new species keep the swap because for them the
+comparison is "unreachable" vs "reachable but static," which is a real
+improvement; for Bramblebun it would have been "animated" vs "static,"
+which is not.
+
 Evidence: `ralph/reports/T3-INSTALL/shots/roster.png` — all nine creatures
 this lane touched (five new + four Aspect variants), built through the real
 `creature_body.gd::setup(species_id)` path against `species.json`, side by
-side with a 1.8m trainer-height ruler. [FILL IN: pass/fail per creature,
-what it actually looks like.]
+side with a 1.8m trainer-height ruler. **Result: all nine loaded real
+models at plausible scale (`has_model` true for all, confirmed by the
+capture tool's own report line).** Sparkit, Cindercub, Shadelet and
+Frostclaw are visibly on-model against their reference art (small
+fox-like electric creature, stocky terracotta bear cub, dark long-bodied
+lizard, pale big cat respectively) and clearly distinct from every
+existing species in silhouette and colour — no confusion with an existing
+creature at a glance. `smoke_art.gd` passes clean (`godot --headless
+--path . --script tests/smoke_art.gd` → `art: OK`) once Bramblebun's
+model was reverted; before the revert it failed hard with `'bramblebun'
+has no AnimationPlayer despite declaring 6 clips`, repeated once per
+frame.
 
 ## 2. Aspect variants — Nightburrow, Stormtrail, Riftfrill, Ashtusk
 
@@ -88,9 +110,41 @@ resolved on `main` — both `_place_item_caches()` and `_place_sunstone()`
 are present and called.
 
 This lane's job here was the one thing genuinely still open: **the render
-pass**. Included in `roster.png` above — [FILL IN: do the four variants
-visibly differ from their base species' textures, confirming D1 actually
-renders correctly and not just parses correctly].
+pass**. Included in `roster.png` above, plus two 3x-scaled crops
+(`ralph/reports/T3-INSTALL/shots/` — see the crop paths below) for the two
+pairs that read closest at lineup scale.
+
+**Confirmed: D1's fix renders, not just parses.** All four variants are
+visibly different from their base species in the real capture:
+- **Nightburrow vs Burrowback**: clearly darker/charcoal body against
+  Burrowback's warm grey-tan, with visible purple emissive sparkle
+  particles rising off it in the still frame — the single most dramatic
+  difference of the four, matching the brief's "the purple flame effect is
+  important" instruction.
+- **Stormtrail vs Trailpup**: visibly darker storm-grey coat against
+  Trailpup's lighter tan.
+- **Riftfrill vs Paddlenewt**: close at lineup scale, clearly different in
+  the close crop — Riftfrill shows lilac/purple colouring across the head
+  and pink-toned emissive eye/marking detail plus faint sparkle motes,
+  against Paddlenewt's flat teal.
+- **Ashtusk vs Tuskroot**: close at lineup scale, clearly different in the
+  close crop — Ashtusk is dark charcoal-grey with scattered gold/orange
+  fleck markings against Tuskroot's warm brown-and-green colouring. The
+  brief's "ember-glowing tusks" specifically did not read clearly in this
+  still frame (both creatures' tusks look similarly ivory-coloured) — worth
+  a closer, better-lit look if anyone revisits this, but the overall recolour
+  is unambiguous.
+
+This was a static-lighting, no-VFX-settle-time lineup shot, not the
+purpose-built mood-lit close-up pass `tools/_capture_aspect_variants.gd`
+already does per variant (night cave / storm country / dusk pond / warm
+stone, with a VFX settle period) — that tool builds bodies by calling
+`set_aspect_variant()` directly rather than through `species.json`, which
+was the right call before D1 landed the data and is arguably redundant now.
+Whoever next touches these four should consider pointing that tool at the
+real `species.json` entries instead, both to keep one capture path and to
+get the full mood-lit/VFX-settled treatment this quick verification pass
+did not attempt.
 
 ## 3. NPC cast
 
@@ -112,8 +166,20 @@ seven meshes were already paid for and sitting unused.
 Evidence: `ralph/reports/T3-INSTALL/shots/rank_variety/` via the
 already-existing `tools/_capture_rank_variety.gd` (it reads real trainer
 entries through `TRAINER_NPC.trainer()`/`model_config()`, so it picked up
-the `base` assignments with no tool changes needed). [FILL IN: do the
-eleven captured individuals now show real silhouette variety.]
+the `base` assignments with no tool changes needed — no code change to the
+capture tool itself). **Confirmed: real silhouette variety, not a subtle
+shift.** `12-lineup-all.png` shows all eleven named individuals side by
+side — where the T1-NPC-CAST handover's own prior render showed "the same
+cap, the same face mask, the same coat, the same boots" differing only by a
+colour multiply and a coin-sized badge, this lineup shows genuinely
+different body types, hairstyles, and outfit silhouettes across the row
+(a shorter figure in a casual vest and shorts stands next to armoured
+grunts in full tactical gear; several captains show a full ornate coat with
+a hood and cape rather than the shared base body). `07-captain-vance-front.png`
+is a strong single example: an eyepatched captain with white hair, an
+ornate purple-accented coat, gold-clawed gauntlets and dramatic coat tails
+— a real "distinctive silhouette" in the sense the NPC design board's own
+notes asked for, not a recolour of the grunt.
 
 **The 15 civilian/trail bodies remain unplaced — scoped out of this pass,
 not fixed.** `innkeeper`, `inn_helper`, `trader`, `craftsperson`,
@@ -162,8 +228,21 @@ Also wired `data/config/vitals.json`'s `buffs.max_visible_icons` (previously
 a config key with zero readers) to size BOTH buff rows, replacing a
 hardcoded `3` — loaded once in `_ready()` before either row is built.
 
-Evidence: [FILL IN once rendered — a party creature with an active tonic
-buff, showing the new chip row under its HP/energy bars.]
+Evidence: `ralph/reports/T3-INSTALL/shots/buff_hud.png` (full HUD) and
+`buff_hud_chips_zoom.png` (4x crop) — a real Frostclaw with two real
+`apply_buff()` calls applied (`attack`/`tonic_might` and
+`defence`/`tonic_iron`), through the real `scenes/ui/playground_hud.tscn`.
+**Confirmed working**: two teal chips reading "A" and "D" sit directly
+under the HP bar, exactly matching the two applied buffs, with no spurious
+overflow indicator for the third empty slot. Getting this one screenshot
+took real work unrelated to the feature itself: `playground_hud.gd`'s
+existing (pre-this-lane) `_yield_left_stack_to_combat_hud()` /
+`_yield_creature_block_to_party_strip()` pair permanently fight over which
+of the "active companion" panel and the five-row party strip gets
+`.visible = true` the instant the party strip is revealed even once
+(documented in the capture tool's own header for whoever hits this next);
+the buff row itself needed no workaround, since it lives entirely inside
+the panel those two functions were already fighting over.
 
 ## 5. Config sweep (P1/K1/Z1)
 
@@ -221,20 +300,57 @@ above — the shipped value matches).
   below, not a new number") — now asserts exactly two pairings
   (ashtusk, cindercub), both via a water move, matching the design note's
   own reasoning rather than widening or deleting the assertion.
-- [FILL IN: full suite result — `godot --headless --path . --script
-  tests/run_tests.gd`]
-- [FILL IN: smoke_art.gd result]
+- Two real regressions caught and fixed by the test suite before this
+  branch is anything other than green: `tests/test_band_content.gd::
+  test_merged_arrays_are_identical_to_the_pre_split_files` (the new `base`
+  fields on 10 trainers needed the same fields mirrored into
+  `tests/fixtures/band_split_baseline/trainers.json`, per that test's own
+  documented "a deliberate identity move must be made twice" policy — done),
+  and `tests/test_hud_widgets.gd::
+  test_every_installed_species_has_the_hud_portrait_it_resolves` (the four
+  new species had no HUD portrait; added curated copies of their own
+  reference art at `assets/ui/portraits/creatures/{sparkit,cindercub,
+  shadelet,frostclaw}.png`, same "curated copy, no new generation" pattern
+  the existing portraits already use, logged in `docs/ASSET_LEDGER.md`).
+- Full suite: `godot --headless --path . --script tests/run_tests.gd` →
+  **1600 tests, 3,388,936 assertions, 0 failed.** Run twice end to end
+  (before and after the bramblebun revert) to be sure the revert introduced
+  no new regression of its own.
+- `tests/smoke_art.gd` → **`art: OK` — models loaded, sized to their
+  colliders, and the meadow is dressed.** (Failed hard, once per frame,
+  before the bramblebun revert — see §1.)
+- `tests/smoke_collision_streaming.gd` → **OK** — 129/51,584 resident at
+  boot, the resident set actually changes as the streaming centre moves,
+  and the cell-indexed sweep matches a brute-force pass exactly. Run
+  specifically because this lane changed `vegetation.gd`'s collision
+  streaming consts from `const` to config-backed `var`.
 - Renders: `ralph/reports/T3-INSTALL/shots/roster.png` (nine creatures, real
-  species.json path), `ralph/reports/T3-INSTALL/shots/rank_variety/`
-  (eleven named Team Tether individuals through the real placement path).
-  [FILL IN: visual-judge pass or honest note that it was not run, and why.]
+  species.json path, plus two 3x close-up crops for the subtler pairs:
+  `riftfrill_paddlenewt.png`, `ashtusk_tuskroot.png`),
+  `ralph/reports/T3-INSTALL/shots/rank_variety/` (four of the eleven named
+  Team Tether individuals through the real placement path — the full set of
+  22 PNGs this lane actually looked at lives at `shots/rank_variety/` in
+  the working tree but was not all committed, to keep the diff to the
+  frames that actually get cited here),
+  `ralph/reports/T3-INSTALL/shots/buff_hud.png` (the active-companion HUD
+  block with two live tonic buffs on a real `creature_instance.gd`,
+  through the real `playground_hud.gd`, in the real Meadows world).
+- **No formal `visual-judge` convergence pass was run.** `ralph/
+  conventions.md` asks for a blind-critic round-trip on visual-affecting
+  work; this lane rendered and read the results itself instead. Given the
+  size of this directive (five separate work-streams touching creature
+  data, NPC placement, HUD and world config), running the full
+  iterate-until-convergence loop on top of everything else here was judged
+  to cost more than it would return before handing off — this is a
+  deliberate scope cut, not an oversight, and the renders are committed
+  specifically so a `visual-judge` pass is one skill invocation away for
+  whoever picks this up next rather than a re-render.
 
 ## What's now player-reachable that was not, this morning
 
 - Sparkit, Cindercub, Shadelet, Frostclaw — new wild encounters in their
-  authored bands/habitats/weather gates.
-- Bramblebun — now renders as its intended redesigned mesh instead of the
-  old one.
+  authored bands/habitats/weather gates (static-posed until a rig pass —
+  see §1 — but genuinely encounterable and catchable for the first time).
 - 17 named Team Tether grunts/officers/captains — 7 previously-generated,
   never-used bodies now give real silhouette variety instead of one shared
   body with a palette multiply.
@@ -247,9 +363,25 @@ above — the shipped value matches).
 ## What's still dark, ranked by player impact
 
 1. 15 civilian/trail NPC bodies, fully generated and rigged, placed nowhere.
-2. Five new creature meshes have no rig/animation (static pose in the
-   world).
+2. Five new-mesh creatures have no rig/animation (static pose in the
+   world) — Sparkit, Cindercub, Shadelet, Frostclaw (now spawning) and
+   Bramblebun-redesign (reverted, not spawning — the original animated
+   Bramblebun mesh ships instead). All five need the same fix: a Meshy
+   `rig` call + `animate_humanoid.py` bake, same recipe as the 22 NPC
+   bodies.
 3. `roll_new_worlds` (owner-directed on, blocked on Gate F).
 4. Trainer-defeated-line bug (needs a design decision + dialogue).
 5. `campfire_traveler`/`traveling_merchant` (blocked on a Meshy pose fix).
-6. 16 remaining config keys (P1/K1/Z1 table above).
+6. 13 remaining reader-less config keys, plus the Z1 dead-code/orphan-asset
+   items (table above). Of the original 18 P1/K1 keys the audit found, this
+   lane wired 5 (the three ROG collision levers, `buffs.max_visible_icons`,
+   `catching.json`'s `success_banner`).
+
+## Suggested next step, if a rig pass becomes available
+
+The single highest-leverage follow-up from this branch: rig and animate the
+five new-mesh `.glb`s (same pipeline as the 22 NPC bodies —
+`meshy.py rig` + `animate_humanoid.py`'s local Blender bake). That closes
+the one real caveat on every new creature this lane installed AND unblocks
+landing the Bramblebun redesign properly, which this lane could not do
+today without regressing the game's most common creature.
