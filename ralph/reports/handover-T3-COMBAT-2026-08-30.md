@@ -334,6 +334,21 @@ Observed within 5.3 % of the correct prediction against a 12 % tolerance, and
 32 % clear of the chart-less one. Both directions verified: **it passes what
 should pass and fails what should fail.**
 
+### Is the tolerance marginal? No — three clean runs
+
+`damage.variance` is ±10 % per hit, so the check's headroom is worth measuring
+rather than assuming. Three separate runs on shipping code:
+
+| run | blows | observed | chart says | chart-less would say | deviation |
+|---|---|---|---|---|---|
+| 1 | 6 | 129.9 | 123.4 | 98.7 | +5.3 % |
+| 2 | 6 | 126.2 | 123.4 | 98.7 | +2.3 % |
+| 3 | 6 | 125.7 | 123.4 | 98.7 | +1.9 % |
+
+Worst deviation 5.3 % against a 12 % tolerance, and every run sits 27–32 % above
+the chart-less prediction the failing build landed on. The window is wide enough
+not to flap in CI and narrow enough that a missing multiplier cannot hide in it.
+
 ---
 
 ## 7. The ladder, walked twice
