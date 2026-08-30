@@ -249,7 +249,57 @@ RUN5 left these explicitly unbaselined and explicitly refused to claim they
 were pre-existing. Result of running each against RUN5's navigator and
 against `origin/main`'s:
 
-<!-- BASELINE-RESULT -->
+**Both are PRE-EXISTING. RUN5's `stick_navigator.gd` rewrite did not cause
+either.** Run under a `trap`-guaranteed restore (RUN5's warning that the
+swap risks committing a revert of the GAME-8 fix is real; the navigator is
+verified unmodified afterwards).
+
+| shard | RUN5's navigator | `origin/main`'s navigator |
+|---|---|---|
+| `smoke_gate_a_build_segment_meadows` | FAIL | **FAIL, identically** |
+| `smoke_gate_b_tail` | FAIL | **FAIL, identically** |
+
+The failure text is byte-identical in both directions:
+
+- gate A: *"there is no hammer in the satchel; the village's gift
+  (`camp_hammer_given`) comes before any of this segment's work and is not
+  this segment's to grant"*
+- gate B tail, all three of its failures, including *"only 3 of 5 creature
+  beds went up"* and *"'home_built' is done and the tracked objective reads
+  'Rest at camp and let a creature recover.'; it should have moved on to
+  the beat that says 'Care for your team'"*
+
+RUN5 reasoned from the failure text that neither was navigation-shaped and
+said plainly that this was *"reasoning, not measurement."* The reasoning was
+correct and it is now measured. **Together with `smoke_gate_b_continuous`,
+which RUN5 did baseline the same way, that is three smoke tests red on
+`origin/main`** — the navigator's own smoke coverage plus two segment
+shards. That is a standing owner item, not a Gate F item, and it is the
+second time a Gate F lane has had to discover it by tripping over it.
+
+---
+
+## 7b. CI — I could not verify it, and I am not claiming it
+
+The brief asked for CI kept green **at the job level**, with the warning
+that a run-level success lies when the `changes` path filter skips jobs, and
+that a full run is 55 jobs with only `verify-continuous-core-known-red` and
+`export` as expected skips.
+
+**I could not check.** This session has no GitHub API access — `gh` is not
+installed, and the REST API answers every request with *"GitHub access is
+not enabled for this session. An org admin must connect the Claude GitHub
+App for this organization."* `git push` works (it goes through the session's
+git proxy); the Actions API does not.
+
+So: **the branch is pushed and CI status is unverified by me.** Whoever
+picks this up should check `ralph/T2-GATEF-RUN6` at the job level before
+treating it as green. What I can say about the risk is narrow and concrete:
+this branch changes **no game code, data or config** — the diff outside
+`ralph/` and `tools/gate_f/segments/` is empty — so the only CI surface it
+can plausibly move is any job that validates segment JSON. All 24 segment
+files parse (checked locally), and the three new `X06*.json` files carry the
+same top-level key set as the `X06.json` they were split from.
 
 ---
 
