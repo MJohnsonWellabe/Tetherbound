@@ -17,7 +17,10 @@ extends SceneTree
 ##     --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/perf_site_survey.gd -- --label=T1-PERF-baseline
 ##
-## Optional: --sites=village,band4  --skip-night=1  --json=out.json
+## Optional: --sites=village_high,band4_ironwood  --times=day  --json=out.json
+## (site names are the VIEWS keys below, not band ids -- "village" alone is
+## silently ignored and the tool falls back to running every site, since an
+## empty --sites match reads the same as "no filter given")
 ##
 ## LIGHT COUNTING METHOD, stated plainly because it is the one number this
 ## tool invents a method for rather than reading from an engine monitor.
@@ -33,10 +36,9 @@ extends SceneTree
 ## not a GPU-verified active count. Shadow-casting is a real boolean read
 ## per light (`shadow_enabled`), not estimated.
 ##
-## NEVER add `--headless` for the render half (hangs forever per
-## ralph/conventions.md). `--mode=structural` (see bottom) runs the
-## light-reachability count alone under `--headless`, since that part reads
-## no RENDER_* monitor and does not need a real rendering driver.
+## NEVER add `--headless` here (hangs forever per ralph/conventions.md) --
+## this tool reads RENDER_* monitors, unlike `tools/perf_scatter_density.gd`,
+## which is headless-safe because it reads no rendering monitor at all.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 240
@@ -76,11 +78,11 @@ const VIEWS := {
 ## measured against; "night" is named in the T1-PERF brief as the likely
 ## worst case because it ADDS lights (braziers, window glow, occupation
 ## conduit) on top of the same day geometry rather than removing anything.
-const TIMES := ["day", "night"]
+const TIMES: Array[String] = ["day", "night"]
 
 var _label := ""
 var _site_names: Array[String] = []
-var _times: Array[String] = TIMES.duplicate()
+var _times: Array[String] = []
 var _json_path := ""
 
 
@@ -108,6 +110,9 @@ func _parse_args() -> void:
 	if _site_names.is_empty():
 		for name: String in VIEWS.keys():
 			_site_names.append(name)
+	if _times.is_empty():
+		for t: String in TIMES:
+			_times.append(t)
 
 
 func _run() -> void:
@@ -216,7 +221,7 @@ func _lights_reaching(world: Node, spot: Vector3) -> Dictionary:
 	var omnis: Array[Node] = world.find_children("*", "OmniLight3D", true, false)
 	for n: Node in omnis:
 		var l := n as OmniLight3D
-		if not l.visible:
+		if not l.is_visible_in_tree():
 			continue
 		if l.global_position.distance_to(spot) <= l.omni_range:
 			total += 1
@@ -225,7 +230,7 @@ func _lights_reaching(world: Node, spot: Vector3) -> Dictionary:
 	var spots: Array[Node] = world.find_children("*", "SpotLight3D", true, false)
 	for n: Node in spots:
 		var l := n as SpotLight3D
-		if not l.visible:
+		if not l.is_visible_in_tree():
 			continue
 		if l.global_position.distance_to(spot) <= l.spot_range:
 			total += 1
