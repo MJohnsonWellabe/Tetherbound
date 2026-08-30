@@ -123,6 +123,7 @@ func _run() -> void:
 	await _the_creature_is_named_on_the_grid()
 	_the_named_creature_is_in_the_real_party()
 	_the_party_still_holds_at_most_five()
+	await _the_player_is_told_how_to_get_out_of_the_house()
 	await _grandpa_hands_over_the_first_catch_orbs()
 	_grandpa_handed_over_the_orbs()
 	await _the_road_gate_stops_until_the_key_is_found()
@@ -350,19 +351,102 @@ func _the_trainer_gets_up_from_the_bed() -> void:
 	print("wake: got up from the bed, beat is now '%s', standing again" % str(_director.call("beat")))
 
 
+## OP-0830-4 — the coverage gap, and it is this file's own.
+##
+## 2026-08-30 owner playtest: *"after the first conversation with grandpa
+## you're trapped in his house with nothing telling you to talk to him again
+## before you can go."* This test was green throughout, and
+## `smoke_wake_softlock.gd` with it. It was green because
+## `_grandpa_hands_over_the_first_catch_orbs()` below finds Grandpa by
+## searching the scene tree for an interactable whose label contains
+## "grandpa", walks to it, and presses the button — omniscience no player has.
+## Every assertion after that is about what the CONVERSATION does. Nothing
+## anywhere asked the only question the player was actually stuck on: *how
+## would I know to do that?*
+##
+## The same structural blindness `smoke_wake_softlock.gd`'s own header names
+## for the beat before this one. A test that hard-codes the right action can
+## never be the player who does not know it.
+##
+## So this runs first, and it is deliberately two independent proofs, because
+## either one alone can be satisfied while the player is still stuck:
+##
+##   1. **The tracked objective names this action.** Not "there is an
+##      objective" — the actual string, checked to be about Grandpa and
+##      checked NOT to be the catch line that used to sit here from the first
+##      frame of a new game (`objectives.json`'s own `_comment_op0830`).
+##   2. **A player who is told nothing still gets out.** It walks at the
+##      doorway and NOTHING else — no interact press, no lookup of Grandpa —
+##      and requires the required conversation to open by itself, the same
+##      spec §1D callout the `house` beat has always had and this beat did
+##      not.
+##
+## It leaves the box open for `_grandpa_hands_over_the_first_catch_orbs()`,
+## which now handles an already-running conversation the way
+## `_grandpa_says_his_piece()` does.
+func _the_player_is_told_how_to_get_out_of_the_house() -> void:
+	var beat := str(_director.call("beat"))
+	if beat != "return_starter":
+		_fail("naming left the opening on beat '%s', not 'return_starter'; the rest of this check is aimed at the wrong beat" % beat)
+		return
+
+	var quest_log: RefCounted = _game.get("quest_log")
+	var progression: RefCounted = _game.get("progression")
+	if quest_log == null or progression == null:
+		_fail("no quest_log/progression on the Game autoload; the tracked objective cannot be read")
+		return
+	var tracked := str(quest_log.call("tracked_text", progression))
+	var hint := str(quest_log.call("tracked_hint", progression))
+	var lowered := tracked.to_lower()
+	if not lowered.contains("grandpa"):
+		_fail(
+			"the player is shut in the house and the tracked objective reads '%s'. " % tracked
+			+ "Nothing on screen names the one action that opens the door (talking to Grandpa again). "
+			+ "This is OP-0830-4."
+		)
+	elif lowered.contains("catch"):
+		_fail("the tracked objective still reads '%s' while the player is locked indoors and cannot reach a wild creature" % tracked)
+	else:
+		print("shut in: the tracked line reads '%s'" % tracked)
+		print("shut in: the hint card reads '%s'" % hint)
+
+	var house := _world.get_node_or_null(^"GrandpaHouse")
+	if house == null:
+		return
+
+	# From here on, behave like a player who was told nothing: head for the way
+	# out. No interact press, no search for Grandpa.
+	var door: Vector3 = house.call("marker", "door")
+	await _walk_toward_point(door, 500)
+	if not bool(_dialogue.call("is_open")):
+		var short_by := _player.global_position.distance_to(door)
+		_fail(
+			"walked into the shut doorway at the 'return_starter' beat (stopped %.1fm short) and nothing happened: " % short_by
+			+ "no conversation, no callout. The player is standing at an invisible wall with no way to learn what opens it. This is OP-0830-4."
+		)
+		return
+	print("shut in: pushing on the door called Grandpa back — '%s' opened with no interact press" % str(_dialogue.call("runner").call("conversation_id")))
+
+
 ## Naming intentionally returns control with one task: go back to Grandpa.
 ## The Basic Orbs arrive in that required follow-up conversation, not during
 ## the starter choice or as a hidden automatic reward.
 func _grandpa_hands_over_the_first_catch_orbs() -> void:
-	# The village also has generic "Talk" offers. This required return must
-	# target Grandpa specifically, not whichever NPC happens to be first in the
-	# scene tree once the naming panel closes.
-	var grandpa := _find_interactable_matching(["grandpa"])
-	if grandpa == null:
-		_fail("nothing offers Grandpa's required first-catch conversation")
-		return
-	if not await _walk_to_and_activate(grandpa):
-		return
+	# The conversation may already be running: OP-0830-4's door callout starts
+	# it when the player walks at the shut doorway, which
+	# `_the_player_is_told_how_to_get_out_of_the_house()` above drives for real.
+	# Same shape as `_grandpa_says_his_piece()`, and for the same reason — the
+	# director is free to open it on arrival rather than on a press.
+	if not bool(_dialogue.call("is_open")):
+		# The village also has generic "Talk" offers. This required return must
+		# target Grandpa specifically, not whichever NPC happens to be first in
+		# the scene tree once the naming panel closes.
+		var grandpa := _find_interactable_matching(["grandpa"])
+		if grandpa == null:
+			_fail("nothing offers Grandpa's required first-catch conversation")
+			return
+		if not await _walk_to_and_activate(grandpa):
+			return
 	if not bool(_dialogue.call("is_open")):
 		_fail("returning to Grandpa after naming opened no first-catch conversation")
 		return

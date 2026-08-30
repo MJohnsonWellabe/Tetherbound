@@ -6,11 +6,33 @@
   "_comment_gateb_flags": "What is real and what is contract, kept current. REAL, wired today: `opening:beat:road` (sequence_director.gd, on a successful catch), `road_gate_open` (key_pickup.gd/road_gate.gd), `tam_tools_given` (data/dialogue/village.json's `village_tam_tools`), `home_materials_gathered`/`home_built`/`creature_bed_built*` (scripts/build/home_progress.gd), `player_slept_at_home` (camp.gd::_on_rest), `tournament_team_ready`/`tournament_training_ready`/`tournament_team_fed` (tournament.gd::_write_entry_flags, from data/config/tournament.json + creature_condition.json thresholds), `tournament_entered` (Halda's sign-up dialogue), `tournament_won` (the final round's trainer reward), `south_bridge_open` (gated_crossing.gd/south_bridge.gd). quest_log.gd still only ever reads `progression`'s flag store (SB9) and still has no live view of party size, XP, placed buildings or sleep -- the owning systems call `set_flag` on these exact ids and this file only names them. `tournament_team_fed` is the one flag here that is CLEARED as well as set; see its entry.",
   "main": [
     {
+      "id": "opening_hear_grandpa",
+      "flag_id": "opening:beat:choose",
+      "label": "Go down and hear Grandpa out.",
+      "how": "He is waiting at the table downstairs. {interact} when you are next to him.",
+      "_comment": "OP-0830-4. Real flag, already written by sequence_director.gd::_set_beat -- `opening:beat:choose` is set the moment his briefing's last line fires `beat:starter_choice`, so this rung is DONE exactly when he has been heard."
+    },
+    {
+      "id": "opening_take_starter",
+      "flag_id": "opening:beat:return_starter",
+      "label": "Choose your first creature and give it a name.",
+      "how": "Grandpa opens all three orbs. Look at each one, take the one you want, then type a name.",
+      "_comment": "OP-0830-4. `opening:beat:return_starter` is set by `_adopt()` the frame the named creature reaches the party. The `how` names no button on purpose: the picker and the naming grid are both modal and draw their own prompts, so a glyph here would be the third instruction on screen for one action."
+    },
+    {
+      "id": "opening_show_grandpa",
+      "flag_id": "opening:beat:walk_out",
+      "label": "Show Grandpa your creature before you head out.",
+      "how": "He has not moved from the table. {interact} to talk -- he has orbs for you, and the door is his to open.",
+      "_comment": "OP-0830-4, and the rung the whole ladder was missing. THIS is the beat the owner got stuck on: 'after the first conversation with grandpa you're trapped in his house with nothing telling you to talk to him again before you can go.' The door gate (grandpa_house.gd::_build_door_gate) stays solid until `opening:beat:walk_out`, and the only thing that sets it is the `beat:first_encounter` effect on the last line of `grandpa_first_catch` -- i.e. talking to him a second time. Nothing said so. It says so now, and sequence_director.gd::_refresh_door_gate additionally calls the player back when they push on the shut door, the same way spec sec1D already required for the FIRST required conversation."
+    },
+    {
       "id": "opening_first_catch",
       "flag_id": "opening:beat:road",
       "label": "Catch your first wild creature.",
       "how": "Wear it down in the fight first, then pick an orb on the hotbar and press {combat_throw}.",
-      "_comment": "Set by sequence_director.gd only on a successful catch (CombatManager.OUTCOME_CAUGHT), not on winning or fleeing the tutorial fight -- see its `_on_combat_exited`. Covers wake/Grandpa/starter/naming/walk-out for free: any save that has not yet reached this beat is still inside the scripted opening, where the sequence director's own prompts are already the guidance."
+      "_comment": "Set by sequence_director.gd only on a successful catch (CombatManager.OUTCOME_CAUGHT), not on winning or fleeing the tutorial fight -- see its `_on_combat_exited`.",
+      "_comment_op0830": "This entry used to be the FIRST rung in the chapter, and carried a note claiming it 'covers wake/Grandpa/starter/naming/walk-out for free ... the sequence director's own prompts are already the guidance'. The 2026-08-30 owner playtest falsified that: from the first frame of a new game -- lying in bed, upstairs, behind a shut door -- the tracked line read 'Catch your first wild creature', an action the player physically cannot take for another three beats, and no line anywhere named the one that releases them. Measured, not inferred: tools/_probe_house_trap.gd prints the tracked line at the `wake`, `house` and `return_starter` beats and it was this string at all three. The three rungs above are the guidance that was assumed to exist."
     },
     {
       "id": "open_road_gate",
