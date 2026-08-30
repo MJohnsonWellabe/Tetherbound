@@ -16,6 +16,33 @@ evidence about how a fight feels.
 
 ---
 
+## 0. The answer, before the working
+
+**87 authored trainer battles were fought — the whole ladder three times, by two
+different pilots and two different teams — and not one of them was lost. No
+creature ever fainted. The four creatures behind the lead never came out.**
+
+- The type chart **works and reads**: damage matches the chart exactly in played
+  fights, the HUD arrow was right every time, and the mix carries effectiveness
+  in three genuinely distinct sounds. Its verdict banner was firing on *every
+  blow* — 22 events in a 14.6-second fight — and is now paced. **Fixed.**
+- The captain rebalance **changed the config and not the fights**: one captain
+  got marginally *easier* for the exact team it was written to stop, the other
+  got five seconds longer and still landed zero blows.
+- The reason nothing is dangerous is one number: **0.5 metres of backward
+  movement defeats every attack in the game**, and a creature has 3.08 m of
+  travel available during a wind-up to cover it.
+- `smoke_combat.gd` was grading the type system on a **mirror matchup** and said
+  so in its own comment. It now fights Water into Ground and **measures the
+  damage** — verified to fail when the chart is patched out, and to pass on
+  shipping code. **Fixed.**
+
+Where it stops being fun: **at the end of Band 1.** For a player who never
+learns to sidestep, the most expensive fight in the chapter is the *village
+tournament final* — and the four bands after it never exceed it.
+
+---
+
 ## 1. What was built to get the evidence
 
 | file | what it is |
@@ -313,11 +340,14 @@ should pass and fails what should fail.**
 
 All 29 authored rungs, in route order, at the level and party size
 `chapter_curve.json` says the player arrives with, at full health, fought
-through `begin_trainer_battle()`. Once with **SPACER** (backs out of the wind-up,
-spends the meter into the recovery) and once with **BRAWLER** (walks in and
-hits, never looks at the telegraph). Same team both times: terrapup, bramblebun,
-mudsnout, trailpup, meadowhart — the Ground team a player who catches what is in
-front of them ends up with.
+through `begin_trainer_battle()` — **three times**, 87 trainer battles in all:
+
+- **SPACER + Ground team** — reads the telegraph, catches what is in front of them
+- **BRAWLER + Ground team** — walks in and hits, never looks at the telegraph
+- **SPACER + Mixed team** — reads the telegraph, and prepared a type-diverse five
+
+The Ground team is terrapup, bramblebun, mudsnout, trailpup, meadowhart. The
+mixed team is terrapup, ripplet, galewisp, mosshell, duskhush.
 
 **"Lead HP left" is the number that matters.** Switching was off in both runs and
 no creature ever fainted, so only the lead creature ever fights and the party
@@ -326,17 +356,17 @@ party size, which is exact when the bench is untouched — and it was.
 
 ### 7.1 The headline
 
-| | BRAWLER | SPACER |
-|---|---|---|
-| rungs lost | **0 of 29** | **0 of 29** |
-| creatures fainted | **0** | **0** |
-| median fight | 23s | 28s |
-| median lead HP left | 73 % | 88 % |
-| worst rung | **39 %** — `tournament_final_oskar` | **70 %** — `warden_aldis` |
+| | BRAWLER + Ground | SPACER + Ground | SPACER + Mixed |
+|---|---|---|---|
+| rungs lost | **0 of 29** | **0 of 29** | **0 of 29** |
+| creatures fainted | **0** | **0** | **0** |
+| median fight | 23s | 28s | 28s |
+| median lead HP left | 73 % | 88 % | 88 % |
+| worst rung | **39 %** `tournament_final_oskar` | **70 %** `warden_aldis` | **66 %** `warden_aldis` |
 
-**58 authored trainer battles were fought and not one of them was lost, by
-either pilot.** The five-creature belt never came out: no fight in the chapter
-put the lead creature low enough to need it.
+**87 authored trainer battles were fought and not one of them was lost, by any
+pilot, with any team.** The five-creature belt never came out: no fight in the
+chapter put the lead creature low enough to need it.
 
 ### 7.2 Where it is trivial, where it is a wall, and where it stops teaching
 
@@ -380,7 +410,26 @@ But the skill never decides anything, because nothing was ever at stake. And
 per §5 the "skill" is 0.5 m of backward movement during a 0.55-second wind-up,
 with 3.08 m of travel available to do it in.
 
-### 7.4 Is switching a real decision?
+### 7.4 Does bringing the right creatures matter?
+
+The ladder was walked a third time with a **type-diverse** team — terrapup
+(Ground), ripplet (Water), galewisp (Air), mosshell (Water), duskhush (Air) —
+against the mono-Ground team, same SPACER pilot, same levels.
+
+| | Ground team | Mixed team |
+|---|---|---|
+| rungs lost | 0 of 29 | 0 of 29 |
+| median lead HP left | 88 % | **88 %** |
+| worst rung | 70 % (`warden_aldis`) | 66 % (`warden_aldis`) |
+| median fight | 28s | 28s |
+
+**A prepared team and a naive one produce the same chapter.** The chart is
+working (§3.1 shows it reaching the damage exactly), and nine rungs hand a Water
+creature a 1.56× exchange for free (§2) — and none of it changes an outcome,
+because none of the outcomes were ever in doubt. Type advantage is currently a
+discount on a bill nobody was struggling to pay.
+
+### 7.5 Is switching a real decision?
 
 **No — and not because the mechanic is broken.** `switchable_indices()`,
 `can_switch()` and `cycle_active()` all work, and D32's lockout is enforced. The
@@ -459,6 +508,7 @@ player for anything.
 | `ladder-ground-spacer.tsv` | all 29 rungs, SPACER pilot |
 | `ladder-ground-brawler.tsv` | all 29 rungs, BRAWLER pilot |
 | `captains.txt` | both captains × both rosters |
+| `ladder-mixed-spacer.tsv` | all 29 rungs, SPACER pilot, type-diverse team |
 | `matchup-spacer.txt` | the four staged non-mirror wild fights |
 | `smoke-negative-chart-off.txt` | `smoke_combat.gd` failing with the chart patched out |
 | `smoke-positive-shipping.txt` | the same test passing on shipping code |
@@ -469,6 +519,7 @@ To reproduce any of it (Godot 4.7, `--headless`):
 godot --headless --path . --script tools/_probe_combat_matchup.gd
 godot --headless --path . --script tools/_probe_combat_ladder.gd -- --team=ground
 godot --headless --path . --script tools/_probe_combat_ladder.gd -- --team=ground --pilot=brawler
+godot --headless --path . --script tools/_probe_combat_ladder.gd -- --team=mixed
 godot --headless --path . --script tools/_probe_captain_rebalance.gd
 godot --headless --path . --script tests/smoke_combat.gd
 ```
