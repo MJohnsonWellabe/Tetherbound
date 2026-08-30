@@ -1229,7 +1229,14 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 				else Vector3(_wall_t + BUTTRESS_PROUD, b_h, BUTTRESS_W)
 			var b_at := Vector3(wall_centre.x + d, _floor_y - _skirt + b_h * 0.5, wall_centre.z) \
 				if along_x else Vector3(wall_centre.x, _floor_y - _skirt + b_h * 0.5, wall_centre.z + d)
-			_box(b_size, b_at, _material(_stone_dark(), 0.0, true), false)
+			# NOT `_stone_dark()`, which is what the first cut used. Rendered, a
+			# #463f37 pilaster against the wall's own #9c9083 reads as a black
+			# bar bolted to the stone -- the same failure JUDGE-5 already named
+			# on this wall ("dark timber crosses with no structural logic ...
+			# crossed beams stuck on a flat face"), reintroduced in a new shape.
+			# A buttress is the SAME masonry as the wall it thickens, one step
+			# down so its shaded return still separates it.
+			_box(b_size, b_at, _material(_stone().lerp(_stone_light(), 0.55), 0.0, true), false)
 
 	if not hardware:
 		return
@@ -1375,9 +1382,15 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	# mark. A banner's outward normal in this holder's frame is local +X.
 	# QuadMesh spans its own local x/y, so the device's width is the banner's
 	# width (holder-local Z) and its height the field's height.
+	# `proud` is measured from the HOLDER's origin, and the panel box is not
+	# centred on it: `panel.position.x` is BANNER_CLOTH_T * 0.5 and the box is
+	# BANNER_CLOTH_T thick, so the cloth's outer face sits at x = BANNER_CLOTH_T.
+	# The first cut passed `BANNER_CLOTH_T * 0.62`, which put the device INSIDE
+	# the cloth -- it rendered as no sigil at all, which is exactly what the
+	# re-render showed. Clear the face, then a hair more.
 	var device := TETHER_SIGIL.device(
 		Vector2(width * 0.62, body_h * 0.62), colour.lightened(0.06),
-		Vector3.RIGHT, BANNER_CLOTH_T * 0.62)
+		Vector3.RIGHT, BANNER_CLOTH_T + 0.012)
 	device.position += Vector3(0.0, -body_h * 0.46 - 0.09, 0.0)
 	holder.add_child(device)
 
@@ -1588,7 +1601,14 @@ const MASSING_FOOT_INSET := 0.35
 const MASSING_FOOT_MAX_BASE := 1.5
 func _ground_hall_massing(massing: Node3D) -> void:
 	var skirt_foot := -absf(float(_config.get("site", {}).get("skirt", 18.0)))
-	var material := _skirt_material()
+	# NOT `_skirt_material()`, which the first cut used. Rendered at H-06 that
+	# solved the floating facade and immediately bought a SECOND seam: the
+	# skirt's dark cobble under a pale kit tower reads as a separate block
+	# bolted beneath it, which is the same defect D7 names one metre lower down.
+	# A foot is the mass continuing to the ground, so it takes the wall's own
+	# stone, one step darker for the shaded return -- the shaft is below the
+	# building's shoulder and should sit in shadow, not announce itself.
+	var material := _material(_stone().lerp(_stone_light(), 0.35), 0.0, true)
 	var grounded := 0
 	for child in massing.get_children():
 		if child is not Node3D:

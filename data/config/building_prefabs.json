@@ -7211,25 +7211,26 @@
           "scale": 2.1
         }
       ],
-      "retint": {
+      "_why_retint_t1_hall_3": "T1-HALL-3, 2026-08-30. LightRock #f2e9da -> #d2c6b2 and DarkRock #c4b39e -> #ab9d89, narrowing the kit's step down toward the works walls' own #9c9083. HALL_DESIGN sec5 authored the wider ladder deliberately (kit stone rendering ~165-175 lit against the works walls' ~100-115) and JUDGE-5 read the result as a defect, not a ladder: D7, ranked 6th, calls the west keep \"two materials butted with a hard vertical seam ... pale cream facing on the left, dark brown block on the right, no trim, no shared lighting\" and says it \"reads as a bug, not a choice\". Confirmed in this lane's own re-render at the same stand. A ~1.55x value step between two surfaces of ONE building, meeting edge-to-edge with no trim course between them, cannot read as a ladder -- it reads as two buildings. The step is now ~1.27x: still a ladder (kit stone stays the light end, works walls the dark), but inside the range a viewer reads as one fortress in two stones rather than as a seam. The value RELATIONSHIP sec5 calls \"the design\" is preserved; only its magnitude changes.",
+    "retint": {
         "LightRock": {
-          "color": "#f2e9da",
+          "color": "#d2c6b2",
           "metallic": 0.0
         },
         "LightRock.001": {
-          "color": "#f2e9da",
+          "color": "#d2c6b2",
           "metallic": 0.0
         },
         "LightRock.002": {
-          "color": "#f2e9da",
+          "color": "#d2c6b2",
           "metallic": 0.0
         },
         "DarkRock": {
-          "color": "#c4b39e",
+          "color": "#ab9d89",
           "metallic": 0.0
         },
         "DarkRock.001": {
-          "color": "#c4b39e",
+          "color": "#ab9d89",
           "metallic": 0.0
         },
         "Black": {

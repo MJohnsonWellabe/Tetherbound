@@ -79,5 +79,42 @@
       "radius": 16.0,
       "_why": "the_approach_sightline -- see order 15."
     }
+  ],
+  "footprints": [
+    {
+      "order": 0,
+      "x": 8.0,
+      "z": 7510.0,
+      "radius": 4.5,
+      "_why": "T1-HALL-3, the CORRECT mechanism for JUDGE-5 D11 (\"foliage clips through the ramp -- plants growing out of the cobble deck\"). This lane's first attempt used `clearings` and it did not work, which the re-render showed plainly: plants were still standing in the causeway cobbles. scatter_rules.gd says why, in a comment written for this exact failure -- a clearing only culls layers that flag `cleared_by_clearings`, and grass, drygrass, flowers, path_stones and groundmat are DELIBERATELY exempt so that a wide clearing does not leave the meadow bald. The things growing through the deck are grass and flowers, so clearings could never have removed them. Footprints are the mechanism for this and the file already says so: \"narrower and unconditional, unlike clearings above ... that exemption also let them grow straight through a building's own floor and roof, since a footprint's few metres are not 'near a structure' the way a 16m clearing is -- they ARE the structure\" (found once before as grass tufts inside Grandpa's house, on the rug). The causeway is 40m of authored stone and is exactly that case. r=4.5 covers the ~7m deck and its kerbs and stops there, so the planted banks either side -- which the same judge praised as \"dense foreground planting\" -- keep their cover. Centres step 9m from the ramp foot (world z ~7507) to the mouth sill (~7547), derived from site.at z 7560, the outer_works face and site.ramp_run 40. The five wider `clearings` on the same line stay: they keep TREES off the ramp banks, which footprints this narrow would not reach."
+    },
+    {
+      "order": 1,
+      "x": 8.0,
+      "z": 7519.0,
+      "radius": 4.5,
+      "_why": "the_causeway_deck -- see order 0."
+    },
+    {
+      "order": 2,
+      "x": 8.0,
+      "z": 7528.0,
+      "radius": 4.5,
+      "_why": "the_causeway_deck -- see order 0."
+    },
+    {
+      "order": 3,
+      "x": 8.0,
+      "z": 7537.0,
+      "radius": 4.5,
+      "_why": "the_causeway_deck -- see order 0."
+    },
+    {
+      "order": 4,
+      "x": 8.0,
+      "z": 7546.0,
+      "radius": 4.5,
+      "_why": "the_causeway_deck -- see order 0."
+    }
   ]
 }
