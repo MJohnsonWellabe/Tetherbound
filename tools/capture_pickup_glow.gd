@@ -36,6 +36,13 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://ralph/reports/T5-FEEL/shots"
 const GLOW := preload("res://scripts/world/pickup_glow.gd")
+## The ground lane's own shutter check (landed on main 2026-08-30). Used
+## alongside this file's `_grass_verdict()` rather than instead of it: theirs is
+## the authoritative, shared statement of "this frame would not show the build"
+## and refuses loudly; mine prints the tuft count and the ring's distance from
+## the lens into the contact log, so the evidence carries the number rather than
+## a pass/fail somebody has to take on trust.
+const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 
 ## Settling is done on PHYSICS frames, which cost nothing here, and only the
 ## handful of frames that actually have to be DRAWN are drawn. Under software
@@ -179,6 +186,7 @@ func _shoot(stand: Dictionary) -> void:
 	if camera == null:
 		_failures.append("%s: no current camera" % stand["name"])
 		return
+	CAPTURE_CHECK.require(self, camera)
 	var grass := _grass_verdict(camera)
 	if grass.begins_with("NO GRASS"):
 		_failures.append("%s: %s" % [stand["name"], grass])
