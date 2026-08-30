@@ -145,3 +145,83 @@ func test_band_scale_picks_the_band_that_contains_z() -> void:
 	# z_max is exclusive: the boundary itself belongs to the NEXT band.
 	assert_almost_eq(RULES._band_scale_at(0.0, bands), 0.5, 0.0001,
 		"z_max should be exclusive; the boundary landed in the wrong band")
+
+
+## T1-GROUND-3's per-layer band weight, pinned the same way and for the same
+## reason as `_band_scale_at` above. The backward-compatibility half is the one
+## that matters most: every layer in vegetation.json except `drygrass` carries
+## no `band_scale`, and if the absent key did anything but return 1.0 the whole
+## chapter's scatter would move on the next bake.
+func test_layer_band_scale_is_absent_by_default() -> void:
+	var bands: Array = [{"id": "b1", "z_min": 0.0, "z_max": 100.0, "density_scale": 0.2}]
+	assert_almost_eq(RULES._layer_band_scale_at(50.0, bands, {}), 1.0, 0.0001,
+		"a layer with no band_scale must place exactly what it placed before this existed")
+	assert_almost_eq(RULES._layer_band_scale_at(50.0, [], {"b1": 0.5}), 1.0, 0.0001,
+		"an empty band table has no band to weight, so the weight cannot apply")
+	assert_almost_eq(RULES._layer_band_scale_at(500.0, bands, {"b1": 0.5}), 1.0, 0.0001,
+		"a z outside every band must not pick up some band's weight")
+
+
+func test_layer_band_scale_is_keyed_by_band_id_and_may_exceed_one() -> void:
+	var bands: Array = [
+		{"id": "lower", "z_min": -500.0, "z_max": 0.0, "density_scale": 0.1},
+		{"id": "upper", "z_min": 0.0, "z_max": 500.0, "density_scale": 0.1},
+	]
+	var weights := {"lower": 0.45, "upper": 1.6}
+	assert_almost_eq(RULES._layer_band_scale_at(-250.0, bands, weights), 0.45, 0.0001)
+	# Over 1.0 survives on purpose: this table says where a species BELONGS,
+	# not what the chapter can afford, so it is not clamped the way
+	# `density_scale` is. Clamping here would flatten a dry band into a normal
+	# one and delete the gradient the key exists for.
+	assert_almost_eq(RULES._layer_band_scale_at(250.0, bands, weights), 1.6, 0.0001,
+		"a weight above 1.0 must survive; clamping it deletes the species gradient")
+	# A band the layer says nothing about keeps its full share rather than
+	# vanishing -- the same "unconfigured means unchanged" rule as above.
+	assert_almost_eq(RULES._layer_band_scale_at(-250.0, bands, {"upper": 1.6}), 1.0, 0.0001,
+		"a band absent from the weight table must keep full density, not zero")
+
+
+## The gradient the second grass species actually ships with, asserted against
+## the real config rather than a fixture -- a typo'd or dropped band id would
+## silently return 1.0 for that band and flatten the regional read back out,
+## which no other test here would notice.
+func test_drygrass_carries_a_band_gradient_over_the_real_band_table() -> void:
+	var config: Dictionary = RULES.config()
+	var bands: Array = config.get("corridor_bands", [])
+	var layers: Dictionary = config.get("layers", {})
+	var drygrass: Dictionary = layers.get("drygrass", {})
+	var weights: Dictionary = drygrass.get("band_scale", {})
+	assert_false(weights.is_empty(),
+		"drygrass is the chapter's second grass species and its band gradient is gone")
+	assert_false(bands.is_empty(), "corridor_bands is empty; the gradient has nothing to key on")
+	var seen := {}
+	for entry: Variant in bands:
+		var band: Dictionary = entry
+		var id := str(band.get("id", ""))
+		assert_true(weights.has(id),
+			"corridor_bands has band '%s' with no drygrass band_scale entry -- " % id +
+			"that band silently falls back to 1.0 and breaks the gradient")
+		var mid: float = (float(band.get("z_min", 0.0)) + float(band.get("z_max", 0.0))) * 0.5
+		var got := RULES._layer_band_scale_at(mid, bands, weights)
+		assert_almost_eq(got, float(weights[id]), 0.0001,
+			"band '%s' did not resolve to its own configured weight" % id)
+		seen[id] = got
+	# The gradient must actually be a gradient, and it must be one in the
+	# quantity the bake applies -- which is `density_scale * band_scale`, NOT
+	# `band_scale` alone. Asserting the weights alone would pass on a table
+	# that reads like a clean ramp and lands as anything at all, which is
+	# exactly the mistake the first cut of this made: 0.45 -> 1.6 across bands
+	# whose own affordability runs 0.18/0.13/0.12/0.13/0.07 put band 4 drier
+	# than band 5. The dry species has to thicken all the way to the
+	# stronghold, so the PRODUCT has to rise monotonically along z.
+	var previous := -1.0
+	var previous_id := ""
+	for entry2: Variant in bands:
+		var band2: Dictionary = entry2
+		var id2 := str(band2.get("id", ""))
+		var product: float = float(band2.get("density_scale", 1.0)) * float(weights.get(id2, 1.0))
+		assert_true(product > previous,
+			"effective dry-species density must climb toward the stronghold: " +
+			"'%s' is %.4f against '%s' at %.4f" % [id2, product, previous_id, previous])
+		previous = product
+		previous_id = id2
