@@ -42,15 +42,23 @@ not a side detail — it is the reason a light budget matters *at all*:
   positional (Omni/Spot) shadow map in the whole scene shares ONE atlas**:
   `project.godot` `[rendering]` → `lights_and_shadows/positional_shadow/atlas_size=2048`
   (already halved from Godot's 4096 default for Ally memory, per that
-  setting's own comment). A 2048×2048 atlas splits by quadrant among however
-  many shadow-casting Omni/Spot lights are active near the camera at once:
-  2 lights ≈ 1448px/side each, 4 ≈ 1024px, 8 ≈ 724px, 16 ≈ 512px. Godot
-  allocates shrinking quadrants as count rises rather than failing outright,
-  so the visible failure mode is not a crash — it is every nearby brazier's
-  shadow going soft/blocky at once, worst exactly where the game wants a
-  dramatic lit scene (the gate, the arena). **This is the real, derived
-  reason `HALL_DESIGN_2026-08-30.md` §6.5's "no shadowed lights anywhere"
-  outdoors is correct, not merely cautious.**
+  setting's own comment). Godot subdivides that single 2048×2048 atlas among
+  however many shadow-casting Omni/Spot lights are near the camera at once,
+  by an LRU/importance quadtree, not a fixed per-light slot — so the exact
+  per-light resolution at a given count is an engine-internal allocation
+  this document does not claim to reproduce exactly. What is certain from the
+  atlas being shared and finite: more simultaneous shadow-casting lights
+  means less atlas per light, and past some count some lights lose shadow
+  resolution or their shadow entirely rather than the game failing outright.
+  The visible failure mode is every nearby brazier's shadow going soft or
+  vanishing at once, worst exactly where the game wants a dramatic lit scene
+  (the gate, the arena) — and confirming exactly where that becomes visible
+  needs a device/editor run with the atlas actually inspected (§8.3), which
+  this container cannot do. **This is still the real, derived reason
+  `HALL_DESIGN_2026-08-30.md` §6.5's "no shadowed lights anywhere" outdoors
+  is correct, not merely cautious**: it keeps outdoor Team Tether dressing
+  off a shared, finite resource entirely rather than betting on where the
+  degradation curve bends.
 - Non-shadow-casting lights are far cheaper (no shadow pass) but are not
   free: Compatibility still evaluates every light whose range reaches a
   drawn surface, per-vertex/per-pixel depending on the surface's shader,
@@ -150,7 +158,7 @@ today.
 
 | | cap | basis |
 |---|---|---|
-| Shadow-casting Omni/Spot lights reaching any one location | **≤ 4** | keeps each a ≥1024px shadow atlas quadrant on the shared 2048² positional atlas (§1); more than that degrades every shadow at once, worst in the exact dramatic-lighting moments (gate, arena) the art wants sharp |
+| Shadow-casting Omni/Spot lights reaching any one location | **≤ 4** | a conservative slice of the single shared 2048² positional shadow atlas (§1) — low enough that even an even split still leaves each light real atlas resolution, without claiming to know Godot's exact allocation curve; more than that is where the shared-atlas math starts to bite, worst in the exact dramatic-lighting moments (gate, arena) the art wants sharp |
 | Total (shadow + non-shadow) Omni/Spot lights reaching any one location | **≤ <FILL, derived from measured baseline + headroom>** | <FILL> |
 | Interior lights (indoors, camera close, small area) | not capped the same way — `HALL_DESIGN_2026-08-30.md`'s own 12 interior lights are unchanged by that design because they were measured against finale readability; this budget does not reopen that number, only states the outdoor cap the design itself derived (§7's ≤18 exterior omnis, 0 shadowed) fits inside this file's harder ≤4-shadowed reasoning |
 
@@ -167,25 +175,63 @@ day and night, all seven locations:
 
 ### 5.1 Measured, this session
 
+`tools/perf_scatter_density.gd`, `main` @ `1d7fc8e7` (248,167 scattered
+placements with a recorded position, world total):
+
 Whole-band (bounding box of that band's own placements — an honest but
-coarse upper-terrain average; every band's placements span nearly the full
-~2048m authored world width, so this is NOT a walked-corridor density):
+coarse upper-terrain average; **every band's measured x-spread came back
+~2047m, i.e. the full authored world width**, not a walked corridor — this
+number is diluted by empty terrain at the width's edges and should not be
+read as "what the player walks through"):
 
 ```
-<FILL from perf_scatter_density.gd>
+band              count   x-spread m    z-run m   footprint ha   density /ha
+village           14279       2047.9      511.6        104.761         136.3
+band1             71653       2046.9     1359.9        278.371         257.4
+band2             52985       2047.6     1820.0        372.662         142.2
+band3             38044       2047.6     1580.0        323.507         117.6
+band4             61599       2047.4     2239.9        458.597         134.3
+band5              8682       2041.1      547.8        111.820          77.6
+stronghold          925       2042.6      131.9         26.945          34.3
 ```
 
-Local (60m-radius circle at the exact point the other tools sample — closer
-to what a player standing there actually sees):
+Local (60m-radius circle, 1.131 ha, at the exact points
+`perf_profile.gd`/`perf_site_survey.gd` sample — much closer to what a
+player standing there actually sees):
 
 ```
-<FILL>
+site              count      density /ha
+village             617            545.5
+band1              1322           1168.9
+band2               272            240.5
+band3               358            316.5
+band4                 20             17.7
+band5              554            489.8
+stronghold          757            669.3
 ```
 
 ### 5.2 The budget line
 
-<FILL — derived from local density spread + which locations are
-disproportionately dense, once ranking is in>
+**The two views disagree by design, and the disagreement is the finding.**
+Whole-band density is fairly flat (78–257/ha) because it averages huge empty
+stretches in with dense clumps. Local density at the exact sampled point
+swings from **17.7/ha to 1168.9/ha — a 66x range** between two points in the
+same authored corridor. That is not a bug in the measurement; it means
+scatter is authored in clumps with wide gaps between, which is consistent
+with intent (a clearing should be clearer than a thicket) but means **no
+single density number can budget this system** — the number that matters is
+local, at the specific place the camera is, which is exactly why §3
+(draw calls) rather than a density ceiling is this file's real render-cost
+lever: under Compatibility, draw calls track MultiMesh batches in frustum,
+not instances per batch (§3.3), so a locally dense clump inside an existing
+batch is close to free in draw-call terms and is bounded by GPU throughput
+instead (§3.4, needs the device).
+
+**Budget line: no per-hectare density ceiling is set here.** The measured
+spread above is recorded so a future density pass can compare against it,
+and the band4 sample point's 17.7/ha (a near-empty ridge) versus band1's
+1168.9/ha (a dense thicket) should be read as evidence the corridor already
+varies deliberately, not as an unowned inconsistency to flatten.
 
 ## 6. The T3-INSTALL collision-streaming levers — verified
 

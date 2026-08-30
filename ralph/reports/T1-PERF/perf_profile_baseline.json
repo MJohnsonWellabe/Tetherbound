@@ -1,0 +1,420 @@
+{
+  "boot_ms": 44794,
+  "label": "",
+  "ranking": {
+    "collision_streaming": {
+      "ms": 1.894,
+      "per_second": 3.788,
+      "site": "band1"
+    },
+    "hud_process": {
+      "ms": 0.2371,
+      "per_second": 14.226,
+      "site": "band4"
+    },
+    "interaction_arbiter": {
+      "ms": 0.0461,
+      "per_second": 2.766,
+      "site": "village"
+    },
+    "wild_cluster_sweep": {
+      "ms": 0.365,
+      "per_second": 21.9,
+      "site": "stronghold"
+    }
+  },
+  "sites": {
+    "band1": {
+      "at": [
+        0.0,
+        700.0
+      ],
+      "costs": {
+        "animating_bodies": {
+          "count": 44,
+          "note": "AnimationPlayers advancing this frame, world-wide",
+          "of": 924
+        },
+        "collision_resident": {
+          "count": 410,
+          "note": "live CollisionShape3D nodes in the streaming bubble at this site"
+        },
+        "collision_streaming": {
+          "ms": 1.894,
+          "note": "vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide",
+          "per_second": 3.788,
+          "worst_ms": 2.972
+        },
+        "hud_process": {
+          "ms": 0.2161,
+          "note": "playground_hud._process(), every frame",
+          "per_second": 12.966
+        },
+        "interaction_arbiter": {
+          "ms": 0.0443,
+          "note": "interaction_arbiter._process(), every frame",
+          "per_second": 2.658
+        },
+        "wild_cluster_sweep": {
+          "ms": 0.184,
+          "note": "encounter_director._tick_streaming(), every frame, over 265 clusters",
+          "per_second": 11.04
+        },
+        "wild_ticking": {
+          "count": 10,
+          "note": "wild bodies running _physics_process at this site",
+          "of": 893
+        }
+      },
+      "ground_y": -4.68700313568115,
+      "node_count": 161694,
+      "physics_active_objects": 12,
+      "physics_collision_pairs": 481,
+      "physics_island_count": 12,
+      "physics_ms": {
+        "max": 9.694,
+        "mean": 9.66559999999998,
+        "min": 9.646,
+        "p95": 9.694
+      },
+      "process_ms": {
+        "max": 10.083,
+        "mean": 9.716725,
+        "min": 9.186,
+        "p95": 10.083
+      }
+    },
+    "band2": {
+      "at": [
+        0.0,
+        2200.0
+      ],
+      "costs": {
+        "animating_bodies": {
+          "count": 44,
+          "note": "AnimationPlayers advancing this frame, world-wide",
+          "of": 924
+        },
+        "collision_resident": {
+          "count": 92,
+          "note": "live CollisionShape3D nodes in the streaming bubble at this site"
+        },
+        "collision_streaming": {
+          "ms": 0.855,
+          "note": "vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide",
+          "per_second": 1.71,
+          "worst_ms": 1.581
+        },
+        "hud_process": {
+          "ms": 0.2282,
+          "note": "playground_hud._process(), every frame",
+          "per_second": 13.692
+        },
+        "interaction_arbiter": {
+          "ms": 0.0202,
+          "note": "interaction_arbiter._process(), every frame",
+          "per_second": 1.212
+        },
+        "wild_cluster_sweep": {
+          "ms": 0.235,
+          "note": "encounter_director._tick_streaming(), every frame, over 265 clusters",
+          "per_second": 14.1
+        },
+        "wild_ticking": {
+          "count": 8,
+          "note": "wild bodies running _physics_process at this site",
+          "of": 893
+        }
+      },
+      "ground_y": -6.30061292648315,
+      "node_count": 161376,
+      "physics_active_objects": 10,
+      "physics_collision_pairs": 389,
+      "physics_island_count": 10,
+      "physics_ms": {
+        "max": 7.294,
+        "mean": 7.1395,
+        "min": 7.088,
+        "p95": 7.294
+      },
+      "process_ms": {
+        "max": 10.315,
+        "mean": 10.2115,
+        "min": 9.901,
+        "p95": 10.315
+      }
+    },
+    "band3": {
+      "at": [
+        0.0,
+        4000.0
+      ],
+      "costs": {
+        "animating_bodies": {
+          "count": 44,
+          "note": "AnimationPlayers advancing this frame, world-wide",
+          "of": 924
+        },
+        "collision_resident": {
+          "count": 325,
+          "note": "live CollisionShape3D nodes in the streaming bubble at this site"
+        },
+        "collision_streaming": {
+          "ms": 1.85,
+          "note": "vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide",
+          "per_second": 3.7,
+          "worst_ms": 2.042
+        },
+        "hud_process": {
+          "ms": 0.2097,
+          "note": "playground_hud._process(), every frame",
+          "per_second": 12.582
+        },
+        "interaction_arbiter": {
+          "ms": 0.024,
+          "note": "interaction_arbiter._process(), every frame",
+          "per_second": 1.44
+        },
+        "wild_cluster_sweep": {
+          "ms": 0.29,
+          "note": "encounter_director._tick_streaming(), every frame, over 265 clusters",
+          "per_second": 17.4
+        },
+        "wild_ticking": {
+          "count": 8,
+          "note": "wild bodies running _physics_process at this site",
+          "of": 893
+        }
+      },
+      "ground_y": -5.46391201019287,
+      "node_count": 161609,
+      "physics_active_objects": 10,
+      "physics_collision_pairs": 463,
+      "physics_island_count": 10,
+      "physics_ms": {
+        "max": 21.012,
+        "mean": 19.20645,
+        "min": 8.975,
+        "p95": 21.012
+      },
+      "process_ms": {
+        "max": 11.946,
+        "mean": 11.8152,
+        "min": 11.074,
+        "p95": 11.946
+      }
+    },
+    "band4": {
+      "at": [
+        0.0,
+        6000.0
+      ],
+      "costs": {
+        "animating_bodies": {
+          "count": 44,
+          "note": "AnimationPlayers advancing this frame, world-wide",
+          "of": 924
+        },
+        "collision_resident": {
+          "count": 22,
+          "note": "live CollisionShape3D nodes in the streaming bubble at this site"
+        },
+        "collision_streaming": {
+          "ms": 0.379,
+          "note": "vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide",
+          "per_second": 0.758,
+          "worst_ms": 0.823
+        },
+        "hud_process": {
+          "ms": 0.2371,
+          "note": "playground_hud._process(), every frame",
+          "per_second": 14.226
+        },
+        "interaction_arbiter": {
+          "ms": 0.0233,
+          "note": "interaction_arbiter._process(), every frame",
+          "per_second": 1.398
+        },
+        "wild_cluster_sweep": {
+          "ms": 0.205,
+          "note": "encounter_director._tick_streaming(), every frame, over 265 clusters",
+          "per_second": 12.3
+        },
+        "wild_ticking": {
+          "count": 8,
+          "note": "wild bodies running _physics_process at this site",
+          "of": 893
+        }
+      },
+      "ground_y": 1.07172286510468,
+      "node_count": 161306,
+      "physics_active_objects": 10,
+      "physics_collision_pairs": 493,
+      "physics_island_count": 10,
+      "physics_ms": {
+        "max": 10.643,
+        "mean": 10.3355833333333,
+        "min": 10.333,
+        "p95": 10.333
+      },
+      "process_ms": {
+        "max": 9.024,
+        "mean": 6.07478333333333,
+        "min": 6.05,
+        "p95": 6.05
+      }
+    },
+    "stronghold": {
+      "at": [
+        0.0,
+        7500.0
+      ],
+      "costs": {
+        "animating_bodies": {
+          "count": 51,
+          "note": "AnimationPlayers advancing this frame, world-wide",
+          "of": 924
+        },
+        "collision_resident": {
+          "count": 304,
+          "note": "live CollisionShape3D nodes in the streaming bubble at this site"
+        },
+        "collision_streaming": {
+          "ms": 0.915,
+          "note": "vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide",
+          "per_second": 1.83,
+          "worst_ms": 1.37
+        },
+        "hud_process": {
+          "ms": 0.2121,
+          "note": "playground_hud._process(), every frame",
+          "per_second": 12.726
+        },
+        "interaction_arbiter": {
+          "ms": 0.0193,
+          "note": "interaction_arbiter._process(), every frame",
+          "per_second": 1.158
+        },
+        "wild_cluster_sweep": {
+          "ms": 0.365,
+          "note": "encounter_director._tick_streaming(), every frame, over 265 clusters",
+          "per_second": 21.9
+        },
+        "wild_ticking": {
+          "count": 15,
+          "note": "wild bodies running _physics_process at this site",
+          "of": 893
+        }
+      },
+      "ground_y": -4.59167337417603,
+      "node_count": 161588,
+      "physics_active_objects": 17,
+      "physics_collision_pairs": 422,
+      "physics_island_count": 17,
+      "physics_ms": {
+        "max": 7.549,
+        "mean": 7.54899999999999,
+        "min": 7.549,
+        "p95": 7.549
+      },
+      "process_ms": {
+        "max": 5.608,
+        "mean": 5.60799999999999,
+        "min": 5.608,
+        "p95": 5.608
+      }
+    },
+    "village": {
+      "at": [
+        10.0,
+        -10.0
+      ],
+      "costs": {
+        "animating_bodies": {
+          "count": 42,
+          "note": "AnimationPlayers advancing this frame, world-wide",
+          "of": 924
+        },
+        "collision_resident": {
+          "count": 151,
+          "note": "live CollisionShape3D nodes in the streaming bubble at this site"
+        },
+        "collision_streaming": {
+          "ms": 1.266,
+          "note": "vegetation.update_collision_streaming(), 2.0 Hz, over 51584 solid placements world-wide",
+          "per_second": 2.532,
+          "worst_ms": 1.772
+        },
+        "hud_process": {
+          "ms": 0.208,
+          "note": "playground_hud._process(), every frame",
+          "per_second": 12.48
+        },
+        "interaction_arbiter": {
+          "ms": 0.0461,
+          "note": "interaction_arbiter._process(), every frame",
+          "per_second": 2.766
+        },
+        "wild_cluster_sweep": {
+          "ms": 0.275,
+          "note": "encounter_director._tick_streaming(), every frame, over 265 clusters",
+          "per_second": 16.5
+        },
+        "wild_ticking": {
+          "count": 11,
+          "note": "wild bodies running _physics_process at this site",
+          "of": 893
+        }
+      },
+      "ground_y": 0.899999976158142,
+      "node_count": 161435,
+      "physics_active_objects": 13,
+      "physics_collision_pairs": 386,
+      "physics_island_count": 13,
+      "physics_ms": {
+        "max": 9.186,
+        "mean": 9.0891,
+        "min": 9.015,
+        "p95": 9.186
+      },
+      "process_ms": {
+        "max": 8.709,
+        "mean": 8.39093333333331,
+        "min": 7.975,
+        "p95": 8.709
+      }
+    }
+  },
+  "world": {
+    "animation_players": 924,
+    "animation_players_playing": 39,
+    "areas": 25,
+    "character_bodies": 895,
+    "harvest_points": 56436,
+    "lights": 67,
+    "mesh_instances": 6630,
+    "multimesh_instances": 28560,
+    "node_count": 161413,
+    "object_count": 202588,
+    "particles": 4,
+    "scatter_batches": 32,
+    "scatter_instances": 248167,
+    "scatter_layers": {
+      "bushes": 39786,
+      "deadfall": 134,
+      "groundmat": 147697,
+      "grove": 277,
+      "path_stones": 9341,
+      "rocks": 5733,
+      "saplings": 2829,
+      "trees": 42745
+    },
+    "scatter_solid": 51584,
+    "skeleton_bones": 15580,
+    "skeletons": 924,
+    "static_bodies": 1202,
+    "static_mem_mb": 2047.98786354065,
+    "wild_ticking": 8,
+    "wild_total": 893
+  }
+}
