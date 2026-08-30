@@ -101,6 +101,17 @@ const REVEAL_FLAG := "learned_legendary_is_the_source"
 ## file covers the FINALE segment, and re-playing the preceding three hours to
 ## reach it would be a different (and much slower) test.
 const ARRIVED_AT_THE_HALL := [
+	# T3-COMBAT: the three opening beats BEFORE the first catch. T5-STORY-2 added
+	# `opening_hear_grandpa`, `opening_take_starter` and `opening_show_grandpa`
+	# to the head of `data/progression/objectives.json`'s `main` chain, and this
+	# list was written against the chain as it stood before them. That is the
+	# exact failure the comment below already describes, one rung earlier: with
+	# them unset, `tracked_text()` returned "Go down and hear Grandpa out." at
+	# the climax, `_run()` bailed at its `_failures.is_empty()` guard straight
+	# after `_bring_a_full_five_to_the_hall()`, and **the finale never reached
+	# the Warden at all** on any branch carrying that story work. Taken from the
+	# data rather than guessed: these are rungs 0-2's own `flag_id` values.
+	"opening:beat:choose", "opening:beat:return_starter", "opening:beat:walk_out",
 	"opening:beat:road", "road_gate_open",
 	# TUTORIAL-CHAIN (OP23-04) added two rungs to the opening ladder and made
 	# the bed rung a count of three (owner directives 2026-08-23 sections 1
