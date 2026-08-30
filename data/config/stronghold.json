@@ -1228,6 +1228,134 @@
       "ivy": [
         {
           "model": "Prop_Vine1",
+          "along": "x",
+          "from": -9.6,
+          "to": 9.6,
+          "at": -12.68,
+          "y": 7.5,
+          "count": 26,
+          "clumps": 4,
+          "yaw_deg": 180,
+          "jitter": 0.18,
+          "y_jitter": 0.7,
+          "scale_min": 0.85,
+          "scale_max": 1.5,
+          "tint": "#1a5900"
+        },
+        {
+          "model": "Prop_Vine2",
+          "along": "x",
+          "from": -9.6,
+          "to": 9.6,
+          "at": -12.68,
+          "y": 4.6,
+          "count": 18,
+          "clumps": 3,
+          "yaw_deg": 180,
+          "jitter": 0.18,
+          "y_jitter": 0.6,
+          "scale_min": 0.7,
+          "scale_max": 1.2,
+          "tint": "#134400"
+        },
+        {
+          "model": "Prop_Vine1",
+          "along": "z",
+          "from": -11.5,
+          "to": 11.5,
+          "at": -10.68,
+          "y": 7.5,
+          "count": 20,
+          "clumps": 3,
+          "yaw_deg": -90,
+          "jitter": 0.18,
+          "y_jitter": 0.6,
+          "scale_min": 0.8,
+          "scale_max": 1.35,
+          "tint": "#1a5900"
+        },
+        {
+          "model": "Prop_Vine2",
+          "along": "z",
+          "from": -11.5,
+          "to": 11.5,
+          "at": 10.68,
+          "y": 7.5,
+          "count": 20,
+          "clumps": 3,
+          "yaw_deg": 90,
+          "jitter": 0.18,
+          "y_jitter": 0.6,
+          "scale_min": 0.8,
+          "scale_max": 1.35,
+          "tint": "#1a5900"
+        },
+        {
+          "model": "Prop_Vine1",
+          "along": "z",
+          "from": 18.5,
+          "to": 45.5,
+          "at": -11.68,
+          "y": 8.5,
+          "count": 30,
+          "clumps": 4,
+          "yaw_deg": -90,
+          "jitter": 0.2,
+          "y_jitter": 0.7,
+          "scale_min": 0.85,
+          "scale_max": 1.5,
+          "tint": "#1a5900"
+        },
+        {
+          "model": "Prop_Vine2",
+          "along": "z",
+          "from": 18.5,
+          "to": 45.5,
+          "at": 11.68,
+          "y": 8.5,
+          "count": 30,
+          "clumps": 4,
+          "yaw_deg": 90,
+          "jitter": 0.2,
+          "y_jitter": 0.7,
+          "scale_min": 0.85,
+          "scale_max": 1.5,
+          "tint": "#1a5900"
+        },
+        {
+          "model": "Prop_Vine2",
+          "along": "z",
+          "from": 18.5,
+          "to": 45.5,
+          "at": -11.68,
+          "y": 5.2,
+          "count": 22,
+          "clumps": 3,
+          "yaw_deg": -90,
+          "jitter": 0.2,
+          "y_jitter": 0.6,
+          "scale_min": 0.7,
+          "scale_max": 1.15,
+          "tint": "#134400"
+        },
+        {
+          "model": "Prop_Vine1",
+          "along": "z",
+          "from": 18.5,
+          "to": 45.5,
+          "at": 11.68,
+          "y": 5.2,
+          "count": 20,
+          "clumps": 3,
+          "yaw_deg": 90,
+          "jitter": 0.2,
+          "y_jitter": 0.6,
+          "scale_min": 0.7,
+          "scale_max": 1.15,
+          "tint": "#134400"
+        },
+        {
+          "model": "Prop_Vine1",
           "along": "z",
           "from": 19.0,
           "to": 45.0,
@@ -1240,7 +1368,7 @@
           "y_jitter": 0.5,
           "scale_min": 0.75,
           "scale_max": 1.35,
-          "tint": "#4f6138"
+          "tint": "#1a5900"
         },
         {
           "model": "Prop_Vine2",
@@ -1256,7 +1384,7 @@
           "y_jitter": 0.5,
           "scale_min": 0.75,
           "scale_max": 1.3,
-          "tint": "#4a5c34"
+          "tint": "#1a5900"
         },
         {
           "model": "Prop_Vine1",
@@ -1272,7 +1400,7 @@
           "y_jitter": 0.45,
           "scale_min": 0.7,
           "scale_max": 1.2,
-          "tint": "#4f6138"
+          "tint": "#1a5900"
         },
         {
           "model": "Prop_Vine2",
@@ -1288,7 +1416,7 @@
           "y_jitter": 0.45,
           "scale_min": 0.7,
           "scale_max": 1.2,
-          "tint": "#4a5c34"
+          "tint": "#1a5900"
         },
         {
           "model": "Prop_Vine1",
@@ -1304,7 +1432,7 @@
           "y_jitter": 0.6,
           "scale_min": 0.8,
           "scale_max": 1.4,
-          "tint": "#4f6138"
+          "tint": "#1a5900"
         },
         {
           "model": "Prop_Vine2",
@@ -1320,7 +1448,7 @@
           "y_jitter": 0.6,
           "scale_min": 0.8,
           "scale_max": 1.35,
-          "tint": "#46582f"
+          "tint": "#1a5900"
         }
       ],
       "rubble": [
@@ -1408,14 +1536,15 @@
           "scale_min": 0.7,
           "scale_max": 1.6
         }
-      ]
+      ],
+      "_comment_tint": "Tints are variations ON the kit's own MI_Vine baseColorFactor (0.102, 0.349, 0), not fresh picks. albedo_color REPLACES that factor rather than multiplying it, so a 'natural' mid-green hex here reads as washed-out grey ivy -- the first cut of this block made exactly that mistake. Lower courses take the darker value because they sit in the wall's own shadow."
     },
     "_comment_retrofit_t1_hall_art": "T1-HALL-ART, 2026-08-30. Layer 2: Team Tether's industrial occupation, from the five bespoke props in the owner's boards. Models live in assets/environment/team_tether/hall/ and are authored by tools/art_pipeline/blender/build_hall_props.py against the boards' own scale bars -- read that script's header for why they are authored rather than generated (MESHY_API_KEY is unset in the build container). ORIENTATION: a prop's working face is toward -z at yaw 0, because the boards' props are authored front-toward-Blender-+Y and the glTF Y-up export maps that to -Z. yaw -90 faces +x, yaw 90 faces -x, yaw 180 faces +z. Get this wrong and a wall machine faces into the stone. NO COLLISION, deliberately: none of these meshes is named `-col`, so Godot builds no collider and nothing here can snag traversal or the Warden fight. PLACEMENT IS A STORY, not a scatter -- the pack asks for 'a coherent retrofit layer, not randomly scattered props'. Boilers sit where work happens (outer works, courtyard), pipes run FROM the boilers TO the siphons, scaffolds climb the faces that needed shoring, and the three siphons escalate along the player's route: one in the courtyard, one on the tether approach, and the hero one on the Warden arena wall.",
     "retrofit": [
       {
         "model": "rift_siphon_wall_machine",
         "at": [
-          -10.2,
+          -10.6,
           26.0
         ],
         "yaw_deg": -90,
@@ -1427,7 +1556,7 @@
       {
         "model": "rift_siphon_wall_machine",
         "at": [
-          7.3,
+          7.6,
           63.0
         ],
         "yaw_deg": 90,
@@ -1439,7 +1568,7 @@
       {
         "model": "rift_siphon_wall_machine",
         "at": [
-          -11.2,
+          -11.6,
           88.0
         ],
         "yaw_deg": -90,
@@ -1470,24 +1599,42 @@
         "model": "team_tether_scaffold_tower",
         "at": [
           -7.4,
-          -12.3
+          -13.43
         ],
-        "yaw_deg": 180,
+        "yaw_deg": 0,
         "lift": 0.0
       },
       {
         "model": "team_tether_scaffold_tower",
         "at": [
           7.4,
-          -12.3
+          -13.43
         ],
-        "yaw_deg": 180,
+        "yaw_deg": 0,
         "lift": 0.0
       },
       {
         "model": "team_tether_scaffold_tower",
         "at": [
-          -10.1,
+          -12.43,
+          30.0
+        ],
+        "yaw_deg": -90,
+        "lift": 0.0
+      },
+      {
+        "model": "team_tether_scaffold_tower",
+        "at": [
+          12.43,
+          38.0
+        ],
+        "yaw_deg": 90,
+        "lift": 0.0
+      },
+      {
+        "model": "team_tether_scaffold_tower",
+        "at": [
+          -10.2,
           36.5
         ],
         "yaw_deg": -90,
@@ -1496,8 +1643,8 @@
       {
         "model": "team_tether_scaffold_tower",
         "at": [
-          10.1,
-          41.0
+          10.2,
+          42.0
         ],
         "yaw_deg": 90,
         "lift": 0.0
@@ -1506,24 +1653,51 @@
         "model": "team_tether_banner_rig",
         "at": [
           -3.2,
-          -12.4
+          -12.98
         ],
-        "yaw_deg": 180,
-        "lift": 4.6
+        "yaw_deg": 0,
+        "lift": 3.6
       },
       {
         "model": "team_tether_banner_rig",
         "at": [
           3.2,
-          -12.4
+          -12.98
         ],
-        "yaw_deg": 180,
-        "lift": 4.6
+        "yaw_deg": 0,
+        "lift": 3.6
       },
       {
         "model": "team_tether_banner_rig",
         "at": [
-          -10.3,
+          -11.98,
+          24.0
+        ],
+        "yaw_deg": -90,
+        "lift": 4.2
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          11.98,
+          44.0
+        ],
+        "yaw_deg": 90,
+        "lift": 4.2
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          -10.98,
+          -6.0
+        ],
+        "yaw_deg": -90,
+        "lift": 3.4
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          -10.65,
           30.5
         ],
         "yaw_deg": -90,
@@ -1532,8 +1706,8 @@
       {
         "model": "team_tether_banner_rig",
         "at": [
-          10.3,
-          24.5
+          10.65,
+          20.5
         ],
         "yaw_deg": 90,
         "lift": 4.0
@@ -1541,7 +1715,7 @@
       {
         "model": "team_tether_banner_rig",
         "at": [
-          -11.3,
+          -11.65,
           95.0
         ],
         "yaw_deg": -90,

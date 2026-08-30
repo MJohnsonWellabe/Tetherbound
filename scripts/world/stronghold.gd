@@ -3811,7 +3811,11 @@ func _build_tether_retrofit() -> void:
 ## RIFT's, and the teal stays Team Tether's own. The reservation therefore holds
 ## unbroken -- no teal appears on this prop, and the purple appears on nothing
 ## else in the Hall. It is flagged in the handover for the owner all the same.
-const SIPHON_CORE_NODE := "RiftCore"
+## `build_hall_props.py::join_by_material` collapses each prop to one mesh per
+## material and names it for that material, so the core arrives as `TT_RiftCore`
+## rather than as the authoring script's `RiftCore` object. It is the sole user
+## of that material, which is what keeps it separable at all.
+const SIPHON_CORE_NODE := "TT_RiftCore"
 const SIPHON_RIFT := Color("#a24bd8")
 func _light_the_siphon(node: Node3D, spec: Dictionary) -> void:
 	var core: Node = node.find_child(SIPHON_CORE_NODE, true, false)

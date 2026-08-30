@@ -174,12 +174,47 @@ def clear_scene():
                 block.remove(b)
 
 
+def join_by_material():
+    """Collapse every object into one mesh PER MATERIAL, and name it for that
+    material.
+
+    THIS IS A BUDGET FIX, and the numbers are why it exists. Godot draws one call
+    per mesh surface, so the first cut of this script -- which exported each
+    primitive as its own object, because the boards ask for "separate logical
+    pieces" -- produced a 63-object scaffold and a 49-object siphon. Counted
+    against the placement list in stronghold.json that is ~1087 draw calls, into a
+    Hall that T1-HALL-4 measured at 3365 against a 4000 ceiling. It would have
+    blown the budget by 450 before the pipes were counted.
+
+    Joined by material the same set is ~193, because a prop costs its MATERIAL
+    COUNT (3-5), not its part count. Nothing visible changes: same geometry, same
+    materials, same silhouette.
+
+    The boards' modularity requirement is still met where it actually matters --
+    the pipe kit is five separate GLBs, and each prop's parts stay separable in
+    the authoring script. What is given up is per-part control in the scene, and
+    the one place that mattered is preserved by construction: `RiftCore` is the
+    only user of `TT_RiftCore`, so it survives as its own object and Godot can
+    still drive its emission and hang a light off it."""
+    groups = {}
+    for o in list(bpy.data.objects):
+        if o.type != "MESH" or not o.data.materials:
+            continue
+        groups.setdefault(o.data.materials[0].name, []).append(o)
+    for name, objs in groups.items():
+        bpy.ops.object.select_all(action="DESELECT")
+        for o in objs:
+            o.select_set(True)
+        bpy.context.view_layer.objects.active = objs[0]
+        if len(objs) > 1:
+            bpy.ops.object.join()
+        bpy.context.view_layer.objects.active.name = name
+
+
 def export(out_dir, stem):
-    """Join nothing -- multi-object GLBs keep the boards' 'separate logical pieces'
-    requirement, and Godot imports each as its own MeshInstance3D so a scene can
-    hide, recolour or animate one part."""
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, stem + ".glb")
+    join_by_material()
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.export_scene.gltf(
         filepath=path,
@@ -544,25 +579,43 @@ def build_banner_rig():
 
     BAR_Y = 2.72
     BAR_LEN = 1.5
+    # -Y is the stone, as on every other wall-mounted prop in this file. Getting
+    # this sign wrong is not cosmetic: the glTF Y-up export maps Blender -Y to
+    # +Z, so a banner authored against +Y would be the one prop in the set whose
+    # wall is on the opposite side, and a single Godot yaw convention could not
+    # place all five.
+    WALL_Y = -0.30       # the stone face
+    BAR_OFF = 0.06       # the bar stands this far off it, into the room
 
-    # wall bracket: plate, arm, diagonal gusset
-    box("BracketPlate", (0.1, 0.36, 1.0), (-0.72, 0, BAR_Y - 0.42), i)
-    box("BracketArm", (0.5, 0.12, 0.12), (-0.48, 0, BAR_Y), i)
-    box("BracketGusset", (0.42, 0.09, 0.42), (-0.5, 0, BAR_Y - 0.28), i)
-    bpy.context.object.rotation_euler = (0, math.pi / 4, 0)
+    # Two L-brackets, one at each end of the bar, reaching OUT of the wall behind.
+    # Board 05's front elevation carries an iron fitting at both ends, and mounting
+    # from behind is also what makes this prop consistent with the other four:
+    # every wall-mounted prop in this file puts the stone at +Y so that one Godot
+    # yaw convention places all of them. The first cut had the bracket plate on -X,
+    # which would have needed the banner hung off a perpendicular pier while its
+    # cloth faced down the wall -- wrong against the board and wrong against the
+    # rest of the set.
+    for sx in (-1, 1):
+        bx = sx * (BAR_LEN / 2 - 0.1)
+        box("BracketPlate", (0.24, 0.1, 0.86), (bx, WALL_Y - 0.05, BAR_Y - 0.34), i)
+        box("BracketArm", (0.12, abs(BAR_OFF - WALL_Y), 0.12),
+            (bx, (WALL_Y + BAR_OFF) / 2, BAR_Y), i)
+        box("BracketGusset", (0.1, 0.34, 0.34), (bx, WALL_Y + 0.14, BAR_Y - 0.2), i,
+            rot=(math.pi / 4, 0, 0))
 
     # horizontal bar with finial caps
-    cyl("Bar", 0.055, BAR_LEN, (0.0, 0, BAR_Y), i, rot=(0, math.pi / 2, 0), verts=10)
+    cyl("Bar", 0.055, BAR_LEN, (0.0, BAR_OFF, BAR_Y), i, rot=(0, math.pi / 2, 0), verts=10)
     for sx in (-1, 1):
-        cyl("BarCap", 0.075, 0.09, (sx * BAR_LEN / 2, 0, BAR_Y), b,
+        cyl("BarCap", 0.075, 0.09, (sx * BAR_LEN / 2, BAR_OFF, BAR_Y), b,
             rot=(0, math.pi / 2, 0), verts=10)
     for x in (-0.42, 0.0, 0.42):
-        torus("BarRing", 0.08, 0.02, (x, 0, BAR_Y), b, rot=(0, math.pi / 2, 0),
+        torus("BarRing", 0.08, 0.02, (x, BAR_OFF, BAR_Y), b, rot=(0, math.pi / 2, 0),
               mseg=12, sseg=6)
 
     # --- cloth --------------------------------------------------------------
     CW, CH = 1.12, 1.9             # cloth width / body height, before the hem
     COLS, ROWS = 14, 12
+    CLOTH_Y = BAR_OFF + 0.05
     me = bpy.data.meshes.new("BannerCloth")
     bm = bmesh.new()
     verts = {}
@@ -577,7 +630,9 @@ def build_banner_rig():
             fold = math.sin(u * math.pi * 3.0) * 0.055 * (0.35 + 0.65 * v)
             # a slight overall belly, and a gentle sway near the hem
             belly = math.sin(u * math.pi) * 0.03
-            y = fold + belly + 0.02 * v * v
+            # CLOTH_Y hangs the sheet just clear of the bar, on the room side of
+            # it, so the stone at +Y never pokes through a fold.
+            y = CLOTH_Y + fold - belly - 0.02 * v * v
             verts[(r, c)] = bm.verts.new((x, y, z))
     bm.verts.ensure_lookup_table()
     for r in range(ROWS):
@@ -601,8 +656,10 @@ def build_banner_rig():
         u0, u1 = c / COLS, (c + 1) / COLS
         x0, x1 = (u0 - 0.5) * CW, (u1 - 0.5) * CW
         drop = 0.16 + 0.1 * ((c * 7) % 5) / 4.0      # uneven, so it reads as torn
-        y0 = math.sin(u0 * math.pi * 3.0) * 0.055 + math.sin(u0 * math.pi) * 0.03 + 0.02
-        y1 = math.sin(u1 * math.pi * 3.0) * 0.055 + math.sin(u1 * math.pi) * 0.03 + 0.02
+        # must match the cloth's own bottom row exactly (v = 1), or the hem tears
+        # away from the sheet it is supposed to continue
+        y0 = CLOTH_Y + math.sin(u0 * math.pi * 3.0) * 0.055 - math.sin(u0 * math.pi) * 0.03 - 0.02
+        y1 = CLOTH_Y + math.sin(u1 * math.pi * 3.0) * 0.055 - math.sin(u1 * math.pi) * 0.03 - 0.02
         a = hb.verts.new((x0, y0, z0))
         bcv = hb.verts.new((x1, y1, z0))
         cpt = hb.verts.new(((x0 + x1) / 2, (y0 + y1) / 2, z0 - drop))
@@ -615,17 +672,19 @@ def build_banner_rig():
 
     # vertical selvage tapes down both edges, the board's gold-ish trim
     for sx in (-1, 1):
-        box("Selvage", (0.05, 0.03, CH), (sx * CW / 2, 0.03, BAR_Y - 0.09 - CH / 2), b)
+        box("Selvage", (0.05, 0.03, CH), (sx * CW / 2, CLOTH_Y + 0.02,
+                                          BAR_Y - 0.09 - CH / 2), b)
 
-    # chain and pulley off the bar's free end
+    # chain and pulley off the bar's free end, hanging clear of the cloth
     px = BAR_LEN / 2 - 0.16
-    box("PulleyCheek", (0.16, 0.02, 0.22), (px, 0.05, BAR_Y - 0.3), b)
-    box("PulleyCheek2", (0.16, 0.02, 0.22), (px, -0.05, BAR_Y - 0.3), b)
-    cyl("PulleyWheel", 0.07, 0.07, (px, 0, BAR_Y - 0.3), i, rot=(math.pi / 2, 0, 0), verts=10)
+    py = BAR_OFF + 0.16
+    box("PulleyCheek", (0.16, 0.02, 0.22), (px, py + 0.05, BAR_Y - 0.3), b)
+    box("PulleyCheek2", (0.16, 0.02, 0.22), (px, py - 0.05, BAR_Y - 0.3), b)
+    cyl("PulleyWheel", 0.07, 0.07, (px, py, BAR_Y - 0.3), i, rot=(math.pi / 2, 0, 0), verts=10)
     for k in range(7):
-        torus("ChainLink", 0.035, 0.012, (px, 0, BAR_Y - 0.46 - k * 0.062), i,
+        torus("ChainLink", 0.035, 0.012, (px, py, BAR_Y - 0.46 - k * 0.062), i,
               rot=(0, (k % 2) * math.pi / 2, 0), mseg=8, sseg=5)
-    sphere("ChainWeight", 0.065, (px, 0, BAR_Y - 0.93), i, segments=10, rings=6)
+    sphere("ChainWeight", 0.065, (px, py, BAR_Y - 0.93), i, segments=10, rings=6)
     return "team_tether_banner_rig"
 
 
