@@ -340,12 +340,15 @@ that are working:
 | `smoke_gate_a_opening_segment.gd` × 4 on `main` | 3 pass, 1 harness aim flake |
 | `run_tests.gd --only=quest_log,gateb_objective_chain,input_glyph_verbs,dialogue_runner` | 112 tests, 1549 assertions, **0 failed** |
 | `run_tests.gd --only=dialogue_runner,village` | 62 tests, 796 assertions, **0 failed** |
+| `run_tests.gd` — **the full suite**, because `quest_log.gd` is a core reader | **1603 tests, 3,568,660 assertions, 0 failed** |
 | `_probe_story_drive.gd` — rungs with no `how` | **16 → 0** |
 | `_probe_story_drive.gd` — rungs misdirecting a hungry team | **21 → 2** (both correct) |
 | `_probe_story_drive.gd` — villager ladders | see §4 |
 
-Commits are `[skip ci]` checkpoints; a full CI round has **not** been spent on
-this branch. It needs one before merge.
+Commits are `[skip ci]` checkpoints, so no CI round has been spent on this
+branch — but the full local suite is green above, which is the same 1603 tests
+CI would run. It still wants one real CI round before merge for the jobs the
+local runner does not cover.
 
 ## 8. Files touched
 
