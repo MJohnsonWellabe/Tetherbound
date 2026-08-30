@@ -1,0 +1,11 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_band_content.gd: 1 of 121 test files
+  ok    test_band_content.gd :: test_merged_arrays_are_identical_to_the_pre_split_files
+  ok    test_band_content.gd :: test_no_band_file_entry_is_dropped_by_the_merge
+  ok    test_band_content.gd :: test_order_is_unique_across_every_band
+  ok    test_band_content.gd :: test_the_head_files_keep_every_global_they_had
+  ok    test_band_content.gd :: test_the_head_files_no_longer_carry_the_positional_array
+  ok    test_band_content.gd :: test_the_loader_knows_exactly_the_bands_the_trail_has
+
+6 tests, 1079 assertions, 0 failed
