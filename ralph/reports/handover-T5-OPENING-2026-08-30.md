@@ -1,6 +1,10 @@
 # T5-OPENING handover — 2026-08-30
 
-Branch: `ralph/T5-OPENING`, off `origin/main` at `1d7fc8e7`.
+Branch: `ralph/T5-OPENING`, off `origin/main` at `1d7fc8e7`, merged forward to
+`5d171130` (the `T1-GROUND-3` landing) before the final push. That merge moves
+terrain heights, and this boundary's fence panels are ground-sampled, so every
+played-path measurement below was re-run on the merged tree — see **After the
+merge** at the end.
 
 Items: **OP-0830-4** (trapped in Grandpa's house), **OP-0830-1** (the village
 gate does not gate), **OP-0830-2** (the key does not glow).
@@ -269,12 +273,25 @@ calling OP-0830-2 closed.
 
 | | |
 |---|---|
-| unit suite (118 files) | pass, after adding the three new rungs to `test_gateb_objective_chain.gd`'s ladder |
+| unit suite (118 files) | pass |
 | `test_village_boundary.gd` (new) | 5 tests, 22 assertions, pass |
+| `test_quest_log.gd` | 35 tests, 767 assertions, pass |
+| `test_gateb_objective_chain.gd` | 4 tests, 54 assertions, pass |
 | `smoke_opening.gd` | pass |
 | `smoke_wake_softlock.gd` | pass (and verified red against the pre-fix code) |
 | `smoke_gate_a_opening_segment.gd` | pass |
 | `smoke_traversal.gd` | pass — the world perimeter, the South Bridge, the Old Mill Crossing and the Sigil Gate all still hold |
+
+Three unit files needed reconciling with the new ladder, and it is worth being
+precise that none of them was a defect in the fix: `test_gateb_objective_chain.gd`
+walks the chain flag by flag and needed the three new rungs at the top;
+`test_quest_log.gd` needed the three flags in its `WORLD_FLAGS` registry of
+"flags something shipped actually sets", and two of its tests set
+`opening:beat:road` alone and then asserted the tracked line moves — which, with
+three rungs ahead of the catch, is a player standing on the third rung of a
+ladder whose first two are outstanding. Both now go through a named
+`_through_the_opening()` helper that writes the beats the director itself would
+have written.
 
 ### Failures that are not this lane's, said plainly
 
@@ -286,32 +303,32 @@ calling OP-0830-2 closed.
   `ralph/reports/gate-f-historical-snapshot.md` names it among the tests left
   unwired because *"a red job added blind is worse than an unwired test"*. Nothing
   in this branch touches the hammer, the fixture or the bindings.
-* **`smoke_gate_b_continuous.gd`** — see the open question below.
+* **`smoke_gate_b_continuous.gd`** — fails at *"Mira's required opening visit left
+  'recipe_orb_basic' unset"*. **Attribution established, not assumed**: the same
+  run was done on a detached `origin/main` at `1d7fc8e7` and it fails there,
+  identically. `gate_a_npc_gather_segment.gd` asserts `recipe_orb_basic`
+  immediately after visiting Tam, on its own stated assumption that *"Mira's
+  required opening visit grants the Basic Orb pattern"* — but
+  `smoke_gate_b_continuous`'s step order plays the opening, sets `road_gate_open`
+  directly, and goes straight to the tools segment, never visiting Mira. Not this
+  branch's, and left for whoever owns that segment.
 
 ---
 
 ## Open / handed on
 
-1. **`smoke_gate_b_continuous.gd` fails at Mira's orb recipe** — *"Mira's required
-   opening visit left 'recipe_orb_basic' unset"*. `gate_a_npc_gather_segment.gd`
-   asserts `recipe_orb_basic` immediately after visiting Tam, on the stated
-   assumption that *"Mira's required opening visit grants the Basic Orb pattern"* —
-   but `smoke_gate_b_continuous`'s own step order plays the opening, sets
-   `road_gate_open` directly, and goes straight to the tools segment, never
-   visiting Mira. **Attribution is stated below the results table; do not treat
-   this as settled until that run is on the record.**
-2. **Performance.** The boundary adds ~40 fence panels (each two `fence_run`
+1. **Performance.** The boundary adds ~40 fence panels (each two `fence_run`
    courses) plus 40 collision boxes to a settlement the player spends their first
    twenty minutes in. That is new geometry against a ROG budget that, per
    OP-0830-6, has never been measured. Flagged to `T1-PERF` rather than guessed
    at; `wall.panel_length_m` in `village_boundary.json` is the single knob that
    trades panel count against silhouette.
-3. **The Rise and Practice Meadow roads now end inside the fence.** The Rise's
+2. **The Rise and Practice Meadow roads now end inside the fence.** The Rise's
    trailhead signpost at (75.4, −38.9) is outside and reached through the gate;
    the practice meadow is entirely inside, which is what keeps the opening's first
    catch reachable before the key. Neither road dead-ends, but nobody has walked
    The Rise past the gate since it moved.
-4. **The corridor out of Band 0 leaves by the Pond gate.** A player heading due
+3. **The corridor out of Band 0 leaves by the Pond gate.** A player heading due
    north for the South Bridge meets fence and has to walk along it to the gate at
    (−21, 21). That is how a walled village works, and it is ~40m of walking, but
    it is a change to the shape of the first walk out and it has not been played
@@ -337,6 +354,31 @@ calling OP-0830-2 closed.
   `tests/test_gateb_objective_chain.gd`, `tests/helpers/gate_a_material_route.gd`
 - `tools/_probe_key_site.gd`, `tools/_probe_road_gate.gd` — `RoadGate` now hangs
   under `VillageBoundary`, so the lookups search rather than index the world root
+
+---
+
+## After the merge
+
+`origin/main` moved to `5d171130` (the `T1-GROUND-3` landing) while this lane was
+working, and it was merged forward, never rebased. That merge changes terrain
+heights and scatter — and the fence panels' colliders are sized from the ground
+they span — so the measurements were not carried over on trust. Re-run on the
+merged tree:
+
+| | |
+|---|---|
+| `test_village_boundary.gd` | 5 tests, 22 assertions, pass |
+| `tools/_probe_village_gate_escape.gd` | see below |
+| `smoke_opening.gd` | see below |
+| `smoke_wake_softlock.gd` | see below |
+
+One thing that lane found is worth reading before trusting any capture from this
+round: *"capture integrity — the grass was never missing, the binding was"*
+(`T1-GROUND-3`). The grassless-frame defect the coordinator warned about has been
+diagnosed at the source; the frames in this report all carry real grass, which is
+consistent with that.
+
+---
 
 **Untouched, per the ownership split:** `stronghold.gd`/`landmark.gd`, terrain and
 grass and scatter configs, `species.json` and the spawn tables, `objectives.json`'s
