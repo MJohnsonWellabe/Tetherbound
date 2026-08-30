@@ -1,0 +1,14 @@
+{
+  "_comment": "T5-PLAY end-to-end chapter run: S01 -> S10e in one save lineage, logic lane. Carries its own freeze record so operator_harness.gd::_freeze_display_claim reads this run's honest declaration rather than the stale global ralph/reports/gate-f-candidate/RUN_METADATA.json, which claims display_server=X11 under xvfb-run and therefore CD-8b-refuses every headless segment. Written BEFORE the run started, which is what the harness's own comment requires -- a run that wants a logic lane must say so in the freeze record before the run, never amend one mid-run to get a segment to start.",
+  "candidate_ref": "ralph/T5-PLAY (from origin/ralph/LAND-0830I)",
+  "run_dir": "ralph/reports/gate-f-run-T5-PLAY",
+  "purpose": "Play the Meadows chapter from a fresh save to post-victory and record what ACTIVE_GAME_PLAN.md section 5 asks for: wall-clock pacing against the 3-4 hour target, dead-travel intervals, team progression, encounter cadence, and every reliability failure. Ad hoc, NOT canonical Gate F.",
+  "display_server": "headless (logic lane, no display server -- honest, matches this process)",
+  "renderer": "none (logic lane, no rendering)",
+  "lanes": {
+    "logic": {
+      "display_server": "headless (logic lane, no display server)",
+      "renderer": "none (logic lane)"
+    }
+  }
+}
