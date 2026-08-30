@@ -110,8 +110,15 @@ Reproduce any number below with the commands in §7.
 
 ### 3.1 The reproduced four-view baseline
 
-`HALL_DESIGN_2026-08-30.md`'s own baseline, re-measured this session on the
-same `main` tree with the same tool for cross-check:
+`HALL_DESIGN_2026-08-30.md`'s own baseline used `tools/perf_render_stats.gd`
+at four views: `village_high`, `band1_open`, `band4_ironwood`,
+`stronghold_approach`. `tools/perf_site_survey.gd` reuses those exact same
+four camera poses verbatim (same x/z/height/yaw), so its `day` rows for
+those four names ARE the cross-check — a second, separately-run measurement
+at the identical points, not a re-guess. (A literal re-run of the old
+narrower tool was started this session and killed once it became clear it
+was measuring a strict subset of what the new tool would produce anyway —
+this session's own reproducibility note, not a gap.)
 
 ```
 view                     draw calls     primitives      objects
