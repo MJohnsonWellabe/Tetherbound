@@ -127,17 +127,49 @@ def segment_report(run_dir, seg):
     if route:
         r["play_s"] = f(route[-1], "t")
         r["dead_peak_m"] = max(f(x, "dead_travel_m") for x in route)
-        # Longest wall of route rows with no meaningful mark between them, in
-        # play seconds. Uses the route clock, so it is the same clock the
-        # dead-travel metres are counted on.
+        # Longest stretch with no meaningful mark, in play seconds -- but only
+        # counting stretches the player actually TRAVELLED through.
+        #
+        # Without the movement filter this metric is dominated by the boot wait:
+        # every segment opens with a 180 s world stand-up during which the
+        # player does not exist yet, which is instrument cost, not a dead walk.
+        # Section 5 asks for "travel without a meaningful gameplay or visual
+        # pull", so a stretch where nobody moved is not one.
+        moved_by_t = []
+        prev = None
+        acc = 0.0
+        for row in route:
+            p = (f(row, "x"), f(row, "z"))
+            if prev is not None:
+                step = ((p[0] - prev[0]) ** 2 + (p[1] - prev[1]) ** 2) ** 0.5
+                if step < 5.0:
+                    acc += step
+            prev = p
+            moved_by_t.append((f(row, "t"), acc))
+
+        def travelled(a, b):
+            """Metres walked between two play timestamps."""
+            lo = hi = None
+            for t, m in moved_by_t:
+                if lo is None and t >= a:
+                    lo = m
+                if t <= b:
+                    hi = m
+            return 0.0 if lo is None or hi is None else max(0.0, hi - lo)
+
         ts = sorted(t for t, _ in marks)
-        span_start, worst, worst_at = 0.0, 0.0, 0.0
+        span_start, worst, worst_at, worst_m = 0.0, 0.0, 0.0, 0.0
         for t in ts + [r["play_s"]]:
-            if t - span_start > worst:
-                worst, worst_at = t - span_start, span_start
+            gap = t - span_start
+            walked = travelled(span_start, t)
+            # 5 m is a couple of strides: below that the player was standing
+            # still, whatever the clock did.
+            if walked >= 5.0 and gap > worst:
+                worst, worst_at, worst_m = gap, span_start, walked
             span_start = t
         r["dead_peak_s"] = worst
         r["dead_peak_s_at"] = worst_at
+        r["dead_peak_s_m"] = worst_m
         # Distance walked: route rows are 2 Hz, so summing per-row movement is a
         # lower bound on path length, not the harness's own per-frame figure.
         dist = 0.0
