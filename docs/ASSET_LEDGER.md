@@ -354,3 +354,53 @@ still blocked on a fresh Meshy generation against a resting-pose reference,
 which this lane has no more ability to spend than the one that found it.
 
 Full account: `ralph/reports/NPC_CAST_INSTALL_2026-08-30.md`.
+
+## T1-CREATURE-RIG (2026-08-30) — the 15 civilian/trail bodies placed, the five creature rigs still blocked
+
+No new Meshy spend in this entry either.
+
+**All 15 civilian/trail bodies above are now placed in the live game.** 12
+non-battle roles (`innkeeper`, `inn_helper`, `trader`, `craftsperson`,
+`creature_caretaker`, `farmer`, `local_historian`, `lost_traveler`,
+`field_researcher`, `alpha_tracker`, `courier`, `former_tether_member`) are
+new entries in `data/config/village_npcs.json` with their own greeting
+conversations in `data/dialogue/village.json`; the 3 Battle roles
+(`young_trainer`, `rival_trainer`, `wandering_trainer`) are standalone
+`trainer_npc.gd` placements (the same shape as Bryn/old_champion_bram) in
+`data/config/bands/band1_lower_meadows/trainers.json` with authored teams
+(species already resident in Band 1, levels inside the band's own [2,7]
+trainer_levels range per `chapter_curve.json`) and challenge/defeated
+dialogue in `data/dialogue/bands/band1_lower_meadows.json`. Every position
+was checked with a new tool, `tools/_probe_civilian_placement.gd` — the
+real analytic terrain (`playground_heightfield.gd`, no bake needed) plus
+real building footprints (`building_prefabs.json`'s own module-extent
+formula, the same one `village.gd::_ground_clear_radius` uses at runtime)
+plus distance to every already-authored person — not eyeballed, the same
+standard `village_npcs.json`'s own `_comment_positions` set. Two of the
+twelve (Maren the field researcher, Sorrel the alpha tracker) fill the
+previously-empty `ranger_station`/mill-crossing buildings near the pond
+route rather than crowding the village square further. Evidence:
+`ralph/reports/T1-CREATURE-RIG/shots/` — real playground-world renders (the
+actual terrain and structures, not a neutral-backdrop lineup), through
+`tools/_capture_t1_creature_rig_npcs.gd`.
+
+**The five expansion-creature meshes' no-rig defect (Sparkit, Cindercub,
+Shadelet, Frostclaw, Bramblebun redesign) is NOT closed this pass, and
+could not be.** `MESHY_API_KEY` is unset in this container — confirmed
+directly (`python3 tools/art_pipeline/meshy.py check` reports "MESHY_API_KEY
+is not set"), the same wall T3-INSTALL's own handover already recorded
+hitting on this exact task ("no API key in this lane, same as every other
+lane that has hit this wall"). Rigging an already-generated mesh is
+in-scope work per CLAUDE.md (it spends no new generation), but the Meshy
+auto-rigger is a cloud API call and there is no local, offline substitute
+for it in this pipeline — `animate_humanoid.py`'s own local Blender bake
+needs a rigged/skinned input to animate, so nothing downstream of the rig
+call can proceed either. Recorded here as a standing environment blocker,
+not a judgement call to escalate for spend authorisation: the five meshes
+still stand in the world at correct scale/material and still do not play
+idle/walk/attack/hit/faint, exactly as this ledger's own T3-INSTALL entry
+above describes. The Bramblebun redesign therefore also stays reverted
+(the original animated mesh still ships) for the same reason T3-INSTALL
+gave.
+
+Full account: `ralph/reports/handover-T1-CREATURE-RIG-2026-08-30.md`.

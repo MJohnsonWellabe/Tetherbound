@@ -315,7 +315,104 @@
           "_why": "After registration, the team-size reminder. The threshold is tournament.json's five-creature cap-aligned value; the dialogue says five rather than carrying a second gameplay number."
         }
       ]
+    },
+    {
+      "name": "Wilhelm",
+      "config_key": "innkeeper",
+      "position": [-8.0, -3.0],
+      "facing_deg": 132.7,
+      "greeting": "village_innkeeper",
+      "_why": "T1-CREATURE-RIG. First of the 15 rigged-but-unplaced civilian bodies T3-INSTALL left dark (docs/ASSET_LEDGER.md's own T3-INSTALL entry). Own generated body, not Bram's tinted `villager_keeper` rig -- a second, named member of the inn's staff rather than a duplicate of Bram's vendor role, which he keeps. Position from tools/_probe_civilian_placement.gd: clear of the inn's own footprint by 1.77m, of Bram by 6.36m, ground flat, off every dirt path (path_factor 0.00)."
+    },
+    {
+      "name": "Nessa",
+      "config_key": "inn_helper",
+      "position": [-9.0, -16.0],
+      "facing_deg": 47.0,
+      "greeting": "village_inn_helper",
+      "_why": "T1-CREATURE-RIG. Probed clear of the inn footprint by 3.18m and of Bram by 7.66m, ground flat, off every path."
+    },
+    {
+      "name": "Corin",
+      "config_key": "trader",
+      "position": [9.0, 4.0],
+      "facing_deg": 175.9,
+      "greeting": "village_trader",
+      "_why": "T1-CREATURE-RIG. Beside the wagon, facing the well -- probed clear of the workshop by 1.43m and of Bryn by 6.40m, ground flat, off every path."
+    },
+    {
+      "name": "Ada",
+      "config_key": "craftsperson",
+      "position": [-3.0, 7.0],
+      "facing_deg": 135.0,
+      "greeting": "village_craftsperson",
+      "_why": "T1-CREATURE-RIG. In the workshop's own yard -- probed clear of the workshop footprint by 1.22m, 11.18m from Wilhelm, ground flat, off every path."
+    },
+    {
+      "name": "Fenn",
+      "config_key": "creature_caretaker",
+      "position": [26.0, -3.0],
+      "facing_deg": -126.9,
+      "greeting": "village_creature_caretaker",
+      "_why": "T1-CREATURE-RIG. Near Oskar's pens -- probed 5.00m from Oskar and 3.55m clear of cottage_a, ground flat, off every path."
+    },
+    {
+      "name": "Garrick",
+      "config_key": "farmer",
+      "position": [8.0, -22.0],
+      "facing_deg": 71.6,
+      "greeting": "village_farmer",
+      "_why": "T1-CREATURE-RIG. By the fenced fields south of the square -- probed 3.62m clear of the nearest fence run and 6.00m from Tam, ground flat, off every path."
+    },
+    {
+      "name": "Old Perrin",
+      "config_key": "local_historian",
+      "position": [6.0, -13.0],
+      "facing_deg": 53.1,
+      "greeting": "village_local_historian",
+      "_why": "T1-CREATURE-RIG. Near the crossroads at the well, off the paths themselves (path_factor 0.00, unlike the well's own junction) -- probed 1.42m clear of the inn and 3.61m from Tam."
+    },
+    {
+      "name": "Tobin",
+      "config_key": "lost_traveler",
+      "position": [80.0, -33.0],
+      "facing_deg": -143.1,
+      "greeting": "village_lost_traveler",
+      "_why": "T1-CREATURE-RIG. Past The Rise trailhead's own dead end (terrain_playground.json's fingerpost at [75.4,-38.9], 'the Rise road's own end') -- fits the board's own blurb, 'lost after the Rifts severed the old roads'. Probed 58.24m clear of the nearest structure and 45m+ from every other placed body, ground present, off every path (path_factor 0.00, unlike the road curve itself just south of him)."
+    },
+    {
+      "name": "Maren",
+      "config_key": "field_researcher",
+      "position": [-343.0, 501.0],
+      "facing_deg": -71.6,
+      "greeting": "village_field_researcher",
+      "_why": "T1-CREATURE-RIG. At the ranger station by the pond crossing (village.json's `ranger_station`, empty since Sela moved to the square) -- a field researcher's own logical desk. Probed 4.71m clear of the station's footprint, ground present (the pond-route shoulder), off every path."
+    },
+    {
+      "name": "Sorrel",
+      "config_key": "alpha_tracker",
+      "position": [-390.0, 524.0],
+      "facing_deg": -59.0,
+      "greeting": "village_alpha_tracker",
+      "_why": "T1-CREATURE-RIG. By the mill crossing, watching the water where the pond route's wild ecology is thickest -- probed 7.35m clear of the mill's own footprint, ground present, off every path, 52.33m from Maren so the pond-crossing pair reads as two people, not one doubled."
+    },
+    {
+      "name": "Lark",
+      "config_key": "courier",
+      "position": [17.0, -17.0],
+      "facing_deg": 163.6,
+      "greeting": "village_courier",
+      "_why": "T1-CREATURE-RIG. On the square's south side, facing the road out toward the South Bridge crossing -- probed 1.26m clear of cottage_b and 7.07m from Sela, ground flat, off every path."
+    },
+    {
+      "name": "Ren",
+      "config_key": "former_tether_member",
+      "position": [26.0, -19.0],
+      "facing_deg": -60.6,
+      "greeting": "village_former_tether_member",
+      "_why": "T1-CREATURE-RIG. A quiet corner past cottage_b, apart from the square's usual traffic -- fits a defector keeping their distance. Probed 3.33m clear of cottage_b and 9.22m from Lark, ground flat, off every path."
     }
   ],
-  "_comment_tournament_1": "TOURNAMENT-1. Halda, the tournament marshal, is the seventh entry and the first villager whose whole `greeting_when` list is a progression LADDER rather than a vendor/gift pair. That is deliberately the existing mechanism and not a new one: the tournament has seven states and each of them is one flag, so the ordered-branch reader `village_npcs.greeting_for()` already written for Mira answers all seven without a line of new code. Order matters and is checked by tests/test_tournament.gd -- champion first, then the rounds newest-first, then sign-up, then the two not-ready explanations."
+  "_comment_tournament_1": "TOURNAMENT-1. Halda, the tournament marshal, is the seventh entry and the first villager whose whole `greeting_when` list is a progression LADDER rather than a vendor/gift pair. That is deliberately the existing mechanism and not a new one: the tournament has seven states and each of them is one flag, so the ordered-branch reader `village_npcs.greeting_for()` already written for Mira answers all seven without a line of new code. Order matters and is checked by tests/test_tournament.gd -- champion first, then the rounds newest-first, then sign-up, then the two not-ready explanations.",
+  "_comment_t1_creature_rig": "T1-CREATURE-RIG, 2026-08-30. Placed 12 of the 15 civilian bodies T3-INSTALL generated, rigged, animated and installed at assets/characters/<slug>/ but never stood up anywhere (docs/ASSET_LEDGER.md's T3-INSTALL entry calls this 'the single largest remaining install opportunity in the game'). The remaining 3 -- young_trainer, rival_trainer, wandering_trainer -- are Battle roles and are placed in data/config/bands/band1_lower_meadows/trainers.json instead, the same standalone trainer_npc.gd path Bryn/old_champion_bram use, since they need an authored team rather than a greeting. Every position here was checked with tools/_probe_civilian_placement.gd (playground_heightfield.gd's real analytic terrain plus building_prefabs.json's own module-extent formula for footprint clearance, the same method village_npcs.json's own `_comment_positions` describes) -- not eyeballed. Evidence: ralph/reports/T1-CREATURE-RIG/shots/."
 }
