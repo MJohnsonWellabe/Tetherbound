@@ -52,3 +52,38 @@ candidate record a `lanes` block naming the headless logic lane, or have
 actually about to make.
 
 ---
+## RIG-T5-2 — S01 expects an objective rung the opening no longer starts on
+
+**Severity:** RIG. **The game is better than the script expects.**
+
+S01-12 asserts the first tracked objective of a fresh game is
+`opening_first_catch` (game flag `opening:beat:road`). Measured:
+
+```
+tracked objective id=opening:beat:choose text=Go down and hear Grandpa out.
+```
+
+`ralph/T5-OPENING` added earlier rungs to the opening ladder, so a fresh save
+now tracks a clearer, earlier instruction than the one the 2026-08-27 segment
+script was written against. A player waking upstairs is told to go down and
+hear Grandpa out, which is the right first line. **No player-facing defect** —
+`tools/gate_f/segments/S01.json` step S01-12 is stale and should track
+`opening:beat:choose`.
+
+Recorded rather than fixed: editing a segment mid-run changes the instrument
+during the measurement, and this lane's job is the account.
+
+---
+
+## Measured, not a defect — front-door cost
+
+| | |
+|---|---|
+| process start → title interactive | **476 ms** (30 settle frames) |
+| title → world playable (New Game) | inside the segment's 180 s budget; world stood up, player spawned at (0.0, 2.9, 0.0) in `grandpas_village` |
+
+`MEADOWS_EXIT_CRITERION.md` §K3 wants no core-verb reliability failure. The
+front door is not one: it is fast, it focuses a control, and Start New Game
+goes straight into the world with no overwrite prompt on a fresh install.
+
+---
