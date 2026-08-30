@@ -479,8 +479,14 @@ func _hang_sigil_banner(at: Vector3) -> void:
 	# is not baked into the panel's material. The banner hangs on the pier's -Z
 	# face, which is the side the road arrives from, so that is its outward
 	# normal in this holder's frame.
+	# Bleached linen, not cloth-plus-6%. `tether_sigil.gd`'s field went
+	# transparent in T1-HALL-4, so this colour tints the MARK rather than a
+	# lightened panel behind it; see `stronghold.gd::_hang_banner`'s matching
+	# note. The gate and the Hall must keep saying the same thing in the same
+	# tone, which is the whole reason the device lives in one file.
 	var device := TETHER_SIGIL.device(
-		Vector2(GATE_BANNER_W * 0.66, body_h * 0.6), FACTION_CLOTH.lightened(0.06),
+		Vector2(GATE_BANNER_W * 0.66, body_h * 0.6),
+		FACTION_CLOTH.lerp(Color("#e8ddc4"), 0.86),
 		Vector3.FORWARD, GATE_BANNER_T * 0.62)
 	device.position += Vector3(0.0, -body_h * 0.46, 0.0)
 	holder.add_child(device)

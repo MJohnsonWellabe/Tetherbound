@@ -24,11 +24,34 @@ extends RefCounted
 ## banners carry and is what survives being read at 150 m as "that flag has a
 ## device on it".
 
-## The device is drawn WHITE on an opaque field so it can be used as an
+## The device is drawn WHITE on a TRANSPARENT field so it can be used as an
 ## `albedo_texture` multiplied by whatever `albedo_color` the caller wants --
 ## one cached image serves the oxblood banners and the faded Meadows-blue
 ## relic banner alike, and neither needs its own copy.
-const SIGIL_PX := 128
+##
+## T1-HALL-4 (2026-08-30) rebuilt this image, and the reason is JUDGE-6's
+## defect 12 plus one line of its §"where I disagree with the lane". Read blind,
+## the judge found the sigil in `H-07` and praised it, then found that in
+## `H-02`, `H-02b`, `H-03` x3, `H-04` and two of three banners in `H-05` the
+## banners are "flat red rectangles with NO SIGIL AT ALL", and separately logged
+## "a patch of PINK DIAGONAL HATCHING" on the keep wall which, magnified, is "a
+## banner's sigil degrading into diagonal stripe noise at range". Its conclusion:
+## "the device does not merely fail to appear at distance; where it does appear
+## it appears as an artefact."
+##
+## Both readings are one bug with one cause, and it is a cause this repo has
+## already diagnosed once. `stronghold.gd::STONE_TILE`'s own header records it:
+## a thin bright high-contrast feature minified with NO MIP CHAIN is "precisely
+## the white per-pixel speckle the critic saw". `ImageTexture.create_from_image`
+## builds no mipmaps unless the Image carries them, and the device is a ring
+## 5.8px thick in a 128px image -- the thinnest, highest-contrast feature in the
+## build. Past a few tens of metres the sampler hits it or misses it per pixel:
+## hit rows and missed rows in alternation ARE the diagonal hatching, and a
+## banner whose every sample misses IS the blank red rectangle. So: mipmaps,
+## generated here; a larger source so the chain has somewhere to go; and a
+## heavier stroke, because a device that has to read at 150 m cannot be drawn at
+## hairline weight whatever the filtering does.
+const SIGIL_PX := 256
 
 static var _texture: ImageTexture = null
 
@@ -37,16 +60,26 @@ static var _texture: ImageTexture = null
 static func texture() -> ImageTexture:
 	if _texture != null:
 		return _texture
-	var img := Image.create(SIGIL_PX, SIGIL_PX, false, Image.FORMAT_RGBA8)
-	img.fill(Color(1.0, 1.0, 1.0, 1.0))
+	var img := Image.create(SIGIL_PX, SIGIL_PX, true, Image.FORMAT_RGBA8)
+	# TRANSPARENT field, not white. The device rides on its own quad standing
+	# 0.012m off the cloth, so an opaque field meant that quad painted a
+	# lightened rectangle over 62% of every banner -- the mark was a panel, not a
+	# mark. With the field clear the cloth shows through and the device is the
+	# device. (The caller already asks for `TRANSPARENCY_ALPHA` on this material;
+	# until now there was no alpha in the image for it to act on.)
+	img.fill(Color(1.0, 1.0, 1.0, 0.0))
 	var cx := float(SIGIL_PX) * 0.5
 	# The device sits in the FIELD -- the upper three quarters of the cloth,
 	# which is the part `_hang_banner`'s panel box shows -- so the banner's
 	# tails do not cut through it.
 	var cy := float(SIGIL_PX) * 0.42
 	var ring_r := float(SIGIL_PX) * 0.26
-	var ring_t := float(SIGIL_PX) * 0.045
-	var arm_t := float(SIGIL_PX) * 0.038
+	# Stroke weights up ~40% (0.045 -> 0.063, 0.038 -> 0.053). JUDGE-6 measured
+	# this device failing at range, and mip-mapping alone would fix the noise by
+	# fading the mark toward nothing rather than by keeping it legible. The board
+	# gives its banners a heavy device; a hairline ring was never that.
+	var ring_t := float(SIGIL_PX) * 0.063
+	var arm_t := float(SIGIL_PX) * 0.053
 	# Bleached linen rather than pure white: a device painted on cloth that has
 	# hung outdoors, not a decal.
 	var mark := Color(0.86, 0.82, 0.70)
@@ -65,7 +98,11 @@ static func texture() -> ImageTexture:
 			if absf(dy) <= arm_t and absf(dx) <= ring_r * 1.06:
 				on = true
 			if on:
-				img.set_pixel(x, y, mark)
+				img.set_pixel(x, y, Color(mark.r, mark.g, mark.b, 1.0))
+	# The whole point of the rebuild. Without this the ring is a 1-2px feature at
+	# every range the Hall is actually seen from, sampled with no filtering
+	# chain -- which is the hatching and the missing sigil both.
+	img.generate_mipmaps()
 	_texture = ImageTexture.create_from_image(img)
 	return _texture
 
