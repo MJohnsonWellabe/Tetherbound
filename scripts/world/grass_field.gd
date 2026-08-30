@@ -50,6 +50,10 @@ static var _config: Dictionary = {}
 @export var force_enabled := false
 
 var _camera: Camera3D = null
+## T1-GROUND-3. Set once the first time the rendering camera turns out not to
+## be the bound one, so `_follow_camera` complains loudly exactly once instead
+## of every frame. See that function for the evidence-integrity bug this is.
+var _warned_camera_swap := false
 var _terrain: Node = null
 var _material: ShaderMaterial = null
 ## The stone tier rides as a CHILD of this node, so the camera-follow in
@@ -582,7 +586,7 @@ func _build_far_cover(cfg: Dictionary) -> void:
 
 	for key: String in [
 		"fade_in_start", "fade_in_end", "fade_out_start", "far_radius",
-		"strength", "lift", "ground_blend", "mottle_scale", "mottle_strength",
+		"strength", "lift", "dilate_lift", "ground_blend", "mottle_scale", "mottle_strength",
 		"mottle_value", "mottle_detail", "mottle_detail_range",
 	]:
 		if far_cfg.has(key):
@@ -1230,6 +1234,55 @@ func bind(terrain: Node, camera: Camera3D) -> void:
 	_bind_terrain()
 
 
+## Follow whichever camera is ACTUALLY RENDERING, and say so loudly the first
+## time that is not the one `bind` was handed.
+##
+## T1-GROUND-3, and this is an evidence-integrity fix rather than a look one.
+## The 2026-08-30 blind pass opened with the owner's words -- "some of those
+## renders are just a bad shot not actual game. the game doesn't have the haze
+## and has real grass" -- and found frame after frame of committed lane
+## evidence showing bushes, reeds and fern cards standing on a bare splat with
+## not one blade between them. It attributed that to "the capture path
+## generally (or software GL)". It is neither. It is this binding.
+##
+## `playground_world.gd::_stand_up_the_grass_field` binds the field to the
+## GAMEPLAY camera, and its own comment already states the failure mode in so
+## many words: "handed the wrong one it centres its ring somewhere the player
+## is not and the ground goes bare exactly where they are standing." A capture
+## tool that builds its own Camera3D and calls `make_current()` does exactly
+## that -- the ring stays parked on the gameplay camera and the shot frames
+## ground the field is not dressing. Every such frame shows the baked scatter
+## (which is placed in world space and does not care) on naked terrain, which
+## is precisely the artefact the judge described.
+##
+## Measured across `tools/`: 128 scripts construct their own Camera3D, and
+## FIVE of them rebind this field. So 123 capture tools could silently produce
+## grass-free evidence, and the ones that happen to be fine are fine by
+## accident -- `_capture_ground_and_sky.gd`'s frames have grass only because it
+## stands the PLAYER at every shot, which drags the gameplay camera along with
+## it. Nobody reading a frame can tell which kind they are holding.
+##
+## Fixing 123 tools by hand would not hold: tool 129 reintroduces it. So the
+## field follows the rendering camera instead. That is also simply more
+## correct -- this node's whole job is to dress the ground being drawn -- and
+## it costs one viewport lookup per frame. `bind` stays the authority for the
+## terrain handle and for the initial camera; this only ever redirects the
+## follow, and it complains once when it has to, so a genuine mis-binding in
+## gameplay is still loud rather than silently papered over.
+func _follow_camera() -> void:
+	var rendering := get_viewport().get_camera_3d() if get_viewport() != null else null
+	if rendering == null or rendering == _camera:
+		return
+	if not _warned_camera_swap:
+		_warned_camera_swap = true
+		push_warning(("[grass_field] the rendering camera (%s) is not the one bind() was given (%s); " +
+			"following the rendering one. In a CAPTURE this is expected -- see _follow_camera. " +
+			"In GAMEPLAY it means the ground is being dressed around the wrong eye.") % [
+				rendering.name, _camera.name if is_instance_valid(_camera) else "<none>"])
+		print("[grass_field] now following rendering camera '%s'" % rendering.name)
+	_camera = rendering
+
+
 ## Mirror Terrain3D's own map textures and region lookup onto this material.
 ##
 ## Read off the LIVE terrain rather than configured here, because the two must
@@ -1510,6 +1563,7 @@ func _process(delta: float) -> void:
 	_material.set_shader_parameter("wind_time", _wind)
 	for cover: ShaderMaterial in _cover_materials:
 		cover.set_shader_parameter("wind_time", _wind)
+	_follow_camera()
 	if _camera == null or not is_instance_valid(_camera):
 		return
 

@@ -1145,11 +1145,55 @@ func place_on_ground(target: Vector3) -> bool:
 		# Leaving it where it is beats teleporting it into the sky, and the
 		# caller is told so it can pick somewhere else.
 		return false
+	height = _seat_over_footprint(target, height)
 
 	global_position = Vector3(target.x, height, target.z)
 	velocity = Vector3.ZERO
 	_impulse = Vector3.ZERO
 	return true
+
+
+## The highest ground under this body's own footprint, not just under its
+## centre.
+##
+## T1-GROUND-3, routed from the 2026-08-30 blind pass: creatures on open ground
+## 100m from any water photograph "sunk into the slope from the hindquarters
+## back, cut off by the ground plane". That is not the water-spawn path and it
+## is not a spawn-table defect -- it is this seat.
+##
+## `place_on_ground` sampled the ground at ONE point and put the root there. A
+## creature stands level, so on a slope the uphill half of a body `_radius`
+## wide is below ground by roughly `radius * tan(slope)` -- 0.4m of radius on a
+## 25-degree hillside buries 19cm of it, which on a small creature is the
+## hindquarters. This is exactly the defect T1-GROUND measured and fixed for
+## `path_stones` (a rigid shape sampled at its centre and laid on a slope), one
+## system over.
+##
+## Seating on the MAXIMUM under the footprint rather than the centre means the
+## downhill side can float by the same amount instead of the uphill side
+## burying. That is deliberate and it is not symmetric in how it reads: a small
+## gap under one flank on a hillside is what a standing animal looks like, and
+## a body sliced off by the ground plane is what a bug looks like. Any creature
+## that then activates resolves the gap on its first `move_and_slide` anyway;
+## nothing resolves being buried, which is why the frames show it.
+##
+## Four samples on the footprint's own axes, not a ring: this runs on every
+## placement and every respawn, the terrain query is not free, and four points
+## already capture the worst case on a plane, which is what a hillside locally
+## is. Falls back to the centre height whenever the world cannot answer, so a
+## scene with no ground source behaves exactly as it did before this existed.
+func _seat_over_footprint(target: Vector3, centre_height: float) -> float:
+	if _radius <= 0.0:
+		return centre_height
+	var highest := centre_height
+	for offset: Vector2 in [
+		Vector2(_radius, 0.0), Vector2(-_radius, 0.0),
+		Vector2(0.0, _radius), Vector2(0.0, -_radius),
+	]:
+		var at := _ground_height(target.x + offset.x, target.z + offset.y)
+		if not is_nan(at):
+			highest = maxf(highest, at)
+	return highest
 
 
 ## The world's own ground query, found by walking up the tree. Cached, because
