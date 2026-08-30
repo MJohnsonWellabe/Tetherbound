@@ -462,3 +462,83 @@ because base stats are species-owned and nothing mutates them — `evolve_into` 
 the only writer and it sets them from the new species' own definition. If that
 ever stops being true, the base stats have to be written into the save instead,
 and the round-trip test above is what would catch the difference.
+
+---
+
+## GAME-F5 — one sweep of the village's authored nodes does not pay for the home, and the run never built one
+
+**Severity:** SHIP candidate, **stated as an open question rather than a verdict**
+— two facts found while checking it cut against the simple reading, and they are
+below. **Not fixed** — `data/` is frozen for this lane.
+
+### What the run measured
+
+S03's gathering ladder walks all twenty band-1 harvest nodes in the village
+area and works each with two taps. Eighteen were reached (two were not — see
+GAME-F1). Result, from `S03-superseded-1/saves/S03-exit.json` after three
+pieces had been placed:
+
+```
+satchel: fiber 8, wood 5, stone 0   (floor + wall + door already paid: 11 wood, 6 stone)
+S03-105  flag home_materials_gathered NOT set        FAIL
+S03-173  flag home_built              NOT set        FAIL
+S03-205  flag creature_bed_built_3    NOT set        FAIL
+S03-228  flag player_slept_at_home    NOT set        FAIL
+```
+
+The home was never built, so there was nothing to sleep in and nothing to feed
+the team beside; the last third of the village ladder could not run.
+
+### The arithmetic, from the real catalogue and the real node table
+
+Costs from `data/items/buildables.json`, availability from
+`data/config/bands/band1_lower_meadows/harvest.json`:
+
+| | wood | stone | fiber |
+|---|---:|---:|---:|
+| **available** — all 20 village-area nodes, one pass, worked to exhaustion | **28** | **9** | **32** |
+| of which outside the fence (GAME-F1) | 4 | 3 | 0 |
+| available without leaving the village | 24 | 6 | 32 |
+| **needed** — `progression.json` `home.required_pieces` (camp) + three creature beds | **30** | 8 | **34** |
+| **needed** — what S03 actually builds (camp+floor+wall+door+roof + three beds) | **45** | **17** | **34** |
+
+Even on the *minimum* the game itself requires, a single pass of every authored
+node — including the two behind the fence — is **2 wood and 2 fiber short**. On
+what the segment builds it is 17 wood and 8 stone short. The owner directive of
+2026-08-23 that S03's own step quotes is:
+
+> *"the village gatherable budget must afford three beds before sign-up — the
+> journey verifies that budget by actually paying it."*
+
+On one sweep, it does not.
+
+### The two facts that cut against the simple reading, stated because they matter
+
+1. **The nodes respawn.** `harvest_node.gd::RESPAWN_SECONDS = 60.0`. A player
+   who circles the village a second time gets the whole table again. The sweep
+   itself took about 180 s of play, so some nodes were already back before it
+   ended.
+2. **The world is full of other harvestables.** The boot log reports
+   `scattered 382817 props ... 59165 harvestable`, and
+   `vegetation_harvest_point.gd` makes scatter trees gatherable. Wood, at
+   least, is not confined to the twenty authored nodes.
+
+So this is **not** "the materials do not exist". It is: **the authored budget
+does not cover the ladder in one pass, and the ladder is written as one pass.**
+Whether that is a tuning miss or a deliberate "go round again" is a design call.
+
+**What does not rescue it:** buying the shortfall. `data/config/trade.json`
+gives Mira `wood {"buy": 4, "sell": 1, "stock": 0}`, and the same `stock: 0`
+for stone and fiber — she *buys* materials from the player and has none to
+sell. The 30 coins in the exit satchel cannot close the gap.
+
+### The open question this run could not answer
+
+**Eleven `gather` events fired across eighteen reached nodes.** Seven nodes were
+walked to, had the right tool equipped, were pressed twice with a 90-frame
+settle between — and produced no gather event. That is either a node needing
+more swings than two, a tool/amount interaction, or a real swallowed interact.
+One run cannot tell which, and it changes the number above materially. **A
+lane wanting to settle the economy should start here**, because until it is
+settled the measured shortfall and the authored shortfall are not the same
+claim.
