@@ -157,14 +157,7 @@ func _leave_the_farmhouse() -> void:
 	var player := _world.get_node_or_null(^"Player") as CharacterBody3D
 	if player == null:
 		return
-	# T5-OPENING (7da75ac7) gave the village an edge, and this stand -- chosen
-	# before it existed -- is OUTSIDE that fence while the practice cluster is
-	# inside it. tools/_probe_catch_stand.gd measures it: from (48,0,-58) the
-	# straight line to every cluster member is blocked by a fence panel, 0 of 3
-	# reachable, while (30,0,-28) reaches 3 of 3. The cluster is NOT the thing to
-	# move -- smoke_gate_a_opening_segment.gd walks to it from the house and fails
-	# the moment it is not where the authored walk reaches.
-	var start := Vector3(30.0, 0.0, -28.0)
+	var start := Vector3(48.0, 0.0, -58.0)
 	# Not closer: the practice cluster spawns around (41, -48), and starting
 	# within ~4m of a creature trips the "spawned on top of the player"
 	# tripwire on nothing worse than a terrain rebake moving y a few cm.

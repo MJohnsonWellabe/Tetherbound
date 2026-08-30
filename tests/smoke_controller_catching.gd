@@ -130,14 +130,7 @@ func _fixture_opening_rewards_and_short_travel() -> void:
 	var short := 15 - int(inventory.call("count", "orb_basic"))
 	if short > 0:
 		inventory.call("add", "orb_basic", short)
-	# T5-OPENING (7da75ac7) gave the village an edge, and this stand -- chosen
-	# before it existed -- is OUTSIDE that fence while the practice cluster is
-	# inside it. tools/_probe_catch_stand.gd measures it: from (48,0,-58) the
-	# straight line to every cluster member is blocked by a fence panel, 0 of 3
-	# reachable, while (30,0,-28) reaches 3 of 3. The cluster is NOT the thing to
-	# move -- smoke_gate_a_opening_segment.gd walks to it from the house and fails
-	# the moment it is not where the authored walk reaches.
-	var start := Vector3(30.0, 0.0, -28.0)
+	var start := Vector3(48.0, 0.0, -58.0)
 	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
 	_player.global_position = start
 	_player.velocity = Vector3.ZERO
