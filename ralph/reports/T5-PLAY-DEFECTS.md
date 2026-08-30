@@ -203,3 +203,93 @@ Leaving a dead coordinate that names the chapter's first gate will catch the
 next reader too.
 
 ---
+## COST-T5-5 — the village now costs 4× what it cost at run 5, and it stops the chapter
+
+**Severity:** BLOCKER for the run. **Open question — game or instrument —
+being measured, not asserted.**
+
+S03 stopped at **step 136 of 406** on the harness's own cost gate:
+
+```
+BLOCKER — S03 is too expensive to finish here
+re-priced at in-play, the REST of this segment predicts 20488 s (5.7 h)
+against 13354 s of the 14400 s ceiling left: 101063 planned frames at a
+MEASURED 0.203 s/frame in THIS scene.
+```
+
+**The measured frame cost, same box, same binary, same instrument:**
+
+| segment | where the player is | in-scene s/frame |
+|---|---|---|
+| S01 | Grandpa's house / dooryard | **0.0167** |
+| S02 | village edge, meadow, road gate | **0.0473** |
+| S03 | the village proper | **0.2027** |
+| *run 5's S04, 2026-08-30* | *the village proper* | *0.0479* |
+
+Two readings of the same number, and they are not the same finding:
+
+- **Within this run**, walking from the village edge into the village proper
+  costs **4.3×** more per frame. That is location, not drift.
+- **Against run 5**, the village proper costs **4.2×** what it cost days ago on
+  the same container with the same instrument.
+
+`ralph/LAND-0830I` landed T1-VILLAGE, T1-HALL-3, T1-CAST, T1-RIG-2,
+T1-VARIANTS-2, T3-DENSITY, T3-ACTIVITIES and T5-CAMPS between those two
+measurements.
+
+**This is not yet a claim about the game.** The harness's own per-frame
+telemetry tick walks the party, the quest log and the point-of-interest cache
+every frame, and T3-DENSITY and T5-CAMPS both add POIs — so an instrument that
+scales with content is a live hypothesis with a motive. `--gatef-mode=overhead`
+(telemetry off vs on vs recording, six windows, order reversed to cancel drift)
+is running to separate them. **No device claim is made either way**: this is CPU
+frame time on this container, headless, software only. ROG Ally frame rate is
+[OWNER-ONLY].
+
+---
+
+## GAME-T5-6 — the starter faints in the village and the team never reaches three
+
+**Severity:** SHIP candidate. **Observed, not yet root-caused** — S03 was cut
+off at step 136 by COST-T5-5, so this is what 136 steps showed, not a verdict.
+
+During the village team-building ladder, with the party at 2 (Moss the L3
+ripplet and the caught L5 bramblebun), the run recorded **eight consecutive**
+engage refusals of the same shape:
+
+```
+the live prompt is "Ripplet is out of the fight.", which does not contain
+"Engage" -- pressing here would activate a different provider. Not pressed.
+```
+
+followed by:
+
+```
+the team is three   ->  FAIL: party size 2 (wanted >= 3)
+```
+
+The starter is down, the prompt the world offers is the fainted-ally line rather
+than an engage offer, and the third catch never happens. The tracked objective
+at that moment reads *"Build your full team of five for the village tournament"*
+— clear direction the player cannot act on.
+
+This is the same shape `ralph/reports/SPAWN_REQUEST-T2-GATEF-2026-08-30.md`
+described as *"a fainted party from S03 that nothing ever heals"*, reproducing
+on a newer candidate.
+
+**What is not yet established, and matters:** whether a player would be stranded
+or would simply heal and continue. S03 contains creature beds, sleep and feeding
+later in its script — past step 136. Whether the recovery the chapter offers
+arrives *before* the tournament demands three is exactly the question the rest of
+S03 answers, and it has not run. **Do not close or escalate this on the evidence
+here.**
+
+Also recorded from the same partial run, one live instance of the
+modal-holds-locomotion class the brief names:
+
+```
+the world owns input before this walk  ->  FAIL: input_context=narrative_modal
+the world owns input before this walk  ->  FAIL: input_context=combat_aim
+```
+
+---
