@@ -63,8 +63,33 @@ const HALO_ENERGY := 0.7
 const LIGHT_HEIGHT := 0.55
 const LIGHT_BASE_ENERGY := 3.4
 const LIGHT_RANGE := 8.0
+## T1-LIGHT, JUDGE-3 §1b: Godot's OmniLight3D falloff at the default
+## `omni_attenuation` (1.0, an inverse-square-ish curve with nothing rounding
+## its edge) reaches `LIGHT_RANGE`'s own cutoff sharply enough to read as a
+## hard-ish circular boundary on the ground -- "an unshaped blown-out disc...
+## brighter at its centre than the sky." `torch.gd`'s SpotLight3D already
+## solved the same class of problem with `spot_attenuation 1.4`; a higher
+## exponent front-loads more of the light near the source and lets the tail
+## taper out gently instead of riding flat most of the way to a sudden edge.
+## Slightly higher than the torch's own value because an omni's disc on flat
+## ground is more exposed to a hard rim than a spot's forward throw is.
+const LIGHT_ATTENUATION := 1.8
 const FLICKER_AMOUNT := 0.32
 const FLICKER_SPEED := 8.0
+
+## T1-LIGHT, JUDGE-3 §1b: "The point light has no daylight attenuation" --
+## `LIGHT_BASE_ENERGY` was tuned to read as a warm pool at NIGHT and then
+## applied unconditionally, so in full daylight the same energy adds a
+## brighter-than-sky disc under the sun with nothing to compete against it.
+## Real ground fires are barely visible in daylight; a torch answers the same
+## problem by only lighting at all when `world_look.gd::is_dark()` is true
+## (`torch.gd::_is_on()`). A permanently-burning ground fire cannot go
+## fully dark the same way without looking broken at noon, so this scales
+## down instead of switching off -- low enough that the disc drops well
+## below ambient daylight (the actual complaint), high enough that the fire
+## still reads as a light source up close and the flame/embers/smoke (which
+## do not dim) have a light to match, rather than a fire with no glow at all.
+const DAY_ENERGY_SCALE := 0.16
 
 const GRADIENT_TEXTURE_SIZE := 32
 
@@ -82,6 +107,13 @@ const EMBER_HEIGHT := 0.85
 
 var _light: OmniLight3D = null
 var _light_time := 0.0
+## Lazy-looked-up every `_process()` tick, not cached at `_init()`/`_ready()`
+## time -- `torch.gd::_is_on()`'s own OF18 lesson applies here too: a
+## campfire can be built and added to the tree before `world_look.gd` has
+## joined the "day_cycle" group (props/camp placement order is not
+## guaranteed against world boot order), and a one-shot lookup that runs too
+## early caches null forever.
+var _world_look: Node = null
 
 
 ## `include_halo` (default true, unchanged for every existing caller):
@@ -107,7 +139,21 @@ func _process(delta: float) -> void:
 		return
 	_light_time += delta
 	var noise := sin(_light_time * FLICKER_SPEED) * 0.6 + sin(_light_time * FLICKER_SPEED * 2.7 + 1.3) * 0.4
-	_light.light_energy = LIGHT_BASE_ENERGY * (1.0 + noise * FLICKER_AMOUNT)
+	_light.light_energy = LIGHT_BASE_ENERGY * _daylight_scale() * (1.0 + noise * FLICKER_AMOUNT)
+
+
+## 1.0 at night, `DAY_ENERGY_SCALE` in daylight -- see that constant's own
+## comment. Missing `WorldLook` (a probe/test rig with no day cycle node)
+## reads as night rather than day: the pre-existing behaviour before this
+## fix was "always full energy", so a rig that never populates the
+## "day_cycle" group keeps looking exactly as it did, and only a world that
+## actually HAS a day cycle and says it is daytime gets dimmed.
+func _daylight_scale() -> float:
+	if _world_look == null or not is_instance_valid(_world_look):
+		_world_look = get_tree().get_first_node_in_group(&"day_cycle")
+	if _world_look == null or not _world_look.has_method("is_dark"):
+		return 1.0
+	return 1.0 if bool(_world_look.call("is_dark")) else DAY_ENERGY_SCALE
 
 
 ## Makes the mesh's own `Fire` surface glow, on every MeshInstance3D under
@@ -289,6 +335,7 @@ func _build_light() -> void:
 	_light.light_color = Color(1.0, 0.68, 0.32)
 	_light.light_energy = LIGHT_BASE_ENERGY
 	_light.omni_range = LIGHT_RANGE
+	_light.omni_attenuation = LIGHT_ATTENUATION
 	_light.position = Vector3(0.0, LIGHT_HEIGHT, 0.0)
 	_light.shadow_enabled = false
 	add_child(_light)
