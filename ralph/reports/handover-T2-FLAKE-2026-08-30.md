@@ -163,38 +163,68 @@ runs too — five of the ten baseline passes recovered from it via an extra
 launch or the game's own eligibility verdict. **14 occurrences to 0** is the
 mechanism, not a sample.
 
-## 5. `smoke_gate_e_finale` — different cause, not fixed here
+## 5. `smoke_gate_e_finale` — a different cause, and a real game defect
 
-Measured separately: see §7 for the run counts.
+It does **not** share the opening's cause, so under this lane's brief it is
+recorded rather than fixed. What the reproduction adds is worth having.
 
-It does **not** share the opening's cause. The failure recorded by
-`handover-T1-HALL-REBUILD-2026-08-30.md` §10 — two failures in nine runs, at
-the same assertion with the same numbers each time — is:
+**Reproduced, at the previous lane's exact rate.** Nine runs on unmodified
+`main`: **7 passed, 2 failed**, both the same assertion with the same numbers
+`handover-T1-HALL-REBUILD-2026-08-30.md` §10 recorded — 2 failures in 9 runs,
+`5.7m BELOW`, `y=0.52`, floor `6.17`. That lane could not tell whether the
+failure was its own branch's; it is not. It reproduces on `main`.
+
+**The harness was measuring the wrong body, and that is why it looked rarer
+than it is.** `_fight_to_the_end()` found the opponent with
+`_world.find_child("TrainerCreature_%s_*")`. `find_child` returns the OLDEST
+match in tree order, and `encounter_director._on_trainer_round_ended()` leaves
+each beaten creature standing in the world for a beat before clearing it. The
+Warden fields **five** creatures. So from round two on, the check — along with
+the closing-distance gap and the stall report's "opponent at x,y,z" — was
+reading a corpse while the live creature fought unmeasured.
+
+Fixed here by adding `encounter_director.trainer_body()` beside the existing
+`ally_body()` and asking for the body in the fight. With that, the same nine
+runs give **5 passed, 4 failed** — the defect's real rate is roughly double
+what the wildcard was reporting.
+
+**What it is.** The corrected message names it directly:
 
 ```
-FAIL: 'warden_aldis''s creature is fighting 'warden_aldis' 5.7m BELOW
-'warden_arena''s floor (y=0.52 against a floor at y=6.17)
+'warden_aldis''s creature ('TrainerCreature_warden_aldis_13') is fighting
+'warden_aldis' 5.6m BELOW 'warden_arena''s floor (y=0.52 against a floor at
+y=6.17) ... creature bodies in the world: TrainerCreature_warden_aldis_13 y=0.52 (live)
 ```
 
-**That is very likely a real game defect, and it is worth saying loudly.**
-`combat_manager.gd::_place_fighters()` (line 482) places both fighters from
-`_player.global_position + forward * deploy_offset`, and
-`_stand_the_trainer_aside()` then teleports the player to
-`arena.centre + side * radius * 0.55 - forward * 1.2`. It is called once per
-`enter()`, and a trainer battle calls `enter()` once per creature — so each
-round re-anchors from where the previous round left the trainer, and the pair
-walks several metres per round. In a stronghold chamber, a few rounds of that
-puts the fight through a wall or under the floor. A player meets this as their
-creature fighting inside geometry; the harness meets it as an intermittent
-assertion, intermittent because whether the drift clears
-`built_floor_height_at()`'s claim margin depends on how many rounds the fight
-ran and which way the trainer was facing.
+Same body, same height, every time. The chain, and `stronghold.gd:3096`
+already describes most of it:
 
-`handover-T1-HALL-2026-08-30.md` §4 documents the same class and treated the
-symptom by widening that margin to 10 m. It should not be widened a third
-time. **This needs someone who owns `scripts/combat/**`**, and it is a
-gameplay-behaviour change (where fighters stand for round 2 onward), not a
-harness edit — which is why this lane recorded it rather than guessed at it.
+1. `combat_manager.gd::_place_fighters()` anchors both fighters off
+   `_player.global_position`, and `_stand_the_trainer_aside()` then moves the
+   player. A multi-creature battle calls `enter()` once per creature, so each
+   round re-anchors from where the last one left the trainer and the fight
+   walks several metres per round. Five rounds of that leaves the Warden's
+   arena.
+2. Out there `built_floor_height_at()` still answers 6.17, because its claim
+   carries a deliberate `FLOOR_CLAIM_MARGIN_M` of 10 m past the wall. So
+   `place_on_ground()` puts the body at floor height — in mid-air, past the
+   edge of the actual slab.
+3. `creature_body.gd::_physics_process()` grounds by `is_on_floor()` and
+   `move_and_slide()`, not by the built-floor claim, so with no collider under
+   it the body falls the 5.6 m to the terrain.
+
+**Note for anyone reading the coordinates:** "the building's floor claim there
+is 6.17" does **not** mean the fighter is inside the room. The claim is 10 m
+generous by design. This lane initially misread that as disproving the drift
+theory; it does not. The drift theory in `handover-T1-HALL-2026-08-30.md` §4
+is consistent with every measurement here.
+
+**This needs someone who owns `scripts/combat/**`.** The fix is where round
+two onward stages its fighters — a gameplay-behaviour change affecting every
+fight in the game, not a harness edit, and not something a reliability lane
+should guess at at the end of its budget. The margin must **not** be widened a
+third time: 10 m is already wide enough to hand a body a floor that is not
+there, which is step 2 above.
 
 ## 6. A sibling, recorded not fixed
 
@@ -204,6 +234,27 @@ harness edit — which is why this lane recorded it rather than guessed at it.
 acceptance window of roughly one body radius (~3°) — the same limit cycle,
 with a wider window. It is **not in `ci.yml`**, so it was left alone. Anyone
 adding it to CI should port `_calibrated_deflection()` first.
+
+## 6b. LANDING ORDER — read this before merging
+
+The branch has two independent halves, and the second one is **not ready to
+land**:
+
+| commits | files | land? |
+|---|---|---|
+| the opening fix + instruments | `tests/helpers/gate_a_opening_drive.gd`, `tests/helpers/frame_granularity_probe.gd`, `tools/flake_rate.sh` | **yes** — 23/23, fixes a job in every round |
+| the finale correction | `scripts/combat/encounter_director.gd`, `tests/smoke_gate_e_finale.gd` | **not yet** |
+
+The finale commit is *correct* and it is what found the defect in §5 — but it
+makes `smoke_gate_e_finale` fail **4 runs in 9 instead of 2**, because it
+starts measuring the creature that is actually fighting. `ci.yml` gives that
+job a single attempt. Landing it before the combat-placement defect is fixed
+turns an intermittent red into a worse intermittent red and blocks other
+lanes, which is not a trade this lane gets to make on their behalf.
+
+It is deliberately the **last commit on the branch and touches no file the
+opening fix touches**, so it can be dropped or held without disturbing the
+half that is ready. Land it together with the `scripts/combat/**` fix.
 
 ## 7. What was not changed, and why
 
@@ -217,15 +268,20 @@ adding it to CI should port `_calibrated_deflection()` first.
 - **Nothing was skipped, disabled, quarantined or retry-wrapped**, and no
   timeout was raised. The one budget that changed became *smaller* in frames
   and correct in units.
-- **No game code was touched.** The opening's defect was in the harness. The
-  finale's is not, which is exactly why it is written up above rather than
-  patched by a reliability lane.
+- **The opening fix touches no game code.** Its defect was in the harness.
+- **One game file is touched**, and only additively: `encounter_director.gd`
+  gains a `trainer_body()` accessor beside `ally_body()`. No behaviour changes.
+  The finale's actual defect is in `combat_manager.gd::_place_fighters()` and
+  is written up in §5 rather than patched by a reliability lane at the end of
+  its budget.
 
 ## 8. Files
 
-- `tests/helpers/gate_a_opening_drive.gd` — the fix.
+- `tests/helpers/gate_a_opening_drive.gd` — the opening fix.
 - `tests/helpers/frame_granularity_probe.gd` — new; prints what a process and a
   physics frame actually cost in the production world on this machine.
 - `tools/flake_rate.sh` — new; runs a smoke N times and counts, N at a time,
   with a fresh `user://` per run.
 - `ralph/reports/handover-T2-FLAKE-2026-08-30.md` — this file.
+- `scripts/combat/encounter_director.gd`, `tests/smoke_gate_e_finale.gd` — the
+  finale correction. **Hold; see §6b.**
