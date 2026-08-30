@@ -109,6 +109,16 @@ extends SceneTree
 ## well under a minute for a heavier 143,630-prop world stand-up).
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+## T1-WORLD. Every shutter in this file now goes through `capture_check`, which
+## did not exist when this tool was written. Its own header carries the full
+## argument; the short version is that this tool builds its own Camera3D and
+## calls `make_current()`, which is exactly the shape of the bug that had 123 of
+## this repo's 128 capture tools photographing a grass-free world. The source
+## fix (`grass_field.gd::_follow_camera`) means this tool's frames were probably
+## always fine -- but "probably fine" is what the whole JUDGE-3 section 0
+## episode was made of, and a whole-board pass that a judge is going to reason
+## about needs the frames to SAY they are the game rather than be assumed to be.
+const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/ground"
 
@@ -129,6 +139,28 @@ const GROUND_BACK := 2.2   # camera metres behind the player
 const GROUND_UP := 2.0     # camera metres above the ground
 const GROUND_AHEAD := 4.5  # how far ahead of the player the ground target sits
 const GROUND_TARGET_H := 0.0
+
+## VISTA framing (T1-WORLD, `--vista`). The two framings this tool already had
+## are both deliberately answers to "what is the GROUND doing": the walking
+## shot aims at a point 4.5m ahead at height zero, and `--elevated` climbs to
+## look at ground variation over tens of metres. Neither is the shot a player
+## actually spends the game inside -- eyes forward, horizon in frame, the
+## region's own shape and skyline doing the work.
+##
+## That is precisely the shot a whole-board cohesion pass needs. EXIT_CRITERION
+## J1 asks whether the chapter is "one art direction, not a gallery of lane
+## outputs", and section J's own framing of the question is whether band 2 and
+## band 4 look like the same world under the same sun. Two ground-down crops
+## cannot answer that: the thing being compared -- sky, horizon treatment,
+## aerial perspective (D7), regional silhouette (E1) -- is the part of the
+## frame both existing framings throw away.
+##
+## Same seat, same 1.80m ruler, camera only. Target is far enough out that the
+## middle distance is real and the horizon is in frame, and at head height
+## rather than at zero so the shot is level rather than pitched into the dirt.
+const VISTA_UP := 1.72     # a standing player's eye, not a raised survey camera
+const VISTA_AHEAD := 60.0  # how far out the look target sits
+const VISTA_TARGET_H := 1.6
 
 ## Water framing shares one shape for all three bodies: PLAYER stands on the
 ## dry bank throughout (never moved, so the ruler and the water-hazard safety
@@ -161,20 +193,40 @@ const GRAZE_TANGENT := 22.0       # grazing shot looks ALONG the shore, not acro
 ## scratch -- swapped in here rather than picking a third point, and the
 ## label renamed to match corridor's own name for it so nothing calls a
 ## relay checkpoint a river again.
+##
+## T1-WORLD added the two ENDS of the chapter (`ground-00-village` and
+## `ground-06-stronghold`), because a five-band list is not the board: the
+## village is where every player's first minutes are spent and the stronghold
+## is where the chapter ends, and neither was ever in this survey. The two
+## coordinates are `tools/perf_site_survey.gd::VIEWS`' own `village_high`
+## (10, -10) and `stronghold_approach` (0, 7420) rather than new points, so a
+## lane cross-referencing the perf numbers and these frames is looking at the
+## same seven stands. Village aim: the settlement is a ~25m cluster around
+## (10, -10) (`data/config/village.json`), so the stand is backed off to the
+## south-east corner and looks back THROUGH it -- standing in the square
+## looking 4.5m ahead photographs the square's dirt and nothing else.
 const GROUND_VIEWPOINTS := [
+	["ground-00-village",         Vector2(34.0, -34.0),    Vector2(4.0, 4.0)],
 	["ground-01-band1-opening",   Vector2(8.0, 90.0),      Vector2(-40.0, 180.0)],
 	["ground-02-band2-stone-root", Vector2(310.0, 1660.0), Vector2(400.0, 1800.0)],
 	["ground-03-band3-crossing",  Vector2(-152.0, 4170.0), Vector2(-100.0, 4350.0)],
 	["ground-04-band4-ironwood",   Vector2(170.0, 5590.0), Vector2(450.0, 5860.0)],
 	["ground-05-band5-approach",   Vector2(0.0, 7000.0),   Vector2(0.0, 7560.0)],
+	["ground-06-stronghold",      Vector2(0.0, 7420.0),    Vector2(0.0, 7700.0)],
 ]
 
-## Index into GROUND_VIEWPOINTS that also carries the weather sweep -- band 2,
-## `density_scale` 0.05 in vegetation.json's corridor_bands, ordinary
-## mid-corridor ground rather than a set piece. Weather is shot at ONE
-## viewpoint on purpose (the task's own instruction): every other axis held
-## fixed so the four presets differ in exactly one variable.
-const WEATHER_VIEWPOINT_INDEX := 1
+## The viewpoint that also carries the weather sweep -- band 2, `density_scale`
+## 0.05 in vegetation.json's corridor_bands, ordinary mid-corridor ground rather
+## than a set piece. Weather is shot at ONE viewpoint on purpose (the task's own
+## instruction): every other axis held fixed so the four presets differ in
+## exactly one variable.
+##
+## Matched by NAME, not by index. It was `WEATHER_VIEWPOINT_INDEX := 1` until
+## T1-WORLD put the village in front of band 1 -- an index into a list that
+## other lanes extend is a silent mis-aim waiting to happen, and the failure
+## mode (three weather frames shot at the wrong stand) looks exactly like a
+## correct run.
+const WEATHER_VIEWPOINT := "ground-02-band2-stone-root"
 
 ## [suffix, time-of-day name, weather preset name]. "day"+"clear" is shot as
 ## part of GROUND_STATES for every band; WEATHER_STATES supplies the three
@@ -197,6 +249,12 @@ var _camera: Camera3D = null
 var _player: Node3D = null
 var _look: Node = null
 var _weather: Node = null
+## The weather preset the tool last ASKED for, so `capture_check` can compare it
+## against the one actually rendering. Tracked here rather than passed down
+## through every shoot function: `_apply_state` is the single place this tool
+## ever changes weather, so a member set there cannot drift out of step with the
+## world the way a parameter threaded through four call sites can.
+var _want_weather := "clear"
 var _failures: Array[String] = []
 
 
@@ -295,6 +353,10 @@ func _run() -> void:
 	# work were judged from a camera that could not show the thing being
 	# changed.
 	var elevated := 0.0
+	## `--vista` adds the eye-level horizon framing beside each ground shot.
+	## Opt-in rather than always-on so the default run stays the byte-identical
+	## ground survey earlier rounds were judged against.
+	var vista := false
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--only="):
 			only = arg.substr("--only=".length())
@@ -302,6 +364,8 @@ func _run() -> void:
 			states = arg.substr("--states=".length())
 		elif arg.begins_with("--elevated="):
 			elevated = float(arg.substr("--elevated=".length()))
+		elif arg == "--vista":
+			vista = true
 	var wanted_states := PackedStringArray()
 	if states != "":
 		wanted_states = states.split(",", false)
@@ -317,9 +381,11 @@ func _run() -> void:
 		for state: Variant in GROUND_STATES:
 			if _state_wanted(state as Array, wanted_states):
 				await _shoot_ground_state(pos, state as Array)
+				if vista:
+					await _shoot_vista(pos, state as Array)
 				if elevated > 0.0:
 					await _shoot_elevated(pos, state as Array, elevated)
-		if band_index == WEATHER_VIEWPOINT_INDEX:
+		if str(entry[0]) == WEATHER_VIEWPOINT:
 			for state: Variant in WEATHER_STATES:
 				if _state_wanted(state as Array, wanted_states):
 					await _shoot_ground_state(pos, state as Array)
@@ -358,6 +424,7 @@ func _run() -> void:
 ## whatever the previous shot left running -- both nodes stay frozen the
 ## whole time (see header), so this is the ONLY thing that ever changes them.
 func _apply_state(time_name: String, weather_name: String) -> void:
+	_want_weather = weather_name
 	if _look != null:
 		_look.call("apply_time", time_name)
 	if _weather != null:
@@ -443,6 +510,29 @@ func _shoot_elevated(pos: Dictionary, state: Array, height: float) -> void:
 		await process_frame
 	await RenderingServer.frame_post_draw
 	_capture("%s-%s-high" % [pos["name"], str(state[0])])
+
+
+## The same seat at standing eye height, looking level down the walking
+## direction. Camera only -- the player is not moved, so the ruler stays in
+## frame and this is the same stand as the ground shot beside it, differing in
+## exactly one variable (where the eye is pointed). See the VISTA_* constants
+## for why a cohesion pass needs this framing and cannot use the other two.
+##
+## No STATE_SETTLE here: the caller has already applied and settled the state
+## for the ground shot at this stand, and nothing between the two shots touches
+## the clock or the weather.
+func _shoot_vista(pos: Dictionary, state: Array) -> void:
+	_hide_huds()
+	var cam_xz: Vector2 = pos["cam_xz"]
+	var target_xz: Vector2 = pos["target_xz"]
+	var forward := (target_xz - cam_xz).normalized()
+	var far_xz: Vector2 = cam_xz + forward * VISTA_AHEAD
+	_camera.global_position = Vector3(cam_xz.x, _surface(cam_xz) + VISTA_UP, cam_xz.y)
+	_camera.look_at(Vector3(far_xz.x, _surface(far_xz) + VISTA_TARGET_H, far_xz.y), Vector3.UP)
+	for i in POSE_FRAMES:
+		await process_frame
+	await RenderingServer.frame_post_draw
+	_capture("%s-%s-vista" % [pos["name"], str(state[0])])
 
 
 func _state_wanted(state: Array, wanted: PackedStringArray) -> bool:
@@ -803,7 +893,24 @@ func _hide_huds() -> void:
 			(node as CanvasLayer).visible = false
 
 
+## T1-WORLD. One choke point, so no framing added later can skip the check.
+##
+## `warn_only`, not `require`: `require` aborts the whole SceneTree, and a
+## 30-minute seven-stand pass that throws away twenty good frames because the
+## twenty-first was degraded is a worse instrument than one that records which
+## frame was bad and keeps going. The problems are recorded per frame, printed
+## at the shutter AND summarised at the end, and a run with any degraded frame
+## exits non-zero via `_failures` -- so a bad frame is impossible to commit as
+## evidence by accident, which is the whole point, while a bad frame also does
+## not cost the other twenty-three.
+func _check(name: String) -> void:
+	var problems := CAPTURE_CHECK.warn_only(self, _camera, _want_weather)
+	for line: String in problems:
+		_failures.append("%s: %s" % [name, line])
+
+
 func _capture(name: String) -> void:
+	_check(name)
 	var image := root.get_texture().get_image()
 	if image == null:
 		_failures.append("%s: viewport returned no image" % name)
