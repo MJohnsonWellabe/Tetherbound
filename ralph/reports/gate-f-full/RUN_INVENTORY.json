@@ -1,0 +1,1319 @@
+{
+  "run_dir": "ralph/reports/gate-f-full",
+  "segments": [
+    "S01",
+    "S02",
+    "S03",
+    "S03-superseded-1",
+    "S04"
+  ],
+  "segments_incomplete": [],
+  "captures": {
+    "planned": 61,
+    "present": 0,
+    "absent": 61,
+    "rows": [
+      {
+        "id": "GF-01-TITLE-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S01",
+            "to": "S01C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-02-START-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S02",
+            "to": "S02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-02-START-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S02",
+            "to": "S02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-02-START-03",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S02",
+            "to": "S02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-03-VILLAGE-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S02",
+            "to": "S02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-03-VILLAGE-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S03",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-1",
+            "to": "S03C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-04-TOURN-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-04-TOURN-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-04-TOURN-03",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S02",
+            "to": "S02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S03",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-1",
+            "to": "S03C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-03",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-09a",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-14-COMBAT-13a",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S03",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-1",
+            "to": "S03C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-15-CATCH-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S02",
+            "to": "S02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-15-CATCH-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S02",
+            "to": "S02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-18-MAP-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S03",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-1",
+            "to": "S03C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-19-UI-10",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S03",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-1",
+            "to": "S03C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-20-NIGHT-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S03",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-1",
+            "to": "S03C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-20-NIGHT-02",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S03",
+            "to": "S03C",
+            "lane": "logic"
+          },
+          {
+            "segment": "S03-superseded-1",
+            "to": "S03C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "GF-21-WEATHER-01",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S02",
+            "to": "S02C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-000",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-001",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-002",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-003",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-004",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-005",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-006",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-007",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-008",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-009",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-010",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-011",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-012",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-013",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-014",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-015",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-016",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-017",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-018",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-019",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-020",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-021",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-022",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-023",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-024",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-025",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-026",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-027",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-028",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-029",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-030",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-031",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-032",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-033",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-034",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-035",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-036",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-037",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-038",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      },
+      {
+        "id": "S04-SEQ-final-039",
+        "owed_by": [],
+        "delegated_by": [
+          {
+            "segment": "S04",
+            "to": "S04C",
+            "lane": "logic"
+          }
+        ],
+        "taken_by": [],
+        "contradicted_by": [],
+        "present": false
+      }
+    ]
+  },
+  "unpaid_delegations": [
+    {
+      "id": "GF-01-TITLE-01",
+      "delegated_by": "S01",
+      "to": "S01C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-02-START-01",
+      "delegated_by": "S02",
+      "to": "S02C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-02-START-02",
+      "delegated_by": "S02",
+      "to": "S02C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-02-START-03",
+      "delegated_by": "S02",
+      "to": "S02C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-03-VILLAGE-01",
+      "delegated_by": "S02",
+      "to": "S02C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-03-VILLAGE-02",
+      "delegated_by": "S03",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-03-VILLAGE-02",
+      "delegated_by": "S03-superseded-1",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-04-TOURN-01",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-04-TOURN-02",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-04-TOURN-03",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-01",
+      "delegated_by": "S02",
+      "to": "S02C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-02",
+      "delegated_by": "S03",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-02",
+      "delegated_by": "S03-superseded-1",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-03",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-09a",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-13a",
+      "delegated_by": "S03",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-14-COMBAT-13a",
+      "delegated_by": "S03-superseded-1",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-15-CATCH-01",
+      "delegated_by": "S02",
+      "to": "S02C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-15-CATCH-02",
+      "delegated_by": "S02",
+      "to": "S02C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-18-MAP-01",
+      "delegated_by": "S03",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-18-MAP-01",
+      "delegated_by": "S03-superseded-1",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-10",
+      "delegated_by": "S03",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-19-UI-10",
+      "delegated_by": "S03-superseded-1",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-01",
+      "delegated_by": "S03",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-01",
+      "delegated_by": "S03-superseded-1",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-02",
+      "delegated_by": "S03",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-20-NIGHT-02",
+      "delegated_by": "S03-superseded-1",
+      "to": "S03C",
+      "target_ran": false
+    },
+    {
+      "id": "GF-21-WEATHER-01",
+      "delegated_by": "S02",
+      "to": "S02C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-000",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-001",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-002",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-003",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-004",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-005",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-006",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-007",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-008",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-009",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-010",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-011",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-012",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-013",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-014",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-015",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-016",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-017",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-018",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-019",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-020",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-021",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-022",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-023",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-024",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-025",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-026",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-027",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-028",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-029",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-030",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-031",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-032",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-033",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-034",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-035",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-036",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-037",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-038",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    },
+    {
+      "id": "S04-SEQ-final-039",
+      "delegated_by": "S04",
+      "to": "S04C",
+      "target_ran": false
+    }
+  ],
+  "uncommittable": [],
+  "complete": false
+}

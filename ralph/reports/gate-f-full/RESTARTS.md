@@ -29,3 +29,15 @@ from nothing else.
 
 The failing walks are preserved in `S05-aborted-1/telemetry/` and are the
 evidence for RIG-F6 in `DEFECTS.md`.
+
+## S06, attempt 1 → `S06-aborted-1/`, and no attempt at S07–S10e
+
+| | |
+|---|---|
+| segment | S06, Stone & Root / band 2 |
+| result | **STOPPED BY ME at step ~20 of 106, on the coordinator's instruction of 23:42Z.** No `INVENTORY.json`, no exit save; nothing in that directory is an S06 result. |
+| why | S06 begins on the near side of a South Bridge that never opened (TRAVERSAL-F8), against a party of two that are both fainted and cannot legally enter the tournament S04 already refused them (PROGRESSION-F7). Every walk in it would have failed against a solid bridge, and every fight would have been refused by `can_challenge()`. That is the same wall already diagnosed twice, in two places, from two directions. Running it would have produced more of the rig-health evidence RIG-F6 and TRAVERSAL-F8 already bank, and no new information about the chapter. |
+
+**S07, S08, S09, S10a, S10b, S10c, S10d and S10e were not attempted**, for the
+same reason. That is a deliberate stop with a stated cause, not a failure to
+reach them.
