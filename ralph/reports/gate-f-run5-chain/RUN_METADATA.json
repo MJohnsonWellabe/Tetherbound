@@ -1,0 +1,14 @@
+{
+  "_comment": "T2-GATEF-RUN5 exit-save chain run. Ad hoc, NOT canonical Gate F. Carries its own RUN_METADATA.json so operator_harness.gd's capture pre-flight reads this honest logic-mode declaration rather than the stale global ralph/reports/gate-f-candidate/RUN_METADATA.json.",
+  "candidate_ref": "ralph/T2-GATEF-RUN5",
+  "run_dir": "ralph/reports/gate-f-run5-chain",
+  "purpose": "produce a healthy S03-exit.json with GAME-8 (shop exit walk) and GAME-9 (tool binding) fixed, then chain S04..S09 and run the study segments.",
+  "display_server": "headless (logic lane, no display server -- honest, matches this process)",
+  "renderer": "none (logic lane, no rendering)",
+  "lanes": {
+    "logic": {
+      "display_server": "headless (logic lane, no display server)",
+      "renderer": "none (logic lane)"
+    }
+  }
+}

@@ -54,10 +54,59 @@ const DETOUR_FRAMES := 45
 const DETOUR_GROWTH := 25
 ## Detours on one side that fail to unstick before the other side is tried.
 const DETOURS_PER_SIDE := 3
-## The sideways free-space probe: cast at roughly hip height so the ray clears
-## the ground, and only as far as a detour would actually walk.
-const PROBE_HEIGHT := 1.0
+## The sideways free-space probe. Only as far as a detour would actually walk.
 const PROBE_REACH := 3.0
+
+## GAME-8 / RIG-23. The probe used to be ONE hairline ray at hip height
+## (`PROBE_HEIGHT := 1.0`), and that single fact is the whole of the Mira's-shop
+## trap. It was blind twice over.
+##
+##   * Blind to anything short. `shop_interior.gd::_build_counter()` puts two
+##     stock crates at local (-1.3, 0.25, 1.5) and (-1.3, 0.72, 1.5) -- tops at
+##     0.50m and 0.945m, both UNDER a ray at 1.0. The counter's own top is at
+##     exactly 1.0, so the ray grazed it too. To the probe, a room full of
+##     furniture read as three metres of open air in every direction.
+##   * Blind to width. A ray has none, and the player capsule is 0.8m across
+##     (`scenes/player/player.tscn`, radius 0.4). The gap between the room's
+##     west wall (INNER_HALF_W 1.69) and the crates' west face (-1.55) is
+##     0.14m. A hairline ray goes down it happily; a body cannot fit.
+##
+## With both probes reading a flat PROBE_REACH, `_freer_side` fell through to
+## its documented "a tie goes to +1" rule EVERY time -- and +1 is a perpendicular
+## of the direction of travel, so it means opposite world sides walking in and
+## walking out. That is exactly the asymmetry run 4 recorded and could not
+## explain: entry slid east into the open room and worked every time, exit slid
+## west into the 0.14m wall/crate pocket at local x=-1.37 and wedged every time.
+## No waypoint could fix it, because the walker was not choosing badly between
+## two known sides -- it could not see either one.
+##
+## So the probe now sweeps the volume the BODY occupies: three heights by three
+## lateral offsets, nine rays, nearest hit wins. Still rays, still cheap, still
+## only fired when a leg has already stalled.
+##
+## The lowest height clears `player_controller.gd::STEP_HEIGHT` (0.35): a kerb
+## the body steps over must not read as a wall, or every outdoor detour would
+## think it was boxed in. The crates at 0.50m are above that line and are seen;
+## a stair tread is below it and is not.
+const PROBE_HEIGHTS: Array[float] = [0.45, 0.95, 1.55]
+## Half the body's own width, so the outer rays trace the capsule's flanks
+## rather than its centre line.
+const PROBE_HALF_WIDTH := 0.35
+## Clearance a side needs before sliding that way is travel rather than a wedge.
+## The body is 0.8m across; this is that plus a hand's breadth either side.
+const BODY_WIDTH := 0.9
+## Frames spent reversing away from the target when BOTH sides are pinched.
+## Short: this is shaking loose from a pocket, not a leg of the journey.
+const BACKOFF_FRAMES := 30
+## A detour is re-examined this often, and must have carried the body at least
+## this far since the last check to be allowed to continue.
+##
+## The old detour committed to `DETOUR_FRAMES` (45, growing by 25) of blind
+## sideways push regardless of whether the body was moving at all. Pressed into
+## a corner that is a second and a half of grinding against plaster per detour,
+## three detours per side, before anything reconsiders.
+const DETOUR_CHECK_FRAMES := 15
+const DETOUR_MIN_TRAVEL := 0.12
 ## How far ahead the GROUND is checked before sliding that way, and the drop
 ## that counts as a cliff rather than a step down.
 ##
@@ -72,6 +121,10 @@ const PROBE_REACH := 3.0
 const GROUND_LOOK_AHEAD := 2.0
 const SAFE_DROP := 1.2
 const GROUND_PROBE_DEPTH := 8.0
+## How far above the feet the downward ground ray starts, so a step up ahead is
+## still seen from above rather than from inside it. Unchanged in value from the
+## hip-height number this used before the clearance probe stopped needing one.
+const GROUND_PROBE_START := 1.0
 ## Metres from the target at which the stick eases off, and the smallest
 ## deflection it eases to. Full stick into a target measured in centimetres
 ## overshoots and oscillates around it; `gate_a_build_segment.gd` stops within
@@ -95,6 +148,11 @@ var _detour := Vector3.ZERO
 var _detour_left := 0
 var _side := 0.0
 var _side_detours := 0
+## Where the body was when the current detour was last examined, and how many
+## frames ago that was. A detour that is not carrying the body anywhere is
+## abandoned rather than run to its frame count -- see DETOUR_CHECK_FRAMES.
+var _detour_origin := Vector3.ZERO
+var _detour_age := 0
 
 
 func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable) -> void:
@@ -179,6 +237,14 @@ func step(point: Vector3) -> void:
 			_detour_left = 0
 			_side = -_side
 			_side_detours = 0
+		elif _detour_stalled():
+			# GAME-8. The side was clear when the detour began and the body has
+			# stopped moving anyway -- furniture the probe could not see from
+			# where it stood, or a corner that closed as the slide entered it.
+			# Give up on this side now instead of grinding out the frame count.
+			_detour_left = 0
+			_side = -_side
+			_side_detours = 0
 		else:
 			_detour_left -= 1
 			_push(_detour)
@@ -213,23 +279,67 @@ func reset() -> void:
 	_detour_left = 0
 	_side = 0.0
 	_side_detours = 0
+	_detour_origin = Vector3.ZERO
+	_detour_age = 0
+
+
+## Has the detour currently running stopped carrying the body anywhere?
+## Answered on a cadence rather than every frame, because a single physics
+## frame of travel is smaller than the noise in a sliding contact.
+func _detour_stalled() -> bool:
+	_detour_age += 1
+	if _detour_age < DETOUR_CHECK_FRAMES:
+		return false
+	var moved := _player.global_position.distance_to(_detour_origin)
+	_detour_age = 0
+	_detour_origin = _player.global_position
+	return moved < DETOUR_MIN_TRAVEL
 
 
 ## Turn the walk sideways. Which way is decided once per side and then KEPT:
 ## following a wall means committing to a direction, and a walk that re-chose
 ## every stall would oscillate in the corner it is trying to leave.
+##
+## GAME-8. Committing is only sane if the side has room for the body. A side
+## narrower than the body is not a slower route, it is the wedge itself, and
+## the old code would commit to one for three detours of growing length before
+## trying the other. Both sides pinched means the body is in a pocket, and the
+## only direction with known-good ground behind it is the way it came.
 func _begin_detour(to: Vector3) -> void:
 	_stall = 0
 	_gap = to.length()
+	var perpendicular := to.normalized().cross(Vector3.UP).normalized()
 	if _side == 0.0:
 		_side = _freer_side(to)
 		_side_detours = 0
 	elif _side_detours >= DETOURS_PER_SIDE:
 		_side = -_side
 		_side_detours = 0
+	if _free_space(perpendicular * _side) < BODY_WIDTH:
+		if _free_space(perpendicular * -_side) >= BODY_WIDTH:
+			_side = -_side
+			_side_detours = 0
+		else:
+			_back_off(to)
+			return
 	_side_detours += 1
-	_detour = to.normalized().cross(Vector3.UP).normalized() * _side
+	_detour = perpendicular * _side
 	_detour_left = DETOUR_FRAMES + (_side_detours - 1) * DETOUR_GROWTH
+	_detour_origin = _player.global_position
+	_detour_age = 0
+
+
+## Reverse out of a pocket neither side can leave. The side choice is cleared
+## so the next stall re-probes from wherever backing off got to, which is the
+## point: the reason both sides read blocked is usually where the body is
+## standing, not where it is trying to go.
+func _back_off(to: Vector3) -> void:
+	_detour = -to.normalized()
+	_detour_left = BACKOFF_FRAMES
+	_side = 0.0
+	_side_detours = 0
+	_detour_origin = _player.global_position
+	_detour_age = 0
 
 
 ## +1 or -1: which perpendicular is the better way to slide. A tie goes to +1
@@ -258,7 +368,7 @@ func _drops_away(direction: Vector3) -> bool:
 	if space == null:
 		return false
 	var foot := _player.global_position
-	var ahead := foot + direction.normalized() * GROUND_LOOK_AHEAD + Vector3.UP * PROBE_HEIGHT
+	var ahead := foot + direction.normalized() * GROUND_LOOK_AHEAD + Vector3.UP * GROUND_PROBE_START
 	var query := PhysicsRayQueryParameters3D.create(ahead,
 		ahead + Vector3.DOWN * GROUND_PROBE_DEPTH)
 	query.collide_with_areas = false
@@ -270,23 +380,43 @@ func _drops_away(direction: Vector3) -> bool:
 	return foot.y - (hit.get("position") as Vector3).y > SAFE_DROP
 
 
-## Metres of clear space in `direction`, capped at `PROBE_REACH`.
+## Metres of clear space in `direction` for the WHOLE body, capped at
+## `PROBE_REACH`. Nine rays -- `PROBE_HEIGHTS` by three lateral offsets across
+## `PROBE_HALF_WIDTH` -- and the nearest hit is the answer, because the body
+## stops at the first thing any part of it touches. See PROBE_HEIGHTS for why
+## one hip-height centre-line ray was not enough (GAME-8).
 func _free_space(direction: Vector3) -> float:
 	var world := _player.get_world_3d()
 	var space := world.direct_space_state if world != null else null
 	if space == null:
 		return PROBE_REACH
-	var from := _player.global_position + Vector3.UP * PROBE_HEIGHT
-	var query := PhysicsRayQueryParameters3D.create(from, from + direction * PROBE_REACH)
-	# Areas are triggers -- interior camera volumes, encounter zones -- not
-	# things a body can walk into.
-	query.collide_with_areas = false
-	if _player is CollisionObject3D:
-		query.exclude = [(_player as CollisionObject3D).get_rid()]
-	var hit := space.intersect_ray(query)
-	if hit.is_empty():
+	var forward := direction.normalized()
+	if forward.is_zero_approx():
 		return PROBE_REACH
-	return from.distance_to(hit.get("position", from) as Vector3)
+	var flank := forward.cross(Vector3.UP).normalized()
+	var exclude: Array[RID] = []
+	if _player is CollisionObject3D:
+		exclude = [(_player as CollisionObject3D).get_rid()]
+	var nearest := PROBE_REACH
+	for height: float in PROBE_HEIGHTS:
+		for offset: float in [-PROBE_HALF_WIDTH, 0.0, PROBE_HALF_WIDTH]:
+			var from := _player.global_position + Vector3.UP * height + flank * offset
+			var query := PhysicsRayQueryParameters3D.create(from,
+				from + forward * PROBE_REACH)
+			# Areas are triggers -- interior camera volumes, encounter zones --
+			# not things a body can walk into.
+			query.collide_with_areas = false
+			# An origin already inside geometry means that flank of the body is
+			# buried in it, which is the most blocked a direction can be. The
+			# default (silently no hit) reads it as wide open instead, and a
+			# wedged walker is exactly when this is asked.
+			query.hit_from_inside = true
+			query.exclude = exclude
+			var hit := space.intersect_ray(query)
+			if hit.is_empty():
+				continue
+			nearest = minf(nearest, from.distance_to(hit.get("position", from) as Vector3))
+	return nearest
 
 
 func _push(direction: Vector3) -> void:

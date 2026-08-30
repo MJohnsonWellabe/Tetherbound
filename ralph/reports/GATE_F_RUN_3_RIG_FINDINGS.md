@@ -550,9 +550,59 @@ no-ally branch.
 
 ---
 
-## RIG-23 — `stick_navigator.gd`'s generic wall-slide detour traps inside Mira's shop on the way OUT, even after the door fix that solved the way IN
+## RIG-23 — the S03 exit leg from Mira's shop was pointed at a target behind a wall (FIXED, T2-GATEF-RUN5)
 
-**Severity: BLOCKER for S03 evidence quality.** Not fixed. Found by
+> **RESOLVED by `ralph/T2-GATEF-RUN5`, 2026-08-30.** The diagnosis below was
+> right about where the walker ended up and wrong about why, and the
+> difference is the whole reason four sessions of waypoint guesses all
+> reproduced the same wedge.
+>
+> `S03-59a` already asked for the correct point — cottage_a's own door
+> staging point at building-local (1.0, 4.0), the one `S03-52` uses on the
+> way in — and still left the player INSIDE the shop, because its
+> `close_enough` was 2.0 m and the doorway is only 1.9 m from that point.
+> The leg returned true standing at local (0.78, 2.15), a step short of the
+> front wall. `S03-60` then set off from inside the room toward Oskar, who
+> is at building-local **(-5.66, 0)**: due west, straight through the wall
+> the stock crates are stacked against, 180 degrees from the only way out.
+> No obstacle-avoidance heuristic can route a leg whose target is behind a
+> wall. The walker was not choosing the wrong side of the counter; it was
+> being asked to walk through plaster and doing the only thing it could.
+>
+> Fix: `close_enough` 2.0 -> 0.8 on `S03-59a`, so the leg cannot terminate
+> until the body is genuinely outside the building, with the budget raised
+> from 400 to 1500 to match. Live-proved by
+> `tools/gate_f/probe_shop_exit_clearance.gd`: from behind Mira's counter,
+> out to the staging point ARRIVES in **38 walking frames** and Oskar then
+> ARRIVES in **79 more**, against a full 3000-frame budget exhaustion for
+> the direct line.
+>
+> **`stick_navigator.gd` was separately fixed, and needed it.** Its
+> clearance probe was one hairline ray at hip height (`PROBE_HEIGHT := 1.0`)
+> — blind to anything shorter than a metre (the stock crates top out at
+> 0.50 m and 0.945 m; the counter at exactly 1.00 m) and blind to width (a
+> ray has none, the player capsule is 0.8 m across, and the gap between the
+> west wall and the crates is 0.14 m). Measured live at the wedge point, the
+> old probe reported **1.50 m** of clearance on the side where the body
+> actually has **0.25 m**. It now sweeps the volume the body occupies —
+> three heights by three lateral offsets, nine rays, nearest hit wins, with
+> the lowest height above `player_controller.gd::STEP_HEIGHT` so a kerb the
+> body steps over does not read as a wall — refuses to commit a detour to a
+> side narrower than the body, backs out of a pocket when both sides are
+> pinched, and abandons a detour that has stopped carrying the body
+> anywhere instead of grinding out its frame count. On the unsolvable direct
+> leg the walker now ends up free in the middle of the room rather than
+> jammed at local x=-1.37.
+>
+> **A real player was never trapped there.** Asked directly, from four
+> starts inside the wall/crate pocket, with a plain held stick and no
+> detour logic at all: all four escape to the door lane
+> (`probe_shop_exit_clearance.gd`, question 3). The 0.14 m gap the harness
+> wedged in is one no 0.8 m-wide body can enter in the first place. No
+> `shop_interior.gd` geometry change was made or is needed.
+
+**Severity: BLOCKER for S03 evidence quality.** *(Original entry, kept for
+the record.)* Not fixed at the time. Found by
 `ralph/T2-GATEF-RUN4` re-running S03 with T2-BUILDPLACE round 3's door +
 revive fix and this session's own GAME-0/T1 fixes all in place — a real
 replay still ends with `home_built`/`creature_bed_built_3` unset and the
@@ -576,9 +626,48 @@ account of what was tried (four different waypoints, all trapping at the
 same or a near-identical point) before spending more replay cycles on
 coordinate tuning.
 
-## RIG-24 — the tool-equip sequence's own isolated-probe PASS does not predict its behaviour inside a full segment replay
+## RIG-24 — the tool-equip sequence's own isolated-probe PASS did not predict its behaviour inside a full segment replay (FIXED, T2-GATEF-RUN5)
 
-**Severity: SHIP candidate, not root-caused.** Not fixed. Also found by
+> **RESOLVED by `ralph/T2-GATEF-RUN5`, 2026-08-30, and the two probes were
+> never running the same recipe.** `probe_tool_equip_sequence.gd` calls
+> `inventory.find_slot("knife")` and drives the cursor to the slot the knife
+> is ACTUALLY in. `S03.json` pressed `ui_right` a hardcoded four times,
+> counting cells along the order a fresh `S02-exit.json` happens to fill the
+> bag in. The probe's PASS was never evidence about the segment's scheme.
+>
+> Two independent things then broke the count, and the second is decisive:
+> the bag is not fresh (run 4's own telemetry shows both Revive draughts
+> spent and potions down from three to one before a tool is bound), and
+> **`ui_left` does not wrap up a grid row** — so from the knife's cell the
+> three left presses walked backwards along row 0 instead of reaching the
+> pickaxe on row 1. `S03-56f`'s own note claimed the wrap ("wrapping up a
+> grid row"); it does not happen.
+>
+> Reproduced exactly by `tools/gate_f/probe_tool_equip_depleted_bag.gd`,
+> which rebuilds run 4's own depleted bag and runs both schemes against it.
+> The shipped counts leave the hotbar `["", "", "potion_small", "knife",
+> ""]` — which is precisely the `{hotbar_slot: 3, item: "knife"}` every one
+> of run 4's six real gathers reported, bit for bit. Slot-addressed, the
+> same bag yields `["", "axe", "pickaxe", "knife", ""]`.
+>
+> Fix: a new harness action, **`focus_item`** (`operator_harness.gd::
+> _step_focus_item`, documented in `tools/gate_f/SEGMENT_SCHEMA.md`), backed
+> by `gate_f_probe.gd::satchel_slot_of()`, `satchel_focus()` and
+> `satchel_columns()`. It sends the same real `ui_*` events `focus_move`
+> sends and simply reads the cursor between them, navigating column-then-row
+> the way `probe_tool_equip_sequence.gd` already did. `S03-56d/f/h` now name
+> the item instead of a press count. A cell count that cannot be reached, or
+> an item the bag does not hold, now FAILs loudly instead of binding the
+> wrong thing in silence.
+>
+> **The standing caution below still stands and is if anything sharpened**:
+> the isolated probe did not merely fail to predict the replay, it was not
+> testing the same mechanism at all. When a probe and a segment disagree,
+> check that they are running the same gesture before theorising about
+> state.
+
+**Severity: SHIP candidate, not root-caused.** *(Original entry, kept for the
+record.)* Not fixed at the time. Also found by
 `ralph/T2-GATEF-RUN4` in the same replay as RIG-23. `tools/gate_f/
 probe_tool_equip_sequence.gd` (T2-BUILDPLACE) proves the hotbar-assign
 sequence correct from a fresh `S02-exit.json` — but a real S03 replay
@@ -593,6 +682,39 @@ caution T2-BUILDPLACE's own handover already recorded once this run
 while the same mechanism fails inside a long, stateful replay) — worth
 treating as a standing rule for this repo's own rig-validation practice,
 not just this one instance of it.
+
+
+## RIG-25 — a segment step that opens a pausing panel needs a matching close AND a context assert (T2-GATEF-RUN5)
+
+**Severity: RIG, fixed in S03, unaudited elsewhere.** The full account is
+GAME-10 in the companion document. Named here because it is a rule about
+how these segments are written, not a fact about Oskar.
+
+Mira's shop is opened by her greeting, closed by `S03-56`, and the world
+re-asserted by `S03-56a`. Oskar's creature swap is opened the same way by
+the same machinery (`sequence_director.gd::_maybe_open_shop()`) and had
+**neither** step. It went unnoticed for four sessions only because RIG-23
+meant the walk to Oskar never arrived and his dialogue never ran.
+
+Two things worth carrying forward:
+
+1. **The assert is the half that pays.** Without `S03-62b`, one stuck panel
+   reported as 71 unrelated-looking failures spread across the rest of the
+   segment — walks that "did not reach", hotbar presses that equipped
+   nothing, menu opens that found the wrong context. With it, the segment
+   stops at the real cause. Every `shop:` / `battle:` / picker effect a
+   segment triggers should be followed by a close and an
+   `assert input_context`.
+2. **`0 held` does not mean the body was free to move.** The walker reported
+   `0 held` for every failed leg while never leaving `(19,-6)`, because
+   `stick_navigator.gd::can_walk()` reads `locomotion_enabled` — and a panel
+   owning input leaves locomotion nominally enabled while swallowing the
+   stick. Prior write-ups (including BUILDPLACE round 3's, already corrected
+   once by RUN4 on a related point) have read `0 held` as evidence that
+   nothing was blocking the player. It is not that evidence.
+
+**Unaudited:** every other segment that triggers a shop, battle or picker
+effect. This one was found by tripping over it, not by looking.
 
 ---
 
