@@ -5,7 +5,7 @@
   "title": "Opening: wake upstairs -> starter caught & named -> first wild catch -> road gate open",
   "lane": "journey",
   "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span and handoff), section D (RT-01), section E.2 (CT-01), section E.5 (navigation record at objectives `opening_hear_grandpa`, `opening_first_catch` and `open_road_gate`), section G (GF-02, GF-03-VILLAGE-01, GF-14-01, GF-15-01/02, GF-21-WEATHER-01) and section H (mandatory 0.5 Hz segment).",
-  "_gap_e5_opening_rungs": "\u00a7E.5 GAP, recorded rather than quietly dropped (ralph/GATE-F-E5, 2026-08-30). OP-0830-4 added three rungs ahead of `opening_first_catch`: 1 `opening_hear_grandpa`, 2 `opening_take_starter`, 3 `opening_show_grandpa`. \u00a7E.5 asks for a navigation record at EACH main-chain objective. This segment carries one for rung 1 (S02-12) and one for rung 4 (S02-29), because those two records already existed and only needed retargeting to the rungs they actually describe. Rungs 2 and 3 have NO \u00a7E.5 record here, and none was invented: this lane corrected a transcription, it did not play the segment, and a navigation record is a played observation (what was legible on screen, time-to-route-decision, the frame it was reasoned from) that cannot honestly be written from a diff. Both rungs are in-house modal beats -- the starter picker and the naming grid draw their own prompts -- so the likely finding is `no navigation decision exists at this rung`, but that is a prediction, not a record. Owed to the Gate F lane on the next S02 run.",
+  "_gap_e5_opening_rungs": "§E.5 GAP, recorded rather than quietly dropped (ralph/GATE-F-E5, 2026-08-30). OP-0830-4 added three rungs ahead of `opening_first_catch`: 1 `opening_hear_grandpa`, 2 `opening_take_starter`, 3 `opening_show_grandpa`. §E.5 asks for a navigation record at EACH main-chain objective. This segment carries one for rung 1 (S02-12) and one for rung 4 (S02-29), because those two records already existed and only needed retargeting to the rungs they actually describe. Rungs 2 and 3 have NO §E.5 record here, and none was invented: this lane corrected a transcription, it did not play the segment, and a navigation record is a played observation (what was legible on screen, time-to-route-decision, the frame it was reasoned from) that cannot honestly be written from a diff. Both rungs are in-house modal beats -- the starter picker and the naming grid draw their own prompts -- so the likely finding is `no navigation decision exists at this rung`, but that is a prediction, not a record. Owed to the Gate F lane on the next S02 run.",
   "_comment_answer_prompts": "Every move_to in this file leaves `answer_prompts` OFF. The schema is explicit that it 'must stay off in any segment whose subject is whether something blocks travel', and this segment's subject IS the opening's conversations -- a harness quietly answering Grandpa would hide the finding. Every dialogue below is advanced by its own explicit press step.",
   "_comment_no_teleport": "Section 0.6 / section J: production paths only, teleport is DIAG-only. Every position in this file is reached by walking.",
   "evidence_lane": "logic",
@@ -744,7 +744,8 @@
         "close_enough": 2.0,
         "held_budget_frames": 7200
       },
-      "expected": "SA7's own done-when: 'near-field and low-stakes, so the player understands early that gated things have keys'. The key sits a short detour off the road toward the square, at `playground_world.gd::GATE_KEY_AT`"
+      "expected": "SA7's own done-when: 'near-field and low-stakes, so the player understands early that gated things have keys'. The key sits a short detour off the road toward the square, at `playground_world.gd::GATE_KEY_AT`",
+      "_comment_anchor": "RIG-T5-3, found and fixed by ralph/T5-PLAY 2026-08-30; re-applied here by ralph/GATE-F-RUN7 because this branch is the first to carry BOTH lanes that caused it. This walked to [31.2, -8.4], where `playground_world.gd::GATE_KEY_AT` used to be. `ralph/T5-OPENING` (7da75ac7, 'the village gate now gates, because the village has an edge') moved the key to [30.7, -15.9]; `ralph/T2-GATEF-RUN6` fixed S02's fight and catch on a branch that still carried the old coordinate. Each lane is individually correct and together they leave the chapter's first gate shut -- MEADOWS_EXIT_CRITERION section K4's integration rule exactly. The old anchor stood 7.5 m from the key against its 2.4 m interact radius, so S02-50's press hit nothing, S02-52 tried a gate with no key, and `road_gate_open` was left unset in the exit save EVERY downstream segment inherits. The gate is a StaticBody3D with sealed wings, so a closed gate is a hard block and the chapter cannot be left. Keep this coordinate equal to GATE_KEY_AT."
     },
     {
       "id": "S02-50",
@@ -758,7 +759,7 @@
     },
     {
       "id": "S02-50a",
-      "_comment": "RIG-T5-3's second half. A `press` step passes when input is INJECTED, not when anything received it -- the same shape as the engage-assert root cause T5-FEEL named. Without this, a key that was never picked up is silent for five steps and then surfaces as 'flag road_gate_open NOT set' at S02-54, which reads as a gate defect and is not one. `key_pickup.gd::FLAG_PREFIX` is 'pickup:', so taking this key sets `pickup:castle_gate_key`. Assert it where it happens.",
+      "_comment": "RIG-T5-3's second half, from ralph/T5-PLAY. A `press` step passes when input is INJECTED, not when anything received it -- the same shape as the engage-assert root cause T5-FEEL named and RUN6 generalised. Without this, a key that was never picked up is silent for five steps and then surfaces as 'flag road_gate_open NOT set', which reads as a gate defect and is not one. `key_pickup.gd::FLAG_PREFIX` is 'pickup:', so taking this key sets `pickup:castle_gate_key`. Assert it where it happens.",
       "title": "the key is actually in the satchel",
       "action": "assert",
       "args": {
@@ -780,7 +781,8 @@
         "budget_frames": 3000,
         "close_enough": 2.0
       },
-      "expected": "the gate stands square across the road at `data/config/village_boundary.json`'s RoadGate entry"
+      "expected": "the gate stands square across the road at `data/config/village_boundary.json`'s RoadGate entry",
+      "_comment_anchor": "RIG-T5-4, found and fixed by ralph/T5-PLAY 2026-08-30; re-applied here by ralph/GATE-F-RUN7. The second half of the same integration failure as the key anchor's. This walked to [27.5, -16.0] = `playground_world.gd::GATE_AT`, which `ralph/T5-OPENING` turned into DEAD CODE: the constant is still declared but places nothing. The gate is now built by `village_boundary.gd::_build_gates` from `data/config/village_boundary.json`, whose RoadGate entry sits at the COMPUTED road/outline intersection [38.7, -19.9] with yaw -71.6 (the old 71.0 was eyeballed and stood at 38 degrees to the road it was meant to bar). T5-PLAY measured the gate node live at (38.7, -2.66, -19.9), 11.9 m from the old anchor against a 4.0 m prompt radius, and proved the GAME is not at fault: standing 2.9 m out with the key, arbiter.activate() returned true, road_gate_open was set and the key consumed. Keep this equal to the config's RoadGate `at`, not to GATE_AT. close_enough 3.0 -> 2.0 because a nearby TM pickup outbids the gate from 4.0 m out."
     },
     {
       "id": "S02-52",

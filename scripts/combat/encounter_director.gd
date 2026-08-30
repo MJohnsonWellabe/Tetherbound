@@ -411,6 +411,35 @@ func _spawn_creatures() -> void:
 			# members different level bands, which is what reading the body's
 			# own z would do.
 			_roll_wild_level(wild, species, rng, centre.z)
+			# GAME-11. An optional per-entry `level` pins this cluster's members
+			# at an absolute level instead of leaving them to the region's band
+			# roll. It exists for exactly one situation: a cluster whose ROLE the
+			# chapter names, where the band's own spread contradicts it. Band 1's
+			# practice cluster is that case -- `progression.json`'s award comment
+			# states the chapter's enemy levels "run 2 at the practice fight to 22
+			# in the stronghold gauntlet", and the band is [2,6], so the fight that
+			# TEACHES combat was rolling anywhere from 2 to 6 against a level-3
+			# starter. Gate F run 6 measured the result across five fresh saves:
+			# the starter FAINTED in 4 of 5, and the catch it gates landed in 1.
+			#
+			# Applied AFTER the roll, never instead of it, and that is the whole
+			# reason it is written this way. `_roll_wild_level()` draws seven
+			# values from the CLUSTER's shared `rng` (level, three IVs, two traits,
+			# shiny), and that same generator goes on to scatter and roll every
+			# later member. Substituting `_set_fixed_level()` here -- which carries
+			# its own name-seeded rng and consumes nothing from this one -- would
+			# leave those seven draws untaken and silently move, relevel and reroll
+			# every creature after it, which is exactly what this table's `order`
+			# header warns against. Overriding the finished instance costs no draw
+			# and leaves IVs, traits, shiny and the scatter bit-identical.
+			# `_apply_elder()`'s `level_bonus` takes the same approach for the same
+			# reason; `level` is its absolute counterpart, for the rarer case where
+			# the chapter names a number rather than a relationship.
+			var pinned := int(spawn.get("level", 0))
+			if pinned > 0:
+				var pinned_instance: Variant = wild.get("instance")
+				if pinned_instance != null:
+					pinned_instance.call("set_level", pinned, PROGRESSION.config())
 			# GATE-D: BOTH of these landed, independently, in two lanes that
 			# could not see each other -- Band 1 authored `elder` (PW2) and
 			# Bands 2 and 3 authored `alpha` (WILD-ECOLOGY, prompt 60), each

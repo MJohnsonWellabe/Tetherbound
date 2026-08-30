@@ -789,15 +789,16 @@
       "action": "move_to",
       "args": {
         "at": [
-          31.2,
-          -8.4
+          30.7,
+          -15.9
         ],
         "budget_frames": 4050,
         "close_enough": 2.0,
         "held_budget_frames": 7200
       },
       "expected": "SA7's own done-when: 'near-field and low-stakes, so the player understands early that gated things have keys'. The key sits a short detour off the road toward the square",
-      "_derived_from": "S02-49"
+      "_derived_from": "S02-49",
+      "_comment_anchor": "RIG-T5-3, found and fixed by ralph/T5-PLAY 2026-08-30; re-applied here by ralph/GATE-F-RUN7 because this branch is the first to carry BOTH lanes that caused it. This walked to [31.2, -8.4], where `playground_world.gd::GATE_KEY_AT` used to be. `ralph/T5-OPENING` (7da75ac7, 'the village gate now gates, because the village has an edge') moved the key to [30.7, -15.9]; `ralph/T2-GATEF-RUN6` fixed S02's fight and catch on a branch that still carried the old coordinate. Each lane is individually correct and together they leave the chapter's first gate shut -- MEADOWS_EXIT_CRITERION section K4's integration rule exactly. The old anchor stood 7.5 m from the key against its 2.4 m interact radius, so S02-50's press hit nothing, S02-52 tried a gate with no key, and `road_gate_open` was left unset in the exit save EVERY downstream segment inherits. The gate is a StaticBody3D with sealed wings, so a closed gate is a hard block and the chapter cannot be left. Keep this coordinate equal to GATE_KEY_AT."
     },
     {
       "id": "S02C-50",
@@ -811,19 +812,31 @@
       "_derived_from": "S02-50"
     },
     {
+      "id": "S02C-50a",
+      "_comment": "RIG-T5-3's second half, from ralph/T5-PLAY. A `press` step passes when input is INJECTED, not when anything received it -- the same shape as the engage-assert root cause T5-FEEL named and RUN6 generalised. Without this, a key that was never picked up is silent for five steps and then surfaces as 'flag road_gate_open NOT set', which reads as a gate defect and is not one. `key_pickup.gd::FLAG_PREFIX` is 'pickup:', so taking this key sets `pickup:castle_gate_key`. Assert it where it happens.",
+      "title": "the key is actually in the satchel",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "pickup:castle_gate_key"
+      },
+      "expected": "`key_pickup.gd` writes `pickup:castle_gate_key` when the key is taken. If this fails, the walk anchor and GATE_KEY_AT have drifted apart again -- fix the anchor, not the gate"
+    },
+    {
       "id": "S02C-51",
       "title": "walk to the road gate",
       "action": "move_to",
       "args": {
         "at": [
-          27.5,
-          -16.0
+          38.7,
+          -19.9
         ],
         "budget_frames": 3000,
-        "close_enough": 3.0
+        "close_enough": 2.0
       },
       "expected": "the gate stands square across the road (`playground_world.gd::GATE_AT`)",
-      "_derived_from": "S02-51"
+      "_derived_from": "S02-51",
+      "_comment_anchor": "RIG-T5-4, found and fixed by ralph/T5-PLAY 2026-08-30; re-applied here by ralph/GATE-F-RUN7. The second half of the same integration failure as the key anchor's. This walked to [27.5, -16.0] = `playground_world.gd::GATE_AT`, which `ralph/T5-OPENING` turned into DEAD CODE: the constant is still declared but places nothing. The gate is now built by `village_boundary.gd::_build_gates` from `data/config/village_boundary.json`, whose RoadGate entry sits at the COMPUTED road/outline intersection [38.7, -19.9] with yaw -71.6 (the old 71.0 was eyeballed and stood at 38 degrees to the road it was meant to bar). T5-PLAY measured the gate node live at (38.7, -2.66, -19.9), 11.9 m from the old anchor against a 4.0 m prompt radius, and proved the GAME is not at fault: standing 2.9 m out with the key, arbiter.activate() returned true, road_gate_open was set and the key consumed. Keep this equal to the config's RoadGate `at`, not to GATE_AT. close_enough 3.0 -> 2.0 because a nearby TM pickup outbids the gate from 4.0 m out."
     },
     {
       "id": "S02C-52",

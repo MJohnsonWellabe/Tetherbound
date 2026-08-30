@@ -858,6 +858,149 @@ GAME-10 sprang on RUN5.
 
 ---
 
+## RIG-28 — the chapter's first gate was shut by two lanes that were each correct (FIXED; found by `ralph/T5-PLAY`, re-applied and extended by `ralph/GATE-F-RUN7`)
+
+**Severity: RIG, with BLOCKER consequence for the whole chain.** Found by
+`ralph/T5-PLAY` driving the world from the other direction. Recorded here
+because it is a Gate F rig defect and because the branch that reproduces it is
+the branch every future run will start from.
+
+`ralph/T5-OPENING` moved the gate key and replaced the hand-placed gate with a
+config-driven village boundary. `ralph/T2-GATEF-RUN6` fixed S02's fight and
+catch on a branch that still carried the old coordinates. **Neither lane is
+wrong. They are wrong together**, which is `ralph/MEADOWS_EXIT_CRITERION.md`
+section K4's rule verbatim — *"do not accumulate individually-successful
+changes that fail together"* — and the first time anything ran far enough to
+notice.
+
+| | rig walked to | thing is actually at | gap | radius |
+|---|---|---|---|---|
+| gate key | (31.2, −8.4) | (30.7, −15.9) `GATE_KEY_AT` | **7.5 m** | 2.4 m |
+| road gate | (27.5, −16.0) `GATE_AT` | (38.7, −19.9) `village_boundary.json` | **11.9 m** | 4.0 m |
+
+Both presses landed on open ground. **The game is not at fault and T5-PLAY
+proved it rather than assuming it**: `tools/gate_f/diag/probe_road_gate.gd`,
+standing the player 2.9 m out with the key in the satchel, got
+`arbiter.activate()=true`, `road_gate_open=true` and the key consumed.
+
+**Why it invalidated everything downstream rather than costing two asserts.**
+`road_gate.gd` builds a `StaticBody3D` with sealed wings, so a closed gate is a
+hard physical block, not a flag. `road_gate_open` unset in `S02-exit.json` is
+inherited by S03 → S04 → S05, and S05's whole span is *leave village*. The
+chapter could not be left.
+
+**`playground_world.gd::GATE_AT` is now dead code** — still declared, places
+nothing, and its neighbouring comment describes a geometry that no longer
+exists. A dead constant that still reads like the answer is what the rig fell
+for. Deleting it or making it read the config is game-side work nobody has done.
+
+**Three things this branch added on top of T5-PLAY's fix:**
+
+1. **`S02C.json` never got it.** T5-PLAY fixed the journey lane only. That is
+   the **third** time a capture-lane twin has been missed after its journey lane
+   was repaired (RIG-13 was the first, RUN6's `S03C-61` the second), and a
+   capture run of S02C would have reproduced the shut gate in the lane whose
+   entire purpose is the frames. Both lanes now carry it.
+2. **A `press` step still proves only that input was injected.** `S02-50a`
+   asserts `pickup:castle_gate_key` immediately after the key press, so a drift
+   fails at the key instead of surfacing five steps later as
+   `road_gate_open NOT set` — which reads as a gate defect and is not one. This
+   is the same root shape as the engage-assert class T5-FEEL named and RUN6
+   generalised, hit for the third time in three different places.
+3. **Nothing ties `GATE_KEY_AT` to the rig anchor**, or to anything else. The
+   same drift will happen to the next lane that nudges the village edge. Open.
+
+**Verified fixed on a real fresh save**, `ralph/reports/gate-f-run7/S02/`:
+`pickup:castle_gate_key` set, `road_gate_open` set, key consumed.
+
+## RIG-29 — six smoke tests still find their opponent by name pattern, and the accessor that fixes it has existed for months (OPEN, not this lane's to fix)
+
+**Severity: RIG.** The Gate F brief asked whether the corpse-lookup bug hiding
+in `smoke_gate_e_finale.gd` was also hiding in the Gate F segments. **It is
+not** — that is the useful negative result, and it is recorded below. But the
+sweep that established it found the same bug in five further places.
+
+`find_child("TrainerCreature_*")` returns the **oldest** match in tree order,
+and a beaten trainer creature lingers a beat before clearing. On any round after
+the first, the lookup reads a corpse while the live opponent stands elsewhere.
+`combat_manager.gd::enemy_body()`'s own header already documents this, names
+`smoke_tournament_bracket.gd` as where it was found, and explains why it is
+intermittent — *"it depended on free timing."*
+
+**The accessor was written. It was applied to one call site.** Still on the
+broken pattern:
+
+| file | line |
+|---|---|
+| `tests/smoke_gate_e_finale.gd` | 682 |
+| `tests/smoke_local_requests.gd` | 202 |
+| `tests/smoke_relay.gd` | 294 |
+| `tests/smoke_boss.gd` | 274 |
+| `tests/smoke_trainer_battle.gd` | 322, 463, 465 |
+| `tests/smoke_village_trainer.gd` | 206 |
+
+**`tests/smoke_relay.gd` is the ~1-in-5 flake `ralph/START_HERE.md` carries as
+an open ticket with root cause unknown.** It is on this list. That is a
+hypothesis with a motive and a mechanism, not a diagnosis — the recorded symptom
+is *"pressing interact opened nothing"* and I did not reproduce it — but it is
+the first candidate anyone has had, and it is cheap to test.
+
+**The fix is mechanical and already proven in four places.**
+`_manager.call("enemy_body")` is a drop-in; `smoke_catching.gd`,
+`smoke_tournament_bracket.gd` and `_capture_combat_moments.gd` (twice) already
+use it, and `_manager` is already resolved in every file listed above.
+
+**Left for `ralph/T3-COMBAT`**, which owns the finale fix and the real gameplay
+bug underneath it (`_place_fighters()` anchoring off the player while
+`_stand_the_trainer_aside()` moves the player, so five rounds re-anchor from
+each other and the fight walks out of the arena). Checked: T3-COMBAT has not
+fixed these six as of `eff3a228`.
+
+### The negative result: the Gate F harness does NOT have this bug
+
+Worth stating plainly so nobody re-derives it.
+
+- **`operator_harness.gd::_find_entity()` resolves by identity, not by name
+  pattern**, and among several matches it picks the **nearest to the player**
+  and *says so in the note*, with the count and the candidate names.
+- **Exactly one segment step in the whole set targets an entity whose name
+  contains "creature"** — `S03-205a`, `move_to_entity` on `creature_bed.gd`.
+  No segment step locates a fighter by name, species or substring during a
+  multi-round fight.
+
+So the class is absent from the segments. It is **not** absent from
+`_find_entity()` in principle: nearest-wins is weaker than oldest-wins but a
+lingering corpse can still be nearer than a freshly-sent opponent. The
+mitigation is that it would say so in the evidence rather than silently. Worth
+knowing before a future segment engages a trainer's second creature.
+
+## RIG-30 — two of S02's asserts fail *because* the chapter now works (OPEN, calibration)
+
+**Severity: RIG, low, but it will mislead the next reader.** Of the three FAILs
+in RUN7's otherwise healthy S02, two are distance/duration floors that were
+calibrated against runs where the segment wandered:
+
+```
+S02-59  the segment actually walked   ->  FAIL: walked 127.1 m (wanted >= 150.0)
+S02-60  the 2 Hz trace ran throughout ->  FAIL: route.csv has 552 rows (wanted >= 900)
+```
+
+Both floors exist for a good reason — a segment that "passed" without anyone
+moving carries no pacing evidence, which is a real failure mode this protocol
+has seen. But they were set when S02 lost its fight, failed its catch, pressed
+at open ground 7.5 m from a key, and re-walked the same ground looking for a
+gate that was 11.9 m away. **With those fixed the segment does its job in less
+distance and less time, and the guards fire on the improvement.**
+
+Do not "fix" this by relaxing the floors on sight. The right move is to re-derive
+both numbers from a run of the segment as it now behaves, and to say in each
+step's `expected` what run the number came from — an authored threshold carrying
+a superseded measurement is indistinguishable from one carrying this run's,
+which is RIG-27's lesson in a second place.
+
+The third FAIL is real and unrelated: `S02-40` wanted `input_context=combat_aim`
+at the start of the catch aim and measured `combat`. Not diagnosed here.
+
 ## What these twenty-two have in common
 
 Read together, RIG-1 through RIG-12 are mostly *instrument* defects: they

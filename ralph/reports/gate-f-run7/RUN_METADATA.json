@@ -1,0 +1,15 @@
+{
+  "_comment": "Gate F RUN 7 chapter run: the journey chain S01 -> S10e in one save lineage, LOGIC LANE. Carries its own freeze record so operator_harness.gd::_freeze_display_claim reads this run's honest declaration rather than the stale global ralph/reports/gate-f-candidate/RUN_METADATA.json, which claims display_server=X11 under xvfb-run and therefore CD-8b-refuses every headless segment (RIG-T5-1, found by ralph/T5-PLAY). Written BEFORE the run started, which is what the harness's own comment requires: a run that wants a logic lane must SAY SO IN THE FREEZE RECORD BEFORE THE RUN, and must never amend one mid-run to get a segment to start. That amendment is CD-8b's own sin in mirror image and two previous runs recorded refusing to commit it.",
+  "candidate_ref": "ralph/GATE-F-RUN7",
+  "run_dir": "ralph/reports/gate-f-run7",
+  "purpose": "Play the Meadows chapter from a fresh save as far as this envelope allows and record what ralph/ACTIVE_GAME_PLAN.md section 5 asks for: pacing against the 3-4 hour target, dead-travel intervals, team progression, encounter cadence, rewards, and every reliability failure or swallowed input. The capture lane is NOT run: this container has no GPU and run 2 measured a rendered 1920x1080 frame at 12.7 s, which prices the capture lane at ~301 hours.",
+  "display_server": "headless (logic lane, no display server -- honest, matches this process)",
+  "renderer": "none (logic lane, no rendering)",
+  "lanes": {
+    "logic": {
+      "display_server": "headless (logic lane, no display server)",
+      "renderer": "none (logic lane)"
+    }
+  },
+  "_what_this_run_can_and_cannot_show": "Measured: mechanics, pacing, cadence, reliability, progression, and every input/objective/flag path the segments assert. NOT measured and NOT claimed in either direction: how the chapter LOOKS (no frames are taken), device frame rate, GPU frame time, VRAM and thermals ([OWNER-ONLY] per protocol section K). Wall clock on this container is dominated by a software renderer and a cold world stand-up and is a rig-cost number, never a player-time estimate; the play clock (physics frames / ticks per second) is the pacing number."
+}
