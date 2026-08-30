@@ -1,0 +1,146 @@
+{
+  "blocked": "",
+  "captures": {
+    "absent": 0,
+    "delegated": [
+      "GF-01-TITLE-01"
+    ],
+    "delegated_to": "S01C",
+    "owes": [],
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": true,
+  "cost": {
+    "frame_cost_s": 0.016732,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.3,
+        "frame_cost_s": 0.006517,
+        "frames_remaining": 10826,
+        "predicted_remaining_s": 71.1,
+        "step_index": 2,
+        "wall_spent_s": 0.7,
+        "was_frame_cost_s": 0.005907
+      },
+      {
+        "armed": "in-play sample over budget: 29561 s predicted against 14071 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14070.9,
+        "frame_cost_s": 2.735819,
+        "frames_remaining": 10805,
+        "predicted_remaining_s": 29560.5,
+        "step_index": 8,
+        "wall_spent_s": 329.1,
+        "was_frame_cost_s": 0.006517
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14068.9,
+        "frame_cost_s": 0.016587,
+        "frames_remaining": 10805,
+        "predicted_remaining_s": 179.2,
+        "step_index": 8,
+        "wall_spent_s": 331.1,
+        "was_frame_cost_s": 2.735819
+      }
+    ]
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false
+  },
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "logic",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [],
+  "preflight": {
+    "allow_no_capture": false,
+    "boot_cost_s": 0.5,
+    "capture_available": false,
+    "capture_lane": "S01C",
+    "capture_requested": false,
+    "cost_rechecks": 91,
+    "delegated_captures": 1,
+    "display_server": "headless",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "headless (logic lane, no display server)",
+      "from": "ralph/reports/gate-f-run7/RUN_METADATA.json",
+      "key": "lanes.logic.display_server",
+      "lane": "logic"
+    },
+    "measured_frame_cost_s": 0.005907,
+    "measured_frame_cost_s_in_scene": 0.016732,
+    "planned_captures": 0,
+    "predicted_frames": 10858,
+    "predicted_segment_cost_s": 64.1,
+    "predicted_segment_cost_s_in_scene": 687.8,
+    "record_baseline_hz": 0.0,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.3,
+        "frame_cost_s": 0.006517,
+        "frames_remaining": 10826,
+        "predicted_remaining_s": 71.1,
+        "step_index": 2,
+        "wall_spent_s": 0.7,
+        "was_frame_cost_s": 0.005907
+      },
+      {
+        "armed": "in-play sample over budget: 29561 s predicted against 14071 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14070.9,
+        "frame_cost_s": 2.735819,
+        "frames_remaining": 10805,
+        "predicted_remaining_s": 29560.5,
+        "step_index": 8,
+        "wall_spent_s": 329.1,
+        "was_frame_cost_s": 0.006517
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14068.9,
+        "frame_cost_s": 0.016587,
+        "frames_remaining": 10805,
+        "predicted_remaining_s": 179.2,
+        "step_index": 8,
+        "wall_spent_s": 331.1,
+        "was_frame_cost_s": 2.735819
+      }
+    ],
+    "verdict": "not required",
+    "why": "segment declares no captures and no continuous record"
+  },
+  "run_id": "gate-f-run7",
+  "segment": "S01",
+  "sha": "8e5082db9699a583627c61eb7e599a5141575f78",
+  "steps": {
+    "delegated": 1,
+    "fail": 0,
+    "pass": 13,
+    "ran": 14,
+    "refused": 0,
+    "skipped": 0,
+    "total": 14
+  },
+  "uncommittable": []
+}
