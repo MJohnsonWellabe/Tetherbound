@@ -223,6 +223,39 @@
       "expected": "Section H window opens on the approach OUT of the village, before the walk south, because the coordinator's own rule is that the window straddles a transition rather than beginning at it -- the approach into a region transition is where the interesting failure lives"
     },
     {
+      "id": "S05-18b",
+      "title": "walk to the Pond gate, the village's north-west door",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -21.0,
+          21.0
+        ],
+        "budget_frames": 5400,
+        "close_enough": 2.0,
+        "held_budget_frames": 5400,
+        "answer_prompts": true
+      },
+      "expected": "data/config/village_boundary.json gates[].PondGate, the computed intersection of the Pond road with the village outline. The gate is open: road_gate_open was set in S02 and village_boundary.gd swings both gates on that one flag",
+      "_comment_route": "RIG-F6, ralph/GATE-F-FULL 2026-08-30. S05-19 walked straight from the tournament ground to (-40,180) and the straight line crosses the village outline at (16.6, 21.5), 37.6 m from the nearest gate. `data/config/village_boundary.json` gave the village a closed fence on 2026-08-30 (OP-0830-1, then the straddle fix the same day) and `village_boundary.gd` builds it as sealed StaticBody3D panels with a hole only at each gate, so the walk hit a wall: measured, `did not reach (-40, 180) in 11700 walking frames; stopped 155.8 m short at (-15.0, 1.0, 26.0)` -- which is the outline's own [-15,27] vertex, 22 m from PondGate. The next walk then failed identically from the same spot, and every walk after it would have. NOT A GAME DEFECT: `road_gate_open` is set from S02 and `village_boundary.gd` swings BOTH gates on that flag, so a player following the Pond road out of the village leaves freely -- `terrain_playground.json`'s third route is exactly (10,-10) -> (-14,14) -> (-45,45) -> (-105,115), through PondGate at (-21,21). This segment predates the fence and was still walking as though the village had no edge. Split into three legs that follow the road the player follows: to the gate, through it, then on to the spine. Checked against the outline before authoring -- the only crossing on the three legs is the gate itself."
+    },
+    {
+      "id": "S05-18c",
+      "title": "step through the gate onto the Pond road",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -24.0,
+          25.0
+        ],
+        "budget_frames": 2400,
+        "close_enough": 2.5,
+        "held_budget_frames": 2400,
+        "answer_prompts": true
+      },
+      "expected": "4.5 m beyond the gate on the far side of the outline, so the next leg starts OUTSIDE the fence and cannot be aimed back through it. On the Pond road (terrain_playground.json paths.routes[2], (10,-10) -> (-14,14) -> (-45,45))"
+    },
+    {
       "id": "S05-19",
       "title": "leave the village southbound onto the band 1 spine",
       "action": "move_to",

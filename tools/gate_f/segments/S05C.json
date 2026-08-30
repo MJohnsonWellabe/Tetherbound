@@ -264,6 +264,41 @@
       "_derived_from": "S05-18a"
     },
     {
+      "id": "S05C-18b",
+      "title": "walk to the Pond gate, the village's north-west door",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -21.0,
+          21.0
+        ],
+        "budget_frames": 5400,
+        "close_enough": 2.0,
+        "held_budget_frames": 5400,
+        "answer_prompts": true
+      },
+      "expected": "data/config/village_boundary.json gates[].PondGate. The gate is open: road_gate_open was set in S02 and village_boundary.gd swings both gates on that one flag",
+      "_derived_from": "S05-18b",
+      "_comment_route": "RIG-F6, mirrored from S05 by ralph/GATE-F-FULL in the same commit as its journey twin -- run 7's handover names a capture twin left carrying a fixed segment's old step as a mistake this project has now made three times. The village fence (data/config/village_boundary.json, 2026-08-30) makes the straight line from the tournament ground to the band-1 spine cross sealed panels 37.6 m from the nearest gate; measured, the walk stopped 155.8 m short against the outline's [-15,27] vertex. See S05-18b for the full measurement."
+    },
+    {
+      "id": "S05C-18c",
+      "title": "step through the gate onto the Pond road",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -24.0,
+          25.0
+        ],
+        "budget_frames": 2400,
+        "close_enough": 2.5,
+        "held_budget_frames": 2400,
+        "answer_prompts": true
+      },
+      "expected": "4.5 m beyond the gate on the far side of the outline, so the next leg starts OUTSIDE the fence and cannot be aimed back through it",
+      "_derived_from": "S05-18c"
+    },
+    {
       "id": "S05C-19",
       "title": "leave the village southbound onto the band 1 spine",
       "action": "move_to",

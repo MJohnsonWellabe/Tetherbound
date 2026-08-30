@@ -17,3 +17,15 @@ the restart says which segment, which SHA, and why.
 **Attempt 1 is preserved in full and its evidence is cited in `DEFECTS.md`** —
 GAME-F1, GAME-F3 and GAME-F4 are all measured from it, and GAME-F4 is measured
 from nothing else.
+
+## S05, attempt 1 → `S05-aborted-1/`
+
+| | |
+|---|---|
+| segment | S05, Lower Meadows / band 1 |
+| result | **STOPPED BY ME, mid-segment, at step ~30 of 80.** Not a completed attempt and not a verdict: there is no `INVENTORY.json`, no exit save, and nothing in that directory should be read as an S05 result. |
+| why | Its first two walks out of the village both failed against the village fence — `did not reach (-40, 180) in 11700 walking frames; stopped 155.8 m short at (-15.0, 1.0, 26.0)`, which is the outline's own `[-15,27]` vertex — and the player was pinned there. Every remaining walk in the segment would have failed identically after burning its full budget, roughly half an hour of runtime for nothing. |
+| what changed | `tools/gate_f/` only — RIG-F6: S05 and its capture twin now leave through PondGate in three legs instead of walking into a fence, and S10e comes home the same way. |
+
+The failing walks are preserved in `S05-aborted-1/telemetry/` and are the
+evidence for RIG-F6 in `DEFECTS.md`.
