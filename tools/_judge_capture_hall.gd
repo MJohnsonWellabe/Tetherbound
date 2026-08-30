@@ -24,7 +24,7 @@ const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const DEFAULT_OUT_DIR := "res://shots/hall0830"
 const SETTLE_FRAMES := 90
-const POSE_FRAMES := 3
+const POSE_FRAMES := 10
 const FOV := 70.0
 
 func _init() -> void:
@@ -247,7 +247,22 @@ func _shoot(camera: Camera3D, look: Node, torch: OmniLight3D, interior: bool,
 		player.global_position = Vector3(eye.x, eye.y, eye.z)
 	torch.visible = interior
 	torch.global_position = eye + Vector3(0.0, 0.35, 0.0)
-	for i in 40:
+	# T1-HALL-3: 40 was still not enough, and the failure is quiet enough to be
+	# worth naming. Two frames of THE SAME STAND in one run --
+	# `H-03-ramp-foot` and `H-03-ramp-foot-golden`, identical camera, seconds
+	# apart -- came back with 5.5% and 54.6% green cover on the same bank. The
+	# first is not a content change and not a scatter edit: it is the grass ring
+	# still rebuilding when the shutter opened. `capture_check` passes it,
+	# because `_grass_problems` asks whether the field EXISTS, follows this
+	# camera and holds instances -- all true of a field that is half-built. A
+	# partially-streamed field is exactly the "silently degraded frame" that
+	# file was written about, and it currently has no test for it; flagged in
+	# the handover as the next thing that checker wants.
+	#
+	# The cheap half of the answer is here: give the ring real time. The
+	# expensive half -- a stability poll on the field's own coverage -- belongs
+	# in `capture_check` where every tool gets it, not in this one tool.
+	for i in 110:
 		await physics_frame
 	if look != null:
 		if look.has_method("set_weather"):
