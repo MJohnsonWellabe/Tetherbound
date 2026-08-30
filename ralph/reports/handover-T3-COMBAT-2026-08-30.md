@@ -670,3 +670,21 @@ sits directly beneath the placement fix, which is what its own §6b asks for:
 the two land together. Its harness correction is what makes the numbers above
 mean anything — without `trainer_body()` the floor check reads a corpse from
 round two on.
+
+### 10.6 Regression
+
+The placement fix moves the player between rounds of a trainer battle, so
+every shipped check that fights through a multi-creature team was re-run on
+this branch after it landed:
+
+| suite | result |
+|---|---|
+| `tests/smoke_combat.gd` | OK — and it is now the non-mirror version with the chart assertion |
+| `tests/smoke_trainer_battle.gd` | OK — challenged, fought through the team, beaten once, not again |
+| `tests/smoke_stronghold.gd` | passed — all seven severed spokes standing, every arena transition inside tolerance |
+| `tests/smoke_boss.gd` | passed — the Warden's five creatures fought and beaten in 988 frames, the machine falls, the legendary is freed and the full-belt path hands off to the release ceremony |
+
+Nothing outside the anchor regressed. The boss suite is the important one:
+it is the only shipped check besides the finale that fights all five of the
+Warden's creatures, and it is the one the anchor would break first if the
+re-position were wrong.
