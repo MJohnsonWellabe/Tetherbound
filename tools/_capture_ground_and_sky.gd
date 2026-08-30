@@ -854,7 +854,26 @@ func _shoot_water_grazing(pos: Dictionary, level: float) -> void:
 	# Never below the real ground under the camera, never far above the
 	# water plane either -- a grazing shot standing head-height above the
 	# surface is just the eye shot again.
-	var cam_h: float = maxf(level + 0.35, graze_ground + 0.15)
+	#
+	# T1-WORLD: the floor was `graze_ground + 0.15`, and the whole-board pass
+	# failed `water-02-river-grazing` on it -- camera y=-3.51 against ground
+	# -3.66, reported as a below-ground shot. Two separate reasons, both real:
+	#
+	# 1. 0.15 is EXACTLY `capture_check.gd::GROUND_CLEARANCE_M`, and that check
+	#    is `pos.y <= ground + CLEARANCE`. A camera seated at precisely the
+	#    threshold fails by construction, so every grazing shot whose water
+	#    level sits below the bank was going to fail this check forever.
+	# 2. The two are not even measuring the same surface. This tool seats on
+	#    `_surface()` -- a raycast against real collision -- and the check reads
+	#    Terrain3D's baked heightfield. This file's own header records those two
+	#    disagreeing by up to 22m near the river channel, which is exactly where
+	#    this shot stands.
+	#
+	# So the floor needs margin over the threshold, not equality with it. 0.45m
+	# is still unambiguously a grazing shot (knee height against the 1.85m eye
+	# shot this framing exists to differ from) and clears both the check and any
+	# plausible disagreement between the two height sources at a bank.
+	var cam_h: float = maxf(level + 0.35, graze_ground + 0.45)
 
 	# VISUAL-CORRIDOR fix: `tangent` used to pick ONE fixed 90-degree
 	# rotation of `away` with no way to know whether THAT side of the shore

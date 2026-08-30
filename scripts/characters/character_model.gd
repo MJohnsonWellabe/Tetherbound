@@ -43,6 +43,51 @@ var _lying: bool = false
 ## not a nice-to-have.
 static var _variant_materials: Dictionary = {}
 
+## How much of the additive emission floor below is currently in effect, 0..1.
+##
+## T1-WORLD. The floor is a CONSTANT additive term, and a constant cannot be
+## right at more than one time of day. `EMISSION_FLOOR_ADD`'s own comment
+## records it being tuned against a daylight frame and then checked at night --
+## day 30.6/35.4, night 51.7/59.5 -- and reads that night jump as acceptable
+## because "there is far less competing direct-light signal". The whole-board
+## night pass shows what that actually looks like standing next to something
+## correctly lit: in `shots/ground/ground-04-band4-ironwood-night-vista.png` the
+## trainer NPC is fully daylit -- the brightest object in the frame, warm tan
+## against a blue night -- while the PLAYER two metres away is a correct dark
+## silhouette. Same shot, same sun. A self-lit figure in a night frame does not
+## read as "legible", it reads as a character that is not in the same world.
+##
+## The floor is still right in daylight and nothing here changes it there: this
+## scales it, `world_look.gd` drives the scale from `art.json`'s per-time
+## `character_emission_floor`, and the base value is 1.0, so every daylight
+## measurement in `EMISSION_FLOOR_ADD`'s comment still holds exactly.
+##
+## Static, and applied to already-built materials, because `_variant_materials`
+## is a shared cache: NPCs are built once at world stand-up and the clock moves
+## afterwards, so a value read only at build time would be frozen at whatever
+## time of day the world happened to boot at.
+static var _emission_floor_scale := 1.0
+
+
+## Set how much of the additive emission floor applies, and re-scale every
+## material already built with one. Called by `world_look.gd` on each look
+## change; safe to call with an unchanged value (it early-returns).
+static func set_emission_floor_scale(scale: float) -> void:
+	var wanted := clampf(scale, 0.0, 1.0)
+	if is_equal_approx(wanted, _emission_floor_scale):
+		return
+	_emission_floor_scale = wanted
+	for key: Variant in _variant_materials:
+		var material: StandardMaterial3D = _variant_materials[key] as StandardMaterial3D
+		# Only the floor materials. Everything else either has emission off or
+		# uses the MULTIPLY branch, where this scale has no meaning and writing
+		# it would dim a rig's own painted emission.
+		if material == null or not material.emission_enabled:
+			continue
+		if material.emission_operator != BaseMaterial3D.EMISSION_OP_ADD:
+			continue
+		material.emission_energy_multiplier = wanted
+
 
 ## Load the named block and stand the body up. False means nothing loaded and
 ## whatever placeholder the scene carries should stay visible.
@@ -590,7 +635,12 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 		if tint_luminance < 0.95:
 			material.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
 			material.emission = colour * EMISSION_FLOOR_ADD
-			material.emission_energy_multiplier = 1.0
+			# T1-WORLD: was the literal 1.0. The product is what renders, so at
+			# the base scale of 1.0 this is byte-identical to what it was, and
+			# every daylight number in the comment above still stands. See
+			# `_emission_floor_scale` for why the floor has to move with the
+			# clock and what a night frame looked like when it did not.
+			material.emission_energy_multiplier = _emission_floor_scale
 		else:
 			material.emission = material.emission * colour
 	_variant_materials[key] = material
