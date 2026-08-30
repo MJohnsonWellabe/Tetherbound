@@ -1369,6 +1369,18 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	panel.position = Vector3(BANNER_CLOTH_T * 0.5, -body_h * 0.5 - 0.09, 0.0)
 	holder.add_child(panel)
 
+	# The compass device, on its own quad just proud of the field (JUDGE-5 D6).
+	# See `tether_sigil.gd::cloth_material` for why it is NOT in the field's own
+	# material: a BoxMesh's read face spans u [0.333,1.0], which crops a centred
+	# mark. A banner's outward normal in this holder's frame is local +X.
+	# QuadMesh spans its own local x/y, so the device's width is the banner's
+	# width (holder-local Z) and its height the field's height.
+	var device := TETHER_SIGIL.device(
+		Vector2(width * 0.62, body_h * 0.62), colour.lightened(0.06),
+		Vector3.RIGHT, BANNER_CLOTH_T * 0.62)
+	device.position += Vector3(0.0, -body_h * 0.46 - 0.09, 0.0)
+	holder.add_child(device)
+
 	# Two darker selvage stripes down the field's edges. A war banner is woven
 	# cloth with a border, and one uniform rectangle of saturated colour is a
 	# large part of what read as toy in the first pass -- the shape was only

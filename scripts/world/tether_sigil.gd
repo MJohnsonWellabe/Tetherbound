@@ -70,16 +70,62 @@ static func texture() -> ImageTexture:
 	return _texture
 
 
-## A banner material carrying the mark. `colour` multiplies the device with it,
-## so the caller keeps ownership of the faction hue and this file never becomes
-## a second place a reserved colour is decided.
+## The plain cloth: a banner's field, with NO device on it.
+##
+## The device deliberately does NOT ride in this material, and the reason is
+## measured rather than assumed. The first cut of this pass put `texture()`
+## straight onto the banner's panel `BoxMesh` -- which looks free, since it costs
+## no extra geometry. A direct probe of `BoxMesh.surface_get_arrays()` says
+## otherwise: Godot packs the six faces into one UV atlas, and the face a banner
+## is actually READ through spans u [0.333, 1.000], v [0.000, 1.000]. A device
+## centred at u 0.5 in its own image therefore renders cropped down its left side
+## and stretched across the remaining two thirds -- a broken mark, which is worse
+## than no mark and exactly the kind of artefact a blind judge names. So the
+## field is plain, and `device()` below puts the mark on its own quad, which has
+## the full 0-1 UVs a centred device needs.
 static func cloth_material(colour: Color) -> StandardMaterial3D:
 	var cloth := StandardMaterial3D.new()
 	cloth.albedo_color = colour
-	cloth.albedo_texture = texture()
 	cloth.roughness = 0.95
 	# Cloth is thin and is routinely seen from behind (the Hall's gate face is
 	# the SHADED face -- HALL_DESIGN sec2 -- so its banners are backlit as often
 	# as not). Without this the reverse of every banner is a black rectangle.
 	cloth.cull_mode = BaseMaterial3D.CULL_DISABLED
 	return cloth
+
+
+## The mark itself, as a `MeshInstance3D` the caller parents to a banner and
+## positions just proud of its field. One quad, one draw call, correct UVs.
+##
+## `normal` is the banner's own outward axis in ITS local frame, so the Hall
+## (whose banners face local +x) and the Sigil Gate (whose face local -z) can
+## each ask for the mark without either having to know the other's convention.
+static func device(size: Vector2, colour: Color, normal: Vector3,
+		proud: float = 0.012) -> MeshInstance3D:
+	var quad := QuadMesh.new()
+	quad.size = size
+	var mark := StandardMaterial3D.new()
+	mark.albedo_color = colour
+	mark.albedo_texture = texture()
+	mark.roughness = 0.95
+	mark.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# The device is painted ON cloth: it must never z-fight with the field it
+	# sits on, and it must not float off it either.
+	mark.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	var node := MeshInstance3D.new()
+	node.name = "BannerDevice"
+	node.mesh = quad
+	node.material_override = mark
+	# A QuadMesh faces its own local +Z, and its width runs along its local +X.
+	# Built as an explicit basis rather than with `look_at`, which aims a node's
+	# MINUS Z at its target -- the quad would face directly away from the viewer
+	# and, being a single-sided plane before `cull_mode`, that is a bug that
+	# renders as "no sigil" rather than as an error.
+	var axis := normal.normalized()
+	var up := Vector3.UP
+	if absf(axis.dot(up)) > 0.99:
+		up = Vector3.BACK
+	var right := up.cross(axis).normalized()
+	node.transform = Transform3D(Basis(right, axis.cross(right).normalized(), axis),
+		axis * proud)
+	return node

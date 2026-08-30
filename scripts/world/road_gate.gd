@@ -452,6 +452,16 @@ func _hang_sigil_banner(at: Vector3) -> void:
 	panel.position = Vector3(0.0, -body_h * 0.5, 0.0)
 	holder.add_child(panel)
 
+	# The mark, on its own quad. See `tether_sigil.gd::cloth_material` for why it
+	# is not baked into the panel's material. The banner hangs on the pier's -Z
+	# face, which is the side the road arrives from, so that is its outward
+	# normal in this holder's frame.
+	var device := TETHER_SIGIL.device(
+		Vector2(GATE_BANNER_W * 0.66, body_h * 0.6), FACTION_CLOTH.lightened(0.06),
+		Vector3.FORWARD, GATE_BANNER_T * 0.62)
+	device.position += Vector3(0.0, -body_h * 0.46, 0.0)
+	holder.add_child(device)
+
 	var tail_h := GATE_BANNER_H - body_h
 	for side: float in [-1.0, 1.0]:
 		var tail := MeshInstance3D.new()
