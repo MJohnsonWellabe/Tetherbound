@@ -40,7 +40,9 @@
         "flags": []
       },
       "defeat_flag": "defeated_relay_hess",
-      "rechallenge": false
+      "rechallenge": false,
+      "base": "grunt_b",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 5,
@@ -79,7 +81,9 @@
         "flags": []
       },
       "defeat_flag": "defeated_relay_orrin",
-      "rechallenge": false
+      "rechallenge": false,
+      "base": "grunt_c",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 6,
@@ -121,7 +125,9 @@
         "flags": []
       },
       "defeat_flag": "defeated_relay_dell",
-      "rechallenge": false
+      "rechallenge": false,
+      "base": "officer_a",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 7,
@@ -171,7 +177,9 @@
       },
       "_comment_defeat_flag": "SE27 waits on exactly this id. data/config/relay_site.json gates the captive's rescue conversation on it, and nothing else in the chapter sets it.",
       "defeat_flag": "relay_captain_defeated",
-      "rechallenge": false
+      "rechallenge": false,
+      "base": "captain_a",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 13,
@@ -229,7 +237,9 @@
       "_why_t3_reward": "T3-REWARD, owner-direction §14 ('Captain 3: Sigil + final preparation unlock/reward'). Riverwatch is the third of the three regional captains (see this entry's own `_comment`), and the last Sigil collected physically opens the Meadows Hall approach (Sec3's own 'the three physical Sigils open the old Hall/stronghold approach') -- so its own payout is the last thing the reward ladder can hand over before that gate. elixir_vigour (permanent max HP, capped by progression.json's elixirs.cap_per_stat) is the one of the three elixirs that reads as 'get ready for what is next' rather than 'get better at what you just did', which is what a final-preparation reward is for. Same unplaced-orphan gap tm_earth_fist and elixir_guard close on the other two captains: items.json's own header names elixirs as belonging 'in the world -- a dungeon, a captain, a stronghold' and none had ever actually been placed.",
       "defeat_flag": "defeated_captain_riverwatch",
       "rechallenge": false,
-      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86."
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86.",
+      "base": "captain_b",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     }
   ]
 }
