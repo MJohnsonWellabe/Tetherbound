@@ -34,11 +34,12 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
 const SETTLE_FRAMES := 240
 
-## Somewhere with room to fight and nothing authored standing in it. Every
-## staged encounter happens here, one at a time, with the previous opponent
-## freed first — so each row is measured in the same place and the terrain is
-## not a variable.
-const STAGE := Vector3(70.0, 0.0, -95.0)
+## Open meadow, and known walkable: this is the spot `tests/smoke_combat.gd`
+## already walks the trainer out of the farmhouse to, near the practice cluster.
+## Every staged encounter happens here, one at a time, with the previous
+## opponent freed first — so each row is measured on the same ground and the
+## terrain is not a variable between rows.
+const STAGE := Vector3(48.0, 0.0, -58.0)
 ## How far from the stage any other wild creature may be standing when a row
 ## begins. Anything nearer is put to sleep for the row, because
 ## `_engageable()` picks the NEAREST creature and a wandering neighbour would
@@ -149,9 +150,10 @@ func _fight_row(row: Dictionary) -> Dictionary:
 
 	var ally: RefCounted = _director.call("ally_instance")
 	if ally == null or str(ally.get("species_id")) != ally_species:
-		return _abandoned(row, "could not put a %s in the player's hands" % ally_species)
+		return _abandoned(row, "could not put a %s in the player's hands (holding '%s')"
+			% [ally_species, "nothing" if ally == null else str(ally.get("species_id"))])
 
-	var spot := STAGE + Vector3(9.0, 0.0, 0.0)
+	var spot := _player.global_position + Vector3(8.0, 0.0, 0.0)
 	spot.y = float(_world.call("ground_height_at", spot.x, spot.z))
 	var foe_body: Node3D = _director.call("spawn_wild", foe_species, spot, {
 		"level": level, "wander_radius": 0.5, "name": "StagedFoe_%s" % foe_species,
@@ -165,11 +167,13 @@ func _fight_row(row: Dictionary) -> Dictionary:
 	# encounter, and the walk is the part of the loop this probe shares with the
 	# player.
 	var engage_range := float(_combat_config().get("flow", {}).get("engage_range", 6.0))
+	var walk_from := _player.global_position
 	var closed: float = await _pilot.walk_trainer_to(
 		_player, foe_body.global_position, engage_range * 0.6, 900)
 	if closed > engage_range:
 		_free(foe_body)
-		return _abandoned(row, "could not walk within engage range (%.1fm)" % closed)
+		return _abandoned(row, "could not walk within engage range: %.1fm away after covering %.1fm from %s"
+			% [closed, walk_from.distance_to(_player.global_position), str(walk_from)])
 
 	await _engage()
 	if not bool(_manager.call("is_fighting")):
