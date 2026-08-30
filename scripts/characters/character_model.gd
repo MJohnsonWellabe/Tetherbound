@@ -484,7 +484,27 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 	# `body` (not hair, not accessories) because a rank badge already gets its
 	# own legibility fix via `finish`'s metal, and an emission floor on hair
 	# was never the reported defect.
-	if body and colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722 < 0.95:
+	# T1-CAST, 2026-08-30. The floor is now declared by the RANK
+	# (`npc_ranks.json`'s own `emission_floor`), not inferred from how bright
+	# the rank's albedo multiply happens to be. T1-LIGHT inferred it, gating on
+	# `tint luminance < 0.95`, and that gate had a hole its own comment named
+	# without seeing: it "still skips the trainer/Grandpa/villagers/captain/
+	# Warden, unchanged". True and correct for four of those five -- they have
+	# their own bright textures. False for the CAPTAIN, who is on the same
+	# near-black grunt-family texture the floor exists to rescue and whose tint
+	# is `#ffffff` only because the captain is the identity step of the
+	# multiply ladder. Measured through this exact path
+	# (`tools/_probe_rank_ladder.gd`): grunts landed 0.242-0.273 and officers
+	# 0.263-0.296, while the four captains the player actually fights -- Vance,
+	# Oreth, Halder, Vess -- landed at 0.093, a third of the officers BELOW
+	# them. The black-NPC defect did not close; it closed for two ranks of
+	# three and reopened on the rank with the most story weight, and the value
+	# ladder C2 asks to be readable on sight was running backwards.
+	# Keying off an explicit per-rank number fixes that without touching a
+	# single unranked character: a config with no `emission_floor` gets 0.0 and
+	# takes the untouched `else` branch below, exactly as today.
+	var emission_floor := float(_cfg.get("emission_floor", 0.0))
+	if body and emission_floor > 0.0:
 		material.emission_enabled = true
 	if material.emission_enabled:
 		# STRANDED-P3: a dark tint (a Team Tether rank palette, e.g. the grunt's
@@ -585,11 +605,14 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 		# floor can. Landed short of the lit crate's own control values
 		# (66.1/54.1) on purpose -- the uniform is meant to read dark, just not
 		# unlit-black.
-		const EMISSION_FLOOR_ADD := 0.18
-		var tint_luminance := colour.r * 0.2126 + colour.g * 0.7152 + colour.b * 0.0722
-		if tint_luminance < 0.95:
+		# `emission_floor` is T1-LIGHT's own 0.18, moved into `npc_ranks.json`
+		# where a rank can state it. Same arithmetic as before for grunt and
+		# officer -- `colour * 0.18`, so their measured 0.155/0.168 adds are
+		# unchanged to the third decimal -- and the captain now gets the
+		# 0.18 the old gate withheld from it.
+		if body and emission_floor > 0.0:
 			material.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
-			material.emission = colour * EMISSION_FLOOR_ADD
+			material.emission = colour * emission_floor
 			material.emission_energy_multiplier = 1.0
 		else:
 			material.emission = material.emission * colour

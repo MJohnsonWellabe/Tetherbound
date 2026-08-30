@@ -1,391 +1,435 @@
-# Handover — T1-CAST (§15 creature presentation + §17 campsite), 2026-08-30
+# T1-CAST — the human cast as a set
 
-**Branch:** `ralph/T1-CAST`, off `origin/main` (`a97f3e84`). Every commit pushed
-as it landed, not batched at the end.
+Branch `ralph/T1-CAST` off `origin/ralph/LAND-0830I`. Owner directive mid-task:
+*"ensure that the game is using all of the characters we generated in meshy
+somewhere in the game where it's appropriate. not just reusing the same 3 NPCs
+when we generated 25."* That directive redirects this lane away from the
+bench-the-body fix T1-HALL-3 applied and toward using every installed rig.
 
-## What I was asked to do
+## 1. What is installed vs what actually stands in the world
 
-Track 1 (Aesthetics) lane, continuing where `ralph/T1-CREATURE` (§15) and
-`ralph/T1-CAMP` (§17) stood down — both already merged to `main` via
-`ralph/LAND-0829B`. My brief named specific open items from each
-predecessor's own handover:
+28 humanoid rigs are installed under `assets/characters/` and 31 keys in
+`data/config/art.json` point at them. Counting real placements in shipped data
+(`config_key` / `base` in `data/config/**`, not tests, not comments):
 
-- §15: get the Warrens Guardian backlight fix in front of the independent
-  judge (T1-CREATURE refused to grade its own work); check whether Creek
-  Hollow's `creek_edge` scatter puts individuals in deep water; prioritise
-  and sample bands 2/4 for the same rock-silhouette-contrast hypothesis
-  rather than blind-sampling; do not re-litigate Bramblebun's colour
-  problem, which is an owner decision.
-- §17: get a blind judge pass on the assembled campsite kit (captured but
-  never routed); get an opinion on whether the player bed and creature bed
-  being the literal same mesh reads as reuse or laziness; the bonfire's
-  textureless logs are real but risky to fix (shared asset, needs
-  `campfire_glow.gd::ignite()` re-verified).
+| Rig | Placements | Where |
+|---|---|---|
+| trainer | player | player body |
+| grandpa | scene | Grandpa Elias |
+| warden | boss | `stronghold_climax.gd` |
+| villager_male / villager_female | 20 | every villager AND every non-Tether trainer |
+| grunt | 3 | rank default for grunt/officer/captain |
+| grunt_a / grunt_b / grunt_c | 3 / 3 / 2 | Tether rank-and-file, bands 1-5 |
+| officer_a | 2 | Officer Dell, Warder Ness |
+| captain_a / captain_b | 2 / 2 | Vance, Oreth, Halder, Vess |
+| innkeeper, inn_helper, trader, craftsperson, creature_caretaker, farmer, local_historian, field_researcher, lost_traveler, alpha_tracker, courier, former_tether_member | 1 each | the twelve civilians placed this week |
+| **officer_b** | **0** | **stranded** |
+| **young_trainer** | **0** | **stranded** |
+| **rival_trainer** | **0** | **stranded** |
+| **wandering_trainer** | **0** | **stranded** |
 
-## Where I got to — DONE and verified
+**Four generated bodies stand nowhere in the game.** They are installed, baked,
+wired into `art.json`, and never referenced by any placement.
 
-### 1. Creek Hollow's disc-scatter depth bug — a real, worse-than-before defect T1-CREATURE's centre-only fix left open, now fixed
+## 2. Why they are stranded, and the second half of the defect
 
-T1-CREATURE's depth correction (already on `main`) only checked the CENTRE
-point of each of the three water spawns' scatter disc. `encounter_director.gd`'s
-own scatter draw (`distance = radius * sqrt(rng.randf())`, line ~284-296) is
-a uniform-AREA sample over the whole disc, which — because a disc's area
-grows with radius — puts MOST of a large disc's probability mass near its
-OUTER edge, not the centre that was actually verified.
+`officer_b` was the Warden's courtyard figure. JUDGE-5 D2 condemned it blind;
+T1-HALL-3 fixed that by deleting the `base` override, which returned the
+courtyard to the rank's shared `grunt` rig and left `officer_b` with no home.
 
-The scatter is fully deterministic (seeded from `hash("wild_spawn_%d" %
-order)`, never `randomize()`d — confirmed by reading the code directly), so
-I reproduced the exact placement math in a standalone probe rather than
-re-rendering blind. **This matters: the predecessor's own suggested next
-step ("re-render a few times to sample the scatter") would have shown the
-identical two points every single time and found nothing.**
+The other three were never placed at all — and the reason is visible in the
+data. **Every non-Tether trainer in the chapter is wearing a villager body:**
 
-Found:
-- paddlenewt individual 1 (order 6): 13.8m from centre, 3.38m depth —
-  fully submerged, *deeper than the cluster's original pre-fix defect*.
-- brooktail's sole individual (order 8): 11.1m out, 1.65m depth — also
-  fully submerged.
-- mosshell (order 7): 27% clear — weak but not broken.
+| Trainer | Role | Currently |
+|---|---|---|
+| `practice_trainer` Bryn | the chapter's first trainer fight | `villager_farmer` (villager_female) |
+| `trainer_mira` / `trainer_oskar` / `trainer_tam` | the three village trainers | villager rigs |
+| `tournament_quarter/semi/final` | the tournament ladder | the same three villager rigs again |
+| `old_champion_bram` Old Bram | the retired champion | `villager_farmer` — the **female** villager rig |
+| `pasture_drover_juno` Juno | the band-4 roadside trainer | `villager_ranger` |
 
-Root cause, confirmed with a full-disc grid probe (not just the seeded
-points): the lakebed drops off steeply from all three centres — worst-case
-depth grows roughly monotonically with radius (paddlenewt: 0.66m depth at
-r=0.5m to 4.2m at r=11-14m). The centres T1-CREATURE found sit right at the
-top of a real drop-off, not in the middle of a flat shallow shelf, so no
-radius large enough to look like a real "scatter" also clears the water.
+Nine trainer fights, two bodies between them, while three purpose-built trainer
+rigs sit unused. `old_champion_bram` on `villager_farmer` is also a straight
+mismatch: the same character is `villager_keeper` (male rig) as a villager in
+`village_npcs.json` and a female rig as a trainer.
 
-**Fixed:** shrunk each cluster's radius (paddlenewt 14.0→0.4m, mosshell
-10.0→3.0m, brooktail 14.0→2.0m). Centre/species/count/habitat untouched.
-Re-verified against the real seeds: paddlenewt 55%/100% clear, mosshell
-68%, brooktail 58% — all now a real visible read.
+## 3. The idiom split (JUDGE-5 D2, measured)
 
-**Mirrored** into `tests/fixtures/band_split_baseline/spawns.json` per that
-fixture's TRACKED MIRROR policy — confirmed `radius` is one of the pinned
-identity fields (the comparison test does a full dict diff per entry, not
-just a named-key subset), and these three entries are already tracked there
-from T1-CREATURE's own mirror commit.
+Measured over the alpha-masked, non-empty region of each atlas
+(`docs`-free repro in this report's own commit):
 
-Tests: `test_band_content.gd` (6), `test_spawns_data.gd` (23), 2383
-assertions, 0 failed. Full suite (below) also green.
+| Group | median luma | mean lit RGB |
+|---|---|---|
+| production rigs (trainer/grandpa/warden/villagers) | 0.169 - 0.258 | warm, browns/olives/creams |
+| `grunt` (Tether production rig) | 0.140 | (0.198, 0.143, 0.141) mauve-maroon |
+| Meshy Tether cast (grunt_a/b/c, officer_a/b, captain_a/b) | **0.086 - 0.114** | purple-black, no oxblood |
 
-Tools added, all committed: `tools/_probe_creek_edge_scatter_depth.gd`
-(reproduces the real seed), `tools/_probe_creek_edge_disc_depth.gd`
-(full-disc grid search + safe-radius search), `tools/_probe_creek_edge_radius_search.gd`
-(scratch, used to converge on final radii against the real seed before
-committing).
+The seven Meshy Tether bodies are a different rendering language: crushed
+near-black grounds, saturated purple-magenta accents, blown-out flat faces with
+painted eye/mouth, and hair as a solid magenta mass. That is what the blind
+judge read as "from a different game" — and it is a property of the seven
+atlases, not of the one figure that happened to be standing in the courtyard.
 
-### 2. Warrens Guardian silhouette — judged, fixed again, judged again, now passing
+## 4. The regression in the Warden's courtyard — what put her there, and what stands there now
 
-T1-CREATURE's own backlight fix (already on `main`) had never been
-independently judged. Routed the EXISTING committed evidence
-(`ralph/reports/T1-CREATURE/shots/guardian-den-AFTER-full.png` /
-`-crop.png`) to a blind Fable pass (`Agent` tool, `model: fable`, no context
-on what changed) rather than re-rendering first, since the frames were
-already captured and a fresh render would cost ~50 minutes to look at a fix
-that hadn't changed.
+**What put her there.** `data/config/bands/band5_stronghold_approach/trainers.json`,
+entry `stronghold_courtyard` (Warder Solene). T3-INSTALL gave that entry a
+`base: "officer_b"` override, which `trainer_npc.gd::model_config()` passes to
+`npc_ranks.gd::config_for()` as `base_override`, replacing the rank's own default
+body for that one trainer. The rank's default *is* `grunt` for grunt, officer and
+captain alike, so before T3-INSTALL the courtyard fielded the oxblood grunt
+silhouette JUDGE-5 preferred.
 
-**Round 1 verdict: "no — not reliably."** Upper silhouette separates where
-the wall happens to be mid-tone, but "the front half is the problem: the
-head and chest sit against the darkest corner of the frame" and "lower
-legs/paws again merge into the dark floor-wall junction." Root cause: the
-backlight aims at ONE wall segment, but the guardian's own 1.5m wander
-rotates which wall is behind it each render; floor-level contrast was never
-addressed (both prior lights sit at y≥1.8).
+**It was already fixed on this branch before this lane started, and this lane
+verified rather than assumed it.** T1-HALL-3 deleted the override for the three
+bodies standing inside the Hall (`stronghold_courtyard`, `stronghold_patrol`,
+`stronghold_elite`) after reading JUDGE-5 D2. The courtyard therefore returns to
+the rank's shared `grunt` production rig. See §7 for the rendered frame.
 
-**Fix:** one more light in `burrow_warrens.json`'s `lights` array, centred
-ON the guardian's own home stand `[3,44]` at y=1.0 (leg height) instead of
-aimed at a wall — rides with the wander instead of depending on facing, and
-lifts the floor-wall junction specifically.
+**But the fix stranded the asset, and the defect was never cast-wide fixed.**
+Deleting the override took `officer_b` out of the game entirely (§1) and left the
+other six generated Tether bodies — all carrying the same idiom — standing in
+fourteen fights across bands 1-5. JUDGE-5 read one figure; the property it
+condemned belongs to seven.
 
-**Re-rendered and re-judged, round 2 verdict: "yes."** "The silhouette
-reads, carried by the dark body against a mid wall and the floor light pool
-under it... legible, thanks to the light pool — the feet read against
-ground." Two things named as still-open but explicitly NOT this fix's job:
-the alpha's moss-green back plates sit near the wall's own value (a colour
-problem — see the new BLOCKED.md entry, same class as Bramblebun) and a
-second body at the frame edge (near-certainly the den's own resident
-trailpup) "reads as a grain sack, not a creature" — a different resident's
-own presentation, flagged and left alone.
+## 5. The black-NPC defect did NOT hold. It reopened on the captains.
 
-`tests/smoke_warrens.gd` re-run clean both times (9 lights load correctly).
+`ralph/MEADOWS_EXIT_CRITERION.md` C1 records the defect as "closed 2026-08-30
+with measurements — grunts 13→31.5/255 day, 15→51.7 night". Those numbers are
+real and this lane reproduces them. They cover two ranks of three.
 
-### 3. Bramblebun's grass-contrast problem, formally recorded (not touched)
+`character_model.gd`'s additive emission floor is gated on **tint luminance
+< 0.95**. The captain's palette multiply is `#ffffff` *by design* — it is the
+identity step of the value ladder, "the brightest of the three grunt-rig ranks IS
+the texture as painted". So the gate reads the captain as a bright character
+needing no help. T1-LIGHT's own comment says as much, and treats it as correct:
+the floor "still skips the trainer/Grandpa/villagers/captain/Warden, unchanged".
 
-Two prior lanes had the 1.08:1 luminance finding and the two candidate
-fixes (repaint or stronger rim) but never a `BLOCKED.md` entry. Added one,
-consolidating the existing measurement rather than re-measuring, and
-explicitly not re-litigating.
+That is right for four of those five. They have their own bright textures. It is
+wrong for the captain, who is on the **same near-black grunt-family texture the
+floor exists to rescue** (`captain_a`/`captain_b` median 0.093 — the darkest
+character atlases in the game).
 
-### 4. Band 2/4 rock-silhouette prioritisation — computed, sampled, and a real, honest negative-then-corrected result
+Measured through the real build path, `tools/_probe_rank_ladder.gd` (new, this lane):
 
-T1-CREATURE's own handover named the exact gap: "sample 2 of 55 blindly" vs
-"check the 5 that are actually near rock", asking for a computed
-prioritisation check before spending more render budget.
+| rank | individual | texMedian | albedoMul | emissAdd | **effective** |
+|---|---|---|---|---|---|
+| grunt | Dorn / Pell / Kest | 0.101-0.113 | 0.863 | 0.155 | 0.242-0.253 |
+| officer | Dell / Ness | 0.102 | 0.933 | 0.168 | 0.263 |
+| captain | **Vance / Oreth / Halder / Vess** | 0.093 | 1.000 | **0.000** | **0.093** |
 
-Wrote `tools/_probe_band24_slope_priority.gd` — rather than distance to the
-1-3 authored rock-prop clusters per band (too few points to explain 130+
-spawns), used the REAL driver of rock-background risk:
-`vegetation.json`'s global "rocks" scatter layer places boulders
-procedurally by terrain SLOPE everywhere in the world (`min_slope_deg: 6,
-max_slope_deg: 44`, read directly from that layer's own config), not from
-an authored point list. This is a lightweight terrain-only probe (no scene
-load, seconds not minutes), computing `slope_degrees_at()` at every band
-2/4 spawn centre and ranking by slope. Rendered the top 3 per band.
+**The ladder ran backwards.** The four captains the player actually fights
+rendered at roughly a third of the officers below them, and were the darkest
+humans in the game — the exact defect C1 claims closed, on the rank carrying the
+most story weight.
 
-**A blind Fable pass on the 6 candidates found two real, distinct
-low-contrast pairings** (not the specific "rock" hypothesis, but real
-findings from the prioritised list): burrowbacks visually confusable with
-actual boulders on the same hillside (band2-2025), and meadowharts blending
-into dried tan grass — colour-mimicry, not rock (band4-4038). The other four
-candidates read fine.
+**Fix.** The floor is now declared by the rank (`npc_ranks.json`'s own
+`emission_floor`, 0.18 — T1-LIGHT's own render-verified constant) instead of
+inferred from how bright the albedo multiply happens to be. `npc_ranks.gd`
+carries it into the config; `character_model.gd` applies it to body surfaces when
+the config declares one. A character with no rank has no key, gets 0.0, and takes
+the untouched branch — so nothing outside the three Tether ranks moves.
 
-**One "confirmed" finding turned out to be a capture-methodology bug I
-introduced and then caught myself:** band2-2044 (duskhush) was judged as
-essentially invisible against a rock face. Investigating why led to reading
-`encounter_director.gd`'s own `_sync_spawn_gates`
-(`wild.visible = _gate_active(gate)`) and finding this spawn carries
-`"time": "night"` — my capture tool pins the clock to DAY for every point,
-so the creature was correctly invisible (never spawned-visible), not
-failing a silhouette test. **Re-rendered the same vantage with night
-pinned** (`tools/_capture_band2_2044_night.gd`) and the two duskhush are
-clearly visible — on grass near the rock formation, not against it, reading
-fine. Documented plainly as a corrected methodology error rather than
-silently dropping the finding or leaving the wrong conclusion standing.
+After, same probe:
 
-**Net result for §15's band 2/4 rock-silhouette hypothesis, after
-correction: not confirmed as a broad problem.** Two secondary, real,
-smaller-scope defects found (burrowback/boulder confusion, meadowhart/dry-grass
-blending) — recorded here, not fixed this round; neither is the severe
-"creature never breaks the surface" class of defect Creek Hollow had, and
-neither is squarely "rock" specifically.
+| rank | individual | **effective** |
+|---|---|---|
+| grunt | Dorn / Pell / Kest | 0.242-0.253 |
+| officer | Dell / Ness | 0.263 |
+| captain | Vance / Oreth / Halder / Vess | **0.273** |
+| grunt / officer / captain | rank defaults | 0.273 / 0.296 / **0.317** |
 
-### 5. Campsite kit (§17) — judged, two real fixes shipped and re-verified, two real defects found and left open
+Grunt and officer are unchanged to the third decimal — their adds are still
+0.155/0.168 — so T1-LIGHT's measured result is preserved exactly. The captains
+lift 0.093 → 0.273, and the ladder ascends by rank.
 
-Re-rendered both predecessors' capture tools (`tools/_capture_t1_camp.gd`,
-`tools/_capture_t1_camp_assets.gd` — output lives under gitignored `shots/`,
-so this needed a fresh render regardless of whether the kit itself changed)
-and routed to a blind Fable pass for the first time ever on this kit.
+## 6. The idiom split, fixed in the atlas rather than by benching the bodies
 
-**Round 1 verdict: "partially" clears the bar.** Two priorities named:
+Purple/magenta share of saturated pixels, before → after
+(`tools/regrade_tether_textures.py --check`):
 
-1. `Bonfire_Fire.obj`'s `Wood`/`LightWood` surfaces are genuinely
-   textureless in the source pack (confirmed reading the `.mtl` directly —
-   `Kd` colour only, no `map_Kd`) and were called "flat-shaded, untextured,
-   mauve-pink low-poly blocks that read as plastic, not wood" — named the
-   kit's single worst asset.
-2. The player bed and creature bed (same `camp_bed.glb`) render
-   pixel-identical, including a human pillow on the creature's own bed —
-   "reads as a mistake, not a shared-gear story."
+| rig | before | after |
+|---|---|---|
+| production rigs (trainer, villagers, grandpa, grunt) | 0.0-0.1% | *(reference, untouched)* |
+| grunt_a | 2.7% | 0.0% |
+| grunt_b | 24.5% | 0.0% |
+| grunt_c | 4.7% | 0.2% |
+| officer_a | 24.3% | 0.3% |
+| officer_b | **34.8%** | 0.2% |
+| captain_a | 20.9% | 0.0% |
+| captain_b | 19.6% | 0.4% |
 
-**Fix 1, the logs — two iterations, the first a real lesson.** Added
-`campfire_glow.gd::texture_logs()`, applying the already-installed (no new
-Meshy spend) `generated_camp/camp_firewood_base_color/normal` textures —
-generated for a whole *rejected* replacement mesh, but the texture itself
-was never the rejected part — onto the Wood/LightWood surfaces via
-`set_surface_override_material` (same pattern `ignite()` already uses, so
-the shared Mesh resource other instances use is untouched). Called from
-BOTH `camp.gd` (player-built) and `props.gd`'s `glow: "campfire"` branch
-(every authored trail_camp fire) — a shared fix, not scoped to one caller,
-which is the exact mistake both predecessors flagged and declined to
-repeat.
+The tool rotates only that hue band, toward the hue the hand-built `grunt` rig
+already sits at (median 354.7°, measured off the faction's own shipped body, not
+picked), weighted by depth-into-band and by saturation so nothing near-neutral
+steps and no banding appears at the selection edges. Skin, leather, metal, cream
+and the reserved tether teal are untouched. No Meshy spend, no new mesh, no
+re-rig — `CLAUDE.md` names materials and textures as the sanctioned lever, and
+`npc_ranks.json` had already used it once when it moved the faction colour "into
+the texture".
 
-Round 1 (plain UV-mapped texture) came back from a blind re-check
-UNCHANGED — "no bark, no grain... a single lighter tone", pixel-identical
-to before. Investigated with `tools/_probe_bonfire_uvs.gd`: the surfaces
-carry **no UV1 data at all** in Godot's OBJ import — not a scale problem,
-there was no UV space for a texture to map onto. Switched to
-`material.uv1_triplanar = true` (projects from object-space position,
-needs no UV coordinates) — this is a real, different lever, not a retry of
-the same one. Re-rendered, re-judged: **"the logs... are no longer flat
-plastic blocks... acceptable at gameplay distance, not yet convincing in
-close-up"** — a real, if partial, improvement. Was the kit's worst asset;
-no longer named as such.
+`data/config/palette.json` reserves `tether_oxblood` (#332228) and says why:
+"it appears only on Team Tether banners, equipment and uniforms, never on
+friendly or neutral elements. A reserved colour is what lets a player read threat
+at distance without a marker." Seven bodies rendering magenta were not spending
+that reservation. JUDGE-5 said the courtyard swap "cost the Team Tether colour
+identity"; this is that cost measured and paid back.
 
-**Fix 2, the twin beds.** `camp_bed.glb` carries its whole model on ONE
-mesh surface (confirmed: `tools/_probe_camp_bed_surfaces.gd`), so there is
-no separate pillow/blanket surface to isolate — the only lever without a
-second Meshy generation is a whole-object tint, the same "one mesh, many
-materials" economy `tm_orb` already uses. Added a `mesh_instances()`
-accessor to `build_piece.gd` (minimal, read-only, exposes what `_spawn()`
-already builds internally) so `creature_bed.gd` can tint its OWN placement
-via `set_surface_override_material` without touching the shared Mesh other
-placements (the player's own bed, the authored trail_camp) use.
+## 7. What was standing in the Warden's courtyard, and what stands there now
 
-Round 1 tint (`Color(0.74, 0.86, 0.80)`) measured as a real shift when
-pixel-sampled directly (pillow `(166,138,107)` → `(113,113,84)`) but was
-too subtle to register as "a different bed" visually. Round 2
-(`Color(0.55, 0.85, 0.62)`, channels pushed further apart) produces an
-unmistakable moss-green. Re-rendered, re-judged: **"[the beds] mostly
-work... reads as a deliberate his-and-theirs pair, not a duplicate."** One
-caveat noted, not a defect: the tint covers the whole mesh (wood, rope,
-fabric together) rather than fabric alone, which the judge called "a
-judgement call, not a mistake."
+**Was:** Warder Solene on `officer_b` — a generated Meshy body carrying an anime
+idiom and a purple-magenta palette with no oxblood in it, put there by
+T3-INSTALL's per-trainer `base` override.
 
-**Deliberately did NOT change:** bed scale (would move `REST_ANCHOR`/
-`BED_SINK_LIFT`, both measured against the unscaled mesh and load-bearing
-for `tests/smoke_gate_a_rest_torch.gd`'s real resting-creature placement —
-a bigger, riskier change than the judge's ask justified on its own).
+**Now:** Warder Solene on the rank's shared `grunt` production rig — masked and
+capped, in the faction's dusty oxblood with a sigil cap badge, crossed straps and
+a belt rig. Rendered on this branch, `ralph/reports/T1-CAST/shots/hall/H-07-courtyard.png`,
+`capture_check` passing ("grass field bound to this camera and drawing").
 
-**Round 2 (final) verdict: still "partially," but the failure moved.**
-"The logs — previously the worst asset — are fixed to gameplay-distance
-standard; the bed pairing now reads intentional. What keeps it at
-'partially' is the workbench's mismatched hand-painted style and the
-crystal-like flame colour."
+Measured off that frame, so the "blown-out flat white face" claim is answered with
+numbers rather than a look:
 
-Both remaining items were investigated and deliberately left alone:
+| region | mean luma | clipped (>0.95) |
+|---|---|---|
+| face/mask | 0.498 | **0.0%** |
+| torso uniform | 0.339 | 0.0% |
+| legs | 0.269 | 0.0% |
+| stone wall behind | 0.375 | 0.0% |
+| cobble floor | 0.259 | 0.0% |
 
-- **The workbench's saturated, cartoon-hot style.** T1-CAMP's own
-  predecessor investigated this TWICE across two rounds and declined both
-  times, for a real reason still true today: it is the SAME prop family
-  used for every other buildable and scatter prop across the entire game.
-  Regrading it here would fix a local mismatch while creating a new one
-  against its own much larger family everywhere else. I re-confirmed the
-  reasoning holds and did not re-litigate a twice-settled call.
-- **The flame's "crystal shard" colour/shape**, unchanged this round.
-  `campfire_glow.gd`'s own header already documents three prior tuning
-  rounds on this exact `FIRE_EMISSION`/energy value (a round that clipped
-  to a white cone, then to a saturated-orange fix specifically to avoid
-  that under this renderer's tonemap). Retuning it again blind, with no
-  render budget left this session to iterate if it goes wrong, risked
-  undoing carefully-balanced prior work for an untested guess. Flagged
-  plainly as the kit's next real defect rather than touched speculatively.
+Nothing is clipped anywhere on the figure. The face is a pale cloth mask, lit, not
+blown. The torso sits between the wall (0.375) and the floor (0.259) — a person in
+clothing against the architecture, which is C1. The uniform reads against the
+oxblood banners above the doorway as the same faction.
 
-Tests: `test_camp_supply_reaches_every_band.gd`, `test_build_catalogue.gd`,
-`test_build_grid.gd`, `test_build_placer_preview.gd`, `test_free_build.gd`,
-`test_gate_a_build_segment_contract.gd`, `test_gather_point_props.gd`,
-`test_register_building.gd` (68 tests total), `tests/smoke_gate_a_rest_torch.gd`,
-`tests/smoke_free_build.gd` — all green. **Full unfiltered
-`tests/run_tests.gd` also run, sharded 4 ways (`--shard=N/4`) since it does
-not fit one invocation's time budget: shard 1 (433 tests), shard 2 (404
-tests), shard 3 (310 tests) all 0 failed; shard 4 was still running when
-this report was finalised — check its own tail before trusting it, though
-nothing in shards 1-3 or the targeted subsets above suggests a regression.**
+## 8. What did NOT get fixed, and why it is an owner question
 
-## An investigation dead end, recorded so nobody repeats it
+The regrade fixes colour. It cannot fix a face.
 
-I briefly suspected the `ERROR: Parameter "material" is null" /
-material_get_instance_shader_parameters` line that appears in
-`smoke_free_build.gd`/`smoke_gate_a_rest_torch.gd`'s output was a
-regression from my `set_surface_override_material` calls. Isolated it by
-temporarily commenting out every one of my new material-override call
-sites and re-running the same test: **the error count did not change (16
-before, 16 after, in both configurations)**. It is pre-existing headless/
-dummy-renderer noise, unrelated to this lane's changes — do not chase it
-again without a stronger lead than "it appeared near my new code in the
-log."
+The lineup render (`shots/rank_variety/12-lineup-all.png`, all eleven named
+grunt/officer/captain fights, post-regrade) shows the rank silhouette ladder
+working — grunts in short jackets, officers with chest chevrons, captains in full
+long coats with shoulder mantles, readable at lineup distance without a nameplate,
+which is C2. It also shows that **two of the seven generated bodies still do not
+belong in this world, and no material pass will change that**:
 
-**Caution for whoever reads this next:** while investigating this I
-briefly did a raw `git checkout <old-commit> -- <files>` directly in the
-working tree to compare behaviour, which — correctly, this is exactly what
-that command does — overwrote my own uncommitted-but-already-pushed files
-with the old versions. Caught it in the next command and restored with
-`git checkout <latest-commit> -- <files>` before anything was lost (nothing
-was uncommitted at the time, so nothing was actually at risk, but it was a
-close read of the situation, not a comfortable one). Use a `git worktree`
-for this kind of comparison, not a raw checkout in the branch you're
-actively working in — I switched to a worktree for the second, real
-baseline comparison and that was the safe way to have done it from the
-start.
+- **`grunt_c` (Pell, the Warrens watch)** is a chibi-proportioned figure in cargo
+  shorts and ankle socks with oversized stylised eyes. Its cyan hair is fixed
+  (1.9% → 0.00% teal); its build and face are geometry.
+- **`grunt_b` (Dorn, the quarry picket)** has the same oversized-eye face and a
+  hair mass that regrades from magenta to rose but stays a bright hair mass.
 
-## What I considered and deliberately did not do
+Both stand in Band 2, early, where the player is forming their first read of who
+Team Tether is. The colour identity is now right on both. The drawing idiom is not,
+and it is baked into the mesh and its face texture.
 
-- **Retinting Bramblebun or the guardian's back plates.** Both are
-  established creature colourways; see BLOCKED.md and the guardian note
-  above.
-- **Regrading the workbench or retuning the flame's emission colour.** See
-  above — both re-confirmed as deliberate, reasoned decisions, not gaps.
-- **A scale change on the creature bed.** See above — colour-only,
-  specifically to avoid moving load-bearing rest-anchor geometry.
-- **A general per-species rim-strength bump or any other change to
-  `creature_body.gd`'s shared silhouette/rim path.** Not needed this
-  round — every fix made was either spawn-position/radius data or a light/
-  material addition local to one placement, matching the brief's own
-  preference for targeted fixes over shared-system changes.
+**This is where I stop rather than invent.** `CLAUDE.md`: a new humanoid mesh is
+exceptional, must solve a real unmet player-facing need, and *still requires
+owner-supplied reference art* — and **never spend a Meshy generation without
+owner-supplied reference art.** I have none for these two. So, as an owner
+question rather than a spend:
 
-## Environment notes
+> `grunt_b` and `grunt_c` read as anime characters in a painted stylised-realism
+> world, in the mesh rather than the material. Three options: (a) leave them —
+> they are now in the faction's colour and only two of fourteen Tether fights are
+> affected; (b) bench both and let those two fights take the shared `grunt` rig,
+> which costs the per-individual identity T3-INSTALL added and puts two bodies
+> back on the shelf; (c) re-generate the two heads against owner-supplied
+> reference art, which is the only option that both keeps the bodies and fixes
+> the idiom, and which needs reference art I do not have.
 
-- Godot 4.7-stable was not preinstalled in this container. Downloaded to
-  the scratchpad and copied to `/usr/local/bin/godot`; will not survive a
-  fresh session.
-- `godot --headless --path . --import` cold run took ~8 minutes. Repeated
-  incremental runs (new `.gd` files only) took ~20 seconds each and were
-  safe to run WHILE two other Godot render processes were mid-run in the
-  background — confirmed multiple times this session, no corruption.
-- Ran up to 2 full `meadows_playground.tscn` capture jobs concurrently on a
-  4-core/15GB box without apparent slowdown or instability (~5GB RSS
-  each). Did not try 3+ concurrent.
-- The Creek Hollow scatter (and every `spawns.json` cluster) is fully
-  deterministic per boot (`hash("wild_spawn_%d" % order)`, never
-  `randomize()`d) — a predecessor's "re-render a few times" instinct will
-  not find anything a single render didn't already show; reproduce the
-  placement MATH instead if you need to check the full distribution, not
-  just one seeded sample.
-- A spawn's `time`/`weather` gate (`_sync_spawn_gates`) hides it via
-  `.visible`, not despawn — a capture tool that pins the clock will
-  silently make a gated spawn invisible with no error. Check `spawns.json`
-  for a `time`/`weather` key on a cluster before trusting a "this creature
-  is invisible" finding from a time-pinned capture.
-- `StandardMaterial3D.uv1_scale` does nothing on a mesh surface with no
-  UV1 array (Godot's OBJ importer does not always produce one) —
-  `uv1_triplanar = true` is the lever that works regardless of UV data,
-  since it projects from object-space position instead.
-- Use `git worktree add <path> <commit>` for a side-by-side behavioural
-  comparison against another commit, never a raw `git checkout <commit> --
-  <files>` inside the branch you are actively working on.
+`rival_trainer`, `young_trainer` and `wandering_trainer` carry no such problem —
+they were drawn in the world's own idiom and are placed (§9).
 
-## File footprint
+## 9. What this lane changed
 
-**Data:**
-- `data/config/bands/band1_lower_meadows/spawns.json` — 3 radius edits
-  (orders 6/7/8), each with an inline `_comment_disc_0830`.
-- `tests/fixtures/band_split_baseline/spawns.json` — mirrored the same 3
-  radius edits, per TRACKED MIRROR policy.
-- `data/config/burrow_warrens.json` — 1 new light in the `lights` array
-  (guardian floor wash) plus 2 new `_comment_*` entries recording the
-  judge verdicts.
-- `ralph/BLOCKED.md` — 1 new entry (Bramblebun contrast, owner decision).
+**Placement — every installed humanoid rig is now used somewhere.**
 
-**Code:**
-- `scripts/world/campfire_glow.gd` — new `texture_logs()` static function.
-- `scripts/build/camp.gd` — 1 new call (`texture_logs`).
-- `scripts/world/props.gd` — 1 new call (`texture_logs`).
-- `scripts/build/build_piece.gd` — 1 new accessor (`mesh_instances()`).
-- `scripts/build/creature_bed.gd` — new `_tint_creature_bed()`, called from
-  both `build_ghost()`/`build_real()`.
+| Body | Was | Now |
+|---|---|---|
+| `young_trainer` | nowhere | Bryn, the chapter's first trainer fight |
+| `wandering_trainer` | nowhere | Old Bram, the retired champion off the Band 1 road |
+| `rival_trainer` | nowhere | Juno, the Band 4 trainer road |
+| `officer_b` | nowhere | Warder Ness, the Sigil-gate checkpoint |
 
-**Tooling (dev-only, `tools/`):** `_probe_band24_slope_priority.gd`,
-`_capture_band24_rock_priority.gd`, `_capture_band2_2044_night.gd`,
-`_probe_creek_edge_scatter_depth.gd`, `_probe_creek_edge_disc_depth.gd`,
-`_probe_creek_edge_radius_search.gd`, `_probe_bonfire_uvs.gd`,
-`_probe_camp_bed_surfaces.gd` (+ `.uid` siblings for all).
+No new trainer fight was added. T3-LADDER removed three fights that existed only
+to house meshes, and it was right to — the chapter's 24-opponent ceiling is
+enforced by `test_chapter_content_map.gd` and Band 1 was already the "monotonous
+trainer hallway" Prompt 59 warns about. Every placement here **reassigns an
+existing fight**, so the census is unchanged and the bodies are spent on
+characters the player already meets.
 
-**Evidence:** `ralph/reports/T1-CAST/shots/` — guardian before/after,
-band2/4 candidate frames (day and the night-corrected duskhush frame), the
-full campsite kit (establishing/close/per-object, both rounds).
+It also fixes two things nobody had caught:
+- **Old Bram was wearing the female villager rig.** `villager_farmer` resolves to
+  `villager_female_lod0.glb`; the same character's `village_npcs.json` entry uses
+  the male one.
+- **Warder Ness had `base` declared twice** in one JSON object. The later key
+  wins, so T3-INSTALL's override was silently dead. Found by
+  `test_trainers_data.gd` after this lane's own edit collided with it; a scan of
+  every trainer table found no others.
 
-**Nothing else touched.** No changes to `creature_body.gd`, `interior_structure.gd`,
-`burrow_warrens.gd`, `encounter_director.gd`, `data/creatures/species.json`,
-`scripts/combat/**`, or any band's `props.json`/`vegetation.json` beyond what
-is listed above.
+**Code and data.**
+- `data/config/npc_ranks.json` — new per-rank `emission_floor` (§5).
+- `scripts/characters/npc_ranks.gd` — carries it into the built config.
+- `scripts/characters/character_model.gd` — body-surface floor now reads the
+  rank's declared value instead of inferring one from tint luminance.
+- `tools/regrade_tether_textures.py` — new; the atlas regrade (§6), idempotent,
+  no Meshy spend.
+- `tools/_probe_rank_ladder.gd` — new; the ladder measurement (§5).
+- `tools/_capture_t1_cast_world.gd` — new; player-distance world frames of the
+  four reassignments, `capture_check` at every shutter.
 
-## What I would do next, concretely
+## 10. The regrade took three rounds; here is what each one actually bought
 
-1. Confirm shard 4/4 of the full test suite finished green (it was still
-   running when this report was written — check its own log tail, or
-   re-run `tests/run_tests.gd -- --shard=4/4` if in doubt).
-2. If continuing §17: the flame's crystal-shard colour is the kit's one
-   remaining named defect after this lane. It needs care — three prior
-   tuning rounds are already recorded in `campfire_glow.gd`'s own header,
-   each fixing a real clipping problem under this renderer's tonemap — so
-   whatever's tried needs a render+judge cycle of its own, not a blind
-   retune.
-3. If continuing §15: bands 2/4's two secondary findings (burrowback/
-   boulder confusion at band2-2025, meadowhart/dry-grass blending at
-   band4-4038) are real but smaller-scope than Creek Hollow's — worth a
-   render-verified fix (a colour accent or modest scale/position nudge)
-   but not urgent.
-4. Get a real ROG Ally frame-time check on this lane's changes — none of
-   this session's work adds new geometry (a texture swap, a material
-   override, a light, and a radius edit are all effectively free), but
-   nobody has measured on real hardware, same honest gap every predecessor
-   in this cluster has logged.
+Convergence, not a round count (`ralph/conventions.md`). Each round was judged
+against a re-rendered `shots/rank_variety` set, not against the atlas thumbnails.
+
+**Round 1** — hue band `[258,342]` with a triangular falloff from the band centre,
+chroma ramp `0.12 → 0.30`. Measured the purple share down to 0.0-0.4% at the
+`s>0.30` threshold and the render confirmed the uniform FIELDS had moved. Two
+things it did not fix, both visible in the lineup: `grunt_c` (Pell) still had
+bright cyan hair, and the officers' and captains' chest chevrons and coat panels
+were still pale lilac.
+
+*Note on the falloff:* a triangular weight from the band centre was the first
+attempt and it barely moved anything — `grunt_b` went 24.5% → 23.7% — because its
+purple sits out near the band edges where a triangle has no weight left. Replaced
+with a plateau plus soft shoulders before round 1 was judged.
+
+**Round 2** — added a second pass for the cyan/blue band, chroma ramp lowered to
+`0.06 → 0.20`. Marginal. Pell's hair rotated *partway* and parked at green, which
+is not an improvement over cyan, just a different wrong colour; the pale lilac
+panels moved barely at all.
+
+**Round 3** — one root cause explained both leftovers. The chroma ramp was gating
+out exactly the pixel class that was failing: **high value, low chroma** — the pale
+panels, and the mint highlight speckles scattered through Pell's hair once its
+brown base had rotated. Those sat at the bottom of the ramp and rotated a fraction
+of the way. A pale pixel with a real hue should rotate fully — pale lilac and pale
+rose differ in nothing but hue, and a pixel with no hue at all is already excluded
+by `rgb_to_hsv`'s own `d < 1e-6` guard. Ramp dropped to `0.02 → 0.06`; the cyan band
+widened to `[132,232]` so a partial rotation cannot park inside it.
+
+Result, measured at the low-chroma threshold `s>0.04` where the residue actually
+lives:
+
+| rig | purple/magenta | cyan/blue |
+|---|---|---|
+| grunt_b | 0.05% | 0.00% |
+| grunt_c | 1.26% | 0.63% |
+| officer_a | 0.19% | 0.00% |
+| officer_b | 0.20% | 0.00% |
+| captain_a | 0.11% | 0.00% |
+| captain_b | 0.40% | 0.00% |
+| *`grunt`, the production reference* | *17.16%* | *0.12%* |
+| *`trainer`, not a subject* | *0.27%* | *8.90%* |
+
+The production `grunt` rig reads 17% "purple" at this threshold because oxblood at
+low chroma sits right on the red/purple boundary — which is the point: the
+generated cast is now well inside the range of the body the project built by hand.
+The trainer's own teal jacket (8.90%) is untouched, because the pass is scoped to
+the seven Tether subjects and never sees him.
+
+**Stopped here.** Pell's hair is plain brown at 5× magnification, cyan and speckles
+both gone. What is left in the lineup is a mauve cast on the chevrons and coat
+panels — and that is **lighting, not texture**: the atlases measure 0.11-0.20%
+purple, so a desaturated maroon under the bare stage's cool fill is what is
+reading lilac. Another regrade round cannot touch it, and the stage's lighting is
+not the game's.
+
+## 11. Evidence
+
+All frames on this branch under `ralph/reports/T1-CAST/shots/`, plus
+`shots/rank_variety/` for the controlled ladder set.
+
+| Frame | What it shows | capture_check |
+|---|---|---|
+| `shots/hall/H-07-courtyard.png` | the Warden's courtyard as it now ships | pass |
+| `shots/world/01-bryn-practice-field.png` | Bryn on `young_trainer`, village practice field | pass |
+| `shots/world/02-bram-off-road.png` | Old Bram on `wandering_trainer`, Band 1 clearing | pass |
+| `shots/world/03-juno-trainer-road.png` | Juno on `rival_trainer`, Band 4 road | pass |
+| `shots/world/04-ness-sigil-checkpoint.png` | Warder Ness on regraded `officer_b`, Hall visible behind | pass |
+| `shots/rank_variety/12-lineup-all.png` | all eleven named grunt/officer/captain fights together | n/a (bare stage) |
+
+**`capture_check` earned its keep twice on this lane, on my own tool.** Round 1 of
+`_capture_t1_cast_world.gd` did not hand Terrain3D the capture camera and did not
+pin the weather, and the check refused the frames for exactly that. Round 2 tripped
+"the capture camera's own position is inside 'Player'" — that one is the tool's own
+doing (it parks the hidden player at the camera so the grass ring and terrain
+bubble stream to the stand, the same trick `_judge_capture_hall.gd` uses), so the
+player is now passed in `ignore_bodies` the way that tool passes it, and the check
+still applies to every other body.
+
+The tool also carries `_judge_capture_hall.gd`'s hard-won settle lesson: **two
+settle passes with a real drawn frame between them, not one long one.** Frame count
+was never the lever — that tool measured the same stand at 5.5% and 54.6% green
+cover seconds apart in one run, because what a stand waits on is Terrain3D
+streaming the region in, and `grass_field` places its tufts in a shader off the
+live height and region maps.
+
+At player distance (8-9m, where the challenge prompt comes up) all four
+reassignments read as people who live in this world, and the grass field is dense
+and present in every frame.
+
+## 12. Acceptance — section C
+
+- **C1, NPCs read as people in clothing, never silhouette cutouts.** Was **not**
+  met on this branch despite being recorded as closed: captains rendered at 0.093
+  against grunts' 0.242-0.273. Now met, measured — captains lift to 0.273, and the
+  courtyard officer measures 0.339 torso against a 0.375 wall with 0.0% clipping
+  anywhere on the figure.
+- **C2, rank readable on sight.** Met, and now monotonic: rank defaults ascend
+  0.273 / 0.296 / 0.317. The lineup shows the silhouette ladder doing the primary
+  work as designed — grunts in short jackets, officers with chest chevrons,
+  captains in full long coats with shoulder mantles.
+- **C3, the cast is varied enough that the Meadows feels populated.** Improved:
+  four bodies that stood nowhere now stand somewhere, and the nine non-Tether
+  trainer fights no longer share two villager rigs between them.
+- **C4, named characters visually individual.** Improved: Bryn, Old Bram, Juno and
+  Warder Ness each have their own body instead of a repaint, and Old Bram is no
+  longer on the female villager rig.
+
+## 13. Open — for the owner
+
+1. **`grunt_b` and `grunt_c` are anime in the mesh** (§8). Three options laid out
+   there; the only one that both keeps the bodies and fixes the idiom needs
+   owner-supplied reference art, and `CLAUDE.md` forbids spending a Meshy
+   generation without it. **No generation was spent on this lane.**
+2. **`captain_accessory` is installed but is not a rig** and was not audited here;
+   it appears to be a prop rather than a body.
+3. The chapter is at its **24-opponent ceiling** (`test_chapter_content_map.gd`).
+   Every placement here reassigned an existing fight for that reason. If a rival
+   rung is ever authored — T3-LADDER flagged it as a real story-structure decision
+   and deliberately left it to whoever shapes the escalation — the census has to be
+   spent deliberately, not inherited because a mesh existed.
+### A nuance the world frames add to §8
+
+At the distance the challenge prompt actually comes up — 8-9m, where a figure is
+roughly 60px tall in a 1280×800 frame — **the anime idiom does not read.** All four
+reassignments, `officer_b` included, sit in the scene as people in clothing; what
+separates them is silhouette and colour, both of which are now right. The idiom
+break is a close-range problem, which matters because a Team Tether trainer *is*
+met close: the challenge conversation and the battle camera both bring the player
+in much nearer than a road-side glance. So the §8 question is real, but it is
+scoped to two bodies at conversation range, not to how the world reads while
+walking through it.
+
+Also worth naming from these frames, outside this lane's scope: the meadow grass is
+tall enough at these stands to partially occlude a standing NPC (clearest on Bryn
+and Juno). That is a readability observation about the grass, not about the cast.
+
+## 14. Tests
+
+| Suite | Result |
+|---|---|
+| `tests/run_tests.gd --only=character,trainers_data,chapter_content_map,npc` (5 files) | 66 tests, 1396 assertions, **0 failed** |
+| `tests/smoke_art.gd` | **OK** — models loaded, sized to their colliders, meadow dressed |
+| `tests/smoke_stronghold.gd` | **passed** |
+| `tests/smoke_village_trainer.gd` | **OK** — greet, challenge, fight, beat, shop |
+| `tests/smoke_boss.gd` | **passed** — the Warden challenge opens and the climax resolves |
+| `tests/smoke_trainer_battle.gd` | **OK** — this is the one that drives **Bryn**, the trainer whose rig this lane changed, through the real placement-and-prompt path end to end: challenged, fought through the team, beaten once, and not again |
+
+`test_trainers_data.gd` caught a real mistake mid-lane: my first edit to Warder Ness
+dropped her `position` key. It also surfaced the duplicate-`base` bug (§9) when the
+restored key collided with the dead one. Both fixed; a duplicate-key scan across
+every trainer table found no others.

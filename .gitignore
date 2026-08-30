@@ -65,3 +65,8 @@ tools/_scratch_*
 # derived from the creature glbs by tools/creature_anatomy_maps.py. Pure
 # derived data, a few MB each, rebuilt in about a second per species.
 *_anatomy.npz
+
+# T1-CAST: tools/regrade_tether_textures.py keeps a local pre-regrade copy of
+# each atlas it edits. Git history is the real backup; these are 4MB each and
+# do not belong in the tree.
+*_lod0_texture_0.orig.png

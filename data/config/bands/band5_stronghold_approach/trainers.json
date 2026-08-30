@@ -243,6 +243,8 @@
       "name": "Warder Ness",
       "_comment": "BAND5-CONTENT. The escalation step between `stronghold_outer_watch` and the doorstep gauntlet: an OFFICER (npc_ranks.json's ladder, one rung above grunt, the same rank `stronghold_courtyard`'s Warder Solene holds) standing just past the three-Sigil gate (`playground_world.gd`'s SIGIL_GATE_AT, (0,7400)) rather than before it. The gate itself already tells the player this ground is sealed to the unprepared; this fight tells them what is on the other side of that seal -- occupied, ranked, and getting worse. Three creatures against the outer watch's two, levels a step above his, still inside the band's [15,20] table and still below the courtyard's own 16-17.",
       "rank": "officer",
+      "base": "officer_b",
+      "_comment_base_t1_cast": "T1-CAST, 2026-08-30, owner directive: use the bodies that were generated. `officer_b` is the body JUDGE-5 (D2) condemned in the Warden's courtyard, and T1-HALL-3 answered that correctly for THAT frame -- the chapter's climax room is the last place to run an unresolved art-style risk -- but the answer left the asset standing nowhere, and the game's only two officer fights (Dell here in band 3, Ness here) were both wearing officer_a. This lane fixed the defect where it lived instead: `tools/regrade_tether_textures.py` measured the purple/magenta share of each generated Tether atlas against the hand-built rigs (production rigs 0.0-0.1%, generated cast 19.6-34.8%, officer_b worst at 34.8%) and rotated that band onto the hue the shipped `grunt` rig already sits at, bringing all seven to 0.0-0.4%. With the body in the faction's own colour, it can carry an officer fight. Placed at the Sigil-gate checkpoint rather than back in the courtyard: the courtyard keeps the shared oxblood grunt silhouette JUDGE-5 preferred, this spends the body one room earlier, and the two officers stop being the same person twice.",
       "position": [
         45.0,
         7440.0
@@ -282,8 +284,7 @@
       },
       "defeat_flag": "defeated_stronghold_checkpoint",
       "rechallenge": false,
-      "base": "officer_a",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_superseded": "T1-CAST, 2026-08-30. T3-INSTALL's `base: officer_a` was here, DUPLICATING the `base` key this entry now carries near the top -- a JSON object with the same key twice keeps the last one, so the override up there was silently dead until this was removed. Removed rather than moved: the reasoning it carried (give an individual a distinct generated body instead of the rank's shared silhouette, rank stays legible through the badge/palette layer) is unchanged and now lives on the surviving `base` key, which names `officer_b` so that the game's only two officer fights stop being the same body twice."
     }
   ]
 }
