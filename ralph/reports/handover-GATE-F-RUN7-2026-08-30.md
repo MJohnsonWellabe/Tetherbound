@@ -174,25 +174,70 @@ RUN6. The branch is pushed; check it at the job level, not the run level.
 
 ## 6. What I did not do, plainly
 
-- **The chapter was not played to the end.** I got through S02. That is two
-  segments of fourteen.
-- **S03 did not complete.** It ran ~16 minutes and I **stopped it** on the
-  owner's instruction to prioritise landing the fixes. It was not blocked and it
-  did not fail — there is no S03 verdict and I have deleted its partial
-  directory rather than leave evidence that could be read as a result.
-- **No pacing account, no dead-travel intervals, no encounter cadence, no
-  wall-clock estimate for a first clear.** Those need the chain, and two
-  segments cannot carry them. **I am not estimating a first-clear time from
-  S01+S02.** The brief asked for that number and the honest answer is that this
-  run did not earn one.
+**The chapter was not played to the end. I got through S02 — two segments of
+fourteen.** The run was stood down by the coordinator at 15:13Z, mid-effort,
+with the board being wound down; everything below is what that leaves undone,
+stated so nobody has to re-derive it.
+
+### How far the chain got
+
+| segment | state |
+|---|---|
+| S01, S02 | **COMPLETE** — see §2 |
+| S03 | started, ran ~16 min, **stopped by me** on the owner's instruction to prioritise landing the fixes. Not blocked, not failed. Its partial directory is **deleted** rather than left where it could be read as a result. |
+| S04–S10e | **not run, not attempted** |
+| X01–X08 | **not run.** X04 stays chain-gated behind S06 (RUN5's finding, still unchallenged); X06a/b/c remain priced-not-run from RUN6. |
+
+### I did NOT take `ralph/T5-PLAY`'s S03 fix
+
+The coordinator's 14:59Z routing said their S03 work was done and should be
+merged rather than re-authored. **I never reached S03**, so there was nothing to
+merge it into and nothing of mine to reconcile it against. **I authored no
+competing S03 fix.** Whoever restarts should take that branch's S03 work as the
+routing directed; nothing here conflicts with it.
+
+What I *did* take from T5-PLAY is separate and is recorded in §3 and §4:
+`run_chain.sh`, `probe_road_gate.gd`, and the two S02 anchor fixes (RIG-28) —
+their finding, their measurements, their probe.
+
+### The wall-clock estimate for a full first clear
+
+**I do not have one, and I am not going to guess.**
+
+The brief asked for it and the honest answer is that two segments cannot carry
+it. Three reasons, all disqualifying on their own:
+
+1. **Two of fourteen segments ran.** S01+S02 are the opening — bedroom, starter,
+   practice fight, first catch, key, gate. Roughly 21 minutes of play clock, and
+   nothing about the village, the tournament, four of five regions, the
+   Stronghold or the finale.
+2. **The harness's play clock is a floor, not a forecast** (T5-PLAY states this
+   well). It walks straight lines to named anchors, never hesitates, never reads
+   a menu twice and never gets lost.
+3. **Wall clock on this container is a rig number, not a player number** — a
+   software rasteriser and a ~90 s cold world stand-up per segment.
+
+What *can* be said, and is worth saying: **the opening's shape is now right.**
+The first fight is winnable, the first catch lands, the gate opens, and the
+player leaves the village with a team of two. That is the first ~20 minutes
+behaving as designed. Whether the remaining 3+ hours do is untested.
+
+### Everything else left undone
+
+- **No pacing account, no dead-travel intervals, no encounter cadence, no reward
+  audit, no regional presentation notes.** All need the chain.
 - **The findings documents were updated, not regenerated from `INVENTORY.json`
   as briefed.** A regeneration needs a run; I have two segments. I updated
   GAME-11 from this run's evidence, added RIG-28/29/30, and **deleted nothing I
   had not disproved.**
 - **GAME-11's fix is one sample against RUN6's five.** The pin removes the roll,
   so the variance is gone by construction — but "the starter reliably wins" is a
-  claim wanting repeats nobody has taken.
+  claim wanting repeats nobody has taken. **This is the cheapest high-value
+  thing the next lane can do.**
 - **GAME-12 is untouched** and still open.
+- **The capture lane was never run** — no frames, so nothing here is a claim
+  about how the chapter looks. Device frame rate, GPU time, VRAM and thermals
+  remain [OWNER-ONLY].
 
 ## 7. Full unit suite result
 
@@ -200,19 +245,58 @@ _Filled in below when the run finished. If this section still reads as a
 placeholder, the suite did not finish in this session and the branch is
 UNVERIFIED._
 
-## 8. What I would do next, in order
+## 8. The four next steps that were on the table
 
-1. **Read §7, then land this.** The three fixes unblock every future run, and
-   every run that starts without them repeats six runs of history.
-2. **Re-run S02 three or four times.** Cheap (~10 min each) and it converts
-   GAME-11's one sample into a reliability claim. It is the one piece of
-   evidence this branch is short of.
-3. **Re-derive S02-59 and S02-60's floors** (RIG-30) from the segment as it now
-   behaves, and record which run each number came from.
-4. **Then chain S03 → S06 before touching X04.** RUN5's ordering finding stands
-   and is still unchallenged: X04 re-seeds from `S06-exit.json` partway through,
-   so it is chain-gated, not entry-save-gated.
-5. **Settle COST-T5-5 with a second measurement** (§4). It is the thing that
-   will stop the next run at the village, and it currently rests on one sample.
-6. **Six one-line fixes for RIG-29**, and check whether `smoke_relay`'s flake
-   goes with them.
+Recorded because the coordinator asked for them explicitly: a future lane should
+not have to re-derive the options or why one was chosen.
+
+At the point the run was stood down, these were the four candidates:
+
+1. **Let the chain run** — keep S03→S10e going and report how far the chapter
+   gets. Most faithful to the Gate F brief. Risk: T5-PLAY hit the harness cost
+   gate at S03 step 136 of 406 on this class of box.
+2. **Land the fixes first** — stop, verify, and get the three fixes into a state
+   a LAND branch can take. **This is the one the owner chose**, and it is why
+   §5 and §7 exist at all.
+3. **Chase the village cost wall** — root-cause why the village costs ~4x what
+   it did at run 5 (T5-PLAY's COST-T5-5, which ruled out the POI scan and never
+   closed). It is the thing that will stop every future run at the same place.
+4. **Fix RIG-29's six smoke sites** and test whether `smoke_relay`'s 1-in-5
+   flake goes with them.
+
+Option 2 was chosen on the reasoning that a good entry save that lands is worth
+more than a longer run that does not — six runs of downstream evidence were
+taken against a broken save and none of it meant anything.
+
+## 9. What I would do next, in order
+
+1. **Read §7, then land this.** The three fixes unblock every future run, and a
+   run that starts without them repeats six runs of history.
+2. **Re-run S02 three or four times** (~10 min each). Converts GAME-11's one
+   sample into a reliability claim. The single cheapest piece of evidence this
+   branch is short of.
+3. **Take `ralph/T5-PLAY`'s S03 fix**, per the 14:59Z routing. I never reached
+   S03 and wrote no competing version, so it merges into a clean slate.
+4. **Re-derive S02-59 and S02-60's floors** (RIG-30) against the segment as it
+   now behaves, and record which run each number came from.
+5. **Then chain S04 → S06 before touching X04.** RUN5's ordering finding stands.
+6. **Settle COST-T5-5 with a second measurement.** It currently rests on one
+   lane's one sample, and it is what will stop the next run.
+7. **Two pre-existing failures want an owner** (§7): the stale playground
+   scatter bake — the test says every boot falls back to computing the full
+   corridor scatter, a ~60 s stall — and `trainers[8..10].base is missing`.
+8. **Six one-line fixes for RIG-29**, then check `smoke_relay`'s flake.
+
+## 10. A note on briefs, for whoever writes the next one
+
+Three runs in a row have been given a base branch that did not contain what the
+brief assumed. RUN6 was told to branch off `main`, which lacked RUN5. I was told
+`GATE-F-E5` carried what I needed; it carried the protocol half and not the data
+half, and its own handover says so in its first sentence. My brief also listed
+the X06 cost split and the smoke-shard baselining as work to do — RUN6 had
+already done both.
+
+None of these cost much individually. Together they are most of why six runs
+each spent their first hour rediscovering the same ground. **Check what a base
+branch actually contains before naming it**, and diff the brief against the last
+handover before issuing it.
