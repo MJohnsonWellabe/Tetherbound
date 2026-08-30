@@ -5,16 +5,18 @@
 
   "enabled": true,
 
-  "_comment_mote": "The 'something is here' cue: a soft camera-facing mote riding ABOVE the object. `height` is the load-bearing number in this file and it is not an aesthetic choice -- grass_field.json's blades stand 0.40-0.62m with 0.38 height jitter, so the carpet tops out around 0.86m and the ground lane is currently RAISING density. Brightness cannot win against opaque geometry; clearance can. At 1.15m the mote sits about 0.3m proud of the tallest blade, which is what lets the depth test stay honest (this is still occluded by terrain, trees and walls, exactly as a glow should be) while still reading over a thickening carpet. Raising this further starts to detach the glow from the object it is marking, which is what the ground aura below is for. `radius` is the quad's authored world radius before the shader's distance compensation.",
-  "_comment_mote_clearance": "`height` is a FLOOR, not a fixed altitude. The same treatment marks a 20cm TM orb and a felled log, and a mote buried inside a two-metre prop reads as a rendering bug rather than a cue -- so pickup_glow.gd::prop_clearance_height() measures the prop's own crown and lifts the mote to `prop_clearance` above it when that is higher. `max_height` is where it stops: past about eye height a glow stops belonging to the object under it and starts being a waypoint marker, which is the loot-beam failure this file is trying not to commit.",
+  "_comment_mote": "The 'something is here' cue: a soft camera-facing halo on the object itself. OWNER DIRECTIVES, 2026-08-30: 'glow on the actual item, not floating in the air above it' and 'don't make it take over the items actual geometry or design. just add the glow to them.' Both are structural, not cosmetic. The first killed an earlier version that hung the mark at a fixed 1.15m to clear the grass -- correct about grass, wrong about everything else, because a light hovering over an object is a waypoint marker rather than an object that glows. The second is why `behind` exists: a camera-facing quad centred on a small prop paints straight over it, so the player sees a bright disc where the object used to be. Pushing the quad `behind` metres away from the camera lets the item's own opaque geometry occlude the middle of its glow, so only the halo escapes around its silhouette and the item is still drawn whole.",
+  "_comment_mote_placement": "`body_fraction` is where on the prop the halo centres -- 0.55 of its measured crown, so a 20cm TM orb glows through its own middle and a two-metre deadwood pile glows through its trunk rather than over its head. `height` is only the fallback for a prop with no measurable mesh, and `max_height` is the ceiling that stops a tall prop's mark drifting up off the object it belongs to. Grass is then beaten by RADIUS: a halo this wide centred low still reaches above grass_field.json's ~0.86m canopy, but it reaches up OUT OF the object instead of hovering over it, which is the whole difference the owner asked for. tests/test_pickup_glow.gd asserts that reach against grass_field.json directly, so the ground lane raising blade height still fails loudly and names the number to move.",
   "mote": {
-    "height": 1.15,
-    "prop_clearance": 0.32,
-    "max_height": 2.2,
-    "radius": 0.34,
-    "core_power": 2.8,
-    "rim_gain": 0.38,
-    "strength": 0.95,
+    "height": 0.28,
+    "body_fraction": 0.55,
+    "max_height": 1.30,
+    "radius": 0.70,
+    "core_inner": 0.30,
+    "core_power": 1.3,
+    "rim_gain": 0.6,
+    "strength": 1.5,
+    "behind": 0.06,
     "pulse_hz": 0.5,
     "pulse_depth": 0.2
   },
@@ -23,9 +25,10 @@
   "aura": {
     "height": 0.06,
     "radius": 0.95,
-    "core_power": 1.5,
-    "rim_gain": 0.2,
-    "strength": 0.45,
+    "core_inner": 0.22,
+    "core_power": 1.3,
+    "rim_gain": 0.3,
+    "strength": 0.8,
     "pulse_hz": 0.5,
     "pulse_depth": 0.0
   },

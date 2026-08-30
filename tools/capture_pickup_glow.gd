@@ -209,11 +209,19 @@ func _grass_verdict(camera: Camera3D) -> String:
 	var field := _world.get_node_or_null(^"GrassField")
 	if field == null:
 		return "NO GRASS: no GrassField node in this world"
+	# `GrassField` IS a MultiMeshInstance3D (the tuft ring itself) and carries the
+	# stone and cover tiers as children, so the node has to be counted alongside
+	# them -- a first version searched only the children and reported the stone
+	# ring's 93k while the 315k tuft ring, the thing this check exists for, was
+	# never looked at.
 	var best_count := 0
-	for child: Node in field.find_children("*", "MultiMeshInstance3D", true, false):
-		var mm := (child as MultiMeshInstance3D).multimesh
-		if mm != null:
-			best_count = maxi(best_count, mm.instance_count)
+	var layers: Array[Node] = [field]
+	layers.append_array(field.find_children("*", "MultiMeshInstance3D", true, false))
+	for layer: Node in layers:
+		var mmi := layer as MultiMeshInstance3D
+		if mmi == null or mmi.multimesh == null:
+			continue
+		best_count = maxi(best_count, mmi.multimesh.instance_count)
 	if best_count <= 0:
 		return "NO GRASS: the grass field carries zero instances"
 	var drift := (field as Node3D).global_position.distance_to(camera.global_position)

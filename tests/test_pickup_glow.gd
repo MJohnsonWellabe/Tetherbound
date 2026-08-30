@@ -10,13 +10,20 @@ extends "res://tests/test_case.gd"
 ##      whole point of the shared treatment is that adding a seventh is one
 ##      call. `test_every_pickup_path_attaches_the_shared_highlight` reads the
 ##      scripts and fails if one draws a pickup without asking for the glow.
-##   2. **The grass grows past the mote.** This is the specific trap the lane
+##   2. **The grass grows past the glow.** This is the specific trap the lane
 ##      order named: the ground lane is raising grass density, and a highlight
-##      tuned against today's carpet is a highlight that stops working when
-##      theirs ships. Height is what beats grass, not brightness, so the mote
-##      height is asserted against `grass_field.json`'s OWN blade numbers rather
-##      than against a constant copied out of them -- if the grass gets taller,
-##      this fails and names the number to move.
+##      tuned against today's carpet is one that stops working when theirs
+##      ships. Blades are opaque, so the glow has to physically reach above them
+##      -- and it does that by RADIUS, because the owner's directive puts its
+##      centre down on the item. The reach is asserted against
+##      `grass_field.json`'s OWN blade numbers rather than a constant copied out
+##      of them, so taller grass fails here and names the number to move.
+##   3. **The glow eats the item.** Two owner directives on 2026-08-30 --
+##      *"glow on the actual item, not floating in the air above it"* and
+##      *"don't make it take over the items actual geometry or design"* -- are
+##      pinned by `test_the_glow_sits_on_the_item_not_above_it` and
+##      `test_the_glow_does_not_paint_over_the_item`. Both describe failures
+##      this treatment has actually shipped once each.
 ##
 ## Nothing here pins a look. Radii, colours, pulse and fade are the owner's to
 ## move on the Ally, and a test that pinned them would break every time the glow
@@ -75,28 +82,70 @@ func test_no_pickup_keeps_a_light_of_its_own() -> void:
 
 # --- the grass rule -------------------------------------------------------
 
-func test_the_mote_clears_the_grass_canopy_that_is_shipping() -> void:
-	# The whole reason this treatment is a HEIGHT rather than a brightness.
-	# Blades are opaque geometry; emission does not get you through one.
+## The tallest blade `grass_field.json` can currently grow.
+func _tallest_blade() -> float:
 	var grass := _json(GRASS_CONFIG)
-	var tallest := float(grass.get("height_far", 0.62)) \
+	return float(grass.get("height_far", 0.62)) \
 		* (1.0 + float(grass.get("height_jitter", 0.38)))
-	var mote := float(GLOW.config().get("mote", {}).get("height", 0.0))
-	assert_true(mote > tallest,
-		"the pickup mote sits at %.2fm and the grass field's tallest blade is %.2fm -- "
-		% [mote, tallest] + "raise `mote.height` in data/config/pickup_glow.json, or the "
-		+ "highlight is inside the carpet it is supposed to beat")
 
 
-func test_the_mote_clears_it_with_margin_not_by_a_hair() -> void:
-	var grass := _json(GRASS_CONFIG)
-	var tallest := float(grass.get("height_far", 0.62)) \
-		* (1.0 + float(grass.get("height_jitter", 0.38)))
-	var mote := float(GLOW.config().get("mote", {}).get("height", 0.0))
-	assert_true(mote - tallest >= 0.2,
-		"only %.2fm of clearance between the mote and the tallest blade; the ground "
-		% (mote - tallest) + "lane is still raising density and a hair of margin is a "
-		+ "regression waiting for their next push")
+func test_the_glow_reaches_above_the_grass_canopy_that_is_shipping() -> void:
+	# Blades are opaque geometry; emission does not get you through one, so the
+	# glow has to physically extend above the carpet to be seen over it.
+	#
+	# It does that by RADIUS, not by altitude. The owner's directive is that the
+	# glow is on the item -- so its centre sits low, on the prop's own body, and
+	# what clears the grass is the top of the halo. This asserts the reach
+	# against `grass_field.json`'s OWN numbers rather than a constant copied out
+	# of them: if the ground lane raises blade height or jitter, this fails and
+	# names the number to move.
+	var mote: Dictionary = GLOW.config().get("mote", {})
+	var reach := float(mote.get("height", 0.0)) + float(mote.get("radius", 0.0))
+	var tallest := _tallest_blade()
+	assert_true(reach > tallest,
+		"the glow reaches %.2fm and the grass field's tallest blade is %.2fm -- "
+		% [reach, tallest] + "raise `mote.radius` in data/config/pickup_glow.json "
+		+ "(NOT `mote.height`, which would lift it off the item), or the highlight "
+		+ "is inside the carpet it is supposed to beat")
+
+
+func test_it_reaches_over_the_grass_with_margin_not_by_a_hair() -> void:
+	var mote: Dictionary = GLOW.config().get("mote", {})
+	var reach := float(mote.get("height", 0.0)) + float(mote.get("radius", 0.0))
+	var margin := reach - _tallest_blade()
+	assert_true(margin >= 0.1,
+		"only %.2fm of reach above the tallest blade; the ground lane is still "
+		% margin + "raising density and a hair of margin is a regression waiting "
+		+ "for their next push")
+
+
+func test_the_glow_sits_on_the_item_not_above_it() -> void:
+	# OWNER DIRECTIVE, 2026-08-30: *"glow on the actual item, not floating in the
+	# air above it."* The first version hung the mark at 1.15m, above the grass
+	# canopy, which is exactly what this now forbids -- a light hovering over an
+	# object is a waypoint marker, not an object that glows.
+	var mote: Dictionary = GLOW.config().get("mote", {})
+	var centre := float(mote.get("height", 0.0))
+	assert_true(centre <= _tallest_blade(),
+		"the glow's centre is at %.2fm, above the %.2fm grass canopy -- it is "
+		% [centre, _tallest_blade()] + "floating over the item rather than sitting "
+		+ "on it. Reach over the grass with `mote.radius` instead.")
+	assert_true(centre > 0.0, "the glow's centre is at or below ground level")
+
+
+func test_the_glow_does_not_paint_over_the_item() -> void:
+	# OWNER DIRECTIVE, 2026-08-30: *"don't make it take over the items actual
+	# geometry or design. just add the glow to them."*
+	#
+	# A camera-facing quad centred on a small prop covers it, and the player
+	# sees a bright disc where the object used to be. `behind` pushes the quad
+	# away from the camera so the prop's own opaque geometry occludes the middle
+	# of its glow and only the halo escapes. Without it, the treatment replaces
+	# the item it is supposed to be pointing at.
+	var behind := float(GLOW.config().get("mote", {}).get("behind", 0.0))
+	assert_true(behind > 0.0,
+		"`mote.behind` is %.2f, so the halo is drawn ON TOP of the item rather "
+		% behind + "than behind it; the object it marks stops being visible")
 
 
 # --- tint -----------------------------------------------------------------
@@ -159,21 +208,21 @@ func test_the_glow_stops_before_it_becomes_a_map_marker() -> void:
 		"the far fade must start before it ends")
 
 
-func test_the_mote_never_floats_off_the_object_it_marks() -> void:
+func test_the_glow_never_drifts_off_the_object_it_marks() -> void:
 	var mote: Dictionary = GLOW.config().get("mote", {})
 	var ceiling := float(mote.get("max_height", 0.0))
 	assert_true(ceiling >= float(mote.get("height", 0.0)),
-		"max_height is below the configured floor height, so tall props would be "
-		+ "clamped BELOW their own crown")
-	assert_true(ceiling <= 3.0,
-		"max_height %.2f puts the mote above head height on a tall prop, which reads "
-		% ceiling + "as a waypoint rather than as the object glowing")
+		"max_height is below the configured floor height, so a short prop would be "
+		+ "clamped ABOVE its own centre")
+	assert_true(ceiling <= 1.6,
+		"max_height %.2f puts the glow above waist height even on a tall prop, "
+		% ceiling + "which reads as a waypoint rather than as the object glowing")
 
 
-func test_the_prop_clearance_rule_lifts_a_mote_over_a_tall_prop() -> void:
-	# `prop_clearance_height` is what stops the mote rendering INSIDE a felled
-	# log or a rootstone deposit. Built from primitives so this stays a unit
-	# test rather than a scene test.
+func test_a_tall_prop_glows_through_its_own_body() -> void:
+	# `prop_glow_height` centres the halo on the prop, so a felled log glows
+	# through its trunk rather than over its head OR down at its feet. Built from
+	# primitives so this stays a unit test rather than a scene test.
 	var node := Node3D.new()
 	var mesh := MeshInstance3D.new()
 	var box := BoxMesh.new()
@@ -182,18 +231,19 @@ func test_the_prop_clearance_rule_lifts_a_mote_over_a_tall_prop() -> void:
 	mesh.position = Vector3.UP * 0.9
 	node.add_child(mesh)
 
-	var floor_height := float(GLOW.config().get("mote", {}).get("height", 1.15))
-	var lifted := GLOW.prop_clearance_height(node, floor_height)
-	assert_true(lifted > floor_height,
-		"a 1.8m prop did not push the mote above the configured floor (%.2f)" % lifted)
-	assert_true(lifted <= float(GLOW.config().get("mote", {}).get("max_height", 2.2)) + 0.001,
-		"the clearance rule ignored its own ceiling (%.2f)" % lifted)
+	var floor_height := float(GLOW.config().get("mote", {}).get("height", 0.28))
+	var placed := GLOW.prop_glow_height(node, floor_height)
+	assert_true(placed > floor_height,
+		"a 1.8m prop put its glow at the same height as a 20cm one (%.2f)" % placed)
+	assert_true(placed < 1.8,
+		"the glow sits at %.2f on a 1.8m prop -- above its crown, which is the "
+		% placed + "floating-marker failure the owner rejected")
 	node.free()
 
 
-func test_a_short_prop_keeps_the_configured_grass_clearing_height() -> void:
-	# The TM orb is 20cm. Nothing about a small object should pull the mote back
-	# down into the grass.
+func test_a_short_prop_keeps_the_glow_down_on_itself() -> void:
+	# The TM orb is 20cm. A small object must not have its glow hoisted into the
+	# air; it glows where it is, and the halo's radius is what reaches the eye.
 	var node := Node3D.new()
 	var mesh := MeshInstance3D.new()
 	var sphere := SphereMesh.new()
@@ -203,7 +253,7 @@ func test_a_short_prop_keeps_the_configured_grass_clearing_height() -> void:
 	mesh.position = Vector3.UP * 0.1
 	node.add_child(mesh)
 
-	var floor_height := float(GLOW.config().get("mote", {}).get("height", 1.15))
-	assert_almost_eq(GLOW.prop_clearance_height(node, floor_height), floor_height, 0.001,
-		"a 20cm pickup moved the mote off the configured grass-clearing height")
+	var floor_height := float(GLOW.config().get("mote", {}).get("height", 0.28))
+	assert_almost_eq(GLOW.prop_glow_height(node, floor_height), floor_height, 0.001,
+		"a 20cm pickup moved its glow off the prop")
 	node.free()

@@ -224,9 +224,11 @@ func _build_visual() -> void:
 	#
 	# The shared highlight replaces it and keeps what the light was for: the
 	# TM's own type colour, presence from a distance, and no dependence on the
-	# Compatibility renderer's ambient. `height_override` puts the mote over the
-	# plinth-and-orb assembly rather than over the ground it stands on.
-	PICKUP_GLOW.attach(self, colour, ORB_CENTRE_Y + 0.95)
+	# Compatibility renderer's ambient. `height_override` puts the halo on the
+	# ORB rather than on the plinth: the automatic rule centres on the measured
+	# body, which for this assembly is the stone it stands on, and the thing the
+	# player is being pointed at is the sphere above it.
+	PICKUP_GLOW.attach(self, colour, ORB_CENTRE_Y)
 
 	set_process(true)
 

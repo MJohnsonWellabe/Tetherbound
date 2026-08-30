@@ -13,16 +13,21 @@ render_mode blend_add, unshaded, cull_disabled, depth_draw_never, shadows_disabl
 //
 // ## The three constraints this shape comes from
 //
-// 1. **It has to survive the grass that is SHIPPING, not the grass today.**
-//    The ground lane is raising density on `ralph/T1-GROUND-3` and the field's
-//    own blades stand 0.40-0.62m with 0.38 jitter, so roughly 0.86m at the
-//    tallest. Brightness does not beat opaque geometry: a glow at ankle height
-//    is behind a blade whatever its emission is. **Height is what beats grass**
-//    -- the mote rides above the canopy, so the depth test stays ON (this is
-//    occluded by terrain, trees and buildings exactly as it should be) and it
-//    still reads over the carpet. That is the whole reason `mote_height` in
-//    `data/config/pickup_glow.json` is the load-bearing number here and
-//    emission is not.
+// 1. **It is the ITEM that glows.** Two owner directives on 2026-08-30 shaped
+//    this: *"glow on the actual item, not floating in the air above it"* and
+//    *"don't make it take over the items actual geometry or design. just add
+//    the glow to them."* So the mark is centred on the prop's own body, and it
+//    is pushed BEHIND that body along the view axis -- the item is opaque and
+//    writes depth, so it occludes the middle of its own glow and only the halo
+//    escapes around its silhouette. The object is drawn whole, with light
+//    coming out from behind it, instead of being replaced by a bright disc.
+//
+//    Grass is beaten by RADIUS rather than by altitude. `grass_field.json`'s
+//    blades stand 0.40-0.62m with 0.38 jitter -- about 0.86m at the tallest --
+//    and a halo centred low on the prop still reaches above that, while
+//    reaching up OUT OF the object rather than hovering over it. The depth test
+//    stays honest either way: terrain, trees and buildings occlude this exactly
+//    as they should.
 //
 // 2. **No per-pickup light.** `item_cache_pickup.gd` and `tm_pickup.gd` each
 //    carried their own `OmniLight3D`, and the world holds well over a hundred
@@ -62,8 +67,12 @@ uniform float near_floor = 0.35;
 uniform float pulse_hz = 0.55;
 uniform float pulse_depth = 0.18;
 
-uniform float core_power = 2.6;
+uniform float core_power = 1.4;
+uniform float core_inner = 0.28;
 uniform float rim_gain = 0.35;
+// Metres the billboard is pushed away from the camera, so the item occludes the
+// middle of its own glow. See the note at the push itself.
+uniform float behind = 0.35;
 uniform float strength = 1.0;
 
 // 0 = camera-facing mote, 1 = flat ground aura (the instance transform already
@@ -110,20 +119,50 @@ void vertex() {
 		// the authored radius.
 		float authored = length(MODEL_MATRIX[0].xyz);
 		VERTEX *= authored * scale * alive;
+		// OWNER DIRECTIVE, 2026-08-30: the glow must not take over the item's own
+		// geometry or design.
+		//
+		// A camera-facing quad centred on the object paints over the front of it,
+		// so the player sees a bright disc where the object used to be -- the
+		// object stops being visible at exactly the moment it is meant to be
+		// noticed. Pushing the quad BEHIND the object along the view axis fixes
+		// that with the depth test rather than with opacity: the item is opaque
+		// and writes depth, so it occludes the middle of the glow and only the
+		// halo escapes around its silhouette. The item is drawn intact, with
+		// light coming out from behind it.
+		// `behind` is a small constant margin; INSTANCE_CUSTOM.y carries HALF THE
+		// PROP'S OWN CROWN, so a 20cm TM orb is cleared by 10cm and a
+		// two-metre deadwood pile by a metre. A single fixed push cannot do
+		// both: sized for the log it puts a small find's whole glow underground,
+		// and sized for the find it paints over the log.
+		VERTEX.z -= behind + INSTANCE_CUSTOM.y;
 	} else {
 		VERTEX *= scale * alive;
 	}
 }
 
 void fragment() {
-	// QuadMesh UVs run 0..1; a radial falloff from the middle.
+	// QuadMesh UVs run 0..1; a radial profile from the middle.
 	vec2 d = UV - vec2(0.5);
 	float r = clamp(length(d) * 2.0, 0.0, 1.0);
-	float falloff = pow(max(1.0 - r, 0.0), core_power);
-	// A faint wider halo under the core, so the shape has an edge that dies in
-	// the grass instead of a hard disc boundary.
+
+	// A disc with a real body, not a point with a long tail.
+	//
+	// The first version was `pow(1.0 - r, core_power)` alone, and the isolated
+	// render (`tools/_probe_pickup_glow_isolated.gd`) showed exactly what is
+	// wrong with that: at `core_power` around 2 the visible core is the middle
+	// fifth of the quad and everything outside it is below the noise floor of a
+	// bright daylit meadow. The quad's authored radius stopped predicting how
+	// big the glow READS, so tuning it was guesswork.
+	//
+	// `core_inner` is the fraction of the radius held at full strength before
+	// the falloff starts, so the disc has a body whose size is the radius that
+	// was authored, and `core_power` only shapes how softly it ends.
+	float core = pow(1.0 - smoothstep(core_inner, 1.0, r), core_power);
+	// A faint wider halo under it, so the shape dies into the grass rather than
+	// ending on a disc boundary.
 	float halo = pow(max(1.0 - r, 0.0), 1.1) * rim_gain;
-	float a = (falloff + halo) * v_fade * strength * COLOR.a;
+	float a = (core + halo) * v_fade * strength * COLOR.a;
 	ALBEDO = COLOR.rgb * a;
 	ALPHA = 1.0;
 }

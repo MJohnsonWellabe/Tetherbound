@@ -19,12 +19,19 @@ extends Node3D
 ##
 ## Two things per pickup, and both are needed:
 ##
-##   * a **mote** above the object, camera-facing, distance-compensated -- the
-##     "something is here" cue that has to survive a grass carpet from thirty
-##     metres away;
-##   * a **ground aura** lying flat at the object's foot -- the "it is exactly
-##     HERE" cue, which the mote alone cannot give because a mote clearing the
-##     grass is by definition not where the item is.
+##   * a **halo** on the object itself, camera-facing and distance-compensated,
+##     pushed BEHIND the prop along the view axis so the prop's own opaque
+##     geometry occludes the middle of it -- the item is drawn whole and the glow
+##     escapes around its silhouette;
+##   * a **ground aura** lying flat at the object's foot, which is what bleeds
+##     into the base of the grass and says the find is on the ground here.
+##
+## Two owner directives on 2026-08-30 shaped both. *"Glow on the actual item, not
+## floating in the air above it"* killed an earlier version that hung the mark
+## above the grass canopy; *"don't make it take over the items actual geometry or
+## design. just add the glow to them"* is why the halo is pushed behind the prop
+## rather than drawn over it. See `prop_glow_height()` and the shader's `behind`
+## uniform.
 ##
 ## ## Why one node and not a child of each pickup
 ##
@@ -69,9 +76,21 @@ static func config() -> Dictionary:
 	if file == null:
 		push_warning("pickup_glow.json missing at %s" % CONFIG_PATH)
 		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if parsed is Dictionary:
-		_config = parsed
+	var json := JSON.new()
+	if json.parse(file.get_as_text()) != OK:
+		# LOUD, because silence here cost a render round. A malformed config
+		# used to fall through to `{}`, every `get(key, default)` below then
+		# quietly returned the code default, and the world rendered a glow at
+		# the pre-tuning size and brightness -- so the capture looked exactly
+		# like the BEFORE frame and the obvious conclusion ("the shader is not
+		# drawing") was wrong. A config this file cannot read is a bug in the
+		# config, and it should say so rather than pretending it was never
+		# edited.
+		push_error("pickup_glow.json is malformed at line %d: %s -- the highlight is running on code defaults" % [
+			json.get_error_line(), json.get_error_message()])
+		return _config
+	if json.data is Dictionary:
+		_config = json.data
 	return _config
 
 
@@ -82,9 +101,9 @@ static func is_enabled() -> bool:
 ## Give `owner_node` the shared highlight. `colour` is the object's own tint --
 ## the key's gold, a TM's type colour, a berry bush's fruit -- so the glow says
 ## something about what is there rather than painting the whole world one
-## colour. `height_override` is for a prop whose visual is unusually tall (the
-## TM's plinth-and-orb assembly); everything else takes the configured height,
-## which is set to clear the grass canopy.
+## colour. `height_override` places the halo by hand on a prop whose measurable
+## crown is not where its body reads (the TM's plinth-and-orb assembly);
+## everything else is measured by `prop_glow_height()`.
 static func attach(
 	owner_node: Node3D, colour: Color, height_override: float = -1.0,
 	scale_multiplier: float = 1.0
@@ -143,13 +162,19 @@ func _ready() -> void:
 
 func _build_layer(shader: Shader, look: Dictionary, billboard: bool) -> MultiMeshInstance3D:
 	var quad := QuadMesh.new()
-	quad.size = Vector2.ONE
+	# 2x2, so its corners sit at +/-1 and the `radius` the config authors is a
+	# RADIUS. At the default 1x1 the corners are at +/-0.5, so every authored
+	# radius silently rendered at half size -- which is most of why an early
+	# tuning round kept concluding "the glow is too faint" and reaching for
+	# `strength` when the real answer was that the quad was half the size the
+	# config said.
+	quad.size = Vector2(2.0, 2.0)
 
 	var material := ShaderMaterial.new()
 	material.shader = shader
 	material.set_shader_parameter("billboard", 1.0 if billboard else 0.0)
 	# Explicit, because the config blocks also carry numbers the shader has no
-	# uniform for (`radius`, `height`, `prop_clearance`, `max_height` are all
+	# uniform for (`radius`, `height`, `body_fraction`, `max_height` are all
 	# consumed on the CPU side in `_rebuild`), and a silently-ignored parameter
 	# name is the kind of thing that costs a render round to notice.
 	var shared: Dictionary = config().get("distance", {})
@@ -160,7 +185,10 @@ func _build_layer(shader: Shader, look: Dictionary, billboard: bool) -> MultiMes
 	]:
 		if shared.has(key):
 			material.set_shader_parameter(key, float(shared[key]))
-	for key: String in ["core_power", "rim_gain", "strength", "pulse_hz", "pulse_depth"]:
+	for key: String in [
+		"core_power", "core_inner", "rim_gain", "strength", "behind",
+		"pulse_hz", "pulse_depth",
+	]:
 		if look.has(key):
 			material.set_shader_parameter(key, float(look[key]))
 
@@ -228,16 +256,30 @@ static func glow_tint(colour: Color) -> Color:
 	return out
 
 
-## How tall the prop this glow is marking actually is, so the mote sits ABOVE it
-## rather than inside it.
+## Where on the prop the glow sits.
 ##
-## The configured `mote.height` is set to clear the grass canopy, which is the
-## case that matters for a TM orb or a key lying in a field. But the same
-## treatment marks a felled log and a rootstone deposit, and a mote buried in
-## the middle of a two-metre prop reads as a rendering bug rather than a cue. So
-## a taller prop pushes the mote up to its own crown plus the same clearance,
-## capped -- past about eye height the glow stops belonging to the object.
-static func prop_clearance_height(node: Node3D, floor_height: float) -> float:
+## OWNER DIRECTIVE, 2026-08-30: **"glow on the actual item, not floating in the
+## air above it."**
+##
+## The first version put the mote a fixed 1.15m up, above the grass canopy, on
+## the reasoning that brightness cannot beat opaque geometry but clearance can.
+## The reasoning about grass is still true and the answer was still wrong: a
+## light hanging in the air over an object is a waypoint marker, not an object
+## that glows, and it is the exact loot-beam register this treatment is supposed
+## to avoid.
+##
+## So the glow is centred **on the prop's own body** -- the middle of its
+## measured crown, so a 20cm TM orb glows at 12cm and a two-metre deadwood pile
+## glows through its middle rather than over its head.
+##
+## Grass is then beaten by RADIUS instead of altitude. The glow is a soft disc
+## roughly as wide as `mote.radius`, so a mark centred at 0.12m still reaches
+## well above the 0.86m canopy `grass_field.json`'s own numbers produce -- but it
+## reaches up out of the object, which is what makes it read as the object
+## glowing rather than as something hovering near it.
+## `tests/test_pickup_glow.gd` asserts that reach against the grass config
+## directly, so the ground lane raising blade height still fails loudly.
+static func prop_glow_height(node: Node3D, floor_height: float) -> float:
 	var top := 0.0
 	for child: Node in node.find_children("*", "VisualInstance3D", true, false):
 		var visual := child as VisualInstance3D
@@ -248,7 +290,7 @@ static func prop_clearance_height(node: Node3D, floor_height: float) -> float:
 		# a pickup's `_build_visual()` runs BEFORE the prop is in the tree in
 		# some paths, and `global_transform` on a detached node is an engine
 		# error and an identity matrix -- which would silently report every
-		# prop as flat and put every mote back down in the grass.
+		# prop as flat.
 		var local := Transform3D.IDENTITY
 		var walk: Node3D = visual
 		while walk != null and walk != node:
@@ -257,9 +299,10 @@ static func prop_clearance_height(node: Node3D, floor_height: float) -> float:
 		for corner in 8:
 			top = maxf(top, (local * aabb.get_endpoint(corner)).y)
 	var cfg: Dictionary = config().get("mote", {})
-	var clearance := float(cfg.get("prop_clearance", 0.3))
-	var ceiling := float(cfg.get("max_height", 2.2))
-	return clampf(maxf(floor_height, top + clearance), floor_height, ceiling)
+	if top <= 0.0:
+		return floor_height
+	var ceiling := float(cfg.get("max_height", 1.4))
+	return clampf(top * float(cfg.get("body_fraction", 0.55)), floor_height, ceiling)
 
 
 func _unregister(owner_node: Node3D) -> void:
@@ -322,11 +365,18 @@ func _rebuild() -> void:
 		var scale_multiplier := float(entry.get("scale", 1.0))
 		var height := float(entry.get("height", -1.0))
 		if height < 0.0:
-			height = prop_clearance_height(node, mote_height)
+			height = prop_glow_height(node, mote_height)
 
 		var colour: Color = entry["colour"]
 		colour.a = 1.0 if shown else 0.0
-		var custom := Color(float(entry.get("phase", 0.0)), 0.0, 0.0, 0.0)
+		# .x is the pulse phase; .y is half the prop's own crown, which the
+		# shader uses to push the halo just far enough behind THIS object for
+		# the object to occlude its middle. See the `behind` push in
+		# `shaders/pickup_glow.gdshader`.
+		var custom := Color(
+			float(entry.get("phase", 0.0)),
+			minf(height, float(mote_look.get("max_height", 1.3))),
+			0.0, 0.0)
 
 		var mote := Transform3D(
 			Basis.IDENTITY.scaled(Vector3.ONE * (mote_radius * scale_multiplier)),
