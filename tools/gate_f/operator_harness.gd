@@ -1348,6 +1348,11 @@ static func _predict_frames(steps: Array) -> int:
 				total += int(args.get("budget_frames", 2400))
 			"face":
 				total += int(args.get("budget_frames", 240))
+			"wait_until":
+				# The worst case, like a walk: the budget, not the hoped-for
+				# early exit. A segment is only safe to launch if the whole
+				# budget fits.
+				total += int(args.get("budget_frames", 600))
 			"press":
 				total += maxi(1, int(args.get("times", 1))) * (int(args.get("settle_frames", 8)) + 4)
 			"press_multi", "focus_move", "focus_item", "open_menu", "close_menu", "probe_cell", \
@@ -1796,6 +1801,12 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_capture_seq(args, id)
 		"probe_cell":
 			actual = await _step_probe_cell(args, id)
+		"wait_until":
+			var settled := await _step_wait_until(args)
+			actual = str(settled.get("actual", ""))
+			verdict = "PASS" if bool(settled.get("ok", false)) else "FAIL"
+			if bool(settled.get("skip", false)):
+				verdict = "SKIP"
 		"assert":
 			var checked := _step_assert(args)
 			actual = str(checked.get("actual", ""))
@@ -3911,6 +3922,60 @@ func _step_probe_cell(args: Dictionary, step_id: String) -> String:
 	})
 	return "cell %s in %s: world=[%s] ui=[%s] release=[%s]" % [control,
 		str(before.get("context")), world_effect, ui_effect, release_effect]
+
+
+## CD-3's missing half: reach a state, then assert it.
+##
+## `assert` asks its question once, at the instant the step runs, so every
+## assertion that follows an asynchronous game event has to be preceded by a
+## `wait` with a GUESSED frame count -- and the protocol's own CD-3 rule says a
+## guessed count for a state-changing operation is wrong in both directions.
+## Under-wait and a true state reads as false; over-wait and the segment pays
+## for frames it did not need.
+##
+## The cost of the missing half was measured by ralph/GATE-F-FULL on
+## 2026-08-30, on the chapter's own first catch. `S02-43iw` waited 360 physics
+## frames (6.0 s of play) after the fourth throw; the throw resolved to a
+## verdict at t=265.38 and CombatManager granted the creature at t=268.00, and
+## the wait ended at t=267.47. `S02-45` ("the catch counted") therefore read
+## `party size 1 (wanted 2)` **0.53 s of play before the party became 2**, and
+## `S02-46` ("the chain advanced to the road") read the stale objective for the
+## same reason. Both were recorded as FAILs against a run whose own exit save
+## carries the caught bramblebun. Three previous runs have reported this shape.
+##
+## So: same `check` vocabulary as `assert`, same args, plus a budget. It polls
+## rather than guesses, PASSes the moment the predicate is true and says how
+## long it took, and FAILs at the budget naming the last thing it saw -- which
+## is strictly more informative than a bare `assert`, because a FAIL here means
+## "still false after N frames", not "false at one instant".
+##
+## A check the envelope cannot evaluate (`skip`) is returned immediately and
+## unchanged: polling a question that cannot be asked is just a slower SKIP.
+func _step_wait_until(args: Dictionary) -> Dictionary:
+	var budget := maxi(1, int(args.get("budget_frames", 600)))
+	var poll := maxi(1, int(args.get("poll_frames", 5)))
+	var checked := _step_assert(args)
+	if bool(checked.get("skip", false)):
+		return checked
+	var waited := 0
+	while not bool(checked.get("ok", false)) and waited < budget:
+		for i in poll:
+			await physics_frame
+			_tick(1.0 / float(Engine.physics_ticks_per_second))
+			waited += 1
+			# `wait`'s own rule: this is a loop the protocol's hours can live
+			# in, so it honours a mid-step cost abort rather than watching the
+			# whole budget go past.
+			if not _blocked.is_empty():
+				return {"ok": false, "actual": "waited %d of %d physics frames before the cost gate stopped it"
+					% [waited, budget]}
+			if waited >= budget:
+				break
+		checked = _step_assert(args)
+	var actual := str(checked.get("actual", ""))
+	if bool(checked.get("ok", false)):
+		return {"ok": true, "actual": "%s [true after %d physics frames]" % [actual, waited]}
+	return {"ok": false, "actual": "%s [still false after %d physics frames]" % [actual, waited]}
 
 
 func _step_assert(args: Dictionary) -> Dictionary:
