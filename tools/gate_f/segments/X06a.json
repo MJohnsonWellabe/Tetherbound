@@ -1,0 +1,2003 @@
+{
+  "id": "X06a",
+  "title": "Abuse and failure sweep (protocol E.6 / section 2) -- Part 1 of 3 -- from S03-exit",
+  "lane": "study",
+  "_source": "ralph/GATE_F_MASTER_PROTOCOL.md E.6, transcribed mechanically per ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 6. Entry saves per protocol B: S03-exit and S05-exit.",
+  "_lane": "SEGMENT_SCHEMA.md lists `journey` and `diag` as the lane values. This segment is neither: protocol 0.1 names two lanes, JOURNEY (S01-S10) and STUDY/DIAG (X01-X08), and only the segments prefixed DIAG- inside that second lane may take a shortcut. `study` is that distinction written down rather than collapsed into `diag`, which would read as permission this segment does not have. The field is informational either way -- the per-step `diag` flag is what actually permits a shortcut, and no step here carries one.",
+  "_rule": "E.6's own preamble: 'All on production paths, each with expected/actual telemetry.' Nothing here is granted and free_build stays OFF.",
+  "_no_teleport": "X06 is not a DIAG segment and contains no teleport step. Every locked route below is approached by walking, because whether the world explains the lock diegetically on arrival is the whole point of case 11.",
+  "_defect_shots": "Protocol G: 'Defect shots (GF-22/DEF-...) are the only operator-added captures: context frame first, then a diagnostic close view if useful, at first occurrence, as-found.' They are therefore NOT pre-planned in this file. Case 6's 'record any clip/soft-lock with position (GF-22 defect shots)' is an instruction to the operator at the moment of a find, not a planned frame.",
+  "evidence_lane": "logic",
+  "_comment_evidence_lane": "X06 (abuse and failure cases) plans no §G frame, so it hands nothing over and needs no capture lane -- the harness allows exactly that. It is declared a logic lane anyway for the OTHER half of the declaration: without it the segment inherits §H's default 0.1 Hz continuous record, which under a 12.7 s rendered frame is the 4.6-million-frame recording the split was created to delete, and which headless would write as file:null rows while every step said PASS.",
+  "_split": "T2-GATEF-RUN6 cost split, the same remedy T2-S10-COST applied to S10 and the one T2-GATEF-RUN5's handover asked for (§8.3, §11.5). X06 whole was refused before step 1 by the harness capture pre-flight: 2,525,320 planned frames, predicted 14,960 s against the 14,400 s ceiling -- 4% over. Splitting at the segment's own entry-save seam is not enough on its own: part 1 (from S03-exit) prices at ~650 s but part 2 (from S05-exit) still prices at ~14,863 s. So part 2 is split again at its own `case 8` boundary, where the previous case has just closed its menu shell and nothing is carried in flight. Each part re-seeds its own entry save through the real title screen, exactly as the original did at X06-004 and X06-182, so no part depends on another having run. Nothing is dropped: the three parts are the original 314 steps plus one repeated 10-step load preamble.",
+  "steps": [
+    {
+      "id": "X06-001",
+      "title": "what this segment is",
+      "action": "note",
+      "args": {
+        "text": "E.6's sixteen abuse and failure cases. Stress testing lives here so it never contaminates the journey telemetry (protocol 0.1)."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-002",
+      "title": "Part 1: from S03-exit",
+      "action": "note",
+      "args": {
+        "text": "The village cases: menu drift, modal leakage, the tournament's unready states, collision edges on the village buildings, and the locked South Bridge."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-003",
+      "title": "case 1",
+      "action": "note",
+      "args": {
+        "text": "'Mash all buttons during: title->world load, dialogue open/close edge, combat start/end edge, save/load, region transitions, tournament round transitions, the release ceremony.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-004",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone"
+    },
+    {
+      "id": "X06-005",
+      "title": "seed slot 4 from S03-exit",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S03-exit.json"
+      },
+      "expected": "the journey's S03-exit slot file is back in user://"
+    },
+    {
+      "id": "X06-006",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "X06-007",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down reaches Load Game"
+    },
+    {
+      "id": "X06-008",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot list opens on the seeded slot 4"
+    },
+    {
+      "id": "X06-009",
+      "title": "start the load",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the title begins the transition into the Meadows"
+    },
+    {
+      "id": "X06-010",
+      "title": "mash all buttons on the same frame: the title->world load",
+      "action": "press_multi",
+      "args": {
+        "controls": [
+          "jump",
+          "hotbar_1",
+          "interact",
+          "inventory",
+          "map",
+          "game_menu",
+          "sprint",
+          "camera_recenter",
+          "party_cycle",
+          "creature_recall",
+          "hotbar_3",
+          "hotbar_5",
+          "hotbar_2",
+          "hotbar_4",
+          "auto_run",
+          "combat_charged",
+          "combat_quick"
+        ],
+        "hold": "tap"
+      },
+      "expected": "every down edge of every physical control is delivered before a frame advances, during the title->world load"
+    },
+    {
+      "id": "X06-011",
+      "title": "mash all buttons, 10 presses in 10 frames: the title->world load",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "E.6 case 2's mash variant: 10 presses in 10 frames, during the title->world load"
+    },
+    {
+      "id": "X06-012",
+      "title": "mash interact, 10 in 10 frames: the title->world load",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of interact during the title->world load"
+    },
+    {
+      "id": "X06-013",
+      "title": "mash game_menu, 10 in 10 frames: the title->world load",
+      "action": "press",
+      "args": {
+        "control": "game_menu",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of game_menu during the title->world load"
+    },
+    {
+      "id": "X06-014",
+      "title": "mash party_cycle, 10 in 10 frames: the title->world load",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of party_cycle during the title->world load"
+    },
+    {
+      "id": "X06-015",
+      "title": "mash creature_recall, 10 in 10 frames: the title->world load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of creature_recall during the title->world load"
+    },
+    {
+      "id": "X06-016",
+      "title": "mash hotbar_1, 10 in 10 frames: the title->world load",
+      "action": "press",
+      "args": {
+        "control": "hotbar_1",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of hotbar_1 during the title->world load"
+    },
+    {
+      "id": "X06-017",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container"
+    },
+    {
+      "id": "X06-018",
+      "title": "the load survived the mash",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal after a load that was mashed through"
+    },
+    {
+      "id": "X06-019",
+      "title": "walk to Tam",
+      "action": "move_to",
+      "args": {
+        "at": [
+          8.0,
+          -16.0
+        ]
+      },
+      "expected": "the player walks to Tam, RT-02's first anchor"
+    },
+    {
+      "id": "X06-020",
+      "title": "open a conversation",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the Greet prompt opens the conversation"
+    },
+    {
+      "id": "X06-021",
+      "title": "mash all buttons on the same frame: the dialogue open edge",
+      "action": "press_multi",
+      "args": {
+        "controls": [
+          "jump",
+          "hotbar_1",
+          "interact",
+          "inventory",
+          "map",
+          "game_menu",
+          "sprint",
+          "camera_recenter",
+          "party_cycle",
+          "creature_recall",
+          "hotbar_3",
+          "hotbar_5",
+          "hotbar_2",
+          "hotbar_4",
+          "auto_run",
+          "combat_charged",
+          "combat_quick"
+        ],
+        "hold": "tap"
+      },
+      "expected": "every down edge of every physical control is delivered before a frame advances, during the dialogue open edge"
+    },
+    {
+      "id": "X06-022",
+      "title": "mash all buttons, 10 presses in 10 frames: the dialogue open edge",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "E.6 case 2's mash variant: 10 presses in 10 frames, during the dialogue open edge"
+    },
+    {
+      "id": "X06-023",
+      "title": "mash interact, 10 in 10 frames: the dialogue open edge",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of interact during the dialogue open edge"
+    },
+    {
+      "id": "X06-024",
+      "title": "mash game_menu, 10 in 10 frames: the dialogue open edge",
+      "action": "press",
+      "args": {
+        "control": "game_menu",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of game_menu during the dialogue open edge"
+    },
+    {
+      "id": "X06-025",
+      "title": "mash party_cycle, 10 in 10 frames: the dialogue open edge",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of party_cycle during the dialogue open edge"
+    },
+    {
+      "id": "X06-026",
+      "title": "mash creature_recall, 10 in 10 frames: the dialogue open edge",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of creature_recall during the dialogue open edge"
+    },
+    {
+      "id": "X06-027",
+      "title": "mash hotbar_1, 10 in 10 frames: the dialogue open edge",
+      "action": "press",
+      "args": {
+        "control": "hotbar_1",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of hotbar_1 during the dialogue open edge"
+    },
+    {
+      "id": "X06-028",
+      "title": "close the conversation",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 8,
+        "settle_frames": 20
+      },
+      "expected": "interact advances the conversation to its end"
+    },
+    {
+      "id": "X06-029",
+      "title": "mash all buttons on the same frame: the dialogue close edge",
+      "action": "press_multi",
+      "args": {
+        "controls": [
+          "jump",
+          "hotbar_1",
+          "interact",
+          "inventory",
+          "map",
+          "game_menu",
+          "sprint",
+          "camera_recenter",
+          "party_cycle",
+          "creature_recall",
+          "hotbar_3",
+          "hotbar_5",
+          "hotbar_2",
+          "hotbar_4",
+          "auto_run",
+          "combat_charged",
+          "combat_quick"
+        ],
+        "hold": "tap"
+      },
+      "expected": "every down edge of every physical control is delivered before a frame advances, during the dialogue close edge"
+    },
+    {
+      "id": "X06-030",
+      "title": "mash all buttons, 10 presses in 10 frames: the dialogue close edge",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "E.6 case 2's mash variant: 10 presses in 10 frames, during the dialogue close edge"
+    },
+    {
+      "id": "X06-031",
+      "title": "mash interact, 10 in 10 frames: the dialogue close edge",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of interact during the dialogue close edge"
+    },
+    {
+      "id": "X06-032",
+      "title": "mash game_menu, 10 in 10 frames: the dialogue close edge",
+      "action": "press",
+      "args": {
+        "control": "game_menu",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of game_menu during the dialogue close edge"
+    },
+    {
+      "id": "X06-033",
+      "title": "mash party_cycle, 10 in 10 frames: the dialogue close edge",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of party_cycle during the dialogue close edge"
+    },
+    {
+      "id": "X06-034",
+      "title": "mash creature_recall, 10 in 10 frames: the dialogue close edge",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of creature_recall during the dialogue close edge"
+    },
+    {
+      "id": "X06-035",
+      "title": "mash hotbar_1, 10 in 10 frames: the dialogue close edge",
+      "action": "press",
+      "args": {
+        "control": "hotbar_1",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "10 presses in 10 frames of hotbar_1 during the dialogue close edge"
+    },
+    {
+      "id": "X06-036",
+      "title": "the world came back after the dialogue mash",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is 'world' with no stuck modal"
+    },
+    {
+      "id": "X06-037",
+      "title": "case 2",
+      "action": "note",
+      "args": {
+        "text": "'Press world controls while each modal owns input (matrix cells above, plus the \"mash\" variant: 10 presses in 10 frames).' The per-cell half is X01's matrix; what X06 adds is the mash variant, run against each modal."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-038",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the pause shell is opened through its production path and takes the input-owner group"
+    },
+    {
+      "id": "X06-039",
+      "title": "world control jump under the pause shell, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the pause shell owns input"
+    },
+    {
+      "id": "X06-040",
+      "title": "world control interact under the pause shell, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the pause shell owns input"
+    },
+    {
+      "id": "X06-041",
+      "title": "world control party_cycle under the pause shell, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the pause shell owns input"
+    },
+    {
+      "id": "X06-042",
+      "title": "world control creature_recall under the pause shell, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the pause shell owns input"
+    },
+    {
+      "id": "X06-043",
+      "title": "world control hotbar_1 under the pause shell, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_1",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the pause shell owns input"
+    },
+    {
+      "id": "X06-044",
+      "title": "world control hotbar_2 under the pause shell, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_2",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the pause shell owns input"
+    },
+    {
+      "id": "X06-045",
+      "title": "world control hotbar_3 under the pause shell, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_3",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the pause shell owns input"
+    },
+    {
+      "id": "X06-046",
+      "title": "world control hotbar_4 under the pause shell, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_4",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the pause shell owns input"
+    },
+    {
+      "id": "X06-047",
+      "title": "world control hotbar_5 under the pause shell, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_5",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the pause shell owns input"
+    },
+    {
+      "id": "X06-048",
+      "title": "world control combat_quick under the pause shell, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the pause shell owns input"
+    },
+    {
+      "id": "X06-049",
+      "title": "what owns input after mashing under the pause shell",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
+    },
+    {
+      "id": "X06-050",
+      "title": "close the pause shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the surface closes and the world comes back"
+    },
+    {
+      "id": "X06-051",
+      "title": "open the Satchel tab",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "the Satchel tab is opened through its production path and takes the input-owner group"
+    },
+    {
+      "id": "X06-052",
+      "title": "world control jump under the Satchel tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Satchel tab owns input"
+    },
+    {
+      "id": "X06-053",
+      "title": "world control interact under the Satchel tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Satchel tab owns input"
+    },
+    {
+      "id": "X06-054",
+      "title": "world control party_cycle under the Satchel tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Satchel tab owns input"
+    },
+    {
+      "id": "X06-055",
+      "title": "world control creature_recall under the Satchel tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Satchel tab owns input"
+    },
+    {
+      "id": "X06-056",
+      "title": "world control hotbar_1 under the Satchel tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_1",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Satchel tab owns input"
+    },
+    {
+      "id": "X06-057",
+      "title": "world control hotbar_2 under the Satchel tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_2",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Satchel tab owns input"
+    },
+    {
+      "id": "X06-058",
+      "title": "world control hotbar_3 under the Satchel tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_3",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Satchel tab owns input"
+    },
+    {
+      "id": "X06-059",
+      "title": "world control hotbar_4 under the Satchel tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_4",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Satchel tab owns input"
+    },
+    {
+      "id": "X06-060",
+      "title": "world control hotbar_5 under the Satchel tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_5",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Satchel tab owns input"
+    },
+    {
+      "id": "X06-061",
+      "title": "world control combat_quick under the Satchel tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Satchel tab owns input"
+    },
+    {
+      "id": "X06-062",
+      "title": "what owns input after mashing under the Satchel tab",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
+    },
+    {
+      "id": "X06-063",
+      "title": "close the Satchel tab",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the surface closes and the world comes back"
+    },
+    {
+      "id": "X06-064",
+      "title": "open the Map tab",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the Map tab is opened through its production path and takes the input-owner group"
+    },
+    {
+      "id": "X06-065",
+      "title": "world control jump under the Map tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Map tab owns input"
+    },
+    {
+      "id": "X06-066",
+      "title": "world control interact under the Map tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Map tab owns input"
+    },
+    {
+      "id": "X06-067",
+      "title": "world control party_cycle under the Map tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Map tab owns input"
+    },
+    {
+      "id": "X06-068",
+      "title": "world control creature_recall under the Map tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Map tab owns input"
+    },
+    {
+      "id": "X06-069",
+      "title": "world control hotbar_1 under the Map tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_1",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Map tab owns input"
+    },
+    {
+      "id": "X06-070",
+      "title": "world control hotbar_2 under the Map tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_2",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Map tab owns input"
+    },
+    {
+      "id": "X06-071",
+      "title": "world control hotbar_3 under the Map tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_3",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Map tab owns input"
+    },
+    {
+      "id": "X06-072",
+      "title": "world control hotbar_4 under the Map tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_4",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Map tab owns input"
+    },
+    {
+      "id": "X06-073",
+      "title": "world control hotbar_5 under the Map tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_5",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Map tab owns input"
+    },
+    {
+      "id": "X06-074",
+      "title": "world control combat_quick under the Map tab, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the Map tab owns input"
+    },
+    {
+      "id": "X06-075",
+      "title": "what owns input after mashing under the Map tab",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
+    },
+    {
+      "id": "X06-076",
+      "title": "close the Map tab",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the surface closes and the world comes back"
+    },
+    {
+      "id": "X06-077",
+      "title": "open the build catalogue",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the build catalogue is opened through its production path and takes the input-owner group"
+    },
+    {
+      "id": "X06-078",
+      "title": "world control jump under the build catalogue, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the build catalogue owns input"
+    },
+    {
+      "id": "X06-079",
+      "title": "world control interact under the build catalogue, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the build catalogue owns input"
+    },
+    {
+      "id": "X06-080",
+      "title": "world control party_cycle under the build catalogue, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the build catalogue owns input"
+    },
+    {
+      "id": "X06-081",
+      "title": "world control creature_recall under the build catalogue, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the build catalogue owns input"
+    },
+    {
+      "id": "X06-082",
+      "title": "world control hotbar_1 under the build catalogue, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_1",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the build catalogue owns input"
+    },
+    {
+      "id": "X06-083",
+      "title": "world control hotbar_2 under the build catalogue, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_2",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the build catalogue owns input"
+    },
+    {
+      "id": "X06-084",
+      "title": "world control hotbar_3 under the build catalogue, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_3",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the build catalogue owns input"
+    },
+    {
+      "id": "X06-085",
+      "title": "world control hotbar_4 under the build catalogue, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_4",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the build catalogue owns input"
+    },
+    {
+      "id": "X06-086",
+      "title": "world control hotbar_5 under the build catalogue, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "hotbar_5",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the build catalogue owns input"
+    },
+    {
+      "id": "X06-087",
+      "title": "world control combat_quick under the build catalogue, 10 in 10 frames",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 1
+      },
+      "expected": "the world verb must not fire while the build catalogue owns input"
+    },
+    {
+      "id": "X06-088",
+      "title": "what owns input after mashing under the build catalogue",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "focus is not lost: E.4 fails a cell when focus is lost/unrecoverable"
+    },
+    {
+      "id": "X06-089",
+      "title": "close the build catalogue",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the surface closes and the world comes back"
+    },
+    {
+      "id": "X06-090",
+      "title": "case 3",
+      "action": "note",
+      "args": {
+        "text": "'Open/close each menu 20x rapidly; verify no drift in pause state, mouse capture, focus, or time-of-day.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-091",
+      "title": "clock and pause state before the 20x loops",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "this event's `clock_hour` is the before half of the time-of-day drift check"
+    },
+    {
+      "id": "X06-092",
+      "title": "open/close the pause shell 20 times",
+      "action": "press",
+      "args": {
+        "control": "game_menu",
+        "hold": "tap",
+        "times": 40,
+        "settle_frames": 6
+      },
+      "expected": "forty presses is twenty open/close pairs of the pause shell"
+    },
+    {
+      "id": "X06-093",
+      "title": "no drift after the pause shell x20",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no drift in pause state, mouse capture, focus, or time-of-day; this event's `clock_hour` and `input_state` are the after half"
+    },
+    {
+      "id": "X06-094",
+      "title": "open/close the Satchel 20 times",
+      "action": "press",
+      "args": {
+        "control": "inventory",
+        "hold": "tap",
+        "times": 40,
+        "settle_frames": 6
+      },
+      "expected": "forty presses is twenty open/close pairs of the Satchel"
+    },
+    {
+      "id": "X06-095",
+      "title": "no drift after the Satchel x20",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no drift in pause state, mouse capture, focus, or time-of-day; this event's `clock_hour` and `input_state` are the after half"
+    },
+    {
+      "id": "X06-096",
+      "title": "open/close the Map 20 times",
+      "action": "press",
+      "args": {
+        "control": "map",
+        "hold": "tap",
+        "times": 40,
+        "settle_frames": 6
+      },
+      "expected": "forty presses is twenty open/close pairs of the Map"
+    },
+    {
+      "id": "X06-097",
+      "title": "no drift after the Map x20",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no drift in pause state, mouse capture, focus, or time-of-day; this event's `clock_hour` and `input_state` are the after half"
+    },
+    {
+      "id": "X06-098",
+      "title": "open/close the build catalogue 20 times",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap",
+        "times": 40,
+        "settle_frames": 6
+      },
+      "expected": "forty presses is twenty open/close pairs of the build catalogue"
+    },
+    {
+      "id": "X06-099",
+      "title": "no drift after the catalogue x20",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no drift in pause state, mouse capture, focus, or time-of-day"
+    },
+    {
+      "id": "X06-100",
+      "title": "case 4",
+      "action": "note",
+      "args": {
+        "text": "'Build: rapid rotate/place/cancel loops; place-cancel-place same piece; dismantle the piece under an armed ghost.' The first two clauses are also E.3 step 7 and are run in X02 at the lab site; what X06 adds is the same loops in the village, and the third clause, which only X06 names."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-101",
+      "title": "open the build catalogue",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X06-102",
+      "title": "arm a ghost",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused build cell arms a ghost"
+    },
+    {
+      "id": "X06-103",
+      "title": "rapid rotate loop",
+      "action": "press",
+      "args": {
+        "control": "build_rotate_right",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 1
+      },
+      "expected": "twenty rotations in twenty frames"
+    },
+    {
+      "id": "X06-104",
+      "title": "rapid place loop",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 1
+      },
+      "expected": "twenty places in twenty frames; each is paid for exactly once or refused"
+    },
+    {
+      "id": "X06-105",
+      "title": "rapid cancel loop",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap",
+        "times": 20,
+        "settle_frames": 1
+      },
+      "expected": "twenty cancels in twenty frames"
+    },
+    {
+      "id": "X06-106",
+      "title": "place-cancel-place the same piece",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X06-107",
+      "title": "arm the same piece",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the same piece is armed"
+    },
+    {
+      "id": "X06-108",
+      "title": "place it",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "it is placed"
+    },
+    {
+      "id": "X06-109",
+      "title": "cancel",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X06-110",
+      "title": "place the same piece again",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens for the same piece"
+    },
+    {
+      "id": "X06-111",
+      "title": "arm and place again",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the same piece is armed and placed; the resource ledger stays coherent"
+    },
+    {
+      "id": "X06-112",
+      "title": "dismantle the piece under an armed ghost",
+      "action": "press",
+      "args": {
+        "control": "build_dismantle",
+        "hold": "tap"
+      },
+      "expected": "a dismantle fired while a ghost is still armed: recorded exactly as it behaves"
+    },
+    {
+      "id": "X06-113",
+      "title": "cancel the ghost",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X06-114",
+      "title": "case 5",
+      "action": "note",
+      "args": {
+        "text": "'Invalid placements: water, cliff, tree, NPC, inside own structure, mid-air edge of terrain.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-115",
+      "title": "walk to the water site",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -342.0,
+          507.0
+        ]
+      },
+      "expected": "the player walks to the invalid placement site"
+    },
+    {
+      "id": "X06-116",
+      "title": "open the catalogue (water)",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X06-117",
+      "title": "arm a ghost (water)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "a ghost is armed"
+    },
+    {
+      "id": "X06-118",
+      "title": "attempt the placement in/on water",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the placement is refused and the refusal says why; nothing leaves the satchel"
+    },
+    {
+      "id": "X06-119",
+      "title": "cancel (water)",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X06-120",
+      "title": "walk to the nearest a cliff",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 240
+      },
+      "expected": "the player walks to the nearest a cliff"
+    },
+    {
+      "id": "X06-121",
+      "title": "open the catalogue (a cliff)",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X06-122",
+      "title": "arm a ghost (a cliff)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "a ghost is armed"
+    },
+    {
+      "id": "X06-123",
+      "title": "attempt the placement in/on a cliff",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the placement is refused and the refusal says why; nothing leaves the satchel"
+    },
+    {
+      "id": "X06-124",
+      "title": "cancel (a cliff)",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X06-125",
+      "title": "walk to the nearest a tree",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 240
+      },
+      "expected": "the player walks to the nearest a tree"
+    },
+    {
+      "id": "X06-126",
+      "title": "open the catalogue (a tree)",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X06-127",
+      "title": "arm a ghost (a tree)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "a ghost is armed"
+    },
+    {
+      "id": "X06-128",
+      "title": "attempt the placement in/on a tree",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the placement is refused and the refusal says why; nothing leaves the satchel"
+    },
+    {
+      "id": "X06-129",
+      "title": "cancel (a tree)",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X06-130",
+      "title": "walk to the an NPC site",
+      "action": "move_to",
+      "args": {
+        "at": [
+          10.0,
+          -10.0
+        ]
+      },
+      "expected": "the player walks to the invalid placement site"
+    },
+    {
+      "id": "X06-131",
+      "title": "open the catalogue (an NPC)",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X06-132",
+      "title": "arm a ghost (an NPC)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "a ghost is armed"
+    },
+    {
+      "id": "X06-133",
+      "title": "attempt the placement in/on an NPC",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the placement is refused and the refusal says why; nothing leaves the satchel"
+    },
+    {
+      "id": "X06-134",
+      "title": "cancel (an NPC)",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X06-135",
+      "title": "walk to the inside own structure site",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -22.0,
+          -16.0
+        ]
+      },
+      "expected": "the player walks to the invalid placement site"
+    },
+    {
+      "id": "X06-136",
+      "title": "open the catalogue (inside own structure)",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X06-137",
+      "title": "arm a ghost (inside own structure)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "a ghost is armed"
+    },
+    {
+      "id": "X06-138",
+      "title": "attempt the placement in/on inside own structure",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the placement is refused and the refusal says why; nothing leaves the satchel"
+    },
+    {
+      "id": "X06-139",
+      "title": "cancel (inside own structure)",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X06-140",
+      "title": "walk to the nearest the mid-air edge of terrain",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 240
+      },
+      "expected": "the player walks to the nearest the mid-air edge of terrain"
+    },
+    {
+      "id": "X06-141",
+      "title": "open the catalogue (the mid-air edge of terrain)",
+      "action": "press",
+      "args": {
+        "control": "build_open",
+        "hold": "tap"
+      },
+      "expected": "the catalogue opens"
+    },
+    {
+      "id": "X06-142",
+      "title": "arm a ghost (the mid-air edge of terrain)",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "a ghost is armed"
+    },
+    {
+      "id": "X06-143",
+      "title": "attempt the placement in/on the mid-air edge of terrain",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "the placement is refused and the refusal says why; nothing leaves the satchel"
+    },
+    {
+      "id": "X06-144",
+      "title": "cancel (the mid-air edge of terrain)",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "the ghost is disarmed"
+    },
+    {
+      "id": "X06-145",
+      "title": "case 6",
+      "action": "note",
+      "args": {
+        "text": "'Collision edges: walk the village building perimeters, bridge railings, quarry lips, Warrens walls, stronghold walls; jump against each; record any clip/soft-lock with position (GF-22 defect shots).'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-146",
+      "title": "walk the village building perimeters",
+      "action": "move_to",
+      "args": {
+        "at": [
+          10.0,
+          -10.0
+        ]
+      },
+      "expected": "the player walks to the village centre and then round the building perimeters"
+    },
+    {
+      "id": "X06-147",
+      "title": "press into a village wall (1,0)",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 1.0,
+        "y": 0.0,
+        "frames": 180
+      },
+      "expected": "the player walks straight into the building perimeter and holds there"
+    },
+    {
+      "id": "X06-148",
+      "title": "jump against it (1,0)",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 20
+      },
+      "expected": "six jumps against the wall; any clip or soft-lock is recorded with its position"
+    },
+    {
+      "id": "X06-149",
+      "title": "press into a village wall (0,-1)",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 180
+      },
+      "expected": "the player walks straight into the building perimeter and holds there"
+    },
+    {
+      "id": "X06-150",
+      "title": "jump against it (0,-1)",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 20
+      },
+      "expected": "six jumps against the wall; any clip or soft-lock is recorded with its position"
+    },
+    {
+      "id": "X06-151",
+      "title": "press into a village wall (-1,0)",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": -1.0,
+        "y": 0.0,
+        "frames": 180
+      },
+      "expected": "the player walks straight into the building perimeter and holds there"
+    },
+    {
+      "id": "X06-152",
+      "title": "jump against it (-1,0)",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 20
+      },
+      "expected": "six jumps against the wall; any clip or soft-lock is recorded with its position"
+    },
+    {
+      "id": "X06-153",
+      "title": "press into a village wall (0,1)",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 180
+      },
+      "expected": "the player walks straight into the building perimeter and holds there"
+    },
+    {
+      "id": "X06-154",
+      "title": "jump against it (0,1)",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 20
+      },
+      "expected": "six jumps against the wall; any clip or soft-lock is recorded with its position"
+    },
+    {
+      "id": "X06-155",
+      "title": "still in the world after the collision pass",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no soft-lock: the player still has control and this event's `pos` is where they are"
+    },
+    {
+      "id": "X06-156",
+      "title": "case 12",
+      "action": "note",
+      "args": {
+        "text": "'Attempt tournament interactions before requirements met (unrested/unfed/short team): the guided chain should point at the next missing prerequisite; record the exact line shown for each unmet state.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-157",
+      "title": "walk to the tournament ground",
+      "action": "move_to",
+      "args": {
+        "at": [
+          23.5,
+          11.5
+        ]
+      },
+      "expected": "the player walks to the marshal at the tournament ground, RT-02's last anchor (20,12)"
+    },
+    {
+      "id": "X06-158",
+      "title": "attempt sign-up while unrested",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the guided chain should point at the next missing prerequisite; the exact line shown for the unrested state is recorded verbatim"
+    },
+    {
+      "id": "X06-159",
+      "title": "read the line shown for unrested",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the surface that states the prerequisite holds focus, so a controller can read and dismiss it"
+    },
+    {
+      "id": "X06-160",
+      "title": "back out of the unrested attempt",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the attempt is backed out without signing up"
+    },
+    {
+      "id": "X06-161",
+      "title": "attempt sign-up while unfed",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the guided chain should point at the next missing prerequisite; the exact line shown for the unfed state is recorded verbatim"
+    },
+    {
+      "id": "X06-162",
+      "title": "read the line shown for unfed",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the surface that states the prerequisite holds focus, so a controller can read and dismiss it"
+    },
+    {
+      "id": "X06-163",
+      "title": "back out of the unfed attempt",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the attempt is backed out without signing up"
+    },
+    {
+      "id": "X06-164",
+      "title": "attempt sign-up while short team",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the guided chain should point at the next missing prerequisite; the exact line shown for the short team state is recorded verbatim"
+    },
+    {
+      "id": "X06-165",
+      "title": "read the line shown for short team",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the surface that states the prerequisite holds focus, so a controller can read and dismiss it"
+    },
+    {
+      "id": "X06-166",
+      "title": "back out of the short team attempt",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the attempt is backed out without signing up"
+    },
+    {
+      "id": "X06-167",
+      "title": "case 11",
+      "action": "note",
+      "args": {
+        "text": "'Approach locked routes early: South Bridge before the key (south_bridge_grunt gate), Old Mill Crossing before the relay, sigil gate with 0-2 Sigils, Hall shutter before the elite. Expected: the world explains the lock diegetically; record what actually communicates it.'"
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-168",
+      "title": "walk to the South Bridge before the key",
+      "action": "move_to",
+      "args": {
+        "at": [
+          0.0,
+          1330.0
+        ],
+        "budget_frames": 90000,
+        "held_budget_frames": 7200
+      },
+      "expected": "the player walks the whole way to the South Bridge (0,1330) from the village, with no key: the walk itself is part of what the lock has to communicate"
+    },
+    {
+      "id": "X06-169",
+      "title": "what communicates the South Bridge lock",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "the world explains the lock diegetically; this event's `pos`, `objective` and the operator's note record what actually communicates it"
+    },
+    {
+      "id": "X06-170",
+      "title": "try to cross anyway",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": -1.0,
+        "frames": 600
+      },
+      "expected": "the player walks straight at the closed gate and is stopped by whatever holds it"
+    },
+    {
+      "id": "X06-171",
+      "title": "press into the bridge railings",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 1.0,
+        "y": -1.0,
+        "frames": 180
+      },
+      "expected": "case 6's bridge-railing collision edge, taken here because the walk is already at the bridge"
+    },
+    {
+      "id": "X06-172",
+      "title": "jump against the railings",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 20
+      },
+      "expected": "six jumps against the railing; any clip or soft-lock is recorded with its position"
+    },
+    {
+      "id": "X06-173",
+      "title": "case 13",
+      "action": "note",
+      "args": {
+        "text": "'Save in awkward but legal states: mid-Warrens, on the bridge, at night while a creature is bedded, with satchel full, during aim-cancel frame; then load each (X05) and verify full restoration.' The saves are taken here; the loads are X05's, by the protocol's own division."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "X06-174",
+      "title": "save on the bridge",
+      "action": "open_menu",
+      "args": {},
+      "expected": "the pause shell opens on the bridge"
+    },
+    {
+      "id": "X06-175",
+      "title": "cycle to the Save tab (on the bridge)",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 5,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses reach the Save tab"
+    },
+    {
+      "id": "X06-176",
+      "title": "focus slot 1 (on the bridge)",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "focus reaches slot 1's Save button"
+    },
+    {
+      "id": "X06-177",
+      "title": "write the on-the-bridge save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "an awkward but legal save, taken on the bridge"
+    },
+    {
+      "id": "X06-178",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "X06-179",
+      "title": "copy the on-the-bridge save out",
+      "action": "save_out",
+      "args": {
+        "slot": 1,
+        "name": "X06-awkward-on-the-bridge.json"
+      },
+      "expected": "the artefact is preserved for X05 to load"
+    },
+    {
+      "id": "X06-180",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes"
+    }
+  ]
+}
