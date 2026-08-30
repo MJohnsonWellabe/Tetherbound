@@ -62,6 +62,33 @@ uniform float slope_lie : hint_range(0.0, 2.0) = 0.0;
 uniform float density_gain : hint_range(0.0, 1.0) = 0.35;
 uniform float drift_scale = 0.06;
 uniform float drift_contrast : hint_range(0.0, 1.0) = 0.85;
+// T1-WORLD. The exponent the drift mask is raised to before it gates anything.
+// 1.0 is the old behaviour exactly.
+//
+// WHY THIS EXISTS, measured rather than assumed. A blind pass read the ground
+// scatter as generator output -- "a near-constant ~1m interval, no clustering,
+// no bare patch, no density gradient" -- and the obvious lever, `drift_contrast`,
+// turns out to have had almost no headroom left: it was already 0.88-0.93, so
+// taking it to 1.0 bought only 17-29% more spatial variance in the keep
+// probability, which measured as no change at all (flower-pixel coefficient of
+// variation over a 14x6 grid: village 3.88 -> 3.85, band1 1.03 -> 1.01, band4
+// 1.96 -> 1.52, i.e. within noise or slightly WORSE across three stands).
+//
+// The reason is structural and no amount of tuning the old two knobs reaches it.
+// `drift` was a LINEAR remap of value_noise, so even at full contrast the mask
+// stays bell-shaped around 0.5; the keep test below is then an independent
+// Bernoulli trial per lattice site, which makes the whole thing a near-Poisson
+// point process. Poisson has no clustering by construction -- it has a
+// characteristic spacing and nothing else. That is precisely the look being
+// complained about, and it is a property of the RULE, not of its parameters.
+//
+// Raising the noise to a power makes the mask peaky instead of bell-shaped:
+// most of the map falls near zero (genuinely bare ground, which the old floor
+// made unreachable) and the patches spike (dense cores). That is what
+// vegetation actually does. `density_gain` has to be scaled up alongside it to
+// keep the same number of plants, because pow() lowers the mask's mean -- see
+// grass_field.json's own note for the arithmetic.
+uniform float drift_gate : hint_range(1.0, 6.0) = 1.0;
 
 // NORMAL SOFTENING. How far each item's own normals are bent toward world up.
 // Without it every leaf of one bush takes a wildly different lambert term and a
@@ -386,7 +413,7 @@ void vertex() {
 	bool hole = bool(control >> 2u & 0x1u);
 	bool on_ground = ((allowed_base_mask >> base_id) & 1) == 1;
 
-	float drift = mix(1.0, value_noise(world_xz * drift_scale), drift_contrast);
+	float drift = mix(1.0, pow(value_noise(world_xz * drift_scale), drift_gate), drift_contrast);
 	bool culled = off_map || hole || !on_ground || v_fade <= 0.001
 			|| item_presence <= 0.002
 			|| on_built_ground(world_xz)

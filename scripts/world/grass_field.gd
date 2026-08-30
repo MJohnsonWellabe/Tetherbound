@@ -462,7 +462,7 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 
 		for key: String in [
 			"item_size", "size_jitter", "sink", "slope_lie", "density_gain",
-			"drift_scale", "drift_contrast", "tint_jitter", "ground_blend",
+			"drift_scale", "drift_contrast", "drift_gate", "tint_jitter", "ground_blend",
 			"contact_darken", "normal_soften", "sway", "wind_scale", "gust", "gust_speed",
 			"gust_length", "field_radius", "fade_start", "leaf_cut", "leaf_serrate",
 			"leaf_teeth", "leaf_root_darken", "leaf_tint_jitter",
