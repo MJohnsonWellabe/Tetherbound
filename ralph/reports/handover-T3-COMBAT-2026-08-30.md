@@ -154,31 +154,47 @@ describes, put back.
 
 ### Field Captain, met by the mono-Water team the rebalance exists to stop
 
-| roster | result | fight | party HP left | faints | damage taken | verdicts on them |
-|---|---|---|---|---|---|---|
-| **shipped** (duskhush / tuskroot / meadowhart) | won | 30.2s | **93.9 %** | 0 | 35.5 over 5 hits | 22 strong, 12 weak |
-| **pre-rebalance** (burrowback / tuskroot / meadowhart) | won | 30.0s | **93.1 %** | 0 | 40.2 over 6 hits | 32 strong, 0 weak |
+| roster | result | fight | party HP left | damage taken | verdicts on them |
+|---|---|---|---|---|---|
+| **shipped** (duskhush / tuskroot / meadowhart) | won | 30.9s | **95.3 %** | 27.4 over 4 hits | 22 strong, 13 weak |
+| **pre-rebalance** (burrowback / tuskroot / meadowhart) | won | 29.0s | **92.5 %** | 43.7 over 6 hits | 32 strong, 0 weak |
 
-**The config moved and the fight did not.** The verdict mix changed exactly as
-designed — a third of the player's hits went from strong to resisted — and the
-outcome moved by **0.2 seconds and 0.8 percentage points of health**. A Water
-team sweeps the Field Captain either way, without losing a creature, at
-94 % health.
+**The rebalance made this fight slightly easier for the exact challenger it was
+written to stop.** The verdict mix moved precisely as designed — a third of the
+player's hits went from strong to resisted — and the Water team came out of the
+shipped roster **healthier** than out of the old one, taking 27.4 damage instead
+of 43.7.
 
-So the honest answer to *"does the captain rebalance actually change the fights
-it was authored to change, or only the config?"* is: **only the config.** Not
-because the swap was wrong — it does what it says — but because a −35 % discount
-is not what was making that fight easy. The fight has no threat in it to
-discount.
+The reason is in the stats, not the chart. The swap took out the *weakest*
+member by level and put in a creature that is also weaker in raw numbers:
+**Burrowback is 110 HP / 23 defence, Duskhush is 96 / 18.** Removing a −35 %
+discount from one of three opponents is worth less than 14 hit points and 5
+defence. And Duskhush's own Air move is 1.25 into Water, but it never landed one
+— every blow the player took in either fight was a resisted Ground hit from
+Tuskroot and Meadowhart.
+
+Run twice, on separate boots, with the same direction both times (93.9 % vs
+93.1 % on the first run; 95.3 % vs 92.5 % on the second).
 
 ### Ridge Captain, met by the mono-Ground team
 
 | roster | result | fight | party HP left | damage taken |
 |---|---|---|---|---|
-| **shipped** (trailpup / duskhush / galecrest) | won | 32.1s | **100.0 %** | **0.0 over 0 hits** |
+| **shipped** (trailpup / duskhush / galecrest) | won | 32.4s | **100.0 %** | **0.0 over 0 hits** |
+| **pre-rebalance** (pipwing / duskhush / galecrest) | won | 27.7s | **100.0 %** | **0.0 over 0 hits** |
 
-A three-round fight against one of the chapter's three Sigil captains, and the
-captain **did not land a single blow**. That is not a type-chart problem. See §5.
+Here the swap went the other way — Pipwing (78 / 20 / 10) out, Trailpup
+(105 / 23 / 15) in — so the fight genuinely got 4.7 seconds longer. And in both
+versions one of the chapter's three Sigil captains **did not land a single blow
+in a three-round battle**.
+
+### The answer
+
+*Does the captain rebalance actually change the fights it was authored to
+change, or only the config?* **Only the config.** One captain became marginally
+easier for the team it was meant to punish; the other became five seconds longer
+and stayed untouchable. The swaps do exactly what their notes say to the
+multipliers — the multipliers were never what made those fights easy. See §5.
 
 ---
 
