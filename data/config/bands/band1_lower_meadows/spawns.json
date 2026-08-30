@@ -1,5 +1,6 @@
 {
   "_comment": "BAND-SPLIT. Band-local spawns for band1_lower_meadows. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 1000-1999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_night_t5camps": "T5-CAMPS. Bands 0 and 1 carried ZERO night-gated clusters until this pass -- 0 `time` entries across all 55 clusters -- which is what ralph/reports/REGION_AUDIT_2026-08-30.md ranked as gap 7, \"night does not exist in the first hour\". Criterion 13 of the region checklist (ralph/MEADOWS_EXIT_CRITERION.md section E) is a PER-REGION requirement, and band 2 was the only region in the chapter meeting it. The five night entries below (orders 1050-1054, 12 Duskhush) are modelled directly on band 2's working template, which is the audit's own named \"thing worth protecting\": one species, `time: night`, clustered into a pocket rather than sprinkled evenly. Band 2 runs 12 clusters / 40 individuals over 2653 m; this band runs 5 / 12 over 2403 m, deliberately lighter because band 1 is the tutorial meadow. They ship alongside orders 1058-1061, the oak ring's UNGATED Trailpup -- the other species the same documents assign to this grove and the other one band 1 did not have. Read those entries' `_why` before changing either count: the two are load-bearing on each other, because Duskhush is Air, Trailpup is Ground, and tests/test_spawn_tables.gd::test_a_rolled_world_is_still_the_ground_dominant_meadows had exactly three creatures of headroom above its 50%-Ground floor before this lane touched it. The species is not a choice this pass made -- data/config/spawns.json `roles.nocturnal` is duskhush, terrain_playground.json's `oak_grove_ring` feature names \"Duskhush at night\" in its own _why, MEADOWS_MACRO_LAYOUT.md section 10's loop table repeats it verbatim, and MEADOWS_PROGRESSION_SPEC.md section 13 lists the Grove as Trailpup / Duskhush at night / Burrowback. The population was specified in three places and built in none. Proven by played path, not by this comment: tests/smoke_night_ecology.gd walks the real world to each site, drives the day/night clock, and asserts the owls are absent by day and present, visible and engageable after dark. SITE: swept, not picked -- every candidate was required to sit at least 38 m from every existing cluster centre in this band and at least 25 m from the trail camp clearing, then ground-probed with tools/_probe_night_sites.gd. The failure being guarded against is this file's sibling `data/config/spawns.json` `_comment_placement`: Galecrest and Burrowback were once authored on a rocky rise whose rim is a closed >45-degree band, \"measured at 71 of 72 radial approaches unwalkable\", so they could never be met. A night-gated creature hides that kind of mistake better than an ungated one, because the player only ever has a chance to meet it after dark. GENTLE ON PURPOSE: Duskhush is species.json's non-aggressive watcher/scout (`aggressive: false`), which is why it is the right night species for the band prompt 71 keeps gentle. No `alpha` block anywhere in this pass -- band2's `_comment_alpha` records the standing rule that alphas run \"one per band from band 2 on, never in band 1\". No `table` either: these are anchors, so the authored ecology three documents asked for is what stands here at every world seed. Each entry below carries only what is specific to ITS site; the reasoning shared by all eight is here rather than repeated eight times. TUNABLE.",
   "_comment_creek_hollow": "FIRST-HOUR-FUN-REBUILD. The relocated pond valley is the nearby Creek Hollow destination. Its population is deliberately a compact set of eight normal-weather individuals across six catchable species, plus the established optional elder just off the loop: enough to make the basin feel alive without recreating the old route-density swarm at a single destination. `habitat` is presentation metadata for authoring/tests; encounter_director.gd intentionally ignores it. The existing pond, mill, footbridge, ranger station, reed arcs, grove scatter and west-bank hollow provide the water edge, open bank, rocky/mill shoulder, grove and overhang equivalents; no new meshes or terrain carve are introduced here.",
   "spawns": [
     {
@@ -768,6 +769,119 @@
         "notice_range": 20.0
       },
       "_why_d1": "PW2 / prompt 62's 'at least one less-common/special temptation', and band1's only elder. SITE: a damp hollow west of the pond, found by tools/_probe_elder_site.gd rather than picked -- 0.83m of relief over 10m so the encounter arena forms on flat ground, 3.9m above the water line so it is not IN the pond, 96m from the pond centre (mosshell habitat: every other mosshell in band1 is pond-side) and 75m lateral from the nearest authored route. That last number is the point: tools/_probe_band1_cadence.py counts anything past 60m lateral as an optional detour rather than corridor cadence, so this is something a player finds by being curious about a low green hollow off the pond loop, not something the road walks them into. Prompt 30's rule that some optional content should be discoverable through curiosity rather than a quest giver, and its rule not to pre-label every secret, are why this gets no map landmark. DIFFERENTIATION: PW2 requires a behavioural distinction and says stats and scale cannot be the only one. `notice_range` 20 against the shared default of 9 means it stops and turns to watch the player from more than twice the usual distance -- and wild_creature.gd's own comment calls that stop-and-look 'the only cue the game gives that the creature is engageable', so this reads before combat starts, which is exactly PW2's readability rule. `wander_radius` 1.5 against 7 means it holds its ground instead of drifting: an old animal that owns this hollow. Both are existing configure() tunables, not new machinery. LEVEL: +4 on whatever band1's own curve rolls, not a pinned number -- an elder should stay relative to its region when chapter_curve.json moves. Against a post-tournament team that has just beaten a level 10-11 final, that is a real fight and not a wall, which is PW2's own 'keep early Band 1 encounters appropriately approachable'. CATCHABLE, deliberately: it is a wild, so the five-creature squeeze this creates is the whole temptation. Nothing on the wild path changes to make that true."
+    },
+    {
+      "order": 1050,
+      "species": "duskhush",
+      "count": 1,
+      "centre": [
+        60.0,
+        0.0,
+        46.0
+      ],
+      "radius": 12.0,
+      "time": "night",
+      "_why_night_home": "BAND 0, the home meadow -- the hook rather than the population. One owl in the treed ground east of the village, outside every vegetation clearing (square r22, Grandpa r16, practice meadow r16, trainer ground r14, spawn r16), because a clearing is where the trees are not and this is a bird that wants cover. Band 0 is where the player actually sleeps on night one (`objectives.json`'s tournament_sleep rung), so this is the one place in the chapter where night content is guaranteed to be SEEN rather than merely reachable. Deliberately a single individual: MEADOWS_PROGRESSION_SPEC.md section 6's optional activity is \"Night Watch -- investigate nighttime activity and INTRODUCE Duskhush\", and an introduction is one call in the dark that makes you look, not a flock on the lawn. The flock is 800 m north in the oak ring the same spec assigns it to. Ground probed: h=-7.56, 1.57 m relief, 12.7 deg worst slope over a 12 m ring. NOTE: this places the night ECOLOGY the audit measured as missing. The Night Watch *quest* -- a giver, a tracked objective, a reward -- is not implemented here and is not claimed."
+    },
+    {
+      "order": 1051,
+      "species": "duskhush",
+      "count": 2,
+      "centre": [
+        4.0,
+        0.0,
+        160.0
+      ],
+      "radius": 13.0,
+      "time": "night",
+      "_why_night_home": "BAND 0 / band 1 seam, on the road north out of the village. The second half of the hook: the player who leaves home after dark, rather than sleeping through it, gets a second look at the same species before the oak ring proper. Sited ON the route rather than off it, because unlike the grove ring below this is not a detour the player chooses -- it is the road they are already walking, and the whole finding is that the first hour reads identically by day and by night. 54 m clear of the galecrest cluster at (-35,197), which is this band's `aggressor` role and is ungated, so the two do not stack after dark. Ground probed: h=-0.90, 2.09 m relief, 11.7 deg worst slope."
+    },
+    {
+      "order": 1052,
+      "species": "duskhush",
+      "count": 3,
+      "centre": [
+        265.0,
+        0.0,
+        897.0
+      ],
+      "radius": 14.0,
+      "time": "night",
+      "_why_night_grove": "Oak grove ring, interior west -- the deepest point inside the loop and furthest from open ground, so the densest of the three night pockets after the camp. Ground probed: h=-1.69, 3.43 m relief, 16.7 deg worst slope. 57 m clear of the nearest pre-existing cluster."
+    },
+    {
+      "order": 1053,
+      "species": "duskhush",
+      "count": 4,
+      "centre": [
+        337.0,
+        0.0,
+        965.0
+      ],
+      "radius": 14.0,
+      "time": "night",
+      "_why_night_grove": "The camp grove -- 31 m from the trail camp at (344,935), which is the point of this entry and the reason it is the densest. The trail camp only became a place a player can actually STOP at in the T5-CADENCE work merged into this same branch (scripts/world/rest_point.gd); before that it was scenery, and night content beside it would have had nobody standing there to see it. Now the two halves meet: you stop at the camp because you can, and the grove around it is awake in a way it is not by day. That is criterion 13's day/night readability delivered as a place rather than as a config flag. Outside the camp's own 9 m vegetation clearing (vegetation.json clearings order 1000) so the owls are in the trees, not standing in the fire ring. Ground probed: h=-0.61, 2.65 m relief, 17.2 deg worst slope."
+    },
+    {
+      "order": 1054,
+      "species": "duskhush",
+      "count": 2,
+      "centre": [
+        382.0,
+        0.0,
+        1133.0
+      ],
+      "radius": 13.0,
+      "time": "night",
+      "_why_night_grove": "The ring's rejoin at (330,1130), thinning out as the loop returns to the spine -- the population reads as a pocket with edges rather than a uniform sprinkle, which is the difference between an ecology and a spawn rate. Ground probed: h=-3.72, 1.56 m relief, 12.3 deg worst slope. 56 m clear of the nearest pre-existing cluster."
+    },
+    {
+      "order": 1058,
+      "species": "trailpup",
+      "count": 5,
+      "centre": [
+        251.0,
+        0.0,
+        803.0
+      ],
+      "radius": 15.0,
+      "_why_grove_resident": "T5-CAMPS, the OTHER half of the same documented sentence. docs/MEADOWS_MACRO_LAYOUT.md's ecology paragraph reads: \"grove (Trailpup/Duskhush/Burrowback) in Band 1's oak ring and Band 2\", and MEADOWS_PROGRESSION_SPEC.md section 13 lists the Grove as Trailpup / Duskhush at night / Burrowback. Band 1 held NEITHER named grove species: zero Duskhush and zero Trailpup, against 47 in band 2, 9 in band 3, 51 in band 4 and 9 in band 5. band2/spawns.json's own entry for order 2 even describes its Trailpup as \"carried from Band 1's oak ring\" -- carried from a population that was never placed. So this is not padding added to balance the Duskhush; it is the rest of the ecology the oak ring was specified to have. UNGATED, unlike the Duskhush beside it, because only Duskhush carries \"at night\" in either document -- Trailpup is the ring's ordinary daytime resident, and the contrast between the two is what makes the grove read differently after dark instead of merely emptier. TYPE BALANCE, stated rather than left to be discovered: tests/test_spawn_tables.gd::test_a_rolled_world_is_still_the_ground_dominant_meadows requires the chapter to stay >=50% Ground at every world seed, and it had exactly THREE creatures of headroom before this lane touched it (50.17% at the worst rolled seed). Duskhush is Air. Adding the night pocket alone took the worst seed to 49.0% and turned that test red -- measured, not predicted. Trailpup is Ground, so placing both named grove species together restores the biome identity the brief requires (50.5% at the worst seed) while implementing the same sentence. The thin margin is PRE-EXISTING and is now this chapter's binding constraint on any future Air content anywhere; see the handover. The ring mouth at (230,830) -- the first thing on the loop, so a player who takes the oak grove ring meets its resident species within 20 m of leaving the spine. Ground probed: h=-0.03, 3.07 m relief, 12.8 deg worst slope."
+    },
+    {
+      "order": 1059,
+      "species": "trailpup",
+      "count": 5,
+      "centre": [
+        347.0,
+        0.0,
+        879.0
+      ],
+      "radius": 15.0,
+      "_why_grove_resident": "T5-CAMPS, the OTHER half of the same documented sentence. docs/MEADOWS_MACRO_LAYOUT.md's ecology paragraph reads: \"grove (Trailpup/Duskhush/Burrowback) in Band 1's oak ring and Band 2\", and MEADOWS_PROGRESSION_SPEC.md section 13 lists the Grove as Trailpup / Duskhush at night / Burrowback. Band 1 held NEITHER named grove species: zero Duskhush and zero Trailpup, against 47 in band 2, 9 in band 3, 51 in band 4 and 9 in band 5. band2/spawns.json's own entry for order 2 even describes its Trailpup as \"carried from Band 1's oak ring\" -- carried from a population that was never placed. So this is not padding added to balance the Duskhush; it is the rest of the ecology the oak ring was specified to have. UNGATED, unlike the Duskhush beside it, because only Duskhush carries \"at night\" in either document -- Trailpup is the ring's ordinary daytime resident, and the contrast between the two is what makes the grove read differently after dark instead of merely emptier. TYPE BALANCE, stated rather than left to be discovered: tests/test_spawn_tables.gd::test_a_rolled_world_is_still_the_ground_dominant_meadows requires the chapter to stay >=50% Ground at every world seed, and it had exactly THREE creatures of headroom before this lane touched it (50.17% at the worst rolled seed). Duskhush is Air. Adding the night pocket alone took the worst seed to 49.0% and turned that test red -- measured, not predicted. Trailpup is Ground, so placing both named grove species together restores the biome identity the brief requires (50.5% at the worst seed) while implementing the same sentence. The thin margin is PRE-EXISTING and is now this chapter's binding constraint on any future Air content anywhere; see the handover. Grove interior, east: 56 m south of the trail camp and inside the loop's own bend, so the ring's resident population is the thing a player walks through on the way to the one place in the band they can stop. Ground probed: h=0.14, 3.01 m relief, 14.2 deg worst slope."
+    },
+    {
+      "order": 1060,
+      "species": "trailpup",
+      "count": 4,
+      "centre": [
+        362.0,
+        0.0,
+        1041.0
+      ],
+      "radius": 14.0,
+      "_why_grove_resident": "T5-CAMPS, the OTHER half of the same documented sentence. docs/MEADOWS_MACRO_LAYOUT.md's ecology paragraph reads: \"grove (Trailpup/Duskhush/Burrowback) in Band 1's oak ring and Band 2\", and MEADOWS_PROGRESSION_SPEC.md section 13 lists the Grove as Trailpup / Duskhush at night / Burrowback. Band 1 held NEITHER named grove species: zero Duskhush and zero Trailpup, against 47 in band 2, 9 in band 3, 51 in band 4 and 9 in band 5. band2/spawns.json's own entry for order 2 even describes its Trailpup as \"carried from Band 1's oak ring\" -- carried from a population that was never placed. So this is not padding added to balance the Duskhush; it is the rest of the ecology the oak ring was specified to have. UNGATED, unlike the Duskhush beside it, because only Duskhush carries \"at night\" in either document -- Trailpup is the ring's ordinary daytime resident, and the contrast between the two is what makes the grove read differently after dark instead of merely emptier. TYPE BALANCE, stated rather than left to be discovered: tests/test_spawn_tables.gd::test_a_rolled_world_is_still_the_ground_dominant_meadows requires the chapter to stay >=50% Ground at every world seed, and it had exactly THREE creatures of headroom before this lane touched it (50.17% at the worst rolled seed). Duskhush is Air. Adding the night pocket alone took the worst seed to 49.0% and turned that test red -- measured, not predicted. Trailpup is Ground, so placing both named grove species together restores the biome identity the brief requires (50.5% at the worst seed) while implementing the same sentence. The thin margin is PRE-EXISTING and is now this chapter's binding constraint on any future Air content anywhere; see the handover. The ring's far side at (400,1040), the loop's turn back toward the spine. Flattest ground of the seven sites: h=-0.86, 2.01 m relief, 10.4 deg worst slope."
+    },
+    {
+      "order": 1061,
+      "species": "trailpup",
+      "count": 4,
+      "centre": [
+        416.0,
+        0.0,
+        1048.0
+      ],
+      "radius": 14.0,
+      "_why_grove_resident": "T5-CAMPS, the OTHER half of the same documented sentence. docs/MEADOWS_MACRO_LAYOUT.md's ecology paragraph reads: \"grove (Trailpup/Duskhush/Burrowback) in Band 1's oak ring and Band 2\", and MEADOWS_PROGRESSION_SPEC.md section 13 lists the Grove as Trailpup / Duskhush at night / Burrowback. Band 1 held NEITHER named grove species: zero Duskhush and zero Trailpup, against 47 in band 2, 9 in band 3, 51 in band 4 and 9 in band 5. band2/spawns.json's own entry for order 2 even describes its Trailpup as \"carried from Band 1's oak ring\" -- carried from a population that was never placed. So this is not padding added to balance the Duskhush; it is the rest of the ecology the oak ring was specified to have. UNGATED, unlike the Duskhush beside it, because only Duskhush carries \"at night\" in either document -- Trailpup is the ring's ordinary daytime resident, and the contrast between the two is what makes the grove read differently after dark instead of merely emptier. TYPE BALANCE, stated rather than left to be discovered: tests/test_spawn_tables.gd::test_a_rolled_world_is_still_the_ground_dominant_meadows requires the chapter to stay >=50% Ground at every world seed, and it had exactly THREE creatures of headroom before this lane touched it (50.17% at the worst rolled seed). Duskhush is Air. Adding the night pocket alone took the worst seed to 49.0% and turned that test red -- measured, not predicted. Trailpup is Ground, so placing both named grove species together restores the biome identity the brief requires (50.5% at the worst seed) while implementing the same sentence. The thin margin is PRE-EXISTING and is now this chapter's binding constraint on any future Air content anywhere; see the handover. The far side's outer edge, the one site off the loop's own line -- the ring is a place with width, not a path with creatures on it. Ground probed: h=-1.38, 4.22 m relief, 15.1 deg worst slope, the roughest of the seven and still comfortably walkable."
     }
   ]
 }
