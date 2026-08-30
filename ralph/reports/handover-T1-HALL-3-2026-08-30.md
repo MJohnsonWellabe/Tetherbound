@@ -549,3 +549,40 @@ Three things worth carrying out of this:
    that produced it was built on the same bad metric. The standing note about
    `capture_check` having no test for a partially-streamed field is still true
    and still worth doing; it just is not what happened here.
+
+## 9. D11, resolved — and the method that resolved it
+
+`D11-causeway-footprint-ab.png` in this directory is the whole argument in one
+image. Three crops of the same region of `H-03-ramp-foot`:
+
+1. the judge's own build — planted: grass, leafy plants, flowers, pebbles;
+2. this build with **my** vegetation config — bare;
+3. this build with the **judge's** vegetation config — planted again.
+
+Panel 3 is the one that matters. Same build, same stand, same everything except
+the config: it rules out T1-GROUND-3's terrain regen and puts the cause squarely
+on my own entries. I had previously written the opposite into this handover.
+
+**The actual mechanism.** The H-03 stand sits at z 7505, three metres *before*
+the ramp foot, where the causeway has not climbed yet and deck and terrain are
+the same surface. A footprint disc placed there removes the *foreground*, not
+the deck. The plants JUDGE-5 actually complained about are further up, where the
+deck is visibly elevated above the ground it crosses.
+
+**The resolution.** Footprints run from z 7516 rather than z 7508, so the first
+~9 m of causeway keeps its planting. Deliberate, not a compromise: D11 ranks
+15th of 16, "dense foreground planting" is named as one of the rebuild's *gains*
+in this exact frame, and trading a named gain for a near-last defect is a bad
+trade — one I made twice before measuring it.
+
+**The method lesson, which is the part worth keeping.** I made three separate
+geometry arguments about which discs covered which ground, from FOV, deck width
+and camera bearing. All three were wrong. One controlled substitution — swap the
+config, hold everything else, re-shoot one stand — answered it in ten minutes
+and left an artifact anyone can check. `--only=` exists so that costs ten
+minutes instead of forty-five; use it.
+
+Corollary already noted in §8 and worth repeating here because it caused two of
+those wrong arguments: **a green-pixel ratio is a test for exposure, not for
+vegetation.** The day and golden frames of this stand scored 5.5% and 55% off
+identical bare ground.
