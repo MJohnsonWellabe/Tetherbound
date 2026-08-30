@@ -1111,6 +1111,29 @@ func _build_exterior_dressing() -> void:
 ## here -- the occupation layer's girders/banners concentrate on the gate
 ## and the cable landing (`_build_hall_massing()`), not on every keep wall.
 const KEEP_CHAMBERS: Array[String] = ["tether_approach", "warden_arena", "legendary_chamber"]
+
+## T1-PERF (2026-08-30). `T1-HALL-REBUILD`'s own handover (§5) measured
+## `hall_approach` at 2706 draw calls against the design's 2463 ceiling
+## (+26.3%) and named this function's merlon rows -- 177 boxes, the single
+## largest block at the site -- as the first lever to spend, because they
+## are built on ALL FOUR sides of all three keep chambers when the chambers'
+## own local `at`/`size` (`data/config/stronghold.json`) put them in a
+## straight line with 4.2-6m gaps between them (tether_approach -> warden_arena
+## -> legendary_chamber, the walking passages the route's own gauntlet
+## already narrows the camera into). A parapet facing directly into one of
+## those gaps sits behind the NEXT chamber's own wall from every angle a
+## camera can ever occupy -- not merely low-priority, structurally
+## unseeable -- so skipping it costs the "continuous parapet line" design
+## acceptance item (HALL_DESIGN_2026-08-30.md §11.6) nothing a viewer could
+## ever perceive as a break, since no viewpoint exists from which the
+## parapet on either side of the gap and the parapet past it would ever
+## appear as one broken line in the first place.
+const KEEP_INTERIOR_FACING_SIDES := {
+	"tether_approach": ["+z"],
+	"warden_arena": ["-z", "-x"],
+	"legendary_chamber": ["+x"],
+}
+
 func _build_keep_parapets() -> void:
 	for id in KEEP_CHAMBERS:
 		if not _chambers.has(id):
@@ -1119,7 +1142,10 @@ func _build_keep_parapets() -> void:
 		var centre := _local_of(chamber.get("at", []))
 		var size := _size_of(chamber.get("size", []))
 		var height := float(chamber.get("height", 6.0))
+		var skip: Array = KEEP_INTERIOR_FACING_SIDES.get(id, [])
 		for side in ["-x", "+x", "-z", "+z"]:
+			if skip.has(side):
+				continue
 			_dress_exterior_wall(centre, size, height, side, false)
 
 
