@@ -163,6 +163,25 @@ runs too — five of the ten baseline passes recovered from it via an extra
 launch or the game's own eligibility verdict. **14 occurrences to 0** is the
 mechanism, not a sample.
 
+## 4b. The `--gate-a-continuous-core` form, since the finding named it
+
+One run of the longer form the finding pointed at. The **whole opening now
+passes inside it** — title, wake, stairs, Grandpa, starter, naming, the orb
+gift, the doorway, the natural engage, the weakening fight and the catch on
+launch 3 — and the run then fails in the continuation segment, on something
+this lane did not touch and does not own:
+
+```
+FAIL: NPC/gather continuation: Mira's required opening visit left
+'recipe_orb_basic' unset; the gift branch is what the Foreman's hammer and
+the orb recipe wait on
+```
+
+So that job's known-red is a **different** failure living past the opening,
+in `gate_a_npc_gather_segment.gd`. It is `continue-on-error` and
+`workflow_dispatch`-only, so it reddens nothing; recorded here so the next
+reader does not re-attribute it to the aim loop.
+
 ## 5. `smoke_gate_e_finale` — a different cause, and a real game defect
 
 It does **not** share the opening's cause, so under this lane's brief it is
