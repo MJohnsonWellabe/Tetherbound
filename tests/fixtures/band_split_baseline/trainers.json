@@ -501,7 +501,7 @@
       "defeated": "captain_field_defeated",
       "team": [
         {
-          "species": "burrowback",
+          "species": "duskhush",
           "level": 13
         },
         {
@@ -513,6 +513,7 @@
           "level": 15
         }
       ],
+      "_why_t3_typechart_rebalance": "T3-ACTIVITIES, acting on T3-TYPECHART's own finding (handover-T3-TYPECHART-2026-08-30.md sec4.2/8): this trio fielded Ground x3, which under the new type chart hands ANY Water-typed challenger a -35% exchange discount for the whole fight and taxes an Air-typed one +56% -- the '-35% discounts are the real problem' the design note names, worse than the tax because it lets a prepared player trivialise a Sigil fight on type alone. Swapping the WEAKEST original member (burrowback, level 13, the lowest of the three) for a same-level, same-band-resident Air creature (duskhush) breaks the mono-type sweep: a Water challenger now gets the 1.25x advantage against only 2 of 3 members instead of all 3, and an Air challenger is no longer taxed on every exchange either. Not a fourth member and not a level change -- same team size, same level ladder (13/14/15), same reward. Verified with tools/_probe_captain_typechart.gd (non-mirror: three mono-type challengers modelled against the real chart, not the same type on both sides smoke_combat.gd's own director draws).",
       "reward": {
         "coins": 40,
         "items": [
@@ -559,7 +560,7 @@
       "defeated": "captain_ridge_defeated",
       "team": [
         {
-          "species": "pipwing",
+          "species": "trailpup",
           "level": 14
         },
         {
@@ -571,6 +572,7 @@
           "level": 16
         }
       ],
+      "_why_t3_typechart_rebalance": "T3-ACTIVITIES, the other half of T3-TYPECHART's finding -- see captain_field's own `_why_t3_typechart_rebalance` for the full reasoning. Air x3 handed a Ground challenger the same free -35% sweep. Swapped the weakest original member (pipwing, level 14) for a same-level, same-band-resident Ground creature (trailpup). Same team size, same 14/15/16 ladder, same reward.",
       "reward": {
         "coins": 45,
         "items": [

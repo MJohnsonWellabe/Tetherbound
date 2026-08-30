@@ -2048,6 +2048,10 @@ func _spawn_population(director: Node) -> void:
 ##     is. Level stays 14: SH47/D42 lowered it deliberately against measured
 ##     pacing and this pass does not reopen that.
 ##
+## JUDGE-3 sec1e adds a fourth, boss-only step after `set_alpha()`:
+## `_let_the_guardian_carry_its_own_light()` -- see its own header for the
+## measured reason the three calls above were not enough in a dim den.
+##
 ## The name still goes on TWO different objects because two different screens
 ## read two different things: `encounter_director.gd`'s engage prompt reads the
 ## BODY's `display_name`, and `combat_hud.gd`'s enemy plate reads the INSTANCE
@@ -2084,9 +2088,129 @@ func _dress_the_guardian(spec: Dictionary) -> void:
 		_guardian.call("apply_size_multiplier", scale)
 	if _guardian.has_method("set_alpha"):
 		_guardian.call("set_alpha", true)
+	# AFTER set_alpha(), because it edits the per-body material duplicates that
+	# call creates.
+	_let_the_guardian_carry_its_own_light(
+		float(spec.get("glow_energy", 0.0)), float(spec.get("rim", 0.0)),
+		Color(str(spec.get("glow_tint", "#ffffff"))))
+	_stand_the_guardian_in_its_own_light(spec.get("aura_light", {}) as Dictionary)
 	# Same marker `_make_alpha()` sets, so anything asking "is this an alpha"
 	# gets one answer for the field and the dungeon alike.
 	_guardian.set_meta("alpha", true)
+
+
+## JUDGE-3 sec1e: at player distance in the den the dressed guardian was "a
+## near-black lump... a rim light on a near-black body against a dark wall has
+## almost nothing to work with."
+##
+## The room was not the root cause and neither was the rim's strength. Verified
+## in isolation first (tools/_probe_guardian_isolation.gd): under a fair
+## neutral key the alpha burrowback reads perfectly well -- white face blaze,
+## pale claws, mossy stone plates over a charcoal body -- and with the lights
+## off it renders BLACK, because burrowback's emissive textures are flat
+## near-black (the glb's embedded emissive measures 0.000, `_emissive_alpha
+## .png` a uniform 0.027). creature_body.gd's own rim-not-albedo reasoning
+## rests on "these models are self-lit -- the painted albedo is wired into the
+## emission slot", and for this species that is simply not true: authored
+## emissive siblings exist and they are black, so they OVERRIDE the
+## albedo-into-emission fallback that makes the rest of the roster self-lit.
+## Scene light is all this creature has, four den lights were already stacked
+## on it (the 0829 backlight, the 0830 floor wash), and the rim term is itself
+## lit by those same lights -- which is why every lighting pass so far has
+## moved the read so little. A fifth light was considered and rejected: it
+## would brighten the wall behind the guardian as much as the guardian.
+##
+## So the boss gets what the judge literally asked for -- internal value
+## contrast -- by wiring its OWN alpha albedo into its emission slot at a
+## modest energy, the same self-lit treatment the roster's other creatures
+## already carry at 0.5 (creatures_visual.json's emission_scale). The painted
+## values do the work: blaze and claws near-white, plates mid-value, charcoal
+## gaps stay dark, readable at any room light level.
+##
+## Boss-scoped on purpose. The judge's finding is about THIS encounter in THIS
+## dim den, not about alphas everywhere, so this never touches the species,
+## creature_body.gd, or `_shiny_swap_materials`' shared alpha material. The
+## materials edited are duplicates made for this body alone: set_alpha()'s own
+## `_rim_light_node` already duplicated the shared alpha material into a
+## per-instance surface override (resource_name `..._alpha_rim`), and the tag
+## check below duplicates again if some future path ever hands us a shared
+## material anyway -- the same never-edit-a-shared-material discipline that
+## function uses.
+## `rim` is the boss-tier escalation of the same per-body materials: set_alpha()
+## dressed them at creature_body.gd's ALPHA_RIM_STRENGTH (0.65), tuned for a
+## field alpha in daylight, and a blind round confirmed that in the den it
+## amounts to nothing. With the aura light above the body (below) the rim term
+## finally has a light to work with, so the boss runs it at full strength --
+## on its own duplicates only, never on the shared alpha material, so field
+## alphas keep their 0.65 identity tell. 0 leaves set_alpha()'s value alone.
+func _let_the_guardian_carry_its_own_light(
+		energy: float, rim: float = 0.0, tint: Color = Color.WHITE) -> void:
+	if (energy <= 0.0 and rim <= 0.0) or _guardian == null:
+		return
+	var model: Node = _guardian.get_node_or_null(^"Model")
+	if model != null:
+		_wire_self_light(model, energy, rim, tint)
+
+
+## The other half of the same blind round's verdict: "no special FX, no glow,
+## no rim lighting... nothing that signals importance." The rim and mote aura
+## exist but do not survive to player distance in a dim room, because both are
+## small-scale effects. What does survive is LIGHT ON THE ANIMAL -- and the den
+## has been chasing that with static lights twice (the 0829 backlight, the 0830
+## floor wash) and losing, because the guardian's own 1.5m wander walks it off
+## any fixed aim. So the light is PARENTED to the body: the boss stands in a
+## warm pool that rides its wander, keys its own form from a consistent
+## direction, and grounds its feet -- the standard "this specific important
+## object must read in a dim room" move, scoped to the one object. Colour
+## defaults to creature_body.gd's ALPHA_AURA_COLOUR so the light and the motes
+## tell one story. No shadow: one small warm accent, not a scene key.
+func _stand_the_guardian_in_its_own_light(cfg: Dictionary) -> void:
+	if _guardian == null or cfg.is_empty():
+		return
+	var energy := float(cfg.get("energy", 0.0))
+	if energy <= 0.0:
+		return
+	var light := OmniLight3D.new()
+	light.name = "GuardianAuraLight"
+	light.light_energy = energy
+	light.omni_range = float(cfg.get("range", 7.0))
+	light.light_color = Color(str(cfg.get("colour", "#ffd479")))
+	light.position = Vector3(0.0, float(cfg.get("y", 1.6)), 0.0)
+	_guardian.add_child(light)
+
+
+func _wire_self_light(
+		node: Node, energy: float, rim: float = 0.0, tint: Color = Color.WHITE) -> void:
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			var source: Material = instance.get_active_material(surface)
+			if not (source is BaseMaterial3D):
+				continue
+			var material := source as BaseMaterial3D
+			if material.albedo_texture == null:
+				continue
+			if not material.resource_name.ends_with("_guardian_glow"):
+				material = material.duplicate() as BaseMaterial3D
+				material.resource_name += "_guardian_glow"
+				instance.set_surface_override_material(surface, material)
+			if energy > 0.0:
+				material.emission_enabled = true
+				# The modulate is a colour TEMPERATURE, not a repaint: a blind
+				# round read the untinted white glow as "lit in a different
+				# scene and dropped into this frame" against the den's warm
+				# torch light, so the self-light wears the den's own warmth
+				# (data: `glow_tint`) while the albedo still carries the
+				# painted moss/plate/blaze values underneath.
+				material.emission = tint
+				material.emission_texture = material.albedo_texture
+				material.emission_energy_multiplier = energy
+			if rim > 0.0:
+				material.rim_enabled = true
+				material.rim = rim
+	for child in node.get_children():
+		_wire_self_light(child, energy, rim, tint)
 
 
 ## --- clearing --------------------------------------------------------------

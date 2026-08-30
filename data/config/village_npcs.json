@@ -411,6 +411,28 @@
       "facing_deg": -60.6,
       "greeting": "village_former_tether_member",
       "_why": "T1-CREATURE-RIG. A quiet corner past cottage_b, apart from the square's usual traffic -- fits a defector keeping their distance. Probed 3.33m clear of cottage_b and 9.22m from Lark, ground flat, off every path."
+    },
+    {
+      "name": "Rae",
+      "config_key": "villager_farmer",
+      "hair": {
+        "visible": true,
+        "color": "#7a4a2c"
+      },
+      "position": [
+        -205.0,
+        1185.0
+      ],
+      "facing_deg": 70.0,
+      "greeting": "meadowhart_herd_greeting",
+      "greeting_when": [
+        {
+          "unless_flag": "band1_meadowhart_herd_found",
+          "conversation": "meadowhart_herd_sighting",
+          "_why": "T3-ACTIVITIES, spec sec6's 'Meadowhart Herd: discovery activity that points toward the Riding Saddle progression'. One-time OF30 gift shape, matching Tam's tool handover: `flag:band1_meadowhart_herd_met` on the first line (data/progression/objectives.json's `revealed_by`), a small `give:` on the last alongside `flag:band1_meadowhart_herd_found` (the objective's own completion flag), so this branch stops matching after the first visit."
+        }
+      ],
+      "_why": "Off the spine near BAND1-D1's own off-spine Meadowhart cluster (spawns.json order 1005, centre [-150,1230]) -- close enough to be watching the same herd, far enough not to stand on top of a wild spawn's own wander radius. She is not the herd's owner or its ranger, just someone who stops to watch it, matching prompt 30's rule that not every optional beat needs a formal quest-giver framing. Ground-checked flat with tools/_probe_activities_sites.gd (worst local slope 6.2 degrees over a 3m pad); no authored content within 20m."
     }
   ],
   "_comment_tournament_1": "TOURNAMENT-1. Halda, the tournament marshal, is the seventh entry and the first villager whose whole `greeting_when` list is a progression LADDER rather than a vendor/gift pair. That is deliberately the existing mechanism and not a new one: the tournament has seven states and each of them is one flag, so the ordered-branch reader `village_npcs.greeting_for()` already written for Mira answers all seven without a line of new code. Order matters and is checked by tests/test_tournament.gd -- champion first, then the rounds newest-first, then sign-up, then the two not-ready explanations.",

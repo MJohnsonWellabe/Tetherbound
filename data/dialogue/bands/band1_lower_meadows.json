@@ -239,6 +239,47 @@
         "Ha! Good one.",
         "We'll be around if you want another go later. We're not in any hurry to be anywhere."
       ]
+    },
+    "meadowhart_herd_sighting": {
+      "speaker": "Rae",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Meadowhart Herd: discovery activity that points toward the Riding Saddle progression'. Same OF30 one-time-gift shape Tam's tool handover uses: the discovery flag on the first line, the reward and the objective's own completion flag together on the last.",
+      "lines": [
+        {
+          "text": "Careful, don't come at them straight on -- they'll bolt. I've been sitting here the better part of an hour just watching them move.",
+          "effect": "flag:band1_meadowhart_herd_met"
+        },
+        "That's the same stock the tournament champion rides, near as I can tell. Once you've got rootstone worked out and a saddle frame built, one of these would carry you the same way.",
+        "For now, just look a while. It's worth the walk out here.",
+        {
+          "text": "Here -- I've got no use for these, but you might.",
+          "effects": ["give:orb_basic:3", "flag:band1_meadowhart_herd_found"]
+        }
+      ]
+    },
+    "meadowhart_herd_greeting": {
+      "speaker": "Rae",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Still my favourite spot in the whole band. They come back most evenings."
+      ]
+    },
+    "broken_cart_broken": {
+      "speaker": "Coll",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Broken Cart: gather materials to repair a bridgehand's cart'. No `battle:`/`give:` effect here -- `cart_repair.gd` owns the actual gather-and-hand-over check (item_gate.gd) and only opens the dialogue panel to report the result; this is what a player sees before they are carrying everything.",
+      "lines": [
+        "Wheel's cracked, axle's split, and I've got nothing left in the box to fix either one.",
+        "Wood for the wheel, stone to true the axle bed, fiber for the lashings -- bring me those and I can still get this off the shoulder before dark."
+      ]
+    },
+    "broken_cart_repaired": {
+      "speaker": "Coll",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "That's everything. Give me an hour and this'll be rolling again.",
+        "Not many stop to help a stranger's cart. I won't forget it."
+      ]
     }
   }
 }

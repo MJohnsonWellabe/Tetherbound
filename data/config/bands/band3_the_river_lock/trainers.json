@@ -241,5 +241,6 @@
       "base": "captain_b",
       "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     }
-  ]
+  ],
+  "_comment_river_nest_doss": "CI-TRAINER-CENSUS, 2026-08-30. `river_nest_doss` (order 3000) briefly lived here as Band 3's 'River Nest' Local Request -- spec sec6's 'aggressive Water/Air creatures block a fishing location', with Doss's own paddlenewt/galecrest team standing for the pair. It was removed the same day it was added: it was the third brand-new distinct trainer opponent T3-ACTIVITIES tried to add in one pass, and `tests/test_chapter_content_map.gd::test_the_chapter_fields_the_number_of_trainers_it_is_aiming_for` caps the chapter at 24 distinct opponents with no headroom left (see that test's own header on why the ceiling is the wrong lever to move). Doss still exists -- same site, same character, same reward -- as a gather-and-give NPC built by `scripts/world/river_nest_clear.gd` instead of a trainers.json row; see that file's header for the full reasoning."
 }
