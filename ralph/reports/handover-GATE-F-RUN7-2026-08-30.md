@@ -241,9 +241,47 @@ behaving as designed. Whether the remaining 3+ hours do is untested.
 
 ## 7. Full unit suite result
 
-_Filled in below when the run finished. If this section still reads as a
-placeholder, the suite did not finish in this session and the branch is
-UNVERIFIED._
+**Ran clean, on this branch's final tree, start to finish:**
+
+```
+1661 tests, 3,620,366 assertions, 2 failed
+```
+
+**Both failures are pre-existing on `origin/ralph/LAND-0830I`, and both were
+MEASURED rather than reasoned about.** RUN5 was right to flag the difference
+about its own work, so this lane took the measurement:
+
+| failure | how it was baselined | verdict |
+|---|---|---|
+| `test_scatter_perf_budget.gd :: test_playground_bake_is_committed_and_fresh` | every change of mine stashed, test re-run | **fails identically without me** |
+| `test_band_content.gd :: test_merged_arrays_are_identical_to_the_pre_split_files` — `trainers[8..10].base is missing` | band data and fixtures reverted to `LAND-0830I`, test re-run | **fails identically without me** |
+
+**My changes introduce zero new test failures.** The one row I did add
+(`spawns[0].level was added`) is closed by mirroring the pin into
+`tests/fixtures/band_split_baseline/spawns.json`, which is that fixture's own
+documented policy for a deliberate balance retune. After the mirror, the only
+rows `test_band_content` reports are the three trainer rows above — confirmed
+against the final suite output, not assumed.
+
+**Two out-of-lane defects for the coordinator, both worth an owner:**
+
+1. **The playground scatter bake is stale on `LAND-0830I`.** The test's own
+   message: *"every boot will fall back to computing the full corridor scatter
+   from scratch, a ~60 s stall measured on this box."* The fix is one command —
+   `godot --headless --path . --script scripts/world/bake_playground_scatter.gd`
+   — and commit the result. **This is also worth a look next to T5-PLAY's
+   COST-T5-5** (§4): a boot recomputing the whole corridor scatter is not the
+   same thing as a per-frame cost regression, and I am not claiming it explains
+   theirs, but the two are adjacent enough that nobody should chase the frame
+   cost without first ruling this out.
+2. **`trainers[8..10].base is missing`** — three merged trainer entries no
+   longer match the split baseline. Either a real content drift or a mirror
+   that was never updated; not investigated here.
+
+**CI is unverified by me.** This session has no GitHub API access, the same
+limit RUN6 recorded. The branch is pushed; check it at the **job** level, not
+the run level — a run-level success lies when the `changes` path filter skips
+jobs.
 
 ## 8. The four next steps that were on the table
 
