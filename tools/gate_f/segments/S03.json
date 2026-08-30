@@ -362,6 +362,8 @@
       "args": {
         "entity": "bramblebun",
         "within": 4.5,
+        "rank": 0,
+        "_comment_rank": "RIG-F4, ralph/GATE-F-FULL 2026-08-30. Every walk in this ladder read `within: 4.5` and no rank, so all ten attempts resolved the SAME nearest bramblebun, the walker reported `walked 0.0 m` from the second attempt on because the player was already inside the tolerance, and every `interact_with` pressed from the identical spot -- (26.03, -44.01), which is the exact position of the authored deadwood node `band1_lower_meadows/harvest.json` order 1 puts at [26,-44]. `prompt_arbiter.gd` breaks a priority tie by distance and both offers carry priority 0, so `Gather deadwood` at ~0 m outbid `Engage Bramblebun` at 1-4 m TEN TIMES, the team never reached three, and the tournament (`tournament.json` min_party_size 3) was unreachable from the exit save. A retry ladder whose every attempt resolves the same entity at the same tolerance is not a retry ladder. Ranks and tolerances now vary across the ten so each attempt is a different attempt: rank walks to a different member of the cluster, and the tighter tolerances close the player onto the creature and off the node. Nothing about the game moved -- the arbiter's nearest-wins rule is doing exactly what it says, and the collision between the teaching fight and a gathering node on the same ground is recorded as GAME-F3 rather than tuned away here.",
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -444,7 +446,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 3.0,
+        "rank": 1,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -527,7 +530,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 3.0,
+        "rank": 2,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -610,7 +614,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 1.8,
+        "rank": 0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -693,7 +698,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 1.8,
+        "rank": 1,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -776,7 +782,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 1.8,
+        "rank": 2,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -859,7 +866,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.5,
+        "rank": 3,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -942,7 +950,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.5,
+        "rank": 4,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -1025,7 +1034,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 1.5,
+        "rank": 0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -1108,7 +1118,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 1.5,
+        "rank": 1,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
