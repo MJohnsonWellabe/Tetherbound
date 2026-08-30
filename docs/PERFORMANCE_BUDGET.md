@@ -121,12 +121,28 @@ was measuring a strict subset of what the new tool would produce anyway —
 this session's own reproducibility note, not a gap.)
 
 ```
-view                     draw calls     primitives      objects
-village_high                  <FILL>         <FILL>        <FILL>
-band1_open                    <FILL>         <FILL>        <FILL>
-band4_ironwood                <FILL>         <FILL>        <FILL>
-stronghold_approach           <FILL>         <FILL>        <FILL>
+view                     draw calls     primitives      objects   (measured this session)
+village_high                   2011       26,892,017        2214   day
+village_high                   1815       27,451,889        2018   night
+band1_open                    <pending — survey still running>
+band4_ironwood                 <pending>
+stronghold_approach            <pending>
 ```
+
+**A finding already confirmed from `village_high` alone, worth stating now
+rather than waiting for the rest:** `ralph/PERF_ROG_REPORT.md` (2026-08-23)
+measured `village_high` at **1995 draw calls on a 143,630-placement bake**.
+This session's `perf_scatter_density.gd` measured the CURRENT bake at
+**248,167 placements — a 73% density increase** since that report. Yet
+`village_high` draw calls moved from 1995 → **2011, +0.8%**. This is a
+second, independent, much larger confirmation of §3.3's own point below:
+under Compatibility, draw calls track MultiMesh **batches**, not the
+instances inside them, so scatter density can grow substantially with
+almost no draw-call cost. It also means **density is not where a lane
+worried about "did my change blow the frame budget" should be looking at
+all** — draw-call counts will look almost identical to before even after a
+large density change; a `perf_scatter_density.gd` run before/after is the
+only way to see whether a density change actually happened.
 
 ### 3.2 All seven authored locations, day and night
 
@@ -172,11 +188,26 @@ today.
 ### 4.2 Measured, current `main`
 
 `tools/perf_site_survey.gd`'s light-reachability count (total / shadowed),
-day and night, all seven locations:
+checked against the player's ground-level position (day and night, all
+seven locations plus the Warrens den — survey in progress, this table fills
+in as it completes):
 
 ```
-<FILL>
+site                   time   lights   shadowed
+village_high           day         0          0
+village_high           night       0          0
 ```
+
+**Already worth noting, not yet a complete picture:** zero lights reach
+`village_high`'s exact sampled point (10, -10) at EITHER time of day. That
+is a real reachability-count result, not a tool bug (the tool's first run
+had a real bug — checking the elevated camera position instead of the
+player's ground position — caught and fixed before trusting any number; see
+`ralph/reports/T1-PERF/`). It most likely means this specific point simply
+isn't within any light's authored range (Grandpa's house and any camp fire
+are lit, but apparently not within reach of this exact coordinate) — an
+argument for reading this table as "lights near the sampled POINT", not
+"lights anywhere in the named area", once the rest of the table is in.
 
 ## 5. Scatter density budget
 
