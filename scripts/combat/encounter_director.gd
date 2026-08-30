@@ -1167,11 +1167,23 @@ func interaction_offer(from: Vector3) -> Dictionary:
 	# away — in the middle of somebody else's challenge.
 	if trainer_battle_active():
 		return {}
-	# A statement rather than an offer, and it outranks everything: with no creature
-	# on its feet there is nothing to fight with, and a "[X] Engage" line the
-	# button refuses is worse than being told why.
+	# T2-GATEF-RUN4 (GAME-0, T2-BUILDPLACE finding 2026-08-30): this used to
+	# carry priority 100 at distance 0.0, and prompt_arbiter.gd's own
+	# priority-before-distance rule made that outrank EVERY other offer in
+	# the world, permanently, from the instant the tracked ally fainted --
+	# not just wild-engage (the one thing this statement is actually about)
+	# but every village greeting, every trainer's own challenge prompt and
+	# every harvest node's prompt too, with no proximity gate at all and no
+	# recovery until a fresh save/load. A player whose only creature fainted
+	# during the S03 tutorial's own catch loop could not interact with
+	# ANYTHING afterward. Ordinary priority (0, `interactable.gd`'s own
+	# default) and a distance past any real interact radius keep the
+	# statement winning -- and still telling the player why nothing else is
+	# responding -- when it is the only offer on the table, but let it lose
+	# the tie-break to any real, closer offer instead of substituting for
+	# one.
 	if _ally != null and _ally.fainted:
-		return PROMPTS.offer("%s is out of the fight." % _ally.display_name, 0.0, 100, false)
+		return PROMPTS.offer("%s is out of the fight." % _ally.display_name, 9999.0, 0, false)
 	var candidate := _engageable()
 	if candidate != null:
 		return PROMPTS.offer(
@@ -1704,6 +1716,17 @@ func can_challenge(spec: Dictionary) -> bool:
 	if _ally == null or _ally.fainted or _ally_body == null or not is_instance_valid(_ally_body):
 		return false
 	return not TRAINERS.already_beaten(spec, _progression())
+
+
+## Is the ONE reason `can_challenge()` just refused "nothing to fight with",
+## rather than "already beaten" or the battle-manager-busy/malformed-spec
+## cases? A sibling query, not a change to `can_challenge()`'s own bool
+## contract (8+ call sites across scripts/ and tests/ read it as a bare
+## bool) -- added so `trainer_npc.gd` can tell a fainted-or-undeployed ally
+## apart from a real "defeated" greeting instead of collapsing every refusal
+## reason into one line (dark-features T1).
+func no_usable_ally() -> bool:
+	return _ally == null or _ally.fainted or _ally_body == null or not is_instance_valid(_ally_body)
 
 
 ## Take up a trainer's challenge. `trainer` is the body that issued it, used
