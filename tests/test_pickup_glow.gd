@@ -99,6 +99,41 @@ func test_the_mote_clears_it_with_margin_not_by_a_hair() -> void:
 		+ "regression waiting for their next push")
 
 
+# --- tint -----------------------------------------------------------------
+
+func test_a_dark_item_colour_still_produces_a_visible_glow() -> void:
+	# `items.json` authors ALBEDO. `wood` is #7a5a35 -- correct for a surface,
+	# nearly invisible as additive light. Without normalisation a deadwood pile
+	# would get a highlight that does not highlight, purely because of what the
+	# item happens to be made of.
+	var wood := GLOW.glow_tint(Color("#7a5a35"))
+	assert_true(wood.v >= 0.8,
+		"a dark item colour glows at value %.2f; an additive glow that dark adds "
+		% wood.v + "almost nothing to the frame")
+
+
+func test_the_glow_keeps_the_items_own_hue() -> void:
+	# Brightness is this system's; identity is the object's. A world where every
+	# pickup glows the same colour tells the player less than one where a fiber
+	# node reads green and the gate key reads gold.
+	var fiber := GLOW.glow_tint(Color("#9aa64a"))
+	var key := GLOW.glow_tint(Color("#c9a227"))
+	assert_true(absf(fiber.h - Color("#9aa64a").h) < 0.02, "the tint lost the item's hue")
+	assert_true(absf(fiber.h - key.h) > 0.02,
+		"two differently-coloured items glow the same hue; the tint is flattening "
+		+ "everything to one colour")
+
+
+func test_a_grey_item_is_not_given_an_invented_hue() -> void:
+	# `stone` is #8e8d86 -- saturation near zero, where the hue channel means
+	# nothing. Clamping saturation UP would read that meaningless hue and glow a
+	# stone deposit pink. Saturation is capped, never floored.
+	var stone := GLOW.glow_tint(Color("#8e8d86"))
+	assert_true(stone.s < 0.15,
+		"a near-grey item was given saturation %.2f; a stone deposit glowing a "
+		% stone.s + "colour is worse than one glowing warm white")
+
+
 # --- restraint ------------------------------------------------------------
 
 func test_the_glow_gets_out_of_the_way_up_close() -> void:

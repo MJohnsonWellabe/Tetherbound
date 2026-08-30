@@ -186,21 +186,46 @@ func _build_layer(shader: Shader, look: Dictionary, billboard: bool) -> MultiMes
 func _register(
 	owner_node: Node3D, colour: Color, height_override: float, scale_multiplier: float
 ) -> void:
+	var tint := glow_tint(colour)
 	for entry: Dictionary in _entries:
 		if entry.get("node") == owner_node:
-			entry["colour"] = colour
+			entry["colour"] = tint
 			entry["height"] = height_override
 			entry["scale"] = scale_multiplier
 			_dirty = true
 			return
 	_entries.append({
 		"node": owner_node,
-		"colour": colour,
+		"colour": tint,
 		"height": height_override,
 		"scale": scale_multiplier,
 		"phase": randf(),
 	})
 	_dirty = true
+
+
+## The object's own colour, made into something that can actually glow.
+##
+## The tint comes from `data/items/items.json`, which is authoring an object's
+## ALBEDO -- `wood` is #7a5a35, `stone` is #8e8d86. Those are correct for a
+## surface and useless for an additive light: a dark brown added to a frame is
+## almost nothing, so a deadwood pile would have been given a highlight that
+## does not highlight while a berry bush blazed, purely because of what the
+## items happen to be made of.
+##
+## So the HUE is the object's (a fiber node still reads green, a key still reads
+## gold) and the BRIGHTNESS is this system's. Saturation is capped rather than
+## floored: a genuinely grey item stays a warm neutral instead of being assigned
+## an arbitrary hue by `Color.from_hsv` off a hue channel that means nothing at
+## zero saturation.
+static func glow_tint(colour: Color) -> Color:
+	var cfg: Dictionary = config().get("tint", {})
+	var out := Color.from_hsv(
+		colour.h,
+		minf(colour.s, float(cfg.get("saturation_max", 0.55))),
+		float(cfg.get("value", 0.95)))
+	out.a = 1.0
+	return out
 
 
 ## How tall the prop this glow is marking actually is, so the mote sits ABOVE it

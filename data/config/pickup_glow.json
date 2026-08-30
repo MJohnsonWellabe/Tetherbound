@@ -30,6 +30,12 @@
     "pulse_depth": 0.0
   },
 
+  "_comment_tint": "How an item's colour becomes a glow colour. `data/items/items.json` authors ALBEDO -- `wood` is #7a5a35, `stone` is #8e8d86 -- and those are correct for a surface and useless as additive light: a dark brown added to a frame is nearly nothing. So the HUE stays the object's (a fiber node reads green, the gate key reads gold) and the BRIGHTNESS is this system's. `saturation_max` is a CAP, not a floor, on purpose: forcing a minimum saturation would assign a genuinely grey item an arbitrary hue off a channel that means nothing at zero saturation, and a stone deposit glowing pink is worse than one glowing warm white. TUNABLE; lower `value` for a subtler world, raise `saturation_max` for more colour separation between item types.",
+  "tint": {
+    "value": 0.95,
+    "saturation_max": 0.55
+  },
+
   "_comment_distance": "Distance compensation, shared by both layers. A fixed-size world quad is a dinner plate at 2m and a sub-pixel speck at 40m, which is exactly backwards -- the far case is the one the owner reported. `reference_distance` is where the authored radius is used unscaled; nearer and further it is scaled toward a constant SCREEN size, clamped by `screen_min_scale`/`screen_max_scale` so it neither vanishes up close nor becomes a tree-sized billboard at range. `far_fade_*` is where it arrives from nothing rather than popping in. `near_fade_*` and `near_floor` are the anti-loot-beam rule: inside a few metres the player can SEE the object, so the glow steps down to `near_floor` of itself and gets out of the way rather than washing out the thing it was pointing at. It never goes to zero -- an item at your feet in tall grass is still the case being solved.",
   "distance": {
     "reference_distance": 12.0,

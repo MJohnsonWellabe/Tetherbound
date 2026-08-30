@@ -35,9 +35,21 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://ralph/reports/T5-FEEL/shots"
+const GLOW := preload("res://scripts/world/pickup_glow.gd")
 
-const SETTLE_FRAMES := 240
-const POSE_FRAMES := 30
+## Settling is done on PHYSICS frames, which cost nothing here, and only the
+## handful of frames that actually have to be DRAWN are drawn. Under software
+## GL at 1280x720 with the grass ring's 315k tufts a rendered frame is seconds,
+## so settling on `process_frame` (the obvious way to write this) turned a
+## six-frame capture into a half-hour run and made every re-render a decision
+## rather than a step.
+const SETTLE_PHYSICS_FRAMES := 240
+const SETTLE_DRAW_FRAMES := 6
+## Physics frames to let the rig arrive at the new stand, then draw frames so
+## the grass ring has actually followed and the shutter is not photographing the
+## previous stand's cover.
+const POSE_PHYSICS_FRAMES := 24
+const POSE_DRAW_FRAMES := 10
 
 ## Each stand: a real authored pickup, the distance the shot is taken from, and
 ## what the frame is for. Distances are the two that matter -- the range at
@@ -91,9 +103,20 @@ var _failures: Array[String] = []
 
 
 func _init() -> void:
+	var glow := true
 	for raw: String in OS.get_cmdline_user_args():
 		if raw.begins_with("--tag="):
 			_tag = raw.substr(6)
+		elif raw == "--glow=off":
+			glow = false
+	if not glow:
+		# The BEFORE frame, taken from the SAME code on the SAME stands rather
+		# than from a reverted checkout: `pickup_glow.json`'s `enabled` flag is
+		# the treatment's own documented revert, so turning it off here
+		# photographs exactly the world the owner reported. Poked at runtime
+		# because `config()` caches the parsed dictionary by reference, and this
+		# runs before the world builds and registers anything.
+		GLOW.config()["enabled"] = false
 	_run()
 
 
@@ -101,7 +124,9 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
-	for i in SETTLE_FRAMES:
+	for i in SETTLE_PHYSICS_FRAMES:
+		await physics_frame
+	for i in SETTLE_DRAW_FRAMES:
 		await process_frame
 
 	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
@@ -145,7 +170,9 @@ func _shoot(stand: Dictionary) -> void:
 	var to := target - stand_at
 	_rig.set("yaw", atan2(-to.x, -to.z))
 	_rig.set("pitch", -atan2(maxf(stand_at.y + 1.4 - target.y, 0.0), maxf(distance, 0.01)) * 0.5)
-	for i in POSE_FRAMES:
+	for i in POSE_PHYSICS_FRAMES:
+		await physics_frame
+	for i in POSE_DRAW_FRAMES:
 		await process_frame
 
 	var camera := root.get_camera_3d()
