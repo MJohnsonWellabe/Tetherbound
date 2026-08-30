@@ -176,11 +176,15 @@ wins. Whoever re-baselines the run owns clearing that record.
    corrected a transcription, it did not play the segment. Both are in-house
    modal beats, so the likely finding is "no navigation decision exists at this
    rung" — a prediction, not a record. Owed on the next S02 run.
-5. **Three `.uid` sidecars are missing on `main`**, surfaced by a Godot import:
-   `scripts/world/river_nest_clear.gd.uid`, `tools/_capture_guardian_den.gd.uid`,
-   `tools/_probe_guardian_isolation.gd.uid`. Left untracked here — out of scope
-   — but the repo tracks `.uid` files and has fixed exactly this before
-   (`791f17df`).
+5. **Three `.uid` sidecars were missing on `main`**, surfaced by a Godot
+   import: `scripts/world/river_nest_clear.gd.uid`,
+   `tools/_capture_guardian_den.gd.uid`,
+   `tools/_probe_guardian_isolation.gd.uid`. **Committed here**, following the
+   repo's own convention — 791 `.uid` files are tracked and `791f17df` fixed
+   exactly this before. With them in, **no tracked `.gd` under `scripts/` or
+   `tools/` is missing a sidecar.** Worth knowing why it matters: Godot mints a
+   *random* UID the first time it imports a script that has none, so an
+   untracked sidecar is a different value on every machine and every CI run.
 
 ## 8. Untouched, per scope
 
