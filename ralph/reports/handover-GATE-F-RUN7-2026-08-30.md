@@ -338,3 +338,102 @@ None of these cost much individually. Together they are most of why six runs
 each spent their first hour rediscovering the same ground. **Check what a base
 branch actually contains before naming it**, and diff the brief against the last
 handover before issuing it.
+
+
+---
+
+## 11. Final state, and the note `LAND-FIX-2` needs
+
+Appended at wrap-up, 2026-08-30 ~15:40Z, on the coordinator's stand-down.
+
+### S03: NOT RUN. Nothing was inherited from it.
+
+S03 was started once, ran ~16 minutes, and was **stopped by me** — not blocked,
+not failed, no cost gate hit. **Its partial run directory was deleted**, so
+`ralph/reports/gate-f-run7/` contains S01 and S02 only. There is no S03 verdict,
+no `S03-exit.json`, and nothing in this branch that a future lane should treat
+as an S03 result.
+
+**I took none of `ralph/T5-PLAY`'s S03 fix and authored no competing version.**
+The 14:59Z routing was right that their fix should be taken rather than
+rewritten; I simply never reached the segment. Their S03 work merges into a
+clean slate here.
+
+### For `LAND-FIX-2`: exactly what my fixture commit changed
+
+`e611720a` — *"Mirror the GAME-11 level pin into the band-split baseline
+fixture"*. If LAND-FIX-2 is fixing `test_band_content` fixture drift on
+`ralph/LAND-0830J`, **we are probably fixing two different rows and both
+changes may be wanted.** Here is precisely what mine does, so a third variant
+does not get invented:
+
+**One entry changed: `spawns.json`, `spawns[0]` — the band-1 bramblebun
+practice cluster. Nothing else in any fixture file was touched.**
+
+Two keys added to that entry, both mirroring `data/config/bands/band1_lower_meadows/spawns.json` byte-for-byte:
+
+| key | value |
+|---|---|
+| `level` | `2` |
+| `_why_game_11` | the rationale string, identical to the live file's |
+
+The `_why_game_11` text had to be **byte-identical** to the live entry's:
+`test_band_content` compares every value including comment strings, so a mirror
+whose rationale merely *says the same thing* still fails. That cost one extra
+round here and is worth knowing.
+
+**Every identity key the fixture exists to freeze is untouched** — `order`,
+array index, `centre`, `count`, `radius`. This is the amendment
+`tests/test_band_content.gd`'s own header names as permitted: *"a deliberate
+BALANCE retune of an entry's own `level` by whoever owns the chapter curve moves
+nothing and rerolls nothing"*, with `captain_field`/`captain_ridge` as the
+precedent.
+
+**My commit does NOT touch `trainers.json` or any trainer row.** So if
+LAND-FIX-2's fix is about `trainers[8..10].base`, the two are disjoint and
+should both land. If LAND-FIX-2 also edits `spawns[0]`, compare against the live
+`data/config/` entry — the live file is the source of truth and the mirror must
+equal it exactly.
+
+### The measurement that settles which failures are whose
+
+Both remaining suite failures were baselined by **reverting every change of
+mine** and re-running. Not reasoned about — measured, in both directions:
+
+| failure | baseline method | result |
+|---|---|---|
+| `test_scatter_perf_budget.gd :: test_playground_bake_is_committed_and_fresh` | all my changes stashed | **fails identically without me** |
+| `test_band_content.gd` — `trainers[8..10].base is missing` | `data/config/bands/` and `tests/fixtures/band_split_baseline/` checked out from `origin/ralph/LAND-0830I` | **fails identically without me** |
+
+**Both are pre-existing on `LAND-0830I`.** Neither is mine and neither is
+`LAND-FIX-2`'s to attribute to this branch. With the same revert, `spawns[0]`
+does **not** fail — confirming my mirror fully closes the only row I introduced.
+
+Final clean suite on this branch's final tree: **1661 tests, 3,620,366
+assertions, 2 failed** — exactly those two.
+
+### If I were continuing, the path I would take
+
+Stated because I am the person who currently understands the choice.
+
+**I would not go to S03 next. I would re-run S02 three or four times first.**
+
+The reasoning: GAME-11's fix rests on **one** sample against RUN6's five. The
+pin removes the level roll, so the variance that produced 4-of-5 faints is gone
+*by construction* — but "the starter reliably wins" is still a one-run claim,
+and every downstream segment in every future run is seeded from that save. Four
+S02 runs cost ~40 minutes and convert the single most load-bearing result on
+this branch from an anecdote into a reliability number. If it holds, the chain
+has a trustworthy entry for the first time. If it does not, everyone finds out
+for 40 minutes instead of after a full chain run.
+
+**Only then** S03 (taking T5-PLAY's fix) → S06, and X04 after S06, per RUN5's
+chain-gating finding.
+
+The one thing I would *not* do next is chase the village frame cost. It is real
+and it will stop a future run, but the stale scatter bake (§7) has to be ruled
+out first, and that is one command rather than an investigation.
+
+### Branch state
+
+`ralph/GATE-F-RUN7` is fully pushed. Working tree clean. Nothing running.
