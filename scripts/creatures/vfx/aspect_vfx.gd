@@ -88,6 +88,7 @@ const PRESETS := {
 		"paw_colour": Color(0.55, 0.55, 0.55),
 		"paw_count": 3,
 		"eye_colour": Color(1.0, 0.6, 0.2),
+		"tusk_colour": Color(1.0, 0.62, 0.16),
 	},
 }
 
@@ -158,6 +159,7 @@ func _physics_process(delta: float) -> void:
 	_draw_primary(right, up)
 	_draw_paws(right, up)
 	_draw_eyes(right, up)
+	_draw_tusks(right, up)
 	_mesh.surface_end()
 
 
@@ -250,6 +252,30 @@ func _draw_eyes(right: Vector3, up: Vector3) -> void:
 	var size: float = _radius * 0.05
 	for side in [-1.0, 1.0]:
 		var centre := Vector3(side * _radius * 0.22, _height * 0.83, _radius * 0.85)
+		var draw_colour := Color(colour.r, colour.g, colour.b, pulse)
+		_disc(centre, right * size, up * size, draw_colour)
+
+
+## T1-VARIANTS 2026-08-30 (JUDGE-3 5b/5d): "Ashtusk's own 'ember-glowing
+## tusks' specifically did not read at all... make them read." The texture
+## layer alone (data/creatures/aspect_variants.json's `tusks` glow) cannot be
+## guaranteed to land precisely on the two tusks -- there is no per-vertex
+## tusk mask without new geometry, only a colour/anatomy heuristic, and this
+## project's own boards are covered in similarly pale grey stone armour that
+## competes with it. A small fixed billboard pair, anchored just below and
+## forward of the shared eye anchor (mouth/tusk height on a quadruped's own
+## head, same reasoning `_draw_eyes()` already gives for why no per-species
+## tuning is needed here), guarantees the read regardless of texture
+## precision. Only variants with a `tusk_colour` in their preset draw this --
+## today that is Ashtusk alone.
+func _draw_tusks(right: Vector3, up: Vector3) -> void:
+	if not _preset.has("tusk_colour"):
+		return
+	var colour: Color = _preset.get("tusk_colour", Color.WHITE)
+	var pulse: float = 0.7 + 0.3 * sin(_life * 2.2 + 1.4)
+	var size: float = _radius * 0.07
+	for side in [-1.0, 1.0]:
+		var centre := Vector3(side * _radius * 0.4, _height * 0.58, _radius * 0.95)
 		var draw_colour := Color(colour.r, colour.g, colour.b, pulse)
 		_disc(centre, right * size, up * size, draw_colour)
 

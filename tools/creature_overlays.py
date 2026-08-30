@@ -60,6 +60,8 @@ different hat. Model-space noise is continuous over the whole animal.
 Everything is seeded from (species, overlay id), so output is a pure function
 of its inputs and the tool stays idempotent.
 """
+import zlib
+
 import numpy as np
 
 from creature_anatomy_maps import build as build_anatomy
@@ -290,7 +292,19 @@ def apply_overlays(rgb, species, overlays, size):
         grain = float(overlay.get("grain", 4.0))
         coverage = float(overlay.get("coverage", 1.0))
         if coverage < 0.999 and grain > 0.0:
-            seed = abs(hash((species, ident))) % (2 ** 32)
+            # T1-VARIANTS 2026-08-30 fix: the builtin `hash()` on a
+            # tuple-of-strings is salted per PROCESS (PYTHONHASHSEED), not
+            # per value -- this module's own docstring promises "output is a
+            # pure function of its inputs", and running the SAME spec twice
+            # in a row without changing anything produced a different clump
+            # pattern and a different printed coverage number each time
+            # (confirmed directly: two back-to-back runs of
+            # tools/generate_aspect_variant_textures.py, which calls this
+            # path via repaint()'s own overlay compositing, disagreed by
+            # several percentage points of coverage on the exact same spec).
+            # zlib.crc32 over the encoded value is deterministic across
+            # processes and interpreter runs.
+            seed = zlib.crc32(("%s|%s" % (species, ident)).encode("utf-8"))
             noise = _value_noise_3d(anatomy["unit"], grain, seed,
                                     int(overlay.get("octaves", 3)))
             cut = float(np.quantile(noise, 1.0 - coverage))

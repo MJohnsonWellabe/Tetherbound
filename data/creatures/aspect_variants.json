@@ -53,17 +53,20 @@
       "glow": [
         {
           "id": "armor_cracks",
-          "_why": "'strong purple emissive cracks through armor' + 'purple flame... rising from... armor seams'. Darkest-pixel seams within the plated back/flank, never the belly or legs.",
+          "_why": "'strong purple emissive cracks through armor' + 'purple flame... rising from... armor seams'. Darkest-pixel seams within the plated back/flank, never the belly or legs. T1-VARIANTS 2026-08-30 (JUDGE-3 5a/5b): the old flat #a855f7 at intensity 1.8 rendered as a saturated magenta blotch, well past the board's own Violet Glow/Amethyst Flame swatches (both a cooler, less pink violet) -- desaturated and shifted a few degrees toward blue, and eased off intensity so the additive emission does not clip toward hot pink. `clump_grain`/`clump_coverage` break the percentile selection into a vein network instead of one solid blob (the mirrored/blotchy look JUDGE-3 named); the generator's own pupil exclusion (module header, tools/generate_aspect_variant_textures.py) keeps this off the eyes without a position band, since a badger's own black mask/legs are too broadly dark for a position cut to help here.",
           "select": "feature",
           "where": {
             "y_min": 0.3,
             "up_min": 0.12
           },
-          "percentile": 7.0,
-          "max_val": 0.14,
-          "color": "#a855f7",
-          "intensity": 1.8,
-          "softness": 0.1
+          "percentile": 8.0,
+          "max_val": 0.16,
+          "color": "#8f6bf0",
+          "intensity": 1.45,
+          "softness": 0.1,
+          "clump_grain": 5.0,
+          "clump_coverage": 0.5,
+          "clump_softness": 0.16
         }
       ]
     },
@@ -103,20 +106,21 @@
       "overlays": [
         {
           "id": "lightning_marks",
-          "_why": "'bright yellow-gold lightning markings'. tint (not grow) so the streaks follow the fur's own value detail instead of sitting on top of it as a flat decal. Narrow radial band keeps it a spine/flank marking, not a full recolour.",
+          "_why": "'bright yellow-gold lightning markings'. tint (not grow) so the streaks follow the fur's own value detail instead of sitting on top of it as a flat decal. Narrow radial band keeps it a spine/flank marking, not a full recolour. T1-VARIANTS 2026-08-30 (JUDGE-3 5b): 'too small to read -- at 30% this is simply a grey wolf; the cyan occupies about 3% of the silhouette'. The reference board's own close-up shows the lightning network covering most of the head/spine/legs, not a thin stripe -- coverage raised and the clump grain widened so streaks read as bolts rather than speckle. `z_max` keeps it off the muzzle/eye region (measured: this species' own dark facial features cluster at unit z > ~0.80 -- see the glow layer below and tools/generate_aspect_variant_textures.py's own eye exclusion), matching the board's close-up where the eyes stay the trailpup's own colour, not painted over.",
           "where": {
-            "y_min": 0.4,
-            "up_min": 0.12,
-            "radial_max": 0.4
+            "y_min": 0.32,
+            "up_min": 0.05,
+            "radial_max": 0.65,
+            "z_max": 0.85
           },
           "mode": "tint",
           "color": "#f7c948",
-          "sat_floor": 0.7,
-          "val_scale": 1.2,
-          "coverage": 0.32,
-          "grain": 9.0,
-          "clump_softness": 0.06,
-          "softness": 0.08
+          "sat_floor": 0.85,
+          "val_scale": 1.4,
+          "coverage": 0.65,
+          "grain": 5.0,
+          "clump_softness": 0.1,
+          "softness": 0.12
         }
       ],
       "finish": {
@@ -127,17 +131,21 @@
       "glow": [
         {
           "id": "storm_veins",
-          "_why": "'occasional electricity moving over coat/tail'. Same darkest-seam trick as Nightburrow, coloured static blue -- the STILL glow; the moving arc is scripts/creatures/vfx/aspect_vfx.gd's job, not the texture's.",
+          "_why": "'occasional electricity moving over coat/tail'. Same darkest-seam trick as Nightburrow, coloured static blue -- the STILL glow; the moving arc is scripts/creatures/vfx/aspect_vfx.gd's job, not the texture's. T1-VARIANTS 2026-08-30: colour moved from a plain sky-cyan toward the board's own more indigo 'Static Blue' swatch. First render pass at percentile 9/coverage 0.6 still measured only 0.56% of the surface and was barely visible even at night close-up (this lane's own render, ralph/reports/T1-VARIANTS/shots) -- raised again, and `scripts/creatures/creature_body.gd`'s own `ASPECT_EMISSION_BOOST` now gives every aspect variant's emission an on-top multiplier beyond the shared `emission_scale` tame, since a sparse crack map is not the full-body self-lit copy that tame was built for. `z_max: 0.85` measured directly off the anatomy map (this species' darkest 0.3% of source pixels -- eyes/nose -- sit at unit z p10-p90 = 0.84-0.99) with a little more margin than the first pass to stop clipping real spine/shoulder texels near the head.",
           "select": "feature",
           "where": {
-            "y_min": 0.32,
-            "up_min": 0.1
+            "y_min": 0.28,
+            "up_min": 0.05,
+            "z_max": 0.85
           },
-          "percentile": 6.0,
-          "max_val": 0.13,
-          "color": "#5aa7ff",
-          "intensity": 1.6,
-          "softness": 0.1
+          "percentile": 14.0,
+          "max_val": 0.24,
+          "color": "#6d76ea",
+          "intensity": 1.7,
+          "softness": 0.1,
+          "clump_grain": 5.0,
+          "clump_coverage": 0.75,
+          "clump_softness": 0.16
         }
       ]
     },
@@ -190,16 +198,20 @@
       "glow": [
         {
           "id": "rift_markings",
-          "_why": "'cyan/violet body markings'. Feature-select still works here even though the body is not dark-charcoal like the other three -- it is the DARKEST-relative-to-its-own-region pixels that carry pattern line-work on every one of these paintings (shiny_colourways.json's own finish-pass comment says the same thing about eyes/nostrils/outlines), so it still isolates markings rather than skin.",
+          "_why": "'cyan/violet body markings'. Feature-select still works here even though the body is not dark-charcoal like the other three -- it is the DARKEST-relative-to-its-own-region pixels that carry pattern line-work on every one of these paintings (shiny_colourways.json's own finish-pass comment says the same thing about eyes/nostrils/outlines), so it still isolates markings rather than skin. T1-VARIANTS 2026-08-30 (JUDGE-3 5b): 'isolated aliased single pixels that read as dead pixels' and 'a stray dark squiggle drawn across each iris' -- the old boolean threshold gave single-texel islands with no anti-aliasing, and nothing kept the selection off the eyes. `z_max: 0.8` measured directly off this species' own anatomy map (its darkest 0.3% source pixels -- eyes -- sit at unit z p10-p90 = 0.84-0.89), and the generator's own model-space clump (see tools/generate_aspect_variant_textures.py) turns single stray texels into a continuous rift-vein pattern instead of dead-pixel noise.",
           "select": "feature",
           "where": {
-            "y_min": 0.2
+            "y_min": 0.2,
+            "z_max": 0.8
           },
-          "percentile": 5.0,
-          "max_val": 0.22,
+          "percentile": 5.5,
+          "max_val": 0.24,
           "color": "#a855f7",
-          "intensity": 1.3,
-          "softness": 0.12
+          "intensity": 1.35,
+          "softness": 0.12,
+          "clump_grain": 4.0,
+          "clump_coverage": 0.6,
+          "clump_softness": 0.18
         }
       ]
     },
@@ -250,28 +262,37 @@
       "glow": [
         {
           "id": "armor_cracks",
-          "_why": "'orange glowing cracks' through the basalt plates. Restricted off the legs/belly the same way Nightburrow's are.",
+          "_why": "'orange glowing cracks' through the basalt plates. Restricted off the legs/belly the same way Nightburrow's are. T1-VARIANTS 2026-08-30 (JUDGE-3 5b): 'the yellow is spread evenly across the whole back... reads as camouflage netting rather than ember cracks; embers should concentrate in the valleys between plates and at the joints'. Tightened percentile (fewer, deeper texels qualify) and a coarser clump so the result is a sparser network of veins rather than an even wash, matching the board's own 'few, large, readable' cracks rather than a body-wide glow.",
           "select": "feature",
           "where": {
             "y_min": 0.28,
             "up_min": 0.12
           },
-          "percentile": 6.0,
-          "max_val": 0.12,
+          "percentile": 4.0,
+          "max_val": 0.11,
           "color": "#ff7a1a",
-          "intensity": 1.7,
-          "softness": 0.1
+          "intensity": 1.75,
+          "softness": 0.1,
+          "clump_grain": 4.0,
+          "clump_coverage": 0.42,
+          "clump_softness": 0.16
         },
         {
           "id": "tusks",
-          "_why": "'ember-glowing tusks'. Tusks are painted PALE/ivory, not dark -- a darkest-pixel search would never find them, so this layer selects by colour (low saturation, high value) instead of by percentile.",
+          "_why": "'ember-glowing tusks'. Tusks are painted PALE/ivory, not dark -- a darkest-pixel search would never find them, so this layer selects by colour (low saturation, high value) instead of by percentile. T1-VARIANTS 2026-08-30 (JUDGE-3 5b/5d): 'did not read at all' -- measured directly (this lane's own k-means over the `sat_max/val_min` selection in unit space) that the old bounds also matched the model's own grey basalt/stone armour patches, which cover far more surface than the ivory tusks and diluted the read into a generic pale wash. A `sat_min` floor plus a warm hue band keeps only the cream/ivory tusk colour (stone is closer to neutral grey, near-zero saturation); `y_max` keeps it off the dorsal plate region where the stone patches concentrate. Coverage is still not perfectly isolated to the two tusks alone (no per-vertex mask exists for them without new geometry) -- scripts/creatures/vfx/aspect_vfx.gd's own new tusk-glow billboard (anchored at the mouth the same way its eye-glow already is) is the guaranteed-visible half of this fix; this texture layer is the ambient half.",
           "select": "match",
-          "where": {},
-          "sat_max": 0.12,
-          "val_min": 0.6,
+          "where": {
+            "y_max": 0.78
+          },
+          "sat_min": 0.03,
+          "sat_max": 0.22,
+          "val_min": 0.68,
+          "hue": [18, 55],
           "color": "#ffb347",
-          "intensity": 1.2,
-          "softness": 0.1
+          "intensity": 1.9,
+          "softness": 0.12,
+          "blur_px": 3,
+          "clump_coverage": 1.0
         }
       ]
     }
