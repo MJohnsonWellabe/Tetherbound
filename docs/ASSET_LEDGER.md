@@ -355,7 +355,7 @@ which this lane has no more ability to spend than the one that found it.
 
 Full account: `ralph/reports/NPC_CAST_INSTALL_2026-08-30.md`.
 
-## T1-CREATURE-RIG (2026-08-30) — the 15 civilian/trail bodies placed, the five creature rigs still blocked
+## T1-CREATURE-RIG (2026-08-30) — the five creature rigs closed locally, the 15 civilian/trail bodies placed
 
 No new Meshy spend in this entry either.
 
@@ -385,22 +385,59 @@ actual terrain and structures, not a neutral-backdrop lineup), through
 `tools/_capture_t1_creature_rig_npcs.gd`.
 
 **The five expansion-creature meshes' no-rig defect (Sparkit, Cindercub,
-Shadelet, Frostclaw, Bramblebun redesign) is NOT closed this pass, and
-could not be.** `MESHY_API_KEY` is unset in this container — confirmed
-directly (`python3 tools/art_pipeline/meshy.py check` reports "MESHY_API_KEY
-is not set"), the same wall T3-INSTALL's own handover already recorded
-hitting on this exact task ("no API key in this lane, same as every other
-lane that has hit this wall"). Rigging an already-generated mesh is
-in-scope work per CLAUDE.md (it spends no new generation), but the Meshy
-auto-rigger is a cloud API call and there is no local, offline substitute
-for it in this pipeline — `animate_humanoid.py`'s own local Blender bake
-needs a rigged/skinned input to animate, so nothing downstream of the rig
-call can proceed either. Recorded here as a standing environment blocker,
-not a judgement call to escalate for spend authorisation: the five meshes
-still stand in the world at correct scale/material and still do not play
-idle/walk/attack/hit/faint, exactly as this ledger's own T3-INSTALL entry
-above describes. The Bramblebun redesign therefore also stays reverted
-(the original animated mesh still ships) for the same reason T3-INSTALL
-gave.
+Shadelet, Frostclaw, Bramblebun redesign) IS closed this pass, and by a
+different recipe than the brief itself guessed at.** `MESHY_API_KEY` was
+confirmed unset in this container early in this session (`python3
+tools/art_pipeline/meshy.py check` reported "MESHY_API_KEY is not set"),
+the same wall T3-INSTALL's own handover recorded hitting on this exact
+task. But `meshy.py`'s own `cmd_rig` docstring says plainly "Meshy
+documents this as HUMANOID-only" — the cloud auto-rigger was never the
+right tool for five quadrupeds — and `tools/art_pipeline/finish.py` (its
+own header: `finish.py rig bramblebun --kind quadruped`) already runs a
+LOCAL, offline recipe for exactly this case: `rig_quadruped.py` places a
+15-bone skeleton from the mesh's own geometry (leg clustering, spine along
+the long axis, no hand-placed bones) and skins it with Blender's automatic
+weights; `animate_quadruped.py` then authors the same six clips
+(idle/walk/run/attack/hit/faint) every other production creature ships,
+locally. Zero Meshy credits — this is the actual recipe every existing
+creature in the roster (Bramblebun's own original mesh included) already
+went through. The owner supplied a working `MESHY_API_KEY` mid-session
+(515 credits, verified) after this was already found, but it was not
+needed for the rig/animate steps themselves — only `finish.py texture`
+(not run here; every one of these five meshes already had its texture)
+touches Meshy.
+
+Run for all five: `mkdir -p assets_raw/<species>/build && cp
+assets/creatures/tetherbound/<species>/models/creature_<species>_lod0.glb
+assets_raw/<species>/build/textured.glb && python3
+tools/art_pipeline/finish.py rig <species> --kind quadruped && python3
+tools/art_pipeline/finish.py install <species>`. Sparkit, Shadelet and
+Bramblebun redesign rigged with 0 unweighted vertices; Cindercub (35/27342)
+and Frostclaw (20/26840) triggered `rig_quadruped.py`'s own
+"UNWEIGHTED VERTICES PRESENT — these will tear" warning, so neither was
+installed on the strength of that count alone — a new tool,
+`tools/art_pipeline/blender/pose_check.py`, renders a model at a named
+action/frame instead of its rest pose specifically to answer that question
+with a frame rather than a number, and both rendered clean at the attack
+clip's most extreme pose (frame 10, full rear-up/paws-down extension) with
+no visible tearing before being installed. Evidence, all five, posed:
+`ralph/reports/T1-CREATURE-RIG/shots/pose_check/`.
+
+**The Bramblebun redesign now ships.** `data/creatures/species.json`'s
+`bramblebun.placeholder.model` now points at
+`bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb` — the
+only reason it was reverted (a static, unrigged mesh regressing the game's
+most-seen creature) no longer applies, and the rendered posed frame shows
+a clean rig with the redesign's own larger, antlered silhouette per the
+owner's size guide.
+
+Also fixed along the way: the newly-installed `.glb` files did not reach
+Godot until `godot --headless --path . --import` was re-run — overwriting
+a `.glb` on disk leaves its stale `.godot/imported/` cache alone, exactly
+the trap `ralph/conventions.md`'s art-pipeline section already documents.
+The first `smoke_art.gd` run after installing still reported "bramblebun
+has no AnimationPlayer" against the OLD cached import; re-importing and
+re-running fixed it. Recorded here since it will bite the next person who
+overwrites a creature `.glb` mid-session too.
 
 Full account: `ralph/reports/handover-T1-CREATURE-RIG-2026-08-30.md`.

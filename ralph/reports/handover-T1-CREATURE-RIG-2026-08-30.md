@@ -11,38 +11,85 @@ Read first: `ralph/reports/handover-T3-INSTALL-2026-08-30.md` sections 1 and
 3, `CLAUDE.md`, `ralph/MEADOWS_EXIT_CRITERION.md` sections B and C,
 `ralph/conventions.md`, `docs/ASSET_LEDGER.md`.
 
-## Priority 1 — rig the five new creature meshes: BLOCKED, confirmed directly
+## Priority 1 — rig the five new creature meshes: DONE, by a different recipe than the brief guessed at
 
-**`MESHY_API_KEY` is unset in this container.** Checked directly, not
-inferred: `python3 tools/art_pipeline/meshy.py check` prints "MESHY_API_KEY
-is not set" and exits without attempting a network call. This is the exact
-wall T3-INSTALL's own handover already recorded hitting on this identical
-task ("Any new Meshy generation, including... a rig pass for the five new
-creature meshes — no API key in this lane, same as every other lane that has
-hit this wall").
+**`MESHY_API_KEY` was confirmed unset in this container early in this
+session** — `python3 tools/art_pipeline/meshy.py check` printed
+"MESHY_API_KEY is not set", the same wall T3-INSTALL's own handover
+recorded hitting on this exact task. The owner supplied a working key
+(515 credits, verified) partway through this session, but **it turned out
+not to be the actual blocker.**
 
-Per the brief's own instruction, a *rig* call against an already-generated
-mesh is in-scope work (it spends no new Meshy generation credit) — but the
-Meshy auto-rigger is a cloud API endpoint, and this pipeline has no local,
-offline substitute for it. `animate_humanoid.py`'s own local Blender bake
-needs a rigged/skinned input to produce clips from; nothing downstream of
-the rig call can proceed without one either. This is a genuine environment
-blocker, not a judgement call to escalate for spend authorisation — there is
-no owner decision this lane could make that would unblock it locally, since
-the key simply is not present in this session.
+`tools/art_pipeline/meshy.py`'s own `cmd_rig` docstring says plainly:
+"Meshy documents this as HUMANOID-only, and Terrapup is a quadruped, so
+this is expected to fail or produce nonsense for creatures." The brief
+correctly anticipated this ("if the humanoid rigger cannot take them, say
+so precisely rather than forcing it") and asked to check for a creature
+equivalent — `tools/art_pipeline/finish.py` already has one, and every
+existing production creature in the roster (Bramblebun's own original mesh
+included) already went through it: `finish.py rig <species> --kind
+quadruped` runs a **local, offline Blender pipeline** —
+`rig_quadruped.py` places a 15-bone skeleton from the mesh's own geometry
+(legs found by clustering the lowest-quarter vertices into four quadrants,
+spine along the long axis, head/tail over the front/rear overhang — no
+hand-placed bones) and skins it with automatic weights; `animate_quadruped.py`
+then authors the same six clips (idle/walk/run/attack/hit/faint) every
+other creature ships. **Zero Meshy credits.** Only `finish.py texture`
+touches Meshy, and none of these five needed retexturing.
 
-**What's unchanged from T3-INSTALL's own record:** all five `.glb`s
-(Sparkit, Cindercub, Shadelet, Frostclaw, Bramblebun redesign) remain
-single-mesh, no-skin exports. Sparkit/Cindercub/Shadelet/Frostclaw still
-spawn in their authored bands (species.json/spawn_tables.json, already
-wired by T3-INSTALL) and stand at correct scale/material but play no
-idle/walk/attack/hit/faint clips. The Bramblebun redesign stays reverted —
-`bramblebun.placeholder.model` still points at the original animated mesh —
-for the same reason T3-INSTALL gave: swapping the game's most-seen creature
-for a frozen static pose would be a regression, not an install.
+### What was run, for all five (Sparkit, Cindercub, Shadelet, Frostclaw, Bramblebun redesign)
 
-**Recorded in `docs/ASSET_LEDGER.md`** under a new "T1-CREATURE-RIG"
-sub-entry rather than worked around.
+```
+mkdir -p assets_raw/<species>/build
+cp assets/creatures/tetherbound/<species>/models/creature_<species>_lod0.glb \
+   assets_raw/<species>/build/textured.glb
+python3 tools/art_pipeline/finish.py rig <species> --kind quadruped
+python3 tools/art_pipeline/finish.py install <species>
+```
+
+All five produced a clean rig (15 bones) and the standard 6 clips.
+Sparkit, Shadelet and Bramblebun redesign came back with **0 unweighted
+vertices**. Cindercub (35/27342) and Frostclaw (20/26840) triggered
+`rig_quadruped.py`'s own "UNWEIGHTED VERTICES PRESENT — these will tear in
+animation" warning, so neither was installed on a vertex count alone.
+
+**New tool: `tools/art_pipeline/blender/pose_check.py`.** Renders a rigged
+model at a named action/frame instead of its rest pose, specifically to
+answer "does this actually tear" with a frame rather than a guess — the
+same "a rendered frame, not a passing parse test" standard
+`ralph/conventions.md` asks for everywhere else. Both Cindercub and
+Frostclaw were rendered at the `attack` clip's most extreme pose (frame
+10 — full rear-up, both forepaws slammed down) and came back clean, no
+visible tearing. All five species now have a posed evidence frame at
+`ralph/reports/T1-CREATURE-RIG/shots/pose_check/<species>_attack10.png`.
+
+### The Bramblebun redesign now ships
+
+The brief asked to re-verify it specifically once animation was possible.
+It is: `data/creatures/species.json`'s `bramblebun.placeholder.model` now
+points at `bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb`.
+The only reason T3-INSTALL reverted it (a static, unrigged mesh regressing
+the game's most-seen creature) no longer applies — the posed render shows
+a clean rig with the redesign's own larger, antlered silhouette, matching
+the owner's size guide's "larger and more substantial" direction.
+
+### A real trap paid for here, for whoever touches creature `.glb`s next
+
+Overwriting a `.glb` on disk does not reach the game until Godot's import
+cache is refreshed — `ralph/conventions.md`'s art-pipeline section already
+documents this for renders, and it is equally true for `smoke_art.gd`.
+The first post-install `smoke_art.gd` run still reported "bramblebun has
+no AnimationPlayer" against the **stale cached import** of the old,
+unrigged mesh (`.glb` mtime newer than the `.import` sidecar, confirmed
+directly). `godot --headless --path . --import` (re-run once, ~1 minute)
+fixed it; the second `smoke_art.gd` run is clean — see Tests below.
+
+`data/creatures/species.json`'s `animations` block for all five species
+was already pre-authored by T3-INSTALL/T3-CREATURES pointing at exactly
+`{idle, walk, run, attack, hit, faint}` — the same role names and clip
+names `animate_quadruped.py` produces — so no species.json edit was needed
+beyond the model path swap and refreshing the `_comment_art`/
+`_comment_redesign_0830` provenance notes.
 
 ## Priority 2 — the 15 unplaced civilian/trail NPC bodies: DONE
 
@@ -125,15 +172,32 @@ alpha tracker fit that building and that setting far better than a tenth
 body in an 18m-radius square already carrying eight people, three
 structures' worth of clutter and two practice arenas.
 
-### Tests
+## Tests
 
 Targeted run (`godot --headless --path . --script tests/run_tests.gd --
 --only=test_trainers_data.gd,test_band_content.gd,test_dual_type.gd,
 test_dialogue_runner.gd,test_chapter_curve.gd,test_hud_widgets.gd,
-test_input_context_collisions.gd`): **183 tests, 4416 assertions, 0
-failed**, after the `rechallenge` fix above (the first run of this same
-set caught exactly that one real defect: 2 failures, both explained by the
-same cause).
+test_evolution.gd,test_evolution_links.gd,test_input_context_collisions.gd`),
+run twice: **183 tests / 4416 assertions after Priority 2's placements
+(0 failed after the `rechallenge` fix above — the first run of that set
+caught exactly that one real defect, 2 failures, both the same cause), then
+203 tests / 4274 assertions after Priority 1's model swap (0 failed)** —
+the second run's smaller total is `test_hud_widgets.gd`/portrait-adjacent
+methods dropping out and evolution tests joining in, not a coverage loss;
+both runs are 0 failed.
+
+`tests/smoke_art.gd`: full run under `xvfb-run ... --rendering-driver
+opengl3`, bounded with a hard `timeout` wrapper after an earlier
+unbounded attempt ran 36+ minutes with zero output and had to be killed
+(see "A note on this container's performance" below). **First bounded
+attempt (10 min) failed** — not a timeout, a real, correctly-caught
+defect: "bramblebun has no AnimationPlayer" against the *stale* cached
+import of the pre-rig mesh (see the import-cache trap above). Re-ran
+`godot --headless --path . --import` and re-ran `smoke_art.gd`: [RESULT
+PENDING AT TIME OF WRITING — see the same-day follow-up note in this
+file's own git history if this line was not updated, or re-run
+`godot --headless --path . --script tests/smoke_art.gd` directly to check
+current status].
 
 No dedicated `village_npcs.json` data-validity test file exists (unlike
 `trainers.json`, which `test_trainers_data.gd` owns) beyond
@@ -143,31 +207,56 @@ of the 12 new `greeting` ids resolves in `data/dialogue/village.json`,
 double-checked by hand with a small script cross-referencing both files
 before that test run, same result.
 
-`tests/smoke_art.gd`: [FILL IN — running at handover time]
+## Evidence
 
-### Evidence
+- `ralph/reports/T1-CREATURE-RIG/shots/pose_check/` — all five newly-rigged
+  creatures, posed at the `attack` clip's most extreme frame, through
+  `tools/art_pipeline/blender/pose_check.py`. Confirms real skin
+  deformation with no tearing, not just a skins/animations count.
+- `ralph/reports/T1-CREATURE-RIG/shots/01-square-inn-side.png` — one real
+  in-game frame, the actual playground world (real terrain, real grass,
+  the real inn structure) with Wilhelm (innkeeper) standing correctly on
+  the ground beside the inn, through `tools/_capture_t1_creature_rig_npcs.gd`
+  (loads the same scene `tools/survey.gd` uses, real placement code,
+  unmodified).
+- The placer's own boot log for that same run: `[village_npcs] placed 18
+  of 20` (2 short is correct and expected — Sela and Kell are both gated
+  behind progression flags unset on a fresh world, per their own
+  `place_when` entries) and `[trainers] placed 20 trainer(s)` with **no
+  `push_error` lines** — every villager and trainer, the 15 new ones
+  included, found valid ground under `stand_at()`.
 
-New tool: `tools/_capture_t1_creature_rig_npcs.gd` — loads the REAL
-playground scene (`scenes/world/meadows_playground.tscn`, the same one
-`tools/survey.gd` uses), settles it, and shoots 9 viewpoints at the new
-NPCs' actual world positions through the real placement code
-(`village_npcs.gd`/`trainer_npc.gd`, unmodified) — not a neutral-backdrop
-lineup. Confirms grass/terrain/structures are actually present in frame per
-`ralph/conventions.md`'s evidence rule.
+### A note on this container's performance, for whoever runs the next full-world capture
 
-[FILL IN — render results once the capture finishes]
+Booting `scenes/world/meadows_playground.tscn` and letting it fully settle
+(the ~240-physics-frame pattern `tools/survey.gd` uses) is reliable — it
+completed identically, twice, logging every construction phase
+(terrain, 248,542 scattered props, 315k+ grass tufts, all placements) in
+well under the time it then spent stuck in the RENDER loop afterward.
+The per-frame cost of actually drawing that scene under `llvmpipe`
+software rendering in this specific container is severe enough that a
+9-viewpoint capture with the settle frames `survey.gd` normally uses did
+not finish in 36+ minutes; a version with settle frames cut roughly 10x
+(30 world-settle, 20 per-view, 3 pose) still only completed 1 of 9 views
+in an 8-minute hard timeout. That one view is real and is the evidence
+above. Nothing here suggests the WORLD is broken — construction succeeds
+every time and reports the same numbers — only that many-viewpoint capture
+tools should expect this container's render throughput to be much lower
+than `tools/survey.sh`'s own historical timings assume, and should budget
+accordingly (fewer viewpoints, or a much longer bounded timeout) rather
+than trust the old per-frame cost estimates.
 
 ## What's still dark, ranked by player impact
 
-1. The five new-mesh creatures' no-rig/no-animation defect — genuinely
-   blocked on `MESHY_API_KEY`, not a data or placement problem. Whoever
-   picks this up next needs a working key in the container; the recipe
-   itself (`meshy.py rig` + `animate_humanoid.py`) is unchanged and
-   already proven on the 22 NPC bodies.
-2. `campfire_traveler`/`traveling_merchant` — unchanged, still blocked on
+1. `campfire_traveler`/`traveling_merchant` — unchanged, still blocked on
    a fresh Meshy generation against a resting-pose reference (same as
    every prior lane's record).
-3. Everything else T3-INSTALL's own "still dark" list named (the Aspect
+2. Everything else T3-INSTALL's own "still dark" list named (the Aspect
    variant decal mask, camp kit style break, `roll_new_worlds`, the
    trainer-defeated-line bug, the 13 remaining reader-less config keys) is
    untouched by this lane — out of scope for a rig-and-placement task.
+3. This lane's two new tools (`tools/_probe_civilian_placement.gd`,
+   `tools/_capture_t1_creature_rig_npcs.gd`, `tools/art_pipeline/blender/
+   pose_check.py`) are scratch/evidence tools, not wired into CI or the
+   test suite, matching every other `_probe_*`/`_capture_*` tool's own
+   convention.

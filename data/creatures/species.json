@@ -156,11 +156,11 @@
         "height": 1.0,
         "radius": 0.325,
         "footprint_allowance": 2.2,
-        "model": "res://assets/creatures/tetherbound/bramblebun/models/creature_bramblebun_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Produced by tools/art_pipeline from the owner's wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. Replaces the Plumberry duck that stood in for it. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
-        "_comment_redesign_0830": "T3-INSTALL, 2026-08-30. TRIED repointing `model` at bramblebun_redesign/'s mesh (per the creature-expansion brief section 6) and REVERTED it in the same pass: `tests/smoke_art.gd` caught it immediately -- 'bramblebun has no AnimationPlayer despite declaring 6 clips' -- because the redesign's `.glb` is a static, unrigged single-mesh Meshy export (skins: 0, empty animations array), unlike every other production creature rig in the game. Bramblebun is the single most common, most-seen creature in the Meadows (native, common tier, the 'practice creature' every player throws orbs at repeatedly); swapping it to a frozen mesh would have been a visible regression on the single worst creature to regress, not an improvement, so this stays on the ORIGINAL animated mesh until the redesign gets a rig pass (Meshy `rig` + `animate_humanoid.py`'s bake, the same recipe the NPC cast used) it does not have yet. `height` was already moved 0.96 -> 1.00 for the redesign's own size guide (see _comment_scale_0830) and is left there -- a real, tiny, harmless step toward the guide regardless of which mesh is active.",
+        "_comment_redesign_0830": "T3-INSTALL, 2026-08-30, TRIED repointing `model` at bramblebun_redesign/'s mesh and REVERTED it in the same pass: `tests/smoke_art.gd` caught 'bramblebun has no AnimationPlayer despite declaring 6 clips' because the redesign's `.glb` was a static, unrigged single-mesh Meshy export (skins: 0, empty animations array). T1-CREATURE-RIG, same day, closed that gap: `tools/art_pipeline/finish.py rig bramblebun_redesign --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py, no Meshy spend, not the humanoid Meshy-auto-rig recipe the comment this replaces guessed at) produced a clean rig (15 bones, 0 unweighted vertices) and the standard 6 clips (idle/walk/run/attack/hit/faint), verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/bramblebun_redesign_attack10.png) before installing, not just a passing skins-count check. `model` now points at the redesign for real. `height` was already moved 0.96 -> 1.00 for the redesign's own size guide (see _comment_scale_0830) and is left there.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
@@ -914,7 +914,7 @@
           "hit": "hit",
           "faint": "faint"
         },
-        "_comment_art": "T3-INSTALL, 2026-08-30. Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. The mesh has no AnimationPlayer/skin -- a static single-mesh export, not yet rigged -- so the creature stands in the world at its correct scale and material but does not play idle/walk/attack/hit/faint clips; creature_body.gd::_build_animator() warns and no-ops rather than failing. A rig pass is follow-up work, not a data problem; see the T3-INSTALL handover."
+        "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
       }
     },
     "cindercub": {
@@ -952,7 +952,7 @@
           "hit": "hit",
           "faint": "faint"
         },
-        "_comment_art": "T3-INSTALL, 2026-08-30. Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. The mesh has no AnimationPlayer/skin -- a static single-mesh export, not yet rigged -- so the creature stands in the world at its correct scale and material but does not play idle/walk/attack/hit/faint clips; creature_body.gd::_build_animator() warns and no-ops rather than failing. A rig pass is follow-up work, not a data problem; see the T3-INSTALL handover."
+        "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
       }
     },
     "shadelet": {
@@ -989,7 +989,7 @@
           "hit": "hit",
           "faint": "faint"
         },
-        "_comment_art": "T3-INSTALL, 2026-08-30. Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. The mesh has no AnimationPlayer/skin -- a static single-mesh export, not yet rigged -- so the creature stands in the world at its correct scale and material but does not play idle/walk/attack/hit/faint clips; creature_body.gd::_build_animator() warns and no-ops rather than failing. A rig pass is follow-up work, not a data problem; see the T3-INSTALL handover."
+        "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
       }
     },
     "frostclaw": {
@@ -1026,7 +1026,7 @@
           "hit": "hit",
           "faint": "faint"
         },
-        "_comment_art": "T3-INSTALL, 2026-08-30. Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. The mesh has no AnimationPlayer/skin -- a static single-mesh export, not yet rigged -- so the creature stands in the world at its correct scale and material but does not play idle/walk/attack/hit/faint clips; creature_body.gd::_build_animator() warns and no-ops rather than failing. A rig pass is follow-up work, not a data problem; see the T3-INSTALL handover."
+        "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
       }
     }
   },
