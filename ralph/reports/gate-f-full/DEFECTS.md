@@ -577,3 +577,84 @@ median fix is doing its job — it refused nothing in this run.
 with a real renderer. This is a headless logic lane and every number here is
 about simulation, not about frames on a screen. Device frame rate, GPU time,
 VRAM and thermals remain [OWNER-ONLY].
+
+---
+
+## GAME-F3, second pass — it is not one deadwood node. The meadow itself outbids the fight
+
+**Amends GAME-F3 above with S03 attempt 2's evidence.** The rig fix (RIG-F4)
+worked: attempt 1 of the ladder now engages cleanly —
+
+```
+S03-32a2  pressed `interact` on "  Engage Bramblebun" (provider 'EncounterDirector'):
+          context world -> combat
+```
+
+— so the ten-identical-attempts artefact is gone and what is left is the game.
+What is left is broader than one node:
+
+| attempt | what won the interact button |
+|---|---|
+| 1 | **Engage Bramblebun** — the fight staged |
+| 6 | `Gather deadwood` |
+| 9 | **`Strip meadow grass`** |
+| 2,3,4,5,7,8,10 | `Ripplet is out of the fight.` — see below |
+
+**`Strip meadow grass` is the ground.** `vegetation_harvest_point.gd` makes the
+scatter harvestable and the boot log reports **59,165 harvestable props** in the
+world. So the competing offer is not a single authored node the chapter could
+move — it is the meadow, and a wild creature standing in grass is competing
+with the grass it is standing in, on equal priority, decided by whichever is
+nearer.
+
+That does not make it a bug. `prompt_arbiter.gd`'s nearest-wins rule is
+deliberate, `encounter_director.gd`'s priority 0 is deliberate and the comment
+above it explains what happened the last time it was not, and a player who
+steps forward gets the creature. **But it is the shape of the thing to decide
+about**, and it is bigger than the one-coordinate fix option 1 above proposes.
+A fourth option belongs beside the three: give the engage offer a priority edge
+over *harvestables specifically* while inside engage range, leaving trainers,
+doors and villagers untouched.
+
+## GAME-F2, second pass — the cost of the missing level pin, measured directly
+
+Attempt 2's first engage staged the fight and **the starter lost it**:
+
+```
+t=202.8 .. 224.5   Moss (ripplet L3) 45.2 -> 39.0 -> 32.0 -> 25.4 -> 18.2 -> 12.2 -> 6.3 -> 0.0
+```
+
+Seven hits, no recovery, and every one of the ladder's remaining attempts was
+then refused with `"Ripplet is out of the fight."` — which is
+`encounter_director.gd` doing exactly what GAME-0's fix asks of it, correctly
+and legibly. **The team never reached three in either attempt, for two entirely
+different reasons.**
+
+Moss entered S03 at **45.2 of 117.6** because S02's practice fight was against a
+band-rolled level-5 bramblebun instead of the level-2 the chapter's own curve
+documents — GAME-F2. A starter that leaves the opening at 38% health loses the
+next fight. That is what the missing pin costs, and this is it measured on the
+played path rather than argued from a table.
+
+## RIG-F5 — two side-effects of this lane's own ladder fix, recorded against it
+
+**Severity:** RIG. **Recorded, not re-tuned** — a second speculative pass at the
+same ladder in the same run would be tuning against one sample.
+
+1. **`within: 1.8` is below the 3D tolerance the ground needs.** Attempt 6:
+   *"reached bramblebun in plan view (1.80 m in x/z) but it is 1.81 m away in 3D
+   — 0.22 m of that is vertical."* CD-5's `close_3d` is right to refuse, and 1.8
+   simply has no room for a creature standing 22 cm up a slope. **2.0 is the
+   floor a future pass should use**, not 1.5 or 1.8.
+2. **A high rank can resolve a creature outside the village.** Attempt 7 took
+   rank 4 and walked 38.4 m before stopping at (−9, 26) — which is the village
+   outline between its `[3,26]` and `[-15,27]` points. The fence stopped it, the
+   same way it stopped S03-83 and S03-85 (GAME-F1). **Ranks above 2 reach past
+   the practice cluster**, and a future pass should either cap the rank at the
+   cluster's own `count` (3) or give those attempts a `poi:wild` search bounded
+   to the meadow.
+
+Both are cheap to fix and both are this lane's own doing. Written down rather
+than adjusted, because the ladder has now been changed once mid-audit and a
+second change would leave nobody able to say which version produced which
+number.
