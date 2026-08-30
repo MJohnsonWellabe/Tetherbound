@@ -17,7 +17,7 @@ treated as the contract, with its five art boards as the generation reference.
 | **Money spent** | **$0.00.** Budget was "target $0, hard cap $10". Nothing was purchased and no payment method was ever used. |
 | **Meshy generations** | **Zero.** No credit spent. See §1 — this is the one place the lane did not follow the pack, and the reason is environmental. |
 | **Assets downloaded** | **Zero.** The pack's own first-named free source turned out to be already vendored in this repository. |
-| **Draw calls added** | **+220** (3365 → ~3585 against a 4000 ceiling). Counted per surface off the exported GLBs, not estimated. |
+| **Draw calls added** | **+208** (3365 → ~3573 against a 4000 ceiling). Measured on the shipped build by `tools/_probe_hall_art_fast.gd`, not estimated. Full breakdown in §4.4. |
 
 ---
 
@@ -81,12 +81,14 @@ baked in — Godot supplies the emission and the light.
 The pipe kit is **five separate GLBs**, because board 03 asks for a kit rather
 than a sculpture.
 
-### 2.2 The ruin layer — 574 instances, 20 draw calls, `$0`
+### 2.2 The ruin layer — 631 instances, 20 draw calls, `$0`
 
 `stronghold.gd::_build_ruin_reclaim()`, driven by
-`stronghold.json`'s new `hall_occupation.reclaim` block: **312 ivy** and **262
+`stronghold.json`'s new `hall_occupation.reclaim` block: **515 ivy** and **116
 rubble** instances across 14 + 6 `MultiMeshInstance3D` bands, clustered rather
-than evenly spaced.
+than evenly spaced. (Both counts were revised by the render rounds in §4.2 --
+ivy up so it reads at flank range, rubble down and bigger so it reads as fallen
+masonry rather than gravel.)
 
 **The pack's first-named free source was already in the repository.** It names
 "Quaternius Medieval Village MegaKit" as a starting point for ivy, moss, vines,
@@ -95,7 +97,7 @@ since the village work and contains `Prop_Vine1`, `Prop_Vine2`, `Prop_Brick1`,
 `Prop_Brick2` and 60 other modules. Nothing needed downloading. That single fact
 is what made the $0 target comfortable rather than tight.
 
-### 2.3 The retrofit layer — 19 props, 74 draw calls
+### 2.3 The retrofit layer — 17 props, 64 draw calls
 
 `stronghold.gd::_build_tether_retrofit()` and `_build_tether_pipe_runs()`.
 Placement is a system, not a scatter, per the pack's "coherent retrofit layer,
@@ -106,8 +108,9 @@ not randomly scattered props":
   the last.
 - **2 boilers** where work happens, with **4 pipe runs going from a boiler to a
   siphon**, so the machinery reads as one installed system.
-- **6 scaffolds** — two on the south elevation the causeway reads, two on the
-  exterior flanks, two inside the courtyard.
+- **4 scaffolds** — two on the south elevation the causeway reads, two inside
+  the courtyard. (Two exterior-flank scaffolds were authored and then removed:
+  they hung 18 m in the air on top of the skirt. See §4.2.)
 - **8 banner rigs**, gate face to arena.
 
 **No colliders anywhere in either layer.** None of these meshes is named `-col`,
@@ -123,7 +126,7 @@ wall must not be able to snag a boss fight.
    each primitive as its own object — which is what "prefer separate logical
    pieces" reads like — gave a 63-object scaffold and a 49-object siphon, and the
    placement list came to **~1087 draw calls against 635 of headroom**. Joined by
-   material it is **220**. A prop costs its *material* count, not its part count.
+   material it is **208**. A prop costs its *material* count, not its part count.
    `join_by_material()` in the build script.
 
 2. **An interior-only ruin layer would not have moved one judged pixel.** Every
