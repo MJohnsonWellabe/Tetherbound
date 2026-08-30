@@ -1,5 +1,6 @@
 {
   "_comment": "BAND-SPLIT. Band-local spawns for band1_lower_meadows. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because encounter_director.gd seeds each cluster's scatter, level roll, IVs, traits and shiny draw from it (hash(\"wild_spawn_%d\" % order)), so changing a number moves creatures and rerolls them. A new entry in this band takes an unused order in this band's reserved range 1000-1999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_night_t5camps": "T5-CAMPS. Bands 0 and 1 carried ZERO night-gated clusters until this pass -- 0 `time` entries across all 55 clusters -- which is what ralph/reports/REGION_AUDIT_2026-08-30.md ranked as gap 7, \"night does not exist in the first hour\". Criterion 13 of the region checklist (ralph/MEADOWS_EXIT_CRITERION.md section E) is a PER-REGION requirement, and band 2 was the only region in the chapter meeting it. The eight entries below (orders 1050-1057, 22 individuals) are modelled directly on band 2's working template, which is the audit's own named \"thing worth protecting\": one species, `time: night`, clustered into a pocket rather than sprinkled evenly. Band 2 runs 12 clusters / 40 individuals over 2653 m; this band runs 8 / 22 over 2403 m, deliberately lighter because band 1 is the tutorial meadow. The species is not a choice this pass made -- data/config/spawns.json `roles.nocturnal` is duskhush, terrain_playground.json's `oak_grove_ring` feature names \"Duskhush at night\" in its own _why, MEADOWS_MACRO_LAYOUT.md section 10's loop table repeats it verbatim, and MEADOWS_PROGRESSION_SPEC.md section 13 lists the Grove as Trailpup / Duskhush at night / Burrowback. The population was specified in three places and built in none. Proven by played path, not by this comment: tests/smoke_night_ecology.gd walks the real world to each site, drives the day/night clock, and asserts the owls are absent by day and present, visible and engageable after dark. SITE: swept, not picked -- every candidate was required to sit at least 38 m from every existing cluster centre in this band and at least 25 m from the trail camp clearing, then ground-probed with tools/_probe_night_sites.gd. The failure being guarded against is this file's sibling `data/config/spawns.json` `_comment_placement`: Galecrest and Burrowback were once authored on a rocky rise whose rim is a closed >45-degree band, \"measured at 71 of 72 radial approaches unwalkable\", so they could never be met. A night-gated creature hides that kind of mistake better than an ungated one, because the player only ever has a chance to meet it after dark. GENTLE ON PURPOSE: Duskhush is species.json's non-aggressive watcher/scout (`aggressive: false`), which is why it is the right night species for the band prompt 71 keeps gentle. No `alpha` block anywhere in this pass -- band2's `_comment_alpha` records the standing rule that alphas run \"one per band from band 2 on, never in band 1\". No `table` either: these are anchors, so the authored ecology three documents asked for is what stands here at every world seed. Each entry below carries only what is specific to ITS site; the reasoning shared by all eight is here rather than repeated eight times. TUNABLE.",
   "_comment_creek_hollow": "FIRST-HOUR-FUN-REBUILD. The relocated pond valley is the nearby Creek Hollow destination. Its population is deliberately a compact set of eight normal-weather individuals across six catchable species, plus the established optional elder just off the loop: enough to make the basin feel alive without recreating the old route-density swarm at a single destination. `habitat` is presentation metadata for authoring/tests; encounter_director.gd intentionally ignores it. The existing pond, mill, footbridge, ranger station, reed arcs, grove scatter and west-bank hollow provide the water edge, open bank, rocky/mill shoulder, grove and overhang equivalents; no new meshes or terrain carve are introduced here.",
   "spawns": [
     {
@@ -768,6 +769,110 @@
         "notice_range": 20.0
       },
       "_why_d1": "PW2 / prompt 62's 'at least one less-common/special temptation', and band1's only elder. SITE: a damp hollow west of the pond, found by tools/_probe_elder_site.gd rather than picked -- 0.83m of relief over 10m so the encounter arena forms on flat ground, 3.9m above the water line so it is not IN the pond, 96m from the pond centre (mosshell habitat: every other mosshell in band1 is pond-side) and 75m lateral from the nearest authored route. That last number is the point: tools/_probe_band1_cadence.py counts anything past 60m lateral as an optional detour rather than corridor cadence, so this is something a player finds by being curious about a low green hollow off the pond loop, not something the road walks them into. Prompt 30's rule that some optional content should be discoverable through curiosity rather than a quest giver, and its rule not to pre-label every secret, are why this gets no map landmark. DIFFERENTIATION: PW2 requires a behavioural distinction and says stats and scale cannot be the only one. `notice_range` 20 against the shared default of 9 means it stops and turns to watch the player from more than twice the usual distance -- and wild_creature.gd's own comment calls that stop-and-look 'the only cue the game gives that the creature is engageable', so this reads before combat starts, which is exactly PW2's readability rule. `wander_radius` 1.5 against 7 means it holds its ground instead of drifting: an old animal that owns this hollow. Both are existing configure() tunables, not new machinery. LEVEL: +4 on whatever band1's own curve rolls, not a pinned number -- an elder should stay relative to its region when chapter_curve.json moves. Against a post-tournament team that has just beaten a level 10-11 final, that is a real fight and not a wall, which is PW2's own 'keep early Band 1 encounters appropriately approachable'. CATCHABLE, deliberately: it is a wild, so the five-creature squeeze this creates is the whole temptation. Nothing on the wild path changes to make that true."
+    },
+    {
+      "order": 1050,
+      "species": "duskhush",
+      "count": 1,
+      "centre": [
+        60.0,
+        0.0,
+        46.0
+      ],
+      "radius": 12.0,
+      "time": "night",
+      "_why_night_home": "BAND 0, the home meadow -- the hook rather than the population. One owl in the treed ground east of the village, outside every vegetation clearing (square r22, Grandpa r16, practice meadow r16, trainer ground r14, spawn r16), because a clearing is where the trees are not and this is a bird that wants cover. Band 0 is where the player actually sleeps on night one (`objectives.json`'s tournament_sleep rung), so this is the one place in the chapter where night content is guaranteed to be seen rather than merely reachable. Deliberately a single individual: docs/MEADOWS_PROGRESSION_SPEC.md section 6's optional activity is \"Night Watch -- investigate nighttime activity and INTRODUCE Duskhush\", and an introduction is one call in the dark that makes you look, not a flock on the lawn. The flock is 700 m north in the grove that the same spec assigns it to. Ground probed: h=-7.56, 1.57 m relief, 12.7 deg worst slope over a 12 m ring. NOTE: this places the night ECOLOGY the audit measured as missing. The Night Watch *quest* -- a giver, a tracked objective, a reward -- is not implemented here and is not claimed."
+    },
+    {
+      "order": 1051,
+      "species": "duskhush",
+      "count": 2,
+      "centre": [
+        4.0,
+        0.0,
+        160.0
+      ],
+      "radius": 13.0,
+      "time": "night",
+      "_why_night_home": "BAND 0 / band 1 seam, on the road north out of the village. The second half of the hook: the player who leaves home after dark, rather than sleeping through it, gets a second look at the same species before the grove proper. Sited on the route rather than off it, because unlike the grove ring below this is not a detour the player chooses -- it is the road they are already walking, and the whole finding is that the first hour reads identically by day and by night. 54 m clear of the galecrest cluster at (-35,197), which is this band's `aggressor` role and is ungated, so the two do not stack after dark. Ground probed: h=-0.90, 2.09 m relief, 11.7 deg worst slope."
+    },
+    {
+      "order": 1052,
+      "species": "duskhush",
+      "count": 3,
+      "centre": [
+        247.0,
+        0.0,
+        806.0
+      ],
+      "radius": 14.0,
+      "time": "night",
+      "_why_night_grove": "The ring mouth at (230,830) -- the first thing on the loop, so a player who takes the oak grove ring after dark learns within 20 m what the detour is for. Ground probed: h=0.14, 3.33 m relief, 14.9 deg worst slope. 46 m clear of the nearest existing cluster."
+    },
+    {
+      "order": 1053,
+      "species": "duskhush",
+      "count": 4,
+      "centre": [
+        269.0,
+        0.0,
+        894.0
+      ],
+      "radius": 14.0,
+      "time": "night",
+      "_why_night_grove": "Grove interior, west. The densest of the six because it is the deepest inside the ring and furthest from open ground -- the centre of the pocket rather than its edge. Ground probed: h=-1.71, 2.38 m relief, 17.2 deg worst slope. 56 m clear of the nearest existing cluster."
+    },
+    {
+      "order": 1054,
+      "species": "duskhush",
+      "count": 3,
+      "centre": [
+        342.0,
+        0.0,
+        880.0
+      ],
+      "radius": 13.0,
+      "time": "night",
+      "_why_night_grove": "Grove interior, east, between the ring path and Old Bram's ground at (195,905). Ground probed: h=0.24, 3.05 m relief, 14.2 deg worst slope. 55 m clear of the nearest existing cluster."
+    },
+    {
+      "order": 1055,
+      "species": "duskhush",
+      "count": 4,
+      "centre": [
+        338.0,
+        0.0,
+        961.0
+      ],
+      "radius": 14.0,
+      "time": "night",
+      "_why_night_grove": "The camp grove -- 27 m from the trail camp at (344,935), which is the point of this entry and the reason it is one of the two densest. The trail camp only became a place a player can actually rest at in this same lane's merged T5-CADENCE work (scripts/world/rest_point.gd); before that it was scenery, and night content beside it would have had nobody standing there to see it. Now the two halves meet: you stop at the camp because you can, and the grove around it is awake in a way it is not by day. That is criterion 13's day/night readability delivered as a place rather than as a config flag. Outside the camp's own 9 m vegetation clearing (vegetation.json clearings order 1000) so the owls are in the trees, not standing in the fire ring. Ground probed: h=-0.82, 2.07 m relief, 13.3 deg worst slope."
+    },
+    {
+      "order": 1056,
+      "species": "duskhush",
+      "count": 3,
+      "centre": [
+        365.0,
+        0.0,
+        1043.0
+      ],
+      "radius": 14.0,
+      "time": "night",
+      "_why_night_grove": "The ring's far side at (400,1040), the loop's turn back toward the spine. Flattest ground of the six: h=-0.99, 1.83 m relief, 10.2 deg worst slope. 56 m clear of the nearest existing cluster."
+    },
+    {
+      "order": 1057,
+      "species": "duskhush",
+      "count": 2,
+      "centre": [
+        382.0,
+        0.0,
+        1128.0
+      ],
+      "radius": 13.0,
+      "time": "night",
+      "_why_night_grove": "The rejoin at (330,1130), thinning out as the loop returns to the spine -- the population reads as a pocket with edges rather than a uniform sprinkle, which is the difference between an ecology and a spawn rate. Ground probed: h=-3.42, 1.87 m relief, 14.0 deg worst slope. 53 m clear of the nearest existing cluster."
     }
   ]
 }

@@ -901,6 +901,17 @@ jobs:
           # the player to each camp and presses the button.
           - smoke: authored_camps
             retries: 1
+          # T5-CAMPS. Bands 0 and 1 carried zero night-gated spawns, so the
+          # chapter's opening read identically by day and after dark in a game
+          # that ships a real day/night clock. The regression this guards is
+          # the one the region audit measured (gap 7), and it is guarded by a
+          # played path rather than by a config assertion: the test drives the
+          # clock, checks the owls are hidden by day and standing after dark,
+          # and asks the director whether "Engage Duskhush" is actually offered
+          # where the player is standing. A gated creature that is visible but
+          # never engageable is scenery with a schedule.
+          - smoke: night_ecology
+            retries: 1
           - smoke: post_modal_control
             retries: 1
           - smoke: tournament_bracket
