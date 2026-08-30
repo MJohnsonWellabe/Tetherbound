@@ -145,7 +145,7 @@ its own). Both halves of the same sentence.
 | 1054 | the ring's rejoin at `(330,1130)` | 2 | thinning out — a pocket with edges, not a uniform sprinkle |
 
 **Trailpup, ungated — orders 1058–1061, 18 individuals**, at the ring mouth,
-the grove's east side by Old Bram's ground, and both ends of the far side.
+the grove's east side inside the loop's bend, and both ends of the far side.
 Ungated because only Duskhush carries "at night" in either document. Trailpup is
 the ring's ordinary daytime resident, and **the contrast between the two is what
 makes the grove read differently after dark instead of merely emptier.**

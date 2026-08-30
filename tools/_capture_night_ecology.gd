@@ -2,9 +2,18 @@ extends SceneTree
 
 ## T5-CAMPS: the same ground, by day and after dark.
 ##
-##   xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
-##     --rendering-driver opengl3 --resolution 1280x800 \
+##   xvfb-run -a -s "-screen 0 960x600x24" godot --path . \
+##     --rendering-driver opengl3 --resolution 960x600 \
 ##     --script tools/_capture_night_ecology.gd
+##
+## 960x600 rather than this repo's usual 1280x800, and said here rather than
+## left for someone to infer from the PNGs: the container these were shot in has
+## no GPU, so every frame goes through llvmpipe at roughly 10-30s. A full-size
+## run of this tool is a two-hour job. The frames are smaller; they are not
+## degraded in the sense `tools/capture_check.gd` cares about -- same scene,
+## same grass field, same lighting, same geometry, and the check below still
+## refuses anything less. Re-run at 1280x800 on a machine with a GPU when the
+## question is how the grove LOOKS rather than what is standing in it.
 ##
 ## The claim this has to settle is not "a config value changed". It is that a
 ## player standing in band 1's oak grove ring sees something after dark that is
@@ -30,11 +39,22 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 ## that back a claim in a handover have to be committed with it.
 const OUT := "res://ralph/reports/t5-camps-night-ecology"
 
-const SETTLE_FRAMES := 90
-const PER_SHOT_SETTLE := 14
+## Frame budgets. These are small on purpose and it is safe for them to be:
+## CAPTURE_CHECK.require() runs immediately before every shutter and REFUSES the
+## run if the grass field is not bound to this camera and drawing, so a settle
+## count too low to let the field re-centre on a moved camera fails loudly
+## instead of quietly producing the bare-splat frame that
+## `tools/capture_check.gd`'s own header was written about. Kept low because a
+## CPU-only container rasterises this scene (315k grass tufts, 378k props) at
+## roughly 10-30s per frame through llvmpipe, and a capture nobody can afford to
+## run is a capture nobody runs.
+const SETTLE_FRAMES := 15
+## The grass ring re-centres on the camera, so this is the budget that actually
+## matters -- it is spent AFTER each camera move, not at boot.
+const PER_SHOT_SETTLE := 10
 ## The gates are re-read in encounter_director.gd::_process, so the clock change
 ## needs frames to actually reach the creatures' visibility.
-const GATE_FRAMES := 12
+const GATE_FRAMES := 6
 const EYE_HEIGHT := 1.7
 const CLEAR_ENOUGH := 6.0
 
