@@ -340,3 +340,89 @@ saying so.
 | `data/config/bands/band5_stronghold_approach/vegetation.json` | five causeway clearings (D11) |
 | `tools/_judge_capture_hall.gd` | H-04 stands on the deck; `capture_check` at every stand |
 | `tools/_t1hall3_measure.py` | **new** — re-measures the judge's own quantities |
+
+## 2. Evidence — what actually moved
+
+Frames in `shots/t1hall3/`. Numbers from `tools/_t1hall3_measure.py`, which
+re-measures on the new set the same quantities JUDGE-5 measured on the old one.
+The "before" column is measured on the judge's own frames
+(`ralph/reports/T1-HALL-REBUILD/shots/`), not quoted from its prose.
+
+| Defect | Before | After | |
+|---|---|---|---|
+| **D6** banner hue | (160, 51, 62) — blue **above** green | (136, 56, 42) — blue **below** green | fixed |
+| **D8** see-through wall strip | 17.8% sky-like pixels | **0.0%** | fixed |
+| **D3** built mass on the approach bearing | 124 px | 186 px | improved |
+| **D5** wall patch std-dev | 27.6 | 29.8 | **still short of the design's own 35** |
+
+Build instrumentation, same run:
+
+```
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+```
+
+17 of 18 modules grounded, roof correctly excluded (D7). Three inter-chamber
+gaps wrapped where the previous build wrapped one (D8).
+
+**Route intact.** All three required smoke tests pass — `smoke_stronghold`,
+`smoke_boss`, and `smoke_gate_e_finale`, the last on its first attempt despite
+being the intermittent one.
+
+### Read by eye, at the stands
+
+- **`H-04-gate-mouth` is a frame of the gate.** For the first time: the deck
+  underfoot, the jambs with their banners either side, the arch overhead, and
+  through the opening the courtyard wall and the towers above it against sky.
+- **`H-02b-sigil-gate-raised`** shows the massing working — the roofline now
+  breaks repeatedly and the spire stands clear of everything under it, where
+  the same stand previously showed one symmetric block on a bald hill.
+- **`H-07-courtyard`** — the anime figure is gone; the oxblood grunt shares the
+  world's rendering idiom again, and the contradicting cast shadow goes with it.
+- **`H-05-east-flank`** — buttresses break the wall plane, the merlon row varies
+  and carries broken crenels, and the cloth reads as oxblood rather than magenta.
+- **The storm** reads as weather with a defined crest and visible rain shafts,
+  and the five Hall frames that carried the old hard-edged slabs no longer do.
+
+### What the frames also exposed — four defects caught in this lane, three mine
+
+Recorded because the discipline that caught them is the transferable part.
+
+1. **The sigil was rendering inside the cloth.** `proud` is measured from the
+   banner holder's origin and the panel box is not centred on it, so
+   `BANNER_CLOTH_T * 0.62` buried the device. It rendered as *no sigil* — the
+   exact defect I had claimed to fix.
+2. **The buttresses were black bars.** `_stone_dark()` against the wall's own
+   tone reproduced the very failure JUDGE-5 named on that wall — "crossed beams
+   stuck on a flat face" — in a new shape.
+3. **The foot shaft bought a second seam.** Grounding the modules in the skirt's
+   dark cobble fixed the floating facade and created a fresh
+   dark-under-pale seam a metre lower, which is the other half of D7.
+4. **D11 was never fixed by the first attempt.** Clearings cull only layers
+   flagging `cleared_by_clearings`; grass, flowers and path stones are
+   deliberately exempt so a clearing does not bald the meadow — and the things
+   growing through the deck are grass and flowers. `footprints` is the
+   mechanism, and `scatter_rules.gd` says so in a comment written the last time
+   this happened (grass growing through Grandpa's floor).
+
+### One finding that is not this lane's to close
+
+**D3 is measurably worse on current integration than the verdict describes, and
+the massing is not why.** At the H-01 stand the fortress is not short — it is
+*occluded*. Band 5's treeline stands between the stand and the Hall and hides it
+outright. That treeline arrived with T1-GROUND-3 (`21fd47f0`, `vegetation.json`
++ `terrain_playground.json`), which landed on `LAND-0830H` **after** JUDGE-5's
+frames were captured, so the judge never saw it.
+
+Height cannot answer occlusion: the blocking canopy at ~200 m subtends more than
+the Hall does at 400 m, so out-topping it would need a ~66 m tower, which is not
+a fortress. This lane opened a sightline instead — five clearings along the road
+the player walks, on the camera-to-Hall bearing, which cull canopy while leaving
+grass and flowers untouched.
+
+**That edits Band 5's vegetation, which is T1-GROUND-3's territory.** It is
+flagged here and in the config's own `_why` rather than done quietly. If that
+lane wants the canopy back, the alternatives are moving the H-01 stand, or
+accepting that the fortress is revealed at the treeline rather than from the
+crest. Both are legitimate composition calls and both want an owner rather than
+a silent revert by whoever touches this next.
