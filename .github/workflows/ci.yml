@@ -840,6 +840,14 @@ jobs:
         include:
           - smoke: title_load_game
             retries: 1
+          # AUDIT-K §K2a. The New Game front door had no CI coverage at all --
+          # only title_load_game was wired here. A matrix leg is its own
+          # parallel job with its own full timeout-minutes budget, unlike the
+          # sequential run_tests.gd shards above whose notes warn a new shard
+          # "would only move which shard dies"; that risk does not apply to
+          # adding a single-test leg here.
+          - smoke: title_new_game
+            retries: 1
           # KNOWN INTERMITTENT (the catch-3 engage defect). retries stays 1 ON
           # PURPOSE: a retry would green it and hide the cause, which is the same
           # reason stick_navigator is withheld from it. One leg of its own means

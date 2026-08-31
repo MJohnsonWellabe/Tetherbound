@@ -61,6 +61,11 @@ const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const BUILD_ROUTE_ENTRY := preload("res://tests/helpers/gate_a_build_segment.gd").BUILD_ROUTE_XZ[0]
 const TAIL := preload("res://tests/helpers/gate_b_tail_segment.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+
+## Never touch a player's real save directory from a regression: the tail's
+## real camp.gd rest autosaves through night_rest.gd.
+const TEST_DIR := "user://test_saves_gate_b_continuous/"
 
 ## The ladder, in the order `data/progression/objectives.json` lists it. Each
 ## entry is the flag the beat writes and a fragment the tracked line must show
@@ -113,6 +118,7 @@ func _init() -> void:
 
 
 func _run() -> void:
+	_wipe_test_dir()
 	_started_ms = Time.get_ticks_msec()
 	if not await _play_the_opening():
 		_finish()
@@ -173,6 +179,9 @@ func _play_the_opening() -> bool:
 	if _world == null or _game == null or _player == null:
 		_fail("the opening passed and handed back no world/game/player")
 		return false
+	# Never touch a player's real save directory from a regression: the tail
+	# played later in this run autosaves through the real rest path.
+	_game.set("save_system", SAVE_GAME.new(TEST_DIR))
 	_progression = _game.get("progression")
 	if _progression == null:
 		_fail("no progression store after the opening")
@@ -592,6 +601,7 @@ func _fail(line: String) -> void:
 
 
 func _finish() -> void:
+	_wipe_test_dir()
 	print("")
 	if _failures.is_empty():
 		print("gate B continuous: OK — a fresh save walked all %d objectives to South Bridge"
@@ -601,6 +611,19 @@ func _finish() -> void:
 	for line: String in _failures:
 		print("gate B continuous FAIL: %s" % line)
 	quit(1)
+
+
+func _wipe_test_dir() -> void:
+	var dir := DirAccess.open(TEST_DIR)
+	if dir == null:
+		return
+	dir.list_dir_begin()
+	var name := dir.get_next()
+	while name != "":
+		if not dir.current_is_dir():
+			dir.remove(name)
+		name = dir.get_next()
+	dir.list_dir_end()
 
 
 ## Read a helper segment's result, and report what it actually said.

@@ -38,9 +38,14 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 const REST_POINT := preload("res://scripts/world/rest_point.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 ## Any band-3 wild will do -- the subject is the bed, not the animal.
 const BEDDED_SPECIES := "brooktail"
 const PROPS_CONFIG := "res://data/config/props.json"
+
+## Never touch a player's real save directory from a regression: the night
+## this test passes autosaves through `game.call("save_game", ...)`.
+const TEST_DIR := "user://test_saves_authored_camps/"
 
 const SETTLE_FRAMES := 240
 ## The rest prompt's own radius is 3.2m and the arbiter needs a clear sight
@@ -61,6 +66,7 @@ func _fail(message: String) -> void:
 
 
 func _run() -> void:
+	_wipe_test_dir()
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
 	for i in SETTLE_FRAMES:
@@ -74,6 +80,9 @@ func _run() -> void:
 		quit(1)
 		return
 
+	# Never touch a player's real save directory from a regression.
+	game.set("save_system", SAVE_GAME.new(TEST_DIR))
+
 	var authored := _authored_rest_clusters()
 	if authored.is_empty():
 		_fail("no cluster in data/config/bands/*/props.json carries a `rest` block; the camps are scenery again")
@@ -82,6 +91,7 @@ func _run() -> void:
 	await _the_camp_offers_rest_where_the_player_stands(world, player, props, authored)
 	await _resting_at_an_authored_camp_passes_the_night(world, player, props, game, authored)
 
+	_wipe_test_dir()
 	print("")
 	if _failures.is_empty():
 		print("authored camps smoke test passed")
@@ -90,6 +100,19 @@ func _run() -> void:
 	for line in _failures:
 		print("  FAIL: %s" % line)
 	quit(1)
+
+
+func _wipe_test_dir() -> void:
+	var dir := DirAccess.open(TEST_DIR)
+	if dir == null:
+		return
+	dir.list_dir_begin()
+	var name := dir.get_next()
+	while name != "":
+		if not dir.current_is_dir():
+			dir.remove(name)
+		name = dir.get_next()
+	dir.list_dir_end()
 
 
 ## The merged, band-split props config -- the same `BAND_CONTENT.load_config`
