@@ -106,3 +106,29 @@
   bottom of `S10e-superseded-3/WHY_SUPERSEDED.md`) -- the findings above
   were recorded before the loss and are not in question, but there is no
   raw telemetry left to re-inspect for this specific attempt.
+
+## S10e, restart 4
+
+- **Reason:** S10e's fourth attempt (S10e-superseded-4/) completed (31
+  pass/5 fail) and, for the first time, both restart-3 fixes held -- the
+  walker reached Tam and Grandpa within their own prompt radii,
+  `meadows_acknowledged` was set, and the recalibrated `distance_above:
+  1300.0` floor passed at 1470.26 m walked. One new defect, all 5 fails
+  the same cause: `S10e-105` ("hear his post-win line out") was still the
+  original blind `press interact x14` count, and `grandpa_freed` (3 lines)
+  does not close on an exact boundary at 14 presses -- the excess presses
+  re-open the same greeting because Grandpa is re-talkable and standing in
+  his prompt radius makes the next `interact` a new open, not a no-op.
+  His dialogue was still open (`narrative_modal`/`DialoguePanel`) when
+  S10e-112 tried to open the pause shell, and every step needing the world
+  back after that failed the same way, including the final save (slot 4
+  stayed byte-identical to the seed). Not a game defect -- this is exactly
+  the CD-3 hazard `advance_dialogue_until_closed` already exists to
+  eliminate (see S02-28's own header); `S10e-102`'s identical blind-count
+  shape (Tam, 10 presses) happened to land on a closed boundary by luck on
+  this same run, not because it was actually safe. Full diagnosis in
+  `S10e-superseded-4/WHY_SUPERSEDED.md`.
+- **Fix:** replaced both `S10e-102` and `S10e-105`'s blind press-count
+  steps with `action: "advance_dialogue_until_closed"`, the predicate-
+  driven primitive `S02`/`S02C`/`S03` already use for this exact failure
+  mode. Re-running S10e fresh from the same S10d-exit seed.

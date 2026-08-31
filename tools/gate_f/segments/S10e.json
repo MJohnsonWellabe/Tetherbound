@@ -183,14 +183,13 @@
     {
       "id": "S10e-102",
       "title": "hear them out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "max_presses": 60,
+        "settle_frames": 30
       },
-      "expected": "record whether the village knows what happened"
+      "expected": "record whether the village knows what happened",
+      "observation": "GATE-F-LEG-S10CDE: was a blind 10x `press` count. Attempt 4 (the first run to actually reach Tam within his prompt radius) showed the exact CD-3 hazard `advance_dialogue_until_closed`'s own header warns about: `village_tam_freed` is a 3-line conversation, and a guessed press count that does not land on an exact close-boundary either leaves it open or, if it overshoots, closes it and then re-opens the same greeting because standing in a re-talkable villager's prompt radius makes the next `interact` a new open rather than a no-op. `advance_dialogue_until_closed` (already used by S02/S02C/S03 for this exact reason -- see S02-28's own header) presses by predicate, reading the panel's own line, and stops the instant it closes rather than guessing how many presses that takes."
     },
     {
       "id": "S10e-102w",
@@ -233,14 +232,13 @@
     {
       "id": "S10e-105",
       "title": "hear his post-win line out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 14,
-        "settle_frames": 20
+        "max_presses": 60,
+        "settle_frames": 30
       },
-      "expected": "Section L.5: 'Post-win world change | S10 walk-back: healed ground, lights out, patrols withdrawn, NPC acknowledgment, Grandpa's post-win line'"
+      "expected": "Section L.5: 'Post-win world change | S10 walk-back: healed ground, lights out, patrols withdrawn, NPC acknowledgment, Grandpa's post-win line'",
+      "observation": "GATE-F-LEG-S10CDE: was a blind 14x `press` count. Attempt 4 -- the first run to ever actually reach Grandpa within his prompt radius -- reproduced CD-3 exactly: `grandpa_freed` is a 3-line conversation, 14 presses does not land on an exact close boundary, and the excess presses re-open the same greeting (Grandpa is standable-next-to and re-talkable, same as a village NPC) rather than being a harmless no-op once closed. The run derailed downstream at S10e-112 ('map did not open the pause shell: context narrative_modal -> narrative_modal, owner=DialoguePanel') because his dialogue was still open when the segment tried to pause and save. Replaced with the predicate-driven primitive already used for exactly this failure mode elsewhere in the lane (S02-28's own header)."
     },
     {
       "id": "S10e-106",
