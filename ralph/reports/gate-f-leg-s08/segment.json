@@ -15,207 +15,1204 @@
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
-    { "id": "ISO-02", "title": "empty the live save directory", "action": "wipe_saves", "args": { "keep_slots": [] },
-      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer" },
-    { "id": "ISO-03", "title": "seed slot 4 from the hand-authored save", "action": "seed_save",
-      "args": { "slot": 4, "from": "run://S07-exit.json" },
-      "expected": "the hand-authored save is copied into user://saves/slot_4.json" },
-    { "id": "ISO-04", "title": "boot the real title screen", "action": "boot",
-      "args": { "scene": "title", "settle_frames": 30 },
-      "expected": "the real title comes up with Start New Game focused and Load Game enabled" },
-    { "id": "ISO-05", "title": "the title focuses something", "action": "assert", "args": { "check": "focus_owned" },
-      "expected": "the title focuses its first button" },
-    { "id": "ISO-06", "title": "move focus to Load Game", "action": "focus_move", "args": { "direction": "down", "times": 1 },
-      "expected": "d-pad down moves focus from Start New Game to Load Game" },
-    { "id": "ISO-07", "title": "open the slot list", "action": "press", "args": { "control": "ui_accept", "hold": "tap" },
-      "expected": "Load Game opens the slot list and auto-focuses the seeded slot 4" },
-    { "id": "ISO-08", "title": "load the seeded slot", "action": "press", "args": { "control": "ui_accept", "hold": "tap" },
-      "expected": "the slot loads and the title transitions into the Meadows" },
-    { "id": "ISO-09", "title": "let the loaded world stand up", "action": "wait", "args": { "seconds": 180 },
-      "expected": "a cold Meadows stand-up costs about 90s of CPU on this container; every assertion after this reads a live Player" },
-    { "id": "ISO-10", "title": "the seeded party loaded intact", "action": "assert", "args": { "check": "party_size", "min": 5, "max": 5 },
-      "expected": "RIG-15 note aside, this seed is deterministic (no catch RNG involved): exactly 5" },
-    { "id": "ISO-11", "title": "deploy the active creature after load", "action": "press", "args": { "control": "creature_recall", "hold": "tap" },
-      "expected": "RIG-11: a load restores the party and deploys nothing. creature_recall (RB) summons the active creature (party index 0, Tuskroot -- the seed's tankiest, deployed first deliberately so unattended travel through a region with aggressive wildlife is not defended by the mount species itself; see ISO-20a)" },
-    { "id": "ISO-12", "title": "let the summon land", "action": "wait", "args": { "seconds": 3 },
-      "expected": "the Tuskroot is standing in the world, following" },
-    { "id": "ISO-13", "title": "place the entry at the Band 3 -> 4 crossing (Old Mill Crossing)", "action": "teleport",
+    {
+      "id": "ISO-02",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer"
+    },
+    {
+      "id": "ISO-03",
+      "title": "seed slot 4 from the hand-authored save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S07-exit.json"
+      },
+      "expected": "the hand-authored save is copied into user://saves/slot_4.json"
+    },
+    {
+      "id": "ISO-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused and Load Game enabled"
+    },
+    {
+      "id": "ISO-05",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses its first button"
+    },
+    {
+      "id": "ISO-06",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "ISO-07",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the seeded slot 4"
+    },
+    {
+      "id": "ISO-08",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows"
+    },
+    {
+      "id": "ISO-09",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90s of CPU on this container; every assertion after this reads a live Player"
+    },
+    {
+      "id": "ISO-10",
+      "title": "the seeded party loaded intact",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 5,
+        "max": 5
+      },
+      "expected": "RIG-15 note aside, this seed is deterministic (no catch RNG involved): exactly 5"
+    },
+    {
+      "id": "ISO-11",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-11: a load restores the party and deploys nothing. creature_recall (RB) summons the active creature (party index 0, Tuskroot -- the seed's tankiest, deployed first deliberately so unattended travel through a region with aggressive wildlife is not defended by the mount species itself; see ISO-20a)"
+    },
+    {
+      "id": "ISO-12",
+      "title": "let the summon land",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the Tuskroot is standing in the world, following"
+    },
+    {
+      "id": "ISO-13",
+      "title": "place the entry at the Band 3 -> 4 crossing (Old Mill Crossing)",
+      "action": "teleport",
       "diag": true,
-      "args": { "at": [-152.0, 4203.0], "resettle_frames": 90 },
-      "expected": "Section D RT-09's own end anchor and S07-76's own walk target: '(350,3760) -> (-152,4203)'. DIAG stand-in for the position S07-exit would already have; the ONLY teleport in this segment" },
-    { "id": "ISO-14", "title": "the crossing was already restored by the seeded flags", "action": "assert", "args": { "check": "flag_set", "flag": "mill_crossing_restored" },
-      "expected": "the seed carries every prior-band flag through mill_crossing_restored" },
-    { "id": "ISO-15", "title": "refresh POIs at the crossing", "action": "refresh_pois",
-      "expected": "band 4's near content joins the POI set" },
-    { "id": "ISO-15w", "title": "the world owns input before this walk", "action": "assert", "args": { "check": "input_context", "equals": "world" },
-      "expected": "no narrative modal is holding locomotion when this walk starts" },
-    { "id": "ISO-15t", "title": "shorten the incidental crossing->grove transit", "action": "teleport",
+      "args": {
+        "at": [
+          -152.0,
+          4203.0
+        ],
+        "resettle_frames": 90
+      },
+      "expected": "Section D RT-09's own end anchor and S07-76's own walk target: '(350,3760) -> (-152,4203)'. DIAG stand-in for the position S07-exit would already have; the ONLY teleport in this segment"
+    },
+    {
+      "id": "ISO-14",
+      "title": "the crossing was already restored by the seeded flags",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "mill_crossing_restored"
+      },
+      "expected": "the seed carries every prior-band flag through mill_crossing_restored"
+    },
+    {
+      "id": "ISO-15",
+      "title": "refresh POIs at the crossing",
+      "action": "refresh_pois",
+      "expected": "band 4's near content joins the POI set"
+    },
+    {
+      "id": "ISO-15w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts"
+    },
+    {
+      "id": "ISO-15t",
+      "title": "shorten the incidental crossing->grove transit",
+      "action": "teleport",
       "diag": true,
-      "args": { "at": [-329.6, 4991.7], "resettle_frames": 60 },
-      "expected": "DIAG stand-in for ~810 m of otherwise-incidental open-Meadows transit this isolated test is not trying to prove (that is section D RT-10's own pacing study, not this leg's job); leaves a real ~70 m final approach on foot into the grove below. Recorded because a multi-hundred-metre unattended walk through band 4's aggressive wildlife with nobody piloting the deployed creature is a real risk this test hit once already (see REPORT.md's ambush finding) and re-exposing it here would not add coverage, only variance" },
-    { "id": "ISO-16", "title": "walk the final approach to the Ironwood Grove", "action": "move_to",
-      "args": { "at": [-345.0, 5060.0], "budget_frames": 3000, "close_enough": 5.0, "held_budget_frames": 7200, "answer_prompts": true },
-      "expected": "Section D RT-10's first anchor (-345,5060): the region's own material tier and encounter" },
-    { "id": "ISO-16a", "title": "defend against an in-transit ambush, if any", "action": "press",
-      "args": { "control": "combat_quick", "hold": "tap", "times": 30, "settle_frames": 20 },
-      "expected": "combat_quick has no world-context listener (combat_manager.gd/throw_aim.gd only read it while a fight/aim is live), so this is a safe no-op if move_to's own held-wait was never interrupted, and a real defence if an aggressive wild (species.json's own `aggressive` flag) auto-engaged mid-walk through `wants_to_engage` -- unlike the official S08.json's move_to, which only answers narrative-modal prompts and would otherwise let the deployed creature take a whole fight's damage with zero pilot input" },
-    { "id": "ISO-16b", "title": "let any fight from the walk actually end", "action": "wait", "args": { "seconds": 8 },
-      "expected": "rewards/control return if ISO-16a resolved a fight; a plain wait if it did not" },
-    { "id": "ISO-17", "title": "the grove region contains the arrival", "action": "assert", "args": { "check": "region_is", "equals": "the_ironwood_grove" },
-      "expected": "map_state.gd's containment puts the player in `the_ironwood_grove`" },
-    { "id": "ISO-18", "title": "rescan for points of interest", "action": "refresh_pois", "expected": "the grove's own content joins the POI set" },
-    { "id": "ISO-19", "title": "harvest ironwood", "action": "press",
-      "args": { "control": "interact", "hold": "tap", "times": 2, "settle_frames": 90 },
-      "expected": "band 4's own material, gathered with the axe already carried" },
-    { "id": "ISO-20", "title": "the saddle is already in the satchel", "action": "note",
-      "args": { "text": "Seed assumption per the task brief: a real S04 tournament-final win over Oskar's Meadowhart grants the saddle (data/config/tournament.json's own comment); this seed carries it already so this segment can test riding directly rather than re-testing crafting, which is X02/S03's own scope." },
-      "expected": "a note event carries this observation into events.jsonl" },
-    { "id": "ISO-20a", "title": "cycle the active creature to the Meadowhart", "action": "press",
-      "args": { "control": "party_cycle", "hold": "tap", "times": 4, "settle_frames": 30 },
-      "expected": "encounter_director.gd: party_cycle steps `Party.cycle_active(1)` forward by one and re-syncs the deployed body each press. Seed order is Tuskroot(0), Trailpup(1), Duskhush(2), Galecrest(3), Meadowhart(4) -- four presses from Tuskroot lands on the Meadowhart, the only rideable creature in this party (species.json's `rideable` block)" },
-    { "id": "ISO-20w", "title": "the world owns input before mounting", "action": "assert", "args": { "check": "input_context", "equals": "world" },
-      "expected": "no narrative modal is holding locomotion" },
-    { "id": "ISO-21", "title": "mount the Meadowhart", "action": "press", "args": { "control": "interact", "hold": "tap" },
-      "expected": "riding_controller.gd: the same interact button, arbitrated -- 'Ride Meadowhart' wins the prompt beside the deployed party creature" },
-    { "id": "ISO-22", "title": "let the mount stage", "action": "wait", "args": { "seconds": 3 },
-      "expected": "the riding camera and mounted locomotion take over" },
-    { "id": "ISO-22a", "title": "FINDING: the direct grove->captain_field line snags the mount", "action": "defect",
-      "args": { "what": "A first attempt rode the direct line from the grove toward (170,5590) at the expected ~10 m/s (Meadowhart's ride_speed_multiplier 2.0 x 5.0 m/s walk_speed -- confirmed correct and sustained for most of the route from route.csv) but stalled into a tight (~3 m) back-and-forth oscillation loop at TWO points on that direct line -- around (35,0,5447) for ~56 s and again around (98,1,5512) for the remainder of the budget, never reaching the target. Whatever is at those two spots, the mount's own collider (species.json placeholder radius 0.74 m, larger than the player's own) could not get past it on a straight approach, and the un-pathfound stick_navigator steering oscillated against it rather than finding a way around. This leg is now routed wide of both points instead, so the rest of S08 can be tested; the snag itself is recorded here rather than silently routed around unremarked.",
-        "severity_candidate": "QUALITY" },
-      "expected": "a defect event carries this finding into events.jsonl" },
-    { "id": "ISO-23-1j", "title": "a jump, in case anything is still snagged from the last attempt", "action": "press",
-      "args": { "control": "jump", "hold": "tap" },
-      "expected": "harmless if not caught on anything; a possible unstick if the mount's collider is resting against geometry" },
-    { "id": "ISO-23-1", "title": "ride wide of the first snag point", "action": "move_to",
-      "args": { "at": [70.0, 5460.0], "budget_frames": 3000, "close_enough": 5.0, "held_budget_frames": 3600, "answer_prompts": true },
-      "expected": "routes east of the (35,5447) stall point found above rather than through it" },
-    { "id": "ISO-23-2", "title": "ride wide of the second snag point", "action": "move_to",
-      "args": { "at": [140.0, 5520.0], "budget_frames": 3000, "close_enough": 5.0, "held_budget_frames": 3600, "answer_prompts": true },
-      "expected": "routes east of the (98,5512) stall point found above rather than through it" },
-    { "id": "ISO-23", "title": "ride the final approach to Captain Halder (the field captain)", "action": "move_to",
-      "args": { "at": [170.0, 5590.0], "budget_frames": 3000, "close_enough": 4.0, "held_budget_frames": 3600, "answer_prompts": true },
-      "expected": "Section D RT-10's second anchor (170,5590) is captain_field. Riding must beat walking and must not cost stamina" },
-    { "id": "ISO-23a", "title": "defend against an in-transit ambush, if any", "action": "press",
-      "args": { "control": "combat_quick", "hold": "tap", "times": 30, "settle_frames": 20 },
-      "expected": "same safe no-op/real-defence rationale as ISO-16a, now for the ridden leg -- a fight forces a dismount (riding_controller.gd::_riding_allowed refuses while `manager.is_fighting()`), so this covers the Meadowhart being caught on foot mid-route too" },
-    { "id": "ISO-23b", "title": "let any fight from the ride actually end", "action": "wait", "args": { "seconds": 8 },
-      "expected": "rewards/control return if ISO-23a resolved a fight; a plain wait if it did not" },
-    { "id": "ISO-24", "title": "dismount for the fight", "action": "press", "args": { "control": "interact", "hold": "tap" },
-      "expected": "the human never fights; a captain fight is piloted on foot" },
-    { "id": "ISO-25", "title": "let the dismount settle", "action": "wait", "args": { "seconds": 2 },
-      "expected": "control returns to the player on foot" },
-    { "id": "ISO-26", "title": "challenge Captain Halder", "action": "press", "args": { "control": "interact", "hold": "tap" },
-      "expected": "trainers.json band4 order 11: captain_field, Ground-focused, rewards field_sigil" },
-    { "id": "ISO-27", "title": "hear the captain out", "action": "advance_dialogue_until_closed", "args": { "max_presses": 40 },
-      "expected": "the challenge conversation ends on battle:captain_field and the fight starts when the box closes" },
-    { "id": "ISO-28", "title": "the fight is actually running", "action": "assert", "args": { "check": "combat_running", "equals": true },
-      "expected": "RIG-26: a bare press only proves input was injected; this proves a fight is live" },
-    { "id": "ISO-29", "title": "let the fight stage", "action": "wait", "args": { "seconds": 3 },
-      "expected": "the combat camera acquires both combatants" },
-    { "id": "ISO-30", "title": "fight Captain Halder", "action": "press",
-      "args": { "control": "combat_quick", "hold": "tap", "times": 40, "settle_frames": 30 },
-      "expected": "his team is 13/14/15 against this seed's 14-16 team; a clean win is expected but not guaranteed" },
-    { "id": "ISO-31", "title": "switch pilot under pressure", "action": "press", "args": { "control": "party_cycle", "hold": "tap" },
-      "expected": "pilot handoff and camera handoff mid-fight" },
-    { "id": "ISO-32", "title": "keep fighting", "action": "press",
-      "args": { "control": "combat_quick", "hold": "tap", "times": 30, "settle_frames": 30 },
-      "expected": "finish the fight if it is not already over" },
-    { "id": "ISO-33", "title": "let the fight end", "action": "wait", "args": { "seconds": 10 },
-      "expected": "rewards and control return with no stuck modal" },
-    { "id": "ISO-34", "title": "the field captain is beaten", "action": "assert", "args": { "check": "flag_set", "flag": "defeated_captain_field" },
-      "expected": "the first of the objective's three count_flags, and the field_sigil should be in the satchel" },
-    { "id": "ISO-34w", "title": "the world owns input before this walk", "action": "assert", "args": { "check": "input_context", "equals": "world" },
-      "expected": "no narrative modal is holding locomotion when this walk starts" },
-    { "id": "ISO-34t", "title": "shorten the incidental field->riverwatch transit", "action": "teleport",
+      "args": {
+        "at": [
+          -329.6,
+          4991.7
+        ],
+        "resettle_frames": 60
+      },
+      "expected": "DIAG stand-in for ~810 m of otherwise-incidental open-Meadows transit this isolated test is not trying to prove (that is section D RT-10's own pacing study, not this leg's job); leaves a real ~70 m final approach on foot into the grove below. Recorded because a multi-hundred-metre unattended walk through band 4's aggressive wildlife with nobody piloting the deployed creature is a real risk this test hit once already (see REPORT.md's ambush finding) and re-exposing it here would not add coverage, only variance"
+    },
+    {
+      "id": "ISO-16",
+      "title": "walk the final approach to the Ironwood Grove",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -345.0,
+          5060.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 5.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-10's first anchor (-345,5060): the region's own material tier and encounter"
+    },
+    {
+      "id": "ISO-16a",
+      "title": "defend against an in-transit ambush, if any",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 30,
+        "settle_frames": 20
+      },
+      "expected": "combat_quick has no world-context listener (combat_manager.gd/throw_aim.gd only read it while a fight/aim is live), so this is a safe no-op if move_to's own held-wait was never interrupted, and a real defence if an aggressive wild (species.json's own `aggressive` flag) auto-engaged mid-walk through `wants_to_engage` -- unlike the official S08.json's move_to, which only answers narrative-modal prompts and would otherwise let the deployed creature take a whole fight's damage with zero pilot input"
+    },
+    {
+      "id": "ISO-16b",
+      "title": "let any fight from the walk actually end",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "rewards/control return if ISO-16a resolved a fight; a plain wait if it did not"
+    },
+    {
+      "id": "ISO-17",
+      "title": "the grove region contains the arrival",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_ironwood_grove"
+      },
+      "expected": "map_state.gd's containment puts the player in `the_ironwood_grove`"
+    },
+    {
+      "id": "ISO-18",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "the grove's own content joins the POI set"
+    },
+    {
+      "id": "ISO-19",
+      "title": "harvest ironwood",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 90
+      },
+      "expected": "band 4's own material, gathered with the axe already carried"
+    },
+    {
+      "id": "ISO-20",
+      "title": "the saddle is already in the satchel",
+      "action": "note",
+      "args": {
+        "text": "Seed assumption per the task brief: a real S04 tournament-final win over Oskar's Meadowhart grants the saddle (data/config/tournament.json's own comment); this seed carries it already so this segment can test riding directly rather than re-testing crafting, which is X02/S03's own scope."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "ISO-20a",
+      "title": "cycle the active creature to the Meadowhart",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "times": 4,
+        "settle_frames": 30
+      },
+      "expected": "encounter_director.gd: party_cycle steps `Party.cycle_active(1)` forward by one and re-syncs the deployed body each press. Seed order is Tuskroot(0), Trailpup(1), Duskhush(2), Galecrest(3), Meadowhart(4) -- four presses from Tuskroot lands on the Meadowhart, the only rideable creature in this party (species.json's `rideable` block)"
+    },
+    {
+      "id": "ISO-20w",
+      "title": "the world owns input before mounting",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion"
+    },
+    {
+      "id": "ISO-21",
+      "title": "mount the Meadowhart",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "riding_controller.gd: the same interact button, arbitrated -- 'Ride Meadowhart' wins the prompt beside the deployed party creature"
+    },
+    {
+      "id": "ISO-22",
+      "title": "let the mount stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the riding camera and mounted locomotion take over"
+    },
+    {
+      "id": "ISO-22a",
+      "title": "FINDING: the direct grove->captain_field line snags the mount",
+      "action": "defect",
+      "args": {
+        "what": "A first attempt rode the direct line from the grove toward (170,5590) at the expected ~10 m/s (Meadowhart's ride_speed_multiplier 2.0 x 5.0 m/s walk_speed -- confirmed correct and sustained for most of the route from route.csv) but stalled into a tight (~3 m) back-and-forth oscillation loop at TWO points on that direct line -- around (35,0,5447) for ~56 s and again around (98,1,5512) for the remainder of the budget, never reaching the target. Whatever is at those two spots, the mount's own collider (species.json placeholder radius 0.74 m, larger than the player's own) could not get past it on a straight approach, and the un-pathfound stick_navigator steering oscillated against it rather than finding a way around. This leg is now routed wide of both points instead, so the rest of S08 can be tested; the snag itself is recorded here rather than silently routed around unremarked.",
+        "severity_candidate": "QUALITY"
+      },
+      "expected": "a defect event carries this finding into events.jsonl"
+    },
+    {
+      "id": "ISO-23-1j",
+      "title": "a jump, in case anything is still snagged from the last attempt",
+      "action": "press",
+      "args": {
+        "control": "jump",
+        "hold": "tap"
+      },
+      "expected": "harmless if not caught on anything; a possible unstick if the mount's collider is resting against geometry"
+    },
+    {
+      "id": "ISO-23-1",
+      "title": "ride wide of the first snag point",
+      "action": "move_to",
+      "args": {
+        "at": [
+          70.0,
+          5460.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 5.0,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "routes east of the (35,5447) stall point found above rather than through it"
+    },
+    {
+      "id": "ISO-23-2",
+      "title": "ride wide of the second snag point",
+      "action": "move_to",
+      "args": {
+        "at": [
+          140.0,
+          5520.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 5.0,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "routes east of the (98,5512) stall point found above rather than through it"
+    },
+    {
+      "id": "ISO-23",
+      "title": "ride the final approach to Captain Halder (the field captain)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          170.0,
+          5590.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 4.0,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-10's second anchor (170,5590) is captain_field. Riding must beat walking and must not cost stamina"
+    },
+    {
+      "id": "ISO-23a",
+      "title": "defend against an in-transit ambush, if any",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 30,
+        "settle_frames": 20
+      },
+      "expected": "same safe no-op/real-defence rationale as ISO-16a, now for the ridden leg -- a fight forces a dismount (riding_controller.gd::_riding_allowed refuses while `manager.is_fighting()`), so this covers the Meadowhart being caught on foot mid-route too"
+    },
+    {
+      "id": "ISO-23b",
+      "title": "let any fight from the ride actually end",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "rewards/control return if ISO-23a resolved a fight; a plain wait if it did not"
+    },
+    {
+      "id": "ISO-24",
+      "title": "dismount for the fight",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the human never fights; a captain fight is piloted on foot"
+    },
+    {
+      "id": "ISO-25",
+      "title": "let the dismount settle",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "control returns to the player on foot"
+    },
+    {
+      "id": "ISO-26",
+      "title": "challenge Captain Halder",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "trainers.json band4 order 11: captain_field, Ground-focused, rewards field_sigil"
+    },
+    {
+      "id": "ISO-27",
+      "title": "hear the captain out",
+      "action": "advance_dialogue_until_closed",
+      "args": {
+        "max_presses": 40
+      },
+      "expected": "the challenge conversation ends on battle:captain_field and the fight starts when the box closes"
+    },
+    {
+      "id": "ISO-28",
+      "title": "the fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "RIG-26: a bare press only proves input was injected; this proves a fight is live"
+    },
+    {
+      "id": "ISO-29",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "ISO-30-r1",
+      "title": "fight round 1: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 1 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-30-c1",
+      "title": "switch pilot, round 1",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-30-r2",
+      "title": "fight round 2: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 2 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-30-c2",
+      "title": "switch pilot, round 2",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-30-r3",
+      "title": "fight round 3: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 3 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-30-c3",
+      "title": "switch pilot, round 3",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-30-r4",
+      "title": "fight round 4: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 4 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-30-c4",
+      "title": "switch pilot, round 4",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-30-r5",
+      "title": "fight round 5: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 5 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-30-c5",
+      "title": "switch pilot, round 5",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-30-r6",
+      "title": "fight round 6: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 6 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-30-c6",
+      "title": "switch pilot, round 6",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-33",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return with no stuck modal"
+    },
+    {
+      "id": "ISO-34",
+      "title": "the field captain is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_captain_field"
+      },
+      "expected": "the first of the objective's three count_flags, and the field_sigil should be in the satchel"
+    },
+    {
+      "id": "ISO-34w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts"
+    },
+    {
+      "id": "ISO-34t",
+      "title": "shorten the incidental field->riverwatch transit",
+      "action": "teleport",
       "diag": true,
-      "args": { "at": [-85.1, 4418.4], "resettle_frames": 60 },
-      "expected": "same rationale as ISO-15t: this leg is transit, not a system under test, and this test already proved riding traversal on the previous (real, untelported) leg" },
-    { "id": "ISO-35", "title": "walk the final approach to Captain Oreth (the riverwatch captain)", "action": "move_to",
-      "args": { "at": [-100.0, 4350.0], "budget_frames": 3000, "close_enough": 4.0, "held_budget_frames": 7200, "answer_prompts": true },
-      "expected": "Section D RT-10's third anchor (-100,4350) is captain_riverwatch, sited in band3's own trainer file but geographically inside this segment's span" },
-    { "id": "ISO-35a", "title": "defend against an in-transit ambush, if any", "action": "press",
-      "args": { "control": "combat_quick", "hold": "tap", "times": 30, "settle_frames": 20 },
-      "expected": "same rationale as ISO-16a" },
-    { "id": "ISO-35b", "title": "let any fight from the walk actually end", "action": "wait", "args": { "seconds": 8 },
-      "expected": "rewards/control return if ISO-35a resolved a fight; a plain wait if it did not" },
-    { "id": "ISO-36", "title": "challenge Captain Oreth", "action": "press", "args": { "control": "interact", "hold": "tap" },
-      "expected": "the second of the three -- Water-led but deliberately balanced" },
-    { "id": "ISO-37", "title": "hear the captain out", "action": "advance_dialogue_until_closed", "args": { "max_presses": 40 },
-      "expected": "the challenge conversation ends and the fight starts when the box closes" },
-    { "id": "ISO-38", "title": "the fight is actually running", "action": "assert", "args": { "check": "combat_running", "equals": true },
-      "expected": "a fight is live, not merely a press injected" },
-    { "id": "ISO-39", "title": "let the fight stage", "action": "wait", "args": { "seconds": 3 },
-      "expected": "the combat camera acquires both combatants" },
-    { "id": "ISO-40", "title": "fight Captain Oreth", "action": "press",
-      "args": { "control": "combat_quick", "hold": "tap", "times": 40, "settle_frames": 30 },
-      "expected": "his team is 13/14/16, mixed Water/Ground" },
-    { "id": "ISO-41", "title": "a charged attack", "action": "press", "args": { "control": "combat_charged", "hold": "long" },
-      "expected": "the charged verb's hold edge" },
-    { "id": "ISO-42", "title": "finish the captain", "action": "press",
-      "args": { "control": "combat_quick", "hold": "tap", "times": 24, "settle_frames": 30 },
-      "expected": "finish the fight if it is not already over" },
-    { "id": "ISO-43", "title": "let the fight end", "action": "wait", "args": { "seconds": 10 },
-      "expected": "rewards and control return" },
-    { "id": "ISO-44", "title": "the riverwatch captain is beaten", "action": "assert", "args": { "check": "flag_set", "flag": "defeated_captain_riverwatch" },
-      "expected": "the second of the three count_flags, and the river_sigil should be in the satchel" },
-    { "id": "ISO-44w", "title": "the world owns input before this walk", "action": "assert", "args": { "check": "input_context", "equals": "world" },
-      "expected": "no narrative modal is holding locomotion when this walk starts" },
-    { "id": "ISO-44t", "title": "shorten the incidental riverwatch->ridge transit", "action": "teleport",
+      "args": {
+        "at": [
+          -85.1,
+          4418.4
+        ],
+        "resettle_frames": 60
+      },
+      "expected": "same rationale as ISO-15t: this leg is transit, not a system under test, and this test already proved riding traversal on the previous (real, untelported) leg"
+    },
+    {
+      "id": "ISO-35",
+      "title": "walk the final approach to Captain Oreth (the riverwatch captain)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -100.0,
+          4350.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 4.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-10's third anchor (-100,4350) is captain_riverwatch, sited in band3's own trainer file but geographically inside this segment's span"
+    },
+    {
+      "id": "ISO-35a",
+      "title": "defend against an in-transit ambush, if any",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 30,
+        "settle_frames": 20
+      },
+      "expected": "same rationale as ISO-16a"
+    },
+    {
+      "id": "ISO-35b",
+      "title": "let any fight from the walk actually end",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "rewards/control return if ISO-35a resolved a fight; a plain wait if it did not"
+    },
+    {
+      "id": "ISO-36",
+      "title": "challenge Captain Oreth",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the second of the three -- Water-led but deliberately balanced"
+    },
+    {
+      "id": "ISO-37",
+      "title": "hear the captain out",
+      "action": "advance_dialogue_until_closed",
+      "args": {
+        "max_presses": 40
+      },
+      "expected": "the challenge conversation ends and the fight starts when the box closes"
+    },
+    {
+      "id": "ISO-38",
+      "title": "the fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "a fight is live, not merely a press injected"
+    },
+    {
+      "id": "ISO-39",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "ISO-40-r1",
+      "title": "fight round 1: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 1 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-40-c1",
+      "title": "switch pilot, round 1",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-40-r2",
+      "title": "fight round 2: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 2 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-40-c2",
+      "title": "switch pilot, round 2",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-40-r3",
+      "title": "fight round 3: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 3 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-40-c3",
+      "title": "switch pilot, round 3",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-40-r4",
+      "title": "fight round 4: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 4 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-40-c4",
+      "title": "switch pilot, round 4",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-40-r5",
+      "title": "fight round 5: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 5 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-40-c5",
+      "title": "switch pilot, round 5",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-40-r6",
+      "title": "fight round 6: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 6 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-40-c6",
+      "title": "switch pilot, round 6",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-43",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return"
+    },
+    {
+      "id": "ISO-44",
+      "title": "the riverwatch captain is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_captain_riverwatch"
+      },
+      "expected": "the second of the three count_flags, and the river_sigil should be in the satchel"
+    },
+    {
+      "id": "ISO-44w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts"
+    },
+    {
+      "id": "ISO-44t",
+      "title": "shorten the incidental riverwatch->ridge transit",
+      "action": "teleport",
       "diag": true,
-      "args": { "at": [-272.4, 6370.3], "resettle_frames": 60 },
-      "expected": "same rationale as ISO-15t" },
-    { "id": "ISO-45", "title": "walk the final approach to Captain Vess on the ridgeline", "action": "move_to",
-      "args": { "at": [-280.0, 6460.0], "budget_frames": 3000, "close_enough": 4.0, "held_budget_frames": 7200, "answer_prompts": true },
-      "expected": "Section D RT-10's fourth anchor (-280,6460) is captain_ridge, in the_ridgeline_watch" },
-    { "id": "ISO-46", "title": "the ridgeline region contains the arrival", "action": "assert", "args": { "check": "region_is", "equals": "the_ridgeline_watch" },
-      "expected": "map_state.gd's containment puts the player in `the_ridgeline_watch`" },
-    { "id": "ISO-45a", "title": "defend against an in-transit ambush, if any", "action": "press",
-      "args": { "control": "combat_quick", "hold": "tap", "times": 30, "settle_frames": 20 },
-      "expected": "same rationale as ISO-16a" },
-    { "id": "ISO-45b", "title": "let any fight from the walk actually end", "action": "wait", "args": { "seconds": 8 },
-      "expected": "rewards/control return if ISO-45a resolved a fight; a plain wait if it did not" },
-    { "id": "ISO-47", "title": "challenge Captain Vess", "action": "press", "args": { "control": "interact", "hold": "tap" },
-      "expected": "the third of the three -- Air-focused" },
-    { "id": "ISO-48", "title": "hear the captain out", "action": "advance_dialogue_until_closed", "args": { "max_presses": 40 },
-      "expected": "the challenge conversation ends and the fight starts when the box closes" },
-    { "id": "ISO-49", "title": "the fight is actually running", "action": "assert", "args": { "check": "combat_running", "equals": true },
-      "expected": "a fight is live, not merely a press injected" },
-    { "id": "ISO-50", "title": "let the fight stage", "action": "wait", "args": { "seconds": 3 },
-      "expected": "the combat camera acquires both combatants" },
-    { "id": "ISO-51", "title": "fight Captain Vess", "action": "press",
-      "args": { "control": "combat_quick", "hold": "tap", "times": 40, "settle_frames": 30 },
-      "expected": "her team is 14/15/16, Air-led (trailpup/duskhush/galecrest)" },
-    { "id": "ISO-52", "title": "switch pilot under pressure", "action": "press", "args": { "control": "party_cycle", "hold": "tap" },
-      "expected": "pilot handoff and camera handoff mid-fight" },
-    { "id": "ISO-53", "title": "finish the captain", "action": "press",
-      "args": { "control": "combat_quick", "hold": "tap", "times": 30, "settle_frames": 30 },
-      "expected": "finish the fight if it is not already over" },
-    { "id": "ISO-54", "title": "let the fight end", "action": "wait", "args": { "seconds": 10 },
-      "expected": "rewards and control return" },
-    { "id": "ISO-55", "title": "the ridge captain is beaten", "action": "assert", "args": { "check": "flag_set", "flag": "defeated_captain_ridge" },
-      "expected": "the third of the three count_flags, and the ridge_sigil should be in the satchel" },
-    { "id": "ISO-56", "title": "all three captains and the objective count", "action": "assert", "args": { "check": "objective_is", "id": "fight_through_the_hall" },
-      "expected": "the tracked line moves past `defeat_the_captains` (22/27) to `fight_through_the_hall` (23/27) once all three are down" },
-    { "id": "ISO-57", "title": "the Hall approach is open (the three Sigils, together)", "action": "assert", "args": { "check": "flag_set", "flag": "hall_approach_open" },
-      "expected": "item_gate.gd's SigilGate: key_item_ids = [field_sigil, ridge_sigil, river_sigil], flag_id = hall_approach_open. This is section B's own span end for S08: '...three Sigils'" },
-    { "id": "ISO-58", "title": "band 4 was actually walked and ridden", "action": "assert", "args": { "check": "distance_above", "metres": 600.0 },
-      "expected": "distance_above is measured only since the LAST teleport (ISO-44t), so this asserts the real, untelported ~739 m ride from the grove to captain_field plus everything since -- see REPORT.md for why the incidental crossing/riverwatch/ridge transit legs were shortened via DIAG teleport instead of walked in full; no pacing claim about the whole band comes from this number" },
-    { "id": "ISO-59", "title": "save handoff: open the pause shell", "action": "open_menu", "args": { "tab": "map" },
-      "expected": "the pause shell, opened by its bound shortcut" },
-    { "id": "ISO-60", "title": "cycle to the Save tab", "action": "press", "args": { "control": "menu_tab_right", "hold": "tap", "times": 3, "settle_frames": 12 },
-      "expected": "three RB presses from the map tab reach Save" },
-    { "id": "ISO-61", "title": "the Save tab is up", "action": "assert", "args": { "check": "input_context", "equals": "menu_save" },
-      "expected": "input_context names the live tab: menu_save" },
-    { "id": "ISO-62", "title": "move focus to slot 4's Save button", "action": "focus_move", "args": { "direction": "down", "times": 4 },
-      "expected": "focus starts on slot 0 and four d-pad downs reach slot 4" },
-    { "id": "ISO-63", "title": "press Save", "action": "press", "args": { "control": "ui_accept", "hold": "tap" },
-      "expected": "the focused Save button activates and writes slot 4" },
-    { "id": "ISO-64", "title": "give the write a moment", "action": "wait", "args": { "seconds": 2 },
-      "expected": "the slot file is on disk" },
-    { "id": "ISO-65", "title": "copy slot 4 out as this segment's exit save", "action": "save_out", "args": { "slot": 4, "name": "S08-exit.json" },
-      "expected": "saves/S08-exit.json now holds this isolated run's own S08 handoff" },
-    { "id": "ISO-66", "title": "close the shell", "action": "close_menu", "args": {}, "expected": "B closes the shell and hands the world back" },
-    { "id": "ISO-67", "title": "close the segment", "action": "note", "args": { "text": "S08 (isolated) exit save written and copied. All three captains defeated, all three Sigils carried, hall_approach_open set." },
-      "expected": "a note event carries this observation into events.jsonl" }
+      "args": {
+        "at": [
+          -272.4,
+          6370.3
+        ],
+        "resettle_frames": 60
+      },
+      "expected": "same rationale as ISO-15t"
+    },
+    {
+      "id": "ISO-45",
+      "title": "walk the final approach to Captain Vess on the ridgeline",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -280.0,
+          6460.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 4.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-10's fourth anchor (-280,6460) is captain_ridge, in the_ridgeline_watch"
+    },
+    {
+      "id": "ISO-46",
+      "title": "the ridgeline region contains the arrival",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_ridgeline_watch"
+      },
+      "expected": "map_state.gd's containment puts the player in `the_ridgeline_watch`"
+    },
+    {
+      "id": "ISO-45a",
+      "title": "defend against an in-transit ambush, if any",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 30,
+        "settle_frames": 20
+      },
+      "expected": "same rationale as ISO-16a"
+    },
+    {
+      "id": "ISO-45b",
+      "title": "let any fight from the walk actually end",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "rewards/control return if ISO-45a resolved a fight; a plain wait if it did not"
+    },
+    {
+      "id": "ISO-47",
+      "title": "challenge Captain Vess",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the third of the three -- Air-focused"
+    },
+    {
+      "id": "ISO-48",
+      "title": "hear the captain out",
+      "action": "advance_dialogue_until_closed",
+      "args": {
+        "max_presses": 40
+      },
+      "expected": "the challenge conversation ends and the fight starts when the box closes"
+    },
+    {
+      "id": "ISO-49",
+      "title": "the fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "a fight is live, not merely a press injected"
+    },
+    {
+      "id": "ISO-50",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "ISO-51-r1",
+      "title": "fight round 1: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 1 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-51-c1",
+      "title": "switch pilot, round 1",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-51-r2",
+      "title": "fight round 2: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 2 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-51-c2",
+      "title": "switch pilot, round 2",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-51-r3",
+      "title": "fight round 3: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 3 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-51-c3",
+      "title": "switch pilot, round 3",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-51-r4",
+      "title": "fight round 4: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 4 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-51-c4",
+      "title": "switch pilot, round 4",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-51-r5",
+      "title": "fight round 5: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 5 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-51-c5",
+      "title": "switch pilot, round 5",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-51-r6",
+      "title": "fight round 6: quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 15,
+        "settle_frames": 20
+      },
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 6 of an interleaved fight-then-switch loop, so a fainted active creature does not silently stop this segment's team from fighting back (CB-08/CB-09's own case: a real player switches the moment their creature goes down, this test's earlier single-switch-per-fight approach did not and lost fights it had the roster to win)"
+    },
+    {
+      "id": "ISO-51-c6",
+      "title": "switch pilot, round 6",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+    },
+    {
+      "id": "ISO-54",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return"
+    },
+    {
+      "id": "ISO-55",
+      "title": "the ridge captain is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_captain_ridge"
+      },
+      "expected": "the third of the three count_flags, and the ridge_sigil should be in the satchel"
+    },
+    {
+      "id": "ISO-56",
+      "title": "all three captains and the objective count",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "fight_through_the_hall"
+      },
+      "expected": "the tracked line moves past `defeat_the_captains` (22/27) to `fight_through_the_hall` (23/27) once all three are down"
+    },
+    {
+      "id": "ISO-57",
+      "title": "the Hall approach is open (the three Sigils, together)",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "hall_approach_open"
+      },
+      "expected": "item_gate.gd's SigilGate: key_item_ids = [field_sigil, ridge_sigil, river_sigil], flag_id = hall_approach_open. This is section B's own span end for S08: '...three Sigils'"
+    },
+    {
+      "id": "ISO-58",
+      "title": "band 4 was actually walked and ridden",
+      "action": "assert",
+      "args": {
+        "check": "distance_above",
+        "metres": 600.0
+      },
+      "expected": "distance_above is measured only since the LAST teleport (ISO-44t), so this asserts the real, untelported ~739 m ride from the grove to captain_field plus everything since -- see REPORT.md for why the incidental crossing/riverwatch/ridge transit legs were shortened via DIAG teleport instead of walked in full; no pacing claim about the whole band comes from this number"
+    },
+    {
+      "id": "ISO-59",
+      "title": "save handoff: open the pause shell",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the pause shell, opened by its bound shortcut"
+    },
+    {
+      "id": "ISO-60",
+      "title": "cycle to the Save tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 12
+      },
+      "expected": "three RB presses from the map tab reach Save"
+    },
+    {
+      "id": "ISO-61",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "ISO-62",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0 and four d-pad downs reach slot 4"
+    },
+    {
+      "id": "ISO-63",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4"
+    },
+    {
+      "id": "ISO-64",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk"
+    },
+    {
+      "id": "ISO-65",
+      "title": "copy slot 4 out as this segment's exit save",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S08-exit.json"
+      },
+      "expected": "saves/S08-exit.json now holds this isolated run's own S08 handoff"
+    },
+    {
+      "id": "ISO-66",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "ISO-67",
+      "title": "close the segment",
+      "action": "note",
+      "args": {
+        "text": "S08 (isolated) exit save written and copied. All three captains defeated, all three Sigils carried, hall_approach_open set."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
   ]
 }
