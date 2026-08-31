@@ -117,9 +117,37 @@ possible use, not in a briefing three beats earlier. `tests/test_tutorial_faint_
 now asserts the opening hands over Revives at all, so the next reflow of this
 file cannot drop them silently.
 
-The potions and berries from the same removed block are **not** restored by
-that change. They are a pacing question about the opening's supply and nobody
-has reopened it; this item is the one a live rule made load-bearing.
+### The rest of the same block, restored 2026-08-31 (CAP-2)
+
+That change left the potions and berries out, calling them "a pacing question
+about the opening's supply." They were not one. Nobody had ever decided the
+opening should ship without them: `docs/OPENING_SEQUENCE.md` beat 3 still names
+the pack as *"orbs, potions, berries"* and still spells the three effects out
+by name, `D18` still calls it *"a parting gift of orbs and potions"*, and this
+file's own §"The decision" adds the Revives *"alongside the existing
+orbs/potions/berries."* `66eb47ec` contradicted all three in one unremarked
+diff. `git log -S "give:potion" -- data/dialogue/opening.json` shows the add
+and that one removal and nothing else — the same shape as the Revive line.
+
+The half-restore cost the next capstone run its chapter, for the mirror-image
+reason. D40 splits recovery in two: a Revive raises the fallen, a potion tops
+up the living, **and neither one covers the other's case.** Restoring only the
+Revive therefore answered only a wipe. `ralph/GATE-F-CAPSTONE-2` carried the
+starter out of the tutorial *alive* at 53.0 of 117.6 — ordinary battle damage —
+and lost the first village training fight with no way to heal it: the Revives
+in the bag refuse a creature that has not fainted (this decision's own rule),
+CAP-1's `faint_recovery_fraction` floor is gated on `party.all_fainted()` and
+a hurt creature standing beside a healthy one is not a wipe, and `potion_small`
+cannot be crafted before the village knife its `fiber` needs. See
+`ralph/reports/FINDING-CAP2-NO-HEAL-FOR-LIVING-DAMAGE-2026-08-31.md`.
+
+`give:potion_small:3` and `give:berries:5` are restored on
+`ralph/CAP2-NO-HEAL-FOR-LIVING-DAMAGE`, on `grandpa_first_catch` beside the
+orbs and the Revives, in the pack's original order.
+`tests/test_opening_healing_kit.gd` now asserts the opening hands over
+something with a `heal` field at all, and enough of it to close the deficit the
+capstone actually measured, so a fourth reflow of this file cannot drop this
+half silently either.
 
 ## What it supersedes
 

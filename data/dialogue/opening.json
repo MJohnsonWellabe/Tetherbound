@@ -29,8 +29,10 @@
       ]
     },
     "grandpa_first_catch": {
-      "_comment": "The required return after naming. The fifteen Basic Orbs arrive here, just before their first use, rather than being buried in the starter exposition.",
-      "_comment_revives": "RESTORED, not new. D40 (docs/decisions/D40-fainting-needs-a-revive.md, owner: 'Grandpa should give you revives at the beginning too') added `give:revive:2` so a new game starts with the tool D40's own rule requires -- potions stopped un-fainting on the same decision. The 2026-08-28 opening rewrite (66eb47ec) reflowed this whole file and dropped the potion, berry and Revive gifts with it, against a decision doc that was never superseded and with no record of the change anywhere. CAP-1 is what that cost: the capstone's exit save leaves the opening carrying orbs and nothing else, so a fainted starter had no answer in the satchel at all. D40 hung the line on `grandpa_house`; it belongs here now for the reason the orbs moved here -- the gift sits on the beat before its first possible use, not in the briefing three beats earlier. The potions and berries are NOT restored by this change: they are a pacing question about the opening's supply, this is the one item a documented rule made load-bearing.",
+      "_comment": "The required return after naming. Grandpa's pack arrives here -- orbs, potions, berries, Revives -- just before its first use, rather than being buried in the starter exposition.",
+      "_comment_gifts": "The pack. All four gifts here are RESTORED, not new, and all four were dropped by the same commit. `66eb47ec` (2026-08-28, 'First-hour: sequence opening through tournament signup') reflowed this whole file and took `give:orb_basic:15`, `give:potion_small:3`, `give:berries:5` and `give:revive:2` off `grandpa_house` together, re-adding only the orbs. One-line commit message, no note anywhere, and nothing it contradicted was ever superseded: docs/OPENING_SEQUENCE.md beat 3 still names the pack as 'orbs, potions, berries' and still spells the three effects out by name, D18 still calls it 'a parting gift of orbs and potions', and D40 added the Revives 'alongside the existing orbs/potions/berries'. `git log -S \"give:potion\" -- data/dialogue/opening.json` finds the add and that one silent removal and nothing else; the same for `give:berr` and `give:revive`.",
+      "_comment_gifts_cost": "Each half of the removal cost a Gate F capstone run its chapter. CAP-1 (ralph/reports/FINDING-CAP1-TUTORIAL-CATCH-FAINT-2026-08-31.md) was the Revives: a FAINTED starter with nothing in the satchel able to raise it. CAP-2 (ralph/reports/FINDING-CAP2-NO-HEAL-FOR-LIVING-DAMAGE-2026-08-31.md) is the potions: a LIVING starter carried out of the tutorial at 53.0 of 117.6 with nothing able to top it up, into a village training fight it then lost. A Revive refuses a creature that has not fainted (D40) and CAP-1's faint floor is gated on `party.all_fainted()`, so neither answer covers ordinary battle damage -- and the only other full heal in the game is a creature bed, a buildable whose fiber is past tools the player does not have yet.",
+      "_comment_gifts_placement": "All four sit here rather than on `grandpa_house` where D40 and OPENING_SEQUENCE.md put them, for the reason `66eb47ec` moved the orbs: a `give:` effect belongs on the beat before its first possible use, not in a briefing three beats earlier. Order is the pack's original order -- orbs, potions, berries, Revives -- which is also hurt, fed, fallen.",
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
@@ -38,6 +40,14 @@
         {
           "text": "Take these Orbs. Head outside, find one you like, and catch it.",
           "effect": "give:orb_basic:15"
+        },
+        {
+          "text": "Three potions. For your creature, mind — you get soup.",
+          "effect": "give:potion_small:3"
+        },
+        {
+          "text": "Berries off my bushes. A fed creature forgives a long day.",
+          "effect": "give:berries:5"
         },
         {
           "text": "And two Revives, at the bottom. A creature that's gone down won't get up on its own — don't waste them.",
