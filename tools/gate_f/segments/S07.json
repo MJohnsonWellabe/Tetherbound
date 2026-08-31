@@ -667,14 +667,9 @@
     {
       "id": "S07-51",
       "title": "hear the captain out",
-      "action": "press",
-      "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 12,
-        "settle_frames": 20
-      },
-      "expected": "the band's named antagonist"
+      "action": "advance_dialogue_until_closed",
+      "expected": "the band's named antagonist",
+      "observation": "GATE-D3-DIALOGUE. relay_captain_challenge (data/dialogue/trainers.json) runs 4 lines against the pickets'/officer's own 2 -- '_authority_not_menace' in trainers.json says why: 'He is the most articulate of the four; Tether personnel believe the barriers are necessary work.' The fixed `times: 12` this step used before (Hess/Orrin/Dell's own working `times: 10` plus a guessed +2) closed the panel to `input_context=narrative_modal`, not `world` -- the very next step (S07-53) asserted `input_context == combat` and got `narrative_modal` instead, no engage was ever received (S07-53f), and every objective/flag downstream of the captain's own defeat (rescue_the_captive, disable_the_relay, restore_the_mill_crossing) FAILed as the honest, correct consequence of a fight that never started. Switched to the schema's own by-predicate primitive rather than guessing a higher press count a fifth line would break again."
     },
     {
       "id": "S07-52",
@@ -991,7 +986,7 @@
       "args": {
         "at": [
           -152.0,
-          4203.0
+          4195.6
         ],
         "budget_frames": 31500,
         "close_enough": 4.0,
@@ -999,7 +994,7 @@
         "answer_prompts": true
       },
       "expected": "Section D RT-09: 'Relay -> Old Mill Crossing -> Upper Meadows entry | (350,3760) -> (-152,4203)'",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "observation": "GATE-D3-CHANNEL. Section D's own (-152,4203) is the crossing's `channel.centre` (terrain_playground.json) -- the middle of the UNBUILT GAP, not a place to stand before the Gear restores the span. The previous target sent the walker straight at the void: it closed 3232m in the first 31492 frames and then spent the rest of its whole budget lodged 8.2m short, repeatedly falling in and getting returned to the road by severed_spokes.gd's carve failsafe (the earlier run's own log: 20+ 'player went over the edge... back to the road' lines at (-152,-7,4198)), because `close_enough: 4.0` against the centre demands standing inside the channel itself (half_length 6.0, so the gap alone runs 4197-4209). Retargeted at `gated_crossing.gd::near_point(7.4)` -- `centre - across*7.4` with `across=(0,1)` (derived here from the same `axis_deg: 0` / `_road_start()` rule the script itself uses, not eyeballed) -- which is also where `mill_crossing.gd`'s own Interactable prompt actually stands (`gate_offset: 7.4` in the same crossing's `bridge` block): (-152, 4195.6). It is 0.6m from where the walker organically stalled, so the earlier run had already effectively arrived and was failing only because the target it was still chasing was unreachable by construction."
     },
     {
       "id": "S07-77",

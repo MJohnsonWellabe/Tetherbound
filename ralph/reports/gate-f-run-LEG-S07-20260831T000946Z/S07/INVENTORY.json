@@ -1,0 +1,195 @@
+{
+  "blocked": "",
+  "captures": {
+    "absent": 0,
+    "delegated": [
+      "GF-10-RELAY-01",
+      "GF-21-WEATHER-03",
+      "GF-14-COMBAT-04c",
+      "GF-10-RELAY-02",
+      "GF-10-RELAY-03"
+    ],
+    "delegated_to": "S07C",
+    "owes": [],
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": true,
+  "cost": {
+    "frame_cost_s": 0.016726,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.3,
+        "frame_cost_s": 0.006523,
+        "frames_remaining": 149861,
+        "predicted_remaining_s": 978.1,
+        "step_index": 3,
+        "wall_spent_s": 0.7,
+        "was_frame_cost_s": 0.005913
+      },
+      {
+        "armed": "in-play sample over budget: 46911 s predicted against 14362 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14361.7,
+        "frame_cost_s": 0.313108,
+        "frames_remaining": 149824,
+        "observed_window_s": 0.313108,
+        "predicted_remaining_s": 46911.0,
+        "samples": 1,
+        "step_index": 8,
+        "wall_spent_s": 38.3,
+        "was_frame_cost_s": 0.006523
+      },
+      {
+        "armed": "in-play sample over budget: 24699 s predicted against 14360 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14359.7,
+        "frame_cost_s": 0.164851,
+        "frames_remaining": 149824,
+        "observed_window_s": 0.016594,
+        "predicted_remaining_s": 24698.6,
+        "samples": 2,
+        "step_index": 8,
+        "wall_spent_s": 40.3,
+        "was_frame_cost_s": 0.313108
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14357.7,
+        "frame_cost_s": 0.016761,
+        "frames_remaining": 149824,
+        "observed_window_s": 0.016761,
+        "predicted_remaining_s": 2511.2,
+        "samples": 3,
+        "step_index": 8,
+        "wall_spent_s": 42.3,
+        "was_frame_cost_s": 0.164851
+      }
+    ]
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false
+  },
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "logic",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [
+      {
+        "hz": 0.5,
+        "label": "band 2 -> band 3, the river arrival",
+        "step": "S07-22a"
+      },
+      {
+        "hz": 0.5,
+        "label": "band 3 -> band 4, the Old Mill Crossing",
+        "step": "S07-75a"
+      }
+    ],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [],
+  "preflight": {
+    "allow_no_capture": false,
+    "boot_cost_s": 0.49,
+    "capture_available": false,
+    "capture_lane": "S07C",
+    "capture_requested": false,
+    "cost_rechecks": 528,
+    "delegated_captures": 5,
+    "display_server": "headless",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "none (headless, no rendering driver)",
+      "from": "ralph/reports/gate-f-run-LEG-S07-20260831T000946Z/RUN_METADATA.json",
+      "key": "lanes.logic.display_server",
+      "lane": "logic"
+    },
+    "measured_frame_cost_s": 0.005913,
+    "measured_frame_cost_s_in_scene": 0.016726,
+    "planned_captures": 0,
+    "predicted_frames": 149894,
+    "predicted_segment_cost_s": 886.4,
+    "predicted_segment_cost_s_in_scene": 1260.7,
+    "record_baseline_hz": 0.0,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.3,
+        "frame_cost_s": 0.006523,
+        "frames_remaining": 149861,
+        "predicted_remaining_s": 978.1,
+        "step_index": 3,
+        "wall_spent_s": 0.7,
+        "was_frame_cost_s": 0.005913
+      },
+      {
+        "armed": "in-play sample over budget: 46911 s predicted against 14362 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14361.7,
+        "frame_cost_s": 0.313108,
+        "frames_remaining": 149824,
+        "observed_window_s": 0.313108,
+        "predicted_remaining_s": 46911.0,
+        "samples": 1,
+        "step_index": 8,
+        "wall_spent_s": 38.3,
+        "was_frame_cost_s": 0.006523
+      },
+      {
+        "armed": "in-play sample over budget: 24699 s predicted against 14360 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14359.7,
+        "frame_cost_s": 0.164851,
+        "frames_remaining": 149824,
+        "observed_window_s": 0.016594,
+        "predicted_remaining_s": 24698.6,
+        "samples": 2,
+        "step_index": 8,
+        "wall_spent_s": 40.3,
+        "was_frame_cost_s": 0.313108
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14357.7,
+        "frame_cost_s": 0.016761,
+        "frames_remaining": 149824,
+        "observed_window_s": 0.016761,
+        "predicted_remaining_s": 2511.2,
+        "samples": 3,
+        "step_index": 8,
+        "wall_spent_s": 42.3,
+        "was_frame_cost_s": 0.164851
+      }
+    ],
+    "verdict": "not required",
+    "why": "segment declares no captures and no continuous record"
+  },
+  "run_id": "gate-f-run-LEG-S07-20260831T000946Z",
+  "segment": "S07",
+  "sha": "65ef5c49232ac782497f87321b7e1a6f909cddef",
+  "steps": {
+    "delegated": 9,
+    "fail": 13,
+    "pass": 85,
+    "ran": 107,
+    "refused": 0,
+    "skipped": 0,
+    "total": 107
+  },
+  "uncommittable": []
+}
