@@ -216,6 +216,15 @@ func time_of_day() -> String:
 	return _time
 
 
+## The live clock hour (0..24), for anything that wants to DISPLAY the time
+## rather than react to a preset. `gate_f_probe.gd::clock_weather()` reads
+## `_cycle`/`_elapsed_seconds` directly because it predates this and needs the
+## preset too; this is the plain accessor a HUD widget should call instead of
+## reaching into those same privates a second way.
+func hour() -> float:
+	return _cycle.hour_at(_elapsed_seconds) if _cycle != null else 0.0
+
+
 func times_available() -> Array:
 	var found: Array = []
 	for key: String in _config.get("times", {}).keys():
