@@ -271,37 +271,15 @@
     {
       "id": "S10a-23",
       "title": "fight the patrol",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 28,
-        "settle_frames": 30
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "gap_frames": 18,
+        "until_flag": "defeated_stronghold_patrol"
       },
-      "expected": "Section E.1 per-fight record. Verrick's Trailpup carried 193.2 HP on the measured run; 28 quick presses is ~21 landed hits plus margin. MEASURED ARITHMETIC, GATE-F-LEG-S10AB 2026-08-31. combat_math.gd's damage is `power * scale * attack / (attack + defence)`, a RATIO -- so a quick hit lands for about combat.json's `player_quick.power` (9.0) against a comparable defender however high the levels are, while max HP keeps climbing with level. Logged from the run: a L20 Terrapup hit a L15 Trailpup for 8.9-10.7 a time, and the gauntlet's creatures carry 176-270 HP each. That is 20-28 quick hits PER ENEMY, and the press counts this script shipped with were budgeted well under it. Nothing here inflates the player: the counts below are the shipped numbers' own answer to 'how many hits does this fight take', and they are spread across the belt rather than piled onto one creature."
-    },
-    {
-      "id": "S10a-24",
-      "title": "switch pilot for his second",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap",
-        "settle_frames": 24
-      },
-      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
-    },
-    {
-      "id": "S10a-25",
-      "title": "fight his second",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 30,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record. His Burrowback carried 209.0 HP. SWITCHING IS THE FIX, not a bigger number. encounter_director.gd::_on_trainer_round_ended treats the piloted creature fainting as LOSING THE WHOLE BATTLE -- its own comment says so, deliberately -- so a script that pilots one creature through a three-creature team is one faint away from a loss with four healthy creatures still on the belt. That is exactly what happened on the first run of this segment: Ripple fainted to the courtyard's third creature with Gale/Tusk/Dusk untouched at full HP, `defeated_stronghold_courtyard` was never set, and the segment failed on a fight it had nearly won. Cycling the pilot between the trainer's creatures is what a five-creature belt is FOR and what CLAUDE.md's own five-and-only-five rule is built around, so the fights below rotate through it."
+      "expected": "Section E.1 per-fight record. Patrolman Verrick fields two -- Trailpup L15 (193.2 HP) and Burrowback L16 (209.0 HP). The gauntlet's first rung, and spec Sec8's own job for it: tell an under-levelled party to turn around while turning around is still cheap.",
+      "_comment_rewritten": "REWRITTEN, GATE-F-LEG-S10AB 2026-08-31, from a run of counted `combat_quick` presses with `party_cycle` sprinkled between them to a single predicate-driven `fight_until_resolved`. The counted form was wrong in principle and measurably wrong in practice. In principle: a fight's length is a function of both levels, the type chart and a +/-10% roll per hit, none of which is knowable when a step-script is written -- the same argument the schema already makes for `advance_dialogue_until_closed` ('by predicate, never by a press count') and for `focus_item` ('a press count is only right for one arrangement of the bag'). In practice, across three runs of this segment: a water pilot against a water defender spent every press budgeted for the courtyard's THREE creatures on its first one (46.8 s for 247 HP); the switch presses then landed mid-round rather than between rounds and were refused by the commitment guard; and each fight was finally lost to a single faint with three untouched creatures still on the belt, because `encounter_director.gd::_on_trainer_round_ended()` ends the whole battle when the PILOTED creature falls. The action presses the same two production verbs -- quick attack, and LB when the pilot is spent -- reading the fight's own state between presses. It never opens the satchel, so a fight won under it is won on levels, types and the belt."
     },
     {
       "id": "S10a-26",
@@ -385,48 +363,15 @@
     {
       "id": "S10a-32",
       "title": "fight the courtyard warder",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 30,
-        "settle_frames": 30
+        "budget_frames": 12000,
+        "switch_below": 0.35,
+        "gap_frames": 18,
+        "until_flag": "defeated_stronghold_courtyard"
       },
-      "expected": "Section E.1 per-fight record. Solene's Mosshell carried 247.0 HP -- the single biggest health pool in the gauntlet's first two rungs. MEASURED ARITHMETIC, GATE-F-LEG-S10AB 2026-08-31. combat_math.gd's damage is `power * scale * attack / (attack + defence)`, a RATIO -- so a quick hit lands for about combat.json's `player_quick.power` (9.0) against a comparable defender however high the levels are, while max HP keeps climbing with level. Logged from the run: a L20 Terrapup hit a L15 Trailpup for 8.9-10.7 a time, and the gauntlet's creatures carry 176-270 HP each. That is 20-28 quick hits PER ENEMY, and the press counts this script shipped with were budgeted well under it. Nothing here inflates the player: the counts below are the shipped numbers' own answer to 'how many hits does this fight take', and they are spread across the belt rather than piled onto one creature."
-    },
-    {
-      "id": "S10a-32a",
-      "title": "switch pilot for her second",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap",
-        "settle_frames": 24
-      },
-      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
-    },
-    {
-      "id": "S10a-33a",
-      "title": "fight her second",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 26,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record. Her Reedwing carried 176.4 HP."
-    },
-    {
-      "id": "S10a-33b",
-      "title": "switch pilot for her third",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap",
-        "settle_frames": 24
-      },
-      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
+      "expected": "Section E.1 per-fight record. Warder Solene fields the building's first THREE -- Mosshell L16 (247.0 HP), Reedwing L17 (176.4) and Mudsnout L17 (196.0). The step up from the patrol is a whole extra creature, which is what actually punishes a party that arrives with one creature it likes.",
+      "_comment_rewritten": "REWRITTEN, GATE-F-LEG-S10AB 2026-08-31, from a run of counted `combat_quick` presses with `party_cycle` sprinkled between them to a single predicate-driven `fight_until_resolved`. The counted form was wrong in principle and measurably wrong in practice. In principle: a fight's length is a function of both levels, the type chart and a +/-10% roll per hit, none of which is knowable when a step-script is written -- the same argument the schema already makes for `advance_dialogue_until_closed` ('by predicate, never by a press count') and for `focus_item` ('a press count is only right for one arrangement of the bag'). In practice, across three runs of this segment: a water pilot against a water defender spent every press budgeted for the courtyard's THREE creatures on its first one (46.8 s for 247 HP); the switch presses then landed mid-round rather than between rounds and were refused by the commitment guard; and each fight was finally lost to a single faint with three untouched creatures still on the belt, because `encounter_director.gd::_on_trainer_round_ended()` ends the whole battle when the PILOTED creature falls. The action presses the same two production verbs -- quick attack, and LB when the pilot is spent -- reading the fight's own state between presses. It never opens the satchel, so a fight won under it is won on levels, types and the belt."
     },
     {
       "id": "S10a-33",
@@ -436,19 +381,8 @@
         "control": "combat_charged",
         "hold": "long"
       },
-      "expected": "the charged verb's hold edge, taken on a freshly switched pilot so the hold is exercised against a full energy bar"
-    },
-    {
-      "id": "S10a-34",
-      "title": "finish her",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 28,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record. Her Mudsnout carried 196.0 HP. On the first run this creature was left at 62.2 HP when the single piloted creature fainted -- the fight was seven hits from won. SWITCHING IS THE FIX, not a bigger number. encounter_director.gd::_on_trainer_round_ended treats the piloted creature fainting as LOSING THE WHOLE BATTLE -- its own comment says so, deliberately -- so a script that pilots one creature through a three-creature team is one faint away from a loss with four healthy creatures still on the belt. That is exactly what happened on the first run of this segment: Ripple fainted to the courtyard's third creature with Gale/Tusk/Dusk untouched at full HP, `defeated_stronghold_courtyard` was never set, and the segment failed on a fight it had nearly won. Cycling the pilot between the trainer's creatures is what a five-creature belt is FOR and what CLAUDE.md's own five-and-only-five rule is built around, so the fights below rotate through it."
+      "expected": "the charged verb's hold edge. Kept as its own step after the fight rather than inside it: `fight_until_resolved` drives the QUICK verb and the switch and nothing else, so the charged hold has to be exercised somewhere a reader can see it.",
+      "_comment_kept": "GATE-F-LEG-S10AB 2026-08-31. This press is now made in the WORLD, not mid-fight, and that is a real reduction in what it evidences -- the hold edge is still driven through the live InputMap, but not against a live combat action machine. Recorded rather than glossed. The charged verb inside a fight is covered by S10b's own charged step and by X04, the combat lab."
     },
     {
       "id": "S10a-35",
@@ -620,60 +554,15 @@
     {
       "id": "S10a-46",
       "title": "fight the elite",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 30,
-        "settle_frames": 30
+        "budget_frames": 15000,
+        "switch_below": 0.35,
+        "gap_frames": 18,
+        "until_flag": "defeated_stronghold_elite"
       },
-      "expected": "Section E.1 per-fight record. Keeper Hald leads a Galecrest (L18), a Burrowback (L19) and a Duskhush (L19) -- three types, the hardest fight before the Warden, and around 250 HP each at those levels. MEASURED ARITHMETIC, GATE-F-LEG-S10AB 2026-08-31. combat_math.gd's damage is `power * scale * attack / (attack + defence)`, a RATIO -- so a quick hit lands for about combat.json's `player_quick.power` (9.0) against a comparable defender however high the levels are, while max HP keeps climbing with level. Logged from the run: a L20 Terrapup hit a L15 Trailpup for 8.9-10.7 a time, and the gauntlet's creatures carry 176-270 HP each. That is 20-28 quick hits PER ENEMY, and the press counts this script shipped with were budgeted well under it. Nothing here inflates the player: the counts below are the shipped numbers' own answer to 'how many hits does this fight take', and they are spread across the belt rather than piled onto one creature."
-    },
-    {
-      "id": "S10a-47",
-      "title": "switch pilot for his second",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap",
-        "settle_frames": 24
-      },
-      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
-    },
-    {
-      "id": "S10a-48",
-      "title": "fight his second",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 30,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record."
-    },
-    {
-      "id": "S10a-48a",
-      "title": "switch pilot for his third",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap",
-        "settle_frames": 24
-      },
-      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
-    },
-    {
-      "id": "S10a-48b",
-      "title": "fight his third",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 32,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record. Three creatures, three pilots: the elite is the fight the belt is sized for. SWITCHING IS THE FIX, not a bigger number. encounter_director.gd::_on_trainer_round_ended treats the piloted creature fainting as LOSING THE WHOLE BATTLE -- its own comment says so, deliberately -- so a script that pilots one creature through a three-creature team is one faint away from a loss with four healthy creatures still on the belt. That is exactly what happened on the first run of this segment: Ripple fainted to the courtyard's third creature with Gale/Tusk/Dusk untouched at full HP, `defeated_stronghold_courtyard` was never set, and the segment failed on a fight it had nearly won. Cycling the pilot between the trainer's creatures is what a five-creature belt is FOR and what CLAUDE.md's own five-and-only-five rule is built around, so the fights below rotate through it."
+      "expected": "Section E.1 per-fight record. Keeper Hald fields three creatures of three different types -- Galecrest L18, Burrowback L19, Duskhush L19 -- and is the hardest fight before the Warden. His defeat flag also closes objective 23/27, `fight_through_the_hall`.",
+      "_comment_rewritten": "REWRITTEN, GATE-F-LEG-S10AB 2026-08-31, from a run of counted `combat_quick` presses with `party_cycle` sprinkled between them to a single predicate-driven `fight_until_resolved`. The counted form was wrong in principle and measurably wrong in practice. In principle: a fight's length is a function of both levels, the type chart and a +/-10% roll per hit, none of which is knowable when a step-script is written -- the same argument the schema already makes for `advance_dialogue_until_closed` ('by predicate, never by a press count') and for `focus_item` ('a press count is only right for one arrangement of the bag'). In practice, across three runs of this segment: a water pilot against a water defender spent every press budgeted for the courtyard's THREE creatures on its first one (46.8 s for 247 HP); the switch presses then landed mid-round rather than between rounds and were refused by the commitment guard; and each fight was finally lost to a single faint with three untouched creatures still on the belt, because `encounter_director.gd::_on_trainer_round_ended()` ends the whole battle when the PILOTED creature falls. The action presses the same two production verbs -- quick attack, and LB when the pilot is spent -- reading the fight's own state between presses. It never opens the satchel, so a fight won under it is won on levels, types and the belt."
     },
     {
       "id": "S10a-49",

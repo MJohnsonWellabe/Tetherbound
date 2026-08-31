@@ -283,9 +283,19 @@ func _walk_in_from_the_entrance() -> void:
 	var entrance: Vector3 = _hold.call("marker", "entrance")
 	var first: Vector3 = _hold.call("marker", "outer_works")
 	await _put_down(entrance + Vector3(0.0, 1.5, 0.0))
-	await _walk_toward(first, 12.0)
+	await _walk_toward(first, 4.0)
 	var short := _player.global_position.distance_to(first)
-	if short > 14.0:
+	# 6 m, not 14. GATE-F-LEG-S10AB, 2026-08-31: the Outer Works is 24 m deep,
+	# and its mouth wall sits 13.2 m from the chamber's own centre -- so a
+	# 14 m tolerance passes a player who never got through the doorway at all.
+	# That is not hypothetical. The approach ramp reached floor height one wall
+	# thickness too far in, leaving a 0.34 m riser across the mouth, and S10a's
+	# own walk measured the player pinned at 13.6 m from this same point,
+	# oscillating along the outside of the wall for about a hundred seconds of
+	# play. 13.6 is inside 14.0, so this check passed the entire time the front
+	# door was effectively shut. 6 m is comfortably inside the room and still
+	# leaves the walker its own slack.
+	if short > 6.0:
 		_fail("walking in from the entrance never reached the Outer Works (%.1fm short)" % short)
 	else:
 		print("walked in from the entrance; %.1fm from the Outer Works' centre" % short)

@@ -240,48 +240,15 @@
     {
       "id": "S10b-60",
       "title": "fight the Warden",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 28,
-        "settle_frames": 30
+        "budget_frames": 20000,
+        "switch_below": 0.35,
+        "gap_frames": 18,
+        "until_flag": "defeated_warden"
       },
-      "expected": "Section E.1 per-fight record. Aldis leads FIVE -- Burrowback L16, Brooktail L17, Galecrest L17, Meadowhart L18, Tuskroot L20 -- the only full belt the chapter ever fields against the player. MEASURED ARITHMETIC, GATE-F-LEG-S10AB 2026-08-31. combat_math.gd's damage is `power * scale * attack / (attack + defence)`, a RATIO -- so a quick hit lands for about combat.json's `player_quick.power` (9.0) against a comparable defender however high the levels are, while max HP keeps climbing with level. Logged from the run: a L20 Terrapup hit a L15 Trailpup for 8.9-10.7 a time, and the gauntlet's creatures carry 176-270 HP each. That is 20-28 quick hits PER ENEMY, and the press counts this script shipped with were budgeted well under it. Nothing here inflates the player: the counts below are the shipped numbers' own answer to 'how many hits does this fight take', and they are spread across the belt rather than piled onto one creature."
-    },
-    {
-      "id": "S10b-61",
-      "title": "switch pilot for his second",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap",
-        "settle_frames": 24
-      },
-      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
-    },
-    {
-      "id": "S10b-62",
-      "title": "fight his second",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 28,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record."
-    },
-    {
-      "id": "S10b-62a",
-      "title": "switch pilot for his third",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap",
-        "settle_frames": 24
-      },
-      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
+      "expected": "Section E.1 per-fight record. Aldis fields FIVE -- Burrowback L16, Brooktail L17, Galecrest L17, Meadowhart L18 and a Tuskroot L20 ace -- the only full belt the chapter ever puts against the player, and the one fight it is tuned to make EVEN: `tests/test_trainers_data.gd::test_the_critical_path_alone_pays_for_the_warden_ready_level` fails the build if the main line stops paying for a starter that arrives level with that ace.",
+      "_comment_rewritten": "REWRITTEN, GATE-F-LEG-S10AB 2026-08-31, from a run of counted `combat_quick` presses with `party_cycle` sprinkled between them to a single predicate-driven `fight_until_resolved`. The counted form was wrong in principle and measurably wrong in practice. In principle: a fight's length is a function of both levels, the type chart and a +/-10% roll per hit, none of which is knowable when a step-script is written -- the same argument the schema already makes for `advance_dialogue_until_closed` ('by predicate, never by a press count') and for `focus_item` ('a press count is only right for one arrangement of the bag'). In practice, across three runs of this segment: a water pilot against a water defender spent every press budgeted for the courtyard's THREE creatures on its first one (46.8 s for 247 HP); the switch presses then landed mid-round rather than between rounds and were refused by the commitment guard; and each fight was finally lost to a single faint with three untouched creatures still on the belt, because `encounter_director.gd::_on_trainer_round_ended()` ends the whole battle when the PILOTED creature falls. The action presses the same two production verbs -- quick attack, and LB when the pilot is spent -- reading the fight's own state between presses. It never opens the satchel, so a fight won under it is won on levels, types and the belt."
     },
     {
       "id": "S10b-63",
@@ -291,65 +258,8 @@
         "control": "combat_charged",
         "hold": "long"
       },
-      "expected": "the charged verb's hold edge in the chapter's hardest fight, taken on a freshly switched pilot so the hold meets a full energy bar"
-    },
-    {
-      "id": "S10b-63a",
-      "title": "fight his third",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 28,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record."
-    },
-    {
-      "id": "S10b-64",
-      "title": "switch pilot for his fourth",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap",
-        "settle_frames": 24
-      },
-      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
-    },
-    {
-      "id": "S10b-64a",
-      "title": "fight his fourth",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 30,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record. Meadowhart, L18."
-    },
-    {
-      "id": "S10b-64b",
-      "title": "switch pilot for his ace",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap",
-        "settle_frames": 24
-      },
-      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
-    },
-    {
-      "id": "S10b-65",
-      "title": "finish the Warden",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 34,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record. Tuskroot at L20 is the Warden's ace and the level `tests/test_trainers_data.gd::test_the_critical_path_alone_pays_for_the_warden_ready_level` tunes the whole chapter's XP curve to bring the player LEVEL WITH -- so this is the one fight in the Meadows that is meant to be even. Five of his against five of yours, one pilot each. SWITCHING IS THE FIX, not a bigger number. encounter_director.gd::_on_trainer_round_ended treats the piloted creature fainting as LOSING THE WHOLE BATTLE -- its own comment says so, deliberately -- so a script that pilots one creature through a three-creature team is one faint away from a loss with four healthy creatures still on the belt. That is exactly what happened on the first run of this segment: Ripple fainted to the courtyard's third creature with Gale/Tusk/Dusk untouched at full HP, `defeated_stronghold_courtyard` was never set, and the segment failed on a fight it had nearly won. Cycling the pilot between the trainer's creatures is what a five-creature belt is FOR and what CLAUDE.md's own five-and-only-five rule is built around, so the fights below rotate through it."
+      "expected": "the charged verb's hold edge, driven immediately after the chapter's hardest fight",
+      "_comment_kept": "See S10a-33's own note: `fight_until_resolved` drives the quick verb and the switch, so the charged hold is kept as its own step."
     },
     {
       "id": "S10b-66",

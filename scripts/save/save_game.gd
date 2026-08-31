@@ -737,6 +737,15 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		return
 	var party_ref := party as RefCounted
 	party_ref.call("clear")
+	# Read ONCE, outside the loop, for the baseline repair below. Read through
+	# this file's own `_read_json_file` rather than through
+	# `creature_species.gd` for the reason this file's header gives: it never
+	# reaches into the scene tree or the autoloads, so a headless test double
+	# round-trips exactly as a running game does.
+	var species_raw: Variant = _read_json_file(SPECIES_PATH).get("species", {})
+	var species_table: Dictionary = species_raw as Dictionary \
+		if typeof(species_raw) == TYPE_DICTIONARY else {}
+	var progression_cfg := _read_json_file(PROGRESSION_CONFIG_PATH)
 	for raw: Variant in (entries as Array):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
@@ -790,6 +799,16 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.nourishment = float(d.get("nourishment", _condition_defaults().get("nourishment", 70.0)))
 		creature.happiness = float(d.get("happiness", _condition_defaults().get("happiness", 55.0)))
 		creature.rested_seconds_left = float(d.get("rested_seconds_left", 0.0))
+		# The species baseline, which this format has never stored and which
+		# every level-up recomputes from. Without it a loaded creature carries
+		# `base_* = 1.0` and the first level it gains collapses its max HP to
+		# roughly 2 -- see `creature_instance.gd::restore_species_baseline()`
+		# for the measurement and for why the repair reads the catalogue rather
+		# than adding three fields to the file.
+		var definition_raw: Variant = species_table.get(creature.species_id, {})
+		creature.call("restore_species_baseline",
+			definition_raw as Dictionary if typeof(definition_raw) == TYPE_DICTIONARY else {},
+			progression_cfg)
 		party_ref.call("add", creature)
 
 
