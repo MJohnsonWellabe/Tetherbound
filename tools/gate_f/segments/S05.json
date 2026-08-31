@@ -813,6 +813,41 @@
       "expected": "on victory the gate opens; rewards and control return"
     },
     {
+      "id": "S05-54b",
+      "title": "walk up to the bridge gate",
+      "action": "move_to",
+      "args": {
+        "at": [
+          0.0,
+          1330.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "GATE-F-LEG-S05 fix, GAME defect (not S05-scope: scripts/world/gated_crossing.gd, general to every ITEM_GATE crossing). Winning the trainer does NOT open the gate by itself -- `_on_tried()` (the gate's own physical Interactable, `prompt_label(): \"Try the bridge gate\"`) is the only caller of `item_gate.gd::try_open()`, which is the only thing that consumes `south_bridge_key` and sets `south_bridge_open`. `_pay_trainer_reward` grants the key to the satchel on defeat; nothing about the fight ending touches the gate. Measured in the run that found this: winning cleanly (both of the grunt's creatures felled, `defeated_south_bridge_grunt` set, key granted) still left `south_bridge_open` NOT SET, and the very next move_to toward (0,1330) stopped 7.8m short against the still-locked leaf's own collider -- the physically correct answer to a closed gate, not a traversal bug. This step is that same walk, run BEFORE the assert rather than after: it is expected to stop short here too, at the same distance, close enough to be inside the leaf's 4.0m interact radius (`_build_gate`'s own `configure(prompt_label, 4.0, true)`)."
+    },
+    {
+      "id": "S05-54c",
+      "title": "try the gate",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the same `interact` press every other legitimate gate opening in this protocol uses (Section L.5: 'the locked probe is X06's; this is the legitimate opening'). With the key already in the satchel from the trainer's reward, `_on_tried()` calls `try_open()`, which consumes it and sets `south_bridge_open`; `_unlock()` swings the leaf and disables its collider and its own prompt."
+    },
+    {
+      "id": "S05-54d",
+      "title": "let the gate open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the unlock is an instant re-pose (gated_crossing.gd::_unlock has no tween on the leaf itself, unlike the locked jar), but the flag write and the collider disable go through the same frame the interact resolves on; this settles it before the assert below reads it"
+    },
+    {
       "id": "S05-55",
       "title": "the South Bridge is open",
       "action": "assert",

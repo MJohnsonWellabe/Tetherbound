@@ -862,6 +862,44 @@
       "_derived_from": "S05-54"
     },
     {
+      "id": "S05C-54b",
+      "title": "walk up to the bridge gate",
+      "action": "move_to",
+      "args": {
+        "at": [
+          0.0,
+          1330.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "GATE-F-LEG-S05 fix: winning the trainer does not open the gate by itself -- the physical Interactable is the only caller of try_open(). This walk stops short against the still-locked leaf, same as S05-54b.",
+      "_derived_from": "S05-54b"
+    },
+    {
+      "id": "S05C-54c",
+      "title": "try the gate",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "with the key already in the satchel from the trainer's reward, this opens the gate and sets south_bridge_open",
+      "_derived_from": "S05-54c"
+    },
+    {
+      "id": "S05C-54d",
+      "title": "let the gate open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "settle the flag write and collider disable before the assert below reads it",
+      "_derived_from": "S05-54d"
+    },
+    {
       "id": "S05C-55",
       "title": "the South Bridge is open",
       "action": "assert",
