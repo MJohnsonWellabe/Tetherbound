@@ -818,15 +818,15 @@
       "action": "move_to",
       "args": {
         "at": [
-          0.0,
-          1330.0
+          8.0,
+          1319.0
         ],
-        "budget_frames": 3000,
-        "close_enough": 3.0,
-        "held_budget_frames": 7200,
+        "budget_frames": 1800,
+        "close_enough": 2.0,
+        "held_budget_frames": 3600,
         "answer_prompts": true
       },
-      "expected": "GATE-F-LEG-S05 fix, GAME defect (not S05-scope: scripts/world/gated_crossing.gd, general to every ITEM_GATE crossing). Winning the trainer does NOT open the gate by itself -- `_on_tried()` (the gate's own physical Interactable, `prompt_label(): \"Try the bridge gate\"`) is the only caller of `item_gate.gd::try_open()`, which is the only thing that consumes `south_bridge_key` and sets `south_bridge_open`. `_pay_trainer_reward` grants the key to the satchel on defeat; nothing about the fight ending touches the gate. Measured in the run that found this: winning cleanly (both of the grunt's creatures felled, `defeated_south_bridge_grunt` set, key granted) still left `south_bridge_open` NOT SET, and the very next move_to toward (0,1330) stopped 7.8m short against the still-locked leaf's own collider -- the physically correct answer to a closed gate, not a traversal bug. This step is that same walk, run BEFORE the assert rather than after: it is expected to stop short here too, at the same distance, close enough to be inside the leaf's 4.0m interact radius (`_build_gate`'s own `configure(prompt_label, 4.0, true)`)."
+      "expected": "GATE-F-LEG-S05 fix, second measurement. Winning the trainer does NOT open the gate by itself -- `_on_tried()` (the gate's own physical Interactable, `prompt_label(): \"Try the bridge gate\"`) is the only caller of `item_gate.gd::try_open()`, which is the only thing that consumes `south_bridge_key` and sets `south_bridge_open`; `_pay_trainer_reward` grants the key to the satchel on defeat but nothing about the fight ending touches the gate. The first fix (this step against (0,1330)) reached its literal target -- but data/config/terrain_playground.json's own `crossings[].south_bridge.carve.centre` is `[8, 1330]`, not `[0,1330]`, and the leaf itself stands `bridge.gate_offset` (8.5m) back toward the village along the crossing's axis, at `[8, 1321.5]` (matches south_bridge_grunt's own `_why_here`: '9.6m from the locked leaf at [8, 1321.5]'). (0,1330) is 11.7m from the actual leaf -- outside its 4.0m interact radius -- and OW5C's own comment names x=0 as sitting exactly on a known, separately-tracked collision-shape-tile seam (COLL1, ralph/BACKLOG.md Phase -1.40) that a walk glued to a fixed x can get stuck crossing; the run that found this saw exactly that (severed_spokes recovery firing repeatedly, an erratic path, and a false 'reached' report from a recovery point nowhere near the leaf). (8, 1319) sits on the seam-safe x the crossing's own road was already moved to (OW5C) and 2.5m short of the leaf on the near side, inside the interact radius without walking through it."
     },
     {
       "id": "S05-54c",

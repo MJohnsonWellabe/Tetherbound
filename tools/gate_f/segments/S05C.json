@@ -867,15 +867,15 @@
       "action": "move_to",
       "args": {
         "at": [
-          0.0,
-          1330.0
+          8.0,
+          1319.0
         ],
-        "budget_frames": 3000,
-        "close_enough": 3.0,
-        "held_budget_frames": 7200,
+        "budget_frames": 1800,
+        "close_enough": 2.0,
+        "held_budget_frames": 3600,
         "answer_prompts": true
       },
-      "expected": "GATE-F-LEG-S05 fix: winning the trainer does not open the gate by itself -- the physical Interactable is the only caller of try_open(). This walk stops short against the still-locked leaf, same as S05-54b.",
+      "expected": "GATE-F-LEG-S05 fix, second measurement: the real carve centre is [8,1330] (terrain_playground.json), the leaf stands at [8,1321.5] (gate_offset 8.5m), and (0,1330) sits on a separately-tracked collision seam (COLL1) plus is outside the leaf's 4.0m interact radius. (8,1319) is seam-safe and inside the radius.",
       "_derived_from": "S05-54b"
     },
     {
