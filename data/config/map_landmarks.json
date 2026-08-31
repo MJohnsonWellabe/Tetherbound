@@ -183,9 +183,10 @@
       "id": "the_burrow_warrens",
       "display_name": "The Burrow Warrens",
       "_comment_mq2b": "MQ2B, spec Sec3 Band 2. The chapter's required dungeon had a `site.at` in burrow_warrens.json and no map entry anywhere -- the Old Quarry (evidence, optional) had a named region and the required dungeon next to it did not. Centre is the site's own entrance point, the one part of the complex that is actually above ground and approachable; the chambers run in from there rather than around it, so naming the mouth names the place. Separation is comfortable and was checked: ~1065m to The Old Quarry, ~1498m to The Tether Relay, both bands away -- no overlap possible at this range. TUNABLE.",
+      "_comment_s06_leg_resite": "GATE-F-LEG-S06. `centre` was still (-420,2470) -- the pre-BAND2-63-WARRENS site, before the cave was relocated to burrow_warrens.json's current `site.at` (-357,2610) because the old site could not be walked through (see that file's own `_comment_resiting`). BAND2_WARRENS_EVIDENCE_2026-08-23.md's file footprint claims this entry moved with the site; it did not take, or was reverted -- this SHA still had the 150m-stale value. A player using the Map tab to find the Warrens was pointed 150m from the real mouth, into unvetted terrain the site relocation never had to prove walkable (only the road-side approach from the spine was measured). An isolated S06 playtest, walking the map's own pin the way a player would, drove the player into that unvetted stretch and it went permanently unrecoverable there (`player_controller.gd`'s own entombment failsafe correctly declines to act -- the body is pressed against something with a clear alternate direction, not sealed -- so nothing ever moved it again). Moved to match `burrow_warrens.json`'s actual `site.at`; radius unchanged.",
       "centre": [
-        -420.0,
-        2470.0
+        -357.0,
+        2610.0
       ],
       "radius": 45.0
     },
