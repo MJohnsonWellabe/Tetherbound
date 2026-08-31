@@ -12,23 +12,31 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
  * that set_shader_override() is NOT clobbered by a later
  * enable_shader_override(true) call as long as it runs first.
  *
- * A second, unrelated manual edit lives inside accumulate_material(),
- * marked with D6-SEAM-FIX banners: ralph/reports/audit/D6-seam-probe/
- * FOLLOWUP-2026-08-31.md confirmed the per-tile detiling rotation this
- * function applies (via _texture_detile_array/random(uv_center)) as the
- * dominant cause of a dashed terrain seam. Two adjacent tiles roll
- * unrelated random rotations, so both the UV rotation and the
- * anisotropic-filter derivatives it drives (id_dd) step sharply at the
- * shared edge -- but a first fix attempt that only feathered rotation
- * near each tile's own boundary measured NO improvement at the seam's
- * actual camera distance (~100m, grazing angle): at that range a single
- * fragment's footprint already covers a fraction of a whole tile, so it
- * legitimately samples across several independently-rotated tiles at
- * once, and no boundary-local feather changes that. The landed fix
- * instead fades detiling strength toward 0 as the fragment's own
- * anisotropic footprint (in tile units) grows toward one whole tile,
- * which is confirmed (render evidence, same camera) to remove the seam
- * while leaving close-range detiling at full strength.
+ * A second, unrelated manual edit lives inside accumulate_material() and
+ * fragment(), marked with D6-SEAM-FIX banners: ralph/reports/audit/
+ * D6-seam-probe/FOLLOWUP-2026-08-31.md confirmed detiling
+ * (_texture_detile_array/random(uv_center)) as the dominant cause of a
+ * dashed terrain seam -- forcing BOTH detiling_rotation and
+ * detiling_shift to 0 on a texture asset removes it. What actually
+ * triggers it took several failed fix attempts to pin down: it is
+ * NOT a same-texture detiling-tile edge (a boundary-position feather
+ * and a footprint-vs-tile-size fade each measured ZERO change at the
+ * seam's actual ~100m grazing-angle camera stand; the fragment's own
+ * anisotropic footprint there measured far below one whole tile, ruling
+ * that theory out directly). It also is NOT rotation or shift alone --
+ * zeroing either one by itself, unconditionally, also measured no
+ * change; only zeroing both together (confirmed via render, matching
+ * the known-good asset-property result) removes the seam. The actual
+ * trigger is Terrain3D's OWN non-bilerp (distant/minified) regime
+ * (fragment()'s `region_mip >= 0.0`): there the control map is read
+ * with a single nearest-texel lookup with no interpolation, so the
+ * texture id/detiling assignment a fragment gets can flip between
+ * adjacent screen pixels independent of any single tile's own geometry.
+ * The fix fades detiling to 0 as region_mip crosses from the bilerp
+ * (close/magnified) into the non-bilerp (distant/minified) regime,
+ * confirmed by render evidence to remove the seam while leaving
+ * close-range detiling (where bilerp holds and the fragment stays
+ * inside one control-map texel) at full strength.
  *
  * REGENERATION: everything OUTSIDE the T1-GROUND-2 and D6-SEAM-FIX
  * banners is Terrain3D template code, not authored here. If a future
@@ -63,17 +71,12 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
 #define DIV_255 0.003921568627450 // 1. / 255.
 #define DIV_1024 0.0009765625 // 1. / 1024.
 #define TAU_16TH -0.392699081698724 // -TAU / 16.
-// D6-SEAM-FIX: detiling rotation/shift strength is faded to 0, in
-// accumulate_material(), as a fragment's own anisotropic footprint (in
-// tile units -- 1.0 == one whole detiling tile per screen pixel) grows
-// from DETILE_FOOTPRINT_LO to DETILE_FOOTPRINT_HI. Below LO the
-// fragment samples comfortably inside one tile and gets full random
-// detiling; at/above HI it already spans multiple independently
-// rotated tiles, which is what produced the D6 dashed seam, so
-// detiling is fully backed off there. See accumulate_material()'s
-// D6-SEAM-FIX blocks and the banner comment at the top of this file.
-#define DETILE_FOOTPRINT_LO 0.05
-#define DETILE_FOOTPRINT_HI 0.5
+// D6-SEAM-FIX: width, in region_mip units (log2 octaves), of the fade
+// band centred on Terrain3D's own bilerp threshold (region_mip == 0.0,
+// fragment.gd) over which detile_fade (computed in fragment(), passed
+// into accumulate_material()) ramps from 1 to 0. See the banner comment
+// at the top of this file for why region_mip is the right axis.
+#define DETILE_MIP_FADE_WIDTH 1.0
 
 // Inline Functions
 #define DECODE_BLEND(control) float(control >> 14u & 0xFFu) * DIV_255
@@ -124,11 +127,6 @@ uniform bool enable_projection = true;
 uniform float projection_threshold : hint_range(0.0, 0.99, 0.01) = 0.8;
 
 uniform float mipmap_bias : hint_range(0.5, 1.5, 0.01) = 1.0;
-// D6-SEAM-FIX scratch diagnostic, NOT for commit: visualizes id_footprint
-// as a 3-band bracket (R saturates >=0.5, G >=0.1, B >=0.02 tile units)
-// so the real magnitude at the seam's camera stand can be read off a
-// single render instead of guessing DETILE_FOOTPRINT_LO/HI blind.
-uniform bool _d6_debug_footprint = true;
 uniform float depth_blur : hint_range(0.0, 35.0, 0.1) = 0.0;
 uniform float bias_distance : hint_range(0.0, 16384.0, 0.1) = 512.0;
 
@@ -286,7 +284,7 @@ vec2 rotate_vec2(const vec2 v, const vec2 cs) {
 // 2-4 lookups ( 2-6 with dual scaling )
 void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float weight, const ivec3 index,
 			const uint control, const vec2 texture_weight, const ivec2 texture_id, const vec3 i_normal,
-			const float h, inout material mat) {
+			const float h, const float detile_fade, inout material mat) {
 
 	// Index position for detiling.
 	vec2 i_pos = fma(_region_locations[index.z], vec2(_region_size), vec2(index.xy)) * _vertex_spacing;
@@ -340,25 +338,15 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 
 		// Detiling and Control map rotation
 		vec2 uv_center = floor(fma(i_pos, vec2(id_scale), vec2(0.5)));
-		// D6-SEAM-FIX: fade detiling strength toward 0 as this fragment's own
-		// anisotropic footprint (id_dd, already in tile units here) grows
-		// toward the size of one whole tile. At that point the fragment no
-		// longer samples inside a single detiling tile -- it legitimately
-		// spans several neighbouring tiles, each with its own unrelated
-		// random rotation, and no per-tile rotation can filter that
-		// correctly; that is what produced the dashed seam (confirmed at a
-		// grazing, ~100m camera stand where each screen pixel already
-		// covers a fraction of a tile). See top-of-file banner.
-		float id_footprint = max(length(id_dd.xy), length(id_dd.zw));
-		if (_d6_debug_footprint) {
-			// Stash raw footprint for a lighting-independent EMISSION readout
-			// at the bottom of fragment() -- mat.ao_strength is unused here.
-			mat.ao_strength = id_footprint;
-			mat.total_weight = 1.0;
-			return;
-		}
-		float id_detile_fade = 1.0 - smoothstep(DETILE_FOOTPRINT_LO, DETILE_FOOTPRINT_HI, id_footprint);
-		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU * id_detile_fade;
+		// D6-SEAM-FIX: see top-of-file banner. detile_fade is 0 whenever this
+		// fragment is in Terrain3D's own non-bilerp (distant/minified) regime,
+		// where the control map is read with a single nearest-texel lookup
+		// and can flip texture id between adjacent screen pixels -- confirmed
+		// as the dashed seam's actual trigger, not a same-texture tile-edge
+		// crossing (ruled out: neither a boundary-position fade nor a
+		// footprint-vs-tile-size fade changed the seam at all; the fragment's
+		// own footprint measured far below one tile everywhere it appears).
+		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU * detile_fade;
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
 		vec2 id_uv = rotate_vec2(fma(i_uv, vec2(id_scale), -uv_center), id_cs_angle) + uv_center + id_detile.y - 0.5;
@@ -401,13 +389,7 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 		// Detiling and Control map rotation
 		vec2 uv_center = floor(fma(i_pos, vec2(id_scale), vec2(0.5)));
 		// D6-SEAM-FIX: see matching comment in the 1st Texture Asset ID block above.
-		float id_footprint = max(length(id_dd.xy), length(id_dd.zw));
-		float id_detile_fade = 1.0 - smoothstep(DETILE_FOOTPRINT_LO, DETILE_FOOTPRINT_HI, id_footprint);
-		vec2 id_detile = _texture_detile_array[id] * fma(random(uv_center), 2.0, -1.0) * TAU * id_detile_fade;
-		if (_d6_debug_footprint) {
-			// SURGICAL TEST: zero BOTH, unconditionally, via shader code (not the asset API).
-			id_detile = vec2(0.0);
-		}
+		vec2 id_detile = _texture_detile_array[id] * fma(random(uv_center), 2.0, -1.0) * TAU * detile_fade;
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
 		vec2 id_uv = rotate_vec2(fma(i_uv, vec2(id_scale), -uv_center), id_cs_angle) + uv_center + id_detile.y - 0.5;
@@ -468,6 +450,13 @@ void fragment() {
 	// skip all extra lookups required for bilinear blend.
 	float region_mip = log2(max(length(base_ddx.xz), length(base_ddy.xz)) * _vertex_density);
 	bool bilerp = region_mip < 0.0 && region_uv.z > -1.;
+	// D6-SEAM-FIX: 1 when comfortably in the bilerp (magnified/close)
+	// regime, fading to 0 across DETILE_MIP_FADE_WIDTH octaves as
+	// region_mip crosses Terrain3D's own bilerp threshold into the
+	// non-bilerp (minified/distant) regime, where the control map is read
+	// with a single nearest-texel lookup and texture id/detiling can flip
+	// between adjacent screen pixels -- see accumulate_material().
+	float detile_fade = 1.0 - smoothstep(0.0, DETILE_MIP_FADE_WIDTH, region_mip);
 
 	// Terrain normals
 	vec3 index_normal[4];
@@ -603,16 +592,16 @@ void fragment() {
 
 	// 2 - 4 lookups, 2 - 6 if dual scale texture
 	accumulate_material(base_ddx, base_ddy, weights[3], index[3], control[3], t_weights[3],
-		texture_ids[3], index_normal[3], h[3], mat);
+		texture_ids[3], index_normal[3], h[3], detile_fade, mat);
 
 	// 6 - 12 lookups, 6 - 18 if dual scale texture
 	if (bilerp) {
 		accumulate_material(base_ddx, base_ddy, weights[2], index[2], control[2], t_weights[2],
-			texture_ids[2], index_normal[2], h[2], mat);
+			texture_ids[2], index_normal[2], h[2], detile_fade, mat);
 		accumulate_material(base_ddx, base_ddy, weights[1], index[1], control[1], t_weights[1],
-			texture_ids[1], index_normal[1], h[1], mat);
+			texture_ids[1], index_normal[1], h[1], detile_fade, mat);
 		accumulate_material(base_ddx, base_ddy, weights[0], index[0], control[0], t_weights[0],
-			texture_ids[0], index_normal[0], h[0], mat);
+			texture_ids[0], index_normal[0], h[0], detile_fade, mat);
 	}
 
 	// normalize accumulated values back to 0.0 - 1.0 range.
@@ -653,15 +642,6 @@ void fragment() {
 		float aerial_luma = dot(ALBEDO, vec3(0.2126, 0.7152, 0.0722));
 		vec3 aerial_desat = mix(ALBEDO, vec3(aerial_luma), aerial_desaturate * aerial_t);
 		ALBEDO = mix(aerial_desat, aerial_fade_colour.rgb, aerial_t * aerial_fade_strength);
-	}
-
-	if (_d6_debug_footprint) {
-		// Lighting-independent readout: mat.ao_strength carries id_footprint
-		// (see accumulate_material()). Discrete boolean bands survive
-		// tonemap/exposure compression better than a raw continuous value.
-		float fp_dbg = mat.ao_strength;
-		ALBEDO = vec3(0.0);
-		EMISSION = vec3(step(0.02, fp_dbg), step(0.1, fp_dbg), step(0.5, fp_dbg));
 	}
 
 	ROUGHNESS = roughness;
