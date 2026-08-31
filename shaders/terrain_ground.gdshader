@@ -135,6 +135,19 @@ uniform float aerial_desaturate : hint_range(0.0, 1.0) = 0.55;
 uniform vec4 aerial_fade_colour : source_color = vec4(0.745, 0.792, 0.808, 1.0);
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// D6-SEAM-PAINT-BOUNDARY diagnostic probe. Gated off by default (mode 0 ==
+// zero behavior change to shipped output). tools/_audit_d6_paint_boundary_
+// probe.gd sets this live via set_shader_param, never persisted -- this
+// block exists only to test whether the dashed terrain seam
+// (ralph/reports/audit/D6-seam-probe/) follows a control-map paint boundary
+// (texture_id divergence between adjacent screen fragments) rather than a
+// same-texture detiling-tile edge, which two prior probe sessions already
+// ruled out as the sole explanation. Revert this block before landing any
+// real fix that doesn't need it.
+uniform int _diag_paint_boundary_mode = 0; // 0=off 1=raw id map 2=id-change edge mask
+// ---------------------------------------------------------------------------
+
 // Varyings & Types
 
 struct material {
@@ -606,5 +619,27 @@ void fragment() {
 	AO = clamp(1. - ao * mat.ao_strength, mat.albedo_height.a, 1.0);
 	AO_LIGHT_AFFECT = (1.0 - mat.albedo_height.a) * clamp(mat.normal_rough.y, 0., 1.);
 
+	// D6-SEAM-PAINT-BOUNDARY diagnostic (see uniform declaration above). Off
+	// (mode 0) in every shipped render; EMISSION bypasses PBR/tonemap so the
+	// readout is lighting-independent, per the prior probe session's own
+	// finding that an albedo-based readout at this stand was not trustworthy.
+	if (_diag_paint_boundary_mode > 0) {
+		float base_id_f = float(texture_ids[3].x);
+		float over_id_f = float(texture_ids[3].y);
+		if (_diag_paint_boundary_mode == 1) {
+			// Raw id map: distinct hashed colour per base texture id.
+			EMISSION = fract(vec3(base_id_f * 0.37, base_id_f * 0.61, base_id_f * 0.89));
+		} else {
+			// Edge mask: white where base OR over texture id changes across
+			// this fragment's own screen footprint (a control-map paint
+			// boundary), black elsewhere.
+			float base_edge = abs(dFdx(base_id_f)) + abs(dFdy(base_id_f));
+			float over_edge = abs(dFdx(over_id_f)) + abs(dFdy(over_id_f));
+			EMISSION = vec3(step(0.5, max(base_edge, over_edge)));
+		}
+		ALBEDO = vec3(0.0);
+		ROUGHNESS = 1.0;
+		SPECULAR = 0.0;
+	}
 }
 
