@@ -7,8 +7,8 @@
   "_comment_long_walks": "The three legs here are the chapter's first long ones (village->pond ~600 m, pond->bridge ~900 m). budget_frames is sized from the distance at the walking rate the self-check measured on this box; held_budget_frames is raised so a wild encounter en route pauses the walk instead of aborting it, and the FAIL message names the input_context that held it if it never comes back.",
   "evidence_lane": "logic",
   "capture_lane": "S05C",
-  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S05C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S05C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
-  "_comment_record_hz_split": "AMENDED for the §H/§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because §H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- §H's prescribed frames move to S05C, which may run BOUNDED record windows around a named state.",
+  "_comment_evidence_lane": "\u00a7H/\u00a7G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md \u00a7H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the \u00a7G ids its steps would have taken are DELEGATED to S05C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S05C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the \u00a7H/\u00a7G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because \u00a7H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- \u00a7H's prescribed frames move to S05C, which may run BOUNDED record windows around a named state.",
   "steps": [
     {
       "id": "S05-01",
@@ -722,7 +722,7 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 10,
+        "times": 7,
         "settle_frames": 30
       },
       "expected": "Section E.1 per-fight record. Section D's difficulty read for band 1 comes from the HP margin at the end of this fight"
@@ -744,7 +744,7 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 10,
+        "times": 7,
         "settle_frames": 30
       },
       "expected": "Section E.1 per-fight record"
@@ -766,7 +766,7 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 10,
+        "times": 7,
         "settle_frames": 30
       },
       "expected": "Section E.1 per-fight record"
@@ -798,7 +798,7 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 22,
+        "times": 25,
         "settle_frames": 30
       },
       "expected": "Section E.1 per-fight record"
