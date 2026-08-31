@@ -56,6 +56,7 @@ func _run() -> void:
 
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
+	current_scene = world
 	for i in 200:
 		await process_frame
 
@@ -102,14 +103,28 @@ func _run() -> void:
 				float(c.get("hp")), float(c.get("max_hp")),
 				float(c.get("attack")), float(c.get("defence"))])
 
-	# --- walk from the bridge landing straight to the Warrens' real approach,
-	# skipping the stale map-pin detour entirely (this is what a player
-	# following the now-fixed map pin would do).
+	# --- walk the SAME proven waypoint chain the full Gate F run of S06
+	# already walked successfully (quarry picket, then the Old Quarry: PASS
+	# at 1059.5m/13485 frames for the next leg alone), rather than one long
+	# straight cross-country shot -- a 1256m beeline from the bridge straight
+	# to the Warrens road point, tried first, wedged solid 302m short in
+	# unmapped forest and never recovered for the rest of the run. That is a
+	# property of asking a naive straight-line walker to cut through terrain
+	# nothing has ever proven walkable in one line, not a finding about Band
+	# 2's own systems -- the road-following route below is the one every
+	# prior pass (including this run's own successful S06 segment attempt)
+	# has actually measured as walkable.
+	var quarry_picket := Vector3(315.0, 0.0, 1668.0)
+	quarry_picket.y = float(warrens.call("ground_height_at", quarry_picket.x, quarry_picket.z)) + 1.5
+	var quarry := Vector3(403.0, 0.0, 1794.0)
+	quarry.y = float(warrens.call("ground_height_at", quarry.x, quarry.z)) + 1.5
 	var road := Vector3(-380.0, 0.0, 2540.0)
 	road.y = float(warrens.call("ground_height_at", road.x, road.z)) + 1.5
 	print("")
-	print("=== walking to the Warrens' real approach ===")
-	await _walk_to(player, world, road, 12000)
+	print("=== walking the proven road chain to the Warrens' real approach ===")
+	await _walk_to(player, world, quarry_picket, 18900)
+	await _walk_to(player, world, quarry, 6300)
+	await _walk_to(player, world, road, 18900, 6.0)
 
 	var entrance: Vector3 = warrens.call("marker", "entrance")
 	await _walk_to(player, world, entrance, 3000)
