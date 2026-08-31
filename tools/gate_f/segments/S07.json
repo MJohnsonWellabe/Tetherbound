@@ -1039,11 +1039,43 @@
           3767.5
         ],
         "budget_frames": 3000,
-        "close_enough": 3.0,
+        "close_enough": 1.5,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "GATE-D3-DECK: tether_relay.json's `ramps[0]` ('yard_stair') foot, in the site's own (s,t) frame at (-12.5,-5.0) -- converted with the same site centre/bearing S07-40g's own note already derives. The Console (`apparatus.console.at [2.9,-9.0]`, `deck_y: 10.0`) sits on the raised pad past this ramp, gantry and pad in turn; a straight move_to_entity aimed at the Console from ground level closes the horizontal distance while walking toward the base of the platform rather than up the ramp, and CD-5's own 3D-arrival check correctly refuses that as 'reached in plan view... 4.94m of that is vertical' rather than a false pass. Routed through the ramp's own foot first, the same fix shape as S07-40g's compound gate."
+      "expected": "GATE-D3-DECK: tether_relay.json's `ramps[0]` ('yard_stair') foot, in the site's own (s,t) frame at (-12.5,-5.0) -- converted with the same site centre/bearing S07-40g's own note already derives. A tight close_enough (1.5m against the ramp's own 3.2m width) so this leg actually ends ON the ramp's own footprint, not merely near it -- the wider 3.0m tolerance a first attempt used left enough slack that the NEXT leg's straight line to the console (local (2.9,-9.0) from the foot's (-12.5,-5.0), a bearing nothing like the ramp's own foot-to-head run) missed the incline and walked at ground level toward the pad's base instead of climbing to it."
+    },
+    {
+      "id": "S07-69s",
+      "title": "climb the ramp to its head",
+      "action": "move_to",
+      "args": {
+        "at": [
+          337.4,
+          3758.0
+        ],
+        "budget_frames": 2400,
+        "close_enough": 2.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "GATE-D3-DECK: `ramps[0]`'s own head, local (-5.5,-11.5) -- the far end of the SAME sloped surface S07-69r's foot stands on, so a walk between the two follows the ramp's own run (about 20 degrees per tether_relay.json's own ramp comment) rather than cutting across open air beside it."
+    },
+    {
+      "id": "S07-69t",
+      "title": "cross the gantry onto the pad",
+      "action": "move_to",
+      "args": {
+        "at": [
+          346.5,
+          3749.1
+        ],
+        "budget_frames": 1800,
+        "close_enough": 2.5,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "GATE-D3-DECK: the pad, local (7.0,-9.0) -- flat deck at the same deck_y as the gantry between it and the ramp head, so this leg is level walking once the climb above is done."
     },
     {
       "id": "S07-70",
@@ -1052,7 +1084,7 @@
       "args": {
         "entity": "Console",
         "within": 2.5,
-        "budget_frames": 4500,
+        "budget_frames": 1800,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
