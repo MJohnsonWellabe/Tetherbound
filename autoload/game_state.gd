@@ -1029,6 +1029,23 @@ func apply_loaded_player_pose() -> bool:
 		rig.set("yaw", yaw)
 		rig.set("pitch", pitch)
 		rig.rotation = Vector3(pitch, yaw, 0.0)
+		# GATE-F-LEG-S09. `camera_rig.gd::set_target()` only snaps its own
+		# `global_position` to the target on the FIRST call (`not had_target`);
+		# every later frame follows via `_follow()`'s per-frame lerp. This rig
+		# already has a target by the time a save loads (`_place_player()` set
+		# it at world boot), so a load that moves the player far from wherever
+		# the rig physically was left the CAMERA -- and anything that streams
+		# terrain/collision off the camera's own position -- lagging behind for
+		# as long as that lerp takes to close the gap. Measured here: loading a
+		# save ~7400m from the rig's last position left it that far behind at
+		# the moment of load, and the player fell through unstreamed terrain,
+		# took lethal fall damage, and was respawned at the village fallback
+		# home with the satchel drained into a death satchel, before the lerp
+		# ever caught up. Snapping the rig's position along with its rotation
+		# is the same one-time snap `set_target()` already does for a target
+		# that has never been followed before; a load is exactly that case
+		# again, whatever the rig was following last.
+		rig.global_position = player.global_position
 	return true
 
 

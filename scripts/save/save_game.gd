@@ -154,7 +154,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 15
+const VERSION := 16
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -570,6 +570,37 @@ func _migrate_v11(data: Dictionary) -> Dictionary:
 ## from -- not an approximation of it, and with no population snapshot to
 ## reconstruct, because the population is derived from this integer rather than
 ## stored.
+## VERSION 16 — base stats (GATE-F-LEG-S09)
+##
+## `base_hp`/`base_attack`/`base_defence` were never part of the save at all,
+## silently defaulting to `creature_instance.gd`'s bare class default (1.0
+## each) on load and detonating the next time that creature levelled up (see
+## `_party_to_array`'s own comment). Unlike every "nothing to migrate FROM"
+## field above, the true value here is NOT unknowable: `species_id` is
+## already in the file, and `species.json` has each species' real base
+## stats. A species the current catalogue no longer recognises falls back to
+## the creature's own current (already-levelled) stat as the least-bad
+## available number -- not correct at any level past 1, but nowhere near the
+## collapse-to-1 failure this migration exists to close off.
+func _migrate_v15(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 16
+	var species_raw: Variant = _read_json_file(SPECIES_PATH).get("species", {})
+	var species_table: Dictionary = species_raw as Dictionary if typeof(species_raw) == TYPE_DICTIONARY else {}
+	var party: Array = migrated.get("party", [])
+	for raw: Variant in party:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var creature := raw as Dictionary
+		var entry_raw: Variant = species_table.get(str(creature.get("species_id", "")), {})
+		var entry: Dictionary = entry_raw as Dictionary if typeof(entry_raw) == TYPE_DICTIONARY else {}
+		creature["base_hp"] = float(entry.get("base_hp", creature.get("max_hp", 100.0)))
+		creature["base_attack"] = float(entry.get("base_attack", creature.get("attack", 10.0)))
+		creature["base_defence"] = float(entry.get("base_defence", creature.get("defence", 10.0)))
+	migrated["party"] = party
+	return migrated
+
+
 func _migrate_v14(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
 	migrated["version"] = 15
@@ -695,6 +726,22 @@ func _party_to_array(party: Variant) -> Array:
 			# additive and a save written before it round-trips unchanged.
 			"secondary_type": str(instance.get("secondary_type")),
 			"nickname": str(instance.get("nickname")),
+			# GATE-F-LEG-S09. `base_hp`/`base_attack`/`base_defence` are the
+			# species-raw stats `_apply_level_stats()` recomputes `max_hp`/
+			# `attack`/`defence` FROM on every future level-up. They were never
+			# saved: a fresh load carried the CURRENT (already-levelled) stats
+			# forward correctly, right up until that creature next levelled up,
+			# at which point `_apply_level_stats()` recomputed its stats from
+			# `creature_instance.gd`'s bare class default (`base_hp = 1.0`,
+			# same for attack/defence) instead of its real species base --
+			# collapsing a healthy level-18 creature (max_hp in the 200s) to a
+			# max_hp of 1-2 the moment it gained one more level. Reproduced
+			# for real driving S09's own checkpoint fight: a save/load/level-up
+			# sequence a full playthrough hits constantly turned a party member
+			# into a one-hit-faint liability mid-battle.
+			"base_hp": float(instance.get("base_hp")),
+			"base_attack": float(instance.get("base_attack")),
+			"base_defence": float(instance.get("base_defence")),
 			"max_hp": float(instance.get("max_hp")),
 			"attack": float(instance.get("attack")),
 			"defence": float(instance.get("defence")),
@@ -752,6 +799,12 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		# every other species-owned field on this class is repaired.
 		creature.secondary_type = str(d.get("secondary_type", ""))
 		creature.nickname = str(d.get("nickname", ""))
+		# See `_party_to_array`'s own comment on `base_hp`/`base_attack`/
+		# `base_defence`. Migrated in by `_migrate_v15` for any older save;
+		# these defaults only matter for a file missing the key outright.
+		creature.base_hp = float(d.get("base_hp", 100.0))
+		creature.base_attack = float(d.get("base_attack", 10.0))
+		creature.base_defence = float(d.get("base_defence", 10.0))
 		# Defaulted to 0, which is what a pre-VERSION-14 save honestly means:
 		# the history was not being kept, so the ceremony says nothing about it
 		# rather than inventing a number. No migration pass needed.
