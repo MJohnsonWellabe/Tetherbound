@@ -77,7 +77,35 @@
       "free_play": ""
     },
     "_comment_wake": "Empty for the same reason free_play is: during the wake beat the player is upstairs and he is downstairs, and he has nothing to say through a floor. His prompt stays quiet until they are in the same room.",
-    "_comment_free_play": "Empty means he has nothing scripted left and his prompt goes quiet rather than repeating a send-off forever. The qualification beat is deliberately not free play: tournament data owns its preparation checklist after the registrar has explained it.",
+    "_comment_free_play": "Empty means he has nothing scripted at THIS beat and his prompt goes quiet rather than repeating a send-off forever -- it does not mean he has nothing left to say at all any more; `grandpa_conversations_when` below is checked first and can still answer for him once one of its flags is set.",
+    "grandpa_conversations_when": [
+      {
+        "if_flag": "legendary_freed",
+        "conversation": "grandpa_freed",
+        "_why": "SG46's ending. Read data/dialogue/meadows_freed.json's own `_comment_grandpa` for the history -- this branch used to be a one-off special case hardcoded in sequence_director.gd; F3 folded it into this ladder as its highest-priority entry instead of leaving it the only flag Grandpa could react to."
+      },
+      {
+        "if_flag": "hall_approach_open",
+        "conversation": "grandpa_hall_approach",
+        "_why": "F3. All three captain sigils are in hand (playground_world.gd's SIGIL_GATE_FLAG) and the Hall itself is reachable -- the same beat Tam's `village_tam_hall` fires on, and deliberately the last thing Grandpa says before the Warden."
+      },
+      {
+        "if_flag": "captive_rescued",
+        "conversation": "grandpa_relay_rescue",
+        "_why": "F3. The relay's captive is free and walking home (data/dialogue/relay.json), the same beat Mira's `village_mira_road` fires on."
+      },
+      {
+        "if_flag": "south_bridge_open",
+        "conversation": "grandpa_south_bridge",
+        "_why": "F3. The grunt at the South Bridge is beaten and the crossing is open, the same beat Oskar's `village_oskar_bridge` fires on."
+      },
+      {
+        "if_flag": "tournament_won",
+        "conversation": "grandpa_tournament_won",
+        "_why": "F3. tournament.gd sets this once Halda's ladder is beaten. Earliest of the five milestones and last in the list on purpose: first match wins, so a later flag (already true by the time an earlier one still is) has to be checked first, the same order village_npcs.json's own freed branches use ahead of everything earlier."
+      }
+    ],
+    "_comment_grandpa_conversations_when": "F3 (MEADOWS_EXIT_CRITERION -- ralph/reports/audit/F-2026-08-31.md's F3, scoped by ralph/reports/handover-T5-STORY-2-2026-08-30.md sec5). Grandpa is not a village NPC and has no `greeting_when` list of his own (village_npcs.json); this is that ladder's home instead, read by scripts/story/opening_beats.gd::grandpa_conversations_when() and checked by sequence_director.gd::_grandpa_conversation_id() through village_npcs.gd's own `greeting_for()` -- the same reader, same first-match-wins order, same branch shape, with `conversation_for(_beat)` above standing in for a villager's plain `greeting`. Before this, `beats.grandpa_conversations` only ever named the first fifteen minutes and he had nothing to say about the tournament win, the bridge, the relay or the Hall -- the single most severe residual gap the audit found.",
     "named_conversation": "",
     "_comment_named": "Naming grants the starter, then deliberately returns control. The next required conversation is with Grandpa, so the player receives one immediate objective rather than an automatic stack of instructions.",
     "effects": {

@@ -17,6 +17,13 @@ extends "res://tests/test_case.gd"
 
 const BEATS := preload("res://scripts/story/opening_beats.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+## F3. `grandpa_conversations_when()`'s branches are read through the exact
+## same reader village_npcs.json's `greeting_when` ladders use, so the ladder
+## logic itself is covered by that file's own tests -- what belongs here is
+## the DATA: every branch this file names has to exist, speak, and win in the
+## right order.
+const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
+const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 
 
 func test_the_beats_come_out_in_the_order_the_config_lists_them() -> void:
@@ -84,6 +91,59 @@ func test_every_conversation_a_beat_names_really_exists() -> void:
 func test_he_has_nothing_scripted_left_once_the_sequence_is_over() -> void:
 	assert_eq(BEATS.conversation_for(BEATS.FREE_PLAY), "",
 		"free play is where the scripting stops; a conversation here would repeat his send-off forever")
+
+
+## F3 (audit F-2026-08-31.md's F3): Grandpa went silent from tournament
+## sign-up onward with no reaction to any mid-chapter milestone. Every branch
+## the ladder can reach has to actually exist and speak, the same guard
+## `test_dialogue_runner.gd::test_every_conversation_a_villager_can_open_really_exists`
+## keeps on every villager's `greeting_when`.
+func test_every_conversation_grandpas_ladder_names_really_exists() -> void:
+	var branches := BEATS.grandpa_conversations_when()
+	assert_false(branches.is_empty(), "F3's mid-chapter ladder should not be empty")
+	for raw: Variant in branches:
+		assert_true(raw is Dictionary, "a grandpa_conversations_when entry is not an object")
+		var branch := raw as Dictionary
+		var id := str(branch.get("conversation", ""))
+		assert_ne(id, "", "a grandpa_conversations_when branch names no conversation")
+		assert_true(RUNNER.has(id),
+			"grandpa_conversations_when names '%s', which is not in any dialogue file" % id)
+		var probe: RefCounted = RUNNER.new()
+		assert_true(probe.start(id), "conversation '%s' would not start" % id)
+		assert_true(int(probe.line().get("count", 0)) > 0, "'%s' has no lines" % id)
+
+
+## The ladder is written latest-milestone-first (F3's own `_why` fields say
+## so) precisely so that first-match-wins gives the right answer once several
+## of these flags are true at once, which is the ordinary end-of-chapter case:
+## nothing unsets `tournament_won` once the Warden falls. Walked through the
+## exact reader `sequence_director.gd::_grandpa_conversation_id()` uses, with
+## `conversation_for(FREE_PLAY)` (empty) standing in for his "greeting".
+func test_grandpas_ladder_lets_the_latest_milestone_outrank_the_rest() -> void:
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	var spec := {
+		"greeting": BEATS.conversation_for(BEATS.FREE_PLAY),
+		"greeting_when": BEATS.grandpa_conversations_when(),
+	}
+	assert_eq(VILLAGE_NPCS.greeting_for(spec, progression), "",
+		"no milestone reached yet -- free play's own conversation is empty and nothing should fill it")
+
+	progression.set_flag("tournament_won")
+	assert_eq(VILLAGE_NPCS.greeting_for(spec, progression), "grandpa_tournament_won")
+
+	progression.set_flag("south_bridge_open")
+	assert_eq(VILLAGE_NPCS.greeting_for(spec, progression), "grandpa_south_bridge",
+		"a later milestone should outrank an earlier one that is still set")
+
+	progression.set_flag("captive_rescued")
+	assert_eq(VILLAGE_NPCS.greeting_for(spec, progression), "grandpa_relay_rescue")
+
+	progression.set_flag("hall_approach_open")
+	assert_eq(VILLAGE_NPCS.greeting_for(spec, progression), "grandpa_hall_approach")
+
+	progression.set_flag("legendary_freed")
+	assert_eq(VILLAGE_NPCS.greeting_for(spec, progression), "grandpa_freed",
+		"the ending should outrank every earlier milestone, all of which are still true by then")
 
 
 ## The one that catches a writer, not a programmer: a line gains

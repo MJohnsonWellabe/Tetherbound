@@ -42,6 +42,11 @@ const BEATS := preload("res://scripts/story/opening_beats.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NPC := preload("res://scripts/npc/npc_body.gd")
+## F3/GATE-F-LEG-S10CDE. `greeting_for()` is what reads a villager's
+## `greeting_when` ladder; `_grandpa_conversation_id()` reuses it for
+## Grandpa's own ladder (opening_beats.gd's `grandpa_conversations_when()`)
+## rather than re-implementing the same first-match-wins lookup a second time.
+const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 ## D39 (OF31). The two trading screens a villager's `shop:` effect can open.
@@ -1069,20 +1074,30 @@ func _on_grandpa_activated() -> void:
 	_start_conversation(_grandpa_conversation_id())
 
 
-## GATE-F-LEG-S10CDE. `free_play` (opening.json's own terminal beat, reached
-## around tournament sign-up) has nothing scripted forever, by design — but
-## SG46's ending changes the world, and GATE_F_MASTER_PROTOCOL.md §L.5 and
-## objectives.json's `see_what_changed` both promise Grandpa has something to
-## say about it, which no entry in `beats.grandpa_conversations` ever named.
-## Checked ahead of the beat table, the same priority order `village_npcs.gd`'s
-## own `greeting_when` freed branches already use ahead of their standing one
-## (data/dialogue/meadows_freed.json).
+## GATE-F-LEG-S10CDE, extended by F3. `free_play` (opening.json's own terminal
+## beat, reached around tournament sign-up) has nothing scripted forever, by
+## design — his opening briefing is one immediate purpose at a time, and the
+## tournament/quest systems own the broader preparation path from there. But
+## the chapter keeps happening around him after that: the tournament is won,
+## the South Bridge and the relay open up, the Hall itself becomes reachable,
+## and finally SG46's ending changes the world. None of that was ever named in
+## `beats.grandpa_conversations`, which only knows the FIRST fifteen minutes.
+##
+## `grandpa_conversations_when()` (opening_beats.gd) is that missing ladder —
+## the same ordered, flag-gated shape `village_npcs.json`'s `greeting_when`
+## already gives every villager, with `conversation_for(_beat)` standing in
+## for a villager's plain `greeting`. Read through `greeting_for()`, the exact
+## function every villager's ladder already goes through, so this is the same
+## lookup the audit's own suggested fix named rather than a second one beside
+## it.
 func _grandpa_conversation_id() -> String:
 	var game := get_node_or_null(^"/root/Game")
 	var progression: RefCounted = game.get("progression") as RefCounted if game != null else null
-	if progression != null and bool(progression.call("has", "legendary_freed")):
-		return "grandpa_freed"
-	return BEATS.conversation_for(_beat)
+	var spec := {
+		"greeting": BEATS.conversation_for(_beat),
+		"greeting_when": BEATS.grandpa_conversations_when(),
+	}
+	return VILLAGE_NPCS.greeting_for(spec, progression)
 
 
 func _start_conversation(id: String) -> bool:
