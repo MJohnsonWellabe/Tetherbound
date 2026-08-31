@@ -18,7 +18,7 @@
 	"inventory": [
 		{
 			"id": "orb_basic",
-			"n": 9
+			"n": 12
 		},
 		null,
 		null,
@@ -77,9 +77,9 @@
 			"defence": 18.7,
 			"display_name": "Ripplet",
 			"energy": 78.0,
-			"fainted": true,
-			"happiness": 42.7727536699997,
-			"hp": 0.0,
+			"fainted": false,
+			"happiness": 54.7782636211111,
+			"hp": 61.8806928242517,
 			"iv_attack": 0.5,
 			"iv_defence": 0.5,
 			"iv_hp": 0.5,
@@ -89,7 +89,7 @@
 			"move_charged": "undertow",
 			"move_quick": "ripple_jab",
 			"nickname": "Moss",
-			"nourishment": 68.3335269133341,
+			"nourishment": 68.3739332214816,
 			"rest_bed_index": -1,
 			"rested": false,
 			"rested_seconds_left": 0.0,
@@ -100,17 +100,56 @@
 			"trait_primary": "",
 			"trait_secondary": "",
 			"xp": 0
+		},
+		{
+			"attack": 17.9462022235394,
+			"base_attack": 18.0,
+			"base_defence": 16.0,
+			"base_hp": 95.0,
+			"battles_fought": 0,
+			"bond": 15,
+			"boost_attack": 0,
+			"boost_defence": 0,
+			"boost_hp": 0,
+			"caught_on_day": 1,
+			"creature_type": "ground",
+			"defence": 16.8048536224365,
+			"display_name": "Bramblebun",
+			"energy": 0.0,
+			"fainted": false,
+			"happiness": 54.9127510683332,
+			"hp": 63.5352908112128,
+			"iv_attack": 0.289727121591568,
+			"iv_defence": 0.501203775405884,
+			"iv_hp": 0.72720593214035,
+			"level": 2,
+			"levels_gained_with_you": 0,
+			"max_hp": 106.191112967968,
+			"move_charged": "warren_charge",
+			"move_quick": "bramble_whip",
+			"nickname": "",
+			"nourishment": 69.360174501111,
+			"rest_bed_index": -1,
+			"rested": false,
+			"rested_seconds_left": 0.0,
+			"resting": false,
+			"secondary_type": "",
+			"shiny": false,
+			"species_id": "bramblebun",
+			"trait_primary": "stubborn",
+			"trait_secondary": "curious",
+			"xp": 0
 		}
 	],
 	"placed_buildings": [],
 	"player_pose": {
-		"camera_pitch": -0.24365560578978,
-		"camera_yaw": 3.13898387361747,
-		"model_yaw": -0.926589369773865,
+		"camera_pitch": -0.383972435438752,
+		"camera_yaw": 2.01312026258018,
+		"model_yaw": -0.947812736034393,
 		"position": [
-			11.8354759216309,
-			0.900844395160675,
-			-11.3786354064941
+			11.9052209854126,
+			0.90083247423172,
+			-11.3687372207642
 		]
 	},
 	"progression": {
@@ -124,11 +163,12 @@
 			"tournament_team_fed",
 			"opening:beat:walk_out",
 			"opening:beat:encounter",
+			"opening:beat:road",
 			"pickup:castle_gate_key",
 			"road_gate_open"
 		]
 	},
-	"satiety": 95.9913333333712,
+	"satiety": 96.0011111111488,
 	"version": 15,
 	"world_seed": 0
 }

@@ -3025,7 +3025,20 @@ func _step_press_until(args: Dictionary, step_id: String) -> String:
 		return "HARNESS-ERROR press_until step %s: no check named" % step_id
 	var budget := maxi(1, int(args.get("max_presses", 4)))
 	var settle := maxi(1, int(args.get("settle_frames", 20)))
-	var hold := str(args.get("hold", HOLD_TAP))
+	var hold := _hold_frames(args.get("hold", "tap"))
+
+	# CD-4's rule ("a cell whose context assert fails is SKIPPED, never PASS and
+	# never FAIL -- those are different facts"), applied to a retry ladder. A
+	# catch ladder runs four throw blocks so that a real, non-buggy miss can be
+	# retried; the blocks AFTER a successful catch have nothing to press at, and
+	# reporting those as FAIL files a defect against a segment that did exactly
+	# what it was supposed to. `skip_if` names the state in which this step is
+	# moot -- combat no longer running, say -- and is checked before any press.
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED press_until: not needed (%s)" % str(moot.get("actual", ""))
 
 	var first := _step_assert(check)
 	if bool(first.get("skip", false)):

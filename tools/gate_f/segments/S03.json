@@ -389,15 +389,16 @@
     },
     {
       "id": "S03-35a",
-      "title": "weaken it",
+      "title": "trim it with quick attacks (do not kill it)",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 20,
+        "times": 3,
         "settle_frames": 30
       },
-      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
+      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
     },
     {
       "id": "S03-36a",
@@ -410,7 +411,11 @@
           "equals": "combat_aim"
         },
         "max_presses": 3,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
@@ -479,15 +484,16 @@
     },
     {
       "id": "S03-35b",
-      "title": "weaken it",
+      "title": "trim it with quick attacks (do not kill it)",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 20,
+        "times": 3,
         "settle_frames": 30
       },
-      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
+      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
     },
     {
       "id": "S03-36b",
@@ -500,7 +506,11 @@
           "equals": "combat_aim"
         },
         "max_presses": 3,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
@@ -569,15 +579,16 @@
     },
     {
       "id": "S03-35c",
-      "title": "weaken it",
+      "title": "trim it with quick attacks (do not kill it)",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 20,
+        "times": 3,
         "settle_frames": 30
       },
-      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
+      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
     },
     {
       "id": "S03-36c",
@@ -590,7 +601,11 @@
           "equals": "combat_aim"
         },
         "max_presses": 3,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
@@ -659,15 +674,16 @@
     },
     {
       "id": "S03-35d",
-      "title": "weaken it",
+      "title": "trim it with quick attacks (do not kill it)",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 20,
+        "times": 3,
         "settle_frames": 30
       },
-      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
+      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
     },
     {
       "id": "S03-36d",
@@ -680,7 +696,11 @@
           "equals": "combat_aim"
         },
         "max_presses": 3,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
@@ -749,15 +769,16 @@
     },
     {
       "id": "S03-35e",
-      "title": "weaken it",
+      "title": "trim it with quick attacks (do not kill it)",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 20,
+        "times": 3,
         "settle_frames": 30
       },
-      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
+      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
     },
     {
       "id": "S03-36e",
@@ -770,7 +791,11 @@
           "equals": "combat_aim"
         },
         "max_presses": 3,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
@@ -839,15 +864,16 @@
     },
     {
       "id": "S03-35f",
-      "title": "weaken it",
+      "title": "trim it with quick attacks (do not kill it)",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 20,
+        "times": 3,
         "settle_frames": 30
       },
-      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
+      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
     },
     {
       "id": "S03-36f",
@@ -860,7 +886,11 @@
           "equals": "combat_aim"
         },
         "max_presses": 3,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
@@ -929,15 +959,16 @@
     },
     {
       "id": "S03-35g",
-      "title": "weaken it",
+      "title": "trim it with quick attacks (do not kill it)",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 20,
+        "times": 3,
         "settle_frames": 30
       },
-      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
+      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
     },
     {
       "id": "S03-36g",
@@ -950,7 +981,11 @@
           "equals": "combat_aim"
         },
         "max_presses": 3,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
@@ -1019,15 +1054,16 @@
     },
     {
       "id": "S03-35h",
-      "title": "weaken it",
+      "title": "trim it with quick attacks (do not kill it)",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 20,
+        "times": 3,
         "settle_frames": 30
       },
-      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
+      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
     },
     {
       "id": "S03-36h",
@@ -1040,7 +1076,11 @@
           "equals": "combat_aim"
         },
         "max_presses": 3,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
@@ -1109,15 +1149,16 @@
     },
     {
       "id": "S03-35i",
-      "title": "weaken it",
+      "title": "trim it with quick attacks (do not kill it)",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 20,
+        "times": 3,
         "settle_frames": 30
       },
-      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
+      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
     },
     {
       "id": "S03-36i",
@@ -1130,7 +1171,11 @@
           "equals": "combat_aim"
         },
         "max_presses": 3,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
@@ -1199,15 +1244,16 @@
     },
     {
       "id": "S03-35j",
-      "title": "weaken it",
+      "title": "trim it with quick attacks (do not kill it)",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 20,
+        "times": 3,
         "settle_frames": 30
       },
-      "expected": "RIG-15: a lower HP fraction for a better catch_chance (data/config/catching.json)."
+      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
+      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
     },
     {
       "id": "S03-36j",
@@ -1220,7 +1266,11 @@
           "equals": "combat_aim"
         },
         "max_presses": 3,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
