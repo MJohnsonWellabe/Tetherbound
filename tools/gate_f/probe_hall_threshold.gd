@@ -23,10 +23,11 @@ const SETTLE_FRAMES := 420
 
 ## The mouth's neighbourhood, in world metres. site.at is (8,7560); the first
 ## chamber is 20 x 24, so its -z wall spans z 7546.8..7548.0.
-const X_LO := 2.0
-const X_HI := 14.0
-const Z_LO := 7540.0
-const Z_HI := 7554.0
+static var X_LO := 2.0
+static var X_HI := 14.0
+static var Z_LO := 7540.0
+static var Z_HI := 7554.0
+static var XS: Array[float] = [4.0, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0]
 
 
 func _init() -> void:
@@ -34,6 +35,14 @@ func _init() -> void:
 
 
 func _run() -> void:
+	# `-- --chamber` retargets the sweep at the Legendary Chamber, whose own
+	# approach turned out to have the same class of problem as the mouth.
+	if OS.get_cmdline_user_args().has("--chamber"):
+		X_LO = -40.0
+		X_HI = -8.0
+		Z_LO = 7634.0
+		Z_HI = 7666.0
+		XS = [-34.0, -30.0, -27.0, -24.0, -21.0, -18.0, -14.0]
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
 	current_scene = world
@@ -54,13 +63,13 @@ func _run() -> void:
 	print("=== walking surface: ray down from y=+40, by (x, z) ===")
 	var space := (world as Node3D).get_world_3d().direct_space_state
 	var header := "     z  "
-	for x in [4.0, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0]:
+	for x in XS:
 		header += "%9.1f" % x
 	print(header)
-	var z := 7542.0
-	while z <= 7552.01:
+	var z := Z_LO + 2.0
+	while z <= Z_HI - 2.0:
 		var line := "  %7.1f" % z
-		for x: float in [4.0, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0]:
+		for x: float in XS:
 			var query := PhysicsRayQueryParameters3D.create(
 				Vector3(x, 40.0, z), Vector3(x, -40.0, z))
 			var hit := space.intersect_ray(query)
@@ -68,10 +77,11 @@ func _run() -> void:
 		print(line)
 		z += 0.4
 
-	print("=== what the ray hits ON the centreline (x=8) ===")
-	z = 7542.0
-	while z <= 7552.01:
-		var query := PhysicsRayQueryParameters3D.create(Vector3(8.0, 40.0, z), Vector3(8.0, -40.0, z))
+	var centre_x: float = XS[3]
+	print("=== what the ray hits ON the centreline (x=%.0f) ===" % centre_x)
+	z = Z_LO + 2.0
+	while z <= Z_HI - 2.0:
+		var query := PhysicsRayQueryParameters3D.create(Vector3(centre_x, 40.0, z), Vector3(centre_x, -40.0, z))
 		var hit := space.intersect_ray(query)
 		var who: Node = hit.get("collider") as Node if not hit.is_empty() else null
 		print("  z=%9.1f y=%7.2f  %s" % [z, (hit.get("position", Vector3.ZERO) as Vector3).y,

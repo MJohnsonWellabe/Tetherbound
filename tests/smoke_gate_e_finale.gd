@@ -473,6 +473,28 @@ func _pull_the_lever() -> void:
 	if not bool(prompt.get("enabled")):
 		_fail("the machine is still refused with the Warden beaten; the legendary can never be freed")
 		return
+	# Ask the prompt for a REAL offer from where the player is actually standing,
+	# before activating it.
+	#
+	# GATE-F-LEG-S10AB, 2026-08-31. This beat used to go straight from the
+	# `enabled` flag to `interaction_activate()`, which is a call no player can
+	# make: it skips the distance entirely. So this test proved the Warden gate
+	# and never once proved the button could be pressed — and it could not.
+	# `stronghold.json`'s `machine_foot` mark sat at the chamber centre, which is
+	# the machine's own axis, inside a base collider of radius 5.6, while the
+	# prompt's radius is 4.2. 5.6 > 4.2: there was nowhere in the room a player
+	# could stand and be offered it, and freeing the legendary — objective 25/27,
+	# the chapter's second-to-last beat — was unreachable in the shipped build.
+	# Measured in S10b: the walk stopped 7.2 m short against the machine's face.
+	var offer: Dictionary = prompt.call("interaction_offer", _player.global_position)
+	if offer.is_empty():
+		_fail(("standing %.1f m from the machine control, the player is offered nothing. "
+			+ "The lever is in the room and out of reach.")
+			% _player.global_position.distance_to(prompt.global_position))
+		return
+	print("  machine control offered at %.1f m: '%s'" % [
+		_player.global_position.distance_to(prompt.global_position),
+		str(offer.get("label", ""))])
 	prompt.call("interaction_activate")
 
 	for i in SEQUENCE_FRAMES:
