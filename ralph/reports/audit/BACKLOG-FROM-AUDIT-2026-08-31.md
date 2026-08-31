@@ -4,8 +4,7 @@
 (§16.2: the reviewer receives run evidence blind, so appending to it out of
 band would contaminate that process). This is a separate, dated ledger built
 straight from the audit's own evidence — sections A–K (`ralph/reports/audit/
-A..K-2026-08-31.md`), `GATE-F-FULL-2026-08-31.md`, `VISUAL-CENSUS-2026-08-31.md`
-(in progress), and the owner's 2026-08-30 evening playtest
+A..K-2026-08-31.md`), `GATE-F-FULL-2026-08-31.md`, `VISUAL-CENSUS-2026-08-31.md`, and the owner's 2026-08-30 evening playtest
 (`ralph/OWNER_PLAYTEST_2026-08-30B.md`). Every item below cites its source.
 
 ## How this is organized
@@ -13,6 +12,10 @@ A..K-2026-08-31.md`), `GATE-F-FULL-2026-08-31.md`, `VISUAL-CENSUS-2026-08-31.md`
 - **Wave 1 (launched 2026-08-31)** — bite-sized, no owner decision required,
   no file overlap with the ten Gate-F-leg lanes currently fixing game systems
   band-by-band. Each is its own `ralph/BACKLOG-<id>` branch.
+- **Wave 3 (queued, not yet launched)** — the bite-sized half of the
+  2026-08-31 visual census. Each is one material, scale, transform, lighting or
+  placement value, or a fix to a capture tool. Read the census report's own
+  coverage gaps before treating the table as complete.
 - **Wave 2 (queued, not yet launched)** — bite-sized but deliberately held
   back because it touches a file or system a Gate-F-leg lane currently owns.
   Launch once the naming lane lands.
@@ -52,6 +55,136 @@ A..K-2026-08-31.md`), `GATE-F-FULL-2026-08-31.md`, `VISUAL-CENSUS-2026-08-31.md`
 
 ---
 
+## Wave 3 — visual census (queued, not yet launched)
+
+Source for every row: `ralph/reports/audit/VISUAL-CENSUS-2026-08-31.md`, which
+carries the numbered catalogue, the verbatim blind critiques and the contact
+sheets. The number in brackets is that catalogue's own defect number.
+
+**These are the bite-sized half only.** The census also found 14 items needing
+an owner decision, 14 blocked on owner-supplied reference art (`CLAUDE.md`'s
+Meshy/mesh rule — none is proposed here), and 21 that are real but multi-day.
+Those live in the census report, not in this table.
+
+**Read before launching any of these:** the census covered 5 of 8 subject areas.
+Combat has no frames at all, the HUD/UI suite produced 2 of 12, Bands 4–5 have
+no landmark frames, and the `J1`/`J2` Stormwall Hall silhouette regression was
+**not** re-measured. Closing those gaps is worth one session before treating
+this table as the whole picture.
+
+**One dependency worth respecting:** `BACKLOG-VISUAL-SHADOW-RANGE` was the
+single most-cited finding across three independent critics, but it was measured
+under llvmpipe software rendering, which is exactly where a shadow judgement is
+least trustworthy. Confirm it on the Ally before spending a lane on it; several
+other lighting rows below become no-ops if it turns out to be a capture
+artefact.
+
+### Capture-tool fixes — these are defects in the evidence, not in the game
+
+Cheapest wave to run, and they make every future visual pass more trustworthy.
+
+| id | item | source | closing cost |
+|---|---|---|---|
+| `BACKLOG-VISUAL-QUARRY-APPROACH-STAND` | `_capture_locations.gd`'s Old Quarry approach eye sits inside foliage; ~95% of the frame is near-black, so the site's announcement shot is unjudgeable | Census 1 | one coordinate, one re-render |
+| `BACKLOG-VISUAL-MILL-STAND-FRAMING` | the two mill stands splay the building's verticals and give 55–65% of frame to empty sky | Census 8 | FOV + pitch on two stands |
+| `BACKLOG-VISUAL-WARRENS-DEN-STAND` | the trainer's torso and backpack interpenetrate the badger, front and centre of the den frame | Census 12 | stand placement |
+| `BACKLOG-VISUAL-LINEUP-RULER` | `_capture_character_cast.gd`'s `14-lineup-all.png` is the one frame where relative scale is the point and the only one with the height annotation stripped | Census 96 | add per-figure ticks |
+| `BACKLOG-VISUAL-BUILD-CORNER-ASSEMBLY` | `capture_build_pieces.gd`'s assembled corner does not assemble — roof-to-plate void, slab through the door and V-brace, fence post through the slab | Census 106 | transform values in the capture |
+| `BACKLOG-VISUAL-BED-SCALE-RIG` | `creature_bed_scale_check.png` does not perform its own check: no 1.80m figure, two objects at different depths, and the creature that sleeps in the bed is in a different frame | Census 115 | rig change; converts a useless frame into the most valuable one in the set |
+| `BACKLOG-VISUAL-BED-REST-LIGHT-RIG` | the two bed-rest frames use different light rigs on the same asset and stage, so the pair cannot be an A/B of anything | Census 116 | one light rig |
+| `BACKLOG-VISUAL-BED-REST-EXPOSURE` | `07-creature-resting-far-side.png` crushes the creature to (0,0,0); the rear silhouette carries no recoverable form | Census 117 | exposure |
+
+### Creature scale and material — all measured against the 1.80m trainer in frame
+
+| id | item | source | closing cost |
+|---|---|---|---|
+| `BACKLOG-VISUAL-STARTER-SCALE` | both starters are taller than the player (terrapup 1.92m, ripplet 1.93m vs 1.80m), and ripplet is designed as a chibi pocket mascot | Census 64 | transform values |
+| `BACKLOG-VISUAL-BADGER-LINE-SCALE` | the badger cub (terrapup, 1.92m) outranks the badger adult (burrowback, 1.66m) | Census 65 | transform values |
+| `BACKLOG-VISUAL-ALPHA-SCALE` | the alpha is 1.14× a common field boar; a boss that size is not a boss you see coming | Census 67 | one scale value |
+| `BACKLOG-VISUAL-ALPHA-GROUNDING` | `galecrest-alpha` floats — lit ground under and between every claw, rearmost toe in mid-air | Census 68 | one y transform |
+| `BACKLOG-VISUAL-PIPWING-LINEUP-SCALE` | pipwing renders at 0.77m in its own frame and 1.05m in the lineup — 36% apart, while four other subjects reconcile to 2–4% | Census 69 | one display-scale value |
+| `BACKLOG-VISUAL-CREATURE-ALBEDO-CLIPPING` | 31.9% pure-white on duskhush-shiny, 41.9% pure-black on burrowback-shiny, against 0.00%/≤0.01% on every Palworld creature sampled | Census 63 | albedo/exposure/fill |
+| `BACKLOG-VISUAL-SHINY-SLOT-SCOPE` | the shiny system hue-rotates every material slot at once, so tuskroot-shiny loses both its moss crest and its tusks and reads worse than the base | Census 61 | recolour the body slot only |
+| `BACKLOG-VISUAL-SHINY-OXBLOOD-EXCLUSION` | `reedwing-shiny` paints a friendly duck in Team Tether's reserved oxblood family | Census 62 | exclude a hue range |
+| `BACKLOG-VISUAL-CREATURE-PALETTE-CONFORMANCE` | five off-board saturated colours (paddlenewt S=0.91 with 70% of pixels >110 from any keyart swatch; mosshell head; reedwing; ripplet; galecrest) — the board's strip has no cyan at all | Census 70 | material hue/saturation |
+| `BACKLOG-VISUAL-PARTICLE-SPRITE` | one recoloured soft-circle sprite does ember, spark and shadow-magic duty across four creatures and reads as lens dust in all four | Census 71 | one sprite |
+| `BACKLOG-VISUAL-CREATURE-PROP-SEATING` | burrowback's spine plate, tuskroot's flat moss slab and meadowhart's shoulder card-fan (which reads as a saddle on a wild creature) all read as attachments, not anatomy | Census 76 | reseat and blend |
+| `BACKLOG-VISUAL-BROOKTAIL-TAIL-SEAM` | hard unblended material/hue seam at the rump, plus a stray orange dot at the tail base | Census 77 | material seam |
+| `BACKLOG-VISUAL-VERIDIAN-MANTLE-GAP` | see-through gap between the shoulder mantle and the neck on `veridian-shiny-rear` | Census 78 | mesh/transform |
+| `BACKLOG-VISUAL-MUDSNOUT-LEAF-BACKFACE` | the crown leaf card shows an untextured white/grey backface fringe | Census 80 | material |
+
+### World, terrain and placement
+
+| id | item | source | closing cost |
+|---|---|---|---|
+| `BACKLOG-VISUAL-SHADOW-RANGE` | shadows work in the near field and stop before the mid-ground; a 10m rock massif and a whole ridge tree line cast nothing. **Confirm on the Ally first** | Census 2, 29 | config, after a hardware check |
+| `BACKLOG-VISUAL-DAYLIGHT-GLOW-BLOBS` | yellow-white ground-glow patches in daylight with no emitter, in three village frames; reads as debug lights left on | Census 30 | find and disable |
+| `BACKLOG-VISUAL-TREE-LOD-TINT` | the same tree species renders a bright terracotta trunk in the foreground and a near-black trunk at 30m | Census 5 | LOD material |
+| `BACKLOG-VISUAL-SPLAT-TRANSITION` | hard sand/grass material boundary with no transition fringe at the quarry | Census 14 | scatter fringe |
+| `BACKLOG-VISUAL-SPLAT-RECTANGLE` | a hard-edged terrain splat patch with 90° corners painted on the hillside | Census 45 | one paint fix |
+| `BACKLOG-VISUAL-QUARRY-PATH-TERMINUS` | the slab path begins and ends in open sand, squared off, connecting nothing | Census 16 | placement |
+| `BACKLOG-VISUAL-QUARRY-FLOAT-BRANCH` | a bare branch floats in frame with no trunk behind it | Census 17 | remove or reseat |
+| `BACKLOG-VISUAL-BOULDER-TEXEL-DENSITY` | a 4m boulder carries the same texel density as the 1m rocks beside it — reads as a small rock scaled 4× | Census 23 | UV scale |
+| `BACKLOG-VISUAL-BASKET-SCALE` | the same wicker basket is ~1.2m in one frame and ~0.6m in another | Census 21 | one transform |
+| `BACKLOG-VISUAL-MILL-OUTBUILDING-SEAT` | the mill's left outbuilding has its eaves at ground level and its walls buried in terrain | Census 7 | one y value |
+| `BACKLOG-VISUAL-LEAF-ALPHA-EDGES` | foreground leaf cards show hard black alpha edges and inter-card slivers | Census 26 | alpha/material |
+| `BACKLOG-VISUAL-SIGN-LEGIBILITY` | signpost text is a sub-pixel dark smear, illegible at any scale, in two quarry frames | Census 20 | glyph size or icons |
+| `BACKLOG-VISUAL-WARRENS-BEAM-MATERIAL` | the Warrens ceiling beams carry the wall's rock texture, and one enters the wall with no bracket | Census 10 | material assignment |
+| `BACKLOG-VISUAL-WARRENS-EMISSIVE-SLAB` | an unsourced emissive slab on the Warrens left wall — no geometry, no falloff, no emitter | Census 11 | remove or replace |
+| `BACKLOG-VISUAL-WARRENS-ZFIGHT` | a thin white z-fighting sliver across the Warrens rock face | Census 13 | depth bias |
+| `BACKLOG-VISUAL-DEN-LIGHTING` | the badger in the Warrens den gets no key, no rim and no bounce — a large creature in a dark room, flat-lit | Census 28 | one light |
+| `BACKLOG-VISUAL-SUN-AND-SKY` | the sun disc is a hard-edged white circle with no bloom or scatter (bite-sized); the cloud layer under it is low-resolution and muddy (not) | Census 27 | sun half is bite-sized |
+
+### Village
+
+| id | item | source | closing cost |
+|---|---|---|---|
+| `BACKLOG-VISUAL-VILLAGE-GRASS-CLEARANCE` | grass grows to the doorsteps and through the paving; the settlement has no cleared negative space | Census 31 | suppression mask around structures and paths |
+| `BACKLOG-VISUAL-FLOWER-SCALE` | the purple flower prop is 4–6× oversized (~1.2m clump) and is the loudest object on the whole census sheet | Census 33 | one scale value |
+| `BACKLOG-VISUAL-ROOF-TINT` | two adjacent houses carry two clearly different roof hues and saturations | Census 35 | material tint |
+| `BACKLOG-VISUAL-VILLAGE-STONE-VALUE` | chimneys and the well clip toward pure white — brighter than the sky, which the keyart never does | Census 36 | albedo |
+| `BACKLOG-VISUAL-PAVING-SEAT` | paving slabs float with a ~10cm lip and a dark gap beneath; the cobble pattern is cut mid-stone at the seams | Census 37 | placement |
+| `BACKLOG-VISUAL-HOUSE-PLINTH-SEAT` | a house sits on a thin grey slab hovering above the terrain with grass overlapping it | Census 38 | one y value |
+| `BACKLOG-VISUAL-IVY-CARDS` | wall ivy floats off the masonry with jagged edges and green fringing | Census 39 | placement + alpha |
+| `BACKLOG-VISUAL-CHIMNEY-SEAT` | the chimney sits on the tiles with a visible gap and no flashing, plus an undersized duplicate further along the ridge | Census 40 | placement |
+| `BACKLOG-VISUAL-TILING-BREAKUP` | roof moss speckles and ground cobble both repeat at visible fixed intervals | Census 42 | UV/detail breakup |
+| `BACKLOG-VISUAL-DEAD-BRANCH-PROPS` | two leafless dead-branch props stand in high summer beside fully-leafed trees | Census 43 | swap or remove |
+| `BACKLOG-VISUAL-ORANGE-PLANT` | a flat unlit orange spiky plant reads as a broken asset | Census 44 | material or removal |
+| `BACKLOG-VISUAL-SIGNPOST-STYLE` | signpost labels read as floating UI at four different text sizes, one clipped by and intersecting a cottage door | Census 47 | material + typography |
+| `BACKLOG-VISUAL-NOTICE-BOARD` | the tournament notice board is a white plane at the wrong scale and depth, illegible, with the trainer's hair rendering through it | Census 48 | scale + placement |
+| `BACKLOG-VISUAL-ELDER-SCALE` | the elder NPC reads ~1.3–1.4m and a different proportion family; he stands nearer camera than the trainer and tops out at his shoulder | Census 51 | one transform (the wider proportion problem is blocked) |
+
+### Cast
+
+| id | item | source | closing cost |
+|---|---|---|---|
+| `BACKLOG-VISUAL-CAPTAIN-FACTION-PALETTE` | the captains wear magenta/lilac/cyan heraldry and a pink cape — hues nowhere on the keyart strip — so they read as a different faction from the grunts they command | Census 86 | material recolour |
+| `BACKLOG-VISUAL-CAPTAIN-CREST-UNLIT` | the captains' chest crest does not respond to scene light while the leather around it does; reads as UI pasted on armour | Census 87 | material flag |
+| `BACKLOG-VISUAL-GLOVE-FINGERTIP-MATERIAL` | gold-tipped glove fingers on three captains — an unassigned material or skin punching through | Census 88 | material assignment |
+| `BACKLOG-VISUAL-CAPTAIN-THROAT-GAP` | a bright tan wedge between beard and collar reads as a hole in the collar geometry | Census 89 | mesh/transform |
+| `BACKLOG-VISUAL-RANK-INSIGNIA` | the officer rank badge is a plain glossy sphere with a specular hotspot; the captain's disc floats clear of the bandolier on its own plane | Census 84 | prop replacement + seating |
+| `BACKLOG-VISUAL-RANK-PALETTE-DRIFT` | inside the rank ladder, the mid ranks render greyest — the drift runs the wrong way | Census 85 | material values |
+| `BACKLOG-VISUAL-CAST-RIM-LIGHT` | no rim or back light anywhere in the cast set, so the Warden's layered coat collapses into one dark mass. Capture-rig half is bite-sized; the in-game half waits on the hardware shadow check | Census 95 | one light in the rig |
+
+### Build kit, beds and camps
+
+| id | item | source | closing cost |
+|---|---|---|---|
+| `BACKLOG-VISUAL-BUILD-KIT-MOIRE` | severe texture moiré: the floor slab dissolves into a regular dot-field, wall braces shimmer. Missing mipmaps or a grain frequency far above the texel density. Called the most visible defect in the set | Census 100 | sampling setting |
+| `BACKLOG-VISUAL-BUILD-KIT-VALUE` | 9.4% of the build-kit lineup's pixels clip; no piece has any dark, which is why the kit has no weight. Exposure half is bite-sized; authored value in the textures is not | Census 98 | exposure + fill |
+| `BACKLOG-VISUAL-ROOF-TILE-TINT` | the roof tile is a hot fluorescent orange with no counterpart on the keyart strip — the loudest object in the set | Census 102 | material tint |
+| `BACKLOG-VISUAL-DUVET-TINT` | the bed duvet is pool-cyan (133,213,216), off the keyart strip | Census 109 | material tint |
+| `BACKLOG-VISUAL-WALL-PLASTER-OFFSET` | the wall's plaster panel is a separate offset card, protruding past the timber frame with the frame shadowing onto it | Census 103 | transform |
+| `BACKLOG-VISUAL-ROOF-UV-BLEED` | green fringe pixels along the roof ridge and tile end — UV atlas bleed / insufficient edge padding | Census 104 | UV padding |
+| `BACKLOG-VISUAL-FLOOR-SLAB-THICKNESS` | the floor slab's near edge is a literal 2D plane, so every floor-to-wall junction shows a paper seam | Census 105 | mesh |
+| `BACKLOG-VISUAL-BED-STUDS` | the bed's iron studs are painted-on flat circles with no bevel, shadow or recess | Census 110 | material/mesh |
+| `BACKLOG-VISUAL-BENCH-STRAP-SCALE` | the bench's iron end-straps are ~30cm on a ~1.6m bench — the second-largest shape on the object | Census 112 | one scale value |
+| `BACKLOG-VISUAL-BENCH-TOP-TILING` | visible tiling seam where the bench plank meets the metal end strap, plus a fixed-interval dash repeat | Census 120 | UV |
+| `BACKLOG-VISUAL-REST-MAT-TEXEL-DENSITY` | the rest mat's woven interior is a muddy blur at visibly lower texel density than the rope ring around it | Census 119 | texture resolution |
+| `BACKLOG-VISUAL-BED-FITS-CREATURE` | the creature still does not fit its bed — hindquarters and rear paws outside the ring, front paws on the rim. **This is `BACKLOG-BED-SCALE-POSE`'s own subject, still failing after that lane's change** | Census 113 | one scale value, then re-render |
+
+---
+
 ## Needs an owner decision (real fix exists, no lane assigned)
 
 - **C4** — Mira, Tam, Oskar, Old Bram fail "named characters individual" (two sex mismatches measured). An Option A/B decision is already on record; closing it is config-only once chosen.
@@ -83,3 +216,5 @@ A..K-2026-08-31.md`), `GATE-F-FULL-2026-08-31.md`, `VISUAL-CENSUS-2026-08-31.md`
 - `ralph/reports/audit/{A,B,C,D,E,F,G,H,I,J,K}-2026-08-31.md`
 - `ralph/reports/gate-f-full/DEFECTS.md`, `ralph/reports/audit/GATE-F-FULL-2026-08-31.md`
 - `ralph/OWNER_PLAYTEST_2026-08-30B.md`
+- `ralph/reports/audit/VISUAL-CENSUS-2026-08-31.md` and its committed critiques
+  and contact sheets under `VISUAL-CENSUS-2026-08-31-shots/`
