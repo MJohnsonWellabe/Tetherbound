@@ -1,0 +1,78 @@
+{
+  "_comment": "Section A.2 freeze record for the Gate F CAPSTONE-2 run. NEW RECORD FOR A NEW CANDIDATE -- not an edit of ralph/reports/gate-f-candidate/RUN_METADATA.json, which is left exactly as it is on main. That record freezes f082bdf6 (2026-08-27), names a different run directory, and lists the pre-split S01..S10 journey; it does not describe this candidate and must not be amended to make this run start -- amending a freeze record so a segment will start is the sin CD-8b exists to prevent.",
+  "_comment_who_wrote_this": "WRITTEN BY THE OPERATOR, which section A assigns to the coordinator. Flagged rather than hidden. The section A.2 precondition had not been discharged for this candidate, and with no run-level record the harness fell through to the stale candidate record and refused every segment at pre-flight (see ralph/reports/gate-f-run-20260831T185309Z/BLOCKER_RUN.md). Every field below is measured or read mechanically on this container -- nothing is copied forward from the 2026-08-27 record on faith. Phase B should treat the authorship as a known deviation.",
+  "candidate_sha": "679f990cc04e557baff227754fbe67a618011214",
+  "candidate_ref": "ralph/GATE-F-CAPSTONE-2 (branched from main at 721893a4)",
+  "frozen_at_utc": "2026-08-31T18:55:55Z",
+  "run_dir": "ralph/reports/gate-f-run-20260831T185555Z",
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "kind": "linux editor binary, NOT the shipped Windows export",
+    "path": "~/.cache/tetherbound-art/godot",
+    "sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+    "_comment": "Section 0.5. Byte-identical to the binary the 2026-08-27 record names, so the engine is not a variable between that run and this one."
+  },
+  "renderer": "opengl3 / Compatibility under xvfb - Mesa 25.2.8 llvmpipe (LLVM 20.1.2, 256 bits), software rasterisation",
+  "lanes": {
+    "logic": {
+      "display_server": "headless",
+      "renderer": "none (--headless, no rendering driver)",
+      "_comment": "Section H.1. Every journey segment S01..S10e declares evidence_lane=logic and hands its prescribed frames to its S..C capture lane. Logic mode is deliberately --headless with NO driver: --headless WITH a driver hangs forever (conventions.md)."
+    },
+    "capture": {
+      "display_server": "X11 under xvfb-run",
+      "renderer": "opengl3 / Compatibility, Mesa llvmpipe software rasterisation",
+      "_comment": "Verified on this container before the run, not asserted: the section A.4 capture smoke wrote a real 1920x1080 PNG with display_server=X11, adapter=llvmpipe."
+    }
+  },
+  "_comment_lanes": "Section H.1 requires a run that wants a logic lane to SAY SO IN THE FREEZE RECORD BEFORE THE RUN. This block is that declaration, written before step 1 of the run it describes. A record with no lanes block binds every lane by its flat claim, which is why the stale record refused the headless journey segments.",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "resolution_substituted": false,
+  "_comment_resolution": "Section A.4 capture smoke PASSED at the requested 1920x1080 on this container; the 1280x800 fallback was not needed. Evidence frame preserved at ralph/reports/gate-f-capstone-2/precondition_capture_smoke.png.",
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "fresh user:// dir",
+  "date": "2026-08-31",
+  "operator": "sonnet-agent",
+  "free_build": false,
+  "_comment_free_build": "game_state.gd defaults free_build and debug_teleport to false, and both persist only in user://settings.json, which each segment's wipe_saves clears. Teleport is off everywhere in this run: the journey chain contains no DIAG- segment.",
+  "instrumentation_overhead_note": "scene=world. 30 s x 2 windows per condition at [-25.4, 4.93, -15.6], order off/telemetry/recording/recording/telemetry/off (reversed to cancel drift). Means: off 24.170, telemetry 23.338, telemetry+recording@0.50Hz 22.937 ms/frame. Deltas vs off: telemetry -0.832 (below the noise floor -- read as 'under ~2.46 ms/frame', not as zero), recording -1.234 (below the noise floor -- read as 'under ~2.46 ms/frame', not as zero). Noise floor 2.461 ms/frame, taken as the widest a single condition disagreed with itself. Display server headless, viewport 1920x1920, frames written 0. Recorder cost measured DIRECTLY as well, because the frame-time difference cannot resolve a 1 ms/frame effect against this noise floor: no frames were recorded, so the grab cost was not measured. CPU frame time on this container only -- no device fps, no VRAM.",
+  "suite_state_at_freeze": {
+    "reverified_in_container": true,
+    "result": "GREEN. 1687 tests, 3632102 assertions, 0 failed, exit 0.",
+    "how": "godot --headless --path . --script tests/run_tests.gd, run on this container at this candidate before S01.",
+    "_comment": "Section A.4 makes a green suite a precondition of the run rather than a finding of it. Re-run here rather than inherited: the 2026-08-27 record explicitly carried reverified_in_container=false and a known-open intermittent failure in smoke_party_count_after_catches.gd. That test passed in this container's run. Section 13 still forbids substituting any unit-test result for player-path evidence."
+  },
+  "envelope_facts_confirmed_on_this_container": {
+    "audio": "NONE. All ALSA drivers failed to initialise (cannot find card '0', libpulse.so.0 absent) and Godot fell back to the dummy audio driver. Section K.6 audio gap confirmed as a measured container fact. Any audio judgement is [OWNER-ONLY].",
+    "import_cache": "Built from scratch on this container: 1750 imported resources, exit 0, with no SCRIPT ERROR / Parse Error / Failed to load. The only log lines matching /error/ are a resource literally named ui_error.wav.",
+    "disk_free_at_freeze": "22 GB free on / , against the harness's 2 GiB reserve and 2x git factor."
+  },
+  "owner_only_gaps": "Unchanged from section K and asserted by NO evidence in this run: device frame rate, GPU frame time, VRAM, thermals/battery, real controller feel, 7-inch handheld legibility, first-time-human navigation/pacing, voluntary engagement, audio, Windows export identity, true continuous video, long-session device soak, mouse-look feel.",
+  "segments_planned": {
+    "journey": [
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10a",
+      "S10b",
+      "S10c",
+      "S10d",
+      "S10e"
+    ],
+    "study": [],
+    "_comment": "The capstone mandate is one real start-to-finish chapter playthrough chained by real exit saves through the production Save/Load path. The S10a-e split is the 2026-08-30 amendment (ralph/T2-S10-COST). Study segments X01-X08 are not part of this mandate and are not claimed by this run."
+  },
+  "_comment_config_flags": "Not hand-listed here. CD-8 requires config flags read MECHANICALLY, and the harness's _config_flags()/_config_flags_off() walk data/config/*.json on disk at run time and write both into every segment's own RUN_METADATA.json. A list kept here would go stale against data/config.",
+  "_comment_overhead_this_box_is_slower": "IMPORTANT for reading any duration in this run. The same measurement on the 2026-08-27 container reported off=4.341 ms/frame; this container reports off=24.170 ms/frame for the same headless world scene -- about 5.6x slower. The noise floor is correspondingly wider (2.461 vs 0.717 ms/frame). Section H.2 already forbids reading harness wall time as game time, and route.csv's t is play time for exactly this reason; this field is here so nobody compares a wall-clock duration from this run against one from 2026-08-27 without knowing the boxes differ by that factor. It also raises the risk that the section H.3 cost gate refuses a segment here that would have fitted there -- if that happens it is recorded as a gate refusal, not worked around.",
+  "_comment_overhead_incomplete": "The overhead run reports complete=false because its recorder condition planned 30 continuous frames and this process is headless, so the framebuffer-grab-and-encode cost is NOT measured directly -- stated in the note itself rather than papered over. The same gap is on the 2026-08-27 record. It does not affect the journey: logic lanes write no frames."
+}
