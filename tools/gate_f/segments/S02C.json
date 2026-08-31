@@ -722,11 +722,14 @@
     {
       "id": "S02C-45",
       "title": "the catch counted",
-      "action": "assert",
+      "action": "wait_until",
       "args": {
         "check": "party_size",
-        "equals": 2
+        "min": 2,
+        "budget_frames": 900,
+        "poll_frames": 5
       },
+      "_comment_wait_until": "RIG-F1, mirrored from S02-45 by ralph/GATE-F-FULL. Mirrored DELIBERATELY and in the same commit: three previous lanes fixed a journey segment and left its capture twin carrying the old step, and ralph/reports/handover-GATE-F-RUN7-2026-08-30.md names that as the third time it had happened. See S02-45 for the measurement.",
       "expected": "Section E.2 CT-08: 'verify party count increments'. Two of five: the starter and the first catch",
       "_derived_from": "S02-45",
       "observation": "T2-GATEF-RUN6: this assert used to sit immediately after the FIRST throw. With `max_catch_failures: 1` the game's promise is kept on the second landed throw, so asserting after throw 1 reads a legitimate first failure as a defect -- which is exactly how this segment reported 'party size 1 (wanted 2)' in a run whose own exit save carried a party of 2. Moved to after the retry blocks, where the promise is actually due."
@@ -734,11 +737,14 @@
     {
       "id": "S02C-46",
       "title": "the chain advanced to the road",
-      "action": "assert",
+      "action": "wait_until",
       "args": {
         "check": "objective_is",
-        "id": "open_road_gate"
+        "id": "open_road_gate",
+        "budget_frames": 600,
+        "poll_frames": 5
       },
+      "_comment_wait_until": "RIG-F1, mirrored from S02-46 by ralph/GATE-F-FULL in the same commit as its journey twin. See S02-46.",
       "expected": "Section L.5 T15: 'tracked line advances immediately; guided ladder surfaces exactly the next rung'. The next rung is `open_road_gate`, 'Open the village gate and follow the road in.'",
       "_derived_from": "S02-46",
       "observation": "T2-GATEF-RUN6: this assert used to sit immediately after the FIRST throw. With `max_catch_failures: 1` the game's promise is kept on the second landed throw, so asserting after throw 1 reads a legitimate first failure as a defect -- which is exactly how this segment reported 'party size 1 (wanted 2)' in a run whose own exit save carried a party of 2. Moved to after the retry blocks, where the promise is actually due."

@@ -664,22 +664,28 @@
     {
       "id": "S02-45",
       "title": "the catch counted",
-      "action": "assert",
+      "action": "wait_until",
       "args": {
         "check": "party_size",
-        "equals": 2
+        "min": 2,
+        "budget_frames": 900,
+        "poll_frames": 5
       },
+      "_comment_wait_until": "RIG-F1, ralph/GATE-F-FULL 2026-08-30. This was an `assert`, and it read the world 0.53 s of PLAY before the world became true. `S02-43iw` waits 360 physics frames (6.0 s) after the fourth throw; in this run the throw resolved to a verdict at t=265.38 and CombatManager granted the creature at t=268.00, and the wait ran out at t=267.47. The step recorded `party size 1 (wanted 2)` against a segment whose own exit save carries the caught bramblebun -- the third run to report that shape. The fix is CD-3's rule applied to waiting rather than to pressing: reach a state, then assert it. `wait_until` polls the same check `assert` asks once, PASSes the instant it is true and says how many frames that took, and FAILs at the budget naming the last thing it saw. 900 frames is 15 s of play, comfortably over the ~6.5 s the grant actually took, and it is priced at its full budget by the cost gate so an early exit cannot fool it. `min` rather than `equals` for RIG-15's reason: a bigger, healthy team must not fail a milestone check.",
       "expected": "Section E.2 CT-08: 'verify party count increments'. Two of five: the starter and the first catch",
       "observation": "T2-GATEF-RUN6: this assert used to sit immediately after the FIRST throw. With `max_catch_failures: 1` the game's promise is kept on the second landed throw, so asserting after throw 1 reads a legitimate first failure as a defect -- which is exactly how this segment reported 'party size 1 (wanted 2)' in a run whose own exit save carried a party of 2. Moved to after the retry blocks, where the promise is actually due."
     },
     {
       "id": "S02-46",
       "title": "the chain advanced to the road",
-      "action": "assert",
+      "action": "wait_until",
       "args": {
         "check": "objective_is",
-        "id": "open_road_gate"
+        "id": "open_road_gate",
+        "budget_frames": 600,
+        "poll_frames": 5
       },
+      "_comment_wait_until": "RIG-F1's second half. The tracked objective advances on the same frame the catch is granted (t=268.00 in this run, with `combat_end` and the `catch_result` that grew the party 1 -> 2), so an `assert` here inherits S02-45's race exactly and failed for the same reason and at the same instant. Polling rather than guessing. 600 frames is 10 s of play; if S02-45 has already waited for the party, this one is normally true on its first poll and costs nothing.",
       "expected": "Section L.5 T15: 'tracked line advances immediately; guided ladder surfaces exactly the next rung'. The next rung is `open_road_gate`, 'Open the village gate and follow the road in.'",
       "observation": "T2-GATEF-RUN6: this assert used to sit immediately after the FIRST throw. With `max_catch_failures: 1` the game's promise is kept on the second landed throw, so asserting after throw 1 reads a legitimate first failure as a defect -- which is exactly how this segment reported 'party size 1 (wanted 2)' in a run whose own exit save carried a party of 2. Moved to after the retry blocks, where the promise is actually due."
     },

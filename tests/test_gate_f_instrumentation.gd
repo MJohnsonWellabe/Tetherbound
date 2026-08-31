@@ -446,6 +446,151 @@ func test_the_overhead_note_cannot_report_a_delta_it_did_not_measure() -> void:
 		"the overhead probe must run each condition twice in reversed order; a single ordered pair measures drift")
 
 
+
+## RIG-F6. Every walk the journey chain authors, against the village fence.
+##
+## `data/config/village_boundary.json` gave the village a closed edge on
+## 2026-08-30 and `village_boundary.gd` builds it as sealed `StaticBody3D`
+## panels with a hole only at each gate. Two journey walks written before that
+## still crossed the line where there is no gate, and both cost a run:
+##
+##   * `S05-19` walked from the tournament ground to the band-1 spine, crossing
+##     the outline 37.6 m from the nearest gate. Measured by `ralph/GATE-F-FULL`:
+##     "did not reach (-40, 180) in 11700 walking frames; stopped 155.8 m short
+##     at (-15.0, 1.0, 26.0)" -- the outline's own `[-15,27]` vertex. The next
+##     walk failed identically from the same spot, and every walk after it would
+##     have.
+##   * `S10e-99`, the chapter's homecoming walk, crosses at (9.7, 23.8), 30.9 m
+##     from the nearest gate. Never reached by any run; it would have put the
+##     last beat of the Meadows against a fence panel.
+##
+## Neither is a game defect — both gates open on `road_gate_open` and
+## `terrain_playground.json`'s Pond road crosses the outline AT PondGate, which
+## is what `test_every_road_leaves_through_a_gate` already checks for the roads.
+## This is the same check for the rig's own legs, and it is the cheap half:
+## finding these cost a run each, and finding them here costs a second.
+##
+## The chain is ONE continuous walk, so the legs are joined ACROSS segments as
+## well as within them — S05's first walk begins where S04's last one ended, and
+## that is precisely the pair that broke. A per-segment check would have missed
+## it.
+func test_no_journey_walk_crosses_the_village_fence_away_from_a_gate() -> void:
+	var boundary: Variant = _read_json("res://data/config/village_boundary.json")
+	if not boundary is Dictionary:
+		assert_true(false, "could not read data/config/village_boundary.json")
+		return
+	var config := boundary as Dictionary
+	var outline := _outline_points(config)
+	assert_true(outline.size() >= 3,
+		"the village outline has %d points; this check would be vacuous" % outline.size())
+	var gates := _fence_gate_positions(config)
+	assert_true(not gates.is_empty(), "the village boundary authors no gates; this check would be vacuous")
+	var wall: Variant = config.get("wall", {})
+	var clear: float = float((wall as Dictionary).get("gate_clear_m", 3.4)) if wall is Dictionary else 3.4
+
+	var legs := _journey_walk_targets()
+	assert_true(legs.size() >= 20,
+		"only %d move_to legs found across the journey chain; the walk list is not being read" % legs.size())
+
+	for i in legs.size() - 1:
+		var from: Dictionary = legs[i]
+		var to: Dictionary = legs[i + 1]
+		for crossing: Vector2 in _fence_crossings(outline, from["at"], to["at"]):
+			var nearest := INF
+			for gate: Vector2 in gates:
+				nearest = minf(nearest, gate.distance_to(crossing))
+			assert_true(nearest <= clear + 1.0,
+				("the walk %s -> %s (%s to %s) crosses the village fence at (%.1f, %.1f), %.1f m from the "
+				+ "nearest gate. The fence is solid: that walk cannot arrive. Route it through a gate, the "
+				+ "way the Pond road and the Rise road already do.") % [
+					str(from["id"]), str(to["id"]),
+					"(%.0f, %.0f)" % [(from["at"] as Vector2).x, (from["at"] as Vector2).y],
+					"(%.0f, %.0f)" % [(to["at"] as Vector2).x, (to["at"] as Vector2).y],
+					crossing.x, crossing.y, nearest])
+
+
+## The journey chain's `move_to` targets, in play order, across every segment.
+## `move_to_entity` is deliberately excluded: it resolves a live node whose
+## position this file cannot know, and a guess would be worse than nothing.
+func _journey_walk_targets() -> Array[Dictionary]:
+	var chain := ["S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09",
+		"S10a", "S10b", "S10c", "S10d", "S10e"]
+	var out: Array[Dictionary] = []
+	for segment: String in chain:
+		var parsed: Variant = _read_json(SEGMENTS_DIR.path_join("%s.json" % segment))
+		if not parsed is Dictionary:
+			continue
+		var steps: Variant = (parsed as Dictionary).get("steps", [])
+		if not steps is Array:
+			continue
+		for raw: Variant in steps as Array:
+			if not raw is Dictionary:
+				continue
+			var step := raw as Dictionary
+			if str(step.get("action", "")) != "move_to":
+				continue
+			var args: Variant = step.get("args", {})
+			if not args is Dictionary:
+				continue
+			var at: Variant = (args as Dictionary).get("at", [])
+			if not at is Array or (at as Array).size() < 2:
+				continue
+			out.append({"id": str(step.get("id", "?")),
+				"at": Vector2(float((at as Array)[0]), float((at as Array)[1]))})
+	return out
+
+
+func _read_json(path: String) -> Variant:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return null
+	return JSON.parse_string(file.get_as_text())
+
+
+func _outline_points(config: Dictionary) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	var block: Variant = config.get("outline", {})
+	if not block is Dictionary:
+		return out
+	var points: Variant = (block as Dictionary).get("points", [])
+	if not points is Array:
+		return out
+	for raw: Variant in points as Array:
+		if raw is Array and (raw as Array).size() >= 2:
+			out.append(Vector2(float((raw as Array)[0]), float((raw as Array)[1])))
+	return out
+
+
+func _fence_gate_positions(config: Dictionary) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	var block: Variant = config.get("gates", {})
+	if not block is Dictionary:
+		return out
+	var entries: Variant = (block as Dictionary).get("entries", [])
+	if not entries is Array:
+		return out
+	for raw: Variant in entries as Array:
+		if not raw is Dictionary:
+			continue
+		var at: Variant = (raw as Dictionary).get("at", [])
+		if at is Array and (at as Array).size() >= 2:
+			out.append(Vector2(float((at as Array)[0]), float((at as Array)[1])))
+	return out
+
+
+## Where the segment from -> to crosses the closed outline. `Geometry2D`'s own
+## segment intersection, so this cannot disagree with the engine about what
+## "crosses" means.
+func _fence_crossings(outline: PackedVector2Array, from: Vector2, to: Vector2) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	for i in outline.size():
+		var a := outline[i]
+		var b := outline[(i + 1) % outline.size()]
+		var hit: Variant = Geometry2D.segment_intersects_segment(from, to, a, b)
+		if hit != null:
+			out.append(hit as Vector2)
+	return out
+
 # --- why the live-state checks are not here ---------------------------------
 #
 # `run_tests.gd` runs every test file from its own `_init`, before Godot has

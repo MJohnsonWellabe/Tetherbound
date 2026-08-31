@@ -362,6 +362,8 @@
       "args": {
         "entity": "bramblebun",
         "within": 4.5,
+        "rank": 0,
+        "_comment_rank": "RIG-F4, ralph/GATE-F-FULL 2026-08-30. Every walk in this ladder read `within: 4.5` and no rank, so all ten attempts resolved the SAME nearest bramblebun, the walker reported `walked 0.0 m` from the second attempt on because the player was already inside the tolerance, and every `interact_with` pressed from the identical spot -- (26.03, -44.01), which is the exact position of the authored deadwood node `band1_lower_meadows/harvest.json` order 1 puts at [26,-44]. `prompt_arbiter.gd` breaks a priority tie by distance and both offers carry priority 0, so `Gather deadwood` at ~0 m outbid `Engage Bramblebun` at 1-4 m TEN TIMES, the team never reached three, and the tournament (`tournament.json` min_party_size 3) was unreachable from the exit save. A retry ladder whose every attempt resolves the same entity at the same tolerance is not a retry ladder. Ranks and tolerances now vary across the ten so each attempt is a different attempt: rank walks to a different member of the cluster, and the tighter tolerances close the player onto the creature and off the node. Nothing about the game moved -- the arbiter's nearest-wins rule is doing exactly what it says, and the collision between the teaching fight and a gathering node on the same ground is recorded as GAME-F3 rather than tuned away here.",
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -444,7 +446,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 3.0,
+        "rank": 1,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -527,7 +530,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 3.0,
+        "rank": 2,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -610,7 +614,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 1.8,
+        "rank": 0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -693,7 +698,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 1.8,
+        "rank": 1,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -776,7 +782,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 1.8,
+        "rank": 2,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -859,7 +866,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.5,
+        "rank": 3,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -942,7 +950,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.5,
+        "rank": 4,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -1025,7 +1034,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 1.5,
+        "rank": 0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -1108,7 +1118,8 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 1.5,
+        "rank": 1,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
@@ -2161,6 +2172,23 @@
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-82b",
+      "title": "back in through the road gate",
+      "action": "move_to",
+      "args": {
+        "at": [
+          38.7,
+          -19.9
+        ],
+        "budget_frames": 3000,
+        "close_enough": 2.5,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "data/config/village_boundary.json gates[].RoadGate, open since S02 took the key. The two outermost harvest nodes stand outside the village fence, so the way back to the rest of them is the door",
+      "_comment_route": "RIG-F6's third leg, ralph/GATE-F-FULL 2026-08-30. Two of the twenty first-day harvest nodes -- (44,-24) and (52,-30) -- fall OUTSIDE the village fence the 2026-08-30 boundary line drew (GAME-F1, recorded in DEFECTS.md and deliberately not fixed, because data/ is frozen for that lane). The walk back in from (52,-30) to the berry node at (38,-36) crosses the outline at (48.5,-31.5), 15.2 m from the RoadGate, against sealed StaticBody3D panels. Measured twice, in both of this run's S03 attempts: `did not reach (38,-36) in 3000 walking frames; stopped 11.4 m short at (47.0,-4.0,-29.0)` and again at (52.0,-3.0,-34.0), with S03-85 failing behind it each time. A player walks back through the gate they opened in S02, so this does: the leg out to (44,-24) already passes 1.5 m from the RoadGate and goes through it; the leg back now names the gate instead of aiming at a fence. This does NOT paper over GAME-F1 -- it makes the gathering ladder able to reach all twenty nodes, which is what GAME-F5's budget measurement needs."
     },
     {
       "id": "S03-83",

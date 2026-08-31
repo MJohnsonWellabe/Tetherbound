@@ -1348,6 +1348,11 @@ static func _predict_frames(steps: Array) -> int:
 				total += int(args.get("budget_frames", 2400))
 			"face":
 				total += int(args.get("budget_frames", 240))
+			"wait_until":
+				# The worst case, like a walk: the budget, not the hoped-for
+				# early exit. A segment is only safe to launch if the whole
+				# budget fits.
+				total += int(args.get("budget_frames", 600))
 			"press":
 				total += maxi(1, int(args.get("times", 1))) * (int(args.get("settle_frames", 8)) + 4)
 			"press_multi", "focus_move", "focus_item", "open_menu", "close_menu", "probe_cell", \
@@ -1796,6 +1801,12 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_capture_seq(args, id)
 		"probe_cell":
 			actual = await _step_probe_cell(args, id)
+		"wait_until":
+			var settled := await _step_wait_until(args)
+			actual = str(settled.get("actual", ""))
+			verdict = "PASS" if bool(settled.get("ok", false)) else "FAIL"
+			if bool(settled.get("skip", false)):
+				verdict = "SKIP"
 		"assert":
 			var checked := _step_assert(args)
 			actual = str(checked.get("actual", ""))
@@ -2676,17 +2687,35 @@ func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 		# `nearest` (the default) picks the closest to the player and SAYS it
 		# did, with the count -- so a segment that meant a specific one can see
 		# from the note that it was ambiguous.
+		#
+		# `rank` (RIG-F4, ralph/GATE-F-FULL 2026-08-30) picks the Nth-nearest
+		# instead of the nearest, and it exists because a RETRY LADDER THAT
+		# ALWAYS RESOLVES THE SAME THING IS NOT A RETRY LADDER. S03's engage
+		# ladder walks to "a live bramblebun" ten times; every attempt resolved
+		# the same nearest creature, the walker reported "walked 0.0 m" because
+		# the player was already inside `within`, and all ten attempts pressed
+		# from the identical spot and lost the interaction arbiter to the same
+		# deadwood node at (26,-44) -- ten identical failures over 180 s of
+		# play, and a team that never reached three. Varying the rank makes each
+		# attempt a genuinely different attempt.
+		#
+		# Out-of-range ranks CLAMP rather than fail, and the note says the rank
+		# was clamped: a ladder authored for five candidates must not blow up in
+		# a boot that spawned three.
 		var player := _probe.call("player") as Node3D
-		var best: Node3D = hits[0]
+		var ordered: Array[Node3D] = hits.duplicate()
 		if player != null:
-			var best_d := INF
-			for node in hits:
-				var d := player.global_position.distance_to(node.global_position)
-				if d < best_d:
-					best_d = d
-					best = node
-		return {"ok": true, "node": best,
-			"how": "%s, nearest of %d (%s)" % [str(pair[1]), hits.size(), _names_of(hits)]}
+			var origin := player.global_position
+			ordered.sort_custom(func(a: Node3D, b: Node3D) -> bool:
+				return origin.distance_to(a.global_position) < origin.distance_to(b.global_position))
+		var rank := clampi(int(args.get("rank", 0)), 0, ordered.size() - 1)
+		var asked := int(args.get("rank", 0))
+		var how := "%s, nearest of %d (%s)" % [str(pair[1]), hits.size(), _names_of(hits)]
+		if asked != 0:
+			how = "%s, #%d nearest of %d%s (%s)" % [str(pair[1]), rank + 1, hits.size(),
+				"" if rank == asked else " [rank %d clamped to %d]" % [asked, rank],
+				_names_of(hits)]
+		return {"ok": true, "node": ordered[rank], "how": how}
 	var how := "of point-of-interest kind" if not want_kind.is_empty() \
 		else ("running the script" if lowered.ends_with(".gd") \
 		else "named, grouped, labelled or speciesed")
@@ -3911,6 +3940,60 @@ func _step_probe_cell(args: Dictionary, step_id: String) -> String:
 	})
 	return "cell %s in %s: world=[%s] ui=[%s] release=[%s]" % [control,
 		str(before.get("context")), world_effect, ui_effect, release_effect]
+
+
+## CD-3's missing half: reach a state, then assert it.
+##
+## `assert` asks its question once, at the instant the step runs, so every
+## assertion that follows an asynchronous game event has to be preceded by a
+## `wait` with a GUESSED frame count -- and the protocol's own CD-3 rule says a
+## guessed count for a state-changing operation is wrong in both directions.
+## Under-wait and a true state reads as false; over-wait and the segment pays
+## for frames it did not need.
+##
+## The cost of the missing half was measured by ralph/GATE-F-FULL on
+## 2026-08-30, on the chapter's own first catch. `S02-43iw` waited 360 physics
+## frames (6.0 s of play) after the fourth throw; the throw resolved to a
+## verdict at t=265.38 and CombatManager granted the creature at t=268.00, and
+## the wait ended at t=267.47. `S02-45` ("the catch counted") therefore read
+## `party size 1 (wanted 2)` **0.53 s of play before the party became 2**, and
+## `S02-46` ("the chain advanced to the road") read the stale objective for the
+## same reason. Both were recorded as FAILs against a run whose own exit save
+## carries the caught bramblebun. Three previous runs have reported this shape.
+##
+## So: same `check` vocabulary as `assert`, same args, plus a budget. It polls
+## rather than guesses, PASSes the moment the predicate is true and says how
+## long it took, and FAILs at the budget naming the last thing it saw -- which
+## is strictly more informative than a bare `assert`, because a FAIL here means
+## "still false after N frames", not "false at one instant".
+##
+## A check the envelope cannot evaluate (`skip`) is returned immediately and
+## unchanged: polling a question that cannot be asked is just a slower SKIP.
+func _step_wait_until(args: Dictionary) -> Dictionary:
+	var budget := maxi(1, int(args.get("budget_frames", 600)))
+	var poll := maxi(1, int(args.get("poll_frames", 5)))
+	var checked := _step_assert(args)
+	if bool(checked.get("skip", false)):
+		return checked
+	var waited := 0
+	while not bool(checked.get("ok", false)) and waited < budget:
+		for i in poll:
+			await physics_frame
+			_tick(1.0 / float(Engine.physics_ticks_per_second))
+			waited += 1
+			# `wait`'s own rule: this is a loop the protocol's hours can live
+			# in, so it honours a mid-step cost abort rather than watching the
+			# whole budget go past.
+			if not _blocked.is_empty():
+				return {"ok": false, "actual": "waited %d of %d physics frames before the cost gate stopped it"
+					% [waited, budget]}
+			if waited >= budget:
+				break
+		checked = _step_assert(args)
+	var actual := str(checked.get("actual", ""))
+	if bool(checked.get("ok", false)):
+		return {"ok": true, "actual": "%s [true after %d physics frames]" % [actual, waited]}
+	return {"ok": false, "actual": "%s [still false after %d physics frames]" % [actual, waited]}
 
 
 func _step_assert(args: Dictionary) -> Dictionary:
