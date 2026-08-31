@@ -401,6 +401,45 @@
    "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
    "model_scale": 0.85,
    "_why_t3_pickups": "T3-REWARD found `travel_pack` (items.json) fully modelled with zero acquisition path anywhere in the game. Placed beside the galecrest off-route pocket (spawns.json order 1048, centre (500,1050)), the 'upper ridge' aggressor sighting -- a pack left by whoever was here before, on the same detour. stack:1 gear, so a respawning crate is harmless: nothing is farmable that changes the equip once worn."
+  },
+  {
+   "order": 1031,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    28.0,
+    6.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 1.2,
+   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15, verbatim: 'There needs to be more berries in the village.' The village authored exactly two berry nodes (orders 10, 11; 3 each = 6), the thinnest of the four village resources against wood's 7 nodes, stone's 3 (raised to 4 each by GAME-F5), and fiber's 8 -- and berries are the one baseline resource with ongoing draws the other three do not carry: player/creature food (items.json), the 3-berries-for-4-seeds recipe and the farm crop itself (data/config/farm.json), and a 5-berry cost in the Band-4 stronghold potion (recipes_ironwood.json). Three new nodes (this one plus 1032, 1033) bring the village to five for +9, proportionate to the raise stone already got and short of flooding the square. Sited in the village's north quarter, inside the fence (data/config/village_boundary.json), >=4m clear of the boundary line and of every existing village node, and outside the practice cluster's 15m disc at (30,-40) -- unused ground: no harvest node previously stood north of z=-8. tests/test_village_boundary.gd's VILLAGE_HARVEST_NODES raised 20 -> 23 in the same commit, per that test's own instruction to confirm and update rather than silently drift."
+  },
+  {
+   "order": 1032,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    0.0,
+    18.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 1.2,
+   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Second of the three new village berry stops, on the north side near the pond-road gate approach, >=4m clear of the boundary and of every existing node."
+  },
+  {
+   "order": 1033,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    -32.0,
+    -1.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 1.2,
+   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Third of the three new village berry stops, west of the farmhouse, >=4m clear of the boundary and of every existing node."
   }
  ],
  "_why_gate_b_three_beds_superseded_2026_08_31": "SUPERSEDED, kept because it is the record of why orders 1020-1027 exist and where they were sited. The arithmetic in the note below -- house 39 wood / 34 stone, THREE creature beds, camp, totalling 69 / 42 / 34 -- is the pre-FIRST-HOUR-FUN-REBUILD bill and the game no longer asks for any of it. data/config/progression.json home.required_pieces is now {camp: 1, creature_bed: 1}, and data/progression/objectives.json calls one bed the mandatory care lesson and tournament proof, with tests/test_quest_log.gd asserting the rung must not require one bed per entrant. The real bill, read through scripts/build/home_progress.gd::materials_threshold(), is 18 wood / 8 stone / 18 fiber, which the twenty village nodes cover in one pass at 28 / 9 / 32. The raise those orders made is therefore no longer load-bearing for the opening -- but it is NOT reverted here, because the surplus is what gives the ladder any margin at all, and because tools/gate_f/segments/S03.json measured the sweep against the OLD bill and reported a shortfall (GAME-F5) that only ever existed in the step script. The one number still worth watching is STONE: three authored nodes, 9 total, against a bill of 8. That is a one-node margin -- and until GAME-F1 was fixed one of those three stood outside the village fence, which put reachable stone at 6 and made the opening build rung unaffordable with no number anywhere being wrong. tests/helpers/gate_a_material_route.gd::TARGET_STOCK is still the old 69 / 42 / 34 and is stale in the same way.",
