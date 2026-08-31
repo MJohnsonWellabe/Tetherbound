@@ -9,7 +9,7 @@ extends SceneTree
 ## actually standing there.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const STALL := Vector3(13.47, -0.08, 7416.99)
+const STALL := Vector3(-4.0, -5.0, 7352.0)
 const HEIGHTS: Array[float] = [0.45, 0.95, 1.55]
 const REACH := 12.0
 
