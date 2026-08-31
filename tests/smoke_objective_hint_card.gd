@@ -319,6 +319,19 @@ func _visible_neighbours() -> Array:
 ## measured against the wrong screen. A catch changes the party and the
 ## objective in the same instant, so these two are genuinely on screen
 ## together.
+##
+## Adding to the real `Game.party` here and letting `playground_hud.gd`'s own
+## `_process -> _update_party_strip()` pick it up (the SETTLE-frame awaits
+## right after this call give it frames to run) is what actually populates the
+## strip with real content: this file used to also poke
+## `party_strip.gd::update_from_party()` directly with the party RefCounted
+## itself, which silently drifted out of sync with the widget's real
+## `(entries: Array, active_index: int, active_out: bool)` signature and threw
+## every run -- past the point where the assertions below had already been
+## reached, so the failure never surfaced, and the direct call being broken
+## meant the strip was never actually populated for the overlap check that
+## follows. Driving it through the real per-frame HUD update instead removes
+## the duplicate, driftable call site rather than re-fixing its arity again.
 func _reveal_the_left_column() -> void:
 	var game := root.get_node_or_null(^"Game")
 	var party: RefCounted = game.get("party") if game != null else null
@@ -328,12 +341,8 @@ func _reveal_the_left_column() -> void:
 			if creature != null:
 				party.call("add", creature)
 	var strip := _hud.get_node_or_null(^"Root/PartyStrip")
-	if strip != null:
-		if strip.has_method("update_from_party") and party != null:
-			strip.call("update_from_party", party)
-		if strip.has_method("set_pinned"):
-			strip.call("set_pinned", true)
-		strip.call("show_strip")
+	if strip != null and strip.has_method("set_pinned"):
+		strip.call("set_pinned", true)
 
 
 ## Push the bottom dock into the tallest state it reaches in play: the hotbar's
