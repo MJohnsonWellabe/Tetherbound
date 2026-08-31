@@ -1,5 +1,6 @@
 {
-  "_comment": "SG46 and R8.6 -- what the Meadows says once the Warden has fallen and the machinery is dead. Every conversation here is reached through an ordinary `greeting_when` branch gated on `legendary_freed` (data/config/village_npcs.json), the same mechanism OF30, SC12 and SE27 all use. Separate file rather than more entries in village.json so the post-victory voice of the region is one thing somebody can read end to end, the same reason relay.json and stronghold.json are their own files.",
+  "_comment": "SG46 and R8.6 -- what the Meadows says once the Warden has fallen and the machinery is dead. Every villager conversation here is reached through an ordinary `greeting_when` branch gated on `legendary_freed` (data/config/village_npcs.json), the same mechanism OF30, SC12 and SE27 all use. Separate file rather than more entries in village.json so the post-victory voice of the region is one thing somebody can read end to end, the same reason relay.json and stronghold.json are their own files.",
+  "_comment_grandpa": "GATE-F-LEG-S10CDE. `grandpa_freed` is the one entry here NOT reached through `greeting_when` -- Grandpa is not in village_npcs.json at all; his conversations are opening.json's own `beats.grandpa_conversations` beat-keyed table (scripts/story/opening_beats.gd), which reaches its terminal `free_play` beat around the tournament and then has nothing scripted for the rest of the game BY DESIGN (`_comment_free_play`: \"his prompt goes quiet rather than repeating a send-off forever\"). Nothing in that table, or anywhere else, ever pointed him at a post-win line, so the ending the master protocol's own §L.5 promises (\"Grandpa's post-win line\", GATE_F_MASTER_PROTOCOL.md, and objectives.json's `see_what_changed` `how`: \"Everyone you passed on the road has something to say about it now\") was unreachable -- found running S10e's isolated evidence pass. Fixed the same way the four villagers already are: `sequence_director.gd::_grandpa_conversation_id()` checks `legendary_freed` BEFORE the beat table (the same priority order `greeting_when`'s own freed branches use ahead of their standing one) and returns this conversation instead. Carries `flag:meadows_acknowledged` on its first line like every other entry in this file, so talking to him alone can close the chapter's last objective.",
   "_comment_spoiler_rule": "THIS FILE IS SCANNED, NOT EXEMPT. tests/test_dialogue_runner.gd's STRONGHOLD_FILES stays exactly one file -- the stronghold's -- and this one is in DIALOGUE_FILES with everything else, so §32's forbidden words ('legendary', 'veridian', 'stag', 'power source') must not appear in a spoken line here either. That is a real constraint and it makes the writing better: villagers who watched the machines go dark talk about the grass, the roads and the quiet, because the grass and the roads and the quiet are what they can actually see. The one character who knows what happened inside the stronghold is the player.",
   "conversations": {
     "village_mira_freed": {
@@ -53,6 +54,18 @@
           "effect": "flag:meadows_acknowledged"
         },
         "But there's green at the rim again, and there wasn't yesterday. I'll take the rim."
+      ]
+    },
+    "grandpa_freed": {
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        {
+          "text": "I felt it in my knees before I heard it -- something let go, out past the rise, and the whole house went quiet with it.",
+          "effect": "flag:meadows_acknowledged"
+        },
+        "I said I'd go after them myself if I were twenty years younger. Instead I gave you fifteen orbs and a door to walk out of.",
+        "Come sit a minute. You've earned a chair by this fire more than I have."
       ]
     },
     "spoke_traveller_storm_road": {
