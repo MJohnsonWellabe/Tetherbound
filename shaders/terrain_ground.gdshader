@@ -15,14 +15,20 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
  * A second, unrelated manual edit lives inside accumulate_material(),
  * marked with D6-SEAM-FIX banners: ralph/reports/audit/D6-seam-probe/
  * FOLLOWUP-2026-08-31.md confirmed the per-tile detiling rotation this
- * function applies (via _texture_detile_array/random(uv_center)) is
- * discontinuous at tile boundaries -- two adjacent tiles roll unrelated
- * random rotations, so both the UV rotation and the anisotropic-filter
- * derivatives it drives (id_dd) step sharply right at the shared edge,
- * which read as a dashed seam. The fix feathers the rotation/shift to
- * zero within a narrow band of each tile's edge so neighbouring tiles
- * converge on the same (identity) transform at the seam, leaving tile
- * interiors at full detiling strength.
+ * function applies (via _texture_detile_array/random(uv_center)) as the
+ * dominant cause of a dashed terrain seam. Two adjacent tiles roll
+ * unrelated random rotations, so both the UV rotation and the
+ * anisotropic-filter derivatives it drives (id_dd) step sharply at the
+ * shared edge -- but a first fix attempt that only feathered rotation
+ * near each tile's own boundary measured NO improvement at the seam's
+ * actual camera distance (~100m, grazing angle): at that range a single
+ * fragment's footprint already covers a fraction of a whole tile, so it
+ * legitimately samples across several independently-rotated tiles at
+ * once, and no boundary-local feather changes that. The landed fix
+ * instead fades detiling strength toward 0 as the fragment's own
+ * anisotropic footprint (in tile units) grows toward one whole tile,
+ * which is confirmed (render evidence, same camera) to remove the seam
+ * while leaving close-range detiling at full strength.
  *
  * REGENERATION: everything OUTSIDE the T1-GROUND-2 and D6-SEAM-FIX
  * banners is Terrain3D template code, not authored here. If a future
@@ -57,11 +63,17 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
 #define DIV_255 0.003921568627450 // 1. / 255.
 #define DIV_1024 0.0009765625 // 1. / 1024.
 #define TAU_16TH -0.392699081698724 // -TAU / 16.
-// D6-SEAM-FIX: width (in id-scaled tile units, tile = 1.0) of the band
-// around each detiling tile's edge over which rotation/shift is faded
-// to 0. See accumulate_material()'s D6-SEAM-FIX blocks and the banner
-// comment at the top of this file.
-#define DETILE_SEAM_FEATHER 0.12
+// D6-SEAM-FIX: detiling rotation/shift strength is faded to 0, in
+// accumulate_material(), as a fragment's own anisotropic footprint (in
+// tile units -- 1.0 == one whole detiling tile per screen pixel) grows
+// from DETILE_FOOTPRINT_LO to DETILE_FOOTPRINT_HI. Below LO the
+// fragment samples comfortably inside one tile and gets full random
+// detiling; at/above HI it already spans multiple independently
+// rotated tiles, which is what produced the D6 dashed seam, so
+// detiling is fully backed off there. See accumulate_material()'s
+// D6-SEAM-FIX blocks and the banner comment at the top of this file.
+#define DETILE_FOOTPRINT_LO 0.05
+#define DETILE_FOOTPRINT_HI 0.5
 
 // Inline Functions
 #define DECODE_BLEND(control) float(control >> 14u & 0xFFu) * DIV_255
@@ -323,13 +335,18 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 
 		// Detiling and Control map rotation
 		vec2 uv_center = floor(fma(i_pos, vec2(id_scale), vec2(0.5)));
-		// D6-SEAM-FIX: fade detiling strength to 0 within DETILE_SEAM_FEATHER
-		// of this tile's edge so neighbouring tiles' independent random
-		// rotations converge on the same (identity) transform at the shared
-		// boundary instead of stepping discontinuously. See top-of-file banner.
-		vec2 id_frac = fma(i_pos, vec2(id_scale), -uv_center);
-		float id_edge_fade = smoothstep(0.0, DETILE_SEAM_FEATHER, 0.5 - max(abs(id_frac.x), abs(id_frac.y)));
-		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU * id_edge_fade;
+		// D6-SEAM-FIX: fade detiling strength toward 0 as this fragment's own
+		// anisotropic footprint (id_dd, already in tile units here) grows
+		// toward the size of one whole tile. At that point the fragment no
+		// longer samples inside a single detiling tile -- it legitimately
+		// spans several neighbouring tiles, each with its own unrelated
+		// random rotation, and no per-tile rotation can filter that
+		// correctly; that is what produced the dashed seam (confirmed at a
+		// grazing, ~100m camera stand where each screen pixel already
+		// covers a fraction of a tile). See top-of-file banner.
+		float id_footprint = max(length(id_dd.xy), length(id_dd.zw));
+		float id_detile_fade = 1.0 - smoothstep(DETILE_FOOTPRINT_LO, DETILE_FOOTPRINT_HI, id_footprint);
+		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU * id_detile_fade;
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
 		vec2 id_uv = rotate_vec2(fma(i_uv, vec2(id_scale), -uv_center), id_cs_angle) + uv_center + id_detile.y - 0.5;
@@ -372,9 +389,9 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 		// Detiling and Control map rotation
 		vec2 uv_center = floor(fma(i_pos, vec2(id_scale), vec2(0.5)));
 		// D6-SEAM-FIX: see matching comment in the 1st Texture Asset ID block above.
-		vec2 id_frac = fma(i_pos, vec2(id_scale), -uv_center);
-		float id_edge_fade = smoothstep(0.0, DETILE_SEAM_FEATHER, 0.5 - max(abs(id_frac.x), abs(id_frac.y)));
-		vec2 id_detile = _texture_detile_array[id] * fma(random(uv_center), 2.0, -1.0) * TAU * id_edge_fade;
+		float id_footprint = max(length(id_dd.xy), length(id_dd.zw));
+		float id_detile_fade = 1.0 - smoothstep(DETILE_FOOTPRINT_LO, DETILE_FOOTPRINT_HI, id_footprint);
+		vec2 id_detile = _texture_detile_array[id] * fma(random(uv_center), 2.0, -1.0) * TAU * id_detile_fade;
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
 		vec2 id_uv = rotate_vec2(fma(i_uv, vec2(id_scale), -uv_center), id_cs_angle) + uv_center + id_detile.y - 0.5;
