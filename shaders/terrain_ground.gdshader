@@ -354,7 +354,7 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU * id_detile_fade;
 		if (_d6_debug_footprint) {
 			// SURGICAL TEST: zero ONLY rotation, unconditionally, keep shift.
-			id_detile.x = 0.0;
+			id_detile.y = 0.0;
 		}
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
@@ -403,7 +403,7 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 		vec2 id_detile = _texture_detile_array[id] * fma(random(uv_center), 2.0, -1.0) * TAU * id_detile_fade;
 		if (_d6_debug_footprint) {
 			// SURGICAL TEST: zero ONLY rotation, unconditionally, keep shift.
-			id_detile.x = 0.0;
+			id_detile.y = 0.0;
 		}
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
