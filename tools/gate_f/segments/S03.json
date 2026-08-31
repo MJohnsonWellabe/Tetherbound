@@ -1,9 +1,9 @@
 {
   "id": "S03",
-  "title": "Village tutorial ladder: Tam's tools -> team of 3 -> training -> gathering -> home + 3 creature beds -> sleep -> feed",
+  "title": "Village tutorial ladder: Tam's tools -> team of five -> training -> gathering -> camp + creature bed -> sleep -> feed",
   "lane": "journey",
   "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section D (RT-02), section E.1 (CB-02), section E.3 (S03 builds the tutorial home and three creature beds under the real economy, free_build OFF), section E.5 (navigation record at each of the eight main-chain objectives this segment crosses), section G (GF-03-VILLAGE-02, GF-18-MAP-01, GF-20-NIGHT-01/02, GF-14-COMBAT-02) and section H (0.1 Hz segment).",
-  "_comment_economy": "Section E.3: 'The authoritative run keeps free_build OFF everywhere'. Nothing in this file touches the Settings toggle; the whole home and all three beds are paid for out of the twenty village harvest nodes walked below. The owner directive of 2026-08-23 -- 'the village gatherable budget must afford three beds before sign-up' -- is verified by actually paying it, and the flag assertions are where a shortfall shows.",
+  "_comment_economy": "Section E.3: 'The authoritative run keeps free_build OFF everywhere'. Nothing in this file touches the Settings toggle; the camp and the creature bed are paid for out of the twenty village harvest nodes walked below. The real bill, read from data/items/buildables.json through scripts/build/home_progress.gd::materials_threshold(), is camp (12 wood / 8 stone / 10 fiber) plus one creature_bed (6 wood / 8 fiber) = 18 / 8 / 18. One sweep of the twenty nodes yields 28 / 9 / 32, so the budget clears with +10 wood, +1 stone and +14 fiber. The stone margin is ONE node wide and is the number to watch: the village authors only three stone nodes, and until GAME-F1 was fixed one of them stood outside the fence, which put reachable stone at 6 against a bill of 8.",
   "_comment_catalogue": "AMBIGUITY: the protocol does not enumerate S03's build-catalogue navigation (section E.3 step 2 enumerates X02's 2x2 lab structure, not S03's home). The focus counts below are derived from data/items/buildables.json's category order and build_menu.gd's CATEGORY_ORDER, and from build_menu.gd remembering the last category and piece per session. They are a transcriber's derivation, not the protocol's words, and a focus_move that does not land FAILs loudly rather than silently selecting the wrong piece.",
   "_comment_answer_prompts": "answer_prompts stays OFF on every walk, per the schema's rule.",
   "evidence_lane": "logic",
@@ -361,11 +361,12 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
       "id": "S03-32a2",
@@ -444,11 +445,12 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
       "id": "S03-32b2",
@@ -527,11 +529,12 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
       "id": "S03-32c2",
@@ -610,11 +613,12 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
       "id": "S03-32d2",
@@ -693,11 +697,12 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
       "id": "S03-32e2",
@@ -776,11 +781,12 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
       "id": "S03-32f2",
@@ -859,11 +865,12 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
       "id": "S03-32g2",
@@ -942,11 +949,12 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
       "id": "S03-32h2",
@@ -1025,11 +1033,12 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
       "id": "S03-32i2",
@@ -1108,11 +1117,12 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "within": 4.5,
+        "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate."
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
       "id": "S03-32j2",
@@ -1176,13 +1186,13 @@
     },
     {
       "id": "S03-39",
-      "title": "the team is three",
+      "title": "the team is five",
       "action": "assert",
       "args": {
         "check": "party_size",
-        "min": 3
+        "min": 5
       },
-      "expected": "`tournament.json` entry.min_party_size = 3, 'a team, not a favourite ... and leaves two slots free so the player is not forced to fill the cap before the tournament'",
+      "expected": "data/config/tournament.json entry.min_party_size is 5 and objectives.json's tournament_build_team says 'Build your full team of five for the village tournament.' The old `min: 3` predates FIRST-HOUR-FUN-REBUILD. Five is also the hard ownership cap (autoload/party.gd MAX_CREATURES), so this is the complete permanent team, never storage or a reserve.",
       "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
     },
     {
@@ -2096,12 +2106,12 @@
     },
     {
       "id": "S03-79",
-      "title": "gather wood at (44, -24)",
+      "title": "gather wood at (40.5, -28)",
       "action": "move_to",
       "args": {
         "at": [
-          44.0,
-          -24.0
+          40.5,
+          -28.0
         ],
         "budget_frames": 3000,
         "close_enough": 2.2,
@@ -2109,7 +2119,7 @@
         "answer_prompts": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "observation": "GAME-F1: this node stood at (44, -24), 2.3 m outside the village fence. Moved inside, so the walk no longer crosses the boundary."
     },
     {
       "id": "S03-80",
@@ -2135,12 +2145,12 @@
     },
     {
       "id": "S03-81",
-      "title": "gather stone at (52, -30)",
+      "title": "gather stone at (47, -34.5)",
       "action": "move_to",
       "args": {
         "at": [
-          52.0,
-          -30.0
+          47.0,
+          -34.5
         ],
         "budget_frames": 3000,
         "close_enough": 2.2,
@@ -2148,7 +2158,7 @@
         "answer_prompts": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Prise loose stones'",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "observation": "GAME-F1: this node stood at (52, -30), 3.5 m outside the village fence -- and it is one of only three stone nodes the village authors, against a camp+bed bill of 8 stone. Moved inside."
     },
     {
       "id": "S03-82",
@@ -2762,644 +2772,6 @@
       "expected": "half a second of stick so the next ghost does not land on the piece already standing. `home_progress.gd` counts pieces rather than validating geometry, so the arrangement is the player's -- but two pieces fighting for one cell would be a placement failure worth recording"
     },
     {
-      "id": "S03-121",
-      "title": "open the pause shell for floor",
-      "action": "open_menu",
-      "args": {
-        "tab": "map"
-      },
-      "expected": "Section L.6 T02: exploration -> Build. Opened through the production path, never by calling open()",
-      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
-    },
-    {
-      "id": "S03-122",
-      "title": "cycle to the Build tab",
-      "action": "press",
-      "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
-      },
-      "expected": "four RB presses move from Satchel to Build, the fifth tab in data/config/menu.json",
-      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build."
-    },
-    {
-      "id": "S03-123",
-      "title": "the Build tab is up",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "menu_build"
-      },
-      "expected": "input_context names the live tab: menu_build"
-    },
-    {
-      "id": "S03-124",
-      "title": "open the build menu",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "`tab_build.gd`'s one job is the handoff to the live build menu; its only focusable control is 'Open Build Menu'"
-    },
-    {
-      "id": "S03-125",
-      "title": "let the build menu open",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "`build_menu.gd` opens on whichever category and piece was last used this session, or the first of each the first time"
-    },
-    {
-      "id": "S03-126",
-      "title": "the catalogue owns input",
-      "action": "assert",
-      "args": {
-        "check": "context_prefix",
-        "prefix": "build"
-      },
-      "expected": "input_context is `build_catalogue`"
-    },
-    {
-      "id": "S03-127",
-      "title": "move to the piece's category",
-      "action": "press",
-      "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
-      },
-      "expected": "CONTROLLER-MAP: 'LB/RB catalogue category'. `build_menu.gd::CATEGORY_ORDER` is survival, crafting, structures, furniture"
-    },
-    {
-      "id": "S03-128",
-      "title": "arm floor",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "Section L.6 T02: 'ghost armed on pick'. The build menu arms the piece and closes; placement itself is `build_placer.gd`'s job"
-    },
-    {
-      "id": "S03-129",
-      "title": "let the ghost arm",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "the placement camera takes over and the ghost follows the aim point"
-    },
-    {
-      "id": "S03-130",
-      "title": "placement owns input",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "build_placement"
-      },
-      "expected": "input_context is `build_placement`"
-    },
-    {
-      "id": "S03-131",
-      "title": "place floor",
-      "action": "press",
-      "args": {
-        "control": "build_place",
-        "hold": "tap"
-      },
-      "expected": "Section E.3: the piece is paid for at its `data/items/buildables.json` cost -- free_build is OFF for the whole authoritative run"
-    },
-    {
-      "id": "S03-131x",
-      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
-      "title": "drop the armed ghost so the shell can open again",
-      "action": "press",
-      "args": {
-        "control": "build_cancel",
-        "hold": "tap"
-      },
-      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
-    },
-    {
-      "id": "S03-131y",
-      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
-      "title": "the world owns input again, so the shell will open",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "world"
-      },
-      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
-    },
-    {
-      "id": "S03-132",
-      "title": "let the placement register",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "`GameState.placed_buildings` gains the piece and `home_progress.gd::maybe_set_home_built` runs"
-    },
-    {
-      "id": "S03-133",
-      "title": "step clear of the piece just placed",
-      "action": "stick",
-      "args": {
-        "stick": "left",
-        "x": 0.35,
-        "y": -0.35,
-        "frames": 45
-      },
-      "expected": "half a second of stick so the next ghost does not land on the piece already standing. `home_progress.gd` counts pieces rather than validating geometry, so the arrangement is the player's -- but two pieces fighting for one cell would be a placement failure worth recording"
-    },
-    {
-      "id": "S03-134",
-      "title": "open the pause shell for wall",
-      "action": "open_menu",
-      "args": {
-        "tab": "map"
-      },
-      "expected": "Section L.6 T02: exploration -> Build. Opened through the production path, never by calling open()",
-      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
-    },
-    {
-      "id": "S03-135",
-      "title": "cycle to the Build tab",
-      "action": "press",
-      "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
-      },
-      "expected": "four RB presses move from Satchel to Build, the fifth tab in data/config/menu.json",
-      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build."
-    },
-    {
-      "id": "S03-136",
-      "title": "the Build tab is up",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "menu_build"
-      },
-      "expected": "input_context names the live tab: menu_build"
-    },
-    {
-      "id": "S03-137",
-      "title": "open the build menu",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "`tab_build.gd`'s one job is the handoff to the live build menu; its only focusable control is 'Open Build Menu'"
-    },
-    {
-      "id": "S03-138",
-      "title": "let the build menu open",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "`build_menu.gd` opens on whichever category and piece was last used this session, or the first of each the first time"
-    },
-    {
-      "id": "S03-139",
-      "title": "the catalogue owns input",
-      "action": "assert",
-      "args": {
-        "check": "context_prefix",
-        "prefix": "build"
-      },
-      "expected": "input_context is `build_catalogue`"
-    },
-    {
-      "id": "S03-140",
-      "title": "focus wall in the grid",
-      "action": "focus_move",
-      "args": {
-        "direction": "right",
-        "times": 1
-      },
-      "expected": "Wall (6 wood / 2 stone) -- one cell right of Floor"
-    },
-    {
-      "id": "S03-141",
-      "title": "arm wall",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "Section L.6 T02: 'ghost armed on pick'. The build menu arms the piece and closes; placement itself is `build_placer.gd`'s job"
-    },
-    {
-      "id": "S03-142",
-      "title": "let the ghost arm",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "the placement camera takes over and the ghost follows the aim point"
-    },
-    {
-      "id": "S03-143",
-      "title": "placement owns input",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "build_placement"
-      },
-      "expected": "input_context is `build_placement`"
-    },
-    {
-      "id": "S03-144",
-      "title": "place wall",
-      "action": "press",
-      "args": {
-        "control": "build_place",
-        "hold": "tap"
-      },
-      "expected": "Section E.3: the piece is paid for at its `data/items/buildables.json` cost -- free_build is OFF for the whole authoritative run"
-    },
-    {
-      "id": "S03-144x",
-      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
-      "title": "drop the armed ghost so the shell can open again",
-      "action": "press",
-      "args": {
-        "control": "build_cancel",
-        "hold": "tap"
-      },
-      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
-    },
-    {
-      "id": "S03-144y",
-      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
-      "title": "the world owns input again, so the shell will open",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "world"
-      },
-      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
-    },
-    {
-      "id": "S03-145",
-      "title": "let the placement register",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "`GameState.placed_buildings` gains the piece and `home_progress.gd::maybe_set_home_built` runs"
-    },
-    {
-      "id": "S03-146",
-      "title": "step clear of the piece just placed",
-      "action": "stick",
-      "args": {
-        "stick": "left",
-        "x": 0.35,
-        "y": -0.35,
-        "frames": 45
-      },
-      "expected": "half a second of stick so the next ghost does not land on the piece already standing. `home_progress.gd` counts pieces rather than validating geometry, so the arrangement is the player's -- but two pieces fighting for one cell would be a placement failure worth recording"
-    },
-    {
-      "id": "S03-147",
-      "title": "open the pause shell for door",
-      "action": "open_menu",
-      "args": {
-        "tab": "map"
-      },
-      "expected": "Section L.6 T02: exploration -> Build. Opened through the production path, never by calling open()",
-      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
-    },
-    {
-      "id": "S03-148",
-      "title": "cycle to the Build tab",
-      "action": "press",
-      "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
-      },
-      "expected": "four RB presses move from Satchel to Build, the fifth tab in data/config/menu.json",
-      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build."
-    },
-    {
-      "id": "S03-149",
-      "title": "the Build tab is up",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "menu_build"
-      },
-      "expected": "input_context names the live tab: menu_build"
-    },
-    {
-      "id": "S03-150",
-      "title": "open the build menu",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "`tab_build.gd`'s one job is the handoff to the live build menu; its only focusable control is 'Open Build Menu'"
-    },
-    {
-      "id": "S03-151",
-      "title": "let the build menu open",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "`build_menu.gd` opens on whichever category and piece was last used this session, or the first of each the first time"
-    },
-    {
-      "id": "S03-152",
-      "title": "the catalogue owns input",
-      "action": "assert",
-      "args": {
-        "check": "context_prefix",
-        "prefix": "build"
-      },
-      "expected": "input_context is `build_catalogue`"
-    },
-    {
-      "id": "S03-153",
-      "title": "focus door in the grid",
-      "action": "focus_move",
-      "args": {
-        "direction": "right",
-        "times": 1
-      },
-      "expected": "Doorway (5 wood) -- one cell right of Wall; `home_built` requires a usable door"
-    },
-    {
-      "id": "S03-154",
-      "title": "arm door",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "Section L.6 T02: 'ghost armed on pick'. The build menu arms the piece and closes; placement itself is `build_placer.gd`'s job"
-    },
-    {
-      "id": "S03-155",
-      "title": "let the ghost arm",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "the placement camera takes over and the ghost follows the aim point"
-    },
-    {
-      "id": "S03-156",
-      "title": "placement owns input",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "build_placement"
-      },
-      "expected": "input_context is `build_placement`"
-    },
-    {
-      "id": "S03-157",
-      "title": "place door",
-      "action": "press",
-      "args": {
-        "control": "build_place",
-        "hold": "tap"
-      },
-      "expected": "Section E.3: the piece is paid for at its `data/items/buildables.json` cost -- free_build is OFF for the whole authoritative run"
-    },
-    {
-      "id": "S03-157x",
-      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
-      "title": "drop the armed ghost so the shell can open again",
-      "action": "press",
-      "args": {
-        "control": "build_cancel",
-        "hold": "tap"
-      },
-      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
-    },
-    {
-      "id": "S03-157y",
-      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
-      "title": "the world owns input again, so the shell will open",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "world"
-      },
-      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
-    },
-    {
-      "id": "S03-158",
-      "title": "let the placement register",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "`GameState.placed_buildings` gains the piece and `home_progress.gd::maybe_set_home_built` runs"
-    },
-    {
-      "id": "S03-159",
-      "title": "step clear of the piece just placed",
-      "action": "stick",
-      "args": {
-        "stick": "left",
-        "x": 0.35,
-        "y": -0.35,
-        "frames": 45
-      },
-      "expected": "half a second of stick so the next ghost does not land on the piece already standing. `home_progress.gd` counts pieces rather than validating geometry, so the arrangement is the player's -- but two pieces fighting for one cell would be a placement failure worth recording"
-    },
-    {
-      "id": "S03-160",
-      "title": "open the pause shell for roof",
-      "action": "open_menu",
-      "args": {
-        "tab": "map"
-      },
-      "expected": "Section L.6 T02: exploration -> Build. Opened through the production path, never by calling open()",
-      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
-    },
-    {
-      "id": "S03-161",
-      "title": "cycle to the Build tab",
-      "action": "press",
-      "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
-      },
-      "expected": "four RB presses move from Satchel to Build, the fifth tab in data/config/menu.json",
-      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build."
-    },
-    {
-      "id": "S03-162",
-      "title": "the Build tab is up",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "menu_build"
-      },
-      "expected": "input_context names the live tab: menu_build"
-    },
-    {
-      "id": "S03-163",
-      "title": "open the build menu",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "`tab_build.gd`'s one job is the handoff to the live build menu; its only focusable control is 'Open Build Menu'"
-    },
-    {
-      "id": "S03-164",
-      "title": "let the build menu open",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "`build_menu.gd` opens on whichever category and piece was last used this session, or the first of each the first time"
-    },
-    {
-      "id": "S03-165",
-      "title": "the catalogue owns input",
-      "action": "assert",
-      "args": {
-        "check": "context_prefix",
-        "prefix": "build"
-      },
-      "expected": "input_context is `build_catalogue`"
-    },
-    {
-      "id": "S03-166",
-      "title": "focus roof in the grid",
-      "action": "focus_move",
-      "args": {
-        "direction": "right",
-        "times": 1
-      },
-      "expected": "Roof (4 wood / 3 stone) -- one cell right of Doorway"
-    },
-    {
-      "id": "S03-167",
-      "title": "arm roof",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "Section L.6 T02: 'ghost armed on pick'. The build menu arms the piece and closes; placement itself is `build_placer.gd`'s job"
-    },
-    {
-      "id": "S03-168",
-      "title": "let the ghost arm",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "the placement camera takes over and the ghost follows the aim point"
-    },
-    {
-      "id": "S03-169",
-      "title": "placement owns input",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "build_placement"
-      },
-      "expected": "input_context is `build_placement`"
-    },
-    {
-      "id": "S03-170",
-      "title": "place roof",
-      "action": "press",
-      "args": {
-        "control": "build_place",
-        "hold": "tap"
-      },
-      "expected": "Section E.3: the piece is paid for at its `data/items/buildables.json` cost -- free_build is OFF for the whole authoritative run"
-    },
-    {
-      "id": "S03-170x",
-      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
-      "title": "drop the armed ghost so the shell can open again",
-      "action": "press",
-      "args": {
-        "control": "build_cancel",
-        "hold": "tap"
-      },
-      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
-    },
-    {
-      "id": "S03-170y",
-      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
-      "title": "the world owns input again, so the shell will open",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "world"
-      },
-      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
-    },
-    {
-      "id": "S03-171",
-      "title": "let the placement register",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "`GameState.placed_buildings` gains the piece and `home_progress.gd::maybe_set_home_built` runs"
-    },
-    {
-      "id": "S03-172",
-      "title": "step clear of the piece just placed",
-      "action": "stick",
-      "args": {
-        "stick": "left",
-        "x": 0.35,
-        "y": -0.35,
-        "frames": 45
-      },
-      "expected": "half a second of stick so the next ghost does not land on the piece already standing. `home_progress.gd` counts pieces rather than validating geometry, so the arrangement is the player's -- but two pieces fighting for one cell would be a placement failure worth recording"
-    },
-    {
-      "id": "S03-173",
-      "title": "the home stands",
-      "action": "assert",
-      "args": {
-        "check": "flag_set",
-        "flag": "home_built"
-      },
-      "expected": "`data/config/progression.json`'s `home.required_pieces` is camp + floor + wall + roof + door, and `home_progress.gd::maybe_set_home_built` sets `home_built` when all five stand"
-    },
-    {
-      "id": "S03-174",
-      "title": "the bed rung is tracked",
-      "action": "assert",
-      "args": {
-        "check": "objective_is",
-        "id": "tournament_build_creature_beds"
-      },
-      "expected": "Section E.5 objective 11/27 `tournament_build_creature_beds`, 'Build a Creature Bed for each of your entrants.' with the 1/3 count appended"
-    },
-    {
       "id": "S03-175",
       "title": "Section E.5 nav note -- tournament_build_creature_beds",
       "action": "note",
@@ -3457,10 +2829,10 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 1,
+        "times": 3,
         "settle_frames": 12
       },
-      "expected": "one RB from Structures reaches Furniture, the last of `CATEGORY_ORDER`"
+      "expected": "build_menu.gd CATEGORY_ORDER is [survival, crafting, structures, furniture] and it remembers the last category per session. The piece placed before this is now the CAMP (survival, index 0), not the roof (structures, index 2), so reaching Furniture takes three tab-rights, not one. Getting this wrong arms the wrong piece silently, which is what this file's own _comment_catalogue warns about."
     },
     {
       "id": "S03-181",
@@ -3545,246 +2917,38 @@
       "expected": "clear of the bed just placed before arming the next ghost"
     },
     {
-      "id": "S03-187",
-      "title": "open the pause shell for bed 2",
-      "action": "open_menu",
-      "args": {
-        "tab": "map"
-      },
-      "expected": "the pause shell, opened by its bound button",
-      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
-    },
-    {
-      "id": "S03-188",
-      "title": "cycle to the Build tab",
-      "action": "press",
-      "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
-      },
-      "expected": "four RB presses reach Build",
-      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build."
-    },
-    {
-      "id": "S03-189",
-      "title": "open the build menu",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "'Open Build Menu' is the tab's only focusable control"
-    },
-    {
-      "id": "S03-190",
-      "title": "let the build menu open",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "it reopens on the last category and piece used this session"
-    },
-    {
-      "id": "S03-191",
-      "title": "arm the creature bed",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "Creature Bed costs 6 wood / 8 fiber, paid at the real cost"
-    },
-    {
-      "id": "S03-192",
-      "title": "let the ghost arm",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "the placement camera takes over"
-    },
-    {
-      "id": "S03-193",
-      "title": "place creature bed 2",
-      "action": "press",
-      "args": {
-        "control": "build_place",
-        "hold": "tap"
-      },
-      "expected": "owner directive 2026-08-23: a bed per entrant, three of them, before sign-up"
-    },
-    {
-      "id": "S03-193x",
-      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
-      "title": "drop the armed ghost so the shell can open again",
-      "action": "press",
-      "args": {
-        "control": "build_cancel",
-        "hold": "tap"
-      },
-      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
-    },
-    {
-      "id": "S03-193y",
-      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
-      "title": "the world owns input again, so the shell will open",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "world"
-      },
-      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
-    },
-    {
-      "id": "S03-194",
-      "title": "let the placement register",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "`home_progress.gd::maybe_set_creature_beds` sets as many of the three bed flags as there are beds standing"
-    },
-    {
-      "id": "S03-195",
-      "title": "step clear",
-      "action": "stick",
-      "args": {
-        "stick": "left",
-        "x": 0.5,
-        "y": 0.0,
-        "frames": 45
-      },
-      "expected": "clear of the bed just placed before arming the next ghost"
-    },
-    {
-      "id": "S03-196",
-      "title": "open the pause shell for bed 3",
-      "action": "open_menu",
-      "args": {
-        "tab": "map"
-      },
-      "expected": "the pause shell, opened by its bound button",
-      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
-    },
-    {
-      "id": "S03-197",
-      "title": "cycle to the Build tab",
-      "action": "press",
-      "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
-      },
-      "expected": "four RB presses reach Build",
-      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build."
-    },
-    {
-      "id": "S03-198",
-      "title": "open the build menu",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "'Open Build Menu' is the tab's only focusable control"
-    },
-    {
-      "id": "S03-199",
-      "title": "let the build menu open",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "it reopens on the last category and piece used this session"
-    },
-    {
-      "id": "S03-200",
-      "title": "arm the creature bed",
-      "action": "press",
-      "args": {
-        "control": "ui_accept",
-        "hold": "tap"
-      },
-      "expected": "Creature Bed costs 6 wood / 8 fiber, paid at the real cost"
-    },
-    {
-      "id": "S03-201",
-      "title": "let the ghost arm",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "the placement camera takes over"
-    },
-    {
-      "id": "S03-202",
-      "title": "place creature bed 3",
-      "action": "press",
-      "args": {
-        "control": "build_place",
-        "hold": "tap"
-      },
-      "expected": "owner directive 2026-08-23: a bed per entrant, three of them, before sign-up"
-    },
-    {
-      "id": "S03-202x",
-      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
-      "title": "drop the armed ghost so the shell can open again",
-      "action": "press",
-      "args": {
-        "control": "build_cancel",
-        "hold": "tap"
-      },
-      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
-    },
-    {
-      "id": "S03-202y",
-      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
-      "title": "the world owns input again, so the shell will open",
-      "action": "assert",
-      "args": {
-        "check": "input_context",
-        "equals": "world"
-      },
-      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
-    },
-    {
-      "id": "S03-203",
-      "title": "let the placement register",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "`home_progress.gd::maybe_set_creature_beds` sets as many of the three bed flags as there are beds standing"
-    },
-    {
-      "id": "S03-204",
-      "title": "step clear",
-      "action": "stick",
-      "args": {
-        "stick": "left",
-        "x": 0.5,
-        "y": 0.0,
-        "frames": 45
-      },
-      "expected": "clear of the bed just placed before arming the next ghost"
-    },
-    {
-      "id": "S03-205",
-      "title": "all three beds stand",
+      "id": "S03-173",
+      "title": "the home stands",
       "action": "assert",
       "args": {
         "check": "flag_set",
-        "flag": "creature_bed_built_3"
+        "flag": "home_built"
       },
-      "expected": "`creature_bed_built_3` is the third of `home_progress.gd::CREATURE_BED_FLAGS`, and the objective's count reads 3/3"
+      "expected": "home_progress.gd::home_built() is true once every home.required_pieces entry is met, and that is {camp: 1, creature_bed: 1} -- so this flag cannot be set until BOTH the camp and the bed stand, which is why the bed is now placed before this assert rather than after it."
+    },
+    {
+      "id": "S03-205",
+      "title": "the creature bed stands",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "creature_bed_built"
+      },
+      "expected": "objectives.json's tournament_build_creature_beds binds to `creature_bed_built` and its comment calls one player-built bed 'the mandatory care lesson and tournament proof'; tests/test_quest_log.gd asserts the rung carries no count_flags. The old `creature_bed_built_3` was the retired one-bed-per-entrant ladder."
+    },
+    {
+      "id": "S03-174",
+      "title": "the chain advanced past the camp and bed rungs together",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "tournament_sleep"
+      },
+      "expected": "FINDING, recorded rather than worked around. quest_log.gd tracks 'the first unset flag in file order', and home_built (rung 10) requires the creature bed that rung 11 is about -- so placing the camp alone advances nothing, and placing the bed sets home_built and creature_bed_built in the SAME frame. Rung 11 is therefore never the tracked line: the chain goes straight from tournament_build_home to tournament_sleep. Asserting objective_is tournament_build_creature_beds here, as this step used to, asserts a state the shipped config cannot produce."
     },
     {
       "id": "S03-205a",
-      "title": "walk to one of the three beds just built",
+      "title": "walk to the creature bed just built",
       "action": "move_to_entity",
       "args": {
         "entity": "creature_bed.gd",
@@ -3815,13 +2979,13 @@
     },
     {
       "id": "S03-205d",
-      "title": "confirm the only row -- the party has one creature (RIG-18)",
+      "title": "confirm the first row",
       "action": "press",
       "args": {
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "creature_bed_panel.gd::_on_rest_row(0) -> creature_bed.gd::assign_creature(0); party size is 1 here, so index 0 is unambiguous"
+      "expected": "creature_bed_panel.gd::_on_rest_row(0) -> creature_bed.gd::assign_creature(0). The old title said 'the party has one creature (RIG-18)', which was true only while the catch ladder could not build a team; with the five-creature roster this segment now produces, row 0 is the panel's own first row and the choice of WHICH creature rests is a real player decision this step does not pretend to make."
     },
     {
       "id": "S03-205e",
@@ -4387,6 +3551,198 @@
       "expected": "B closes the shell and hands the world back"
     },
     {
+      "id": "S03-300",
+      "title": "open the Satchel for entrant 4",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "Section L.2: the shell's own shortcut (Y satchel) opens straight onto the tab",
+      "observation": "RIG. tournament.gd::team_fed() returns false unless EVERY entrant is fed, and entrants() is the `min_party_size` strongest -- five, not three. The ladder stopped at three because this file was written when min_party_size was 3, so `tournament_team_fed` could never be set and S03-260 could never pass. Entrants 4 and 5 follow the same berries-stack and row-offset pattern the first three establish. The village authors six berries across two nodes against the five this now spends -- a one-berry margin, and a number worth watching."
+    },
+    {
+      "id": "S03-301",
+      "title": "the Satchel is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_backpack"
+      },
+      "expected": "input_context names the live tab: menu_backpack"
+    },
+    {
+      "id": "S03-302",
+      "title": "a slot holds focus",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "`tab_backpack.gd`'s slot buttons are icon chips with empty text; focus_owner is what proves one of them holds focus at all"
+    },
+    {
+      "id": "S03-303",
+      "title": "focus the berries stack",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 5
+      },
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item"
+    },
+    {
+      "id": "S03-304",
+      "title": "open the slot's actions",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "`tab_backpack.gd` runs food through the same 'which of yours?' picker a heal, a TM and an elixir already use"
+    },
+    {
+      "id": "S03-305",
+      "title": "focus Feed",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "the food action on the slot's action list"
+    },
+    {
+      "id": "S03-306",
+      "title": "choose Feed",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "`_targeting_food` is set and the creature picker opens"
+    },
+    {
+      "id": "S03-307",
+      "title": "focus entrant 4",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 3
+      },
+      "expected": "the picker lists the party; ineligible rows are disabled and out of the focus chain"
+    },
+    {
+      "id": "S03-308",
+      "title": "feed that creature",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'Feeding / satiety (light, no starvation death)'. `CONDITION.feed` accepts or refuses and the panel says which"
+    },
+    {
+      "id": "S03-309",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S03-310",
+      "title": "open the Satchel for entrant 5",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "Section L.2: the shell's own shortcut (Y satchel) opens straight onto the tab",
+      "observation": "RIG. tournament.gd::team_fed() returns false unless EVERY entrant is fed, and entrants() is the `min_party_size` strongest -- five, not three. The ladder stopped at three because this file was written when min_party_size was 3, so `tournament_team_fed` could never be set and S03-260 could never pass. Entrants 4 and 5 follow the same berries-stack and row-offset pattern the first three establish. The village authors six berries across two nodes against the five this now spends -- a one-berry margin, and a number worth watching."
+    },
+    {
+      "id": "S03-311",
+      "title": "the Satchel is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_backpack"
+      },
+      "expected": "input_context names the live tab: menu_backpack"
+    },
+    {
+      "id": "S03-312",
+      "title": "a slot holds focus",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "`tab_backpack.gd`'s slot buttons are icon chips with empty text; focus_owner is what proves one of them holds focus at all"
+    },
+    {
+      "id": "S03-313",
+      "title": "focus the berries stack",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 6
+      },
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item"
+    },
+    {
+      "id": "S03-314",
+      "title": "open the slot's actions",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "`tab_backpack.gd` runs food through the same 'which of yours?' picker a heal, a TM and an elixir already use"
+    },
+    {
+      "id": "S03-315",
+      "title": "focus Feed",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "the food action on the slot's action list"
+    },
+    {
+      "id": "S03-316",
+      "title": "choose Feed",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "`_targeting_food` is set and the creature picker opens"
+    },
+    {
+      "id": "S03-317",
+      "title": "focus entrant 5",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "the picker lists the party; ineligible rows are disabled and out of the focus chain"
+    },
+    {
+      "id": "S03-318",
+      "title": "feed that creature",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'Feeding / satiety (light, no starvation death)'. `CONDITION.feed` accepts or refuses and the panel says which"
+    },
+    {
+      "id": "S03-319",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
       "id": "S03-260",
       "title": "the whole team is fed",
       "action": "assert",
@@ -4404,7 +3760,8 @@
         "check": "distance_above",
         "metres": 600.0
       },
-      "expected": "Section D RT-02 is the village traversal plus the harvest ring; a segment that 'passed' without anyone moving would carry no pacing evidence"
+      "expected": "Section D RT-02 is the village traversal plus the harvest ring; a segment that 'passed' without anyone moving would carry no pacing evidence",
+      "observation": "FLOOR NOT RE-DERIVED, and flagged rather than quietly retuned. RIG-F3's rule is that moving a floor to match the number that failed it is how a floor stops meaning anything. This 600 m was derived against the ladder that built a five-piece house and three beds; that ladder is gone (82 steps, most of them menu waits), so this segment is materially shorter in play time and this number is now known to be derived from a version of the segment that no longer exists. Re-derive it from three or four runs of the segment AS IT NOW IS and write the run ids into this step, exactly as RIG-F3 asks."
     },
     {
       "id": "S03-262",
@@ -4414,7 +3771,8 @@
         "check": "route_rows_at_least",
         "rows": 2000
       },
-      "expected": "Section C.2: the pacing study's raw material"
+      "expected": "Section C.2: the pacing study's raw material",
+      "observation": "FLOOR NOT RE-DERIVED, and flagged rather than quietly retuned. RIG-F3's rule is that moving a floor to match the number that failed it is how a floor stops meaning anything. This 2000 was derived against the ladder that built a five-piece house and three beds; that ladder is gone (82 steps, most of them menu waits), so this segment is materially shorter in play time and this number is now known to be derived from a version of the segment that no longer exists. Re-derive it from three or four runs of the segment AS IT NOW IS and write the run ids into this step, exactly as RIG-F3 asks."
     },
     {
       "id": "S03-263",
@@ -4523,5 +3881,6 @@
       },
       "expected": "a note event carries this observation into events.jsonl"
     }
-  ]
+  ],
+  "_comment_stale_rebuild": "RIG, 2026-08-31 (lane ralph/GATE-F-LEG-S03). This file was transcribed against a version of the chapter that no longer ships, and most of what GAME-F5 recorded against the gathering economy was this file asking for the wrong building. FIRST-HOUR-FUN-REBUILD changed three shipped numbers and none of them reached here. (1) data/config/tournament.json entry.min_party_size is 5, not 3 -- and it was already 5 on candidate 453107fb, the very SHA the audit measured, so DEFECTS.md's 'tournament.json requires min_party_size: 3' was wrong about its own candidate. data/progression/objectives.json's tournament_build_team says it in words: 'Build your full team of five for the village tournament.' (2) data/config/progression.json home.required_pieces is {camp: 1, creature_bed: 1} -- ONE camp and ONE bed. This file built camp+floor+wall+door+roof and THREE beds and measured the village's gathering budget against that: 45 wood / 17 stone / 34 fiber, against a real requirement of 18 / 8 / 18 that the twenty village nodes (28 / 9 / 32 in one pass) cover with room to spare. (3) The bed rung's flag is creature_bed_built, not creature_bed_built_3; objectives.json calls one bed 'the mandatory care lesson' and tests/test_quest_log.gd asserts the rung 'must not require one bed per tournament entrant'. The floor/wall/door/roof and second/third bed blocks are removed rather than retained-and-skipped: a step that builds something the game does not ask for is not extra coverage, it is a false economy measurement, and that is exactly what GAME-F5 reported."
 }
