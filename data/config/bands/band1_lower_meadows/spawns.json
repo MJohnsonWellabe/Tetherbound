@@ -13,7 +13,10 @@
         -40.0
       ],
       "radius": 15.0,
-      "_why_ow5d": "lower field, section 10.2: 'stay Band 1 near current position' -- unmoved. Also the `practice` role and the Practice Meadow itself is section 10.1's own unmoved list."
+      "level": 2,
+      "_why_ow5d": "lower field, section 10.2: 'stay Band 1 near current position' -- unmoved. Also the `practice` role and the Practice Meadow itself is section 10.1's own unmoved list.",
+      "_why_game_11": "GAME-11 (Gate F run 6, measured across five fresh saves: the starter FAINTED in 4 of 5, and the catch this fight gates landed in 1). This is the Practice Meadow cluster -- the chapter's designated teaching fight, and the one the opening walks the player to. Without a pin it took the band roll like any other band-1 population, and band1's wild_band is [2,6], so the fight that TEACHES combat fielded anything from level 2 to level 6 against a level-3 starter. progression.json's own award comment already states the intended number: the chapter's enemy levels \"run 2 at the practice fight to 22 in the stronghold gauntlet\". This pins the data to tuning the repo had already written down; it is not a new balance decision. Only this cluster is pinned -- every other band-1 cluster still rolls -- and encounter_director.gd applies the pin AFTER the band roll so no rng draw order changes and no other creature moves or rerolls.",
+      "_why_game_f2_regression": "GAME-F2 (Gate F full run, candidate 453107fb). This pin was lost once already and silently: cfce9d54 restored the whole pre-pin entry to move the cluster back to its authored centre, and its own commit message asserted 'Species, count, level pin and the GAME-11 rationale below are untouched' while deleting both. encounter_director.gd:438 reads spawn.get(\"level\", 0) and treats an absent level as 'roll it', so the regression produced no error; and the mirror in tests/fixtures/band_split_baseline/spawns.json was reverted alongside the live file, so tests/test_band_content.gd agreed with it on the unpinned value and stayed green. A baseline that moves with the thing it baselines cannot catch a regression in it, so tests/test_practice_fight_level.gd now asserts this number directly and independently of that fixture."
     },
     {
       "order": 1,
