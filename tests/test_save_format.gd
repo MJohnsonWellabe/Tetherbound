@@ -217,30 +217,29 @@ func test_save_then_load_round_trips_the_party() -> void:
 	assert_eq(str(creature.get("species_id")), "terrapup")
 	assert_eq(str(creature.get("nickname")), "Biscuit")
 	assert_almost_eq(float(creature.get("hp")), 65.0)
-	# 120, not the 100 `_game()`'s fixture invents: a load now puts the
-	# SPECIES' real base stats back (`creature_instance.gd::
-	# restore_species_baseline`), and data/creatures/species.json says
-	# terrapup's `base_hp` is 120. The saved `hp` survives as a number and is
-	# clamped to the recomputed maximum, which is why 65 is untouched. See the
-	# level-up test below for what this repair exists to stop.
-	assert_almost_eq(float(creature.get("max_hp")), 120.0)
+	assert_almost_eq(float(creature.get("max_hp")), 100.0)
 
 
-## The defect this file exists to catch, and the one it did not.
+## The Meadows Hall measurement behind GAME-F4, pinned as a test.
 ##
-## GATE-F-LEG-S10AB, 2026-08-31. `base_hp`/`base_attack`/`base_defence` are
-## what `creature_instance.gd::_apply_level_stats()` recomputes every stat
-## from, and this format has never written them to a slot. A loaded creature
-## therefore carried the class defaults of 1.0 while its `max_hp` came back
-## from the file looking perfectly healthy -- and the moment it LEVELLED, the
-## recompute ran from a base of 1.0 and its maximum collapsed to about 2.
+## GATE-F-LEG-S10AB, 2026-08-31. `base_hp`/`base_attack`/`base_defence` are what
+## `creature_instance.gd::_apply_level_stats()` recomputes every stat from, and
+## `save_game.gd` did not write them until GAME-F4. A loaded creature therefore
+## carried the class defaults of 1.0 while its `max_hp` came back from the file
+## looking perfectly healthy -- and the moment it LEVELLED, the recompute ran
+## from a base of 1.0 and its maximum collapsed to about 2.
 ##
-## Measured in the Meadows Hall gauntlet on the frame the elite's first
-## creature fell and the victory XP landed: three party members went from
-## 218.4, 256.8 and 218.4 max HP to 2.14, 2.2 and 2.14, and the chapter's
-## climax became unwinnable. Every existing round-trip test above passed
-## throughout, because none of them levelled a creature after loading it --
-## which is exactly the gap this test closes.
+## Measured in the Meadows Hall gauntlet on the frame the elite's first creature
+## fell and the victory XP landed: three party members went from 218.4, 256.8
+## and 218.4 max HP to 2.14, 2.2 and 2.14 in one tick, and since a trainer
+## battle ends the moment the PILOTED creature falls, the chapter's climax
+## became unwinnable. Every existing round-trip test in this file passed
+## throughout, because none of them levelled a creature after loading it -- and
+## that, rather than the round trip itself, is what this one covers. Kept
+## alongside GAME-F4's own `test_save_then_load_round_trips_base_stats_and_
+## survives_a_level_up`: that one proves the fields make the trip, this one
+## drives the production `gain_xp` path the fights actually call and asserts on
+## what the player would see.
 func test_a_loaded_creature_can_level_up_without_its_stats_collapsing() -> void:
 	var written := _game()
 	assert_true(saver.save(written, 1))
@@ -267,20 +266,6 @@ func test_a_loaded_creature_can_level_up_without_its_stats_collapsing() -> void:
 		"a levelled creature's attack collapsed to the class default")
 	assert_true(float(creature.get("defence")) > 1.5,
 		"a levelled creature's defence collapsed to the class default")
-
-
-## The repair reads the catalogue, so a species it does not know must leave the
-## file's own numbers alone rather than zeroing a creature the player owns.
-func test_a_species_the_catalogue_forgot_keeps_what_the_save_said() -> void:
-	var written := _game()
-	written.party.at(0).species_id = "no_such_species"
-	assert_true(saver.save(written, 1))
-
-	var read := _game(false)
-	assert_true(saver.load_slot(read, 1))
-	var creature: RefCounted = read.party.at(0)
-	assert_almost_eq(float(creature.get("max_hp")), 100.0)
-	assert_almost_eq(float(creature.get("hp")), 65.0)
 
 
 func test_save_then_load_replaces_whatever_party_the_loading_game_already_had() -> void:
@@ -1081,3 +1066,108 @@ func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
 		"a creature from before the model came back starving rather than unmeasured")
 	assert_almost_eq(float(back.get("happiness")),
 		float(cfg.get("happiness", {}).get("start", 55.0)), 0.001)
+
+
+# --- GAME-F4: base stats must survive a save/load, or the next level-up ------
+# destroys the creature (`_apply_level_stats` recomputes max_hp/attack/defence
+# FROM base_hp/base_attack/base_defence every time; those three were never
+# written to the save at all, so a loaded creature silently carried the class
+# default of 1.0 until its next level-up, elixir or evolve rebuilt it from
+# that -- a level 4 Terrapup with 1.18 max hp instead of ~124. Measured in
+# play and reproduced here without a world.
+
+
+func test_save_then_load_round_trips_base_stats_and_survives_a_level_up() -> void:
+	var distinct_definition := {
+		"display_name": "Terrapup", "type": "ground",
+		"base_hp": 105.0, "base_attack": 26.0, "base_defence": 19.0,
+	}
+	var written := _game(false)
+	var creature: RefCounted = CREATURE.from_species("terrapup", distinct_definition)
+	creature.level = 3
+	written.party.add(creature)
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	var loaded: RefCounted = read.party.at(0)
+	assert_almost_eq(float(loaded.get("base_hp")), 105.0, 0.001,
+		"base_hp did not survive the save; the next level-up will rebuild stats from the class default of 1.0")
+	assert_almost_eq(float(loaded.get("base_attack")), 26.0, 0.001)
+	assert_almost_eq(float(loaded.get("base_defence")), 19.0, 0.001)
+
+	# The defect's own signature: levelling a LOADED creature must land on
+	# exactly the same stats as levelling the identical creature that was
+	# never saved at all -- not a collapse toward the class default of 1.0.
+	var cfg := PROGRESSION.config()
+	var reference: RefCounted = CREATURE.from_species("terrapup", distinct_definition)
+	reference.level = 3
+	reference.gain_xp(reference.xp_to_next(cfg), cfg)
+	loaded.gain_xp(loaded.xp_to_next(cfg), cfg)
+
+	assert_eq(int(loaded.get("level")), int(reference.get("level")),
+		"level-up did not land on the same level as the unsaved reference")
+	assert_almost_eq(float(loaded.get("max_hp")), float(reference.get("max_hp")), 0.01,
+		"GAME-F4: a loaded creature's first level-up collapsed toward the class default instead of growing normally")
+	assert_almost_eq(float(loaded.get("attack")), float(reference.get("attack")), 0.01)
+	assert_almost_eq(float(loaded.get("defence")), float(reference.get("defence")), 0.01)
+
+
+## The migration case: a save written before this fix has no `base_hp`/
+## `base_attack`/`base_defence` keys at all (every real fixture in
+## `ralph/reports/` is this shape). `_array_to_party` must repair them from
+## `species.json` by `species_id` -- the `apply_species_definition` repair two
+## comments on this class already promised and neither ever implemented --
+## rather than leaving the class default of 1.0 standing until the next
+## level-up destroys the creature.
+func test_a_pre_gamef4_save_migrates_base_stats_from_species_json() -> void:
+	var v15_data := {
+		"version": 15,
+		"day": 12,
+		"world_seed": 0,
+		"party": [{
+			"species_id": "terrapup",
+			"display_name": "Terrapup",
+			"creature_type": "ground",
+			"nickname": "Pre-GAME-F4 Save",
+			"max_hp": 141.6, "attack": 27.28, "defence": 24.0,
+			"hp": 141.6, "energy": 0.0, "fainted": false,
+			"level": 3, "xp": 0, "bond": 0,
+			"move_quick": "pebble_toss", "move_charged": "stone_rush",
+		}],
+		"inventory": [],
+		"hotbar": [],
+		"placed_buildings": [],
+		"farm_plots": [],
+		"death_satchels": [],
+		"satiety": 80.0,
+		"map": {},
+		"progression": {},
+		"harvested_vegetation": {},
+		"felled_vegetation": {},
+	}
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify(v15_data))
+	file = null
+
+	var read := _game(false)
+	read.map = MAP_STATE.new()
+	read.map.configure({})
+	read.progression = PROGRESSION_STATE.new()
+	assert_true(saver.load_slot(read, 1))
+
+	var creature: RefCounted = read.party.at(0)
+	# terrapup's real data/creatures/species.json entry, not the 100/20/20
+	# shorthand this file's own `_game()` fixture uses for a fresh instance.
+	assert_almost_eq(float(creature.get("base_hp")), 120.0, 0.001,
+		"a save predating GAME-F4 must repair base_hp from species.json, not leave it at the class default of 1.0")
+	assert_almost_eq(float(creature.get("base_attack")), 22.0, 0.001)
+	assert_almost_eq(float(creature.get("base_defence")), 20.0, 0.001)
+
+	# Prove it the way the audit did: level the migrated creature up and
+	# confirm it grows instead of collapsing toward the class default.
+	var cfg := PROGRESSION.config()
+	creature.gain_xp(int(creature.call("xp_to_next", cfg)), cfg)
+	assert_true(float(creature.get("max_hp")) > 10.0,
+		"GAME-F4: a migrated creature's first level-up collapsed its stats toward the class default of 1.0")

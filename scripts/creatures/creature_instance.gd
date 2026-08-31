@@ -401,61 +401,6 @@ func _apply_level_stats(cfg: Dictionary) -> void:
 	hp = max_hp * fraction
 
 
-## Put the species' level-1 base stats back on a creature that was rebuilt
-## from a save file, and recompute what they derive.
-##
-## GATE-F-LEG-S10AB, 2026-08-31, and this is the one defect the finale could
-## not be played around. `base_hp`/`base_attack`/`base_defence` are the numbers
-## `_apply_level_stats()` recomputes EVERYTHING from -- its own comment says
-## why it must never scale `max_hp` from `max_hp` -- and
-## `scripts/save/save_game.gd` has never written them to a slot and never read
-## them back. A creature rebuilt by `_array_to_party()` therefore came back
-## with the class defaults, `base_* = 1.0`, while its `max_hp` was restored
-## from the file and looked perfectly healthy.
-##
-## Nothing showed until the creature LEVELLED. Then `_apply_level_stats()` did
-## exactly what it is supposed to, from a base of 1.0, and a level-19 creature
-## with 218.4 max HP became a level-20 creature with **2.14**. Measured in the
-## Meadows Hall gauntlet, on the frame the elite's first creature fell and the
-## victory XP landed: Ripple 218.4 -> 2.14, Tup 256.8 -> 2.2, Gale 218.4 ->
-## 2.14, all three in the same tick, all three then one hit from fainting. The
-## chapter's own progression -- the thing every fight pays out -- destroyed the
-## party that earned it, and only ever in a session that had loaded a save,
-## which is every session after the first.
-##
-## Old evidence in the repo carries the same fingerprint, unrecognised:
-## `ralph/reports/gate-f-run-20260828T183531Z/S09/saves/S09-exit.json` holds a
-## level-4 creature with `max_hp` 1.18 and `attack`/`defence` 1.15.
-##
-## Restored from the CATALOGUE rather than added to the save format on purpose.
-## Base stats are species-owned, not creature-owned -- `from_species()` above
-## reads them straight out of the same definition, and this class's own
-## `secondary_type` comment already states the rule ("repaired from
-## species.json the same way every other species-owned field on this class
-## is"). Reading them back means every save that already exists is repaired on
-## load, with no format version to bump and no migration to write, and it means
-## a species retune reaches creatures the player already owns instead of
-## stopping at the ones they catch next.
-##
-## `hp` is preserved as a NUMBER here, not as a fraction, and clamped to the
-## recomputed maximum. A healthy save recomputes to the identical `max_hp` and
-## nothing moves; a save already corrupted by this bug comes back with its real
-## maximum and the HP it was saved on, which is the honest reading of what
-## happened to it.
-func restore_species_baseline(definition: Dictionary, cfg: Dictionary) -> void:
-	if definition.is_empty():
-		# A species the catalogue no longer knows. Same "trust nothing you
-		# cannot look up" answer `save_game.gd::_array_to_party` already gives
-		# a missing move: leave what the file said and change nothing.
-		return
-	base_hp = float(definition.get("base_hp", base_hp))
-	base_attack = float(definition.get("base_attack", base_attack))
-	base_defence = float(definition.get("base_defence", base_defence))
-	var kept_hp := hp
-	_apply_level_stats(cfg)
-	hp = clampf(kept_hp, 0.0, max_hp)
-
-
 ## Drink an elixir: add `points` to one stat, permanently, up to the cap.
 ##
 ## `stat` is "hp" / "attack" / "defence". Returns how many points were actually
