@@ -128,6 +128,33 @@ func test_left_stack_clears_bottom_dock_at_every_supported_aspect() -> void:
 		)
 
 
+## HUD-BACKLOG-20 (owner playtest 2026-08-30, item 20: "Put the player's
+## health bar in the lower left"). Two things this guards against regressing:
+## the widget must actually sit BELOW where the old combined vitals cluster
+## used to draw the HP row (`VITALS_HP_ROW_Y` inside `vitals_position()`'s
+## box) -- proving the fix is real, not just a relabelled position -- and its
+## own footprint (backing plate included) must never draw past the canvas
+## bottom edge, at either supported aspect.
+func test_player_health_bar_sits_lower_than_the_old_hp_row_and_stays_on_screen() -> void:
+	for canvas_h in [1080.0, 1200.0]:
+		var health_pos: Vector2 = PLAYGROUND_HUD.player_health_bar_position(canvas_h)
+		var old_hp_row_y: float = PLAYGROUND_HUD.vitals_position(canvas_h).y + PLAYGROUND_HUD.VITALS_HP_ROW_Y
+		assert_true(
+			health_pos.y > old_hp_row_y,
+			"the extracted health bar (top %.1f) must sit lower than the old HP row (%.1f) at canvas height %.0f" % [
+				health_pos.y, old_hp_row_y, canvas_h,
+			]
+		)
+
+		var plate_bottom := health_pos.y + PLAYGROUND_HUD.HEALTH_BAR_CONTENT_HEIGHT + PLAYGROUND_HUD.VITALS_PLATE_OVERHANG
+		assert_true(
+			plate_bottom <= canvas_h + 0.001,
+			"the health bar's own plate (bottom %.1f) must not draw past the canvas bottom (%.0f) at canvas height %.0f" % [
+				plate_bottom, canvas_h, canvas_h,
+			]
+		)
+
+
 ## `party_strip_position()` never draws the reveal above `TOP_SAFE_INSET`,
 ## regardless of canvas height. GF-B-006 turned this from a top anchor with a
 ## defensive floor into a BOTTOM alignment against the vitals cluster with the
