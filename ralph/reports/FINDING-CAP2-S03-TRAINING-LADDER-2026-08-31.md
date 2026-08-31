@@ -142,3 +142,49 @@ produces a full account rather than stopping at the first red (§1.6), **but eve
 segment from S04 on is downstream of the degraded handoff in §2 and must be read
 with that caveat** — the same shape of contamination CAP-1 produced in capstone 1,
 where S03 alone showed 28 failures cascading from one root cause.
+
+---
+
+## 6. S04 confirms the contamination — and it is NOT `TOURNAMENT-SEMI-DIFFICULTY`
+
+`53 PASS · 18 FAIL · 0 SKIP · complete=true · no derail`
+
+Every one of the eighteen failures is downstream of §2's handoff. The gate that
+stops it is the entry requirement, not any fight:
+
+| step | actual |
+|---|---|
+| `S04-10` the team travelled | `party size 2 (wanted >= 3)` |
+| `S04-21` the team met the entry size | `flag tournament_team_ready NOT set` |
+| `S04-22` the team met the training bar | `flag tournament_training_ready NOT set` |
+| `S04-23` the team is in condition | `flag tournament_condition_ready NOT set` |
+| `S04-24` the sign-up took | `flag tournament_entered NOT set` |
+
+and then, for all three matches alike:
+
+| step | actual |
+|---|---|
+| `S04-28f` a fight is actually running (quarter) | `combat_running=false` |
+| `S04-36f` a fight is actually running (**semi**) | `combat_running=false` |
+| `S04-43f` a fight is actually running (final) | `combat_running=false` |
+
+**No tournament match ever started.** `input_context` stays `world` through the
+quarter, the semi and the final; the objective never leaves *"Build your full
+team of five for the village tournament."*
+
+Two consequences worth stating plainly:
+
+1. **`TOURNAMENT-SEMI-DIFFICULTY` did not resurface here and this run says
+   nothing about it.** That item is about the difficulty of a semi-final that is
+   fought. This run never signed up, so no semi-final existed to be hard. The
+   backlog item is neither confirmed nor cleared by this evidence, and must not
+   be read as either.
+2. **S04 is uninformative about the tournament as a player experience.** Its 53
+   PASSes are the walk to the ground and the surrounding scaffolding, not the
+   event. Nothing about tournament pacing, difficulty, or presentation can be
+   sourced from this segment.
+
+This is the same shape of downstream contamination CAP-1 produced in capstone 1.
+The correct disposition once CAP-2 is fixed is a restart from the last clean
+handoff — `S02-exit.json`, which is good — **not** a continuation from any save
+at or after S03.
