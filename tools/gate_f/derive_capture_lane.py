@@ -676,7 +676,13 @@ def derive(seg_id: str) -> dict:
         new["_derived_from"] = str(step.get("id", ""))
         out_steps.append(new)
     out_steps.append({
-        "id": "%sC-99" % seg_id,
+        # NOT "%sC-99": that collided with the derived id of any logic-lane
+        # step numbered 99, and S03 has one (S03-99, a gathering walk), so
+        # regenerating S03C produced two steps called S03C-99 and
+        # test_gate_f_instrumentation.gd::test_every_segment_script_is_well_formed
+        # failed on the duplicate. A step number can be anything; a tail marker
+        # must be something a step number cannot be.
+        "id": "%sC-close" % seg_id,
         "title": "close",
         "action": "note",
         "args": {"text":

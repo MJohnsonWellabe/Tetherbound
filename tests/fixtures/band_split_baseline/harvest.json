@@ -29,9 +29,10 @@
       "amount": 4,
       "label": "Gather deadwood",
       "at": [
-        44.0,
-        -24.0
+        40.5,
+        -28.0
       ],
+      "_why_game_f1": "GAME-F1 (Gate F full run, candidate 453107fb). This node stood at (44, -24), 2.3 m OUTSIDE data/config/village_boundary.json's outline after that line was rerouted on 2026-08-30 (OP-0830-1 and the straddle fix the same day). The fence is a hard StaticBody3D, so the chapter's own first gathering lesson sent the player out through their own village gate and back for this stop, and a player who has not yet found the gate key could not reach it at all. Moved 4.3 m inward to the nearest point that is inside the line, at least 3 m clear of it, at least 4 m from every other node, and still outside the practice cluster's own 15 m disc. The item, amount, label, model and order are unchanged, so the village gathering budget is untouched -- which matters, because with this node and its sibling unreachable the reachable stone in the village (6) fell short of the 8 that progression.json's home.required_pieces actually costs. tests/test_village_boundary.gd now checks every village-area harvest node, so a future reroute of the fence fails a test instead of stranding a node.",
       "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
       "model_scale": 0.22
     },
@@ -62,9 +63,10 @@
       "amount": 3,
       "label": "Prise loose stones",
       "at": [
-        52.0,
-        -30.0
+        47.0,
+        -34.5
       ],
+      "_why_game_f1": "GAME-F1 (Gate F full run, candidate 453107fb). This node stood at (52, -30), 3.5 m OUTSIDE data/config/village_boundary.json's outline after that line was rerouted on 2026-08-30 (OP-0830-1 and the straddle fix the same day). The fence is a hard StaticBody3D, so the chapter's own first gathering lesson sent the player out through their own village gate and back for this stop, and a player who has not yet found the gate key could not reach it at all. Moved 7.1 m inward to the nearest point that is inside the line, at least 3 m clear of it, at least 4 m from every other node, and still outside the practice cluster's own 15 m disc. The item, amount, label, model and order are unchanged, so the village gathering budget is untouched -- which matters, because with this node and its sibling unreachable the reachable stone in the village (6) fell short of the 8 that progression.json's home.required_pieces actually costs. tests/test_village_boundary.gd now checks every village-area harvest node, so a future reroute of the fence fails a test instead of stranding a node.",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
       "model_scale": 1.0
     },

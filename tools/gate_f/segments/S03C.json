@@ -3348,7 +3348,7 @@
       "_derived_from": "S03-220"
     },
     {
-      "id": "S03C-99",
+      "id": "S03C-close",
       "title": "close",
       "action": "note",
       "args": {
