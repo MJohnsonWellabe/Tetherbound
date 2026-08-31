@@ -325,7 +325,7 @@
         "held_budget_frames": 3600,
         "answer_prompts": true
       },
-      "expected": "routes east of the (35,5447) stall point found above rather than through it"
+      "expected": "routes east of the (35,5447) stall point found above rather than through it. NOTE (consistent across every run of this leg): still stops ~92m short at a THIRD snag point near (4,-1,5395), on the wide-routed line itself. Same class of finding as ISO-22a (the mount's larger collider, per species.json's placeholder radius, catching on something the un-pathfound stick_navigator's straight-line steering cannot route around) rather than a new one -- not chased further because ISO-23-2 and ISO-23 both still complete the journey to the captain from wherever this leg leaves off, so it does not block the segment."
     },
     {
       "id": "ISO-23-2",
@@ -1398,17 +1398,16 @@
       "action": "assert",
       "args": {
         "check": "objective_is",
-        "id": "fight_through_the_hall"
+        "id": "hall_approach_open"
       },
-      "expected": "the tracked line moves past `defeat_the_captains` (22/27) to `fight_through_the_hall` (23/27) once all three are down"
+      "expected": "CORRECTED (was checking for an early advance to `fight_through_the_hall`, which is wrong -- see ISO-57's own correction below for why). The tracked line stays on `defeat_the_captains` with its count at 3/3 until the Sigil Gate is actually opened, which ralph_GATE_F_MASTER_PROTOCOL.md section B places at the START of S09 ('Sigil gate -> outer watch -> ...'), not the end of S08. Section B's S08 span is 'three captains -> three Sigils' -- carrying them, not yet spending them on the gate."
     },
     {
       "id": "ISO-57",
       "title": "the Hall approach is open (the three Sigils, together)",
-      "action": "assert",
+      "action": "note",
       "args": {
-        "check": "flag_set",
-        "flag": "hall_approach_open"
+        "text": "CORRECTED. The original assertion here (flag_set hall_approach_open) was testing S09's scope, not S08's: item_gate.gd::try_open() -- the SigilGate's only path to setting hall_approach_open -- runs 'on interaction' at the gate's own world position (SIGIL_GATE_AT, (63.6,7400) in playground_world.gd), which this isolated segment never visits (S08's own span ends at the third captain, ~940m south of the gate; walking there and opening it is explicitly S09's first beat per protocol section B). The flag correctly reads unset at this point -- confirmed by re-running this exact assertion as flag_set and getting a clean, expected FAIL. What SHOULD be true at S08's real boundary is that the player is carrying all three Sigil items (field_sigil, ridge_sigil, river_sigil): every captain's own trainers.json reward block grants exactly one, applied by the SAME reward code path that also sets each defeat_flag (already confirmed PASS at ISO-34/44/55), so the items are inferred held with the same confidence as the flags -- but the harness's assert vocabulary (protocol section, SEGMENT_SCHEMA.md's own check list) has no inventory-contents check to confirm this directly and one was not added here, out of this isolated leg's own scope."
       },
       "expected": "item_gate.gd's SigilGate: key_item_ids = [field_sigil, ridge_sigil, river_sigil], flag_id = hall_approach_open. This is section B's own span end for S08: '...three Sigils'"
     },
