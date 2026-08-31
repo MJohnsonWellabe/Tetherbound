@@ -3875,10 +3875,10 @@
       "action": "assert",
       "args": {
         "check": "distance_above",
-        "metres": 600.0
+        "metres": 420.0
       },
-      "expected": "Section D RT-02 is the village traversal plus the harvest ring; a segment that 'passed' without anyone moving would carry no pacing evidence",
-      "observation": "FLOOR NOT RE-DERIVED, and flagged rather than quietly retuned. RIG-F3's rule is that moving a floor to match the number that failed it is how a floor stops meaning anything. This 600 m was derived against the ladder that built a five-piece house and three beds; that ladder is gone (82 steps, most of them menu waits), so this segment is materially shorter in play time and this number is now known to be derived from a version of the segment that no longer exists. Re-derive it from three or four runs of the segment AS IT NOW IS and write the run ids into this step, exactly as RIG-F3 asks."
+      "expected": "the village ladder is a real walk, not a teleport tour. 420 m is below the 470.6 m minimum observed across four runs of THIS segment as it now is.",
+      "observation": "RE-DERIVED 2026-08-31 (lane ralph/GATE-F-LEG-S03), which is what RIG-F3 asked for and what this lane could finally supply: 'three or four S03 runs, the distance and row count from each, and a floor set below the observed minimum with the run ids written into the step's expected. Two samples is not a floor.' The old numbers (600 m / 2000 rows) were derived against the ladder that built a five-piece house and three creature beds -- 82 steps, most of them menu waits -- and that ladder no longer exists, so they were measuring a segment that is gone. FOUR runs in ralph/reports/gate-f-leg-s03, all on this lane's own fixes:\\n  S03-superseded-1  476.3 m  1358 rows\\n  S03-superseded-2  598.3 m  1404 rows   (outlier: carried duplicate tool-select steps, since removed)\\n  S03-superseded-4  470.6 m  1327 rows\\n  S03               472.9 m  1350 rows\\nThe three comparable runs cluster at 470.6-476.3 m and 1327-1358 rows. The floors below sit under the observed MINIMUM with headroom for a slower walk, rather than at it -- a floor pinned to the best observation is a flake waiting to happen, and a floor moved to match the number that failed it is how a floor stops meaning anything."
     },
     {
       "id": "S03-262",
@@ -3886,10 +3886,10 @@
       "action": "assert",
       "args": {
         "check": "route_rows_at_least",
-        "rows": 2000
+        "rows": 1200
       },
-      "expected": "Section C.2: the pacing study's raw material",
-      "observation": "FLOOR NOT RE-DERIVED, and flagged rather than quietly retuned. RIG-F3's rule is that moving a floor to match the number that failed it is how a floor stops meaning anything. This 2000 was derived against the ladder that built a five-piece house and three beds; that ladder is gone (82 steps, most of them menu waits), so this segment is materially shorter in play time and this number is now known to be derived from a version of the segment that no longer exists. Re-derive it from three or four runs of the segment AS IT NOW IS and write the run ids into this step, exactly as RIG-F3 asks."
+      "expected": "the 2 Hz trace ran for the whole segment. 1200 rows is below the 1327 minimum observed across four runs of THIS segment as it now is.",
+      "observation": "RE-DERIVED 2026-08-31 (lane ralph/GATE-F-LEG-S03), which is what RIG-F3 asked for and what this lane could finally supply: 'three or four S03 runs, the distance and row count from each, and a floor set below the observed minimum with the run ids written into the step's expected. Two samples is not a floor.' The old numbers (600 m / 2000 rows) were derived against the ladder that built a five-piece house and three creature beds -- 82 steps, most of them menu waits -- and that ladder no longer exists, so they were measuring a segment that is gone. FOUR runs in ralph/reports/gate-f-leg-s03, all on this lane's own fixes:\\n  S03-superseded-1  476.3 m  1358 rows\\n  S03-superseded-2  598.3 m  1404 rows   (outlier: carried duplicate tool-select steps, since removed)\\n  S03-superseded-4  470.6 m  1327 rows\\n  S03               472.9 m  1350 rows\\nThe three comparable runs cluster at 470.6-476.3 m and 1327-1358 rows. The floors below sit under the observed MINIMUM with headroom for a slower walk, rather than at it -- a floor pinned to the best observation is a flake waiting to happen, and a floor moved to match the number that failed it is how a floor stops meaning anything."
     },
     {
       "id": "S03-263",

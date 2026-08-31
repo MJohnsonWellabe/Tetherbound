@@ -301,6 +301,53 @@ item in the opening, or add out-of-combat regeneration — and this lane will no
 invent it. **PROGRESSION-F7 named the tournament gate as the chapter's
 progression boundary; this is the mechanism behind it.**
 
+
+### What the final run reached
+
+`ralph/reports/gate-f-leg-s03/S03` — **318 PASS / 26 FAIL / 9 SKIP**, with an
+earned `S03-exit.json`. Three rungs that have never passed in any Gate F run
+now pass:
+
+```
+home_materials_gathered   SET      (24 wood / 12 stone / 28 fiber collected)
+home_built                SET      placed_buildings: ['camp', 'creature_bed']
+creature_bed_built        SET
+```
+
+Twenty of twenty nodes now yield (was ten), and the camp is affordable and
+armed. The gathering half of the village ladder works end to end.
+
+**Sixteen of the twenty-six remaining failures are one cause.** The team never
+reaches five, so `quest_log` keeps `tournament_team_ready` as the tracked line
+and every rung after it (`S03-41`, `-106`, `-174`, `-206`, `-229`) asserts an
+objective the chain cannot reach; nine more are the single "Ripplet is out of
+the fight." refusal repeated across catch attempts 2–10. That is §8's structural
+finding, not ten separate defects.
+
+The rest: `S03-205b/c` (a fainted party cannot be put to bed, so the sleep rung
+cannot run), `S03-239/-315/-317/-260` (the Satchel feed flow — `menu_cancel`
+left the shell open and focus would not move; a real rig defect this lane did
+not reach), and `S03-261/-262`, the two stale floors, now re-derived below.
+
+### The floors, re-derived — RIG-F3's ask, finally answerable
+
+RIG-F3 asked for *"three or four S03 runs… and a floor set below the observed
+minimum with the run ids written into the step's expected. Two samples is not a
+floor."* Four runs, all in this lane's run directory:
+
+| run | distance | route rows |
+|---|---:|---:|
+| `S03-superseded-1` | 476.3 m | 1358 |
+| `S03-superseded-2` | 598.3 m | 1404 |
+| `S03-superseded-4` | 470.6 m | 1327 |
+| `S03` | 472.9 m | 1350 |
+
+`S03-superseded-2` is an outlier and is labelled as one: it carried the
+duplicate tool-select steps this lane added and then removed. The three
+comparable runs cluster at 470.6–476.3 m and 1327–1358 rows. Floors moved
+600 m → **420 m** and 2000 → **1200 rows**, below the observed minimum with
+headroom rather than pinned to it.
+
 ## 9. What is NOT done, and why
 
 
