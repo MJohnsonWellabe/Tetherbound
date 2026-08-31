@@ -57,7 +57,7 @@ var _field: RefCounted = null
 const SHOTS := [
 	{"site": "02-mill-pond", "label": "wheel", "at": [-390.0, 512.0], "look": [-386.0, 514.0]},
 	{"site": "03-quarry", "label": "conduit-head", "at": [399.0, 1809.0], "look": [404.0, 1804.0]},
-	{"site": "05-relay-camp", "label": "fire", "at": [237.0, 3678.0], "look": [241.0, 3674.0]},
+	{"site": "05-relay-camp", "label": "fire", "at": [237.0, 3678.0], "look": [241.4, 3667.3]},
 	{"site": "06-relay", "label": "apparatus", "relay": true, "at": [1.0, -4.0], "look": [7.0, -9.0]},
 	{"site": "07-mill-crossing", "label": "yard", "at": [-144.0, 4212.0], "look": [-140.0, 4219.0]},
 	{"site": "08-ridge-camp", "label": "fire", "at": [-230.0, 6471.0], "look": [-233.1, 6474.3]},
