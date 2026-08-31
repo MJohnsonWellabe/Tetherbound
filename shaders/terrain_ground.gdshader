@@ -351,8 +351,13 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 		// covers a fraction of a tile). See top-of-file banner.
 		float id_footprint = max(length(id_dd.xy), length(id_dd.zw));
 		if (_d6_debug_footprint) {
-			// Raw per-tile checker: does this even line up with the dash?
-			mat.albedo_height = vec4(vec3(random(uv_center)), 1.0);
+			// R: raw per-tile checker (tile identity/boundary).
+			// G: v1-style edge fade (1=full detile, 0=at a tile edge).
+			// B: v2-style footprint fade (1=full detile, 0=footprint>=HI).
+			vec2 id_frac_dbg = fma(i_pos, vec2(id_scale), -uv_center);
+			float edge_fade_dbg = smoothstep(0.0, 0.12, 0.5 - max(abs(id_frac_dbg.x), abs(id_frac_dbg.y)));
+			float footprint_fade_dbg = 1.0 - smoothstep(DETILE_FOOTPRINT_LO, DETILE_FOOTPRINT_HI, id_footprint);
+			mat.albedo_height = vec4(random(uv_center), edge_fade_dbg, footprint_fade_dbg, 1.0);
 			mat.total_weight = 1.0;
 			return;
 		}
