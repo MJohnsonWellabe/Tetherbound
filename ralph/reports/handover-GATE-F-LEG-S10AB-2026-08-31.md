@@ -385,7 +385,7 @@ New tools, all committed with their reasoning:
 
 - Godot 4.7-stable (`4.7.stable.official.5b4e0cb0f`), CI's pin. Two import
   passes before any run.
-- Unit suite: **1605 tests, 290,710 assertions, 0 failed**
+- Unit suite on the shipped head: **1606 tests, 290,740 assertions, 0 failed**
   (`--skip=test_veg_corridor.gd,test_scatter_rules.gd,test_harvest.gd`, CI's own
   split).
 - `smoke_gate_e_finale.gd` green, with the tightened walk-in bar and the new
