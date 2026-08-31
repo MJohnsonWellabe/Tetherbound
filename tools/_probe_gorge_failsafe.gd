@@ -7,7 +7,7 @@ extends SceneTree
 ## it gets rescued rather than staying stuck.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const PIN_POINT := Vector3(-7.0, -4.8, 7352.0)
+const PIN_POINT := Vector3(19.0, -7.0, 7372.0)
 
 func _init() -> void:
 	_run()
