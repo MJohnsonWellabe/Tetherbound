@@ -1503,7 +1503,7 @@
       "title": "close the segment",
       "action": "note",
       "args": {
-        "text": "S08 (isolated) exit save written and copied. All three captains defeated, all three Sigils carried, hall_approach_open set."
+        "text": "S08 (isolated) exit save written and copied. All three captains defeated, all three Sigils carried (field_sigil, ridge_sigil, river_sigil each n:1 in the exit save's own inventory) -- hall_approach_open is correctly NOT set, since opening the Sigil Gate is S09's own first beat, not S08's (see ISO-57's correction)."
       },
       "expected": "a note event carries this observation into events.jsonl"
     }
