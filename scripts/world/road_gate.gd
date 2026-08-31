@@ -28,6 +28,8 @@ const STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_Unev
 const STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
 const STONE_TILE := 0.28
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
+const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
+const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 
 const KEY_ITEM_ID := "castle_gate_key"
 const FLAG_ID := "road_gate_open"
@@ -80,6 +82,33 @@ var seal_half_width := 0.0
 ## through `tether_sigil.gd`). It is built from boxes in the same masonry
 ## vocabulary the Hall uses; no new asset, no Meshy generation.
 var faction_dressing := false
+
+## GATE-F-LEG-S10CDE. Ids of `terrain_playground.json` `crossings[]` entries
+## whose OWN `carve` this gate should hang a fall-in failsafe on, the same
+## `severed_spokes.gd::_add_carve_failsafe` mechanism `gated_crossing.gd`
+## already uses for the South Bridge and the storm road spoke. Opt-in and
+## empty by default -- the village road gate stands in open ground and has
+## no gorge of its own to guard.
+##
+## Found needing this the hard way: `sigil_gate_gorge_west`/`_east` and their
+## `_west_wing`/`_east_wing` extensions (all four, `sigil_gate_gorge_*` in
+## that file) are pure terrain carves -- `playground_heightfield.gd` reads
+## them for the analytic height, and nothing else in the game ever reads
+## their `carve.failsafe` field, because `severed_spokes.gd::_add_carve_
+## failsafe` is only ever called from that script's OWN spoke-processing
+## loop, and `gated_crossing.gd`'s own call only fires for a crossing that
+## script itself builds a bridge/leaf for (south_bridge, old_mill_crossing)
+## -- these four are neither. A player who slides into one of them (11m
+## deep, ~72 degrees of wall, well past `floor_max_angle`) has no scripted
+## way out at all: `stick_navigator.gd`'s own stall/detour/backoff logic
+## cannot escape a hole nothing built a rescue for, and it burns its entire
+## walk budget finding that out (reproduced twice, S10c and S10d both
+## pinned at the SAME world position, ~7km into a walk with 121 m/s
+## `_clamp_runaway_velocity` warnings firing every physics frame and zero
+## net displacement -- consistent with the body caught between the carve's
+## own walls, never falling far enough to reach `world_perimeter.gd`'s deep
+## kill plane).
+var gorge_carve_ids: Array = []
 ## The reserved oxblood, in the render-space-corrected value `stronghold.gd`'s
 ## `BANNER_COLOUR` header explains at length -- blue below green so no light
 ## level can push it to magenta (D6).
@@ -205,6 +234,8 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	_build_wings(world, prefabs, at, aabb)
 	if faction_dressing:
 		_build_faction_gatehouse(aabb)
+	if not gorge_carve_ids.is_empty():
+		_hang_gorge_failsafes(world, at)
 
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
@@ -325,6 +356,56 @@ func _build_wings(world: Node3D, prefabs: RefCounted, at: Vector2, aabb: AABB) -
 
 func is_open() -> bool:
 	return _open
+
+
+## GATE-F-LEG-S10CDE. One `severed_spokes.gd` failsafe volume per id in
+## `gorge_carve_ids`, reading each entry's own `carve` straight out of
+## `terrain_playground.json`'s `crossings[]` -- see that var's own comment for
+## why nothing else in the game already does this for these four. Recovery
+## road is a two-point stub, `[carve's own centre, this gate's own position]`
+## -- `_recovery_point` (severed_spokes.gd) only needs a "back" direction and
+## a point to walk forward from until clear of the carve's rim, and the
+## gate's own position is the one place every one of these four carves
+## exists to guard, so it is always a safe, meaningful landing regardless of
+## which of the four caught the fall.
+func _hang_gorge_failsafes(world: Node3D, at: Vector2) -> void:
+	var config := _load_terrain_config()
+	var by_id: Dictionary = {}
+	for entry: Variant in (config.get("crossings", []) as Array):
+		if entry is Dictionary:
+			by_id[str((entry as Dictionary).get("id", ""))] = entry
+	for raw_id: Variant in gorge_carve_ids:
+		var id := str(raw_id)
+		var entry: Dictionary = by_id.get(id, {}) as Dictionary
+		var carve: Dictionary = entry.get("carve", {}) as Dictionary
+		if carve.is_empty():
+			push_warning("road_gate.gd: no crossings[] carve named '%s'; no failsafe hung" % id)
+			continue
+		var centre_raw: Array = carve.get("centre", [])
+		if centre_raw.size() < 2:
+			continue
+		var centre := Vector2(float(centre_raw[0]), float(centre_raw[1]))
+		if centre.is_equal_approx(at):
+			continue
+		var spokes: Node3D = SEVERED_SPOKES.new()
+		spokes.name = "GorgeFailsafe_%s" % id
+		# See `gated_crossing.gd::_hang_failsafe`'s own comment on why this
+		# must be top_level: `_add_carve_failsafe` places its volume in WORLD
+		# coordinates via plain `position`, which is only correct for a node
+		# with no inherited transform of its own -- this gate's own `position`/
+		# `rotation.y` (set in `build()` above) would otherwise displace it.
+		spokes.top_level = true
+		add_child(spokes)
+		var road := [[centre.x, centre.y], [at.x, at.y]]
+		spokes.call("_add_carve_failsafe", world, spokes, carve, road)
+
+
+func _load_terrain_config() -> Dictionary:
+	var file := FileAccess.open(TERRAIN_CONFIG, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
 
 
 ## SG46. The Warden falls, the machinery dies, and the region's keyed gates
