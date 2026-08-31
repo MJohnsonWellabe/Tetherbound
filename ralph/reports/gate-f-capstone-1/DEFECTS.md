@@ -217,3 +217,50 @@ claim them as such.
 Section J's own rule is that a step which could not be PERFORMED invalidates the
 ones after it. The harness recorded these as FAIL rather than SKIP-with-derail,
 which is why the raw 28-FAIL count for S03 overstates the game's fault.
+
+---
+
+## CAP-6 — 23 `interact` presses at the tournament ground with an unready team opened nothing at all
+
+**Severity candidate:** SHIP (with a stated limit). **Segment:** S04.
+**Status:** recorded, not fixed.
+
+Protocol section E.6.12 requires: *"Attempt tournament interactions before
+requirements met (unrested/unfed/short team): the guided chain should point at
+the next missing prerequisite; **record the exact line shown for each unmet
+state**."*
+
+S04 arrived at the tournament ground with a party of 1 fainted creature against
+`tournament.json`'s `min_party_size: 5`, pressed `interact` at the tournament
+board (1 + 8 presses) and at the marshal (1 + 14 presses) — **23 presses** — and:
+
+- **no `dialogue` event fired anywhere in the segment**, though the same
+  instrumentation emitted eleven of them in S03 for Tam, Mira, Oskar and Lark;
+- `input_context` over the whole of S04 was only ever
+  `no_scene -> title -> world -> menu_map -> menu_quest_log -> menu_build ->
+  menu_save -> world`. **It never became `narrative_modal` and never became
+  `combat`.**
+
+So the exact line shown for this unmet state, as far as this run can see, is
+**nothing at all** — no refusal, no prerequisite named, no acknowledgement. That
+contrasts sharply with the trainer in S03, which for the *same* underlying cause
+gave a specific, actionable line ("a bed will do it").
+
+### The limit on this claim, stated rather than papered over
+
+`S04-17` reached the marshal with `move_to` **(20, 12)** — literal coordinates —
+and `S04-18`/`S04-20` used a plain `press`, which does not assert that an
+interact prompt is live. That is precisely the CD-5 trap ("**Reached** means
+within interaction range of the **entity**, with its prompt live. **Not** within
+a radius of a literal coordinate"). So this run **cannot** separate:
+
+- the marshal refusing to speak to an unready team while showing nothing, from
+- the player never being in the marshal's interaction range at all.
+
+Both are consistent with the evidence. **This entry does not choose between
+them.** What it does establish is a coverage defect in its own right: section
+E.6.12's requirement is **unsatisfiable by S04 as scripted**, because
+coordinate-`move_to` plus unchecked `press` cannot produce "the exact line shown"
+either way. S03's own catch loop already uses the entity-resolving form
+(`move_to_entity` + a prompt-matching press, RIG-16/RIG-17) and fails loudly
+when no prompt is live; S04's sign-up path does not.
