@@ -29,7 +29,7 @@
     }
   },
   "purpose": "Gate F capstone. Nine isolated leg lanes each fixed defects in one seeded segment of the protocol and landed on main at 88df9f47. This run verifies the fixed WHOLE holds together end to end: S01 -> S10e in ONE save lineage, production Save/Load throughout. No game code, data or config may be changed during the run (protocol section 13 / section J); a defect found here is capstone evidence, recorded with reproduction, not patched.",
-  "instrumentation_overhead_note": "measured by tools/gate_f/run_segment.sh --overhead; see OVERHEAD.json in this run directory",
+  "instrumentation_overhead_note": "Measured BEFORE step 1 of the run by tools/gate_f/run_segment.sh --overhead. Verbatim result and its full method are in ralph/reports/gate-f-capstone-1/overhead/RUN_METADATA.json (instrumentation_overhead_note). Headline: scene=world, 30 s x 2 windows per condition, order off/telemetry/recording/recording/telemetry/off to cancel drift. Means off 14.994, telemetry 14.624, telemetry+recording@0.5Hz 14.574 ms/frame; both deltas are NEGATIVE and below the 1.116 ms/frame noise floor, so the honest reading is 'instrumentation costs under ~1.12 ms/frame', NOT 'zero'. CPU frame time on this container only -- no device fps, no VRAM (section 0.4, section K).",
   "config_flags": {
     "art.environment.fog_enabled": true,
     "art.environment.ssao_enabled": true,
@@ -148,5 +148,6 @@
   "known_open_questions_entering_this_run": [
     "TOURNAMENT-SEMI-DIFFICULTY (ralph/reports/audit/BACKLOG-FROM-AUDIT-2026-08-31.md): unresolved entering this run.",
     "GATE-F-LEG-S06's isolated leg never cleared the Burrow Warrens guardian (its exit save has warrens_cleared:false); Band 2 completion is unverified before this run."
-  ]
+  ],
+  "_pointer_correction": "This field originally said 'see OVERHEAD.json in this run directory'. No such file is written -- the harness puts the note in <run>/overhead/RUN_METADATA.json. Corrected BEFORE step 1 of S01, while this was still the precondition phase and no evidence existed. Recorded here rather than made silently, because CD-8b is about a freeze record amended mid-run to make a segment start, and this is neither."
 }
