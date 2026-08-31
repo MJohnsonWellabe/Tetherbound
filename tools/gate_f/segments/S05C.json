@@ -762,11 +762,70 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 32,
+        "times": 10,
         "settle_frames": 30
       },
       "expected": "Section E.1 per-fight record. Section D's difficulty read for band 1 comes from the HP margin at the end of this fight",
       "_derived_from": "S05-51"
+    },
+    {
+      "id": "S05C-51b",
+      "title": "switch before this pilot runs low -- CB-09 mid-fight rotation",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "GATE-F-LEG-S05 measurement: the grunt's team is a real gate fight above this party's own levels; D32 has no auto-switch-on-faint, so switching mid-fight is the intended answer, not automatic.",
+      "_derived_from": "S05-51b"
+    },
+    {
+      "id": "S05C-51c",
+      "title": "keep fighting on the fresh pilot",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record",
+      "_derived_from": "S05-51c"
+    },
+    {
+      "id": "S05C-51d",
+      "title": "switch again before this pilot runs low",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "same reasoning as S05C-51b",
+      "_derived_from": "S05-51d"
+    },
+    {
+      "id": "S05C-51e",
+      "title": "keep fighting on the third pilot",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record",
+      "_derived_from": "S05-51e"
+    },
+    {
+      "id": "S05C-51f",
+      "title": "switch to the fourth pilot for the finish",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "same reasoning as S05C-51b; this is the party's fourth of five creatures, the third rotation into this one fight",
+      "_derived_from": "S05-51f"
     },
     {
       "id": "S05C-52",
@@ -786,7 +845,7 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 18,
+        "times": 22,
         "settle_frames": 30
       },
       "expected": "Section E.1 per-fight record",
