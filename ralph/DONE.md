@@ -47,6 +47,32 @@ oversight in this one. The critic's other findings (unlabeled per-creature
 bars, OPEN SLOT row spacing, the stamina arc's mismatched visual language,
 minimap/objective disconnect) are pre-existing and out of scope here.
 
+## BACKLOG-HUD-STORYTRACKER — the story tracker stops growing past its own design height
+
+`tests: smoke_objective_hint_card, smoke_hud_handheld_legibility, smoke_station_panels_hide_world_hud, smoke_combat_hud_left_column, smoke_dialogue_clears_the_world_hud, smoke_menu` · `area: scripts/ui/playground_hud.gd`
+
+Answers `ralph/OWNER_PLAYTEST_2026-08-30B.md` item 21 — "Move the main story or
+just shrink it. It takes up too much space." `tools/_probe_storytracker_footprint.gd`
+measured every authored tracked line at the block's real width/font: 14 of 27
+wrap past two lines, growing the plate up to 256px tall against its 169px
+two-line design height (`OBJECTIVE_BLOCK_HEIGHT`) — the panel was quietly
+50% taller than intended for roughly half the chapter's objectives. Neither
+free lever helps: `HUD_SENTENCE_FONT_SIZE` (32) is already exactly
+`HUD_SCALE`'s computed legibility floor for sentence text, and narrowing the
+block makes the wrap worse (19/27 hit three-plus lines instead of 14).
+Shrunk in place instead of relocated (lower blast radius, no neighbouring-
+widget collision risk): `_objective_text_label` now caps display to
+`OBJECTIVE_LINES` (two) via `max_lines_visible` + `OVERRUN_TRIM_WORD_ELLIPSIS`,
+and `_layout_objective_block()` sizes the plate to the CLAMPED line count
+(`get_line_count()` still reports the unclamped wrap, so the clamp has to be
+applied at the call site) rather than trusting `_wrapped_height()`, which the
+transient hint card also calls and must stay uncapped. Confirmed via
+`smoke_objective_hint_card.gd`: the plate's longest authored line now holds
+93px of text in a 169px plate, down from 141px in a 211px plate before this
+change. Full objective text is unaffected in `tab_quest_log.gd` and
+`Game.objective_text` — only the on-screen HUD label is capped. Health bar
+(item 20) and a day/time tracker (item 19) are separate, out of scope here.
+
 ## GRASS-INDOORS — the field learns what is standing on the ground
 
 `tests: test_grass_field (5/31), scatter suite (33/958342), smoke_art, smoke_playground, smoke_warrens` · `area: scripts/world/grass_field.gd, scripts/world/village.gd, scripts/world/burrow_warrens.gd, scripts/world/building_prefabs.gd, shaders/*` · `report: ralph/reports/GRASS_INDOORS_2026-08-28.md`

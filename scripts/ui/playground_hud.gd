@@ -2265,6 +2265,25 @@ func _build_objective_block() -> void:
 	# it read as one continuing sentence instead of a widow.
 	_objective_text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_objective_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# BACKLOG-HUD-STORYTRACKER (owner playtest item 21, "takes up too much
+	# space"). `tools/_probe_storytracker_footprint.gd` measured every
+	# authored tracked line at this block's real width/font: half of them
+	# (14/27) wrap past two lines, up to 256px tall against the block's
+	# 169px two-line design height (`OBJECTIVE_BLOCK_HEIGHT`) -- the panel was
+	# quietly growing 50% taller than intended for the common case, which is
+	# the "too much space" the owner is naming. Neither lever left to shrink
+	# WITH is free: `HUD_SENTENCE_FONT_SIZE` (32) is already exactly
+	# `HUD_SCALE`'s computed floor for sentence-shaped text
+	# (`font_size_for_cap_arcmin(SENTENCE_CAP_ARCMIN)` == 32), and narrowing
+	# the block (the probe's 268px case) makes the wrap WORSE, not better (19/27
+	# hit three-plus lines instead of 14). So the cap goes on line count, not on
+	# the two settled levers: the tracker always shows and sizes for at most
+	# `OBJECTIVE_LINES`, with a word-boundary ellipsis on whatever doesn't fit.
+	# The full sentence is not lost -- `tab_quest_log.gd` already carries the
+	# complete objective text; this HUD panel is the at-a-glance pointer, not
+	# the only place the line exists.
+	_objective_text_label.max_lines_visible = OBJECTIVE_LINES
+	_objective_text_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
 	block.add_child(_objective_text_label)
 
 
@@ -2324,6 +2343,15 @@ func _soften_vitals_contrast() -> void:
 ## floor and the block is that height exactly for every line that fits, which
 ## is what the `maxf` says.
 ##
+## BACKLOG-HUD-STORYTRACKER: "every line that fits" used to mean however many
+## lines a `Label` with no cap decided to wrap to -- as many as three for half
+## the authored objectives (see `_build_objective_block()`'s own header). The
+## text label is now capped to `OBJECTIVE_LINES` (`max_lines_visible` +
+## word-ellipsis overrun, set once at build time), so the height computed here
+## is clamped to match what the label will actually show -- `get_line_count()`
+## still reports the UNCLAMPED wrap count, which is why the clamp is applied
+## here rather than trusted from the label.
+##
 ## Called on objective change rather than every frame: measuring a wrapped
 ## label shapes its text, and this panel changes about twenty-five times in a
 ## chapter.
@@ -2335,7 +2363,9 @@ func _layout_objective_block() -> void:
 	var text_floor := OBJECTIVE_BLOCK_HEIGHT - 36.0 - OBJECTIVE_INSET * 2.0
 
 	_objective_text_label.size.x = inner_width
-	var text_height := maxf(text_floor, _wrapped_height(_objective_text_label))
+	var shown_lines := mini(_objective_text_label.get_line_count(), OBJECTIVE_LINES)
+	var capped_height := float(shown_lines) * float(_objective_text_label.get_line_height())
+	var text_height := maxf(text_floor, capped_height)
 	_objective_text_label.size = Vector2(inner_width, text_height)
 
 	var height := maxf(OBJECTIVE_BLOCK_HEIGHT, text_top + text_height + OBJECTIVE_INSET)
