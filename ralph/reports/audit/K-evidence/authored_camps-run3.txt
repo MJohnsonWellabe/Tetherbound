@@ -1,0 +1,137 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _build_terrain (res://scripts/world/playground_world.gd:690)
+         [1] _ready (res://scripts/world/playground_world.gd:447)
+WARNING: Terrain3DTextureAsset#5490:set_albedo_texture:79: Texture 'meadow_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#5490:set_normal_texture:100: Texture 'meadow_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#8053:set_albedo_texture:79: Texture 'verge_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#8053:set_normal_texture:100: Texture 'verge_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#6132:set_albedo_texture:79: Texture 'rock_scree_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#6132:set_normal_texture:100: Texture 'rock_scree_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#8694:set_albedo_texture:79: Texture 'dirt_path_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#8694:set_normal_texture:100: Texture 'dirt_path_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#8711:set_albedo_texture:79: Texture 'wet_earth_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#8711:set_normal_texture:100: Texture 'wet_earth_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#4154:set_albedo_texture:79: Texture 'forest_floor_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#4154:set_normal_texture:100: Texture 'forest_floor_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 384733 placements, 454387 skipped]=2586 reorder[15 layers]=506
+[vegetation] grass field is on; 454387 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=3322 mark_harvestable=82 group_by_model=347 register_mesh_assets=42 build_batches_total=6521 (of which harvest_points[59165 nodes]=4738, initial_collision_stream[53864 solid]=216) update_mmis=1028
+[grass_field] grass ring: 315232 instances over 9 lattice layers (tuft_count asked for 300000)
+[grass_field] stone ring: 93236 instances over 9 lattice layers (count 90000)
+[grass_field] cover tier bushes   15052 instances over 7 lattice layers (count 14800)
+[grass_field] cover tier flowers  15052 instances over 7 lattice layers (count 14800)
+[grass_field] cover tier litter   48716 instances over 9 lattice layers (count 49000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 315232 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 382817 props in 35 batches (59165 harvestable, 0 already chopped, 137/53864 collision resident)
+[water] pond quads 2538, stream points 46, reeds 152, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 49, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 130, bank scrub 60
+[village] placed 14 structures
+[props] placed 215 props in 28 clusters (5 usable rest points)
+[village_npcs] placed 19 of 21
+[relay_site] placed 1 of 1
+[trainers] placed 19 trainer(s)
+[quarry] 2 foundations, 4 pylons standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 123 harvest nodes
+[playground] placed 6 farm plots
+[warrens] cleared 429 scattered trees/rocks inside the 30m site radius
+[warrens] planted 134 pieces of ground cover around the site
+[warrens] 181 pieces of interior rock across 5 chambers
+[warrens] 188 structural members across 5 chambers
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.2m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 86 scattered prop(s) standing inside the five spaces
+[stronghold] 18 exterior omni light(s) at the Hall (budget 18), 6 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+authored camps carrying a rest block: 5
+  trail_camp             rest + craft + bed at 346, 935
+  ranger_camp            rest + craft + bed at -256, 2260
+  riverwatch_rest        rest + craft + bed at 215, 3697
+  highfield_stockcamp    rest + craft + bed at 277, 5652
+  the_waystop            rest + craft + bed at -21, 7457
+  trail_camp             offers '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Rest until morning'
+  ranger_camp            offers '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Rest until morning'
+  riverwatch_rest        offers '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Rest until morning'
+  highfield_stockcamp    offers '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Rest until morning'
+  the_waystop            offers '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Rest until morning'
+[rest] rested; day 2
+  rested at trail_camp: day 1 -> 2
+  the bedded creature woke at full HP
+
+authored camps smoke test passed

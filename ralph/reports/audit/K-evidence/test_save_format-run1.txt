@@ -1,0 +1,97 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_save_format.gd: 1 of 121 test files
+  ok    test_save_format.gd :: test_a_fresh_slot_has_nothing_to_load
+SCRIPT ERROR: Invalid call. Nonexistent function 'save_game' in base 'RefCounted (save_game.gd)'.
+          at: test_a_half_fought_bracket_survives_a_save (res://tests/test_save_format.gd:926)
+          GDScript backtrace (most recent call first):
+              [0] test_a_half_fought_bracket_survives_a_save (res://tests/test_save_format.gd:926)
+              [1] _init (res://tests/run_tests.gd:108)
+  ok    test_save_format.gd :: test_a_half_fought_bracket_survives_a_save
+SCRIPT ERROR: Invalid call. Nonexistent function 'save_game' in base 'RefCounted (save_game.gd)'.
+          at: test_a_pre_condition_save_loads_at_the_configured_start (res://tests/test_save_format.gd:995)
+          GDScript backtrace (most recent call first):
+              [0] test_a_pre_condition_save_loads_at_the_configured_start (res://tests/test_save_format.gd:995)
+              [1] _init (res://tests/run_tests.gd:108)
+  ok    test_save_format.gd :: test_a_pre_condition_save_loads_at_the_configured_start
+  ok    test_save_format.gd :: test_a_save_predating_rolled_populations_loads_the_authored_world
+WARNING: save slot 1 is version 16, this build reads 15 -- not loading
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] load_slot (res://scripts/save/save_game.gd:236)
+         [1] test_a_version_newer_than_this_build_is_refused (res://tests/test_save_format.gd:731)
+         [2] _init (res://tests/run_tests.gd:108)
+  ok    test_save_format.gd :: test_a_version_newer_than_this_build_is_refused
+SCRIPT ERROR: Invalid call. Nonexistent function 'save_game' in base 'RefCounted (save_game.gd)'.
+          at: test_a_won_tournament_cannot_be_reloaded_into_a_second_payout (res://tests/test_save_format.gd:960)
+          GDScript backtrace (most recent call first):
+              [0] test_a_won_tournament_cannot_be_reloaded_into_a_second_payout (res://tests/test_save_format.gd:960)
+              [1] _init (res://tests/run_tests.gd:108)
+  ok    test_save_format.gd :: test_a_won_tournament_cannot_be_reloaded_into_a_second_payout
+SCRIPT ERROR: Invalid call. Nonexistent function 'save_game' in base 'RefCounted (save_game.gd)'.
+          at: test_condition_survives_a_save (res://tests/test_save_format.gd:981)
+          GDScript backtrace (most recent call first):
+              [0] test_condition_survives_a_save (res://tests/test_save_format.gd:981)
+              [1] _init (res://tests/run_tests.gd:108)
+  ok    test_save_format.gd :: test_condition_survives_a_save
+  ok    test_save_format.gd :: test_every_readable_save_version_actually_loads
+  ok    test_save_format.gd :: test_has_slot_reflects_what_was_actually_written
+ERROR: Parse JSON failed. Error at line 0: Expected 'true', 'false', or 'null', got 'not'
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] _read (res://scripts/save/save_game.gd:637)
+       [1] load_slot (res://scripts/save/save_game.gd:228)
+       [2] test_load_on_a_corrupt_file_returns_false_and_leaves_the_game_untouched (res://tests/test_save_format.gd:541)
+       [3] _init (res://tests/run_tests.gd:108)
+  ok    test_save_format.gd :: test_load_on_a_corrupt_file_returns_false_and_leaves_the_game_untouched
+  ok    test_save_format.gd :: test_load_on_a_missing_slot_returns_false_and_leaves_the_game_untouched
+WARNING: save slot 1 is version 16, this build reads 15 -- not loading
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] load_slot (res://scripts/save/save_game.gd:236)
+         [1] test_load_on_a_newer_version_refuses_and_leaves_the_game_untouched (res://tests/test_save_format.gd:553)
+         [2] _init (res://tests/run_tests.gd:108)
+  ok    test_save_format.gd :: test_load_on_a_newer_version_refuses_and_leaves_the_game_untouched
+  ok    test_save_format.gd :: test_load_on_an_older_save_with_no_yaw_deg_does_not_crash_or_lose_the_entry
+  ok    test_save_format.gd :: test_malformed_player_pose_falls_back_as_one_unit
+  ok    test_save_format.gd :: test_save_and_load_reject_an_out_of_range_slot
+  ok    test_save_format.gd :: test_save_then_load_replaces_whatever_party_the_loading_game_already_had
+  ok    test_save_format.gd :: test_save_then_load_round_trips_a_non_shiny_creature_too
+  ok    test_save_format.gd :: test_save_then_load_round_trips_a_placed_buildings_rotation
+  ok    test_save_format.gd :: test_save_then_load_round_trips_a_placed_buildings_state_payload
+  ok    test_save_format.gd :: test_save_then_load_round_trips_building_yaw
+  ok    test_save_format.gd :: test_save_then_load_round_trips_creature_progression_and_moves
+  ok    test_save_format.gd :: test_save_then_load_round_trips_farm_plots
+  ok    test_save_format.gd :: test_save_then_load_round_trips_felled_vegetation
+  ok    test_save_format.gd :: test_save_then_load_round_trips_individuality_and_traits
+  ok    test_save_format.gd :: test_save_then_load_round_trips_inventory_slot_positions
+  ok    test_save_format.gd :: test_save_then_load_round_trips_map_discovery
+  ok    test_save_format.gd :: test_save_then_load_round_trips_permanently_harvested_vegetation
+  ok    test_save_format.gd :: test_save_then_load_round_trips_placed_buildings
+  ok    test_save_format.gd :: test_save_then_load_round_trips_player_pose
+  ok    test_save_format.gd :: test_save_then_load_round_trips_progression_flags
+  ok    test_save_format.gd :: test_save_then_load_round_trips_satiety_through_live_vitals
+  ok    test_save_format.gd :: test_save_then_load_round_trips_satiety_through_the_fallback_field
+  ok    test_save_format.gd :: test_save_then_load_round_trips_shiny
+  ok    test_save_format.gd :: test_save_then_load_round_trips_the_day_counter
+  ok    test_save_format.gd :: test_save_then_load_round_trips_the_party
+  ok    test_save_format.gd :: test_save_then_load_round_trips_the_world_seed
+  ok    test_save_format.gd :: test_save_then_load_round_trips_tool_durability
+  ok    test_save_format.gd :: test_slot_count_is_between_three_and_five
+  ok    test_save_format.gd :: test_slot_info_reports_day_and_party_size_without_touching_the_caller
+  ok    test_save_format.gd :: test_slots_are_independent_of_each_other
+SCRIPT ERROR: Invalid call. Nonexistent function 'save_game' in base 'RefCounted (save_game.gd)'.
+          at: test_the_board_reads_the_same_bracket_after_a_reload (res://tests/test_save_format.gd:944)
+          GDScript backtrace (most recent call first):
+              [0] test_the_board_reads_the_same_bracket_after_a_reload (res://tests/test_save_format.gd:944)
+              [1] _init (res://tests/run_tests.gd:108)
+  ok    test_save_format.gd :: test_the_board_reads_the_same_bracket_after_a_reload
+  ok    test_save_format.gd :: test_v10_save_migrates_with_nothing_felled
+  ok    test_save_format.gd :: test_v1_save_migrates_creatures_satiety_map_and_building_yaw_on_load
+  ok    test_save_format.gd :: test_v2_save_migrates_with_a_fresh_progression_store
+  ok    test_save_format.gd :: test_v4_save_migrates_with_average_individuality_and_no_traits
+  ok    test_save_format.gd :: test_v5_save_migrates_with_shiny_false
+  ok    test_save_format.gd :: test_v9_save_migrates_with_nothing_harvested
+  ok    test_save_format.gd :: test_version_11_save_loads_without_inventing_a_player_pose
+
+48 tests, 221 assertions, 0 failed
