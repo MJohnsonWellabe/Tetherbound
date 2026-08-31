@@ -1,0 +1,185 @@
+{
+  "blocked": "",
+  "captures": {
+    "absent": 0,
+    "delegated": [
+      "GF-02-START-01",
+      "GF-21-WEATHER-01",
+      "GF-02-START-02",
+      "GF-02-START-03",
+      "GF-14-COMBAT-01",
+      "GF-15-CATCH-01",
+      "GF-15-CATCH-02",
+      "GF-03-VILLAGE-01"
+    ],
+    "delegated_to": "S02C",
+    "owes": [],
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": true,
+  "cost": {
+    "frame_cost_s": 0.017014,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.2,
+        "frame_cost_s": 0.006514,
+        "frames_remaining": 39990,
+        "predicted_remaining_s": 261.0,
+        "step_index": 3,
+        "wall_spent_s": 0.8,
+        "was_frame_cost_s": 0.005929
+      },
+      {
+        "armed": "in-play sample over budget: 16012 s predicted against 14351 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14351.2,
+        "frame_cost_s": 0.400528,
+        "frames_remaining": 39977,
+        "observed_window_s": 0.400528,
+        "predicted_remaining_s": 16011.9,
+        "samples": 1,
+        "step_index": 6,
+        "wall_spent_s": 48.8,
+        "was_frame_cost_s": 0.006514
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14349.2,
+        "frame_cost_s": 0.208608,
+        "frames_remaining": 39977,
+        "observed_window_s": 0.016689,
+        "predicted_remaining_s": 8339.5,
+        "samples": 2,
+        "step_index": 6,
+        "wall_spent_s": 50.8,
+        "was_frame_cost_s": 0.400528
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14347.2,
+        "frame_cost_s": 0.01673,
+        "frames_remaining": 39977,
+        "observed_window_s": 0.01673,
+        "predicted_remaining_s": 668.8,
+        "samples": 3,
+        "step_index": 6,
+        "wall_spent_s": 52.8,
+        "was_frame_cost_s": 0.208608
+      }
+    ]
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false
+  },
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "logic",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [],
+  "preflight": {
+    "allow_no_capture": false,
+    "boot_cost_s": 0.5,
+    "capture_available": false,
+    "capture_lane": "S02C",
+    "capture_requested": false,
+    "cost_rechecks": 134,
+    "delegated_captures": 8,
+    "display_server": "headless",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "headless (logic lane, no display server)",
+      "from": "ralph/reports/gate-f-leg-s03/RUN_METADATA.json",
+      "key": "lanes.logic.display_server",
+      "lane": "logic"
+    },
+    "measured_frame_cost_s": 0.005929,
+    "measured_frame_cost_s_in_scene": 0.017014,
+    "planned_captures": 0,
+    "predicted_frames": 40023,
+    "predicted_segment_cost_s": 237.3,
+    "predicted_segment_cost_s_in_scene": 355.4,
+    "record_baseline_hz": 0.0,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.2,
+        "frame_cost_s": 0.006514,
+        "frames_remaining": 39990,
+        "predicted_remaining_s": 261.0,
+        "step_index": 3,
+        "wall_spent_s": 0.8,
+        "was_frame_cost_s": 0.005929
+      },
+      {
+        "armed": "in-play sample over budget: 16012 s predicted against 14351 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14351.2,
+        "frame_cost_s": 0.400528,
+        "frames_remaining": 39977,
+        "observed_window_s": 0.400528,
+        "predicted_remaining_s": 16011.9,
+        "samples": 1,
+        "step_index": 6,
+        "wall_spent_s": 48.8,
+        "was_frame_cost_s": 0.006514
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14349.2,
+        "frame_cost_s": 0.208608,
+        "frames_remaining": 39977,
+        "observed_window_s": 0.016689,
+        "predicted_remaining_s": 8339.5,
+        "samples": 2,
+        "step_index": 6,
+        "wall_spent_s": 50.8,
+        "was_frame_cost_s": 0.400528
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14347.2,
+        "frame_cost_s": 0.01673,
+        "frames_remaining": 39977,
+        "observed_window_s": 0.01673,
+        "predicted_remaining_s": 668.8,
+        "samples": 3,
+        "step_index": 6,
+        "wall_spent_s": 52.8,
+        "was_frame_cost_s": 0.208608
+      }
+    ],
+    "verdict": "not required",
+    "why": "segment declares no captures and no continuous record"
+  },
+  "run_id": "gate-f-leg-s03",
+  "segment": "S02",
+  "sha": "bd9084765b3f9599228de6b3f97321f2fcefd23e",
+  "steps": {
+    "delegated": 8,
+    "fail": 3,
+    "pass": 78,
+    "ran": 89,
+    "refused": 0,
+    "skipped": 0,
+    "total": 89
+  },
+  "uncommittable": []
+}

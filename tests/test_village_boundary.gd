@@ -179,3 +179,84 @@ func _crossings(outline: PackedVector2Array, from: Vector2, to: Vector2) -> Arra
 		if hit != null:
 			out.append(hit as Vector2)
 	return out
+
+
+## --- GAME-F1: the first day's gathering nodes ------------------------------
+##
+## `MUST_BE_INSIDE` above is hand-written on purpose, and its comment says why:
+## *"a loader would silently start including whatever moved into range later."*
+## That is the right rule for landmarks. It is the wrong rule for the twenty
+## band-1 harvest nodes that make up the chapter's first gathering lesson,
+## and GAME-F1 is what the wrong rule cost.
+##
+## When the outline was rerouted on 2026-08-30, two nodes -- (44,-24) and
+## (52,-30) -- ended up outside it. Nothing failed, because the nodes were on
+## nobody's list. The fence is a hard `StaticBody3D`, so the chapter's own
+## first gathering lesson sent the player out through their own gate and back
+## for two of its twenty stops, and a player who has not yet found the gate key
+## could not reach either at all. Worse and quieter: one of the two is a STONE
+## node, and the village only authors three. With it unreachable the reachable
+## stone (6) fell below the 8 that `progression.json`'s `home.required_pieces`
+## (one Camp, one Creature Bed) actually costs -- so the opening's build rung
+## became unaffordable without anyone writing a number down wrong.
+##
+## Hand-listing twenty coordinates here would not fix it either: they would be
+## a COPY of `harvest.json`, and a node moved there would leave this file
+## happily checking the old spot. So this reads the live file, and keeps the
+## human decision where it belongs -- in the COUNT. Add or remove a village
+## node and this fails until a person confirms the new number, which is exactly
+## the review `MUST_BE_INSIDE`'s comment is protecting.
+
+const HARVEST_CONFIG := "res://data/config/bands/band1_lower_meadows/harvest.json"
+
+## The village square/well, `paths.routes`' own origin and the same anchor
+## `MUST_BE_INSIDE` uses.
+const VILLAGE_CENTRE := Vector2(10.0, -10.0)
+
+## Everything band 1 authors for the first day's gathering lies within 47 m of
+## the well; the next node in the file is 152 m away, at the pond. 80 m sits in
+## the middle of that gap with room on both sides, so the selection is not
+## sensitive to a node being nudged a few metres.
+const VILLAGE_HARVEST_RADIUS := 80.0
+
+## HUMAN DECISION. The number of authored gathering stops the first day walks.
+## If this fails, a node was added to or removed from the village area: confirm
+## the new node belongs inside the fence, then update this number.
+const VILLAGE_HARVEST_NODES := 20
+
+
+func _village_harvest_nodes() -> Array:
+	var file := FileAccess.open(HARVEST_CONFIG, FileAccess.READ)
+	assert_true(file != null, "%s is missing" % HARVEST_CONFIG)
+	if file == null:
+		return []
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	assert_true(parsed is Dictionary, "%s is not a JSON object" % HARVEST_CONFIG)
+	if not parsed is Dictionary:
+		return []
+	var out: Array = []
+	for raw: Variant in ((parsed as Dictionary).get("nodes", []) as Array):
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var node: Dictionary = raw
+		var at: Array = node.get("at", []) as Array
+		if at.size() < 2:
+			continue
+		var point := Vector2(float(at[0]), float(at[1]))
+		if point.distance_to(VILLAGE_CENTRE) <= VILLAGE_HARVEST_RADIUS:
+			out.append({"at": point, "item": str(node.get("item", "")), "label": str(node.get("label", ""))})
+	return out
+
+
+func test_the_village_gathering_lesson_is_the_size_a_human_signed_off() -> void:
+	var nodes := _village_harvest_nodes()
+	assert_eq(nodes.size(), VILLAGE_HARVEST_NODES,
+		"%d band-1 harvest nodes now stand within %.0f m of the village well, not the %d this test was told to expect. A node was added or removed: confirm it belongs inside the fence, then update VILLAGE_HARVEST_NODES." % [nodes.size(), VILLAGE_HARVEST_RADIUS, VILLAGE_HARVEST_NODES])
+
+
+## The check GAME-F1 exists for.
+func test_every_village_harvest_node_is_inside_the_fence() -> void:
+	for entry: Dictionary in _village_harvest_nodes():
+		var at: Vector2 = entry["at"]
+		assert_true(BOUNDARY.contains(outline, at),
+			"the '%s' node (%s) at (%.1f, %.1f) is OUTSIDE the village boundary -- the first day's gathering lesson sends the player through their own gate, and a player without the gate key cannot reach it at all" % [entry["label"], entry["item"], at.x, at.y])
