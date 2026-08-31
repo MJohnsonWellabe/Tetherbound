@@ -575,6 +575,17 @@
       "expected": "`legendary_settled` closes section E.5 objective 26/27. Set whichever way the choice went -- `stronghold_climax.gd::_settle()`'s own comment: a player who keeps their five has resolved the decision exactly as completely as one who kept the legendary."
     },
     {
+      "id": "S10b-89",
+      "title": "let the tether machinery fail",
+      "action": "advance_dialogue_until_closed",
+      "args": {
+        "max_presses": 20,
+        "settle_frames": 60
+      },
+      "expected": "Spec section 28's last beat, and this segment's real close: with the roster settled, `stronghold_climax.gd::_advance()` leaves STAGE_CEREMONY and starts `stronghold_machinery_fails`. Four lines. Driven by predicate rather than by a press count, the same way every other conversation in this protocol is.",
+      "_comment_added": "ADDED, GATE-F-LEG-S10AB 2026-08-31. Without it the segment walked into its own save handoff with the machinery's conversation still on screen: measured, S10b-112's `open_menu` reported 'map did not open the pause shell: context narrative_modal -> narrative_modal (owner=DialoguePanel)', every step after it failed against a shell that was never up, and S10b-118 correctly refused to copy out a slot 4 that was still byte-identical to what seed_save had written -- the handoff would otherwise have been S10a's save wearing S10b's name. The climax was not at fault: it had run section 28's order to the end and was speaking the last of it."
+    },
+    {
       "id": "S10b-111",
       "title": "Section B save handoff",
       "action": "note",
