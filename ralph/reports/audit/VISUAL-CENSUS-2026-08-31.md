@@ -143,6 +143,31 @@ session should close them before the catalogue below is treated as complete.
   get is folded into areas 1 and 2, which found terrain, material, LOD and
   horizon defects in quantity.
 
+### One incidental finding, outside the visual scope
+
+Building the import cache from scratch made Godot generate **seven `.gd.uid`
+sidecar files that are missing from `main`**:
+
+    tests/smoke_creatures_tab_controller.gd.uid
+    tests/test_tutorial_faint_floor.gd.uid
+    tools/_audit_d6_debug_overlay_probe.gd.uid
+    tools/_audit_d6_mipfilter_probe.gd.uid
+    tools/_audit_i6_minimap_heading_probe.gd.uid
+    tools/_diag_ness_time_ab.gd.uid
+    tools/_probe_cap1_faint_floor.gd.uid
+
+`.uid` files **are** tracked in this repo — 870 of them — and are not
+gitignored, so these seven are a gap, not a convention. Each belongs to a `.gd`
+file committed on 2026-08-31 by another lane (`BACKLOG-I7-CREATURES-TAB-TEST`,
+`BACKLOG-D6-SEAM-PROBE`, `CAP-1` and neighbours) whose commit did not include
+the sidecar. Godot assigns a fresh random UID on first import, so today every
+fresh checkout generates its own and they drift per machine.
+
+**This lane did not commit them** — a diagnosis-only census branch is the wrong
+place for game-adjacent files, and they are not this lane's to author. They were
+deleted so the tree matches what this lane found. Recorded here so a coordinator
+can assign the one-line fix to whoever owns those files.
+
 **Why the queue was so short.** A single Meadows boot peaks at **~7 GB RSS** on
 this 16 GB box; two concurrent boots OOM-killed a run early in the session
 (`dmesg`: "Memory cgroup out of memory: Killed process ... (godot)
