@@ -1969,18 +1969,6 @@
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
-      "id": "S03-66T",
-      "title": "select the axe for this wood node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_2",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture.",
-      "observation": "RIG, 2026-08-31. THE gathering shortfall, and it was invisible because the step could not fail. S03-56b already knew that wood/stone/fiber are tool-gated (harvest_logic.gd) and that a tool must be EQUIPPED, not merely carried -- and S03-56e..i duly bind knife/pickaxe/axe to hotbar slots 4/3/2. Nothing then SELECTS a slot. Whatever was active stayed active for all twenty nodes, so only the nodes matching that one tool (plus the ungated berries) paid out. Measured on this lane's first complete S03: all 20 nodes reached, all 20 `work the node` presses injected, and only 10 `gather` events -- yielding 16 wood / 6 stone / 8 fiber against the 28 / 9 / 32 the nodes actually hold. That shortfall is what left the camp unaffordable (12/8/10), so S03-117 could not arm it, `home_built` never set, and the sleep and feed rungs never ran. It is also, almost certainly, GAME-F5's unanswered question -- 'eleven gather events fired across eighteen reached nodes... one run cannot tell which' -- which was read as a possible economy defect and is a missing tool-select. SECOND DEFECT, recorded not fixed: every one of those twenty presses PASSED. `press` asserts that the input was INJECTED, not that anything received it -- the exact shape T2-GATEF-RUN6/RIG-26 already fixed for engage ('a press into an unengaged world PASSed'). A gather step needs an inventory-delta assertion or it cannot report its own failure, and half a gathering ladder silently did nothing for at least two runs."
-    },
-    {
       "id": "S03-66",
       "title": "work the node",
       "action": "press",
@@ -1997,10 +1985,11 @@
       "title": "equip the knife",
       "action": "press",
       "args": {
-        "control": "hotbar_4",
+        "control": "hotbar_5",
         "hold": "tap"
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT CORRECTED 2026-08-31: the run's own exit save records the hotbar as ['', 'axe', 'pickaxe', '', 'knife'] -- the bar is 1-INDEXED, so the knife that S03-56e binds with four backpack_assign presses lands in slot 5, not slot 4. Selecting hotbar_4 chose an EMPTY slot, so every fiber node was worked with no tool and yielded nothing. Read the slot off the save, do not infer it from the number of assign presses.",
+      "observation": "RIG, 2026-08-31. This step read `hotbar_4` and selected an EMPTY slot, so every fiber node in the gathering ladder was worked with no tool equipped and yielded nothing -- harvest_logic.gd gates fiber on the knife. The hotbar is 1-INDEXED: this lane's run recorded it as ['', 'axe', 'pickaxe', '', 'knife'], so the knife that S03-56e binds with four backpack_assign presses lands in slot 5. The slot was inferred from the number of assign presses rather than read off the hotbar, and four presses does not mean slot 4. This is very likely the residue of GAME-F5's open question -- 'seven nodes were walked to, HAD THE RIGHT TOOL EQUIPPED, were pressed twice... and produced no gather event' -- where the tool was bound but the wrong slot was selected. SECOND DEFECT, recorded not fixed: every one of those gather presses PASSED anyway. `press` asserts the input was INJECTED, not that anything received it (the T2-GATEF-RUN6/RIG-26 shape). A gather step needs an inventory-delta assertion or it cannot report its own failure."
     },
     {
       "id": "S03-67",
@@ -2018,17 +2007,6 @@
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
-    },
-    {
-      "id": "S03-68T",
-      "title": "select the knife for this fiber node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_4",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
     },
     {
       "id": "S03-68",
@@ -2099,17 +2077,6 @@
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
-      "id": "S03-72T",
-      "title": "select the pickaxe for this stone node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_3",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
-    },
-    {
       "id": "S03-72",
       "title": "work the node",
       "action": "press",
@@ -2126,10 +2093,11 @@
       "title": "equip the knife",
       "action": "press",
       "args": {
-        "control": "hotbar_4",
+        "control": "hotbar_5",
         "hold": "tap"
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT CORRECTED 2026-08-31: the run's own exit save records the hotbar as ['', 'axe', 'pickaxe', '', 'knife'] -- the bar is 1-INDEXED, so the knife that S03-56e binds with four backpack_assign presses lands in slot 5, not slot 4. Selecting hotbar_4 chose an EMPTY slot, so every fiber node was worked with no tool and yielded nothing. Read the slot off the save, do not infer it from the number of assign presses.",
+      "observation": "RIG, 2026-08-31. This step read `hotbar_4` and selected an EMPTY slot, so every fiber node in the gathering ladder was worked with no tool equipped and yielded nothing -- harvest_logic.gd gates fiber on the knife. The hotbar is 1-INDEXED: this lane's run recorded it as ['', 'axe', 'pickaxe', '', 'knife'], so the knife that S03-56e binds with four backpack_assign presses lands in slot 5. The slot was inferred from the number of assign presses rather than read off the hotbar, and four presses does not mean slot 4. This is very likely the residue of GAME-F5's open question -- 'seven nodes were walked to, HAD THE RIGHT TOOL EQUIPPED, were pressed twice... and produced no gather event' -- where the tool was bound but the wrong slot was selected. SECOND DEFECT, recorded not fixed: every one of those gather presses PASSED anyway. `press` asserts the input was INJECTED, not that anything received it (the T2-GATEF-RUN6/RIG-26 shape). A gather step needs an inventory-delta assertion or it cannot report its own failure."
     },
     {
       "id": "S03-73",
@@ -2147,17 +2115,6 @@
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
-    },
-    {
-      "id": "S03-74T",
-      "title": "select the knife for this fiber node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_4",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
     },
     {
       "id": "S03-74",
@@ -2199,17 +2156,6 @@
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
-      "id": "S03-76T",
-      "title": "select the axe for this wood node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_2",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
-    },
-    {
       "id": "S03-76",
       "title": "work the node",
       "action": "press",
@@ -2226,10 +2172,11 @@
       "title": "equip the knife",
       "action": "press",
       "args": {
-        "control": "hotbar_4",
+        "control": "hotbar_5",
         "hold": "tap"
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT CORRECTED 2026-08-31: the run's own exit save records the hotbar as ['', 'axe', 'pickaxe', '', 'knife'] -- the bar is 1-INDEXED, so the knife that S03-56e binds with four backpack_assign presses lands in slot 5, not slot 4. Selecting hotbar_4 chose an EMPTY slot, so every fiber node was worked with no tool and yielded nothing. Read the slot off the save, do not infer it from the number of assign presses.",
+      "observation": "RIG, 2026-08-31. This step read `hotbar_4` and selected an EMPTY slot, so every fiber node in the gathering ladder was worked with no tool equipped and yielded nothing -- harvest_logic.gd gates fiber on the knife. The hotbar is 1-INDEXED: this lane's run recorded it as ['', 'axe', 'pickaxe', '', 'knife'], so the knife that S03-56e binds with four backpack_assign presses lands in slot 5. The slot was inferred from the number of assign presses rather than read off the hotbar, and four presses does not mean slot 4. This is very likely the residue of GAME-F5's open question -- 'seven nodes were walked to, HAD THE RIGHT TOOL EQUIPPED, were pressed twice... and produced no gather event' -- where the tool was bound but the wrong slot was selected. SECOND DEFECT, recorded not fixed: every one of those gather presses PASSED anyway. `press` asserts the input was INJECTED, not that anything received it (the T2-GATEF-RUN6/RIG-26 shape). A gather step needs an inventory-delta assertion or it cannot report its own failure."
     },
     {
       "id": "S03-77",
@@ -2247,17 +2194,6 @@
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
-    },
-    {
-      "id": "S03-78T",
-      "title": "select the knife for this fiber node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_4",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
     },
     {
       "id": "S03-78",
@@ -2299,17 +2235,6 @@
       "observation": "GAME-F1: this node stood at (44, -24), 2.3 m outside the village fence. Moved inside, so the walk no longer crosses the boundary."
     },
     {
-      "id": "S03-80T",
-      "title": "select the axe for this wood node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_2",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
-    },
-    {
       "id": "S03-80",
       "title": "work the node",
       "action": "press",
@@ -2347,17 +2272,6 @@
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Prise loose stones'",
       "observation": "GAME-F1: this node stood at (52, -30), 3.5 m outside the village fence -- and it is one of only three stone nodes the village authors, against a camp+bed bill of 8 stone. Moved inside."
-    },
-    {
-      "id": "S03-82T",
-      "title": "select the pickaxe for this stone node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_3",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
     },
     {
       "id": "S03-82",
@@ -2405,10 +2319,11 @@
       "title": "equip the knife",
       "action": "press",
       "args": {
-        "control": "hotbar_4",
+        "control": "hotbar_5",
         "hold": "tap"
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT CORRECTED 2026-08-31: the run's own exit save records the hotbar as ['', 'axe', 'pickaxe', '', 'knife'] -- the bar is 1-INDEXED, so the knife that S03-56e binds with four backpack_assign presses lands in slot 5, not slot 4. Selecting hotbar_4 chose an EMPTY slot, so every fiber node was worked with no tool and yielded nothing. Read the slot off the save, do not infer it from the number of assign presses.",
+      "observation": "RIG, 2026-08-31. This step read `hotbar_4` and selected an EMPTY slot, so every fiber node in the gathering ladder was worked with no tool equipped and yielded nothing -- harvest_logic.gd gates fiber on the knife. The hotbar is 1-INDEXED: this lane's run recorded it as ['', 'axe', 'pickaxe', '', 'knife'], so the knife that S03-56e binds with four backpack_assign presses lands in slot 5. The slot was inferred from the number of assign presses rather than read off the hotbar, and four presses does not mean slot 4. This is very likely the residue of GAME-F5's open question -- 'seven nodes were walked to, HAD THE RIGHT TOOL EQUIPPED, were pressed twice... and produced no gather event' -- where the tool was bound but the wrong slot was selected. SECOND DEFECT, recorded not fixed: every one of those gather presses PASSED anyway. `press` asserts the input was INJECTED, not that anything received it (the T2-GATEF-RUN6/RIG-26 shape). A gather step needs an inventory-delta assertion or it cannot report its own failure."
     },
     {
       "id": "S03-85",
@@ -2426,17 +2341,6 @@
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
-    },
-    {
-      "id": "S03-86T",
-      "title": "select the knife for this fiber node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_4",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
     },
     {
       "id": "S03-86",
@@ -2478,17 +2382,6 @@
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
-      "id": "S03-88T",
-      "title": "select the axe for this wood node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_2",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
-    },
-    {
       "id": "S03-88",
       "title": "work the node",
       "action": "press",
@@ -2505,10 +2398,11 @@
       "title": "equip the knife",
       "action": "press",
       "args": {
-        "control": "hotbar_4",
+        "control": "hotbar_5",
         "hold": "tap"
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT CORRECTED 2026-08-31: the run's own exit save records the hotbar as ['', 'axe', 'pickaxe', '', 'knife'] -- the bar is 1-INDEXED, so the knife that S03-56e binds with four backpack_assign presses lands in slot 5, not slot 4. Selecting hotbar_4 chose an EMPTY slot, so every fiber node was worked with no tool and yielded nothing. Read the slot off the save, do not infer it from the number of assign presses.",
+      "observation": "RIG, 2026-08-31. This step read `hotbar_4` and selected an EMPTY slot, so every fiber node in the gathering ladder was worked with no tool equipped and yielded nothing -- harvest_logic.gd gates fiber on the knife. The hotbar is 1-INDEXED: this lane's run recorded it as ['', 'axe', 'pickaxe', '', 'knife'], so the knife that S03-56e binds with four backpack_assign presses lands in slot 5. The slot was inferred from the number of assign presses rather than read off the hotbar, and four presses does not mean slot 4. This is very likely the residue of GAME-F5's open question -- 'seven nodes were walked to, HAD THE RIGHT TOOL EQUIPPED, were pressed twice... and produced no gather event' -- where the tool was bound but the wrong slot was selected. SECOND DEFECT, recorded not fixed: every one of those gather presses PASSED anyway. `press` asserts the input was INJECTED, not that anything received it (the T2-GATEF-RUN6/RIG-26 shape). A gather step needs an inventory-delta assertion or it cannot report its own failure."
     },
     {
       "id": "S03-89",
@@ -2526,17 +2420,6 @@
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
-    },
-    {
-      "id": "S03-90T",
-      "title": "select the knife for this fiber node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_4",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
     },
     {
       "id": "S03-90",
@@ -2578,17 +2461,6 @@
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
-      "id": "S03-92T",
-      "title": "select the axe for this wood node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_2",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
-    },
-    {
       "id": "S03-92",
       "title": "work the node",
       "action": "press",
@@ -2605,10 +2477,11 @@
       "title": "equip the knife",
       "action": "press",
       "args": {
-        "control": "hotbar_4",
+        "control": "hotbar_5",
         "hold": "tap"
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT CORRECTED 2026-08-31: the run's own exit save records the hotbar as ['', 'axe', 'pickaxe', '', 'knife'] -- the bar is 1-INDEXED, so the knife that S03-56e binds with four backpack_assign presses lands in slot 5, not slot 4. Selecting hotbar_4 chose an EMPTY slot, so every fiber node was worked with no tool and yielded nothing. Read the slot off the save, do not infer it from the number of assign presses.",
+      "observation": "RIG, 2026-08-31. This step read `hotbar_4` and selected an EMPTY slot, so every fiber node in the gathering ladder was worked with no tool equipped and yielded nothing -- harvest_logic.gd gates fiber on the knife. The hotbar is 1-INDEXED: this lane's run recorded it as ['', 'axe', 'pickaxe', '', 'knife'], so the knife that S03-56e binds with four backpack_assign presses lands in slot 5. The slot was inferred from the number of assign presses rather than read off the hotbar, and four presses does not mean slot 4. This is very likely the residue of GAME-F5's open question -- 'seven nodes were walked to, HAD THE RIGHT TOOL EQUIPPED, were pressed twice... and produced no gather event' -- where the tool was bound but the wrong slot was selected. SECOND DEFECT, recorded not fixed: every one of those gather presses PASSED anyway. `press` asserts the input was INJECTED, not that anything received it (the T2-GATEF-RUN6/RIG-26 shape). A gather step needs an inventory-delta assertion or it cannot report its own failure."
     },
     {
       "id": "S03-93",
@@ -2626,17 +2499,6 @@
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
-    },
-    {
-      "id": "S03-94T",
-      "title": "select the knife for this fiber node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_4",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
     },
     {
       "id": "S03-94",
@@ -2666,17 +2528,6 @@
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
-    },
-    {
-      "id": "S03-96T",
-      "title": "select the knife for this fiber node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_4",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
     },
     {
       "id": "S03-96",
@@ -2718,17 +2569,6 @@
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
-      "id": "S03-98T",
-      "title": "select the axe for this wood node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_2",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
-    },
-    {
       "id": "S03-98",
       "title": "work the node",
       "action": "press",
@@ -2745,10 +2585,11 @@
       "title": "equip the knife",
       "action": "press",
       "args": {
-        "control": "hotbar_4",
+        "control": "hotbar_5",
         "hold": "tap"
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT CORRECTED 2026-08-31: the run's own exit save records the hotbar as ['', 'axe', 'pickaxe', '', 'knife'] -- the bar is 1-INDEXED, so the knife that S03-56e binds with four backpack_assign presses lands in slot 5, not slot 4. Selecting hotbar_4 chose an EMPTY slot, so every fiber node was worked with no tool and yielded nothing. Read the slot off the save, do not infer it from the number of assign presses.",
+      "observation": "RIG, 2026-08-31. This step read `hotbar_4` and selected an EMPTY slot, so every fiber node in the gathering ladder was worked with no tool equipped and yielded nothing -- harvest_logic.gd gates fiber on the knife. The hotbar is 1-INDEXED: this lane's run recorded it as ['', 'axe', 'pickaxe', '', 'knife'], so the knife that S03-56e binds with four backpack_assign presses lands in slot 5. The slot was inferred from the number of assign presses rather than read off the hotbar, and four presses does not mean slot 4. This is very likely the residue of GAME-F5's open question -- 'seven nodes were walked to, HAD THE RIGHT TOOL EQUIPPED, were pressed twice... and produced no gather event' -- where the tool was bound but the wrong slot was selected. SECOND DEFECT, recorded not fixed: every one of those gather presses PASSED anyway. `press` asserts the input was INJECTED, not that anything received it (the T2-GATEF-RUN6/RIG-26 shape). A gather step needs an inventory-delta assertion or it cannot report its own failure."
     },
     {
       "id": "S03-99",
@@ -2766,17 +2607,6 @@
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
-    },
-    {
-      "id": "S03-100T",
-      "title": "select the knife for this fiber node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_4",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
     },
     {
       "id": "S03-100",
@@ -2818,17 +2648,6 @@
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
-      "id": "S03-102T",
-      "title": "select the pickaxe for this stone node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_3",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
-    },
-    {
       "id": "S03-102",
       "title": "work the node",
       "action": "press",
@@ -2866,17 +2685,6 @@
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
-    },
-    {
-      "id": "S03-104T",
-      "title": "select the axe for this wood node",
-      "action": "press",
-      "args": {
-        "control": "hotbar_2",
-        "hold": "tap",
-        "settle_frames": 20
-      },
-      "expected": "harvest_logic.gd gates wood/stone/fiber on the EQUIPPED tool, so the matching hotbar slot has to be selected before the node is worked -- binding it in the satchel (S03-56e..i) is only half the gesture."
     },
     {
       "id": "S03-104",
