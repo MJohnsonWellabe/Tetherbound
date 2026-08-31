@@ -222,7 +222,11 @@ const VILLAGE_HARVEST_RADIUS := 80.0
 ## HUMAN DECISION. The number of authored gathering stops the first day walks.
 ## If this fails, a node was added to or removed from the village area: confirm
 ## the new node belongs inside the fence, then update this number.
-const VILLAGE_HARVEST_NODES := 20
+##
+## 20 -> 23: owner playtest 2026-08-30B item 15, "there needs to be more
+## berries in the village" -- three new berry nodes (harvest.json orders
+## 1031-1033), confirmed inside the fence by this same test file.
+const VILLAGE_HARVEST_NODES := 23
 
 
 func _village_harvest_nodes() -> Array:
