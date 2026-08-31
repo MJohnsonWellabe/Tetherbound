@@ -1157,6 +1157,10 @@ func _read_creature_control_input() -> void:
 ## The non-actionable status line `interaction_offer()` falls back to once
 ## nothing nearby is offering anything else — see that function's own comment
 ## on why `PROMPTS`'s single line can carry a second button's prompt at all.
+##
+## Priority -2, one below `riding_controller.gd::RIDE_PRIORITY` (-1) — this is
+## the true floor: a plain status line that does nothing when pressed must
+## never win a tie against an offer that DOES something, riding's own included.
 func _creature_control_offer() -> Dictionary:
 	# OWNER DIRECTIVE 2026-08-23 §3: with the build hammer out, this line moves
 	# to the party-cycle button context for the duration, and Build has the
@@ -1172,7 +1176,7 @@ func _creature_control_offer() -> Dictionary:
 			return {}
 		return PROMPTS.offer(
 			"%s%sPut %s away" % [INPUT_GLYPH.icon("creature_recall"), PROMPTS.GAP, _ally.label()],
-			0.0, -1, false
+			0.0, -2, false
 		)
 	var party := _party()
 	var creature: RefCounted = party.call("active") if party != null else null
