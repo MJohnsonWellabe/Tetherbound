@@ -12,14 +12,27 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
  * that set_shader_override() is NOT clobbered by a later
  * enable_shader_override(true) call as long as it runs first.
  *
- * REGENERATION: everything OUTSIDE the two T1-GROUND-2 banners is Terrain3D
- * template code, not authored here. If a future ground-texture/material
- * change needs Terrain3D to regenerate this (e.g. a texture starts using
- * dual-scaling, which this snapshot's accumulate_material() may not carry
- * if no texture used it at export time -- see the DUAL_SCALING_CONDITION_*
- * insert markers upstream), re-run tools/_dump_terrain_shader.gd, then
- * reapply the two marked blocks below into the fresh dump by hand rather
- * than hand-editing generated code blind.
+ * A second, unrelated manual edit lives inside accumulate_material(),
+ * marked with D6-SEAM-FIX banners: ralph/reports/audit/D6-seam-probe/
+ * FOLLOWUP-2026-08-31.md confirmed the per-tile detiling rotation this
+ * function applies (via _texture_detile_array/random(uv_center)) is
+ * discontinuous at tile boundaries -- two adjacent tiles roll unrelated
+ * random rotations, so both the UV rotation and the anisotropic-filter
+ * derivatives it drives (id_dd) step sharply right at the shared edge,
+ * which read as a dashed seam. The fix feathers the rotation/shift to
+ * zero within a narrow band of each tile's edge so neighbouring tiles
+ * converge on the same (identity) transform at the seam, leaving tile
+ * interiors at full detiling strength.
+ *
+ * REGENERATION: everything OUTSIDE the T1-GROUND-2 and D6-SEAM-FIX
+ * banners is Terrain3D template code, not authored here. If a future
+ * ground-texture/material change needs Terrain3D to regenerate this
+ * (e.g. a texture starts using dual-scaling, which this snapshot's
+ * accumulate_material() may not carry if no texture used it at export
+ * time -- see the DUAL_SCALING_CONDITION_* insert markers upstream),
+ * re-run tools/_dump_terrain_shader.gd, then reapply all marked blocks
+ * below into the fresh dump by hand rather than hand-editing generated
+ * code blind.
  *
  * ORIGINAL UPSTREAM COMMENT FOLLOWS:
  *
@@ -44,6 +57,11 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
 #define DIV_255 0.003921568627450 // 1. / 255.
 #define DIV_1024 0.0009765625 // 1. / 1024.
 #define TAU_16TH -0.392699081698724 // -TAU / 16.
+// D6-SEAM-FIX: width (in id-scaled tile units, tile = 1.0) of the band
+// around each detiling tile's edge over which rotation/shift is faded
+// to 0. See accumulate_material()'s D6-SEAM-FIX blocks and the banner
+// comment at the top of this file.
+#define DETILE_SEAM_FEATHER 0.12
 
 // Inline Functions
 #define DECODE_BLEND(control) float(control >> 14u & 0xFFu) * DIV_255
@@ -305,7 +323,13 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 
 		// Detiling and Control map rotation
 		vec2 uv_center = floor(fma(i_pos, vec2(id_scale), vec2(0.5)));
-		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU;
+		// D6-SEAM-FIX: fade detiling strength to 0 within DETILE_SEAM_FEATHER
+		// of this tile's edge so neighbouring tiles' independent random
+		// rotations converge on the same (identity) transform at the shared
+		// boundary instead of stepping discontinuously. See top-of-file banner.
+		vec2 id_frac = fma(i_pos, vec2(id_scale), -uv_center);
+		float id_edge_fade = smoothstep(0.0, DETILE_SEAM_FEATHER, 0.5 - max(abs(id_frac.x), abs(id_frac.y)));
+		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU * id_edge_fade;
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
 		vec2 id_uv = rotate_vec2(fma(i_uv, vec2(id_scale), -uv_center), id_cs_angle) + uv_center + id_detile.y - 0.5;
@@ -347,7 +371,10 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 
 		// Detiling and Control map rotation
 		vec2 uv_center = floor(fma(i_pos, vec2(id_scale), vec2(0.5)));
-		vec2 id_detile = _texture_detile_array[id] * fma(random(uv_center), 2.0, -1.0) * TAU;
+		// D6-SEAM-FIX: see matching comment in the 1st Texture Asset ID block above.
+		vec2 id_frac = fma(i_pos, vec2(id_scale), -uv_center);
+		float id_edge_fade = smoothstep(0.0, DETILE_SEAM_FEATHER, 0.5 - max(abs(id_frac.x), abs(id_frac.y)));
+		vec2 id_detile = _texture_detile_array[id] * fma(random(uv_center), 2.0, -1.0) * TAU * id_edge_fade;
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
 		vec2 id_uv = rotate_vec2(fma(i_uv, vec2(id_scale), -uv_center), id_cs_angle) + uv_center + id_detile.y - 0.5;
