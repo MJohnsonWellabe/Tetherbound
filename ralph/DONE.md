@@ -3,6 +3,50 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## BACKLOG-HUD-HEALTHBAR — the player's HP bar moves to the lower left
+
+`tests: test_hud_widgets (29/29), smoke_hud_handheld_legibility, smoke_dialogue_clears_the_world_hud, smoke_station_panels_hide_world_hud, smoke_combat_hud_left_column, smoke_hud_no_sixth_slot` · `area: scripts/ui/playground_hud.gd, tests/test_hud_widgets.gd` · `branch: ralph/BACKLOG-HUD-HEALTHBAR`
+
+Answers `ralph/OWNER_PLAYTEST_2026-08-30B.md` item 20, verbatim: *"Put the
+player's health bar in the lower left."*
+
+**Mechanism.** The HP icon/bar/value used to live inside `VitalsCluster`
+alongside FOOD and buffs, and that whole cluster is the anchor the rest of
+the left column (`creature_block_position()`, `party_strip_position()`)
+stacks bottom-up from -- so it could not move without moving the roster and
+active-creature panel with it, which this item does not ask for and the
+parallel day/time-tracker and story-tracker lanes did not want touched
+either. Extracted the HP row into its own `PlayerHealthBar` widget
+(`_build_player_health_bar()`), positioned by a new, independent
+`player_health_bar_position()` anchored to `Root/BottomDock`'s real fixed
+bottom edge (`offset_bottom = -96`, confirmed by measurement to be immune to
+the dock's own transient top-edge growth) rather than competing for the room
+above the dock the rest of the column needs. `vitals_position()` and
+`VITALS_HEIGHT` are untouched, so nothing else in the left column moved a
+pixel -- verified by the existing geometry tests, all still green against
+the unchanged formulas.
+
+One real regression caught before it shipped: the new widget's lower
+position falls inside `dialogue_panel.gd`'s own box footprint
+(`smoke_dialogue_clears_the_world_hud.gd` failed on first render). Fixed by
+folding the health bar into the same `_bottom_dock_should_yield()` predicate
+the hotbar and prompt already use (build menu / dialogue / name prompt /
+starter picker), extracted from `_yield_bottom_to_build_menu()` so both call
+sites share it.
+
+**Visual-judge note.** A blind critic on the five HUD pose captures
+(`shots/_diag/hud_*.png`, not committed -- gitignored) named the HP/FOOD
+split as its top finding: the two bars now sit ~500px apart with nothing
+visually linking them. That is the literal, requested outcome of item 20,
+not a defect introduced by the implementation, and closing the gap would
+mean moving the FOOD panel too -- out of this item's scope, and specifically
+not wanted per the task brief ("this is the health bar only"). Recorded here
+rather than silently accepted: if a later pass wants the two bars visually
+tied together again, that is a design call for a separate task, not a
+oversight in this one. The critic's other findings (unlabeled per-creature
+bars, OPEN SLOT row spacing, the stamina arc's mismatched visual language,
+minimap/objective disconnect) are pre-existing and out of scope here.
+
 ## GRASS-INDOORS — the field learns what is standing on the ground
 
 `tests: test_grass_field (5/31), scatter suite (33/958342), smoke_art, smoke_playground, smoke_warrens` · `area: scripts/world/grass_field.gd, scripts/world/village.gd, scripts/world/burrow_warrens.gd, scripts/world/building_prefabs.gd, shaders/*` · `report: ralph/reports/GRASS_INDOORS_2026-08-28.md`
