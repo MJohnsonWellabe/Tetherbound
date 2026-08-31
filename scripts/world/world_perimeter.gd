@@ -369,6 +369,25 @@ const KILL_PLANE_THICKNESS := 40.0
 
 var _player: CharacterBody3D = null
 var _spawn: Vector3 = Vector3.ZERO
+## GATE-F-LEG-S10CDE. The last position the player stood on real ground,
+## tracked so the kill volume below can recover LOCALLY instead of sending a
+## seven-kilometre walk back to `_spawn`. See `_on_kill_volume_entered`'s own
+## comment for why this exists and what it does not fix.
+var _last_safe_position: Vector3 = Vector3.ZERO
+var _has_last_safe_position: bool = false
+## Seconds since `_last_safe_position` was last refreshed. Only trusted below
+## `_LAST_SAFE_MAX_AGE_S` -- see `_on_kill_volume_entered`'s own comment for
+## the regression this stops: `tests/smoke_traversal.gd`'s `_check_kill_volume`
+## deliberately teleports the player into the kill band as its own test, with
+## no walking in between, and a STALE ground reading from several checks
+## earlier (in that run, the far end of `_check_perimeter`'s cap-walk, 7+ km
+## from the actual test) is a worse recovery than `_spawn` -- it is not where
+## anything relevant just happened, only the last place that happened to be
+## true. A real in-play glitch (the platform-velocity case this was built
+## for) refreshes this every physics frame right up to the moment it fires,
+## so the age check costs that path nothing.
+var _last_safe_age_s: float = 0.0
+const LAST_SAFE_MAX_AGE_S := 3.0
 var _wobble_noise: FastNoiseLite = null
 var _tether_tint: Color = Color(0.2, 0.133, 0.157)
 var _edges: Array = []
@@ -395,6 +414,7 @@ func build(world: Node, player: CharacterBody3D, spawn_position: Vector3) -> voi
 	_player = player
 	_spawn = spawn_position
 	_tether_tint = _palette_colour("tether_oxblood", _tether_tint)
+	set_process(true)
 
 	var boundary := Node3D.new()
 	boundary.name = "Boundary"
@@ -1516,6 +1536,22 @@ func _palette_colour(key: String, fallback: Color) -> Color:
 const KILL_PLANE_HALF_X := (WORLD_X_EAST - WORLD_X_WEST) * 0.5 + KILL_PLANE_MARGIN
 const KILL_PLANE_HALF_Z := (WORLD_Z_SOUTH - WORLD_Z_NORTH) * 0.5 + KILL_PLANE_MARGIN
 
+## GATE-F-LEG-S10CDE. Track the last position the player was genuinely
+## standing on the ground, so a kill-volume trigger can recover locally.
+## `on_floor()` is read straight off the body rather than re-derived, the
+## same "trust the physics server's own answer" the rest of this class
+## already follows for collision.
+func _process(delta: float) -> void:
+	if _player == null or not is_instance_valid(_player):
+		return
+	if _player.is_on_floor() and _player.global_position.y > KILL_PLANE_Y + 10.0:
+		_last_safe_position = _player.global_position
+		_has_last_safe_position = true
+		_last_safe_age_s = 0.0
+	elif _has_last_safe_position:
+		_last_safe_age_s += delta
+
+
 func _build_kill_volume() -> void:
 	var area := Area3D.new()
 	area.name = "KillVolume"
@@ -1531,12 +1567,54 @@ func _build_kill_volume() -> void:
 	add_child(area)
 
 
+## GATE-F-LEG-S10CDE. Measured against the real corridor: a player who was
+## genuinely, stably standing on solid ground (`on_floor` true, unmoving, at
+## the analytically-correct terrain height) can still land in this volume a
+## handful of frames later with no gravity-paced fall in between -- `tools/
+## _probe_s10c_stall_repro.gd`'s own log shows exactly that at (13.47, -0.08,
+## 7416.99), band 5's approach corridor. That is the SAME mechanism
+## `player_controller.gd::_clamp_runaway_velocity`'s own header already
+## documents and admits is not fully closed ("there is more than one thing in
+## the Meadows that gets built under a standing body... a CLAMP and not a fix
+## to whatever moved the collider") -- a one-frame position jump large enough
+## to land past this volume before the velocity clamp (which runs on the
+## FOLLOWING frame's read) ever sees it. That root cause is not this file's
+## to chase down; what IS this file's problem is what happens next. Resetting
+## to `_spawn` unconditionally turns one transient physics glitch into
+## catastrophic damage for anything walking a long route -- `move_to`'s own
+## target is unrelated to spawn, so the walk wakes up ~7km from both its
+## start and its destination, burns its entire remaining budget trying to
+## walk back, and the whole leg reports FAIL for a reason that has nothing to
+## do with the route itself. Recovering to the last position the player was
+## actually, verifiably standing on real ground turns the same glitch into a
+## few centimetres of correction -- the walk simply continues -- while still
+## catching a genuine fall off the map (nothing here was ever on solid
+## ground) by falling back to `_spawn` exactly as before.
+##
+## `_last_safe_age_s` guards a second, measured regression: `tests/
+## smoke_traversal.gd`'s `_check_kill_volume` deliberately teleports the
+## player straight into this volume as its own test, with no walking in
+## between, so the only "last safe" reading on record was whatever the
+## PREVIOUS, unrelated check left behind -- in that run, the far end of
+## `_check_perimeter`'s cap-walk, 7+ km from anything the kill-volume test
+## itself was about. Recovering there is not a local correction, it is a
+## second teleport to a stale, irrelevant place, and it cascaded into the
+## South Bridge check finding the player "entombed" and unsticking to the
+## same stale spot next. A real in-play glitch never has this problem: the
+## position is refreshed every physics frame right up to the moment the
+## kill volume fires, so its age is ~0. Only a reading younger than
+## `LAST_SAFE_MAX_AGE_S` is trusted; anything older falls back to `_spawn`,
+## same as before this fix existed.
 func _on_kill_volume_entered(body: Node3D) -> void:
 	if body != _player:
 		return
-	print("[world_perimeter_corridor] player fell below the world at %.0f, %.0f, %.0f -- returning to spawn" % [
-		body.global_position.x, body.global_position.y, body.global_position.z
+	var use_last_safe := _has_last_safe_position and _last_safe_age_s <= LAST_SAFE_MAX_AGE_S
+	var recover_to := _last_safe_position if use_last_safe else _spawn
+	print(("[world_perimeter_corridor] player fell below the world at %.0f, %.0f, %.0f -- "
+		+ "returning to %s") % [
+		body.global_position.x, body.global_position.y, body.global_position.z,
+		"last safe ground" if use_last_safe else "spawn"
 	])
-	body.global_position = _spawn
+	body.global_position = recover_to
 	if body is CharacterBody3D:
 		(body as CharacterBody3D).velocity = Vector3.ZERO

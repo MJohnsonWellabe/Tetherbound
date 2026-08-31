@@ -731,7 +731,7 @@ func _refresh_lockout() -> void:
 ## Grandpa offers his prompt on any beat he has something to say on.
 func _refresh_prompts() -> void:
 	if _grandpa_prompt != null and is_instance_valid(_grandpa_prompt):
-		_grandpa_prompt.call("set_enabled", BEATS.conversation_for(_beat) != "")
+		_grandpa_prompt.call("set_enabled", _grandpa_conversation_id() != "")
 	if _bed_prompt != null and is_instance_valid(_bed_prompt):
 		_bed_prompt.call("set_enabled", _beat == BEATS.WAKE)
 
@@ -1065,7 +1065,23 @@ func _to_vector3(raw: Variant) -> Vector3:
 ## --- beat 3: Grandpa ---------------------------------------------------------------
 
 func _on_grandpa_activated() -> void:
-	_start_conversation(BEATS.conversation_for(_beat))
+	_start_conversation(_grandpa_conversation_id())
+
+
+## GATE-F-LEG-S10CDE. `free_play` (opening.json's own terminal beat, reached
+## around tournament sign-up) has nothing scripted forever, by design — but
+## SG46's ending changes the world, and GATE_F_MASTER_PROTOCOL.md §L.5 and
+## objectives.json's `see_what_changed` both promise Grandpa has something to
+## say about it, which no entry in `beats.grandpa_conversations` ever named.
+## Checked ahead of the beat table, the same priority order `village_npcs.gd`'s
+## own `greeting_when` freed branches already use ahead of their standing one
+## (data/dialogue/meadows_freed.json).
+func _grandpa_conversation_id() -> String:
+	var game := get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") as RefCounted if game != null else null
+	if progression != null and bool(progression.call("has", "legendary_freed")):
+		return "grandpa_freed"
+	return BEATS.conversation_for(_beat)
 
 
 func _start_conversation(id: String) -> bool:

@@ -135,7 +135,10 @@ extends RefCounted
 ## default in `_array_to_party` cannot already do, and would carry the real
 ## risk the comment on `_migrate_v13`'s neighbour warns about: forgetting the
 ## step refuses every existing save outright, which is a strictly worse
-## failure than the bug this is fixing.
+## failure than the bug this is fixing. Independently found and fixed with a
+## version bump by GATE-F-LEG-S10CDE (measured: a level 3 ripplet loaded
+## through the production Load path went from 117.60 max hp to 1.18 on its
+## next level-up) -- the bump was reverted here for the same reason S09's was.
 ##
 ## ## The satiety seam
 ##
@@ -723,9 +726,10 @@ func _party_to_array(party: Variant) -> Array:
 			# stats and rebuilds it from the class default of 1.0. Independently
 			# reproduced by GATE-F-LEG-S09 (a save/load/level-up sequence turned a
 			# healthy level-18 party member's max_hp in the 200s into 2 on its
-			# next level) and by GATE-F-LEG-S07 (a hand-seeded level 9-13 party
-			# loaded correctly, then the segment's first trainer win silently
-			# gutted every stat the same way).
+			# next level), GATE-F-LEG-S07 (a hand-seeded level 9-13 party loaded
+			# correctly, then the segment's first trainer win silently gutted
+			# every stat the same way), and GATE-F-LEG-S10CDE (a level 3 ripplet
+			# went from 117.60 max hp to 1.18 on its next level-up).
 			"base_hp": float(instance.get("base_hp")),
 			"base_attack": float(instance.get("base_attack")),
 			"base_defence": float(instance.get("base_defence")),

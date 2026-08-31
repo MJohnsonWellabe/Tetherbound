@@ -127,37 +127,37 @@
       "expected": "Section E.5 objective 27/27, unchanged since S10d. Surviving the S10d/S10e handoff is itself evidence that the flag persisted through a real save/load"
     },
     {
-      "id": "S10e-98b",
-      "title": "come home by the Pond road, up to the gate",
+      "id": "S10e-98g",
+      "title": "walk wide of the fence's northeast bulge, toward the road gate",
       "action": "move_to",
       "args": {
         "at": [
-          -24.0,
-          25.0
+          55.0,
+          -10.0
         ],
-        "budget_frames": 60750,
-        "close_enough": 3.0,
+        "budget_frames": 54000,
+        "close_enough": 4.0,
         "held_budget_frames": 10800,
         "answer_prompts": true
       },
-      "expected": "4.5 m outside PondGate on the Pond road (terrain_playground.json paths.routes[2]). The long leg of the walk home, ending on the far side of the village fence rather than against it",
-      "_comment_route": "RIG-F6's other end, ralph/GATE-F-FULL 2026-08-30. The chapter's homecoming walk went straight from the South Bridge to the village well and the straight line crosses the village outline at (9.7, 23.8), 30.9 m from the nearest gate -- so the last beat of the chapter would have ended against a fence panel. `data/config/village_boundary.json` gave the village a closed edge on 2026-08-30, after this segment was written, and `village_boundary.gd` builds it as sealed StaticBody3D panels with a hole only at each gate. Measured at the other end of the same journey: S05-19 walked the reverse of this line and `did not reach (-40, 180) in 11700 walking frames; stopped 155.8 m short at (-15.0, 1.0, 26.0)`, the outline's own [-15,27] vertex. NOT A GAME DEFECT -- both gates are open from S02's key and a player follows the Pond road home. Two legs added so this walk comes in through the door: outside the gate, then the gate, then the well. Checked against the outline before authoring: the only crossing on the three legs is the gate itself."
+      "expected": "GATE-F-LEG-S10CDE, corrected during GATEF-CONSOLIDATE-1. Split out of what was one straight move_to at (10,-10): approaching the village fence directly from this segment's own entry point (arrival from the South Bridge side, north/east of the village) does not cross the fence near a real opening, so the single-leg walk oscillated against the fence line for its entire budget without ever finding one, the same shape of stall diagnosed and fixed for the sigil-gate gorges earlier in this lane. `stick_navigator.gd` is a local wall-follower, not a pathfinder; it needs to be AIMED at the gate, the same way S05-19's own outbound leg is aimed at a real waypoint rather than straight at its final destination. S10CDE's own fix aimed at `playground_world.gd::GATE_AT` (27.5,-16.0), believing it 'the only hole in the fence' -- it is not: `GATE_AT` is a stale pre-OP-0830-1 constant nothing in the game actually builds or checks against any more. Aiming straight at the real gate, `village_boundary.json`'s `RoadGate` (38.7,-19.9), does not work either: a line from this segment's own far-north entry to that point still clips the outline's own [40,-16]->[37,-2] edge 11.5m before arrival (`test_gate_f_instrumentation.gd::test_no_journey_walk_crosses_the_village_fence_away_from_a_gate` catches exactly this -- the outline bulges northeast past the gate's own vertex). (55,-10) is outside the outline entirely and has clear line of sight both back to this segment's entry and forward to the gate (verified by the same polygon this test checks against), so this leg goes wide of the bulge instead of aiming at the gate directly; S10e-98h below closes the last short distance through the gate itself. `budget_frames` 15000 -> 54000 after a first attempt: splitting the original single 60750-frame leg into two 15000-frame ones threw away the budget for the actual LONG distance this leg covers (South Bridge back to the village, the bulk of the original leg) rather than giving the short gate-to-centre hop below its own small share -- this leg gets most of the original total, S10e-99 keeps a comfortable but much smaller one.",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
-      "id": "S10e-98c",
-      "title": "through the gate the key opened",
+      "id": "S10e-98h",
+      "title": "through the road gate",
       "action": "move_to",
       "args": {
         "at": [
-          -21.0,
-          21.0
+          38.7,
+          -19.9
         ],
         "budget_frames": 2400,
         "close_enough": 2.0,
         "held_budget_frames": 2400,
         "answer_prompts": true
       },
-      "expected": "data/config/village_boundary.json gates[].PondGate. Coming back in through the door the chapter's own first key opened is the right shape for this beat as well as the only shape that works"
+      "expected": "GATEF-CONSOLIDATE-1. The short closing hop from the wide-berth waypoint (S10e-98g) through `RoadGate` itself -- both gates are open from S02's key, and this is the only crossing on the two legs together, verified against the outline the same way S10e-98g's own comment is."
     },
     {
       "id": "S10e-99",
@@ -165,16 +165,16 @@
       "action": "move_to",
       "args": {
         "at": [
-          10.0,
-          -10.0
+          8.0,
+          -16.0
         ],
-        "budget_frames": 60750,
-        "close_enough": 5.0,
+        "budget_frames": 10000,
+        "close_enough": 2.5,
         "held_budget_frames": 10800,
         "answer_prompts": true
       },
       "expected": "Section L.5's post-win row: NPC acknowledgment in the place the chapter started",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "observation": "GATE-F-LEG-S10CDE: retargeted from the bare village-square centre (10,-10) to Tam's own standing position (data/config/village_npcs.json, 8,-16), the nearest villager to the South Bridge approach. S10e attempt 3 reached (13.67,-12.83) -- within the old 5.0 close_enough of (10,-10) -- and then the S10e-101 interact found nobody: `npc_body.gd::add_prompt`'s default prompt radius is 3.8m, and the nearest villager (Tam) was 6.5m from that arrival point (Quarry Foreman at (0,-6) was 15.3m away). Aiming at Tam directly with close_enough 2.5 guarantees the arrival point is within his prompt radius, the same 'aim at the real thing, not the abstract destination' fix S10e-98g already needed for the gate.\n\nanswer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S10e-100",
@@ -199,14 +199,13 @@
     {
       "id": "S10e-102",
       "title": "hear them out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "max_presses": 60,
+        "settle_frames": 30
       },
-      "expected": "record whether the village knows what happened"
+      "expected": "record whether the village knows what happened",
+      "observation": "GATE-F-LEG-S10CDE: was a blind 10x `press` count. Attempt 4 (the first run to actually reach Tam within his prompt radius) showed the exact CD-3 hazard `advance_dialogue_until_closed`'s own header warns about: `village_tam_freed` is a 3-line conversation, and a guessed press count that does not land on an exact close-boundary either leaves it open or, if it overshoots, closes it and then re-opens the same greeting because standing in a re-talkable villager's prompt radius makes the next `interact` a new open rather than a no-op. `advance_dialogue_until_closed` (already used by S02/S02C/S03 for this exact reason -- see S02-28's own header) presses by predicate, reading the panel's own line, and stops the instant it closes rather than guessing how many presses that takes."
     },
     {
       "id": "S10e-102w",
@@ -220,20 +219,36 @@
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
+      "id": "S10e-103d",
+      "title": "walk to Grandpa's door",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -15.7,
+          -16.0
+        ],
+        "budget_frames": 6000,
+        "close_enough": 2.5,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "GATE-F-LEG-S10CDE: intermediate waypoint at `grandpa_house.gd::marker(\"door\")`. Attempt 5 aimed the whole leg straight at Grandpa's interior marker (-24.4,-14.8) and `stick_navigator.gd` (a local wall-follower, not a pathfinder) walked around the OUTSIDE of the house instead of through the doorway, stalling 4.8m short at a north-west exterior corner (-27.0,-11.0) it could not route past -- the same 'aimed at the abstract destination instead of the real passage point' shape S10e-98g's own header already diagnosed for the village gate. Aiming at the doorway itself first, the same fix already applied there."
+    },
+    {
       "id": "S10e-103",
       "title": "walk home to Grandpa",
       "action": "move_to",
       "args": {
         "at": [
-          -22.0,
-          -16.0
+          -24.4,
+          -14.8
         ],
-        "budget_frames": 3000,
-        "close_enough": 3.0,
-        "held_budget_frames": 7200,
+        "budget_frames": 6000,
+        "close_enough": 2.0,
+        "held_budget_frames": 3600,
         "answer_prompts": true
       },
-      "expected": "Section E.6.15: 'return home mid-chapter; verify Grandpa's dialogue state advances with the chapter (home-relevance check)'. Section L.5: 'Grandpa's post-win line'",
+      "expected": "Section E.6.15: 'return home mid-chapter; verify Grandpa's dialogue state advances with the chapter (home-relevance check)'. Section L.5: 'Grandpa's post-win line'. GATE-F-LEG-S10CDE: budget_frames raised 3000 -> 6000 -> 12000, the target corrected from the house origin to Grandpa's real marker, THEN split behind a new S10e-103d door waypoint (see its own header) after a straight aim at this same target walked around the house exterior instead of through the door. Budget lowered back to 6000 now that this leg only covers the short interior distance (~8.8m from the door) rather than the whole village-to-house walk. `grandpa_house.gd::marker(\"grandpa\")` places him at the house's local (-2.4,0,1.2) -- world (-24.4,-14.8) -- and `sequence_director.gd`'s own `_grandpa_prompt` uses the same 3.8m default radius as a villager's, so a tight close_enough keeps the arrival point inside it by construction. The door itself is not the obstacle: `_refresh_door_gate()` holds it open for any beat at or after `walk_out`, which this post-victory seed always is.",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
@@ -249,14 +264,13 @@
     {
       "id": "S10e-105",
       "title": "hear his post-win line out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 14,
-        "settle_frames": 20
+        "max_presses": 60,
+        "settle_frames": 30
       },
-      "expected": "Section L.5: 'Post-win world change | S10 walk-back: healed ground, lights out, patrols withdrawn, NPC acknowledgment, Grandpa's post-win line'"
+      "expected": "Section L.5: 'Post-win world change | S10 walk-back: healed ground, lights out, patrols withdrawn, NPC acknowledgment, Grandpa's post-win line'",
+      "observation": "GATE-F-LEG-S10CDE: was a blind 14x `press` count. Attempt 4 -- the first run to ever actually reach Grandpa within his prompt radius -- reproduced CD-3 exactly: `grandpa_freed` is a 3-line conversation, 14 presses does not land on an exact close boundary, and the excess presses re-open the same greeting (Grandpa is standable-next-to and re-talkable, same as a village NPC) rather than being a harmless no-op once closed. The run derailed downstream at S10e-112 ('map did not open the pause shell: context narrative_modal -> narrative_modal, owner=DialoguePanel') because his dialogue was still open when the segment tried to pause and save. Replaced with the predicate-driven primitive already used for exactly this failure mode elsewhere in the lane (S02-28's own header)."
     },
     {
       "id": "S10e-106",
@@ -285,10 +299,10 @@
       "action": "assert",
       "args": {
         "check": "distance_above",
-        "metres": 3000.0
+        "metres": 1300.0
       },
-      "expected": "Section 0.6: no pacing, navigation, difficulty or economy claim may come from a shortcut. This sub-segment alone (South Bridge to Grandpa's house) is roughly 3.5 km; the SPLIT COST NOTE below records why the original whole-walk-back distance assertion (>= 7000 m) is now spread across S10c/S10d/S10e rather than checked once here.",
-      "observation": "SPLIT NOTE: the original monolithic S10-108 asserted `distance_above: 7000` once, over the WHOLE walk-back (approach through Grandpa's, ~7.6 km). Splitting the walk into S10c/S10d/S10e means no single sub-segment's own `route.csv` sees the full distance, so that one assertion is replaced by a distance floor on EACH sub-segment (S10c/S10d implicitly via their own move_to budgets and this segment's own 3000 m floor here), and the handover report is where the reassembled total across all three is reported and compared against the original 7000 m bar -- a claim about the whole walk-back, not about any one file, needs the whole run's saves/route.csv stitched together, not a single segment's assert."
+      "expected": "Section 0.6: no pacing, navigation, difficulty or economy claim may come from a shortcut. This sub-segment (South Bridge to Grandpa's house, direct) is roughly 1.4-1.5 km measured; the SPLIT COST NOTE below records why the original whole-walk-back distance assertion (>= 7000 m) is now spread across S10c/S10d/S10e rather than checked once here.",
+      "observation": "SPLIT NOTE: the original monolithic S10-108 asserted `distance_above: 7000` once, over the WHOLE walk-back (approach through Grandpa's, ~7.6 km). Splitting the walk into S10c/S10d/S10e means no single sub-segment's own `route.csv` sees the full distance, so that one assertion is replaced by a distance floor on EACH sub-segment (S10c/S10d implicitly via their own move_to budgets and this segment's own floor here), and the handover report is where the reassembled total across all three is reported and compared against the original 7000 m bar -- a claim about the whole walk-back, not about any one file, needs the whole run's saves/route.csv stitched together, not a single segment's assert.\n\nGATE-F-LEG-S10CDE, floor corrected 3000.0 -> 1300.0: the 3000 m figure (like the 3.5 km estimate above it) does not match this leg's actual geography. S10d's own exit position (1.17,-2.88,1337.71) is a straight-line ~1354 m from the village gate (27.5,-16.0) alone; S10e attempt 3's real, un-shortcut walk (South Bridge -> village -> Grandpa's, before the NPC-targeting fix in this same restart) measured 1460.47 m end to end -- already under the old 3000 m floor even with nothing skipped. Cross-checked against the other two sub-segments' own final `distance_m` (S10c 3391.81 m, S10d 4235.49 m; total across all three ~9087 m, comfortably clearing the original whole-walk-back's 7000 m bar), so this leg being short is real geography, not a missing 1500+ m of unwalked route. 1300.0 stays a real floor -- a genuine teleport or skipped leg would still fail it -- without asserting a distance this direct a walk cannot honestly reach."
     },
     {
       "id": "S10e-109",

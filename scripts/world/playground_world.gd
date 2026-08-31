@@ -1261,6 +1261,15 @@ func _build_sigil_gate() -> void:
 	# gate keeps the plain leaf it is supposed to have. See `road_gate.gd`'s
 	# `faction_dressing`.
 	gate.set("faction_dressing", true)
+	# GATE-F-LEG-S10CDE. The four flanking `sigil_gate_gorge_*` carves are
+	# 11m-deep, ~72-degree-walled trenches with no rescue of their own --
+	# reproduced twice (S10c and S10d both permanently pinned inside
+	# `sigil_gate_gorge_west_wing`, burning their whole walk budget). See
+	# `road_gate.gd`'s own `gorge_carve_ids` comment for the full account.
+	gate.set("gorge_carve_ids", [
+		"sigil_gate_gorge_west", "sigil_gate_gorge_east",
+		"sigil_gate_gorge_west_wing", "sigil_gate_gorge_east_wing",
+	])
 	add_child(gate)
 	gate.call("build", self, SIGIL_GATE_AT, SIGIL_GATE_YAW_DEG)
 

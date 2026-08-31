@@ -1,0 +1,20 @@
+{
+  "_comment": "ISOLATED evidence run for GATE-F-LEG-S10CDE: S10c/S10d/S10e (the post-win world-healing walk-back) driven in isolation from a hand-authored 'clean' S10b-exit seed, because ralph/GATE-F-FOUNDATION and ralph/GATE-F-LEG-S10AB did not exist when this lane ran. This is CONDITIONAL evidence, not a full Gate F journey run -- see this run directory's own HONESTY.md and the lane's handover report. Findings are phrased 'S10c-e, given a clean entry, does X', never 'the chapter does X'.",
+  "candidate_sha": "453107fb247d2207352d6fc5024cd47804364932",
+  "candidate_ref": "ralph/GATE-F-LEG-S10CDE (branched from main at 453107fb, plus this lane's own fixes -- see git log on the branch for the exact commit)",
+  "godot_version": "4.7-stable",
+  "lanes": {
+    "logic": {
+      "display_server": "headless",
+      "renderer": "none -- godot --headless --path . --script, NO --rendering-driver"
+    },
+    "capture": {
+      "display_server": "X11 under xvfb-run",
+      "renderer": "opengl3 / Compatibility under xvfb -- llvmpipe software rasterisation"
+    }
+  },
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "S10b-exit.json is HAND-AUTHORED (tools/gate_f/build_s10b_synthetic_seed.gd), not a real S10b run's output -- see saves/S10b-exit.json and this directory's HONESTY.md",
+  "operator": "claude-sonnet-5 agent, ralph/GATE-F-LEG-S10CDE",
+  "free_build": false
+}
