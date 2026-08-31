@@ -819,10 +819,10 @@
       "args": {
         "at": [
           8.0,
-          1319.0
+          1321.0
         ],
         "budget_frames": 1800,
-        "close_enough": 2.0,
+        "close_enough": 0.5,
         "held_budget_frames": 3600,
         "answer_prompts": true
       },
