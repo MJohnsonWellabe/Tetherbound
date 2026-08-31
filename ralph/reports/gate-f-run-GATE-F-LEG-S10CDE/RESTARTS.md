@@ -132,3 +132,29 @@
   steps with `action: "advance_dialogue_until_closed"`, the predicate-
   driven primitive `S02`/`S02C`/`S03` already use for this exact failure
   mode. Re-running S10e fresh from the same S10d-exit seed.
+
+## S10e, restart 5
+
+- **Reason:** S10e's fifth attempt (S10e-superseded-5/) DERAILED at
+  `S10e-105` (19 pass/2 fail/15 skipped). Restart 4's dialogue-advance fix
+  held cleanly for Tam -- `S10e-102` opened and closed
+  `village_tam_freed` in three ticks, no over/under-press. But `S10e-103`
+  (straight `move_to` at Grandpa's real marker, `(-24.4,-14.8)`) failed
+  outright this time: "did not reach (-24, -15) in 12000 walking frames;
+  stopped 4.8 m short at (-27.0, 1.0, -11.0)" -- a position OUTSIDE the
+  house's own footprint on both axes. `stick_navigator.gd` (a local
+  wall-follower, not a pathfinder) walked around the OUTSIDE of the house
+  toward the target instead of through the doorway on the east wall, and
+  stalled at a north-west exterior corner it could not route past. The
+  door is confirmed open (`_refresh_door_gate()` holds it for any beat at
+  or after `walk_out`); this is the same "aimed at the abstract
+  destination instead of the real passage point" shape `S10e-98g`'s own
+  header already diagnosed for the village gate, this time against a
+  doorway. `S10e-105` then correctly BLOCKERed (no modal was open to
+  advance) rather than mis-firing. Full diagnosis in
+  `S10e-superseded-5/WHY_SUPERSEDED.md`.
+- **Fix:** split `S10e-103` behind a new `S10e-103d` waypoint at
+  `grandpa_house.gd::marker("door")` (`(-15.7,-16.0)`), the same shape
+  `S10e-98g`/`S10e-99` already use for the village gate. Budgets
+  rebalanced 12000 -> 6000/6000 now that each leg covers only its own
+  short distance. Re-running S10e fresh from the same S10d-exit seed.

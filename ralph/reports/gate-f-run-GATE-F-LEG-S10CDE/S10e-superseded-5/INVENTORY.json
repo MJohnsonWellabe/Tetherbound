@@ -1,0 +1,187 @@
+{
+  "blocked": "",
+  "captures": {
+    "absent": 0,
+    "delegated": [],
+    "delegated_to": "",
+    "owes": [],
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": false,
+  "cost": {
+    "frame_cost_s": 0.016666,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.2,
+        "frame_cost_s": 0.006528,
+        "frames_remaining": 87582,
+        "predicted_remaining_s": 572.2,
+        "step_index": 3,
+        "wall_spent_s": 0.8,
+        "was_frame_cost_s": 0.005921
+      },
+      {
+        "armed": "in-play sample over budget: 263651 s predicted against 14038 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14037.8,
+        "frame_cost_s": 3.011608,
+        "frames_remaining": 87545,
+        "observed_window_s": 3.011608,
+        "predicted_remaining_s": 263651.2,
+        "samples": 1,
+        "step_index": 8,
+        "wall_spent_s": 362.2,
+        "was_frame_cost_s": 0.006528
+      },
+      {
+        "armed": "in-play sample over budget: 132562 s predicted against 14036 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14035.8,
+        "frame_cost_s": 1.514211,
+        "frames_remaining": 87545,
+        "observed_window_s": 0.016814,
+        "predicted_remaining_s": 132561.6,
+        "samples": 2,
+        "step_index": 8,
+        "wall_spent_s": 364.2,
+        "was_frame_cost_s": 3.011608
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14033.8,
+        "frame_cost_s": 0.016814,
+        "frames_remaining": 87545,
+        "observed_window_s": 0.016587,
+        "predicted_remaining_s": 1472.0,
+        "samples": 3,
+        "step_index": 8,
+        "wall_spent_s": 366.2,
+        "was_frame_cost_s": 1.514211
+      }
+    ]
+  },
+  "derailed": "BLOCKER advance_dialogue_until_closed at step S10e-105: no narrative modal is open. input_context is 'world' and the input owner is nothing. Advancing nothing would have sent the advance button into the world.",
+  "derailed_at": "S10e-105",
+  "derails": [
+    {
+      "action": "advance_dialogue_until_closed",
+      "at": "S10e-105",
+      "context": "world",
+      "resynced_at": null,
+      "skipped": 15,
+      "why": "BLOCKER advance_dialogue_until_closed at step S10e-105: no narrative modal is open. input_context is 'world' and the input owner is nothing. Advancing nothing would have sent the advance button into the world."
+    }
+  ],
+  "disk": {
+    "applies": false
+  },
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "logic",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [],
+  "preflight": {
+    "allow_no_capture": false,
+    "boot_cost_s": 0.49,
+    "capture_available": false,
+    "capture_lane": "",
+    "capture_requested": false,
+    "cost_rechecks": 342,
+    "delegated_captures": 0,
+    "display_server": "headless",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "headless",
+      "from": "ralph/reports/gate-f-run-GATE-F-LEG-S10CDE/RUN_METADATA.json",
+      "key": "lanes.logic.display_server",
+      "lane": "logic"
+    },
+    "measured_frame_cost_s": 0.005921,
+    "measured_frame_cost_s_in_scene": 0.016666,
+    "planned_captures": 0,
+    "predicted_frames": 87615,
+    "predicted_segment_cost_s": 518.8,
+    "predicted_segment_cost_s_in_scene": 1251.8,
+    "record_baseline_hz": 0.0,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.2,
+        "frame_cost_s": 0.006528,
+        "frames_remaining": 87582,
+        "predicted_remaining_s": 572.2,
+        "step_index": 3,
+        "wall_spent_s": 0.8,
+        "was_frame_cost_s": 0.005921
+      },
+      {
+        "armed": "in-play sample over budget: 263651 s predicted against 14038 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14037.8,
+        "frame_cost_s": 3.011608,
+        "frames_remaining": 87545,
+        "observed_window_s": 3.011608,
+        "predicted_remaining_s": 263651.2,
+        "samples": 1,
+        "step_index": 8,
+        "wall_spent_s": 362.2,
+        "was_frame_cost_s": 0.006528
+      },
+      {
+        "armed": "in-play sample over budget: 132562 s predicted against 14036 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 14035.8,
+        "frame_cost_s": 1.514211,
+        "frames_remaining": 87545,
+        "observed_window_s": 0.016814,
+        "predicted_remaining_s": 132561.6,
+        "samples": 2,
+        "step_index": 8,
+        "wall_spent_s": 364.2,
+        "was_frame_cost_s": 3.011608
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14033.8,
+        "frame_cost_s": 0.016814,
+        "frames_remaining": 87545,
+        "observed_window_s": 0.016587,
+        "predicted_remaining_s": 1472.0,
+        "samples": 3,
+        "step_index": 8,
+        "wall_spent_s": 366.2,
+        "was_frame_cost_s": 1.514211
+      }
+    ],
+    "verdict": "not required",
+    "why": "segment declares no captures and no continuous record"
+  },
+  "run_id": "gate-f-run-GATE-F-LEG-S10CDE",
+  "segment": "S10e",
+  "sha": "134b5456c6defaf423ca881c033a985e02309afc",
+  "steps": {
+    "delegated": 0,
+    "fail": 2,
+    "pass": 19,
+    "ran": 21,
+    "refused": 0,
+    "skipped": 15,
+    "total": 36
+  },
+  "uncommittable": []
+}
