@@ -42,6 +42,10 @@ const CONFIG_PATH := "res://data/config/movement.json"
 ## TUNABLE.
 const MOUNT_RADIUS := 4.5
 
+## How long after a dismount the mount stops offering to be ridden again. See
+## `_since_dismount_s()`'s own comment for why this exists. TUNABLE.
+const DISMOUNT_REOFFER_DELAY := 1.5
+
 signal mounted(body: Node3D)
 signal dismounted()
 
@@ -76,6 +80,44 @@ var _last_mount_position: Vector3 = Vector3.ZERO
 
 var _ride_camera: Dictionary = {}
 var _walk_speed: float = 5.0
+
+## When `dismount()` last ran, in engine msec. Defaulted far enough in the
+## past that `_since_dismount_s()` reads as comfortably past
+## `DISMOUNT_REOFFER_DELAY` before any dismount has ever happened — otherwise
+## a fresh scene would read as "just dismounted" and suppress the very first
+## mount of the game.
+##
+## Why this exists at all: `_dismount_spot` always lands the mount within
+## `dismount_distance` (1.6-2.0 m for the roster today) of the player, well
+## inside `MOUNT_RADIUS` — and a dismounted mount resumes FOLLOWING, so it
+## stays roughly that close rather than wandering off. A rider who dismounts
+## next to the thing they actually came to interact with — ride up to a
+## captain, dismount, challenge is this segment's OWN designed sequence
+## (`ralph/GATE_F_MASTER_PROTOCOL.md` section B's S08 span: "...saddle &
+## riding -> three captains...") — has their own just-dismissed mount sitting
+## there as a second, tied-priority `interaction_offer()`. `prompt_arbiter.gd`
+## breaks a tie by nearest, and the mount just placed itself as close as the
+## rules allow, so it can silently win the button and remount the player
+## instead of opening the challenge. Found live by `ralph/GATE-F-LEG-S08`'s
+## isolated S08 run: camera distance round-tripped 6.8 -> 5.2 -> 6.8 across a
+## dismount then a captain-challenge press, proving the "challenge" press
+## actually remounted instead.
+##
+## A short cooldown on the RE-OFFER, not a priority change: this system
+## already uses priority -1 for a genuinely lower-priority fallback (the
+## non-actionable "Put X away" status line `encounter_director.gd`'s
+## `_creature_control_offer()` falls back to), and dropping the ride offer to
+## match it made the STATUS LINE win instead — worse, because pressing it does
+## nothing at all (measured: it broke `tests/smoke_riding.gd`'s very first
+## mount). Suppressing the re-offer for a couple of seconds after getting off
+## leaves the ordinary case (nothing else around) completely unaffected — the
+## mount is still the only candidate, cooldown or not — and only changes the
+## outcome in the specific window this bug lives in: right after dismounting,
+## next to whatever the player dismounted FOR.
+var _dismounted_at_msec: int = -int(DISMOUNT_REOFFER_DELAY * 1000.0) - 1000
+
+func _since_dismount_s() -> float:
+	return float(Time.get_ticks_msec() - _dismounted_at_msec) / 1000.0
 
 
 func _ready() -> void:
@@ -266,6 +308,7 @@ func dismount() -> bool:
 	var body := _mount
 	_mount = null
 	_riding_now = false
+	_dismounted_at_msec = Time.get_ticks_msec()
 
 	var alive := is_instance_valid(body)
 	if alive:
@@ -460,6 +503,8 @@ func interaction_offer(from: Vector3) -> Dictionary:
 		# a prompt teaches nothing.
 		var tack := str(SPECIES.rideable(species_id).get("requires_item", ""))
 		return PROMPTS.offer("%s needs a %s." % [label, _item_name(tack)], distance, 0, false)
+	if _since_dismount_s() < DISMOUNT_REOFFER_DELAY:
+		return {}
 	return PROMPTS.offer("Ride %s" % label, distance)
 
 
