@@ -53,19 +53,20 @@
   {
    "order": 4,
    "item": "stone",
-   "amount": 3,
+   "amount": 4,
    "label": "Prise loose stones",
    "at": [
     22.0,
     -34.0
    ],
    "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
-   "model_scale": 1.0
+   "model_scale": 1.0,
+   "_why_game_f5_stone": "GAME-F5, RESCOPED and measured on the played path 2026-08-31 (lane ralph/GATE-F-LEG-S03). GAME-F5 reported the village gathering budget as short against a camp+floor+wall+door+roof+3-bed bill the game stopped asking for; against the real bill (camp + one creature_bed = 18 wood / 8 stone / 18 fiber) wood and fiber clear comfortably. STONE does not. The village authors exactly three stone nodes at 3 each = 9, against a camp that costs 8 -- a one-node margin, and a real S03 run measured what that costs: two of the three nodes paid out, the sweep ended with 6 stone, the camp could not be armed (the run reported input_context=build_catalogue where it wanted build_placement, which reads like a build-menu defect and is an empty satchel), `home_built` never set, and the sleep and feed rungs never ran. Wood came in at 24 against 18 and fiber at 28 against 18 in the same sweep, so stone was the only binding constraint. 3 -> 4 puts the authored stone budget at 12 against 8, a margin proportionate to the other two, and survives a single missed node. Every number in this file is TUNABLE by its own header; this is the smallest change that makes the opening's build rung affordable in practice rather than only on paper. Mirrored into tests/fixtures/band_split_baseline/harvest.json per that fixture's TRACKED MIRROR policy."
   },
   {
    "order": 5,
    "item": "stone",
-   "amount": 3,
+   "amount": 4,
    "label": "Prise loose stones",
    "at": [
     47.0,
@@ -73,19 +74,21 @@
    ],
    "_why_game_f1": "GAME-F1 (Gate F full run, candidate 453107fb). This node stood at (52, -30), 3.5 m OUTSIDE data/config/village_boundary.json's outline after that line was rerouted on 2026-08-30 (OP-0830-1 and the straddle fix the same day). The fence is a hard StaticBody3D, so the chapter's own first gathering lesson sent the player out through their own village gate and back for this stop, and a player who has not yet found the gate key could not reach it at all. Moved 7.1 m inward to the nearest point that is inside the line, at least 3 m clear of it, at least 4 m from every other node, and still outside the practice cluster's own 15 m disc. The item, amount, label, model and order are unchanged, so the village gathering budget is untouched -- which matters, because with this node and its sibling unreachable the reachable stone in the village (6) fell short of the 8 that progression.json's home.required_pieces actually costs. tests/test_village_boundary.gd now checks every village-area harvest node, so a future reroute of the fence fails a test instead of stranding a node.",
    "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
-   "model_scale": 1.0
+   "model_scale": 1.0,
+   "_why_game_f5_stone": "GAME-F5, RESCOPED and measured on the played path 2026-08-31 (lane ralph/GATE-F-LEG-S03). GAME-F5 reported the village gathering budget as short against a camp+floor+wall+door+roof+3-bed bill the game stopped asking for; against the real bill (camp + one creature_bed = 18 wood / 8 stone / 18 fiber) wood and fiber clear comfortably. STONE does not. The village authors exactly three stone nodes at 3 each = 9, against a camp that costs 8 -- a one-node margin, and a real S03 run measured what that costs: two of the three nodes paid out, the sweep ended with 6 stone, the camp could not be armed (the run reported input_context=build_catalogue where it wanted build_placement, which reads like a build-menu defect and is an empty satchel), `home_built` never set, and the sleep and feed rungs never ran. Wood came in at 24 against 18 and fiber at 28 against 18 in the same sweep, so stone was the only binding constraint. 3 -> 4 puts the authored stone budget at 12 against 8, a margin proportionate to the other two, and survives a single missed node. Every number in this file is TUNABLE by its own header; this is the smallest change that makes the opening's build rung affordable in practice rather than only on paper. Mirrored into tests/fixtures/band_split_baseline/harvest.json per that fixture's TRACKED MIRROR policy."
   },
   {
    "order": 6,
    "item": "stone",
-   "amount": 3,
+   "amount": 4,
    "label": "Prise loose stones",
    "at": [
     -18.0,
     6.0
    ],
    "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
-   "model_scale": 1.0
+   "model_scale": 1.0,
+   "_why_game_f5_stone": "GAME-F5, RESCOPED and measured on the played path 2026-08-31 (lane ralph/GATE-F-LEG-S03). GAME-F5 reported the village gathering budget as short against a camp+floor+wall+door+roof+3-bed bill the game stopped asking for; against the real bill (camp + one creature_bed = 18 wood / 8 stone / 18 fiber) wood and fiber clear comfortably. STONE does not. The village authors exactly three stone nodes at 3 each = 9, against a camp that costs 8 -- a one-node margin, and a real S03 run measured what that costs: two of the three nodes paid out, the sweep ended with 6 stone, the camp could not be armed (the run reported input_context=build_catalogue where it wanted build_placement, which reads like a build-menu defect and is an empty satchel), `home_built` never set, and the sleep and feed rungs never ran. Wood came in at 24 against 18 and fiber at 28 against 18 in the same sweep, so stone was the only binding constraint. 3 -> 4 puts the authored stone budget at 12 against 8, a margin proportionate to the other two, and survives a single missed node. Every number in this file is TUNABLE by its own header; this is the smallest change that makes the opening's build rung affordable in practice rather than only on paper. Mirrored into tests/fixtures/band_split_baseline/harvest.json per that fixture's TRACKED MIRROR policy."
   },
   {
    "order": 7,
@@ -401,5 +404,5 @@
   }
  ],
  "_why_gate_b_three_beds_superseded_2026_08_31": "SUPERSEDED, kept because it is the record of why orders 1020-1027 exist and where they were sited. The arithmetic in the note below -- house 39 wood / 34 stone, THREE creature beds, camp, totalling 69 / 42 / 34 -- is the pre-FIRST-HOUR-FUN-REBUILD bill and the game no longer asks for any of it. data/config/progression.json home.required_pieces is now {camp: 1, creature_bed: 1}, and data/progression/objectives.json calls one bed the mandatory care lesson and tournament proof, with tests/test_quest_log.gd asserting the rung must not require one bed per entrant. The real bill, read through scripts/build/home_progress.gd::materials_threshold(), is 18 wood / 8 stone / 18 fiber, which the twenty village nodes cover in one pass at 28 / 9 / 32. The raise those orders made is therefore no longer load-bearing for the opening -- but it is NOT reverted here, because the surplus is what gives the ladder any margin at all, and because tools/gate_f/segments/S03.json measured the sweep against the OLD bill and reported a shortfall (GAME-F5) that only ever existed in the step script. The one number still worth watching is STONE: three authored nodes, 9 total, against a bill of 8. That is a one-node margin -- and until GAME-F1 was fixed one of those three stood outside the village fence, which put reachable stone at 6 and made the opening build rung unaffordable with no number anywhere being wrong. tests/helpers/gate_a_material_route.gd::TARGET_STOCK is still the old 69 / 42 / 34 and is stale in the same way.",
- "_why_gate_b_three_beds": "OWNER DIRECTIVE 2026-08-23 \u00a71: three creature beds must be affordable before tournament sign-up, and the gatherable budget is raised NEAR THE VILLAGE to pay for them rather than by sending the player further afield. Orders 1020-1027 are that raise: +12 wood and +20 fiber on the practice-path loop the first day already walks. The arithmetic it has to cover is house 39 wood / 34 stone, three creature beds 18 wood / 24 fiber (6 + 8 each, data/items/buildables.json), and the camp 12 wood / 8 stone / 10 fiber -- 69 / 42 / 34, which is tests/helpers/gate_a_material_route.gd's TARGET_STOCK. The old 57 / 42 / 18 bought exactly one bed against an entry gate that wants three rested entrants (tournament.gd::condition_ready, creature_bed.gd's single occupant)."
+ "_why_gate_b_three_beds": "OWNER DIRECTIVE 2026-08-23 §1: three creature beds must be affordable before tournament sign-up, and the gatherable budget is raised NEAR THE VILLAGE to pay for them rather than by sending the player further afield. Orders 1020-1027 are that raise: +12 wood and +20 fiber on the practice-path loop the first day already walks. The arithmetic it has to cover is house 39 wood / 34 stone, three creature beds 18 wood / 24 fiber (6 + 8 each, data/items/buildables.json), and the camp 12 wood / 8 stone / 10 fiber -- 69 / 42 / 34, which is tests/helpers/gate_a_material_route.gd's TARGET_STOCK. The old 57 / 42 / 18 bought exactly one bed against an entry gate that wants three rested entrants (tournament.gd::condition_ready, creature_bed.gd's single occupant)."
 }

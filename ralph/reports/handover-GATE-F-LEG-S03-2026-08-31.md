@@ -204,7 +204,105 @@ shipped config cannot produce.
 
 ---
 
-## 8. What is NOT done, and why
+## 8. What the real run found — S02 and S03 driven end to end
+
+`ralph/reports/gate-f-leg-s03/` is this lane's own run directory (its own
+`RUN_METADATA.json` declares a logic lane honestly, so CD-8b's pre-flight stops
+falling through to the stale 2026-08-27 candidate record that claims xvfb).
+S01 and S02 were re-run from scratch rather than seeded from
+`gate-f-full/S02/saves/S02-exit.json`, because that save is a *product* of
+GAME-F2: Moss at 45.15 of 117.6 (38%) and a level-5 caught bramblebun. An
+earned S03-exit needs an earned entry.
+
+### The pin works, measured on the played path
+
+S02's first fight, this lane, with the pin restored:
+
+| | audit (unpinned) | this lane (pinned) |
+|---|---|---|
+| opponent | level 5, 124.2 max HP | **level 2, 106.2 max HP** |
+| starter after the fight | 45.2 of 117.6 (38%) | **61.9 of 117.6 (53%)** |
+| the catch | — | **landed, party 1 → 2** |
+
+The earned `S02-exit` carries Moss (ripplet L3, 61.9/117.6) and a **level-2**
+bramblebun, both with `base_hp` correctly persisted — FOUNDATION's GAME-F4 fix
+working on the played path, not just in its unit test.
+
+### Four rig defects the run found, all fixed
+
+1. **S02's save block could not write a handoff save.** `game_menu` (Start) is
+   also `backpack_drop`, so opening the shell can raise a "Drop it?"
+   confirmation — *timing-dependent*, because `tab_backpack.gd`'s
+   `_ignore_drop_until_release` guard sometimes holds. `S02-63b` dismissed it
+   with an unconditional B; when the guard held there was nothing to dismiss and
+   B closed the **shell**, so five tab presses went to the world and no save was
+   written. Replaced with `open_menu {tab: map}`, which presses that tab's own
+   shortcut instead of Start — the pattern S03-265 already used, which is why
+   S03's save block never had this failure.
+2. **RIG-F2, fixed properly.** `interact` toggles the catch aim, so the fixed
+   "aim = interact ×2, throw = ×1" pattern lands on the wrong parity: **one
+   `catch_throw` out of four throw blocks**, and the starter stands still
+   through 4×6 s of waits taking free damage. That, not balance, is what fainted
+   Moss. The audit could not fix it because the vocabulary had no
+   press-until-predicate action; this lane wrote it. `press_until` reuses
+   `_step_assert`'s own check vocabulary, PASSes on **zero** presses when the
+   state already holds, is priced at full budget like a walk, and takes a
+   `skip_if` so a retry block after a successful catch reads SKIP, not FAIL
+   (CD-4's rule). Result: two real throws, catch landed, starter survived.
+3. **S03's catch ladder killed what it was trying to catch.** `combat_quick`
+   ×20 into a 106 HP level-2 opponent is ~200 damage. Four fights staged, zero
+   throws, every aim step reporting `input_context=world` — because the fight
+   was already over. Replaced with S02's measured opener (charged + 3 quick,
+   which lands the target at 63% and catches on the second throw).
+4. **The knife equip selected an empty hotbar slot.** The hotbar is 1-indexed
+   (`['', 'axe', 'pickaxe', '', 'knife']`), so the knife bound by four
+   `backpack_assign` presses lands in slot **5**; the step read `hotbar_4`. Every
+   fiber node was worked with no tool. **This is almost certainly GAME-F5's
+   unanswered question** — *"seven nodes were walked to, had the right tool
+   equipped… and produced no gather event… one run cannot tell which"* — and the
+   answer is none of its three candidates: the tool was bound, the wrong slot was
+   selected.
+
+### An instrument defect worth more than any of them
+
+**All twenty gather presses PASSED while ten of them did nothing.** `press`
+asserts the input was *injected*, not that anything received it — precisely the
+T2-GATEF-RUN6/RIG-26 shape already fixed once for engage (*"a press into an
+unengaged world PASSed and the visible failure surfaced several steps later"*).
+A gather step needs an inventory-delta assertion or it cannot report its own
+failure. Recorded, not fixed: it is a vocabulary change, and this lane has
+already added one primitive mid-run.
+
+### The structural finding: there is no recovery before the team rung
+
+This is the one that is **not** a tunable number, and it is stated as an open
+question rather than fixed, per CLAUDE.md.
+
+The chapter's objective order is: build a team of **five** → train to level
+**6** → gather → build camp → build bed → sleep → feed. The **only** creature
+healing in the game is `home_recovery.gd`, i.e. the creature bed — which is
+built at rung 11, *after* the team rung. Verified against the earned save:
+the opening satchel holds **12 basic orbs and nothing else** — no Revive
+draughts (correcting DEFECTS.md's GAME-F2, which says losing "costs one of the
+two Revive draughts the opening satchel grants"); Tam gives a knife and a
+torch; Mira gives an axe, a pickaxe and 30 coins and sells no healing.
+
+So a party that arrives from S02 at ~53% health must catch three more creatures
+and train five to level 6 with no way to heal. In this lane's runs Moss fainted
+during the catch ladder every time, after which `encounter_director` correctly
+refused every later engage with "Ripplet is out of the fight." and the ladder
+cascaded — 9 of the 27 failures in one run are that single refusal repeated.
+
+**No S03-exit produced by this lane is tournament-ready.** That is not a rig
+failure and not a balance number: it is the chapter asking for a trained team of
+five before it has taught, or provided, any way to recover one. Closing it is a
+design decision — move the camp/bed rung ahead of the team rung, grant a healing
+item in the opening, or add out-of-combat regeneration — and this lane will not
+invent it. **PROGRESSION-F7 named the tournament gate as the chapter's
+progression boundary; this is the mechanism behind it.**
+
+## 9. What is NOT done, and why
+
 
 **The real S03 run has not happened.** It depends on `GAME-F4` (every creature
 loaded from a save loses its base stats; the first level-up after that collapses
@@ -234,7 +332,7 @@ the lane brief asked for in that case.
 
 ---
 
-## 9. Verification actually run
+## 10. Verification actually run
 
 - `tests/test_practice_fight_level.gd` + `tests/test_village_boundary.gd` — green.
 - **Both defects reintroduced locally and both new tests failed on them**, with
