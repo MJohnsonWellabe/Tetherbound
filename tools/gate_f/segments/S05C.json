@@ -541,6 +541,19 @@
       "_derived_from": "S05-37"
     },
     {
+      "id": "S05C-37b",
+      "title": "finish the second creature",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 30
+      },
+      "expected": "GATE-F-LEG-S05 measurement: S05-37's 30 taps defeat Meadowhart (first round) but leave Galecrest at 10.8/142.8 hp -- one landed hit short of the kill. Not a game defect: the multi-creature trainer flow ran correctly for Meadowhart's own fall. This step supplies the missing presses with margin.",
+      "_derived_from": "S05-37b"
+    },
+    {
       "id": "S05C-38",
       "title": "let the fight end",
       "action": "wait",

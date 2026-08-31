@@ -498,6 +498,18 @@
       "expected": "Section E.1 per-fight record; an optional fight's difficulty read against a required one is section D's material"
     },
     {
+      "id": "S05-37b",
+      "title": "finish the second creature",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 30
+      },
+      "expected": "GATE-F-LEG-S05 measurement: S05-37's 30 taps defeat Meadowhart (first round) but leave Galecrest at 10.8/142.8 hp -- one landed hit short of the kill that fires _award_victory()/_begin_resolve('won'). Not a game defect: combat_manager.gd's multi-creature trainer flow (round-end -> next-creature send-out -> new round) ran correctly for Meadowhart's own fall (combat_end/combat_start pair at t=463.73/465.12 in that run); the fight simply never got the finishing press this step's budget did not provide, so input_context stayed 'combat' through every following step for the rest of the segment. This step supplies the missing presses with margin."
+    },
+    {
       "id": "S05-38",
       "title": "let the fight end",
       "action": "wait",
