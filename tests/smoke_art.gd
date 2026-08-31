@@ -308,6 +308,7 @@ func _a_colourway_species_swaps_textures_not_tints() -> void:
 	shiny.queue_free()
 
 	_an_alpha_reads_differently_from_its_own_species()
+	_rarity_tiers_read_differently_from_each_other()
 
 
 ## CREATURE-IDENTITY-2's own "done when": a cluster ALPHA must be visibly a
@@ -376,6 +377,64 @@ func _an_alpha_reads_differently_from_its_own_species() -> void:
 
 	plain.queue_free()
 	alpha.queue_free()
+
+
+## Audit B3's own "done when": common/uncommon/rare must differ in
+## presentation from each other and from an untiered body, not only in
+## `spawn_tables.json`'s selection weight -- which is as far as `tier` reached
+## before this fix (drawn to choose a species, then discarded; no reader
+## outside a doc-comment). `set_tier()` now feeds the same silhouette-edge rim
+## `_apply_field_separation()` already uses for grass legibility (B2), so this
+## asserts the ladder is real and monotonic, and that it stays clearly under
+## an alpha's own rim -- the identity tell `_an_alpha_reads_differently_...`
+## above already protects.
+##
+## terrapup rather than burrowback: it carries no authored `field_rim` (unlike
+## bramblebun) and no alpha colourway, so any rim found here can only be
+## tier's doing, not a species opt-in or a colourway swap leaking through.
+func _rarity_tiers_read_differently_from_each_other() -> void:
+	var bodies := {}
+	for tier_id in ["", "common", "uncommon", "rare"]:
+		var body: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
+		body.set_script(CREATURE_BODY)
+		root.add_child(body)
+		body.call("setup", "terrapup", false)
+		body.call("set_tier", tier_id)
+		body.set_physics_process(false)
+		bodies[tier_id] = body
+
+	var rim := {}
+	var ok := true
+	for tier_id in bodies:
+		var mat := _first_material(bodies[tier_id].call("model_pivot") as Node3D)
+		if mat == null or not mat is BaseMaterial3D:
+			_fail("rarity tier check: could not read a material off a '%s'-tier terrapup" % tier_id)
+			ok = false
+			break
+		var base := mat as BaseMaterial3D
+		rim[tier_id] = base.rim if base.rim_enabled else 0.0
+
+	if ok:
+		if rim[""] != 0.0 or rim["common"] != 0.0:
+			_fail("rarity tier check: an untiered or common terrapup renders with a rim (%.2f/%.2f) " % [
+				rim[""], rim["common"]
+			] + "-- common is the baseline every other tier should read as more-than, not a fourth look")
+		elif not (rim["common"] < rim["uncommon"] and rim["uncommon"] < rim["rare"]):
+			_fail(("rarity tier check: rim strength is not a monotonic ladder " +
+				"(common %.2f, uncommon %.2f, rare %.2f) -- the three tiers must be " +
+				"distinguishable from each other, not just from common") % [
+				rim["common"], rim["uncommon"], rim["rare"]
+			])
+		elif rim["rare"] >= CREATURE_BODY.ALPHA_RIM_STRENGTH:
+			_fail(("rarity tier check: rare's rim (%.2f) is not clearly under alpha's own (%.2f) -- " +
+				"alpha has to stay the strongest tell") % [rim["rare"], CREATURE_BODY.ALPHA_RIM_STRENGTH])
+		else:
+			print("  rarity tiers     terrapup rim by tier: common %.2f, uncommon %.2f, rare %.2f" % [
+				rim["common"], rim["uncommon"], rim["rare"]
+			])
+
+	for tier_id in bodies:
+		(bodies[tier_id] as Node3D).queue_free()
 
 
 ## The first material an actual mesh renders with, walking down from a model

@@ -40,6 +40,28 @@ const FIELD_RIM_MAX := 0.30
 const ALPHA_RIM_TINT := 0.15
 const ALPHA_AURA_COLOUR := Color("#ffd479")
 
+## Audit B3 (2026-08-31): `tier` ("common"/"uncommon"/"rare", drawn by
+## `spawn_tables.gd` from `data/config/spawn_tables.json`) reached exactly as
+## far as picking which species to spawn and was then discarded -- no reader
+## anywhere turned it into anything the player could see, so the exit
+## criterion's "common/uncommon/rare/alpha differ in presentation, not just a
+## stat block" failed for three of the four tiers. `alpha` already has its own
+## full treatment (colourway + rim + aura); this gives the three tiers below
+## it a rung on the same silhouette-edge rim `_apply_field_separation()`
+## already uses for grass legibility, scaled well under `ALPHA_RIM_STRENGTH` so
+## alpha stays the strongest tell. `common` is 0.0 on purpose -- it is the
+## baseline every other tier reads as more-than, not a fourth look to author.
+## An unrecognised or missing tier (every authored, non-rolled spawn today --
+## `spawns.json` carries no `tier` field) resolves to `common`'s 0.0, so this
+## is a no-op for the shipped seed-0 Meadows and only becomes visible once a
+## world is actually rolled (`TB_WORLD_SEED`/`roll_new_worlds`), which is the
+## only place tier-bearing data exists at all right now.
+const TIER_RIM_STRENGTH := {
+	"common": 0.0,
+	"uncommon": 0.14,
+	"rare": 0.26,
+}
+
 ## The grounding ray starts this far above the requested spot and traces this far
 ## down.
 ##
@@ -90,6 +112,15 @@ var shiny: bool = false
 ##
 ## Set through `set_alpha()`, never decided here -- same rule as `shiny`.
 var alpha: bool = false
+
+## Audit B3. The spawn-weight tier this individual was drawn at --
+## "common"/"uncommon"/"rare", or "" for a body nobody has told (every
+## authored spawn today; see `TIER_RIM_STRENGTH`'s own comment). Set through
+## `set_tier()`, never decided here -- same rule as `shiny`/`alpha`. Distinct
+## from `alpha`: a creature can be a rolled "rare" AND its cluster's alpha at
+## once, and alpha's own presentation already wins that combination in
+## `_apply_field_separation()`.
+var tier: String = ""
 
 ## T1-CREATURE-ART. Non-empty for a body wearing an ASPECT VARIANT's recolor +
 ## glow + VFX treatment (Nightburrow, Stormtrail, Riftfrill, Ashtusk --
@@ -256,6 +287,17 @@ func set_alpha(value: bool) -> void:
 	if alpha == value:
 		return
 	alpha = value
+	_refresh_shiny_tint()
+
+
+## Audit B3. Give this body its rolled spawn-weight tier and re-dress it --
+## same shape as `set_alpha()` above: the director/encounter table decides
+## tier AFTER `populate()` has already built this body, this has to work on an
+## existing body, and it is a no-op when the tier has not actually changed.
+func set_tier(value: String) -> void:
+	if tier == value:
+		return
+	tier = value
 	_refresh_shiny_tint()
 
 
@@ -634,11 +676,23 @@ func _apply_aspect_vfx() -> void:
 ## Opt-in per species via `placeholder.field_rim` so the lever is applied where
 ## a measurement says it is needed and nowhere else -- see this species' own
 ## note in `data/creatures/species.json` for its number.
+##
+## Audit B3 shares this same channel for rarity-tier legibility: both are "make
+## a non-alpha body's silhouette edge read at a distance", and `_rim_light_node`
+## sets one `rim`/`rim_tint` pair per material, so a second call under a
+## different tag would silently overwrite this one rather than add to it (the
+## same material comes back from `get_active_material` either way). Taking the
+## max of the two sources keeps that a single write and means a creature that
+## needs both (a rare Bramblebun, say) still reads as whichever need is
+## stronger, never less legible than either alone.
 func _apply_field_separation() -> void:
 	if not _has_model:
 		return
-	var strength := clampf(
+	var field_strength := clampf(
 		float(SPECIES.placeholder(species_id).get("field_rim", 0.0)), 0.0, FIELD_RIM_MAX)
+	var tier_strength := clampf(
+		float(TIER_RIM_STRENGTH.get(tier, 0.0)), 0.0, FIELD_RIM_MAX)
+	var strength := maxf(field_strength, tier_strength)
 	if strength <= 0.0:
 		return
 	_rim_light_node(_model, strength, "field")

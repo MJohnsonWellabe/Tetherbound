@@ -406,6 +406,10 @@ func _spawn_creatures() -> void:
 			if not elder.is_empty():
 				wild.set("body_scale", float(elder.get("body_scale", 1.0)))
 			wild.call("populate", species, _player)
+			# Audit B3: "" (no tier) for every authored anchor, which
+			# `TIER_RIM_STRENGTH` resolves to `common`'s 0.0 -- only a rolled
+			# spawn (`spawn_tables.gd::plan_for`) ever sets a real tier here.
+			wild.call("set_tier", str(spawn.get("tier", "")))
 			# The CLUSTER's centre, not this individual's scattered spot: a
 			# cluster sitting on a region boundary must not hand two of its own
 			# members different level bands, which is what reading the body's
@@ -565,6 +569,8 @@ func _apply_plan(spawn: Dictionary, plan: Dictionary) -> Dictionary:
 	var rolled: Dictionary = plan[order]
 	var merged := spawn.duplicate(true)
 	merged["species"] = str(rolled.get("species", spawn.get("species", "")))
+	if rolled.has("tier"):
+		merged["tier"] = str(rolled["tier"])
 	if rolled.has("time"):
 		merged["time"] = str(rolled["time"])
 	if rolled.has("weather"):

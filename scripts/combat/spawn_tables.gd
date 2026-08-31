@@ -212,7 +212,7 @@ static func plan_for(
 				_spend(budgets, region, tier)
 				placed_rare.append(centre)
 
-		var result := {"species": str(pick.get("species", ""))}
+		var result := {"species": str(pick.get("species", "")), "tier": tier}
 		# A table entry may carry its own presence gate. Nothing in the live
 		# tables does today; the pending five all do (see spawn_tables.json's
 		# `_pending`), and a rolled cluster that draws a night species has to
