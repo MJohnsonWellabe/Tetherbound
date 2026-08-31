@@ -506,15 +506,18 @@
     {
       "id": "S02-39",
       "title": "begin the aim",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap",
-        "times": 2,
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
         "settle_frames": 20
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 8: 'The catch is a physical act you aim'. CONTROLLER-MAP put the orb on the hotbar and throws it with interact, so X reaches `_try_throw` through `interact`",
-      "observation": "T2-GATEF-RUN6, third measurement: `combat_manager.gd:1273` applies `catch_math.apply_failure_bound()` once `_tutorial_catch_failure_bound >= 0`, so with `max_catch_failures: 1` the SECOND LANDED throw is forced to succeed. The binding constraint is therefore not catch odds -- it is keeping the fight alive long enough for two throws to land. A lvl-3 starter (117 HP) against a practice bramblebun that rolls lvl 5 / 124 HP loses a long exchange: one RUN6 run ended with Moss at 0.0 HP and the fight over before the retries could throw. So the pre-catch damage is cut to the charged attack plus a single quick (both verbs still exercised for section E.4, ~69 dmg, leaving 34-44% HP on either roll), and the throw sequence is entered sooner and retried three times."
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
     },
     {
       "id": "S02-40",
@@ -562,15 +565,18 @@
     {
       "id": "S02-43d",
       "title": "aim again (throw 2)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap",
-        "times": 2,
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
         "settle_frames": 20
       },
-      "expected": "the orb is re-aimed for landed throw 2; `max_catch_failures` 1 means the game owes the player a success by throw 2",
-      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
     },
     {
       "id": "S02-43e",
@@ -596,15 +602,18 @@
     {
       "id": "S02-43f",
       "title": "aim again (throw 3)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap",
-        "times": 2,
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
         "settle_frames": 20
       },
-      "expected": "the orb is re-aimed for landed throw 3; `max_catch_failures` 1 means the game owes the player a success by throw 2",
-      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
     },
     {
       "id": "S02-43g",
@@ -630,15 +639,18 @@
     {
       "id": "S02-43h",
       "title": "aim again (throw 4)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap",
-        "times": 2,
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
         "settle_frames": 20
       },
-      "expected": "re-aim for a fourth landed throw",
-      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
     },
     {
       "id": "S02-43i",
@@ -732,7 +744,7 @@
     },
     {
       "id": "S02-49",
-      "_comment_anchor": "RIG-T5-3, fixed by ralph/T5-PLAY 2026-08-30. This walked to [31.2, -8.4], which is where `playground_world.gd::GATE_KEY_AT` used to be. `ralph/T5-OPENING` (7da75ac7, 'the village gate now gates, because the village has an edge') moved the key to [30.7, -15.9] and nobody re-ran S02, so both lanes landed into ralph/LAND-0830I individually correct and jointly broken -- MEADOWS_EXIT_CRITERION section K4's integration rule, exactly. The old anchor stood 7.5 m from the key against its 2.4 m interact radius (the radius is deliberate; see GATE_KEY_AT's own comment on prompt contest with the 4.0 m gate), so S02-50's press hit nothing, S02-52 tried a gate with no key, and `road_gate_open` was left unset in the exit save EVERY downstream segment inherits. The gate is a StaticBody3D with sealed wings, so a closed gate is a hard block: the chapter cannot be left. Keep this coordinate equal to GATE_KEY_AT.",
+      "_comment_anchor": "RIG-T5-3, found and fixed by ralph/T5-PLAY 2026-08-30; re-applied here by ralph/GATE-F-RUN7 because this branch is the first to carry BOTH lanes that caused it. This walked to [31.2, -8.4], where `playground_world.gd::GATE_KEY_AT` used to be. `ralph/T5-OPENING` (7da75ac7, 'the village gate now gates, because the village has an edge') moved the key to [30.7, -15.9]; `ralph/T2-GATEF-RUN6` fixed S02's fight and catch on a branch that still carried the old coordinate. Each lane is individually correct and together they leave the chapter's first gate shut -- MEADOWS_EXIT_CRITERION section K4's integration rule exactly. The old anchor stood 7.5 m from the key against its 2.4 m interact radius, so S02-50's press hit nothing, S02-52 tried a gate with no key, and `road_gate_open` was left unset in the exit save EVERY downstream segment inherits. The gate is a StaticBody3D with sealed wings, so a closed gate is a hard block and the chapter cannot be left. Keep this coordinate equal to GATE_KEY_AT.",
       "title": "walk to the old key",
       "action": "move_to",
       "args": {
@@ -744,8 +756,7 @@
         "close_enough": 2.0,
         "held_budget_frames": 7200
       },
-      "expected": "SA7's own done-when: 'near-field and low-stakes, so the player understands early that gated things have keys'. The key sits a short detour off the road toward the square, at `playground_world.gd::GATE_KEY_AT`",
-      "_comment_anchor": "RIG-T5-3, found and fixed by ralph/T5-PLAY 2026-08-30; re-applied here by ralph/GATE-F-RUN7 because this branch is the first to carry BOTH lanes that caused it. This walked to [31.2, -8.4], where `playground_world.gd::GATE_KEY_AT` used to be. `ralph/T5-OPENING` (7da75ac7, 'the village gate now gates, because the village has an edge') moved the key to [30.7, -15.9]; `ralph/T2-GATEF-RUN6` fixed S02's fight and catch on a branch that still carried the old coordinate. Each lane is individually correct and together they leave the chapter's first gate shut -- MEADOWS_EXIT_CRITERION section K4's integration rule exactly. The old anchor stood 7.5 m from the key against its 2.4 m interact radius, so S02-50's press hit nothing, S02-52 tried a gate with no key, and `road_gate_open` was left unset in the exit save EVERY downstream segment inherits. The gate is a StaticBody3D with sealed wings, so a closed gate is a hard block and the chapter cannot be left. Keep this coordinate equal to GATE_KEY_AT."
+      "expected": "SA7's own done-when: 'near-field and low-stakes, so the player understands early that gated things have keys'. The key sits a short detour off the road toward the square, at `playground_world.gd::GATE_KEY_AT`"
     },
     {
       "id": "S02-50",
@@ -770,7 +781,7 @@
     },
     {
       "id": "S02-51",
-      "_comment_anchor": "RIG-T5-4, fixed by ralph/T5-PLAY 2026-08-30, and the SECOND half of the same integration failure as S02-49's. This walked to [27.5, -16.0] = `playground_world.gd::GATE_AT`, which `ralph/T5-OPENING` (7da75ac7) turned into DEAD CODE: the constant is still declared but places nothing. The gate is now built by `village_boundary.gd::_build_gates` from `data/config/village_boundary.json`, whose RoadGate entry sits at the COMPUTED road/outline intersection [38.7, -19.9] with yaw -71.6 (the old 71.0 was eyeballed and stood at 38 degrees to the road it was meant to bar). Measured live by tools/gate_f/diag/probe_road_gate.gd: the gate node is at (38.7, -2.66, -19.9), 11.9 m from the anchor this step used, against a 4.0 m prompt radius -- so S02-52 pressed at open ground. THE GAME IS NOT AT FAULT: that same probe, standing the player 2.9 m out with the key in the satchel, got arbiter.activate()=true, road_gate_open=true and the key consumed. Keep this coordinate equal to the config's RoadGate `at`, not to GATE_AT. close_enough tightened 3.0 -> 2.0 because the probe's sweep shows a nearby TM pickup ('Learn TM: Stone Rush') outbids the gate from 4.0 m out; at 2.9 m and closer the gate wins.",
+      "_comment_anchor": "RIG-T5-4, found and fixed by ralph/T5-PLAY 2026-08-30; re-applied here by ralph/GATE-F-RUN7. The second half of the same integration failure as the key anchor's. This walked to [27.5, -16.0] = `playground_world.gd::GATE_AT`, which `ralph/T5-OPENING` turned into DEAD CODE: the constant is still declared but places nothing. The gate is now built by `village_boundary.gd::_build_gates` from `data/config/village_boundary.json`, whose RoadGate entry sits at the COMPUTED road/outline intersection [38.7, -19.9] with yaw -71.6 (the old 71.0 was eyeballed and stood at 38 degrees to the road it was meant to bar). T5-PLAY measured the gate node live at (38.7, -2.66, -19.9), 11.9 m from the old anchor against a 4.0 m prompt radius, and proved the GAME is not at fault: standing 2.9 m out with the key, arbiter.activate() returned true, road_gate_open was set and the key consumed. Keep this equal to the config's RoadGate `at`, not to GATE_AT. close_enough 3.0 -> 2.0 because a nearby TM pickup outbids the gate from 4.0 m out.",
       "title": "walk to the road gate",
       "action": "move_to",
       "args": {
@@ -781,8 +792,7 @@
         "budget_frames": 3000,
         "close_enough": 2.0
       },
-      "expected": "the gate stands square across the road at `data/config/village_boundary.json`'s RoadGate entry",
-      "_comment_anchor": "RIG-T5-4, found and fixed by ralph/T5-PLAY 2026-08-30; re-applied here by ralph/GATE-F-RUN7. The second half of the same integration failure as the key anchor's. This walked to [27.5, -16.0] = `playground_world.gd::GATE_AT`, which `ralph/T5-OPENING` turned into DEAD CODE: the constant is still declared but places nothing. The gate is now built by `village_boundary.gd::_build_gates` from `data/config/village_boundary.json`, whose RoadGate entry sits at the COMPUTED road/outline intersection [38.7, -19.9] with yaw -71.6 (the old 71.0 was eyeballed and stood at 38 degrees to the road it was meant to bar). T5-PLAY measured the gate node live at (38.7, -2.66, -19.9), 11.9 m from the old anchor against a 4.0 m prompt radius, and proved the GAME is not at fault: standing 2.9 m out with the key, arbiter.activate() returned true, road_gate_open was set and the key consumed. Keep this equal to the config's RoadGate `at`, not to GATE_AT. close_enough 3.0 -> 2.0 because a nearby TM pickup outbids the gate from 4.0 m out."
+      "expected": "the gate stands square across the road at `data/config/village_boundary.json`'s RoadGate entry"
     },
     {
       "id": "S02-52",
@@ -904,22 +914,13 @@
     },
     {
       "id": "S02-63",
-      "title": "open the pause shell",
+      "title": "open the pause shell on the Map tab",
       "action": "open_menu",
-      "args": {},
-      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab"
-    },
-    {
-      "id": "S02-63b",
-      "title": "put away the drop confirmation the open press raised",
-      "action": "press",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap",
-        "settle_frames": 30
+        "tab": "map"
       },
-      "expected": "B dismisses the 'Drop it? / Cancel' confirmation and leaves the shell open, which is what a player does. DEFECT RECORDED, not worked around silently: `game_menu` and `backpack_drop` are the SAME physical button -- gamepad Start, button 6 in project.godot -- so the press that opens the pause shell also fires the destructive drop verb on the backpack tab the shell opens on. tab_backpack.gd:1345-1370 already carries a guard for exactly this (`_ignore_drop_until_release`) and its comment describes this exact symptom; the guard did not hold here. Observed in S02 attempts 5 and 6: the shell opened on `menu_backpack` with focus on 'Drop it', 5x menu_tab_right never left the backpack tab, and no handoff save was written. A developer probe (tools/opening_fix/probe_tab_cycle.gd on ralph/OPENING-STARTER-FOCUS) confirms the game cycles backpack->creatures->map->quest_log->build->SAVE->settings correctly when the satchel is EMPTY, so the tab machinery is sound and the confirmation is what eats the presses.",
-      "severity_candidate": "SHIP"
+      "expected": "the `map` shortcut opens the shell straight onto the Map tab. Deliberately NOT `game_menu`: that button is shared with `backpack_drop` and can raise a drop confirmation that eats the tab presses.",
+      "observation": "RIG, 2026-08-31 (lane ralph/GATE-F-LEG-S03, which needs a real S02-exit to enter S03 from). This block used to open the shell with `game_menu` (Start) and cycle five tabs right. Start is ALSO `backpack_drop` (project.godot; the two share gamepad button 6), so the press that opens the shell onto the Satchel can also fire the destructive drop verb and raise a 'Drop it? / Cancel' confirmation -- and S02-63b existed to dismiss it with B. The trouble is that the confirmation is TIMING-DEPENDENT: tab_backpack.gd's `_ignore_drop_until_release` guard sometimes holds and sometimes does not. When it holds there is no confirmation to dismiss, and the unconditional B press closes the SHELL instead. That is what happened on this lane's run: S02-63 reported focus on '' rather than 'Drop it', B closed the shell, the five RB presses went to the world, S02-65 correctly read input_context=world, and no handoff save was written -- so the chain could not continue past S02. A step that must guess whether a modal is present is CD-3's own failure shape ('reach a state, then assert it'), and the vocabulary has no conditional press. So the fix is to stop needing the guess: `open_menu` with a `tab` presses THAT TAB'S OWN SHORTCUT (data/config/menu.json `shortcuts`) rather than Start, so the drop verb is never fired and no confirmation can appear. There is no `save` shortcut, only `inventory`->backpack and `map`->map, so this opens on Map and walks three tabs right (map -> quest_log -> build -> save). This is not a new pattern: it is exactly what S03-265/266 already does for the same handoff save, and S03's save block has never had this failure."
     },
     {
       "id": "S02-64",
@@ -928,11 +929,10 @@
       "args": {
         "control": "menu_tab_right",
         "hold": "tap",
-        "times": 5,
+        "times": 3,
         "settle_frames": 45
       },
-      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json",
-      "observation": "settle_frames raised 12 -> 45. Attempt 5 opened the shell on `menu_backpack` with focus on 'Drop it' and five RB presses left it on `menu_backpack`, so the Save tab was never reached and no handoff save was written. A developer probe (tools/opening_fix/probe_tab_cycle.gd) shows the game cycles correctly -- backpack -> creatures -> map -> quest_log -> build -> SAVE -> settings on five presses -- in a world where the player carries nothing, at 20 frames between presses. The difference in S02 is a full satchel from Grandpa plus the map tab baking its map, which is the exact case this file's own `press` comment warns about: 'a tab switch rebuilds a whole tab body ... back-to-back presses with only the injection's own frames between them can arrive while the previous one is still being digested.'"
+      "expected": "three RB presses move Map -> Quest Log -> Build -> Save. data/config/menu.json's tab order is backpack, creatures, map, quest_log, build, save, settings, so Map (index 2) reaches Save (index 5) in three. settle_frames stays at 45: a tab switch rebuilds a whole tab body and back-to-back presses can arrive while the previous one is still being digested."
     },
     {
       "id": "S02-65",

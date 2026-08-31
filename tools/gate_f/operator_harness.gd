@@ -1355,6 +1355,13 @@ static func _predict_frames(steps: Array) -> int:
 				total += 12
 			"advance_dialogue_until_closed":
 				total += int(args.get("max_presses", 60)) * 4
+			"press_until":
+				# RIG-F2. Priced at its FULL budget, never at the early exit --
+				# same rule `move_to`'s walk budget follows. A step that usually
+				# stops after one press must not be able to talk the cost gate
+				# into launching a segment it cannot afford in the worst case.
+				total += maxi(1, int(args.get("max_presses", 4))) \
+					* (int(args.get("settle_frames", 20)) + 4)
 			"capture":
 				total += 6
 			"capture_seq":
@@ -1760,6 +1767,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_press(args, id)
 		"press_multi":
 			actual = await _step_press_multi(args, id)
+		"press_until":
+			actual = await _step_press_until(args, id)
 		"hold":
 			actual = _step_hold(args, id)
 		"release":
@@ -2980,6 +2989,64 @@ func _step_face(args: Dictionary) -> String:
 ## physical event plus the paired poll. Never `Game.menu().open()` -- calling
 ## open() proves open() works and nothing about whether the button reaches it,
 ## which is `smoke_menu.gd`'s own stated reason for existing.
+## RIG-F2 — press an action until the world says the press landed.
+##
+## The primitive the Gate F audit named as missing and could not write mid-run:
+## *"the correct rig fix is 'press until the context is `combat_aim`', and the
+## step vocabulary has no press-until-predicate action -- `wait_until` waits, it
+## does not act."*
+##
+## Why it is needed, from measured evidence rather than from theory. `interact`
+## TOGGLES the catch aim, and every catch block in S02/S03 was written as a
+## fixed pattern -- "aim" as `interact` x2, then "throw" as `interact` x1. That
+## pattern lands on a different PARITY depending on whether the aim happened to
+## be armed when the block started, so it arms-and-disarms and throws nothing.
+## This lane measured one `catch_throw` out of four throw blocks in S02, and the
+## cost is not just the missed throws: the segment stands still through four
+## six-second waits while the opponent keeps attacking, which is what actually
+## fainted the starter and left the handoff save with a party of one.
+##
+## This is CD-3's rule ("no step may encode a guessed repetition count for a
+## state-changing UI; reach a state, then assert it") applied to a PRESS. The
+## predicate vocabulary is `_step_assert`'s own, so a check that works in an
+## `assert` works here and there is no second implementation to drift.
+##
+## Contract: PASSes the instant the predicate holds, reporting how many presses
+## that took -- including ZERO, when the world was already in the wanted state,
+## which is the case the fixed pattern got wrong. FAILs at `max_presses` naming
+## the last thing it saw. A predicate this envelope cannot evaluate is a SKIP
+## rather than a press storm.
+func _step_press_until(args: Dictionary, step_id: String) -> String:
+	var control := str(args.get("control", ""))
+	if control.is_empty():
+		return "HARNESS-ERROR press_until step %s: no control named" % step_id
+	var check: Dictionary = args.get("check", {}) as Dictionary
+	if check.is_empty():
+		return "HARNESS-ERROR press_until step %s: no check named" % step_id
+	var budget := maxi(1, int(args.get("max_presses", 4)))
+	var settle := maxi(1, int(args.get("settle_frames", 20)))
+	var hold := str(args.get("hold", HOLD_TAP))
+
+	var first := _step_assert(check)
+	if bool(first.get("skip", false)):
+		return "SKIPPED press_until: %s" % str(first.get("actual", ""))
+	if bool(first.get("ok", false)):
+		return "already true before any press (%s), 0 x %s sent" % [
+			str(first.get("actual", "")), control]
+
+	var last := str(first.get("actual", ""))
+	for attempt in budget:
+		var sent := await _inject(control, hold)
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		for i in settle:
+			await physics_frame
+		var now := _step_assert(check)
+		last = str(now.get("actual", ""))
+		if bool(now.get("ok", false)):
+			return "%d x %s reached it: %s" % [attempt + 1, control, last]
+	return "FAIL %d x %s did not reach it; last saw %s" % [budget, control, last]
+
 func _step_open_menu(args: Dictionary, step_id: String) -> String:
 	var tab := str(args.get("tab", ""))
 	# `menu.json`'s `shortcuts` maps an action to a tab in both directions, so

@@ -458,12 +458,18 @@
     {
       "id": "S03C-36a",
       "title": "begin the aim",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
       },
-      "expected": "the throw is aimed, not commanded",
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong.",
       "_derived_from": "S03-36a"
     },
     {
@@ -550,12 +556,18 @@
     {
       "id": "S03C-36b",
       "title": "begin the aim",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
       },
-      "expected": "the throw is aimed, not commanded",
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong.",
       "_derived_from": "S03-36b"
     },
     {
@@ -642,12 +654,18 @@
     {
       "id": "S03C-36c",
       "title": "begin the aim",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
       },
-      "expected": "the throw is aimed, not commanded",
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong.",
       "_derived_from": "S03-36c"
     },
     {
@@ -734,12 +752,18 @@
     {
       "id": "S03C-36d",
       "title": "begin the aim",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
       },
-      "expected": "the throw is aimed, not commanded",
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong.",
       "_derived_from": "S03-36d"
     },
     {
@@ -826,12 +850,18 @@
     {
       "id": "S03C-36e",
       "title": "begin the aim",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
       },
-      "expected": "the throw is aimed, not commanded",
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong.",
       "_derived_from": "S03-36e"
     },
     {
@@ -918,12 +948,18 @@
     {
       "id": "S03C-36f",
       "title": "begin the aim",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
       },
-      "expected": "the throw is aimed, not commanded",
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong.",
       "_derived_from": "S03-36f"
     },
     {
@@ -1010,12 +1046,18 @@
     {
       "id": "S03C-36g",
       "title": "begin the aim",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
       },
-      "expected": "the throw is aimed, not commanded",
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong.",
       "_derived_from": "S03-36g"
     },
     {
@@ -1102,12 +1144,18 @@
     {
       "id": "S03C-36h",
       "title": "begin the aim",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
       },
-      "expected": "the throw is aimed, not commanded",
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong.",
       "_derived_from": "S03-36h"
     },
     {
@@ -1194,12 +1242,18 @@
     {
       "id": "S03C-36i",
       "title": "begin the aim",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
       },
-      "expected": "the throw is aimed, not commanded",
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong.",
       "_derived_from": "S03-36i"
     },
     {
@@ -1286,12 +1340,18 @@
     {
       "id": "S03C-36j",
       "title": "begin the aim",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "interact",
-        "hold": "tap"
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
       },
-      "expected": "the throw is aimed, not commanded",
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong.",
       "_derived_from": "S03-36j"
     },
     {
