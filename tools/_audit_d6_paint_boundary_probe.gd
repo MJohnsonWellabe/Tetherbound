@@ -38,9 +38,23 @@ extends SceneTree
 ## If idedge is blank or uncorrelated there, the theory is RULED OUT and the
 ## faint residual named in FOLLOWUP-2026-08-31.md is still unexplained.
 ##
-## This tool changes NOTHING on disk. `diag_paint_boundary_mode` is a shader
-## uniform pushed live via set_shader_param, restored to 0 before exit as
-## paranoia (the process exits anyway; same pattern as the mipfilter probe).
+## RESULT (2026-08-31, ralph/reports/audit/D6-seam-probe/PAINT-BOUNDARY-
+## 2026-08-31.md): RULED OUT. idmap reads uniform solid black (a single
+## texture id, no variation at all) across the entire seam crop box, and
+## idedge is entirely blank there -- zero id discontinuity anywhere near the
+## dash, at any of the three ids the scene's own textures use nearby. The
+## seam is not a paint-boundary artefact.
+##
+## This tool changes NOTHING on disk when run as committed. `diag_paint_
+## boundary_mode` is a shader uniform pushed live via set_shader_param,
+## restored to 0 before exit as paranoia (the process exits anyway; same
+## pattern as the mipfilter probe) -- but the uniform declaration and the
+## EMISSION diagnostic block it gates in terrain_ground.gdshader were
+## themselves reverted after this session's run (0-line diff from origin/
+## main, matching this backlog item's own negative-result convention). To
+## rerun this tool, re-apply that shader diff first -- see this branch's git
+## history (the commit that added `diag_paint_boundary_mode` and the
+## fragment()-tail block reading it) for the exact patch.
 ##
 ## Invocation (never --headless with a rendering driver; see
 ## ralph/conventions.md "Art pipeline traps"):
