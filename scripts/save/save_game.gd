@@ -695,6 +695,16 @@ func _party_to_array(party: Variant) -> Array:
 			# additive and a save written before it round-trips unchanged.
 			"secondary_type": str(instance.get("secondary_type")),
 			"nickname": str(instance.get("nickname")),
+			# GAME-F4. `_apply_level_stats` (creature_instance.gd) recomputes
+			# max_hp/attack/defence from THESE three, not from themselves, on
+			# every gain_xp/set_level/drink_elixir/evolve_into call -- so a
+			# save that omitted them left every loaded creature's next
+			# level-up computing from the class default (1.0), collapsing a
+			# 117 hp creature to 1.18. Saved here so `_array_to_party` can
+			# restore the real ones instead of guessing.
+			"base_hp": float(instance.get("base_hp")),
+			"base_attack": float(instance.get("base_attack")),
+			"base_defence": float(instance.get("base_defence")),
 			"max_hp": float(instance.get("max_hp")),
 			"attack": float(instance.get("attack")),
 			"defence": float(instance.get("defence")),
@@ -737,6 +747,8 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		return
 	var party_ref := party as RefCounted
 	party_ref.call("clear")
+	var species_raw: Variant = _read_json_file(SPECIES_PATH).get("species", {})
+	var species_table: Dictionary = species_raw as Dictionary if typeof(species_raw) == TYPE_DICTIONARY else {}
 	for raw: Variant in (entries as Array):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
@@ -758,6 +770,27 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.battles_fought = int(d.get("battles_fought", 0))
 		creature.caught_on_day = int(d.get("caught_on_day", 0))
 		creature.levels_gained_with_you = int(d.get("levels_gained_with_you", 0))
+		# GAME-F4. Absent on any save written before this fix -- `base_hp`/
+		# `base_attack`/`base_defence` were never in `_party_to_array`'s
+		# output, so `_apply_level_stats` (creature_instance.gd) computed the
+		# NEXT level-up from the class default of 1.0 and collapsed the
+		# creature's stats (measured: 117.60 hp -> 1.18). A value of 0.0 here
+		# means exactly that -- an old save or one written before this round
+		# trip existed -- so it is repaired from species.json the same way
+		# `move_quick`/`move_charged` already are on a VERSION 1 migration,
+		# falling back to `CreatureInstance.from_species`'s own defaults
+		# (100/20/20) only if the species itself is unknown.
+		var species_def: Dictionary = species_table.get(creature.species_id, {}) as Dictionary \
+			if typeof(species_table.get(creature.species_id, {})) == TYPE_DICTIONARY else {}
+		var saved_base_hp := float(d.get("base_hp", 0.0))
+		var saved_base_attack := float(d.get("base_attack", 0.0))
+		var saved_base_defence := float(d.get("base_defence", 0.0))
+		creature.base_hp = saved_base_hp if saved_base_hp > 0.0 \
+			else float(species_def.get("base_hp", 100.0))
+		creature.base_attack = saved_base_attack if saved_base_attack > 0.0 \
+			else float(species_def.get("base_attack", 20.0))
+		creature.base_defence = saved_base_defence if saved_base_defence > 0.0 \
+			else float(species_def.get("base_defence", 20.0))
 		creature.max_hp = float(d.get("max_hp", 1.0))
 		creature.attack = float(d.get("attack", 1.0))
 		creature.defence = float(d.get("defence", 1.0))
