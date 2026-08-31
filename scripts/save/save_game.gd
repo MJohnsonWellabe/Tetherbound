@@ -720,7 +720,11 @@ func _party_to_array(party: Variant) -> Array:
 			# recomputes `max_hp`/`attack`/`defence` from THESE, never from
 			# themselves -- so if these are missing on load, the very next
 			# level-up (or elixir, or evolve) throws away the creature's real
-			# stats and rebuilds it from the class default of 1.0.
+			# stats and rebuilds it from the class default of 1.0. Independently
+			# reproduced by GATE-F-LEG-S09 driving its own checkpoint fight: a
+			# save/load/level-up sequence a full playthrough hits constantly
+			# turned a healthy level-18 party member (max_hp in the 200s) into a
+			# one-hit-faint liability the moment it gained one more level.
 			"base_hp": float(instance.get("base_hp")),
 			"base_attack": float(instance.get("base_attack")),
 			"base_defence": float(instance.get("base_defence")),
