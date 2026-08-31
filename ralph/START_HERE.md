@@ -4,10 +4,44 @@ This is the **single current entry point for autonomous Meadows work**.
 
 If another document looks like a startup guide, milestone guide, handover, or old Ralph manual, do not treat it as current merely because it exists. Start here.
 
-## CURRENT STATE — 2026-08-30 (coordinator update, post-LAND-0830B)
+## CURRENT STATE — 2026-08-30 (coordinator update, post-LAND-0830J landing)
 
-**This section supersedes every dated section below it**, including the
-dark-features section immediately following.
+**This section supersedes every dated section below it.**
+
+- **`main` is at `453107fb` — `ralph/LAND-0830J` LANDED** via `ralph-sweep.yml`,
+  CI verified at job level across BOTH pages of run 3253 (56 success, 2 expected
+  skips; `authored_camps` passed on its single failed-jobs re-run — it is the
+  known pre-existing arbiter intermittent, measured at **1-in-4 locally** the
+  same day, same trail_camp signature). The landing carries the whole 0830J
+  consolidation (~20 lanes) plus three commits from the incoming coordinator:
+  - the **practice-cluster straddle fix** — the village outline's south-east run
+    was rerouted so the full r15 spawn disk AND the catch tests' (48,-58) stand
+    sit inside the fence; `party_count_after_catches` green three CI-independent
+    ways. See `data/config/village_boundary.json`'s `_why_southeast_bulge` note;
+    the corner at [38,-22] is load-bearing (gate jamb panel), do not "clean it up".
+  - `docs/future/` — the owner's Regions 2–8 vision (progression plan, art/world
+    handoff, boards). **VISION ONLY, nothing there is authorized to build.**
+  - the closing straddle-report bookkeeping in this landing's history.
+- **The full-state audit is IN FLIGHT** per `ralph/NEXT_COORDINATOR_FULL_STATE_AUDIT.md`:
+  thirteen fresh sessions spawned 2026-08-30 ~21:25 UTC against `main@453107fb` —
+  `ralph/AUDIT-A`…`ralph/AUDIT-K`, `ralph/GATE-F-FULL`, `ralph/PHOTO-EVERYTHING` —
+  reporting into `ralph/reports/audit/*-2026-08-31.md`. **No game-code changes in
+  those lanes.** The coordinator session ("Tetherbound coordinator setup") holds
+  landing rights and assembles `ralph/reports/audit/INDEX-2026-08-31.md` for the
+  planning pass when they finish.
+- A website redesign per the owner's 2026-08-30 pack is in flight on
+  `ralph/WEBSITE-REDESIGN` (site/ only; real screenshots only; no Steam language).
+- Branch cleanup owed from the previous handover (31 contained branches; keep
+  `ralph-status`) has NOT been done yet — branches cannot be deleted from
+  sessions, only by Actions.
+- Still open, unchanged: the arbiter prompt-press family (one lane's worth, now
+  with a measured local repro rate), reference art for the two unrecoverable
+  humanoids, the ROG Ally playtest (OP-0830-6), 73 unheard audio files,
+  `roll_new_worlds` OFF until Gate F re-baselines (D-0830-1).
+
+### Historical: post-LAND-0830B state (superseded above)
+
+**Kept as history; its `main` SHA and in-flight lane list are stale.**
 
 - **`main` is at `07b3e2aa` — `ralph/LAND-0830B` LANDED** (fast-forward ref
   push, CI verified at job level: 53 success, 2 expected skips, 0 failures;
