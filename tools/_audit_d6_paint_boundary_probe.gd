@@ -38,7 +38,7 @@ extends SceneTree
 ## If idedge is blank or uncorrelated there, the theory is RULED OUT and the
 ## faint residual named in FOLLOWUP-2026-08-31.md is still unexplained.
 ##
-## This tool changes NOTHING on disk. `_diag_paint_boundary_mode` is a shader
+## This tool changes NOTHING on disk. `diag_paint_boundary_mode` is a shader
 ## uniform pushed live via set_shader_param, restored to 0 before exit as
 ## paranoia (the process exits anyway; same pattern as the mipfilter probe).
 ##
@@ -157,25 +157,25 @@ func _run() -> void:
 	for i in REFRAME_FRAMES:
 		await physics_frame
 
-	var default_mode: Variant = _material.call("get_shader_param", "_diag_paint_boundary_mode")
-	print("[paint-boundary-probe] shipped _diag_paint_boundary_mode=%s" % str(default_mode))
+	var default_mode: Variant = _material.call("get_shader_param", "diag_paint_boundary_mode")
+	print("[paint-boundary-probe] shipped diag_paint_boundary_mode=%s" % str(default_mode))
 
 	await _shoot("seam-probe-paint-default")
 
-	_material.call("set_shader_param", "_diag_paint_boundary_mode", 1)
+	_material.call("set_shader_param", "diag_paint_boundary_mode", 1)
 	for i in RECONFIG_FRAMES:
 		await physics_frame
 	print("[paint-boundary-probe] diag mode 1 (raw id map)")
 	await _shoot("seam-probe-paint-idmap")
 
-	_material.call("set_shader_param", "_diag_paint_boundary_mode", 2)
+	_material.call("set_shader_param", "diag_paint_boundary_mode", 2)
 	for i in RECONFIG_FRAMES:
 		await physics_frame
 	print("[paint-boundary-probe] diag mode 2 (id-change edge mask)")
 	await _shoot("seam-probe-paint-idedge")
 
 	# Leave the live node as found -- paranoia only, the process exits anyway.
-	_material.call("set_shader_param", "_diag_paint_boundary_mode", 0)
+	_material.call("set_shader_param", "diag_paint_boundary_mode", 0)
 
 	if not _failures.is_empty():
 		for line in _failures:

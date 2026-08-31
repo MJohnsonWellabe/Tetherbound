@@ -145,7 +145,7 @@ uniform vec4 aerial_fade_colour : source_color = vec4(0.745, 0.792, 0.808, 1.0);
 // same-texture detiling-tile edge, which two prior probe sessions already
 // ruled out as the sole explanation. Revert this block before landing any
 // real fix that doesn't need it.
-uniform int _diag_paint_boundary_mode = 0; // 0=off 1=raw id map 2=id-change edge mask
+uniform int diag_paint_boundary_mode = 0; // 0=off 1=raw id map 2=id-change edge mask
 // ---------------------------------------------------------------------------
 
 // Varyings & Types
@@ -623,10 +623,10 @@ void fragment() {
 	// (mode 0) in every shipped render; EMISSION bypasses PBR/tonemap so the
 	// readout is lighting-independent, per the prior probe session's own
 	// finding that an albedo-based readout at this stand was not trustworthy.
-	if (_diag_paint_boundary_mode > 0) {
+	if (diag_paint_boundary_mode > 0) {
 		float base_id_f = float(texture_ids[3].x);
 		float over_id_f = float(texture_ids[3].y);
-		if (_diag_paint_boundary_mode == 1) {
+		if (diag_paint_boundary_mode == 1) {
 			// Raw id map: distinct hashed colour per base texture id.
 			EMISSION = fract(vec3(base_id_f * 0.37, base_id_f * 0.61, base_id_f * 0.89));
 		} else {
