@@ -38,15 +38,25 @@ A..K-2026-08-31.md`), `GATE-F-FULL-2026-08-31.md`, `VISUAL-CENSUS-2026-08-31.md`
 
 ---
 
-## Wave 2 — queued, held for file-ownership reasons
+## Wave 2 — landed 2026-08-31
 
-| id | item | source | why held |
+Held items above were launched once their owning Gate-F-leg lanes reached/passed
+the relevant file scope; all five below are on `main` (via `ralph/LAND-BACKLOG-0831-2`),
+verified by `git merge-base --is-ancestor` against `origin/main`, not by CI badge alone.
+
+| id | item | source | status |
 |---|---|---|---|
-| `BACKLOG-F3-GRANDPA-DIALOGUE` | Grandpa Elias has zero dialogue from tournament sign-up onward and no reaction to the ending, while every other named NPC has both (~30 lines, 5 conversations, one read-ladder in `sequence_director.gd`) | Audit F3 | Grandpa's house content is inside `GATE-F-LEG-S03`'s active scope |
-| `BACKLOG-BED-SCALE-POSE` | owner: creature beds too small; creatures stand on beds instead of lying | Owner playtest items 11, 14 | bed prefab/placement is inside `S03`'s (home) and `S09`'s (camp) active scope |
+| `BACKLOG-F3-GRANDPA-DIALOGUE` | Grandpa Elias has zero dialogue from tournament sign-up onward and no reaction to the ending, while every other named NPC has both (~30 lines, 5 conversations, one read-ladder in `sequence_director.gd`) | Audit F3 | **landed** |
+| `BACKLOG-BED-SCALE-POSE` | owner: creature beds too small; creatures stand on beds instead of lying | Owner playtest items 11, 14 | **landed** |
+| `BACKLOG-GLOW-PICKUPS-ONLY` | owner: only key items/TMs/orbs/potions should glow; bulk nodes (trees/wood/stone) should not, or grass should clear space around them | Owner playtest item 3, adjacent to Audit D3 | **landed** |
+| `BACKLOG-VILLAGE-BERRIES` | owner: "there needs to be more berries in the village" | Owner playtest item 15 | **landed** |
+| `BACKLOG-I6-MINIMAP-HEADING-FIX` | minimap heading test compared a net-displacement chord across an OF15 deflection event instead of tail heading | Audit I6 (diagnosis), fix same day | **landed** |
+
+Still queued, unchanged from the original hold reasons:
+
+| id | item | source | why still held |
+|---|---|---|---|
 | `BACKLOG-NPC-DIALOGUE-TERSE` | owner: "all NPCs talk too much, just have them be short and to the point" | Owner playtest item 5 | tournament/trainer dialogue (Mira/Tam/Oskar/Halda) is inside `S04`'s active scope; do the mechanical terseness pass once S04 lands so it isn't editing files S04 is also touching |
-| `BACKLOG-GLOW-PICKUPS-ONLY` | owner: only key items/TMs/orbs/potions should glow; bulk nodes (trees/wood/stone) should not, or grass should clear space around them | Owner playtest item 3, adjacent to Audit D3 | risk of touching the same scatter/placement-rule code D3 already names as an open, harder defect — do after D3 is scoped |
-| `BACKLOG-VILLAGE-BERRIES` | owner: "there needs to be more berries in the village" | Owner playtest item 15 | the exact file, `data/config/bands/band1_lower_meadows/harvest.json`, is `S03`'s to edit for GAME-F1/F5 right now |
 | `BACKLOG-E-SCENE-TUNING` | E1 (village orientation fails by day), E3 (Team Tether occupation absent), E4 (2 of 3 camps fail as rest points), E5 (Warrens dressing/lighting) — all flagged "scene-tuning, cheap" | Audit E | camp/village/Warrens scenes overlap `S03`, `S06`, `S09` — sequence after they land |
 | `BACKLOG-VILLAGE-LAYOUT` | owner: "the village layout is still terrible"; village NPC spread (owner items 4, 16) | Owner playtest + Audit E1 | placement of Mira/Tam/Oskar/Halda affects the tournament and practice systems `S03`/`S04` depend on; touch only decorative NPCs, after those land |
 
