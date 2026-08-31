@@ -53,7 +53,24 @@ whole of it: the warm greeting, Team Tether — returned, holding the eight
 places of power, creatures chained to the stones — why he cannot go himself, and
 then the gifts. The gifts are not a cutscene grant: each `give:` effect sits on
 the exact line that speaks it (`give:orb_basic:15`, `give:potion_small:3`,
-`give:berries:5`), so the satchel fills as he says the words. The creature belt
+`give:berries:5`, and `give:revive:2` since D40), so the satchel fills as he
+says the words.
+
+**Moved 2026-08-28 (`66eb47ec`), and it took three days and two capstone runs
+to notice what else moved with them.** All four `give:` lines now live one
+conversation later, on `grandpa_first_catch`, which is the right place for the
+reason that rewrite gave: a gift belongs on the beat before its first possible
+use, not in a briefing three beats earlier. But the same commit re-added only
+the orbs and dropped the other three without a word, against this paragraph,
+against `D18` and against `D40`, none of which were superseded. The Revives
+came back on `ralph/CAP1-TUTORIAL-CATCH-FAINT` (CAP-1: a fainted starter with
+nothing able to raise it) and the potions and berries on
+`ralph/CAP2-NO-HEAL-FOR-LIVING-DAMAGE` (CAP-2: a *living* starter at 53.0 of
+117.6 with nothing able to top it up). The pack is four items and it is now
+`tests/test_tutorial_faint_floor.gd` and `tests/test_opening_healing_kit.gd`
+that say so, not only this prose.
+
+The creature belt
 line is where the five-creature cap is said in fiction — *it holds five, no more; a
 rule older than Team Tether* — which is the only kind of place a rule that hard
 should be said. His last line sends the player out the door and emits
