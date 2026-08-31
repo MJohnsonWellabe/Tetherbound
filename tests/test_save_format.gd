@@ -272,6 +272,53 @@ func test_a_loaded_creature_can_level_up_without_its_stats_collapsing() -> void:
 		"a levelled creature's defence collapsed to the class default")
 
 
+## GATE-F-LEG-S07's own version of the same regression coverage, found the
+## same day driving a hand-seeded level 9-13 party instead of a level-3
+## terrapup: `base_hp`/`base_attack`/`base_defence` drive every level-up
+## recompute (`creature_instance.gd::_apply_level_stats`, called from
+## `gain_xp`) but were never written to a save at all until this fix -- a
+## loaded creature kept `CreatureInstance`'s own bare class defaults
+## (1.0/1.0/1.0) until it next levelled, at which point a real, played-in
+## creature's stats collapsed to roughly the level multiplier alone.
+func test_a_loaded_creature_survives_its_next_level_up() -> void:
+	var written := _game(false)
+	var creature: RefCounted = CREATURE.from_species("ripplet", {
+		"display_name": "Ripplet", "type": "water",
+		"base_hp": 105.0, "base_attack": 24.0, "base_defence": 17.0,
+	})
+	var cfg0 := {"level": {"growth_per_level": {"hp": 0.06, "attack": 0.05, "defence": 0.05}}}
+	creature.level = 13
+	creature.call("_apply_level_stats", cfg0)
+	creature.hp = creature.max_hp
+	written.party.add(creature)
+	var written_max_hp := float(creature.get("max_hp"))
+	assert_almost_eq(written_max_hp, 180.6, 0.5)
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	var loaded: RefCounted = read.party.at(0)
+	# The save/load round trip alone must not have touched it.
+	assert_almost_eq(float(loaded.get("max_hp")), written_max_hp, 0.5)
+	assert_almost_eq(float(loaded.get("base_hp")), 105.0, 0.5)
+	assert_almost_eq(float(loaded.get("base_attack")), 24.0, 0.5)
+	assert_almost_eq(float(loaded.get("base_defence")), 17.0, 0.5)
+
+	# The regression: a level-up right after load must recompute from the
+	# creature's REAL base stats, not from CreatureInstance's class defaults.
+	var cfg := {"level": {"cap": 50, "growth_per_level": {"hp": 0.06, "attack": 0.05, "defence": 0.05}},
+		"individuality": {"variance_pct": 0.0}}
+	var levels_gained: int = loaded.call("gain_xp", 1000000, cfg)
+	assert_true(levels_gained > 0)
+	# At iv=0.5 (no variance) the level-up recompute is exact: base_hp *
+	# (1 + 0.06 * (level-1)), same for attack/defence. A creature whose base
+	# stats reverted to CreatureInstance's own defaults (1.0/1.0/1.0) would
+	# land at roughly 1/100th of these regardless of level.
+	assert_true(float(loaded.get("max_hp")) > 100.0)
+	assert_true(float(loaded.get("attack")) > 20.0)
+	assert_true(float(loaded.get("defence")) > 15.0)
+
+
 ## The repair reads the catalogue, so a species it does not know must leave the
 ## file's own numbers alone rather than zeroing a creature the player owns.
 func test_a_species_the_catalogue_forgot_keeps_what_the_save_said() -> void:
@@ -321,6 +368,41 @@ func test_save_then_load_repairs_missing_base_stats_from_species_json() -> void:
 	assert_almost_eq(float(loaded.get("base_hp")), 115.0)
 	assert_almost_eq(float(loaded.get("base_attack")), 16.0)
 	assert_almost_eq(float(loaded.get("base_defence")), 17.0)
+
+
+## GATE-F-LEG-S07's own version of the same species-lookup fallback coverage:
+## a save written before this fix has no `base_hp`/`base_attack`/
+## `base_defence` keys at all and must reconstruct them from `species.json`
+## rather than falling back to `CreatureInstance`'s own bare class defaults.
+func test_a_save_with_no_base_stats_reconstructs_them_from_species() -> void:
+	var written := _game(false)
+	var creature: RefCounted = CREATURE.from_species("terrapup", {
+		"display_name": "Terrapup", "type": "ground", "base_hp": 100.0,
+		"base_attack": 20.0, "base_defence": 20.0,
+	})
+	written.party.add(creature)
+	assert_true(saver.save(written, 1))
+
+	var path := TEST_DIR.path_join("slot_1.json")
+	var file := FileAccess.open(path, FileAccess.READ)
+	var data: Dictionary = JSON.parse_string(file.get_as_text())
+	file.close()
+	var party: Array = data["party"]
+	(party[0] as Dictionary).erase("base_hp")
+	(party[0] as Dictionary).erase("base_attack")
+	(party[0] as Dictionary).erase("base_defence")
+	data["party"] = party
+	var out := FileAccess.open(path, FileAccess.WRITE)
+	out.store_string(JSON.stringify(data, "\t"))
+	out.close()
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	var loaded: RefCounted = read.party.at(0)
+	# terrapup's real base_hp (species.json) is 120.0, not the 100.0 generic
+	# fallback -- proves this reconstructed from the species table rather than
+	# from a hardcoded default.
+	assert_almost_eq(float(loaded.get("base_hp")), 120.0, 0.5)
 
 
 func test_save_then_load_replaces_whatever_party_the_loading_game_already_had() -> void:

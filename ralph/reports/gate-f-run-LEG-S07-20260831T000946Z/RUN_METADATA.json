@@ -1,0 +1,21 @@
+{
+  "_comment": "Isolated leg run, S07 only (River & Relay / Band 3), per operator instruction: hand-seeded S06-exit entry, played and fixed in isolation. NOT a full Gate F chain freeze -- no coordinator froze a chapter-wide candidate for this run, so this file exists only to give the harness's capture-preflight a truthful claim for the LOGIC lane this run actually uses, per operator_harness.gd::_freeze_display_claim's own 'a record with no lanes block still binds every segment by its flat claim' rule. The checked-in ralph/reports/gate-f-candidate/RUN_METADATA.json (2026-08-27, X11 under xvfb-run) is the wrong fallback for a headless logic-mode run and was overriding nothing until this file existed.",
+  "candidate_sha": "453107fb247d2207352d6fc5024cd47804364932",
+  "candidate_ref": "ralph/GATE-F-LEG-S07 (branched off origin/main; ralph/GATE-F-FOUNDATION did not exist yet when this leg started)",
+  "run_dir": "ralph/reports/gate-f-run-LEG-S07-20260831T000946Z",
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "operator": "sonnet-agent",
+  "free_build": false,
+  "save_state": "hand-authored seed, saves/S06-exit.json -- conditional/isolated evidence, not a real earned S01-S06 playthrough",
+  "lanes": {
+    "logic": {
+      "display_server": "none (headless, no rendering driver)",
+      "renderer": "none -- logic lane runs --headless with no --rendering-driver"
+    },
+    "capture": {
+      "display_server": "X11 under xvfb-run",
+      "renderer": "opengl3 / Compatibility under xvfb, software rasterisation"
+    }
+  }
+}
