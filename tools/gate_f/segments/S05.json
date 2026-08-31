@@ -874,7 +874,7 @@
       "action": "move_to",
       "args": {
         "at": [
-          0.0,
+          8.0,
           1330.0
         ],
         "budget_frames": 3000,
@@ -882,7 +882,7 @@
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "Section D RT-05 ends at the bridge (0,1330); section B: S05's span ends at 'cross'",
+      "expected": "Section D RT-05 ends at the bridge; the crossing's real carve centre is [8,1330] (terrain_playground.json), not the [0,1330] this step used before -- GATE-F-LEG-S05 measurement: with the gate correctly opened, this step still reported 'stopped short' against the old target while the player's own position (8.0,1332.0) was already past the crossing. Retargeted to the real centre.",
       "observation": "answer_prompts turned ON for this journey walk. Same recorded trade as S03/S04/S06-S10: these segments can no longer evidence 'a narrative modal blocked travel', which is captured un-answered in S02-superseded-2/3/4 and S02/BLOCKER.md. Without it the journey produces no combat, catching, building or progression evidence at all."
     },
     {
@@ -906,7 +906,7 @@
       "args": {
         "check": "near",
         "at": [
-          0.0,
+          8.0,
           1330.0
         ],
         "within": 8.0

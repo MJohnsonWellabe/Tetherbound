@@ -927,7 +927,7 @@
       "action": "move_to",
       "args": {
         "at": [
-          0.0,
+          8.0,
           1330.0
         ],
         "budget_frames": 3000,
