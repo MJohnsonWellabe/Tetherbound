@@ -188,3 +188,65 @@ This is the same shape of downstream contamination CAP-1 produced in capstone 1.
 The correct disposition once CAP-2 is fixed is a restart from the last clean
 handoff — `S02-exit.json`, which is good — **not** a continuation from any save
 at or after S03.
+
+---
+
+## 7. S06: the chapter is walled at the South Bridge — bands 2–5 are unreachable
+
+`76 PASS · 19 FAIL · complete=true · no derail · no harness errors · 2469 s wall`
+
+Ten of S06's nineteen failures are `did not reach` on a walk. Their stop
+positions are the finding:
+
+| step | target | stopped at |
+|---|---|---|
+| `S06-17` quarry picket | (315, 1668) | (8.0, **-2.0**, **1317.0**) — 466.3 m short |
+| `S06-24` Old Quarry | (403, 1794) | (5.0, -3.0, **1322.0**) — 617.7 m short |
+| `S06-50` Warrens mouth | (-420, 2470) | (8.0, -3.0, **1318.0**) — 1229.2 m short |
+| `S06-55` mouth chamber | (-357, 2616) | (8.0, -3.0, **1317.0**) — 1349.1 m short |
+| `S06-58` hall chamber | (-357, 2632) | (8.0, -2.0, **1317.0**) — 1364.7 m short |
+| `S06-68` side chamber | (-373, 2632) | (14.0, -3.0, **1323.0**) — 1365.0 m short |
+| `S06-70` the den | (-357, 2650) | (10.0, -3.0, **1320.0**) — 1380.2 m short |
+| `S06-81` the vault | (-342, 2650) | (15.0, -6.0, **1325.0**) — 1371.9 m short |
+| `S06-83` back out | (-357, 2616) | (15.0, -3.0, **1321.0**) — 1347.2 m short |
+| `S06-84` ranger camp | (-259, 2256) | (12.0, -5.0, **1324.0**) — 971.2 m short |
+
+**Every one stops in the same place: x ≈ 8–15, z ≈ 1317–1325.** The South Bridge
+is at z = 1330. `S05-56` failed at (3.0, -3.0, 1319.0), the same spot.
+
+`route.csv` settles it. Across 4,340 rows and **10,031.7 m walked**:
+
+```
+z range        0.0 .. 1327.8      (the bridge is at 1330)
+regions        corridor 4338 rows, grandpas_village 2 rows
+band-2 regions the_old_quarry 0, the_burrow_warrens 0
+```
+
+The player walked ten kilometres and never crossed. `S06-88` records the
+consequence exactly: *"dead_travel peaked at 0.6 m this segment (wanted >=
+150.0); 10031.7 m walked in total"* — ten kilometres of walking into a shut gate
+registers as no dead travel at all, because the player never got far enough from
+a POI for the counter to start.
+
+### Reading
+
+This is consistent with **inherited CAP-2 contamination, not a new pathing
+defect**: `south_bridge_open` is NOT set (`S05-55`), because the bridge gate
+fight never ran (`S05-48f` `combat_running=false`), because the party cannot
+fight. A shut gate that will not let the player through is the game behaving
+correctly given the state §2 put it in. The alternative reading offered for
+`S05-56` in the operator log — that the walk fails on its own terms — is now the
+less likely of the two, though the operator still does not choose.
+
+### What this costs the run
+
+**Bands 2, 3, 4 and 5 have no evidence in this run, and cannot.** S07 (River &
+Relay), S08 (Upper Meadows), S09 (Stronghold approach) and S10a–e (the finale)
+all begin north of a crossing this save cannot make. Nothing about those regions'
+pacing, navigation, combat, encounters or presentation may be sourced from this
+run's remaining segments — the same way §6 makes S04 uninformative about the
+tournament.
+
+The 2,469 s S06 spent is largely a navigator retrying unreachable targets —
+`S06-50` alone burned **44,100 walking frames**. That is a cost observation about
+the rig, not a game defect.
