@@ -40,7 +40,7 @@ extends Node3D
 ## (`Axe_Bronze`, `Pickaxe_Bronze`, `Knife`) -- D24's "one prop family", no new
 ## asset family for this. Which mesh a tool uses, and how it sits in the hand,
 ## is data on the item itself (`data/items/items.json`'s `held_model`,
-## `held_offset`, `held_rotation_deg`), not a table in here.
+## `held_offset`, `held_rotation_deg`, `held_scale`), not a table in here.
 
 const MATERIAL_FINISH := preload("res://scripts/build/build_material_finish.gd")
 const HAND_BONE := "Hand.R"
@@ -241,6 +241,7 @@ func _rebuild_prop() -> void:
 	_prop_root.add_child(_prop)
 	_prop.position = _vector3_from(definition.get("held_offset", [0.0, 0.0, 0.0]))
 	_prop.rotation_degrees = _vector3_from(definition.get("held_rotation_deg", [0.0, 0.0, 0.0]))
+	_prop.scale = _scale_from(definition.get("held_scale", 1.0))
 	# The vendored kits' missing `metallicFactor` reaches the trainer's hand too.
 	# `Axe_Bronze.gltf` and `Pickaxe_Bronze.gltf` both carry one material,
 	# `MI_Trim_Props_Vertex`, with no `metallicFactor` at all, so glTF's spec
@@ -379,3 +380,20 @@ func _vector3_from(value: Variant) -> Vector3:
 	if array.size() < 3:
 		return Vector3.ZERO
 	return Vector3(float(array[0]), float(array[1]), float(array[2]))
+
+
+## A held prop's scale, uniform unless the item names one per axis. Defaults to
+## 1.0 (untouched) for every tool that has never needed this -- the GLTF-backed
+## axe and pickaxe already carry their own scale in the model file, and only
+## an OBJ-backed prop like the knife (Godot's OBJ importer has no scene-root
+## transform to carry one) needs `held_scale` in `items.json` at all.
+func _scale_from(value: Variant) -> Vector3:
+	if typeof(value) == TYPE_ARRAY:
+		var array := value as Array
+		if array.size() < 3:
+			return Vector3.ONE
+		return Vector3(float(array[0]), float(array[1]), float(array[2]))
+	if typeof(value) == TYPE_FLOAT or typeof(value) == TYPE_INT:
+		var uniform := float(value)
+		return Vector3(uniform, uniform, uniform)
+	return Vector3.ONE
