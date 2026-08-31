@@ -519,6 +519,25 @@
       "expected": "rewards and control return"
     },
     {
+      "id": "S05-38b",
+      "title": "cycle to a fresh party member before the road to the bridge",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "same pattern as S03-39b: `autoload/party.gd::cycle_active()` is a documented no-op if the active creature is already the only healthy one, so this is safe regardless of outcome. GATE-F-LEG-S05 measurement: Terrapup piloted BOTH of Old Bram's creatures unrelieved and ended that fight at 59.5/177.6 hp -- the other four party members never fought and are still full. Piloting the same worn-down Terrapup straight into the South Bridge grunt (mudsnout L10 + burrowback L12, harder than Bram's team) is not what a player choosing among five creatures would do; that exact choice is what fainted Terrapup mid-fight against the grunt's first creature in the run that found this (my_hp 59.5 -> 0.0 over six exchanges, opponent still at 76.3/154 -- the fight never lost to a game defect, it lost to an unrotated pilot), which is why `south_bridge_open` read NOT SET afterward. This is the segment's own combat choreography, not game code."
+    },
+    {
+      "id": "S05-38c",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the walk continues"
+    },
+    {
       "id": "S05-35w",
       "title": "the world owns input before this walk",
       "action": "assert",

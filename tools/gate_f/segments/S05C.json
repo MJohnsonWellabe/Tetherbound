@@ -564,6 +564,27 @@
       "_derived_from": "S05-38"
     },
     {
+      "id": "S05C-38b",
+      "title": "cycle to a fresh party member before the road to the bridge",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "same pattern as S03-39b: cycle_active() is a documented no-op if the active creature is already the only healthy one. GATE-F-LEG-S05 measurement: Terrapup piloted both of Old Bram's creatures unrelieved and ended that fight at 59.5/177.6 hp; sending it straight into the South Bridge grunt unrotated is what fainted it there in the run that found this.",
+      "_derived_from": "S05-38b"
+    },
+    {
+      "id": "S05C-38c",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the walk continues",
+      "_derived_from": "S05-38c"
+    },
+    {
       "id": "S05C-35w",
       "title": "the world owns input before this walk",
       "action": "assert",
