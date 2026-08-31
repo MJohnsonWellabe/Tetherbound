@@ -1031,19 +1031,16 @@
     },
     {
       "id": "S07-70",
-      "title": "walk to the relay apparatus",
-      "action": "move_to",
+      "title": "walk to the relay apparatus console",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          350.0,
-          3760.0
-        ],
+        "entity": "Console",
+        "within": 2.5,
         "budget_frames": 3000,
-        "close_enough": 2.5,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "data/config/relay_site.json's `site.centre` (350,3760) -- the same point map_landmarks.json pins the relay at",
+      "expected": "data/config/relay_site.json's `site.centre` (350,3760) is the SITE's own coordinate, not the console's -- tether_relay.json's `apparatus.console.at` is a further-offset [2.9,-9.0] in the site's own local frame, on the raised pad (`deck_y: 10.0`) reached by a ramp off the yard's west side, per that file's own `_comment_decks`. A flat move_to at the site centre (ground level, no `y`) put the walker on open ground roughly under the pad rather than on it -- interact pressed at nothing, relay_disabled never set. move_to_entity resolves the live Console node by name and arrives in 3D (CD-5), which is what an elevated target with a real ramp underneath it needs.",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
