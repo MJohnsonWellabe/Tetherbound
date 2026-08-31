@@ -6,7 +6,7 @@
   "title": "Finale II: Warden -> legendary -> release ceremony",
   "lane": "journey",
   "_comment": "Transcribed verbatim from the original S10.json (steps S10-51..S10-88, renumbered S10b-51..), which was itself transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section E.1 (CB-06), section E.5 (objectives `defeat_the_warden`, `shut_down_the_machine`, `settle_the_roster`), section G (GF-13-FINALE-02/03/04) and section H (the mandatory 0.5 Hz Warden capture_seq).",
-  "_comment_warden_coordinate": "AMBIGUITY carried over from S10.json: section E.1 CB-06 gives warden_aldis as (90.2,7569.4), which is exactly what data/config/bands/band5_stronghold_approach/trainers.json says. data/config/stronghold.json puts the `warden_arena` chamber at offset (0,90.2) from site.at (0,7560) -- that is (0,7650.2). The two numbers look like the same pair transposed. The discrepancy is recorded rather than silently corrected, unchanged by the split.",
+  "_comment_warden_coordinate": "RESOLVED, GATE-F-LEG-S10AB 2026-08-31. This file used to record an unreconciled ambiguity: section E.1 CB-06 and band5's trainers.json both give warden_aldis as (90.2,7569.4), while stronghold.json puts the `warden_arena` chamber at site.at (8,7560) plus local (0,90.2) -- and the two 'look like the same pair transposed'. They are: the trainers.json row is a stale pre-OW5D fallback written when the Hall's chambers ran along +x, and it says so itself (`_position_note`: \"FALLBACK ONLY\"). MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31). The Warden's body stands at world (8,7658.2); (90.2,7569.4) is 120 m away in open ground outside the building. The step-script now walks to the measured stand.",
   "evidence_lane": "logic",
   "capture_lane": "S10bC",
   "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, ralph/GATE_F_MASTER_PROTOCOL.md §H.1. LOGIC lane: headless, mechanics/telemetry/step verdicts. Its own §G ids (GF-13-FINALE-02, the S10-SEQ-warden capture_seq, GF-13-FINALE-03, GF-13-FINALE-04) are DELEGATED to S10bC. The harness refuses to start this segment if S10bC does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it.",
@@ -143,16 +143,17 @@
       "action": "move_to",
       "args": {
         "at": [
-          90.2,
-          7569.4
+          8.0,
+          7658.2
         ],
         "budget_frames": 3000,
-        "close_enough": 4.0,
+        "close_enough": 3.0,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "Section E.1 CB-06 gives warden_aldis as (90.2,7569.4); see this file's header for the discrepancy with stronghold.json's `warden_arena` chamber",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "expected": "warden_aldis, Warden Aldis, standing on stronghold.json's `warden_stand` mark at world (8,7658.2) -- the `warden_arena` chamber's centre (8,7650.2) plus the mark's own local (0,8). The walk in passes the Tether readout on `warden_challenge` (8,7642.2), which is the maintenance board objective 24/27's `how` line tells the player to read first.",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
+      "_comment_coordinate_fix": "COORDINATE CORRECTION, GATE-F-LEG-S10AB 2026-08-31. This step's `at` was transcribed from data/config/bands/band5_stronghold_approach/trainers.json's `position` row -- which that same file labels, in its own `_position_note`, \"FALLBACK ONLY. scripts/world/stronghold.gd places this row from data/config/stronghold.json's `gauntlet` block\". Those fallback rows are still written in the pre-OW5D frame where the Hall's chambers ran along +x; the built Hall runs them along +z from site.at (8,7560). So every finale walk was aimed at open meadow rather than at the thing it names. MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31)."
     },
     {
       "id": "S10b-54",
@@ -243,32 +244,44 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 50,
+        "times": 28,
         "settle_frames": 30
       },
-      "expected": "Section E.1 per-fight record; the HP margin at the end is the chapter's final difficulty read"
+      "expected": "Section E.1 per-fight record. Aldis leads FIVE -- Burrowback L16, Brooktail L17, Galecrest L17, Meadowhart L18, Tuskroot L20 -- the only full belt the chapter ever fields against the player. MEASURED ARITHMETIC, GATE-F-LEG-S10AB 2026-08-31. combat_math.gd's damage is `power * scale * attack / (attack + defence)`, a RATIO -- so a quick hit lands for about combat.json's `player_quick.power` (9.0) against a comparable defender however high the levels are, while max HP keeps climbing with level. Logged from the run: a L20 Terrapup hit a L15 Trailpup for 8.9-10.7 a time, and the gauntlet's creatures carry 176-270 HP each. That is 20-28 quick hits PER ENEMY, and the press counts this script shipped with were budgeted well under it. Nothing here inflates the player: the counts below are the shipped numbers' own answer to 'how many hits does this fight take', and they are spread across the belt rather than piled onto one creature."
     },
     {
       "id": "S10b-61",
-      "title": "switch pilot",
+      "title": "switch pilot for his second",
       "action": "press",
       "args": {
         "control": "party_cycle",
-        "hold": "tap"
+        "hold": "tap",
+        "settle_frames": 24
       },
-      "expected": "CB-06: target_on_screen has to hold at every switch"
+      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
     },
     {
       "id": "S10b-62",
-      "title": "keep fighting",
+      "title": "fight his second",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 34,
+        "times": 28,
         "settle_frames": 30
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Section E.1 per-fight record."
+    },
+    {
+      "id": "S10b-62a",
+      "title": "switch pilot for his third",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "settle_frames": 24
+      },
+      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
     },
     {
       "id": "S10b-63",
@@ -278,17 +291,53 @@
         "control": "combat_charged",
         "hold": "long"
       },
-      "expected": "the charged verb's hold edge in the chapter's hardest fight"
+      "expected": "the charged verb's hold edge in the chapter's hardest fight, taken on a freshly switched pilot so the hold meets a full energy bar"
+    },
+    {
+      "id": "S10b-63a",
+      "title": "fight his third",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 28,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record."
     },
     {
       "id": "S10b-64",
-      "title": "switch pilot again",
+      "title": "switch pilot for his fourth",
       "action": "press",
       "args": {
         "control": "party_cycle",
-        "hold": "tap"
+        "hold": "tap",
+        "settle_frames": 24
       },
-      "expected": "CB-06: every switch, not just the first"
+      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
+    },
+    {
+      "id": "S10b-64a",
+      "title": "fight his fourth",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 30,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record. Meadowhart, L18."
+    },
+    {
+      "id": "S10b-64b",
+      "title": "switch pilot for his ace",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "settle_frames": 24
+      },
+      "expected": "CB-06: target_on_screen has to hold at every switch. Also the belt doing its job -- see this fight's own note."
     },
     {
       "id": "S10b-65",
@@ -300,7 +349,7 @@
         "times": 34,
         "settle_frames": 30
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Section E.1 per-fight record. Tuskroot at L20 is the Warden's ace and the level `tests/test_trainers_data.gd::test_the_critical_path_alone_pays_for_the_warden_ready_level` tunes the whole chapter's XP curve to bring the player LEVEL WITH -- so this is the one fight in the Meadows that is meant to be even. Five of his against five of yours, one pilot each. SWITCHING IS THE FIX, not a bigger number. encounter_director.gd::_on_trainer_round_ended treats the piloted creature fainting as LOSING THE WHOLE BATTLE -- its own comment says so, deliberately -- so a script that pilots one creature through a three-creature team is one faint away from a loss with four healthy creatures still on the belt. That is exactly what happened on the first run of this segment: Ripple fainted to the courtyard's third creature with Gale/Tusk/Dusk untouched at full HP, `defeated_stronghold_courtyard` was never set, and the segment failed on a fight it had nearly won. Cycling the pilot between the trainer's creatures is what a five-creature belt is FOR and what CLAUDE.md's own five-and-only-five rule is built around, so the fights below rotate through it."
     },
     {
       "id": "S10b-66",
@@ -357,16 +406,17 @@
       "action": "move_to",
       "args": {
         "at": [
-          -32.0,
+          -24.0,
           7650.2
         ],
         "budget_frames": 6300,
-        "close_enough": 5.0,
+        "close_enough": 3.0,
         "held_budget_frames": 10800,
         "answer_prompts": true
       },
-      "expected": "stronghold.json's `legendary_chamber` at offset (-32,90.2) from site.at (0,7560)",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "expected": "stronghold.json's `machine_foot` mark, world (-24,7650.2) -- the `legendary_chamber` chamber's centre, which is also where stronghold_climax.gd hangs the 'Shut down the tether machine' prompt. close_enough 3.0 lands inside stronghold_climax.json's own `site.prompt_radius` of 4.2.",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
+      "_comment_coordinate_fix": "COORDINATE CORRECTION, GATE-F-LEG-S10AB 2026-08-31. This step's `at` was transcribed from data/config/bands/band5_stronghold_approach/trainers.json's `position` row -- which that same file labels, in its own `_position_note`, \"FALLBACK ONLY. scripts/world/stronghold.gd places this row from data/config/stronghold.json's `gauntlet` block\". Those fallback rows are still written in the pre-OW5D frame where the Hall's chambers ran along +x; the built Hall runs them along +z from site.at (8,7560). So every finale walk was aimed at open meadow rather than at the thing it names. MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31)."
     },
     {
       "id": "S10b-71",
@@ -446,20 +496,20 @@
     },
     {
       "id": "S10b-78",
-      "title": "open the roster choice",
-      "action": "press",
-      "args": {
-        "control": "interact",
-        "hold": "tap"
-      },
-      "expected": "the ceremony's first beat"
-    },
-    {
-      "id": "S10b-79",
-      "title": "let the ceremony open",
+      "title": "let the ceremony open itself",
       "action": "wait",
       "args": {
         "seconds": 3
+      },
+      "expected": "The ceremony is not opened by a press. READ OFF THE SHIPPED UI, GATE-F-LEG-S10AB 2026-08-31, not guessed. `scripts/ui/tab_creatures.gd`: the ceremony opens ITSELF -- `game_state.gd::_watch_pending_catch()` opens the pause shell on the creatures tab the frame `Game.pending_catch` is set, and there is no prompt to press. `_maybe_begin_release()` then focuses the NEWCOMER's row, which `_fence_choose_focus()` fences so left/right point at themselves and down from the newcomer wraps to belt row 0. `_begin_farewell()` focuses \"Keep them\", and `_fence_farewell_buttons()` wraps Keep and \"Let them go\" onto each other vertically -- again with left/right pointing at themselves.",
+      "_comment_replaced": "WHAT THIS REPLACES. The shipped sequence was `press interact` (nothing in the ceremony answers interact), `focus_move right` (fenced to a no-op in every stage of the ceremony), `ui_accept` on the still-focused NEWCOMER row -- which asks 'let the legendary go?' rather than choosing any of the five -- and then `menu_confirm` on the focused button, which is \"Keep them\" and is wired to `_back_to_choosing()`. Driven faithfully it walks in a circle: nothing is ever released, `Game.pending_catch` is never cleared, and `legendary_settled` -- objective 26/27 -- is never set. The steps below make the choice the one section L.4 calls 'real and permanent': a creature off the belt, for the legendary."
+    },
+    {
+      "id": "S10b-79",
+      "title": "let the team screen settle",
+      "action": "wait",
+      "args": {
+        "seconds": 2
       },
       "expected": "the team screen takes input"
     },
@@ -484,66 +534,125 @@
       "args": {
         "check": "focus_owned"
       },
-      "expected": "a choice a controller cannot move through is not a choice"
+      "expected": "a choice a controller cannot move through is not a choice. Focus lands on the newcomer's own row -- the legendary, below the five."
     },
     {
       "id": "S10b-82",
+      "title": "step off the newcomer onto the belt",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "Down from the newcomer wraps to belt row 0 -- `_fence_choose_focus()`'s own wrap, written so 'the newcomer is one press away from anywhere'. READ OFF THE SHIPPED UI, GATE-F-LEG-S10AB 2026-08-31, not guessed. `scripts/ui/tab_creatures.gd`: the ceremony opens ITSELF -- `game_state.gd::_watch_pending_catch()` opens the pause shell on the creatures tab the frame `Game.pending_catch` is set, and there is no prompt to press. `_maybe_begin_release()` then focuses the NEWCOMER's row, which `_fence_choose_focus()` fences so left/right point at themselves and down from the newcomer wraps to belt row 0. `_begin_farewell()` focuses \"Keep them\", and `_fence_farewell_buttons()` wraps Keep and \"Let them go\" onto each other vertically -- again with left/right pointing at themselves."
+    },
+    {
+      "id": "S10b-82a",
       "title": "look across the roster",
       "action": "focus_move",
       "args": {
-        "direction": "right",
-        "times": 1
+        "direction": "down",
+        "times": 4
       },
-      "expected": "Section L.4: 'history shown' -- what the ceremony says about each creature before the player chooses"
+      "expected": "Section L.4: 'history shown' -- four presses walk the whole belt past the detail column, which is what the ceremony puts there to be read, and land on the fifth holder."
     },
     {
       "id": "S10b-83",
-      "title": "make the choice",
+      "title": "ask the question of one of the five",
       "action": "press",
       "args": {
         "control": "ui_accept",
-        "hold": "tap"
+        "hold": "tap",
+        "settle_frames": 30
       },
-      "expected": "Section L.4: 'choice is real and permanent'"
+      "expected": "`_begin_farewell()`: the farewell panel, carrying that creature's level, bond and history -- Section L.4's 'history shown', at the press that spends it."
     },
     {
       "id": "S10b-84",
       "title": "let the ceremony's second beat run",
       "action": "wait",
       "args": {
-        "seconds": 4
+        "seconds": 3
       },
       "expected": "the three-beat ceremony section L.4 names"
+    },
+    {
+      "id": "S10b-84a",
+      "title": "the question focuses the safe answer",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "`_begin_farewell()` focuses \"Keep them\" deliberately -- its own comment: 'the permanent choice is one deliberate press DOWN from the safe one, never the default under a mashed A'. This asserts that safety exists."
+    },
+    {
+      "id": "S10b-84b",
+      "title": "take the deliberate press down",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "\"Keep them\" -> \"Let them go\". One press, and it is the one the UI was built to make cost something."
     },
     {
       "id": "S10b-85",
       "title": "confirm the release",
       "action": "press",
       "args": {
-        "control": "menu_confirm",
-        "hold": "tap"
+        "control": "ui_accept",
+        "hold": "tap",
+        "settle_frames": 30
       },
-      "expected": "the permanent half of the choice; CLAUDE.md: never a sixth slot, never storage"
+      "expected": "the permanent half of the choice; CLAUDE.md: never a sixth slot, never storage. `_do_release()` removes the chosen creature and the legendary takes the freed holder -- the belt is five before and five after."
     },
     {
       "id": "S10b-86",
-      "title": "let the ceremony finish",
+      "title": "let the goodbye play",
       "action": "wait",
       "args": {
-        "seconds": 8
+        "seconds": 5
       },
-      "expected": "the third beat"
+      "expected": "the third beat: the released creature holds the viewport one last time while the belt settles into the final five"
+    },
+    {
+      "id": "S10b-86a",
+      "title": "back to the belt",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap",
+        "settle_frames": 30
+      },
+      "expected": "`_end_release()`, wired to the \"Back to the belt\" button, which is the only control the done beat leaves focusable"
+    },
+    {
+      "id": "S10b-86b",
+      "title": "close the team screen",
+      "action": "close_menu",
+      "args": {},
+      "expected": "The ceremony does NOT close the shell -- `_end_release()` only un-holds it and drops focus back on a belt row. The player closes it, and until they do the tree stays paused, which is why the two asserts below come after this step and not before it: `stronghold_climax.gd::_advance()` runs in `_process` and cannot see the ceremony resolve while the shell holds the tree.",
+      "_comment_added": "ADDED, GATE-F-LEG-S10AB 2026-08-31."
+    },
+    {
+      "id": "S10b-86c",
+      "title": "let the climax notice",
+      "action": "wait",
+      "args": {
+        "seconds": 4
+      },
+      "expected": "`_ceremony_pending()` reads `Game.pending_catch` back as null, records which way the choice went, and `_settle()` sets `legendary_settled`. Then `_advance()` leaves STAGE_CEREMONY for the machinery's own failure beat -- spec section 28's order, and the last thing this segment owes."
     },
     {
       "id": "S10b-87",
-      "title": "the belt is still five",
+      "title": "the belt is still five, and not six",
       "action": "assert",
       "args": {
         "check": "party_size",
-        "min": 5
+        "equals": 5
       },
-      "expected": "five creatures, ever. A sixth here would be the single hardest rule in the project broken",
-      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+      "expected": "five creatures, ever. A sixth here would be the single hardest rule in the project broken.",
+      "_comment_comparator": "COMPARATOR CORRECTED, GATE-F-LEG-S10AB 2026-08-31: `min: 5` -> `equals: 5`. RIG-15 moved every `party_size` check from `equals` to `min` because catching is probabilistic and a journey step that threw an orb could legitimately land on a bigger team. That reasoning does not reach THIS assert, and applying it here inverted the check's whole purpose: the step's own `expected` says a SIXTH creature would break the project's hardest rule, and `min: 5` passes a party of six without comment. Nothing probabilistic happens in the ceremony -- both endings (release one of the five, or let the legendary walk) leave exactly five -- so exact equality is the honest comparator, and RIG-15's own note says `equals` 'stays for a caller that genuinely wants exact equality'. This is that caller."
     },
     {
       "id": "S10b-88",
@@ -553,7 +662,7 @@
         "check": "flag_set",
         "flag": "legendary_settled"
       },
-      "expected": "`legendary_settled` closes section E.5 objective 26/27"
+      "expected": "`legendary_settled` closes section E.5 objective 26/27. Set whichever way the choice went -- `stronghold_climax.gd::_settle()`'s own comment: a player who keeps their five has resolved the decision exactly as completely as one who kept the legendary."
     },
     {
       "id": "S10b-111",

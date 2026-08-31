@@ -123,6 +123,12 @@ const STONE_TILE := 0.28
 ## its people stand.
 const PLACED_BY := "stronghold"
 
+## How far the approach ramp's slab runs past its own foot, in metres, so the
+## end is buried in the meadow rather than standing as a step in it. Runs
+## DOWNHILL only -- see `_build_approach_ramp()` for what an uphill overlap
+## cost the Hall's front door.
+const RAMP_FOOT_OVERLAP_M := 3.0
+
 ## OP21-25. `combat_arena.gd`'s default radius is a flat 11m (data/config/
 ## combat.json) and every fight that starts inside this building asks for it
 ## uniformly, whatever room it lands in. `tether_approach` is 16x18, so an 11m
@@ -941,21 +947,57 @@ func _build_door(flag: String, centre: Vector3, along_x: bool, width: float, hei
 func _build_approach_ramp() -> void:
 	var first: String = _order[0]
 	var width := float(_first_passage().get("width", 4.0)) + 3.0
-	var outer_z := _mouth_outer_z()
+	# The z the ramp's surface has to REACH `_floor_y` at, and it is the wall's
+	# OUTER face, not `_mouth_outer_z()`.
+	#
+	# GATE-F-LEG-S10AB, 2026-08-31. `_mouth_outer_z()` returns the first
+	# chamber's own edge -- which `_wall_rects` then builds the mouth wall
+	# OUTBOARD of, from `_mouth_outer_z() - _wall_t` to `_mouth_outer_z()`. So a
+	# ramp that reached floor height at `_mouth_outer_z()` reached it at the
+	# INNER face, one wall-thickness too far in, and the interior floor slab
+	# (which begins at the outer face) stood proud of the ramp for that whole
+	# 1.2 m: measured on the built world, the ramp surface was y=5.83 where the
+	# floor slab's leading edge was y=6.17. A 0.34 m vertical riser, in the
+	# doorway, and this function's own header says what that costs -- "Godot's
+	# character body does no stair-stepping of its own", which is why the
+	# apron here is an incline and not steps in the first place.
+	#
+	# It is not theoretical. S10a's first walk, "walk in through the Outer
+	# Works", spent its entire 9,000-frame budget oscillating between x=6.07
+	# and x=9.92 at z~7546.4 -- inside the doorway's own 4 m gap, at the right
+	# height for the ramp, scrabbling at the lip -- and failed 13.7 m short.
+	# The player got in about two seconds later, on the next step's walk, by
+	# the capsule rolling over the riser: which is the tell that it was
+	# marginal rather than sealed, and marginal is worse. The chapter's climax
+	# had a front door that took roughly a minute and a half of luck to enter.
+	var top_z := _mouth_outer_z() - _wall_t
 	var run := maxf(4.0, float(_config.get("site", {}).get("ramp_run", 26.0)))
 	var lateral := _local_of((_chambers[first] as Dictionary).get("at", [])).x
 	var end_local := _floor_y - 1.0
 	if _world != null and _world.has_method("ground_height_at"):
-		var far := to_global(Vector3(lateral, 0.0, outer_z - run))
+		var far := to_global(Vector3(lateral, 0.0, top_z - run))
 		var height: float = float(_world.call("ground_height_at", far.x, far.z))
 		if not is_nan(height):
 			end_local = height - global_position.y
 
 	var rise := _floor_y - end_local
 	var angle := atan2(rise, run)
-	var length := sqrt(run * run + rise * rise) + 3.0   # overlap the floor slab at the top
+	# The overlap runs DOWNHILL only, and that is the second half of the same
+	# defect. `length` used to be the surface span plus 3 m with the slab
+	# CENTRED on that span, so 1.5 m of it continued UPHILL past the top --
+	# still climbing, at the same 15.6 degrees. Measured: the ramp's crest
+	# stood at y=6.55 against a floor of 6.17, a 0.38 m ridge lying across the
+	# inside of the doorway, which the player has to climb on the way back OUT
+	# of the Hall. Every metre of the overlap now extends past the FOOT, into
+	# the meadow, where burying a slab end is what an overlap is for.
+	var surface := sqrt(run * run + rise * rise)
+	var length := surface + RAMP_FOOT_OVERLAP_M
 	var thickness := 4.0
-	var top_mid := Vector3(lateral, (_floor_y + end_local) * 0.5, outer_z - run * 0.5)
+	# Down-slope unit vector, so the slab can be hung off its TOP corner rather
+	# than off the middle of a span whose length no longer matches it.
+	var down := Vector3(0.0, -sin(angle), -cos(angle))
+	var top := Vector3(lateral, _floor_y, top_z)
+	var surface_mid := top + down * (length * 0.5)
 	# The slab's own up vector once tilted, so the WALKING SURFACE passes through
 	# both sampled ends rather than the slab's centreline.
 	var up := Vector3(0.0, cos(angle), -sin(angle))
@@ -965,7 +1007,7 @@ func _build_approach_ramp() -> void:
 	box.size = Vector3(width, thickness, length)
 	mesh.mesh = box
 	mesh.material_override = _floor_material()
-	mesh.position = top_mid - up * (thickness * 0.5)
+	mesh.position = surface_mid - up * (thickness * 0.5)
 	mesh.rotation.x = -angle
 	add_child(mesh)
 
@@ -987,11 +1029,11 @@ func _build_approach_ramp() -> void:
 	# built, and `_causeway_y()` is the one place anything asks where the
 	# surface is. Nothing downstream re-derives the slope.
 	_ramp_run_m = run
-	_ramp_foot_z = outer_z - run
+	_ramp_foot_z = top_z - run
 	_ramp_foot_y = end_local
 	_ramp_half_w = width * 0.5
 
-	_markers["ramp_foot"] = to_global(Vector3(lateral, end_local, outer_z - run))
+	_markers["ramp_foot"] = to_global(Vector3(lateral, end_local, top_z - run))
 	if rad_to_deg(angle) > 40.0:
 		push_warning("the stronghold's approach ramp climbs at %.0f degrees; that is a wall, not a way in" % [
 			rad_to_deg(angle)])

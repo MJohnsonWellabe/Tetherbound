@@ -1,0 +1,45 @@
+{
+  "_comment": "ISOLATED LANE RUN, not an authoritative Gate F journey. GATE-F-LEG-S10AB drives S10a (Hall gauntlet) and S10b (Warden / legendary / release ceremony) on their own, from a HAND-AUTHORED entry save, to find and fix defects in those two segments' own systems. It is NOT a chapter playthrough and NOTHING in it may be cited as evidence about the chapter: the entry state was constructed by tools/gate_f/seed_s09_exit.gd rather than earned, and every finding here is conditional on that. The honest form of a finding from this run is 'S10a/S10b, given a clean entry, does X'.",
+  "_comment_why_this_file_exists": "The harness's capture pre-flight (section A.2 / CD-8b) reads a freeze record's display-server claim and BLOCKs a process that contradicts it. With no record in this run directory it falls through to ralph/reports/gate-f-candidate/RUN_METADATA.json -- the 2026-08-27 freeze, for a different candidate SHA and a different run directory, carrying a FLAT \"display_server\": \"X11 under xvfb-run\" and no `lanes` block. Per _freeze_display_claim()'s own rule a flat claim binds every segment, so that stale record refused this lane's headless LOGIC run before step 1. The documented remedy is exactly this file: a run that wants a logic lane must say so in its own freeze record BEFORE the run rather than amend one mid-run. Recorded rather than worked around; a stale candidate freeze silently binding an unrelated later run is worth a coordinator's attention.",
+  "candidate_sha": "453107fb247d2207352d6fc5024cd47804364932",
+  "candidate_ref": "ralph/GATE-F-LEG-S10AB",
+  "frozen_at_utc": "2026-08-31T00:15:59Z",
+  "run_dir": "ralph/reports/gate-f-run-S10AB-2026-08-31",
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "kind": "linux editor binary, NOT the shipped Windows export",
+    "path": "~/.cache/tetherbound-art/godot",
+    "sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75"
+  },
+  "lanes": {
+    "logic": {
+      "display_server": "headless",
+      "renderer": "none (--headless, no rendering driver)",
+      "_comment": "Section 0.2: logic mode is deliberately --headless with NO rendering driver, because --headless WITH one hangs forever. S10a and S10b both declare evidence_lane=logic and delegate every prescribed frame to S10aC/S10bC."
+    },
+    "capture": {
+      "display_server": "X11 under xvfb-run",
+      "renderer": "opengl3 / Compatibility under xvfb, Mesa llvmpipe, software rasterisation",
+      "_comment": "Declared for completeness. This lane did NOT run the capture segments: a parallel audit lane (AUDIT-E) is doing a blind visual judge pass on this exact location, and duplicating its frames here would spend hours of software rasterisation to answer a question somebody else is already answering. The visual half of S10a/S10b's evidence is therefore ABSENT from this run, not negative."
+    }
+  },
+  "resolution": [1920, 1080],
+  "resolution_substituted": false,
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "hand-authored; see seed_provenance below",
+  "seed_provenance": {
+    "entry_save": "saves/S09-exit.json",
+    "written_by": "tools/gate_f/seed_s09_exit.gd",
+    "earned": false,
+    "_comment": "The protocol entry for S10a is S09-exit. No completed Gate F run has ever produced a real one: the single S09-exit.json in the repo (ralph/reports/gate-f-run-20260828T183531Z/S09/saves/) holds one FAINTED level-4 creature, eight opening flags and a player standing at z=1318 -- 6.2 km short of the Hall. So this run's entry is constructed. That file's own header states every assumption and its source."
+  },
+  "date": "2026-08-31",
+  "operator": "gate-f-leg-s10ab lane",
+  "free_build": false,
+  "debug_teleport": false,
+  "suite_state_at_freeze": {
+    "reverified_in_container": false,
+    "_comment": "This is a lane branch, not a coordinator freeze. The relevant checks are run and reported on the branch itself rather than asserted here."
+  }
+}
