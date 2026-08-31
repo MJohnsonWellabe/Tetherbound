@@ -89,13 +89,36 @@ func _check_real_pad_party_cycle() -> void:
 func _check_actual_travel_drives_minimap() -> void:
 	# Let the HUD establish its initial stationary sample, then move through the
 	# real left-stick binding. The expected heading comes from resolved world
-	# displacement, never from camera yaw or the requested stick vector.
+	# displacement, never from camera yaw or the requested stick vector -- but
+	# only over the TAIL of the hold. A long held-stick input near spawn can
+	# cross OF15's obstacle-deflection feature (player_controller.gd:287-334,
+	# owner ruling 2026-08-25: "when you hit a rock you should slide around
+	# it"), which genuinely bends the trainer's real path partway through. A
+	# single atan2 over the whole hold's net displacement would blend the
+	# pre- and post-deflection segments into a chord the trainer was never
+	# actually facing at any instant. minimap._movement_yaw (scripts/ui/
+	# minimap.gd:120-131) is itself only ever the most recently resolved
+	# frame's instantaneous heading, so this compares like with like by
+	# sampling "expected" from the same tail window instead.
 	for i in 8:
 		await physics_frame
-	var before := _player.global_position
-	await _hold_axis(JOY_AXIS_LEFT_X, 1.0, 70)
+	var motion := InputEventJoypadMotion.new()
+	motion.axis = JOY_AXIS_LEFT_X
+	motion.axis_value = 1.0
+	Input.parse_input_event(motion)
+	for i in 60:
+		await physics_frame
+	var tail_before := _player.global_position
+	for i in 10:
+		await physics_frame
+	var release := InputEventJoypadMotion.new()
+	release.axis = JOY_AXIS_LEFT_X
+	release.axis_value = 0.0
+	Input.parse_input_event(release)
+	for i in 8:
+		await physics_frame
 	var after := _player.global_position
-	var displacement := Vector2(after.x - before.x, after.z - before.z)
+	var displacement := Vector2(after.x - tail_before.x, after.z - tail_before.z)
 	if displacement.length() < 0.5:
 		_fail("physical left stick did not move the trainer; minimap travel cannot be proven")
 		return
