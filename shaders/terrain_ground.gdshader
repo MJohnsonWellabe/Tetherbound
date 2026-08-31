@@ -124,6 +124,11 @@ uniform bool enable_projection = true;
 uniform float projection_threshold : hint_range(0.0, 0.99, 0.01) = 0.8;
 
 uniform float mipmap_bias : hint_range(0.5, 1.5, 0.01) = 1.0;
+// D6-SEAM-FIX scratch diagnostic, NOT for commit: visualizes id_footprint
+// as a 3-band bracket (R saturates >=0.5, G >=0.1, B >=0.02 tile units)
+// so the real magnitude at the seam's camera stand can be read off a
+// single render instead of guessing DETILE_FOOTPRINT_LO/HI blind.
+uniform bool _d6_debug_footprint = true;
 uniform float depth_blur : hint_range(0.0, 35.0, 0.1) = 0.0;
 uniform float bias_distance : hint_range(0.0, 16384.0, 0.1) = 512.0;
 
@@ -345,6 +350,11 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 		// grazing, ~100m camera stand where each screen pixel already
 		// covers a fraction of a tile). See top-of-file banner.
 		float id_footprint = max(length(id_dd.xy), length(id_dd.zw));
+		if (_d6_debug_footprint) {
+			mat.albedo_height = vec4(clamp(id_footprint * 2.0, 0., 1.), clamp(id_footprint * 10.0, 0., 1.), clamp(id_footprint * 50.0, 0., 1.), 1.0);
+			mat.total_weight = 1.0;
+			return;
+		}
 		float id_detile_fade = 1.0 - smoothstep(DETILE_FOOTPRINT_LO, DETILE_FOOTPRINT_HI, id_footprint);
 		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU * id_detile_fade;
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
