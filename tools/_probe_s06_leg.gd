@@ -28,9 +28,10 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SEED_PATH := "res://ralph/reports/gate-f-leg-s06/saves/S05-exit.json"
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const GATE_F_PROBE := preload("res://scripts/debug/gate_f_probe.gd")
+const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 
 var _probe: RefCounted
-var _walk_speed := 5.0
+var _nav: RefCounted
 
 
 func _init() -> void:
@@ -83,7 +84,8 @@ func _run() -> void:
 		push_error("scene has no Player or no BurrowWarrens node")
 		quit(1)
 		return
-	_walk_speed = _player_walk_speed()
+	var rig := _camera_rig(player)
+	_nav = NAVIGATOR.new(self, player, rig, _parse_move_stick)
 
 	# Deploy the active creature (RIG-11 -- a load restores the party and
 	# deploys nothing).
@@ -142,7 +144,7 @@ func _run() -> void:
 		await _walk_to(player, world, point, 3000)
 	print("")
 	print("=== the side warren chamber (rootstone) ===")
-	_press_tap("interact", 2, 90)
+	await _press_tap("interact", 2, 90)
 	print("inventory after warren rootstone: %s" % _inventory_snapshot(game))
 
 	for point: Vector3 in _approach(warrens, "den"):
@@ -165,7 +167,7 @@ func _run() -> void:
 		await _walk_to(player, world, point, 3000)
 	print("")
 	print("=== the vault / heartstone ===")
-	_press_tap("interact", 1, 90)
+	await _press_tap("interact", 1, 90)
 	print("inventory after heartstone: %s" % _inventory_snapshot(game))
 
 	# Walk back out, toward the ranger camp / river.
@@ -275,27 +277,34 @@ func _camera_rig(player: CharacterBody3D) -> Node3D:
 	return null
 
 
+## Uses tests/helpers/stick_navigator.gd -- the same obstacle-detouring
+## walker the Gate F harness itself drives through (operator_harness.gd's
+## `_walk_loop`), not a naive point-the-stick-and-hold line. A first version
+## of this script drove the stick with a plain yaw calculation and wedged
+## solid twice, in two different places, on legs `stick_navigator.gd`'s own
+## header explains this exact class of failure for (a straight line into
+## whatever stands in the way, with no detour). Reusing the real navigator
+## instead of re-diagnosing each wedge as a new Band 2 defect.
 func _walk_to(player: CharacterBody3D, world: Node, target: Vector3, budget_frames: int, close_enough: float = 3.0) -> void:
-	var rig := _camera_rig(player)
 	var start := player.global_position
-	Input.action_press("move_forward")
-	var frames := 0
-	while frames < budget_frames:
-		var to_target := target - player.global_position
-		to_target.y = 0.0
-		if to_target.length() <= close_enough:
-			break
-		if rig != null:
-			var yaw := atan2(-to_target.x, -to_target.z)
-			rig.set("yaw", yaw)
-			rig.rotation = Vector3(rig.rotation.x, yaw, 0.0)
-		await physics_frame
-		frames += 1
-	Input.action_release("move_forward")
+	var arrived: bool = await _nav.call("walk_to", target, budget_frames, close_enough)
+	_release_move_stick()
 	var remaining := player.global_position.distance_to(target)
-	var verdict := "arrived" if remaining <= close_enough else "STUCK %.1fm short at %s" % [remaining, str(player.global_position)]
-	print("walk to %s: %.1fm start-dist, %d frames, [%s]" % [
-		str(target), start.distance_to(target), frames, verdict])
+	var verdict := "arrived" if arrived else "STUCK %.1fm short at %s" % [remaining, str(player.global_position)]
+	print("walk to %s: %.1fm start-dist, [%s]" % [
+		str(target), start.distance_to(target), verdict])
+
+
+func _parse_move_stick(x: float, y: float) -> void:
+	Input.action_press(&"move_right", clampf(x, 0.0, 1.0))
+	Input.action_press(&"move_left", clampf(-x, 0.0, 1.0))
+	Input.action_press(&"move_back", clampf(y, 0.0, 1.0))
+	Input.action_press(&"move_forward", clampf(-y, 0.0, 1.0))
+
+
+func _release_move_stick() -> void:
+	for action: StringName in [&"move_right", &"move_left", &"move_back", &"move_forward"]:
+		Input.action_release(action)
 
 
 func _press_tap(action: String, times: int, settle_frames: int) -> void:
@@ -339,14 +348,3 @@ func _engage_and_fight(label: String, quick_presses: int = 60) -> void:
 	print("%s: fight over after %d swings, combat_running now %s" % [label, swings, str(state.get("combat_running", false))])
 
 
-func _player_walk_speed() -> float:
-	var file := FileAccess.open("res://data/config/movement.json", FileAccess.READ)
-	if file == null:
-		return 5.0
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if not parsed is Dictionary:
-		return 5.0
-	for section: Variant in (parsed as Dictionary).values():
-		if section is Dictionary and (section as Dictionary).has("walk_speed"):
-			return float((section as Dictionary)["walk_speed"])
-	return float((parsed as Dictionary).get("walk_speed", 5.0))
