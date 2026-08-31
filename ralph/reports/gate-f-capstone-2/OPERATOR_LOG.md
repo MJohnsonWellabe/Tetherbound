@@ -20,11 +20,28 @@ segment's real exit save. No hand-authored or synthetic seed saves.
 | CAP-1 fix present | yes — `cf4c5ab1` in `origin/main` history |
 | Godot | 4.7.stable.official.5b4e0cb0f, linux editor binary |
 | Mesa/EGL deps | installed after the documented `apt-get update` fallback (stale index → 404s) |
-| Import cache | in progress |
+| Import cache | built, exit 0, 1750 files (the two `error` grep hits are a file named `ui_error.wav`) |
 
 `.gitignore` re-checked against CD-2: `shots/` is root-anchored, so
 `ralph/reports/gate-f-run-*/<segment>/shots/` is tracked. Verified with
 `git check-ignore` before the run rather than after it.
+
+---
+
+## Section A preconditions
+
+§A.4 requires both of these to hold **before** the run, so that a failure here
+is a blocker rather than a finding of the run.
+
+| precondition | result |
+|---|---|
+| Capture smoke writes a PNG (`tools/capture_diag_minimal.gd`) | **PASS at the requested 1920x1080** — no fallback substitution to record. `display_server=X11`, `adapter=llvmpipe (LLVM 20.1.2)`. Frame preserved as `precondition_capture_smoke.png`. |
+| Full test suite green at the candidate SHA | (running) |
+
+Audio drivers fail in this container and Godot falls back to the dummy driver
+(`libpulse.so.0` absent, no ALSA card). Recorded, not worked around: §K.6
+already declares audio [OWNER-ONLY] because no audio path exists in this
+envelope at all. It is not a finding of this run.
 
 ---
 
