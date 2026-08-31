@@ -1,0 +1,35 @@
+{
+  "run_id": "gate-f-run-20260831T223853Z",
+  "capstone": 3,
+  "branch": "ralph/GATE-F-CAPSTONE-3",
+  "candidate_sha": "4ef01e4063a11ea0b30035d4ccab5ec8b2be0b9c",
+  "candidate_note": "origin/main HEAD at run start. Carries CAP-1 (revive restoration) and CAP-2 (potion/berries restoration) fixes, merge commit 4ef01e40, message states 'Full suite green (1693 tests, 0 failed) plus 6 new targeted tests' at merge time. This run did not re-run the full suite itself (time budget); it relies on that recorded CI evidence plus its own capture-smoke preflight below.",
+  "freeze_record_note": "This freeze record is OPERATOR-authored, not coordinator-discharged, exactly as GATE-F-CAPSTONE-2's was (see that run's BLOCKER_RUN.md at ralph/reports/gate-f-run-20260831T185309Z/). Section A.2 names this a coordinator precondition; no separate coordinator pass produced one for this candidate, so the operator wrote it and says so here per that same precedent.",
+  "godot_version": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "path": "/root/.cache/tetherbound-art/godot",
+    "sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+    "source": "tools/art_pipeline/setup.sh godot (pinned GODOT_VERSION=4.7-stable in that script)"
+  },
+  "lanes": {
+    "logic": { "display_server": "headless", "renderer": "none" },
+    "capture": { "display_server": "X11 under xvfb-run", "renderer": "opengl3/compatibility, software (llvmpipe)" }
+  },
+  "resolution": [1920, 1080],
+  "capture_preflight": "tools/capture_diag_minimal.gd PASSED at 1920x1080 (no fallback needed) -- see _preflight_smoke/capture_smoke.png",
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S01/S02 inherited from ralph/GATE-F-CAPSTONE-2 (ralph/reports/gate-f-run-20260831T185555Z/S02/saves/S02-exit.json), copied in as this run's S02 entry save per the coordinator instruction: S02 logic/evidence stands (both fixes only touch the grandpa_first_catch gift beat, downstream of S02's own completion), and a save from before the fix would not gain the potions/berries retroactively. S03 onward is fresh user:// state seeded from that save.",
+  "date": "2026-08-31",
+  "operator": "sonnet-agent",
+  "free_build": false,
+  "config_flags_note": "data/config/*.json booleans enumerated mechanically; none named 'free_build' exists as a static config flag -- free_build is a runtime Settings toggle (autoload/game_state.gd, D16) that defaults OFF and is never touched by this run. grass_field.json 'enabled': true (owner-approved art, unmodified). No config flag inspected reads OFF in a way that would silently change what a reviewer sees, so none is called out beyond this note.",
+  "instrumentation_overhead_note": "Not separately re-measured this run (time budget); GATE-F-CAPSTONE-2 measured 24.170 ms/frame overhead on what is presumed to be the same container class -- see that run's report for comparison caveats. Any duration in this run's telemetry should be read against a re-measurement if precise overhead matters.",
+  "clocks": {
+    "route_csv_t": "play (Engine.get_physics_frames() / physics_ticks_per_second)",
+    "events_jsonl_t": "play",
+    "route_csv_wall": "wall datetime, for lining up the two clocks",
+    "cost_and_disk_gates": "wall"
+  },
+  "inherited_segments": ["S01", "S02"],
+  "inherited_from": "ralph/GATE-F-CAPSTONE-2 run gate-f-run-20260831T185555Z (S01: 13P/0F/0SKIP; S02: 78P/3F/0SKIP, CAP-1 verified fixed there)"
+}
