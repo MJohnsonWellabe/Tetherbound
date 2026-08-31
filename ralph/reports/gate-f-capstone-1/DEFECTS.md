@@ -55,17 +55,32 @@ From `S02/telemetry/events.jsonl`, play-clock seconds:
 Four landed-or-missed throws, no catch, against a documented bound of one
 failure. Orb stock 15 -> 11 confirms four throws were actually spent.
 
-### The limit on this claim, stated rather than papered over
+### RESOLVED BY REPRODUCTION — the bound is intact; the miss is the failure mode
 
-The bound counts **landed** throws on purpose — a physical miss is not a failed
-catch. **This run cannot tell a landed throw from a miss**, because the harness
-emits no `catch_throw` and no `catch_result` event for an in-combat throw; the
-only trace of each throw is an inventory delta. So this entry does **not** assert
-the bound is broken. It asserts the promise did not hold in play, and names the
-instrument that prevents the run from saying which half failed. See **CAP-2**.
+The first draft of this entry could not tell a landed throw from a miss and said
+so. Three independent fresh S02 runs
+(`ralph/reports/gate-f-capstone-1-repro/attempt-{1,2,3}/`) resolved it:
 
-A bounded reproduction (protocol section J, budget 3) is owed and is run in a
-SEPARATE run directory so the capstone save lineage stays untouched.
+| run | throws | landed (a `catch_result` verdict) | caught? | starter | rung 4 |
+|---|---|---|---|---|---|
+| capstone | 4 | **0** | no | fainted | not set |
+| attempt-1 | 2 | 1 | **yes**, 2nd throw | ok | set |
+| attempt-2 | 4 | **0** | no | fainted | not set |
+| attempt-3 | 2 | 2 | **yes**, 2nd landed throw | ok | set |
+
+**`max_catch_failures: 1` is NOT broken.** Wherever throws landed, the catch came
+on the second landed throw, exactly as documented. Only **3 of 12** tutorial
+throws produced a verdict at all, and the two runs that lost the starter landed
+none. The uncovered failure is the **miss** — which `opening.json`'s own comment
+says the bound deliberately does not cover, while `catch_orb_floor` covers the
+other uncovered case (running dry). Missing until your starter dies is the one
+way to fail the tutorial that nothing protects against.
+
+**2 of 4 runs end in the unrecoverable state.** This is not a rare path.
+
+Caveat carried forward: the aim is **synthetic** (§0.1, ENV-PARTIAL). A 25 % land
+rate may be substantially the harness's aim rather than the game's, and a human
+miss rate is [OWNER-ONLY]. The gating defect below does not depend on it.
 
 ### What it costs the player, and why the consequence is worse than the fight
 
@@ -98,25 +113,25 @@ is not.
 
 ---
 
-## CAP-2 — an in-combat orb throw emits no `catch_throw` and no `catch_result`
+## CAP-2 — `catch_throw` is never emitted, so landed-vs-missed is only knowable by absence
 
-**Severity candidate:** RIG. **Segment:** S02 (and every catch in the run).
-**Status:** recorded, not fixed (rig frozen during the run, section J).
+**Severity candidate:** RIG. **Segment:** all. **Status:** recorded, not fixed.
 
-Both types are in the section C.1 enum. Across S02's four tutorial throws the
-only `catch_result` in `events.jsonl` is the **starter grant** at t=204
-("party grew 0 -> 1"); the four real throws produce nothing but an
-`inventory` delta on a `note`.
+**CORRECTED.** This entry first claimed no `catch_result` is emitted for an
+in-combat throw. That is wrong: `catch_result` **is** emitted when a throw
+resolves to a verdict, and the reproduction above depends on it. The real gap is
+narrower and still real:
 
-This is the failure class CD-6 exists to name: *a schema field that no code
-writes is an instrumentation defect, and Phase B may not treat its absence as
-evidence.* Its concrete cost is already visible one entry up — CAP-1 cannot
-separate "the bound did not hold" from "three of four throws physically missed",
-and the section E.2 study's required per-throw record (aim time, distance,
-target species/size, hit/miss and stated reason, shown percent, result) has no
-source at all.
-
----
+- **`catch_throw` is never emitted at all** — it is in the §C.1 enum and nothing
+  writes it. A throw's only direct trace is an `inventory` delta on a `note`.
+- Because of that, "did this throw land?" can only be answered by **the absence
+  of a following `catch_result`** — which is exactly the inference CD-6 forbids
+  treating as evidence, and which the reproduction table above nonetheless has to
+  rely on.
+- §E.2's required per-throw record (aim time, distance, target species/size,
+  hit/miss **and stated reason**, shown percent, result, party count after) has no
+  source. A single `catch_throw` carrying placement and the miss reason would have
+  turned this whole investigation into one query.
 
 ## CAP-3 — section H's continuous record for S01/S02 has no implementing action
 
