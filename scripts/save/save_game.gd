@@ -117,6 +117,21 @@ extends RefCounted
 ## `_migrate_v10` hands back `{}`, the identical "nothing to migrate FROM"
 ## answer every step above gives its own new field.
 ##
+## ## VERSION 16 — GAME-F4: a loaded creature's base stats
+##
+## `creature_instance.gd`'s `base_hp`/`base_attack`/`base_defence` are the
+## numbers every level-up, elixir and evolution recomputes `max_hp`/`attack`/
+## `defence` FROM (`_apply_level_stats`) — and no version before this one ever
+## wrote them. `_array_to_party` set every field it knew about directly and
+## left these three at the class default of 1.0, which is invisible right up
+## until the next stat recompute, at which point it overwrites a real
+## creature's stats with what 1.0 base stats produce. Measured in play: a
+## level 3 ripplet loaded through the production Load path went from 117.60
+## max hp to 1.18 on its next level-up. `_migrate_v15` looks each migrated
+## creature's base stats up fresh from its own species — the same
+## `species.json` read `_migrate_v1` already does for moves, and exactly what
+## `creature_species.spawn()` would hand a brand new creature of that species.
+##
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
@@ -154,7 +169,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 15
+const VERSION := 16
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -570,6 +585,37 @@ func _migrate_v11(data: Dictionary) -> Dictionary:
 ## from -- not an approximation of it, and with no population snapshot to
 ## reconstruct, because the population is derived from this integer rather than
 ## stored.
+## VERSION 15 -> VERSION 16. GAME-F4: `_party_to_array` never wrote
+## `base_hp`/`base_attack`/`base_defence`, so `_array_to_party` left every
+## loaded creature at `creature_instance.gd`'s class default of 1.0 for all
+## three -- invisible until the next `_apply_level_stats()` call (a level-up,
+## an elixir, an evolution), which recomputes `max_hp`/`attack`/`defence`
+## FROM those defaults and destroys the creature on the spot. A v15 slot has
+## no base stats of its own to recover, so each migrated creature's are
+## looked up fresh from its own species -- the same `species.json` read
+## `_migrate_v1` already does for moves, and exactly what
+## `creature_species.spawn()` would hand a brand new creature of that
+## species. A species the catalogue no longer knows falls back to
+## `from_species()`'s own defaults (100/20/20), never a crash.
+func _migrate_v15(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 16
+	var species_raw: Variant = _read_json_file(SPECIES_PATH).get("species", {})
+	var species_table: Dictionary = species_raw as Dictionary if typeof(species_raw) == TYPE_DICTIONARY else {}
+	var party: Array = migrated.get("party", [])
+	for raw: Variant in party:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var creature := raw as Dictionary
+		var entry_raw: Variant = species_table.get(str(creature.get("species_id", "")), {})
+		var entry: Dictionary = entry_raw as Dictionary if typeof(entry_raw) == TYPE_DICTIONARY else {}
+		creature["base_hp"] = float(entry.get("base_hp", 100.0))
+		creature["base_attack"] = float(entry.get("base_attack", 20.0))
+		creature["base_defence"] = float(entry.get("base_defence", 20.0))
+	migrated["party"] = party
+	return migrated
+
+
 func _migrate_v14(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
 	migrated["version"] = 15
@@ -695,6 +741,13 @@ func _party_to_array(party: Variant) -> Array:
 			# additive and a save written before it round-trips unchanged.
 			"secondary_type": str(instance.get("secondary_type")),
 			"nickname": str(instance.get("nickname")),
+			# GAME-F4 (VERSION 16). The numbers `_apply_level_stats` recomputes
+			# max_hp/attack/defence FROM on the next level-up, elixir or
+			# evolution -- omitted here, they silently destroy the creature the
+			# next time any of those three fire. See the class header.
+			"base_hp": float(instance.get("base_hp")),
+			"base_attack": float(instance.get("base_attack")),
+			"base_defence": float(instance.get("base_defence")),
 			"max_hp": float(instance.get("max_hp")),
 			"attack": float(instance.get("attack")),
 			"defence": float(instance.get("defence")),
@@ -758,6 +811,14 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.battles_fought = int(d.get("battles_fought", 0))
 		creature.caught_on_day = int(d.get("caught_on_day", 0))
 		creature.levels_gained_with_you = int(d.get("levels_gained_with_you", 0))
+		# GAME-F4 (VERSION 16). `_migrate_v15` backfills these for any save
+		# older than this version, so `.get` here only ever falls back to
+		# `from_species()`'s own defaults on a file this build's migration
+		# chain somehow never touched -- belt and braces, not the primary
+		# repair path.
+		creature.base_hp = float(d.get("base_hp", 100.0))
+		creature.base_attack = float(d.get("base_attack", 20.0))
+		creature.base_defence = float(d.get("base_defence", 20.0))
 		creature.max_hp = float(d.get("max_hp", 1.0))
 		creature.attack = float(d.get("attack", 1.0))
 		creature.defence = float(d.get("defence", 1.0))

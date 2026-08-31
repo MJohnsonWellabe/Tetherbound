@@ -75,6 +75,9 @@ func _init() -> void:
 			"creature_type": str(creature.creature_type),
 			"secondary_type": str(creature.secondary_type),
 			"nickname": str(creature.nickname),
+			"base_hp": float(creature.base_hp),
+			"base_attack": float(creature.base_attack),
+			"base_defence": float(creature.base_defence),
 			"max_hp": float(creature.max_hp),
 			"attack": float(creature.attack),
 			"defence": float(creature.defence),
@@ -118,7 +121,7 @@ func _init() -> void:
 	}
 
 	var data := {
-		"version": 15,
+		"version": 16,
 		"day": 9,
 		"party": party,
 		"inventory": [],
