@@ -66,14 +66,16 @@ an owner decision, 14 blocked on owner-supplied reference art (`CLAUDE.md`'s
 Meshy/mesh rule — none is proposed here), and 21 that are real but multi-day.
 Those live in the census report, not in this table.
 
-**Read before launching any of these:** the census covered 6 of 8 subject areas.
-Area 4 got the wild encounter but no trainer/tournament battle; the dedicated
-HUD/UI suite produced 3 of 12 frames before being stopped as too slow (the
-in-combat HUD *was* judged, and its rows are below, but this week's health-bar,
-day/time and story-tracker changes were **not**); Bands 4–5 have no landmark
-frames; and the `J1`/`J2` Stormwall Hall silhouette regression was **not**
-re-measured. Closing those gaps is worth one session before treating this table
-as the whole picture.
+**Read before launching any of these:** the census covered 7 of 8 subject areas.
+Area 4 got the wild encounter but no trainer/tournament battle. Area 7 got the
+current exploration HUD — **including this week's health-bar, day/time and
+story-tracker changes** — plus three inventory states and an independent
+in-combat pass, but not the map tab, creatures tab, tournament board, build menu
+or catch states (`capture_ui_suite.gd` measured ~450s per frame at 1920×1080 and
+was stopped; run it at 1280×720 next time). Bands 4–5 have no landmark frames,
+and the `J1`/`J2` Stormwall Hall silhouette regression was **not** re-measured.
+Closing those gaps is worth one session before treating this table as the whole
+picture.
 
 **One dependency worth respecting:** `BACKLOG-VISUAL-SHADOW-RANGE` was the
 single most-cited finding across three independent critics, but it was measured
@@ -209,6 +211,44 @@ these rows cover both subject areas.
 | `BACKLOG-VISUAL-TERRAPUP-FIELD-SEPARATION` | the starter's mint shell sits within a hair of the grass in hue and value, so its back half merges with the meadow | Census 138 | material hue |
 | `BACKLOG-VISUAL-CLIFF-TEXTURE-TILING` | cliff rock texture repeats on a visible ~1m grid in three frames | Census 136 | triplanar or detail-break |
 | `BACKLOG-VISUAL-FENCE-RUN-AUTHORING` | a fence run terminates in mid-air with no end post; elsewhere it is one unbroken mechanical arc with uniform spacing, no gate, no gap and no lean | Census 137 | placement |
+
+---
+
+### HUD and UI — the exploration pass
+
+`hud_full.png` carries this week's HUD changes (health bar lower-left, day/time
+tracker, shrunk story card), so these rows are against the current state.
+**`BACKLOG-VISUAL-INPUT-GLYPH-LANGUAGE` is the one finding two blind critics
+reached independently from different rigs, and it is a `CLAUDE.md` hard-rule
+violation, not a taste call — take it first.**
+
+| id | item | source | closing cost |
+|---|---|---|---|
+| `BACKLOG-VISUAL-INPUT-GLYPH-LANGUAGE` | five input languages at once; the exploration HUD shows **no gamepad glyph at all** (`M`/`I`/`R`/`C` keycaps, quickbar slots `1`–`5`), the tooltip shows a **mouse-click icon with no controller equivalent**, and two on-screen instructions for the same action contradict each other. Controller-first is a hard rule | Census 148, 129 | data/config for the language; redrawing the two unreadable glyphs is small art |
+| `BACKLOG-VISUAL-FOOD-BAR-LEGIBILITY` | the FOOD bar is ~15% opacity with ochre text on ochre fill and grass reading through it; **at 35% it vanishes from the frame entirely** | Census 142 | opacity, contrast |
+| `BACKLOG-VISUAL-HEALTH-BAR-CONTRAST` | "100 / 100" is light grey on a mid-green fill over a barely-darker track; reads as one green lozenge at a glance | Census 143 | contrast |
+| `BACKLOG-VISUAL-VITALS-COLOCATION` | health and food are 350–500px apart, so the two numbers a player checks together are never in one glance | Census 144 | layout |
+| `BACKLOG-VISUAL-HUD-SAFE-AREA` | nothing sits inside a 5% title-safe box; the health bar is 14px from the left edge (0.7%). First things clipped on a handheld with rounded corners | Census 145 | margins |
+| `BACKLOG-VISUAL-HUD-ANCHORING` | the HUD re-flows with resolution instead of anchoring — the TEAM roster is present at 720p and absent at 1080p, the FOOD bar moves, the quickbar grows 50% | Census 146 | anchors |
+| `BACKLOG-VISUAL-MODAL-HUD-SUPPRESSION` | the inventory modal neither dims nor suppresses the HUD, and loses to it: the minimap draws on top of the panel, with the panel's own "Day 1" label printed inside the minimap ring | Census 149 | z-order / visibility |
+| `BACKLOG-VISUAL-INVENTORY-FOOTER-PLACEMENT` | the inventory footer legend sits outside and below its own panel, floating on the world and overlapping the live health bar | Census 150 | layout |
+| `BACKLOG-VISUAL-PANEL-STYLE-SYSTEM` | six panel styles, three corner radii, five opacities; the minimap has hard square corners around an inset rounded ring | Census 151 | one style token set |
+| `BACKLOG-VISUAL-MINIMAP-CONTENT` | the minimap is the darkest, heaviest object on screen and its interior is empty — no terrain, no path, no landmark, no N/E/S/W, a player marker that reads as a fir tree, and a second triangle cut in half by its own ring | Census 152 | map draw + marker art |
+| `BACKLOG-VISUAL-STACK-COUNT-CHIP` | stack counts straddle the cell border with no background chip; unreadable at 35%, and a light icon behind one would erase it | Census 154 | chip behind the number |
+| `BACKLOG-VISUAL-ITEM-STATE-MARKERS` | selecting an item destroys the quickbar-assigned marker, so you cannot see whether the selected item is assigned; neither marker is legended | Census 155 | state layering |
+| `BACKLOG-VISUAL-HUD-ALIGNMENT` | four right-anchored HUD elements have four different right edges spanning 23px; two centred-looking elements are centred on axes 270px apart | Census 156 | alignment |
+| `BACKLOG-VISUAL-CLOCK-VS-SKY` | the clock reads `Day 1 · 00:00` — midnight — over a bright midday sky with a long low sun shadow. Very likely the same root cause as owner playtest items 9/18/22/23 | Census 157 | clock source |
+| `BACKLOG-VISUAL-OPEN-SLOT-LEGIBILITY` | "OPEN SLOT" rows are ~25% opacity with grass reading through them — the five-creature limit made visible, and nearly invisible | Census 158 | opacity |
+| `BACKLOG-VISUAL-KO-CHIP` | the KO chip has ~2px clearance on both sides and is a **second danger red** that does not match the oxblood reserved for Team Tether | Census 159 | spacing + hue |
+| `BACKLOG-VISUAL-QUICKBAR-CELL-LAYOUT` | the "x12" count hangs outside its cell; near-invisible dividers make slots 2–5 read as one empty box | Census 160 | layout |
+| `BACKLOG-VISUAL-DISABLED-STATE` | the disabled action signals only through opacity plus a keycap colour change, which reads as a rendering inconsistency | Census 161 | state styling |
+| `BACKLOG-VISUAL-DATE-FORMAT-CONSISTENCY` | the inventory header says "Day 1"; the HUD says "Day 1 · 00:00" | Census 162 | one formatter |
+| `BACKLOG-VISUAL-INVENTORY-LAYOUT-WEIGHTING` | the preview pane is the widest column and ~93% empty while the item grid is squeezed into six columns | Census 163 | layout |
+| `BACKLOG-VISUAL-DURABILITY-READOUT` | durability is plain text where a bar would read faster, while the two readouts that are bars are the two that are illegible | Census 164 | widget choice |
+| `BACKLOG-VISUAL-INTERACT-PROMPT-MISSING` | the frame named `ui_explore_prompt` contains no prompt: the trainer stands beside the harvest node with no glyph, no highlight, no outline | Census 147 | tell a real prompt bug from a capture-timing one, then fix |
+| `BACKLOG-VISUAL-NOTCHED-BOULDER` | a boulder with a right-angled notch cut into it and a pure-black unlit face — reads as a failed boolean or inverted normals, and it is beside a rock in a completely different material language | Census 165 | mesh/normals |
+| `BACKLOG-VISUAL-SAPLING-INTERSECTS-PLAYER` | the harvest sapling passes through the trainer's arm | Census 166 | placement |
+| `BACKLOG-VISUAL-HEIGHTMAP-STEP` | a right-angled terraced step with a flat top in the terrain — an unsculpted heightmap edge | Census 167 | sculpt |
 
 ---
 

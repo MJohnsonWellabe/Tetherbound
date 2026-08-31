@@ -95,7 +95,7 @@ to — that is the correct reading, not a failure.
 | 4 | Combat (wild encounter) | 5 | `survey_combat.gd` | 1 |
 | 5 | Player + humanoid NPC cast | 27 | `_capture_character_cast.gd` | 1 |
 | 6 | Camps / rest points / build | 6 | `capture_build_pieces.gd`, `capture_creature_bed.gd`, `_capture_creature_bed_rest.gd` | 1 |
-| 7 | HUD / UI | 5 live-HUD combat frames + 2 UI states | `survey_combat.gd`, `capture_ui_suite.gd` | judged inside area 4 — see gap note |
+| 7 | HUD / UI | 4 (exploration HUD + 3 UI states) + 5 live-HUD combat frames | `capture_exploration_hud.gd`, `capture_ui_suite.gd`, `survey_combat.gd` | 1, plus area 4's independent pass |
 | 8 | Terrain / material quality | folded into 1 & 2 | `_capture_locations.gd` | via 1 & 2 |
 
 ### Gaps in this census, stated plainly
@@ -109,25 +109,24 @@ session should close them before the catalogue below is treated as complete.
   **trainer or tournament battle** was captured — `capture_combat_actions.gd`
   did not reach the front of the serial queue — so the staged-duel half of
   area 4 is still an evidence gap.
-- **Area 7 (HUD/UI) was judged only as it appears in combat.** The five
-  `survey_combat.gd` frames carry the live HUD, and the area-4 critic judged it
-  in full — defects 127–133 are that evidence, and they are real: the hostile
-  health bar is the same green as the ally's, the boss nameplate occludes the
-  compositional centre, and the ability tray shows **keyboard and mouse glyphs
-  in a controller-first project**, which is a `CLAUDE.md` hard-rule violation
-  visible in a still.
+- **Area 7 (HUD/UI) got a real round, but not the whole suite.**
+  `tools/capture_exploration_hud.gd` delivered `hud_full.png` — the current
+  exploration HUD, carrying **this week's changes**: the health bar at the
+  lower-left, the `Day 1 · 00:00` tracker top-centre, and the shrunk MAIN STORY
+  card. That plus three inventory/prompt states got a full blind round
+  (defects 142–168), and the five combat frames got the same HUD judged
+  independently from a different rig (defects 127–133). The two rounds agreed
+  on the input-glyph failure without seeing each other.
 
-  What is still missing is the dedicated UI suite. `capture_ui_suite.gd` walks
-  twelve UI states at 1920×1080 and was **measured at ~450 s per frame** under
-  llvmpipe — about 90 minutes for the set, which starved every other subject
-  area — so it was stopped after three frames (`ui_explore_prompt.png`,
-  `ui_inventory.png`, `ui_inventory_selected.png`) and its slot given to
-  combat. `capture_map_tab.gd`, `capture_exploration_hud.gd` and
-  `_capture_tournament_board.gd` did not run. **The HUD changes this week's
-  backlog made — health bar to lower-left, the day/time tracker, the shrunk
-  story tracker — are therefore not judged here**, and neither are the map tab,
-  the creatures tab or the tournament board. A follow-up should run that suite
-  at 1280×720, not 1920×1080.
+  What is **still unjudged**: the map tab, the creatures tab, the tournament
+  board, the build menu, the placement ghost and the catch states.
+  `capture_ui_suite.gd` walks twelve UI states at 1920×1080 and was **measured
+  at ~450 s per frame** under llvmpipe — about 90 minutes for the set, which
+  starved every other subject area — so it was stopped after three frames and
+  its slot given to combat. `capture_map_tab.gd` and
+  `_capture_tournament_board.gd` did not run. A follow-up should run that suite
+  at **1280×720, not 1920×1080**; that is the single cheapest thing that would
+  have made this census complete.
 - **Area 1 covers Bands 1–3 only.** The `_capture_locations.gd` run was cut off
   by this lane's own 40-minute `timeout` wrapper part-way through the Relay
   Camp, so sites 6–11 (Tether Relay, Mill Crossing, Ridge Camp, Waystop,
@@ -171,7 +170,8 @@ in this census, and these four should be read as the headline.
    creature idioms** standing in the same places. Four critics, four rigs, one
    finding.
 
-2. **Missing shadow and missing ambient fill.** Area 2 reports "no cast shadows
+2. **Missing shadow and missing ambient fill — with an important qualification
+   this lane found itself.** Area 2 reports "no cast shadows
    anywhere in any of the six world frames." Area 1 reports shadows that work
    in the near field and stop before the mid-ground — with the tree in
    `02-mill-pond-approach-day.png` casting a correct soft shadow, which proves
@@ -179,10 +179,22 @@ in this census, and these four should be read as the headline.
    **41.9 % pure-black pixels** on `07-burrowback-shiny.png` and **31.9 % pure
    white** on `14-duskhush-shiny.png` against **0.00 % / ≤0.01 %** on every
    Palworld creature sampled. Area 6 found the same crush at `(0,0,0)`.
-   **This one needs hardware confirmation before a fix lane spends on it** —
-   software rendering is exactly where a shadow-range finding is least
-   trustworthy — but the clipping percentages are albedo/exposure and are
-   trustworthy now.
+   **The qualification:** `shots/_diag/hud_full.png`, captured late in this
+   session by `tools/capture_exploration_hud.gd` and read directly by this lane
+   rather than by a critic, **plainly shows cast shadows** — the trainer's own
+   shadow and a large soft shadow band across the meadow. So "there are no cast
+   shadows" as a flat statement is **wrong**, and this report does not carry it.
+   What the evidence actually supports is narrower and matches area 1's own
+   reading: shadows exist and work in the near field, and stop or thin out
+   before the mid-ground, which is why a 10 m rock massif and a whole ridge
+   tree line cast nothing while a foreground tree casts correctly. That is a
+   **range** finding.
+
+   **It still needs hardware confirmation before a fix lane spends on it** —
+   software rendering is exactly where a shadow judgement is least trustworthy,
+   and three critics reporting "no shadows" on frames that demonstrably contain
+   some is itself a reason for caution. The clipping and crushing percentages
+   are albedo/exposure and are trustworthy now.
 
 3. **No aerial perspective, and visible world edges.** Area 1 and area 2 both
    report distant foliage rendering at the same saturation, value and contrast
@@ -211,6 +223,7 @@ gitignored, so the sheets are the durable evidence).
 |---|---|---|---|---|
 | 1 — world sites | `01-world-sites-round1.md` | `01-world-sites.jpg` | **yes** | **no** |
 | 4 — combat | `04-combat-round1.md` | `04-combat.jpg` | **no** | yes |
+| 7 — HUD / UI | `07-ui-round1.md` | `07-ui.jpg` | **no** | yes, weakly |
 | 2 — village | `02-village-round1.md` | `02-village.jpg` | **no** | yes, weakly |
 | 3 — creatures r1 | `03-creatures-round1.md` | `03-creatures-presentation.jpg` | **no** | **no** |
 | 3 — creatures r2 | `03-creatures-round2.md` | `03-roster-world.jpg` | **no** | yes, half |
@@ -225,8 +238,17 @@ percentages. By the convention's own rule that is improvement, so area 3 was
 still moving when the session ran out of budget and warrants at least one more
 round.
 
-Areas 1, 2, 4, 5 and 6 each have exactly one round and are therefore **not**
+Areas 1, 2, 4, 5, 6 and 7 each have exactly one round and are therefore **not**
 converged either; a second round on a different rig is owed for each.
+
+Area 7 is the interesting case, and it is worth naming because it is the
+closest thing this census has to a validated finding. The HUD was judged
+**twice, blind, from two unrelated rigs** — once in combat (area 4) and once in
+exploration (area 7) — by critics who saw neither each other's frames nor each
+other's reports. Both independently reported the input-glyph failure. When two
+blind readers converge on the same defect from different pictures, that defect
+is real, and `BACKLOG-VISUAL-INPUT-GLYPH-LANGUAGE` should be treated
+accordingly.
 
 ---
 
@@ -872,17 +894,181 @@ evidence for subject area 7.
      costume and palette, not a mesh — `BACKLOG-VISUAL-PLAYER-SILHOUETTE-SEPARATION`
 
 
+### Area 7 — HUD / UI
+
+From `hud_full.png` (the current exploration HUD, carrying this week's
+lower-left health bar, `Day 1 · 00:00` tracker and shrunk MAIN STORY card) plus
+the three inventory/prompt states the UI suite produced before it was stopped.
+The rubric forbids comparing UI design against the Palworld screenshots, so
+these are judged on their own terms: legibility, hierarchy, safe area, and
+whether a player can read their own state in one look on a handheld.
+
+142. **The FOOD bar is effectively invisible.** Drawn at roughly 15% opacity
+     with ochre text on an ochre fill, a fence rail and individual grass blades
+     reading straight through it (`hud_full.png`, x 10–210 / y 300–355).
+     **Downscaled to 35% it disappears from the frame entirely** — on a 7-inch
+     screen the player has no satiety readout. **bite-sized** —
+     `BACKLOG-VISUAL-FOOD-BAR-LEGIBILITY`
+143. **The health bar is barely more legible.** "100 / 100" is light grey on a
+     mid-green fill, and the track is barely darker than the fill, so it reads
+     as one green lozenge with a ghost of a number. At 35% it is a green smear.
+     **bite-sized** — `BACKLOG-VISUAL-HEALTH-BAR-CONTRAST`
+144. **The two vitals are never in the same glance** — health at the extreme
+     bottom-left, food 350 px above it in `hud_full.png` and 500 px above it in
+     `ui_explore_prompt.png`. **bite-sized** —
+     `BACKLOG-VISUAL-VITALS-COLOCATION`
+145. **Safe area is violated on every edge.** Measured: health bar 14 px from
+     the left and 22 px from the bottom (0.7% / 2.0%), FOOD panel 18 px, minimap
+     35 px, footer legend ~24 px. Nothing sits inside a 5% title-safe box and
+     several elements are inside 1% — on a handheld with rounded corners these
+     are the first things clipped. **bite-sized** —
+     `BACKLOG-VISUAL-HUD-SAFE-AREA`
+146. **The HUD re-flows with resolution instead of anchoring.** Between
+     `hud_full.png` (720p) and `ui_explore_prompt.png` (1080p) the TEAM roster
+     panel is present in one and entirely absent in the other, the FOOD bar
+     moves to a free-floating mid-left position, and the quickbar grows from
+     ~370 px to ~555 px. Neither frame can be trusted as *the* HUD. **bite-sized**
+     — `BACKLOG-VISUAL-HUD-ANCHORING`
+147. **The interact prompt is missing from the frame named for it.** In
+     `ui_explore_prompt.png` the trainer stands beside the intended harvest node
+     with no prompt, no glyph, no highlight and no outline anywhere near it.
+     **bite-sized** — either a real prompt bug or a capture-timing one, and
+     worth telling apart — `BACKLOG-VISUAL-INTERACT-PROMPT-MISSING`
+148. **The build speaks five different input languages at once, and the
+     controller half is the illegible half.** The exploration HUD shows keycaps
+     only (`M` Map, `I` Satchel, `R` Call Out, `C` Change Creature, quickbar
+     slots `1`–`5`) with **no gamepad glyph anywhere**; the inventory footer
+     uses plain text pairs ("A / Enter Select"); the tooltip uses pictorial
+     glyphs including a **mouse-click icon with no controller equivalent**; and
+     `ui_inventory_selected.png` adds bracketed ASCII ("J / [L3]"). The two
+     pictorial gamepad glyphs do not resolve into recognisable buttons at any
+     zoom. Two of these contradict each other on one screen: the quickbar panel
+     says "pick a stack up with ▣, then press a slot" while a tooltip 250 px
+     away says "J / [L3] Put on the quick bar". `CLAUDE.md` says controller
+     first; this is that rule failing in four places at once, and it is the same
+     defect the combat round found independently (129). **bite-sized** for
+     unifying the language (data/config); **needs owner-supplied reference art**
+     only for redrawing the two unreadable glyphs —
+     `BACKLOG-VISUAL-INPUT-GLYPH-LANGUAGE`
+149. **The modal inventory does not suppress or dim the HUD, and loses to it.**
+     The exploration minimap is drawn **on top of** the Satchel panel, with the
+     panel's own "Day 1" label printed inside the minimap ring and the player
+     triangle showing through the text; the "Settings" tab label is partially
+     covered; the MAIN STORY card bleeds through the panel edge. **bite-sized** —
+     `BACKLOG-VISUAL-MODAL-HUD-SUPPRESSION`
+150. **The inventory footer legend sits outside the panel it belongs to**
+     (panel bottom ≈ y 1035, legend baseline ≈ y 1056), floating on the world
+     and overlapping the still-live health bar. **bite-sized** —
+     `BACKLOG-VISUAL-INVENTORY-FOOTER-PLACEMENT`
+151. **Six panel styles, three corner radii, no shared system.** Team rows
+     (near-opaque, tight radius, cyan border) / FOOD (~15%, large radius, no
+     border) / health (~40%, large radius, thin border) / minimap (near-opaque
+     near-black, **hard square corners** around an inset **rounded** ring) /
+     MAIN STORY (~70%) / quickbar and action bar (~75%) / Satchel (~92%).
+     **bite-sized** — `BACKLOG-VISUAL-PANEL-STYLE-SYSTEM`
+152. **The minimap is the heaviest object on screen and carries no map.** Its
+     interior is empty — no terrain, no path, no water, no fence, no landmark,
+     none of the tree, barn or boulders 30 m away in the same frame. It has four
+     symmetric cyan dots that cannot all be POIs, four edge ticks with **no
+     N/E/S/W letters** so north is unknowable, a player marker that reads as a
+     fir tree rather than a heading arrow, and **a second white triangle cut in
+     half by the ring**. It is also the darkest object in the whole build,
+     giving the most visual weight to the least information. **bite-sized** —
+     `BACKLOG-VISUAL-MINIMAP-CONTENT`
+153. **Five item icons in four unrelated idioms, one unidentifiable.** Wood is
+     orange line-art rings; stone is a **pink** faceted hexagon that reads as
+     fruit; berries are a flat red-pink blob; the flask is a flat cream circle;
+     and the Axe is a pale **blue** diamond on a stem that reads as a tuning
+     fork or a lollipop — and stays unreadable at 90 px in the preview pane. The
+     Axe is also the only cool-coloured icon in the row, which signals "different
+     rarity" when it only means "different artist". **needs owner-supplied
+     reference art** — small and cheap, but art —
+     `BACKLOG-VISUAL-ITEM-ICON-SET`
+154. **Stack counts straddle the cell border with no background chip** — "24"
+     pushes into the selected cell's cyan outline, and at 35% all four are
+     unreadable smudges. A light icon behind one would erase it. **bite-sized** —
+     `BACKLOG-VISUAL-STACK-COUNT-CHIP`
+155. **The selection state destroys the quickbar-assigned state.** In
+     `ui_inventory.png` the Axe carries a green underline; in
+     `ui_inventory_selected.png` the Axe takes the cyan selection outline and
+     **the green underline vanishes**, so you cannot see whether the item you
+     have selected is quickbar-assigned. Neither marker is legended, and at 35%
+     the green bar reads as a durability meter. **bite-sized** —
+     `BACKLOG-VISUAL-ITEM-STATE-MARKERS`
+156. **Four right-anchored HUD elements have four different right edges**
+     spanning 23 px (quickbar x≈1863, action bar x≈1855, MAIN STORY x≈1862,
+     minimap x≈1878), and the action bar's centre is neither screen-centre nor
+     aligned to anything. In `hud_full.png` the world prompt and the action bar
+     are centred on axes 270 px apart. **bite-sized** —
+     `BACKLOG-VISUAL-HUD-ALIGNMENT`
+157. **The clock says `Day 1 · 00:00` — midnight — over a bright midday sky
+     with a long low sun shadow** (`hud_full.png`, `ui_explore_prompt.png`).
+     The HUD is stating something the frame contradicts. This is very likely the
+     same root cause as the owner's own playtest items 9/18/22/23 about the
+     day/rest/clock. **bite-sized** — `BACKLOG-VISUAL-CLOCK-VS-SKY`
+158. **The empty roster slots are nearly invisible.** "OPEN SLOT" rows 4 and 5
+     are drawn at ~25% opacity with grass and a fence reading through the text.
+     An empty slot is the five-creature limit made visible and it is the second
+     least legible thing on the HUD. **bite-sized** —
+     `BACKLOG-VISUAL-OPEN-SLOT-LEGIBILITY`
+159. **The KO chip is jammed with ~2 px clearance** between "Lv 1" and the
+     health bar, and its bright coral is a **second danger red** that does not
+     match the oxblood the key art reserves for Team Tether. **bite-sized** —
+     `BACKLOG-VISUAL-KO-CHIP`
+160. **The quickbar's count hangs outside its cell.** "x12" is drawn *below*
+     slot 1 rather than inside it, so the slot stacks icon / keycap / count as
+     three separated elements; cell dividers are near-invisible, so slots 2–5
+     read as one long empty box. **bite-sized** —
+     `BACKLOG-VISUAL-QUICKBAR-CELL-LAYOUT`
+161. **Disabled state reads as a rendering inconsistency.** "Change Creature"
+     is disabled but signals it only through ~40% opacity plus a keycap chip
+     that changes from white to pale blue-grey. **bite-sized** —
+     `BACKLOG-VISUAL-DISABLED-STATE`
+162. **The same data is formatted two ways.** The inventory header says
+     "Day 1"; the HUD says "Day 1 · 00:00". **bite-sized** —
+     `BACKLOG-VISUAL-DATE-FORMAT-CONSISTENCY`
+163. **Inventory space allocation does not follow content.** The centre preview
+     pane is ~480×650 px, ~93% empty, holding one 90 px icon and one word, while
+     the satchel grid is squeezed into six columns and the tab row is justified
+     with irregular gaps. **bite-sized** —
+     `BACKLOG-VISUAL-INVENTORY-LAYOUT-WEIGHTING`
+164. **Durability is plain text where a bar would read faster** ("40/40
+     durability"), while the two readouts that *are* bars are the two that are
+     illegible. **bite-sized** — `BACKLOG-VISUAL-DURABILITY-READOUT`
+165. **A boulder with a right-angled notch and a pure-black unlit face**
+     (`ui_explore_prompt.png`, x 1150–1350 / y 150–330) — reads as a failed
+     boolean or inverted normals, and the critic called it the most obviously
+     broken object in the set. Two metres in front of it, a second rock uses a
+     completely different material language. **bite-sized** —
+     `BACKLOG-VISUAL-NOTCHED-BOULDER`
+166. **The harvest sapling intersects the trainer's arm**
+     (`ui_explore_prompt.png`) — geometry through geometry on the hero of the
+     frame. **bite-sized** — `BACKLOG-VISUAL-SAPLING-INTERSECTS-PLAYER`
+167. **A right-angled terraced step with a flat top in the terrain**
+     (`hud_full.png`, x≈900–1100 / y≈250–300) — an unsculpted heightmap edge,
+     not a designed ledge. **bite-sized** —
+     `BACKLOG-VISUAL-HEIGHTMAP-STEP`
+168. **The thing you chop is a 1.93 m leafless twig, and the game calls it an
+     oak.** Measured against the trainer at 123 px/m, the harvest node is
+     chest-to-head height, while the Wood tooltip says "rough-cut lengths from
+     the meadow's oaks" and the Axe tooltip says it "takes a full swing off an
+     oak". A scale-and-identity mismatch visible in a still, and the same tree
+     asset also stands on the horizon as scenery. **needs owner decision** —
+     the fix is either a real oak (blocked on art, defect 22/53) or different
+     copy — `BACKLOG-VISUAL-HARVEST-NODE-IS-NOT-AN-OAK`
+
+
 ---
 
 ## Totals
 
 | Sizing | Count |
 |---|---|
-| **bite-sized** | 89 |
-| **needs owner decision** | 15 |
-| **needs owner-supplied reference art** (blocked per `CLAUDE.md`) | 15 |
+| **bite-sized** | 114 |
+| **needs owner decision** | 16 |
+| **needs owner-supplied reference art** (blocked per `CLAUDE.md`) | 16 |
 | **not bite-sized** (multi-day, no new generation needed) | 22 |
-| **total** | **141** |
+| **total** | **168** |
 
 Counted by each entry's leading classification. Several entries are split — a
 bite-sized half and a blocked or multi-day half — and both halves are stated in
@@ -925,7 +1111,11 @@ findings one fix would close:
 4. **The combat-camera and enemy-framing pair** (defects 121, 122) — a boss
    nameplate displayed for a creature that is not on screen is the loudest
    single thing in the census, and both halves are camera/placement values.
-5. **Close the remaining census gaps** — the trainer/tournament battle, the
+5. **The controller-glyph pass** (defects 129, 148) — the only finding in the
+   census that two blind critics reached independently from different rigs, and
+   a direct `CLAUDE.md` hard-rule violation ("controller first") rather than a
+   matter of taste. The exploration HUD shows **no gamepad glyph at all**.
+6. **Close the remaining census gaps** — the trainer/tournament battle, the
    dedicated UI suite (at 1280×720, not 1920×1080), Bands 4–5, water, weather,
    the ground-seam probe, and the J1/J2 Hall silhouette re-measurement. Until
    those run, this catalogue is six-eighths of a census, not a whole one.
