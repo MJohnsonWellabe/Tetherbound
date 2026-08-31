@@ -156,10 +156,20 @@ func _run() -> void:
 	print("")
 	print("=== the guardian ===")
 	var guardian: Node3D = warrens.call("guardian")
-	if guardian != null and is_instance_valid(guardian):
-		var g_pos: Vector3 = guardian.global_position
-		await _walk_to(player, world, g_pos, 3000, 4.0)
-	await _engage_and_fight("the Warren Guardian", 90)
+	# The guardian has its own small `wander_radius` (1.2-1.5m per
+	# burrow_warrens.json), so a position captured once before walking can go
+	# stale by the time the walk finishes. Re-reading it and retrying the
+	# approach a few times catches that, rather than reporting "never
+	# engaged" for what may just be an out-of-date snapshot.
+	for attempt in 3:
+		if bool((_probe.call("input_state") as Dictionary).get("combat_running", false)):
+			break
+		if guardian != null and is_instance_valid(guardian):
+			await _walk_to(player, world, guardian.global_position, 1500, 3.0)
+		await _engage_and_fight("the Warren Guardian (attempt %d)" % (attempt + 1), 90)
+		if bool((_probe.call("input_state") as Dictionary).get("combat_running", false)) \
+				or _has_flag(game, "warrens_cleared"):
+			break
 
 	print("warrens_cleared flag set: %s" % str(_has_flag(game, "warrens_cleared")))
 
@@ -316,14 +326,25 @@ func _press_tap(action: String, times: int, settle_frames: int) -> void:
 			await physics_frame
 
 
+## The hall fight showed combat can already be RUNNING by the time this is
+## called -- aggressive residents (every spawn in this file, guardian
+## included, carries `"aggressive": true`) close distance and engage during
+## the walk itself, before any interact press. So this checks first, rather
+## than pressing interact unconditionally: doing so while combat is already
+## live is what threw two orb_greater at the hall's own residents as catch
+## attempts instead of landing melee swings.
 func _engage_and_fight(label: String, quick_presses: int = 60) -> void:
-	Input.action_press("interact")
-	await physics_frame
-	Input.action_release("interact")
-	for i in 180:
-		await physics_frame
 	var state: Dictionary = _probe.call("input_state")
-	print("%s: input_context=%s combat_running=%s" % [label, str(_probe.call("input_context")), str(state.get("combat_running", false))])
+	if not bool(state.get("combat_running", false)):
+		Input.action_press("interact")
+		await physics_frame
+		Input.action_release("interact")
+		for i in 180:
+			await physics_frame
+		state = _probe.call("input_state")
+		print("%s: input_context=%s combat_running=%s" % [label, str(_probe.call("input_context")), str(state.get("combat_running", false))])
+	else:
+		print("%s: combat already running (aggro engaged during the approach)" % label)
 	if not bool(state.get("combat_running", false)):
 		print("%s: NOT engaged after one interact press -- trying once more" % label)
 		Input.action_press("interact")
