@@ -326,6 +326,34 @@ const VITALS_SATIETY_ROW_Y := VITALS_HP_ROW_Y + 34.0 + VITALS_ROW_GAP
 ## children still lay out with the same local offsets they always have.
 const VITALS_HEIGHT := VITALS_SATIETY_ROW_Y + 34.0 + 6.0
 
+## HUD-BACKLOG-20 (owner playtest 2026-08-30, item 20: "Put the player's
+## health bar in the lower left"). The HP icon/bar/value move out of
+## `_vitals_cluster` into their own widget, built by
+## `_build_player_health_bar()` and positioned by
+## `player_health_bar_position()` below, anchored to the true canvas bottom
+## instead of stacked above `Root/BottomDock` the way the rest of the left
+## column is. `VITALS_HP_ROW_Y`/`VITALS_SATIETY_ROW_Y`/`VITALS_HEIGHT` above
+## are UNTOUCHED on purpose: `vitals_position()` and everything derived from
+## it (`creature_block_position()`, `party_strip_position()`) keep reserving
+## the exact same footprint they always have, so the party strip and the
+## creature panel do not move a pixel. Only `_vitals_cluster`'s own remaining
+## content (buffs, satiety/food) redraws starting from the row the HP row
+## used to occupy, using these two, so its plate does not show an empty gap
+## where HP used to sit.
+const VITALS_FOOD_ONLY_ROW_Y := VITALS_HP_ROW_Y
+const VITALS_HEIGHT_WITHOUT_HP := VITALS_FOOD_ONLY_ROW_Y + 34.0 + 6.0
+
+## The extracted HP row's own local geometry -- the same icon/bar/value
+## layout `_build_vitals_cluster()` used to draw at `VITALS_HP_ROW_Y`, just
+## re-anchored so the row's own top (the value label, which drew 8px above
+## `VITALS_HP_ROW_Y`) starts at local y 0 instead.
+const HEALTH_BAR_ROW_Y := 8.0
+const HEALTH_BAR_CONTENT_HEIGHT := 34.0
+## Clearance kept between the widget's own backing plate and the true canvas
+## bottom edge. Reuses `UITokens.GAP`, the same small-gap token
+## `PARTY_ACTIVE_GAP` above already borrows, rather than a new number.
+const HEALTH_BAR_BOTTOM_MARGIN := UITokens.GAP
+
 const STAMINA_ARC_POS := Vector2(960.0 + 48.0, 540.0 - 160.0 * 0.5) ## centred-right of screen centre
 
 ## HUD-SCALE: 240 -> 184. The minimap is a permanently-present 2.78% of the
@@ -674,6 +702,10 @@ var _party_strip_last_active_out := true
 var _max_buff_chips := DEFAULT_MAX_BUFF_CHIPS
 
 var _vitals_cluster: Control = null
+## HUD-BACKLOG-20: the player's HP icon/bar/value, split out of
+## `_vitals_cluster` into their own bottom-left-anchored widget. See
+## `_build_player_health_bar()`.
+var _health_bar_cluster: Control = null
 var _buff_chips: Array[Panel] = []
 var _buff_chip_labels: Array[Label] = []
 var _buff_overflow_label: Label = null
@@ -771,6 +803,7 @@ func _ready() -> void:
 	_build_creature_block()
 	_mount_party_strip()
 	_build_vitals_cluster()
+	_build_player_health_bar()
 	_mount_stamina_arc()
 	_mount_minimap()
 	_build_objective_block()
@@ -1418,6 +1451,28 @@ static func vitals_position(canvas_height: float) -> Vector2:
 	return Vector2(CREATURE_BLOCK_X, left_stack_bottom(canvas_height) - VITALS_HEIGHT)
 
 
+## HUD-BACKLOG-20. Independent of `left_stack_bottom()` on purpose -- the
+## rest of the left column stacks bottom-up from `Root/BottomDock`'s real top
+## edge (see that function's own header), but `Root/BottomDock` reserves the
+## same nominal footprint regardless of X, and this widget sits far enough
+## left (`CREATURE_BLOCK_X`) that it never shares paint with the dock's own
+## right-aligned hotbar or centred prompt. So instead of competing for room
+## above the dock the way the roster/creature panel/vitals cluster must, this
+## widget anchors to `Root/BottomDock`'s own OTHER real edge: that Control's
+## `offset_bottom` (-96 in `playground_hud.tscn`) leaves it always exactly
+## 96px short of the true canvas bottom, regardless of any transient growth
+## in its message row or a wrapped prompt (both of which only ever push the
+## dock's TOP edge up -- confirmed on real `get_global_rect()` measurements,
+## not assumed). `HEALTH_BAR_BOTTOM_MARGIN` plus this widget's own plate
+## overhang leaves a comfortable clearance inside that fixed 96px, so this
+## never needs LEFT_STACK_CLEARANCE-style tuning against dock growth the way
+## `vitals_position()` does.
+static func player_health_bar_position(canvas_height: float) -> Vector2:
+	var plate_bottom := canvas_height - HEALTH_BAR_BOTTOM_MARGIN
+	var plate_top := plate_bottom - (HEALTH_BAR_CONTENT_HEIGHT + VITALS_PLATE_OVERHANG * 2.0)
+	return Vector2(CREATURE_BLOCK_X, plate_top + VITALS_PLATE_OVERHANG)
+
+
 static func creature_block_position(canvas_height: float, creature_panel_height: float) -> Vector2:
 	return Vector2(
 		CREATURE_BLOCK_X,
@@ -1530,6 +1585,9 @@ func _reflow_left_stack() -> void:
 	if _vitals_cluster != null:
 		_vitals_cluster.position = vitals_position(canvas_h)
 
+	if _health_bar_cluster != null:
+		_health_bar_cluster.position = player_health_bar_position(canvas_h)
+
 	if _creature_block != null:
 		_creature_block.position = creature_block_position(canvas_h, creature_h)
 
@@ -1639,10 +1697,15 @@ func _update_party_strip() -> void:
 # --- player vitals cluster --------------------------------------------------------
 
 
-## Buff icons row, HP row (bar + right-aligned value text), satiety row (bar
-## + hunger-state text). One Control holds all three so the idle-fade rule
-## can fade the whole cluster with a single modulate write, matching the old
-## per-bar fade this replaces.
+## Buff icons row, satiety row (bar + hunger-state text). One Control holds
+## both so the idle-fade rule can fade the whole cluster with a single
+## modulate write, matching the old per-bar fade this replaces.
+##
+## HUD-BACKLOG-20: the HP row used to live here too. It now builds in
+## `_build_player_health_bar()`'s own widget instead -- see that function's
+## header, and `VITALS_HEIGHT_WITHOUT_HP`'s, for why this cluster's own
+## position formula (`vitals_position()`) is untouched even though its real
+## content shrank.
 func _build_vitals_cluster() -> void:
 	_vitals_cluster = Control.new()
 	_vitals_cluster.name = "VitalsCluster"
@@ -1650,7 +1713,7 @@ func _build_vitals_cluster() -> void:
 	# Position is set by `_reflow_left_stack()`, not here -- see that
 	# function's header and `BOTTOM_DOCK_TOP_OFFSET`'s comment for why a
 	# fixed top-anchored offset was the actual HUD-LAYOUT defect.
-	_vitals_cluster.size = Vector2(VITALS_WIDTH, VITALS_HEIGHT)
+	_vitals_cluster.size = Vector2(VITALS_WIDTH, VITALS_HEIGHT_WITHOUT_HP)
 	_root.add_child(_vitals_cluster)
 
 	# HUD-EMPHASIS: a blind critic named this corner the one that "reads
@@ -1667,68 +1730,11 @@ func _build_vitals_cluster() -> void:
 	var vitals_plate := Panel.new()
 	vitals_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vitals_plate.position = Vector2(-40.0, -VITALS_PLATE_OVERHANG)
-	vitals_plate.size = Vector2(VITALS_WIDTH + 48.0, VITALS_HEIGHT + VITALS_PLATE_OVERHANG * 2.0)
+	vitals_plate.size = Vector2(VITALS_WIDTH + 48.0, VITALS_HEIGHT_WITHOUT_HP + VITALS_PLATE_OVERHANG * 2.0)
 	vitals_plate.add_theme_stylebox_override("panel", UITokens.panel_box())
 	_vitals_cluster.add_child(vitals_plate)
 
 	_build_buff_row(_vitals_cluster)
-
-	# hp_heart.png is a mid-tone green glyph, matching HP_GREEN by design (see
-	# ASSET_LEDGER.md) -- but this cluster has no panel behind it (§16's
-	# "legibility outline instead of a box" call, same as the text below), so
-	# without a backing chip the icon sits directly on grass/terrain and
-	# nearly disappears into it (blind-judge finding, EV9 handheld-scale
-	# remainder). A small round BG_PANEL chip -- the same fill the ledger says
-	# the icon was originally colour-checked against -- restores the contrast
-	# without touching the owner-supplied art itself.
-	var hp_icon_bg := Panel.new()
-	hp_icon_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hp_icon_bg.position = Vector2(-30.0, VITALS_HP_ROW_Y - 4.0)
-	hp_icon_bg.size = Vector2(26.0, 26.0)
-	var hp_icon_bg_box := StyleBoxFlat.new()
-	hp_icon_bg_box.bg_color = UITokens.BG_PANEL
-	hp_icon_bg_box.corner_radius_top_left = 13
-	hp_icon_bg_box.corner_radius_top_right = 13
-	hp_icon_bg_box.corner_radius_bottom_left = 13
-	hp_icon_bg_box.corner_radius_bottom_right = 13
-	hp_icon_bg.add_theme_stylebox_override("panel", hp_icon_bg_box)
-	_vitals_cluster.add_child(hp_icon_bg)
-
-	_hp_icon = TextureRect.new()
-	_hp_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hp_icon.texture = load(ICON_HP)
-	_hp_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_hp_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_hp_icon.position = Vector2(-26.0, VITALS_HP_ROW_Y)
-	_hp_icon.size = Vector2(18.0, 18.0)
-	_vitals_cluster.add_child(_hp_icon)
-
-	_hp_bar = ProgressBar.new()
-	_hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hp_bar.position = Vector2(0.0, VITALS_HP_ROW_Y)
-	_hp_bar.size = Vector2(VITALS_WIDTH, VITALS_BAR_HEIGHT)
-	_hp_bar.show_percentage = false
-	_hp_bar.min_value = 0.0
-	_hp_bar.max_value = 1.0
-	_hp_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
-	_hp_fill = UITokens.fill_box(UITokens.HP_GREEN)
-	_hp_bar.add_theme_stylebox_override("fill", _hp_fill)
-	_vitals_cluster.add_child(_hp_bar)
-
-	# HUD-POPUP task 3: was `UITokens.FONT_LABEL` (23), which measured ~10.7
-	# physical px cap height at the Ally's real scale -- the single specific
-	# number the critic quoted ("Player HP 100 / 100 ~10px"). Raised to the
-	# same `HUD_READABLE_FONT_SIZE` floor every other label on this HUD
-	# already clears, with the row's own height grown to hold it without
-	# clipping into the buff row above or the satiety row below.
-	_hp_value_label = Label.new()
-	_hp_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hp_value_label.position = Vector2(0.0, VITALS_HP_ROW_Y - 8.0)
-	_hp_value_label.size = Vector2(VITALS_WIDTH - 8.0, 34.0)
-	_hp_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_hp_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_hp_value_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
-	_vitals_cluster.add_child(_hp_value_label)
 
 	# HUD-POPUP task 4: "the yellow satiety bar has no icon, label or value;
 	# next to a heart-marked HP bar it is a mystery meter." No new icon
@@ -1738,7 +1744,7 @@ func _build_vitals_cluster() -> void:
 	# a right-aligned percentage value mirroring the HP row exactly.
 	_satiety_caption_label = Label.new()
 	_satiety_caption_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_caption_label.position = Vector2(0.0, VITALS_SATIETY_ROW_Y - 8.0)
+	_satiety_caption_label.position = Vector2(0.0, VITALS_FOOD_ONLY_ROW_Y - 8.0)
 	_satiety_caption_label.size = Vector2(VITALS_CAPTION_WIDTH - 8.0, 34.0)
 	_satiety_caption_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_caption_label.text = "FOOD"
@@ -1748,7 +1754,7 @@ func _build_vitals_cluster() -> void:
 
 	_satiety_bar = ProgressBar.new()
 	_satiety_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_bar.position = Vector2(VITALS_CAPTION_WIDTH, VITALS_SATIETY_ROW_Y)
+	_satiety_bar.position = Vector2(VITALS_CAPTION_WIDTH, VITALS_FOOD_ONLY_ROW_Y)
 	_satiety_bar.size = Vector2(VITALS_WIDTH - VITALS_CAPTION_WIDTH, VITALS_BAR_HEIGHT)
 	_satiety_bar.show_percentage = false
 	_satiety_bar.min_value = 0.0
@@ -1759,7 +1765,7 @@ func _build_vitals_cluster() -> void:
 
 	_satiety_value_label = Label.new()
 	_satiety_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_value_label.position = Vector2(VITALS_CAPTION_WIDTH, VITALS_SATIETY_ROW_Y - 8.0)
+	_satiety_value_label.position = Vector2(VITALS_CAPTION_WIDTH, VITALS_FOOD_ONLY_ROW_Y - 8.0)
 	_satiety_value_label.size = Vector2(VITALS_WIDTH - VITALS_CAPTION_WIDTH - 8.0, 34.0)
 	_satiety_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_satiety_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -1773,12 +1779,83 @@ func _build_vitals_cluster() -> void:
 	# task's own floor for a state word the player needs to actually read.
 	_satiety_state_label = Label.new()
 	_satiety_state_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_state_label.position = Vector2(VITALS_WIDTH + 12.0, VITALS_SATIETY_ROW_Y - 8.0)
+	_satiety_state_label.position = Vector2(VITALS_WIDTH + 12.0, VITALS_FOOD_ONLY_ROW_Y - 8.0)
 	_satiety_state_label.size = Vector2(220.0, 34.0)
 	_satiety_state_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_state_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
 	_satiety_state_label.visible = false
 	_vitals_cluster.add_child(_satiety_state_label)
+
+
+## HUD-BACKLOG-20 (owner playtest 2026-08-30, item 20: "Put the player's
+## health bar in the lower left"). Same icon/bar/value the old HP row inside
+## `_vitals_cluster` drew (`hp_heart.png` backing chip and all -- see that
+## code's own history for why the chip exists), just re-homed into its own
+## `Control` so it can be positioned independently by
+## `player_health_bar_position()` instead of being pinned to
+## `vitals_position()`'s spot above `Root/BottomDock`.
+func _build_player_health_bar() -> void:
+	_health_bar_cluster = Control.new()
+	_health_bar_cluster.name = "PlayerHealthBar"
+	_health_bar_cluster.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Position is set by `_reflow_left_stack()`, not here -- matches
+	# `_vitals_cluster`'s own convention.
+	_health_bar_cluster.size = Vector2(VITALS_WIDTH, HEALTH_BAR_CONTENT_HEIGHT)
+	_root.add_child(_health_bar_cluster)
+
+	var health_plate := Panel.new()
+	health_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	health_plate.position = Vector2(-40.0, -VITALS_PLATE_OVERHANG)
+	health_plate.size = Vector2(VITALS_WIDTH + 48.0, HEALTH_BAR_CONTENT_HEIGHT + VITALS_PLATE_OVERHANG * 2.0)
+	health_plate.add_theme_stylebox_override("panel", UITokens.panel_box())
+	_health_bar_cluster.add_child(health_plate)
+
+	# hp_heart.png is a mid-tone green glyph, matching HP_GREEN by design (see
+	# ASSET_LEDGER.md). A small round BG_PANEL chip behind it keeps it
+	# legible against grass/terrain -- same call `_build_vitals_cluster()`
+	# made for this icon before the split.
+	var hp_icon_bg := Panel.new()
+	hp_icon_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hp_icon_bg.position = Vector2(-30.0, HEALTH_BAR_ROW_Y - 4.0)
+	hp_icon_bg.size = Vector2(26.0, 26.0)
+	var hp_icon_bg_box := StyleBoxFlat.new()
+	hp_icon_bg_box.bg_color = UITokens.BG_PANEL
+	hp_icon_bg_box.corner_radius_top_left = 13
+	hp_icon_bg_box.corner_radius_top_right = 13
+	hp_icon_bg_box.corner_radius_bottom_left = 13
+	hp_icon_bg_box.corner_radius_bottom_right = 13
+	hp_icon_bg.add_theme_stylebox_override("panel", hp_icon_bg_box)
+	_health_bar_cluster.add_child(hp_icon_bg)
+
+	_hp_icon = TextureRect.new()
+	_hp_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hp_icon.texture = load(ICON_HP)
+	_hp_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_hp_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_hp_icon.position = Vector2(-26.0, HEALTH_BAR_ROW_Y)
+	_hp_icon.size = Vector2(18.0, 18.0)
+	_health_bar_cluster.add_child(_hp_icon)
+
+	_hp_bar = ProgressBar.new()
+	_hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hp_bar.position = Vector2(0.0, HEALTH_BAR_ROW_Y)
+	_hp_bar.size = Vector2(VITALS_WIDTH, VITALS_BAR_HEIGHT)
+	_hp_bar.show_percentage = false
+	_hp_bar.min_value = 0.0
+	_hp_bar.max_value = 1.0
+	_hp_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
+	_hp_fill = UITokens.fill_box(UITokens.HP_GREEN)
+	_hp_bar.add_theme_stylebox_override("fill", _hp_fill)
+	_health_bar_cluster.add_child(_hp_bar)
+
+	_hp_value_label = Label.new()
+	_hp_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hp_value_label.position = Vector2(0.0, HEALTH_BAR_ROW_Y - 8.0)
+	_hp_value_label.size = Vector2(VITALS_WIDTH - 8.0, 34.0)
+	_hp_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_hp_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_hp_value_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
+	_health_bar_cluster.add_child(_hp_value_label)
 
 
 ## T3-INSTALL, B1 (`ralph/reports/DARK_FEATURES_INVENTORY_2026-08-30.md`):
@@ -1908,6 +1985,10 @@ func _update_vitals_cluster(vitals: RefCounted, delta: float) -> void:
 	var sprinting: bool = bool(_player.call("is_sprinting")) if _player.has_method("is_sprinting") else false
 	var relevant := health_fraction < 0.999 or hunger != "ok" or sprinting
 	_fade_toward(_vitals_cluster, 1.0 if relevant else FADE_ALPHA, delta)
+	# HUD-BACKLOG-20: same idle-fade rule, retargeted -- the split moved the
+	# HP row out of `_vitals_cluster`, not out of the "safety information
+	# never fully fades" contract `relevant` encodes.
+	_fade_toward(_health_bar_cluster, 1.0 if relevant else FADE_ALPHA, delta)
 
 
 # --- stamina arc -------------------------------------------------------------------
@@ -2954,13 +3035,15 @@ func _combat_is_aiming() -> bool:
 ## blind critic captured (`shots/ui/10-combat-hud.png`: "TEAM 5/5" printing
 ## straight through a companion panel's own "120 / 120").
 ##
-## `_vitals_cluster` (the player's own HP/FOOD, bottom-left) joins them here
-## now too -- DEFECT 1, the worst-ranked finding in the same critique. It
-## does not have a `combat_hud.gd` twin the way the other two do; the reason
-## it stood down anyway is the geometry, not duplication: `vitals_position()`
-## places it in the exact bottom-left corner `combat_hud.gd` needs for its
-## own `AllyPanel`/`PartyStrip`, so leaving it up let a ghosted "100 / 100"
-## and "FOOD 100%" print straight through combat's roster
+## `_vitals_cluster` (the player's own FOOD/buffs) and `_health_bar_cluster`
+## (the player's own HP, split out to its own bottom-left widget by
+## HUD-BACKLOG-20) join them here too -- DEFECT 1, the worst-ranked finding
+## in the same critique. Neither has a `combat_hud.gd` twin the way the other
+## two do; the reason they stand down anyway is the geometry, not
+## duplication: `vitals_position()` and `player_health_bar_position()` both
+## place their widget in the exact bottom-left corner `combat_hud.gd` needs
+## for its own `AllyPanel`/`PartyStrip`, so leaving either up let a ghosted
+## "100 / 100" and "FOOD 100%" print straight through combat's roster
 ## (`shots/ui/10-combat-hud.png`, `shots/ui/11-capture-reticle.png`). CLAUDE.md
 ## is explicit that the human never fights -- creature combat is real-time
 ## and directly piloted, and nothing in a fight can move the trainer's own
@@ -2980,8 +3063,9 @@ func _combat_is_aiming() -> bool:
 ## combat never replaces, for a collision that does not exist.
 ##
 ## Plain `.visible` writes, not a fade: `_creature_block` is a bare `Control`
-## with no animation of its own, `_vitals_cluster` only ever animates its own
-## `modulate.a` (`_update_vitals_cluster`'s idle fade), never `.visible`, and
+## with no animation of its own, `_vitals_cluster` and `_health_bar_cluster`
+## only ever animate their own `modulate.a` (`_update_vitals_cluster`'s idle
+## fade drives both), never `.visible`, and
 ## `party_strip.gd::_process` already early-returns its fade-timer bookkeeping
 ## whenever `not visible` (`if _pinned or not visible: return`), so forcing it
 ## off here cannot fight the widget's own reveal/hide tween -- it simply
@@ -2997,6 +3081,21 @@ func _yield_left_stack_to_combat_hud() -> void:
 		_party_strip.visible = not combat
 	if _vitals_cluster != null:
 		_vitals_cluster.visible = not combat
+	# HUD-BACKLOG-20: the HP row's own widget now, standing down for combat
+	# for the same reason `_vitals_cluster` (which used to include it)
+	# already does -- nothing this shows is about the fight (the human never
+	# fights), and `combat_hud.gd` wants this same bottom-left corner for its
+	# own `AllyPanel`/`PartyStrip`. ALSO standing down whenever the bottom
+	# dock does (`_bottom_dock_should_yield()`) -- unlike `_vitals_cluster`,
+	# this widget's new lower position sits inside `dialogue_panel.gd`'s own
+	# fixed-bottom-edge box (`smoke_dialogue_clears_the_world_hud.gd` caught
+	# the real overlap), the same reason the hotbar and prompt already yield
+	# to it. Both conditions combine in this one write, run last in
+	# `_run_frame()`, so this and `_yield_bottom_to_build_menu()` (which runs
+	# earlier and cannot see the combat flag) never fight over the final
+	# value the way a second, independent write would.
+	if _health_bar_cluster != null:
+		_health_bar_cluster.visible = not combat and not _bottom_dock_should_yield()
 	_yield_creature_block_to_party_strip()
 
 
@@ -3337,11 +3436,23 @@ func _world_input_allowed(allow_armed_build: bool = false, allow_combat: bool = 
 ## (`_prompt_belongs_to_combat()` blanks its text once the fight owns it),
 ## and the emptiness check just above already hides the plate for that case.
 func _yield_bottom_to_build_menu() -> void:
-	var yielding := _build_menu_is_open() or INPUT_OWNER.current(get_tree()) != null
+	var yielding := _bottom_dock_should_yield()
 	if _hotbar_panel != null:
 		_hotbar_panel.visible = not yielding and not _combat_is_running()
 	if _prompt_label != null:
 		_prompt_label.visible = not yielding and not _prompt_label.text.is_empty()
+
+
+## Shared with `_yield_left_stack_to_combat_hud()`'s own `_health_bar_cluster`
+## write (HUD-BACKLOG-20) rather than inlined twice: the build menu draws
+## over the hotbar/prompt's own strip, and any `INPUT_OWNER.GROUP` panel
+## (dialogue, name prompt, starter picker) can draw a box that reaches into
+## the same bottom band -- `smoke_dialogue_clears_the_world_hud.gd` measured
+## the conversation box's own fixed bottom edge sitting inside the health
+## bar's new lower-left position, the same collision this predicate already
+## exists to prevent for the hotbar and the prompt.
+func _bottom_dock_should_yield() -> bool:
+	return _build_menu_is_open() or INPUT_OWNER.current(get_tree()) != null
 
 
 func _build_menu_is_open() -> bool:
