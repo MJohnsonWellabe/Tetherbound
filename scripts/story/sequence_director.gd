@@ -425,6 +425,7 @@ func _process(delta: float) -> void:
 	_maybe_open_shop()
 	_maybe_start_battle()
 	_hold_the_tutorial_orb_floor()
+	_hold_the_tutorial_team_floor()
 
 
 ## Mira and the registrar already own their interactions, rewards and one-time
@@ -1239,6 +1240,70 @@ func _hold_the_tutorial_orb_floor() -> void:
 	inventory.call("add", TUTORIAL_ORB, amount - held)
 
 
+## The third part of the same promise, and the one nothing was keeping.
+##
+## `configure_tutorial_catch_assist` bounds the LANDED throw and
+## `_hold_the_tutorial_orb_floor` bounds the orb supply. Neither bounds the
+## FIGHT. `data/config/catching.json` is explicit that your creature is
+## undefended while you aim and that the opponent does not stop attacking it --
+## "that cost is the whole design" -- and that is right, but nothing anywhere
+## bounded the cost. A run of missed throws ends with the starter fainted, and
+## a fainted starter at this beat is terminal: `creature_instance.heal()`
+## refuses a fainted creature outright (D40), the creature bed that would rest
+## it is a buildable needing Tam's tools from past the road gate, and a night
+## only heals creatures actually put to bed
+## (`night_rest.gd` -> `game_state.complete_creature_bed_rests()`). From there
+## `encounter_director.gd::_engageable()` offers no fight in the entire game
+## while this beat waits for a catch that can no longer be attempted -- the
+## exact dead-end the orb floor exists to prevent, reached through the other
+## door. Measured on four fresh runs, two of which ended in it:
+## `ralph/reports/gate-f-capstone-1/CAP-1-FINDING.md` (CAP-1).
+##
+## Polled rather than hung off the fight's own "lost" outcome, for two reasons
+## the orb floor's header already gives in its own words. It fires one frame
+## after the arena tears down rather than in the middle of `_begin_resolve`,
+## which has already decided the outcome and must not have the creature stand
+## back up underneath it; and a save made in the broken state (the capstone's
+## S03 booted exactly one) recovers on load instead of staying stranded.
+##
+## Gated on the beat alone, not on beat AND species like the two assists above.
+## Those two reach into a LIVE fight, where "which creature is on screen" is
+## both knowable and the thing that must not leak. This runs between fights,
+## where there is no enemy to name -- and the dead-end it answers does not care
+## what fainted the starter. The bound that matters is the same one: the
+## opening's encounter beat ends permanently at the first catch, so this cannot
+## outlive the tutorial.
+func _hold_the_tutorial_team_floor() -> void:
+	if _beat != BEATS.WALK_OUT and _beat != BEATS.ENCOUNTER:
+		return
+	var fraction := float(BEATS.encounter().get("faint_recovery_fraction", 0.0))
+	if fraction <= 0.0:
+		return
+	# Never mid-fight. CombatManager owns the creature for the length of one and
+	# has already decided the outcome by the time the faint is visible.
+	if _manager == null or bool(_manager.call("is_fighting")):
+		return
+	if _encounter != null and _encounter.has_method("trainer_battle_active") \
+			and bool(_encounter.call("trainer_battle_active")):
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var party: RefCounted = game.get("party")
+	# `all_fainted()` and nothing looser. A player who still has one creature
+	# standing has not lost anything they cannot walk out of, and handing them a
+	# free heal would be the opening quietly undoing a fight they are still in.
+	if party == null or not bool(party.call("all_fainted")):
+		return
+	for member: Variant in party.call("members"):
+		var creature := member as RefCounted
+		if creature != null:
+			# D40's dedicated un-fainter: it refuses anything still standing, so
+			# the loop cannot top up a creature this floor is not about.
+			creature.call("revive", fraction)
+	game.call("push_world_message", "Your creature is back on its feet. Try again.")
+
+
 ## Is the fight on screen the authored practice catch? Beat AND species, for the
 ## reason `_on_combat_entered` gives: another Bramblebun fought later must not
 ## inherit the opening's assists.
@@ -1258,6 +1323,14 @@ func _on_combat_exited(outcome: String) -> void:
 		# where it is and they get another go — species.json gives that creature
 		# the highest catch rate in the game precisely so the tutorial catch does
 		# not have to succeed first time.
+		#
+		# CAP-1: "lost" is the fourth case, and it used to fall through this same
+		# return into a beat waiting on a catch the player could no longer
+		# attempt. Staying put is still the right move HERE -- what was missing
+		# was anyone putting the starter back up, which
+		# `_hold_the_tutorial_team_floor()` now does on the next frame, off the
+		# party rather than off this outcome so a save reloaded into the broken
+		# state recovers too.
 		return
 
 	# R4.10: the catch itself reaches `Game.party` through

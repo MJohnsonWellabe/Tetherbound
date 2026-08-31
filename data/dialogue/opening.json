@@ -30,6 +30,7 @@
     },
     "grandpa_first_catch": {
       "_comment": "The required return after naming. The fifteen Basic Orbs arrive here, just before their first use, rather than being buried in the starter exposition.",
+      "_comment_revives": "RESTORED, not new. D40 (docs/decisions/D40-fainting-needs-a-revive.md, owner: 'Grandpa should give you revives at the beginning too') added `give:revive:2` so a new game starts with the tool D40's own rule requires -- potions stopped un-fainting on the same decision. The 2026-08-28 opening rewrite (66eb47ec) reflowed this whole file and dropped the potion, berry and Revive gifts with it, against a decision doc that was never superseded and with no record of the change anywhere. CAP-1 is what that cost: the capstone's exit save leaves the opening carrying orbs and nothing else, so a fainted starter had no answer in the satchel at all. D40 hung the line on `grandpa_house`; it belongs here now for the reason the orbs moved here -- the gift sits on the beat before its first possible use, not in the briefing three beats earlier. The potions and berries are NOT restored by this change: they are a pacing question about the opening's supply, this is the one item a documented rule made load-bearing.",
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
@@ -37,6 +38,10 @@
         {
           "text": "Take these Orbs. Head outside, find one you like, and catch it.",
           "effect": "give:orb_basic:15"
+        },
+        {
+          "text": "And two Revives, at the bottom. A creature that's gone down won't get up on its own — don't waste them.",
+          "effect": "give:revive:2"
         },
         {
           "text": "Then come back and show me.",

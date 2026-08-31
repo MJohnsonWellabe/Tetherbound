@@ -82,6 +82,22 @@ grazing past the rise, and has the highest catch rate in `species.json` so the
 tutorial catch cannot fail twice. Talking to Grandpa in this stretch gets the
 one-line reminder (`grandpa_encounter_hint`), never the briefing again.
 
+"Cannot fail" turned out to need saying three times, because there are three
+ways to fail it and the species rate only covers one. `max_catch_failures`
+converts the second **landed** throw; `catch_orb_floor` keeps the satchel off
+empty, since a throw that never reached the creature is not a failed catch and
+every orb resupply is past the road gate; and `faint_recovery_fraction` puts
+the party back on its feet, because the creature is undefended while you aim
+(`data/config/catching.json`: "that cost is the whole design") and a starter
+that goes down here has nothing in the chapter that can revive it — potions
+refuse a fainted creature (D40), the creature bed is a buildable whose
+materials need tools from past the gate, and a night only heals creatures
+actually put to bed. All three live in `data/config/opening.json`'s `encounter`
+block, all three are gated on this beat and end permanently at the first catch,
+and all three are there because a real run hit the dead-end they answer — the
+third from the Gate F capstone
+(`ralph/reports/FINDING-CAP1-TUTORIAL-CATCH-FAINT-2026-08-31.md`, CAP-1).
+
 **The road.** After the catch, `grandpa_road` closes the scripted sequence with
 the first-day arc in three sentences: follow the dirt road out, gather what the
 verges offer, and **make camp before dark**. That last instruction is the
@@ -143,6 +159,11 @@ What the restaging adds, and who owns it:
 - **The first wild creature is Bramblebun and it is peaceful.** `species.json` gives
   it the highest catch rate in the game for exactly this reason: the tutorial
   catch must not fail twice.
+- **This beat is not losable in a way that strands the player, and that is
+  enforced rather than hoped for.** A high catch rate is a probability, an orb
+  gift is a supply, and neither is a guarantee. The three floors named above
+  are the guarantee. They apply to this beat only: past it, running out and
+  going down both mean exactly what they say.
 - **Naming is mandatory, not skippable.** A creature you did not name is a creature you
   did not adopt.
 - **The other two starters stay visible with Grandpa afterwards.** The cost of

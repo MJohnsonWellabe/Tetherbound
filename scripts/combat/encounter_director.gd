@@ -1288,7 +1288,45 @@ func _process(delta: float) -> void:
 	# put back to sleep in the same frame instead of one frame late.
 	_tick_streaming()
 	_sync_active_creature()
+	_show_a_revived_follower()
 	_update_prompt()
+
+
+## A creature that stops being fainted has to come back out.
+##
+## `combat_manager.gd::_finish()` hides the shared deployed body on its way out
+## of every fight, and `_set_exploration_active(true)` -- the one thing that
+## shows it again -- refuses to for a fainted creature, correctly: a knocked-out
+## creature should not be standing beside the trainer. But that is a HANDOFF,
+## and it is the last one that runs. Nothing was watching for the creature
+## getting back up afterwards, so a Revive used out of the belt (D40's whole
+## point) cleared `fainted` on a body that stayed invisible until the player
+## happened to recall and re-summon it, or walked into another fight --
+## `begin()` shows it again, so the state repaired itself only by being fought
+## through, which is exactly the thing a revived-but-invisible creature makes
+## you not want to do.
+##
+## Found while closing CAP-1 (ralph/reports/gate-f-capstone-1/CAP-1-FINDING.md):
+## the opening's own faint recovery goes through the same door, so this is what
+## makes any un-fainting outside a fight visible at all.
+##
+## Deliberately only the visibility. `set_following` is already true from the
+## exploration handoff, and re-running the rest of that handoff every frame is
+## what its own comment warns against.
+func _show_a_revived_follower() -> void:
+	if _ally == null or _ally_body == null or not is_instance_valid(_ally_body):
+		return
+	if _ally_body.visible:
+		return
+	# The three states that own the body's visibility themselves, in the order
+	# the rest of this file already checks them.
+	if _manager != null and bool(_manager.call("is_fighting")):
+		return
+	if trainer_battle_active():
+		return
+	if bool(_ally.get("fainted")) or bool(_ally.get("resting")):
+		return
+	_ally_body.visible = true
 
 
 ## Engage is read on the physics tick, not the idle tick.
