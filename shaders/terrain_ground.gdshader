@@ -350,12 +350,15 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 		// grazing, ~100m camera stand where each screen pixel already
 		// covers a fraction of a tile). See top-of-file banner.
 		float id_footprint = max(length(id_dd.xy), length(id_dd.zw));
+		if (_d6_debug_footprint) {
+			// Stash raw footprint for a lighting-independent EMISSION readout
+			// at the bottom of fragment() -- mat.ao_strength is unused here.
+			mat.ao_strength = id_footprint;
+			mat.total_weight = 1.0;
+			return;
+		}
 		float id_detile_fade = 1.0 - smoothstep(DETILE_FOOTPRINT_LO, DETILE_FOOTPRINT_HI, id_footprint);
 		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU * id_detile_fade;
-		if (_d6_debug_footprint) {
-			// SURGICAL TEST: zero BOTH, unconditionally, via shader code (not the asset API).
-			id_detile = vec2(0.0);
-		}
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
 		vec2 id_uv = rotate_vec2(fma(i_uv, vec2(id_scale), -uv_center), id_cs_angle) + uv_center + id_detile.y - 0.5;
@@ -650,6 +653,15 @@ void fragment() {
 		float aerial_luma = dot(ALBEDO, vec3(0.2126, 0.7152, 0.0722));
 		vec3 aerial_desat = mix(ALBEDO, vec3(aerial_luma), aerial_desaturate * aerial_t);
 		ALBEDO = mix(aerial_desat, aerial_fade_colour.rgb, aerial_t * aerial_fade_strength);
+	}
+
+	if (_d6_debug_footprint) {
+		// Lighting-independent readout: mat.ao_strength carries id_footprint
+		// (see accumulate_material()). Discrete boolean bands survive
+		// tonemap/exposure compression better than a raw continuous value.
+		float fp_dbg = mat.ao_strength;
+		ALBEDO = vec3(0.0);
+		EMISSION = vec3(step(0.02, fp_dbg), step(0.1, fp_dbg), step(0.5, fp_dbg));
 	}
 
 	ROUGHNESS = roughness;
