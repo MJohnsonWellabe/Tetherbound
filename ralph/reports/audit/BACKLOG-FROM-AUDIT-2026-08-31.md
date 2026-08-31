@@ -28,7 +28,7 @@ A..K-2026-08-31.md`), `GATE-F-FULL-2026-08-31.md`, `VISUAL-CENSUS-2026-08-31.md`
 | id | item | source | closing cost |
 |---|---|---|---|
 | `BACKLOG-C1-NESS-FACE` | Warder Ness's face is a black void at conversation range | Audit C1 | ~1hr investigation + re-render |
-| `BACKLOG-D6-SEAM-PROBE` | visible terrain seams; clipmap hypothesis ruled out this session | Audit D6 | one more probe (mip/filter), minutes, then fix if the cause is now nameable |
+| `BACKLOG-D6-SEAM-PROBE` | visible terrain seams; clipmap AND generic mip-bias/debug-overlays now ruled out too — cause is named: per-tile detiling rotation in `terrain_ground.gdshader`'s `accumulate_material()` (see `ralph/reports/audit/D6-seam-probe/FOLLOWUP-2026-08-31.md`) | Audit D6 | cause is nameable now; needs a shader fix that softens the per-tile rotation discontinuity without removing detiling (which fixes the 2K-texture-repeat complaint it exists for) — new task, not attempted this session |
 | `BACKLOG-I5-OBJECTIVES-TEST` | a test-fidelity bug in the objectives smoke test (not a game bug) | Audit I5 | ~15 min, test-only |
 | `BACKLOG-I6-MINIMAP-HEADING` | minimap heading defect, standing, unowned | Audit I6 | ~half a day |
 | `BACKLOG-I7-CREATURES-TAB-TEST` | Creatures-tab controller-isolation coverage gap | Audit I7 | ~half a day, new smoke test |
