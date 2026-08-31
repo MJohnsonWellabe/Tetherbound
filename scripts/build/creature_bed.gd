@@ -88,7 +88,7 @@ const MESH_PATH := "res://assets/props/generated_camp/camp_bed.glb"
 ## ellipse's ~0.75 centreline at that angle, so the pad's frame legs embed
 ## in the branch ring instead of poking visibly outside it (round 1, at
 ## scale 1.12/0.62, had them a clear 0.1m proud of the rim on each diagonal).
-const PAD_SCALE := Vector3(0.95, 0.72, 0.55)
+const PAD_SCALE := Vector3(1.75, 0.72, 1.05)
 
 ## Mattress-top seat for the resting creature, re-derived for PAD_SCALE:
 ## lifted pad base sits at ground (BED_SINK_LIFT * PAD_SCALE.y = 0.155), the
@@ -119,11 +119,24 @@ const BED_SINK_LIFT := 0.215
 const PAD_SETTLE := 0.02
 
 ## Nest rim: two courses of branch segments laid tangent to an ellipse just
-## outside the pad's footprint (pad half-extents 0.58 x 0.52). Deterministic
-## jitter so every placed bed is the same object, not a reroll.
-const RIM_RADIUS_X := 0.92
-const RIM_RADIUS_Z := 0.82
-const RIM_BRANCHES_PER_COURSE := 12
+## outside the pad's footprint (pad half-extents 1.08 x 1.00).
+##
+## BACKLOG-BED-SCALE-POSE (2026-08-31): owner playtest items 11/14 --
+## "beds are too small for creatures", measured directly with
+## tools/_capture_creature_bed_rest.gd against terrapup (species.json's own
+## largest-footprint common creature): the previous pad (half-extents
+## 0.58 x 0.52) left every paw planted on bare ground outside the rim.
+## PAD_SCALE and these radii are raised ~1.7x in X/Z (Y/height untouched --
+## the complaint is footprint, not thickness) so a resting creature's feet
+## land on the pad, re-rendered and confirmed. RIM_BRANCHES_PER_COURSE goes
+## up with the radii so the branch spacing (set for the old, much smaller
+## circumference) does not open visible gaps in the ring at the new size --
+## same branch length/jitter, more of them.
+##
+## Deterministic jitter so every placed bed is the same object, not a reroll.
+const RIM_RADIUS_X := 1.55
+const RIM_RADIUS_Z := 1.35
+const RIM_BRANCHES_PER_COURSE := 20
 const RIM_COURSE_HEIGHTS: Array[float] = [0.09, 0.24]
 const RIM_SEED := 20260830
 
@@ -221,7 +234,7 @@ func _build_rim() -> void:
 		for i in RIM_BRANCHES_PER_COURSE:
 			var t := TAU * float(i) / float(RIM_BRANCHES_PER_COURSE) + phase \
 					+ rng.randf_range(-0.04, 0.04)
-			if course == 1 and (i == 2 or i == 3):
+			if course == 1 and (i == 3 or i == 4 or i == 5):
 				# ENTRY GAP. Every blind round agreed the two beds are now
 				# different objects, but a closed uniform ring kept part-
 				# reading as an unlit fire pit -- the campfire ring a few
@@ -468,9 +481,24 @@ func _sync_rest_body(force: bool) -> void:
 	_rest_body.collision_layer = 0
 	_rest_body.collision_mask = 0
 	_rest_body.set_physics_process(false)
-	# Reuse the shipped creature faint/lie animation as the closest authored
-	# resting pose. The body is visibly in bed and non-interactive; visual-judge
-	# decides whether a later dedicated sleep pose is warranted.
+	# Reuse the shipped creature faint animation as the closest authored resting
+	# pose -- the only role beyond idle/walk/run/attack/hit every species ships
+	# (creature_animator.gd's FAINT, resolved from species.json's `faint` clip).
+	#
+	# BACKLOG-BED-SCALE-POSE (2026-08-31), owner playtest item 11 ("creatures
+	# just stand on the beds they don't lay"): checked directly, not guessed.
+	# tools/_capture_creature_bed_rest.gd rendered a resting terrapup with this
+	# exact call, held past the clip's full length (~1.5s) to its settled final
+	# frame -- a crouch, weight still on all four planted paws, not lying down.
+	# A second check across galewisp/bramblebun/veridian's own `faint` clips
+	# found the same thing (veridian's is a standing idle-like pose). Every
+	# shipped creature .glb was inspected directly (glTF `animations[].name`)
+	# and carries exactly these 6 clips -- no `sleep`/`lie_down`/`rest` clip
+	# exists anywhere in the roster to swap to instead. Closing item 11 for
+	# real needs a new authored lying/sleep clip per rig (or at least per
+	# body-plan family); that is new animation content, not a code fix, so it
+	# is explicitly OUT of this item's bite-sized scope. `play_faint()` here
+	# stays the best available approximation in the meantime.
 	_rest_body.call_deferred("play_faint")
 
 
