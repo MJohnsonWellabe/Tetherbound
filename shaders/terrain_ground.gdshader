@@ -12,41 +12,14 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
  * that set_shader_override() is NOT clobbered by a later
  * enable_shader_override(true) call as long as it runs first.
  *
- * A second, unrelated manual edit lives inside accumulate_material() and
- * fragment(), marked with D6-SEAM-FIX banners: ralph/reports/audit/
- * D6-seam-probe/FOLLOWUP-2026-08-31.md confirmed detiling
- * (_texture_detile_array/random(uv_center)) as the dominant cause of a
- * dashed terrain seam -- forcing BOTH detiling_rotation and
- * detiling_shift to 0 on a texture asset removes it. What actually
- * triggers it took several failed fix attempts to pin down: it is
- * NOT a same-texture detiling-tile edge (a boundary-position feather
- * and a footprint-vs-tile-size fade each measured ZERO change at the
- * seam's actual ~100m grazing-angle camera stand; the fragment's own
- * anisotropic footprint there measured far below one whole tile, ruling
- * that theory out directly). It also is NOT rotation or shift alone --
- * zeroing either one by itself, unconditionally, also measured no
- * change; only zeroing both together (confirmed via render, matching
- * the known-good asset-property result) removes the seam. The actual
- * trigger is Terrain3D's OWN non-bilerp (distant/minified) regime
- * (fragment()'s `region_mip >= 0.0`): there the control map is read
- * with a single nearest-texel lookup with no interpolation, so the
- * texture id/detiling assignment a fragment gets can flip between
- * adjacent screen pixels independent of any single tile's own geometry.
- * The fix fades detiling to 0 as region_mip crosses from the bilerp
- * (close/magnified) into the non-bilerp (distant/minified) regime,
- * confirmed by render evidence to remove the seam while leaving
- * close-range detiling (where bilerp holds and the fragment stays
- * inside one control-map texel) at full strength.
- *
- * REGENERATION: everything OUTSIDE the T1-GROUND-2 and D6-SEAM-FIX
- * banners is Terrain3D template code, not authored here. If a future
- * ground-texture/material change needs Terrain3D to regenerate this
- * (e.g. a texture starts using dual-scaling, which this snapshot's
- * accumulate_material() may not carry if no texture used it at export
- * time -- see the DUAL_SCALING_CONDITION_* insert markers upstream),
- * re-run tools/_dump_terrain_shader.gd, then reapply all marked blocks
- * below into the fresh dump by hand rather than hand-editing generated
- * code blind.
+ * REGENERATION: everything OUTSIDE the two T1-GROUND-2 banners is Terrain3D
+ * template code, not authored here. If a future ground-texture/material
+ * change needs Terrain3D to regenerate this (e.g. a texture starts using
+ * dual-scaling, which this snapshot's accumulate_material() may not carry
+ * if no texture used it at export time -- see the DUAL_SCALING_CONDITION_*
+ * insert markers upstream), re-run tools/_dump_terrain_shader.gd, then
+ * reapply the two marked blocks below into the fresh dump by hand rather
+ * than hand-editing generated code blind.
  *
  * ORIGINAL UPSTREAM COMMENT FOLLOWS:
  *
@@ -71,12 +44,6 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
 #define DIV_255 0.003921568627450 // 1. / 255.
 #define DIV_1024 0.0009765625 // 1. / 1024.
 #define TAU_16TH -0.392699081698724 // -TAU / 16.
-// D6-SEAM-FIX: width, in region_mip units (log2 octaves), of the fade
-// band centred on Terrain3D's own bilerp threshold (region_mip == 0.0,
-// fragment.gd) over which detile_fade (computed in fragment(), passed
-// into accumulate_material()) ramps from 1 to 0. See the banner comment
-// at the top of this file for why region_mip is the right axis.
-#define DETILE_MIP_FADE_WIDTH 1.0
 
 // Inline Functions
 #define DECODE_BLEND(control) float(control >> 14u & 0xFFu) * DIV_255
@@ -284,7 +251,7 @@ vec2 rotate_vec2(const vec2 v, const vec2 cs) {
 // 2-4 lookups ( 2-6 with dual scaling )
 void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float weight, const ivec3 index,
 			const uint control, const vec2 texture_weight, const ivec2 texture_id, const vec3 i_normal,
-			const float h, const float detile_fade, inout material mat) {
+			const float h, inout material mat) {
 
 	// Index position for detiling.
 	vec2 i_pos = fma(_region_locations[index.z], vec2(_region_size), vec2(index.xy)) * _vertex_spacing;
@@ -338,15 +305,7 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 
 		// Detiling and Control map rotation
 		vec2 uv_center = floor(fma(i_pos, vec2(id_scale), vec2(0.5)));
-		// D6-SEAM-FIX: see top-of-file banner. detile_fade is 0 whenever this
-		// fragment is in Terrain3D's own non-bilerp (distant/minified) regime,
-		// where the control map is read with a single nearest-texel lookup
-		// and can flip texture id between adjacent screen pixels -- confirmed
-		// as the dashed seam's actual trigger, not a same-texture tile-edge
-		// crossing (ruled out: neither a boundary-position fade nor a
-		// footprint-vs-tile-size fade changed the seam at all; the fragment's
-		// own footprint measured far below one tile everywhere it appears).
-		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU * detile_fade;
+		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU;
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
 		vec2 id_uv = rotate_vec2(fma(i_uv, vec2(id_scale), -uv_center), id_cs_angle) + uv_center + id_detile.y - 0.5;
@@ -388,8 +347,7 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 
 		// Detiling and Control map rotation
 		vec2 uv_center = floor(fma(i_pos, vec2(id_scale), vec2(0.5)));
-		// D6-SEAM-FIX: see matching comment in the 1st Texture Asset ID block above.
-		vec2 id_detile = _texture_detile_array[id] * fma(random(uv_center), 2.0, -1.0) * TAU * detile_fade;
+		vec2 id_detile = _texture_detile_array[id] * fma(random(uv_center), 2.0, -1.0) * TAU;
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
 		vec2 id_uv = rotate_vec2(fma(i_uv, vec2(id_scale), -uv_center), id_cs_angle) + uv_center + id_detile.y - 0.5;
@@ -450,13 +408,6 @@ void fragment() {
 	// skip all extra lookups required for bilinear blend.
 	float region_mip = log2(max(length(base_ddx.xz), length(base_ddy.xz)) * _vertex_density);
 	bool bilerp = region_mip < 0.0 && region_uv.z > -1.;
-	// D6-SEAM-FIX: 1 when comfortably in the bilerp (magnified/close)
-	// regime, fading to 0 across DETILE_MIP_FADE_WIDTH octaves as
-	// region_mip crosses Terrain3D's own bilerp threshold into the
-	// non-bilerp (minified/distant) regime, where the control map is read
-	// with a single nearest-texel lookup and texture id/detiling can flip
-	// between adjacent screen pixels -- see accumulate_material().
-	float detile_fade = 1.0 - smoothstep(0.0, DETILE_MIP_FADE_WIDTH, region_mip);
 
 	// Terrain normals
 	vec3 index_normal[4];
@@ -592,16 +543,16 @@ void fragment() {
 
 	// 2 - 4 lookups, 2 - 6 if dual scale texture
 	accumulate_material(base_ddx, base_ddy, weights[3], index[3], control[3], t_weights[3],
-		texture_ids[3], index_normal[3], h[3], detile_fade, mat);
+		texture_ids[3], index_normal[3], h[3], mat);
 
 	// 6 - 12 lookups, 6 - 18 if dual scale texture
 	if (bilerp) {
 		accumulate_material(base_ddx, base_ddy, weights[2], index[2], control[2], t_weights[2],
-			texture_ids[2], index_normal[2], h[2], detile_fade, mat);
+			texture_ids[2], index_normal[2], h[2], mat);
 		accumulate_material(base_ddx, base_ddy, weights[1], index[1], control[1], t_weights[1],
-			texture_ids[1], index_normal[1], h[1], detile_fade, mat);
+			texture_ids[1], index_normal[1], h[1], mat);
 		accumulate_material(base_ddx, base_ddy, weights[0], index[0], control[0], t_weights[0],
-			texture_ids[0], index_normal[0], h[0], detile_fade, mat);
+			texture_ids[0], index_normal[0], h[0], mat);
 	}
 
 	// normalize accumulated values back to 0.0 - 1.0 range.
