@@ -60,7 +60,7 @@ const SHOTS := [
 	{"site": "05-relay-camp", "label": "fire", "at": [237.0, 3678.0], "look": [241.4, 3667.3]},
 	{"site": "06-relay", "label": "apparatus", "relay": true, "at": [1.0, -4.0], "look": [7.0, -9.0]},
 	{"site": "07-mill-crossing", "label": "yard", "at": [-144.0, 4212.0], "look": [-140.0, 4219.0]},
-	{"site": "08-ridge-camp", "label": "fire", "at": [-230.0, 6471.0], "look": [-233.1, 6474.3]},
+	{"site": "08-ridge-camp", "label": "fire", "at": [-230.0, 6471.0], "look": [-233.9, 6473.7]},
 	{"site": "09-waystop", "label": "bench", "at": [-23.0, 7454.0], "look": [-26.5, 7457.0]},
 ]
 
