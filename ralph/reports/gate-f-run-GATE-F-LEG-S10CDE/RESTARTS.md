@@ -44,3 +44,65 @@
   down from burning an entire move_to budget (tens of thousands of frames).
   Re-running S10c fresh from the same S10b-exit seed, then S10d from its
   real exit.
+
+## S10e, restart 1
+
+- **Reason:** S10e's first attempt (S10e-superseded-1/) completed (32
+  pass/3 fail) but never closed the chapter -- `meadows_acknowledged` was
+  not set. The single-leg `move_to` at S10e-99 (straight to the village
+  centre, `(10,-10)`) does not cross the village fence anywhere near its
+  one gate (`playground_world.gd::GATE_AT`, `(27.5,-16.0)`), so
+  `stick_navigator.gd` (a local wall-follower, not a pathfinder)
+  oscillated against the fence for its whole 60750-frame budget, stopping
+  28.4 m short. The Grandpa leg (S10e-103) then also fell 6.5 m short,
+  starting from much further away than intended with too little budget
+  (3000 frames) -- steadily closing the gap, not stuck.
+- **Fix:** `tools/gate_f/segments/S10e.json`: split S10e-99 into a new
+  S10e-98g (walk to the gate first) + the original S10e-99 (gate to
+  village centre); doubled S10e-103's budget (3000 -> 6000). Re-running
+  S10e fresh from the same S10d-exit seed.
+
+## S10e, restart 2
+
+- **Reason:** S10e's second attempt (S10e-superseded-2/) still had 5
+  fails, `meadows_acknowledged` still not set. The restart-1 budget split
+  was wrong -- S10e-98g (South Bridge to the gate, ~1300 m, the bulk of
+  the original leg's distance) and S10e-99 (gate to village centre, ~20 m)
+  both got 15000 frames each, when the original undivided leg had 60750
+  for the whole distance. S10e-98g fell 173.3 m short, so S10e-99 started
+  far away again and repeated the same fence-oscillation shape. The
+  Grandpa leg was also still 5.9 m short at the doubled 6000-frame budget,
+  still steadily closing the gap.
+- **Fix:** S10e-98g budget 15000 -> 54000 (matching its own much longer
+  real distance), S10e-99 kept at a smaller 10000, S10e-103 doubled again
+  to 12000. Re-running S10e fresh from the same S10d-exit seed.
+
+## S10e, restart 3
+
+- **Reason:** S10e's third attempt (S10e-superseded-3/) completed (34
+  pass/2 fail) -- all three `move_to` legs finally reached their targets,
+  but two real defects remained. FIRST: `meadows_acknowledged` still never
+  set, because both interacts (village and Grandpa) were aimed at abstract
+  destinations rather than the actual NPCs -- the village-centre arrival
+  point was 6.5 m from the nearest villager (Tam), outside
+  `npc_body.gd::add_prompt`'s default 3.8 m prompt radius, and Grandpa's
+  real standing position (`grandpa_house.gd::marker("grandpa")`,
+  `(-24.4,-14.8)`) is 2.68 m from the house-origin point (`(-22,-16)`)
+  S10e-103 was aiming at, which is enough slack for a `close_enough: 3.0`
+  arrival to land outside his own 3.8 m radius. SECOND: the `distance_above`
+  floor on S10e-108 (3000.0 m) was miscalibrated against this leg's real,
+  direct geography (South Bridge to the village to Grandpa's is
+  ~1.4-1.5 km measured, not the ~3.5 km the step's own comment estimated).
+  Neither is a game defect -- see
+  `S10e-superseded-3/WHY_SUPERSEDED.md` for the full diagnosis.
+- **Fix:** S10e-99 retargeted at Tam's own position `(8,-16)`
+  (`close_enough` 5.0 -> 2.5); S10e-103 retargeted at Grandpa's actual
+  marker `(-24.4,-14.8)` (`close_enough` 3.0 -> 2.0); S10e-108's distance
+  floor lowered 3000.0 -> 1300.0, with the cross-check against S10c/S10d's
+  own measured distances recorded inline. Re-running S10e fresh from the
+  same S10d-exit seed.
+- **Note:** this attempt's raw run artifacts (telemetry/saves/frames) were
+  lost to an operator error during the supersede move (see the note at the
+  bottom of `S10e-superseded-3/WHY_SUPERSEDED.md`) -- the findings above
+  were recorded before the loss and are not in question, but there is no
+  raw telemetry left to re-inspect for this specific attempt.
