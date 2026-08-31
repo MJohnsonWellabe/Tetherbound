@@ -219,6 +219,78 @@ func test_save_then_load_round_trips_the_party() -> void:
 	assert_almost_eq(float(creature.get("max_hp")), 100.0)
 
 
+## GAME-F4. `_array_to_party` used to leave every loaded creature's
+## `base_hp`/`base_attack`/`base_defence` at the bare class defaults
+## (1.0/1.0/1.0) because only the pre-computed `max_hp`/`attack`/`defence`
+## were ever round-tripped. It looked fine right up until the creature's next
+## level-up, which recomputes those three FROM base — so a save/load cycle
+## followed by one win in the field collapsed a loaded creature's stats to
+## whatever 1.0 times the growth curve is. Non-default base stats here (a
+## species this test's own `_game()` helper does not otherwise use) so a
+## silent fallback to `from_species`'s OWN defaults (100/20/20) could not
+## accidentally pass this test too.
+func test_save_then_load_round_trips_base_stats_and_survives_a_level_up() -> void:
+	var game := FakeGame.new()
+	game.party = PARTY.new()
+	game.inventory = INVENTORY.new(db)
+	game.progression = PROGRESSION_STATE.new()
+	var creature: RefCounted = CREATURE.from_species("terrapup", {
+		"display_name": "Terrapup", "type": "ground",
+		"base_hp": 140.0, "base_attack": 18.0, "base_defence": 25.0,
+	})
+	game.party.add(creature)
+	assert_true(saver.save(game, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	var loaded: RefCounted = read.party.at(0)
+	assert_almost_eq(float(loaded.get("base_hp")), 140.0)
+	assert_almost_eq(float(loaded.get("base_attack")), 18.0)
+	assert_almost_eq(float(loaded.get("base_defence")), 25.0)
+
+	# The regression itself: force a level-up on the LOADED creature and check
+	# the stats it recomputes from are still the real ones, not the 1.0/1.0/1.0
+	# a missing base would recompute from.
+	var before_max_hp := float(loaded.get("max_hp"))
+	var cfg := {"level": {"growth_per_level": {"hp": 0.06, "attack": 0.05, "defence": 0.05}}, "individuality": {}}
+	loaded.call("gain_xp", 1000000, cfg)
+	assert_true(float(loaded.get("max_hp")) >= before_max_hp,
+		"a level-up must never make max_hp go DOWN")
+	assert_true(float(loaded.get("max_hp")) > 100.0,
+		"max_hp collapsed toward base=1.0's own numbers after a post-load level-up: %.2f" % float(loaded.get("max_hp")))
+
+
+func test_save_then_load_repairs_missing_base_stats_from_species_json() -> void:
+	# An old-format save (VERSION < the one that added base_hp/attack/defence)
+	# carries none of the three. `_array_to_party` must repair them from
+	# species.json rather than leaving them at 1.0/1.0/1.0.
+	var game := FakeGame.new()
+	game.party = PARTY.new()
+	game.inventory = INVENTORY.new(db)
+	game.progression = PROGRESSION_STATE.new()
+	game.day = 1
+	assert_true(DirAccess.make_dir_recursive_absolute(TEST_DIR) == OK)
+	var path: String = str(saver.call("slot_path", 1))
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify({
+		"version": 15, "day": 1,
+		"party": [{
+			"species_id": "meadowhart", "display_name": "Meadowhart", "creature_type": "ground",
+			"max_hp": 218.5, "attack": 28.0, "defence": 29.75, "hp": 218.5,
+			"level": 16, "xp": 0,
+		}],
+		"inventory": [], "hotbar": [], "placed_buildings": [], "farm_plots": [],
+		"death_satchels": [], "satiety": 100.0, "map": {}, "progression": {},
+	}))
+	file.close()
+
+	assert_true(saver.load_slot(game, 1))
+	var loaded: RefCounted = game.party.at(0)
+	assert_almost_eq(float(loaded.get("base_hp")), 115.0)
+	assert_almost_eq(float(loaded.get("base_attack")), 16.0)
+	assert_almost_eq(float(loaded.get("base_defence")), 17.0)
+
+
 func test_save_then_load_replaces_whatever_party_the_loading_game_already_had() -> void:
 	var written := _game()
 	assert_true(saver.save(written, 1))

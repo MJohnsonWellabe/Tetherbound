@@ -625,6 +625,16 @@ func _species_moves(species_table: Dictionary, species_id: String) -> Dictionary
 	return moves_raw as Dictionary if typeof(moves_raw) == TYPE_DICTIONARY else {}
 
 
+## GAME-F4's repair source: `species.json`'s own entry for `species_id`, or an
+## empty dict for one this build no longer defines — the same "trust nothing
+## you cannot look up" contract `_array_to_party`'s other repairs already use.
+func _species_definition(species_id: String) -> Dictionary:
+	var species_raw: Variant = _read_json_file(SPECIES_PATH).get("species", {})
+	var species_table: Dictionary = species_raw as Dictionary if typeof(species_raw) == TYPE_DICTIONARY else {}
+	var entry_raw: Variant = species_table.get(species_id, {})
+	return entry_raw as Dictionary if typeof(entry_raw) == TYPE_DICTIONARY else {}
+
+
 func _read(slot: int) -> Dictionary:
 	if slot < 0 or slot >= SLOT_COUNT:
 		return {}
@@ -690,6 +700,16 @@ func _party_to_array(party: Variant) -> Array:
 			"species_id": str(instance.get("species_id")),
 			"display_name": str(instance.get("display_name")),
 			"creature_type": str(instance.get("creature_type")),
+			# GAME-F4. `_apply_level_stats` (creature_instance.gd) recomputes
+			# max_hp/attack/defence from these three every level-up, elixir drink
+			# and evolution — and `_array_to_party` below used to leave them at the
+			# class defaults (1.0/1.0/1.0) on every loaded creature, because only
+			# the pre-computed max_hp/attack/defence were ever round-tripped. A
+			# loaded save's creature therefore looked fine until its NEXT level-up,
+			# at which point its stats collapsed to base=1.0's own tiny numbers.
+			"base_hp": float(instance.get("base_hp")),
+			"base_attack": float(instance.get("base_attack")),
+			"base_defence": float(instance.get("base_defence")),
 			# T3-CREATURES. "" for every mono-typed creature, which is every one
 			# that existed before the creature-expansion brief -- so this key is
 			# additive and a save written before it round-trips unchanged.
@@ -752,6 +772,27 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		# every other species-owned field on this class is repaired.
 		creature.secondary_type = str(d.get("secondary_type", ""))
 		creature.nickname = str(d.get("nickname", ""))
+		# GAME-F4. A save written before this field existed carries none of the
+		# three — 0.0 is not a value any real base stat ever takes (species.json
+		# has no zero-base species), so it doubles as the "this is an old save"
+		# signal. The repair reads the SAME species.json a fresh catch would, the
+		# way `secondary_type`'s own comment above already promises ("repaired
+		# from species.json ... exactly like every other species-owned field") —
+		# a promise nothing had actually implemented yet. A species this build no
+		# longer defines falls back to 100/20/20, `from_species`'s own defaults,
+		# rather than the class's bare 1.0/1.0/1.0: a creature whose species
+		# vanished from the data should read as an ordinary one, not a barely-alive
+		# one the moment it next levels up.
+		var base_hp_raw := float(d.get("base_hp", 0.0))
+		if base_hp_raw > 0.0:
+			creature.base_hp = base_hp_raw
+			creature.base_attack = float(d.get("base_attack", 20.0))
+			creature.base_defence = float(d.get("base_defence", 20.0))
+		else:
+			var species_def := _species_definition(creature.species_id)
+			creature.base_hp = float(species_def.get("base_hp", 100.0))
+			creature.base_attack = float(species_def.get("base_attack", 20.0))
+			creature.base_defence = float(species_def.get("base_defence", 20.0))
 		# Defaulted to 0, which is what a pre-VERSION-14 save honestly means:
 		# the history was not being kept, so the ceremony says nothing about it
 		# rather than inventing a number. No migration pass needed.
