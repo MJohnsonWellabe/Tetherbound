@@ -739,10 +739,55 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 38,
+        "times": 10,
         "settle_frames": 30
       },
-      "expected": "Section E.1 per-fight record; the HP margin at the end is band 3's difficulty read"
+      "expected": "Section E.1 per-fight record; the HP margin at the end is band 3's difficulty read",
+      "observation": "GATE-D3-SWAP. This fight and the two before it were split into shorter combat_quick blocks with a party_cycle between each (was one 38-tap block then one swap): the third run's own telemetry showed a fresh but solo ally (Pipwing, undamaged at 120hp) taking hits every ~0.65s and fainting before the ORIGINAL single mid-fight swap (38 taps in) ever fired, losing the fight to Vance's three-creature team with two more full party members never touched. Real-time directly-piloted combat against the band's hardest trainer needs a pilot who responds to a faint quickly, not a script that mashes one block and checks once."
+    },
+    {
+      "id": "S07-54b",
+      "title": "swap out if this pilot is under pressure",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "GATE-D3-SWAP: cycle_active() (party.gd) already skips a fainted/resting member on its own, so this is a no-op on a healthy pilot and a real handoff on a hurt one -- safe every time"
+    },
+    {
+      "id": "S07-54c",
+      "title": "keep fighting",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S07-54d",
+      "title": "swap out if this pilot is under pressure",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "GATE-D3-SWAP: see S07-54b"
+    },
+    {
+      "id": "S07-54e",
+      "title": "keep fighting",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
     },
     {
       "id": "S07-55",
@@ -761,7 +806,29 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 26,
+        "times": 13,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S07-56b",
+      "title": "swap out if this pilot is under pressure",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "GATE-D3-SWAP: see S07-54b"
+    },
+    {
+      "id": "S07-56c",
+      "title": "keep fighting",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 13,
         "settle_frames": 30
       },
       "expected": "Section E.1 per-fight record"
@@ -777,13 +844,45 @@
       "expected": "the charged verb's hold edge"
     },
     {
+      "id": "S07-57b",
+      "title": "swap out if this pilot is under pressure",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "GATE-D3-SWAP: see S07-54b"
+    },
+    {
       "id": "S07-58",
       "title": "finish the captain",
       "action": "press",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 20,
+        "times": 10,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S07-58b",
+      "title": "swap out if this pilot is under pressure",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "GATE-D3-SWAP: see S07-54b"
+    },
+    {
+      "id": "S07-58c",
+      "title": "finish the captain",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 10,
         "settle_frames": 30
       },
       "expected": "Section E.1 per-fight record"
