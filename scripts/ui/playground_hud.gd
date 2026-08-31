@@ -188,6 +188,22 @@ const REGION_BANNER_SECONDS := 3.2
 const REGION_BANNER_TOP := 120.0
 const REGION_BANNER_HEIGHT := 48.0
 
+## Owner playtest 2026-08-30B, item 19: "There should be something that
+## tracks what day number and time we're at." Persistent, not a toast --
+## unlike the region banner above it shares this top-centre lane with, it
+## never hides. Sits ABOVE `REGION_BANNER_TOP` (120) with clearance to spare
+## at `DAYTIME_READOUT_HEIGHT`'s own font+leading, so a region announcement
+## never overlaps it.
+##
+## Deliberately outside the left column and the minimap/objective column on
+## the right -- item 21 is a separate, still-open complaint that those two
+## already crowd the screen, and this is a NEW element, so it goes in the one
+## authored-space lane nothing else occupies at rest: top-centre, above where
+## the transient region banner draws.
+const DAYTIME_READOUT_FONT_SIZE := UITokens.FONT_LABEL
+const DAYTIME_READOUT_TOP := UITokens.HUD_INSET
+const DAYTIME_READOUT_HEIGHT := 32.0
+
 ## --- layout (spec §6/§6.6, numbers inlined per the task) --------------------
 ## All positions are in the HUD's own 1920x1080 authoring space (top-left
 ## origin), matching the rest of this file's "sized for the Ally" convention.
@@ -762,6 +778,17 @@ var _objective_hint_until := 0.0
 var _region_banner: Label = null
 var _region_banner_until := 0.0
 
+## --- day/time readout (owner playtest 2026-08-30B item 19) ----------------------
+
+## `MeadowsPlayground`'s own clock, looked up defensively the same way the
+## minimap's owning script is -- a capture rig or an isolated test scene may
+## have no `WorldLook` at all, and this readout should just stay blank rather
+## than crash. Re-checked with `is_instance_valid()` each frame the same way
+## `_refresh_game_ref()` re-checks `_game`, since neither node is guaranteed
+## to exist yet the first time `_ready()` runs.
+var _world_look: Node = null
+var _daytime_label: Label = null
+
 ## --- persistent exploration legend (RG3) ---------------------------------------
 
 var _exploration_legend: PanelContainer = null
@@ -809,6 +836,7 @@ func _ready() -> void:
 	_build_objective_block()
 	_build_objective_hint_card()
 	_build_region_banner()
+	_build_daytime_readout()
 	_build_exploration_legend()
 	_style_hotbar()
 
@@ -1545,6 +1573,20 @@ static func party_strip_position(canvas_height: float, strip_height: float) -> V
 	# ...but never above the top safe inset, which is where the reveal lines up
 	# with the minimap and objective block's own top row.
 	return Vector2(CREATURE_BLOCK_X, maxf(TOP_SAFE_INSET, bottom - strip_height))
+
+
+## Pure text formatting for the day/time readout, split out so
+## `tests/test_hud_widgets.gd` can pin the format without instancing the HUD
+## or a live `WorldLook` clock. `hour` is `day_cycle.gd::hour_at()`'s own
+## 0..24 float; `@ 24:00` never happens because `fposmod` in that function
+## always wraps it back under 24 first, but this still floors/wraps
+## defensively so a caller passing a raw, un-wrapped value (a test, a future
+## refactor) reads as a clock and not as garbage.
+static func daytime_readout_text(day: int, hour: float) -> String:
+	var wrapped := fposmod(hour, 24.0)
+	var h := int(wrapped)
+	var m := int(round((wrapped - float(h)) * 60.0)) % 60
+	return "Day %d  ·  %02d:%02d" % [maxi(day, 1), h, m]
 
 
 ## Places the whole left column from the CANVAS BOTTOM every time `_root`'s
@@ -2510,6 +2552,48 @@ func _update_region_banner() -> void:
 		_region_banner.visible = false
 
 
+# --- day/time readout -------------------------------------------------------------
+
+
+## Owner playtest 2026-08-30B, item 19: no on-screen way to tell what day it
+## is or how far through it the player is. Display only -- this reads
+## `Game.day` and `WorldLook`'s own clock, it does not touch either. Naked
+## text, no panel, same call `_build_region_banner()` above already makes for
+## this same top-centre lane: a persistent line has even less excuse to spend
+## a plate on itself than a transient one does.
+func _build_daytime_readout() -> void:
+	_daytime_label = Label.new()
+	_daytime_label.name = "DaytimeReadout"
+	_daytime_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_daytime_label.anchor_left = 0.5
+	_daytime_label.anchor_right = 0.5
+	_daytime_label.offset_left = -200.0
+	_daytime_label.offset_right = 200.0
+	_daytime_label.offset_top = DAYTIME_READOUT_TOP
+	_daytime_label.offset_bottom = DAYTIME_READOUT_TOP + DAYTIME_READOUT_HEIGHT
+	_daytime_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_daytime_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_daytime_label.add_theme_font_size_override("font_size", DAYTIME_READOUT_FONT_SIZE)
+	_daytime_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_daytime_label.text = daytime_readout_text(1, 0.0)
+	_root.add_child(_daytime_label)
+
+
+## `_world_look` is looked up lazily, the same defensive `is_instance_valid`
+## re-check `_refresh_game_ref()` uses for `_game` -- `_ready()` can run
+## before `MeadowsPlayground`'s own children are all in the tree, and a
+## capture rig or an isolated test scene may mount this HUD with no
+## `WorldLook` sibling at all.
+func _update_daytime_readout() -> void:
+	if _daytime_label == null or _game == null:
+		return
+	if not is_instance_valid(_world_look):
+		var scene := get_tree().current_scene if is_inside_tree() else null
+		_world_look = scene.get_node_or_null(^"WorldLook") if scene != null else null
+	var hour := float(_world_look.call("hour")) if _world_look != null else 0.0
+	_daytime_label.text = daytime_readout_text(int(_game.get("day")), hour)
+
+
 # --- frame / lifecycle ---------------------------------------------------------------
 
 
@@ -2573,6 +2657,7 @@ func _run_frame(delta: float) -> void:
 	_yield_left_stack_to_combat_hud()
 	_update_objective()
 	_update_region_banner()
+	_update_daytime_readout()
 	_update_exploration_legend()
 	_ensure_minimap_baked()
 	_update_minimap()

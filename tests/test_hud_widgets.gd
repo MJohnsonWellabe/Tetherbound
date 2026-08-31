@@ -455,6 +455,29 @@ func test_a_healthy_entry_keeps_the_green_hp_fill() -> void:
 	strip.free()
 
 
+# --- day/time readout (owner playtest 2026-08-30B item 19) -----------------------
+
+
+func test_daytime_readout_formats_day_and_clock() -> void:
+	assert_eq(PLAYGROUND_HUD.daytime_readout_text(3, 6.5), "Day 3  ·  06:30")
+	assert_eq(PLAYGROUND_HUD.daytime_readout_text(1, 0.0), "Day 1  ·  00:00")
+
+
+func test_daytime_readout_wraps_an_out_of_range_hour() -> void:
+	# `day_cycle.gd::hour_at()` always returns a value already wrapped into
+	# [0, 24) via `fposmod`, but this is the display's own defence, not a
+	# trust in the caller -- assert it actually wraps rather than printing a
+	# clock that reads "25:00".
+	assert_eq(PLAYGROUND_HUD.daytime_readout_text(2, 25.0), "Day 2  ·  01:00")
+
+
+func test_daytime_readout_floors_the_day_number_at_one() -> void:
+	# `Game.day` starts at 1 and only ever advances (`advance_day()`), but a
+	# bare 0/negative should still read as day one rather than a value the
+	# player has never seen and would read as a bug.
+	assert_eq(PLAYGROUND_HUD.daytime_readout_text(0, 12.0), "Day 1  ·  12:00")
+
+
 # --- OP21-12: cycle-clarity banner ----------------------------------------------
 
 
