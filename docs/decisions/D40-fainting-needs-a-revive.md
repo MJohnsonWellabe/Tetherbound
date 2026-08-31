@@ -93,6 +93,34 @@ not a stat that a plentiful item shrugs off.
   Revive sits unusable in the belt through a fight that faints and ends
   (`tests/run_tests.gd`, `smoke_combat.gd` both still pass unmodified).
 
+## Regressed 2026-08-28, restored 2026-08-31
+
+The gift line above was dropped from `data/dialogue/opening.json` by
+`66eb47ec` ("First-hour: sequence opening through tournament signup"), which
+reflowed Grandpa's whole conversation set and took the potion, berry and
+Revive gifts with it. One-line commit message, no note anywhere, and this
+decision was never superseded — so for three days a new game started with no
+answer at all to a fainted creature, which is the exact hole D40 exists to
+close. `git log -S "give:revive" -- data/dialogue/opening.json` shows the add
+and that silent removal and nothing else.
+
+What it cost is measured: `ralph/reports/gate-f-capstone-1/CAP-1-FINDING.md`,
+where a lost tutorial fight left a party of one fainted creature and the
+chapter had no way back up. See
+`ralph/reports/FINDING-CAP1-TUTORIAL-CATCH-FAINT-2026-08-31.md`.
+
+Restored on `ralph/CAP1-TUTORIAL-CATCH-FAINT`, with one deliberate change: the
+line now sits on `grandpa_first_catch` rather than `grandpa_house`, following
+the fifteen Basic Orbs, which the same rewrite moved there for a reason this
+file agrees with — a `give:` effect belongs on the beat before its first
+possible use, not in a briefing three beats earlier. `tests/test_tutorial_faint_floor.gd`
+now asserts the opening hands over Revives at all, so the next reflow of this
+file cannot drop them silently.
+
+The potions and berries from the same removed block are **not** restored by
+that change. They are a pacing question about the opening's supply and nobody
+has reopened it; this item is the one a live rule made load-bearing.
+
 ## What it supersedes
 
 `creature_instance.gd::heal()`'s prior behaviour — reviving a fainted
