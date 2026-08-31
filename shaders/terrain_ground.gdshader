@@ -351,7 +351,8 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 		// covers a fraction of a tile). See top-of-file banner.
 		float id_footprint = max(length(id_dd.xy), length(id_dd.zw));
 		if (_d6_debug_footprint) {
-			mat.albedo_height = vec4(clamp(id_footprint * 2.0, 0., 1.), clamp(id_footprint * 10.0, 0., 1.), clamp(id_footprint * 50.0, 0., 1.), 1.0);
+			// Raw per-tile checker: does this even line up with the dash?
+			mat.albedo_height = vec4(vec3(random(uv_center)), 1.0);
 			mat.total_weight = 1.0;
 			return;
 		}
