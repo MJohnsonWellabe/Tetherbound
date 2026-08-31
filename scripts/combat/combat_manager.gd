@@ -1507,9 +1507,31 @@ func switchable_indices() -> Array[int]:
 		if i == _active_index:
 			continue
 		var member: RefCounted = _party[i]
-		if member != null and not member.fainted:
+		if member != null and _can_take_the_field(member):
 			out.append(i)
 	return out
+
+
+## Can this creature take the field RIGHT NOW? Fainted is the obvious half.
+## RESTING is the other, and it was missing from every switch path in this file
+## while every other place in the project already had it:
+## `begin()` above refuses to start a fight on a resting creature, and
+## `autoload/party.gd::cycle_active()` -- the exploration-side cycle, whose own
+## comment is "wraps and skips anything that cannot take the field" -- skips
+## both. Only the in-fight switch disagreed.
+##
+## GATE-F-LEG-S10AB, 2026-08-31. That disagreement is reachable in exactly one
+## place in the chapter, and it is inside this lane's own segment: the Hall's
+## recovery point (`stronghold.json`'s `recovery` block) is the only creature
+## bed standing within metres of a fight. Park a creature in it, walk nine
+## metres to the elite, and LB would pull the sleeping creature straight out of
+## the bed and into the fight -- still flagged `resting`, so
+## `game_state.gd::_tick_creature_bed_recovery()` keeps healing it every frame
+## WHILE it fights, and `creature_bed.gd` still lists it as the bed's occupant.
+## A creature that is both asleep and in a boss fight is not a state any of the
+## three systems involved thinks it can be in.
+func _can_take_the_field(member: RefCounted) -> bool:
+	return not member.fainted and not bool(member.get("resting"))
 
 
 ## Is a voluntary switch allowed RIGHT NOW? Mirrors the guards the fight
@@ -1529,7 +1551,8 @@ func can_switch() -> bool:
 
 ## The next (`direction > 0`) or previous (`direction < 0`) switchable party
 ## member from the active one, wrapping around the whole party order and
-## skipping fainted members. Delegates to `request_switch` so cycling and any
+## skipping anyone who cannot take the field (fainted, or asleep in a creature
+## bed -- see `_can_take_the_field`). Delegates to `request_switch` so cycling and any
 ## future direct-pick selector share one path in and one set of guards.
 func cycle_active(direction: int) -> bool:
 	var size := _party.size()
@@ -1540,7 +1563,13 @@ func cycle_active(direction: int) -> bool:
 	for _n in size - 1:
 		i = ((i + step) % size + size) % size
 		var member: RefCounted = _party[i]
-		if member != null and not member.fainted:
+		# SKIPS, rather than stopping on, anyone who cannot take the field --
+		# see `_can_take_the_field()`. The loop already had this shape for
+		# fainted members; a resting one now steps over in the same way instead
+		# of being handed to `request_switch` and refused, which would have
+		# ended the whole cycle on it and left the healthy creatures behind it
+		# unreachable.
+		if member != null and _can_take_the_field(member):
 			return request_switch(i)
 	return false
 
@@ -1554,7 +1583,7 @@ func request_switch(index: int) -> bool:
 	if index < 0 or index >= _party.size() or index == _active_index:
 		return false
 	var member: RefCounted = _party[index]
-	if member == null or member.fainted:
+	if member == null or not _can_take_the_field(member):
 		return false
 
 	_activate_party_member(index)

@@ -645,21 +645,6 @@ func _species_moves(species_table: Dictionary, species_id: String) -> Dictionary
 	return moves_raw as Dictionary if typeof(moves_raw) == TYPE_DICTIONARY else {}
 
 
-## GAME-F4 migration fallback. Same defaults `creature_instance.gd::from_species`
-## uses when a definition is missing a base stat, so a species this build no
-## longer defines still lands a loaded creature on the same numbers a brand
-## new one of that (now-unknown) species would get, rather than the class's
-## 1.0 default that makes the very next level-up destroy it.
-func _species_base_stats(species_table: Dictionary, species_id: String) -> Dictionary:
-	var entry_raw: Variant = species_table.get(species_id, {})
-	var entry: Dictionary = entry_raw as Dictionary if typeof(entry_raw) == TYPE_DICTIONARY else {}
-	return {
-		"base_hp": float(entry.get("base_hp", 100.0)),
-		"base_attack": float(entry.get("base_attack", 20.0)),
-		"base_defence": float(entry.get("base_defence", 20.0)),
-	}
-
-
 func _read(slot: int) -> Dictionary:
 	if slot < 0 or slot >= SLOT_COUNT:
 		return {}
@@ -781,12 +766,15 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		return
 	var party_ref := party as RefCounted
 	party_ref.call("clear")
-	# GAME-F4 migration. Only consulted for a creature whose save entry predates
-	# `base_hp`/`base_attack`/`base_defence` being written (VERSION 15 and
-	# earlier) -- loaded once, not per creature, the same shape `_migrate_v1`
-	# already uses to read this same file.
+	# Read ONCE, outside the loop, for the baseline repair below. Read through
+	# this file's own `_read_json_file` rather than through
+	# `creature_species.gd` for the reason this file's header gives: it never
+	# reaches into the scene tree or the autoloads, so a headless test double
+	# round-trips exactly as a running game does.
 	var species_raw: Variant = _read_json_file(SPECIES_PATH).get("species", {})
-	var species_table: Dictionary = species_raw as Dictionary if typeof(species_raw) == TYPE_DICTIONARY else {}
+	var species_table: Dictionary = species_raw as Dictionary \
+		if typeof(species_raw) == TYPE_DICTIONARY else {}
+	var progression_cfg := _read_json_file(PROGRESSION_CONFIG_PATH)
 	for raw: Variant in (entries as Array):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
@@ -808,19 +796,6 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.battles_fought = int(d.get("battles_fought", 0))
 		creature.caught_on_day = int(d.get("caught_on_day", 0))
 		creature.levels_gained_with_you = int(d.get("levels_gained_with_you", 0))
-		# GAME-F4. `base_hp`/`base_attack`/`base_defence` are what every
-		# level-up, elixir and evolve recomputes `max_hp`/`attack`/`defence`
-		# FROM (creature_instance.gd's `_apply_level_stats`) -- never present
-		# means the class default of 1.0 stands until the next one of those,
-		# at which point the creature's real stats are gone. Absent only on a
-		# save written before this fix (VERSION 15 and earlier); repaired from
-		# species.json the same way `secondary_type` above already is,
-		# because base stats are species-owned and nothing but `evolve_into`
-		# (which sets them fresh from the new species) ever changes them.
-		var base_fallback := _species_base_stats(species_table, creature.species_id)
-		creature.base_hp = float(d.get("base_hp", base_fallback.get("base_hp", 100.0)))
-		creature.base_attack = float(d.get("base_attack", base_fallback.get("base_attack", 20.0)))
-		creature.base_defence = float(d.get("base_defence", base_fallback.get("base_defence", 20.0)))
 		creature.max_hp = float(d.get("max_hp", 1.0))
 		creature.attack = float(d.get("attack", 1.0))
 		creature.defence = float(d.get("defence", 1.0))
@@ -853,6 +828,19 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.nourishment = float(d.get("nourishment", _condition_defaults().get("nourishment", 70.0)))
 		creature.happiness = float(d.get("happiness", _condition_defaults().get("happiness", 55.0)))
 		creature.rested_seconds_left = float(d.get("rested_seconds_left", 0.0))
+		# GAME-F4. Trusted from the save like every other field on this class;
+		# only a save that predates this fix has nothing here, and for that one
+		# case only, `species.json` supplies the value the save itself is
+		# missing -- see the GAME-F4 section in this file's header comment and
+		# `creature_instance.gd::recompute_stats_from_base()` for why this is
+		# never unconditionally re-derived from the catalogue.
+		var definition_raw: Variant = species_table.get(creature.species_id, {})
+		var definition: Dictionary = definition_raw as Dictionary \
+			if typeof(definition_raw) == TYPE_DICTIONARY else {}
+		creature.base_hp = float(d.get("base_hp", definition.get("base_hp", 100.0)))
+		creature.base_attack = float(d.get("base_attack", definition.get("base_attack", 20.0)))
+		creature.base_defence = float(d.get("base_defence", definition.get("base_defence", 20.0)))
+		creature.call("recompute_stats_from_base", progression_cfg)
 		party_ref.call("add", creature)
 
 

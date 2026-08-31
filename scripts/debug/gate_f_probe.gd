@@ -111,6 +111,21 @@ func combat_manager() -> Node:
 	return w.get_node_or_null(^"CombatManager")
 
 
+## The EncounterDirector, for the one caller that needs to know a trainer
+## battle is still running BETWEEN its rounds.
+##
+## GATE-F-LEG-S10AB. `CombatManager::is_fighting()` goes false in the gap
+## between a trainer's creatures (`_trainer_send_delay`), so a driver that
+## stopped on the first false would walk away from a five-creature Warden after
+## his first one fell. `trainer_battle_active()` is the director's own answer
+## and is what `_on_trainer_round_ended` is written against.
+func encounter_director() -> Node:
+	var w := world()
+	if w == null:
+		return null
+	return w.get_node_or_null(^"EncounterDirector")
+
+
 func world_look() -> Node:
 	var w := world()
 	if w == null:

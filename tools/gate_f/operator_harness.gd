@@ -1360,6 +1360,10 @@ static func _predict_frames(steps: Array) -> int:
 				total += 12
 			"advance_dialogue_until_closed":
 				total += int(args.get("max_presses", 60)) * 4
+			"fight_until_resolved":
+				# Its own ceiling, same as a walk's `budget_frames`: the step
+				# cannot run longer than this whatever the fight does.
+				total += int(args.get("budget_frames", 9000))
 			"capture":
 				total += 6
 			"capture_seq":
@@ -1763,6 +1767,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_wait(args)
 		"press":
 			actual = await _step_press(args, id)
+		"fight_until_resolved":
+			actual = await _step_fight(args, id)
 		"press_multi":
 			actual = await _step_press_multi(args, id)
 		"hold":
@@ -2515,6 +2521,150 @@ func _step_press_multi(args: Dictionary, step_id: String) -> String:
 	_last_input = {"device": "synthetic", "raw": " + ".join(raws),
 		"action": " + ".join(controls), "edge": "press"}
 	return "pressed %s together for %d frames" % [" + ".join(controls), frames]
+
+
+## Fight the fight in front of you until it resolves, by PREDICATE rather than
+## by a press count.
+##
+## GATE-F-LEG-S10AB, 2026-08-31, and the schema's own argument for it is already
+## written twice in this file: `advance_dialogue_until_closed` exists because
+## "press confirm N times" is right for exactly one conversation, and
+## `focus_item` exists because "press right N times" is right for exactly one
+## arrangement of the bag. A fight is the same class of problem and a worse one.
+## How long it takes depends on the species, both levels, the type chart and a
+## +/-10% roll on every hit, and none of that is knowable when the step-script
+## is written. Driven by counted presses, S10a's gauntlet came apart three
+## different ways on three runs: the presses budgeted for a trainer's three
+## creatures were all spent on the FIRST one when the matchup went badly (a
+## water pilot against a water defender took 46.8 s to clear a 247 HP creature),
+## the switch presses then landed mid-round instead of between rounds, and the
+## fights were lost with three untouched creatures on the belt.
+##
+## What it drives, and what it deliberately does NOT:
+##
+##   * `combat_quick`, on the down edge, only while the action machine reads
+##     READY -- so it never mashes into the commitment guard that
+##     `can_switch()` respects, and never buffers an attack the player did not
+##     choose.
+##   * `party_cycle`, ONCE, when the piloted creature drops to `switch_below`
+##     of its max HP and the manager says a switch is possible. This is the
+##     verb a five-creature belt exists for, and
+##     `encounter_director.gd::_on_trainer_round_ended()` makes it load-bearing:
+##     the piloted creature fainting loses the WHOLE battle, however many
+##     healthy creatures are behind it.
+##   * NOTHING else. No potions, no items, no menu, no granted state. The
+##     player's satchel is untouched -- so a fight this step wins is won on
+##     levels, types and the belt alone, which is the harder claim and the one
+##     worth having.
+##
+## It stops when the fight is over -- `is_fighting()` false AND
+## `trainer_battle_active()` false for `quiet_frames`, because a trainer battle
+## goes quiet BETWEEN its creatures and a driver that stopped on the first gap
+## would abandon a five-creature Warden after his first one fell -- or when
+## `budget_frames` runs out, or when the cost gate stops the run.
+func _step_fight(args: Dictionary, step_id: String) -> String:
+	var budget := maxi(60, int(args.get("budget_frames", 9000)))
+	var switch_below := clampf(float(args.get("switch_below", 0.35)), 0.0, 1.0)
+	var gap := maxi(1, int(args.get("gap_frames", 18)))
+	var quiet_needed := maxi(30, int(args.get("quiet_frames", 240)))
+	var until_flag := str(args.get("until_flag", ""))
+
+	var manager := _probe.call("combat_manager") as Node
+	if manager == null:
+		return "HARNESS-ERROR fight step %s has no CombatManager in the world" % step_id
+	var director := _probe.call("encounter_director") as Node
+
+	var quicks := 0
+	var switches := 0
+	var refused := 0
+	var quiet := 0
+	var spent := 0
+	var ended := ""
+
+	while spent < budget:
+		if not _blocked.is_empty():
+			return "FAIL fought %d frames before the cost gate stopped it" % spent
+		if until_flag != "" and (_probe.call("flags") as Array).has(until_flag):
+			ended = "flag '%s' set" % until_flag
+			break
+
+		var fighting := bool(manager.call("is_fighting"))
+		var battle := director != null and bool(director.call("trainer_battle_active"))
+		if not fighting and not battle:
+			quiet += 1
+			if quiet >= quiet_needed:
+				ended = "no fight running for %d frames" % quiet
+				break
+			await physics_frame
+			_tick(1.0 / float(Engine.physics_ticks_per_second))
+			spent += 1
+			continue
+		quiet = 0
+
+		if not fighting:
+			# Between a trainer's creatures. Wait it out rather than pressing
+			# into the send-out beat.
+			await physics_frame
+			_tick(1.0 / float(Engine.physics_ticks_per_second))
+			spent += 1
+			continue
+
+		var state: Dictionary = _probe.call("combat_state")
+		if str(state.get("phase", "")) != "ready":
+			await physics_frame
+			_tick(1.0 / float(Engine.physics_ticks_per_second))
+			spent += 1
+			continue
+
+		var mine: Variant = manager.call("active_creature")
+		var max_hp := float(mine.get("max_hp")) if mine != null else 0.0
+		var frac := (float(mine.get("hp")) / max_hp) if (mine != null and max_hp > 0.0) else 1.0
+		var wants_switch := frac <= switch_below \
+			and bool(manager.call("can_switch")) \
+			and not (manager.call("switchable_indices") as Array).is_empty()
+
+		if wants_switch:
+			var was: String = str(mine.call("label"))
+			var sent := await _inject("party_cycle", HOLD_TAP)
+			if not bool(sent.get("ok", false)):
+				return "HARNESS-ERROR %s" % str(sent.get("why", "party_cycle injection failed"))
+			var now: Variant = manager.call("active_creature")
+			if now != null and now != mine:
+				switches += 1
+				_emit("combat_switch", {"observation":
+					"fight step %s handed over: %s (%.0f%% hp) -> %s" % [
+						step_id, was, frac * 100.0, str(now.call("label"))]})
+			else:
+				# Recorded, not retried in a tight loop: a refusal is a real
+				# property of the fight (`can_switch()` said yes and the swap
+				# still did not happen) and is worth a line rather than a spin.
+				refused += 1
+		else:
+			var sent2 := await _inject("combat_quick", HOLD_TAP)
+			if not bool(sent2.get("ok", false)):
+				return "HARNESS-ERROR %s" % str(sent2.get("why", "combat_quick injection failed"))
+			quicks += 1
+
+		# `_inject` advances its own frames (two idle, two physics for a tap);
+		# charge them flat, then idle the gap.
+		spent += 3
+		for f in gap:
+			await physics_frame
+			_tick(1.0 / float(Engine.physics_ticks_per_second))
+			spent += 1
+
+	if ended.is_empty():
+		ended = "budget of %d frames exhausted with the fight still running" % budget
+	var flag_note := ""
+	if until_flag != "":
+		flag_note = ", %s '%s'" % [
+			"SET" if (_probe.call("flags") as Array).has(until_flag) else "NOT SET", until_flag]
+	var line := "fought %d frames: %d quick, %d handover(s), %d refused switch(es); ended because %s%s" % [
+		spent, quicks, switches, refused, ended, flag_note]
+	_emit("note", {"observation": "fight step %s: %s" % [step_id, line]})
+	if until_flag != "" and not (_probe.call("flags") as Array).has(until_flag):
+		return "FAIL " + line
+	return line
 
 
 func _step_hold(args: Dictionary, step_id: String) -> String:

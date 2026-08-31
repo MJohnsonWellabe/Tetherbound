@@ -401,6 +401,52 @@ func _apply_level_stats(cfg: Dictionary) -> void:
 	hp = max_hp * fraction
 
 
+## Recompute `max_hp`/`attack`/`defence` from whatever `base_hp`/`base_attack`/
+## `base_defence` are already set on this instance, immediately, right after a
+## save is loaded -- rather than leaving the stale saved `max_hp`/`attack`/
+## `defence` in place until the creature's next level-up.
+##
+## GATE-F-LEG-S10AB/S09/S05/S08/GATE-F-FOUNDATION, 2026-08-31 (four
+## independent lanes found this the same day): `base_hp`/`base_attack`/
+## `base_defence` are the numbers `_apply_level_stats()` recomputes EVERYTHING
+## from, and until this fix `scripts/save/save_game.gd` never wrote them to a
+## slot or read them back, so a creature rebuilt by `_array_to_party()` carried
+## the class defaults (`base_* = 1.0`) while its `max_hp` -- restored straight
+## from the file -- still looked perfectly healthy. Nothing showed until the
+## creature LEVELLED: `_apply_level_stats()` then recomputed from a base of
+## 1.0, and a level-19 creature with 218.4 max HP became a level-20 creature
+## with **2.14**. Measured in the Meadows Hall gauntlet, on the frame the
+## elite's first creature fell and the victory XP landed: Ripple 218.4 -> 2.14,
+## Tup 256.8 -> 2.2, Gale 218.4 -> 2.14, all three in the same tick.
+##
+## `base_hp`/`base_attack`/`base_defence` are NOT re-derived from the species
+## catalogue here on purpose, even though they usually equal it: this class's
+## own `secondary_type` comment and `tests/test_save_format.gd`'s
+## `test_save_then_load_round_trips_base_stats_and_survives_a_level_up` both
+## hold the opposite rule for every OTHER field on this class -- "an instance's
+## saved stats are trusted as-is" -- and `save_game.gd::_array_to_party`
+## already restores `base_hp`/`base_attack`/`base_defence` from the save
+## itself, falling back to `species.json` only when a save predates this fix
+## and the fields are simply absent. Overwriting them here from the catalogue
+## unconditionally was S10AB's first version of this fix and a real
+## regression (that test caught it): it discarded a legitimately saved
+## non-catalogue base_hp and replaced it with the species average on every
+## single load, not only on repair. This function only ever recomputes what
+## those three ALREADY-CORRECT values derive.
+##
+## `hp` is preserved as a NUMBER, not as a fraction, and clamped to the
+## recomputed maximum. A healthy save recomputes to the identical `max_hp` and
+## nothing moves; a save already corrupted by this bug (base_* silently
+## defaulted to 1.0, so max_hp collapsed at the next level-up before this fix
+## existed) comes back with its real maximum and the HP it was saved on, which
+## is the honest reading of what happened to it -- repaired on load, not just
+## prevented from corrupting further.
+func recompute_stats_from_base(cfg: Dictionary) -> void:
+	var kept_hp := hp
+	_apply_level_stats(cfg)
+	hp = clampf(kept_hp, 0.0, max_hp)
+
+
 ## Drink an elixir: add `points` to one stat, permanently, up to the cap.
 ##
 ## `stat` is "hp" / "attack" / "defence". Returns how many points were actually

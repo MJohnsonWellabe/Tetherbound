@@ -1816,10 +1816,11 @@
       "trainer": "stronghold_elite",
       "chamber": "tether_approach",
       "offset": [
-        4.5,
+        2.0,
         5.0
       ],
-      "facing_deg": 90.0
+      "facing_deg": 180.0,
+      "_why": "GATE-F-LEG-S10AB, 2026-08-31. WAS offset [4.5, 5.0], facing_deg 90. `tether_approach` is the narrowest room on the route -- 16 m wide against the outer works' 20 and the courtyard's 22 -- and [4.5,5.0] put the elite at world x 12.5, 3.5 m from its east wall, facing straight into it. `data/config/combat.json`'s `arena.separation` is 5.0, so a fight staged on his own front had nowhere to put the second body and pushed it through the wall: measured by `tests/smoke_gate_e_finale.gd`, both combatants formed at world (18.4, 0.68) -- outside the building, 5.5 m BELOW the floor they were standing on, on the terrain under it. x 4.5 -> 2.0 moves him to world x 10, six metres off either wall, and facing_deg 90 -> 180 turns him down the room's own 18 m depth to face the passage the player walks in through, which is what the Warden's own facing_deg already does in his arena. Nothing else moves: he keeps his z, so he still stands in front of the Tether blast shutter, and he stays 7 m clear of the recovery bed's own prompt at world (3,7628). The two other gauntlet trainers keep facing_deg 90 -- their rooms are wide enough that it costs nothing there."
     }
   ],
   "_comment_marks": "Named spots later items ask for BY NAME instead of by coordinate, exactly the rule burrow_warrens.gd's markers keep. R8.3 needs somewhere to stand the Warden and somewhere to stop the player for his dialogue; SG40 needs the spot the reveal is delivered from; R8.4 needs the machine's own foot and the place the freed legendary appears. All five are here so none of those items has to hard-code a metre. `offset` is [lateral, depth] from that chamber's own centre.",
@@ -1852,9 +1853,10 @@
       "id": "machine_foot",
       "chamber": "legendary_chamber",
       "offset": [
-        0.0,
+        7.0,
         0.0
-      ]
+      ],
+      "_why": "GATE-F-LEG-S10AB, 2026-08-31. WAS [0.0, 0.0] -- the chamber centre, which is the machine's own AXIS, not its foot. `stronghold_climax.gd::_place_machine_prompt()` hangs the \"Shut down the tether machine\" interactable on this mark, `stronghold_climax.json`'s `site.prompt_radius` is 4.2 m, and this file's own `machine.base_radius` is 5.6 -- so the prompt sat at the centre of a solid cylinder the player can never come within 5.6 m of. 5.6 > 4.2: the interaction could not be offered from anywhere in the room, by construction. Measured in play, S10b's walk stopped 7.2 m from this mark against the machine's face, `legendary_freed` was never set, and objective 25/27 -- freeing the legendary, the chapter's second-to-last beat -- was unreachable. +7.0 in local x puts the mark 1.4 m clear of the base cylinder on the side the player enters from (the legendary_chamber's doorway is its +x wall, world x about -9.4), which is where a control at the FOOT of a machine belongs and what this mark is named for. It shipped because the one test that covers the beat, `tests/smoke_gate_e_finale.gd::_pull_the_lever`, called `interaction_activate()` on the prompt directly and only ever checked its `enabled` flag -- so it proved the Warden gate and never the distance. That test now asks the prompt for a real offer from where the player is standing."
     },
     {
       "id": "legendary_stand",

@@ -255,7 +255,22 @@ default-device press.
 | `focus_move` | `direction` (`up`/`down`/`left`/`right`), `times` | `ui_<direction>` taps. **FAILs if focus did not move**, which is the whole point: a focus step that silently did nothing is the defect this action exists to catch. |
 | `focus_item` | `item` (id), `max_moves` (default 60) | Moves the SATCHEL cursor onto the cell holding `item`, one real `ui_left`/`ui_right` at a time, re-reading the cursor between presses. **FAILs if the bag does not hold the item, if the Satchel does not own focus, or if the cursor cannot reach the cell.** Use this, not `focus_move`, for anything that acts on a named item: a press count is only right for one arrangement of the bag, and a bag two Revives and two potions into a real run is not that arrangement (GAME-9/RIG-24 — three tool bindings landed on the wrong items in silence, every step reporting PASS). |
 | `advance_dialogue_until_closed` | `max_presses` (default 60), `settle_frames` (default 90), `close_settle_frames` (default 30), `chain` (default `true`), `control` (override) | Advances an open narrative modal **by predicate, never by a press count**. Reads the panel's own line (`dialogue_runner.gd::line()`, or the starter picker's highlighted index), presses, waits for that line to change or the panel to close, and stops the moment it closes. Picks the button off the panel: `interact` for a conversation, `menu_confirm` for the starter picker; refuses the naming prompt and points at `type_name`. FAILs if no modal is open, if the panel stops responding (naming the line it stuck on), if it is still open at the budget, or if it closes and **re-opens** — the over-press signature. A different modal taking input afterwards is a chained conversation and is reported, not failed. |
+| `fight_until_resolved` | `budget_frames` (default 9000), `switch_below` (default 0.35), `gap_frames` (default 18), `quiet_frames` (default 240), `until_flag` | Drives a fight **by predicate, never by a press count** — the same reason `advance_dialogue_until_closed` exists. Presses `combat_quick` only while the action machine reads READY (so it never mashes into the commitment guard `can_switch()` respects), and presses `party_cycle` ONCE when the piloted creature drops to `switch_below` of its max HP and the manager says a switch is possible. Stops when `is_fighting()` AND `EncounterDirector::trainer_battle_active()` have both been false for `quiet_frames` — both, because a trainer battle goes quiet BETWEEN its creatures and a driver that stopped on the first gap would abandon a five-creature Warden after his first one fell — or when `budget_frames` runs out, or when the cost gate stops the run. FAILs if `until_flag` is named and not set at the end. Opens no menu and uses no item: a fight it wins is won on levels, types and the belt. |
 | `type_name` | `name` | Types `name` into the live naming prompt on the pad's on-screen letter grid, then presses Done. See below. |
+
+`fight_until_resolved` exists for the reason the two actions above it do, and
+it was paid for the same way. A fight's length is a function of both levels,
+the type chart and a ±10% roll on every hit, so a counted run of
+`combat_quick` presses is right for exactly one matchup. Measured on S10a
+across three runs: a water pilot against a water defender spent every press
+budgeted for a trainer's THREE creatures on the first one (46.8 s to clear
+247 HP); the `party_cycle` presses meant to hand over between rounds then
+landed mid-round and were refused by the commitment guard; and the fight was
+lost to a single faint with three untouched creatures on the belt, because
+`encounter_director.gd::_on_trainer_round_ended()` ends the whole battle when
+the PILOTED creature falls. Every one of those steps reported PASS, because a
+press step only ever asserts that input was injected — the same defect shape
+RIG-26 found on engage steps.
 
 `type_name` exists because naming is mandatory (`docs/OPENING_SEQUENCE.md`) and
 it is the one beat nothing else in this vocabulary can reach: `name_prompt.gd`

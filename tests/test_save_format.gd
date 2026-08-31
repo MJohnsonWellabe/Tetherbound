@@ -217,7 +217,73 @@ func test_save_then_load_round_trips_the_party() -> void:
 	assert_eq(str(creature.get("species_id")), "terrapup")
 	assert_eq(str(creature.get("nickname")), "Biscuit")
 	assert_almost_eq(float(creature.get("hp")), 65.0)
+	# 100, exactly what `_game()`'s fixture set `base_hp` to, not
+	# `species.json`'s real terrapup value of 120: a load trusts the save's
+	# own `base_hp` (GAME-F4), the same "an instance's saved stats are as-is"
+	# rule this class holds for every other field --
+	# `creature_instance.gd::recompute_stats_from_base()` explains why
+	# unconditionally overwriting from the species catalogue here was a
+	# regression, not the fix. The saved `hp` survives as a number and is
+	# clamped to the recomputed maximum, which is why 65 is untouched. See the
+	# level-up test below for what the base_hp/max_hp mismatch bug used to do.
 	assert_almost_eq(float(creature.get("max_hp")), 100.0)
+
+
+## The defect this file exists to catch, and the one it did not.
+##
+## GATE-F-LEG-S10AB, 2026-08-31. `base_hp`/`base_attack`/`base_defence` are
+## what `creature_instance.gd::_apply_level_stats()` recomputes every stat
+## from, and this format has never written them to a slot. A loaded creature
+## therefore carried the class defaults of 1.0 while its `max_hp` came back
+## from the file looking perfectly healthy -- and the moment it LEVELLED, the
+## recompute ran from a base of 1.0 and its maximum collapsed to about 2.
+##
+## Measured in the Meadows Hall gauntlet on the frame the elite's first
+## creature fell and the victory XP landed: three party members went from
+## 218.4, 256.8 and 218.4 max HP to 2.14, 2.2 and 2.14, and the chapter's
+## climax became unwinnable. Every existing round-trip test above passed
+## throughout, because none of them levelled a creature after loading it --
+## which is exactly the gap this test closes.
+func test_a_loaded_creature_can_level_up_without_its_stats_collapsing() -> void:
+	var written := _game()
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	var creature: RefCounted = read.party.at(0)
+	var before := float(creature.get("max_hp"))
+	assert_true(before > 50.0, "a loaded terrapup should carry a real maximum, not the class default")
+
+	# Enough XP to be certain of at least one level, whatever the curve is
+	# tuned to. `gain_xp` is the production path: it is what every victory
+	# award calls.
+	var cfg: Dictionary = PROGRESSION.config()
+	var gained: int = int(creature.call("gain_xp", 100000, cfg))
+	assert_true(gained > 0, "the creature did not level at all; the test proves nothing")
+
+	var after := float(creature.get("max_hp"))
+	assert_true(after > before,
+		("levelling a LOADED creature took its max HP from %.2f to %.2f. Base stats were "
+		+ "not restored on load, so _apply_level_stats recomputed from base_hp = 1.0.")
+		% [before, after])
+	assert_true(float(creature.get("attack")) > 1.5,
+		"a levelled creature's attack collapsed to the class default")
+	assert_true(float(creature.get("defence")) > 1.5,
+		"a levelled creature's defence collapsed to the class default")
+
+
+## The repair reads the catalogue, so a species it does not know must leave the
+## file's own numbers alone rather than zeroing a creature the player owns.
+func test_a_species_the_catalogue_forgot_keeps_what_the_save_said() -> void:
+	var written := _game()
+	written.party.at(0).species_id = "no_such_species"
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	var creature: RefCounted = read.party.at(0)
+	assert_almost_eq(float(creature.get("max_hp")), 100.0)
+	assert_almost_eq(float(creature.get("hp")), 65.0)
 
 
 func test_save_then_load_replaces_whatever_party_the_loading_game_already_had() -> void:

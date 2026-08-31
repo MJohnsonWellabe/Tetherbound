@@ -143,7 +143,7 @@
       "action": "move_to",
       "args": {
         "at": [
-          0.0,
+          8.0,
           7560.0
         ],
         "budget_frames": 9000,
@@ -151,8 +151,9 @@
         "held_budget_frames": 10800,
         "answer_prompts": true
       },
-      "expected": "data/config/stronghold.json's `outer_works` chamber at site.at (0,7560). Section D RT-12: 'Stronghold/finale interior | Hall spaces'",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "expected": "the centre of stronghold.json's `outer_works` chamber, which the built Hall puts at world (8,7560) -- site.at (8,7560) plus the chamber's own local (0,0). Section D RT-12: 'Stronghold/finale interior | Hall spaces'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
+      "_comment_coordinate_fix": "COORDINATE CORRECTION, GATE-F-LEG-S10AB 2026-08-31. This step's `at` was transcribed from data/config/bands/band5_stronghold_approach/trainers.json's `position` row -- which that same file labels, in its own `_position_note`, \"FALLBACK ONLY. scripts/world/stronghold.gd places this row from data/config/stronghold.json's `gauntlet` block\". Those fallback rows are still written in the pre-OW5D frame where the Hall's chambers ran along +x; the built Hall runs them along +z from site.at (8,7560). So every finale walk was aimed at open meadow rather than at the thing it names. MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31)."
     },
     {
       "id": "S10a-14",
@@ -180,16 +181,17 @@
       "action": "move_to",
       "args": {
         "at": [
-          6.0,
-          7560.0
+          3.0,
+          7566.0
         ],
         "budget_frames": 3000,
         "close_enough": 3.0,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "stronghold_patrol, Patrolman Verrick at (6,7560) -- the first of the gauntlet's three",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "expected": "stronghold_patrol, Patrolman Verrick, standing at world (3,7566) -- outer_works' centre plus stronghold.json's own gauntlet offset (-5,6). The first of the gauntlet's three. close_enough 3.0 lands inside interactable.gd's 3.6 m default prompt radius.",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
+      "_comment_coordinate_fix": "COORDINATE CORRECTION, GATE-F-LEG-S10AB 2026-08-31. This step's `at` was transcribed from data/config/bands/band5_stronghold_approach/trainers.json's `position` row -- which that same file labels, in its own `_position_note`, \"FALLBACK ONLY. scripts/world/stronghold.gd places this row from data/config/stronghold.json's `gauntlet` block\". Those fallback rows are still written in the pre-OW5D frame where the Hall's chambers ran along +x; the built Hall runs them along +z from site.at (8,7560). So every finale walk was aimed at open meadow rather than at the thing it names. MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31)."
     },
     {
       "id": "S10a-17",
@@ -269,36 +271,15 @@
     {
       "id": "S10a-23",
       "title": "fight the patrol",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 38,
-        "settle_frames": 30
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "gap_frames": 18,
+        "until_flag": "defeated_stronghold_patrol"
       },
-      "expected": "Section E.1 per-fight record"
-    },
-    {
-      "id": "S10a-24",
-      "title": "switch pilot",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "CB-06: target_on_screen has to hold at every switch"
-    },
-    {
-      "id": "S10a-25",
-      "title": "keep fighting",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 24,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Section E.1 per-fight record. Patrolman Verrick fields two -- Trailpup L15 (193.2 HP) and Burrowback L16 (209.0 HP). The gauntlet's first rung, and spec Sec8's own job for it: tell an under-levelled party to turn around while turning around is still cheap.",
+      "_comment_rewritten": "REWRITTEN, GATE-F-LEG-S10AB 2026-08-31, from a run of counted `combat_quick` presses with `party_cycle` sprinkled between them to a single predicate-driven `fight_until_resolved`. The counted form was wrong in principle and measurably wrong in practice. In principle: a fight's length is a function of both levels, the type chart and a +/-10% roll per hit, none of which is knowable when a step-script is written -- the same argument the schema already makes for `advance_dialogue_until_closed` ('by predicate, never by a press count') and for `focus_item` ('a press count is only right for one arrangement of the bag'). In practice, across three runs of this segment: a water pilot against a water defender spent every press budgeted for the courtyard's THREE creatures on its first one (46.8 s for 247 HP); the switch presses then landed mid-round rather than between rounds and were refused by the commitment guard; and each fight was finally lost to a single faint with three untouched creatures still on the belt, because `encounter_director.gd::_on_trainer_round_ended()` ends the whole battle when the PILOTED creature falls. The action presses the same two production verbs -- quick attack, and LB when the pilot is spent -- reading the fight's own state between presses. It never opens the satchel, so a fight won under it is won on levels, types and the belt."
     },
     {
       "id": "S10a-26",
@@ -336,16 +317,17 @@
       "action": "move_to",
       "args": {
         "at": [
-          36.0,
-          7564.0
+          4.0,
+          7596.0
         ],
         "budget_frames": 3000,
         "close_enough": 3.0,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "stronghold.json's `courtyard` chamber; stronghold_courtyard is Warder Solene at (36,7564)",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "expected": "stronghold.json's `courtyard` chamber (world centre (8,7592)); stronghold_courtyard is Warder Solene at world (4,7596) -- that centre plus her gauntlet offset (-4,4).",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
+      "_comment_coordinate_fix": "COORDINATE CORRECTION, GATE-F-LEG-S10AB 2026-08-31. This step's `at` was transcribed from data/config/bands/band5_stronghold_approach/trainers.json's `position` row -- which that same file labels, in its own `_position_note`, \"FALLBACK ONLY. scripts/world/stronghold.gd places this row from data/config/stronghold.json's `gauntlet` block\". Those fallback rows are still written in the pre-OW5D frame where the Hall's chambers ran along +x; the built Hall runs them along +z from site.at (8,7560). So every finale walk was aimed at open meadow rather than at the thing it names. MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31)."
     },
     {
       "id": "S10a-29",
@@ -381,14 +363,15 @@
     {
       "id": "S10a-32",
       "title": "fight the courtyard warder",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 40,
-        "settle_frames": 30
+        "budget_frames": 12000,
+        "switch_below": 0.35,
+        "gap_frames": 18,
+        "until_flag": "defeated_stronghold_courtyard"
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Section E.1 per-fight record. Warder Solene fields the building's first THREE -- Mosshell L16 (247.0 HP), Reedwing L17 (176.4) and Mudsnout L17 (196.0). The step up from the patrol is a whole extra creature, which is what actually punishes a party that arrives with one creature it likes.",
+      "_comment_rewritten": "REWRITTEN, GATE-F-LEG-S10AB 2026-08-31, from a run of counted `combat_quick` presses with `party_cycle` sprinkled between them to a single predicate-driven `fight_until_resolved`. The counted form was wrong in principle and measurably wrong in practice. In principle: a fight's length is a function of both levels, the type chart and a +/-10% roll per hit, none of which is knowable when a step-script is written -- the same argument the schema already makes for `advance_dialogue_until_closed` ('by predicate, never by a press count') and for `focus_item` ('a press count is only right for one arrangement of the bag'). In practice, across three runs of this segment: a water pilot against a water defender spent every press budgeted for the courtyard's THREE creatures on its first one (46.8 s for 247 HP); the switch presses then landed mid-round rather than between rounds and were refused by the commitment guard; and each fight was finally lost to a single faint with three untouched creatures still on the belt, because `encounter_director.gd::_on_trainer_round_ended()` ends the whole battle when the PILOTED creature falls. The action presses the same two production verbs -- quick attack, and LB when the pilot is spent -- reading the fight's own state between presses. It never opens the satchel, so a fight won under it is won on levels, types and the belt."
     },
     {
       "id": "S10a-33",
@@ -398,19 +381,8 @@
         "control": "combat_charged",
         "hold": "long"
       },
-      "expected": "the charged verb's hold edge"
-    },
-    {
-      "id": "S10a-34",
-      "title": "finish her",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 24,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record"
+      "expected": "the charged verb's hold edge. Kept as its own step after the fight rather than inside it: `fight_until_resolved` drives the QUICK verb and the switch and nothing else, so the charged hold has to be exercised somewhere a reader can see it.",
+      "_comment_kept": "GATE-F-LEG-S10AB 2026-08-31. This press is now made in the WORLD, not mid-fight, and that is a real reduction in what it evidences -- the hold edge is still driven through the live InputMap, but not against a live combat action machine. Recorded rather than glossed. The charged verb inside a fight is covered by S10b's own charged step and by X04, the combat lab."
     },
     {
       "id": "S10a-35",
@@ -441,6 +413,24 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S10a-37a",
+      "title": "walk to the Hall's recovery point",
+      "action": "move_to",
+      "args": {
+        "at": [
+          3.0,
+          7628.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 2.5,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "stronghold.json's `recovery` block puts the authored creature bed in the `tether_approach` chamber at offset (-5,4) -- world (3,7628), MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31).",
+      "_comment_added": "ADDED, GATE-F-LEG-S10AB 2026-08-31. S10a-37's note says 'the steps below use it' and the step below it was a bare `press interact` -- with no walk in between, that press landed wherever the courtyard fight ended, 32 m from the bed and well outside interactable.gd's prompt radius. Section B's span names a 'recovery' beat between the gauntlet and the elite; without this step the segment could never evidence one, and the press instead re-offered whatever prompt was nearest the courtyard.",
+      "_comment_order": "Placed between the note and the press deliberately: the bed and the elite are in the SAME chamber (`tether_approach`, 9.5 m apart), so this walk is also the walk out of the courtyard, and S10a-42's own walk to the elite is a short step from here rather than a second crossing of the building."
+    },
+    {
       "id": "S10a-38",
       "title": "use the Hall's recovery point",
       "action": "press",
@@ -460,6 +450,17 @@
       "expected": "the creature-bed panel takes input"
     },
     {
+      "id": "S10a-39a",
+      "title": "pick the creature that actually needs the bed",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "`creature_bed_panel.gd::_refresh()` focuses 'the first row that can actually act', which is belt slot 1 -- the lead, and not necessarily the one that is hurt. One press down moves to slot 2.",
+      "_comment_added": "ADDED, GATE-F-LEG-S10AB 2026-08-31, and it is a gameplay choice rather than a rig detail. The bed heals ONE creature, gradually (`progression.json::creature_bed.full_heal_seconds` 120), and makes it unavailable while it sleeps. Measured on this segment's own run, the belt arrives at the recovery point with the lead on 62/257 and slot 2 on 42/218 and everyone else untouched -- so the beat is worth something only if it is spent on one of those two. Confirming the default row rested the LEAD and left the worse-off creature in the rotation, where the elite fight then started on it at 42 HP and lost the whole battle to a single faint. Resting slot 2 instead takes the weakest creature out of the fight rotation (`party.gd::set_resting` cycles the active pick off it for exactly this reason) and leaves four who can stand up. That is the beat doing its job, and section B calls it 'recovery'."
+    },
+    {
       "id": "S10a-40",
       "title": "rest the team",
       "action": "press",
@@ -467,7 +468,7 @@
         "control": "menu_confirm",
         "hold": "tap"
       },
-      "expected": "Section L.4's care row; record the bed's unavailability window"
+      "expected": "Section L.4's care row; record the bed's unavailability window. The focused row's creature is assigned to the bed and starts recovering; the panel REFRESHES rather than closing, which is why S10a-41a exists."
     },
     {
       "id": "S10a-41",
@@ -477,6 +478,18 @@
         "seconds": 8
       },
       "expected": "the team's condition is restored per the rules"
+    },
+    {
+      "id": "S10a-41a",
+      "title": "close the recovery panel",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap",
+        "settle_frames": 30
+      },
+      "expected": "creature_bed_panel.gd closes on `menu_cancel` and on nothing else -- confirming a rest row assigns the creature and REFRESHES, it does not dismiss the panel.",
+      "_comment_added": "ADDED, GATE-F-LEG-S10AB 2026-08-31. The recovery beat had no close. The panel pauses the tree and owns input for as long as it is up, so S10a-30w ('the world owns input before this walk') failed with input_context=panel:@CanvasLayer, and S10a-42's walk to the elite then burned its whole budget without the player moving a metre -- which is precisely the silent cascade S10a-30w was added to turn into one named cause. It did its job; the missing step is this one."
     },
     {
       "id": "S10a-30w",
@@ -495,16 +508,17 @@
       "action": "move_to",
       "args": {
         "at": [
-          69.0,
-          7557.0
+          10.0,
+          7629.0
         ],
         "budget_frames": 3000,
         "close_enough": 3.0,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "stronghold_elite, Keeper Hald at (69,7557) -- the gauntlet's third rung, standing in front of the Tether blast shutter",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "expected": "stronghold_elite, Keeper Hald at world (10,7629) -- the `tether_approach` chamber's centre (8,7624) plus his gauntlet offset (2,5). The gauntlet's third rung, standing in front of the Tether blast shutter and facing back down the room at the passage the player walks in through.",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
+      "_comment_coordinate_fix": "COORDINATE CORRECTION, GATE-F-LEG-S10AB 2026-08-31. This step's `at` was transcribed from data/config/bands/band5_stronghold_approach/trainers.json's `position` row -- which that same file labels, in its own `_position_note`, \"FALLBACK ONLY. scripts/world/stronghold.gd places this row from data/config/stronghold.json's `gauntlet` block\". Those fallback rows are still written in the pre-OW5D frame where the Hall's chambers ran along +x; the built Hall runs them along +z from site.at (8,7560). So every finale walk was aimed at open meadow rather than at the thing it names. MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31). RE-AIMED AGAIN 2026-08-31: the elite's own offset moved from (4.5,5) to (2,5) so a fight staged on his front could no longer push a combatant through the east wall -- see data/config/stronghold.json's gauntlet entry for the measurement."
     },
     {
       "id": "S10a-43",
@@ -540,36 +554,15 @@
     {
       "id": "S10a-46",
       "title": "fight the elite",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 44,
-        "settle_frames": 30
+        "budget_frames": 15000,
+        "switch_below": 0.35,
+        "gap_frames": 18,
+        "until_flag": "defeated_stronghold_elite"
       },
-      "expected": "Section E.1 per-fight record"
-    },
-    {
-      "id": "S10a-47",
-      "title": "switch pilot",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "CB-06: target_on_screen has to hold at every switch"
-    },
-    {
-      "id": "S10a-48",
-      "title": "keep fighting",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 30,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Section E.1 per-fight record. Keeper Hald fields three creatures of three different types -- Galecrest L18, Burrowback L19, Duskhush L19 -- and is the hardest fight before the Warden. His defeat flag also closes objective 23/27, `fight_through_the_hall`.",
+      "_comment_rewritten": "REWRITTEN, GATE-F-LEG-S10AB 2026-08-31, from a run of counted `combat_quick` presses with `party_cycle` sprinkled between them to a single predicate-driven `fight_until_resolved`. The counted form was wrong in principle and measurably wrong in practice. In principle: a fight's length is a function of both levels, the type chart and a +/-10% roll per hit, none of which is knowable when a step-script is written -- the same argument the schema already makes for `advance_dialogue_until_closed` ('by predicate, never by a press count') and for `focus_item` ('a press count is only right for one arrangement of the bag'). In practice, across three runs of this segment: a water pilot against a water defender spent every press budgeted for the courtyard's THREE creatures on its first one (46.8 s for 247 HP); the switch presses then landed mid-round rather than between rounds and were refused by the commitment guard; and each fight was finally lost to a single faint with three untouched creatures still on the belt, because `encounter_director.gd::_on_trainer_round_ended()` ends the whole battle when the PILOTED creature falls. The action presses the same two production verbs -- quick attack, and LB when the pilot is spent -- reading the fight's own state between presses. It never opens the satchel, so a fight won under it is won on levels, types and the belt."
     },
     {
       "id": "S10a-49",

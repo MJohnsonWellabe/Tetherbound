@@ -283,9 +283,22 @@ func _walk_in_from_the_entrance() -> void:
 	var entrance: Vector3 = _hold.call("marker", "entrance")
 	var first: Vector3 = _hold.call("marker", "outer_works")
 	await _put_down(entrance + Vector3(0.0, 1.5, 0.0))
-	await _walk_toward(first, 12.0)
+	# 1400 frames, not the default 700: at this walker's 4 m/s that is 93 m
+	# against a 53.2 m causeway, so the budget is no longer what decides the
+	# result. See `_walk_toward`'s own note.
+	await _walk_toward(first, 4.0, 1400)
 	var short := _player.global_position.distance_to(first)
-	if short > 14.0:
+	# 6 m, not 14. GATE-F-LEG-S10AB, 2026-08-31: the Outer Works is 24 m deep,
+	# and its mouth wall sits 13.2 m from the chamber's own centre -- so a
+	# 14 m tolerance passes a player who never got through the doorway at all.
+	# That is not hypothetical. The approach ramp reached floor height one wall
+	# thickness too far in, leaving a 0.34 m riser across the mouth, and S10a's
+	# own walk measured the player pinned at 13.6 m from this same point,
+	# oscillating along the outside of the wall for about a hundred seconds of
+	# play. 13.6 is inside 14.0, so this check passed the entire time the front
+	# door was effectively shut. 6 m is comfortably inside the room and still
+	# leaves the walker its own slack.
+	if short > 6.0:
 		_fail("walking in from the entrance never reached the Outer Works (%.1fm short)" % short)
 	else:
 		print("walked in from the entrance; %.1fm from the Outer Works' centre" % short)
@@ -463,6 +476,28 @@ func _pull_the_lever() -> void:
 	if not bool(prompt.get("enabled")):
 		_fail("the machine is still refused with the Warden beaten; the legendary can never be freed")
 		return
+	# Ask the prompt for a REAL offer from where the player is actually standing,
+	# before activating it.
+	#
+	# GATE-F-LEG-S10AB, 2026-08-31. This beat used to go straight from the
+	# `enabled` flag to `interaction_activate()`, which is a call no player can
+	# make: it skips the distance entirely. So this test proved the Warden gate
+	# and never once proved the button could be pressed — and it could not.
+	# `stronghold.json`'s `machine_foot` mark sat at the chamber centre, which is
+	# the machine's own axis, inside a base collider of radius 5.6, while the
+	# prompt's radius is 4.2. 5.6 > 4.2: there was nowhere in the room a player
+	# could stand and be offered it, and freeing the legendary — objective 25/27,
+	# the chapter's second-to-last beat — was unreachable in the shipped build.
+	# Measured in S10b: the walk stopped 7.2 m short against the machine's face.
+	var offer: Dictionary = prompt.call("interaction_offer", _player.global_position)
+	if offer.is_empty():
+		_fail(("standing %.1f m from the machine control, the player is offered nothing. "
+			+ "The lever is in the room and out of reach.")
+			% _player.global_position.distance_to(prompt.global_position))
+		return
+	print("  machine control offered at %.1f m: '%s'" % [
+		_player.global_position.distance_to(prompt.global_position),
+		str(offer.get("label", ""))])
 	prompt.call("interaction_activate")
 
 	for i in SEQUENCE_FRAMES:
@@ -914,9 +949,14 @@ func _gauntlet_body(id: String) -> Node3D:
 ## Same direct-drive technique smoke_stronghold/smoke_warrens document: the
 ## controller's own `_physics_process` is suspended for the push, because two
 ## `move_and_slide()` calls a frame with two velocities is a race.
-func _walk_toward(target: Vector3, stop: float) -> void:
+## `budget` overrides WALK_FRAMES for a walk that is simply longer than the
+## default covers. GATE-F-LEG-S10AB: WALK_FRAMES is 700 and this walker moves at
+## 4 m/s, so it can cover 46.7 m — and the causeway from `entrance` to the Outer
+## Works' centre is 53.2 m. The walk-in was running out of budget several metres
+## short and the old 14 m tolerance passed it anyway.
+func _walk_toward(target: Vector3, stop: float, budget: int = WALK_FRAMES) -> void:
 	_player.set_physics_process(false)
-	for i in WALK_FRAMES:
+	for i in budget:
 		var to := target - _player.global_position
 		to.y = 0.0
 		if to.length() <= stop:
