@@ -48,3 +48,57 @@ envelope at all. It is not a finding of this run.
 ## Run journal
 
 (entries appended as the chain executes)
+
+### S01 — Boot & front door
+`exit 0 · 13 PASS · 0 FAIL · 0 SKIP · complete=true · 277 s wall`
+14 steps ran, one prescribed frame (`GF-01-TITLE-01`) DELEGATED to S01C and
+recorded as a debt. 362 route rows.
+
+### S02 — Opening
+`exit 0 · 78 PASS · 3 FAIL · 0 SKIP · complete=true · 8 delegated`
+No derail, no harness errors.
+
+**CAP-1 does not reproduce.** This is the segment that stranded capstone 1, and
+the two things that made that unrecoverable are both absent here. From the
+telemetry:
+
+```
+t=231.48 combat_start  my_hp 117.6   opponent bramblebun 106.2
+t=256.07 catch_throw   my_hp  53.0   opponent  66.2   phase absorb
+t=260.27 catch_result                                 phase verdict
+t=262.82 combat_end
+```
+
+and from `saves/S02-exit.json`, which is what the rest of the chapter chains
+from:
+
+| | capstone 1 | this run |
+|---|---|---|
+| party | 1 creature, fainted | **2 creatures, both `fainted: false`** |
+| inventory | `orb_basic x11`, nothing else | `orb_basic x12`, **`revive x2`** |
+
+The restored `give:revive:2` (fix item 4) is present in a real production save
+produced by real play, and the starter finished the tutorial fight up rather
+than down. The wild catch succeeded.
+
+#### The three FAILs, recorded not diagnosed
+
+| step | expected | actual |
+|---|---|---|
+| `S02-43h` aim again (throw 4) | `input_context=combat_aim` before anything is thrown | `3 x interact did not reach it; last saw input_context=world` |
+| `S02-59` the segment actually walked | `>= 150.0 m` | `147.2 m` |
+| `S02-60` the 2 Hz trace ran throughout | `>= 900` rows | `574` rows |
+
+One fact the operator can state without diagnosing, because it is a pair of
+timestamps: `S02-43h` failed at **t=262.80** and `combat_end` fired at
+**t=262.82** — the fight was over and the bramblebun already caught when the
+step asked the aim to arm for a fourth throw. The last event of the segment is
+at t=294.43 play seconds, and 294.43 s x 2 Hz is ~589 rows against the 574
+recorded and the 900 asserted, so `S02-60`'s floor wants roughly 450 play
+seconds of segment.
+
+Whether the floors in `S02-59`/`S02-60` are calibrated against a longer
+worst-case catch sequence than this run needed is **Fable's Phase B call**, not
+the operator's. Severity candidate: QUALITY (rig-side), recorded for Phase B.
+The three FAILs are carried as FAILs regardless — §J forbids skipping a failed
+step silently, and none of them stopped the segment or corrupted the handoff.
