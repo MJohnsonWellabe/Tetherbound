@@ -361,13 +361,33 @@ func is_open() -> bool:
 ## GATE-F-LEG-S10CDE. One `severed_spokes.gd` failsafe volume per id in
 ## `gorge_carve_ids`, reading each entry's own `carve` straight out of
 ## `terrain_playground.json`'s `crossings[]` -- see that var's own comment for
-## why nothing else in the game already does this for these four. Recovery
-## road is a two-point stub, `[carve's own centre, this gate's own position]`
-## -- `_recovery_point` (severed_spokes.gd) only needs a "back" direction and
-## a point to walk forward from until clear of the carve's rim, and the
-## gate's own position is the one place every one of these four carves
-## exists to guard, so it is always a safe, meaningful landing regardless of
-## which of the four caught the fall.
+## why nothing else in the game already does this for these four.
+##
+## Recovery road is `[this gate's own position, carve's own centre]` --
+## `_recovery_point` (severed_spokes.gd) reads `road[-1]` ("last", where it
+## starts walking FROM) and `road[-2]` ("prev", the direction it walks
+## TOWARD, "back" = normalize(prev-last)) and steps from `last` toward
+## `prev` until clear of the carve's own rim. So `last` must be the point
+## NEAR the hazard and `prev` the point further into safety, the same shape
+## `gated_crossing.gd::_hang_failsafe`'s own two-point `village_side` stub
+## uses (its own `road[1]` sits close to the gap, `road[0]` well behind it).
+## Second thing gotten wrong on the first pass, found by the same probe:
+## using the GATE as the safe-direction target at all. `sigil_gate_gorge_
+## west`/`_east` are authored with `axis_deg` PERPENDICULAR to the gate's
+## own approach on purpose (their own `_why` says so directly) -- which
+## means the direction FROM the carve's centre TO THE GATE runs almost
+## exactly ALONG the trench's own axis, not across it, so walking that way
+## barely changes the one coordinate (`across`) the clearance check actually
+## reads. Measured: `recover_to` for `sigil_gate_gorge_west` landed at
+## (28.5,7380.9) after "clearing", which is still inside `sigil_gate_gorge_
+## west`'s own carve by the exact same (u,v) test `_prepared_carve_depth`
+## uses. Walking straight out along `across` -- the same axis the clearance
+## test itself measures -- is both correct and the shortest possible escape,
+## so the "prev" point is a virtual reference in that direction rather than
+## anywhere a player is meant to end up: `_recovery_point` only reads it for
+## direction, and the loop keeps stepping until the REAL clearance check
+## passes, so an approximate direction is fine as long as it points the
+## right way.
 func _hang_gorge_failsafes(world: Node3D, at: Vector2) -> void:
 	var config := _load_terrain_config()
 	var by_id: Dictionary = {}
@@ -387,6 +407,16 @@ func _hang_gorge_failsafes(world: Node3D, at: Vector2) -> void:
 		var centre := Vector2(float(centre_raw[0]), float(centre_raw[1]))
 		if centre.is_equal_approx(at):
 			continue
+		var axis := Vector2.RIGHT.rotated(deg_to_rad(float(carve.get("axis_deg", 0.0))))
+		var across := Vector2(-axis.y, axis.x)
+		# Whichever sign of `across` points more toward this gate's own side
+		# -- a cheap, good-enough heuristic for "the side with an actual road
+		# on it" without hand-picking a sign per carve. `_recovery_point`
+		# only uses this for direction (see the comment above); a virtual
+		# point far out along it is not itself the landing spot.
+		if across.dot(at - centre) < 0.0:
+			across = -across
+		var away := centre + across * 200.0
 		var spokes: Node3D = SEVERED_SPOKES.new()
 		spokes.name = "GorgeFailsafe_%s" % id
 		# See `gated_crossing.gd::_hang_failsafe`'s own comment on why this
@@ -396,7 +426,7 @@ func _hang_gorge_failsafes(world: Node3D, at: Vector2) -> void:
 		# `rotation.y` (set in `build()` above) would otherwise displace it.
 		spokes.top_level = true
 		add_child(spokes)
-		var road := [[centre.x, centre.y], [at.x, at.y]]
+		var road := [[away.x, away.y], [centre.x, centre.y]]
 		spokes.call("_add_carve_failsafe", world, spokes, carve, road)
 
 
