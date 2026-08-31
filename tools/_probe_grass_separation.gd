@@ -53,9 +53,17 @@ func _run() -> void:
 		print("headless has no renderer; run under xvfb-run")
 		quit(1)
 		return
+	var extra_heights: Array[float] = []
+	var skip_baseline := false
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			_out_dir = arg.substr(6)
+		elif arg.begins_with("--extra-heights="):
+			for token in arg.substr(16).split(","):
+				if token.strip_edges() != "":
+					extra_heights.append(token.strip_edges().to_float())
+		elif arg == "--skip-baseline":
+			skip_baseline = true
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 
 	_world = (load(SCENE) as PackedScene).instantiate()
@@ -94,12 +102,28 @@ func _run() -> void:
 			await physics_frame
 		print("grass field re-bound to the probe camera")
 
-	for variant: Dictionary in [
-		{"tag": "A-0.78-norim", "height": 0.78, "rim": 0.0},
-		{"tag": "B-0.96-norim", "height": 0.96, "rim": 0.0},
-		{"tag": "C-0.78-rim", "height": 0.78, "rim": 0.22},
-		{"tag": "D-0.96-rim", "height": 0.96, "rim": 0.22},
-	]:
+	var variants: Array[Dictionary] = []
+	if not skip_baseline:
+		variants.append({"tag": "A-0.78-norim", "height": 0.78, "rim": 0.0})
+		variants.append({"tag": "B-0.96-norim", "height": 0.96, "rim": 0.0})
+		variants.append({"tag": "C-0.78-rim", "height": 0.78, "rim": 0.22})
+		variants.append({"tag": "D-0.96-rim", "height": 0.96, "rim": 0.22})
+
+	# SHIPPED: whatever height/field_rim species.json currently carries for
+	# this species, read live rather than hardcoded -- the gap the audit
+	# addendum named (the two baseline heights above never test the real
+	# shipped value).
+	var species := load("res://scripts/creatures/creature_species.gd")
+	var live_table: Dictionary = species.call("placeholder", SPECIES_ID)
+	var shipped_height: float = float(live_table.get("height", 0.78))
+	var shipped_rim: float = float(live_table.get("field_rim", 0.0))
+	variants.append({
+		"tag": "SHIPPED-%.2f" % shipped_height, "height": shipped_height, "rim": shipped_rim,
+	})
+	for h in extra_heights:
+		variants.append({"tag": "TEST-%.2f" % h, "height": h, "rim": shipped_rim})
+
+	for variant: Dictionary in variants:
 		await _shoot(variant, look_at)
 
 	print("")
