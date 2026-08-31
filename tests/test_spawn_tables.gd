@@ -303,16 +303,18 @@ func test_the_plan_only_ever_touches_clusters_that_opted_in() -> void:
 
 
 func test_a_rolled_cluster_keeps_its_position_count_and_order() -> void:
-	# The plan carries species (and optionally a gate and an alpha) and nothing
-	# else. Position, headcount and `order` are the inputs the cluster's own
-	# seeded rng derives scatter, level, IVs, traits and the shiny draw from, and
-	# a roll that moved any of them would relevel and reroll the chapter.
+	# The plan carries species (and optionally a gate, an alpha and -- Audit
+	# B3 -- the tier the species was drawn at, so presentation can read it)
+	# and nothing else. Position, headcount and `order` are the inputs the
+	# cluster's own seeded rng derives scatter, level, IVs, traits and the
+	# shiny draw from, and a roll that moved any of them would relevel and
+	# reroll the chapter.
 	for world_seed: int in SEEDS:
 		for order: Variant in _plan(world_seed):
 			var rolled: Dictionary = _plan(world_seed)[order]
 			for key: Variant in rolled:
-				assert_true(str(key) in ["species", "alpha", "time", "weather"],
-					"the roll plan carried '%s' for order %s; it may only decide species, gate and alpha" % [
+				assert_true(str(key) in ["species", "tier", "alpha", "time", "weather"],
+					"the roll plan carried '%s' for order %s; it may only decide species, tier, gate and alpha" % [
 						str(key), str(order)])
 
 
