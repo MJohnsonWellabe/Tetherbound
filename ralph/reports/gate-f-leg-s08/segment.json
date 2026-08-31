@@ -794,9 +794,19 @@
       "title": "let the fight end",
       "action": "wait",
       "args": {
-        "seconds": 10
+        "seconds": 30
       },
-      "expected": "rewards and control return with no stuck modal"
+      "expected": "rewards and control return with no stuck modal -- widened from 10s to 30s after a run where the fight had not actually concluded at 10s (combat_running still true) and the NEXT step (a DIAG teleport into the following leg) fired mid-combat, corrupting position/state for the rest of the run"
+    },
+    {
+      "id": "ISO-33-canary",
+      "title": "the fight has actually ended before moving on",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": false
+      },
+      "expected": "if this ever fails, nothing after it in this segment can be trusted -- the fight is still running and the next steps would act into a live trainer battle"
     },
     {
       "id": "ISO-34",
@@ -1264,9 +1274,19 @@
       "title": "let the fight end",
       "action": "wait",
       "args": {
-        "seconds": 10
+        "seconds": 30
       },
-      "expected": "rewards and control return"
+      "expected": "rewards and control return with no stuck modal -- widened from 10s to 30s after a run where the fight had not actually concluded at 10s (combat_running still true) and the NEXT step (a DIAG teleport into the following leg) fired mid-combat, corrupting position/state for the rest of the run"
+    },
+    {
+      "id": "ISO-43-canary",
+      "title": "the fight has actually ended before moving on",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": false
+      },
+      "expected": "if this ever fails, nothing after it in this segment can be trusted -- the fight is still running and the next steps would act into a live trainer battle"
     },
     {
       "id": "ISO-44",
@@ -1744,9 +1764,19 @@
       "title": "let the fight end",
       "action": "wait",
       "args": {
-        "seconds": 10
+        "seconds": 30
       },
-      "expected": "rewards and control return"
+      "expected": "rewards and control return with no stuck modal -- widened from 10s to 30s after a run where the fight had not actually concluded at 10s (combat_running still true) and the NEXT step (a DIAG teleport into the following leg) fired mid-combat, corrupting position/state for the rest of the run"
+    },
+    {
+      "id": "ISO-54-canary",
+      "title": "the fight has actually ended before moving on",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": false
+      },
+      "expected": "if this ever fails, nothing after it in this segment can be trusted -- the fight is still running and the next steps would act into a live trainer battle"
     },
     {
       "id": "ISO-55",
