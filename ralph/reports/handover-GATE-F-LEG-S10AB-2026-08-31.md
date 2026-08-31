@@ -1,6 +1,7 @@
 # GATE-F-LEG-S10AB — S10a and S10b, driven in isolation from a hand-built entry
 
-**Lane:** `ralph/GATE-F-LEG-S10AB`. **Date:** 2026-08-31.
+**Lane:** `ralph/GATE-F-LEG-S10AB`, branched from `main` and merged with
+`ralph/GATE-F-FOUNDATION` once that branch appeared. **Date:** 2026-08-31.
 **Run directory:** `ralph/reports/gate-f-run-S10AB-2026-08-31/`.
 
 ## The honesty rule, stated once and up front
@@ -32,7 +33,10 @@ Both segments now run clean end to end, **zero FAIL verdicts in either**.
 | segment | steps | verdict | handoff |
 |---|---|---|---|
 | S10a — Hall entry → gauntlet → recovery → elite | 62 | 0 FAIL | `S10a/saves/S10a-exit.json` |
-| S10b — Warden → legendary → release ceremony | 63 | 0 FAIL | `S10b/saves/S10b-exit.json` |
+| S10b — Warden → legendary → release ceremony | 66 | 0 FAIL | `S10b/saves/S10b-exit.json` |
+
+Both runs above were taken on this branch's head **after** the merge with
+`ralph/GATE-F-FOUNDATION`, so the evidence comes from the code that ships.
 
 The handoff between them is a real save/load through the production Save tab and
 the title-screen Load path, as §B requires — not an in-memory continuation. S10b
@@ -40,12 +44,12 @@ seeds from S10a's own written slot and boots fresh.
 
 **Given a fair start, both fights complete cleanly.** The gauntlet:
 
-- patrol (Trailpup L15, Burrowback L16) — 47 quick attacks, no handover needed;
-- courtyard (Mosshell L16, Reedwing L17, Mudsnout L17) — 70 quick, 1 handover;
-- elite (Galecrest L18, Burrowback L19, Duskhush L19) — 67 quick, 1 handover.
+- patrol (Trailpup L15, Burrowback L16) — 48 quick attacks, no handover needed;
+- courtyard (Mosshell L16, Reedwing L17, Mudsnout L17) — 67 quick, 1 handover;
+- elite (Galecrest L18, Burrowback L19, Duskhush L19) — 65 quick, 1 handover.
 
 The Warden — five creatures, Burrowback L16 through a Tuskroot L20 ace — took
-107 quick attacks and 2 handovers, and `defeated_warden` was set. Then the
+110 quick attacks and 2 handovers, and `defeated_warden` was set. Then the
 machine was shut down, the legendary freed, the roster ceremony taken on a full
 belt, and the tether machinery failed: §28's order, complete, in order.
 
@@ -86,15 +90,19 @@ to level 22". The data says the highest enemy in the building is the Warden's
 ### 1. The load path never restored a creature's species base stats — SHIP
 
 The one defect the finale could not be played around, and it is not confined to
-the finale.
+the finale. **This lane found and fixed it independently; the coordinator's
+`ralph/GATE-F-FOUNDATION` landed a fix for the same bug (GAME-F4) while this
+lane was running, and GAME-F4's mechanism is the one that ships.** This
+branch's duplicate was removed in the merge. What follows is the measurement,
+which is this lane's own contribution to it.
 
 `creature_instance.gd::_apply_level_stats()` recomputes max_hp, attack and
 defence from `base_hp`/`base_attack`/`base_defence`, deliberately — its own
 comment explains why it must never scale `max_hp` from `max_hp`.
-`save_game.gd` has **never written those three fields to a slot and never read
-them back**. A creature rebuilt by `_array_to_party()` therefore carried the
-class defaults of 1.0, while its `max_hp` came back from the file looking
-perfectly healthy.
+`save_game.gd` **never wrote those three fields to a slot and never read them
+back**. A creature rebuilt by `_array_to_party()` therefore carried the class
+defaults of 1.0, while its `max_hp` came back from the file looking perfectly
+healthy.
 
 Nothing showed until the creature LEVELLED. Measured in the Hall on the frame
 the elite's first creature fell and the victory XP landed:
@@ -112,16 +120,10 @@ only ever in a session that had loaded a save, which is every session after the
 first. The same fingerprint is sitting unrecognised in the 2026-08-28 run's own
 `S09-exit.json`: a level-4 creature with `max_hp` 1.18.
 
-**Fixed** by restoring the baseline from the CATALOGUE on load
-(`creature_instance.gd::restore_species_baseline()`), not by adding three fields
-to the save format. Base stats are species-owned; reading them back repairs
-every save that already exists, with no version bump and no migration, and it
-means a species retune reaches creatures the player already owns. A species the
-catalogue no longer knows leaves the file's numbers alone.
-
-Two regression tests in `test_save_format.gd`. Every existing round-trip test in
-that file passed throughout this bug's life, because none of them levelled a
-creature after loading it.
+GAME-F4 writes the three fields going forward and falls back to `species.json`
+for any save that lacks them. One regression test from this lane is kept beside
+GAME-F4's own: that one proves the fields make the round trip, this one drives
+the production `gain_xp` path the fights actually call, from a loaded creature.
 
 ### 2. The Hall's front door had a 0.34 m riser in it — SHIP
 
@@ -287,6 +289,22 @@ probabilistic happens and both endings leave exactly five. Restored to
 `equals: 5`, which RIG-15's own note reserves for "a caller that genuinely wants
 exact equality".
 
+**The two interior doorways were walked past rather than lined up with.**
+`stronghold.json`'s passages give the tether_approach → warden_arena door a
+width of **3.4 m** — the narrowest opening in the building, and it is the one
+into the boss arena — centred on world x 8, while the elite fight can leave the
+player anywhere in a 16 m-wide room. Measured across two runs from two different
+S10a exits: from x=5.0 the walk to the Warden went straight through; from x=4.5
+it did not, and the player spent all 3,000 frames sliding along the inside of
+the north wall between x=0.4 and x=3.3, twenty-six metres short, taking the
+whole segment down with it. The protocol's walker steers straight at its target
+and does not route around interior geometry, so a doorway narrower than the
+room's own spread has to be lined up with. Both interior passages now get a
+waypoint on their own centreline first — which is what a player does on sight of
+a door, and it makes the segment deliberate instead of dependent on where the
+last fight happened to end. Recorded as an observation as well: a 3.4 m door is
+the tightest thing between the player and the Warden.
+
 **The segment walked into its own save handoff with a conversation open.** §28's
 last beat — the tether machinery failing — starts the moment the roster settles,
 and nothing played it out, so `open_menu` reported "map did not open the pause
@@ -310,6 +328,16 @@ fixing at the coordinator level.
 
 ## Observations, not fixed
 
+- **GAME-F4 does not repair a save that the bug already corrupted.** It restores
+  the BASE stats and leaves the derived ones as the file has them, so a save
+  written by a build carrying the bug — the 2026-08-28 run's own `S09-exit.json`
+  holds a level-4 creature with `max_hp` 1.18 — comes back at its collapsed
+  maximum and stays there until the next level-up recomputes it, which at 2 HP
+  it may never reach. This lane's own version recomputed the derived stats on
+  load, which repairs those saves and is a no-op for healthy ones; it was
+  dropped in favour of one mechanism rather than two. Whether that residual is
+  worth closing is the foundation lane's call, and it is stated here so the
+  choice is a choice.
 - **The legendary is enormous relative to the team it joins.** Veridian's
   authored `base_hp` is 420 against a roster of 96–130, so the freed Stag lands
   on the belt at L22 with **949 max HP** beside party members at 231–286. That
