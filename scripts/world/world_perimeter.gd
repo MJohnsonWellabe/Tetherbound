@@ -375,6 +375,19 @@ var _spawn: Vector3 = Vector3.ZERO
 ## comment for why this exists and what it does not fix.
 var _last_safe_position: Vector3 = Vector3.ZERO
 var _has_last_safe_position: bool = false
+## Seconds since `_last_safe_position` was last refreshed. Only trusted below
+## `_LAST_SAFE_MAX_AGE_S` -- see `_on_kill_volume_entered`'s own comment for
+## the regression this stops: `tests/smoke_traversal.gd`'s `_check_kill_volume`
+## deliberately teleports the player into the kill band as its own test, with
+## no walking in between, and a STALE ground reading from several checks
+## earlier (in that run, the far end of `_check_perimeter`'s cap-walk, 7+ km
+## from the actual test) is a worse recovery than `_spawn` -- it is not where
+## anything relevant just happened, only the last place that happened to be
+## true. A real in-play glitch (the platform-velocity case this was built
+## for) refreshes this every physics frame right up to the moment it fires,
+## so the age check costs that path nothing.
+var _last_safe_age_s: float = 0.0
+const LAST_SAFE_MAX_AGE_S := 3.0
 var _wobble_noise: FastNoiseLite = null
 var _tether_tint: Color = Color(0.2, 0.133, 0.157)
 var _edges: Array = []
@@ -1528,12 +1541,15 @@ const KILL_PLANE_HALF_Z := (WORLD_Z_SOUTH - WORLD_Z_NORTH) * 0.5 + KILL_PLANE_MA
 ## `on_floor()` is read straight off the body rather than re-derived, the
 ## same "trust the physics server's own answer" the rest of this class
 ## already follows for collision.
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if _player == null or not is_instance_valid(_player):
 		return
 	if _player.is_on_floor() and _player.global_position.y > KILL_PLANE_Y + 10.0:
 		_last_safe_position = _player.global_position
 		_has_last_safe_position = true
+		_last_safe_age_s = 0.0
+	elif _has_last_safe_position:
+		_last_safe_age_s += delta
 
 
 func _build_kill_volume() -> void:
@@ -1574,14 +1590,30 @@ func _build_kill_volume() -> void:
 ## few centimetres of correction -- the walk simply continues -- while still
 ## catching a genuine fall off the map (nothing here was ever on solid
 ## ground) by falling back to `_spawn` exactly as before.
+##
+## `_last_safe_age_s` guards a second, measured regression: `tests/
+## smoke_traversal.gd`'s `_check_kill_volume` deliberately teleports the
+## player straight into this volume as its own test, with no walking in
+## between, so the only "last safe" reading on record was whatever the
+## PREVIOUS, unrelated check left behind -- in that run, the far end of
+## `_check_perimeter`'s cap-walk, 7+ km from anything the kill-volume test
+## itself was about. Recovering there is not a local correction, it is a
+## second teleport to a stale, irrelevant place, and it cascaded into the
+## South Bridge check finding the player "entombed" and unsticking to the
+## same stale spot next. A real in-play glitch never has this problem: the
+## position is refreshed every physics frame right up to the moment the
+## kill volume fires, so its age is ~0. Only a reading younger than
+## `LAST_SAFE_MAX_AGE_S` is trusted; anything older falls back to `_spawn`,
+## same as before this fix existed.
 func _on_kill_volume_entered(body: Node3D) -> void:
 	if body != _player:
 		return
-	var recover_to := _last_safe_position if _has_last_safe_position else _spawn
+	var use_last_safe := _has_last_safe_position and _last_safe_age_s <= LAST_SAFE_MAX_AGE_S
+	var recover_to := _last_safe_position if use_last_safe else _spawn
 	print(("[world_perimeter_corridor] player fell below the world at %.0f, %.0f, %.0f -- "
 		+ "returning to %s") % [
 		body.global_position.x, body.global_position.y, body.global_position.z,
-		"last safe ground" if _has_last_safe_position else "spawn"
+		"last safe ground" if use_last_safe else "spawn"
 	])
 	body.global_position = recover_to
 	if body is CharacterBody3D:
