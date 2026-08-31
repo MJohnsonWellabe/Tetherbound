@@ -158,3 +158,20 @@
   `S10e-98g`/`S10e-99` already use for the village gate. Budgets
   rebalanced 12000 -> 6000/6000 now that each leg covers only its own
   short distance. Re-running S10e fresh from the same S10d-exit seed.
+
+## S10e, restart 6 -- clean
+
+- **Result:** `INVENTORY.json`: `complete: true`, 37/37 steps passed, 0
+  fails. Every fix from restarts 1-5 held together on the same run: the
+  gate-aimed village leg, Tam-targeted greeting, predicate-driven dialogue
+  advance for both NPCs, and the door-then-marker Grandpa approach.
+  `meadows_acknowledged` set at distance_m 1762.63 (Grandpa's line, the
+  last of the five post-win villager/Grandpa conversations able to set
+  it); final distance_m 1807.74, comfortably above the recalibrated 1300 m
+  floor. `S10-exit.json` written: version 16, day 9, party of 5 (Bramble
+  fainted at 0 hp from S10c's inherited wild encounter, the other four
+  untouched), 38 progression flags including `meadows_acknowledged`,
+  final position (-22.72,1.32,-15.14) -- inside Grandpa's house, at his
+  own marker. This is the lane's final, non-superseded S10e -- see
+  `ralph/reports/handover-GATE-F-LEG-S10CDE-2026-08-31.md` for the full
+  lane report.
