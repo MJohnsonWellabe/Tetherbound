@@ -1,0 +1,28 @@
+{
+  "_comment": "Gate F leg S03 run, NOT a canonical Gate F run. Own RUN_METADATA.json written for this run directory specifically so operator_harness.gd's capture pre-flight (CD-8b) reads THIS honest logic-mode declaration instead of falling through to the stale global ralph/reports/gate-f-candidate/RUN_METADATA.json -- which was frozen 2026-08-27 at f082bdf6, claims 'X11 under xvfb-run' with no `lanes` block, and therefore binds every segment including a legitimately headless logic lane. This is the mechanism _freeze_display_claim() documents ('a run that wants a logic lane must SAY SO IN THE FREEZE RECORD BEFORE THE RUN'), declared before step 1 and not amended mid-run, and it is the same shape ralph/reports/gate-f-buildplace-validation used. This file touches nothing shared; it exists only inside this lane's own run directory.",
+  "candidate_sha": "51c95f01adc3b37a2a93f6faa98676bd942989ec",
+  "candidate_ref": "ralph/GATE-F-LEG-S03",
+  "run_dir": "ralph/reports/gate-f-leg-s03",
+  "purpose": "Drive S01 -> S02 -> S03 for real on the leg's own fixes (GAME-F2 level pin restored, GAME-F1 harvest nodes moved inside the fence, S03.json rebuilt against the shipped five-creature / one-camp / one-bed configuration) on top of ralph/GATE-F-FOUNDATION's GAME-F4 fix, and produce a genuinely earned S03-exit. S01 and S02 are re-run from scratch rather than seeded from the existing gate-f-full S02-exit.json, because that save is a PRODUCT of GAME-F2: it carries Moss at 45.15 of 117.6 HP (38%) and a level-5 caught bramblebun, both consequences of the unpinned practice fight. An earned S03-exit needs an earned entry.",
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "path": "~/godot-bin/godot",
+    "kind": "linux editor build, installed per .github/workflows/ci.yml"
+  },
+  "display_server": "headless (logic lane, no display server -- honest, matches this process)",
+  "renderer": "none (logic lane, no rendering driver; --headless WITH one hangs forever per conventions)",
+  "lanes": {
+    "logic": {
+      "display_server": "headless (logic lane, no display server)",
+      "renderer": "none (logic lane)"
+    }
+  },
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "fresh user:// dir; S01 wipes saves at step 2",
+  "date": "2026-08-31",
+  "operator": "claude-agent (lane ralph/GATE-F-LEG-S03)",
+  "free_build": false,
+  "_comment_captures": "Every segment run here declares evidence_lane=logic and delegates its prescribed GF- frames to its C lane. No capture is taken in this run and none is claimed; the C lanes are not run here.",
+  "owner_only_gaps": "Unchanged from section K: device frame rate, GPU frame time, VRAM, thermals, real controller feel, handheld legibility, first-time-human navigation and pacing, audio, Windows export identity."
+}
