@@ -124,7 +124,10 @@ func _build_visual() -> void:
 	# actually answers "is there something here to pick up right now" -- and
 	# pickup_glow.gd tracks that, so a depleted node stops glowing and a
 	# respawned one starts again with no extra wiring on either side.
-	PICKUP_GLOW.attach(_visual, _item_colour())
+	# OWNER PLAYTEST 2026-08-30B item 3. `_item_kind()` is what lets one node
+	# type glow for a buried potion and stay dark for a wood/stone/fiber
+	# deposit -- see `pickup_glow.gd::is_glow_kind()`.
+	PICKUP_GLOW.attach(_visual, _item_colour(), -1.0, 1.0, _item_kind())
 
 
 ## MAT-BLOCKOUT. The Old Quarry's rootstone deposits (`Rock_Medium_1/3.gltf`,
@@ -267,6 +270,19 @@ func _item_colour() -> Color:
 		return Color(0.6, 0.5, 0.4)
 	var items: RefCounted = game.get("items")
 	return items.call("colour", _item_id) if items != null else Color(0.6, 0.5, 0.4)
+
+
+## `item_db.gd::kind()` for whatever this node hands out -- `"resource"` for
+## wood/stone/fiber/rootstone/ironwood, `"consumable"`/`"gear"` for the
+## potions and orbs the same tutorial band also seeds. Empty (glow-eligible
+## by `pickup_glow.gd::is_glow_kind()`'s default) if there is no Game autoload
+## to ask, same fallback shape as `_item_colour()`.
+func _item_kind() -> String:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return ""
+	var items: RefCounted = game.get("items")
+	return str(items.call("kind", _item_id)) if items != null else ""
 
 
 func _on_gathered(equipped_tool: Variant = null) -> void:

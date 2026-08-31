@@ -79,11 +79,13 @@ func setup(spec: Dictionary) -> void:
 	add_child(_prompt)
 
 	add_child(_build_visual())
-	# OP-0830-3. A felled pile is the single most grass-lost pickup in the game:
-	# it is created wherever the tree happened to fall, at ankle height, in
-	# whatever cover is already there. Same shared treatment as every other
-	# pickup -- see scripts/world/pickup_glow.gd.
-	PICKUP_GLOW.attach(self, _pile_colour())
+	# OWNER PLAYTEST 2026-08-30B item 3: a felled pile is always a `"resource"`
+	# item (wood, fiber, stone/rootstone/ironwood -- see `vegetation.gd`'s
+	# `harvest_item`), which is exactly the bulk-gatherable case the owner
+	# asked to stop glowing. `pickup_glow.gd::is_glow_kind()` is what turns
+	# this into "the pile itself is the affordance, same as every standing
+	# tree and rock outcrop" rather than a per-caller special case here.
+	PICKUP_GLOW.attach(self, _pile_colour(), -1.0, 1.0, _pile_kind())
 
 
 ## Read-only identity for a controller route that must collect the specific
@@ -288,6 +290,17 @@ func _pile_colour() -> Color:
 		return RUBBLE_COLOUR
 	var items: RefCounted = game.get("items")
 	return items.call("colour", _item_id) if items != null else RUBBLE_COLOUR
+
+
+## `item_db.gd::kind()` for the pile's own item, for the shared highlight's
+## glow-eligibility gate. Empty (glow-eligible by default) if the item
+## database is unavailable, the same fallback shape `_pile_colour()` uses.
+func _pile_kind() -> String:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return ""
+	var items: RefCounted = game.get("items")
+	return str(items.call("kind", _item_id)) if items != null else ""
 
 
 func _ready() -> void:
