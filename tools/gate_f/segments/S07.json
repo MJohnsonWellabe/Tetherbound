@@ -449,6 +449,17 @@
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
+      "id": "S07-34c",
+      "title": "rotate to a fresh ally before Orrin",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "a level-headed five-creature roster does not run the same pilot through every fight on the ladder",
+      "observation": "GATE-D3-STAMINA. Measured on this run's own telemetry (before this fix): Hess and Orrin alone wore the deployed ally (Moss, L13) from 180.6hp to 0 by the end of Dell's fight, three real trainer fights on one creature with nothing between them -- and the captain never got a healthy pilot at all, which is why relay_captain_defeated stayed unset even once his fight eventually engaged. Four real fights (Hess, Orrin, Dell, Vance) against a five-creature party is exactly the shape party_cycle exists for; a script that never presses it is not testing the game's own difficulty, it is testing one un-rotated creature's stamina."
+    },
+    {
       "id": "S07-35",
       "title": "challenge Orrin",
       "action": "press",
@@ -575,6 +586,16 @@
       "expected": "the compound's own content joins the POI set"
     },
     {
+      "id": "S07-43c",
+      "title": "rotate to a fresh ally before Dell",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "GATE-D3-STAMINA (S07-34c's own note): the third real fight on the ladder, still on a five-creature roster"
+    },
+    {
       "id": "S07-44",
       "title": "challenge Officer Dell",
       "action": "press",
@@ -653,6 +674,16 @@
       },
       "expected": "Section E.1 CB-04: relay_captain at (352,3757), the band's required fight",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S07-49c",
+      "title": "rotate to a fresh ally before the captain",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "GATE-D3-STAMINA (S07-34c's own note): the band's required fight, and the ladder's fourth real battle in a row -- without this the deployed ally arrives at the hardest of the four already worn from three others"
     },
     {
       "id": "S07-50",
