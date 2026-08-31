@@ -350,19 +350,12 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 		// grazing, ~100m camera stand where each screen pixel already
 		// covers a fraction of a tile). See top-of-file banner.
 		float id_footprint = max(length(id_dd.xy), length(id_dd.zw));
-		if (_d6_debug_footprint) {
-			// R: raw per-tile checker (tile identity/boundary).
-			// G: v1-style edge fade (1=full detile, 0=at a tile edge).
-			// B: v2-style footprint fade (1=full detile, 0=footprint>=HI).
-			vec2 id_frac_dbg = fma(i_pos, vec2(id_scale), -uv_center);
-			float edge_fade_dbg = smoothstep(0.0, 0.12, 0.5 - max(abs(id_frac_dbg.x), abs(id_frac_dbg.y)));
-			float footprint_fade_dbg = 1.0 - smoothstep(DETILE_FOOTPRINT_LO, DETILE_FOOTPRINT_HI, id_footprint);
-			mat.albedo_height = vec4(random(uv_center), edge_fade_dbg, footprint_fade_dbg, 1.0);
-			mat.total_weight = 1.0;
-			return;
-		}
 		float id_detile_fade = 1.0 - smoothstep(DETILE_FOOTPRINT_LO, DETILE_FOOTPRINT_HI, id_footprint);
 		vec2 id_detile = fma(random(uv_center), 2.0, -1.0) * _texture_detile_array[id] * TAU * id_detile_fade;
+		if (_d6_debug_footprint) {
+			// SURGICAL TEST: zero ONLY rotation, unconditionally, keep shift.
+			id_detile.x = 0.0;
+		}
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
 		vec2 id_uv = rotate_vec2(fma(i_uv, vec2(id_scale), -uv_center), id_cs_angle) + uv_center + id_detile.y - 0.5;
@@ -408,6 +401,10 @@ void accumulate_material(const vec3 base_ddx, const vec3 base_ddy, const float w
 		float id_footprint = max(length(id_dd.xy), length(id_dd.zw));
 		float id_detile_fade = 1.0 - smoothstep(DETILE_FOOTPRINT_LO, DETILE_FOOTPRINT_HI, id_footprint);
 		vec2 id_detile = _texture_detile_array[id] * fma(random(uv_center), 2.0, -1.0) * TAU * id_detile_fade;
+		if (_d6_debug_footprint) {
+			// SURGICAL TEST: zero ONLY rotation, unconditionally, keep shift.
+			id_detile.x = 0.0;
+		}
 		vec2 id_cs_angle = vec2(cos(id_detile.x), sin(id_detile.x));
 		// Apply UV rotation and shift around pivot.
 		vec2 id_uv = rotate_vec2(fma(i_uv, vec2(id_scale), -uv_center), id_cs_angle) + uv_center + id_detile.y - 0.5;
