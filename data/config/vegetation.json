@@ -1028,6 +1028,10 @@
         },
         "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf": {
           "Grass": "#8d7f54"
+        },
+        "_comment_wheat_e1_village_daytime": "BACKLOG-E1-VILLAGE-DAYTIME, 2026-08-31. Grass_Wheat joined this layer later (WORLD-GRASS) and was never given the VIS-WORLD round 3 fix above -- it kept inheriting the layer's own general `retint` (e8d89a, the same near-white 0.91 value that round already measured as 'a highlight, not straw' for Wispy). Wheat's own Grass.png UV region samples a considerably more saturated orange/gold texel than Wispy's (its seed heads, not just its stalk), so the same near-white multiply that only over-brightened Wispy left Wheat reading as a small saturated orange mark rather than dry grass -- exactly what a fresh audit pass (ralph/reports/audit/E-2026-08-31.md sec E1) found and flagged as 'an unexplained floating orange spark/flare... likely an orphaned-particle bug' at a stray instance 0.8m from the tournament stand's own eye (14,5). It is not a particle; there is no GPUParticles3D/Sprite3D anywhere near that stand (checked directly against the running scene tree). It is this one placement's isolation and proximity making a real but under-corrected asset colour readable as a UI-adjacent glow instead of a plant. Matched to Wispy_Tall's own darker value with a touch more warmth/gold, since wheat is legitimately more golden than a wispy fan -- keeps the two-species variety VIS-WORLD/WORLD-GRASS built without reintroducing the highlight defect either already-fixed model was measured against.",
+        "res://assets/environment/stylized_nature/Grass_Wheat.gltf": {
+          "Grass": "#9c8a54"
         }
       },
       "clear_radius": 2.0,
