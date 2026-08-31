@@ -1,0 +1,82 @@
+{
+  "blocked": "the freeze record contradicts this process: the freeze record at /home/user/Tetherbound/ralph/reports/gate-f-candidate/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none",
+  "captures": {
+    "absent": 0,
+    "delegated": [
+      "GF-10-RELAY-01",
+      "GF-21-WEATHER-03",
+      "GF-14-COMBAT-04c",
+      "GF-10-RELAY-02",
+      "GF-10-RELAY-03"
+    ],
+    "delegated_to": "S07C",
+    "owes": [],
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": false,
+  "cost": {
+    "frame_cost_s": 0.005911,
+    "reprices": []
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {},
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "logic",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [
+    "capture pre-flight BLOCKER: the freeze record contradicts this process: the freeze record at /home/user/Tetherbound/ralph/reports/gate-f-candidate/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none"
+  ],
+  "preflight": {
+    "allow_no_capture": false,
+    "capture_available": false,
+    "capture_lane": "S07C",
+    "capture_requested": false,
+    "contradiction": "the freeze record at /home/user/Tetherbound/ralph/reports/gate-f-candidate/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none",
+    "delegated_captures": 5,
+    "display_server": "headless",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "X11 under xvfb-run",
+      "from": "/home/user/Tetherbound/ralph/reports/gate-f-candidate/RUN_METADATA.json",
+      "key": "display_server",
+      "lane": "(all lanes; the record declares none)"
+    },
+    "measured_frame_cost_s": 0.005911,
+    "planned_captures": 0,
+    "predicted_frames": 144494,
+    "predicted_segment_cost_s": 854.1,
+    "record_baseline_hz": 0.0,
+    "verdict": "BLOCKER",
+    "why": "the freeze record contradicts this process: the freeze record at /home/user/Tetherbound/ralph/reports/gate-f-candidate/RUN_METADATA.json says display_server=X11 under xvfb-run; this process has none"
+  },
+  "run_id": "gate-f-run-LEG-S07-20260831T000946Z",
+  "segment": "S07",
+  "sha": "453107fb247d2207352d6fc5024cd47804364932",
+  "steps": {
+    "delegated": 0,
+    "fail": 0,
+    "pass": 0,
+    "ran": 0,
+    "refused": 0,
+    "skipped": 0,
+    "total": 106
+  },
+  "uncommittable": []
+}
