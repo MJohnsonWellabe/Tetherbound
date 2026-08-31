@@ -526,6 +526,22 @@
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
+      "id": "S07-40g",
+      "title": "walk to the compound gate",
+      "action": "move_to",
+      "args": {
+        "at": [
+          342.1,
+          3771.6
+        ],
+        "budget_frames": 5400,
+        "close_enough": 4.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "GATE-D3-GEOM: the picket road's own approach bearing (the (230,3670)->(350,3760) leg, unit (0.8,0.6)) runs 92 degrees off tether_relay.json's own approach_bearing_deg (-34.4, unit (0.565,-0.826)) -- almost exactly parallel to the compound's front wall rather than toward it. A beeline from the road straight at Officer Dell's own coordinate clips the flank_west fence and the wall-following navigator cannot always work all the way around it inside one leg's budget (measured: tools/_probe_relay_gate_reach.gd, stuck-point replay, both legs succeed once routed through the gate first). Named here as its own waypoint rather than folded into S07-41's `at`, so a future re-siting of either the road or the gate shows up as one waypoint disagreeing with the map instead of a silent detour failure."
+    },
+    {
       "id": "S07-41",
       "title": "walk to Officer Dell",
       "action": "move_to",

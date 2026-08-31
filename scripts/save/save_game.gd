@@ -695,6 +695,17 @@ func _party_to_array(party: Variant) -> Array:
 			# additive and a save written before it round-trips unchanged.
 			"secondary_type": str(instance.get("secondary_type")),
 			"nickname": str(instance.get("nickname")),
+			# GAME-F4. Never written before this: `_apply_level_stats` recomputes
+			# `max_hp`/`attack`/`defence` from THESE on every level-up
+			# (`gain_xp`), and a loaded creature that had never levelled up kept
+			# `CreatureInstance`'s bare class defaults (1.0/1.0/1.0) until the
+			# moment it next did -- at which point a real, played-in creature (say
+			# 180 hp) collapsed to roughly 2. Found driving Gate F's S07 leg: a
+			# hand-seeded level 9-13 party loaded correctly, then the first
+			# trainer win in the segment silently gutted every stat.
+			"base_hp": float(instance.get("base_hp")),
+			"base_attack": float(instance.get("base_attack")),
+			"base_defence": float(instance.get("base_defence")),
 			"max_hp": float(instance.get("max_hp")),
 			"attack": float(instance.get("attack")),
 			"defence": float(instance.get("defence")),
@@ -737,6 +748,14 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		return
 	var party_ref := party as RefCounted
 	party_ref.call("clear")
+	# GAME-F4. `base_hp`/`base_attack`/`base_defence` were only added to the
+	# written format above; a save from before that fix has none. The honest
+	# reconstruction is the same species.json lookup `_migrate_v1` already does
+	# for a pre-D30 save's moves -- not `CreatureInstance`'s own bare class
+	# defaults (1.0/1.0/1.0), which is the exact value that was silently
+	# gutting every loaded creature's stats on its next level-up.
+	var species_raw: Variant = _read_json_file(SPECIES_PATH).get("species", {})
+	var species_table: Dictionary = species_raw as Dictionary if typeof(species_raw) == TYPE_DICTIONARY else {}
 	for raw: Variant in (entries as Array):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
@@ -745,6 +764,14 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.species_id = str(d.get("species_id", ""))
 		creature.display_name = str(d.get("display_name", creature.species_id))
 		creature.creature_type = str(d.get("creature_type", "ground"))
+		var species_def_raw: Variant = species_table.get(creature.species_id, {})
+		var species_def: Dictionary = species_def_raw as Dictionary if typeof(species_def_raw) == TYPE_DICTIONARY else {}
+		# Same 100.0/20.0/20.0 fallback `CreatureInstance.from_species` itself
+		# uses for a species definition missing the key -- an unknown species_id
+		# (a retired/renamed species) gets exactly what a fresh one would.
+		creature.base_hp = float(d.get("base_hp", species_def.get("base_hp", 100.0)))
+		creature.base_attack = float(d.get("base_attack", species_def.get("base_attack", 20.0)))
+		creature.base_defence = float(d.get("base_defence", species_def.get("base_defence", 20.0)))
 		# T3-CREATURES. Absent in a save written before dual typing existed,
 		# and "" is the honest answer there: that creature was mono-typed when
 		# it was stored. If its species has since gained a second type,
