@@ -61,6 +61,8 @@ func _run() -> void:
 func _count_pickups(world: Node) -> Dictionary:
 	var by_kind := {}
 	var total := 0
+	var game := world.get_node_or_null(^"/root/Game")
+	var items: RefCounted = game.get("items") if game != null else null
 	for node: Node in world.find_children("*", "Node3D", true, false):
 		var script: Script = node.get_script() as Script
 		if script == null:
@@ -73,6 +75,17 @@ func _count_pickups(world: Node) -> Dictionary:
 				and not path.ends_with("death_satchel.gd"):
 			continue
 		if not node.is_visible_in_tree():
+			continue
+		# OWNER PLAYTEST 2026-08-30B item 3: harvest_node.gd and felled_resource.gd
+		# now withhold the highlight from "resource"-kind items (trees, wood,
+		# stone, fiber, ore -- see `pickup_glow.gd::is_glow_kind()`) on purpose.
+		# Counting those in `total` would fail this probe's 90% floor below on
+		# exactly the pickups the owner asked to leave dark -- the majority of
+		# every band's harvest table -- so they are excluded from "built" the
+		# same way they are excluded from the glow.
+		if (path.ends_with("harvest_node.gd") or path.ends_with("felled_resource.gd")) \
+				and items != null and node.has_method("resource_item") \
+				and str(items.call("kind", node.call("resource_item"))) == "resource":
 			continue
 		var kind := path.get_file()
 		by_kind[kind] = int(by_kind.get(kind, 0)) + 1

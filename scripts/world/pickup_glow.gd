@@ -103,17 +103,43 @@ static func is_enabled() -> bool:
 ## something about what is there rather than painting the whole world one
 ## colour. `height_override` places the halo by hand on a prop whose measurable
 ## crown is not where its body reads (the TM's plinth-and-orb assembly);
-## everything else is measured by `prop_glow_height()`.
+## everything else is measured by `prop_glow_height()`. `kind` is the item's
+## `item_db.gd::kind()` where the caller has one to give (harvest_node.gd,
+## felled_resource.gd) -- see `is_glow_kind()` for what it gates.
 static func attach(
 	owner_node: Node3D, colour: Color, height_override: float = -1.0,
-	scale_multiplier: float = 1.0
+	scale_multiplier: float = 1.0, kind: String = ""
 ) -> void:
-	if owner_node == null or not is_enabled():
+	if owner_node == null or not is_enabled() or not is_glow_kind(kind):
 		return
 	var field := _field_for(owner_node)
 	if field == null:
 		return
 	field.call("_register", owner_node, colour, height_override, scale_multiplier)
+
+
+## OWNER PLAYTEST, 2026-08-30B, item 3: *"Not everything gatherable needs to
+## glow. Like trees, wood, stone, etc does not. It just needs to be a way to
+## make the key, tms, orbs, potions, etc visible."*
+##
+## `kind` is `item_db.gd::kind()` for the thing a pickup hands out --
+## `"resource"` for wood, stone, fiber, rootstone and ironwood, the bulk
+## gatherables `harvest_node.gd` and `felled_resource.gd` scatter through
+## every band. Those already have their own affordance: they are the visible
+## trees, rock outcrops and cut piles the owner is asking to leave alone, and
+## OP-0830-3's "whatever should glow" was about the things that DON'T already
+## read on sight (a TM plinth, a key, a potion buried in the grass).
+##
+## A caller with no opinion on kind (`kind == ""` -- everything that predates
+## this rule: the key, the TM, the cache, the death satchel) still glows, so
+## this narrows the existing rule rather than replacing it with an allow-list
+## a new pickup path could silently fall outside of.
+##
+## This is glow eligibility only. Grass still grows over/around these nodes
+## exactly as before -- that is audit D3's open scatter/placement defect, a
+## separate and harder fix this rule does not touch.
+static func is_glow_kind(kind: String) -> bool:
+	return kind != "resource"
 
 
 static func detach(owner_node: Node3D) -> void:
