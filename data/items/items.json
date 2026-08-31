@@ -290,7 +290,9 @@
         0,
         0,
         -10
-      ]
+      ],
+      "_comment_scale": "BACKLOG-KNIFE-SCALE. `Knife.obj` carries no scene-root scale the way the GLTF-backed `Axe_Bronze`/`Pickaxe_Bronze` do (Godot's OBJ importer has nowhere to put one), so the raw mesh -- 1.56m along its long axis -- was rendering at that literal size in the trainer's hand. Owner playtest item 13: 'the knife is comically large.' 0.14 brings it to ~0.22m overall, a believable one-hand survival-knife length next to the axe's own effective ~0.83m (its GLTF root already carries a 0.847 scale) and the pickaxe's ~1.2m two-handed haft.",
+      "held_scale": 0.14
     },
     "hoe": {
       "name": "Hoe",
