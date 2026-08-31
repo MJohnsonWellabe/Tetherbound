@@ -444,10 +444,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 1 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 1 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-30-c1",
@@ -457,7 +457,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-30-r2",
@@ -466,10 +466,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 2 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 2 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-30-c2",
@@ -479,7 +479,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-30-r3",
@@ -488,10 +488,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 3 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 3 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-30-c3",
@@ -501,7 +501,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-30-r4",
@@ -510,10 +510,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 4 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 4 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-30-c4",
@@ -523,7 +523,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-30-r5",
@@ -532,10 +532,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 5 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 5 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-30-c5",
@@ -545,7 +545,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-30-r6",
@@ -554,10 +554,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 6 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 6 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-30-c6",
@@ -567,7 +567,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-30-r7",
@@ -576,10 +576,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 7 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 7 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-30-c7",
@@ -589,7 +589,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-30-r8",
@@ -598,10 +598,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 8 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 8 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-30-c8",
@@ -611,7 +611,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-30-r9",
@@ -620,10 +620,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 9 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 9 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-30-c9",
@@ -633,7 +633,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-30-r10",
@@ -642,10 +642,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 10 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 10 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-30-c10",
@@ -655,139 +655,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-30-r11",
-      "title": "fight round 11: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 11 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-30-c11",
-      "title": "switch pilot, round 11",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-30-r12",
-      "title": "fight round 12: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 12 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-30-c12",
-      "title": "switch pilot, round 12",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-30-r13",
-      "title": "fight round 13: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 13 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-30-c13",
-      "title": "switch pilot, round 13",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-30-r14",
-      "title": "fight round 14: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 14 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-30-c14",
-      "title": "switch pilot, round 14",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-30-r15",
-      "title": "fight round 15: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 15 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-30-c15",
-      "title": "switch pilot, round 15",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-30-r16",
-      "title": "fight round 16: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Halder (Ground-focused, 13/14/15) -- round 16 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-30-c16",
-      "title": "switch pilot, round 16",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-33",
@@ -924,10 +792,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 1 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 1 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-40-c1",
@@ -937,7 +805,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-40-r2",
@@ -946,10 +814,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 2 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 2 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-40-c2",
@@ -959,7 +827,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-40-r3",
@@ -968,10 +836,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 3 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 3 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-40-c3",
@@ -981,7 +849,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-40-r4",
@@ -990,10 +858,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 4 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 4 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-40-c4",
@@ -1003,7 +871,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-40-r5",
@@ -1012,10 +880,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 5 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 5 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-40-c5",
@@ -1025,7 +893,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-40-r6",
@@ -1034,10 +902,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 6 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 6 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-40-c6",
@@ -1047,7 +915,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-40-r7",
@@ -1056,10 +924,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 7 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 7 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-40-c7",
@@ -1069,7 +937,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-40-r8",
@@ -1078,10 +946,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 8 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 8 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-40-c8",
@@ -1091,7 +959,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-40-r9",
@@ -1100,10 +968,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 9 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 9 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-40-c9",
@@ -1113,7 +981,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-40-r10",
@@ -1122,10 +990,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 10 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 10 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-40-c10",
@@ -1135,139 +1003,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-40-r11",
-      "title": "fight round 11: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 11 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-40-c11",
-      "title": "switch pilot, round 11",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-40-r12",
-      "title": "fight round 12: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 12 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-40-c12",
-      "title": "switch pilot, round 12",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-40-r13",
-      "title": "fight round 13: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 13 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-40-c13",
-      "title": "switch pilot, round 13",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-40-r14",
-      "title": "fight round 14: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 14 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-40-c14",
-      "title": "switch pilot, round 14",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-40-r15",
-      "title": "fight round 15: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 15 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-40-c15",
-      "title": "switch pilot, round 15",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-40-r16",
-      "title": "fight round 16: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Oreth (mixed Water/Ground, 13/14/16) -- round 16 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-40-c16",
-      "title": "switch pilot, round 16",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-43",
@@ -1414,10 +1150,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 1 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 1 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-51-c1",
@@ -1427,7 +1163,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-51-r2",
@@ -1436,10 +1172,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 2 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 2 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-51-c2",
@@ -1449,7 +1185,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-51-r3",
@@ -1458,10 +1194,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 3 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 3 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-51-c3",
@@ -1471,7 +1207,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-51-r4",
@@ -1480,10 +1216,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 4 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 4 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-51-c4",
@@ -1493,7 +1229,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-51-r5",
@@ -1502,10 +1238,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 5 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 5 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-51-c5",
@@ -1515,7 +1251,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-51-r6",
@@ -1524,10 +1260,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 6 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 6 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-51-c6",
@@ -1537,7 +1273,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-51-r7",
@@ -1546,10 +1282,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 7 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 7 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-51-c7",
@@ -1559,7 +1295,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-51-r8",
@@ -1568,10 +1304,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 8 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 8 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-51-c8",
@@ -1581,7 +1317,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-51-r9",
@@ -1590,10 +1326,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 9 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 9 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-51-c9",
@@ -1603,7 +1339,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-51-r10",
@@ -1612,10 +1348,10 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
+        "times": 9,
+        "settle_frames": 18
       },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 10 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
+      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 10 of a proactive fight-then-switch loop. combat_manager.gd's own D32 comment settles what earlier runs were probing for: 'There is no auto-switch-on-faint ... a faint of the active creature still ends the fight ... This only ever fires from the player's own choice' -- switching is deliberately NOT a post-faint save, it is a pre-emptive rotation, so the fix is switching often enough that no one creature is left at the front for too long, not switching faster after the fact."
     },
     {
       "id": "ISO-51-c10",
@@ -1625,139 +1361,7 @@
         "control": "party_cycle",
         "hold": "tap"
       },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-51-r11",
-      "title": "fight round 11: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 11 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-51-c11",
-      "title": "switch pilot, round 11",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-51-r12",
-      "title": "fight round 12: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 12 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-51-c12",
-      "title": "switch pilot, round 12",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-51-r13",
-      "title": "fight round 13: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 13 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-51-c13",
-      "title": "switch pilot, round 13",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-51-r14",
-      "title": "fight round 14: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 14 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-51-c14",
-      "title": "switch pilot, round 14",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-51-r15",
-      "title": "fight round 15: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 15 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-51-c15",
-      "title": "switch pilot, round 15",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
-    },
-    {
-      "id": "ISO-51-r16",
-      "title": "fight round 16: quick attacks",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 15
-      },
-      "expected": "Captain Vess (Air-focused, 14/15/16) -- round 16 of a TIGHTLY interleaved fight-then-switch loop (4 attacks per round, not 15): CB-08's forced-switch window measured short on the previous run -- a fainted lead cost the fight outright when the reactive party_cycle only fired at the end of a 15-attack burst, even with two full-health creatures still in the party. A shorter round narrows how far a faint can happen before the next switch attempt."
-    },
-    {
-      "id": "ISO-51-c16",
-      "title": "switch pilot, round 16",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- safe to press every round, not just after a faint"
+      "expected": "cycle_active(1) skips a fainted creature and keeps whichever is already healthy active if nothing better -- proactive rotation, not a reaction to a faint that has already ended the fight"
     },
     {
       "id": "ISO-54",
