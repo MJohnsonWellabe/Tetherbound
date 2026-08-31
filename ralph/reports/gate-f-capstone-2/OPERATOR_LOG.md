@@ -102,3 +102,41 @@ worst-case catch sequence than this run needed is **Fable's Phase B call**, not
 the operator's. Severity candidate: QUALITY (rig-side), recorded for Phase B.
 The three FAILs are carried as FAILs regardless — §J forbids skipping a failed
 step silently, and none of them stopped the segment or corrupted the handoff.
+
+### S03 — Village tutorial ladder
+`exit 0 · 315 PASS · 29 FAIL · 9 SKIP · complete=FALSE`
+**CAP-2.** Full write-up: `ralph/reports/FINDING-CAP2-S03-TRAINING-LADDER-2026-08-31.md`.
+Three fights lost, starter fainted with both Revives spent, team never reaches
+five, every rung after it unset. Hands S04 a degraded save.
+
+### S04 — Tournament
+`exit 0 · 53 PASS · 18 FAIL · complete=true`
+All 18 inherited from CAP-2. Gated at **entry**, not at a fight: sign-up never
+took, so `combat_running=false` for quarter, semi and final alike. No tournament
+match started. `TOURNAMENT-SEMI-DIFFICULTY` neither confirmed nor cleared —
+there was no semi-final to be difficult.
+
+### S05 — Lower Meadows / Band 1
+`exit 0 · 71 PASS · 9 FAIL · complete=true · no derail · no harness errors`
+
+Inherited from CAP-2 (5 of 9): `S05-10` party size 2 wanted >= 3; `S05-11`
+objective still `tournament_team_ready`; `S05-48f` `combat_running=false` at the
+South Bridge gate fight; `S05-55` `south_bridge_open NOT set`; `S05-60` 1371
+route rows against a 3000 floor (a segment that could not do most of its work).
+
+Not obviously inherited — carried for Phase B, **not diagnosed**:
+
+| step | expected | actual |
+|---|---|---|
+| `S05-35w` | world owns input before this walk | `input_context=narrative_modal` |
+| `S05-48` | combat owns input | `input_context=narrative_modal` |
+| `S05-56` | cross the South Bridge | `did not reach (8, 1330) in 3000 walking frames; stopped 12.4 m short at (3.0, -3.0, 1319.0)` |
+| `S05-58` | player stands on the crossing | `12.4 m from (8, 1330), wanted within 8.0` |
+
+Two readings are open on `S05-56`/`S05-58` and the operator does not choose
+between them: the crossing may be physically shut because `south_bridge_open` is
+unset (inherited), or the walk may be failing on its own terms. The stop position
+carries `y = -3.0`. Recorded with its coordinates so Phase B can settle it.
+
+The `narrative_modal` pair is the CD-3 shape the rig explicitly watches for — a
+modal owning input where the step expected the world or a fight.
