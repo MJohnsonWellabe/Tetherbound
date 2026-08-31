@@ -135,12 +135,12 @@
           27.5,
           -16.0
         ],
-        "budget_frames": 15000,
+        "budget_frames": 54000,
         "close_enough": 4.0,
         "held_budget_frames": 10800,
         "answer_prompts": true
       },
-      "expected": "GATE-F-LEG-S10CDE. Split out of what was one straight move_to at (10,-10): approaching the village fence directly from this segment's own entry point (arrival from the South Bridge side, north/east of the village) does not cross the fence anywhere near `playground_world.gd::GATE_AT` (27.5,-16.0) -- the only hole in it -- so the single-leg walk oscillated against the fence line for its entire budget without ever finding the opening, the same shape of stall diagnosed and fixed for the sigil-gate gorges earlier in this lane. `stick_navigator.gd` is a local wall-follower, not a pathfinder; it needs to be AIMED at the gate, the same way S05-19's own outbound leg is aimed at a real waypoint rather than straight at its final destination.",
+      "expected": "GATE-F-LEG-S10CDE. Split out of what was one straight move_to at (10,-10): approaching the village fence directly from this segment's own entry point (arrival from the South Bridge side, north/east of the village) does not cross the fence anywhere near `playground_world.gd::GATE_AT` (27.5,-16.0) -- the only hole in it -- so the single-leg walk oscillated against the fence line for its entire budget without ever finding the opening, the same shape of stall diagnosed and fixed for the sigil-gate gorges earlier in this lane. `stick_navigator.gd` is a local wall-follower, not a pathfinder; it needs to be AIMED at the gate, the same way S05-19's own outbound leg is aimed at a real waypoint rather than straight at its final destination. `budget_frames` 15000 -> 54000 after a first attempt: splitting the original single 60750-frame leg into two 15000-frame ones threw away the budget for the actual LONG distance this leg covers (South Bridge back to the village, the bulk of the original leg) rather than giving the short gate-to-centre hop below its own small share -- this leg gets most of the original total, S10e-99 keeps a comfortable but much smaller one.",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
@@ -152,7 +152,7 @@
           10.0,
           -10.0
         ],
-        "budget_frames": 15000,
+        "budget_frames": 10000,
         "close_enough": 5.0,
         "held_budget_frames": 10800,
         "answer_prompts": true
@@ -212,12 +212,12 @@
           -22.0,
           -16.0
         ],
-        "budget_frames": 6000,
+        "budget_frames": 12000,
         "close_enough": 3.0,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "Section E.6.15: 'return home mid-chapter; verify Grandpa's dialogue state advances with the chapter (home-relevance check)'. Section L.5: 'Grandpa's post-win line'. GATE-F-LEG-S10CDE: budget_frames raised 3000 -> 6000. A run that had S10e-99 stop short of the village centre (fixed separately, see that step's own comment) started this leg from much further out than intended and stopped 6.5m short of Grandpa's door at 3000 -- the walk itself was never stuck, just steadily still closing the gap when the budget ran out. Doubled for margin now that S10e-99 should land where it is meant to.",
+      "expected": "Section E.6.15: 'return home mid-chapter; verify Grandpa's dialogue state advances with the chapter (home-relevance check)'. Section L.5: 'Grandpa's post-win line'. GATE-F-LEG-S10CDE: budget_frames raised 3000 -> 6000 -> 12000. Two attempts running short (6.5m at 3000, 5.9m at 6000), both while the walk was measurably still closing the gap steadily rather than stuck -- not the oscillating-stall shape S10e-98g/S10e-99 needed a real fix for, just a leg that needed more room. Doubled again for real margin.",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
