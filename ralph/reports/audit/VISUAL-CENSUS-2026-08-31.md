@@ -77,7 +77,8 @@ fresh critic on a **different rig** for the same subject — a different camera,
 a different reference in frame, a different distance. That is the only honest
 form of round 2 available here, and it is what area 3 got.
 
-So: **every area below records one real blind round; area 3 records two.**
+So: **every area covered below records one real blind round; area 3 records
+two.**
 Areas that plainly warrant more are named as such rather than declared
 converged. No area in this census converged, because none was given the chance
 to — that is the correct reading, not a failure.
@@ -91,10 +92,10 @@ to — that is the correct reading, not a failure.
 | 1 | Open-world environment | 10 | `_capture_locations.gd` | 1 |
 | 2 | Village (Band 0) | 7 | `_capture_locations.gd`, `capture_village_npcs.gd` | 1 |
 | 3 | Creature roster | 50 + 70 | `capture_creature_presentation.gd`, `_capture_creature_roster.gd` | 2 |
-| 4 | Combat | — | — | 0 — see gap note |
+| 4 | Combat (wild encounter) | 5 | `survey_combat.gd` | 1 |
 | 5 | Player + humanoid NPC cast | 27 | `_capture_character_cast.gd` | 1 |
 | 6 | Camps / rest points / build | 6 | `capture_build_pieces.gd`, `capture_creature_bed.gd`, `_capture_creature_bed_rest.gd` | 1 |
-| 7 | HUD / UI | partial | `capture_ui_suite.gd` | 0 — see gap note |
+| 7 | HUD / UI | 5 live-HUD combat frames + 2 UI states | `survey_combat.gd`, `capture_ui_suite.gd` | judged inside area 4 — see gap note |
 | 8 | Terrain / material quality | folded into 1 & 2 | `_capture_locations.gd` | via 1 & 2 |
 
 ### Gaps in this census, stated plainly
@@ -102,18 +103,31 @@ to — that is the correct reading, not a failure.
 These are gaps in the **evidence**, not findings about the game. A follow-up
 session should close them before the catalogue below is treated as complete.
 
-- **Area 4 (combat) has no frames.** `tools/survey_combat.gd` and
-  `tools/capture_combat_actions.gd` were queued behind the UI suite and did not
-  reach the front of the serial queue before this session ended. Nothing in
-  this census judges a wild encounter or a trainer battle.
-- **Area 7 (HUD/UI) has only two of twelve frames.** `capture_ui_suite.gd`
-  boots the world once and walks twelve UI states at 1920×1080; under llvmpipe
-  that is roughly ten minutes of boot plus minutes per frame, and it produced
-  `ui_explore_prompt.png` and `ui_inventory.png` before the session ended. The
-  HUD changes this week's backlog made (health bar, day/time tracker, story
-  tracker) are therefore **not** judged here. `capture_map_tab.gd`,
-  `capture_exploration_hud.gd` and `_capture_tournament_board.gd` also did not
-  run.
+- **Area 4 covers the wild encounter only.** `tools/survey_combat.gd`
+  delivered five frames of a real fight in progress (approach, arena opening,
+  closing, enemy wind-up, attack landing) and they got a full blind round. No
+  **trainer or tournament battle** was captured — `capture_combat_actions.gd`
+  did not reach the front of the serial queue — so the staged-duel half of
+  area 4 is still an evidence gap.
+- **Area 7 (HUD/UI) was judged only as it appears in combat.** The five
+  `survey_combat.gd` frames carry the live HUD, and the area-4 critic judged it
+  in full — defects 127–133 are that evidence, and they are real: the hostile
+  health bar is the same green as the ally's, the boss nameplate occludes the
+  compositional centre, and the ability tray shows **keyboard and mouse glyphs
+  in a controller-first project**, which is a `CLAUDE.md` hard-rule violation
+  visible in a still.
+
+  What is still missing is the dedicated UI suite. `capture_ui_suite.gd` walks
+  twelve UI states at 1920×1080 and was **measured at ~450 s per frame** under
+  llvmpipe — about 90 minutes for the set, which starved every other subject
+  area — so it was stopped after three frames (`ui_explore_prompt.png`,
+  `ui_inventory.png`, `ui_inventory_selected.png`) and its slot given to
+  combat. `capture_map_tab.gd`, `capture_exploration_hud.gd` and
+  `_capture_tournament_board.gd` did not run. **The HUD changes this week's
+  backlog made — health bar to lower-left, the day/time tracker, the shrunk
+  story tracker — are therefore not judged here**, and neither are the map tab,
+  the creatures tab or the tournament board. A follow-up should run that suite
+  at 1280×720, not 1920×1080.
 - **Area 1 covers Bands 1–3 only.** The `_capture_locations.gd` run was cut off
   by this lane's own 40-minute `timeout` wrapper part-way through the Relay
   Camp, so sites 6–11 (Tether Relay, Mill Crossing, Ridge Camp, Waystop,
@@ -196,6 +210,7 @@ gitignored, so the sheets are the durable evidence).
 | Area | Critique file | Sheet | Bar A (key art) | Bar B (Palworld) |
 |---|---|---|---|---|
 | 1 — world sites | `01-world-sites-round1.md` | `01-world-sites.jpg` | **yes** | **no** |
+| 4 — combat | `04-combat-round1.md` | `04-combat.jpg` | **no** | yes |
 | 2 — village | `02-village-round1.md` | `02-village.jpg` | **no** | yes, weakly |
 | 3 — creatures r1 | `03-creatures-round1.md` | `03-creatures-presentation.jpg` | **no** | **no** |
 | 3 — creatures r2 | `03-creatures-round2.md` | `03-roster-world.jpg` | **no** | yes, half |
@@ -210,7 +225,7 @@ percentages. By the convention's own rule that is improvement, so area 3 was
 still moving when the session ran out of budget and warrants at least one more
 round.
 
-Areas 1, 2, 5 and 6 each have exactly one round and are therefore **not**
+Areas 1, 2, 4, 5 and 6 each have exactly one round and are therefore **not**
 converged either; a second round on a different rig is owed for each.
 
 ---
@@ -739,31 +754,154 @@ bite-sized, and a `BACKLOG-VISUAL-<id>` name for a future fix session.
      (`creature_bed_scale_check.png`). **bite-sized** —
      `BACKLOG-VISUAL-BENCH-TOP-TILING`
 
+### Area 4 — combat (and the only live-HUD evidence in this census)
+
+These come from `tools/survey_combat.gd`'s five wild-encounter frames, shot
+through the game's own combat camera with the HUD on. The camera is therefore
+itself under judgement, and defects 126–133 are the census's **only** real
+evidence for subject area 7.
+
+121. **The opponent is not in the frame.** `02-arena-opens.png` and
+     `03-closing-in.png` both display a `LEVEL 2 / Bramblebun / GROUND` boss
+     nameplate with a full health bar while Bramblebun is nowhere in the
+     picture — the critic searched both at full size and found only a floating
+     ground chevron over empty grass. A boss bar with no boss on screen is the
+     single loudest defect in the census. **bite-sized** — encounter placement
+     or camera framing — `BACKLOG-VISUAL-COMBAT-ENEMY-OFFSCREEN`
+122. **The combat camera frames the wrong subject in all five frames.** The
+     ally's back and rump fill the lower-left quadrant of `02`, `03` and `04`;
+     in `05-quick-attack-lands-offaxis.png` the ally is cropped to shell and
+     one leg in the corner while the action sits small in the middle distance;
+     in `01-approach.png` the ally's skull occupies bottom-centre and is cropped
+     by the frame edge. It never gets both combatants into one readable
+     composition. **bite-sized** — camera height, distance and look target —
+     `BACKLOG-VISUAL-COMBAT-CAMERA-FRAMING`
+123. **The two combatants are 4–6× apart in linear size, in the ally's
+     favour.** Measured against the 1.80 m trainer: Terrapup ≈1.25 m at the
+     shoulder and ≈2.5 m long; Bramblebun ≈0.30–0.35 m. In both Palworld fight
+     references the opponent is the largest thing in frame. **bite-sized** for
+     the scale values (and it is the same underlying fault as defects 59, 64);
+     the colourway half is a design call — `BACKLOG-VISUAL-COMBAT-SIZE-RATIO`
+124. **Bramblebun is the same straw colour as the dry grass tufts around it**,
+     so even when it is in frame it is not separable from ground scatter.
+     **needs owner decision** — a high-contrast colourway is a design choice,
+     and the mesh itself is already blocked (defect 59) —
+     `BACKLOG-VISUAL-BRAMBLEBUN-FIELD-SEPARATION`
+125. **There is not one combat VFX in the set.** No hit spark, impact ring,
+     dust, damage number, flinch, motion trail or ground telegraph decal — in a
+     frame whose own filename says an attack landed. **not bite-sized** — this
+     is a whole missing art package and the critic ranked it the second-largest
+     gap — `BACKLOG-VISUAL-COMBAT-VFX-LIBRARY`
+126. **Nobody in any frame is exerting force.** The trainer is in a neutral
+     standing idle in `02`, `03` and `05`, looking off to the right while the
+     HUD says "it's open — hit it"; the Terrapup has no attack pose.
+     **not bite-sized** — wind-up, attack, flinch and recoil animation —
+     `BACKLOG-VISUAL-COMBAT-ANIMATION`
+127. **The hostile health bar is the same green as the ally bars**, so nothing
+     in the frame is colour-coded as a threat. **bite-sized** — a HUD colour,
+     and not the reserved oxblood — `BACKLOG-VISUAL-HOSTILE-BAR-COLOUR`
+128. **The boss nameplate is a large opaque slab dead-centre top**, occluding
+     exactly the band where the arena's far edge and the terrain behind the
+     fight would establish the encounter; both references use a thin strip
+     about a fifth the height. **bite-sized** —
+     `BACKLOG-VISUAL-BOSS-NAMEPLATE-SIZE`
+129. **Keyboard and mouse glyphs in a controller-first project.**
+     `01-approach.png` prompts `E  Engage Bramblebun`; `02`–`05` show `F`, `C`
+     and mouse-button icons on the ability tray. `CLAUDE.md`'s hard rules say
+     controller first, so this is a rule violation visible in a still, not just
+     a polish item. **bite-sized** — `BACKLOG-VISUAL-CONTROLLER-GLYPHS`
+130. **The telegraph is prose in a box.** "it's open — hit it" and
+     "! incoming — move" carry information the animation and the ground decal
+     do not; neither reference uses a word of prose for a wind-up. **not
+     bite-sized** — it depends on 125 and 126 — `BACKLOG-VISUAL-TELEGRAPH-LANGUAGE`
+131. **The arena decal reads as UI, not world.** A flat unlit mint gradient
+     band with hard edges that passes through the fence posts without
+     conforming to them (`03-closing-in.png`), clips off at a hard diagonal at
+     the frame edge (`05`), and whose near edge is off-frame in `02` and `03`
+     so the arena's shape cannot be read at all. Its hue is close enough to the
+     grass to be simultaneously intrusive and uninformative. **bite-sized** —
+     `BACKLOG-VISUAL-ARENA-DECAL`
+132. **The target chevron floats over nothing.** `02-arena-opens.png` (≈355,
+     310) over empty grass; `04` hovering well above the tuft it marks; worst
+     in `05`, where it sits at the far-left edge while the action is
+     centre-frame. **bite-sized** — anchor it to the target —
+     `BACKLOG-VISUAL-TARGET-CHEVRON-ANCHOR`
+133. **Unidentified placeholder geometry in the open world** — a dark grey box
+     at approximately (730, 240) beyond the fence in
+     `05-quick-attack-lands-offaxis.png`, plus a small pale dome at (620, 240).
+     **bite-sized** — `BACKLOG-VISUAL-COMBAT-STRAY-GEOMETRY`
+134. **The five frames of one continuous fight are lit two different ways.**
+     `01-approach.png` has warm dusk light, structured cloud, a lit and shaded
+     hill face and real ridge haze; `02`–`05` have a flat blown-out grey-white
+     sky, no directional light and no haze. Same fence, same hill. This is the
+     defect the contact sheet exists to catch, and it also proves the build can
+     produce the good version. **bite-sized** — clock/weather pinning in the
+     capture, or a real time-of-day inconsistency — `BACKLOG-VISUAL-COMBAT-LIGHT-CONSISTENCY`
+135. **The grass render-distance ring is visible in three of five frames** —
+     a hard horizontal line at y≈300 in `01-approach.png`, beyond the fence in
+     `05`, and in `04-enemy-winds-up-offaxis.png` the ground around the houses
+     carries no grass cards at all while the foreground is fully dense. Third
+     independent sighting of defect 46. **needs owner decision** — same
+     performance call — `BACKLOG-VISUAL-SCATTER-CULL-RING`
+136. **Tiling rock texture on the cliffs**, with a visible ~1 m grid —
+     `03-closing-in.png` top-right, `01-approach.png` right-hand hill,
+     `05` top-left. **bite-sized** — `BACKLOG-VISUAL-CLIFF-TEXTURE-TILING`
+137. **The fence terminates in mid-air with no end post** in
+     `01-approach.png`, and elsewhere runs as one unbroken mechanical arc with
+     perfectly uniform spacing, no gate, no gap, no lean and no broken rail.
+     **bite-sized** — `BACKLOG-VISUAL-FENCE-RUN-AUTHORING`
+138. **The starter creature disappears into the field.** Terrapup's mint shell
+     scutes sit within a hair of the grass in both hue and value, so its back
+     half merges with the meadow in `02-arena-opens.png` and
+     `03-closing-in.png`. Every Pal in `palworld-04` is a colour that does not
+     exist in its terrain. **bite-sized** — material hue —
+     `BACKLOG-VISUAL-TERRAPUP-FIELD-SEPARATION`
+139. **The interact prompt is drawn across the creature's face** in
+     `01-approach.png`. **bite-sized** — `BACKLOG-VISUAL-PROMPT-OCCLUSION`
+140. **The trainer has no contact shadow at all** in `02-arena-opens.png` and
+     `05-quick-attack-lands-offaxis.png` and reads as a cut-out pasted onto the
+     grass. Third independent rig to find this (see defects 2 and 29), and the
+     first to find it on a character at close range. **bite-sized** after the
+     hardware check — `BACKLOG-VISUAL-SHADOW-RANGE`
+141. **The trainer is not readable as the protagonist.** At sheet scale he
+     collapses to a 5–6 px dark tick indistinguishable from the bush rosettes;
+     at full size the hair is a solid blob, the face has no discernible
+     features, and the costume carries no accent colour and no
+     silhouette-breaking prop. Fourth independent sighting of the
+     player-separation problem (see defect 56). **needs owner decision** —
+     costume and palette, not a mesh — `BACKLOG-VISUAL-PLAYER-SILHOUETTE-SEPARATION`
+
+
 ---
 
 ## Totals
 
 | Sizing | Count |
 |---|---|
-| **bite-sized** | 74 |
-| **needs owner decision** | 12 |
+| **bite-sized** | 89 |
+| **needs owner decision** | 15 |
 | **needs owner-supplied reference art** (blocked per `CLAUDE.md`) | 15 |
-| **not bite-sized** (multi-day, no new generation needed) | 19 |
-| **total** | **120** |
+| **not bite-sized** (multi-day, no new generation needed) | 22 |
+| **total** | **141** |
 
 Counted by each entry's leading classification. Several entries are split — a
 bite-sized half and a blocked or multi-day half — and both halves are stated in
 the entry; the count follows the leading half only, so the blocked and
 multi-day totals are floors, not ceilings.
 
-Three ids appear against more than one numbered defect because two different
-rigs found the same underlying fault independently:
-`BACKLOG-VISUAL-SHADOW-RANGE` (defects 2 and 29),
-`BACKLOG-VISUAL-TREE-VARIETY` (22 and 53) and
-`BACKLOG-VISUAL-BURROWBACK-REAR` (60 and 118). The Wave 3 table in
-`BACKLOG-FROM-AUDIT-2026-08-31.md` therefore carries **72 distinct bite-sized
-ids** for 74 bite-sized defects. Independent rediscovery is evidence, not
-duplication, so both numbered entries are kept.
+Six ids appear against more than one numbered defect because separate rigs
+found the same underlying fault independently, and that repetition is the
+census's strongest signal rather than noise:
+`BACKLOG-VISUAL-SHADOW-RANGE` (defects 2, 29, 140 — three rigs),
+`BACKLOG-VISUAL-SCATTER-CULL-RING` (46, 135),
+`BACKLOG-VISUAL-PLAYER-SILHOUETTE-SEPARATION` (56, 141),
+`BACKLOG-VISUAL-TREE-VARIETY` (22, 53),
+`BACKLOG-VISUAL-BURROWBACK-REAR` (60, 118) and
+`BACKLOG-VISUAL-COMBAT-SIZE-RATIO` (which restates 64's starter-scale fault
+from the fight's point of view). The Wave 3 table in
+`BACKLOG-FROM-AUDIT-2026-08-31.md` therefore carries fewer distinct ids than
+there are bite-sized defects. Both numbered entries are kept in every case,
+because independent rediscovery is evidence.
 
 ---
 
@@ -784,6 +922,10 @@ findings one fix would close:
 3. **The creature scale table** (defects 64, 65, 67, 68, 69) — five defects,
    all transform values, all measured with a ruler in frame, closable in one
    session.
-4. **Close the census gaps** — combat, the HUD/UI suite, Bands 4–5, and the
-   J1/J2 Hall silhouette re-measurement. Until those run, this catalogue is
-   five-eighths of a census, not a whole one.
+4. **The combat-camera and enemy-framing pair** (defects 121, 122) — a boss
+   nameplate displayed for a creature that is not on screen is the loudest
+   single thing in the census, and both halves are camera/placement values.
+5. **Close the remaining census gaps** — the trainer/tournament battle, the
+   dedicated UI suite (at 1280×720, not 1920×1080), Bands 4–5, water, weather,
+   the ground-seam probe, and the J1/J2 Hall silhouette re-measurement. Until
+   those run, this catalogue is six-eighths of a census, not a whole one.

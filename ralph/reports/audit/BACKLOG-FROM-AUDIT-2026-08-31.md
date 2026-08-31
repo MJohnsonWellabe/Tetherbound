@@ -66,11 +66,14 @@ an owner decision, 14 blocked on owner-supplied reference art (`CLAUDE.md`'s
 Meshy/mesh rule — none is proposed here), and 21 that are real but multi-day.
 Those live in the census report, not in this table.
 
-**Read before launching any of these:** the census covered 5 of 8 subject areas.
-Combat has no frames at all, the HUD/UI suite produced 2 of 12, Bands 4–5 have
-no landmark frames, and the `J1`/`J2` Stormwall Hall silhouette regression was
-**not** re-measured. Closing those gaps is worth one session before treating
-this table as the whole picture.
+**Read before launching any of these:** the census covered 6 of 8 subject areas.
+Area 4 got the wild encounter but no trainer/tournament battle; the dedicated
+HUD/UI suite produced 3 of 12 frames before being stopped as too slow (the
+in-combat HUD *was* judged, and its rows are below, but this week's health-bar,
+day/time and story-tracker changes were **not**); Bands 4–5 have no landmark
+frames; and the `J1`/`J2` Stormwall Hall silhouette regression was **not**
+re-measured. Closing those gaps is worth one session before treating this table
+as the whole picture.
 
 **One dependency worth respecting:** `BACKLOG-VISUAL-SHADOW-RANGE` was the
 single most-cited finding across three independent critics, but it was measured
@@ -182,6 +185,30 @@ Cheapest wave to run, and they make every future visual pass more trustworthy.
 | `BACKLOG-VISUAL-BENCH-TOP-TILING` | visible tiling seam where the bench plank meets the metal end strap, plus a fixed-interval dash repeat | Census 120 | UV |
 | `BACKLOG-VISUAL-REST-MAT-TEXEL-DENSITY` | the rest mat's woven interior is a muddy blur at visibly lower texel density than the rope ring around it | Census 119 | texture resolution |
 | `BACKLOG-VISUAL-BED-FITS-CREATURE` | the creature still does not fit its bed — hindquarters and rear paws outside the ring, front paws on the rim. **This is `BACKLOG-BED-SCALE-POSE`'s own subject, still failing after that lane's change** | Census 113 | one scale value, then re-render |
+
+---
+
+### Combat and the in-combat HUD
+
+The five `survey_combat.gd` frames are the census's only live-HUD evidence, so
+these rows cover both subject areas.
+
+| id | item | source | closing cost |
+|---|---|---|---|
+| `BACKLOG-VISUAL-COMBAT-ENEMY-OFFSCREEN` | a `LEVEL 2 / Bramblebun` boss nameplate and full health bar are displayed while the creature is nowhere in the frame, in two of five combat frames. Loudest single defect in the census | Census 121 | encounter placement or camera framing |
+| `BACKLOG-VISUAL-COMBAT-CAMERA-FRAMING` | the combat camera frames the ally's rump in three frames, crops it to shell-and-one-leg in a fourth, and puts its skull in the bottom-centre of the fifth; it never gets both combatants into one readable composition | Census 122 | camera height, distance, look target |
+| `BACKLOG-VISUAL-CONTROLLER-GLYPHS` | the ability tray and interact prompt show `E`/`F`/`C` and mouse-button icons. **`CLAUDE.md`'s hard rules say controller first**, so this is a rule violation visible in a still | Census 129 | glyph set |
+| `BACKLOG-VISUAL-HOSTILE-BAR-COLOUR` | the hostile health bar is the same green as the ally bars — nothing in a combat frame is colour-coded as a threat | Census 127 | one HUD colour (not the reserved oxblood) |
+| `BACKLOG-VISUAL-BOSS-NAMEPLATE-SIZE` | the boss nameplate is a large opaque slab dead-centre top, occluding the band where the encounter would establish itself; both references use a strip about a fifth the height | Census 128 | panel size and position |
+| `BACKLOG-VISUAL-ARENA-DECAL` | the arena band is a flat unlit mint gradient that passes through fence posts, clips at a hard diagonal, and whose near edge is off-frame so the arena's shape cannot be read | Census 131 | decal tint, conform, extent |
+| `BACKLOG-VISUAL-TARGET-CHEVRON-ANCHOR` | the target chevron floats over empty grass in three frames, in one case at the far-left edge while the action is centre-frame | Census 132 | anchor to target |
+| `BACKLOG-VISUAL-PROMPT-OCCLUSION` | the `Engage` prompt is drawn across the creature's face | Census 139 | prompt offset |
+| `BACKLOG-VISUAL-COMBAT-STRAY-GEOMETRY` | an unidentified dark grey box and a pale dome sit beyond the fence, reading as untextured placeholder geometry in the open world | Census 133 | remove or identify |
+| `BACKLOG-VISUAL-COMBAT-LIGHT-CONSISTENCY` | five frames of one continuous fight in one place are lit two different ways — warm dusk with haze in the first, flat blown-out overcast in the other four | Census 134 | clock/weather pinning in the capture, or a real time-of-day bug |
+| `BACKLOG-VISUAL-COMBAT-SIZE-RATIO` | the ally is 4–6× the opponent in linear size (Terrapup ≈1.25m at the shoulder vs Bramblebun ≈0.30m); in both fight references the opponent is the largest thing in frame | Census 123 | scale values; same fault as the starter-scale row above |
+| `BACKLOG-VISUAL-TERRAPUP-FIELD-SEPARATION` | the starter's mint shell sits within a hair of the grass in hue and value, so its back half merges with the meadow | Census 138 | material hue |
+| `BACKLOG-VISUAL-CLIFF-TEXTURE-TILING` | cliff rock texture repeats on a visible ~1m grid in three frames | Census 136 | triplanar or detail-break |
+| `BACKLOG-VISUAL-FENCE-RUN-AUTHORING` | a fence run terminates in mid-air with no end post; elsewhere it is one unbroken mechanical arc with uniform spacing, no gate, no gap and no lean | Census 137 | placement |
 
 ---
 
