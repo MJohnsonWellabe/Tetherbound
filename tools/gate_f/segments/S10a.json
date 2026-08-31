@@ -508,7 +508,7 @@
       "action": "move_to",
       "args": {
         "at": [
-          12.5,
+          10.0,
           7629.0
         ],
         "budget_frames": 3000,
@@ -516,9 +516,9 @@
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "stronghold_elite, Keeper Hald at world (12.5,7629) -- the `tether_approach` chamber's centre (8,7624) plus his gauntlet offset (4.5,5). The gauntlet's third rung, standing in front of the Tether blast shutter.",
+      "expected": "stronghold_elite, Keeper Hald at world (10,7629) -- the `tether_approach` chamber's centre (8,7624) plus his gauntlet offset (2,5). The gauntlet's third rung, standing in front of the Tether blast shutter and facing back down the room at the passage the player walks in through.",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
-      "_comment_coordinate_fix": "COORDINATE CORRECTION, GATE-F-LEG-S10AB 2026-08-31. This step's `at` was transcribed from data/config/bands/band5_stronghold_approach/trainers.json's `position` row -- which that same file labels, in its own `_position_note`, \"FALLBACK ONLY. scripts/world/stronghold.gd places this row from data/config/stronghold.json's `gauntlet` block\". Those fallback rows are still written in the pre-OW5D frame where the Hall's chambers ran along +x; the built Hall runs them along +z from site.at (8,7560). So every finale walk was aimed at open meadow rather than at the thing it names. MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31)."
+      "_comment_coordinate_fix": "COORDINATE CORRECTION, GATE-F-LEG-S10AB 2026-08-31. This step's `at` was transcribed from data/config/bands/band5_stronghold_approach/trainers.json's `position` row -- which that same file labels, in its own `_position_note`, \"FALLBACK ONLY. scripts/world/stronghold.gd places this row from data/config/stronghold.json's `gauntlet` block\". Those fallback rows are still written in the pre-OW5D frame where the Hall's chambers ran along +x; the built Hall runs them along +z from site.at (8,7560). So every finale walk was aimed at open meadow rather than at the thing it names. MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31). RE-AIMED AGAIN 2026-08-31: the elite's own offset moved from (4.5,5) to (2,5) so a fight staged on his front could no longer push a combatant through the east wall -- see data/config/stronghold.json's gauntlet entry for the measurement."
     },
     {
       "id": "S10a-43",
