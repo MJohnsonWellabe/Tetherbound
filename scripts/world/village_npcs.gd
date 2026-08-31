@@ -23,6 +23,7 @@ extends Node3D
 
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
+const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const CONFIG_PATH := "res://data/config/village_npcs.json"
 
 ## SE27. The same placer, pointed at a second list. `build()` takes an optional
@@ -150,8 +151,17 @@ func _placement_holds(spec: Dictionary, progression: RefCounted) -> bool:
 ## human NPCs are differentiated by hair, palette entries and accessories on a
 ## rig that already exists. An entry naming none of them gets the plain block
 ## back, which is what `setup()` used to hand `build()` anyway.
+##
+## E3-RELAY-POPULATION: `rank` is the same second path `trainer_npc.model_config()`
+## already reads — a Team Tether rank (`data/config/npc_ranks.json`) instead of
+## a villager's own `config_key` — so a non-combat Team Tether body (a patrol,
+## a worker) gets the faction's own grunt/officer rig, palette and badge rather
+## than a villager's. An entry naming neither gets an empty config, same as
+## before this existed.
 static func model_config(spec: Dictionary) -> Dictionary:
-	var cfg := CHARACTER_MODEL.config_for(str(spec.get("config_key", "")))
+	var rank := str(spec.get("rank", ""))
+	var cfg := NPC_RANKS.config_for(rank, str(spec.get("base", ""))) if rank != "" \
+		else CHARACTER_MODEL.config_for(str(spec.get("config_key", "")))
 	if cfg.is_empty():
 		return cfg
 	cfg = cfg.duplicate(true)

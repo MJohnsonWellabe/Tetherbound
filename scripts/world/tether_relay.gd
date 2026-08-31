@@ -116,6 +116,7 @@ func build(world: Node3D) -> bool:
 	_build_apparatus()
 	_build_conduits()
 	_build_dead_ground()
+	_build_scorch_marks()
 
 	# A relay disabled before a save is still disabled after a reload: the
 	# flag is the state, and the scene is rebuilt from it rather than
@@ -853,6 +854,86 @@ func _build_dead_ground() -> void:
 	add_child(skin)
 	_dead_ground = skin
 	_dead_ground_material = material
+
+
+## E3-RELAY-POPULATION (ralph/reports/audit/E-2026-08-31.md §E3): the hero
+## hardware reads as hostile tech on its own, but the compound had no mark of
+## anything having HAPPENED here — no scorch, no damage, nothing beyond static
+## massing and the drained-ground skin `_build_dead_ground` above already
+## paints. This is the difference between "an installation" and "an
+## installation somebody has been fighting at, or that has been running long
+## enough to scar its own ground" — small, irregular, charred patches at the
+## points a working station would actually mark: right where a posted guard
+## stands, and at the workstation the loose tools now sit at.
+##
+## Same no-new-asset shape `_build_dead_ground` already uses: a flat irregular
+## polygon, painted rather than modelled, seeded per mark so two marks never
+## trace the same silhouette. No collider and no shadow — it is paint on the
+## ground, not an object standing on it.
+func _build_scorch_marks() -> void:
+	var marks: Array = _config.get("scorch_marks", [])
+	if marks.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "ScorchMarks"
+	add_child(holder)
+	var material := StandardMaterial3D.new()
+	material.vertex_color_use_as_albedo = true
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
+	material.roughness = 1.0
+	material.metallic = 0.0
+	for entry: Variant in marks:
+		if not entry is Dictionary:
+			continue
+		var mark: Dictionary = entry
+		var at := _local(mark.get("at", []))
+		if at == Vector2.INF:
+			continue
+		var centre := world_of(at)
+		var ground := _ground(centre)
+		if is_nan(ground):
+			continue
+		var radius := float(mark.get("radius", 1.6))
+		var id := str(mark.get("id", "mark"))
+		_scorch_patch(holder, "Scorch_%s" % id, Vector3(centre.x, ground + 0.03, centre.y),
+			radius, hash(id), material)
+
+
+## One irregular, roughly-circular splat: a triangle fan whose rim wobbles
+## per-vertex (0.55-1.0x the nominal radius) so it reads as burnt/cracked
+## ground rather than a perfect painted disc. Seeded off the mark's own id, so
+## re-running the world build produces the same shape rather than a new one
+## every load.
+func _scorch_patch(parent: Node3D, node_name: String, at: Vector3, radius: float,
+		seed_value: int, material: StandardMaterial3D) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value
+	var segments := 10
+	var colour := Color(0.05, 0.045, 0.04, 0.82)
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var rim: Array[Vector3] = []
+	for i in segments:
+		var angle := TAU * float(i) / float(segments)
+		var r := radius * rng.randf_range(0.55, 1.0)
+		rim.append(Vector3(cos(angle) * r, 0.0, sin(angle) * r))
+	for i in segments:
+		var a := rim[i]
+		var b := rim[(i + 1) % segments]
+		surface.set_color(colour)
+		surface.add_vertex(Vector3.ZERO)
+		surface.set_color(Color(colour.r, colour.g, colour.b, colour.a * 0.35))
+		surface.add_vertex(a)
+		surface.add_vertex(b)
+	surface.generate_normals()
+	surface.set_material(material)
+	var patch := MeshInstance3D.new()
+	patch.name = node_name
+	patch.mesh = surface.commit()
+	patch.position = at
+	patch.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	parent.add_child(patch)
 
 
 ## SG46 / D41's third clause. The relay's machinery is dead, so the skin that
