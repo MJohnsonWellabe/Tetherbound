@@ -1,0 +1,83 @@
+# Backlog derived from the full-state audit — 2026-08-31
+
+**Not `ralph/BACKLOG.md`.** That file has its own Gate-F regeneration protocol
+(§16.2: the reviewer receives run evidence blind, so appending to it out of
+band would contaminate that process). This is a separate, dated ledger built
+straight from the audit's own evidence — sections A–K (`ralph/reports/audit/
+A..K-2026-08-31.md`), `GATE-F-FULL-2026-08-31.md`, `VISUAL-CENSUS-2026-08-31.md`
+(in progress), and the owner's 2026-08-30 evening playtest
+(`ralph/OWNER_PLAYTEST_2026-08-30B.md`). Every item below cites its source.
+
+## How this is organized
+
+- **Wave 1 (launched 2026-08-31)** — bite-sized, no owner decision required,
+  no file overlap with the ten Gate-F-leg lanes currently fixing game systems
+  band-by-band. Each is its own `ralph/BACKLOG-<id>` branch.
+- **Wave 2 (queued, not yet launched)** — bite-sized but deliberately held
+  back because it touches a file or system a Gate-F-leg lane currently owns.
+  Launch once the naming lane lands.
+- **Needs an owner decision** — a real, cheap fix exists, but which fix is a
+  call only the owner can make.
+- **Not bite-sized** — real, cited, but multi-day/needs new art/needs a
+  played chapter run. Feeds the completion plan directly; no lane assigned.
+
+---
+
+## Wave 1 — launched
+
+| id | item | source | closing cost |
+|---|---|---|---|
+| `BACKLOG-C1-NESS-FACE` | Warder Ness's face is a black void at conversation range | Audit C1 | ~1hr investigation + re-render |
+| `BACKLOG-D6-SEAM-PROBE` | visible terrain seams; clipmap hypothesis ruled out this session | Audit D6 | one more probe (mip/filter), minutes, then fix if the cause is now nameable |
+| `BACKLOG-I5-OBJECTIVES-TEST` | a test-fidelity bug in the objectives smoke test (not a game bug) | Audit I5 | ~15 min, test-only |
+| `BACKLOG-I6-MINIMAP-HEADING` | minimap heading defect, standing, unowned | Audit I6 | ~half a day |
+| `BACKLOG-I7-CREATURES-TAB-TEST` | Creatures-tab controller-isolation coverage gap | Audit I7 | ~half a day, new smoke test |
+| `BACKLOG-B2-GRASS-SEPARATION` | redesigned Bramblebun mesh measures *less* separated from grass than the mesh it replaced (ratio ~1.02–1.05 vs. the old 1.06–1.15) | Audit B2 + addendum | tune existing rim/height knobs in `species.json` |
+| `BACKLOG-B3-RARITY-LEGIBILITY` | rarity legible on sight fails for 3 of 4 tiers (direct code read, not a rendering judgement) | Audit B3 | code-level, contained |
+| `BACKLOG-HUD-LAYOUT` | owner: health bar to lower-left; on-screen day/time tracker; shrink/relocate the main-story tracker | Owner playtest items 19–21 | HUD-only, contained |
+| `BACKLOG-KNIFE-SCALE` | "the knife is comically large" | Owner playtest item 13 | mesh-scale only |
+
+---
+
+## Wave 2 — queued, held for file-ownership reasons
+
+| id | item | source | why held |
+|---|---|---|---|
+| `BACKLOG-F3-GRANDPA-DIALOGUE` | Grandpa Elias has zero dialogue from tournament sign-up onward and no reaction to the ending, while every other named NPC has both (~30 lines, 5 conversations, one read-ladder in `sequence_director.gd`) | Audit F3 | Grandpa's house content is inside `GATE-F-LEG-S03`'s active scope |
+| `BACKLOG-BED-SCALE-POSE` | owner: creature beds too small; creatures stand on beds instead of lying | Owner playtest items 11, 14 | bed prefab/placement is inside `S03`'s (home) and `S09`'s (camp) active scope |
+| `BACKLOG-NPC-DIALOGUE-TERSE` | owner: "all NPCs talk too much, just have them be short and to the point" | Owner playtest item 5 | tournament/trainer dialogue (Mira/Tam/Oskar/Halda) is inside `S04`'s active scope; do the mechanical terseness pass once S04 lands so it isn't editing files S04 is also touching |
+| `BACKLOG-GLOW-PICKUPS-ONLY` | owner: only key items/TMs/orbs/potions should glow; bulk nodes (trees/wood/stone) should not, or grass should clear space around them | Owner playtest item 3, adjacent to Audit D3 | risk of touching the same scatter/placement-rule code D3 already names as an open, harder defect — do after D3 is scoped |
+| `BACKLOG-VILLAGE-BERRIES` | owner: "there needs to be more berries in the village" | Owner playtest item 15 | the exact file, `data/config/bands/band1_lower_meadows/harvest.json`, is `S03`'s to edit for GAME-F1/F5 right now |
+| `BACKLOG-E-SCENE-TUNING` | E1 (village orientation fails by day), E3 (Team Tether occupation absent), E4 (2 of 3 camps fail as rest points), E5 (Warrens dressing/lighting) — all flagged "scene-tuning, cheap" | Audit E | camp/village/Warrens scenes overlap `S03`, `S06`, `S09` — sequence after they land |
+| `BACKLOG-VILLAGE-LAYOUT` | owner: "the village layout is still terrible"; village NPC spread (owner items 4, 16) | Owner playtest + Audit E1 | placement of Mira/Tam/Oskar/Halda affects the tournament and practice systems `S03`/`S04` depend on; touch only decorative NPCs, after those land |
+
+---
+
+## Needs an owner decision (real fix exists, no lane assigned)
+
+- **C4** — Mira, Tam, Oskar, Old Bram fail "named characters individual" (two sex mismatches measured). An Option A/B decision is already on record; closing it is config-only once chosen.
+- **C3** — two stylistic Team Tether bodies, cosmetic-only either way.
+- **I4** — a harvest bare-hand doc/code drift, needs a small owner call plus ~1hr.
+- **D5b** — the river reads as a canal; rim noise + regen exists as a fix, bank-angle change is capped pending an owner call. (Same defect the owner's own playtest item 8 names independently.)
+- **D7** — aerial-perspective horizon-band limit needs an owner fog decision.
+- **G4/G5** (from the earlier exit-criterion audit pass) — bands 4–5 introduce zero new catchable species; the challenge ladder's typing axis is flat across all 27 rungs. Both are content/design-scope, not bugs.
+- **G3/roll_new_worlds** — `D-0830-1` stays off pending Gate F re-baseline; sequence after the Gate-F-leg lanes land.
+
+---
+
+## Not bite-sized — feeds the completion plan directly
+
+- **GAME-F2/F4/F5, PROGRESSION-F7, TRAVERSAL-F8** (GATE-F-FULL) — assigned to the ten active Gate-F-leg lanes; not duplicated here.
+- **J1/J2** — the open world and the Meadows Hall read as two different productions; the Hall silhouette fix has *regressed* (+33.1 → +11.6) because a later lane landed art on top of it without re-running the measurement. Real, multi-day art/material work; also a process fix (re-run the silhouette probe on every future Hall-exterior landing) that should go in `ralph/conventions.md`.
+- **D3** — open-field shape/silhouette interest; the scatter placement-rule defect is a design+code pass, not a bug fix.
+- **I3** — progression legibility as a played path cannot be determined without a new smoke test (~half a day) *and* matches the owner's own item 17 ("what do I need for the tournament") — worth a real UI feature once S04 lands, not just a test.
+- **J4** — ROG Ally performance; no container can determine this, needs the owner's hardware.
+- Owner items 6 (village wall/gate), 7 (TEAM counter drift), 8 (river source), 9/18/22/23 (day/rest/clock — likely one root cause), 10 (building recipes illegible), 17 (training/tournament clarity), 24 (camping build-menu category) — all recorded in `ralph/OWNER_PLAYTEST_2026-08-30B.md`'s own triage; several are already being answered live by the Gate-F-leg lanes (S03's home-building fix, the tournament-requirement work).
+
+---
+
+## Sources
+
+- `ralph/reports/audit/{A,B,C,D,E,F,G,H,I,J,K}-2026-08-31.md`
+- `ralph/reports/gate-f-full/DEFECTS.md`, `ralph/reports/audit/GATE-F-FULL-2026-08-31.md`
+- `ralph/OWNER_PLAYTEST_2026-08-30B.md`
