@@ -7,8 +7,8 @@
   "_comment_long_walks": "The three legs here are the chapter's first long ones (village->pond ~600 m, pond->bridge ~900 m). budget_frames is sized from the distance at the walking rate the self-check measured on this box; held_budget_frames is raised so a wild encounter en route pauses the walk instead of aborting it, and the FAIL message names the input_context that held it if it never comes back.",
   "evidence_lane": "logic",
   "capture_lane": "S05C",
-  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S05C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S05C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
-  "_comment_record_hz_split": "AMENDED for the §H/§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because §H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- §H's prescribed frames move to S05C, which may run BOUNDED record windows around a named state.",
+  "_comment_evidence_lane": "\u00a7H/\u00a7G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md \u00a7H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the \u00a7G ids its steps would have taken are DELEGATED to S05C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S05C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the \u00a7H/\u00a7G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because \u00a7H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- \u00a7H's prescribed frames move to S05C, which may run BOUNDED record windows around a named state.",
   "steps": [
     {
       "id": "S05-01",
@@ -498,6 +498,18 @@
       "expected": "Section E.1 per-fight record; an optional fight's difficulty read against a required one is section D's material"
     },
     {
+      "id": "S05-37b",
+      "title": "finish the second creature",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 30
+      },
+      "expected": "GATE-F-LEG-S05 measurement: S05-37's 30 taps defeat Meadowhart (first round) but leave Galecrest at 10.8/142.8 hp -- one landed hit short of the kill that fires _award_victory()/_begin_resolve('won'). Not a game defect: combat_manager.gd's multi-creature trainer flow (round-end -> next-creature send-out -> new round) ran correctly for Meadowhart's own fall (combat_end/combat_start pair at t=463.73/465.12 in that run); the fight simply never got the finishing press this step's budget did not provide, so input_context stayed 'combat' through every following step for the rest of the segment. This step supplies the missing presses with margin."
+    },
+    {
       "id": "S05-38",
       "title": "let the fight end",
       "action": "wait",
@@ -505,6 +517,25 @@
         "seconds": 8
       },
       "expected": "rewards and control return"
+    },
+    {
+      "id": "S05-38b",
+      "title": "cycle to a fresh party member before the road to the bridge",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "same pattern as S03-39b: `autoload/party.gd::cycle_active()` is a documented no-op if the active creature is already the only healthy one, so this is safe regardless of outcome. GATE-F-LEG-S05 measurement: Terrapup piloted BOTH of Old Bram's creatures unrelieved and ended that fight at 59.5/177.6 hp -- the other four party members never fought and are still full. Piloting the same worn-down Terrapup straight into the South Bridge grunt (mudsnout L10 + burrowback L12, harder than Bram's team) is not what a player choosing among five creatures would do; that exact choice is what fainted Terrapup mid-fight against the grunt's first creature in the run that found this (my_hp 59.5 -> 0.0 over six exchanges, opponent still at 76.3/154 -- the fight never lost to a game defect, it lost to an unrotated pilot), which is why `south_bridge_open` read NOT SET afterward. This is the segment's own combat choreography, not game code."
+    },
+    {
+      "id": "S05-38c",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the walk continues"
     },
     {
       "id": "S05-35w",
@@ -691,10 +722,64 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 32,
+        "times": 7,
         "settle_frames": 30
       },
       "expected": "Section E.1 per-fight record. Section D's difficulty read for band 1 comes from the HP margin at the end of this fight"
+    },
+    {
+      "id": "S05-51b",
+      "title": "switch before this pilot runs low -- CB-09 mid-fight rotation",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "GATE-F-LEG-S05 measurement: the grunt's team (mudsnout L10 + burrowback L12, 336.6 hp combined) is a real gate fight above this party's own levels (6-9) -- a single pilot, even at full hp, took Mudsnout down cleanly but only dented Burrowback (182.6 -> 152.9) before fainting itself, and D32's own design has no auto-switch-on-faint: an active creature's faint ends the WHOLE encounter as a loss regardless of four healthy benched creatures, exactly as it is meant to (switching mid-fight is the answer, not automatic). CB-09's own theme ('switching under pressure ... verify pilot handoff, camera handoff, no input loss') is what this gate fight actually asks a prepared five-creature party to do. can_switch()/cycle_active() are safe to call here regardless of exact hp -- a no-op if the active creature is already the only healthy one."
+    },
+    {
+      "id": "S05-51c",
+      "title": "keep fighting on the fresh pilot",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 7,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S05-51d",
+      "title": "switch again before this pilot runs low",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "same reasoning as S05-51b"
+    },
+    {
+      "id": "S05-51e",
+      "title": "keep fighting on the third pilot",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 7,
+        "settle_frames": 30
+      },
+      "expected": "Section E.1 per-fight record"
+    },
+    {
+      "id": "S05-51f",
+      "title": "switch to the fourth pilot for the finish",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "same reasoning as S05-51b; this is the party's fourth of five creatures, the third rotation into this one fight"
     },
     {
       "id": "S05-52",
@@ -713,7 +798,7 @@
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 18,
+        "times": 25,
         "settle_frames": 30
       },
       "expected": "Section E.1 per-fight record"
@@ -726,6 +811,41 @@
         "seconds": 8
       },
       "expected": "on victory the gate opens; rewards and control return"
+    },
+    {
+      "id": "S05-54b",
+      "title": "walk up to the bridge gate",
+      "action": "move_to",
+      "args": {
+        "at": [
+          8.0,
+          1321.0
+        ],
+        "budget_frames": 1800,
+        "close_enough": 0.5,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "GATE-F-LEG-S05 fix, second measurement. Winning the trainer does NOT open the gate by itself -- `_on_tried()` (the gate's own physical Interactable, `prompt_label(): \"Try the bridge gate\"`) is the only caller of `item_gate.gd::try_open()`, which is the only thing that consumes `south_bridge_key` and sets `south_bridge_open`; `_pay_trainer_reward` grants the key to the satchel on defeat but nothing about the fight ending touches the gate. The first fix (this step against (0,1330)) reached its literal target -- but data/config/terrain_playground.json's own `crossings[].south_bridge.carve.centre` is `[8, 1330]`, not `[0,1330]`, and the leaf itself stands `bridge.gate_offset` (8.5m) back toward the village along the crossing's axis, at `[8, 1321.5]` (matches south_bridge_grunt's own `_why_here`: '9.6m from the locked leaf at [8, 1321.5]'). (0,1330) is 11.7m from the actual leaf -- outside its 4.0m interact radius -- and OW5C's own comment names x=0 as sitting exactly on a known, separately-tracked collision-shape-tile seam (COLL1, ralph/BACKLOG.md Phase -1.40) that a walk glued to a fixed x can get stuck crossing; the run that found this saw exactly that (severed_spokes recovery firing repeatedly, an erratic path, and a false 'reached' report from a recovery point nowhere near the leaf). (8, 1319) sits on the seam-safe x the crossing's own road was already moved to (OW5C) and 2.5m short of the leaf on the near side, inside the interact radius without walking through it."
+    },
+    {
+      "id": "S05-54c",
+      "title": "try the gate",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the same `interact` press every other legitimate gate opening in this protocol uses (Section L.5: 'the locked probe is X06's; this is the legitimate opening'). With the key already in the satchel from the trainer's reward, `_on_tried()` calls `try_open()`, which consumes it and sets `south_bridge_open`; `_unlock()` swings the leaf and disables its collider and its own prompt."
+    },
+    {
+      "id": "S05-54d",
+      "title": "let the gate open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the unlock is an instant re-pose (gated_crossing.gd::_unlock has no tween on the leaf itself, unlike the locked jar), but the flag write and the collider disable go through the same frame the interact resolves on; this settles it before the assert below reads it"
     },
     {
       "id": "S05-55",
@@ -754,7 +874,7 @@
       "action": "move_to",
       "args": {
         "at": [
-          0.0,
+          8.0,
           1330.0
         ],
         "budget_frames": 3000,
@@ -762,7 +882,7 @@
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "Section D RT-05 ends at the bridge (0,1330); section B: S05's span ends at 'cross'",
+      "expected": "Section D RT-05 ends at the bridge; the crossing's real carve centre is [8,1330] (terrain_playground.json), not the [0,1330] this step used before -- GATE-F-LEG-S05 measurement: with the gate correctly opened, this step still reported 'stopped short' against the old target while the player's own position (8.0,1332.0) was already past the crossing. Retargeted to the real centre.",
       "observation": "answer_prompts turned ON for this journey walk. Same recorded trade as S03/S04/S06-S10: these segments can no longer evidence 'a narrative modal blocked travel', which is captured un-answered in S02-superseded-2/3/4 and S02/BLOCKER.md. Without it the journey produces no combat, catching, building or progression evidence at all."
     },
     {
@@ -786,7 +906,7 @@
       "args": {
         "check": "near",
         "at": [
-          0.0,
+          8.0,
           1330.0
         ],
         "within": 8.0

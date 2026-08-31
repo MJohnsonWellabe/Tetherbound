@@ -1,0 +1,23 @@
+{
+  "_comment": "Isolated Gate F leg: S05 (Lower Meadows / Band 1 remainder, through the South Bridge fight), tested with a hand-authored 'just won the tournament' seed while S03/S04 are fixed in parallel lanes. This is NOT a formal Gate F journey freeze -- no coordinator froze a candidate SHA for a full run, so this run directory carries its own metadata rather than relying on the stale global candidate record at ralph/reports/gate-f-candidate/RUN_METADATA.json, which is from an unrelated 2026-08-27 run (candidate f082bdf6) and describes a capture-mode (X11 under xvfb-run) invocation this run never makes.",
+  "candidate_ref": "ralph/GATE-F-LEG-S05",
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "kind": "linux editor binary, NOT the shipped Windows export",
+    "path": "~/godot-bin/godot"
+  },
+  "renderer": "headless: no rendering driver, this process has no display server",
+  "display_server": "headless: this process has no display server",
+  "resolution_substituted": false,
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "seeded slot 4 from a hand-authored S04-exit.json (idealized post-tournament party of 5, levels 6-9, road_gate_open, tournament round-win flags set)",
+  "operator": "sonnet-agent",
+  "free_build": false,
+  "lanes": {
+    "logic": {
+      "display_server": "headless: this process has no display server",
+      "renderer": "headless: no rendering driver"
+    }
+  }
+}
