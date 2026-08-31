@@ -1030,66 +1030,21 @@
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
-      "id": "S07-69r",
-      "title": "walk to the ramp foot",
+      "id": "S07-70",
+      "title": "walk to the relay apparatus (ground level)",
       "action": "move_to",
       "args": {
         "at": [
-          338.8,
-          3767.5
+          350.0,
+          3760.0
         ],
         "budget_frames": 3000,
-        "close_enough": 1.5,
-        "held_budget_frames": 7200,
-        "answer_prompts": true
-      },
-      "expected": "GATE-D3-DECK: tether_relay.json's `ramps[0]` ('yard_stair') foot, in the site's own (s,t) frame at (-12.5,-5.0) -- converted with the same site centre/bearing S07-40g's own note already derives. A tight close_enough (1.5m against the ramp's own 3.2m width) so this leg actually ends ON the ramp's own footprint, not merely near it -- the wider 3.0m tolerance a first attempt used left enough slack that the NEXT leg's straight line to the console (local (2.9,-9.0) from the foot's (-12.5,-5.0), a bearing nothing like the ramp's own foot-to-head run) missed the incline and walked at ground level toward the pad's base instead of climbing to it."
-    },
-    {
-      "id": "S07-69s",
-      "title": "climb the ramp to its head",
-      "action": "move_to",
-      "args": {
-        "at": [
-          337.4,
-          3758.0
-        ],
-        "budget_frames": 2400,
-        "close_enough": 2.0,
-        "held_budget_frames": 7200,
-        "answer_prompts": true
-      },
-      "expected": "GATE-D3-DECK: `ramps[0]`'s own head, local (-5.5,-11.5) -- the far end of the SAME sloped surface S07-69r's foot stands on, so a walk between the two follows the ramp's own run (about 20 degrees per tether_relay.json's own ramp comment) rather than cutting across open air beside it."
-    },
-    {
-      "id": "S07-69t",
-      "title": "cross the gantry onto the pad",
-      "action": "move_to",
-      "args": {
-        "at": [
-          346.5,
-          3749.1
-        ],
-        "budget_frames": 1800,
         "close_enough": 2.5,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "GATE-D3-DECK: the pad, local (7.0,-9.0) -- flat deck at the same deck_y as the gantry between it and the ramp head, so this leg is level walking once the climb above is done."
-    },
-    {
-      "id": "S07-70",
-      "title": "walk to the relay apparatus console",
-      "action": "move_to_entity",
-      "args": {
-        "entity": "Console",
-        "within": 2.5,
-        "budget_frames": 1800,
-        "held_budget_frames": 7200,
-        "answer_prompts": true
-      },
-      "expected": "data/config/relay_site.json's `site.centre` (350,3760) is the SITE's own coordinate, not the console's -- tether_relay.json's `apparatus.console.at` is a further-offset [2.9,-9.0] in the site's own local frame, on the raised pad (`deck_y: 10.0`) reached by a ramp off the yard's west side, per that file's own `_comment_decks`. A flat move_to at the site centre (ground level, no `y`) put the walker on open ground roughly under the pad rather than on it -- interact pressed at nothing, relay_disabled never set. move_to_entity resolves the live Console node by name and arrives in 3D (CD-5), which is what an elevated target with a real ramp underneath it needs.",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "expected": "data/config/relay_site.json's `site.centre` (350,3760) -- the same point map_landmarks.json pins the relay at",
+      "observation": "GATE-D3-DECK, KNOWN LIMIT, not chased further. `disable_the_relay` is NOT part of section B's own S07 span (river arrival -> relay pickets -> officer -> relay captain -> captive -> Old Mill Crossing restored); it is objective 20/27 in the full chain and this segment's own S07-69 note already records that the protocol gives no site for it. Three straight attempts (a flat walk, a move_to_entity('Console'), then a four-waypoint ramp/gantry/pad chain -- see this run directory's own S07-superseded-6/7/8) all closed the horizontal gap to the Console node but stayed 4.7-4.9m short vertically: the console sits on a raised pad (`deck_y: 10.0`) reached by a real ramp, and `tests/smoke_relay_station.gd` (independently run and PASSING on this same SHA) proves the ramp itself works -- 'walked up the ramp... reached y=9.98 against a deck top of y=10.00' -- but ALSO proves approaching it from the wrong angle legitimately does not climb ('walked at the pad's flank from the yard; reached y=5.22'), which is exactly what this segment's own general-purpose, wall-following move_to/move_to_entity kept doing despite increasingly precise waypoints. This is a harness-navigator precision limit on one narrow ramp, not a Band3 game defect -- verified, not assumed. Reverted to the flat ground-level walk so this segment does not strand the player on the ramp/pad and block the in-scope Old Mill Crossing walk after it (S07-superseded-9's own S07-76 failed as exactly that knock-on). The console interact below is expected to refuse (relay_disabled will not be set) until a future pass gives this its own precision-walked waypoint chain or a dedicated capture-lane probe."
     },
     {
       "id": "S07-71",
