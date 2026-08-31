@@ -1030,13 +1030,29 @@
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
+      "id": "S07-69r",
+      "title": "walk to the ramp foot",
+      "action": "move_to",
+      "args": {
+        "at": [
+          338.8,
+          3767.5
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "GATE-D3-DECK: tether_relay.json's `ramps[0]` ('yard_stair') foot, in the site's own (s,t) frame at (-12.5,-5.0) -- converted with the same site centre/bearing S07-40g's own note already derives. The Console (`apparatus.console.at [2.9,-9.0]`, `deck_y: 10.0`) sits on the raised pad past this ramp, gantry and pad in turn; a straight move_to_entity aimed at the Console from ground level closes the horizontal distance while walking toward the base of the platform rather than up the ramp, and CD-5's own 3D-arrival check correctly refuses that as 'reached in plan view... 4.94m of that is vertical' rather than a false pass. Routed through the ramp's own foot first, the same fix shape as S07-40g's compound gate."
+    },
+    {
       "id": "S07-70",
       "title": "walk to the relay apparatus console",
       "action": "move_to_entity",
       "args": {
         "entity": "Console",
         "within": 2.5,
-        "budget_frames": 3000,
+        "budget_frames": 4500,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
