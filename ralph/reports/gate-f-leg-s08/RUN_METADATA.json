@@ -1,0 +1,19 @@
+{
+  "_comment": "Freeze record for this ISOLATED S08 leg (ralph/GATE-F-LEG-S08), not a Gate F candidate run. Written by the operator, coordinator-style (protocol section A.2), so the harness's freeze-record cross-check (CD-8b) has an honest, run-scoped claim instead of falling back to the stale 2026-08-27 gate-f-candidate record, which claims X11 and contradicts this plain --headless logic-mode process.",
+  "candidate_sha": "unknown (working tree on ralph/GATE-F-LEG-S08)",
+  "run_dir": "ralph/reports/gate-f-leg-s08",
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "renderer": "none (logic mode)",
+  "display_server": "headless (no display server)",
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "hand-authored seed at saves/S07-exit.json, not a chained fresh user:// journey",
+  "operator": "sonnet-agent",
+  "free_build": false,
+  "segments_planned": {
+    "journey": ["S08ISO"],
+    "study": [],
+    "dropped": []
+  },
+  "scope_note": "This run is CONDITIONAL/ISOLATED evidence per the task brief: 'S08, given a clean entry, does X', never a claim about the whole chapter. See saves/S07-exit.json and segment.json for the seed and step-script."
+}

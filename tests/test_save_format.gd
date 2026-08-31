@@ -286,6 +286,43 @@ func test_a_species_the_catalogue_forgot_keeps_what_the_save_said() -> void:
 	assert_almost_eq(float(creature.get("hp")), 65.0)
 
 
+## GATE-F-LEG-S08's own version of the same regression coverage as
+## `test_save_then_load_round_trips_base_stats_and_survives_a_level_up`
+## further down this file (same name collision, resolved by keeping that one
+## canonical and this species/shape instead: a pre-GAME-F4 save with none of
+## the three fields at all, repaired from `species.json`'s meadowhart entry
+## rather than terrapup's).
+func test_save_then_load_repairs_missing_base_stats_from_species_json() -> void:
+	# An old-format save (VERSION < the one that added base_hp/attack/defence)
+	# carries none of the three. `_array_to_party` must repair them from
+	# species.json rather than leaving them at 1.0/1.0/1.0.
+	var game := FakeGame.new()
+	game.party = PARTY.new()
+	game.inventory = INVENTORY.new(db)
+	game.progression = PROGRESSION_STATE.new()
+	game.day = 1
+	assert_true(DirAccess.make_dir_recursive_absolute(TEST_DIR) == OK)
+	var path: String = str(saver.call("slot_path", 1))
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify({
+		"version": 15, "day": 1,
+		"party": [{
+			"species_id": "meadowhart", "display_name": "Meadowhart", "creature_type": "ground",
+			"max_hp": 218.5, "attack": 28.0, "defence": 29.75, "hp": 218.5,
+			"level": 16, "xp": 0,
+		}],
+		"inventory": [], "hotbar": [], "placed_buildings": [], "farm_plots": [],
+		"death_satchels": [], "satiety": 100.0, "map": {}, "progression": {},
+	}))
+	file.close()
+
+	assert_true(saver.load_slot(game, 1))
+	var loaded: RefCounted = game.party.at(0)
+	assert_almost_eq(float(loaded.get("base_hp")), 115.0)
+	assert_almost_eq(float(loaded.get("base_attack")), 16.0)
+	assert_almost_eq(float(loaded.get("base_defence")), 17.0)
+
+
 func test_save_then_load_replaces_whatever_party_the_loading_game_already_had() -> void:
 	var written := _game()
 	assert_true(saver.save(written, 1))

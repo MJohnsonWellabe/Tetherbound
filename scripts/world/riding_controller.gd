@@ -42,6 +42,16 @@ const CONFIG_PATH := "res://data/config/movement.json"
 ## TUNABLE.
 const MOUNT_RADIUS := 4.5
 
+## Below the priority-0 default every ordinary `interactable.gd` provider
+## uses (trainers, chests, harvest nodes, ...), but above the -1
+## `encounter_director.gd::_creature_control_offer()` falls back to for its
+## own non-actionable "Put X away"/"Call out X" status line -- see
+## `interaction_offer()`'s own comment for why the gap between them matters:
+## a mount that TIES with that status line loses to it (worse, since pressing
+## a status line does nothing), which is what happens if this is ever moved
+## to -1 to match it instead of sitting between the two.
+const RIDE_PRIORITY := -1
+
 signal mounted(body: Node3D)
 signal dismounted()
 
@@ -459,8 +469,28 @@ func interaction_offer(from: Vector3) -> Dictionary:
 		# place the saddle recipe gets taught in the world; a silent absence of
 		# a prompt teaches nothing.
 		var tack := str(SPECIES.rideable(species_id).get("requires_item", ""))
-		return PROMPTS.offer("%s needs a %s." % [label, _item_name(tack)], distance, 0, false)
-	return PROMPTS.offer("Ride %s" % label, distance)
+		return PROMPTS.offer("%s needs a %s." % [label, _item_name(tack)], distance, RIDE_PRIORITY, false)
+	# RIDE_PRIORITY (-1), not the ordinary-interactable default of 0. Riding a
+	# creature that is just following you is the least deliberate thing a
+	# player can be reaching for -- it is always in range, any time, by
+	# design -- so it should never win a tie against something that is only
+	# reachable right here and right now: a trainer's challenge, a chest, a
+	# harvest node, all still on `interactable.gd`'s ordinary priority-0
+	# default. Without this, `_dismount_spot` (below) lands the mount within
+	# `dismount_distance` of the player and it then FOLLOWS at roughly that
+	# distance indefinitely, so a rider who dismounts next to whatever they
+	# actually came to interact with -- ride up to a captain, dismount,
+	# challenge is this segment's OWN designed sequence
+	# (`ralph/GATE_F_MASTER_PROTOCOL.md` section B's S08 span: "...saddle &
+	# riding -> three captains...") -- has their own dismissed mount silently
+	# winning `prompt_arbiter.gd`'s nearest-wins tiebreak and remounting them
+	# instead of opening the challenge. Found live by `ralph/GATE-F-LEG-S08`'s
+	# isolated S08 run: camera distance round-tripped 6.8 -> 5.2 -> 6.8 across
+	# a dismount then a captain-challenge press, proving the "challenge" press
+	# actually remounted instead -- and a plain 1.5 s post-dismount cooldown
+	# was NOT enough on its own, because a follower keeps pace this close for
+	# as long as it is following, not just for the first couple of seconds.
+	return PROMPTS.offer("Ride %s" % label, distance, RIDE_PRIORITY)
 
 
 func interaction_activate() -> void:
