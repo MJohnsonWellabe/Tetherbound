@@ -405,6 +405,46 @@
         "Nobody carries three for any other reason. You're going to the Hall.",
         "Then go the way you'd finish a weld. Rested, and all at once. Not tired, and not in pieces."
       ]
+    },
+    "grandpa_tournament_won": {
+      "_comment": "F3. Grandpa's own mid-chapter ladder (data/config/opening.json's `grandpa_conversations_when`, read the same way village_npcs.json's `greeting_when` is), and the earliest of its five milestones. Halda tells the square before he even hears it from the player -- tournament.gd sets `tournament_won` the moment her ladder is beaten, same flag `village.json`'s own `tournament_halda_champion` reacts to. No effect: he has nothing to hand over here, this is the first time since the briefing he has had anything to say at all, and that gap closing is the whole point of the branch.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "Halda sent word before you'd even got your boots off. Word travels faster than you do, these days.",
+        "Won it fair, she says. I always knew you would, but hearing somebody else say it is a different thing entirely.",
+        "Don't let it go to your head. Team Tether doesn't care what ribbon you're wearing."
+      ]
+    },
+    "grandpa_south_bridge": {
+      "_comment": "F3, second of the five. Gated on `south_bridge_open`, the same beat Oskar's `village_oskar_bridge` fires on -- deliberately not repeating Oskar's own key-and-belt story (that is his to tell), just an old man hearing that a road near his house opened back up.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "Heard about the South Bridge before I'd finished my tea. That road's been half theirs since spring and now it isn't.",
+        "I walked it a thousand times when I was your age and never once thought twice about it. You don't know what you have until somebody stands on it and dares you to cross.",
+        "One road back. Plenty more shut. But it's a start, and I'll take a start."
+      ]
+    },
+    "grandpa_relay_rescue": {
+      "_comment": "F3, third of the five. Gated on `captive_rescued`, the same beat Mira's `village_mira_road` fires on. Deliberately does not repeat what Sela already told the player and Mira directly (the seams, cut on purpose) -- this is Grandpa reacting to the PERSON coming home, not relitigating the reveal, and keeps spec sec32's ladder exactly where it was.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "That surveyor you pulled out of the relay stopped at the house before she'd even found the square. Wanted to see who'd raised somebody reckless enough to walk in there after her.",
+        "I liked her. Didn't waste a word, and she'd earned the right not to.",
+        "You brought somebody home who didn't think they were getting there. Hold onto how that feels — it's worth more than any of it."
+      ]
+    },
+    "grandpa_hall_approach": {
+      "_comment": "F3, fourth of the five and deliberately the last thing he says before the Warden -- `legendary_freed` outranks it in the ladder, so this is superseded the moment the fight is won. Gated on `hall_approach_open`, the same beat Tam's `village_tam_hall` fires on. Echoes his own first line ('you won't do it alone') on purpose, closing the loop it opened; nothing here names what is under the Hall, so spec sec32's reveal ladder holds.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "Tam wouldn't stop talking about it at the well. Three sigils, in one satchel, all at once.",
+        "That's the door, isn't it. Everything since spring has been leading up to that door.",
+        "I told you when this started that you wouldn't do it alone, and I meant it, even if the furthest I can walk now is to my own gate. Go on. Come back and tell me about it."
+      ]
     }
   },
   "_comment_se30": "SE30 (spec Sec32's reveal ladder, plus D41's own new rung). The ladder is: villagers know travel and trade are controlled AND that the ground near Team Tether's works is dying, without knowing why; the quarry shows conduits; the relay shows energy routed and an investigator held; the rescued captive knows the separation is MADE and that power runs toward the stronghold, and no further; the Upper Meadows shows the scale of it; and the stronghold, and nowhere before it, names the legendary as the source. The drain lines added to Mira/Tam/Oskar/the foreman are the rung D41 created and nobody had spoken: the world had 2737 painted pixels of dying ground and not one line of dialogue admitting it. Each speaker reports what their own trade would notice -- rows that won't take, creatures that won't den, seams that go bad, a verge that used to be waist high -- and none of them offers a cause. tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary enforces the top of the ladder across every dialogue file, not just the captive's.",

@@ -148,6 +148,22 @@ static func named_conversation() -> String:
 	return str(_beats().get("named_conversation", ""))
 
 
+## F3/GATE-F-LEG-S10CDE. Grandpa's own flag-keyed ladder, the same ordered
+## `{if_flag|unless_flag, conversation}` shape village_npcs.json's
+## `greeting_when` uses (see that file's own `_comment_greeting_when`) — he is
+## not a village NPC and has no ladder of his own to extend, so this is that
+## ladder's home instead. `sequence_director.gd::_grandpa_conversation_id()`
+## checks these branches ahead of `conversation_for(beat)` through
+## `village_npcs.gd::greeting_for()`, the exact reader every villager's ladder
+## already goes through, treating the beat table's answer as Grandpa's
+## "standing greeting". First match wins, so the branches are written
+## latest-milestone-first — the same reason village_npcs.json's own freed
+## branches are checked ahead of everything earlier.
+static func grandpa_conversations_when() -> Array:
+	var branches: Variant = _beats().get("grandpa_conversations_when", [])
+	return branches if branches is Array else []
+
+
 ## Which beat a dialogue effect asks for. `effect` is the part after the colon:
 ## `beat:starter_choice` arrives here as "starter_choice".
 ##
