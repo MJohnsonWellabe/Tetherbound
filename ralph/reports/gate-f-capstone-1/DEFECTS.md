@@ -132,3 +132,88 @@ that section H's continuous-evidence clause is **unpaid on this run**, as it was
 on previous ones.
 
 ---
+
+---
+
+## CAP-4 — a one-creature party that faints is locked out of every engagement; the run could not confirm any recovery path works
+
+**Severity candidate:** SHIP (pending the recovery probe below). **Segment:** S03.
+**Status:** recorded, not fixed. **Downstream of CAP-1.**
+
+S03 booted `S02-exit` through the production Load path and the fainted state
+restored faithfully (`t=1.05 faint "Moss fainted"`, party 1). From there:
+
+- **Ten consecutive attempts to engage a wild bramblebun found no prompt at
+  all.** S03-32a…j2, all at `input_context=world` (t=199.22), all
+  *"no interact prompt is live … there is nothing here to interact with"*. The
+  walk itself succeeded each time (RIG-16 tracks a live creature's own
+  position), so the creature was there and the offer was not.
+- The team never grew: S03-39 `party size 1 (wanted >= 5)`.
+- **The guided ladder never advanced past rung 4 for the whole segment.** Seven
+  separate rung assertions (S03-12, -28, -41, -106, -174, -206, -229) each read
+  back `opening_first_catch` / "Catch your first wild creature." `S03-exit.json`
+  confirms it: 19 flags, and `opening:beat:road` is not among them.
+
+### What the game gets RIGHT here, recorded because a prior lane's text says otherwise
+
+`tools/gate_f/segments/S03.json`'s own S03-205b expected-text asserts that
+`can_challenge()` refuses every fight *"with no error and no on-screen
+explanation"*, falling back to the trainer's `defeated` line. **That is not what
+this candidate does.** At t=318.20 the trainer says:
+
+> "Your creature can't fight like this. Get it back on its feet first — a bed
+>  will do it, or s…"
+> "Come find me again once you've got something to send out."
+
+A specific, diagnostic line that names the remedy. The stale claim is recorded
+here so the next reader does not inherit it.
+
+### What this run could NOT establish, and why
+
+Whether a player in this state can actually recover. All three paths the game
+points at came back unproven:
+
+| path | outcome | trustworthy? |
+|---|---|---|
+| Revive draught from the Satchel | S03-51e/51f FAIL | **No — rig-caused, see CAP-5** |
+| Creature bed | S03-205b/c FAIL: live prompt was *"Rest until morning"*, not a creature-bed prompt; rest panel never opened | needs a probe |
+| Sleep at home | S03-228 FAIL: `player_slept_at_home` never set | needs a probe |
+
+Because the trainer explicitly promises *"a bed will do it"*, whether a bed
+actually does it is the question that decides this entry's severity — a setback
+versus an unrecoverable chapter. **A dedicated recovery probe is owed before
+this is graded**, and this lane will not grade it from the journey evidence
+alone.
+
+---
+
+## CAP-5 — CD-3's fixed-press-count trap is still live in S03, and it invalidated the revive test
+
+**Severity candidate:** RIG. **Segment:** S03. **Status:** recorded, not fixed
+(rig frozen during the run, section J).
+
+Protocol section J, CD-3: *"No step may encode a guessed repetition count for a
+state-changing UI. Reach a state, then assert it."* S03-32 presses `interact`
+**x10** at a two-line trainer conversation. The telemetry shows the exact
+documented consequence — the modal re-opening the conversation the previous tap
+closed:
+
+```
+t=318.07 world -> narrative_modal      t=319.67 narrative_modal -> world
+t=318.88 world -> narrative_modal      t=320.78 narrative_modal -> world
+t=320.05 world -> narrative_modal
+t=321.15 world -> narrative_modal   <-- stays open
+t=321.80 pressed interact x10 (tap)
+t=358.45 narrative_modal -> world   <-- 37 play-seconds later
+```
+
+S03-51e (t=358.12) then failed with *"inventory did not open the pause shell:
+context narrative_modal -> narrative_modal (owner=DialoguePanel)"* and S03-51f
+with *"3 x ui_right did not move focus off nothing"*. **Both are the harness
+driving a menu that a dialogue owned, not the game refusing to open one** — so
+neither is evidence about the Satchel or the Revive draught, and CAP-4 does not
+claim them as such.
+
+Section J's own rule is that a step which could not be PERFORMED invalidates the
+ones after it. The harness recorded these as FAIL rather than SKIP-with-derail,
+which is why the raw 28-FAIL count for S03 overstates the game's fault.
