@@ -42,6 +42,7 @@ const TEACHING := preload("res://scripts/creatures/teaching.gd")
 ## same loader the level curve uses.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
+const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 
 ## OW1. Owner, after playing: "I can't move things in my inventory. There's no
 ## separate hot bar section. I can't move anything into it."
@@ -1939,6 +1940,10 @@ func _on_target_row(index: int) -> void:
 			_end_targeting()
 			return
 		inventory.call("remove", id, 1)
+		# OWNER-0901-BOND-MILESTONES: the ladder's "feeding" task -- feeding is
+		# inherently per-creature and manual, so unlike distance/landmarks/rest
+		# this credits only the one creature actually fed.
+		BOND_MILESTONES.credit_feed(creature)
 		say("%s ate the %s. %s" % [
 			str(creature.call("label")), str(db.call("item_name", id)),
 			CONDITION.label(creature, CONDITION.config())

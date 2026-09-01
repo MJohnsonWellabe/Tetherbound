@@ -33,6 +33,7 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
+const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## PT-17. `party_seam.gd::set_nickname` is the one place a nickname gets
 ## written anywhere in the project (the opening beat routes through it too,
@@ -987,8 +988,8 @@ func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: in
 	(_row_hp_bars[i] as ProgressBar).value = fraction * 100.0
 	(_row_hp_fills[i] as StyleBoxFlat).bg_color = HEALTH_LOW.lerp(HEALTH_FULL, fraction)
 
-	var nodes: int = int(creature.call("bond_nodes", cfg))
-	var total: int = int(cfg.get("bond", {}).get("thresholds", []).size())
+	var nodes: int = int(creature.call("bond_nodes"))
+	var total: int = BOND_MILESTONES.milestones(BOND_MILESTONES.config()).size()
 	# "Bond N/M", not a bare fraction sitting under the bond icon -- blind-judge
 	# pass named "0/5" a token nobody could explain, and the icon alone (no
 	# text label anywhere near it) does not carry that meaning on its own.
@@ -1053,7 +1054,7 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_move_charged_sub.text = ""
 		_move_charged_tag.text = ""
 		_move_charged_icon.texture = null
-		_bond_meter.call("set_bond", 0, 100, 0, 5)
+		_bond_meter.call("set_bond", "", 0, 5)
 		_bond_caption.text = ""
 		_best_caption.text = ""
 		_detail_status.text = ""
@@ -1133,10 +1134,10 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_move_charged_icon, _move_charged_name, _move_charged_tag, _move_charged_sub
 	)
 
-	var nodes: int = int(creature.call("bond_nodes", cfg))
-	var total: int = int(cfg.get("bond", {}).get("thresholds", []).size())
-	var bond_max: int = int(cfg.get("bond", {}).get("max", 100))
-	_bond_meter.call("set_bond", int(creature.get("bond")), bond_max, nodes, maxi(total, 1))
+	var nodes: int = int(creature.call("bond_nodes"))
+	var total: int = BOND_MILESTONES.milestones(BOND_MILESTONES.config()).size()
+	var progress := BOND_MILESTONES.progress_text(creature, BOND_MILESTONES.config())
+	_bond_meter.call("set_bond", progress, nodes, maxi(total, 1))
 	var per_node: float = float(cfg.get("bond", {}).get("effects_per_node", {}).get("attack_scale", 0.0))
 	_bond_caption.text = "+%d%% ATK/DEF per node" % int(round(per_node * 100.0))
 
@@ -1540,9 +1541,8 @@ func _begin_farewell(index: int) -> void:
 		_farewell_body.text = ("%s was never on the belt. They go back to the meadow, " +
 			"and your five keep their holders.") % label
 	else:
-		var cfg: Dictionary = PROGRESSION.config()
-		var nodes: int = int(creature.call("bond_nodes", cfg))
-		var total: int = maxi(int(cfg.get("bond", {}).get("thresholds", []).size()), 1)
+		var nodes: int = int(creature.call("bond_nodes"))
+		var total: int = maxi(BOND_MILESTONES.milestones(BOND_MILESTONES.config()).size(), 1)
 		var pending := _pending_catch()
 		var newcomer := str(pending.call("label")) if pending != null else "the newcomer"
 		# Level and bond restated at the moment of the question — the two

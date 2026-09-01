@@ -14,6 +14,7 @@ extends "res://tests/test_case.gd"
 
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
+const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 
 ## A small, hand-built config with round numbers, so gain_xp's level-up
 ## thresholds and stat growth can be asserted exactly rather than merely
@@ -30,8 +31,6 @@ const CFG := {
 	},
 	"xp_award": {"base": 18, "per_enemy_level": 6, "party_share": 0.35, "rest_bonus": 5},
 	"bond": {
-		"max": 100,
-		"thresholds": [10, 30, 55, 80, 100],
 		"effects_per_node": {"attack_scale": 0.01, "defence_scale": 0.01},
 	},
 }
@@ -75,13 +74,6 @@ func test_roll_wild_level_spans_the_configured_band() -> void:
 	var band: Array = cfg.get("level", {}).get("wild_band", [1, 1])
 	assert_eq(PROGRESSION.roll_wild_level(cfg, 0.0), int(band[0]), "roll 0.0 should be the band's floor")
 	assert_eq(PROGRESSION.roll_wild_level(cfg, 1.0), int(band[1]), "roll 1.0 should be the band's ceiling")
-
-
-func test_bond_node_thresholds_match_the_shipped_boundaries() -> void:
-	var cfg := PROGRESSION.config()
-	assert_eq(PROGRESSION.bond_nodes(9, cfg), 0, "just under the first threshold should earn nothing")
-	assert_eq(PROGRESSION.bond_nodes(10, cfg), 1, "hitting the first threshold should earn one node")
-	assert_eq(PROGRESSION.bond_nodes(100, cfg), 5, "maxed bond should earn every node")
 
 
 func test_bond_stat_scale_is_one_at_zero_nodes() -> void:
@@ -226,33 +218,35 @@ func test_xp_to_next_matches_the_static_curve() -> void:
 	assert_eq(creature.xp_to_next(CFG), PROGRESSION.xp_to_next(creature.level, CFG))
 
 
-# --- creature_instance.gd: bond ----------------------------------------------------
-
-func test_gain_bond_accumulates() -> void:
-	var creature := _creature()
-	creature.gain_bond(4, CFG)
-	creature.gain_bond(4, CFG)
-	assert_eq(creature.bond, 8)
-
-
-func test_gain_bond_clamps_at_the_configured_max() -> void:
-	var creature := _creature()
-	creature.gain_bond(1000, CFG)
-	assert_eq(creature.bond, 100)
-
-
-func test_gain_bond_of_zero_or_negative_does_nothing() -> void:
-	var creature := _creature()
-	creature.gain_bond(10, CFG)
-	creature.gain_bond(0, CFG)
-	creature.gain_bond(-50, CFG)
-	assert_eq(creature.bond, 10)
-
+# --- creature_instance.gd: bond (OWNER-0901-BOND-MILESTONES) -----------------
+##
+## The old points-accumulator (`gain_bond`) is gone -- bond is a task ladder
+## now, not a number a caller adds to. `tests/test_bond.gd` owns the ladder's
+## own sequential behaviour; this file only pins that the INSTANCE method
+## delegates correctly to `bond_milestones.gd`.
 
 func test_creature_bond_nodes_matches_the_static_function() -> void:
 	var creature := _creature()
-	creature.bond = 55
-	assert_eq(creature.bond_nodes(CFG), PROGRESSION.bond_nodes(55, CFG))
+	creature.battles_fought = 2
+	creature.landmarks_visited_together = 1
+	var cfg := {
+		"milestones": [
+			{"task": "battles_fought", "target": 2, "name": "wins"},
+			{"task": "landmarks_visited_together", "target": 1, "name": "visits"},
+		],
+	}
+	assert_eq(creature.bond_nodes(cfg), BOND_MILESTONES.tier(creature, cfg))
+
+
+func test_creature_bond_nodes_defaults_to_the_real_shipped_ladder() -> void:
+	# Called with no cfg at all (every production caller's shape once the
+	# progression config in hand has no `milestones` key of its own) reads
+	# the real shipped data/config/bond_milestones.json rather than reading
+	# nothing.
+	var creature := _creature()
+	assert_eq(creature.bond_nodes(), BOND_MILESTONES.tier(creature, BOND_MILESTONES.config()))
+	assert_eq(creature.bond_nodes(CFG), BOND_MILESTONES.tier(creature, BOND_MILESTONES.config()),
+		"CFG's own bond block has no 'milestones' key, so this must fall back too")
 
 
 # --- individuality (R4.2) -----------------------------------------------------
@@ -261,9 +255,19 @@ const IV_CFG := {
 	"individuality": {"variance_pct": 0.1, "star_thresholds": [0.2, 0.4, 0.6, 0.8]},
 	"traits": {"unlock_bond_nodes": 5},
 	"bond": {
-		"max": 100, "thresholds": [10, 30, 55, 80, 100],
 		"effects_per_node": {"attack_scale": 0.01, "defence_scale": 0.01},
 	},
+	# A 5-entry ladder so `revealed_trait_secondary`'s "tier 5 = fully bonded"
+	# gate has five real milestones to climb, same as the shipped ladder --
+	# `bond_nodes(IV_CFG)` honours this instead of falling back to the real
+	# file because IV_CFG carries its own top-level `milestones` key.
+	"milestones": [
+		{"task": "battles_fought", "target": 1, "name": "a"},
+		{"task": "landmarks_visited_together", "target": 1, "name": "b"},
+		{"task": "rest_nights_together", "target": 1, "name": "c"},
+		{"task": "feeds_together", "target": 1, "name": "d"},
+		{"task": "distance_m_together", "target": 1, "name": "e"},
+	],
 }
 
 
@@ -354,10 +358,15 @@ func test_from_species_with_a_trait_roll_sets_the_primary_trait() -> void:
 func test_revealed_trait_secondary_stays_hidden_until_bond_unlocks_it() -> void:
 	var creature := CREATURE.from_species("terrapup", DEFINITION, -1.0, {}, [], [0.0, 0.5])
 	assert_true(creature.trait_secondary != "", "the roll should have picked something")
-	creature.bond = 30
+	# 2 of IV_CFG's 5 milestones met.
+	creature.battles_fought = 1
+	creature.landmarks_visited_together = 1
+	assert_eq(creature.bond_nodes(IV_CFG), 2, "sanity: exactly two of IV_CFG's five milestones are met")
 	assert_eq(creature.revealed_trait_secondary(IV_CFG), "",
 		"only 2 of 5 bond nodes crossed -- the second trait must stay hidden")
-	creature.bond = 100
+	creature.rest_nights_together = 1
+	creature.feeds_together = 1
+	creature.distance_m_together = 1.0
 	assert_eq(creature.revealed_trait_secondary(IV_CFG), creature.trait_secondary,
 		"fully bonded should reveal the rolled second trait")
 
@@ -365,5 +374,9 @@ func test_revealed_trait_secondary_stays_hidden_until_bond_unlocks_it() -> void:
 func test_from_species_with_only_a_primary_trait_roll_leaves_secondary_empty() -> void:
 	var creature := CREATURE.from_species("terrapup", DEFINITION, -1.0, {}, [], [0.0])
 	assert_eq(creature.trait_secondary, "", "no second roll supplied -- nothing to reveal, ever")
-	creature.bond = 100
+	creature.battles_fought = 1
+	creature.landmarks_visited_together = 1
+	creature.rest_nights_together = 1
+	creature.feeds_together = 1
+	creature.distance_m_together = 1.0
 	assert_eq(creature.revealed_trait_secondary(IV_CFG), "")

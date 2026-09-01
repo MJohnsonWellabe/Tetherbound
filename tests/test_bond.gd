@@ -19,19 +19,38 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PARTY := preload("res://autoload/party.gd")
+const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 
 const DEFINITION := {
 	"display_name": "Terrapup", "type": "ground",
 	"base_hp": 100.0, "base_attack": 20.0, "base_defence": 20.0,
 }
 
+## `bond.effects_per_node`/`traits.unlock_bond_nodes` still live in
+## progression.json's own shape (unchanged by OWNER-0901-BOND-MILESTONES:
+## they describe what a node BUYS, not how it is earned) — this is that
+## config, hand-built the same reason every other progression test builds
+## its own rather than reading the shipped, tunable file.
+##
+## `milestones` is folded into the SAME dict rather than kept separate: one
+## config object plays both roles here, since `bond_nodes(cfg)` honours any
+## cfg carrying a top-level `milestones` key instead of falling back to the
+## real shipped ladder (data/config/bond_milestones.json), and
+## `effective_attack`/`effective_defence`/`revealed_trait_secondary` all pass
+## the ONE cfg they were given straight into `bond_nodes()` internally.
+## Three short, round-numbered tasks, reusing real instance fields
+## (`landmarks_visited_together`, `rest_nights_together`) so a test can drive
+## them by simply setting properties on the creature.
 const CFG := {
 	"bond": {
-		"max": 100,
-		"thresholds": [10, 30, 55, 80, 100],
 		"effects_per_node": {"attack_scale": 0.01, "defence_scale": 0.02},
 	},
 	"xp_award": {"rest_bonus": 5},
+	"milestones": [
+		{"task": "battles_fought", "target": 2, "name": "wild creatures defeated together"},
+		{"task": "landmarks_visited_together", "target": 1, "name": "landmarks discovered together"},
+		{"task": "rest_nights_together", "target": 3, "name": "nights rested together"},
+	],
 }
 
 const SURVIVOR_ABILITY := {"id": "test_shell", "kind": "survivability", "value": 0.2}
@@ -52,9 +71,13 @@ func test_effective_attack_equals_plain_attack_at_zero_bond() -> void:
 
 func test_effective_attack_grows_with_bond_nodes() -> void:
 	var creature := _creature()
-	creature.bond = 55
+	# All three of CFG's milestones met, in order: 2 wild wins, 1 landmark,
+	# 3 nights rested -- tier 3 of 3.
+	creature.battles_fought = 2
+	creature.landmarks_visited_together = 1
+	creature.rest_nights_together = 3
 	var nodes: int = creature.bond_nodes(CFG)
-	assert_eq(nodes, 3, "sanity: 55 crosses the first three thresholds in CFG")
+	assert_eq(nodes, 3, "sanity: all three of CFG's milestones are met")
 	assert_almost_eq(
 		creature.effective_attack(CFG), creature.attack * (1.0 + 3.0 * 0.01), 0.0001
 	)
@@ -67,9 +90,12 @@ func test_effective_defence_equals_plain_defence_at_zero_bond_and_no_ability() -
 
 func test_effective_defence_grows_with_bond_nodes() -> void:
 	var creature := _creature()
-	creature.bond = 100
+	# All three of CFG's milestones met -- tier 3 of 3, CFG's own maximum.
+	creature.battles_fought = 2
+	creature.landmarks_visited_together = 1
+	creature.rest_nights_together = 3
 	assert_almost_eq(
-		creature.effective_defence(CFG), creature.defence * (1.0 + 5.0 * 0.02), 0.0001
+		creature.effective_defence(CFG), creature.defence * (1.0 + 3.0 * 0.02), 0.0001
 	)
 
 
@@ -145,60 +171,132 @@ func test_every_shipped_species_has_a_best_creature_ability() -> void:
 			"%s has no Best Creature ability" % species_id)
 
 
-# --- progression.gd::rest_bond: the "time together"/"resting" bond source --
+# --- bond_milestones.gd: bond as an ordered ladder of tasks (OWNER-0901) ----
+##
+## Owner playtest 2026-09-01: "I don't understand bond. It just goes up. It
+## needs to be a task." These pin the SEQUENTIAL behaviour the redesign is
+## actually about: a creature is always working toward exactly one named
+## task, and finishing task N advances the tier only once N is truly done —
+## not before, and not by finishing a LATER task out of order.
 
-func test_rest_bond_reads_from_config() -> void:
-	var cfg := {"bond": {"per_day_in_party": 2}}
-	assert_eq(PROGRESSION.rest_bond(cfg), 2)
+func test_tier_is_zero_for_a_fresh_creature() -> void:
+	var creature := _creature()
+	assert_eq(BOND_MILESTONES.tier(creature, CFG), 0)
 
 
-func test_rest_bond_defaults_to_zero_when_missing() -> void:
-	assert_eq(PROGRESSION.rest_bond({}), 0)
+func test_tier_advances_only_once_the_current_task_is_fully_met() -> void:
+	var creature := _creature()
+	creature.battles_fought = 1
+	assert_eq(BOND_MILESTONES.tier(creature, CFG), 0, "1 of 2 required wins should not advance the tier")
+	creature.battles_fought = 2
+	assert_eq(BOND_MILESTONES.tier(creature, CFG), 1, "meeting the target should advance exactly one tier")
 
 
-func test_rest_bond_matches_the_shipped_config() -> void:
+func test_tier_does_not_skip_ahead_on_a_later_task_alone() -> void:
+	var creature := _creature()
+	# CFG's SECOND milestone (landmarks) met, but its first (battles) is not.
+	creature.landmarks_visited_together = 1
+	assert_eq(BOND_MILESTONES.tier(creature, CFG), 0,
+		"a creature must not skip milestone 1 by finishing milestone 2's task first")
+
+
+func test_tier_advances_through_every_milestone_in_order() -> void:
+	var creature := _creature()
+	creature.battles_fought = 2
+	assert_eq(BOND_MILESTONES.tier(creature, CFG), 1)
+	creature.landmarks_visited_together = 1
+	assert_eq(BOND_MILESTONES.tier(creature, CFG), 2)
+	creature.rest_nights_together = 3
+	assert_eq(BOND_MILESTONES.tier(creature, CFG), 3, "every milestone in CFG's ladder is now met")
+
+
+func test_tier_never_exceeds_the_ladder_length() -> void:
+	var creature := _creature()
+	creature.battles_fought = 999
+	creature.landmarks_visited_together = 999
+	creature.rest_nights_together = 999
+	assert_eq(BOND_MILESTONES.tier(creature, CFG), 3, "CFG only has three milestones to complete")
+
+
+func test_progress_text_names_the_current_task() -> void:
+	var creature := _creature()
+	assert_eq(BOND_MILESTONES.progress_text(creature, CFG), "0/2 wild creatures defeated together")
+	creature.battles_fought = 2
+	assert_eq(BOND_MILESTONES.progress_text(creature, CFG), "0/1 landmarks discovered together")
+
+
+func test_progress_text_reports_fully_bonded_once_every_milestone_is_done() -> void:
+	var creature := _creature()
+	creature.battles_fought = 2
+	creature.landmarks_visited_together = 1
+	creature.rest_nights_together = 3
+	assert_eq(BOND_MILESTONES.progress_text(creature, CFG), "Fully bonded")
+
+
+# --- crediting helpers: the four tasks with no pre-existing counter --------
+
+func test_credit_landmark_visit_accumulates() -> void:
+	var creature := _creature()
+	BOND_MILESTONES.credit_landmark_visit(creature)
+	BOND_MILESTONES.credit_landmark_visit(creature)
+	assert_eq(int(creature.get("landmarks_visited_together")), 2)
+
+
+func test_credit_distance_accumulates_and_ignores_non_positive() -> void:
+	var creature := _creature()
+	BOND_MILESTONES.credit_distance(creature, 12.5)
+	BOND_MILESTONES.credit_distance(creature, 3.5)
+	BOND_MILESTONES.credit_distance(creature, -100.0)
+	BOND_MILESTONES.credit_distance(creature, 0.0)
+	assert_almost_eq(float(creature.get("distance_m_together")), 16.0, 0.0001)
+
+
+func test_credit_rest_night_accumulates() -> void:
+	var creature := _creature()
+	BOND_MILESTONES.credit_rest_night(creature)
+	assert_eq(int(creature.get("rest_nights_together")), 1)
+
+
+func test_credit_feed_accumulates() -> void:
+	var creature := _creature()
+	BOND_MILESTONES.credit_feed(creature)
+	BOND_MILESTONES.credit_feed(creature)
+	BOND_MILESTONES.credit_feed(creature)
+	assert_eq(int(creature.get("feeds_together")), 3)
+
+
+# --- the shipped ladder itself -----------------------------------------------
+
+func test_shipped_ladder_matches_the_owners_own_first_milestone() -> void:
+	var list := BOND_MILESTONES.milestones(BOND_MILESTONES.config())
+	assert_true(list.size() > 0, "bond_milestones.json shipped no milestones")
+	var first := list[0] as Dictionary
+	assert_eq(str(first.get("task", "")), "battles_fought")
+	assert_eq(int(first.get("target", 0)), 50,
+		"OWNER-0901: 'defeat 50 wild creatures together' is the owner's own exact number")
+
+
+func test_shipped_ladder_has_five_milestones_matching_the_stat_scale_and_trait_unlock() -> void:
 	var cfg := PROGRESSION.config()
-	var expected := int(cfg.get("bond", {}).get("per_day_in_party", 0))
-	assert_eq(PROGRESSION.rest_bond(cfg), expected)
-	assert_true(expected > 0, "resting together is supposed to be a real bond source, not a no-op")
+	var list := BOND_MILESTONES.milestones(BOND_MILESTONES.config())
+	assert_eq(list.size(), 5, "the milestone ladder should still produce the same 0-5 tier "
+		+ "progression.json's traits.unlock_bond_nodes and bond.effects_per_node assume")
+	var unlock_required := int(cfg.get("traits", {}).get("unlock_bond_nodes", 5))
+	assert_eq(unlock_required, list.size(),
+		"the second-trait unlock should require every milestone, i.e. 'fully bonded'")
 
 
-## OP23-14 (owner playtest 2026-08-23): "one percent per action is worthless."
-## Before the retune, catching (10) plus battle wins alone (4 each) needed
-## ~23 wins to reach the 100-point max; nothing here asserted that the gain
-## amounts scaled with the max, only that they existed. This pins the shipped
-## config to a concrete "meaningful" floor: a catch plus a couple dozen
-## ordinary actions (wins/nights), not fifty-plus, should be able to reach max.
-func test_bond_gain_is_meaningful_against_the_shipped_max() -> void:
-	var cfg := PROGRESSION.config()
-	var bond: Dictionary = cfg.get("bond", {})
-	var max_bond := int(bond.get("max", 0))
-	var battle_won := int(bond.get("battle_won", 0))
-	var catch_start := int(bond.get("successful_catch_start", 0))
-	var per_day := int(bond.get("per_day_in_party", 0))
-
-	assert_true(max_bond > 0, "bond.max is missing from the shipped config")
-
-	# A single battle win must move at least 5% of the max bar, not ~1%.
-	var win_msg := (
-		"a battle win only grants %d/%d (%.1f%%) of max bond; OP23-14 asked for a "
-		+ "win to feel meaningful, not a rounding error"
-	) % [battle_won, max_bond, 100.0 * float(battle_won) / float(max_bond)]
-	assert_true(float(battle_won) / float(max_bond) >= 0.05, win_msg)
-
-	# Catching a creature should hand it a real head start, not a token amount.
-	var catch_msg := "successful_catch_start only grants %d/%d of max bond" % [catch_start, max_bond]
-	assert_true(float(catch_start) / float(max_bond) >= 0.10, catch_msg)
-
-	# A dozen wins plus a dozen nights together should be enough to max a
-	# bond in ordinary play, without resting alone or fighting alone doing it.
-	var reached := catch_start + 12 * battle_won + 12 * per_day
-	var reached_msg := (
-		"a catch plus a dozen wins and a dozen nights together only reaches %d/%d "
-		+ "bond; ordinary play should be able to max a bond well inside the "
-		+ "chapter's length"
-	) % [reached, max_bond]
-	assert_true(reached >= max_bond, reached_msg)
+## Every task must be a real, ever-growing field on a fresh instance, and
+## every target must be reachable in principle (positive) -- a milestone with
+## a target of 0 or a task naming no field would silently complete itself.
+func test_every_shipped_milestone_names_a_real_field_with_a_positive_target() -> void:
+	var creature := _creature()
+	for entry: Variant in BOND_MILESTONES.milestones(BOND_MILESTONES.config()):
+		var m := entry as Dictionary
+		var task := str(m.get("task", ""))
+		assert_true(creature.has_method("get") and typeof(creature.get(task)) != TYPE_NIL,
+			"milestone task '%s' names no field on creature_instance.gd" % task)
+		assert_true(int(m.get("target", 0)) > 0, "milestone task '%s' has no positive target" % task)
 
 
 # --- autoload/party.gd: the Best Creature designation ------------------------

@@ -25,6 +25,9 @@ const CREATURE_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
 ## RG19-spec/D68. Rested/fed/happy, ticked here for every party member.
 const CREATURE_CONDITION := preload("res://scripts/creatures/creature_condition.gd")
+## OWNER-0901-BOND-MILESTONES: distance/landmark/rest-night crediting for the
+## bond ladder's "travelling"/"visiting"/"resting" tasks.
+const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
@@ -381,6 +384,22 @@ var _menu: CanvasLayer = null
 const _DISCOVERY_INTERVAL_S := 0.5
 var _discovery_elapsed: float = 0.0
 
+## OWNER-0901-BOND-MILESTONES travel tracking, ticked alongside fog-of-war
+## discovery above rather than every physics frame -- one more throttled
+## poll on the same cadence, not a second per-frame cost.
+##
+## `_travel_pos_valid` starts false so the very first tick after a scene
+## loads (or a `reset_for_new_game()`) has nothing to measure FROM yet — the
+## first real position becomes the baseline instead of being read as however
+## far the player spawned from Vector3.ZERO.
+var _travel_pos: Vector3 = Vector3.ZERO
+var _travel_pos_valid: bool = false
+## A single tick's honest walking distance at sprint speed is a few metres
+## (see player_controller.gd's `_sprint_speed`) times `_DISCOVERY_INTERVAL_S`.
+## Anything past this in one tick is a teleport/respawn/scene change, not
+## travel, and must not inflate the "travelled together" milestone.
+const _TRAVEL_TELEPORT_GUARD_M := 30.0
+
 ## PT-23. `scripts/build/camp.gd` was the sole caller of `autosave_slot()`
 ## in the whole codebase -- building a camp is a mid-session action, so a
 ## new player who has not built anything yet has NO autosave at all for
@@ -472,6 +491,7 @@ func reset_for_new_game() -> void:
 		if SPAWN_TABLES.rolls_new_worlds(SPAWN_TABLES.config()) else 0
 	_discovery_elapsed = 0.0
 	_autosave_elapsed = 0.0
+	_travel_pos_valid = false
 
 
 ## The menu, as a child of the autoload rather than of a world scene.
@@ -596,8 +616,27 @@ func _process(delta: float) -> void:
 	var player := _find_player()
 	if player == null:
 		return
-	map.mark_visited(player.global_position)
-	map.update_region(player.global_position)
+	# OWNER-0901-BOND-MILESTONES: "travelling"/"visiting" milestone credit,
+	# shared by every party member present (the same "whole five, not just
+	# whoever is piloted" rule `battles_fought`/the old rest bonus already
+	# used) — measured here rather than in player_controller.gd so the
+	# player's own delicate movement/collision code stays untouched.
+	var landmarks_before := int(map.discovered_landmark_count())
+	var here := player.global_position
+	if _travel_pos_valid:
+		var stepped := here.distance_to(_travel_pos)
+		if stepped > 0.0 and stepped <= _TRAVEL_TELEPORT_GUARD_M and party != null:
+			for member: Variant in (party.call("members") as Array):
+				BOND_MILESTONES.credit_distance(member as RefCounted, stepped)
+	_travel_pos = here
+	_travel_pos_valid = true
+
+	map.mark_visited(here)
+	map.update_region(here)
+	var landmarks_gained := int(map.discovered_landmark_count()) - landmarks_before
+	if landmarks_gained > 0 and party != null:
+		for member: Variant in (party.call("members") as Array):
+			BOND_MILESTONES.credit_landmark_visit(member as RefCounted)
 
 
 ## R4.10. While a catch is waiting on the release ceremony, the Team screen is
@@ -732,10 +771,6 @@ func complete_creature_bed_rests() -> int:
 	if party == null:
 		return 0
 	var cfg := CREATURE_PROGRESSION.config()
-	# `rest_xp` is read by `home_recovery.rest()` from the same config; only the
-	# bond half is paid here, because bond is what the BED adds over an ordinary
-	# rest (RG19-spec/D68).
-	var rest_bond := CREATURE_PROGRESSION.rest_bond(cfg)
 	var completed := 0
 	for i in party.call("size"):
 		var creature: RefCounted = party.call("at", i)
@@ -759,8 +794,11 @@ func complete_creature_bed_rests() -> int:
 		creature.set("rested", true)
 		creature.set("resting", false)
 		creature.set("rest_bed_index", -1)
-		if rest_bond > 0:
-			creature.call("gain_bond", rest_bond, cfg)
+		# OWNER-0901-BOND-MILESTONES: bond's "resting" milestone -- what the
+		# BED adds over an ordinary rest is now a night credited toward it
+		# (RG19-spec/D68 is still why this lives here rather than in
+		# home_recovery.rest()).
+		BOND_MILESTONES.credit_rest_night(creature)
 		# RG19-spec/D68: the night in the bed is what "well rested" means, and
 		# it is worth a little mood on top. The bed does not carry the numbers.
 		CREATURE_CONDITION.note_rest_completed(creature, CREATURE_CONDITION.config())

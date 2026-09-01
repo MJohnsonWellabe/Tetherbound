@@ -102,9 +102,10 @@ extends SceneTree
 ##     open gives each one the real state it was built to show.
 ##   - `bond_meter.gd` has no mount of its own; `tab_creatures.gd` is its only
 ##     caller (`_bond_meter.call("set_bond", ...)`, fed off the party's real
-##     `creature.bond`), so the dedicated "bond meter" element the brief names
-##     is the Creatures tab with a party whose first member has real,
-##     non-zero bond -- not a separate widget invented for this tool.
+##     milestone progress -- `bond_milestones.gd::progress_text()`), so the
+##     dedicated "bond meter" element the brief names is the Creatures tab
+##     with a party whose first member has real, non-zero bond progress -- not
+##     a separate widget invented for this tool.
 ##   - `party_strip.gd` and `stamina_arc.gd` both say in their own headers that
 ##     they never reach `/root/Game` -- they are pure Controls fed a fraction/
 ##     entries array by whoever mounts them (`playground_hud.gd` in real
@@ -254,7 +255,12 @@ func _seed_game_state() -> void:
 			2:
 				creature.take_damage(float(creature.get("max_hp"))) # fainted
 			3:
-				creature.bond = 46 # a real, partial bond -- not zero, not maxed
+				# OWNER-0901-BOND-MILESTONES: real, partial progress -- milestone
+				# 1 (50 wild wins) done, one node filled, and partway into
+				# milestone 2 (landmarks) so the caption shows real in-progress
+				# text rather than "0/50" or "Fully bonded".
+				creature.set("battles_fought", 50)
+				creature.set("landmarks_visited_together", 1)
 		party.call("add", creature)
 
 	inventory.call("add", "wood", 40)

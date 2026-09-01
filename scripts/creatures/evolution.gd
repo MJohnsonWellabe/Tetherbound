@@ -130,14 +130,26 @@ static func _describe_catalysts(names: Array[String]) -> String:
 ## test) that has none in hand -- and is only ever consulted when the
 ## requirement actually names an `item_id`. Never mutates anything; `evolve()`
 ## below is the only function here that does.
-static func check(creature: RefCounted, cfg: Dictionary, inventory: RefCounted = null) -> Dictionary:
+##
+## `milestones_cfg` is OWNER-0901-BOND-MILESTONES's optional override, passed
+## straight through to `creature.bond_nodes()` -- {} (the default) reads the
+## real shipped ladder, same as every other production caller of
+## `bond_nodes()`. Only a test that wants an isolated ladder needs to pass one.
+static func check(
+	creature: RefCounted, cfg: Dictionary, inventory: RefCounted = null,
+	milestones_cfg: Dictionary = {}
+) -> Dictionary:
 	var species_id := str(creature.get("species_id"))
 	var req := requirements(species_id, cfg, inventory)
 	if req.is_empty():
 		return {"eligible": false, "target": "", "reason": "%s does not evolve." % str(creature.call("label"))}
 
 	var level_needed := int(req.get("level", 0))
-	var bond_needed := int(req.get("bond", 0))
+	# OWNER-0901-BOND-MILESTONES: `bond` used to be a raw 0-100 value compared
+	# directly; it is now `bond_tier`, read off the milestone ladder via
+	# `bond_nodes()` (see that method's own comment for what `milestones_cfg`
+	# does).
+	var bond_tier_needed := int(req.get("bond_tier", 0))
 
 	if int(creature.get("level")) < level_needed:
 		return {
@@ -146,7 +158,7 @@ static func check(creature: RefCounted, cfg: Dictionary, inventory: RefCounted =
 				str(creature.call("label")), level_needed, int(creature.get("level"))
 			],
 		}
-	if int(creature.get("bond")) < bond_needed:
+	if int(creature.call("bond_nodes", milestones_cfg)) < bond_tier_needed:
 		return {
 			"eligible": false, "target": str(req.get("target", "")),
 			"reason": "%s needs a stronger bond first." % str(creature.call("label")),
@@ -176,8 +188,11 @@ static func check(creature: RefCounted, cfg: Dictionary, inventory: RefCounted =
 ## trusted from an earlier `check()`, the same defensive shape
 ## `teaching.teach()` uses, so a caller cannot evolve a creature by racing a
 ## stale eligibility read (an item spent elsewhere between the two calls, say).
-static func evolve(creature: RefCounted, cfg: Dictionary, inventory: RefCounted = null) -> bool:
-	var result := check(creature, cfg, inventory)
+static func evolve(
+	creature: RefCounted, cfg: Dictionary, inventory: RefCounted = null,
+	milestones_cfg: Dictionary = {}
+) -> bool:
+	var result := check(creature, cfg, inventory, milestones_cfg)
 	if not bool(result.get("eligible", false)):
 		return false
 

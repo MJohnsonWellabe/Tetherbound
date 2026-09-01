@@ -140,6 +140,21 @@ extends RefCounted
 ## through the production Load path went from 117.60 max hp to 1.18 on its
 ## next level-up) -- the bump was reverted here for the same reason S09's was.
 ##
+## ## VERSION 16 — OWNER-0901-BOND-MILESTONES
+##
+## Bond became an ordered ladder of concrete tasks instead of a bare 0-100
+## meter (owner playtest 2026-09-01). Four of its five tasks needed a new
+## per-creature counter: `landmarks_visited_together`, `distance_m_together`,
+## `rest_nights_together`, `feeds_together` (the fifth, `battles_fought`,
+## already existed — see `bond_milestones.json`'s own comment). Same "nothing
+## to migrate FROM" answer `_migrate_v13` gives battles_fought's own siblings:
+## a pre-16 save was not counting any of these, so zero is the true statement
+## that the history was never kept, not a placeholder. The legacy `bond` int
+## itself is untouched and keeps round-tripping as-is; nothing reads it as a
+## gate any more, but nothing needs to erase it either. This landed after
+## VERSION 15 (T3-ENCOUNTER's `world_seed`) went in on `main`, hence 16 rather
+## than the 15 an earlier pass on this branch used before rebasing.
+##
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
@@ -177,7 +192,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 15
+const VERSION := 16
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -615,6 +630,24 @@ func _migrate_v13(data: Dictionary) -> Dictionary:
 	return migrated
 
 
+## VERSION 15 -> 16: OWNER-0901-BOND-MILESTONES. See the class header for why
+## every one of these is an honest zero rather than a placeholder.
+func _migrate_v15(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 16
+	var party: Array = migrated.get("party", [])
+	for raw: Variant in party:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var creature := raw as Dictionary
+		creature["landmarks_visited_together"] = 0
+		creature["distance_m_together"] = 0.0
+		creature["rest_nights_together"] = 0
+		creature["feeds_together"] = 0
+	migrated["party"] = party
+	return migrated
+
+
 func _migrate_v12(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
 	migrated["version"] = 13
@@ -748,6 +781,10 @@ func _party_to_array(party: Variant) -> Array:
 			"battles_fought": int(instance.get("battles_fought")),
 			"caught_on_day": int(instance.get("caught_on_day")),
 			"levels_gained_with_you": int(instance.get("levels_gained_with_you")),
+			"landmarks_visited_together": int(instance.get("landmarks_visited_together")),
+			"distance_m_together": float(instance.get("distance_m_together")),
+			"rest_nights_together": int(instance.get("rest_nights_together")),
+			"feeds_together": int(instance.get("feeds_together")),
 			"move_quick": str(instance.get("move_quick")),
 			"move_charged": str(instance.get("move_charged")),
 			"iv_hp": float(instance.get("iv_hp")),
@@ -805,6 +842,10 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.battles_fought = int(d.get("battles_fought", 0))
 		creature.caught_on_day = int(d.get("caught_on_day", 0))
 		creature.levels_gained_with_you = int(d.get("levels_gained_with_you", 0))
+		creature.landmarks_visited_together = int(d.get("landmarks_visited_together", 0))
+		creature.distance_m_together = float(d.get("distance_m_together", 0.0))
+		creature.rest_nights_together = int(d.get("rest_nights_together", 0))
+		creature.feeds_together = int(d.get("feeds_together", 0))
 		creature.max_hp = float(d.get("max_hp", 1.0))
 		creature.attack = float(d.get("attack", 1.0))
 		creature.defence = float(d.get("defence", 1.0))

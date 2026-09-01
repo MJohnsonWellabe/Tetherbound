@@ -1,26 +1,33 @@
 extends Control
 
 ## The bond tether (spec §8.4): five nodes on a line, the same "how many
-## thresholds crossed" shape `creature_instance.gd::bond_nodes()` and
-## `progression.gd::bond_nodes()` already compute — this widget only draws
-## what those return, it does not decide bond thresholds itself.
+## milestones completed" shape `creature_instance.gd::bond_nodes()` and
+## `bond_milestones.gd::tier()` already compute — this widget only draws
+## what those return, it does not decide the milestone ladder itself.
 ##
 ## A custom `_draw()` rather than five child Controls: five circles on a line
 ## with a caption underneath is cheaper to keep in sync as one paint call than
 ## as six nodes whose positions and colours would otherwise all have to agree
 ## with each other every frame.
+##
+## OWNER-0901-BOND-MILESTONES: the caption used to read a bare "Bond N/100",
+## exactly the opaque meter the owner's 2026-09-01 playtest objected to
+## ("I don't understand bond. It just goes up."). It now takes the current
+## milestone's own progress SENTENCE instead ("38/50 wild creatures defeated
+## together") — `bond_milestones.gd::progress_text()` builds it, so this
+## widget, the Team screen row and the release ceremony can never disagree
+## about the wording.
 
 const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 
 const GRAPHIC_SIZE := Vector2(220.0, 28.0)
-## Room for "Bond N/100" underneath the graphic.
+## Room for the milestone progress line underneath the graphic.
 const CAPTION_HEIGHT := 26.0
 
 const NODE_RADIUS := 5.0
 const LINE_WIDTH := 3.0
 
-var _bond: int = 0
-var _bond_max: int = 100
+var _caption: String = ""
 var _nodes: int = 0
 var _total_nodes: int = 5
 var _font: Font = null
@@ -32,14 +39,14 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
-## `bond`/`bond_max` are for the caption text only; `nodes`/`total_nodes`
-## decide how many of the five circles paint filled. Split rather than
-## deriving nodes from bond here, because the threshold table
-## (`data/config/progression.json`'s `bond.thresholds`) is not this widget's
-## to know — `creature_instance.bond_nodes(cfg)` already does that work.
-func set_bond(bond: int, bond_max: int, nodes: int, total_nodes: int = 5) -> void:
-	_bond = bond
-	_bond_max = maxi(bond_max, 1)
+## `caption` is the milestone progress sentence to print underneath (see this
+## file's own header); `nodes`/`total_nodes` decide how many of the five
+## circles paint filled. Split rather than deriving nodes from the caption
+## here, because the milestone ladder (`data/config/bond_milestones.json`) is
+## not this widget's to know — `creature_instance.bond_nodes(cfg)` already
+## does that work.
+func set_bond(caption: String, nodes: int, total_nodes: int = 5) -> void:
+	_caption = caption
 	_nodes = clampi(nodes, 0, total_nodes)
 	_total_nodes = maxi(total_nodes, 1)
 	queue_redraw()
@@ -66,9 +73,8 @@ func _draw() -> void:
 		else:
 			draw_arc(center, NODE_RADIUS, 0.0, TAU, 16, UI_TOKENS.BORDER, 2.0, true)
 
-	var caption := "Bond %d/%d" % [_bond, _bond_max]
 	var caption_pos := Vector2(0.0, GRAPHIC_SIZE.y + UI_TOKENS.FONT_TINY)
 	draw_string(
-		_font, caption_pos, caption, HORIZONTAL_ALIGNMENT_LEFT, -1.0,
+		_font, caption_pos, _caption, HORIZONTAL_ALIGNMENT_LEFT, -1.0,
 		UI_TOKENS.FONT_TINY, UI_TOKENS.TEXT_SECONDARY
 	)

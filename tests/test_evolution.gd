@@ -14,12 +14,26 @@ extends "res://tests/test_case.gd"
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
+const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 
 const CFG_NO_ITEM := {
-	"evolution": {"mudsnout": {"level": 15, "bond": 55, "item_id": ""}},
+	"evolution": {"mudsnout": {"level": 15, "bond_tier": 3, "item_id": ""}},
 }
 const CFG_WITH_ITEM := {
-	"evolution": {"mudsnout": {"level": 15, "bond": 55, "item_id": "heartstone"}},
+	"evolution": {"mudsnout": {"level": 15, "bond_tier": 3, "item_id": "heartstone"}},
+}
+
+## OWNER-0901-BOND-MILESTONES: a small, isolated 3-entry ladder so `_mudsnout`
+## below can put a creature at an exact tier by setting real instance fields,
+## the same "hand-built config, real fields" shape test_bond.gd/
+## test_progression.gd already use. Passed as `check()`/`evolve()`'s optional
+## `milestones_cfg` argument.
+const MILESTONES_CFG := {
+	"milestones": [
+		{"task": "battles_fought", "target": 1, "name": "wins"},
+		{"task": "landmarks_visited_together", "target": 1, "name": "visits"},
+		{"task": "rest_nights_together", "target": 1, "name": "nights"},
+	],
 }
 
 
@@ -39,10 +53,18 @@ class FakeInventory:
 		return true
 
 
-func _mudsnout(level: int, bond: int) -> RefCounted:
+## `tier` sets real instance fields against MILESTONES_CFG's own 3-entry
+## ladder so it lands the creature at exactly that many milestones completed,
+## in order -- 0-3.
+func _mudsnout(level: int, tier: int) -> RefCounted:
 	var creature: RefCounted = SPECIES.spawn("mudsnout")
 	creature.set("level", level)
-	creature.set("bond", bond)
+	if tier >= 1:
+		creature.set("battles_fought", 1)
+	if tier >= 2:
+		creature.set("landmarks_visited_together", 1)
+	if tier >= 3:
+		creature.set("rest_nights_together", 1)
 	return creature
 
 
@@ -57,59 +79,63 @@ func test_requirements_names_the_real_species_json_target() -> void:
 	var req := EVOLUTION.requirements("mudsnout", CFG_NO_ITEM)
 	assert_eq(str(req.get("target")), "tuskroot")
 	assert_eq(int(req.get("level")), 15)
-	assert_eq(int(req.get("bond")), 55)
+	assert_eq(int(req.get("bond_tier")), 3)
 
 
 func test_not_eligible_below_the_level_requirement() -> void:
-	var creature := _mudsnout(10, 100)
-	var result := EVOLUTION.check(creature, CFG_NO_ITEM)
+	var creature := _mudsnout(10, 3)
+	var result := EVOLUTION.check(creature, CFG_NO_ITEM, null, MILESTONES_CFG)
 	assert_false(bool(result.get("eligible")))
 	assert_true(str(result.get("reason")).contains("level"),
 		"refusal should explain the level gate: '%s'" % str(result.get("reason")))
 
 
 func test_not_eligible_below_the_bond_requirement() -> void:
-	var creature := _mudsnout(20, 10)
-	var result := EVOLUTION.check(creature, CFG_NO_ITEM)
+	var creature := _mudsnout(20, 1)
+	var result := EVOLUTION.check(creature, CFG_NO_ITEM, null, MILESTONES_CFG)
 	assert_false(bool(result.get("eligible")))
 
 
 func test_eligible_once_level_and_bond_are_both_met_with_no_item_required() -> void:
-	var creature := _mudsnout(15, 55)
-	var result := EVOLUTION.check(creature, CFG_NO_ITEM)
+	var creature := _mudsnout(15, 3)
+	var result := EVOLUTION.check(creature, CFG_NO_ITEM, null, MILESTONES_CFG)
 	assert_true(bool(result.get("eligible")))
 	assert_eq(str(result.get("target")), "tuskroot")
 
 
 func test_item_gate_refuses_without_the_item_and_spends_nothing() -> void:
-	var creature := _mudsnout(15, 55)
+	var creature := _mudsnout(15, 3)
 	var inventory := FakeInventory.new()
-	var result := EVOLUTION.check(creature, CFG_WITH_ITEM, inventory)
+	var result := EVOLUTION.check(creature, CFG_WITH_ITEM, inventory, MILESTONES_CFG)
 	assert_false(bool(result.get("eligible")))
-	assert_false(EVOLUTION.evolve(creature, CFG_WITH_ITEM, inventory))
+	assert_false(EVOLUTION.evolve(creature, CFG_WITH_ITEM, inventory, MILESTONES_CFG))
 	assert_eq(creature.get("species_id"), "mudsnout", "a refused evolve must change nothing")
 
 
 func test_item_gate_passes_and_consumes_exactly_one_with_the_item_in_hand() -> void:
-	var creature := _mudsnout(15, 55)
+	var creature := _mudsnout(15, 3)
 	var inventory := FakeInventory.new()
 	inventory.counts["heartstone"] = 2
-	assert_true(bool(EVOLUTION.check(creature, CFG_WITH_ITEM, inventory).get("eligible")))
-	assert_true(EVOLUTION.evolve(creature, CFG_WITH_ITEM, inventory))
+	assert_true(bool(EVOLUTION.check(creature, CFG_WITH_ITEM, inventory, MILESTONES_CFG).get("eligible")))
+	assert_true(EVOLUTION.evolve(creature, CFG_WITH_ITEM, inventory, MILESTONES_CFG))
 	assert_eq(inventory.count("heartstone"), 1, "evolve must consume exactly one catalyst item")
 
 
 func test_evolve_refuses_and_changes_nothing_when_not_eligible() -> void:
 	var creature := _mudsnout(3, 0)
 	var before_species: String = creature.get("species_id")
-	assert_false(EVOLUTION.evolve(creature, CFG_NO_ITEM))
+	assert_false(EVOLUTION.evolve(creature, CFG_NO_ITEM, null, MILESTONES_CFG))
 	assert_eq(creature.get("species_id"), before_species)
 
 
 ## The core promise: species/stats change, everything the player earned does
 ## not.
 func test_evolve_changes_species_and_stats_but_preserves_what_the_player_earned() -> void:
-	var creature := _mudsnout(20, 60)
+	var creature := _mudsnout(20, 3)
+	# The legacy `bond` field (OWNER-0901-BOND-MILESTONES: no longer gated on,
+	# but still just a plain int property) should survive evolution exactly
+	# like every other earned field below.
+	creature.set("bond", 60)
 	creature.set("nickname", "Snorty")
 	creature.set("xp", 42)
 	creature.set("iv_hp", 0.81)
@@ -118,7 +144,7 @@ func test_evolve_changes_species_and_stats_but_preserves_what_the_player_earned(
 
 	var hp_fraction_before: float = creature.call("hp_fraction")
 
-	assert_true(EVOLUTION.evolve(creature, CFG_NO_ITEM))
+	assert_true(EVOLUTION.evolve(creature, CFG_NO_ITEM, null, MILESTONES_CFG))
 
 	assert_eq(creature.get("species_id"), "tuskroot")
 	assert_eq(creature.get("display_name"), str(SPECIES.definition("tuskroot").get("display_name")))
@@ -182,6 +208,30 @@ func test_the_shipped_evolution_catalyst_is_a_real_item() -> void:
 		"progression.json's evolution catalyst '%s' is not defined in items.json" % item_id)
 
 
+## Sets real instance fields to meet the first `tier` entries of the REAL
+## shipped data/config/bond_milestones.json, so a creature can be put at a
+## real tier without a milestones_cfg override -- needed for any test in this
+## section, since they read the real shipped progression.json `cfg` (and so
+## real `bond_nodes()` falls back to the real ladder too, unlike `_mudsnout`
+## above which only satisfies the small hand-built MILESTONES_CFG).
+func _mudsnout_at_real_tier(level: int, tier: int) -> RefCounted:
+	var creature: RefCounted = SPECIES.spawn("mudsnout")
+	creature.set("level", level)
+	var list := BOND_MILESTONES.milestones(BOND_MILESTONES.config())
+	for i in mini(tier, list.size()):
+		var m := list[i] as Dictionary
+		var task := str(m.get("task", ""))
+		if task.is_empty():
+			continue
+		# `distance_m_together` is the one float-typed task; every other
+		# shipped task so far is a plain int counter.
+		if task == "distance_m_together":
+			creature.set(task, float(m.get("target", 0.0)))
+		else:
+			creature.set(task, int(m.get("target", 0)))
+	return creature
+
+
 ## --- D71/T3-SUNSTONE: Mudsnout branches on which stone is held -------------
 ##
 ## These read the REAL species.json link (`mudsnout.evolves_into_variants`),
@@ -190,9 +240,15 @@ func test_the_shipped_evolution_catalyst_is_a_real_item() -> void:
 ## nothing exercised it. CFG_WITH_ITEM is reused unchanged: the branch design
 ## deliberately keeps progression.json's shape exactly as SD17 shipped it,
 ## only species.json gained a new field.
+##
+## OWNER-0901-BOND-MILESTONES: these read the real shipped progression.json
+## `evolution.mudsnout.bond_tier` (no milestones_cfg override passed to
+## `check()`/`evolve()`), so `_mudsnout_at_real_tier` -- not `_mudsnout`,
+## which only satisfies the small hand-built MILESTONES_CFG above -- is what
+## puts a creature at the real bond_tier requirement.
 
 func test_sunstone_branch_evolves_into_ashtusk_and_consumes_only_the_sunstone() -> void:
-	var creature := _mudsnout(15, 55)
+	var creature := _mudsnout_at_real_tier(15, 3)
 	var inventory := FakeInventory.new()
 	inventory.counts["sunstone"] = 1
 	var result := EVOLUTION.check(creature, CFG_WITH_ITEM, inventory)
@@ -204,7 +260,7 @@ func test_sunstone_branch_evolves_into_ashtusk_and_consumes_only_the_sunstone() 
 
 
 func test_holding_both_stones_refuses_as_ambiguous_and_spends_nothing() -> void:
-	var creature := _mudsnout(15, 55)
+	var creature := _mudsnout_at_real_tier(15, 3)
 	var inventory := FakeInventory.new()
 	inventory.counts["heartstone"] = 1
 	inventory.counts["sunstone"] = 1
@@ -226,7 +282,7 @@ func test_holding_neither_stone_still_reports_tuskroot_as_the_default_target() -
 
 
 func test_refusal_with_no_catalyst_names_both_stones() -> void:
-	var creature := _mudsnout(15, 55)
+	var creature := _mudsnout_at_real_tier(15, 3)
 	var result := EVOLUTION.check(creature, CFG_WITH_ITEM, FakeInventory.new())
 	assert_false(bool(result.get("eligible")))
 	var reason := str(result.get("reason"))
@@ -240,7 +296,9 @@ func test_the_shipped_gate_refuses_without_the_catalyst_and_allows_with_it() -> 
 	var item_id := str(entry.get("item_id", ""))
 	if item_id.is_empty():
 		return
-	var creature := _mudsnout(int(entry.get("level", 15)) + 5, int(entry.get("bond", 55)) + 5)
+	var creature := _mudsnout_at_real_tier(
+		int(entry.get("level", 15)) + 5, int(entry.get("bond_tier", 3))
+	)
 	var inventory := FakeInventory.new()
 	var without := EVOLUTION.check(creature, cfg, inventory)
 	assert_false(bool(without.get("eligible")),
