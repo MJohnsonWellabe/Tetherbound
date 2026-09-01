@@ -2441,16 +2441,16 @@
     "_comment_world_noise_removed": "world_noise_scale/height/region_blend/lod_distance/max_octaves/min_octaves are NOT real uniforms on this Terrain3D build \u2014 confirmed by dumping Terrain3DMaterial's actual _get_shader_parameters() keys directly (R7.1), which do not include any world_noise_* name. world_background=NOISE above is a real property and does apply; the background's shape beyond it is this build's fixed default, not tunable from here. Removed rather than left silently ignored, same reasoning as dual_scale below.",
     "_comment_macro": "Macro variation tints the ground at two large scales, which is the only thing that stops a 2K tile reading as tiling. The critic measured the previous ground as high-frequency mottled noise with 'no blade direction and no scale cue' \u2014 a texture repeating every few metres with nothing varying above that.",
     "_comment_macro_multiply": "These MULTIPLY the albedo \u2014 the shader does `macrov = mix(colour1, white, noise1); macrov *= mix(colour2, white, noise2)`. So they can only ever darken, and two mid-tones compound: the first attempt used #c6d18a and #8fa06a, which multiply out to roughly 0.47 at their overlap and took the near-field ground from luminance 0.124 to 0.054 \u2014 a black foreground in every frame. Keep both near white and let them tint, not shade. Anything below about #b0 here is a brightness change wearing a colour's clothes.",
-    "macro_variation1": "#f0eee6",
-    "macro_variation2": "#e4e6e2",
-    "noise1_scale": 0.022,
-    "noise2_scale": 0.055,
+    "macro_variation1": "#b8b58c",
+    "macro_variation2": "#8ea369",
+    "noise1_scale": 0.012,
+    "noise2_scale": 0.03,
     "noise1_angle": 0.7,
     "_comment_dual_scale_removed": "Terrain3D's dual-scaling uniforms (dual_scale_texture/near/far/reduction) are NOT reachable through set_shader_param on this build \u2014 the shader only compiles them in behind a feature this API does not expose, and writing them returns quietly having done nothing. They were configured here for two rounds while the surveys came back byte-identical. `_apply_ground_shader` now reads every uniform back and warns by name, which is how this was finally caught.",
     "_comment_auto_removed": "auto_slope/auto_height_reduction (R7.1): also not real uniform names on this build, same check as world_noise_* above. There is no exposed control over the auto-shader's grass/rock slope threshold or blend softness in this Terrain3D version; `colour.blend_deg` above only softens the BAKED vertex-colour transition, a separate layer from the live auto-shader texture switch.",
     "_comment_enable_macro": "R7.1: macro_variation1/2 above were configured but never actually applied \u2014 enable_macro_variation defaults false and nothing set it true. blend_sharpness, mipmap_bias, macro_variation1/2 and noise1/2_scale/angle ARE real uniforms on this build (confirmed the same way, and separately confirmed to affect the render: forcing extreme values visibly changes the frame even though get_shader_param() reads them back as null after every set \u2014 the readback is unreliable on this build, not the write). The `ignored N setting(s)` warning below is therefore a false positive for exactly these seven keys; it stays because it is still correct about world_noise_*/auto_slope/auto_height_reduction, which really are dead.",
-    "blend_sharpness": 0.38,
-    "mipmap_bias": 0.92,
+    "blend_sharpness": 0.5,
+    "mipmap_bias": 0.86,
     "enable_macro_variation": true,
     "_comment_macro_r9_4": "R9.4. Was #eef0d8 / #d8dcc0 -- both tinted toward yellow-green, so macro variation was a third compounding saturation multiplier on top of the texture tint and the baked colour map. Neutralised: it still does its job (breaking up the tile's repeat period at low frequency) but it no longer pushes hue. The pair keeps a slight warm/cool split so the variation is still visible as variation.",
     "_comment_blend_r9_4": "R9.4. Was 0.62. The blind critic found the grass/soil boundary on frame 03's near hill stepping in visible 90-degree blocks -- the splatmap texel grid showing through -- and called it the most obvious bug in the set. Softer blending spreads that transition over more texels. TUNABLE; if the ground starts looking muddy where two materials meet, this went too far.",
@@ -2462,7 +2462,8 @@
     "aerial_desaturate": 0.55,
     "_comment_aerial_colour_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defects 1 and 2. #bec9ce -> #d0c9b6, matching the warm rotation `art.json`'s `_comment_fog_colour_t1_hall_4` makes to fog and horizon in the same pass -- these three are the whole of the scene's distance haze and a judge reading one frame sees them as one thing, so they move together or they disagree. Two findings land on this single colour. The judge's prescription for the silhouette is \"push a LIGHTER WARM HAZE behind it so it reads as the dark shape\", and this uniform is the only haze that touches the ground BEHIND the fortress without touching the fortress itself -- it lives in terrain_ground.gdshader's fragment tail, so it lifts the backdrop and leaves the building's own value alone, which is exactly the figure/ground move wanted and something env fog cannot do. And the mid-distance was measured as \"a uniform, NEAR-WHITE, desaturated yellow-green\" that objects visibly float on: the old cool grey-blue was fading warm sunlit meadow toward a colour the sun in this scene cannot produce, which is a large part of why the far ground read as a bald putting green rather than as distance. The `aerial_fade_strength`/`aerial_desaturate` amounts are UNCHANGED -- T1-GROUND-2 tuned those against the washing-to-one-flat-plane failure its own comment warns about, and this pass has no evidence to move them. Only the hue and value of what the distance fades TO.",
     "aerial_fade_colour": "#c6ccbd",
-    "_comment_aerial_vp1": "VP1: range 900->380. At 900m the block was inert: 400m out mixed 12% -- which is why every wide frame's horizon was a hard flat line with distant terrain at the same value as the foreground. 380 puts ~80% of the fade inside the 420m shadow reach so form and depth agree. Colour cooled toward horizon_colour's green-grey neighbour so far ground sits under the sky's haze band instead of turning khaki."
+    "_comment_aerial_vp1": "VP1: range 900->380. At 900m the block was inert: 400m out mixed 12% -- which is why every wide frame's horizon was a hard flat line with distant terrain at the same value as the foreground. 380 puts ~80% of the fade inside the 420m shadow reach so form and depth agree. Colour cooled toward horizon_colour's green-grey neighbour so far ground sits under the sky's haze band instead of turning khaki.",
+    "_comment_macro_vp2": "VP2: macro_variation1/2 were near-white (#f0eee6/#e4e6e2), which multiplies to nothing -- the 'flat lime, one green value everywhere' read in every wide frame. A dry olive and a deeper green at longer wavelengths (noise scales 0.022/0.055 -> 0.012/0.03) give the far ground the patchy tone the keyart's hills carry; blend_sharpness 0.38 -> 0.5 so slope transitions crisp up; mipmap_bias 0.92 -> 0.86 keeps texture grain a little further out. Runtime-only (no terrain re-bake), but this file is in the scatter fingerprint -> scatter re-bake."
   },
   "_comment_textures": "Real PBR ground, replacing the `show_colormap` debug view that stood in for it from M1 to the first art pass. Terrain3D's auto shader picks texture 0 on walkable ground and texture 1 on slopes, so the grass/soil/rock intent the bake already encodes is expressed with albedo and normal detail instead of flat vertex colour. `uv_scale` is metres per tile: too large and the ground is mush at distance, too small and it visibly repeats.",
   "_comment_uv_scale": "Metres per tile is 1/uv_scale, so 0.34 tiles every ~3m. It was 0.18 (~5.5m), and at that size the near ground showed the photograph's own brown patches rather than its average \u2014 a green meadow with a brown foreground, reading as two materials. Tighter tiling averages to grass; too tight and it visibly repeats, which is what the macro variation and detiling above are for.",
@@ -2474,14 +2475,14 @@
       "name": "grass",
       "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
       "normal": "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
-      "uv_scale": 0.2,
+      "uv_scale": 0.27,
       "_comment_uv_scale": "Metres per tile is 1/uv_scale, so this is 5.0 m per tile, as specified.",
-      "normal_depth": 0.22,
+      "normal_depth": 0.34,
       "ao_strength": 0.2,
       "roughness_mod": 0.08,
       "detiling_rotation": 0.28,
       "detiling_shift": 0.35,
-      "tint": "#ffffff",
+      "tint": "#e9dfc0",
       "_comment_tint": "WHITE, deliberately, on every surface. These textures are generated to an exact target colour, so the texture carries the colour and there is nothing left for a tint to correct. Every tint in the previous photographic set existed to drag a scan toward a palette it could not reach -- including a LAVENDER grass tint, invented because albedo_color multiplies and the only way to desaturate a green by multiplying is to raise blue relative to it. If a surface ever reads wrong again, re-solve its entry in tools/art_pipeline/stylised_ground_spec.py and regenerate; do not reintroduce a tint here."
     },
     {
@@ -2496,7 +2497,7 @@
       "roughness_mod": 0.1,
       "detiling_rotation": 0.31,
       "detiling_shift": 0.37,
-      "tint": "#ffffff",
+      "tint": "#e2d8b4",
       "_comment_tint": "WHITE, deliberately, on every surface. These textures are generated to an exact target colour, so the texture carries the colour and there is nothing left for a tint to correct. Every tint in the previous photographic set existed to drag a scan toward a palette it could not reach -- including a LAVENDER grass tint, invented because albedo_color multiplies and the only way to desaturate a green by multiplying is to raise blue relative to it. If a surface ever reads wrong again, re-solve its entry in tools/art_pipeline/stylised_ground_spec.py and regenerate; do not reintroduce a tint here."
     },
     {
@@ -2504,7 +2505,7 @@
       "name": "rock",
       "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
       "normal": "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
-      "uv_scale": 0.22,
+      "uv_scale": 0.16,
       "_comment_uv_scale": "T1-GROUND, 2026-08-30: was 0.1538 (6.5 m per tile), the largest tile of any ground texture in this file (grass/soil 5.0m, path 4.0m) -- and this is the SAME texture Terrain3D's slope threshold paints onto every steep surface in the corridor, river banks included (`build_playground_terrain.gd`'s `band_slope` pick is generic, not river-specific). A blind visual pass measured the river channel specifically as 'both banks faced in one large hex/pebble texture, like riprap on a canal levee' -- at 6.5m per tile the texture's own hex/pebble motif reads several times too large next to a 1.8m person. 0.22 (~4.5 m per tile) brings it in line with the other ground textures' tiling density; the motif itself is unchanged, only how many times it repeats per metre. Global (every rock-textured slope, not just the river -- there is no per-body texture override in this control-map system), so cliffs and the quarry get the same correction. TUNABLE; re-solve in tools/art_pipeline/stylised_ground_spec.py only if the texture itself needs to change, not this.",
       "normal_depth": 0.55,
       "ao_strength": 0.2,
@@ -3598,5 +3599,6 @@
         "_comment_type": "NOT a road -- no polyline is painted or walked between these two points; a boat covers the water/distance between them. Deliberately excluded from road_polylines() by its own `type`. The endpoints are game-logic (where the boat is boarded and where it lands), not a route."
       }
     ]
-  }
+  },
+  "_comment_textures_vp2": "VP2: grass/soil tints pulled off pure white toward a warm straw so the albedo's own fluorescent lime reads as sunlit yellow-green (the keyart's foreground grass measures ~#7c8737); grass uv_scale 0.2 -> 0.27 and normal_depth 0.22 -> 0.34 for legible grain and relief at 5-40m; rock uv_scale 0.22 -> 0.16 because the rock texture read at four scales at once against the Hall (JUDGE-6)."
 }

@@ -566,3 +566,95 @@ func test_path_standoff_is_a_stable_property_of_position() -> void:
 	assert_almost_eq(first, second, 0.000001, "the same spot drew two different standoffs")
 
 
+
+
+# --- VP3 ecology field (corridor clustering) ---------------------------------
+
+func test_ecology_absent_changes_nothing() -> void:
+	# The backward-compatibility guarantee, same shape as ridge_bias 0.0: a
+	# layer with no `corridor_fill.ecology` block draws no extra RNG and
+	# reproduces the old placements exactly.
+	var with_empty := _layer("trees").duplicate(true)
+	var fill: Dictionary = with_empty.get("corridor_fill", {}).duplicate(true)
+	fill["ecology"] = {}
+	with_empty["corridor_fill"] = fill
+	var a := RULES.placements_for(with_empty, field, world_size, 55)
+	var without := _layer("trees").duplicate(true)
+	var fill2: Dictionary = without.get("corridor_fill", {}).duplicate(true)
+	fill2.erase("ecology")
+	without["corridor_fill"] = fill2
+	var b := RULES.placements_for(without, field, world_size, 55)
+	assert_eq(a.size(), b.size())
+	for i in a.size():
+		assert_true((a[i]["position"] as Vector3).is_equal_approx(b[i]["position"]),
+			"an empty ecology block moved a placement; it must be a no-op")
+
+
+func _corridor_spatial_cv(placements: Array, bin_m: float) -> float:
+	# Coefficient of variation of per-bin counts over the corridor (outside
+	# the origin square), on a bin_m grid. Uniform scatter -> low CV; groves
+	# with open ground between -> high CV.
+	var half := world_size * 0.5
+	var bins: Dictionary = {}
+	var n := 0
+	for p: Variant in placements:
+		var at: Vector3 = p["position"]
+		if absf(at.x) <= half and absf(at.z) <= half:
+			continue
+		var key := Vector2i(floori(at.x / bin_m), floori(at.z / bin_m))
+		bins[key] = int(bins.get(key, 0)) + 1
+		n += 1
+	if bins.is_empty():
+		return 0.0
+	var mean := float(n) / float(bins.size())
+	var var_sum := 0.0
+	for v: Variant in bins.values():
+		var d := float(v) - mean
+		var_sum += d * d
+	return sqrt(var_sum / float(bins.size())) / mean
+
+
+func test_ecology_core_clusters_without_changing_the_count() -> void:
+	var plain := _layer("trees").duplicate(true)
+	var fill: Dictionary = plain.get("corridor_fill", {}).duplicate(true)
+	fill.erase("ecology")
+	plain["corridor_fill"] = fill
+	var gated := plain.duplicate(true)
+	var fill_g: Dictionary = gated["corridor_fill"].duplicate(true)
+	fill_g["ecology"] = {"salt": 7001, "wavelength": 120.0, "band": "core", "gamma": 2.5, "contrast": 1.0}
+	gated["corridor_fill"] = fill_g
+
+	var a := RULES.placements_for(plain, field, world_size, 55)
+	var b := RULES.placements_for(gated, field, world_size, 55)
+	# Count-preserving: the keep roll is untouched and rejected centres are
+	# redrawn, so within a few percent the corridor places the same number.
+	var tolerance := maxi(20, int(a.size() * 0.08))
+	assert_true(absi(a.size() - b.size()) <= tolerance,
+		"the ecology gate changed the tree count %d -> %d (tolerance %d); it must move clumps, not remove them" % [
+			a.size(), b.size(), tolerance])
+	var cv_a := _corridor_spatial_cv(a, 100.0)
+	var cv_b := _corridor_spatial_cv(b, 100.0)
+	assert_true(cv_b > cv_a * 1.15,
+		"core gating did not cluster: 100m-bin CV %.3f gated vs %.3f plain" % [cv_b, cv_a])
+
+
+func test_ecology_gate_is_a_probability_and_bands_partition_the_field() -> void:
+	var core := {"salt": 7001, "wavelength": 120.0, "band": "core", "gamma": 2.0, "contrast": 1.0}
+	var open := {"salt": 7001, "wavelength": 120.0, "band": "open", "gamma": 2.0, "contrast": 1.0}
+	var edge := {"salt": 7001, "wavelength": 120.0, "band": "edge", "contrast": 1.0}
+	var core_sum := 0.0
+	var open_sum := 0.0
+	for i in 400:
+		var p := Vector2(-900.0 + float(i) * 4.7, 300.0 + float(i) * 17.3)
+		var c: float = RULES._ecology_gate(p, core)
+		var o: float = RULES._ecology_gate(p, open)
+		var e: float = RULES._ecology_gate(p, edge)
+		assert_between(c, 0.0, 1.0)
+		assert_between(o, 0.0, 1.0)
+		assert_between(e, 0.0, 1.0)
+		core_sum += c
+		open_sum += o
+		# Where the core is strong the clearing is weak, and vice versa.
+		assert_true(not (c > 0.6 and o > 0.6), "core and open both high at %s" % str(p))
+	assert_true(core_sum > 20.0 and open_sum > 20.0, "one band never accepts anything")
+	assert_eq(RULES._ecology_gate(Vector2(5.0, 5.0), {}), 1.0, "no block must be a pass-through")
