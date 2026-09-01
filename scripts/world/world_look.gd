@@ -306,7 +306,10 @@ func _apply_blended(hour: float) -> void:
 ## interpolate a key, since a colour lerped as a bare float is nonsense.
 const _COLOUR_KEYS := {
 	"sun": ["colour"],
-	"sky": ["top_colour", "horizon_colour", "ground_horizon_colour", "ground_bottom_colour"],
+	"sky": ["top_colour", "horizon_colour", "ground_horizon_colour", "ground_bottom_colour",
+		# VP1: the cloud and sun colours used to snap at the blend midpoint
+		# because they were not listed here; a driven clock now lerps them.
+		"cloud_lit", "cloud_shade", "cloud_base", "sun_colour"],
 	"environment": ["fog_colour", "ambient_colour"],
 }
 
@@ -521,11 +524,18 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 		# `sky_clouds.gdshader`'s own note -- the night sky's "moon" was reading
 		# as a lens bloom because the disc was two-thirds gradient.
 		["sun_disc_edge", "disc_edge"],
+		# VP1: cumulus form, shell projection, cirrus layer, horizon haze.
+		["cloud_edge_softness", "edge_softness"], ["cloud_altitude", "cloud_altitude"],
+		["cloud_lit_contrast", "lit_contrast"],
+		["cloud_high_coverage", "high_coverage"], ["cloud_high_scale", "high_scale"],
+		["cloud_high_opacity", "high_opacity"],
+		["horizon_haze_height", "haze_height"], ["horizon_haze_strength", "haze_strength"],
 	]:
 		if cfg.has(str(pair[0])):
 			mat.set_shader_parameter(str(pair[1]), float(cfg[str(pair[0])]))
 	for pair2: Array in [
 		["cloud_lit", "cloud_lit"], ["cloud_shade", "cloud_shade"],
+		["cloud_base", "cloud_base"],
 		["sun_colour", "sun_colour"],
 	]:
 		if cfg.has(str(pair2[0])):

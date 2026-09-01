@@ -16,11 +16,11 @@
       "throw": "throw",
       "chop": "chop"
     },
-     "_comment_tool_swing": "OP21-24. The chop clip's own length and the frame the axe is IN the wood, in clip fractions. tool_hold.gd reads these so the gather resolves on the impact pose rather than at an arbitrary half-way point, and so the swing state holds for exactly as long as the clip plays instead of cutting to idle mid-arc. Re-derive both from animate_humanoid.py's author_chop() (15 frames at 24 fps; impact keyed at frame 9) if that clip is re-timed. TUNABLE.",
-     "tool_swing": {
+    "_comment_tool_swing": "OP21-24. The chop clip's own length and the frame the axe is IN the wood, in clip fractions. tool_hold.gd reads these so the gather resolves on the impact pose rather than at an arbitrary half-way point, and so the swing state holds for exactly as long as the clip plays instead of cutting to idle mid-arc. Re-derive both from animate_humanoid.py's author_chop() (15 frames at 24 fps; impact keyed at frame 9) if that clip is re-timed. TUNABLE.",
+    "tool_swing": {
       "seconds": 0.625,
       "impact_fraction": 0.6
-     },
+    },
     "_comment_gait_speeds": "OF5, TUNABLE. Metres per second each gait clip was AUTHORED for \u2014 animate_humanoid.py derives the cycle length and stride from these so a planted foot sweeps back under the body at the same speed the controller drives it. trainer_model.gd scales playback by actual ground speed / this value (clamped 0.5-1.4x in character_model.gd), so cadence stays honest through acceleration, slopes and any movement.json retune. If locomotion speeds are retuned by more than the clamp covers, re-bake the clips against the new numbers rather than widening the clamp: past ~1.4x a gait reads as frantic, not fast.",
     "gait_reference_speeds": {
       "walk": 5.0,
@@ -39,32 +39,50 @@
     "ground_bottom_colour": "#4a5648",
     "_comment_clouds": "SKY-CLOUDS. `cloud_coverage` above 0 swaps the ProceduralSkyMaterial for shaders/sky_clouds.gdshader; 0 falls back to the gradient below, which the shader reproduces exactly so turning clouds off lands on the sky they replaced rather than a different one. This exists because four blind passes in a row named the empty sky: measured horizontal variation 0.020 against 0.140-0.289 across the Palworld references, per-channel standard deviation of 2-8 (a pure gradient), 30-50% of the wide frames carrying no information at all, against cumulus in every keyart panel, both meadow reference frames and four of five Palworld shots. world_look.gd::_apply_sky already argued the case and proposed an HDRI panorama; a generated sky is the better fit for the same slot -- no asset to source or license, it drifts on the wind, and each time of day drives it with one number. `coverage` is the knob that matters: 0.35-0.6 is the interesting range, above that is overcast. TUNABLE per time of day.",
     "_comment_cloud_form": "SKY-CLOUDS round 2. A blind pass with the first numbers in frame called the sky `a flat gradient with two or three blurred cloud smudges pasted in with no form and no sun cue`, and it was right: at coverage 0.46 with scale 1.35 the projected noise put one or two very large, very soft features across the whole dome. More coverage, a harder density ramp and a smaller projection scale give banks with edges instead of smudges.",
-    "cloud_coverage": 0.58,
+    "cloud_coverage": 0.5,
     "cloud_sharpness": 3.4,
-    "cloud_scale": 1.9,
-    "cloud_wind": [0.006, 0.002],
+    "cloud_scale": 1.5,
+    "cloud_wind": [
+      0.006,
+      0.002
+    ],
     "sun_angle_max_deg": 24.0,
     "sun_curve": 0.18,
     "_comment_sun_disc_t1_sky": "T1-SKY. shaders/sky_clouds.gdshader's own sun_size/sun_glow uniforms default to 0.022/0.35 (a blown, hard-edged disc with a near-invisible glow term -- glow decays as pow(sun_dot,24) so at these raw defaults it reads as a second, even tighter disc rather than a soft halo). T1-LIGHT's 2026-08-29 fix set small tuned values on the NIGHT preset only (sun_size 0.006/sun_glow 0.05, a subdued moon). Day and golden never set these keys at all, so world_look.gd::_apply_cloud_sky's per-key `if cfg.has(...)` guard never touched the shader parameters for them -- on a freshly created sky material (every fresh scene/tool boot) that left the RAW shader defaults in effect, which is exactly the blown white sticker-disc a blind judge caught in the golden snap (JUDGE-VISUAL-2026-08-29.md subject 7). Sized well below the raw default but well above night's subdued moon -- day gets a normal bright sun, golden's own override (below) goes slightly larger and warmer for the low sunset sun the key art's panel asks for.",
-    "sun_size": 0.010,
+    "sun_size": 0.01,
     "sun_glow": 0.16,
     "_comment_panorama": "An HDRI panorama, when the time of day names one. The procedural gradient below is the FALLBACK and stays because a missing texture should degrade to the old sky rather than to a black void. The critic measured the procedural sky's horizontal variation at 0.020 against Palworld's 0.140-0.289 and said the build sky 'contributes nothing' \u2014 a ProceduralSkyMaterial can make a vertical gradient and a soft sun blob and nothing else, ever. No amount of tuning puts a cloud in it.",
     "_comment_panorama_ev8": "EV8. day.hdr named here was pulled: a static equirect photo has its OWN baked-in sun position, unrelated to this file's sun.pitch_deg/yaw_deg, so whichever way a viewpoint faces, the photographed sky and the actual DirectionalLight3D can disagree about where the light is coming from. That is exactly what a blind pass caught -- one viewpoint's sky read as dusk while its own ground lit as bright midday, in the same frame, both driven by the same 'day' preset. The procedural gradient has no such seam: its glow is generated from the real sun direction, so it agrees with the ground in every direction, not just the survey's five. Costs the cloud detail the panorama bought; buys back the 'one sky/fog treatment shared everywhere' EV8 exists to deliver. TUNABLE -- naming a panorama here is legitimate again once one exists whose baked sun can be kept in sync, or once multiple panoramas are matched to sun position by heading.",
-    "panorama": ""
+    "panorama": "",
+    "_comment_vp1": "VP1 (visual parity program, 2026-09-01). Every blind pass since the cloud shader landed named the same defect: 'smeared airbrush blotches in every outdoor frame'. shaders/sky_clouds.gdshader now builds billowed cumulus with a defined edge on a shell projection (large overhead, compressed at the horizon), a cloud BASE colour for the underside, a thin cirrus layer and a horizon haze band that lands on horizon_colour so sky and terrain fog meet in one band. The keys below drive it; every one is set in this BASE block on purpose -- world_look.gd only writes keys the merged config has, so a key missing here would never reach the shader. cloud_lit/cloud_shade/cloud_base/sun_colour are now in world_look.gd's _COLOUR_KEYS so the driven clock lerps them instead of snapping at the midpoint.",
+    "cloud_edge_softness": 0.06,
+    "cloud_altitude": 0.9,
+    "cloud_lit": "#fff8ec",
+    "cloud_shade": "#9fb0c4",
+    "cloud_base": "#8d99ac",
+    "cloud_lit_contrast": 6.0,
+    "cloud_sun_gain": 1.1,
+    "cloud_high_coverage": 0.3,
+    "cloud_high_scale": 0.55,
+    "cloud_high_opacity": 0.35,
+    "horizon_haze_height": 0.14,
+    "horizon_haze_strength": 0.55,
+    "sun_colour": "#fff1d8"
   },
   "sun": {
     "_comment": "One directional light. `pitch` well above the horizon so shadows are short and readable under a top-down-ish combat camera; long raking shadows look dramatic in a screenshot and hide the opponent in a fight.",
     "_comment_yaw_visual_light": "VISUAL-LIGHT. Was -40, which GATE-E-STRONGHOLD-ART's own investigation named exactly: -40 puts the sun in the NORTH sky (world_look.gd rotates the DirectionalLight3D so its light travels FROM the yaw direction TOWARD the opposite one -- verified with a Basis.from_euler probe, sun_dir.z > 0 at -40, i.e. north), while the chapter's whole play direction and the stronghold's hero face (landmark.gd's own comment: 'every approach to this building is on its south side') point SOUTH. Every south-facing surface the player actually walks toward -- not just the stronghold, which only got a local albedo/fire-basket workaround because 'turning the sun around... lives in the environment config another lane owns' -- was backlit at every hour of the chapter. This lane owns that file now. Flipped 180 degrees (-40 -> 140) rather than re-deriving an azimuth from scratch: it is the exact opposite direction, same elevation, so shadow length/readability (this block's own stated reason for the pitch) is untouched, and it is trivially reversible if a specific site turns out to want the sun from a third direction. Sun is now in the south sky; south-facing hero faces are front-lit. GATE-E-STRONGHOLD-ART's castle albedo/fire-basket compensation is stepped back in the same change (building_prefabs.json, landmark.gd) now that the real cause is fixed.",
     "pitch_deg": -44.0,
     "yaw_deg": 140.0,
-    "energy": 1.35,
-    "colour": "#fff6e6",
+    "energy": 1.4,
+    "colour": "#fff1d8",
     "_comment_shadow_reach_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defects 10 and 12. 220 -> 420. Two of the report's findings are the same missing shadow at two ranges. At golden hour, with a very low sun, \"the crenellations cast NO SHADOW DOWN THE PARAPET BELOW THEM. The fortress does not appear to be casting shadows onto itself at all, WHICH IS A LARGE PART OF WHY IT STAYS FLAT IN EVERY DAYLIGHT FRAME\" -- and separately, the 400m approach frame has no cast shadow anywhere on the building. 220m was tuned for a player walking a meadow, where nothing past it is worth a shadow map. The Hall broke that assumption: it is 60m of building whose establishing shots are taken from 165m and 400m, so at 220m the SUBJECT of the chapter's three most important frames sat outside the shadow cascade entirely and lit flat. 420 covers the 400m approach stand with margin. The cost is real and is the reason this is not larger: two PSSM splits now spread over 420m instead of 220m, so near-field shadow edges soften. That trade is worth taking here because the near field is already carrying `shadow_normal_bias` 2.0 for its own reasons and because a soft shadow on a tuft is invisible while a missing shadow on the fortress is the judge's finding.",
     "shadow_max_distance": 420.0,
     "_comment_shadow": "Normal bias fights the acne that a heightmap terrain produces at grazing angles. Raise it if the ground looks striped; lower it if small props stop casting.",
-    "shadow_normal_bias": 2.0,
+    "shadow_normal_bias": 1.7,
     "_comment_energy": "Bright. The first pass at real lighting overshot into gloom: the arena went near-black and the creatures stopped being readable, which is a worse failure than the flat lighting it replaced. Value RANGE was the goal \u2014 bright sun, real shadows \u2014 not darkness.",
-    "_comment_pitch_r9_4": "R9.4. Was -52. The blind critic found frames 01-04 'effectively flat-lit' -- boosting contrast 3x revealed almost no terrain form -- while frame 05, the only low-sun frame, was 'by a wide margin the best-lit frame in the set' and the only one whose value statistics land inside the references' range. Dropped to -44 rather than to 05's -13: the original comment's reason for a high sun is real (long raking shadows hide the opponent under a top-down-ish combat camera) and this keeps shadows short while giving slopes a lit and a shaded side. TUNABLE, and the thing to re-check first if combat readability regresses."
+    "_comment_pitch_r9_4": "R9.4. Was -52. The blind critic found frames 01-04 'effectively flat-lit' -- boosting contrast 3x revealed almost no terrain form -- while frame 05, the only low-sun frame, was 'by a wide margin the best-lit frame in the set' and the only one whose value statistics land inside the references' range. Dropped to -44 rather than to 05's -13: the original comment's reason for a high sun is real (long raking shadows hide the opponent under a top-down-ish combat camera) and this keeps shadows short while giving slopes a lit and a shaded side. TUNABLE, and the thing to re-check first if combat readability regresses.",
+    "_comment_vp1": "VP1: energy 1.35->1.4 and a slightly warmer colour to compensate the terrain macro darkening VP2 adds; shadow_normal_bias 2.0->1.7 for tree-trunk/rock contact (the blind pass: 'every boulder floats with no contact shadow'). Re-check the ground for acne with tools/diag_shadow_bias.gd if it stripes."
   },
   "environment": {
     "_comment": "Tonemap and fog. ACES holds highlights on sunlit grass instead of clipping them to white, which was the single worst thing about the previous prototype's look.",
@@ -72,7 +90,7 @@
     "exposure": 0.6,
     "white": 6.0,
     "_comment_ambient_cover": "Was 1.5. A blind pass measured the darkest 1% of six of twelve frames clipping to literal luminance 0.0, against a Palworld floor near 30/255, while our mean saturation ran 0.53-0.72 against their 0.40-0.47 -- acid green beside holes. Note the tension with the R9.4 note below, which CUT ambient because a critic had measured the darkest 5% at 126, far too bright: this file has oscillated on this number before and the two complaints are about opposite ends of the range. This is a modest step toward the floor, not a return to the R9.4 regime, and the value range is worth re-MEASURING rather than re-arguing next round. TUNABLE.",
-    "ambient_energy": 2.1,
+    "ambient_energy": 1.9,
     "_comment_exposure_ev4_lighting": "EV4-textures-lighting. Was 1.22. Three blind-critic rounds on EV4-textures's own path frames independently named a blown-white sunlit path and (separately) an unmotivated dark diagonal band, and it took both diag_shadow_band.gd and diag_slope_check.gd (scratch, not shipped) to separate two different causes hiding under one description. `square-convergence`'s band IS a real occlusion shadow -- confirmed by toggling sun.shadow_enabled off, which removed it -- from the Barn 6m from that viewpoint's camera; raising directional_shadow/size back to 4096 changed nothing (pixel-identical edge), which rules out SA1's atlas cut as the cause. `grandpas-house-route`'s flanking bands are NOT a shadow at all -- identical with shadow_enabled true or false, identical with SSAO on or off, and the ground there measures dead flat (slope_degrees_at = 0.0 across the whole sampled width, confirmed with the heightfield's own function, no scene load needed). That one is pure contrast: ordinary grass at luma ~70-100 sitting next to a path blown to ~190-200 reads as 'a shadow with no caster' even though the grass itself is unremarkable. Fixing the blown highlight therefore addresses both: `near_luma` (tools/frame_stats.py, mean luma of the bottom 15% of frame) measured 0.692 on grandpas-house-route against Palworld's own 0.492-0.600, and the sunlit path itself sampled at ~197/255. A modest exposure trim did almost nothing (1.22 -> 0.95 moved the path 0/255 -- ACES's shoulder is that flat up here); it took a real cut to 0.6 to bring the path to ~151/255, inside the Palworld range. TUNABLE, and the first thing to revisit if 'day' reads dim elsewhere.",
     "_comment_ambient_ev4_lighting": "EV4-textures-lighting. Was 1.02. The Barn's real shadow measured near-black (luma 10-20/255) at its darkest, well under any reference near-field value -- lifting ambient is the one lever that reaches it without touching the sunlit path much (measured: tripling ambient moved the sunlit path only ~197->215, but moved the shadow floor ~15->40, because ambient is a much larger fraction of what a SHADOWED point receives). Went with a smaller, safer step than that -- 1.02 -> 1.5, not 3x -- because a big ambient increase measurably crept back into the sunlit path too once combined with the exposure cut above (both scale the same HDR value before tonemap), which would have undone the highlight fix. Left the shadow darker than ideal rather than fight that tradeoff further; see the EV4-textures-lighting DONE.md entry for what a blind pass said after this.",
     "_comment_fog": "Very light, and warm rather than grey. It exists to separate near hills from far ones; at any strength where you notice it as fog, it is too strong.",
@@ -88,10 +106,10 @@
     "ssao_intensity": 1.6,
     "ssao_radius": 1.2,
     "_comment_ambient": "Sky ambient with a real colour underneath it. `sky_contribution` blends between the two. Quadrupling ambient energy with pure sky ambient moved the survey frames by NOTHING \u2014 sky radiance does not reach the terrain under the Compatibility renderer the harness is forced to use \u2014 while an explicit colour lifted the shaded ground by 55%. Specifying both means shaded ground is filled under either renderer, and 'shadows are filled by this much of this colour' is a decision somebody made rather than a side effect of a procedural sky.",
-    "ambient_colour": "#a8bccc",
+    "ambient_colour": "#9db3c6",
     "_comment_ambient_sky_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defect 5 -- \"about a quarter of the frame is a flat near-black slab ... the keep's shadowed face retains essentially no bounce light and no visible texture. Compare palworld-04's shadowed cliff faces, which keep colour and detail. HERE SHADOW EQUALS BLACK\" (measured on the shipped frames at 16.9% of `H-06` below luminance 26), plus the near-black tree in `H-05`. 0.5 -> 0.25, and note carefully that this RAISES fill without touching `ambient_energy`. That distinction is the whole point, because the two live findings pull opposite ways: this defect wants more light in shadow, while `_comment_ambient_cover` above records the last pass raising ambient_energy 1.5 -> 2.1 for the same reason and a different pass cutting it for the opposite one. This file has oscillated on that number twice and a third swing would be the wrong move. `ambient_sky_contribution` is a free lever instead, and `_comment_ambient` directly below says why in its own words: \"sky radiance does not reach the terrain under the Compatibility renderer\". project.godot ships gl_compatibility (D01), so this is not a harness quirk -- it is the renderer the game runs on. At 0.5, half of the ambient budget was being spent on a sky term that contributes nothing to any frame anyone has ever judged. Moving it to 0.25 hands that half back to the explicit `ambient_colour`, which does reach, so shaded faces gain roughly 1.5x their fill while sunlit surfaces -- where ambient is a small fraction of the total -- barely move. The blown-highlight fix `_comment_exposure_ev4_lighting` bought is therefore not at risk. NOT a claim that ambient occlusion is fixed. `ssao_enabled` below is TRUE and is a no-op: Compatibility does not implement SSAO, so every frame in every judging round has been rendered without it and the key has been decorative since it was written. JUDGE-6's \"enable/repair contact shadows and AO globally\" cannot be answered from this file under this renderer; what can be answered is the sun-shadow reach above and this fill. Real contact occlusion needs either a renderer change (D01, locked) or baked/geometry contact, and that is named as a remainder in the lane's handover rather than quietly left looking done. ROUND 2, same lane, after rendering: 0.25 was not enough and the number that says so is the one JUDGE-6 raised. Its defect 5 box (H-06, x 900-1280, y 0-620) measured mean L 28.8 with a high-pass texture sd of 4.10 on the judged frames; after this lane's stone value drop it read 19.8 and 2.67 -- DARKER, and with LESS readable texture, which is the defect getting worse rather than better. That is a cost of the silhouette fix and it is this lane's to pay, not to report and leave. 0.25 -> 0.10 hands over almost the whole sky term. Still not `ambient_energy`, for the reason the round-1 note gives: that number has oscillated twice already and this file should stop swinging it.",
     "ambient_sky_contribution": 0.1,
-    "aerial_perspective": 0.35,
+    "aerial_perspective": 0.7,
     "_comment_character_emission_floor": "T1-WORLD. How much of character_model.gd's additive emission floor applies at this time of day, 0..1. The floor is a CONSTANT additive lift that keeps a dark-uniformed NPC out of the ACES tonemap's toe; its own comment records it tuned against a daylight frame (day body luma 30.6/35.4) and then checked at night (51.7/59.5), reading that night jump as acceptable. The whole-board night pass shows what it looks like beside something correctly lit: in shots/ground/ground-04-band4-ironwood-night-vista.png the band-4 trainer is the BRIGHTEST object in the frame, fully daylit warm tan against a blue night, while the player two metres away is a correct dark silhouette. A constant additive term cannot be right at more than one light level, because at night everything it competes with has dropped an order of magnitude and it has not. 1.0 here is the base and means unchanged, so every daylight measurement in that comment still holds exactly; night cuts it. TUNABLE -- raise the night value if NPCs stop reading at all after dark, lower it if they still look self-lit. ROUND 3, measured: 0.25 was too far. A blind before/after re-judge counted 59% of the pixels inside the band-4 trainer's torso and legs at exactly (0,0,0), against 0.3% before the change, and frame-wide pure black rising 12.5% -> 19% -- the coat, cape and boots had no material or form left and the silhouette existed only where it occluded grass. That is trading a wrongly-lit figure for a clipped one, which is not a fix. 0.5 keeps the figure off daylight exposure while leaving the outfit some range to read as cloth. The head and hands are a SEPARATE and unrelated defect -- see the T1-WORLD verdict sec5; they are near-white untextured art on the rig, not a lighting term, which is why they stay bright at night no matter what this value is and why the same pale face shows on the village NPCs in frames taken before any of this existed.",
     "character_emission_floor": 1.0,
     "_comment_adjustment_defaults_t1_sky": "T1-SKY. NIGHT-LIGHT's own comment on the night preset explains adjustment_enabled/adjustment_saturation/adjustment_contrast in detail but only NIGHT ever sets them -- neither this base block nor golden did. `world_look.gd::_blend_dict` blends `av = a.get(key, bv)` when a key is missing from one side: with no base default, the FROM side of the golden->night segment silently defaulted to the TO side's own value (bv), which means adjustment_saturation/contrast were not ramping across that six-hour span at all -- they SNAPPED to night's exact tuned numbers (0.72/1.08) the instant the clock left golden (hour 18+epsilon) and held flat all the way to midnight, the opposite of the continuous blend OP23-05 exists to guarantee for every other key. Neutral (no-op) values here give both `day` and `golden` a real, present adjustment_* entry, so the blend now ramps smoothly FROM neutral TO night's tuned grade across whichever segment approaches night, and back again leaving it -- instead of pinning early or vanishing early. adjustment_enabled stays true globally: with saturation/contrast/brightness all 1.0 it is a genuine no-op for day and golden.",
@@ -101,7 +119,8 @@
     "adjustment_saturation": 1.0,
     "_comment_ambient_r9_4": "R9.4. Was 1.25. High ambient is what removed the bottom of the value range: the critic measured the 5th-percentile luminance of frames 01 and 03 at 126 and 117 -- the DARKEST 5% of those images was still a mid-tone -- against 17 for palworld-04, and luminance standard deviation at 28-36 against the references' 52-69. Ambient light with nowhere to fall off is a flat frame by construction. Cut to 0.95, not lower: this file already records one pass that overshot into gloom and made the arena unreadable, and the ground albedo itself now carries most of the value drop (see terrain_playground's grass tint). TUNABLE.",
     "_comment_fog_r9_4": "R9.4. Halved again, 0.0011 -> 0.00055, and the colour warmed off neutral grey. The critic: 'fog is eating the world, not describing it' -- everything past the mid-ground washing to one pale value with no separation between hills, against palworld-04 which keeps three readable value planes at distance. It also produced the survey's most-reported inconsistency: frames 03 and 04 appear to have a flat cream sky, which is not sky at all but fogged-out terrain filling the upper frame, so two viewpoints of the same place look like different biomes. Less fog, not less distance. TUNABLE.",
-    "_comment_exposure_r9_4": "R9.4 round 2. Was 1.05. Round 1 dropped the ground albedo (grass tint) AND cut ambient 1.25 -> 0.95 at the same time, and the two stacked: near-field luminance went 0.526 -> 0.271 and the open meadow read murky rather than merely un-blown-out. Exposure is the right knob to give it back, because it scales everything uniformly and so costs none of the desaturation the tint bought -- unlike raising ambient again, which would re-flatten the shadows that were the point. TUNABLE."
+    "_comment_exposure_r9_4": "R9.4 round 2. Was 1.05. Round 1 dropped the ground albedo (grass tint) AND cut ambient 1.25 -> 0.95 at the same time, and the two stacked: near-field luminance went 0.526 -> 0.271 and the open meadow read murky rather than merely un-blown-out. Exposure is the right knob to give it back, because it scales everything uniformly and so costs none of the desaturation the tint bought -- unlike raising ambient again, which would re-flatten the shadows that were the point. TUNABLE.",
+    "_comment_vp1": "VP1: ambient slightly lower and cooler so shadowed ground reads as shadow (form) without going black; aerial_perspective 0.35->0.7 so the far bands take the fog colour. fog_density is deliberately NOT touched (owner rejected raising it twice, see terrain_ground.gdshader) -- depth comes from the terrain shader's aerial block in terrain_playground.json, whose 900m range made it inert."
   },
   "_comment_times": "Named hours. Each states ONLY what it changes; everything else comes from the blocks above. `hour` (0-24) is when scripts/world/day_cycle.gd treats this as the active preset -- see R5.1.",
   "_comment_times_why": "The previous survey shipped a frame called `05-spawn-low-sun` whose sky was BIT-IDENTICAL to the midday frame beside it \u2014 46.8% of the image pixel-for-pixel the same \u2014 because dropping the sun meant rotating a DirectionalLight3D and nothing else. The sun disc, sky gradient, horizon haze and fog all stayed at noon. The key art board asks for 'day and night create different moods'; a sky that does not move with the sun cannot give one. So the hour is one value and everything derives from it. Nothing should reach for the Sun node directly again.",
@@ -118,10 +137,10 @@
       "_comment": "Late afternoon. Long shadows, warm key, the sky's blue pushed down and the horizon lifted to amber. This is the mood the key art's own sunset panel is selling, and it is the one hour where the meadow gets its warm end of the palette for free.",
       "hour": 18.0,
       "sun": {
-        "pitch_deg": -13.0,
+        "pitch_deg": -16.0,
         "yaw_deg": -66.0,
-        "energy": 1.5,
-        "colour": "#ffd9a3",
+        "energy": 1.6,
+        "colour": "#ffc98a",
         "shadow_normal_bias": 1.8
       },
       "sky": {
@@ -136,13 +155,20 @@
         "sun_glow": 0.22,
         "_comment_clouds_t1_sky": "T1-SKY. The real reason the driven clock's own frames at hour 17.5-18.1 read as a flat grey-blue wash even AFTER the weather-pin fix (tools/_capture_day_night_transition.gd) and the sun-disc fix above: golden never set cloud_lit/cloud_shade/cloud_sun_gain either. At the inherited cloud_coverage 0.58 -- more than half the visible sky -- the clouds rendered at the cloud shader's raw neutral defaults (near-white lit face, cool blue-grey shade) the entire day+golden span, since world_look.gd::_apply_cloud_sky only writes a shader parameter when the merged config explicitly has that key. A field of cool, neutral-toned clouds covering most of the sky visually dilutes the warm gradient underneath regardless of how correct top_colour/horizon_colour/sun_size are. Re-tinted toward the sun's own warm colour (matches sun.colour #ffd9a3) so backlit cloud edges and lit faces read as sunset-lit rather than midday-lit, and cloud_sun_gain raised so the rim catching the low sun actually glows.",
         "cloud_lit": "#f6cf9c",
-        "cloud_shade": "#5c5266",
+        "cloud_shade": "#6a5d78",
         "cloud_sun_gain": 1.9,
         "sun_colour": "#ffd9a3",
         "_comment_energy_ev8_retired": "EV8 tried scaling golden.hdr's energy down twice (1.0 -> 0.6 -> 0.35) to fix a blown-white horizon, and even 0.35 still blew out roughly two-thirds of the frame. Retired along with the panorama below rather than pushed further -- same root cause as day.hdr: a static photo's own baked sun position does not track sun.pitch_deg/yaw_deg, so nothing here can make its glare agree with wherever this preset's actual low sun is pointed.",
         "energy": 1.0,
         "_comment_panorama_ev8": "EV8. Dropped golden.hdr, same reasoning as the base sky block above -- a static panorama's own baked sun cannot track this preset's actual sun.pitch_deg/yaw_deg, and here that showed up as blown-white glare rather than a mismatched hue. The procedural gradient's sun glow is generated from the real light direction, so at a low golden-hour angle it puts the glow where the sun actually is and holds highlights the way ACES is tuned to.",
-        "panorama": ""
+        "panorama": "",
+        "cloud_coverage": 0.46,
+        "cloud_edge_softness": 0.08,
+        "cloud_base": "#4f4459",
+        "cloud_high_coverage": 0.4,
+        "cloud_high_opacity": 0.45,
+        "horizon_haze_height": 0.18,
+        "horizon_haze_strength": 0.7
       },
       "environment": {
         "_comment_fog_colour_ev8": "EV8. Matched to horizon_colour (#e8b784) above, same reasoning as the day preset -- fog_sky_affect is 0, so fog colour and horizon colour are what has to agree for distant terrain to fade into the sky without a seam.",
@@ -150,10 +176,11 @@
         "fog_density": 0.0016,
         "_comment_ambient_ev8": "EV8. Was 1.15. A blind pass on the low-sun frame called the ground 'crushed almost to black' against a still-saturated sky -- the shadow side was losing terrain form entirely rather than reading as evening mood. TUNABLE -- the cool tint stays deliberately (real golden-hour fill from open sky reads cool against a warm key), only the amount lifted.",
         "_comment_ambient_vis_world": "VIS-WORLD. ambient_energy 1.5 -> 0.85. The cool tint stays -- real golden-hour fill from open sky IS cool against a warm key, and this file's own EV8 comment is right about that -- but at 1.5 it ran at full DAYTIME strength, so a cool blue-grey fill was washing the warm key out across the whole frame. A blind critic read the result exactly: 'the sun is a white fuzzy disc, the light is grey, and the ground goes muddier and LESS saturated than midday'. Golden hour that desaturates is the wrong way round. Cutting the fill, not the key, is what lets the warm sun read. TUNABLE.",
-        "ambient_energy": 0.85,
+        "ambient_energy": 1.0,
         "ambient_colour": "#8f9ec4",
         "ambient_sky_contribution": 0.45,
-        "exposure": 1.0
+        "exposure": 1.0,
+        "aerial_perspective": 0.7
       }
     },
     "night": {
@@ -169,7 +196,7 @@
       },
       "sky": {
         "_comment_top_colour_vis_world": "VIS-WORLD. Night measured sky 0.0% and horizon 0.00 in all five night frames, every round: the sky was indistinguishable from the ground, so there was no horizon at all. That is not a judgement call -- frame_stats.sky_mask classifies sky as blue-band hue with value > 0.35, and #0a1330's value is 0.19, so no night pixel could ever qualify. Raised so the sky sits ABOVE the land in value, which is what a real night looks like and what the key art's night panel does (navy with readable silhouettes). The ground is deliberately NOT raised with it -- see exposure below. TUNABLE.",
-      "top_colour": "#1b2d5c",
+        "top_colour": "#1b2d5c",
         "horizon_colour": "#3d5285",
         "ground_horizon_colour": "#1a2338",
         "ground_bottom_colour": "#05070c",
@@ -185,7 +212,16 @@
         "cloud_lit": "#5a6890",
         "cloud_shade": "#232c47",
         "_comment_panorama": "Explicitly empty. The base `sky` block above names day.hdr; _merged() layers this dict on top of that one, so without this the night preset would silently inherit the DAY panorama instead of falling back to the procedural gradient.",
-        "panorama": ""
+        "panorama": "",
+        "cloud_coverage": 0.3,
+        "cloud_edge_softness": 0.05,
+        "cloud_scale": 1.7,
+        "cloud_base": "#1a2238",
+        "cloud_high_coverage": 0.15,
+        "cloud_high_opacity": 0.2,
+        "horizon_haze_height": 0.1,
+        "horizon_haze_strength": 0.4,
+        "sun_colour": "#d8e2ff"
       },
       "environment": {
         "_comment_fog_colour_ev8": "EV8. Matched to horizon_colour (#1c2740) above, same reasoning as the day and golden presets.",
@@ -200,47 +236,52 @@
         "adjustment_enabled": true,
         "adjustment_saturation": 0.72,
         "adjustment_contrast": 1.08,
-        "character_emission_floor": 0.5
+        "character_emission_floor": 0.5,
+        "aerial_perspective": 0.5
       }
     },
     "dawn": {
       "_comment_t1_night": "T1-NIGHT. Judge 2 measured ground luma climbing monotonically from 22:00 to 02:00 (51 -> 53 -> 56 -> 78 on its scale, confirmed independently here at 53 -> 61 -> 63 -> 85) instead of holding at night's own darkest, moodiest tuning -- the 02:00 frame read as a flat pale-mint wash brighter than golden hour, with moonlight from nowhere and no shadow direction. Root cause: before this entry, `times` had exactly three keyframes (day@8, golden@18, night@0), so the ONLY bracket covering the entire night@0 -> day@8 stretch was one continuous 8-hour linear blend -- the ramp toward day's much brighter numbers started the instant the clock passed midnight, and by 02:00 (t=0.25 of that span) a quarter of the whole night-to-day brightness/colour/desaturation swing had already landed, two hours after the darkest keyframe and three hours before dark_to_hour even says the world should start counting as not-dark. This is not a blend-math bug (T1-SKY already confirmed the blend itself is correct once upstream config is) -- it is a missing keyframe. `dawn` is a straight hold of every night sun/sky/environment value, placed exactly at dark_to_hour (5.0) so the game's own is_dark() boundary and the visual's own boundary now agree: night@0 -> dawn@5 interpolates between two identical dicts, so ground/sky luma cannot move at all across the whole dead-of-night stretch this judge flagged (the 22:00 frame this brief explicitly protects sits in the untouched golden->night span and is unaffected), and the real sunrise brightening now happens once, over dawn@5 -> day@8's 3-hour span, instead of being smeared thinly across 8 hours starting at the wrong end of the night. Every value below is copied verbatim from the night preset above; see that block's own comments (NIGHT-LIGHT, VIS-WORLD, T1-LIGHT) for why each number is what it is. TUNABLE only insofar as night's own values are -- change night, then re-copy here, rather than tuning the two independently and letting them drift apart.",
       "hour": 5.0,
       "sun": {
-        "pitch_deg": -20.0,
-        "yaw_deg": 25.0,
-        "energy": 0.55,
-        "colour": "#b7c6ea",
-        "shadow_normal_bias": 1.4
+        "pitch_deg": -9.0,
+        "yaw_deg": 62.0,
+        "energy": 0.9,
+        "colour": "#ffc3a0",
+        "shadow_normal_bias": 1.6
       },
       "sky": {
-        "top_colour": "#1b2d5c",
-        "horizon_colour": "#3d5285",
-        "ground_horizon_colour": "#1a2338",
-        "ground_bottom_colour": "#05070c",
-        "sun_angle_max_deg": 14.0,
-        "sun_curve": 0.35,
-        "energy": 0.75,
-        "sun_glow": 0.05,
-        "sun_size": 0.0024,
-        "sun_disc_edge": 0.93,
-        "cloud_sun_gain": 0.15,
-        "cloud_lit": "#5a6890",
-        "cloud_shade": "#232c47",
+        "top_colour": "#4a6a9a",
+        "horizon_colour": "#e6bca4",
+        "ground_horizon_colour": "#d6ad98",
+        "ground_bottom_colour": "#3e3a36",
+        "cloud_coverage": 0.42,
+        "cloud_edge_softness": 0.09,
+        "cloud_scale": 1.4,
+        "cloud_lit": "#ffd6b8",
+        "cloud_shade": "#7a7290",
+        "cloud_base": "#5b5570",
+        "cloud_sun_gain": 1.6,
+        "cloud_high_coverage": 0.45,
+        "cloud_high_opacity": 0.5,
+        "horizon_haze_height": 0.2,
+        "horizon_haze_strength": 0.7,
+        "sun_size": 0.013,
+        "sun_glow": 0.2,
+        "sun_colour": "#ffc3a0",
+        "energy": 0.9,
         "panorama": ""
       },
       "environment": {
-        "fog_colour": "#31446f",
-        "fog_density": 0.0011,
-        "ambient_energy": 1.5,
-        "ambient_colour": "#2a3b6e",
-        "ambient_sky_contribution": 0.2,
-        "exposure": 1.2,
-        "adjustment_enabled": true,
-        "adjustment_saturation": 0.72,
-        "adjustment_contrast": 1.08,
-        "character_emission_floor": 0.5
-      }
+        "fog_colour": "#e6bca4",
+        "fog_density": 0.0009,
+        "ambient_energy": 1.3,
+        "ambient_colour": "#8090ac",
+        "ambient_sky_contribution": 0.3,
+        "aerial_perspective": 0.8,
+        "exposure": 0.8
+      },
+      "_comment_vp1": "VP1: dawn was a byte-for-byte copy of night. This is a real dawn: low warm sun in the east, cool sky, warm horizon, thin high cloud. hour 5.0 equals dark_to_hour so is_dark() is false here."
     }
   },
   "_comment_creature_motion_removed": "The procedural bob that used to be configured here is gone. The creatures are rigged and animated now, so they have real idle, walk, run, attack and death clips \u2014 faking motion on top of that would fight the animation.",
@@ -411,7 +452,7 @@
     "_comment": "NP2-grunt-wire. `assets/characters/grunt/grunt_lod0.glb` was imported and sitting on disk with nothing in data/config or scripts pointing at it -- docs/art/HUMANOID_ASSET_INVENTORY.md already lists it as the 'Reusable Team Tether rank-and-file archetype' and its own rule 4 says to use this rig for ordinary Team Tether personnel rather than repainting a civilian. This block is what actually wires it in: without a top-level art.json key, CHARACTER_MODEL.config_for('grunt') returns empty and npc_ranks.gd has nothing but the Warden's own rig to build a rank ladder on -- which is exactly the bug a blind pass caught ('four rank frames, one body, one coat, one face').",
     "model": "res://assets/characters/grunt/grunt_lod0.glb",
     "_comment_height": "Measured, not assumed -- tools/_capture_character_cast.gd's own GRUNT_CFG comment records the raw .glb measuring close to the trainer's ruler height; 1.80m matches that and CLAUDE.md's stated human scale.",
-    "height": 1.80,
+    "height": 1.8,
     "model_yaw": 0.0,
     "_comment_clips": "Read off the raw glTF JSON chunk on disk, not guessed: `animations` is `[\"idle\",\"walk\",\"sprint\",\"jump\",\"throw\"]` over `Armature`/`Hips`/`Spine02`/`Head` bones -- the same clip set and bone names every other wired human rig carries, baked through the same animate_humanoid.py pipeline. No `chop`: this rig never gathers.",
     "clips": {
