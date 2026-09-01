@@ -575,13 +575,23 @@ static func _place_corridor_fill(
 	var trail_segments: Dictionary = {}
 	if trail_bias > 0.0:
 		trail_segments = _trail_segments(field)
+	# VP3: the ecology field. Absent -> `_ecology_gate` returns 1.0 for every
+	# point and this function is byte-identical to before.
+	var ecology: Dictionary = fill.get("ecology", {})
 
 	for c in candidate_clumps:
-		var centre := Vector2(rng.randf_range(min_x, max_x), rng.randf_range(min_z, max_z))
-		if trail_bias > 0.0 and rng.randf() < trail_bias:
-			var near_trail := _sample_near_trail(rng, trail_segments, trail_offset_min, trail_offset_max)
-			if near_trail != Vector2.INF:
-				centre = near_trail
+		var centre := Vector2.ZERO
+		# VP3: with an ecology block, redraw the centre until the field
+		# accepts it (bounded). The keep roll below is untouched, so the
+		# layer places the same NUMBER of clumps; only WHERE they land moves.
+		for attempt in ECOLOGY_ATTEMPTS:
+			centre = Vector2(rng.randf_range(min_x, max_x), rng.randf_range(min_z, max_z))
+			if trail_bias > 0.0 and rng.randf() < trail_bias:
+				var near_trail := _sample_near_trail(rng, trail_segments, trail_offset_min, trail_offset_max)
+				if near_trail != Vector2.INF:
+					centre = near_trail
+			if ecology.is_empty() or rng.randf() <= _ecology_gate(centre, ecology):
+				break
 		var keep_chance := layer_scale * _band_scale_at(centre.y, bands) \
 			* _layer_band_scale_at(centre.y, bands, layer_bands)
 		if rng.randf() > keep_chance:
@@ -595,7 +605,11 @@ static func _place_corridor_fill(
 			_consider(out, layer, field, models, spot, half, rng)
 
 	for s in candidate_strays:
-		var spot := Vector2(rng.randf_range(min_x, max_x), rng.randf_range(min_z, max_z))
+		var spot := Vector2.ZERO
+		for attempt in ECOLOGY_ATTEMPTS:
+			spot = Vector2(rng.randf_range(min_x, max_x), rng.randf_range(min_z, max_z))
+			if ecology.is_empty() or rng.randf() <= _ecology_gate(spot, ecology):
+				break
 		var keep_chance := layer_scale * _band_scale_at(spot.y, bands) \
 			* _layer_band_scale_at(spot.y, bands, layer_bands)
 		if rng.randf() > keep_chance:
@@ -836,6 +850,67 @@ static func path_standoff_at(
 	var coarse := _value_noise(spot / wavelength, salt * 131 + side)
 	var fine := _value_noise(spot / (wavelength * 0.25), salt * 131 + side + 977)
 	return lerpf(min_standoff, max_standoff, clampf(coarse * 0.7 + fine * 0.3, 0.0, 1.0))
+
+
+## VP3 (visual parity program, 2026-09-01). THE ECOLOGY FIELD, and why the
+## corridor read as "uniform procedural noise" in every blind pass.
+##
+## `_place_corridor_fill` draws clump centres UNIFORMLY over the corridor
+## rectangle and keeps each by an independent Bernoulli roll. That is a
+## Poisson process: at 150+ clumps per kilometre with 6.5m clump envelopes it
+## averages to "no bare patches, no thickets" -- the same density everywhere,
+## which is exactly the read the handover for T1-WORLD root-caused and the
+## judges keep naming ("scattered rather than composed", "identical clumps at
+## uniform scale"). Nature is not Poisson. Trees stand in groves with open
+## ground between; bushes and saplings crowd the grove's EDGE where the light
+## is; flowers and dry grass take the clearings.
+##
+## The field is one low-frequency value noise (the same lattice noise
+## `_thin_by_drain` uses -- position and salt only, deterministic) sampled at
+## a candidate centre and turned into an ACCEPTANCE PROBABILITY in [0, 1].
+## `_place_corridor_fill` redraws a rejected centre (bounded by
+## ECOLOGY_ATTEMPTS) rather than dropping it, so a layer places the same
+## number of clumps as before -- the corridor floor in test_veg_corridor.gd
+## and the boot budget do not move -- and only WHERE they land changes.
+##
+##   core: eco^gamma                -- masses with open ground between
+##   edge: 1 - |eco - 0.5| * 2      -- a ring where the mask crosses 0.5
+##   open: (1 - eco)^gamma          -- the clearings
+##
+## Layers that share a `salt` see the SAME field, which is the whole trick:
+## trees on `core`, bushes/saplings on `edge` and flowers on `open` of one
+## salt gives groves with understory rings and flowered clearings between,
+## without any cross-layer bookkeeping. `contrast` mixes the probability
+## toward 1.0 so a layer can opt in gently. `wavelength` is the noise's cell
+## size in metres: ~120m puts two or three groves in a 400m view. The field is
+## contrast-stretched before shaping because bilinear value noise crowds the
+## middle of its range. Absent block -> no extra RNG draws -> byte-identical
+## placements. TUNABLE, all of it, per layer under `corridor_fill.ecology`.
+const ECOLOGY_ATTEMPTS := 8
+
+static func _ecology_gate(point: Vector2, ecology: Dictionary) -> float:
+	if ecology.is_empty():
+		return 1.0
+	var wavelength := maxf(8.0, float(ecology.get("wavelength", 120.0)))
+	var salt := int(ecology.get("salt", 7001))
+	var gamma := maxf(1.0, float(ecology.get("gamma", 2.5)))
+	var contrast := clampf(float(ecology.get("contrast", 0.85)), 0.0, 1.0)
+	# Two octaves so a grove has an irregular outline rather than a blob, then
+	# stretched about the midpoint so the extremes are actually reachable.
+	var raw := _value_noise(point / wavelength, salt) * 0.7 \
+			+ _value_noise(point / (wavelength * 0.37) + Vector2(11.3, 7.1), salt + 17) * 0.3
+	var eco := clampf((raw - 0.5) * 1.8 + 0.5, 0.0, 1.0)
+	var g := 1.0
+	match str(ecology.get("band", "core")):
+		"core":
+			g = pow(eco, gamma)
+		"open":
+			g = pow(1.0 - eco, gamma)
+		"edge":
+			g = 1.0 - absf(eco - 0.5) * 2.0
+		_:
+			g = 1.0
+	return lerpf(1.0, g, contrast)
 
 
 ## Smoothed value noise on an integer lattice, in [0, 1]. Deterministic from

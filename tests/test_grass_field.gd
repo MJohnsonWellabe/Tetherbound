@@ -267,3 +267,67 @@ func test_the_far_tier_did_not_grow_the_expensive_one() -> void:
 		"have to move; growing it defeats the whole change.")
 	assert_true(int(cfg.get("tuft_count", 0)) <= 300000,
 		"tuft_count is %d. Same reasoning as field_radius above." % int(cfg.get("tuft_count", 0)))
+
+
+## VP2. The ring is laid out as cull tiles now -- one MultiMesh per tile with
+## its own AABB -- so the renderer can drop the two thirds of the disc a
+## third-person camera is not looking at. That is only a win if it is ALSO a
+## no-op for the look: the same cells, the same per-layer counts, the same slot
+## tags, just in different buckets. These pin both halves.
+func test_cull_tiles_hold_exactly_the_instances_the_single_multimesh_did() -> void:
+	var cfg := FIELD.config()
+	var cell: float = FIELD.lattice_cell()
+	var plan: Array = FIELD._lattice_plan(20000, 40.0, 0.62, cell, cfg)
+	var single := MultiMesh.new()
+	single.transform_format = MultiMesh.TRANSFORM_3D
+	single.mesh = BoxMesh.new()
+	var expected: int = FIELD._fill_lattice(single, plan, cell)
+	var tiles: Array = FIELD._fill_lattice_tiles(BoxMesh.new(), plan, cell, 16.0)
+	var total := 0
+	var origins: Dictionary = {}
+	for entry: Variant in tiles:
+		var tile: Dictionary = entry
+		var mm: MultiMesh = tile["mm"]
+		total += mm.instance_count
+		for i in mm.instance_count:
+			var o := mm.get_instance_transform(i).origin
+			origins["%.3f,%.3f" % [o.x, o.z]] = true
+	assert_eq(total, expected,
+		"tiling changed the instance count: %d tiled vs %d in one MultiMesh" % [total, expected])
+	for i in single.instance_count:
+		var o := single.get_instance_transform(i).origin
+		assert_true(origins.has("%.3f,%.3f" % [o.x, o.z]),
+			"instance at (%.2f, %.2f) exists in the single MultiMesh but no tile carries it" % [o.x, o.z])
+	assert_true(tiles.size() > 4,
+		"a 40m ring on 16m tiles should be many tiles, got %d" % tiles.size())
+
+
+func test_every_cull_tile_instance_sits_inside_its_own_aabb() -> void:
+	var cfg := FIELD.config()
+	var cell: float = FIELD.lattice_cell()
+	var plan: Array = FIELD._lattice_plan(20000, 40.0, 0.62, cell, cfg)
+	var tiles: Array = FIELD._fill_lattice_tiles(BoxMesh.new(), plan, cell, 16.0)
+	for entry: Variant in tiles:
+		var tile: Dictionary = entry
+		var mm: MultiMesh = tile["mm"]
+		var aabb: AABB = tile["aabb"]
+		var key: Vector2i = tile["key"]
+		for i in mm.instance_count:
+			var o := mm.get_instance_transform(i).origin
+			assert_true(aabb.has_point(Vector3(o.x, 0.0, o.z)),
+				"tile %s instance at (%.2f, %.2f) is outside its AABB %s -- it would be culled while visible" % [
+					str(key), o.x, o.z, str(aabb)])
+			# A cell belongs to the tile its origin falls in, so no item may
+			# be more than one cell plus the slack outside the tile square.
+			assert_true(o.x >= float(key.x) * 16.0 - 0.001 and o.x < float(key.x + 1) * 16.0 + cell,
+				"tile %s instance x=%.2f is not in that tile's column" % [str(key), o.x])
+
+
+func test_cull_tile_size_is_a_whole_number_of_lattice_cells() -> void:
+	var cell: float = FIELD.lattice_cell()
+	var tile: float = FIELD.cull_tile_m(FIELD.config())
+	assert_true(tile > 0.0, "cull_tile_m is off; the ring is one uncullable MultiMesh again, which is the ~10 FPS finding")
+	assert_true(is_equal_approx(fmod(tile, cell), 0.0) or is_equal_approx(fmod(tile, cell), cell),
+		"cull_tile_m %.2f is not a multiple of the lattice cell %.2f" % [tile, cell])
+	assert_eq(FIELD.cull_tile_m({"cull_tile_m": 0.0}), 0.0, "0 must mean the single-MultiMesh A/B path")
+	assert_eq(FIELD.cull_tile_m({"cull_tile_m": 0.7}), cell, "a tile smaller than a cell rounds up to one cell")

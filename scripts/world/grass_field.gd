@@ -77,6 +77,9 @@ var _wind := 0.0
 ## this changes, which is most frames a no-op; `field_centre` is written every
 ## frame and is a different thing -- see `_process`.
 var _centre := Vector3(INF, INF, INF)
+## How many tuft instances the ring stood up, across every tile. The ring's own
+## `multimesh` is null once tiled, so the count lives here.
+var _ring_instances := 0
 
 
 static func config() -> Dictionary:
@@ -335,6 +338,112 @@ static func _fill_lattice(mm: MultiMesh, plan: Array, cell: float) -> int:
 	return total
 
 
+## VP2 (visual parity program, 2026-09-01). The ring's whole cost problem, and
+## its fix, in one number.
+##
+## THE DEFECT: `ralph/reports/OWNER-0901-PERFORMANCE-LAG-V2.md` measured this
+## field at 22.5M primitives a frame -- 71% of everything drawn -- and the owner
+## felt it as ~10 FPS on the Ally. Not because 300,000 tufts is too many for
+## the near field, but because every one of them was in ONE MultiMesh with ONE
+## AABB the size of the whole ring. The ring follows the camera, so that AABB
+## is never outside the frustum, so Godot submits every tuft every frame --
+## the two thirds of the disc BEHIND a 70-degree camera included. A MultiMesh
+## is culled as a unit; the renderer cannot drop the instances it cannot see.
+##
+## THE FIX: the same lattice, the same instances, the same shaders and hashes
+## (nothing about where an item stands or what it looks like changes -- the
+## STABLE RING note below still holds), laid out into square TILES of
+## `cull_tile_m` metres, one MultiMeshInstance3D each, each with an AABB of its
+## own tile. Every tile rides this node exactly as the single MultiMesh did, so
+## the ring still hops in whole cells and every tile hops with it; but the
+## renderer now frustum-culls tile by tile, and the tiles behind the camera
+## and off to its sides stop being submitted at all. At the shipped 72m radius
+## and a 16m tile that is ~80 tiles, and a third-person camera sees roughly a
+## third of them. Draw calls rise by the number of VISIBLE tiles (tens, against
+## the ~7,000 the frame already carries -- `PERF-ROG-GPU` records that
+## Compatibility's cost is batches, and these are small batches), primitives
+## fall by the tiles that are not. Measured with tools/perf_render_stats.gd,
+## recorded in docs/VISUAL_PARITY_PROGRESS.md.
+##
+## `cull_tile_m` 0 restores the single-MultiMesh path exactly, for A/B
+## measurement. Forced to a whole multiple of the lattice cell so a tile edge
+## never splits a cell: an item's cell decides its tile, and the cell's origin
+## is what the tile's AABB is grown from.
+static func cull_tile_m(cfg: Dictionary) -> float:
+	var tile := float(cfg.get("cull_tile_m", 16.0))
+	if tile <= 0.0:
+		return 0.0
+	var cell := lattice_cell()
+	return maxf(cell, snappedf(tile, cell))
+
+
+## `_fill_lattice`, cut into tiles. Same cells, same per-layer counts, same
+## slot tags and same pure-translation transforms -- the only difference is
+## which MultiMesh a cell's items land in. Returns one entry per non-empty
+## tile: `{"mm": MultiMesh, "aabb": AABB, "key": Vector2i}`.
+static func _fill_lattice_tiles(mesh: Mesh, plan: Array, cell: float, tile_m: float) -> Array:
+	var per_tile: Dictionary = {}  # Vector2i -> Array[Transform3D]
+	for index in plan.size():
+		var layer: Dictionary = plan[index]
+		var reach: float = float(layer["geo"])
+		var per: int = int(layer["per_cell"])
+		var steps := int(ceil(reach / cell)) + 1
+		var half := cell * 0.5
+		var corner := cell * 0.70711
+		for ix in range(-steps, steps + 1):
+			for iz in range(-steps, steps + 1):
+				var origin := Vector2(float(ix) * cell, float(iz) * cell)
+				if (origin + Vector2(half, half)).length() - corner > reach:
+					continue
+				var key := Vector2i(int(floor(origin.x / tile_m)), int(floor(origin.y / tile_m)))
+				if not per_tile.has(key):
+					per_tile[key] = []
+				var bucket: Array = per_tile[key]
+				for item in per:
+					var slot := _slot_offset(item, index, cell)
+					bucket.append(Transform3D(Basis.IDENTITY,
+							Vector3(origin.x + slot.x, 0.0, origin.y + slot.y)))
+	var out: Array = []
+	# Half a cell of hash jitter each way plus the slot offset inside the cell,
+	# and blades lean with the wind: two cells of slack on each side, the same
+	# margin the single-MultiMesh AABB carried.
+	var slack := cell * 2.0
+	for key: Vector2i in per_tile.keys():
+		var bucket: Array = per_tile[key]
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = mesh
+		mm.instance_count = bucket.size()
+		for i in bucket.size():
+			mm.set_instance_transform(i, bucket[i])
+		var x0 := float(key.x) * tile_m
+		var z0 := float(key.y) * tile_m
+		out.append({
+			"mm": mm, "key": key,
+			"aabb": AABB(Vector3(x0 - slack, -400.0, z0 - slack),
+					Vector3(tile_m + slack * 2.0, 800.0, tile_m + slack * 2.0)),
+		})
+	return out
+
+
+## Stand the tiles up as children of `under`, all sharing one material, and
+## report how many instances that took. Children of the ring move with it.
+static func _stand_up_tiles(under: Node3D, prefix: String, tiles: Array, mat: ShaderMaterial) -> int:
+	var placed := 0
+	for entry: Variant in tiles:
+		var tile: Dictionary = entry
+		var node := MultiMeshInstance3D.new()
+		var key: Vector2i = tile["key"]
+		node.name = "%s_%d_%d" % [prefix, key.x, key.y]
+		node.multimesh = tile["mm"]
+		node.material_override = mat
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		node.custom_aabb = tile["aabb"]
+		under.add_child(node)
+		placed += int((tile["mm"] as MultiMesh).instance_count)
+	return placed
+
+
 ## Hand a plan to a material. The two arrays are the only per-layer state the
 ## shaders need; an instance finds its own row through the layer index encoded
 ## in its slot tag. Unused rows are pushed past any distance that can occur so
@@ -388,16 +497,28 @@ func _build() -> void:
 	# because a random disc cannot survive its own ring moving.
 	var cell := lattice_cell()
 	var plan := _lattice_plan(count, radius, float(cfg.get("centre_bias", 0.62)), cell, cfg)
-	var placed := _fill_lattice(mm, plan, cell)
-	multimesh = mm
 
 	_material = ShaderMaterial.new()
 	_material.shader = load(SHADER_PATH)
 	material_override = _material
+	# VP2: tiled, so the renderer can cull the ring behind and beside the
+	# camera. See `cull_tile_m` above. This node itself then carries no
+	# instances; its children do.
+	var tile_m := cull_tile_m(cfg)
+	var placed := 0
+	if tile_m > 0.0:
+		multimesh = null
+		placed = _stand_up_tiles(self, "GrassTile",
+				_fill_lattice_tiles(mm.mesh, plan, cell, tile_m), _material)
+	else:
+		placed = _fill_lattice(mm, plan, cell)
+		multimesh = mm
+	_ring_instances = placed
 	_apply_config(cfg)
 	_apply_lattice(_material, plan, cell)
-	print("[grass_field] grass ring: %d instances over %d lattice layers (%s asked for %d)" % [
-		placed, plan.size(), "tuft_count", count])
+	print("[grass_field] grass ring: %d instances over %d lattice layers (%s asked for %d), %s" % [
+		placed, plan.size(), "tuft_count", count,
+		("%.0fm cull tiles" % tile_m) if tile_m > 0.0 else "one uncullable MultiMesh"])
 
 	# The field is ground cover: it must not push the camera around, must not
 	# receive a harvest prompt, and must not cast the black carpet a thousand
@@ -445,14 +566,21 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		var cell := lattice_cell()
 		var plan := _lattice_plan(count, radius,
 				float(tier.get("centre_bias", 0.6)), cell, cfg)
-		var placed := _fill_lattice(mm, plan, cell)
 
 		var node := MultiMeshInstance3D.new()
 		node.name = "Cover_" + str(tier.get("name", "tier"))
-		node.multimesh = mm
 		var mat := ShaderMaterial.new()
 		mat.shader = load(COVER_SHADER_PATH)
 		node.material_override = mat
+		# VP2: tiled like the grass ring, for the same culling reason.
+		var tile_m := cull_tile_m(cfg)
+		var placed := 0
+		if tile_m > 0.0:
+			placed = _stand_up_tiles(node, "Tile",
+					_fill_lattice_tiles(mm.mesh, plan, cell, tile_m), mat)
+		else:
+			placed = _fill_lattice(mm, plan, cell)
+			node.multimesh = mm
 		# Same reasoning as the grass and stone tiers: thousands of small
 		# shadows overlap into a black carpet rather than reading as shade, and
 		# the shader darkens each item at its own contact instead.
@@ -983,14 +1111,21 @@ func _build_stones(cfg: Dictionary, radius: float) -> void:
 	var cell := lattice_cell()
 	var plan := _lattice_plan(count, radius,
 			float(stone_cfg.get("centre_bias", 0.58)), cell, cfg)
-	var placed := _fill_lattice(mm, plan, cell)
 
 	_stones = MultiMeshInstance3D.new()
 	_stones.name = "StoneField"
-	_stones.multimesh = mm
 	_stone_material = ShaderMaterial.new()
 	_stone_material.shader = load(STONE_SHADER_PATH)
 	_stones.material_override = _stone_material
+	# VP2: tiled like the grass ring, for the same culling reason.
+	var tile_m := cull_tile_m(cfg)
+	var placed := 0
+	if tile_m > 0.0:
+		placed = _stand_up_tiles(_stones, "StoneTile",
+				_fill_lattice_tiles(mm.mesh, plan, cell, tile_m), _stone_material)
+	else:
+		placed = _fill_lattice(mm, plan, cell)
+		_stones.multimesh = mm
 	# A pebble's shadow is not information at this size, and thousands of them
 	# would be the same black carpet `vegetation.json`'s grass layer turned its
 	# own shadows off for. The shader darkens each stone at its own contact
@@ -1361,7 +1496,7 @@ func _bind_region_uniforms(data: Object) -> void:
 	# the floor is clear.
 	_apply_built(global_position)
 	print("[grass_field] bound: %d tufts, radius %.0fm, region_size %.0f, vertex_spacing %.1f, %d region slots" % [
-		multimesh.instance_count if multimesh != null else 0,
+		_ring_instances,
 		float(config().get("field_radius", 48.0)), region_size, vertex_spacing, map.size()])
 
 
