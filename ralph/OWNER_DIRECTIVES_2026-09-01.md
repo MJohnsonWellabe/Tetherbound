@@ -41,3 +41,25 @@ are left as historical record of what a blind critic said — not amended —
 per this repo's own practice of correcting forward rather than rewriting
 what a report got wrong. This file is the standing correction any future
 lane should read before touching creature scale again.
+
+## OD-0901-2 — grow the ceiling, don't shrink toward it
+
+Same session, immediate follow-up once OD-0901-1's implications were traced
+to the alpha-creature work too. `ralph/VISUAL-CREATURE-SCALE-TABLE`
+(`dcbcbe1e`) reduced the alpha Galecrest's size multiplier from 1.3/1.3/1.4
+to 1.1/1.15/1.2 specifically to keep it under the Veridian Stag legendary's
+2.60m height — the same shrink-to-fit instinct as OD-0901-1, applied to a
+different pair of creatures.
+
+> "grow legendary. alpha doesn't have to be smaller than it."
+
+**General rule going forward, not just for this one pair:** whenever a
+census/visual finding is about one creature reading too small *relative to*
+another (an alpha vs. a legendary, a cub vs. an adult, a starter vs. the
+player), the default fix is to raise the smaller side's ceiling, not lower
+the larger side's floor — consistent with OD-0901-1. A relative-scale
+defect is not license to shrink whichever creature is currently on top.
+
+**Status:** `ralph/VISUAL-VERIDIAN-GROWTH` in flight — grows Veridian above
+2.60m and restores the alpha Galecrest multipliers, no longer capped by the
+legendary's old height.
