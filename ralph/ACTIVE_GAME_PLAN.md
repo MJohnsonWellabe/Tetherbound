@@ -13,7 +13,7 @@ Read first:
 1. `CLAUDE.md`
 2. `docs/TETHERBOUND_GAME_VISION.md`
 3. this file
-4. `ralph/OWNER_PLAYTEST_2026-08-18.md`
+4. newest `ralph/OWNER_PLAYTEST_*.md` (currently `ralph/OWNER_PLAYTEST_2026-09-01.md`)
 5. `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md`
 6. relevant detailed prompt(s)
 7. current `main` + relevant BACKLOG/DONE history
