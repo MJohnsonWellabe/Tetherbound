@@ -155,6 +155,23 @@ rewrites itself cannot be trusted about what it got wrong.
   All three patched 2026-09-01. Full evidence:
   `ralph/reports/audit/controller-glyphs/FOLLOWUP-2026-09-01.md`.
 
+- **The 2026-08-31 census's bed-overflow defect was judging a stale pose,
+  and current `main` had a worse one it never saw.**
+  `BACKLOG-VISUAL-BED-FITS-CREATURE` (census 113) reported terrapup
+  overflowing its rope bed's rim. The frame it judged
+  (`06-creature-resting.png`) came from `tools/_capture_creature_bed_rest.gd`
+  calling `play_faint()`, which predates `play_rest()`'s roll-onto-side
+  feature and is not what `creature_bed.gd` actually plays for a real
+  occupant. A 2026-09-01 investigation top-down-measured BOTH poses against
+  the current rim and found neither overflows — but the REAL current pose
+  (`play_rest()`, never rendered by the stale tool) flips terrapup onto its
+  back, paws in the air, for a body-plan reason (idle paws held away from
+  centre) that also breaks trailpup and bramblebun. Fixed for terrapup
+  (`rest_roll_deg: 0`, reverting to the still-contained faint crouch) and
+  fixed the stale capture tool to call `play_rest()`; trailpup/bramblebun
+  left open as `BACKLOG-VISUAL-BED-REST-ROLL-FLIP`. Full evidence:
+  `ralph/reports/audit/bed-fits-creature/FOLLOWUP-2026-09-01.md`.
+
 - **The grunt armband defect does not exist.** The corridor round-2 critic
   reported "a flat pure-red untextured rectangle that renders magenta at night"
   and this coordinator briefed VIS-CAST on it without checking. VIS-CAST found
