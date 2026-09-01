@@ -474,11 +474,12 @@
    "label": "Pick berries",
    "at": [
     -9.0,
-    -9.0
+    -19.0
    ],
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 1.2,
-   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note). Berries carry no `gathered_with` tool at all (items.json), so this is the one resource a fresh player gathers at full yield from the very first minute -- CLAUDE.md's light-satiety rule makes that the honest safety net, not a workaround of the knife gate this lane is told to leave alone. Sited on the walk from Grandpa's house toward the square (terrain_playground.json paths.routes 'Grandpa's House': [10,-10]->[-4,-13]->[-18,-15]), clear (>=4m) of the work_area prop cluster (props.json order 0) and every existing wood/fiber node nearby."
+   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note). Berries carry no `gathered_with` tool at all (items.json), so this is the one resource a fresh player gathers at full yield from the very first minute -- CLAUDE.md's light-satiety rule makes that the honest safety net, not a workaround of the knife gate this lane is told to leave alone. Sited on the walk from Grandpa's house toward the square (terrain_playground.json paths.routes 'Grandpa's House': [10,-10]->[-4,-13]->[-18,-15]).",
+   "_why_resited_2026_09_01": "LAND-MEGA-0901 fix: the original [-9,-9] was verified clear (>=4m) of the work_area prop cluster and every existing wood/fiber node, but nobody checked it against the village's PEOPLE -- it landed 3.11m from Bram [-5.89,-9] (village_npcs.json), inside Bram's own 3.8m Interactable radius, and 0.42m inside the inn building's own 7.08m circumscribed footprint (tools/_probe_civilian_placement.gd's BUILDINGS.inn). interaction_arbiter.gd has exactly one prompt slot and picks whichever offer is closer at equal priority (prompt_arbiter.gd::choose_index), so standing at Bram's own authored customer spot made the two prompts contest that slot -- reproduced 100% by tests/smoke_post_modal_control.gd's first Bram visit (bisected to this commit, df793bd5). Moved 10m further south along the same north-south line, still off every path (path_factor 0.00) and on flat ground (slope <5deg, tools/_probe_berries_1036_resite.gd): 10.47m from Bram (>=7.2m combined-radius-plus-margin), 5.42m clear of the inn footprint, and 5.10m clear of the nearest other harvest node (order 1026, fiber at [-10,-14])."
   },
   {
    "order": 1037,
