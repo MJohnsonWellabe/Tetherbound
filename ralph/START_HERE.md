@@ -4,9 +4,22 @@ This is the **single current entry point for autonomous Meadows work**.
 
 If another document looks like a startup guide, milestone guide, handover, or old Ralph manual, do not treat it as current merely because it exists. Start here.
 
+## CURRENT STATE — 2026-09-01 (coordinator handover)
+
+**This section supersedes every dated section below it, including the 2026-08-30 one immediately following.**
+
+Read `ralph/COORDINATOR_HANDOVER_2026-09-01.md` in full before doing anything
+else. It is today's actual routing document: the state of
+`ralph/LAND-MEGA-0901` (not yet landed on `main` — a real, reproducing
+`Verify free_build` CI failure blocks it), the docs cleanup this file itself
+is part of, and today's four other work streams (creature visual lane, a
+conditional Gate F redo, backlog lanes). Everything below this point in
+`START_HERE.md` is superseded history kept only until the docs cleanup pass
+that handover describes gets to it — do not route from it.
+
 ## CURRENT STATE — 2026-08-30 (coordinator update, post-LAND-0830J landing)
 
-**This section supersedes every dated section below it.**
+**This section is superseded by 2026-09-01 above. Kept for now as history.**
 
 - **`main` is at `453107fb` — `ralph/LAND-0830J` LANDED** via `ralph-sweep.yml`,
   CI verified at job level across BOTH pages of run 3253 (56 success, 2 expected
