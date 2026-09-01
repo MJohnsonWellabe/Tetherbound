@@ -784,6 +784,12 @@ func _refresh_door_gate() -> void:
 		return
 	var door_open := BEATS.at_or_after(_beat, BEATS.WALK_OUT)
 	_house.call("set_door_open", door_open)
+	# OWNER-0901: the player's own bed offers "Sleep" (grandpa_house.gd's
+	# `_build_sleep_prompt`) on the same gate as the front door — free to
+	# leave the house is free to nap in it, and before that the player is
+	# still mid-conversation with Grandpa, where a sleep prompt would fire
+	# `night_rest.gd::rest()` out from under an unfinished opening beat.
+	_house.call("set_sleep_enabled", door_open)
 	if door_open or not DOOR_CALLOUT_BEATS.has(_beat):
 		return
 	if bool(_dialogue.call("is_open")) or _adopting or _picker_pending:

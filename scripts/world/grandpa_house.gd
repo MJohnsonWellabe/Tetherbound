@@ -39,6 +39,8 @@ extends Node3D
 ## camera uses.
 
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const NIGHT_REST := preload("res://scripts/world/night_rest.gd")
 
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 ## Quaternius furniture is authored at roughly 2x real scale (a 4.26m bed).
@@ -114,6 +116,7 @@ const KIT_TEXTURES := {}
 var _markers: Dictionary = {}
 var _camera_rig: Node = null
 var _player: Node3D = null
+var _sleep_prompt: Node3D = null
 
 
 func marker(name_key: String) -> Vector3:
@@ -497,6 +500,7 @@ func _build_furniture() -> void:
 	var bed_at := Vector3(-half_w + 1.3, FLOOR_H + 0.25, -half_d + 1.9)
 	_furnish("BedTwin", bed_at, 0.0, FURNITURE_SCALE, FURNITURE_DIR, false)
 	_bed_mattress_collider(bed_at)
+	_build_sleep_prompt(bed_at)
 	_furnish("NightStand", Vector3(-half_w + 0.55, FLOOR_H + 0.25, 0.6), 0.0)
 
 	# Past-minimum dressing (R7.2): both reviews called this room an undressed
@@ -646,3 +650,48 @@ func _build_door_gate() -> void:
 func set_door_open(open: bool) -> void:
 	if _door_gate_shape != null:
 		_door_gate_shape.disabled = open
+
+
+## OWNER-0901: "Still no way for a person to sleep." night_rest.gd's `rest()`/
+## `pass_the_night()` and the `player_slept_at_home` flag it sets have existed
+## since the tutorial ladder was written, and `rest_point.gd` already wires
+## them to every AUTHORED camp out in the Meadows (trail_camp, ranger_camp,
+## riverwatch_rest) plus the player's own buildable camp (`camp.gd`) — but the
+## one bed the opening itself puts the player in, the loft `BedTwin` this
+## function furnishes, carried no interactable at all once the wake beat
+## ended. `sequence_director.gd`'s own "BedPrompt" is the wake beat's "Get up"
+## exit and is disabled for the rest of the game
+## (`_bed_prompt.call("set_enabled", _beat == BEATS.WAKE)`) — it was never a
+## sleep trigger. So a player who never bothers building a camp, and never
+## wanders as far as an authored one, had genuinely no way to rest at all.
+## This is the missing piece: the same bed, offering the same shared
+## `night_rest.gd` entry point everything else already uses.
+##
+## Starts disabled and is polled by `sequence_director.gd::_refresh_door_gate`
+## the same frame it decides the front door unlocks (`set_sleep_enabled`,
+## called right after `set_door_open`) — reusing that beat gate rather than
+## adding a second one: before the player is free to leave the house, they are
+## still mid-conversation with Grandpa and sleeping out from under that scene
+## would be a stranger bug than not being able to sleep yet.
+func _build_sleep_prompt(bed_at: Vector3) -> void:
+	var prompt: Node3D = INTERACTABLE.new()
+	prompt.name = "SleepPrompt"
+	# Raised off the mattress for the same reason every other prompt in this
+	# file and `rest_point.gd`/`camp.gd` is: interactable.gd draws its sight
+	# line from ITS OWN position, and one sitting at mattress height is
+	# occluded by the mattress itself.
+	prompt.position = bed_at + Vector3(0.0, 0.6, 0.0)
+	prompt.call("configure", "Sleep", 2.2, false)
+	prompt.connect("activated", _on_sleep_activated)
+	add_child(prompt)
+	_sleep_prompt = prompt
+
+
+func _on_sleep_activated() -> void:
+	NIGHT_REST.rest(self)
+
+
+## See `_build_sleep_prompt`'s comment for why this shares the door's gate.
+func set_sleep_enabled(value: bool) -> void:
+	if _sleep_prompt != null:
+		_sleep_prompt.call("set_enabled", value)
