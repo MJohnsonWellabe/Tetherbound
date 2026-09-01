@@ -1371,6 +1371,10 @@ static func _predict_frames(steps: Array) -> int:
 				# into launching a segment it cannot afford in the worst case.
 				total += maxi(1, int(args.get("max_presses", 4))) \
 					* (int(args.get("settle_frames", 20)) + 4)
+			"track_aim":
+				# RIG-F3. Same rule as `press_until` just above it: priced at its
+				# FULL budget, never at the early exit a clean track usually takes.
+				total += int(args.get("budget_frames", 240))
 			"capture":
 				total += 6
 			"capture_seq":
@@ -1780,6 +1784,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_press_multi(args, id)
 		"press_until":
 			actual = await _step_press_until(args, id)
+		"track_aim":
+			actual = await _step_track_aim(args, id)
 		"hold":
 			actual = _step_hold(args, id)
 		"release":
@@ -3238,6 +3244,127 @@ func _step_press_until(args: Dictionary, step_id: String) -> String:
 		if bool(now.get("ok", false)):
 			return "%d x %s reached it: %s" % [attempt + 1, control, last]
 	return "FAIL %d x %s did not reach it; last saw %s" % [budget, control, last]
+
+
+## RIG-F3 — track the live target during aim; do not throw at a stale point.
+##
+## `ralph/GATE-F-CAPSTONE-3`'s S02 run found the second generation of RIG-F2's
+## bug in the same catch sequence: all 3 scripted throws missed the wild
+## bramblebun's body entirely (`reason=reticle_outside_body`/`reason=ground`)
+## rather than landing and failing the catch roll on its own merits. RIG-F2
+## fixed the AIM TOGGLE (press until `input_context == combat_aim`); this
+## fixes the AIM DIRECTION once inside it. Every S02 throw block re-aimed
+## exactly once, at aim entry, via `press_until` -- there was nothing between
+## that snap and the eventual `press interact` release except a `capture`
+## step, but the bramblebun is a live `CharacterBody3D` that keeps walking
+## through both, and `throw_aim.gd::_acquire_target()` only SNAPS the camera
+## once, on the frame the aim opens (see its own header: "Snapped rather than
+## glided"). A camera pointed at where the target stood is exactly the fixed
+## aim-then-throw pattern CD-3 already named as the wrong shape for a press;
+## the same shape is wrong for an aim.
+##
+## So this steers, every frame, at the target's CURRENT `centre()` -- the
+## same yaw/pitch formula `_acquire_target()` snaps once, re-applied
+## continuously here -- and reads eligibility off `throw_aim.gd::aim_report()`,
+## the exact live diagnostic `_commit_launch_assist()` itself is built from
+## (`reticle_outside_body`/`line_of_sight_blocked`/`eligible`). That is the
+## same "reach a state, then assert it, never guess a repetition count"
+## primitive RIG-F2 used for a press, applied here to a continuous analogue
+## input: PASS the instant the reticle is confirmed on the body, reporting
+## how many frames that took; FAIL at `budget_frames` naming the last reason
+## seen. This step only STEERS -- the throw itself stays a separate `press`
+## step immediately after it, so a segment can still see (and evidence) the
+## release as its own step.
+func _step_track_aim(args: Dictionary, step_id: String) -> String:
+	# CD-4's rule, the same way `press_until`'s own `skip_if` applies it: a
+	# retry block that runs after the catch already landed has nothing to aim
+	# at, and that is the segment succeeding early, not a defect. Measured on
+	# this segment: once `party_size` reaches its target after throw 2, throws
+	# 3 and 4's `press_until` (aim entry) already reports FAIL rather than
+	# SKIP because neither carries a `skip_if` of its own — this step must not
+	# repeat that shape by reporting a hard FAIL for the same moot case.
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED track_aim: not needed (%s)" % str(moot.get("actual", ""))
+
+	var manager := _probe.call("combat_manager") as Node
+	if manager == null:
+		return "HARNESS-ERROR track_aim step %s has no CombatManager in the world" % step_id
+	var throw: Node = manager.call("throw_aim") if manager.has_method("throw_aim") else null
+	if throw == null:
+		return "HARNESS-ERROR track_aim step %s: CombatManager has no throw_aim node" % step_id
+	if not bool(throw.call("is_aiming")):
+		return "FAIL track_aim: input_context is not combat_aim -- enter it with press_until first"
+	var rig := _probe.call("camera_rig") as Node
+	if rig == null:
+		return "HARNESS-ERROR track_aim step %s: no live camera rig" % step_id
+	# The RETICLE ray is cast from the CAMERA's eye (`launch_assist_diagnostics()`
+	# uses `camera.global_position`), not the trainer's — the aim camera sits
+	# about a shoulder's width off to one side (`_shoulder`, `_apply_aim_camera`'s
+	# own header explains why). Steering toward the target from the PLAYER's
+	# position instead (what `_acquire_target()`'s one-shot snap does, and what
+	# this step's first cut also did) is off by exactly that parallax, and
+	# because the offset does not shrink as the camera turns, it never converges
+	# -- measured: four tracked blocks, every one still `reticle_outside_body`
+	# after the full 240-frame budget, with the offset if anything larger than
+	# the single un-tracked snap it was meant to fix. Aiming from the camera's
+	# own eye is the ray the eligibility check will actually judge.
+	var camera := rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null:
+		return "HARNESS-ERROR track_aim step %s: camera rig has no live Camera3D" % step_id
+
+	var budget := maxi(1, int(args.get("budget_frames", 240)))
+	var last_reason := "unavailable"
+	var turned := 0
+	while turned < budget:
+		if not bool(throw.call("is_aiming")):
+			return "FAIL track_aim: left combat_aim mid-track after %d frame(s) (last: %s)" % [
+				turned, last_reason]
+		var report: Dictionary = throw.call("aim_report")
+		last_reason = str(report.get("reason", "unavailable"))
+		if bool(report.get("eligible", false)):
+			_stick_right = Vector2.ZERO
+			_drive_sticks()
+			await physics_frame
+			return "reticle confirmed on body after %d tracked frame(s): %s" % [turned, last_reason]
+
+		var body: Node3D = manager.call("enemy_body") as Node3D
+		if body == null or not is_instance_valid(body) or not body.has_method("centre"):
+			_stick_right = Vector2.ZERO
+			_drive_sticks()
+			return "FAIL track_aim: no live target body to track after %d frame(s)" % turned
+
+		# Same formula `_acquire_target()` snaps once at aim entry -- resampled
+		# every frame here because the target keeps walking through the gap a
+		# fixed snap leaves open, and measured FROM THE CAMERA rather than the
+		# trainer (see the header above).
+		var centre: Vector3 = body.call("centre")
+		var to_target: Vector3 = centre - camera.global_position
+		var have_yaw := float(rig.get("yaw"))
+		var want_yaw := atan2(-to_target.x, -to_target.z)
+		var yaw_delta := rad_to_deg(angle_difference(have_yaw, want_yaw))
+		var yaw_push := clampf(absf(yaw_delta) / 45.0, 0.4, 1.0) * signf(-yaw_delta)
+
+		var pitch_push := 0.0
+		var flat := Vector2(to_target.x, to_target.z).length()
+		if flat > 0.01:
+			var have_pitch := float(rig.get("pitch"))
+			var want_pitch := atan2(to_target.y, flat)
+			var pitch_delta := rad_to_deg(angle_difference(have_pitch, want_pitch))
+			pitch_push = clampf(absf(pitch_delta) / 45.0, 0.4, 1.0) * signf(-pitch_delta)
+
+		_stick_right = Vector2(yaw_push, pitch_push)
+		_drive_sticks()
+		turned += 1
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+
+	_stick_right = Vector2.ZERO
+	_drive_sticks()
+	return "FAIL track_aim: reticle never confirmed on body in %d frame(s); last saw %s" % [
+		budget, last_reason]
 
 func _step_open_menu(args: Dictionary, step_id: String) -> String:
 	var tab := str(args.get("tab", ""))
