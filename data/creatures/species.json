@@ -704,9 +704,9 @@
       },
       "placeholder": {
         "colour": "#46a050",
-        "height": 2.6,
-        "radius": 0.95,
-        "_comment_size": "Above every other creature in the biome, which D12 asked for explicitly: after D19's size pass the range runs 1.50m for the practice creature to 2.15m for the evolved Tuskroot, 'and the legendary above all of them'. At 2.6m it stands a head and antlers over the 1.8m trainer.",
+        "height": 3.6,
+        "radius": 1.32,
+        "_comment_size": "Above every other creature in the biome, which D12 asked for explicitly: after D19's size pass the range runs 1.50m for the practice creature to 2.15m for the evolved Tuskroot, 'and the legendary above all of them'. Raised 2.6m -> 3.6m (radius scaled by the same ratio, 0.95m -> 1.32m, per D12's radii-scale-with-height rule) under OD-0901-1: the owner's correction that creatures looming over the 1.80m trainer is the intended read, not a defect, and that any alpha-vs-legendary ceiling should be solved by raising the legendary rather than shrinking the alpha (ralph/OWNER_DIRECTIVES_2026-09-01.md). This undoes D69's 'legendary's headroom stays 0.45m' constraint by design: the same 0.45m absolute lead is now kept over the tallest thing in the biome, which after this change is band5's restored alpha Galecrest (3.15m) rather than ordinary Tuskroot (2.15m). Still sized as a rideable mount (GAME_DESIGN.md/MEADOWS_PROGRESSION_SPEC.md), not a building.",
         "_comment_rest_sink": "OWNER-0901-CREATURE-BED-POSE: this legendary's idle holds its head up alert, well clear of its rest pose, so the radius-based grounding creature_body.gd's play_rest() uses for the rest of the roster left it floating well above the bed. Measured against a render, not guessed.",
         "rest_sink_extra": 1.5,
         "model": "res://assets/creatures/tetherbound/veridian/models/creature_veridian_lod0.glb",
