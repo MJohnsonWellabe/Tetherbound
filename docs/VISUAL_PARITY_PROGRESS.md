@@ -35,7 +35,7 @@ Passes are `VP0…VP11` (visual passes) — never conflate with gameplay Gate A/
 | 2. real screenshot file on disk from the repo capture path | PASS — `tools/capture_diag_minimal.gd` wrote 1920x1080 via X11/llvmpipe GL 4.5; `tools/survey.gd` wrote 5 frames to `shots/` (copied to `ralph/reports/visual-parity/VP-PRE/`) |
 | 3. image is a real rendered frame | PASS — opened `01-spawn-outward.png`/`03-rise-overlook.png`: real world frames (terrain, scatter, buildings, sky). FINDING: `05-spawn-low-sun` (golden) came back a flat frame (spread 0.000) — `apply_time("golden")` renders nothing under this pipeline; carried into VP1 as defect VP1-G0 |
 | 4. test command runs | PASS — `tests/smoke_art.gd` headless: `art: OK` in 1m53s |
-| 5. blind visual judge invocable from this environment | (pending) |
+| 5. blind visual judge invocable from this environment | PASS — a fresh sonnet subagent given only the four VP-PRE frames, `docs/reference/`, the website board and the rubric produced a full critique: `ralph/reports/visual-parity/VP-PRE/JUDGE.md` (bar A: no, bar B: no). Not deferred. |
 
 Environment notes for the next session (all verified 2026-09-01):
 - Install Godot 4.7-stable: `tools/art_pipeline/setup.sh godot` → `~/.cache/tetherbound-art/godot`.
@@ -67,7 +67,11 @@ Environment notes for the next session (all verified 2026-09-01):
 
 ## Judge history
 
-(one entry per pass: verdict or DEFERRED, main failures, response)
+### VP-PRE (survey frames, shipped main @ 252ccc81) — `ralph/reports/visual-parity/VP-PRE/JUDGE.md`
+- Bar A (keyart world): **no**. Bar B (Palworld kind of game): **no**.
+- Ranked gaps: (1) the ground does not resolve — grass dissolves into textureless blur a few metres out in 3 of 4 frames; (2) nothing casts a believable shadow — rocks float, and 01 carries a large hard-edged diagonal dark patch with no caster; (3) the palette never leaves a narrow desaturated mid-tone band, sky identical and smeared in every frame, no atmospheric depth (03 horizon is a hard flat line).
+- Also: trees are identical ball-on-stick at regular intervals (02); scatter-blob clump with hard falloff (04); no creatures in the survey set (capture gap, not a verdict).
+- Response: (1) → VP2; (2) shadows/contact → VP1 (shadow bias, ambient) + VP2 (ground darkening under objects); the 01 diagonal patch is investigated in VP1 (suspect: PSSM split / terrain macro); (3) → VP1. Creature frames are added in VP0's location/combat set.
 
 ## Implementation decisions
 
