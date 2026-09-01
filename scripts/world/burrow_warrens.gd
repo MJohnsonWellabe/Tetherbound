@@ -216,6 +216,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	_build_mound()
 	_build_deposits()
 	_build_dressing()
+	_build_den_atmosphere()
 	_build_interior_rock()
 	_build_structure()
 	_build_prize()
@@ -1774,6 +1775,107 @@ func _build_dressing() -> void:
 		spec["name"] = "%s_%s_%d" % [str(spec.get("model", "prop")), chamber, index]
 		spec["yaw_deg"] = float(spec.get("yaw_deg", 0.0)) + site_yaw
 		placer.call("place", placer, spec)
+
+
+## AUDIT-E5 (2026-08-31). `tests/smoke_warrens.gd` passes end to end and the
+## den's own room composition (angled beam ceiling, four real walls, a
+## doorway with light beyond) is already confirmed good -- the "protect it"
+## verdict stands. What a fresh, independent blind pass on the same passing
+## frame called out is narrower: dirt floor, one rock, one sack, no
+## bedding/bones/nest material/water, and a flat, shadowless wash that
+## undercuts the room's own "hints of mystery" target. `_build_dressing()`
+## above already carries the room's crates/barrels/bag; bones and standing
+## water have no modelled equivalent in any installed pack (checked:
+## quaternius_fantasy, quaternius_survival, kenney_survival, stylized_nature,
+## environment/nature -- none), so they are built the same way the
+## Heartstone's own plinth below is: primitive geometry with a real material,
+## not a sourced mesh and not a new one. No collider on either -- decoration a
+## player can get stuck on is a bug, the rule `_place_rock` already keeps for
+## the mound's own boulders. Scoped to the den only: nothing here touches the
+## guardian, the vault door, collision/navigation or the reward path.
+func _build_den_atmosphere() -> void:
+	if not _chambers.has("den"):
+		return
+	var chamber: Dictionary = _chambers["den"]
+	var centre := _local_of(chamber.get("at", []))
+	var height := float(chamber.get("height", 4.8))
+	_build_den_nest_scatter(centre)
+	_build_den_puddle_and_shaft(centre, height)
+
+
+## Gnawed bones at the edge of the nest heap `_build_dressing()`'s own
+## Grass_Wide_Tall/Fern_1 entries pile up near the guardian's own stand (den
+## centre + [3,4], per `guardian.offset`) -- this reads as the animal that
+## actually lives here, not a stranger's abandoned camp. Three CapsuleMesh
+## "bones", fixed and deterministic like every other authored placement in
+## this file; an RNG scatter for three objects would be a second mechanism
+## for no reason.
+func _build_den_nest_scatter(centre: Vector3) -> void:
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color("#e7ddbe")
+	mat.roughness = 0.85
+	var holder := Node3D.new()
+	holder.name = "DenBones"
+	add_child(holder)
+	for spec: Array in [
+		[Vector2(6.0, 5.5), 0.55, 0.30, 0.10],
+		[Vector2(7.0, 4.9), 0.42, -1.05, -0.05],
+		[Vector2(5.2, 6.0), 0.50, 2.10, 0.08],
+	]:
+		var off: Vector2 = spec[0]
+		var bone := MeshInstance3D.new()
+		var capsule := CapsuleMesh.new()
+		capsule.radius = 0.045
+		capsule.height = float(spec[1])
+		bone.mesh = capsule
+		bone.material_override = mat
+		# Rolled onto its side (the PI*0.5 roll) so a capsule authored upright
+		# lies flat like a bone dropped on a floor; pitch/yaw vary each one so
+		# the three do not read as identical copies.
+		bone.rotation = Vector3(float(spec[3]), float(spec[2]), PI * 0.5)
+		bone.position = Vector3(centre.x + off.x, _floor_y + 0.05, centre.z + off.y)
+		holder.add_child(bone)
+
+
+## A puddle with no modelled equivalent, and a beam with nothing behind it
+## except a gap in the rock: a thin CylinderMesh standing in for still water,
+## lit from straight above by a narrow, shadow-casting SpotLight3D. Every
+## light in `lights` (this room included) is a broad, shadowless wash by
+## design -- `_build_lights()`'s own comment -- so this is the one point of
+## real contrast the blind pass called missing, tucked into the den's far
+## corner from the guardian's own stand and well outside
+## `combat_arena_bounds_at()`'s fight footprint so it never reads as part of
+## the encounter.
+func _build_den_puddle_and_shaft(centre: Vector3, height: float) -> void:
+	var at := Vector3(centre.x - 7.0, 0.0, centre.z - 5.0)
+
+	var puddle := MeshInstance3D.new()
+	var disc := CylinderMesh.new()
+	disc.top_radius = 1.05
+	disc.bottom_radius = 1.25
+	disc.height = 0.05
+	puddle.mesh = disc
+	var water := StandardMaterial3D.new()
+	water.albedo_color = Color(0.05, 0.08, 0.11, 0.85)
+	water.roughness = 0.04
+	water.metallic = 0.3
+	water.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	puddle.material_override = water
+	puddle.name = "DenPuddle"
+	puddle.position = Vector3(at.x, _floor_y + 0.02, at.z)
+	add_child(puddle)
+
+	var shaft := SpotLight3D.new()
+	shaft.name = "DenLightShaft"
+	shaft.position = Vector3(at.x, _floor_y + height - 0.3, at.z)
+	shaft.rotation.x = -PI * 0.5  # local -Z rotated to point straight down
+	shaft.light_color = Color("#bfe0e6")
+	shaft.light_energy = 2.2
+	shaft.spot_range = height + 1.0
+	shaft.spot_angle = 18.0
+	shaft.spot_angle_attenuation = 1.4
+	shaft.shadow_enabled = true
+	add_child(shaft)
 
 
 ## The Heartstone (R4.6's evolution catalyst), in the branch chamber. One
