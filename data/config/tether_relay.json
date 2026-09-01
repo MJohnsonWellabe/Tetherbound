@@ -304,6 +304,21 @@
     "_comment_tint": "Deliberately close to terrain_playground.json's own `drains.tint` (#bfb6a0), a shade further down because this skin ADDS over an untinted bake where the bake's own tint MULTIPLIES the albedo. Desaturated warm grey: sun-killed ground, not ash. TUNABLE.",
     "_comment_lift": "Metres above the sampled ground. Small enough not to read as a floating sheet, large enough that a 3m cell over 6-degree ground never lets the terrain poke through."
   },
-  "_comment_props": "The site's loose gear \u2014 crates, barrels, tooling \u2014 belongs in data/config/props.json as a `relay_station` cluster, placed by props.gd like every other cluster, and is deliberately NOT duplicated here. That cluster is not authored yet (props.json's own header says the same of `quarry_station`): a prop-placement pass is its own item and the station reads without it. Nothing in this file or in tether_relay.gd will need to change when it lands.",
+  "_comment_scorch_marks": "E3-RELAY-POPULATION (ralph/reports/audit/E-2026-08-31.md \u00a7E3): irregular charred ground patches, `tether_relay.gd::_build_scorch_marks` -- same no-new-asset shape as `dead_ground` above (a painted, seeded triangle fan, no collider, no shadow), at the two points a lived-in station would actually mark: where the posted sentry stands, and at the loose-tools workstation (`data/config/bands/band3_the_river_lock/props.json`'s `relay_station` cluster). Local (s,t) frame, same as everything else in this file.",
+  "scorch_marks": [
+    {
+      "id": "gate_watch",
+      "at": [-11.0, -2.0],
+      "radius": 1.6,
+      "_why": "under the sentry's own post, a stride inside the gate"
+    },
+    {
+      "id": "yard_workstation",
+      "at": [-3.0, -6.0],
+      "radius": 2.0,
+      "_why": "at the tool workstation on the standing-shot sightline, next to the Relay Watch grunt"
+    }
+  ],
+  "_comment_props": "The site's loose gear \u2014 crates, barrels, tooling \u2014 belongs in data/config/props.json as a `relay_station` cluster, placed by props.gd like every other cluster, and is deliberately NOT duplicated here. GATE-D3 authored that cluster (`data/config/bands/band3_the_river_lock/props.json`, order 3002); E3-RELAY-POPULATION added three more props to it, on the same sightline as the scorch marks and the new grunts above. Nothing in this file or in tether_relay.gd had to change when either landed.",
   "_comment_ow5d_relocation": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved together with relay_site.json's `site.centre`, from (108,34) to (350,3760) -- see that file's own OW5D note. Everything below `site` (walls, gate, decks, ramps, apparatus, conduits) is authored in the site's OWN (s,t) frame per `_frame` below and needs no changes -- a pure translation of the centre carries the whole compound with it."
 }

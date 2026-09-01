@@ -15,7 +15,36 @@
 
   "_comment_people": "Read by scripts/world/village_npcs.gd — the same placer the square uses, pointed at a second file. Spelled `people` rather than `villagers` because these are not villagers; the placer accepts either key. Every field means what it means in data/config/village_npcs.json (`config_key`, `position` [x,z], `facing_deg`, `greeting`, `greeting_when`), plus two SE27 additions used here and documented in that file too: `place_when` (an ordered branch list deciding whether this body STANDS here at all, re-read whenever the flag store changes) and the per-part model overrides (`palette`, `hair`, `tint`, `height`, `accessories`) a trainer entry already accepts. NO NEW MODEL: the captive is `villager_ranger` — NP4-rig's villager_female base, the exact rig the village's Rescued Ranger already uses — with one palette variant over it, per CLAUDE.md and spec §20/§21.",
 
+  "_comment_patrol": "E3-RELAY-POPULATION (ralph/reports/audit/E-2026-08-31.md §E3): the audit's own fresh capture confirmed the compound's four combat trainers (Hess/Orrin on the road, Dell/Vance on the site — data/config/bands/band3_the_river_lock/trainers.json) exist but sit outside or at the edge of the three judged camera stands (`tools/_capture_locations.gd --only=06-relay`), so the site read as abandoned architecture rather than an active operation despite already having a captain and an officer posted on it. `test_chapter_content_map.gd` caps the chapter at 24 distinct trainer opponents with no headroom left (see band3's own `_comment_river_nest_doss`), so these two are NOT fightable trainers — they are ordinary `village_npcs.gd` bodies, same mechanism as Sela above, given the Team Tether `rank: grunt` (`village_npcs.gd::model_config()`, added alongside this) instead of a villager `config_key` so they wear the faction's own grunt rig, palette and chest badge (`data/config/npc_ranks.json`) rather than a new model. Positioned directly on the three capture stands' own sightlines (gate threshold for `approach`/`standing`, the yard floor on the standing-to-apparatus sightline) — verified by re-running the capture tool, not guessed. `place_when: unless relay_disabled` because an active patrol standing over a relay the player has already shut down and whose captain they already beat would read as a continuity error, not an intended irony.",
+
   "people": [
+    {
+      "name": "Relay Sentry",
+      "rank": "grunt",
+      "position": [342.3, 3772.32],
+      "facing_deg": -34.4,
+      "_why_here": "In the gate's own opening (local s=-14.5, t=0.6 — 0.6m off the road centreline so the walk-through stays clear), facing back down the approach bearing. This is the point `06-relay-approach`'s camera looks straight at from 32m out, and the point `06-relay-standing`'s camera stands 4-5m from just inside the gate — the two stands the audit's fresh capture found nobody in.",
+      "place_when": [
+        {
+          "unless_flag": "relay_disabled",
+          "_why": "A posted sentry belongs to the site while it is live. Once the console is pressed the relay is dead and its guard has no post left to stand."
+        }
+      ]
+    },
+    {
+      "name": "Relay Watch",
+      "rank": "grunt",
+      "base": "grunt_a",
+      "position": [344.7, 3762.43],
+      "facing_deg": 145.6,
+      "_why_here": "On the yard floor at local (s=-5.0, t=-3.0), beside the whetstone/axe workstation (`data/config/bands/band3_the_river_lock/props.json`'s `relay_station` cluster) and 3.2m from `06-relay-standing`'s own eye (local -8,-2) — close enough to read clearly in a shot whose look target is the elevated apparatus pad and therefore tilts the camera upward (verified against a fresh capture: a first placement 6m out at the pad's own edge fell below this shot's frame the same way the road pickets do). Clear of the deck footprint (s 2..12) and the ramp run (s -12.5..-5.5). `base: grunt_a` so this figure is not a silhouette duplicate of the sentry a few metres away in the same frame.",
+      "place_when": [
+        {
+          "unless_flag": "relay_disabled",
+          "_why": "Same as the sentry: a live station has a second body working it; a dead one does not."
+        }
+      ]
+    },
     {
       "name": "Sela",
       "config_key": "villager_ranger",
