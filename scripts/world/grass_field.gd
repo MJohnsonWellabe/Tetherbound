@@ -380,7 +380,11 @@ static func cull_tile_m(cfg: Dictionary) -> float:
 ## `_fill_lattice`, cut into tiles. Same cells, same per-layer counts, same
 ## slot tags and same pure-translation transforms -- the only difference is
 ## which MultiMesh a cell's items land in. Returns one entry per non-empty
-## tile: `{"mm": MultiMesh, "aabb": AABB, "key": Vector2i}`.
+## tile: `{"mm": MultiMesh, "aabb": AABB, "key": Vector2i, "origins":
+## PackedVector3Array}`. `origins` duplicates what went into the MultiMesh
+## because the headless (Dummy) renderer the tests run under never stores a
+## MultiMesh buffer -- `get_instance_transform()` reads back identity for
+## every instance there -- so the tests pin the layout through this array.
 static func _fill_lattice_tiles(mesh: Mesh, plan: Array, cell: float, tile_m: float) -> Array:
 	var per_tile: Dictionary = {}  # Vector2i -> Array[Transform3D]
 	for index in plan.size():
@@ -414,12 +418,16 @@ static func _fill_lattice_tiles(mesh: Mesh, plan: Array, cell: float, tile_m: fl
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.mesh = mesh
 		mm.instance_count = bucket.size()
+		var origins := PackedVector3Array()
+		origins.resize(bucket.size())
 		for i in bucket.size():
-			mm.set_instance_transform(i, bucket[i])
+			var xf: Transform3D = bucket[i]
+			mm.set_instance_transform(i, xf)
+			origins[i] = xf.origin
 		var x0 := float(key.x) * tile_m
 		var z0 := float(key.y) * tile_m
 		out.append({
-			"mm": mm, "key": key,
+			"mm": mm, "key": key, "origins": origins,
 			"aabb": AABB(Vector3(x0 - slack, -400.0, z0 - slack),
 					Vector3(tile_m + slack * 2.0, 800.0, tile_m + slack * 2.0)),
 		})

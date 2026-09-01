@@ -273,7 +273,9 @@ func test_the_far_tier_did_not_grow_the_expensive_one() -> void:
 ## its own AABB -- so the renderer can drop the two thirds of the disc a
 ## third-person camera is not looking at. That is only a win if it is ALSO a
 ## no-op for the look: the same cells, the same per-layer counts, the same slot
-## tags, just in different buckets. These pin both halves.
+## tags, just in different buckets. These pin both halves. They read the
+## tiler's own `origins` array rather than the MultiMesh, because the headless
+## renderer these run under stores no MultiMesh buffer at all.
 func test_cull_tiles_hold_exactly_the_instances_the_single_multimesh_did() -> void:
 	var cfg := FIELD.config()
 	var cell: float = FIELD.lattice_cell()
@@ -284,20 +286,19 @@ func test_cull_tiles_hold_exactly_the_instances_the_single_multimesh_did() -> vo
 	var expected: int = FIELD._fill_lattice(single, plan, cell)
 	var tiles: Array = FIELD._fill_lattice_tiles(BoxMesh.new(), plan, cell, 16.0)
 	var total := 0
-	var origins: Dictionary = {}
+	var seen: Dictionary = {}
 	for entry: Variant in tiles:
 		var tile: Dictionary = entry
-		var mm: MultiMesh = tile["mm"]
-		total += mm.instance_count
-		for i in mm.instance_count:
-			var o := mm.get_instance_transform(i).origin
-			origins["%.3f,%.3f" % [o.x, o.z]] = true
+		var origins: PackedVector3Array = tile["origins"]
+		assert_eq(origins.size(), (tile["mm"] as MultiMesh).instance_count,
+			"a tile's origins array and its MultiMesh disagree about the instance count")
+		total += origins.size()
+		for o: Vector3 in origins:
+			var key := "%.3f,%.3f" % [o.x, o.z]
+			assert_false(seen.has(key), "two instances share the spot (%.2f, %.2f)" % [o.x, o.z])
+			seen[key] = true
 	assert_eq(total, expected,
 		"tiling changed the instance count: %d tiled vs %d in one MultiMesh" % [total, expected])
-	for i in single.instance_count:
-		var o := single.get_instance_transform(i).origin
-		assert_true(origins.has("%.3f,%.3f" % [o.x, o.z]),
-			"instance at (%.2f, %.2f) exists in the single MultiMesh but no tile carries it" % [o.x, o.z])
 	assert_true(tiles.size() > 4,
 		"a 40m ring on 16m tiles should be many tiles, got %d" % tiles.size())
 
@@ -309,18 +310,18 @@ func test_every_cull_tile_instance_sits_inside_its_own_aabb() -> void:
 	var tiles: Array = FIELD._fill_lattice_tiles(BoxMesh.new(), plan, cell, 16.0)
 	for entry: Variant in tiles:
 		var tile: Dictionary = entry
-		var mm: MultiMesh = tile["mm"]
 		var aabb: AABB = tile["aabb"]
 		var key: Vector2i = tile["key"]
-		for i in mm.instance_count:
-			var o := mm.get_instance_transform(i).origin
+		for o: Vector3 in (tile["origins"] as PackedVector3Array):
 			assert_true(aabb.has_point(Vector3(o.x, 0.0, o.z)),
 				"tile %s instance at (%.2f, %.2f) is outside its AABB %s -- it would be culled while visible" % [
 					str(key), o.x, o.z, str(aabb)])
 			# A cell belongs to the tile its origin falls in, so no item may
-			# be more than one cell plus the slack outside the tile square.
+			# be more than one cell outside the tile square.
 			assert_true(o.x >= float(key.x) * 16.0 - 0.001 and o.x < float(key.x + 1) * 16.0 + cell,
 				"tile %s instance x=%.2f is not in that tile's column" % [str(key), o.x])
+			assert_true(o.z >= float(key.y) * 16.0 - 0.001 and o.z < float(key.y + 1) * 16.0 + cell,
+				"tile %s instance z=%.2f is not in that tile's row" % [str(key), o.z])
 
 
 func test_cull_tile_size_is_a_whole_number_of_lattice_cells() -> void:
