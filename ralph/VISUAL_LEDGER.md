@@ -172,6 +172,34 @@ rewrites itself cannot be trusted about what it got wrong.
   left open as `BACKLOG-VISUAL-BED-REST-ROLL-FLIP`. Full evidence:
   `ralph/reports/audit/bed-fits-creature/FOLLOWUP-2026-09-01.md`.
 
+- **The bed-fits-creature fix above shipped too narrow, and the owner caught
+  it live: "galecrest goes way out of the bed."** That pass only ever
+  measured terrapup, and measured it at its OLD 1.62m height — the same day
+  it was independently raised to 2.30m by `OD-0901-1`; nobody re-checked bed
+  fit against any of the roster's new, bigger sizes. A 2026-09-01
+  whole-roster measurement (new `tools/_measure_bed_roster_fit.gd`, headless,
+  reusable) found 11 of 25 species overflowing the bed's OLD rim in their
+  shipped rest pose, worst the 3.6m legendary Veridian Stag at 1.66x. Fixed
+  by growing the bed itself (`RIM_RADIUS_X/Z` 1.55/1.35 → 2.40/2.05,
+  `PAD_SCALE` scaled proportionally) per `OWNER_DIRECTIVES_2026-09-01.md`
+  ("grow the ceiling, don't shrink toward it") — the bed is a build-menu
+  prop, not a creature, so `CLAUDE.md`'s no-resize rule never applied to it.
+  Separately, the owner also rejected the prior pass's terrapup fix outright
+  ("so is solution was to make terrapup stand in bed again?") — `rest_roll_
+  deg: 0` was a crouch, never lying down. This pass swept intermediate roll
+  angles and found -45 degrees genuinely settles terrapup (and trailpup,
+  same root cause) onto its side; bramblebun's identical-looking flip turned
+  out to be a genuinely broken idle/faint animation clip that no roll angle
+  fixes (filed separately, `BACKLOG-VISUAL-BRAMBLEBUN-IDLE-DEFORM`), and
+  veridian's stag-like idle makes every roll angle WORSE than not rolling, so
+  it also got the crouch escape hatch, honestly documented as containment
+  only, not a lying pose. Every species now fits the grown bed with real
+  margin (worst case 0.97x). `BACKLOG-VISUAL-BED-REST-ROLL-FLIP` (the
+  unfixed-default-roll back-flip, now confirmed on Frostclaw too and likely
+  every other species that kept the shipped 90-degree default) remains open
+  — contained now, still visibly wrong pose-wise. Full evidence:
+  `ralph/reports/audit/bed-roster-fit/REPORT-2026-09-01.md`.
+
 - **The grunt armband defect does not exist.** The corridor round-2 critic
   reported "a flat pure-red untextured rectangle that renders magenta at night"
   and this coordinator briefed VIS-CAST on it without checking. VIS-CAST found

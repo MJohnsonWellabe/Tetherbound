@@ -88,7 +88,16 @@ const MESH_PATH := "res://assets/props/generated_camp/camp_bed.glb"
 ## ellipse's ~0.75 centreline at that angle, so the pad's frame legs embed
 ## in the branch ring instead of poking visibly outside it (round 1, at
 ## scale 1.12/0.62, had them a clear 0.1m proud of the rim on each diagonal).
-const PAD_SCALE := Vector3(1.75, 0.72, 1.05)
+##
+## BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01): X/Z raised again, by the SAME
+## ratio as RIM_RADIUS_X/Z below (~1.55x/1.52x), so the pad keeps tracking the
+## rim's own centreline the way the paragraph above describes -- this is a
+## proportional re-scale of an already-tuned relationship, not a fresh fit.
+## Y (thickness) untouched, same discipline as the 2026-08-31 pass: the
+## complaint this round answers is footprint (a roster measurement found 11
+## of 25 species overflowing the OLD rim in their shipped rest pose, up to
+## the legendary Veridian Stag at 1.66x), never thickness.
+const PAD_SCALE := Vector3(2.71, 0.72, 1.60)
 
 ## Mattress-top seat for the resting creature, re-derived for PAD_SCALE:
 ## lifted pad base sits at ground (BED_SINK_LIFT * PAD_SCALE.y = 0.155), the
@@ -133,10 +142,30 @@ const PAD_SETTLE := 0.02
 ## circumference) does not open visible gaps in the ring at the new size --
 ## same branch length/jitter, more of them.
 ##
+## BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01): raised again, from a real
+## measurement rather than a single species this time. The owner reported
+## "galecrest goes way out of the bed" and, per OWNER_DIRECTIVES_2026-09-01.md
+## ("grow the ceiling, don't shrink toward it"), the fix is this object, not
+## the creatures -- CLAUDE.md restricts resizing a CREATURE mesh, not a
+## build-menu prop like this one. tools/_measure_bed_roster_fit.gd (new,
+## reusable) rendered every one of the 25 species' actual REST_ANCHOR pose
+## (whatever creature_bed.gd::_sync_rest_body() really plays for it, not a
+## standing/faint stand-in) and checked all 8 AABB corners against this
+## ellipse: 11 species overflowed the OLD 1.55/1.35 rim, worst the legendary
+## Veridian Stag at 1.66x its radius even rolled onto its side (a 3.6m stag,
+## OD-0901-1/2's own "grow the ceiling" pass past the old 2.60m cap).
+## 2.40/2.05 is the smallest size that clears the WHOLE roster with margin
+## (worst case, terrapup's new -45-degree lying pose below, measures 0.97x)
+## -- not picked to exactly clear one species, searched by sweeping candidate
+## sizes against the full-roster measurement until every species passed.
+## RIM_BRANCHES_PER_COURSE goes up with the radii for the same reason it did
+## last time: unchanged branch length/jitter over a bigger circumference
+## opens gaps otherwise.
+##
 ## Deterministic jitter so every placed bed is the same object, not a reroll.
-const RIM_RADIUS_X := 1.55
-const RIM_RADIUS_Z := 1.35
-const RIM_BRANCHES_PER_COURSE := 20
+const RIM_RADIUS_X := 2.40
+const RIM_RADIUS_Z := 2.05
+const RIM_BRANCHES_PER_COURSE := 30
 const RIM_COURSE_HEIGHTS: Array[float] = [0.09, 0.24]
 const RIM_SEED := 20260830
 
