@@ -544,6 +544,16 @@
       "expected": "Section G: CT-01 aim reticle frame (tutorial/required catch, S02, production path) -- throw/feedback quality"
     },
     {
+      "id": "S02-41b",
+      "title": "track the bramblebun until the reticle is on it (throw 1)",
+      "action": "track_aim",
+      "args": {
+        "budget_frames": 240
+      },
+      "expected": "RIG-F3: `throw_aim.gd::_acquire_target()` only snaps the camera once, at aim entry -- the live bramblebun keeps walking through the capture step above, so a fixed snap misses it. This steers the camera at the target's CURRENT position every frame and stops the instant `aim_report()` reports `eligible` (reticle inside the body, unobstructed), rather than throwing at wherever the target stood when the aim opened.",
+      "observation": "ralph/GATE-F-CAPSTONE-3: all 3 scripted throws in this block missed the body entirely (`reason=reticle_outside_body`/`reason=ground`) because the aim was never re-pointed after the single entry snap. RIG-F2 fixed the AIM TOGGLE; this fixes the AIM DIRECTION."
+    },
+    {
       "id": "S02-42",
       "title": "throw the orb",
       "action": "press",
@@ -577,6 +587,15 @@
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S02-43db",
+      "title": "track the bramblebun until the reticle is on it (throw 2)",
+      "action": "track_aim",
+      "args": {
+        "budget_frames": 240
+      },
+      "expected": "RIG-F3: re-point the camera at the target's live position every frame and stop the instant the reticle is confirmed on the body, rather than throwing at the single snap taken when the aim opened."
     },
     {
       "id": "S02-43e",
@@ -616,6 +635,15 @@
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
     },
     {
+      "id": "S02-43fb",
+      "title": "track the bramblebun until the reticle is on it (throw 3)",
+      "action": "track_aim",
+      "args": {
+        "budget_frames": 240
+      },
+      "expected": "RIG-F3: re-point the camera at the target's live position every frame and stop the instant the reticle is confirmed on the body, rather than throwing at the single snap taken when the aim opened."
+    },
+    {
       "id": "S02-43g",
       "title": "throw again (throw 3)",
       "action": "press",
@@ -651,6 +679,15 @@
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S02-43hb",
+      "title": "track the bramblebun until the reticle is on it (throw 4)",
+      "action": "track_aim",
+      "args": {
+        "budget_frames": 240
+      },
+      "expected": "RIG-F3: re-point the camera at the target's live position every frame and stop the instant the reticle is confirmed on the body, rather than throwing at the single snap taken when the aim opened."
     },
     {
       "id": "S02-43i",
