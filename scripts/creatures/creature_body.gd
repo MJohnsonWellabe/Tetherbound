@@ -1122,24 +1122,35 @@ func play_faint() -> void:
 		_animator.call("play_faint")
 
 
-## The bed-rest pose: idle (not faint) rolled onto the side so it reads as
-## lying rather than crouching. See `DEFAULT_REST_ROLL_DEG` above for why the
-## angle is per-species data, not a constant. Only ever called on the
-## cosmetic body `creature_bed.gd` spawns to represent a resting occupant --
-## never on the piloted creature -- so tipping the model over here cannot
-## affect combat, which reads `_height`/`_radius`/the collider and never this
-## node's rotation.
+## How much of a rolled model's own standing height sinks into the bedding.
+## Two live renders (galewisp, veridian) showed why grounding this by
+## MEASURING the actual pose is a trap: `_bounds()` only ever reports the
+## skeleton's REST pose (its own doc explains why), and both species' real
+## `idle`/`faint` clips hold their root well clear of that rest pose (a
+## flier's idle is a hover, not a stance on the ground) -- so a placement
+## that trusted the measured box came out floating a clear body-height above
+## the pad, precisely measured (tools/_diag_rest_roll_math.gd) as grounded
+## and still wrong on screen. `_height` has no such problem: it is gameplay
+## data, true regardless of which pose is currently playing. Sinking a
+## generous, fixed fraction of it, rather than solving for an exact seat, is
+## also just a better LOOK per the owner's own suggestion -- a creature
+## settled into a mattress with part of its bulk below the surface reads
+## more natural than one perched exactly on top of it, and it is forgiving
+## of exactly the pose-vs-rest-pose slop that broke the measured approach.
+const REST_SINK_FRACTION := 0.35
+
+## The bed-rest pose: idle (not faint) rolled onto its side so it reads as
+## lying rather than crouching, then sunk partway into the bedding. See
+## `DEFAULT_REST_ROLL_DEG` above for why the angle is per-species data, not
+## a constant. Only ever called on the cosmetic body `creature_bed.gd`
+## spawns to represent a resting occupant -- never on the piloted creature
+## -- so tipping the model over here cannot affect combat, which reads
+## `_height`/`_radius`/the collider and never this node's rotation.
 ##
-## Idle, not faint: the placement math below measures the SKELETON'S REST
-## pose (`_bounds()`'s own doc explains why -- bind and rest are the same
-## transform for every shipped rig), and idle sits close to that rest pose on
-## every rig this project ships. `faint` does not -- it is a death-flop, and
-## on a winged species it flings the wings out far past the rest-pose box
-## the placement math measured, so a first attempt at this (rolling+centring
-## the FAINT pose) still rendered galewisp's wingtip and terrapup's raised
-## hindquarters well above the bed after the maths said they would be
-## grounded. Idle keeps the whole thing consistent: the pose being measured
-## and the pose being rolled are the same pose.
+## Idle, not faint: `faint` is a death-flop, and on a winged species it
+## flings the wings out wide rather than settling, which reads as "shot out
+## of the sky" once rolled rather than "asleep". Idle is closer to a
+## species' own resting silhouette on every rig this project ships.
 ##
 ## `rest_roll_deg: 0` opts a species out of all of this, back to the
 ## original `play_faint()`-only behaviour. galecrest's own data carries it:
@@ -1156,20 +1167,13 @@ func play_rest() -> void:
 		_animator.call("tick", 0.0, 0.0, 1.0)
 	if not _has_model:
 		return
-	_model.rotate_z(deg_to_rad(roll))
-	# Rolling around `_model`'s own ground-contact origin does not leave the
-	# result centred there: height that used to run straight up now runs
-	# sideways from that same point, so the whole silhouette lands lopsided
-	# to one side instead of straddling it the way the standing pose did.
-	# Measured, not guessed at (tools/_diag_rest_roll_math.gd) -- a first cut
-	# that only lifted by `_radius` put terrapup and galewisp's rolled body
-	# entirely off one edge of the bed. `_bounds(self)` reads the actual
-	# post-roll box in this body's own space (bind-pose geometry, per
-	# `_bounds()`'s own doc -- close enough for placement, not for scale) and
-	# resets it to the same convention `_fit()` already uses for standing:
-	# feet-equivalent at y=0, centred over x/z=0.
-	var box := _bounds(self)
-	_model.position -= Vector3(box.position.x + box.size.x * 0.5, box.position.y, box.position.z + box.size.z * 0.5)
+	var roll_rad := deg_to_rad(roll)
+	_model.rotate_z(roll_rad)
+	# Re-centre sideways by half of what used to be standing height (that is
+	# where the roll sends it: see the corner derivation in
+	# tools/_diag_rest_roll_math.gd), then sink -- both purely a function of
+	# `_height`, never of a measured, pose-dependent box.
+	_model.position = Vector3(_height * 0.5 * sin(roll_rad), -_height * REST_SINK_FRACTION, 0.0)
 
 
 func revive_animation() -> void:
