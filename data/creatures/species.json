@@ -206,6 +206,8 @@
         "radius": 0.38,
         "_comment_footprint": "A low piglet is much longer than it is tall.",
         "footprint_allowance": 3.0,
+        "_comment_field_emission_0901": "OWNER DIRECTIVE 2026-09-01 ('some of the smaller creatures blend into the environment too well... they either need to be bigger or brighter'). Third species this lane checked with tools/_probe_grass_separation.gd's `--species=` sweep (after bramblebun and terrapup) rather than assumed from the other two -- picked because it is the darkest small creature in the roster (`#6e492c`, a dark dirt brown) and a real render confirmed it: SHIPPED (field_emission 0.0) measured 0.719/0.682, the creature noticeably darker than the field, a near-identical starting problem to terrapup's rather than bramblebun's milder one. Swept against crop box (560,340)-(720,445): 0.5->0.883/0.840, 0.9->1.006/0.955, 1.2->1.087/1.035, 1.3->1.114/1.059, 1.35->1.125/1.068, 1.4->1.136/1.081, 1.5->1.161/1.104, 1.8->1.218/1.159, 2.1->1.272/1.209. 1.4 lands both boxes comfortably inside the 1.06-1.15 target, same discipline and the same value terrapup landed on. TUNABLE.",
+        "field_emission": 1.4,
         "model": "res://assets/creatures/tetherbound/mudsnout/models/creature_mudsnout_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
