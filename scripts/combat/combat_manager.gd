@@ -1152,7 +1152,33 @@ func _on_enemy_strike() -> void:
 		# still rested; `note_faint` owns both, so no caller has to remember
 		# the second half.
 		CONDITION.note_faint(creature, CONDITION.config())
-		_begin_resolve("lost")
+		_handle_active_faint()
+
+
+## The active creature was just reduced to 0 HP. GATE-F-LEG-S04 (owner
+## directive): against a TRAINER (`_enemy_owned`, R8.1's "somebody else's
+## creature" flag) the fight goes on with whoever else is still standing,
+## exactly as it already does when the OPPONENT's creature falls
+## (`_on_trainer_round_ended`'s "next one steps up") — the whole point being
+## that a person fields a ROSTER, not one animal, and the player's own bench
+## is the same kind of roster. A WILD encounter is unaffected and still ends
+## here: D32's original "no auto-switch-on-faint" reasoning still holds for
+## one creature against one animal; it never held for a trainer's whole team
+## against the player's, which the tournament's own Gate F evidence measured
+## losing a round to a single hit the player could not have dodge-cancelled
+## out of, with four fully healthy party members sitting unused on the bench
+## the whole time. Split out from `_on_enemy_strike()` so a test can drive
+## this decision directly against `_party`/`_active_index`/`_enemy_owned`,
+## the same bare-manager style `test_combat_progression.gd` already uses for
+## the rest of the switch seam, without needing a live wild/ally body node.
+func _handle_active_faint() -> void:
+	var next_index := _next_switchable_index(1) if _enemy_owned else -1
+	if next_index >= 0:
+		_activate_party_member(next_index)
+		creature_switched.emit(next_index)
+		state_changed.emit()
+		return
+	_begin_resolve("lost")
 
 
 ## A blow that landed has to look like one.
@@ -1481,9 +1507,17 @@ func _finish() -> void:
 ## HUD milestone binds `party_cycle` (one LB press cycles) to the functions
 ## below. D32's hold-to-open-a-selector chord was retired by CONTROLLER-MAP.
 ##
-## There is no auto-switch-on-faint (D32's own "what was deliberately not
-## built") — a faint of the active creature still ends the fight exactly as it
-## always has. This only ever fires from the player's own choice.
+## GATE-F-LEG-S04 (owner directive, in response to the tournament's own
+## Gate F evidence): a TRAINER fight now auto-switches to the next available
+## party member the instant the active one faints, rather than ending the
+## whole battle right there — see `_on_enemy_strike()`'s use of
+## `_next_switchable_index()`. D32's original "no auto-switch-on-faint" rule
+## still stands for a WILD encounter (`_enemy_owned == false`): a wild fight
+## is one creature against one creature and still ends exactly as it always
+## has. The distinction is `_enemy_owned` (R8.1), already threaded through
+## `begin()` for the unrelated "catching a trainer's creature is refused"
+## rule — the same flag answers "is this a person, not an animal" that the
+## owner's own framing asked for.
 
 ## Party indices, in `_party` order, that are alive and not the one currently
 ## piloted — what a switch selector has to offer.
@@ -1520,6 +1554,28 @@ func _can_take_the_field(member: RefCounted) -> bool:
 	return not member.fainted and not bool(member.get("resting"))
 
 
+## The index `cycle_active(direction)` would land on, or -1 if nobody
+## switchable exists. Factored out of `cycle_active` so the involuntary
+## post-faint auto-switch in `_handle_active_faint()` can reuse the exact same
+## traversal order (nearest-next, wrapping, skipping anyone who cannot take
+## the field -- see `_can_take_the_field()`) without going through
+## `request_switch()`'s VOLUNTARY-switch guards (`can_switch()`'s
+## aim/catch/commitment/lockout checks) — none of which make sense for a
+## switch the player did not choose and cannot refuse.
+func _next_switchable_index(direction: int) -> int:
+	var size := _party.size()
+	if size < 2:
+		return -1
+	var step: int = 1 if direction >= 0 else -1
+	var i := _active_index
+	for _n in size - 1:
+		i = ((i + step) % size + size) % size
+		var member: RefCounted = _party[i]
+		if member != null and _can_take_the_field(member):
+			return i
+	return -1
+
+
 ## Is a voluntary switch allowed RIGHT NOW? Mirrors the guards the fight
 ## already applies elsewhere: aiming owns the controls (`_drive_player_creature`'s
 ## own comment), a resolving catch pauses the whole fight
@@ -1541,23 +1597,10 @@ func can_switch() -> bool:
 ## bed -- see `_can_take_the_field`). Delegates to `request_switch` so cycling and any
 ## future direct-pick selector share one path in and one set of guards.
 func cycle_active(direction: int) -> bool:
-	var size := _party.size()
-	if size < 2:
+	var index := _next_switchable_index(direction)
+	if index < 0:
 		return false
-	var step: int = 1 if direction >= 0 else -1
-	var i := _active_index
-	for _n in size - 1:
-		i = ((i + step) % size + size) % size
-		var member: RefCounted = _party[i]
-		# SKIPS, rather than stopping on, anyone who cannot take the field --
-		# see `_can_take_the_field()`. The loop already had this shape for
-		# fainted members; a resting one now steps over in the same way instead
-		# of being handed to `request_switch` and refused, which would have
-		# ended the whole cycle on it and left the healthy creatures behind it
-		# unreachable.
-		if member != null and _can_take_the_field(member):
-			return request_switch(i)
-	return false
+	return request_switch(index)
 
 
 ## Switch the piloted creature to party index `index`. Guarded rather than

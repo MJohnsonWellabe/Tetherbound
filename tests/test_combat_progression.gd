@@ -196,6 +196,54 @@ func test_cycle_active_returns_false_with_nothing_to_switch_to() -> void:
 	assert_false(bool(mgr2.call("cycle_active", 1)), "an all-fainted bench has nothing to switch to")
 
 
+# --- auto-switch-on-faint for TRAINER battles only (GATE-F-LEG-S04) --------
+#
+# `_handle_active_faint()` is exercised directly, the same bare-manager style
+# every other switch-seam test above uses -- it only ever touches `_party`,
+# `_active_index`, `_enemy_owned` and `state`, none of which need a live
+# wild/ally body node.
+
+func test_trainer_fight_auto_switches_when_the_active_creature_faints() -> void:
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
+	var mgr := _in_combat([a, b] as Array[RefCounted], 0)
+	mgr.set("_enemy_owned", true)
+
+	mgr.call("_handle_active_faint")
+
+	assert_eq(int(mgr.get("_active_index")), 1, "should have switched to the only other living member")
+	assert_eq(int(mgr.get("state")), COMBAT_MANAGER.State.ACTIVE,
+		"the fight must still be running against a trainer -- a faint no longer ends it while somebody is left")
+
+
+func test_trainer_fight_still_ends_once_the_whole_party_has_fainted() -> void:
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
+	b.fainted = true
+	var mgr := _in_combat([a, b] as Array[RefCounted], 0)
+	mgr.set("_enemy_owned", true)
+
+	mgr.call("_handle_active_faint")
+
+	assert_eq(int(mgr.get("state")), COMBAT_MANAGER.State.RESOLVING,
+		"with nobody left to switch to, even a trainer fight ends")
+	assert_eq(str(mgr.get("_outcome")), "lost")
+
+
+func test_wild_encounter_still_ends_on_the_first_faint_d32_unchanged() -> void:
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
+	var mgr := _in_combat([a, b] as Array[RefCounted], 0)
+	mgr.set("_enemy_owned", false)
+
+	mgr.call("_handle_active_faint")
+
+	assert_eq(int(mgr.get("state")), COMBAT_MANAGER.State.RESOLVING,
+		"a wild fight still ends the moment the active creature faints, D32 unchanged, even with a healthy bench")
+	assert_eq(str(mgr.get("_outcome")), "lost")
+	assert_eq(int(mgr.get("_active_index")), 0, "no switch should have happened for a wild encounter")
+
+
 func test_can_switch_false_when_not_fighting() -> void:
 	var a := _creature(3, "A")
 	var b := _creature(3, "B")
