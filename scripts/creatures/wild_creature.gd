@@ -156,6 +156,46 @@ const UNSTICK_STEER_RAD := 1.3  # ~75 degrees off the direct line, enough to cle
 const HARD_UNSTICK_AFTER_FRAMES := 140  # ~2.3s of steering tried and failed
 const HARD_UNSTICK_NUDGE := 0.35  # metres
 
+## Steers around, then nudges past, a static collider `requested_dir` runs
+## straight through -- the LP7 mechanism above, factored out so `_tick_combat`
+## can use it too. GATE-F-LEG-S04's trainer-round auto-switch made a lost
+## round run five party members deep instead of ending on the first faint,
+## which is long enough for the wild AI to walk a REPOSITION arc into a spot
+## the direct line back to CLOSE range cannot clear -- caught live via
+## `smoke_tournament_bracket.gd`: `dist` frozen bit-for-bit for 2600+ straight
+## frames in `Intent.CLOSE` with `cooldown`/`beat_left` both already at zero,
+## the same frozen-position signature LP7 documents, just in the one movement
+## path (`_tick_combat`) that never called this. A single-hit fight never ran
+## long enough to reach it.
+func _unstick(requested_dir: Vector3) -> Vector3:
+	if global_position.distance_to(_stuck_check_pos) < 0.05:
+		_stuck_frames += 1
+	else:
+		_stuck_frames = 0
+	_stuck_check_pos = global_position
+
+	var dir := requested_dir
+	if _stuck_frames > UNSTICK_AFTER_FRAMES:
+		# Pinned against something the direct line runs straight through.
+		# Steer off it rather than keep requesting the same blocked
+		# direction forever. A single fixed angle was not enough on its
+		# own — verified over 15 local runs, it cut the failure rate but
+		# did not close it, because the first escape angle can itself run
+		# into more of the same obstacle (a tree's collision shape is not
+		# a point). Alternating sides every half second gives it more than
+		# one candidate gap to find rather than committing to a direction
+		# that might be blocked too.
+		var phase := int((_stuck_frames - UNSTICK_AFTER_FRAMES) / 30.0) % 2
+		var side := _side_sign if phase == 0 else -_side_sign
+		dir = dir.rotated(Vector3.UP, side * UNSTICK_STEER_RAD)
+
+		if _stuck_frames > HARD_UNSTICK_AFTER_FRAMES:
+			global_position += dir * HARD_UNSTICK_NUDGE
+			_stuck_frames = 0
+			_stuck_check_pos = global_position
+	return dir
+
+
 func _tick_aggression(delta: float) -> bool:
 	if _player == null or not is_alive():
 		_stuck_frames = 0
@@ -198,37 +238,12 @@ func _tick_aggression(delta: float) -> bool:
 
 	face_towards(_player.global_position)
 	if to_player.length() > engage:
-		var chase_dir := to_player.normalized()
-
-		if global_position.distance_to(_stuck_check_pos) < 0.05:
-			_stuck_frames += 1
-		else:
-			_stuck_frames = 0
-		_stuck_check_pos = global_position
+		var chase_dir := _unstick(to_player.normalized())
 
 		if OS.has_environment("DEBUG_AGGRO") and Engine.get_physics_frames() % 30 == 0:
 			print("[DBG2 %s] to_player_len=%.2f chase_dir=%s vel=%s is_on_wall=%s is_on_floor=%s stuck_frames=%d" % [
 				name, to_player.length(), chase_dir, velocity, is_on_wall(), is_on_floor(), _stuck_frames
 			])
-
-		if _stuck_frames > UNSTICK_AFTER_FRAMES:
-			# Pinned against something the direct line runs straight through.
-			# Steer off it rather than keep requesting the same blocked
-			# direction forever. A single fixed angle was not enough on its
-			# own — verified over 15 local runs, it cut the failure rate but
-			# did not close it, because the first escape angle can itself run
-			# into more of the same obstacle (a tree's collision shape is not
-			# a point). Alternating sides every half second gives it more than
-			# one candidate gap to find rather than committing to a direction
-			# that might be blocked too.
-			var phase := int((_stuck_frames - UNSTICK_AFTER_FRAMES) / 30.0) % 2
-			var side := _side_sign if phase == 0 else -_side_sign
-			chase_dir = chase_dir.rotated(Vector3.UP, side * UNSTICK_STEER_RAD)
-
-			if _stuck_frames > HARD_UNSTICK_AFTER_FRAMES:
-				global_position += chase_dir * HARD_UNSTICK_NUDGE
-				_stuck_frames = 0
-				_stuck_check_pos = global_position
 
 		request_move(chase_dir, float(_aggro_cfg.get("chase_speed", 3.4)))
 		return true
@@ -277,6 +292,13 @@ func set_engaged(value: bool, opponent: Node3D = null) -> void:
 		# to read the situation.
 		_cooldown = float(_combat_cfg.get("first_attack_delay", 1.5))
 		_side_sign = 1.0 if _rng.randf() < 0.5 else -1.0
+		# Fresh combat starts fresh stuck-tracking, not whatever the chase that
+		# led here last measured -- `_unstick`'s distance check compares against
+		# `_stuck_check_pos`, and a stale value from across the engage boundary
+		# would either falsely flag the first CLOSE frame as pinned or hide a
+		# real one behind a leftover "just moved" reading.
+		_stuck_frames = 0
+		_stuck_check_pos = global_position
 	else:
 		_intent = AI.Intent.IDLE
 		_pause_left = _rng.randf_range(_pause_min, _pause_max)
@@ -317,7 +339,15 @@ func _tick_combat(delta: float) -> void:
 
 	var direction := AI.movement_for(_intent, to, _side_sign)
 	if direction != Vector3.ZERO:
-		request_move(direction, AI.speed_for(_intent, _combat_cfg))
+		request_move(_unstick(direction), AI.speed_for(_intent, _combat_cfg))
+	else:
+		# Rooted on purpose (TELEGRAPH/RECOVER) is not stuck -- without this the
+		# stillness `_unstick`'s own distance check reads as "pinned" the moment
+		# CLOSE/REPOSITION resumes, since the body legitimately did not move
+		# while rooted. Reset here so the count only ever measures continuous
+		# movement-intent frames, never a beat that was never trying to move.
+		_stuck_frames = 0
+		_stuck_check_pos = global_position
 
 
 ## The numbers this creature is actually fighting with, spacing included.

@@ -404,6 +404,14 @@ func landmarks() -> Array[Dictionary]:
 	return out
 
 
+## OWNER-0901-BOND-MILESTONES: `game_state.gd::_process()` diffs this before
+## and after `mark_visited()` to know whether a landmark was newly discovered
+## THIS tick, without `mark_visited()`'s own bool return (which also fires for
+## an ordinary fog reveal) conflating the two.
+func discovered_landmark_count() -> int:
+	return _discovered.size()
+
+
 func is_landmark_discovered(id: String) -> bool:
 	return _discovered.has(id)
 

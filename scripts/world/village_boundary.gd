@@ -49,6 +49,26 @@ const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 const CONFIG_PATH := "res://data/config/village_boundary.json"
 
+## OWNER-0901-VILLAGE-GATE-ROADS-V2. 2026-09-01 owner playtest, second
+## reproduction of the same class of bug OP-0830-1 first found: "I can still
+## jump it some places." Measured with `tools/_probe_village_gate_roads_v2.gd`
+## against the LIVE built scene (not the prefab's own comment, which says "two
+## courses tall (~1.4m)"): the real collision top above the ACTUAL ground a
+## player stands on cleared jump apex by 0.06m-0.11m, both at the fence panels
+## `_build_panel` builds below and at `road_gate.gd`'s own leaf (`_build_gates`
+## passes this same value through as `vault_guard_m`) -- `movement.json`'s
+## `jump.height` is 1.35m, and a running jump timed at several different
+## frames near the wall's own base cleared it at both gates and 3 of 8 sampled
+## fence panels in the probe's own live physics test. This is a collision-only
+## pad added to the box TOP past where the visible mesh ends, the same
+## invisible-collision-supports-a-visible-boundary pattern this file's own
+## header already documents (`_why` above, MEADOWS_PROGRESSION_SPEC sec1E) --
+## no visual change, the mesh height and course placement are untouched.
+## 1.0m over the already-measured ~1.4-1.7m clearance puts the floor at
+## roughly 2.4-2.7m, a full metre of margin over the 1.35m jump apex rather
+## than the previous few centimetres. TUNABLE (`wall.vault_guard_m`).
+const VAULT_GUARD_DEFAULT_M := 1.0
+
 var _config: Dictionary = {}
 var _gates: Array[Node3D] = []
 var _all_open := false
@@ -127,6 +147,9 @@ func _build_gates(world: Node3D) -> void:
 		return
 	var key_item := str(_config.get("key_item", "castle_gate_key"))
 	var flag := str(_config.get("flag", "road_gate_open"))
+	var wall: Variant = _config.get("wall", {})
+	var wall_cfg: Dictionary = wall if wall is Dictionary else {}
+	var vault_guard := float(wall_cfg.get("vault_guard_m", VAULT_GUARD_DEFAULT_M))
 	for raw: Variant in entries as Array:
 		if not raw is Dictionary:
 			continue
@@ -145,6 +168,13 @@ func _build_gates(world: Node3D) -> void:
 		# now, and it is a real authored line rather than a guess at how far a
 		# sliding player will go. That guess is what SA7's own comment records
 		# raising from 12.0 to 20.0 and still losing.
+		# `vault_guard_m`: same collision-only anti-vault pad `_build_panel`
+		# gives the fence either side of this leaf, in the SAME value from the
+		# SAME `wall` config block, so the leaf is never the weak point in a
+		# line the rest of which was just raised. See this file's own
+		# `VAULT_GUARD_DEFAULT_M` header for the OWNER-0901-VILLAGE-GATE-
+		# ROADS-V2 measurement behind it.
+		gate.set("vault_guard_m", vault_guard)
 		add_child(gate)
 		gate.call("build", world, Vector2(float(at[0]), float(at[1])), float(entry.get("yaw_deg", 0.0)))
 		_gates.append(gate)
@@ -175,6 +205,7 @@ func _build_fence(world: Node3D, prefabs: RefCounted, points: PackedVector2Array
 	var clear := float(cfg.get("gate_clear_m", 3.4))
 	var bury := float(cfg.get("bury_m", 1.0))
 	var samples: int = maxi(int(cfg.get("footprint_samples", 5)), 2)
+	var vault_guard := float(cfg.get("vault_guard_m", VAULT_GUARD_DEFAULT_M))
 	var gates := gate_positions()
 
 	var built := 0
@@ -193,7 +224,7 @@ func _build_fence(world: Node3D, prefabs: RefCounted, points: PackedVector2Array
 			if _inside_a_gate(centre, gates, clear):
 				continue
 			if _build_panel(world, prefabs, prefab, centre, direction, step,
-					courses, course_rise, sink, bury, samples, built):
+					courses, course_rise, sink, bury, samples, vault_guard, built):
 				built += 1
 	if built == 0:
 		push_error("the village boundary built no fence at all; the settlement is open")
@@ -214,7 +245,7 @@ func _inside_a_gate(centre: Vector2, gates: Array[Vector2], clear: float) -> boo
 ## than a reported gap.
 func _build_panel(world: Node3D, prefabs: RefCounted, prefab: String, centre: Vector2,
 		direction: Vector2, length: float, courses: int, course_rise: float,
-		sink: float, bury: float, samples: int, index: int) -> bool:
+		sink: float, bury: float, samples: int, vault_guard: float, index: int) -> bool:
 	var ground: float = float(world.call("ground_height_at", centre.x, centre.y))
 	if is_nan(ground):
 		return false
@@ -262,9 +293,11 @@ func _build_panel(world: Node3D, prefabs: RefCounted, prefab: String, centre: Ve
 
 	# Collision is the WHOLE footprint's span, sunk below the lowest ground it
 	# crosses and topped a full panel height above the highest — see this file's
-	# own header on why a centre sample is not enough.
+	# own header on why a centre sample is not enough. `vault_guard` extends the
+	# COLLISION top only, past the visible fence's own silhouette — see this
+	# file's own header const for why the mesh height alone is not enough.
 	var bottom := lowest - bury
-	var top := highest + total_height
+	var top := highest + total_height + vault_guard
 	var body := StaticBody3D.new()
 	body.name = "FencePanelCollision_%d" % index
 	var shape := CollisionShape3D.new()

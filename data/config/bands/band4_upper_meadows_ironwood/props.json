@@ -57,31 +57,34 @@
         },
         {
           "model": "Bonfire_Fire",
-          "at": [-233.1, 6474.3],
+          "at": [-233.9, 6473.7],
           "yaw_deg": -35.0,
           "sink_m": 0.02,
           "scale": 0.4,
+          "glow_scale": 1.8,
           "dir": "res://assets/props/quaternius_survival",
           "glow": "campfire",
-          "_why": "SITE-DRESSING: the D1 trail-camp's own solved fire (Bonfire_Fire.obj's real `Fire` surface + ignite() + campfire_glow.gd's light/embers/smoke), scaled down further than band1's -- a patrol posting keeps a smaller fire than a rest camp. Sited past the crate/bag pile on the open side of the ruin, the ground a critic reading this as 'barrel/crate/bench on virgin grass' has nothing standing on."
+          "_why": "SITE-DRESSING: the D1 trail-camp's own solved fire (Bonfire_Fire.obj's real `Fire` surface + ignite() + campfire_glow.gd's light/embers/smoke), scaled down further than band1's -- a patrol posting keeps a smaller fire than a rest camp.",
+          "_why_reclustered": "AUDIT-E E4 (ralph/reports/audit/E-2026-08-31.md): sited 3.5-5.4m from the crate/barrel/rope/whetstone supply pile against the ruin, this read as two unrelated groups -- 'props ... sit in a straight line ... instead of clustered around the firepit'. Moved 1.0m (dx-0.8, dz-0.6) toward the pile, staying on its own open ground short of the ruin wall the pile is set against (unchanged: crate/barrel/rope/whetstone/axe keep every stated relationship to each other and to the ruin) -- now 2.6-3.6m from crate/barrel/whetstone and 1.0-1.6m from the nearer axe/bag, close enough that the fire reads as what the pile is arranged around rather than a second, separate lit prop nearby. `campfire_stone_ring` and `Stool` below move the same 1.0m so the fire, its ring and its one seat keep the geometry `_why` already describes.",
+          "_why_glow_scale": "AUDIT-E E4: the fire is present and correctly targeted by 08-ridge-camp-fire's own capture stand but 'mostly hidden behind the player character's own head', too small/dim to register at normal viewing size. The log pile keeps its own smaller `scale` (a patrol keeps a smaller fire than a rest camp, per the note above) -- `glow_scale` only grows the light/embers `campfire_glow.gd` builds around it (props.gd's own overlay counter-scale means the glow was rendering at every other camp's absolute size regardless, so growing the mesh alone would not have fixed legibility). 1.8x brings the light range to 14.4m and the light energy/ember count up with it, at night (this stand's own capture pass), without changing the fire prop's own footprint or touching any other camp's fire (every other `glow: \"campfire\"` caller in the chapter keeps the 1.0 default)."
         },
         {
           "model": "campfire_stone_ring",
-          "at": [-233.1, 6474.3],
+          "at": [-233.9, 6473.7],
           "yaw_deg": 15.0,
           "sink_m": 0.02,
           "scale": 0.55,
           "dir": "res://assets/props/generated_camp",
-          "_why": "SITE-DRESSING: the D1 fire-ring mesh (owner-referenced, already committed under assets/props/generated_camp -- no new generation), scaled to this smaller fire's own footprint the same way band1 matched it to its six-stone predecessor."
+          "_why": "SITE-DRESSING: the D1 fire-ring mesh (owner-referenced, already committed under assets/props/generated_camp -- no new generation), scaled to this smaller fire's own footprint the same way band1 matched it to its six-stone predecessor. AUDIT-E E4: moved with `Bonfire_Fire` above, same offset, so the ring keeps matching the brazier's own footprint."
         },
         {
           "model": "Stool",
-          "at": [-232.1, 6473.5],
+          "at": [-232.9, 6472.9],
           "yaw_deg": 205.0,
           "sink_m": 0.03,
           "scale": 1.0,
           "dir": "res://assets/props/quaternius_furniture",
-          "_why": "SITE-DRESSING: one seat, facing the fire across it -- the piece that turns a fire into a place someone sits rather than a lit prop. Same model band1's trail_camp already uses for its own second seat."
+          "_why": "SITE-DRESSING: one seat, facing the fire across it -- the piece that turns a fire into a place someone sits rather than a lit prop. Same model band1's trail_camp already uses for its own second seat. AUDIT-E E4: moved with the fire (same dx-0.8, dz-0.6 offset), keeping the same seat-to-fire geometry this note already describes."
         },
         {
           "model": "camp_tent",

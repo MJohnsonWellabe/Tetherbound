@@ -105,7 +105,14 @@ func _evolves_a_ready_creature_and_hands_the_menu_back_clean() -> void:
 		_fail("could not build a second Mudsnout for the real evolve path")
 		return
 	creature.set("level", 20)
-	creature.set("bond", 80)
+	# OWNER-0901-BOND-MILESTONES: the mudsnout evolution gate now reads
+	# `bond_tier` (real shipped requirement: 3) off the milestone ladder
+	# instead of a raw bond value. Generous margin above every one of the
+	# shipped ladder's first three targets, the same "well past the gate"
+	# spirit `bond = 80` (well past the old threshold of 55) had.
+	creature.set("battles_fought", 200)
+	creature.set("landmarks_visited_together", 20)
+	creature.set("distance_m_together", 20000.0)
 	if not bool(party.call("add", creature)):
 		_fail("could not seed the ready Mudsnout")
 		return

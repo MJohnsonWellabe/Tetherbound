@@ -440,6 +440,72 @@
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 1.2,
    "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Third of the three new village berry stops, west of the farmhouse, >=4m clear of the boundary and of every existing node."
+  },
+  {
+   "order": 1034,
+   "item": "revive",
+   "amount": 1,
+   "label": "A stashed revive",
+   "at": [
+    -30.0,
+    -24.0
+   ],
+   "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+   "model_scale": 0.85,
+   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK, following the T3-REWARD pickup convention (orders 1028-1030) rather than inventing one. Both Gate F capstone playthroughs (CAP-1, CAP-2) found the opening's starting kit had regressed to near-nothing before both were fixed by restoring Grandpa's original gift; this is the deeper structural fix underneath: before `tam_tools_given`, the player holds no tool at all and item_db.gd's `harvest_yield()` halves every gathered amount, so a findable Revive that costs nothing to reach matters most in exactly the window CAP-1 found empty. Sited a few steps south-west of the farmhouse (village.json header, house at [-22,-16]), off the farm plots (farm.json, nearest bed [-24.4,-9.0]) and outside the house's own footprint -- the first thing a player who wanders off the doorway route finds, not something that requires already knowing the map. 42.4m from the village well, inside village_boundary.json's outline with 9.4m clearance from the fence line (tests/test_village_boundary.gd re-verifies this). Reuses harvest_node.gd's existing generic gather mechanism -- no new system, no new asset."
+  },
+  {
+   "order": 1035,
+   "item": "potion_small",
+   "amount": 1,
+   "label": "A stashed potion",
+   "at": [
+    34.0,
+    -28.0
+   ],
+   "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+   "model_scale": 0.85,
+   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note for the full rationale). A second findable consumable, this one near the RoadGate (village_boundary.json entries.RoadGate, at [38.7,-19.9]) rather than the farmhouse, so a player who heads straight for the practice meadow and the gate without doubling back also crosses a find. 30.0m from the village well, inside the boundary with 7.2m clearance from the fence line, and clear (>=4m) of the trainer_camp prop cluster and the new wood node at order 1038."
+  },
+  {
+   "order": 1036,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    -9.0,
+    -19.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 1.2,
+   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note). Berries carry no `gathered_with` tool at all (items.json), so this is the one resource a fresh player gathers at full yield from the very first minute -- CLAUDE.md's light-satiety rule makes that the honest safety net, not a workaround of the knife gate this lane is told to leave alone. Sited on the walk from Grandpa's house toward the square (terrain_playground.json paths.routes 'Grandpa's House': [10,-10]->[-4,-13]->[-18,-15]).",
+   "_why_resited_2026_09_01": "LAND-MEGA-0901 fix: the original [-9,-9] was verified clear (>=4m) of the work_area prop cluster and every existing wood/fiber node, but nobody checked it against the village's PEOPLE -- it landed 3.11m from Bram [-5.89,-9] (village_npcs.json), inside Bram's own 3.8m Interactable radius, and 0.42m inside the inn building's own 7.08m circumscribed footprint (tools/_probe_civilian_placement.gd's BUILDINGS.inn). interaction_arbiter.gd has exactly one prompt slot and picks whichever offer is closer at equal priority (prompt_arbiter.gd::choose_index), so standing at Bram's own authored customer spot made the two prompts contest that slot -- reproduced 100% by tests/smoke_post_modal_control.gd's first Bram visit (bisected to this commit, df793bd5). Moved 10m further south along the same north-south line, still off every path (path_factor 0.00) and on flat ground (slope <5deg, tools/_probe_berries_1036_resite.gd): 10.47m from Bram (>=7.2m combined-radius-plus-margin), 5.42m clear of the inn footprint, and 5.10m clear of the nearest other harvest node (order 1026, fiber at [-10,-14])."
+  },
+  {
+   "order": 1037,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    11.0,
+    -32.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note). Stone needs a pickaxe for full yield but still pays out at BAREHANDED_FRACTION (item_db.gd, 0.5x) with none held, same as wood and fiber -- an extra node before Tam widens that halved margin rather than opening a new resource. Sited on the square-to-practice-meadow route (terrain_playground.json paths.routes 'Practice Meadow': [10,-10]->[18,-24]->[30,-40]), clear (>=4m) of every existing wood/stone/fiber node in the same quadrant."
+  },
+  {
+   "order": 1038,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    33.0,
+    -23.0
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22,
+   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note). Same barehanded-yield reasoning as order 1037, for wood. Sited between the practice meadow and the RoadGate, clear (>=4m) of the trainer_camp prop cluster (props.json order 2) and the new potion pickup at order 1035."
   }
  ],
  "_why_gate_b_three_beds_superseded_2026_08_31": "SUPERSEDED, kept because it is the record of why orders 1020-1027 exist and where they were sited. The arithmetic in the note below -- house 39 wood / 34 stone, THREE creature beds, camp, totalling 69 / 42 / 34 -- is the pre-FIRST-HOUR-FUN-REBUILD bill and the game no longer asks for any of it. data/config/progression.json home.required_pieces is now {camp: 1, creature_bed: 1}, and data/progression/objectives.json calls one bed the mandatory care lesson and tournament proof, with tests/test_quest_log.gd asserting the rung must not require one bed per entrant. The real bill, read through scripts/build/home_progress.gd::materials_threshold(), is 18 wood / 8 stone / 18 fiber, which the twenty village nodes cover in one pass at 28 / 9 / 32. The raise those orders made is therefore no longer load-bearing for the opening -- but it is NOT reverted here, because the surplus is what gives the ladder any margin at all, and because tools/gate_f/segments/S03.json measured the sweep against the OLD bill and reported a shortfall (GAME-F5) that only ever existed in the step script. The one number still worth watching is STONE: three authored nodes, 9 total, against a bill of 8. That is a one-node margin -- and until GAME-F1 was fixed one of those three stood outside the village fence, which put reachable stone at 6 and made the opening build rung unaffordable with no number anywhere being wrong. tests/helpers/gate_a_material_route.gd::TARGET_STOCK is still the old 69 / 42 / 34 and is stale in the same way.",

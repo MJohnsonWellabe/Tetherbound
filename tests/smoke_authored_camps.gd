@@ -38,9 +38,14 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 const REST_POINT := preload("res://scripts/world/rest_point.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 ## Any band-3 wild will do -- the subject is the bed, not the animal.
 const BEDDED_SPECIES := "brooktail"
 const PROPS_CONFIG := "res://data/config/props.json"
+
+## Never touch a player's real save directory from a regression: the night
+## this test passes autosaves through `game.call("save_game", ...)`.
+const TEST_DIR := "user://test_saves_authored_camps/"
 
 const SETTLE_FRAMES := 240
 ## The rest prompt's own radius is 3.2m and the arbiter needs a clear sight
@@ -61,6 +66,7 @@ func _fail(message: String) -> void:
 
 
 func _run() -> void:
+	_wipe_test_dir()
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
 	for i in SETTLE_FRAMES:
@@ -74,6 +80,9 @@ func _run() -> void:
 		quit(1)
 		return
 
+	# Never touch a player's real save directory from a regression.
+	game.set("save_system", SAVE_GAME.new(TEST_DIR))
+
 	var authored := _authored_rest_clusters()
 	if authored.is_empty():
 		_fail("no cluster in data/config/bands/*/props.json carries a `rest` block; the camps are scenery again")
@@ -82,6 +91,7 @@ func _run() -> void:
 	await _the_camp_offers_rest_where_the_player_stands(world, player, props, authored)
 	await _resting_at_an_authored_camp_passes_the_night(world, player, props, game, authored)
 
+	_wipe_test_dir()
 	print("")
 	if _failures.is_empty():
 		print("authored camps smoke test passed")
@@ -90,6 +100,19 @@ func _run() -> void:
 	for line in _failures:
 		print("  FAIL: %s" % line)
 	quit(1)
+
+
+func _wipe_test_dir() -> void:
+	var dir := DirAccess.open(TEST_DIR)
+	if dir == null:
+		return
+	dir.list_dir_begin()
+	var name := dir.get_next()
+	while name != "":
+		if not dir.current_is_dir():
+			dir.remove(name)
+		name = dir.get_next()
+	dir.list_dir_end()
 
 
 ## The merged, band-split props config -- the same `BAND_CONTENT.load_config`
@@ -183,7 +206,7 @@ func _the_camp_offers_rest_where_the_player_stands(
 		if point == null:
 			continue
 		var label := str((entry[1] as Dictionary).get("label", "Rest until morning"))
-		await _stand_beside(player, point.global_position)
+		await _stand_beside(world, player, point.global_position)
 		var offered := str(arbiter.call("prompt"))
 		if not offered.contains(label):
 			_fail("standing %.1fm from '%s''s fire, the game offers '%s', not '%s'"
@@ -240,7 +263,7 @@ func _resting_at_an_authored_camp_passes_the_night(
 	if vitals != null:
 		vitals.set("hunger", 10.0)
 
-	await _stand_beside(player, point.global_position)
+	await _stand_beside(world, player, point.global_position)
 	var arbiter: Node = get_first_node_in_group("interaction_arbiter")
 	if not bool(arbiter.call("activate")):
 		_fail("pressing interact at '%s' activated nothing" % camp_name)
@@ -267,8 +290,36 @@ func _resting_at_an_authored_camp_passes_the_night(
 			print("  the bedded creature woke at full HP")
 
 
-func _stand_beside(player: CharacterBody3D, at: Vector3) -> void:
-	player.velocity = Vector3.ZERO
-	player.global_position = at + Vector3(STAND_OFF_M, 0.2, 0.0)
+## K3: this used to teleport once and then just wait 20 physics frames,
+## trusting gravity and `move_and_slide()` to settle the player onto real
+## ground. `tools/_probe_trail_camp_second_visit.gd` (frame-by-frame arbiter
+## AND collision logging) found that trusting it is the bug: the FIRST
+## teleport into `trail_camp`'s stand-off spot lands solidly by frame 5
+## (`is_on_floor()==true`, y settles at 1.645) every time, but a SECOND
+## teleport to the exact same coordinates -- reached only by
+## `_resting_at_an_authored_camp_passes_the_night()`, after the offer sweep
+## has already carried the player clear across four other bands and back --
+## sometimes free-falls the player straight through that same ground,
+## unarrested, until they are outside the rest prompt's radius by frame 18.
+## A physics shape query run alongside the fall (not the ray `ground_height_at`
+## itself warns against -- a direct `intersect_shape` at the real ground
+## height) showed real Terrain3D collision only flickering into presence at
+## y=1.60 around frame 14, well after the player's OWN fall had already
+## carried them past it, followed immediately by a sideways depenetration
+## shove -- a terrain-collision-streaming race on a long-distance teleport,
+## not a stale offer or a state a `set_flag`/`assign_creature` call in the
+## test left dirty (confirmed by reproducing the identical fall with the bed
+## assignment skipped entirely). Nothing rest_point.gd or
+## interaction_arbiter.gd computes is wrong here -- they correctly stop
+## offering once the player has genuinely fallen out of range. Fixing the
+## terrain streaming itself is a world-system change and not this test's job;
+## this test only needs the player standing beside the point to ask the
+## arbiter a question, not a realistic fall, so it holds the target transform
+## fixed every physics frame of the settle window instead of setting it once
+## and hoping gravity leaves it alone.
+func _stand_beside(_world: Node, player: CharacterBody3D, at: Vector3) -> void:
+	var target := at + Vector3(STAND_OFF_M, 0.2, 0.0)
 	for i in 20:
+		player.velocity = Vector3.ZERO
+		player.global_position = target
 		await physics_frame

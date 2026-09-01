@@ -266,9 +266,9 @@
       "required": false,
       "reward": {
         "xp": "per data/config/progression.json xp_award",
-        "bond": 4
+        "bond": "credit toward bond milestone 1, per data/config/bond_milestones.json (was a flat 4-point gain before OWNER-0901-BOND-MILESTONES)"
       },
-      "enables": "The chapter's baseline income and the reason to fight something you are not catching. XP is split across everyone who fought (party_share 0.5), so an ordinary fight pays the whole team -- which is what makes a five-creature roster raisable at all.",
+      "enables": "The chapter's baseline income and the reason to fight something you are not catching. XP is split across everyone who fought (party_share 0.5), so an ordinary fight pays the whole team -- which is what makes a five-creature roster raisable at all. The same fight now also counts toward every non-fainted party member's `battles_fought`, bond's first milestone.",
       "understood_when_received": true
     }
   ],

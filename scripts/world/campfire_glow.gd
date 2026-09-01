@@ -107,6 +107,14 @@ const EMBER_HEIGHT := 0.85
 
 var _light: OmniLight3D = null
 var _light_time := 0.0
+## E4-CAMP-CLUSTERING (AUDIT-E, 2026-08-31): a caller-supplied multiplier on
+## the light and embers only -- the log mesh keeps whatever `scale` the prop
+## spec gives it, this only grows how far the FIRE reads once it is that
+## size. Defaults to 1.0 so every existing caller (every other camp in the
+## chapter) stays pixel-identical; `ridge_patrol_camp`'s fire is the first to
+## pass anything else, because the audit found its glow legible but too small
+## to register behind the player's own head at the site's own capture stand.
+var _glow_scale := 1.0
 ## Lazy-looked-up every `_process()` tick, not cached at `_init()`/`_ready()`
 ## time -- `torch.gd::_is_on()`'s own OF18 lesson applies here too: a
 ## campfire can be built and added to the tree before `world_look.gd` has
@@ -136,10 +144,11 @@ var _world_look: Node = null
 ## fractional halo -- same quad, same height, scaled down in size AND energy
 ## -- is the manual bloom in between: soft edge without replacing the
 ## flame's silhouette. 1.0 keeps every existing caller pixel-identical.
-func _init(include_halo: bool = true, halo_scale: float = 1.0) -> void:
+func _init(include_halo: bool = true, halo_scale: float = 1.0, glow_scale: float = 1.0) -> void:
 	name = "CampfireGlow"
+	_glow_scale = glow_scale
 	if include_halo:
-		_build_halo(halo_scale)
+		_build_halo(halo_scale * glow_scale)
 	_build_light()
 	_build_embers()
 	_build_smoke()
@@ -150,7 +159,7 @@ func _process(delta: float) -> void:
 		return
 	_light_time += delta
 	var noise := sin(_light_time * FLICKER_SPEED) * 0.6 + sin(_light_time * FLICKER_SPEED * 2.7 + 1.3) * 0.4
-	_light.light_energy = LIGHT_BASE_ENERGY * _daylight_scale() * (1.0 + noise * FLICKER_AMOUNT)
+	_light.light_energy = LIGHT_BASE_ENERGY * _glow_scale * _daylight_scale() * (1.0 + noise * FLICKER_AMOUNT)
 
 
 ## 1.0 at night, `DAY_ENERGY_SCALE` in daylight -- see that constant's own
@@ -413,8 +422,8 @@ func _build_light() -> void:
 	_light = OmniLight3D.new()
 	_light.name = "Glow"
 	_light.light_color = Color(1.0, 0.68, 0.32)
-	_light.light_energy = LIGHT_BASE_ENERGY
-	_light.omni_range = LIGHT_RANGE
+	_light.light_energy = LIGHT_BASE_ENERGY * _glow_scale
+	_light.omni_range = LIGHT_RANGE * _glow_scale
 	_light.omni_attenuation = LIGHT_ATTENUATION
 	_light.position = Vector3(0.0, LIGHT_HEIGHT, 0.0)
 	_light.shadow_enabled = false
@@ -424,7 +433,7 @@ func _build_light() -> void:
 func _build_embers() -> void:
 	var particles := GPUParticles3D.new()
 	particles.name = "Embers"
-	particles.amount = 14
+	particles.amount = int(round(14 * _glow_scale))
 	particles.lifetime = 1.4
 	particles.local_coords = false
 	particles.position = Vector3(0.0, EMBER_HEIGHT, 0.0)
@@ -435,12 +444,12 @@ func _build_embers() -> void:
 	process_material.initial_velocity_min = 0.3
 	process_material.initial_velocity_max = 0.7
 	process_material.gravity = Vector3(0.0, 0.35, 0.0)
-	process_material.scale_min = 0.4
-	process_material.scale_max = 1.0
+	process_material.scale_min = 0.4 * _glow_scale
+	process_material.scale_max = 1.0 * _glow_scale
 	particles.process_material = process_material
 
 	var quad := QuadMesh.new()
-	quad.size = Vector2(0.05, 0.05)
+	quad.size = Vector2(0.05, 0.05) * _glow_scale
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA

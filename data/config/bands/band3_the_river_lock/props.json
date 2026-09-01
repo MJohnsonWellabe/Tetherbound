@@ -199,6 +199,7 @@
       "order": 3002,
       "name": "relay_station",
       "_why": "GATE-D3, adopting tether_relay.json's own open invitation (`_comment_props`): the site's loose gear, placed inside the compound yard rather than duplicated in that file. Positions are the site's own (s,t) local frame (tether_relay.json's `_frame`) converted to world metres -- s around -7..-9 (just inside the gate, off the road axis every fight stands on) so the crates sit in the yard corner rather than in the walk line between Hess/Orrin/Dell and the console.",
+      "_why_added_e3": "E3-RELAY-POPULATION (ralph/reports/audit/E-2026-08-31.md §E3). The five props above all sit at t=+6..+10 (the east side of the yard) or s=-9.4/t=+11 (near the gate but off to the west) -- every one of them is off the camera axis `06-relay-standing`/`06-relay-apparatus` actually look down (the eye-to-apparatus line runs from local (-8,-2) to (7,-9), i.e. toward NEGATIVE t), which the audit's own fresh capture confirmed: the clutter is in the scene but not in the frame, the same 'built but not legible' defect the Hall's own occupation layer has. The three items below sit ON that sightline (local s -1..-4, t -3.6..-5.3, next to the `Relay Watch` grunt in relay_site.json) instead of duplicating the existing cluster's own corner.",
       "props": [
         {
           "model": "Crate_Wooden",
@@ -240,6 +241,31 @@
           "sink_m": 0.06,
           "scale": 1.0,
           "_why": "near the pad's foot -- somebody's kit, the detail that makes the site occupied rather than merely built"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [346.13, 3758.57],
+          "yaw_deg": -15.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "E3-RELAY-POPULATION. On the standing-shot sightline (local -1.0, -4.0), a couple of paces from the `Relay Watch` grunt -- the crate a working post has open beside it, not the sealed stock in the corner cluster."
+        },
+        {
+          "model": "Whetstone",
+          "at": [344.77, 3761.27],
+          "yaw_deg": 60.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "E3-RELAY-POPULATION. Set down at local (-4.0, -3.6), on the same sightline -- a tool actually in use, not stock in storage."
+        },
+        {
+          "model": "Axe_Bronze",
+          "at": [343.81, 3759.65],
+          "yaw_deg": 20.0,
+          "pitch_deg": -75.0,
+          "sink_m": 0.02,
+          "scale": 1.0,
+          "_why": "E3-RELAY-POPULATION. Leaned at local (-3.2, -5.3), beside the whetstone -- the two read as one workstation rather than two unrelated props."
         }
       ]
     },

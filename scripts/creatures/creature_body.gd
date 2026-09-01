@@ -37,6 +37,36 @@ const ALPHA_RIM_STRENGTH := 0.65
 ## gives: an alpha's rim is its identity tell, so an ordinary creature's must
 ## stay clearly under it. Species opt in below this via `placeholder.field_rim`.
 const FIELD_RIM_MAX := 0.30
+
+## OWNER DIRECTIVE 2026-09-01 ("some of the smaller creatures blend into the
+## environment too well... they either need to be bigger or brighter"), and
+## `_apply_field_separation()`'s own conclusion for why a rim never reached
+## bramblebun's target ratio: the fix needs to change how bright the creature
+## itself reads, not add an edge highlight the render already showed is too
+## weak to matter.
+##
+## That comment's premise -- "these models are self-lit, an albedo change
+## would compile and still be invisible" -- turned out NOT to hold for
+## `bramblebun_redesign`: inspected directly (a body spawned and its active
+## surface material read back), the shipped material has
+## `emission_enabled = false`. It is a plain lit PBR material, not the
+## painted-albedo-into-emission convention the older production creature
+## pipeline uses (and which the OF27/OF28 tint code above correctly still
+## assumes for species that DO ship that way). So `_apply_field_brightness()`
+## multiplies `albedo_color` unconditionally -- the lever this mesh's own
+## material actually renders through -- and ALSO multiplies emission energy
+## when a surface happens to have it enabled, so the same per-species knob
+## keeps working correctly for a species whose material ships the other way.
+## Pure multiply on purpose: it raises value without touching hue, so it
+## cannot walk the creature's colour out of its painted family.
+##
+## `field_emission` is the per-species opt-in, exactly like `field_rim`. No
+## ceiling anywhere near `FIELD_RIM_MAX`'s -- brightness past 1.0 is a
+## deliberately available push (`SHINY_PLACEHOLDER_TINT` above already
+## multiplies past 1.0 for the same "a near-1x multiply is not visible in a
+## screenshot" reason), and the owner directive names this species' modest
+## scale as already exhausted.
+const FIELD_EMISSION_MAX := 3.0
 const ALPHA_RIM_TINT := 0.15
 const ALPHA_AURA_COLOUR := Color("#ffd479")
 
@@ -80,6 +110,21 @@ const GROUND_PROBE_DOWN := 300.0
 ## cylinder. Far above 1 and creatures visibly interpenetrate before their
 ## colliders touch, which reads as attacks landing at the wrong distance.
 const FOOTPRINT_ALLOWANCE := 2.4
+
+## OWNER-0901-CREATURE-BED-POSE. No shipped creature carries an authored
+## lie-down clip -- `faint` is the only pose beyond idle/walk/run/attack/hit
+## every species ships (BACKLOG-BED-SCALE-POSE inspected every .glb directly
+## and confirmed this) -- and that clip alone reads as "standing/crouching on
+## a bed" for every body plan except the one bird in the roster (galecrest),
+## whose wing-collapse happens to fall sideways on its own. `play_rest()`
+## below rolls the model onto its side around its own ground-contact line
+## (the way a felled body actually tips over) so the rest of the roster reads
+## as lying down too. How far a species should roll is a fact about its body
+## plan, not a universal constant -- a tall, narrow creature (an antlered
+## deer) oversteers past a bed's rim at the same angle a low, wide one settles
+## at -- so it lives in species.json's `rest_roll_deg` per species, defaulting
+## to this when a species has not been tuned yet.
+const DEFAULT_REST_ROLL_DEG := 90.0
 
 ## OF27 placeholder tint: a deliberately garish magenta-shift multiply,
 ## applied to both albedo AND emission (see `_shared_variant_material`'s own
@@ -612,6 +657,7 @@ func _refresh_shiny_tint() -> void:
 ## never leak onto an ordinary creature of the same species: an alpha that fell
 ## back to the shared `vivid` material gets its own duplicate first.
 func _apply_alpha_presence() -> void:
+	_apply_field_brightness()
 	if _aura != null:
 		_aura.queue_free()
 		_aura = null
@@ -696,6 +742,55 @@ func _apply_field_separation() -> void:
 	if strength <= 0.0:
 		return
 	_rim_light_node(_model, strength, "field")
+
+
+## OWNER DIRECTIVE 2026-09-01, "bigger or brighter". BACKLOG-B2-GRASS-SEPARATION
+## measured that a rim alone cannot reach the target creature/grass luminance
+## ratio for a species this small. See `FIELD_EMISSION_MAX`'s own comment for
+## why this brightens `albedo_color` (unconditionally) and `emission` (only
+## when the material actually has it enabled) rather than emission alone --
+## `bramblebun_redesign`'s shipped material does not self-light the way the
+## rest of this file assumes, so the rim's own "emission drowns out an albedo
+## change" reasoning does not transfer, and the lever has to cover both cases
+## to work for every species that opts in, not just this one.
+##
+## Applied on whatever material is currently active (so it stacks correctly
+## after a colourway swap, or on the raw shipped material when no swap
+## applies). Opt-in via `placeholder.field_emission`, exactly like
+## `field_rim`: applied only where a measurement says it is needed, and left
+## at 0.0 (a no-op) everywhere else.
+func _apply_field_brightness() -> void:
+	if not _has_model:
+		return
+	var strength := clampf(
+		float(SPECIES.placeholder(species_id).get("field_emission", 0.0)), 0.0, FIELD_EMISSION_MAX)
+	if strength <= 0.0:
+		return
+	_brighten_node(_model, strength)
+
+
+func _brighten_node(node: Node, strength: float) -> void:
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			var source: Material = instance.get_active_material(surface)
+			if not (source is BaseMaterial3D):
+				continue
+			var material := source as BaseMaterial3D
+			var suffix := "_field_bright"
+			if material.resource_name.ends_with(suffix):
+				continue
+			material = material.duplicate() as BaseMaterial3D
+			material.resource_name = "%s%s" % [material.resource_name, suffix]
+			instance.set_surface_override_material(surface, material)
+			var factor := 1.0 + strength
+			var albedo := material.albedo_color
+			material.albedo_color = Color(albedo.r * factor, albedo.g * factor, albedo.b * factor, albedo.a)
+			if material.emission_enabled:
+				material.emission_energy_multiplier *= factor
+	for child in node.get_children():
+		_brighten_node(child, strength)
 
 
 func _rim_light_node(node: Node, strength: float, tag: String) -> void:
@@ -1105,6 +1200,60 @@ func play_hit() -> void:
 func play_faint() -> void:
 	if _animator != null:
 		_animator.call("play_faint")
+
+
+## A rolled body's own rigid rotation dips one side below its own origin by
+## roughly `_radius` (a quadruped's width, halved either side of centre) --
+## verified against terrapup's measured box (tools/_diag_rest_roll_math.gd:
+## -0.834m against a declared radius of 0.76m, the small gap being the art's
+## normal overhang past its collider). `_radius` grounds that dip from KNOWN,
+## pose-independent data, the same way `_height` (below) sizes the sideways
+## re-centre -- neither reads a measured pose. On top of that, a small extra
+## sink settles the body into the bedding rather than balancing exactly on
+## its surface, per the owner's own suggestion; kept modest on purpose after
+## the first attempt (0.35 of full standing HEIGHT) buried terrapup almost
+## entirely, when radius-grounding alone already looked right for it.
+const REST_SINK_METERS := 0.12
+
+## The bed-rest pose: idle (not faint) rolled onto its side so it reads as
+## lying rather than crouching, then sunk partway into the bedding. See
+## `DEFAULT_REST_ROLL_DEG` above for why the angle is per-species data, not
+## a constant. Only ever called on the cosmetic body `creature_bed.gd`
+## spawns to represent a resting occupant -- never on the piloted creature
+## -- so tipping the model over here cannot affect combat, which reads
+## `_height`/`_radius`/the collider and never this node's rotation.
+##
+## Idle, not faint: `faint` is a death-flop, and on a winged species it
+## flings the wings out wide rather than settling, which reads as "shot out
+## of the sky" once rolled rather than "asleep". Idle is closer to a
+## species' own resting silhouette on every rig this project ships.
+##
+## `rest_roll_deg: 0` opts a species out of all of this, back to the
+## original `play_faint()`-only behaviour. galecrest's own data carries it:
+## galecrest is the one species whose `faint` clip already falls sideways
+## into a genuine lying pose on its own (a wing-collapse, not anything this
+## roll produces), so ticking it into idle and not rolling would trade an
+## already-correct pose for a standing one.
+func play_rest() -> void:
+	var roll := float(SPECIES.placeholder(species_id).get("rest_roll_deg", DEFAULT_REST_ROLL_DEG))
+	if roll == 0.0:
+		play_faint()
+		return
+	if _animator != null:
+		_animator.call("tick", 0.0, 0.0, 1.0)
+	if not _has_model:
+		return
+	var roll_rad := deg_to_rad(roll)
+	_model.rotate_z(roll_rad)
+	# Re-centre sideways by half of what used to be standing height (that is
+	# where the roll sends it: see the corner derivation in
+	# tools/_diag_rest_roll_math.gd); ground the rotation's own dip by
+	# `_radius`; sink an extra `rest_sink_extra` (species data, defaulting to
+	# REST_SINK_METERS -- a hovering flier's idle can sit well clear of its
+	# own rest pose, which the radius term above cannot see, so an outlier
+	# gets a bigger number here rather than the whole roster paying for it).
+	var sink := float(SPECIES.placeholder(species_id).get("rest_sink_extra", REST_SINK_METERS))
+	_model.position = Vector3(_height * 0.5 * sin(roll_rad), _radius * sin(roll_rad) - sink, 0.0)
 
 
 func revive_animation() -> void:

@@ -1,5 +1,18 @@
 extends SceneTree
 
+## OWNER DIRECTIVE 2026-09-01 extension: "bigger or brighter", and other small
+## creatures beside Bramblebun. Two additions to the 2026-08-31 session's own
+## extension of this probe, same spirit (sweep the live species table against
+## a real render, do not fake the lever by touching a node directly):
+##   `--extra-emission=` sweeps `placeholder.field_emission`
+##   (`creature_body.gd::_apply_field_brightness()`) at the SHIPPED height,
+##   the emission-energy lever traced from `_apply_field_separation()`'s own
+##   "these models are self-lit" reasoning for why the rim alone could not
+##   reach bramblebun's target ratio.
+##   `--species=` points the whole probe (camera stand, SHIPPED read, spawn)
+##   at a different species than Bramblebun, so the same tool answers the
+##   same question for terrapup and others without a rewrite.
+
 ## OWNER DIRECTIVE 2026-08-28 §2b, judged the way the owner will judge it: a
 ## wild creature at throwing range, in real grass, with the throw cone up.
 ##
@@ -28,7 +41,9 @@ extends SceneTree
 ## problem -- C and B are what let that be answered instead of assumed.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const SPECIES_ID := "bramblebun"
+const DEFAULT_SPECIES_ID := "bramblebun"
+## Overridable by `--species=`; see this session's header note.
+var SPECIES_ID := DEFAULT_SPECIES_ID
 const SETTLE_FRAMES := 300
 const POSE_FRAMES := 24
 
@@ -54,6 +69,7 @@ func _run() -> void:
 		quit(1)
 		return
 	var extra_heights: Array[float] = []
+	var extra_emissions: Array[float] = []
 	var skip_baseline := false
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
@@ -62,6 +78,12 @@ func _run() -> void:
 			for token in arg.substr(16).split(","):
 				if token.strip_edges() != "":
 					extra_heights.append(token.strip_edges().to_float())
+		elif arg.begins_with("--extra-emission="):
+			for token in arg.substr(17).split(","):
+				if token.strip_edges() != "":
+					extra_emissions.append(token.strip_edges().to_float())
+		elif arg.begins_with("--species="):
+			SPECIES_ID = arg.substr(10)
 		elif arg == "--skip-baseline":
 			skip_baseline = true
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
@@ -104,24 +126,30 @@ func _run() -> void:
 
 	var variants: Array[Dictionary] = []
 	if not skip_baseline:
-		variants.append({"tag": "A-0.78-norim", "height": 0.78, "rim": 0.0})
-		variants.append({"tag": "B-0.96-norim", "height": 0.96, "rim": 0.0})
-		variants.append({"tag": "C-0.78-rim", "height": 0.78, "rim": 0.22})
-		variants.append({"tag": "D-0.96-rim", "height": 0.96, "rim": 0.22})
+		variants.append({"tag": "A-0.78-norim", "height": 0.78, "rim": 0.0, "emission": 0.0})
+		variants.append({"tag": "B-0.96-norim", "height": 0.96, "rim": 0.0, "emission": 0.0})
+		variants.append({"tag": "C-0.78-rim", "height": 0.78, "rim": 0.22, "emission": 0.0})
+		variants.append({"tag": "D-0.96-rim", "height": 0.96, "rim": 0.22, "emission": 0.0})
 
-	# SHIPPED: whatever height/field_rim species.json currently carries for
-	# this species, read live rather than hardcoded -- the gap the audit
-	# addendum named (the two baseline heights above never test the real
+	# SHIPPED: whatever height/field_rim/field_emission species.json currently
+	# carries for this species, read live rather than hardcoded -- the gap the
+	# audit addendum named (the two baseline heights above never test the real
 	# shipped value).
 	var species := load("res://scripts/creatures/creature_species.gd")
 	var live_table: Dictionary = species.call("placeholder", SPECIES_ID)
 	var shipped_height: float = float(live_table.get("height", 0.78))
 	var shipped_rim: float = float(live_table.get("field_rim", 0.0))
+	var shipped_emission: float = float(live_table.get("field_emission", 0.0))
 	variants.append({
 		"tag": "SHIPPED-%.2f" % shipped_height, "height": shipped_height, "rim": shipped_rim,
+		"emission": shipped_emission,
 	})
 	for h in extra_heights:
-		variants.append({"tag": "TEST-%.2f" % h, "height": h, "rim": shipped_rim})
+		variants.append({"tag": "TEST-h%.2f" % h, "height": h, "rim": shipped_rim, "emission": shipped_emission})
+	for e in extra_emissions:
+		variants.append({
+			"tag": "TEST-e%.2f" % e, "height": shipped_height, "rim": shipped_rim, "emission": e,
+		})
 
 	for variant: Dictionary in variants:
 		await _shoot(variant, look_at)
@@ -144,8 +172,10 @@ func _shoot(variant: Dictionary, at: Vector3) -> void:
 	var table: Dictionary = species.call("placeholder", SPECIES_ID)
 	var original_height: float = float(table.get("height", 0.78))
 	var original_rim: float = float(table.get("field_rim", 0.0))
+	var original_emission: float = float(table.get("field_emission", 0.0))
 	table["height"] = float(variant["height"])
 	table["field_rim"] = float(variant["rim"])
+	table["field_emission"] = float(variant.get("emission", 0.0))
 
 	if _body != null and is_instance_valid(_body):
 		_body.queue_free()
@@ -161,11 +191,13 @@ func _shoot(variant: Dictionary, at: Vector3) -> void:
 	var path := "%s/grass-%s.png" % [_out_dir, variant["tag"]]
 	var image := get_root().get_texture().get_image()
 	image.save_png(ProjectSettings.globalize_path(path))
-	_written.append("%-14s height %.2f rim %.2f -> %s" % [
-		variant["tag"], float(variant["height"]), float(variant["rim"]), path])
+	_written.append("%-14s height %.2f rim %.2f emission %.2f -> %s" % [
+		variant["tag"], float(variant["height"]), float(variant["rim"]),
+		float(variant.get("emission", 0.0)), path])
 
 	table["height"] = original_height
 	table["field_rim"] = original_rim
+	table["field_emission"] = original_emission
 
 
 ## The same three steps `encounter_director.gd` takes for a real wild spawn:

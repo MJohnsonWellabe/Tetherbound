@@ -20,6 +20,9 @@ const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 ## here without a cycle: creature_condition.gd knows nothing about this class,
 ## it only reads and writes fields on whatever RefCounted it is handed.
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
+## OWNER-0901-BOND-MILESTONES. Bond as an ordered ladder of concrete tasks
+## instead of a bare 0-100 meter -- see bond_milestones.gd's own header.
+const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 
 var species_id: String = ""
 var display_name: String = ""
@@ -114,10 +117,26 @@ var rested_seconds_left: float = 0.0
 var level: int = 1
 var xp: int = 0
 
-## 0-100. Read through `bond_nodes()` rather than compared directly — the
-## thresholds that turn bond into an actual stat bonus live in
-## data/config/progression.json, not here.
+## LEGACY (pre-OWNER-0901-BOND-MILESTONES). The old continuous 0-100 bond
+## meter. No longer written by gameplay code and read by nothing shipped —
+## kept only so a save file from before the milestone ladder still parses
+## without losing an unrelated field. `bond_nodes()` below is the real answer
+## to "how bonded is this creature" now; see `BOND_MILESTONES`'s own header
+## for what replaced this.
 var bond: int = 0
+
+## --- bond milestones (OWNER-0901-BOND-MILESTONES) ---------------------------
+##
+## Plain lifetime counters that only ever grow. `bond_nodes()` walks them, in
+## the order data/config/bond_milestones.json lists, to say how many of the
+## five milestones this creature has completed with THIS trainer. Milestone
+## 1's task, `battles_fought` above, already existed (prompt 67's release-
+## ceremony history) and needed no new field — these four are the ones that
+## did.
+var landmarks_visited_together: int = 0
+var distance_m_together: float = 0.0
+var rest_nights_together: int = 0
+var feeds_together: int = 0
 
 ## --- history ----------------------------------------------------------------
 ##
@@ -541,21 +560,22 @@ func evolve_into(new_species_id: String, definition: Dictionary, cfg: Dictionary
 	_apply_level_stats(cfg)
 
 
-## Raise bond, clamped at the configured max so nothing that keeps calling
-## this (a daily tick, a string of wins) can walk it past 100 and off the end
-## of `thresholds`.
-func gain_bond(points: int, cfg: Dictionary) -> void:
-	if points <= 0:
-		return
-	var cap := int(cfg.get("bond", {}).get("max", 100))
-	bond = clampi(bond + points, 0, cap)
-
-
-## How many bond thresholds this creature has crossed (0-5 for the shipped
-## five-entry `thresholds` list). What that actually buys is
-## `PROGRESSION.bond_stat_scale` — this only counts the crossings.
-func bond_nodes(cfg: Dictionary) -> int:
-	return PROGRESSION.bond_nodes(bond, cfg)
+## How many bond milestones this creature has completed, in order (0-5 for
+## the shipped five-entry ladder). What that actually buys is
+## `PROGRESSION.bond_stat_scale` — this only counts the completions.
+##
+## `cfg` is `BOND_MILESTONES.config()`-shaped (data/config/bond_milestones.json),
+## NOT progression.json's own config, even though every existing caller here
+## passes `PROGRESSION.config()` in — that dict has no top-level `milestones`
+## key, so a `cfg` that lacks one falls back to the real shipped ladder. That
+## is what lets `effective_attack`/`effective_defence`/`revealed_trait_secondary`
+## below keep passing the SAME progression cfg they already had without
+## needing a second config threaded through every call site, while a test
+## that wants an isolated milestone ladder can still hand one in explicitly
+## (pass a dict with a `milestones` key and it is honoured instead).
+func bond_nodes(cfg: Dictionary = {}) -> int:
+	var milestones_cfg := cfg if cfg.has("milestones") else BOND_MILESTONES.config()
+	return BOND_MILESTONES.tier(self, milestones_cfg)
 
 
 ## --- Best Creature (R4.7, GAME_DESIGN.md §12) -------------------------------

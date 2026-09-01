@@ -631,14 +631,14 @@ func _set_progression_flag(flag_id: String) -> void:
 	progression.call("set_flag", flag_id)
 
 
-## `give:orb_basic:15` — Grandpa's parting gifts, granted on the line that
+## `give:orb_basic:50` — Grandpa's parting gifts, granted on the line that
 ## mentions them so the words and the satchel agree. Into the REAL inventory
 ## through the same autoload everything else uses; a full satchel is warned
 ## about rather than silently swallowed, because a player who was promised
-## fifteen orbs and got twelve has no way to know.
+## fifty orbs and got twelve has no way to know.
 ##
 ## `parse_effect` splits on the FIRST colon only, so parts[1] here is
-## "orb_basic:15" and the id/count split is this function's own job.
+## "orb_basic:50" and the id/count split is this function's own job.
 func _give_items(parts: Array) -> void:
 	var rest := str(parts[1]).split(":")
 	if rest.size() != 2 or not str(rest[1]).is_valid_int():
@@ -784,6 +784,12 @@ func _refresh_door_gate() -> void:
 		return
 	var door_open := BEATS.at_or_after(_beat, BEATS.WALK_OUT)
 	_house.call("set_door_open", door_open)
+	# OWNER-0901: the player's own bed offers "Sleep" (grandpa_house.gd's
+	# `_build_sleep_prompt`) on the same gate as the front door — free to
+	# leave the house is free to nap in it, and before that the player is
+	# still mid-conversation with Grandpa, where a sleep prompt would fire
+	# `night_rest.gd::rest()` out from under an unfinished opening beat.
+	_house.call("set_sleep_enabled", door_open)
 	if door_open or not DOOR_CALLOUT_BEATS.has(_beat):
 		return
 	if bool(_dialogue.call("is_open")) or _adopting or _picker_pending:

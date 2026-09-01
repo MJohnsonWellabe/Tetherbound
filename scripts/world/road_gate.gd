@@ -65,6 +65,19 @@ var prompt_text := "Try the gate"
 ## rims rather than stopping flush with a walkable edge.
 var seal_half_width := 0.0
 
+## OWNER-0901-VILLAGE-GATE-ROADS-V2. Metres added to the leaf's OWN collision
+## box top, past where the visible mesh ends -- collision-only, no visual
+## change, the same pattern `village_boundary.gd`'s `_build_panel` uses for
+## the fence either side of this leaf (see that file's `VAULT_GUARD_DEFAULT_M`
+## header for the measurement: a live running jump, timed at several frames
+## against the actual built scene, cleared this leaf's UNPADDED collision top
+## by margins as thin as 0.06m against `movement.json`'s 1.35m jump apex).
+## Defaults to 0.0 so every other caller of this file (the Sigil Gate's own
+## `faction_dressing`/`seal_half_width` causeway seal, sized to its own
+## clear-span geometry) is untouched; `village_boundary.gd` sets this
+## explicitly for the two village gates only.
+var vault_guard_m := 0.0
+
 ## T1-HALL-3 / JUDGE-5 D4, ranked 8th of sixteen and read blind as: the "sigil
 ## gate" "has NEITHER sigil NOR gate ... a three-rail farm fence with a small
 ## yellow padlock. No sigil, no banner, no gatehouse, no Team Tether mark of any
@@ -225,10 +238,13 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	body.name = "GateCollision"
 	_shape = CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = aabb.size
+	# `vault_guard_m` extends the box past the leaf's own mesh height, bottom
+	# fixed at the ground the leaf stands on -- see that var's own header.
+	var collision_height := aabb.size.y + vault_guard_m
+	box.size = Vector3(aabb.size.x, collision_height, aabb.size.z)
 	_shape.shape = box
 	body.add_child(_shape)
-	body.position = Vector3(0.0, aabb.size.y * 0.5, 0.0)
+	body.position = Vector3(0.0, collision_height * 0.5, 0.0)
 	add_child(body)
 
 	_build_wings(world, prefabs, at, aabb)

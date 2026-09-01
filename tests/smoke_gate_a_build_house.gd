@@ -51,6 +51,7 @@ func _run() -> void:
 
 	await _build_paid_modular_sample()
 	await _dismantle_exact_middle_piece()
+	await _dismantle_creature_bed()
 	await _cancel_returns_control()
 	_finish()
 
@@ -167,6 +168,63 @@ func _dismantle_exact_middle_piece() -> void:
 		_fail("paid floor dismantle did not refund its full four stone exactly once")
 	else:
 		print("controller dismantle: exact middle piece removed; neighbours survive; full refund")
+
+
+## AUDIT-H H1(b) regression guard. `ralph/reports/audit/H-2026-08-31.md` read
+## `creature_bed.gd` and, finding no `StaticBody3D`/`CollisionShape3D` text in
+## that file, concluded the piece has no collision and can never be dismantled
+## by any raycast. That inspection missed that `build_real()` delegates to
+## `build_piece.gd`'s own `BUILD_PIECE.new()...call("build_real", ...)`, which
+## already builds a real `StaticBody3D`+`CollisionShape3D` sized to the
+## instanced mesh's AABB (`build_piece.gd:80-87`) -- the same path every other
+## generic buildable (floor/wall/roof/fence/workbench/storage) uses. Verified
+## directly: a placed creature bed's collision box is real, correctly sized
+## and positioned (own probe against a bare `build_piece.gd` instance and
+## against a full `creature_bed.gd` placement, both hit by a straight-down
+## ray at the mesh's own footprint), and IS reachable by the production
+## dismantle raycast once the camera is actually pointed at it -- the audit's
+## own probe (`tools/_probe_t5_dismantle_armed.gd`) set the rig's `yaw` but
+## never its `pitch` away from the default ~-12 degrees, which overshoots
+## ANY ground-level flat piece (a floor tile fails identically at that
+## pitch) at a normal camera stand-off distance, not something specific to
+## this piece. This guard places a creature bed through the exact production
+## spawn/registry path `_dismantle_exact_middle_piece` above uses for a
+## floor, aims a camera at it the same deliberate way that test already does,
+## and dismantles it -- so a real collision regression (this piece losing its
+## `build_piece.gd` delegation, or DISMANTLE_RANGE), not merely an ill-aimed
+## probe, is what would ever fail this again.
+func _dismantle_creature_bed() -> void:
+	_game.set("pending_build", "")
+	_game.set("placed_buildings", [])
+	_placer.call("restore_from_game", _game)
+	await physics_frame
+	var index := int((_game.get("placed_buildings") as Array).size())
+	var node: Node3D = _placer.call("_spawn_building", _game, "creature_bed", 0.0, index)
+	node.global_position = Vector3.ZERO
+	_game.call("register_building", "creature_bed", Vector3.ZERO, 0.0, true)
+	await physics_frame
+
+	# Same deliberate stand-off/angle `_dismantle_exact_middle_piece` uses for
+	# a floor tile: a ground-level piece needs the camera actually pitched
+	# down at it, not left at a default forward-ish look.
+	_camera.global_position = Vector3(0.0, 3.0, 5.0)
+	_camera.look_at(Vector3.ZERO)
+	await _arm("creature_bed")
+	var wood_before := int(_game.get("inventory").call("count", "wood"))
+	var fiber_before := int(_game.get("inventory").call("count", "fiber"))
+	await _tap_action("build_dismantle")
+	await physics_frame
+	var records: Array = _game.get("placed_buildings") as Array
+	if not records.is_empty():
+		_fail("controller dismantle did not remove the aimed creature bed (%d record(s) left)" % records.size())
+		return
+	var wood_after := int(_game.get("inventory").call("count", "wood"))
+	var fiber_after := int(_game.get("inventory").call("count", "fiber"))
+	if wood_after != wood_before + 6 or fiber_after != fiber_before + 8:
+		_fail("creature bed dismantle did not refund its full cost (wood %d->%d, fiber %d->%d)" % [
+			wood_before, wood_after, fiber_before, fiber_after])
+	else:
+		print("controller dismantle: creature bed removed and fully refunded")
 
 
 func _cancel_returns_control() -> void:

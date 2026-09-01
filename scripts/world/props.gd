@@ -247,7 +247,13 @@ func place(into: Node3D, spec: Dictionary) -> void:
 		if lit == 0:
 			push_warning("prop '%s' has glow:\"campfire\" but no `Fire` surface to light" % model)
 		CAMPFIRE_GLOW.texture_logs(root)
-		var overlay: Node3D = CAMPFIRE_GLOW.new()
+		# `glow_scale` (optional, default 1.0): E4-CAMP-CLUSTERING. Grows the
+		# light range/energy and the ember particles without touching the log
+		# mesh's own `scale` -- see campfire_glow.gd's own `_glow_scale` note.
+		# 1.0 keeps every existing campfire in the chapter pixel-identical;
+		# `ridge_patrol_camp` is the one site that passes anything else.
+		var glow_scale := float(spec.get("glow_scale", 1.0))
+		var overlay: Node3D = CAMPFIRE_GLOW.new(true, 1.0, glow_scale)
 		if not is_zero_approx(scale_factor):
 			overlay.scale = Vector3.ONE / scale_factor
 		root.add_child(overlay)

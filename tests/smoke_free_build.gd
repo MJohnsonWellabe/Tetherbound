@@ -586,10 +586,10 @@ func _check_a_specific_piece_is_chosen_through_real_pad_navigation(world: Node) 
 		return
 
 	# Clear of the two walls the rotation/snap check above planted.
-	player.global_position += _forward(world, player) * 25.0
-	player.velocity = Vector3.ZERO
+	_hop_forward(world, player, 25.0)
 	for i in 20:
 		await physics_frame
+	await _settle_on_ground(player)
 
 	# Free build so this check is about whether real navigation reaches the
 	# right cell, not about affordability -- already proven elsewhere in this
@@ -810,10 +810,10 @@ func _check_build_actions_are_gated_behind_a_reopened_menu(world: Node) -> void:
 	# meadow, so a legal spot for the ghost is not left to chance.
 	var player := world.get_node_or_null(^"Player") as CharacterBody3D
 	if player != null:
-		player.global_position += _forward(world, player) * 15.0
-		player.velocity = Vector3.ZERO
+		_hop_forward(world, player, 15.0)
 		for i in 20:
 			await physics_frame
+		await _settle_on_ground(player)
 
 	Input.action_press(BUILD_PLACER.PLACE_ACTION)
 	await physics_frame
@@ -1076,10 +1076,10 @@ func _check_movement_and_jump_are_gated_behind_an_open_build_menu(world: Node) -
 		return
 	_game.set("pending_build", "")
 	# Open ground, clear of anything an earlier check in this file planted.
-	player.global_position += _forward(world, player) * 15.0
-	player.velocity = Vector3.ZERO
+	_hop_forward(world, player, 15.0)
 	for i in 20:
 		await physics_frame
+	await _settle_on_ground(player)
 
 	await _ensure_pause_menu_open()
 	for i in 10:
@@ -1130,6 +1130,47 @@ func _check_movement_and_jump_are_gated_behind_an_open_build_menu(world: Node) -
 		_fail("movement still does nothing once the build menu closed (%.2fm drift) -- the gate never releases" % drifted)
 	else:
 		print("movement works again once the build menu is closed (%.2fm drift)" % drifted)
+
+
+## `_check_a_specific_piece_is_chosen_through_real_pad_navigation`,
+## `_check_build_actions_are_gated_behind_a_reopened_menu`, and the movement/
+## jump gate check above all used to reposition the player with a bare
+## `global_position += forward * N` -- a fixed horizontal hop that carries the
+## OLD y straight across, unlike every other reposition in this file, which
+## lands on a real anchor (a wall, a bench, a camp) whose y is already correct
+## for where it sits. Probed directly with `world.ground_height_at()` plus a
+## raycast at the coordinates the corridor kept reporting: the terrain at
+## every xz these hops land on is solid ground with sensible
+## height (1-5m, matches `world.ground_height_at` and a raycast both) -- there
+## is no hole. The Meadows ground simply isn't flat, so a same-y horizontal
+## hop over a slope can land the player BELOW the real surface at the new
+## spot, i.e. already embedded in solid terrain -- `CharacterBody3D` cannot
+## push itself back out of that from below, so it just falls, forever finding
+## nothing under it, until `world_perimeter.gd`'s kill volume catches it far
+## down and teleports back to spawn or the last safe ground. Confirmed by
+## instrumenting a run: the player read `is_on_floor() == false`, falling at
+## -13m/s, immediately after the pad-navigation check's own 25m hop, several
+## checks before the movement gate ever ran -- and because that catch can
+## land on ANY later check's own frame window, it surfaced downstream as a
+## false "the movement gate is broken" 82m drift.
+##
+## `_hop_forward` is the real fix: snap y to the ground at the new xz instead
+## of carrying the old one. `_settle_on_ground` stays as a cheap backstop
+## (a no-op once already grounded) for anything a ground-height query cannot
+## see, same as the corridor recovery it is guarding against.
+func _hop_forward(world: Node, player: CharacterBody3D, distance: float) -> void:
+	var new_pos := player.global_position + _forward(world, player) * distance
+	if world.has_method("ground_height_at"):
+		new_pos.y = float(world.call("ground_height_at", new_pos.x, new_pos.z)) + 0.5
+	player.global_position = new_pos
+	player.velocity = Vector3.ZERO
+
+
+func _settle_on_ground(player: CharacterBody3D, max_frames: int = 360) -> void:
+	for i in max_frames:
+		if player.is_on_floor():
+			return
+		await physics_frame
 
 
 ## The same forward-direction math `build_placer.gd::_show_ghost` uses, so

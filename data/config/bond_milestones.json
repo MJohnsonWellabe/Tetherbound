@@ -1,0 +1,39 @@
+{
+  "_comment": "OWNER-0901-BOND-MILESTONES. Owner playtest 2026-09-01: 'I don't understand bond. It just goes up. It needs to be a task. Like defeat 50 wild creatures together takes you from 0 to 1. Then visit whatever takes you to 2. Then travel x miles takes you to 3.' Bond is now an ORDERED LADDER of concrete, nameable tasks instead of a bare 0-100 meter -- a creature works on exactly ONE of these at a time, in order, never a percentage nobody can explain. Read by scripts/creatures/bond_milestones.gd, the only file allowed to interpret this list.",
+  "_comment_fields": "Each entry: `task` names a field on creature_instance.gd (an existing counter, or one credited by bond_milestones.gd's own credit_* helpers) that only ever grows; `target` is the count/amount that completes it; `name` is the noun phrase a UI prints after 'X/Y' (e.g. 'wild creatures defeated together'). `tier()` walks this list in order and stops at the first incomplete task, so a creature is always working toward exactly one line, matching the owner's own '0 to 1, then to 2' shape.",
+  "_comment_ladder": "Maps 1:1 onto GAME_DESIGN.md §12's five canon bond sources (fighting together / time together+visiting / traveling / resting / feeding), and produces the same 0-5 tier count progression.json's `bond.effects_per_node` and `traits.unlock_bond_nodes` already assume -- neither of those needed to change. Milestone 1 is the owner's own exact words, unmodified. Milestones 2-5 fill placeholders the owner explicitly left open ('visit whatever', 'travel x miles') or left unstated (how many total) -- see the branch report for how each was grounded, and treat every one of these five as tunable, not locked canon.",
+  "_comment_battles_fought": "Reuses the existing `battles_fought` field (creature_instance.gd) rather than a new counter -- combat_manager.gd's `_award_victory` only ever runs against a wild encounter (`_enemy = wild.get(\"instance\")`), and it already credits every non-fainted party member present for the win, not just the piloted one. That is already exactly 'defeat N wild creatures together', so milestone 1 needed no new crediting code at all.",
+  "_comment_calibration": "OWNER-0901 follow-up note: a normal player should be able to reach FULL bond (all five milestones) on their whole five-creature team before leaving the Meadows, not merely clear the first one or two. Distance/landmarks/rest credit every present party member at once (mirroring how battles_fought and the old per_day_in_party rest bonus already worked), so those three track roughly with total playtime regardless of which creature is being piloted. Feeding is the one deliberately manual, per-creature task -- its target is kept the lowest-effort of the four judgment calls for exactly that reason, since it is the one milestone a player cannot advance passively for all five at once.",
+  "milestones": [
+    {
+      "task": "battles_fought",
+      "target": 50,
+      "name": "wild creatures defeated together",
+      "_comment": "Owner's own words, verbatim shape. Every present, non-fainted party member shares credit for a wild win (combat_manager.gd::_award_victory)."
+    },
+    {
+      "task": "landmarks_visited_together",
+      "target": 3,
+      "name": "landmarks discovered together",
+      "_comment": "JUDGMENT CALL filling the owner's 'visit whatever'. data/config/map_landmarks.json ships 9 discoverable landmarks; 3 is reachable in the first hour of ordinary exploration without detouring for it. Credited to every party member the moment map_state.gd discovers a landmark that was not already known, so a whole five shares one visit."
+    },
+    {
+      "task": "distance_m_together",
+      "target": 4000,
+      "name": "meters travelled together",
+      "_comment": "JUDGMENT CALL calibrating the owner's 'travel x miles' (kept in meters -- every other distance-shaped number in this repo, e.g. ralph/GATE_F_EVIDENCE_2026-08-23.md's measured corridor, is metric). Grounded on the one real measured distance in the repo: the critical-path spine alone is 11,519 m in a single idealised straight walk (GATE_F_EVIDENCE_2026-08-23.md / ralph/reports/gate-f-run-2026-08-23-1919/REPORT.md); no per-playthrough route.csv/telemetry exists to calibrate against real wandering instead. 4000 m is roughly a third of that one-way spine, reachable well before the chapter's end even for a creature that joins the roster partway through, once ordinary backtracking/side exploration (which covers more ground than one straight walk) is accounted for. Credited to every party member on player movement, not only whichever creature is currently piloted."
+    },
+    {
+      "task": "rest_nights_together",
+      "target": 4,
+      "name": "nights rested together",
+      "_comment": "JUDGMENT CALL, the ladder's 'resting' canon source (GAME_DESIGN.md §12) reusing the bed-rest event the old `bond.per_day_in_party` gain already hooked. data/config/art.json's day_length_seconds (600 = 10 real minutes/day) means a 3-4 hour session spans roughly 18-24 cycles, but sleeping is a deliberate player action at a built creature_bed (data/items/buildables.json), not automatic -- 4 is reachable without requiring a five-bed compound, at the cost of a couple of deliberate rests. Credited to every party member actually assigned to a bed that completed the night (autoload/game_state.gd::complete_creature_bed_rests), same as before."
+    },
+    {
+      "task": "feeds_together",
+      "target": 10,
+      "name": "meals fed together",
+      "_comment": "JUDGMENT CALL, the ladder's 'feeding' canon source (GAME_DESIGN.md §12), previously a real bond source the design doc named but nothing wired (prompt 67's own audit). Feeding is inherently per-creature and manual (the player picks one creature and one food item per use, scripts/ui/tab_backpack.gd), so unlike the other three this cannot be advanced for the whole five at once -- kept the lowest target of the four judgment calls on purpose, since it is the one milestone that does not average out across a full team automatically."
+    }
+  ]
+}
