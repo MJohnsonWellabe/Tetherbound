@@ -1122,15 +1122,27 @@ func play_faint() -> void:
 		_animator.call("play_faint")
 
 
-## The bed-rest pose: the faint clip's own settled body language (weight
-## down, head low) plus a roll onto the side so it reads as lying rather than
-## crouching. See `DEFAULT_REST_ROLL_DEG` above for why the angle is
-## per-species data, not a constant. Only ever called on the cosmetic body
-## `creature_bed.gd` spawns to represent a resting occupant -- never on the
-## piloted creature -- so tipping the model over here cannot affect combat,
-## which reads `_height`/`_radius`/the collider and never this node's rotation.
+## The bed-rest pose: idle (not faint) rolled onto the side so it reads as
+## lying rather than crouching. See `DEFAULT_REST_ROLL_DEG` above for why the
+## angle is per-species data, not a constant. Only ever called on the
+## cosmetic body `creature_bed.gd` spawns to represent a resting occupant --
+## never on the piloted creature -- so tipping the model over here cannot
+## affect combat, which reads `_height`/`_radius`/the collider and never this
+## node's rotation.
+##
+## Idle, not faint: the placement math below measures the SKELETON'S REST
+## pose (`_bounds()`'s own doc explains why -- bind and rest are the same
+## transform for every shipped rig), and idle sits close to that rest pose on
+## every rig this project ships. `faint` does not -- it is a death-flop, and
+## on a winged species it flings the wings out far past the rest-pose box
+## the placement math measured, so a first attempt at this (rolling+centring
+## the FAINT pose) still rendered galewisp's wingtip and terrapup's raised
+## hindquarters well above the bed after the maths said they would be
+## grounded. Idle keeps the whole thing consistent: the pose being measured
+## and the pose being rolled are the same pose.
 func play_rest() -> void:
-	play_faint()
+	if _animator != null:
+		_animator.call("tick", 0.0, 0.0, 1.0)
 	if not _has_model:
 		return
 	var roll := float(SPECIES.placeholder(species_id).get("rest_roll_deg", DEFAULT_REST_ROLL_DEG))

@@ -20,6 +20,7 @@ func _init() -> void:
 func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	var species_id := args[0] if args.size() > 0 else "terrapup"
+	var settle_frames := int(args[1]) if args.size() > 1 else 5
 
 	var body := CREATURE_SCENE.instantiate() as Node3D
 	body.set_script(CREATURE_BODY)
@@ -33,10 +34,13 @@ func _run() -> void:
 		% [str(model.position), str(model.rotation_degrees)])
 	var box_before: AABB = RENDER_BOUNDS.measure(model)
 	print("model-space AABB BEFORE roll: position=%s size=%s" % [str(box_before.position), str(box_before.size)])
+	print("body-space (self) AABB from bind pose, BEFORE roll: %s" % str(RENDER_BOUNDS.measure(body)))
 
 	body.call_deferred("play_rest")
-	for i in 5:
+	for i in settle_frames:
 		await process_frame
+	print("body-space (self) AABB from bind pose, %d frames AFTER play_rest: %s"
+		% [settle_frames, str(RENDER_BOUNDS.measure(body))])
 
 	print("model local transform AFTER roll: origin=%s basis_euler_deg=%s"
 		% [str(model.position), str(model.rotation_degrees)])
