@@ -108,6 +108,22 @@ func _run() -> void:
 		_finish()
 		return
 
+	# Pin the whole suite to the device the owner actually holds, not just shot
+	# 18. `game_state.gd` initialises `_last_input_was_gamepad` from `not
+	# Input.get_connected_joypads().is_empty()`, true from frame one on the ROG
+	# Ally (an always-connected XInput pad) but false under this harness's
+	# `xvfb-run` display, where no joypad is ever connected -- so
+	# `ui_explore_prompt`/`ui_inventory`/`ui_inventory_selected` all fell back to
+	# keyboard keycaps before shot 18's own explicit pin ever ran, for a
+	# controller-first target platform. `VISUAL-CENSUS-2026-08-31.md` defect 148
+	# read those three frames' bracketed/keycap glyphs as a `CLAUDE.md`
+	# "controller first" violation in the shipped game; it is not one --
+	# `tools/_capture_ui_survey.gd::_pin_owner_device()` already diagnosed and
+	# fixed the identical gap for its own captures. Shot 18's own pin below is
+	# now redundant with this one but left in place as documentation of what
+	# that frame is specifically for.
+	_game.set("_last_input_was_gamepad", true)
+
 	await _phase_explore_prompt()
 	await _phase_inventory()
 	await _phase_build_menu()
