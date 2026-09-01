@@ -139,6 +139,22 @@ rewrites itself cannot be trusted about what it got wrong.
   which no linked script backs. Full evidence:
   `ralph/reports/audit/creature-albedo-clipping/FOLLOWUP-2026-09-01.md`.
 
+- **The 2026-08-31 census's "no gamepad glyph at all" finding (defects 129,
+  148 — two independent critics, ranked the census's #5 follow-up priority as
+  a direct `CLAUDE.md` "controller first" violation) was a capture-harness
+  artefact, not a live-game defect.** `input_glyph.gd` and every HUD/UI call
+  site that draws it (`playground_hud.gd`, `combat_hud.gd`,
+  `prompt_arbiter.gd`, `tab_backpack.gd`) already resolve glyphs off the live
+  input device, and `_capture_ui_survey.gd`'s own `_pin_owner_device()` (D2's
+  capture tool, landed the day before this census branched) already exists to
+  correct for `xvfb-run` never having a connected joypad. The census's
+  specific evidence came from three OLDER tools that never got that fix —
+  `capture_exploration_hud.gd`, `survey_combat.gd`, and (partially)
+  `capture_ui_suite.gd` — so it rendered the game's genuinely-correct
+  no-controller default rather than the ROG Ally's always-connected-pad one.
+  All three patched 2026-09-01. Full evidence:
+  `ralph/reports/audit/controller-glyphs/FOLLOWUP-2026-09-01.md`.
+
 - **The grunt armband defect does not exist.** The corridor round-2 critic
   reported "a flat pure-red untextured rectangle that renders magenta at night"
   and this coordinator briefed VIS-CAST on it without checking. VIS-CAST found

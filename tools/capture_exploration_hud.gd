@@ -93,6 +93,23 @@ func _run() -> void:
 		# still long enough to screenshot.
 		player.set_physics_process(false)
 
+	# Pin the survey to the device the owner actually holds. `game_state.gd`
+	# initialises `_last_input_was_gamepad` from `not
+	# Input.get_connected_joypads().is_empty()`, which is true from frame one on
+	# the ROG Ally (an always-connected XInput pad) but false under this
+	# harness's `xvfb-run` display, where no joypad is ever connected -- so
+	# every `input_glyph.gd::icon()` call in these frames (the hotbar, the
+	# persistent M/I/R/C legend) fell back to keyboard keycaps for a
+	# controller-first target platform. `VISUAL-CENSUS-2026-08-31.md` defect 148
+	# ("no gamepad glyph anywhere") read that harness artefact, produced by
+	# `hud_full.png` from this exact tool, as a `CLAUDE.md` "controller first"
+	# violation in the shipped game; it is not one --
+	# `tools/_capture_ui_survey.gd::_pin_owner_device()` already diagnosed and
+	# fixed the identical gap for its own captures, this tool just predates it.
+	var game_autoload: Node = root.get_node_or_null(^"/root/Game")
+	if game_autoload != null:
+		game_autoload.set("_last_input_was_gamepad", true)
+
 	_seed_demo_state(world)
 	_pin_party_strip(world)
 
