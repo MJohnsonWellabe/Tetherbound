@@ -3285,9 +3285,22 @@ func _step_track_aim(args: Dictionary, step_id: String) -> String:
 	if not bool(throw.call("is_aiming")):
 		return "FAIL track_aim: input_context is not combat_aim -- enter it with press_until first"
 	var rig := _probe.call("camera_rig") as Node
-	var player := _probe.call("player") as Node3D
-	if rig == null or player == null:
-		return "HARNESS-ERROR track_aim step %s: no live camera rig / player" % step_id
+	if rig == null:
+		return "HARNESS-ERROR track_aim step %s: no live camera rig" % step_id
+	# The RETICLE ray is cast from the CAMERA's eye (`launch_assist_diagnostics()`
+	# uses `camera.global_position`), not the trainer's — the aim camera sits
+	# about a shoulder's width off to one side (`_shoulder`, `_apply_aim_camera`'s
+	# own header explains why). Steering toward the target from the PLAYER's
+	# position instead (what `_acquire_target()`'s one-shot snap does, and what
+	# this step's first cut also did) is off by exactly that parallax, and
+	# because the offset does not shrink as the camera turns, it never converges
+	# -- measured: four tracked blocks, every one still `reticle_outside_body`
+	# after the full 240-frame budget, with the offset if anything larger than
+	# the single un-tracked snap it was meant to fix. Aiming from the camera's
+	# own eye is the ray the eligibility check will actually judge.
+	var camera := rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null:
+		return "HARNESS-ERROR track_aim step %s: camera rig has no live Camera3D" % step_id
 
 	var budget := maxi(1, int(args.get("budget_frames", 240)))
 	var last_reason := "unavailable"
@@ -3312,9 +3325,10 @@ func _step_track_aim(args: Dictionary, step_id: String) -> String:
 
 		# Same formula `_acquire_target()` snaps once at aim entry -- resampled
 		# every frame here because the target keeps walking through the gap a
-		# fixed snap leaves open.
+		# fixed snap leaves open, and measured FROM THE CAMERA rather than the
+		# trainer (see the header above).
 		var centre: Vector3 = body.call("centre")
-		var to_target: Vector3 = centre - player.global_position
+		var to_target: Vector3 = centre - camera.global_position
 		var have_yaw := float(rig.get("yaw"))
 		var want_yaw := atan2(-to_target.x, -to_target.z)
 		var yaw_delta := rad_to_deg(angle_difference(have_yaw, want_yaw))
