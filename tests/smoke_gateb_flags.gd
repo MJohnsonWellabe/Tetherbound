@@ -23,6 +23,11 @@ const CAMP := preload("res://scripts/build/camp.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+
+## Never touch a player's real save directory from a regression: passing the
+## night through camp.gd's real `_on_rest` autosaves.
+const TEST_DIR := "user://test_saves_gateb_flags/"
 
 class FlatWorld extends Node3D:
 	func ground_height_at(_x: float, _z: float) -> float:
@@ -40,11 +45,14 @@ func _init() -> void:
 
 
 func _run() -> void:
+	_wipe_test_dir()
 	_game = root.get_node_or_null(^"Game")
 	if _game == null:
 		_fail("Game autoload is missing")
 		_finish()
 		return
+	# Never touch a player's real save directory from a regression.
+	_game.set("save_system", SAVE_GAME.new(TEST_DIR))
 	_game.set("pending_build", "")
 	_game.set("free_build", false)
 	_game.set("placed_buildings", [])
@@ -213,12 +221,26 @@ func _check_materials_gathered_flag() -> void:
 		_fail("harvest_node.gd's gather completion did not set home_materials_gathered once wood crossed the threshold")
 
 
+func _wipe_test_dir() -> void:
+	var dir := DirAccess.open(TEST_DIR)
+	if dir == null:
+		return
+	dir.list_dir_begin()
+	var name := dir.get_next()
+	while name != "":
+		if not dir.current_is_dir():
+			dir.remove(name)
+		name = dir.get_next()
+	dir.list_dir_end()
+
+
 func _fail(message: String) -> void:
 	_failures.append(message)
 	push_error(message)
 
 
 func _finish() -> void:
+	_wipe_test_dir()
 	if _world != null and is_instance_valid(_world):
 		_world.queue_free()
 	if _failures.is_empty():
