@@ -386,18 +386,18 @@
     {
       "name": "Garrick",
       "config_key": "farmer",
-      "position": [8.0, -22.0],
+      "position": [6.0, -34.0],
       "facing_deg": 71.6,
       "greeting": "village_farmer",
-      "_why": "T1-CREATURE-RIG. By the fenced fields south of the square -- probed 3.62m clear of the nearest fence run and 6.00m from Tam, ground flat, off every path."
+      "_why": "OWNER-0901-VILLAGE-POPULATION, 2026-09-01. Owner playtest item 6 (ralph/OWNER_PLAYTEST_2026-09-01.md), a repeat complaint: 'still too many people in the village.' Checked whether `BACKLOG-E1-VILLAGE-DAYTIME` (landed the same day) caused it first -- it did not: that lane's landed diff (9f06bc4d) touched only props.json/terrain_playground.json/vegetation.json, zero NPC files, and its own tournament_ground entry says explicitly the NPCs there are 'out of this lane's scope'. The crowding is the base T1-CREATURE-RIG roster: its own handover already flagged the risk, routing Maren/Sorrel to the pond crossing 'rather than adding to the village square's own crowding', but left this one (and Old Perrin, and Lark) standing inside the same already-crowded 18m-radius square. Pushed 12m further south along the fenced-fields line this entry already described -- a farmer working his own fields reads the same at 22m from the well as at 34m -- clearing the square's core sightline without inventing a new location. Was [8,-22]. Confirmed by hand (no Godot binary this session, so not re-run through tools/_probe_civilian_placement.gd): inside data/config/village_boundary.json's outline with 20.00m clear of the nearest fence segment, 15.95m clear of fence_run_2 [19.5,-25.5], 16.10m clear of fence_run_1 [14,-20], 18.0m from Tam, and 13.7m from Lark's own new position below -- all comfortably past the >=3m/>=0.5m margins tools/_probe_civilian_placement.gd enforces. Same gentle Band-1 meadow the original probed position already sat on, just further along it."
     },
     {
       "name": "Old Perrin",
       "config_key": "local_historian",
-      "position": [6.0, -13.0],
-      "facing_deg": 53.1,
+      "position": [-15.0, -5.0],
+      "facing_deg": 101.3,
       "greeting": "village_local_historian",
-      "_why": "T1-CREATURE-RIG. Near the crossroads at the well, off the paths themselves (path_factor 0.00, unlike the well's own junction) -- probed 1.42m clear of the inn and 3.61m from Tam."
+      "_why": "OWNER-0901-VILLAGE-POPULATION, 2026-09-01. Same fix as Garrick's own _why above -- owner playtest item 6's repeat 'too many people' complaint, confirmed to be the base T1-CREATURE-RIG roster and not `BACKLOG-E1-VILLAGE-DAYTIME` (see Garrick's entry for the full trace). Was standing 'near the crossroads at the well' -- the single most central, most trafficked point in the square, immediately between the well and every road out of it, which is exactly the wrong spot for a tenth body if the square already reads as crowded. Moved 21m west, past the inn cluster, to a quiet spot off on his own -- fitting for a local historian who has already told his stories to whoever stops at the well and isn't fighting for the same ground as the smith, the trainers and the pens. Faces back toward the well/inn corner (101.3deg) so he still reads as watching the square rather than turned away from it. Was [6,-13]/53.1deg. Confirmed by hand (no Godot binary this session): inside village_boundary.json's outline with 23.08m clear of the nearest fence segment, 12.5m clear of the inn's own footprint (circumscribed radius 8.03m, so an 4.4m margin), 7.28m from Wilhelm, 9.95m from Bram, 9.5m clear of the 'Grandpa's House' path segment nearest this point -- all past the probe tool's minimum margins."
     },
     {
       "name": "Tobin",
@@ -426,10 +426,10 @@
     {
       "name": "Lark",
       "config_key": "courier",
-      "position": [17.0, -17.0],
+      "position": [19.6, -35.3],
       "facing_deg": 163.6,
       "greeting": "village_courier",
-      "_why": "T1-CREATURE-RIG. On the square's south side, facing the road out toward the South Bridge crossing -- probed 1.26m clear of cottage_b and 7.07m from Sela, ground flat, off every path."
+      "_why": "OWNER-0901-VILLAGE-POPULATION, 2026-09-01. Same fix as Garrick's own _why above -- owner playtest item 6's repeat 'too many people' complaint, confirmed to be the base T1-CREATURE-RIG roster and not `BACKLOG-E1-VILLAGE-DAYTIME` (see Garrick's entry for the full trace). Moved down the Practice Meadow road (terrain_playground.json paths.routes, [10,-10]->[18,-24]->[30,-40]) toward the South Bridge crossing his own line already names -- a courier about to set out reads better waiting further down the road than standing in the middle of the square, and this thins the square's core cluster by one more. Offset 5.5m off the road's own centreline (perpendicular to its [18,-24]->[30,-40] leg) rather than on it, so he stands beside the road rather than in it. Was [17,-17]. Confirmed by hand (no Godot binary this session): inside village_boundary.json's outline with 18.71m clear of the nearest fence segment, 5.50m clear of the Practice Meadow road itself, 13.7m from Garrick's own new position above, well clear of Old Bram [195,905] and every band1 trainers.json position near the village (Bryn [13,9], Mira/Oskar/Tam)."
     },
     {
       "name": "Ren",
