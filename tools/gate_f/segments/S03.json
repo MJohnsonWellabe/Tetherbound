@@ -361,6 +361,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
@@ -441,14 +442,16 @@
     },
     {
       "id": "S03-32a2w",
-      "title": "the world owns input before this walk",
-      "action": "assert",
+      "title": "wait for the world to own input before this walk",
+      "action": "wait_until",
       "args": {
         "check": "input_context",
-        "equals": "world"
+        "equals": "world",
+        "budget_frames": 1800,
+        "poll_frames": 5
       },
-      "expected": "no narrative modal is holding locomotion when this walk starts",
-      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+      "expected": "no narrative modal or combat is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
       "id": "S03-32b",
@@ -456,6 +459,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
+        "rank": 1,
         "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
@@ -536,14 +540,16 @@
     },
     {
       "id": "S03-32b2w",
-      "title": "the world owns input before this walk",
-      "action": "assert",
+      "title": "wait for the world to own input before this walk",
+      "action": "wait_until",
       "args": {
         "check": "input_context",
-        "equals": "world"
+        "equals": "world",
+        "budget_frames": 1800,
+        "poll_frames": 5
       },
-      "expected": "no narrative modal is holding locomotion when this walk starts",
-      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+      "expected": "no narrative modal or combat is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
       "id": "S03-32c",
@@ -551,6 +557,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
+        "rank": 2,
         "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
@@ -631,14 +638,16 @@
     },
     {
       "id": "S03-32c2w",
-      "title": "the world owns input before this walk",
-      "action": "assert",
+      "title": "wait for the world to own input before this walk",
+      "action": "wait_until",
       "args": {
         "check": "input_context",
-        "equals": "world"
+        "equals": "world",
+        "budget_frames": 1800,
+        "poll_frames": 5
       },
-      "expected": "no narrative modal is holding locomotion when this walk starts",
-      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+      "expected": "no narrative modal or combat is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
       "id": "S03-32d",
@@ -646,6 +655,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
@@ -726,14 +736,16 @@
     },
     {
       "id": "S03-32d2w",
-      "title": "the world owns input before this walk",
-      "action": "assert",
+      "title": "wait for the world to own input before this walk",
+      "action": "wait_until",
       "args": {
         "check": "input_context",
-        "equals": "world"
+        "equals": "world",
+        "budget_frames": 1800,
+        "poll_frames": 5
       },
-      "expected": "no narrative modal is holding locomotion when this walk starts",
-      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+      "expected": "no narrative modal or combat is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
       "id": "S03-32e",
@@ -741,6 +753,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
+        "rank": 1,
         "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
@@ -821,14 +834,16 @@
     },
     {
       "id": "S03-32e2w",
-      "title": "the world owns input before this walk",
-      "action": "assert",
+      "title": "wait for the world to own input before this walk",
+      "action": "wait_until",
       "args": {
         "check": "input_context",
-        "equals": "world"
+        "equals": "world",
+        "budget_frames": 1800,
+        "poll_frames": 5
       },
-      "expected": "no narrative modal is holding locomotion when this walk starts",
-      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+      "expected": "no narrative modal or combat is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
       "id": "S03-32f",
@@ -836,6 +851,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
+        "rank": 2,
         "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
@@ -916,14 +932,16 @@
     },
     {
       "id": "S03-32f2w",
-      "title": "the world owns input before this walk",
-      "action": "assert",
+      "title": "wait for the world to own input before this walk",
+      "action": "wait_until",
       "args": {
         "check": "input_context",
-        "equals": "world"
+        "equals": "world",
+        "budget_frames": 1800,
+        "poll_frames": 5
       },
-      "expected": "no narrative modal is holding locomotion when this walk starts",
-      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+      "expected": "no narrative modal or combat is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
       "id": "S03-32g",
@@ -931,6 +949,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
@@ -1011,14 +1030,16 @@
     },
     {
       "id": "S03-32g2w",
-      "title": "the world owns input before this walk",
-      "action": "assert",
+      "title": "wait for the world to own input before this walk",
+      "action": "wait_until",
       "args": {
         "check": "input_context",
-        "equals": "world"
+        "equals": "world",
+        "budget_frames": 1800,
+        "poll_frames": 5
       },
-      "expected": "no narrative modal is holding locomotion when this walk starts",
-      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+      "expected": "no narrative modal or combat is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
       "id": "S03-32h",
@@ -1026,6 +1047,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
+        "rank": 1,
         "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
@@ -1106,14 +1128,16 @@
     },
     {
       "id": "S03-32h2w",
-      "title": "the world owns input before this walk",
-      "action": "assert",
+      "title": "wait for the world to own input before this walk",
+      "action": "wait_until",
       "args": {
         "check": "input_context",
-        "equals": "world"
+        "equals": "world",
+        "budget_frames": 1800,
+        "poll_frames": 5
       },
-      "expected": "no narrative modal is holding locomotion when this walk starts",
-      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+      "expected": "no narrative modal or combat is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
       "id": "S03-32i",
@@ -1121,6 +1145,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
+        "rank": 2,
         "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
@@ -1201,14 +1226,16 @@
     },
     {
       "id": "S03-32i2w",
-      "title": "the world owns input before this walk",
-      "action": "assert",
+      "title": "wait for the world to own input before this walk",
+      "action": "wait_until",
       "args": {
         "check": "input_context",
-        "equals": "world"
+        "equals": "world",
+        "budget_frames": 1800,
+        "poll_frames": 5
       },
-      "expected": "no narrative modal is holding locomotion when this walk starts",
-      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+      "expected": "no narrative modal or combat is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
       "id": "S03-32j",
@@ -1216,6 +1243,7 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 3000,
         "held_budget_frames": 3600
