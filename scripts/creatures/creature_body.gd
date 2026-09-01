@@ -1122,22 +1122,18 @@ func play_faint() -> void:
 		_animator.call("play_faint")
 
 
-## How much of a rolled model's own standing height sinks into the bedding.
-## Two live renders (galewisp, veridian) showed why grounding this by
-## MEASURING the actual pose is a trap: `_bounds()` only ever reports the
-## skeleton's REST pose (its own doc explains why), and both species' real
-## `idle`/`faint` clips hold their root well clear of that rest pose (a
-## flier's idle is a hover, not a stance on the ground) -- so a placement
-## that trusted the measured box came out floating a clear body-height above
-## the pad, precisely measured (tools/_diag_rest_roll_math.gd) as grounded
-## and still wrong on screen. `_height` has no such problem: it is gameplay
-## data, true regardless of which pose is currently playing. Sinking a
-## generous, fixed fraction of it, rather than solving for an exact seat, is
-## also just a better LOOK per the owner's own suggestion -- a creature
-## settled into a mattress with part of its bulk below the surface reads
-## more natural than one perched exactly on top of it, and it is forgiving
-## of exactly the pose-vs-rest-pose slop that broke the measured approach.
-const REST_SINK_FRACTION := 0.35
+## A rolled body's own rigid rotation dips one side below its own origin by
+## roughly `_radius` (a quadruped's width, halved either side of centre) --
+## verified against terrapup's measured box (tools/_diag_rest_roll_math.gd:
+## -0.834m against a declared radius of 0.76m, the small gap being the art's
+## normal overhang past its collider). `_radius` grounds that dip from KNOWN,
+## pose-independent data, the same way `_height` (below) sizes the sideways
+## re-centre -- neither reads a measured pose. On top of that, a small extra
+## sink settles the body into the bedding rather than balancing exactly on
+## its surface, per the owner's own suggestion; kept modest on purpose after
+## the first attempt (0.35 of full standing HEIGHT) buried terrapup almost
+## entirely, when radius-grounding alone already looked right for it.
+const REST_SINK_METERS := 0.12
 
 ## The bed-rest pose: idle (not faint) rolled onto its side so it reads as
 ## lying rather than crouching, then sunk partway into the bedding. See
@@ -1171,9 +1167,13 @@ func play_rest() -> void:
 	_model.rotate_z(roll_rad)
 	# Re-centre sideways by half of what used to be standing height (that is
 	# where the roll sends it: see the corner derivation in
-	# tools/_diag_rest_roll_math.gd), then sink -- both purely a function of
-	# `_height`, never of a measured, pose-dependent box.
-	_model.position = Vector3(_height * 0.5 * sin(roll_rad), -_height * REST_SINK_FRACTION, 0.0)
+	# tools/_diag_rest_roll_math.gd); ground the rotation's own dip by
+	# `_radius`; sink an extra `rest_sink_extra` (species data, defaulting to
+	# REST_SINK_METERS -- a hovering flier's idle can sit well clear of its
+	# own rest pose, which the radius term above cannot see, so an outlier
+	# gets a bigger number here rather than the whole roster paying for it).
+	var sink := float(SPECIES.placeholder(species_id).get("rest_sink_extra", REST_SINK_METERS))
+	_model.position = Vector3(_height * 0.5 * sin(roll_rad), _radius * sin(roll_rad) - sink, 0.0)
 
 
 func revive_animation() -> void:
