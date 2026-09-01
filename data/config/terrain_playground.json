@@ -402,6 +402,24 @@
         ]
       },
       {
+        "_why": "BACKLOG-E1-VILLAGE-DAYTIME, 2026-08-31. The square to the inn's door. Every other village building already has one of these -- Grandpa's house, the practice meadow, the pond, the rise -- but the inn (R7.9, added 2026-08-16, after this route table was authored) never got one, which is a real piece of why a fresh audit pass (ralph/reports/audit/E-2026-08-31.md sec E1) reads the twins frame as 'two houses dropped in a meadow, no connecting paths'. Ends 2.0m short of the inn's own centre (-1.5,-9), on the well-facing side, matching Grandpa's House route's own 4.5m stand-off above.",
+        "label": "The Inn",
+        "points": [
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            4.0,
+            -9.0
+          ],
+          [
+            0.5,
+            -9.0
+          ]
+        ]
+      },
+      {
         "_why": "the square to the practice meadow (the opening's bramblebun)",
         "label": "Practice Meadow",
         "points": [
