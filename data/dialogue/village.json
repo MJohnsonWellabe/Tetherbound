@@ -17,9 +17,9 @@
       "speaker": "Mira",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Meadow Keeper's what they call me around here — somebody's got to look after what grows out there, garden rows included. The meadow has opinions about strangers, mind.",
-        "That workshop's mended every tool this village ever broke. Still smells of iron and oak shavings.",
-        "Something's wrong with the ground out past the south crossing. Rows won't take there anymore — same seed, same season, and it comes up grey and thin. I've stopped trying."
+        "Meadow Keeper's what they call me. I look after what grows out there — the meadow has opinions about strangers.",
+        "That workshop's mended every tool this village ever broke.",
+        "Ground's wrong past the south crossing. Same seed, same season — comes up grey and thin now. I've stopped trying."
       ]
     },
     "village_mira_shop_intro": {
@@ -28,7 +28,7 @@
       "lines": [
         "Grandpa said you would come through. Take these before you head out: an axe for wood and a pick for stone.",
         {
-          "text": "For Basic Orbs, bind three wood with two fiber. The pattern is yours now; make more whenever you need them. Elias left you fifteen to learn with.",
+          "text": "Bind three wood with two fiber for a Basic Orb. Pattern's yours now — make more whenever you need them.",
           "effects": [
             "give:axe:1",
             "give:pickaxe:1",
@@ -39,7 +39,7 @@
           ]
         },
         {
-          "text": "Now then. I sell, and I buy — so if you're hauling wood and cut grass about the meadow, haul it here first.",
+          "text": "Now then. I sell, and I buy — haul it here first.",
           "effect": "shop:goods:mira"
         }
       ]
@@ -79,17 +79,17 @@
       "speaker": "Bram",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Innkeeper's the whole of it. Bed, board and a fire that stays lit -- that's the trade.",
-        "Half the square eats here on a cold night. The other half just likes complaining about my stew where it's warm."
+        "Innkeeper's the whole of it. Bed, board and a fire that stays lit.",
+        "Half the square eats here on a cold night. The other half just likes complaining about my stew."
       ]
     },
     "village_bram_shop_intro": {
       "speaker": "Bram",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "First one through the door gets the tour. Bar's here, beds are through the back, and I keep a bit of stock behind the counter same as Mira does.",
+        "First one through the door gets the tour. Bar's here, beds are through the back, and I keep stock too.",
         {
-          "text": "Berries, and the tonics and brews she doesn't always have spare. Have a look.",
+          "text": "Berries, tonics, brews. Have a look.",
           "effect": "shop:goods:bram"
         }
       ]
@@ -108,23 +108,23 @@
       "speaker": "Oskar",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Bridgehand's my trade — I keep the old crossing south of here in one piece, when it lets me. Team Tether's been sniffing round it lately, which helps nobody.",
-        "Well rope's been fraying since the spring thaw. Nobody's got round to it.",
-        "You're the one staying with old Elias, aren't you? Whole square knows by now.",
-        "They pay in coin and they pay on time, and I don't ask what the masts are for. Only — the verge by the south road used to be waist high. You've seen it."
+        "Bridgehand's my trade — I keep the old crossing south of here. Team Tether's been sniffing round it lately.",
+        "Well rope's been fraying since spring. Nobody's got round to it.",
+        "You're staying with old Elias, aren't you? Whole square knows.",
+        "They pay on time and I don't ask what the masts are for. But the verge by the south road used to be waist high. You've seen it."
       ]
     },
     "village_oskar_trade_intro": {
       "speaker": "Oskar",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Bridgehand's my trade, but I keep pens behind the cottage as well — creatures that came off the crossing road with nobody walking beside them.",
+        "Bridgehand's my trade, but I keep pens behind the cottage too — creatures that came off the crossing road with nobody beside them.",
         {
-          "text": "I don't sell them and I won't buy yours. Straight swap: one of mine for one of yours, and both of us shake on it. That's how it's done here.",
+          "text": "I don't sell them and I won't buy yours. Straight swap: one of mine for one of yours, and we shake on it.",
           "effect": "flag:oskar_trade_open"
         },
         {
-          "text": "One rule of my own, mind — I'll not take your last. Nobody walks back out to that meadow on their own. Come and see who's up.",
+          "text": "One rule — I'll not take your last. Nobody walks back out to that meadow alone. Come see who's up.",
           "effect": "shop:creatures:oskar"
         }
       ]
@@ -143,9 +143,9 @@
       "speaker": "Oskar",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "That bridge south of here was mine to keep shut. Was. Tether took the key off my belt in the spring and put one of their own on the near landing.",
+        "That bridge south of here was mine to keep shut. Was. Tether took the key off my belt in the spring.",
         {
-          "text": "So I've nothing to hand you but a fight, and I'm told you're worth one. Come on then.",
+          "text": "So I've nothing to hand you but a fight. Come on then.",
           "effect": "battle:trainer_oskar"
         }
       ]
@@ -155,7 +155,7 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         {
-          "text": "Square's square. Wish I still had that key to give you — the lad in the grey coat has it, down at the crossing. Mind the far bank either way. Nobody's walked it in years.",
+          "text": "Square's square. Wish I still had that key — the lad in the grey coat has it, down at the crossing. Mind the far bank either way.",
           "effect": "shop:creatures:oskar"
         }
       ]
@@ -164,10 +164,10 @@
       "speaker": "Tam",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Field Scout, that's me — I track what's out there before it tracks you. Watch a creature's temper as much as its size; the placid-looking ones surprise you most.",
-        "Careful on the yard fence, the post on the end is looser than it looks.",
-        "Good road out to the meadow from here. Watch for the bramblebun, it startles easy.",
-        "Word of advice for out east: the grass by Tether's roadworks is dead flat and the creatures know it. Nothing dens within a hundred paces of those masts. I'd trust them over a surveyor."
+        "Field Scout, that's me — I track what's out there before it tracks you. Watch temper as much as size.",
+        "Careful on the yard fence, the end post's looser than it looks.",
+        "Good road out to the meadow. Watch for the bramblebun, it startles easy.",
+        "Grass by Tether's roadworks is dead flat, and nothing dens within a hundred paces of those masts. I'd trust the creatures over a surveyor."
       ]
     },
     "village_tam_tools": {
@@ -175,12 +175,12 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "Field Scout when I'm out past the fence. Smith when I'm in. Same pair of hands either way.",
-        "You've been at the oaks and the outcrops with nothing but your hands, haven't you. It shows.",
+        "You've been at the oaks and outcrops with nothing but your hands. It shows.",
         {
-          "text": "Mira has you set for gathering. This knife and torch are for the work that runs long: clean fiber, then see your way home.",
+          "text": "Mira set you up for gathering. This knife and torch are for the long work: clean fiber, then see your way home.",
           "effects": ["give:knife:1", "give:torch:1", "flag:tam_tools_given"]
         },
-        "Come back when they're blunt. I'll see to them."
+        "Come back when they're blunt."
       ]
     },
     "village_tam_challenge": {
@@ -189,7 +189,7 @@
       "lines": [
         "Scouting teaches you one thing fast: no single creature answers every question.",
         {
-          "text": "Bring your whole belt, not your favourite. I'll show you what I mean.",
+          "text": "Bring your whole belt, not your favourite.",
           "effect": "battle:trainer_tam"
         }
       ]
@@ -205,25 +205,25 @@
       "speaker": "Quarry Foreman",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Foreman by trade, though there's no quarry to run yet — Team Tether's been working the old rootstone seams south of here longer than anyone local has.",
+        "Foreman by trade, though there's no quarry to run yet — Team Tether's been working the old rootstone seams longer than anyone local has.",
         "Give it time. Stone doesn't go anywhere. Neither do I.",
-        "You want the honest version? Every seam they've run a line off has gone bad above ground within the month. Grass first, then the scrub, then it's bare. They tell me that's the weather."
+        "Honest version? Every seam they've run a line off goes bad above ground within a month. Grass first, then scrub, then bare. They tell me that's the weather."
       ]
     },
     "village_quarry_foreman_hammer": {
       "speaker": "Quarry Foreman",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "No quarry to run leaves a foreman with time on his hands. Enough to watch you crossing this square with an armful of deadwood and nowhere under a roof to put it down.",
-        "Wood left in a heap too long swells and rots on you. A trainer left out in the open does worse. Neither keeps well that way.",
+        "No quarry to run leaves a foreman with time on his hands — enough to watch you cross this square with an armful of deadwood and nowhere to put it down.",
+        "Wood left in a heap too long rots. A trainer left out in the open does worse.",
         {
-          "text": "Take this — my old hammer. No use to me without stone to cut. Get enough wood together, stone too if the trip's worth it, fiber for the binding, and you've a fire and a roof both. Simplest thing any of us ever raised.",
+          "text": "Take this — my old hammer, no use to me without stone. Wood, stone, fiber for the binding, and you've a fire and a roof both.",
           "effects": [
             "give:hammer:1",
             "flag:camp_hammer_given"
           ]
         },
-        "Don't put it on the road itself. Learned that one the hard way."
+        "Don't put it on the road itself. Learned that the hard way."
       ]
     },
     "village_rescued_ranger": {
@@ -375,10 +375,10 @@
       "speaker": "Mira",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Your surveyor walked in off the south road. Thin as a rake and asking for paper before she'd sit down.",
-        "She says the seams were cut. Cut, like a quarry face, by somebody, on purpose. I have lived under them my whole life and nobody has ever once said that out loud in this square.",
+        "Your surveyor walked in off the south road. Thin as a rake, asking for paper before she'd sit down.",
+        "She says the seams were cut. On purpose. I've lived under them my whole life and nobody's ever said that out loud in this square.",
         {
-          "text": "So take what you need and don't count it too carefully. I'd sooner be short of stock than short of you.",
+          "text": "So take what you need and don't count it too carefully.",
           "effect": "shop:goods:mira"
         }
       ]
@@ -389,9 +389,9 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "The near landing's clear. Tam's boy ran the whole way back to tell me and he hasn't run anywhere since he was nine.",
-        "That was my key on that man's belt. They took it off me in the spring and I let them, because what was I going to do — and I have been quietly ashamed of it every day since.",
+        "That was my key on that man's belt. I let them take it, and I've been quietly ashamed of it since.",
         {
-          "text": "Pen's open. Take a proper look this time, and pick something that can stand still and take a hit. Whatever's up that road is not a grunt on a bridge.",
+          "text": "Pen's open. Take a proper look this time — whatever's up that road is not a grunt on a bridge.",
           "effect": "shop:creatures:oskar"
         }
       ]
@@ -401,9 +401,9 @@
       "speaker": "Tam",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Three sigils. I've held one of those, once — a man came through buying nails and wouldn't say what for, and I've thought about it every year since.",
+        "Three sigils. I've held one of those once — a man came through buying nails and wouldn't say what for.",
         "Nobody carries three for any other reason. You're going to the Hall.",
-        "Then go the way you'd finish a weld. Rested, and all at once. Not tired, and not in pieces."
+        "Go the way you'd finish a weld. Rested, all at once. Not in pieces."
       ]
     },
     "grandpa_tournament_won": {
@@ -411,8 +411,8 @@
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
-        "Halda sent word before you'd even got your boots off. Word travels faster than you do, these days.",
-        "Won it fair, she says. I always knew you would, but hearing somebody else say it is a different thing entirely.",
+        "Halda sent word before you'd got your boots off. News travels faster than you do these days.",
+        "Won it fair, she says. I always knew you would.",
         "Don't let it go to your head. Team Tether doesn't care what ribbon you're wearing."
       ]
     },
@@ -421,9 +421,9 @@
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
-        "Heard about the South Bridge before I'd finished my tea. That road's been half theirs since spring and now it isn't.",
-        "I walked it a thousand times when I was your age and never once thought twice about it. You don't know what you have until somebody stands on it and dares you to cross.",
-        "One road back. Plenty more shut. But it's a start, and I'll take a start."
+        "Heard about the South Bridge before I'd finished my tea. That road's been half theirs since spring, and now it isn't.",
+        "I walked it a thousand times as a lad and never thought twice about it. You don't know what you have till somebody dares you to cross it.",
+        "One road back. Plenty more shut. But I'll take a start."
       ]
     },
     "grandpa_relay_rescue": {
@@ -431,9 +431,9 @@
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
-        "That surveyor you pulled out of the relay stopped at the house before she'd even found the square. Wanted to see who'd raised somebody reckless enough to walk in there after her.",
-        "I liked her. Didn't waste a word, and she'd earned the right not to.",
-        "You brought somebody home who didn't think they were getting there. Hold onto how that feels — it's worth more than any of it."
+        "That surveyor you pulled out of the relay stopped at the house before she'd even found the square. Wanted to see who'd raised somebody reckless enough to walk in after her.",
+        "I liked her. Didn't waste a word.",
+        "You brought somebody home who didn't think they'd get there. Hold onto how that feels."
       ]
     },
     "grandpa_hall_approach": {
@@ -442,8 +442,8 @@
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
         "Tam wouldn't stop talking about it at the well. Three sigils, in one satchel, all at once.",
-        "That's the door, isn't it. Everything since spring has been leading up to that door.",
-        "I told you when this started that you wouldn't do it alone, and I meant it, even if the furthest I can walk now is to my own gate. Go on. Come back and tell me about it."
+        "That's the door, isn't it. Everything since spring has led up to it.",
+        "I told you when this started you wouldn't do it alone. I meant it, even if my own gate's as far as I can walk now. Go on. Come back and tell me about it."
       ]
     }
   },

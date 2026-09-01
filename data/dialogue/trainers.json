@@ -81,27 +81,26 @@
       "speaker": "Captain Vance",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "You've come a long way to be told something simple, so I'll be plain about it: this station is necessary, and it stays.",
-        "Every road you found closed was closed on purpose, by people who weighed the cost and paid it. Your village is safe because of what we do here.",
-        "Three of mine, and I don't send the weakest out first. If your five are still worn from the walk up here, that was the place to fix it, not this one.",
-        "I'd rather you understood that than fought me. But I'll take the fight if that's the only language left."
+        "This station is necessary, and it stays.",
+        "Every road you found closed, we closed on purpose. Your village is safer for it.",
+        "Three of mine, and I don't send the weakest out first. If your five are still worn from the walk up here, fix it now — I'd rather you understood than fought me."
       ]
     },
     "relay_captain_defeated_greeting": {
       "speaker": "Captain Vance",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "The station's yours to walk through. I won't stop you, and I won't apologise for it either.",
-        "You'll take our prisoner as well, I expect. Take them. They only ever asked questions.",
-        "Ask me again when you've seen the far end of this line. I doubt either of us will enjoy the answer."
+        "Station's yours. I won't stop you, and I won't apologise.",
+        "Take our prisoner too. They only ever asked questions.",
+        "Ask me again once you've seen the far end of this line."
       ]
     },
     "stronghold_patrol_challenge": {
       "speaker": "Patrolman Verrick",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Nobody walks the works. That's the whole of my orders and I've never had to explain them before.",
-        "Turn round or take the fight. I'd rather you turned round -- it's a long way in and it only gets worse."
+        "Nobody walks the works. That's the whole of my orders.",
+        "Turn round or take the fight. It's a long way in, and it only gets worse."
       ]
     },
     "stronghold_patrol_defeated": {
@@ -109,8 +108,8 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "Fine. You're better than the orders account for.",
-        "Three of us stand between here and the Warden, and none of us fields less than the last. Bring your whole five in, not just your best one.",
-        "There's a yard past the gate and someone in it who won't say that."
+        "Three of us stand between here and the Warden, and none of us fields less than the last. Bring your whole five, not just your best.",
+        "There's a yard past the gate, and someone in it who won't say that."
       ]
     },
     "stronghold_courtyard_challenge": {
@@ -149,10 +148,9 @@
       "speaker": "Captain Halder",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Far as the pasture, no further. That's the posting, and I've kept it eleven years.",
-        "You've seen what walks in off the high ground when a fence goes down. I've buried the difference.",
-        "No trick to this ground and none to mine. Whoever's strongest walks off it.",
-        "Sigil's on my belt and it stays there unless you take it properly. Bring them out."
+        "Far as the pasture, no further. Eleven years I've held this posting.",
+        "No trick to this ground, and none to mine. Whoever's strongest walks off it.",
+        "Sigil's on my belt. Take it properly, or not at all. Bring them out."
       ]
     },
     "captain_field_defeated": {
@@ -168,10 +166,9 @@
       "speaker": "Captain Vess",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Careful. Crosswind on this shoulder has taken better-footed than you off it.",
-        "People call the ridge line cruel. It's a wall, and a wall is the kindest thing we've built up here.",
-        "You got up here already breathing hard, I'd wager. Good — whatever's left in your five is what fights mine.",
-        "Most of mine fly it every day. The one that doesn't just digs in instead. Let's see yours."
+        "Careful. This crosswind's taken better-footed than you off it.",
+        "They call the ridge line cruel. Up here, a wall's the kindest thing we've built.",
+        "You're already breathing hard, I'd wager — whatever's left in your five is what fights mine. Most fly it daily; the rest dig in."
       ]
     },
     "captain_ridge_defeated": {
@@ -187,9 +184,9 @@
       "speaker": "Captain Oreth",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Riverwatch. We keep the low ground, and the low ground is where everything ends up.",
-        "You'll think the barriers are what's wrong here. Stand a season in this draw and you'll thank whoever set them.",
-        "Three of mine. Not all one type — you'll want a plan, not a favourite."
+        "Riverwatch. We keep the low ground — where everything ends up.",
+        "You'll think the barriers are wrong. Stand a season in this draw and you'll thank whoever set them.",
+        "Three of mine, not all one type. You'll want a plan, not a favourite."
       ]
     },
     "captain_riverwatch_defeated": {
@@ -197,8 +194,8 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "A plan, then. Good.",
-        "However many you're carrying now, that's one more. The Hall approach reads all three or it reads none — no bargaining with a lock.",
-        "Go on up. I hope you're right about whatever you think is in there."
+        "One more sigil. The Hall approach reads all three or none — no bargaining with a lock.",
+        "Go on up. I hope you're right about what's in there."
       ]
     },
     "patrol_ridgeline_challenge": {

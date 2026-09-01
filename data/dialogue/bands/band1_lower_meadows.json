@@ -8,8 +8,8 @@
       "speaker": "Halda",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Halda. I keep the board up there and I keep the draw honest, which in this village is two jobs.",
-        "Eight slots, four bouts, then two, then one. Same as it's been run since before the road went quiet."
+        "Halda. I keep the board and I keep the draw honest — two jobs, this village.",
+        "Eight slots, four bouts, then two, then one."
       ]
     },
     "tournament_halda_closed": {
@@ -17,30 +17,30 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "You'll want the tournament, then. Everyone does, first week.",
-        "Rule's the rule: I don't put a name on that board unless there's a proper team stood behind it. One creature isn't a team, it's a favourite.",
-        "Fill out all five places. Then we can talk about whether they're ready."
+        "Rule's the rule: no name on that board without a proper team behind it. One creature's a favourite, not a team.",
+        "Fill out all five places, then we'll talk."
       ]
     },
     "tournament_halda_register": {
       "speaker": "Halda",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "You want your name on the board? Good. Here is what I need to see before I take it.",
-        "Five creatures. Not borrowed bodies -- your whole team. Train them until they can stand in the ring.",
+        "You want your name on the board? Here's what I need to see first.",
+        "Five creatures. Your whole team, trained till they can stand in the ring.",
         {
-          "text": "Make a real camp: tent, fire and your bedroll. Build a Creature Bed, let one of them recover there, then come back with everyone rested, fed and happy.",
+          "text": "A real camp: tent, fire, bedroll. Build a Creature Bed, let one recover there, then come back rested, fed and happy.",
           "effect": "flag:opening:tournament_registered"
         },
-        "No walls or fancy workshop required. I need proof you can keep a team, not a house."
+        "No walls or workshop required. I need proof you can keep a team, not a house."
       ]
     },
     "tournament_halda_train": {
       "speaker": "Halda",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "All five of them. Good. Now look at them.",
-        "Half of that lot have never taken a real hit. I'd be signing them up for a hiding, and I'd be the one who did it.",
-        "Feed them properly. Rest them -- a Creature Bed, or your own bedroll by the fire, either does it. And get them to level five before you come back. Then we'll talk about the board."
+        "All five. Good. Now look at them.",
+        "Half that lot have never taken a real hit. I'd be signing them up for a hiding.",
+        "Feed them. Rest them — a Creature Bed or your own bedroll, either does it. Get them to level five, then we'll talk."
       ]
     },
     "tournament_halda_condition": {
@@ -49,8 +49,8 @@
       "_comment": "RG19-spec/D68. The entry gate the owner named in his own words: 'They have to be well rested, well fed, and happy.' Shown when the team is big enough and levelled enough but not in shape. Deliberately written as a reason and a to-do list, not a refusal -- she names the three things and where to go and do them, and the team screen's own condition line says WHICH creature is short of WHICH. The thresholds are in data/config/creature_condition.json and are not repeated here or anywhere else.",
       "lines": [
         "Levels aren't the whole of it. Look at the state of them.",
-        "That one's dead on its feet, and that one hasn't eaten since you found it. I've seen tired creatures put in front of a crowd before. It doesn't go well for them and it doesn't go well for the person who entered them.",
-        "Beds at home, a proper feed, and time out with you where nothing's trying to bite them. Berries do fine. Then come back and I'll put your name up."
+        "That one's dead on its feet, and that one hasn't eaten since you found it. Tired creatures in front of a crowd doesn't go well for anyone.",
+        "Beds at home, a proper feed, some time where nothing's trying to bite them. Then I'll put your name up."
       ]
     },
     "tournament_halda_camp": {
@@ -58,7 +58,7 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "They look strong enough. Now show me they have somewhere safe to come back to.",
-        "I want a proper camp, a Creature Bed, and one real night of recovery there. A team that can fight is not yet a team you can keep."
+        "A proper camp, a Creature Bed, one real night of recovery. A team that can fight isn't yet a team you can keep."
       ]
     },
     "tournament_halda_signup": {
@@ -67,7 +67,7 @@
       "lines": [
         "Now that's a team. Look at them stood there like they've done this before.",
         {
-          "text": "Right. Slot one, and I've drawn you Mira in the first bout — she'll not go easy on you because she sold you a potion. Board's up behind me; the other half of the draw fills in as it's fought.",
+          "text": "Right. Slot one — I've drawn you Mira first. She'll not go easy on you for selling you a potion. Board's up behind me.",
           "effect": "flag:tournament_entered"
         }
       ]
@@ -76,9 +76,9 @@
       "speaker": "Halda",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Champion of the Lower Meadows. I'll want that written on the board properly, not in my hand.",
-        "Here — the pattern for a riding saddle. It's Oskar's, by rights; he said give it to whoever took the Meadowhart off him.",
-        "A Meadowhart will carry you once you've built one. Rootstone for the frame, and the only rootstone left is past the south crossing. So: earn it, then go and get it."
+        "Champion of the Lower Meadows. That goes on the board properly now.",
+        "Here — the pattern for a riding saddle. Oskar's, by rights; he said give it to whoever took the Meadowhart off him.",
+        "A Meadowhart will carry you once you've built one. Rootstone for the frame, and the only rootstone left is past the south crossing."
       ]
     },
     "tournament_quarter": {
@@ -87,7 +87,7 @@
       "lines": [
         "First bout, then. Don't look at me like that — the meadow doesn't care who's nice to it either.",
         {
-          "text": "Whole team out this time. Nothing held back, same as I promised you in the square.",
+          "text": "Whole team out this time. Nothing held back.",
           "effect": "battle:tournament_quarter_mira"
         }
       ]
@@ -103,9 +103,9 @@
       "speaker": "Tam",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Semi-final. Fen put up more than the board says, mind — I've a limp to prove it.",
+        "Semi-final. Fen put up more than the board says — I've a limp to prove it.",
         {
-          "text": "You know my lesson. Let's see whether you learned it or just heard it.",
+          "text": "You know my lesson. Let's see if you learned it or just heard it.",
           "effect": "battle:tournament_semi_tam"
         }
       ]
@@ -122,9 +122,9 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "Final. Bryn took me to the last creature in the semi and I'm still short of breath.",
-        "You'll not have seen this one out on the road. She's not a fighter by trade — she's a road, if you know how to sit on her.",
+        "You'll not have seen this one on the road. She's not a fighter by trade — she's a road, if you know how to sit on her.",
         {
-          "text": "Beat her and the pattern's yours. Halda holds it. Come on.",
+          "text": "Beat her and the pattern's yours. Come on.",
           "effect": "battle:tournament_final_oskar"
         }
       ]
@@ -141,10 +141,9 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "Far side's closed. Company business. Go back up the road.",
-        "No, I don't know what's over there either. I know what I'm paid to stand in front of.",
-        "Two of mine, nothing special. If that string at your heel is worth anything at all, this won't take long.",
+        "Two of mine, nothing special. Shouldn't take long.",
         {
-          "text": "You're not walking round me and you're not talking round me. Fine. Beat me and the key's yours; that's not company policy, that's mine.",
+          "text": "You're not walking round me and you're not talking round me. Fine. Beat me and the key's yours — that's not policy, that's mine.",
           "effect": "battle:south_bridge_grunt"
         }
       ]
@@ -153,8 +152,8 @@
       "speaker": "Tether Grunt",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Take it. I'll tell them you had a key already.",
-        "Straight over and don't stop on the span. There's nothing down there but the old road."
+        "Take it. I'll tell them you had one already.",
+        "Straight over, don't stop on the span. Nothing down there but the old road."
       ]
     },
     "old_champion_challenge": {
@@ -165,13 +164,12 @@
         "Sit if you like. I've not got anywhere to be.",
         "You'll be the one they're all talking about. Won the ribbon down in the square.",
         {
-          "text": "I won it too. Long time ago now. Held it eleven years.",
+          "text": "I won it too, once. Held it eleven years.",
           "effect": "flag:old_champion_met"
         },
-        "Then the Tether came up the road with their pylons and their paperwork, and I went down to the bridge to tell them no.",
-        "I was fifty-three and I had two creatures who'd never lost. Neither of those facts helped.",
+        "Then Tether came up the road with their pylons and paperwork, and I went to the bridge to tell them no. I was fifty-three with two creatures who'd never lost. Neither fact helped.",
         {
-          "text": "So. You're going that way, and I'd like to know whether it's worth me hoping. Show me.",
+          "text": "You're going that way. I'd like to know if it's worth me hoping. Show me.",
           "effect": "battle:old_champion_bram"
         }
       ]
@@ -182,11 +180,10 @@
       "_comment": "The payoff line. The items and coins are granted by the trainer's own `reward` block the moment the fight is won (data/config/bands/band1_lower_meadows/trainers.json), so a player who walks off and never speaks to him again keeps them -- this is the acknowledgement, not the delivery. The last two lines are the ONLY place the elder mosshell (spawns.json order 1900) is named anywhere in the game. Prompt 30: some optional content should be found by curiosity, and secrets should not be pre-labelled on the map, so the elder has no marker -- but a player who did the harder optional thing gets told where the other one is, which makes the two a chain instead of two icons.",
       "lines": [
         "Ha. Well.",
-        "That's the first time in nine years I've enjoyed losing.",
-        "Take the orbs. I've no use for them and you're going to need them -- the far side of that bridge doesn't hand anything over.",
-        "One more thing, since you've earned the telling.",
-        "West of the pond, past where the path bends away, there's a hollow that stays green when everything round it burns off. There's a mosshell down there older than I am.",
-        "I've never been able to take it. You might. Mind it sees you coming a long way off."
+        "First time in nine years I've enjoyed losing.",
+        "Take the orbs. You'll need them — the far side of that bridge doesn't hand anything over.",
+        "One more thing, since you've earned it. West of the pond, past where the path bends away, there's a hollow that stays green when everything round it burns off. A mosshell lives down there, older than I am.",
+        "I've never been able to take it. You might. Mind — it sees you coming a long way off."
       ]
     },
     "meadowhart_herd_sighting": {
