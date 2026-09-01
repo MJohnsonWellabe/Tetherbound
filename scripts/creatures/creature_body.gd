@@ -41,15 +41,31 @@ const FIELD_RIM_MAX := 0.30
 ## OWNER DIRECTIVE 2026-09-01 ("some of the smaller creatures blend into the
 ## environment too well... they either need to be bigger or brighter"), and
 ## `_apply_field_separation()`'s own conclusion for why a rim never reached
-## bramblebun's target: these models are self-lit (painted albedo copied into
-## the emission slot), so the lever that actually moves what a player sees is
-## emission energy, not an albedo/rim tweak the emission channel drowns out.
-## `field_emission` is a per-species multiplier on top of whatever emission
-## energy the material already carries post-swap (`VISUAL.emission_scale()`,
-## any Aspect boost) -- see `_apply_field_brightness()`. No ceiling anywhere
-## near `FIELD_RIM_MAX`'s: brightness is the whole point of the lever, and
-## `_apply_field_brightness()` never touches hue, only how hard the creature's
-## own painted colours are lit.
+## bramblebun's target ratio: the fix needs to change how bright the creature
+## itself reads, not add an edge highlight the render already showed is too
+## weak to matter.
+##
+## That comment's premise -- "these models are self-lit, an albedo change
+## would compile and still be invisible" -- turned out NOT to hold for
+## `bramblebun_redesign`: inspected directly (a body spawned and its active
+## surface material read back), the shipped material has
+## `emission_enabled = false`. It is a plain lit PBR material, not the
+## painted-albedo-into-emission convention the older production creature
+## pipeline uses (and which the OF27/OF28 tint code above correctly still
+## assumes for species that DO ship that way). So `_apply_field_brightness()`
+## multiplies `albedo_color` unconditionally -- the lever this mesh's own
+## material actually renders through -- and ALSO multiplies emission energy
+## when a surface happens to have it enabled, so the same per-species knob
+## keeps working correctly for a species whose material ships the other way.
+## Pure multiply on purpose: it raises value without touching hue, so it
+## cannot walk the creature's colour out of its painted family.
+##
+## `field_emission` is the per-species opt-in, exactly like `field_rim`. No
+## ceiling anywhere near `FIELD_RIM_MAX`'s -- brightness past 1.0 is a
+## deliberately available push (`SHINY_PLACEHOLDER_TINT` above already
+## multiplies past 1.0 for the same "a near-1x multiply is not visible in a
+## screenshot" reason), and the owner directive names this species' modest
+## scale as already exhausted.
 const FIELD_EMISSION_MAX := 3.0
 const ALPHA_RIM_TINT := 0.15
 const ALPHA_AURA_COLOUR := Color("#ffd479")
@@ -715,17 +731,19 @@ func _apply_field_separation() -> void:
 
 ## OWNER DIRECTIVE 2026-09-01, "bigger or brighter". BACKLOG-B2-GRASS-SEPARATION
 ## measured that a rim alone cannot reach the target creature/grass luminance
-## ratio for a species this small, and traced the reason to these models being
-## self-lit: the painted albedo is wired into the emission slot at (tamed)
-## near-full energy already, so it -- not the albedo colour -- is what a
-## render actually shows against a sunlit field. This turns that same knob up
-## per species, on whatever material is currently active (so it stacks
-## correctly after a colourway swap, or on the raw shipped material when no
-## swap applies), rather than fighting it with a rim the emission drowns out.
+## ratio for a species this small. See `FIELD_EMISSION_MAX`'s own comment for
+## why this brightens `albedo_color` (unconditionally) and `emission` (only
+## when the material actually has it enabled) rather than emission alone --
+## `bramblebun_redesign`'s shipped material does not self-light the way the
+## rest of this file assumes, so the rim's own "emission drowns out an albedo
+## change" reasoning does not transfer, and the lever has to cover both cases
+## to work for every species that opts in, not just this one.
 ##
-## Opt-in via `placeholder.field_emission`, exactly like `field_rim`: applied
-## only where a measurement says it is needed, and left at 0.0 (a no-op)
-## everywhere else.
+## Applied on whatever material is currently active (so it stacks correctly
+## after a colourway swap, or on the raw shipped material when no swap
+## applies). Opt-in via `placeholder.field_emission`, exactly like
+## `field_rim`: applied only where a measurement says it is needed, and left
+## at 0.0 (a no-op) everywhere else.
 func _apply_field_brightness() -> void:
 	if not _has_model:
 		return
@@ -751,8 +769,11 @@ func _brighten_node(node: Node, strength: float) -> void:
 			material = material.duplicate() as BaseMaterial3D
 			material.resource_name = "%s%s" % [material.resource_name, suffix]
 			instance.set_surface_override_material(surface, material)
+			var factor := 1.0 + strength
+			var albedo := material.albedo_color
+			material.albedo_color = Color(albedo.r * factor, albedo.g * factor, albedo.b * factor, albedo.a)
 			if material.emission_enabled:
-				material.emission_energy_multiplier *= (1.0 + strength)
+				material.emission_energy_multiplier *= factor
 	for child in node.get_children():
 		_brighten_node(child, strength)
 
