@@ -10,7 +10,7 @@ extends "res://tests/test_case.gd"
 ## bounded by nothing except how many orbs they are carrying.
 ##
 ## Which would be harmless if orbs were replaceable at that point, and they are
-## not. Grandpa hands over fifteen (`give:orb_basic:15`, data/dialogue/opening.json).
+## not. Grandpa hands over fifty (`give:orb_basic:50`, data/dialogue/opening.json).
 ## The renewable recipe is taught by Mira's required opening visit, but the
 ## player still cannot craft during this authored practice catch. So an opening
 ## that runs dry is a hard dead-end:
@@ -61,8 +61,8 @@ func test_the_opening_configures_a_floor_under_the_tutorial_orb_supply() -> void
 		"catch_orb_floor is %d; a floor of zero is no floor" % floor_value)
 	# Not a stockpile either. The floor exists so the beat stays winnable, not so
 	# the player leaves the opening with a satchel Grandpa never gave them.
-	assert_true(floor_value <= 15,
-		"catch_orb_floor is %d, more than Grandpa's own gift of fifteen" % floor_value)
+	assert_true(floor_value <= 50,
+		"catch_orb_floor is %d, more than Grandpa's own gift of fifty" % floor_value)
 
 
 func test_the_floor_answers_the_refusal_the_empty_satchel_actually_emits() -> void:
