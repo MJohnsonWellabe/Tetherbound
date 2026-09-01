@@ -94,7 +94,7 @@ const FOOTPRINT_ALLOWANCE := 2.4
 ## deer) oversteers past a bed's rim at the same angle a low, wide one settles
 ## at -- so it lives in species.json's `rest_roll_deg` per species, defaulting
 ## to this when a species has not been tuned yet.
-const DEFAULT_REST_ROLL_DEG := 62.0
+const DEFAULT_REST_ROLL_DEG := 90.0
 
 ## OF27 placeholder tint: a deliberately garish magenta-shift multiply,
 ## applied to both albedo AND emission (see `_shared_variant_material`'s own
