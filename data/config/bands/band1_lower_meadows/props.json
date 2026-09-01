@@ -199,6 +199,81 @@
       ]
     },
     {
+      "order": 1005,
+      "name": "village_twins_yard",
+      "_why": "BACKLOG-E1-VILLAGE-DAYTIME, 2026-08-31. `01-village-twins-day.png` (ralph/reports/audit/E-2026-08-31.md sec E1, matching T1-VILLAGE's own 2026-08-30 finding on the same frame) reads as 'two houses dropped in a meadow' by day: the existing `farmhouse_yard` cluster sits behind Grandpa's house (around -24,-25/-26) and is out of frame from the twins stand (eye -11.5,-21 looking -11.5,-12, i.e. north -- everything south of the eye is behind the camera), so neither building shows any clutter from the angle a player and the survey both actually see them from. These sit on the FRONT/path side of each building instead, inside each one's own building_apron worked-soil footprint (data/config/terrain_playground.json) so nothing floats on raw grass, and at the new well<->inn path's own end point (see terrain_playground.json paths.routes 'The Inn', added alongside this) so the path visibly arrives somewhere rather than stopping at a lawn.",
+      "props": [
+        {
+          "model": "log_large",
+          "at": [
+            -19.2,
+            -15.6
+          ],
+          "yaw_deg": 40.0,
+          "scale": 1.0,
+          "dir": "res://assets/environment/nature",
+          "_why": "a woodpile at Grandpa's own path-side corner -- homely, private-house clutter (matching the differentiation T1-VILLAGE's inn/farmhouse work already established), not a public one's. Inside the farmhouse's own apron footprint (centre -22,-16, half_extents 5.3x3.3), 3m clear of the house wall."
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            -19.8,
+            -15.1
+          ],
+          "yaw_deg": -15.0,
+          "scale": 1.0,
+          "_why": "set against the woodpile's own foot, not floating separately -- same 'one pile, not a scatter' rule farmhouse_yard's own props already follow."
+        },
+        {
+          "model": "Barrel",
+          "at": [
+            0.0,
+            -9.6
+          ],
+          "yaw_deg": 200.0,
+          "scale": 1.0,
+          "_why": "at the inn's own path-side corner, facing the approach from the well -- a public house's clutter, not a private one's. Inside the inn's own apron footprint (centre -1.5,-9, half_extents 4.32x6.78)."
+        },
+        {
+          "model": "Bench",
+          "at": [
+            -0.8,
+            -10.2
+          ],
+          "yaw_deg": 227.0,
+          "scale": 1.0,
+          "_why": "beside the barrel, facing the path -- somewhere to sit before going in, which is the whole difference an inn's own frontage needs over a private home's."
+        }
+      ]
+    },
+    {
+      "order": 1006,
+      "name": "tournament_ground",
+      "_why": "BACKLOG-E1-VILLAGE-DAYTIME, 2026-08-31. `01-village-tournament-day.png` (ralph/reports/audit/E-2026-08-31.md sec E1) reads as open wilderness with a board in it, matching T1-VILLAGE's own 2026-08-30 judge finding on this exact ground ('an empty field with a sign in it... no seating, no perimeter'). Two spectator benches, well clear of both the board's own 2.6m prompt radius and Bryn's practice challenge (tournament.json: board at [20,15], Bryn at [13,9], the two already kept 9.2m apart on purpose) -- these sit 5-11m from either, inside neither's radius, flanking the board the way an audience would rather than blocking anything. Deliberately minimal: this is dressing for a field two trainers already occupy, not a rebuilt arena, and tournament.gd/the NPCs placed here are out of this lane's scope.",
+      "props": [
+        {
+          "model": "Bench",
+          "at": [
+            24.0,
+            12.0
+          ],
+          "yaw_deg": 127.0,
+          "scale": 1.0,
+          "_why": "east flank of the board, facing back toward it -- a place to sit and watch the bracket, 5.0m clear of the board's own prompt radius."
+        },
+        {
+          "model": "Bench",
+          "at": [
+            16.0,
+            18.0
+          ],
+          "yaw_deg": 307.0,
+          "scale": 1.0,
+          "_why": "the board's other flank, facing back toward it, mirroring the east bench so the ground reads as an audience space rather than one stray seat."
+        }
+      ]
+    },
+    {
       "order": 1000,
       "name": "trail_camp",
       "rest": {
