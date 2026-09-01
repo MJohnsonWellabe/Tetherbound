@@ -67,7 +67,8 @@ Environment notes for the next session (all verified 2026-09-01):
 
 ## Judge history
 
-### VP-PRE (survey frames, shipped main @ 252ccc81) — `ralph/reports/visual-parity/VP-PRE/JUDGE.md`
+### VP-PRE (survey frames, shipped main @ 252ccc81, grass carpet OFF) — `ralph/reports/visual-parity/VP-PRE/JUDGE.md`
+**Superseded as a baseline**: these frames were captured with `grass_field` off (the shipped state), which the owner rejected as unjudgeable. Kept only as the capability-check evidence; the program baseline is VP0 with the carpet on.
 - Bar A (keyart world): **no**. Bar B (Palworld kind of game): **no**.
 - Ranked gaps: (1) the ground does not resolve — grass dissolves into textureless blur a few metres out in 3 of 4 frames; (2) nothing casts a believable shadow — rocks float, and 01 carries a large hard-edged diagonal dark patch with no caster; (3) the palette never leaves a narrow desaturated mid-tone band, sky identical and smeared in every frame, no atmospheric depth (03 horizon is a hard flat line).
 - Also: trees are identical ball-on-stick at regular intervals (02); scatter-blob clump with hard falloff (04); no creatures in the survey set (capture gap, not a verdict).
@@ -75,10 +76,14 @@ Environment notes for the next session (all verified 2026-09-01):
 
 ## Implementation decisions
 
-- `data/config/grass_field.json` stays **OFF**. Owner playtest 2026-09-01 measured ~10 FPS with it on
-  (`ralph/reports/OWNER-0901-PERFORMANCE-LAG-V2.md`). All ground density in this program goes through the
-  baked `Terrain3DInstancer` scatter (per-cell culling) with `scatter_lod_ranges` distance cutoffs, and is
-  gated by the primitive proxy above.
+- `data/config/grass_field.json` is **ON** for this program (owner directive 2026-09-01: "I don't see how a
+  judge can judge anything without the actual grass in the frame"). Current `main` ships it OFF after the
+  ~10 FPS Ally report (`ralph/reports/OWNER-0901-PERFORMANCE-LAG-V2.md`, 31.8M primitives/frame at
+  band1_open with it on vs 9.25M off). The carpet is the intended ground read, so every evidence frame
+  carries it, and **VP2 owns the real fix that report asked for**: per-tile distance culling inside
+  `grass_field.gd` so far tiles stop submitting, measured with `tools/perf_render_stats.gd` primitives
+  at the fixed stands. The proxy budget in §6 is re-baselined in VP0 against the carpet-on numbers.
+  Until VP2 lands, this branch is not an Ally shipping candidate.
 
 ## Regressions / unresolved problems
 
