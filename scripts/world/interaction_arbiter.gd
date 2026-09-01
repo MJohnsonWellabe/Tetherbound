@@ -274,6 +274,9 @@ func _physics_process(_delta: float) -> void:
 		return
 	if not Input.is_action_just_pressed("interact"):
 		return
+	print("[DBG f=%d/p=%d] arbiter sees just_pressed, winner=%s winning_provider=%s" % [
+		Engine.get_physics_frames(), Engine.get_process_frames(),
+		not _winner.is_empty(), _winning_provider])
 	activate()
 
 
@@ -288,6 +291,7 @@ func activate() -> bool:
 	if not is_instance_valid(provider):
 		_winning_provider = null
 		return false
+	print("[DBG f=%d] arbiter.activate() -> %s" % [Engine.get_physics_frames(), provider])
 	provider.call("interaction_activate")
 	activated.emit(provider)
 	return true
@@ -317,8 +321,12 @@ func _recompute() -> void:
 		owners.append(provider)
 
 	var index := ARBITER.choose_index(offers)
+	var new_provider: Object = null if index < 0 else owners[index]
+	if new_provider != _winning_provider:
+		print("[DBG f=%d/p=%d] arbiter winner changes -> %s (candidates=%d)" % [
+			Engine.get_physics_frames(), Engine.get_process_frames(), new_provider, offers.size()])
 	_winner = {} if index < 0 else offers[index] as Dictionary
-	_winning_provider = null if index < 0 else owners[index]
+	_winning_provider = new_provider
 	_publish(ARBITER.format(_winner))
 
 

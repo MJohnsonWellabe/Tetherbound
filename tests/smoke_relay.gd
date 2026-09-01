@@ -247,10 +247,13 @@ func _greet(who: Node3D) -> void:
 		await physics_frame
 	var lines := 0
 	for i in 40:
+		print("[DBG f=%d] greet press #%d" % [Engine.get_physics_frames(), i])
 		await _press("interact")
 		for n in 10:
 			await physics_frame
-		if bool(_panel.call("is_open")):
+		var open_now := bool(_panel.call("is_open"))
+		print("[DBG f=%d] greet press #%d -> is_open=%s" % [Engine.get_physics_frames(), i, open_now])
+		if open_now:
 			lines += 1
 			continue
 		if lines > 0:
