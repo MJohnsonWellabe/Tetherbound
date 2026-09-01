@@ -140,8 +140,6 @@ func start(conversation_id: String) -> bool:
 	_buffered_during_guard = false
 	_skip_input_this_tick = true
 	_draw()
-	if OS.is_stdout_verbose() or true:
-		print("[DBG f=%d] start(%s) index=%d" % [Engine.get_physics_frames(), conversation_id, _runner._index])
 	return true
 
 
@@ -157,7 +155,6 @@ func drain_effects() -> Array[String]:
 func advance() -> void:
 	_runner.advance()
 	_draw()
-	print("[DBG f=%d] advance() -> index=%d active=%s" % [Engine.get_physics_frames(), _runner._index, _runner._active])
 
 
 func close() -> void:
@@ -177,7 +174,6 @@ func _physics_process(_delta: float) -> void:
 	var skip_input := _skip_input_this_tick
 	_skip_input_this_tick = false
 	if not skip_input and Input.is_action_just_pressed("interact"):
-		print("[DBG f=%d] dialogue sees just_pressed, guard=%d" % [Engine.get_physics_frames(), _guard])
 		if _guard > 0:
 			_buffered_during_guard = true
 		else:

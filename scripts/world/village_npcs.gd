@@ -113,7 +113,6 @@ func _refresh_placements() -> void:
 		if wanted and not standing:
 			_spawn(spec, _player)
 		elif standing and not wanted:
-			print("[DBG f=%d] village_npcs despawning %s" % [Engine.get_physics_frames(), who])
 			var body: Node = _bodies[who]
 			_bodies.erase(who)
 			_placed = maxi(0, _placed - 1)
@@ -214,7 +213,6 @@ func _spawn(spec: Dictionary, player: Node3D) -> void:
 ## `_refresh_lockout`), so a press can only reach here when nothing else has
 ## the screen.
 func _on_greeted(spec: Dictionary) -> void:
-	print("[DBG f=%d] _on_greeted %s" % [Engine.get_physics_frames(), spec.get("name", "?")])
 	var game := get_node_or_null(^"/root/Game")
 	var progression: RefCounted = game.get("progression") if game != null else null
 	var conversation_id := greeting_for(spec, progression)
@@ -225,7 +223,6 @@ func _on_greeted(spec: Dictionary) -> void:
 		push_warning("no node in the 'dialogue_panel' group; a villager has nothing to say")
 		return
 	if bool(panel.call("is_open")):
-		print("[DBG f=%d] _on_greeted refused: panel already open" % Engine.get_physics_frames())
 		return
 	panel.call("start", conversation_id)
 

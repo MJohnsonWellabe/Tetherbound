@@ -267,6 +267,30 @@ func _process(_delta: float) -> void:
 ## and the screen are both on the menu. This node is otherwise `PAUSABLE`
 ## (the default, unset here), so the six tree-pausing panels already stop it
 ## for free; this is the same non-pausing-panel gap `build_placer.gd` closed.
+##
+## OWNER-0901-INTERACT-RELIABILITY: `_winner`/`_winning_provider` are
+## `_process()`'s (idle/render-frame) output, but the button is read here, on
+## the physics tick -- a different clock, ticking at a fixed 60Hz regardless
+## of render rate. Every ordinary tick is therefore a read of whatever
+## `_recompute()` last published, which can be stale by however long it has
+## been since `_process()` last ran -- normally sub-frame, but the two clocks
+## are not the same clock and nothing enforced them staying that close;
+## `tools/probe_arbiter_race.gd`, `probe_interact_flake.gd`,
+## `probe_interact_approach.gd` and `probe_interact_lag.gd` (the last
+## manufacturing exactly the multi-physics-tick-per-render-frame batching a
+## slow frame causes, since a struggling frame rate is the other half of the
+## owner's 2026-08-31 playtest) all failed to catch this gap actually
+## dropping a press against current `main` -- Godot's real scheduling keeps
+## `_process()` far enough ahead that it never got the chance. That is a
+## property of today's scheduling, not a contract anything here promises, so
+## closing the gap outright is cheap insurance rather than a fix for a
+## measured failure: recomputing here, synchronously, right before deciding,
+## costs the offer-scan/raycast pass only on a tick a button was actually
+## pressed on -- not every tick -- so it adds nothing to the steady per-frame
+## cost `_recompute()` already pays from `_process()`. `probe_arbiter_race.gd`
+## now pins the contract this guarantees outright: a press is never refused
+## because of when `_process()` last happened to run, only because the offer
+## is genuinely not there.
 func _physics_process(_delta: float) -> void:
 	if not _enabled:
 		return
@@ -274,9 +298,7 @@ func _physics_process(_delta: float) -> void:
 		return
 	if not Input.is_action_just_pressed("interact"):
 		return
-	print("[DBG f=%d/p=%d] arbiter sees just_pressed, winner=%s winning_provider=%s" % [
-		Engine.get_physics_frames(), Engine.get_process_frames(),
-		not _winner.is_empty(), _winning_provider])
+	_recompute()
 	activate()
 
 
@@ -291,7 +313,6 @@ func activate() -> bool:
 	if not is_instance_valid(provider):
 		_winning_provider = null
 		return false
-	print("[DBG f=%d] arbiter.activate() -> %s" % [Engine.get_physics_frames(), provider])
 	provider.call("interaction_activate")
 	activated.emit(provider)
 	return true
@@ -321,12 +342,8 @@ func _recompute() -> void:
 		owners.append(provider)
 
 	var index := ARBITER.choose_index(offers)
-	var new_provider: Object = null if index < 0 else owners[index]
-	if new_provider != _winning_provider:
-		print("[DBG f=%d/p=%d] arbiter winner changes -> %s (candidates=%d)" % [
-			Engine.get_physics_frames(), Engine.get_process_frames(), new_provider, offers.size()])
 	_winner = {} if index < 0 else offers[index] as Dictionary
-	_winning_provider = new_provider
+	_winning_provider = null if index < 0 else owners[index]
 	_publish(ARBITER.format(_winner))
 
 
