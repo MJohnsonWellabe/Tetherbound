@@ -1320,7 +1320,18 @@ jobs:
     # this workflow's long pole in exchange for 7 fewer jobs than the other
     # five groups combined would need at one-test-per-job. 35 min covers
     # checkout/setup plus a retry on gate_a_opening_segment.
-    timeout-minutes: 35
+    #
+    # A ninth step, trainer_no_usable_ally, was added south-bridge-fainted-
+    # party (2026-09-01) alongside the eight above. The file existed on
+    # `main` already (FINDING-T2-STRANDING-2026-08-30.md's own regression
+    # proof) but was never wired into any CI job, so it never actually ran
+    # after the day it was written. Its own world stand-up is the same
+    # 300-frame boot smoke_trainer_battle.gd pays in verify-combat-shard
+    # (measured there at well under a minute of the group's own budget), so
+    # 40 min keeps the same retry headroom this job already had without
+    # a fresh full-suite measurement to attribute an exact number to this
+    # step alone.
+    timeout-minutes: 40
     needs: changes
     if: needs.changes.outputs.code == 'true'
     steps:
@@ -1405,6 +1416,34 @@ jobs:
       - name: Verify authored_camps
         if: ${{ !cancelled() }}
         env: { SMOKE: authored_camps, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
+      # south-bridge-fainted-party, 2026-09-01. Proves the recovery path a
+      # player actually has when their whole party faints on the road to a
+      # gate: a fainted, deployed ally makes can_challenge() false and opens
+      # the honest "nothing to fight with" line rather than a false
+      # "defeated" one, no fight starts, the trainer is not wrongly recorded
+      # as beaten, and healing the ally (the same fainted -> false, hp ->
+      # max_hp a creature bed's own rest completes, per
+      # FINDING-T2-STRANDING-2026-08-30.md) restores the ordinary challenge
+      # on the very same trainer. This file existed on `main` already but
+      # was never in any CI job, so it never ran after the day it proved the
+      # fix -- this wires it in rather than writing a second test.
+      - name: Verify trainer_no_usable_ally
+        if: ${{ !cancelled() }}
+        env: { SMOKE: trainer_no_usable_ally, RETRIES: 1 }
         run: |
           set -uo pipefail
           n=0
