@@ -20,3 +20,15 @@ stands at this branch's head.
 | `S10b-superseded-2` | Ceremony green — the belt held at exactly five and `legendary_settled` was set — but the segment walked into its save handoff with §28's machinery-failure conversation still on screen, so the Save tab never opened and `save_out` correctly refused to copy an unchanged slot. |
 
 The kept `S10a/` and `S10b/` are both 0-FAIL runs at this branch's head.
+
+## After the merge with `ralph/GATE-F-FOUNDATION`
+
+Both segments were re-run from scratch once the foundation branch was merged, so
+the kept evidence comes from the code that ships rather than from this branch's
+own earlier version of the base-stat fix.
+
+| directory | why it was superseded |
+|---|---|
+| `S10a-superseded-8` | Green, and superseded only by the re-run on the merged head. |
+| `S10b-superseded-3` | Green, same reason. |
+| `S10b-superseded-4` | The first run on the merged head. It failed for a reason worth keeping: the new `S10a-exit` left the player at world x 4.5 instead of 5.0, and the walk to the Warden then spent all 3,000 frames sliding along the inside of the north wall, 26 m short of a 3.4 m-wide door centred on x 8. Two runs, two exits half a metre apart, opposite outcomes — which is what made the case for squaring up with the doorway rather than aiming past it. |
