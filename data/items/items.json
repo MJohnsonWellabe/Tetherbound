@@ -291,8 +291,8 @@
         0,
         -10
       ],
-      "_comment_scale": "BACKLOG-KNIFE-SCALE. `Knife.obj` carries no scene-root scale the way the GLTF-backed `Axe_Bronze`/`Pickaxe_Bronze` do (Godot's OBJ importer has nowhere to put one), so the raw mesh -- 1.56m along its long axis -- was rendering at that literal size in the trainer's hand. Owner playtest item 13: 'the knife is comically large.' 0.14 brings it to ~0.22m overall, a believable one-hand survival-knife length next to the axe's own effective ~0.83m (its GLTF root already carries a 0.847 scale) and the pickaxe's ~1.2m two-handed haft.",
-      "held_scale": 0.14
+      "_comment_scale": "BACKLOG-KNIFE-SCALE / OWNER-0901-KNIFE-VISIBILITY. `Knife.obj` carries no scene-root scale the way the GLTF-backed `Axe_Bronze`/`Pickaxe_Bronze` do (Godot's OBJ importer has nowhere to put one), so the raw mesh -- 1.56m along its long axis -- was rendering at that literal size in the trainer's hand. Owner playtest item 13: 'the knife is comically large.' The first fix, 0.14 (~0.22m overall), swung too far the other way: at that scale the blade's own cross-section is ~3.7cm x ~1cm, thin enough that from the game's normal third-person distance it reads as nothing in the hand at all -- owner playtest 2026-09-01 item 1, 'knife not visible in hand.' Measured directly (`tools/_capture_knife_visibility.gd`'s render, not assumed): 0.14 shows an empty-looking grip even zoomed in 4x on the hand; 0.28 (~0.43m overall) shows a small but clearly readable blade from the front, 3/4 and rear angles, the same views the axe (~0.83m) and pickaxe (~1.2m) already read fine from. Still short of a machete, and still the smallest of the three hand tools.",
+      "held_scale": 0.28
     },
     "hoe": {
       "name": "Hoe",
