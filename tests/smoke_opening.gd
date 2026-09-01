@@ -467,8 +467,8 @@ func _grandpa_hands_over_the_first_catch_orbs() -> void:
 func _grandpa_handed_over_the_orbs() -> void:
 	var inventory: RefCounted = _game.get("inventory")
 	var orbs := int(inventory.call("count", "orb_basic"))
-	if orbs < 10 or orbs > 15:
-		_fail("naming the starter left %d Basic Orbs in the satchel; the opening catch supply must be 10-15" % orbs)
+	if orbs < 45 or orbs > 50:
+		_fail("naming the starter left %d Basic Orbs in the satchel; the opening catch supply must be 45-50" % orbs)
 	else:
 		print("the opening catch supply: %d Basic Orbs" % orbs)
 

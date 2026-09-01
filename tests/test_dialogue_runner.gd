@@ -163,8 +163,8 @@ func test_every_give_effect_names_a_real_item_and_a_real_count() -> void:
 				assert_true(pieces.size() == 2 and int(pieces[1]) > 0,
 					"'%s' gives '%s' without a positive count" % [id, str(parts[1])])
 	assert_true(found >= 1, "dialogue should still contain item grants; found %d give: effects" % found)
-	assert_true(_effects_of("grandpa_first_catch").has("give:orb_basic:15"),
-		"Grandpa must give 15 Basic Orbs immediately before the first catch")
+	assert_true(_effects_of("grandpa_first_catch").has("give:orb_basic:50"),
+		"Grandpa must give 50 Basic Orbs immediately before the first catch")
 
 
 ## --- OF30: Tam the blacksmith -----------------------------------------------

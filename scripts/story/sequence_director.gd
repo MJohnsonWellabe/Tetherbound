@@ -631,14 +631,14 @@ func _set_progression_flag(flag_id: String) -> void:
 	progression.call("set_flag", flag_id)
 
 
-## `give:orb_basic:15` — Grandpa's parting gifts, granted on the line that
+## `give:orb_basic:50` — Grandpa's parting gifts, granted on the line that
 ## mentions them so the words and the satchel agree. Into the REAL inventory
 ## through the same autoload everything else uses; a full satchel is warned
 ## about rather than silently swallowed, because a player who was promised
-## fifteen orbs and got twelve has no way to know.
+## fifty orbs and got twelve has no way to know.
 ##
 ## `parse_effect` splits on the FIRST colon only, so parts[1] here is
-## "orb_basic:15" and the id/count split is this function's own job.
+## "orb_basic:50" and the id/count split is this function's own job.
 func _give_items(parts: Array) -> void:
 	var rest := str(parts[1]).split(":")
 	if rest.size() != 2 or not str(rest[1]).is_valid_int():
