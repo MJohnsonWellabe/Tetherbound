@@ -31,10 +31,10 @@ Passes are `VP0…VP11` (visual passes) — never conflate with gameplay Gate A/
 
 | check | result |
 |---|---|
-| 1. Godot binary + project imports | (pending) |
-| 2. real screenshot file on disk from the repo capture path | (pending) |
-| 3. image is a real rendered frame | (pending) |
-| 4. test command runs | (pending) |
+| 1. Godot binary + project imports | PASS — Godot 4.7.stable.official.5b4e0cb0f at `~/.cache/tetherbound-art/godot`; `--import` twice, 0 script errors (688 MB `.godot/`) |
+| 2. real screenshot file on disk from the repo capture path | PASS — `tools/capture_diag_minimal.gd` wrote 1920x1080 via X11/llvmpipe GL 4.5; `tools/survey.gd` wrote 5 frames to `shots/` (copied to `ralph/reports/visual-parity/VP-PRE/`) |
+| 3. image is a real rendered frame | PASS — opened `01-spawn-outward.png`/`03-rise-overlook.png`: real world frames (terrain, scatter, buildings, sky). FINDING: `05-spawn-low-sun` (golden) came back a flat frame (spread 0.000) — `apply_time("golden")` renders nothing under this pipeline; carried into VP1 as defect VP1-G0 |
+| 4. test command runs | PASS — `tests/smoke_art.gd` headless: `art: OK` in 1m53s |
 | 5. blind visual judge invocable from this environment | (pending) |
 
 Environment notes for the next session (all verified 2026-09-01):
