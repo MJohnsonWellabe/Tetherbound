@@ -125,6 +125,19 @@ rewrites itself cannot be trusted about what it got wrong.
 - **The buildable wall is not warped.** A critic's finding, disproven by raw
   vertex data; the "diagonal lift" is an intentional Tudor V-brace. No change
   made, and none wanted.
+- **The 2026-08-31 census's creature clipping percentages do not hold up.**
+  Round 2 reported 26.4-41.9% pure-white/pure-black pixels on four species
+  (`BACKLOG-VISUAL-CREATURE-ALBEDO-CLIPPING`) against a claimed 0.00%/≤0.01%
+  Palworld bar. A 2026-09-01 investigation re-ran the exact cited tool
+  (`_capture_creature_roster.gd`) against unmodified textures on unmodified
+  `main` and measured 0.02-1.87% on all four frames — matching what the
+  census's own committed `03-roster-world.jpg` contact sheet already shows on
+  direct inspection. This is the same lesson pattern #9 above already named
+  ("a survey that is not exposure-calibrated... is harder to notice and costs
+  whole rounds") pushed one step further: the stage WAS calibrated correctly
+  this time, and the number that needed checking was the critique's own,
+  which no linked script backs. Full evidence:
+  `ralph/reports/audit/creature-albedo-clipping/FOLLOWUP-2026-09-01.md`.
 
 - **The grunt armband defect does not exist.** The corridor round-2 critic
   reported "a flat pure-red untextured rectangle that renders magenta at night"
