@@ -598,6 +598,9 @@ func _take_camera() -> void:
 ## of them) gets the flat profile completely unchanged.
 func _combat_camera_profile() -> Dictionary:
 	var profile: Dictionary = (MATH.config().get("camera", {}) as Dictionary).duplicate()
+	var distance := float(profile.get("distance", 4.6))
+	profile["shoulder_offset"] = _combat_shoulder_offset(
+		distance, float(profile.get("pitch_start_deg", -25.0)))
 	if _arena == null:
 		return profile
 	var points: Array[Vector3] = [_arena_centre]
@@ -612,9 +615,64 @@ func _combat_camera_profile() -> Dictionary:
 	if clearance < 0.0:
 		return profile
 	profile["shoulder_offset"] = 0.0
-	var distance := float(profile.get("distance", 4.6))
 	profile["distance"] = minf(distance, maxf(1.5, clearance))
 	return profile
+
+
+## VISUAL-CENSUS-2026-08-31 defects 121/122: the flat `shoulder_offset` above
+## (`combat.json`, 2.6) was picked ONLY against the config's own worked
+## example -- a single assumed 2.1m ally-wild gap -- and never checked
+## against the frame it actually produces. Confirmed by re-running
+## `tools/survey_combat.gd` with the real geometry printed: at the real
+## post-engage gap (2.63m, not the arena's 5.0m deploy separation -- the
+## wild creature is already closing by the time the camera settles). a flat
+## 2.6 puts the ALLY 25 degrees off the crosshair (its own vfov half-angle is
+## 31, so that is most of the way to the edge -- "cropped to shell and one
+## leg") and the WILD only 18 degrees off, at a distance where Bramblebun's
+## own small mesh and grass-matching colour (separate, out-of-scope defects
+## 123/124) make an 18-degree-off, screen-edge-adjacent creature read as
+## "not in the frame" to a critic scanning near the boss nameplate instead.
+##
+## The lateral shift is pure parallax (`camera_rig.gd::_follow()` translates
+## the follow pivot sideways without changing where the rig looks), so BOTH
+## bodies swing toward the SAME screen edge by an angle of
+## `atan(shoulder / depth)` -- the near one (the ally, sitting almost exactly
+## at the pivot) swings the MOST because it is the closest, which is exactly
+## backwards from where the swing is wanted. A flat metres constant cannot
+## fix this: the two things that actually matter -- how far off-centre the
+## ally ends up, and how much daylight the shift buys past the ally's own
+## body toward the wild -- both depend on the CURRENT ally-wild gap, which
+## changes continuously as the fight moves. So this solves the same
+## occlusion arithmetic combat.json's own comment already works out, in the
+## other direction: given the real gap right now, find the SMALLEST shoulder
+## that still buys `CLEARANCE_FLOOR_M` of daylight past the ally's body
+## (the ORIGINAL bug this whole mechanism exists to fix -- OP23/R9.4's
+## opponent hidden directly behind the ally, confirmed at the time with a
+## real raycast), rather than a shoulder picked for one assumed distance and
+## then applied at every other distance the fight can actually be at.
+## Clamped to SHOULDER_MAX_M so a very tight clinch (where no finite lateral
+## shift can meaningfully separate two nearly-coincident points) cannot spiral
+## the ally back out past where the flat 2.6 already put it.
+const SHOULDER_MIN_M := 1.0
+const SHOULDER_MAX_M := 2.2
+const SHOULDER_CLEARANCE_FLOOR_M := 0.6
+
+
+func _combat_shoulder_offset(distance: float, pitch_start_deg: float) -> float:
+	if _ally_body == null or _wild == null \
+			or not is_instance_valid(_ally_body) or not is_instance_valid(_wild):
+		return SHOULDER_MAX_M
+	# Horizontal component of the arm's own setback -- the same
+	# `distance * cos(pitch)` combat.json's comment already works this out
+	# with, not a second guess at the rig's geometry.
+	var setback := distance * cos(deg_to_rad(absf(pitch_start_deg)))
+	if setback <= 0.01:
+		return SHOULDER_MAX_M
+	var ally_flat := Vector2(_ally_body.global_position.x, _ally_body.global_position.z)
+	var wild_flat := Vector2(_wild.global_position.x, _wild.global_position.z)
+	var gap := maxf(ally_flat.distance_to(wild_flat), 0.3)
+	var needed := SHOULDER_CLEARANCE_FLOOR_M * (setback + gap) / gap
+	return clampf(needed, SHOULDER_MIN_M, SHOULDER_MAX_M)
 
 
 func _release_camera() -> void:
