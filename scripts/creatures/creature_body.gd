@@ -1137,7 +1137,19 @@ func play_rest() -> void:
 	if roll == 0.0:
 		return
 	_model.rotate_z(deg_to_rad(roll))
-	_model.position.y += _radius
+	# Rolling around `_model`'s own ground-contact origin does not leave the
+	# result centred there: height that used to run straight up now runs
+	# sideways from that same point, so the whole silhouette lands lopsided
+	# to one side instead of straddling it the way the standing pose did.
+	# Measured, not guessed at (tools/_diag_rest_roll_math.gd) -- a first cut
+	# that only lifted by `_radius` put terrapup and galewisp's rolled body
+	# entirely off one edge of the bed. `_bounds(self)` reads the actual
+	# post-roll box in this body's own space (bind-pose geometry, per
+	# `_bounds()`'s own doc -- close enough for placement, not for scale) and
+	# resets it to the same convention `_fit()` already uses for standing:
+	# feet-equivalent at y=0, centred over x/z=0.
+	var box := _bounds(self)
+	_model.position -= Vector3(box.position.x + box.size.x * 0.5, box.position.y, box.position.z + box.size.z * 0.5)
 
 
 func revive_animation() -> void:
