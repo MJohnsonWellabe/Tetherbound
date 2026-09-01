@@ -93,18 +93,55 @@ func _one_cycle(trial: int) -> void:
 		return not bool(_panel.call("is_open")))
 
 
+## REAL InputEventJoypadButton through Input.parse_input_event(), not
+## Input.action_press() -- OW4/UI-PAD1 (ralph/DONE.md) both found real
+## controller behaviour Input.action_press() cannot reproduce because it
+## never travels the InputMap the way an actual pad event does. Interleaved
+## with a continuous low-level right-stick "look" motion stream on every
+## physics tick, mimicking a player who is still nudging the camera while
+## they tap the button -- the one realistic condition the earlier all-clean
+## trials (stationary, no other input) did not cover.
+func _real_press(button_index: int) -> InputEventJoypadButton:
+	var e := InputEventJoypadButton.new()
+	e.button_index = button_index
+	e.pressed = true
+	return e
+
+
+func _real_release(button_index: int) -> InputEventJoypadButton:
+	var e := InputEventJoypadButton.new()
+	e.button_index = button_index
+	e.pressed = false
+	return e
+
+
+func _look_jitter() -> void:
+	var e := InputEventJoypadMotion.new()
+	e.axis = 2  # right stick X, matches look_left/look_right in project.godot
+	e.axis_value = 0.35 + randf() * 0.1
+	Input.parse_input_event(e)
+
+
 func _expect_press(label: String, ok: Callable) -> void:
 	_attempts += 1
-	Input.action_press(&"interact")
+	Input.parse_input_event(_real_press(2))
+	_look_jitter()
 	await physics_frame
+	_look_jitter()
 	await physics_frame
-	Input.action_release(&"interact")
+	Input.parse_input_event(_real_release(2))
+	_look_jitter()
 	for i in CHECK_FRAMES:
+		_look_jitter()
 		await physics_frame
 	if not ok.call():
 		_misses += 1
 		_miss_log.append(label)
 	# Settle before the next tap regardless, so a miss does not cascade into
 	# the following expectation via leftover input state.
+	var stop := InputEventJoypadMotion.new()
+	stop.axis = 2
+	stop.axis_value = 0.0
+	Input.parse_input_event(stop)
 	for i in 10:
 		await physics_frame
