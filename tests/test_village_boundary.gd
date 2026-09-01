@@ -226,7 +226,14 @@ const VILLAGE_HARVEST_RADIUS := 80.0
 ## 20 -> 23: owner playtest 2026-08-30B item 15, "there needs to be more
 ## berries in the village" -- three new berry nodes (harvest.json orders
 ## 1031-1033), confirmed inside the fence by this same test file.
-const VILLAGE_HARVEST_NODES := 23
+##
+## 23 -> 28: EARLY-GAME-RESOURCE-SLACK. Two findable consumable pickups
+## (revive, potion_small) and three more knife-free gathering stops (berries,
+## stone, wood) -- harvest.json orders 1034-1038 -- so the opening has some
+## slack before `tam_tools_given`, when the player holds no gathering tool at
+## all and item_db.gd's `harvest_yield()` halves every yield. Confirmed
+## inside the fence by this same test file.
+const VILLAGE_HARVEST_NODES := 28
 
 
 func _village_harvest_nodes() -> Array:
