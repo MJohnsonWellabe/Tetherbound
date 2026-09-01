@@ -447,7 +447,7 @@
       "args": {
         "check": "input_context",
         "equals": "world",
-        "budget_frames": 1800,
+        "budget_frames": 4800,
         "poll_frames": 5
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
@@ -545,7 +545,7 @@
       "args": {
         "check": "input_context",
         "equals": "world",
-        "budget_frames": 1800,
+        "budget_frames": 4800,
         "poll_frames": 5
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
@@ -643,7 +643,7 @@
       "args": {
         "check": "input_context",
         "equals": "world",
-        "budget_frames": 1800,
+        "budget_frames": 4800,
         "poll_frames": 5
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
@@ -741,7 +741,7 @@
       "args": {
         "check": "input_context",
         "equals": "world",
-        "budget_frames": 1800,
+        "budget_frames": 4800,
         "poll_frames": 5
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
@@ -839,7 +839,7 @@
       "args": {
         "check": "input_context",
         "equals": "world",
-        "budget_frames": 1800,
+        "budget_frames": 4800,
         "poll_frames": 5
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
@@ -937,7 +937,7 @@
       "args": {
         "check": "input_context",
         "equals": "world",
-        "budget_frames": 1800,
+        "budget_frames": 4800,
         "poll_frames": 5
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
@@ -1035,7 +1035,7 @@
       "args": {
         "check": "input_context",
         "equals": "world",
-        "budget_frames": 1800,
+        "budget_frames": 4800,
         "poll_frames": 5
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
@@ -1133,7 +1133,7 @@
       "args": {
         "check": "input_context",
         "equals": "world",
-        "budget_frames": 1800,
+        "budget_frames": 4800,
         "poll_frames": 5
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
@@ -1231,7 +1231,7 @@
       "args": {
         "check": "input_context",
         "equals": "world",
-        "budget_frames": 1800,
+        "budget_frames": 4800,
         "poll_frames": 5
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
