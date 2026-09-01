@@ -1,0 +1,23 @@
+{
+  "run_id": "gate-f-run-20260901T220548Z-s03fix",
+  "purpose": "GATE-F-S03-CATCH-LOOP verification. Re-run S01+S02 fresh, then S03 with the catch-retry-loop fix, per ralph/reports/gate-f-capstone-3/CAPSTONE_3_REPORT.md section 7.3's own recommended disposition: restart the journey chain from a fresh S01+S02 rather than reusing any S03-or-later save from the stalled capstone-3 run.",
+  "candidate_sha": "7b4fafab904dd12520f3c828edcf06d11f83b0dc",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "candidate_note": "origin/main HEAD plus this branch's one commit, which only edits tools/gate_f/segments/S03.json (rank cycling on the catch-retry ladder's move_to_entity steps, and assert->wait_until on the between-attempt input_context checkpoints). No game code, data, or scene file touched.",
+  "freeze_record_note": "This freeze record is OPERATOR-authored, not coordinator-discharged, following the same precedent GATE-F-CAPSTONE-2 and GATE-F-CAPSTONE-3 set (see ralph/reports/gate-f-run-20260831T223853Z/RUN_METADATA.json). Section A.2 names a coordinator freeze record a coordinator precondition; no separate coordinator pass produced one for this verification run, so the operator wrote it here per that same precedent.",
+  "godot_version": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "path": "/root/.cache/tetherbound-art/godot",
+    "source": "tools/art_pipeline/setup.sh godot (pinned GODOT_VERSION=4.7-stable in that script)"
+  },
+  "lanes": {
+    "logic": { "display_server": "headless", "renderer": "none" },
+    "capture": { "display_server": "X11 under xvfb-run", "renderer": "opengl3/compatibility, software (llvmpipe)" }
+  },
+  "resolution": [1920, 1080],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "fresh user:// dir; S01 and S02 run fresh in this run, not inherited from any prior run",
+  "date": "2026-09-01",
+  "operator": "sonnet-agent",
+  "free_build": false
+}
