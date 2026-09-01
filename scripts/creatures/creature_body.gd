@@ -37,6 +37,36 @@ const ALPHA_RIM_STRENGTH := 0.65
 ## gives: an alpha's rim is its identity tell, so an ordinary creature's must
 ## stay clearly under it. Species opt in below this via `placeholder.field_rim`.
 const FIELD_RIM_MAX := 0.30
+
+## OWNER DIRECTIVE 2026-09-01 ("some of the smaller creatures blend into the
+## environment too well... they either need to be bigger or brighter"), and
+## `_apply_field_separation()`'s own conclusion for why a rim never reached
+## bramblebun's target ratio: the fix needs to change how bright the creature
+## itself reads, not add an edge highlight the render already showed is too
+## weak to matter.
+##
+## That comment's premise -- "these models are self-lit, an albedo change
+## would compile and still be invisible" -- turned out NOT to hold for
+## `bramblebun_redesign`: inspected directly (a body spawned and its active
+## surface material read back), the shipped material has
+## `emission_enabled = false`. It is a plain lit PBR material, not the
+## painted-albedo-into-emission convention the older production creature
+## pipeline uses (and which the OF27/OF28 tint code above correctly still
+## assumes for species that DO ship that way). So `_apply_field_brightness()`
+## multiplies `albedo_color` unconditionally -- the lever this mesh's own
+## material actually renders through -- and ALSO multiplies emission energy
+## when a surface happens to have it enabled, so the same per-species knob
+## keeps working correctly for a species whose material ships the other way.
+## Pure multiply on purpose: it raises value without touching hue, so it
+## cannot walk the creature's colour out of its painted family.
+##
+## `field_emission` is the per-species opt-in, exactly like `field_rim`. No
+## ceiling anywhere near `FIELD_RIM_MAX`'s -- brightness past 1.0 is a
+## deliberately available push (`SHINY_PLACEHOLDER_TINT` above already
+## multiplies past 1.0 for the same "a near-1x multiply is not visible in a
+## screenshot" reason), and the owner directive names this species' modest
+## scale as already exhausted.
+const FIELD_EMISSION_MAX := 3.0
 const ALPHA_RIM_TINT := 0.15
 const ALPHA_AURA_COLOUR := Color("#ffd479")
 
@@ -612,6 +642,7 @@ func _refresh_shiny_tint() -> void:
 ## never leak onto an ordinary creature of the same species: an alpha that fell
 ## back to the shared `vivid` material gets its own duplicate first.
 func _apply_alpha_presence() -> void:
+	_apply_field_brightness()
 	if _aura != null:
 		_aura.queue_free()
 		_aura = null
@@ -696,6 +727,55 @@ func _apply_field_separation() -> void:
 	if strength <= 0.0:
 		return
 	_rim_light_node(_model, strength, "field")
+
+
+## OWNER DIRECTIVE 2026-09-01, "bigger or brighter". BACKLOG-B2-GRASS-SEPARATION
+## measured that a rim alone cannot reach the target creature/grass luminance
+## ratio for a species this small. See `FIELD_EMISSION_MAX`'s own comment for
+## why this brightens `albedo_color` (unconditionally) and `emission` (only
+## when the material actually has it enabled) rather than emission alone --
+## `bramblebun_redesign`'s shipped material does not self-light the way the
+## rest of this file assumes, so the rim's own "emission drowns out an albedo
+## change" reasoning does not transfer, and the lever has to cover both cases
+## to work for every species that opts in, not just this one.
+##
+## Applied on whatever material is currently active (so it stacks correctly
+## after a colourway swap, or on the raw shipped material when no swap
+## applies). Opt-in via `placeholder.field_emission`, exactly like
+## `field_rim`: applied only where a measurement says it is needed, and left
+## at 0.0 (a no-op) everywhere else.
+func _apply_field_brightness() -> void:
+	if not _has_model:
+		return
+	var strength := clampf(
+		float(SPECIES.placeholder(species_id).get("field_emission", 0.0)), 0.0, FIELD_EMISSION_MAX)
+	if strength <= 0.0:
+		return
+	_brighten_node(_model, strength)
+
+
+func _brighten_node(node: Node, strength: float) -> void:
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			var source: Material = instance.get_active_material(surface)
+			if not (source is BaseMaterial3D):
+				continue
+			var material := source as BaseMaterial3D
+			var suffix := "_field_bright"
+			if material.resource_name.ends_with(suffix):
+				continue
+			material = material.duplicate() as BaseMaterial3D
+			material.resource_name = "%s%s" % [material.resource_name, suffix]
+			instance.set_surface_override_material(surface, material)
+			var factor := 1.0 + strength
+			var albedo := material.albedo_color
+			material.albedo_color = Color(albedo.r * factor, albedo.g * factor, albedo.b * factor, albedo.a)
+			if material.emission_enabled:
+				material.emission_energy_multiplier *= factor
+	for child in node.get_children():
+		_brighten_node(child, strength)
 
 
 func _rim_light_node(node: Node, strength: float, tag: String) -> void:
