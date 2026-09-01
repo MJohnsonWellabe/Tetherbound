@@ -454,6 +454,96 @@
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
+      "id": "S03-32ar1",
+      "title": "cycle to a live party member before attempt 2 (T2-BUILDPLACE)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01, closing the gap FINDING-T2-BUILDPLACE-2026-08-30.md named but did not plug: encounter_director.gd::interaction_offer() returns a priority-100 'X is out of the fight' statement UNCONDITIONALLY once the active creature has fainted, overriding every other interaction in the world including a fresh, healthy, different wild creature standing right in front of the player. S03-39b/d already proved party_cycle-then-revive is the correct, unconditionally-safe recovery (autoload/party.gd::cycle_active() is a documented no-op when the active creature is already the only healthy one) -- but that block previously ran only ONCE, after all ten attempts, so a faint on attempt 'a' silently doomed every attempt after it regardless of this segment's own retry-targeting fix. Running the SAME recovery between every attempt, not just at the end, is what actually lets the ladder recover mid-run."
+    },
+    {
+      "id": "S03-32ar2",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the next engage is attempted."
+    },
+    {
+      "id": "S03-32ar3",
+      "title": "open the Satchel to check for a fainted party member",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() (_buttons[0]) on open, so focus starts at slot 0 (orb_basic) every time."
+    },
+    {
+      "id": "S03-32ar4",
+      "title": "focus the Revive draught",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+    },
+    {
+      "id": "S03-32ar5",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use(): opens the target picker if any party member is fainted, or safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions (tools/gate_f/probe_revive_menu_flow.gd), which is what makes this safe to run every time regardless of party state."
+    },
+    {
+      "id": "S03-32ar6",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "If the picker opened, focus already sits on the only eligible (fainted) row; this confirms it, clearing `fainted` and consuming one Revive. If nobody was fainted, this press instead picks the Revive stack up off the grid (Godot's ordinary carry gesture) -- non-destructive, corrected by the next step."
+    },
+    {
+      "id": "S03-32ar7",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead."
+    },
+    {
+      "id": "S03-32ar8",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case."
+    },
+    {
+      "id": "S03-32ar9",
+      "title": "wait for the world to own input before attempt 2",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "Both branches above converge on a closed shell; the world must have input back before the next attempt's walk starts."
+    },
+    {
       "id": "S03-32b",
       "title": "walk to a live bramblebun (attempt 2)",
       "action": "move_to_entity",
@@ -550,6 +640,96 @@
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
+    },
+    {
+      "id": "S03-32br1",
+      "title": "cycle to a live party member before attempt 3 (T2-BUILDPLACE)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01, closing the gap FINDING-T2-BUILDPLACE-2026-08-30.md named but did not plug: encounter_director.gd::interaction_offer() returns a priority-100 'X is out of the fight' statement UNCONDITIONALLY once the active creature has fainted, overriding every other interaction in the world including a fresh, healthy, different wild creature standing right in front of the player. S03-39b/d already proved party_cycle-then-revive is the correct, unconditionally-safe recovery (autoload/party.gd::cycle_active() is a documented no-op when the active creature is already the only healthy one) -- but that block previously ran only ONCE, after all ten attempts, so a faint on attempt 'a' silently doomed every attempt after it regardless of this segment's own retry-targeting fix. Running the SAME recovery between every attempt, not just at the end, is what actually lets the ladder recover mid-run."
+    },
+    {
+      "id": "S03-32br2",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the next engage is attempted."
+    },
+    {
+      "id": "S03-32br3",
+      "title": "open the Satchel to check for a fainted party member",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() (_buttons[0]) on open, so focus starts at slot 0 (orb_basic) every time."
+    },
+    {
+      "id": "S03-32br4",
+      "title": "focus the Revive draught",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+    },
+    {
+      "id": "S03-32br5",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use(): opens the target picker if any party member is fainted, or safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions (tools/gate_f/probe_revive_menu_flow.gd), which is what makes this safe to run every time regardless of party state."
+    },
+    {
+      "id": "S03-32br6",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "If the picker opened, focus already sits on the only eligible (fainted) row; this confirms it, clearing `fainted` and consuming one Revive. If nobody was fainted, this press instead picks the Revive stack up off the grid (Godot's ordinary carry gesture) -- non-destructive, corrected by the next step."
+    },
+    {
+      "id": "S03-32br7",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead."
+    },
+    {
+      "id": "S03-32br8",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case."
+    },
+    {
+      "id": "S03-32br9",
+      "title": "wait for the world to own input before attempt 3",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "Both branches above converge on a closed shell; the world must have input back before the next attempt's walk starts."
     },
     {
       "id": "S03-32c",
@@ -650,6 +830,96 @@
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
+      "id": "S03-32cr1",
+      "title": "cycle to a live party member before attempt 4 (T2-BUILDPLACE)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01, closing the gap FINDING-T2-BUILDPLACE-2026-08-30.md named but did not plug: encounter_director.gd::interaction_offer() returns a priority-100 'X is out of the fight' statement UNCONDITIONALLY once the active creature has fainted, overriding every other interaction in the world including a fresh, healthy, different wild creature standing right in front of the player. S03-39b/d already proved party_cycle-then-revive is the correct, unconditionally-safe recovery (autoload/party.gd::cycle_active() is a documented no-op when the active creature is already the only healthy one) -- but that block previously ran only ONCE, after all ten attempts, so a faint on attempt 'a' silently doomed every attempt after it regardless of this segment's own retry-targeting fix. Running the SAME recovery between every attempt, not just at the end, is what actually lets the ladder recover mid-run."
+    },
+    {
+      "id": "S03-32cr2",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the next engage is attempted."
+    },
+    {
+      "id": "S03-32cr3",
+      "title": "open the Satchel to check for a fainted party member",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() (_buttons[0]) on open, so focus starts at slot 0 (orb_basic) every time."
+    },
+    {
+      "id": "S03-32cr4",
+      "title": "focus the Revive draught",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+    },
+    {
+      "id": "S03-32cr5",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use(): opens the target picker if any party member is fainted, or safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions (tools/gate_f/probe_revive_menu_flow.gd), which is what makes this safe to run every time regardless of party state."
+    },
+    {
+      "id": "S03-32cr6",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "If the picker opened, focus already sits on the only eligible (fainted) row; this confirms it, clearing `fainted` and consuming one Revive. If nobody was fainted, this press instead picks the Revive stack up off the grid (Godot's ordinary carry gesture) -- non-destructive, corrected by the next step."
+    },
+    {
+      "id": "S03-32cr7",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead."
+    },
+    {
+      "id": "S03-32cr8",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case."
+    },
+    {
+      "id": "S03-32cr9",
+      "title": "wait for the world to own input before attempt 4",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "Both branches above converge on a closed shell; the world must have input back before the next attempt's walk starts."
+    },
+    {
       "id": "S03-32d",
       "title": "walk to a live bramblebun (attempt 4)",
       "action": "move_to_entity",
@@ -746,6 +1016,96 @@
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
+    },
+    {
+      "id": "S03-32dr1",
+      "title": "cycle to a live party member before attempt 5 (T2-BUILDPLACE)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01, closing the gap FINDING-T2-BUILDPLACE-2026-08-30.md named but did not plug: encounter_director.gd::interaction_offer() returns a priority-100 'X is out of the fight' statement UNCONDITIONALLY once the active creature has fainted, overriding every other interaction in the world including a fresh, healthy, different wild creature standing right in front of the player. S03-39b/d already proved party_cycle-then-revive is the correct, unconditionally-safe recovery (autoload/party.gd::cycle_active() is a documented no-op when the active creature is already the only healthy one) -- but that block previously ran only ONCE, after all ten attempts, so a faint on attempt 'a' silently doomed every attempt after it regardless of this segment's own retry-targeting fix. Running the SAME recovery between every attempt, not just at the end, is what actually lets the ladder recover mid-run."
+    },
+    {
+      "id": "S03-32dr2",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the next engage is attempted."
+    },
+    {
+      "id": "S03-32dr3",
+      "title": "open the Satchel to check for a fainted party member",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() (_buttons[0]) on open, so focus starts at slot 0 (orb_basic) every time."
+    },
+    {
+      "id": "S03-32dr4",
+      "title": "focus the Revive draught",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+    },
+    {
+      "id": "S03-32dr5",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use(): opens the target picker if any party member is fainted, or safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions (tools/gate_f/probe_revive_menu_flow.gd), which is what makes this safe to run every time regardless of party state."
+    },
+    {
+      "id": "S03-32dr6",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "If the picker opened, focus already sits on the only eligible (fainted) row; this confirms it, clearing `fainted` and consuming one Revive. If nobody was fainted, this press instead picks the Revive stack up off the grid (Godot's ordinary carry gesture) -- non-destructive, corrected by the next step."
+    },
+    {
+      "id": "S03-32dr7",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead."
+    },
+    {
+      "id": "S03-32dr8",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case."
+    },
+    {
+      "id": "S03-32dr9",
+      "title": "wait for the world to own input before attempt 5",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "Both branches above converge on a closed shell; the world must have input back before the next attempt's walk starts."
     },
     {
       "id": "S03-32e",
@@ -846,6 +1206,96 @@
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
+      "id": "S03-32er1",
+      "title": "cycle to a live party member before attempt 6 (T2-BUILDPLACE)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01, closing the gap FINDING-T2-BUILDPLACE-2026-08-30.md named but did not plug: encounter_director.gd::interaction_offer() returns a priority-100 'X is out of the fight' statement UNCONDITIONALLY once the active creature has fainted, overriding every other interaction in the world including a fresh, healthy, different wild creature standing right in front of the player. S03-39b/d already proved party_cycle-then-revive is the correct, unconditionally-safe recovery (autoload/party.gd::cycle_active() is a documented no-op when the active creature is already the only healthy one) -- but that block previously ran only ONCE, after all ten attempts, so a faint on attempt 'a' silently doomed every attempt after it regardless of this segment's own retry-targeting fix. Running the SAME recovery between every attempt, not just at the end, is what actually lets the ladder recover mid-run."
+    },
+    {
+      "id": "S03-32er2",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the next engage is attempted."
+    },
+    {
+      "id": "S03-32er3",
+      "title": "open the Satchel to check for a fainted party member",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() (_buttons[0]) on open, so focus starts at slot 0 (orb_basic) every time."
+    },
+    {
+      "id": "S03-32er4",
+      "title": "focus the Revive draught",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+    },
+    {
+      "id": "S03-32er5",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use(): opens the target picker if any party member is fainted, or safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions (tools/gate_f/probe_revive_menu_flow.gd), which is what makes this safe to run every time regardless of party state."
+    },
+    {
+      "id": "S03-32er6",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "If the picker opened, focus already sits on the only eligible (fainted) row; this confirms it, clearing `fainted` and consuming one Revive. If nobody was fainted, this press instead picks the Revive stack up off the grid (Godot's ordinary carry gesture) -- non-destructive, corrected by the next step."
+    },
+    {
+      "id": "S03-32er7",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead."
+    },
+    {
+      "id": "S03-32er8",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case."
+    },
+    {
+      "id": "S03-32er9",
+      "title": "wait for the world to own input before attempt 6",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "Both branches above converge on a closed shell; the world must have input back before the next attempt's walk starts."
+    },
+    {
       "id": "S03-32f",
       "title": "walk to a live bramblebun (attempt 6)",
       "action": "move_to_entity",
@@ -942,6 +1392,96 @@
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
+    },
+    {
+      "id": "S03-32fr1",
+      "title": "cycle to a live party member before attempt 7 (T2-BUILDPLACE)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01, closing the gap FINDING-T2-BUILDPLACE-2026-08-30.md named but did not plug: encounter_director.gd::interaction_offer() returns a priority-100 'X is out of the fight' statement UNCONDITIONALLY once the active creature has fainted, overriding every other interaction in the world including a fresh, healthy, different wild creature standing right in front of the player. S03-39b/d already proved party_cycle-then-revive is the correct, unconditionally-safe recovery (autoload/party.gd::cycle_active() is a documented no-op when the active creature is already the only healthy one) -- but that block previously ran only ONCE, after all ten attempts, so a faint on attempt 'a' silently doomed every attempt after it regardless of this segment's own retry-targeting fix. Running the SAME recovery between every attempt, not just at the end, is what actually lets the ladder recover mid-run."
+    },
+    {
+      "id": "S03-32fr2",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the next engage is attempted."
+    },
+    {
+      "id": "S03-32fr3",
+      "title": "open the Satchel to check for a fainted party member",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() (_buttons[0]) on open, so focus starts at slot 0 (orb_basic) every time."
+    },
+    {
+      "id": "S03-32fr4",
+      "title": "focus the Revive draught",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+    },
+    {
+      "id": "S03-32fr5",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use(): opens the target picker if any party member is fainted, or safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions (tools/gate_f/probe_revive_menu_flow.gd), which is what makes this safe to run every time regardless of party state."
+    },
+    {
+      "id": "S03-32fr6",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "If the picker opened, focus already sits on the only eligible (fainted) row; this confirms it, clearing `fainted` and consuming one Revive. If nobody was fainted, this press instead picks the Revive stack up off the grid (Godot's ordinary carry gesture) -- non-destructive, corrected by the next step."
+    },
+    {
+      "id": "S03-32fr7",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead."
+    },
+    {
+      "id": "S03-32fr8",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case."
+    },
+    {
+      "id": "S03-32fr9",
+      "title": "wait for the world to own input before attempt 7",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "Both branches above converge on a closed shell; the world must have input back before the next attempt's walk starts."
     },
     {
       "id": "S03-32g",
@@ -1042,6 +1582,96 @@
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
+      "id": "S03-32gr1",
+      "title": "cycle to a live party member before attempt 8 (T2-BUILDPLACE)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01, closing the gap FINDING-T2-BUILDPLACE-2026-08-30.md named but did not plug: encounter_director.gd::interaction_offer() returns a priority-100 'X is out of the fight' statement UNCONDITIONALLY once the active creature has fainted, overriding every other interaction in the world including a fresh, healthy, different wild creature standing right in front of the player. S03-39b/d already proved party_cycle-then-revive is the correct, unconditionally-safe recovery (autoload/party.gd::cycle_active() is a documented no-op when the active creature is already the only healthy one) -- but that block previously ran only ONCE, after all ten attempts, so a faint on attempt 'a' silently doomed every attempt after it regardless of this segment's own retry-targeting fix. Running the SAME recovery between every attempt, not just at the end, is what actually lets the ladder recover mid-run."
+    },
+    {
+      "id": "S03-32gr2",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the next engage is attempted."
+    },
+    {
+      "id": "S03-32gr3",
+      "title": "open the Satchel to check for a fainted party member",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() (_buttons[0]) on open, so focus starts at slot 0 (orb_basic) every time."
+    },
+    {
+      "id": "S03-32gr4",
+      "title": "focus the Revive draught",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+    },
+    {
+      "id": "S03-32gr5",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use(): opens the target picker if any party member is fainted, or safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions (tools/gate_f/probe_revive_menu_flow.gd), which is what makes this safe to run every time regardless of party state."
+    },
+    {
+      "id": "S03-32gr6",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "If the picker opened, focus already sits on the only eligible (fainted) row; this confirms it, clearing `fainted` and consuming one Revive. If nobody was fainted, this press instead picks the Revive stack up off the grid (Godot's ordinary carry gesture) -- non-destructive, corrected by the next step."
+    },
+    {
+      "id": "S03-32gr7",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead."
+    },
+    {
+      "id": "S03-32gr8",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case."
+    },
+    {
+      "id": "S03-32gr9",
+      "title": "wait for the world to own input before attempt 8",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "Both branches above converge on a closed shell; the world must have input back before the next attempt's walk starts."
+    },
+    {
       "id": "S03-32h",
       "title": "walk to a live bramblebun (attempt 8)",
       "action": "move_to_entity",
@@ -1140,6 +1770,96 @@
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
     },
     {
+      "id": "S03-32hr1",
+      "title": "cycle to a live party member before attempt 9 (T2-BUILDPLACE)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01, closing the gap FINDING-T2-BUILDPLACE-2026-08-30.md named but did not plug: encounter_director.gd::interaction_offer() returns a priority-100 'X is out of the fight' statement UNCONDITIONALLY once the active creature has fainted, overriding every other interaction in the world including a fresh, healthy, different wild creature standing right in front of the player. S03-39b/d already proved party_cycle-then-revive is the correct, unconditionally-safe recovery (autoload/party.gd::cycle_active() is a documented no-op when the active creature is already the only healthy one) -- but that block previously ran only ONCE, after all ten attempts, so a faint on attempt 'a' silently doomed every attempt after it regardless of this segment's own retry-targeting fix. Running the SAME recovery between every attempt, not just at the end, is what actually lets the ladder recover mid-run."
+    },
+    {
+      "id": "S03-32hr2",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the next engage is attempted."
+    },
+    {
+      "id": "S03-32hr3",
+      "title": "open the Satchel to check for a fainted party member",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() (_buttons[0]) on open, so focus starts at slot 0 (orb_basic) every time."
+    },
+    {
+      "id": "S03-32hr4",
+      "title": "focus the Revive draught",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+    },
+    {
+      "id": "S03-32hr5",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use(): opens the target picker if any party member is fainted, or safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions (tools/gate_f/probe_revive_menu_flow.gd), which is what makes this safe to run every time regardless of party state."
+    },
+    {
+      "id": "S03-32hr6",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "If the picker opened, focus already sits on the only eligible (fainted) row; this confirms it, clearing `fainted` and consuming one Revive. If nobody was fainted, this press instead picks the Revive stack up off the grid (Godot's ordinary carry gesture) -- non-destructive, corrected by the next step."
+    },
+    {
+      "id": "S03-32hr7",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead."
+    },
+    {
+      "id": "S03-32hr8",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case."
+    },
+    {
+      "id": "S03-32hr9",
+      "title": "wait for the world to own input before attempt 9",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "Both branches above converge on a closed shell; the world must have input back before the next attempt's walk starts."
+    },
+    {
       "id": "S03-32i",
       "title": "walk to a live bramblebun (attempt 9)",
       "action": "move_to_entity",
@@ -1236,6 +1956,96 @@
       },
       "expected": "no narrative modal or combat is holding locomotion when this walk starts",
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit, upgraded per FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01. This step used to be a one-shot `assert`, diagnostic only: it recorded that the previous fight/catch had not finished unwinding but did not wait for it, so attempts b-j walked straight into 'the interaction arbiter is DISABLED... input_context combat' every time. `wait_until` polls the same check instead of sampling it once, so the next attempt's walk starts only once combat has actually closed and the world owns input again -- CD-3's rule applied to the retry ladder's own seam, not just to a single wait."
+    },
+    {
+      "id": "S03-32ir1",
+      "title": "cycle to a live party member before attempt 10 (T2-BUILDPLACE)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "FINDING-CAPSTONE3-S03-CATCH-LOOP-STALL-2026-09-01, closing the gap FINDING-T2-BUILDPLACE-2026-08-30.md named but did not plug: encounter_director.gd::interaction_offer() returns a priority-100 'X is out of the fight' statement UNCONDITIONALLY once the active creature has fainted, overriding every other interaction in the world including a fresh, healthy, different wild creature standing right in front of the player. S03-39b/d already proved party_cycle-then-revive is the correct, unconditionally-safe recovery (autoload/party.gd::cycle_active() is a documented no-op when the active creature is already the only healthy one) -- but that block previously ran only ONCE, after all ten attempts, so a faint on attempt 'a' silently doomed every attempt after it regardless of this segment's own retry-targeting fix. Running the SAME recovery between every attempt, not just at the end, is what actually lets the ladder recover mid-run."
+    },
+    {
+      "id": "S03-32ir2",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly-active creature's body needs a few frames to stand up before the next engage is attempted."
+    },
+    {
+      "id": "S03-32ir3",
+      "title": "open the Satchel to check for a fainted party member",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() (_buttons[0]) on open, so focus starts at slot 0 (orb_basic) every time."
+    },
+    {
+      "id": "S03-32ir4",
+      "title": "focus the Revive draught",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 3
+      },
+      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+    },
+    {
+      "id": "S03-32ir5",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use(): opens the target picker if any party member is fainted, or safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions (tools/gate_f/probe_revive_menu_flow.gd), which is what makes this safe to run every time regardless of party state."
+    },
+    {
+      "id": "S03-32ir6",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "If the picker opened, focus already sits on the only eligible (fainted) row; this confirms it, clearing `fainted` and consuming one Revive. If nobody was fainted, this press instead picks the Revive stack up off the grid (Godot's ordinary carry gesture) -- non-destructive, corrected by the next step."
+    },
+    {
+      "id": "S03-32ir7",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead."
+    },
+    {
+      "id": "S03-32ir8",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case."
+    },
+    {
+      "id": "S03-32ir9",
+      "title": "wait for the world to own input before attempt 10",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "Both branches above converge on a closed shell; the world must have input back before the next attempt's walk starts."
     },
     {
       "id": "S03-32j",
