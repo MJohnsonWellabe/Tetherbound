@@ -81,6 +81,21 @@ const GROUND_PROBE_DOWN := 300.0
 ## colliders touch, which reads as attacks landing at the wrong distance.
 const FOOTPRINT_ALLOWANCE := 2.4
 
+## OWNER-0901-CREATURE-BED-POSE. No shipped creature carries an authored
+## lie-down clip -- `faint` is the only pose beyond idle/walk/run/attack/hit
+## every species ships (BACKLOG-BED-SCALE-POSE inspected every .glb directly
+## and confirmed this) -- and that clip alone reads as "standing/crouching on
+## a bed" for every body plan except the one bird in the roster (galecrest),
+## whose wing-collapse happens to fall sideways on its own. `play_rest()`
+## below rolls the model onto its side around its own ground-contact line
+## (the way a felled body actually tips over) so the rest of the roster reads
+## as lying down too. How far a species should roll is a fact about its body
+## plan, not a universal constant -- a tall, narrow creature (an antlered
+## deer) oversteers past a bed's rim at the same angle a low, wide one settles
+## at -- so it lives in species.json's `rest_roll_deg` per species, defaulting
+## to this when a species has not been tuned yet.
+const DEFAULT_REST_ROLL_DEG := 62.0
+
 ## OF27 placeholder tint: a deliberately garish magenta-shift multiply,
 ## applied to both albedo AND emission (see `_shared_variant_material`'s own
 ## comment for why emission has to be included). This is not the shiny
@@ -1105,6 +1120,24 @@ func play_hit() -> void:
 func play_faint() -> void:
 	if _animator != null:
 		_animator.call("play_faint")
+
+
+## The bed-rest pose: the faint clip's own settled body language (weight
+## down, head low) plus a roll onto the side so it reads as lying rather than
+## crouching. See `DEFAULT_REST_ROLL_DEG` above for why the angle is
+## per-species data, not a constant. Only ever called on the cosmetic body
+## `creature_bed.gd` spawns to represent a resting occupant -- never on the
+## piloted creature -- so tipping the model over here cannot affect combat,
+## which reads `_height`/`_radius`/the collider and never this node's rotation.
+func play_rest() -> void:
+	play_faint()
+	if not _has_model:
+		return
+	var roll := float(SPECIES.placeholder(species_id).get("rest_roll_deg", DEFAULT_REST_ROLL_DEG))
+	if roll == 0.0:
+		return
+	_model.rotate_z(deg_to_rad(roll))
+	_model.position.y += _radius
 
 
 func revive_animation() -> void:

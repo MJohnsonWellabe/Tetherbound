@@ -9,7 +9,10 @@ extends SceneTree
 ##
 ##   xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x800 \
-##     --script tools/_capture_bed_pose_survey.gd -- <out_dir> <species,species,...>
+##     --script tools/_capture_bed_pose_survey.gd -- <out_dir> <species,species,...> [rest|faint]
+##
+## Third arg defaults to "rest" (creature_bed.gd's actual play_rest() call);
+## pass "faint" to render the old play_faint()-only pose for a before/after.
 
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
@@ -37,6 +40,7 @@ func _run() -> void:
 			species_list.append(s)
 	else:
 		species_list = ["terrapup", "galewisp", "galecrest"]
+	var pose := args[2] if args.size() > 2 else "rest"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out_dir))
 
 	var world := _stage(20.0)
@@ -61,7 +65,7 @@ func _run() -> void:
 		body.collision_layer = 0
 		body.collision_mask = 0
 		body.set_physics_process(false)
-		body.call_deferred("play_faint")
+		body.call_deferred("play_faint" if pose == "faint" else "play_rest")
 
 		camera.global_position = Vector3(3.4, 2.2, 4.0)
 		camera.look_at(Vector3(0.0, 0.45, 0.0), Vector3.UP)

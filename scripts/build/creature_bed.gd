@@ -481,25 +481,24 @@ func _sync_rest_body(force: bool) -> void:
 	_rest_body.collision_layer = 0
 	_rest_body.collision_mask = 0
 	_rest_body.set_physics_process(false)
-	# Reuse the shipped creature faint animation as the closest authored resting
-	# pose -- the only role beyond idle/walk/run/attack/hit every species ships
-	# (creature_animator.gd's FAINT, resolved from species.json's `faint` clip).
+	# BACKLOG-BED-SCALE-POSE (2026-08-31) found every shipped creature .glb
+	# carries exactly 6 clips -- idle/walk/run/attack/hit/faint, no
+	# sleep/lie_down/rest clip anywhere -- and that `faint` alone renders as a
+	# crouch still standing on all four planted paws for every body plan it
+	# checked (terrapup/galewisp/bramblebun/veridian), leaving item 11
+	# ("creatures just stand on the beds they don't lay") open.
 	#
-	# BACKLOG-BED-SCALE-POSE (2026-08-31), owner playtest item 11 ("creatures
-	# just stand on the beds they don't lay"): checked directly, not guessed.
-	# tools/_capture_creature_bed_rest.gd rendered a resting terrapup with this
-	# exact call, held past the clip's full length (~1.5s) to its settled final
-	# frame -- a crouch, weight still on all four planted paws, not lying down.
-	# A second check across galewisp/bramblebun/veridian's own `faint` clips
-	# found the same thing (veridian's is a standing idle-like pose). Every
-	# shipped creature .glb was inspected directly (glTF `animations[].name`)
-	# and carries exactly these 6 clips -- no `sleep`/`lie_down`/`rest` clip
-	# exists anywhere in the roster to swap to instead. Closing item 11 for
-	# real needs a new authored lying/sleep clip per rig (or at least per
-	# body-plan family); that is new animation content, not a code fix, so it
-	# is explicitly OUT of this item's bite-sized scope. `play_faint()` here
-	# stays the best available approximation in the meantime.
-	_rest_body.call_deferred("play_faint")
+	# OWNER-0901-CREATURE-BED-POSE: the owner's own next playtest named the one
+	# species that line never checked -- galecrest -- as the one that DOES lie
+	# down, and it does so only because a bird's wing-collapse happens to fall
+	# sideways on its own; nothing else about its data differs from any other
+	# species (same `faint` clip name, same animation role table). `play_rest()`
+	# closes the gap without new animation content: it plays the same `faint`
+	# clip every species already had, then rolls the model onto its side around
+	# its own ground-contact line by species.json's `rest_roll_deg` (creature_
+	# body.gd's DEFAULT_REST_ROLL_DEG when a species has not been tuned), the
+	# same sideways fall galecrest's own clip produces by accident.
+	_rest_body.call_deferred("play_rest")
 
 
 func _on_rest() -> void:
