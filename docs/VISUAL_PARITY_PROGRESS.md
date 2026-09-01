@@ -74,6 +74,12 @@ Environment notes for the next session (all verified 2026-09-01):
 - Also: trees are identical ball-on-stick at regular intervals (02); scatter-blob clump with hard falloff (04); no creatures in the survey set (capture gap, not a verdict).
 - Response: (1) → VP2; (2) shadows/contact → VP1 (shadow bias, ambient) + VP2 (ground darkening under objects); the 01 diagonal patch is investigated in VP1 (suspect: PSSM split / terrain macro); (3) → VP1. Creature frames are added in VP0's location/combat set.
 
+### VP0 baseline, village + mill pond (carpet ON, main @ 252ccc81 + grass_field enabled) — `ralph/reports/visual-parity/VP0-baseline/JUDGE-village-pond.md`
+- Bar A (keyart world): **no**. Bar B (Palworld kind of game): **no**.
+- Ranked gaps: (1) the sky — tan/brown-streaked smeared clouds in 7 of 9 frames, a third of every wide shot, "reads as a broken shader"; (2) no creature anywhere in the set; (3) lighting disagrees with itself — clear sky but no ground shadows, flat hard-edged sun disc with no bloom, distant hills with no blue haze.
+- Also: single broccoli tree silhouette at one scale everywhere; dead tree and boulder assets copy-pasted; flat plastic leaf cards close up; fenced paddocks enclose nothing; NPCs static (village reads populated, not lived-in); mill has no wheel/chute (frame named "wheel" shows none); tournament frame shows no event dressing.
+- Response: (1)+(3) → VP1 (shader rewrite + light/aerial config, drafted); creature frames → added to VP0 via the combat/creature captures, and creature staging near capture stands is a VP9 item; tree variety/leaf cards → VP3; paddocks/tournament/mill dressing → VP5; NPC life → VP9.
+
 ## Implementation decisions
 
 - `data/config/grass_field.json` is **ON** for this program (owner directive 2026-09-01: "I don't see how a
