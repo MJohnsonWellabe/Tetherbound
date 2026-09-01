@@ -1140,13 +1140,21 @@ func play_faint() -> void:
 ## hindquarters well above the bed after the maths said they would be
 ## grounded. Idle keeps the whole thing consistent: the pose being measured
 ## and the pose being rolled are the same pose.
+##
+## `rest_roll_deg: 0` opts a species out of all of this, back to the
+## original `play_faint()`-only behaviour. galecrest's own data carries it:
+## galecrest is the one species whose `faint` clip already falls sideways
+## into a genuine lying pose on its own (a wing-collapse, not anything this
+## roll produces), so ticking it into idle and not rolling would trade an
+## already-correct pose for a standing one.
 func play_rest() -> void:
+	var roll := float(SPECIES.placeholder(species_id).get("rest_roll_deg", DEFAULT_REST_ROLL_DEG))
+	if roll == 0.0:
+		play_faint()
+		return
 	if _animator != null:
 		_animator.call("tick", 0.0, 0.0, 1.0)
 	if not _has_model:
-		return
-	var roll := float(SPECIES.placeholder(species_id).get("rest_roll_deg", DEFAULT_REST_ROLL_DEG))
-	if roll == 0.0:
 		return
 	_model.rotate_z(deg_to_rad(roll))
 	# Rolling around `_model`'s own ground-contact origin does not leave the
