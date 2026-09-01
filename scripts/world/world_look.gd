@@ -35,6 +35,17 @@ var _time: String = DEFAULT_TIME
 var _cycle: RefCounted = null
 var _elapsed_seconds: float = 0.0
 
+## OWNER-0901-DAYNIGHT-CYCLE. `_elapsed_seconds` above already measures real
+## time against `day_length_seconds`, but nothing ever told `Game.day` about
+## it -- the HUD/pause-menu "Day N" readout only moved when the player slept
+## (autoload/game_state.gd::advance_day(), called from camp.gd/night_rest.gd).
+## A whole session with no sleep left it stuck on "Day 1" no matter how much
+## real time passed. Tracked as its own accumulator rather than derived from
+## `_elapsed_seconds` because `apply_time()` (below) rewrites that to a
+## same-cycle hour on every rest/scene-start snap, which would otherwise make
+## a day-count derived from it run backwards or double-count.
+var _auto_day_accum: float = 0.0
+
 ## R5.2: a weather delta layered on top of whichever time-of-day preset is
 ## active, set by world_weather.gd. Empty means no weather override -- the
 ## time-of-day preset's own look, unchanged. Kept as a second axis rather
@@ -44,6 +55,13 @@ var _weather: Dictionary = {}
 
 
 func _ready() -> void:
+	# OWNER-0901-DAYNIGHT-CYCLE. The comment on _process() below has always
+	# claimed menus can't pause this clock, but WorldLook was never actually
+	# exempted from the pause game_menu.gd sets while any tab is open, so it
+	# silently did stop -- and however long a session happened to spend in
+	# menus (different every playthrough) is exactly what made night fall at
+	# what read as a random time instead of on `day_length_seconds`.
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_config = _load()
 	if _config.is_empty():
 		push_warning("art.json missing or unreadable; the scene keeps its authored look")
@@ -91,6 +109,18 @@ func _process(delta: float) -> void:
 	var preset: String = _cycle.preset_at(hour)
 	if preset != "":
 		_time = preset
+
+	# OWNER-0901-DAYNIGHT-CYCLE: advance Game.day automatically as real time
+	# passes, instead of leaving it to only ever move on a manual rest. A
+	# `while` rather than `if` so a single huge delta (a long stall, an
+	# alt-tab) still lands on the right day rather than under-counting.
+	_auto_day_accum += delta
+	while _auto_day_accum >= _cycle.day_length_seconds:
+		_auto_day_accum -= _cycle.day_length_seconds
+		var game := get_node_or_null(^"/root/Game")
+		if game != null:
+			game.call("advance_day")
+
 	_blend_accum += delta
 	if _blend_accum < BLEND_INTERVAL:
 		return
@@ -103,6 +133,11 @@ func _process(delta: float) -> void:
 ## it was when the player made camp.
 func reset_to_morning() -> void:
 	apply_time(DEFAULT_TIME)
+	# A rest already advances Game.day itself (camp.gd/night_rest.gd call
+	# advance_day() directly); without this the automatic accumulator above
+	# would still be sitting close to a rollover from the time already spent
+	# before the player slept, and fire again just moments into the new day.
+	_auto_day_accum = 0.0
 
 
 func is_dark() -> bool:
