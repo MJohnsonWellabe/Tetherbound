@@ -1,13 +1,29 @@
 extends SceneTree
 
 ## K3: `tests/smoke_authored_camps.gd`'s SECOND pass at `trail_camp` (the sleep
-## phase) sometimes finds the rest-point interact prompt inert -- 2/8 (25%)
-## per `ralph/reports/audit/K-2026-08-31.md`. Reproduces the exact test
-## sequence (offer sweep over every authored camp, then the sleep phase at
-## trail_camp) but logs the arbiter's winner/prompt/actionable state on EVERY
-## physics frame of the 20-frame settle window after the second teleport,
-## instead of only checking the outcome, so a failure shows what the arbiter
-## actually saw instead of just that it saw nothing.
+## phase) sometimes found the rest-point interact prompt inert -- 2/8 (25%)
+## per `ralph/reports/audit/K-2026-08-31.md`, confirmed here at 5/8 against
+## the original file on this machine. The audit's own hypothesis was a
+## one-frame-late refresh of the arbiter's current offer; this probe's
+## frame-by-frame logging of the arbiter's winner/prompt/actionable state,
+## the player's `is_on_floor()`, and a direct physics shape query at the
+## known ground height DISPROVED that and found the real mechanism instead:
+## the SECOND teleport into trail_camp's stand-off spot (reached only after
+## the offer sweep has carried the player clear across four other bands and
+## back) sometimes free-falls the player straight through solid-looking
+## ground -- real Terrain3D collision only flickers into presence there well
+## after the fall has already carried the player past it and out of the
+## interact radius, followed by a sideways depenetration shove once it does.
+## rest_point.gd and interaction_arbiter.gd are correct throughout; they
+## stop offering because the player has genuinely left the radius. The fix
+## (`tests/smoke_authored_camps.gd::_stand_beside()`) no longer trusts
+## gravity/`move_and_slide()` to settle the player during the wait window --
+## it holds the target transform fixed every physics frame instead, since
+## this test only needs the player standing beside the point, not a
+## realistic fall. This probe mirrors that same fix and is left in the repo
+## as a reusable instrument for any future "interact prompt went inert"
+## report near a teleport, per the audit's own suggestion to build one in
+## `tools/_probe_engage_obstacle.gd`'s style.
 ##
 ##   godot --headless --path . --script tools/_probe_trail_camp_second_visit.gd
 
@@ -51,13 +67,7 @@ func _run() -> void:
 		if point == null:
 			continue
 		var label := str((entry[1] as Dictionary).get("label", "Rest until morning"))
-		if name == "trail_camp":
-			await _stand_beside(world, player, point.global_position)
-			print("  [sweep visit to trail_camp] player settled at %.3f,%.3f,%.3f on_floor=%s" % [
-				player.global_position.x, player.global_position.y, player.global_position.z,
-				str(player.call("is_on_floor"))])
-		else:
-			await _stand_beside(world, player, point.global_position)
+		await _stand_beside(player, point.global_position)
 		var offered := str(arbiter.call("prompt"))
 		print("  sweep  %-22s offers '%s' (want '%s')" % [name, offered, label])
 
@@ -156,7 +166,7 @@ func _rest_node(props: Node3D, name: String) -> Node3D:
 	return group.get_node_or_null(NodePath("%s_Rest" % name)) as Node3D
 
 
-func _stand_beside(_world: Node, player: CharacterBody3D, at: Vector3) -> void:
+func _stand_beside(player: CharacterBody3D, at: Vector3) -> void:
 	var target := at + Vector3(STAND_OFF_M, 0.2, 0.0)
 	for i in 20:
 		player.velocity = Vector3.ZERO
