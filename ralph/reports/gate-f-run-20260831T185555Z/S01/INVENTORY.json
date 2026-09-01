@@ -1,0 +1,176 @@
+{
+  "blocked": "",
+  "captures": {
+    "absent": 0,
+    "delegated": [
+      "GF-01-TITLE-01"
+    ],
+    "delegated_to": "S01C",
+    "owes": [],
+    "planned": 0,
+    "present": 0,
+    "rows": []
+  },
+  "complete": true,
+  "cost": {
+    "frame_cost_s": 0.016666,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.2,
+        "frame_cost_s": 0.006491,
+        "frames_remaining": 10826,
+        "predicted_remaining_s": 70.8,
+        "step_index": 2,
+        "wall_spent_s": 0.8,
+        "was_frame_cost_s": 0.005931
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14344.4,
+        "frame_cost_s": 0.456631,
+        "frames_remaining": 10805,
+        "observed_window_s": 0.456631,
+        "predicted_remaining_s": 4933.9,
+        "samples": 1,
+        "step_index": 8,
+        "wall_spent_s": 55.6,
+        "was_frame_cost_s": 0.006491
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14342.5,
+        "frame_cost_s": 0.236549,
+        "frames_remaining": 10805,
+        "observed_window_s": 0.016466,
+        "predicted_remaining_s": 2555.9,
+        "samples": 2,
+        "step_index": 8,
+        "wall_spent_s": 57.5,
+        "was_frame_cost_s": 0.456631
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14340.5,
+        "frame_cost_s": 0.016557,
+        "frames_remaining": 10805,
+        "observed_window_s": 0.016557,
+        "predicted_remaining_s": 178.9,
+        "samples": 3,
+        "step_index": 8,
+        "wall_spent_s": 59.5,
+        "was_frame_cost_s": 0.236549
+      }
+    ]
+  },
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false
+  },
+  "disk_actual": {
+    "frame_bytes": 0,
+    "largest_evidence_png_bytes": 0,
+    "preflight_self_test_png_bytes": 0,
+    "shot_bytes": 0,
+    "total_bytes": 0
+  },
+  "evidence_lane": "logic",
+  "frames": {
+    "absent": 0,
+    "absent_reasons": {},
+    "baseline_hz": 0.0,
+    "delegated_windows": [],
+    "written": 0
+  },
+  "git_check": "not run",
+  "harness_errors": [],
+  "preflight": {
+    "allow_no_capture": false,
+    "boot_cost_s": 0.5,
+    "capture_available": false,
+    "capture_lane": "S01C",
+    "capture_requested": false,
+    "cost_rechecks": 91,
+    "delegated_captures": 1,
+    "display_server": "headless",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "headless",
+      "from": "ralph/reports/gate-f-run-20260831T185555Z/RUN_METADATA.json",
+      "key": "lanes.logic.display_server",
+      "lane": "logic"
+    },
+    "measured_frame_cost_s": 0.005931,
+    "measured_frame_cost_s_in_scene": 0.016666,
+    "planned_captures": 0,
+    "predicted_frames": 10858,
+    "predicted_segment_cost_s": 64.4,
+    "predicted_segment_cost_s_in_scene": 413.6,
+    "record_baseline_hz": 0.0,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.2,
+        "frame_cost_s": 0.006491,
+        "frames_remaining": 10826,
+        "predicted_remaining_s": 70.8,
+        "step_index": 2,
+        "wall_spent_s": 0.8,
+        "was_frame_cost_s": 0.005931
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14344.4,
+        "frame_cost_s": 0.456631,
+        "frames_remaining": 10805,
+        "observed_window_s": 0.456631,
+        "predicted_remaining_s": 4933.9,
+        "samples": 1,
+        "step_index": 8,
+        "wall_spent_s": 55.6,
+        "was_frame_cost_s": 0.006491
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14342.5,
+        "frame_cost_s": 0.236549,
+        "frames_remaining": 10805,
+        "observed_window_s": 0.016466,
+        "predicted_remaining_s": 2555.9,
+        "samples": 2,
+        "step_index": 8,
+        "wall_spent_s": 57.5,
+        "was_frame_cost_s": 0.456631
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 14340.5,
+        "frame_cost_s": 0.016557,
+        "frames_remaining": 10805,
+        "observed_window_s": 0.016557,
+        "predicted_remaining_s": 178.9,
+        "samples": 3,
+        "step_index": 8,
+        "wall_spent_s": 59.5,
+        "was_frame_cost_s": 0.236549
+      }
+    ],
+    "verdict": "not required",
+    "why": "segment declares no captures and no continuous record"
+  },
+  "run_id": "gate-f-run-20260831T185555Z",
+  "segment": "S01",
+  "sha": "679f990cc04e557baff227754fbe67a618011214",
+  "steps": {
+    "delegated": 1,
+    "fail": 0,
+    "pass": 13,
+    "ran": 14,
+    "refused": 0,
+    "skipped": 0,
+    "total": 14
+  },
+  "uncommittable": []
+}
