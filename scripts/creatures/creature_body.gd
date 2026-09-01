@@ -111,6 +111,21 @@ const GROUND_PROBE_DOWN := 300.0
 ## colliders touch, which reads as attacks landing at the wrong distance.
 const FOOTPRINT_ALLOWANCE := 2.4
 
+## OWNER-0901-CREATURE-BED-POSE. No shipped creature carries an authored
+## lie-down clip -- `faint` is the only pose beyond idle/walk/run/attack/hit
+## every species ships (BACKLOG-BED-SCALE-POSE inspected every .glb directly
+## and confirmed this) -- and that clip alone reads as "standing/crouching on
+## a bed" for every body plan except the one bird in the roster (galecrest),
+## whose wing-collapse happens to fall sideways on its own. `play_rest()`
+## below rolls the model onto its side around its own ground-contact line
+## (the way a felled body actually tips over) so the rest of the roster reads
+## as lying down too. How far a species should roll is a fact about its body
+## plan, not a universal constant -- a tall, narrow creature (an antlered
+## deer) oversteers past a bed's rim at the same angle a low, wide one settles
+## at -- so it lives in species.json's `rest_roll_deg` per species, defaulting
+## to this when a species has not been tuned yet.
+const DEFAULT_REST_ROLL_DEG := 90.0
+
 ## OF27 placeholder tint: a deliberately garish magenta-shift multiply,
 ## applied to both albedo AND emission (see `_shared_variant_material`'s own
 ## comment for why emission has to be included). This is not the shiny
@@ -1185,6 +1200,60 @@ func play_hit() -> void:
 func play_faint() -> void:
 	if _animator != null:
 		_animator.call("play_faint")
+
+
+## A rolled body's own rigid rotation dips one side below its own origin by
+## roughly `_radius` (a quadruped's width, halved either side of centre) --
+## verified against terrapup's measured box (tools/_diag_rest_roll_math.gd:
+## -0.834m against a declared radius of 0.76m, the small gap being the art's
+## normal overhang past its collider). `_radius` grounds that dip from KNOWN,
+## pose-independent data, the same way `_height` (below) sizes the sideways
+## re-centre -- neither reads a measured pose. On top of that, a small extra
+## sink settles the body into the bedding rather than balancing exactly on
+## its surface, per the owner's own suggestion; kept modest on purpose after
+## the first attempt (0.35 of full standing HEIGHT) buried terrapup almost
+## entirely, when radius-grounding alone already looked right for it.
+const REST_SINK_METERS := 0.12
+
+## The bed-rest pose: idle (not faint) rolled onto its side so it reads as
+## lying rather than crouching, then sunk partway into the bedding. See
+## `DEFAULT_REST_ROLL_DEG` above for why the angle is per-species data, not
+## a constant. Only ever called on the cosmetic body `creature_bed.gd`
+## spawns to represent a resting occupant -- never on the piloted creature
+## -- so tipping the model over here cannot affect combat, which reads
+## `_height`/`_radius`/the collider and never this node's rotation.
+##
+## Idle, not faint: `faint` is a death-flop, and on a winged species it
+## flings the wings out wide rather than settling, which reads as "shot out
+## of the sky" once rolled rather than "asleep". Idle is closer to a
+## species' own resting silhouette on every rig this project ships.
+##
+## `rest_roll_deg: 0` opts a species out of all of this, back to the
+## original `play_faint()`-only behaviour. galecrest's own data carries it:
+## galecrest is the one species whose `faint` clip already falls sideways
+## into a genuine lying pose on its own (a wing-collapse, not anything this
+## roll produces), so ticking it into idle and not rolling would trade an
+## already-correct pose for a standing one.
+func play_rest() -> void:
+	var roll := float(SPECIES.placeholder(species_id).get("rest_roll_deg", DEFAULT_REST_ROLL_DEG))
+	if roll == 0.0:
+		play_faint()
+		return
+	if _animator != null:
+		_animator.call("tick", 0.0, 0.0, 1.0)
+	if not _has_model:
+		return
+	var roll_rad := deg_to_rad(roll)
+	_model.rotate_z(roll_rad)
+	# Re-centre sideways by half of what used to be standing height (that is
+	# where the roll sends it: see the corner derivation in
+	# tools/_diag_rest_roll_math.gd); ground the rotation's own dip by
+	# `_radius`; sink an extra `rest_sink_extra` (species data, defaulting to
+	# REST_SINK_METERS -- a hovering flier's idle can sit well clear of its
+	# own rest pose, which the radius term above cannot see, so an outlier
+	# gets a bigger number here rather than the whole roster paying for it).
+	var sink := float(SPECIES.placeholder(species_id).get("rest_sink_extra", REST_SINK_METERS))
+	_model.position = Vector3(_height * 0.5 * sin(roll_rad), _radius * sin(roll_rad) - sink, 0.0)
 
 
 func revive_animation() -> void:
