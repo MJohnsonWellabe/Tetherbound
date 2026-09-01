@@ -59,8 +59,9 @@
       "id": "tournament_train_team",
       "flag_id": "tournament_training_ready",
       "label": "Train with your team before the tournament.",
-      "how": "Villagers who offer a fight are the training -- Bryn at the practice ring first. Wins are levels.",
-      "_comment": "CONTRACT flag -- RG19 owns the permanent level/condition threshold. Winning fights, gaining XP, or whatever RG19's condition model actually gates entry on should set this, not an invented second number."
+      "how": "Villagers who offer a fight are the training -- Bryn at the practice ring first. Wins are levels. Get your whole team to level 5.",
+      "_comment": "CONTRACT flag -- RG19 owns the permanent level/condition threshold. Winning fights, gaining XP, or whatever RG19's condition model actually gates entry on should set this, not an invented second number.",
+      "_comment_owner_0901": "ralph/OWNER_PLAYTEST_2026-09-01.md item 12: this rung named no concrete target, so a player reading the quest screen saw 'wins are levels' with nothing to aim for. The '5' here must stay in sync with data/config/tournament.json's entry.min_level (currently being lowered from 6 to 5 on ralph/OWNER-0901-TOURNAMENT-LEVEL5, matching Halda's tournament_halda_train dialogue) -- if that number ever moves again, update this line in the same change."
     },
     {
       "id": "tournament_gather_materials",
