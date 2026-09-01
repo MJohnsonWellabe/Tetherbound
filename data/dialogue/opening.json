@@ -69,10 +69,12 @@
     },
     "grandpa_after_first_catch": {
       "_comment": "The required return after the first catch. Mira owns the tool/recipe reward; this only points the player to her.",
+      "_comment_training_line": "OWNER-0901-TRAIN-CLARITY. Owner playtest 2026-09-01 item 7/10: 'still unclear how to train a team... no clear guidance on what training is or how to do it' -- a repeat of the same complaint from 2026-08-30B item 17. The only existing answer was objectives.json's `tournament_train_team` `how` line ('Villagers who offer a fight are the training'), which only shows inside the Quest Log tab (quest_log.gd's `tracked_hint()` is deliberately not wired to the HUD -- see that function's own header) and only once the player has already opened a menu to find it. This line puts the same fact in the one dialogue box every player is required to read this early -- the conversation that gates `beat:visit_mira` -- so the mechanic is established before the tournament's own checklist (Halda's registrar line, OWNER-0901-TOURNAMENT-LEVEL5's scope, not this one) ever has to re-teach it.",
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
         "Nice catch. That's how a team starts.",
+        "Fight with it from here on — wild creatures, other trainers, whoever's willing. Win, and it grows stronger. That's all training is.",
         "Now go see Mira in the village. She'll give you some basic tools and teach you how to make more Orbs.",
         {
           "text": "Come back when you're equipped.",
