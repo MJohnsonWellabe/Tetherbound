@@ -1098,6 +1098,21 @@ func apply_size_multiplier(multiplier: float) -> void:
 	if not _build_model(look):
 		_build_capsule(look)
 	_refresh_shiny_tint()
+	# BACKLOG-VISUAL-ALPHA-GROUNDING. The caller already stood this body on the
+	# ground via `place_on_ground()` BEFORE calling here (`encounter_director.
+	# _make_alpha()` resizes an already-placed wild), and that call's
+	# `_seat_over_footprint()` sampled the ground under the ORDINARY `_radius`.
+	# An alpha's footprint just grew, so re-seating with the now-larger radius
+	# is the only way its rearmost feet see the same ground a smaller body
+	# would have been placed on -- on any slope, the wider stance the bigger
+	# `_radius` implies reaches further outward than the sample this body was
+	# originally planted on, which is exactly "lit ground under every claw,
+	# the rearmost toe in mid-air" reads like on a rise. Skipped with no
+	# ground source (a capture-tool stage with its own flat floor and no
+	# `ground_height_at` node) since `place_on_ground` already returns false
+	# harmlessly there.
+	if is_inside_tree():
+		place_on_ground(global_position)
 
 
 func body_radius() -> float:

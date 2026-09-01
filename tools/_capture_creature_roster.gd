@@ -135,11 +135,14 @@ extends SceneTree
 ## TRAINERS (ordinary creatures on a harder team, `data/config/trainers.json`
 ## / `data/config/stronghold.json`), which is a roster question, not a visual
 ## one. So the one alpha demonstration below is a SCALE shot, not a repaint:
-## galecrest at `x1.4`, the largest alpha multiplier any band actually
-## authors (`data/config/bands/band5_stronghold_approach/spawns.json`, the
-## pack leader on the last stretch before the Hall -- burrowback and duskhush
-## also get alphas elsewhere, both at the smaller x1.3 every band but band5
-## uses).
+## galecrest at `x1.2`, the largest of the three authored Galecrest alpha
+## multipliers (`data/config/bands/band5_stronghold_approach/spawns.json`,
+## the pack leader on the last stretch before the Hall; band3 and band4 each
+## author their own Galecrest alpha lower on the same escalating ladder).
+## BACKLOG-VISUAL-ALPHA-SCALE dropped all three off their old 1.3/1.3/1.4:
+## that old top value read as barely bigger than an ordinary Tuskroot on a
+## census AND, uncaught until then, stood taller than the Veridian Stag
+## legendary at ordinary Galecrest's post-D69 2.10m height.
 ##
 ## Output: `res://shots/creatures/NN-<species>.png` for all 17 species (their
 ## ordinary/vivid look, the one the game actually ships), plus
@@ -173,7 +176,7 @@ const ORDER: Array[String] = [
 ## MATERIAL VARIANTS note. `13` matches galecrest's own index in `ORDER`
 ## above, so the file sorts next to `13-galecrest.png` / `-shiny.png`.
 const ALPHA_SPECIES := "galecrest"
-const ALPHA_SCALE := 1.4
+const ALPHA_SCALE := 1.2
 const ALPHA_INDEX := 13
 
 ## Five species answering the rubric's own example question -- "is the one
@@ -222,9 +225,29 @@ const CAM_LOOK := Vector3(-1.15, 1.35, 0.0)
 const FOV := 42.0
 
 ## --- line-up framing: its own shot, not held to "identical to the pairs" -
-const LINEUP_CAM_POS := Vector3(0.2, 1.9, 13.0)
+##
+## BACKLOG-VISUAL-PIPWING-LINEUP-SCALE. Pipwing (0.76m, `species.json`) is the
+## smallest lineup subject and sits closest to camera-centre in X (offset 3.8m
+## from `LINEUP_CAM_POS.x`), while the ruler -- the trainer, at `LINEUP_TRAINER_X`
+## -- sits 6.2m off-axis. At the OLD framing (z=13, fov=46) that put Pipwing
+## roughly 6% CLOSER to the camera than the trainer it is measured against
+## (13.5m vs 14.4m along the camera's view axis): real perspective foreshortening,
+## not a data or seating bug -- `_seat_on_ground()` runs identically for every
+## lineup subject and the single-species pass, and both read the same
+## `species.json` height. A census caught it as "0.77m in its own frame vs
+## 1.05m in the lineup" -- a ~36% swing -- because that ~6% distance skew reads
+## as a much bigger PERCENTAGE error against a subject this small, while the
+## other four lineup subjects (closer in absolute height to the trainer, so the
+## same skew is a smaller fraction of them) "reconciled to within 2-4%" per the
+## same census. Pulling the camera back and narrowing the FOV to match keeps
+## every subject at the same screen position (same visible half-width at the
+## new distance) while roughly quartering the relative camera-distance spread
+## between the nearest and farthest subjects (was ~6.4% trainer-to-Pipwing,
+## now ~1.8%), which is the actual lever for this class of error, not anything
+## in the game's own transform data.
+const LINEUP_CAM_POS := Vector3(0.2, 1.9, 26.0)
 const LINEUP_CAM_LOOK := Vector3(0.2, 1.5, 0.0)
-const LINEUP_FOV := 46.0
+const LINEUP_FOV := 24.0
 
 const BOOT_FRAMES := 10
 const SETTLE_FRAMES := 6
