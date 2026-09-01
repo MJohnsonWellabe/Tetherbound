@@ -3276,6 +3276,19 @@ func _step_press_until(args: Dictionary, step_id: String) -> String:
 ## step immediately after it, so a segment can still see (and evidence) the
 ## release as its own step.
 func _step_track_aim(args: Dictionary, step_id: String) -> String:
+	# CD-4's rule, the same way `press_until`'s own `skip_if` applies it: a
+	# retry block that runs after the catch already landed has nothing to aim
+	# at, and that is the segment succeeding early, not a defect. Measured on
+	# this segment: once `party_size` reaches its target after throw 2, throws
+	# 3 and 4's `press_until` (aim entry) already reports FAIL rather than
+	# SKIP because neither carries a `skip_if` of its own — this step must not
+	# repeat that shape by reporting a hard FAIL for the same moot case.
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED track_aim: not needed (%s)" % str(moot.get("actual", ""))
+
 	var manager := _probe.call("combat_manager") as Node
 	if manager == null:
 		return "HARNESS-ERROR track_aim step %s has no CombatManager in the world" % step_id

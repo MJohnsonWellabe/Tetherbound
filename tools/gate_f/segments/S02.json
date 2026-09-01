@@ -593,7 +593,11 @@
       "title": "track the bramblebun until the reticle is on it (throw 2)",
       "action": "track_aim",
       "args": {
-        "budget_frames": 240
+        "budget_frames": 240,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "RIG-F3: re-point the camera at the target's live position every frame and stop the instant the reticle is confirmed on the body, rather than throwing at the single snap taken when the aim opened."
     },
@@ -639,7 +643,11 @@
       "title": "track the bramblebun until the reticle is on it (throw 3)",
       "action": "track_aim",
       "args": {
-        "budget_frames": 240
+        "budget_frames": 240,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "RIG-F3: re-point the camera at the target's live position every frame and stop the instant the reticle is confirmed on the body, rather than throwing at the single snap taken when the aim opened."
     },
@@ -685,7 +693,11 @@
       "title": "track the bramblebun until the reticle is on it (throw 4)",
       "action": "track_aim",
       "args": {
-        "budget_frames": 240
+        "budget_frames": 240,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
       },
       "expected": "RIG-F3: re-point the camera at the target's live position every frame and stop the instant the reticle is confirmed on the body, rather than throwing at the single snap taken when the aim opened."
     },
