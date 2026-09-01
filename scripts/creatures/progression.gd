@@ -76,16 +76,6 @@ static func rest_xp(cfg: Dictionary) -> int:
 	return int(award_cfg.get("rest_bonus", 0))
 
 
-## GAME_DESIGN.md §12: "Bond increases through... time together... resting."
-## `bond.per_day_in_party` has held a real number in progression.json since
-## D30 but nothing ever read it — R4.1-remainder wired the same rest call
-## site for XP and left this half explicitly for whoever picked up bond next
-## (see BACKLOG.md's R4.7 entry). Mirrors `rest_xp`'s own shape.
-static func rest_bond(cfg: Dictionary) -> int:
-	var bond_cfg: Dictionary = cfg.get("bond", {})
-	return int(bond_cfg.get("per_day_in_party", 0))
-
-
 ## A stat at `level`, scaled linearly from its level-1 `base` by `growth` per
 ## level above 1. `stat_at_level(base, 1, growth)` is always exactly `base`,
 ## whatever `growth` is — level 1 is the species' base stat by definition, not
@@ -106,20 +96,6 @@ static func roll_wild_level(cfg: Dictionary, rng_value: float) -> int:
 	var high := int(band[1]) if band.size() > 1 else low
 	var roll := clampf(rng_value, 0.0, 1.0)
 	return int(round(lerpf(float(low), float(high), roll)))
-
-
-## How many bond thresholds `bond` has crossed, 0 to `thresholds.size()`. A
-## count rather than a named tier because the UI and the stat-scaling both
-## just need "how many", and naming the tiers is a presentation decision that
-## does not belong in pure arithmetic.
-static func bond_nodes(bond: int, cfg: Dictionary) -> int:
-	var bond_cfg: Dictionary = cfg.get("bond", {})
-	var thresholds: Array = bond_cfg.get("thresholds", [])
-	var nodes := 0
-	for threshold: Variant in thresholds:
-		if bond >= int(threshold):
-			nodes += 1
-	return nodes
 
 
 ## The multiplier bond applies to a stat named by `key` (e.g. "attack_scale",

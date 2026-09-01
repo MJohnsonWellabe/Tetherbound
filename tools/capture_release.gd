@@ -51,12 +51,17 @@ func _run() -> void:
 		return
 
 	var cfg: Dictionary = PROGRESSION.config()
+	# OWNER-0901-BOND-MILESTONES: entry[3] used to be a raw 0-100 bond value;
+	# it is now "how many wild wins toward milestone 1's 50" -- still varied
+	# per creature (0 to a full milestone) so the ceremony's farewell text
+	# shows a real, differing "bond N/M" line per belt member, not the same
+	# number five times.
 	var belt := [
-		["terrapup", "Biscuit", 12, 74, 1.0],
-		["ripplet", "", 8, 31, 0.85],
-		["galewisp", "Kite", 10, 48, 1.0],
-		["mudsnout", "", 7, 22, 0.45],
-		["bramblebun", "", 5, 9, 0.9],
+		["terrapup", "Biscuit", 12, 37, 1.0],
+		["ripplet", "", 8, 15, 0.85],
+		["galewisp", "Kite", 10, 24, 1.0],
+		["mudsnout", "", 7, 11, 0.45],
+		["bramblebun", "", 5, 4, 0.9],
 	]
 	for entry in belt:
 		var creature: RefCounted = game.call("make_creature", str(entry[0]), str(entry[1]))
@@ -65,7 +70,7 @@ func _run() -> void:
 			quit(1)
 			return
 		creature.call("set_level", int(entry[2]), cfg)
-		creature.set("bond", int(entry[3]))
+		creature.set("battles_fought", int(entry[3]))
 		var hp := float(creature.get("max_hp")) * float(entry[4])
 		creature.set("hp", hp)
 		party.call("add", creature)

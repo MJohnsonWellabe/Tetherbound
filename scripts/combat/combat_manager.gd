@@ -868,20 +868,12 @@ func _award_victory() -> void:
 		CONDITION.note_victory(member, condition_cfg)
 		for _level in levels_gained:
 			CONDITION.note_level_up(member, condition_cfg)
-
-	var winner := active_creature()
-	if winner != null:
-		winner.gain_bond(int(cfg.get("bond", {}).get("battle_won", 0)), cfg)
-
-
-## D30's bond a freshly caught creature starts with. Split out of `_finish_catch`'s
-## success branch so this exact rule is reachable on its own, without the rest
-## of catch resolution's staged VFX/camera machinery.
-func _apply_catch_bond(caught: RefCounted) -> void:
-	if caught == null:
-		return
-	var cfg: Dictionary = PROGRESSION.config()
-	caught.gain_bond(int(cfg.get("bond", {}).get("successful_catch_start", 0)), cfg)
+	# OWNER-0901-BOND-MILESTONES: bond's "fighting together" milestone reads
+	# `battles_fought` directly (just incremented above for every member who
+	# fought), so a win needs no separate bond credit here any more -- see
+	# bond_milestones.json's own comment. A freshly caught creature no longer
+	# gets a bond head start either: milestone 0 is always "0/50", the same
+	# concrete starting line as every creature caught before or after it.
 
 
 ## Movement is the dodge. The creature is driven straight from the stick, in camera
@@ -1377,12 +1369,6 @@ func _finish_catch() -> void:
 	var orb: Node3D = _throw.call("resting_orb")
 
 	if _catch_succeeded:
-		# D30: a caught creature starts with a bond head start rather than at zero,
-		# same as GAME_DESIGN.md's read that catching is itself an act of
-		# trust. `_enemy` IS what `caught_instance()` will hand the director in
-		# a moment, so setting it here is setting it on the instance that
-		# actually joins the party.
-		_apply_catch_bond(_enemy)
 		# The seal: the orb blooms warm and stays glowing, the camera stays on
 		# it through the fight's resolve pause, and the orb is only freed with
 		# the rest of the fight in `_finish()`.

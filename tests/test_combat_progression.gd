@@ -1,8 +1,8 @@
 extends "res://tests/test_case.gd"
 
-## Combat progression wiring (D30 XP/bond-on-victory, D30 catch-bond) and the
-## mid-combat switch seam (D32) — the LOGIC combat_manager.gd exposes, tested
-## against a bare, un-`_ready()`d CombatManager instance.
+## Combat progression wiring (D30 XP-on-victory) and the mid-combat switch
+## seam (D32) — the LOGIC combat_manager.gd exposes, tested against a bare,
+## un-`_ready()`d CombatManager instance.
 ##
 ## combat_manager.gd extends Node, not RefCounted, so it cannot be this file's
 ## own base class the way creature_instance.gd/progression.gd are for
@@ -13,13 +13,20 @@ extends "res://tests/test_case.gd"
 ##
 ## `.new()` alone never calls `_ready()` (that only fires on entering a
 ## SceneTree), so the functions exercised here are chosen to be the ones that
-## do not need it: `_award_victory`, `_apply_catch_bond` and the whole switch
-## seam only ever touch `_party`, `_active_index`, `_enemy`, `state`,
-## `_catch_phase`, `_action` and `_switch_lockout` — plain data, no child
-## nodes. `is_aiming()` is the one switch guard that DOES need a live `_throw`
-## node (built in `_ready`); it is not exercised here for that reason, and
-## `smoke_combat.gd` already proves the whole wired-in-a-real-scene fight,
-## start to finish, including that guard's sibling checks.
+## do not need it: `_award_victory` and the whole switch seam only ever touch
+## `_party`, `_active_index`, `_enemy`, `state`, `_catch_phase`, `_action` and
+## `_switch_lockout` — plain data, no child nodes. `is_aiming()` is the one
+## switch guard that DOES need a live `_throw` node (built in `_ready`); it is
+## not exercised here for that reason, and `smoke_combat.gd` already proves
+## the whole wired-in-a-real-scene fight, start to finish, including that
+## guard's sibling checks.
+##
+## OWNER-0901-BOND-MILESTONES removed both `_apply_catch_bond` (a caught
+## creature no longer gets a bond head start -- every creature starts its
+## milestone ladder at 0/50, caught or not) and bond's separate per-victory
+## gain (`_award_victory`'s existing `battles_fought` increment, tested below,
+## already IS the ladder's first milestone -- see bond_milestones.json's own
+## comment for why no new crediting code was needed there).
 
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -93,21 +100,28 @@ func test_award_victory_splits_xp_between_the_active_creature_and_its_bench() ->
 	assert_eq(fainted_bench.level, 3, "a fainted party member should not level up")
 
 
-func test_award_victory_grants_battle_won_bond_only_to_the_active_creature() -> void:
+## OWNER-0901-BOND-MILESTONES: `battles_fought` (also prompt 67's release-
+## ceremony history counter) IS the bond ladder's first milestone now, and
+## it goes to every non-fainted party member who was in the fight, not only
+## the one who landed the win -- matching the owner's own "defeat 50 wild
+## creatures TOGETHER" wording, and the same "whole party, not just active"
+## rule the xp party_share above already follows.
+func test_award_victory_credits_battles_fought_to_every_non_fainted_member() -> void:
 	var mgr := _manager()
-	var cfg := PROGRESSION.config()
 
 	var winner := _creature(3, "Champ")
 	var bench := _creature(3, "Bench")
-	mgr.set("_party", [winner, bench] as Array[RefCounted])
+	var fainted_bench := _creature(3, "Downed")
+	fainted_bench.fainted = true
+	mgr.set("_party", [winner, bench, fainted_bench] as Array[RefCounted])
 	mgr.set("_active_index", 0)
 	mgr.set("_enemy", _creature(4, ""))
 
 	mgr.call("_award_victory")
 
-	var battle_won := int(cfg.get("bond", {}).get("battle_won", 0))
-	assert_eq(winner.bond, battle_won, "the active creature should gain the battle-won bond")
-	assert_eq(bench.bond, 0, "only the active creature gains bond from landing the win")
+	assert_eq(winner.battles_fought, 1, "the active creature fought and should be credited")
+	assert_eq(bench.battles_fought, 1, "a non-fainted bench member was in the fight too")
+	assert_eq(fainted_bench.battles_fought, 0, "a fainted member did not fight")
 
 
 func test_award_victory_records_last_xp_award_for_the_hud() -> void:
@@ -137,26 +151,7 @@ func test_award_victory_does_nothing_with_no_enemy_recorded() -> void:
 	# _enemy left null -- combat_manager should refuse quietly, not crash.
 	mgr.call("_award_victory")
 	assert_eq(winner.xp, 0)
-	assert_eq(winner.bond, 0)
-
-
-# --- bond on a successful catch (D30, combat_manager._apply_catch_bond) -----
-
-func test_apply_catch_bond_starts_a_fresh_catch_with_the_configured_bond() -> void:
-	var mgr := _manager()
-	var cfg := PROGRESSION.config()
-	var caught := _creature(2, "")
-	assert_eq(caught.bond, 0, "a fresh instance should start unbonded")
-
-	mgr.call("_apply_catch_bond", caught)
-
-	var start := int(cfg.get("bond", {}).get("successful_catch_start", 0))
-	assert_eq(caught.bond, start)
-
-
-func test_apply_catch_bond_tolerates_a_null_catch() -> void:
-	var mgr := _manager()
-	mgr.call("_apply_catch_bond", null)  # must not crash
+	assert_eq(winner.battles_fought, 0, "no fight happened, so no bond-ladder credit either")
 
 
 # --- the switch seam (D32) ---------------------------------------------------
