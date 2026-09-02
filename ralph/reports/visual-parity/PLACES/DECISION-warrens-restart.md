@@ -57,4 +57,4 @@ Caveats, stated honestly:
   (e.g. `#4a3a2a`, ~2× the apron value) so Ground030's grain survives the shadow, or run it through the stain shader
   with a dark `base_tint` and `material_override` cleared. One data knob either way; no interior impact.
 
-`tests/smoke_warrens.gd`: SMOKE_RESULT_PLACEHOLDER
+`tests/smoke_warrens.gd` on this state: exit 0, "warrens smoke test passed" (mouth walkable, chambers enclosed, route walked, guardian/heartstone/reward intact).
