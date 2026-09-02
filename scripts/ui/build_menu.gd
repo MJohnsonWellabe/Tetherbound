@@ -150,6 +150,7 @@ var _grid: GridContainer = null
 var _scroll: ScrollContainer = null
 var _cell_buttons: Array[Button] = []
 var _detail_name: Label = null
+var _detail_blurb: Label = null
 var _detail_rows: VBoxContainer = null
 var _message: Label = null
 var _message_left := 0.0
@@ -418,6 +419,18 @@ func _build_ui() -> void:
 	_detail_name.add_theme_color_override("font_color", UITokens.BUILD_TEXT)
 	strip_vbox.add_child(_detail_name)
 
+	# OWNER_PLAYTEST_2026-09-02 #10: `blurb` and `contains` have sat in every
+	# buildables.json entry since the menu shipped, unread by any UI -- a
+	# bundled piece like `camp` (tent + campfire + bedroll, one buy) never
+	# told the player it was a bundle at all, so a player looking for a
+	# "tent" tile specifically found nothing named one and reasonably
+	# concluded it could not be built. This label is that missing sentence.
+	_detail_blurb = Label.new()
+	_detail_blurb.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_blurb.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_detail_blurb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	strip_vbox.add_child(_detail_blurb)
+
 	_detail_rows = VBoxContainer.new()
 	_detail_rows.add_theme_constant_override("separation", 2)
 	strip_vbox.add_child(_detail_rows)
@@ -623,10 +636,13 @@ func _describe(index: int) -> void:
 	_clear(_detail_rows)
 	if index < 0 or index >= pieces.size():
 		_detail_name.text = ""
+		_detail_blurb.text = ""
 		return
 
 	var piece: Dictionary = pieces[index]
 	_detail_name.text = str(piece.get("name", piece.get("id", "?")))
+	_detail_blurb.text = _blurb_text(piece)
+	_detail_blurb.visible = not _detail_blurb.text.is_empty()
 
 	var game := _game()
 	var free := game != null and bool(game.get("free_build"))
@@ -676,6 +692,21 @@ func _describe(index: int) -> void:
 		row.add_child(label)
 
 		_detail_rows.add_child(row)
+
+
+## `piece.blurb`, with `piece.contains` (if any) appended as "Includes: ..." —
+## the one place either field is read. A single buy that plants more than one
+## object (`camp`: tent, campfire, bedroll) says so here instead of leaving
+## the player to infer it from a thumbnail that shows only one of the three.
+func _blurb_text(piece: Dictionary) -> String:
+	var blurb := str(piece.get("blurb", ""))
+	var contains: Array = piece.get("contains", [])
+	if contains.is_empty():
+		return blurb
+	var joined := ", ".join(contains.map(func(s: Variant) -> String: return str(s)))
+	if blurb.is_empty():
+		return "Includes: %s." % joined
+	return "%s Includes: %s." % [blurb, joined]
 
 
 func _update_footer() -> void:
