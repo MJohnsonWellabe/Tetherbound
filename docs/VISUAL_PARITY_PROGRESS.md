@@ -182,6 +182,16 @@ Evidence: `ralph/reports/visual-parity/WORLD/round2/` (village/pond 15 frames + 
   black again (clock freeze ordering in survey.gd), daytime sun a flat white cutout, night ground black past the lit
   radius, overlook distance flattens against the sky, one evenly spaced bush row. All sent as round-3 items.
 
+### PLACES round 2 (`claude/vp-places` @ 347306a0) — verdicts 2026-09-02 05:50 UTC — MERGED into the program branch
+Evidence: `PLACES/round2/locations/` (27 frames). Judge: `PLACES/JUDGE-round2.md` — Bar B **yes** for village and
+stronghold courtyard, no for the Relay; Bar A no as a set (pale canopies — WORLD's bug, now fixed — and debug-line cables
+are the loudest elements).
+- Better: Warrens den stand fixed (interior with creature), Hall 100/200/400 m stands now actually aim at the Hall,
+  relay gate + barrier + banner + grunts at the approach.
+- Open → round 3 (sent 05:52 + addendum 06:06): Hall exterior kit still cream at distance; Warrens mound flat grey;
+  cyan cables/beams unanchored at relay, stronghold sky and courtyard floor; relay standing/apparatus not staffed;
+  smoke column a hard band; night courtyard/gate crushed black; route-out stand shows no gate.
+
 ## Implementation decisions
 
 - `data/config/grass_field.json` is **ON** for this program (owner directive 2026-09-01: "I don't see how a
