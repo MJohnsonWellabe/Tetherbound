@@ -3,15 +3,16 @@
 **Branch** `claude/vp-places` · **start commit** `e3aba7d7` (VP0 merge of the GROUND+VEG lane code)
 **Owns** VP5 (village / tournament / camps), VP6 (Warrens exterior), VP7 (Relay), VP8 (Meadows Hall)
 
-## Current state at a glance (after round 5)
+## Current state at a glance (after round 6)
 
 | | state |
 |---|---|
 | `hall_approach` draw calls | **3848 / 4000** — inside budget (was 4331 at baseline) |
 | guard smokes | `smoke_stronghold`, `smoke_warrens`, `smoke_relay` pass; `smoke_traversal` fails on a pre-existing South Bridge walk-around outside this lane |
-| courtyard night | 3.58 → **8.38** mean; reads at native exposure, but **misses the ≥ 12 target** |
-| Hall silhouette | decisive at 100 m (storm band lifted clear); **still weak at 200 m / 400 m** |
-| Warrens | reshaped as earthwork, exterior rock family now matches the interior; **den frame no longer pixel-stable (4.6 % of pixels > 8)** |
+| courtyard night | **12.45 mean — target met**; floor at the trainer 2.4× brighter; extreme foreground still black |
+| Hall silhouette | decisive at 100 m (storm band lifted clear and halved); **still weak at 200 m / 400 m** |
+| Warrens | earth-mound material language, overhang wedge removed, threshold now the interior's exact wall material; **den stability restored (1.8 % of pixels > 8)** |
+| banners | material changed to `#5a1a1a`, but **not proven in-frame** — treat poster-red as open |
 | Relay | occupied and cabled, but **its round-3 changes have never been rendered** |
 | open, outside PLACES | grass field enabled yet drawing zero instances; South Bridge gate walk-around; `_judge_capture_hall.gd` has never produced frames |
 
