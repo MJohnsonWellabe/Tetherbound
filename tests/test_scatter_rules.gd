@@ -616,6 +616,14 @@ func _corridor_spatial_cv(placements: Array, bin_m: float) -> float:
 
 func test_ecology_core_clusters_without_changing_the_count() -> void:
 	var plain := _layer("trees").duplicate(true)
+	# The gate acts on the corridor fill only. The live layer also carries
+	# authored anchors, hero trees and water-edge bands, which are appended
+	# identically to both sides and are clustered by construction -- they
+	# inflate the "plain" CV until the gate's own contribution disappears
+	# behind them (CI 2026-09-02: 2.511 gated vs 2.329 plain on the merged
+	# layer). Measure the fill alone so the test stays about the gate.
+	for pass_key in ["anchors", "heroes", "water_edge", "verge", "under"]:
+		plain.erase(pass_key)
 	var fill: Dictionary = plain.get("corridor_fill", {}).duplicate(true)
 	fill.erase("ecology")
 	plain["corridor_fill"] = fill
