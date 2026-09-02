@@ -128,7 +128,7 @@
           "sink_m": 0.03,
           "scale": 1.0,
           "dir": "res://assets/props/kenney_survival",
-          "_why": "VP5 round9, coordinator spec: apply the relay camp's asymmetric treatment here. Set 1.0m from the NW log so the two touch and read as one pulled-together seat, leaving the Stool across the fire as the camp's one unpaired seat -- the fire and bed stay the visual subject (bed and fire unchanged), this only breaks the old mirrored two-seats-opposite-each-other symmetry. (Merge note: shifted by the CORRIDOR round-7 camp move (-6.83, -1.52) so it still touches the NW log.)",
+          "_why": "VP5 round9, coordinator spec: apply the relay camp's asymmetric treatment here. Set 1.0m from the NW log so the two touch and read as one pulled-together seat, leaving the Stool across the fire as the camp's one unpaired seat -- the fire and bed stay the visual subject (bed and fire unchanged), this only breaks the old mirrored two-seats-opposite-each-other symmetry. (Merge note: shifted by the CORRIDOR round-7 camp move (-6.83, -1.52) so it still touches the NW log.)"
         },
         {
           "model": "tree-log-small",
