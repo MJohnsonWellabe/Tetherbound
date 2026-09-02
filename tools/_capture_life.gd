@@ -118,7 +118,7 @@ const STANDS := [
 	 "cluster_note": "band1 order 0 (bramblebun, existing) + order 1070 (mudsnout, new)"},
 	{"id": "02-mill-pond-banks", "night": true,
 	 "eye": [-386.0, 520.0], "facing_toward": [-378.0, 528.0],
-	 "cluster_note": "band1 order 6 (paddlenewt, existing) + order 1071 (mosshell, new)"},
+	 "cluster_note": "band1 order 6 (paddlenewt, existing), ~11m off this eye. Round 5's own second-species cluster (order 1071, mosshell) was removed by the program coordinator's own CI fix after it landed inside Creek Hollow's authored 8-cluster/9-creature pocket (tests/test_spawns_data.gd::test_creek_hollow_is_a_compact_multi_habitat_first_adventure); the hollow's own order 7 (mosshell) exists but sits ~45m from this eye, outside REPORT_RADIUS, and order 8 (brooktail) sits ~29m off, at the very edge. The round5/round6 shipped PNGs for this stand were captured BEFORE the removal and still show the mosshell that supplied them -- a re-capture from current data will not reproduce that second species until a replacement is sited (per the coordinator: change count/radius on orders 6/7 only, or place new clusters outside x in [-520,-300], z in [460,640])."},
 	{"id": "03-band1-open-meadow", "night": false,
 	 "eye": [-11.5, 698.5], "facing_toward": [-17.5, 696.5],
 	 "cluster_note": "band1 order 1002 (pipwing, existing) + order 1072 (bramblebun, new); round 6 boot 1 aimed facing_toward at the two clusters' centroid from the OLD eye (-6,700) and still failed every body on height_frac_too_small (0.03-0.07, all comfortably below the 0.08 floor) -- not an aim problem, a distance one (9.3-15.9m from the eye, plus this stand's own 3.5m camera pull-back). Boot 2 moves the eye itself to (-11.5,698.5), roughly halving the eye-to-centroid distance (11.7m -> 6.3m)."},
