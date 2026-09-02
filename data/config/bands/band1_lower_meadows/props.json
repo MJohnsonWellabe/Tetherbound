@@ -783,6 +783,26 @@
           "_why": "the watering bucket, touching the crate's side."
         }
       ]
+    },
+    {
+      "order": 1034,
+      "name": "grandpa_door_lantern",
+      "_why": "VP2-NIGHT judge pass, 2026-09-02: '01-village-grandpa-yard-night' (marker stand GrandpaHouse/outside -> GrandpaHouse/door) reads NPCs at the door as 'silhouetted to illegibility (a little warm light near the door)'. `grandpa_house.gd`'s door marker is `to_global(Vector3(INNER_W*0.5+WALL_T+1.2, 0, 0))` = world (-15.7,-16) off `playground_world.gd`'s HOUSE_AT (-22,-16) with no rotation -- the same figure this file's own `village_twins_yard` cluster already cites for its woodpile ('built door node (-15.7,-16), wall extent x -16.05'), not a fresh guess. No lantern/lamp/brazier mesh exists anywhere under assets/ (torch_prop.gd's own header: a find across assets/props and assets/environment for torch/flame/lantern turns up nothing but this same Bonfire), and this lane may only edit config, not scripts, so the reused mechanism is the one already-solved warm-practical-light recipe every camp in the chapter uses (`Bonfire_Fire.obj`'s real `Fire` surface + `ignite()` + `campfire_glow.gd`'s light/ember/smoke overlay, `glow: campfire`) -- scaled far down from every camp's own use of it (band1's trail camp 0.45, band4's patrol posting 0.42) to read as a small dooryard fire-pot rather than a bonfire dropped on the threshold, which is what 'a lantern by a door, not stage lighting' asks for. ONE light only -- no stone ring, no supply pile -- since a fire ring/log cache would read as a camp, not a doorstep. Sited 1.24m from the door node at (-15.4,-17.2): south of the door on the same side as the existing woodpile/crate pair (-15.0,-18.9)/(-14.3,-19.4) so it reads as one dooryard rather than clutter on both flanks, 1.75m clear of the woodpile, 1.63m clear of the 'Grandpa's House' route's own painted-path endpoint (-16.5,-16.0) (terrain_playground.json paths.routes), and off the door-to-outside walking lane (village_twins_yard's own 'x -16..-9.7 at z~-15' figure runs close to z=-16 at this x, not through z=-17.2). Sits in `building_aprons.footprints[0]`'s (centre -22,-16, half_extents 5.3x3.3) feather zone, same as the woodpile/crate beside it -- worked dooryard ground, not raw lawn, the same convention every other VP5 entry in this file already follows.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "at": [
+            -15.4,
+            -17.2
+          ],
+          "yaw_deg": 35.0,
+          "scale": 0.22,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "_why": "The door light itself. `scale` 0.22 -- roughly half band4's already-small 0.42 patrol posting -- keeps the log pile door-side-brazier small rather than reading as a hearth blocking the threshold; `glow_scale` deliberately left at the chapter's own 1.0 default (LIGHT_RANGE 8.0m, LIGHT_BASE_ENERGY 3.4, warm colour (1.0,0.68,0.32) -- campfire_glow.gd's own constants) rather than dimmed further, because the judge's finding was specifically that NPCs at the door are ILLEGIBLE at night: an 8m warm pool centred 1.24m from the door is what actually reads Oskar/Grandpa's faces, and every other camp in the chapter already proves this exact energy/range reads as a warm practical light rather than daylight at night without complaint. `yaw_deg` 35 (not a flat 0/90) so the log pile does not stand squared-off against the wall, matching this file's own 'not one more object than the yard needs, every object placed on purpose' convention for the rest of the dooryard."
+        }
+      ]
     }
   ]
 }
