@@ -225,6 +225,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	_clear_the_ground_the_cave_stands_on()
 	_build_mound()
 	_build_entrance_dressing()
+	_build_spoil_mounds()
 	_build_deposits()
 	_build_dressing()
 	_build_den_atmosphere()
@@ -1809,6 +1810,67 @@ func _build_entrance_dressing() -> void:
 		placed += 1
 	if placed > 0:
 		print("[warrens] placed %d entrance dressing pieces (fern ring / hood)" % placed)
+
+
+## EXT-07-EARTHWORK, item 3: "spoil mounds / soil apron of terrain-coloured
+## earth around the mouth -- the dug-out material a burrow would throw up".
+## Read from `mound.spoil_mounds` (burrow_warrens.json's own comment there
+## carries the full reasoning). Reuses the same installed rock meshes
+## `_build_mound()`/`_build_entrance_dressing()` already stand around this
+## doorway -- no new mesh -- but wears them with `_floor_material(true)`, the
+## triplanar Ground030 earth material and `apron_colour` the trodden approach
+## ramp and every boulder's own soil collar (`_boulder_soil_collar()`) already
+## share, instead of `_wear_the_cave_stone()`'s rock stone. `squash_y`
+## flattens the model on its own Y axis before the uniform draw scale is
+## applied, turning what is modelled as a boulder into a low mounded hump --
+## the only geometry move this function makes; everything else (ground
+## sampling, no collider, deterministic-by-config placement) follows the same
+## rules `_build_entrance_dressing()` above already keeps for ground-level
+## pieces. No collider, same rule every other piece of this outcrop's
+## dressing keeps: decoration a player can get stuck on is a bug.
+func _build_spoil_mounds() -> void:
+	var mound: Dictionary = _config.get("mound", {})
+	var entries: Array = mound.get("spoil_mounds", [])
+	if entries.is_empty() or _footprint.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "SpoilMounds"
+	add_child(holder)
+	var earth := _floor_material(true)
+	var placed := 0
+	for entry_v: Variant in entries:
+		if not entry_v is Dictionary:
+			continue
+		var spec: Dictionary = entry_v as Dictionary
+		var model_name := str(spec.get("model", ""))
+		if model_name.is_empty():
+			continue
+		var packed: PackedScene = load(
+			"res://assets/environment/stylized_nature/%s.gltf" % model_name) as PackedScene
+		if packed == null:
+			push_warning("spoil mound names a model that does not load: %s" % model_name)
+			continue
+		var art: Node3D = packed.instantiate() as Node3D
+		if art == null:
+			continue
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		var sink := float(spec.get("sink_m", 0.0))
+		var ground := _site_ground(Vector3(offset.x, 0.0, offset.z))
+		var y: float = (ground if not is_nan(ground) else _floor_y) - sink
+		art.position = Vector3(offset.x, y, offset.z)
+		art.rotation = Vector3(0.0, deg_to_rad(float(spec.get("yaw_deg", 0.0))), 0.0)
+		var draw := float(spec.get("scale", 2.4))
+		var squash := float(spec.get("squash_y", 0.4))
+		art.scale = Vector3(draw, draw * squash, draw)
+		holder.add_child(art)
+		for child in _mesh_boxes_nodes(art):
+			var instance := child as MeshInstance3D
+			var mesh := instance.mesh
+			for surface in (mesh.get_surface_count() if mesh != null else 0):
+				instance.set_surface_override_material(surface, earth)
+		placed += 1
+	if placed > 0:
+		print("[warrens] placed %d spoil mounds around the entrance" % placed)
 
 
 ## The skirt's flora half of `_build_site_skirt()`'s material split. Mirrors

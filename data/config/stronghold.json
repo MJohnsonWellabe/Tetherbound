@@ -507,6 +507,7 @@
   "_comment_lights_exterior": "T1-ARCH (2026-08-29), owner evidence 'the stronghold: bad'. `stronghold_occupation.gd` already diagnosed and fixed this exact failure mode for `landmark.gd`'s castle: `art.json` puts the sun in the north sky, every approach here is on the south side (`_build_approach_ramp` exits toward decreasing local z), so the hero face is backlit at every hour the chapter is played -- and that file's own header says outright that the stronghold route built here 'is a different building entirely... untouched by it'. `shots/t1arch/S-ext-01-approach-ramp-foot.png` and `S-ext-02-flank-wide.png` (T1-ARCH capture) show the predicted result: the outer_works curtain renders as a near-black silhouette from the ramp foot, with no stone detail readable at all. FIRST ATTEMPT (superseded): two lights flanking the gate at energy 1.8/range 18, calibrated by guess rather than by the castle's own numbers -- re-rendered and made NO visible difference, because the castle's equivalent fix is fourteen braziers (energy ~1.69, range ~10.2 each) PLUS four wide shadowless sky-fill omnis (energy 1.4-2.4, range 30-50) covering a 10m curtain, and two small-range point lights are not that system at any energy. The five entries below are a smaller version of the SAME two-part recipe sized to this wall (20m wide, 8m tall, `outer_z` = local z -12): four fire points spread across the curtain's own width so no stretch of wall is more than ~5m from one, plus one wide, weak, shadowless sky-fill light standing off the approach the way the castle's own `sky_fill` entries do, so the wall does not read as pure orange with nothing else in it. VERIFIED PARTIAL by that pass's own report: the gate face (`S-ext-01`) came back lit; `S-ext-02`, a wide stand looking at the PERPENDICULAR west flank, was still mostly dark because all five of these sit on the south face only and none of them reach a `-x`/`+x` wall at all. A second independent judge pass, reading nothing either T1-ARCH report wrote, reproduced exactly that: 'from the flank it is the worst-reading structure in the world right now... an unlit warehouse dropped on the meadow'. The block below (`_comment_lights_flanks`) is the same recipe's own coverage gap closed on the two `-x`/`+x` walls it never reached, at `outer_works` (`z` 0) and `courtyard` (`z` 32) -- the only two chambers `scripts/world/stronghold.gd::EXTERIOR_CHAMBERS` dresses, because they are the only ones with a true, unroofed, meadow-facing perimeter.",
   "_comment_lights_flanks": "T1-ARCH-STRONGHOLD (2026-08-29). Same fire+sky-fill recipe as `_comment_lights_exterior` above, standing off the `-x`/`+x` flank walls instead of the `-z` gate face. `outer_works` is 20x24 (half-extent 10, wall_thickness 1.2, so the wall centreline sits at x=+-10.6 and its span runs z[-13.2,13.2]); `courtyard` is 22x28 centred at z=32 (wall centreline x=+-11.6, span z[16.8,47.2]). Fire stations spread every ~9-10m along each flank the same density the gate face uses (~5m clearance per station over a shorter wall); one sky-fill per flank, further out and high, mirroring the gate's own counterweight. `x` stands roughly 2m proud of the wall face -- close enough that the flank does not merely brighten by ambient bounce, the way the first (superseded) gate attempt did at range 18 from further off.",
   "_comment_lights_flanks_budget": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §7. The block below was TWELVE fire points plus FOUR sky-fills, sized when the flanks were the only lit exterior in the game and the wall values were a stop and a half darker than they are now. Two things changed under it: T1-HALL-BUILD raised the stone ladder (`site.stone_light`, the kit retints) so a flank no longer needs a fire every 9m to be legible at all, and the design's own measured budget caps the merged Hall at 18 exterior omnis, versus 21 on this branch's parent (4 gate fire + 1 gate sky-fill + 16 here). So: one fire PAIR per side spanning both yards (at the yards' own joint, z=16, where a 16m-range light reaches outer_works' back half AND courtyard's front half) plus one sky-fill per side moved to the same joint for the same reason -- 6 entries, not 16. The ten cut are paid for by §5's brighter walls, exactly as §7 says, and the ten omnis they free are what the causeway braziers and the yard fires in `hall_occupation` below are spent on. `stronghold.gd::_build_lights()` prints the live exterior count at build time and warns past 18, so this is a checked budget rather than a comment.",
+  "_comment_lights_flanks_removed_sky_fills": "ROUND-5 (2026-09-02). Both flank sky-fills (west at [-27,14], east at [27,14], y 22, energy 3.0, range 60) are RETIRED here, not retuned. This round's code-blind judge findings were all about the courtyard and the gate/approach, never the flanks; the two flank fires per side (kept, unchanged, below) still carry the flank silhouette. Freeing 2 omnis from the design's fixed budget (`EXTERIOR_OMNI_BUDGET`) is what pays for the new courtyard NPC-stand brazier without raising the ceiling -- see that brazier's own comment in `hall_occupation.braziers`. If a later pass finds the flanks read flat without their sky counterweight, restore these two before spending anywhere else.",
   "lights_flanks": [
     {
       "_comment": "West flank fire 1/2 -- outer_works' own half.",
@@ -531,17 +532,6 @@
       "colour": "#ffab5e"
     },
     {
-      "_comment": "West flank sky-fill, one for both yards. VP-HALL-FIX: energy up 2.4 -> 3.0, same reasoning as the gate sky-fill -- at night it is standing in for the sun on this whole flank, not merely balancing it.",
-      "at": [
-        -27.0,
-        14.0
-      ],
-      "y": 22.0,
-      "energy": 3.0,
-      "range": 60.0,
-      "colour": "#8fa6c8"
-    },
-    {
       "_comment": "East flank fire 1/2 -- outer_works' own half.",
       "at": [
         13.0,
@@ -562,17 +552,6 @@
       "energy": 2.8,
       "range": 18.0,
       "colour": "#ffab5e"
-    },
-    {
-      "_comment": "East flank sky-fill, one for both yards. VP-HALL-FIX: same night-legibility bump as the west flank sky-fill above.",
-      "at": [
-        27.0,
-        14.0
-      ],
-      "y": 22.0,
-      "energy": 3.0,
-      "range": 60.0,
-      "colour": "#8fa6c8"
     }
   ],
   "_comment_lights_outer_works_ambient": "T1-HALL-REBUILD (2026-08-30). The outer_works yard's own weak ambient omni (was `at [0,0], y 6, energy 0.35, range 18`) is RETIRED, not moved: `hall_occupation.braziers` now stands a real fire in this yard beside the garrison camp, and two more on the causeway kerbs a few metres outside the mouth. A yard lit by a fire the player can see burning is the whole point of the occupation layer; a colourless 0.35 ambient over the top of it is the thing that flattens it. Retiring it is also what brings the site to exactly the design's 18-omni ceiling (§7) with the causeway fires included.",
@@ -784,14 +763,15 @@
       },
       {
         "_comment": "VP-HALL-FIX-3 (2026-09-02), courtyard corner brazier 1/4, NW. `stronghold-courtyard-night` measured 2.84/255 with one central fire (the inner bailey's, above) trying to cover a 22x28 yard alone -- these four hug the four corners instead of adding more energy to the same spot. Against the west curtain, north of the hoarding/stairs, clear of the fight floor x[-5,5] z[24,42] and the trainer stand (-4,36) radius.",
+        "_comment_round5": "ROUND-5 (code-blind judge on round-4 frames): 'the new lights are small hot spots that don't spread across the yard' and native-exposure frame mean was still 2.84->3.58 against a stated target of >=12. Owner-authorised x3 energy / x1.5 range on these four exactly (2.2->6.6, 13.0->19.5) -- attenuation is left at 1.4 (still pools near the bowl rather than washing flat) so the extra energy grows the POOL each brazier throws instead of just brightening its hottest pixel.",
         "at": [
           -9.4,
           20.0
         ],
         "on_floor": true,
         "scale": 1.9,
-        "energy": 2.2,
-        "range": 13.0,
+        "energy": 6.6,
+        "range": 19.5,
         "attenuation": 1.4
       },
       {
@@ -802,8 +782,8 @@
         ],
         "on_floor": true,
         "scale": 1.9,
-        "energy": 2.2,
-        "range": 13.0,
+        "energy": 6.6,
+        "range": 19.5,
         "attenuation": 1.4
       },
       {
@@ -814,8 +794,8 @@
         ],
         "on_floor": true,
         "scale": 1.9,
-        "energy": 2.2,
-        "range": 13.0,
+        "energy": 6.6,
+        "range": 19.5,
         "attenuation": 1.4
       },
       {
@@ -826,9 +806,21 @@
         ],
         "on_floor": true,
         "scale": 1.9,
-        "energy": 2.2,
-        "range": 13.0,
+        "energy": 6.6,
+        "range": 19.5,
         "attenuation": 1.4
+      },
+      {
+        "_comment": "ROUND-5, NPC-stand practical light. The courtyard trainer ('stronghold_courtyard', stronghold.json's own `gauntlet` list) stands at local (-4,36); a judge read faces as unreadable at night even after the corner braziers. This is a small torch beside the stand itself rather than another yard-scale fire -- 3m off the trainer's own position (-7.0 vs -4.0), on the WEST side (outside the fight floor's x[-5,5] band, so it never stands in the arena), close enough to actually light a face. Costs 1 omni; paid for by dropping the two flank sky-fill lights below (see their own removal note).",
+        "at": [
+          -7.0,
+          36.0
+        ],
+        "on_floor": true,
+        "scale": 1.5,
+        "energy": 3.4,
+        "range": 9.0,
+        "attenuation": 1.3
       }
     ],
     "_comment_gate_source": "Two brazier BASKETS with no light of their own, standing at two of the four gate fire points `lights` already authors. The T1-ARCH gate recipe lit the curtain convincingly and put nothing in the frame that could be doing the lighting; these are that missing source, and they cost zero omnis because the light is already there.",
@@ -848,6 +840,48 @@
         ],
         "on_floor": true,
         "scale": 2.3
+      }
+    ],
+    "_comment_gate_sconces": "ROUND-5 (2026-09-02), FIX2. Judge on the gate towers by day: 'no lit window ... the wall mass is a flat, uniformly dark green-black repeating-brick surface that reads as an abandoned ruin'; by night: 'a near-pure-black silhouette with two tiny window lights; nothing else reads at all'. This is an EMISSIVE MATERIAL plaque, not a light node -- `stronghold.gd::_build_gate_tower_sconces` measures the real `LargeSquareTowerBricks` mesh bounds and stands one warm rectangle flush on the SOUTH face of each gate tower (the face the causeway and every approach stand actually look at), so it reads day and night for zero omni budget. `at`/`scale` are the same values `building_prefabs.json`'s `meadows_hall` recipe already places these two towers at (module `LargeSquareTowerBricks`, [-10.6,-12.6] and [10.6,-12.6], scale 3.0) -- quoted, not re-picked, so a retune of the massing recipe cannot silently orphan the sconce.",
+    "gate_sconces": [
+      {
+        "_comment": "West gate tower.",
+        "at": [
+          -10.6,
+          -12.6
+        ],
+        "scale": 3.0,
+        "y": 6.0,
+        "emission": 3.6
+      },
+      {
+        "_comment": "East gate tower.",
+        "at": [
+          10.6,
+          -12.6
+        ],
+        "scale": 3.0,
+        "y": 6.0,
+        "emission": 3.6
+      }
+    ],
+    "_comment_gate_sentries": "ROUND-5, FIX3. Judge: 'no sentry figure ... reads as an abandoned ruin rather than a garrisoned stronghold'. One Team Tether grunt per gate tower (`assets/characters/grunt/grunt_lod0.glb`, already wired at art.json's `grunt` key -- CLAUDE.md/D24 forbids a new humanoid mesh, so no other option was considered), standing at the tower's own foot on the built floor, facing across the gate lane at each other -- a purely decorative garrison figure via `stronghold.gd::_build_gate_sentries`, no dialogue, no trainers.json row, no combat.",
+    "gate_sentries": [
+      {
+        "_comment": "West gate tower sentry, facing east across the gate lane.",
+        "at": [
+          -8.0,
+          -10.5
+        ],
+        "facing_deg": -90.0
+      },
+      {
+        "_comment": "East gate tower sentry, facing west across the gate lane.",
+        "at": [
+          8.0,
+          -10.5
+        ],
+        "facing_deg": 90.0
       }
     ],
     "_comment_causeway": "The 40m climb, dressed. Kerbs are code boxes following the ramp's own self-derived slope (nothing here authors the rise; `site.ramp_run` is still the only authored number). `rail_pitch_m` spaces `Prop_WoodenFence_Single` along the kerb tops -- the board's timber approach. `banner_pairs` are the z stations for oxblood banners on stone piers; the piers are what a banner needs to hang from out on open ground.",

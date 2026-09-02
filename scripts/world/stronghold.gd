@@ -57,6 +57,11 @@ extends Node3D
 
 const CONFIG_PATH := "res://data/config/stronghold.json"
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
+## ROUND-5, FIX3. The same rigged-human builder `trainer_npc.gd`'s own bodies
+## and `village_npcs.gd`'s decorative NPCs both build on -- used here directly
+## and standalone (no trainers.json row, no greeting, no combat) for the two
+## gate sentries. See `_build_gate_sentries()`.
+const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const TETHER_SIGIL := preload("res://scripts/world/tether_sigil.gd")
@@ -431,7 +436,16 @@ const EXTERIOR_CHAMBERS: Array[String] = ["outer_works", "courtyard"]
 ## fact and `_tether_material`'s girders are untouched -- this is the cloth's
 ## albedo only, chosen so that what the player SEES is the colour the palette
 ## always meant.
-const BANNER_COLOUR := Color("#6b2a20")
+## ROUND-5 (2026-09-02). A code-blind judge, reading courtyard-day frames cold:
+## "banners are bright poster-red rather than the deeper oxblood in the
+## keyart." #6b2a20 (the prior JUDGE-5 D6 fix, see the note above) was already
+## a step toward it but still not it -- moved into the OWNER-AUTHORISED
+## `#5a1a1a` family explicitly, and explicitly NOT `#c02020` (poster red, the
+## thing being fixed). #5a1a1a is R=90 G=26 B=26 -- darker than #6b2a20 (was
+## R=107 G=42 B=32) and G==B rather than G>B, so there is no channel
+## relationship left for a bright key or the ACES tonemap to read as a warm
+## red instead of a blood-dark one.
+const BANNER_COLOUR := Color("#5a1a1a")
 const BANNER_NOMINAL_OXBLOOD := Color("#7a2430")
 ## T1-HALL-4, JUDGE-6 defect 8/10: "monumental banners, several, at varied size
 ## -- present but POSTAGE-STAMP SIZED. The good banner in `H-05` reads ~1.5m on
@@ -2557,6 +2571,8 @@ func _build_occupation() -> void:
 		return
 	_build_causeway_dressing()
 	_build_hall_fire()
+	_build_gate_tower_sconces()
+	_build_gate_sentries()
 	_build_garrison_camp()
 	_build_relay_hub()
 	_build_hoarding()
@@ -2829,6 +2845,119 @@ func _add_basket(into: Node3D, scale_factor: float) -> void:
 	bowl.mesh = bowl_mesh
 	bowl.position = Vector3(0.0, (BRAZIER_POST_H + BRAZIER_BOWL_H * 0.5) * scale_factor, 0.0)
 	into.add_child(bowl)
+
+
+## ROUND-5 (2026-09-02), FIX2. A code-blind judge on the gate towers: by day
+## "no sentry figure, no lit window, no smoke ... reads as an abandoned ruin
+## rather than a garrisoned stronghold"; by night "a near-pure-black
+## silhouette with two tiny window lights; nothing else reads at all". This is
+## the "lit window" half, done the CHEAP way the brief asks for -- an
+## EMISSIVE MATERIAL plaque flush on the tower's own mesh, no OmniLight3D, so
+## it reads day and night at zero omni-budget cost and (being an emissive
+## StandardMaterial3D on one extra box per tower) at negligible draw-call cost
+## against `hall_approach`'s tight ceiling.
+##
+## The plaque's OUTWARD offset is measured, not guessed: `LargeSquareTowerBricks`
+## is loaded once as a probe (freed immediately after, never added to the
+## tree) and its real bounds read through `_visual_bounds()`, the same
+## measure-don't-guess method `_build_causeway_dressing()`'s railing pitch and
+## every `_fit_to_height()` caller already use -- so the plaque sits ON the
+## tower's real south face at whatever scale `gate_sconces` names, rather
+## than floating clear of it or burying itself inside it.
+const GATE_TOWER_DIR := "res://assets/buildings/quaternius_castle"
+const GATE_TOWER_MODULE := "LargeSquareTowerBricks"
+const SCONCE_SIZE := Vector3(0.05, 1.15, 0.6)
+const SCONCE_COLOUR := Color(1.0, 0.6, 0.2)
+func _build_gate_tower_sconces() -> void:
+	var list: Array = _occupation().get("gate_sconces", []) as Array
+	if list.is_empty():
+		return
+	var probe := _load_prop(GATE_TOWER_DIR, GATE_TOWER_MODULE)
+	if probe == null:
+		return
+	# `LargeSquareTowerBricks` resolves through `_load_prop`'s .obj fallback,
+	# which hands back a BARE MeshInstance3D with no children -- `_visual_
+	# bounds()` walks DESCENDANTS via `find_children()`, never the node passed
+	# in, so measuring `probe` directly would always return an empty AABB (the
+	# same reason `_build_causeway_dressing()`'s own probe goes into a holder
+	# first). Wrapping it here works for either a bare mesh or a multi-node
+	# import alike.
+	var probe_holder := Node3D.new()
+	probe_holder.add_child(probe)
+	var bounds := _visual_bounds(probe_holder)
+	probe_holder.queue_free()
+	if bounds.size.z <= 0.01:
+		return
+	# ONE shared material for both plaques (same colour/energy on both towers)
+	# so the pair batches as one draw call the way `_build_gate_arch_and_
+	# portcullis()`'s own header already banks on for its voussoir ring.
+	var shared_mat := StandardMaterial3D.new()
+	shared_mat.albedo_color = SCONCE_COLOUR
+	shared_mat.emission_enabled = true
+	shared_mat.emission = SCONCE_COLOUR
+	shared_mat.emission_energy_multiplier = float((list[0] as Dictionary).get("emission", 3.4))
+	var holder := Node3D.new()
+	holder.name = "GateSconces"
+	add_child(holder)
+	for entry: Variant in list:
+		var spec: Dictionary = entry as Dictionary
+		var at := _local_of(spec.get("at", []))
+		var tower_scale := float(spec.get("scale", 3.0))
+		var half_z := bounds.size.z * 0.5 * tower_scale
+		var y := _floor_y + float(spec.get("y", 6.0))
+		var emission := float(spec.get("emission", 3.4))
+		var mat := shared_mat if is_equal_approx(emission, shared_mat.emission_energy_multiplier) \
+			else shared_mat.duplicate() as StandardMaterial3D
+		if mat != shared_mat:
+			mat.emission_energy_multiplier = emission
+		# The tower's south (-z, outward/causeway-facing) face, standing a hair
+		# proud of it so the plaque never z-fights the brick behind it.
+		var box := MeshInstance3D.new()
+		box.name = "GateSconce"
+		var mesh := BoxMesh.new()
+		mesh.size = SCONCE_SIZE
+		box.mesh = mesh
+		box.material_override = mat
+		box.position = Vector3(at.x, y, at.z - half_z - SCONCE_SIZE.x * 0.5 + 0.03)
+		holder.add_child(box)
+
+
+## ROUND-5, FIX3, the "sentry" half of the same finding. One Team Tether
+## grunt per gate tower, standing decoration only -- no `trainers.json` row
+## (nothing here is fightable or catchable, CLAUDE.md's "trainer-owned
+## creatures cannot be caught" does not even apply, there IS no creature),
+## no greeting, no combat. `CHARACTER_MODEL` is the same rigged-human builder
+## `trainer_npc.gd`'s own bodies and `village_npcs.gd`'s villagers both stand
+## on; used directly here because a sentry needs none of the trainer-battle
+## or dialogue plumbing either of those wrap it in -- load the body, fit it,
+## stand it, play `idle`. `grunt` is already wired at `art.json`'s top level
+## (NP2-grunt-wire) onto `assets/characters/grunt/grunt_lod0.glb`, the
+## rank-and-file rig `docs/art/HUMANOID_ASSET_INVENTORY.md` names for exactly
+## this: ordinary Team Tether personnel. No new mesh, per CLAUDE.md/D24.
+func _build_gate_sentries() -> void:
+	var list: Array = _occupation().get("gate_sentries", []) as Array
+	if list.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "GateSentries"
+	add_child(holder)
+	var index := 0
+	for entry: Variant in list:
+		var spec: Dictionary = entry as Dictionary
+		var body: Node3D = CHARACTER_MODEL.new()
+		holder.add_child(body)
+		if not bool(body.call("build", "grunt")):
+			push_warning("gate sentry %d has no grunt model; nothing stands there" % index)
+			body.queue_free()
+			index += 1
+			continue
+		body.name = "GateSentry_%d" % index
+		var at := _local_of(spec.get("at", []))
+		body.position = Vector3(at.x, _floor_y + float(spec.get("y", 0.0)), at.z)
+		body.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
+		if body.has_method("play"):
+			body.call("play", "idle")
+		index += 1
 
 
 ## The board's Inner Yard stalls with a hostile owner. Same prop family the
@@ -3229,6 +3358,13 @@ func _tint_node(node: Node, colour: Color) -> void:
 ## builds, so this is a total-omni raise only -- the harder shadow-casting
 ## cap `docs/PERFORMANCE_BUDGET.md` states (<=4 reaching any one point) is
 ## unaffected, since it stays at zero here as everywhere else in this file.
+##
+## ROUND-5 (2026-09-02): tripled the four courtyard corner braziers' energy
+## and range (owner-authorised x3/x1.5) and added one small practical light
+## beside the courtyard trainer's own stand so faces read (+1 omni). Paid for
+## by retiring the two flank sky-fill lights in `lights_flanks` (-2 omni) --
+## see their own removal note. Net -1 against the prior count, so the
+## ceiling itself did not need to move; live count prints below either way.
 const EXTERIOR_OMNI_BUDGET := 22
 func _report_light_budget() -> void:
 	var exterior := _fires.size()
@@ -4272,6 +4408,18 @@ const BOILER_STACK_TOP := Vector3(0.0, 4.0, 0.0)
 ## config (site.boiler_smoke_enabled, default false) per the reviewer's own
 ## stated fallback ("soft column or REMOVE it") rather than reworking the
 ## curve again blind. Code kept intact for a later tuning pass.
+## ROUND-5 (2026-09-02): re-reviewed against the round-4 finding list, which
+## explicitly asked for "one small smoke/steam source IF it can be kept
+## small" and named the fallback itself: "if you cannot make it small and
+## safe quickly, LEAVE IT DISABLED... a missing wisp is much better than
+## another smog wall." Two independent tuning passes already produced a
+## visible defect here (the flat band, then the horizon-spanning smog), both
+## caught only by rendering -- and this pass has no render tool available to
+## verify a third curve blind. `site.boiler_smoke_enabled` stays `false`; not
+## touched. A future pass with capture access should tune amount/scale/spread
+## down hard from the VP-HALL-FIX-2 numbers still sitting below (roughly
+## amount 8-12, scale 1.0-1.5, spread 8-10deg) and verify on a real frame
+## before flipping the flag, rather than guess again.
 func _smoke_column(boiler: Node3D, spec: Dictionary) -> void:
 	if not bool(_config.get("site", {}).get("boiler_smoke_enabled", false)):
 		return
