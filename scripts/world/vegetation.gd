@@ -615,6 +615,23 @@ func _adjusted_texture(base: Texture2D, adjust: Dictionary) -> Texture2D:
 	image.adjust_bsc(brightness, contrast, saturation)
 	image.generate_mipmaps()
 	var derived := ImageTexture.create_from_image(image)
+	# VP3-FIX (pale-mint canopy regression). A `create_from_image()` texture
+	# has an EMPTY `resource_path` -- unlike the imported `CompressedTexture2D`
+	# it replaces, which has one because it lives at a real res:// file. Every
+	# retinted mesh here is packed into a throwaway `PackedScene`
+	# (`_make_mesh_asset` below) and handed to `Terrain3DMeshAsset.scene_file`,
+	# and that pack/registration round-trip does not carry a pathless runtime
+	# resource through: measured directly by the coordinator on a real render,
+	# the shipped canopy colour was EXACTLY the flat `retint` tint (e.g.
+	# `#a9d18c`) over a WHITE albedo, i.e. this texture, not the maths that
+	# built it. `take_over_path()` gives the derived texture a stable
+	# synthetic identity (never written to disk -- nothing here needs to
+	# survive a restart, only this one process's pack/duplicate) so it
+	# round-trips as an external reference instead of being dropped. One path
+	# per (source, settings) key, matching the `_adjusted_textures` cache above
+	# one line up, so two materials sharing an adjustment still share one
+	# texture and one path.
+	derived.take_over_path("res://._generated/vegetation_leaf_adjust/%s.tex" % key.md5_text())
 	_adjusted_textures[key] = derived
 	return derived
 
