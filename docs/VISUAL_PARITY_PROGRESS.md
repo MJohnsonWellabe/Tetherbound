@@ -212,6 +212,22 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Coverage audit against the brief (10:22 UTC, owner asked "is VP1–9 everything?")
+Not everything. Remaining after the current lane rounds:
+- **VP4** — only village → Band 2 walked; bands 3–5 to the Hall approach still need corridor stations + judge.
+- **VP5** — camps/waystops (fire focal point, seating, supplies, a reason to exist) never judged as a set.
+- **VP9** — the brief forbids faking life for screenshots and requires visible == gameplay population; the LIFE
+  lane's staged-group captures (rounds 3–4) violate that, so LIFE was redirected at 10:22: staging becomes a
+  diagnostic flag, deliverable frames come from authored clusters in spawn data, the pairing frame uses the real
+  party/summon path. NPC walkers, ambient motion and wind remain unaddressed.
+- **VP1** — dawn/night presets and the low-sun disc still open (WORLD 5b).
+- **VP10** — profiling/LOD/visibility optimisation + post-optimisation visual regression check not started
+  (only per-merge proxy numbers exist).
+- **VP11** — handoff gallery, hero gallery, performance report, judge-history table, known limitations: not started.
+- **§6 on-device FPS floor** — owner-side only (`tools/vp_capture_windows.ps1`).
+Plan: finish the in-flight rounds → CORRIDOR bands 3–5 → PLACES camps round → LIFE real-population round → VP10
+on the merged tree → VP11.
+
 ### Check-in #14 (10:06 UTC)
 - **WORLD round 5** (`3a0fd9f8`, report only): both discriminators (fog_aerial_perspective 0; Sky REALTIME) produced
   bit-identical frames — eight explanations falsified; `fog_sky_affect` is 0.0 in this project so the fog/radiance
