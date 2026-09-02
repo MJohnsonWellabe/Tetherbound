@@ -1099,3 +1099,31 @@ cold-grey material".
    as diagnosed in R5.7 — untouched again this round.
 5. Carried, outside PLACES: grass field enabled but drawing zero instances; South Bridge walk-around;
    `_judge_capture_hall.gd` still never run; the Relay's round-3 work still never rendered.
+
+## R6.9 A late failure caught before it shipped
+
+After the round-6 frames were captured and pushed, the Hall lane produced a further uncommitted revision —
+a third attempt at gate-sentry placement. It was **not shipped**, because it broke the build:
+
+```
+stronghold FAIL: the scene has no Player or no Stronghold node
+```
+
+Verified by bisecting rather than assuming: `git stash` of the uncommitted edits and a re-run of
+`smoke_stronghold` gave `stronghold smoke test passed` on the committed state, so the breakage was
+specifically in the unshipped revision. Those edits were dropped. **The pushed frames therefore match the
+pushed code**, which is the property that matters — a frame set that does not correspond to its commit is
+exactly the failure mode this report criticised the judging step for in R4.0.
+
+What survives in the shipped commit, from that lane's earlier passes: the floating-prop root cause and its
+fix. The `retrofit_skyline` lifts had been computed against an **assumed ~5.4 m native height** for the
+`LargeSquareTowerBricks` module, when a probe of the real mesh measures its native visual bounds at
+**4.165 m** — so a scale-3.6 tower is ~15.0 m, not ~19.4 m, and the chimney and banner rig were mounted
+4.4 m above roofs that were never that tall. Lift 15.6 → **14.3**. That is why the prop floated.
+
+The one-time probe `print()` that produced this measurement was also shipping in the committed code; it
+has been removed and its finding preserved as a comment. `smoke_stronghold` passes after the removal.
+
+**Still open from that lane:** the gate sentries remain where the shipped commit puts them, not at the
+banner-spot position the dropped revision was reaching for. Whether they read from the gate stand is
+unproven and should be judged from the round-6 gate frames.

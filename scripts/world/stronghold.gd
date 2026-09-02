@@ -2917,13 +2917,12 @@ func _build_gate_tower_sconces() -> void:
 	probe_holder.add_child(probe)
 	var bounds := _visual_bounds(probe_holder)
 	probe_holder.queue_free()
-	# TEMP-DIAGNOSTIC-ITEM3: the retrofit_skyline props on this same tower kit
-	# were mounted with hand-computed lifts against an assumed ~5.4m native
-	# height (scale x 3.0 = ~16.2m); this prints the REAL measured native AABB
-	# so that assumption can be checked against the retrofit's own floating
-	# prop before its lift is retuned. Remove once item 3 is verified.
-	print("[stronghold][DIAG] LargeSquareTowerBricks native visual bounds: %s (native height %.3f)" % [
-		bounds, bounds.size.y])
+	# ITEM3 (2026-09-02): a one-time probe of this same measurement found the
+	# retrofit_skyline lifts had been computed against an assumed ~5.4m native
+	# height when the real visual-bounds height is 4.165m -- which is why the
+	# chimney and banner rig floated clear of the roofs they were meant to sit
+	# on. Those lifts are corrected in stronghold.json; the probe print itself
+	# has served its purpose and is removed.
 	if bounds.size.z <= 0.01:
 		return
 	# ONE shared material for both plaques (same colour/energy on both towers)
