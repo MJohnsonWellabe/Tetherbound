@@ -494,29 +494,13 @@ func _surface(at: Vector2) -> float:
 				at.x, at.y, analytic])
 			return analytic
 		var collider: Object = hit.get("collider")
-		if _under_terrain(collider):
+		if collider is Node and _under_terrain(collider as Node):
 			return float((hit["position"] as Vector3).y)
 		if collider is CollisionObject3D:
 			excluded.append((collider as CollisionObject3D).get_rid())
 		else:
 			break
 	return analytic
-
-
-## True if `node` is `Terrain` (the node whose `set_camera` is called in
-## `_init`) or one of its descendants -- the one collider category this
-## tool trusts as "the ground" rather than a player/NPC/prop/creature body
-## that happened to be directly overhead when the ray fired.
-func _under_terrain(node: Object) -> bool:
-	var terrain: Node = _world.get_node_or_null(^"Terrain")
-	if terrain == null or not (node is Node):
-		return false
-	var walk: Node = node as Node
-	while walk != null:
-		if walk == terrain:
-			return true
-		walk = walk.get_parent()
-	return false
 
 
 func _creatures_near(at: Vector3) -> int:
