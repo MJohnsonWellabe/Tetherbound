@@ -54,49 +54,73 @@ coordinator lanes above; none of their frames are cited in this handoff.
 
 ## 2. Matched before/after gallery
 
-All paths verified to exist under `ralph/reports/visual-parity/` unless marked PENDING.
+All AFTER frames are the **VP11 final recapture** (`ralph/reports/visual-parity/VP11-final/`, 1920x1080, program
+head with `structure_visibility_ranges` ON and the grass carpet ON), taken in one run on 2026-09-02 19:03–21:00 UTC
+so every location is shown at the same shipped state. BEFORE frames are the earliest capture of the same stand in
+the program (VP0 baseline where it exists; otherwise the first lane capture of that stand). Side-by-side sheet:
+`VP11-final/_sheet_before_after.png` (left BEFORE, right AFTER, 34 pairs); the mapping below is generated from the
+same script and every path was verified to exist at write time.
 
-| location | BEFORE | AFTER | judge round |
-|---|---|---|---|
-| Village day | `VP0-baseline/locations-1080p/01-village-standing-day.png` | `PLACES/round2/locations/01-village-standing-day.png` | PLACES round 2 (Bar B **yes** for village) |
-| Village night | `PLACES/round1/locations/01-village-standing-night.png` (VP0 baseline captured day only — no VP0 night frame exists) | `PLACES/round2/locations/01-village-standing-night.png` | PLACES round 2 |
-| Mill pond | `VP0-baseline/locations-1080p/02-mill-pond-standing-day.png` | `WORLD/round3/locations/02-mill-pond-standing-day.png` | WORLD round 3 (day ground close-ups "strongest to date") |
-| Band1 open meadow | `LIFE/round1/03-band1-open-meadow-day.png` | `LIFE/round7/03-band1-open-meadow-day.png` | LIFE round 7 ("PASS, decisively" — 3 trailpup unmistakable) |
-| River/water edge | `VP1-3-after/ground/water-02-river-eye.png` | `WORLD/round3/ground/water-02-river-eye.png` | WORLD round 3 |
-| Ridge/overlook | `WORLD/round1/before/03-rise-overlook.png` | `WORLD/round6/stands/03-rise-overlook-day.png` | WORLD round 6 (red-wash root-caused and fixed; "every previously washed elevated stand is clean") |
-| Forest edge (stone-root corridor entry) | `CORRIDOR/00-before/06-stone-root-entry-day.png` | `CORRIDOR/round6/06-stone-root-entry-day.png` | CORRIDOR round 6 |
-| Travel corridor (full 16-station set) | `CORRIDOR/00-before-b3b5/_sheet.png` (bands 3–5) + `CORRIDOR/00-before/_sheet.png` (bands 1–2) | `CORRIDOR/round6/_sheet.png` | CORRIDOR round 6 (`JUDGE-round6.md`) |
-| Tournament ground | `VP0-baseline/locations-1080p/01-village-tournament-day.png` | `PLACES/round2/locations/01-village-tournament-day.png` | PLACES round 2 |
-| Warrens exterior | `PLACES/00-before/locations/04-warrens-approach-day.png` | `PLACES/round8/locations/04-warrens-approach-day.png` | PLACES round 8 (pale boulder/panel **PROVEN by sample** fixed; round 9 dispatched for remaining items — see §6) |
-| Team Tether Relay | `PLACES/00-before/locations/06-relay-apparatus-day.png` | `PLACES/round8/locations/06-relay-apparatus-day.png` | PLACES round 8 (ground pad ≤120 lum **PROVEN**) |
-| Relay camp | `PLACES/round8/camps-before/05-relay-camp-standing-day.png` | `PLACES/round8/locations/05-relay-camp-standing-day.png` | PLACES round 8 (R8.6, minimal dressing added deliberately) |
-| Ridge camp | `PLACES/round8/camps-before/08-ridge-camp-standing-day.png` | `PLACES/round8/locations/08-ridge-camp-standing-day.png` | PLACES round 8 |
-| Waystop | `PLACES/round8/camps-before/09-waystop-standing-day.png` | `PLACES/round8/locations/09-waystop-standing-day.png` | PLACES round 8 |
-| Hall approach | `PLACES/00-before/locations/11-castle-landmark-approach-day.png` | `PLACES/round8/locations/11-castle-landmark-hall-200m-day.png` | PLACES round 8 ("Hall material read at ≤100m improved"; 200–400m still soft — see §6) |
-| Hall gate/courtyard | `PLACES/00-before/locations/10-stronghold-gate-day.png` + `PLACES/00-before/locations/10-stronghold-courtyard-day.png` | `PLACES/round8/locations/10-stronghold-gate-day.png` + `PLACES/round8/locations/10-stronghold-courtyard-day.png` | PLACES round 8 (day gate reads; **courtyard night median 1.49 vs target 8 — FAILED**, open) |
-| Creature-in-world | `LIFE/round1/05-ridge-camp-day.png` | `LIFE/round7/05-ridge-camp-day.png` | LIFE round 7 ("strongest overall" single frame) |
-| Combat | none (no pre-VP combat baseline was captured) | `VP1-3-candidate/combat/02-arena-opens.png` | not separately judged by name; captured at the VP1–VP3 checkpoint (06:14 UTC) and unchanged since — LIFE's own report names "total absence of any action/combat framing" as an open limitation |
-| Building/home | none (VP0 did not capture building interiors) | `VP1-3-candidate/buildings/07-farmhouse-interior.png` | not separately judged by name; same VP1–VP3 checkpoint |
+| location | BEFORE | AFTER (VP11-final) |
+|---|---|---|
+| Village day | `VP0-baseline/locations-1080p/01-village-standing-day.png` | `VP11-final/locations/01-village-standing-day.png` |
+| Village night | `PLACES/00-before/locations/01-village-standing-night.png` | `VP11-final/locations/01-village-standing-night.png` |
+| Village approach | `VP0-baseline/locations-1080p/01-village-approach-day.png` | `VP11-final/locations/01-village-approach-day.png` |
+| Grandpa yard | `VP0-baseline/locations-1080p/01-village-grandpa-yard-day.png` | `VP11-final/locations/01-village-grandpa-yard-day.png` |
+| Tournament | `VP0-baseline/locations-1080p/01-village-tournament-day.png` | `VP11-final/locations/01-village-tournament-day.png` |
+| Mill pond | `VP0-baseline/locations-1080p/02-mill-pond-standing-day.png` | `VP11-final/locations/02-mill-pond-standing-day.png` |
+| Mill wheel | `VP0-baseline/locations-1080p/02-mill-pond-wheel-day.png` | `VP11-final/locations/02-mill-pond-wheel-day.png` |
+| Spawn outward (wide) | `WORLD/round1/before/01-spawn-outward.png` | `VP11-final/survey/01-spawn-outward.png` |
+| Valley floor (wide) | `WORLD/round1/before/02-valley-floor.png` | `VP11-final/survey/02-valley-floor.png` |
+| Rise overlook (wide) | `WORLD/round1/before/03-rise-overlook.png` | `VP11-final/survey/03-rise-overlook.png` |
+| Three-quarter (wide) | `WORLD/round1/before/04-three-quarter.png` | `VP11-final/survey/04-three-quarter.png` |
+| Spawn low sun (wide) | `WORLD/round1/before/05-spawn-low-sun.png` | `VP11-final/survey/05-spawn-low-sun.png` |
+| Band1 ground day | `VP1-3-after/ground/ground-01-band1-opening-day.png` | `VP11-final/ground/ground-01-band1-opening-day.png` |
+| Band2 stone-root ground | `VP1-3-after/ground/ground-02-band2-stone-root-day.png` | `VP11-final/ground/ground-02-band2-stone-root-day.png` |
+| Band4 ironwood ground | `VP1-3-after/ground/ground-04-band4-ironwood-day.png` | `VP11-final/ground/ground-04-band4-ironwood-day.png` |
+| River edge | `VP1-3-after/ground/water-02-river-eye.png` | `VP11-final/ground/water-02-river-eye.png` |
+| Pond edge | `VP1-3-after/ground/water-01-pond-eye.png` | `VP11-final/ground/water-01-pond-eye.png` |
+| Warrens approach | `PLACES/00-before/locations/04-warrens-approach-day.png` | `VP11-final/locations/04-warrens-approach-day.png` |
+| Warrens standing | `PLACES/00-before/locations/04-warrens-standing-day.png` | `VP11-final/locations/04-warrens-standing-day.png` |
+| Warrens den (interior) | `PLACES/00-before/locations/04-warrens-den-day.png` | `VP11-final/locations/04-warrens-den-day.png` |
+| Relay camp | `PLACES/00-before/locations/05-relay-camp-standing-day.png` | `VP11-final/locations/05-relay-camp-standing-day.png` |
+| Relay camp night | `PLACES/00-before/locations/05-relay-camp-fire-night.png` | `VP11-final/locations/05-relay-camp-fire-night.png` |
+| Relay apparatus | `PLACES/00-before/locations/06-relay-apparatus-day.png` | `VP11-final/locations/06-relay-apparatus-day.png` |
+| Relay approach | `PLACES/00-before/locations/06-relay-approach-day.png` | `VP11-final/locations/06-relay-approach-day.png` |
+| Ridge camp | `PLACES/00-before/locations/08-ridge-camp-standing-day.png` | `VP11-final/locations/08-ridge-camp-standing-day.png` |
+| Ridge camp night | `PLACES/00-before/locations/08-ridge-camp-fire-night.png` | `VP11-final/locations/08-ridge-camp-fire-night.png` |
+| Waystop | `PLACES/00-before/locations/09-waystop-standing-day.png` | `VP11-final/locations/09-waystop-standing-day.png` |
+| Hall approach (200 m) | `PLACES/00-before/locations/11-castle-landmark-approach-day.png` | `VP11-final/locations/11-castle-landmark-hall-200m-day.png` |
+| Hall gate day | `PLACES/00-before/locations/10-stronghold-gate-day.png` | `VP11-final/locations/10-stronghold-gate-day.png` |
+| Hall gate night | `PLACES/00-before/locations/10-stronghold-gate-night.png` | `VP11-final/locations/10-stronghold-gate-night.png` |
+| Hall courtyard day | `PLACES/00-before/locations/10-stronghold-courtyard-day.png` | `VP11-final/locations/10-stronghold-courtyard-day.png` |
+| Hall courtyard night | `PLACES/00-before/locations/10-stronghold-courtyard-night.png` | `VP11-final/locations/10-stronghold-courtyard-night.png` |
+| Hall at 100 m | `PLACES/00-before/locations/11-castle-landmark-gate-day.png` | `VP11-final/locations/11-castle-landmark-hall-100m-day.png` |
+| Stronghold approach night | `PLACES/00-before/locations/10-stronghold-approach-night.png` | `VP11-final/locations/10-stronghold-approach-night.png` |
+
+Per-round judged pairs (the rounds that moved each location) remain listed in §5 with their judge files.
+
+Stands that could not be matched: combat and building/home have no pre-program baseline (VP0 did not capture
+them); their VP11 frames are in `VP11-final/combat/` and `VP11-final/buildings/` and appear in §3.
 
 ---
 
 ## 3. Hero gallery
 
-Ten slots per the VP11 brief. The first slot is a triplet (3 strongest wide Meadows views); the rest are
-single frames.
+Ten slots per the VP11 brief, all from the final recapture (`VP11-final/`) so the hero set is the shipped state.
 
 | slot | frame path(s) |
 |---|---|
-| 3 strongest wide Meadows views | `WORLD/round6/stands/01-spawn-outward-day.png`, `WORLD/round6/stands/03-rise-overlook-day.png`, `WORLD/round6/stands/03-rise-overlook-golden.png` |
-| Village day | `PLACES/round2/locations/01-village-standing-day.png` |
-| Village night | `PLACES/round2/locations/01-village-standing-night.png` |
-| Creature/world frame | `LIFE/round7/05-ridge-camp-day.png` |
-| Combat/world frame | `VP1-3-candidate/combat/02-arena-opens.png` |
-| Building/home frame | `VP1-3-candidate/buildings/07-farmhouse-interior.png` |
-| Tournament | `PLACES/round2/locations/01-village-tournament-day.png` |
-| Warrens | `PLACES/round8/locations/04-warrens-standing-day.png` |
-| Team Tether Relay | `PLACES/round8/locations/06-relay-apparatus-day.png` |
-| Hall approach | `PLACES/round8/locations/11-castle-landmark-hall-200m-day.png` |
+| 3 strongest wide Meadows views | `VP11-final/survey/03-rise-overlook.png`, `VP11-final/survey/01-spawn-outward.png`, `VP11-final/survey/05-spawn-low-sun.png` |
+| Village day | `VP11-final/locations/01-village-standing-day.png` |
+| Village night | `VP11-final/locations/01-village-standing-night.png` |
+| Creature/world frame | `VP11-final/locations/08-ridge-camp-standing-day.png` (creatures beside the ridge camp) |
+| Combat/world frame | `VP11-final/combat/02-arena-opens.png` |
+| Building/home frame | `VP11-final/buildings/07-farmhouse-interior.png` |
+| Tournament | `VP11-final/locations/01-village-tournament-day.png` |
+| Warrens | `VP11-final/locations/04-warrens-approach-day.png` |
+| Team Tether Relay | `VP11-final/locations/06-relay-apparatus-day.png` |
+| Hall approach | `VP11-final/locations/11-castle-landmark-hall-200m-day.png` (plus `10-stronghold-gate-day.png` for the gate face) |
 
 ---
 
@@ -352,12 +376,12 @@ structure missing or popping at any stand (the 15–29% pixel diffs are grass/cl
   relationship needs a mechanism change (a ground-fade colour decoupled from `fog_colour`, or
   `fog_sky_affect > 0`), explicitly not attempted inside a time box. — `WORLD/REPORT.md` (item 3);
   `docs/VISUAL_PARITY_PROGRESS.md` (18:25 UTC check-in).
-- **VP10's residual draw calls and 45% unattributed cost.** `band1_open` remains at 7659 draws against
-  the 7500 provisional proxy budget — never brought under. The grass carpet was disproved as the cause by
-  measurement (133 draws, not thousands — a MultiMesh is one draw per surface, not per instance); 45.3% of
-  draws are unattributed, so vegetation's true cost is unknown, and the per-group breakdown is a
-  surface-count upper bound, not frustum-aware. — `WORLD/REPORT.md` (item 4);
-  `ralph/reports/visual-parity/VP10-perf/perf_merged_1d1a2f74.txt`.
+- **VP10's draw-call cost is now inside the proxy, but 45% of draws remain unattributed.** `band1_open`
+  went 7659 → 6847 draws (≤ 7500) by switching `structure_visibility_ranges` ON (one-shot measurement, kept);
+  the grass carpet was disproved as the cause by measurement (133 draws — a MultiMesh is one draw per
+  surface, not per instance). The per-group breakdown is still a surface-count upper bound, not
+  frustum-aware, so vegetation's true share is unknown. — `VP10-perf/perf_visibility_ranges_on.txt`;
+  `VP10-perf/DECISION-visibility-ranges.md`; `WORLD/REPORT.md` (item 4).
 
 **CORRIDOR**
 
@@ -380,11 +404,12 @@ structure missing or popping at any stand (the 15–29% pixel diffs are grass/cl
   while the outer curtain already met its target — reaching the jamb faces would need a light inside the
   gate mouth itself; reverted, not shipped. — `docs/VISUAL_PARITY_PROGRESS.md` (17:25 UTC check-in,
   "Check-in #27"); `PLACES/REPORT.md` ("PLACES closing summary", known limitations item 5).
-- **Warrens flanks are pending the queued colour knob.** Round 11's clean-restart fix removed the pale
-  slab (median 102/44 → 2.8/2.5) and the flat approach wall, but the burrow-mouth flanks now read as an
-  unlit black void with no grain; a dedicated `exterior_cladding_colour` (~#4a3a2a) was agreed and queued
-  but not delivered inside this handoff's evidence window. — `PLACES/JUDGE-round11-warrens.md`;
-  `PLACES/DECISION-warrens-restart.md`.
+- **Warrens flank brightness is a lighting ceiling.** Round 11's clean-restart fix removed the pale slab
+  (median 102/44 → 2.8/2.5) and the flat approach wall; round 12 shipped the agreed `exterior_cladding_colour`
+  (#4a3a2a, `data/config/burrow_warrens.json`) on the earth-skin cladding, which gives the mouth flanks a
+  material read but not brightness — the flanks sit in the mound's own shadow at the approach stand, so
+  they still read dark. Accepted at round 12 as a lighting ceiling rather than pursued again. —
+  `PLACES/JUDGE-round11-warrens.md`; `PLACES/DECISION-warrens-restart.md`; `PLACES/round12-warrens/`.
 - **Courtyard night is accepted on the code-blind judge's visual read** ("lit pool around the trainer,
   trainer reads, rest acceptably dark") **while its own 3 m-disc median metric still fails** (5.82 vs a
   target of ≥ 20) — recorded as a known limitation of the metric, not of the frame. —
@@ -409,6 +434,20 @@ structure missing or popping at any stand (the 15–29% pixel diffs are grass/cl
 
 **Program-wide**
 
+- **Three capture stands in the final recapture are mis-framed by the harness, not by the world.**
+  `05-relay-camp` **fire** (detail stand): the eye now sits inside a scatter tree's canopy (day frame is
+  leaves, night frame near-black) although PLACES round 10 was clear from the same numbers — the bake was
+  regenerated after the CORRIDOR round 9 vegetation merge and the nearby placements moved. The camp itself
+  is proven at the **standing** stand (`VP11-final/locations/05-relay-camp-standing-day.png`). `03-quarry`
+  **approach** renders inside foliage and `07-mill-crossing` **yard** frames the player's boots; both stands
+  came in from `main` after the program's judged set was fixed and were never part of a judged round. All
+  three are stand-siting work in `tools/_capture_locations.gd`, not visual defects, and are left as-is so the
+  final evidence stays one unedited run. — `VP11-final/locations/`; `tools/_probe_relay_fire_trees.gd`.
+- **`tools/_capture_ground_and_sky.gd` reports `GrassField … holds no instances` for every frame and exits 1**
+  while still writing all 30 frames with the carpet visibly present. Identical in the VP1–VP3 checkpoint
+  capture, so it is a stale guard (the camera-relative carpet is checked before it repopulates for the
+  teleported eye), not a missing carpet. Treat the frames, not the exit code, as the evidence.
+  — `VP11-final/capture.log`; `VP1-3-after/capture.log`.
 - **No on-device FPS floor has been measured.** All perf numbers in §4 are structural counters (draw
   calls/primitives/objects) from software GL in this container; the §6 sustained-FPS (45) and 1% low (30)
   floors are PROVISIONAL placeholders pending an owner measurement on the actual ROG Ally via

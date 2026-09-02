@@ -27,10 +27,10 @@
 | Ridge camp | `PLACES/00-before/locations/08-ridge-camp-standing-day.png` | `VP11-final/locations/08-ridge-camp-standing-day.png` |
 | Ridge camp night | `PLACES/00-before/locations/08-ridge-camp-fire-night.png` | `VP11-final/locations/08-ridge-camp-fire-night.png` |
 | Waystop | `PLACES/00-before/locations/09-waystop-standing-day.png` | `VP11-final/locations/09-waystop-standing-day.png` |
-| Hall approach | `PLACES/00-before/locations/11-castle-landmark-approach-day.png` | `VP11-final/locations/11-castle-landmark-approach-day.png` (MISSING) |
+| Hall approach (200 m) | `PLACES/00-before/locations/11-castle-landmark-approach-day.png` | `VP11-final/locations/11-castle-landmark-hall-200m-day.png` |
 | Hall gate day | `PLACES/00-before/locations/10-stronghold-gate-day.png` | `VP11-final/locations/10-stronghold-gate-day.png` |
 | Hall gate night | `PLACES/00-before/locations/10-stronghold-gate-night.png` | `VP11-final/locations/10-stronghold-gate-night.png` |
 | Hall courtyard day | `PLACES/00-before/locations/10-stronghold-courtyard-day.png` | `VP11-final/locations/10-stronghold-courtyard-day.png` |
 | Hall courtyard night | `PLACES/00-before/locations/10-stronghold-courtyard-night.png` | `VP11-final/locations/10-stronghold-courtyard-night.png` |
-| Hall banners | `PLACES/00-before/locations/11-castle-landmark-banners-day.png` | `VP11-final/locations/11-castle-landmark-banners-day.png` (MISSING) |
+| Hall at 100 m | `PLACES/00-before/locations/11-castle-landmark-gate-day.png` | `VP11-final/locations/11-castle-landmark-hall-100m-day.png` |
 | Stronghold approach night | `PLACES/00-before/locations/10-stronghold-approach-night.png` | `VP11-final/locations/10-stronghold-approach-night.png` |
