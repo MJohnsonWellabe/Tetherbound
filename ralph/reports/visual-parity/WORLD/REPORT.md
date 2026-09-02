@@ -610,3 +610,140 @@ Retuning golden against a black frame would be tuning against an artefact.
 - **Moon glow (night falloff 80)** — still NOT verified. The night stands are very
   dark (mean 6.1 / 3.8 / 5.5) with no blown pixels, but nothing here confirms the
   moon is in frame, and round 1 established it sits outside these headings.
+
+---
+
+# Round 3
+
+Merged `origin/claude/coordination-subagents-3fhz1x` first, as instructed; it carries the
+measured VP2 cost config (`cull_tile_m` 24, `scatter_lod_ranges` false), untouched here, and
+brings VP_FAST, used for all round-3 captures. Re-baked after the config edits: 826,135
+placements. Perf table is the coordinator's this round.
+
+## Headline: VP1-G0 is FIXED, and the cause explains three rounds of contradictions
+
+`05-spawn-low-sun` renders **lit and warm, mean 84.5/73.0/47.7, R−G +11.5**, where it was
+pure 0,0,0 in VP-PRE, in the first cut, and again in round 2.
+
+The freeze *ordering* was never the defect. `survey.gd` never froze **WorldWeather**, and
+`world_look.gd::set_weather()` is **not gated by `_clock_frozen`** — it unconditionally
+calls `_apply_blended()`. That is the one deliberate exception to the freeze contract (so a
+capture tool can set weather while frozen), but it also means WorldWeather's own
+unsupervised roll reaches WorldLook through a door the freeze never covers. WorldWeather
+rolls on a **240–480s real-time** timer, so it only reaches runs long enough to cross that
+window — on whichever viewpoint is last:
+
+- round 1's 2-viewpoint stands render → good golden frame (too short to reach the roll)
+- the 5-viewpoint survey → golden fails, and golden is its final viewpoint
+- `_capture_ground_and_sky.gd` and `_capture_locations.gd` → never failed, because both
+  force weather to "clear" and freeze the node
+
+**This is a general trap, not a survey bug.** Any capture tool that freezes the clock but
+not the weather node will silently drift, and only on long runs — which is exactly why it
+survived three rounds and made short tests look like passes. Worth every lane knowing.
+
+## Values changed
+
+| file | key | old → new |
+|---|---|---|
+| `art.json` | `sky.sun_colour` | #fff1d8 → #fff0c8 |
+| | `sky.sun_disc_edge` | 0.75 → 0.5 |
+| | `sky.sun_glow_falloff` | 600 → 2050 (5.5° → 3.0°) |
+| | `times.golden.sky.sun_glow_falloff` | 350 → 1150 (7.2° → 4.0°) |
+| | `times.golden.environment.ambient_colour` | #8f9ec4 → #a59fb5 |
+| | `times.golden.sky.cloud_shade` / `cloud_base` | #6a5d78/#4f4459 → #8a7d78/#6b5c56 |
+| | `times.night.sky.sun_glow_falloff` / `sun_glow` | 80 → 55 / 0.12 → 0.15 |
+| | `times.night.sky.horizon_colour` + `environment.fog_colour` | #3d5285/#31446f → #4d6a9e (both) |
+| | `times.night.environment.ambient_colour` | #2a3b6e → #34448a |
+| | `times.dawn.environment.exposure` / `fog_density` | 0.8 → 0.55 / 0.0009 → 0.0006 |
+| `terrain_playground.json` | `shader.grain_fade_end_m` | 48.0 → 60.0 |
+| | `shader.aerial_fade_strength` | 0.30 → 0.24 |
+| | `shader.aerial_fade_colour` | #aebcc4 → #7f8c9e |
+| `vegetation.json` | `layers.trees.ridge_bias` | 0.75 → 0.4 |
+| `tools/survey.gd` | freeze WorldWeather + DIAG prints | *(new)* |
+
+Also fixes a long-standing invariant violation: night's `horizon_colour` and `fog_colour`
+disagreed. The invariant now holds in **every** preset.
+
+## Verified
+
+- **Golden hour renders** (above).
+- **The moon, photographed for the first time.** A crisp disc with a soft halo, placed where
+  the arithmetic predicted (yaw 25°, horizon 0.65 → ~8° above frame centre). It had evaded
+  three rounds purely because no capture faced yaw 25°.
+- **Night value range (item 5).** Every night frame brighter with more channel separation and
+  exposure untouched: `01-village-approach-night` 6.4/16.6/31.7 → 11.3/22.4/39.3.
+- **Golden at the sun-facing stand:** R−G +4.4 → **+12.3**.
+- **Canopies still green** after the re-bake (`02-mill-pond-approach` pale-mint 0.70%).
+
+## NOT verified / failed
+
+**1. Golden is still cool at the away-facing stand.** −18.7 → **−16.2**. Warming ambient and
+clouds moved it 2.5 points, so the diagnosis that ambient dominated was wrong. Worse, the
+round's own fixes fight each other there: item 1 warmed ambient while item 8 made
+`aerial_fade_colour` bluer and darker, and at a stand facing away from the sun most of the
+frame is distant terrain, so the aerial term wins.
+
+**2. The dawn exposure fix is FALSIFIED.** `03-rise-overlook-dawn` R−G +96.8 → **+96.3**. A
+31% exposure cut moved the cast by half a point. In hindsight the reasoning was
+self-defeating: **exposure scales R, G and B proportionally, so it can darken a frame but can
+never remove a hue cast.** The frame did get darker (mean 160.7 → 145.8) — exposure working
+as exposure. Prime suspect now is dawn's `fog_colour` **#e6bca4**, a strongly warm orange
+dominating a vista where fog covers most of the frame. Never questioned; `fog_density` was
+cut instead.
+
+**3. NEW DEFECT — a full-frame maroon wash whenever the light source is in view.** The moon
+stand exposed it: R−G **+78.3** at night with the moon in frame, and **+96.3** at the dawn
+vista, against **+3.7** and **−50.8** for the same times at stands without the light in
+frame. Night's own palette is cool (`sun_colour` #d8e2ff, fog #4d6a9e), so this is not the
+preset's colours. No previous capture had ever faced a light source — adding one camera
+found it.
+
+**4. Night horizon glow got WORSE.** `03-rise-overlook-night` 18.8/68.3/104.0 →
+**25.8/76.6/113.8**. Item 5's brightening propagates into the distance because
+`aerial_fade_colour` is time-invariant. The vista sits at mean 72 against the same time's
+foreground at 21.
+
+**5. Tests and smokes NOT run** — the Godot slot was held by renders for the whole round.
+
+## Structural findings for round 4
+
+**`aerial_fade_colour` cannot be fixed with a value — it needs script wiring.**
+`playground_world.gd::_apply_ground_shader` reads the shader block **once** at scene setup
+and never again, and `world_look.gd` re-derives sky/fog/ambient every blend tick but has **no
+connection to the terrain material at all**. This is now the third round this constant has
+been the root cause (golden cool at range, night horizon glow, distance not separating), and
+it will keep resurfacing until something pushes a per-time colour into that uniform.
+
+**Nothing connects the aerial term to vegetation** — only `terrain_ground.gdshader` reads it.
+So "distant trees read as thin pins" cannot be fixed from `terrain_playground.json`.
+
+**Two texture tints violate the file's own rule.** `textures[grass].tint` #e9dfc0 and
+`textures[soil].tint` #e2d8b4 are warm creams with no override comment, against the file's
+stated "tint is WHITE, deliberately, on every surface" (rock/damp/forest_floor are #ffffff;
+path has a documented override). A warm cream multiplied onto a green albedo skews
+yellow-green — a plausible source of the "fluorescent lime" this program keeps chasing. Left
+unchanged deliberately: round 2's day frames passed the judge's bar, so lime is not a
+demonstrated live defect, and changing ground colour in the same render that tests whether
+grain shows would muddy both answers.
+
+**`rock.uv_scale` is 0.16** next to a T1-GROUND comment saying it was corrected to 0.22 for
+exactly the tiling reason it now exhibits. Either a stale comment or a regression; not
+touched.
+
+## Judged from frames, not retuned blind (item 4)
+
+- groves with open ground between: **visible** in the wides; reads as a continuous wall at
+  ground stands on a trail, which is `trail_bias` 0.85 working as designed.
+- tree scale variance: **visible**. No unmistakable hero tree in these stands, expected at
+  ~70 heroes over ~12 km (about 1 per 170 m).
+- bushes/saplings as a canopy-to-ground transition: **faint**, and asset-limited — saplings
+  are miniature CommonTree meshes, so they read as small trees, not a bushy band.
+- reeds/scrub at the pond bank: **not judgeable** — no frame in the set shows an eye-level
+  bank; the pond is walled in by canopy from every angle captured. Left unchanged rather than
+  tuned blind.
+
+## Frames
+
+`ralph/reports/visual-parity/WORLD/round3/`: `stands/` (9, incl. `06-moon-stand-night`),
+`locations/` (15), `survey/` (5), plus `_sheet_stands.png`, `_sheet_survey.png`.
