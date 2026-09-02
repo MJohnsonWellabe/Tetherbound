@@ -319,6 +319,9 @@ func _proof_camp_in_fov(name: String) -> void:
 	# wide frame) -- `root.size` is the actual render-target resolution the
 	# capture is saved from, so that is what "inside" is checked against here.
 	var viewport_size := Vector2(root.size)
+	var camera_viewport := _camera.get_viewport()
+	print("  [14 proof] root.size=%s camera.get_viewport()=%s same_as_root=%s vp_size=%s" % [
+		root.size, camera_viewport, camera_viewport == root, camera_viewport.size])
 	var probes := [["fire", Vector2(-233.9, 6473.7)], ["tent", Vector2(-238.3, 6473.6)]]
 	for probe: Array in probes:
 		var label: String = str(probe[0])
