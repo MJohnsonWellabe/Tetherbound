@@ -423,16 +423,16 @@
     },
     {
       "id": "S03-36a2",
-      "title": "force the reticle onto the target (attempt harness shortcut)",
-      "action": "force_aim",
+      "title": "track the bramblebun until the reticle is on it (attempt 1)",
+      "action": "track_aim",
       "args": {
-        "budget_frames": 10,
+        "budget_frames": 240,
         "skip_if": {
           "check": "combat_running",
           "equals": false
         }
       },
-      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
     },
     {
       "id": "S03-37a",
@@ -624,16 +624,16 @@
     },
     {
       "id": "S03-36b2",
-      "title": "force the reticle onto the target (attempt harness shortcut)",
-      "action": "force_aim",
+      "title": "track the bramblebun until the reticle is on it (attempt 2)",
+      "action": "track_aim",
       "args": {
-        "budget_frames": 10,
+        "budget_frames": 240,
         "skip_if": {
           "check": "combat_running",
           "equals": false
         }
       },
-      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
     },
     {
       "id": "S03-37b",
@@ -825,16 +825,16 @@
     },
     {
       "id": "S03-36c2",
-      "title": "force the reticle onto the target (attempt harness shortcut)",
-      "action": "force_aim",
+      "title": "track the bramblebun until the reticle is on it (attempt 3)",
+      "action": "track_aim",
       "args": {
-        "budget_frames": 10,
+        "budget_frames": 240,
         "skip_if": {
           "check": "combat_running",
           "equals": false
         }
       },
-      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
     },
     {
       "id": "S03-37c",
@@ -1026,16 +1026,16 @@
     },
     {
       "id": "S03-36d2",
-      "title": "force the reticle onto the target (attempt harness shortcut)",
-      "action": "force_aim",
+      "title": "track the bramblebun until the reticle is on it (attempt 4)",
+      "action": "track_aim",
       "args": {
-        "budget_frames": 10,
+        "budget_frames": 240,
         "skip_if": {
           "check": "combat_running",
           "equals": false
         }
       },
-      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
     },
     {
       "id": "S03-37d",
@@ -1227,16 +1227,16 @@
     },
     {
       "id": "S03-36e2",
-      "title": "force the reticle onto the target (attempt harness shortcut)",
-      "action": "force_aim",
+      "title": "track the bramblebun until the reticle is on it (attempt 5)",
+      "action": "track_aim",
       "args": {
-        "budget_frames": 10,
+        "budget_frames": 240,
         "skip_if": {
           "check": "combat_running",
           "equals": false
         }
       },
-      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
     },
     {
       "id": "S03-37e",
@@ -1428,16 +1428,16 @@
     },
     {
       "id": "S03-36f2",
-      "title": "force the reticle onto the target (attempt harness shortcut)",
-      "action": "force_aim",
+      "title": "track the bramblebun until the reticle is on it (attempt 6)",
+      "action": "track_aim",
       "args": {
-        "budget_frames": 10,
+        "budget_frames": 240,
         "skip_if": {
           "check": "combat_running",
           "equals": false
         }
       },
-      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
     },
     {
       "id": "S03-37f",
@@ -1629,16 +1629,16 @@
     },
     {
       "id": "S03-36g2",
-      "title": "force the reticle onto the target (attempt harness shortcut)",
-      "action": "force_aim",
+      "title": "track the bramblebun until the reticle is on it (attempt 7)",
+      "action": "track_aim",
       "args": {
-        "budget_frames": 10,
+        "budget_frames": 240,
         "skip_if": {
           "check": "combat_running",
           "equals": false
         }
       },
-      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
     },
     {
       "id": "S03-37g",
@@ -1830,16 +1830,16 @@
     },
     {
       "id": "S03-36h2",
-      "title": "force the reticle onto the target (attempt harness shortcut)",
-      "action": "force_aim",
+      "title": "track the bramblebun until the reticle is on it (attempt 8)",
+      "action": "track_aim",
       "args": {
-        "budget_frames": 10,
+        "budget_frames": 240,
         "skip_if": {
           "check": "combat_running",
           "equals": false
         }
       },
-      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
     },
     {
       "id": "S03-37h",
@@ -2031,16 +2031,16 @@
     },
     {
       "id": "S03-36i2",
-      "title": "force the reticle onto the target (attempt harness shortcut)",
-      "action": "force_aim",
+      "title": "track the bramblebun until the reticle is on it (attempt 9)",
+      "action": "track_aim",
       "args": {
-        "budget_frames": 10,
+        "budget_frames": 240,
         "skip_if": {
           "check": "combat_running",
           "equals": false
         }
       },
-      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
     },
     {
       "id": "S03-37i",
@@ -2232,16 +2232,16 @@
     },
     {
       "id": "S03-36j2",
-      "title": "force the reticle onto the target (attempt harness shortcut)",
-      "action": "force_aim",
+      "title": "track the bramblebun until the reticle is on it (attempt 10)",
+      "action": "track_aim",
       "args": {
-        "budget_frames": 10,
+        "budget_frames": 240,
         "skip_if": {
           "check": "combat_running",
           "equals": false
         }
       },
-      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
     },
     {
       "id": "S03-37j",
