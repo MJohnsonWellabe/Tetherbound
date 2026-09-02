@@ -439,21 +439,40 @@ func _any_night(only: Array[String]) -> bool:
 ## Pin the clock to `time`, then STOP both clocks. Order matters and freezing
 ## matters: a pin that is not frozen wears off across a multi-site pass and the
 ## late frames come back in a dusk wash under whatever weather rolled.
+##
+## R6-CLOCK-FREEZE. `_look.set_process(true)` here used to stay true for the
+## whole 30-frame wait below, on the (false) assumption that apply_time()
+## needed a live `_process` to take effect -- it does not, it is an ordinary
+## synchronous write (see the sibling tools/_capture_ground_and_sky.gd's own
+## header, which freezes WorldLook once and never unfreezes it for exactly
+## this reason). Those 30 unfrozen frames instead let world_look.gd's passive
+## clock advance `_elapsed_seconds` on every one of them; under software
+## rendering that is tens of real seconds, which at day_length_seconds/24 =
+## 25 real seconds per in-game hour is enough to walk a "night" pin most of
+## the way back toward day before the first shot ever fires. Freezing the
+## clock (rather than toggling `_look`'s whole `_process`) keeps apply_time()
+## pinned through the wait without needing that wait at all -- kept anyway so
+## an older WorldLook without set_clock_frozen (has_method guard below) still
+## gets the previous, drift-prone-but-working behaviour instead of a hard fail.
 func _pin(time: String) -> void:
 	if _weather != null:
 		_weather.set_process(true)
 		_weather.set_physics_process(true)
 		_weather.call("set_weather", "clear")
+	var look_frozen := _look != null and _look.has_method("set_clock_frozen")
 	if _look != null:
-		_look.set_process(true)
-		_look.set_physics_process(true)
+		if look_frozen:
+			_look.call("set_clock_frozen", true)
+		else:
+			_look.set_process(true)
+			_look.set_physics_process(true)
 		_look.call("apply_time", time)
 	for i in 30:
 		await physics_frame
 	if _weather != null:
 		_weather.set_process(false)
 		_weather.set_physics_process(false)
-	if _look != null:
+	if _look != null and not look_frozen:
 		_look.set_process(false)
 		_look.set_physics_process(false)
 	print("[locations] clock pinned to %s and frozen" % time)
