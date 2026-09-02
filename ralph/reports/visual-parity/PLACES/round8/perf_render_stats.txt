@@ -1,0 +1,324 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+ERROR: Condition "status < 0" is true. Returning: ERR_CANT_OPEN
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _build_terrain (res://scripts/world/playground_world.gd:690)
+         [1] _ready (res://scripts/world/playground_world.gd:447)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+WARNING: Terrain3DTextureAsset#3254:set_albedo_texture:79: Texture 'meadow_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#3254:set_normal_texture:100: Texture 'meadow_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#4936:set_albedo_texture:79: Texture 'verge_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#4936:set_normal_texture:100: Texture 'verge_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#7266:set_albedo_texture:79: Texture 'rock_scree_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#7266:set_normal_texture:100: Texture 'rock_scree_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#4259:set_albedo_texture:79: Texture 'dirt_path_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#4259:set_normal_texture:100: Texture 'dirt_path_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#1255:set_albedo_texture:79: Texture 'wet_earth_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#1255:set_normal_texture:100: Texture 'wet_earth_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#5630:set_albedo_texture:79: Texture 'forest_floor_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#5630:set_normal_texture:100: Texture 'forest_floor_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 386158 placements, 440634 skipped]=3318 reorder[16 layers]=526
+[vegetation] grass field is on; 440634 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=4123 mark_harvestable=126 group_by_model=469 register_mesh_assets=63 build_batches_total=8233 (of which harvest_points[57522 nodes]=6046, initial_collision_stream[52406 solid]=263) update_mmis=2933
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   6228 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(12945031430201) region_map=1024 entries
+[playground] scattered 385083 props in 35 batches (57522 harvestable, 0 already chopped, 366/52406 collision resident)
+[water] pond quads 2538, stream points 46, reeds 152, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 49, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 130, bank scrub 60
+[village] placed 25 structures
+ERROR: prop missing: Stool (looked for .gltf/.glb/.obj under res://assets/props/quaternius_fantasy)
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:143)
+       [1] build (res://scripts/world/props.gd:57)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:994)
+       [3] _ready (res://scripts/world/playground_world.gd:486)
+ERROR: prop missing: Stool (looked for .gltf/.glb/.obj under res://assets/props/quaternius_fantasy)
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:143)
+       [1] build (res://scripts/world/props.gd:57)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:994)
+       [3] _ready (res://scripts/world/playground_world.gd:486)
+[props] placed 247 props in 33 clusters (6 usable rest points)
+[village_npcs] placed 17 of 19
+[relay_site] placed 5 of 5
+[trainers] placed 19 trainer(s)
+[quarry] 2 foundations, 4 pylons standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 131 harvest nodes
+[playground] placed 6 farm plots
+[warrens] cleared 660 scattered trees/rocks inside the 30m site radius
+[warrens] planted 104 pieces of ground cover around the site
+[warrens] placed 5 accent boulders around the mound
+[warrens] placed 3 mouth dome pieces (earth over the entrance)
+[warrens] placed 12 entrance dressing pieces (fern ring / hood)
+[warrens] placed 2 spoil mounds around the entrance
+[warrens] 181 pieces of interior rock across 5 chambers
+[warrens] 188 structural members across 5 chambers
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _dress_the_guardian (res://scripts/world/burrow_warrens.gd:2830)
+       [3] _spawn_population (res://scripts/world/burrow_warrens.gd:2741)
+       [4] build (res://scripts/world/burrow_warrens.gd:241)
+       [5] _build_burrow_warrens (res://scripts/world/playground_world.gd:1411)
+       [6] _build_settlement (res://scripts/world/playground_world.gd:1119)
+       [7] _ready (res://scripts/world/playground_world.gd:486)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _dress_the_guardian (res://scripts/world/burrow_warrens.gd:2830)
+       [3] _spawn_population (res://scripts/world/burrow_warrens.gd:2741)
+       [4] build (res://scripts/world/burrow_warrens.gd:241)
+       [5] _build_burrow_warrens (res://scripts/world/playground_world.gd:1411)
+       [6] _build_settlement (res://scripts/world/playground_world.gd:1119)
+       [7] _ready (res://scripts/world/playground_world.gd:486)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _dress_the_guardian (res://scripts/world/burrow_warrens.gd:2830)
+       [3] _spawn_population (res://scripts/world/burrow_warrens.gd:2741)
+       [4] build (res://scripts/world/burrow_warrens.gd:241)
+       [5] _build_burrow_warrens (res://scripts/world/playground_world.gd:1411)
+       [6] _build_settlement (res://scripts/world/playground_world.gd:1119)
+       [7] _ready (res://scripts/world/playground_world.gd:486)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _dress_the_guardian (res://scripts/world/burrow_warrens.gd:2830)
+       [3] _spawn_population (res://scripts/world/burrow_warrens.gd:2741)
+       [4] build (res://scripts/world/burrow_warrens.gd:241)
+       [5] _build_burrow_warrens (res://scripts/world/playground_world.gd:1411)
+       [6] _build_settlement (res://scripts/world/playground_world.gd:1119)
+       [7] _ready (res://scripts/world/playground_world.gd:486)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 205 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+=== PERF-ROG render stats (round8) ===
+driver=X11  adapter=llvmpipe (LLVM 20.1.2, 256 bits)
+scatter_lod_ranges=false
+
+view                     draw calls     primitives      objects
+village_high                   3158        8634016         3299
+hall_approach                  3832        4302054         4174
+PERF8_DONE

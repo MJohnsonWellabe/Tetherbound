@@ -113,6 +113,54 @@ func test_rest_xp_matches_the_shipped_config() -> void:
 	assert_true(expected > 0, "resting is supposed to be a real xp source, not a silent no-op")
 
 
+# --- creature_bed rest-progress (OWNER-0902-REST-VISIBILITY) -----------------
+
+const REST_CFG := {"creature_bed": {"full_heal_seconds": 100.0}}
+
+
+func test_rest_seconds_remaining_is_zero_when_not_resting() -> void:
+	var creature := _creature()
+	creature.resting = false
+	creature.hp = 1.0  # far below max, but not resting -- must not report a countdown
+	assert_almost_eq(PROGRESSION.rest_seconds_remaining(creature, REST_CFG), 0.0, 0.0001)
+
+
+func test_rest_seconds_remaining_is_zero_at_full_hp() -> void:
+	var creature := _creature()
+	creature.resting = true
+	creature.hp = creature.max_hp
+	assert_almost_eq(PROGRESSION.rest_seconds_remaining(creature, REST_CFG), 0.0, 0.0001)
+
+
+func test_rest_seconds_remaining_scales_with_the_hp_deficit() -> void:
+	var creature := _creature()
+	creature.resting = true
+	creature.max_hp = 100.0
+	creature.hp = 50.0  # half the deficit of a freshly-fainted creature
+	assert_almost_eq(PROGRESSION.rest_seconds_remaining(creature, REST_CFG), 50.0, 0.0001,
+		"half the hp missing at full_heal_seconds=100 should be 50 seconds left")
+
+
+func test_rest_seconds_remaining_matches_the_tick_loops_own_heal_rate() -> void:
+	# The exact inverse relationship the doc comment promises: ticking
+	# `hp += max_hp/full_heal_seconds * delta` for exactly the reported
+	# remaining seconds must land the creature at full hp, not over or under.
+	var creature := _creature()
+	creature.resting = true
+	creature.max_hp = 80.0
+	creature.hp = 22.0
+	var seconds := PROGRESSION.rest_seconds_remaining(creature, REST_CFG)
+	var rate: float = float(creature.max_hp) / PROGRESSION.creature_bed_full_heal_seconds(REST_CFG)
+	creature.hp = minf(float(creature.max_hp), float(creature.hp) + rate * seconds)
+	assert_almost_eq(float(creature.hp), float(creature.max_hp), 0.01)
+
+
+func test_creature_bed_full_heal_seconds_matches_the_shipped_config() -> void:
+	var cfg := PROGRESSION.config()
+	var expected := float(cfg.get("creature_bed", {}).get("full_heal_seconds", 120.0))
+	assert_almost_eq(PROGRESSION.creature_bed_full_heal_seconds(cfg), expected, 0.0001)
+
+
 # --- creature_instance.gd: from_species compatibility -----------------------------
 
 func test_from_species_with_no_new_args_reproduces_old_behavior() -> void:

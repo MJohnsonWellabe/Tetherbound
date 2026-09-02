@@ -5,62 +5,76 @@
       "order": 4000,
       "name": "ridge_patrol_camp",
       "_why": "GATE-D4/prompt 65: spec Band 4 names 'ruined watch/occupation traces' and 'Team Tether patrol camps' among the region's regional identity and this band had zero prop clusters authored at package start. Sited on the watchtower spur beside the new patrol trainer (trainers.json order 4000) and 46m from captain_ridge -- the garrison the trainer belongs to, read the same way `old_quarry.gd`'s `quarry_station` and `ranger_camp` clusters read their own sites: a posting left mid-shift, not a stage set. Same prop family both of those already use (D24, one prop family) -- nothing here is new. A crate and barrel for supply, a bag and rope for gear, a whetstone for the same reason the quarry crew left one, and the axe standing in for a Team Tether tool rather than a mining one: the composition differs by what a patrol carries, not by a new mesh.",
+      "_why_vp5": "VP5 visual-parity pass. This is the Upper Meadows' only authored camp, and it was built as five props strung along the ruin wall in a straight line with the fire off to one side -- legible as a supply drop, not as a camp. The supply pile now sits together W-SW of the fire, seating is arranged tangentially on both sides of it (the stool moved, a log seat added), firewood was added radial to the fire, and the whetstone -- the patrol's own grindstone -- sits south where the pile used to trail off in a line. The cluster also gains this band's only `rest` block: a named `rest` site the player could not previously use.",
+      "rest": {
+        "_why": "VP5. `ridge_patrol_camp` is the only authored camp in Upper Meadows and, until now, could not be rested at -- every other camp cluster in the chapter (band1's trail_camp, band3's riverwatch_rest and the_waystop, band4's own highfield_stockcamp) carries a `rest` block and this one did not. Sited 2.0m SE of the fire, in the open SE quarter clear of the supply pile (W-SW), the tent (west, against the ruin) and both seats, the same clearance geometry `camp.gd` and `rest_point.gd` use at every other camp. `bed_index: -16` is the next free reserved index -- the chapter's other four beds already hold -11 through -15 -- and `scripts/world/rest_point.gd` builds this exactly like those four: same mechanic, same `night_rest.gd` call, no second rest system.",
+        "at": [-232.3, 6473.7],
+        "radius": 3.2,
+        "label": "Rest until morning",
+        "craft_at": [-231.2, 6476.6],
+        "creature_bed": {
+          "_why": "The bed sits in the open SE quarter of the camp, clear of the fire, both seats, the supply pile and the tent -- its own quarter the way `highfield_stockcamp`'s bed keeps its own quarter on the far side of that camp's fire from its tent. `bed_index -16` is the next free reserved index after this chapter's existing -11..-15.",
+          "at": [-230.9, 6470.9],
+          "yaw_deg": -40.0,
+          "bed_index": -16
+        }
+      },
       "props": [
         {
           "model": "Crate_Wooden",
-          "at": [-236.4, 6472.1],
+          "at": [-236.6, 6471.2],
           "yaw_deg": -40.0,
           "sink_m": 0.06,
           "scale": 1.0,
-          "_why": "the post's own supply crate, set where a picket would actually stack one -- against the ruin, not in the open"
+          "_why": "VP5. Regrouped W-SW of the fire, 3.0m off it, as the anchor of one touching supply pile with the barrel, bag and rope -- the post's own supply crate, still set against the ruin's own side of the camp"
         },
         {
           "model": "Barrel",
-          "at": [-235.6, 6471.3],
+          "at": [-235.9, 6470.5],
           "yaw_deg": 10.0,
           "sink_m": 0.05,
           "scale": 1.0,
-          "_why": "water for a posting nowhere near the river -- set touching the crate, one load rather than a scatter"
+          "_why": "VP5. Set touching the crate, one load rather than a scatter"
         },
         {
           "model": "Bag",
-          "at": [-234.2, 6472.6],
+          "at": [-237.2, 6472.1],
           "yaw_deg": 95.0,
           "sink_m": 0.06,
           "scale": 1.0,
-          "_why": "a picket's kit, dropped rather than packed -- the same detail that reads 'abandoned' at the quarry and the ranger camp, told a third time"
+          "_why": "VP5. Leaning against the crate -- a picket's kit, dropped rather than packed, the same detail that reads 'abandoned' at the quarry and the ranger camp, told a third time"
         },
         {
           "model": "Rope_1",
-          "at": [-236.9, 6470.5],
+          "at": [-237.8, 6470.9],
           "yaw_deg": 60.0,
           "sink_m": 0.03,
           "scale": 1.0,
-          "_why": "coiled beside the crate -- what tied a watch-line to the ruin above before the ruin stopped being watched"
+          "_why": "VP5. Coiled at the pile's own edge -- what tied a watch-line to the ruin above before the ruin stopped being watched"
         },
         {
           "model": "Whetstone",
-          "at": [-234.8, 6470.2],
+          "at": [-233.8, 6469.6],
           "yaw_deg": -15.0,
           "sink_m": 0.02,
           "scale": 1.0,
-          "_why": "set down and not picked back up, same reasoning as the quarry crew's own whetstone -- someone left in a hurry, not on schedule"
+          "_why": "VP5. The patrol's own grindstone, 4m south of the fire and off the supply pile -- set down and not picked back up, same reasoning as the quarry crew's own whetstone"
         },
         {
           "model": "Axe_Bronze",
-          "at": [-235.2, 6473.4],
+          "at": [-235.4, 6472.5],
           "yaw_deg": 70.0,
           "pitch_deg": -68.0,
           "sink_m": 0.02,
           "scale": 1.0,
-          "_why": "leaning against the crate, pitched off vertical -- the one tool that names a patrol rather than a dig, the same lean `quarry_station`'s pickaxe uses for the same reason"
+          "_why": "leaning against the crate, pitched off vertical -- the one tool that names a patrol rather than a dig, the same lean `quarry_station`'s pickaxe uses for the same reason. VP5: kept at the same offset from the crate it leaned on before, moving with the pile"
         },
         {
           "model": "Bonfire_Fire",
           "at": [-233.9, 6473.7],
           "yaw_deg": -35.0,
           "sink_m": 0.02,
-          "scale": 0.4,
+          "scale": 0.42,
           "glow_scale": 1.8,
           "dir": "res://assets/props/quaternius_survival",
           "glow": "campfire",
@@ -72,19 +86,21 @@
           "model": "campfire_stone_ring",
           "at": [-233.9, 6473.7],
           "yaw_deg": 15.0,
-          "sink_m": 0.02,
-          "scale": 0.55,
+          "sink_m": 0.03,
+          "scale": 0.85,
           "dir": "res://assets/props/generated_camp",
-          "_why": "SITE-DRESSING: the D1 fire-ring mesh (owner-referenced, already committed under assets/props/generated_camp -- no new generation), scaled to this smaller fire's own footprint the same way band1 matched it to its six-stone predecessor. AUDIT-E E4: moved with `Bonfire_Fire` above, same offset, so the ring keeps matching the brazier's own footprint."
+          "_why": "SITE-DRESSING: the D1 fire-ring mesh (owner-referenced, already committed under assets/props/generated_camp -- no new generation), scaled to this smaller fire's own footprint the same way band1 matched it to its six-stone predecessor. AUDIT-E E4: moved with `Bonfire_Fire` above, same offset, so the ring keeps matching the brazier's own footprint.",
+          "_why_vp5": "VP5. Grown from 0.55 to 0.85 to match the brazier's own enlargement; sink_m raised to 0.03 to keep the ring's base seated against the taller fire."
         },
         {
           "model": "Stool",
-          "at": [-232.9, 6472.9],
-          "yaw_deg": 205.0,
+          "at": [-231.9, 6475.4],
+          "yaw_deg": 215.0,
           "sink_m": 0.03,
           "scale": 1.0,
           "dir": "res://assets/props/quaternius_furniture",
-          "_why": "SITE-DRESSING: one seat, facing the fire across it -- the piece that turns a fire into a place someone sits rather than a lit prop. Same model band1's trail_camp already uses for its own second seat. AUDIT-E E4: moved with the fire (same dx-0.8, dz-0.6 offset), keeping the same seat-to-fire geometry this note already describes."
+          "_why": "one seat, facing the fire across it -- the piece that turns a fire into a place someone sits rather than a lit prop. Same model band1's trail_camp already uses for its own second seat.",
+          "_why_vp5": "VP5. Moved to sit tangential to the fire 2.6m NE, opposite the new log seat, instead of the straight line the props formerly ran in along the ruin."
         },
         {
           "model": "camp_tent",
@@ -94,6 +110,33 @@
           "scale": 0.85,
           "dir": "res://assets/props/generated_camp",
           "_why": "SITE-DRESSING: the D1 owner-referenced tent mesh (already committed, no new generation), scaled down from band1's 1.05 -- a patrol keeps one small shelter, not a rest camp's. Placed against the ruin behind the crate/barrel, mouth turned toward the fire so the tent and the fire read as one posting instead of two unrelated objects. `sink_m` copied from band1's own measured fix for this same mesh's raised local origin."
+        },
+        {
+          "model": "tree-log",
+          "at": [-235.6, 6475.8],
+          "yaw_deg": 51.0,
+          "sink_m": 0.03,
+          "scale": 1.15,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "VP5. A second seat, tangential to the fire 2.7m NW, opposite the stool -- one stool alone read as a single perch rather than a manned camp with somewhere to sit. Kenney's textured CC0 log, the same mesh every other camp in the chapter uses for this role."
+        },
+        {
+          "model": "tree-log-small",
+          "at": [-233.2, 6471.2],
+          "yaw_deg": 164.0,
+          "pitch_deg": 4.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "VP5. Firewood south of the fire, radial rather than tangential -- band1's own rule, for the opposite reason its seats obey."
+        },
+        {
+          "model": "Bag",
+          "at": [-229.9, 6472.0],
+          "yaw_deg": 200.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "VP5 round8. A patroller's own kit set down beside the bed rather than at the supply pile 5m west -- this is the only camp in the chapter with the player's own creature bed, and the bar for this site is 'the bed and fire are the subject, supplies secondary'. One bag at the sleeping spot, unpaired from the crate/barrel/rope group, keeps the west-side supplies reading as secondary rather than the pile the camp is arranged around."
         },
         {
           "model": "Rock_Medium_2",
