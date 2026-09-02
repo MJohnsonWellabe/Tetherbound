@@ -465,12 +465,12 @@
     {
       "id": "S03-32ar2",
       "title": "focus the Revive draught",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "revive",
+        "max_moves": 60
       },
-      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+      "expected": "T2-GATEF-RUN5/GAME-9/RIG-24 (S03-56d/S03-56f) already proved fixed-offset focus_move fragile in this same bag once acquisitions or spends shift the grid: a positional \"3 cells right of slot 0\" assumed a fresh save's fill order, and this ladder's own telemetry (gate-f-run-20260901T220548Z-s03fix attempts 3-4) shows it silently landing on the wrong item once earlier presses in this same recovery block had already shifted the grid, so every recovery reported PASS while reviving nothing and party size stayed capped at 2 (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02). focus_item reads the cursor and sends real ui_left/ui_right the way a player reads the bag, regardless of where Revive actually sits."
     },
     {
       "id": "S03-32ar3",
@@ -653,12 +653,12 @@
     {
       "id": "S03-32br2",
       "title": "focus the Revive draught",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "revive",
+        "max_moves": 60
       },
-      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+      "expected": "T2-GATEF-RUN5/GAME-9/RIG-24 (S03-56d/S03-56f) already proved fixed-offset focus_move fragile in this same bag once acquisitions or spends shift the grid: a positional \"3 cells right of slot 0\" assumed a fresh save's fill order, and this ladder's own telemetry (gate-f-run-20260901T220548Z-s03fix attempts 3-4) shows it silently landing on the wrong item once earlier presses in this same recovery block had already shifted the grid, so every recovery reported PASS while reviving nothing and party size stayed capped at 2 (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02). focus_item reads the cursor and sends real ui_left/ui_right the way a player reads the bag, regardless of where Revive actually sits."
     },
     {
       "id": "S03-32br3",
@@ -841,12 +841,12 @@
     {
       "id": "S03-32cr2",
       "title": "focus the Revive draught",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "revive",
+        "max_moves": 60
       },
-      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+      "expected": "T2-GATEF-RUN5/GAME-9/RIG-24 (S03-56d/S03-56f) already proved fixed-offset focus_move fragile in this same bag once acquisitions or spends shift the grid: a positional \"3 cells right of slot 0\" assumed a fresh save's fill order, and this ladder's own telemetry (gate-f-run-20260901T220548Z-s03fix attempts 3-4) shows it silently landing on the wrong item once earlier presses in this same recovery block had already shifted the grid, so every recovery reported PASS while reviving nothing and party size stayed capped at 2 (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02). focus_item reads the cursor and sends real ui_left/ui_right the way a player reads the bag, regardless of where Revive actually sits."
     },
     {
       "id": "S03-32cr3",
@@ -1029,12 +1029,12 @@
     {
       "id": "S03-32dr2",
       "title": "focus the Revive draught",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "revive",
+        "max_moves": 60
       },
-      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+      "expected": "T2-GATEF-RUN5/GAME-9/RIG-24 (S03-56d/S03-56f) already proved fixed-offset focus_move fragile in this same bag once acquisitions or spends shift the grid: a positional \"3 cells right of slot 0\" assumed a fresh save's fill order, and this ladder's own telemetry (gate-f-run-20260901T220548Z-s03fix attempts 3-4) shows it silently landing on the wrong item once earlier presses in this same recovery block had already shifted the grid, so every recovery reported PASS while reviving nothing and party size stayed capped at 2 (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02). focus_item reads the cursor and sends real ui_left/ui_right the way a player reads the bag, regardless of where Revive actually sits."
     },
     {
       "id": "S03-32dr3",
@@ -1217,12 +1217,12 @@
     {
       "id": "S03-32er2",
       "title": "focus the Revive draught",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "revive",
+        "max_moves": 60
       },
-      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+      "expected": "T2-GATEF-RUN5/GAME-9/RIG-24 (S03-56d/S03-56f) already proved fixed-offset focus_move fragile in this same bag once acquisitions or spends shift the grid: a positional \"3 cells right of slot 0\" assumed a fresh save's fill order, and this ladder's own telemetry (gate-f-run-20260901T220548Z-s03fix attempts 3-4) shows it silently landing on the wrong item once earlier presses in this same recovery block had already shifted the grid, so every recovery reported PASS while reviving nothing and party size stayed capped at 2 (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02). focus_item reads the cursor and sends real ui_left/ui_right the way a player reads the bag, regardless of where Revive actually sits."
     },
     {
       "id": "S03-32er3",
@@ -1405,12 +1405,12 @@
     {
       "id": "S03-32fr2",
       "title": "focus the Revive draught",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "revive",
+        "max_moves": 60
       },
-      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+      "expected": "T2-GATEF-RUN5/GAME-9/RIG-24 (S03-56d/S03-56f) already proved fixed-offset focus_move fragile in this same bag once acquisitions or spends shift the grid: a positional \"3 cells right of slot 0\" assumed a fresh save's fill order, and this ladder's own telemetry (gate-f-run-20260901T220548Z-s03fix attempts 3-4) shows it silently landing on the wrong item once earlier presses in this same recovery block had already shifted the grid, so every recovery reported PASS while reviving nothing and party size stayed capped at 2 (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02). focus_item reads the cursor and sends real ui_left/ui_right the way a player reads the bag, regardless of where Revive actually sits."
     },
     {
       "id": "S03-32fr3",
@@ -1593,12 +1593,12 @@
     {
       "id": "S03-32gr2",
       "title": "focus the Revive draught",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "revive",
+        "max_moves": 60
       },
-      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+      "expected": "T2-GATEF-RUN5/GAME-9/RIG-24 (S03-56d/S03-56f) already proved fixed-offset focus_move fragile in this same bag once acquisitions or spends shift the grid: a positional \"3 cells right of slot 0\" assumed a fresh save's fill order, and this ladder's own telemetry (gate-f-run-20260901T220548Z-s03fix attempts 3-4) shows it silently landing on the wrong item once earlier presses in this same recovery block had already shifted the grid, so every recovery reported PASS while reviving nothing and party size stayed capped at 2 (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02). focus_item reads the cursor and sends real ui_left/ui_right the way a player reads the bag, regardless of where Revive actually sits."
     },
     {
       "id": "S03-32gr3",
@@ -1781,12 +1781,12 @@
     {
       "id": "S03-32hr2",
       "title": "focus the Revive draught",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "revive",
+        "max_moves": 60
       },
-      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+      "expected": "T2-GATEF-RUN5/GAME-9/RIG-24 (S03-56d/S03-56f) already proved fixed-offset focus_move fragile in this same bag once acquisitions or spends shift the grid: a positional \"3 cells right of slot 0\" assumed a fresh save's fill order, and this ladder's own telemetry (gate-f-run-20260901T220548Z-s03fix attempts 3-4) shows it silently landing on the wrong item once earlier presses in this same recovery block had already shifted the grid, so every recovery reported PASS while reviving nothing and party size stayed capped at 2 (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02). focus_item reads the cursor and sends real ui_left/ui_right the way a player reads the bag, regardless of where Revive actually sits."
     },
     {
       "id": "S03-32hr3",
@@ -1969,12 +1969,12 @@
     {
       "id": "S03-32ir2",
       "title": "focus the Revive draught",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "revive",
+        "max_moves": 60
       },
-      "expected": "The satchel fills in acquisition order -- orb_basic, potion_small, berries, revive. Revive sits 3 cells right of slot 0."
+      "expected": "T2-GATEF-RUN5/GAME-9/RIG-24 (S03-56d/S03-56f) already proved fixed-offset focus_move fragile in this same bag once acquisitions or spends shift the grid: a positional \"3 cells right of slot 0\" assumed a fresh save's fill order, and this ladder's own telemetry (gate-f-run-20260901T220548Z-s03fix attempts 3-4) shows it silently landing on the wrong item once earlier presses in this same recovery block had already shifted the grid, so every recovery reported PASS while reviving nothing and party size stayed capped at 2 (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02). focus_item reads the cursor and sends real ui_left/ui_right the way a player reads the bag, regardless of where Revive actually sits."
     },
     {
       "id": "S03-32ir3",
