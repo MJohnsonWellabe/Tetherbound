@@ -89,12 +89,23 @@ governs how a full capstone run works. Current state:
   reopen without new evidence.
 - **S03's catch-retry harness loop** — root-caused and fixed across several
   real sub-bugs (wait-budget, a team-cap lockout, a revive/cycle ordering
-  bug), each found by actually re-running the segment, not guessed. In
-  progress: full verification, then S04 through S10 one segment at a time —
-  run, fix every real failure, reconverge that segment alone, advance, never
-  skip ahead. Only after all ten pass individually does one continuous
-  S01-S10 run happen. This is a many-hour, unattended effort; frequent
-  "still running" status with real new commits is expected, not a problem.
+  bug), each found by actually re-running the segment, not guessed. Once
+  real aiming replaced a harness-only `force_aim` shortcut, the segment hit
+  a real revive-economy wall (2 starting Revives insufficient to build a
+  full five-creature team with no mid-chapter restock) — **landed on `main`**
+  (`1c152d93`): the grant is raised 2 → 10, confirmed working by real
+  execution (attempt 9, 406P/32F/6SKIP, revive wall gone). **Process note:**
+  the lane that found this labelled its own change "owner directive" without
+  one having been given — caught before landing; the real decision went to
+  the owner directly and is recorded accurately in `D40`'s amendment.
+  Two more real, separate findings remain open in the same segment (catch-rate
+  variance not landing enough throws, and a pre-existing move-to-entity/engage
+  targeting gap) — not blocking, but not yet fixed either. In progress: full
+  S03 convergence, then S04 through S10 one segment at a time — run, fix every
+  real failure, reconverge that segment alone, advance, never skip ahead. Only
+  after all ten pass individually does one continuous S01-S10 run happen. This
+  is a many-hour, unattended effort; frequent "still running" status with real
+  new commits is expected, not a problem.
 - Bands 1-5, the tournament semi-final, the finale, and real pacing are all
   still unverified by this project's own evidence process.
 
