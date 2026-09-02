@@ -475,51 +475,97 @@ const BUTTRESS_HEIGHT_FRAC := 0.80
 
 ## --- materials --------------------------------------------------------------
 
-func _material(colour: Color, emissive := 0.0, textured := false) -> StandardMaterial3D:
+## VP8 (visual parity). Every TEXTURED stone material is now the weathered
+## `hall_stone.gdshader` rather than a StandardMaterial3D: same texture, same
+## world-space triplanar projection at the same `STONE_TILE`, plus the moss in
+## the joints, the macro/per-stone tone variation and the damp base band that
+## two blind judges and the owner's own Hall pack asked for and that a
+## StandardMaterial3D cannot express (see the shader's header). Untextured and
+## emissive-only materials (teal conduits, timber, iron) are unchanged.
+##
+## Returns `Material`, not `StandardMaterial3D`: callers that used to adjust
+## `uv1_scale` on a duplicate now set the shader's `tile` through
+## `_stone_variant()` below, which is the ONE place that knowledge lives.
+const HALL_STONE_SHADER := preload("res://assets/environment/team_tether/hall/hall_stone.gdshader")
+func _material(colour: Color, emissive := 0.0, textured := false) -> Material:
 	var key := "%s_%.2f_%s" % [colour.to_html(), emissive, textured]
 	if _materials.has(key):
 		return _materials[key]
+	if textured:
+		var stone := _stone_shader_material(colour, STONE_TILE, emissive)
+		_materials[key] = stone
+		return stone
+	# The textured branch used to live here: `T_UnevenBrick` world-triplanar at
+	# `STONE_TILE` under a flat tint. WORLD triplanar (T1-HALL-4, JUDGE-6 defect
+	# 3) is preserved in the shader -- object-space triplanar scales the texture
+	# with the node, and this kit's modules run 2.1x to 7.0x, which was the
+	# whole of "one material, four scales, one frame". The shader projects in
+	# world metres, so every surface still courses at one real stone size.
 	var m := StandardMaterial3D.new()
 	m.roughness = 0.92
-	if textured:
-		# Same triplanar-on-a-primitive-box technique `burrow_warrens.gd` and
-		# `severed_spokes.gd::_stone_material` already use: no authored UVs on
-		# these procedurally-sized walls/floors, so the texture has to project
-		# itself. `albedo_color` still multiplies the texture, so every config
-		# key that used to BE the wall's colour (`_stone`, `_stone_light`,
-		# `_floor_colour`) still tints it -- the works keep their own palette,
-		# they just stop being flat.
-		m.albedo_texture = STONE_ALBEDO
-		m.albedo_color = colour
-		m.normal_enabled = true
-		m.normal_texture = STONE_NORMAL
-		m.roughness_texture = STONE_ROUGHNESS
-		m.uv1_triplanar = true
-		# WORLD triplanar, T1-HALL-4, JUDGE-6 defect 3. Object-space triplanar
-		# multiplies `uv1_scale` by the LOCAL vertex position, so a mesh's own
-		# node scale scales its texture with it -- which is why one material at
-		# one `STONE_TILE` still shipped four stone sizes. Measured by the judge
-		# in single frames: `H-08` has "three UV scales meeting at two hard
-		# vertical seams", `H-04` "one material, four scales, one frame", and
-		# `H-06`'s near tower runs "at roughly 4x the wall's scale" where the
-		# stones "become 120px soap-smears ... it reads as wet clay, not
-		# masonry". That tower is `LargeSquareTowerBricks` at scale 4.0 against
-		# curtain walls built as unit boxes: 4x the node scale, 4x the stone,
-		# exactly as measured. In world space the projection is independent of
-		# node scale, so every surface in the complex -- kit module, procedural
-		# wall, merlon, causeway kerb -- courses at the same real-world stone
-		# size and the seams between them stop existing. This is the whole of
-		# the judge's "normalise UV scale across all uses of the stone material;
-		# remove the hard seams", and it costs nothing: same material, same
-		# texture, same draw call.
-		m.uv1_world_triplanar = true
-		m.uv1_scale = Vector3.ONE * STONE_TILE
-	else:
-		m.albedo_color = colour
+	m.albedo_color = colour
 	if emissive > 0.0:
 		m.emission_enabled = true
 		m.emission = colour
 		m.emission_energy_multiplier = emissive
+	_materials[key] = m
+	return m
+
+
+## The weathered stone, instanced. `tile` is repeats per metre (the works'
+## `STONE_TILE` for walls; the floor, the skirt and the exterior skin each ask
+## for their own, exactly as they used to via `uv1_scale`). `emissive` is the
+## oxblood paint's value floor -- faction paint over stone keeps the stone's
+## grain and macro variation but grows no moss: it is fresh, and that contrast
+## (old sacred ruin + recent invasive industry) is the whole point of the pack.
+##
+## `damp_top_y` is the building's own ground line in WORLD metres. This node
+## carries `site.at` and `_floor_y` by the time any material is asked for, so
+## the band sits where the skirt meets the meadow rather than at world zero.
+## Weathering numbers are TUNABLE from `stronghold.json`'s `site.weathering`
+## block; absent keys take the shader's defaults.
+func _stone_shader_material(colour: Color, tile: float, emissive := 0.0) -> ShaderMaterial:
+	var m := ShaderMaterial.new()
+	m.shader = HALL_STONE_SHADER
+	m.set_shader_parameter("tint", colour)
+	m.set_shader_parameter("albedo_tex", STONE_ALBEDO)
+	m.set_shader_parameter("normal_tex", STONE_NORMAL)
+	m.set_shader_parameter("rough_tex", STONE_ROUGHNESS)
+	m.set_shader_parameter("tile", tile)
+	m.set_shader_parameter("emission_energy", emissive)
+	m.set_shader_parameter("damp_top_y", position.y + _floor_y - _skirt + _damp_lift())
+	var weathering: Dictionary = _config.get("site", {}).get("weathering", {}) as Dictionary
+	for param: String in ["macro_strength", "stone_strength", "moss_amount", "moss_scale",
+			"joint_threshold", "up_moss", "damp_height", "damp_strength", "streak_strength",
+			"macro_scale", "stone_scale"]:
+		if weathering.has(param):
+			m.set_shader_parameter(param, float(weathering[param]))
+	if weathering.has("moss_colour"):
+		m.set_shader_parameter("moss_colour", Color(str(weathering["moss_colour"])))
+	if emissive > 0.0:
+		# Paint, not ruin: see above.
+		m.set_shader_parameter("moss_amount", 0.0)
+		m.set_shader_parameter("streak_strength", 0.0)
+		m.set_shader_parameter("damp_strength", 0.0)
+	return m
+
+
+## Where the damp band tops out, measured UP from the skirt's foot. The skirt
+## is 18 m deep but only its top few metres clear the ground on the visible
+## faces (`_comment_skirt_face`: the floor sits ~6 m above the meadow), so the
+## band is anchored near where the wall actually meets grass, not 18 m under it.
+func _damp_lift() -> float:
+	return float(_config.get("site", {}).get("weathering", {}).get("ground_above_skirt_foot_m", 11.0))
+
+
+## A textured stone at its own tile, cached under `key`. Replaces the three
+## `duplicate() + uv1_scale` copies the floor, the exterior skin and the skirt
+## used to make -- a ShaderMaterial has no `uv1_scale`, so the tile is a
+## parameter set once here.
+func _stone_variant(key: String, colour: Color, tile: float) -> Material:
+	if _materials.has(key):
+		return _materials[key]
+	var m := _stone_shader_material(colour, tile)
 	_materials[key] = m
 	return m
 
@@ -604,7 +650,7 @@ func _timber() -> Color:
 ## the base tone, and every wall gets a dark base course under it -- the single
 ## cheapest cue that turns a flat box into built masonry, and the one the
 ## castle's own two-course curtain already uses.
-func _wall_material(outer: bool) -> StandardMaterial3D:
+func _wall_material(outer: bool) -> Material:
 	return _material(_stone_light() if outer else _stone(), 0.0, true)
 
 
@@ -620,12 +666,19 @@ func _floor_colour() -> Color:
 ## the size of a car bonnet, laid in a corridor". A wall is seen face-on and a
 ## floor is seen at a grazing angle running away from the camera, so the same
 ## tile size cannot serve both -- the floor needs the tighter one.
-func _floor_material() -> StandardMaterial3D:
+func _floor_material() -> Material:
 	var key := "floor_stone"
 	if _materials.has(key):
 		return _materials[key]
-	var m: StandardMaterial3D = _material(_floor_colour(), 0.0, true).duplicate() as StandardMaterial3D
-	m.uv1_scale = Vector3.ONE * (STONE_TILE * float(_config.get("site", {}).get("floor_tile_scale", 2.6)))
+	var m := _stone_shader_material(_floor_colour(),
+		STONE_TILE * float(_config.get("site", {}).get("floor_tile_scale", 2.6)))
+	# A trodden yard floor is not a damp wall foot: the first render of the
+	# shader carpeted every yard in moss because a floor is ALL upward face.
+	# The floor keeps the joint moss and loses most of the face creep.
+	var weathering: Dictionary = _config.get("site", {}).get("weathering", {}) as Dictionary
+	m.set_shader_parameter("moss_amount", float(weathering.get("floor_moss_amount", 0.3)))
+	m.set_shader_parameter("up_moss", float(weathering.get("floor_up_moss", 0.3)))
+	m.set_shader_parameter("damp_strength", 0.0)
 	_materials[key] = m
 	return m
 
@@ -634,7 +687,7 @@ func _floor_material() -> StandardMaterial3D:
 ## glow -- severed_spokes.gd's own header records why (under gl_compatibility
 ## the bare albedo shades to pure black and the colour stops being readable as
 ## a colour at all).
-func _tether_material() -> StandardMaterial3D:
+func _tether_material() -> Material:
 	# CONTENT-0828B: `textured` was defaulting to false here, so every girder
 	# and pillar in the complex was a flat unshaded colour. A blind critic
 	# probed the courtyard's tallest pillar down its full height and got the
@@ -651,15 +704,29 @@ func _tether_material() -> StandardMaterial3D:
 
 ## Teal: the reserved ENERGY colour, and it appears only where Team Tether's
 ## machinery is live.
-func _live_material() -> StandardMaterial3D:
+func _live_material() -> Material:
 	return _material(_palette("tether_teal", Color("#3fe8c4")), 1.4)
+
+
+## The same teal, for the conduits that climb the OUTSIDE of the flank walls.
+## JUDGE-6 defect 9 and JUDGE-AUDIT-E defect 4, independently: at 1.4 the
+## interior's value-floor energy blows the exterior runs out to "bright
+## cyan-white bars ... the most saturated objects in the frame", pulling the
+## eye harder than the fortress does. Outdoors under the sun the floor is not
+## needed; a live cable reads as live at a fraction of it. TUNABLE via
+## `site.exterior_conduit_energy`.
+func _exterior_live_material() -> Material:
+	# The albedo is darkened too: a bare (0.25, 0.91, 0.77) box in full sun is
+	# white before any emission is added to it. The glow is what says "live".
+	return _material(_palette("tether_teal", Color("#3fe8c4")).darkened(0.55),
+		float(_config.get("site", {}).get("exterior_conduit_energy", 0.45)))
 
 
 ## --- geometry ---------------------------------------------------------------
 
 ## A box with matching collision, positioned by its centre in complex-local
 ## space. `solid: false` is decoration that must never block a doorway.
-func _box(size: Vector3, at: Vector3, material: StandardMaterial3D, solid := true,
+func _box(size: Vector3, at: Vector3, material: Material, solid := true,
 		node_name := "") -> MeshInstance3D:
 	var mesh := MeshInstance3D.new()
 	var box := BoxMesh.new()
@@ -1103,14 +1170,8 @@ func _build_exterior_facing() -> void:
 				_face_rect(rect)
 
 
-func _exterior_face_material() -> StandardMaterial3D:
-	var key := "exterior_face_stone"
-	if _materials.has(key):
-		return _materials[key]
-	var m: StandardMaterial3D = _material(_stone_light(), 0.0, true).duplicate() as StandardMaterial3D
-	m.uv1_scale = Vector3.ONE * (STONE_TILE * EXTERIOR_FACE_TILE_MULT)
-	_materials[key] = m
-	return m
+func _exterior_face_material() -> Material:
+	return _stone_variant("exterior_face_stone", _stone_light(), STONE_TILE * EXTERIOR_FACE_TILE_MULT)
 
 
 func _face_rect(rect: Dictionary) -> void:
@@ -1260,10 +1321,26 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(Vector3i(int(wall_centre.x * 8.0), int(wall_top * 8.0),
 		int(wall_centre.z * 8.0)))
+	# VP8: a COLLAPSED run. The pack asks for "broken parapets and collapsed wall
+	# tops ... use broken masonry pieces to destroy the 'perfect finished castle'
+	# silhouette", and the previous lane left it open ("the parapets themselves
+	# are still intact"). On a long enough wall, one stretch of two to four
+	# merlons is gone and a heap of fallen blocks lies on the coping where they
+	# stood -- the silhouette breaks, and the rubble at the wall foot the ruin
+	# layer already scatters finally has somewhere to have fallen FROM. Seeded
+	# off the same wall hash, so it is stable across rebuilds.
+	var breach_from := -1
+	var breach_to := -1
+	if count >= 6 and rng.randf() < float(_occupation().get("parapet_breach_chance", 0.75)):
+		var run_len := rng.randi_range(2, 4)
+		breach_from = rng.randi_range(1, count - run_len - 1)
+		breach_to = breach_from + run_len
 	for i in count:
 		var d := start + float(i) * (MERLON_W + MERLON_GAP) + rng.randf_range(-0.16, 0.16)
 		var w := MERLON_W * rng.randf_range(0.82, 1.18)
 		var h := MERLON_H * rng.randf_range(0.86, 1.12)
+		if i >= breach_from and i < breach_to:
+			continue
 		# One in roughly nine is a broken crenel: a stub at a third height, or
 		# gone. The reference key art puts "broken crenels" on every surface.
 		var roll := rng.randf()
@@ -1278,6 +1355,13 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 		var merlon_at := Vector3(wall_centre.x + d, wall_top + COPING_H + h * 0.5, wall_centre.z) \
 			if along_x else Vector3(wall_centre.x, wall_top + COPING_H + h * 0.5, wall_centre.z + d)
 		_box(merlon_size, merlon_at, _material(_stone_light(), 0.0, true), false)
+	if breach_from >= 0:
+		var d0 := start + float(breach_from) * (MERLON_W + MERLON_GAP)
+		var d1 := start + float(breach_to - 1) * (MERLON_W + MERLON_GAP)
+		var mid := (d0 + d1) * 0.5
+		var heap_at := Vector3(wall_centre.x + mid, wall_top + COPING_H, wall_centre.z) \
+			if along_x else Vector3(wall_centre.x, wall_top + COPING_H, wall_centre.z + mid)
+		_parapet_rubble_heap(heap_at, absf(d1 - d0) + MERLON_W, along_x, rng)
 
 	# JUDGE-5 D5, the other half: "the wall has no batter, no buttress, no
 	# parapet thickness ... single planes". Buttresses are the cheapest of the
@@ -1354,7 +1438,8 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 	if conduit:
 		var run_z := centre.z + (0.0 if kind == 0 else signf(float(kind) - 1.5) * span * 0.18)
 		_box(Vector3(0.3, height * 0.85, 0.3),
-			Vector3(face_x + sign_ * 0.35, _floor_y + height * 0.42, run_z), _live_material(), false)
+			Vector3(face_x + sign_ * 0.35, _floor_y + height * 0.42, run_z),
+			_exterior_live_material(), false)
 
 	var stations: Array = [-0.15, 0.15] if banners == 2 else [0.16 * signf(float(kind) - 1.5)]
 	# Hung from just under the parapet: `at` is the CROSSBAR now, and cloth
@@ -1381,6 +1466,64 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 	for f2: float in stations:
 		_hang_banner(Vector3(face_x, banner_top, centre.z + f2 * span),
 			0.0 if sign_ > 0.0 else PI, BANNER_COLOUR, banner_scale)
+
+
+## The fallen blocks where a parapet run has gone: one MultiMesh of the kit's
+## own `Prop_Brick` modules (the same fallen-masonry piece the ruin layer uses
+## at the wall feet, so the wall top and the wall foot agree about what fell),
+## tumbled along the breach on the coping, thinning toward the ends. One draw
+## call per breach.
+func _parapet_rubble_heap(at: Vector3, length: float, along_x: bool, rng: RandomNumberGenerator) -> void:
+	var parts := _kit_mesh_and_material(MEDIEVAL_KIT, "Prop_Brick1" if rng.randf() < 0.5 else "Prop_Brick2")
+	if parts.is_empty():
+		return
+	var count := maxi(6, int(round(length * 3.2)))
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = parts[0]
+	mm.instance_count = count
+	for i in count:
+		# Piled toward the middle of the breach, spilling to either side of the
+		# coping's centre line so the heap has a profile rather than a row.
+		var along := rng.randfn(0.0, length * 0.28)
+		along = clampf(along, -length * 0.5, length * 0.5)
+		var across := rng.randf_range(-_wall_t * 0.45, _wall_t * 0.45)
+		var lift := maxf(0.0, rng.randfn(0.22, 0.16)) * (1.0 - absf(along) / (length * 0.6))
+		var pos := at + (Vector3(along, lift, across) if along_x else Vector3(across, lift, along))
+		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU))
+		basis = basis * Basis(Vector3.RIGHT, rng.randf_range(-0.7, 0.7))
+		basis = basis * Basis(Vector3.FORWARD, rng.randf_range(-0.7, 0.7))
+		basis = basis.scaled(Vector3.ONE * rng.randf_range(1.6, 3.2))
+		mm.set_instance_transform(i, Transform3D(basis, pos))
+	var node := MultiMeshInstance3D.new()
+	node.name = "ParapetRubble"
+	node.multimesh = mm
+	var material: Material = parts[1]
+	if material is StandardMaterial3D:
+		# The same `MI_RockTrim` metallic defect `_reclaim_batch` documents.
+		var unique: StandardMaterial3D = (material as StandardMaterial3D).duplicate()
+		unique.albedo_color = _stone_light().lerp(_stone(), 0.4)
+		unique.metallic = 0.0
+		unique.roughness = 0.95
+		material = unique
+	node.material_override = material
+	add_child(node)
+
+
+## A kit module's single mesh and its material, for MultiMesh batching:
+## `[mesh, material]`, or empty when the module cannot be loaded. The kit's
+## props are single-surface, so the first MeshInstance3D IS the prop.
+func _kit_mesh_and_material(dir: String, model: String) -> Array:
+	var source := _load_prop(dir, model)
+	if source == null:
+		return []
+	var meshes := _weather_hall_mesh_instances(source)
+	if meshes.is_empty() or meshes[0].mesh == null:
+		source.queue_free()
+		return []
+	var out := [meshes[0].mesh, meshes[0].get_active_material(0)]
+	source.queue_free()
+	return out
 
 
 ## OWNER, 2026-08-30, on the first T1-HALL-REBUILD frames: "the red flags look
@@ -1424,17 +1567,6 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 
 	var width := BANNER_CLOTH_W * scale
 	var height := BANNER_CLOTH_H * scale
-	# JUDGE-5 D6: "no sigil ... the key art's banners carry the compass sigil".
-	# The mark rides in the cloth's own albedo rather than on added geometry, so
-	# every banner in the complex costs ONE shared cached image and not a single
-	# extra draw call -- the lane inherited a draw-call overrun and a sigil built
-	# from boxes would have cost ~5 calls per banner. Shared with the Sigil Gate
-	# (D4) through `tether_sigil.gd` so the faction's mark is drawn in one place.
-	var cloth := TETHER_SIGIL.cloth_material(colour)
-	# Cloth is thin and lit from one side on a shaded face; without this the
-	# back of a banner on the gate (the north, shaded face -- design §2) is a
-	# black rectangle rather than a banner seen from behind.
-	cloth.cull_mode = BaseMaterial3D.CULL_DISABLED
 
 	# The crossbar it hangs from, in the Hall's own timber.
 	var bar := MeshInstance3D.new()
@@ -1446,82 +1578,51 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	bar.position = Vector3(BANNER_CLOTH_T * 2.0, 0.0, 0.0)
 	holder.add_child(bar)
 
-	# The field: the top three quarters is one panel, the bottom quarter is two
-	# tails with a notch between them. Three boxes buy a silhouette no amount of
-	# retinting the old pennant could.
-	var body_h := height * 0.74
-	var tail_h := height - body_h
+	# VP8: the cloth is ONE subdivided plane wearing `banner_cloth.gdshader`,
+	# which carries the field, both tails and the V notch, the selvage, the hem
+	# and the faction device (JUDGE-5 D6's sigil, still `tether_sigil.gd`'s one
+	# image), and sways in the wind from the bar down. It replaces the six
+	# rigid boxes JUDGE-6 read as "a laminated sign" and costs one draw call
+	# where those cost six -- across the ~30 banners on this building that is
+	# ~150 draw calls returned to the budget. See the shader's header.
+	#
+	# The quad's own frame is +X across, +Y up, +Z out; the holder's outward
+	# normal is +X, so a quarter turn about Y carries the quad's +Z there.
+	var quad := QuadMesh.new()
+	quad.size = Vector2(width, height)
+	quad.subdivide_width = 6
+	quad.subdivide_depth = 14
 	var panel := MeshInstance3D.new()
 	panel.name = "BannerCloth"
-	var panel_box := BoxMesh.new()
-	panel_box.size = Vector3(BANNER_CLOTH_T, body_h, width)
-	panel.mesh = panel_box
-	panel.material_override = cloth
-	panel.position = Vector3(BANNER_CLOTH_T * 0.5, -body_h * 0.5 - 0.09, 0.0)
+	panel.mesh = quad
+	panel.material_override = _banner_cloth_material(colour, Vector2(width, height), torn, at)
+	panel.position = Vector3(BANNER_CLOTH_T, -height * 0.5 - 0.09, 0.0)
+	panel.rotation.y = PI * 0.5
 	holder.add_child(panel)
 
-	# The compass device, on its own quad just proud of the field (JUDGE-5 D6).
-	# See `tether_sigil.gd::cloth_material` for why it is NOT in the field's own
-	# material: a BoxMesh's read face spans u [0.333,1.0], which crops a centred
-	# mark. A banner's outward normal in this holder's frame is local +X.
-	# QuadMesh spans its own local x/y, so the device's width is the banner's
-	# width (holder-local Z) and its height the field's height.
-	# `proud` is measured from the HOLDER's origin, and the panel box is not
-	# centred on it: `panel.position.x` is BANNER_CLOTH_T * 0.5 and the box is
-	# BANNER_CLOTH_T thick, so the cloth's outer face sits at x = BANNER_CLOTH_T.
-	# The first cut passed `BANNER_CLOTH_T * 0.62`, which put the device INSIDE
-	# the cloth -- it rendered as no sigil at all, which is exactly what the
-	# re-render showed. Clear the face, then a hair more.
-	# `lightened(0.06)` was correct while the device's own image was an OPAQUE
-	# white field: the quad painted a barely-lighter rectangle of cloth and the
-	# mark sat a shade above it. `tether_sigil.gd`'s field is transparent as of
-	# T1-HALL-4, so this colour now tints THE MARK ALONE, and a mark 6% lighter
-	# than the cloth it is painted on is a mark nobody can see. Bleached linen
-	# against oxblood is both what the board's banners carry and what survives
-	# being read at the ranges JUDGE-6 measured this device failing at.
-	var device := TETHER_SIGIL.device(
-		Vector2(width * 0.62, body_h * 0.62), colour.lerp(Color("#e8ddc4"), 0.86),
-		Vector3.RIGHT, BANNER_CLOTH_T + 0.012)
-	device.position += Vector3(0.0, -body_h * 0.46 - 0.09, 0.0)
-	holder.add_child(device)
 
-	# Two darker selvage stripes down the field's edges. A war banner is woven
-	# cloth with a border, and one uniform rectangle of saturated colour is a
-	# large part of what read as toy in the first pass -- the shape was only
-	# half of it. Two boxes buy the field an inside and an outside.
-	var selvage := StandardMaterial3D.new()
-	selvage.albedo_color = colour.darkened(0.34)
-	selvage.roughness = 0.95
-	selvage.cull_mode = BaseMaterial3D.CULL_DISABLED
-	for edge: float in [-1.0, 1.0]:
-		var strip := MeshInstance3D.new()
-		strip.name = "BannerSelvage"
-		var strip_box := BoxMesh.new()
-		strip_box.size = Vector3(BANNER_CLOTH_T * 1.2, body_h, width * 0.085)
-		strip.mesh = strip_box
-		strip.material_override = selvage
-		strip.position = Vector3(BANNER_CLOTH_T * 0.55, -body_h * 0.5 - 0.09,
-			edge * width * 0.452)
-		holder.add_child(strip)
-
-	var tails: Array[float] = []
-	if torn:
-		# The relic banner (§6.2) has ONE tail left. Same three-box banner, one
-		# box removed -- the seizure read in a silhouette rather than in a tint.
-		tails.append(-1.0)
-	else:
-		tails.append(-1.0)
-		tails.append(1.0)
-	for side: float in tails:
-		var tail := MeshInstance3D.new()
-		tail.name = "BannerTail"
-		var tail_box := BoxMesh.new()
-		tail_box.size = Vector3(BANNER_CLOTH_T, tail_h * (0.6 if torn else 1.0), width * 0.42)
-		tail.mesh = tail_box
-		tail.material_override = cloth
-		tail.position = Vector3(BANNER_CLOTH_T * 0.5,
-			-body_h - 0.09 - tail_h * (0.3 if torn else 0.5), side * width * 0.29)
-		holder.add_child(tail)
+## One shader material per banner: the sway phase is seeded off the banner's
+## own position so no two banners on a wall move in step, and the size is what
+## the notch and the device are shaped against. `torn` is the relic banner
+## (§6.2): one tail, ragged hem.
+const BANNER_CLOTH_SHADER := preload("res://assets/environment/team_tether/hall/banner_cloth.gdshader")
+func _banner_cloth_material(colour: Color, size: Vector2, torn: bool, at: Vector3) -> ShaderMaterial:
+	var m := ShaderMaterial.new()
+	m.shader = BANNER_CLOTH_SHADER
+	m.set_shader_parameter("colour", colour)
+	m.set_shader_parameter("selvage_colour", colour.darkened(0.34))
+	# Bleached linen against oxblood: what the board's banners carry and what
+	# survives being read at the ranges JUDGE-6 measured the device failing at.
+	m.set_shader_parameter("device_colour", colour.lerp(Color("#e8ddc4"), 0.86))
+	m.set_shader_parameter("device_tex", TETHER_SIGIL.texture())
+	m.set_shader_parameter("use_device", 0.0 if torn else 1.0)
+	m.set_shader_parameter("size", size)
+	m.set_shader_parameter("tails", 1.0 if torn else 2.0)
+	m.set_shader_parameter("phase", fposmod(at.x * 1.7 + at.z * 0.9 + at.y * 0.4, TAU))
+	# Big banners move slower and further; small ones flutter.
+	m.set_shader_parameter("sway", clampf(0.05 * size.y, 0.08, 0.32))
+	m.set_shader_parameter("speed", clampf(2.4 / maxf(size.y, 1.0), 0.6, 1.6))
+	return m
 
 
 ## Design §6.2's one invented story beat: a single faded Meadows-blue banner,
@@ -1607,6 +1708,108 @@ func _build_gate_frame() -> void:
 		holder.position = Vector3(lateral, _floor_y + jamb_h + 0.6, jamb_z + jamb_proud * 0.2)
 		add_child(holder)
 		_tint_node(arch, _timber())
+
+	_build_gate_arch_and_portcullis(lateral, width, op_height, jamb_w, jamb_proud, jamb_z)
+
+
+## VP8. The owner's pack, Layer 1: "a convincing arched gate with keystone and
+## portcullis". JUDGE-6 defect 4 measured the gate as "a flat rectangular
+## lintel", defect 7 as "no gate -- no portcullis, no doors, no bar. The enemy
+## stronghold's front entrance is a permanently open hole."
+##
+## A ring of voussoirs, springing from the jambs and closing in a keystone,
+## stands proud of the wall face over the opening: the arch is REAL stone
+## geometry the eye reads at every range, not a timber decoration. Below it a
+## raised portcullis hangs in the opening -- a grid of iron bars, one MultiMesh
+## (one draw call), with its foot `portcullis_clear_m` above the causeway so
+## nothing that walks the route (trainer, creature, camera) touches it; it has
+## no collider and never will, because the gate is the one doorway every
+## player must pass. The passage geometry and the opening's own dimensions are
+## untouched: this is an art layer over the doorway, per the pack's first
+## integration rule.
+const VOUSSOIRS := 11
+func _build_gate_arch_and_portcullis(lateral: float, width: float, op_height: float,
+		jamb_w: float, jamb_proud: float, jamb_z: float) -> void:
+	var gate_cfg: Dictionary = _occupation().get("gate", {}) as Dictionary
+	var radius := width * 0.5 + 0.05
+	var ring_depth := 0.62
+	var ring_w := 0.66
+	var centre_y := _floor_y + op_height - radius + 0.1
+	# In FRONT of the jamb-and-lintel frame, not inside it. The first render put
+	# the ring at the wall face, where the 1 m-proud jambs and the lintel box
+	# (which spans the same depth) hid all of it but a hand's width above the
+	# opening -- the frame read exactly as before, a rectangular hole. The
+	# jambs stand `jamb_proud` off the face; the ring stands a little further.
+	var proud_z := jamb_z - jamb_proud * 0.5 - ring_depth * 0.5 - 0.06
+	var stone := _material(_stone_dark().lerp(_stone_light(), 0.25), 0.0, true)
+	var key_stone := _material(_stone_light(), 0.0, true)
+	var holder := Node3D.new()
+	holder.name = "GateArch"
+	add_child(holder)
+	for i in VOUSSOIRS:
+		var a := PI * (float(i) + 0.5) / float(VOUSSOIRS)
+		var is_key := i == VOUSSOIRS / 2
+		var r := radius + ring_depth * 0.5
+		var block := MeshInstance3D.new()
+		block.name = "Voussoir_%d" % i
+		var box := BoxMesh.new()
+		box.size = Vector3(ring_w * (1.35 if is_key else 1.0), ring_depth * (1.4 if is_key else 1.0),
+			ring_depth + (0.3 if is_key else 0.0))
+		block.mesh = box
+		block.material_override = key_stone if is_key else stone
+		block.position = Vector3(lateral + cos(a) * r, centre_y + sin(a) * r,
+			proud_z - (0.15 if is_key else 0.0))
+		# A voussoir's long axis is tangential: rotate about z so its width
+		# follows the ring.
+		block.rotation.z = a - PI * 0.5
+		holder.add_child(block)
+
+	# The portcullis: vertical bars and three horizontal rails, iron.
+	var clear := float(gate_cfg.get("portcullis_clear_m", 3.0))
+	var bar_bottom := _floor_y + clear
+	var bar_top := _floor_y + op_height + 1.1
+	var bar_len := bar_top - bar_bottom
+	if bar_len < 0.5:
+		return
+	var iron := StandardMaterial3D.new()
+	# A step lighter than the fittings' iron: the grille hangs in the darkest
+	# hole on the building and black bars against a black opening are no bars.
+	iron.albedo_color = IRON_COLOUR.lightened(0.28)
+	iron.roughness = 0.72
+	iron.metallic = 0.08
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	var bar_mesh := BoxMesh.new()
+	bar_mesh.size = Vector3(1.0, 1.0, 1.0)
+	mm.mesh = bar_mesh
+	var uprights := maxi(3, int(round(width / 0.72)) + 1)
+	var rails := 3
+	mm.instance_count = uprights + rails + uprights
+	var z := jamb_z + jamb_proud * 0.5 - _wall_t * 0.25
+	var index := 0
+	for i in uprights:
+		var x := lateral - width * 0.5 + width * (float(i) + 0.5) / float(uprights)
+		mm.set_instance_transform(index, Transform3D(
+			Basis().scaled(Vector3(0.16, bar_len, 0.16)),
+			Vector3(x, bar_bottom + bar_len * 0.5, z)))
+		index += 1
+		# A spike below each upright: the raised grille's teeth, what says
+		# "portcullis" at a glance rather than "fence".
+		mm.set_instance_transform(index, Transform3D(
+			Basis().scaled(Vector3(0.1, 0.4, 0.1)),
+			Vector3(x, bar_bottom - 0.2, z)))
+		index += 1
+	for j in rails:
+		var y := bar_bottom + bar_len * (0.1 + 0.4 * float(j))
+		mm.set_instance_transform(index, Transform3D(
+			Basis().scaled(Vector3(width + 0.3, 0.14, 0.18)),
+			Vector3(lateral, y, z)))
+		index += 1
+	var grille := MultiMeshInstance3D.new()
+	grille.name = "Portcullis"
+	grille.multimesh = mm
+	grille.material_override = iron
+	holder.add_child(grille)
 
 
 ## T1-HALL (2026-08-30). HALL_DESIGN_2026-08-30.md §4/§9 step 2: the castle
@@ -1800,6 +2003,12 @@ const ROOF_WEATHER_MATERIALS := [
 	"Celing", "Celing.001", "MI_RoundTiles",
 ]
 const ROOF_TILE_MULT := 2.4
+## VP8: the kit's stone and roof slots take the SAME weathered shader the
+## works' walls wear (`_stone_shader_material`), keyed by the retinted colour
+## `building_prefabs.gd::_apply_retint` already put on each slot, so the two
+## kits stop being "two stones" a judge can measure a seam between. One shader
+## material per (slot colour, tile) pair, shared by every module that uses the
+## slot -- the same sharing the old in-place mutation had.
 func _weather_hall_massing(massing: Node3D) -> void:
 	var done: Dictionary = {}
 	for mi in _weather_hall_mesh_instances(massing):
@@ -1814,21 +2023,11 @@ func _weather_hall_massing(massing: Node3D) -> void:
 			var is_roof := ROOF_WEATHER_MATERIALS.has(std.resource_name)
 			if not is_stone and not is_roof:
 				continue
-			if done.has(std.get_instance_id()):
-				continue
-			done[std.get_instance_id()] = true
-			std.albedo_texture = STONE_ALBEDO
-			std.normal_enabled = true
-			std.normal_texture = STONE_NORMAL
-			std.roughness_texture = STONE_ROUGHNESS
-			std.uv1_triplanar = true
-			# See `_material()`'s own note: object-space triplanar scales the
-			# texture with the node, and this kit's modules run scale 2.1 to 7.0.
-			# That single property is the whole of JUDGE-6 defect 3's "one
-			# material, four scales, one frame".
-			std.uv1_world_triplanar = true
-			std.uv1_scale = Vector3.ONE * STONE_TILE * (ROOF_TILE_MULT if is_roof else 1.0)
-			std.roughness = maxf(std.roughness, 0.92)
+			var key := "kit_%s_%s" % [std.resource_name, std.albedo_color.to_html()]
+			if not done.has(key):
+				done[key] = _stone_variant(key, std.albedo_color,
+					STONE_TILE * (ROOF_TILE_MULT if is_roof else 1.0))
+			mi.set_surface_override_material(surface, done[key])
 
 
 func _weather_hall_mesh_instances(node: Node) -> Array[MeshInstance3D]:
@@ -2164,7 +2363,11 @@ func _build_cable_landing() -> void:
 	builder.name = "HallCableLanding"
 	_world.add_child(builder)
 	var spokes: Node3D = SEVERED_SPOKES.new()
-	spokes.call("_conduit_span", builder, 0, pylon_head, anchor, _live_material(), 1.0)
+	# VP8: the exterior energy, not the interior value floor -- this is the
+	# "stray cyan line arcing across the top-right of the frame" in JUDGE-6
+	# defect 9 and JUDGE-AUDIT-E defect 4, and at 1.4 it read as a debug line
+	# rather than a cable.
+	spokes.call("_conduit_span", builder, 0, pylon_head, anchor, _exterior_live_material(), 1.0)
 	spokes.free()
 
 
@@ -2712,15 +2915,9 @@ func _build_yard_stairs() -> void:
 ## blocks), with a course at each end so the tier reads as built rather than
 ## as a painted band. Same skin technique `_build_exterior_facing()` already
 ## uses on the walls, for the same reason it is a skin there.
-func _skirt_material() -> StandardMaterial3D:
-	var key := "skirt_stone"
-	if _materials.has(key):
-		return _materials[key]
-	var material := _material(Color(str(_config.get("site", {})
-		.get("stone_skirt", "#8f8172"))), 0.0, true)
-	material.uv1_scale = Vector3.ONE * SKIRT_TILE
-	_materials[key] = material
-	return material
+func _skirt_material() -> Material:
+	return _stone_variant("skirt_stone",
+		Color(str(_config.get("site", {}).get("stone_skirt", "#8f8172"))), SKIRT_TILE)
 
 
 const SKIRT_TILE := 0.22
@@ -2971,7 +3168,7 @@ func _build_structure() -> void:
 	var placed: int = INTERIOR_STRUCTURE.new().dress(self, {
 		"chambers": chambers, "doorways": _doorways, "openings": _openings,
 		"floor_y": _floor_y, "config": cfg,
-		"material_for": func(role: String) -> StandardMaterial3D:
+		"material_for": func(role: String) -> Material:
 			return _material(_structure_colour(role), 0.0, true),
 	})
 	if placed > 0:
@@ -3028,12 +3225,19 @@ func _build_conduits() -> void:
 		var along_x := absf(b.x - a.x) >= absf(b.z - a.z)
 		var mid := (a + b) * 0.5
 		var length := absf(b.x - a.x) if along_x else absf(b.z - a.z)
-		var size := Vector3(length, 0.16, 0.34) if along_x else Vector3(0.34, 0.16, length)
+		# VP8: 0.34 x 0.16 was JUDGE-6 defect 9's "hard-edged aliased emissive
+		# quad running along the wall base"; in the open yards the value floor
+		# also blows out under the sun. A cable is a cable's width, and in the
+		# daylit yards it runs at the exterior energy.
+		var size := Vector3(length, 0.12, 0.2) if along_x else Vector3(0.2, 0.12, length)
 		if along_x:
 			mid.z += offset
 		else:
 			mid.x += offset
-		_box(size, Vector3(mid.x, _floor_y + 0.08, mid.z), _live_material(), false)
+		var open_yard := bool((_chambers[from] as Dictionary).get("open", false)) \
+			or bool((_chambers[to] as Dictionary).get("open", false))
+		_box(size, Vector3(mid.x, _floor_y + 0.06, mid.z),
+			_exterior_live_material() if open_yard else _live_material(), false)
 
 
 func _build_lights() -> void:
@@ -3306,7 +3510,7 @@ func _machine_shell(spec: Dictionary, height: float) -> void:
 
 
 func _drum(parent: Node3D, node_name: String, radius: float, height: float, base_y: float,
-		material: StandardMaterial3D, solid: bool) -> void:
+		material: Material, solid: bool) -> void:
 	var mesh := MeshInstance3D.new()
 	mesh.name = node_name
 	var cylinder := CylinderMesh.new()
@@ -3792,10 +3996,24 @@ func _reclaim_batch(holder: Node3D, band: Dictionary, rng: RandomNumberGenerator
 		clump_at.append(lerpf(from, to, (float(k) + 0.5) / float(clumps)
 			+ rng.randf_range(-0.08, 0.08)))
 	var spread := absf(to - from) / float(clumps) * float(band.get("clump_spread", 0.55))
+	# VP8: `skip` is a span along the band nothing may land in -- the gate
+	# opening, where the first render hung vines across the doorway and hid the
+	# portcullis and the arch behind a green curtain. An instance that rolls into
+	# the span is re-rolled; the count is unchanged.
+	var skip: Array = band.get("skip", []) as Array
+	var skip_lo := float(skip[0]) if skip.size() >= 2 else 1.0
+	var skip_hi := float(skip[1]) if skip.size() >= 2 else 0.0
 
 	for i in count:
 		var centre: float = clump_at[i % clumps]
 		var t := clampf(centre + rng.randfn(0.0, spread), minf(from, to), maxf(from, to))
+		var tries := 0
+		while t > skip_lo and t < skip_hi and tries < 6:
+			t = clampf(centre + rng.randfn(0.0, spread) + (skip_hi - skip_lo) * (1.0 if rng.randf() < 0.5 else -1.0),
+				minf(from, to), maxf(from, to))
+			tries += 1
+		if t > skip_lo and t < skip_hi:
+			t = skip_lo if absf(t - skip_lo) < absf(t - skip_hi) else skip_hi
 		var off := rng.randf_range(-jitter, jitter)
 		var pos := Vector3(
 			fixed + off if not along_x else t,
@@ -3872,6 +4090,85 @@ func _build_tether_retrofit() -> void:
 		holder.add_child(node)
 		if model.begins_with("rift_siphon"):
 			_light_the_siphon(node, spec)
+		if model.begins_with("team_tether_boiler") and bool(spec.get("smoke", true)):
+			_smoke_column(node, spec)
+
+
+## VP8. A working boiler makes smoke, and smoke is the one sign of occupation
+## that reads from OUTSIDE a walled yard -- the boilers stand inside the
+## courtyard and the outer works where no exterior stand can see them, so
+## until now the Hall's industry was invisible from the approach the Bible
+## says "must communicate the building's history". A column rising over the
+## curtain wall says "somebody is running machinery in there" from the
+## causeway and the flank stands both.
+##
+## CPUParticles3D, one draw call per boiler, billboarded soft discs from a
+## radial gradient: the same no-texture technique `torch_prop.gd` proves for
+## its embers. The stack top is the prop's own authored geometry
+## (`build_hall_props.py::build_boiler`: the cap lid sits at z 2.2 + 1.35 +
+## 0.4 in Blender, i.e. local y ~4.0 on the prop's own axis).
+const BOILER_STACK_TOP := Vector3(0.0, 4.0, 0.0)
+func _smoke_column(boiler: Node3D, spec: Dictionary) -> void:
+	var smoke := CPUParticles3D.new()
+	smoke.name = "StackSmoke"
+	smoke.position = BOILER_STACK_TOP
+	smoke.amount = int(spec.get("smoke_amount", 48))
+	smoke.lifetime = float(spec.get("smoke_lifetime", 8.0))
+	smoke.preprocess = 6.0
+	smoke.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	smoke.emission_sphere_radius = 0.18
+	smoke.direction = Vector3(0.0, 1.0, 0.0)
+	smoke.spread = 9.0
+	smoke.initial_velocity_min = 1.4
+	smoke.initial_velocity_max = 2.2
+	smoke.gravity = Vector3(0.35, 0.55, 0.0)   # drifts as it rises; a stack plume leans
+	smoke.damping_min = 0.15
+	smoke.damping_max = 0.3
+	smoke.scale_amount_min = 0.9
+	smoke.scale_amount_max = 1.4
+	var grow := Curve.new()
+	grow.add_point(Vector2(0.0, 0.45))
+	grow.add_point(Vector2(0.5, 2.1))
+	grow.add_point(Vector2(1.0, 4.2))
+	smoke.scale_amount_curve = grow
+	var ramp := Gradient.new()
+	ramp.set_color(0, Color(0.14, 0.13, 0.12, 0.8))
+	ramp.set_color(1, Color(0.4, 0.4, 0.42, 0.0))
+	ramp.add_point(0.4, Color(0.26, 0.25, 0.25, 0.55))
+	smoke.color_ramp = ramp
+	var quad := QuadMesh.new()
+	quad.size = Vector2(1.6, 1.6)
+	var puff := StandardMaterial3D.new()
+	puff.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	puff.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
+	puff.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	puff.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	puff.vertex_color_use_as_albedo = true
+	puff.albedo_texture = _soft_disc_texture()
+	puff.cull_mode = BaseMaterial3D.CULL_DISABLED
+	puff.no_depth_test = false
+	quad.material = puff
+	smoke.mesh = quad
+	boiler.add_child(smoke)
+
+
+var _soft_disc: Texture2D = null
+func _soft_disc_texture() -> Texture2D:
+	if _soft_disc != null:
+		return _soft_disc
+	var g := Gradient.new()
+	g.set_color(0, Color(1.0, 1.0, 1.0, 1.0))
+	g.set_color(1, Color(1.0, 1.0, 1.0, 0.0))
+	g.add_point(0.45, Color(1.0, 1.0, 1.0, 0.55))
+	var tex := GradientTexture2D.new()
+	tex.gradient = g
+	tex.width = 64
+	tex.height = 64
+	tex.fill = GradientTexture2D.FILL_RADIAL
+	tex.fill_from = Vector2(0.5, 0.5)
+	tex.fill_to = Vector2(0.5, 0.0)
+	_soft_disc = tex
+	return tex
 
 
 ## The signature prop's glow, added in Godot rather than baked into the mesh --
