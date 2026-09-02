@@ -61,6 +61,21 @@ Environment notes for the next session (all verified 2026-09-01):
 | container-enforced proxy per pass | `tools/perf_render_stats.gd`: primitives at `band1_open` ≤ 12.0M (baseline 9.25M with grass_field OFF; 31.7M produced the ~10 FPS owner report), draw calls at `band1_open` ≤ 7500, draw calls at `hall_approach` ≤ 4000 (`docs/PERFORMANCE_BUDGET.md` §0.5). Same tool, same resolution, every pass. |
 | test command | `tests/smoke_art.gd`, `tests/smoke_playground.gd`, `tests/smoke_traversal.gd` + `run_tests.gd --only=` the tests owning changed files; full 4-shard unit suite at VP0 and at the end of VP3 |
 
+## Parallel lanes (spawned 2026-09-02 00:39 UTC from 1ef3878a; contract in `docs/VISUAL_PARITY_LANES.md`)
+
+| lane | pass | branch | session |
+|---|---|---|---|
+| SKY | VP1 | `claude/vp-sky` | session_01BGTw8d5sLdQA8V34RkTgou |
+| GROUND | VP2 | `claude/vp-ground` | session_018GT9BkQfWZuu5kVdfmonw8 |
+| VEG | VP3 | `claude/vp-veg` | session_01WF4HFAG7p6hPwuVQcjr8GY |
+| VILLAGE | VP5 | `claude/vp-village` | session_01M1qiTLwxaFNJp9ZqgNbd52 |
+| HALL | VP8 + VP7 | `claude/vp-hall` | session_01FvtyLa4Y6Kvib2fU8G84vM |
+| WARRENS | VP6 | `claude/vp-warrens` | session_01XLcXZC6QjZV4mRn8rKC7Lk |
+
+The coordinator merges lane branches into the program branch in pass order, re-bakes the scatter
+after any VEG/GROUND merge, and re-runs the perf proxy + playability guard on the merged tree.
+Lanes never commit `data/scatter/**`.
+
 ## Performance measurements
 
 (filled per pass; baseline in VP0)
