@@ -317,3 +317,65 @@ every hour except midday. **Strongest candidate for round 2.**
 monochrome red frame, against a neutral -1.4 for the same time at stand 01.
 Plausibly a sunrise viewed head-on, but the magnitude is extreme and it was not
 diagnosed.
+
+---
+
+## Post-round addendum — independent re-analysis of the same 8 frames
+
+An independent pass over the committed frames corroborated every number above and
+added three findings the first pass missed.
+
+### 1. CONFIRMED BUG: `adjust_bsc` is not a Godot method — the leaf desaturation has never run
+
+`scripts/world/vegetation.gd:615` calls `image.adjust_bsc(brightness, contrast,
+saturation)`. Godot's actual method is **`adjust_bcs`**. The verification render's log
+contains, 8 times — once per call:
+
+```
+SCRIPT ERROR: Invalid call. Nonexistent function 'adjust_bsc' in base 'Image'.
+```
+
+GDScript logs the error and continues, so the whole VEG leaf-desaturation feature has
+been a silent no-op since it was written. The doc comment at `vegetation.gd:582`
+repeats the same transposition, which is presumably how it survived review.
+
+This explains the canopy FAIL above and reframes it: `take_over_path()` addressed the
+*binding*, but the *colour* half of the fix could never have worked. Measured canopy
+pixels in `01-spawn-outward-day` average RGB **(72.6, 101.3, 31.0)** — blue at 31
+against the target family's 60–74. An olive-yellow green, not the intended deeper cooler
+green.
+
+**Deliberately NOT applied.** The round was stopped by the program coordinator with "do
+not start any new render or fix", and while the edit is one transposed character, it
+converts a line that currently throws into a line that actually changes every leaf
+texture in the world. That is a visual change requiring a render to verify, and shipping
+it unverified against an explicit stop is exactly the failure mode this round already
+hit once with the 120-settle-frame "fix". **It is the single highest-value first action
+for round 2**: one character, then re-render the day stands and compare canopy RGB
+against the `#5f9a4a` / `#2f5f3c` target.
+
+### 2. The moon question cannot be answered from these stands
+
+The moon's yaw (25°) is outside both cameras' FOV, so **no moon is visible in either
+night frame**. The brightest region in `01-spawn-outward-night` is a diffuse RGB
+(240,240,240) cloud patch, not the tinted `#d8e2ff` disc. So the open risk recorded
+above — that `sun_glow_falloff` 200.0 narrowed the moon's glow ~3× — remains genuinely
+**unanswered**, not cleared. Round 2 needs a night stand aimed at the moon's azimuth.
+
+### 3. The pale-mint metric is blind at distance
+
+Distant tree clumps in `03-rise-overlook-day` and `-golden` read as visibly pale
+whitish-mint puffballs, while the numeric mask reports **0.00%** for those frames. The
+mask's RGB relationship does not survive aerial-perspective fog at range, so the metric
+misses the failure mode that is most obvious in the wide establishing shot — the shot a
+judge looks at first. Do not treat a 0.00% pale-mint reading on a distant view as
+evidence of anything.
+
+### 4. Sun glow: day passes, golden does not
+
+Measured disc/halo bounding boxes: **day 31×25 px** — a small clean disc, working as
+intended. **Golden 224×113 px** at stand 01 and 227×92 px at stand 03, both touching the
+frame's top edge, with no visible crisp disc edge inside the mass — roughly 18° against
+the ~12.3° the `sun_glow_falloff=120` config comment predicts. Better than the old fixed
+27° halo, but golden still reads as a soft light mass rather than a disc with a glow.
+Golden wants a tighter falloff than 120.0.
