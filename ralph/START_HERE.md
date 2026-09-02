@@ -4,69 +4,52 @@ This is the **single current entry point for autonomous Meadows work**.
 
 If another document looks like a startup guide, milestone guide, or handover,
 do not treat it as current merely because it exists — check whether it is
-still linked from here. This file was rewritten fresh on 2026-09-01 (a full
-docs cleanup, owner directive) specifically to stop the "CURRENT STATE"
-sections accreting on top of each other; if this file starts doing that
-again, rewrite it again rather than patching once more.
+still linked from here. This file gets rewritten fresh whenever its own
+"current state" section starts accreting layers rather than patched once
+more — it happened once already (2026-09-01, docs cleanup) and happened again
+the same day (below), on owner instruction that the accumulated Ralph
+backlog files were no longer relevant.
 
-## Current state, 2026-09-01
+## Current state, 2026-09-01 (second rewrite, same day)
 
-`main` carries `ralph/LAND-MEGA-0901` — confirmed landed via
-`git merge-base --is-ancestor`, not the CI badge. That branch closed two real
-bugs found by full CI, both root-caused and fixed, not band-aided:
+`main` carries `ralph/LAND-MEGA-0901` (185-commit overnight consolidation,
+including twelve same-day owner-playtest fixes) plus a run of same-day
+landings after it: docs cleanup, a South Bridge finding, dialogue trim, five
+creature-visual fixes (three of them corrections to an earlier fix that went
+the wrong direction — see `ralph/OWNER_DIRECTIVES_2026-09-01.md`), and an
+albedo-clipping investigation that closed non-reproducing. All confirmed
+landed via `git merge-base --is-ancestor`, not the CI badge or self-report.
 
-- `Verify free_build` — a test-only defect (a test helper carried stale
-  height across sloped terrain, embedding the player in the ground and
-  triggering an unrelated recovery teleport that corrupted a later
-  measurement). The movement-gating game code was never broken.
-- `Verify tournament_bracket` — a real player-facing defect: a wild
-  creature's in-combat movement was missing the anti-stuck escape logic the
-  pre-engagement chase already had, so a trainer battle could get
-  permanently stuck. Fixed by sharing that logic into the in-combat path
-  (`scripts/creatures/wild_creature.gd::_unstick()`).
+**`ralph/BACKLOG.md` and `ralph/BLOCKED.md` were deleted and `BACKLOG.md`
+rewritten from scratch this same day**, on direct owner instruction: "all
+these backlogs are wrong... the Ralph ones should be gone. they're not
+relevant anymore." The new `BACKLOG.md` is short by design — it covers
+exactly three things: the newest owner playtest (landed, not yet
+re-confirmed), Gate F's current blocker, and the handful of visual-review
+items an independent check actually confirmed matter. It is not a
+re-derivation of the old 4,000-line ledger or the 168-item visual census;
+those stay as historical reports, not backlog. Read `ralph/BACKLOG.md`
+itself for the current detail — it is short enough to read in full now,
+unlike its predecessor.
 
-A third failure (`Verify traversal`, "the South Bridge gate can be walked
-around") was confirmed a flake by a clean re-run on the same commit — not
-caused by anything in the branch.
+**What's actually open right now, in priority order:**
 
-Read `ralph/COORDINATOR_HANDOVER_2026-09-01.md` for the full detail on what
-that landing session found and the work it queued behind it. As of this
-rewrite, still open from that queue:
+1. **A fresh owner playtest**, to confirm today's twelve landed fixes
+   actually hold — none have been re-verified since they shipped, and one
+   of them (village gate roads) already proved a "nothing to fix" claim
+   wrong once today. This is not something an agent can do for the owner;
+   it is the single most valuable next real-world event.
+2. **Gate F's S03 harness catch-loop fix**, in flight — once it lands, the
+   chapter has never been played start-to-finish by this project's own
+   evidence process. That first real capstone pass outranks everything
+   else an agent can do unattended.
+3. **The six visual items** `ralph/BACKLOG.md` §3 names as confirmed real
+   — most already landed; two (a near-black world site, illegible signpost
+   text) are not started.
 
-- the creature visual lane (capture every species in field/bed/combat →
-  blind review → per-defect fix sessions);
-- a feasibility call on redoing the Gate F capstone playthrough (a prior run
-  found the chapter walled at the South Bridge, bands 2-5 unreachable —
-  re-verify against landed `main` before committing to a full redo);
-- backlog lanes pulled from `ralph/BACKLOG.md` and the audit-derived ledgers.
-
-## The docs cleanup that produced this rewrite
-
-Owner directive, 2026-09-01: delete old Ralph process/coordination docs and
-outdated start-here files, once their content has been acted on. Roughly 30
-files were removed from `ralph/` in that pass — dated coordination logs,
-closed-gate evidence docs, superseded owner-playtest transcripts (their
-substance is preserved in `ralph/BACKLOG.md`/`ralph/DONE.md`), and legacy
-process manuals `START_HERE.md` itself already called superseded.
-
-**`ralph/BACKLOG.md` was explicitly kept, not deleted.** It is the canonical
-ledger — CLAUDE.md calls it "the complete ledger/history," and
-`ralph/GATE_F_MASTER_PROTOCOL.md`'s own Phase B deliverable states outright
-that it "remain[s] operationally authoritative... must not be retired." A
-few *derived*, one-off ledgers built by past audit sessions
-(`ralph/reports/audit/BACKLOG-FROM-AUDIT-2026-08-31.md` and similar) are
-separate from it and get folded into fresh lane briefs, then removed, as
-that work is picked up — see the backlog-lanes item above.
-
-Kept as still-active, cross-referenced canon (verified by grep before this
-rewrite, not assumed from filenames): the whole Gate F protocol chain
-(`ralph/GATE_F_PROTOCOL.md`, `ralph/GATE_F_MASTER_PROTOCOL.md`,
-`ralph/GATE_F_INSTRUMENTATION_REQUEST.md`), `ralph/MEADOWS_EXIT_CRITERION.md`
-(the audit's own acceptance-standard synthesis), `ralph/VISUAL_LEDGER.md`
-(the standing whole-game visual ledger — read this before starting the
-creature visual lane), every `ralph/OWNER_DIRECTIVES_*.md` and
-`ralph/OWNER_FEEDBACK_*.md` file (the owner's own words don't expire), and
-`ralph/BLOCKED.md`.
+Do not go looking for more work in the old visual census or the deleted
+backlog files' git history and reopen it as new work — it was retired on
+purpose, not lost by accident.
 
 ## 1. Read order
 
@@ -76,19 +59,16 @@ A fresh coordinator or lane should establish context in this order:
 2. `docs/TETHERBOUND_GAME_VISION.md` — what the finished Meadows game is
    supposed to feel like.
 3. `ralph/ACTIVE_GAME_PLAN.md` — gameplay gates and regional execution
-   order; this is what decides current priority, not a cold read of
-   `BACKLOG.md`.
-4. newest `ralph/OWNER_PLAYTEST_*.md` — newest owner-play evidence wins
-   where old wording/tests conflict.
+   order.
+4. `ralph/BACKLOG.md` in full — it's short now. Then the newest
+   `ralph/OWNER_PLAYTEST_*.md` and `ralph/OWNER_DIRECTIVES_*.md` for
+   anything dated after the backlog entry you're reading.
 5. `ralph/PROMPT_COMPATIBILITY_MAP.md` — prevents duplicate implementations
    from overlapping historical prompts.
 6. `ralph/conventions.md` — branch, testing, visual-judge, and shipping
    rules.
 7. Only then read the **specific detailed prompt(s)** and the **specific
    code/spec sections** needed for the selected work.
-
-Do **not** cold-read all of `BACKLOG.md` or `DONE.md`. They are
-reference/history stores, not the startup briefing.
 
 ## 2. Decide your mode
 
@@ -103,11 +83,14 @@ Read `ralph/COORDINATED_RUN.md` after the files above. The coordinator:
 - verifies what actually landed on `main` via `git merge-base
   --is-ancestor`, never the CI badge or a session's own say-so;
 - never leaves a delegation without either a known result or an armed
-  follow-up (`ralph/../.claude/skills/overnight-coordination/SKILL.md` on a
-  landing branch that carries it, or general practice: schedule a check-in);
+  follow-up;
 - runs the full gameplay evidence segment before declaring a gate complete;
 - produces integrated playable checkpoints rather than disappearing into
-  one giant task.
+  one giant task;
+- weighs a blind critic's visual finding against actual owner intent before
+  acting on it — a critic can be technically right about what's on screen
+  and still wrong about what the game should look like (see
+  `ralph/OWNER_DIRECTIVES_2026-09-01.md`'s creature-scale correction).
 
 ### Implementation lane
 Read `ralph/PROMPT.md` after the files above. A lane:
@@ -115,23 +98,24 @@ Read `ralph/PROMPT.md` after the files above. A lane:
 - receives one concrete child task/package;
 - inspects current `main` before editing;
 - implements only that coherent scope;
-- tests it for real (reproduce the failure, then show it fixed);
-- pushes a `ralph/<task>` branch (or the shared landing branch it was
-  briefed against);
+- tests it for real (reproduce the failure, then show it fixed) — a
+  "nothing to fix" conclusion needs a pushed branch or a run probe behind
+  it, not a config read; that exact shortcut produced a wrong answer on
+  `main` once already (see `ralph/BACKLOG.md` §1, item 5);
+- pushes a `ralph/<task>` branch;
 - records useful findings;
 - does not redefine the active game plan or discard owner requirements.
 
 ## 3. How work is selected
 
-`ralph/ACTIVE_GAME_PLAN.md` decides **canonical gameplay gate/package
-ownership and acceptance order**. The newest owner playtest file is
-authoritative evidence — a fresh owner reproduction reopens an older
-supposedly-fixed item when they conflict.
+`ralph/ACTIVE_GAME_PLAN.md` decides canonical gameplay gate/package ownership
+and acceptance order. The newest owner playtest file is authoritative
+evidence — a fresh owner reproduction reopens an older supposedly-fixed item
+when they conflict, no exceptions.
 
-`ralph/BACKLOG.md` is the complete ledger and remains authoritative for
-whether an old task exists, but does not control current Meadows priority
-when the active plan reorders that work. It is consulted for a task already
-selected, never cold-read to choose one.
+`ralph/BACKLOG.md` is short and current now; read it in full rather than
+treating it as a cold-read-only reference store the way its predecessor had
+to be.
 
 Detailed files under `docs/ralph-prompts/` explain individual implementation
 requirements. When two prompt files overlap, use
@@ -174,24 +158,28 @@ chapter that passes the vision and reaches Gate F clean.
 
 ## 6. Reference/history — read only when needed
 
-These files remain useful but are **not startup documents**:
-
-- `ralph/BACKLOG.md` — complete historical/current ledger; targeted lookup
-  only.
+- `ralph/BACKLOG.md` — current backlog, short enough to read in full.
 - `ralph/DONE.md` — large completion archive; search for a task/commit,
   never read end to end.
-- `ralph/BLOCKED.md` — parked work and reasons.
 - `ralph/GATE_F_PROTOCOL.md` / `ralph/GATE_F_MASTER_PROTOCOL.md` /
   `ralph/GATE_F_INSTRUMENTATION_REQUEST.md` — the Gate F protocol chain;
   read in full only when actually running or redoing a Gate F pass.
 - `ralph/MEADOWS_EXIT_CRITERION.md` — the unified acceptance-standard
   synthesis, useful when judging whether something is actually finished.
-- `ralph/VISUAL_LEDGER.md` — the standing whole-game visual ledger; read
-  before any visual capture/judge/fix lane.
+- `ralph/VISUAL_LEDGER.md` — the standing whole-game visual ledger. Its
+  domain rows predate the 2026-09-01 retirement of the 168-item census as
+  active backlog; read it for the recurring capture-harness-artifact
+  pattern it documents (relevant every time a visual finding looks too
+  large to be real), not as a work queue.
+- `ralph/reports/audit/VISUAL-CENSUS-2026-08-31.md` — historical evidence
+  report, not a backlog. `ralph/BACKLOG.md` §3 names the handful of items
+  from it that were independently confirmed to matter.
 - dated `ralph/OWNER_DIRECTIVES_*.md` / `ralph/OWNER_FEEDBACK_*.md` —
   canon owner directives, consulted for the specific decision they cover.
-- `ralph/COORDINATOR_HANDOVER_2026-09-01.md` — the freshest handover;
-  supersede this pointer with a newer one as soon as one exists.
+- `ralph/COORDINATOR_HANDOVER_2026-09-01.md` — historical handover from
+  earlier the same day; superseded by this file and `ralph/BACKLOG.md` for
+  anything current.
 
-Git history preserves superseded operating instructions. Do not carry
-obsolete process forward merely because an old document described it.
+Git history preserves superseded operating instructions, including the
+deleted `BACKLOG.md`/`BLOCKED.md` themselves. Do not carry obsolete process
+forward merely because an old document described it.

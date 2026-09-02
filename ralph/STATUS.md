@@ -58,7 +58,7 @@ changed.
 | `started` | Picked a task, branch created, work not begun |
 | `working` | Mid-task. `note` says what it is actually doing |
 | `shipped` | CI green, fast-forwarded to `main`, `DONE.md` updated |
-| `blocked` | Stopped on purpose. `BLOCKED.md` says why |
+| `blocked` | Stopped on purpose. `BACKLOG.md` says why |
 | `play-gate` | Waiting for the owner to play. The loop is correctly parked |
 | `idle` | Backlog empty or everything parked |
 
@@ -70,7 +70,7 @@ changed.
   with that Routine itself.
 - **`state: started` and stale** — a firing died early, most likely before it
   could push anything. Its branch may exist with no commits worth keeping.
-- **`state: blocked` or `play-gate`** — working as designed. Read `BLOCKED.md`.
+- **`state: blocked` or `play-gate`** — working as designed. Read `BACKLOG.md`.
 - **Several blocks at `working` on different areas** — this is the loop running
   as intended, not a collision.
 - **Several blocks at `working` on the SAME area** — a real collision. The

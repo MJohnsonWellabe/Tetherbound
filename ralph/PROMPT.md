@@ -52,7 +52,7 @@ The coordinator owns collision avoidance and bookkeeping.
 
 - Follow the file exclusion list in your brief.
 - Do not claim/heartbeat/release `ralph/STATUS.md` leases.
-- Do not edit `BACKLOG.md`, `DONE.md`, or `BLOCKED.md` unless the coordinator explicitly assigns that bookkeeping.
+- Do not edit `BACKLOG.md` or `DONE.md` unless the coordinator explicitly assigns that bookkeeping.
 - Write useful out-of-scope findings to `ralph/NOTES.md` on the shared status channel when available.
 - At your estimated checkpoint, report what is complete, what remains, and any blockers/findings. Going silent is a failure mode.
 

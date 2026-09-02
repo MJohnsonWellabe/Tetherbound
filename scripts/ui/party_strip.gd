@@ -316,9 +316,30 @@ var _last_out: Array[bool] = [true, true, true, true, true]
 ## currently visible, so this can never yank the widget mid-reveal or
 ## mid-fade out from under its own tween -- the next `show_strip()` simply
 ## targets the new rest position like it always does.
+##
+## OWNER-0902-HUD-TEAM-MENU: a real render caught the gap this left. The very
+## first `_reflow_left_stack()` call can land before the viewport has settled
+## its final stretched size (`_root.size` briefly reports a degenerate value
+## on the opening frames -- the same settle race `_reflow_left_stack()`'s own
+## header and several smoke tests already work around by awaiting a handful
+## of frames before trusting `root.size`). If the party already has a
+## creature at that moment (a save reload, a headless harness that seeds the
+## party before the HUD mounts), `_update_party_strip()` can call
+## `show_strip()` on that very first frame -- revealing the strip AT the
+## wrong, transient rest position. Every later `set_rest_position()` call
+## then only updates `_rest_position`, per this function's own contract
+## above, leaving `.position` parked at that first wrong spot forever, since
+## nothing ever calls `_reveal()` again. Snapping here whenever the target
+## actually moved AND there is no reveal/fade tween currently running closes
+## that gap without touching the tween contract above: a real mid-reveal is
+## still never yanked, but a strip that already finished settling at a stale
+## target self-corrects instead of staying wrong for the rest of the session.
 func set_rest_position(pos: Vector2) -> void:
+	var moved := not pos.is_equal_approx(_rest_position)
 	_rest_position = pos
 	if not visible:
+		position = pos
+	elif moved and (_tween == null or not _tween.is_valid()):
 		position = pos
 
 
@@ -752,6 +773,38 @@ func set_pinned(pinned: bool) -> void:
 		_reveal()
 	else:
 		_fade_timer = UI_TOKENS.T_PARTY_FADE
+
+
+## OWNER-0902-HUD-TEAM-MENU (owner playtest 2026-09-02, finding #12: "the team
+## menu comes up twice after a fight"). `combat_hud.gd` mounts its own separate
+## instance of this widget for mid-fight switching; `playground_hud.gd`'s
+## exploration HUD mounts a second, independent instance that reveals itself
+## whenever `Party.active_index`/`revision` changes -- which combat almost
+## always does on the way out (a switch during the fight, a faint). Ending a
+## fight by calling `set_pinned(false)` on the COMBAT instance only starts its
+## `T_PARTY_FADE` countdown (see that function's own header on why -- it is the
+## right behaviour for un-pinning mid-fight, when the strip is still relevant
+## and just not locked open any more). Combat's strip is not "still relevant,
+## just unpinned" once the fight is actually over, though: the exploration
+## strip is about to reveal fresh in its place, and the two, fading in and out
+## in different screen positions at once, is exactly the "twice" the owner
+## saw -- along with combat's own instance, fed only the creatures still able
+## to fight (`combat_manager.gd::_party` excludes fainted members), reading as
+## a roster that "doesn't always show the full team." Called instead of
+## `set_pinned(false)` at the exact moment a fight ends, so there is no second
+## instance left on screen to be stale.
+func hide_now() -> void:
+	_pinned = false
+	_fade_timer = 0.0
+	_cycle_banner_timer = 0.0
+	if _tween != null and _tween.is_valid():
+		_tween.kill()
+	if _cycle_banner != null:
+		_cycle_banner.visible = false
+	if _count_label != null:
+		_count_label.visible = true
+	modulate.a = 0.0
+	visible = false
 
 
 ## `entries`: up to `SLOTS` Dictionaries of

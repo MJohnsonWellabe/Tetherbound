@@ -109,43 +109,62 @@ func test_full_roster_mount_clears_the_separate_active_panel() -> void:
 func test_left_stack_clears_bottom_dock_at_every_supported_aspect() -> void:
 	var creature_h := 150.0
 	for canvas_h in [1080.0, 1200.0]:
-		var vitals_pos: Vector2 = PLAYGROUND_HUD.vitals_position(canvas_h)
-		var vitals_bottom := vitals_pos.y + PLAYGROUND_HUD.VITALS_HEIGHT
+		# OWNER-0902-HUD-TEAM-MENU: the vitals (satiety) cluster no longer
+		# stacks in this column at all -- it moved to sit with the health bar
+		# (see `vitals_position()`'s own header) precisely so nothing stacked
+		# here can ever run into it again. What still has to clear
+		# `Root/BottomDock` is the active-creature panel, the column's own
+		# lowest element now.
+		var creature_pos: Vector2 = PLAYGROUND_HUD.creature_block_position(canvas_h, creature_h)
+		var creature_bottom := creature_pos.y + creature_h
 		var dock_top: float = canvas_h + float(PLAYGROUND_HUD.BOTTOM_DOCK_TOP_OFFSET)
 		assert_true(
-			dock_top - vitals_bottom >= PLAYGROUND_HUD.LEFT_STACK_CLEARANCE - 0.001,
-			"left stack must clear BottomDock's nominal top at canvas height %.0f (vitals bottom %.1f, dock top %.1f)" % [
-				canvas_h, vitals_bottom, dock_top,
+			dock_top - creature_bottom >= PLAYGROUND_HUD.LEFT_STACK_CLEARANCE - 0.001,
+			"left stack must clear BottomDock's nominal top at canvas height %.0f (creature panel bottom %.1f, dock top %.1f)" % [
+				canvas_h, creature_bottom, dock_top,
 			]
 		)
 
-		var creature_pos: Vector2 = PLAYGROUND_HUD.creature_block_position(canvas_h, creature_h)
+
+## OWNER-0902-HUD-TEAM-MENU (owner playtest 2026-09-02, finding #11: "the team
+## menu overruns the food bar. Food bar needs to go down by the health bar.").
+## `vitals_position()` used to anchor in the same column the roster and the
+## creature panel stack bottom-up in, which is how a tall reveal there ran
+## into the food bar sitting underneath it. It now anchors directly off
+## `player_health_bar_position()` instead, so HP and satiety read as one
+## vitals unit near the true canvas bottom -- this proves that relationship
+## on geometry.
+##
+## Beside, not above: `vitals_position()`'s own header has the exact reason
+## (the fixed 96px band below `Root/BottomDock` cannot fit both plates
+## stacked). This checks the two share the same Y and sit a fixed gap apart
+## in X instead.
+func test_vitals_cluster_sits_a_fixed_gap_beside_the_health_bar() -> void:
+	for canvas_h in [1080.0, 1200.0]:
+		var health_pos: Vector2 = PLAYGROUND_HUD.player_health_bar_position(canvas_h)
+		var vitals_pos: Vector2 = PLAYGROUND_HUD.vitals_position(canvas_h)
 		assert_almost_eq(
-			vitals_pos.y - (creature_pos.y + creature_h),
-			PLAYGROUND_HUD.PARTY_ACTIVE_GAP,
+			vitals_pos.x - (health_pos.x + PLAYGROUND_HUD.VITALS_WIDTH),
+			PLAYGROUND_HUD.BOTTOM_VITALS_COLUMN_GAP,
 			0.001,
-			"vitals cluster must sit a fixed gap below the creature panel at canvas height %.0f" % canvas_h
+			"the satiety plate must sit a fixed gap to the right of the health bar at canvas height %.0f" % canvas_h
 		)
 
 
 ## HUD-BACKLOG-20 (owner playtest 2026-08-30, item 20: "Put the player's
-## health bar in the lower left"). Two things this guards against regressing:
-## the widget must actually sit BELOW where the old combined vitals cluster
-## used to draw the HP row (`VITALS_HP_ROW_Y` inside `vitals_position()`'s
-## box) -- proving the fix is real, not just a relabelled position -- and its
-## own footprint (backing plate included) must never draw past the canvas
-## bottom edge, at either supported aspect.
-func test_player_health_bar_sits_lower_than_the_old_hp_row_and_stays_on_screen() -> void:
+## health bar in the lower left"). Its own footprint (backing plate included)
+## must never draw past the canvas bottom edge, at either supported aspect.
+##
+## This used to also assert the widget sits below where the old combined
+## vitals cluster drew its HP row, proving the extraction was real and not
+## just a relabelled position. `vitals_position()` no longer names that spot
+## at all -- OWNER-0902-HUD-TEAM-MENU moved it to sit with THIS widget (see
+## `test_vitals_cluster_sits_a_fixed_gap_above_the_health_bar`, which now
+## carries the "the two are related correctly" half of what this test used to
+## check).
+func test_player_health_bar_stays_on_screen() -> void:
 	for canvas_h in [1080.0, 1200.0]:
 		var health_pos: Vector2 = PLAYGROUND_HUD.player_health_bar_position(canvas_h)
-		var old_hp_row_y: float = PLAYGROUND_HUD.vitals_position(canvas_h).y + PLAYGROUND_HUD.VITALS_HP_ROW_Y
-		assert_true(
-			health_pos.y > old_hp_row_y,
-			"the extracted health bar (top %.1f) must sit lower than the old HP row (%.1f) at canvas height %.0f" % [
-				health_pos.y, old_hp_row_y, canvas_h,
-			]
-		)
-
 		var plate_bottom := health_pos.y + PLAYGROUND_HUD.HEALTH_BAR_CONTENT_HEIGHT + PLAYGROUND_HUD.VITALS_PLATE_OVERHANG
 		assert_true(
 			plate_bottom <= canvas_h + 0.001,
@@ -157,11 +176,12 @@ func test_player_health_bar_sits_lower_than_the_old_hp_row_and_stays_on_screen()
 
 ## `party_strip_position()` never draws the reveal above `TOP_SAFE_INSET`,
 ## regardless of canvas height. GF-B-006 turned this from a top anchor with a
-## defensive floor into a BOTTOM alignment against the vitals cluster with the
-## same floor (see that function's own header for why the strip came back to the
-## left column), so the floor is the thing that can now realistically engage --
-## on a short canvas the strip would want to start above the screen. This proves
-## the bound holds, and that it is NOT engaged at either supported height, which
+## defensive floor into a BOTTOM alignment against `Root/BottomDock`'s real top
+## edge (OWNER-0902-HUD-TEAM-MENU re-anchored it there from the vitals cluster,
+## which no longer shares this column -- see that function's own header), so
+## the floor is the thing that can now realistically engage -- on a short
+## canvas the strip would want to start above the screen. This proves the
+## bound holds, and that it is NOT engaged at either supported height, which
 ## is what says the strip is resting where it was designed to rather than being
 ## clamped into place.
 func test_party_strip_never_goes_off_the_top_of_the_screen() -> void:
@@ -178,7 +198,7 @@ func test_party_strip_never_goes_off_the_top_of_the_screen() -> void:
 		assert_true(
 			strip_pos.y > PLAYGROUND_HUD.TOP_SAFE_INSET + 0.001,
 			"party strip should rest clear of its defensive floor at canvas height %.0f -- " % canvas_h +
-			"if this fails, TOTAL_HEIGHT or VITALS_HEIGHT grew enough that the reveal no longer fits the left column"
+			"if this fails, TOTAL_HEIGHT grew enough that the reveal no longer fits above BottomDock"
 		)
 
 
@@ -236,23 +256,22 @@ func test_party_strip_clears_the_centre_of_the_viewport() -> void:
 ## The strip must FIT the left column, not merely start in it. Without this,
 ## `_yield_creature_block_to_party_strip()` would be hiding an overflow rather
 ## than resolving a designed overlap: a strip taller than the room between
-## `TOP_SAFE_INSET` and the vitals cluster would run under the vitals (which is
-## never hidden -- HP and satiety are safety information) or off the top.
-func test_party_strip_fits_the_left_column_above_the_vitals_cluster() -> void:
+## `TOP_SAFE_INSET` and `Root/BottomDock`'s real top edge would run under the
+## dock or off the top.
+##
+## OWNER-0902-HUD-TEAM-MENU: used to check the strip against the vitals
+## cluster's plate, back when vitals shared this column. Re-pointed at
+## `Root/BottomDock` now that `party_strip_position()` bottoms out there
+## instead (see that function's own header).
+func test_party_strip_fits_the_left_column_above_bottom_dock() -> void:
 	for canvas_h in [1080.0, 1200.0]:
 		var strip_pos: Vector2 = PLAYGROUND_HUD.party_strip_position(canvas_h, PARTY_STRIP.TOTAL_HEIGHT)
 		var strip_bottom: float = strip_pos.y + PARTY_STRIP.TOTAL_HEIGHT
-		var vitals_top: float = PLAYGROUND_HUD.vitals_position(canvas_h).y
-		# The PLATE, not the cluster rect: the vitals backing panel is drawn
-		# `VITALS_PLATE_OVERHANG` outside the cluster on every side, and it is
-		# what the player sees. A first render of GF-B-006 had the roster's
-		# fifth row drawing into the plate while every check against the
-		# cluster passed.
-		var plate_top: float = vitals_top - PLAYGROUND_HUD.VITALS_PLATE_OVERHANG
+		var dock_top: float = PLAYGROUND_HUD.left_stack_bottom(canvas_h)
 		assert_true(
-			strip_bottom <= plate_top - PLAYGROUND_HUD.PARTY_ACTIVE_GAP + 0.001,
-			"party strip bottom (%.1f) must stay a gap clear of the vitals plate top (%.1f) at canvas height %.0f" % [
-				strip_bottom, plate_top, canvas_h,
+			strip_bottom <= dock_top + 0.001,
+			"party strip bottom (%.1f) must stay clear of BottomDock's real top (%.1f) at canvas height %.0f" % [
+				strip_bottom, dock_top, canvas_h,
 			]
 		)
 		assert_true(

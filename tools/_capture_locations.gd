@@ -317,6 +317,17 @@ var _weather: Node = null
 var _failures: int = 0
 var _written: int = 0
 
+## FAST ITERATION MODE. On with `--fast` (a user script arg) or `VP_FAST=1` in
+## the environment. Halves every settle wait below (floor 2 frames, via
+## `_frames()`) and turns off MSAA/SSAA on the capture viewport. Output
+## filenames and directories are unchanged -- this trades fidelity for a
+## quicker local loop, never for the numbers that ship as evidence.
+static var _fast_mode: bool = false
+
+
+static func _frames(n: int) -> int:
+	return maxi(2, n / 2) if _fast_mode else n
+
 
 func _init() -> void:
 	_run()
@@ -328,11 +339,15 @@ func _run() -> void:
 		quit(1)
 		return
 
+	_fast_mode = "--fast" in OS.get_cmdline_user_args() or OS.get_environment("VP_FAST") == "1"
+	if _fast_mode:
+		print("[fast] iteration mode: settle halved, msaa off")
+
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	_field = HEIGHTFIELD.new()
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
-	for i in BOOT_FRAMES:
+	for i in _frames(BOOT_FRAMES):
 		await physics_frame
 	print("[locations] world up, boot settled")
 
@@ -356,6 +371,9 @@ func _run() -> void:
 	_camera.far = 4000.0
 	_world.add_child(_camera)
 	_camera.make_current()
+	if _fast_mode:
+		root.msaa_3d = Viewport.MSAA_DISABLED
+		root.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 
 	var terrain: Node = _world.get_node_or_null(^"Terrain")
 	if terrain != null and terrain.has_method("set_camera"):
@@ -448,7 +466,7 @@ func _pin(time: String) -> void:
 		_look.set_process(true)
 		_look.set_physics_process(true)
 		_look.call("apply_time", time)
-	for i in 30:
+	for i in _frames(30):
 		await physics_frame
 	if _weather != null:
 		_weather.set_process(false)
@@ -508,18 +526,18 @@ func _shoot(site_id: String, shot: Dictionary, suffix: String, first: bool) -> v
 		var seat: float = _ground_at(eye, floor_hint) if _is_interior(floor_hint) else float(_field.height_at(eye.x, eye.y))
 		_place(eye, seat)
 		_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m, look_up)
-		for i in ARRIVE_FRAMES:
+		for i in _frames(ARRIVE_FRAMES):
 			await physics_frame
 
 	var ground := _ground_at(eye, floor_hint)
 	_place(eye, ground)
 	_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m, look_up)
-	for i in (SETTLE_FRAMES if first else HOP_FRAMES):
+	for i in _frames(SETTLE_FRAMES if first else HOP_FRAMES):
 		await physics_frame
 
 	_hide_huds()
 	_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m, look_up)
-	for i in POSE_FRAMES:
+	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
 
