@@ -212,6 +212,25 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Check-in #12 (09:00 UTC) — WORLD r4 judged, CORRIDOR r2 / LIFE r3 under judgement, CI fix landed
+- **CI:** `test_ecology_core_clusters_without_changing_the_count` rewritten to measure the mean core-gate value under
+  the placements (the bin-CV proxy was dominated by the 64-tree clumps both sides share); 37/37 locally; pushed as
+  `00745630` (CI commit). Post-merge `smoke_stronghold` / `smoke_warrens` exit 0 on the PLACES-r4 tree.
+- **WORLD round 4** (`claude/vp-world` @ 08:51; stands + repeat test): judge `WORLD/JUDGE-round4.md` — all 9 stands
+  visually unchanged from round 3; dawn overlook + moon stand still a full-frame red wash, night overlook a flat
+  steel-blue wash with no near/far separation, golden sun still a huge pale oval. Lane's own findings: repeat test
+  flat (not accumulation), six config explanations falsified, per-time aerial plumbing is a silent no-op. **Not
+  merged.** Round 5 dispatched 09:04 with the coordinator's mechanism: fog_sky_affect + fog_aerial_perspective paint
+  far terrain AND sky with the sky *radiance cubemap*, which a ShaderMaterial sky updates incrementally — two
+  discriminating renders (aerial_perspective 0; Sky.PROCESS_MODE_REALTIME), then the in-game fix, sun disc ≤ 3%
+  frame height, night separation, dead plumbing fixed or removed.
+- **CORRIDOR round 2** pushed 08:33 (stations 02/07 restored, 04/08 horizon masses); lane blocked on a classifier-
+  denied `git merge` of the program branch — told to skip merging (coordinator merges lane branches). Judge running.
+- **LIFE round 3** pushed 08:54: mill-pond blob root-caused (paddlenewt is self-lit; `field_emission` compounded an
+  active emission texture → reverted), stands now stage 2-species de-synced groups, pairing frame has a visibility
+  assertion (false-negative: it measures against the 1920×1080 design viewport while VP_FAST renders 960×540);
+  two stands (open meadow, ridge camp) regressed to a creature body filling the frame. Judge running.
+
 ### PLACES round 4 (`claude/vp-places` @ 08:18) — judged 08:33, MERGED 08:35 (`622b904e`)
 Evidence: `PLACES/round4/locations/` (12), `PLACES/round4/_sheet_r3_vs_r4.png`, `PLACES/JUDGE-round4.md`.
 - Lane findings: the grey band behind the Hall is the `rift_collapse` StormWall (three 520–620 m alpha slabs at
