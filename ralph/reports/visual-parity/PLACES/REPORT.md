@@ -1290,3 +1290,112 @@ not a material one.
 **Next step for VP7:** extend the ground pad to cover the road approach the `06-relay-road` stand
 actually sees (or apply the earth material to that terrain patch), and find the pale slab on the right of
 frame — likely another `_stone_material()` caller that the wall sweep missed.
+
+---
+
+# Round 8
+
+Merged the program branch clean; re-baked (825717 placements, 355 s).
+
+## R8.1 Per item, with the sampled values
+
+| # | item | verdict | evidence |
+|---|---|---|---|
+| 1 | Relay pad + colonnade ≤ 120 lum | **PROVEN** | pad [98.1, 89.8, 69.1] (lum ≈ 89), deck/colonnade [91.7, 116.6, 128.6] (lum ≈ 110) |
+| 2 | Warrens pale boulder + panel | **PROVEN by sample** | brow [87.6, 93.0, 87.9], right panel [88.4, 89.3, 74.2] |
+| 3 | Hall material read at ≤ 100 m | **improved** | gate-day 39.8 % of pixels changed; moss, ivy, lit slits and banners visible at 2× |
+| 4 | Sentry identifiable on a tower | **NOT proven** | no human figure identifiable in the 2× crop |
+| 5 | Courtyard night median ≥ 8 | **FAILED** | median **1.49** |
+| 6 | Camps started | **started, minimal** | 4 objects added across three camps |
+
+## R8.2 Relay — the pad was being painted over by its own skin
+
+The pad added in round 7 rendered correctly all along. `_build_dead_ground()` was covering it: tint
+`#a89d84` at `max_alpha` **0.72**, `lift` 0.09, over a 46 m radius — directly on top of the opaque pad at
+`lift` 0.03. Its own `_comment_tint` justified that pale value because the skin "ADDS over an untinted
+bake", reasoning that went stale the moment a dark pad went underneath. tint → `#584d3f`, `max_alpha` →
+**0.40**.
+
+The judge's "central colonnade/platform under the tether machine" is the deck: `_build_decks()`'s slab
+(the 10×10 m apparatus pad and the 8×3.2 m gantry), the deck legs, `_build_console()`'s cabinet and
+`_build_cable_socket()`'s bracket were all still on the untinted `_stone_material()` — round 7's sweep had
+covered walls, piers, lintel and ramp only. All now share `_weathered_stone_material()`.
+
+Ground pad, before → after across the two rounds: **[195.6, 191.4, 163.6] → [98.1, 89.8, 69.1]**.
+
+## R8.3 Warrens — one cause behind both pale surfaces, and it had been "fixed" twice
+
+The boulder above the doorway (the brow, `Rock_Medium_3`) and the "untextured back-face panel" on the
+right of the standing frame (the right jamb, `Rock_Medium_1`) are **the same code path**: the
+entrance-dressing `dark: true` branch, drawing through `_wear_as_wall_stone()`, whose textured path always
+lerps 75 % toward a near-white `ROCK_TINT` and paints it flat across the whole boulder — a value tuned for
+a dim interior. Round 6 introduced it; round 7's `normal_scale` 1.15 fix stopped the *aliasing* but not
+the *paleness*, which is why it came back. That branch now goes through `_wear_the_cave_stone()` with the
+same stain shader every other exterior boulder wears, and **`_wear_as_wall_stone()` has been deleted** —
+it produced this same defect twice.
+
+## R8.4 Courtyard night — FAILED, and a correction to my own round-7 claim
+
+Three separate renders, as asked:
+
+| run | frame mean lum | frame **median** lum | floor at trainer |
+|---|---|---|---|
+| 1 | 9.30 | 1.49 | 7.08 |
+| 2 | 9.47 | 1.49 | 7.17 |
+| 3 | 9.54 | 1.49 | 7.16 |
+
+**Median 1.49 against a target of ≥ 8. Failed.** The mean (9.47) and the median (1.49) disagree by a
+factor of six, which is the whole story: a few bright brazier pools lift the mean while **more than half
+the frame is still essentially black**. The judge's choice of median over mean is the correct metric and
+every previous round's "mean improved" claim on this frame — including mine — was measuring the wrong
+thing.
+
+**Correction:** round 7 reported that brazier flicker is about ±26 %, and used that to argue a dip in this
+frame was noise. **These three repeats do not reproduce that.** Means span 9.30–9.54 (±1.3 %) and the
+medians are identical to two decimals. Whatever produced the earlier spread, it was not frame-to-frame
+brazier flicker at this stand, and the ±26 % figure should not be relied on.
+
+## R8.5 Sentries — not proven, and a design concern I want on the record
+
+The rank/emission path turned out **not** to be the bug — it was already correct
+(`NPC_RANKS.config_for("grunt")` → `build_from_config`). The diagnosis this round is that the stand
+captures at night where `art.json`'s `times.night.character_emission_floor` is 0.5, half the usual
+self-lit boost, so a true-scale 1.8 m figure 44 m out and 15.5 m up cannot read however well it is wired.
+
+The applied fix scales the sentry bodies **1.5×**. It is not verified — I cannot identify a figure in the
+2× crop (`round8/gate-sentry-2x-crop.png`) — and I am flagging the approach itself: a 2.7 m guard is a
+change to the game, not to the frame. If the only way to make a figure legible at this stand is to make
+it half again human size, the honest options are a closer stand, a lit sentry post, or accepting that
+individual figures do not read at 44 m — not silently shipping oversized humans. This needs a decision
+rather than another tuning pass.
+
+## R8.6 Camps (VP5) — started, deliberately small
+
+Matched before-frames were captured **first**, at the same `VP_FAST` settings as the after-frames
+(`round8/camps-before/`, 15 frames), since these three sites had not been rendered since round 1 at a
+different resolution.
+
+All three camps already carried substantial dressing from `32292b0e` and sit at or near the owner's
+"do not overfill" ceiling (14 / 15 / 11 props). What was missing was the **reason** read, so only **4
+objects** were added in total: the relay camp gains an unpaired stool facing back down the road plus a
+whetstone (one seat watches the road, one watches the fire); the ridge camp gains a bag beside the
+creature bed rather than at the supply pile, keeping bed+fire as the subject; the waystop gains a stool
+turned 75.6°, the bearing straight up the spine to the Hall, so every other seat faces the fire and this
+one faces what is coming.
+
+That restraint is a judgement call against a brief that allowed 10–14 objects **per camp**. If the judge
+wants denser camps, the headroom is there — but padding compositions that were already finished would
+contradict the owner's standing rule.
+
+## R8.7 Perf and tests
+
+`hall_approach` **3832** (r7 3842) — under the 4000 ceiling. `village_high` 3158.
+`smoke_stronghold`, `smoke_warrens`, `smoke_relay`, `smoke_authored_camps` all exit 0.
+Contact sheet `round8/_sheet_locations.png`; 31 frames in `round8/locations/`.
+
+## R8.8 What still fails
+
+1. **Courtyard night median 1.49 vs ≥ 8** — the frame is still majority black.
+2. **No identifiable sentry** — and the 1.5× scale fix needs a design decision, not another pass.
+3. The Hall mass at the gate is better lit in detail but still reads dark overall.
+4. Camps are dressed for *reason* but not re-composed; the judge may want more.
