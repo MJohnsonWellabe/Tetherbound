@@ -1375,6 +1375,10 @@ static func _predict_frames(steps: Array) -> int:
 				# RIG-F3. Same rule as `press_until` just above it: priced at its
 				# FULL budget, never at the early exit a clean track usually takes.
 				total += int(args.get("budget_frames", 240))
+			"force_aim":
+				# Harness-only shortcut, cheap and single-frame by construction --
+				# see _step_force_aim's own header for why this exists.
+				total += 6
 			"capture":
 				total += 6
 			"capture_seq":
@@ -1786,6 +1790,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_press_until(args, id)
 		"track_aim":
 			actual = await _step_track_aim(args, id)
+		"force_aim":
+			actual = await _step_force_aim(args, id)
 		"hold":
 			actual = _step_hold(args, id)
 		"release":
@@ -3365,6 +3371,81 @@ func _step_track_aim(args: Dictionary, step_id: String) -> String:
 	_drive_sticks()
 	return "FAIL track_aim: reticle never confirmed on body in %d frame(s); last saw %s" % [
 		budget, last_reason]
+
+
+## Harness-only test shortcut: put the reticle on the target's body in one
+## frame instead of steering toward it with rate-limited analog stick input.
+##
+## `track_aim` above is the honest player-input simulation, and stays that
+## way -- it is what a real controller does. But this catch-loop's own
+## purpose in the current work (ralph/GATE-F-S03-CATCH-LOOP) is exercising
+## team-building/revive/economy logic downstream of a successful catch, not
+## re-proving aim-input responsiveness, and a live gameplay fix for aim
+## tracking itself (creatures slow down on entering catch mode) is already
+## landing in a separate lane. Until that lands, `track_aim`'s clamped
+## per-frame turn rate against a full-speed wild creature is a second,
+## independent source of flakiness on top of whatever this lane is actually
+## trying to verify -- gate_f-run-20260901T220548Z-s03fix's attempt 5 spent
+## its whole 966s segment on exactly one successful catch (the S02 carry-
+## over) with every scripted throw missing on `reticle_outside_body`/`ground`.
+##
+## This step reuses `track_aim`'s own camera-eye/centre() geometry (see its
+## header for why the ray is cast from the camera, not the trainer) but
+## assigns `camera_rig.gd`'s public `yaw`/`pitch` floats directly rather
+## than nudging them via `_stick_right`, so there is no turn-rate limit to
+## outrun a moving target with. It still goes through the same live
+## `aim_report()` eligibility check afterward and FAILs loudly if that
+## somehow still does not confirm -- this shortcuts the STEERING, not the
+## catch roll, the orb physics, or anything downstream of the throw.
+func _step_force_aim(args: Dictionary, step_id: String) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED force_aim: not needed (%s)" % str(moot.get("actual", ""))
+
+	var manager := _probe.call("combat_manager") as Node
+	if manager == null:
+		return "HARNESS-ERROR force_aim step %s has no CombatManager in the world" % step_id
+	var throw: Node = manager.call("throw_aim") if manager.has_method("throw_aim") else null
+	if throw == null:
+		return "HARNESS-ERROR force_aim step %s: CombatManager has no throw_aim node" % step_id
+	if not bool(throw.call("is_aiming")):
+		return "FAIL force_aim: input_context is not combat_aim -- enter it with press_until first"
+	var rig := _probe.call("camera_rig") as Node
+	if rig == null:
+		return "HARNESS-ERROR force_aim step %s: no live camera rig" % step_id
+	var camera := rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null:
+		return "HARNESS-ERROR force_aim step %s: camera rig has no live Camera3D" % step_id
+	var body: Node3D = manager.call("enemy_body") as Node3D
+	if body == null or not is_instance_valid(body) or not body.has_method("centre"):
+		return "FAIL force_aim: no live target body to aim at"
+
+	var budget := maxi(1, int(args.get("budget_frames", 10)))
+	var last_reason := "unavailable"
+	var attempts := 0
+	while attempts < budget:
+		# Resampled every attempt, same as track_aim: the target may still be
+		# moving between the previous miss and this retry.
+		var centre: Vector3 = body.call("centre")
+		var to_target: Vector3 = centre - camera.global_position
+		rig.set("yaw", atan2(-to_target.x, -to_target.z))
+		var flat := Vector2(to_target.x, to_target.z).length()
+		if flat > 0.01:
+			rig.set("pitch", atan2(to_target.y, flat))
+		_stick_right = Vector2.ZERO
+		_drive_sticks()
+		await physics_frame
+		var report: Dictionary = throw.call("aim_report")
+		last_reason = str(report.get("reason", "unavailable"))
+		attempts += 1
+		if bool(report.get("eligible", false)):
+			return "reticle forced onto body in %d attempt(s): %s" % [attempts, last_reason]
+
+	return "FAIL force_aim: reticle not confirmed on body after %d forced attempt(s); last saw %s" % [
+		budget, last_reason]
+
 
 func _step_open_menu(args: Dictionary, step_id: String) -> String:
 	var tab := str(args.get("tab", ""))

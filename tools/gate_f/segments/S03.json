@@ -422,6 +422,19 @@
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
     },
     {
+      "id": "S03-36a2",
+      "title": "force the reticle onto the target (attempt harness shortcut)",
+      "action": "force_aim",
+      "args": {
+        "budget_frames": 10,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+    },
+    {
       "id": "S03-37a",
       "title": "throw the orb",
       "action": "press",
@@ -608,6 +621,19 @@
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S03-36b2",
+      "title": "force the reticle onto the target (attempt harness shortcut)",
+      "action": "force_aim",
+      "args": {
+        "budget_frames": 10,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
     },
     {
       "id": "S03-37b",
@@ -798,6 +824,19 @@
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
     },
     {
+      "id": "S03-36c2",
+      "title": "force the reticle onto the target (attempt harness shortcut)",
+      "action": "force_aim",
+      "args": {
+        "budget_frames": 10,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+    },
+    {
       "id": "S03-37c",
       "title": "throw the orb",
       "action": "press",
@@ -984,6 +1023,19 @@
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S03-36d2",
+      "title": "force the reticle onto the target (attempt harness shortcut)",
+      "action": "force_aim",
+      "args": {
+        "budget_frames": 10,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
     },
     {
       "id": "S03-37d",
@@ -1174,6 +1226,19 @@
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
     },
     {
+      "id": "S03-36e2",
+      "title": "force the reticle onto the target (attempt harness shortcut)",
+      "action": "force_aim",
+      "args": {
+        "budget_frames": 10,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+    },
+    {
       "id": "S03-37e",
       "title": "throw the orb",
       "action": "press",
@@ -1360,6 +1425,19 @@
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S03-36f2",
+      "title": "force the reticle onto the target (attempt harness shortcut)",
+      "action": "force_aim",
+      "args": {
+        "budget_frames": 10,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
     },
     {
       "id": "S03-37f",
@@ -1550,6 +1628,19 @@
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
     },
     {
+      "id": "S03-36g2",
+      "title": "force the reticle onto the target (attempt harness shortcut)",
+      "action": "force_aim",
+      "args": {
+        "budget_frames": 10,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+    },
+    {
       "id": "S03-37g",
       "title": "throw the orb",
       "action": "press",
@@ -1736,6 +1827,19 @@
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S03-36h2",
+      "title": "force the reticle onto the target (attempt harness shortcut)",
+      "action": "force_aim",
+      "args": {
+        "budget_frames": 10,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
     },
     {
       "id": "S03-37h",
@@ -1926,6 +2030,19 @@
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
     },
     {
+      "id": "S03-36i2",
+      "title": "force the reticle onto the target (attempt harness shortcut)",
+      "action": "force_aim",
+      "args": {
+        "budget_frames": 10,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
+    },
+    {
       "id": "S03-37i",
       "title": "throw the orb",
       "action": "press",
@@ -2112,6 +2229,19 @@
       },
       "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
       "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S03-36j2",
+      "title": "force the reticle onto the target (attempt harness shortcut)",
+      "action": "force_aim",
+      "args": {
+        "budget_frames": 10,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02's own follow-up: with the revive/engage bugs upstream now fixed, attempt 5's telemetry (gate-f-run-20260901T220548Z-s03fix) showed the catch loop's remaining failure was the throw itself -- every scripted throw missed with reticle_outside_body/ground because track_aim's rate-limited stick steering cannot out-turn a full-speed wild bramblebun in the frames this block allots it. Owner direction 2026-09-02: a live gameplay fix (creatures slow on entering catch mode) is landing in a separate lane and will make real stick tracking converge on its own once it does; until then this harness-only step (see _step_force_aim's header in operator_harness.gd) sets the reticle directly rather than re-proving aim-input responsiveness, which is not what this catch-loop is currently verifying."
     },
     {
       "id": "S03-37j",
