@@ -901,19 +901,6 @@
       "_why_vp9_r5": "VP9 LIFE round 5 course correction (owner directive: the visible population and the real gameplay population must agree -- no staged bodies at the shutter). This lane's own capture stand for the practice-meadow evidence point stands at (21,-32); order 0's bramblebun cluster (30,-40) already sits 12m off it. This second, second-SPECIES cluster sits alongside it (10.6m off the same eye) so the stand's own group reads as 2 species / 5 individuals from where the camera actually stands, per the round's own contract, without moving order 0 or touching its own pinned history. Radius tightened 8.0 -> 3.0 after round 5's own first boot rolled an individual to 5.0m off the eye (in the camera's own near field) -- 3m keeps every roll within the 8-14m band this cluster was sited for."
     },
     {
-      "order": 1071,
-      "species": "mosshell",
-      "count": 2,
-      "habitat": "water_edge",
-      "centre": [
-        -379.0,
-        0.0,
-        525.0
-      ],
-      "radius": 3.0,
-      "_why_vp9_r5": "VP9 LIFE round 5 course correction, same reasoning as order 1070. The mill-pond bank stand (-386,520) already has order 6's Paddlenewt 11.3m off; this Mosshell pair sits 8.6m off the same eye, on the shore rather than in the water (habitat water_edge, matching order 8's own brooktail tag), so the stand reads 2 species from the actual bank standpoint instead of one. Radius tightened 4.0 -> 3.0 alongside the other round-5 clusters after the first boot's own scatter overshoots."
-    },
-    {
       "order": 1072,
       "species": "bramblebun",
       "count": 3,

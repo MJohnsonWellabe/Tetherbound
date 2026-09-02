@@ -62,6 +62,13 @@ const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 ## and standalone (no trainers.json row, no greeting, no combat) for the two
 ## gate sentries. See `_build_gate_sentries()`.
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
+## ITEM3B (2026-09-02). See `_build_gate_sentries()` -- a bare `build("grunt")`
+## skips the rank ladder's own emission floor and renders the rig's genuinely
+## near-black base texture, which is why a correctly-positioned sentry was
+## still not identifiable. `npc_ranks.gd` is what `trainer_npc.gd::model_
+## config()` already reads for every ordinary trainer; used directly here for
+## the same reason `CHARACTER_MODEL` is (no trainer-battle plumbing wanted).
+const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const TETHER_SIGIL := preload("res://scripts/world/tether_sigil.gd")
@@ -1950,6 +1957,7 @@ func _build_hall_massing() -> void:
 	massing.name = "HallMassing"
 	massing.position = Vector3(0.0, _floor_y, 0.0)
 	add_child(massing)
+	_lift_hall_massing_exterior(massing)
 	_weather_hall_massing(massing)
 	_ground_hall_massing(massing)
 	_build_tower_banner()
@@ -1957,6 +1965,57 @@ func _build_hall_massing() -> void:
 	_build_hall_slits()
 	_build_cable_landing()
 	_build_blue_relic_banner()
+
+
+## VP-HALL-FIX ITEM1a (2026-09-02). A code-blind judge, fresh 100/200/400m
+## frames: the Hall "holds at 100 m but collapses to a blob at 200 m and a
+## smudge at 400 m". The kit's own tallest pieces -- the gate/flank/mid-wall
+## towers and the keep cluster over the legendary chamber (`LargeSquareTower
+## Bricks`, `LargeTower`, `PointyTower`) -- do not stand tall enough against
+## the meadow's own scale to keep an angular silhouette at range; only the
+## roof (`Roof_RoundTiles_4x8`, a glTF unrelated to the castle-kit tower
+## height problem this lever targets) is excluded.
+##
+## `site.hall_massing_exterior_lift` raises every non-roof massing module's
+## HEIGHT ONLY (`scale.y`), never `scale.x`/`scale.z`. Two reasons, both
+## load-bearing: (1) each module's own local origin sits at, or within
+## `MASSING_FOOT_MAX_BASE` of, its visual base -- `_ground_hall_massing()`
+## below measures exactly that -- so a Y-only stretch grows a tower upward
+## from where it already stands rather than sliding its base off the floor
+## it was grounded to; (2) the footprint stays exactly as authored, so
+## neighbouring towers (the two gate flankers are 21.2 m apart centre to
+## centre) never grow into each other and the gate opening itself never
+## narrows. This is applied BEFORE `_ground_hall_massing()` so its foot-shaft
+## derivation measures the FINAL scaled base, and before every other
+## massing-dependent pass below (tower banner, waist, slits, cable landing,
+## blue relic banner) so they all read one finished geometry rather than a
+## pre-lift snapshot.
+##
+## THE INTERIOR IS UNTOUCHED: this function only ever visits `massing`'s own
+## direct children, which are exterior castle-kit modules and nothing else.
+## The five chambers, the passages, `interior_structure.gd`'s bays/course/
+## ribs/reveals/corners and every light/prop placed relative to chamber
+## `at`/`size` are built by separate code elsewhere in this file, keyed off
+## `stronghold.json`'s `chambers`/`passages` blocks, which this pass never
+## reads or writes.
+##
+## Cost: zero. Same mesh instances, same draw calls -- only each node's own
+## `scale.y` component changes.
+func _lift_hall_massing_exterior(massing: Node3D) -> void:
+	var lift := float(_config.get("site", {}).get("hall_massing_exterior_lift", 1.0))
+	if is_equal_approx(lift, 1.0):
+		return
+	var lifted := 0
+	for child in massing.get_children():
+		if child is not Node3D:
+			continue
+		var node := child as Node3D
+		if str(node.name).begins_with("Roof"):
+			continue
+		node.scale.y *= lift
+		lifted += 1
+	print("[stronghold] hall massing exterior lift: %.2fx height on %d/%d module(s)" % [
+		lift, lifted, massing.get_child_count()])
 
 
 ## JUDGE-5 D7, ranked 6th: "the pale facade's bottom edge stops in mid-air at
@@ -2917,13 +2976,12 @@ func _build_gate_tower_sconces() -> void:
 	probe_holder.add_child(probe)
 	var bounds := _visual_bounds(probe_holder)
 	probe_holder.queue_free()
-	# TEMP-DIAGNOSTIC-ITEM3: the retrofit_skyline props on this same tower kit
-	# were mounted with hand-computed lifts against an assumed ~5.4m native
-	# height (scale x 3.0 = ~16.2m); this prints the REAL measured native AABB
-	# so that assumption can be checked against the retrofit's own floating
-	# prop before its lift is retuned. Remove once item 3 is verified.
-	print("[stronghold][DIAG] LargeSquareTowerBricks native visual bounds: %s (native height %.3f)" % [
-		bounds, bounds.size.y])
+	# ITEM3 (2026-09-02): a one-time probe of this same measurement found the
+	# retrofit_skyline lifts had been computed against an assumed ~5.4m native
+	# height when the real visual-bounds height is 4.165m -- which is why the
+	# chimney and banner rig floated clear of the roofs they were meant to sit
+	# on. Those lifts are corrected in stronghold.json; the probe print itself
+	# has served its purpose and is removed.
 	if bounds.size.z <= 0.01:
 		return
 	# ONE shared material for both plaques (same colour/energy on both towers)
@@ -2972,6 +3030,18 @@ func _build_gate_tower_sconces() -> void:
 ## (NP2-grunt-wire) onto `assets/characters/grunt/grunt_lod0.glb`, the
 ## rank-and-file rig `docs/art/HUMANOID_ASSET_INVENTORY.md` names for exactly
 ## this: ordinary Team Tether personnel. No new mesh, per CLAUDE.md/D24.
+## ITEM3B (2026-09-02). WAS `body.call("build", "grunt")` -- the bare species
+## config, with no `emission_floor`. Every OTHER grunt the player meets is a
+## trainer built through `trainer_npc.gd::model_config()`, which reads
+## `npc_ranks.json`'s "grunt" RANK (not just the species) and layers its own
+## emission floor on top -- `character_model.gd`'s own header records that this
+## rig's raw texture is genuinely near-black and needs that floor to clear the
+## tonemap's toe at all. A sentry built from the bare species config skipped
+## that floor entirely, so repositioning it into an already-proven sightline
+## was not enough on its own: the body was there and correctly placed, just
+## rendering at the same near-black value that makes it "not identifiable" in
+## the first place. `NPC_RANKS.config_for("grunt")` gets the SAME merged
+## config a trainer's own grunt body would.
 func _build_gate_sentries() -> void:
 	var list: Array = _occupation().get("gate_sentries", []) as Array
 	if list.is_empty():
@@ -2979,12 +3049,15 @@ func _build_gate_sentries() -> void:
 	var holder := Node3D.new()
 	holder.name = "GateSentries"
 	add_child(holder)
+	var rank_cfg: Dictionary = NPC_RANKS.config_for("grunt")
 	var index := 0
 	for entry: Variant in list:
 		var spec: Dictionary = entry as Dictionary
 		var body: Node3D = CHARACTER_MODEL.new()
 		holder.add_child(body)
-		if not bool(body.call("build", "grunt")):
+		var built := bool(body.call("build_from_config", rank_cfg)) if not rank_cfg.is_empty() \
+			else bool(body.call("build", "grunt"))
+		if not built:
 			push_warning("gate sentry %d has no grunt model; nothing stands there" % index)
 			body.queue_free()
 			index += 1

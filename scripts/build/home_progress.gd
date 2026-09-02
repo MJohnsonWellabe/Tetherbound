@@ -14,10 +14,11 @@ extends RefCounted
 ## first, camp second, whichever) answers the question the same way live
 ## placement does.
 ##
-## The rule: the camp is the fire + player bedroll, already the literal sleep
-## spot (`camp.gd::_on_rest`) the next objective asks the player to use; the
-## tent/fire/bedroll composition establishes the player's rest place; the
-## creature bed makes it a real care camp. The optional Workbench remains the
+## The rule: the bedroll is the literal sleep spot (`player_bed.gd::_on_rest`)
+## the next objective asks the player to use; the tent/campfire/bedroll trio
+## (OWNER-0902-CAMP-SPLIT: independently placeable, no longer one bundled
+## `camp` buy) establishes the player's rest place; the creature bed makes it
+## a real care camp. The optional Workbench remains the
 ## natural preparation station once Mira teaches Orb crafting.
 ## This replaces the old floor/wall/roof/door shell: free-building remains
 ## available, but it is not a mandatory architecture lesson in the opening.
