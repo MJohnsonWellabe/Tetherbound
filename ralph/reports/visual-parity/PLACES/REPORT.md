@@ -1237,3 +1237,56 @@ Contact sheet at `round7/_sheet_locations.png`.
 `ralph/reports/visual-parity/PLACES/ROUND8-CAMPS-PLAN.md` — the camps list, **prepared not started** as
 asked. Flags that none of the three camps has been re-rendered since round 1, so round 8 needs fresh
 before-frames at matched settings first.
+
+## R7.8 VP7 addendum — the relay compound from the road
+
+The CORRIDOR lane's new stations exposed the relay from the ROAD, where the whole Team Tether compound
+rendered as untextured near-white. Folded into this round's cycle.
+
+**Reproducing the exact view.** The dispatch pointed at `tools/_capture_corridor.gd` station 11, but that
+station does not exist in the copy on this branch **or** in commit `d7c003cc` which produced the frame —
+both carry only 8 stations. The 16-station version lives on `origin/claude/vp-corridor` at `43defff6`,
+where station 11 is `["11-relay", Vector2(350.0, 3760.0), Vector2(280.0, 3900.0)]`. Added as a `road`
+shot on the existing `06-relay` site, converted into the site's local frame the way
+`TetherRelay.world_of()` does (eye lands exactly on the site centre; look → local (−155.07, 21.26)).
+The before-frame was captured at this lane's own `VP_FAST` settings rather than citing the CORRIDOR
+lane's 1280x720 frame, so the pair is matched.
+
+**Root cause — two, both "no material" rather than "wrong material".**
+1. Walls, gate piers, lintel and ramp wore `severed_spokes.gd::_stone_material()` — the `T_UnevenBrick`
+   texture with **`albedo_color` never set**, so it defaults to white and blows out under direct sun.
+2. The only cover over the yard was `_build_dead_ground()`'s alpha-blended tint, capped at 0.72 alpha
+   with no texture, laid over raw terrain — so up to **28 % of the raw near-white ground always showed
+   through**, whatever tint was chosen.
+
+**Fixes:** `_weathered_stone_material()` applies the Hall's `hall_stone.gdshader` to walls/piers/lintel/
+ramp, driven by a new `site.weathering` block (darken 0.5, desaturate 0.4 — lighter than the Hall's ruin,
+since this is a small recent compound). `_build_ground_pad()` lays an opaque triplanar Ground030 earth
+mesh tinted `#463c30` with a per-vertex wear band along the road spine. Both materials cached and shared,
+so batching is unaffected.
+
+**Pixel proof, before → after, same stand and settings:**
+
+| sample | before | after | |
+|---|---|---|---|
+| mid wall / gate | [150.4, 154.0, 129.6] | **[79.6, 84.2, 62.1]** | ✅ fixed |
+| upper wall band | [140.3, 153.8, 155.4] | **[94.9, 108.6, 111.2]** | ✅ fixed |
+| **ground pad** | [195.6, 191.4, 163.6] | **[191.2, 188.1, 167.3]** | ❌ **not fixed** |
+
+Frame mean 150.06 → 134.16, mean abs diff 18.71, 25.4 % of pixels changed.
+
+**Verdict, split.** The dispatch asked to prove "wall **and** ground are no longer near-white". **The
+walls are proven; the ground is not.** The pad material work did not reach the ground this stand actually
+sees — the near-white surface in frame is evidently terrain outside the pad's footprint, not the pad.
+Looking at the after-frame also shows a large pale grey slab still untextured on the right of frame.
+Both are open.
+
+**Flagged, not fixed:** the apparatus and most pylons sit behind or beside the camera at this stand by
+construction (the rig lands at local ~(6.9, −0.95), beside the apparatus footprint at (7, −9), looking
+outward down the road). No culling, `visibility_range` or lighting bug was found and the conduit/pylon
+materials carry real emission — making the apparatus visible from this view is a stand-framing change,
+not a material one.
+
+**Next step for VP7:** extend the ground pad to cover the road approach the `06-relay-road` stand
+actually sees (or apply the earth material to that terrain patch), and find the pale slab on the right of
+frame — likely another `_stone_material()` caller that the wall sweep missed.
