@@ -212,6 +212,11 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### 18:50 UTC — traversal smoke green serially; Warrens round-12 evidence committed
+
+- `smoke_traversal` re-run serially on the merged tree (nothing else on the Godot slot): **exit 0**, "traversal: OK — the ground is solid across the playground, the perimeter holds … no severed spoke's blocker lies across a route the player is asked to walk". The earlier exit 1 came from a three-process contended run and is recorded as contention, not a tree defect.
+- Warrens round-12 proof committed by the restart agent (`09a88119`): flank medians 8.3 / 9.1 with std ~43 and a warm-brown hue, `smoke_warrens` exit 0 on both r11 and r12 states; kept r12.
+
 ### 18:45 UTC — Ship PR #21 opened; CI-skip trap noted
 
 - **PR #21** https://github.com/MJohnsonWellabe/Tetherbound/pull/21 (program branch → main): the lane close-out since PR #20 (WORLD r7–r9, CORRIDOR r7–r9, PLACES r9–r11, sentry + Warrens restarts, VP10 measurement, fresh bake). Merge when its CI is green.
