@@ -122,6 +122,34 @@ const TIER_RIM_STRENGTH := {
 	"rare": 0.26,
 }
 
+## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. `grass_field.gd` already has a
+## clearing mechanism for exactly this shape of problem -- a building's own
+## floor grows grass through it unless the floor says "nothing grows on the
+## ground I stand on" -- via `CLEAR_GROUP`/`CLEAR_RADIUS_META`
+## (`village.gd`/`burrow_warrens.gd` already use it, and it clears every field
+## tier: tufts, stones, bushes, flowers, litter, the far sheet, all four
+## shaders read the same `built[]` list). A blind visual-judge pass on this
+## branch's own frames found a creature standing *inside* a flowering cover-tier
+## bush, its whole outline broken by real leaf geometry in front of it -- a
+## defect no per-species material tint can reach, because those pixels belong
+## to a different mesh. This joins the same group so any creature -- wild,
+## piloted, ally -- clears a small disc of field/cover/stone around wherever
+## it currently stands, the same "legitimate local suppression" `CLAUDE.md`
+## names for this exact defect, reusing tested machinery rather than adding a
+## second clearing system. Literal string, not a cross-script const import:
+## `grass_field.gd` has no dependency on creature code and should not gain one
+## for two string names.
+const GRASS_CLEAR_GROUP := "grass_clear"
+const GRASS_CLEAR_RADIUS_META := "grass_clear_radius"
+## Added to the collider radius, not used alone: a clearing sized to exactly
+## the collider would still leave field items overlapping the art, which
+## legitimately extends past the capsule for a long-bodied species (see
+## `_footprint_allowance`'s own comment). 0.6 is a modest fixed margin, not
+## scaled per-species -- a bigger creature already clears more of the field by
+## already having a bigger `_radius`, and a margin that grew with size would
+## turn a legendary's clearing into a visible bald disc.
+const GRASS_CLEAR_MARGIN := 0.6
+
 ## The grounding ray starts this far above the requested spot and traces this far
 ## down.
 ##
@@ -429,6 +457,13 @@ func _build_placeholder() -> void:
 	# diameter. Per species because it is a fact about the animal: a triceratops
 	# is genuinely several times longer than it is wide and a frog is not.
 	_footprint_allowance = float(look.get("footprint_allowance", FOOTPRINT_ALLOWANCE))
+	# Idempotent: add_to_group/set_meta are safe to repeat on a re-setup
+	# (colourway swap, shiny re-tint), and grass_field.gd reads this group's
+	# members' CURRENT global_position live every time the field's ring moves,
+	# so a moving wild creature keeps clearing wherever it actually stands
+	# without this needing to run again per-frame.
+	add_to_group(GRASS_CLEAR_GROUP)
+	set_meta(GRASS_CLEAR_RADIUS_META, _radius + GRASS_CLEAR_MARGIN)
 
 	# The collider is built from the SPECIES, never from the art.
 	#
