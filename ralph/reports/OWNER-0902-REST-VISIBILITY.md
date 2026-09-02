@@ -124,7 +124,14 @@ reaches full) and an honest edge case (a creature already at full HP is not
   `"Resting — HP 40 / 120 · 1:20 left"` (or `"...ready — sleep to complete
   the rest"` once the HP clock has finished but the player has not yet
   slept). This is the moment a player is most likely to ask the question —
-  standing at the bed — so the answer lives here first.
+  standing at the bed — so the answer lives here first. **A real render
+  (see Verification below) caught this text clipping mid-word** ("· 1:20
+  le") against the row's old fixed 370px width, sized for the shorter
+  pre-existing "Resting — HP 40 / 120" string alone — the panel/row width
+  (420/370 → 520/470) was widened to fit the real longest string rather
+  than the text being shortened to fit an arbitrary old width, since this
+  panel carries no shared layout budget the way `party_strip.gd` does.
+  Re-rendered after the fix to confirm.
 - `scripts/ui/tab_creatures.gd`: the team roster's existing per-creature
   condition line (previously "Tired"/"Rested"/"KO", `creature_condition.gd`'s
   own `label()`) now shows `"Resting — 1:20 left"` for a currently-resting
