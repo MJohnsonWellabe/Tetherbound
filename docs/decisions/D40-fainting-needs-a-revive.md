@@ -162,3 +162,25 @@ One line: restore `heal()`'s old body (drop the `fainted` refusal, `hp > 0.0`
 still sets `fainted = false` same as before D40) and `revive()`, the
 `revive` item, and the `give:revive:2` gift line become inert vestiges,
 harmless to leave in place or to delete.
+
+## Amendment — starting grant raised 2 -> 10 (2026-09-02)
+
+`ralph/GATE-F-S03-CATCH-LOOP` measured the 2-Revive starting grant directly
+against the catch-to-a-team-of-five loop it was meant to cover
+(`ralph/reports/FINDING-S03-ATTEMPT7-TRACKAIM-REVIVE-WALL-2026-09-02.md`):
+even with real, working aim-steering landing throws reliably, the ladder
+stalled for good once both Revives were spent, at only 3 of the 5 creatures
+a full team needs, with no way to retreat and restock mid-chapter. Reported
+back rather than decided in that session. Owner directive, put to it
+directly: raise the grant, 2 -> 10 (`data/dialogue/opening.json`'s
+`give:revive:2` on `grandpa_first_catch`, now `give:revive:10`) — sized like
+`give:orb_basic`'s own 15 -> 50 raise right above it in the same file, for
+the same reason: covering repeated faints across a full five-creature
+build-out, not a single emergency. The owner also named the standing
+fallback this doesn't need to solve alone: a creature bed is buildable
+early and rests a fainted creature back up for free, so running out of
+Revives mid-chapter was never meant to be a hard wall, only an
+inconvenience — D40's dedicated-item split (a Revive stands a fallen
+creature back up; a bed does too, on your own time) still holds. `10` is
+not asserted here as a permanent number — like the orb count beside it,
+it is tunable and open to being measured again.
