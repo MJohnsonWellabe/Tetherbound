@@ -3399,10 +3399,20 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 		if not bool(mgr.call("is_fighting")):
 			return "FAIL throw_until_caught: fight ended before throw %d (%s)" % [
 				attempt + 1, ", ".join(log)]
+		# Budget widened after a real run: `catch_resolving` clearing (the
+		# waits above) is necessary but not sufficient -- combat_manager.gd::
+		# _finish_catch()'s failure branch also re-engages the wild creature
+		# (`set_engaged`) and swaps the camera back (`_take_camera()`), and a
+		# real run showed input still not landing for a further ~2s past the
+		# verdict for a reason not fully chased down. Rather than guess a
+		# second hidden duration, this simply keeps trying for longer --
+		# `press_until` already reports PASS on zero presses if it is already
+		# armed, so a wider budget costs nothing when the shorter one would
+		# have worked anyway.
 		var armed := await _step_press_until({
 			"control": "interact",
 			"check": {"check": "input_context", "equals": "combat_aim"},
-			"max_presses": 3,
+			"max_presses": 15,
 			"settle_frames": 20,
 		}, "%s-arm%d" % [step_id, attempt + 1])
 		if armed.begins_with("FAIL") or armed.begins_with("HARNESS-ERROR"):
