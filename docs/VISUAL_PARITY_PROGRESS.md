@@ -212,6 +212,20 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### PLACES round 3 (`claude/vp-places` @ 07:11) — coordinator verdict 07:25 UTC — MERGED
+Evidence: `ralph/reports/visual-parity/PLACES/round3/` (warrens, stronghold, castle-landmark 100/200/400 m, plus ground/water/survey).
+- Both headline fixes were "a value silently cancelled downstream": the Hall exterior already carried the weathered
+  shader but `darken` 0.24 left it brighter than the interior tone (now 0.56 + per-piece variation); the Warrens
+  `tint_variation` was 65% eaten by a later lerp (now applied after it, 0.42). Frames: Hall reads as a dark
+  weathered mass with distinct towers from the gate and at 100 m; Warrens boulders vary in tone, entrance darkest.
+- Still open (VP8/VP6 round 4 candidates): Hall silhouette at 200–400 m is faint against the haze; no ivy/scaffold
+  read at distance; Warrens is still a boulder pile without a soil apron read at the approach stand.
+### CORRIDOR round 1 (`claude/vp-corridor` @ 07:17) — coordinator verdict 07:25 UTC — NOT merged yet
+- Before/after pairs at 8 stations are nearly identical; the two emptiest sightlines (02-first-bend, 07-band2-mid)
+  got nothing visible. The lane added a band `layer_anchors` merge in scatter_rules.gd (out of its file scope,
+  disclosed) because band vegetation files never carried anchors — mechanism accepted in principle; round 2 sent
+  with concrete per-station placements. Frames predate the canopy fix (white trees).
+
 ## Implementation decisions
 
 - `data/config/grass_field.json` is **ON** for this program (owner directive 2026-09-01: "I don't see how a
