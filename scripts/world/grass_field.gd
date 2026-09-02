@@ -371,6 +371,14 @@ static func _fill_lattice(mm: MultiMesh, plan: Array, cell: float) -> int:
 ## is what the tile's AABB is grown from.
 static func cull_tile_m(cfg: Dictionary) -> float:
 	var tile := float(cfg.get("cull_tile_m", 16.0))
+	# A/B seam for tools/perf_render_stats.gd: `TB_GRASS_CULL_TILE_M=0|8|16`
+	# in the environment overrides the config so three measurements can be
+	# chained from one checkout without editing the shipped file between runs
+	# (and without a mid-chain edit silently landing in the wrong run). Nothing
+	# in `scripts/` sets it; an export never carries it.
+	var env := OS.get_environment("TB_GRASS_CULL_TILE_M")
+	if env != "" and env.is_valid_float():
+		tile = float(env)
 	if tile <= 0.0:
 		return 0.0
 	var cell := lattice_cell()
