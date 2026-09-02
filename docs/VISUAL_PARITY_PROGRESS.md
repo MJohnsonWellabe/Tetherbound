@@ -112,9 +112,11 @@ Tool: `tools/perf_render_stats.gd`, 1280x720, Compatibility, llvmpipe (structura
 | VP2 iteration B: main's shipped density (75k tufts, 4 blades, 25k stones, 6k/6k/15k tiers) + cull tiles 16 m + far thinning/reach/tile LOD + VEG lod ranges (trees 700/grove 800) | band1_open | 8593 | 12,583,284 | 7573 | coordinator 04:52 UTC, `VP2-perf/perf_iterB.txt` |
 | same | village_high | 4408 | 9,386,569 | 4504 | same |
 | same | hall_approach | 4424 | 4,627,194 | 4769 | same |
-| VP2 iteration C: B + trees/grove/deadfall/rocks lod 420/460/260/220 + cull_tile_m 24 | all three | measuring | | | coordinator |
+| **VP2 iteration C (candidate)**: B + trees/grove/deadfall/rocks lod 420/460/260/220 + cull_tile_m 24 | band1_open | 7839 | 12,217,644 | 6812 | coordinator 05:20 UTC, `VP2-perf/perf_iterC.txt` |
+| same | village_high | 3703 | 9,197,864 | 3852 | same |
+| same | hall_approach | 4270 | 4,634,502 | 4615 | same |
 
-Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw calls ≤ 4000. **Iteration 0 misses both** (21.3M; 4335). **Iteration B: primitives within 5% of budget (12.58M), hall draw calls still over (4424).**
+Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw calls ≤ 4000. **Iteration 0 misses both** (21.3M; 4335). **Iteration B: 12.58M / 4424. Iteration C: 12.22M at band1_open (1.8% over the provisional 12.0M and 11% under the 13.69M main ships with grass on), hall_approach 4270 draw calls (7% over the reasoned 4000 ceiling; pre-program baseline at that stand was 4331 after the GROUND+VEG merge, ~2900 before it). Accepted as the VP2 cost candidate; the hall draw-call source is being A/B'd (scatter_lod_ranges).**
 
 ## Judge history
 
