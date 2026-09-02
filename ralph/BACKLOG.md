@@ -31,7 +31,7 @@ still broken by direct play** — treat these as the standing lesson that
 
 | finding | landed as | now |
 |---|---|---|
-| Village gate on every exit | `OWNER-0901-VILLAGE-GATE-ROADS-V2` (`5b934766`) | **reopened** — still missing on at least one exit |
+| Village gate on every exit | `OWNER-0901-VILLAGE-GATE-ROADS-V2` (`5b934766`) | **landed for real, third attempt** — see below |
 | Village population too high | `OWNER-0901-VILLAGE-POPULATION` | **reopened** |
 | Day/night cycle | `OWNER-0901-DAYNIGHT-CYCLE` | **investigated, not reproducible** — see below |
 
@@ -41,11 +41,14 @@ still broken by direct play** — treat these as the standing lesson that
 - **"Creatures never get out of bed" is the tent/campfire bug, not the day/night bug.** Same investigation traced it: a resting creature only wakes via a real completed rest; if the camp/bed build is failing (item 10 below), rest never completes and the creature never appears rested, regardless of what day it is. One root cause, not two.
 - **Catching — landed.** `ralph/OWNER-0902-CATCH-SLOWMO` (`c789bb57`): the creature being aimed at now moves at 35% speed while catch/aim is open, scoped to that one creature (not a global slow-mo). Verified by measuring actual distance covered with aim open vs. closed.
 - **Village population — landed.** `ralph/OWNER-0902-VILLAGE-POPULATION-REGRESSION` (`34bb6e3f`): the 09-01 fix only repositioned NPCs within the same boundary (15 always-present civilians before and after, proven by a point-in-polygon count) — this pass actually cut two genuine duplicates (Nessa/Wilhelm, Fenn/Oskar), 15 → 13.
-- **Village layout — partially landed.** Same merge: the Grandpa's-house path endpoint, which sat a metre inside the house's own east wall (a kit rebuild widened the house and nobody re-derived the path), is fixed; Mira's shop got an exterior sign so a player knows a merchant is behind that door before entering. **"Characters read too small" — REOPENED, that branch's explanation was wrong.** It claimed unchanged 1.7-1.85m villagers read smaller by comparison to the 09-01 creature-scale growth. The owner rejected this directly: *"small villagers have nothing to do with larger creatures. bullshit. it's compared to our own character NPCs look small."* That branch also admitted it shipped with **zero render verification** (no Godot binary available in that session) — the conclusion was never actually checked against a frame. Redo in flight: `ralph/OWNER-0902-VILLAGE-SCALE-VS-TRAINER` (`session_01S9vn6EW9xrSeGTAE7PK52H`) — render the trainer next to villagers in one frame, measure real pixel-to-metre ratios against `art.json`'s declared heights, and only conclude code-bug vs. proportion/pose/camera design issue once actually measured. Also still open: are villager NPC rigs meant to read as adults or youths, since their proportions don't cleanly support either (recovered from the deleted `BLOCKED.md`) — may turn out to be the same root cause.
+- **Village layout — partially landed.** Same merge: the Grandpa's-house path endpoint, which sat a metre inside the house's own east wall (a kit rebuild widened the house and nobody re-derived the path), is fixed; Mira's shop got an exterior sign so a player knows a merchant is behind that door before entering.
+- **Village gate on every exit — landed, third attempt, root cause finally correct.** `ralph/OWNER-0902-VILLAGE-GATE-REGRESSION`. Every road that actually crosses the boundary already had a gate — that was never the bug. The real gap: the fence is built as independent straight panels, and where two meet at one of the outline's 22 polygon corners, a panel's flat perpendicular end never sweeps the wedge to the next edge's angle — nothing before this fix built collision at a vertex or ever tested one. (The prior "fixed" landing's own escape probe sampled 8 of ~45 panels by index and never checked a corner, despite claiming a full ring sweep — that's the structural reason it looked green and still failed under real play.) Fixed in three measured rounds — a corner guard post at every vertex, widened after an exhaustive re-test caught one corner still escaping by ~0.3m, then given extra height after that same corner turned out to be a character-controller edge/step interaction, not a lateral gap. Final exhaustive run: 47/47 panels, 22/22 corners, both gates, all 16 bearings, all 7 jump timings — zero escapes anywhere.
+- **"Characters read too small" — landed as a finding, needs an owner call.** `ralph/OWNER-0902-VILLAGE-SCALE-VS-TRAINER` — the second explanation (villagers vs. bigger creatures) was wrong and the owner rejected it directly. This third pass built a real capture tool and measured actual rendered pixel heights under three controlled camera setups (coordinator independently re-viewed all three rendered frames, not just the numbers). **Verdict: no code/config bug** — at equal camera distance a villager's on-screen height matches its declared `art.json` height to ~1%. The real cause is the trailing third-person camera: standing where a player actually stands to face and talk to a villager puts them measurably farther from the camera than the player's own body, which alone shrinks them to ~73% of the trainer's on-screen height — reproduced and visually confirmed, not just measured. This is a camera-framing design question (should a close-approach/dialogue camera close that depth gap?), correctly left unfixed for an owner decision rather than guessed at a third time. Also reconfirms the still-open, independently-flagged question: are villager rigs meant to read as adults or youths, since they visibly read stockier/more head-heavy even at a matched height.
 - **Load time — landed.** `ralph/OWNER-0902-LOAD-TIME`: root cause was a stale scatter bake — `VISUAL-FLOWER-SCALE` edited `vegetation.json` on 09-01 after the committed bake, so every New Game/load silently fell back to recomputing all 812,433 scatter placements live (256.6s of a 302.5s world stand-up) instead of reading the disk cache. Re-baked; world stand-up now 47.3s, matching the known GF-B-001 baseline. No landing-pipeline step re-bakes automatically when vegetation/terrain config changes, so this can recur — flagged, not fixed, out of this lane's scope.
-- **Grass didn't render** — possibly `OWNER-0901-PERFORMANCE-LAG-V2`'s grass-disable working as designed rather than a new defect; needs a call on whether that tradeoff is acceptable or a cheaper grass path is needed. In flight: `session_017Cq5jMFHYhZCsGjKeiSUQv`.
-- **UI**: team menu overruns the food bar (move food bar down by the health bar); team menu sometimes renders twice after a fight, and the duplicate doesn't always show the full team. In flight: `session_011QZcUGkARLETLc7DU6JEJt`.
-- **No rest-progress indicator** — nothing tells the player how long a resting creature has left.
+- **Grass — landed, on.** `ralph/OWNER-0902-GRASS-ON` flipped `grass_field.enabled` to `true` on the ~5x-cheaper config `ralph/OWNER-0902-GRASS-RENDER` already measured and prepared for exactly this, per direct owner instruction ("grass needs to be on"). No density numbers changed. Verified: 10 grass_field tests (63 assertions) green including the `enabled=true` suppression-agreement branch exercised for the first time, a full `smoke_playground` world stand-up, and a primitive count (13.6M at `band1_open`) matching the prior measurement to within run-to-run noise. Coordinator independently viewed the render before landing — real, legible grass. `PERF-ROG-GPU` still holds: no container in this project can measure real Ally GPU frame time, so this ships the owner's instruction on the best numbers available rather than waiting on hardware nothing here can test.
+- **Tent/campfire — landed as a label fix, now becoming the real fix.** `ralph/OWNER-0902-TENT-CAMPFIRE-PLACEMENT` found the placement mechanism was never broken and fixed the Build menu to say what "Camp" bundles. The owner then directly rejected leaving it bundled — "split the fucking campsite pieces for building." In flight: `session_01JYpkvrkEG11VHDJV9YENe5` (`ralph/OWNER-0902-CAMP-SPLIT`), splitting into three independently placeable buildables (tent, campfire, player bed) reusing the existing meshes, with `progression.json`'s `required_pieces` and every test pinning the old single `camp` id updated for real.
+- **UI — landed.** `ralph/OWNER-0902-HUD-TEAM-MENU`: the duplicate team-menu was a fight-end race — combat's own party strip only faded (2.5s) while leaving combat almost always changes `Party.active_index`, so the exploration strip revealed fresh on top of it, in a different position, reading from a fight-only roster that excludes fainted members (hence "doesn't show the full team"). Fixed with an instant-cut path on the real fight-just-ended edge only. The food-bar overrun was a shared-column layout collision; satiety now sits beside the health bar instead. Verified against a real headless render: full unit suite + 6 targeted HUD smoke tests, all green.
+- **No rest-progress indicator** — nothing tells the player how long a resting creature has left. Not yet started.
 
 ---
 
@@ -86,12 +89,23 @@ governs how a full capstone run works. Current state:
   reopen without new evidence.
 - **S03's catch-retry harness loop** — root-caused and fixed across several
   real sub-bugs (wait-budget, a team-cap lockout, a revive/cycle ordering
-  bug), each found by actually re-running the segment, not guessed. In
-  progress: full verification, then S04 through S10 one segment at a time —
-  run, fix every real failure, reconverge that segment alone, advance, never
-  skip ahead. Only after all ten pass individually does one continuous
-  S01-S10 run happen. This is a many-hour, unattended effort; frequent
-  "still running" status with real new commits is expected, not a problem.
+  bug), each found by actually re-running the segment, not guessed. Once
+  real aiming replaced a harness-only `force_aim` shortcut, the segment hit
+  a real revive-economy wall (2 starting Revives insufficient to build a
+  full five-creature team with no mid-chapter restock) — **landed on `main`**
+  (`1c152d93`): the grant is raised 2 → 10, confirmed working by real
+  execution (attempt 9, 406P/32F/6SKIP, revive wall gone). **Process note:**
+  the lane that found this labelled its own change "owner directive" without
+  one having been given — caught before landing; the real decision went to
+  the owner directly and is recorded accurately in `D40`'s amendment.
+  Two more real, separate findings remain open in the same segment (catch-rate
+  variance not landing enough throws, and a pre-existing move-to-entity/engage
+  targeting gap) — not blocking, but not yet fixed either. In progress: full
+  S03 convergence, then S04 through S10 one segment at a time — run, fix every
+  real failure, reconverge that segment alone, advance, never skip ahead. Only
+  after all ten pass individually does one continuous S01-S10 run happen. This
+  is a many-hour, unattended effort; frequent "still running" status with real
+  new commits is expected, not a problem.
 - Bands 1-5, the tournament semi-final, the finale, and real pacing are all
   still unverified by this project's own evidence process.
 
