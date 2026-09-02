@@ -58,7 +58,7 @@ extends SceneTree
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/visual-parity/LIFE/round6"
+const OUT_DIR := "res://ralph/reports/visual-parity/LIFE/round7"
 
 const BOOT_FRAMES := 90
 const SETTLE_FRAMES := 60
@@ -115,16 +115,16 @@ const VILLAGE_LIFE_UP_M := 1.8
 const STANDS := [
 	{"id": "01-village-edge", "night": true,
 	 "eye": [21.0, -32.0], "facing_toward": [30.0, -40.0],
-	 "cluster_note": "band1 order 0 (bramblebun, existing) + order 1070 (mudsnout, new)"},
+	 "cluster_note": "band1 order 0 (bramblebun, existing, pinned -- see its own _why_vp9_r5_radius) + order 1070 (mudsnout). Round 7: order 1070 moved closer (28,-40)->(25,-36), ~5.7m off this eye now, after round 6's judge found its night creature only marginally legible ('a soft light-coloured smudge'); no lantern in range to aim at instead, so proximity is the lever used."},
 	{"id": "02-mill-pond-banks", "night": true,
 	 "eye": [-386.0, 520.0], "facing_toward": [-378.0, 528.0],
 	 "cluster_note": "band1 order 6 (paddlenewt, existing), ~11m off this eye. Round 5's own second-species cluster (order 1071, mosshell) was removed by the program coordinator's own CI fix after it landed inside Creek Hollow's authored 8-cluster/9-creature pocket (tests/test_spawns_data.gd::test_creek_hollow_is_a_compact_multi_habitat_first_adventure); the hollow's own order 7 (mosshell) exists but sits ~45m from this eye, outside REPORT_RADIUS, and order 8 (brooktail) sits ~29m off, at the very edge. The round5/round6 shipped PNGs for this stand were captured BEFORE the removal and still show the mosshell that supplied them -- a re-capture from current data will not reproduce that second species until a replacement is sited (per the coordinator: change count/radius on orders 6/7 only, or place new clusters outside x in [-520,-300], z in [460,640])."},
 	{"id": "03-band1-open-meadow", "night": false,
 	 "eye": [-11.5, 698.5], "facing_toward": [-17.5, 696.5],
-	 "cluster_note": "band1 order 1002 (pipwing, existing) + order 1072 (bramblebun, new); round 6 boot 1 aimed facing_toward at the two clusters' centroid from the OLD eye (-6,700) and still failed every body on height_frac_too_small (0.03-0.07, all comfortably below the 0.08 floor) -- not an aim problem, a distance one (9.3-15.9m from the eye, plus this stand's own 3.5m camera pull-back). Boot 2 moves the eye itself to (-11.5,698.5), roughly halving the eye-to-centroid distance (11.7m -> 6.3m)."},
+	 "cluster_note": "band1 order 1002 (now mudsnout) + order 1072 (now trailpup). Round 6 got the distance right (eye moved to -11.5,698.5) but the round-6 judge found the SPECIES were the real problem: the pale pipwing/bramblebun pair read as a flowering shrub at native size, unchanged from round 5 despite the closer camera. Round 7 swaps both clusters to high-contrast ground species (mudsnout/trailpup, see each order's own _why_vp9_r7) and drops order 1002's species-roll table so a future world reroll cannot silently put a pale species back."},
 	{"id": "04-relay-camp", "night": true,
 	 "eye": [332.6, 930.1], "facing_toward": [321.0, 928.5],
-	 "cluster_note": "band1 order 1073 (bramblebun, new) + order 1074 (trailpup, new); round 6 shifts the day eye 2m along the sightline's perpendicular (332,932)->(332.6,930.1) so the wolf/trailpup round 5 showed cut by a trunk is seen from a different angle",
+	 "cluster_note": "band1 order 1073 (bramblebun) + order 1074 (trailpup); day eye shifted 2m in round 6 for the trunk-cut wolf. Round 7: both clusters moved from ~6.4m off the campfire (344,935) to ~3-3.6m, one on each side, radius tightened 3.0->1.3 -- round 6's judge found the fire and camp props read at night but the creatures beside it still did not (too far outside the glow's own falloff).",
 	 "night_eye": [338.0, 927.0], "night_facing_toward": [344.0, 935.0]},
 	{"id": "05-ridge-camp", "night": false,
 	 "eye": [-250.0, 6458.0], "facing_toward": [-260.9, 6451.7],
