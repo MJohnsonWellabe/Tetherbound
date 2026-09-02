@@ -901,3 +901,56 @@ mitigation. A real fix would need the sky shader to compensate for off-axis proj
   exposure, camera, light-in-frame, config mutation). The repeat test — the same dawn
   frame rendered four times in one boot — was running when the budget ran out.
 - Tests and smokes not run this round.
+
+## Repeat test: ACCUMULATION FALSIFIED — and a possible regression from this round
+
+The same dawn frame, re-applied four times in one boot, nothing else changed:
+
+| pass | mean RGB | R−G |
+|---|---|---|
+| dawn #1 (right after night) | 145.7/49.5/42.5 | +96.1 |
+| dawn #2 | 145.7/49.5/42.5 | +96.2 |
+| dawn #3 | 145.7/49.6/42.5 | +96.2 |
+| dawn #4 | 145.7/49.6/42.5 | +96.2 |
+
+**Flat.** No drift across four applications, so the red is not accumulation. Combined
+with the earlier bit-identical re-render, it is not sequence position either. Six
+explanations are now falsified by measurement: weather roll, exposure, camera,
+light-in-frame, config mutation, and accumulation.
+
+The single-frame bisect's clean **−12.8** is now the sole outlier against everything
+else. It should be treated as suspect — most likely that tool was not rendering the
+framing it claimed — rather than as evidence about the defect.
+
+### ⚠ POSSIBLE REGRESSION INTRODUCED THIS ROUND — verify before merging
+
+The same run's sanity frames read:
+
+| preset | this run | round 3, same stand |
+|---|---|---|
+| day | R−G −27.2 | −25.3 (consistent) |
+| golden | R−G −19.6 | −16.3 (consistent) |
+| **night** | **R−G +81.1** | **−50.9** |
+
+Night has flipped from cool to red at this stand, and the only change between those
+two renders is **this round's per-time `aerial_fade_colour` commit**. Day and golden
+are unaffected, which fits: night is the preset whose aerial colour changed most
+(inheriting day's `#7f8c9e` before, now its own `#2f3f63`).
+
+Checked and NOT the cause: `world_look.gd::_as_colour` returns a proper `Color` for a
+`#rrggbb` string, and `playground_world.set_aerial_fade_colour` is guarded and typed —
+no obvious conversion or type fault.
+
+Two readings, and I could not separate them before the budget ran out:
+1. The per-time aerial genuinely regressed night, in which case the night value or the
+   push needs fixing before this merges.
+2. The test tool's "night (sanity)" framing differs from `03-rise-overlook-night`, in
+   which case night was already red at that framing and the aerial change is innocent.
+
+**The cheap discriminator:** re-render `03-rise-overlook` at night with the four
+`times.*.environment.aerial_fade_colour` keys temporarily removed. If night returns to
+≈ −50, this round caused it. That is one render and it should happen before the merge.
+
+Note this also connects the two symptoms: if night at *some* framings is red, then
+"dawn is red at 03 and clean at 01" and "night is red at the moon stand and clean at
+03" may be one defect selecting on framing, not two.
