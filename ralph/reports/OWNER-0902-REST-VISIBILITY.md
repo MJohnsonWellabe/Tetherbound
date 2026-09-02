@@ -186,7 +186,16 @@ the string and colour of an existing `Label` changed on each.
   open, and the pause menu's Creatures tab. See `shots/_diag/rest_bed_panel.png`
   and `shots/_diag/rest_team_menu.png` (not committed — diagnostic capture
   output, same convention every other `tools/capture_*.gd`/`tools/_capture_*.gd`
-  script in this repo already follows).
+  script in this repo already follows). First render caught the row-width
+  clipping bug above; re-rendered after the fix and confirmed both frames
+  read cleanly, full text visible, no overlap with anything else on screen.
+- Two pre-existing production smoke tests re-run for real after all edits
+  landed, both still green: `tests/smoke_gate_a_rest_torch.gd` ("Gate A
+  rest/torch smoke passed" — its own controller-driven creature_bed +
+  bedroll placement, assignment, and rest-completion path, independent of
+  this task's own probe) and `tests/smoke_menu_focus.gd` ("menu focus smoke
+  test passed" — confirms `creature_bed_panel.gd`'s row-focus/stick
+  navigation still works after the width change).
 
 ## Commands to reproduce
 
