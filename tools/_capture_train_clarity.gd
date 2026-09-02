@@ -107,6 +107,18 @@ func _run() -> void:
 
 	# Frame 1: the objective hint card, over terrain, at the size and
 	# position a player actually meets it at.
+	#
+	# The reveal only fires on a TEXT CHANGE (`_update_objective()`), and by
+	# this point in boot the real Tournament autoload has already polled the
+	# seeded five-creature party and naturally advanced the tracked line to
+	# this exact rung on its own -- so setting the same text again is not a
+	# change and the card never reveals. Force a real change first (a
+	# different placeholder), settle, THEN set the real text so the reveal
+	# fires the way it does for an actual player crossing into this rung.
+	_hud.call("_hide_objective_hint_card")
+	_game.set("objective_hint", "")
+	_game.set("objective_text", "")
+	await _settle(3)
 	_game.set("objective_hint", hint)
 	_game.set("objective_text", label)
 	await _settle(6)
@@ -119,14 +131,18 @@ func _run() -> void:
 	await _shoot("01-objective-hint-card")
 
 	# Frame 2: Halda's own voice, the same guidance, as a player actually
-	# reads it mid-conversation (not the opening line -- the SECOND line is
-	# the one that names the concrete actions).
+	# reads it mid-conversation. `tournament_halda_train` is three lines --
+	# "All five. Good..." / "Half that lot have never taken a real hit..." /
+	# "Feed them. Rest them... Get them to level five, then we'll talk." --
+	# and the THIRD is the one item 12 is actually about (the concrete
+	# actions), so two advances, not one.
 	var started: bool = bool(_dialogue.call("start", "tournament_halda_train"))
 	if not started:
 		_fail("tournament_halda_train did not start on the real DialoguePanel")
 	else:
-		_dialogue.call("advance")
-		await _settle(6)
+		for i in 2:
+			_dialogue.call("advance")
+			await _settle(3)
 		if not bool(_dialogue.call("is_open")):
 			_fail("DialoguePanel closed before the capture -- fewer lines than expected")
 	await _shoot("02-halda-train-dialogue")
