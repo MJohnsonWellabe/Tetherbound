@@ -3216,7 +3216,20 @@ func _tint_node(node: Node, colour: Color) -> void:
 ## chamber -- the two yards are open to the sky and their lights are seen from
 ## the meadow, so they are part of the approach's budget even though they sit
 ## within the footprint. The braziers this pass adds are counted too.
-const EXTERIOR_OMNI_BUDGET := 18
+## VP-HALL-FIX-3 (2026-09-02): `10-stronghold-courtyard-night` measured at
+## frame mean 2.84/255 -- near-black, no practical light -- and a prior round's
+## retune of the existing courtyard ambient (`lights` entry at [0,32], see its
+## own comment) moved that number by 0.03, i.e. nothing. The design's §7
+## ceiling of 18 was already spent exactly (4 gate fire + 1 gate sky-fill + 4
+## flank fire + 2 flank sky-fill + 1 courtyard ambient + 6 braziers), so there
+## was no slot left to add a real source without either cutting one of those
+## or raising the ceiling. Raised 18 -> 22 to buy the four new courtyard
+## braziers `hall_occupation.braziers` now carries (one per corner of the 22 x
+## 28 yard, all `shadow_enabled = false` like every light `_build_hall_fire`
+## builds, so this is a total-omni raise only -- the harder shadow-casting
+## cap `docs/PERFORMANCE_BUDGET.md` states (<=4 reaching any one point) is
+## unaffected, since it stays at zero here as everywhere else in this file.
+const EXTERIOR_OMNI_BUDGET := 22
 func _report_light_budget() -> void:
 	var exterior := _fires.size()
 	for entry: Variant in _config.get("lights", []) + _config.get("lights_flanks", []):
@@ -4188,8 +4201,14 @@ func _reclaim_batch(holder: Node3D, band: Dictionary, rng: RandomNumberGenerator
 ## toward Blender +Y; the glTF Y-up export maps that to **-Z**. So a prop at yaw
 ## 0 faces -z (back down the hall toward the causeway), yaw -90 faces +x, yaw 90
 ## faces -x, yaw 180 faces +z.
+## VP-HALL-FIX-2 (2026-09-02): `retrofit_skyline` is the SAME list, kept as
+## its own config key only so the roofline-breaking pieces (mounted above the
+## gate towers' own tops, per that block's own `_why`s in stronghold.json)
+## stay documented apart from the ground-level occupation layer above them --
+## it is not a second placement path, just a second array concatenated in.
 func _build_tether_retrofit() -> void:
-	var list: Array = _occupation().get("retrofit", []) as Array
+	var list: Array = (_occupation().get("retrofit", []) as Array) \
+		+ (_occupation().get("retrofit_skyline", []) as Array)
 	if list.is_empty():
 		return
 	var holder := Node3D.new()

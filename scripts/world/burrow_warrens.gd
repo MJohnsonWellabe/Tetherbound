@@ -90,6 +90,16 @@ const ROCK_NORMAL := preload("res://assets/environment/terrain/Rock030_NormalGL.
 const ROCK_UV_SCALE := 0.46
 const ROCK_TINT := Color("#fff2e0")
 
+## EXT-06-STAIN. See `warrens_boulder_stain.gdshader`'s own header: the
+## StandardMaterial3D `_wear_the_cave_stone()` builds normally reads one flat
+## albedo tint across an entire boulder, so a rock's own ground-contact base
+## and its up-facing shoulder were drawn identically. This shader wears the
+## SAME `ROCK_ALBEDO` photo (hand-rolled triplanar, not a new texture) and
+## blends a dark stain toward each piece's own foot and moss onto its own
+## up-facing surfaces. Mound/skirt/entrance boulders only -- never the
+## interior rock pass, see `_wear_the_cave_stone()`'s own routing.
+const BOULDER_STAIN_SHADER := preload("res://shaders/warrens_boulder_stain.gdshader")
+
 ## T1-WARRENS-EXT. The site skirt's flora (`_dress_skirt_flora`) reuses the
 ## SAME fix `vegetation.json`'s own `bushes` layer already vetted for this
 ## exact model -- Bush_Common's leaf material (`Leaves_TwistedTree`) ships a
@@ -790,7 +800,16 @@ func _build_approach_apron() -> void:
 	var mouth_width := float(site.get("apron_mouth_width_m", base_width))
 	var far_width := float(site.get("apron_far_width_m", base_width))
 	var outer_z := _mouth_outer_z()
-	var run := 6.0
+	# EXT-06-STAIN, reviewer evidence "a visibly dark soil apron 6-8m out from
+	# the mouth, with the ground carpet suppressed there". `run` used to be a
+	# fixed 6.0 with no config hook at all; `apron_run_m` makes it tunable and
+	# is raised to 7.5 -- inside the asked 6-8m band -- so BOTH what this loop
+	# already does reach further out: the dark trodden `_floor_box` ramp
+	# itself, and the `CLEAR_RADIUS_META` grass-suppression circle below,
+	# whose own radius formula already scales off `run`. Same mechanism, same
+	# log line ("planted N pieces of ground cover"), just told to cover more
+	# ground -- not a second, competing suppression system.
+	var run := float(site.get("apron_run_m", 6.0))
 	var steps := 10
 	var end_local := _floor_y - 0.6
 	if _world != null and _world.has_method("ground_height_at"):
@@ -1447,17 +1466,73 @@ func _varied_tint(base: Color, rng: RandomNumberGenerator, variation: float) -> 
 ## actually wears -- so the number a site configures is the swing a frame
 ## shows. Both default to a no-op (0.0 / null), so `_place_interior_rock`'s
 ## own two-argument call is unaffected by this change.
+##
+## EXT-06-STAIN: `stain_base_y`, when finite, routes exterior pieces through
+## `_apply_boulder_stain()` instead -- a per-boulder shader blend toward
+## `mound.stain_colour` near this piece's OWN placement height and
+## `mound.moss_colour` on its OWN up-facing surfaces (see
+## `warrens_boulder_stain.gdshader`'s own header), rather than the one flat
+## tint every boulder wore before. Defaults to NAN (no-op): the interior
+## caller (`_place_interior_rock`) never passes it and is byte-for-byte
+## unaffected, and `mound.stain_enabled: false` falls every exterior caller
+## back to the old flat material too.
 func _wear_the_cave_stone(node: Node, tint: Color, exterior := false,
-		variation := 0.0, rng: RandomNumberGenerator = null) -> void:
+		variation := 0.0, rng: RandomNumberGenerator = null, stain_base_y := NAN) -> void:
 	var base := _rock().lerp(tint, 0.35)
 	if variation > 0.0 and rng != null:
 		base = _varied_tint(base, rng, variation)
+	if exterior and not is_nan(stain_base_y) \
+			and bool(_config.get("mound", {}).get("stain_enabled", true)):
+		_apply_boulder_stain(node, base, stain_base_y)
+		return
 	var stone := _material(base, 0.0, true, 1.15 if exterior else 2.2)
 	for child in _mesh_boxes_nodes(node):
 		var instance := child as MeshInstance3D
 		var mesh := instance.mesh
 		for surface in (mesh.get_surface_count() if mesh != null else 0):
 			instance.set_surface_override_material(surface, stone)
+
+
+## One shared `ShaderMaterial` per (tint, height-bucket) pair, cached in the
+## same `_materials` dict `_material()` already bounds -- `_varied_tint()`'s
+## own header states why that cache has to stay a handful of entries rather
+## than one duplicate resource per boulder, and this follows the same rule.
+## `base_y_world` is rounded to the nearest 0.4m before it enters the cache
+## key: the stain band is soft (`stain_softness_m`, default 0.5m) so a 0.4m
+## step is invisible in the render and keeps the bucket count small across a
+## mound whose boulders span maybe a dozen real heights.
+func _boulder_stain_material(base: Color, base_y_world: float) -> ShaderMaterial:
+	var mound: Dictionary = _config.get("mound", {})
+	var y_bucket := roundf(base_y_world / 0.4) * 0.4
+	var key := "stain_%s_%.1f" % [base.to_html(), y_bucket]
+	if _materials.has(key):
+		return _materials[key]
+	var stain_colour := Color(str(mound.get("stain_colour", "#2b2118")))
+	var moss_colour := Color(str(mound.get("moss_colour", "#3a4a20")))
+	var mat := ShaderMaterial.new()
+	mat.shader = BOULDER_STAIN_SHADER
+	mat.set_shader_parameter("albedo_tex", ROCK_ALBEDO)
+	mat.set_shader_parameter("uv_scale", ROCK_UV_SCALE)
+	mat.set_shader_parameter("base_tint", Vector3(base.r, base.g, base.b))
+	mat.set_shader_parameter("base_y_world", y_bucket)
+	mat.set_shader_parameter("stain_colour", Vector3(stain_colour.r, stain_colour.g, stain_colour.b))
+	mat.set_shader_parameter("moss_colour", Vector3(moss_colour.r, moss_colour.g, moss_colour.b))
+	mat.set_shader_parameter("stain_height", float(mound.get("stain_height_m", 0.85)))
+	mat.set_shader_parameter("stain_softness", float(mound.get("stain_softness_m", 0.5)))
+	mat.set_shader_parameter("moss_normal_min", float(mound.get("moss_normal_min", 0.5)))
+	mat.set_shader_parameter("moss_strength", float(mound.get("moss_strength", 0.6)))
+	mat.set_shader_parameter("roughness_value", 0.95)
+	_materials[key] = mat
+	return mat
+
+
+func _apply_boulder_stain(node: Node, base: Color, base_y_world: float) -> void:
+	var mat := _boulder_stain_material(base, base_y_world)
+	for child in _mesh_boxes_nodes(node):
+		var instance := child as MeshInstance3D
+		var mesh := instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			instance.set_surface_override_material(surface, mat)
 
 
 ## EXT-05-GROUND, second blind pass, evidence "boulders read as sitting ON
@@ -1609,7 +1684,7 @@ func _build_site_skirt(holder: Node3D, mound: Dictionary, rng: RandomNumberGener
 		if use_flora:
 			_dress_skirt_flora(art)
 		else:
-			_wear_the_cave_stone(art, tint, true, tint_variation, rng)
+			_wear_the_cave_stone(art, tint, true, tint_variation, rng, art.global_position.y)
 			_boulder_soil_collar(Vector3(local.x, ground, local.z), draw * collar_scale, soil_colour)
 		planted += 1
 	if planted > 0:
@@ -1713,13 +1788,20 @@ func _build_entrance_dressing() -> void:
 				# marks the two ground-contact jambs (not the elevated brow,
 				# `y_m` present) for the soil collar below -- the doorway's own
 				# framing stones planting into visible dirt rather than grass.
-				tint = base_tint.darkened(clampf(0.32 + variation, 0.32, 0.78))
+				#
+				# EXT-06-STAIN: bounds moved again, [0.32,0.78] -> [0.40,0.86].
+				# The reviewer's own words this round: the eye should land on
+				# "a dark hole" from the approach stand. At `tint_variation`
+				# 0.42 the old bounds already clamped these pieces to 0.74 --
+				# short of their own 0.78 ceiling -- so raising the ceiling
+				# alone would have changed nothing; the FLOOR had to move too.
+				tint = base_tint.darkened(clampf(0.40 + variation, 0.40, 0.86))
 				is_dark_ground_jamb = not spec.has("y_m")
 				# Deterministically dark already -- no further random swing,
 				# or a lightening step could undo "always darkest on purpose".
-				_wear_the_cave_stone(art, tint, true)
+				_wear_the_cave_stone(art, tint, true, 0.0, null, art.global_position.y)
 			else:
-				_wear_the_cave_stone(art, base_tint, true, variation, rng)
+				_wear_the_cave_stone(art, base_tint, true, variation, rng, art.global_position.y)
 			_keep_rock_out_of_the_rooms(art)
 			if is_dark_ground_jamb:
 				_boulder_soil_collar(Vector3(offset.x, y + sink, offset.z),
@@ -1854,7 +1936,7 @@ func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGe
 	# `_wear_the_cave_stone()` rather than being pre-applied here -- see that
 	# function's own header for why the old order silently discarded 65% of
 	# the configured swing before it ever reached a material.
-	_wear_the_cave_stone(art, tint, true, variation, rng)
+	_wear_the_cave_stone(art, tint, true, variation, rng, art.global_position.y)
 
 
 ## CONTENT-0828. The one thing `_place_rock()` never checked: whether the

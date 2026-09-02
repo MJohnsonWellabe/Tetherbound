@@ -305,8 +305,10 @@ static func _slab_mask(seed_value: int) -> ImageTexture:
 		for y in _MASK_SIZE.y:
 			var v := float(y) / float(_MASK_SIZE.y - 1)
 			var n := noise.get_noise_2d(x, y) * 0.5 + 0.5
-			# A defined top: ~4% of the slab's height, not 30%.
-			var vertical := smoothstep(top - 0.005, top + 0.042, v)
+			# T1-HALL-4: the ~4% band above still read as a flat-edged grey plate
+			# in the 400m/200m Hall long shots -- widened so the top dissolves
+			# over ~11% instead of terminating in a near-straight line.
+			var vertical := smoothstep(top - 0.02, top + 0.09, v)
 			# ... and a base that still settles into ground haze rather than
 			# ending on a sill.
 			vertical *= 1.0 - 0.42 * smoothstep(0.80, 1.0, v)
