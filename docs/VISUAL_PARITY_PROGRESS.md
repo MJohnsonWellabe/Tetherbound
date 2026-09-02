@@ -212,6 +212,11 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Check-in #30 (19:00 UTC) — VP10 one-shot: structure visibility ranges ON brings band1_open inside the proxy
+
+- `structure_visibility_ranges: true` measured once (`VP10-perf/perf_visibility_ranges_on.txt`, same tool/settle/resolution as the merged-tree baseline): **band1_open 7659 → 6847 draws** (≤ 7500), primitives 11.76M → 11.72M (≤ 12.0M), hall_approach 3844 → 3847 (≤ 4000), village_high 3165 → 2880. Survey stands re-rendered with the flag ON (`VP10-perf/survey_vis_on/`, sheet `_sheet_off_vs_on.png`): coordinator's own read — no structure missing or popping at any of the five stands; pixel diffs 15–29 % are grass/cloud motion only. The agent is running `test_scatter_perf_budget` + `test_grass_field` before committing the flag KEPT ON with `DECISION-visibility-ranges.md`. **VP10: PASS on the proxy budget** (all three views inside) once that commit lands; on-device FPS remains the owner-side measurement.
+- PR #21 full CI run 3735 in progress on `ae6c2a3d`. VP11 recapture (`RES=1920x1080 tools/vp_capture.sh ralph/reports/visual-parity/VP11-final`) queued behind the agent's test run so it captures the final tree.
+
 ### 18:50 UTC — traversal smoke green serially; Warrens round-12 evidence committed
 
 - `smoke_traversal` re-run serially on the merged tree (nothing else on the Godot slot): **exit 0**, "traversal: OK — the ground is solid across the playground, the perimeter holds … no severed spoke's blocker lies across a route the player is asked to walk". The earlier exit 1 came from a three-process contended run and is recorded as contention, not a tree defect.
