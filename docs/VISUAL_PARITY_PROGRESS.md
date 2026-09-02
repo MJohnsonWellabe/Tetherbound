@@ -212,6 +212,21 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### 14:56 UTC — SHIPPED TO MAIN (PR #20 merged, `b03cdb94`); VP10 first measurement on the merged tree
+
+- **PR #20 merged into `main`** at 14:56 UTC as merge commit `b03cdb94` (CI run 33642046946 on `1d1a2f74`: success after a 25-minute run — the code jobs ran, this was not a docs-only skip). Main now carries VP1–VP9 as merged so far (WORLD r1–r6, GROUND/VILLAGE, CORRIDOR r1–r6, PLACES r1–r8, LIFE r1–r7). The program branch is fast-forwarded onto `b03cdb94`; later lane rounds ship through a new PR the same way.
+- **VP10 measurement** (`ralph/reports/visual-parity/VP10-perf/perf_merged_1d1a2f74.txt`, `tools/perf_render_stats.gd` 1280x720 Compatibility llvmpipe, settle 120/60/20, `scatter_lod_ranges=false` — the VP2 decision `1f7b5a03`, not a merge regression):
+
+| view | draw calls | primitives | objects | budget | verdict |
+|---|---|---|---|---|---|
+| band1_open | 7659 | 11,757,306 | 6593 | ≤ 7500 draws / ≤ 12.0M prims | prims PASS (2 % headroom); **draws 2 % OVER** (+148 vs the VP2 candidate's 7511) |
+| hall_approach | 3844 | 4,332,388 | 4185 | ≤ 4000 draws | PASS |
+| village_high | 3165 | 8,622,824 | 3306 | — | recorded |
+
+  The band1_open draw-call growth since VP2 comes from VP3/VP4/VP9 content (hero trees, band layer anchors, authored wild clusters) and main's own additions. VP10 action: a targeted draw-call pass at band1_open (candidates: grass carpet `cull_tile_m` 24 → 32 trades ~40 % fewer carpet tiles for a small primitive rise — primitives have only 2 % headroom, so it must be measured; instancer region-cell batching for the near layers; prop material sharing), proven by re-measurement plus a pixel-diff/judge on the survey stands so nothing visible is lost. Assigned to the WORLD session after its round 7 (existing session, no new lane).
+- Guard on the merged tree (`vp10_guard.log`): `smoke_art`, `smoke_wild_streaming`, `smoke_stronghold` exit 0; `smoke_warrens`, `smoke_relay` running.
+- Lane deliveries in flight at 14:56: WORLD r7 pushed code + 6 frames (`f4d3cf26`, sun disc / dawn saturation / night seam / depth) — full stands+survey set and CI commit still to come; CORRIDOR r7 pushed the station-14 fix (`52bd8f1a`, camp dressing moved 7 m toward the route) — frames still to come; PLACES r9 in progress.
+
 ### Check-ins #21–#22 (13:45–14:30 UTC) — WORLD r6 / LIFE r7 (final) / PLACES r8 judged and merged; PR #20 open; bake fresh on the main-merged tree
 
 - **Program branch** `1d1a2f74` (pushed 14:26): main `371605b6` re-merged (scatter conflicts → ours + re-bake), then `origin/claude/vp-world` (`c7b773b7`, rounds 4–6), `origin/claude/vp-life` (`aac8cc90`, round 7 final), `origin/claude/vp-places` (`ebe7d826`, round 8), then the fresh bake (`825,759` placements; bake inputs unchanged by the three lane merges, verified with `git diff 371605b6..HEAD` on `terrain_playground.json` + vegetation files). Local guard on the merged tree: scatter/veg/perf-budget/spawns/band-content 52 tests 0 failed, `smoke_playground` green, `smoke_traversal` in the chain.
