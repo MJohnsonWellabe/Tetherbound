@@ -1,0 +1,436 @@
+{
+  "id": "S03CT",
+  "title": "S03 catch-loop single-attempt test (fast iteration slice of S03, not part of the real segment chain)",
+  "lane": "journey",
+  "evidence_lane": "logic",
+  "_comment": "NOT part of the S01-S10 evidence chain. A truncated copy of S03 steps S03-01..S03-38a (its boot/load/setup plus exactly ONE catch attempt), captures dropped, so a chip-down/catch-mechanics change can be checked in under a minute instead of running all 451 steps of S03 (~20+ minutes). Regenerate from S03.json by hand whenever S03s setup steps change; this file is scratch tooling, not authoritative evidence.",
+  "steps": [
+    {
+      "id": "S03-01",
+      "title": "how this segment is entered",
+      "action": "note",
+      "args": {
+        "text": "Section B: this segment's entry save is `S02-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. Section B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-02",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer"
+    },
+    {
+      "id": "S03-03",
+      "title": "seed slot 4 from the previous segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S02-exit.json"
+      },
+      "expected": "Section B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
+    },
+    {
+      "id": "S03-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused and Load Game enabled, because a save now exists"
+    },
+    {
+      "id": "S03-05",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses its first button; without focus a controller cannot reach Load Game at all"
+    },
+    {
+      "id": "S03-06",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "S03-07",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+    },
+    {
+      "id": "S03-08",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
+    },
+    {
+      "id": "S03-09",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+    },
+    {
+      "id": "S03-09a",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-13 (extending RIG-11 to the segments RIG-11's own fix never reached): a load restores the party and deploys nothing -- encounter_director.gd::can_challenge() returns false on a null/undeployed ally before checking whether a trainer is already beaten, so trainer_npc.gd falls back to its 'defeated' conversation line instead of the 'challenge' line that leads to combat. No trainer fight downstream of a load -- including this segment's Bryn practice match -- can start without this. creature_recall (RB) summons the active creature so this segment's fights can actually start."
+    },
+    {
+      "id": "S03-10",
+      "title": "the load restored the village arrival",
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          10.0,
+          -10.0
+        ],
+        "within": 12.0
+      },
+      "expected": "S02 ended at the village center; the load has to bring the player back there, not to a fresh spawn"
+    },
+    {
+      "id": "S03-11",
+      "title": "the party travelled",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 2
+      },
+      "expected": "the starter and the first catch: two of five",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+    },
+    {
+      "id": "S03-12",
+      "title": "the ladder's next rung is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "village_tools"
+      },
+      "expected": "Section E.5 objective 6/27 `village_tools`, 'Meet Tam in the village and take his tools.'"
+    },
+    {
+      "id": "S03-13",
+      "title": "Section H cadence for this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: this segment is outside the mandatory 0.5 Hz list, so it 'runs at 0.1 Hz (one frame per 10 s) plus event-forced frames, to keep the record continuous without drowning the run directory'. The vocabulary has no background-recorder action; recorded here as a gap."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-14",
+      "title": "open the Map tab",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "Section E.5: 'full-map usefulness (open Map tab, zoom in/out with LT/RT, verify pan/centering behavior and zoom persistence across close/reopen)'. The `map` shortcut opens the shell straight onto the tab"
+    },
+    {
+      "id": "S03-15",
+      "title": "the Map tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_map"
+      },
+      "expected": "input_context names the live tab: menu_map"
+    },
+    {
+      "id": "S03-17",
+      "title": "zoom the map in",
+      "action": "press",
+      "args": {
+        "control": "map_zoom_in",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 10
+      },
+      "expected": "Section E.5: zoom in/out with LT/RT"
+    },
+    {
+      "id": "S03-18",
+      "title": "zoom the map back out",
+      "action": "press",
+      "args": {
+        "control": "map_zoom_out",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 10
+      },
+      "expected": "Section E.5: zoom in/out with LT/RT"
+    },
+    {
+      "id": "S03-19",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S03-20",
+      "title": "reopen the Map tab",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "Section E.5: 'zoom persistence across close/reopen' -- the level the map reopens at is the finding"
+    },
+    {
+      "id": "S03-21",
+      "title": "close the shell again",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S03-22",
+      "title": "Section E.5 nav note -- village_tools",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 6/27 `village_tools`. Wording: 'Meet Tam in the village and take his tools.' It names WHAT (Tam, tools) and a WHERE only as specific as 'in the village'; it does not say which building or which side. Player-visible information: the fresh-save reveal shows the village and its roads, and GF-18-MAP-01 is the record of what that map actually offers -- whether Tam is a pin at all. Route decision: cross the village square westward along the spine, because the objective names no landmark and the square is the only place the map marks. Reasoned from GF-18-MAP-01 and GF-03-VILLAGE-01 (S02). Operator: record time-to-route-decision and whether the map named Tam."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-23",
+      "title": "walk to Tam",
+      "action": "move_to",
+      "args": {
+        "at": [
+          8.0,
+          -16.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-02: village traversal, Tam (8,-16) -> Oskar (22,-6) -> Mira (19,-1) -> tournament ground (20,12)",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-24",
+      "title": "talk to Tam",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the ladder's rung: 'take his tools'"
+    },
+    {
+      "id": "S03-25",
+      "title": "hear him out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 16,
+        "settle_frames": 20
+      },
+      "expected": "his conversation gives the axe and pickaxe"
+    },
+    {
+      "id": "S03-26",
+      "title": "Tam's tools were given",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "tam_tools_given"
+      },
+      "expected": "`tam_tools_given` is the rung's own contract flag"
+    },
+    {
+      "id": "S03-28",
+      "title": "the chain advanced",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "tournament_build_team"
+      },
+      "expected": "Section E.5 objective 7/27 `tournament_build_team`"
+    },
+    {
+      "id": "S03-29",
+      "title": "Section E.5 nav note -- tournament_build_team",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 7/27 `tournament_build_team`. Wording: 'Catch and raise a team for the village tournament.' It names WHAT and no WHERE at all -- there is nowhere named to go. Player-visible information: the minimap and the world itself; wild creatures are visible individuals on the meadow south-east of the village (the practice meadow the opening already used). Route decision: return to the practice meadow because it is the only ground the player has already seen wild creatures on. Reasoned from GF-18-MAP-01 and GF-03-VILLAGE-02. Operator: record whether an objective that names no place left the player uncertain, and for how long."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-25w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "S03-30",
+      "title": "walk out to the practice meadow",
+      "action": "move_to",
+      "args": {
+        "at": [
+          30.0,
+          -40.0
+        ],
+        "budget_frames": 3150,
+        "close_enough": 4.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "`data/config/tournament.json`'s `entry.min_party_size` is 3: 'a team, not a favourite'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-31",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "Section F's POI set for the dead-travel meter"
+    },
+    {
+      "id": "S03-32a",
+      "title": "walk to a live bramblebun (attempt 1)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600
+      },
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
+    },
+    {
+      "id": "S03-32a2",
+      "title": "challenge it (attempt 1)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+    },
+    {
+      "id": "S03-33a",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S03-35a",
+      "title": "trim it with quick attacks (do not kill it)",
+      "action": "press_until",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "settle_frames": 30,
+        "max_presses": 10,
+        "check": {
+          "check": "enemy_hp_fraction",
+          "at_most": 0.3
+        }
+      },
+      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
+      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
+    },
+    {
+      "id": "S03-36a",
+      "title": "begin the aim",
+      "action": "press_until",
+      "args": {
+        "control": "interact",
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S03-36a2",
+      "title": "track the bramblebun until the reticle is on it (attempt 1)",
+      "action": "track_aim",
+      "args": {
+        "budget_frames": 240,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
+    },
+    {
+      "id": "S03-37a",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
+    },
+    {
+      "id": "S03-38a",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S03CT-END",
+      "title": "end of the single-attempt catch test",
+      "action": "note",
+      "args": {
+        "text": "One catch attempt only, for fast iteration on the chip-down/catch mechanics. Check party_size (S03-11 confirmed 2 at entry) and the last catch_result/party grew observation in telemetry/events.jsonl for the outcome."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

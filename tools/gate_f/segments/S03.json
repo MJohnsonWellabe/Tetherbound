@@ -391,15 +391,19 @@
     {
       "id": "S03-35a",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 3,
-        "settle_frames": 30
+        "settle_frames": 30,
+        "max_presses": 10,
+        "check": {
+          "check": "enemy_hp_fraction",
+          "at_most": 0.3
+        }
       },
-      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
-      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
+      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
+      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
     },
     {
       "id": "S03-36a",
@@ -592,15 +596,19 @@
     {
       "id": "S03-35b",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 3,
-        "settle_frames": 30
+        "settle_frames": 30,
+        "max_presses": 10,
+        "check": {
+          "check": "enemy_hp_fraction",
+          "at_most": 0.3
+        }
       },
-      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
-      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
+      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
+      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
     },
     {
       "id": "S03-36b",
@@ -793,15 +801,19 @@
     {
       "id": "S03-35c",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 3,
-        "settle_frames": 30
+        "settle_frames": 30,
+        "max_presses": 10,
+        "check": {
+          "check": "enemy_hp_fraction",
+          "at_most": 0.3
+        }
       },
-      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
-      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
+      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
+      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
     },
     {
       "id": "S03-36c",
@@ -994,15 +1006,19 @@
     {
       "id": "S03-35d",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 3,
-        "settle_frames": 30
+        "settle_frames": 30,
+        "max_presses": 10,
+        "check": {
+          "check": "enemy_hp_fraction",
+          "at_most": 0.3
+        }
       },
-      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
-      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
+      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
+      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
     },
     {
       "id": "S03-36d",
@@ -1195,15 +1211,19 @@
     {
       "id": "S03-35e",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 3,
-        "settle_frames": 30
+        "settle_frames": 30,
+        "max_presses": 10,
+        "check": {
+          "check": "enemy_hp_fraction",
+          "at_most": 0.3
+        }
       },
-      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
-      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
+      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
+      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
     },
     {
       "id": "S03-36e",
@@ -1396,15 +1416,19 @@
     {
       "id": "S03-35f",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 3,
-        "settle_frames": 30
+        "settle_frames": 30,
+        "max_presses": 10,
+        "check": {
+          "check": "enemy_hp_fraction",
+          "at_most": 0.3
+        }
       },
-      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
-      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
+      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
+      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
     },
     {
       "id": "S03-36f",
@@ -1597,15 +1621,19 @@
     {
       "id": "S03-35g",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 3,
-        "settle_frames": 30
+        "settle_frames": 30,
+        "max_presses": 10,
+        "check": {
+          "check": "enemy_hp_fraction",
+          "at_most": 0.3
+        }
       },
-      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
-      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
+      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
+      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
     },
     {
       "id": "S03-36g",
@@ -1798,15 +1826,19 @@
     {
       "id": "S03-35h",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 3,
-        "settle_frames": 30
+        "settle_frames": 30,
+        "max_presses": 10,
+        "check": {
+          "check": "enemy_hp_fraction",
+          "at_most": 0.3
+        }
       },
-      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
-      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
+      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
+      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
     },
     {
       "id": "S03-36h",
@@ -1999,15 +2031,19 @@
     {
       "id": "S03-35i",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 3,
-        "settle_frames": 30
+        "settle_frames": 30,
+        "max_presses": 10,
+        "check": {
+          "check": "enemy_hp_fraction",
+          "at_most": 0.3
+        }
       },
-      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
-      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
+      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
+      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
     },
     {
       "id": "S03-36i",
@@ -2200,15 +2236,19 @@
     {
       "id": "S03-35j",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press",
+      "action": "press_until",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
-        "times": 3,
-        "settle_frames": 30
+        "settle_frames": 30,
+        "max_presses": 10,
+        "check": {
+          "check": "enemy_hp_fraction",
+          "at_most": 0.3
+        }
       },
-      "expected": "the target is WEAKENED, not defeated -- a defeated wild cannot be caught. Mirrors S02-36/37, the opener this chapter's own first catch is measured on.",
-      "observation": "RIG, 2026-08-31. `combat_quick` x20 KILLED the target. This lane's first real S03 measured it: four fights staged, zero catch_throw events, and every aim step reporting input_context=world -- because by the time the aim ran the bramblebun was already defeated and the fight was over, and a defeated wild cannot be caught. Twenty quick attacks at ~10 damage each is ~200 damage into a 106 HP level-2 opponent. The long fights also cost the player's side: Moss fainted in the third one, after which encounter_director correctly refused every later engage with 'Ripplet is out of the fight.' and the whole ladder cascaded. The replacement is S02's own PROVEN opener -- one charged attack then three quick -- which S02 measured landing the target at 66.7 of 106.2 (63%) and catching on the second throw. Weakening is the point of this step; killing is the failure of it."
+      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
+      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
     },
     {
       "id": "S03-36j",

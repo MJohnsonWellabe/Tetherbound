@@ -4459,6 +4459,30 @@ func _step_assert(args: Dictionary) -> Dictionary:
 			var want := str(args.get("prefix", ""))
 			var have := str(_probe.call("input_context"))
 			return {"ok": have.begins_with(want), "actual": "input_context=%s (wanted prefix %s)" % [have, want]}
+		"enemy_hp_fraction":
+			# S03's catch ladder chipped a fixed `times: 3` regardless of how
+			# much that actually left on the target -- measured across a real
+			# run (gate-f-run-20260902T053310Z-s03enginefix) at 57%-75% of max
+			# HP depending on the creature's own defence, not the "sliver"
+			# catching.json's steep hp_curve actually rewards (hp_factor goes
+			# from ~0.10 at full HP toward 1.0 near zero). A live threshold
+			# lets `press_until` chip exactly as far as needed instead of a
+			# guessed hit count -- pairs with `combat_quick` the same way
+			# `combat_running` pairs with an engage press.
+			var mgr := _probe.call("combat_manager") as Node
+			var foe: RefCounted = mgr.call("enemy") if mgr != null and mgr.has_method("enemy") else null
+			if foe == null:
+				return {"ok": false, "actual": "no live enemy to read HP from"}
+			var max_hp := float(foe.get("max_hp"))
+			if max_hp <= 0.0:
+				return {"ok": false, "actual": "enemy max_hp is %.1f, cannot fraction" % max_hp}
+			var frac: float = float(foe.get("hp")) / max_hp
+			var ok := true
+			if args.has("at_most"):
+				ok = ok and frac <= float(args["at_most"])
+			if args.has("at_least"):
+				ok = ok and frac >= float(args["at_least"])
+			return {"ok": ok, "actual": "enemy hp fraction %.3f (%.1f/%.1f)" % [frac, float(foe.get("hp")), max_hp]}
 		"combat_running":
 			# T2-GATEF-RUN6 / RIG-26. The engage steps in this protocol asserted
 			# that `interact` was INJECTED, not that a fight received it, so a
