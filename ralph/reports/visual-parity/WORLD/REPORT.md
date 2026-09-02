@@ -564,3 +564,49 @@ adapted tool — which froze at a different point in its sequence — did not hi
 **This is the top item for round 3**, ahead of further tuning: the golden-hour
 frame is unjudgeable, so the sun-halo (600/350) and golden-exposure changes
 remain unverifiable through this tool.
+
+## Ground/sky frames — golden is FINE; the black frame is a TOOL bug
+
+`round2/ground/` + `_sheet_ground.png`, 960x540, four stands across day / golden /
+night (plus cloudy / fog / rain at band2).
+
+| frame | mean RGB | R-G | nearwhite% |
+|---|---|---|---|
+| 00-village-golden | 64.8 60.9 37.6 | **+3.9** | 0.00 |
+| 01-band1-opening-golden | 71.2 58.3 35.3 | **+12.9** | 0.00 |
+| 02-band2-stone-root-golden | 24.7 20.9 8.6 | **+3.8** | 0.00 |
+| 03-band3-crossing-golden | 59.3 52.0 33.5 | **+7.3** | 0.00 |
+| 00-village-day | 98.6 113.9 60.5 | -15.3 | 0.00 |
+| 00-village-night | 6.1 15.0 20.0 | -8.9 | 0.00 |
+
+**All four golden stands render, and all four are warm** (R-G positive, against
+negative for every day stand), with `nearwhite` 0.00% everywhere — no blown-out
+sun blob at any time of day.
+
+This settles the regression above: **golden's configuration is correct, and
+`05-spawn-low-sun`'s black frame is a defect in `tools/survey.gd`, not in
+`data/config/art.json`.** Golden renders correctly through
+`_capture_ground_and_sky.gd` on the identical config, in the same pipeline run,
+minutes apart.
+
+A concrete difference to start from in round 3: the two tools freeze the clock by
+DIFFERENT mechanisms. `_capture_ground_and_sky.gd` calls `set_process(false)` on
+`_look`/`_weather` once at boot; `tools/survey.gd` uses the newer
+`set_clock_frozen(true)`. The working tool uses the older mechanism. That is where
+to look first — and it means round 1's `set_clock_frozen` may itself be implicated,
+despite the four day stands surviving it.
+
+**Round-3 recommendation changes accordingly: fix the tool, do NOT retune golden.**
+Retuning golden against a black frame would be tuning against an artefact.
+
+### What this verifies
+
+- **Sun halo (falloff 600 base / 350 golden)** — `nearwhite` 0.00% at every stand
+  and every time of day, including the golden stands where the sun is in view.
+  No blown white mass. Consistent with the intended 5.5 deg / 7.2 deg halo, though
+  disc diameter in pixels was not measured this round.
+- **Golden exposure 0.65** — warm without blowing out, at four independent stands.
+- **Dawn** — still NOT verified; this tool captures day/golden/night, not dawn.
+- **Moon glow (night falloff 80)** — still NOT verified. The night stands are very
+  dark (mean 6.1 / 3.8 / 5.5) with no blown pixels, but nothing here confirms the
+  moon is in frame, and round 1 established it sits outside these headings.
