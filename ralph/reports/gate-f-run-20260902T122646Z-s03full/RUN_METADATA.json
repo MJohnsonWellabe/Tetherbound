@@ -1,0 +1,13 @@
+{
+  "run_id": "gate-f-run-20260902T122646Z-s03full",
+  "purpose": "Full S03 run against the combined fix set: ally-engage-gap fix, chip_to_floor, throw_until_caught, and the party_size>=5 early-exit skip.",
+  "candidate_sha": "72a0966a7247894e38d217dbe2e1758f61738104",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "resolution": [1920, 1080],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S02-exit.json carried over from gate-f-run-20260901T220548Z-s03fix/S02",
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}
