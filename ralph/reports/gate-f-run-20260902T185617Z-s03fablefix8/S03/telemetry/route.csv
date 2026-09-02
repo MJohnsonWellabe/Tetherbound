@@ -1,0 +1,6 @@
+t,wall,x,y,z,heading,region,clock_hour,weather,frame_ms,physics_ms,dead_travel_m,nearest_poi_dist_m,input_context
+0.75,2026-09-02 18:56:18,0.00,0.00,0.00,0.0,grandpas_village,0.00,,31.510,12.328,0.00,,title
+0.90,2026-09-02 18:56:18,0.00,0.00,0.00,0.0,grandpas_village,0.00,,31.510,12.328,0.00,,title
+1.62,2026-09-02 18:56:58,12.33,0.90,-10.18,-85.6,grandpas_village,8.01,clear,14.654,2.155,0.00,9.63,world
+2.12,2026-09-02 18:56:58,12.33,0.90,-10.18,-85.6,grandpas_village,8.03,clear,14.654,2.155,0.00,9.63,world
+2.62,2026-09-02 18:56:59,12.33,0.90,-10.18,-85.6,grandpas_village,8.05,clear,20.177,375.010,0.00,9.63,world
