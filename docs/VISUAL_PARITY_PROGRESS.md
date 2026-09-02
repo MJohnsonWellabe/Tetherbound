@@ -212,6 +212,22 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Check-in #15 (10:38 UTC) — CORRIDOR r3 and PLACES r6 judged and merged
+- **CORRIDOR round 3** (lane folder `round4/`, `dd74ce6c`): anchor RNG isolation with a shipped-config unit test
+  (`test_anchors_do_not_perturb_corridor_fill_or_any_other_placement`), station 02 rebalanced, station 06 restored
+  by the isolation alone, `--only` comma-list bug fixed. Judge `CORRIDOR/JUDGE-round3.md`: canopies read as
+  foliage at all 8 stations, 06 exceeds baseline, 04 near keyart quality, **Bar A "yes" except station 07** (lost
+  its foreground copse; below baseline), signpost text overflow at 08. Merged `b08c0ecd`, re-bake in progress.
+  Round 4 dispatched 10:40: 8 new stations Band 2 far → Band 3 river/relay → Band 4 ironwood → Band 5 approach →
+  Hall gate (befores first), plus the 07 copse and signpost addendum.
+- **PLACES round 6** (`900f3bb7`): Warrens mound re-materialled as earth, overhang wedge removed, one rock family
+  at the threshold, den stability restored (1.8 %), courtyard-night mean 12.45 (floor at the trainer 2.4×), gate
+  sentries/sconces, storm slabs halved. Judge `PLACES/JUDGE-round6.md`: courtyard night reads, banners sampled
+  oxblood, floating prop gone, sconces/windows read; still failing: mound reads as boulders + a new white patch
+  over the doorway, Hall collapses past 100 m, storm band extent unchanged, no identifiable sentry. Merged
+  `98d50074`. Round 7 dispatched 10:46: doorway patch + earth dome, Hall tower height / distance darkening,
+  storm band ≤ 15 % of sky, sentries on the wall walk; camps list prepared for round 8 (VP5).
+
 ### Coverage audit against the brief (10:22 UTC, owner asked "is VP1–9 everything?")
 Not everything. Remaining after the current lane rounds:
 - **VP4** — only village → Band 2 walked; bands 3–5 to the Hall approach still need corridor stations + judge.
