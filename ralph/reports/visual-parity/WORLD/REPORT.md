@@ -1009,3 +1009,51 @@ fix are compatible precisely because the freeze landed in between.
 varying ONLY the settle length after `apply_time("dawn")` — 24 vs 200 vs 1000 frames. If
 R−G converges back toward the clean ≈ −12 as settle grows, this is confirmed and the
 tooling fix is right.
+
+## Round-4 tests — 1 failure, reported verbatim
+
+`run_tests.gd --only=test_grass_field.gd,test_scatter_rules.gd`:
+
+```
+55 tests, 1116716 assertions, 1 failed
+
+test_scatter_rules.gd :: test_ecology_core_clusters_without_changing_the_count
+  — expected true, got false
+    (core gating did not cluster: 100m-bin CV 2.483 gated vs 2.334 plain)
+```
+
+`smoke_art.gd`: **PASS** — "art: OK — models loaded, sized to their colliders, and the
+meadow is dressed." Notably it also confirms the round-2 canopy fix still holds at the
+asset level: `vegetation LOD  CommonTree_1 survives retint: [10, 4]`, and 384,640 props
+across 35 batches.
+
+On the failure: the test builds its own ecology block inline and asserts
+`cv_b > cv_a * 1.15`. It measured a ratio of **1.064** — so core gating DOES cluster,
+just not by the required 15% margin. It exercises the `corridor_fill` path.
+
+**Probably not this lane's round-3 `ridge_bias` change** (0.75 → 0.4): `ridge_bias` feeds
+`_clump_centre`, which is called only from the origin-square `clumps` path and never from
+`_place_corridor_fill`. That was checked when the change was made. But it has NOT been
+proven by re-running the test at the old value, so it cannot be fully excluded — that is
+one cheap test run, not a render, and it should happen before this is attributed
+elsewhere.
+
+## Round-4 stands — the aerial plumbing is a silent no-op
+
+9 stands in `round4/stands/` + `_sheet_stands.png`. Deltas against round 3, where only
+the aerial colours changed:
+
+| frame | Δ mean RGB | expected |
+|---|---|---|
+| `03-rise-overlook-night` | +0.2 / +0.6 / +0.8 | large darkening (`#7f8c9e` → `#2f3f63`) |
+| `03-rise-overlook-golden` | ~0 | warming (→ `#c9a98a`) |
+| `01-spawn-outward-night` | **+1.6 / +2.8 / +1.4** | ambient lift — **works** |
+
+The ambient change (art.json → `world_look` → `Environment`) lands; the aerial change
+(art.json → `world_look` → terrain `ShaderMaterial`) does not. Same file, same commit.
+The uniform exists (`terrain_ground.gdshader:135`) and the setup path warns about unknown
+keys, so the constant IS applied at scene build — this is specific to the runtime push,
+whose setter returns silently when the cached material is null, and the terrain material
+is built after `world_look` first applies.
+
+Both red frames persist (+96.5, +78.2), unmoved by any colour edit.
