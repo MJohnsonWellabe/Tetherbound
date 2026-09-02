@@ -21,11 +21,16 @@ extends SceneTree
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/visual-parity/LIFE/round1"
+const OUT_DIR := "res://ralph/reports/visual-parity/LIFE/round2"
 
 const BOOT_FRAMES := 90
-const SETTLE_FRAMES := 40
-const ARRIVE_FRAMES := 18
+## ROUND 2: raised from 40/18. The round-1 verdict asked explicitly to "wait
+## for the cluster to be streamed in and settled (encounter streaming
+## radius) before the shutter" -- these eyes now stand 8-15m from their
+## cluster, well inside activation range, but a tighter eye also means less
+## margin for a creature still mid-spawn-settle to be caught between frames.
+const SETTLE_FRAMES := 70
+const ARRIVE_FRAMES := 30
 const POSE_FRAMES := 4
 const FOV := 70.0
 const EYE_UP := 1.70
@@ -34,22 +39,33 @@ const EYE_UP := 1.70
 ## cluster this pass sited/confirmed near each, not by eye. `look` is that
 ## cluster's own authored `centre` (data/config/bands/*/spawns.json), so a
 ## miss here means the population moved, not that the frame was aimed wrong.
+##
+## ROUND 2 (program coordinator, round-1 verdict): the placement work landed
+## but the evidence did not show it -- village-edge and relay-camp read as
+## "tiny figures"/"pale blobs" from the round-1 25-40m eyes, the pond eye
+## stood IN the water looking at the mill instead of on the bank looking at
+## the water species, and band1-open-meadow's eye landed inside a mesh
+## (solid green frame, near clip inside geometry). Every `at` below is now
+## 8-15m from its `look` cluster centre -- close enough that a 2-4 creature
+## cluster reads at real size -- rather than the 25-40m the brief's PLACEMENT
+## instruction asked for (that number sited the wild cluster in the world
+## relative to the named stand; it was never a camera-composition distance).
 const STANDS := [
 	{"id": "01-village-edge", "night": true,
-	 "at": [14.0, -25.5], "look": [30.0, -40.0],
-	 "_why": "village.json's own practice-meadow path marker [19.5,-25.5], looking at band1 spawns.json order 0's bramblebun cluster centre (30,0,-40) -- the Practice Meadow teaching-fight cluster, ungated so it reads day and night alike."},
+	 "at": [21.0, -32.0], "look": [30.0, -40.0],
+	 "_why": "12m from band1 spawns.json order 0's bramblebun cluster centre (30,0,-40) -- the Practice Meadow teaching-fight cluster, ungated so it reads day and night alike. Round 1's eye (14,-25.5) stood 21.6m off and the cluster read as two tiny figures."},
 	{"id": "02-mill-pond-banks", "night": true,
-	 "at": [-368.0, 545.0], "look": [-374.0, 538.0],
-	 "_why": "pond centre (-395,545) per the brief; look point is the midpoint of order 6 (paddlenewt, -378,528) and order 7 (mosshell, -371,563), the two water-edge clusters within 25-30m of the pond centre. Ungated, day and night."},
+	 "at": [-386.0, 520.0], "look": [-378.0, 528.0],
+	 "_why": "ON THE BANK, not in the water -- round 1's eye (-368,545) rendered as open water with the mill in the distance and no creature in frame at all. This eye is `_capture_locations.gd`'s own '02-mill-pond standing' point, confirmed there by raycast to sit on the bank (-16.5 against pond level -17.0). Look is order 6's paddlenewt cluster centre (-378,528), 11.3m off, along the shoreline rather than across the water at the mill."},
 	{"id": "03-band1-open-meadow", "night": false,
-	 "at": [10.0, 685.0], "look": [-20.0, 700.0],
-	 "_why": "band1 open meadow (0,700) per the brief, looking at order 1002's pipwing cluster centre (-20,700), the corridor cluster nearest that point."},
+	 "at": [-6.0, 700.0], "look": [-20.0, 700.0],
+	 "_why": "round 1's eye (10,685) rendered solid green -- the near clip plane inside a mesh, not the open meadow. This eye stands due east of order 1002's pipwing cluster centre (-20,700) on the same z as the cluster itself (open corridor ground, not the off-axis approach that clipped something), 14m off."},
 	{"id": "04-relay-camp", "night": true,
-	 "at": [344.0, 935.0], "look": [314.0, 927.5],
-	 "_why": "band1 props.json's relocated trail-camp clearing (344,935), looking at order 1032's bramblebun cluster (314,927.5), 31m off -- and order 1053's night-gated duskhush (337,965) stands within the same frame's depth for the night pass."},
+	 "at": [325.0, 930.0], "look": [314.0, 927.5],
+	 "_why": "11.3m from order 1032's bramblebun cluster (314,927.5) -- round 1's eye (344,935) stood 30.9m off and read as 'two pale blobs at 60m'. Order 1053's night-gated duskhush (337,965) still stands within this frame's depth for the night pass."},
 	{"id": "05-ridge-camp", "night": false,
-	 "at": [-236.0, 6472.0], "look": [-260.9, 6451.7],
-	 "_why": "band4 props.json ridge_patrol_camp centroid (-235.9,6471.7) per the brief, looking at this pass's new order-4076 burrowback cluster (-260.9,6451.7), 32m southwest of the camp and off the watchtower spur."},
+	 "at": [-250.0, 6458.0], "look": [-260.9, 6451.7],
+	 "_why": "12.6m from this pass's own order-4076 burrowback cluster (-260.9,6451.7) -- round 1's eye (-236,6472) stood 32.1m off, off the watchtower spur the same as before."},
 ]
 
 var _field: RefCounted = null
@@ -205,37 +221,34 @@ func _shoot_stand(stand: Dictionary, suffix: String) -> void:
 ## `EncounterDirector.spawn_wild()` mechanism `_capture_creature_animation_
 ## world.gd` uses to put a creature in the world, not the party/save-state
 ## `summon_active_creature()` path, which needs a live save to have a party
-## in it at all. Staged at Grandpa's yard (`GrandpaHouse.marker("outside")`),
-## the opening's own establishing spot, with the player standing in for "the
-## trainer" the brief names.
+## in it at all.
+##
+## ROUND 2 (program coordinator): round 1 staged this at Grandpa's yard and
+## burned three re-renders fighting the house's own roof/wall colliders
+## (`_capture_locations.gd`'s own header calls this exact trap out -- a
+## raycast near a building routinely hits ITS collider, not the ground), and
+## the surviving frame showed only the creature's own back with no trainer
+## in shot. Moved to the open Practice Meadow instead -- the same ground
+## `01-village-edge` already renders clean, confirmed clear of geometry by
+## that very frame -- and reframed as the coordinator's "website hero" ask:
+## trainer and starter side by side, three-quarter view from behind and to
+## the side, both fully in frame, facing out over the meadow toward the
+## grass knoll `01-village-edge-day` shows on the horizon.
 func _shoot_starter() -> void:
-	var house: Node = _world.get_node_or_null(^"GrandpaHouse")
-	var eye3: Vector3
-	var away := Vector2(0.0, -1.0)
-	if house != null and house.has_method("marker"):
-		eye3 = house.call("marker", "outside")
-		var door: Vector3 = house.call("marker", "door")
-		var raw := Vector2(eye3.x - door.x, eye3.z - door.z)
-		if not raw.is_zero_approx():
-			away = raw.normalized()
-	else:
-		print("  WARN no GrandpaHouse.marker('outside'); falling back to the village well")
-		eye3 = Vector3(10.0, 0.0, -15.5)
-		eye3.y = _surface(Vector2(eye3.x, eye3.z))
+	var base := Vector2(21.0, -32.0)
+	var landmark := Vector2(60.0, -60.0)
+	var facing := (landmark - base).normalized()
+	var side := Vector2(-facing.y, facing.x)
 
-	_player.global_position = eye3 + Vector3(0.0, 0.4, 0.0)
+	var player_ground := _surface(base)
+	_player.global_position = Vector3(base.x, player_ground + 0.4, base.y)
 	if _player is CharacterBody3D:
 		(_player as CharacterBody3D).velocity = Vector3.ZERO
 	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
 
-	# Creature stands beside the player, ALONG the outward axis from the
-	# house rather than at a fixed world offset -- door/outside are a local
-	# +x pair, so a hardcoded (+1.6,+1.2) world nudge is only "beside" the
-	# player for whichever way the house happens to face.
-	var side := Vector2(-away.y, away.x)
-	var spot := eye3 + Vector3(side.x * 1.8, 0.0, side.y * 1.8)
-	spot.y = _surface(Vector2(spot.x, spot.z))
+	var spot2 := base + side * 2.2
+	var spot := Vector3(spot2.x, _surface(spot2), spot2.y)
 	var wild: Node3D = _director.call("spawn_wild", "terrapup", spot, {
 		"name": "Shot_starter_terrapup",
 		"wander_radius": 0.0,
@@ -247,23 +260,17 @@ func _shoot_starter() -> void:
 	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
 
-	# Third attempt (away*14 + side*4) walked the raycast into ANOTHER
-	# building's wall -- the yard is not open ground for 14m in every
-	# direction either. Reverting to the second attempt's geometry
-	# (side*6 + away*1.5), the best of the three: it stands close enough
-	# behind the creature to read clearly (its own back fills the middle
-	# of frame, house and open yard behind it) without landing on any
-	# collider. First: further along `away` landed on the house's own roof
-	# ("outside" is only ~8.7m off the wall, grandpa_house.gd).
-	var camEye := Vector2(eye3.x, eye3.z) + side * 6.0 + away * 1.5
-	var camTarget := Vector2((eye3.x + spot.x) * 0.5, (eye3.z + spot.z) * 0.5)
+	var mid := (base + spot2) * 0.5
+	var camEye := mid - facing * 5.5 + side * -3.0
+	var camTarget := mid + facing * 10.0
 	_frame(camEye, _surface(camEye), camTarget, _surface(camTarget))
 	_hide_huds()
 	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
 	_save("06-starter-beside-trainer-day")
-	print("  06-starter-beside-trainer  day  terrapup at (%.0f,%.0f)" % [spot.x, spot.z])
+	print("  06-starter-beside-trainer  day  player(%.0f,%.0f) terrapup(%.0f,%.0f)" % [
+		base.x, base.y, spot2.x, spot2.y])
 	wild.queue_free()
 	await process_frame
 
