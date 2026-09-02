@@ -3,16 +3,19 @@
 **Branch** `claude/vp-places` · **start commit** `e3aba7d7` (VP0 merge of the GROUND+VEG lane code)
 **Owns** VP5 (village / tournament / camps), VP6 (Warrens exterior), VP7 (Relay), VP8 (Meadows Hall)
 
-## Current state at a glance (after round 7)
+## Current state at a glance (after round 8)
 
 | | state |
 |---|---|
 | `hall_approach` draw calls | **3848 / 4000** — inside budget (was 4331 at baseline) |
 | guard smokes | `smoke_stronghold`, `smoke_warrens`, `smoke_relay` pass; `smoke_traversal` fails on a pre-existing South Bridge walk-around outside this lane |
-| courtyard night | root cause found — brazier `attenuation` 1.4, not energy; now 1.0 at range 27. **Frame mean is ±26 % noisy (brazier flicker)** so single-frame comparisons are unreliable |
+| courtyard night | **FAILING — median luminance 1.49 vs a ≥ 8 target** across 3 renders. Mean (9.47) and median (1.49) disagree 6×: a few brazier pools lift the mean while over half the frame is black. Mean was the wrong metric all along. The earlier ±26 % flicker claim does NOT reproduce (means span 9.30–9.54) |
 | Hall silhouette | **decisive at 400 m** — storm band cleared and +30 % exterior height; 100 m holds; **200 m still weak** |
 | storm band | moved back +150 m, alpha 0.4 — approach-stand sky coverage 22.7 % → **13.3 %**, under the 15 % target |
-| Warrens | scale corrected after an overshoot; **doorway pale patch is BACK on the new dome pieces — open, top priority** |
+| Warrens | doorway pale patch resolved at the root: both it and the right-side "panel" were the same `_wear_as_wall_stone()` path, now deleted. Brow [87.6,93.0,87.9], panel [88.4,89.3,74.2] |
+| relay | pad and colonnade fixed — pad [195.6,191.4,163.6] → **[98.1,89.8,69.1]**; walls/gate/deck/console all weathered |
+| sentries | **not identifiable**; the applied 1.5× body scale is a change to the game, not the frame — needs a decision |
+| camps | before-frames captured at matched settings; 4 objects added for *reason*, density headroom deliberately unspent |
 | banners | proven oxblood by the judge (`#5e1117`/`#6a241d`). Carry the finding: ACES tonemapping makes the picked hex misleading — `#5a1a1a` renders as RGB(119,15,24) |
 | round 8 | camps plan prepared at `ROUND8-CAMPS-PLAN.md`, not started |
 | Relay | occupied and cabled, but **its round-3 changes have never been rendered** |
