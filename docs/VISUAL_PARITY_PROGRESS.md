@@ -108,9 +108,13 @@ Tool: `tools/perf_render_stats.gd`, 1280x720, Compatibility, llvmpipe (structura
 | VP2 iteration 0: cull_tile_m=16 + far thinning/reach caps/tile LOD + VEG lod ranges on | band1_open | 8633 | 21,287,781 | 7612 | coordinator 04:23 UTC, settle 120/60/20, `WORLD-coord-fast/perf_render_stats.txt` |
 | same | village_high | 4376 | 18,087,761 | 4474 | same |
 | same | hall_approach | 4335 | 13,219,939 | 4680 | same |
-| VP2 iteration A: tuft_count 210k, field_radius 56, fade_start 34, far_thin_floor 0.12, tile LOD 14/28 m, stones 45k/reach 20, cover tiers ~0.6x, far_cover fade 38–60, tree/grove lod 420/460, deadfall 260, rocks 220 | band1_open, hall_approach | measuring | | | coordinator |
+| VP2 iteration A (superseded before measuring by main's owner-decided density) | — | — | — | — | — |
+| VP2 iteration B: main's shipped density (75k tufts, 4 blades, 25k stones, 6k/6k/15k tiers) + cull tiles 16 m + far thinning/reach/tile LOD + VEG lod ranges (trees 700/grove 800) | band1_open | 8593 | 12,583,284 | 7573 | coordinator 04:52 UTC, `VP2-perf/perf_iterB.txt` |
+| same | village_high | 4408 | 9,386,569 | 4504 | same |
+| same | hall_approach | 4424 | 4,627,194 | 4769 | same |
+| VP2 iteration C: B + trees/grove/deadfall/rocks lod 420/460/260/220 + cull_tile_m 24 | all three | measuring | | | coordinator |
 
-Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw calls ≤ 4000. **Iteration 0 misses both** (21.3M; 4335).
+Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw calls ≤ 4000. **Iteration 0 misses both** (21.3M; 4335). **Iteration B: primitives within 5% of budget (12.58M), hall draw calls still over (4424).**
 
 ## Judge history
 
