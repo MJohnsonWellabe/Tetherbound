@@ -70,8 +70,14 @@
       "_comment_corridor_fill": "VEG-CORRIDOR: the main canopy fills the corridor at the band table's own rate -- see corridor_bands above. VEG-SITING: `trail_bias` sites most of that fill beside the authored routes instead of anywhere in the corridor's 2048m-wide box -- docs/reviews/band2/round-05 measured that a uniform box draw put zero kept clumps near any of Band 2's own eight survey viewpoints, all of which stand ON or beside the trail, so a 4x density multiplier moved nothing there. `trail_offset_min/max` keeps the copse off the worn path itself (path_standoff/path_factor still gate individual instances) while staying inside the ~20m clump_radius plus walking-distance that reads as 'forest beside the trail' rather than a treeline on the horizon. TUNABLE.",
       "corridor_fill": {
         "density_scale": 6.0,
-        "_comment_ecology": "VP3: see scatter_rules.gd::_ecology_gate. salt 7001 is the shared tree-family field (trees/grove core, saplings/bushes edge, flowers/drygrass open); salt 7101 is the independent lush-drift field for the ground carpet. Count-preserving: moves clumps, never removes them.",
-        "ecology": {"salt": 7001, "wavelength": 140.0, "band": "core", "gamma": 2.5, "contrast": 0.85},
+        "_comment_ecology": "VP3 round 1 (2026-09-02, VEG lane): see scatter_rules.gd::_ecology_gate. Contrast raised toward 1.0 so the grove/clearing split actually reads -- the first bake at 0.85 was never rendered. `under` (bushes) accepts the grove floor as well as its fringe; `edge` (saplings, deadfall) is the outline only; `open` (drygrass, flowers) takes the clearings between. Wavelength 150m puts two or three groves in a 400m view.",
+        "ecology": {
+          "salt": 7001,
+          "wavelength": 150.0,
+          "band": "core",
+          "gamma": 2.4,
+          "contrast": 0.93
+        },
         "trail_bias": 0.85,
         "trail_offset_min": 15.0,
         "trail_offset_max": 65.0
@@ -83,13 +89,13 @@
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. Trees stop 0.9m of elevation above the waterline, clear of the damp shore ring. TUNABLE.",
       "min_height": -21.6,
       "_comment_scale": "A 2.5x spread inside one copse. Uniform prop scale is one of the two readable signatures of generator output, and a wood with saplings and old trees in it is the difference between a grove and a stamp.",
-      "scale_min": 0.55,
-      "scale_max": 1.35,
+      "scale_min": 0.5,
+      "scale_max": 1.45,
       "_comment_clear": "The spawn pad stays clear. The player's first sight of the game should not be the inside of a tree.",
       "clear_radius": 14.0,
       "base_scale": 1.0,
-      "lod_range": 260.0,
-      "lod_fade_margin": 40.0,
+      "lod_range": 700.0,
+      "lod_fade_margin": 90.0,
       "collides": true,
       "collision_radius": 0.6,
       "_comment_harvest_r2_3": "R2.3: the world's own scattered trees, not a second set of authored nodes on top of them -- makes the biggest single ground-cover layer double as the wood supply once harvest_node.gd's ~10 tutorial spots stop being enough. Originally 1-in-12 (0.083); HARVEST-ALL/D60 (owner directive) takes it to 1.0 -- every placed tree is harvestable, permanently, once chopped. See vegetation.gd::_mark_harvestable and harvest_permanently.",
@@ -102,20 +108,20 @@
         "Leaves_NormalTree": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
       },
       "retint": {
-        "Leaves_NormalTree": "#78c86e"
+        "Leaves_NormalTree": "#a9d18c"
       },
       "_comment_variant": "EV2: 'controlled material variants -- spring, deep and yellow-green -- not a different colour per tree' (bible sec10). Three fixed steps, one per remaining model, not per-instance jitter. Round 1 of EV2's own blind pass tried R9.4's shipped #9dcaff (`spring`) plus a straight darken (`deep`) -- both BLUE-hued multiplies (hue ~213) that land in the intended green family on Leaves.png's dark/average texels but multiply through nearly unchanged on bright highlight texels, reading as cyan/teal flecks a blind critic named directly. Round 2 fixed the hue (green-hued multiplies, hue 77-112, confirmed fleck-free by an independent second blind pass) but that pass's own close pixel inspection found the three still clustered in a 63-84 degree rendered hue band -- too narrow to read as distinguishable varieties once scene lighting compresses it further, even though the un-lit albedo maths looked separated. These values push both hue (77/96/103 after the same texture-multiply check) AND value (0.20/0.19/0.09) further apart -- `deep` in particular is now a genuinely darker tint, not just a different hue at the same brightness -- while the highlight-case check (a synthetic near-white texel) still stays inside 75-130 degrees, short of the ~150 degree line where the round-1 cyan artifact started.",
       "variant_retint": {
         "res://assets/environment/stylized_nature/CommonTree_1.gltf": {
-          "Leaves_NormalTree": "#78c86e",
+          "Leaves_NormalTree": "#a9d18c",
           "Bark_NormalTree": "#9c8268"
         },
         "res://assets/environment/stylized_nature/CommonTree_2.gltf": {
-          "Leaves_NormalTree": "#325f3c",
+          "Leaves_NormalTree": "#5f9a6c",
           "Bark_NormalTree": "#5f4a3a"
         },
         "res://assets/environment/stylized_nature/CommonTree_3.gltf": {
-          "Leaves_NormalTree": "#c4d696",
+          "Leaves_NormalTree": "#d9dd9a",
           "Bark_NormalTree": "#d4bc9e"
         }
       },
@@ -317,7 +323,54 @@
           "max_slope_deg": 26.0,
           "radius": 24.0
         }
-      ]
+      ],
+      "_comment_model_scale_vp3": "VP3: per-model size classes on top of the shared range (scatter_rules.gd `model_scale`, RNG-safe). CommonTree_1 (widest canopy) becomes the big broad form, _2 (deep-green variant) the compact one, so the three variants differ in SIZE as well as tint and a copse carries an age range rather than three tints of one silhouette.",
+      "model_scale": {
+        "res://assets/environment/stylized_nature/CommonTree_1.gltf": 1.12,
+        "res://assets/environment/stylized_nature/CommonTree_2.gltf": 0.86,
+        "res://assets/environment/stylized_nature/CommonTree_3.gltf": 1.0
+      },
+      "_comment_retexture_adjust_vp3": "VP3: `retexture_adjust` (vegetation.gd::_adjusted_texture). Leaves_NormalTree_C.png has a ZERO blue channel on every texel, so no multiply tint can ever take a canopy below HSV saturation 1.0 -- which is the whole reason two rounds of variant_retint still rendered fluorescent lime. Saturation 0.55 mixes 45% toward grey at load time (no new asset, same leaf sheet), which finally gives the tints below a blue channel to work with; the three variant colours are then re-derived so the family lands at spring / deep-cool / warm yellow-green rather than three lime values.",
+      "retexture_adjust": {
+        "Leaves_NormalTree": {
+          "saturation": 0.55,
+          "brightness": 1.05
+        }
+      },
+      "_comment_heroes_vp3": "VP3: HERO TREES, scatter_rules.gd::_place_heroes. A few lone 12-19m CommonTrees standing in the OPEN band of the shared tree field -- in the clearings between groves, on the trail, at least 90m from each other -- the landmark silhouette every reference board has and a copse of same-sized trees cannot produce. ~70 tries over the ~12km route network is roughly one every 170m of walking. TUNABLE.",
+      "heroes": {
+        "count": 70,
+        "trail_offset_min": 14.0,
+        "trail_offset_max": 40.0,
+        "spacing": 90.0,
+        "scale_min": 1.7,
+        "scale_max": 2.1,
+        "max_slope_deg": 21.0,
+        "ecology": {
+          "salt": 7001,
+          "wavelength": 150.0,
+          "band": "open",
+          "gamma": 1.6,
+          "contrast": 0.9
+        }
+      },
+      "_comment_water_edge_vp3": "VP3: the wetland form the bible asks for (sec10 'wetland, 1-2 forms near river'), without a new mesh: CommonTree_2 -- the deep-green, compact variant -- strung along the stream, river rim and pond shore at a larger scale (scatter_rules.gd::_place_water_edge). Trees at a waterline are what make a bank read as a bank rather than as meadow cut off by water. Sparse on purpose: a solid bankside wall would hide the water the frame is about.",
+      "water_edge": {
+        "per_100m": 2.2,
+        "sources": {
+          "stream": 1.0,
+          "river": 0.8,
+          "pond": 1.0
+        },
+        "offset_min": 2.0,
+        "offset_max": 14.0,
+        "models": [
+          "res://assets/environment/stylized_nature/CommonTree_2.gltf"
+        ],
+        "scale_min": 0.9,
+        "scale_max": 1.5
+      },
+      "_comment_lod_vp3": "VP3: `scatter_lod_ranges` is now TRUE in performance.json (measured with tools/perf_render_stats.gd -- see ralph/reports/visual-parity/VEG/REPORT.md), so these ranges are LIVE. Canopy layers reach far enough for a distant tree-mass read (a 400m view has trees on its horizon); the ground layers cull at ~100m where they were never resolvable, which is where the primitive saving comes from."
     },
     "grove": {
       "_comment": "The ancient twisted oaks, 15-19m and far broader. A genuinely DIFFERENT species, not the same mesh retinted \u2014 which was the previous version of this layer and exactly what the critic caught. These are the landmark trees: at twice the height of a common tree and three times the canopy, a stand of them reads from across the playground.",
@@ -336,8 +389,14 @@
       "_comment_corridor_fill": "VEG-CORRIDOR: hero trees stay rare outside the square too, so this layer's own multiplier trims the band table's rate further rather than matching it -- a landmark that repeats every few hundred metres stops being one. VEG-SITING: a lower `trail_bias` than the standard canopy -- still mostly trailside (a hero tree is most a landmark when the player actually walks near it) but a genuine landmark also reads from open ground, so a larger minority stay wherever the unbiased box draw puts them.",
       "corridor_fill": {
         "density_scale": 1.8,
-        "_comment_ecology": "VP3: see scatter_rules.gd::_ecology_gate. salt 7001 is the shared tree-family field (trees/grove core, saplings/bushes edge, flowers/drygrass open); salt 7101 is the independent lush-drift field for the ground carpet. Count-preserving: moves clumps, never removes them.",
-        "ecology": {"salt": 7001, "wavelength": 140.0, "band": "core", "gamma": 3.0, "contrast": 0.9},
+        "_comment_ecology": "VP3 round 1 (2026-09-02, VEG lane): see scatter_rules.gd::_ecology_gate. Contrast raised toward 1.0 so the grove/clearing split actually reads -- the first bake at 0.85 was never rendered. `under` (bushes) accepts the grove floor as well as its fringe; `edge` (saplings, deadfall) is the outline only; `open` (drygrass, flowers) takes the clearings between. Wavelength 150m puts two or three groves in a 400m view.",
+        "ecology": {
+          "salt": 7001,
+          "wavelength": 150.0,
+          "band": "core",
+          "gamma": 3.0,
+          "contrast": 0.95
+        },
         "trail_bias": 0.6,
         "trail_offset_min": 20.0,
         "trail_offset_max": 80.0
@@ -345,12 +404,12 @@
       "max_slope_deg": 19.0,
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. Same shoreline standoff as the standard canopy. TUNABLE.",
       "min_height": -21.6,
-      "scale_min": 0.55,
-      "scale_max": 1.0,
+      "scale_min": 0.6,
+      "scale_max": 1.15,
       "clear_radius": 22.0,
       "base_scale": 0.85,
-      "lod_range": 220.0,
-      "lod_fade_margin": 40.0,
+      "lod_range": 800.0,
+      "lod_fade_margin": 100.0,
       "collides": true,
       "collision_radius": 1.1,
       "_comment_retexture": "The pack ships `Leaves_TwistedTree_C` as a CRIMSON autumn leaf. Left alone it made the biggest trees in the meadow blood red and they dominated every frame. Warm hue has to come from the flowers, the dry grass and the golden hour, not from painting the whole canopy.",
@@ -364,19 +423,19 @@
         "Leaves_CherryBlossom": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
       },
       "retint": {
-        "Leaves_TwistedTree": "#78c86e",
-        "Leaves_CherryBlossom": "#78c86e"
+        "Leaves_TwistedTree": "#a9d18c",
+        "Leaves_CherryBlossom": "#a9d18c"
       },
       "_comment_variant": "EV2: the same 3-step spring/deep/yellow-green family as the `trees` layer (bible sec10), so the hero trees read as kin to the standard canopy rather than a fourth palette. One variant per remaining model, not per-instance jitter. CherryBlossom_3 takes the `spring` step, the same one TwistedTree_1 carried before EV2-landmark-ceiling replaced it in this species slot.",
       "variant_retint": {
         "res://assets/environment/stylized_nature/CherryBlossom_3.gltf": {
-          "Leaves_CherryBlossom": "#78c86e"
+          "Leaves_CherryBlossom": "#a9d18c"
         },
         "res://assets/environment/stylized_nature/TwistedTree_2.gltf": {
-          "Leaves_TwistedTree": "#325f3c"
+          "Leaves_TwistedTree": "#5f9a6c"
         },
         "res://assets/environment/stylized_nature/TwistedTree_4.gltf": {
-          "Leaves_TwistedTree": "#c4d696"
+          "Leaves_TwistedTree": "#d9dd9a"
         }
       },
       "_comment_anchors_of4_mound": "OF4-remainder-mound. Two stands of the hero oaks at the rise's foot, at either end of the village-facing arc. These are the tallest things in the game (8-14m placed) and they do what the common canopy cannot: give the base of a 46m landform something with a known height standing against it, so the eye can size the hill from the village square. Kept to two stands -- this layer's whole comment above is about why a landmark tree stops being one when there are forty. ALL TUNABLE.",
@@ -451,7 +510,55 @@
           "max_slope_deg": 24.0,
           "radius": 22.0
         }
-      ]
+      ],
+      "retexture_adjust": {
+        "Leaves_TwistedTree": {
+          "saturation": 0.55,
+          "brightness": 1.05
+        },
+        "Leaves_CherryBlossom": {
+          "saturation": 0.55,
+          "brightness": 1.05
+        }
+      },
+      "_comment_retexture_adjust_vp3": "VP3: `retexture_adjust` (vegetation.gd::_adjusted_texture). Leaves_NormalTree_C.png has a ZERO blue channel on every texel, so no multiply tint can ever take a canopy below HSV saturation 1.0 -- which is the whole reason two rounds of variant_retint still rendered fluorescent lime. Saturation 0.55 mixes 45% toward grey at load time (no new asset, same leaf sheet), which finally gives the tints below a blue channel to work with; the three variant colours are then re-derived so the family lands at spring / deep-cool / warm yellow-green rather than three lime values.",
+      "_comment_heroes_vp3": "VP3: the lone landmark oak -- one tall twisted tree or one broad crown at ~1.25x this layer's ceiling, in a clearing, 220m+ from the last one. See `trees.heroes`. TUNABLE.",
+      "heroes": {
+        "count": 24,
+        "trail_offset_min": 18.0,
+        "trail_offset_max": 50.0,
+        "spacing": 220.0,
+        "scale_min": 1.15,
+        "scale_max": 1.35,
+        "max_slope_deg": 20.0,
+        "models": [
+          "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+          "res://assets/environment/stylized_nature/CherryBlossom_3.gltf"
+        ],
+        "ecology": {
+          "salt": 7001,
+          "wavelength": 150.0,
+          "band": "open",
+          "gamma": 2.0,
+          "contrast": 0.95
+        }
+      },
+      "_comment_water_edge_vp3": "VP3: a few broad crowns leaning over the pond and river -- the willow read, from the pack's widest form. Very sparse.",
+      "water_edge": {
+        "per_100m": 0.5,
+        "sources": {
+          "pond": 1.0,
+          "river": 0.6
+        },
+        "offset_min": 2.0,
+        "offset_max": 10.0,
+        "models": [
+          "res://assets/environment/stylized_nature/CherryBlossom_3.gltf"
+        ],
+        "scale_min": 0.9,
+        "scale_max": 1.1
+      },
+      "_comment_lod_vp3": "VP3: `scatter_lod_ranges` is now TRUE in performance.json (measured with tools/perf_render_stats.gd -- see ralph/reports/visual-parity/VEG/REPORT.md), so these ranges are LIVE. Canopy layers reach far enough for a distant tree-mass read (a 400m view has trees on its horizon); the ground layers cull at ~100m where they were never resolvable, which is where the primitive saving comes from."
     },
     "saplings": {
       "_comment": "EV2 (bible sec10): 'young/small, 2-3 sapling forms'. No dedicated sapling mesh exists in the imported subset, and the fuller Stylized Nature MegaKit is itch.io-blocked (see EV1-remainder in BLOCKED.md) -- so this reuses CommonTree_4 and _5, the two narrowest standard-canopy forms cut from the `trees` layer above, at young-tree scale instead of medium-tree scale. Same species, a different age, not a new model -- exactly what the bible means by controlled variants rather than clutter.",
@@ -468,8 +575,13 @@
       "_comment_corridor_fill": "VEG-CORRIDOR: fills alongside the standard canopy at the band table's own rate. VEG-SITING: same `trail_bias` as `trees` above, same reasoning -- the understory belongs at the edge of the trailside copses this layer's own comment already describes, not spread independently across the whole box.",
       "corridor_fill": {
         "density_scale": 6.0,
-        "_comment_ecology": "VP3: see scatter_rules.gd::_ecology_gate. salt 7001 is the shared tree-family field (trees/grove core, saplings/bushes edge, flowers/drygrass open); salt 7101 is the independent lush-drift field for the ground carpet. Count-preserving: moves clumps, never removes them.",
-        "ecology": {"salt": 7001, "wavelength": 140.0, "band": "edge", "contrast": 0.8},
+        "_comment_ecology": "VP3 round 1 (2026-09-02, VEG lane): see scatter_rules.gd::_ecology_gate. Contrast raised toward 1.0 so the grove/clearing split actually reads -- the first bake at 0.85 was never rendered. `under` (bushes) accepts the grove floor as well as its fringe; `edge` (saplings, deadfall) is the outline only; `open` (drygrass, flowers) takes the clearings between. Wavelength 150m puts two or three groves in a 400m view.",
+        "ecology": {
+          "salt": 7001,
+          "wavelength": 150.0,
+          "band": "edge",
+          "contrast": 0.85
+        },
         "trail_bias": 0.85,
         "trail_offset_min": 12.0,
         "trail_offset_max": 55.0
@@ -478,12 +590,12 @@
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. Same shoreline standoff as the standard canopy. TUNABLE.",
       "min_height": -21.6,
       "_comment_scale": "A young CommonTree at roughly a third the height of a mature one -- 2.5-3.5m against the standard canopy's 7-9m -- read against a 1.8m trainer, not guessed.",
-      "scale_min": 0.28,
-      "scale_max": 0.45,
+      "scale_min": 0.25,
+      "scale_max": 0.5,
       "clear_radius": 12.0,
       "base_scale": 1.0,
-      "lod_range": 140.0,
-      "lod_fade_margin": 25.0,
+      "lod_range": 220.0,
+      "lod_fade_margin": 40.0,
       "collides": true,
       "collision_radius": 0.35,
       "_comment_leaf_magenta_fix": "Same magenta-canopy fix as the `trees` layer above (see its comment for the full mechanism) -- CommonTree_4/_5 share the Leaves_NormalTree material and the same full-canvas leaf-card technique, so they carried the identical green/blue/orange/magenta contamination from Leaves.png.",
@@ -493,10 +605,10 @@
       "_comment_variant": "The same two non-spring variants as the standard canopy, so the sapling layer reads as the same species at a different age rather than a third palette.",
       "variant_retint": {
         "res://assets/environment/stylized_nature/CommonTree_4.gltf": {
-          "Leaves_NormalTree": "#325f3c"
+          "Leaves_NormalTree": "#5f9a6c"
         },
         "res://assets/environment/stylized_nature/CommonTree_5.gltf": {
-          "Leaves_NormalTree": "#c4d696"
+          "Leaves_NormalTree": "#d9dd9a"
         }
       },
       "_comment_anchors_band2_floor": "BAND2-FLOOR: a blind critique of Band 2's forest floor named saplings by name as missing ('no leaf litter, undergrowth, fallen branches, saplings'). This layer's own corridor_fill already runs a rich trail-biased fill, but docs/reviews/band2/round-05 measured that random siting lands near none of Band 2's own survey viewpoints by chance -- these anchors guarantee young growth at the exact sites the critique's frames looked at, using this layer's own default models (no override needed).",
@@ -528,7 +640,27 @@
           "count": 5,
           "_why": "late-ridge: centred on harvest.json order 2004/2007 (68-76,2965-2972), tools/survey_band2.gd's 05-late-ridge-day frame."
         }
-      ]
+      ],
+      "retexture_adjust": {
+        "Leaves_NormalTree": {
+          "saturation": 0.55,
+          "brightness": 1.05
+        }
+      },
+      "retint": {
+        "Leaves_NormalTree": "#a9d18c"
+      },
+      "_comment_water_edge_vp3": "VP3: young trees crowd a bank the way they crowd a grove edge; see `trees.water_edge`.",
+      "water_edge": {
+        "per_100m": 4.0,
+        "sources": {
+          "stream": 1.0,
+          "river": 0.6,
+          "pond": 1.0
+        },
+        "offset_min": 1.0,
+        "offset_max": 9.0
+      }
     },
     "deadfall": {
       "_comment": "Dead trees and mushrooms. The dead trees are 9-13m bare silhouettes and do a job no living tree can: they break a green tree line with a grey vertical, which is most of what stops a treeline reading as a hedge.",
@@ -546,8 +678,13 @@
       "_comment_corridor_fill": "VEG-CORRIDOR: dead trees break up the corridor's own treeline the same way they do the square's. VEG-SITING: trailside like the living canopy, but MUCH milder than the living layers. Round 1 tried density_scale 4.0/trail_bias 0.7 to match `trees` -- the early-forest viewpoint rendered a horizon of five bare skeletal trunks against one living tree, the exact 'ugliest and most out-of-palette' read R9.4 already fixed once inside the square. Round 2 (1.5/0.4) still drew an independent blind critic's fire: 'the leafless dead-tree asset dominates 01, 02a, 04, and 05, while a much better leafy oak-type tree exists and is used only in 02b... the good asset exists in the build, it's simply not being scattered everywhere.' Pulled back again so a dead tree is a rare grey accent near the trail, not competing with the living canopy trail_bias is now sending far more of for the same ground. TUNABLE.",
       "corridor_fill": {
         "density_scale": 0.6,
-        "_comment_ecology": "VP3: see scatter_rules.gd::_ecology_gate. salt 7001 is the shared tree-family field (trees/grove core, saplings/bushes edge, flowers/drygrass open); salt 7101 is the independent lush-drift field for the ground carpet. Count-preserving: moves clumps, never removes them.",
-        "ecology": {"salt": 7001, "wavelength": 140.0, "band": "core", "gamma": 1.5, "contrast": 0.6},
+        "_comment_ecology": "VP3 round 1 (2026-09-02, VEG lane): see scatter_rules.gd::_ecology_gate. Contrast raised toward 1.0 so the grove/clearing split actually reads -- the first bake at 0.85 was never rendered. `under` (bushes) accepts the grove floor as well as its fringe; `edge` (saplings, deadfall) is the outline only; `open` (drygrass, flowers) takes the clearings between. Wavelength 150m puts two or three groves in a 400m view.",
+        "ecology": {
+          "salt": 7001,
+          "wavelength": 150.0,
+          "band": "edge",
+          "contrast": 0.7
+        },
         "trail_bias": 0.2,
         "trail_offset_min": 15.0,
         "trail_offset_max": 65.0
@@ -644,17 +781,18 @@
       "max_slope_deg": 20.0,
       "_comment_min_height_ev5": "OP21-19: re-anchored to the current water level. OW5D moved the pond basin (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) and Gate A then moved `water.level` itself from -22.5 to -17.0 (terrain_playground.json `_comment_gate_a_level`) to restore a rendered surface at the new basin, but this min_height floor was never re-derived against the new level -- it stayed anchored to the OLD waterline, so trees/bushes/grass grew straight through the new, shallower water. Shifted by the same +5.5m the water level moved, preserving this layer's original wading depth relative to the shoreline. A dead tree IN the pond would be a nice touch one day, but placed deliberately, not by a scatter that cannot see the water. TUNABLE.",
       "min_height": -21.6,
-      "scale_min": 0.5,
-      "scale_max": 1.0,
+      "scale_min": 0.45,
+      "scale_max": 1.15,
       "clear_radius": 26.0,
       "base_scale": 0.7,
-      "lod_range": 160.0,
-      "lod_fade_margin": 25.0,
+      "lod_range": 420.0,
+      "lod_fade_margin": 60.0,
       "collides": false,
       "_comment_count": "R9.4. Was clumps 14 / per_clump 3 / strays 20 -- 62 bare dead trees in the biome the key art board calls 'peaceful by day'. The blind critic called them 'simultaneously the ugliest and the most out-of-palette objects present' and noted they occupy about a third of frame 04 as its compositional foreground: untextured cool grey-violet tubes in a warm-lit green scene. They earn a place as occasional character, not as the meadow's most prominent vertical element. Cut to 18, held further off the village by clear_radius, and warmed out of violet by the retint so they read as weathered wood rather than ash. TUNABLE.",
       "retint": {
         "Bark_DeadTree": "#e0d2bc"
-      }
+      },
+      "_comment_scale_vp3": "VP3: widened 0.5-1.0 -> 0.45-1.15 so two dead trees in one view are not the same silhouette at the same size (JUDGE-village-pond named exactly that pair). Band moved to `edge`: a bare trunk on a grove's OUTLINE breaks the canopy line, which is its whole job; inside the core it is hidden and in the open it is the out-of-palette foreground R9.4 already cut."
     },
     "bushes": {
       "_comment": "The middle layer. Without something between grass height and tree height the ground reads as a lawn with poles on it. Ferns and broad plants included, because undergrowth banked at the base of a tree is what makes a copse read as a wood rather than as trees standing on a lawn.",
@@ -672,8 +810,15 @@
       "_comment_corridor_fill": "VEG-CORRIDOR: the understory fills at the band table's own rate. VEG-SITING: trailside, same reasoning as `trees` -- undergrowth banked at a copse's base is what makes trailside canopy read as a wood rather than trees standing on a lawn (this layer's own top comment), so it has to land where the canopy fill now concentrates, not independently across the whole box.",
       "corridor_fill": {
         "density_scale": 6.0,
-        "_comment_ecology": "VP3: see scatter_rules.gd::_ecology_gate. salt 7001 is the shared tree-family field (trees/grove core, saplings/bushes edge, flowers/drygrass open); salt 7101 is the independent lush-drift field for the ground carpet. Count-preserving: moves clumps, never removes them.",
-        "ecology": {"salt": 7001, "wavelength": 140.0, "band": "edge", "contrast": 0.7},
+        "_comment_ecology": "VP3 round 1 (2026-09-02, VEG lane): see scatter_rules.gd::_ecology_gate. Contrast raised toward 1.0 so the grove/clearing split actually reads -- the first bake at 0.85 was never rendered. `under` (bushes) accepts the grove floor as well as its fringe; `edge` (saplings, deadfall) is the outline only; `open` (drygrass, flowers) takes the clearings between. Wavelength 150m puts two or three groves in a 400m view.",
+        "ecology": {
+          "salt": 7001,
+          "wavelength": 150.0,
+          "band": "under",
+          "gamma": 2.0,
+          "contrast": 0.8,
+          "floor": 0.08
+        },
         "trail_bias": 0.85,
         "trail_offset_min": 10.0,
         "trail_offset_max": 50.0
@@ -704,8 +849,8 @@
       "scale_max": 1.0,
       "clear_radius": 9.0,
       "base_scale": 0.9,
-      "lod_range": 110.0,
-      "lod_fade_margin": 20.0,
+      "lod_range": 160.0,
+      "lod_fade_margin": 30.0,
       "collides": false,
       "_comment_retexture": "Bush_Common and Bush_Common_Flowers use the material `Leaves_TwistedTree`, whose texture the pack ships CRIMSON \u2014 it is the autumn variant of the twisted oak. Unswapped, every bush in the meadow came out blood red, and no colour multiply turns red into green. This points them at the pack's own green leaf instead.",
       "retexture": {
@@ -855,7 +1000,60 @@
           ],
           "_why": "BAND2-FLOOR: late-ridge floor toward the Band 3 seam -- centred on harvest.json order 2004/2007 (68-76,2965-2972), the ground tools/survey_band2.gd's 05-late-ridge-day frame looks at."
         }
-      ]
+      ],
+      "_comment_retint_vp3": "VP3: this layer swapped its leaf to the green sheet and then rendered it UNTINTED at full brightness -- the 'neon spherical two-tone bush' of every village frame. Same fix as the trees: desaturate the sheet at load, then a per-model tint so the four shrub silhouettes are four greens in one family (Bush_Common deep, the flowering bush mid with lilac heads matching the flower tier, ferns cooler, the broad plant paler). `Flowers` on Bush_Common_Flowers was pure Flowers.png at full brightness; pulled to the same muted lilac the flowers layer already uses.",
+      "retexture_adjust": {
+        "Leaves_TwistedTree": {
+          "saturation": 0.55,
+          "brightness": 1.0
+        },
+        "Leaves_NormalTree": {
+          "saturation": 0.55,
+          "brightness": 1.0
+        }
+      },
+      "retint": {
+        "Leaves_TwistedTree": "#7fa86a",
+        "Leaves_NormalTree": "#7fa86a",
+        "Flowers": "#c9b3d6",
+        "Leaves": "#8aa872"
+      },
+      "variant_retint": {
+        "res://assets/environment/stylized_nature/Bush_Common.gltf": {
+          "Leaves_TwistedTree": "#6a9c5e"
+        },
+        "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf": {
+          "Leaves_NormalTree": "#8fb476",
+          "Flowers": "#c9b3d6"
+        },
+        "res://assets/environment/stylized_nature/Fern_1.gltf": {
+          "Leaves": "#7ea67e"
+        },
+        "res://assets/environment/stylized_nature/Plant_7.gltf": {
+          "Leaves": "#9ab07a"
+        },
+        "res://assets/environment/stylized_nature/Plant_7_Big.gltf": {
+          "Leaves": "#8aa872"
+        }
+      },
+      "_comment_water_edge_vp3": "VP3: the reed and fern band. Plant_1 -- the blade rosette GATE-D restricted to water margins by hand anchors -- plus ferns and the broad plant, strung along every bank by arc length (scatter_rules.gd::_place_water_edge) instead of at five authored spots. This is the 'stream vegetation / wet-ground bands' line of the bible.",
+      "water_edge": {
+        "per_100m": 10.0,
+        "sources": {
+          "stream": 1.0,
+          "river": 0.5,
+          "pond": 1.0
+        },
+        "offset_min": 0.4,
+        "offset_max": 7.0,
+        "models": [
+          "res://assets/environment/stylized_nature/Plant_1.gltf",
+          "res://assets/environment/stylized_nature/Fern_1.gltf",
+          "res://assets/environment/stylized_nature/Plant_7.gltf"
+        ],
+        "scale_min": 0.6,
+        "scale_max": 1.0
+      }
     },
     "grass": {
       "_comment": "Tufts, not a ground texture. These are what make the terrain read as a meadow rather than as a painted surface, and they are the layer whose density most separates these frames from the reference \u2014 Palworld's meadows measure 3-9% featureless ground against this build's 56-66%.",
@@ -889,7 +1087,13 @@
         "_comment_density_scale_ground_layers": "GROUND-LAYERS. Deliberately DOWN, reversing this lane's own rounds 2-3. Those rounds answered 'the ground reads as one flat material' with scatter density and took the chapter from 143,630 to 532,886 placements for no measured change in the blind near-field clump count. The reason is in ralph/reports/VISUAL_WORLD_SURFACE_2026-08-23.md and it is geometric: the near field is terrain SURFACE, not somewhere a mesh can stand, so the ground's appearance is a material problem and scatter was the wrong instrument for it. With the terrain now carrying real material variation (terrain_playground.json `macro`, the drygrass and damp layers), scatter goes back to what it is good at: accent and silhouette break-up, over open readable ground. The target composition is roughly 70% open grass, 15% path/worn, 10% low accents, 5% special patches -- so the meadow needs NEGATIVE SPACE, which density was actively destroying. The siting (trail_bias) and the clustering (clump_radius, the strays/per_clump ratio) are KEPT: they cost nothing and they are what make the accents land where the player walks and read as drifts rather than sprinkle. TUNABLE, and the honest first thing to give back if the ROG Ally needs headroom.",
         "density_scale": 1.4,
         "_comment_ecology": "VP3: see scatter_rules.gd::_ecology_gate. salt 7001 is the shared tree-family field (trees/grove core, saplings/bushes edge, flowers/drygrass open); salt 7101 is the independent lush-drift field for the ground carpet. Count-preserving: moves clumps, never removes them.",
-        "ecology": {"salt": 7101, "wavelength": 60.0, "band": "core", "gamma": 1.4, "contrast": 0.45},
+        "ecology": {
+          "salt": 7101,
+          "wavelength": 60.0,
+          "band": "core",
+          "gamma": 1.4,
+          "contrast": 0.45
+        },
         "_comment_density_scale_b11": "B11 ground-cover density. 1.6 -> 2.8. ASSESSMENT_2026-08-23's blind critic counted 0-2 distinct ground-cover clumps in the lower half of player-height frames for bands 1-4 and called the near field 'empty, not sparse' -- the ground design budgets ~60% of the underfoot read to scattered props and that budget was unfunded. Unlike the chapter-wide VISUAL-GROUNDCOVER corridor_bands bump below, which measured only ~4% mean gain because it multiplied a distribution spread over 16.8 km2 the camera never sees, this layer is trail-sited with a 45-55m LOD range, so these instances land in frame. Acceptance: 8-12 countable clumps in the lower half of the band-1 and band-3 player-height frames. TUNABLE.",
         "_comment_density_scale_vis_world": "VIS-WORLD round 2. 1.0 -> 3.0. This is a PER-LAYER multiplier on a layer that is now trail-sited, which is a different trade from the chapter-wide bump that failed: VISUAL-GROUNDCOVER raised the corridor_bands table for every layer at once and measured ~4% mean gain because the extra props were spread over 16.8 km2 the camera never sees. Round 1 fixed the siting and measured the honest result -- the three weather frames moved and the day frames moved by hundredths, because relocating ~373 clumps onto a 12km route is about one clump per 32m and a frame sees one of them. A fresh blind critic ranked the same defect first for the fourth time (\"the ground plane is a bare texture; the references' ground is a volume\") and asked for an order of magnitude. 3.0 is the multiplier applied where the candidates now land, so it buys walked metres rather than empty corridor. Watch the bake's own placement count and boot cost before pushing it further; the ceiling is 8.0. TUNABLE.",
         "trail_bias": 0.65,
@@ -944,7 +1148,7 @@
       "clear_radius": 1.5,
       "base_scale": 1.0,
       "_comment_lod_world_grass": "WORLD-GRASS. 55 -> 120, fade 12 -> 35, and this is the lane's single largest lever after blade scale because it costs NOTHING in the placement budget: `lod_range` is a render-side cutoff (vegetation.gd::_make_mesh_asset -> Terrain3DMeshAsset.lod0_range -> a real RenderingServer visibility range), so no instance is added by it. At 55m the ground stopped carrying growth about a third of the way to the treeline in every band-2 and band-4 frame this lane shot, and the fade band was too narrow to disguise the cutoff -- prompt 72 calls it a bald ring and the frames agree. 120m reaches the treeline in the frames that have one. THE HONEST RISK, stated rather than measured: this multiplies the grass instances DRAWN per frame by roughly (120/55)^2 ~ 4.8x, and grass is 53% of the whole bake (249,898 of 466,922, tools/_probe_grass_census.gd). GPU cost is not measurable in this container at all -- PERF-ROG-GPU: the Compatibility renderer counts MultiMesh batches, not instances, and this box rasterises in software -- and the ROG Ally is the target. So this number, not the placement count, is the first thing to pull back if the owner's next handheld pass hitches, and pulling it back costs no re-bake. TUNABLE. ROUND 3: fade 35 -> 55, range unchanged at 120. The round-2 blind pass still named the cull as 'a hard line, not a fade' in the two frames whose eye sits inside the +-256m origin square. Widening the fade band rather than the range answers that without buying any more reach: the ramp now starts at 65m instead of 85m, so instances thin over 55 metres instead of 35. It is also the one adjustment in this lane that makes the GPU picture slightly BETTER rather than worse -- more of the drawn grass is inside the fade, none of it is further away.",
-      "lod_range": 120.0,
+      "lod_range": 110.0,
       "lod_fade_margin": 55.0,
       "_comment_shadow": "No shadow. Thousands of tufts each casting one overlap into a black carpet on terrain that does receive \u2014 measured at luminance 0.068 in the near field against 0.27-0.60 across the references. A blade's shadow is not information at this scale.",
       "casts_shadow": false,
@@ -988,8 +1192,14 @@
         "_comment_density_scale_ground_layers": "GROUND-LAYERS: down with grass above, same reasoning. The warm end of the ground read now comes from the terrain's own drygrass layer rather than from straw props.",
         "_comment_density_scale_t1_ground_3": "T1-GROUND-3: 1.0 -> 2.0, paired with the trail_bias raise below rather than spent on its own. The first cut of this pass un-suppressed the layer at its authored density and MEASURED NO VISIBLE CHANGE across all five band frames -- straw's share of lit ground pixels moved by +0.1 to +0.9 points in four of them. tools/_probe_layer_count.gd says why: 53,726 instances over a 16.8 km2 corridor is about 0.004 per m2, so a player-height frame holds single digits of them, against the grass field's 300,000-tuft carpet inside the same 72m ring. A species you meet eight times in a frame is confetti, which is the exact defect this pass exists to answer. This file already records that a chapter-wide density bump buys ~4% because it lands on ground the camera never sees, so the multiplier is deliberately modest and the trail bias below is what makes it count.",
         "density_scale": 2.0,
-        "_comment_ecology": "VP3: see scatter_rules.gd::_ecology_gate. salt 7001 is the shared tree-family field (trees/grove core, saplings/bushes edge, flowers/drygrass open); salt 7101 is the independent lush-drift field for the ground carpet. Count-preserving: moves clumps, never removes them.",
-        "ecology": {"salt": 7001, "wavelength": 140.0, "band": "open", "gamma": 1.5, "contrast": 0.5},
+        "_comment_ecology": "VP3 round 1 (2026-09-02, VEG lane): see scatter_rules.gd::_ecology_gate. Contrast raised toward 1.0 so the grove/clearing split actually reads -- the first bake at 0.85 was never rendered. `under` (bushes) accepts the grove floor as well as its fringe; `edge` (saplings, deadfall) is the outline only; `open` (drygrass, flowers) takes the clearings between. Wavelength 150m puts two or three groves in a 400m view.",
+        "ecology": {
+          "salt": 7001,
+          "wavelength": 150.0,
+          "band": "open",
+          "gamma": 1.5,
+          "contrast": 0.6
+        },
         "_comment_density_scale_b11": "B11 ground-cover density. 1.4 -> 2.0, same underfunded underfoot-read defect as grass's matching entry above -- the blind critic's 0-2 clump count and 'empty, not sparse' verdict covered this layer too, and it is trail-sited with a 55m LOD range so the added instances land in frame rather than in the ~64x-larger unwalked corridor. Acceptance: 8-12 countable clumps in the lower half of the band-1 and band-3 player-height frames. TUNABLE.",
         "_comment_density_scale_vis_world": "VIS-WORLD round 2: same reasoning as grass, held lower. Dry grass is the accent carpet, not the primary one, and two ground-cover layers at the same multiplier on the same trail-sited metres would stack rather than mix. TUNABLE.",
         "_comment_trail_bias_t1_ground_3": "T1-GROUND-3: 0.55 -> 0.75. The old value was set so dry grass would still read on open ground away from the route while the green carpet took the trail -- true when this was an accent under a green SCATTER layer, but that layer is suppressed now and the green in the near field is the grass FIELD's camera-relative ring, which is everywhere the player is and nowhere the corridor fill is. Pulling the dry species onto the walked route no longer stacks it under anything; it puts it where every frame anyone judges is taken.",
@@ -1082,7 +1292,13 @@
       "corridor_fill": {
         "density_scale": 0.8,
         "_comment_ecology": "VP3: see scatter_rules.gd::_ecology_gate. salt 7001 is the shared tree-family field (trees/grove core, saplings/bushes edge, flowers/drygrass open); salt 7101 is the independent lush-drift field for the ground carpet. Count-preserving: moves clumps, never removes them.",
-        "ecology": {"salt": 7001, "wavelength": 140.0, "band": "open", "gamma": 1.8, "contrast": 0.6},
+        "ecology": {
+          "salt": 7001,
+          "wavelength": 140.0,
+          "band": "open",
+          "gamma": 1.8,
+          "contrast": 0.6
+        },
         "_comment_density_scale_b11": "B11 ground-cover density. 1.0 -> 1.5. Same underfunded-underfoot-budget defect named on grass/drygrass above -- the blind critic's 0-2 clump count and 'empty, not sparse' verdict for bands 1-4 covered every ground-cover layer, and this one is trail-sited with a 45m LOD range so the added instances land in the counted frame rather than the unwalked corridor. Acceptance: 8-12 countable clumps in the lower half of the band-1 and band-3 player-height frames. TUNABLE."
       },
       "_comment_path_of12": "OF12: this layer's whole path-anchoring stack -- path_bias 0.35, path_bias_per_clump 26, path_bias_side_offset 6.0, path_bias_jitter 4.0, grown one knob per round across EV3-remainder through -4 (the full history is in DONE.md, kept there rather than here) -- is REMOVED, not retuned. Every round treated 'the flowers read as a planted border' as a parameter problem on a mechanism whose only job was to anchor flower clumps to the road, and the owner's verdict never moved: deliberately snapping a garden-accent layer to a path centreline IS planting a border, however jittered. Wildflowers are now ordinary meadow accents that reach a path only when an unbiased clump happens to land near one, gated by the same noise-varying path_standoff as grass (scatter_rules.gd::path_standoff_at) so a chance near-path clump keeps a ragged, per-side-independent edge instead of a matched pair of crescents. max is lower than grass's -- verge wildflowers genuinely hug a worn edge -- and the salt differs so flower gaps do not mirror grass gaps. TUNABLE.",
@@ -1158,8 +1374,8 @@
       "scale_max": 2.1,
       "clear_radius": 10.0,
       "base_scale": 1.0,
-      "lod_range": 150.0,
-      "lod_fade_margin": 25.0,
+      "lod_range": 320.0,
+      "lod_fade_margin": 50.0,
       "collides": true,
       "collision_radius": 0.9,
       "_comment_harvest_r2_3": "R2.3: the world's own scattered rocks, the stone-gathering half of the same fix trees got above. Originally 1-in-14 (0.071); HARVEST-ALL/D60 (owner directive) takes it to 1.0, same as trees -- every placed rock is harvestable, permanently.",
@@ -1609,7 +1825,22 @@
           "scale_max": 2.6,
           "sink": 0.3
         }
-      ]
+      ],
+      "_comment_water_edge_vp3": "VP3: bank cobbles and the odd boulder at the water's edge -- a shore is stones and reeds, not grass to the waterline. `min_slope_deg` overridden to 0 for these draws only: banks are flat where the water has cut them, and the layer's own 6-degree floor would reject every one.",
+      "water_edge": {
+        "per_100m": 3.0,
+        "sources": {
+          "river": 1.0,
+          "pond": 0.7,
+          "stream": 0.6
+        },
+        "offset_min": 0.2,
+        "offset_max": 5.0,
+        "min_slope_deg": 0.0,
+        "scale_min": 0.3,
+        "scale_max": 0.9,
+        "sink": 0.2
+      }
     },
     "path_stones": {
       "_comment": "Flat rock plates, scattered thinly on walkable ground. Not a path yet \u2014 M7 authors real paths \u2014 but a warm grey stone note at ground level, which is a hue the meadow has none of. The critic measured one frame at 0.7% desaturated pixels and observed there is 'no stone, no wood, no built thing, no path anywhere in that frame', where every Palworld reference carries 18-30% desaturated grey.",
@@ -1679,7 +1910,13 @@
       "corridor_fill": {
         "density_scale": 1.2,
         "_comment_ecology": "VP3: see scatter_rules.gd::_ecology_gate. salt 7001 is the shared tree-family field (trees/grove core, saplings/bushes edge, flowers/drygrass open); salt 7101 is the independent lush-drift field for the ground carpet. Count-preserving: moves clumps, never removes them.",
-        "ecology": {"salt": 7101, "wavelength": 60.0, "band": "core", "gamma": 1.6, "contrast": 0.5},
+        "ecology": {
+          "salt": 7101,
+          "wavelength": 60.0,
+          "band": "core",
+          "gamma": 1.6,
+          "contrast": 0.5
+        },
         "trail_bias": 0.7,
         "trail_offset_min": 0.0,
         "trail_offset_max": 30.0
@@ -1715,11 +1952,27 @@
       "clear_radius": 1.5,
       "base_scale": 1.0,
       "_comment_lod": "Short on purpose, and shorter than every layer above it. These are the smallest meshes in the scatter; past ~70m a 0.3m clover is sub-pixel and costs a draw to render nothing. The fade band is wide relative to the range for the same reason grass's is -- a hard cutoff on the densest layer is the bald ring this lane exists to remove, and it must not be reintroduced by the layer that fixes it. TUNABLE, and the first ground layer to give back if the Ally needs GPU headroom.",
-      "lod_range": 70.0,
-      "lod_fade_margin": 22.0,
+      "lod_range": 90.0,
+      "lod_fade_margin": 25.0,
       "casts_shadow": false,
       "cleared_by_clearings": false,
-      "collides": false
+      "collides": false,
+      "_comment_water_edge_vp3": "VP3: Plant_1_Big at reed height right at the waterline (the layer's own scale keeps it under 1.1m). See `bushes.water_edge`.",
+      "water_edge": {
+        "per_100m": 6.0,
+        "sources": {
+          "pond": 1.0,
+          "stream": 0.6,
+          "river": 0.3
+        },
+        "offset_min": 0.3,
+        "offset_max": 4.0,
+        "models": [
+          "res://assets/environment/stylized_nature/Plant_1_Big.gltf"
+        ],
+        "scale_min": 0.38,
+        "scale_max": 0.55
+      }
     }
   },
   "_comment_retint": "Mostly EMPTY now, and that is the point. The Kenney kit shipped a bright teal-green palette that had to be remapped wholesale; this pack ships real textures, and `albedo_color` multiplies them, so an unmapped material passes through as authored. Only the deliberate per-layer modulates above apply. A strong colour here would come out as shadow, not as hue.",

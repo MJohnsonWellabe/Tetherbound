@@ -183,6 +183,12 @@ static func placements_for(
 	# comment for why it is opt-in per layer rather than automatic.
 	_place_corridor_fill(out, layer, field, models, half, rng)
 
+	# VP3: hero trees and the water-edge bands, appended after the corridor
+	# fill under the same append-only contract. A layer without either key
+	# draws nothing extra and consumes no rng.
+	_place_heroes(out, layer, field, models, half, rng)
+	_place_water_edge(out, layer, field, models, half, rng)
+
 	# OP21-19: nothing stands in the pond. Applied here, as a filter, for
 	# exactly the reason D41's own filter is -- see `_drop_below_waterline`.
 	var dry: Array[Dictionary] = _drop_below_waterline(out, field)
@@ -626,23 +632,54 @@ static func _place_corridor_fill(
 ## (`playground_heightfield.gd::road_polylines`'s own `_road_polylines_ready`
 ## flag), so this is a cheap array walk, not a re-parse of the config.
 static func _trail_segments(field: RefCounted) -> Dictionary:
+	if field.has_method("path_polylines"):
+		return _polyline_segments(field.path_polylines())
+	return _polyline_segments([])
+
+
+## VP3. One polyline set flattened into arc-length segments, the shape
+## `_sample_near_trail` walks. `reaches` (optional, one PackedFloat32Array per
+## polyline, one value per vertex) is a per-vertex "half-width" the sampler
+## adds to its lateral offset -- zero for a trail, whose worn width the path
+## gate already handles, but the river's channel is up to 20m across and its
+## bank is `half_width + rim` out from the centreline, so a fixed offset from
+## the centreline would put every draw in the water. `outward_from`, when a
+## caller sets it on the result, makes the sampler take only the side facing
+## away from that point: a pond's shore is a closed loop and "either side"
+## of it is half in the pond.
+static func _polyline_segments(polylines: Array, reaches: Array = []) -> Dictionary:
 	var seg_a := PackedVector2Array()
 	var seg_b := PackedVector2Array()
 	var seg_length := PackedFloat32Array()
+	var reach_a := PackedFloat32Array()
+	var reach_b := PackedFloat32Array()
 	var total := 0.0
-	if field.has_method("path_polylines"):
-		var polylines: Array = field.path_polylines()
-		for entry: Variant in polylines:
-			var line: PackedVector2Array = entry
-			for i in line.size() - 1:
-				var length := line[i].distance_to(line[i + 1])
-				if length <= 0.001:
-					continue
-				seg_a.append(line[i])
-				seg_b.append(line[i + 1])
-				seg_length.append(length)
-				total += length
-	return {"a": seg_a, "b": seg_b, "length": seg_length, "total": total}
+	var has_reach := false
+	for p in polylines.size():
+		var line: PackedVector2Array = polylines[p]
+		var reach: PackedFloat32Array = PackedFloat32Array()
+		if p < reaches.size():
+			reach = reaches[p]
+		for i in line.size() - 1:
+			var length := line[i].distance_to(line[i + 1])
+			if length <= 0.001:
+				continue
+			seg_a.append(line[i])
+			seg_b.append(line[i + 1])
+			seg_length.append(length)
+			if reach.size() > i + 1:
+				reach_a.append(reach[i])
+				reach_b.append(reach[i + 1])
+				has_reach = true
+			else:
+				reach_a.append(0.0)
+				reach_b.append(0.0)
+			total += length
+	var out := {"a": seg_a, "b": seg_b, "length": seg_length, "total": total}
+	if has_reach:
+		out["reach_a"] = reach_a
+		out["reach_b"] = reach_b
+	return out
 
 
 ## A point beside the trail rather than anywhere in the corridor's box: a
@@ -674,7 +711,260 @@ static func _sample_near_trail(
 	var along := seg_a[segment] + tangent * u
 	var side := -1.0 if rng.randf() < 0.5 else 1.0
 	var offset := lerpf(offset_min, offset_max, rng.randf())
-	return along + Vector2(-tangent.y, tangent.x) * side * offset
+	# VP3: a water course's bank is `reach` out from its centreline (see
+	# `_polyline_segments`); a trail's is 0, so this is byte-identical for it.
+	if segments.has("reach_a"):
+		var reach_a: PackedFloat32Array = segments["reach_a"]
+		var reach_b: PackedFloat32Array = segments["reach_b"]
+		var t := u / maxf(seg_length[segment], 0.001)
+		offset += lerpf(reach_a[segment], reach_b[segment], t)
+	var normal := Vector2(-tangent.y, tangent.x)
+	if segments.has("outward_from"):
+		var centre: Vector2 = segments["outward_from"]
+		# Only the bank side. The rng side draw above still happens so the
+		# stream is consumed identically whether or not this key is set.
+		side = 1.0 if normal.dot(along - centre) >= 0.0 else -1.0
+	return along + normal * side * offset
+
+
+## VP3. A copy of `layer` with one block's own keys laid over it, the same
+## override contract `_place_anchor` gives an anchor: `scale_min`/`scale_max`
+## for a different age class, `max_slope_deg` for a bank, `models` for a
+## subset that suits the site. `skip` lists the block's own control keys, which
+## are not layer keys. Every placement block is stripped so the local copy
+## cannot recurse into itself.
+static func _local_layer(layer: Dictionary, block: Dictionary, skip: Array) -> Dictionary:
+	var local: Dictionary = layer.duplicate(true)
+	for placement_key in ["anchors", "verge", "corridor_fill", "heroes", "water_edge"]:
+		local.erase(placement_key)
+	for key: Variant in block.keys():
+		var name := str(key)
+		if name in skip or name.begins_with("_"):
+			continue
+		local[name] = block[key]
+	return local
+
+
+## VP3: HERO TREES. `layer.heroes` (optional, TUNABLE) places a few LONE,
+## oversized instances of the layer along the authored routes -- a landmark
+## tree standing on its own in a clearing, which is the one silhouette a
+## copse of same-sized trees can never produce and the one every reference
+## board has. Sited by trail arc length (`_sample_near_trail`) so the player
+## actually walks past them, then gated by an `ecology` block of its own --
+## normally the `open` band of the shared tree field, so a hero stands in the
+## gap BETWEEN groves rather than lost inside one -- and by `spacing`, the
+## minimum distance to any hero already placed, so two never read as a pair.
+##
+##   count         how many to try for across the whole route network
+##   trail_offset_min/max  lateral distance off the centreline
+##   spacing       minimum metres between heroes (default 60)
+##   ecology       optional gate, same keys as corridor_fill.ecology
+##   anything else overrides the layer's own key for these draws only
+##                 (scale_min/scale_max is the point; models narrows the list)
+##
+## Bounded like the corridor fill: a hero that finds no acceptable spot in
+## ECOLOGY_ATTEMPTS draws is skipped, never spun on.
+static func _place_heroes(
+	out: Array[Dictionary], layer: Dictionary, field: RefCounted, models: Array,
+	half: float, rng: RandomNumberGenerator
+) -> void:
+	var heroes: Dictionary = layer.get("heroes", {})
+	if heroes.is_empty():
+		return
+	var count := int(heroes.get("count", 0))
+	if count <= 0:
+		return
+	var segments := _trail_segments(field)
+	if float(segments.get("total", 0.0)) <= 0.0:
+		return
+	var control := ["count", "trail_offset_min", "trail_offset_max", "spacing", "ecology"]
+	var local := _local_layer(layer, heroes, control)
+	var hero_models: Array = local.get("models", models)
+	if hero_models.is_empty():
+		hero_models = models
+	var offset_min := float(heroes.get("trail_offset_min", 12.0))
+	var offset_max := float(heroes.get("trail_offset_max", 45.0))
+	var spacing := maxf(float(heroes.get("spacing", 60.0)), 0.0)
+	var ecology: Dictionary = heroes.get("ecology", {})
+	var placed := PackedVector2Array()
+	for i in count:
+		var spot := Vector2.INF
+		for attempt in ECOLOGY_ATTEMPTS:
+			var candidate := _sample_near_trail(rng, segments, offset_min, offset_max)
+			if candidate == Vector2.INF:
+				return
+			if not ecology.is_empty() and rng.randf() > _ecology_gate(candidate, ecology):
+				continue
+			var crowded := false
+			for other in placed:
+				if other.distance_to(candidate) < spacing:
+					crowded = true
+					break
+			if crowded:
+				continue
+			spot = candidate
+			break
+		if spot == Vector2.INF:
+			continue
+		var before := out.size()
+		_consider(out, local, field, hero_models, spot, half, rng)
+		if out.size() > before:
+			placed.append(spot)
+
+
+## VP3: THE WATER-EDGE BANDS. `layer.water_edge` (optional, TUNABLE) strings
+## extra instances along the banks of the map's water -- the starter stream,
+## the river and the pond's shoreline -- the way `verge` strings them along
+## the paths. The bible's "stream vegetation / wet-ground bands" and the
+## reference boards' reeds-and-willows waterline were unreachable before
+## this: the scatter's only relationship to water was the gates that keep
+## things OUT of it, so a bank read as the same meadow as everywhere else,
+## cut off by a waterline.
+##
+## Courses come from the terrain config the field was built from, read
+## through the field (`_water_segments`), not re-parsed from disk, so a test
+## field built on its own config gets its own water. Each course carries its
+## bank as a per-vertex reach (`_polyline_segments`): the stream's water
+## half-width plus shoulder, the river's `half_width + rim`, the pond's
+## traced shoreline at zero -- and draws step `offset_min..offset_max` metres
+## beyond that, onto the bank. `_consider`'s own stream/river gates and
+## `_drop_below_waterline` still apply, so an offset that lands wet is
+## rejected rather than planted.
+##
+##   per_100m      instances per hundred metres of bank (before gating)
+##   sources       {stream: mult, river: mult, pond: mult}; absent source = 0
+##   offset_min/max  metres beyond the bank line
+##   anything else overrides the layer's own key for these draws only
+##                 (models is the point: the reed rosette belongs here and
+##                 nowhere else; scale/slope for a bank)
+static func _place_water_edge(
+	out: Array[Dictionary], layer: Dictionary, field: RefCounted, models: Array,
+	half: float, rng: RandomNumberGenerator
+) -> void:
+	var edge: Dictionary = layer.get("water_edge", {})
+	if edge.is_empty():
+		return
+	var per_100m := float(edge.get("per_100m", 0.0))
+	if per_100m <= 0.0:
+		return
+	var sources: Dictionary = edge.get("sources", {"stream": 1.0, "river": 1.0, "pond": 1.0})
+	var control := ["per_100m", "sources", "offset_min", "offset_max"]
+	var local := _local_layer(layer, edge, control)
+	var edge_models: Array = local.get("models", models)
+	if edge_models.is_empty():
+		edge_models = models
+	var offset_min := float(edge.get("offset_min", 0.5))
+	var offset_max := float(edge.get("offset_max", 6.0))
+	var courses := _water_segments(field)
+	# Fixed order so the rng stream does not depend on Dictionary iteration.
+	for source in ["stream", "river", "pond"]:
+		var multiplier := float(sources.get(source, 0.0))
+		if multiplier <= 0.0 or not courses.has(source):
+			continue
+		var segments: Dictionary = courses[source]
+		var total: float = segments.get("total", 0.0)
+		if total <= 0.0:
+			continue
+		var count := int(round(per_100m * multiplier * total / 100.0))
+		for i in count:
+			var spot := _sample_near_trail(rng, segments, offset_min, offset_max)
+			if spot == Vector2.INF:
+				break
+			_consider(out, local, field, edge_models, spot, half, rng)
+
+
+## How many rays the pond shoreline is traced with, and how far out from
+## `pond_centre` each ray looks before giving up. 72 gives a 5-degree polygon
+## on a ~100m basin: a few metres of chord error, under the offset band.
+const POND_SHORE_RAYS := 72
+const POND_SHORE_REACH := 260.0
+const POND_SHORE_STEP := 2.0
+
+static var _water_cache: Dictionary = {}
+
+## The map's water courses as `_polyline_segments` sets, keyed "stream",
+## "river", "pond" -- built once per field and cached on the field's own
+## identity, since tracing the pond shore is a few thousand height samples.
+##
+## The config is read off the field (`_config`, the dictionary it was built
+## from) rather than `HEIGHTFIELD.load_config()`, so a test field carrying a
+## custom config sees its own water and a field with none sees none.
+static func _water_segments(field: RefCounted) -> Dictionary:
+	var key := field.get_instance_id()
+	if _water_cache.has(key):
+		return _water_cache[key]
+	var courses: Dictionary = {}
+	var config: Variant = field.get("_config")
+	if config is Dictionary and not (config as Dictionary).is_empty():
+		var cfg: Dictionary = config
+		var water: Dictionary = cfg.get("water", {})
+		# The starter stream: an authored point list, one water half-width
+		# plus shoulder either side (the same numbers `stream_factor` gates on).
+		var stream: Dictionary = water.get("stream", {})
+		var points: Array = stream.get("points", [])
+		if points.size() >= 2:
+			var line := PackedVector2Array()
+			var reach := PackedFloat32Array()
+			var bank := float(stream.get("width", 2.4)) * 0.5 + float(stream.get("shoulder", 1.2))
+			for p: Variant in points:
+				line.append(Vector2(float((p as Array)[0]), float((p as Array)[1])))
+				reach.append(bank)
+			courses["stream"] = _polyline_segments([line], [reach])
+		# The river: `half_width + rim` per course vertex is the top of the
+		# bank, exactly where `river_factor` falls to zero.
+		var course: Array = cfg.get("river", {}).get("course", [])
+		if course.size() >= 2:
+			var line := PackedVector2Array()
+			var reach := PackedFloat32Array()
+			for entry: Variant in course:
+				var vertex: Dictionary = entry
+				var at: Array = vertex.get("at", [])
+				if at.size() < 2:
+					continue
+				line.append(Vector2(float(at[0]), float(at[1])))
+				reach.append(float(vertex.get("half_width", 9.0)) + float(vertex.get("rim", 5.0)))
+			courses["river"] = _polyline_segments([line], [reach])
+		# The pond: no authored outline, so the shoreline is traced -- walk
+		# each ray out from the centre until the ground first rises above the
+		# waterline and keep that point. Skipped entirely if the map has no
+		# level or no centre.
+		var pond_at: Array = water.get("pond_centre", [])
+		if pond_at.size() >= 2 and water.has("level") and field.has_method("height_at"):
+			var centre := Vector2(float(pond_at[0]), float(pond_at[1]))
+			var level := float(water.get("level"))
+			var shore := PackedVector2Array()
+			for r in POND_SHORE_RAYS:
+				var angle := TAU * float(r) / float(POND_SHORE_RAYS)
+				var dir := Vector2(cos(angle), sin(angle))
+				var found := Vector2.INF
+				var d := POND_SHORE_STEP
+				while d <= POND_SHORE_REACH:
+					var p := centre + dir * d
+					var h: float = field.height_at(p.x, p.y)
+					if not is_nan(h) and h > level + 0.1:
+						# Bisect the last step so the chord sits on the line.
+						var lo := d - POND_SHORE_STEP
+						var hi := d
+						for it in 6:
+							var mid := (lo + hi) * 0.5
+							var pm := centre + dir * mid
+							var hm: float = field.height_at(pm.x, pm.y)
+							if is_nan(hm) or hm > level + 0.1:
+								hi = mid
+							else:
+								lo = mid
+						found = centre + dir * hi
+						break
+					d += POND_SHORE_STEP
+				if found != Vector2.INF:
+					shore.append(found)
+			if shore.size() >= 3:
+				shore.append(shore[0])
+				var segments := _polyline_segments([shore])
+				segments["outward_from"] = centre
+				courses["pond"] = segments
+	_water_cache[key] = courses
+	return courses
 
 
 ## The `density_scale` (0..1, TUNABLE) of the first band in `corridor_bands`
@@ -908,8 +1198,19 @@ static func _ecology_gate(point: Vector2, ecology: Dictionary) -> float:
 			g = pow(1.0 - eco, gamma)
 		"edge":
 			g = 1.0 - absf(eco - 0.5) * 2.0
+		"under":
+			# VP3 round 1: the fringe AND the interior. `edge` alone peaks at
+			# the grove's outline and falls to nothing under the canopy, which
+			# left every grove floor bare -- the understory the bible asks for
+			# ("bushes beneath trees") has to be allowed where the trees are,
+			# not only around them.
+			g = maxf(1.0 - absf(eco - 0.5) * 2.0, pow(eco, gamma))
 		_:
 			g = 1.0
+	# `floor` (0..1, default 0): the acceptance a band never drops below, so
+	# a species that mostly belongs to one band still strays into the others
+	# -- a lone bush in a clearing, a fern outside the wood.
+	g = maxf(g, clampf(float(ecology.get("floor", 0.0)), 0.0, 1.0))
 	return lerpf(1.0, g, contrast)
 
 
