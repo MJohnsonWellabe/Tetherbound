@@ -207,6 +207,7 @@ func _build_fence(world: Node3D, prefabs: RefCounted, points: PackedVector2Array
 	var samples: int = maxi(int(cfg.get("footprint_samples", 5)), 2)
 	var vault_guard := float(cfg.get("vault_guard_m", VAULT_GUARD_DEFAULT_M))
 	var gates := gate_positions()
+	var total_height := _fence_total_height(prefabs, prefab, courses, course_rise)
 
 	var built := 0
 	for i in points.size():
@@ -224,10 +225,12 @@ func _build_fence(world: Node3D, prefabs: RefCounted, points: PackedVector2Array
 			if _inside_a_gate(centre, gates, clear):
 				continue
 			if _build_panel(world, prefabs, prefab, centre, direction, step,
-					courses, course_rise, sink, bury, samples, vault_guard, built):
+					courses, course_rise, sink, total_height, bury, samples, vault_guard, built):
 				built += 1
 	if built == 0:
 		push_error("the village boundary built no fence at all; the settlement is open")
+
+	_build_corner_guards(world, points, gates, clear, bury, vault_guard, total_height)
 
 
 func _inside_a_gate(centre: Vector2, gates: Array[Vector2], clear: float) -> bool:
@@ -235,6 +238,20 @@ func _inside_a_gate(centre: Vector2, gates: Array[Vector2], clear: float) -> boo
 		if centre.distance_to(gate) <= clear:
 			return true
 	return false
+
+
+## The fence prefab's own stacked height, measured once from a throwaway
+## instance rather than per panel — every panel uses the same prefab and the
+## same course count, so the height is one number, not forty-nine identical
+## measurements. `_build_corner_guards` needs this exact number too, so it is
+## computed here rather than buried inside `_build_panel`.
+func _fence_total_height(prefabs: RefCounted, prefab: String, courses: int, course_rise: float) -> float:
+	var piece: Node3D = prefabs.call("instantiate", prefab)
+	if piece == null:
+		return 1.2
+	var aabb: AABB = prefabs.call("combined_aabb", piece)
+	piece.queue_free()
+	return maxf(aabb.size.y + course_rise * float(courses - 1), 1.2)
 
 
 ## One panel: the visible fence at the ground height under its own centre, and
@@ -245,7 +262,7 @@ func _inside_a_gate(centre: Vector2, gates: Array[Vector2], clear: float) -> boo
 ## than a reported gap.
 func _build_panel(world: Node3D, prefabs: RefCounted, prefab: String, centre: Vector2,
 		direction: Vector2, length: float, courses: int, course_rise: float,
-		sink: float, bury: float, samples: int, vault_guard: float, index: int) -> bool:
+		sink: float, total_height: float, bury: float, samples: int, vault_guard: float, index: int) -> bool:
 	var ground: float = float(world.call("ground_height_at", centre.x, centre.y))
 	if is_nan(ground):
 		return false
@@ -273,7 +290,6 @@ func _build_panel(world: Node3D, prefabs: RefCounted, prefab: String, centre: Ve
 	panel.rotation.y = yaw
 	add_child(panel)
 
-	var height := 0.0
 	for course in courses:
 		var piece: Node3D = prefabs.call("instantiate", prefab)
 		if piece == null:
@@ -286,10 +302,6 @@ func _build_panel(world: Node3D, prefabs: RefCounted, prefab: String, centre: Ve
 		piece.position = Vector3(0.0, course_rise * float(course), 0.0)
 		piece.rotation.y = PI if course % 2 == 1 else 0.0
 		panel.add_child(piece)
-		if course == 0:
-			var aabb: AABB = prefabs.call("combined_aabb", piece)
-			height = aabb.size.y
-	var total_height := maxf(height + course_rise * float(courses - 1), 1.2)
 
 	# Collision is the WHOLE footprint's span, sunk below the lowest ground it
 	# crosses and topped a full panel height above the highest — see this file's
@@ -304,7 +316,9 @@ func _build_panel(world: Node3D, prefabs: RefCounted, prefab: String, centre: Ve
 	var box := BoxShape3D.new()
 	# A shade longer than the step so consecutive panels overlap rather than
 	# meeting exactly: two boxes that share a face leave a seam a
-	# CharacterBody3D can be squeezed through on a bad frame.
+	# CharacterBody3D can be squeezed through on a bad frame. This overlap is
+	# only ever between two COLINEAR panels on the same straight edge — see
+	# `_build_corner_guards` for the polygon-vertex case this does not cover.
 	box.size = Vector3(length + 0.3, top - bottom, 0.5)
 	shape.shape = box
 	body.add_child(shape)
@@ -312,6 +326,107 @@ func _build_panel(world: Node3D, prefabs: RefCounted, prefab: String, centre: Ve
 	body.rotation.y = yaw
 	add_child(body)
 	return true
+
+
+## OWNER-0902-VILLAGE-GATE-REGRESSION. A third owner reproduction of "the
+## village gate is not on every exit"/"I can still jump it some places",
+## after two earlier fixes (the outline itself, then a vault-height pad on
+## every panel) each re-broke by direct play. Both earlier fixes treated the
+## fence as a sequence of independent straight panels and never looked at
+## what happens WHERE THEY MEET.
+##
+## Each panel above is a thin (0.5m) slab whose long axis runs along its own
+## edge's direction, overshooting the edge's own endpoints by 0.15m (half of
+## `_build_panel`'s 0.3m pad) so consecutive panels on the SAME straight edge
+## overlap. That overlap is along a single shared direction and closes a gap
+## between two colinear boxes fine. It does nothing for a POLYGON VERTEX,
+## where two edges meet at an angle: the outline turns by anywhere from 5 to
+## nearly 70 degrees at its 22 corners (measured directly from
+## `village_boundary.json`'s own `outline.points`), and two thin oriented
+## slabs that each end 0.15m past a shared point, at DIFFERENT angles, do not
+## sweep the wedge between them — a box's own end is a flat cut perpendicular
+## to its length, not a mitre matched to the next edge's angle. The sharper
+## the turn, the wider that wedge, and nothing before this ever tested a
+## corner: every probe (`tools/_probe_village_gate_roads_v2.gd`'s own PART 5,
+## and the escape sweep before it) only ever sampled panel CENTRES or a
+## handful of panels by index, never a vertex.
+##
+## The fix is not a bigger overlap number — no straight-panel overshoot closes
+## a wedge whose width grows with the turn angle. It is a third kind of
+## collider this file never had: one small AXIS-ALIGNED post per outline
+## vertex, centred exactly on the vertex (which is where both adjacent
+## panels' own centrelines terminate) and wide enough in every direction to
+## overlap both of those thin 0.5m-thick slabs regardless of which way they
+## turn. A square post covers a bend axis-aligned rectangles cannot, the same
+## reason a fence POST exists at every real fence corner and not just panels.
+func _build_corner_guards(world: Node3D, points: PackedVector2Array, gates: Array[Vector2],
+		clear: float, bury: float, vault_guard: float, total_height: float) -> void:
+	# Half-width of the square post, metres. OWNER-0902: first landed at 0.6,
+	# which overlapped each adjacent panel's near corner by only ~0.3m of true
+	# margin (measured directly: panel corners sat 0.29-0.30m from the vertex).
+	# The exhaustive PART 6 sweep still caught ONE corner jumping out through
+	# that overlap despite a measured VERTICAL clearance there of well over 2m
+	# -- not a height defect, a seam: two separately-built StaticBody3D shapes
+	# that only just overlap, at one specific running-jump timing out of seven
+	# tried, let the character's swept collision query find daylight at the
+	# exact line where the post's flat face meets the panel's flat face at an
+	# angle. A knife's-edge overlap is exactly the kind of margin that holds on
+	# most timings and fails on one. 1.1m turns that ~0.3m of true overlap into
+	# ~0.8m -- not a tuned minimum, a decisive margin, because a value this
+	# cheap (invisible collision only, never the visible mesh) is not worth
+	# re-deriving to the metre a third time.
+	const POST_HALF := 1.1
+	const POST_SAMPLE_STEP_M := 1.1
+	# OWNER-0902, second measurement. Widening POST_HALF alone did not hold: a
+	# re-test at the SAME corner still jumped out, but landed at world Y≈1.4 —
+	# within centimetres of that corner's own measured collision TOP
+	# (`tools/_diag_corner3.gd` logged world top=1.39 there), not out in open
+	# air past a cleared barrier the way every held panel's landing Y did.
+	# `movement.json`'s 1.35m jump apex, launched from ground around -0.4 to
+	# -1.1 there, cannot reach a fixed world height of 1.39-1.5 by itself —
+	# so this reads as a character-controller edge/step interaction at the
+	# post's own top corner (a convex edge a flat mid-span panel never
+	# presents), not a lateral gap and not plain jump height. Rather than
+	# chase the exact controller mechanic, the corner post's own top is
+	# pushed well past anything a jump-plus-edge-catch could reach: panels
+	# already proved clean across all ~45 of them at ordinary vault_guard_m,
+	# so this margin is added ONLY at corners, not by raising vault_guard_m
+	# file-wide.
+	const CORNER_EXTRA_HEIGHT_M := 3.0
+	var n := points.size()
+	var built := 0
+	for i in n:
+		var cur := points[i]
+		if _inside_a_gate(cur, gates, clear):
+			continue
+		var prev := points[(i - 1 + n) % n]
+		var next := points[(i + 1) % n]
+		var to_prev := (prev - cur).normalized()
+		var to_next := (next - cur).normalized()
+		var lowest := INF
+		var highest := -INF
+		for probe: Vector2 in [cur, cur + to_prev * POST_SAMPLE_STEP_M, cur + to_next * POST_SAMPLE_STEP_M]:
+			var g: float = float(world.call("ground_height_at", probe.x, probe.y))
+			if is_nan(g):
+				continue
+			lowest = minf(lowest, g)
+			highest = maxf(highest, g)
+		if is_inf(lowest) or is_inf(highest):
+			continue
+		var bottom := lowest - bury
+		var top := highest + total_height + vault_guard + CORNER_EXTRA_HEIGHT_M
+		var body := StaticBody3D.new()
+		body.name = "FenceCornerGuard_%d" % i
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = Vector3(POST_HALF * 2.0, top - bottom, POST_HALF * 2.0)
+		shape.shape = box
+		body.add_child(shape)
+		body.position = Vector3(cur.x, (bottom + top) * 0.5, cur.y)
+		add_child(body)
+		built += 1
+	if built == 0 and n > 0:
+		push_warning("village_boundary.gd: no corner guards built; every vertex sat inside a gate's clear zone")
 
 
 ## One lock, two doors. `road_gate.gd` restores its own open pose from the
