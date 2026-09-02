@@ -4385,6 +4385,21 @@
       "observation": "Tightened again 2026-09-02 (second pass): the previous within:1.2, computed from ONE run's measured 4.0m camp-to-bed separation (< half of it, so the walk could never land closer to camp than to the bed by the triangle inequality), was not tight enough on a later run whose relative stick-placement (S03-121n/131n/141n) happened to land the pieces closer together: that run's own S03-205a reported 'walked 2.7 m ... in 35 walking frames' -- a short, nearly-direct walk, consistent with a SMALLER separation than 4.0m that time -- and S03-205b still read camp's own 'Rest until morning' instead of the bed's 'Rest a Creature'. The relative placement offsets (a fixed stick deflection for a fixed frame count, S03-121n/131n/141n) do not guarantee a fixed separation between pieces run to run, so a within tuned to one run's measured gap is not safe in general -- only a tighter margin buys more headroom against that variance. 0.6 halves the previous figure; if a future run's own placed_buildings measurement shows a separation under roughly 1.2 m (where 0.6 stops guaranteeing the triangle-inequality property), this needs ralph/OWNER-0902-REST-VISIBILITY's own fix (its name is literally this problem), not a third harness-side tightening -- a shared interact-prompt RADIUS two pieces of furniture can be placed inside of is not something a walk-stopping-distance can out-tune forever."
     },
     {
+      "id": "S03-205a2",
+      "title": "put the active companion away, if one is standing in the way",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Put",
+        "optional": true,
+        "check_provider": false,
+        "settle_frames": 30,
+        "control": "creature_recall",
+        "expect_change": false
+      },
+      "expected": "the piloted creature follows the player everywhere, including up to a piece of furniture just built next to where it is standing -- its own 'Put <name> away' prompt is right on top of the player and can out-rank the bed's 'Rest a Creature' the same way camp's 'Rest until morning' can, for the identical reason (interaction_arbiter.gd's priority-then-nearest, and the companion is about as close as anything can be). optional:true because most of the time nothing is in the way at all -- this only presses when the live prompt actually says 'Put'.",
+      "observation": "Added 2026-09-02: measured directly across two consecutive runs, a different party member each time ('Put Mudsnout away' once -- a wild creature caught earlier that run -- then 'Put Bramblebun away', one of the scripted catch targets), both times blocking S03-205b in exactly the same shape the camp/bed within-tightening (FINDING-S03-205-CAMP-BED-PROMPT-COLLISION-2026-09-02.md and its follow-up) was written for, but with a THIRD contender no within value can out-tune: a deployed companion stands at ~0m from the player by definition, so no walk-stopping-distance can ever put the bed closer than it is. Putting it away first -- the same thing a real player would do before reaching past their own creature for a piece of furniture -- removes that contender before S03-205b ever presses."
+    },
+    {
       "id": "S03-205b",
       "title": "put a creature to bed",
       "action": "interact_with",

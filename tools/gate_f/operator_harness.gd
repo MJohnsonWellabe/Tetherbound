@@ -3206,7 +3206,15 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 					+ "of it. Not pressed: this press would have activated the wrong thing.") % [
 						prompt, provider_name, spec]
 	var before := _cell_snapshot()
-	var sent := await _inject("interact", _hold_frames(args.get("hold", "tap")))
+	# Not every live prompt answers to `interact` -- `encounter_director.gd`'s
+	# "Put <creature> away" is bound to `creature_recall`, not `interact`
+	# (CONTROLLER-MAP: "Fleeing is RB. Putting the creature away IS
+	# disengaging."), and pressing the wrong control here would silently do
+	# nothing while every check above still said the right prompt was live.
+	# `control` defaults to `interact` -- the verb this action is named and
+	# documented for -- and is only overridden by a step that means to press
+	# something else at a verified, specific prompt.
+	var sent := await _inject(str(args.get("control", "interact")), _hold_frames(args.get("hold", "tap")))
 	if not bool(sent.get("ok", false)):
 		return "HARNESS-ERROR %s" % str(sent.get("why", ""))
 	for i in maxi(2, int(args.get("settle_frames", 20))):
@@ -3214,6 +3222,7 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 		await physics_frame
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
 	var after := _cell_snapshot()
+	var pressed_control := str(args.get("control", "interact"))
 	var changed := _describe_delta(before, after, ["context", "focus_text", "inventory",
 		"pending_build", "party_size", "flags", "active_creature"])
 	if changed == "none":
@@ -3222,11 +3231,12 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 			# a press that quietly did nothing can never be read as one that
 			# was expected to: the default is FAIL, and this is the exception
 			# an operator writes down before playing.
-			return ("pressed `interact` on \"%s\" (provider '%s') and nothing observable changed "
-				+ "-- the step declared expect_change:false") % [prompt, provider_name]
-		return ("FAIL pressed `interact` with the prompt \"%s\" live (provider '%s') and nothing "
-			+ "changed: no context, focus, satchel, build, party or flag moved.") % [prompt, provider_name]
-	return "pressed `interact` on \"%s\" (provider '%s'): %s" % [prompt, provider_name, changed]
+			return ("pressed `%s` on \"%s\" (provider '%s') and nothing observable changed "
+				+ "-- the step declared expect_change:false") % [pressed_control, prompt, provider_name]
+		return ("FAIL pressed `%s` with the prompt \"%s\" live (provider '%s') and nothing "
+			+ "changed: no context, focus, satchel, build, party or flag moved.") % [
+				pressed_control, prompt, provider_name]
+	return "pressed `%s` on \"%s\" (provider '%s'): %s" % [pressed_control, prompt, provider_name, changed]
 
 
 ## Turn the camera. `yaw_deg` is an absolute world heading; `at:[x,z]` points
