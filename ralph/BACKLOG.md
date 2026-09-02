@@ -19,6 +19,78 @@ census, which stays a historical report
 
 ---
 
+## 0. Coordinator dispatch, 2026-09-02 afternoon — read this first
+
+A new backlog/Gate-F coordinator picked up from
+`ralph/COORDINATOR_HANDOVER_2026-09-02.md` at ~11:50 UTC. Two findings and a
+dispatch log.
+
+### Finding: `main`'s CI is red, and its green badge is lying
+
+`main` @ `852fe366` (the CAMP-SPLIT merge, run 33619015130) fails
+`verify-unit-tests (4)`:
+
+```
+FAIL  test_scatter_perf_budget.gd :: test_playground_bake_is_committed_and_fresh
+  data/scatter/playground is missing or stale against the live config
+  (vegetation.json / terrain_playground.json)
+```
+
+333 tests, 1 failed. Every other job that ran passed; the `cancelled` ones were
+superseded by the next push, which is normal. **The two commits after it are
+documentation-only**, so CI skipped every code job and reported `success` — the
+badge on `main` HEAD is thirteen skipped jobs, not a green build. Checking the
+badge instead of the jobs would have missed this entirely; check job-by-job on
+the last commit that actually touched code.
+
+This is not only a red test. It is the exact root cause `ralph/OWNER-0902-LOAD-TIME`
+found behind the owner's *"the game took forever to load"* — a stale bake makes
+every New Game/load recompute ~812k scatter placements live (256.6s of a 302.5s
+world stand-up). That lane re-baked at `be349d97` **and flagged that nothing
+re-bakes automatically when vegetation/terrain config changes, so it would
+recur.** It recurred within the day: `5b2ce125` (GRASS-RENDER) and `7c939c9d`
+(GRASS-ON) both edited `data/config/grass_field.json` after that bake. The build
+the owner plays right now is very likely slow to load again.
+
+Dispatched as `ralph/FIX-STALE-SCATTER-BAKE-V2`, briefed to re-bake *and* close
+the silent-recurrence hole rather than just clearing the red.
+
+### Finding: nothing from Gate F is waiting to land
+
+`ralph/GATE-F-S03-CATCH-LOOP` is 30 commits ahead of `main`, but every one of
+them is harness (`tools/gate_f/**`) or run-log artifacts. The single production
+change that segment produced — the Revive grant 2 → 10 — already landed at
+`1c152d93`. There is no outstanding Gate F work queued for `main`; the branch's
+size is not a landing backlog.
+
+### Dispatched lanes
+
+One session per item, each briefed with the verbatim owner finding, told to
+reproduce for real before touching anything, and held to the landing discipline
+in `ralph/COORDINATOR_HANDOVER_2026-09-02.md` §0.
+
+| branch | item | why now |
+|---|---|---|
+| `ralph/FIX-STALE-SCATTER-BAKE-V2` | stale scatter bake | `main` CI red + live owner load-time bug |
+| `ralph/OWNER-0901-PLAYER-SLEEP-V2` | *"player sleep was impossible still"* | owner-confirmed live bug |
+| `ralph/OWNER-0901-CREATURE-GRASS-VISIBILITY-V2` | *"small creatures in grass still want fixed"* | owner-confirmed live bug, and grass is on now |
+| `ralph/OWNER-0901-INTERACT-RELIABILITY-V3` | interact works ~half the time | owner-named game breaker, never confirmed fixed |
+| `ralph/OWNER-0902-REST-VISIBILITY` | rest completes end-to-end + rest-progress indicator | 09-02 items 15 and 7, one system |
+| `ralph/OWNER-0901-TRAIN-CLARITY-V2` | train clarity + tournament level 5 | owner's own #3 priority, both still "believed fixed" |
+
+Deliberately **not** dispatched, and why:
+
+- **Village shape (09-02 item 8)** — the separate visual-parity (VP) program has a
+  live VILLAGE lane; dispatching a village-layout fix here would collide with it.
+- **The two open visual items** (near-black world site, illegible signpost text) —
+  same reason; they belong to the visual coordinator, not this one.
+- **Characters read too small (09-02 item 4)** — genuinely blocked on an owner
+  design decision, already measured in full. It needs the question put to the
+  owner, not another investigation session.
+- **Lag / item 2** — cannot be closed from any container here. See §2c of the
+  handover; it needs an owner playtest on the Ally with grass in its current on
+  state.
+
 ## 1. Owner playtest, 2026-09-02 — the current priority
 
 `ralph/OWNER_PLAYTEST_2026-09-02.md` is the full verbatim record. Real,
