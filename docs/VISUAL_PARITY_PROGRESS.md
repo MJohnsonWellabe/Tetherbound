@@ -120,6 +120,9 @@ Tool: `tools/perf_render_stats.gd`, 1280x720, Compatibility, llvmpipe (structura
 | iteration C with `scatter_lod_ranges=false` (A/B) | hall_approach | **3975** | 4,201,344 | 4317 | coordinator 05:31 UTC, `VP2-perf/perf_iterC_lodoff.txt` |
 | iteration C with `scatter_lod_ranges=false` (A/B) | band1_open | **7511** | **11,799,910** | 6481 | coordinator 05:48 UTC, `VP2-perf/perf_iterC_lodoff_band1.txt` |
 | **VP2 COST CANDIDATE = iteration C + scatter_lod_ranges=false** (committed) | band1_open / hall_approach | 7511 / 3975 | 11.80M / 4.20M | | meets every §6 proxy budget |
+| **Checkpoint 06:14 UTC: program branch with WORLD r2 + PLACES r2 merged** (`VP1-3-candidate/`) | band1_open | 7668 | 11,817,644 | 6608 | fast capture run, settle 120/60/20 |
+| same | village_high | 3122 | 8,579,837 | 3263 | same |
+| same | hall_approach | 3795 | 4,361,609 | 4137 | same — all inside budget with everything merged |
 
 Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw calls ≤ 4000. **Iteration 0 misses both** (21.3M; 4335). **Iteration B: 12.58M / 4424. Iteration C: 12.22M at band1_open (1.8% over the provisional 12.0M and 11% under the 13.69M main ships with grass on), hall_approach 4270 draw calls (7% over the reasoned 4000 ceiling; pre-program baseline at that stand was 4331 after the GROUND+VEG merge, ~2900 before it). A/B showed `scatter_lod_ranges=true` costs +0.4M primitives and +330 draw calls: OFF is the VP2 cost candidate — 11.80M / 7511 at band1_open, 3975 at hall_approach, all inside budget.**
 
