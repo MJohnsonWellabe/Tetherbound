@@ -2764,6 +2764,11 @@ func _step_move_to(args: Dictionary) -> String:
 ## `within` metres of where the entity IS, and an entity that cannot be found is
 ## a FAIL that names the search -- an honest "not in the world" is a finding.
 func _step_move_to_entity(args: Dictionary) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED move_to_entity: not needed (%s)" % str(moot.get("actual", ""))
 	var spec := str(args.get("entity", ""))
 	if spec.is_empty():
 		return "HARNESS-ERROR move_to_entity needs entity:\"<name|group|label|species>\""
@@ -3079,6 +3084,11 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 ## arbiter could see instead. That is a finding about reach, which is what it
 ## always was.
 func _step_interact_with(args: Dictionary, step_id: String) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED interact_with: not needed (%s)" % str(moot.get("actual", ""))
 	var arbiter := _probe.call("interaction_arbiter") as Node
 	if arbiter == null:
 		return "HARNESS-ERROR interact_with step %s: no live InteractionArbiter" % step_id
