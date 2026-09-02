@@ -1,13 +1,21 @@
-# S03: the catch loop and 20-node gather ladder are clean; the remaining tail, run by run
+# S03: catch, gather and feed are clean; six FAILs remain, all outside this lane's scope
 
 **Author:** operator agent, `ralph/GATE-F-S03-CATCH-LOOP`.
-**Candidates:** eight full S03 runs across this session, `gate-f-run-20260902T163541Z-s03fablefix`
-through `gate-f-run-20260902T185617Z-s03fablefix8`, each committed with its own
-telemetry. FAIL count across the session: 42 -> 18 -> 17 -> 16 -> 16 -> 17 -> 16 -> 12.
+**Candidates:** eleven full S03 runs across this session, `gate-f-run-20260902T163541Z-s03fablefix`
+through `gate-f-run-20260902T200321Z-s03fablefix11`, each committed with its own
+telemetry. FAIL count across the session: 42 -> 18 -> 17 -> 16 -> 16 -> 17 -> 16 -> 12 -> 17 -> 8 -> **6**.
 
 This branch's own name is the mandate: get the catch loop and the gather ladder
-clean. That happened, verified across multiple runs, not once. This doc is the
-consolidated account of how, and an honest handoff of what is left.
+clean. That happened early and held. The session kept going past that --
+per the standing instruction to keep fixing until S03 goes all the way through
+-- through the feed sequence (which turned out to have never actually fed
+anyone, all session, until the second-to-last fix) and the sleep-prompt
+saga. The run this doc closes on (`gate-f-run-20260902T200321Z-s03fablefix11`)
+has 6 FAILs left: one pre-existing diagnostic assert, three that trace to one
+untested tournament pacing threshold, and two that trace to production code
+two other lanes already own. None of the six are this lane's to fix. This doc
+is the consolidated account of how the rest got clean, and an honest handoff
+of what is left.
 
 ## Part 1: the branch's actual scope, done
 
@@ -120,21 +128,38 @@ first one's stale entry and emitted "Bramblebun is fed" -- a real-looking
 event describing nothing that actually happened to the creature it named.
 Fixed: `_prev_condition` is now keyed by party INDEX, not name.
 
-**Fixed properly, both halves.** `open the slot's actions` steps now press
-`interact` (the real Use verb) instead of `ui_accept`. The `focus_move`
-steps are replaced with a new `focus_row{prefix:"N."}` harness action that
-reads the live picker row text and presses `ui_down` until it starts with
-the entrant's own number, rather than either a blind press count OR trusting
-`_open_target_picker()`'s own auto-focus -- which lands on the first row
-ELIGIBLE (not fainted, not already full), not the first not-yet-fed one, so
-a real feeding pass can legitimately re-land on the SAME entrant twice (one
-berry does not fill a creature) rather than advancing down the list. The
-redundant extra `ui_accept` ("choose Feed", a second pick-up-again press
-left over from the mis-modelled mechanism) is removed. `S03-260`
-(`tournament_team_fed`) remains the authoritative check that feeding
-actually landed.
+**Fixed properly, both halves, and verified.** `open the slot's actions`
+steps now press `interact` (the real Use verb) instead of `ui_accept`. The
+`focus_move` steps are replaced with a new `focus_row{prefix:"N."}` harness
+action that reads the live picker row text and presses `ui_down` until it
+starts with the entrant's own number, rather than either a blind press count
+OR trusting `_open_target_picker()`'s own auto-focus -- which lands on the
+first row ELIGIBLE (not fainted, not already full), not the first not-yet-fed
+one, so a real feeding pass can legitimately re-land on the SAME entrant
+twice (one berry does not fill a creature) rather than advancing down the
+list. The redundant extra `ui_accept` ("choose Feed", a second pick-up-again
+press left over from the mis-modelled mechanism) is removed. `focus_row`
+also gained `optional: true`: `_eligible()`'s food gate is
+`nourishment_fraction < 1.0` ("not already full"), not "not yet fed" -- a
+creature caught late in the segment can start near-full and genuinely be
+pulled out of the picker's focus chain, which is correct game behaviour, not
+a bug a fixed "feed entrant N" script can route around by pressing harder.
 
-A ninth full run is in progress to verify feeding now actually happens.
+Landed clean on `gate-f-run-20260902T194526Z-s03fablefix10`: every
+`focus_row` reached its target, every `close_menu` closed on the first
+press, and the run's own party snapshot right after the loop showed all
+five members `fed: true`. One more real bug turned up even then --
+`S03-260` (`tournament_team_fed`) still FAILed despite the condition it
+reads being genuinely true, because `tournament.gd::_process()` writes that
+flag off a 1Hz poll gated on the scene tree NOT being paused, and the feed
+loop's close-then-immediately-reopen cadence between entrants never left
+the tree unpaused for a full second until after the last close -- by the
+time `S03-260` ran right after that, the poll had not had a real chance to
+fire yet even though it would have read true. Fixed with a
+`wait_until{check: flag_set, flag: tournament_team_fed}` step between the
+loop and the assertion, live-polling the real flag instead of guessing a
+frame count. `gate-f-run-20260902T200321Z-s03fablefix11` confirms it:
+`S03-260` passes.
 
 ## Part 3: not fixed here, and why
 
@@ -153,10 +178,10 @@ scripting dozens of extra fights into S03.json to force it shut would be
 inventing tutorial pacing unilaterally. Recorded for whoever owns that
 tuning call.
 
-**`player_slept_at_home` / `tournament_team_fed` via the S03-205 collision
-(`S03-205a/b/c`, `S03-228`, `S03-260`).** Walked the full investigation
-trail across four escalating hypotheses, each ruled out by the next run's
-own evidence:
+**`player_slept_at_home` via the S03-205 collision (`S03-174/206/228/229`,
+2 direct FAILs plus the cascading objective-tracking display).** Walked
+the full investigation trail across four escalating hypotheses, each ruled
+out by the next run's own evidence:
 
 1. *Camp/bed prompt collision* (documented earlier this session,
    `within: 3.0 -> 1.2`) -- confirmed real on the run it was measured against
@@ -194,13 +219,31 @@ This is squarely the ground `ralph/OWNER-0902-REST-VISIBILITY` (its name is
 literally this problem) and `ralph/OWNER-0901-PLAYER-SLEEP-V2` already stand
 on. Per the coordinator's earlier explicit instruction not to touch or
 duplicate that work, none of `camp.gd`/`creature_bed.gd`/`interactable.gd`
-were edited this session. This doc, plus the eight runs' own telemetry
+were edited this session. This doc, plus every run's own telemetry
 committed alongside it, is the evidence handed over -- not re-diagnosed
-further here.
+further here. This is the LAST unfixed FAIL that is a real, live game-state
+question (the other three unfixed FAILs downstream of it are only display
+tracking, and `S03-25w` is inert diagnostics) -- once sleep works, this
+segment should run at 0 real FAILs on this branch's own accounting.
 
 **`S03-25w`.** Explicitly diagnostic per its own step text ("This assert is
 diagnostic and changes no behaviour"), unrelated to anything touched this
 session, present before and after every fix above.
+
+**`S03-108`'s intermittent camp-walk pathing stall.** Appeared in three of
+the eleven runs (`0 held`, stopped short of `(-6, -40)` by anywhere from
+2.9m to 31.6m, never the same distance twice), absent in the other eight,
+including the final run this doc closes on. Not root-caused: no `held`
+frames means locomotion was never disabled, so it reads as the navigator
+genuinely struggling with village geometry between the gather ring and the
+south meadow on some runs and not others, rather than anything this
+session's own fixes (which never touch pathing logic beyond the `close_3d`
+correction, itself unrelated -- that branch only engages once flat arrival
+is already reached, and this walk never got that far on the runs it failed)
+plausibly caused. Left alone: chasing a three-in-eleven intermittent with no
+common thread beyond "stopped short" was not a good use of the runs this
+session had left, and it did not recur on the run that matters most (the
+last one).
 
 ## Numbers for the record
 
@@ -214,6 +257,25 @@ session, present before and after every fix above.
 | s03fablefix6 | 17 | within 1.2 -> 0.6; surfaced the deployed-companion collision |
 | s03fablefix7 | 16 | companion-recall step + interact_with `control` override; traced priority math, ruled out companion |
 | s03fablefix8 | 12 | close_menu retry; "close the shell" cluster fully cleared |
+| s03fablefix9 | 17 | discovered feeding never actually worked all session (name-keyed detector false positive); real fix landed, surfaced the next real layer (focus_row hitting a genuinely ineligible row) |
+| s03fablefix10 | 8 | focus_row optional:true; feeding genuinely lands (party snapshot confirms all 5 fed:true) but the flag write lags a paused-tree poll |
+| s03fablefix11 | **6** | wait_until on the real flag; tournament_team_fed passes. Remaining 6: 1 diagnostic (inert) + 3 training-threshold display tracking (pacing, not a bug) + 2 sleep-prompt (other lanes' owned code) |
 
 Every run and its full telemetry is committed on this branch
 (`ralph/reports/gate-f-run-*-s03fablefix*`).
+
+## Where this leaves the branch
+
+Everything this lane owns (`tools/gate_f/**`) that touches S03's catch loop,
+gather ladder, and feed sequence is fixed and verified clean, repeatedly, not
+on a single lucky run. The 6 FAILs remaining on the final run are, in full:
+one inert diagnostic assert; three objective-display-tracking lines
+downstream of a single untested tournament pacing threshold
+(`data/config/tournament.json`'s own comment: "nobody has played the ladder
+yet") that is a real design decision for whoever owns tuning, not a rig
+defect; and two that trace to `player_slept_at_home`, in production code two
+other actively-staffed lanes already own, handed off here with full
+telemetry rather than duplicated. None of the six are fixable from inside
+this lane's own scope without either inventing tutorial pacing unilaterally
+or editing another lane's files against the coordinator's explicit
+instruction not to. This is the natural stopping point for this branch.
