@@ -74,3 +74,4 @@ doorway rows are 0–3 % — composition unchanged. Den: 8.0 % px changed vs r11
 Next mechanism if a 20+ median is still wanted: it is a LIGHT problem now, not a material one — either ~4–5× tint
 (`#8a6e50`, risks reading as dry clay in the sunlit approach) or a low-energy fill omni at the mouth (the judge's own
 suggestion), both one data knob; the skin material path is proven to move the region.
+`tests/smoke_warrens.gd` on the round-12 state: exit 0, "warrens smoke test passed".
