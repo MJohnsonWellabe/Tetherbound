@@ -212,6 +212,23 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Check-in #20 (13:31 UTC) — red wash SOLVED (capture artifact); first ship attempt blocked by a moving main
+- **WORLD 5e** (`7d67651d`): the wash was the stands capture tool — a stand without an `actor` key dropped the
+  player 500 m below the eye with physics live, and Terrain3D streams around the player, so a sky-heavy elevated
+  camera rendered from unloaded terrain. Same sequence with the player placed at the camera: night overlook
+  +80.8 → −16.8 R−G. Thirteen config hypotheses were falsified because the config was never wrong. Not a game
+  defect in normal play; a known limitation for any future distant-camera feature (streaming anchor). Closing
+  round dispatched 13:33: player at every stand by default with a cam→player distance assertion, re-render stands +
+  survey, keep the TIME wrap (latent fix), tests.
+- **Ship-to-main**: `ralph/VP-PROGRAM` @ `095cee94` went green and the sweep (13:28) tried to ship it, but `main`
+  had moved 30 s earlier (`e97baa30`, another session's stale-bake CI job + re-bake) so the script attempted a
+  191-commit rebase and stopped at the first conflict (`grass_field.json`). `origin/main` re-merged into the
+  program branch (`15313d8c`; scatter conflicts resolved with our bake), re-bake + guards running; next mirror +
+  sweep immediately after that CI is green, while `main` is still.
+- **CORRIDOR round 6** (`42b12878`, 16 stations): 07 copse restored, 09/10/14 re-sited or anchored, 13 filled,
+  signpost siting separated (text still clipped — open). Judge running.
+- **LIFE round 7** (final) running; **PLACES round 8** rendering (camp before-frames pushed).
+
 ### Check-in #19 (12:59 UTC) — LIFE r6 merged; CI fix; WORLD 5c
 - **Ship-to-main**: the first mirror run (`dbfec0be`) failed two unit tests that came from LIFE r5, not from
   `main`: `test_spawns_data` (new mosshell cluster 1071 inside the Creek Hollow footprint → 9 clusters / 11
