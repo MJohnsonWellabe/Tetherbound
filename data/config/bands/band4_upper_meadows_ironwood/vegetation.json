@@ -70,6 +70,13 @@
         "min_slope_deg": 0.0
       },
       {
+        "_why": "ROUND 9 (JUDGE-round8.md, final round): 'camp visible but small on a featureless hillside'. A small rock cluster ~4m left of the (now closer, eye=clearing centre+8m per this round's dispatch) station, breaking up the bare foreground the judge named rather than adding scale to the camp itself (which is dressing this lane does not own further).",
+        "at": [-248.74, 6462.9],
+        "radius": 3.0,
+        "count": 2,
+        "min_slope_deg": 0.0
+      },
+      {
         "_why": "ROUND 6, station 13 right two-thirds: a rock line further right and further out than the new tree copse above, ~68m out at 32 degrees off-axis, so the far right edge of the frame (past the copse) is not the only untouched sky left. `min_slope_deg` 0, same gentle-meadow override as this layer's other station-13 entry.",
         "at": [-364.0, 5013.0],
         "radius": 11.0,

@@ -132,7 +132,7 @@ const STATIONS := [
 	["11-relay",           Vector2(350.0, 3760.0), Vector2(280.0, 3900.0)],
 	["12-old-mill-crossing",Vector2(-152.0, 4170.0),Vector2(-152.0, 4235.0)],
 	["13-band4-entry-bend",Vector2(-300.0, 4990.0),Vector2(-420.0, 5140.0)],
-	["14-ridge-camp-approach",Vector2(-254.5, 6465.7),Vector2(-235.0, 6470.0)],
+	["14-ridge-camp-approach",Vector2(-249.6, 6466.8),Vector2(-235.0, 6470.0)],
 	["15-stronghold-approach",Vector2(80.0, 7370.0),Vector2(20.0, 7480.0)],
 	["16-hall-gate-approach",Vector2(20.0, 7480.0), Vector2(0.0, 7560.0)],
 ]
@@ -326,6 +326,19 @@ func _hide_huds() -> void:
 ## patch is technically inside_frame too and that was exactly the failure
 ## mode this whole investigation was chasing.
 func _proof_camp_in_fov(name: String) -> void:
+	if name == "13-band4-entry-bend":
+		# ROUND 9: world position of the frame's right edge at 20-30m depth,
+		# via the camera's own project_position (the exact inverse of
+		# unproject_position, using the REAL settled camera transform rather
+		# than a flat-terrain approximation) -- so a new anchor can be sited
+		# exactly where the empty strip actually is, not estimated.
+		for probe: Array in [[1150.0, 20.0], [1200.0, 25.0], [1250.0, 30.0]]:
+			var sx: float = probe[0]
+			var depth: float = probe[1]
+			var world := _camera.project_position(Vector2(sx, 400.0), depth)
+			print("  [13 proof] screen_x=%.0f depth=%.0fm -> world(%.1f,%.1f,%.1f)" % [
+				sx, depth, world.x, world.y, world.z])
+		return
 	if name != "14-ridge-camp-approach":
 		return
 	# `get_visible_rect().size` does NOT match the saved PNG's own dimensions
