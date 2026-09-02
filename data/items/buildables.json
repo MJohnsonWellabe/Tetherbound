@@ -16,8 +16,8 @@
       "id": "camp",
       "name": "Camp",
       "category": "survival",
-      "blurb": "A ring of stones and a bedroll. Light, warmth, and somewhere to wake up.",
-      "contains": ["Campfire", "Bedroll"],
+      "blurb": "Light, warmth, and somewhere to wake up — placed together as one buy.",
+      "contains": ["Tent", "Campfire", "Bedroll"],
       "thumbnail": "res://assets/ui/icons/buildables/camp.png",
       "cost": [
         { "id": "wood", "n": 12 },

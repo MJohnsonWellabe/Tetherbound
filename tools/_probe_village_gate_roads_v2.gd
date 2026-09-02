@@ -20,13 +20,23 @@ extends SceneTree
 ##     `road_gate.gd` built into the running scene, against the player's own
 ##     configured jump apex (movement.json `jump.height`) -- so "can I jump it"
 ##     is a measured margin, not a guess from prefab comments.
-##  3. JUMP-ASSISTED ESCAPE. At the village's two gates and a spread of fence
-##     panels around the whole ring, teleport the player to the inside face,
-##     hold forward+jump, and see whether they land outside the polygon
-##     (`village_boundary.gd.contains`, not a fixed distance threshold -- the
-##     2026-08-30 southeast bulge legitimately puts the fence more than 60m
-##     from the square in that corner, which a fixed-radius escape check
-##     misreads as an escape).
+##  3. JUMP-ASSISTED ESCAPE. At the village's two gates, EVERY fence panel
+##     around the whole ring, and EVERY outline vertex (corner), teleport the
+##     player to the inside face, hold forward+jump, and see whether they land
+##     outside the polygon (`village_boundary.gd.contains`, not a fixed
+##     distance threshold -- the 2026-08-30 southeast bulge legitimately puts
+##     the fence more than 60m from the square in that corner, which a
+##     fixed-radius escape check misreads as an escape).
+##
+## OWNER-0902-VILLAGE-GATE-REGRESSION. This part used to sample 8 of the ring's
+## ~45 panels and never tested a corner at all -- exactly where the real gap
+## turned out to live (two thin oriented panel slabs meeting at an angle leave
+## a wedge no panel-centre sample or vault-height check would ever see; see
+## `village_boundary.gd::_build_corner_guards`'s own header). Two owner
+## reproductions of "I can still jump it" survived this probe reporting green
+## because it was never actually a full sweep despite its own docstring saying
+## so. This is now literally exhaustive: every panel, every vertex, not a
+## sample of either.
 ##
 ## Diagnostic only. Prints; never asserts.
 
@@ -105,19 +115,27 @@ func _run() -> void:
 	for g: Dictionary in _gate_positions:
 		await _try_jump_escape(str(g["id"]), g["at"] as Vector2)
 
-	print("\n=== PART 5: jump-assisted escape at ordinary fence panels (not gates) ===")
+	print("\n=== PART 5: jump-assisted escape at EVERY ordinary fence panel (not gates) ===")
 	var boundary_node := _world.get_node_or_null(^"VillageBoundary")
 	if boundary_node != null:
 		var panel_positions := _panel_world_positions(boundary_node)
-		# A spread around the ring, not just the panels nearest the gates.
-		var picks: Array[int] = []
-		var n := panel_positions.size()
-		if n > 0:
-			for k in 8:
-				picks.append((k * n) / 8)
-		for idx: int in picks:
+		print("  %d fence panels built; testing every one (not a sample)" % panel_positions.size())
+		for idx in panel_positions.size():
 			var p: Vector2 = panel_positions[idx]
 			await _try_jump_escape("FencePanel[%d]" % idx, p)
+	else:
+		print("  no VillageBoundary node found in the built scene")
+
+	print("\n=== PART 6: jump-assisted escape at EVERY outline corner ===")
+	# The failure mode PART 5 could never see: two thin oriented panel slabs
+	# meeting at an outline vertex, at an angle, do not seal the wedge between
+	# them the way two colinear panels seal a shared edge. Every one of the
+	# outline's own vertices, tested directly -- see
+	# `village_boundary.gd::_build_corner_guards`'s own header for why this is
+	# the actual bug two earlier "fixed" landings both missed.
+	for i in _outline.size():
+		var corner: Vector2 = _outline[i]
+		await _try_jump_escape("Corner[%d]@%s" % [i, str(corner)], corner)
 
 	quit(0)
 

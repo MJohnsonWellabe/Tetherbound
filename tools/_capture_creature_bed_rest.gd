@@ -3,9 +3,17 @@ extends SceneTree
 ## Creature-bed nest rework: one frame of a creature body actually seated at
 ## creature_bed.gd's REST_ANCHOR over a real built bed, so the re-derived
 ## anchor is verified by sight rather than arithmetic alone. Mirrors
-## _sync_rest_body()'s own placement (same scene, same script, same faint
-## pose) without standing up Game/party. Same stage rig as
-## tools/_capture_t1_camp_assets.gd.
+## _sync_rest_body()'s own placement (same scene, same script) without
+## standing up Game/party. Same stage rig as tools/_capture_t1_camp_assets.gd.
+##
+## BACKLOG-VISUAL-BED-FITS-CREATURE (2026-09-01): this used to call
+## play_faint() directly, which predates play_rest()'s roll-onto-side
+## behaviour (OWNER-0901-CREATURE-BED-POSE) and never reflected what
+## _sync_rest_body() actually plays for a real occupant. The 2026-08-31
+## visual census judged that stale play_faint() frame and reported the
+## creature overflowing the rim -- a defect in the standing/faint pose this
+## tool no longer needs to render, not in what ships. Calling play_rest()
+## here, same as production, keeps this tool's evidence honest.
 ##
 ##   xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x800 \
@@ -48,7 +56,7 @@ func _run() -> void:
 	body.collision_layer = 0
 	body.collision_mask = 0
 	body.set_physics_process(false)
-	body.call_deferred("play_faint")
+	body.call_deferred("play_rest")
 
 	var camera := Camera3D.new()
 	camera.fov = FOV
