@@ -1,0 +1,13 @@
+{
+  "run_id": "gate-f-run-20260902T173909Z-s03fablefix4",
+  "purpose": "Fourth full S03 re-run: verifies the feed-sequence focus fix (removed the four manual 'focus entrant N' steps, which fought the creature-target picker's own correct auto-focus). Expect the 9 feed-sequence FAILs from run 3 to clear, leaving only the pre-existing diagnostic assert, the training-threshold display-tracking finding (recorded, not fixed), and the out-of-lane sleep-flag finding (recorded, not fixed).",
+  "candidate_sha": "29c14495e131b46e2c2eecdda13f74258aadc33f",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "resolution": [1920, 1080],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S02-exit.json carried over from gate-f-run-20260902T161704Z-s03feedfix/S02",
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}
