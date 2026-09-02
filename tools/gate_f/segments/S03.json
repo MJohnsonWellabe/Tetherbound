@@ -3797,10 +3797,11 @@
       "action": "move_to_entity",
       "args": {
         "entity": "creature_bed.gd",
-        "within": 3.0,
+        "within": 1.2,
         "budget_frames": 1800
       },
-      "expected": "one of the three creature beds built above is reachable nearby"
+      "expected": "one of the three creature beds built above is reachable nearby",
+      "observation": "Tightened 2026-09-02 (FINDING-S03-205-CAMP-BED-PROMPT-COLLISION-2026-09-02.md), reported to and confirmed by the coordinator as a harness-side fix, not the production code camp.gd/creature_bed.gd own: this run's own placed_buildings measured camp and creature_bed only 4.0m apart, each with its own 2.6m interact prompt radius (camp.gd:163 'Rest until morning', creature_bed.gd:399 'Rest a Creature'), so the two prompts' catchment zones genuinely overlap in a band roughly 1.4m-2.6m from either building. The old within:3.0 let the walk stop anywhere in that whole overlap band -- this run stopped 1.43m from camp and 2.86m from the bed it was WALKING TO, so camp's prompt (nearest-wins, equal priority, equal radius) answered instead of the bed's. A real player deliberately walking up to and facing a specific piece of furniture stops much closer to it than this script did; within:1.2 (< half the measured 4.0m separation, so the walk can never land closer to camp than to the bed it targeted, by the triangle inequality) matches that. Left camp.gd/creature_bed.gd and their placement/radii untouched -- both are real production code two other lanes (ralph/OWNER-0901-PLAYER-SLEEP-V2, ralph/OWNER-0902-REST-VISIBILITY) are already working, per the coordinator's explicit instruction not to touch or duplicate that work."
     },
     {
       "id": "S03-205b",
