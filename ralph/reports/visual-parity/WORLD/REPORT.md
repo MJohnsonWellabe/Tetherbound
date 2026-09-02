@@ -521,3 +521,46 @@ world build — locations alone took 2137 s. Combined with the mandatory ~7 min
 scatter re-bake after any `vegetation.json` edit, a full capture set does not fit a
 75-minute budget on this GPU-less box. Batching everything a round needs into ONE
 world build, as round 1's stands render did, is the only approach that fits.
+
+## Round-2 survey frames — and a REGRESSION
+
+`round2/survey/` + `_sheet_survey.png`, 960x540.
+
+| frame | mean RGB | R-G | palemint% |
+|---|---|---|---|
+| 01-spawn-outward | 78.0 98.1 56.9 | -20.1 | 0.20 |
+| 02-valley-floor | 90.3 109.0 56.2 | -18.7 | 0.42 |
+| 03-rise-overlook | 101.4 127.7 116.3 | -26.3 | 0.00 |
+| 04-three-quarter | 66.3 108.0 93.8 | -41.7 | 0.00 |
+| **05-spawn-low-sun** | **0.0 0.0 0.0** | — | 0.00 |
+
+Canopy corroboration: pale-mint on the day survey stands fell to 0.20% / 0.42%,
+against 1.07% / 1.76% for the broken first cut and a 0.06% pre-regression
+baseline. Combined with the visibly green mill-pond frame, the leaf bake holds
+across both capture tools.
+
+**REGRESSION: `05-spawn-low-sun` is pure black again** (mean 0,0,0), the same
+failure as round 1's VP1-G0.
+
+What this is NOT:
+- Not a missing clock freeze. `set_clock_frozen` is committed (`6afd51a1`) and
+  present in `world_look.gd:139`, called from `tools/survey.gd:204`. The
+  implementation is a clean early return in `_process`.
+- Not a general breakage: the four day stands in the SAME run render correctly,
+  and all 15 location frames — day AND night, through the same freeze in
+  `_capture_locations.gd` — render correctly.
+
+What contradicts it: round 1's stands render produced a genuinely lit, warm
+golden frame at a verified `hour=18.0000`, using an adapted copy of this same
+tool. So golden renders under one tool and not the other, with the same config.
+
+Mechanism UNKNOWN. Not diagnosed — the round-2 budget was spent. Untested
+hypothesis worth trying first: `apply_time()` may not push the sky material the
+way `_apply_blended()` does, so freezing the clock before any blend has run could
+leave a preset that differs from the boot state uninitialised. That would explain
+why `day` (the boot state) survives and `golden` does not, and why round 1's
+adapted tool — which froze at a different point in its sequence — did not hit it.
+
+**This is the top item for round 3**, ahead of further tuning: the golden-hour
+frame is unjudgeable, so the sun-halo (600/350) and golden-exposure changes
+remain unverifiable through this tool.
