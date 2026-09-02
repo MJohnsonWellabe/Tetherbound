@@ -23,7 +23,13 @@ Passes are `VP0…VP11` (visual passes) — never conflate with gameplay Gate A/
 | VP1 sky/light | in progress — first cut rendered (`VP1-3-after/survey/`), round 1 fix list with WORLD | 1ef3878a (first cut) | — | |
 | VP2 terrain/ground | in progress — cull tiles + far thinning + terrain material coded, perf table pending with WORLD | e3aba7d7 | — | |
 | VP3 vegetation | in progress — ecology gate + heroes + water bands + retints coded and baked, unjudged | e3aba7d7 | — | |
-| VP4–VP11 | not started | — | — | |
+| VP4 corridor | in flight (CORRIDOR Sonnet lane) | — | — | |
+| VP5 village/tournament/camps | first pass merged (PLACES r2); Bar B yes for village | adaee521 | 5b8a53a6 | `PLACES/round1`, `PLACES/round2` |
+| VP6 Warrens | exterior in flight (PLACES r3); den stand fixed | adaee521 | | |
+| VP7 Relay | first occupation pass merged; staffing/cables in PLACES r3 | adaee521 | | |
+| VP8 Hall | courtyard weathered + banners merged; exterior kit at distance in PLACES r3 | adaee521 | | |
+| VP9 world life | in flight (LIFE Sonnet lane: roll_new_worlds on, clusters at stands, life capture tool) | — | — | |
+| VP10–VP11 | not started | — | — | |
 
 **Current pass:** VP1–VP3 in parallel under the WORLD coordinator; VP5–VP8 render-and-verify under PLACES. **Next action:** at the 02:37 UTC check-in, judge the pushed frames on `claude/vp-world` / `claude/vp-places`, send round-2 fix lists, merge accepted rounds.
 
