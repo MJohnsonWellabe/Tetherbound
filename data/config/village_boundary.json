@@ -1,49 +1,131 @@
 {
   "_comment": "OP-0830-1. The edge of the home settlement, as an authored closed line, so that the village gate is the door of something rather than a panel standing in open grass.",
-
   "_why": "2026-08-30 owner playtest: 'the village gate is pointless. it doesn't keep you in. it should keep you in until you find the key.' Measured before changing anything (tools/_probe_village_gate_escape.gd): standing in the square with no key, a player walked clear of the village on NINE of sixteen bearings, up to 79m out. tools/_probe_village_layout.gd says why -- across 36 bearings at 20-90m from the well there was no solid body at all on 24 of them. The gate's own wings sealed roughly 24m of one bearing and the settlement was open on every other side, so the key, the search for it and the gate all meant nothing. MEADOWS_PROGRESSION_SPEC sec1E is the rule this satisfies: a believable physical perimeter of walls, ranch fencing, hedgerows and ridges, with invisible collision only SUPPORTING a visible boundary and never being it.",
-
   "_why_not_terrain": "The pattern that works elsewhere is `gated_crossing.gd` -- an authored gully in `terrain_playground.json`'s `crossings[]` that the world itself cannot be walked across, with a bridge in it. That is the better mechanism and it is not available here: this lane may not edit the terrain config, and a gorge around the family farm would be absurd geography anyway. A village wall is what a village gate belongs to.",
-
   "outline": {
     "_comment": "A closed polygon in world (x,z) metres, walked in order and closed from the last point back to the first. Everything Band 0 needs is inside it: Grandpa's farmhouse and its plots, the whole village square and its cast, the tournament ground, and the practice meadow the opening's first catch happens in (`band1_lower_meadows/spawns.json`'s bramblebun at [30,-40]). Verified point by point, not by eye -- `tests/test_village_boundary.gd` fails if any of them falls outside.",
     "_comment_shape": "Deliberately a rounded blob rather than a circle: the farm is 34m west of the well and the practice meadow 36m south-east of it, and no circle centred anywhere contains both while still passing through a gate the player meets on the road. TUNABLE -- every number here is a fence line, not a mechanic.",
     "_why_southeast_bulge_2026_08_30": "The straddle fix (ralph/reports/PARTY_COUNT_STRADDLE_2026-08-30.md, preferred option 1). The practice cluster spawns randomised within 15.0m of (30,-40), and the old south-east run [20,-52]->[36,-46]->[36,-28] cut that disk: members past x=36 spawned OUTSIDE the fence, splitting the teaching meadow across a wall -- visibly for the player, and fatally for smoke_party_count_after_catches, whose (48,0,-58) stand sat outside with two of three catches walled off. The cluster itself cannot move (the opening's walk from Grandpa's house arrives at its authored centre -- attempt 2's lesson), so the LINE moves instead: this run keeps every point of the r15 disk at least 2.4m inside the fence, keeps the catch tests' (48,-58) stand inside with 3.1m clearance, and stays south of The Rise road so the road still crosses the outline exactly once, at the gate. The closing segment [38,-22]->[40,-16] is collinear with the old [36,-28]->[40,-16], so the computed RoadGate position and its -71.6 yaw are unchanged. The corner at [38,-22] is load-bearing, not cosmetic: the closing segment's own panel is always skipped by gate_clear_m, so the SW jamb of the gate is sealed by the NEIGHBOUR segment's panel -- [44,-27]->[38,-22] lays one with its centre 5.1m from the gate, outside the skip zone, ending 0.2m from the leaf's SW end. Pull that corner further from the gate (run 3252's mistake, at [37.5,-23.5]) and the gap between panel and leaf opens past a player capsule's width: smoke_opening walked out through it, 13.8m past the locked gate's plane. Verified against every pin in tests/test_village_boundary.gd before authoring.",
     "points": [
-      [40.0, -16.0],
-      [37.0, -2.0],
-      [30.0, 11.0],
-      [18.0, 21.0],
-      [3.0, 26.0],
-      [-15.0, 27.0],
-      [-27.0, 15.0],
-      [-38.0, 6.0],
-      [-42.0, -9.0],
-      [-41.0, -24.0],
-      [-33.0, -37.0],
-      [-18.0, -46.0],
-      [0.0, -54.0],
-      [19.0, -54.0],
-      [27.0, -58.0],
-      [36.0, -61.0],
-      [46.0, -63.0],
-      [54.0, -58.0],
-      [54.0, -42.0],
-      [50.0, -33.0],
-      [44.0, -27.0],
-      [38.0, -22.0]
-    ]
+      [
+        39.42,
+        -17.76
+      ],
+      [
+        37.55,
+        -5.6
+      ],
+      [
+        37.0,
+        -2.0
+      ],
+      [
+        30.0,
+        11.0
+      ],
+      [
+        15.98,
+        22.59
+      ],
+      [
+        11.6,
+        22.21
+      ],
+      [
+        0.37,
+        27.23
+      ],
+      [
+        -15.0,
+        27.0
+      ],
+      [
+        -19.44,
+        22.56
+      ],
+      [
+        -22.56,
+        19.44
+      ],
+      [
+        -27.0,
+        15.0
+      ],
+      [
+        -38.0,
+        6.0
+      ],
+      [
+        -42.0,
+        -9.0
+      ],
+      [
+        -41.0,
+        -24.0
+      ],
+      [
+        -33.0,
+        -37.0
+      ],
+      [
+        -18.0,
+        -46.0
+      ],
+      [
+        0.0,
+        -54.0
+      ],
+      [
+        19.0,
+        -54.0
+      ],
+      [
+        27.0,
+        -58.0
+      ],
+      [
+        36.0,
+        -61.0
+      ],
+      [
+        46.0,
+        -63.0
+      ],
+      [
+        54.0,
+        -58.0
+      ],
+      [
+        54.0,
+        -42.0
+      ],
+      [
+        50.0,
+        -33.0
+      ],
+      [
+        42.72,
+        -25.91
+      ],
+      [
+        38.02,
+        -21.94
+      ]
+    ],
+    "_why_third_road_and_jambs_2026_09_02": "VP5 (visual-parity village lane), reopening OWNER-0901-VILLAGE-GATE-ROADS-V2 with measurements instead of a config read. TWO defects, both reproduced live. (1) A THIRD road leaves the village with no gate: `terrain_playground.json`'s corridor spine, `trail.bands[0]` (band1_lower_meadows: [27.5,-16] -> [14,20] -> [8,90] ...), is a real painted road that crosses the old north run [18,21]->[3,26] at (13.79,22.40), 34.8m from the nearest gate. `tests/test_village_boundary.gd` only walks `paths.routes`, so it could not see it, and the V2 probe only walked `paths.routes` too. That is the road the owner meant by 'no gate on at least one of the roads'. (2) The gate JAMBS leaked. `village_boundary.gd::_build_fence` lays panels along each EDGE from its own start and skips any panel whose CENTRE is within `gate_clear_m` (3.4) of a gate, then builds a collider `step+0.3` long. On the old RoadGate edge [38,-22]->[40,-16] that skipped the whole 6.32m edge, while the leaf is 4.07m wide: its north-east end sat 2.08m from the corner [40,-16], and the next edge's first collider started 0.15m past that corner -- a 1.9m hole with no visible fence in it. A scratch probe pushing a keyless player outward at 0.5m offsets along the leaf walked out at +2.5, +3.0, +3.5, +4.5 and +6.0m and jumped out at +2.6m; the escape landed 13m outside the line. THE RULE THIS OUTLINE NOW FOLLOWS, at every gate: the gate sits at the exact midpoint of its own short edge whose two corners are 2.2m either side of the gate centre (a 4.4m edge -> one panel, centred on the gate, skipped), and BOTH neighbouring edges are a multiple of `panel_length_m` 6.15 (within +/-0.3m) so their step is ~6.15: the neighbour's first collider then ends at the corner, 0.02-0.18m from the leaf's end (a player capsule is ~0.5m), and its VISIBLE 6.15m prefab reaches the corner too instead of stopping 0.9m short (the old SW side) or running 1.8m through the gate opening (what any shorter neighbour edge would do, because `_build_panel` instantiates the full prefab regardless of step). Derived and checked with a layout simulation of `_build_fence`'s own arithmetic before authoring, then walked with the same escape probe after. GEOMETRY. TrailGate: the short edge [15.98,22.59]->[11.6,22.21] is perpendicular to the trail leg (14,20)->(8,90) at its crossing; its east neighbour runs straight to [30,11] (18.19m = 3 x 6.06) and its west neighbour to [0.37,27.23] (12.3m = 2 x 6.15), which replaces the old [3,26] corner. PondGate: [-19.44,22.56]->[-22.56,19.44] inserted on the old line, neighbours to [-15,27] and [-27,15] are 6.28m each. RoadGate: [38.02,-21.94]->[39.42,-17.76] on the old line; SW neighbour to [42.72,-25.91] (6.15m, replacing the [44,-27] corner), NE neighbour to [37.55,-5.6] (12.3m, replacing the [40,-16] corner; [37.55,-5.6]->[37,-2] is a 3.6m stub on the same bearing). Every pin in tests/test_village_boundary.gd (inside/outside, all 28 village harvest nodes, the practice disk's 2.4m clearance -- 2.45m -- and the (48,-58) catch stand) was re-checked against this polygon before it was written."
   },
-
   "gates": {
-    "_comment": "One lock, one key, one flag -- and a leaf wherever an authored road crosses the line, so no road in the village dead-ends at a fence. Both are `road_gate.gd`, the body SA7 already wrote and `smoke_traversal.gd` already tests; opening either one sets `road_gate_open` and `village_boundary.gd` swings the other on the same frame.",
-    "_comment_positions": "Both `at` values are the COMPUTED intersection of the road with the outline above, and both `yaw_deg` values put the leaf along the outline at that point (which is also across the road, because the outline is authored perpendicular to each road where it crosses). Recomputed and pinned by tests/test_village_boundary.gd rather than eyeballed -- `playground_world.gd`'s old GATE_YAW_DEG carried its own note that it 'was tuned by eye against a render rather than computed', and it was 71.0 where the perpendicular is -71.6: the leaf stood at 38 degrees to the road it was supposed to bar.",
+    "_comment": "One lock, one key, one flag -- and a leaf wherever an authored road crosses the line, so no road in the village dead-ends at a fence. THREE roads cross it: The Rise (paths.routes), The Pond (paths.routes) and the corridor spine north (trail.bands[0]), so three leaves. All are `road_gate.gd`, the body SA7 already wrote and `smoke_traversal.gd` already tests; opening any one sets `road_gate_open` and `village_boundary.gd` swings the others on the same frame.",
+    "_comment_positions": "Every `at` is the COMPUTED intersection of its road with the outline above, and every `yaw_deg` is `atan2(-dir.y, dir.x)` of the short gate edge's own direction, walked in outline order -- the same formula `village_boundary.gd::_build_panel` uses for the fence, so the leaf lies exactly in the line of the panels it replaces (which is also across the road, because each gate edge is authored perpendicular to its road). Recomputed and pinned by tests/test_village_boundary.gd rather than eyeballed -- `playground_world.gd`'s old GATE_YAW_DEG carried its own note that it 'was tuned by eye against a render rather than computed', and it was 71.0 where the perpendicular is -71.6: the leaf stood at 38 degrees to the road it was supposed to bar.",
     "entries": [
       {
         "id": "RoadGate",
         "route": "The Rise",
-        "at": [38.7, -19.9],
-        "yaw_deg": -71.6,
+        "at": [
+          38.72,
+          -19.85
+        ],
+        "yaw_deg": -71.57,
         "prompt": "Try the gate",
         "locked_conversation": "road_gate_locked",
         "unlocked_conversation": "road_gate_unlocked"
@@ -51,18 +133,32 @@
       {
         "id": "PondGate",
         "route": "The Pond",
-        "at": [-21.0, 21.0],
+        "at": [
+          -21.0,
+          21.0
+        ],
         "yaw_deg": 135.0,
         "prompt": "Try the gate",
         "locked_conversation": "road_gate_locked",
         "unlocked_conversation": "road_gate_unlocked"
+      },
+      {
+        "id": "TrailGate",
+        "route": "Lower Meadows (corridor spine, trail.bands[0])",
+        "at": [
+          13.79,
+          22.4
+        ],
+        "yaw_deg": 175.1,
+        "prompt": "Try the gate",
+        "locked_conversation": "road_gate_locked",
+        "unlocked_conversation": "road_gate_unlocked",
+        "_why": "VP5, 2026-09-02: the corridor spine leaves the village due north across the tournament field, 4m west of the bracket board, and crossed the fence 34.8m from any gate. Same key, same flag, same leaf as the other two."
       }
     ]
   },
-
   "key_item": "castle_gate_key",
   "flag": "road_gate_open",
-
   "_comment_wall": "How the line is dressed. `fence_run` is the settlement's own rustic fencing (D24: one village family) and is already placed by `village.json`, so the boundary reads as the same property line the player has walked past inside the village rather than as a new kind of object. Two courses, because one course of it is a knee rail and a knee rail is scenery, not an edge.",
   "wall": {
     "prefab": "fence_run",

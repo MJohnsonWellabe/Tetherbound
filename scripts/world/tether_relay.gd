@@ -59,6 +59,15 @@ extends Node3D
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+## E-relay-dress: the same two helpers `props.gd` already uses for a loose
+## prop's material fix and its optional faction retint — borrowed rather than
+## reimplemented, for the same "a second copy gets it subtly wrong" reason
+## this file's header gives for `severed_spokes.gd`. Used by the deck-prop,
+## barrier and banner dressing below, none of which is a `props.json` cluster
+## (those sit on real sampled ground; these sit on the raised pad or need this
+## file's own local (s,t) frame), so it is placed and loaded locally instead.
+const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
+const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const CONFIG_PATH := "res://data/config/tether_relay.json"
 
 var _config: Dictionary = {}
@@ -78,6 +87,11 @@ var _healing: bool = false
 var _healed: bool = false
 var _heal_seconds: float = 0.0
 var _heal_elapsed: float = 0.0
+## E-relay-dress: the retint helper is stateful only for its own tint cache
+## (`building_prefabs.gd::apply_retint`), so one lazily-built instance serves
+## every dressing prop that carries a `retint` block, the same lazy pattern
+## `props.gd::_prefabs` already uses.
+var _prefabs: RefCounted = null
 
 
 ## `world` is only ever asked for `ground_height_at` — the same duck-typed
@@ -115,8 +129,12 @@ func build(world: Node3D) -> bool:
 	_build_ramps()
 	_build_apparatus()
 	_build_conduits()
+	_build_cable_links()
 	_build_dead_ground()
 	_build_scorch_marks()
+	_build_deck_props()
+	_build_barrier()
+	_build_banner()
 
 	# A relay disabled before a save is still disabled after a reload: the
 	# flag is the state, and the scene is rebuilt from it rather than
@@ -781,6 +799,77 @@ func _build_conduits() -> void:
 		_built["pylons"] += world_list.size()
 
 
+## E3-RELAY-POPULATION follow-up (this pass): each conduit run above stops at
+## its own LAST authored pylon, which sits several metres short of the
+## apparatus centre by construction — the runs converge ON the site but never
+## actually touch the object they power, which reads as pylons with nobody
+## and nothing at the end of them. This adds exactly one more sagged span per
+## listed run, from that run's own last pylon (its top-frame attach point, the
+## same formula `severed_spokes.gd::_build_pylons` already uses) to a point on
+## the apparatus's own footprint — `massing.grounding_base.radius` out from
+## `apparatus.at`, toward whichever pylon is arriving, at half `apparatus.height`
+## up from `deck_y`. Every number is read off this file's own `apparatus` and
+## `conduits` blocks; nothing here is a guessed coordinate.
+func _build_cable_links() -> void:
+	var links: Dictionary = _config.get("cable_links", {})
+	var run_ids: Array = links.get("runs", [])
+	if run_ids.is_empty():
+		return
+	var apparatus: Dictionary = _config.get("apparatus", {})
+	var app_at := _local(apparatus.get("at", []))
+	if app_at == Vector2.INF:
+		return
+	var centre := world_of(app_at)
+	var deck_y := float(apparatus.get("deck_y", 0.0))
+	var tall := float(apparatus.get("height", 4.2))
+	var massing: Dictionary = apparatus.get("massing", {})
+	var base_r := float((massing.get("grounding_base", {}) as Dictionary).get("radius", 3.4))
+
+	var conduits: Dictionary = _config.get("conduits", {})
+	var height := float(conduits.get("height", 6.4))
+	var runs: Array = conduits.get("runs", [])
+	if runs.is_empty():
+		return
+
+	var holder := Node3D.new()
+	holder.name = "CableLinks"
+	add_child(holder)
+	# The SAME cached lit-conduit material every span already carries, by
+	# identity — so `_kill_the_conduits`' material-identity sweep turns these
+	# off with everything else the moment the console goes quiet, with no
+	# separate bookkeeping.
+	var live: StandardMaterial3D = _works.call("_conduit_material", true)
+
+	var index := 0
+	for entry: Variant in runs:
+		if not entry is Dictionary:
+			continue
+		var run: Dictionary = entry
+		if not run_ids.has(str(run.get("id", ""))):
+			continue
+		var list: Array = run.get("list", [])
+		if list.is_empty() or not list[list.size() - 1] is Dictionary:
+			continue
+		var last_local := _local((list[list.size() - 1] as Dictionary).get("at", []))
+		if last_local == Vector2.INF:
+			continue
+		var pylon_xz := world_of(last_local)
+		var ground := _ground(pylon_xz)
+		if is_nan(ground):
+			continue
+		# Same base_y/attach-height formula `_build_pylons` uses, so this span's
+		# OWN end genuinely lands where that pylon's cable frame is, not near it.
+		var attach := Vector3(pylon_xz.x, ground - 0.22 + height * 0.66, pylon_xz.y)
+		var dir := (pylon_xz - centre)
+		if dir.length() < 0.01:
+			dir = Vector2(_u.x, _u.y)
+		dir = dir.normalized()
+		var landing := Vector3(
+			centre.x + dir.x * base_r, deck_y + tall * 0.5, centre.y + dir.y * base_r)
+		_works.call("_conduit_span", holder, index, attach, landing, live, 0.6)
+		index += 1
+
+
 ## --- the drained ground ----------------------------------------------------
 
 
@@ -891,12 +980,24 @@ func _build_scorch_marks() -> void:
 		if at == Vector2.INF:
 			continue
 		var centre := world_of(at)
-		var ground := _ground(centre)
-		if is_nan(ground):
-			continue
+		# `deck_y` (optional): E-relay-dress's apparatus-pad ring. A mark under
+		# the raised pad has no business sampling the REAL ground two-to-eight
+		# metres below the slab — nobody standing on the platform could ever
+		# see paint down there. When present this is the deck's own authored
+		# top surface (the same value `decks[].deck_y` already uses), so the
+		# scorch sits on the concrete the player actually walks on.
+		var deck_y_raw: Variant = mark.get("deck_y", null)
+		var y: float
+		if deck_y_raw != null:
+			y = float(deck_y_raw) + 0.03
+		else:
+			var ground := _ground(centre)
+			if is_nan(ground):
+				continue
+			y = ground + 0.03
 		var radius := float(mark.get("radius", 1.6))
 		var id := str(mark.get("id", "mark"))
-		_scorch_patch(holder, "Scorch_%s" % id, Vector3(centre.x, ground + 0.03, centre.y),
+		_scorch_patch(holder, "Scorch_%s" % id, Vector3(centre.x, y, centre.y),
 			radius, hash(id), material)
 
 
@@ -934,6 +1035,169 @@ func _scorch_patch(parent: Node3D, node_name: String, at: Vector3, radius: float
 	patch.position = at
 	patch.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	parent.add_child(patch)
+
+
+## --- loose dressing (E-relay-dress) -----------------------------------------
+##
+## The occupation layer that is not people or the drained-ground/scorch skin:
+## the platform's own loose gear, a barricade across the approach, and the
+## site's one banner. None of it belongs in `props.json` — the platform sits
+## at an absolute `deck_y` rather than sampled ground, and the barrier/banner
+## are authored in this file's own local (s,t) frame the way everything else
+## here is — so it is loaded and placed locally, through the exact same
+## gltf/glb/obj loading `props.gd::place()` already established (the fallback
+## order, the OBJ-as-bare-mesh wrap, the combined-AABB collider, the
+## `retint`/dielectric-material treatment) rather than a second, subtly
+## different copy of it.
+
+
+## One prop scene, instantiated but not yet placed. `null` (with a warning) if
+## `model` cannot be found under `dir` in any of the three formats this
+## codebase's prop packs ship in.
+func _load_dressing_scene(model: String, dir: String) -> Node3D:
+	var gltf_path := "%s/%s.gltf" % [dir, model]
+	var glb_path := "%s/%s.glb" % [dir, model]
+	var obj_path := "%s/%s.obj" % [dir, model]
+	var root: Node3D = null
+	if ResourceLoader.exists(gltf_path):
+		var packed := load(gltf_path) as PackedScene
+		if packed != null:
+			root = packed.instantiate()
+	elif ResourceLoader.exists(glb_path):
+		var packed := load(glb_path) as PackedScene
+		if packed != null:
+			root = packed.instantiate()
+	elif ResourceLoader.exists(obj_path):
+		var mesh := load(obj_path) as Mesh
+		if mesh != null:
+			var mi := MeshInstance3D.new()
+			mi.mesh = mesh
+			root = mi
+	if root == null:
+		push_warning("relay dressing prop missing: %s (looked under %s)" % [model, dir])
+	return root
+
+
+## One dressing prop from one spec, into `holder`. `deck_y`: null places it on
+## sampled ground (minus `sink_m`, the same key `props.gd` uses); a float
+## places it AT that absolute height instead (minus `sink_m`), for anything
+## standing on the raised pad rather than the yard. Position and facing are
+## both authored in this file's own local (s,t) frame — `yaw_offset_deg` is
+## added to the site's own approach-facing yaw, the same convention the gate
+## band, the console and the apparatus itself already use, rather than a raw
+## world angle every entry would have to work out by hand.
+func _place_dressing_prop(holder: Node3D, spec: Dictionary, deck_y: Variant) -> bool:
+	var model := str(spec.get("model", ""))
+	if model.is_empty():
+		return false
+	var at := _local(spec.get("at", []))
+	if at == Vector2.INF:
+		push_warning("relay dressing prop '%s' has no `at`" % model)
+		return false
+	var root := _load_dressing_scene(model, str(spec.get("dir", "res://assets/props/quaternius_fantasy")))
+	if root == null:
+		return false
+
+	var world_xz := world_of(at)
+	var sink := float(spec.get("sink_m", 0.0))
+	var y: float
+	if deck_y != null:
+		y = float(deck_y) - sink
+	else:
+		var ground := _ground(world_xz)
+		if is_nan(ground):
+			push_warning("no ground under relay dressing prop '%s'" % model)
+			return false
+		y = ground - sink
+
+	IMPORTED_MATERIALS.make_dielectric(root)
+	root.name = str(spec.get("name", model))
+	root.position = Vector3(world_xz.x, y, world_xz.y)
+	var base_yaw := atan2(_u.x, _u.y)
+	root.rotation = Vector3(
+		deg_to_rad(float(spec.get("pitch_deg", 0.0))),
+		base_yaw + deg_to_rad(float(spec.get("yaw_offset_deg", 0.0))),
+		deg_to_rad(float(spec.get("roll_deg", 0.0))))
+	var scale_factor := float(spec.get("scale", 1.0))
+	root.scale = Vector3.ONE * scale_factor
+	holder.add_child(root)
+
+	var retint: Variant = spec.get("retint", {})
+	if retint is Dictionary and not (retint as Dictionary).is_empty():
+		if _prefabs == null:
+			_prefabs = BUILDING_PREFABS.new()
+		_prefabs.call("apply_retint", root, retint)
+
+	var meshes: Array[MeshInstance3D] = []
+	_collect_meshes(root, meshes)
+	if meshes.is_empty():
+		push_warning("relay dressing prop '%s' has no mesh; placed with no collider" % model)
+		return true
+	var to_root_local := root.global_transform.affine_inverse()
+	var aabb: AABB = to_root_local * (meshes[0].global_transform * meshes[0].get_aabb())
+	for i in range(1, meshes.size()):
+		aabb = aabb.merge(to_root_local * (meshes[i].global_transform * meshes[i].get_aabb()))
+	var body := StaticBody3D.new()
+	body.name = "%s_Collision" % root.name
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = aabb.size * scale_factor
+	shape.shape = box
+	body.add_child(shape)
+	body.position = root.global_transform * (aabb.position + aabb.size * 0.5)
+	body.rotation = root.rotation
+	holder.add_child(body)
+	return true
+
+
+func _collect_meshes(node: Node, into: Array[MeshInstance3D]) -> void:
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		into.append(node as MeshInstance3D)
+	for child in node.get_children():
+		_collect_meshes(child, into)
+
+
+## The work platform's own loose gear — one compact cluster in the pad's
+## south-east corner, clear of the apparatus footprint and the console. See
+## `deck_props._comment_deck_props` in the config for the exact clearances.
+func _build_deck_props() -> void:
+	var config: Dictionary = _config.get("deck_props", {})
+	var list: Array = config.get("list", [])
+	if list.is_empty():
+		return
+	var deck_y := float(config.get("deck_y", 10.0))
+	var holder := Node3D.new()
+	holder.name = "DeckProps"
+	add_child(holder)
+	for entry: Variant in list:
+		if entry is Dictionary:
+			_place_dressing_prop(holder, entry as Dictionary, deck_y)
+
+
+## The barricade across the approach, short of the gate. See `barrier.
+## _comment_barrier` in the config.
+func _build_barrier() -> void:
+	var config: Dictionary = _config.get("barrier", {})
+	var list: Array = config.get("list", [])
+	if list.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "Barrier"
+	add_child(holder)
+	for entry: Variant in list:
+		if entry is Dictionary:
+			_place_dressing_prop(holder, entry as Dictionary, null)
+
+
+## The site's one banner. See `banner._why` in the config.
+func _build_banner() -> void:
+	var config: Dictionary = _config.get("banner", {})
+	if config.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "Banner"
+	add_child(holder)
+	_place_dressing_prop(holder, config, null)
 
 
 ## SG46 / D41's third clause. The relay's machinery is dead, so the skin that
