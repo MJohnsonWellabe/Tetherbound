@@ -3,13 +3,14 @@
 **Branch** `claude/vp-places` · **start commit** `e3aba7d7` (VP0 merge of the GROUND+VEG lane code)
 **Owns** VP5 (village / tournament / camps), VP6 (Warrens exterior), VP7 (Relay), VP8 (Meadows Hall)
 
-## Current state at a glance (after round 8)
+## Current state at a glance (after round 9)
 
 | | state |
 |---|---|
 | `hall_approach` draw calls | **3848 / 4000** — inside budget (was 4331 at baseline) |
 | guard smokes | `smoke_stronghold`, `smoke_warrens`, `smoke_relay` pass; `smoke_traversal` fails on a pre-existing South Bridge walk-around outside this lane |
-| courtyard night | **FAILING — median luminance 1.49 vs a ≥ 8 target** across 3 renders. Mean (9.47) and median (1.49) disagree 6×: a few brazier pools lift the mean while over half the frame is black. Mean was the wrong metric all along. The earlier ±26 % flicker claim does NOT reproduce (means span 9.30–9.54) |
+| courtyard night | **FAILING — trainer 3 m disc median 5.82 vs a ≥ 20 target** (mean 11.31). Mean/median gap again: over half the disc is still dark. Any claim here must quote the median |
+| verification | every targeted frame now carries a round-over-round pixel diff; **under 5 % changed = failed delivery, not a proof.** Adopted after my round-8 "proof" turned out to be an absolute sample of a byte-identical region |
 | Hall silhouette | **decisive at 400 m** — storm band cleared and +30 % exterior height; 100 m holds; **200 m still weak** |
 | storm band | moved back +150 m, alpha 0.4 — approach-stand sky coverage 22.7 % → **13.3 %**, under the 15 % target |
 | Warrens | doorway pale patch resolved at the root: both it and the right-side "panel" were the same `_wear_as_wall_stone()` path, now deleted. Brow [87.6,93.0,87.9], panel [88.4,89.3,74.2] |
@@ -1402,3 +1403,104 @@ Contact sheet `round8/_sheet_locations.png`; 31 frames in `round8/locations/`.
 2. **No identifiable sentry** — and the 1.5× scale fix needs a design decision, not another pass.
 3. The Hall mass at the gate is better lit in detail but still reads dark overall.
 4. Camps are dressed for *reason* but not re-composed; the judge may want more.
+
+---
+
+# Round 9
+
+Merged the program branch clean; re-baked (825759 placements). **Every claim below is a round8→round9
+pixel diff on the delivered PNGs**, per the coordinator's new rule: a targeted frame under 5 % changed
+pixels is a failed delivery, not a proof.
+
+## R9.0 First, a correction to my own round-8 report
+
+I marked the Warrens panel **PROVEN** on an absolute pixel sample. Diffing the judge's named regions
+round7→round8 shows that region changed by **0.07 mean / 0.0 % of pixels** — byte-identical. I proved
+nothing. The sample I quoted, [88.4, 89.3, 74.2], averaged a bright band with darker surroundings and hid
+the defect. The new rule is the right correction and is adopted; I built a harness so it is applied
+mechanically rather than by eye.
+
+For completeness, the same diff shows the judge's blanket "identical apart from cloud/grass noise" claim
+is **wrong for three of four regions** — warrens brow 101.80→89.47 at 25.7 % of pixels, Hall mass at the
+gate 30.3 %, Hall at 100 m 20.7 %. Only the right panel was genuinely unchanged. That one was mine to own,
+and owning it is the point.
+
+## R9.1 Delivery check, round8 → round9
+
+| frame | prev | cur | mean abs diff | px > 8 | delivery |
+|---|---|---|---|---|---|
+| `04-warrens-approach-day` | 104.98 | 103.34 | 10.24 | **24.3 %** | OK |
+| `04-warrens-standing-day` | 32.11 | 32.29 | 0.63 | **1.6 %** | **FAILED** |
+| `04-warrens-den-day` | 75.02 | 75.22 | 1.24 | 2.5 % | (intentionally stable) |
+| `10-stronghold-gate-day` | 119.74 | 119.57 | 15.43 | **37.3 %** | OK |
+| `10-stronghold-courtyard-night` | 11.32 | 13.66 | 3.59 | **24.1 %** | OK |
+| `11-castle-landmark-hall-100m-day` | 99.78 | 94.84 | 13.01 | **32.7 %** | OK |
+| `11-castle-landmark-hall-400m-day` | 120.06 | 114.56 | 11.48 | **28.3 %** | OK |
+
+Camps, camps-before → round9: relay-camp-standing **43.8 %**, relay-camp-fire **44.8 %**,
+relay-camp-approach 36.1 %, ridge-camp-fire **90.0 %**, waystop-standing 22.0 % — all delivered.
+
+## R9.2 Per item
+
+| # | item | verdict |
+|---|---|---|
+| 1 | Warrens brow + right panel | brow OK (24.3 %); **panel FAILED (1.4 %)** |
+| 2 | Hall stone ≥ 60 lum, silhouette kept | **delivered** (gate 37.3 %, 100 m 32.7 %, 400 m 28.3 %) |
+| 3 | Sentries: revert scale, gate posts, new stand | **delivered structurally**, legibility unjudged |
+| 4 | Courtyard night, 3 m disc median ≥ 20 | **FAILED — median 5.82** |
+| 5 | Camps | **delivered** |
+
+## R9.3 Item 1 — the panel failed, and the identification was wrong
+
+The fix routed the `mouth` chamber's `-z` flank walls through the exterior stain path, on the hypothesis
+that they were the slab. **They were not.** The tight panel block is luminance 113.7 → **113.6**, the
+region 1.4 % changed, and the crop is visually identical.
+
+That is consistent with something I found before dispatching and should have weighted more heavily: a
+diagnostic that walked the whole `BurrowWarrens` subtree and projected every node to screen found **no
+node landing in that region at all**. I let a plausible hypothesis override a measurement that
+contradicted it. The measurement was right.
+
+What is established about the slab: large, flat, vertical, hard rectangular edges, speckled stone
+texture, luminance ~145 in its brightest block (std ~13, i.e. flat), unchanged across rounds 7, 8 and 9,
+and **not projected to by any node in the Warrens subtree**. The next diagnostic should walk the whole
+world rather than the site, and should ray-cast from the `04-warrens` `standing` camera through screen
+(0.80, 0.42) to name whatever it actually hits. Per the dispatch's own instruction, if that turns out to
+belong to another lane, it should not be edited here.
+
+## R9.4 Item 4 — courtyard night failed on the correct metric
+
+Trainer 3 m disc: **median luminance 5.82** (mean 11.31) against a target of ≥ 20. The torch energy went
+3.4 → 6.6 and the frame did change (24.1 % of pixels), so the edit landed — it is simply not enough. Note
+the mean/median gap again: 11.31 vs 5.82, so more than half the disc is still dark and any future claim
+here must quote the median.
+
+## R9.5 What was delivered
+
+**Hall stone uncrushed.** `distance_darken_start` 200→260, floor 0.7→**0.85**, end held at 400 so the
+400 m silhouette survives. The real lever was the weathering multiply: `site.weathering.exterior.darken`
+0.74→**0.48**, taking LightRock tint luminance from 33/255 to 66/255, clearing the ≥ 60 floor.
+`Color.darkened` multiplies uniformly so the skirt<walls<DarkRock<LightRock ladder is preserved exactly.
+
+**Sentries.** The 1.5× body scale is **reverted** — no oversized humans. Grunts build at native rank size
+at the gate posts, local (−2.0, −13.1) and (2.0, −13.1), lit by the gate fires 6 m away. New `gate-face`
+stand added 15 m south of the arch; both `10-stronghold-gate-face-day/night` frames delivered. Whether the
+figures are legible there is for the judge.
+
+**Camps** built to spec, overruling the previous pass's restraint: relay camp +5 (fire 0.45→0.6, glow
+1.5→1.9, ring 0.8→1.05, firewood at the ring, a third log seat touching the existing one so the Bench
+stays the lone unpaired seat, a bucket as the kettle since no kettle mesh exists in the project); ridge
+camp +1 and waystop +1, each a touching log that breaks the old mirrored two-seats-opposite pattern.
+
+## R9.6 Perf and tests
+
+`hall_approach` **3845** (r8 3832) — under the 4000 ceiling. `village_high` 3177. `smoke_stronghold`,
+`smoke_warrens`, `smoke_relay` pass; `smoke_authored_camps` was still running at cutoff and is unreported
+rather than assumed.
+
+## R9.7 Open
+
+1. **Warrens right panel** — failed twice now; needs a whole-world ray-cast identification, not another
+   hypothesis.
+2. **Courtyard night 3 m disc** — median 5.82 vs ≥ 20.
+3. Sentry legibility at the new `gate-face` stand — unjudged.

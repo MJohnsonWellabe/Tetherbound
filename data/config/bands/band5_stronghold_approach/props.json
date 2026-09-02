@@ -141,6 +141,16 @@
           "_why_vp5": "VP5. Re-aimed radial to the fire now that the bench has moved off this bearing."
         },
         {
+          "model": "tree-log-small",
+          "at": [-23.6, 7453.6],
+          "yaw_deg": -105.0,
+          "pitch_deg": 2.0,
+          "sink_m": 0.03,
+          "scale": 0.9,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "VP5 round9, coordinator spec: 'logs and stones around' the fire, told asymmetrically. Set 0.7m from the existing firewood log so the two touch and read as one dropped stack rather than one lone log -- the road-facing Stool 4.6m off stays this camp's one unpaired seat, so the touching pair and the lone watcher sit on opposite sides of the same clearing rather than a matched ring."
+        },
+        {
           "model": "tree-log",
           "at": [-20.2, 7455.0],
           "yaw_deg": 30.0,
