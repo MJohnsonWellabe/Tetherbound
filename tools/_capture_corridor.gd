@@ -101,12 +101,20 @@ const UP := 2.4
 ##     this is the same fix, applied before it could bite twice. Looks at
 ##     road[2] (-152,4235), the far landing.
 ##   13 (-300,4990): band4 pt2, a bend just after crossing into Band 4.
-##   14 (-280,6460): band4 pt14. ROUND-4 ADDENDUM: `look` re-sited from the
-##     next trail vertex to `ridge_patrol_camp`'s own props.json centroid
-##     (-235.9,6471.7) -- the trail-vertex look put the camp 51.5 degrees off
-##     axis, just past the ~51.3-degree half-FOV, so it never entered frame
-##     at all (`JUDGE-b3b5-before.md`'s own finding: "neither ridge nor camp
-##     is legible"). Still a documented site coordinate, not eyeballed.
+##   14: ROUND 8 (DECISION-station14.md). Rounds 4-7's eye=pt14(-280,6460)
+##     looking at the camp centroid was never wrong about direction -- the
+##     camp WAS in frame the whole time, as an 18px-tall patch at 41-48m
+##     directly behind the "Watchtower Spur" signpost (6m from the camera)
+##     and just above the parked player's own head. Nothing failed to
+##     render; the camp was simply too small and masked. Re-sited to
+##     `vegetation.json clearings[order 4000]`'s own centre (-241.8,6468.5)
+##     + its 13m radius along the line to band4 pt14 -- the last 13m of the
+##     approach walk from the trail into the camp, a documented site
+##     coordinate (same licence stations 05/11/12 already use), not
+##     eyeballed. `look` is `trainers.json patrol_ridgeline`'s own position
+##     (-235,6470), the Team Tether grunt posted at the camp. From this
+##     pair the props project at 15-22m instead of 41-48m: the signpost
+##     and Captain Vess fall 26m behind the camera, out of frame.
 ##   15 (80,7370): band5 pt3, a bend on the final approach.
 ##   16 (20,7480): band5 pt4, looking at pt5 (0,7560) -- `stronghold.json`'s
 ##     own site centre, i.e. the Hall gate itself.
@@ -124,7 +132,7 @@ const STATIONS := [
 	["11-relay",           Vector2(350.0, 3760.0), Vector2(280.0, 3900.0)],
 	["12-old-mill-crossing",Vector2(-152.0, 4170.0),Vector2(-152.0, 4235.0)],
 	["13-band4-entry-bend",Vector2(-300.0, 4990.0),Vector2(-420.0, 5140.0)],
-	["14-ridge-camp-approach",Vector2(-280.0, 6460.0),Vector2(-242.7, 6470.2)],
+	["14-ridge-camp-approach",Vector2(-254.5, 6465.7),Vector2(-235.0, 6470.0)],
 	["15-stronghold-approach",Vector2(80.0, 7370.0),Vector2(20.0, 7480.0)],
 	["16-hall-gate-approach",Vector2(20.0, 7480.0), Vector2(0.0, 7560.0)],
 ]
@@ -307,10 +315,16 @@ func _hide_huds() -> void:
 ## the trail-vertex look because the coordinator's judging pipeline reported
 ## a regression they could not see for themselves -- this prints hard proof
 ## instead of another eyeballed claim. `ridge_patrol_camp`'s own props.json
-## entries for the fire (Bonfire_Fire, -233.9,6473.7) and tent (camp_tent,
-## -238.3,6473.6) are unprojected through the SAME camera transform the PNG
-## was captured from, so "inside_frame" here is exactly what the saved image
-## shows, not a separate geometric estimate.
+## entries for the fire (Bonfire_Fire), tent (camp_tent) and crate
+## (Crate_Wooden) -- ROUND 8 (DECISION-station14.md): round 7 moved every
+## camp prop 7m (see props.json's own `_why_r7`) but this proof still read
+## the pre-move coordinates, so it was proving the wrong points the whole
+## time. Corrected to the current `at` values. Also prints `tent_px`, the
+## tent's own on-screen height (unproject ground and ground+1.5m, take the
+## absolute pixel delta) -- the decision's own proof criterion needs a
+## real size number, not just "somewhere in frame", since an 18px-tall
+## patch is technically inside_frame too and that was exactly the failure
+## mode this whole investigation was chasing.
 func _proof_camp_in_fov(name: String) -> void:
 	if name != "14-ridge-camp-approach":
 		return
@@ -319,21 +333,28 @@ func _proof_camp_in_fov(name: String) -> void:
 	# wide frame) -- `root.size` is the actual render-target resolution the
 	# capture is saved from, so that is what "inside" is checked against here.
 	var viewport_size := Vector2(root.size)
-	var camera_viewport := _camera.get_viewport()
-	print("  [14 proof] root.size=%s camera.get_viewport()=%s same_as_root=%s vp_size=%s" % [
-		root.size, camera_viewport, camera_viewport == root, camera_viewport.size])
-	var probes := [["fire", Vector2(-233.9, 6473.7)], ["tent", Vector2(-238.3, 6473.6)]]
+	var probes := [
+		["fire", Vector2(-240.73, 6472.18)],
+		["tent", Vector2(-245.13, 6472.08)],
+		["crate", Vector2(-243.43, 6469.68)],
+	]
 	for probe: Array in probes:
 		var label: String = str(probe[0])
 		var spot: Vector2 = probe[1]
-		var world_pos := Vector3(spot.x, _surface(spot) + 1.0, spot.y)
+		var ground := _surface(spot)
+		var world_pos := Vector3(spot.x, ground + 1.0, spot.y)
 		var behind := _camera.is_position_behind(world_pos)
 		var screen := _camera.unproject_position(world_pos)
 		var inside := not behind and screen.x >= 0.0 and screen.x <= viewport_size.x \
 			and screen.y >= 0.0 and screen.y <= viewport_size.y
-		print("  [14 proof] %-4s world(%.1f,%.1f,%.1f) screen(%.0f,%.0f) of frame(%.0f,%.0f) behind=%s inside_frame=%s" % [
+		var tent_px := ""
+		if label == "tent":
+			var lo := _camera.unproject_position(Vector3(spot.x, ground, spot.y))
+			var hi := _camera.unproject_position(Vector3(spot.x, ground + 1.5, spot.y))
+			tent_px = "  tent_px=%.1f" % absf(hi.y - lo.y)
+		print("  [14 proof] %-5s world(%.1f,%.1f,%.1f) screen(%.0f,%.0f) of frame(%.0f,%.0f) behind=%s inside_frame=%s%s" % [
 			label, world_pos.x, world_pos.y, world_pos.z, screen.x, screen.y,
-			viewport_size.x, viewport_size.y, behind, inside])
+			viewport_size.x, viewport_size.y, behind, inside, tent_px])
 
 
 func _shoot(shot: Array) -> void:
@@ -353,6 +374,10 @@ func _shoot(shot: Array) -> void:
 	# Pass two: reseat on the real streamed surface, then settle so the
 	# encounter director populates the region around the player.
 	var ground := _surface(eye)
+	if name == "14-ridge-camp-approach":
+		var ground2 := _surface(eye)
+		print("  [14 proof] _surface(eye) called twice: %.3f then %.3f (diff %.3f)" % [
+			ground, ground2, absf(ground - ground2)])
 	_place(eye, ground)
 	_frame(back, _surface(back), target, _surface(target))
 	for i in _frames(SETTLE_FRAMES):
@@ -438,20 +463,44 @@ func _frame(eye: Vector2, eye_ground: float, target: Vector2, target_ground: flo
 
 ## The analytic heightfield and the streamed collision surface disagree, by up
 ## to 22m near water. Raycast, and say so when the ray misses.
+## ROUND 8 (DECISION-station14.md). The raycast fallback below could hit
+## the player's own capsule, an NPC/trainer, a prop collider or a flying
+## creature standing between the 400m-up ray-start and the ground -- none
+## of which excluded anything, so a query directly above a populated camp
+## could return whatever body happened to be tallest there instead of the
+## terrain (measured: 9.2m/4.8m/3.6m for the exact same XZ across calls).
+## `ground_height_at` reads Terrain3D's own height data directly and is not
+## a raycast at all, so it cannot hit a body; prefer it whenever it has an
+## answer (NAN means "no terrain data here", not "hit something else").
 func _surface(at: Vector2) -> float:
 	var analytic: float = _field.height_at(at.x, at.y)
+	var direct: Variant = _world.call("ground_height_at", at.x, at.y)
+	if direct is float and not is_nan(direct):
+		return direct
 	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state
 	if space == null:
 		return analytic
-	var query := PhysicsRayQueryParameters3D.create(
-		Vector3(at.x, analytic + 400.0, at.y), Vector3(at.x, analytic - 400.0, at.y))
-	query.collide_with_areas = false
-	var hit := space.intersect_ray(query)
-	if hit.is_empty():
-		print("  WARN no collision under (%.0f, %.0f); analytic %.2f may be under the surface" % [
-			at.x, at.y, analytic])
-		return analytic
-	return float((hit["position"] as Vector3).y)
+	var excluded: Array[RID] = []
+	if _player != null:
+		excluded.append(_player.get_rid())
+	for attempt in 8:
+		var query := PhysicsRayQueryParameters3D.create(
+			Vector3(at.x, analytic + 400.0, at.y), Vector3(at.x, analytic - 400.0, at.y))
+		query.collide_with_areas = false
+		query.exclude = excluded
+		var hit := space.intersect_ray(query)
+		if hit.is_empty():
+			print("  WARN no collision under (%.0f, %.0f); analytic %.2f may be under the surface" % [
+				at.x, at.y, analytic])
+			return analytic
+		var collider: Object = hit.get("collider")
+		if collider is Node and _under_terrain(collider as Node):
+			return float((hit["position"] as Vector3).y)
+		if collider is CollisionObject3D:
+			excluded.append((collider as CollisionObject3D).get_rid())
+		else:
+			break
+	return analytic
 
 
 func _creatures_near(at: Vector3) -> int:
