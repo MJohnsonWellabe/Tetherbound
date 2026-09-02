@@ -1,12 +1,12 @@
 # Meadows Visual Parity — Handoff (candidate for external visual judgement)
 
-**STATUS: DRAFT — VP10/VP11 in progress**
+**STATUS: CANDIDATE READY FOR EXTERNAL VISUAL JUDGEMENT** (VP0–VP11 complete; final recapture + code-blind judge in `ralph/reports/visual-parity/VP11-final/`)
 
 This document packages the Meadows Visual Parity program (`docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md`)
 for external visual review. It is generated from `docs/VISUAL_PARITY_PROGRESS.md` (the authoritative
-checkpoint) and the evidence under `ralph/reports/visual-parity/`. VP10 (performance retention) and VP11
-(this handoff) are not finished — the draft status above reflects that; the coordinator flips it to final
-once VP10's draw-call pass and a fresh recapture land.
+checkpoint) and the evidence under `ralph/reports/visual-parity/`. All eleven passes are closed; the final
+code-blind verdict is 6.5/10 (Bar A yes, Bar B partial) — see §5 VP11 and, for what remains short of the vision,
+`docs/VISUAL_NEXT_AGENT_HANDOFF.md`.
 
 ---
 
@@ -353,6 +353,33 @@ prims**, `hall_approach` 3847, `village_high` 2880, with the five survey stands 
 structure missing or popping at any stand (the 15–29% pixel diffs are grass/cloud motion). Unit guards
 `test_scatter_perf_budget` + `test_grass_field` 21/0. **Final state: PASS on the proxy budget** — switch KEPT ON
 (commit `222ea390`); on-device FPS remains the owner-side measurement (§4).
+
+### VP11 — handoff: final recapture + code-blind final judge
+Evidence: `VP11-final/` (one unedited run, 1920x1080, program head, visibility ranges ON, carpet ON) and
+`VP11-final/JUDGE-final.md` (Sonnet, code-blind: frames + `docs/reference/` + `site/img/page-board.jpg` + the
+visual-judge skill only; combat/buildings folders were not yet rendered when it ran and were skipped).
+
+Verdict verbatim: **overall parity 6.5/10**; **Bar A (belongs to the key-art world): Yes**, with the caveat that the
+flat cel-shaded rendering is a stylisation, not a miss; **Bar B (same kind of game as the Palworld boards):
+Partially, leaning no** — structure matches (open terrain, distant landmark, camps, creature-at-scale), the
+anime-cel outline on trainer/NPC/creature and the simpler tree shape language sit a visible step below the material
+and density bar. Per-area scores: sky/light 7, ground/vegetation 6, corridor 6, village+tournament 7, camps 5,
+Warrens 6, Relay 8, Hall 9, creatures/life 5, night 6.
+
+Strongest five: `10-stronghold-gate-day`, `09-waystop-standing-day`, `06-relay-apparatus-day`,
+`08-ridge-camp-standing-day` (four creature sizes legible at once), `11-castle-landmark-hall-400m-day` (landmark
+reads through haze). Weakest five, all named as capture-rig framing rather than assets: `05-relay-camp-fire-day/-night`,
+`07-mill-crossing-yard-day`, plus `02-mill-pond-wheel-day` and `05-relay-camp-standing-night`. Coordinator's
+check on the last two (`VP11-final/locations/`): the mill-wheel frame is a clean building shot with sky, and the
+relay standing-night frame is dark but carries the fire, bench and trainer — those two are judge misreads, recorded
+as such; the other three are the stand-siting limitations in §6. The judge's "fixable by scene" list — tournament
+banners' flat placeholder look (the relay pennant proves the kit has a real cloth flag), weather variants reading
+identical to clear, night fill in unlit camps, band-to-band sameness — and its "needs new art" list — tree canopy
+shape language, the cel-outline material split between creature/trainer/terrain, creature variety in the sampled
+frames — are carried into `docs/VISUAL_NEXT_AGENT_HANDOFF.md` as the next round's direction.
+
+**Final state: CANDIDATE READY FOR EXTERNAL VISUAL JUDGEMENT** — the label the program prompt defines; it means
+the evidence package is complete and honest, not that the vision is reached (6.5/10 against an ~8/10 target).
 
 ---
 

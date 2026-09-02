@@ -11,27 +11,34 @@ Passes are `VP0…VP11` (visual passes) — never conflate with gameplay Gate A/
 |---|---|
 | program branch | `claude/coordination-subagents-3fhz1x` (the owner prompt names `codex/meadows-visual-parity`; this session's harness pins the branch name, so this branch *is* the visual-parity branch — do not create a second one) |
 | starting `main` SHA | `252ccc81` (2026-09-01, `origin/main` at program start) |
-| current branch SHA | (updated at each pass, see per-pass table) |
-| last successful push SHA | (see per-pass table) |
+| current branch SHA | see the final check-in at the bottom of this file (`git log --oneline -1` on the program branch at handoff) |
+| last successful push SHA | same as above — every commit in this program was pushed before the next step |
 
 ## Pass status
 
-| pass | status | commit SHA | pushed SHA | evidence |
-|---|---|---|---|---|
-| VP-PRE | complete (5/5 checks) | f4afc9d9 | f4afc9d9 | §VP-PRE below |
-| VP0 baseline | **complete** (evidence set reduced to village/pond/survey by owner call; other sites' befores are renderable from ca0575b8) | 401d7217 | 401d7217 | `ralph/reports/visual-parity/VP0-baseline/` (locations-1080p/, locations/, JUDGE-village-pond.md), `VP-PRE/` |
-| VP1 sky/light | candidate merged (WORLD r1–r3: cumulus sky, dawn/golden/night presets, sun_glow_falloff, moon); judge r3: day/golden "yes" for environment, dawn/night overlook red wash + low-sun halo open → WORLD r4 | 3c87d9ea | — | `WORLD/round1..3`, `WORLD/JUDGE-round*.md` |
-| VP2 terrain/ground | candidate merged (grass carpet ON with cull tiles/far thinning/mesh LOD, terrain grain/damp, aerial); proxy budget met (band1_open 11.80M / 7511; hall 3975); judge r3 calls ground close-ups the strongest frames | 3c87d9ea | — | `GROUND/`, `VP2-perf/`, `WORLD/JUDGE-round3.md` |
-| VP3 vegetation | candidate merged (ecology gate, under band, heroes, water-edge bands, desaturated leaf retints); judge r2/r3: groves read, distant scatter at overlook still uniform → WORLD r4 | 3c87d9ea | — | `WORLD/round2..3`, `VEG` tests |
-| VP4 corridor | round 1 judged (regressions at stations 02/07, groves vanished); CORRIDOR r2 rendering | — | — | `CORRIDOR/round1`, `CORRIDOR/JUDGE-round1.md` |
-| VP5 village/tournament/camps | first pass merged (PLACES r2); Bar B yes for village | adaee521 | 5b8a53a6 | `PLACES/round1`, `PLACES/round2` |
-| VP6 Warrens | tone variation merged (PLACES r3); soil-apron/exterior read still open → PLACES r4 | 81c4232a | | `PLACES/round3` |
-| VP7 Relay | occupation + staffing/cables merged (PLACES r3) | 81c4232a | | `PLACES/round3` |
-| VP8 Hall | dark weathered exterior merged (PLACES r3); silhouette at 200–400 m + storm band open → PLACES r4 | 81c4232a | | `PLACES/round3` |
-| VP9 world life | round 2 merged (5 stands, field_emission); judge r2: both bars still no → LIFE r3 (pairing assertion, groups ≤ 10 m, night emission, pond blob) | 3c87d9ea | — | `LIFE/round1..2`, `LIFE/JUDGE-round*.md` |
-| VP10–VP11 | not started | — | — | |
+**FINAL — all eleven passes closed 2026-09-02.** Per-pass detail is in `docs/VISUAL_PARITY_HANDOFF.md` §5; the
+remaining gaps and how to work them are in `docs/VISUAL_NEXT_AGENT_HANDOFF.md`.
 
-**Current pass:** VP1–VP9 all have merged candidates on the program branch; WORLD r4 / PLACES r4 / CORRIDOR r2 / LIFE r3 in flight. **Next action:** check-in #11 (08:25 UTC): judge pushed frames, merge accepted rounds (re-bake), then VP10 perf retention on the merged tree.
+| pass | status | landed | evidence |
+|---|---|---|---|
+| VP-PRE | complete (5/5 checks) | f4afc9d9 | `VP-PRE/` |
+| VP0 baseline | complete | 401d7217 | `VP0-baseline/` |
+| VP1 sky/light | complete — WORLD r1–r9 (cumulus sky, per-time presets, angular sun disc, night horizon); dawn far plain = mechanism ceiling | PR #20 `b03cdb94` + PR #21 | `WORLD/round1..9`, `WORLD/JUDGE-round*.md`, `WORLD/REPORT.md` |
+| VP2 terrain/ground | complete — carpet ON with tile culling, terrain grain/damp/aerial; proxy met | PR #20 | `GROUND/`, `VP2-perf/` |
+| VP3 vegetation | complete — ecology gate, under bands, heroes, water-edge bands, leaf retints | PR #20 | `WORLD/round2..6`, `VEG` tests |
+| VP4 corridor | complete — CORRIDOR r1–r9 (16 stations; station 14 root-caused by a Fable decision agent); station 13 right edge = ceiling | PR #20 + PR #21 | `CORRIDOR/round1..9`, `CORRIDOR/JUDGE-round*.md`, `CORRIDOR/DECISION-station14.md`, `CORRIDOR/REPORT.md` |
+| VP5 village/tournament/camps | complete — PLACES r1–r12 (Bar B yes for village at r2; camps dressed r8; relay road r9) | PR #20 + PR #21 | `PLACES/round1..12`, `PLACES/JUDGE-round*.md` |
+| VP6 Warrens | complete — slab root-caused (material_override lerp) and clad by a clean-restart agent; flank brightness = lighting ceiling; interior untouched | PR #21 | `PLACES/round11-warrens`, `round12-warrens`, `PLACES/DECISION-warrens-restart.md` |
+| VP7 Relay | complete — occupation, staffing, cables, road (judge: 8/10, clearest authored faction look) | PR #20 + PR #21 | `PLACES/round3..9` |
+| VP8 Hall | complete — black-stone root cause (`Color.darkened` in sRGB) fixed, sentries on the causeway with night lights proven; inner jamb night stone = ceiling | PR #21 | `PLACES/round9..12-sentries-night`, `PLACES/DECISION-hall-sentries.md`, `DECISION-sentries-restart.md`, `DECISION-sentries-night.md` |
+| VP9 world life | complete — LIFE r1–r7 ("PASS, decisively" at r7); night creature meshes unlit = open limitation; walkers scoped only | PR #20 | `LIFE/round1..7`, `LIFE/JUDGE-round*.md`, `LIFE/REPORT.md` |
+| VP10 perf retention | complete — PASS on the proxy: `structure_visibility_ranges` ON, band1_open 6847 draws / 11.72M prims, hall 3847, village 2880; on-device FPS = owner measurement | 222ea390 (PR #21) | `VP10-perf/`, `VP10-perf/DECISION-visibility-ranges.md` |
+| VP11 handoff | complete — final 1920x1080 recapture in one run + code-blind judge **6.5/10, Bar A yes, Bar B partial**; handoff package + next-agent handoff | PR #21 | `VP11-final/`, `VP11-final/JUDGE-final.md`, `docs/VISUAL_PARITY_HANDOFF.md`, `docs/VISUAL_NEXT_AGENT_HANDOFF.md` |
+
+**Final label: CANDIDATE READY FOR EXTERNAL VISUAL JUDGEMENT.** Meaning: the evidence package is complete and
+honest (one unedited recapture, matched before/after, blind verdict, perf inside the proxy, limitations named with
+their mechanisms). It does not mean the ~80% vision is reached — the blind score is 6.5/10 against an ~8/10 target;
+`docs/VISUAL_NEXT_AGENT_HANDOFF.md` §2–§5 is the route from here.
 
 ## VP-PRE — environment capability check
 
@@ -632,4 +639,27 @@ Evidence: `ralph/reports/visual-parity/PLACES/round3/` (warrens, stronghold, cas
 
 ## Resume note
 
-(written at the end of every pass)
+**Program complete (2026-09-02).** There is nothing to resume in this program. A future visual round starts from
+`main` on a new branch, following `docs/VISUAL_NEXT_AGENT_HANDOFF.md`. Do not reopen items this file records as
+proven (sentries night, Hall stone, Warrens slab, station 14) unless a newer owner playtest reproduces them.
+
+### Check-in #34 (20:55 UTC) — VP11 closed: final recapture, blind judge 6.5/10, handoffs written
+
+- Final recapture `VP11-final/` ran 19:03–21:0x UTC in one `tools/vp_capture.sh` run at 1920x1080 on the program head
+  (visibility ranges ON, carpet ON): 54 location, 5 survey, 30 ground/water/sky frames, combat, buildings, perf.
+  `_capture_ground_and_sky.gd` exits 1 on a stale GrassField guard while writing every frame (same in VP1-3-after) —
+  recorded as a harness quirk, frames are the evidence.
+- Pre-judge coordinator review found the `05-relay-camp` fire stand now inside a scatter canopy (clear in PLACES r10,
+  bake regenerated after the CORRIDOR r9 vegetation merge); `03-quarry` approach and `07-mill-crossing` yard (stands
+  that came in from `main`) mis-framed. Left as stand-siting limitations (handoff §6) so the final evidence stays one
+  unedited run; `tools/_probe_relay_fire_trees.gd` added to locate the tree.
+- Code-blind final judge (`VP11-final/JUDGE-final.md`): **6.5/10; Bar A yes; Bar B partial, leaning no.** Hall 9,
+  Relay 8, sky 7, village 7, ground 6, corridor 6, Warrens 6, night 6, camps 5, creatures/life 5. Two of its five
+  "weakest" frames are misreads (mill-wheel is a clean building shot; relay standing-night carries fire, bench and
+  trainer) — recorded, not argued; the other three are the stand-siting items above.
+- `docs/VISUAL_PARITY_HANDOFF.md` STATUS flipped to CANDIDATE READY FOR EXTERNAL VISUAL JUDGEMENT; §2/§3 galleries
+  from the recapture; §4 VP10 table + final recapture perf; §5 VP11; §6 updated. `docs/VISUAL_NEXT_AGENT_HANDOFF.md`
+  written (owner: "write a handoff that helps another agent finish our vision") and routed from `ralph/START_HERE.md`.
+- Owner directive 20:5x UTC: "get everything to main and archive yourself" → `origin/main` merged into the branch
+  (0a04ce69, no conflicts), PR #21 to carry the whole close-out with a non-skip head so CI runs, merge when green,
+  then archive this session. Lane sessions are all archived already.

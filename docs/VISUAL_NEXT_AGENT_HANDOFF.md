@@ -21,7 +21,9 @@ bottom) → the lane closing reports `ralph/reports/visual-parity/{WORLD,CORRIDO
   new branch from `main`.
 - The shipped state of every location is in **one unedited run**: `ralph/reports/visual-parity/VP11-final/`
   (1920x1080; 54 location frames, 5 wide survey stands, 30 ground/water/sky stands, combat, buildings, perf). The
-  code-blind final verdict is `VP11-final/JUDGE-final.md`. Before/after for 34 stands: `VP11-final/_sheet_before_after.png`.
+  code-blind final verdict is `VP11-final/JUDGE-final.md`: **6.5/10, Bar A yes, Bar B partial** (Hall 9, Relay 8,
+  sky 7, village 7; camps 5, creatures/life 5 — the low scores are camp stand framing and the creature/trainer
+  material split, see §2/§3). Before/after for 34 stands: `VP11-final/_sheet_before_after.png`.
 - Perf proxy (structural, software GL; not FPS): band1_open 6847 draws / 11.72M prims, hall_approach 3847, village_high
   2880, with `data/config/performance.json` `structure_visibility_ranges: true` and the grass carpet ON. Budgets
   (PROVISIONAL, owner to confirm): band1_open ≤ 7500 draws / ≤ 12.0M prims, hall_approach ≤ 4000 draws.
