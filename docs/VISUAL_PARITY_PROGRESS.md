@@ -105,9 +105,12 @@ Tool: `tools/perf_render_stats.gd`, 1280x720, Compatibility, llvmpipe (structura
 | carpet ON, one MultiMesh (owner's laggy build) | band1_open | 7320 | 31,757,567 | 6315 | OWNER-0901-PERFORMANCE-LAG-V2 |
 | VP0 baseline: carpet ON, cull_tile_m=0 | band1_open | 7409 | 31,672,479 | 6378 | GROUND lane, `GROUND/perf/perf_before_tile0.txt` |
 | VP0 baseline: carpet ON, cull_tile_m=0 | village_high | 2860 | 28,277,296 | 3050 | same |
-| cull_tile_m=16 (+ far thinning/reach/LOD) | band1_open | pending | pending | | WORLD round 1 |
+| VP2 iteration 0: cull_tile_m=16 + far thinning/reach caps/tile LOD + VEG lod ranges on | band1_open | 8633 | 21,287,781 | 7612 | coordinator 04:23 UTC, settle 120/60/20, `WORLD-coord-fast/perf_render_stats.txt` |
+| same | village_high | 4376 | 18,087,761 | 4474 | same |
+| same | hall_approach | 4335 | 13,219,939 | 4680 | same |
+| VP2 iteration A: tuft_count 210k, field_radius 56, fade_start 34, far_thin_floor 0.12, tile LOD 14/28 m, stones 45k/reach 20, cover tiers ~0.6x, far_cover fade 38–60, tree/grove lod 420/460, deadfall 260, rocks 220 | band1_open, hall_approach | measuring | | | coordinator |
 
-Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw calls ≤ 4000.
+Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw calls ≤ 4000. **Iteration 0 misses both** (21.3M; 4335).
 
 ## Judge history
 
