@@ -118,6 +118,14 @@
         "count": 12,
         "scale_min": 0.9,
         "scale_max": 1.2
+      },
+      {
+        "_why": "ROUND 2 ADDENDUM: the program coordinator asked to also thicken 04's left flank at closer range, not just the distant 120-200m horizon mass above -- 4 trees at ~80m out, 25 degrees off-axis (comfortably inside the ~51.3-degree half-FOV, unlike station 02's own first miss), clear of the (480,1023) mass (87.6m apart) and >30m off the path centreline (checked against the p13-p14 trail segment).",
+        "at": [427.0, 953.0],
+        "radius": 10.0,
+        "count": 4,
+        "scale_min": 0.85,
+        "scale_max": 1.25
       }
     ],
     "rocks": [
@@ -147,6 +155,12 @@
         "at": [-128.0, 283.0],
         "radius": 7.0,
         "count": 5
+      },
+      {
+        "_why": "ROUND 2 ADDENDUM: bushes beside station 04's new closer left-flank trees, completing the coordinator's 'thicken with trees + bushes' ask.",
+        "at": [415.0, 945.0],
+        "radius": 6.0,
+        "count": 4
       }
     ],
     "saplings": [

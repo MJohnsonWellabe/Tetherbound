@@ -231,10 +231,34 @@ static func placements_for(
 		_place_verge(out, layer, field, models, verge, half, rng)
 
 	# Authored anchors after everything else, same append-only contract as the
-	# verge and for the same reason.
-	for entry: Variant in layer.get("anchors", []):
+	# verge and for the same reason -- but, unlike the verge, EACH ANCHOR GETS
+	# ITS OWN RNG rather than drawing from the shared `rng` stream.
+	#
+	# VP4-CORRIDOR, round 2. Before this: an anchor's own draws (angle,
+	# distance, scale, model, yaw -- `_place_anchor`/`_consider`) came out of
+	# the SAME stream `_place_corridor_fill`/`_place_heroes`/`_place_water_edge`
+	# go on to use below. Every draw an anchor makes shifts the cursor those
+	# later calls start from, so adding, enlarging, or moving ONE anchor
+	# reshuffles EVERY corridor-fill placement for the WHOLE CORRIDOR in that
+	# layer -- not just near the anchor. `JUDGE-round1.md` (blind visual
+	# review) caught the result: two stations came back emptier after a pass
+	# that only ever added content, because pre-existing corridor-fill trees
+	# that happened to stand on their sightlines were shuffled elsewhere.
+	# `vegetation.json`'s own BAND2-FLOOR comment on `_place_corridor_fill`
+	# already names this exact mechanism as a known cost of raising an
+	# anchor's `count` -- this removes that cost instead of continuing to pay
+	# it. Seeded from this layer's own `seed_value` plus a large per-anchor
+	# stride (deterministic and stable given a fixed anchor order -- the same
+	# contract `seed_offset` already keeps between layers), so the result is
+	# still fully reproducible and untouched by `test_the_meadow_is_the_same_
+	# every_run`. Nothing downstream of this loop advances differently
+	# whether an anchor is absent, present, bigger, or moved.
+	for anchor_index in layer.get("anchors", []).size():
+		var entry: Variant = layer["anchors"][anchor_index]
 		if entry is Dictionary:
-			_place_anchor(out, layer, field, models, entry as Dictionary, half, rng)
+			var anchor_rng := RandomNumberGenerator.new()
+			anchor_rng.seed = seed_value + 104729 * (anchor_index + 1)
+			_place_anchor(out, layer, field, models, entry as Dictionary, half, anchor_rng)
 
 	# VEG-CORRIDOR: the corridor fill, dead last and for the same append-only
 	# reason as the verge and anchors above -- every draw made before this
