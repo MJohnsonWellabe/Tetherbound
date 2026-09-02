@@ -635,3 +635,23 @@ touched a station no anchor was ever placed at.
 
 Not committed, same convention as every round:
 `computed 825701 placements (3802 drained) across 11 layers`.
+
+---
+
+## Status at handoff, round 3
+
+Pushed to `claude/vp-corridor` at `dd74ce6c` — this commit adds no
+config/code changes, only this note, and is deliberately **not**
+`[skip ci]` so CI validates the branch (`scripts/world/scatter_rules.gd`,
+`tests/test_scatter_rules.gd`, `tools/_capture_corridor.gd`, and the two
+band vegetation files) before it is next merged.
+
+Rounds so far: 1 (`f1d74889`), 2 (`d8aa35b6`), round-2 addendum
+(`ccfd57d5` merge + `e3ee39ec` RNG-isolation fix), round 3 (`bb7c39e0`
+merge + `dd74ce6c` — 02/06 fixes, the formal isolation test, the
+`--only=` comma-list fix). All 8 stations currently read as composed
+(no `player -> empty grass -> sky`); the two capture-tool bugs found along
+the way (station-05's gully seat, `--only=`'s single-substring match) are
+both fixed and unlikely to recur since both are now either structurally
+avoided (05) or covered by a working comma-split (06/02's targeted
+re-renders this round exercised it directly).
