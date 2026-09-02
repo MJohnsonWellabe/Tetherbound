@@ -1181,3 +1181,54 @@ Then clamp: replace `TIME` with `mod(TIME, P)` for a wind period `P` and re-rend
 
 Anyone continuing this: **do not spend another round on colour values.** Nine explanations
 are now falsified and the config is proven correct at shutter on a washed frame.
+
+# Round 5c — elapsed time is NOT the cause; the wrap is not the fix
+
+Matched-TIME A/B in ONE boot at `03-rise-overlook`, preset `day`. `time_wrap` is a
+uniform, so both arms were shot at the same elapsed time with every other variable
+identical — `1.0e9` (wrap effectively off, old raw-`TIME` behaviour) vs `2500.0` (shipped).
+
+| checkpoint | TIME (s) | R−G wrap OFF | R−G wrap ON |
+|---|---|---|---|
+| N=0 | ~165 | −6.76 | −8.13 |
+| N=200 | ~1226 | −8.26 | −8.25 |
+| N=300 | ~1774 | −8.72 | −8.66 |
+| N=400 | ~2325 | −8.95 | −8.97 |
+| N=500 | ~2883 | **−9.02** | **−8.85** |
+
+**NEITHER ARM EVER WASHED.** Ten frames, out to TIME 2890 s — covering the whole
+2000–2900 s window in which every washed run sat.
+
+## What this settles
+
+1. **Elapsed time alone does not cause the red wash.** Falsified. My round-5b reading
+   that it "tracks elapsed render time" was too strong: elapsed time was a *correlate*
+   of the runs that washed, not the cause.
+2. **The `TIME` wrap is NOT the fix.** It stays in as a genuine latent-bug fix (unbounded
+   `TIME` into `fract()`/`floor()` is a real hazard, and it costs nothing), but it must not
+   be described as fixing the wash. At N=500 the wrap is ACTIVE and the two arms differ by
+   0.17 R−G — i.e. bounded and raw `TIME` are visually indistinguishable at these
+   magnitudes, so precision loss is not degrading anything here.
+3. **A useful side result:** with the wrap active past its period, no seam or jump appeared
+   in the measurements. The 2500 s period is safe to ship.
+4. **The brightening is a completed convergence, not a ramp to the wash.** Mean rose 0.33
+   → ~0.49 by TIME ~1200 s and then *plateaued* (0.4956 → 0.4912 → 0.4896 → 0.4884). It
+   settles; it does not run away into a wash.
+
+## Where the cause must be
+
+The discriminator is now sharp. Runs that washed all involved **stand and preset
+TRANSITIONS**: round 5b washed at shot 3 of 4 (teleport + `apply_time` changes), and the
+round-3 stands run washed at shot 8 of 9. This test did ten shots with **no transitions**
+— same stand, same preset, only idling — and never washed at any elapsed time.
+
+So the trigger is in what happens at a transition: teleporting the camera/player between
+stands, and/or `apply_time()` switching presets — not in time passing.
+
+**Next test, and it is cheap:** at ONE stand, shoot `day`, then call `apply_time` to cycle
+through the other presets and back to `day`, and shoot `day` again — no teleport, no long
+idle. If the second `day` is washed, preset switching is the trigger. If it is clean, add a
+teleport and repeat. That isolates the two candidates in at most two short runs, and
+neither needs to run for an hour.
+
+Evidence: `round5c-wrap-ab/` (10 frames), `round5c-onset/` (2 frames).
