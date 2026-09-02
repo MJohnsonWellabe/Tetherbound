@@ -77,6 +77,19 @@ const PAIR_MAX_H := 0.45
 const MAX_REROLLS := 5
 const REPORT_RADIUS := 30.0
 
+## The camera can NOT sit at the same point as the player: `_capture_locations.
+## gd`'s own established rig always pulls the camera back from the standing
+## point (`back := eye - toward * back_m`, RIG["standing"] = 3.2) precisely
+## because a camera co-located with the player looks straight into the
+## trainer's own hood/hair at 0m. This file's first round-5 boot skipped that
+## offset and every stand frame paid for it -- see REPORT.md's round 5
+## section. STAND_BACK_M matches that same default; VILLAGE_BACK_M/_UP_M copy
+## `_capture_locations.gd`'s own "01 standing" rig verbatim (back 15, up 2.6),
+## since that is literally the same eye this file's village frame reuses.
+const STAND_BACK_M := 3.5
+const VILLAGE_BACK_M := 15.0
+const VILLAGE_UP_M := 2.6
+
 ## Five evidence stands. `eye`/`facing_toward` are round 2-3's own
 ## confirmed-clear camera geometry. Round 5 adds `_why_vp9_r5`-tagged
 ## clusters in the band spawns.json files so the REAL population reads a
@@ -255,8 +268,11 @@ func _shoot_stand(stand: Dictionary, suffix: String) -> void:
 	var toward := Vector2(float(towardArr[0]), float(towardArr[1]))
 	var eye := _clear_eye(eye_raw, toward, "%s-%s" % [id, suffix])
 	var ground := _surface(eye)
+	var facing := (toward - eye).normalized()
+	var cam2 := eye - facing * STAND_BACK_M
+	var cam_ground := _surface(cam2)
 	_place(eye, ground)
-	_frame(eye, ground, toward, ground)
+	_frame(cam2, cam_ground, toward, ground)
 	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
 	# Let encounter streaming activate/settle whatever the world's own
@@ -265,7 +281,7 @@ func _shoot_stand(stand: Dictionary, suffix: String) -> void:
 		await physics_frame
 
 	_hide_huds()
-	_frame(eye, ground, toward, ground)
+	_frame(cam2, cam_ground, toward, ground)
 	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -316,14 +332,17 @@ func _shoot_village() -> void:
 	var toward := Vector2(3.0, 1.0)
 	var eye := _clear_eye(eye_raw, toward, "00-village-life")
 	var ground := _surface(eye)
+	var facing := (toward - eye).normalized()
+	var cam2 := eye - facing * VILLAGE_BACK_M
+	var cam_ground := _surface(cam2)
 	_place(eye, ground)
-	_frame(eye, ground, toward, ground)
+	_frame(cam2, cam_ground, toward, ground, VILLAGE_UP_M, 1.6)
 	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
 	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
 	_hide_huds()
-	_frame(eye, ground, toward, ground)
+	_frame(cam2, cam_ground, toward, ground, VILLAGE_UP_M, 1.6)
 	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -888,9 +907,10 @@ func _place(at: Vector2, ground: float) -> void:
 		(_player as CharacterBody3D).velocity = Vector3.ZERO
 
 
-func _frame(eye: Vector2, eye_ground: float, target: Vector2, target_ground: float) -> void:
-	_camera.global_position = Vector3(eye.x, eye_ground + 1.70, eye.y)
-	_camera.look_at(Vector3(target.x, target_ground + 1.70, target.y), Vector3.UP)
+func _frame(eye: Vector2, eye_ground: float, target: Vector2, target_ground: float,
+		eye_up: float = 1.70, look_up: float = 1.70) -> void:
+	_camera.global_position = Vector3(eye.x, eye_ground + eye_up, eye.y)
+	_camera.look_at(Vector3(target.x, target_ground + look_up, target.y), Vector3.UP)
 
 
 func _surface(at: Vector2) -> float:
