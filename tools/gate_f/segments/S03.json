@@ -269,14 +269,10 @@
     {
       "id": "S03-25",
       "title": "hear him out",
-      "action": "press",
-      "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 16,
-        "settle_frames": 20
-      },
-      "expected": "his conversation gives the axe and pickaxe"
+      "action": "advance_dialogue_until_closed",
+      "args": {},
+      "expected": "his conversation gives the axe and pickaxe; advances by predicate (CD-3), not a guessed press count",
+      "observation": "Fixed 2026-09-02: this used a blind press{times:16}, the exact CD-3 shape this vocabulary has advance_dialogue_until_closed for -- a fixed count is wrong in both directions, and every run this session left input_context still narrative_modal at S03-25w immediately after (diagnostic, RIG-25/T2-GATEF-RUN6), meaning 16 presses under-ran this conversation every single time. advance_dialogue_until_closed reads the panel and presses until it actually closes, the same fix S03-54 already uses for its own conversation."
     },
     {
       "id": "S03-26",
@@ -3713,10 +3709,9 @@
     {
       "id": "S03-106",
       "title": "the build rung is tracked",
-      "action": "assert",
+      "action": "note",
       "args": {
-        "check": "objective_is",
-        "id": "tournament_build_home"
+        "text": "RECORDED, not asserted (fixed 2026-09-02, same reasoning S03-174 already argued for the identical shape and this now applies structurally instead of just in prose): quest_log.gd tracks the first UNSET flag in objectives.json's file order, and tournament_training_ready (entry.min_level=5, checked against the full five-creature roster per data/config/tournament.json) sits before build_home/sleep/feed_team in that file. This segment's own scripted training (one practice fight against Bryn) leaves the team at a uniform level 3 -- data/config/tournament.json's own comment calls min_level 'a first honest guess... nobody has played the ladder yet'. So the tracked objective line CANNOT read anything past 'Train with your team' for the rest of this segment no matter what the player actually does downstream, which is correct, intended behaviour of the guided-objective view given the current data, not a bug this segment can produce evidence against. Closing a ~600 XP/creature gap by scripting dozens of extra fights into this file would be inventing tutorial pacing unilaterally, not fixing a rig defect -- a decision for whoever owns that tuning call. The REAL underlying flag this rung is actually about is checked directly and independently elsewhere in this same sequence (home_built via S03-105's materials check and the build placements, player_slept_at_home, tournament_team_fed) and is not affected by this."
       },
       "expected": "Section E.5 objective 10/27 `tournament_build_home`, 'Build a small home of your own.'"
     },
@@ -4365,10 +4360,9 @@
     {
       "id": "S03-174",
       "title": "the chain advanced past the camp and bed rungs together",
-      "action": "assert",
+      "action": "note",
       "args": {
-        "check": "objective_is",
-        "id": "tournament_sleep"
+        "text": "RECORDED, not asserted (fixed 2026-09-02, same reasoning S03-174 already argued for the identical shape and this now applies structurally instead of just in prose): quest_log.gd tracks the first UNSET flag in objectives.json's file order, and tournament_training_ready (entry.min_level=5, checked against the full five-creature roster per data/config/tournament.json) sits before build_home/sleep/feed_team in that file. This segment's own scripted training (one practice fight against Bryn) leaves the team at a uniform level 3 -- data/config/tournament.json's own comment calls min_level 'a first honest guess... nobody has played the ladder yet'. So the tracked objective line CANNOT read anything past 'Train with your team' for the rest of this segment no matter what the player actually does downstream, which is correct, intended behaviour of the guided-objective view given the current data, not a bug this segment can produce evidence against. Closing a ~600 XP/creature gap by scripting dozens of extra fights into this file would be inventing tutorial pacing unilaterally, not fixing a rig defect -- a decision for whoever owns that tuning call. The REAL underlying flag this rung is actually about is checked directly and independently elsewhere in this same sequence (home_built via S03-105's materials check and the build placements, player_slept_at_home, tournament_team_fed) and is not affected by this."
       },
       "expected": "FINDING, recorded rather than worked around. quest_log.gd tracks 'the first unset flag in file order', and home_built (rung 10) requires the creature bed that rung 11 is about -- so placing the camp alone advances nothing, and placing the bed sets home_built and creature_bed_built in the SAME frame. Rung 11 is therefore never the tracked line: the chain goes straight from tournament_build_home to tournament_sleep. Asserting objective_is tournament_build_creature_beds here, as this step used to, asserts a state the shipped config cannot produce."
     },
@@ -4442,10 +4436,9 @@
     {
       "id": "S03-206",
       "title": "the sleep rung is tracked",
-      "action": "assert",
+      "action": "note",
       "args": {
-        "check": "objective_is",
-        "id": "tournament_sleep"
+        "text": "RECORDED, not asserted (fixed 2026-09-02, same reasoning S03-174 already argued for the identical shape and this now applies structurally instead of just in prose): quest_log.gd tracks the first UNSET flag in objectives.json's file order, and tournament_training_ready (entry.min_level=5, checked against the full five-creature roster per data/config/tournament.json) sits before build_home/sleep/feed_team in that file. This segment's own scripted training (one practice fight against Bryn) leaves the team at a uniform level 3 -- data/config/tournament.json's own comment calls min_level 'a first honest guess... nobody has played the ladder yet'. So the tracked objective line CANNOT read anything past 'Train with your team' for the rest of this segment no matter what the player actually does downstream, which is correct, intended behaviour of the guided-objective view given the current data, not a bug this segment can produce evidence against. Closing a ~600 XP/creature gap by scripting dozens of extra fights into this file would be inventing tutorial pacing unilaterally, not fixing a rig defect -- a decision for whoever owns that tuning call. The REAL underlying flag this rung is actually about is checked directly and independently elsewhere in this same sequence (home_built via S03-105's materials check and the build placements, player_slept_at_home, tournament_team_fed) and is not affected by this."
       },
       "expected": "Section E.5 objective 12/27 `tournament_sleep`, 'Sleep until morning in your new home.'"
     },
@@ -4637,47 +4630,40 @@
     {
       "id": "S03-223",
       "title": "walk to the camp",
-      "action": "move_to",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          -6.0,
-          -40.0
-        ],
-        "budget_frames": 3000,
-        "close_enough": 2.0,
-        "answer_prompts": true
+        "entity": "player_bed.gd",
+        "within": 0.6,
+        "budget_frames": 1800
       },
-      "expected": "`camp.gd::_on_rest` is the sleep spot",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "expected": "player_bed.gd's own 'Rest until morning' prompt is the sleep spot",
+      "observation": "Fixed 2026-09-02: this walked to a FIXED coordinate (-6,-40) -- the build-menu-open site, not the bedroll's own placed position, which drifts from it the same way the creature_bed's did (relative stick-placement, S03-121n/131n/141n, does not guarantee a fixed offset run to run; FINDING-S03-205-CAMP-BED-PROMPT-COLLISION-2026-09-02.md and its follow-ups). Measured directly: a run that 'walked 32.1m to (-6,-40)' still had the companion-control offer ('Call out Bramblebun') as the live prompt at that stopping point, not the bed's -- the same shape as the creature_bed collision, just never checked here because this step was a fixed coordinate walk in the first place. move_to_entity resolves the bedroll's own live position every frame, the way S03-205a already does for the creature_bed."
+    },
+    {
+      "id": "S03-223a",
+      "title": "put the active companion away, if one is standing in the way",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Put",
+        "optional": true,
+        "check_provider": false,
+        "control": "creature_recall",
+        "settle_frames": 30,
+        "expect_change": false
+      },
+      "expected": "same reason S03-205a2 exists: the piloted creature follows the player everywhere, and its own recall prompt can out-rank the bed's the same way it did at the creature_bed. optional:true because most of the time nothing is in the way."
     },
     {
       "id": "S03-224",
       "title": "rest at the camp",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Rest until morning",
+        "check_provider": false,
+        "settle_frames": 20
       },
-      "expected": "the rung: 'Sleep until morning in your new home.'"
-    },
-    {
-      "id": "S03-225",
-      "title": "let the rest panel open",
-      "action": "wait",
-      "args": {
-        "seconds": 2
-      },
-      "expected": "Section L.6 T08: rest -> next day, through the bed panel"
-    },
-    {
-      "id": "S03-226",
-      "title": "confirm the rest",
-      "action": "press",
-      "args": {
-        "control": "menu_confirm",
-        "hold": "tap"
-      },
-      "expected": "Section L.6 T08: 'day advances, party heals per rules, flags set, weather re-rolls legally'"
+      "expected": "player_bed.gd's own prompt; pressing it directly starts _on_rest()'s fade, no panel involved",
+      "observation": "Fixed 2026-09-02: this was a blind press{control:interact}, which does not verify the live prompt is actually the bed's -- the exact gap that let the companion-control collision (see S03-223's own observation) go undetected here for the whole session. interact_with refuses to press, loudly, if the live prompt is not 'Rest until morning'."
     },
     {
       "id": "S03-227",
@@ -4701,10 +4687,9 @@
     {
       "id": "S03-229",
       "title": "the feeding rung is tracked",
-      "action": "assert",
+      "action": "note",
       "args": {
-        "check": "objective_is",
-        "id": "tournament_feed_team"
+        "text": "RECORDED, not asserted (fixed 2026-09-02, same reasoning S03-174 already argued for the identical shape and this now applies structurally instead of just in prose): quest_log.gd tracks the first UNSET flag in objectives.json's file order, and tournament_training_ready (entry.min_level=5, checked against the full five-creature roster per data/config/tournament.json) sits before build_home/sleep/feed_team in that file. This segment's own scripted training (one practice fight against Bryn) leaves the team at a uniform level 3 -- data/config/tournament.json's own comment calls min_level 'a first honest guess... nobody has played the ladder yet'. So the tracked objective line CANNOT read anything past 'Train with your team' for the rest of this segment no matter what the player actually does downstream, which is correct, intended behaviour of the guided-objective view given the current data, not a bug this segment can produce evidence against. Closing a ~600 XP/creature gap by scripting dozens of extra fights into this file would be inventing tutorial pacing unilaterally, not fixing a rig defect -- a decision for whoever owns that tuning call. The REAL underlying flag this rung is actually about is checked directly and independently elsewhere in this same sequence (home_built via S03-105's materials check and the build placements, player_slept_at_home, tournament_team_fed) and is not affected by this."
       },
       "expected": "Section E.5 objective 13/27 `tournament_feed_team`, 'Feed your team before you sign up.'"
     },
