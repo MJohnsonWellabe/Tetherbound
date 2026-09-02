@@ -176,6 +176,21 @@
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
     },
     {
+      "order": 4076,
+      "species": "burrowback",
+      "table": "meadows_rock",
+      "count": 3,
+      "centre": [
+        -260.9,
+        0.0,
+        6451.7
+      ],
+      "radius": 12.0,
+      "habitat": "rocky_shoulder",
+      "_why": "VP9. The blind visual-parity judge's own first-round finding across every stand rendered so far: no creature appears in any frame of a creature-bonding game. `ridge_patrol_camp`'s own centroid is [-235.9,6471.7] (props.json order 4000's `_why`); this band's only existing wild presence near it is order 4010's single resident picket 38m to the north, authored deliberately thin so it reads as a lone denizen rather than a herd. This is a SEPARATE, ground-level grazing cluster southwest of the camp, off the watchtower spur the patrol trainer and picket occupy, so a player standing at the camp actually sees wildlife in the ridge terrain rather than empty rock. Burrowback over another Trailpup/Mudsnout repeat because this is rocky ridge ground, the family's own home terrain per `meadows_rock`'s table comment, and the band's existing burrowback cluster (order 4009) is 1600m+ away at the eastern loop camp. No time/weather gate -- reads day and night, same as the picket beside it.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/ridge country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as authored here."
+    },
+    {
       "order": 4011,
       "species": "mudsnout",
       "table": "meadows_open",
