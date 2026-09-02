@@ -3,7 +3,7 @@
   "title": "S03 catch-loop single-attempt test (fast iteration slice of S03, not part of the real segment chain)",
   "lane": "journey",
   "evidence_lane": "logic",
-  "_comment": "NOT part of the S01-S10 evidence chain. A truncated copy of S03 steps S03-01..S03-38a (its boot/load/setup plus exactly ONE catch attempt), captures dropped, so a chip-down/catch-mechanics change can be checked in under a minute instead of running all 451 steps of S03 (~20+ minutes). Regenerate from S03.json by hand whenever S03s setup steps change; this file is scratch tooling, not authoritative evidence.",
+  "_comment": "NOT part of the S01-S10 evidence chain. A truncated copy of S03 steps S03-01..S03-36a (its boot/load/setup, one chip_to_floor, one throw_until_caught), captures dropped, so a chip/catch-mechanics change can be checked in under a minute instead of running all of S03. Regenerate from S03.json by hand whenever S03s setup steps change; this file is scratch tooling, not authoritative evidence.",
   "steps": [
     {
       "id": "S03-01",
@@ -371,62 +371,26 @@
     },
     {
       "id": "S03-36a",
-      "title": "begin the aim",
-      "action": "press_until",
+      "title": "aim and throw until caught, or out of tries (attempt 1)",
+      "action": "throw_until_caught",
       "args": {
-        "control": "interact",
-        "check": {
-          "check": "input_context",
-          "equals": "combat_aim"
-        },
-        "max_presses": 3,
-        "settle_frames": 20,
+        "max_throws": 4,
+        "aim_budget_frames": 240,
+        "resolve_seconds": 6.0,
         "skip_if": {
           "check": "combat_running",
           "equals": false
         }
       },
-      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
-      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
-    },
-    {
-      "id": "S03-36a2",
-      "title": "track the bramblebun until the reticle is on it (attempt 1)",
-      "action": "track_aim",
-      "args": {
-        "budget_frames": 240,
-        "skip_if": {
-          "check": "combat_running",
-          "equals": false
-        }
-      },
-      "expected": "RIG-F3 (S02-41b/S02-43db): steers the camera at the target's live position every frame and stops the instant aim_report() reports eligible -- the same real-stick primitive S02's own required catch is measured on. S03's catch loop never actually used this before attempt 7: attempts 1-5 went straight from arming the aim to a blind throw with no steering step at all, and attempt 6's force_aim (2026-09-02, superseded) papered over that gap with a harness-only reticle snap instead of adding real tracking. main has since landed ralph/OWNER-0902-CATCH-SLOWMO (data/config/catching.json's aim.target_slowdown_scale, wild_creature.gd) putting the aimed-at creature at 35% speed for the duration of this step, which is what gives track_aim's own rate-limited stick steering a real chance of converging on a wild bramblebun within this budget."
-    },
-    {
-      "id": "S03-37a",
-      "title": "throw the orb",
-      "action": "press",
-      "args": {
-        "control": "interact",
-        "hold": "tap"
-      },
-      "expected": "Section E.2: per throw record aim time, distance, shown percent and result"
-    },
-    {
-      "id": "S03-38a",
-      "title": "let the catch resolve",
-      "action": "wait",
-      "args": {
-        "seconds": 6
-      },
-      "expected": "the `catch_result` event carries the outcome"
+      "expected": "the target is caught, or every allotted throw against it is spent -- a missed throw does not end the fight (catching.json's own cooldown exists so a failed catch can be re-thrown once the wobble clears; combat_manager.gd re-engages the same target on a miss), so this keeps throwing at the SAME chipped-down target instead of treating one orb as the whole attempt.",
+      "observation": "Owner directive, this session: \"we should chip down then throw orbs til we catch.\" The ladder used to spend exactly one orb per numbered attempt (arm aim, track, throw once, wait) and then move on regardless of outcome -- discarding real, intended-to-be-retried catch chances the moment a single throw missed, even though nothing about the game ends the fight on a miss. throw_until_caught (operator_harness.gd, added for this) re-arms the aim, re-tracks the live target and throws again, up to max_throws times, stopping the instant the party actually grows."
     },
     {
       "id": "S03CT-END",
       "title": "end of the single-attempt catch test",
       "action": "note",
       "args": {
-        "text": "One catch attempt only, for fast iteration on the chip-down/catch mechanics. Check party_size (S03-11 confirmed 2 at entry) and the last catch_result/party grew observation in telemetry/events.jsonl for the outcome."
+        "text": "Chip then throw-until-caught, one target only, for fast iteration. Check party_size (S03-11 confirmed 2 at entry) and the last catch_result/party grew observation in telemetry/events.jsonl for the outcome."
       },
       "expected": "a note event carries this observation into events.jsonl"
     }

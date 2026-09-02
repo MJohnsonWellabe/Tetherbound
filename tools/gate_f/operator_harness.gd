@@ -1790,6 +1790,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_press_until(args, id)
 		"chip_to_floor":
 			actual = await _step_chip_to_floor(args, id)
+		"throw_until_caught":
+			actual = await _step_throw_until_caught(args, id)
 		"track_aim":
 			actual = await _step_track_aim(args, id)
 		"force_aim":
@@ -3353,6 +3355,78 @@ func _step_chip_to_floor(args: Dictionary, step_id: String) -> String:
 
 	return "%d x %s: enemy hp %.1f/%.1f (%.1f%%), hits dealt [%s], largest %.1f" % [
 		presses, control, hp, max_hp, 100.0 * hp / max_hp, ", ".join(hits), max_hit]
+
+
+## Aim, throw, and if it misses, DO IT AGAIN -- against the same chipped-down
+## target, in the same fight -- instead of walking away after one orb.
+##
+## Owner directive, this session: "we should chip down then throw orbs til we
+## catch." A single scripted throw per numbered attempt was leaving real
+## catch chances on the table for a reason that has nothing to do with the
+## catch roll: `catching.json`'s own `throw.cooldown` (0.9s, "stops a failed
+## catch from being instantly re-thrown while the wobble is still on
+## screen") and `combat_manager.gd::_finish_catch()`'s failure branch
+## (`_wild.call("set_engaged", true, _ally_body)`, no fight-ending) both say
+## outright that a missed throw is meant to be followed by another one in the
+## SAME encounter -- a real player does not lose access to their target
+## because one orb bounced off. This step re-arms the aim
+## (`press_until input_context == combat_aim`, idempotent the same way
+## `press_until` always is), re-tracks the live target (`track_aim`, since
+## it keeps walking through the wait), throws, and waits for the verdict --
+## repeating up to `max_throws` times, stopping the INSTANT the party grows
+## (caught) or the fight ends some other way (fled, or `is_fighting()` goes
+## false). Bounded, not unconditional: `max_throws` (default 4) keeps one
+## stubborn target from spending the whole trip's orb supply, the same
+## reasoning `chip_to_floor`'s own `max_presses` cap uses.
+func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED throw_until_caught: not needed (%s)" % str(moot.get("actual", ""))
+
+	var mgr := _probe.call("combat_manager") as Node
+	if mgr == null or not mgr.has_method("is_fighting"):
+		return "HARNESS-ERROR throw_until_caught step %s has no CombatManager" % step_id
+	var max_throws := maxi(1, int(args.get("max_throws", 4)))
+	var aim_budget := int(args.get("aim_budget_frames", 240))
+	var resolve_seconds := float(args.get("resolve_seconds", 6.0))
+	var throw_control := str(args.get("throw_control", "interact"))
+
+	var party_before := (_probe.call("party_state") as Array).size()
+	var log: Array[String] = []
+	for attempt in max_throws:
+		if not bool(mgr.call("is_fighting")):
+			return "FAIL throw_until_caught: fight ended before throw %d (%s)" % [
+				attempt + 1, ", ".join(log)]
+		var armed := await _step_press_until({
+			"control": "interact",
+			"check": {"check": "input_context", "equals": "combat_aim"},
+			"max_presses": 3,
+			"settle_frames": 20,
+		}, "%s-arm%d" % [step_id, attempt + 1])
+		if armed.begins_with("FAIL") or armed.begins_with("HARNESS-ERROR"):
+			return "FAIL throw_until_caught: could not arm aim for throw %d (%s) -- prior: %s" % [
+				attempt + 1, armed, ", ".join(log)]
+		var tracked := await _step_track_aim({"budget_frames": aim_budget},
+			"%s-track%d" % [step_id, attempt + 1])
+		# A tracking FAIL (budget exhausted, LOS blocked) is not fatal on its
+		# own: the throw below still goes out unassisted rather than wasting
+		# the whole attempt on a step that only steers, never presses --
+		# matching the ladder's own pre-existing behaviour when tracking ran
+		# out. Recorded in the log either way.
+		var sent := await _inject(throw_control, _hold_frames("tap"))
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		await _step_wait({"seconds": resolve_seconds})
+		var party_now := (_probe.call("party_state") as Array).size()
+		log.append("throw %d (%s)" % [attempt + 1, "tracked" if not tracked.begins_with("FAIL") else "untracked"])
+		if party_now > party_before:
+			return "caught on throw %d of %d (%s)" % [attempt + 1, max_throws, ", ".join(log)]
+		if not bool(mgr.call("is_fighting")):
+			return "FAIL throw_until_caught: fight ended after throw %d without a catch (%s)" % [
+				attempt + 1, ", ".join(log)]
+	return "FAIL throw_until_caught: %d throw(s) spent, no catch (%s)" % [max_throws, ", ".join(log)]
 
 
 ## RIG-F3 — track the live target during aim; do not throw at a stale point.
