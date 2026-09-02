@@ -31,7 +31,10 @@
 shader_type spatial;
 render_mode cull_disabled, diffuse_lambert, specular_disabled;
 
-uniform vec4 colour : source_color = vec4(0.42, 0.16, 0.13, 1.0);
+// Default kept in sync with stronghold.gd's BANNER_COLOUR (#66362c); every
+// real caller sets this uniform explicitly (`_banner_cloth_material`), so the
+// default only matters if a future caller forgets to.
+uniform vec4 colour : source_color = vec4(0.4, 0.212, 0.173, 1.0);
 uniform vec4 selvage_colour : source_color = vec4(0.25, 0.09, 0.08, 1.0);
 uniform vec4 device_colour : source_color = vec4(0.91, 0.87, 0.77, 1.0);
 uniform sampler2D device_tex : source_color, filter_linear_mipmap;

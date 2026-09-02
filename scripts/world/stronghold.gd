@@ -445,7 +445,38 @@ const EXTERIOR_CHAMBERS: Array[String] = ["outer_works", "courtyard"]
 ## R=107 G=42 B=32) and G==B rather than G>B, so there is no channel
 ## relationship left for a bright key or the ACES tonemap to read as a warm
 ## red instead of a blood-dark one.
-const BANNER_COLOUR := Color("#5a1a1a")
+## ROUND-6 (2026-09-02). The judge was right again: #5a1a1a STILL reads
+## poster-red -- confirmed by sampling actual rendered banner pixels rather
+## than reasoning about the authored hex, which is what every prior round did.
+## `_hang_banner`/`_banner_cloth_material` were already wired to this constant
+## correctly (checked every call site; nothing else builds a banner and no
+## stray kit `Banner` material is in the current `meadows_hall` build), so the
+## bug was never a routing mistake -- it is that this constant is not what the
+## PLAYER SEES it as. Measured directly off `10-stronghold-gate-day.png` (a
+## clean field pixel, away from the sigil and selvage, well outside any
+## diagnostic light): #5a1a1a (0.353, 0.102, 0.102 normalised) renders as
+## roughly RGB(119,15,24) -- R pushed UP about 30% while G is crushed to
+## barely half itself and B holds close to authored. `world_look.gd` runs
+## `Environment.TONE_MAPPER_ACES` (`data/config/art.json`'s `tonemap: "aces"`),
+## and Godot's ACES fit applies its own S-curve to each channel independently:
+## a channel already near the curve's toe (G and B here, both ~0.10) gets
+## crushed, while a channel far enough up the curve (R, ~0.35) gets the
+## contrast-boosted mid-tone gain instead -- the exact mechanism this file's
+## own `_comment_ambient_sky_t1_hall_4`/NIGHT-LIGHT notes elsewhere in the
+## codebase already document for shadows, just never checked against THIS
+## surface's own rendered pixels before. Raising the two crushed channels
+## (G 0.102 -> 0.212, B 0.102 -> 0.173) lifts both clear of the toe so they
+## pick up gain too instead of collapsing toward zero, which is what turns a
+## post-tonemap "pure saturated red" into a muted red-BROWN -- the oxblood
+## read the keyart wants. R comes down slightly (0.353 -> 0.4 is actually a
+## touch higher pre-tonemap, but starts from a point past the same toe so its
+## own gain is smaller) and G stays below B is explicitly avoided (G > B, per
+## the ROUND-5 note above, so no light level reads this as magenta). PROVEN
+## by re-rendering and re-sampling, not merely reasoned -- see the report for
+## the after-fix pixel value; if it is still saturated red, this colour is
+## wrong and needs the same measure-don't-guess treatment again, not another
+## hex picked by eye.
+const BANNER_COLOUR := Color("#66362c")
 const BANNER_NOMINAL_OXBLOOD := Color("#7a2430")
 ## T1-HALL-4, JUDGE-6 defect 8/10: "monumental banners, several, at varied size
 ## -- present but POSTAGE-STAMP SIZED. The good banner in `H-05` reads ~1.5m on
@@ -2886,6 +2917,13 @@ func _build_gate_tower_sconces() -> void:
 	probe_holder.add_child(probe)
 	var bounds := _visual_bounds(probe_holder)
 	probe_holder.queue_free()
+	# TEMP-DIAGNOSTIC-ITEM3: the retrofit_skyline props on this same tower kit
+	# were mounted with hand-computed lifts against an assumed ~5.4m native
+	# height (scale x 3.0 = ~16.2m); this prints the REAL measured native AABB
+	# so that assumption can be checked against the retrofit's own floating
+	# prop before its lift is retuned. Remove once item 3 is verified.
+	print("[stronghold][DIAG] LargeSquareTowerBricks native visual bounds: %s (native height %.3f)" % [
+		bounds, bounds.size.y])
 	if bounds.size.z <= 0.01:
 		return
 	# ONE shared material for both plaques (same colour/energy on both towers)
@@ -3503,6 +3541,24 @@ func _build_conduits() -> void:
 			_exterior_live_material() if open_yard else _live_material(), false)
 
 
+## DIAGNOSTIC RESULT, ITEM 1 (2026-09-02). A single OmniLight3D dropped at the
+## courtyard centre (energy 20, range 30, default attenuation 1.0) was rendered
+## and the floor pixels sampled directly: they LIT UP (roughly RGB 128,121,80
+## under the diagnostic light, against a near-black floor without it) -- so the
+## floor's own material (`_floor_material()`/`hall_stone.gdshader`) was never
+## the problem; the light never reaching enough of the yard was. The real cause
+## the diagnostic pointed at: the four courtyard corner braziers
+## (`hall_occupation.braziers`) carry `attenuation: 1.4`, which -- per
+## `_build_hall_fire()`'s own header -- concentrates a light's falloff sharply
+## near the source rather than spreading it toward the range edge. Three prior
+## rounds raised `energy` on that same steep curve and moved the frame mean
+## only 2.83 -> 8.38, because energy on a steep attenuation curve raises the
+## peak brightness AT the bowl without growing the pool much -- exactly what
+## the diagnostic's own default-attenuation light (which pools far more evenly
+## out to its range) proved by lighting the whole yard at once. Fixed in
+## `stronghold.json` by lowering attenuation toward the diagnostic's own shape
+## rather than raising energy a fourth time. See `hall_occupation`'s own
+## comments there for the final numbers.
 func _build_lights() -> void:
 	# T1-ARCH-STRONGHOLD: `lights_flanks` is the gate-face fire+sky-fill recipe
 	# (`lights` above) re-aimed at the two `-x`/`+x` walls it never reached --

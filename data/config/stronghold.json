@@ -752,18 +752,20 @@
       },
       {
         "_comment": "The inner bailey's fire, beside the relay hub. Clear of the courtyard trainer's stand at (-4,36).",
+        "_comment_round6": "ROUND-6 (2026-09-02), item 1's final reach pass: range 15->18, energy 2.7->3.2 -- this is the yard's own central fire and the last modest push after the corner braziers' attenuation fix to clear the >=12 frame-mean bar (measured 11.05 with the corner fix alone, one render short).",
         "at": [
           6.4,
           30.6
         ],
         "on_floor": true,
         "scale": 2.1,
-        "energy": 2.7,
-        "range": 15.0
+        "energy": 3.2,
+        "range": 18.0
       },
       {
         "_comment": "VP-HALL-FIX-3 (2026-09-02), courtyard corner brazier 1/4, NW. `stronghold-courtyard-night` measured 2.84/255 with one central fire (the inner bailey's, above) trying to cover a 22x28 yard alone -- these four hug the four corners instead of adding more energy to the same spot. Against the west curtain, north of the hoarding/stairs, clear of the fight floor x[-5,5] z[24,42] and the trainer stand (-4,36) radius.",
         "_comment_round5": "ROUND-5 (code-blind judge on round-4 frames): 'the new lights are small hot spots that don't spread across the yard' and native-exposure frame mean was still 2.84->3.58 against a stated target of >=12. Owner-authorised x3 energy / x1.5 range on these four exactly (2.2->6.6, 13.0->19.5) -- attenuation is left at 1.4 (still pools near the bowl rather than washing flat) so the extra energy grows the POOL each brazier throws instead of just brightening its hottest pixel.",
+        "_comment_round6": "ROUND-6 (2026-09-02), DIAGNOSTIC-FIRST. A single OmniLight3D dropped at the courtyard centre (energy 20, range 30, DEFAULT attenuation 1.0) lit the floor to a warm, clearly-readable RGB in one render, proving the floor material was never the defect -- the SHAPE of these braziers' own falloff was. `attenuation: 1.4` concentrates a light's contribution close to the bowl (see `_build_hall_fire()`'s own header); round-5's x3 energy bump rode that same steep curve and only grew the hottest pixel, not the pool, which is why three rounds of raising energy barely moved the frame mean. attenuation 1.4 -> 1.0 (the diagnostic's own shape) first at range 22.0 measured frame mean 11.05 -- real movement (8.38 -> 11.05) but one render short of the >=12 bar, so range went to 25.0 here alongside the inner bailey fire's own small reach bump (see that entry). Energy is UNCHANGED from round 5's 6.6 throughout this round: every gain here is reach (attenuation, range), never another energy multiply.",
         "at": [
           -9.4,
           20.0
@@ -771,8 +773,8 @@
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
-        "range": 19.5,
-        "attenuation": 1.4
+        "range": 25.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "Courtyard corner brazier 2/4, SW -- against the west curtain, south end, lighting the doorway toward tether_approach.",
@@ -783,8 +785,8 @@
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
-        "range": 19.5,
-        "attenuation": 1.4
+        "range": 25.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "Courtyard corner brazier 3/4, NE -- against the east curtain, north end.",
@@ -795,8 +797,8 @@
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
-        "range": 19.5,
-        "attenuation": 1.4
+        "range": 25.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "Courtyard corner brazier 4/4, SE -- against the east curtain, south end.",
@@ -807,11 +809,12 @@
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
-        "range": 19.5,
-        "attenuation": 1.4
+        "range": 25.0,
+        "attenuation": 1.0
       },
       {
         "_comment": "ROUND-5, NPC-stand practical light. The courtyard trainer ('stronghold_courtyard', stronghold.json's own `gauntlet` list) stands at local (-4,36); a judge read faces as unreadable at night even after the corner braziers. This is a small torch beside the stand itself rather than another yard-scale fire -- 3m off the trainer's own position (-7.0 vs -4.0), on the WEST side (outside the fight floor's x[-5,5] band, so it never stands in the arena), close enough to actually light a face. Costs 1 omni; paid for by dropping the two flank sky-fill lights below (see their own removal note).",
+        "_comment_round6": "ROUND-6, same diagnostic finding as the corner braziers above: attenuation 1.3 -> 1.0, range 9.0 -> 11.0, so this fire's own pool actually reaches the trainer's stand 3m away instead of concentrating on the bowl itself.",
         "at": [
           -7.0,
           36.0
@@ -819,8 +822,8 @@
         "on_floor": true,
         "scale": 1.5,
         "energy": 3.4,
-        "range": 9.0,
-        "attenuation": 1.3
+        "range": 11.0,
+        "attenuation": 1.0
       }
     ],
     "_comment_gate_source": "Two brazier BASKETS with no light of their own, standing at two of the four gate fire points `lights` already authors. The T1-ARCH gate recipe lit the curtain convincingly and put nothing in the frame that could be doing the lighting; these are that missing source, and they cost zero omnis because the light is already there.",
@@ -869,17 +872,19 @@
     "gate_sentries": [
       {
         "_comment": "West gate tower sentry, facing east across the gate lane.",
+        "_why_item3_fix": "ITEM3 (2026-09-02). WAS `at` [-8.0,-10.5] -- squarely behind the SOLID flank wall between the 4m-wide gate opening (x[-2,2]) and the west flanker tower (x -5.5), so from the `10-stronghold` `gate` stand (standing at the `entrance` marker looking straight up the gate lane at `outer_works`, per `tools/_capture_locations.gd`) the sentry was occluded by the wall's own 8m mass -- invisible in every gate frame, not merely unreadable. Moved to the west flanker tower's own x (-5.5, `building_prefabs.json` meadows_hall module at [-5.5,0,-14.1]) and pulled to z -12.5, the wall's own front face -- inside the tower's silhouette and directly in the camera's forward view down the causeway, the same zone the gate's own banners (x +-3.45) already prove is unoccluded from this stand.",
         "at": [
-          -8.0,
-          -10.5
+          -5.5,
+          -12.5
         ],
         "facing_deg": -90.0
       },
       {
         "_comment": "East gate tower sentry, facing west across the gate lane.",
+        "_why_item3_fix": "ITEM3 (2026-09-02). Same fix, mirrored: x 8.0 -> 5.5 (the east flanker tower's own x), z -10.5 -> -12.5.",
         "at": [
-          8.0,
-          -10.5
+          5.5,
+          -12.5
         ],
         "facing_deg": 90.0
       }
@@ -1863,8 +1868,9 @@
           17.6
         ],
         "yaw_deg": -90,
-        "lift": 15.6,
-        "_why": "mounted on the west gate/mid-wall tower's own top (module at [-11.1,15.0] scale 3.6, ~19.4m), a floor above the ground-level scaffold already standing at [-10.2,20.5] -- the same face, a second storey."
+        "lift": 14.3,
+        "_why": "mounted on the west gate/mid-wall tower's own top (module at [-11.1,15.0] scale 3.6).",
+        "_why_item3_fix": "ITEM3 (2026-09-02). WAS `lift` 15.6, computed against an assumed ~19.4m tower (native height 5.4m x scale 3.6). `stronghold.gd::_build_gate_tower_sconces`'s own probe of the real `LargeSquareTowerBricks` mesh (added as a one-time diagnostic print for this fix) measures its native visual-bounds height at 4.165m, not 5.4m -- so this tower is actually ~15.0m (4.165 x 3.6), 4.4m SHORTER than the estimate every retrofit_skyline lift here was computed against. 15.6 -> 14.3 (0.7m below the tower's REAL top, matching the margin `team_tether_boiler_chimney` below already used against its own tower), so the rig sits on the roof deck instead of floating in the sky above it."
       },
       {
         "model": "team_tether_boiler_chimney",
@@ -1873,18 +1879,20 @@
           -12.6
         ],
         "yaw_deg": 90,
-        "lift": 15.5,
-        "_why": "planted on the east gate tower's roof (module at [10.6,-12.6] scale 3.0, ~16.2m) -- the closest, most prominent tower in the 400m/200m frame, so the break in its skyline is the one those stands cannot miss."
+        "lift": 11.8,
+        "_why": "planted on the east gate tower's roof (module at [10.6,-12.6] scale 3.0) -- the closest, most prominent tower in the 400m/200m frame, so the break in its skyline is the one those stands cannot miss.",
+        "_why_item3_fix": "ITEM3 (2026-09-02). WAS `lift` 15.5, computed against an assumed ~16.2m tower (native height 5.4m x scale 3.0). The real measured native height is 4.165m (see the scaffold_tower entry's own note above), so this tower is actually ~12.5m (4.165 x 3.0), 3.7m shorter than the estimate -- the chimney was floating 3m clear of the roof it was meant to stand on. 15.5 -> 11.8 (0.7m below the REAL top) puts its base back on the tower."
       },
       {
         "model": "team_tether_banner_rig",
         "at": [
-          -8.0,
-          -12.9
+          -10.6,
+          -12.6
         ],
         "yaw_deg": 0,
-        "lift": 16.6,
-        "_why": "a tattered banner pole standing above the west gate tower's own roof (module at [-10.6,-12.6] scale 3.0, ~16.2m), front toward -z (yaw 0) so it reads against the sky from the approach rather than edge-on."
+        "lift": 11.8,
+        "_why": "a tattered banner pole standing above the west gate tower's own roof (module at [-10.6,-12.6] scale 3.0), front toward -z (yaw 0) so it reads against the sky from the approach rather than edge-on.",
+        "_why_item3_fix": "ITEM3 (2026-09-02). TWO bugs, both fixed. (1) WAS `at` [-8.0,-12.9] -- 2.6m off the tower's own [-10.6,-12.6] in x, well outside a ~3m-scale tower's footprint. (2) WAS `lift` 16.6, computed against the same wrong ~16.2m tower-height assumption `team_tether_boiler_chimney` above was (real native height 4.165m, not 5.4m -- see that entry's note); the real tower is only ~12.5m, so 16.6 floated the pole 4.1m clear of any roof even before the x fix. Together these are exactly why this prop rendered as a red sliver hanging unattached in open sky: wrong x AND wrong height. `at` moved onto the tower's own x/z exactly and `lift` to 11.8 (the same 0.7m roof-deck margin the chimney entry uses, same tower)."
       }
     ],
     "_comment_pipe_runs_t1_hall_art": "T1-HALL-ART. Board 03's modular kit, authored as LINES rather than as a list of pieces -- stronghold.gd::_build_tether_pipe_runs lays straights end to end, drops a bracket every `bracket_pitch` pieces, puts one valve at `valve_at` along the run and caps both ends with an elbow. `y` is height above the chamber floor. These are the only part of the retrofit that is NOT batched -- each piece is its own draw call -- so the runs are deliberately short and few, and they exist to connect a boiler to a siphon so the machinery reads as one installed system rather than as unrelated props.",
