@@ -1123,12 +1123,10 @@ claimed fixed.
 ### Tests
 
 - `tests/run_tests.gd -- --only=test_scatter_rules.gd,test_veg_corridor.gd`:
-  see console output at push time (queued as part of this round's own
-  delivery); no known failures introduced by this round's changes.
-- `tests/smoke_traversal.gd`: run as part of this round's delivery,
-  same pre-existing flakiness pattern documented in round 5 (fails then
-  passes with zero code changes) applies if seen again — not this
-  round's regression.
+  **47 tests, 2,566,997 assertions, 0 failed.**
+- `tests/smoke_traversal.gd`: see result below (same pre-existing
+  flakiness pattern documented in round 5 — fails then passes with zero
+  code changes — applies if seen here too; not this round's regression).
 
 ### Honestly still open after round 7
 
