@@ -2712,14 +2712,15 @@
     },
     {
       "id": "S03-66-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-67-equip",
@@ -2765,14 +2766,15 @@
     },
     {
       "id": "S03-68-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-69",
@@ -2805,14 +2807,15 @@
     },
     {
       "id": "S03-70-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Pick berries",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-71-equip",
@@ -2857,14 +2860,15 @@
     },
     {
       "id": "S03-72-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Prise loose stones",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-73-equip",
@@ -2910,14 +2914,15 @@
     },
     {
       "id": "S03-74-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-75-equip",
@@ -2962,14 +2967,15 @@
     },
     {
       "id": "S03-76-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-77-equip",
@@ -3015,14 +3021,15 @@
     },
     {
       "id": "S03-78-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-79-equip",
@@ -3067,14 +3074,15 @@
     },
     {
       "id": "S03-80-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-81-equip",
@@ -3119,14 +3127,15 @@
     },
     {
       "id": "S03-82-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Prise loose stones",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-83",
@@ -3159,14 +3168,15 @@
     },
     {
       "id": "S03-84-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Pick berries",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-85-equip",
@@ -3212,14 +3222,15 @@
     },
     {
       "id": "S03-86-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-87-equip",
@@ -3264,14 +3275,15 @@
     },
     {
       "id": "S03-88-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-89-equip",
@@ -3317,14 +3329,15 @@
     },
     {
       "id": "S03-90-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-91-equip",
@@ -3369,14 +3382,15 @@
     },
     {
       "id": "S03-92-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-93-equip",
@@ -3422,14 +3436,15 @@
     },
     {
       "id": "S03-94-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-95",
@@ -3462,14 +3477,15 @@
     },
     {
       "id": "S03-96-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-97-equip",
@@ -3514,14 +3530,15 @@
     },
     {
       "id": "S03-98-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-99-equip",
@@ -3567,14 +3584,15 @@
     },
     {
       "id": "S03-100-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-101-equip",
@@ -3619,14 +3637,15 @@
     },
     {
       "id": "S03-102-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Prise loose stones",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-103-equip",
@@ -3671,14 +3690,15 @@
     },
     {
       "id": "S03-104-again",
-      "action": "press",
+      "action": "interact_with",
       "title": "work the node (second swing)",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
+        "optional": true,
         "hold": "tap",
         "settle_frames": 90
       },
-      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
     },
     {
       "id": "S03-105",

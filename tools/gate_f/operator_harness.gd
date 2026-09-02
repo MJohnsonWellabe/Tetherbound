@@ -3120,10 +3120,29 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 		var moot := _step_assert(skip_if)
 		if bool(moot.get("ok", false)):
 			return "SKIPPED interact_with: not needed (%s)" % str(moot.get("actual", ""))
+	# `optional`: this press is legitimately a maybe, and the three reasons
+	# below not to press are not failures of it -- they are SKIPS. Written for
+	# a harvest node's second swing: the node (and its prompt) may already be
+	# gone after a good first hit, which is fine and is not what this guards.
+	# What it actually guards, found live on a run that reached one: a wild
+	# creature can wander up to a node WHILE it is being worked and win the
+	# arbiter's priority-then-nearest contest over the node's own prompt
+	# before the second tap lands. A plain, unconditional press there does not
+	# know the difference and presses "Engage <creature>" instead of the
+	# node -- starting a real, unplanned wild fight the rest of this ladder
+	# has no script to resolve, which then FAILs every following step for as
+	# long as the world stays in combat. `optional` makes every one of those
+	# three conditions a SKIP instead of a press: no live prompt, the wrong
+	# live prompt, or the arbiter disabled outright.
+	var optional := bool(args.get("optional", false))
 	var arbiter := _probe.call("interaction_arbiter") as Node
 	if arbiter == null:
 		return "HARNESS-ERROR interact_with step %s: no live InteractionArbiter" % step_id
 	if arbiter.has_method("enabled") and not bool(arbiter.call("enabled")):
+		if optional:
+			return ("SKIPPED interact_with (optional): the interaction arbiter is DISABLED "
+				+ "(input_context '%s') -- not pressed, to avoid pressing into whatever owns "
+				+ "input instead.") % str(_probe.call("input_context"))
 		return ("FAIL the interaction arbiter is DISABLED -- a conversation, a naming prompt or "
 			+ "a fight owns the screen (input_context '%s'). No prompt is offered here and "
 			+ "`interact` would go to whatever does own input.") % str(_probe.call("input_context"))
@@ -3131,6 +3150,8 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 	var spec := str(args.get("entity", ""))
 	var player := _probe.call("player") as Node3D
 	if prompt.is_empty():
+		if optional:
+			return "SKIPPED interact_with (optional): no interact prompt is live -- not pressed"
 		var nearest := ""
 		if not spec.is_empty():
 			var found := _find_entity(spec, args)
@@ -3150,6 +3171,9 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 	# reads in the notes as a successful interaction either way.
 	var want_text := str(args.get("expect_prompt", ""))
 	if not want_text.is_empty() and not prompt.to_lower().contains(want_text.to_lower()):
+		if optional:
+			return ("SKIPPED interact_with (optional): the live prompt is \"%s\", not \"%s\" -- "
+				+ "not pressed, to avoid activating a different provider.") % [prompt, want_text]
 		return ("FAIL the live prompt is \"%s\", which does not contain \"%s\" -- pressing here "
 			+ "would activate a different provider. Not pressed.") % [prompt, want_text]
 	var provider: Object = arbiter.call("winning_provider") if arbiter.has_method("winning_provider") else null
