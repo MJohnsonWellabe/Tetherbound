@@ -173,8 +173,27 @@ provable by breaking the thing it guards.
   no breadcrumb is dropped (`_drop_breadcrumb` returns early when not
   `is_on_floor()`), the entombment failsafe rewinds to a 6.3km-stale breadcrumb,
   and the test scores that as walking around a locked gate. Harness cascade,
-  impossible for a real player. In flight on
-  `ralph/TRAVERSAL-BREADCRUMB-TELEPORT-RACE`.
+  impossible for a real player. First fix (`107c9644`) shipped only half of it:
+  it made the breadcrumb reliably EXIST, but `_recovery_position()` skips any
+  breadcrumb closer than `min_recovery_distance_m` (6.0m), and an entombed body
+  never moves horizontally, so the freshly planted breadcrumb is always inside
+  that radius and can never be chosen. Closed for real on
+  `ralph/TRAVERSAL-BRIDGE-TELEPORT-GUARD` by giving `_walk_at_the_bridge()` the
+  same step-sanity guard `_check_sigil_gate()` already had -- a teleport is not
+  a stride, and a walk that cannot tell them apart is not measuring the gate.
+  The 6.0m rule is production behaviour and was deliberately left alone.
+- **The player really is entombed 11m back from the South Bridge.** OPEN, and
+  the more serious half. Placed at `near_point(11.0)` = (7.9, -3.4, 1319.0),
+  `ground_height_at` + 1.0, the capsule settles INSIDE geometry: all eight
+  compass probes sealed, and `_clamp_runaway_velocity` firing hundreds of times
+  on 121 m/s depenetration at that exact spot. Reproduces to the centimetre
+  across every attempt. `RETRIES: 3` and the recovery failsafe together hid
+  this for weeks -- the teleport guard above stops it being scored as a false
+  gate breach, but it does NOT make the ground there sound. A player who walks
+  into that gully has a real hole to fall in. Needs a world/collision session,
+  not a harness one. The same `(x, -3.0, 1319.0)` pin recurs in Gate F S05-S10
+  notes ("stopped 12.4m short"), so it is very likely already costing Gate F
+  runs.
 - **Bram-exit navigation defect.** Leaving Bram's shop, `_exit_through()` walks a
   straight line from wherever the movement probe left the player, clipping the
   shop furniture. Partially fixed, still failing, needs its own session.
