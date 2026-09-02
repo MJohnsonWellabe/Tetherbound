@@ -3338,15 +3338,31 @@ func _step_press_until(args: Dictionary, step_id: String) -> String:
 ## of what was wanted.
 func _step_equip_tool(args: Dictionary, step_id: String) -> String:
 	var tool := str(args.get("tool", ""))
-	var control := str(args.get("control", ""))
-	if tool.is_empty() or control.is_empty():
-		return "HARNESS-ERROR equip_tool step %s needs both tool and control" % step_id
+	if tool.is_empty():
+		return "HARNESS-ERROR equip_tool step %s needs tool" % step_id
 	var max_attempts := maxi(1, int(args.get("max_attempts", 3)))
 	var settle := maxi(1, int(args.get("settle_frames", 60)))
 
 	var have := str((_probe.call("equipped") as Dictionary).get("item", ""))
 	if have == tool:
 		return "already equipped (%s)" % tool
+
+	# Live-read the slot, same reason `focus_item` reads the satchel cursor
+	# live instead of trusting a fixed offset: a step script's `control`
+	# argument is a claim about where an earlier assign sequence PUT the
+	# tool, and that claim goes stale. Measured directly on this run:
+	# `hotbar_4` held 'pickaxe', not the knife the SAME assign sequence put
+	# there in an earlier run and two independent probes confirmed -- the
+	# "if a future run's save ever again shows the knife somewhere else"
+	# case the previous ground-truth note asked to be watched for. A
+	# `control` argument, if the step script still carries one from before
+	# this fix, is accepted but ignored: it is no longer authoritative.
+	var slot := int(_probe.call("hotbar_slot_of", tool))
+	if slot < 0:
+		return ("FAIL equip_tool: '%s' is not on the hotbar at all (checked live via "
+			+ "hotbar_slot_of, not a fixed slot guess) -- the assign step never bound it, "
+			+ "or something since removed it from the bar.") % tool
+	var control := "hotbar_%d" % (slot + 1)
 
 	for attempt in max_attempts:
 		var sent := await _inject(control, _hold_frames("tap"))
@@ -3356,9 +3372,16 @@ func _step_equip_tool(args: Dictionary, step_id: String) -> String:
 			await physics_frame
 		have = str((_probe.call("equipped") as Dictionary).get("item", ""))
 		if have == tool:
-			return "%d x %s: equipped %s" % [attempt + 1, control, tool]
-	return "FAIL equip_tool: wanted %s, holding '%s' after %d press(es) of %s" % [
-		tool, have, max_attempts, control]
+			return "%d x %s (live slot %d): equipped %s" % [attempt + 1, control, slot, tool]
+		# The slot can itself have moved between attempts (another gather, a
+		# bag change) -- re-read it rather than hammering a control that may
+		# no longer be the right one.
+		var reslot := int(_probe.call("hotbar_slot_of", tool))
+		if reslot != slot and reslot >= 0:
+			slot = reslot
+			control = "hotbar_%d" % (slot + 1)
+	return "FAIL equip_tool: wanted %s, holding '%s' after %d press(es) (last tried %s, live slot %d)" % [
+		tool, have, max_attempts, control, slot]
 
 
 ## Chip a live wild target down to as close to zero HP as the fight will

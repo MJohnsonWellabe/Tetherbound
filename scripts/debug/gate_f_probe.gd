@@ -394,6 +394,21 @@ func equipped() -> Dictionary:
 	return {"hotbar_slot": int(g.call("hotbar_slot_of", tool_id)), "item": tool_id}
 
 
+## Which quick-bar slot holds `item_id` RIGHT NOW, independent of what is
+## currently equipped -- `game_state.gd::hotbar_slot_of()`'s own lookup,
+## exposed directly. -1 if it is not on the bar at all. Exists because a
+## fixed hotbar control number in a step script is a claim about where an
+## assign sequence PUT something, and that claim goes stale exactly the way
+## a fixed satchel offset did (`focus_item`'s own reason to exist): a bag
+## reshuffle, a different assign order, or an item consumed and re-added
+## can all move a tool to a different slot between one run and the next.
+func hotbar_slot_of(item_id: String) -> int:
+	var g := game()
+	if g == null:
+		return -1
+	return int(g.call("hotbar_slot_of", item_id))
+
+
 # --- input context -----------------------------------------------------------
 
 ## Who owns input right now, as the game itself decides it.
