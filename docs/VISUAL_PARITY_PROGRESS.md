@@ -143,7 +143,7 @@ Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw
 - **Capture time sink is the stale bake, not rendering:** with the scatter bake fingerprint stale, every capture
   process spends ~348 s at boot recomputing placements (`[vegetation] boot phases placements=348106`). Re-bake
   after any `vegetation.json` / `terrain_playground.json` change before capturing; fast mode alone changed
-  nothing (11m42 vs 10m49) because boot dominated.
+  nothing (11m42 vs 10m49) because boot dominated. **Fixed on the branch tip:** fresh bake → placements 1,669 ms, and the same fast-mode survey takes 5m03 (5 frames). Remaining boot cost (~3.5 min) is world stand-up; the locations tool amortises it over many shots per process.
 
 ## Resume note
 
