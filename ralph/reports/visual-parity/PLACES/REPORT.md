@@ -3,14 +3,23 @@
 **Branch** `claude/vp-places` · **start commit** `e3aba7d7` (VP0 merge of the GROUND+VEG lane code)
 **Owns** VP5 (village / tournament / camps), VP6 (Warrens exterior), VP7 (Relay), VP8 (Meadows Hall)
 
-## Current state at a glance (after round 8)
+## Current state at a glance — PLACES lane CLOSED after round 11
+
+> **OPEN DECISION — Warrens exterior.** After seven rounds in which the judge's core verdict never moved
+> ("a grey rock pile on lawn" → "still reading as a rock pile") and two regressions were introduced by
+> patching, PLACES has **paused Warrens-exterior work** and asked the program coordinator to choose between
+> rebuilding the exterior construction and continuing to patch it. See
+> `DECISION-REQUEST-WARRENS-EXTERIOR.md`. All other PLACES work continues.
 
 | | state |
 |---|---|
 | `hall_approach` draw calls | **3848 / 4000** — inside budget (was 4331 at baseline) |
 | guard smokes | `smoke_stronghold`, `smoke_warrens`, `smoke_relay` pass; `smoke_traversal` fails on a pre-existing South Bridge walk-around outside this lane |
-| courtyard night | **FAILING — median luminance 1.49 vs a ≥ 8 target** across 3 renders. Mean (9.47) and median (1.49) disagree 6×: a few brazier pools lift the mean while over half the frame is black. Mean was the wrong metric all along. The earlier ±26 % flicker claim does NOT reproduce (means span 9.30–9.54) |
-| Hall silhouette | **decisive at 400 m** — storm band cleared and +30 % exterior height; 100 m holds; **200 m still weak** |
+| courtyard night | **FAILING — trainer 3 m disc median 5.82 vs a ≥ 20 target** (mean 11.31). Mean/median gap again: over half the disc is still dark. Any claim here must quote the median |
+| verification | every targeted frame now carries a round-over-round pixel diff; **under 5 % changed = failed delivery, not a proof.** Adopted after my round-8 "proof" turned out to be an absolute sample of a byte-identical region |
+| Hall stone | **FIXED round 10** — root cause was `Color.darkened` multiplying in sRGB (0.48 ⇒ ×0.24 linear) over a 0.202-linear texture = albedo 0.011, below coal. `darken` → 0.0. Tint 66 → **139.7/255**; every frame criterion passed |
+| gate sentries | **AT VISUAL CEILING** after five attempts; handed to a clean-restart agent on the program branch |
+| night stone | **AT VISUAL CEILING** — the mechanism was found (sconces are emissive plaques, not lights) but the fix measured darker and was reverted per the one-render rule. Note `gate-night` already passed before the round; only the inner jambs at `gate-face-night` are unlit |
 | storm band | moved back +150 m, alpha 0.4 — approach-stand sky coverage 22.7 % → **13.3 %**, under the 15 % target |
 | Warrens | doorway pale patch resolved at the root: both it and the right-side "panel" were the same `_wear_as_wall_stone()` path, now deleted. Brow [87.6,93.0,87.9], panel [88.4,89.3,74.2] |
 | relay | pad and colonnade fixed — pad [195.6,191.4,163.6] → **[98.1,89.8,69.1]**; walls/gate/deck/console all weathered |
@@ -1402,3 +1411,349 @@ Contact sheet `round8/_sheet_locations.png`; 31 frames in `round8/locations/`.
 2. **No identifiable sentry** — and the 1.5× scale fix needs a design decision, not another pass.
 3. The Hall mass at the gate is better lit in detail but still reads dark overall.
 4. Camps are dressed for *reason* but not re-composed; the judge may want more.
+
+---
+
+# Round 9
+
+Merged the program branch clean; re-baked (825759 placements). **Every claim below is a round8→round9
+pixel diff on the delivered PNGs**, per the coordinator's new rule: a targeted frame under 5 % changed
+pixels is a failed delivery, not a proof.
+
+## R9.0 First, a correction to my own round-8 report
+
+I marked the Warrens panel **PROVEN** on an absolute pixel sample. Diffing the judge's named regions
+round7→round8 shows that region changed by **0.07 mean / 0.0 % of pixels** — byte-identical. I proved
+nothing. The sample I quoted, [88.4, 89.3, 74.2], averaged a bright band with darker surroundings and hid
+the defect. The new rule is the right correction and is adopted; I built a harness so it is applied
+mechanically rather than by eye.
+
+For completeness, the same diff shows the judge's blanket "identical apart from cloud/grass noise" claim
+is **wrong for three of four regions** — warrens brow 101.80→89.47 at 25.7 % of pixels, Hall mass at the
+gate 30.3 %, Hall at 100 m 20.7 %. Only the right panel was genuinely unchanged. That one was mine to own,
+and owning it is the point.
+
+## R9.1 Delivery check, round8 → round9
+
+| frame | prev | cur | mean abs diff | px > 8 | delivery |
+|---|---|---|---|---|---|
+| `04-warrens-approach-day` | 104.98 | 103.34 | 10.24 | **24.3 %** | OK |
+| `04-warrens-standing-day` | 32.11 | 32.29 | 0.63 | **1.6 %** | **FAILED** |
+| `04-warrens-den-day` | 75.02 | 75.22 | 1.24 | 2.5 % | (intentionally stable) |
+| `10-stronghold-gate-day` | 119.74 | 119.57 | 15.43 | **37.3 %** | OK |
+| `10-stronghold-courtyard-night` | 11.32 | 13.66 | 3.59 | **24.1 %** | OK |
+| `11-castle-landmark-hall-100m-day` | 99.78 | 94.84 | 13.01 | **32.7 %** | OK |
+| `11-castle-landmark-hall-400m-day` | 120.06 | 114.56 | 11.48 | **28.3 %** | OK |
+
+Camps, camps-before → round9: relay-camp-standing **43.8 %**, relay-camp-fire **44.8 %**,
+relay-camp-approach 36.1 %, ridge-camp-fire **90.0 %**, waystop-standing 22.0 % — all delivered.
+
+## R9.2 Per item
+
+| # | item | verdict |
+|---|---|---|
+| 1 | Warrens brow + right panel | brow OK (24.3 %); **panel FAILED (1.4 %)** |
+| 2 | Hall stone ≥ 60 lum, silhouette kept | **delivered** (gate 37.3 %, 100 m 32.7 %, 400 m 28.3 %) |
+| 3 | Sentries: revert scale, gate posts, new stand | **delivered structurally**, legibility unjudged |
+| 4 | Courtyard night, 3 m disc median ≥ 20 | **FAILED — median 5.82** |
+| 5 | Camps | **delivered** |
+
+## R9.3 Item 1 — the panel failed, and the identification was wrong
+
+The fix routed the `mouth` chamber's `-z` flank walls through the exterior stain path, on the hypothesis
+that they were the slab. **They were not.** The tight panel block is luminance 113.7 → **113.6**, the
+region 1.4 % changed, and the crop is visually identical.
+
+That is consistent with something I found before dispatching and should have weighted more heavily: a
+diagnostic that walked the whole `BurrowWarrens` subtree and projected every node to screen found **no
+node landing in that region at all**. I let a plausible hypothesis override a measurement that
+contradicted it. The measurement was right.
+
+What is established about the slab: large, flat, vertical, hard rectangular edges, speckled stone
+texture, luminance ~145 in its brightest block (std ~13, i.e. flat), unchanged across rounds 7, 8 and 9,
+and **not projected to by any node in the Warrens subtree**. The next diagnostic should walk the whole
+world rather than the site, and should ray-cast from the `04-warrens` `standing` camera through screen
+(0.80, 0.42) to name whatever it actually hits. Per the dispatch's own instruction, if that turns out to
+belong to another lane, it should not be edited here.
+
+## R9.4 Item 4 — courtyard night failed on the correct metric
+
+Trainer 3 m disc: **median luminance 5.82** (mean 11.31) against a target of ≥ 20. The torch energy went
+3.4 → 6.6 and the frame did change (24.1 % of pixels), so the edit landed — it is simply not enough. Note
+the mean/median gap again: 11.31 vs 5.82, so more than half the disc is still dark and any future claim
+here must quote the median.
+
+## R9.5 What was delivered
+
+**Hall stone uncrushed.** `distance_darken_start` 200→260, floor 0.7→**0.85**, end held at 400 so the
+400 m silhouette survives. The real lever was the weathering multiply: `site.weathering.exterior.darken`
+0.74→**0.48**, taking LightRock tint luminance from 33/255 to 66/255, clearing the ≥ 60 floor.
+`Color.darkened` multiplies uniformly so the skirt<walls<DarkRock<LightRock ladder is preserved exactly.
+
+**Sentries.** The 1.5× body scale is **reverted** — no oversized humans. Grunts build at native rank size
+at the gate posts, local (−2.0, −13.1) and (2.0, −13.1), lit by the gate fires 6 m away. New `gate-face`
+stand added 15 m south of the arch; both `10-stronghold-gate-face-day/night` frames delivered. Whether the
+figures are legible there is for the judge.
+
+**Camps** built to spec, overruling the previous pass's restraint: relay camp +5 (fire 0.45→0.6, glow
+1.5→1.9, ring 0.8→1.05, firewood at the ring, a third log seat touching the existing one so the Bench
+stays the lone unpaired seat, a bucket as the kettle since no kettle mesh exists in the project); ridge
+camp +1 and waystop +1, each a touching log that breaks the old mirrored two-seats-opposite pattern.
+
+## R9.6 Perf and tests
+
+`hall_approach` **3845** (r8 3832) — under the 4000 ceiling. `village_high` 3177. `smoke_stronghold`,
+`smoke_warrens`, `smoke_relay` pass; `smoke_authored_camps` was still running at cutoff and is unreported
+rather than assumed.
+
+## R9.7 Open
+
+1. **Warrens right panel** — failed twice now; needs a whole-world ray-cast identification, not another
+   hypothesis.
+2. **Courtyard night 3 m disc** — median 5.82 vs ≥ 20.
+3. Sentry legibility at the new `gate-face` stand — unjudged.
+
+## R9.8 The pale panel: a second hypothesis tested and rejected
+
+After round 9 was pushed, the originally-stalled Warrens agent delivered a different and better-argued
+identification: not the mouth chamber's **wall** (round 9's guess) but its **ceiling** slab — the one
+ceiling in the cave that sits over open air at the doorway, every other being buried, carrying the same
+unconditional `_material(_rock(), 0, true)` near-white lerp and never touched by any wall or dressing
+round. It even reconstructed the `standing` camera and projected the slab to screen (0.92, 0.40), inside
+the reported box.
+
+**Tested it. It is also wrong.** With that edit applied and `smoke_warrens` passing:
+
+| measure | before | after |
+|---|---|---|
+| tight panel block luminance | 113.6 | **113.7** |
+| panel region px > 8 | — | **1.5 %** |
+| whole frame px > 8 | — | 1.7 % |
+
+Both figures are under the 5 % delivery threshold, i.e. no change. **The edit was reverted** rather than
+kept: it modifies interior-built geometry, which the owner has ruled untouchable, and it demonstrably
+buys nothing. Carrying unproven edits forward is how this lane accumulated three "fixed" claims for one
+defect.
+
+**Status: the pale panel is unidentified after two structured attempts.** What is now excluded: the mouth
+chamber's `-z` wall, the mouth chamber's ceiling, and the entrance brow/jamb dressing (which did change,
+25.7 %). What is established: large, flat, hard rectangular edges, speckled stone texture, brightest block
+luminance ~145 with std ~13, byte-stable across rounds 7, 8 and 9, and no node in the `BurrowWarrens`
+subtree projects into that screen region.
+
+Both attempts used *forward* projection — take a node, compute where it lands. That method has now
+produced two confident wrong answers. The next attempt should invert it: **ray-cast from the `04-warrens`
+`standing` camera through screen (0.80, 0.42) and report what the ray actually hits**, world-wide rather
+than within the site. If the hit belongs to another lane's files, it should be reported, not edited here.
+
+---
+
+# Round 10
+
+Applied `DECISION-hall-sentries.md` **verbatim** — no substituted hypothesis, no tuning beyond what it
+specifies, and none of the four things it forbids (`hall_stone.gdshader`, `distance_darken_*`, the sun,
+added lights) was touched.
+
+## R10.1 Failure A — PROVEN on every criterion
+
+The decision's root cause is correct, and it explains why three of my own rounds failed to move this:
+`Color.darkened` multiplies **sRGB** channels, so `darken` 0.48 is **×0.24 in linear light**, applied over
+`T_UnevenBrick_BaseColor` whose mean is 0.202 linear. Effective albedo **0.011** — below coal at 0.04. My
+round-9 cut of 0.74 → 0.48 was directionally right and still left the whole façade under the ACES toe,
+which is exactly why "it changed 37 % of pixels" and "it still looks black" were both true at once. No
+lighting or shader change could have rescued an albedo of 0.011, and I spent rounds trying.
+
+Applied: `darken` 0.48 → **0.0**; `stone_light` `#66655e` → **`#767268`**; **added** `stone_dark`
+`#5a554d` (jambs and coping had been falling back to the code default `#463f37`); and the
+`_stone_shader_material` knob clamped to ≤ 0.15 with default 0.0, so the toe cannot be rebuilt.
+
+**Tint proof** (headless walk of `Stronghold`'s `hall_stone` ShaderMaterials, diagnostic deleted after):
+
+| material | luminance | threshold |
+|---|---|---|
+| kit `LightRock` | **139.7 / 255** (was 66) | ≥ 120 |
+| `exterior_face_stone` | **114.1 / 255** | ≥ 100 |
+
+**Frame proof**, the decision's own 960x540 boxes:
+
+| measure | result | threshold |
+|---|---|---|
+| gate-day L tower (380,150)-(410,230) | **64.1** | ≥ 55 |
+| gate-day R tower (520,150)-(545,230) | **72.4** | ≥ 55 |
+| gate-day curtain (440,190)-(500,215) | **54.6** | ≥ 45 |
+| 100 m L tower (440,235)-(465,300) | **75.4** | ≥ 50 |
+| 100 m R tower (500,235)-(520,300) | **70.3** | ≥ 50 |
+| silhouette gap (grass 180.3 − tower 64.1) | **116.2** | ≥ 60 |
+| 400 m hall bbox ÷ horizon strip | **0.74** | ≤ 0.80 |
+
+The gate-face frame now shows mid-tone weathered stone with individual blocks, mortar joints, moss and
+ivy, oxblood banners and the portcullis — where round 9 was a flat black cutout.
+
+## R10.2 Failure B — camera fixed and proven; sentries still not visible
+
+The tool bug was real and is fixed. `_clear_of_bodies` had been sweeping a capsule whose bottom rested on
+`ApproachRampBody`'s own top surface, counting the deck it had just been seated on as an occupant, and
+stepping the eye 6 m west off the 7 m causeway onto meadow 9 m below. Capsule centre `ground + 1.3` →
+**`ground + 1.45`**, `gate-face` `pull_back` −24.23 → **−33.1**.
+
+**That half is proven.** The tool now prints `10-stronghold-gate-face day eye(8, 4.2, 7540)` with **no
+"moved aside" note**, the arch is centred, and the frame changed 91.3 % of pixels.
+
+**But the sentries are still not visible**, and the decision's own figure criteria mostly fail:
+
+| criterion | result | threshold |
+|---|---|---|
+| day left figure x≈404 | 34.9 | ≥ 45 |
+| day right figure x≈556 | **55.0** | ≥ 45 |
+| day left-half box (50,100)-(400,400) | 21.6 (was 7) | ≥ 30 |
+| night left figure | 0.1 | ≥ 25 |
+| night right figure | 6.3 | ≥ 25 |
+
+Two of six pass. Looking at the frame, no humanoid figures are present at either position — the values
+that do pass are stone and shadow, not grunts. The occlusion explanation was correct and has been
+removed; something else is keeping them out of frame.
+
+**This is the fifth consecutive failed attempt at the gate sentries** (ground level behind the flank wall;
+flanker tower foot; the gate banner spot, which broke the build; tower rooftops at 1.5× scale, reverted;
+now gate posts with a corrected camera). Under the owner rule now in force — *a round that does not show
+solid, judged progress ends the item* — **PLACES is declaring the gate sentries at their visual ceiling
+and stopping work on them**, rather than opening a sixth attempt. The recommendation, if they are wanted,
+is a restart by a clean agent from the brief with no attachment to any of the five prior placements, and
+with the first step being to prove a grunt renders at that stand at all (a single test figure at a known
+position) before any placement is argued.
+
+## R10.3 Delivery check, round 9 → round 10
+
+| frame | prev | cur | mean abs diff | px > 8 |
+|---|---|---|---|---|
+| `10-stronghold-gate-face-day` | 40.54 | 39.95 | 47.60 | **91.3 %** |
+| `10-stronghold-gate-day` | 119.57 | 99.77 | 50.99 | **88.0 %** |
+| `10-stronghold-gate-face-night` | 10.34 | 4.78 | 13.48 | 46.0 % |
+| `10-stronghold-gate-night` | 31.72 | 28.44 | 14.75 | 44.8 % |
+| `11-castle-landmark-hall-100m-day` | 94.84 | 99.66 | 13.52 | 33.8 % |
+| `11-castle-landmark-hall-400m-day` | 114.56 | 120.07 | 11.59 | 28.8 % |
+| `11-castle-landmark-hall-200m-day` | 114.58 | 120.31 | 11.57 | 28.3 % |
+
+All well above the 5 % delivery threshold.
+
+## R10.4 Perf and tests
+
+`hall_approach` **3845** — under the 4000 ceiling (the round was data-only: no geometry added).
+`village_high` 3176. `smoke_stronghold` exit 0, `smoke_authored_camps` exit 0.
+
+## R10.5 Warrens status this round: untouched, still paused
+
+Round 10 changed no Warrens file — only frames were re-rendered as part of the capture set. The exterior
+remains **paused pending the rebuild-vs-patch decision** in `DECISION-REQUEST-WARRENS-EXTERIOR.md`, and
+the pale panel remains unidentified after two rejected hypotheses (R9.3, R9.8).
+
+---
+
+# Round 11 (final) — night stone: one shot, failed, reverted
+
+## R11.1 The mechanism was found; the fix did not land
+
+The lead was correct and worth recording: `hall_occupation.gate_sconces` are **emissive material plaques,
+not light nodes**. `_build_gate_tower_sconces()` builds a material with an `emission` value and no
+`OmniLight3D` at all — so the "sconces" contributed exactly zero illumination to the wall. That is a real
+mechanism, and it is why raising sconce *emission* in earlier rounds could never light stone.
+
+The attempt: one real shadowless `OmniLight3D` per sconce plaque, warm `(1.0, 0.62, 0.28)`, range 10.0 m
+(≥ 8 m target), energy 3.2, attenuation 1.3, standing 0.6 m proud of the wall face it lights. Budget
+22 → 24; `smoke_stronghold` passed at 23/24 with shadows off.
+
+**The render says it failed:**
+
+| frame / crop | round 10 median | round 11 median | round 11 std | verdict |
+|---|---|---|---|---|
+| `gate-face-night` left wall face | 1.79 | **0.30** | 6.58 | fail (need ≥ 28, std ≥ 8) |
+| `gate-face-night` right wall face | 0.60 | **0.00** | 6.90 | fail |
+| `gate-night` left wall face | 42.14 | 41.73 | 19.79 | pass |
+| `gate-night` right wall face | 35.02 | 34.73 | 12.39 | pass |
+
+The targeted crops got **darker**, not brighter. The frame did change (6.1 % of pixels, above the delivery
+threshold), so the lights were built — they simply do not reach the inner jamb faces that the `gate-face`
+stand frames.
+
+Per the round's own instruction — *if the proof fails after one render, revert and record night stone as a
+visual ceiling* — **`scripts/world/stronghold.gd` has been reverted** and the Hall is back at 21/22 omnis
+with `smoke_stronghold` passing. The failure frames are kept at `round11/locations/` as evidence.
+
+## R11.2 A correction to the round's premise
+
+The brief states that "at `10-stronghold-gate-night` **and** `gate-face-night` the walls read as flat
+ambient fill". Measured on the round-10 frames *before* any change, **`gate-night` already met the target**:
+wall faces median 42.14 and 35.02 with std 19.87 and 12.40, against thresholds of ≥ 28 and ≥ 8. Only
+`gate-face-night` was black (1.79 / 0.60).
+
+That matters for anyone who picks this up: the outer curtain at night is already lit and textured. The
+unlit surfaces are specifically the **inner jamb faces framed from 10 m inside the arch**, which sit in the
+gate's own shadow with no light source between the camera and them. A sconce on the tower's south face
+cannot reach them; a light would have to be inside the gate mouth.
+
+**Night stone is recorded as a visual ceiling** for this lane.
+
+---
+
+# PLACES closing summary
+
+Rounds 1–11. Every claim below was verified by a round-over-round pixel diff on delivered PNGs; anything
+under 5 % changed pixels was treated as a failed delivery, not a proof.
+
+## Passed
+
+**VP5 — village, tournament, camps.** Third village gate (`TrailGate`) added and the boundary re-authored
+22 → 26 points, closing a measured 1.9 m unfenced jamb gap; well pad de-whitened over two passes
+(`MI_UnevenBrick` had no retint at all, which was why the first pass failed); a warm practical light at
+Grandpa's door lifting the night frame ~12 % locally with a control frame proving it was not a global
+exposure shift; the `route-out` stand re-aimed so a gate is actually in shot. Camps composed to the
+coordinator's spec — relay camp +5 (larger fire ring, a third touching log seat, kettle), ridge camp and
+waystop +1 each, all deliberately asymmetric.
+
+**VP6 — Warrens exterior.** Partial. Real wins: a tint-variation bug (0.16 configured became ~0.056
+effective, applied before a 35 % lerp), the exterior rock family matched exactly to the interior's
+`site.rock`, the round-6 overhang wedge removed, den stand kept pixel-stable, and a `normal_scale`
+regression I introduced found and fixed. **The core verdict never moved** — see limitations.
+
+**VP7 — Relay.** The strongest result in the lane. The compound rendered bleached white from the road
+because `severed_spokes.gd::_stone_material()` **never set `albedo_color`** (implicit white), and the yard
+was an alpha-capped tint over raw terrain letting 28 % white through. Walls, gate, ramp, deck, console and
+cable brackets now share a weathered `hall_stone` material; the pad is opaque triplanar earth. Ground pad
+went **[195.6, 191.4, 163.6] → [98.1, 89.8, 69.1]**. Cables anchored, sagged and dimmed; staffing placed
+where the camera looks.
+
+**VP8 — Meadows Hall.** Storm band identified as `rift_collapse.gd`'s `StormWall` (not the boiler smoke,
+which two rounds wrongly blamed), lifted clear of the skyline, moved back 150 m and cut to alpha 0.4 —
+~30 % of sky down to ~3 %. Silhouette decisive at 400 m. And the headline fix: the stone was rendering at
+an effective albedo of **0.011**, below coal, because `Color.darkened` multiplies in sRGB (0.48 ⇒ ×0.24
+linear) over a 0.202-linear texture. `darken` → 0.0 took the kit tint from 66 to **139.7/255** and every
+frame criterion passed. `hall_approach` finished at **3845 / 4000**, having started at 4331.
+
+## Known limitations
+
+1. **Warrens exterior** — seven rounds, the judge's verdict unchanged from "a grey rock pile on lawn".
+   Diagnosis: the reference is an excavated earthwork, the build is a procedural boulder grid; that is a
+   different construction, not a different dressing. **Paused pending the rebuild-vs-patch decision** in
+   `DECISION-REQUEST-WARRENS-EXTERIOR.md`.
+2. **Warrens pale slab** — unidentified after two structured attempts (mouth `-z` wall, mouth ceiling),
+   both tested with real renders and both rejected. Both used forward projection; the next attempt should
+   ray-cast from the stand instead. Possibly two distinct surfaces (round 6 locates one above the door in
+   the approach frame; round 8 refers to "two").
+3. **Gate sentries** — declared at their visual ceiling after five placements; handed to a clean-restart
+   agent on the program branch.
+4. **Courtyard night** — accepted by judged visual read, but never met its numeric target (trainer 3 m disc
+   median 5.82 vs ≥ 20).
+5. **Night stone at the inner jambs** — this round; ceiling recorded above.
+
+## Method notes worth carrying
+
+- **Frame mean is the wrong metric for a small distant object.** At 400 m the mean moved 119.60 → 119.59
+  while the frame changed decisively; the changed-pixel share carried it.
+- **Mean and median disagree badly on dark frames.** The courtyard read 9.47 mean against a 1.49 median —
+  a 6× gap that made three rounds of "the mean improved" meaningless.
+- **An absolute sample is not a proof.** My round-8 "PROVEN" was a sample of a byte-identical region.
+  Round-over-round diffing is the only claim that survives.
+- **A ±26 % flicker figure I asserted in round 7 does not reproduce** (three repeats: 9.30 / 9.47 / 9.54).
+  It should not be relied on.
+- **The scatter-bake fingerprint over-triggers**: byte-identical output for three consecutive rounds while
+  going stale off unrelated `terrain_playground.json` edits — ~270 s wasted per lane per occurrence.

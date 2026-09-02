@@ -1379,3 +1379,333 @@ The clean proof of the mechanism remains round 5e, where one variable changed
 inside a single boot and produced a 97-point swing.
 
 Evidence: `round5f-survey-after-fix/` (5 frames + sheet).
+
+---
+
+# Round 6 — close-out
+
+## Stands (9), after parking the actor 12 m behind the camera
+
+| frame | before | now |
+|---|---|---|
+| `03-rise-overlook-dawn` | +96.3 red | **+17.9** warm dawn |
+| `03-rise-overlook-night` | +80.8 red | **−16.7** dark blue |
+| `06-moon-stand-night` | +78.3 red | **−22.6** dark blue |
+| `03-rise-overlook-golden` | −16.3 **cool** | **+24.0** warm |
+| `03-rise-overlook-day` | −25.4 | −8.4 |
+
+The four `01-spawn-outward` controls are unchanged to the decimal (−11.6, +12.2,
+−10.1, +3.7) — that stand always placed its actor, so the fix must not move it, and
+does not. `03-day` now matches the verified player-at-camera arm (125.9/134.3/104.1
+vs 126.3/134.6/104.7) to within rounding.
+
+**`03-rise-overlook-golden` deserves attention.** It read cool at −16.2 and −16.3 and
+was a fix-list item across rounds 3 AND 4; warming `ambient_colour`, `cloud_shade` and
+`cloud_base` never moved it. It was this bug. With the player placed correctly it is
++24.0 warm, with no colour value touched. Some of what this lane diagnosed as art
+direction — the cool golden vista, and part of the night horizon glow attributed to the
+time-invariant aerial term — was one capture bug wearing different masks at different
+times of day. That is why the values kept *looking* wrong while *measuring* correct.
+
+Night glow also improves: the `03` night vista drops from mean ~72 to ~51 against a ~23
+foreground.
+
+## Survey (5), shipped tool
+
+| frame | mean RGB | R−G |
+|---|---|---|
+| 01-spawn-outward | 82.5/94.3/54.4 | −11.8 |
+| 02-valley-floor | 96.8/109.1/57.5 | −12.3 |
+| 03-rise-overlook | 125.1/133.8/103.9 | −8.7 |
+| 04-three-quarter | 94.7/107.0/52.3 | −12.3 |
+| 05-spawn-low-sun | 84.4/72.8/47.1 | **+11.6** |
+
+No frame washed; `05-spawn-low-sun`, black since before this program began, is a warm
+golden frame.
+
+## The 20 m assertion fires at one stand — and that is useful, not a failure
+
+```
+WARNING: survey.gd: 03-rise-overlook stands 26.0m from the player (max 20.0m)
+```
+
+Per-shot distances: 8.8 / 17.2 / **26.0** / 13.7 / 8.8 m.
+
+I predicted 18.9 m from `hypot(12, 14.6)`; the real value is 26.0 m because that stand
+is a **rise** — parking 12 m behind the camera goes downhill, so the park ground sits
+well below the eye's ground and the VERTICAL separation dominates. Shortening the
+horizontal park barely helps (at 8 m it is still ~25.9 m), so the 20 m ceiling is not
+reachable at this stand by parking behind it.
+
+It does not need to be: **the frame is clean at 26 m**, matching the verified
+player-at-camera values. The proven-clean reference is 14.6 m and the washed case was
+616 m, so 26 m is comfortably inside the safe region. Recommendation: keep the warning
+as a tripwire and either raise the ceiling to ~30 m or treat it as informational. Do NOT
+chase the number by shortening the park further — it cannot work, and the evidence says
+it is unnecessary.
+
+## Known limitation to carry forward (filed, not implemented)
+
+**Terrain3D streams its mesh off the PLAYER position.** Any future feature that renders
+from a viewpoint far from the player — a cutscene camera, a photo mode, a spectator or
+map view — must move the streaming anchor with the camera, or the whole scene degrades:
+sky, distant terrain and near geometry together, while every Environment and sky value
+still reads correct. This is exactly how the maroon wash presented, and it is why it
+defeated thirteen config-level hypotheses.
+
+## Program-wide: this pattern is not confined to this lane
+
+- `tools/capture_water.gd` parks the player at eye + (5000, 5000) — **~7071 m
+  horizontal**. Since Terrain3D streams on XZ, that is arguably worse than the 500 m
+  vertical drop. All four of its viewpoints lack an `actor` key.
+- ~21 further tools still do the literal 500 m drop (`capture_buildings`,
+  `capture_paths`, `capture_wayfinding`, `capture_inn`, `capture_well`,
+  `capture_stronghold_approach`, `diag_shadow_cascade`, …).
+- ~8 more use the horizontal 5000-offset shape (`survey_band2`, `capture_night_light`,
+  `_probe_golden_snap`, …).
+
+Any frame those tools have produced carries this defect. Out of scope for this lane, but
+it means evidence from them should be re-read with this in mind.
+
+## Round-7 tests — the long-standing failure is resolved
+
+```
+56 tests, 1117458 assertions, 0 failed
+art: OK — models loaded, sized to their colliders, and the meadow is dressed.
+```
+
+`test_scatter_rules.gd :: test_ecology_core_clusters_without_changing_the_count` had failed
+in rounds 4 and 6 (100 m-bin CV ratio 1.064 against a required 1.15). It now passes, and the
+suite has grown 55 → 56 tests, so the fix came in with the merged program branch rather than
+from this lane. The one outstanding test failure this lane had been carrying is closed.
+
+## Round-7 survey
+
+| frame | mean RGB | R−G | saturation |
+|---|---|---|---|
+| 01-spawn-outward | 82.9/94.6/54.7 | −11.7 | 0.694 |
+| 02-valley-floor | 96.1/108.4/56.7 | −12.3 | 0.640 |
+| 03-rise-overlook | 125.2/134.0/103.9 | −8.8 | 0.360 |
+| 04-three-quarter | 96.6/109.0/55.2 | −12.4 | 0.654 |
+| 05-spawn-low-sun | 82.6/70.8/45.0 | +11.8 | 0.695 |
+
+Stable against round 6 (−11.8, −12.3, −8.7, −12.3, +11.6), so the sun-disc rework, dawn
+retune and seam fix did not disturb the day survey.
+
+---
+
+# VP10 — draw-call breakdown at `band1_open` (the measurement step)
+
+Baseline on the merged tree: **7659 draws / 11,757,306 primitives / 6593 objects**.
+Budget: ≤7500 draws AND ≤12.0M primitives — 159 draws to cut with 243K primitives of
+headroom (2.0%).
+
+## Where the draws actually are
+
+| group | drawn nodes | draws |
+|---|---|---|
+| **GrassCarpet** | 133 tiles / 85,336 instances | **133** |
+| **Scatter** (Terrain3DInstancer nodes) | 1 of 32,483 | **0** |
+| **Everything else** (props, structures, characters, water) | 6,042 of 8,554 | **4,058** |
+| attributed total | | 4,191 |
+| engine total (avg 20 frames) | | **7,662.9** |
+| **residual** | | **3,471.9 (45.3%)** |
+
+Within "everything else":
+
+| group | draws |
+|---|---|
+| Village | 641 |
+| Props | 428 |
+| Stronghold | 375 |
+| BurrowWarrens | 360 |
+| VillageBoundary | 294 |
+| GrandpaHouse | 208 |
+| SeveredSpokes | 191 |
+| MillCrossing | 166 |
+
+## What this rules out, and it is the brief's own first candidate
+
+**The grass carpet is 133 draw calls.** Not 1,000, not 3,000 — 133, across 132 tiles holding
+85,336 instances. A MultiMesh is one draw per *surface*, not per instance, so the carpet is
+nearly free in draw terms however dense it looks.
+
+So `cull_tile_m` 24 → 32 cannot deliver 159 draws. It would remove perhaps a few dozen tiles
+at best, and it would *raise* primitives — spending the 2% headroom to buy a fraction of the
+target. **Do not pull that lever.** The same applies to merging carpet tiers and to scatter
+batching: the discoverable scatter nodes contribute **zero** draws.
+
+## Where it should come from instead
+
+Discrete structure and prop meshes, 4,058 draws — and note these are being drawn from a
+viewpoint **700 m away**: Village 641, Stronghold 375, BurrowWarrens 360, GrandpaHouse 208,
+MillCrossing 166. Those five alone are 1,750 draws. `visibility_range_end` on distant built
+structures (explicitly the brief's "distant object visibility ranges on props, not vegetation")
+is the lever with the measured mass behind it.
+
+**Caveat that must be respected:** the brief forbids sparsifying, and some of those structures
+may be genuinely visible on a 700 m vista. Any range must be set so it culls only what does
+not contribute to the image, verified by a pixel diff — not chosen to hit a number.
+
+## Two honest limits of this measurement
+
+1. **45.3% of draws are unattributed.** `Scatter` reports 32,483 instancer nodes of which 1 is
+   a discoverable scene node, so the entire vegetation scatter is inside that residual, managed
+   as raw RenderingServer resources by the vendored Terrain3D rather than as SceneTree nodes.
+   The residual also contains the terrain clipmap and the shadow passes. So vegetation's true
+   draw cost is *not known* from this pass — it is only known that the discoverable nodes cost
+   nothing.
+2. **The primitive estimate is unusable.** The tool sums every mesh's primitives without
+   frustum or LOD culling and reports 57.9M against the engine's 11.75M. That column should be
+   ignored; the engine's number is the only valid one. The tool states this itself rather than
+   presenting the estimate as fact.
+
+---
+
+# Round 9 — dawn far-plain distance fade: ATTEMPTED, FAILED, REVERTED
+
+One shot, per the rule that governed it: prove it or revert it and record the ceiling. It did
+not prove. `data/config/art.json` is back at its round-8 values (commit reverted, dawn's
+`horizon_colour == fog_colour` invariant re-verified on disk after the revert).
+
+## The defect this was aimed at
+
+Round 8 fixed dawn's *near* ground by desaturating the key light (`sun.colour`
+`#ff9d66` -> `#ffebdc`). The *mid/far* plain stayed orange, and — the part that made it a
+defect rather than a preference — it out-saturated its own sky, the reverse of the reference
+DAWN panel where the sky is the saturated element and the far ground is hazy.
+
+That is the distance fade, not the key light. Past roughly 150 m everything fades toward
+`fog_colour` / `aerial_fade_colour` regardless of the ground's own local colour, so a saturated
+`horizon_colour`/`fog_colour` washes the far plain orange no matter what the light does.
+
+## What was changed (`times.dawn` only)
+
+| key | round 8 | round 9 attempt |
+|---|---|---|
+| `sky.horizon_colour` | `#eb906a` (S 0.549) | `#d8bfb8` (S 0.148) |
+| `environment.fog_colour` | `#eb906a` | `#d8bfb8` (kept byte-identical — the invariant) |
+| `environment.aerial_fade_colour` | `#c4a9a4` | `#b9a4a2` |
+| `sky.ground_horizon_colour` | `#db8663` | `#c9b2ac` (re-derived at round 7's own ~93.2% ratio) |
+| `sky.cloud_lit` | `#ffbf8c` (S 0.451) | `#ffb173` (S 0.549) — compensation |
+| `sky.horizon_haze_colour` | `#d7b9b8` (S 0.144) | `#d79997` (S 0.298) — compensation |
+
+## Measured result
+
+Both frames 960x540, VP_FAST, identical crops before and after
+(`scratchpad/measure_dawn.py`): horizon row = `int(H * horizon_frac)` using each stand's own
+`horizon` value from `tools/survey.gd` (0.28 and 0.24); SKY = rows `[hy-0.15H, hy-0.02H]`;
+FAR = rows `[hy+0.02H, hy+0.10H]`; seam = 20-px bands either side of `hy`.
+
+| stand | crop | R−G before | R−G after | sat before | sat after |
+|---|---|---|---|---|---|
+| 03-rise-overlook | sky | +44.22 | +17.86 | 0.363 | **0.136** |
+| 03-rise-overlook | **far** | **+60.88** | **+21.41** | 0.554 | 0.208 |
+| 03-rise-overlook | near | +11.93 | +7.52 | 0.666 | 0.588 |
+| 01-spawn-outward | sky | +36.74 | +13.86 | 0.392 | **0.128** |
+| 01-spawn-outward | **far** | +9.37 | +4.09 | 0.787 | 0.642 |
+| 01-spawn-outward | near | −1.80 | −2.15 | 0.939 | 0.938 |
+
+Horizon seam step: 03-rise-overlook 2.38 -> **0.83** (improved); 01-spawn-outward
+21.86 -> 22.51 (unchanged within noise). Criterion 3 passes on both.
+
+Against the three pass criteria:
+
+| criterion | 01-spawn-outward | 03-rise-overlook |
+|---|---|---|
+| 1. far R−G ≤ 30 **and** below the frame's own sky R−G | PASS (+4.09 vs sky +13.86) | **FAIL** — +21.41 vs sky +17.86 |
+| 2. sky saturation ≥ 0.25 | **FAIL** — 0.128 | **FAIL** — 0.136 |
+| 3. horizon seam step ≤ 25 | PASS (22.51) | PASS (0.83) |
+
+The orange itself was genuinely fixed: the far plain fell from R−G +60.88 to +21.41, well
+inside the ≤ 30 target. It still failed criterion 1 only because the *sky* fell further, to
++17.86 — the far ground never got below the sky, which was the actual shape being chased.
+
+## The ceiling this establishes
+
+**Dawn's far-ground saturation and its sky saturation are the same number, and cannot be
+separated from `art.json`.** `sky.horizon_colour` drives the sky's own horizon band *and*
+(as `environment.fog_colour`, which the project's load-bearing invariant requires to be
+byte-identical, because `fog_sky_affect` is 0) the mid/far ground fade. Desaturating it to fix
+the ground desaturates the sky by the same amount, in lockstep. The attempt tried to break the
+lockstep by moving saturation onto two keys that sit above the ground-fade plane —
+`cloud_lit` and `horizon_haze_colour` — and that compensation was not close to sufficient:
+sky saturation still collapsed 0.363 -> 0.136, roughly to a third, missing the 0.25 floor by
+a wide margin on both stands rather than marginally.
+
+So the reference DAWN panel's relationship — saturated sky over hazy far ground — is not
+reachable by colour configuration alone in the current renderer. Reaching it needs a mechanism
+change, not a value change. The candidate worth trying (**not attempted, not validated**) is
+decoupling the two: give the ground fade its own colour independent of `fog_colour`, or raise
+`fog_sky_affect` off 0 so the sky is no longer forced to share the fog colour verbatim. Both
+touch the seam machinery that rounds 3 and 7 were spent stabilising, so neither is a small
+change and neither should be attempted inside a time-boxed pass.
+
+Rejected frames kept at `round9/dawn-distancefade/REJECTED-*.png` so this is not retried
+blind, in the same spirit as `round1/clock-freeze/00-INVALID-settle-attempt-golden.png`.
+
+**Also recorded:** `03-rise-overlook-dawn` rendered with the camera 26.0 m from the parked
+player, over the 20.0 m limit the round-5e streaming fix established, and the warning fired.
+The frame is usable — the fix that matters is the player being ~26 m away rather than 616 m —
+but its far terrain may be very slightly less streamed than a compliant frame, and that
+warning is not dismissed here.
+
+---
+
+# WORLD area — closing summary
+
+## Passed, with measured evidence
+
+- **Sky rework (VP1).** Cloud form, coverage and haze retuned across all presets; the mackerel
+  cirrus overcast cut back to match golden's own numbers.
+- **Sun disc.** Rewritten from an arbitrary `sun_size` to a true angular radius:
+  `sun_angular_radius_deg`, wired through `world_look.gd`, with the glow exponent lifted out of
+  the shader as `sun_glow_falloff`. Base/golden now sit at a 2.00 degree halo (falloff 4551)
+  against the ~27.4 degree, ~54x-oversized halo they shipped with. Night reproduces its old
+  moon to within 1% at falloff 55 / radius 4.0.
+- **Dawn near ground.** Key light desaturated (`sun.colour` `#ff9d66` -> `#ffebdc`, R−G 98 ->
+  20); near-camera ground R−G 15.5 -> 7.3.
+- **Night horizon seam.** `ground_horizon_colour` `#1a2338` -> `#486393` and
+  `ground_bottom_colour` `#05070c` -> `#172037`, closing a hard single-row cliff where the sky
+  shader switches from `horizon_colour` to `ground_horizon_colour` with nothing bridging them.
+- **Aerial fade.** `aerial_fade_colour` added as a real key and pushed into the terrain
+  material, including the fix for it being silently dropped at boot (children are ready before
+  parents, so `WorldLook._ready()` always ran before the terrain material existed —
+  `_reapply_look_after_ground_materials()`).
+- **Canopy white blobs.** Two stacked bugs: `adjust_bsc` is not a Godot method (the engine's is
+  `adjust_bcs`, so it threw 8x per run), and a runtime `ImageTexture` has an empty
+  `resource_path` and is dropped through the `PackedScene` -> `Terrain3DMeshAsset` round trip.
+  Fixed by baking the desaturated sheets offline instead: blue channel 0 -> 80.3, HSV
+  saturation 0.984 -> 0.671, alpha byte-identical.
+- **The red/maroon wash**, after thirteen falsified hypotheses. Root cause: stands with no
+  `actor` key early-returned out of `_place_actor()` after the player had been dropped 500 m
+  below the world, and **Terrain3D streams mesh off the player position, not the camera**. Same
+  frame, one boot: player at 616.66 m gave R−G +80.84, at 14.60 m gave −16.77 — a 97-point
+  swing. This silently fixed `03-rise-overlook-golden` reading cool as well.
+
+## Known limitations, carried forward rather than hidden
+
+1. **Terrain3D streams around the player, not the camera.** The capture tools were fixed to
+   park the player 12 m behind the camera, but this is program-wide scope that was only
+   recorded, not repaired: `tools/capture_water.gd` parks ~7071 m away horizontally (worse,
+   since streaming is XZ), ~21 tools still do the 500 m drop, and ~8 more use the 5000-offset
+   shape. **Any future distant-camera feature — cutscene, photo mode, spectator or map view —
+   must move the streaming anchor with the camera**, or it will render degraded terrain.
+2. **Night far ground is bluer and brighter than the reference.** The seam is closed and the
+   cliff is gone, but the far plain sits above the reference panel's value. Not chased further.
+3. **Dawn's far plain is unfixed**, and is a ceiling rather than an open bug — see round 9
+   above. Far-ground saturation and sky saturation are locked to one another by
+   `horizon_colour == fog_colour` under `fog_sky_affect = 0`, and separating them is a
+   mechanism change.
+4. **VP10 residual draw calls. `band1_open` remains at 7659 draws against a 7500 budget — it
+   was never brought under.** The breakdown above is the deliverable, and it disproved the
+   brief's leading candidate by measurement: the grass carpet costs 133 draws, not thousands,
+   because a MultiMesh is one draw per surface rather than per instance, and discoverable
+   scatter nodes attribute zero. A `visibility_range_end` mechanism for built structures was
+   written and shipped **default-OFF and unmeasured** (`structure_visibility_ranges: false`);
+   it is a no-op as configured and must not be credited with any saving until someone measures
+   it. Two further limits stand: 45.3% of draws are unattributed, so vegetation's true cost is
+   still unknown, and the per-group table is surface-count attribution rather than
+   frustum-aware — from `band1_open`'s camera the Stronghold, BurrowWarrens, MillCrossing and
+   six of seven SeveredSpokes routes are *behind* the camera and are likely already culled, so
+   those per-group numbers are upper bounds, not measured draws.
