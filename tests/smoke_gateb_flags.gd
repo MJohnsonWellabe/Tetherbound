@@ -6,7 +6,7 @@ extends SceneTree
 ##
 ## Every check here was run against pre-wiring `main` while this file was
 ## being written and failed for the expected reason: `creature_bed.gd::
-## build_real`, `camp.gd::_pass_the_night`, `build_placer.gd::
+## build_real`, `player_bed.gd::_pass_the_night`, `build_placer.gd::
 ## restore_from_game`/`_place` and `harvest_node.gd::_on_gathered` set none
 ## of these flags before this task's changes, so the corresponding
 ## `progression.has(...)` came back false where this file now asserts true.
@@ -19,14 +19,14 @@ extends SceneTree
 ## feel, which is `smoke_gate_a_build_house.gd`'s job already.
 
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
-const CAMP := preload("res://scripts/build/camp.gd")
+const PLAYER_BED := preload("res://scripts/build/player_bed.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 
 ## Never touch a player's real save directory from a regression: passing the
-## night through camp.gd's real `_on_rest` autosaves.
+## night through player_bed.gd's real `_on_rest` autosaves.
 const TEST_DIR := "user://test_saves_gateb_flags/"
 
 class FlatWorld extends Node3D:
@@ -174,16 +174,16 @@ func _check_player_slept_flag() -> void:
 	var progression: RefCounted = _game.get("progression")
 	if bool(progression.call("has", "player_slept_at_home")):
 		_fail("player_slept_at_home was already set before resting")
-	var camp := CAMP.new()
-	camp.name = "TestCamp"
-	_world.add_child(camp)
-	camp.call("build_real")
-	camp.call("_on_rest")
+	var bed := PLAYER_BED.new()
+	bed.name = "TestBedroll"
+	_world.add_child(bed)
+	bed.call("build_real")
+	bed.call("_on_rest")
 	# FADE_SECONDS is 1.2s and `_pass_the_night` fires at the midpoint of the
 	# real tween; wait past that without waiting for the whole fade-back-in.
 	await create_timer(1.0).timeout
 	if not bool(progression.call("has", "player_slept_at_home")):
-		_fail("camp.gd's rest interaction did not set player_slept_at_home")
+		_fail("player_bed.gd's rest interaction did not set player_slept_at_home")
 
 
 ## Drives the real gathering completion path, `harvest_node.gd::_on_gathered`

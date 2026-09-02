@@ -265,14 +265,18 @@ func test_no_two_authored_harvest_spots_contest_the_same_prompt() -> void:
 
 
 ## Gate A's continuous evidence is one paid session, not three isolated smokes:
-## the player builds the simple house, then a camp and a creature bed without
-## a debug grant in between. The old opening authored only 12 fiber while the
-## camp and creature bed alone consume 18, so a perfectly thorough natural
-## gather still hit an artificial wall. Keep the requirement derived from the
-## real catalogue so a later tuning pass cannot recreate that failure silently.
+## the player builds the simple house, then a campsite (tent, campfire,
+## bedroll -- OWNER-0902-CAMP-SPLIT retired the old single bundled `camp` buy)
+## and a creature bed without a debug grant in between. The old opening
+## authored only 12 fiber while the campsite and creature bed alone consume
+## 18, so a perfectly thorough natural gather still hit an artificial wall.
+## Keep the requirement derived from the real catalogue so a later tuning
+## pass cannot recreate that failure silently.
 func test_band1_naturally_supplies_the_gate_a_paid_build_session() -> void:
 	var build_counts := {
-		"camp": 1,
+		"tent": 1,
+		"campfire": 1,
+		"bedroll": 1,
 		"floor": 4,
 		"wall": 7,
 		"door": 1,

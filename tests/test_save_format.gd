@@ -442,7 +442,7 @@ func test_save_then_load_round_trips_tool_durability() -> void:
 func test_save_then_load_round_trips_placed_buildings() -> void:
 	var written := _game()
 	written.placed_buildings = [
-		{"id": "camp", "position": [1.0, 0.0, -2.5]},
+		{"id": "tent", "position": [1.0, 0.0, -2.5]},
 		{"id": "storage", "position": [4.25, 0.0, 6.0]},
 	]
 	assert_true(saver.save(written, 1))
@@ -450,7 +450,7 @@ func test_save_then_load_round_trips_placed_buildings() -> void:
 	var read := _game(false)
 	assert_true(saver.load_slot(read, 1))
 	assert_eq(read.placed_buildings.size(), 2)
-	assert_eq(str((read.placed_buildings[0] as Dictionary).get("id")), "camp")
+	assert_eq(str((read.placed_buildings[0] as Dictionary).get("id")), "tent")
 	assert_eq((read.placed_buildings[1] as Dictionary).get("position"), [4.25, 0.0, 6.0])
 
 
@@ -698,13 +698,13 @@ func test_load_on_an_older_save_with_no_yaw_deg_does_not_crash_or_lose_the_entry
 	# quietly require a version bump `docs/decisions/D15`'s "carry on, do not
 	# brick the player" rule would otherwise be broken by.
 	var written := _game()
-	written.placed_buildings = [{"id": "camp", "position": [0.0, 0.0, 0.0]}]
+	written.placed_buildings = [{"id": "tent", "position": [0.0, 0.0, 0.0]}]
 	assert_true(saver.save(written, 1))
 
 	var read := _game(false)
 	assert_true(saver.load_slot(read, 1))
 	assert_eq(read.placed_buildings.size(), 1)
-	assert_eq(str((read.placed_buildings[0] as Dictionary).get("id")), "camp")
+	assert_eq(str((read.placed_buildings[0] as Dictionary).get("id")), "tent")
 	assert_false((read.placed_buildings[0] as Dictionary).has("yaw_deg"))
 
 
@@ -839,7 +839,7 @@ func test_save_then_load_round_trips_map_discovery() -> void:
 func test_save_then_load_round_trips_building_yaw() -> void:
 	var written := _game()
 	written.placed_buildings = [
-		{"id": "camp", "position": [1.0, 0.0, -2.5], "yaw_deg": 90.0},
+		{"id": "tent", "position": [1.0, 0.0, -2.5], "yaw_deg": 90.0},
 	]
 	assert_true(saver.save(written, 1))
 
@@ -866,7 +866,7 @@ func test_v1_save_migrates_creatures_satiety_map_and_building_yaw_on_load() -> v
 			"fainted": false,
 		}],
 		"inventory": [null, {"id": "wood", "n": 5}],
-		"placed_buildings": [{"id": "camp", "position": [1.0, 0.0, 2.0]}],
+		"placed_buildings": [{"id": "tent", "position": [1.0, 0.0, 2.0]}],
 	}
 	DirAccess.make_dir_recursive_absolute(TEST_DIR)
 	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
