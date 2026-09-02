@@ -124,6 +124,19 @@ Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw
 - Also: single broccoli tree silhouette at one scale everywhere; dead tree and boulder assets copy-pasted; flat plastic leaf cards close up; fenced paddocks enclose nothing; NPCs static (village reads populated, not lived-in); mill has no wheel/chute (frame named "wheel" shows none); tournament frame shows no event dressing.
 - Response: (1)+(3) → VP1 (shader rewrite + light/aerial config, drafted); creature frames → added to VP0 via the combat/creature captures, and creature staging near capture stands is a VP9 item; tree variety/leaf cards → VP3; paddocks/tournament/mill dressing → VP5; NPC life → VP9.
 
+### WORLD round 1 (Opus coordinator, `claude/vp-world` @ 0409e726) — coordinator verdict 2026-09-02 04:00 UTC
+Evidence: `ralph/reports/visual-parity/WORLD/round1/` (stands 2×4 times, clock-freeze, before) and the program
+coordinator's fast render of the same tip (`WORLD-coord-fast`, village/pond/survey, 960x540).
+- Fixed and confirmed in frames: cloud form and scale (large cumulus, blue sky), horizon no longer white,
+  village day and night read well (moon disc, lit windows). Root causes found by WORLD: the day clock
+  drifts ~1 in-game hour per 25 real seconds so every pinned capture time walked away during settle
+  (`set_clock_frozen()` added; this was VP1-G0); the sun "blob" was a hard-coded halo exponent (27° halo),
+  now `sun_glow_falloff`.
+- Still open → round 2 sent 04:12: (1) canopies still mint-white — the runtime derived-texture binding
+  failed twice; round 2 bakes the desaturated leaf sheets to derived PNG assets and uses the `retexture`
+  swap; (2) sun halo still too large (falloff 200/120 → 600/350); (3) dawn overlook is a uniform red
+  wash. Perf table not measured by WORLD; the program coordinator measures tiles 0/16 locally.
+
 ## Implementation decisions
 
 - `data/config/grass_field.json` is **ON** for this program (owner directive 2026-09-01: "I don't see how a
