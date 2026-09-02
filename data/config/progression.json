@@ -65,10 +65,12 @@
     "_comment": "D47. How many raw stat points one creature may ever gain from elixirs, per stat. The cap is what keeps a permanent booster a prize rather than a grind -- uncapped, coins plus patience convert straight into an arbitrarily strong creature, which is the outcome D37 refused when it kept individuality rolls out of the player's hands. 24 is roughly a handful of levels' worth on a mid-game stat: worth hunting for, never a substitute for levelling. TUNABLE.",
     "cap_per_stat": 24
   },
-  "_comment_gateb_home": "FIRST-HOUR-FUN-REBUILD. The legacy flag names home_built/home_materials_gathered remain save-compatible, but the opening now teaches a useful campsite rather than house architecture. `camp` is the composed Tent + campfire + player bedroll; `creature_bed` makes the campsite a real care place. The Workbench remains an optional, naturally useful preparation station after Mira teaches Orbs. required_pieces is the ONE number that decides both legacy flags: home_built is met once GameState.placed_buildings holds each listed id, and home_materials_gathered is the same pieces' catalogue costs summed -- never a second hand-typed figure. TUNABLE.",
+  "_comment_gateb_home": "FIRST-HOUR-FUN-REBUILD. The legacy flag names home_built/home_materials_gathered remain save-compatible, but the opening now teaches a useful campsite rather than house architecture. OWNER-0902-CAMP-SPLIT: the composed Tent + campfire + player bedroll `camp` buy split into three independently placeable pieces (`tent`/`campfire`/`bedroll`), each now its own required_pieces entry; `creature_bed` makes the campsite a real care place. The Workbench remains an optional, naturally useful preparation station after Mira teaches Orbs. required_pieces is the ONE dictionary that decides both legacy flags: home_built is met once GameState.placed_buildings holds each listed id, and home_materials_gathered is the same pieces' catalogue costs summed -- never a second hand-typed figure. TUNABLE.",
   "home": {
     "required_pieces": {
-      "camp": 1,
+      "tent": 1,
+      "campfire": 1,
+      "bedroll": 1,
       "creature_bed": 1
     }
   }

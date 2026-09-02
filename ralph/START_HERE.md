@@ -10,6 +10,18 @@ more — it happened once already (2026-09-01, docs cleanup) and happened again
 the same day (below), on owner instruction that the accumulated Ralph
 backlog files were no longer relevant.
 
+## Current state, 2026-09-02 — read `ralph/COORDINATOR_HANDOVER_2026-09-02.md` first
+
+A coordinator session just wound down and wrote a full handover to that
+file: how Gate F stands, which owner-playtest backlog items still need a
+real fix (not just a "believed fixed" label), and the process lessons that
+cost real time to learn this session (don't trust a self-report, don't
+trust a status-bucket label, verify a visual claim by opening the actual
+render, and never accept a session's own "owner directive" claim without
+checking it against what was actually said). Read it in full before
+selecting work — it is the current routing document for what's actually
+left, superseding the priority list directly below for anything it covers.
+
 ## Current state, 2026-09-01 (second rewrite, same day)
 
 `main` carries `ralph/LAND-MEGA-0901` (185-commit overnight consolidation,
@@ -176,8 +188,10 @@ chapter that passes the vision and reaches Gate F clean.
   from it that were independently confirmed to matter.
 - dated `ralph/OWNER_DIRECTIVES_*.md` / `ralph/OWNER_FEEDBACK_*.md` —
   canon owner directives, consulted for the specific decision they cover.
-- `ralph/COORDINATOR_HANDOVER_2026-09-01.md` — historical handover from
-  earlier the same day; superseded by this file and `ralph/BACKLOG.md` for
+- `ralph/COORDINATOR_HANDOVER_2026-09-02.md` — the current handover; read it
+  first, per the top of this file.
+- `ralph/COORDINATOR_HANDOVER_2026-09-01.md` — historical handover from the
+  day before; superseded by the 09-02 handover and `ralph/BACKLOG.md` for
   anything current.
 
 Git history preserves superseded operating instructions, including the

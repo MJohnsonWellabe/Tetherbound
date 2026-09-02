@@ -3,9 +3,10 @@ extends SceneTree
 ## Real build-piece thumbnails, replacing the letter-chip placeholders in
 ## assets/ui/icons/buildables/. NO meadows world -- every buildable in
 ## data/items/buildables.json is either a plain glTF module (`mesh`) or one of
-## the two hand-authored visuals (`camp`, `storage`), whose scripts
-## (scripts/build/camp.gd, scripts/build/storage_container.gd) are read here
-## for the exact same mesh paths rather than re-guessing them.
+## the hand-authored visuals (`tent`, `campfire`, `bedroll`, `storage`), whose
+## scripts (scripts/build/camp_tent.gd, campfire.gd, player_bed.gd,
+## storage_container.gd) are read here for the exact same mesh paths rather
+## than re-guessing them.
 ##
 ##   xvfb-run -a -s "-screen 0 512x512x24" \
 ##     ~/godot-bin/godot --rendering-driver opengl3 --path . \
@@ -17,9 +18,13 @@ extends SceneTree
 const BUILDABLES_JSON := "res://data/items/buildables.json"
 const OUT_DIR := "res://assets/ui/icons/buildables"
 
-# scripts/build/camp.gd -- BONFIRE constant, task brief says "for camp use the
-# Bonfire mesh" (not the bedroll too; one representative piece per icon).
-const CAMP_MESH := "res://assets/props/quaternius_survival/Bonfire_Fire.obj"
+# scripts/build/camp_tent.gd -- TENT constant.
+const TENT_MESH := "res://assets/props/generated_camp/camp_tent.glb"
+# scripts/build/campfire.gd -- BONFIRE constant, task brief says "for camp use
+# the Bonfire mesh" (not the bedroll too; one representative piece per icon).
+const CAMPFIRE_MESH := "res://assets/props/quaternius_survival/Bonfire_Fire.obj"
+# scripts/build/player_bed.gd -- MESH_PATH constant.
+const BEDROLL_MESH := "res://assets/props/generated_camp/camp_bed.glb"
 # scripts/build/storage_container.gd -- MESH_PATH constant.
 const STORAGE_MESH := "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf"
 
@@ -229,8 +234,12 @@ func _load_buildables() -> Array:
 
 func _mesh_path_for(entry: Dictionary) -> String:
 	var id := str(entry.get("id", ""))
-	if id == "camp":
-		return CAMP_MESH
+	if id == "tent":
+		return TENT_MESH
+	if id == "campfire":
+		return CAMPFIRE_MESH
+	if id == "bedroll":
+		return BEDROLL_MESH
 	if id == "storage":
 		return STORAGE_MESH
 	return str(entry.get("mesh", ""))

@@ -35,8 +35,10 @@ func _nodes(band: String) -> Array:
 	return _json("res://data/config/bands/%s/harvest.json" % band).get("nodes", [])
 
 
-## What `camp` and `creature_bed` together actually cost, read from the
-## shipping build data rather than restated here.
+## What `tent`/`campfire`/`bedroll` and `creature_bed` together actually cost,
+## read from the shipping build data rather than restated here.
+## OWNER-0902-CAMP-SPLIT: the old bundled `camp` buy split into three
+## independently placeable pieces; a rest point still needs all of them.
 func _rest_point_cost() -> Dictionary:
 	# `buildables` is an ARRAY of entries each carrying its own `id`, and a cost
 	# line's amount key is `n`. The first version of this read it as a dictionary
@@ -44,7 +46,7 @@ func _rest_point_cost() -> Dictionary:
 	# check below would have passed vacuously -- which is exactly what
 	# `test_the_rest_point_cost_is_readable_at_all` exists to catch, and did.
 	var entries: Variant = _json(BUILDABLES_PATH).get("buildables", [])
-	var wanted := {"camp": true, "creature_bed": true}
+	var wanted := {"tent": true, "campfire": true, "bedroll": true, "creature_bed": true}
 	var cost: Dictionary = {}
 	for raw: Variant in (entries as Array):
 		var entry: Dictionary = raw as Dictionary

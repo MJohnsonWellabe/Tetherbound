@@ -173,7 +173,7 @@ func _check_the_first_day_arc(world: Node) -> void:
 			return
 		_game.call("assign_hotbar", 0, "")
 
-	# Fund and arm the camp, then plant it through the placer's own press.
+	# Fund and arm the tent, then plant it through the placer's own press.
 	inventory.call("add", "wood", 12)
 	inventory.call("add", "stone", 8)
 	inventory.call("add", "fiber", 10)
@@ -194,14 +194,14 @@ func _check_the_first_day_arc(world: Node) -> void:
 	# This block holds the button across the arming frame, the way a real mouse
 	# click does.
 	Input.action_press("build_place")
-	_game.set("pending_build", "camp")
+	_game.set("pending_build", "tent")
 	for i in 12:
 		await physics_frame
-	if world.get_node_or_null(^"Camp") != null:
+	if world.get_node_or_null(^"Tent") != null:
 		_fail("arming a piece with the place button held planted it instantly -- "
 				+ "the player never sees a ghost, and never gets to rotate or position it")
 		return
-	if str(_game.get("pending_build")) != "camp":
+	if str(_game.get("pending_build")) != "tent":
 		_fail("arming with the place button held disarmed the piece instead of holding the ghost")
 		return
 	Input.action_release("build_place")
@@ -209,7 +209,7 @@ func _check_the_first_day_arc(world: Node) -> void:
 		await physics_frame
 	print("arming with place held planted nothing -- the ghost gets its frames")
 
-	_game.set("pending_build", "camp")
+	_game.set("pending_build", "tent")
 	var wood_before_build := int(inventory.call("count", "wood"))
 	for i in 30:
 		await physics_frame
@@ -222,20 +222,20 @@ func _check_the_first_day_arc(world: Node) -> void:
 	for i in 20:
 		await physics_frame
 
-	var camp := world.get_node_or_null(^"Camp")
-	if camp == null:
-		_fail("pressing build_place on a legal ghost planted no camp")
+	var tent := world.get_node_or_null(^"Tent")
+	if tent == null:
+		_fail("pressing build_place on a legal ghost planted no tent")
 		return
 	if int(inventory.call("count", "wood")) >= wood_before_build:
-		_fail("the camp was planted and cost no wood")
-	if str(_game.get("pending_build")) != "camp":
-		_fail("persistent placement lost the selected camp after one placement")
-	print("camp planted, costs spent, and a fresh camp ghost remains active")
+		_fail("the tent was planted and cost no wood")
+	if str(_game.get("pending_build")) != "tent":
+		_fail("persistent placement lost the selected tent after one placement")
+	print("tent planted, costs spent, and a fresh tent ghost remains active")
 
 	# The workbench: place one, and CRAFT AT IT. Owner brief: "use the
 	# workbench to craft capture orbs, knives, axes, pickaxes" -- it used to be
 	# plain geometry with no interaction, so this block is the loop's proof:
-	# fund it, plant it through the same ghost path the camp just used, then
+	# fund it, plant it through the same ghost path the tent just used, then
 	# find its Craft prompt and craft a knife standing at the bench.
 	inventory.call("add", "wood", 12)
 	inventory.call("add", "stone", 8)
@@ -279,7 +279,7 @@ func _check_the_first_day_arc(world: Node) -> void:
 		return
 	print("workbench planted, Craft prompt present, knife crafted at the bench")
 
-	# Persistent mode must be left explicitly before the camp's Interactable
+	# Persistent mode must be left explicitly before the bedroll's Interactable
 	# can own X. Use the production cancel action and verify the ghost clears.
 	Input.action_press("build_cancel")
 	await physics_frame
@@ -291,11 +291,35 @@ func _check_the_first_day_arc(world: Node) -> void:
 		_fail("build_cancel did not leave persistent workbench placement")
 		return
 
-	# Rest. The camp's own prompt, through the arbiter.
+	# OWNER-0902-CAMP-SPLIT: rest now lives on the standalone bedroll, not the
+	# tent -- fund and plant one the same way the tent was above.
+	inventory.call("add", "wood", 4)
+	inventory.call("add", "fiber", 6)
+	_game.set("pending_build", "bedroll")
+	for i in 30:
+		await physics_frame
+	Input.action_press("build_place")
+	await physics_frame
+	await physics_frame
+	Input.action_release("build_place")
+	for i in 20:
+		await physics_frame
+	var bedroll := world.get_node_or_null(^"Bedroll")
+	if bedroll == null:
+		_fail("pressing build_place on a legal bedroll ghost planted no bedroll")
+		return
+	Input.action_press("build_cancel")
+	await physics_frame
+	await physics_frame
+	Input.action_release("build_cancel")
+	for i in 6:
+		await physics_frame
+
+	# Rest. The bedroll's own prompt, through the arbiter.
 	var day_before := int(_game.get("day"))
 	var vitals: RefCounted = player.get("vitals")
 	vitals.set("health", 40.0)
-	player.global_position = camp.global_position + Vector3(1.6, 0.5, 0.0)
+	player.global_position = bedroll.global_position + Vector3(1.6, 0.5, 0.0)
 	for i in 30:
 		await physics_frame
 	Input.action_press("interact")
@@ -714,7 +738,7 @@ func _check_a_specific_piece_is_chosen_through_real_pad_navigation(world: Node) 
 	# `_category_index` is a `static var` on build_menu.gd -- a within-session
 	# "land back on what I last used" convenience -- so leaving it on Structures
 	# would silently change which category `_check_an_unaffordable_pick_shows_
-	# the_shortfall_and_refuses` below opens on; that check assumes Survival/Camp
+	# the_shortfall_and_refuses` below opens on; that check assumes Survival/Tent
 	# by name in its own comment. The menu is already closed by the pick above
 	# (asserted a few lines up), so there is no grid left to navigate with real
 	# input; this sets the remembered index back directly rather than reopening
@@ -1561,8 +1585,8 @@ func _check_an_unaffordable_pick_shows_the_shortfall_and_refuses() -> void:
 		await _close_build_menu_and_restore_pause(menu)
 		return
 
-	# Camp — survival, the first tab and first cell — costs wood/stone/fiber,
-	# all zeroed above, so it is guaranteed unaffordable here.
+	# Tent — survival, the first tab and first cell — costs wood/fiber,
+	# both zeroed above, so it is guaranteed unaffordable here.
 	var cell := cells[0] as Button
 	if cell.modulate.a >= 0.999:
 		_fail("an unaffordable piece's grid cell is not greyed (alpha %.2f)" % cell.modulate.a)

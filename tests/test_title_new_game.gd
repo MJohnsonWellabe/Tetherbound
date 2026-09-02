@@ -34,7 +34,7 @@ func test_new_game_clears_loaded_progress_but_preserves_save_slots() -> void:
 	game.inventory.add("berries", 12)
 	game.party.add(game.make_creature("terrapup", "Keeper"))
 	game.hotbar[0] = "berries"
-	game.placed_buildings = [{"id": "camp", "position": [1.0, 2.0, 3.0], "yaw_deg": 0.0}]
+	game.placed_buildings = [{"id": "tent", "position": [1.0, 2.0, 3.0], "yaw_deg": 0.0}]
 	game.farm_plots = [{"state": "ripe", "ripe_on_day": 8}]
 	game.death_satchels = [{"position": [2.0, 0.0, 2.0], "state": []}]
 	game.harvested_vegetation = {"trees": "AQ=="}
