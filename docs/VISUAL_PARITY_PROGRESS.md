@@ -23,7 +23,13 @@ Passes are `VP0…VP11` (visual passes) — never conflate with gameplay Gate A/
 | VP1 sky/light | in progress — first cut rendered (`VP1-3-after/survey/`), round 1 fix list with WORLD | 1ef3878a (first cut) | — | |
 | VP2 terrain/ground | in progress — cull tiles + far thinning + terrain material coded, perf table pending with WORLD | e3aba7d7 | — | |
 | VP3 vegetation | in progress — ecology gate + heroes + water bands + retints coded and baked, unjudged | e3aba7d7 | — | |
-| VP4–VP11 | not started | — | — | |
+| VP4 corridor | in flight (CORRIDOR Sonnet lane) | — | — | |
+| VP5 village/tournament/camps | first pass merged (PLACES r2); Bar B yes for village | adaee521 | 5b8a53a6 | `PLACES/round1`, `PLACES/round2` |
+| VP6 Warrens | exterior in flight (PLACES r3); den stand fixed | adaee521 | | |
+| VP7 Relay | first occupation pass merged; staffing/cables in PLACES r3 | adaee521 | | |
+| VP8 Hall | courtyard weathered + banners merged; exterior kit at distance in PLACES r3 | adaee521 | | |
+| VP9 world life | in flight (LIFE Sonnet lane: roll_new_worlds on, clusters at stands, life capture tool) | — | — | |
+| VP10–VP11 | not started | — | — | |
 
 **Current pass:** VP1–VP3 in parallel under the WORLD coordinator; VP5–VP8 render-and-verify under PLACES. **Next action:** at the 02:37 UTC check-in, judge the pushed frames on `claude/vp-world` / `claude/vp-places`, send round-2 fix lists, merge accepted rounds.
 
@@ -86,6 +92,8 @@ coordinates, Sonnet codes/renders, Fable judges/plans):
 |---|---|---|---|
 | WORLD | VP1 + VP2 + VP3 | `claude/vp-world` | session_01XigbWtMzp7EwN5SqzwLvYB |
 | PLACES | VP5 + VP6 + VP7 + VP8 | `claude/vp-places` | session_0182PYdBscd4KZMdDfwmmu63 |
+| LIFE (Sonnet, direct lane, spawned 05:36) | VP9 first slice: roll_new_worlds on, creature clusters at stands, creature/combat frames | `claude/vp-life` | session_01D9GHSeCLm2kM7uFYjod6TD |
+| CORRIDOR (Sonnet, direct lane, spawned 05:36) | VP4: mid-ground structure along the village→band 2 route via band vegetation anchors | `claude/vp-corridor` | session_01TRE9FUps52WdL4esFFFxK9 |
 
 Round plans are delivered into the coordinator sessions by the program coordinator; each round ends
 with pushed frames + REPORT.md and the session stopping.
@@ -116,9 +124,13 @@ Tool: `tools/perf_render_stats.gd`, 1280x720, Compatibility, llvmpipe (structura
 | same | village_high | 3703 | 9,197,864 | 3852 | same |
 | same | hall_approach | 4270 | 4,634,502 | 4615 | same |
 | iteration C with `scatter_lod_ranges=false` (A/B) | hall_approach | **3975** | 4,201,344 | 4317 | coordinator 05:31 UTC, `VP2-perf/perf_iterC_lodoff.txt` |
-| iteration C with `scatter_lod_ranges=false` (A/B) | band1_open | measuring | | | coordinator |
+| iteration C with `scatter_lod_ranges=false` (A/B) | band1_open | **7511** | **11,799,910** | 6481 | coordinator 05:48 UTC, `VP2-perf/perf_iterC_lodoff_band1.txt` |
+| **VP2 COST CANDIDATE = iteration C + scatter_lod_ranges=false** (committed) | band1_open / hall_approach | 7511 / 3975 | 11.80M / 4.20M | | meets every §6 proxy budget |
+| **Checkpoint 06:14 UTC: program branch with WORLD r2 + PLACES r2 merged** (`VP1-3-candidate/`) | band1_open | 7668 | 11,817,644 | 6608 | fast capture run, settle 120/60/20 |
+| same | village_high | 3122 | 8,579,837 | 3263 | same |
+| same | hall_approach | 3795 | 4,361,609 | 4137 | same — all inside budget with everything merged |
 
-Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw calls ≤ 4000. **Iteration 0 misses both** (21.3M; 4335). **Iteration B: 12.58M / 4424. Iteration C: 12.22M at band1_open (1.8% over the provisional 12.0M and 11% under the 13.69M main ships with grass on), hall_approach 4270 draw calls (7% over the reasoned 4000 ceiling; pre-program baseline at that stand was 4331 after the GROUND+VEG merge, ~2900 before it). Accepted as the VP2 cost candidate; the hall draw-call source is being A/B'd (scatter_lod_ranges).**
+Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw calls ≤ 4000. **Iteration 0 misses both** (21.3M; 4335). **Iteration B: 12.58M / 4424. Iteration C: 12.22M at band1_open (1.8% over the provisional 12.0M and 11% under the 13.69M main ships with grass on), hall_approach 4270 draw calls (7% over the reasoned 4000 ceiling; pre-program baseline at that stand was 4331 after the GROUND+VEG merge, ~2900 before it). A/B showed `scatter_lod_ranges=true` costs +0.4M primitives and +330 draw calls: OFF is the VP2 cost candidate — 11.80M / 7511 at band1_open, 3975 at hall_approach, all inside budget.**
 
 ## Judge history
 
@@ -162,6 +174,62 @@ Code-blind judge: `PLACES/JUDGE-round1.md`. Bar A soft yes for village/stronghol
   three broken/empty stands, relay occupation first pass, warrens exterior, well pad, gate visible, night NPC light.
 - PLACES also found: `smoke_traversal` fails on the merged tree at the South Bridge (pre-existing on main, outside
   PLACES), and that 34–58 main commits were missing from the program branch (now merged, ce235831).
+
+### WORLD round 2 (`claude/vp-world` @ bf92e754) — coordinator verdict 2026-09-02 05:45 UTC — MERGED into the program branch
+Evidence: `ralph/reports/visual-parity/WORLD/round2/` (village/pond 15 frames + survey 5, sheets).
+- **Canopy regression fixed and verified in frame**: root causes were `Image.adjust_bsc` (nonexistent; the engine's is
+  `adjust_bcs`, so the desaturation never ran and the aborted call left a null albedo → white) and a path-less runtime
+  ImageTexture dropped through the Terrain3DMeshAsset round-trip. Fix: desaturated leaf sheets baked offline to
+  `assets/environment/stylized_nature/derived/*.png` (derived textures, no new meshes) and bound via the existing
+  `retexture` swap. Trees now read deep/mid green with three visible tints.
+- Sun halo tightened (day 5.5°, golden 7.2°), night moon given a glow, cloud edges softened, dawn exposure 0.8→0.55,
+  pond-approach stand moved out of the canopy.
+- Open for round 3: golden still reads as a soft light mass (WORLD's own measurement), a night stand aimed at the moon's
+  azimuth is needed to judge the moon, `03-rise-overlook-golden` reads cool/grey.
+- Code-blind judge (`WORLD/JUDGE-round2.md`): **Bar A yes (day frames), Bar B yes on environment** — first yes of the
+  program; creature/character half unanswerable (no creature in any frame → LIFE lane). Remaining: survey golden frame
+  black again (clock freeze ordering in survey.gd), daytime sun a flat white cutout, night ground black past the lit
+  radius, overlook distance flattens against the sky, one evenly spaced bush row. All sent as round-3 items.
+
+### PLACES round 2 (`claude/vp-places` @ 347306a0) — verdicts 2026-09-02 05:50 UTC — MERGED into the program branch
+Evidence: `PLACES/round2/locations/` (27 frames). Judge: `PLACES/JUDGE-round2.md` — Bar B **yes** for village and
+stronghold courtyard, no for the Relay; Bar A no as a set (pale canopies — WORLD's bug, now fixed — and debug-line cables
+are the loudest elements).
+- Better: Warrens den stand fixed (interior with creature), Hall 100/200/400 m stands now actually aim at the Hall,
+  relay gate + barrier + banner + grunts at the approach.
+- Open → round 3 (sent 05:52 + addendum 06:06): Hall exterior kit still cream at distance; Warrens mound flat grey;
+  cyan cables/beams unanchored at relay, stronghold sky and courtyard floor; relay standing/apparatus not staffed;
+  smoke column a hard band; night courtyard/gate crushed black; route-out stand shows no gate.
+
+### Check-in 06:50 UTC — lane state
+- WORLD round 3 stands pushed (9, incl. a moon stand): golden sun still a very large disc; `03-rise-overlook-dawn` AND
+  `06-moon-stand-night` are uniform red washes while day/golden at the same stand and the spawn stand at all times are
+  fine → time-preset × elevated camera; a one-key-at-a-time bisect was dispatched. Round-3 locations/ground/survey
+  frames not yet pushed.
+- LIFE round 1 pushed (9 frames): placement work is in but not legible — creatures tiny or absent at every stand,
+  `03-band1-open-meadow-day` is a camera-in-geometry frame, the starter-beside-trainer frame shows only the creature's
+  back. Round 2 sent: re-stage at eye height with clusters 8–15 m ahead, fix the stand, hero pairing, REPORT.md.
+- PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
+- CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
+
+### PLACES round 3 (`claude/vp-places` @ 07:11) — coordinator verdict 07:25 UTC — MERGED
+Evidence: `ralph/reports/visual-parity/PLACES/round3/` (warrens, stronghold, castle-landmark 100/200/400 m, plus ground/water/survey).
+- Both headline fixes were "a value silently cancelled downstream": the Hall exterior already carried the weathered
+  shader but `darken` 0.24 left it brighter than the interior tone (now 0.56 + per-piece variation); the Warrens
+  `tint_variation` was 65% eaten by a later lerp (now applied after it, 0.42). Frames: Hall reads as a dark
+  weathered mass with distinct towers from the gate and at 100 m; Warrens boulders vary in tone, entrance darkest.
+- Still open (VP8/VP6 round 4 candidates): Hall silhouette at 200–400 m is faint against the haze; no ivy/scaffold
+  read at distance; Warrens is still a boulder pile without a soil apron read at the approach stand.
+- Code-blind judge (`PLACES/JUDGE-round3.md`): Hall gate/courtyard day "genuinely good"; 100/200 m improved (silhouette
+  and the pylon row now visible); 400 m still does not separate from the ground and a flat-edged grey storm band sits
+  behind the Hall; courtyard night near-black; **Warrens approach measured pixel-comparable to round 2** — the lane's
+  tint change did not reach that stand. Round 4 sent 07:40 (Warrens staining/apron/entrance with a pixel-diff proof,
+  Hall far read + storm band, courtyard night practicals).
+### CORRIDOR round 1 (`claude/vp-corridor` @ 07:17) — coordinator verdict 07:25 UTC — NOT merged yet
+- Before/after pairs at 8 stations are nearly identical; the two emptiest sightlines (02-first-bend, 07-band2-mid)
+  got nothing visible. The lane added a band `layer_anchors` merge in scatter_rules.gd (out of its file scope,
+  disclosed) because band vegetation files never carried anchors — mechanism accepted in principle; round 2 sent
+  with concrete per-station placements. Frames predate the canopy fix (white trees).
 
 ## Implementation decisions
 

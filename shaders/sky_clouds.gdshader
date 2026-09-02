@@ -97,10 +97,18 @@ uniform float high_coverage : hint_range(0.0, 1.0) = 0.3;
 uniform float high_scale = 0.55;
 uniform float high_opacity : hint_range(0.0, 1.0) = 0.35;
 
-// Horizon haze: how far up the dome (in `up`, 0..1) the horizon colour reaches
+// Horizon haze: how far up the dome (in `up`, 0..1) the haze colour reaches
 // and how strongly it takes over at the line itself.
 uniform float haze_height : hint_range(0.0, 0.5) = 0.14;
 uniform float haze_strength : hint_range(0.0, 1.0) = 0.55;
+// VP1 sky retune round 1. The haze used to mix straight to `horizon_colour`,
+// which is right for the SEAM with the terrain fog but wrong for the haze
+// band itself: real atmospheric haze reads slightly cooler/bluer than the lit
+// horizon under it (more air, more scattered blue), and reusing the warm
+// horizon tint for both flattened the whole lower dome to one near-white
+// wash. Defaults to `horizon_colour`'s own default so an old preset that never
+// sets this keeps exactly the prior look.
+uniform vec3 haze_colour : source_color = vec3(0.72, 0.80, 0.76);
 
 // The sun disc the gradient sky never had.
 uniform float sun_size : hint_range(0.0, 0.2) = 0.022;
@@ -109,6 +117,18 @@ uniform float sun_glow : hint_range(0.0, 1.0) = 0.35;
 // gradient from centre to rim. See the `disc` line in sky() for why this became
 // a uniform (JUDGE-6: "a soft blurry ellipse with no disc edge").
 uniform float disc_edge : hint_range(0.0, 0.99) = 0.35;
+// The `glow` term's falloff exponent. This used to be a hardcoded `24.0`,
+// which fixes the halo's angular width regardless of `sun_size`/`disc_edge`
+// (those only shape `disc`, the crisp body) or `sun_glow` (which only scales
+// the halo's brightness, not its extent). At exponent E, glow falls to half
+// its peak at cos(theta) = 2^(-1/E), so the halo's full diameter in degrees is
+// `2 * acos(2^(-1/E)) * 180/PI`. E=24.0 (the old constant) works out to about
+// 27.4 degrees across -- roughly 54x the real sun's ~0.5-degree width -- which
+// is what read as a giant white blob instead of a disc with a glow around it.
+// Higher E narrows the halo; e.g. E=200.0 is about 9.5 degrees, E=120.0 about
+// 12.3 degrees. Default kept at the old 24.0 so any preset that does not set
+// this renders exactly as before.
+uniform float sun_glow_falloff : hint_range(4.0, 600.0) = 24.0;
 uniform vec3 sun_colour : source_color = vec3(1.0, 0.96, 0.86);
 
 float hash12(vec2 p) {
@@ -239,10 +259,14 @@ void sky() {
 		colour = mix(colour, cloud, clamp(density, 0.0, 1.0));
 	}
 
-	// Horizon haze band: lands on `horizon_colour`, which is also the terrain
-	// fog colour, so the land's aerial fade and the sky meet in one band.
+	// Horizon haze band: `haze_colour` defaults to `horizon_colour`'s own
+	// default (see that uniform's declaration) so an old preset that never
+	// sets it lands on the same seam-matching behaviour as before -- but a
+	// preset that DOES set `horizon_haze_colour` can bias the haze band
+	// slightly bluer than the horizon it sits on, which is closer to how real
+	// haze reads than repeating the horizon's own (often warm) tint.
 	float haze = 1.0 - smoothstep(0.0, max(haze_height, 1e-3), abs(up));
-	colour = mix(colour, horizon_colour, haze * haze_strength);
+	colour = mix(colour, haze_colour, haze * haze_strength);
 
 	// The sun disc, which the gradient sky never had at all.
 	//
@@ -254,7 +278,7 @@ void sky() {
 	// the sun is meant to bloom).
 	float sun_dot = dot(dir, sun_dir);
 	float disc = smoothstep(1.0 - sun_size, 1.0 - sun_size * disc_edge, sun_dot);
-	float glow = pow(clamp(sun_dot, 0.0, 1.0), 24.0) * sun_glow;
+	float glow = pow(clamp(sun_dot, 0.0, 1.0), sun_glow_falloff) * sun_glow;
 	colour += sun_colour * (disc + glow) * LIGHT0_ENERGY;
 
 	COLOR = colour * sky_energy;

@@ -19,6 +19,20 @@
 
   "people": [
     {
+      "name": "Relay Patrol",
+      "rank": "grunt",
+      "base": "grunt_c",
+      "position": [343.9, 3758.3],
+      "facing_deg": 145.6,
+      "_why_here": "FIX 2 (code-blind judge pass, tether_relay.json's own branch): the site's three existing grunts sit outside the `06-relay` `standing`/`apparatus` stands' own view cones. This one does not -- local (s=-2, t=-6), on the open yard floor between the gate and the ramp foot, clear of the ramp's own s<=-5.5 run and the gantry's t[-12.6,-9.4] band, 3-4m from Relay Watch and Relay Deckhand (not on top of either). Forward of `06-relay`'s `standing` eye (local [-8,-2], so ahead of camera rather than behind it) and within its view cone toward the apparatus. `facing_deg` 145.6 -- the same 'facing deeper into the compound' bearing Sela and Relay Watch already use -- reads as a beat walked toward the platform rather than a body parked facing the wall. `base: grunt_c`: distinct from Relay Watch's `grunt_a` and Relay Deckhand's `grunt_b`, both of which stand within a few metres in the same frame.",
+      "place_when": [
+        {
+          "unless_flag": "relay_disabled",
+          "_why": "Same as the sentry, the watch and the deckhand: a live station has a patrol on its own approach; a dead one does not."
+        }
+      ]
+    },
+    {
       "name": "Relay Sentry",
       "rank": "grunt",
       "position": [342.3, 3772.32],
@@ -42,6 +56,20 @@
         {
           "unless_flag": "relay_disabled",
           "_why": "Same as the sentry: a live station has a second body working it; a dead one does not."
+        }
+      ]
+    },
+    {
+      "name": "Relay Deckhand",
+      "rank": "grunt",
+      "base": "grunt_b",
+      "position": [341.9, 3764.8],
+      "facing_deg": -48.3,
+      "_why_here": "E-relay-dress (this pass): posted at local (s=-8.5, t=-4.0), 3.65m from Relay Watch and 3.6m from Officer Dell's own fight position -- close enough to read as the same working post, far enough that neither an idle body nor a fight crowds the other. Facing the yard_stair ramp foot (local -12.5,-5.0) rather than the yard itself: the ramp is the ONLY route up to the apparatus pad (`tether_relay.json`'s own `_comment_decks`), so a body watching its foot reads as guarding the work platform's access without needing to stand on the raised slab itself, which `village_npcs.gd` has no mechanism for (it samples real ground height, not a deck's authored absolute Y -- the deck-mounted crates a few metres above this spot are placed a different way, by `tether_relay.gd` directly, for exactly that reason). `base: grunt_b` so this third grunt is not a third repeat of either sibling's silhouette in the same frame.",
+      "place_when": [
+        {
+          "unless_flag": "relay_disabled",
+          "_why": "Same as the sentry and the watch: a live station has somebody covering the one way up to its own machinery; a dead one does not."
         }
       ]
     },

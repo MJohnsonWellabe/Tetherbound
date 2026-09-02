@@ -214,6 +214,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null, director
 	_build_interior_area()
 	_clear_the_ground_the_cave_stands_on()
 	_build_mound()
+	_build_entrance_dressing()
 	_build_deposits()
 	_build_dressing()
 	_build_den_atmosphere()
@@ -337,6 +338,20 @@ func _floor_colour() -> Color:
 	return Color(str(_config.get("site", {}).get("floor_colour", "#4a423a")))
 
 
+## EXT-05-GROUND. The exterior apron used to draw straight off `floor_colour`
+## -- the SAME colour the interior chambers' own floors use -- through a lerp
+## tuned for a dim interior room (see `_floor_material()`'s own header). The
+## interior is not this pass's to touch (owner verdict: interior good), so
+## this is a new, exterior-only value rather than a second use of the old one:
+## `site.apron_colour`, falling back to `floor_colour` if a site never sets
+## it, so an untouched site is unaffected.
+func _apron_colour() -> Color:
+	var site: Dictionary = _config.get("site", {})
+	if site.has("apron_colour"):
+		return Color(str(site.get("apron_colour")))
+	return _floor_colour()
+
+
 ## The cave floor's own material. Triplanar for the same reason every other
 ## surface in here is: these are procedurally-sized primitive boxes with no
 ## authored UVs, so the texture has to project itself from world space.
@@ -358,6 +373,17 @@ func _floor_colour() -> Color:
 ## facet contrast. `exterior=true` pulls the lerp back toward the source
 ## photo's own dirt/pebble colour instead, the same direction
 ## `_wear_the_cave_stone`'s `exterior` split already goes for the rock.
+##
+## EXT-05-GROUND, second blind pass, evidence "reads as ... boulders on
+## lawn". The exterior branch drew `_floor_colour()` -- the interior floor's
+## own colour, shared with every chamber -- through a 0.12 lerp toward
+## near-white `ROCK_TINT`, tuned only to stop that colour bleaching in a dim
+## room. Outdoors under real sun that same lerp read as pale, unworn dirt.
+## `exterior` now reads the new `_apron_colour()` (falls back to
+## `_floor_colour()` if a site sets no `apron_colour`, so this is a no-op for
+## any site that hasn't) and the lerp toward white drops 0.12 -> 0.05, so the
+## apron stays close to its own dark, worn value instead of being pulled
+## toward the near-white rock tint the way the wall/rock materials are.
 func _floor_material(exterior := false) -> StandardMaterial3D:
 	var key := "floor_ext" if exterior else "floor"
 	if _materials.has(key):
@@ -382,7 +408,8 @@ func _floor_material(exterior := false) -> StandardMaterial3D:
 	# fixing the sandiness. 0.42 reads as packed dirt DARKER than the wall
 	# above it without emptying the histogram -- between round 2's beach and
 	# round 3's hole.
-	m.albedo_color = _floor_colour().lerp(ROCK_TINT, 0.12 if exterior else 0.42)
+	m.albedo_color = (_apron_colour() if exterior else _floor_colour()).lerp(
+		ROCK_TINT, 0.05 if exterior else 0.42)
 	m.normal_enabled = true
 	m.normal_texture = FLOOR_NORMAL
 	m.normal_scale = 1.8
@@ -747,7 +774,21 @@ func _build_vault_door_seam(along_x: bool, width: float, height: float, size: Ve
 func _build_approach_apron() -> void:
 	if not _chambers.has("mouth"):
 		return
-	var width := float(_first_passage().get("width", 3.0)) + 1.6
+	var site: Dictionary = _config.get("site", {})
+	var base_width := float(_first_passage().get("width", 3.0)) + 1.6
+	# EXT-04-APRON, judge evidence "04-warrens-approach reads as a flat grey
+	# rock pile on lawn". The walkway itself was never the defect, but at a
+	# flat `base_width` (barely wider than the doorway) it left grass running
+	# to within a metre of the mound's own boulders either side of it -- a
+	# path across a lawn, not worn ground a burrow sits in. A trodden apron at
+	# a real den mouth FANS: the trample spreads wide right at the threshold
+	# and narrows into a single line further off. `apron_mouth_width_m` /
+	# `apron_far_width_m` let the two ends of the ramp taper instead of
+	# repeating one number ten times; both fall back to the old fixed width
+	# so a site that sets neither is unchanged. `_why` for the actual numbers
+	# lives on the two keys themselves.
+	var mouth_width := float(site.get("apron_mouth_width_m", base_width))
+	var far_width := float(site.get("apron_far_width_m", base_width))
 	var outer_z := _mouth_outer_z()
 	var run := 6.0
 	var steps := 10
@@ -761,6 +802,7 @@ func _build_approach_apron() -> void:
 		var t := (float(i) + 0.5) / float(steps)
 		var z := outer_z - t * run
 		var top: float = lerpf(_floor_y, end_local, t)
+		var width := lerpf(mouth_width, far_width, t)
 		# Same dirt as the chambers' own floors, but the EXTERIOR tint -- this
 		# ramp is OUTDOORS, in daylight, beside textured terrain and the
 		# mound's own boulders. T1-WARRENS-EXT: the interior-tuned lerp read
@@ -779,12 +821,17 @@ func _build_approach_apron() -> void:
 	# tells it here rather than somebody transcribing the numbers into a config.
 	# The marker is a bare Node3D at the ramp's own midpoint, because the ramp
 	# itself is ten separate boxes and the field wants one circle.
+	#
+	# EXT-04-APRON: the clear radius is measured off `mouth_width`, the wider
+	# of the two taper ends, so the grass stops wherever the widened fan's
+	# floor actually reaches rather than under-clearing it at the old fixed
+	# width and leaving a green fringe along the new fan's own edge.
 	var apron := Node3D.new()
 	apron.name = "ApronGround"
 	apron.position = Vector3(0.0, 0.0, outer_z - run * 0.5)
 	add_child(apron)
 	apron.set_meta(GRASS_FIELD.CLEAR_RADIUS_META,
-			Vector2(width, run).length() * 0.5 + APRON_CLEAR_MARGIN)
+			Vector2(mouth_width, run).length() * 0.5 + APRON_CLEAR_MARGIN)
 	apron.add_to_group(GRASS_FIELD.CLEAR_GROUP)
 
 
@@ -944,6 +991,9 @@ func _build_mound() -> void:
 	rng.seed = int(mound.get("seed", 63220))
 	var sink := float(mound.get("sink_m", 1.0))
 	var tint := Color(str(mound.get("tint", "#ffffff")))
+	# EXT-04-APRON. See `_place_rock()`'s own comment on this parameter --
+	# without it every boulder placed below shares one cached material.
+	var tint_variation := float(mound.get("tint_variation", 0.0))
 	var skip_front := float(mound.get("skip_front_m", 9.0))
 	var mouth_z := _mouth_outer_z()
 
@@ -990,7 +1040,7 @@ func _build_mound() -> void:
 						lerpf(min_z, max_z, t))
 				if at.z < mouth_z + skip_front and absf(at.x) < skip_front:
 					continue
-				_place_rock(holder, loaded, rng, at, perimeter_scale, sink, tint)
+				_place_rock(holder, loaded, rng, at, perimeter_scale, sink, tint, tint_variation)
 
 	_build_site_skirt(holder, mound, rng)
 
@@ -1012,7 +1062,7 @@ func _build_mound() -> void:
 					centre.z + size.y * (float(iz) / float(steps_z) - 0.5))
 				if at.z < mouth_z + skip_front and absf(at.x) < skip_front:
 					continue
-				_place_rock(holder, loaded, rng, at, roof_scale, sink, tint)
+				_place_rock(holder, loaded, rng, at, roof_scale, sink, tint, tint_variation)
 
 
 ## CONTENT-0828. What turns these rooms from boxes into a cave.
@@ -1363,17 +1413,81 @@ func _place_interior_rock(holder: Node3D, models: Array[PackedScene],
 ## `tint` is kept as the per-piece variation: each rock takes the site's rock
 ## colour nudged toward its own value, so the bank along a wall is not one flat
 ## sheet of identical stone.
+##
+## EXT-04-APRON: that description was aspirational until now. Every CALLER of
+## this function outdoors (`_place_rock`, `_build_site_skirt`) passed the
+## SAME `tint` for every piece, and `_material()` caches by the colour it
+## computes from it -- so the whole mound and skirt were one shared
+## StandardMaterial3D, which is what a judge frame calling this "a flat grey
+## rock pile" is a frame of. `_varied_tint()` below is what actually gives
+## each piece its own nudge; the callers now use it rather than passing `tint`
+## straight through.
+func _varied_tint(base: Color, rng: RandomNumberGenerator, variation: float) -> Color:
+	if variation <= 0.0:
+		return base
+	# Quantized to five steps (-1, -0.5, 0, 0.5, 1 of `variation`) rather than
+	# a continuous `randf_range`, so the bounded `_materials` cache this file
+	# already relies on stays a handful of entries shared across ~250 pieces
+	# of mound/skirt rock, not one duplicate StandardMaterial3D per boulder.
+	var step := float(rng.randi_range(-2, 2)) * 0.5
+	var shift := step * variation
+	return base.lightened(shift) if shift > 0.0 else base.darkened(-shift)
 ## `exterior` selects the lower, sun-driven `normal_scale` -- see `_material`'s
 ## own header. Defaults to false (the interior value) so `_place_interior_rock`
 ## and the vault plinth are unaffected; the mound and the site skirt's rocks
 ## pass true.
-func _wear_the_cave_stone(node: Node, tint: Color, exterior := false) -> void:
-	var stone := _material(_rock().lerp(tint, 0.35), 0.0, true, 1.15 if exterior else 2.2)
+##
+## EXT-05-GROUND, second blind pass: "0.16 [tint_variation] is evidently
+## invisible" turned out to be arithmetic, not taste. The OLD callers computed
+## `_varied_tint(tint, rng, variation)` and passed the RESULT in here, where it
+## still had to survive this function's own 35% lerp toward `_rock()` before
+## reaching a material -- so only 35% of a configured swing ever rendered
+## (0.16 configured, ~0.056 effective). `variation`/`rng` are now parameters of
+## THIS function and are applied to the LERPED colour -- the value a piece
+## actually wears -- so the number a site configures is the swing a frame
+## shows. Both default to a no-op (0.0 / null), so `_place_interior_rock`'s
+## own two-argument call is unaffected by this change.
+func _wear_the_cave_stone(node: Node, tint: Color, exterior := false,
+		variation := 0.0, rng: RandomNumberGenerator = null) -> void:
+	var base := _rock().lerp(tint, 0.35)
+	if variation > 0.0 and rng != null:
+		base = _varied_tint(base, rng, variation)
+	var stone := _material(base, 0.0, true, 1.15 if exterior else 2.2)
 	for child in _mesh_boxes_nodes(node):
 		var instance := child as MeshInstance3D
 		var mesh := instance.mesh
 		for surface in (mesh.get_surface_count() if mesh != null else 0):
 			instance.set_surface_override_material(surface, stone)
+
+
+## EXT-05-GROUND, second blind pass, evidence "boulders read as sitting ON
+## top of grass ... uniform light-grey boulders on lawn". Sinking a boulder
+## deeper (the skirt/jamb sink fixes alongside this) hides more of its own
+## silhouette but does nothing about the JOIN -- the ring where stone actually
+## meets earth is still bare grass right up to the rock, and a boulder is not
+## one flat value top to bottom in real light either: the base, in its own
+## shadow and damp from contact with the ground, reads darker than the crown.
+## This drops one small, dark, flattened dirt patch at a ground-contact
+## boulder's own foot -- wider than the rock's own drawn scale so a rim of it
+## shows past the silhouette, giving both effects (a darker base band, and
+## visible soil at the feet) from one piece of reused geometry. `_box()` is
+## the same primitive every solid surface in this file is already built from;
+## `solid=false` is the rule `_build_site_skirt()`'s own header already states
+## for every piece of ground cover here -- decoration a player can get stuck
+## on is a bug, and this is dressing, not a stepping stone. Uses
+## `site.apron_colour` (via the caller) so the collar and the trodden apron
+## ramp read as the one worn dirt rather than two disagreeing browns.
+##
+## `textured=false`: `_material()`'s textured branch lerps whatever colour it
+## is given 75% toward the near-white `ROCK_TINT` (MAT-BLOCKOUT, tuned for a
+## sunlit rock face) -- exactly the wrong thing for a colour that is dark
+## specifically because it is meant to read as damp shadowed earth. A flat
+## unlit-albedo colour keeps the dark value the config actually asked for.
+func _boulder_soil_collar(at: Vector3, footprint: float, colour: Color) -> void:
+	if footprint <= 0.0:
+		return
+	var size := Vector3(footprint, 0.16, footprint)
+	_box(size, Vector3(at.x, at.y - size.y * 0.5 + 0.02, at.z), colour, false, false)
 
 
 func _mesh_boxes_nodes(node: Node) -> Array[Node]:
@@ -1441,6 +1555,26 @@ func _build_site_skirt(holder: Node3D, mound: Dictionary, rng: RandomNumberGener
 	var flora_scale: Array = mound.get("skirt_flora_scale", [0.45, 1.0])
 	var flora_fraction := clampf(float(mound.get("skirt_flora_fraction", 0.5)), 0.0, 1.0)
 	var tint := Color(str(mound.get("tint", "#ffffff")))
+	# EXT-04-APRON. Same value-collapse `_place_rock()` had: this loop called
+	# `_wear_the_cave_stone(art, tint, true)` with one fixed `tint` for every
+	# rock in the skirt, so the ground cover right at the boulders' own feet
+	# was as flat as the boulders it was meant to break up. Same fix.
+	var tint_variation := float(mound.get("tint_variation", 0.0))
+	# EXT-05-GROUND, second blind pass, evidence "boulders read as sitting ON
+	# top of grass ... boulders on lawn". Every skirt rock used to sink a flat
+	# 0.08m regardless of its own drawn scale -- enough for a small piece,
+	# nothing for one near the top of `skirt_scale`'s 0.7-2.1x range. Sink now
+	# scales with the piece's own draw, between `skirt_sink_min_m` (smallest
+	# rocks) and `skirt_sink_m` (largest); both default to the old 0.08 so an
+	# unconfigured site is unaffected. `soil_collar_scale` sizes the dark-earth
+	# patch `_boulder_soil_collar()` drops at each rock's own foot, in
+	# `site.apron_colour` so it and the trodden apron ramp match. Flora keeps
+	# the old fixed sink and gets no collar -- a fern does not want bare earth
+	# heaped at its own base the way a boulder does.
+	var sink_min := float(mound.get("skirt_sink_min_m", 0.08))
+	var sink_max := float(mound.get("skirt_sink_m", 0.08))
+	var collar_scale := float(mound.get("soil_collar_scale", 0.0))
+	var soil_colour := _apron_colour()
 	var planted := 0
 	for i in count:
 		# Weighted toward the outcrop: sqrt would spread evenly over the disc,
@@ -1464,17 +1598,135 @@ func _build_site_skirt(holder: Node3D, mound: Dictionary, rng: RandomNumberGener
 			continue
 		var low := float(scale_range[0]) if scale_range.size() > 0 else 0.6
 		var high := float(scale_range[1]) if scale_range.size() > 1 else 1.2
-		art.position = Vector3(local.x, ground - 0.08, local.z)
+		var draw := rng.randf_range(low, high)
+		var sink := 0.08
+		if not use_flora:
+			sink = lerpf(sink_min, sink_max, inverse_lerp(low, high, draw)) if high > low else sink_max
+		art.position = Vector3(local.x, ground - sink, local.z)
 		art.rotation = Vector3(0.0, rng.randf_range(-PI, PI), 0.0)
-		art.scale = Vector3.ONE * rng.randf_range(low, high)
+		art.scale = Vector3.ONE * draw
 		holder.add_child(art)
 		if use_flora:
 			_dress_skirt_flora(art)
 		else:
-			_wear_the_cave_stone(art, tint, true)
+			_wear_the_cave_stone(art, tint, true, tint_variation, rng)
+			_boulder_soil_collar(Vector3(local.x, ground, local.z), draw * collar_scale, soil_colour)
 		planted += 1
 	if planted > 0:
 		print("[warrens] planted %d pieces of ground cover around the site" % planted)
+
+
+## EXT-04-APRON, judge evidence "04-warrens-approach reads as a flat grey
+## rock pile on lawn" -- the two findings the procedural mound/skirt above
+## cannot fix by construction, because both `skip_front_m` (mound.json's own
+## comment: "an outcrop that swallows its own entrance is worse than a bare
+## box") and the skirt's own doorway carve-out deliberately keep the whole
+## area around the opening EMPTY of the generic scatter. That emptiness is
+## correct for the walk-through gap itself and wrong for everything around
+## it: a real den mouth has scrub growing right up to where feet wear it bare
+## (fern/scrub ring) and a hood of rock actually FRAMING the hole rather than
+## a gap in a scattered field (dark entrance focal point). Both need to be
+## authored by hand, close to the opening, rather than rolled by the same
+## radial scatter that is deliberately excluded there.
+##
+## Read from `mound.entrance_dressing` -- the mound's own site treatment,
+## extended rather than duplicated into a third config block -- one entry per
+## piece, cave-local like every other position in this file. `kind: "flora"`
+## reuses `_dress_skirt_flora()`'s own vetted Bush_Common/Grass_Wide_Tall
+## retint; `kind: "rock"` (default) reuses `_wear_the_cave_stone()` and
+## `_varied_tint()` above, with `dark: true` biasing specifically toward the
+## darker end of that same spread rather than a third tinting mechanism, for
+## the pieces meant to read as shadowed jambs and a brow over the hole.
+## `y_m` (present) places a piece at a height above the cave floor, for the
+## hood stones that belong to the doorway's own structure; its absence
+## samples the real hillside under the piece instead (`_site_ground()`, the
+## same sampling `_build_site_skirt()` already trusts), for ground-level
+## flora and scree that should sit on the actual slope, not on an assumed
+## flat plane. No collider on anything placed here, same rule every other
+## piece of this outcrop's dressing already keeps: decoration a player can
+## get stuck on is a bug.
+func _build_entrance_dressing() -> void:
+	var mound: Dictionary = _config.get("mound", {})
+	var entries: Array = mound.get("entrance_dressing", [])
+	if entries.is_empty() or _footprint.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "EntranceDressing"
+	add_child(holder)
+	# Offset from the mound's own seed rather than reusing it outright, so
+	# this hand-authored set draws its own numbers instead of silently
+	# consuming the same RNG stream `_build_mound()` already spent -- both
+	# stay independently deterministic, which is the one promise every piece
+	# of scatter in this file makes.
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(mound.get("seed", 63220)) + 401
+	var base_tint := Color(str(mound.get("tint", "#ffffff")))
+	var variation := float(mound.get("tint_variation", 0.0))
+	var collar_scale := float(mound.get("soil_collar_scale", 0.0))
+	var soil_colour := _apron_colour()
+	var placed := 0
+	for entry_v: Variant in entries:
+		if not entry_v is Dictionary:
+			continue
+		var spec: Dictionary = entry_v as Dictionary
+		var model_name := str(spec.get("model", ""))
+		if model_name.is_empty():
+			continue
+		var packed: PackedScene = load(
+			"res://assets/environment/stylized_nature/%s.gltf" % model_name) as PackedScene
+		if packed == null:
+			push_warning("entrance dressing names a model that does not load: %s" % model_name)
+			continue
+		var art: Node3D = packed.instantiate() as Node3D
+		if art == null:
+			continue
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		var sink := float(spec.get("sink_m", 0.0))
+		var y: float
+		if spec.has("y_m"):
+			y = _floor_y + float(spec.get("y_m", 0.0)) - sink
+		else:
+			var ground := _site_ground(Vector3(offset.x, 0.0, offset.z))
+			y = (ground if not is_nan(ground) else _floor_y) - sink
+		art.position = Vector3(offset.x, y, offset.z)
+		art.rotation = Vector3(0.0, deg_to_rad(float(spec.get("yaw_deg", 0.0))), 0.0)
+		art.scale = Vector3.ONE * float(spec.get("scale", 1.0))
+		holder.add_child(art)
+		if str(spec.get("kind", "rock")) == "flora":
+			_dress_skirt_flora(art)
+		else:
+			var tint := base_tint
+			var is_dark_ground_jamb := false
+			if bool(spec.get("dark", false)):
+				# A fixed, deliberately dark step off the same spread
+				# `_varied_tint()` draws from at random elsewhere -- these
+				# pieces are the doorway's own shadowed jambs/brow, not one
+				# more random sample, so they get the darkest end on purpose
+				# every time rather than whatever the RNG happens to roll.
+				#
+				# EXT-05-GROUND: bounds moved [0.22,0.55] -> [0.32,0.78]. This
+				# file's own instruction on the second pass was to make the
+				# entrance "the darkest value in the frame" -- the old ceiling
+				# (0.55) was already being hit by a modest `tint_variation`,
+				# so raising `tint_variation` alone (see that key's own note)
+				# could not push these pieces any darker. `is_dark_ground_jamb`
+				# marks the two ground-contact jambs (not the elevated brow,
+				# `y_m` present) for the soil collar below -- the doorway's own
+				# framing stones planting into visible dirt rather than grass.
+				tint = base_tint.darkened(clampf(0.32 + variation, 0.32, 0.78))
+				is_dark_ground_jamb = not spec.has("y_m")
+				# Deterministically dark already -- no further random swing,
+				# or a lightening step could undo "always darkest on purpose".
+				_wear_the_cave_stone(art, tint, true)
+			else:
+				_wear_the_cave_stone(art, base_tint, true, variation, rng)
+			_keep_rock_out_of_the_rooms(art)
+			if is_dark_ground_jamb:
+				_boulder_soil_collar(Vector3(offset.x, y + sink, offset.z),
+					float(spec.get("scale", 1.0)) * collar_scale, soil_colour)
+		placed += 1
+	if placed > 0:
+		print("[warrens] placed %d entrance dressing pieces (fern ring / hood)" % placed)
 
 
 ## The skirt's flora half of `_build_site_skirt()`'s material split. Mirrors
@@ -1536,7 +1788,7 @@ func _site_ground(local: Vector3) -> float:
 ## One boulder. `at.y` is the height its BASE should sit around; `sink` pulls
 ## it down into whatever it is standing on so there is no seam under it.
 func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGenerator,
-		at: Vector3, scale_range: Array, sink: float, tint: Color) -> void:
+		at: Vector3, scale_range: Array, sink: float, tint: Color, variation := 0.0) -> void:
 	var art: Node3D = models[rng.randi() % models.size()].instantiate() as Node3D
 	if art == null:
 		return
@@ -1587,7 +1839,22 @@ func _place_rock(holder: Node3D, models: Array[PackedScene], rng: RandomNumberGe
 	# texture. That reasoning does not stop being true at the cave mouth: the
 	# outcrop and the chamber walls are supposed to be the same rock, and now
 	# they are, in both directions.
-	_wear_the_cave_stone(art, tint, true)
+	#
+	# EXT-04-APRON, judge evidence "reads as a flat grey rock pile": every
+	# boulder in the mound called this with the SAME `tint`, and `_material()`
+	# caches by the resulting colour -- so every boulder in the outcrop was,
+	# literally, one shared StandardMaterial3D. `_varied_tint()` nudges that
+	# same base tint a further, small, quantized step lighter or darker per
+	# piece (`mound.tint_variation`) before it goes into the 35% lerp, so the
+	# outcrop reads as one family of stone at a spread of values rather than a
+	# single photocopied slab. `variation` defaults to 0.0 (no-op, identical
+	# to the old behaviour) so a caller that does not pass it is unaffected.
+	#
+	# EXT-05-GROUND: `variation`/`rng` now pass straight through to
+	# `_wear_the_cave_stone()` rather than being pre-applied here -- see that
+	# function's own header for why the old order silently discarded 65% of
+	# the configured swing before it ever reached a material.
+	_wear_the_cave_stone(art, tint, true, variation, rng)
 
 
 ## CONTENT-0828. The one thing `_place_rock()` never checked: whether the

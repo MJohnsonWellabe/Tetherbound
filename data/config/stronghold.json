@@ -7,6 +7,7 @@
   "_comment_stone_light": "T1-HALL-BUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §5's palette-proof step: `stone_light` (the works' own exterior wall / exterior-face-skin tone, `stronghold.gd::_stone_light`/`_exterior_face_material`) moves from the code default #786d5e to the design's #9c9083, so the works' true exterior wears the SAME value-ladder step as the castle kit's retuned walls -- 'one stone, one scale, one value ladder, both kits'. `stone`/`stone_dark`/`floor_colour` are interior tones this pass does not touch; nothing else in `site` changed.",
   "_comment_stone_skirt": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §5's foundation tier -- the darkest step on the ladder (skirt < works walls < DarkRock < LightRock < coping), at the coarser 0.22 tile so the foundation reads as BIGGER blocks than the wall above it. It is worn by a facing skin (`stronghold.gd::_build_skirt_facing`), not by the skirt slab itself: each chamber's floor slab IS its skirt (one box 18m deep whose top face is the room's walkable floor), so retinting the slab would repaint five interiors. Before this the building's whole visible plinth rendered as yard cobble seen edge-on, at a smaller stone scale than the wall standing on it -- the exact scale collision §5 resolves with a stated ladder.",
   "site": {
+    "boiler_smoke_enabled": false,
     "at": [
       8.0,
       7560.0
@@ -22,7 +23,39 @@
     "stone_skirt": "#575147",
     "floor_colour": "#57503f",
     "tether_trim": "#332228",
-    "door_colour": "#3a3f3c"
+    "door_colour": "#3a3f3c",
+    "_comment_weathering": "VP8 (visual parity, 2026-09-02). Parameters for assets/environment/team_tether/hall/hall_stone.gdshader, the weathered-ruin stone every textured surface at the Hall now wears (stronghold.gd::_stone_shader_material). Every key is optional and TUNABLE; the shader's own defaults apply to any key missing here. `ground_above_skirt_foot_m` is where the damp/moss band tops out, measured up from the skirt's 18 m foot: the meadow meets the visible skirt faces ~11-12 m above that foot (floor sits ~6 m above the ground, per _comment_skirt_face), so the band sits where stone meets grass rather than 18 m underground. `exterior_conduit_energy` is the teal value-floor for the conduits climbing the OUTSIDE of the flank walls (interior runs keep 1.4): JUDGE-6 defect 9 and JUDGE-AUDIT-E defect 4 both measured the exterior runs blowing out to white under the sun.",
+    "weathering": {
+      "ground_above_skirt_foot_m": 11.5,
+      "macro_strength": 0.24,
+      "stone_strength": 0.14,
+      "moss_amount": 0.46,
+      "moss_scale": 0.3,
+      "moss_colour": "#2f4d1c",
+      "joint_threshold": 0.4,
+      "up_moss": 0.55,
+      "damp_height": 3.0,
+      "damp_strength": 0.26,
+      "streak_strength": 0.2,
+      "floor_moss_amount": 0.3,
+      "floor_up_moss": 0.3,
+      "_why_exterior": "VP8-EXT (2026-09-02). The 400m approach stand (`hall_approach`, `hall_gate`) judged the works still 'the clean cream castle kit with pale towers' -- the shader was already reaching every kit tower/roof surface (`stronghold.gd::_weather_hall_massing`) and every outer curtain wall, coping, merlon, buttress, gate jamb/arch and skirt facing (all already textured through `_stone_shader_material`), but every one of those surfaces was sharing the SAME weathering intensity as the five lit rooms inside, and the kit's own retinted LightRock/DarkRock tint (building_prefabs.json, ~#817f78/#68675f) is a mid-value grey-tan on its own -- no amount of joint moss over that base reads as 'dark ruined mass' at range. This block is read ONLY by `stronghold.gd::_material`/`_stone_shader_material` callers that pass `exterior: true` (every genuinely outside-facing stone: kit massing, outer walls, coping/merlons/buttresses, the gate frame and arch, the skirt foundation) and OVERRIDES the block above term-by-term; the five interior chambers (`outer: false` walls, the floor, the ceiling) never read this block and are unchanged. `darken`/`desaturate` bias the TINT itself before the shader's own texture and moss terms are added, which is the lever the flat parity pass upstream (building_prefabs.json's own T1-HALL-4 value-drop notes) could not reach because it only ever retints the kit's raw StandardMaterial3D before this shader replaces it. `damp_height` is 2.2x the interior figure because the 'lower third' the approach silhouette needs covered is a fraction of a 15-38m tower, not a 6-22m chamber wall -- the interior number was measured against the room the player stands in, this one against the mass the player walks toward.",
+      "_why_exterior_round2": "VP-HALL-FIX (2026-09-02), a code-blind judge re-reading fresh 100/200/400m frames after the round-1 block above landed: 'still pale cream towers and curtain walls with no weathering, no moss, no dark mass'. A headless material dump (`tools/_diag_hall_materials.gd`) confirmed every exterior surface WAS already textured through this shader with `exterior:true` -- the routing was never the bug. The bug is that `darken: 0.24` against the kit's #817f78/#68675f retint only reaches a shader `tint` of about (0.38,0.38,0.36), which is BRIGHTER than `site.stone_light` (#66655e, ~0.40 direct but close enough to read as the SAME value) -- the 'weathered ruin' tint was landing almost exactly on top of the ordinary LIT-INTERIOR wall tone instead of below it, so no amount of moss on top of it could read as a dark mass against the sky. `darken` 0.24 -> 0.56 and `desaturate` 0.32 -> 0.5 pushes the same #817f78 kit tint down to roughly (0.21,0.21,0.20) -- clearly darker than the interior stone_light and darker than the current stone_skirt tier (#575147, ~0.31), which is what 'dark ruined mass against the sky' actually requires. Moss/damp are lifted too: JUDGE-6/T1-HALL wanted moss and damp to be VISIBLE, not merely present in a shader param nobody could see over a base that was too pale to show it.",
+      "exterior": {
+        "darken": 0.56,
+        "desaturate": 0.5,
+        "macro_strength": 0.34,
+        "moss_amount": 0.78,
+        "moss_scale": 0.26,
+        "moss_colour": "#1f3510",
+        "up_moss": 0.85,
+        "damp_height": 8.5,
+        "damp_strength": 0.5,
+        "streak_strength": 0.38,
+        "_comment_piece_variation": "VP-HALL-FIX. `stronghold.gd::_weather_hall_massing` seeds a small per-module tint bias off each kit piece's own name/index (+-`HALL_PIECE_VARIATION`, currently 0.14) ON TOP of `darken` above, so neighbouring towers read as distinct quarried masses instead of one flat tone repeated across the whole massing -- stable across rebuilds (name-hashed, not frame-random), costs zero draw calls (same mesh instances, different cached ShaderMaterial per piece)."
+      }
+    },
+    "exterior_conduit_energy": 0.45
   },
   "_comment_approach_pylons": "BAND5-CONTENT, prompt 66. Three of that prompt's asks are one object, so they are built once rather than three times: the `navigation spine` (\"pylons/landmarks should create readable world-space direction without becoming magical GPS\"), `pylon/tether machinery readability`, and the environmental storytelling clause (\"use existing machinery ... rather than inventing unrelated lore\"). Band 5 had NONE of it. The chapter's conduit network stopped at the relay (z 3749) and the quarry (z 1790) and the last 680m -- the approach to the thing the whole network feeds -- was open meadow with a castle on the horizon. The run is the answer: an unbroken, LIT trunk line arriving at the works, the exact opposite statement to the seven spokes' broken-and-dead runs, and the same one `old_quarry.json`'s own `_comment_pylons` already makes (D41: present-tense machinery doing present-tense harm, not ruins).",
   "_comment_approach_pylons_why_a_line": "Why a straight line beside a wandering road, and not pylons ON the road. The trail's own Band 5 waypoints swing +-80m either side of x=0 (terrain_playground.json `trail.bands`), which is what stops the region being a corridor. A line that followed it would be a handrail -- literally magical GPS in world geometry, the thing the prompt names. A STRAIGHT line the road keeps crossing is the opposite: it is a BEARING. The player loses sight of it around every rise, meets it again, and each time it is pointing the same way. Direction comes from the line's own convergence in perspective, which is free and needs no marker, no minimap and no objective arrow.",
@@ -450,13 +483,8 @@
     "corner_width_m": 1.0,
     "corner_project_m": 0.48
   },
-  "_comment_conduits": "Lit teal cable runs along the floor, every one of them pointing deeper. `from`/`to` are chamber ids; the run is drawn between their centres at ankle height and is DECORATION ONLY (no collider) so it can never block a doorway or trip a fight.",
+  "_comment_conduits": "Lit teal cable runs along the floor, every one of them pointing deeper. `from`/`to` are chamber ids; the run is drawn between their centres at ankle height and is DECORATION ONLY (no collider) so it can never block a doorway or trip a fight. VP-HALL-FIX (2026-09-02): the `courtyard`->`tether_approach` run is REMOVED. `courtyard` is one of only two open-sky yards (`stronghold.gd::EXTERIOR_CHAMBERS`) with no walls to hide a floor strip against and no visible junction box at either end -- a judge read it as 'an unanchored beam on the courtyard floor', and unlike the three runs kept below it had no wall or doorway threshold to plug into on the open-yard side. The three remaining runs are all between ROOFED interior chambers, where a lit cable crossing a machine-room floor is the read the occupation layer is going for.",
   "conduits": [
-    {
-      "from": "courtyard",
-      "to": "tether_approach",
-      "offset": 3.0
-    },
     {
       "from": "tether_approach",
       "to": "warden_arena",
@@ -502,13 +530,13 @@
       "colour": "#ffab5e"
     },
     {
-      "_comment": "West flank sky-fill, one for both yards.",
+      "_comment": "West flank sky-fill, one for both yards. VP-HALL-FIX: energy up 2.4 -> 3.0, same reasoning as the gate sky-fill -- at night it is standing in for the sun on this whole flank, not merely balancing it.",
       "at": [
         -27.0,
         14.0
       ],
       "y": 22.0,
-      "energy": 2.4,
+      "energy": 3.0,
       "range": 60.0,
       "colour": "#8fa6c8"
     },
@@ -535,13 +563,13 @@
       "colour": "#ffab5e"
     },
     {
-      "_comment": "East flank sky-fill, one for both yards.",
+      "_comment": "East flank sky-fill, one for both yards. VP-HALL-FIX: same night-legibility bump as the west flank sky-fill above.",
       "at": [
         27.0,
         14.0
       ],
       "y": 22.0,
-      "energy": 2.4,
+      "energy": 3.0,
       "range": 60.0,
       "colour": "#8fa6c8"
     }
@@ -549,14 +577,15 @@
   "_comment_lights_outer_works_ambient": "T1-HALL-REBUILD (2026-08-30). The outer_works yard's own weak ambient omni (was `at [0,0], y 6, energy 0.35, range 18`) is RETIRED, not moved: `hall_occupation.braziers` now stands a real fire in this yard beside the garrison camp, and two more on the causeway kerbs a few metres outside the mouth. A yard lit by a fire the player can see burning is the whole point of the occupation layer; a colourless 0.35 ambient over the top of it is the thing that flattens it. Retiring it is also what brings the site to exactly the design's 18-omni ceiling (§7) with the causeway fires included.",
   "lights": [
     {
-      "_comment": "T1-ARCH exterior fire 1/4, spread across the curtain's own width.",
+      "_comment": "T1-ARCH exterior fire 1/4, spread across the curtain's own width. VP-HALL-FIX (night): this is one of the two `gate_source` points with a real basket standing at it, so it is the pair that got the night-legibility budget -- y/range/energy up and `attenuation` added so the pool climbs the gate face and reaches the great tower's banner instead of stopping at the ground, without a new omni (same 18-light budget).",
       "at": [
         -8.0,
         -13.0
       ],
-      "y": 4.5,
-      "energy": 2.6,
-      "range": 16.0,
+      "y": 6.2,
+      "energy": 3.3,
+      "range": 24.0,
+      "attenuation": 1.3,
       "colour": "#ffab5e"
     },
     {
@@ -582,36 +611,39 @@
       "colour": "#ffab5e"
     },
     {
-      "_comment": "T1-ARCH exterior fire 4/4.",
+      "_comment": "T1-ARCH exterior fire 4/4. VP-HALL-FIX (night): the other `gate_source` basket point -- same night-legibility bump as fire 1/4 above.",
       "at": [
         8.0,
         -13.0
       ],
-      "y": 4.5,
-      "energy": 2.6,
-      "range": 16.0,
+      "y": 6.2,
+      "energy": 3.3,
+      "range": 24.0,
+      "attenuation": 1.3,
       "colour": "#ffab5e"
     },
     {
-      "_comment": "T1-ARCH sky fill -- the castle's own counterweight so the wall reads as fire-against-sky rather than as one warm flood. High and south of the wall, wide and weak, shadowless like every other light in this file.",
+      "_comment": "T1-ARCH sky fill -- the castle's own counterweight so the wall reads as fire-against-sky rather than as one warm flood. High and south of the wall, wide and weak, shadowless like every other light in this file. VP-HALL-FIX: energy up 2.2 -> 2.8 -- at night this is the ONLY light reaching the upper gate towers at all, so it has to do double duty as the sun's stand-in, not merely the day's cool counterweight.",
       "at": [
         0.0,
         -30.0
       ],
       "y": 20.0,
-      "energy": 2.2,
+      "energy": 2.8,
       "range": 45.0,
       "colour": "#8fa6c8"
     },
     {
+      "_comment": "VP-HALL-FIX (night): was a near-dead 0.35-energy grey ambient that did nothing after dark -- 'stronghold-courtyard-night' crushed to black around it. Retuned to a real warm fill, sited a few metres from the inner bailey's own brazier (`hall_occupation.braziers`, at [6.4,30.6]) so it reads as that fire's glow reaching the yard rather than an unexplained light. Same entry, same budget slot -- no new omni.",
       "at": [
         0.0,
         32.0
       ],
-      "y": 7.0,
-      "energy": 0.35,
-      "range": 22.0,
-      "colour": "#9aa6a0"
+      "y": 6.5,
+      "energy": 1.7,
+      "range": 28.0,
+      "attenuation": 1.2,
+      "colour": "#e0975a"
     },
     {
       "at": [
@@ -1233,15 +1265,19 @@
           "to": 9.6,
           "at": -13.05,
           "y": 7.5,
-          "count": 49,
+          "count": 30,
           "clumps": 4,
           "yaw_deg": 180,
           "jitter": 0.1,
           "y_jitter": 0.7,
           "scale_min": 1.9,
           "scale_max": 3.4,
-          "tint": "#1a5900",
-          "clump_spread": 0.7
+          "tint": "#2c5220",
+          "clump_spread": 0.42,
+          "skip": [
+            -3.2,
+            3.2
+          ]
         },
         {
           "model": "Prop_Vine2",
@@ -1250,15 +1286,19 @@
           "to": 9.6,
           "at": -13.05,
           "y": 4.6,
-          "count": 34,
+          "count": 21,
           "clumps": 3,
           "yaw_deg": 180,
           "jitter": 0.1,
           "y_jitter": 0.6,
           "scale_min": 1.9,
           "scale_max": 3.4,
-          "tint": "#134400",
-          "clump_spread": 0.7
+          "tint": "#22421a",
+          "clump_spread": 0.42,
+          "skip": [
+            -3.2,
+            3.2
+          ]
         },
         {
           "model": "Prop_Vine1",
@@ -1267,15 +1307,15 @@
           "to": 11.5,
           "at": -11.05,
           "y": 7.5,
-          "count": 38,
+          "count": 24,
           "clumps": 3,
           "yaw_deg": -90,
           "jitter": 0.1,
           "y_jitter": 0.6,
           "scale_min": 1.9,
           "scale_max": 3.4,
-          "tint": "#1a5900",
-          "clump_spread": 0.7
+          "tint": "#2c5220",
+          "clump_spread": 0.42
         },
         {
           "model": "Prop_Vine2",
@@ -1284,15 +1324,15 @@
           "to": 11.5,
           "at": 11.05,
           "y": 7.5,
-          "count": 38,
+          "count": 24,
           "clumps": 3,
           "yaw_deg": 90,
           "jitter": 0.1,
           "y_jitter": 0.6,
           "scale_min": 1.9,
           "scale_max": 3.4,
-          "tint": "#1a5900",
-          "clump_spread": 0.7
+          "tint": "#2c5220",
+          "clump_spread": 0.42
         },
         {
           "model": "Prop_Vine1",
@@ -1301,15 +1341,15 @@
           "to": 45.5,
           "at": -12.05,
           "y": 8.5,
-          "count": 57,
+          "count": 35,
           "clumps": 4,
           "yaw_deg": -90,
           "jitter": 0.1,
           "y_jitter": 0.7,
           "scale_min": 1.9,
           "scale_max": 3.4,
-          "tint": "#1a5900",
-          "clump_spread": 0.7
+          "tint": "#2c5220",
+          "clump_spread": 0.42
         },
         {
           "model": "Prop_Vine2",
@@ -1318,15 +1358,15 @@
           "to": 45.5,
           "at": 12.05,
           "y": 8.5,
-          "count": 57,
+          "count": 35,
           "clumps": 4,
           "yaw_deg": 90,
           "jitter": 0.1,
           "y_jitter": 0.7,
           "scale_min": 1.9,
           "scale_max": 3.4,
-          "tint": "#1a5900",
-          "clump_spread": 0.7
+          "tint": "#2c5220",
+          "clump_spread": 0.42
         },
         {
           "model": "Prop_Vine2",
@@ -1335,15 +1375,15 @@
           "to": 45.5,
           "at": -12.05,
           "y": 5.2,
-          "count": 41,
+          "count": 25,
           "clumps": 3,
           "yaw_deg": -90,
           "jitter": 0.1,
           "y_jitter": 0.6,
           "scale_min": 1.9,
           "scale_max": 3.4,
-          "tint": "#134400",
-          "clump_spread": 0.7
+          "tint": "#22421a",
+          "clump_spread": 0.42
         },
         {
           "model": "Prop_Vine1",
@@ -1352,15 +1392,15 @@
           "to": 45.5,
           "at": 12.05,
           "y": 5.2,
-          "count": 38,
+          "count": 24,
           "clumps": 3,
           "yaw_deg": 90,
           "jitter": 0.1,
           "y_jitter": 0.6,
           "scale_min": 1.9,
           "scale_max": 3.4,
-          "tint": "#134400",
-          "clump_spread": 0.7
+          "tint": "#22421a",
+          "clump_spread": 0.42
         },
         {
           "model": "Prop_Vine1",
@@ -1376,7 +1416,7 @@
           "y_jitter": 0.5,
           "scale_min": 0.75,
           "scale_max": 1.35,
-          "tint": "#1a5900"
+          "tint": "#2c5220"
         },
         {
           "model": "Prop_Vine2",
@@ -1392,7 +1432,7 @@
           "y_jitter": 0.5,
           "scale_min": 0.75,
           "scale_max": 1.3,
-          "tint": "#1a5900"
+          "tint": "#2c5220"
         },
         {
           "model": "Prop_Vine1",
@@ -1408,7 +1448,7 @@
           "y_jitter": 0.45,
           "scale_min": 0.7,
           "scale_max": 1.2,
-          "tint": "#1a5900"
+          "tint": "#2c5220"
         },
         {
           "model": "Prop_Vine2",
@@ -1424,7 +1464,7 @@
           "y_jitter": 0.45,
           "scale_min": 0.7,
           "scale_max": 1.2,
-          "tint": "#1a5900"
+          "tint": "#2c5220"
         },
         {
           "model": "Prop_Vine1",
@@ -1433,15 +1473,19 @@
           "to": 9.5,
           "at": -12.6,
           "y": 7.6,
-          "count": 41,
+          "count": 25,
           "clumps": 4,
           "yaw_deg": 180,
           "jitter": 0.2,
           "y_jitter": 0.6,
           "scale_min": 1.9,
           "scale_max": 3.4,
-          "tint": "#1a5900",
-          "clump_spread": 0.7
+          "tint": "#2c5220",
+          "clump_spread": 0.42,
+          "skip": [
+            -3.2,
+            3.2
+          ]
         },
         {
           "model": "Prop_Vine2",
@@ -1450,15 +1494,15 @@
           "to": 102.0,
           "at": -11.4,
           "y": 10.3,
-          "count": 38,
+          "count": 24,
           "clumps": 3,
           "yaw_deg": -90,
           "jitter": 0.25,
           "y_jitter": 0.6,
           "scale_min": 1.9,
           "scale_max": 3.4,
-          "tint": "#1a5900",
-          "clump_spread": 0.7
+          "tint": "#2c5220",
+          "clump_spread": 0.42
         }
       ],
       "rubble": [
@@ -1554,7 +1598,8 @@
         }
       ],
       "_comment_tint": "Tints are variations ON the kit's own MI_Vine baseColorFactor (0.102, 0.349, 0), not fresh picks. albedo_color REPLACES that factor rather than multiplying it, so a 'natural' mid-green hex here reads as washed-out grey ivy -- the first cut of this block made exactly that mistake. Lower courses take the darker value because they sit in the wall's own shadow.",
-      "_comment_exterior_offsets": "Exterior ivy sits clear of the BUTTRESS line, not merely clear of the wall face. stronghold.gd's BUTTRESS_PROUD is 0.8, so a band at the face +0.05 is behind pilasters for much of its run and half-buried by its own jitter for the rest. The first render of this layer showed no exterior ivy at all for that reason."
+      "_comment_exterior_offsets": "Exterior ivy sits clear of the BUTTRESS line, not merely clear of the wall face. stronghold.gd's BUTTRESS_PROUD is 0.8, so a band at the face +0.05 is behind pilasters for much of its run and half-buried by its own jitter for the rest. The first render of this layer showed no exterior ivy at all for that reason.",
+      "_comment_vp8": "VP8 (visual parity). `skip` on the gate-face bands keeps the vines out of the doorway span so the arch and the raised portcullis read (the first render hung a green curtain across the opening). Exterior flank bands were cut to ~60% and clumped harder (clump_spread 0.42): at flank range JUDGE-AUDIT-E defect 10 read the previous density as 'uniform wallpaper, not growth'. Tints were desaturated one step in the same pass (#2c5220 / #22421a): the saturated kit green read as painted cards against the darker weathered stone."
     },
     "_comment_retrofit_t1_hall_art": "T1-HALL-ART, 2026-08-30. Layer 2: Team Tether's industrial occupation, from the five bespoke props in the owner's boards. Models live in assets/environment/team_tether/hall/ and are authored by tools/art_pipeline/blender/build_hall_props.py against the boards' own scale bars -- read that script's header for why they are authored rather than generated (MESHY_API_KEY is unset in the build container). ORIENTATION: a prop's working face is toward -z at yaw 0, because the boards' props are authored front-toward-Blender-+Y and the glTF Y-up export maps that to -Z. yaw -90 faces +x, yaw 90 faces -x, yaw 180 faces +z. Get this wrong and a wall machine faces into the stone. NO COLLISION, deliberately: none of these meshes is named `-col`, so Godot builds no collider and nothing here can snag traversal or the Warden fight. PLACEMENT IS A STORY, not a scatter -- the pack asks for 'a coherent retrofit layer, not randomly scattered props'. Boilers sit where work happens (outer works, courtyard), pipes run FROM the boilers TO the siphons, scaffolds climb the faces that needed shoring, and the three siphons escalate along the player's route: one in the courtyard, one on the tether approach, and the hero one on the Warden arena wall.",
     "retrofit": [
