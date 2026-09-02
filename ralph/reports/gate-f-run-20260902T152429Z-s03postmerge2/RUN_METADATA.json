@@ -1,0 +1,13 @@
+{
+  "run_id": "gate-f-run-20260902T152429Z-s03postmerge2",
+  "purpose": "Full S03 re-run against merged main, verifying the tent/campfire/bedroll camp-split adaptation.",
+  "candidate_sha": "5a6c0cd17dd853316fc35f74528c5e43c750f6e9",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "resolution": [1920, 1080],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S02-exit.json carried over from gate-f-run-20260901T220548Z-s03fix/S02",
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}

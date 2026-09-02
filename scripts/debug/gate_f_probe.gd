@@ -394,6 +394,21 @@ func equipped() -> Dictionary:
 	return {"hotbar_slot": int(g.call("hotbar_slot_of", tool_id)), "item": tool_id}
 
 
+## Which quick-bar slot holds `item_id` RIGHT NOW, independent of what is
+## currently equipped -- `game_state.gd::hotbar_slot_of()`'s own lookup,
+## exposed directly. -1 if it is not on the bar at all. Exists because a
+## fixed hotbar control number in a step script is a claim about where an
+## assign sequence PUT something, and that claim goes stale exactly the way
+## a fixed satchel offset did (`focus_item`'s own reason to exist): a bag
+## reshuffle, a different assign order, or an item consumed and re-added
+## can all move a tool to a different slot between one run and the next.
+func hotbar_slot_of(item_id: String) -> int:
+	var g := game()
+	if g == null:
+		return -1
+	return int(g.call("hotbar_slot_of", item_id))
+
+
 # --- input context -----------------------------------------------------------
 
 ## Who owns input right now, as the game itself decides it.
@@ -534,6 +549,17 @@ func input_owner_node() -> Node:
 ##                        is not evidence that focus is on Load Game.
 ##   `mouse_mode`       — captured/visible. The menu must release the mouse and
 ##                        restore it; `smoke_menu.gd` exists partly for this.
+##   `prompt`           — `interaction_arbiter.gd::prompt()`, the live interact
+##                        prompt text, "" when none is offered. A `press
+##                        interact` step that presses blind against a refusal
+##                        (wrong tool, out of range, wrong item) has no way to
+##                        tell a silent no-op from a real success without this
+##                        -- Fable's diagnosis of the S03 gather-ladder misses
+##                        (2026-09-02) took real per-node correlation to find
+##                        what one field here would have shown directly.
+##   `prompt_distance`  — 3D distance from the player to the winning provider,
+##                        -1.0 when there is none. Pairs with `prompt` to tell
+##                        a genuine reach/LOS miss from a wrong-provider one.
 func input_state() -> Dictionary:
 	var out := {
 		"owner": "",
@@ -545,6 +571,8 @@ func input_state() -> Dictionary:
 		"focus_owner": "",
 		"focus_text": "",
 		"mouse_mode": int(Input.get_mouse_mode()),
+		"prompt": "",
+		"prompt_distance": -1.0,
 	}
 	if _tree == null:
 		return out
@@ -561,6 +589,13 @@ func input_state() -> Dictionary:
 	var arbiter := interaction_arbiter()
 	if arbiter != null and arbiter.has_method("enabled"):
 		out["arbiter_enabled"] = bool(arbiter.call("enabled"))
+		if arbiter.has_method("prompt"):
+			out["prompt"] = str(arbiter.call("prompt"))
+		if not str(out["prompt"]).is_empty() and arbiter.has_method("winning_provider"):
+			var provider: Variant = arbiter.call("winning_provider")
+			var body := player()
+			if provider is Node3D and body != null:
+				out["prompt_distance"] = body.global_position.distance_to((provider as Node3D).global_position)
 	var g := game()
 	if g != null:
 		out["pending_build"] = str(g.get("pending_build"))

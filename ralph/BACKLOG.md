@@ -350,14 +350,32 @@ governs how a full capstone run works. Current state:
   the lane that found this labelled its own change "owner directive" without
   one having been given — caught before landing; the real decision went to
   the owner directly and is recorded accurately in `D40`'s amendment.
-  Two more real, separate findings remain open in the same segment (catch-rate
-  variance not landing enough throws, and a pre-existing move-to-entity/engage
-  targeting gap) — not blocking, but not yet fixed either. In progress: full
-  S03 convergence, then S04 through S10 one segment at a time — run, fix every
-  real failure, reconverge that segment alone, advance, never skip ahead. Only
-  after all ten pass individually does one continuous S01-S10 run happen. This
-  is a many-hour, unattended effort; frequent "still running" status with real
-  new commits is expected, not a problem.
+  Of the two more findings that remained open (catch-rate variance, and a
+  pre-existing move-to-entity/engage targeting gap): the targeting gap's
+  dominant cause was root-caused and **fixed** (`39d4fa20`) —
+  `operator_harness.gd::_find_entity`'s species match was resolving the
+  player's own deployed ally creature instead of a wild one (both share
+  `species_id`), which is what actually ate 4 of the ladder's 10 numbered
+  attempts. Confirmed by a real re-run (attempt 10, 410P/30F/4SKIP): engage
+  success rose from 6/10 to 8/10 attempts and party size from 3 to 4.
+  Catch-rate variance was measured and is real, working, deliberately steep
+  catch math (`catching.json`), not a bug — see the attempt-10 finding for
+  the arithmetic. Two narrower, newly-surfaced gaps remain, both precisely
+  diagnosed, neither landed: an NPC (Lark) whose 2026-09-01 repositioning put
+  him inside the practice-meadow wild cluster's own worst-case reach
+  (occasionally loses the engage prompt to his own greet, then stalls in a
+  stuck `narrative_modal`) — reported rather than fixed because the one
+  clean fix direction (further down the same road) runs out of road at the
+  cluster itself, and the alternative reopens the village-crowding complaint
+  the owner has already raised twice this week; and a single fence
+  line-of-sight block on one throw, not yet reproduced a second time. S03
+  still has not converged (party capped at 4 of 5 this run). Full detail:
+  `ralph/reports/FINDING-S03-ATTEMPT10-ENGAGE-GAP-FIX-CONFIRMED-2026-09-02.md`.
+  In progress: full S03 convergence, then S04 through S10 one segment at a
+  time — run, fix every real failure, reconverge that segment alone, advance,
+  never skip ahead. Only after all ten pass individually does one continuous
+  S01-S10 run happen. This is a many-hour, unattended effort; frequent "still
+  running" status with real new commits is expected, not a problem.
 - Bands 1-5, the tournament semi-final, the finale, and real pacing are all
   still unverified by this project's own evidence process.
 

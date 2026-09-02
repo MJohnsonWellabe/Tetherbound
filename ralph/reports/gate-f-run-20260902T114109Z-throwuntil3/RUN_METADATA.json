@@ -1,0 +1,10 @@
+{
+  "run_id": "gate-f-run-20260902T114109Z-throwuntil3",
+  "purpose": "Verify the widened re-arm retry budget lets throw_until_caught survive multiple misses.",
+  "candidate_sha": "237811c175b3a166a39e3b8045822abc62429bba",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}

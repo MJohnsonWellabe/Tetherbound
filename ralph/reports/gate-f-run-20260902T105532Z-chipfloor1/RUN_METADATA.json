@@ -1,0 +1,10 @@
+{
+  "run_id": "gate-f-run-20260902T105532Z-chipfloor1",
+  "purpose": "Verify the new chip_to_floor harness action (computed per-hit safe floor, not a guessed fraction).",
+  "candidate_sha": "1fc2db0bec6bef0575b7b002fb2385131179837d",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}

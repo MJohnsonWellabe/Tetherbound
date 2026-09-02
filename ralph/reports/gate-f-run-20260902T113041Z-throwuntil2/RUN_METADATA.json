@@ -1,0 +1,10 @@
+{
+  "run_id": "gate-f-run-20260902T113041Z-throwuntil2",
+  "purpose": "Verify throw_until_caught's catch_resolving wait_until fix (real resolve-length instead of a guessed fixed wait).",
+  "candidate_sha": "f5afb41e4b1acc5b5e2a880980cda980af80e5a0",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}

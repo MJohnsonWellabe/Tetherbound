@@ -1375,6 +1375,10 @@ static func _predict_frames(steps: Array) -> int:
 				# RIG-F3. Same rule as `press_until` just above it: priced at its
 				# FULL budget, never at the early exit a clean track usually takes.
 				total += int(args.get("budget_frames", 240))
+			"force_aim":
+				# Harness-only shortcut, cheap and single-frame by construction --
+				# see _step_force_aim's own header for why this exists.
+				total += 6
 			"capture":
 				total += 6
 			"capture_seq":
@@ -1784,8 +1788,16 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_press_multi(args, id)
 		"press_until":
 			actual = await _step_press_until(args, id)
+		"chip_to_floor":
+			actual = await _step_chip_to_floor(args, id)
+		"equip_tool":
+			actual = await _step_equip_tool(args, id)
+		"throw_until_caught":
+			actual = await _step_throw_until_caught(args, id)
 		"track_aim":
 			actual = await _step_track_aim(args, id)
+		"force_aim":
+			actual = await _step_force_aim(args, id)
 		"hold":
 			actual = _step_hold(args, id)
 		"release":
@@ -1808,6 +1820,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_focus_move(args, id)
 		"focus_item":
 			actual = await _step_focus_item(args, id)
+		"focus_row":
+			actual = await _step_focus_row(args, id)
 		"advance_dialogue_until_closed":
 			actual = await _step_advance_dialogue(args, id)
 		"assert_context":
@@ -2478,6 +2492,11 @@ func _step_wait(args: Dictionary) -> String:
 
 
 func _step_press(args: Dictionary, step_id: String) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED press: not needed (%s)" % str(moot.get("actual", ""))
 	var control := str(args.get("control", ""))
 	if control.is_empty():
 		return "HARNESS-ERROR press step %s has no control" % step_id
@@ -2754,11 +2773,26 @@ func _step_move_to(args: Dictionary) -> String:
 ## `within` metres of where the entity IS, and an entity that cannot be found is
 ## a FAIL that names the search -- an honest "not in the world" is a finding.
 func _step_move_to_entity(args: Dictionary) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED move_to_entity: not needed (%s)" % str(moot.get("actual", ""))
 	var spec := str(args.get("entity", ""))
 	if spec.is_empty():
 		return "HARNESS-ERROR move_to_entity needs entity:\"<name|group|label|species>\""
+	# `optional` (added 2026-09-02): for a step that names a `rank` past
+	# however many actually spawned -- e.g. an opportunistic training pass
+	# that asks for the 15th-nearest wild creature in a meadow that may only
+	# hold 10 -- "not found" is an expected outcome, not a defect. Every
+	# other caller keeps the loud FAIL: a segment step naming a SPECIFIC
+	# entity it expects to exist (a build, a named NPC) not finding it is
+	# real information a SKIP would bury.
+	var optional := bool(args.get("optional", false))
 	var found := _find_entity(spec, args)
 	if not bool(found.get("ok", false)):
+		if optional:
+			return "SKIPPED move_to_entity (optional): %s" % str(found.get("why", ""))
 		return "FAIL %s" % str(found.get("why", ""))
 	var node: Node3D = found["node"]
 	var what := "%s (%s)" % [spec, str(found.get("how", ""))]
@@ -2833,8 +2867,22 @@ func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 			by_group.append(node)
 		if node.has_method("label") and str(node.call("label")).to_lower() == lowered:
 			by_label.append(node)
+		# species_id is shared by wild bodies (wild_creature.gd) AND the
+		# player's own deployed party creature (follower_creature.gd,
+		# node name "AllyCreature") -- a caught Bramblebun walking behind the
+		# trainer answers to species_id "bramblebun" exactly like a wild one.
+		# Unfiltered, a ladder that walks to "a live bramblebun" ten times
+		# started resolving its OWN ally instead of a wild target the moment
+		# the first Bramblebun was caught and deployed -- the ally is always
+		# close, so it kept winning `rank 0`, `move_to_entity` "arrived" at
+		# it in ~0 m, and `interact_with` FAILed on "Put Bramblebun away" /
+		# "Bramblebun is out of the fight" instead of "Engage" (S03 attempt 7
+		# §4, attempts b/d/g/j). Restricted to `_poi_kind == "wild"` so a
+		# species match can only ever mean a wild creature, the same
+		# classification `poi:wild` already uses.
 		var species: Variant = node.get("species_id")
-		if species != null and str(species).to_lower() == lowered:
+		if species != null and str(species).to_lower() == lowered \
+				and str(_probe.call("_poi_kind", node)).to_lower() == "wild":
 			by_species.append(node)
 		if str(node.name).to_lower().contains(lowered):
 			by_substring.append(node)
@@ -2950,6 +2998,14 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 	var held_by := ""
 	var what := "?"
 	var target := player.global_position
+	# RIG-F5 correction (Fable, 2026-09-02): a flat arrival with a small
+	# vertical gap (a slope, a curb, a step up to a node) is a walk that has
+	# not finished climbing, not an unreachable target -- failing on it
+	# immediately is what turned ordinary gather-node terrain into FAILs
+	# after the VP terrain change. Track whether the 3D gap is still
+	# shrinking; only give up when it stops.
+	var close_3d_best_solid := INF
+	var close_3d_stall_frames := 0
 	nav.call("reset")
 	while walked < budget:
 		var aim: Dictionary = target_fn.call()
@@ -2976,17 +3032,38 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 			if solid <= close:
 				arrived = true
 				break
-			# Directly under (or over) it and unable to close the gap by
-			# walking. Reported as the vertical fact it is, rather than as an
-			# arrival: this is the exact shape that produced 31 interacts
-			# through a floor.
-			_stick_left = Vector2.ZERO
-			_drive_sticks()
-			await physics_frame
-			return ("FAIL reached %s in plan view (%.2f m in x/z) but it is %.2f m away in 3D -- "
-				+ "%.2f m of that is vertical. Walking cannot close it, and an `interact` from "
-				+ "here would press through the floor.") % [what, to.length(), solid,
-					absf(target.y - player.global_position.y)]
+			var vertical := absf(target.y - player.global_position.y)
+			if vertical >= close:
+				# The gap is vertical alone -- directly under (or over) the
+				# target and unable to close it by walking, no matter how
+				# long this loop runs. Reported as the vertical fact it is,
+				# rather than as an arrival: this is the exact shape that
+				# produced 31 interacts through a floor.
+				_stick_left = Vector2.ZERO
+				_drive_sticks()
+				await physics_frame
+				return ("FAIL reached %s in plan view (%.2f m in x/z) but it is %.2f m away in 3D -- "
+					+ "%.2f m of that is vertical, which alone is at or past the %.2f m tolerance. "
+					+ "Walking cannot close it, and an `interact` from here would press through "
+					+ "the floor.") % [what, to.length(), solid, vertical, close]
+			# Small vertical gap: keep walking rather than failing on the
+			# flat distance alone. Fail only once the 3D gap stops shrinking
+			# (stalled, not merely not-yet-arrived) while genuinely close
+			# flat, which means the remaining gap is not something walking
+			# is going to fix.
+			elif solid < close_3d_best_solid - 0.02:
+				close_3d_best_solid = solid
+				close_3d_stall_frames = 0
+			else:
+				close_3d_stall_frames += 1
+				if close_3d_stall_frames > 90 and to.length() < 0.8:
+					_stick_left = Vector2.ZERO
+					_drive_sticks()
+					await physics_frame
+					return ("FAIL stalled %.2f m away (3D) from %s -- %.2f m flat, %.2f m vertical -- "
+						+ "and not closing after %d frames of walking. The remaining gap is not one "
+						+ "walking is fixing.") % [solid, what, to.length(), vertical,
+							close_3d_stall_frames]
 		if not bool(nav.call("can_walk")):
 			# Locomotion is off: a fight, a fade, a conversation. Frames spent
 			# held are not frames spent walking, so they do not count against
@@ -2999,7 +3076,7 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 			_stick_left = Vector2.ZERO
 			_drive_sticks()
 			nav.call("reset")
-			if answer and held % 20 == 0:
+			if answer and held % 20 == 0 and held_by == "narrative_modal":
 				# Both verbs, alternating. `input_contexts.json`'s
 				# `narrative_modal` context lists interact / ui_accept /
 				# menu_confirm as the answers to a modal, and the three panels
@@ -3014,6 +3091,20 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 				# primitive: a step that means to answer a conversation uses
 				# `advance_dialogue_until_closed`, which reads the panel instead
 				# of guessing at it (CD-3).
+				#
+				# `held_by == "narrative_modal"` (added 2026-09-02): held used to
+				# be enough on its own, and that pressed blind into ANY reason
+				# locomotion was disabled -- including a wild creature standing
+				# close enough to win `interaction_arbiter.gd`'s priority
+				# contest with its own live "Engage <creature>" prompt, which
+				# this then pressed, starting a real unplanned fight a travel
+				# script has no way to resolve. Measured directly: a gather
+				# ladder's second-swing press got the same `optional:true`
+				# guard for the identical reason: press only what you meant to
+				# press. Narrowed to the one input_context this mechanism was
+				# actually written for -- a held walk blocked by anything else
+				# (combat, a fade, a creature physically in the way) now just
+				# waits, the same as `answer_prompts:false` already does for it.
 				await _inject("interact" if (held / 20) % 2 == 0 else "menu_confirm", HOLD_TAP)
 			await physics_frame
 			_tick(1.0 / float(Engine.physics_ticks_per_second))
@@ -3055,10 +3146,34 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 ## arbiter could see instead. That is a finding about reach, which is what it
 ## always was.
 func _step_interact_with(args: Dictionary, step_id: String) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED interact_with: not needed (%s)" % str(moot.get("actual", ""))
+	# `optional`: this press is legitimately a maybe, and the three reasons
+	# below not to press are not failures of it -- they are SKIPS. Written for
+	# a harvest node's second swing: the node (and its prompt) may already be
+	# gone after a good first hit, which is fine and is not what this guards.
+	# What it actually guards, found live on a run that reached one: a wild
+	# creature can wander up to a node WHILE it is being worked and win the
+	# arbiter's priority-then-nearest contest over the node's own prompt
+	# before the second tap lands. A plain, unconditional press there does not
+	# know the difference and presses "Engage <creature>" instead of the
+	# node -- starting a real, unplanned wild fight the rest of this ladder
+	# has no script to resolve, which then FAILs every following step for as
+	# long as the world stays in combat. `optional` makes every one of those
+	# three conditions a SKIP instead of a press: no live prompt, the wrong
+	# live prompt, or the arbiter disabled outright.
+	var optional := bool(args.get("optional", false))
 	var arbiter := _probe.call("interaction_arbiter") as Node
 	if arbiter == null:
 		return "HARNESS-ERROR interact_with step %s: no live InteractionArbiter" % step_id
 	if arbiter.has_method("enabled") and not bool(arbiter.call("enabled")):
+		if optional:
+			return ("SKIPPED interact_with (optional): the interaction arbiter is DISABLED "
+				+ "(input_context '%s') -- not pressed, to avoid pressing into whatever owns "
+				+ "input instead.") % str(_probe.call("input_context"))
 		return ("FAIL the interaction arbiter is DISABLED -- a conversation, a naming prompt or "
 			+ "a fight owns the screen (input_context '%s'). No prompt is offered here and "
 			+ "`interact` would go to whatever does own input.") % str(_probe.call("input_context"))
@@ -3066,6 +3181,8 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 	var spec := str(args.get("entity", ""))
 	var player := _probe.call("player") as Node3D
 	if prompt.is_empty():
+		if optional:
+			return "SKIPPED interact_with (optional): no interact prompt is live -- not pressed"
 		var nearest := ""
 		if not spec.is_empty():
 			var found := _find_entity(spec, args)
@@ -3085,6 +3202,9 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 	# reads in the notes as a successful interaction either way.
 	var want_text := str(args.get("expect_prompt", ""))
 	if not want_text.is_empty() and not prompt.to_lower().contains(want_text.to_lower()):
+		if optional:
+			return ("SKIPPED interact_with (optional): the live prompt is \"%s\", not \"%s\" -- "
+				+ "not pressed, to avoid activating a different provider.") % [prompt, want_text]
 		return ("FAIL the live prompt is \"%s\", which does not contain \"%s\" -- pressing here "
 			+ "would activate a different provider. Not pressed.") % [prompt, want_text]
 	var provider: Object = arbiter.call("winning_provider") if arbiter.has_method("winning_provider") else null
@@ -3103,7 +3223,15 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 					+ "of it. Not pressed: this press would have activated the wrong thing.") % [
 						prompt, provider_name, spec]
 	var before := _cell_snapshot()
-	var sent := await _inject("interact", _hold_frames(args.get("hold", "tap")))
+	# Not every live prompt answers to `interact` -- `encounter_director.gd`'s
+	# "Put <creature> away" is bound to `creature_recall`, not `interact`
+	# (CONTROLLER-MAP: "Fleeing is RB. Putting the creature away IS
+	# disengaging."), and pressing the wrong control here would silently do
+	# nothing while every check above still said the right prompt was live.
+	# `control` defaults to `interact` -- the verb this action is named and
+	# documented for -- and is only overridden by a step that means to press
+	# something else at a verified, specific prompt.
+	var sent := await _inject(str(args.get("control", "interact")), _hold_frames(args.get("hold", "tap")))
 	if not bool(sent.get("ok", false)):
 		return "HARNESS-ERROR %s" % str(sent.get("why", ""))
 	for i in maxi(2, int(args.get("settle_frames", 20))):
@@ -3111,6 +3239,7 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 		await physics_frame
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
 	var after := _cell_snapshot()
+	var pressed_control := str(args.get("control", "interact"))
 	var changed := _describe_delta(before, after, ["context", "focus_text", "inventory",
 		"pending_build", "party_size", "flags", "active_creature"])
 	if changed == "none":
@@ -3119,11 +3248,12 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 			# a press that quietly did nothing can never be read as one that
 			# was expected to: the default is FAIL, and this is the exception
 			# an operator writes down before playing.
-			return ("pressed `interact` on \"%s\" (provider '%s') and nothing observable changed "
-				+ "-- the step declared expect_change:false") % [prompt, provider_name]
-		return ("FAIL pressed `interact` with the prompt \"%s\" live (provider '%s') and nothing "
-			+ "changed: no context, focus, satchel, build, party or flag moved.") % [prompt, provider_name]
-	return "pressed `interact` on \"%s\" (provider '%s'): %s" % [prompt, provider_name, changed]
+			return ("pressed `%s` on \"%s\" (provider '%s') and nothing observable changed "
+				+ "-- the step declared expect_change:false") % [pressed_control, prompt, provider_name]
+		return ("FAIL pressed `%s` with the prompt \"%s\" live (provider '%s') and nothing "
+			+ "changed: no context, focus, satchel, build, party or flag moved.") % [
+				pressed_control, prompt, provider_name]
+	return "pressed `%s` on \"%s\" (provider '%s'): %s" % [pressed_control, prompt, provider_name, changed]
 
 
 ## Turn the camera. `yaw_deg` is an absolute world heading; `at:[x,z]` points
@@ -3246,6 +3376,270 @@ func _step_press_until(args: Dictionary, step_id: String) -> String:
 	return "FAIL %d x %s did not reach it; last saw %s" % [budget, control, last]
 
 
+## Equip a named tool by its own hotbar slot, verified and retried -- never a
+## blind press.
+##
+## Fable's diagnosis (2026-09-02, `FINDING-S03-POSTMERGE-TERRAIN-VARIANCE-
+## 2026-09-02.md`'s correction): S03's gather ladder pressed `hotbar_N` blind
+## before every node, no verification, and it silently failed roughly a
+## third of the time. Two real reasons, both invisible to a bare `press`:
+## (1) the SAME slot's button TOGGLES -- pressing the currently-equipped
+## tool's own slot un-equips it rather than re-equipping it, which is
+## harmless here because this step never presses a slot that already holds
+## the wanted tool; (2) a press landing while a swing from the PREVIOUS
+## gather is still resolving (`tool_hold.gd`) is dropped outright, not
+## queued -- correlating every equip press in a real run against
+## `equipped.item` showed exactly this shape, presses that took immediately
+## after `harvest_logic.gd`'s own gather animation and presses that silently
+## missed while one was still finishing. `harvest_node.gd` then correctly
+## REFUSES a wrong-tool gather ("Needs a Knife.") -- the old script read
+## that refusal as a reach problem because nothing ever checked what tool
+## was actually in hand.
+##
+## Contract: no-ops (0 presses) if the tool is already equipped. Otherwise
+## presses `control`, settles (long enough for an in-flight swing to
+## finish), and checks `equipped().item`; retries up to `max_attempts`
+## (default 3) before FAILing loud with what is actually equipped instead
+## of what was wanted.
+func _step_equip_tool(args: Dictionary, step_id: String) -> String:
+	var tool := str(args.get("tool", ""))
+	if tool.is_empty():
+		return "HARNESS-ERROR equip_tool step %s needs tool" % step_id
+	var max_attempts := maxi(1, int(args.get("max_attempts", 3)))
+	var settle := maxi(1, int(args.get("settle_frames", 60)))
+
+	var have := str((_probe.call("equipped") as Dictionary).get("item", ""))
+	if have == tool:
+		return "already equipped (%s)" % tool
+
+	# Live-read the slot, same reason `focus_item` reads the satchel cursor
+	# live instead of trusting a fixed offset: a step script's `control`
+	# argument is a claim about where an earlier assign sequence PUT the
+	# tool, and that claim goes stale. Measured directly on this run:
+	# `hotbar_4` held 'pickaxe', not the knife the SAME assign sequence put
+	# there in an earlier run and two independent probes confirmed -- the
+	# "if a future run's save ever again shows the knife somewhere else"
+	# case the previous ground-truth note asked to be watched for. A
+	# `control` argument, if the step script still carries one from before
+	# this fix, is accepted but ignored: it is no longer authoritative.
+	var slot := int(_probe.call("hotbar_slot_of", tool))
+	if slot < 0:
+		return ("FAIL equip_tool: '%s' is not on the hotbar at all (checked live via "
+			+ "hotbar_slot_of, not a fixed slot guess) -- the assign step never bound it, "
+			+ "or something since removed it from the bar.") % tool
+	var control := "hotbar_%d" % (slot + 1)
+
+	for attempt in max_attempts:
+		var sent := await _inject(control, _hold_frames("tap"))
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		for i in settle:
+			await physics_frame
+		have = str((_probe.call("equipped") as Dictionary).get("item", ""))
+		if have == tool:
+			return "%d x %s (live slot %d): equipped %s" % [attempt + 1, control, slot, tool]
+		# The slot can itself have moved between attempts (another gather, a
+		# bag change) -- re-read it rather than hammering a control that may
+		# no longer be the right one.
+		var reslot := int(_probe.call("hotbar_slot_of", tool))
+		if reslot != slot and reslot >= 0:
+			slot = reslot
+			control = "hotbar_%d" % (slot + 1)
+	return "FAIL equip_tool: wanted %s, holding '%s' after %d press(es) (last tried %s, live slot %d)" % [
+		tool, have, max_attempts, control, slot]
+
+
+## Chip a live wild target down to as close to zero HP as the fight will
+## actually bear, WITHOUT a fixed hit count or a fixed HP-fraction floor
+## guessed in advance.
+##
+## S03's catch ladder first used a blind `times: 3` (real defect: `times: 20`
+## had killed the target outright once, `fainted` and uncatchable), then a
+## fixed `enemy_hp_fraction at_most: 0.3` press_until -- both leave a real,
+## computable amount of catching.json's own reward curve on the table,
+## because neither one asks how much damage THIS fight's quick attack is
+## actually dealing before deciding when to stop. It can be asked:
+## `combat_math.gd::rolled_damage()`'s only per-swing randomness against a
+## fixed target is `variance` (+/-10% of the roll) -- `type_mult`/`power`/
+## attack/defence are the SAME for every quick attack this creature throws at
+## this target, so the first hit already reveals, within +/-10%, what every
+## later one will cost. This step learns that from the fight itself: after
+## each swing it records the actual damage dealt, and refuses to throw the
+## NEXT swing only once the target's remaining HP would not survive the
+## LARGEST hit seen so far scaled up by `safety_factor` (default 1.25,
+## comfortably past the 1.1/0.9 = 1.222 worst-case roll-to-roll swing) --
+## which is the same arithmetic a player would do in their head: "that hit
+## took 13, I have 16 left, one more could take 14.3, still safe; a fourth
+## could not." `floor_fraction` (default 0.01, i.e. 1% of max HP) is a small
+## absolute cushion on top of that prediction, against float rounding and
+## anything this model has not accounted for -- never the primary guard.
+func _step_chip_to_floor(args: Dictionary, step_id: String) -> String:
+	var control := str(args.get("control", "combat_quick"))
+	var hold := _hold_frames(args.get("hold", "tap"))
+	var settle := maxi(1, int(args.get("settle_frames", 30)))
+	var budget := maxi(1, int(args.get("max_presses", 15)))
+	var safety := float(args.get("safety_factor", 1.25))
+	var floor_frac := float(args.get("floor_fraction", 0.01))
+
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED chip_to_floor: not needed (%s)" % str(moot.get("actual", ""))
+
+	var mgr := _probe.call("combat_manager") as Node
+	if mgr == null or not mgr.has_method("enemy"):
+		return "HARNESS-ERROR chip_to_floor step %s has no CombatManager" % step_id
+	var foe: RefCounted = mgr.call("enemy")
+	if foe == null:
+		return "FAIL chip_to_floor: no live enemy to chip"
+	var max_hp := float(foe.get("max_hp"))
+	if max_hp <= 0.0:
+		return "FAIL chip_to_floor: enemy max_hp is %.1f, cannot compute a floor" % max_hp
+	var floor_hp := max_hp * floor_frac
+
+	var hp := float(foe.get("hp"))
+	var max_hit := 0.0
+	var presses := 0
+	var hits: Array[String] = []
+	for attempt in budget:
+		# The predictive stop: only reached once at least one real hit has
+		# been observed. The very first swing always goes in blind -- there
+		# is no data yet, and a single hit has never come close to fainting
+		# a fresh, healthy practice-cluster target in any run measured so far.
+		if max_hit > 0.0 and hp - max_hit * safety <= floor_hp:
+			break
+		if not is_instance_valid(foe):
+			return "FAIL chip_to_floor: enemy left the fight after %d press(es) (hits: %s)" % [
+				presses, ", ".join(hits)]
+		var sent := await _inject(control, hold)
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		for i in settle:
+			await physics_frame
+		if not is_instance_valid(foe):
+			return "FAIL chip_to_floor: enemy left the fight mid-swing after %d press(es) (hits: %s)" % [
+				presses, ", ".join(hits)]
+		var now := float(foe.get("hp"))
+		var dealt := hp - now
+		if dealt > max_hit:
+			max_hit = dealt
+		hp = now
+		presses += 1
+		hits.append("%.1f" % dealt)
+		if bool(foe.get("fainted")) or hp <= 0.0:
+			return ("FAIL chip_to_floor: target fainted after %d press(es) (hits: %s) -- " +
+				"safety_factor %.2f was not enough margin against this target, widen it") % [
+					presses, ", ".join(hits), safety]
+
+	return "%d x %s: enemy hp %.1f/%.1f (%.1f%%), hits dealt [%s], largest %.1f" % [
+		presses, control, hp, max_hp, 100.0 * hp / max_hp, ", ".join(hits), max_hit]
+
+
+## Aim, throw, and if it misses, DO IT AGAIN -- against the same chipped-down
+## target, in the same fight -- instead of walking away after one orb.
+##
+## Owner directive, this session: "we should chip down then throw orbs til we
+## catch." A single scripted throw per numbered attempt was leaving real
+## catch chances on the table for a reason that has nothing to do with the
+## catch roll: `catching.json`'s own `throw.cooldown` (0.9s, "stops a failed
+## catch from being instantly re-thrown while the wobble is still on
+## screen") and `combat_manager.gd::_finish_catch()`'s failure branch
+## (`_wild.call("set_engaged", true, _ally_body)`, no fight-ending) both say
+## outright that a missed throw is meant to be followed by another one in the
+## SAME encounter -- a real player does not lose access to their target
+## because one orb bounced off. This step re-arms the aim
+## (`press_until input_context == combat_aim`, idempotent the same way
+## `press_until` always is), re-tracks the live target (`track_aim`, since
+## it keeps walking through the wait), throws, and waits for the verdict --
+## repeating up to `max_throws` times, stopping the INSTANT the party grows
+## (caught) or the fight ends some other way (fled, or `is_fighting()` goes
+## false). Bounded, not unconditional: `max_throws` (default 4) keeps one
+## stubborn target from spending the whole trip's orb supply, the same
+## reasoning `chip_to_floor`'s own `max_presses` cap uses.
+func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED throw_until_caught: not needed (%s)" % str(moot.get("actual", ""))
+
+	var mgr := _probe.call("combat_manager") as Node
+	if mgr == null or not mgr.has_method("is_fighting"):
+		return "HARNESS-ERROR throw_until_caught step %s has no CombatManager" % step_id
+	var max_throws := maxi(1, int(args.get("max_throws", 4)))
+	var aim_budget := int(args.get("aim_budget_frames", 240))
+	var resolve_seconds := float(args.get("resolve_seconds", 6.0))
+	var throw_control := str(args.get("throw_control", "interact"))
+
+	var party_before := (_probe.call("party_state") as Array).size()
+	var log: Array[String] = []
+	for attempt in max_throws:
+		if not bool(mgr.call("is_fighting")):
+			return "FAIL throw_until_caught: fight ended before throw %d (%s)" % [
+				attempt + 1, ", ".join(log)]
+		var armed := await _step_press_until({
+			"control": "interact",
+			"check": {"check": "input_context", "equals": "combat_aim"},
+			"max_presses": 5,
+			"settle_frames": 20,
+		}, "%s-arm%d" % [step_id, attempt + 1])
+		if armed.begins_with("FAIL") or armed.begins_with("HARNESS-ERROR"):
+			return "FAIL throw_until_caught: could not arm aim for throw %d (%s) -- prior: %s" % [
+				attempt + 1, armed, ", ".join(log)]
+		var tracked := await _step_track_aim({"budget_frames": aim_budget},
+			"%s-track%d" % [step_id, attempt + 1])
+		# A tracking FAIL (budget exhausted, LOS blocked) is not fatal on its
+		# own: the throw below still goes out unassisted rather than wasting
+		# the whole attempt on a step that only steers, never presses --
+		# matching the ladder's own pre-existing behaviour when tracking ran
+		# out. Recorded in the log either way.
+		var sent := await _inject(throw_control, _hold_frames("tap"))
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		# NOT a fixed wait: `combat_manager.gd`'s post-strike resolve sequence
+		# (absorb -> shake x N -> settle -> verdict) runs to a length that
+		# depends on the SHAKE COUNT catching.json rolls per throw (a near
+		# miss shakes more than a hopeless one), which a guessed duration
+		# cannot know -- a fixed 6.0s here once undershot a max-shake resolve
+		# and cost a whole re-arm cycle, `_read_player_input()` silently
+		# dropping interact presses because `_catch_phase` was still
+		# non-NONE. Phase 1 confirms the strike actually started resolving
+		# (skips itself harmlessly if the orb missed the body outright and
+		# there is nothing to resolve); phase 2 waits for the real end.
+		await _step_wait_until({"check": "catch_resolving", "equals": true,
+			"budget_frames": 180, "poll_frames": 3})
+		await _step_wait_until({"check": "catch_resolving", "equals": false,
+			"budget_frames": maxi(60, int(resolve_seconds * float(Engine.physics_ticks_per_second))),
+			"poll_frames": 3})
+		# `catch_resolving` clearing is the VERDICT, not the outcome finishing.
+		# Measured directly: a caught creature is not actually added to the
+		# party, and the fight does not actually end, until ~2.7s AFTER the
+		# verdict resolves (combat_manager.gd's post-catch sequence has its
+		# own beat past `_finish_catch()`). Checking party size the instant
+		# `catch_resolving` clears reads a real catch as a miss and burns the
+		# rest of this attempt trying to re-arm a fight that has already
+		# ended. So: wait, up to `resolve_seconds` again, for whichever
+		# happens first -- the party growing (caught) or the fight actually
+		# ending some other way (fled) -- and only conclude "still fighting,
+		# genuine miss" if neither happens in that window.
+		var settle_budget := maxi(1, int(resolve_seconds * float(Engine.physics_ticks_per_second)))
+		var settled := 0
+		var party_now := (_probe.call("party_state") as Array).size()
+		while party_now <= party_before and bool(mgr.call("is_fighting")) and settled < settle_budget:
+			await physics_frame
+			_tick(1.0 / float(Engine.physics_ticks_per_second))
+			settled += 1
+			party_now = (_probe.call("party_state") as Array).size()
+		log.append("throw %d (%s)" % [attempt + 1, "tracked" if not tracked.begins_with("FAIL") else "untracked"])
+		if party_now > party_before:
+			return "caught on throw %d of %d (%s)" % [attempt + 1, max_throws, ", ".join(log)]
+		if not bool(mgr.call("is_fighting")):
+			return "FAIL throw_until_caught: fight ended after throw %d without a catch (%s)" % [
+				attempt + 1, ", ".join(log)]
+	return "FAIL throw_until_caught: %d throw(s) spent, no catch (%s)" % [max_throws, ", ".join(log)]
+
+
 ## RIG-F3 — track the live target during aim; do not throw at a stale point.
 ##
 ## `ralph/GATE-F-CAPSTONE-3`'s S02 run found the second generation of RIG-F2's
@@ -3366,6 +3760,81 @@ func _step_track_aim(args: Dictionary, step_id: String) -> String:
 	return "FAIL track_aim: reticle never confirmed on body in %d frame(s); last saw %s" % [
 		budget, last_reason]
 
+
+## Harness-only test shortcut: put the reticle on the target's body in one
+## frame instead of steering toward it with rate-limited analog stick input.
+##
+## `track_aim` above is the honest player-input simulation, and stays that
+## way -- it is what a real controller does. But this catch-loop's own
+## purpose in the current work (ralph/GATE-F-S03-CATCH-LOOP) is exercising
+## team-building/revive/economy logic downstream of a successful catch, not
+## re-proving aim-input responsiveness, and a live gameplay fix for aim
+## tracking itself (creatures slow down on entering catch mode) is already
+## landing in a separate lane. Until that lands, `track_aim`'s clamped
+## per-frame turn rate against a full-speed wild creature is a second,
+## independent source of flakiness on top of whatever this lane is actually
+## trying to verify -- gate_f-run-20260901T220548Z-s03fix's attempt 5 spent
+## its whole 966s segment on exactly one successful catch (the S02 carry-
+## over) with every scripted throw missing on `reticle_outside_body`/`ground`.
+##
+## This step reuses `track_aim`'s own camera-eye/centre() geometry (see its
+## header for why the ray is cast from the camera, not the trainer) but
+## assigns `camera_rig.gd`'s public `yaw`/`pitch` floats directly rather
+## than nudging them via `_stick_right`, so there is no turn-rate limit to
+## outrun a moving target with. It still goes through the same live
+## `aim_report()` eligibility check afterward and FAILs loudly if that
+## somehow still does not confirm -- this shortcuts the STEERING, not the
+## catch roll, the orb physics, or anything downstream of the throw.
+func _step_force_aim(args: Dictionary, step_id: String) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED force_aim: not needed (%s)" % str(moot.get("actual", ""))
+
+	var manager := _probe.call("combat_manager") as Node
+	if manager == null:
+		return "HARNESS-ERROR force_aim step %s has no CombatManager in the world" % step_id
+	var throw: Node = manager.call("throw_aim") if manager.has_method("throw_aim") else null
+	if throw == null:
+		return "HARNESS-ERROR force_aim step %s: CombatManager has no throw_aim node" % step_id
+	if not bool(throw.call("is_aiming")):
+		return "FAIL force_aim: input_context is not combat_aim -- enter it with press_until first"
+	var rig := _probe.call("camera_rig") as Node
+	if rig == null:
+		return "HARNESS-ERROR force_aim step %s: no live camera rig" % step_id
+	var camera := rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null:
+		return "HARNESS-ERROR force_aim step %s: camera rig has no live Camera3D" % step_id
+	var body: Node3D = manager.call("enemy_body") as Node3D
+	if body == null or not is_instance_valid(body) or not body.has_method("centre"):
+		return "FAIL force_aim: no live target body to aim at"
+
+	var budget := maxi(1, int(args.get("budget_frames", 10)))
+	var last_reason := "unavailable"
+	var attempts := 0
+	while attempts < budget:
+		# Resampled every attempt, same as track_aim: the target may still be
+		# moving between the previous miss and this retry.
+		var centre: Vector3 = body.call("centre")
+		var to_target: Vector3 = centre - camera.global_position
+		rig.set("yaw", atan2(-to_target.x, -to_target.z))
+		var flat := Vector2(to_target.x, to_target.z).length()
+		if flat > 0.01:
+			rig.set("pitch", atan2(to_target.y, flat))
+		_stick_right = Vector2.ZERO
+		_drive_sticks()
+		await physics_frame
+		var report: Dictionary = throw.call("aim_report")
+		last_reason = str(report.get("reason", "unavailable"))
+		attempts += 1
+		if bool(report.get("eligible", false)):
+			return "reticle forced onto body in %d attempt(s): %s" % [attempts, last_reason]
+
+	return "FAIL force_aim: reticle not confirmed on body after %d forced attempt(s); last saw %s" % [
+		budget, last_reason]
+
+
 func _step_open_menu(args: Dictionary, step_id: String) -> String:
 	var tab := str(args.get("tab", ""))
 	# `menu.json`'s `shortcuts` maps an action to a tab in both directions, so
@@ -3394,14 +3863,30 @@ func _step_open_menu(args: Dictionary, step_id: String) -> String:
 func _step_close_menu(args: Dictionary, step_id: String) -> String:
 	var control := str(args.get("control", "menu_cancel"))
 	var before := str(_probe.call("input_context"))
-	var sent := await _inject(control, HOLD_TAP)
-	if not bool(sent.get("ok", false)):
-		return "HARNESS-ERROR %s" % str(sent.get("why", ""))
-	await _settle_until(func() -> bool: return not str(_probe.call("input_context")).begins_with("menu"))
-	var after := str(_probe.call("input_context"))
-	if after.begins_with("menu"):
-		return "FAIL %s left the shell open: context %s -> %s" % [control, before, after]
-	return "%s closed the shell: context %s -> %s" % [control, before, after]
+	# Retried (added 2026-09-02), same reason `equip_tool` retries a hotbar
+	# press instead of trusting one: measured directly on S03's feed sequence,
+	# a `menu_cancel` here can land in a frame the shell is not actually
+	# reading it in (a sub-mode ending the same frame -- `tab_backpack.gd`'s
+	# `_end_targeting()`/`_end_confirm()`/`_end_held()` all restore grid focus
+	# synchronously, but not every one-frame window in between is guaranteed
+	# open to a fresh press) and reports "left the shell open" even though a
+	# SECOND press moments later closes it cleanly. A real player facing an
+	# unresponsive first B press just presses it again.
+	var max_attempts := maxi(1, int(args.get("max_attempts", 3)))
+	var after := before
+	for attempt in max_attempts:
+		var sent := await _inject(control, HOLD_TAP)
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		await _settle_until(func() -> bool: return not str(_probe.call("input_context")).begins_with("menu"))
+		after = str(_probe.call("input_context"))
+		if not after.begins_with("menu"):
+			if attempt > 0:
+				return "%s closed the shell on press %d: context %s -> %s" % [
+					control, attempt + 1, before, after]
+			return "%s closed the shell: context %s -> %s" % [control, before, after]
+	return "FAIL %s left the shell open after %d press(es): context %s -> %s" % [
+		control, max_attempts, before, after]
 
 
 # --- dialogue (GF-B-002 primitive 2 / CD-3) ----------------------------------
@@ -3637,6 +4122,69 @@ func _step_focus_move(args: Dictionary, step_id: String) -> String:
 			and str(before.get("focus_text", "")) == str(after.get("focus_text", "")):
 		return "FAIL %d x %s did not move focus off %s" % [times, control, _focus_name(before)]
 	return "%d x %s moved focus %s -> %s" % [times, control, _focus_name(before), _focus_name(after)]
+
+
+## Move focus down a picker list until the focused row's own text starts with
+## `prefix` -- e.g. `"3."` for the target picker's third row
+## (`tab_backpack.gd`'s rows read `"N.  Name  HP x / y"`, `tab_backpack.gd:1850-1857`).
+##
+## Written for the SAME reason `focus_item` reads the satchel cursor instead of
+## counting presses: a fixed `focus_move` press count assumes the row order and
+## the eligible-row count never change, and both do here. `_open_target_picker()`
+## auto-focuses the first ELIGIBLE row (not-fainted and not full, `_eligible()`),
+## which is the FIRST entrant only when every earlier entrant is either already
+## full or fainted -- one berry at a typical starting satiety leaves an entrant
+## still eligible, so a real feeding pass can auto-focus the SAME entrant twice
+## in a row rather than advancing down the list on its own. This presses
+## `ui_down` and reads the live row text after each press, rather than trusting
+## either the auto-focus or a press count to land on the entrant a step actually
+## means to feed.
+func _step_focus_row(args: Dictionary, step_id: String) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED focus_row: not needed (%s)" % str(moot.get("actual", ""))
+	var prefix := str(args.get("prefix", ""))
+	if prefix.is_empty():
+		return "HARNESS-ERROR focus_row step %s has no prefix:\"...\"" % step_id
+	var max_presses := maxi(1, int(args.get("max_presses", 6)))
+	# `optional` (added 2026-09-02): `tab_backpack.gd::_eligible()`'s food gate
+	# is `nourishment_fraction < 1.0`, not "not yet fed" -- a creature caught
+	# late in the segment can start close to full and be genuinely ungeable,
+	# with its row pulled out of the focus chain entirely
+	# (`_refresh_target_panel()`'s `focus_mode = FOCUS_NONE` on an ineligible
+	# row). `ui_down` then never lands on it no matter how many times it is
+	# pressed -- not a flaky press `max_presses` should paper over, a row that
+	# genuinely is not reachable. `optional: true` treats "never reached it"
+	# as a SKIP rather than a FAIL, and backs out of the picker with one
+	# `menu_cancel` (`_read_targeting_cancel()` reads it as Cancel while a
+	# picker is open) so a step after this one presses into the grid, not a
+	# picker sitting open on the wrong row.
+	var optional := bool(args.get("optional", false))
+	var have: Dictionary = _probe.call("input_state")
+	var text := str(have.get("focus_text", ""))
+	if text.begins_with(prefix):
+		return "focus_row '%s': already there (%s)" % [prefix, text]
+	for attempt in max_presses:
+		var sent := await _inject("ui_down", HOLD_TAP)
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		for f in 3:
+			await process_frame
+		have = _probe.call("input_state")
+		text = str(have.get("focus_text", ""))
+		if text.begins_with(prefix):
+			return "focus_row '%s': %d x ui_down reached it (%s)" % [prefix, attempt + 1, text]
+	if optional:
+		var cancel := await _inject("menu_cancel", HOLD_TAP)
+		if bool(cancel.get("ok", false)):
+			for f in 20:
+				await process_frame
+		return ("SKIPPED focus_row (optional): %d x ui_down never reached '%s' -- last row read "
+			+ "\"%s\", backed out with menu_cancel") % [max_presses, prefix, text]
+	return "FAIL focus_row '%s': %d x ui_down never reached it -- last row read \"%s\"" % [
+		prefix, max_presses, text]
 
 
 ## Move the satchel cursor onto the cell holding a named ITEM.
@@ -4364,6 +4912,47 @@ func _step_assert(args: Dictionary) -> Dictionary:
 			var want := str(args.get("prefix", ""))
 			var have := str(_probe.call("input_context"))
 			return {"ok": have.begins_with(want), "actual": "input_context=%s (wanted prefix %s)" % [have, want]}
+		"catch_resolving":
+			# combat_manager.gd::_tick_active() reads `_catch_phase` (ABSORB ->
+			# WAIT -> SHAKING -> VERDICT) BEFORE `_read_player_input()` and
+			# returns early while it is anything but NONE -- interact presses
+			# during that window are silently dropped, not queued. The window's
+			# real length depends on the SHAKE COUNT catching.json's own
+			# `resolve` block rolls per throw (a near miss shakes more times
+			# than a hopeless one, `resolve.max_shakes_on_failure`), which a
+			# fixed `wait` cannot know in advance -- `throw_until_caught`
+			# guessed 6.0s once and a throw that rolled the max shake count
+			# outlasted it, so three re-arm presses all landed while
+			# `_catch_phase` was still non-NONE and none of them registered.
+			# `combat_manager.gd::is_resolving_catch()` is the live truth.
+			var want_resolving := bool(args.get("equals", false))
+			var mgr2 := _probe.call("combat_manager") as Node
+			var resolving := bool(mgr2.call("is_resolving_catch")) if mgr2 != null and mgr2.has_method("is_resolving_catch") else false
+			return {"ok": resolving == want_resolving, "actual": "catch_resolving=%s (wanted %s)" % [resolving, want_resolving]}
+		"enemy_hp_fraction":
+			# S03's catch ladder chipped a fixed `times: 3` regardless of how
+			# much that actually left on the target -- measured across a real
+			# run (gate-f-run-20260902T053310Z-s03enginefix) at 57%-75% of max
+			# HP depending on the creature's own defence, not the "sliver"
+			# catching.json's steep hp_curve actually rewards (hp_factor goes
+			# from ~0.10 at full HP toward 1.0 near zero). A live threshold
+			# lets `press_until` chip exactly as far as needed instead of a
+			# guessed hit count -- pairs with `combat_quick` the same way
+			# `combat_running` pairs with an engage press.
+			var mgr := _probe.call("combat_manager") as Node
+			var foe: RefCounted = mgr.call("enemy") if mgr != null and mgr.has_method("enemy") else null
+			if foe == null:
+				return {"ok": false, "actual": "no live enemy to read HP from"}
+			var max_hp := float(foe.get("max_hp"))
+			if max_hp <= 0.0:
+				return {"ok": false, "actual": "enemy max_hp is %.1f, cannot fraction" % max_hp}
+			var frac: float = float(foe.get("hp")) / max_hp
+			var ok := true
+			if args.has("at_most"):
+				ok = ok and frac <= float(args["at_most"])
+			if args.has("at_least"):
+				ok = ok and frac >= float(args["at_least"])
+			return {"ok": ok, "actual": "enemy hp fraction %.3f (%.1f/%.1f)" % [frac, float(foe.get("hp")), max_hp]}
 		"combat_running":
 			# T2-GATEF-RUN6 / RIG-26. The engage steps in this protocol asserted
 			# that `interact` was INJECTED, not that a fight received it, so a
@@ -4420,6 +5009,42 @@ func _step_assert(args: Dictionary) -> Dictionary:
 				return {"ok": have >= want_min, "actual": "party size %d (wanted >= %d)" % [have, want_min]}
 			var want := int(args.get("equals", -1))
 			return {"ok": have == want, "actual": "party size %d (wanted %d)" % [have, want]}
+		"creature_fed":
+			# Live-reads `party_state()[index].fed`. For `skip_if` on a feed
+			# sequence: a creature caught late in a segment can still be at or
+			# near full satiety and genuinely ineligible in
+			# `tab_backpack.gd`'s target picker (`_eligible()` requires
+			# `nourishment_fraction < 1.0`) -- not a bug, just satiety timing
+			# a fixed "feed entrant N" script cannot know in advance. Skipping
+			# that entrant is correct; force-feeding it is not possible
+			# (`_eligible()` pulls the row out of the focus chain entirely) and
+			# was never the goal -- `S03-260`'s `tournament_team_fed` only
+			# needs every creature FED, not every creature FED BY THIS SCRIPT.
+			var idx := int(args.get("index", -1))
+			var members: Array = _probe.call("party_state")
+			if idx < 0 or idx >= members.size():
+				return {"ok": false, "actual": "no party member at index %d (party size %d)" % [
+					idx, members.size()]}
+			var member: Dictionary = members[idx]
+			var is_fed := bool(member.get("fed", false))
+			var want_fed := bool(args.get("equals", true))
+			return {"ok": is_fed == want_fed, "actual": "party[%d] (%s) fed=%s" % [
+				idx, str(member.get("name", "")), is_fed]}
+		"inventory_count":
+			# Live-read the satchel through the same snapshot the diff detector
+			# uses, rather than trusting a press sequence spent what it meant to.
+			var item_id := str(args.get("item", ""))
+			if item_id.is_empty():
+				return {"ok": false, "actual": "inventory_count check has no item:\"...\""}
+			var count := int((_probe.call("inventory_snapshot") as Dictionary).get(item_id, 0))
+			var ok2 := true
+			if args.has("max"):
+				ok2 = ok2 and count <= int(args["max"])
+			if args.has("min"):
+				ok2 = ok2 and count >= int(args["min"])
+			if args.has("equals"):
+				ok2 = ok2 and count == int(args["equals"])
+			return {"ok": ok2, "actual": "%s count %d" % [item_id, count]}
 		"region_is":
 			var want := str(args.get("equals", ""))
 			var player := _probe.call("player") as Node3D
@@ -5485,16 +6110,29 @@ func _watch_for_events() -> void:
 	if _prev_party_size >= 0 and party.size() > _prev_party_size:
 		_emit("catch_result", {"observation": "party grew %d -> %d" % [_prev_party_size, party.size()]})
 	_prev_party_size = party.size()
-	for entry: Variant in party:
-		var creature: Dictionary = entry
+	for i in party.size():
+		var creature: Dictionary = party[i]
 		var name := str(creature.get("name", ""))
 		var level := int(creature.get("level", 0))
-		if _prev_levels.has(name) and level > int(_prev_levels[name]):
+		# Keyed by SLOT INDEX, not `name`: two wild-caught creatures of the same
+		# species share the same default label (a run's own party can carry
+		# three creatures all called "Bramblebun" -- exactly what this segment's
+		# own catch loop produces), and a name-keyed dict collapses them onto one
+		# shared "previous hp" cell. Whichever same-named entry the loop visited
+		# LAST each frame won that cell, so a fainted one and a healthy one
+		# alternating which wrote last re-triggered the hp>0 -> hp<=0 edge on
+		# every single tick -- measured on gate-f-run-20260901T220548Z-s03fix
+		# attempt 6: 8733 "faint" events, nearly all repeats of one already-
+		# fainted Bramblebun, one per physics frame for the rest of the segment.
+		# Party order is stable absent an explicit reorder action, which this
+		# loop never takes, so the slot index is the stable identity a shared
+		# name is not.
+		if _prev_levels.has(i) and level > int(_prev_levels[i]):
 			_emit("level_up", {"observation": "%s reached level %d" % [name, level]})
-		if float(creature.get("hp", 1.0)) <= 0.0 and float(_prev_levels.get("%s:hp" % name, 1.0)) > 0.0:
+		if float(creature.get("hp", 1.0)) <= 0.0 and float(_prev_levels.get("%d:hp" % i, 1.0)) > 0.0:
 			_emit("faint", {"observation": "%s fainted" % name})
-		_prev_levels[name] = level
-		_prev_levels["%s:hp" % name] = creature.get("hp", 1.0)
+		_prev_levels[i] = level
+		_prev_levels["%d:hp" % i] = creature.get("hp", 1.0)
 
 	_slow_watch_tick += 1
 	if _slow_watch_tick % SLOW_WATCH_EVERY == 0:
@@ -5596,19 +6234,30 @@ func _watch_slow(context: String, party: Array) -> void:
 	# Read off `creature_condition.gd`'s own summary through the probe, which is
 	# what the HUD shows the player. A creature going from not-fed to fed IS the
 	# feed event; there is no other observable moment.
-	for entry: Variant in party:
-		var creature: Dictionary = entry
+	# Keyed by PARTY INDEX, not name (fixed 2026-09-02): two party members can
+	# share a species and its display name (S03's team carries four
+	# Bramblebun), and a name key merged their state into one entry. That
+	# read a still-hungry Bramblebun's "not fed" as the FOLLOWING Bramblebun's
+	# own previous state on the next sample, so an unrelated creature going
+	# from not-fed to fed anywhere in the party could report as "Bramblebun
+	# is fed" for a Bramblebun that was never touched -- which is exactly the
+	# false-positive evidence a whole feed sequence was misread as working
+	# by. Index is stable within a segment (the party does not reorder itself
+	# under a running script), so it is a safe key here even though it is not
+	# a durable identity across saves.
+	for i in party.size():
+		var creature: Dictionary = party[i]
 		var who := str(creature.get("name", ""))
 		var fed := bool(creature.get("fed", false))
 		var rested := bool(creature.get("rested", false))
-		var was_fed: Variant = _prev_condition.get("%s:fed" % who)
-		var was_rested: Variant = _prev_condition.get("%s:rested" % who)
+		var was_fed: Variant = _prev_condition.get("%d:fed" % i)
+		var was_rested: Variant = _prev_condition.get("%d:rested" % i)
 		if was_fed != null and fed and not bool(was_fed):
-			_emit("feed", {"observation": "%s is fed" % who})
+			_emit("feed", {"observation": "%s (party slot %d) is fed" % [who, i]})
 		if was_rested != null and rested and not bool(was_rested):
-			_emit("rest", {"observation": "%s is rested" % who})
-		_prev_condition["%s:fed" % who] = fed
-		_prev_condition["%s:rested" % who] = rested
+			_emit("rest", {"observation": "%s (party slot %d) is rested" % [who, i]})
+		_prev_condition["%d:fed" % i] = fed
+		_prev_condition["%d:rested" % i] = rested
 
 	var vitals: Dictionary = _probe.call("player_vitals")
 	if not vitals.is_empty():
@@ -5634,10 +6283,13 @@ func _seed_change_detection() -> void:
 	var party: Array = _probe.call("party_state")
 	_prev_party_size = party.size()
 	_prev_levels.clear()
-	for entry: Variant in party:
-		var creature: Dictionary = entry
-		_prev_levels[str(creature.get("name", ""))] = int(creature.get("level", 0))
-		_prev_levels["%s:hp" % str(creature.get("name", ""))] = creature.get("hp", 1.0)
+	for i in party.size():
+		var creature: Dictionary = party[i]
+		# Keyed by slot index -- see the matching comment at the watch loop's
+		# own use of _prev_levels for why `name` collides across same-species
+		# party members.
+		_prev_levels[i] = int(creature.get("level", 0))
+		_prev_levels["%d:hp" % i] = creature.get("hp", 1.0)
 	_have_last_pos = false
 	# The new GF-B-011 detectors, seeded the same way and for the same reason:
 	# a boot must not report every item already in the satchel as newly
