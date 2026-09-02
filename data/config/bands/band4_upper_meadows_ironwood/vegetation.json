@@ -44,6 +44,14 @@
         "count": 6,
         "scale_min": 0.85,
         "scale_max": 1.3
+      },
+      {
+        "_why": "ROUND 8 (JUDGE-round7.md): 'partial' -- the right-side fill still does not reach the frame's right EDGE, only its mid-right. This anchor is closer and further right than every existing station-13 anchor: 32m out at roughly 22m lateral offset from the (-300,4990)->(-420,5140) path (per the brief's own '10-25m right of the path at 15-35m depth'), clear of the near rock cluster (-321,5003 r9, 20.5m away) and the round-6 copse (-340,5020 r12, ~19m away, radius kept small here specifically to avoid that overlap).",
+        "at": [-337.2, 5001.3],
+        "radius": 6.0,
+        "count": 4,
+        "scale_min": 0.85,
+        "scale_max": 1.2
       }
     ],
     "rocks": [
