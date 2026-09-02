@@ -1491,3 +1491,71 @@ from this lane. The one outstanding test failure this lane had been carrying is 
 
 Stable against round 6 (−11.8, −12.3, −8.7, −12.3, +11.6), so the sun-disc rework, dawn
 retune and seam fix did not disturb the day survey.
+
+---
+
+# VP10 — draw-call breakdown at `band1_open` (the measurement step)
+
+Baseline on the merged tree: **7659 draws / 11,757,306 primitives / 6593 objects**.
+Budget: ≤7500 draws AND ≤12.0M primitives — 159 draws to cut with 243K primitives of
+headroom (2.0%).
+
+## Where the draws actually are
+
+| group | drawn nodes | draws |
+|---|---|---|
+| **GrassCarpet** | 133 tiles / 85,336 instances | **133** |
+| **Scatter** (Terrain3DInstancer nodes) | 1 of 32,483 | **0** |
+| **Everything else** (props, structures, characters, water) | 6,042 of 8,554 | **4,058** |
+| attributed total | | 4,191 |
+| engine total (avg 20 frames) | | **7,662.9** |
+| **residual** | | **3,471.9 (45.3%)** |
+
+Within "everything else":
+
+| group | draws |
+|---|---|
+| Village | 641 |
+| Props | 428 |
+| Stronghold | 375 |
+| BurrowWarrens | 360 |
+| VillageBoundary | 294 |
+| GrandpaHouse | 208 |
+| SeveredSpokes | 191 |
+| MillCrossing | 166 |
+
+## What this rules out, and it is the brief's own first candidate
+
+**The grass carpet is 133 draw calls.** Not 1,000, not 3,000 — 133, across 132 tiles holding
+85,336 instances. A MultiMesh is one draw per *surface*, not per instance, so the carpet is
+nearly free in draw terms however dense it looks.
+
+So `cull_tile_m` 24 → 32 cannot deliver 159 draws. It would remove perhaps a few dozen tiles
+at best, and it would *raise* primitives — spending the 2% headroom to buy a fraction of the
+target. **Do not pull that lever.** The same applies to merging carpet tiers and to scatter
+batching: the discoverable scatter nodes contribute **zero** draws.
+
+## Where it should come from instead
+
+Discrete structure and prop meshes, 4,058 draws — and note these are being drawn from a
+viewpoint **700 m away**: Village 641, Stronghold 375, BurrowWarrens 360, GrandpaHouse 208,
+MillCrossing 166. Those five alone are 1,750 draws. `visibility_range_end` on distant built
+structures (explicitly the brief's "distant object visibility ranges on props, not vegetation")
+is the lever with the measured mass behind it.
+
+**Caveat that must be respected:** the brief forbids sparsifying, and some of those structures
+may be genuinely visible on a 700 m vista. Any range must be set so it culls only what does
+not contribute to the image, verified by a pixel diff — not chosen to hit a number.
+
+## Two honest limits of this measurement
+
+1. **45.3% of draws are unattributed.** `Scatter` reports 32,483 instancer nodes of which 1 is
+   a discoverable scene node, so the entire vegetation scatter is inside that residual, managed
+   as raw RenderingServer resources by the vendored Terrain3D rather than as SceneTree nodes.
+   The residual also contains the terrain clipmap and the shadow passes. So vegetation's true
+   draw cost is *not known* from this pass — it is only known that the discoverable nodes cost
+   nothing.
+2. **The primitive estimate is unusable.** The tool sums every mesh's primitives without
+   frustum or LOD culling and reports 57.9M against the engine's 11.75M. That column should be
+   ignored; the engine's number is the only valid one. The tool states this itself rather than
+   presenting the estimate as fact.
