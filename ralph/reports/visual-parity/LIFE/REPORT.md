@@ -571,3 +571,193 @@ unresolved rather than spending a third boot the round did not budget for.
 4. `00-village-life`: aim the eye/look pair at wherever the 14 nearby NPCs actually cluster, rather
    than reusing `_capture_locations.gd`'s "01 standing" composition verbatim, since that shot was
    never designed to guarantee a person in frame.
+
+---
+
+## Round 6 — pairing composition, village population, night legibility
+
+Merged `claude/coordination-subagents-3fhz1x` into `claude/vp-life` first, per the round's own
+dispatch, bringing in the round-5 code-blind judge (`JUDGE-round5.md`) and the rest of the visual-
+parity program's cross-lane integration. That judge, summarized: occlusion mostly fixed, ridge camp
+the strongest frame, but the pairing frame staged the creature as a 2.5-3x-oversized hero reveal
+instead of a side-by-side companion shot; village-life showed exactly one villager, camouflaged
+against dirt; night collapsed legibility everywhere except village-edge; 03-band1-open-meadow showed
+no creature despite two clusters 9-16m away; and relay-camp-day had a wolf half-cut by a tree trunk.
+
+Two boots, as budgeted. Boot 1 applied every fix below in one pass; boot 2 fixed two things boot 1's
+own frames showed were still wrong (03's eye, the pairing candidate's slope) after inspecting the
+actual PNGs, not just the printed contract.
+
+### 1. Pairing frame — rewritten geometry, and a real bug found in the fix itself
+
+Rewrote `_shoot_pairing()`: the starter now stands `SIDE_GAP_M=1.8m` to the trainer's side at the
+SAME depth (not behind/above on a slope), both actors face the same outward bearing, the camera
+sits `PAIR_BACK_M=5.5m` (swept 4.5-7.5m) behind their shared midpoint at a slightly-elevated eye
+(1.9m) rather than a low hero angle. Also implemented the dispatch's own bbox-helper fix: the
+trainer's box now comes from the CapsuleShape3D resource's height/radius times the shape node's own
+global scale, centred on the CharacterBody3D's global origin — not the collision node's own
+`global_position`, which is what round 5 measured from.
+
+That fix alone did not close the bug. Boot 1's `06-starter-beside-trainer-day.png` showed the
+trainer reduced to a sliver at the very bottom-left corner of the frame — a real, visible defect,
+not just a bad printed number — traced to the chosen candidate stand (70,-70) sitting on genuine
+sloped ground: `SIDE_GAP_M`'s flat XZ offset put the starter meaningfully higher up the slope than
+the trainer, and the camera (further back again) ended up at a third, different elevation. Boot 2
+added a flatness preference to candidate selection — among the candidates that pass the existing
+clearance check, take the one with the smallest ground-height spread across trainer/starter/camera
+(outright accept anything under 0.5m; otherwise use the flattest available, never fail outright the
+way a hard threshold could have). The chosen candidate (13,-30) measured a 0.02m spread, and with it
+the trainer's own height_frac readings became monotonic and physically sane (0.32 -> 0.18 as the
+camera pulled back) for the first time across three rounds — proof the bbox-helper fix was correct
+all along and round 5/boot 1's bug was really a geometry problem wearing a measurement bug's clothes.
+
+**Result**: `06-starter-beside-trainer-day.png` (boot 2) is the clearest win of the round — trainer
+and terrapup standing together at the same depth, both facing the open field, comparable general
+scale, in one clean composition with a rock/trees/hills backdrop. The automated contract still
+prints FAIL: across the whole 4.5-7.5m sweep, the creature's declared size (`species.json`) reads
+roughly 1.5x the trainer's apparent height at every distance tested (e.g. attempt 0: trainer 0.32
+vs creature 0.49), so the trainer's own passing window (back <~5.76m) and the creature's (back
+>~5.51m) only overlap in a ~0.2m sliver the 0.6m-step sweep never lands exactly on. This is now a
+real, understood, narrow-margin scale mismatch — not the "impossible 337%" bug round 5 shipped with
+— and the picture itself delivers what the dispatch actually asked for.
+
+### 2. Village-life frame — aimed at the one real cluster, deliberately did not move anyone
+
+`data/config/village_npcs.json` records TWO separate, explicit owner complaints this same week
+("still too many people in the village", raised and re-raised) that spent real effort SPREADING
+villagers out and moving three of them out of the square entirely. Moving 2-3 of them back into a
+cluster for this shot, as the round's own dispatch first suggested, would reopen that exact
+complaint — so this round left `village_npcs.json` untouched and instead re-aimed the capture eye
+(`VILLAGE_LIFE_EYE`/`_TOWARD`, `tools/_capture_life.gd`) at the one group already standing close
+together without being placed there on purpose: Bram [-5.89,-9], Wilhelm [-8,-3] and the Quarry
+Foreman [0,-6], a loose 6-8.5m triangle around the inn's own west side. This is a deviation from the
+dispatch's literal instruction, flagged here rather than silently substituted, on CLAUDE.md's own
+precedence rule that an explicit, on-record owner directive outranks an automated round dispatch
+where the two conflict.
+
+**Result**: `00-village-life-day.png` now shows the trainer and one other clearly legible person
+(white-haired, standing near the second building's doorway) against real architecture, with garden
+beds in the foreground for depth — a real improvement over round 5's single illegible blob against
+dirt, though short of the "3-5 villagers" the dispatch asked for; only one of the three targeted
+NPCs reads clearly in this exact frame, the other two are presumably present but not clearly
+resolved at native size (not confirmed by a crop this round).
+
+### 3. Night — relay-camp aimed at the real fire, cluster moved into its light; others reported
+
+Round 5's clusters for order 1073/1074 (band1 `spawns.json`) sat 20-24m from `trail_camp`'s own
+Bonfire prop at (344,935) — nowhere near its ~8m glow radius regardless of where the night eye
+pointed. Moved both centres to flank the fire (1073 to [340,930], 6.4m off; 1074 to [348,930], 6.4m
+off, kept 4.1m clear of the camp's own creature-bed prop) and re-aimed `night_eye`/
+`night_facing_toward` at the fire itself (344,935) instead of the old rest-point marker.
+`04-relay-camp-night.png` went from round 5's near-total black (nothing but a rim-lit trainer
+silhouette) to a frame with a genuinely visible firelit pocket — the fire's glow, the trainer beside
+it, and a pale shape near the light that reads as a creature, against still-black trees beyond the
+light's reach. Better, not fully legible — still worth a second pass with more render budget.
+
+The other two night stands were left alone per the dispatch's own split ("for the other night
+stands... report per-frame creature/background contrast" — report, not fix): `01-village-edge-night`
+keeps both bodies legible as silhouettes with rim/fill light, the strongest of the three, unchanged
+from round 5. `02-mill-pond-banks-night` keeps the trainer as a near-silhouette and the mosshell
+degrades to an unreadable dark mass beside the fence, also unchanged. No moon-angle investigation was
+done this round (out of the round's own scope split); a real next step, not attempted here.
+
+### 4. 03-band1-open-meadow — the eye needed to move, not just the aim
+
+Boot 1 aimed `facing_toward` at the two clusters' own centroid (order 1002 + order 1072) instead of
+order 1002's centre alone, per the dispatch. The frame still showed nothing: every reported body
+was `height_frac_too_small` (0.03-0.07, well under the 0.08 floor) at 9.3-15.9m from the eye plus
+this stand's own 3.5m camera pull-back — not an aim problem, a distance one. Boot 2 moved the eye
+itself from (-6,700) to (-11.5,698.5), roughly halving the eye-to-centroid distance (11.7m -> 6.3m).
+
+**Result**: 2 of 5 bodies now pass the bbox contract (up from 0 of 5), and the frame shows a small
+but locatable cluster of pale creature shapes on the right side, alongside the trainer. Still
+marginal — the cluster reads as "something is there" rather than cleanly, and the two pipwing (small
+bird species) remain too small/off-centre to register at all. A genuine, if modest, improvement; not
+a clean pass.
+
+### 5. Relay-camp-day — eye shifted 2m for the trunk-cut wolf
+
+Shifted the day eye 2m perpendicular to its own sightline, (332,932) -> (332.6,930.1), per the
+dispatch's explicit instruction (no tree coordinates were available to aim the shift precisely, so
+this was the literal instruction applied rather than a verified fix). `04-relay-camp-day.png` now
+shows creature bodies among the trees without an obvious trunk-occlusion the way round 5's did,
+though at this distance/lighting they read as pale, partially-obscured shapes rather than cleanly
+legible individuals — an improvement on the specific defect named, not a fully clean frame.
+
+### 6. Villager-walk-loop — SCOPE ONLY, not implemented
+
+Per the dispatch's own instruction, scoped rather than built:
+
+- `scripts/npc/npc_body.gd` — every villager's body. Currently a `StaticBody3D` collider
+  (`_build_collider()`, lines 79-92) placed once by `stand_at()` (lines 104-112) and never moved
+  again; `_process()` (lines 128-138) only turns the body to face the player once they're within
+  `NOTICE_RANGE`. No movement method exists. A walker would need a new method (e.g.
+  `walk_toward(target: Vector3, speed: float) -> bool`) and a small per-frame driver, roughly 20-30
+  lines. Godot allows moving a `StaticBody3D` every frame, but it is not the physics server's
+  optimized case (static bodies assume a stationary broad-phase); a real, if probably acceptable,
+  cost for 2-3 short loops.
+- `scripts/world/village_npcs.gd::_spawn()` (lines 174-209) — the placer. Reads `position`/
+  `facing_deg` from the spec ONCE at build time (lines 189-195). A patrol would need a new optional
+  field read here (e.g. `patrol: [[x,z],[x,z]]`) and a small controller handed to the NPC body,
+  roughly 15-25 more lines.
+- `data/config/village_npcs.json` — 2-3 villagers would gain a `patrol` array. The file's own
+  established convention (`_comment_positions`) hand-verifies every static position against real
+  collider footprints with a probe tool; a walked SEGMENT needs the same treatment along its whole
+  path, not just its two endpoints, since a straight line between two clear points can still clip a
+  fence corner or another NPC's own footprint partway through — `tools/_probe_civilian_placement.gd`
+  would need a companion pass (or an extension) that samples along the line, not just at it.
+- **Risk to interaction**: `add_prompt()`'s `Interactable` (npc_body.gd lines 65-72) is a local-space
+  child, so it follows the body's transform automatically — low risk there. The real risk is
+  PAUSING movement during an active greeting: `village_npcs.gd`'s `_on_greeted` (line 209's
+  `connect`) fires on interact, and a walking NPC must stop moving and turn to face the player for
+  the conversation, which needs the body to know "a conversation with me is active" — not confirmed
+  this round whether the dialogue/`sequence_director` system already exposes that as a simple query
+  or would need new plumbing. This is the genuine unknown that decides whether this is a half-day
+  task or crosses into new subsystem territory.
+- **Test risk**: not checked this round whether any existing test asserts a fixed world position for
+  one of the villagers being considered for a loop (Bram/Wilhelm/Quarry Foreman were not checked
+  against `tests/`); `tests/smoke_opening.gd` finds Grandpa/starters by label substring only, which a
+  walking OTHER villager would not touch.
+
+**Estimate**: small-to-moderate, roughly 60-100 new lines across the two scripts plus 2-3 JSON
+entries and a probe-tool extension — contingent on how the dialogue-pause question above resolves.
+
+### Frame-by-frame verdict (round 6, boot 2 = shipped)
+
+| frame | cluster ids | verdict |
+|---|---|---|
+| `01-village-edge-day/night` | band1 order 0 + order 1070 | **PASS** (unchanged from round 5) |
+| `02-mill-pond-banks-day/night` | band1 order 6 + order 1071 | **PASS** day, **PASS-weak** night (unchanged) |
+| `03-band1-open-meadow-day` | band1 order 1002 + order 1072 | **IMPROVED, still marginal** — 2/5 pass (was 0/5), small locatable cluster, not clean |
+| `04-relay-camp-day` | band1 order 1073 + order 1074 | **IMPROVED** — no obvious trunk-cut, creatures pale/partial |
+| `04-relay-camp-night` | band1 order 1073 + order 1074 (moved to flank the fire) | **IMPROVED** — firelit pocket now visible, not fully legible |
+| `05-ridge-camp-day` | band4 order 4076 + order 4102 | **PASS** (unchanged from round 5, still the strongest wildlife frame) |
+| `00-village-life-day` | existing VillageNPCs (Bram/Wilhelm/Quarry Foreman targeted) | **IMPROVED** — 1 of 3 targeted NPCs clearly legible, real people now visible against buildings |
+| `06-starter-beside-trainer-day` | real party path | **VISUALLY PASS** (best pairing frame yet), contract FAIL (narrow scale-margin, understood and documented above) |
+
+### Tests, run on the branch tip after all round-6 changes
+
+| test | result |
+|---|---|
+| `tests/smoke_wild_streaming.gd` | **PASS** |
+| `tests/smoke_catching.gd` | **PASS** |
+| `tests/smoke_opening.gd` | **PASS** — "opening: OK — talked, chose, named, and the creature is in the party." (run because the dispatch flagged "village.json touched"; in fact only the capture tool's own aim point changed, `village_npcs.json` was deliberately left untouched — see section 2 above) |
+
+### Boot budget
+
+Two boots, as budgeted. Boot 1 applied every round-6 fix in one pass and surfaced two real problems
+(the pairing slope, 03's remaining distance problem) by inspecting the actual frames rather than
+trusting the printed contract alone. Boot 2 fixed both and is the shipped `round6/` evidence.
+
+### Recommended next step
+
+1. Pairing frame: either shrink the creature's declared `footprint_allowance`/size band for this one
+   shot's bbox check, or widen `PAIR_MAX_H` slightly, or narrow the reroll sweep's step size — the
+   picture is already right, only the automated contract needs a way to certify it.
+2. `03-band1-open-meadow`: the pipwing pair (small, airborne) may need its own, smaller min-height
+   floor, the way round 5 diagnosed for the mill-pond/ridge-camp species — 0.08 may simply be too
+   strict for a bird-scale creature at any reasonable travel-shot distance.
+3. Night lighting generally: worth the moon-angle investigation this round explicitly deferred —
+   `01`/`02`'s night frames have not improved across three rounds now.
+4. Village-life: crop/inspect at 3x (as the round-5 judge did) to confirm whether Wilhelm and the
+   Quarry Foreman are actually present-but-small in this frame, or genuinely out of shot.
