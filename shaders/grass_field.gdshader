@@ -153,6 +153,17 @@ uniform float clearing_strength : hint_range(0.0, 1.0) = 0.0;
 uniform float clearing_floor : hint_range(0.0, 1.0) = 0.78;
 uniform float clearing_shorten : hint_range(0.0, 1.0) = 0.45;
 
+// VP2 MESH LOD. Tiles that can only be seen from `lod_far_m` and beyond carry a
+// tuft with its last blades missing (`grass_field.gd::_grass_lod`). A cell
+// walking in from a far tile to a nearer one gains those blades, so they are
+// grown in here over `lod_band_m` metres of approach, per blade, rather than
+// appearing at the tile edge. A blade whose UV2.x (blade id / blades) is at or
+// past `lod_far_blade_frac` is one the far mesh does not have. Defaults are
+// "no LOD": the distance is unreachable and the fraction above any blade id.
+uniform float lod_far_m = 1.0e9;
+uniform float lod_far_blade_frac = 2.0;
+uniform float lod_band_m = 6.0;
+
 // Which terrain textures grass refuses to grow on, as a bitmask over base
 // texture id. `terrain_playground.json`'s texture list is
 // 0 grass, 1 soil/verge, 2 rock, 3 path, 4 damp, 5 forest floor -- so the
@@ -458,6 +469,12 @@ void vertex() {
 		// And shorter while its lattice layer is still arriving, which is the
 		// only reason a blade's height changes as the player walks now.
 		h *= item_presence;
+		// VP2: a blade the far LOD mesh lacks grows in as the player closes on
+		// `lod_far_m`, dithered per blade so the ring does not swap in a band.
+		if (UV2.x >= lod_far_blade_frac - 0.001) {
+			float lod_jit = (hash12(blade_seed * 2.93) - 0.5) * lod_band_m;
+			h *= 1.0 - smoothstep(lod_far_m - lod_band_m, lod_far_m, dist + lod_jit);
+		}
 
 		// Bend. A blade of grass is not a spike: it leans, and each one leans a
 		// different way. Without the per-blade term the whole field renders as

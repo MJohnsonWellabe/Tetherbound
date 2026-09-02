@@ -23,6 +23,20 @@
   "snap": 2.0,
   "_comment_cull_tile": "VP2 (visual parity program). Metres per CULL TILE: the ring is laid out as square tiles, one MultiMesh each with its own AABB, so the renderer frustum-culls the two thirds of the disc a third-person camera is not looking at instead of submitting every tuft every frame -- which is the whole of the 22.5M-primitive / ~10 FPS finding in _comment_enabled_ownerplaytest_20260901 (one MultiMesh, one ring-sized AABB, never outside the frustum). Snapped to a whole multiple of `snap`. 0 = the old single MultiMesh, kept for A/B measurement. Smaller tiles cull tighter but cost a draw call per visible tile; 16m over a 72m ring is ~80 tiles of which roughly a third are visible.",
   "cull_tile_m": 16.0,
+  "_comment_far_cost": "VP2, the rest of the ~10 FPS fix. Tiles only drop what the camera is not pointed at; these three drop what it is pointed at but cannot see, and every one of them leaves the near field (inside fade_start) untouched. Numbers measured with tools/perf_render_stats.gd and recorded in ralph/reports/visual-parity/GROUND/REPORT.md. `far_thin_floor` is the fraction of the base layer's tufts that keep full reach; the rest is split into `far_thin_steps` sub-layers whose reach is spaced across the fade_start..field_radius band, so density ramps down across the same 30m the blades were already shortening over (grass_field.gd::_thin_far -- the same per-item, rank-dithered layer arrival the inner layers use, no shader change). `reach_m` on a tier is where that tier stops being generated at all: a 10cm stone is under a pixel at 25m and a fallen leaf at 40m, so generating them to 72m only to collapse them in the vertex stage was a third of the ring's primitives. `reach_band_m` is how many metres a tier's arrival is spread over. `lod` swaps the tuft MESH by tile distance: past `mid_m` a blade keeps every blade and drops to `mid_segments` (a kink halfway up a dozen-pixel blade is not visible), past `far_m` it also drops to `far_blades` blades, which the shader grows back in over `band_m` as the player closes so the tile swap is a ramp not a pop. `far_bush_m` does the same for the bush tier with every other leaf. ALL TUNABLE; `far_thin_floor` 1.0 / `lod.enabled` false / removing `reach_m` each restore the previous behaviour exactly.",
+  "far_thin_floor": 0.2,
+  "far_thin_steps": 4,
+  "reach_band_m": 6.0,
+  "lod": {
+    "enabled": true,
+    "mid_m": 18.0,
+    "mid_segments": 2,
+    "far_m": 38.0,
+    "far_segments": 2,
+    "far_blades": 4,
+    "band_m": 6.0,
+    "far_bush_m": 38.0
+  },
   "_comment_lattice": "How the nested lattices that carry `centre_bias`'s density gradient are scheduled. A single uniform lattice cannot have a gradient, and the gradient is most of why the near field reads as thick -- 0.62 puts ~78 tufts/m2 at the eye against ~15 at the rim -- so the ring is a base lattice over the whole disc plus a stack of smaller discs each adding the difference. `lattice_layer_ratio` is how much smaller each disc is than the last (1.5 fits the disc law to within a few per cent everywhere the player can see; larger is fewer layers and a coarser fit), `lattice_band` is the fraction of a disc's radius at which it is still fully present so the rest is its growth band, and `lattice_min_radius` is where the stack stops -- below about two metres the ring is under the camera and the tufts there are not in any frame. `lattice_jitter` is how much of its own cell an item may wander: 1.0 fills the cell, which is what makes a lattice read as scatter rather than as rows, and 0 would put every item dead centre and make the grid plainly visible. `lod_dither` is the width in rank of a layer's growth band -- small means each item grows in fast but few are growing at once, large the reverse. It is the only knob here that trades one kind of visible change for another.",
   "lattice_layer_ratio": 1.5,
   "lattice_band": 0.85,
@@ -77,6 +91,7 @@
     "contact_darken": 0.45,
     "stray_chance": 0.05,
     "verge_gain": 0.55,
+    "reach_m": 28.0,
     "ground": [
       "rock",
       "path"
@@ -149,6 +164,7 @@
       "contact_darken": 0.3,
       "sway": 0.05,
       "gust": 0.8,
+      "reach_m": 56.0,
       "ground": [
         "grass",
         "soil"
@@ -179,6 +195,7 @@
       "leaf_serrate": 0.18,
       "leaf_teeth": 3.0,
       "sway": 0.0,
+      "reach_m": 40.0,
       "ground": [
         "forest_floor"
       ]

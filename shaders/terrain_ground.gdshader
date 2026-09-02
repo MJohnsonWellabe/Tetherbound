@@ -129,10 +129,60 @@ uniform float noise2_scale : hint_range(0.001, 1.) = 0.076;	// Used for macro va
 // distance, already computed per-vertex for its own mipmap bias -- reused
 // here rather than adding a second distance metric.
 uniform float aerial_fade_start_m : hint_range(0.0, 400.0) = 45.0;
-uniform float aerial_fade_range_m : hint_range(1.0, 600.0) = 160.0;
+uniform float aerial_fade_range_m : hint_range(1.0, 1200.0) = 160.0;
 uniform float aerial_fade_strength : hint_range(0.0, 1.0) = 0.32;
 uniform float aerial_desaturate : hint_range(0.0, 1.0) = 0.55;
 uniform vec4 aerial_fade_colour : source_color = vec4(0.745, 0.792, 0.808, 1.0);
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// VP2 (visual parity program, 2026-09-02): the ground READ at 5-40m. Three
+// things the blind passes name every round and Terrain3D's stock material
+// cannot express, each behind a strength uniform that ships from
+// terrain_playground.json's `shader` block and is a no-op at 0.
+//
+// GRAIN. Between the near-field carpet and the macro variation there was
+// nothing: one 5m tile repeat with its mips averaged flat, which is the
+// "flat lime, one green value" read. Two octaves of the noise Terrain3D
+// already binds, applied as a value modulation that fades out with distance
+// so it never becomes far speckle.
+//
+// DAMP. The bake paints a `damp` ring (wet_earth) above the waterline; the
+// texture alone reads as a slightly darker tan. Ground that is wet is DARKER
+// and GLOSSIER than the same ground dry -- so the damp weight, recovered
+// bilinearly from the four control texels the material already fetched,
+// darkens the albedo and drops roughness toward a wet sheen. Soft-edged by
+// the same noise so the 2m texel staircase does not show.
+//
+// PATH WEAR. A route is painted `path` with the natural ground as overlay,
+// blend rising toward the edge. Real trodden earth is packed and pale in the
+// middle and darker, damper and grass-invaded at the shoulder. The path
+// weight (same bilinear recovery) drives a shoulder darkening that peaks at
+// the half-blend and leaves the centreline alone, so the road reads pressed
+// into the meadow instead of painted on top of it.
+// ---------------------------------------------------------------------------
+uniform float grain_strength : hint_range(0.0, 1.0) = 0.0;
+uniform float grain_tile_m = 3.7;
+uniform float grain_fade_start_m = 8.0;
+uniform float grain_fade_end_m = 48.0;
+uniform vec3 damp_tint : source_color = vec3(0.604, 0.565, 0.502);
+uniform float damp_strength : hint_range(0.0, 1.0) = 0.0;
+uniform float damp_roughness : hint_range(0.0, 1.0) = 0.35;
+uniform int damp_texture_id = 4;
+uniform vec3 path_shoulder_tint : source_color = vec3(0.66, 0.58, 0.44);
+uniform float path_wear : hint_range(0.0, 1.0) = 0.0;
+uniform int path_texture_id = 3;
+
+// Weight of texture `id` at this fragment: bilinear over the four control
+// texels when the material is bilerping, else the nearest one. The control
+// word carries base id, overlay id and the blend between them.
+float texture_id_weight(uvec4 ctrl, vec4 w, bool bl, int id) {
+	vec4 base_w = vec4(equal(ivec4(ctrl >> uvec4(27u) & uvec4(0x1Fu)), ivec4(id)));
+	vec4 over_w = vec4(equal(ivec4(ctrl >> uvec4(22u) & uvec4(0x1Fu)), ivec4(id)));
+	vec4 blend = vec4(ctrl >> uvec4(14u) & uvec4(0xFFu)) * DIV_255;
+	vec4 per = base_w * (1.0 - blend) + over_w * blend;
+	return bl ? dot(per, w) : per[3];
+}
 // ---------------------------------------------------------------------------
 
 // Varyings & Types
@@ -578,6 +628,32 @@ void fragment() {
 	// Apply PBR
 	ALBEDO = mat.albedo_height.rgb * color_map.rgb * macrov;
 
+	// VP2 grain / damp / path wear. See the VP2 uniform block above.
+	float vp2_noise = 0.5;
+	if (grain_strength > 0.001 || damp_strength > 0.001 || path_wear > 0.001) {
+		vec2 gp = v_vertex.xz / max(grain_tile_m, 0.1);
+		vp2_noise = texture(noise_texture, gp).r * 0.62
+				+ texture(noise_texture, gp * 3.13 + vec2(0.37)).r * 0.38;
+	}
+	if (grain_strength > 0.001) {
+		float grain_t = 1.0 - smoothstep(grain_fade_start_m, grain_fade_end_m, v_vertex_xz_dist);
+		ALBEDO *= 1.0 + (vp2_noise - 0.5) * 2.0 * grain_strength * grain_t;
+	}
+	float damp_w = 0.0;
+	if (damp_strength > 0.001) {
+		damp_w = texture_id_weight(control, weights, bilerp, damp_texture_id);
+		damp_w = smoothstep(0.12, 0.7, damp_w * (0.75 + 0.5 * vp2_noise)) * damp_strength;
+		ALBEDO = mix(ALBEDO, ALBEDO * damp_tint, damp_w);
+	}
+	if (path_wear > 0.001) {
+		float path_w = texture_id_weight(control, weights, bilerp, path_texture_id);
+		// Peaks at the half-blend shoulder, zero on the centreline and off the
+		// path; the noise ragged-edges it so it is not a parallel stripe.
+		float wear_w = (1.0 - abs(path_w * 2.0 - 1.0)) * smoothstep(0.02, 0.3, path_w);
+		wear_w = clamp(wear_w * (0.6 + 0.8 * vp2_noise), 0.0, 1.0) * path_wear;
+		ALBEDO = mix(ALBEDO, ALBEDO * path_shoulder_tint, wear_w);
+	}
+
 	// T1-GROUND-2, Job 2: aerial perspective (see uniform block above for
 	// why this lives here and not in env.fog_density). Desaturate toward
 	// grey first, then mix toward the haze colour -- desaturating alone
@@ -595,7 +671,8 @@ void fragment() {
 		ALBEDO = mix(aerial_desat, aerial_fade_colour.rgb, aerial_t * aerial_fade_strength);
 	}
 
-	ROUGHNESS = roughness;
+	// VP2: wet ground is glossier than dry. `damp_w` is 0 off the damp band.
+	ROUGHNESS = mix(roughness, damp_roughness, damp_w);
 	SPECULAR = 1. - mat.normal_rough.a;
 	// Repack final normal map value.
 	NORMAL_MAP = fma(normalize(mat.normal_rough.xzy), vec3(0.5), vec3(0.5));
