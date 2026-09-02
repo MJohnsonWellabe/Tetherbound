@@ -807,7 +807,7 @@ func test_water_edge_lands_on_the_bank_and_never_in_the_water() -> void:
 	assert_true(placements.size() >= 20, "water_edge placed only %d instances" % placements.size())
 
 	var courses: Dictionary = RULES._water_segments(field)
-	var level := field.water_level()
+	var level: float = field.water_level()
 	var near_stream := false
 	var near_river := false
 	var near_pond := false
@@ -868,7 +868,7 @@ func test_water_segments_carry_reach_and_pond_is_outward() -> void:
 	# the sampler chose correctly, wherever the shore happens to bend.
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 55
-	var level := field.water_level()
+	var level: float = field.water_level()
 	var dry := 0
 	var total_samples := 200
 	for i in total_samples:
