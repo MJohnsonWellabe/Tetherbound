@@ -52,8 +52,14 @@ var _started_ms := 0
 var _nav = null  # stick_navigator.gd; untyped so its methods read as methods
 
 
+## `include_vendors`: Oskar (the creature trader) and Bram (the innkeeper) are
+## commerce-only stops -- nothing downstream of this segment (gathering,
+## hammer, tools, the objective flags) depends on either. Defaulted true so
+## every existing caller's coverage is unchanged; a caller proving something
+## that starts after this segment and has nothing to do with trade (the
+## build/camp/sleep chain, for instance) can pass false to skip them.
 func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
-		camera_rig: Node3D) -> Array[String]:
+		camera_rig: Node3D, include_vendors: bool = true) -> Array[String]:
 	_started_ms = Time.get_ticks_msec()
 	_tree = tree
 	_world = world
@@ -76,23 +82,43 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 		return _failures
 	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick)
 
-	# Mira has already supplied the axe/pick and Orb pattern; Tam supplies the
-	# remaining knife/torch before the Satchel route has everything to assign.
-	# Mira's required opening visit grants the Basic Orb pattern. Tam supplies
-	# the knife and torch that make its fiber cost gatherable; the Foreman's
-	# hammer below also waits on `recipe_orb_basic`.
+	# ORDER-BUG, found running this segment for real (OWNER-0901-PLAYER-SLEEP-V2):
+	# this used to visit only Tam here and then assert `recipe_orb_basic` plus
+	# an axe/pickaxe count -- all three of which are Mira's gifts, not Tam's
+	# (`village_mira_shop_intro` in data/dialogue/village.json is the only place
+	# any of them are granted). Nothing here had visited Mira yet; her own visit
+	# was scheduled far later, after gathering. So this segment -- the ONE real,
+	# continuous, fresh-save proof of the gather/build/sleep chain -- has been
+	# failing at the very first village check since whichever pass moved the
+	# starter tools from Tam onto Mira, and every later beat this segment was
+	# meant to prove (the hammer, gathering, the camp, the bedroll, sleeping)
+	# has gone unexercised by real automated play since. A real player is not
+	# affected -- `village_npcs.json`'s own `greeting_when` gates neither
+	# villager's first-visit branch on the other, so either can be greeted
+	# first -- but this harness asserted an order it never actually walked.
+	# Mira first, matching Tam's own line ("Mira set you up for gathering").
+	if not await _visit_villager("Mira", "shop_panel.gd", 1):
+		return _failures
+	if not _progression_has("recipe_orb_basic"):
+		_fail("Mira's required opening visit left 'recipe_orb_basic' unset; the gift branch is "
+			+ "what the Foreman's hammer and the orb recipe wait on")
+		return _failures
+	for tool_id in ["axe", "pickaxe"]:
+		if int((_game.get("inventory") as RefCounted).call("count", tool_id)) != 1:
+			_fail("Mira's completed dialogue did not leave exactly one %s in the Satchel" % tool_id)
+			return _failures
+	_checkpoint("Mira handed over axe, pickaxe and the Basic Orb pattern through dialogue")
+
 	if not await _visit_villager("Tam", "", 1):
 		return _failures
-	for flag_id in ["tam_tools_given", "recipe_orb_basic"]:
-		if not _progression_has(flag_id):
-			_fail("Mira's required opening visit left '%s' unset; the gift branch is "
-				% flag_id + "what the Foreman's hammer and the orb recipe wait on")
-			return _failures
-	for tool_id in ["axe", "pickaxe", "knife", "torch"]:
+	if not _progression_has("tam_tools_given"):
+		_fail("Tam's required opening visit left 'tam_tools_given' unset")
+		return _failures
+	for tool_id in ["knife", "torch"]:
 		if int((_game.get("inventory") as RefCounted).call("count", tool_id)) != 1:
 			_fail("Tam's completed dialogue did not leave exactly one %s in the Satchel" % tool_id)
 			return _failures
-	_checkpoint("Tam handed over axe, pickaxe, knife and torch through dialogue")
+	_checkpoint("Tam handed over knife and torch through dialogue")
 
 	# The Foreman, and the hammer.
 	#
@@ -108,7 +134,7 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 	#   (camp_hammer_given) comes before any of this segment's work
 	#
 	# `village_npcs.json` gates the Foreman's gift on `recipe_orb_basic`, which
-	# is TAM's second flag, so this has to come after Tam and does.
+	# is MIRA's flag, so this has to come after Mira's own visit above and does.
 	if not await _visit_villager("Quarry Foreman", "", 1):
 		return _failures
 	if int((_game.get("inventory") as RefCounted).call("count", "hammer")) < 1:
@@ -126,13 +152,16 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 	if not await _gather_authored_node("fiber", "knife", "hotbar_3"):
 		return _failures
 
-	# Oskar and Mira each exercise a dialogue -> distinct modal -> B -> world
-	# lifecycle.  Bram is deliberately reopened three times: unlike the two
-	# trainers, his steady-state greeting remains a service and does not turn
-	# the second visit into a battle outside this segment's scope.
-	if not await _visit_villager("Oskar", "swap_panel.gd", 1):
+	if not include_vendors:
+		_checkpoint("tools/gather chain returned world control (vendors skipped by caller)")
 		return _failures
-	if not await _visit_villager("Mira", "shop_panel.gd", 1):
+
+	# Oskar exercises the same dialogue -> distinct modal -> B -> world
+	# lifecycle Mira and the Foreman already did above. Bram is deliberately
+	# reopened three times: unlike the trainers, his steady-state greeting
+	# remains a service and does not turn the second visit into a battle
+	# outside this segment's scope.
+	if not await _visit_villager("Oskar", "swap_panel.gd", 1):
 		return _failures
 	if not await _visit_villager("Bram", "shop_panel.gd", 3):
 		return _failures
@@ -210,7 +239,9 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
 	# Leave an interior through the same open doorway before the next route leg.
 	if door != null:
 		if not await _exit_through(door, npc.global_position):
-			_fail("could not naturally leave %s's building" % who)
+			_fail("could not naturally leave %s's building (player %.1fm from door at %s)" % [
+				who, _player.global_position.distance_to(door.global_position),
+				str(_player.global_position.round())])
 			return false
 	return true
 
@@ -476,9 +507,23 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 	return true
 
 
+## Reproduced twice running this segment for real (OWNER-0901-PLAYER-SLEEP-V2):
+## after Bram's third dialogue/shop cycle, `_prove_movement_resumed()`'s own
+## exploratory nudge (four cardinal directions, whichever moves first) can
+## leave the player off the door's own axis -- behind his counter, say -- and
+## a single straight line from THERE to the door clips the room's furniture
+## the same way `_enter_through`'s own header says an oblique entry clips a
+## 1.6m opening. `_enter_through` never has this problem because it starts
+## from a chosen standoff point on the door's axis; this now regains that same
+## axis (the identical `step` point `_enter_through` walks to) before
+## approaching the door, rather than one direct line from an arbitrary
+## interior position.
 func _exit_through(door: Node3D, inside_target: Vector3) -> bool:
 	var outward := _door_outward(door, inside_target)
-	if not await _walk_toward(door.global_position, 700, 0.65):
+	var step := door.global_position - outward * DOOR_STEP_IN
+	if not await _walk_toward(step, 700, 0.7):
+		return false
+	if not await _walk_toward(door.global_position, 400, 0.65):
 		return false
 	return await _walk_toward(door.global_position + outward * 2.4, 500, 0.7)
 
