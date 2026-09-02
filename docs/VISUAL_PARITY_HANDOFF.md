@@ -464,6 +464,8 @@ structure missing or popping at any stand (the 15–29% pixel diffs are grass/cl
 
 ## 7. Final progress file
 
+**Next agent:** read `docs/VISUAL_NEXT_AGENT_HANDOFF.md` first — it lists what is still short of the vision, the mechanism behind each ceiling, and the working protocol that actually moved rounds.
+
 `docs/VISUAL_PARITY_PROGRESS.md` is the single resume checkpoint for this program. Its pass-status table,
 per-pass commit/pushed SHAs, judge-history section, and "Regressions / unresolved problems" section are
 authoritative — this handoff summarizes and cross-references it but does not supersede it. Where this
