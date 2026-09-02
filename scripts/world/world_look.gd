@@ -567,6 +567,11 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 		# `sky_clouds.gdshader`'s own note -- the night sky's "moon" was reading
 		# as a lens bloom because the disc was two-thirds gradient.
 		["sun_disc_edge", "disc_edge"],
+		# The glow halo's falloff exponent -- see the `sun_glow_falloff`
+		# uniform's own comment in sky_clouds.gdshader for the fixed-24.0
+		# defect this replaces (a halo whose angular width could not be
+		# tuned by any of the neighbouring sun keys above).
+		["sun_glow_falloff", "sun_glow_falloff"],
 		# VP1: cumulus form, shell projection, cirrus layer, horizon haze.
 		["cloud_edge_softness", "edge_softness"], ["cloud_altitude", "cloud_altitude"],
 		["cloud_lit_contrast", "lit_contrast"],

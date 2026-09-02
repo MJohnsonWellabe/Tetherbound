@@ -117,6 +117,18 @@ uniform float sun_glow : hint_range(0.0, 1.0) = 0.35;
 // gradient from centre to rim. See the `disc` line in sky() for why this became
 // a uniform (JUDGE-6: "a soft blurry ellipse with no disc edge").
 uniform float disc_edge : hint_range(0.0, 0.99) = 0.35;
+// The `glow` term's falloff exponent. This used to be a hardcoded `24.0`,
+// which fixes the halo's angular width regardless of `sun_size`/`disc_edge`
+// (those only shape `disc`, the crisp body) or `sun_glow` (which only scales
+// the halo's brightness, not its extent). At exponent E, glow falls to half
+// its peak at cos(theta) = 2^(-1/E), so the halo's full diameter in degrees is
+// `2 * acos(2^(-1/E)) * 180/PI`. E=24.0 (the old constant) works out to about
+// 27.4 degrees across -- roughly 54x the real sun's ~0.5-degree width -- which
+// is what read as a giant white blob instead of a disc with a glow around it.
+// Higher E narrows the halo; e.g. E=200.0 is about 9.5 degrees, E=120.0 about
+// 12.3 degrees. Default kept at the old 24.0 so any preset that does not set
+// this renders exactly as before.
+uniform float sun_glow_falloff : hint_range(4.0, 600.0) = 24.0;
 uniform vec3 sun_colour : source_color = vec3(1.0, 0.96, 0.86);
 
 float hash12(vec2 p) {
@@ -266,7 +278,7 @@ void sky() {
 	// the sun is meant to bloom).
 	float sun_dot = dot(dir, sun_dir);
 	float disc = smoothstep(1.0 - sun_size, 1.0 - sun_size * disc_edge, sun_dot);
-	float glow = pow(clamp(sun_dot, 0.0, 1.0), 24.0) * sun_glow;
+	float glow = pow(clamp(sun_dot, 0.0, 1.0), sun_glow_falloff) * sun_glow;
 	colour += sun_colour * (disc + glow) * LIGHT0_ENERGY;
 
 	COLOR = colour * sky_energy;
