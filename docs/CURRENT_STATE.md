@@ -40,8 +40,15 @@ player-path smoke chain run one test at a time. Classification per the audit bri
 | Village, NPC dialogue, trade | Working | `smoke_gate_b_continuous` reaches "visited the village and came away with tools" |
 | Objective chain after tournament readiness | **Broken (harness-confirmed)** | `smoke_gate_b_continuous` fails: with `tournament_team_ready` and `tournament_training_ready` set, the tracked objective still reads "Gather supplies for your team's camp." instead of advancing to the "Gather wood" beat |
 | Gather route navigation | **Working but rough** | same smoke: the controller could not reach authored wood at (16, −28), stopped 23 m short. Walker or authoring issue; the harness walker is known to fail on village walls |
-| Traversal / South Bridge | **Broken (world)** | player capsule entombed at (7.9, −3.4, 1319); `smoke_traversal` needs the retry to pass; result of this session's run pending |
-| Warrens, Relay, Stronghold, finale | Unable to verify this session (smokes queued) | code and data present and wired (`docs/GAMEPLAY_SYSTEMS.md`); Gate F S04–S10 never passed as a chain |
+| Traversal / South Bridge | **Working in the harness, hole still real** | `smoke_traversal` passed on the first attempt this session (438 s) on the tree carrying the teleport guard; the entombment at (7.9, −3.4, 1319) is the world defect the guard stops mis-scoring, not a fixed one |
+| Burrow Warrens | Working | `smoke_warrens` passes (379 s) |
+| Relay, Stronghold, finale, playground, riding, settings | see the note below | code and data present and wired (`docs/GAMEPLAY_SYSTEMS.md`); Gate F S04–S10 never passed as a chain |
+
+Smoke isolation finding: `smoke_title_new_game` fails whenever an earlier smoke has left a
+real `user://saves/slot_0.json`, because the title then shows the returning-player
+confirmation and the test never answers it. It passed on a clean profile and again once
+the other smokes' saves were moved aside. Smokes that write real saves should use their
+own `user://` subdirectory (most already do) or the title smoke should answer the prompt.
 | Save / load | Working | `test_save_format`, `smoke_save_persistence`, `test_autosave_fallback` green |
 | Day/night | Working in engine | three real-frame probes pass *(reported 2026-09-02)*; owner reported it stuck on hardware — see §3 |
 | Bond milestones, level-up feedback, party cycle, riding, map | Working (unit level) | unit tests green; not exercised by this session's smokes |
