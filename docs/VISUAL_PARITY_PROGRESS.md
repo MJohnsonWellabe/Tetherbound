@@ -212,6 +212,21 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Check-in #18 (12:28 UTC) — CORRIDOR r5 and PLACES r7 judged and merged
+- **CORRIDOR round 5** (16 stations, `fb27f52d`): band4's first `layer_anchors` (copse + rock cluster at station 13).
+  Judge `CORRIDOR/JUDGE-round5.md`: 01–06, 12, 16 solid; 13 borderline (right two-thirds bare); 09 better but no
+  water in frame; 07/08 still unfixed (lane's round 6 in progress); 10/14 weak; 11 white (PLACES). Merged
+  `3be018a6`, re-bake in progress. Round-6 addendum sent 12:34 (13 right side, 09 re-site to the river, 10 relay
+  glimpse, 14 clearing edge cover).
+- **PLACES round 7** (`ed2582f6`): storm slabs +150 m / alpha 0.4, Hall massing +30 % height with a capped distance
+  darken and fog disabled on hall stone, courtyard brazier attenuation 1.4→1.0 / range 27 (the real cause of the
+  black floor), relay walls given an albedo (they never had one), `06-relay-road` stand added, ROUND8-CAMPS-PLAN.
+  Judge `PLACES/JUDGE-round7.md`: **storm band ~30 % → ~3 % of sky at every stand**, relay walls weathered, Hall
+  reads at 400 m; still failing: relay ground pad + colonnade pale, Warrens pale boulder above the mouth + pale
+  right-side panel, Hall flat/unlit up close, sentries not identifiable, courtyard night median 0 on a single frame
+  (flicker ±26 %). Merged `dcd45f99`. Round 8 dispatched 12:35 (those five with pixel-sample proof, then VP5 camps).
+- Ship-to-main: `ralph/VP-PROGRAM` mirror CI running on `dbfec0be`; sweep at 12:48 if green.
+
 ### Owner directive 12:20 UTC — ship to `main` as we go
 The owner overrode the brief's "do not merge": program work goes to `main` continuously. Mechanism (repo
 convention, `ralph/conventions.md` Shipping): `main` is never pushed directly; the program branch tip is mirrored to
