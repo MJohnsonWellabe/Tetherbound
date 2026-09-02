@@ -377,6 +377,22 @@ func _build_corner_guards(world: Node3D, points: PackedVector2Array, gates: Arra
 	# re-deriving to the metre a third time.
 	const POST_HALF := 1.1
 	const POST_SAMPLE_STEP_M := 1.1
+	# OWNER-0902, second measurement. Widening POST_HALF alone did not hold: a
+	# re-test at the SAME corner still jumped out, but landed at world Y≈1.4 —
+	# within centimetres of that corner's own measured collision TOP
+	# (`tools/_diag_corner3.gd` logged world top=1.39 there), not out in open
+	# air past a cleared barrier the way every held panel's landing Y did.
+	# `movement.json`'s 1.35m jump apex, launched from ground around -0.4 to
+	# -1.1 there, cannot reach a fixed world height of 1.39-1.5 by itself —
+	# so this reads as a character-controller edge/step interaction at the
+	# post's own top corner (a convex edge a flat mid-span panel never
+	# presents), not a lateral gap and not plain jump height. Rather than
+	# chase the exact controller mechanic, the corner post's own top is
+	# pushed well past anything a jump-plus-edge-catch could reach: panels
+	# already proved clean across all ~45 of them at ordinary vault_guard_m,
+	# so this margin is added ONLY at corners, not by raising vault_guard_m
+	# file-wide.
+	const CORNER_EXTRA_HEIGHT_M := 3.0
 	var n := points.size()
 	var built := 0
 	for i in n:
@@ -398,7 +414,7 @@ func _build_corner_guards(world: Node3D, points: PackedVector2Array, gates: Arra
 		if is_inf(lowest) or is_inf(highest):
 			continue
 		var bottom := lowest - bury
-		var top := highest + total_height + vault_guard
+		var top := highest + total_height + vault_guard + CORNER_EXTRA_HEIGHT_M
 		var body := StaticBody3D.new()
 		body.name = "FenceCornerGuard_%d" % i
 		var shape := CollisionShape3D.new()
