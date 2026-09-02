@@ -149,17 +149,26 @@ func _run() -> void:
 	_look = _world.get_node_or_null(^"WorldLook")
 	_weather = _world.get_node_or_null(^"WorldWeather")
 
-	var only := ""
+	# `--only=` takes a COMMA-SEPARATED list, not one substring -- found the
+	# hard way this round: a two-station `--only=02-first-bend,06-stone-
+	# root-entry` silently matched NOTHING (the whole joined string was never
+	# a substring of either short station name) and the tool still printed
+	# its normal "written to" summary, which read as success. Matches
+	# `tools/_capture_locations.gd`'s own already-correct parsing.
+	var only: Array[String] = []
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--only="):
-			only = arg.substr(7)
-	if only != "":
-		print("[corridor] --only=%s: re-shooting matching stations only" % only)
+			for piece: String in arg.substr(7).split(",", false):
+				var trimmed := piece.strip_edges()
+				if trimmed != "":
+					only.append(trimmed)
+	if not only.is_empty():
+		print("[corridor] --only=%s: re-shooting matching stations only" % ", ".join(only))
 
 	await _pin("day")
 	for entry: Variant in STATIONS:
 		var shot: Array = entry as Array
-		if only == "" or only in str(shot[0]):
+		if only.is_empty() or _selected(only, str(shot[0])):
 			await _shoot(shot)
 
 	print("")
@@ -168,6 +177,13 @@ func _run() -> void:
 	print("density and silhouette are trustworthy; frame times are not a")
 	print("performance measurement.")
 	quit(0)
+
+
+func _selected(only: Array[String], station_id: String) -> bool:
+	for want: String in only:
+		if want in station_id:
+			return true
+	return false
 
 
 func _pin(time: String) -> void:
