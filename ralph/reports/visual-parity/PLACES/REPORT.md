@@ -160,3 +160,102 @@ Hall branch adds gate-arch voussoirs (11), parapet rubble heaps and a smoke colu
 draw calls at exactly these two stands. The after numbers below say whether that made an already-failing
 budget worse.
 
+## 6. Playability guard — the nine smoke tests
+
+Run headless on the **merged** tree (`godot --headless --path . --script tests/<name>.gd`). Whole suite 1655 s (27 m 35 s); no test crashed or timed out.
+
+| test | exit | result |
+|---|---|---|
+| `smoke_authored_camps` | 0 | PASS |
+| `smoke_traversal` | 1 | **FAIL** — see below |
+| `smoke_playground` | 0 | PASS |
+| `smoke_village_trainer` | 0 | PASS |
+| `smoke_tournament_bracket` | 0 | PASS |
+| `smoke_stronghold` | 0 | PASS |
+| `smoke_relay` | 0 | PASS |
+| `smoke_warrens` | 0 | PASS |
+| `smoke_gate_e_finale` | 0 | PASS |
+
+**Nothing the merged dressing placed blocks a door, path, ring, spawn or bed.** That is the specific
+guard the brief asks about, and it is clean: `smoke_traversal` positively confirms all four village doors
+(`cottage_a`, `cottage_b`, `ranger_station`, `inn`) still read "shut and blocking -> interact -> open and
+clear, room behind it", and `smoke_village_trainer`, `smoke_tournament_bracket`, `smoke_authored_camps`,
+`smoke_stronghold`, `smoke_relay` and `smoke_warrens` all pass on the merged tree — so the tournament
+ring, the camp rest points (including band4's newly added `creature_bed`) and the Hall/Warrens/Relay
+spawns are all still reachable. No prop needed moving.
+
+### The one failure, verbatim
+
+```
+  the South Bridge, locked:   reached +6348.4m past the gap
+  the South Bridge, unlocked: reached +22.7m past the gap
+
+traversal FAIL: crossed the South Bridge without the key (6348.4m past the gap) — the gate can be walked around
+```
+
+**This is not caused by either merged branch, and it is not a prop-blocking defect.** It is the inverse:
+a barrier that fails to block. Evidence for the attribution:
+
+- The South Bridge gate is authored in `data/config/terrain_playground.json`, `data/config/opening.json`
+  and `data/config/map_landmarks.json`. **The merge touches none of them** (`git diff --name-only
+  e3aba7d7..HEAD` lists only the 10 code/config files in §1). The only `south_bridge` string anywhere in
+  the merged diff is a `_why` prose field whose `§` was re-encoded as `§` — a JSON escaping change
+  with no functional effect.
+- The village branch's boundary work is the *village fence*, a different barrier, and the same test run
+  shows the two barriers it does own passing: the Sigil Gate seals at every one of its eight probed
+  bearings (`locked ... reached -0.5m past the gate` at 0/±3/±6 m off centre, both directions) and opens
+  correctly when unlocked (+22.4 m / +20.7 m); the Old Mill Crossing likewise (locked -8.0 m, unlocked
+  +23.6 m).
+
+It is, however, the **same class of defect** as owner playtest 2026-09-01 item 5 ("I can still jump it
+some places") — a keyed barrier walkable around — now reproduced by an automated probe at a different
+crossing. There is an existing branch `origin/ralph/SOUTH-BRIDGE-FAINTED-PARTY` in this area. Flagged for
+the program coordinator to route; it is outside PLACES' file ownership.
+
+Two `NOTE:` lines in the same run, also pre-existing and explicitly owned elsewhere by the test's own
+text ("SPINE-LAYOUT owns re-aiming the trail at it"): route `spine` enters the south_bridge gully 8.4 m
+off that crossing's road, and `shortcuts:quarry_haul_road` enters it 238.0 m off.
+
+## 7. After frames
+
+`ralph/reports/visual-parity/PLACES/round1/locations/` — captured on the merged tree.
+
+**Read these with one caveat, stated plainly: the before and after frames are NOT resolution-matched.**
+Before is 1280x720 at full settle; after is **960x540 with halved settle waits and MSAA/SSAA disabled**,
+because the round's time budget required `VP_FAST=1` (`tools/vp_capture.sh`, taken from the program
+branch, whose own header says "Use for quick local loops, not for evidence that ships"). Judge the after
+frames for *what changed in the world* — Hall stone weathering and moss, cloth banners, the gate arch and
+portcullis, ivy density, the third village gate, the village and camp dressing — and **not** for
+sharpness, aliasing or fine grain, which the capture mode alone accounts for. A resolution-matched
+re-render is the first item of round 2.
+
+Captured (36 frames): all eight sites at every day stand, plus night at `01-village` (6) and
+`05-relay-camp` (3). **Missing:** the night pass at `08-ridge-camp` and `10-stronghold` (3 each), and the
+`survey`/`ground` sets, contact sheets and **after-perf** — the round hit its hard time budget while the
+`locations` stage was still running. The stronghold night frame is the notable gap, because
+`stronghold.json`'s new `exterior_conduit_energy` 0.45 exists precisely to fix a night/dusk blow-out.
+
+## 8. Unresolved, and the recommended next step
+
+1. **After-perf was not captured.** Before is `hall_approach` 4331 / `village_high` 4376 draw calls, and
+   `hall_approach` already breaches the ≤4000 budget on the baseline. The merged code adds ~30 placed
+   village objects plus 11 gate voussoirs, parapet rubble and a smoke column at exactly those stands, so
+   the after number could be materially worse and is currently unknown. **This is the single highest
+   priority for round 2** — run it before any judging of dressing density.
+2. **Re-render before+after matched.** Both at 1280x720 full settle, including the missing night frames.
+3. **`smoke_traversal` FAIL at the South Bridge** — pre-existing, outside PLACES ownership (§6). Needs
+   routing, possibly to `origin/ralph/SOUTH-BRIDGE-FAINTED-PARTY`.
+4. **`survey.gd` FAIL: `05-spawn-low-sun` renders as a flat single colour (spread 0.0000)** — reproduces
+   on the unmerged baseline, so pre-existing. Low-sun/sky, VP1 SKY lane, not PLACES.
+5. **34 `main` commits are missing from the program branch**, and three of them land squarely in VP5:
+   `OWNER-0902-VILLAGE-POPULATION-REGRESSION` ("cut the village's actual headcount"),
+   `OWNER-0902-VILLAGE-READABILITY` (Grandpa's-house path clip, Mira's shop sign) and
+   `OWNER-0902-VILLAGE-GATE-REGRESSION` (corner-guard height/overlap against jump-escapes). The merged
+   vp-village branch independently adds a third gate and re-authors the boundary polygon. **Two efforts
+   have been fixing the same owner findings in parallel and they have not been reconciled.** Merging
+   `main` is the program coordinator's call and would change what these before-frames mean, so this lane
+   did not do it. It should be settled before round 2 dresses anything further.
+6. **The stale-bake trap will recur for every lane** (§4). Bake in the environment recipe or gate in CI.
+
+**Recommended next step:** do not add dressing in round 2. Run the resolution-matched re-render and the
+after-perf first, reconcile item 5, and judge density from frames that are comparable.
