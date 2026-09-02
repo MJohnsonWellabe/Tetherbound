@@ -72,9 +72,17 @@ Environment notes for the next session (all verified 2026-09-01):
 | HALL | VP8 + VP7 | `claude/vp-hall` | session_01FvtyLa4Y6Kvib2fU8G84vM |
 | WARRENS | VP6 | `claude/vp-warrens` | session_01XLcXZC6QjZV4mRn8rKC7Lk |
 
-The coordinator merges lane branches into the program branch in pass order, re-bakes the scatter
-after any VEG/GROUND merge, and re-runs the perf proxy + playability guard on the merged tree.
-Lanes never commit `data/scatter/**`.
+**Wrapped 2026-09-02 01:30 UTC by owner directive ("they're burning my usage").** All six Fable
+lane sessions were interrupted and archived. What survived: code/config on `claude/vp-ground`
+(24769eff: tiles A/B tile=0 measurement 31.67M primitives at band1_open, far_cover/grass shader edits),
+`claude/vp-veg` (d6c0fe55), `claude/vp-village` (8d738af0), `claude/vp-hall` (992fbec7). No lane pushed
+a single frame. SKY and WARRENS pushed nothing. Lane-branch code is reviewed and cherry-picked by the
+coordinator, never merged blind.
+
+**Operating model from here:** the coordinator (this session) judges and plans; rendering runs serially
+on the coordinator's box; the code-blind judge is a cheap Sonnet subagent inside this session; remote
+Sonnet coder sessions are spawned only for bounded, well-specified rounds when wall-clock parallelism
+is worth their setup cost.
 
 ## Performance measurements
 
