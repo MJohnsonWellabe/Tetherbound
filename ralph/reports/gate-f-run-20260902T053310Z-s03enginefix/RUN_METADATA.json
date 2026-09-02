@@ -1,0 +1,22 @@
+{
+  "run_id": "gate-f-run-20260902T053310Z-s03enginefix",
+  "purpose": "S03 re-run verifying the _find_entity species/ally targeting fix (operator_harness.gd) that stopped move_to_entity('bramblebun')/interact_with resolving the player's own deployed ally creature instead of a wild one, per ralph/reports/FINDING-S03-ATTEMPT7-TRACKAIM-REVIVE-WALL-2026-09-02.md section 4 and FINDING-S03-ATTEMPT9-REVIVE-GRANT-CONFIRMED-2026-09-02.md section 2.2. Entry save is the confirmed-fresh S02-exit.json carried over from ralph/reports/gate-f-run-20260901T220548Z-s03fix/S02 (post 2->10 Revive-grant raise), copied in rather than re-run, since S02 itself is unaffected by this fix.",
+  "candidate_sha": "64c198e8dff2879472daa9e7a18a49aeecea99ef",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "candidate_note": "origin/main merged in, plus operator_harness.gd::_find_entity's species-match restricted to _poi_kind=='wild' so a species_id match can never resolve the player's own AllyCreature body.",
+  "freeze_record_note": "Operator-authored, following the same precedent gate-f-run-20260901T220548Z-s03fix set for this branch's own verification runs.",
+  "godot_version": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "path": "/root/.cache/tetherbound-art/godot",
+    "source": "downloaded directly from the official godotengine/godot 4.7-stable linux x86_64 release for this session"
+  },
+  "lanes": {
+    "logic": { "display_server": "headless", "renderer": "none" }
+  },
+  "resolution": [1920, 1080],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S02-exit.json carried over from gate-f-run-20260901T220548Z-s03fix/S02, S03 runs fresh against it",
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}

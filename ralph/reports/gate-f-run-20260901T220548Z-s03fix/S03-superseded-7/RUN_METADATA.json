@@ -1,0 +1,463 @@
+{
+  "blocked": "",
+  "capture_available": false,
+  "capture_lane": "S03C",
+  "capture_preflight": {
+    "allow_no_capture": false,
+    "boot_cost_s": 0.48,
+    "capture_available": false,
+    "capture_lane": "S03C",
+    "capture_requested": false,
+    "cost_rechecks": 379,
+    "delegated_captures": 7,
+    "display_server": "headless",
+    "evidence_lane": "logic",
+    "freeze_record": {
+      "claim": "headless",
+      "from": "ralph/reports/gate-f-run-20260901T220548Z-s03fix/RUN_METADATA.json",
+      "key": "lanes.logic.display_server",
+      "lane": "logic"
+    },
+    "measured_frame_cost_s": 0.005935,
+    "measured_frame_cost_s_in_scene": 0.016785,
+    "planned_captures": 0,
+    "predicted_frames": 216233,
+    "predicted_segment_cost_s": 1283.2,
+    "predicted_segment_cost_s_in_scene": 1338.6,
+    "record_baseline_hz": 0.0,
+    "reprices": [
+      {
+        "at": "boot:title",
+        "budget_remaining_s": 14399.3,
+        "frame_cost_s": 0.006522,
+        "frames_remaining": 216200,
+        "predicted_remaining_s": 1410.5,
+        "step_index": 3,
+        "wall_spent_s": 0.7,
+        "was_frame_cost_s": 0.005935
+      },
+      {
+        "armed": "in-play sample over budget: 719862 s predicted against 14000 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 13999.6,
+        "frame_cost_s": 3.33018,
+        "frames_remaining": 216163,
+        "observed_window_s": 3.33018,
+        "predicted_remaining_s": 719861.7,
+        "samples": 1,
+        "step_index": 8,
+        "wall_spent_s": 400.4,
+        "was_frame_cost_s": 0.006522
+      },
+      {
+        "armed": "in-play sample over budget: 361727 s predicted against 13998 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+        "at": "in-play",
+        "budget_remaining_s": 13997.6,
+        "frame_cost_s": 1.673399,
+        "frames_remaining": 216163,
+        "observed_window_s": 0.016618,
+        "predicted_remaining_s": 361726.9,
+        "samples": 2,
+        "step_index": 8,
+        "wall_spent_s": 402.4,
+        "was_frame_cost_s": 3.33018
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13995.6,
+        "frame_cost_s": 0.016618,
+        "frames_remaining": 216163,
+        "observed_window_s": 0.016605,
+        "predicted_remaining_s": 3592.2,
+        "samples": 3,
+        "step_index": 8,
+        "wall_spent_s": 404.4,
+        "was_frame_cost_s": 1.673399
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13712.2,
+        "frame_cost_s": 0.022117,
+        "frames_remaining": 174788,
+        "observed_window_s": 0.033599,
+        "predicted_remaining_s": 3865.8,
+        "samples": 9,
+        "step_index": 76,
+        "wall_spent_s": 687.8,
+        "was_frame_cost_s": 0.019943
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13391.9,
+        "frame_cost_s": 0.034921,
+        "frames_remaining": 70205,
+        "observed_window_s": 0.069409,
+        "predicted_remaining_s": 2451.6,
+        "samples": 9,
+        "step_index": 280,
+        "wall_spent_s": 1008.1,
+        "was_frame_cost_s": 0.022806
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13389.9,
+        "frame_cost_s": 0.017226,
+        "frames_remaining": 70205,
+        "observed_window_s": 0.016553,
+        "predicted_remaining_s": 1209.3,
+        "samples": 9,
+        "step_index": 280,
+        "wall_spent_s": 1010.1,
+        "was_frame_cost_s": 0.034921
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13384.7,
+        "frame_cost_s": 0.034921,
+        "frames_remaining": 67005,
+        "observed_window_s": 0.043311,
+        "predicted_remaining_s": 2339.9,
+        "samples": 9,
+        "step_index": 283,
+        "wall_spent_s": 1015.3,
+        "was_frame_cost_s": 0.017226
+      },
+      {
+        "at": "in-play",
+        "budget_remaining_s": 13300.2,
+        "frame_cost_s": 0.016757,
+        "frames_remaining": 22238,
+        "observed_window_s": 0.016757,
+        "predicted_remaining_s": 372.6,
+        "samples": 9,
+        "step_index": 325,
+        "wall_spent_s": 1099.8,
+        "was_frame_cost_s": 0.042707
+      }
+    ],
+    "verdict": "not required",
+    "why": "segment declares no captures and no continuous record"
+  },
+  "capture_requested": false,
+  "clocks": {
+    "cost_gate_and_disk_gate": "wall (they are questions about the box)",
+    "duration_ms": "wall (a boot/save/load cost is a wall-clock fact)",
+    "events_jsonl_t": "play",
+    "frames_manifest_t": "play",
+    "play_seconds_elapsed": 923.27,
+    "route_csv_t": "play (Engine.get_physics_frames() / physics_ticks_per_second)",
+    "route_csv_wall": "wall datetime, so the two clocks can be lined up",
+    "trace_hz_and_record_hz": "play seconds",
+    "wall_seconds_elapsed": 1338.25
+  },
+  "config_flags": {
+    "art.json": {
+      "environment.adjustment_enabled": true,
+      "environment.fog_enabled": true,
+      "environment.ssao_enabled": true,
+      "times.dawn.environment.adjustment_enabled": true,
+      "times.night.environment.adjustment_enabled": true,
+      "villager_farmer.hair.visible": true,
+      "villager_ranger.hair.visible": true,
+      "villager_smith.hair.visible": true
+    },
+    "audio.json": {
+      "music.tracks.combat.loop": true,
+      "music.tracks.exploration.loop": true,
+      "music.tracks.release.loop": true,
+      "music.tracks.village.loop": true,
+      "music.tracks.warden.loop": true
+    },
+    "burrow_warrens.json": {
+      "interior_rock.enabled": true,
+      "interior_structure.corners": true,
+      "interior_structure.course": true,
+      "interior_structure.enabled": true,
+      "interior_structure.ragged": true,
+      "interior_structure.reveals": true,
+      "interior_structure.ribs": true
+    },
+    "chapter_rewards.json": {
+      "invariants.every_tm_is_obtainable": true,
+      "invariants.no_orphan_materials": true
+    },
+    "combat.json": {
+      "impact.enabled": true,
+      "telegraph.enabled": true
+    },
+    "creature_condition.json": {
+      "rest.clear_on_faint": true
+    },
+    "grass_field.json": {
+      "enabled": false,
+      "far_cover.enabled": true,
+      "stones.enabled": true
+    },
+    "meadow_healing.json": {
+      "barriers.enabled": true,
+      "dead_ground.enabled": true,
+      "patrols.enabled": true,
+      "tether_lights.enabled": true,
+      "vegetation.enabled": true
+    },
+    "movement.json": {
+      "camera.invert_y": false,
+      "torch.auto_at_night": true,
+      "torch.shadows": false,
+      "unstick.enabled": true
+    },
+    "performance.json": {
+      "debug_overlay_on_boot": false,
+      "scatter_lod_ranges": false
+    },
+    "pickup_glow.json": {
+      "enabled": true
+    },
+    "spawn_tables.json": {
+      "roll_new_worlds": false
+    },
+    "stronghold.json": {
+      "approach_drain.enabled": true,
+      "interior_structure.corners": true,
+      "interior_structure.course": true,
+      "interior_structure.enabled": true,
+      "interior_structure.ragged": false,
+      "interior_structure.reveals": true,
+      "interior_structure.ribs": true,
+      "machine.placeholder": false
+    },
+    "terrain_playground.json": {
+      "river.failsafe": true,
+      "shader.enable_macro_variation": true
+    },
+    "tether_relay.json": {
+      "dead_ground.enabled": true
+    },
+    "vegetation.json": {
+      "layers.bushes.collides": false,
+      "layers.deadfall.collides": false,
+      "layers.drygrass.casts_shadow": false,
+      "layers.drygrass.cleared_by_clearings": false,
+      "layers.drygrass.collides": false,
+      "layers.flowers.casts_shadow": false,
+      "layers.flowers.cleared_by_clearings": false,
+      "layers.flowers.collides": false,
+      "layers.grass.casts_shadow": false,
+      "layers.grass.cleared_by_clearings": false,
+      "layers.grass.collides": false,
+      "layers.groundmat.casts_shadow": false,
+      "layers.groundmat.cleared_by_clearings": false,
+      "layers.groundmat.collides": false,
+      "layers.grove.collides": true,
+      "layers.path_stones.align_to_slope": true,
+      "layers.path_stones.casts_shadow": true,
+      "layers.path_stones.cleared_by_clearings": false,
+      "layers.path_stones.collides": false,
+      "layers.path_stones.grows_on_paths": true,
+      "layers.rocks.align_to_slope": true,
+      "layers.rocks.collides": true,
+      "layers.saplings.collides": true,
+      "layers.trees.collides": true
+    },
+    "water.json": {
+      "dressing.boulders.collides": true,
+      "dressing.stones.collides": false,
+      "jetty.railing": true
+    },
+    "weather.json": {
+      "presets.clear.rain": false,
+      "presets.cloudy.rain": false,
+      "presets.fog.rain": false,
+      "presets.rain.rain": true
+    }
+  },
+  "config_flags_off": [
+    "grass_field.json:enabled",
+    "movement.json:camera.invert_y",
+    "movement.json:torch.shadows",
+    "performance.json:debug_overlay_on_boot",
+    "performance.json:scatter_lod_ranges",
+    "spawn_tables.json:roll_new_worlds",
+    "stronghold.json:interior_structure.ragged",
+    "stronghold.json:machine.placeholder",
+    "vegetation.json:layers.bushes.collides",
+    "vegetation.json:layers.deadfall.collides",
+    "vegetation.json:layers.drygrass.casts_shadow",
+    "vegetation.json:layers.drygrass.cleared_by_clearings",
+    "vegetation.json:layers.drygrass.collides",
+    "vegetation.json:layers.flowers.casts_shadow",
+    "vegetation.json:layers.flowers.cleared_by_clearings",
+    "vegetation.json:layers.flowers.collides",
+    "vegetation.json:layers.grass.casts_shadow",
+    "vegetation.json:layers.grass.cleared_by_clearings",
+    "vegetation.json:layers.grass.collides",
+    "vegetation.json:layers.groundmat.casts_shadow",
+    "vegetation.json:layers.groundmat.cleared_by_clearings",
+    "vegetation.json:layers.groundmat.collides",
+    "vegetation.json:layers.path_stones.cleared_by_clearings",
+    "vegetation.json:layers.path_stones.collides",
+    "water.json:dressing.stones.collides",
+    "weather.json:presets.clear.rain",
+    "weather.json:presets.cloudy.rain",
+    "weather.json:presets.fog.rain"
+  ],
+  "cost_reprices": [
+    {
+      "at": "boot:title",
+      "budget_remaining_s": 14399.3,
+      "frame_cost_s": 0.006522,
+      "frames_remaining": 216200,
+      "predicted_remaining_s": 1410.5,
+      "step_index": 3,
+      "wall_spent_s": 0.7,
+      "was_frame_cost_s": 0.005935
+    },
+    {
+      "armed": "in-play sample over budget: 719862 s predicted against 14000 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+      "at": "in-play",
+      "budget_remaining_s": 13999.6,
+      "frame_cost_s": 3.33018,
+      "frames_remaining": 216163,
+      "observed_window_s": 3.33018,
+      "predicted_remaining_s": 719861.7,
+      "samples": 1,
+      "step_index": 8,
+      "wall_spent_s": 400.4,
+      "was_frame_cost_s": 0.006522
+    },
+    {
+      "armed": "in-play sample over budget: 361727 s predicted against 13998 s left. Armed, not blocked -- an in-play price is an average over a window and a scene stand-up inside one is a construction, not a per-frame cost. The next window decides.",
+      "at": "in-play",
+      "budget_remaining_s": 13997.6,
+      "frame_cost_s": 1.673399,
+      "frames_remaining": 216163,
+      "observed_window_s": 0.016618,
+      "predicted_remaining_s": 361726.9,
+      "samples": 2,
+      "step_index": 8,
+      "wall_spent_s": 402.4,
+      "was_frame_cost_s": 3.33018
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13995.6,
+      "frame_cost_s": 0.016618,
+      "frames_remaining": 216163,
+      "observed_window_s": 0.016605,
+      "predicted_remaining_s": 3592.2,
+      "samples": 3,
+      "step_index": 8,
+      "wall_spent_s": 404.4,
+      "was_frame_cost_s": 1.673399
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13712.2,
+      "frame_cost_s": 0.022117,
+      "frames_remaining": 174788,
+      "observed_window_s": 0.033599,
+      "predicted_remaining_s": 3865.8,
+      "samples": 9,
+      "step_index": 76,
+      "wall_spent_s": 687.8,
+      "was_frame_cost_s": 0.019943
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13391.9,
+      "frame_cost_s": 0.034921,
+      "frames_remaining": 70205,
+      "observed_window_s": 0.069409,
+      "predicted_remaining_s": 2451.6,
+      "samples": 9,
+      "step_index": 280,
+      "wall_spent_s": 1008.1,
+      "was_frame_cost_s": 0.022806
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13389.9,
+      "frame_cost_s": 0.017226,
+      "frames_remaining": 70205,
+      "observed_window_s": 0.016553,
+      "predicted_remaining_s": 1209.3,
+      "samples": 9,
+      "step_index": 280,
+      "wall_spent_s": 1010.1,
+      "was_frame_cost_s": 0.034921
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13384.7,
+      "frame_cost_s": 0.034921,
+      "frames_remaining": 67005,
+      "observed_window_s": 0.043311,
+      "predicted_remaining_s": 2339.9,
+      "samples": 9,
+      "step_index": 283,
+      "wall_spent_s": 1015.3,
+      "was_frame_cost_s": 0.017226
+    },
+    {
+      "at": "in-play",
+      "budget_remaining_s": 13300.2,
+      "frame_cost_s": 0.016757,
+      "frames_remaining": 22238,
+      "observed_window_s": 0.016757,
+      "predicted_remaining_s": 372.6,
+      "samples": 9,
+      "step_index": 325,
+      "wall_spent_s": 1099.8,
+      "was_frame_cost_s": 0.042707
+    }
+  ],
+  "delegated_captures": [
+    "GF-18-MAP-01",
+    "GF-03-VILLAGE-02",
+    "GF-14-COMBAT-02",
+    "GF-19-UI-10",
+    "GF-20-NIGHT-01",
+    "GF-20-NIGHT-02",
+    "GF-14-COMBAT-13a"
+  ],
+  "derailed": "",
+  "derailed_at": "",
+  "derails": [],
+  "disk": {
+    "applies": false
+  },
+  "display_server": "headless",
+  "evidence_lane": "logic",
+  "frame_grab_ms": {},
+  "frames_absent": 0,
+  "frames_written": 0,
+  "godot": "4.7-stable (official)",
+  "harness_errors": [],
+  "instrumentation_overhead_note": "not measured in this run (--gatef-mode=overhead measures it)",
+  "measured_frame_cost_s": 0.016785,
+  "owes": [],
+  "planned_captures": 0,
+  "predicted_segment_cost_s": 1338.6,
+  "record_baseline_hz": 0.0,
+  "rendering_driver": "headless",
+  "run_id": "gate-f-run-20260901T220548Z-s03fix",
+  "segment": "S03",
+  "segment_script": "tools/gate_f/segments/S03.json",
+  "sha": "284069f9bf206e3fd95ac0a39577760ae3e3a803",
+  "started_wall": "2026-09-02 02:01:40",
+  "steps_ran": 451,
+  "steps_refused": 0,
+  "steps_total": 451,
+  "trace_hz": 2.0,
+  "trace_rows": 1705,
+  "verdicts": {
+    "DELEGATED": 7,
+    "FAIL": 32,
+    "PASS": 404,
+    "SKIP": 8
+  },
+  "viewport_size": [
+    1920,
+    1920
+  ]
+}

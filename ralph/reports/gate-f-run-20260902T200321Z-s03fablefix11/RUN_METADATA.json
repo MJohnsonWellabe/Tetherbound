@@ -1,0 +1,13 @@
+{
+  "run_id": "gate-f-run-20260902T200321Z-s03fablefix11",
+  "purpose": "Eleventh full S03 re-run: verifies the wait_until poll-cycle fix (c499ac5f) for tournament_team_fed. If this passes, only the pre-existing diagnostic assert, the training-threshold pacing gap, the S03-205 sleep saga (handed to other lanes), and the intermittent S03-108 pathing stall should remain.",
+  "candidate_sha": "c499ac5fd348fd4a11e63af9e1807efdef2c48b3",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "resolution": [1920, 1080],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S02-exit.json carried over from gate-f-run-20260902T161704Z-s03feedfix/S02",
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}

@@ -1,0 +1,13 @@
+{
+  "run_id": "gate-f-run-20260902T150502Z-s03postmerge",
+  "purpose": "First S03 run against main merged forward (b03cdb94, camp-split + rest-visibility + Visual Parity). Establishing a fresh, honest baseline per the coordinator -- prior numbers (38ecd274, a1ba8c98) are superseded.",
+  "candidate_sha": "b8d452f95d6f0126415d9ea38d207d964b1e11f6",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "resolution": [1920, 1080],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S02-exit.json carried over from gate-f-run-20260901T220548Z-s03fix/S02",
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}

@@ -1,0 +1,13 @@
+{
+  "run_id": "gate-f-run-20260902T185617Z-s03fablefix8",
+  "purpose": "Eighth full S03 re-run: verifies close_menu's new retry (max_attempts:3, 8cd59eba) against the feed sequence's flaky first-press shell-close, and checks whether S03-205a's walk arrives cleanly this time.",
+  "candidate_sha": "8cd59eba0e91fe74ab65adcca680de188d5e1514",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "resolution": [1920, 1080],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S02-exit.json carried over from gate-f-run-20260902T161704Z-s03feedfix/S02",
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}

@@ -1,0 +1,13 @@
+{
+  "run_id": "gate-f-run-20260902T161704Z-s03feedfix",
+  "purpose": "Full S03 re-run with the feed-sequence focus_item fix applied. Also checking whether this run's own gather-node RNG clears the materials budget without needing the terrain-tolerance decision.",
+  "candidate_sha": "b563da86ddbd7a6eef2b196056d4e5dcf932cd35",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "resolution": [1920, 1080],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S02-exit.json carried over from gate-f-run-20260901T220548Z-s03fix/S02",
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}
