@@ -2374,7 +2374,8 @@
       "action": "note",
       "args": {
         "text": "Added 2026-09-02, per direct instruction to close every real S03 FAIL rather than record and stop: `tournament_training_ready` (entry.min_level=5, checked against the full five-creature roster) is a REAL, validated threshold -- OWNER-0901-TRAIN-CLARITY-V2/OWNER-0901-TOURNAMENT-LEVEL5 confirmed it with a real headless test suite and a real simulated tournament win, and objectives.json's own authored guidance already tells the player 'Wins are levels. Get your whole team to level 5' -- not a made-up number this segment invents pacing to satisfy. One Bryn fight alone leaves the team at a uniform level 3 (a ~600 XP/creature gap to level 5, progression.gd's xp_to_next curve). `combat_manager.gd::_award_victory()` pays the active pilot the FULL award and every OTHER non-fainted party member `party_share` (35%) of it on every win -- so a wild fight anywhere trains the whole team at once, not just whoever is piloting, and rotating the pilot between fights (party_cycle below) spreads the full award around instead of stacking it on one creature. The blocks below engage whichever wild bramblebun the catch loop's own ten-attempt ladder did not need (rank 10+, clamping to whatever is actually left the same way the catch loop's own `rank` already does) and fight it to a real resolution -- `fight_until_resolved`, no `until_flag`, so it costs nothing and reports cleanly even on a round that finds nothing left to fight."
-      }
+      },
+      "expected": "a note event carries this observation into events.jsonl"
     },
     {
       "id": "S03-51n0a",
@@ -2429,7 +2430,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n1a",
@@ -2484,7 +2486,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n2a",
@@ -2539,7 +2542,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n3a",
@@ -2594,7 +2598,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n4a",
@@ -2649,7 +2654,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n5a",
@@ -2704,7 +2710,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n6a",
@@ -2759,7 +2766,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n7a",
@@ -2814,7 +2822,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n8a",
@@ -2869,7 +2878,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n9a",
@@ -2924,7 +2934,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n10a",
@@ -2979,7 +2990,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n11a",
@@ -3034,7 +3046,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n12a",
@@ -3089,7 +3102,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n13a",
@@ -3144,7 +3158,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n14a",
@@ -3199,7 +3214,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n15a",
@@ -3254,7 +3270,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n16a",
@@ -3309,7 +3326,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n17a",
@@ -3364,7 +3382,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n18a",
@@ -3419,7 +3438,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-51n19a",
@@ -3474,7 +3494,8 @@
       "action": "wait",
       "args": {
         "seconds": 1
-      }
+      },
+      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
     },
     {
       "id": "S03-52",
