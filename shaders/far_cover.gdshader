@@ -182,6 +182,22 @@ uniform float drift_contrast : hint_range(0.0, 1.0) = 0.78;
 // flicker, not texture, and under minification it aliases into crawling
 // speckle rather than reading as ground. Full inside half the range, gone at
 // the range.
+// VP2 MACRO. The terrain under this sheet carries Terrain3D's two-scale macro
+// variation (`terrain_playground.json` shader.macro_variation1/2, at
+// noise1_scale/noise2_scale); the sheet used to carry none, so from an
+// overlook the far meadow came out as one uniform pale green laid over ground
+// that was itself patchy. `grass_field.gd::_build_far_cover` pushes the same
+// two colours and scales in, and the sheet multiplies by the same shape --
+// `mix(colour, white, noise)` twice -- over its own noise field. The noise is
+// not Terrain3D's texture, so the patches are not pixel-identical to the
+// terrain's, but they are the same colours at the same wavelengths, which is
+// what "tracks" means at 100m+.
+uniform vec3 macro_variation1 : source_color = vec3(1.0);
+uniform vec3 macro_variation2 : source_color = vec3(1.0);
+uniform float macro_scale1 = 0.012;
+uniform float macro_scale2 = 0.03;
+uniform float macro_strength : hint_range(0.0, 1.0) = 0.0;
+
 uniform float mottle_scale = 0.34;
 uniform float mottle_strength : hint_range(0.0, 1.0) = 0.7;
 uniform float mottle_value : hint_range(0.0, 1.0) = 0.30;
@@ -401,7 +417,15 @@ void fragment() {
 	// cannot pay back the contrast the blend dilutes; this is the term that
 	// keeps the far ground from coming out smoother than the paint it replaced.
 	float value = 1.0 + (mottle - 0.5) * 2.0 * mottle_value;
-	ALBEDO = tint * mix(vec3(1.0), v_ground_colour, ground_blend) * value;
+	// VP2: the terrain's own macro colours, at the terrain's own wavelengths.
+	vec3 macrov = vec3(1.0);
+	if (macro_strength > 0.001) {
+		float n1 = value_noise(v_world_xz * macro_scale1);
+		float n2 = value_noise(v_world_xz * macro_scale2);
+		macrov = mix(macro_variation1, vec3(1.0), n1) * mix(macro_variation2, vec3(1.0), n2);
+		macrov = mix(vec3(1.0), macrov, macro_strength);
+	}
+	ALBEDO = tint * mix(vec3(1.0), v_ground_colour, ground_blend) * value * macrov;
 	ALPHA = strength * v_ramp * drift;
 	ROUGHNESS = 1.0;
 }
