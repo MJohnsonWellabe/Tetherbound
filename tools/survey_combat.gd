@@ -115,6 +115,21 @@ func _run() -> void:
 		if inventory != null:
 			inventory.call("add", "orb_basic", 15)
 
+		# Pin the survey to the device the owner actually holds. `game_state.gd`
+		# initialises `_last_input_was_gamepad` from `not
+		# Input.get_connected_joypads().is_empty()`, which is true from frame one
+		# on the ROG Ally (an always-connected XInput pad) but false under this
+		# harness's `xvfb-run` display, where no joypad is ever connected -- so
+		# every `input_glyph.gd::icon()` call in these frames fell back to
+		# keyboard/mouse keycaps for a controller-first target platform.
+		# `VISUAL-CENSUS-2026-08-31.md` defect 129 ("keyboard and mouse glyphs in
+		# a controller-first project") read that harness artefact as a
+		# `CLAUDE.md` "controller first" violation in the shipped game; it is
+		# not one -- `tools/_capture_ui_survey.gd::_pin_owner_device()` already
+		# diagnosed and fixed the identical gap for its own captures, this tool
+		# just predates that fix.
+		game.set("_last_input_was_gamepad", true)
+
 	# The M1 debug readout covers a third of the frame and is not part of what a
 	# critic should be looking at. The combat HUD stays: whether the fight is
 	# readable is exactly the question.

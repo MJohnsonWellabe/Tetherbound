@@ -176,7 +176,9 @@ const ORDER: Array[String] = [
 ## MATERIAL VARIANTS note. `13` matches galecrest's own index in `ORDER`
 ## above, so the file sorts next to `13-galecrest.png` / `-shiny.png`.
 const ALPHA_SPECIES := "galecrest"
-const ALPHA_SCALE := 1.2
+## OD-0901-1 (2026-09-01): matches band5_stronghold_approach/spawns.json order
+## 5001's restored 1.5x, the tallest of the three authored Galecrest alphas.
+const ALPHA_SCALE := 1.5
 const ALPHA_INDEX := 13
 
 ## Five species answering the rubric's own example question -- "is the one
@@ -191,8 +193,9 @@ const ALPHA_INDEX := 13
 ##                     fight ALONGSIDE
 ##   tuskroot   2.15m  "the one that comes at you" -- aggressive, evolved,
 ##                     the biome's one evolution line
-##   veridian   2.60m  the legendary, above every other creature on purpose
-##                     (D12: "above all of them")
+##   veridian   3.60m  the legendary, above every other creature on purpose
+##                     (D12: "above all of them"; raised from 2.60m under
+##                     OD-0901-1, see species.json's own _comment_size)
 const LINEUP_SPECIES: Array[String] = ["pipwing", "bramblebun", "terrapup", "tuskroot", "veridian"]
 const LINEUP_X: Array[float] = [-3.6, -1.2, 1.4, 4.0, 6.8]
 const LINEUP_TRAINER_X := -6.0

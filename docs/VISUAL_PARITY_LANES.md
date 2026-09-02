@@ -69,6 +69,14 @@ Software rendering: FPS is meaningless, never quote it. Structural cost is
   "run this capture command into this directory", "run these tests and report". "Coded" is not a
   result; a pushed frame is.
 
+## Faster renders
+
+- **Iteration rounds use fast mode:** `VP_FAST=1 tools/vp_capture.sh <dir> "<ids>"` → 960x540, MSAA off,
+  half the settle frames (the tools take `--fast`). Judges view sheets reduced anyway. Final pass
+  evidence renders without it.
+- **Owner GPU frames:** `tools/vp_capture_windows.ps1` runs the identical capture set on the owner's
+  Windows machine in minutes; the owner pushes the evidence dir to `claude/vp-owner-frames`.
+
 ## The loop, per round
 
 1. Reproduce the current state (before frames). 2. Fix the highest-impact visible problems in

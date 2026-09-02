@@ -348,15 +348,21 @@ const VITALS_HEIGHT := VITALS_SATIETY_ROW_Y + 34.0 + 6.0
 ## `_build_player_health_bar()` and positioned by
 ## `player_health_bar_position()` below, anchored to the true canvas bottom
 ## instead of stacked above `Root/BottomDock` the way the rest of the left
-## column is. `VITALS_HP_ROW_Y`/`VITALS_SATIETY_ROW_Y`/`VITALS_HEIGHT` above
-## are UNTOUCHED on purpose: `vitals_position()` and everything derived from
-## it (`creature_block_position()`, `party_strip_position()`) keep reserving
-## the exact same footprint they always have, so the party strip and the
-## creature panel do not move a pixel. Only `_vitals_cluster`'s own remaining
-## content (buffs, satiety/food) redraws starting from the row the HP row
-## used to occupy, using these two, so its plate does not show an empty gap
-## where HP used to sit.
-const VITALS_FOOD_ONLY_ROW_Y := VITALS_HP_ROW_Y
+## column is.
+##
+## OWNER-0902-HUD-TEAM-MENU (owner playtest 2026-09-02, finding #11: "food
+## bar needs to go down by the health bar"). `vitals_position()` now sits
+## BESIDE `player_health_bar_position()` (see that function's own header),
+## both anchored near the true canvas bottom -- which means the satiety
+## cluster's own row spacing now has to fit the SAME tight, fixed 96px band
+## the health bar always did (`Root/BottomDock`'s own `offset_bottom` in the
+## .tscn), not the roomy column above the roster it used to share. The row
+## gap between the buff chips (0-20 local y) and the satiety row below them
+## used to be 18px (`VITALS_HP_ROW_Y`'s old 38, left over from when this row
+## sat where the HP row used to); tightened to the standard `VITALS_ROW_GAP`
+## (10) to reclaim the 8px that band cannot spare. Nothing about the buff row
+## or the satiety row's own content moves -- only the gap between them.
+const VITALS_FOOD_ONLY_ROW_Y := 20.0 + VITALS_ROW_GAP  ## buff chip bottom (BUFF_CHIP_SIZE, 20) + the standard row gap
 const VITALS_HEIGHT_WITHOUT_HP := VITALS_FOOD_ONLY_ROW_Y + 34.0 + 6.0
 
 ## The extracted HP row's own local geometry -- the same icon/bar/value
@@ -369,6 +375,22 @@ const HEALTH_BAR_CONTENT_HEIGHT := 34.0
 ## bottom edge. Reuses `UITokens.GAP`, the same small-gap token
 ## `PARTY_ACTIVE_GAP` above already borrows, rather than a new number.
 const HEALTH_BAR_BOTTOM_MARGIN := UITokens.GAP
+## OWNER-0902-HUD-TEAM-MENU: the satiety plate's own bottom margin, separate
+## from `HEALTH_BAR_BOTTOM_MARGIN` because the two plates are not the same
+## height -- satiety's (buff row included) is taller, so fitting it inside
+## the same fixed 96px band with the same margin the shorter HP plate uses
+## leaves no room to spare. MEASURED against that band: satiety plate 86
+## (`VITALS_HEIGHT_WITHOUT_HP` 70 + `VITALS_PLATE_OVERHANG` x2) + this
+## margin (6) = 92, four clear px inside the 96px `Root/BottomDock` leaves
+## below it (`smoke_hud_handheld_legibility.gd` checks this against the real
+## rendered dock, not just this arithmetic).
+const BOTTOM_VITALS_MARGIN := 6.0
+## Horizontal gap between the health bar and the satiety bar now that they
+## sit side by side in that same band -- there is no vertical room left to
+## stack them (see `BOTTOM_VITALS_MARGIN`'s own header), but the band has
+## width to spare this far from the central third. Reuses `UITokens.GAP`,
+## the same token `HEALTH_BAR_BOTTOM_MARGIN` already borrows.
+const BOTTOM_VITALS_COLUMN_GAP := UITokens.GAP
 
 const STAMINA_ARC_POS := Vector2(960.0 + 48.0, 540.0 - 160.0 * 0.5) ## centred-right of screen centre
 
@@ -1475,8 +1497,31 @@ static func left_stack_bottom(canvas_height: float) -> float:
 	return canvas_height + BOTTOM_DOCK_TOP_OFFSET - LEFT_STACK_CLEARANCE
 
 
+## OWNER-0902-HUD-TEAM-MENU (owner playtest 2026-09-02, finding #11: "the
+## team menu overruns the food bar. Food bar needs to go down by the health
+## bar."). Used to anchor off `left_stack_bottom()`, in the SAME column the
+## roster (`party_strip_position()`) and the active-creature panel
+## (`creature_block_position()`) stack bottom-up in -- so a tall reveal in
+## that column (the five-row roster, or a creature panel whose content grew)
+## pushed straight down into the satiety bar sitting right underneath it,
+## which is exactly the "overrun" the owner played into. Re-anchored here to
+## sit BESIDE `player_health_bar_position()` instead, both near the true
+## canvas bottom -- off in its own corner the roster column never reaches,
+## and reading as one vitals unit is what the owner actually asked for.
+##
+## Beside, not above: `Root/BottomDock` leaves a fixed 96px band below it
+## regardless of canvas height (see `player_health_bar_position()`'s own
+## header), and that is not enough vertical room for both plates stacked --
+## the satiety plate alone (its buff row included) very nearly fills it on
+## its own (`BOTTOM_VITALS_MARGIN`'s own header has the exact numbers).
+## Sitting side by side instead costs width, which this corner has to spare
+## this far from the central third, not height, which it does not.
 static func vitals_position(canvas_height: float) -> Vector2:
-	return Vector2(CREATURE_BLOCK_X, left_stack_bottom(canvas_height) - VITALS_HEIGHT)
+	var health_pos: Vector2 = player_health_bar_position(canvas_height)
+	var plate_bottom := canvas_height - BOTTOM_VITALS_MARGIN
+	var plate_top := plate_bottom - (VITALS_HEIGHT_WITHOUT_HP + VITALS_PLATE_OVERHANG * 2.0)
+	var x := health_pos.x + VITALS_WIDTH + BOTTOM_VITALS_COLUMN_GAP
+	return Vector2(x, plate_top + VITALS_PLATE_OVERHANG)
 
 
 ## HUD-BACKLOG-20. Independent of `left_stack_bottom()` on purpose -- the
@@ -1485,7 +1530,7 @@ static func vitals_position(canvas_height: float) -> Vector2:
 ## same nominal footprint regardless of X, and this widget sits far enough
 ## left (`CREATURE_BLOCK_X`) that it never shares paint with the dock's own
 ## right-aligned hotbar or centred prompt. So instead of competing for room
-## above the dock the way the roster/creature panel/vitals cluster must, this
+## above the dock the way the roster/creature panel must, this
 ## widget anchors to `Root/BottomDock`'s own OTHER real edge: that Control's
 ## `offset_bottom` (-96 in `playground_hud.tscn`) leaves it always exactly
 ## 96px short of the true canvas bottom, regardless of any transient growth
@@ -1494,17 +1539,25 @@ static func vitals_position(canvas_height: float) -> Vector2:
 ## not assumed). `HEALTH_BAR_BOTTOM_MARGIN` plus this widget's own plate
 ## overhang leaves a comfortable clearance inside that fixed 96px, so this
 ## never needs LEFT_STACK_CLEARANCE-style tuning against dock growth the way
-## `vitals_position()` does.
+## the rest of the column does. `vitals_position()` above now derives its X
+## from this function's result, to sit beside it rather than above it.
 static func player_health_bar_position(canvas_height: float) -> Vector2:
 	var plate_bottom := canvas_height - HEALTH_BAR_BOTTOM_MARGIN
 	var plate_top := plate_bottom - (HEALTH_BAR_CONTENT_HEIGHT + VITALS_PLATE_OVERHANG * 2.0)
 	return Vector2(CREATURE_BLOCK_X, plate_top + VITALS_PLATE_OVERHANG)
 
 
+## OWNER-0902-HUD-TEAM-MENU: used to bottom out against `vitals_position()`,
+## back when satiety shared this column with the roster. Now that satiety has
+## moved down to sit with the health bar (see that function's own header),
+## the active-creature panel has nothing left to clear in this column except
+## `Root/BottomDock` itself, so it bottoms out directly against
+## `left_stack_bottom()` -- the same edge the roster strip below now also
+## measures from.
 static func creature_block_position(canvas_height: float, creature_panel_height: float) -> Vector2:
 	return Vector2(
 		CREATURE_BLOCK_X,
-		vitals_position(canvas_height).y - PARTY_ACTIVE_GAP - creature_panel_height,
+		left_stack_bottom(canvas_height) - creature_panel_height,
 	)
 
 
@@ -1540,10 +1593,16 @@ static func creature_block_position(canvas_height: float, creature_panel_height:
 ##
 ## That second change is what makes the original HUD-POPUP defect impossible
 ## rather than merely avoided. Disjoint rects still both draw; two widgets that
-## are never on screen together cannot composite through each other at all. The
-## vitals cluster is NOT stood down -- HP and satiety are safety information --
-## so the bottom bound below is a real constraint, not a formality, and
-## `test_party_strip_never_overlaps_player_vitals` still holds on geometry.
+## are never on screen together cannot composite through each other at all.
+##
+## OWNER-0902-HUD-TEAM-MENU: the bottom bound used to be the vitals cluster
+## (HP/satiety shared this column back then), which is exactly how a tall
+## reveal ran into the food bar sitting underneath it (owner playtest
+## 2026-09-02, finding #11). `vitals_position()` has since moved satiety down
+## to sit with the health bar, out of this column entirely -- so the strip's
+## real floor is `Root/BottomDock`'s own top edge (`left_stack_bottom()`),
+## the same fixture the creature panel it stands in for already bottoms out
+## against.
 ##
 ## --- the HUD-POPUP reasoning this replaces, kept because it is still why the
 ## --- strip may not simply be drawn over the creature panel:
@@ -1565,11 +1624,11 @@ static func creature_block_position(canvas_height: float, creature_panel_height:
 ## inverse of that rejected option -- it hides the SINGLE-CREATURE PANEL
 ## while the ROSTER is up, which keeps OP21-12's requirement intact.
 static func party_strip_position(canvas_height: float, strip_height: float) -> Vector2:
-	# Bottom-aligned against the vitals cluster rather than top-anchored at
-	# `TOP_SAFE_INSET`: the vitals cluster is the fixture the strip must clear,
-	# and deriving from it means a change to `VITALS_HEIGHT` or to the strip's
-	# own row height can never silently push the two into each other.
-	var bottom: float = vitals_position(canvas_height).y - VITALS_PLATE_OVERHANG - PARTY_ACTIVE_GAP
+	# Bottom-aligned against `Root/BottomDock`'s real top edge rather than
+	# top-anchored at `TOP_SAFE_INSET`: that dock is the fixture the strip
+	# must clear, and deriving from it means a change to the strip's own row
+	# height can never silently push the two into each other.
+	var bottom: float = left_stack_bottom(canvas_height)
 	# ...but never above the top safe inset, which is where the reveal lines up
 	# with the minimap and objective block's own top row.
 	return Vector2(CREATURE_BLOCK_X, maxf(TOP_SAFE_INSET, bottom - strip_height))
@@ -3194,23 +3253,31 @@ func _yield_left_stack_to_combat_hud() -> void:
 		_creature_block.visible = not combat
 	if _party_strip != null:
 		_party_strip.visible = not combat
-	if _vitals_cluster != null:
-		_vitals_cluster.visible = not combat
-	# HUD-BACKLOG-20: the HP row's own widget now, standing down for combat
-	# for the same reason `_vitals_cluster` (which used to include it)
-	# already does -- nothing this shows is about the fight (the human never
-	# fights), and `combat_hud.gd` wants this same bottom-left corner for its
-	# own `AllyPanel`/`PartyStrip`. ALSO standing down whenever the bottom
-	# dock does (`_bottom_dock_should_yield()`) -- unlike `_vitals_cluster`,
-	# this widget's new lower position sits inside `dialogue_panel.gd`'s own
+	# HUD-BACKLOG-20: the HP row's own widget, standing down for combat
+	# for the same reason `_vitals_cluster` does -- nothing this shows is
+	# about the fight (the human never fights), and `combat_hud.gd` wants
+	# this same bottom-left corner for its own `AllyPanel`/`PartyStrip`. ALSO
+	# standing down whenever the bottom dock does (`_bottom_dock_should_yield()`)
+	# -- this widget's lower position sits inside `dialogue_panel.gd`'s own
 	# fixed-bottom-edge box (`smoke_dialogue_clears_the_world_hud.gd` caught
 	# the real overlap), the same reason the hotbar and prompt already yield
-	# to it. Both conditions combine in this one write, run last in
+	# to it.
+	#
+	# OWNER-0902-HUD-TEAM-MENU: `_vitals_cluster` now sits directly beside
+	# this widget instead of up in the roster column (`vitals_position()`'s
+	# own header), so it shares BOTH reasons to stand down, not just combat --
+	# it is exactly as much inside `dialogue_panel.gd`'s box now as the health
+	# bar always was. One shared condition for both, rather than two that
+	# could silently drift apart again.
+	var vitals_visible := not combat and not _bottom_dock_should_yield()
+	if _vitals_cluster != null:
+		_vitals_cluster.visible = vitals_visible
+	# Both conditions combine in this one write, run last in
 	# `_run_frame()`, so this and `_yield_bottom_to_build_menu()` (which runs
 	# earlier and cannot see the combat flag) never fight over the final
 	# value the way a second, independent write would.
 	if _health_bar_cluster != null:
-		_health_bar_cluster.visible = not combat and not _bottom_dock_should_yield()
+		_health_bar_cluster.visible = vitals_visible
 	_yield_creature_block_to_party_strip()
 
 

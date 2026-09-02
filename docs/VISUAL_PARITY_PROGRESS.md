@@ -18,14 +18,14 @@ Passes are `VP0…VP11` (visual passes) — never conflate with gameplay Gate A/
 
 | pass | status | commit SHA | pushed SHA | evidence |
 |---|---|---|---|---|
-| VP-PRE | in progress | — | — | §VP-PRE below |
-| VP0 baseline | pending | — | — | `ralph/reports/visual-parity/VP0-baseline/` |
-| VP1 sky/light | pending | — | — | |
-| VP2 terrain/ground | pending | — | — | |
-| VP3 vegetation | pending | — | — | |
+| VP-PRE | complete (5/5 checks) | f4afc9d9 | f4afc9d9 | §VP-PRE below |
+| VP0 baseline | **complete** (evidence set reduced to village/pond/survey by owner call; other sites' befores are renderable from ca0575b8) | 401d7217 | 401d7217 | `ralph/reports/visual-parity/VP0-baseline/` (locations-1080p/, locations/, JUDGE-village-pond.md), `VP-PRE/` |
+| VP1 sky/light | in progress — first cut rendered (`VP1-3-after/survey/`), round 1 fix list with WORLD | 1ef3878a (first cut) | — | |
+| VP2 terrain/ground | in progress — cull tiles + far thinning + terrain material coded, perf table pending with WORLD | e3aba7d7 | — | |
+| VP3 vegetation | in progress — ecology gate + heroes + water bands + retints coded and baked, unjudged | e3aba7d7 | — | |
 | VP4–VP11 | not started | — | — | |
 
-**Current pass:** VP-PRE. **Next action:** (filled at end of each pass).
+**Current pass:** VP1–VP3 in parallel under the WORLD coordinator; VP5–VP8 render-and-verify under PLACES. **Next action:** at the 02:37 UTC check-in, judge the pushed frames on `claude/vp-world` / `claude/vp-places`, send round-2 fix lists, merge accepted rounds.
 
 ## VP-PRE — environment capability check
 
@@ -79,6 +79,19 @@ lane sessions were interrupted and archived. What survived: code/config on `clau
 a single frame. SKY and WARRENS pushed nothing. Lane-branch code is reviewed and cherry-picked by the
 coordinator, never merged blind.
 
+**Area coordinators (Opus), spawned 2026-09-02 01:46 UTC from e3aba7d7** (owner directive: Opus
+coordinates, Sonnet codes/renders, Fable judges/plans):
+
+| area | passes | branch | session |
+|---|---|---|---|
+| WORLD | VP1 + VP2 + VP3 | `claude/vp-world` | session_01XigbWtMzp7EwN5SqzwLvYB |
+| PLACES | VP5 + VP6 + VP7 + VP8 | `claude/vp-places` | session_0182PYdBscd4KZMdDfwmmu63 |
+| LIFE (Sonnet, direct lane, spawned 05:36) | VP9 first slice: roll_new_worlds on, creature clusters at stands, creature/combat frames | `claude/vp-life` | session_01D9GHSeCLm2kM7uFYjod6TD |
+| CORRIDOR (Sonnet, direct lane, spawned 05:36) | VP4: mid-ground structure along the village→band 2 route via band vegetation anchors | `claude/vp-corridor` | session_01TRE9FUps52WdL4esFFFxK9 |
+
+Round plans are delivered into the coordinator sessions by the program coordinator; each round ends
+with pushed frames + REPORT.md and the session stopping.
+
 **Operating model from here:** the coordinator (this session) judges and plans; rendering runs serially
 on the coordinator's box; the code-blind judge is a cheap Sonnet subagent inside this session; remote
 Sonnet coder sessions are spawned only for bounded, well-specified rounds when wall-clock parallelism
@@ -86,7 +99,29 @@ is worth their setup cost.
 
 ## Performance measurements
 
-(filled per pass; baseline in VP0)
+Tool: `tools/perf_render_stats.gd`, 1280x720, Compatibility, llvmpipe (structural counters only).
+
+| state | view | draw calls | primitives | objects | source |
+|---|---|---|---|---|---|
+| carpet OFF (shipped main) | band1_open | 7366 | 9,250,290 | 6361 | OWNER-0901-PERFORMANCE-LAG-V2 |
+| carpet ON, one MultiMesh (owner's laggy build) | band1_open | 7320 | 31,757,567 | 6315 | OWNER-0901-PERFORMANCE-LAG-V2 |
+| VP0 baseline: carpet ON, cull_tile_m=0 | band1_open | 7409 | 31,672,479 | 6378 | GROUND lane, `GROUND/perf/perf_before_tile0.txt` |
+| VP0 baseline: carpet ON, cull_tile_m=0 | village_high | 2860 | 28,277,296 | 3050 | same |
+| VP2 iteration 0: cull_tile_m=16 + far thinning/reach caps/tile LOD + VEG lod ranges on | band1_open | 8633 | 21,287,781 | 7612 | coordinator 04:23 UTC, settle 120/60/20, `WORLD-coord-fast/perf_render_stats.txt` |
+| same | village_high | 4376 | 18,087,761 | 4474 | same |
+| same | hall_approach | 4335 | 13,219,939 | 4680 | same |
+| VP2 iteration A (superseded before measuring by main's owner-decided density) | — | — | — | — | — |
+| VP2 iteration B: main's shipped density (75k tufts, 4 blades, 25k stones, 6k/6k/15k tiers) + cull tiles 16 m + far thinning/reach/tile LOD + VEG lod ranges (trees 700/grove 800) | band1_open | 8593 | 12,583,284 | 7573 | coordinator 04:52 UTC, `VP2-perf/perf_iterB.txt` |
+| same | village_high | 4408 | 9,386,569 | 4504 | same |
+| same | hall_approach | 4424 | 4,627,194 | 4769 | same |
+| **VP2 iteration C (candidate)**: B + trees/grove/deadfall/rocks lod 420/460/260/220 + cull_tile_m 24 | band1_open | 7839 | 12,217,644 | 6812 | coordinator 05:20 UTC, `VP2-perf/perf_iterC.txt` |
+| same | village_high | 3703 | 9,197,864 | 3852 | same |
+| same | hall_approach | 4270 | 4,634,502 | 4615 | same |
+| iteration C with `scatter_lod_ranges=false` (A/B) | hall_approach | **3975** | 4,201,344 | 4317 | coordinator 05:31 UTC, `VP2-perf/perf_iterC_lodoff.txt` |
+| iteration C with `scatter_lod_ranges=false` (A/B) | band1_open | **7511** | **11,799,910** | 6481 | coordinator 05:48 UTC, `VP2-perf/perf_iterC_lodoff_band1.txt` |
+| **VP2 COST CANDIDATE = iteration C + scatter_lod_ranges=false** (committed) | band1_open / hall_approach | 7511 / 3975 | 11.80M / 4.20M | | meets every §6 proxy budget |
+
+Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw calls ≤ 4000. **Iteration 0 misses both** (21.3M; 4335). **Iteration B: 12.58M / 4424. Iteration C: 12.22M at band1_open (1.8% over the provisional 12.0M and 11% under the 13.69M main ships with grass on), hall_approach 4270 draw calls (7% over the reasoned 4000 ceiling; pre-program baseline at that stand was 4331 after the GROUND+VEG merge, ~2900 before it). A/B showed `scatter_lod_ranges=true` costs +0.4M primitives and +330 draw calls: OFF is the VP2 cost candidate — 11.80M / 7511 at band1_open, 3975 at hall_approach, all inside budget.**
 
 ## Judge history
 
@@ -103,6 +138,60 @@ is worth their setup cost.
 - Also: single broccoli tree silhouette at one scale everywhere; dead tree and boulder assets copy-pasted; flat plastic leaf cards close up; fenced paddocks enclose nothing; NPCs static (village reads populated, not lived-in); mill has no wheel/chute (frame named "wheel" shows none); tournament frame shows no event dressing.
 - Response: (1)+(3) → VP1 (shader rewrite + light/aerial config, drafted); creature frames → added to VP0 via the combat/creature captures, and creature staging near capture stands is a VP9 item; tree variety/leaf cards → VP3; paddocks/tournament/mill dressing → VP5; NPC life → VP9.
 
+### WORLD round 1 (Opus coordinator, `claude/vp-world` @ 0409e726) — coordinator verdict 2026-09-02 04:00 UTC
+Evidence: `ralph/reports/visual-parity/WORLD/round1/` (stands 2×4 times, clock-freeze, before) and the program
+coordinator's fast render of the same tip (`WORLD-coord-fast`, village/pond/survey, 960x540).
+- Fixed and confirmed in frames: cloud form and scale (large cumulus, blue sky), horizon no longer white,
+  village day and night read well (moon disc, lit windows). Root causes found by WORLD: the day clock
+  drifts ~1 in-game hour per 25 real seconds so every pinned capture time walked away during settle
+  (`set_clock_frozen()` added; this was VP1-G0); the sun "blob" was a hard-coded halo exponent (27° halo),
+  now `sun_glow_falloff`.
+- Still open → round 2 sent 04:12: (1) canopies still mint-white — the runtime derived-texture binding
+  failed twice; round 2 bakes the desaturated leaf sheets to derived PNG assets and uses the `retexture`
+  swap; (2) sun halo still too large (falloff 200/120 → 600/350); (3) dawn overlook is a uniform red
+  wash. Perf table not measured by WORLD; the program coordinator measures tiles 0/16 locally.
+
+### PLACES round 1 (Opus coordinator, `claude/vp-places` @ 45238cab) — verdicts 2026-09-02 04:45 UTC
+Evidence: `ralph/reports/visual-parity/PLACES/00-before/` (42 frames + survey/ground) and `PLACES/round1/locations/` (36).
+Code-blind judge: `PLACES/JUDGE-round1.md`. Bar A soft yes for village/stronghold, no for relay/landmarks; Bar B yes.
+- Judge: every after-frame is pixel-identical to its before-frame — the merged VILLAGE/HALL code did not reach the
+  round-1 render (root-cause step added to round 2). Village reads as a cozy inhabited settlement day and night;
+  trail camp is the strongest place (legible fire, placed props); waystop good (Hall silhouette + smoke); stronghold
+  courtyard "nails ruin + Team Tether industry"; relay reads abandoned, not active; 04-warrens-den and
+  06-relay-approach are camera-in-geometry frames; 11-castle-landmark stands show empty grassland; no village gate
+  visible in any road frame; night NPCs silhouetted; cardboard tree cards and roof-tile moiré need art, not staging.
+- Coordinator: Hall exterior at distance still reads cream castle kit; relay needs occupation; warrens exterior flat grey.
+- Round 2 sent 04:50 (+ addendum 04:56): verify frames differ, Hall exterior weathering on all kit pieces, fix the
+  three broken/empty stands, relay occupation first pass, warrens exterior, well pad, gate visible, night NPC light.
+- PLACES also found: `smoke_traversal` fails on the merged tree at the South Bridge (pre-existing on main, outside
+  PLACES), and that 34–58 main commits were missing from the program branch (now merged, ce235831).
+
+### WORLD round 2 (`claude/vp-world` @ bf92e754) — coordinator verdict 2026-09-02 05:45 UTC — MERGED into the program branch
+Evidence: `ralph/reports/visual-parity/WORLD/round2/` (village/pond 15 frames + survey 5, sheets).
+- **Canopy regression fixed and verified in frame**: root causes were `Image.adjust_bsc` (nonexistent; the engine's is
+  `adjust_bcs`, so the desaturation never ran and the aborted call left a null albedo → white) and a path-less runtime
+  ImageTexture dropped through the Terrain3DMeshAsset round-trip. Fix: desaturated leaf sheets baked offline to
+  `assets/environment/stylized_nature/derived/*.png` (derived textures, no new meshes) and bound via the existing
+  `retexture` swap. Trees now read deep/mid green with three visible tints.
+- Sun halo tightened (day 5.5°, golden 7.2°), night moon given a glow, cloud edges softened, dawn exposure 0.8→0.55,
+  pond-approach stand moved out of the canopy.
+- Open for round 3: golden still reads as a soft light mass (WORLD's own measurement), a night stand aimed at the moon's
+  azimuth is needed to judge the moon, `03-rise-overlook-golden` reads cool/grey.
+- Code-blind judge (`WORLD/JUDGE-round2.md`): **Bar A yes (day frames), Bar B yes on environment** — first yes of the
+  program; creature/character half unanswerable (no creature in any frame → LIFE lane). Remaining: survey golden frame
+  black again (clock freeze ordering in survey.gd), daytime sun a flat white cutout, night ground black past the lit
+  radius, overlook distance flattens against the sky, one evenly spaced bush row. All sent as round-3 items.
+
+### PLACES round 2 (`claude/vp-places` @ 347306a0) — verdicts 2026-09-02 05:50 UTC — MERGED into the program branch
+Evidence: `PLACES/round2/locations/` (27 frames). Judge: `PLACES/JUDGE-round2.md` — Bar B **yes** for village and
+stronghold courtyard, no for the Relay; Bar A no as a set (pale canopies — WORLD's bug, now fixed — and debug-line cables
+are the loudest elements).
+- Better: Warrens den stand fixed (interior with creature), Hall 100/200/400 m stands now actually aim at the Hall,
+  relay gate + barrier + banner + grunts at the approach.
+- Open → round 3 (sent 05:52 + addendum 06:06): Hall exterior kit still cream at distance; Warrens mound flat grey;
+  cyan cables/beams unanchored at relay, stronghold sky and courtyard floor; relay standing/apparatus not staffed;
+  smoke column a hard band; night courtyard/gate crushed black; route-out stand shows no gate.
+
 ## Implementation decisions
 
 - `data/config/grass_field.json` is **ON** for this program (owner directive 2026-09-01: "I don't see how a
@@ -116,7 +205,13 @@ is worth their setup cost.
 
 ## Regressions / unresolved problems
 
-(none yet)
+- **VP1-G0 (golden frame black):** no longer reproduces on the branch tip with fast mode (05-spawn-low-sun renders,
+  spread 1.585). Root cause not isolated (settle count / merged shader changes are the candidates). The golden
+  frame that now renders is badly overexposed: a giant white sun disc, trees blown to white — WORLD round 2.
+- **Capture time sink is the stale bake, not rendering:** with the scatter bake fingerprint stale, every capture
+  process spends ~348 s at boot recomputing placements (`[vegetation] boot phases placements=348106`). Re-bake
+  after any `vegetation.json` / `terrain_playground.json` change before capturing; fast mode alone changed
+  nothing (11m42 vs 10m49) because boot dominated. **Fixed on the branch tip:** fresh bake → placements 1,669 ms, and the same fast-mode survey takes 5m03 (5 frames). Remaining boot cost (~3.5 min) is world stand-up; the locations tool amortises it over many shots per process.
 
 ## Resume note
 

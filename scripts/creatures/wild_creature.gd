@@ -60,6 +60,19 @@ var _cooldown: float = 0.0
 var _side_sign: float = 1.0
 var _combat_cfg: Dictionary = {}
 
+## OWNER PLAYTEST 2026-09-02 finding #6: "aiming at the creature is too hard...
+## they should move a little less or in slow motion once you go into catch
+## mode." `combat_manager.gd` owns the aim window (`throw_aim.gd::is_aiming()`)
+## and has no reason to know this creature's movement internals, so it tells
+## this node with `set_catch_aim_active()` every physics tick instead — the
+## same shape as `set_engaged()`. Scoped to THIS creature (the one being aimed
+## at) rather than a global slow-mo: a global time dilation would also slow the
+## player's own throw and the rest of the fight's pacing, which the owner never
+## asked for. `_catch_aim_slowdown_scale` is TUNABLE — see catching.json's
+## `aim.target_slowdown_scale`.
+var _catch_aim_active: bool = false
+var _catch_aim_slowdown_scale: float = 0.35
+
 var _rng := RandomNumberGenerator.new()
 
 
@@ -70,6 +83,8 @@ func _ready() -> void:
 	_target = home
 	_pause_left = _rng.randf_range(_pause_min, _pause_max)
 	_combat_cfg = MATH.config().get("enemy", {})
+	_catch_aim_slowdown_scale = float(
+		CATCH.config().get("aim", {}).get("target_slowdown_scale", _catch_aim_slowdown_scale))
 
 
 ## Give it a species and a live instance in one call, so a caller cannot end up
@@ -307,6 +322,7 @@ func set_engaged(value: bool, opponent: Node3D = null) -> void:
 		_has_announced = false
 		_returning_home = false
 		_grace_left = float(_aggro_cfg.get("grace_after_combat", 8.0))
+		_catch_aim_active = false
 
 
 func _tick_combat(delta: float) -> void:
@@ -339,7 +355,10 @@ func _tick_combat(delta: float) -> void:
 
 	var direction := AI.movement_for(_intent, to, _side_sign)
 	if direction != Vector3.ZERO:
-		request_move(_unstick(direction), AI.speed_for(_intent, _combat_cfg))
+		var speed := AI.speed_for(_intent, _combat_cfg)
+		if _catch_aim_active:
+			speed *= _catch_aim_slowdown_scale
+		request_move(_unstick(direction), speed)
 	else:
 		# Rooted on purpose (TELEGRAPH/RECOVER) is not stuck -- without this the
 		# stillness `_unstick`'s own distance check reads as "pinned" the moment
@@ -410,6 +429,15 @@ func _enter(intent: int) -> void:
 		# One coin flip per reposition rather than one per frame, so it commits
 		# to going around one side instead of jittering on the spot.
 		_side_sign = 1.0 if _rng.randf() < 0.5 else -1.0
+
+
+## Told every physics tick by `combat_manager.gd` (mirroring `throw_aim.gd`'s
+## own `is_aiming()`), not read here directly — this node has no reference to
+## the throw and no reason to gain one. A no-op outside `_tick_combat` (a
+## peaceful creature is never the aim target), so a stray true left over from
+## a fight that has already ended costs nothing.
+func set_catch_aim_active(value: bool) -> void:
+	_catch_aim_active = value
 
 
 func is_winding_up() -> bool:

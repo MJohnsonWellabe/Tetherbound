@@ -41,10 +41,11 @@
       "_why": "The western ridge at the spine's far point ((-420,5140)). The aggressor role's presence in the high country, on open ground where a hostile silhouette reads across the long sightlines this region is for.",
       "alpha": {
         "level_bonus": 3,
-        "scale": 1.15
+        "scale": 1.4
       },
       "_why_alpha": "ASSESS-REDS/prompt 60's 'handful of special encounters'. The ridge pair's elder, on the exposed western high ground the region is built to be seen across -- Band 4 is where the chapter tells the player the world got harder without the player scaling with it (order 4000's own trailpup note), and a visibly bigger aggressor on the long sightline says the same thing before the fight starts.",
-      "_comment_alpha_scale_0901": "BACKLOG-VISUAL-ALPHA-SCALE. Dropped 1.3 -> 1.15 (2.73m -> 2.415m), part of the same fix as band5_stronghold_approach.json order 5001: ordinary Galecrest sits at 2.10m (D69), so the old 1.3x already stood taller than the Veridian Stag legendary (2.60m, 'above every other creature in the biome'). 1.15 keeps this mid-chapter alpha below band5's harder 1.20 in the same escalating ladder (band3 1.10 < band4 1.15 < band5 1.20), all comfortably under Veridian."
+      "_comment_alpha_scale_0901": "BACKLOG-VISUAL-ALPHA-SCALE. Dropped 1.3 -> 1.15 (2.73m -> 2.415m) on 2026-09-01, part of the same fix as band5_stronghold_approach.json order 5001, because ordinary Galecrest at 2.10m (D69) had put the old 1.3x alpha above the then-2.60m Veridian Stag legendary.",
+      "_comment_alpha_scale_0901_2": "OD-0901-1 raised this to 1.4 -> 2.94m the same day: the owner's correction is that the legendary should be raised to make room for a boss-sized alpha, not the other way round (ralph/OWNER_DIRECTIVES_2026-09-01.md). Veridian is now 3.6m (data/creatures/species.json). 1.4 keeps this mid-chapter alpha below band5's harder 1.5 in the escalating ladder (band3 1.30 < band4 1.40 < band5 1.50), all comfortably under Veridian."
     },
     {
       "order": 4002,

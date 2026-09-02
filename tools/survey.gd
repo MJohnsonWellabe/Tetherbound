@@ -142,11 +142,27 @@ const VIEWPOINTS := [
 ]
 
 
+## FAST ITERATION MODE. On with `--fast` (a user script arg) or `VP_FAST=1` in
+## the environment. Halves every settle wait below (floor 2 frames, via
+## `_frames()`) and turns off MSAA/SSAA on the capture viewport. Output
+## filenames and directories are unchanged -- this trades fidelity for a
+## quicker local loop, never for the numbers that ship as evidence.
+static var _fast_mode: bool = false
+
+
+static func _frames(n: int) -> int:
+	return maxi(2, n / 2) if _fast_mode else n
+
+
 func _init() -> void:
 	_run()
 
 
 func _run() -> void:
+	_fast_mode = "--fast" in OS.get_cmdline_user_args() or OS.get_environment("VP_FAST") == "1"
+	if _fast_mode:
+		print("[fast] iteration mode: settle halved, msaa off")
+
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 
 	var packed: PackedScene = load(SCENE)
@@ -158,7 +174,7 @@ func _run() -> void:
 	var world: Node = packed.instantiate()
 	root.add_child(world)
 
-	for i in SETTLE_FRAMES:
+	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
 
 	# The playground's own rig follows the player every frame, so it has to stop
@@ -180,6 +196,9 @@ func _run() -> void:
 	camera.far = 2000.0
 	world.add_child(camera)
 	camera.make_current()
+	if _fast_mode:
+		root.msaa_3d = Viewport.MSAA_DISABLED
+		root.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 
 	var look: Node = world.get_node_or_null(^"WorldLook")
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
@@ -239,9 +258,9 @@ func _run() -> void:
 
 		# Physics frames, not process frames, because the trainer has to settle
 		# onto the ground after being moved.
-		for i in SETTLE_AFTER_MOVE:
+		for i in _frames(SETTLE_AFTER_MOVE):
 			await physics_frame
-		for i in POSE_FRAMES:
+		for i in _frames(POSE_FRAMES):
 			await process_frame
 		await RenderingServer.frame_post_draw
 

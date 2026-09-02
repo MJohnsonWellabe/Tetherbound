@@ -665,6 +665,21 @@ Measured against the shipping config, not against intent:
 from, and its Village & Settlement row reads as a portrait set for this
 village's named cast.
 
+**Amended by OWNER-0902-VILLAGE-POPULATION-REGRESSION, 2026-09-02:** this
+duplication was the eventual root cause of a twice-reopened owner complaint
+("too many people in the village"). Fenn and Nessa (`inn_helper`, a thirteenth
+walk-on not listed above, redundant with both Wilhelm and Bram) are unplaced
+from `data/config/village_npcs.json` -- bodies and dialogue kept installed,
+matching this ledger's own precedent for the unplaced `young_trainer`/
+`rival_trainer`/`wandering_trainer` trio. Wilhelm and Garrick are left placed
+despite the same duplication noted here: Wilhelm because three interact-
+reliability probes (`tools/probe_interact_*.gd`) hard-require his node for an
+unrelated open Tier-1 regression, Garrick because he was already relocated
+once (OWNER-0901-VILLAGE-POPULATION) and his farming role is not a bare
+duplicate of Mira's shop. See `village_npcs.json`'s own
+`_comment_owner_0902_population_regression` for the measured before/after
+headcount.
+
 ### Two defects found while establishing role reads
 
 Both are wrong rather than merely generic, and neither was recorded anywhere:

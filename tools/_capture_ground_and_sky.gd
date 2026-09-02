@@ -280,6 +280,17 @@ var _weather: Node = null
 var _want_weather := "clear"
 var _failures: Array[String] = []
 
+## FAST ITERATION MODE. On with `--fast` (a user script arg) or `VP_FAST=1` in
+## the environment. Halves every settle wait above (floor 2 frames, via
+## `_frames()`) and turns off MSAA/SSAA on the capture viewport. Output
+## filenames and directories are unchanged -- this trades fidelity for a
+## quicker local loop, never for the numbers that ship as evidence.
+static var _fast_mode: bool = false
+
+
+static func _frames(n: int) -> int:
+	return maxi(2, n / 2) if _fast_mode else n
+
 
 func _init() -> void:
 	_run()
@@ -291,12 +302,16 @@ func _run() -> void:
 		quit(1)
 		return
 
+	_fast_mode = "--fast" in OS.get_cmdline_user_args() or OS.get_environment("VP_FAST") == "1"
+	if _fast_mode:
+		print("[fast] iteration mode: settle halved, msaa off")
+
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	_config = HEIGHTFIELD.load_config()
 	_field = HEIGHTFIELD.new()
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
-	for i in BOOT_FRAMES:
+	for i in _frames(BOOT_FRAMES):
 		await physics_frame
 	print("[ground] world up, boot settled; starting ground and water capture")
 
@@ -323,6 +338,9 @@ func _run() -> void:
 	_camera.far = 4000.0
 	_world.add_child(_camera)
 	_camera.make_current()
+	if _fast_mode:
+		root.msaa_3d = Viewport.MSAA_DISABLED
+		root.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 
 	var terrain: Node = _world.get_node_or_null(^"Terrain")
 	if terrain != null and terrain.has_method("set_camera"):
@@ -449,7 +467,7 @@ func _run() -> void:
 		# Reset to day/clear before the water section -- the last ground state
 		# shot may have left the world at night, in rain, or both.
 		_apply_state("day", "clear")
-		for i in STATE_SETTLE_FRAMES:
+		for i in _frames(STATE_SETTLE_FRAMES):
 			await physics_frame
 
 		if _name_wanted("water-01-pond", wanted_names) or _name_wanted("water", wanted_names):
@@ -524,14 +542,14 @@ func _arrive_ground(entry: Array) -> Dictionary:
 	_place(eye_xz, _field.height_at(eye_xz.x, eye_xz.y))
 	_frame_ground(cam_xz, _field.height_at(cam_xz.x, cam_xz.y),
 		target_xz, _field.height_at(target_xz.x, target_xz.y))
-	for i in ARRIVE_FRAMES:
+	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
 
 	# Pass two: reseat on the surface that actually arrived.
 	var eye_ground := _surface(eye_xz)
 	_place(eye_xz, eye_ground)
 	_frame_ground(cam_xz, _surface(cam_xz), target_xz, _surface(target_xz))
-	for i in REFRAME_FRAMES:
+	for i in _frames(REFRAME_FRAMES):
 		await physics_frame
 
 	print("[ground] arrived %-28s eye(%.0f, %.1f, %.0f)" % [name, eye_xz.x, eye_ground, eye_xz.y])
@@ -559,7 +577,7 @@ func _shoot_elevated(pos: Dictionary, state: Array, height: float) -> void:
 	var ahead: Vector2 = cam_xz + forward * (height * 1.7)
 	_camera.global_position = Vector3(cam_xz.x, _surface(cam_xz) + height, cam_xz.y)
 	_camera.look_at(Vector3(ahead.x, _surface(ahead), ahead.y), Vector3.UP)
-	for i in POSE_FRAMES:
+	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
 	_capture("%s-%s-high" % [pos["name"], str(state[0])])
@@ -582,7 +600,7 @@ func _shoot_vista(pos: Dictionary, state: Array) -> void:
 	var far_xz: Vector2 = cam_xz + forward * VISTA_AHEAD
 	_camera.global_position = Vector3(cam_xz.x, _surface(cam_xz) + VISTA_UP, cam_xz.y)
 	_camera.look_at(Vector3(far_xz.x, _surface(far_xz) + VISTA_TARGET_H, far_xz.y), Vector3.UP)
-	for i in POSE_FRAMES:
+	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
 	_capture("%s-%s-vista" % [pos["name"], str(state[0])])
@@ -608,13 +626,13 @@ func _capture_landmark(entry: Array, wanted_states: PackedStringArray) -> void:
 	_place(eye_xz, _field.height_at(eye_xz.x, eye_xz.y))
 	_camera.global_position = Vector3(eye_xz.x,
 		_field.height_at(eye_xz.x, eye_xz.y) + LANDMARK_UP, eye_xz.y)
-	for i in ARRIVE_FRAMES:
+	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
 
 	var eye_ground := _surface(eye_xz)
 	var target_ground: float = _field.height_at(target_xz.x, target_xz.y)
 	_place(eye_xz, eye_ground)
-	for i in REFRAME_FRAMES:
+	for i in _frames(REFRAME_FRAMES):
 		await physics_frame
 	print("[ground] arrived %-28s eye(%.0f, %.1f, %.0f)" % [name, eye_xz.x, eye_ground, eye_xz.y])
 
@@ -622,12 +640,12 @@ func _capture_landmark(entry: Array, wanted_states: PackedStringArray) -> void:
 		if not _state_wanted(state as Array, wanted_states):
 			continue
 		_apply_state(str((state as Array)[1]), str((state as Array)[2]))
-		for i in STATE_SETTLE_FRAMES:
+		for i in _frames(STATE_SETTLE_FRAMES):
 			await physics_frame
 		_hide_huds()
 		_camera.global_position = Vector3(eye_xz.x, eye_ground + LANDMARK_UP, eye_xz.y)
 		_camera.look_at(Vector3(target_xz.x, target_ground + target_h, target_xz.y), Vector3.UP)
-		for i in POSE_FRAMES:
+		for i in _frames(POSE_FRAMES):
 			await process_frame
 		await RenderingServer.frame_post_draw
 		_capture("%s-%s" % [name, str((state as Array)[0])])
@@ -658,14 +676,14 @@ func _shoot_ground_state(pos: Dictionary, state: Array) -> void:
 	var time_name: String = str(state[1])
 	var weather_name: String = str(state[2])
 	_apply_state(time_name, weather_name)
-	for i in STATE_SETTLE_FRAMES:
+	for i in _frames(STATE_SETTLE_FRAMES):
 		await physics_frame
 	_hide_huds()
 
 	var cam_xz: Vector2 = pos["cam_xz"]
 	var target_xz: Vector2 = pos["target_xz"]
 	_frame_ground(cam_xz, _surface(cam_xz), target_xz, _surface(target_xz))
-	for i in POSE_FRAMES:
+	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
 
@@ -815,13 +833,13 @@ func _arrive_water(name: String, bank: Vector2, look_at_xz: Vector2) -> Dictiona
 	_place(bank, _field.height_at(bank.x, bank.y))
 	_pose_water_eye(cam_xz, _field.height_at(cam_xz.x, cam_xz.y),
 		look_at_xz, _field.height_at(look_at_xz.x, look_at_xz.y))
-	for i in ARRIVE_FRAMES:
+	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
 
 	var bank_ground := _surface(bank)
 	_place(bank, bank_ground)
 	_pose_water_eye(cam_xz, _surface(cam_xz), look_at_xz, _surface(look_at_xz))
-	for i in REFRAME_FRAMES:
+	for i in _frames(REFRAME_FRAMES):
 		await physics_frame
 
 	print("[ground] arrived %-28s bank(%.0f, %.1f, %.0f)" % [name, bank.x, bank_ground, bank.y])
@@ -833,7 +851,7 @@ func _shoot_water_eye(pos: Dictionary) -> void:
 	var cam_xz: Vector2 = pos["cam_xz"]
 	var look_at_xz: Vector2 = pos["look_at"]
 	_pose_water_eye(cam_xz, _surface(cam_xz), look_at_xz, _surface(look_at_xz))
-	for i in POSE_FRAMES:
+	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
 	_capture("%s-eye" % pos["name"])
@@ -902,9 +920,9 @@ func _shoot_water_grazing(pos: Dictionary, level: float) -> void:
 	_hide_huds()
 	_camera.global_position = Vector3(graze_xz.x, cam_h, graze_xz.y)
 	_camera.look_at(Vector3(target_xz.x, maxf(level, target_ground), target_xz.y), Vector3.UP)
-	for i in GRAZE_SETTLE_FRAMES:
+	for i in _frames(GRAZE_SETTLE_FRAMES):
 		await physics_frame
-	for i in POSE_FRAMES:
+	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
 	_capture("%s-grazing" % pos["name"])
