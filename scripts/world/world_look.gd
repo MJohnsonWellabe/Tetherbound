@@ -19,6 +19,11 @@ const DAY_CYCLE := preload("res://scripts/world/day_cycle.gd")
 ## T1-WORLD: for the character emission floor only -- see `_apply_environment`.
 ## Preloaded for its STATIC setter; this node never builds or owns a character.
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
+## WORLD-ART aerial-fade pass, 2026-09-02. For the terrain's distance-fade
+## colour only -- see `_apply_environment`'s own comment on
+## `aerial_fade_colour`. Preloaded for its STATIC setter, same reasoning as
+## CHARACTER_MODEL directly above: this node never builds or owns the terrain.
+const PLAYGROUND_WORLD := preload("res://scripts/world/playground_world.gd")
 
 const DEFAULT_TIME := "day"
 
@@ -353,7 +358,12 @@ const _COLOUR_KEYS := {
 		"cloud_lit", "cloud_shade", "cloud_base", "sun_colour",
 		# VP1 sky retune round 1: the new haze tint blends the same way.
 		"horizon_haze_colour"],
-	"environment": ["fog_colour", "ambient_colour"],
+	# WORLD-ART aerial-fade pass: aerial_fade_colour used to snap at the blend
+	# midpoint (the default branch in `_blend_dict` below, for anything not
+	# named here); it now lerps the same way fog/ambient already do, so the
+	# terrain's own distance fade eases across a time-of-day transition
+	# instead of popping between two presets' colours.
+	"environment": ["fog_colour", "ambient_colour", "aerial_fade_colour"],
 }
 
 ## yaw_deg wraps at +-180 -- a bare float lerp from day's 140 to golden's -66
@@ -572,6 +582,16 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 		# defect this replaces (a halo whose angular width could not be
 		# tuned by any of the neighbouring sun keys above).
 		["sun_glow_falloff", "sun_glow_falloff"],
+		# Round 7: the disc's TRUE angular radius, in degrees. `sun_size` above
+		# is now inert for the disc -- it was thresholded as `1 - sun_size` and
+		# treated as a cosine, but its values were never derived from a real
+		# angle, so day's 0.022 was acos(1-0.022) = 12.0 degrees of RADIUS, a
+		# disc filling ~34% of frame height, and golden/dawn's 0.009 was ~22%.
+		# Expressed in degrees the numbers are checkable: at the capture's 70
+		# degree vertical FOV, 1.0 degree of radius is a 2.0 degree disc, 2.86%
+		# of frame height. `sun_size` is still passed above because the uniform
+		# is still declared; removing the pass-through would error.
+		["sun_angular_radius_deg", "sun_angular_radius_deg"],
 		# VP1: cumulus form, shell projection, cirrus layer, horizon haze.
 		["cloud_edge_softness", "edge_softness"], ["cloud_altitude", "cloud_altitude"],
 		["cloud_lit_contrast", "lit_contrast"],
@@ -657,6 +677,27 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# out of a white void.
 	env.fog_sky_affect = float(cfg.get("fog_sky_affect", 0.0))
 	env.fog_aerial_perspective = float(cfg.get("aerial_perspective", 0.4))
+
+	# WORLD-ART aerial-fade pass, 2026-09-02. The terrain's OWN distance fade
+	# (`terrain_playground.json`'s `shader.aerial_fade_colour`, a uniform on
+	# `shaders/terrain_ground.gdshader`, wholly separate from the fog above)
+	# used to be read once at scene setup and never again, while the sky's
+	# fog/horizon colours already varied every hour -- measured consequence at
+	# midnight: a distant vista read 25.7/76.6/113.8, BRIGHTER than its own
+	# foreground at 13.4/22.3/28.2, because far terrain kept fading toward a
+	# constant tuned for a bright daytime sky. `cfg.has(...)` guards this so a
+	# time-of-day preset that does not opt in changes nothing on this path --
+	# the terrain keeps whatever `terrain_playground.json` gave it at scene
+	# setup, exactly as before. Reached through PLAYGROUND_WORLD's static
+	# setter (same pattern as CHARACTER_MODEL's emission floor above) because
+	# this node has no reference to the scene's terrain; the setter itself is
+	# a safe no-op if no terrain has been built yet, or if this Terrain3D
+	# build's shader has no such uniform. This one function is called from
+	# BOTH `apply_time()` (a pinned capture frame) and `_apply_blended()` (the
+	# live clock), so both paths reach the terrain without duplicating the
+	# call at each of those two sites.
+	if cfg.has("aerial_fade_colour"):
+		PLAYGROUND_WORLD.set_aerial_fade_colour(_as_colour(cfg.get("aerial_fade_colour")))
 
 	# NIGHT-LIGHT. Colour-grade adjustment, off (no-op defaults) unless a
 	# preset asks for it. Exists because raising a night preset's own light

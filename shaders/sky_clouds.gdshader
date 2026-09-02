@@ -79,6 +79,53 @@ uniform float cloud_altitude : hint_range(0.2, 3.0) = 0.9;
 uniform float height = 0.22;
 uniform vec2 wind = vec2(0.006, 0.002);
 
+// TIME WRAP. `TIME` grows without bound for the lifetime of the render, and the
+// two wind-drift terms below (`wind * TIME`, `wind * 1.8 * TIME`) feed that
+// ever-growing value straight into fract()/floor() inside `value_noise()` (via
+// `hash12`'s `fract(p * 0.1031)`). Measured over five rounds on one boot, one
+// stand: Environment/sky uniforms are bit-identical at shutter between a clean
+// early frame (TIME 172.6s, R-G -5.94) and a frame gone uniform red/maroon later
+// (`day`, R-G +84.5) -- with a brightening trend already visible by TIME 1376.8s
+// (mean +50%, hue still clean at R-G -8.47). Ten other explanations were
+// falsified, including per-camera/delivery routing (one Environment object, no
+// overrides). Because `world_look.gd::_apply_sky` sets
+// `ambient_light_source = AMBIENT_SOURCE_SKY`, a sky that degenerates this way
+// drags terrain and near rocks red too, even though nothing else in the scene
+// changed -- which is why a sky-only precision bug reads as a whole-frame wash.
+// Wrapping TIME keeps that fract()/floor() argument bounded for the run's whole
+// lifetime instead of growing forever. DO NOT replace `t_wrapped` below with raw
+// `TIME` again without re-reading this comment.
+//
+// Wrap-period arithmetic. The two drift terms share one `wind` vector but
+// different multipliers: `wind * TIME` (cumulus, `plane`) and `wind * 1.8 * TIME`
+// (cirrus, `plane2`). For a `mod(TIME, time_wrap)` reset not to also shear the
+// noise lattice it samples, the drift accumulated over one period must land back
+// on an integer number of grid cells in BOTH axes, for BOTH layers, at the SAME
+// period (they share one TIME). With the default wind = (0.006, 0.002) -- an
+// exact 3:1 ratio -- let A = wind.x * time_wrap; wind.y * time_wrap is then
+// always A/3, so the real constraint is making A an integer (cumulus) AND
+// 1.8*A an integer (cirrus) at once. 1.8 = 9/5 in lowest terms, so 1.8*A is only
+// an integer when A is a multiple of 5, and A/3 is only an integer when A is a
+// multiple of 3 -- so the smallest A satisfying both is lcm(3, 5) = 15, giving
+// time_wrap = 15 / 0.006 = 2500 seconds (~41.7 min). At that period:
+//   cumulus drift  wind * time_wrap       = (15, 5)  -- exact integers
+//   cirrus  drift  wind * 1.8 * time_wrap = (27, 9)  -- exact integers
+// so both layers land back on a grid boundary simultaneously: no fractional-
+// interpolation shear at the seam. This is NOT the noise FIELD repeating, only
+// its lattice alignment: `hash12`'s own internal cycle (1/0.1031 ~= 9.699321,
+// not an integer) means an integer lattice shift lands on a different,
+// uncorrelated pseudo-random cell, so the cloud/cirrus SHAPES still visibly
+// re-arrange in that one frame -- true bit-for-bit seamlessness is not
+// achievable with this hash, only shear-free alignment is. The accepted
+// residual: a rare (once per ~42 minutes of elapsed render time), clean
+// grid-aligned pop instead of a constant tear -- versus the permanent red wash
+// this replaces. Exposed as a uniform, not a constant, because this exact
+// arithmetic is keyed to the DEFAULT `wind` above: a time-of-day preset that
+// sets a different `wind` (a different ratio, not 3:1) needs its own recomputed
+// `time_wrap` to keep the alignment, and hardcoding this value would silently
+// break that preset's seam instead of just needing a new number.
+uniform float time_wrap : hint_range(60.0, 6000.0) = 2500.0;
+
 // Cloud colour. `lit` is the sunward face, `shade` the side away from the sun,
 // `base` the flat underside of a thick cloud. Clouds are not white: a cumulus
 // base is a warm grey and reading it as pure white is the commonest way a
@@ -111,6 +158,32 @@ uniform float haze_strength : hint_range(0.0, 1.0) = 0.55;
 uniform vec3 haze_colour : source_color = vec3(0.72, 0.80, 0.76);
 
 // The sun disc the gradient sky never had.
+//
+// VP1 low-sun oval fix. `sun_size` below is a cosine-space radius: the old
+// disc test was `smoothstep(1.0 - sun_size, ..., dot(dir, sun_dir))`, i.e. it
+// thresholds against `1 - sun_size` directly as if that were a cosine. `dir`
+// and `sun_dir` ARE both unit vectors (`normalize()`d at the top of `sky()`),
+// so that dot product genuinely is cos(angle-between) -- the "dir not
+// normalised" theory is FALSE, confirmed by reading the top of `sky()`. The
+// real defect is that `sun_size` was never actually driven from a real
+// angular radius: at the golden/dawn value of 0.009, `1 - 0.009 = 0.991`
+// implies an angular radius of `acos(0.991) ~= 7.7 deg` (radius!), i.e. a
+// ~15.4-degree-diameter disc -- about 22% of the 70-degree-vertical capture
+// FOV, seven times the <=3% target, before perspective stretch off the
+// optical axis (see the `disc` line below) turns that oversized circle into
+// the reported oval. `sun_angular_radius_deg` below replaces `sun_size` as
+// the thing that actually drives the disc, expressed in real degrees so its
+// value means something: at its 1.0-degree default the disc is 2.0 degrees
+// across, 2.0/70 = 2.9% of frame height, under the 3% target with headroom
+// (the real sun is ~0.53 degrees across; a contained disc reads correctly at
+// several times that, the way this shader's moon already does).
+uniform float sun_angular_radius_deg : hint_range(0.05, 20.0) = 1.0;
+// DEPRECATED for the disc: `sky()` no longer reads this to size the disc --
+// see `sun_angular_radius_deg` above. Left declared, at its old default, only
+// so a caller that still sets it (an unmigrated `art.json` preset via
+// `world_look.gd::_apply_cloud_sky`) does not fail to find the uniform; the
+// value itself is now inert for this purpose. Migrate presets to
+// `sun_angular_radius_deg` and this can be deleted.
 uniform float sun_size : hint_range(0.0, 0.2) = 0.022;
 uniform float sun_glow : hint_range(0.0, 1.0) = 0.35;
 // How much of the disc's radius is falloff. 1.0 is a razor edge, 0.0 a full
@@ -196,6 +269,10 @@ float fbm_cirrus(vec2 p) {
 void sky() {
 	vec3 dir = normalize(EYEDIR);
 	vec3 sun_dir = normalize(LIGHT0_DIRECTION);
+	// See the `time_wrap` uniform's comment: raw TIME grows without bound over a
+	// long-running render and degrades the fract()/floor() noise math below, so
+	// every drift term uses this wrapped copy instead of TIME directly.
+	float t_wrapped = mod(TIME, time_wrap);
 
 	// The gradient, same shape ProceduralSkyMaterial produces so a coverage of
 	// zero lands on the sky this replaces rather than on a different one.
@@ -215,7 +292,7 @@ void sky() {
 
 		// Cirrus first: it sits above the cumulus, so cumulus paints over it.
 		if (high_opacity > 0.0) {
-			vec2 plane2 = dir.xz * (t * 2.6) * high_scale * vec2(0.35, 1.0) + wind * 1.8 * TIME;
+			vec2 plane2 = dir.xz * (t * 2.6) * high_scale * vec2(0.35, 1.0) + wind * 1.8 * t_wrapped;
 			float n2 = fbm_cirrus(plane2);
 			float high = smoothstep(1.0 - high_coverage, 1.0 - high_coverage + 0.25, n2)
 					* high_opacity * horizon_fade;
@@ -223,7 +300,7 @@ void sky() {
 			colour = mix(colour, cirrus, high);
 		}
 
-		vec2 plane = dir.xz * t * scale + wind * TIME;
+		vec2 plane = dir.xz * t * scale + wind * t_wrapped;
 		float n = fbm_cumulus(plane, detail);
 		// A second, slower sample displaces the first, which is what turns a
 		// noise field into something with cauliflower edges instead of blobs.
@@ -276,9 +353,20 @@ void sky() {
 	// the falloff fraction as a uniform, so a time of day can ask for a crisp
 	// body (night, where a moon needs a rim) or a soft one (golden hour, where
 	// the sun is meant to bloom).
-	float sun_dot = dot(dir, sun_dir);
-	float disc = smoothstep(1.0 - sun_size, 1.0 - sun_size * disc_edge, sun_dot);
-	float glow = pow(clamp(sun_dot, 0.0, 1.0), sun_glow_falloff) * sun_glow;
+	// `dir`/`sun_dir` are already unit vectors from the top of `sky()`; the
+	// `normalize()` calls here are belt-and-suspenders so this test stays a
+	// true angular-radius test even if that ever changes upstream. `cos_radius`
+	// is the disc's true edge, converted from degrees once per pixel (cheap:
+	// one `cos`/`radians` against a uniform, not per-octave). `disc_edge`
+	// keeps its old meaning -- 1.0 a razor edge at `cos_radius`, 0.0 a full
+	// gradient from centre (`cos_ang` = 1) to rim -- by interpolating the
+	// smoothstep's near edge between 1.0 and `cos_radius` instead of scaling a
+	// cosine-space radius the way the old `sun_size * disc_edge` did.
+	float cos_ang = dot(normalize(dir), normalize(sun_dir));
+	float cos_radius = cos(radians(sun_angular_radius_deg));
+	float cos_inner = mix(1.0, cos_radius, disc_edge);
+	float disc = smoothstep(cos_radius, cos_inner, cos_ang);
+	float glow = pow(clamp(cos_ang, 0.0, 1.0), sun_glow_falloff) * sun_glow;
 	colour += sun_colour * (disc + glow) * LIGHT0_ENERGY;
 
 	COLOR = colour * sky_energy;

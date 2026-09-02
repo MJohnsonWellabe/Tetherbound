@@ -34,7 +34,7 @@ func _run() -> void:
 	game.inventory.add("berries", 7)
 	game.party.add(game.make_creature("terrapup", "Old Run"))
 	game.progression.set_flag("warden_defeated")
-	game.placed_buildings = [{"id": "camp", "position": [1.0, 0.0, 1.0], "yaw_deg": 0.0}]
+	game.placed_buildings = [{"id": "tent", "position": [1.0, 0.0, 1.0], "yaw_deg": 0.0}]
 
 	var packed := load(TITLE_SCENE) as PackedScene
 	var title := packed.instantiate() if packed != null else null
@@ -75,8 +75,8 @@ func _run() -> void:
 	if game.progression.has("warden_defeated"):
 		_fail("Start New Game carried the old Warden victory into Meadows")
 	for raw: Variant in game.placed_buildings:
-		if typeof(raw) == TYPE_DICTIONARY and str((raw as Dictionary).get("id", "")) == "camp":
-			_fail("Start New Game carried the old camp into Meadows")
+		if typeof(raw) == TYPE_DICTIONARY and str((raw as Dictionary).get("id", "")) == "tent":
+			_fail("Start New Game carried the old placed building into Meadows")
 			break
 	_finish()
 

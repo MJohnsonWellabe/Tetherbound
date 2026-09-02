@@ -212,6 +212,218 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Check-in #23 (15:19–15:30 UTC) — CORRIDOR r7 judged + merged; first Fable decision (station 14); round 8 dispatched
+
+- **CORRIDOR round 7** (`b49c443e`, 5 stations) — judged `CORRIDOR/JUDGE-round7.md`: 13 PARTIAL (mid-right trees added, right edge still empty); 08 reframed (both signposts in frame, text still not legible at native res); 07, 10, 14 content-identical to round 6 (the lane's "bake-fresh copse" at 07 did not change the frame); camp absent at 14. No regressions. Pixel diffs r6→r7 are dominated by grass/cloud noise (28–79 % px) — content-level diffs are what count. **MERGED** `df90c5e6` (band3/band4 vegetation.json → re-bake queued, `corridor7_bake.log`: bake + import + scatter/veg/perf-budget/band-content tests + smoke_traversal).
+- **First Fable decision agent (owner directive)**: the lane had disclosed station 14 as "STILL NOT FIXED" after five camera candidates plus a 7 m prop move, blaming an unstable ground-height raycast. The Fable agent (`CORRIDOR/DECISION-station14.md`) found from the lane's own PNGs and projection maths that the camp IS in frame in every render — a ~90×20 px patch at exact frame centre, 41–48 m away, directly behind the "Watchtower Spur" signpost 6 m from the camera; the 9.2/4.8/3.6 m raycast variance is real (the raycast never excluded the player/props) but irrelevant. Decision A: re-site the stand to the clearing's trail-side edge (eye (-254.5, 6465.7) → look at the posted grunt (-235, 6470)), make `_surface()` use `ground_height_at` (the bake) with a raycast fallback that excludes non-terrain colliders, fix the proof's stale prop coordinates, with a three-part proof criterion.
+- **CORRIDOR round 8 dispatched 15:33** (time box 40 min, then archive): 14 per the decision; 07 a real foreground-framing anchor (pixel-diff must show the anchor region); 13 fill to the right edge; 08 text = raise the label size if parametric, else known limitation.
+- WORLD: round-7 survey frames pushed 15:23 (`7f5c0f96`); round 8 + VP10 trigger fired 15:18 into the same session.
+- PLACES round 9: no push since dispatch (14:40, 50 min) — within the range of its earlier rounds (r8 took ~75 min); stuck rule applies at check-in #24 if still silent.
+- Local guard note: the WORLD r7 guard's `--only=` filter matched no test files and launched the full unit suite; killed at 15:26, chain continued with smoke_art + smoke_night_ecology. The relevant unit test is `test_day_cycle.gd`; CI on the next code commit runs the full suite anyway.
+
+### 15:15 UTC — WORLD round 7 judged + MERGED (`7a8870fa`); round 8 + VP10 draw-call pass dispatched; handoff draft started
+
+- **Owner directive 15:00 UTC**: if any lane gets stuck, use a Fable agent to make decisions; keep going until the visuals are where we want them. Applied as: at every check-in a lane with WIP-only churn or silence past its time box gets a Fable decision agent fed its report, commits and frames; the program continues past the original VP11 label until the visual bar is met.
+- **WORLD round 7** (`8ae70423`, stands 9) — judged `WORLD/JUDGE-round7.md`: (1) sun disc PARTIAL — 01-spawn-outward-golden core still ~7.4 % of frame height (r6 13.5 %), 03-rise-overlook-golden clean; (2) dawn PROVEN — sky saturation 0.09 → 0.29, hue grey-lavender → pink-magenta; (3) night seam PROVEN — no near-black horizon band at either night stand; (4) night depth NOT PROVEN as asked (far ground bluer but brighter, unchanged from r6) — coordinator ACCEPTS it as a valid hazy-night read. Regressions: none (day/night diffs at noise level). Coordinator's own read adds: 03-rise-overlook-dawn washes the whole terrain orange; the reference keeps pink-gold in the sky with the ground's local colour surviving. Pixel diffs r6→r7: dawn 27 % / 74 % changed, golden 9.5 % / 7.6 %, night 3.7–9.7 %, day ≤ 7 %. **MERGED** `7a8870fa` (art.json, world_look.gd, sky_clouds.gdshader; no bake inputs). Guard queued: art/world_look unit tests + smoke_art + smoke_night_ecology (`world7_guard.log`).
+- **WORLD round 8 + VP10 dispatched 15:18** (same session, not a new lane): sun disc ≤ 3 % at both golden stands with measured core height; dawn ground crop R−G ≤ 25 while sky saturation stays ≥ 0.25; then the VP10 draw-call pass at band1_open (7659 → ≤ 7500, primitives ≤ 12.0M) with a per-node breakdown first, measured candidates, before/after perf at all three views, pixel-diffs on the survey stands, grass/scatter tests + traversal/playground smokes. Archive after.
+- **VP11 handoff draft** committed `docs/VISUAL_PARITY_HANDOFF.md` (`b5e5aacf`, STATUS: DRAFT): branch info, matched before/after and hero galleries from existing evidence, perf report, judge history per pass, known limitations, reproduction commands. Drafter flagged: no WORLD/round7 (now delivered) or PLACES/round9 dirs at draft time; CORRIDOR round 4 has frames but no separate judge file (folded into round 5); GROUND/VILLAGE lane REPORTs still carry FILL placeholders (the progress file's consolidated tables are used instead). Final galleries come from the VP11 recapture.
+- Guard on the merged tree completed: `smoke_relay` returned 1 inside the contended chain and 0 on a serial re-run ("relay: OK — the captain is beaten, the captive is freed…"); recorded as chain contention, not a tree defect.
+- CORRIDOR r7: station-14 fix pushed 14:52 (`52bd8f1a`, camp dressing moved 7 m toward the route), no frames by 15:15 — time box expires at 15:17; PLACES r9: no push since dispatch (14:40).
+
+### 14:56 UTC — SHIPPED TO MAIN (PR #20 merged, `b03cdb94`); VP10 first measurement on the merged tree
+
+- **PR #20 merged into `main`** at 14:56 UTC as merge commit `b03cdb94` (CI run 33642046946 on `1d1a2f74`: success after a 25-minute run — the code jobs ran, this was not a docs-only skip). Main now carries VP1–VP9 as merged so far (WORLD r1–r6, GROUND/VILLAGE, CORRIDOR r1–r6, PLACES r1–r8, LIFE r1–r7). The program branch is fast-forwarded onto `b03cdb94`; later lane rounds ship through a new PR the same way.
+- **VP10 measurement** (`ralph/reports/visual-parity/VP10-perf/perf_merged_1d1a2f74.txt`, `tools/perf_render_stats.gd` 1280x720 Compatibility llvmpipe, settle 120/60/20, `scatter_lod_ranges=false` — the VP2 decision `1f7b5a03`, not a merge regression):
+
+| view | draw calls | primitives | objects | budget | verdict |
+|---|---|---|---|---|---|
+| band1_open | 7659 | 11,757,306 | 6593 | ≤ 7500 draws / ≤ 12.0M prims | prims PASS (2 % headroom); **draws 2 % OVER** (+148 vs the VP2 candidate's 7511) |
+| hall_approach | 3844 | 4,332,388 | 4185 | ≤ 4000 draws | PASS |
+| village_high | 3165 | 8,622,824 | 3306 | — | recorded |
+
+  The band1_open draw-call growth since VP2 comes from VP3/VP4/VP9 content (hero trees, band layer anchors, authored wild clusters) and main's own additions. VP10 action: a targeted draw-call pass at band1_open (candidates: grass carpet `cull_tile_m` 24 → 32 trades ~40 % fewer carpet tiles for a small primitive rise — primitives have only 2 % headroom, so it must be measured; instancer region-cell batching for the near layers; prop material sharing), proven by re-measurement plus a pixel-diff/judge on the survey stands so nothing visible is lost. Assigned to the WORLD session after its round 7 (existing session, no new lane).
+- Guard on the merged tree (`vp10_guard.log`): `smoke_art`, `smoke_wild_streaming`, `smoke_stronghold` exit 0; `smoke_warrens`, `smoke_relay` running.
+- Lane deliveries in flight at 14:56: WORLD r7 pushed code + 6 frames (`f4d3cf26`, sun disc / dawn saturation / night seam / depth) — full stands+survey set and CI commit still to come; CORRIDOR r7 pushed the station-14 fix (`52bd8f1a`, camp dressing moved 7 m toward the route) — frames still to come; PLACES r9 in progress.
+
+### Check-ins #21–#22 (13:45–14:30 UTC) — WORLD r6 / LIFE r7 (final) / PLACES r8 judged and merged; PR #20 open; bake fresh on the main-merged tree
+
+- **Program branch** `1d1a2f74` (pushed 14:26): main `371605b6` re-merged (scatter conflicts → ours + re-bake), then `origin/claude/vp-world` (`c7b773b7`, rounds 4–6), `origin/claude/vp-life` (`aac8cc90`, round 7 final), `origin/claude/vp-places` (`ebe7d826`, round 8), then the fresh bake (`825,759` placements; bake inputs unchanged by the three lane merges, verified with `git diff 371605b6..HEAD` on `terrain_playground.json` + vegetation files). Local guard on the merged tree: scatter/veg/perf-budget/spawns/band-content 52 tests 0 failed, `smoke_playground` green, `smoke_traversal` in the chain.
+- **Ship to main**: the mirror + `ralph-sweep` route failed at 13:40 (main moved 30 s earlier → 191-commit rebase conflict at `grass_field.json`). Alternative route per the owner's 12:20 directive: **PR #20** https://github.com/MJohnsonWellabe/Tetherbound/pull/20 (program branch → main, 272 commits, 1,246 files); merge when CI on `1d1a2f74` is green. Main has moved another 4 commits since (`8bf4f0bd`); a merge commit absorbs that unless `data/scatter/**` conflicts again, in which case: re-merge main, `--ours` for the bake, re-bake, push.
+- **WORLD round 6** (`639314db`) — judged `WORLD/JUDGE-round6.md`: every previously washed elevated stand is clean; root cause was the stands tool free-falling the player 500 m below the camera (Terrain3D streams around the player → unloaded terrain rendered as sky-heavy wash). `TIME` wrap in `sky_clouds.gdshader` kept as a latent fix. Remaining polish → **round 7 dispatched 14:32 (final)**: sun disc ovality, dawn saturation, night horizon black seam, night far separation. Archive the WORLD session after judging r7.
+- **LIFE round 7 (final)** (`aac8cc90` merge) — judged `LIFE/JUDGE-round7.md`: open-meadow trailpup pack passes; pairing side-by-side and occupied village hold; relay day best; night stands unchanged (creature meshes unlit beside lit humans — recorded as a known limitation). Walkers were scoped only (no movement method on villagers; ~20–30 lines + driver). **LIFE session archived.**
+- **PLACES round 8** (`167b6d7f`) — judged `PLACES/JUDGE-round8.md`: relay road fixed; Warrens pale surfaces and the Hall's flat-black near faces unchanged in the delivered frames (pixel-identical to r7 — the edits were never rendered); 1.5× sentries not identifiable; camps ranked relay < ridge < waystop. **Round 9 dispatched 14:40**: Warrens pale surfaces with pixel-diff proof, Hall `distance_darken_start` ≥ 250 m / floor 0.85 and gate wall ≥ 60 luminance, revert the 1.5× sentry scale (gate-post sentries + a gate-face stand instead), courtyard night median ≥ 20 within 3 m of the trainer, camps relay → ridge → waystop.
+- **CORRIDOR round 7** running since 13:45 (WIP pushes for stations 07/08/14 visible on `claude/vp-corridor`): station 07 bake-fresh proof, 08 signpost framing, 10 relay glimpse, 13 right side, 14 camp in FOV.
+- **Delivery rule (all lanes, from PLACES r8 / CORRIDOR r6)**: edit THEN render; every targeted frame carries a pixel-diff vs the previous round in REPORT.md; < 5 % changed pixels = failed delivery, not a judged round.
+- **VP10 started** on the merged tree: `tools/perf_render_stats.gd --views=band1_open,hall_approach,village_high --settle=120 --resettle=60 --sample=20` queued after the guard chain → `ralph/reports/visual-parity/VP10-perf/perf_merged_1d1a2f74.txt`; budget band1_open ≤ 12.0M primitives / ≤ 7500 draw calls, hall_approach ≤ 4000 draw calls.
+- Costs so far (approx. session spend): WORLD ~$225, PLACES ~$148, LIFE ~$115, CORRIDOR ~$63.
+
+### Check-in #20 (13:31 UTC) — red wash SOLVED (capture artifact); first ship attempt blocked by a moving main
+- **WORLD 5e** (`7d67651d`): the wash was the stands capture tool — a stand without an `actor` key dropped the
+  player 500 m below the eye with physics live, and Terrain3D streams around the player, so a sky-heavy elevated
+  camera rendered from unloaded terrain. Same sequence with the player placed at the camera: night overlook
+  +80.8 → −16.8 R−G. Thirteen config hypotheses were falsified because the config was never wrong. Not a game
+  defect in normal play; a known limitation for any future distant-camera feature (streaming anchor). Closing
+  round dispatched 13:33: player at every stand by default with a cam→player distance assertion, re-render stands +
+  survey, keep the TIME wrap (latent fix), tests.
+- **Ship-to-main**: `ralph/VP-PROGRAM` @ `095cee94` went green and the sweep (13:28) tried to ship it, but `main`
+  had moved 30 s earlier (`e97baa30`, another session's stale-bake CI job + re-bake) so the script attempted a
+  191-commit rebase and stopped at the first conflict (`grass_field.json`). `origin/main` re-merged into the
+  program branch (`15313d8c`; scatter conflicts resolved with our bake), re-bake + guards running; next mirror +
+  sweep immediately after that CI is green, while `main` is still.
+- **CORRIDOR round 6** (`42b12878`, 16 stations): 07 copse restored, 09/10/14 re-sited or anchored, 13 filled,
+  signpost siting separated (text still clipped — open). Judge running.
+- **LIFE round 7** (final) running; **PLACES round 8** rendering (camp before-frames pushed).
+
+### Check-in #19 (12:59 UTC) — LIFE r6 merged; CI fix; WORLD 5c
+- **Ship-to-main**: the first mirror run (`dbfec0be`) failed two unit tests that came from LIFE r5, not from
+  `main`: `test_spawns_data` (new mosshell cluster 1071 inside the Creek Hollow footprint → 9 clusters / 11
+  creatures vs the authored 8 / 9) and `test_band_content` (a doc key on band1 order 0 not mirrored into the
+  band-split fixture). Fixed on the program branch (`095cee94`: cluster 1071 removed, fixture mirrored; 31/31
+  locally), mirror moved to that SHA, CI queued; sweep when green.
+- **LIFE round 6** (`6aa21e95`): pairing rewritten side-by-side at equal depth with a flatness-selected stand;
+  village-life re-aimed at the one natural villager group (village_npcs.json deliberately untouched per the
+  owner's "too many people" directive); relay-camp clusters moved into the bonfire's light. Judge
+  `LIFE/JUDGE-round6.md`: **pairing composition solved**, village reads occupied (2 villagers), relay-camp-day the
+  best frame; open meadow still reads as zero fauna (camouflaged species), relay-camp-night creatures unread.
+  Merged `02292cf7`. Round 7 dispatched 13:07 as the lane's final round (high-contrast species at 03, bodies
+  inside the firelight, walker scope estimate, final state section).
+- **WORLD 5c** (`d2c80263`): matched-TIME A/B — neither arm washed out to 2,900 s; elapsed time is a correlate,
+  not the cause; the `TIME` wrap stays as a latent fix. The trigger is a stand/preset TRANSITION. Final
+  diagnostic dispatched 13:01: dump and mechanically diff every Environment / DirectionalLight3D / sky-uniform /
+  camera property between a clean and a washed shot across a preset cycle and a teleport.
+- CORRIDOR round 6 and PLACES round 8 (+ camps) in progress.
+
+### Check-in #18 (12:28 UTC) — CORRIDOR r5 and PLACES r7 judged and merged
+- **CORRIDOR round 5** (16 stations, `fb27f52d`): band4's first `layer_anchors` (copse + rock cluster at station 13).
+  Judge `CORRIDOR/JUDGE-round5.md`: 01–06, 12, 16 solid; 13 borderline (right two-thirds bare); 09 better but no
+  water in frame; 07/08 still unfixed (lane's round 6 in progress); 10/14 weak; 11 white (PLACES). Merged
+  `3be018a6`, re-bake in progress. Round-6 addendum sent 12:34 (13 right side, 09 re-site to the river, 10 relay
+  glimpse, 14 clearing edge cover).
+- **PLACES round 7** (`ed2582f6`): storm slabs +150 m / alpha 0.4, Hall massing +30 % height with a capped distance
+  darken and fog disabled on hall stone, courtyard brazier attenuation 1.4→1.0 / range 27 (the real cause of the
+  black floor), relay walls given an albedo (they never had one), `06-relay-road` stand added, ROUND8-CAMPS-PLAN.
+  Judge `PLACES/JUDGE-round7.md`: **storm band ~30 % → ~3 % of sky at every stand**, relay walls weathered, Hall
+  reads at 400 m; still failing: relay ground pad + colonnade pale, Warrens pale boulder above the mouth + pale
+  right-side panel, Hall flat/unlit up close, sentries not identifiable, courtyard night median 0 on a single frame
+  (flicker ±26 %). Merged `dcd45f99`. Round 8 dispatched 12:35 (those five with pixel-sample proof, then VP5 camps).
+- Ship-to-main: `ralph/VP-PROGRAM` mirror CI running on `dbfec0be`; sweep at 12:48 if green.
+
+### Owner directive 12:20 UTC — ship to `main` as we go
+The owner overrode the brief's "do not merge": program work goes to `main` continuously. Mechanism (repo
+convention, `ralph/conventions.md` Shipping): `main` is never pushed directly; the program branch tip is mirrored to
+`ralph/VP-PROGRAM`, CI runs there, and `ralph-sweep.yml` is dispatched to fast-forward `main` (the sweep deletes the
+mirror branch after shipping; it is recreated from the program tip for every ship). `origin/main` was merged into the
+program branch first (`dbfec0be`, clean, 7 commits incl. the campsite split) so the ship is a fast-forward. Cadence:
+after every merge whose CI is green.
+
+### Check-in #17 (11:45 UTC) — LIFE round 5 judged and merged; CI green
+- **CI `308b4fca`** (CORRIDOR r3 bake): green. Local guards on the same tree: 50/50 tests, traversal, stronghold,
+  warrens all exit 0.
+- **LIFE round 5** (`f2fa8906`, real population): the tool no longer spawns or hides anything for a stand — it
+  positions the eye (clearance sweep, camera pulled back 3.5 m like `_capture_locations.gd`), lets streaming
+  settle and REPORTS which real wild bodies are in frame; legibility moved to authored clusters in band spawn
+  data; the pairing frame grants the starter through the real party/summon path; a `00-village-life` frame was
+  added. Judge `LIFE/JUDGE-round5.md`: lens occlusion mostly gone, **05-ridge-camp-day now the strongest frame**
+  (trainer + 2 legible creatures), mill pond solid, village edge day/night read; still failing: pairing frame
+  shows the starter at 2.5–3× the trainer's apparent size (hero reveal, not side-by-side), village-life shows one
+  camouflaged villager, night nearly black at relay camp, 03 open meadow aimed away from its clusters. Merged
+  `d55e6ad5` (spawn data + species + capture tool; no bake impact). Round 6 dispatched 11:49: same-depth pairing,
+  village gathering from existing villagers + a walker scope estimate, firelit night stand, re-aimed 03.
+- **WORLD**: bounded `TIME` in `sky_clouds.gdshader` pushed (`84f6bfd9`, `time_wrap` 2500 s derived so both
+  drift layers land on integer noise cells) — unverified by render; A/B in progress. Not merged until proven.
+- PLACES round 7 (+ relay-from-road) and CORRIDOR round 5 (all 16 stations) rendering.
+
+### Check-in #16 (11:14 UTC)
+- Bake after the CORRIDOR r3 merge committed (`308b4fca`, 825,701 placements; 50/50 scatter/veg/perf tests).
+- **WORLD**: identity check proved the rendered Environment/Sky are the objects world_look mutates, and the
+  shutter-time env/sky state is bit-identical between a clean and a red frame — the wash tracks **elapsed render
+  time** (a clean early `03-rise-overlook-dawn`, and a `day` frame going maroon after a long settle). Both the lane
+  and the coordinator converge on unbounded shader `TIME` in `sky_clouds.gdshader` (cloud drift offsets) breaking
+  noise precision at large values, with the SKY ambient/radiance path carrying it onto terrain. Wrap test dispatched
+  11:15 (`mod(TIME, period)`), plus the aerial push re-apply after ground materials (`04bbb286`).
+- **CORRIDOR**: bands 3–5 before frames pushed (stations 09–16) and judged (`CORRIDOR/JUDGE-b3b5-before.md`):
+  12 and 16 pass, 15 borderline, 10/14 weak, **09/11/13 fail** (13 is textbook empty grass → sky). Ranked fix list
+  dispatched 11:18; round 5 will render all 16 stations as one set.
+- **Defect found from the road**: the Team Tether relay compound renders as untextured white walls on a bleached
+  ground pad at station 11 (`00-before-b3b5/11-relay-day.png`) — a VP7 failure the relay-apparatus stand never
+  showed. Sent to PLACES as a round-7 addendum with a new `06-relay-road` stand.
+- **LIFE** round 5 (real population): boot-1 frames pushed before a camera/cluster fix; boot 2 in progress; the
+  session compacted its context once. Judge after boot 2.
+- **PLACES** round 7 in progress.
+
+### Check-in #15 (10:38 UTC) — CORRIDOR r3 and PLACES r6 judged and merged
+- **CORRIDOR round 3** (lane folder `round4/`, `dd74ce6c`): anchor RNG isolation with a shipped-config unit test
+  (`test_anchors_do_not_perturb_corridor_fill_or_any_other_placement`), station 02 rebalanced, station 06 restored
+  by the isolation alone, `--only` comma-list bug fixed. Judge `CORRIDOR/JUDGE-round3.md`: canopies read as
+  foliage at all 8 stations, 06 exceeds baseline, 04 near keyart quality, **Bar A "yes" except station 07** (lost
+  its foreground copse; below baseline), signpost text overflow at 08. Merged `b08c0ecd`, re-bake in progress.
+  Round 4 dispatched 10:40: 8 new stations Band 2 far → Band 3 river/relay → Band 4 ironwood → Band 5 approach →
+  Hall gate (befores first), plus the 07 copse and signpost addendum.
+- **PLACES round 6** (`900f3bb7`): Warrens mound re-materialled as earth, overhang wedge removed, one rock family
+  at the threshold, den stability restored (1.8 %), courtyard-night mean 12.45 (floor at the trainer 2.4×), gate
+  sentries/sconces, storm slabs halved. Judge `PLACES/JUDGE-round6.md`: courtyard night reads, banners sampled
+  oxblood, floating prop gone, sconces/windows read; still failing: mound reads as boulders + a new white patch
+  over the doorway, Hall collapses past 100 m, storm band extent unchanged, no identifiable sentry. Merged
+  `98d50074`. Round 7 dispatched 10:46: doorway patch + earth dome, Hall tower height / distance darkening,
+  storm band ≤ 15 % of sky, sentries on the wall walk; camps list prepared for round 8 (VP5).
+
+### Coverage audit against the brief (10:22 UTC, owner asked "is VP1–9 everything?")
+Not everything. Remaining after the current lane rounds:
+- **VP4** — only village → Band 2 walked; bands 3–5 to the Hall approach still need corridor stations + judge.
+- **VP5** — camps/waystops (fire focal point, seating, supplies, a reason to exist) never judged as a set.
+- **VP9** — the brief forbids faking life for screenshots and requires visible == gameplay population; the LIFE
+  lane's staged-group captures (rounds 3–4) violate that, so LIFE was redirected at 10:22: staging becomes a
+  diagnostic flag, deliverable frames come from authored clusters in spawn data, the pairing frame uses the real
+  party/summon path. NPC walkers, ambient motion and wind remain unaddressed.
+- **VP1** — dawn/night presets and the low-sun disc still open (WORLD 5b).
+- **VP10** — profiling/LOD/visibility optimisation + post-optimisation visual regression check not started
+  (only per-merge proxy numbers exist).
+- **VP11** — handoff gallery, hero gallery, performance report, judge-history table, known limitations: not started.
+- **§6 on-device FPS floor** — owner-side only (`tools/vp_capture_windows.ps1`).
+Plan: finish the in-flight rounds → CORRIDOR bands 3–5 → PLACES camps round → LIFE real-population round → VP10
+on the merged tree → VP11.
+
+### Check-in #14 (10:06 UTC)
+- **WORLD round 5** (`3a0fd9f8`, report only): both discriminators (fog_aerial_perspective 0; Sky REALTIME) produced
+  bit-identical frames — eight explanations falsified; `fog_sky_affect` is 0.0 in this project so the fog/radiance
+  mechanism was structurally impossible. The lane's own new suspicion is the useful one: unrelated config
+  mutations keep producing **bit-identical** frames and the per-time aerial push moved a vista by < 1/255 —
+  changes may be mutating an Environment/Sky other than the one the camera renders. Round 5b dispatched 10:08:
+  print the rendered World3D environment / camera override / world_look's Environment identities in one boot,
+  fix ownership if they differ and prove delivery with one toggle, else print the per-frame env/sky values for
+  01-dawn (clean) vs 03-dawn (red); fix the aerial push ordering.
+- **LIFE round 4** (`0786e323`, 9 frames): bbox contract + AABB near-clip floor + hiding unstaged wild bodies; 01
+  day/night and 04 day pass and read; mill-pond blob gone; but the pairing frame regressed to creature-only (the
+  trainer was measured from a CollisionShape3D, not visible geometry), 05 eye is inside rock, 03 Pipwing never
+  cleared the 8% floor, mill-pond has a staged body crowding the right edge. Not merged. Round 5 dispatched 10:08
+  (visible-geometry trainer AABB, eye clearance sweep, small-species floor, central-80% lateral bound, night 04
+  under lantern light; max two boots). Judge running.
+- CORRIDOR round 3 (RNG isolation done, station 02 re-render) and PLACES round 6 (courtyard floor diagnostic,
+  earth-mound Warrens) in progress.
+
+### Program-branch health at 09:55 UTC
+- **CI `34cdd67a` (CORRIDOR r2 merge + bake): fully green** — first all-green run on the program branch (the
+  ecology test rewrite `00745630` was superseded by this push and cancelled).
+- Local guards on the merged tree: `test_scatter_rules + test_veg_corridor + test_scatter_perf_budget` 49 tests,
+  0 failed; `smoke_traversal` exit 0; after the PLACES r5 merge `smoke_stronghold` / `smoke_warrens` exit 0.
+- Program branch head `761393b3` carries: WORLD r1–r3, GROUND, VEG, LIFE r2, PLACES r2–r5, CORRIDOR r2, grass
+  carpet ON with cull tiles, fresh bake (825,875 placements). Not merged: WORLD r4 (no-op), LIFE r3 (occluded
+  stands), CORRIDOR r2 addendum (RNG isolation; lands with r3).
+
+### PLACES round 5 (`claude/vp-places` @ 09:17) — judged 09:45, MERGED 09:46 (`60994d60`)
+Evidence: `PLACES/round5/locations/` (12), `_sheet_r4_vs_r5.png`, `PLACES/JUDGE-round5.md`.
+- Lane: Warrens reshaped (223→89 boulders, spoil mounds, exterior base = den rock), storm slabs lifted above the Hall
+  skyline, braziers ×3 + a face torch (21/22 omnis), gate sconces + 2 sentries, banner constant → oxblood; perf
+  `hall_approach` 3848; smokes green; courtyard-night mean 8.38 (target 12 missed, reported honestly).
+- Judge: approach/gate night genuinely brighter with a lit window and sconce; Hall silhouette reads at 200/400 m;
+  den unchanged; a legible grunt in the courtyard by day. Still failing: Warrens exterior a rock bunker with a flush
+  door, threshold frame regressed (darker, overhang wedge, a third grey rock material); courtyard floor still black;
+  banners still poster-red (the constant did not reach the rendered material); no identifiable gate sentry; a
+  floating prop above the gate; storm band still a third of every day sky. Bars A/B still **no** for the set-pieces.
+- Merged for the night/Hall gains. Round 6 dispatched 09:47: palworld-02-style earth mound with the mouth cut in,
+  one rock family, courtyard floor light diagnostic then ≥ 12, banner material found and sampled, gate prop/sentries,
+  storm band halved.
+
 ### CORRIDOR round 2 (`claude/vp-corridor` @ 08:33) — judged 09:05, MERGED 09:06, re-baked
 Evidence: `CORRIDOR/00-before`, `round1`, `round2`, `CORRIDOR/JUDGE-round2.md`.
 - Judge: station 07 restored and improved (hero tree, rock landmark, horizon); 04 a clean win (left-flank horizon

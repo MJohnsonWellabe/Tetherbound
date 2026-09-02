@@ -802,3 +802,667 @@ and the bisect tool differs from the stands tool in some other way.
 **Do not spend another round retuning `art.json` colours for this.** Three
 explanations have now been falsified by measurement, and the one surviving class
 of cause is tool/engine state, not art values.
+
+---
+
+# Round 4
+
+Branch `claude/vp-world`, merged from the program branch at round-4 start.
+
+## Two fix-list premises did not hold — checked before spending renders
+
+**Item 1 ("the red frames predate the exposure change").** They do not.
+`times.dawn.environment.exposure` 0.8 → 0.55 was committed at **06:08**; the stands
+rendered at **06:30** and were re-rendered at **07:20**. Both post-change, both red,
+and the two renders were **bit-identical**. Exposure was already excluded by
+measurement, and it could not have been the cause in any case: exposure scales R, G
+and B proportionally and cannot remove a hue cast.
+
+**Item 6 ("distant scatter reads sparser than round 2").** Measured on the same view:
+
+| | canopy pixels | far-band canopy |
+|---|---|---|
+| round 2 `03-rise-overlook` | 45.14% | 67.90% |
+| round 3 `03-rise-overlook-day` | 44.10% | **72.12%** |
+
+Distant scatter is not sparser; the far band gained 4.2 points. Lowering the ecology
+`contrast` for trees/grove would have reduced real density to chase a defect that is
+not a density change, partly undoing the VP3 clustering work. The likely real cause is
+**value separation**: round 3 darkened and blued `aerial_fade_colour` to `#7f8c9e`,
+bringing far canopy closer in value to the terrain behind it, so trees read as thin
+pins without any of them disappearing. That is what the per-time aerial work below
+addresses. **No vegetation change made.**
+
+This is the third and fourth time a prescribed value has described a state the branch
+was not in. Checking the tip first now routinely saves a render.
+
+## The structural fix: aerial perspective now varies with time of day
+
+Raised in every round since round 1; authorised this round.
+
+`terrain_playground.json`'s `shader.aerial_fade_colour` was a **constant**, and
+`playground_world.gd` read that block **once at scene setup**, while the sky's fog and
+horizon vary per preset. So distance faded toward the same colour at every hour.
+
+**The night inversion now has an exact mechanism:** night was inheriting day's
+`#7f8c9e`, which sits *above* night's own fog `#4d6a9e` in value. Distance was being
+faded toward something brighter than the sky it met — which is why a midnight vista
+measured 25.7/76.6/113.8 against its own foreground at 13.4/22.3/28.2.
+
+Plumbing: `playground_world.gd` caches the terrain material and exposes
+`set_aerial_fade_colour()`; `world_look.gd` pushes from inside the **shared**
+`_apply_environment()`, which both `apply_time()` and `_apply_blended()` already call,
+so pinned capture frames and the live clock both get it from one call site.
+`aerial_fade_colour` joins `_COLOUR_KEYS.environment` so `_blend_dict` lerps it rather
+than snapping at the segment midpoint. Uses `set_shader_param` with a `has_method`
+guard, matching the existing pattern at `playground_world.gd:837` — this is a Terrain3D
+material, not a stock `ShaderMaterial`.
+
+| preset | aerial | that preset's fog | relationship |
+|---|---|---|---|
+| day | `#7f8c9e` | `#b4c8cc` | cooler, a stop darker |
+| golden | `#c9a98a` | `#e8b784` | same warm hue, darker, less saturated |
+| dawn | `#c4a9a4` | `#e6bca4` | warm-neutral, darker |
+| night | `#2f3f63` | `#4d6a9e` | same cool hue, a full stop darker |
+
+Day uses the value actually on the branch after round 3, **not** the `#aebcc4` the fix
+list named (the pre-round-3 constant). Every preset gets an explicit key including day,
+because `_blend_dict` only lerps where BOTH segment endpoints define it — an unset day
+would have held dawn's dark colour across the entire dawn→day transition. A preset
+omitting the key is simply never pushed, so the terrain keeps its setup value.
+
+## Night ground (item 3)
+
+`times.night.environment.ambient_colour` `#34448a` → `#3d50a3`, a pure ×1.18 value
+scale with hue and saturation unchanged. Ambient lifts the NEAR field; the new night
+aerial darkens the FAR field; together they widen the near/far gap in the correct
+direction, reversing the inversion. `ambient_energy` and `exposure` deliberately
+untouched — this file's own VIS-WORLD precedent records that raising either
+re-introduces the "character pasted on black paper" defect.
+
+## Low sun (item 5) — mitigated, not fixed, and the stated mechanism is wrong
+
+golden and dawn `sun_size` 0.012 → 0.009 and `sun_glow` → 0.12, matching base.
+
+But the fix list's mechanism ("the halo term scales with the disc near the horizon") is
+not what the shader does. In `sky_clouds.gdshader` both `disc` and `glow` are pure
+functions of `sun_dot = dot(dir, sun_dir)` — **purely angular, with no elevation term
+anywhere**. The oval is a projection artifact: `EYEDIR` in a sky pass follows the
+camera's perspective, so a circle of constant angular radius renders as a circle only
+on the optical axis and as an ellipse off it, more eccentric further from screen
+centre — and none of the fixed survey framings aim at the sun. **No `sun_size` /
+`sun_glow` / `sun_glow_falloff` value can fully correct this.** Shrinking the disc makes
+the same stretch read as a small oval instead of a frame-filling mass. That is a
+mitigation. A real fix would need the sky shader to compensate for off-axis projection.
+
+## Still open
+
+- **The red wash.** Five explanations now falsified by measurement (weather roll,
+  exposure, camera, light-in-frame, config mutation). The repeat test — the same dawn
+  frame rendered four times in one boot — was running when the budget ran out.
+- Tests and smokes not run this round.
+
+## Repeat test: ACCUMULATION FALSIFIED — and a possible regression from this round
+
+The same dawn frame, re-applied four times in one boot, nothing else changed:
+
+| pass | mean RGB | R−G |
+|---|---|---|
+| dawn #1 (right after night) | 145.7/49.5/42.5 | +96.1 |
+| dawn #2 | 145.7/49.5/42.5 | +96.2 |
+| dawn #3 | 145.7/49.6/42.5 | +96.2 |
+| dawn #4 | 145.7/49.6/42.5 | +96.2 |
+
+**Flat.** No drift across four applications, so the red is not accumulation. Combined
+with the earlier bit-identical re-render, it is not sequence position either. Six
+explanations are now falsified by measurement: weather roll, exposure, camera,
+light-in-frame, config mutation, and accumulation.
+
+The single-frame bisect's clean **−12.8** is now the sole outlier against everything
+else. It should be treated as suspect — most likely that tool was not rendering the
+framing it claimed — rather than as evidence about the defect.
+
+### ⚠ POSSIBLE REGRESSION INTRODUCED THIS ROUND — verify before merging
+
+The same run's sanity frames read:
+
+| preset | this run | round 3, same stand |
+|---|---|---|
+| day | R−G −27.2 | −25.3 (consistent) |
+| golden | R−G −19.6 | −16.3 (consistent) |
+| **night** | **R−G +81.1** | **−50.9** |
+
+Night has flipped from cool to red at this stand, and the only change between those
+two renders is **this round's per-time `aerial_fade_colour` commit**. Day and golden
+are unaffected, which fits: night is the preset whose aerial colour changed most
+(inheriting day's `#7f8c9e` before, now its own `#2f3f63`).
+
+Checked and NOT the cause: `world_look.gd::_as_colour` returns a proper `Color` for a
+`#rrggbb` string, and `playground_world.set_aerial_fade_colour` is guarded and typed —
+no obvious conversion or type fault.
+
+Two readings, and I could not separate them before the budget ran out:
+1. The per-time aerial genuinely regressed night, in which case the night value or the
+   push needs fixing before this merges.
+2. The test tool's "night (sanity)" framing differs from `03-rise-overlook-night`, in
+   which case night was already red at that framing and the aerial change is innocent.
+
+**The cheap discriminator:** re-render `03-rise-overlook` at night with the four
+`times.*.environment.aerial_fade_colour` keys temporarily removed. If night returns to
+≈ −50, this round caused it. That is one render and it should happen before the merge.
+
+Note this also connects the two symptoms: if night at *some* framings is red, then
+"dawn is red at 03 and clean at 01" and "night is red at the moon stand and clean at
+03" may be one defect selecting on framing, not two.
+
+### CORRECTION: the night flip is probably NOT this round's aerial change
+
+Above I flagged night reading +81.1 as a possible regression from the per-time aerial
+commit. Follow-up analysis identifies a simpler cause: **the two runs had different
+frame histories.** Round 3's run cycled the full day/golden/night/dawn set at
+`01-spawn-outward` BEFORE reaching `03-rise-overlook`; the repeat test went straight to
+`03-rise-overlook`. Different number of prior preset transitions, same config.
+
+So the aerial commit is not implicated, and the one-render discriminator I proposed
+above is no longer the priority. Keeping the flag recorded rather than deleting it,
+because the reasoning is what led here.
+
+### Leading mechanism: Godot's sky radiance re-bake has not converged
+
+`scenes/world/meadows_playground.tscn:33-34` sets the Environment's
+`ambient_light_source` and `reflected_light_source` to **SKY**, and `world_look.gd`
+pushes new sky `ShaderMaterial` uniforms on every `apply_time()` / `_apply_blended()`.
+Godot spreads that radiance convolution over several real frames rather than applying it
+synchronously with the parameter push. A camera with a lot of open sky in frame samples
+a partially-converged radiance; a camera buried in foliage barely does.
+
+This fits every observation, which is more than any config explanation managed:
+- **camera-dependent** — elevated, sky-heavy `03-rise-overlook` and `06-moon-stand` go
+  red; low, foliage-heavy `01-spawn-outward` stays clean through the identical
+  night→dawn transition (+3.7).
+- **sequence-dependent** — the number of prior transitions changes the result.
+- **deterministic and bit-identical across runs** — same frame counts, same partial
+  convergence.
+- **flat across four repeats** — it has plateaued, not drifted.
+- **immune to every config toggle** — six falsified explanations, all of them config.
+
+Code was ruled out properly, not assumed: `apply_time()` rebuilds a fully-merged,
+deep-duplicated dict each call; `adjustment_*` (`world_look.gd:669-672`) are set
+UNCONDITIONALLY via `cfg.get(key, default)`, so the "assigned only when present, never
+cleared" shape I hypothesised **does not exist** in this file; and `_apply_cloud_sky`'s
+conditional sets always receive the full base-merged dict.
+
+### The fix, and why it is now safe when it was not in round 1
+
+The fix belongs in the **capture tooling**, not gameplay: wait materially longer after
+`apply_time()` before the shutter — the current 20 physics + 4 process frames are not
+enough for radiance to converge — or sample R−G twice and capture only once two
+consecutive samples agree.
+
+Round 1 tried extra settle frames and it was correctly rejected, because back then the
+clock advanced during the wait and the frame drifted ~5 in-game hours off the pinned
+time. **That objection no longer applies:** `set_clock_frozen()` now pins the clock, so
+extra settle frames cost wall-clock and nothing else. The round-1 trap and the round-4
+fix are compatible precisely because the freeze landed in between.
+
+**The one render that proves it:** the same night→dawn sequence at `03-rise-overlook`,
+varying ONLY the settle length after `apply_time("dawn")` — 24 vs 200 vs 1000 frames. If
+R−G converges back toward the clean ≈ −12 as settle grows, this is confirmed and the
+tooling fix is right.
+
+## Round-4 tests — 1 failure, reported verbatim
+
+`run_tests.gd --only=test_grass_field.gd,test_scatter_rules.gd`:
+
+```
+55 tests, 1116716 assertions, 1 failed
+
+test_scatter_rules.gd :: test_ecology_core_clusters_without_changing_the_count
+  — expected true, got false
+    (core gating did not cluster: 100m-bin CV 2.483 gated vs 2.334 plain)
+```
+
+`smoke_art.gd`: **PASS** — "art: OK — models loaded, sized to their colliders, and the
+meadow is dressed." Notably it also confirms the round-2 canopy fix still holds at the
+asset level: `vegetation LOD  CommonTree_1 survives retint: [10, 4]`, and 384,640 props
+across 35 batches.
+
+On the failure: the test builds its own ecology block inline and asserts
+`cv_b > cv_a * 1.15`. It measured a ratio of **1.064** — so core gating DOES cluster,
+just not by the required 15% margin. It exercises the `corridor_fill` path.
+
+**Probably not this lane's round-3 `ridge_bias` change** (0.75 → 0.4): `ridge_bias` feeds
+`_clump_centre`, which is called only from the origin-square `clumps` path and never from
+`_place_corridor_fill`. That was checked when the change was made. But it has NOT been
+proven by re-running the test at the old value, so it cannot be fully excluded — that is
+one cheap test run, not a render, and it should happen before this is attributed
+elsewhere.
+
+## Round-4 stands — the aerial plumbing is a silent no-op
+
+9 stands in `round4/stands/` + `_sheet_stands.png`. Deltas against round 3, where only
+the aerial colours changed:
+
+| frame | Δ mean RGB | expected |
+|---|---|---|
+| `03-rise-overlook-night` | +0.2 / +0.6 / +0.8 | large darkening (`#7f8c9e` → `#2f3f63`) |
+| `03-rise-overlook-golden` | ~0 | warming (→ `#c9a98a`) |
+| `01-spawn-outward-night` | **+1.6 / +2.8 / +1.4** | ambient lift — **works** |
+
+The ambient change (art.json → `world_look` → `Environment`) lands; the aerial change
+(art.json → `world_look` → terrain `ShaderMaterial`) does not. Same file, same commit.
+The uniform exists (`terrain_ground.gdshader:135`) and the setup path warns about unknown
+keys, so the constant IS applied at scene build — this is specific to the runtime push,
+whose setter returns silently when the cached material is null, and the terrain material
+is built after `world_look` first applies.
+
+Both red frames persist (+96.5, +78.2), unmoved by any colour edit.
+
+# Round 5 — the sky-radiance hypothesis is falsified, and a unifying suspicion
+
+| test at `03-rise-overlook` dawn | mean RGB | R−G |
+|---|---|---|
+| baseline (reproduces) | 146.3 / 49.9 / 42.6 | **+96.5** |
+| `fog_aerial_perspective = 0.0` only | 146.3 / 49.9 / 42.6 | **+96.5** (bit-identical) |
+| Sky `PROCESS_MODE_REALTIME` + `radiance_size` 128 | 146.3 / 49.9 / 42.6 | **+96.5** (bit-identical) |
+| settle 24 / 200 frames | 146.3 / 49.9 / 42.6 | +96.5 |
+| settle 1000 frames | 9.9 / 7.9 / 6.2 | +2.0 — **test artifact, see below** |
+
+Neither arm cleared it. **Eight explanations are now falsified by measurement.**
+
+**The hypothesis was structurally impossible, and this is the useful part.** It requires
+`fog_sky_affect` at its 1.0 default so fog paints sky as well as terrain. This project
+sets it to **0.0** — confirmed three ways: `art.json` line 121, `world_look.gd:668`
+(`env.fog_sky_affect = float(cfg.get("fog_sky_affect", 0.0))`, commented "Sky affect at
+zero, deliberately"), and a runtime print. With sky affect at zero, fog cannot tint the
+sky, so a fog-sourced wash over BOTH sky and ground was never possible. Worth checking
+before designing the next hypothesis.
+
+The 1000-frame settle result must NOT be read as "it resolves itself": the frame went
+near-black overall (same silhouette, everything dark), because the test parks the player
+at y=−500 with physics live, so it free-falls for the whole run and something scales its
+bounds off the player rather than the camera. A real long-settle test needs the player
+pinned or frozen.
+
+## The pattern nobody has named yet
+
+Across this investigation, **unrelated config mutations keep producing bit-identical
+frames**: two weather-freeze runs, two exposure states, `fog_aerial_perspective` 0.8 → 0,
+a whole sky process-mode change — all identical to the tenth. Meanwhile the round-4
+stands showed the per-time `aerial_fade_colour` moving a vista by +0.2/+0.6/+0.8 when a
+full stop of darkening was applied.
+
+That is the same signature twice: **changes that should alter the frame are not reaching
+the renderer.** Two independent instances (my aerial push, and these mutation arms) point
+at one class of cause — the mutation is applied to a different object than the one being
+rendered. The scene has a `WorldEnvironment` (`meadows_playground.tscn:33-34`) and
+`world_look.gd` also builds/owns Environment and Sky resources; a tool or a code path
+that mutates one while the camera renders the other would produce exactly this.
+
+**The test that would settle it, and it is not a render:** inside a running capture,
+print the identity of the Environment actually in use by the rendering camera
+(`get_viewport().find_world_3d().environment`) alongside the one `world_look` mutates,
+and compare. If they differ, that single fact explains both the aerial no-op AND why
+eight config explanations all "failed" — several may never have been tested at all,
+only assumed applied.
+
+Until that is checked, **no further conclusion should be drawn from a config toggle
+producing no change in this scene** — a null result there is currently indistinguishable
+from the change not being delivered.
+
+# Round 5b — the red wash is ELAPSED-TIME driven, not preset or camera
+
+## Identity check: everything is the same object
+
+```
+viewport.find_world_3d().environment : id=-9223371912535603377  meadows_playground.tscn::Env_1
+capture Camera3D                     : environment override=null   attributes override=null
+scene CameraRig/Camera3D             : environment override=null   attributes override=null
+WorldEnvironment node                : same id
+world_look.gd (../WorldEnvironment)  : same id
+Sky / sky_material                   : same instances everywhere
+```
+
+**My "changes are not reaching the renderer" suspicion is FALSIFIED.** Delivery routing
+is correct and neither camera carries an override. Settled for the cost of a print.
+
+## The shutter-time diff is EMPTY — and that is the finding
+
+Comparing `01-spawn-outward-dawn` (clean) against `03-rise-overlook-dawn` (red), same
+preset, at shutter: `fog_enabled`, `fog_density`, `fog_light_color`,
+`fog_aerial_perspective`, `fog_sky_affect`, all `adjustment_*`, `ambient_light_color`,
+`ambient_light_energy`, `tonemap_mode`, `tonemap_exposure`, and the sky uniforms
+`sun_glow` / `sun_colour` / `horizon_colour` / `haze_colour` / `sun_glow_falloff` are
+**bit-identical**. The Environment and sky state are provably correct *on a washed frame*.
+
+## What it actually tracks
+
+- `03-rise-overlook-dawn` shot EARLY in a short run: **clean**, R−G ≈ +1.3.
+- With a longer post-teleport settle, the **`day`** preset — normal values at shutter —
+  rendered as a uniform maroon wash over the whole frame: sky, distant terrain AND near
+  rocks. Day R161/G77/B63; night R120/G39/B49. Mean and median match, so it is a uniform
+  cast, not a hot sun disc.
+
+**So it is neither preset-specific nor camera-specific.** It tracks elapsed render time.
+That vindicates the round-3 instinct (early frames clean, late frames red) which was
+abandoned when freezing `WorldWeather` did not fix it — the pattern was right, the cause
+was not weather.
+
+It also explains why eight explanations all "failed": **none of them touched elapsed
+time.** Config toggles produced bit-identical frames because the cause is not in the
+config.
+
+## Leading candidate — unbounded `TIME` in the sky shader
+
+`shaders/sky_clouds.gdshader` uses raw, unbounded `TIME` in two places:
+
+```glsl
+218: vec2 plane2 = dir.xz * (t * 2.6) * high_scale * vec2(0.35, 1.0) + wind * 1.8 * TIME;
+226: vec2 plane  = dir.xz * t * scale + wind * TIME;
+```
+
+This is the only term in the system that grows with elapsed render time and is immune to
+every config change tested. Under llvmpipe a stands run accumulates tens of minutes of
+`TIME`, where a single-frame tool accumulates seconds — matching "clean early, red late,
+never reproducible in a short tool".
+
+**Caveat, stated rather than glossed:** a sky-shader term cannot by itself tint NEAR
+ROCKS, and the drift magnitude at these elapsed times looks too small to destroy float
+precision on its own. So either the sky feeds everything through an ambient/radiance path
+(worth testing, given `ambient_sky_contribution` is non-zero on several presets), or the
+real cause is a different time-driven term — a post-process/glow reaction, or something
+in the software renderer's own accumulation. **Not proven.**
+
+## The test that settles it, and it is cheap
+
+Render the SAME frame twice in one boot — once immediately, once after N idle frames with
+nothing else changed — and print `TIME` at each shutter. If the second is red, bisect N.
+Then clamp: replace `TIME` with `mod(TIME, P)` for a wind period `P` and re-render.
+
+Anyone continuing this: **do not spend another round on colour values.** Nine explanations
+are now falsified and the config is proven correct at shutter on a washed frame.
+
+# Round 5c — elapsed time is NOT the cause; the wrap is not the fix
+
+Matched-TIME A/B in ONE boot at `03-rise-overlook`, preset `day`. `time_wrap` is a
+uniform, so both arms were shot at the same elapsed time with every other variable
+identical — `1.0e9` (wrap effectively off, old raw-`TIME` behaviour) vs `2500.0` (shipped).
+
+| checkpoint | TIME (s) | R−G wrap OFF | R−G wrap ON |
+|---|---|---|---|
+| N=0 | ~165 | −6.76 | −8.13 |
+| N=200 | ~1226 | −8.26 | −8.25 |
+| N=300 | ~1774 | −8.72 | −8.66 |
+| N=400 | ~2325 | −8.95 | −8.97 |
+| N=500 | ~2883 | **−9.02** | **−8.85** |
+
+**NEITHER ARM EVER WASHED.** Ten frames, out to TIME 2890 s — covering the whole
+2000–2900 s window in which every washed run sat.
+
+## What this settles
+
+1. **Elapsed time alone does not cause the red wash.** Falsified. My round-5b reading
+   that it "tracks elapsed render time" was too strong: elapsed time was a *correlate*
+   of the runs that washed, not the cause.
+2. **The `TIME` wrap is NOT the fix.** It stays in as a genuine latent-bug fix (unbounded
+   `TIME` into `fract()`/`floor()` is a real hazard, and it costs nothing), but it must not
+   be described as fixing the wash. At N=500 the wrap is ACTIVE and the two arms differ by
+   0.17 R−G — i.e. bounded and raw `TIME` are visually indistinguishable at these
+   magnitudes, so precision loss is not degrading anything here.
+3. **A useful side result:** with the wrap active past its period, no seam or jump appeared
+   in the measurements. The 2500 s period is safe to ship.
+4. **The brightening is a completed convergence, not a ramp to the wash.** Mean rose 0.33
+   → ~0.49 by TIME ~1200 s and then *plateaued* (0.4956 → 0.4912 → 0.4896 → 0.4884). It
+   settles; it does not run away into a wash.
+
+## Where the cause must be
+
+The discriminator is now sharp. Runs that washed all involved **stand and preset
+TRANSITIONS**: round 5b washed at shot 3 of 4 (teleport + `apply_time` changes), and the
+round-3 stands run washed at shot 8 of 9. This test did ten shots with **no transitions**
+— same stand, same preset, only idling — and never washed at any elapsed time.
+
+So the trigger is in what happens at a transition: teleporting the camera/player between
+stands, and/or `apply_time()` switching presets — not in time passing.
+
+**Next test, and it is cheap:** at ONE stand, shoot `day`, then call `apply_time` to cycle
+through the other presets and back to `day`, and shoot `day` again — no teleport, no long
+idle. If the second `day` is washed, preset switching is the trigger. If it is clean, add a
+teleport and repeat. That isolates the two candidates in at most two short runs, and
+neither needs to run for an hour.
+
+Evidence: `round5c-wrap-ab/` (10 frames), `round5c-onset/` (2 frames).
+
+# Round 5d — transitions are NOT the trigger either; a camera/player-separation lead
+
+One boot at `03-rise-overlook`, preset `day` throughout, three shots differing only in what
+happened between them:
+
+| shot | preceded by | mean RGB | R−G |
+|---|---|---|---|
+| A | fresh arrival + `apply_time("day")` | 0.3726/0.3992/0.3107 | −6.78 |
+| B | preset cycle golden→night→dawn→day, SAME camera, NO teleport | 0.4904/0.5252/0.4088 | −8.89 |
+| C | teleport 03→01→03, NO preset change | 0.4908/0.5254/0.4088 | −8.80 |
+
+**All three clean.** So neither `apply_time()` preset switching NOR teleporting between
+stands triggers the wash. Both remaining candidates from round 5c are eliminated —
+thirteen explanations now falsified by measurement.
+
+Shot A also reproduces the previous run's N=0 almost exactly (−6.78 vs −6.76, mean 0.3726
+vs 0.3720), so the harness is stable across boots and these nulls are trustworthy.
+
+## The one structural difference that remains — and there is direct evidence for it
+
+This tool places the actor at each stand and freezes it on the ground. The tools whose runs
+DID wash do not: `render_world_r3.gd:389` reads
+
+```gdscript
+if not view.has("actor"):
+    return
+```
+
+and the `03-rise-overlook` stand has **no `actor` key**. So in every washed run the player
+was left at spawn while the camera teleported ~200 m away. In every clean run the player sat
+at the camera.
+
+The supporting evidence is direct, and it was recorded earlier as a discarded artifact: a
+settle test that parked the player at y=−500 with physics live produced a **near-black whole
+frame** — same terrain silhouette, everything dark. That is proof that player position alone
+can globally change what renders, independent of camera, preset and config. It was set aside
+as "a harness artifact" at the time; in light of these nulls it looks like the same
+phenomenon at a different magnitude.
+
+So the working hypothesis is **camera/player separation**, not time, not preset, not
+teleporting per se.
+
+## The test, and it is short
+
+Re-run the exact sequence that washed (`01-dawn` → `03-dawn` → `03-day` → `03-night` via
+`render_world_r3.gd`) TWICE:
+1. unchanged — expect the wash at shot 3, reproducing the known result;
+2. with an `actor` key added to the `03-rise-overlook` stand so the player is placed at the
+   camera — if the wash disappears, camera/player separation is the mechanism.
+
+That is one variable, a known-positive control, and no long idles. If it reproduces, the
+in-game consequence matters more than the capture bug: it would mean the look degrades
+whenever the rendering viewpoint is far from the player, which is a real gameplay condition
+(cutscenes, distant cameras), not just a capture artifact.
+
+Evidence: `round5d-transition/` (3 frames).
+
+---
+
+# ROUND 5e — SOLVED: the red wash is CAMERA/PLAYER SEPARATION
+
+One boot. The known-washing four-shot sequence run twice, back to back, changing exactly
+one thing: whether the player is placed at the camera.
+
+| shot | cam→player dist | mean RGB | R−G |
+|---|---|---|---|
+| P1-01-spawn-outward-dawn | 8.75 m | 0.1699/0.1549/0.1260 | +3.81 clean |
+| P1-03-rise-overlook-dawn | 536.79 m | 0.2799/0.3195/0.3304 | −10.09 clean |
+| P1-03-rise-overlook-day | 576.73 m | 0.2943/0.4657/0.5010 | −43.69 clean |
+| **P1-03-rise-overlook-night** | **616.66 m** | 0.4695/0.1524/0.1920 | **+80.84 RED** |
+| P2-01-spawn-outward-dawn | 1.80 m | 0.1599/0.1364/0.1253 | +5.99 clean |
+| P2-03-rise-overlook-dawn | 14.60 m | 0.3585/0.2884/0.2251 | +17.86 clean |
+| P2-03-rise-overlook-day | 14.60 m | 0.4952/0.5279/0.4106 | −8.35 clean |
+| **P2-03-rise-overlook-night** | **14.60 m** | 0.1270/0.1927/0.2804 | **−16.77 CLEAN** |
+
+**The wash disappears when the player is at the camera.** Same stand, same preset, same
+boot, same sequence, same elapsed time — a **97-point** swing on the only variable changed.
+P1's night reproduces round 5b's +80.9 to within 0.1, so the positive control is real.
+
+Player position moves the frame at every stand, not just in the washed case: `03-dawn` went
+−10.09 → +17.86 and `03-day` −43.69 → −8.35 on placement alone.
+
+## Why every previous hypothesis failed
+
+`render_world_r3.gd::_place_actor()` returns early when a stand has no `actor` key — and
+`03-rise-overlook` has none. It does not leave the player at spawn; it drops it **500 m
+straight down at the stand's eye XZ with physics live**, so it free-falls for the rest of the
+run. That is the same condition that produced the near-black frame I earlier dismissed as a
+harness artifact. It was the same bug, at a different magnitude.
+
+This explains the signature that defeated thirteen hypotheses: every Environment and sky
+value is *correct* at shutter, because the values were never wrong. Nothing in the config,
+the presets, the camera, the clock or the shader was involved — so no config toggle could
+ever move it, and every toggle produced bit-identical frames.
+
+## What is a real defect vs a capture artifact
+
+- **Capture tooling (certain):** any stand without an `actor` key renders with the player
+  free-falling hundreds of metres away. Every VP stands frame ever taken at
+  `03-rise-overlook` is affected. **Fix: give every stand an `actor`, or make `_place_actor`
+  place at the eye by default instead of returning early.**
+- **Engine/gameplay (needs a decision):** something in the render pipeline scales off player
+  position strongly enough to invert a night frame's hue at ~600 m. Whether that can occur in
+  real play (a distant or cutscene camera, a long fall) is worth one deliberate check. If it
+  can, it is a shipping bug, not a tooling one.
+
+## Corrections this supersedes
+
+- Round 5b's "the wash tracks elapsed render time" — **wrong**; elapsed time was a correlate.
+- Round 5c's "transitions are the trigger" — **wrong**; preset cycling and teleporting are
+  both clean (round 5d).
+- The `TIME` wrap (`84f6bfd9`) is **not** the fix. It stays as a genuine latent-bug fix and is
+  now confirmed harmless (the A/B showed 0.17 R−G with the wrap active).
+- `03-day` no longer washes even in P1, while `03-night` still does. Likely the aerial
+  re-apply fix (`04bbb286`) removed one contributor; not proven, and not needed now.
+
+Evidence: `round5e-SOLVED/` (8 frames + `_sheet_SOLVED.png`).
+
+## Round 5f — survey after the actor-parking fix
+
+The SHIPPED `tools/survey.gd`, all five frames, 960x540:
+
+| frame | mean RGB | R−G | round 2 | Δ |
+|---|---|---|---|---|
+| 01-spawn-outward | 82.9/94.5/54.5 | −11.6 | −20.1 | 8.5 |
+| 02-valley-floor | 96.9/109.2/57.5 | −12.3 | −18.7 | 6.4 |
+| **03-rise-overlook** | 125.1/133.9/103.9 | −8.8 | −26.3 | **17.5** |
+| **04-three-quarter** | 94.5/106.8/52.2 | −12.3 | −41.7 | **29.4** |
+| 05-spawn-low-sun | 84.0/72.5/47.1 | **+11.5** | **BLACK** | — |
+
+**No frame is washed.** All five sit between −12.3 and +11.5, and
+`05-spawn-low-sun` — pure black through rounds 1 and 2 — is now a warm golden
+frame, the last of the original defects to close.
+
+The two stands that were parking the player 500 m under the world (`03`, `04`)
+moved most, 17.5 and 29.4 points against 6–9 for the three controls. That is the
+right direction.
+
+**Evidential caveat, stated rather than glossed:** this is a cross-round
+comparison and `art.json` changed substantially in between (day sun disc and
+colour, golden ambient and clouds, per-time aerial, night horizon/ambient), so
+every frame would move somewhat regardless. It corroborates; it does not prove.
+The clean proof of the mechanism remains round 5e, where one variable changed
+inside a single boot and produced a 97-point swing.
+
+Evidence: `round5f-survey-after-fix/` (5 frames + sheet).
+
+---
+
+# Round 6 — close-out
+
+## Stands (9), after parking the actor 12 m behind the camera
+
+| frame | before | now |
+|---|---|---|
+| `03-rise-overlook-dawn` | +96.3 red | **+17.9** warm dawn |
+| `03-rise-overlook-night` | +80.8 red | **−16.7** dark blue |
+| `06-moon-stand-night` | +78.3 red | **−22.6** dark blue |
+| `03-rise-overlook-golden` | −16.3 **cool** | **+24.0** warm |
+| `03-rise-overlook-day` | −25.4 | −8.4 |
+
+The four `01-spawn-outward` controls are unchanged to the decimal (−11.6, +12.2,
+−10.1, +3.7) — that stand always placed its actor, so the fix must not move it, and
+does not. `03-day` now matches the verified player-at-camera arm (125.9/134.3/104.1
+vs 126.3/134.6/104.7) to within rounding.
+
+**`03-rise-overlook-golden` deserves attention.** It read cool at −16.2 and −16.3 and
+was a fix-list item across rounds 3 AND 4; warming `ambient_colour`, `cloud_shade` and
+`cloud_base` never moved it. It was this bug. With the player placed correctly it is
++24.0 warm, with no colour value touched. Some of what this lane diagnosed as art
+direction — the cool golden vista, and part of the night horizon glow attributed to the
+time-invariant aerial term — was one capture bug wearing different masks at different
+times of day. That is why the values kept *looking* wrong while *measuring* correct.
+
+Night glow also improves: the `03` night vista drops from mean ~72 to ~51 against a ~23
+foreground.
+
+## Survey (5), shipped tool
+
+| frame | mean RGB | R−G |
+|---|---|---|
+| 01-spawn-outward | 82.5/94.3/54.4 | −11.8 |
+| 02-valley-floor | 96.8/109.1/57.5 | −12.3 |
+| 03-rise-overlook | 125.1/133.8/103.9 | −8.7 |
+| 04-three-quarter | 94.7/107.0/52.3 | −12.3 |
+| 05-spawn-low-sun | 84.4/72.8/47.1 | **+11.6** |
+
+No frame washed; `05-spawn-low-sun`, black since before this program began, is a warm
+golden frame.
+
+## The 20 m assertion fires at one stand — and that is useful, not a failure
+
+```
+WARNING: survey.gd: 03-rise-overlook stands 26.0m from the player (max 20.0m)
+```
+
+Per-shot distances: 8.8 / 17.2 / **26.0** / 13.7 / 8.8 m.
+
+I predicted 18.9 m from `hypot(12, 14.6)`; the real value is 26.0 m because that stand
+is a **rise** — parking 12 m behind the camera goes downhill, so the park ground sits
+well below the eye's ground and the VERTICAL separation dominates. Shortening the
+horizontal park barely helps (at 8 m it is still ~25.9 m), so the 20 m ceiling is not
+reachable at this stand by parking behind it.
+
+It does not need to be: **the frame is clean at 26 m**, matching the verified
+player-at-camera values. The proven-clean reference is 14.6 m and the washed case was
+616 m, so 26 m is comfortably inside the safe region. Recommendation: keep the warning
+as a tripwire and either raise the ceiling to ~30 m or treat it as informational. Do NOT
+chase the number by shortening the park further — it cannot work, and the evidence says
+it is unnecessary.
+
+## Known limitation to carry forward (filed, not implemented)
+
+**Terrain3D streams its mesh off the PLAYER position.** Any future feature that renders
+from a viewpoint far from the player — a cutscene camera, a photo mode, a spectator or
+map view — must move the streaming anchor with the camera, or the whole scene degrades:
+sky, distant terrain and near geometry together, while every Environment and sky value
+still reads correct. This is exactly how the maroon wash presented, and it is why it
+defeated thirteen config-level hypotheses.
+
+## Program-wide: this pattern is not confined to this lane
+
+- `tools/capture_water.gd` parks the player at eye + (5000, 5000) — **~7071 m
+  horizontal**. Since Terrain3D streams on XZ, that is arguably worse than the 500 m
+  vertical drop. All four of its viewpoints lack an `actor` key.
+- ~21 further tools still do the literal 500 m drop (`capture_buildings`,
+  `capture_paths`, `capture_wayfinding`, `capture_inn`, `capture_well`,
+  `capture_stronghold_approach`, `diag_shadow_cascade`, …).
+- ~8 more use the horizontal 5000-offset shape (`survey_band2`, `capture_night_light`,
+  `_probe_golden_snap`, …).
+
+Any frame those tools have produced carries this defect. Out of scope for this lane, but
+it means evidence from them should be re-read with this in mind.

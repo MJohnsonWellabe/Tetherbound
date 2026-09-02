@@ -206,6 +206,59 @@ jobs:
             echo "code=false" >> "$GITHUB_OUTPUT"
           fi
 
+  # A dedicated, fast, unmissable check for exactly one regression class:
+  # `data/scatter/playground` going stale against `vegetation.json` /
+  # `terrain_playground.json` / a band's `vegetation.json` without a re-bake.
+  # `test_playground_bake_is_committed_and_fresh` (below in
+  # `verify-unit-tests`) already asserts this, but that is one file among
+  # ~40 in one shard of four -- the exact shape that let this recur:
+  # `main` @ 852fe366 sat CI-red on this single assertion in
+  # `verify-unit-tests (4)` while every commit after it was documentation-only
+  # and skipped the code jobs entirely, so the workflow badge read green and
+  # nobody opened a shard log to find the one red line. A config edit
+  # (`data/config/vegetation.json` or `data/config/grass_field.json`) landing
+  # without its re-bake reintroduces the ~5-8 minute live-recompute stall
+  # `ralph/reports/OWNER-0902-LOAD-TIME.md` root-caused from an owner
+  # playtest complaint, on every single New Game / load.
+  #
+  # This job runs the SAME assertion `scatter_bake.gd::is_fresh()` backs --
+  # no new check, no new fingerprint logic, nothing that can drift from what
+  # `verify-unit-tests` already covers -- but as its own named job, so a
+  # stale bake shows up as one red job in the run summary instead of a line
+  # inside a shard's log, and finishes in about as long as the import cache
+  # takes to restore, not gated behind the other ~40 files in its shard.
+  #
+  # Does NOT catch: a config edit that lands together with a correct re-bake
+  # but describes the wrong intent (this only checks the fingerprint matches,
+  # not that the bake is "good"); anything about `data/terrain/playground`,
+  # which has no equivalent freshness check at all (see this task's own
+  # report). Does NOT re-bake or auto-commit anything -- failing here means a
+  # human or a lane runs `godot --headless --path . --script
+  # scripts/world/bake_playground_scatter.gd` and commits the result, same as
+  # today.
+  verify-scatter-bake-freshness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+      - uses: ./.github/actions/setup-godot
+      - name: Check the playground scatter bake is fresh
+        run: |
+          godot --headless --path . --script tests/run_tests.gd \
+            -- --only=test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh
+
   verify-unit-tests:
     runs-on: ubuntu-latest
     # FOUR shards, 2026-09-01 (down from ten). This shard's file list already

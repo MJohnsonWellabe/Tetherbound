@@ -56,14 +56,16 @@ func _run() -> void:
 	_game.set("free_build", true)
 	# Known clear-meadow coordinates also used by the modal/build regressions.
 	var bed := await _place_fixture("creature_bed", Vector3(70.0, 0.0, 70.0))
-	var camp := await _place_fixture("camp", Vector3(100.0, 0.0, 80.0))
-	if bed == null or camp == null:
+	# OWNER-0902-CAMP-SPLIT: the "Rest until morning" prompt now lives on the
+	# standalone bedroll, not a bundled camp.
+	var bedroll := await _place_fixture("bedroll", Vector3(100.0, 0.0, 80.0))
+	if bed == null or bedroll == null:
 		_report()
 		return
 
 	await _exercise_creature_bed(bed, party)
 	await _exercise_repeated_torch()
-	await _exercise_player_rest(camp, bed, party)
+	await _exercise_player_rest(bedroll, bed, party)
 	_report()
 
 
@@ -197,7 +199,7 @@ func _exercise_repeated_torch() -> void:
 		print("torch: %d physical draw/stow cycles restored prop and lights without duplicates" % TORCH_CYCLES)
 
 
-func _exercise_player_rest(camp: Node3D, bed: Node3D, party: RefCounted) -> void:
+func _exercise_player_rest(bedroll: Node3D, bed: Node3D, party: RefCounted) -> void:
 	var creature: RefCounted = party.call("at", 0)
 	var vitals: RefCounted = _player.get("vitals")
 	var day_before := int(_game.get("day"))
@@ -205,9 +207,9 @@ func _exercise_player_rest(camp: Node3D, bed: Node3D, party: RefCounted) -> void
 		_fail("Player has no vitals for rest verification")
 		return
 	vitals.set("health", 40.0)
-	var prompt := camp.get_node_or_null(^"Interactable") as Node3D
+	var prompt := bedroll.get_node_or_null(^"Interactable") as Node3D
 	if prompt == null:
-		_fail("placed camp has no player-bed Rest interaction")
+		_fail("placed bedroll has no Rest interaction")
 		return
 	await _teleport_near(prompt, Vector3.ZERO)
 	if not await _wait_provider(prompt):

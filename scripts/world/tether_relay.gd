@@ -82,6 +82,26 @@ const CONFIG_PATH := "res://data/config/tether_relay.json"
 ## conduits should stay dim/thin even if the config block is ever trimmed.
 const CONDUIT_RADIUS_FALLBACK := 0.03
 const CONDUIT_ENERGY_FALLBACK := 0.4
+## ROUND7 MATERIAL DEFECT: the compound's walls/gate/ramp wore
+## `severed_spokes.gd::_stone_material()` -- the same T_UnevenBrick texture,
+## but under a StandardMaterial3D with no `albedo_color`, i.e. an implicit
+## WHITE tint, which bleached to near-white under this site's own strong
+## daylight (measured on `06-relay-road-day.png`; see `tether_relay.json`'s
+## `site._comment_weathering`). `stronghold.gd` already solved exactly this
+## for the Hall (`hall_stone.gdshader` + a real darkened/desaturated
+## `site.weathering` tint) -- `_weathered_stone_material` below is the same
+## fix, on this site's own numbers, reusing the identical installed textures
+## `severed_spokes.gd` already preloads rather than a new asset.
+const HALL_STONE_SHADER := preload("res://assets/environment/team_tether/hall/hall_stone.gdshader")
+const RELAY_STONE_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
+const RELAY_STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
+const RELAY_STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
+## The ground pad's earth: the SAME triplanar Ground030 dirt/pebble textures
+## `burrow_warrens.gd::_floor_material()` already wears for trodden ground and
+## `build_playground_terrain.gd` uses for the meadow's own paths -- no new
+## texture, same material family the player has been walking on all chapter.
+const GROUND_PAD_ALBEDO := preload("res://assets/environment/terrain/Ground030_Color.jpg")
+const GROUND_PAD_NORMAL := preload("res://assets/environment/terrain/Ground030_NormalGL.jpg")
 
 var _config: Dictionary = {}
 var _world: Node3D = null
@@ -105,6 +125,13 @@ var _heal_elapsed: float = 0.0
 ## every dressing prop that carries a `retint` block, the same lazy pattern
 ## `props.gd::_prefabs` already uses.
 var _prefabs: RefCounted = null
+## ROUND7 MATERIAL DEFECT: one shared, cached ShaderMaterial for every wall
+## run, gate pier, gate lintel and ramp slab -- see `_weathered_stone_material`'s
+## own header. Cached rather than built per mesh so batching is unaffected.
+var _weathered_stone_cache: ShaderMaterial = null
+## ROUND7 MATERIAL DEFECT: the ground pad's own shared earth material -- see
+## `_ground_pad_material`'s own header.
+var _ground_pad_material_cache: StandardMaterial3D = null
 
 
 ## `world` is only ever asked for `ground_height_at` — the same duck-typed
@@ -136,6 +163,7 @@ func build(world: Node3D) -> bool:
 	_works.name = "TetherWorks"
 	add_child(_works)
 
+	_build_ground_pad()
 	_build_walls()
 	_build_gate()
 	_build_decks()
@@ -203,6 +231,151 @@ func is_disabled() -> bool:
 ## --- the compound ----------------------------------------------------------
 
 
+## ROUND7 MATERIAL DEFECT, EXTENDED IN ROUND8. `severed_spokes.gd::
+## _stone_material()` (still what the apparatus placeholder massing wears --
+## genuinely out of scope, see the hero-asset seam header above) never sets
+## `albedo_color`, which defaults to WHITE and multiplies the T_UnevenBrick
+## texture -- fine at a grazing angle where the texture's own shading carries
+## it, but under a face-on sun it bleaches to near-white, exactly what
+## `06-relay-road-day.png` measured. `stronghold.gd::_stone_shader_material`
+## already carries the real fix (`hall_stone.gdshader`, a tint darkened and
+## desaturated off a `site.weathering` block) for the Hall; this is the same
+## shader, the same identical installed textures (no new asset), and this
+## site's OWN `site.weathering` numbers in `tether_relay.json` rather than the
+## Hall's -- see that block's own `_comment_weathering`/`_comment_darken_
+## desaturate` for why the values differ. Cached once and shared by every
+## caller -- `_build_walls`, `_build_gate`'s piers/lintel, `_build_ramps`, and,
+## as of ROUND8 (the round7 sweep missed these: the round7 "after" frame still
+## showed a large pale untextured slab), `_build_decks`' slab and legs (the
+## gantry and the 10x10 apparatus pad were exactly that slab),
+## `_build_console`'s cabinet, and `_build_cable_socket`'s bracket -- ONE
+## ShaderMaterial resource, not one per mesh, so batching is unaffected.
+func _weathered_stone_material() -> ShaderMaterial:
+	if _weathered_stone_cache != null:
+		return _weathered_stone_cache
+	var weathering: Dictionary = (_config.get("site", {}) as Dictionary).get("weathering", {}) as Dictionary
+	var m := ShaderMaterial.new()
+	m.shader = HALL_STONE_SHADER
+	var base := Color(str(weathering.get("base_tint", "#c9c2b3")))
+	var darken := clampf(float(weathering.get("darken", 0.5)), 0.0, 0.95)
+	var desat := clampf(float(weathering.get("desaturate", 0.4)), 0.0, 1.0)
+	var tint := base.darkened(darken)
+	var grey := Color(tint.get_luminance(), tint.get_luminance(), tint.get_luminance())
+	tint = tint.lerp(grey, desat)
+	m.set_shader_parameter("tint", tint)
+	m.set_shader_parameter("albedo_tex", RELAY_STONE_ALBEDO)
+	m.set_shader_parameter("normal_tex", RELAY_STONE_NORMAL)
+	m.set_shader_parameter("rough_tex", RELAY_STONE_ROUGHNESS)
+	m.set_shader_parameter("tile", float(weathering.get("tile", 3.2)))
+	m.set_shader_parameter("emission_energy", 0.0)
+	# The ground line this compound's own walls stand on -- a modest lift
+	# above the site centre's own sampled ground, not the Hall's tall-tower
+	# formula (`_damp_lift()`), because this structure is 2.6-7.2m of wall,
+	# not a multi-storey works.
+	var ground := _ground(_centre)
+	m.set_shader_parameter("damp_top_y", (0.0 if is_nan(ground) else ground) + 0.6)
+	for param: String in ["moss_amount", "up_moss", "damp_height", "damp_strength", "streak_strength"]:
+		if weathering.has(param):
+			m.set_shader_parameter(param, float(weathering[param]))
+	if weathering.has("moss_colour"):
+		m.set_shader_parameter("moss_colour", Color(str(weathering["moss_colour"])))
+	_weathered_stone_cache = m
+	return m
+
+
+## ROUND7 MATERIAL DEFECT. The ground pad: a real, OPAQUE triplanar earth
+## surface laid over the compound's walkable footprint, so the yard no longer
+## depends on the raw terrain underneath reading anything but bleached white
+## -- see `tether_relay.json`'s own `_comment_ground_pad`. Same technique
+## `burrow_warrens.gd::_floor_material(true)` already uses for trodden ground
+## and the village `doorstep` prefab uses for a worked threshold: a real
+## surface, not a colour wash. `dead_ground`'s own alpha skin and the scorch
+## marks are UNCHANGED and still draw on top of this.
+func _ground_pad_material() -> StandardMaterial3D:
+	if _ground_pad_material_cache != null:
+		return _ground_pad_material_cache
+	var config: Dictionary = _config.get("ground_pad", {})
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = GROUND_PAD_ALBEDO
+	m.albedo_color = Color(str(config.get("tint", "#463c30")))
+	m.normal_enabled = true
+	m.normal_texture = GROUND_PAD_NORMAL
+	m.normal_scale = 1.6
+	m.uv1_triplanar = true
+	m.uv1_scale = Vector3.ONE * float(config.get("uv_scale", 0.32))
+	m.roughness = float(config.get("roughness", 0.97))
+	m.metallic = 0.0
+	# The per-vertex boot/tyre wear band (`_build_ground_pad`'s own colours)
+	# multiplies over the tinted texture rather than replacing it.
+	m.vertex_color_use_as_albedo = true
+	_ground_pad_material_cache = m
+	return m
+
+
+## The compound's own packed ground, gridded like `_build_dead_ground` but
+## OPAQUE (alpha 1 throughout) and following the site's (s,t) frame rather
+## than a world-space square, so its footprint actually matches the walled
+## yard instead of a circle centred on the site. A per-vertex "wear" factor
+## darkens a band either side of t=0 -- the road/gantry axis every person and
+## conduit run on this site already treats as its spine -- for the "visible
+## boot/tyre wear" the defect report asks for, all procedural (no new asset).
+func _build_ground_pad() -> void:
+	var config: Dictionary = _config.get("ground_pad", {})
+	if not bool(config.get("enabled", true)):
+		return
+	var s_min := float(config.get("s_min", -27.0))
+	var s_max := float(config.get("s_max", 22.0))
+	var t_min := float(config.get("t_min", -19.0))
+	var t_max := float(config.get("t_max", 19.0))
+	var cell := maxf(float(config.get("cell", 2.0)), 0.5)
+	var lift := float(config.get("lift", 0.03))
+	var wear_band := maxf(float(config.get("wear_band_t", 3.4)), 0.1)
+	var wear_darken := clampf(float(config.get("wear_darken", 0.4)), 0.0, 1.0)
+
+	var steps_s := maxi(1, int(ceil((s_max - s_min) / cell)))
+	var steps_t := maxi(1, int(ceil((t_max - t_min) / cell)))
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var wrote := false
+	for i in steps_s:
+		for j in steps_t:
+			var quad: Array = []
+			for corner: Vector2 in [Vector2(0.0, 0.0), Vector2(1.0, 0.0),
+					Vector2(1.0, 1.0), Vector2(0.0, 1.0)]:
+				var s := s_min + (float(i) + corner.x) * cell
+				var t := t_min + (float(j) + corner.y) * cell
+				var xz := world_of(Vector2(s, t))
+				var ground := _ground(xz)
+				if is_nan(ground):
+					quad.clear()
+					break
+				var wear := 1.0 - wear_darken * clampf(1.0 - absf(t) / wear_band, 0.0, 1.0)
+				quad.append([Vector3(xz.x, ground + lift, xz.y), wear])
+			if quad.size() < 4:
+				continue
+			for triangle: Array in [[0, 1, 2], [0, 2, 3]]:
+				for index: int in triangle:
+					var point: Array = quad[index]
+					var world_v: Vector3 = point[0] as Vector3
+					surface.set_color(Color(point[1], point[1], point[1], 1.0))
+					# The material is triplanar (`uv1_triplanar`), so this UV is never
+					# actually sampled -- it exists only because
+					# `generate_tangents()` below refuses a mesh with none.
+					surface.set_uv(Vector2(world_v.x, world_v.z) * 0.1)
+					surface.add_vertex(world_v)
+			wrote = true
+	if not wrote:
+		return
+	surface.generate_normals()
+	surface.generate_tangents()
+	surface.set_material(_ground_pad_material())
+	var pad := MeshInstance3D.new()
+	pad.name = "GroundPad"
+	pad.mesh = surface.commit()
+	pad.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(pad)
+
+
 ## Wall runs, through `severed_spokes.gd::_ground_wall` — a run that follows
 ## the ground it stands on instead of hanging over the dips at its ends, which
 ## is a failure `OF7` fixed once already in the boundary ring and which this
@@ -230,9 +403,22 @@ func _build_walls() -> void:
 		# One segment per ~3m, so a run re-seats itself on the ground often
 		# enough that a 6-degree shoulder never opens a gap under it.
 		var segments := maxi(2, int(round(span / 3.0)))
-		_works.call("_ground_wall", _world, holder, "Wall_%s" % str(wall.get("id", "x")),
+		var wall_name := "Wall_%s" % str(wall.get("id", "x"))
+		# ROUND7 MATERIAL DEFECT: `_ground_wall`'s own `material` parameter is
+		# typed `StandardMaterial3D`, so the weathered ShaderMaterial cannot be
+		# passed straight in through this dynamic `.call()` -- it is built with
+		# the unweathered stone material exactly as before, then every segment
+		# this call just created (named "<wall_name>_<i>") has its mesh's own
+		# material swapped to the shared weathered one, the same "override
+		# after the fact" `_build_gate`/`_build_ramps` use below.
+		_works.call("_ground_wall", _world, holder, wall_name,
 			(a + b) * 0.5, axis, span, float(wall.get("height", 3.0)),
 			float(wall.get("thickness", 1.4)), segments, _works.call("_stone_material"))
+		for child: Node in holder.get_children():
+			if child is MeshInstance3D and child.name.begins_with(wall_name + "_"):
+				var block := child as MeshInstance3D
+				if block.mesh != null:
+					block.mesh.material = _weathered_stone_material()
 		_built["walls"] += 1
 
 
@@ -281,6 +467,10 @@ func _build_gate() -> void:
 		pier.name = "GatePier_%s" % ("a" if side > 0.0 else "b")
 		pier.position = Vector3(spot.x, ground - 0.8 + pier_h * 0.5, spot.y)
 		pier.rotation.y = yaw
+		# ROUND7 MATERIAL DEFECT: `_stone_box` hands back a fresh BoxMesh already
+		# wearing the unweathered stone material -- swapped here to the shared
+		# weathered one rather than reimplementing the box.
+		(pier.mesh as BoxMesh).material = _weathered_stone_material()
 		holder.add_child(pier)
 		_works.call("_add_box_collider", holder, pier.position,
 			Vector3(pier_w, pier_h, pier_d), yaw)
@@ -290,6 +480,7 @@ func _build_gate() -> void:
 	lintel.name = "GateLintel"
 	lintel.position = Vector3(centre.x, base - 0.8 + pier_h + lintel_h * 0.5, centre.y)
 	lintel.rotation.y = yaw
+	(lintel.mesh as BoxMesh).material = _weathered_stone_material()
 	holder.add_child(lintel)
 
 	# The faction band under the lintel: the one place on the compound that
@@ -338,6 +529,12 @@ func _build_decks() -> void:
 		slab.name = "Deck_%s" % id
 		slab.position = mid
 		slab.rotation.y = yaw
+		# ROUND8 MATERIAL DEFECT: `_stone_box` hands back the unweathered white
+		# stone -- the gantry and the 10x10 apparatus pad are exactly the "large
+		# flat pale untextured slab" the round7 wall/gate/ramp sweep missed
+		# (see `_weathered_stone_material`'s own header; that sweep covered
+		# walls/gate/ramp only). Swapped after the fact, same pattern.
+		(slab.mesh as BoxMesh).material = _weathered_stone_material()
 		holder.add_child(slab)
 		_works.call("_add_box_collider", holder, mid, Vector3(size.x, thickness, size.y), yaw)
 
@@ -368,6 +565,8 @@ func _build_decks() -> void:
 			leg.name = "Leg_%s_%.0f_%.0f" % [id, corner.x, corner.y]
 			leg.position = Vector3(spot.x, ground - 0.3 + height * 0.5, spot.y)
 			leg.rotation.y = yaw
+			# ROUND8 MATERIAL DEFECT: same swap as the slab above -- see there.
+			(leg.mesh as BoxMesh).material = _weathered_stone_material()
 			holder.add_child(leg)
 			_works.call("_add_box_collider", holder, leg.position,
 				Vector3(0.9, height, 0.9), yaw)
@@ -427,7 +626,9 @@ func _build_ramps() -> void:
 		var slab := MeshInstance3D.new()
 		var mesh := BoxMesh.new()
 		mesh.size = Vector3(length + 0.6, thickness, width)
-		mesh.material = _works.call("_stone_material")
+		# ROUND7 MATERIAL DEFECT: the weathered shader, not the plain white-tinted
+		# stone -- see `_weathered_stone_material`'s own header.
+		mesh.material = _weathered_stone_material()
 		slab.mesh = mesh
 		slab.name = "Ramp_%s" % str(ramp.get("id", "ramp"))
 		slab.transform = Transform3D(basis, mid)
@@ -661,6 +862,11 @@ func _build_console(seam: Node3D, apparatus: Dictionary) -> void:
 	cabinet.name = "Cabinet"
 	cabinet.position = Vector3(0.0, size.y * 0.5, 0.0)
 	cabinet.rotation.y = yaw
+	# ROUND8 MATERIAL DEFECT: same swap as the deck slab -- see its own note.
+	# The console cabinet is built on both the placeholder and generated-model
+	# apparatus paths (it is never part of the massing), so this is a real
+	# compound feature, not placeholder scope.
+	(cabinet.mesh as BoxMesh).material = _weathered_stone_material()
 	holder.add_child(cabinet)
 
 	# The face. Teal while live, and the reason the console is findable from
@@ -927,6 +1133,10 @@ func _build_cable_socket(holder: Node3D, run_id: String, landing: Vector3, dir: 
 	bracket.name = "CableSocket_%s_bracket" % run_id
 	bracket.position = landing - inward
 	bracket.rotation.y = yaw
+	# ROUND8 MATERIAL DEFECT: this doc comment already claimed "this site's own
+	# wall/deck material" -- it wasn't; `_stone_box` is always the unweathered
+	# white stone until swapped. Swapped here, same pattern as the deck slab.
+	(bracket.mesh as BoxMesh).material = _weathered_stone_material()
 	holder.add_child(bracket)
 	_cylinder(holder, "CableSocket_%s_cap" % run_id,
 		landing + Vector3.UP * 0.06, 0.09, 0.3, live as StandardMaterial3D)

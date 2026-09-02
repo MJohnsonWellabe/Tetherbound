@@ -1,10 +1,11 @@
 extends Node3D
 
 ## A generic placeable build piece: one glTF module, one box collider, no
-## interaction. `camp.gd` stays its own hand-authored script because it
-## carries the rest/craft prompts; every other `data/items/buildables.json`
-## entry is plain geometry, so this one script places any of them rather
-## than each piece needing its own copy of camp.gd's mesh/collision code.
+## interaction. `campfire.gd`/`player_bed.gd`/`camp_tent.gd` stay their own
+## hand-authored scripts because they carry the rest/craft prompts or sink
+## compensation; every other `data/items/buildables.json` entry is plain
+## geometry, so this one script places any of them rather than each piece
+## needing its own copy of that mesh/collision code.
 ##
 ## The Medieval Village MegaKit ships each module as a glTF scene (a node
 ## tree, not a bare `Mesh`), the same shape `building_prefabs.gd` already
@@ -196,8 +197,9 @@ func tint_ghost_state(state: StringName) -> void:
 
 
 ## Wrapper kept for callers that only ever had a legal/not-legal boolean
-## (camp.gd, storage_container.gd's own hand-authored ghosts, and any test
-## exercising this file directly) — `tint_ghost_state` is the one that knows
+## (camp_tent.gd/campfire.gd/player_bed.gd, storage_container.gd's own
+## hand-authored ghosts, and any test exercising this file directly) —
+## `tint_ghost_state` is the one that knows
 ## about the amber middle state.
 func tint_ghost(ok: bool) -> void:
 	tint_ghost_state(STATE_VALID if ok else STATE_INVALID)

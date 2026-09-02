@@ -40,6 +40,31 @@ const SETTLE_AFTER_MOVE := 20
 ## lower third rather than silhouetted on the horizon.
 const ACTOR_CLEARANCE := 0.4
 
+## How far behind the camera the player is parked when a viewpoint has no
+## `actor` entry. See the history in `_place_actor`: this used to be 500m
+## (straight down) and that was still far enough to break Terrain3D's own
+## streaming for the whole shot. 12m keeps the player inside the same
+## streaming region as the camera -- comparable to the ~14.6m separation that
+## measured correctly in the A/B below -- while `_place_actor`'s geometry
+## keeps it out of frame regardless of distance, so this only has to be
+## "close", not "far and hidden". The program coordinator's rule is no stand
+## may render with the player more than 20m from the camera; see the
+## per-shot distance print/warning below, which checks this every shutter.
+
+## WHY 12m AND NOT MORE. The park point is 180 degrees behind the camera, so it
+## is out of frame at ANY distance -- the limit is not framing, it is the 20m
+## camera-to-player ceiling this program adopted after the maroon-wash bug.
+## Elevated stands separate vertically as well: `03-rise-overlook` sits at
+## eye_h 15.0, so the player on the ground is already ~14.6m below it, and the
+## true separation is hypot(park, 14.6). At park=18 that is 23.2m -- OVER the
+## ceiling. At 12 it is 18.9m, and `04-three-quarter` (eye_h 8.0) is 14.2m.
+## Raising this constant silently pushes elevated stands back over the line.
+const PARK_DISTANCE := 12.0
+
+## The program coordinator's ceiling on camera->player separation at
+## shutter. Anything past this is loud (push_warning), never silent.
+const MAX_CAMERA_PLAYER_DISTANCE := 20.0
+
 ## Vertical FOV, matching the gameplay camera. The horizon maths below depends
 ## on it, and Godot treats `fov` as the vertical angle at 16:9.
 const FOV := 70.0
@@ -329,7 +354,18 @@ func _run() -> void:
 		# dark scene. Better to fail the run than hand it to a critic.
 		if flat < 0.01:
 			failures.append("%s: frame is almost a single flat colour (spread %.4f); nothing rendered" % [name, flat])
-		print("  %-22s spread %.3f  -> %s" % [name, flat, path])
+		# Terrain3D streams its mesh off the PLAYER position (see PARK_DISTANCE's
+		# own comment for the measured A/B), so a player parked far from the
+		# camera degrades the whole scene while every Environment/sky value at
+		# shutter still reads correct -- the exact failure this print/warning
+		# exists to make impossible to regress silently.
+		var cam_player_dist := INF
+		if player != null:
+			cam_player_dist = camera.global_position.distance_to(player.global_position)
+		print("  %-22s spread %.3f  cam-player %.1fm  -> %s" % [name, flat, cam_player_dist, path])
+		if cam_player_dist > MAX_CAMERA_PLAYER_DISTANCE:
+			push_warning("survey.gd: %s stands %.1fm from the player (max %.1fm) -- Terrain3D streaming may be degraded for this frame" % [
+				name, cam_player_dist, MAX_CAMERA_PLAYER_DISTANCE])
 
 	print("")
 	print("%d frames -> %s" % [written.size(), OUT_DIR])
@@ -378,22 +414,52 @@ func _place_actor(player: Node3D, field: RefCounted, camera: Camera3D, view: Dic
 	if player == null:
 		return
 	if not view.has("actor"):
-		# Parked far out of shot rather than hidden: hiding it disables the body,
+		# Parked out of shot rather than hidden: hiding it disables the body,
 		# and a disabled body is a different scene from the one being surveyed.
 		#
-		# This used to be a fixed (9000, 200, 9000), nowhere near the baked
-		# 512m world. That silently broke Terrain3D's own mesh streaming for
-		# the rest of the scene — not just around the player — and was the
-		# real cause of viewpoints 03 and 04 rendering as if the camera sat
-		# below the terrain with nothing but the world-noise backdrop and
-		# floating vegetation in frame: proven by re-running both with the
-		# player left near the camera instead, which rendered correctly with
-		# no other change. Parking straight down from the eye's own XZ keeps
-		# the player inside the region Terrain3D is already streaming for
-		# this shot, and 500m of dirt is more than enough to keep it out of
-		# any authored viewpoint.
+		# HISTORY, part 1: this used to be a fixed (9000, 200, 9000), nowhere
+		# near the baked 512m world. That silently broke Terrain3D's own mesh
+		# streaming for the rest of the scene — not just around the player —
+		# and was blamed for viewpoints 03 and 04 rendering as if the camera
+		# sat below the terrain with nothing but the world-noise backdrop and
+		# floating vegetation in frame. The fix at the time was to park
+		# straight down from the eye's own XZ instead: same column as the
+		# camera, just 500m of dirt below it.
+		#
+		# HISTORY, part 2: that "fixed" position still reproduced the exact
+		# same defect. A same-boot, same-preset, same-elapsed-time A/B at
+		# 03-rise-overlook with only the player's distance from the camera
+		# changed:
+		#   player 616.66m away -> mean RGB (0.4695, 0.1524, 0.1920), R-G +80.84 (maroon wash)
+		#   player  14.60m away -> mean RGB (0.1270, 0.1927, 0.2804), R-G -16.77 (correct dark blue)
+		# a 97-point swing in R-G from distance alone, with the other frames
+		# moving the same way: 03-dawn -10.09 -> +17.86, 03-day -43.69 -> -8.35.
+		# So "500m straight down" was never a fix for the real mechanism —
+		# Terrain3D keys its mesh streaming off the player's own position, and
+		# 500m in any direction, including down, is still far enough outside
+		# the region it streams around the camera to degrade rendering for
+		# the whole visible scene, not just the ground under the player.
+		#
+		# THE ACTUAL FIX: keep the player close to the camera (small
+		# PARK_DISTANCE), so it stays inside the same region Terrain3D is
+		# already streaming for this shot — matching the ~14.6m separation
+		# that measured correctly above — and get "out of frame" from
+		# geometry instead of from distance. Parking directly behind the
+		# camera along the horizontal eye->target line puts the player at a
+		# yaw of exactly 180 degrees from the camera's own look-at heading
+		# (see `_pose`: heading comes from `look_at`, only pitch is
+		# overridden afterwards). `_pitch_for_horizon` is bounded to roughly
+		# +-51.6 degrees for any horizon fraction in its clamped [0.05, 0.95]
+		# range against this file's 70-degree vertical FOV, nowhere near
+		# enough to rotate a point 180 degrees away in yaw into a ~35-degree
+		# half-angle frustum cone. So this is out of frame by construction,
+		# for any horizon setting — not a distance the frustum merely happens
+		# not to reach.
 		var eye_xz: Vector2 = view["eye"]
-		player.global_position = Vector3(eye_xz.x, field.height_at(eye_xz.x, eye_xz.y) - 500.0, eye_xz.y)
+		var target_xz: Vector2 = view["target"]
+		var behind := (eye_xz - target_xz).normalized()
+		var park_xz := eye_xz + behind * PARK_DISTANCE
+		player.global_position = Vector3(park_xz.x, field.height_at(park_xz.x, park_xz.y) + ACTOR_CLEARANCE, park_xz.y)
 		return
 
 	var xz: Vector2 = view["actor"]
