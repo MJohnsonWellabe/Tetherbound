@@ -747,3 +747,58 @@ touched.
 
 `ralph/reports/visual-parity/WORLD/round3/`: `stands/` (9, incl. `06-moon-stand-night`),
 `locations/` (15), `survey/` (5), plus `_sheet_stands.png`, `_sheet_survey.png`.
+
+## Red wash — my diagnosis was WRONG; here is what is actually established
+
+I claimed the red wash was the same `WorldWeather` bug as VP1-G0, reaching late
+frames of a long run. **Falsified.** I added the weather freeze to the stands tool
+and re-rendered all nine frames:
+
+| frame | before | after weather freeze |
+|---|---|---|
+| 03-rise-overlook-dawn | 145.8/49.5/42.3 (+96.3) | **145.8/49.5/42.3 (+96.3)** |
+| 06-moon-stand-night | 117.1/38.8/55.9 (+78.3) | **117.1/38.8/55.9 (+78.3)** |
+
+**Bit-identical.** Freezing weather changed nothing, and identical output across
+two runs also proves the render is deterministic — so elapsed real time was never
+the variable, and my "same preset early vs late" reading was a coincidence of
+frame ordering.
+
+### Ruled out, with evidence
+
+1. **Weather roll / elapsed time** — the freeze produced bit-identical frames.
+2. **The camera** — the bisect tool uses the *identical* camera for this stand
+   (eye 172,−88 → target −60,60, horizon 0.24) and measured a clean **−12.8**,
+   against the stands tool's **+96.3**.
+3. **Light source in frame** (my earlier claim) — golden points **8.5°** off its
+   sun and renders fine; dawn points **119.5°** away and is red.
+4. **Config mutation across `apply_time()` calls** — `_merged()` deep-copies
+   (`.duplicate(true)`), and `_layer_weather()` mutates only those copies.
+
+### What that leaves
+
+Same camera, same preset, same config — clean in a single-frame tool, red as
+frame 8 of a nine-frame run. So it IS sequence state, but not weather and not
+config pollution. The remaining candidate is **`Environment` state persisting on
+the reused camera/environment across frames**, which is exactly the
+`environment.adjustment_*` lead the coordinator listed first.
+
+Concretely worth testing: `night` carries `adjustment_saturation`/
+`adjustment_contrast`; if dawn does not override them, a dawn frame rendered
+*after* a night frame inherits them, while a dawn frame rendered alone does not.
+Note this needs to account for `01-spawn-outward-dawn` being clean (+3.7) despite
+following `01-spawn-outward-night` — so a single inheritance is not enough, and
+the hypothesis to test is **accumulation** (03-dawn follows two night frames;
+the moon stand follows those plus a red dawn).
+
+### The test that settles it, in one render
+
+Render dawn at the 03 stand **four times in a row in one boot** with nothing else,
+and print R−G each time. If it starts clean and drifts red, it is accumulation and
+the fix is to reset the Environment (or explicitly set `adjustment_*` per preset)
+between frames. If all four are red, the single-frame bisect result is the anomaly
+and the bisect tool differs from the stands tool in some other way.
+
+**Do not spend another round retuning `art.json` colours for this.** Three
+explanations have now been falsified by measurement, and the one surviving class
+of cause is tool/engine state, not art values.
