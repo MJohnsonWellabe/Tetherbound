@@ -1127,3 +1127,111 @@ has been removed and its finding preserved as a comment. `smoke_stronghold` pass
 **Still open from that lane:** the gate sentries remain where the shipped commit puts them, not at the
 banner-spot position the dropped revision was reaching for. Whether they read from the gate stand is
 unproven and should be judged from the round-6 gate frames.
+
+---
+
+# Round 7
+
+Merged the program branch clean; re-baked (825701 placements, 328 s).
+
+## R7.1 Per item: proven or not
+
+| # | item | verdict |
+|---|---|---|
+| 1 | Warrens doorway patch + earth mound | **NOT proven** — patch returned on the new dome pieces; scale overshot then corrected |
+| 2 | Hall at 200/400 m | **PROVEN at 400 m** — silhouette now unmistakable against clean sky |
+| 3 | Storm band ≤ 15 % of sky | **proven at approach** (22.7 % → 13.3 % dark-in-top-40 %); gate stand confounded |
+| 4 | Gate sentries identifiable | **not verified** — see R7.5 |
+
+## R7.2 Two root causes worth keeping
+
+**The doorway patch was my own round-6 regression, and it was a normal-map problem, not a colour one.**
+Round 6's `_wear_as_wall_stone()` called `_material(_rock(), 0.0, true)` directly instead of going through
+`_wear_the_cave_stone()`, so it silently inherited the **interior** default `normal_scale` 2.2 — tuned for
+the cave's dim shadowless omnis — on doorway boulders scaled 1.9–2.4× standing outdoors under a real
+directional sun. Every other exterior boulder already passes 1.15 for exactly this reason, and
+`_material()`'s own docstring documents the failure mode. That one caller skipped it. Fixed by passing
+1.15, preserving round 6's confirmed win that the threshold rock is the den's own stone.
+
+**The courtyard floor was never a material problem, and three rounds of energy bumps were the wrong
+lever.** A diagnostic render (one omni, energy 20, range 30, courtyard centre) took the floor from literal
+`(0,0,0)` to a lit, textured `~(128,121,80)`. The cause was `attenuation: 1.4` on the four corner braziers
+— a steep curve concentrating falloff near the bowl, so raising energy (2.83 → 2.84 → 3.58 → 8.38) only
+brightened the hottest pixels and never the pool. Fixed by reach and shape: attenuation 1.4 → **1.0**,
+range 19.5 → **27.0**, energy unchanged at 6.6.
+
+**A measurement caveat that invalidates some earlier comparisons.** The same config measured **11.05,
+12.21 and 11.49** on repeat renders — brazier flicker is about **±26 %**. Courtyard-night frame means
+within a few points of each other are therefore not comparable between rounds, and this round's dip
+against round 6's 12.45 is inside that noise band, not a regression. Any future "the night got worse"
+finding needs repeat renders before it is believed.
+
+## R7.3 Frames, r6 → r7
+
+| frame | r6 | r7 | mean abs diff | px >8 |
+|---|---|---|---|---|
+| `04-warrens-approach-day` | 92.06 | 105.19 (after correction) | 25.17 | 38.5 % |
+| `04-warrens-standing-day` | 34.86 | 38.60 (after correction) | 14.29 | 32.9 % |
+| `11-castle-landmark-hall-100m-day` | 103.31 | 98.15 | 13.85 | 38.2 % |
+| `10-stronghold-gate-day` | 114.27 | 114.36 | 10.02 | 24.4 % |
+| `10-stronghold-courtyard-day` | 42.74 | 36.75 | 9.00 | 26.6 % |
+| `10-stronghold-approach-day` | 100.29 | 101.98 | 6.79 | 21.2 % |
+| `11-castle-landmark-hall-200m-day` | 119.33 | 119.66 | 4.46 | 17.5 % |
+| `11-castle-landmark-hall-400m-day` | 119.60 | 119.59 | 3.52 | 14.1 % |
+| `04-warrens-den-day` | 74.98 | 74.97 | 0.93 | 2.2 % |
+
+**Frame mean is a bad metric for a small distant object, and this round proves it.** At 400 m the mean
+moved 119.60 → 119.59 — nothing — while the frame changed decisively: the storm band is gone from behind
+the Hall and the silhouette is now crisp against clean sky with legible towers. The 14.1 % changed-pixel
+figure carries that; the mean does not. Judge distant-landmark stands by looking, not by mean.
+
+## R7.4 Hall and storm band
+
+Hall: new `site.hall_massing_exterior_lift` **1.3** applied by `_lift_hall_massing_exterior()`, multiplying
+`scale.y` **only** (never x/z, so the footprint is unchanged and towers cannot grow into each other or the
+gate opening) on 17 of 18 non-roof `HallMassing` children. The interior is untouched by construction — that
+loop only visits `HallMassing`'s own children, never the chambers/passages/`interior_structure` paths.
+`retrofit_skyline` lifts re-derived off the corrected 4.165 m native height × scale × 1.3 (scaffold
+14.3→18.79, chimney and banner rig 11.8→15.54). `hall_stone.gdshader` gains `fog_disabled` — the
+WorldEnvironment fog was mixing the dark weathered tint toward the pale sky, which is what washed the
+silhouette out — plus a **capped** manual distance-darken (`distance_darken_start/end/floor` 100/400/0.6).
+
+Storm band: distances 300/356/262 → **450/506/412** (+150 m each), alpha 0.6 → **0.4**, `base` held at 55.0
+(an absolute world height, so the 18 m Hall clearance is distance-independent). Moving them back is what
+actually shrinks angular footprint — round 6 halved the heights and the extent did not visibly change.
+
+Measured dark fraction of the top 40 % of frame: approach-day **22.7 % → 13.3 %**, under the ~15 % target.
+`hall-400m` 8.4 % → 8.9 %. The gate stand reads 45.7 % → 43.1 %, but that metric is confounded there — at
+the gate the Hall's own walls fill most of the upper frame, so "dark" is mostly building, not band.
+
+## R7.5 What still fails
+
+1. **The Warrens doorway patch is back.** Item 1's highest-priority defect is **not fixed**. The
+   `normal_scale` correction was right and the giant-slab overshoot has been corrected (scales roughly
+   halved, pieces grounded), but the delivered frame shows a bright pale band above the doorway again —
+   now located on the three **new `mouth_dome` pieces** added this round. Those carry the earth triplanar
+   and are rendering pale. Next step: apply the same exterior `normal_scale` 1.15 treatment (or the stain
+   shader path) to the dome pieces, which currently go through a different material call.
+2. **My own scale-up overshot and had to be corrected mid-round.** 66 → 15 pieces was right; scaling to
+   [6.0, 10.0] produced 15–20 m slabs dwarfing the 1.8 m player, with visible sky under one. Corrected to
+   [3.0, 5.0] / [3.0, 4.5] with dome sinks re-derived at the same proven 0.28 sink/scale ratio. The
+   corrected frame is proportionate and grounded.
+3. **200 m still weak.** 400 m is now decisive; 200 m moved only 4.46 / 17.5 %.
+4. **Sentries unverified.** They now stand on the tower rooftops at y 15.54, and a separate finding fixed
+   a real bug where a bare `body.call("build","grunt")` skipped the rank emission floor and rendered them
+   near-black. Whether they read at native size in the gate frame has not been confirmed.
+5. **Banner hex is tonemap-dependent** — a finding worth carrying: ACES tonemapping renders `#5a1a1a` as
+   RGB(119,15,24), boosting R ~32 % and crushing G to 55 %, so it reads poster-red whatever hex is picked.
+   The working value is `#66362c`, which renders as RGB(140,69,54).
+
+## R7.6 Perf and tests
+
+`hall_approach` **3842** (r6 3843) — under the 4000 ceiling; the +30 % height lift cost nothing because it
+only scales existing nodes. `village_high` 3156. `smoke_stronghold` exit 0, `smoke_warrens` exit 0.
+Contact sheet at `round7/_sheet_locations.png`.
+
+## R7.7 Round 8 prep
+
+`ralph/reports/visual-parity/PLACES/ROUND8-CAMPS-PLAN.md` — the camps list, **prepared not started** as
+asked. Flags that none of the three camps has been re-rendered since round 1, so round 8 needs fresh
+before-frames at matched settings first.
