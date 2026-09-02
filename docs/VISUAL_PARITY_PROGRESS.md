@@ -177,6 +177,10 @@ Evidence: `ralph/reports/visual-parity/WORLD/round2/` (village/pond 15 frames + 
   pond-approach stand moved out of the canopy.
 - Open for round 3: golden still reads as a soft light mass (WORLD's own measurement), a night stand aimed at the moon's
   azimuth is needed to judge the moon, `03-rise-overlook-golden` reads cool/grey.
+- Code-blind judge (`WORLD/JUDGE-round2.md`): **Bar A yes (day frames), Bar B yes on environment** — first yes of the
+  program; creature/character half unanswerable (no creature in any frame → LIFE lane). Remaining: survey golden frame
+  black again (clock freeze ordering in survey.gd), daytime sun a flat white cutout, night ground black past the lit
+  radius, overlook distance flattens against the sky, one evenly spaced bush row. All sent as round-3 items.
 
 ## Implementation decisions
 
