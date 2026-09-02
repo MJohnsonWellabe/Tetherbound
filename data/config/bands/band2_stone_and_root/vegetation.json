@@ -23,5 +23,87 @@
       "radius": 30.0,
       "_why": "BAND2-63-WARRENS: the Burrow Warrens' new mouth (burrow_warrens.json `_comment_resiting`). The cave stands in a rock knoll of its own here, and the driven run found the doorway itself blocked by a `CommonTree_3` growing where the entrance is -- the scatter had no idea the cave had moved, because nothing told it. Radius 30 covers the whole footprint plus the apron and the last stretch of the approach, so the outcrop reads as rock breaking out of the ground rather than a boulder pile in a wood, and so nothing is standing in the doorway. This clearing does NOT take effect until the coordinator's single re-bake -- GATE_D_LANE_CONTRACT.md sec4's inherited fingerprint defect, the same one the `ranger_camp` clearing above is waiting on."
     }
-  ]
+  ],
+  "_comment_layer_anchors_vp4": "VP4-CORRIDOR. See band1_lower_meadows/vegetation.json's own comment on this same key for the merge mechanism and why it exists; ralph/reports/visual-parity/CORRIDOR/REPORT.md has the before/after frames these fix. Checked clear of this file's own clearings above (the quarry at 400,1800 r17; ranger_camp at -259,2256.5 r15; the Warrens mouth at -357,2610 r30) before siting.",
+  "layer_anchors": {
+    "trees": [
+      {
+        "_why": "VP4 station 06-stone-root-entry (310,1660)->(400,1800): the before frame had a signpost but an otherwise bare gap between the player and a thin horizon tree line on entering Band 2. A tree line flanking the path's left side, ~65m ahead.",
+        "at": [340.0, 1748.0],
+        "radius": 11.0,
+        "count": 6
+      },
+      {
+        "_why": "VP4 station 07-band2-mid (20,2130)->(-150,2210): the worst 'empty grass to sky' case in the whole pass -- bald ground from the player's feet to the horizon on both sides. A tree line flanking the left side of the path ~70m ahead, opposite the rock cluster below.",
+        "at": [-54.0, 2137.0],
+        "radius": 11.0,
+        "count": 6
+      },
+      {
+        "_why": "ROUND 2 (JUDGE-round1.md), COORDINATES CORRECTED after this round's own first render: the round-1 fix here was confirmed a NET REGRESSION -- 'the single emptiest frame in the after set' -- for the same RNG-reshuffle reason as station 02's own round-2 note. This round's first attempt at this anchor ((-15,2185)) was rendered and found to overlap round 1's own trees anchor below (5.2m apart against a combined 27m of radius) rather than landing on a distinct ridge, and independently checked to be on the WRONG side: the camera's true right axis here, `(-Fz,Fx)` from the view direction, is (-0.426,-0.905), and (-15,2185)'s own offset from the eye had a near-zero/slightly-right dot, not the clearly-right position the brief's 'right ridge' asks for. This corrected centre has a clearly positive dot (+27) with that axis (confirmed right) and sits >40m clear of every other anchor at this station. 7 trees (6-8 asked), radius 16, ~73m out (within the 40-70m ask, upper end).",
+        "at": [-52.0, 2097.0],
+        "radius": 16.0,
+        "count": 7
+      },
+      {
+        "_why": "ROUND 2, COORDINATES CORRECTED: the brief's single hero tree, scale 1.4, on the rise ahead-left at ~60m. This round's first attempt ((-45,2148)) used the same inverted axis and landed on the right/centre instead of left -- checked directly, its dot with the true right axis above was positive. This corrected centre has a negative dot (confirmed left) and sits clear of every other anchor here.",
+        "at": [-4.0, 2185.0],
+        "radius": 3.0,
+        "count": 1,
+        "scale_min": 1.4,
+        "scale_max": 1.4
+      },
+      {
+        "_why": "ROUND 2, station 08-band2-far (-420,2470)->(-330,2630): JUDGE-round1.md called this station 'already the strongest landmark frame in the set' and 'essentially unchanged' -- nothing was broken here, but the brief still asks for a distant tree mass on the horizon side, 120-200m out, at both 04 and 08 for consistency. Sited on the RIGHT side (~165m out) rather than the left: the left side at this distance overlaps the Burrow Warrens' own 30m-radius clearing (-357,2610) by more than half its own radius, which would silently reject most draws there.",
+        "at": [-311.0, 2592.0],
+        "radius": 20.0,
+        "count": 12,
+        "scale_min": 0.9,
+        "scale_max": 1.2
+      }
+    ],
+    "rocks": [
+      {
+        "_why": "VP4 station 06-stone-root-entry: a rock cluster on the right side of the path, matching this band's own 'Stone & Root' identity as well as filling the sightline. `min_slope_deg` overridden to 0 for the same reason as band 1's bend cluster -- this shoulder reads as gentle meadow, not the layer's usual 6-degree floor.",
+        "at": [365.0, 1697.0],
+        "radius": 12.0,
+        "count": 5,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "VP4 station 07-band2-mid: a second mid-ground anchor on the right side of the path, ~110m ahead, so the sightline reads compression (near trees) -> open -> a second landmark rather than one clump and then bare ground again.",
+        "at": [-70.0, 2197.0],
+        "radius": 10.0,
+        "count": 4,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "ROUND 2, COORDINATES CORRECTED: the brief's 4-mixed-size rock cluster, 20m off-path on the right, close to the player so it reads as a near-field ground detail. This round's first attempt ((15,2155)) used the same inverted axis; this centre's own dot with the true right axis is positive (confirmed right), ~22m from the eye. `min_slope_deg` 0 for the same gentle-meadow reason as every other rock anchor in this pass; mixed sizes come from the layer's own 0.28-2.1 scale span.",
+        "at": [2.0, 2116.0],
+        "radius": 9.0,
+        "count": 4,
+        "min_slope_deg": 0.0
+      }
+    ],
+    "bushes": [
+      {
+        "_why": "VP4 station 06: edge planting on the new tree line.",
+        "at": [350.0, 1705.0],
+        "radius": 6.0,
+        "count": 3
+      },
+      {
+        "_why": "VP4 station 07: edge planting on the new tree line.",
+        "at": [-60.0, 2145.0],
+        "radius": 6.0,
+        "count": 3
+      },
+      {
+        "_why": "ROUND 2: 4 bushes near the new round-2 rock cluster, per the brief. Coordinates corrected alongside the rock cluster above.",
+        "at": [6.0, 2120.0],
+        "radius": 6.0,
+        "count": 4
+      }
+    ]
+  }
 }
