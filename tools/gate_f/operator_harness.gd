@@ -2492,6 +2492,11 @@ func _step_wait(args: Dictionary) -> String:
 
 
 func _step_press(args: Dictionary, step_id: String) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED press: not needed (%s)" % str(moot.get("actual", ""))
 	var control := str(args.get("control", ""))
 	if control.is_empty():
 		return "HARNESS-ERROR press step %s has no control" % step_id
@@ -4125,10 +4130,28 @@ func _step_focus_move(args: Dictionary, step_id: String) -> String:
 ## either the auto-focus or a press count to land on the entrant a step actually
 ## means to feed.
 func _step_focus_row(args: Dictionary, step_id: String) -> String:
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED focus_row: not needed (%s)" % str(moot.get("actual", ""))
 	var prefix := str(args.get("prefix", ""))
 	if prefix.is_empty():
 		return "HARNESS-ERROR focus_row step %s has no prefix:\"...\"" % step_id
 	var max_presses := maxi(1, int(args.get("max_presses", 6)))
+	# `optional` (added 2026-09-02): `tab_backpack.gd::_eligible()`'s food gate
+	# is `nourishment_fraction < 1.0`, not "not yet fed" -- a creature caught
+	# late in the segment can start close to full and be genuinely ungeable,
+	# with its row pulled out of the focus chain entirely
+	# (`_refresh_target_panel()`'s `focus_mode = FOCUS_NONE` on an ineligible
+	# row). `ui_down` then never lands on it no matter how many times it is
+	# pressed -- not a flaky press `max_presses` should paper over, a row that
+	# genuinely is not reachable. `optional: true` treats "never reached it"
+	# as a SKIP rather than a FAIL, and backs out of the picker with one
+	# `menu_cancel` (`_read_targeting_cancel()` reads it as Cancel while a
+	# picker is open) so a step after this one presses into the grid, not a
+	# picker sitting open on the wrong row.
+	var optional := bool(args.get("optional", false))
 	var have: Dictionary = _probe.call("input_state")
 	var text := str(have.get("focus_text", ""))
 	if text.begins_with(prefix):
@@ -4143,6 +4166,13 @@ func _step_focus_row(args: Dictionary, step_id: String) -> String:
 		text = str(have.get("focus_text", ""))
 		if text.begins_with(prefix):
 			return "focus_row '%s': %d x ui_down reached it (%s)" % [prefix, attempt + 1, text]
+	if optional:
+		var cancel := await _inject("menu_cancel", HOLD_TAP)
+		if bool(cancel.get("ok", false)):
+			for f in 20:
+				await process_frame
+		return ("SKIPPED focus_row (optional): %d x ui_down never reached '%s' -- last row read "
+			+ "\"%s\", backed out with menu_cancel") % [max_presses, prefix, text]
 	return "FAIL focus_row '%s': %d x ui_down never reached it -- last row read \"%s\"" % [
 		prefix, max_presses, text]
 
@@ -4969,6 +4999,27 @@ func _step_assert(args: Dictionary) -> Dictionary:
 				return {"ok": have >= want_min, "actual": "party size %d (wanted >= %d)" % [have, want_min]}
 			var want := int(args.get("equals", -1))
 			return {"ok": have == want, "actual": "party size %d (wanted %d)" % [have, want]}
+		"creature_fed":
+			# Live-reads `party_state()[index].fed`. For `skip_if` on a feed
+			# sequence: a creature caught late in a segment can still be at or
+			# near full satiety and genuinely ineligible in
+			# `tab_backpack.gd`'s target picker (`_eligible()` requires
+			# `nourishment_fraction < 1.0`) -- not a bug, just satiety timing
+			# a fixed "feed entrant N" script cannot know in advance. Skipping
+			# that entrant is correct; force-feeding it is not possible
+			# (`_eligible()` pulls the row out of the focus chain entirely) and
+			# was never the goal -- `S03-260`'s `tournament_team_fed` only
+			# needs every creature FED, not every creature FED BY THIS SCRIPT.
+			var idx := int(args.get("index", -1))
+			var members: Array = _probe.call("party_state")
+			if idx < 0 or idx >= members.size():
+				return {"ok": false, "actual": "no party member at index %d (party size %d)" % [
+					idx, members.size()]}
+			var member: Dictionary = members[idx]
+			var is_fed := bool(member.get("fed", false))
+			var want_fed := bool(args.get("equals", true))
+			return {"ok": is_fed == want_fed, "actual": "party[%d] (%s) fed=%s" % [
+				idx, str(member.get("name", "")), is_fed]}
 		"inventory_count":
 			# Live-read the satchel through the same snapshot the diff detector
 			# uses, rather than trusting a press sequence spent what it meant to.

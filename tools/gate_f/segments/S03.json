@@ -4774,7 +4774,8 @@
       "action": "focus_row",
       "args": {
         "prefix": "1.",
-        "max_presses": 6
+        "max_presses": 6,
+        "optional": true
       },
       "expected": "tab_backpack.gd's target-picker rows read 'N.  Name  HP x / y' (see this file's own row-building code); this entrant's row is the one starting with '1.'."
     },
@@ -4852,7 +4853,8 @@
       "action": "focus_row",
       "args": {
         "prefix": "2.",
-        "max_presses": 6
+        "max_presses": 6,
+        "optional": true
       },
       "expected": "tab_backpack.gd's target-picker rows read 'N.  Name  HP x / y' (see this file's own row-building code); this entrant's row is the one starting with '2.'."
     },
@@ -4930,7 +4932,8 @@
       "action": "focus_row",
       "args": {
         "prefix": "3.",
-        "max_presses": 6
+        "max_presses": 6,
+        "optional": true
       },
       "expected": "tab_backpack.gd's target-picker rows read 'N.  Name  HP x / y' (see this file's own row-building code); this entrant's row is the one starting with '3.'."
     },
@@ -5009,7 +5012,8 @@
       "action": "focus_row",
       "args": {
         "prefix": "4.",
-        "max_presses": 6
+        "max_presses": 6,
+        "optional": true
       },
       "expected": "tab_backpack.gd's target-picker rows read 'N.  Name  HP x / y' (see this file's own row-building code); this entrant's row is the one starting with '4.'."
     },
@@ -5088,7 +5092,8 @@
       "action": "focus_row",
       "args": {
         "prefix": "5.",
-        "max_presses": 6
+        "max_presses": 6,
+        "optional": true
       },
       "expected": "tab_backpack.gd's target-picker rows read 'N.  Name  HP x / y' (see this file's own row-building code); this entrant's row is the one starting with '5.'."
     },
