@@ -535,3 +535,19 @@ concrete cost it has caused.
 **Conclusion: no re-render of round 1 is warranted on this finding, and no cache/stale-import defect
 exists to fix.** What is warranted is closing the resolution mismatch so the judge is never handed a
 mismatched pair again.
+
+## Addendum fixes — evidence
+
+`ralph/reports/visual-parity/PLACES/round2b/locations/`, `VP_FAST` 960x540, same settings as round 2 so
+these ARE directly comparable to `round2/`.
+
+| frame | round2 mean | round2b mean | delta | |
+|---|---|---|---|---|
+| `01-village-grandpa-yard-night` | 24.27 | 27.10 | **+2.83** | warm light at Grandpa's door |
+| `01-village-route-out-day` | 105.43 | 119.79 | **+14.36** | stand re-aimed at TrailGate |
+| `01-village-route-out-night` | 18.45 | 22.24 | +3.79 | same re-aim, night |
+| `01-village-standing-day` | 138.00 | 138.52 | +0.52 | **control — stand unchanged** |
+
+The control matters: an unchanged stand moved 0.52 while the Grandpa's-yard night frame moved 2.83
+(a ~12 % lift on a dark frame). So the night change is a genuine local practical light, not a global
+exposure or tone shift — which is the failure mode "just brighten the night" would have produced.
