@@ -1678,6 +1678,35 @@ func _check_the_quarry(world: Node, player: CharacterBody3D, failures: Array[Str
 ## entry's own `_comment_stranded_p3_deck_clearance` and
 ## `ralph/GATE_D_REMAINDERS.md` §8. Nothing in this walk needed to change; kept
 ## as it was before this investigation.
+## BREADCRUMB-TELEPORT-RACE. This teleports the player straight to the bridge
+## rather than walking them there, and `player_controller.gd`'s entombment
+## failsafe (`_recover_if_entombed`/`_drop_breadcrumb`) only ever records a
+## breadcrumb on a frame where the body is BOTH on the floor AND has moved
+## more than `_unstick_progress_m` (8cm) since its last recorded anchor. A
+## fresh teleport satisfies the second half every frame of the fall (each
+## frame's position differs from the last-updated anchor by more than 8cm)
+## but never the first half until the body actually lands -- and the anchor
+## keeps sliding to match the falling position every one of those airborne
+## frames, so by the exact frame landing happens the remaining delta from the
+## just-updated anchor can easily be under 8cm again. When that race loses,
+## the ONLY breadcrumb on record stays whatever real ground the player last
+## walked away from under their own power somewhere else entirely in the
+## world -- for this file, the perimeter cap-walk, kilometres away. Getting
+## held at the still-locked gate for `unstick_after` seconds then recovers
+## the player onto THAT breadcrumb instead of the bridge approach, which
+## reads as having walked straight through the gate.
+##
+## A real player is never teleported, so this is a pure test-harness gap, not
+## a production bug -- confirmed against `player_controller.gd`'s own header
+## on `_recover_if_entombed`: "RECOVERY REWINDS, IT DOES NOT INVENT. The first
+## choice is always a breadcrumb -- ground this body stood on and walked away
+## from" is exactly what the entombment failsafe promises and is doing
+## correctly; it has just never been told about a spot the harness placed the
+## body at directly. Fixed here, not there: settle for real (wait for
+## `is_on_floor()`, not a fixed frame count that may land mid-fall depending
+## on the drop height) and then hand the controller a real breadcrumb at
+## journey's start explicitly, the one production movement would have left
+## walking up to the bridge for real.
 func _walk_at_the_bridge(bridge: Node3D, player: CharacterBody3D, camera_rig: Node3D) -> float:
 	var start: Vector2 = bridge.call("near_point", BRIDGE_START_BACK)
 	var target: Vector2 = bridge.call("far_point", BRIDGE_START_BACK)
@@ -1686,14 +1715,57 @@ func _walk_at_the_bridge(bridge: Node3D, player: CharacterBody3D, camera_rig: No
 	player.velocity = Vector3.ZERO
 	var outward := Vector3(target.x - start.x, 0.0, target.y - start.y).normalized()
 	camera_rig.set("yaw", Vector3(0.0, 0.0, -1.0).signed_angle_to(outward, Vector3.UP))
+	for i in 90:
+		await physics_frame
+		if player.call("is_on_floor"):
+			break
+	# A few more frames once grounded, not just the first frame `is_on_floor()`
+	# reads true: the landing can still be settling (a small bounce or slide)
+	# for a frame or two, and `_drop_breadcrumb` is only asked once, so it
+	# should record a position the body is actually resting at.
 	for i in 10:
 		await physics_frame
+		if player.has_method("_drop_breadcrumb"):
+			player.call("_drop_breadcrumb", player.global_position)
 
+	# THE SETTLE-AND-BREADCRUMB ABOVE IS NECESSARY BUT NOT SUFFICIENT, and this
+	# guard is the half that actually holds the check honest.
+	#
+	# `player_controller.gd::_recovery_position()` skips any breadcrumb closer
+	# than `_unstick_min_distance_m` (`movement.json`'s
+	# `min_recovery_distance_m`, 6.0m) -- correctly, since rewinding a metre
+	# just re-enters the same hole. But the breadcrumb planted above is at the
+	# spot the body was placed at, and when the body is entombed there it never
+	# moves horizontally, so that breadcrumb is ALWAYS inside the skip radius
+	# and can never be the one chosen. Recovery then falls back to the only
+	# other thing on record -- the perimeter cap-walk, kilometres away -- and
+	# `depth_past_crossing` scores the teleport as having strolled past a
+	# locked gate. Observed 3/3 attempts, byte-identical: entombed at
+	# (7.9, -3.4, 1319.0), recovered to (505.0, 8.2, 7678.4), reported
+	# "+6348.4m past the gap" against an unlocked run's honest +22.9m.
+	#
+	# So progress is only counted while the player is still WALKING, exactly as
+	# `_check_sigil_gate` already does for the same class of failure (a fall and
+	# respawn there, an entombment recovery here -- both teleports, both scored
+	# as progress by a walk that could not tell the difference). A step larger
+	# than STEP_SANITY_M in one physics frame is not a stride: stop and keep
+	# what was earned on foot.
+	#
+	# This deliberately does NOT touch the 6.0m skip radius. That rule is
+	# production behaviour protecting real players from being rewound into the
+	# hole they just fell in; a test that cannot describe its own teleports is
+	# the thing that is wrong here.
 	var best := -INF
+	var previous := player.global_position
 	Input.action_press("move_forward")
 	for i in BRIDGE_WALK_FRAMES:
 		await physics_frame
 		var here := player.global_position
+		if here.distance_to(previous) > STEP_SANITY_M:
+			print("      (walk abandoned at frame %d: the player moved %.0fm in one frame -- an entombment recovery, not a crossing)" % [
+				i, here.distance_to(previous)])
+			break
+		previous = here
 		best = maxf(best, float(bridge.call("depth_past_crossing", Vector2(here.x, here.z))))
 	Input.action_release("move_forward")
 	for i in 20:

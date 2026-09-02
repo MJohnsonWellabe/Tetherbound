@@ -40,6 +40,31 @@ const SETTLE_AFTER_MOVE := 20
 ## lower third rather than silhouetted on the horizon.
 const ACTOR_CLEARANCE := 0.4
 
+## How far behind the camera the player is parked when a viewpoint has no
+## `actor` entry. See the history in `_place_actor`: this used to be 500m
+## (straight down) and that was still far enough to break Terrain3D's own
+## streaming for the whole shot. 12m keeps the player inside the same
+## streaming region as the camera -- comparable to the ~14.6m separation that
+## measured correctly in the A/B below -- while `_place_actor`'s geometry
+## keeps it out of frame regardless of distance, so this only has to be
+## "close", not "far and hidden". The program coordinator's rule is no stand
+## may render with the player more than 20m from the camera; see the
+## per-shot distance print/warning below, which checks this every shutter.
+
+## WHY 12m AND NOT MORE. The park point is 180 degrees behind the camera, so it
+## is out of frame at ANY distance -- the limit is not framing, it is the 20m
+## camera-to-player ceiling this program adopted after the maroon-wash bug.
+## Elevated stands separate vertically as well: `03-rise-overlook` sits at
+## eye_h 15.0, so the player on the ground is already ~14.6m below it, and the
+## true separation is hypot(park, 14.6). At park=18 that is 23.2m -- OVER the
+## ceiling. At 12 it is 18.9m, and `04-three-quarter` (eye_h 8.0) is 14.2m.
+## Raising this constant silently pushes elevated stands back over the line.
+const PARK_DISTANCE := 12.0
+
+## The program coordinator's ceiling on camera->player separation at
+## shutter. Anything past this is loud (push_warning), never silent.
+const MAX_CAMERA_PLAYER_DISTANCE := 20.0
+
 ## Vertical FOV, matching the gameplay camera. The horizon maths below depends
 ## on it, and Godot treats `fov` as the vertical angle at 16:9.
 const FOV := 70.0
@@ -142,11 +167,27 @@ const VIEWPOINTS := [
 ]
 
 
+## FAST ITERATION MODE. On with `--fast` (a user script arg) or `VP_FAST=1` in
+## the environment. Halves every settle wait below (floor 2 frames, via
+## `_frames()`) and turns off MSAA/SSAA on the capture viewport. Output
+## filenames and directories are unchanged -- this trades fidelity for a
+## quicker local loop, never for the numbers that ship as evidence.
+static var _fast_mode: bool = false
+
+
+static func _frames(n: int) -> int:
+	return maxi(2, n / 2) if _fast_mode else n
+
+
 func _init() -> void:
 	_run()
 
 
 func _run() -> void:
+	_fast_mode = "--fast" in OS.get_cmdline_user_args() or OS.get_environment("VP_FAST") == "1"
+	if _fast_mode:
+		print("[fast] iteration mode: settle halved, msaa off")
+
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 
 	var packed: PackedScene = load(SCENE)
@@ -158,7 +199,46 @@ func _run() -> void:
 	var world: Node = packed.instantiate()
 	root.add_child(world)
 
-	for i in SETTLE_FRAMES:
+	var written: Array[String] = []
+	var failures: Array[String] = []
+
+	# R6-CLOCK-FREEZE (weather half). world_look.gd's set_clock_frozen (below)
+	# only gates WorldLook's own `_process` -- it says nothing about
+	# WorldWeather, a SEPARATE node with its own `_process` that rolls a new
+	# weather preset on a real-time timer (weather.json cycle_seconds_min/max,
+	# 240-480s) and, on every roll, calls world_look.gd::set_weather(), which
+	# unconditionally re-derives sun/sky/environment via _apply_blended() --
+	# see that function's own body: it has no `_clock_frozen` check at all,
+	# because it is meant to work "even while frozen" for the ordinary case of
+	# a capture tool calling set_weather() directly. A random roll firing mid-
+	# run comes in through that same unguarded door. A 5-viewpoint pass here is
+	# comfortably inside the 240-480s window under software rendering (this
+	# tool's own SETTLE_FRAMES alone is ~240 real seconds), while a short
+	# 1-2 viewpoint smoke test is not -- which is exactly why an isolated
+	# clock-freeze check on a couple of viewpoints came back looking correct
+	# while the full five-viewpoint run did not: nothing about the mechanism
+	# differs, only whether 240-480 real seconds had elapsed yet.
+	#
+	# tools/_capture_ground_and_sky.gd and tools/_capture_locations.gd (both
+	# golden/night frames render correctly through them) already freeze BOTH
+	# WorldLook and WorldWeather for exactly this reason -- this tool only
+	# froze the first. Forced to "clear" and frozen HERE, before the very
+	# first settle frame, rather than alongside WorldLook's own freeze below:
+	# freezing it after the 240-frame initial settle would be freezing it
+	# after it already had up to 240 real seconds -- most of the roll window
+	# -- to fire once unobserved.
+	var weather: Node = world.get_node_or_null(^"WorldWeather")
+	if weather != null and weather.has_method("set_weather"):
+		weather.call("set_weather", "clear")
+		weather.set_process(false)
+		weather.set_physics_process(false)
+	else:
+		failures.append("no WorldWeather node with set_weather; its random cycle " +
+			"timer is free to roll mid-run and overwrite a pinned time of day " +
+			"through world_look.gd's own set_weather(), which is not gated by " +
+			"the clock freeze")
+
+	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
 
 	# The playground's own rig follows the player every frame, so it has to stop
@@ -180,13 +260,37 @@ func _run() -> void:
 	camera.far = 2000.0
 	world.add_child(camera)
 	camera.make_current()
+	if _fast_mode:
+		root.msaa_3d = Viewport.MSAA_DISABLED
+		root.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 
 	var look: Node = world.get_node_or_null(^"WorldLook")
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	var field: RefCounted = HEIGHTFIELD.new()
 
-	var written: Array[String] = []
-	var failures: Array[String] = []
+	# R6-CLOCK-FREEZE (WorldLook half; see the WorldWeather freeze above for
+	# the other half of "the clock"). Every viewpoint below calls apply_time()
+	# expecting an exact, reproducible pinned frame -- but world_look.gd's
+	# passive day/night clock (`_process`) is still running underneath it, and
+	# this loop's own SETTLE_AFTER_MOVE/POSE_FRAMES waits are real frames under
+	# software rendering (~1s each on this box). A previous attempt papered
+	# over a black golden-hour frame by adding 120 MORE such frames after
+	# apply_time("golden") and got a lit frame back that was not golden at all
+	# -- neutral midday -- because those 120 frames let _process's own
+	# _apply_blended(hour) re-derive the sky from a clock that had drifted ~5
+	# in-game hours off the pin (see world_look.gd::set_clock_frozen's own
+	# comment for the exact arithmetic).
+	# Freezing once, here, BEFORE the viewpoint loop starts (and therefore
+	# before every apply_time() call the loop makes), means every apply_time()
+	# call below stays pinned through its settle/pose frames with no drift,
+	# without touching SETTLE_AFTER_MOVE/POSE_FRAMES at all. Freezing alone is
+	# not enough on its own, though -- WorldLook's OWN clock was never the
+	# whole story here, see the WorldWeather block above.
+	# has_method guards this tool against an older WorldLook that predates
+	# set_clock_frozen -- it should degrade to the old (drift-prone) behaviour
+	# rather than hard-fail.
+	if look != null and look.has_method("set_clock_frozen"):
+		look.call("set_clock_frozen", true)
 
 	# Terrain3D has to be told about this camera too. `make_current()` only
 	# changes what the viewport renders from; Terrain3D streams its regions —
@@ -215,14 +319,21 @@ func _run() -> void:
 		_place_actor(player, field, camera, view)
 		if look != null:
 			look.call("apply_time", str(view.get("time", "day")))
+			# Proof the pin held: printed AFTER apply_time() and BEFORE the
+			# settle/pose wait below, so a re-run can compare this against the
+			# named viewpoint's own `time` and catch drift the moment it
+			# starts, rather than only inferring it from a wrong-looking PNG.
+			if look.has_method("time_of_day") and look.has_method("hour"):
+				print("DIAG %s: time=%s hour=%.3f" % [
+					name, str(look.call("time_of_day")), float(look.call("hour"))])
 		else:
 			failures.append("%s: no WorldLook node, so the time of day is whatever the scene was saved with" % name)
 
 		# Physics frames, not process frames, because the trainer has to settle
 		# onto the ground after being moved.
-		for i in SETTLE_AFTER_MOVE:
+		for i in _frames(SETTLE_AFTER_MOVE):
 			await physics_frame
-		for i in POSE_FRAMES:
+		for i in _frames(POSE_FRAMES):
 			await process_frame
 		await RenderingServer.frame_post_draw
 
@@ -243,7 +354,18 @@ func _run() -> void:
 		# dark scene. Better to fail the run than hand it to a critic.
 		if flat < 0.01:
 			failures.append("%s: frame is almost a single flat colour (spread %.4f); nothing rendered" % [name, flat])
-		print("  %-22s spread %.3f  -> %s" % [name, flat, path])
+		# Terrain3D streams its mesh off the PLAYER position (see PARK_DISTANCE's
+		# own comment for the measured A/B), so a player parked far from the
+		# camera degrades the whole scene while every Environment/sky value at
+		# shutter still reads correct -- the exact failure this print/warning
+		# exists to make impossible to regress silently.
+		var cam_player_dist := INF
+		if player != null:
+			cam_player_dist = camera.global_position.distance_to(player.global_position)
+		print("  %-22s spread %.3f  cam-player %.1fm  -> %s" % [name, flat, cam_player_dist, path])
+		if cam_player_dist > MAX_CAMERA_PLAYER_DISTANCE:
+			push_warning("survey.gd: %s stands %.1fm from the player (max %.1fm) -- Terrain3D streaming may be degraded for this frame" % [
+				name, cam_player_dist, MAX_CAMERA_PLAYER_DISTANCE])
 
 	print("")
 	print("%d frames -> %s" % [written.size(), OUT_DIR])
@@ -292,22 +414,52 @@ func _place_actor(player: Node3D, field: RefCounted, camera: Camera3D, view: Dic
 	if player == null:
 		return
 	if not view.has("actor"):
-		# Parked far out of shot rather than hidden: hiding it disables the body,
+		# Parked out of shot rather than hidden: hiding it disables the body,
 		# and a disabled body is a different scene from the one being surveyed.
 		#
-		# This used to be a fixed (9000, 200, 9000), nowhere near the baked
-		# 512m world. That silently broke Terrain3D's own mesh streaming for
-		# the rest of the scene — not just around the player — and was the
-		# real cause of viewpoints 03 and 04 rendering as if the camera sat
-		# below the terrain with nothing but the world-noise backdrop and
-		# floating vegetation in frame: proven by re-running both with the
-		# player left near the camera instead, which rendered correctly with
-		# no other change. Parking straight down from the eye's own XZ keeps
-		# the player inside the region Terrain3D is already streaming for
-		# this shot, and 500m of dirt is more than enough to keep it out of
-		# any authored viewpoint.
+		# HISTORY, part 1: this used to be a fixed (9000, 200, 9000), nowhere
+		# near the baked 512m world. That silently broke Terrain3D's own mesh
+		# streaming for the rest of the scene — not just around the player —
+		# and was blamed for viewpoints 03 and 04 rendering as if the camera
+		# sat below the terrain with nothing but the world-noise backdrop and
+		# floating vegetation in frame. The fix at the time was to park
+		# straight down from the eye's own XZ instead: same column as the
+		# camera, just 500m of dirt below it.
+		#
+		# HISTORY, part 2: that "fixed" position still reproduced the exact
+		# same defect. A same-boot, same-preset, same-elapsed-time A/B at
+		# 03-rise-overlook with only the player's distance from the camera
+		# changed:
+		#   player 616.66m away -> mean RGB (0.4695, 0.1524, 0.1920), R-G +80.84 (maroon wash)
+		#   player  14.60m away -> mean RGB (0.1270, 0.1927, 0.2804), R-G -16.77 (correct dark blue)
+		# a 97-point swing in R-G from distance alone, with the other frames
+		# moving the same way: 03-dawn -10.09 -> +17.86, 03-day -43.69 -> -8.35.
+		# So "500m straight down" was never a fix for the real mechanism —
+		# Terrain3D keys its mesh streaming off the player's own position, and
+		# 500m in any direction, including down, is still far enough outside
+		# the region it streams around the camera to degrade rendering for
+		# the whole visible scene, not just the ground under the player.
+		#
+		# THE ACTUAL FIX: keep the player close to the camera (small
+		# PARK_DISTANCE), so it stays inside the same region Terrain3D is
+		# already streaming for this shot — matching the ~14.6m separation
+		# that measured correctly above — and get "out of frame" from
+		# geometry instead of from distance. Parking directly behind the
+		# camera along the horizontal eye->target line puts the player at a
+		# yaw of exactly 180 degrees from the camera's own look-at heading
+		# (see `_pose`: heading comes from `look_at`, only pitch is
+		# overridden afterwards). `_pitch_for_horizon` is bounded to roughly
+		# +-51.6 degrees for any horizon fraction in its clamped [0.05, 0.95]
+		# range against this file's 70-degree vertical FOV, nowhere near
+		# enough to rotate a point 180 degrees away in yaw into a ~35-degree
+		# half-angle frustum cone. So this is out of frame by construction,
+		# for any horizon setting — not a distance the frustum merely happens
+		# not to reach.
 		var eye_xz: Vector2 = view["eye"]
-		player.global_position = Vector3(eye_xz.x, field.height_at(eye_xz.x, eye_xz.y) - 500.0, eye_xz.y)
+		var target_xz: Vector2 = view["target"]
+		var behind := (eye_xz - target_xz).normalized()
+		var park_xz := eye_xz + behind * PARK_DISTANCE
+		player.global_position = Vector3(park_xz.x, field.height_at(park_xz.x, park_xz.y) + ACTOR_CLEARANCE, park_xz.y)
 		return
 
 	var xz: Vector2 = view["actor"]

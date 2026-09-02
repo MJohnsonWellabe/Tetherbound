@@ -103,6 +103,14 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/locations"
 
+## Terrain3D streams its mesh off the PLAYER position, not the camera -- a
+## player parked far from the camera degrades the whole scene (sky, terrain,
+## near props) while every Environment/sky value at shutter still reads
+## correct (see tools/survey.gd's PARK_DISTANCE comment for the measured A/B).
+## This tool already carries the player to every shot's own `eye` point, so
+## this constant/print exist to make that guarantee loud rather than assumed.
+const MAX_CAMERA_PLAYER_DISTANCE := 20.0
+
 const BOOT_FRAMES := 90
 const SETTLE_FRAMES := 40    # on arrival at a site, so spawning catches up
 const ARRIVE_FRAMES := 18    # after the analytic seat, before the ray reseat
@@ -149,8 +157,8 @@ const SITES := [
 			 "_why": "T1-VILLAGE 2026-08-30. The opening's own establishing shot: standing in Grandpa's yard at the house's own `outside` marker (~7.5m off the door, the point the starter row already stands at) looking back at the door. TETHERBOUND_VISUAL_STUNNING_PASS.md sec6/sec16 name this exact yard/house pair a priority and no existing capture in this file stands here."},
 			{"label": "tournament", "mode": "standing", "at": [14.0, 5.0], "look": [20.0, 15.0],
 			 "_why": "T1-VILLAGE 2026-08-30. tournament.json `board.position` [20,15], `facing_deg` 205 -- the north field behind the square, Bryn's practice ground (playground_world.gd's own comment). Eye stands on the walk-up line from the well toward the board, which is also roughly the bearing `board.facing_deg` 205 was tuned to be read head-on from. sec16 names 'the village tournament area' a priority alongside Grandpa's house and no existing capture in this file has ever stood here."},
-			{"label": "route-out", "mode": "standing", "at": [10.0, -10.0], "look": [-14.0, 14.0],
-			 "_why": "T1-VILLAGE 2026-08-30. Standing at the well (paths.routes' own hub) looking down the FIRST leg of the 'Pond' route (terrain_playground.json paths.routes[2]: [10,-10] -> [-14,14] -> ... -> [-105,115]), the bearing toward the pond valley and the open basin band1/spawns.json's own comment calls Creek Hollow. sec12 asks for a composed sightline out of the village toward the early-adventure route; this is the one this file has never shot."}
+			{"label": "route-out", "mode": "standing", "at": [14.0, 20.0], "look": [13.11, 30.37],
+			 "_why": "VP2-NIGHT judge pass, 2026-09-02: 'no gate is visible on any road frame -- make the TrailGate/RoadGate visible in at least one route-out frame.' OLD stand (T1-VILLAGE 2026-08-30): at [10,-10] (the well) looking [-14,14], the first leg of the Pond route -- a real road but one with no gate on it anywhere along its authored length, which is exactly why the judge could not find one.\n\nNEW stand aims at TrailGate instead: `data/config/village_boundary.json` gates.entries['TrailGate'] sits `at` [13.79,22.4] on the corridor spine (`terrain_playground.json` trail.bands[0], band1_lower_meadows: authored points [27.5,-16] -> [14,20] -> [8,90] -> ...) -- the road crosses the village fence there, so this is a real gate on a real road, not an invented one. `at` [14,20] is that polyline's own waypoint immediately before the crossing (not picked by eye), 2.41m short of the gate (dx=-0.21, dz=2.4, hypot=2.41) -- close enough that the leaf (`road_gate.gd`/`village_boundary.json` wall.gate_clear_m: a 4.07m-wide leaf) reads large in the near-foreground rather than as a distant speck, and with the default `standing` back (3.2) pulling the camera to about (14.27,16.81) -- still south of the gate on the same road, so nothing about this eye needed overriding.\n\n`look` is deliberately NOT the gate's own coordinate. This file's own header trap (`_ground_at` returning a prop's own box-collider top rather than terrain -- the mill-wheel/apparatus/campfire/bench entries above all hit this) applies to a gate leaf exactly as it does to a fire or a bench: `road_gate.gd::_build_gate_collision` sizes the leaf's collision box from its own AABB (+`vault_guard_m` 1.0, per village_boundary.json's own `_comment_vault_guard`), so a look point sitting on the leaf's own footprint would raycast to the LEAF'S collision top, not the road under it, and `look_up`'s default 1.6 would aim into the sky over the gate the same way the apparatus shot's own fix describes. Instead `look` continues 8m PAST the gate along the trail's own next leg (14,20)->(8,90): unit vector (-6,70)/70.257 = (-0.0854,0.9963), so gate [13.79,22.4] + 8*(-0.0854,0.9963) = (13.11,30.37) -- still on the authored road, off the leaf's own box, so `_ground_at` reads real terrain there and the bare RIG's `look_up` needs no collider correction. Because this look point is directly beyond the gate on the same straight road the eye also stands on, the leaf sits physically between camera and aim point either way -- centred in the frame, not merely somewhere in it. Shot label kept as `route-out` so filenames still match earlier rounds."}
 		]
 	},
 	{
@@ -159,7 +167,8 @@ const SITES := [
 		"_why": "data/config/village.json's OW5D-relocated pond group: mill [-382,514], footbridge [-386.3,520], ranger_station [-350,507]; band1 props.json `bridge_repair_site` centroid [-391.4,521.1].",
 		"shots": [
 			{"label": "approach", "mode": "approach", "at": [-330.0, 492.0], "look": [-350.0, 507.0],
-			 "_why": "the pond route's own first waypoint. village.json's ranger_station entry names the route as points [-80,85] -> [-105,115] in the pre-OW5D frame; the OW5D offset is (-250,+407), so the route runs (-330,492) -> (-355,522) now. Standing at its head looks at the ranger station -- 'the first built thing between the settlement and the pond valley' in that file's own words -- with the mill beyond it.\n\nThe first draft of this eye was (-352,545) and the raycast reported no collision under it with an analytic height of -20.20 against a pond surface at -17.0: it was IN THE WATER, 38m north of the ranger station. Kept in the comment rather than silently corrected, because 'a plausible-looking coordinate 40m from the thing it names' is how this sweep has produced six frames of the wrong subject."},
+			 "back": 13.0, "up": 9.2,
+			 "_why": "the pond route's own first waypoint. village.json's ranger_station entry names the route as points [-80,85] -> [-105,115] in the pre-OW5D frame; the OW5D offset is (-250,+407), so the route runs (-330,492) -> (-355,522) now. Standing at its head looks at the ranger station -- 'the first built thing between the settlement and the pond valley' in that file's own words -- with the mill beyond it.\n\nThe first draft of this eye was (-352,545) and the raycast reported no collision under it with an analytic height of -20.20 against a pond surface at -17.0: it was IN THE WATER, 38m north of the ranger station. Kept in the comment rather than silently corrected, because 'a plausible-looking coordinate 40m from the thing it names' is how this sweep has produced six frames of the wrong subject.\n\nCODE-BLIND JUDGE, 2026-09-02: the shipped frame (bare RIG `back` 7.0/`up` 3.2) came back filled with leaf cards, camera seated inside a tree canopy on this trail-side approach -- `trees` (data/config/vegetation.json) are the everyday 7-9m broadleaf and this layer's own `corridor_fill.trail_bias` 0.85 sites most of its fill BESIDE the authored trail this eye stands on, so a copse this close to the route is the expected case, not a fluke. Pulled `back` 7.0->13.0 (+6m further from the target along the same eye->target axis) and `up` 3.2->9.2 (+6m higher above the ground under the camera -- ground-relative, per `_frame()`, not an absolute Y) to clear a canopy whose typical crown base sits well under the new eye height even on the tallest 9m form, without re-aiming: same `at`/`look`, so the shot still stands at the route's own first waypoint looking at the ranger station with the mill beyond it."},
 			{"label": "standing", "mode": "standing", "at": [-388.0, 526.0], "look": [-382.0, 514.0],
 			 "_why": "on the crossing just downstream of the footbridge, looking up at the mill's north face. Ray-seated at -16.5 against a pond surface of -17.0, so this stands on the bank rather than in the water -- checked, because the approach eye 30m away did NOT and it would have been easy to condemn all three together."},
 			{"label": "wheel", "mode": "detail", "at": [-390.0, 512.0], "look": [-386.0, 514.0],
@@ -193,8 +202,8 @@ const SITES := [
 			 "look_marker": ["BurrowWarrens", "hall"],
 			 "_why": "at the mouth looking in, the threshold shot"},
 			{"label": "den", "mode": "interior", "marker": ["BurrowWarrens", "den"],
-			 "look_marker": ["BurrowWarrens", "guardian"],
-			 "_why": "standing in the guardian's chamber looking at the guardian -- the deepest authored room and the thing in it that gives the warrens their identity. No offset: the site is yawed 315 degrees, so a world-axis nudge does not stay inside the room it was measured in, and an offset also forfeits the marker's authoritative floor Y."}
+			 "look_marker": ["BurrowWarrens", "guardian"], "back": 1.5, "up": 2.2, "look_up": 1.15,
+			 "_why": "standing in the guardian's chamber looking at the guardian -- the deepest authored room and the thing in it that gives the warrens their identity. No offset: the site is yawed 315 degrees, so a world-axis nudge does not stay inside the room it was measured in, and an offset also forfeits the marker's authoritative floor Y.\n\nFIX (JUDGE-round1 PLACES, 04-* section): this frame rendered as 'a flat teal-green fill with faceted diagonal shading bands ... consistent with the camera being clipped inside collision geometry', identical before/after -- a persistent camera fault, not an art defect. Re-deriving every number this shot depends on turns up nothing that puts the bare RIG (back 3.2, up 1.70) camera point outside the den's own 16x14x4.8m room: burrow_warrens.json's `den` chamber and the guardian's `offset` [3,4] both resolve inside it, and `BurrowWarrens.marker('guardian')` is not a guess -- `creature_body.gd::place_on_ground`/`_seat_over_footprint` snap the spawn's authored y (floor+0.5) straight back down to `built_floor_height_at()`'s flat _floor_y, so eye and look share the SAME Y the chamber marker does, not the offset y this shot's own comment used to assume. What the room DOES carry, per `data/config/burrow_warrens.json`'s own `_comment_caps`, is wall-hugging decorative rock with a documented history of exactly this failure ('a five-metre-wide rock... one ended up between the camera and the guardian -- the exact failure this pass exists to replace') -- capped since at `wall_width_cap_m` 1.9 off an `edge_band_m` up to 1.7, which can still reach within ~4.35m of the near (hall-side) wall on an unlucky seed roll, only 1.8m short of the OLD back-3.2 camera point. Since the render is broken anyway, this round does not trust a second single computed point: `back` 1.5 (down from 3.2) keeps the camera within 1.5m of the chamber's own mathematical centre, >3m clear of every wall on every axis regardless of the interior-rock seed, and `up` 2.2 (from 1.70) lifts it clear of anything sunk near the floor. `look_up` 1.15 replaces the bare RIG's chest-height 1.6 -- tuned for people and buildings -- with the guardian's own half-height at its `scale` 1.35 (species.json burrowback placeholder height 1.7 x 1.35 / 2 = 1.15), since the flat cave floor means eye, back and look all share one Y and 1.6 was aiming near the top of a ~2.3m creature rather than its centre."}
 		]
 	},
 	{
@@ -216,13 +225,16 @@ const SITES := [
 		"night": false,
 		"_why": "data/config/tether_relay.json site centre [350,3760]. Yard walls run local x -14..+10, z -16..+16; gate at local [-14,0] opening 6.8; apparatus at local [7,-9] with its console at [2.9,-9]. Local metres are put through `TetherRelay.world_of()`, the builder's own frame, so the -34.4-degree approach bearing does not have to be re-derived here.",
 		"shots": [
-			{"label": "approach", "mode": "approach", "relay": true, "at": [-46.0, 0.0], "look": [-14.0, 0.0],
-			 "_why": "32m out on the gate's own axis, outside the front wall line"},
+			{"label": "approach", "mode": "approach", "relay": true, "at": [-20.0, 0.0], "look": [-14.0, 0.0],
+			 "back": 4.0,
+			 "_why": "6m out on the gate's own axis, outside the front wall line.\n\nFIX (JUDGE-round1 PLACES, 06-* section): this frame rendered as 'a flat green fill with light-green triangular facets, consistent with the camera clipped inside terrain or canopy geometry', identical before/after. `tether_relay.json`'s own `site._ground` names exactly how far this site's ground is actually known: 'ground runs -5.6m at s=-24 up to -1.0m at s=+20 ... every wall, leg and pad is seated on its own sampled ground' -- and says nothing about ground past s=-24. The old eye at s=-46 already stood 22m past that edge, unprobed, and the bare RIG's `back` 7.0 (mode approach, not `relay`-mapped, so it moves the WORLD-space camera in the same s-direction here) walked it a further 7m out to s=-53, 29m into ground this file never asked the heightfield about -- exactly the kind of raycast this file's own header warns can return a prop's (or here, a tree's) own collider top instead of real terrain, which is what a camera that ends up INSIDE a canopy looks like. New eye s=-20, t=0 sits 6m out from the front wall (s=-14, unchanged from the reasoning the old `_why` already gave) and inside the last 4m of the site's own probed band. `back` 4.0 (overriding the mode default 7.0) keeps the final camera point at s=-24 -- the site's own outermost sampled point, not a metre past it. `up`/`look_up` are unchanged: the ground under them was the defect, not the height above it."},
 			{"label": "standing", "mode": "standing", "relay": true, "at": [-8.0, -2.0], "look": [7.0, -9.0],
 			 "_why": "just inside the gate on the yard floor, looking at the apparatus on its pad"},
-			{"label": "apparatus", "mode": "detail", "relay": true, "at": [1.0, -4.0], "look": [7.0, -9.0],
+			{"label": "apparatus", "mode": "detail", "relay": true, "at": [14.0, -4.0], "look": [7.0, -9.0],
 			 "back": 3.0, "up": 2.4, "look_up": -2.1,
-			 "_why": "the relay apparatus itself -- a Team Tether hero object, and the site's identity.\n\nROUND 2 (tools/_probe_detail_shots.gd): this is the critic's own named case -- 'an apparatus on a 10m deck'. tether_relay.json sets `deck_y` 10.0 and the installed hero mesh (`Model`, under `ApparatusSeam`) measures y 10.00..14.20, 6.67m across, centred on world y 12.10. The bare RIG's `look_up` 1.6 means nothing at this look point: the ground raycast here does not find the compound floor at all, it hits the APPARATUS'S OWN box collider top at y 14.20 (proven by the eye/back ground sweep sitting flat at 4.9-5.8 everywhere EXCEPT this one point, and by 14.20 matching `Model`'s own measured top to the centimetre) -- so `look_up` 1.6 aimed 1.6m ABOVE the apparatus's own peak, at open sky, which is exactly the 'shot about the dirt' failure mode inverted (a shot about the sky over the hero object instead of the hero object). `look_up` -2.1 reconstructs the apparatus's true centre height through that same ground reading (14.20 - 2.1 = 12.10), which is the only way to aim at it correctly given `_ground_at` returns that collider hit either way. `back` 3.0 is this round's ruler floor -- the FOV fit alone only needs 4.81m of camera-to-look distance and the eye already stands 7.81m off, so no extra `back` was owed for size. `up` 2.4 puts the camera at world y ~7.4 at this back (ground under the camera itself reads normally, ~4.96, since the collider-hit only happens exactly at the apparatus's own footprint) -- BELOW the 10.0m deck, so the shot looks UP at the apparatus the way an object standing on a raised pad over a person's head should be seen, rather than being framed at deck height or above it."}
+			 "_why": "the relay apparatus itself -- a Team Tether hero object, and the site's identity.\n\nFIX 3 (code-blind judge pass): 'the trainer is clipped onto a roof and the camera stares into the sun.' Two separate defects, addressed together by moving the eye; `look`/`up`/`look_up` are unchanged.\n\nSTARING INTO THE SUN. `data/config/art.json`'s `sun` block sets `pitch_deg` -44, `yaw_deg` 140 (world_look.gd rotates the DirectionalLight3D so light travels FROM the yaw direction TOWARD the opposite one -- that file's own `_comment_yaw_visual_light` names the 140 value directly). Running that rotation through Basis.from_euler's YXZ order the same way world_look.gd's own comment verifies it (`sun_dir.z > 0 at yaw -40 = north`) gives a light-TRAVEL direction of world (-0.462,-0.695,0.551) at yaw 140 -- i.e. the sun itself sits toward world (0.462,0.695,-0.551), horizontally (0.643,-0.766) once normalised: south, with a lean east. The OLD eye (1,-4) looked at the apparatus (7,-9) along local (6,-5) -> world (-0.739,-7.775) normalised (-0.095,-0.995) -- within 0.7 percent of `_u`'s own value (0.565,-0.826) mapped to local `(0.826,-0.565)`, itself EXACTLY world (0,-1) by this same site's own basis (solved directly: local (ds,dt) satisfying `_u*ds+_p*dt=(0,-1)` gives (0.825,-0.565)), the site's own due-south direction -- so the old shot looked almost exactly toward where the sun sits. New eye (14,-4) looks at the same (7,-9) along local (-7,-5) -> world (-0.939,0.343), whose dot product against the sun's own horizontal direction (0.643,-0.766) is -0.867 (about 150 degrees off dead-on, i.e. the sun sits mostly BEHIND this camera, front-lighting the apparatus rather than glaring into the lens).\n\nCLIPPED ONTO A ROOF. This file's own header trap (`_ground_at` returning a prop's own collider top, not terrain) is the apparatus's OWN case, already named in this shot's prior round -- but that trap is at the LOOK point, not the eye: the prior round's own ground sweep found the eye/back reading a flat, ordinary 4.9-5.8m 'everywhere EXCEPT [the look] point', so the ruler trainer this file always seats at `at` was standing on real ground, not a roof, even before this fix -- the read was almost certainly this shot's extreme low, close, steeply-upward composition (back 3.0, camera well under the 10.0m deck, aimed at an object whose conductor arms and manifolds oversail the pad) putting the object's own overhead massing directly above the ruler in frame, rather than a bad ground seat. Nothing in `relay_site.json` stands anyone at this shot's coordinates, so there was no authored position to fix. The reframe happens to remove any ambiguity anyway: `tether_relay.json`'s `apparatus.massing.grounding_base.radius` is 3.4m and the pad itself (`decks[1]`) runs local s[2,12] t[-14,-4] -- the new eye (14,-4) sits a clean 2m past the pad's own s edge and 8.6m from the apparatus centre (vs. the model's 3.4m footprint), so `_ground_at` reads open ground with no nearby collider to catch, the same way the un-moved `standing` eye already does.\n\nFOOTPRINT AND HAZARD CLEARANCE (checked, not assumed): east_run's own last pylon sits at local (14.5,-9), 5.2m from the new eye and 4.3m from the new back point (18.7,-9 is not on the eye/back line; nearest approach is well past 3m) -- clear of its own 1.7m collision box. The new back point (16.4,-2.3, from `back` 3.0 along the same line) stays inside `site._ground`'s own probed band (out to local s=+20). `up`/`look_up` are unchanged from the prior round's own derivation (still valid: the LOOK point did not move, so the same collider-hit reconstruction -- the apparatus's `Model` measures y 10.00..14.20, centred 12.10, and the ground raycast at (7,-9) still hits that same 14.20 top -- still gives `look_up` -2.1 = 12.10 - 14.20). `up` 2.4 is carried over rather than re-derived against a fresh ground probe at the NEW back point (out of this pass's tooling budget); it keeps the camera comfortably below the 10.0m deck across the whole 2.3-6.9m relief `relay_site.json`'s own OW5E note records within 15m of the pad, so the shot still looks UP at the apparatus rather than level with it.\n\nSTAFFING (FIX 2, tether_relay.json's own `deck_people`): Relay Platform Hand (local 10.6,-7.3) sits 4.7m along this eye's own view axis against the apparatus centre's 8.6m -- nearer the camera than the object, so it stands unoccluded in the near ground rather than behind the object's 3.4m bulk. Relay Console Guard (local 2.9,-7.0) sits past the apparatus on this axis and is the harder figure to keep clear in THIS shot specifically (the console faces west, back down the gantry, away from this south-east eye) -- it is what the `standing` eye below (approaching from the west) exists to cover instead."},
+			{"label": "road", "mode": "approach", "relay": true, "at": [0.0, 0.0], "look": [-155.07, 21.26],
+			 "_why": "CORRIDOR LANE PARITY. tools/_capture_corridor.gd (origin/claude/vp-corridor, 43defff6) station 11 ('11-relay') seats the player at world XZ (350.0,3760.0) looking at world XZ (280.0,3900.0) -- the view walking IN along the road, which this file's own three 06-relay eyes (approach/standing/apparatus) never reproduce because all three stand well inside or at the gate, not on the corridor's own approach line. Converted into this site's own local (s,t) frame per this site's `_why` and `tether_relay.json`'s `_frame` comment (world_of(local) = centre + u*local.x + p*local.y, centre [350,3760], u = (0.565,-0.826) normalised, p = (-u.y,u.x)):\n\nnormalised u = (0.565,-0.826)/|(0.565,-0.826)| = (0.565,-0.826)/1.00075 = (0.564576,-0.825380); p = (0.825380,0.564576).\n\nEYE: world (350,3760) - centre (350,3760) = offset (0,0) -> local (0,0) -- station 11's eye IS this site's own centre, to the metre.\n\nLOOK: world (280,3900) - centre (350,3760) = offset (-70,140). local s = offset.dot(u) = (-70)(0.564576)+(140)(-0.825380) = -39.5203 + -115.5532 = -155.0736. local t = offset.dot(p) = (-70)(0.825380)+(140)(0.564576) = -57.7766 + 79.0406 = 21.2641. Rounded to (-155.07, 21.26).\n\nNo `back`/`up`/`look_up` override: mode `approach` (back 7.0, up 3.2) is the same rig this site's own `approach` shot uses for the same kind of question (does the site read from the road), and nothing about this pair of points is known to hit this file's own collider-top trap -- the look point sits 156.5m out along open corridor ground the corridor lane itself already stands a station on, not on a prop's own footprint."}
 		]
 	},
 	{
@@ -281,23 +293,29 @@ const SITES := [
 			 "_why": "at the entrance mark looking into the outer works -- the gate slot at the height a 1.80m person meets it"},
 			{"label": "courtyard", "mode": "interior", "marker": ["Stronghold", "courtyard"],
 			 "look_marker": ["Stronghold", "tether_approach"],
-			 "_why": "standing in the courtyard looking on toward the tether approach. This is where oxblood belongs and where the structures round found none. No offset, for the same reason as the warrens den: site yaw 90 rotates every local, and the marker's own Y is the floor."}
+			 "_why": "standing in the courtyard looking on toward the tether approach. This is where oxblood belongs and where the structures round found none. No offset, for the same reason as the warrens den: site yaw 90 rotates every local, and the marker's own Y is the floor."},
+			{"label": "gate-face", "mode": "standing", "marker": ["Stronghold", "entrance"],
+			 "look_marker": ["Stronghold", "outer_works"], "pull_back": -33.1,
+			 "_why": "VP-HALL-FIX ITEM2 (2026-09-02). 15m out from the gate ARCH (not the jambs, not the mouth wall face), on the arch's own centreline, so the two ground-level sentries now posted at the gate posts (`stronghold.json`'s `gate_sentries`, x +-2.0) read at native size flanking the doorway. Derived the way this file's own header requires -- from the same code the building itself runs, not a guessed coordinate.\n\n`stronghold.gd::_build_gate_frame`/`_build_gate_arch_and_portcullis`, `outer_works` at local [0,0] size [20,24], `site.wall_thickness` 1.2, `site.ramp_run` 40.0: mouth outer face `_mouth_outer_z()` = -12.0; jamb face `jamb_z` = -12.0 - 1.2 + 1.2*0.5 - 1.0*0.5(jamb_proud) = -13.1; the voussoir ring itself (the actual arch, standing proud of the jambs per that function's own comment) sits at `proud_z` = jamb_z - 1.0*0.5 - 0.62*0.5(ring_depth) - 0.06 = -13.97. World arch z = site.z 7560.0 + -13.97 = 7546.03, at lateral world x = site.x 8.0 (outer_works' own centre, unchanged by the door). `ramp_foot`/`entrance` marker sits at local z = (mouth -12.0 - wall_t 1.2) - ramp_run 40.0 = -53.2, world z 7506.8 -- the same 41.2m-out-from-the-mouth arithmetic the `hall-100m/200m/400m` shots above already use and verify.\n\n`pull_back` moves the eye from `entrance` along `(entrance - outer_works).normalized()`, which is world (0,-1) here since both markers share x=8.0 -- so the eye stays on the arch's own centreline (x=8.0) at every pull_back value, and a negative pull_back walks it NORTH, back toward the building, past where `entrance` stands. Target eye z = arch z 7546.03 - 15.0 = 7531.03; pull_back = entrance z 7506.8 - eye z 7531.03 = -24.23.\n\nTHE HEADER'S OWN TRAP: `look_marker` (`outer_works`) hands the target a real floor_hint, so `_ground_at`'s `_is_interior(floor_hint)` branch returns that marker's own Y directly -- no raycast at the look point at all, so the arch's own geometry (which the look line passes straight through, both points sharing x=8.0) cannot be hit as a false 'ground'. The EYE, by contrast, gets `floor_y` reset to NaN by `pull_back` (same as every other pull_back shot here) and is genuinely raycast at z~-28.97 local -- but that point sits on the open centre of the ramp deck itself: `causeway`'s own dressing (kerb piers, braziers, banner piers) all stand off-centreline per `stronghold.json`'s own placement notes ('the centre lane stays completely clear end to end' -- the walking lane a raycast here has to land on, not a prop's box), and the ramp is real walkable collision the player crosses every playthrough, unlike the unprobed open terrain the 100/200/400m stands' own `up` insurance exists for. No `back`/`up`/`look_up` override: mode `standing`'s own rig (back 3.2, up 1.70, look_up 1.6) is the same one the `gate` shot above already uses for the same kind of question at the same site, and look_up 1.6 aims at a real grunt's own head/torso height off the outer_works floor, not the arch's masonry above it.\n\nVP-PLACES DECISION-hall-sentries.md FAILURE B (2026-09-02): pull_back -24.23 also put the eye's own clearance capsule bottom flush on `ApproachRampBody`'s top surface, so `_clear_of_bodies` read it as occupied and shoved the eye 6m west, off the 7m-wide deck entirely. Fixed at the capsule (lifted 0.15m so a body the eye was just ray-seated on no longer counts as a blocker) AND here: pull_back tightened -24.23 -> -33.1, eye at world z 7539.9 (7.0m south of the sentries, on the deck), camera at (8, deck-1.15, 7536.7), 10.2m from the posts, pitched up 6.7 degrees. Distance was tightened, not just unstuck: at 1280x720 vertical fov 70 (514 px per unit tan), a 1.8m sentry only reaches 33-42px at the old 22-28m stand-off -- too small to read as a figure -- versus 91px (68px on the 960x540 sheet) at 10.2m."}
 		]
 	},
 	{
 		"id": "11-castle-landmark",
 		"night": false,
-		"_why": "The OTHER stronghold. `scripts/world/landmark.gd` builds building_prefabs.json's `castle` -- 132 modules, four corner towers, a two-module gate and nine oxblood `Banner` modules -- at RISE_CENTRE + OFFSET = (140,-90) + (89.8,-54.4) = (229.8,-144.4), two hardcoded constants from the pre-corridor world. That is 7,708 m from the stronghold the player actually reaches at (0,7560), and `castle` is referenced in exactly one file.\n\nThis site is shot for one reason: to decide which of two very different fixes the structures round's 'the castle is untextured blockout, no stone material, no crenellation, no banners' actually needs. If the castle renders CORRECTLY here, in the world, then the art is fine and the defect is siting -- a const that OW5D's relocation left behind. If it renders as untextured blockout HERE too, then its retint or its OBJ/MTL materials are not loading and that is a material bug to fix, not a coordinate. The structures survey shoots prefabs on a bare stage, so it cannot tell those two apart; this can.\n\nThe gate faces local -z (its two TallWallEntrance modules sit at local x 2.0, z -8.448, and all nine banners hang between z -9.648 and -11.8). landmark.gd sets no rotation, so local -z is world -z: the gate faces south and every eye below stands south of the site.",
+		"_why": "RETARGETED. T1-HALL merged the detached castle this site used to shoot into the Meadows Hall -- `data/config/stronghold.json`'s own `_comment_where`: 'the castle IS the Meadows Hall IS the stronghold -- one location, not the works behind a separate castle 154m away.' `scripts/world/landmark.gd`'s castle at (229.8,-144.4) retired and `playground_world.gd` stopped calling it, so the three shots that used to stand here photographed empty hills -- JUDGE-round1 PLACES (11-* section): 'effectively empty frames ... despite their names, neither shows any castle.'\n\nRe-aimed at `Stronghold`'s own `entrance`/`outer_works` markers rather than a transcribed coordinate, per this file's #1 source-of-truth rule -- the site has already moved once (OW5D put it at [0,7560] yaw 90 'very likely WRONG'; T1-HALL re-probed and moved it again to [8,7560] yaw 0) without every caller following, and a marker-based shot moves with it if it moves a third time.\n\nThree distances along the causeway axis, per the task that dispatched this fix: 100m, 200m and 400m out from the Hall's own MOUTH (`outer_works`' -z wall face -- yaw 0 keeps local and world identical, so `stronghold.json`'s `chambers[0]` `at`[0,0] + `size`[20,24] puts that face at local z=-12, world z=7560-12=7548, the same arithmetic `stronghold.gd::_mouth_outer_z()` runs). `entrance` (== `ramp_foot`, built by `stronghold.gd::_build_approach_ramp`) sits a further `ramp_run`(40) + `wall_thickness`(1.2) = 41.2m out, at world z=7506.8 -- so `pull_back` from `entrance` for a shot `D` metres out from the mouth is `D - 41.2 - back`. The 400m stand is the important one (VISUAL_STRUCTURES' 'the game's antagonist made of nothing' is the claim it has to answer, and the task names it the evidence stand for whether the silhouette separates from the ground), so it carries the most `up`; 100m and 200m are closer establishing beats on the same line. Renamed hall-100m/200m/400m from approach/gate/banners because the subject changed from the retired castle's own gate and banner wall to the Hall's silhouette at a set of distances -- the capture report should explain the filename change.",
 		"shots": [
-			{"label": "approach", "mode": "approach", "at": [231.8, -214.0], "look": [231.8, -150.0],
-			 "back": 10.0, "up": 5.0, "look_up": 8.0,
-			 "_why": "64m due south of the gate on its own axis, aimed 8m up so the towers and the keep cap at 21.7m are in frame rather than cropped at the wall line"},
-			{"label": "gate", "mode": "standing", "at": [231.8, -166.0], "look": [231.8, -152.0],
-			 "look_up": 5.0,
-			 "_why": "at the gate, eye height, where a player would stand to walk in"},
-			{"label": "banners", "mode": "detail", "at": [217.4, -172.0], "look": [217.4, -154.0],
-			 "back": 8.0, "up": 2.2, "look_up": 9.5,
-			 "_why": "the west gate flank, where four Banner modules hang at 6.4m and 13.2m. Aimed 9.5m up because a shot composed on the ground line crops the very thing it is asking about -- the oxblood the structures round went looking for and did not find."}
+			{"label": "hall-400m", "mode": "approach", "marker": ["Stronghold", "entrance"],
+			 "look_marker": ["Stronghold", "outer_works"], "pull_back": 353.8,
+			 "back": 5.0, "up": 28.0, "look_up": 14.0,
+			 "_why": "400m out from the Hall's mouth (world z=7548-400=7148). `pull_back` 353.8 = 400 - 41.2 (entrance's own offset from the mouth, derived above) - `back` 5.0. This point is well past `stronghold.json`'s own probed grid (x[-72,40] z[7490,7682]) -- like `06-relay`'s approach fix above, this is beyond directly-verified ground, so `up` 28.0 is deliberate insurance, well above every relief the probe DID record near the site (+4.8 courtyard rise, +7..+9 western shoulder, -8..-16 ravine, all inside +-16m), rather than a claim this file pretends is measured. `look_up` 14.0 keeps the aim on the Hall's own upper works -- `legendary_chamber` alone runs to height 22 -- rather than its floor, so the massing frames against sky the way the evidence stand needs."},
+			{"label": "hall-200m", "mode": "approach", "marker": ["Stronghold", "entrance"],
+			 "look_marker": ["Stronghold", "outer_works"], "pull_back": 153.8,
+			 "back": 5.0, "up": 18.0, "look_up": 10.0,
+			 "_why": "200m out (world z=7548-200=7348). `pull_back` 153.8 = 200 - 41.2 - `back` 5.0. `up`/`look_up` scaled down from the 400m stand for the closer, more oblique establishing beat this distance asks for; ground here is equally unprobed, same insurance reasoning."},
+			{"label": "hall-100m", "mode": "approach", "marker": ["Stronghold", "entrance"],
+			 "look_marker": ["Stronghold", "outer_works"], "pull_back": 53.8,
+			 "back": 5.0, "up": 10.0, "look_up": 8.0,
+			 "_why": "100m out (world z=7548-100=7448). `pull_back` 53.8 = 100 - 41.2 - `back` 5.0. Closest of the three: 42m past the south edge of `stronghold.json`'s own probed grid (z>=7490) and 32m further from the mouth than the probe's own sampled trail point at (20,7480) -- still beyond directly-verified ground, so `up` 10.0 is the same insurance as the other two stands, scaled to the shorter distance."}
 		]
 	},
 ]
@@ -317,6 +335,17 @@ var _weather: Node = null
 var _failures: int = 0
 var _written: int = 0
 
+## FAST ITERATION MODE. On with `--fast` (a user script arg) or `VP_FAST=1` in
+## the environment. Halves every settle wait below (floor 2 frames, via
+## `_frames()`) and turns off MSAA/SSAA on the capture viewport. Output
+## filenames and directories are unchanged -- this trades fidelity for a
+## quicker local loop, never for the numbers that ship as evidence.
+static var _fast_mode: bool = false
+
+
+static func _frames(n: int) -> int:
+	return maxi(2, n / 2) if _fast_mode else n
+
 
 func _init() -> void:
 	_run()
@@ -328,11 +357,15 @@ func _run() -> void:
 		quit(1)
 		return
 
+	_fast_mode = "--fast" in OS.get_cmdline_user_args() or OS.get_environment("VP_FAST") == "1"
+	if _fast_mode:
+		print("[fast] iteration mode: settle halved, msaa off")
+
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	_field = HEIGHTFIELD.new()
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
-	for i in BOOT_FRAMES:
+	for i in _frames(BOOT_FRAMES):
 		await physics_frame
 	print("[locations] world up, boot settled")
 
@@ -356,6 +389,9 @@ func _run() -> void:
 	_camera.far = 4000.0
 	_world.add_child(_camera)
 	_camera.make_current()
+	if _fast_mode:
+		root.msaa_3d = Viewport.MSAA_DISABLED
+		root.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 
 	var terrain: Node = _world.get_node_or_null(^"Terrain")
 	if terrain != null and terrain.has_method("set_camera"):
@@ -439,21 +475,40 @@ func _any_night(only: Array[String]) -> bool:
 ## Pin the clock to `time`, then STOP both clocks. Order matters and freezing
 ## matters: a pin that is not frozen wears off across a multi-site pass and the
 ## late frames come back in a dusk wash under whatever weather rolled.
+##
+## R6-CLOCK-FREEZE. `_look.set_process(true)` here used to stay true for the
+## whole 30-frame wait below, on the (false) assumption that apply_time()
+## needed a live `_process` to take effect -- it does not, it is an ordinary
+## synchronous write (see the sibling tools/_capture_ground_and_sky.gd's own
+## header, which freezes WorldLook once and never unfreezes it for exactly
+## this reason). Those 30 unfrozen frames instead let world_look.gd's passive
+## clock advance `_elapsed_seconds` on every one of them; under software
+## rendering that is tens of real seconds, which at day_length_seconds/24 =
+## 25 real seconds per in-game hour is enough to walk a "night" pin most of
+## the way back toward day before the first shot ever fires. Freezing the
+## clock (rather than toggling `_look`'s whole `_process`) keeps apply_time()
+## pinned through the wait without needing that wait at all -- kept anyway so
+## an older WorldLook without set_clock_frozen (has_method guard below) still
+## gets the previous, drift-prone-but-working behaviour instead of a hard fail.
 func _pin(time: String) -> void:
 	if _weather != null:
 		_weather.set_process(true)
 		_weather.set_physics_process(true)
 		_weather.call("set_weather", "clear")
+	var look_frozen := _look != null and _look.has_method("set_clock_frozen")
 	if _look != null:
-		_look.set_process(true)
-		_look.set_physics_process(true)
+		if look_frozen:
+			_look.call("set_clock_frozen", true)
+		else:
+			_look.set_process(true)
+			_look.set_physics_process(true)
 		_look.call("apply_time", time)
-	for i in 30:
+	for i in _frames(30):
 		await physics_frame
 	if _weather != null:
 		_weather.set_process(false)
 		_weather.set_physics_process(false)
-	if _look != null:
+	if _look != null and not look_frozen:
 		_look.set_process(false)
 		_look.set_physics_process(false)
 	print("[locations] clock pinned to %s and frozen" % time)
@@ -508,18 +563,18 @@ func _shoot(site_id: String, shot: Dictionary, suffix: String, first: bool) -> v
 		var seat: float = _ground_at(eye, floor_hint) if _is_interior(floor_hint) else float(_field.height_at(eye.x, eye.y))
 		_place(eye, seat)
 		_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m, look_up)
-		for i in ARRIVE_FRAMES:
+		for i in _frames(ARRIVE_FRAMES):
 			await physics_frame
 
 	var ground := _ground_at(eye, floor_hint)
 	_place(eye, ground)
 	_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m, look_up)
-	for i in (SETTLE_FRAMES if first else HOP_FRAMES):
+	for i in _frames(SETTLE_FRAMES if first else HOP_FRAMES):
 		await physics_frame
 
 	_hide_huds()
 	_frame(back, _ground_at(back, floor_hint), target, _ground_at(target, look_hint), up_m, look_up)
-	for i in POSE_FRAMES:
+	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
 
@@ -535,8 +590,12 @@ func _shoot(site_id: String, shot: Dictionary, suffix: String, first: bool) -> v
 		return
 	_written += 1
 	var here := Vector3(eye.x, ground, eye.y)
-	print("  %-26s %-5s eye(%.0f, %.1f, %.0f)  %d creatures, %d people within 160m" % [
-		frame_name, suffix, eye.x, ground, eye.y, _creatures_near(here), _people_near(here)])
+	var cam_player_dist := _camera.global_position.distance_to(_player.global_position)
+	print("  %-26s %-5s eye(%.0f, %.1f, %.0f)  %d creatures, %d people within 160m  cam-player %.1fm" % [
+		frame_name, suffix, eye.x, ground, eye.y, _creatures_near(here), _people_near(here), cam_player_dist])
+	if cam_player_dist > MAX_CAMERA_PLAYER_DISTANCE:
+		push_warning("_capture_locations.gd: %s-%s stands %.1fm from the player (max %.1fm) -- Terrain3D streaming may be degraded for this frame" % [
+			frame_name, suffix, cam_player_dist, MAX_CAMERA_PLAYER_DISTANCE])
 
 
 ## Turn a shot's declared viewpoint into world metres. Three declaration forms,
@@ -722,7 +781,11 @@ func _clear_of_bodies(eye: Vector2, toward: Vector2, ground: float) -> Vector2:
 		capsule.radius = 0.6
 		capsule.height = 2.6
 		query.shape = capsule
-		query.transform = Transform3D(Basis(), Vector3(candidate.x, ground + 1.3, candidate.y))
+		# Lifted 0.15m off `ground`: a capsule resting on the ramp/floor body
+		# the eye was just ray-seated onto is not "occupied" -- at ground+1.3
+		# the capsule's own bottom touched that surface and intersect_shape
+		# reported it as a blocker (only `Terrain` bodies are filtered out).
+		query.transform = Transform3D(Basis(), Vector3(candidate.x, ground + 1.45, candidate.y))
 		query.collide_with_bodies = true
 		query.collide_with_areas = false
 		if _player != null:

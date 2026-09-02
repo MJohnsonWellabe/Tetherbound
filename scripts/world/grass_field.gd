@@ -77,6 +77,9 @@ var _wind := 0.0
 ## this changes, which is most frames a no-op; `field_centre` is written every
 ## frame and is a different thing -- see `_process`.
 var _centre := Vector3(INF, INF, INF)
+## How many tuft instances the ring stood up, across every tile. The ring's own
+## `multimesh` is null once tiled, so the count lives here.
+var _ring_instances := 0
 
 
 static func config() -> Dictionary:
@@ -335,6 +338,246 @@ static func _fill_lattice(mm: MultiMesh, plan: Array, cell: float) -> int:
 	return total
 
 
+## VP2 (visual parity program, 2026-09-01). The ring's whole cost problem, and
+## its fix, in one number.
+##
+## THE DEFECT: `ralph/reports/OWNER-0901-PERFORMANCE-LAG-V2.md` measured this
+## field at 22.5M primitives a frame -- 71% of everything drawn -- and the owner
+## felt it as ~10 FPS on the Ally. Not because 300,000 tufts is too many for
+## the near field, but because every one of them was in ONE MultiMesh with ONE
+## AABB the size of the whole ring. The ring follows the camera, so that AABB
+## is never outside the frustum, so Godot submits every tuft every frame --
+## the two thirds of the disc BEHIND a 70-degree camera included. A MultiMesh
+## is culled as a unit; the renderer cannot drop the instances it cannot see.
+##
+## THE FIX: the same lattice, the same instances, the same shaders and hashes
+## (nothing about where an item stands or what it looks like changes -- the
+## STABLE RING note below still holds), laid out into square TILES of
+## `cull_tile_m` metres, one MultiMeshInstance3D each, each with an AABB of its
+## own tile. Every tile rides this node exactly as the single MultiMesh did, so
+## the ring still hops in whole cells and every tile hops with it; but the
+## renderer now frustum-culls tile by tile, and the tiles behind the camera
+## and off to its sides stop being submitted at all. At the shipped 72m radius
+## and a 16m tile that is ~80 tiles, and a third-person camera sees roughly a
+## third of them. Draw calls rise by the number of VISIBLE tiles (tens, against
+## the ~7,000 the frame already carries -- `PERF-ROG-GPU` records that
+## Compatibility's cost is batches, and these are small batches), primitives
+## fall by the tiles that are not. Measured with tools/perf_render_stats.gd,
+## recorded in docs/VISUAL_PARITY_PROGRESS.md.
+##
+## `cull_tile_m` 0 restores the single-MultiMesh path exactly, for A/B
+## measurement. Forced to a whole multiple of the lattice cell so a tile edge
+## never splits a cell: an item's cell decides its tile, and the cell's origin
+## is what the tile's AABB is grown from.
+static func cull_tile_m(cfg: Dictionary) -> float:
+	var tile := float(cfg.get("cull_tile_m", 16.0))
+	# A/B seam for tools/perf_render_stats.gd: `TB_GRASS_CULL_TILE_M=0|8|16`
+	# in the environment overrides the config so three measurements can be
+	# chained from one checkout without editing the shipped file between runs
+	# (and without a mid-chain edit silently landing in the wrong run). Nothing
+	# in `scripts/` sets it; an export never carries it.
+	var env := OS.get_environment("TB_GRASS_CULL_TILE_M")
+	if env != "" and env.is_valid_float():
+		tile = float(env)
+	if tile <= 0.0:
+		return 0.0
+	var cell := lattice_cell()
+	return maxf(cell, snappedf(tile, cell))
+
+
+## VP2, the second half of the far cost. Tiles let the renderer drop what the
+## camera is not looking AT; these two take out what it is looking at but
+## cannot see. Measured with the shipped config (tools/perf_render_stats.gd,
+## recorded in ralph/reports/visual-parity/GROUND/REPORT.md): the base layer
+## of every tier is one uniform density all the way to `field_radius`, and it
+## is 83% of the ring -- 64 tufts in every 2m cell out to 72m for the grass
+## tier, two thirds of those cells in the 42-72m band where `v_fade` is
+## already shortening every blade toward nothing. Submitting a full-density
+## blade in order to shrink it is the far cost.
+##
+## FAR THINNING splits the base layer's per-cell count into a floor that keeps
+## full reach plus `steps` sub-layers whose `ramp_out` radii are spaced across
+## the fade band. That is the SAME `layer_in`/`layer_out` mechanism the nested
+## inner layers already use, so each sub-layer grows in per item, dithered
+## against its stable rank, exactly as the inner layers do, and the tiler stops
+## generating a sub-layer's cells past its own reach. No shader change, no new
+## hash; nothing about where a surviving item stands moves.
+static func _thin_far(plan: Array, fade_start: float, radius: float, floor_frac: float,
+		steps: int, cell: float) -> Array:
+	if plan.is_empty() or steps <= 0 or floor_frac >= 0.999 or fade_start >= radius:
+		return plan
+	var base: Dictionary = plan[0]
+	var per: int = int(base["per_cell"])
+	var keep := clampi(int(round(float(per) * clampf(floor_frac, 0.0, 1.0))), 1, per)
+	var spare := per - keep
+	if spare <= 0:
+		return plan
+	steps = mini(steps, LATTICE_MAX_LAYERS - plan.size())
+	if steps <= 0:
+		return plan
+	var wobble := cell * 0.70711
+	var out: Array = []
+	var floor_layer := base.duplicate()
+	floor_layer["per_cell"] = keep
+	out.append(floor_layer)
+	# `steps + 1` so the last sub-layer is gone one band short of the rim and
+	# the outermost band carries the floor alone: that band is the largest
+	# annulus of the ring, and the blades in it are already at a fraction of
+	# their height from `v_fade`.
+	var width := (radius - fade_start) / float(steps + 1)
+	var handed := 0
+	for k in steps:
+		var share := int(round(float(spare) * float(k + 1) / float(steps))) - handed
+		handed += share
+		if share <= 0:
+			continue
+		var ramp_out := fade_start + width * float(k + 1)
+		out.append({
+			"per_cell": share,
+			"ramp_in": ramp_out - width,
+			"ramp_out": ramp_out,
+			"geo": ramp_out + wobble,
+		})
+	for i in range(1, plan.size()):
+		out.append(plan[i])
+	return out
+
+
+## REACH caps a tier's plan at `reach` metres. A 10cm stone or a fallen leaf
+## is under a pixel long before the ring ends, and generating it out to 72m so
+## the shader can collapse it to a point is pure cost. Layers wholly beyond the
+## reach are dropped; the base layer gets a real `ramp_in`/`ramp_out` at the
+## reach so it arrives per item like every inner layer, and its cells stop
+## there. `band` is how many metres the arrival is spread over.
+static func _cap_reach(plan: Array, reach: float, band: float, cell: float) -> Array:
+	var out: Array = []
+	var wobble := cell * 0.70711
+	# A nested layer is fully present everywhere INSIDE its ramp, so one that
+	# is dropped for being wholly beyond the reach was also contributing to the
+	# near field. Its count is folded into the base layer so the density inside
+	# the reach is exactly what it was.
+	var folded := 0
+	for index in plan.size():
+		var layer: Dictionary = (plan[index] as Dictionary).duplicate()
+		if index == 0:
+			if float(layer["ramp_out"]) > reach:
+				layer["ramp_in"] = maxf(reach - band, 0.0)
+				layer["ramp_out"] = reach
+				layer["geo"] = reach + wobble
+		else:
+			if float(layer["ramp_in"]) >= reach:
+				folded += int(layer["per_cell"])
+				continue
+			if float(layer["ramp_out"]) > reach:
+				layer["ramp_out"] = reach
+				layer["geo"] = reach + wobble
+		out.append(layer)
+	if not out.is_empty() and folded > 0:
+		out[0]["per_cell"] = mini(int(out[0]["per_cell"]) + folded, LATTICE_SLOTS - 2)
+	return out
+
+
+## MESH LOD BY TILE. The third far lever: a tile that can only ever be seen
+## from `from_m` metres away carries a cheaper mesh. `lod` is a list of
+## `{"from_m": float, "mesh": Mesh}` sorted by distance; a tile takes the last
+## entry whose `from_m` is inside the nearest the eye can come to it (the tile
+## square's nearest point, less the ring's own cell wobble), so the geometry a
+## cell needs at any distance the shader can ask for it at is always there.
+## The grass tier's far mesh drops blades and segments -- see `_tuft_mesh` --
+## and the shader grows the dropped blades back in over `lod_band_m` as the
+## player closes, so the swap is a ramp rather than a pop.
+static func _lod_mesh_for_tile(key: Vector2i, tile_m: float, cell: float, base: Mesh, lod: Array) -> Mesh:
+	if lod.is_empty():
+		return base
+	var x0 := float(key.x) * tile_m
+	var z0 := float(key.y) * tile_m
+	var dx := maxf(maxf(x0, 0.0), -(x0 + tile_m))
+	var dz := maxf(maxf(z0, 0.0), -(z0 + tile_m))
+	var nearest := sqrt(dx * dx + dz * dz) - cell * 1.5
+	var pick := base
+	for entry: Variant in lod:
+		var level: Dictionary = entry
+		if nearest >= float(level["from_m"]):
+			pick = level["mesh"]
+	return pick
+
+
+## `_fill_lattice`, cut into tiles. Same cells, same per-layer counts, same
+## slot tags and same pure-translation transforms -- the only difference is
+## which MultiMesh a cell's items land in. Returns one entry per non-empty
+## tile: `{"mm": MultiMesh, "aabb": AABB, "key": Vector2i, "origins":
+## PackedVector3Array}`. `origins` duplicates what went into the MultiMesh
+## because the headless (Dummy) renderer the tests run under never stores a
+## MultiMesh buffer -- `get_instance_transform()` reads back identity for
+## every instance there -- so the tests pin the layout through this array.
+static func _fill_lattice_tiles(mesh: Mesh, plan: Array, cell: float, tile_m: float,
+		lod: Array = []) -> Array:
+	var per_tile: Dictionary = {}  # Vector2i -> Array[Transform3D]
+	for index in plan.size():
+		var layer: Dictionary = plan[index]
+		var reach: float = float(layer["geo"])
+		var per: int = int(layer["per_cell"])
+		var steps := int(ceil(reach / cell)) + 1
+		var half := cell * 0.5
+		var corner := cell * 0.70711
+		for ix in range(-steps, steps + 1):
+			for iz in range(-steps, steps + 1):
+				var origin := Vector2(float(ix) * cell, float(iz) * cell)
+				if (origin + Vector2(half, half)).length() - corner > reach:
+					continue
+				var key := Vector2i(int(floor(origin.x / tile_m)), int(floor(origin.y / tile_m)))
+				if not per_tile.has(key):
+					per_tile[key] = []
+				var bucket: Array = per_tile[key]
+				for item in per:
+					var slot := _slot_offset(item, index, cell)
+					bucket.append(Transform3D(Basis.IDENTITY,
+							Vector3(origin.x + slot.x, 0.0, origin.y + slot.y)))
+	var out: Array = []
+	# Half a cell of hash jitter each way plus the slot offset inside the cell,
+	# and blades lean with the wind: two cells of slack on each side, the same
+	# margin the single-MultiMesh AABB carried.
+	var slack := cell * 2.0
+	for key: Vector2i in per_tile.keys():
+		var bucket: Array = per_tile[key]
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = _lod_mesh_for_tile(key, tile_m, cell, mesh, lod)
+		mm.instance_count = bucket.size()
+		var origins := PackedVector3Array()
+		origins.resize(bucket.size())
+		for i in bucket.size():
+			var xf: Transform3D = bucket[i]
+			mm.set_instance_transform(i, xf)
+			origins[i] = xf.origin
+		var x0 := float(key.x) * tile_m
+		var z0 := float(key.y) * tile_m
+		out.append({
+			"mm": mm, "key": key, "origins": origins,
+			"aabb": AABB(Vector3(x0 - slack, -400.0, z0 - slack),
+					Vector3(tile_m + slack * 2.0, 800.0, tile_m + slack * 2.0)),
+		})
+	return out
+
+
+## Stand the tiles up as children of `under`, all sharing one material, and
+## report how many instances that took. Children of the ring move with it.
+static func _stand_up_tiles(under: Node3D, prefix: String, tiles: Array, mat: ShaderMaterial) -> int:
+	var placed := 0
+	for entry: Variant in tiles:
+		var tile: Dictionary = entry
+		var node := MultiMeshInstance3D.new()
+		var key: Vector2i = tile["key"]
+		node.name = "%s_%d_%d" % [prefix, key.x, key.y]
+		node.multimesh = tile["mm"]
+		node.material_override = mat
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		node.custom_aabb = tile["aabb"]
+		under.add_child(node)
+		placed += int((tile["mm"] as MultiMesh).instance_count)
+	return placed
+
+
 ## Hand a plan to a material. The two arrays are the only per-layer state the
 ## shaders need; an instance finds its own row through the layer index encoded
 ## in its slot tag. Unused rows are pushed past any distance that can occur so
@@ -388,16 +631,32 @@ func _build() -> void:
 	# because a random disc cannot survive its own ring moving.
 	var cell := lattice_cell()
 	var plan := _lattice_plan(count, radius, float(cfg.get("centre_bias", 0.62)), cell, cfg)
-	var placed := _fill_lattice(mm, plan, cell)
-	multimesh = mm
+	# VP2: thin the base layer across the fade band. See `_thin_far`.
+	plan = _thin_far(plan, float(cfg.get("fade_start", 30.0)), radius,
+			float(cfg.get("far_thin_floor", 1.0)), int(cfg.get("far_thin_steps", 0)), cell)
 
 	_material = ShaderMaterial.new()
 	_material.shader = load(SHADER_PATH)
 	material_override = _material
+	# VP2: tiled, so the renderer can cull the ring behind and beside the
+	# camera. See `cull_tile_m` above. This node itself then carries no
+	# instances; its children do.
+	var tile_m := cull_tile_m(cfg)
+	var placed := 0
+	if tile_m > 0.0:
+		multimesh = null
+		placed = _stand_up_tiles(self, "GrassTile",
+				_fill_lattice_tiles(mm.mesh, plan, cell, tile_m, _grass_lod(cfg)), _material)
+	else:
+		placed = _fill_lattice(mm, plan, cell)
+		multimesh = mm
+	_ring_instances = placed
 	_apply_config(cfg)
 	_apply_lattice(_material, plan, cell)
-	print("[grass_field] grass ring: %d instances over %d lattice layers (%s asked for %d)" % [
-		placed, plan.size(), "tuft_count", count])
+	_apply_grass_lod(cfg)
+	print("[grass_field] grass ring: %d instances over %d lattice layers (%s asked for %d), %s" % [
+		placed, plan.size(), "tuft_count", count,
+		("%.0fm cull tiles" % tile_m) if tile_m > 0.0 else "one uncullable MultiMesh"])
 
 	# The field is ground cover: it must not push the camera around, must not
 	# receive a harvest prompt, and must not cast the black carpet a thousand
@@ -418,6 +677,48 @@ func _build() -> void:
 	_build_cover_tiers(cfg, radius)
 	_build_far_cover(cfg)
 	_apply_clearing(cfg)
+
+
+## The grass tier's mesh LOD list, from the config's `lod` block. Two cheaper
+## tufts: `mid` keeps every blade and drops segments (a blade at 18m is a dozen
+## pixels tall; a kink halfway up it is not one of them), `far` also drops the
+## last blades of the tuft. Both are built by the same `_tuft_mesh` with the
+## same blade offsets, so a blade that survives into the far mesh is the same
+## blade, at the same spot, hashing the same height and lean -- the only
+## difference between the tiers is which blades exist.
+func _grass_lod(cfg: Dictionary) -> Array:
+	var lod_cfg: Dictionary = cfg.get("lod", {})
+	if not bool(lod_cfg.get("enabled", false)):
+		return []
+	var blades := int(cfg.get("blades_per_tuft", 4))
+	var segments := int(cfg.get("blade_segments", 4))
+	var out: Array = []
+	var mid_m := float(lod_cfg.get("mid_m", 0.0))
+	if mid_m > 0.0:
+		out.append({"from_m": mid_m,
+			"mesh": _tuft_mesh(blades, int(lod_cfg.get("mid_segments", segments)), blades)})
+	var far_m := float(lod_cfg.get("far_m", 0.0))
+	if far_m > mid_m:
+		out.append({"from_m": far_m,
+			"mesh": _tuft_mesh(blades, int(lod_cfg.get("far_segments", segments)),
+				clampi(int(lod_cfg.get("far_blades", blades)), 1, blades))})
+	return out
+
+
+## Tell the grass shader which blades the far mesh lacks and where, so it can
+## grow them back in as the player closes rather than have them appear at the
+## tile boundary. Off (all blades everywhere) when the LOD block is.
+func _apply_grass_lod(cfg: Dictionary) -> void:
+	if _material == null:
+		return
+	var lod_cfg: Dictionary = cfg.get("lod", {})
+	var blades := maxi(1, int(cfg.get("blades_per_tuft", 4)))
+	var far_m := float(lod_cfg.get("far_m", 0.0))
+	var far_blades := clampi(int(lod_cfg.get("far_blades", blades)), 1, blades)
+	var on := bool(lod_cfg.get("enabled", false)) and far_m > 0.0 and far_blades < blades
+	_material.set_shader_parameter("lod_far_m", far_m if on else 1.0e9)
+	_material.set_shader_parameter("lod_far_blade_frac", float(far_blades) / float(blades) if on else 2.0)
+	_material.set_shader_parameter("lod_band_m", maxf(float(lod_cfg.get("band_m", 6.0)), 0.5))
 
 
 ## The generic cover tiers, from `cover_tiers` in the config: small bushes,
@@ -445,14 +746,31 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		var cell := lattice_cell()
 		var plan := _lattice_plan(count, radius,
 				float(tier.get("centre_bias", 0.6)), cell, cfg)
-		var placed := _fill_lattice(mm, plan, cell)
+		# VP2: a tier's own reach, where it has one. See `_cap_reach`.
+		if tier.has("reach_m"):
+			plan = _cap_reach(plan, float(tier["reach_m"]),
+					float(tier.get("reach_band_m", cfg.get("reach_band_m", 6.0))), cell)
+		# VP2: a cheaper bush past `lod.far_bush_m`, every other leaf dropped.
+		var lod: Array = []
+		var lod_cfg: Dictionary = cfg.get("lod", {})
+		if bool(lod_cfg.get("enabled", false)) and str(tier.get("mesh", "bush")) == "bush" \
+				and float(lod_cfg.get("far_bush_m", 0.0)) > 0.0:
+			lod.append({"from_m": float(lod_cfg["far_bush_m"]), "mesh": _bush_mesh(2)})
 
 		var node := MultiMeshInstance3D.new()
 		node.name = "Cover_" + str(tier.get("name", "tier"))
-		node.multimesh = mm
 		var mat := ShaderMaterial.new()
 		mat.shader = load(COVER_SHADER_PATH)
 		node.material_override = mat
+		# VP2: tiled like the grass ring, for the same culling reason.
+		var tile_m := cull_tile_m(cfg)
+		var placed := 0
+		if tile_m > 0.0:
+			placed = _stand_up_tiles(node, "Tile",
+					_fill_lattice_tiles(mm.mesh, plan, cell, tile_m, lod), mat)
+		else:
+			placed = _fill_lattice(mm, plan, cell)
+			node.multimesh = mm
 		# Same reasoning as the grass and stone tiers: thousands of small
 		# shadows overlap into a black carpet rather than reading as shade, and
 		# the shader darkens each item at its own contact instead.
@@ -595,6 +913,17 @@ func _build_far_cover(cfg: Dictionary) -> void:
 		if far_cfg.has(key2):
 			_far_material.set_shader_parameter(key2, Color(str(far_cfg[key2])))
 	_far_material.set_shader_parameter("far_cell", cell)
+	# VP2: the TERRAIN'S macro colours and scales, read off its own config so
+	# the sheet cannot drift a different green from the ground under it.
+	var terrain_shader: Dictionary = _terrain_config().get("shader", {})
+	if bool(terrain_shader.get("enable_macro_variation", false)):
+		_far_material.set_shader_parameter("macro_variation1",
+				Color(str(terrain_shader.get("macro_variation1", "#ffffff"))))
+		_far_material.set_shader_parameter("macro_variation2",
+				Color(str(terrain_shader.get("macro_variation2", "#ffffff"))))
+		_far_material.set_shader_parameter("macro_scale1", float(terrain_shader.get("noise1_scale", 0.012)))
+		_far_material.set_shader_parameter("macro_scale2", float(terrain_shader.get("noise2_scale", 0.03)))
+		_far_material.set_shader_parameter("macro_strength", float(far_cfg.get("macro_strength", 1.0)))
 	# The GRASS TIER'S drift field, by its own numbers, not a second one shaped
 	# to look similar. The far ground's open patches have to be the same
 	# world-space patches the near field's are, or the hand-over is two
@@ -750,7 +1079,10 @@ func _branch_point(out: Vector3, t: float) -> Vector3:
 	return Vector3.UP * (0.05 + t * (BUSH_HEIGHT - 0.05)) + out * (pow(t, 1.5) * 0.36)
 
 
-func _bush_mesh() -> ArrayMesh:
+## VP2: `leaf_step` > 1 emits every `leaf_step`-th leaf of each branch, for the
+## far LOD bush. The kept leaves are the same leaves at the same points on the
+## same branches; the bush just carries fewer of them where it is a few pixels.
+func _bush_mesh(leaf_step: int = 1) -> ArrayMesh:
 	var verts := PackedVector3Array()
 	var normals := PackedVector3Array()
 	var uvs := PackedVector2Array()
@@ -796,6 +1128,8 @@ func _bush_mesh() -> ArrayMesh:
 				indices.append_array([a, a + 1, a + 2, a + 1, a + 3, a + 2])
 
 		for k in BUSH_LEAVES_PER_BRANCH:
+			if leaf_step > 1 and k % leaf_step != 0:
+				continue
 			# Leaves start a little up the branch: bare wood at the bottom is
 			# what makes the branch readable as a branch at all.
 			# From 0.14, not 0.22: a long bare shank at the bottom of every
@@ -983,14 +1317,25 @@ func _build_stones(cfg: Dictionary, radius: float) -> void:
 	var cell := lattice_cell()
 	var plan := _lattice_plan(count, radius,
 			float(stone_cfg.get("centre_bias", 0.58)), cell, cfg)
-	var placed := _fill_lattice(mm, plan, cell)
+	# VP2: a 10cm stone is sub-pixel long before the ring ends. See `_cap_reach`.
+	if stone_cfg.has("reach_m"):
+		plan = _cap_reach(plan, float(stone_cfg["reach_m"]),
+				float(stone_cfg.get("reach_band_m", cfg.get("reach_band_m", 6.0))), cell)
 
 	_stones = MultiMeshInstance3D.new()
 	_stones.name = "StoneField"
-	_stones.multimesh = mm
 	_stone_material = ShaderMaterial.new()
 	_stone_material.shader = load(STONE_SHADER_PATH)
 	_stones.material_override = _stone_material
+	# VP2: tiled like the grass ring, for the same culling reason.
+	var tile_m := cull_tile_m(cfg)
+	var placed := 0
+	if tile_m > 0.0:
+		placed = _stand_up_tiles(_stones, "StoneTile",
+				_fill_lattice_tiles(mm.mesh, plan, cell, tile_m), _stone_material)
+	else:
+		placed = _fill_lattice(mm, plan, cell)
+		_stones.multimesh = mm
 	# A pebble's shadow is not information at this size, and thousands of them
 	# would be the same black carpet `vegetation.json`'s grass layer turned its
 	# own shadows off for. The shader darkens each stone at its own contact
@@ -1081,7 +1426,13 @@ func _stone_mesh(sides: int) -> ArrayMesh:
 ## ground blend both read -- the two things a blind critic named as missing from
 ## the scattered tufts ("flat two-tone polygon... no base-to-tip gradient, no
 ## translucency, no ground blend").
-func _tuft_mesh(blades: int, segments: int) -> ArrayMesh:
+## VP2: `keep` is how many of the `blades` are actually emitted. The loop still
+## runs over all of them so a kept blade's yaw and offset are the ones it has
+## in the full mesh -- the far LOD tuft is the near tuft with its last blades
+## missing, not a different tuft.
+func _tuft_mesh(blades: int, segments: int, keep: int = -1) -> ArrayMesh:
+	if keep < 0:
+		keep = blades
 	var verts := PackedVector3Array()
 	var normals := PackedVector3Array()
 	var uvs := PackedVector2Array()
@@ -1114,6 +1465,8 @@ func _tuft_mesh(blades: int, segments: int) -> ArrayMesh:
 	var half_width := 0.0055
 	var spread := 0.075
 	for b in blades:
+		if b >= keep:
+			continue
 		var yaw := TAU * float(b) / float(blades) + 0.37 * float(b)
 		var dir := Vector3(sin(yaw), 0.0, cos(yaw))
 		var side := Vector3(dir.z, 0.0, -dir.x)
@@ -1211,16 +1564,31 @@ func _apply_clearing(cfg: Dictionary) -> void:
 		return
 
 
-func _terrain_texture_names() -> Array:
+## The terrain config, read once. Two readers here: the texture NAME list the
+## masks are built from, and (VP2) the shader block's macro colours the far
+## sheet mirrors.
+static var _terrain_cfg: Dictionary = {}
+static var _terrain_cfg_read := false
+
+
+static func _terrain_config() -> Dictionary:
+	if _terrain_cfg_read:
+		return _terrain_cfg
+	_terrain_cfg_read = true
 	var file := FileAccess.open("res://data/config/terrain_playground.json", FileAccess.READ)
 	if file == null:
-		return []
+		return _terrain_cfg
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	file.close()
-	var out: Array = []
 	if parsed is Dictionary:
-		for entry: Variant in (parsed as Dictionary).get("textures", []):
-			out.append(str((entry as Dictionary).get("name", "")))
+		_terrain_cfg = parsed
+	return _terrain_cfg
+
+
+func _terrain_texture_names() -> Array:
+	var out: Array = []
+	for entry: Variant in _terrain_config().get("textures", []):
+		out.append(str((entry as Dictionary).get("name", "")))
 	return out
 
 
@@ -1361,7 +1729,7 @@ func _bind_region_uniforms(data: Object) -> void:
 	# the floor is clear.
 	_apply_built(global_position)
 	print("[grass_field] bound: %d tufts, radius %.0fm, region_size %.0f, vertex_spacing %.1f, %d region slots" % [
-		multimesh.instance_count if multimesh != null else 0,
+		_ring_instances,
 		float(config().get("field_radius", 48.0)), region_size, vertex_spacing, map.size()])
 
 

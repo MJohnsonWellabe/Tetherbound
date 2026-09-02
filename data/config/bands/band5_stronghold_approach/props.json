@@ -57,6 +57,7 @@
       "order": 5001,
       "name": "the_waystop",
       "_why": "EXPEDITION-REST/prompt 66's final preparation point. A remembered clearing, not a hotel: `vegetation.json` (order 5000) keeps this 14m nook clear for a player to build in, `harvest.json` (orders 5001-5005) puts wood/stone/fiber within a few paces, and this cluster is the flavour that makes it read as a place travellers already stop rather than a bare lawn -- log seats and a kept pack, no bed and no fire ring (the shipped prop family has neither model; `ranger_camp`'s own note in band2 records the same substitution). Deliberately NOT collapsed or abandoned like `ranger_camp`: this is the last waystop before the Hall, still in use, the difference between a place something happened to and a place people keep choosing to stop.",
+      "_why_vp5": "VP5 visual-parity pass. The smith's anvil is the reason this stop exists, but the fire it should have gathered around was the dimmest in the chapter and the seating sat off at odd distances rather than tangential to it. Fire brightened, bench pulled tangential and closer, a second log seat added opposite it, and the anvil, bag and bucket regrouped in close around the fire so the working half of the camp (smith's tools) and the resting half (seats) both read as arranged around one focal flame. A small supply pair (barrel and crate) was added by the anvil, clear of the creature bed, so the smith's own stock has a place.",
       "rest": {
         "_why": "T5-CADENCE. Band 5 was the audit's most pointed camp/recovery FAIL, because of what this band is FOR: 'Three prop clusters, all 4-prop supply caches. No bed, no fire, no camp anywhere in band 5 -- and this is the band whose entire design purpose per FUN sec15 is final rest and preparation. The player's only option is to build one.'\n\nTHIS CLUSTER'S OWN `_why` ALREADY SAID SO, and its wording is what makes this addition an extension rather than a reversal: 'no bed and no fire ring (the shipped prop family has neither model; `ranger_camp`'s own note in band2 records the same substitution)'. That substitution is now spent -- `campfire_stone_ring.glb` and `camp_bed.glb` have both shipped from the owner-referenced camp set (docs/ASSET_LEDGER.md) and are already placed in bands 1, 2, 3 and 4. Nothing is generated or sourced; the fire and the bed this waystop was authored to have and could not are simply available.\n\nTHE NOOK STAYS BUILDABLE, which is the one thing the cluster's own note asks for ('vegetation.json (order 5000) keeps this 14m nook clear for a player to build in'). Every piece added here hugs the existing bench/anvil group on the road side; the nook's centre and its western half are untouched. A player who wants their own camp here still has the ground for it, and a player who does not now has somewhere to sleep before the Hall.",
         "at": [-21.0, 7456.6],
@@ -74,47 +75,38 @@
       "props": [
         {
           "model": "Bench",
-          "at": [
-            -26.5,
-            7457.0
-          ],
-          "yaw_deg": 35.0,
-          "sink_m": 0.04,
+          "at": [-25.0, 7457.4],
+          "yaw_deg": -67.5,
+          "sink_m": 0.08,
           "scale": 1.0,
-          "_why": "the cluster's anchor -- seating, facing back down the road the player just climbed"
+          "_why": "the cluster's anchor -- seating, facing back down the road the player just climbed",
+          "_why_vp5": "VP5. Pulled tangential to the fire, 2.6m W of it -- the deeper sink (0.08) follows the ground rising to the west at this distance."
         },
         {
           "model": "Anvil_Log",
-          "at": [
-            -24.0,
-            7458.8
-          ],
+          "at": [-24.9, 7459.9],
           "yaw_deg": -20.0,
           "sink_m": 0.06,
           "scale": 0.9,
-          "_why": "a second, lower seat opposite the bench -- two ways to sit, the same cue `ranger_camp`'s round 3 used for 'a place people actually gathered'"
+          "_why": "a second, lower seat opposite the bench -- two ways to sit, the same cue `ranger_camp`'s round 3 used for 'a place people actually gathered'. VP5: the smith's own anvil, the reason this waystop exists, moved in close by the fire rather than sitting apart from it"
         },
         {
           "model": "Bag",
-          "at": [
-            -25.2,
-            7456.0
-          ],
+          "at": [-25.9, 7455.6],
           "yaw_deg": 140.0,
           "sink_m": 0.06,
           "scale": 1.0,
-          "_why": "somebody's kit, set down and not forgotten -- whoever stopped here meant to come back for it, unlike the abandoned camps further back"
+          "_why": "somebody's kit, set down and not forgotten -- whoever stopped here meant to come back for it, unlike the abandoned camps further back",
+          "_why_vp5": "VP5. Moved against the bench's own south end, the same touching-pile rule this chapter's other camps use."
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [
-            -27.8,
-            7459.4
-          ],
+          "at": [-23.9, 7460.4],
           "yaw_deg": -60.0,
           "sink_m": 0.04,
           "scale": 1.0,
-          "_why": "within reach of the bench, not tipped -- this stop is tended"
+          "_why": "within reach of the bench, not tipped -- this stop is tended",
+          "_why_vp5": "VP5. Moved beside the anvil -- water for the smith's own work, close enough to read as part of the same station."
         },
         {
           "model": "campfire_stone_ring",
@@ -130,20 +122,75 @@
           "at": [-22.6, 7456.4],
           "yaw_deg": -40.0,
           "scale": 0.42,
+          "glow_scale": 1.4,
           "sink_m": 0.02,
           "dir": "res://assets/props/quaternius_survival",
           "glow": "campfire",
-          "_why": "T5-CADENCE. The fire in it, the same solved combination every other camp in the chapter uses (`Bonfire_Fire.obj`'s real `Fire` surface + `ignite()` + campfire_glow.gd's light, embers and smoke). On the final approach it does a second job the other fires do not: `stronghold_occupation.json` drains this ground and lights it with Team Tether's own braziers, so one ordinary warm fire on the road is the last thing here that belongs to the Meadows rather than to the people who took it."
+          "_why": "T5-CADENCE. The fire in it, the same solved combination every other camp in the chapter uses (`Bonfire_Fire.obj`'s real `Fire` surface + `ignite()` + campfire_glow.gd's light, embers and smoke). On the final approach it does a second job the other fires do not: `stronghold_occupation.json` drains this ground and lights it with Team Tether's own braziers, so one ordinary warm fire on the road is the last thing here that belongs to the Meadows rather than to the people who took it.",
+          "_why_vp5": "VP5. This was the dimmest fire in the chapter, no `glow_scale` at all against neighbouring camps' 1.4-1.8. Set to 1.4 so the last fire before the Hall is legible as the focal point the smith's anvil, seats and supplies are now arranged around, without overplaying it against the Team Tether braziers this same site sits beside."
         },
         {
           "model": "tree-log-small",
           "at": [-24.2, 7454.0],
-          "yaw_deg": 55.0,
+          "yaw_deg": -146.5,
           "pitch_deg": 4.0,
           "sink_m": 0.03,
           "scale": 1.0,
           "dir": "res://assets/props/kenney_survival",
-          "_why": "T5-CADENCE. Firewood beside the new fire, radial rather than tangential -- band 1's own rule, for the opposite reason its seats obey. Kenney's textured CC0 log, as at every other camp."
+          "_why": "T5-CADENCE. Firewood beside the new fire, radial rather than tangential -- band 1's own rule, for the opposite reason its seats obey. Kenney's textured CC0 log, as at every other camp.",
+          "_why_vp5": "VP5. Re-aimed radial to the fire now that the bench has moved off this bearing."
+        },
+        {
+          "model": "tree-log-small",
+          "at": [-23.6, 7453.6],
+          "yaw_deg": -105.0,
+          "pitch_deg": 2.0,
+          "sink_m": 0.03,
+          "scale": 0.9,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "VP5 round9, coordinator spec: 'logs and stones around' the fire, told asymmetrically. Set 0.7m from the existing firewood log so the two touch and read as one dropped stack rather than one lone log -- the road-facing Stool 4.6m off stays this camp's one unpaired seat, so the touching pair and the lone watcher sit on opposite sides of the same clearing rather than a matched ring."
+        },
+        {
+          "model": "tree-log",
+          "at": [-20.2, 7455.0],
+          "yaw_deg": 30.0,
+          "sink_m": 0.03,
+          "scale": 1.15,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "VP5. A second seat, tangential to the fire 2.8m E, opposite the bench -- the bench alone read as one seat facing an empty fire; a camp used by more than one traveller needs somewhere else to sit."
+        },
+        {
+          "model": "camp_tent",
+          "at": [-26.9, 7453.0],
+          "yaw_deg": 35.0,
+          "sink_m": -0.5,
+          "scale": 0.9,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "VP5. A kept shelter for the last waystop before the Hall -- still in use, unlike the abandoned camps further back. The D1 owner-referenced tent mesh (already committed, no new generation), sized between band1's rest-camp tent (1.05) and band4's patrol tent (0.85)."
+        },
+        {
+          "model": "Barrel",
+          "at": [-23.0, 7459.3],
+          "yaw_deg": 25.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "VP5. A small supply pair by the anvil -- the smith's own stock, clear of the seating arc and the creature bed at (-21, 7459.4)"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [-22.6, 7461.0],
+          "yaw_deg": -30.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "VP5. Set touching the barrel, one load rather than a scatter"
+        },
+        {
+          "model": "Stool",
+          "at": [-19.5, 7453.0],
+          "yaw_deg": 75.6,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "VP5 round8. An unpaired seat at the clearing's own road-facing edge, 4.6m clear of the fire group and turned to bearing 75.6 -- straight up the spine at the outer works (8.0,7560.0), the Hall itself. Every other seat here faces the fire; this one turns the last stop before the climax toward what the player is about to walk into, the read the site's own name (a traveller's halt facing the road ahead) was still missing."
         }
       ]
     },

@@ -19,77 +19,190 @@ census, which stays a historical report
 
 ---
 
-## 0. Coordinator dispatch, 2026-09-02 afternoon — read this first
+## 0. Coordinator session, 2026-09-02 afternoon — read this first
 
-A new backlog/Gate-F coordinator picked up from
-`ralph/COORDINATOR_HANDOVER_2026-09-02.md` at ~11:50 UTC. Two findings and a
-dispatch log.
+A backlog/Gate-F coordinator picked up from `ralph/COORDINATOR_HANDOVER_2026-09-02.md`
+at 11:50 UTC and dispatched six lanes. This section is the record of what landed,
+what was decided, and what is still open. A separate visual coordinator ran the
+Visual Parity program in parallel; its PR #20 merged at `b03cdb94`.
 
-### Finding: `main`'s CI is red, and its green badge is lying
+### Landed on `main` (each proven with `git merge-base --is-ancestor`, not a CI badge)
 
-`main` @ `852fe366` (the CAMP-SPLIT merge, run 33619015130) fails
-`verify-unit-tests (4)`:
+| commit | what |
+|---|---|
+| `e97baa30` | Re-bake the playground scatter + a dedicated `verify-scatter-bake-freshness` CI job |
+| `c98998fa` | Rest cycle proven end to end + a rest-progress indicator (09-02 findings 15 and 7) |
+| `8bf4f0bd` | Interact reliability: real-input **evidence only** — the game-breaker is NOT closed |
+| `0f1b2661` | Training guidance legible on real handheld frames (09-01 findings 7 and 12) |
 
-```
-FAIL  test_scatter_perf_budget.gd :: test_playground_bake_is_committed_and_fresh
-  data/scatter/playground is missing or stale against the live config
-  (vegetation.json / terrain_playground.json)
-```
+### Three ways CI reported green over a real failure, all confirmed today
 
-333 tests, 1 failed. Every other job that ran passed; the `cancelled` ones were
-superseded by the next push, which is normal. **The two commits after it are
-documentation-only**, so CI skipped every code job and reported `success` — the
-badge on `main` HEAD is thirteen skipped jobs, not a green build. Checking the
-badge instead of the jobs would have missed this entirely; check job-by-job on
-the last commit that actually touched code.
+This is the single most valuable thing this session learned, and all three are
+still live traps for the next coordinator:
 
-This is not only a red test. It is the exact root cause `ralph/OWNER-0902-LOAD-TIME`
-found behind the owner's *"the game took forever to load"* — a stale bake makes
-every New Game/load recompute ~812k scatter placements live (256.6s of a 302.5s
-world stand-up). That lane re-baked at `be349d97` **and flagged that nothing
-re-bakes automatically when vegetation/terrain config changes, so it would
-recur.** It recurred within the day: `5b2ce125` (GRASS-RENDER) and `7c939c9d`
-(GRASS-ON) both edited `data/config/grass_field.json` after that bake. The build
-the owner plays right now is very likely slow to load again.
+1. **Docs-only commits hide a red one.** `main` sat red on the stale-bake test
+   while the two commits after it were documentation, so every code job skipped
+   and the badge read `success`. Check job-by-job on the last commit that
+   actually touched code.
+2. **`[skip ci]` on WIP + the `changes` job.** A branch whose final commit is a
+   report gets judged documentation-only, skipping every code job, while the
+   earlier `[skip ci]` commits carried the real production code. Seen on two
+   branches: an ~80-second `success` is twelve skipped jobs.
+3. **`RETRIES: 3` is a bug-hider.** `smoke_traversal.gd` failed on attempt 1 of
+   four separate runs today — identical coordinates to the centimetre, on both
+   sides of the VP merge — and the retry loop rescued it every time. A retry that
+   turns 0-for-1 into a green tick is not a pass.
 
-Dispatched as `ralph/FIX-STALE-SCATTER-BAKE-V2`, briefed to re-bake *and* close
-the silent-recurrence hole rather than just clearing the red.
+### Findings worth carrying forward
 
-### Finding: nothing from Gate F is waiting to land
+- **The scatter bake goes stale silently, and it is worse than the owner's own
+  report.** Measured 492.6s to first settled frame on `main` (the owner's
+  original "takes forever to load" was 302s), fixed to 70.3s. Root cause is
+  unchanged from `OWNER-0902-LOAD-TIME`: nothing re-bakes when vegetation/grass
+  config changes. `e97baa30` adds a named CI guard for the *playground* bake —
+  but **`data/terrain/playground` has no freshness check at all**, and
+  `terrain_playground.json`'s `routes` moved 2026-09-02 with no re-bake since.
+  Same shape, still open.
+- **The owner may be playtesting stale release builds.** Proven for the sleep
+  item: the handover recording "player sleep was impossible still" was pushed at
+  10:29:48 UTC, seven minutes *before* camp-split's release build finished at
+  10:36:55, and no release fired between 05:47:38 and 10:36:55. So the Bedroll
+  did not exist in any build he could have played. `ralph/conventions.md` already
+  warns a Ralph ship does not reliably publish a Windows build — this is that
+  warning coming true, and it means some "still broken" reports may be against
+  code that was already fixed. Worth its own process fix.
+- **The Ralph sweep workflow failed at 13:27** (run 33635811838 on `38147fca`).
+  The VP program reached `main` via a pull request instead. The sweep is the
+  documented path to `main`, so it should not stay broken quietly.
+- **A test that exists but does not test the thing.** `_probe_camp_split.gd`
+  proved the bedroll heals the *trainer* and never once assigned a creature to
+  the creature bed — the actual subject of the owner's complaint. Separately,
+  `smoke_gate_b_continuous.gd`, the only automated gather → build camp → sleep
+  path, had been failing at its first village check since Mira's gifts moved off
+  Tam, so it never reached the sleep segment at all. Both now fixed; the pattern
+  is worth suspecting elsewhere.
 
-`ralph/GATE-F-S03-CATCH-LOOP` is 30 commits ahead of `main`, but every one of
-them is harness (`tools/gate_f/**`) or run-log artifacts. The single production
-change that segment produced — the Revive grant 2 → 10 — already landed at
-`1c152d93`. There is no outstanding Gate F work queued for `main`; the branch's
-size is not a landing backlog.
+### Decisions
 
-### Dispatched lanes
+- **Grass density: keep 75,000 tufts / 4 blades / 3 segments. No change.**
+  The owner noticed the field had thinned (`5b2ce125` cut every lever ~5x, 1.8M
+  blades → 300k, staged with `enabled: false`; `OWNER-0902-GRASS-ON` then flipped
+  the flag onto the thinned numbers — so the switch was approved, the thinning
+  rode along). A rendered ladder was put to two independent judges, one blind to
+  which frame was which config. Both picked the shipped density: the 150k step is
+  denser only within ~5m, marginal at mid-distance, nil at the horizon, and
+  invisible at thumbnail scale.
+  **The more useful finding: neither step reads as the key art's meadow, and the
+  gap is blade SHAPE, not count.** The grass draws as isolated 1–2px spikes on a
+  blurry ground — "hair on a lawn" — where `docs/reference/moong-01-mounted-in-tall-grass.jpg`
+  shows overlapping blades with mass, varied height and a dark root zone. The
+  recommended change is a **clump card** (3–5 blades per instance, wider base,
+  root-to-tip gradient, ±30% height variation) at the *current* instance count,
+  so coverage rises without geometry cost. Put to the owner; not yet decided.
+  `grass_field.gd` is VP-owned since PR #20, so this is likely their work.
 
-One session per item, each briefed with the verbatim owner finding, told to
-reproduce for real before touching anything, and held to the landing discipline
-in `ralph/COORDINATOR_HANDOVER_2026-09-02.md` §0.
+### A recurring bug family in the evidence harness — worth one sweep, not ten discoveries
 
-| branch | item | why now |
-|---|---|---|
-| `ralph/FIX-STALE-SCATTER-BAKE-V2` | stale scatter bake | `main` CI red + live owner load-time bug |
-| `ralph/OWNER-0901-PLAYER-SLEEP-V2` | *"player sleep was impossible still"* | owner-confirmed live bug |
-| `ralph/OWNER-0901-CREATURE-GRASS-VISIBILITY-V2` | *"small creatures in grass still want fixed"* | owner-confirmed live bug, and grass is on now |
-| `ralph/OWNER-0901-INTERACT-RELIABILITY-V3` | interact works ~half the time | owner-named game breaker, never confirmed fixed |
-| `ralph/OWNER-0902-REST-VISIBILITY` | rest completes end-to-end + rest-progress indicator | 09-02 items 15 and 7, one system |
-| `ralph/OWNER-0901-TRAIN-CLARITY-V2` | train clarity + tournament level 5 | owner's own #3 priority, both still "believed fixed" |
+Six separate failures today were the same shape: **a check that exists, reports
+green or fails for an unrelated-looking reason, and is not testing the thing it
+appears to test.** Each was found individually, at real cost. They are worth
+fixing as a class.
 
-Deliberately **not** dispatched, and why:
+- **Fixed slot offsets instead of item identity.** The Gate F harness repeatedly
+  addresses inventory by position: the revive `focus_item` fix, the knife
+  `hotbar_5` → `hotbar_4` correction (which cost S03 several hours and had been
+  "corrected" the wrong way once already), the feed sequence's berries lookup,
+  and a gather-node wrong-tool bug. A press on an empty slot selects nothing
+  silently, and the segment then fails somewhere downstream that looks unrelated.
+  **Grep `tools/gate_f/` and `tests/helpers/` for fixed-offset hotbar/inventory
+  lookups and convert them to lookup-by-identity in one pass.**
+- **`tools/_probe_camp_split.gd`** proved the bedroll heals the *trainer* and
+  never once assigned a creature to the creature bed — the actual subject of the
+  owner's complaint.
+- **`tests/smoke_gate_b_continuous.gd`**, the only automated
+  gather → build camp → sleep path, had been failing at its first village check
+  since Mira's gifts moved off Tam, so it never reached the sleep segment at all.
+- **The Gate F feed sequence "never actually fed anyone all session"** (its own
+  words) before it was fixed.
+- **`smoke_traversal.gd`** failed on attempt 1 of every run all day; `RETRIES: 3`
+  turned that into a green tick.
 
-- **Village shape (09-02 item 8)** — the separate visual-parity (VP) program has a
-  live VILLAGE lane; dispatching a village-layout fix here would collide with it.
-- **The two open visual items** (near-black world site, illegible signpost text) —
-  same reason; they belong to the visual coordinator, not this one.
-- **Characters read too small (09-02 item 4)** — genuinely blocked on an owner
-  design decision, already measured in full. It needs the question put to the
-  owner, not another investigation session.
-- **Lag / item 2** — cannot be closed from any container here. See §2c of the
-  handover; it needs an owner playtest on the Ally with grass in its current on
-  state.
+The generalisation: **a green check is not evidence until something has seen it
+go red for the right reason.** Where practical, a test worth trusting should be
+provable by breaking the thing it guards.
+
+### Follow-ups filed today
+
+- **Creature-vs-ground contrast in shade.** The spawn-siting fix closes the
+  occlusion half of the owner's "small creatures in grass" complaint — a creature
+  no longer spawns inside a baked bush, and its silhouette is intact. But the
+  relocated spot can land in partial shade, where at 30% scale the creature still
+  reads as a dark smudge. The remaining lever is **creature material value and
+  saturation, possibly a rim light or a ground-contact shadow** — explicitly NOT
+  grass density (settled: keep 75k) and NOT `field_degreen` alone (measured as
+  modest on its own by two independent judges, one blind). Evidence is attached to
+  `ralph/reports/OWNER-0901-CREATURE-GRASS-VISIBILITY-V2/`.
+- **Two different things are both named "bushes".** `grass_field.json`'s
+  procedural `cover_tiers` bushes, and `vegetation.json`'s statically-baked
+  `bushes` scatter layer. `grass_clear`'s `built[]` mechanism reaches only the
+  first. The baked layer also carries `collides: false`, so it was invisible to
+  every collision-based check despite being the densest visual occluder in the
+  game. This collision cost a full lane cycle to discover; renaming one of them
+  would be cheap.
+- **MAIN STORY objective label truncates at 1280x800** — "Train with your team
+  before the …". The hint card carrying the full "how" is timed (~10s, once per
+  rung change), so a player who misses it sees a cut sentence until they open the
+  quest log.
+
+### Still open
+
+- **Interact reliability (09-01 item 3) — the owner's own game-breaker.** Does
+  not reproduce in-container: 0 misses / 324 real-input attempts across five
+  situations including a simulated frame hitch. But the probe cannot run on the
+  ROG Ally, which is where he hit it. **Needs an owner hardware pass.** Same
+  bucket as the ~10 FPS lag item, which is equally unclosable from here.
+- **Player sleep (09-01 item 4).** Both paths verified working under real
+  interact input — Grandpa's loft bed ("Sleep") and the placed Bedroll ("Rest
+  until morning"). The Bedroll provably did not exist in the build the owner
+  tested. **Unresolved: whether he ever tried Grandpa's loft bed**, which landed
+  09-01 and should have been present. Asked; awaiting his answer.
+- **Small creatures in grass (09-01).** Fix sent back, twice-reviewed. Density is
+  not the cause; the causes are value/hue camouflage, silhouettes broken by
+  creatures spawning *inside* flowering shrubs, and no ground contact shadow.
+- **`smoke_traversal.gd` breadcrumb/teleport race.** The test teleports the player,
+  no breadcrumb is dropped (`_drop_breadcrumb` returns early when not
+  `is_on_floor()`), the entombment failsafe rewinds to a 6.3km-stale breadcrumb,
+  and the test scores that as walking around a locked gate. Harness cascade,
+  impossible for a real player. First fix (`107c9644`) shipped only half of it:
+  it made the breadcrumb reliably EXIST, but `_recovery_position()` skips any
+  breadcrumb closer than `min_recovery_distance_m` (6.0m), and an entombed body
+  never moves horizontally, so the freshly planted breadcrumb is always inside
+  that radius and can never be chosen. Closed for real on
+  `ralph/TRAVERSAL-BRIDGE-TELEPORT-GUARD` by giving `_walk_at_the_bridge()` the
+  same step-sanity guard `_check_sigil_gate()` already had -- a teleport is not
+  a stride, and a walk that cannot tell them apart is not measuring the gate.
+  The 6.0m rule is production behaviour and was deliberately left alone.
+- **The player really is entombed 11m back from the South Bridge.** OPEN, and
+  the more serious half. Placed at `near_point(11.0)` = (7.9, -3.4, 1319.0),
+  `ground_height_at` + 1.0, the capsule settles INSIDE geometry: all eight
+  compass probes sealed, and `_clamp_runaway_velocity` firing hundreds of times
+  on 121 m/s depenetration at that exact spot. Reproduces to the centimetre
+  across every attempt. `RETRIES: 3` and the recovery failsafe together hid
+  this for weeks -- the teleport guard above stops it being scored as a false
+  gate breach, but it does NOT make the ground there sound. A player who walks
+  into that gully has a real hole to fall in. Needs a world/collision session,
+  not a harness one. The same `(x, -3.0, 1319.0)` pin recurs in Gate F S05-S10
+  notes ("stopped 12.4m short"), so it is very likely already costing Gate F
+  runs.
+- **Bram-exit navigation defect.** Leaving Bram's shop, `_exit_through()` walks a
+  straight line from wherever the movement probe left the player, clipping the
+  shop furniture. Partially fixed, still failing, needs its own session.
+- **MAIN STORY objective label truncates at 1280x800** — "Train with your team
+  before the …". The hint card carrying the full "how" is timed (~10s, once per
+  rung change), so a player who misses it sees a cut sentence until they open the
+  quest log. Small, real, found while closing train-clarity.
+
+---
 
 ## 1. Owner playtest, 2026-09-02 — the current priority
 
@@ -121,6 +234,7 @@ still broken by direct play** — treat these as the standing lesson that
 - **Tent/campfire/bed — landed, split for real.** `ralph/OWNER-0902-TENT-CAMPFIRE-PLACEMENT` found the placement mechanism was never broken and fixed the Build menu to say what "Camp" bundled. The owner then directly rejected leaving it bundled — "split the fucking campsite pieces for building." `ralph/OWNER-0902-CAMP-SPLIT` did that: three independently placeable buildables (tent 6 wood/4 fiber, campfire 2 wood/8 stone, bedroll 4 wood/6 fiber — same 12/8/10 total as the old bundle), reusing the existing meshes/rest-craft logic split across three real scripts rather than rewritten. `progression.json`'s `required_pieces` and every test pinning the old single `camp` id (11 files) updated to the real shape. Verified: 110 tests across 7 suites + 5 smoke tests green, plus a new real headless placement probe (arm → ghost → build_place for all three pieces) confirming the Craft and Rest prompts both work end to end.
 - **UI — landed.** `ralph/OWNER-0902-HUD-TEAM-MENU`: the duplicate team-menu was a fight-end race — combat's own party strip only faded (2.5s) while leaving combat almost always changes `Party.active_index`, so the exploration strip revealed fresh on top of it, in a different position, reading from a fight-only roster that excludes fainted members (hence "doesn't show the full team"). Fixed with an instant-cut path on the real fight-just-ended edge only. The food-bar overrun was a shared-column layout collision; satiety now sits beside the health bar instead. Verified against a real headless render: full unit suite + 6 targeted HUD smoke tests, all green.
 - **No rest-progress indicator** — nothing tells the player how long a resting creature has left. Not yet started.
+- **Interact reliability ("works about half the time," game breaker) — investigated further, real-input evidence, does not reproduce on `main`.** `ralph/OWNER-0901-INTERACT-RELIABILITY-V3` (branch, not merged): V2 closed one real staleness window in `interaction_arbiter.gd` but its own commit message said plainly it never confirmed a root cause, and all four of its probes only ever pressed the button near one NPC's dialogue. Code reading found the one real architectural asymmetry V2 never tested: `interaction_arbiter.gd` and `dialogue_panel.gd` both read `interact` from `_physics_process()` (fixed 60Hz) by explicit design, but `playground_hud.gd::_hammer_opens_the_catalogue()` (the button that opens the build catalogue when the hammer is equipped) is read from `PlaygroundHUD._process()` — the idle/render-frame clock — the one `interact` consumer on the other clock and the strongest remaining suspect for a real cross-clock miss. `tools/probe_interact_reliability_v3.gd` measures single real `InputEventJoypadButton` presses (never `Input.action_press`, per `conventions.md`) across five real situations: NPC dialogue, world pickups (tool-free berries bushes, so a miss can't be confused with a correct wrong-tool refusal), a station panel (creature bed Rest UI), the build catalogue via the hammer (both native speed and under an artificial physics-tick stall that forces several physics ticks to batch inside one process frame, the same shape as a real frame hitch), and the post-modal-close race named directly in the task brief (close a conversation, press interact again 0-4 frames later to reopen one — exercising `sequence_director.gd::_refresh_lockout()`, which recomputes the arbiter's `_enabled` flag on the idle clock while the arbiter reads it on the physics clock, the same class of staleness V2 closed for `_winner` but never touched for `_enabled`). Two independent full runs: 0 misses / 162 attempts each (324 total). V2's own four probes (`probe_interact_flake`/`probe_interact_approach`/`probe_interact_lag`/`probe_arbiter_race`) and `smoke_post_modal_control.gd` re-run clean on this branch too (0 misses across 277 further attempts). Not covered by any of this: real hardware (ROG Ally input latency/polling), and any interact target this probe didn't construct (e.g. the road/castle gate, vendor/shop panels beyond Bram's already-covered one, farm plots). If the owner hits this again, the single most useful thing to capture is which of these five categories the miss was in and what was on screen in the second before it, since headless simulation cannot manufacture whatever condition real hardware is hitting.
 
 ---
 
@@ -138,13 +252,76 @@ not super visible."*
 |---|---|---|---|
 | 1 | Knife not visible in hand | `OWNER-0901-KNIFE-VISIBILITY-V2` | **confirmed fixed by real play** |
 | 2 | Severe lag, ~10 FPS — **game breaker** | `OWNER-0901-PERFORMANCE-LAG-V2` | **inconclusive** — the owner's retest happened while grass was off (it's back on as of today, `OWNER-0902-GRASS-ON`), which was the original fix's own mechanism, so this run couldn't actually test whether the fix still holds. Needs a fresh real-hardware playtest with grass in its current on state before this can be called fixed or broken. |
-| 3 | Interact works ~half the time — **game breaker** | `OWNER-0901-INTERACT-RELIABILITY-V2` | not covered by this pass, still just "believed fixed" |
+| 3 | Interact works ~half the time — **game breaker** | `OWNER-0901-INTERACT-RELIABILITY-V2` | **investigated further, real-input evidence, does not reproduce on `main`** — see §1's new entry below |
 | 4 | No way for the player to sleep | `OWNER-0901-PLAYER-SLEEP` | **confirmed still broken** — "player sleep was impossible still." Reopened; needs a real fix, not another investigation. Note: the campsite was split into three pieces the same day (`OWNER-0902-CAMP-SPLIT`) and player rest now runs through the new `bedroll` piece (`scripts/build/player_bed.gd`) — check whether this complaint is about that path specifically, or a separate player-only sleep action (distinct from creature-bed rest) that was never built at all. |
-| 7 | Unclear how to train a team | `OWNER-0901-TRAIN-CLARITY` | not covered by this pass, still just "believed fixed" |
+| 7 | Unclear how to train a team | `OWNER-0901-TRAIN-CLARITY` | **confirmed fixed by real headless execution, 2026-09-02 re-verification** (`ralph/OWNER-0901-TRAIN-CLARITY-V2`) — see below |
 | 8 | Bond system illegible, wants discrete milestones | `OWNER-0901-BOND-MILESTONES` | **closed, confirmed implemented by code inspection** (owner: "I didn't test bond but if it's coded remove it"). `docs/decisions/D70-bond-is-a-milestone-ladder-not-a-meter.md` records the real redesign: the old 0-100 point meter is gone, replaced by an ordered five-task ladder (`data/config/bond_milestones.json`, `scripts/creatures/bond_milestones.gd`) matching the owner's own example almost verbatim ("defeat 50 wild creatures together" is milestone 1, unmodified owner input). `scripts/ui/bond_meter.gd` (the display widget, name notwithstanding) draws the milestone tier and its progress sentence, not a raw percentage — no leftover old-meter UI. `tests/test_bond.gd` pins the ladder's sequential behavior. Real, not a stub. |
 | 9 | Creatures don't lie in bed except galecrest | `OWNER-0901-CREATURE-BED-POSE` (bed roster-fit landed separately, §3) | not re-covered by this pass |
-| 12 | Tournament `min_level` 6→5, Halda's guidance made concrete | `OWNER-0901-TOURNAMENT-LEVEL5` | not covered by this pass, still just "believed fixed" |
+| 12 | Tournament `min_level` 6→5, Halda's guidance made concrete | `OWNER-0901-TOURNAMENT-LEVEL5` | **confirmed fixed by real headless execution, 2026-09-02 re-verification** (`ralph/OWNER-0901-TRAIN-CLARITY-V2`) — see below |
 | — | Small creatures disappear into grass | `OWNER-0901-CREATURE-GRASS-VISIBILITY` | **confirmed still broken, and now live again** — "small creatures in grass still want fixed. they're not super visible." Now more urgent than when this was filed: grass is back on as of today (`OWNER-0902-GRASS-ON`), so this is an active, current defect, not a dormant one. Needs a real fix. |
+
+**Items 7 and 12 re-verified 2026-09-02, real execution not a code read.** A
+local Godot 4.7-stable headless binary (the same version CI pins) was
+downloaded and used to actually import and run this checkout, because no
+Godot binary exists by default in this container and a code read alone has
+burned this project before (village gate, thrice). Findings:
+
+- `data/config/tournament.json`'s `min_level` is `5`, and nothing else
+  overrides it: `scripts/world/tournament.gd::required_level()`'s `6` is
+  only a never-triggered missing-config fallback. `tests/test_tournament.gd`
+  (85 tests, 1070 assertions, all green on this run) exercises the real
+  threshold dynamically via `TOURNAMENT.required_level()`, including
+  `test_a_party_at_the_authored_level_is_trained` and
+  `test_one_level_below_the_threshold_is_not_trained` — a level-4 party
+  fails, a level-5 party passes.
+- Halda's `tournament_halda_train` line (`data/dialogue/bands/band1_lower_meadows.json`)
+  already reads: *"Feed them. Rest them — a Creature Bed or your own
+  bedroll, either does it. Get them to level five, then we'll talk."* — the
+  vague-"train" complaint item 12 named is gone from her actual voice line,
+  not just from a comment.
+- `tests/smoke_tournament_bracket.gd` (a real simulated playthrough, run
+  directly, not through a code read) drove an actual party from too-small
+  through every one of Halda's branches — `tournament_halda_closed` →
+  `tournament_halda_train` → `tournament_halda_condition` → fed/rested →
+  `tournament_halda_signup` → all three rounds **actually fought** (real
+  combat simulation, not stubbed) → champion → saddle pattern granted.
+  Output: `smoke: OK — the tournament can be entered, lost, retried, fought
+  through all three rounds and won, once.` This is the closest thing to
+  "playing it" available without an interactive session, and it exercises
+  the real game code, not a mock.
+- Item 7's own root cause was broader than item 12's dialogue fix alone:
+  `data/progression/objectives.json`'s `tournament_train_team` rung already
+  carries the concrete `how` text (*"Villagers who offer a fight are the
+  training -- Bryn at the practice ring first. Wins are levels. Get your
+  whole team to level 5."*, landed same-day as item 12's fix, `e202559b`)
+  — but that text lives in `quest_log.gd::tracked_hint()`, which for months
+  had "been written and tested... with nothing rendering it" (the code's
+  own words, `scripts/ui/playground_hud.gd`'s `_build_objective_hint_card`
+  comment). **That gap is already closed too** — `HIST-036` wired a real
+  timed HUD card that draws `tracked_hint()` on screen whenever the tracked
+  objective changes. Ran `tests/smoke_objective_hint_card.gd` for real
+  (not read): PASS, "the objective hint reaches the screen and its card
+  fits its band" — measured at 1920×1080, all 27 authored hints (including
+  this one) fit their card, and `Game.objective_hint reaches the card's own
+  label` is confirmed live-wired, not dead data.
+- Bryn (the practice-fight trainer the hint names) is real and placed
+  (`data/config/bands/band1_lower_meadows/trainers.json`), fields a
+  level-2 team, and his own challenge line frames the fight as training
+  ("no idea what it can do yet... beat them both and you'll know something
+  you can't be told") — so the guidance's claim is mechanically true, not
+  just narratively plausible.
+- Bond milestones (item 8, closed separately) do not carry any of this
+  load — `docs/decisions/D70` confirms it is a companionship/attachment
+  ladder (battles fought together, landmarks, distance, rest, feeding
+  *together*), unrelated to a creature's own combat level. It neither
+  duplicates nor substitutes for the training guidance above.
+
+No code change was needed for either item — both were already correctly
+implemented, and item 7's landing (`e202559b`) undersold its own fix by
+citing only the objectives-data text without knowing at the time that the
+HUD surface for it had also already shipped (`HIST-036`, an unrelated
+lane). What was missing until now was real-execution proof, which this
+pass supplies. Branch: `ralph/OWNER-0901-TRAIN-CLARITY-V2`.
 
 **The village-gate lesson stands as recorded history:** the first dispatch on
 that finding claimed "nothing to fix" from a config read with no pushed

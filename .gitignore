@@ -44,6 +44,11 @@ logs/
 # was swallowed on the way to the commit.
 /shots/
 /shots-*/
+# Scratch capture directories written by one-off VP render scripts
+# (res://shots_world_r3, res://shots_dawn_verify, ...). Same anchored form
+# and the same reasoning as the two lines above: only at the repo root, so
+# nothing nested under ralph/reports/ is ever swallowed.
+/shots_*/
 
 # Python bytecode from the art pipeline tools
 __pycache__/

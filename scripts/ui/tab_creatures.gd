@@ -1001,7 +1001,21 @@ func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: in
 	# cannot act on. One line per row, coloured while it would refuse entry.
 	var condition: Dictionary = CONDITION.summary(creature, CONDITION.config())
 	var line := _row_conditions[i] as Label
-	if bool(creature.get("fainted")):
+	if bool(creature.get("resting")):
+		# OWNER-0902-REST-VISIBILITY. Owner playtest finding 7: "No way to tell
+		# when a creature finishes resting... in the menu or elsewhere." This
+		# IS the menu the owner named -- the team roster already carries a
+		# per-creature condition line, so the answer joins it instead of a new
+		# widget. Checked ahead of the KO branch below: a creature can be
+		# fainted AND resting at once (a bed heals a fainted pal in place,
+		# `creature_bed.gd`'s own comment), and while it is actively
+		# recovering that is the more useful thing to tell the player than a
+		# bare "KO" they can do nothing about from here.
+		var seconds_left := PROGRESSION.rest_seconds_remaining(creature, PROGRESSION.config())
+		line.text = "Resting — ready, sleep to finish" if seconds_left <= 0.5 \
+			else "Resting — %s left" % _format_rest_seconds(seconds_left)
+		line.add_theme_color_override("font_color", UITokens.WATER_BLUE)
+	elif bool(creature.get("fainted")):
 		# Blind-judge pass: a fainted row here showed only a red NAME, with no
 		# word anywhere on it -- the same state the party strip spells "KO"
 		# and this screen's own detail column already calls "Out of the
@@ -1026,6 +1040,13 @@ func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: in
 		# worth fixing rather than as a crisis.
 		line.add_theme_color_override("font_color",
 			UITokens.TEXT_SECONDARY if bool(condition.get("ready", false)) else UITokens.WARNING)
+
+
+## Matches `creature_bed_panel.gd::_format_seconds()` -- the same duration,
+## the same M:SS shape, wherever a player reads it.
+func _format_rest_seconds(seconds: float) -> String:
+	var whole := int(ceil(seconds))
+	return "%d:%02d" % [whole / 60, whole % 60]
 
 
 func _describe(index: int, cfg: Dictionary) -> void:
