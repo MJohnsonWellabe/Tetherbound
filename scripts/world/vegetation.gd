@@ -534,13 +534,13 @@ var _tints: Dictionary = {}
 ## green grass in one layer and dry gold straw in another, which is most of the
 ## hue breadth the meadow has. The critic counted 2 hue families against the key
 ## art board's 6, and the ground cannot supply the difference on its own.
-func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}, needs_instance_colour: bool = false) -> Mesh:
+func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}, needs_instance_colour: bool = false, adjusts: Dictionary = {}) -> Mesh:
 	var map: Dictionary = RULES.config().get("retint", {})
 	# needs_instance_colour still requires a fresh material even with nothing
 	# else to change: per-instance MultiMesh colour only multiplies through
 	# when the material's own vertex_color_use_as_albedo is true, and the
 	# source pack's default for an untouched model cannot be assumed to be.
-	if not needs_instance_colour and map.is_empty() and overrides.is_empty() and swaps.is_empty():
+	if not needs_instance_colour and map.is_empty() and overrides.is_empty() and swaps.is_empty() and adjusts.is_empty():
 		return mesh
 
 	# `duplicate(false)` copies the mesh's surfaces (geometry, LOD chain and
@@ -558,11 +558,85 @@ func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}, needs_in
 	for surface in mesh.get_surface_count():
 		var source: Material = mesh.surface_get_material(surface)
 		var key := "" if source == null else source.resource_name
-		out.surface_set_material(surface, _tint_for(key, source, overrides, swaps, needs_instance_colour))
+		out.surface_set_material(surface, _tint_for(key, source, overrides, swaps, needs_instance_colour, adjusts))
 	return out
 
 
-func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dictionary = {}, needs_instance_colour: bool = false) -> Material:
+## VP3: a derived copy of a leaf texture with its saturation, brightness or
+## contrast changed, for the one thing a tint cannot do.
+##
+## `albedo_color` MULTIPLIES, and a multiply can only ever drive a channel
+## toward zero. `Leaves_NormalTree_C.png` -- the pack's single green leaf
+## sheet, and after the Leaves.png magenta-contamination fix the only leaf
+## texture every canopy, bush and sapling in the meadow can safely use --
+## measures RGB(88,123,0): its blue channel is zero on every texel, so
+## whatever tint is laid over it the result is a colour with a zero
+## channel, i.e. saturation 1.0 in HSV, the maximum a colour can have. That
+## is why two rounds of variant_retint tuning still rendered every canopy as
+## fluorescent lime against the terrain, and why the blind passes keep
+## calling the bushes "neon" (`trees`' own `_comment_leaf_magenta_fix`
+## records giving the desaturation back for exactly this reason). The green
+## the bible asks for ("deeper cooler greens under tree cover") needs a
+## non-zero blue channel, which only a texture edit can supply.
+##
+## `Image.adjust_bsc` does that edit in engine code at load time on a copy
+## of the imported image: no new asset on disk, the pack's own leaf shapes,
+## alpha untouched. One derived texture per (source, settings) pair, cached,
+## so every material sharing the same adjustment shares one texture. Per
+## layer and per material name in vegetation.json:
+##
+##   "retexture_adjust": {"Leaves_NormalTree": {"saturation": 0.55, "brightness": 1.0, "contrast": 1.0}}
+##
+## Mipmaps are regenerated, so the derived texture filters at distance the
+## way the imported one did.
+var _adjusted_textures: Dictionary = {}
+
+func _adjusted_texture(base: Texture2D, adjust: Dictionary) -> Texture2D:
+	if base == null or adjust.is_empty():
+		return base
+	var brightness := float(adjust.get("brightness", 1.0))
+	var contrast := float(adjust.get("contrast", 1.0))
+	var saturation := float(adjust.get("saturation", 1.0))
+	if is_equal_approx(brightness, 1.0) and is_equal_approx(contrast, 1.0) and is_equal_approx(saturation, 1.0):
+		return base
+	var key := "%s|%.3f|%.3f|%.3f" % [base.resource_path, brightness, contrast, saturation]
+	if _adjusted_textures.has(key):
+		return _adjusted_textures[key]
+	var image: Image = base.get_image()
+	if image == null:
+		push_warning("retexture_adjust: %s has no readable image; left as imported" % base.resource_path)
+		return base
+	image = image.duplicate()
+	if image.is_compressed():
+		if image.decompress() != OK:
+			push_warning("retexture_adjust: %s could not be decompressed; left as imported" % base.resource_path)
+			return base
+	image.convert(Image.FORMAT_RGBA8)
+	image.adjust_bsc(brightness, contrast, saturation)
+	image.generate_mipmaps()
+	var derived := ImageTexture.create_from_image(image)
+	# VP3-FIX (pale-mint canopy regression). A `create_from_image()` texture
+	# has an EMPTY `resource_path` -- unlike the imported `CompressedTexture2D`
+	# it replaces, which has one because it lives at a real res:// file. Every
+	# retinted mesh here is packed into a throwaway `PackedScene`
+	# (`_make_mesh_asset` below) and handed to `Terrain3DMeshAsset.scene_file`,
+	# and that pack/registration round-trip does not carry a pathless runtime
+	# resource through: measured directly by the coordinator on a real render,
+	# the shipped canopy colour was EXACTLY the flat `retint` tint (e.g.
+	# `#a9d18c`) over a WHITE albedo, i.e. this texture, not the maths that
+	# built it. `take_over_path()` gives the derived texture a stable
+	# synthetic identity (never written to disk -- nothing here needs to
+	# survive a restart, only this one process's pack/duplicate) so it
+	# round-trips as an external reference instead of being dropped. One path
+	# per (source, settings) key, matching the `_adjusted_textures` cache above
+	# one line up, so two materials sharing an adjustment still share one
+	# texture and one path.
+	derived.take_over_path("res://._generated/vegetation_leaf_adjust/%s.tex" % key.md5_text())
+	_adjusted_textures[key] = derived
+	return derived
+
+
+func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dictionary = {}, needs_instance_colour: bool = false, adjusts: Dictionary = {}) -> Material:
 	var map: Dictionary = RULES.config().get("retint", {})
 	var colour := ""
 	if overrides.has(name):
@@ -578,13 +652,17 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 	# eight hundred bushes came out blood red, and no multiply turns red green.
 	# Swapping the texture for the pack's own green leaf does.
 	var swap := str(swaps.get(name, ""))
+	# VP3: ...or ADJUST it, see `_adjusted_texture`. Applied after the swap,
+	# so a layer can point a material at the green leaf and desaturate it in
+	# one breath.
+	var adjust: Dictionary = adjusts.get(name, {})
 
 	# Keyed by everything that can change the result, so two layers overriding
 	# the same source material get two materials while everything else still
 	# shares one. needs_instance_colour is part of the key too — a jittered
 	# layer and an unjittered one must not share a material even when their
 	# colour/swap are otherwise identical.
-	var cache_key := "%s|%s|%s|%s" % [name, colour, swap, needs_instance_colour]
+	var cache_key := "%s|%s|%s|%s|%s" % [name, colour, swap, needs_instance_colour, str(adjust)]
 	if _tints.has(cache_key):
 		return _tints[cache_key]
 
@@ -610,6 +688,8 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 			material.albedo_texture = load(swap) as Texture2D
 		elif swap != "":
 			push_warning("layer asks to swap material '%s' to '%s', which does not exist" % [name, swap])
+		if not adjust.is_empty():
+			material.albedo_texture = _adjusted_texture(material.albedo_texture, adjust)
 		material.normal_texture = standard.normal_texture
 		# Foliage packs carry per-vertex tint; dropping it flattens the canopy
 		# variation the pack authored. A jittered layer forces it on regardless
@@ -827,7 +907,8 @@ func _make_mesh_asset(model_path: String) -> Object:
 	var variants: Dictionary = layer_cfg.get("variant_retint", {})
 	if variants.has(model_path):
 		tint_overrides = variants[model_path]
-	var retinted := _retint(mesh, tint_overrides, layer_cfg.get("retexture", {}), jitter > 0.0)
+	var retinted := _retint(mesh, tint_overrides, layer_cfg.get("retexture", {}), jitter > 0.0,
+		layer_cfg.get("retexture_adjust", {}))
 
 	var holder := MeshInstance3D.new()
 	holder.mesh = retinted

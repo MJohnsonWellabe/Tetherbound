@@ -24,5 +24,42 @@
       "_why": "GATE-D4b/prompt 65's camp-home rhythm, the half clearings[4001] does not cover. Crafting in this game happens AT A CAMPFIRE OR WORKBENCH (scripts/ui/craft_panel.gd's own header, and build_placer.gd only opens the craft panel at a placed station) -- so the ironwood tier this band exists to introduce cannot be spent where it is cut. The five ironwood nodes (harvest.json 4000-4004) sit in the old-growth on the western swing at z~5010-5075; the nearest ground authored as a camp pad before this was clearings[4001] at z=6040, a kilometre further up the road, and the only other station in the chapter is home, ~5km back. That is the difference between `gather the region's material and make the region's Prime Orb and Ridge Tonics on the spot' and `carry three ironwood for a kilometre before the game will let you use them'. MEASURED with tools/_probe_band4_sites.gd (h=0.85m, 1.26m of spread, worst local slope 9.9 degrees over a 6m pad -- the flattest of six candidates walked across the stand), 15-45m from the five nodes so the fire is beside the trees rather than in among them. Radius 12 is the patrol pad's 13 less a metre, sized for a Camp buildable (campfire + bedroll) plus room to stand, not for an arena. Does not BUILD anything: the Camp is the player's, on their own wood/stone/fiber (data/items/buildables.json), and this only keeps scatter off ground flat enough to place it."
     }
   ],
-  "footprints": []
+  "footprints": [],
+  "_comment_layer_anchors_vp4": "VP4-CORRIDOR round 4. Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (see band1_lower_meadows/vegetation.json's own comment on this key for the merge mechanism and why it exists). Fixes station 13-band4-entry-bend in `tools/_capture_corridor.gd`'s before set (`ralph/reports/visual-parity/CORRIDOR/00-before-b3b5/13-band4-entry-bend-day.png`) -- the worst 'empty grass to sky' case in the whole round-4 set, ~60% open sky with only a small distant tree cluster dead-centre. Checked clear of this file's own clearings above (4000 at -235,6470 r13; 4001 at 400,6040 r15; 4002 at -330,5090 r12) before siting.",
+  "layer_anchors": {
+    "trees": [
+      {
+        "_why": "VP4 station 13-band4-entry-bend (-300,4990)->(-420,5140): a tree copse flanking the left side of the bend, 40m out at 25 degrees off the view axis (comfortably inside the ~51.3-degree half-FOV that clipped an earlier station-02 attempt in an prior round), so the sightline gets real mid-ground mass instead of a token distant cluster.",
+        "at": [-309.0, 5029.0],
+        "radius": 13.0,
+        "count": 8,
+        "scale_min": 0.85,
+        "scale_max": 1.3
+      }
+    ],
+    "rocks": [
+      {
+        "_why": "VP4 station 13-band4-entry-bend: a rock cluster at the bend's outside (right side), 25m out at 20 degrees off-axis, mixed sizes via the layer's own 0.28-2.1 scale span. `min_slope_deg` overridden to 0 -- this shoulder is gentle meadow, not the layer's usual 6-degree floor, same override every other rock anchor in this pass uses.",
+        "at": [-321.0, 5003.0],
+        "radius": 9.0,
+        "count": 4,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "ROUND 4 ADDENDUM, station 14-ridge-camp-approach (JUDGE-b3b5-before.md): 'neither ridge nor camp is legible... no rise, ledge, or rock shelf anywhere in frame to signal elevation'. A rock cluster between the station and the (now re-sited, see tools/_capture_corridor.gd) look target at `ridge_patrol_camp`'s own centroid, reading as a shelf breaking the ground plane on the approach. Honest limit: vegetation anchors place objects, they cannot sculpt terrain, so this is a visual mass cue rather than authored elevation -- a genuine height-map change at the ridge is outside this lane's owned files.",
+        "at": [-260.0, 6465.0],
+        "radius": 10.0,
+        "count": 5,
+        "min_slope_deg": 0.0
+      }
+    ],
+    "bushes": [
+      {
+        "_why": "VP4 station 13: edge planting on the new tree copse.",
+        "at": [-302.0, 5015.0],
+        "radius": 7.0,
+        "count": 4
+      }
+    ]
+  }
 }

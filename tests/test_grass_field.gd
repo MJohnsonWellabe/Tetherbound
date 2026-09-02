@@ -267,3 +267,198 @@ func test_the_far_tier_did_not_grow_the_expensive_one() -> void:
 		"have to move; growing it defeats the whole change.")
 	assert_true(int(cfg.get("tuft_count", 0)) <= 300000,
 		"tuft_count is %d. Same reasoning as field_radius above." % int(cfg.get("tuft_count", 0)))
+
+
+## VP2. The ring is laid out as cull tiles now -- one MultiMesh per tile with
+## its own AABB -- so the renderer can drop the two thirds of the disc a
+## third-person camera is not looking at. That is only a win if it is ALSO a
+## no-op for the look: the same cells, the same per-layer counts, the same slot
+## tags, just in different buckets. These pin both halves. They read the
+## tiler's own `origins` array rather than the MultiMesh, because the headless
+## renderer these run under stores no MultiMesh buffer at all.
+func test_cull_tiles_hold_exactly_the_instances_the_single_multimesh_did() -> void:
+	var cfg := FIELD.config()
+	var cell: float = FIELD.lattice_cell()
+	var plan: Array = FIELD._lattice_plan(20000, 40.0, 0.62, cell, cfg)
+	var single := MultiMesh.new()
+	single.transform_format = MultiMesh.TRANSFORM_3D
+	single.mesh = BoxMesh.new()
+	var expected: int = FIELD._fill_lattice(single, plan, cell)
+	var tiles: Array = FIELD._fill_lattice_tiles(BoxMesh.new(), plan, cell, 16.0)
+	var total := 0
+	var seen: Dictionary = {}
+	for entry: Variant in tiles:
+		var tile: Dictionary = entry
+		var origins: PackedVector3Array = tile["origins"]
+		assert_eq(origins.size(), (tile["mm"] as MultiMesh).instance_count,
+			"a tile's origins array and its MultiMesh disagree about the instance count")
+		total += origins.size()
+		for o: Vector3 in origins:
+			var key := "%.3f,%.3f" % [o.x, o.z]
+			assert_false(seen.has(key), "two instances share the spot (%.2f, %.2f)" % [o.x, o.z])
+			seen[key] = true
+	assert_eq(total, expected,
+		"tiling changed the instance count: %d tiled vs %d in one MultiMesh" % [total, expected])
+	assert_true(tiles.size() > 4,
+		"a 40m ring on 16m tiles should be many tiles, got %d" % tiles.size())
+
+
+func test_every_cull_tile_instance_sits_inside_its_own_aabb() -> void:
+	var cfg := FIELD.config()
+	var cell: float = FIELD.lattice_cell()
+	var plan: Array = FIELD._lattice_plan(20000, 40.0, 0.62, cell, cfg)
+	var tiles: Array = FIELD._fill_lattice_tiles(BoxMesh.new(), plan, cell, 16.0)
+	for entry: Variant in tiles:
+		var tile: Dictionary = entry
+		var aabb: AABB = tile["aabb"]
+		var key: Vector2i = tile["key"]
+		for o: Vector3 in (tile["origins"] as PackedVector3Array):
+			assert_true(aabb.has_point(Vector3(o.x, 0.0, o.z)),
+				"tile %s instance at (%.2f, %.2f) is outside its AABB %s -- it would be culled while visible" % [
+					str(key), o.x, o.z, str(aabb)])
+			# A cell belongs to the tile its origin falls in, so no item may
+			# be more than one cell outside the tile square.
+			assert_true(o.x >= float(key.x) * 16.0 - 0.001 and o.x < float(key.x + 1) * 16.0 + cell,
+				"tile %s instance x=%.2f is not in that tile's column" % [str(key), o.x])
+			assert_true(o.z >= float(key.y) * 16.0 - 0.001 and o.z < float(key.y + 1) * 16.0 + cell,
+				"tile %s instance z=%.2f is not in that tile's row" % [str(key), o.z])
+
+
+func test_cull_tile_size_is_a_whole_number_of_lattice_cells() -> void:
+	var cell: float = FIELD.lattice_cell()
+	var tile: float = FIELD.cull_tile_m(FIELD.config())
+	assert_true(tile > 0.0, "cull_tile_m is off; the ring is one uncullable MultiMesh again, which is the ~10 FPS finding")
+	assert_true(is_equal_approx(fmod(tile, cell), 0.0) or is_equal_approx(fmod(tile, cell), cell),
+		"cull_tile_m %.2f is not a multiple of the lattice cell %.2f" % [tile, cell])
+	assert_eq(FIELD.cull_tile_m({"cull_tile_m": 0.0}), 0.0, "0 must mean the single-MultiMesh A/B path")
+	assert_eq(FIELD.cull_tile_m({"cull_tile_m": 0.7}), cell, "a tile smaller than a cell rounds up to one cell")
+
+
+## VP2. FAR THINNING and REACH: the two plan transforms that take the far cost
+## out of the ring without touching the near field. Both are pure functions of
+## a plan, so they are pinned here as arithmetic rather than through a frame.
+func test_far_thinning_keeps_the_near_field_and_thins_only_the_fade_band() -> void:
+	var cfg := FIELD.config()
+	var cell: float = FIELD.lattice_cell()
+	var plan: Array = FIELD._lattice_plan(300000, 72.0, 0.62, cell, cfg)
+	var before_near: float = FIELD._plan_density(plan, cell, 30.0)
+	var thinned: Array = FIELD._thin_far(plan, 42.0, 72.0, 0.2, 4, cell)
+	assert_true(thinned.size() > plan.size(),
+		"thinning should add fade sub-layers to the plan (%d -> %d)" % [plan.size(), thinned.size()])
+	assert_true(thinned.size() <= FIELD.LATTICE_MAX_LAYERS,
+		"thinned plan has %d layers, more than the shaders' %d rows" % [thinned.size(), FIELD.LATTICE_MAX_LAYERS])
+	# Inside fade_start nothing moves: every sub-layer is fully present there.
+	assert_true(absf(FIELD._plan_density(thinned, cell, 30.0) - before_near) < 0.001,
+		"thinning changed the density at 30m (inside fade_start 42m): %.3f vs %.3f" % [
+			FIELD._plan_density(thinned, cell, 30.0), before_near])
+	assert_true(absf(FIELD._plan_density(thinned, cell, 41.0) - FIELD._plan_density(plan, cell, 41.0)) < 0.001,
+		"thinning changed the density just inside fade_start")
+	# At the rim only the floor fraction of the base layer survives.
+	var base_per: int = int((plan[0] as Dictionary)["per_cell"])
+	var rim: float = FIELD._plan_density(thinned, cell, 72.0)
+	assert_true(rim < float(base_per) / (cell * cell) * 0.3 and rim > 0.0,
+		"rim density %.3f/m2 should be about the floor fraction of %d per cell" % [rim, base_per])
+	# Monotonic through the band: never denser further out.
+	var last := INF
+	for i in 31:
+		var d := FIELD._plan_density(thinned, cell, 42.0 + float(i))
+		assert_true(d <= last + 0.001, "thinned density rises at %.0fm" % (42.0 + float(i)))
+		last = d
+	# The tiler generates fewer instances for the thinned plan.
+	var full := 0
+	for t: Variant in FIELD._fill_lattice_tiles(BoxMesh.new(), plan, cell, 16.0):
+		full += ((t as Dictionary)["origins"] as PackedVector3Array).size()
+	var less := 0
+	for t: Variant in FIELD._fill_lattice_tiles(BoxMesh.new(), thinned, cell, 16.0):
+		less += ((t as Dictionary)["origins"] as PackedVector3Array).size()
+	assert_true(less < full * 0.82,
+		"thinning should cut the ring's instance count materially: %d -> %d" % [full, less])
+
+
+func test_reach_cap_stops_a_tier_at_its_reach() -> void:
+	var cfg := FIELD.config()
+	var cell: float = FIELD.lattice_cell()
+	var plan: Array = FIELD._lattice_plan(90000, 72.0, 0.58, cell, cfg)
+	var capped: Array = FIELD._cap_reach(plan, 28.0, 6.0, cell)
+	assert_true(capped.size() < plan.size(), "layers wholly beyond the reach should be dropped")
+	for entry: Variant in capped:
+		var layer: Dictionary = entry
+		assert_true(float(layer["ramp_out"]) <= 28.0 + 0.001,
+			"a capped layer still ramps out at %.1fm" % float(layer["ramp_out"]))
+		assert_true(float(layer["geo"]) <= 28.0 + cell,
+			"a capped layer still generates cells to %.1fm" % float(layer["geo"]))
+	assert_true(absf(FIELD._plan_density(capped, cell, 10.0) - FIELD._plan_density(plan, cell, 10.0)) < 0.001,
+		"the reach cap changed the near-field density")
+	assert_true(FIELD._plan_density(capped, cell, 29.0) < 0.001, "density should be zero past the reach")
+	assert_true(FIELD._plan_density(capped, cell, 25.0) < FIELD._plan_density(plan, cell, 25.0),
+		"the base layer should be ramping down inside its band")
+
+
+## The far LOD tuft has to be the near tuft with blades missing, not a
+## different tuft: a kept blade's vertices must be identical in both meshes,
+## or the swap would move every blade in a tile as the player walked up to it.
+func test_the_far_lod_tuft_is_the_near_tuft_with_blades_missing() -> void:
+	var field: MultiMeshInstance3D = FIELD.new()
+	var near: ArrayMesh = field.call("_tuft_mesh", 6, 4)
+	var far: ArrayMesh = field.call("_tuft_mesh", 6, 2, 4)
+	var near_v: PackedVector3Array = near.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var far_v: PackedVector3Array = far.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var near_uv2: PackedVector2Array = near.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV2]
+	assert_eq(far_v.size(), 4 * (2 + 1) * 2, "far tuft should be 4 blades of 2 segments")
+	assert_true(far_v.size() < near_v.size(), "the far tuft is not cheaper than the near one")
+	# Every far vertex exists in the near mesh at the same spot (base and tip
+	# of each kept blade are shared by both segment counts).
+	var near_set: Dictionary = {}
+	for v: Vector3 in near_v:
+		near_set["%.4f,%.4f,%.4f" % [v.x, v.y, v.z]] = true
+	var shared := 0
+	for v: Vector3 in far_v:
+		if near_set.has("%.4f,%.4f,%.4f" % [v.x, v.y, v.z]):
+			shared += 1
+	assert_true(shared >= 4 * 2 * 2,
+		"only %d far vertices coincide with near ones; the kept blades moved" % shared)
+	# The dropped blades are the LAST ids, which is what the shader's
+	# `lod_far_blade_frac` cut assumes.
+	var max_far_id := 0.0
+	for uv: Vector2 in near_uv2:
+		max_far_id = maxf(max_far_id, uv.x)
+	assert_true(max_far_id > 0.8, "near tuft should carry blade ids up to 5/6")
+	field.free()
+
+
+func test_lod_mesh_picks_by_the_nearest_the_eye_can_get_to_a_tile() -> void:
+	var cell: float = FIELD.lattice_cell()
+	var near := BoxMesh.new()
+	var mid := BoxMesh.new()
+	var far := BoxMesh.new()
+	var lod: Array = [{"from_m": 18.0, "mesh": mid}, {"from_m": 38.0, "mesh": far}]
+	assert_true(FIELD._lod_mesh_for_tile(Vector2i(0, 0), 16.0, cell, near, lod) == near,
+		"the tile under the eye must carry the full mesh")
+	assert_true(FIELD._lod_mesh_for_tile(Vector2i(-1, -1), 16.0, cell, near, lod) == near,
+		"a tile touching the origin must carry the full mesh")
+	assert_true(FIELD._lod_mesh_for_tile(Vector2i(2, 0), 16.0, cell, near, lod) == mid,
+		"a tile starting 32m out is a mid tile")
+	assert_true(FIELD._lod_mesh_for_tile(Vector2i(3, 0), 16.0, cell, near, lod) == far,
+		"a tile starting 48m out is a far tile")
+	assert_true(FIELD._lod_mesh_for_tile(Vector2i(1, 0), 16.0, cell, near, lod) == near,
+		"a tile starting 16m out can be seen from 13m; it is not a mid tile yet")
+	assert_true(FIELD._lod_mesh_for_tile(Vector2i(0, 0), 16.0, cell, near, []) == near,
+		"no LOD list means the base mesh everywhere")
+
+
+func test_shipped_config_thins_the_grass_and_caps_the_small_tiers() -> void:
+	var cfg := FIELD.config()
+	assert_true(float(cfg.get("far_thin_floor", 1.0)) < 0.5,
+		"far_thin_floor is %.2f; the far cost fix is off" % float(cfg.get("far_thin_floor", 1.0)))
+	assert_true(int(cfg.get("far_thin_steps", 0)) >= 2, "far_thin_steps < 2")
+	var stones: Dictionary = cfg.get("stones", {})
+	assert_true(float(stones.get("reach_m", 1.0e9)) <= 40.0,
+		"the 10cm stone tier reaches %.0fm; it is sub-pixel long before that" % float(stones.get("reach_m", 1.0e9)))
+	for entry: Variant in cfg.get("cover_tiers", []):
+		var tier: Dictionary = entry
+		if str(tier.get("name", "")) == "litter":
+			assert_true(float(tier.get("reach_m", 1.0e9)) <= 48.0, "litter reaches past 48m")
+	var lod: Dictionary = cfg.get("lod", {})
+	assert_true(bool(lod.get("enabled", false)), "grass mesh LOD is off")
+	assert_true(float(lod.get("mid_m", 0.0)) > 10.0 and float(lod.get("far_m", 0.0)) > float(lod.get("mid_m", 0.0)),
+		"lod.mid_m/far_m are not in order")
