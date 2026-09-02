@@ -19,6 +19,119 @@ census, which stays a historical report
 
 ---
 
+## 0. Coordinator session, 2026-09-02 afternoon — read this first
+
+A backlog/Gate-F coordinator picked up from `ralph/COORDINATOR_HANDOVER_2026-09-02.md`
+at 11:50 UTC and dispatched six lanes. This section is the record of what landed,
+what was decided, and what is still open. A separate visual coordinator ran the
+Visual Parity program in parallel; its PR #20 merged at `b03cdb94`.
+
+### Landed on `main` (each proven with `git merge-base --is-ancestor`, not a CI badge)
+
+| commit | what |
+|---|---|
+| `e97baa30` | Re-bake the playground scatter + a dedicated `verify-scatter-bake-freshness` CI job |
+| `c98998fa` | Rest cycle proven end to end + a rest-progress indicator (09-02 findings 15 and 7) |
+| `8bf4f0bd` | Interact reliability: real-input **evidence only** — the game-breaker is NOT closed |
+| `0f1b2661` | Training guidance legible on real handheld frames (09-01 findings 7 and 12) |
+
+### Three ways CI reported green over a real failure, all confirmed today
+
+This is the single most valuable thing this session learned, and all three are
+still live traps for the next coordinator:
+
+1. **Docs-only commits hide a red one.** `main` sat red on the stale-bake test
+   while the two commits after it were documentation, so every code job skipped
+   and the badge read `success`. Check job-by-job on the last commit that
+   actually touched code.
+2. **`[skip ci]` on WIP + the `changes` job.** A branch whose final commit is a
+   report gets judged documentation-only, skipping every code job, while the
+   earlier `[skip ci]` commits carried the real production code. Seen on two
+   branches: an ~80-second `success` is twelve skipped jobs.
+3. **`RETRIES: 3` is a bug-hider.** `smoke_traversal.gd` failed on attempt 1 of
+   four separate runs today — identical coordinates to the centimetre, on both
+   sides of the VP merge — and the retry loop rescued it every time. A retry that
+   turns 0-for-1 into a green tick is not a pass.
+
+### Findings worth carrying forward
+
+- **The scatter bake goes stale silently, and it is worse than the owner's own
+  report.** Measured 492.6s to first settled frame on `main` (the owner's
+  original "takes forever to load" was 302s), fixed to 70.3s. Root cause is
+  unchanged from `OWNER-0902-LOAD-TIME`: nothing re-bakes when vegetation/grass
+  config changes. `e97baa30` adds a named CI guard for the *playground* bake —
+  but **`data/terrain/playground` has no freshness check at all**, and
+  `terrain_playground.json`'s `routes` moved 2026-09-02 with no re-bake since.
+  Same shape, still open.
+- **The owner may be playtesting stale release builds.** Proven for the sleep
+  item: the handover recording "player sleep was impossible still" was pushed at
+  10:29:48 UTC, seven minutes *before* camp-split's release build finished at
+  10:36:55, and no release fired between 05:47:38 and 10:36:55. So the Bedroll
+  did not exist in any build he could have played. `ralph/conventions.md` already
+  warns a Ralph ship does not reliably publish a Windows build — this is that
+  warning coming true, and it means some "still broken" reports may be against
+  code that was already fixed. Worth its own process fix.
+- **The Ralph sweep workflow failed at 13:27** (run 33635811838 on `38147fca`).
+  The VP program reached `main` via a pull request instead. The sweep is the
+  documented path to `main`, so it should not stay broken quietly.
+- **A test that exists but does not test the thing.** `_probe_camp_split.gd`
+  proved the bedroll heals the *trainer* and never once assigned a creature to
+  the creature bed — the actual subject of the owner's complaint. Separately,
+  `smoke_gate_b_continuous.gd`, the only automated gather → build camp → sleep
+  path, had been failing at its first village check since Mira's gifts moved off
+  Tam, so it never reached the sleep segment at all. Both now fixed; the pattern
+  is worth suspecting elsewhere.
+
+### Decisions
+
+- **Grass density: keep 75,000 tufts / 4 blades / 3 segments. No change.**
+  The owner noticed the field had thinned (`5b2ce125` cut every lever ~5x, 1.8M
+  blades → 300k, staged with `enabled: false`; `OWNER-0902-GRASS-ON` then flipped
+  the flag onto the thinned numbers — so the switch was approved, the thinning
+  rode along). A rendered ladder was put to two independent judges, one blind to
+  which frame was which config. Both picked the shipped density: the 150k step is
+  denser only within ~5m, marginal at mid-distance, nil at the horizon, and
+  invisible at thumbnail scale.
+  **The more useful finding: neither step reads as the key art's meadow, and the
+  gap is blade SHAPE, not count.** The grass draws as isolated 1–2px spikes on a
+  blurry ground — "hair on a lawn" — where `docs/reference/moong-01-mounted-in-tall-grass.jpg`
+  shows overlapping blades with mass, varied height and a dark root zone. The
+  recommended change is a **clump card** (3–5 blades per instance, wider base,
+  root-to-tip gradient, ±30% height variation) at the *current* instance count,
+  so coverage rises without geometry cost. Put to the owner; not yet decided.
+  `grass_field.gd` is VP-owned since PR #20, so this is likely their work.
+
+### Still open
+
+- **Interact reliability (09-01 item 3) — the owner's own game-breaker.** Does
+  not reproduce in-container: 0 misses / 324 real-input attempts across five
+  situations including a simulated frame hitch. But the probe cannot run on the
+  ROG Ally, which is where he hit it. **Needs an owner hardware pass.** Same
+  bucket as the ~10 FPS lag item, which is equally unclosable from here.
+- **Player sleep (09-01 item 4).** Both paths verified working under real
+  interact input — Grandpa's loft bed ("Sleep") and the placed Bedroll ("Rest
+  until morning"). The Bedroll provably did not exist in the build the owner
+  tested. **Unresolved: whether he ever tried Grandpa's loft bed**, which landed
+  09-01 and should have been present. Asked; awaiting his answer.
+- **Small creatures in grass (09-01).** Fix sent back, twice-reviewed. Density is
+  not the cause; the causes are value/hue camouflage, silhouettes broken by
+  creatures spawning *inside* flowering shrubs, and no ground contact shadow.
+- **`smoke_traversal.gd` breadcrumb/teleport race.** The test teleports the player,
+  no breadcrumb is dropped (`_drop_breadcrumb` returns early when not
+  `is_on_floor()`), the entombment failsafe rewinds to a 6.3km-stale breadcrumb,
+  and the test scores that as walking around a locked gate. Harness cascade,
+  impossible for a real player. In flight on
+  `ralph/TRAVERSAL-BREADCRUMB-TELEPORT-RACE`.
+- **Bram-exit navigation defect.** Leaving Bram's shop, `_exit_through()` walks a
+  straight line from wherever the movement probe left the player, clipping the
+  shop furniture. Partially fixed, still failing, needs its own session.
+- **MAIN STORY objective label truncates at 1280x800** — "Train with your team
+  before the …". The hint card carrying the full "how" is timed (~10s, once per
+  rung change), so a player who misses it sees a cut sentence until they open the
+  quest log. Small, real, found while closing train-clarity.
+
+---
+
 ## 1. Owner playtest, 2026-09-02 — the current priority
 
 `ralph/OWNER_PLAYTEST_2026-09-02.md` is the full verbatim record. Real,
