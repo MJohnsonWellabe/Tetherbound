@@ -472,7 +472,34 @@ func _build_chambers() -> void:
 
 		for side: String in ["-x", "+x", "-z", "+z"]:
 			var opening := _opening_on(id, side)
-			_build_wall(id, centre, size, height, side, opening)
+			# PALE-SLAB-FIX. The mouth chamber's "-z" wall is the ONE chamber
+			# wall in this whole cave that fronts open air rather than another
+			# room, the mound, or buried hillside -- every other id/side
+			# combination is interior (den, hall, vault, and the mouth's own
+			# other three sides all face either another chamber or the earth
+			# the mound piles over them). `_wall_piece()` below always wore
+			# the interior `_rock()` StandardMaterial3D unconditionally, so
+			# this one wall's OUTWARD face -- the flanks either side of the
+			# front door, in full daylight -- was the same flat near-white
+			# lerp `_material()`'s own comment already documents as wrong
+			# outdoors (EXT-11-DOORPATCH2, on the entrance-dressing boulders
+			# in front of it) but never fixed on the wall itself: a large
+			# flat vertical box with hard rectangular edges and a pale
+			# speckled texture, exactly what round7/round8's visual-parity
+			# capture caught at 04-warrens-standing-day.png (the flank sits
+			# right where the "standing" camera looks past the dressing
+			# boulders). Passing `exterior=true` here only for this one
+			# side, on this one chamber, routes it through the SAME
+			# `warrens_boulder_stain.gdshader` treatment the jambs/brow/mound
+			# already wear (`_wear_the_cave_stone(..., true, ...)`) -- same
+			# rock colour, same texture, just per-fragment stain/moss instead
+			# of one flat tint. Every OTHER wall in the cave (den, hall,
+			# vault, and the mouth's own -x/+x/+z sides) keeps calling
+			# `_build_wall`/`_wall_piece` with the default `exterior=false`
+			# and is byte-for-byte unaffected -- the interior render the
+			# owner already judged good never runs through this branch.
+			var wall_is_exterior := id == "mouth" and side == "-z"
+			_build_wall(id, centre, size, height, side, opening, wall_is_exterior)
 			# T1-WARRENS-EXT, owner+judge evidence "the mouth facade is a flat
 			# wall with a rectangular hole". `_build_passages()` records BOTH
 			# ends of every internal passage into `_openings` for the reveals
@@ -537,7 +564,7 @@ func _side_toward(a_id: String, b_id: String) -> String:
 ## a lintel over it (grandpa_house.gd's doorway technique -- a
 ## CharacterBody3D cannot walk through a gap that was never cut).
 func _build_wall(_id: String, centre: Vector3, size: Vector2, height: float,
-		side: String, opening: Dictionary) -> void:
+		side: String, opening: Dictionary, exterior := false) -> void:
 	var along_x := side == "-z" or side == "+z"
 	var span := (size.x if along_x else size.y) + _wall_t * 2.0
 	var offset := (size.y if along_x else size.x) * 0.5 + _wall_t * 0.5
@@ -550,17 +577,17 @@ func _build_wall(_id: String, centre: Vector3, size: Vector2, height: float,
 	var wall_h := height + 1.2  # up past the ceiling slab, so no seam of daylight
 
 	if opening.is_empty():
-		_wall_piece(along_x, wall_centre, span, wall_h, 0.0)
+		_wall_piece(along_x, wall_centre, span, wall_h, 0.0, exterior)
 		return
 
 	var gap := float(opening.get("width", 2.5))
 	var gap_h := minf(float(opening.get("height", 2.6)), height)
 	var flank := (span - gap) * 0.5
 	if flank > 0.05:
-		_wall_piece(along_x, _shift(wall_centre, along_x, -(gap * 0.5 + flank * 0.5)), flank, wall_h, 0.0)
-		_wall_piece(along_x, _shift(wall_centre, along_x, gap * 0.5 + flank * 0.5), flank, wall_h, 0.0)
+		_wall_piece(along_x, _shift(wall_centre, along_x, -(gap * 0.5 + flank * 0.5)), flank, wall_h, 0.0, exterior)
+		_wall_piece(along_x, _shift(wall_centre, along_x, gap * 0.5 + flank * 0.5), flank, wall_h, 0.0, exterior)
 	# The lintel: from the top of the opening to the top of the wall.
-	_wall_piece(along_x, wall_centre, gap, wall_h - gap_h, gap_h)
+	_wall_piece(along_x, wall_centre, gap, wall_h - gap_h, gap_h, exterior)
 
 
 func _shift(at: Vector3, along_x: bool, by: float) -> Vector3:
@@ -571,7 +598,8 @@ func _shift(at: Vector3, along_x: bool, by: float) -> Vector3:
 	return at
 
 
-func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: float) -> void:
+func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: float,
+		exterior := false) -> void:
 	if span <= 0.01 or height <= 0.01:
 		return
 	var size := Vector3(span, height, _wall_t) if along_x else Vector3(_wall_t, height, span)
@@ -579,7 +607,19 @@ func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: f
 	# reads as rock meeting the hillside rather than as a floating box.
 	var extra := 0.0 if base > 0.0 else _skirt
 	size.y += extra
-	_box(size, Vector3(at.x, _floor_y + base + (height + extra) * 0.5 - extra, at.z), _rock(), true, true)
+	var piece_at := Vector3(at.x, _floor_y + base + (height + extra) * 0.5 - extra, at.z)
+	var box := _box(size, piece_at, _rock(), true, true)
+	if exterior:
+		# PALE-SLAB-FIX (see `_build_chambers()`'s own comment on the one
+		# caller that passes `exterior=true`). Same shader, same rock colour,
+		# as the entrance-dressing jambs/brow wear -- `_rock()` as the tint
+		# means `_wear_the_cave_stone`'s own 0.35 lerp is a no-op
+		# (`_rock().lerp(_rock(), 0.35) == _rock()`), so this is strictly the
+		# wall's own colour with per-fragment stain/moss instead of one flat
+		# tint, not a third material family. `global_position.y` (not local
+		# `piece_at.y`) because `_boulder_stain_material()`'s height bucket is
+		# world-space, matching every other exterior caller.
+		_wear_the_cave_stone(box, _rock(), true, 0.0, null, box.global_position.y)
 
 
 ## The tunnels between chambers: floor, ceiling and two side walls each. The
