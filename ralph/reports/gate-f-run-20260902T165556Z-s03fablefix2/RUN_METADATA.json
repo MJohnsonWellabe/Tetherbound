@@ -1,0 +1,21 @@
+{
+  "run_id": "gate-f-run-20260902T165556Z-s03fablefix2",
+  "purpose": "Second full S03 re-run: adds the equip_tool live hotbar-slot-read fix (hotbar_slot_of, not a fixed control) after the first attempt's own save proved hotbar_4 does not reliably hold the knife. Also re-checks whether the previous attempt's 42-FAIL count was mostly the known, out-of-lane interaction_offer() fainted-ally world lockout (FINDING-T2-BUILDPLACE-2026-08-30.md) rather than a regression in this lane's own fixes.",
+  "candidate_sha": "658c613bd3a2d20587a50cbb3bea2d1ce9b16191 (plus uncommitted equip_tool live-slot-read fix)",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": {
+    "logic": {
+      "display_server": "headless",
+      "renderer": "none"
+    }
+  },
+  "resolution": [
+    1920,
+    1080
+  ],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S02-exit.json carried over from gate-f-run-20260902T161704Z-s03feedfix/S02",
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}
