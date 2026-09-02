@@ -747,7 +747,7 @@ func _tick_creature_bed_recovery(delta: float) -> void:
 	if party == null or delta <= 0.0:
 		return
 	var cfg := CREATURE_PROGRESSION.config()
-	var seconds := maxf(float(cfg.get("creature_bed", {}).get("full_heal_seconds", 120.0)), 1.0)
+	var seconds := CREATURE_PROGRESSION.creature_bed_full_heal_seconds(cfg)
 	for member: Variant in (party.call("members") as Array):
 		var creature := member as RefCounted
 		if creature == null or not bool(creature.get("resting")):

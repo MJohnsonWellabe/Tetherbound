@@ -76,6 +76,34 @@ static func rest_xp(cfg: Dictionary) -> int:
 	return int(award_cfg.get("rest_bonus", 0))
 
 
+## `creature_bed`'s own full_heal_seconds (see progression.json's comment on
+## that block) -- centralized so a UI reading for a time-remaining display and
+## `game_state.gd`'s own per-second heal tick can never disagree about it.
+static func creature_bed_full_heal_seconds(cfg: Dictionary) -> float:
+	return maxf(float(cfg.get("creature_bed", {}).get("full_heal_seconds", 120.0)), 1.0)
+
+
+## OWNER-0902-REST-VISIBILITY. Owner playtest 2026-09-02 finding 7: "No way to
+## tell when a creature finishes resting." Seconds until `creature`'s bed
+## recovery reaches full HP -- the exact inverse of
+## `game_state.gd::_tick_creature_bed_recovery`'s own per-second heal rate
+## (`max_hp / full_heal_seconds`), so a UI reading this can never show a
+## number the tick loop that actually drives recovery disagrees with. 0 for a
+## creature that is not resting, already at full HP, or has no max_hp to
+## recover toward -- "0 seconds left" is what "would read as done right now"
+## should say, not a defined-but-wrong number.
+static func rest_seconds_remaining(creature: RefCounted, cfg: Dictionary) -> float:
+	if creature == null or not bool(creature.get("resting")):
+		return 0.0
+	var max_hp := float(creature.get("max_hp"))
+	if max_hp <= 0.0:
+		return 0.0
+	var missing := max_hp - float(creature.get("hp"))
+	if missing <= 0.0:
+		return 0.0
+	return missing / max_hp * creature_bed_full_heal_seconds(cfg)
+
+
 ## A stat at `level`, scaled linearly from its level-1 `base` by `growth` per
 ## level above 1. `stat_at_level(base, 1, growth)` is always exactly `base`,
 ## whatever `growth` is — level 1 is the species' base stat by definition, not
