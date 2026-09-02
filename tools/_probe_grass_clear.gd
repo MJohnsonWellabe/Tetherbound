@@ -23,7 +23,6 @@ const SETTLE_FRAMES := 240
 const POSE_FRAMES := 40
 const RANGE := 6.5
 const EYE_HEIGHT := 1.78
-const GRASS_CLEAR_GROUP := "grass_clear"
 
 var SPECIES_ID := "bramblebun"
 var _world: Node = null
@@ -73,23 +72,26 @@ func _run() -> void:
 
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
 
-	# WITHOUT: spawn, then pull it back out of the clear group before the
-	# field's own built[] list is recomputed, so the field never sees it.
+	# WITHOUT: spawn, group membership left at its new default (off --
+	# `set_grass_clear_active()` is opt-in now, driven by
+	# `encounter_director.gd`'s own cluster-activation signal in the real
+	# game, which this direct-spawn probe bypasses entirely).
 	_body = _spawn(look_at)
-	if _body != null:
-		_body.remove_from_group(GRASS_CLEAR_GROUP)
 	if _field != null:
 		_field.call("_apply_built", _field.get("global_position"))
 	for i in POSE_FRAMES:
 		await physics_frame
 	_save("without-clear")
 
-	# WITH: same spot, same creature, group membership left alone (the shipped
-	# behaviour), field refreshed the same way a player's own footstep would.
+	# WITH: same spot, same creature, explicitly toggled on -- what
+	# `encounter_director.gd::_set_wild_active()` does for a wild creature
+	# whose cluster the player has actually approached.
 	if _body != null and is_instance_valid(_body):
 		_body.queue_free()
 		await process_frame
 	_body = _spawn(look_at)
+	if _body != null and _body.has_method("set_grass_clear_active"):
+		_body.call("set_grass_clear_active", true)
 	if _field != null:
 		_field.call("_apply_built", _field.get("global_position"))
 	for i in POSE_FRAMES:

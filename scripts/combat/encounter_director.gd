@@ -912,6 +912,13 @@ func _spawn_ally_body(creature: RefCounted) -> bool:
 	_ally_body.visible = true
 	_ally_body.call("face_towards", _player.global_position)
 	_ally_body.call("set_following", true)
+	# OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. The player's own creature is
+	# always within a few metres of the player by definition (following or
+	# piloted), so it is the one case `creature_body.gd::set_grass_clear_active()`
+	# is meant to be called unconditionally rather than distance-gated -- see
+	# that function's own comment for why wild creatures are NOT this simple.
+	if _ally_body.has_method("set_grass_clear_active"):
+		_ally_body.call("set_grass_clear_active", true)
 	return true
 
 
@@ -1536,6 +1543,17 @@ func _set_wild_active(wild: Node3D, active: bool) -> void:
 	if active:
 		_reground_if_fallen(wild)
 	wild.set_physics_process(active)
+	# OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. Piggy-backs this exact signal
+	# rather than a new per-frame distance check -- see
+	# `creature_body.gd::GRASS_CLEAR_GROUP`'s own comment for why wild
+	# membership has to be gated at all. `_stream_clusters()` only calls this
+	# on a real active/inactive transition, so a wild creature's grass_clear
+	# membership tracks the same "is the player near this cluster" state its
+	# physics streaming already tracks -- clearing stops the moment it stops
+	# being relevant, and the group never holds more than the clusters the
+	# player is actually near.
+	if wild.has_method("set_grass_clear_active"):
+		wild.call("set_grass_clear_active", active)
 
 
 ## GATE-D. Put a creature back on the ground if it is under it, before handing
