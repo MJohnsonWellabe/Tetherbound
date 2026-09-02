@@ -1,9 +1,16 @@
 extends SceneTree
 
-## VP4 CORRIDOR PASS. Eight player-height frames down the actual walked route
-## from the village edge (z~20) through the South Bridge (z~1330) and into
-## Band 2 (z~2470), day only -- the eyes VP4 (docs/VISUAL_PARITY_STAGED_GOAL_
-## PROMPT_V2.md) judges "player -> empty grass -> sky" against.
+## VP4 CORRIDOR PASS. Sixteen player-height frames down the actual walked
+## route from the village edge (z~20) through the South Bridge (z~1330),
+## Band 2 (z~2470), Band 3's river lock/relay/mill crossing, Band 4's upper
+## meadows/ironwood and ridge camp, Band 5's stronghold approach, to the Hall
+## gate itself (z~7560), day only -- the eyes VP4 (docs/VISUAL_PARITY_STAGED_
+## GOAL_PROMPT_V2.md) judges "player -> empty grass -> sky" against.
+##
+## Round 4 (stations 09-16): extends the original 8 (village -> Band 2 far,
+## authored in earlier rounds of this pass) to cover the rest of the major
+## continuous player journey, per the program coordinator's own round-4
+## dispatch.
 ##
 ##   xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x800 \
@@ -61,6 +68,28 @@ const UP := 2.4
 ## safe point on solid ground just short of the span (9, 1300), looking at the
 ## far landing (8, 1338) -- the same crossing, framed from ground the bridge's
 ## own builder already stands things on.
+## Stations 09-16 (round 4), same never-hand-picked contract: every `at` is a
+## literal `terrain_playground.json` `trail.bands[]` vertex for
+## band3_the_river_lock / band4_upper_meadows_ironwood /
+## band5_stronghold_approach, `look` the next vertex along the same polyline.
+## Landmark identity checked against each band's own `props.json` cluster
+## centroids and `terrain_playground.json`'s own `crossings[]`/site entries
+## (never guessed):
+##   09 (-110,3290): band3 pt1, the first bend entering the River Lock.
+##   10 (230,3670): band3 pt5, matching `relay_approach_checkpoint`'s own
+##     centroid (240.9,3673.7) to within 13m.
+##   11 (350,3760): band3 pt6, exactly `tether_relay.json`'s site centre.
+##   12 (-152,4170): `crossings[1]` (old_mill_crossing) road[0] -- NOT the
+##     channel centre (-152,4203), which carves a 15m gully (`channel.depth`)
+##     the same way South Bridge's own mid-span did to station 05 in round 1;
+##     this is the same fix, applied before it could bite twice. Looks at
+##     road[2] (-152,4235), the far landing.
+##   13 (-300,4990): band4 pt2, a bend just after crossing into Band 4.
+##   14 (-280,6460): band4 pt14, matching `ridge_patrol_camp`'s own centroid
+##     (-235.9,6471.7) to within 55m.
+##   15 (80,7370): band5 pt3, a bend on the final approach.
+##   16 (20,7480): band5 pt4, looking at pt5 (0,7560) -- `stronghold.json`'s
+##     own site centre, i.e. the Hall gate itself.
 const STATIONS := [
 	["01-village-edge",    Vector2(14.0, 20.0),    Vector2(8.0, 90.0)],
 	["02-first-bend",      Vector2(-120.0, 270.0), Vector2(-230.0, 330.0)],
@@ -70,6 +99,14 @@ const STATIONS := [
 	["06-stone-root-entry",Vector2(310.0, 1660.0), Vector2(400.0, 1800.0)],
 	["07-band2-mid",       Vector2(20.0, 2130.0),  Vector2(-150.0, 2210.0)],
 	["08-band2-far",       Vector2(-420.0, 2470.0),Vector2(-330.0, 2630.0)],
+	["09-river-lock-entry",Vector2(-110.0, 3290.0),Vector2(-160.0, 3420.0)],
+	["10-relay-approach",  Vector2(230.0, 3670.0), Vector2(350.0, 3760.0)],
+	["11-relay",           Vector2(350.0, 3760.0), Vector2(280.0, 3900.0)],
+	["12-old-mill-crossing",Vector2(-152.0, 4170.0),Vector2(-152.0, 4235.0)],
+	["13-band4-entry-bend",Vector2(-300.0, 4990.0),Vector2(-420.0, 5140.0)],
+	["14-ridge-camp-approach",Vector2(-280.0, 6460.0),Vector2(-210.0, 6620.0)],
+	["15-stronghold-approach",Vector2(80.0, 7370.0),Vector2(20.0, 7480.0)],
+	["16-hall-gate-approach",Vector2(20.0, 7480.0), Vector2(0.0, 7560.0)],
 ]
 
 var _field: RefCounted = null
