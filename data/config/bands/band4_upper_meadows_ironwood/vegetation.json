@@ -52,6 +52,14 @@
         "count": 4,
         "scale_min": 0.85,
         "scale_max": 1.2
+      },
+      {
+        "_why": "ROUND 9 (JUDGE-round8.md, final round): 'the right ~26% of the frame (~334px of 1280) is still bare sky/grass'. Sited from the REAL settled camera transform, not a flat-terrain estimate: `Camera3D.project_position()` at this station's own eye/look gave world(-319.0,5001.3) for screen x=1200 at 25m depth (the frame's own right-edge strip), averaged with the x=1250/30m probe (-324.9,5003.1) to land the anchor centre a little further out than the single nearest sample. Canopy specifically (not just rocks) because the judge's own failure mode is 'bare sky' above the grass line, and a rock cluster does not reach the upper two-thirds of the frame the way a tree's canopy does.",
+        "at": [-322.0, 5002.0],
+        "radius": 8.0,
+        "count": 4,
+        "scale_min": 0.9,
+        "scale_max": 1.3
       }
     ],
     "rocks": [
