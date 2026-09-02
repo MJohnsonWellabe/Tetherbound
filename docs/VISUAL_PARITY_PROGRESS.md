@@ -201,6 +201,17 @@ are the loudest elements).
   cyan cables/beams unanchored at relay, stronghold sky and courtyard floor; relay standing/apparatus not staffed;
   smoke column a hard band; night courtyard/gate crushed black; route-out stand shows no gate.
 
+### Check-in 06:50 UTC — lane state
+- WORLD round 3 stands pushed (9, incl. a moon stand): golden sun still a very large disc; `03-rise-overlook-dawn` AND
+  `06-moon-stand-night` are uniform red washes while day/golden at the same stand and the spawn stand at all times are
+  fine → time-preset × elevated camera; a one-key-at-a-time bisect was dispatched. Round-3 locations/ground/survey
+  frames not yet pushed.
+- LIFE round 1 pushed (9 frames): placement work is in but not legible — creatures tiny or absent at every stand,
+  `03-band1-open-meadow-day` is a camera-in-geometry frame, the starter-beside-trainer frame shows only the creature's
+  back. Round 2 sent: re-stage at eye height with clusters 8–15 m ahead, fix the stand, hero pairing, REPORT.md.
+- PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
+- CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
+
 ## Implementation decisions
 
 - `data/config/grass_field.json` is **ON** for this program (owner directive 2026-09-01: "I don't see how a
