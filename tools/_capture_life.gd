@@ -58,7 +58,7 @@ extends SceneTree
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/visual-parity/LIFE/round5"
+const OUT_DIR := "res://ralph/reports/visual-parity/LIFE/round6"
 
 const BOOT_FRAMES := 90
 const SETTLE_FRAMES := 60
@@ -73,7 +73,7 @@ const GROUP_MIN_H := 0.08
 const GROUP_MAX_H := 0.45
 const GROUP_WIDTH_CENTRAL := 0.8
 const PAIR_MIN_H := 0.25
-const PAIR_MAX_H := 0.45
+const PAIR_MAX_H := 0.40
 const MAX_REROLLS := 5
 const REPORT_RADIUS := 30.0
 
@@ -90,6 +90,24 @@ const STAND_BACK_M := 3.5
 const VILLAGE_BACK_M := 15.0
 const VILLAGE_UP_M := 2.6
 
+## ROUND 6: round 5's village-life frame reused `_capture_locations.gd`'s own
+## wide ESTABLISHING eye (10,-15.5)/(3,1), back=15 -- built for a skyline shot
+## of the square, not for showing people. The round-5 judge: one villager in
+## the whole frame, camouflaged against dirt, reads as an empty film set.
+## data/config/village_npcs.json amended twice this same week for an owner
+## complaint ("too many people in the village" x2) by SPREADING villagers out
+## and moving three of them OUT of the square entirely -- moving anyone back
+## into a cluster for this shot would reopen that exact complaint, so this
+## round does not touch village_npcs.json. Instead: aim at the one group that
+## was already left standing close together without being moved there on
+## purpose -- Bram [-5.89,-9], Wilhelm [-8,-3] and the Quarry Foreman [0,-6],
+## a loose ~6-8.5m triangle around the inn's own west side (centroid roughly
+## [-4.6,-6.0]) -- so the inn's wall reads behind them instead of open dirt.
+const VILLAGE_LIFE_EYE := Vector2(-18.0, -8.0)
+const VILLAGE_LIFE_TOWARD := Vector2(-4.6, -6.0)
+const VILLAGE_LIFE_BACK_M := 4.5
+const VILLAGE_LIFE_UP_M := 1.8
+
 ## Five evidence stands. `eye`/`facing_toward` are round 2-3's own
 ## confirmed-clear camera geometry. Round 5 adds `_why_vp9_r5`-tagged
 ## clusters in the band spawns.json files so the REAL population reads a
@@ -102,12 +120,12 @@ const STANDS := [
 	 "eye": [-386.0, 520.0], "facing_toward": [-378.0, 528.0],
 	 "cluster_note": "band1 order 6 (paddlenewt, existing) + order 1071 (mosshell, new)"},
 	{"id": "03-band1-open-meadow", "night": false,
-	 "eye": [-6.0, 700.0], "facing_toward": [-20.0, 700.0],
-	 "cluster_note": "band1 order 1002 (pipwing, existing) + order 1072 (bramblebun, new)"},
+	 "eye": [-11.5, 698.5], "facing_toward": [-17.5, 696.5],
+	 "cluster_note": "band1 order 1002 (pipwing, existing) + order 1072 (bramblebun, new); round 6 boot 1 aimed facing_toward at the two clusters' centroid from the OLD eye (-6,700) and still failed every body on height_frac_too_small (0.03-0.07, all comfortably below the 0.08 floor) -- not an aim problem, a distance one (9.3-15.9m from the eye, plus this stand's own 3.5m camera pull-back). Boot 2 moves the eye itself to (-11.5,698.5), roughly halving the eye-to-centroid distance (11.7m -> 6.3m)."},
 	{"id": "04-relay-camp", "night": true,
-	 "eye": [332.0, 932.0], "facing_toward": [321.0, 928.5],
-	 "cluster_note": "band1 order 1073 (bramblebun, new) + order 1074 (trailpup, new)",
-	 "night_eye": [330.0, 940.0], "night_facing_toward": [345.6, 935.4]},
+	 "eye": [332.6, 930.1], "facing_toward": [321.0, 928.5],
+	 "cluster_note": "band1 order 1073 (bramblebun, new) + order 1074 (trailpup, new); round 6 shifts the day eye 2m along the sightline's perpendicular (332,932)->(332.6,930.1) so the wolf/trailpup round 5 showed cut by a trunk is seen from a different angle",
+	 "night_eye": [338.0, 927.0], "night_facing_toward": [344.0, 935.0]},
 	{"id": "05-ridge-camp", "night": false,
 	 "eye": [-250.0, 6458.0], "facing_toward": [-260.9, 6451.7],
 	 "cluster_note": "band4 order 4076 (burrowback, existing) + order 4102 (trailpup, new)"},
@@ -328,21 +346,21 @@ func _shoot_stand(stand: Dictionary, suffix: String) -> void:
 ## standing point (`_capture_locations.gd`'s own '01-village standing' eye),
 ## reporting the authored villager NPCs actually there.
 func _shoot_village() -> void:
-	var eye_raw := Vector2(10.0, -15.5)
-	var toward := Vector2(3.0, 1.0)
+	var eye_raw := VILLAGE_LIFE_EYE
+	var toward := VILLAGE_LIFE_TOWARD
 	var eye := _clear_eye(eye_raw, toward, "00-village-life")
 	var ground := _surface(eye)
 	var facing := (toward - eye).normalized()
-	var cam2 := eye - facing * VILLAGE_BACK_M
+	var cam2 := eye - facing * VILLAGE_LIFE_BACK_M
 	var cam_ground := _surface(cam2)
 	_place(eye, ground)
-	_frame(cam2, cam_ground, toward, ground, VILLAGE_UP_M, 1.6)
+	_frame(cam2, cam_ground, toward, ground, VILLAGE_LIFE_UP_M, 1.6)
 	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
 	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
 	_hide_huds()
-	_frame(cam2, cam_ground, toward, ground, VILLAGE_UP_M, 1.6)
+	_frame(cam2, cam_ground, toward, ground, VILLAGE_LIFE_UP_M, 1.6)
 	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -372,7 +390,21 @@ func _shoot_village() -> void:
 ## THE PAIRING FRAME, real party path: `CreatureSpecies.spawn()` + `Game.
 ## party.add()` + `EncounterDirector.summon_active_creature()` -- the same
 ## three calls the party screen's own "send this one out first" flow makes,
-## not `spawn_wild()`. gap=2m per the brief, back swept monotonically 4-7m.
+## not `spawn_wild()`.
+##
+## ROUND 6 REWRITE. Round 5's geometry put the creature BEHIND and ABOVE the
+## trainer on a slope (a hero-reveal shot) instead of the side-by-side
+## companionship the keyart/page-board pairing panel shows. Per the round 6
+## dispatch: starter at the SAME depth as the trainer, `SIDE_GAP_M` to its
+## side, both actors facing the same outward bearing ("the vista") rather
+## than facing each other or the camera; eye `PAIR_BACK_M` behind their
+## shared midpoint, camera a little above the pair's own ~1.6m eye line
+## rather than a low hero angle.
+const SIDE_GAP_M := 1.8
+const PAIR_BACK_M := 5.5
+const PAIR_CAM_UP_M := 1.9
+const PAIR_LOOK_UP_M := 1.5
+
 func _shoot_pairing() -> void:
 	var candidates: Array[Vector2] = [
 		Vector2(70.0, -70.0), Vector2(85.0, -55.0), Vector2(55.0, -85.0),
@@ -380,23 +412,49 @@ func _shoot_pairing() -> void:
 		Vector2(21.0, -32.0), Vector2(29.0, -34.0), Vector2(13.0, -30.0),
 	]
 	var facing_bearing := Vector2(1.0, -1.0).normalized()
-	var gap := 2.0
-	var base_back := 5.0
 	var chosen := Vector2.ZERO
 	var found := false
+	var best_flat_spread := INF
+	var best_flat_base := Vector2.ZERO
+	var best_flat_found := false
 	for base: Vector2 in candidates:
 		var facing := facing_bearing
 		var side := Vector2(-facing.y, facing.x)
-		var creature2 := base - facing * gap
+		var creature2 := base + side * SIDE_GAP_M
 		var mid := (base + creature2) * 0.5
-		var camEye2 := mid - facing * base_back
-		if _stand_is_clear(base) and _stand_is_clear(creature2) and _stand_is_clear(camEye2):
+		var camEye2 := mid - facing * PAIR_BACK_M
+		if not (_stand_is_clear(base) and _stand_is_clear(creature2) and _stand_is_clear(camEye2)):
+			print("  [pairing] candidate (%.0f,%.0f) REJECTED (prop underfoot or a static body within 4m)" % [base.x, base.y])
+			continue
+		# ROUND 6: boot 1's chosen candidate (70,-70) put trainer and starter on
+		# a real slope -- SIDE_GAP_M is a flat XZ offset, blind to the terrain
+		# under it, and the two actors (and the camera further back again)
+		# ended up at different-enough heights that the trainer was reduced to
+		# a sliver at the very bottom of the frame. Among clearance-passing
+		# candidates, prefer the flattest one (smallest ground-height spread
+		# across base/creature/camera) rather than just the first; a hard
+		# reject above some threshold risked failing all 9 candidates outright
+		# if the whole area turned out sloped, which is worse than a slightly
+		# uneven but present pairing frame.
+		var h_base := _surface(base)
+		var h_creature := _surface(creature2)
+		var h_cam := _surface(camEye2)
+		var spread := maxf(h_base, maxf(h_creature, h_cam)) - minf(h_base, minf(h_creature, h_cam))
+		print("  [pairing] candidate (%.0f,%.0f) passed clearance, %.2fm ground-height spread" % [base.x, base.y, spread])
+		if spread < best_flat_spread:
+			best_flat_spread = spread
+			best_flat_base = base
+			best_flat_found = true
+		if spread <= 0.5:
 			chosen = base
 			found = true
-			print("  [pairing] candidate (%.0f,%.0f) passed the ground/clearance check" % [base.x, base.y])
+			print("  [pairing] candidate (%.0f,%.0f) is flat enough (%.2fm) -- taking it" % [base.x, base.y, spread])
 			break
-		else:
-			print("  [pairing] candidate (%.0f,%.0f) REJECTED (prop underfoot or a static body within 4m)" % [base.x, base.y])
+	if not found and best_flat_found:
+		chosen = best_flat_base
+		found = true
+		print("  [pairing] no candidate was flat enough outright; using the flattest clearance-passing one (%.0f,%.0f), %.2fm spread" % [
+			chosen.x, chosen.y, best_flat_spread])
 	if not found:
 		print("  FAIL starter-beside-trainer: no candidate stand cleared the geometry check")
 		_failures += 1
@@ -405,9 +463,11 @@ func _shoot_pairing() -> void:
 	var base := chosen
 	var facing := facing_bearing
 	var side := Vector2(-facing.y, facing.x)
+	var facing_yaw := atan2(facing.x, facing.y)
 
 	var player_ground := _surface(base)
 	_player.global_position = Vector3(base.x, player_ground + 0.4, base.y)
+	_player.rotation.y = facing_yaw
 	if _player is CharacterBody3D:
 		(_player as CharacterBody3D).velocity = Vector3.ZERO
 	for i in _frames(ARRIVE_FRAMES):
@@ -450,9 +510,10 @@ func _shoot_pairing() -> void:
 	# than fighting its live pathing every attempt.
 	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
-	var spot2 := base - facing * gap
+	var spot2 := base + side * SIDE_GAP_M
 	wild.global_position = Vector3(spot2.x, _surface(spot2), spot2.y)
-	wild.rotation.y = atan2(facing.x, facing.y)
+	wild.rotation.y = facing_yaw
+	_player.rotation.y = facing_yaw
 	for i in _frames(REPOSITION_SETTLE):
 		await physics_frame
 
@@ -461,12 +522,18 @@ func _shoot_pairing() -> void:
 	var creature_chk: Dictionary = {}
 	var ok := false
 	while attempt <= MAX_REROLLS:
-		var back := lerpf(4.0, 7.0, float(attempt) / float(MAX_REROLLS))
+		# PAIR_BACK_M=5.5 is the dispatch's own target, but at this camera's
+		# 70-degree vertical FOV a 1.8m-tall subject only clears the 25%
+		# height floor within ~5.1m (2*D*tan(35deg) math, side offset
+		# included) -- so the sweep starts a metre CLOSER than the named
+		# target and only moves further out on a reroll, rather than
+		# starting exactly at 5.5m and immediately needing one.
+		var back := lerpf(PAIR_BACK_M - 1.0, PAIR_BACK_M + 2.0, float(attempt) / float(MAX_REROLLS))
 		var mid := (base + spot2) * 0.5
 		var camEye2 := mid - facing * back
 		var camGround := _surface(camEye2)
-		var camPos := Vector3(camEye2.x, camGround + 1.6, camEye2.y)
-		var lookAt := Vector3(mid.x, _surface(mid) + 1.1, mid.y)
+		var camPos := Vector3(camEye2.x, camGround + PAIR_CAM_UP_M, camEye2.y)
+		var lookAt := Vector3(mid.x, _surface(mid) + PAIR_LOOK_UP_M, mid.y)
 		_camera.global_position = camPos
 		_camera.look_at(lookAt, Vector3.UP)
 		_hide_huds()
@@ -709,8 +776,35 @@ func _player_visible_aabb(body: Node3D) -> AABB:
 	if best == null:
 		print("    WARN no usable CollisionShape3D found under the player; using a fixed human-scale box")
 		return _player_aabb(body)
-	print("    trainer collider chosen: %s (height=%.2f) of %d candidate(s)" % [best.name, best_height, candidates.size()])
-	return _shape_global_aabb(best)
+
+	# ROUND 6 FIX: round 5 measured this box from `cs.global_position` -- the
+	# collision NODE's own origin, which for a rig where the collider sits
+	# under an animated/scaled bone chain does not agree with the resource's
+	# own height/radius (the SHAPE'S numbers are in the shape's local frame;
+	# rendering them without the node's own global scale is exactly how a
+	# printed height_frac hit 337% while the saved PNG looked normal -- the
+	# render used the real transform, this helper didn't). Per the round 6
+	# dispatch: shape-resource height/radius x the shape node's global scale,
+	# the box centred on the BODY's own global origin (not the shape node's),
+	# since `body.global_position` is the stable, unambiguous point every
+	# other placement call in this file (`_place`, `_creature_global_aabb`)
+	# already measures the player and every creature from.
+	var scale := best.global_transform.basis.get_scale()
+	var raw_height := 1.8
+	var raw_radius := 0.35
+	if best.shape is CapsuleShape3D:
+		raw_height = (best.shape as CapsuleShape3D).height
+		raw_radius = (best.shape as CapsuleShape3D).radius
+	elif best.shape is BoxShape3D:
+		raw_height = (best.shape as BoxShape3D).size.y
+		raw_radius = maxf((best.shape as BoxShape3D).size.x, (best.shape as BoxShape3D).size.z) * 0.5
+	var height := raw_height * scale.y
+	var radius := raw_radius * maxf(scale.x, scale.z)
+	print("    trainer collider chosen: %s shape height=%.2f x scale.y=%.2f = %.2fm, at body origin, of %d candidate(s)" % [
+		best.name, raw_height, scale.y, height, candidates.size()])
+	var half := Vector3(radius, height * 0.5, radius)
+	var centre := body.global_position + Vector3(0.0, height * 0.5, 0.0)
+	return AABB(centre - half, half * 2.0)
 
 
 func _shape_global_aabb(cs: CollisionShape3D) -> AABB:
