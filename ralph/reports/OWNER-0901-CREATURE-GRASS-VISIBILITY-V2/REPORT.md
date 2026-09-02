@@ -128,38 +128,142 @@ plant geometry the fix cannot touch.
 spawn, identical order of magnitude to the already-shipped `field_emission`
 path it rides alongside — no new draw calls, no shader change, no asset.
 
-## What's NOT fixed, and the honest next step
+## Density ladder (started, then stopped on direct instruction)
 
-The dominant remaining defect is occlusion by real grass/plant geometry, not
-creature colour. `CLAUDE.md`'s own allowance covers this directly: *"A
-local suppression or flattening of grass immediately around a creature is a
-legitimate option if it's genuinely the right fix."* Given this branch's own
-evidence, it is the right fix — but it is a real shader/engineering change
-(the field's tufts, stones and cover tiers are all GPU-hashed from world
-position with no per-instance CPU transform to suppress individually; doing
-this properly means passing a small set of "active nearby creature" world
-positions into `shaders/grass_field.gdshader` and its stone/cover-tier
-siblings as a uniform and having the vertex stage collapse any tuft/prop
-within some clearance radius of one), not a data tweak, and touching those
-shaders is real risk to a system that was only just re-measured and landed
-at a deliberately cheap config. It deserves its own dedicated pass with its
-own render-based verification, not a rushed addition here. Recorded as the
-concrete next step rather than attempted in the time left on this branch —
-this branch's owner also has a live, explicit, time-sensitive request in
-flight (a grass density ladder for a separate decision) that took priority
-over spending further render cycles on a bigger creature-visibility change.
+Between the two passes above, the coordinator relayed a separate, time-sensitive
+owner request: render a four-step grass density ladder (75k/150k/225k/300k
+tufts, landscape + creature shots, primitive counts at `band1_open`) so the
+owner could pick a density with actual frames in front of him, since
+`OWNER-0902-GRASS-ON` had shipped a ~5x-cheaper field as a side effect of a
+performance fix, not a separately-chosen look. `tools/_capture_grass_density_ladder.gd`
+was built for this (one world boot, rebuilding only the `GrassField` node
+between steps rather than re-booting four times) and completed steps A
+(75k) and B (150k) — both pushed — before a follow-up instruction arrived:
+**the density question is decided (keep the shipped 75k config, no change),
+based on two independent judges finding density was not the actual lever
+for either "does it look like the key art" or creature visibility.** The
+render was killed at that point; C and D were never produced. The tool is
+left in the branch in case a future density pass wants it, but per direct
+instruction `data/config/grass_field.json` was never touched by this branch.
+
+That same instruction is why the section below exists: the two judges'
+finding was that a creature standing *inside* a flowering cover-tier bush,
+not grass density, was the dominant legibility problem — which reopened the
+"what's not fixed" gap this report originally left as a recorded next step
+rather than attempted work.
+
+## Second pass: local suppression, and the VP merge
+
+**The whole grass system was rewritten out from under this branch mid-session.**
+`origin/main` moved to `b03cdb94` (PR #20, the Meadows Visual Parity program —
+per-tile culling, distance LOD, far thinning, per-tier reach on
+`grass_field.gd`, plus `scatter_rules.gd`, `vegetation.json` and a scatter
+re-bake) while this branch was mid-flight. Every render up to that point was
+against the pre-VP field. Merged `origin/main` forward (not rebased) at
+`cf349e16` — clean, zero conflicts, since this branch never touched any file
+VP owns — and re-verified `field_degreen` on the merged tree
+(`ralph/reports/hud-catch/repro_grasson_vp/bramblebun/grass-SHIPPED-1.00.png`):
+still reads clearly, the fix survives the rewrite intact.
+
+A blind visual-judge pass on this branch's own frames (run separately by the
+coordinator, alongside a second independent judge) named the real, dominant
+defect directly: **the creature is standing *inside* a green flowering
+cover-tier bush, its outline broken by real leaf geometry that overlaps its
+body** — exactly the occlusion mechanism this report's first pass diagnosed
+from pixel evidence, now confirmed from a second, independent angle.
+
+The engineering estimate in this report's earlier draft (a new shader
+uniform threading creature positions into `grass_field.gdshader` and its
+stone/cover-tier siblings) turned out to be unnecessary: **`grass_field.gd`
+already has exactly this mechanism**, built for the "grass grows through the
+floor" defect (`village.gd`/`burrow_warrens.gd` join a `grass_clear` group
+with a `grass_clear_radius` meta value; the field reads every member's
+*current* position live each time its ring moves, and clears every tier —
+tufts, stones, bushes, flowers, litter, the far sheet — around it; all four
+field shaders already read the same `built[]` uniform). `creature_body.gd`
+now joins every creature body — wild, piloted, ally — to that same group at
+build time, radius = its own collider radius + a fixed 0.6m margin (not
+scaled per-species: a bigger creature already clears more by having a bigger
+collider, and a margin that grew with size would turn a legendary's own
+footprint into a visible bald disc). This reuses tested, shipped machinery
+rather than adding a second clearing system, and needed no shader change.
+
+**Verified in isolation** (`tools/_probe_grass_clear.gd`, new): same fixed
+camera/site/creature, with vs without group membership, forcing the field's
+own `_apply_built()` refresh the way a walking player's footsteps would (a
+static-camera probe never triggers the ring-move that does this for free) —
+`ralph/reports/hud-catch/grass_clear_probe/bramblebun-{with,without}-clear.png`.
+The foreground grass immediately around the creature's feet is measurably
+thinner with the group joined; the effect's *size* depends on how much
+vegetation happened to be at this particular spawn point (this site had no
+dense bush cluster directly on the spawn point, so the visible difference
+here is real but modest — a creature that spawns literally inside a bush,
+the coordinator's own worst-case example, should see a much larger effect,
+since bushes are one of the tiers this same mechanism clears).
+
+**Verification on the merged tree:** `tests/smoke_art.gd` (`art: OK`),
+`tests/run_tests.gd --only=creature,test_evolution_links.gd,test_creature,
+test_grass_field.gd,test_wild_alphas.gd` (77 tests, 88,030 assertions, 0
+failed — `test_grass_field.gd`'s own suite, unmodified by this branch, is
+green with every creature body now a member of the group its tests already
+exercise).
+
+**A final blind visual-judge pass on the combined result** (both fixes
+together, independent sub-agent, no knowledge of what changed): confirmed the
+same read — "a real but small improvement... it only fixes the base contact
+line," the lower silhouette (where grass blades used to cross the chest/front
+legs) reading cleaner, everything above that unchanged since it was never the
+problem. Flagged the contact shadow as "a flat dark blob rather than a shaped
+cast shadow — reads as a placeholder," matching the coordinator's own
+ground-contact finding independently. Also flagged the grass scatter itself as
+reading "too regular/uniform... procedural placement rather than authored
+planting" and the scene as "flat-lit," both of which are the ground-material
+work now owned by the VP program, not a creature-level fix.
+
+## What's still not fixed
+
+No ground-contact shadow or flattened-grass ring under a creature — it reads
+as floating on the texture rather than anchored to it. The same two judges
+named this as a third, independent contributor, and it was not attempted
+here: it is a real rendering feature (a decal, a per-instance shadow-caster
+tweak, or a small terrain-mask push), out of scope for a data/grouping-level
+fix and not touched by the `grass_clear` mechanism above. Left as a named,
+recorded gap rather than a rushed addition.
 
 **Not touched, per the brief's own hazard warning:** `data/config/
 grass_field.json` and `vegetation.json` — no density, radius or
-suppress-layer values changed anywhere in this branch.
+suppress-layer values changed anywhere in this branch, including during the
+density-ladder work (killed before it produced a recommendation, per direct
+instruction to leave the density decision alone).
+
+## For the record: the meadow's own defect (not this branch's task)
+
+The two judges' single highest-impact recommendation for the meadow ground
+itself, carried here for the record per the coordinator's instruction: the
+single-blade tuft reads as "hair on a lawn" against the key art's own
+overlapping-blade-with-mass reference
+(`docs/reference/moong-01-mounted-in-tall-grass.jpg`) at any density tested
+(75k or 150k) — replacing it with a clump card (3-5 blades per instance,
+wider base, dark-to-light root-to-tip gradient, ±30% height variation) at
+the *current* instance count was judged the fix, not more tufts. That is
+`grass_field.gd` art direction, now owned by the VP program, not this
+branch's task.
 
 ## Files
 
-- `scripts/creatures/creature_body.gd` — `field_degreen` lever.
+- `scripts/creatures/creature_body.gd` — `field_degreen` lever (colour) and
+  the `grass_clear` group join (local suppression).
 - `data/creatures/species.json` — bramblebun's `field_degreen: 0.75` +
   documented reasoning.
 - `tools/_probe_grass_separation.gd` — `--extra-degreen=` sweep support.
+- `tools/_probe_grass_clear.gd` — isolates the group-join fix from
+  `field_degreen`, with a forced `_apply_built()` refresh for a static
+  camera.
+- `tools/_capture_grass_density_ladder.gd` — density-ladder tool, built and
+  partially run per a since-superseded request; `data/config/
+  grass_field.json` was never changed.
 - `tools/_dump_bramblebun_materials.gd` — throwaway, confirms the mesh's
   single-material/single-texture structure.
-- `ralph/reports/hud-catch/repro_grasson/**` — every render referenced
-  above.
+- `ralph/reports/hud-catch/repro_grasson/**`, `repro_grasson_vp/**`,
+  `grass_clear_probe/**`, `grass_density_ladder/**` — every render
+  referenced above.
