@@ -220,6 +220,7 @@ are the loudest elements).
 ### 18:45 UTC — Ship PR #21 opened; CI-skip trap noted
 
 - **PR #21** https://github.com/MJohnsonWellabe/Tetherbound/pull/21 (program branch → main): the lane close-out since PR #20 (WORLD r7–r9, CORRIDOR r7–r9, PLACES r9–r11, sentry + Warrens restarts, VP10 measurement, fresh bake). Merge when its CI is green.
+- **CI trap, second half**: a `[skip ci]` in the PR head commit also skips the pull_request run, so the PR had no check runs while its head was a docs commit; this commit deliberately carries no skip marker so the PR run diffs against main and executes every job.
 - **CI trap recorded**: `ci.yml`'s `changes` job diffs a push against `github.event.before` (the previous push), so a push whose head commit is docs-only reports `success` in ~3 minutes with every code job skipped — run 33667458009 on `4d31d0f8` is such a skip, not a green. The `[skip ci]` code commits in between (sentry placement/light, Warrens cladding) were therefore never CI-tested on a push. A pull_request event diffs against the base branch and runs everything, which is why the ship goes through a PR.
 
 ### 18:40 UTC — Warrens exterior CLOSED at round 12 (earth-skin cladding with its own tint)
