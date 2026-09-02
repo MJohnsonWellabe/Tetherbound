@@ -17,7 +17,7 @@ code-blind verdict is 6.5/10 (Bar A yes, Bar B partial) — see §5 VP11 and, fo
 | program branch (this session's harness-pinned branch; the owner prompt named `codex/meadows-visual-parity`, but the harness pins the branch below, so this branch *is* the visual-parity branch — see `docs/VISUAL_PARITY_PROGRESS.md` "Branch and SHAs") | `claude/coordination-subagents-3fhz1x` |
 | starting `main` SHA | `252ccc81` (2026-09-01, `origin/main` at program start) |
 | ship-to-main merge | `b03cdb94` — PR #20, merged 2026-09-02 14:56 UTC (CI run 33642046946 on `1d1a2f74`, green after a 25-minute run). Carries VP1–VP9 as merged at that point (WORLD r1–r6, GROUND/VILLAGE, CORRIDOR r1–r6, PLACES r1–r8, LIFE r1–r7). |
-| latest pushed SHA (this session, `git rev-parse --short HEAD`) | `f0740c96` |
+| latest pushed SHA (this session, `git rev-parse --short HEAD`) | see PR #21's merge commit on `main`; code content is identical from `0a04ce69` (main merged in) onward — every later commit is docs/evidence only |
 
 ### Per-pass milestone commits
 
@@ -34,7 +34,11 @@ code-blind verdict is 6.5/10 (Bar A yes, Bar B partial) — see §5 VP11 and, fo
 | Ship to main | `b03cdb94` | PR #20 merge: VP1–VP9 candidate (sky, ground, vegetation, corridor, places, life) |
 | VP10 re-bake on merged tree | `1d1a2f74` | re-bake playground scatter on the main-merged tree (825,759 placements; bake inputs unchanged by the WORLD/LIFE/PLACES merges) |
 | VP10 first perf measurement | `8db85108` | first perf measurement on the merged tree — band1_open draws 2% over proxy budget, prims/hall pass |
-| VP10 perf retention numbers | `f0740c96` (current HEAD) | perf retention numbers on the merged tree (band1_open 7659 draws / 11.76M prims, hall_approach 3844, village_high 3165) |
+| VP10 perf retention numbers | `f0740c96` | perf retention numbers on the merged tree (band1_open 7659 draws / 11.76M prims, hall_approach 3844, village_high 3165) |
+| Lane close-out (WORLD r7–r9, CORRIDOR r7–r9, PLACES r9–r12, sentries, Warrens cladding, Hall stone) | `b805d9d6` … `6c7f8d1e` | merged lane branches + Fable decision/restart agents' fixes |
+| VP10 visibility ranges ON (kept) | `222ea390` | `structure_visibility_ranges: true` — band1_open 6847 draws |
+| main merged into the program branch | `0a04ce69` | 16 main-side commits (sleep/traversal/train-clarity harness fixes), no conflicts |
+| VP11 final recapture + judge + handoffs | `4011160b` … (PR #21 head) | `VP11-final/`, `JUDGE-final.md`, handoff STATUS flip, next-agent handoff |
 
 ### Lane branches
 
