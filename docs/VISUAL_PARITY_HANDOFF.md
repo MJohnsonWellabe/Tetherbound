@@ -105,7 +105,11 @@ same script and every path was verified to exist at write time.
 Per-round judged pairs (the rounds that moved each location) remain listed in §5 with their judge files.
 
 Stands that could not be matched: combat and building/home have no pre-program baseline (VP0 did not capture
-them); their VP11 frames are in `VP11-final/combat/` and `VP11-final/buildings/` and appear in §3.
+them). Combat frames are in `VP11-final/combat/` (six frames). **The buildings pass and the trailing perf series of
+the recapture chain were lost to a container restart at 21:1x UTC after the owner called wrap-up** and were not
+re-run; the building/home hero slot in §3 therefore points at the VP1–VP3 checkpoint frame
+(`VP1-3-candidate/buildings/07-farmhouse-interior.png`, unchanged interior since), and §4's number of record is
+the VP10 ON measurement on the same code.
 
 ---
 
@@ -120,7 +124,7 @@ Ten slots per the VP11 brief, all from the final recapture (`VP11-final/`) so th
 | Village night | `VP11-final/locations/01-village-standing-night.png` |
 | Creature/world frame | `VP11-final/locations/08-ridge-camp-standing-day.png` (creatures beside the ridge camp) |
 | Combat/world frame | `VP11-final/combat/02-arena-opens.png` |
-| Building/home frame | `VP11-final/buildings/07-farmhouse-interior.png` |
+| Building/home frame | `VP1-3-candidate/buildings/07-farmhouse-interior.png` (VP11 buildings pass lost to a container restart, see §2 note) |
 | Tournament | `VP11-final/locations/01-village-tournament-day.png` |
 | Warrens | `VP11-final/locations/04-warrens-approach-day.png` |
 | Team Tether Relay | `VP11-final/locations/06-relay-apparatus-day.png` |
