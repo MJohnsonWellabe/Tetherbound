@@ -4838,11 +4838,13 @@
     {
       "id": "S03-106",
       "title": "the build rung is tracked",
-      "action": "note",
+      "action": "assert",
       "args": {
-        "text": "RECORDED, not asserted (fixed 2026-09-02, same reasoning S03-174 already argued for the identical shape and this now applies structurally instead of just in prose): quest_log.gd tracks the first UNSET flag in objectives.json's file order, and tournament_training_ready (entry.min_level=5, checked against the full five-creature roster per data/config/tournament.json) sits before build_home/sleep/feed_team in that file. This segment's own scripted training (one practice fight against Bryn) leaves the team at a uniform level 3 -- data/config/tournament.json's own comment calls min_level 'a first honest guess... nobody has played the ladder yet'. So the tracked objective line CANNOT read anything past 'Train with your team' for the rest of this segment no matter what the player actually does downstream, which is correct, intended behaviour of the guided-objective view given the current data, not a bug this segment can produce evidence against. Closing a ~600 XP/creature gap by scripting dozens of extra fights into this file would be inventing tutorial pacing unilaterally, not fixing a rig defect -- a decision for whoever owns that tuning call. The REAL underlying flag this rung is actually about is checked directly and independently elsewhere in this same sequence (home_built via S03-105's materials check and the build placements, player_slept_at_home, tournament_team_fed) and is not affected by this."
+        "check": "objective_is",
+        "id": "tournament_build_home"
       },
-      "expected": "Section E.5 objective 10/27 `tournament_build_home`, 'Build a small home of your own.'"
+      "expected": "Section E.5 objective 10/27 `tournament_build_home`, 'Build a small home of your own.'",
+      "observation": "REVERTED to assert 2026-09-02 (handover pass): this was converted to a non-failing `note` on the premise that tournament_training_ready's min_level=5 threshold was an untested, first-guess pacing number nobody could reach -- that premise was itself retracted the same session after merging forward OWNER-0901-TRAIN-CLARITY-V2/OWNER-0901-TOURNAMENT-LEVEL5, which confirmed with a real test suite and a real simulated tournament win that min_level=5 is the actual, validated, reachable threshold. A 20-round wild-fight training pass was added after Bryn's fight (S03-51m onward) to actually earn the team to level 5, but that fix has NOT been verified by a completed run as of this handover -- the run that would have proven it (gate-f-run-20260902T210024Z-s03fablefix12) was still in progress when work on this branch was stopped. Restored to a real assert rather than left as an inert note, because leaving it as a note would hide whether the training pass actually works from the next real run -- exactly the kind of false-green this project has been burned by before."
     },
     {
       "id": "S03-107",
@@ -5489,11 +5491,13 @@
     {
       "id": "S03-174",
       "title": "the chain advanced past the camp and bed rungs together",
-      "action": "note",
+      "action": "assert",
       "args": {
-        "text": "RECORDED, not asserted (fixed 2026-09-02, same reasoning S03-174 already argued for the identical shape and this now applies structurally instead of just in prose): quest_log.gd tracks the first UNSET flag in objectives.json's file order, and tournament_training_ready (entry.min_level=5, checked against the full five-creature roster per data/config/tournament.json) sits before build_home/sleep/feed_team in that file. This segment's own scripted training (one practice fight against Bryn) leaves the team at a uniform level 3 -- data/config/tournament.json's own comment calls min_level 'a first honest guess... nobody has played the ladder yet'. So the tracked objective line CANNOT read anything past 'Train with your team' for the rest of this segment no matter what the player actually does downstream, which is correct, intended behaviour of the guided-objective view given the current data, not a bug this segment can produce evidence against. Closing a ~600 XP/creature gap by scripting dozens of extra fights into this file would be inventing tutorial pacing unilaterally, not fixing a rig defect -- a decision for whoever owns that tuning call. The REAL underlying flag this rung is actually about is checked directly and independently elsewhere in this same sequence (home_built via S03-105's materials check and the build placements, player_slept_at_home, tournament_team_fed) and is not affected by this."
+        "check": "objective_is",
+        "id": "tournament_sleep"
       },
-      "expected": "FINDING, recorded rather than worked around. quest_log.gd tracks 'the first unset flag in file order', and home_built (rung 10) requires the creature bed that rung 11 is about -- so placing the camp alone advances nothing, and placing the bed sets home_built and creature_bed_built in the SAME frame. Rung 11 is therefore never the tracked line: the chain goes straight from tournament_build_home to tournament_sleep. Asserting objective_is tournament_build_creature_beds here, as this step used to, asserts a state the shipped config cannot produce."
+      "expected": "FINDING, recorded rather than worked around. quest_log.gd tracks 'the first unset flag in file order', and home_built (rung 10) requires the creature bed that rung 11 is about -- so placing the camp alone advances nothing, and placing the bed sets home_built and creature_bed_built in the SAME frame. Rung 11 is therefore never the tracked line: the chain goes straight from tournament_build_home to tournament_sleep. Asserting objective_is tournament_build_creature_beds here, as this step used to, asserts a state the shipped config cannot produce.",
+      "observation": "REVERTED to assert 2026-09-02 (handover pass): this was converted to a non-failing `note` on the premise that tournament_training_ready's min_level=5 threshold was an untested, first-guess pacing number nobody could reach -- that premise was itself retracted the same session after merging forward OWNER-0901-TRAIN-CLARITY-V2/OWNER-0901-TOURNAMENT-LEVEL5, which confirmed with a real test suite and a real simulated tournament win that min_level=5 is the actual, validated, reachable threshold. A 20-round wild-fight training pass was added after Bryn's fight (S03-51m onward) to actually earn the team to level 5, but that fix has NOT been verified by a completed run as of this handover -- the run that would have proven it (gate-f-run-20260902T210024Z-s03fablefix12) was still in progress when work on this branch was stopped. Restored to a real assert rather than left as an inert note, because leaving it as a note would hide whether the training pass actually works from the next real run -- exactly the kind of false-green this project has been burned by before."
     },
     {
       "id": "S03-205a",
@@ -5565,11 +5569,13 @@
     {
       "id": "S03-206",
       "title": "the sleep rung is tracked",
-      "action": "note",
+      "action": "assert",
       "args": {
-        "text": "RECORDED, not asserted (fixed 2026-09-02, same reasoning S03-174 already argued for the identical shape and this now applies structurally instead of just in prose): quest_log.gd tracks the first UNSET flag in objectives.json's file order, and tournament_training_ready (entry.min_level=5, checked against the full five-creature roster per data/config/tournament.json) sits before build_home/sleep/feed_team in that file. This segment's own scripted training (one practice fight against Bryn) leaves the team at a uniform level 3 -- data/config/tournament.json's own comment calls min_level 'a first honest guess... nobody has played the ladder yet'. So the tracked objective line CANNOT read anything past 'Train with your team' for the rest of this segment no matter what the player actually does downstream, which is correct, intended behaviour of the guided-objective view given the current data, not a bug this segment can produce evidence against. Closing a ~600 XP/creature gap by scripting dozens of extra fights into this file would be inventing tutorial pacing unilaterally, not fixing a rig defect -- a decision for whoever owns that tuning call. The REAL underlying flag this rung is actually about is checked directly and independently elsewhere in this same sequence (home_built via S03-105's materials check and the build placements, player_slept_at_home, tournament_team_fed) and is not affected by this."
+        "check": "objective_is",
+        "id": "tournament_sleep"
       },
-      "expected": "Section E.5 objective 12/27 `tournament_sleep`, 'Sleep until morning in your new home.'"
+      "expected": "Section E.5 objective 12/27 `tournament_sleep`, 'Sleep until morning in your new home.'",
+      "observation": "REVERTED to assert 2026-09-02 (handover pass): this was converted to a non-failing `note` on the premise that tournament_training_ready's min_level=5 threshold was an untested, first-guess pacing number nobody could reach -- that premise was itself retracted the same session after merging forward OWNER-0901-TRAIN-CLARITY-V2/OWNER-0901-TOURNAMENT-LEVEL5, which confirmed with a real test suite and a real simulated tournament win that min_level=5 is the actual, validated, reachable threshold. A 20-round wild-fight training pass was added after Bryn's fight (S03-51m onward) to actually earn the team to level 5, but that fix has NOT been verified by a completed run as of this handover -- the run that would have proven it (gate-f-run-20260902T210024Z-s03fablefix12) was still in progress when work on this branch was stopped. Restored to a real assert rather than left as an inert note, because leaving it as a note would hide whether the training pass actually works from the next real run -- exactly the kind of false-green this project has been burned by before."
     },
     {
       "id": "S03-207",
@@ -5816,11 +5822,13 @@
     {
       "id": "S03-229",
       "title": "the feeding rung is tracked",
-      "action": "note",
+      "action": "assert",
       "args": {
-        "text": "RECORDED, not asserted (fixed 2026-09-02, same reasoning S03-174 already argued for the identical shape and this now applies structurally instead of just in prose): quest_log.gd tracks the first UNSET flag in objectives.json's file order, and tournament_training_ready (entry.min_level=5, checked against the full five-creature roster per data/config/tournament.json) sits before build_home/sleep/feed_team in that file. This segment's own scripted training (one practice fight against Bryn) leaves the team at a uniform level 3 -- data/config/tournament.json's own comment calls min_level 'a first honest guess... nobody has played the ladder yet'. So the tracked objective line CANNOT read anything past 'Train with your team' for the rest of this segment no matter what the player actually does downstream, which is correct, intended behaviour of the guided-objective view given the current data, not a bug this segment can produce evidence against. Closing a ~600 XP/creature gap by scripting dozens of extra fights into this file would be inventing tutorial pacing unilaterally, not fixing a rig defect -- a decision for whoever owns that tuning call. The REAL underlying flag this rung is actually about is checked directly and independently elsewhere in this same sequence (home_built via S03-105's materials check and the build placements, player_slept_at_home, tournament_team_fed) and is not affected by this."
+        "check": "objective_is",
+        "id": "tournament_feed_team"
       },
-      "expected": "Section E.5 objective 13/27 `tournament_feed_team`, 'Feed your team before you sign up.'"
+      "expected": "Section E.5 objective 13/27 `tournament_feed_team`, 'Feed your team before you sign up.'",
+      "observation": "REVERTED to assert 2026-09-02 (handover pass): this was converted to a non-failing `note` on the premise that tournament_training_ready's min_level=5 threshold was an untested, first-guess pacing number nobody could reach -- that premise was itself retracted the same session after merging forward OWNER-0901-TRAIN-CLARITY-V2/OWNER-0901-TOURNAMENT-LEVEL5, which confirmed with a real test suite and a real simulated tournament win that min_level=5 is the actual, validated, reachable threshold. A 20-round wild-fight training pass was added after Bryn's fight (S03-51m onward) to actually earn the team to level 5, but that fix has NOT been verified by a completed run as of this handover -- the run that would have proven it (gate-f-run-20260902T210024Z-s03fablefix12) was still in progress when work on this branch was stopped. Restored to a real assert rather than left as an inert note, because leaving it as a note would hide whether the training pass actually works from the next real run -- exactly the kind of false-green this project has been burned by before."
     },
     {
       "id": "S03-230",
