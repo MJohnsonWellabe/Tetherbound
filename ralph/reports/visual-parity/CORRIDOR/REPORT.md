@@ -481,3 +481,35 @@ reverted before this commit. Final bake this round:
   a visible defect, same as noted in round 2's own report section.
 - The pre-existing `test_ecology_core_clusters_without_changing_the_count`
   failure remains open and is outside this lane's owned files.
+
+---
+
+## Status at handoff (CI requested)
+
+All three CORRIDOR rounds are pushed to `claude/vp-corridor` at
+`e3ee39ec` — this commit adds no config/code changes, only this note, and
+is deliberately **not** `[skip ci]`, at the coordinator's own request, so
+CI validates the branch before it is merged in.
+
+- **Round 1** (`f1d74889`): first anchors at stations 01/02/06/07, plus the
+  station-05 capture-tool fix (bridge-gully seat bug).
+- **Round 2** (`d8aa35b6`): judged a net regression at 02/07 by
+  `JUDGE-round1.md`; replaced with larger, corrected-side anchors, added
+  the 04/08 distant horizon mass.
+- **Round 2 addendum** (`ccfd57d5` merge, `e3ee39ec` fixes): found and
+  fixed the actual root cause (anchors sharing the corridor RNG stream with
+  `corridor_fill`), proved it with `tools/_probe_anchor_isolation.gd`
+  (92,867 placements checked, 0 moved), merged the coordination branch
+  (WORLD's canopy-material fix landed, `smoke_traversal.gd` now passes),
+  thickened station 04 further.
+
+**What still fails**: `test_scatter_rules.gd ::
+test_ecology_core_clusters_without_changing_the_count`, confirmed
+pre-existing (reproduced identically on the unmodified branch via
+`git stash` in round 1) and outside this lane's owned files — not fixed
+here.
+
+**Frames**: `ralph/reports/visual-parity/CORRIDOR/{00-before,round1,round2,
+round3}/`, each with its own contact sheet. Round 3 is the current/final
+state; its own section above has the per-station pixel-diff table against
+`00-before`.
