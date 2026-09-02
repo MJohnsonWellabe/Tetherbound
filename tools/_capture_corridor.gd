@@ -124,7 +124,7 @@ const STATIONS := [
 	["11-relay",           Vector2(350.0, 3760.0), Vector2(280.0, 3900.0)],
 	["12-old-mill-crossing",Vector2(-152.0, 4170.0),Vector2(-152.0, 4235.0)],
 	["13-band4-entry-bend",Vector2(-300.0, 4990.0),Vector2(-420.0, 5140.0)],
-	["14-ridge-camp-approach",Vector2(-280.0, 6460.0),Vector2(-233.9, 6473.7)],
+	["14-ridge-camp-approach",Vector2(-280.0, 6460.0),Vector2(-242.7, 6470.2)],
 	["15-stronghold-approach",Vector2(80.0, 7370.0),Vector2(20.0, 7480.0)],
 	["16-hall-gate-approach",Vector2(20.0, 7480.0), Vector2(0.0, 7560.0)],
 ]

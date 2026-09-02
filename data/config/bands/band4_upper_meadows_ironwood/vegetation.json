@@ -4,10 +4,10 @@
   "clearings": [
     {
       "order": 4000,
-      "x": -235.0,
-      "z": 6470.0,
+      "x": -241.8,
+      "z": 6468.5,
       "radius": 13.0,
-      "_why": "The watchtower spur's new patrol trainer and prop cluster (trainers.json order 4000, props.json order 4000) -- an 11m arena and six ground-hugging props both need scatter off the pad for the same reason every other trainer/cluster site in the chapter gets one (see band1's own clearings[4] on the practice trainer)."
+      "_why": "The watchtower spur's new patrol trainer and prop cluster (trainers.json order 4000, props.json order 4000) -- an 11m arena and six ground-hugging props both need scatter off the pad for the same reason every other trainer/cluster site in the chapter gets one (see band1's own clearings[4] on the practice trainer). ROUND 7 (JUDGE-round6.md): moved with props.json's own ridge_patrol_camp cluster (dx=-6.83, dz=-1.52, 7m toward the walked route) -- see that file's own _why_r7."
     },
     {
       "order": 4001,
