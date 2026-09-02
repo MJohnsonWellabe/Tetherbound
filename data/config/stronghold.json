@@ -767,7 +767,7 @@
       {
         "_comment": "VP-HALL-FIX-3 (2026-09-02), courtyard corner brazier 1/4, NW. `stronghold-courtyard-night` measured 2.84/255 with one central fire (the inner bailey's, above) trying to cover a 22x28 yard alone -- these four hug the four corners instead of adding more energy to the same spot. Against the west curtain, north of the hoarding/stairs, clear of the fight floor x[-5,5] z[24,42] and the trainer stand (-4,36) radius.",
         "_comment_round5": "ROUND-5 (code-blind judge on round-4 frames): 'the new lights are small hot spots that don't spread across the yard' and native-exposure frame mean was still 2.84->3.58 against a stated target of >=12. Owner-authorised x3 energy / x1.5 range on these four exactly (2.2->6.6, 13.0->19.5) -- attenuation is left at 1.4 (still pools near the bowl rather than washing flat) so the extra energy grows the POOL each brazier throws instead of just brightening its hottest pixel.",
-        "_comment_round6": "ROUND-6 (2026-09-02), DIAGNOSTIC-FIRST. A single OmniLight3D dropped at the courtyard centre (energy 20, range 30, DEFAULT attenuation 1.0) lit the floor to a warm, clearly-readable RGB in one render, proving the floor material was never the defect -- the SHAPE of these braziers' own falloff was. `attenuation: 1.4` concentrates a light's contribution close to the bowl (see `_build_hall_fire()`'s own header); round-5's x3 energy bump rode that same steep curve and only grew the hottest pixel, not the pool, which is why three rounds of raising energy barely moved the frame mean. attenuation 1.4 -> 1.0 (the diagnostic's own shape) first at range 22.0 measured frame mean 11.05 -- real movement (8.38 -> 11.05) but one render short of the >=12 bar, so range went to 25.0 here alongside the inner bailey fire's own small reach bump (see that entry). Energy is UNCHANGED from round 5's 6.6 throughout this round: every gain here is reach (attenuation, range), never another energy multiply.",
+        "_comment_round6": "ROUND-6 (2026-09-02), DIAGNOSTIC-FIRST. A single OmniLight3D dropped at the courtyard centre (energy 20, range 30, DEFAULT attenuation 1.0) lit the floor to a warm, clearly-readable RGB in one render, proving the floor material was never the defect -- the SHAPE of these braziers' own falloff was. `attenuation: 1.4` concentrates a light's contribution close to the bowl (see `_build_hall_fire()`'s own header); round-5's x3 energy bump rode that same steep curve and only grew the hottest pixel, not the pool, which is why three rounds of raising energy barely moved the frame mean. attenuation 1.4 -> 1.0 (the diagnostic's own shape) first at range 22.0 measured frame mean 11.05, then 25.0 measured 12.21 -- past the >=12 bar, but `_build_hall_fire`'s own flicker (+-26% per bowl, `FLICKER_AMOUNT`) reproduces render-to-render and a second capture at the SAME config read 11.49, under the bar on an unlucky flicker phase. 25.0 -> 27.0 for margin above the bar rather than chasing a lucky frame. Energy is UNCHANGED from round 5's 6.6 throughout this round: every gain here is reach (attenuation, range), never another energy multiply.",
         "at": [
           -9.4,
           20.0
@@ -775,7 +775,7 @@
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
-        "range": 25.0,
+        "range": 27.0,
         "attenuation": 1.0
       },
       {
@@ -787,7 +787,7 @@
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
-        "range": 25.0,
+        "range": 27.0,
         "attenuation": 1.0
       },
       {
@@ -799,7 +799,7 @@
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
-        "range": 25.0,
+        "range": 27.0,
         "attenuation": 1.0
       },
       {
@@ -811,7 +811,7 @@
         "on_floor": true,
         "scale": 1.9,
         "energy": 6.6,
-        "range": 25.0,
+        "range": 27.0,
         "attenuation": 1.0
       },
       {
