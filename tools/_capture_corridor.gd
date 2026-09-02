@@ -119,7 +119,7 @@ const STATIONS := [
 	["06-stone-root-entry",Vector2(310.0, 1660.0), Vector2(400.0, 1800.0)],
 	["07-band2-mid",       Vector2(20.0, 2130.0),  Vector2(-150.0, 2210.0)],
 	["08-band2-far",       Vector2(-420.0, 2470.0),Vector2(-330.0, 2630.0)],
-	["09-river-lock-entry",Vector2(-121.5, 4142.5),Vector2(-152.0, 4235.0)],
+	["09-river-lock-entry",Vector2(-141.0, 4160.0),Vector2(-100.0, 4230.0)],
 	["10-relay-approach",  Vector2(230.0, 3670.0), Vector2(350.0, 3760.0)],
 	["11-relay",           Vector2(350.0, 3760.0), Vector2(280.0, 3900.0)],
 	["12-old-mill-crossing",Vector2(-152.0, 4170.0),Vector2(-152.0, 4235.0)],
