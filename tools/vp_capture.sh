@@ -3,21 +3,39 @@
 # Runs the capture tools serially, builds contact sheets, copies frames into an
 # evidence dir, then measures the perf proxy. Env: GODOT, RES (default
 # 1280x720), LIGHT=1 skips combat/buildings, REPO overrides the checkout.
+# VP_FAST=1: fast-iteration mode. Defaults RES to 960x540 (still overridable
+# by an explicit RES) and passes --fast to every capture tool's user args, so
+# each tool (see their own headers) halves its settle waits and disables
+# MSAA/SSAA. Use for quick local loops, not for evidence that ships.
 #   tools/vp_capture.sh <evidence_dir> [locations --only list, comma separated]
 set -uo pipefail
 cd "${REPO:-$(cd "$(dirname "$0")/.." && pwd)}"
 GODOT=${GODOT:-$HOME/.cache/tetherbound-art/godot}
-RES=${RES:-1280x720}
+if [ -n "${VP_FAST:-}" ]; then
+  RES=${RES:-960x540}
+else
+  RES=${RES:-1280x720}
+fi
 EV=$1; ONLY=${2:-}
 mkdir -p "$EV"
 LOG=$EV/capture.log
 FILTER='ALSA|libpulse|pcm\.c|conf\.c|confmisc|snd_|set_use_vsync|audio driver|ERR_CANT_OPEN'
 run_render() { # name script [extra args...]
   local name=$1; shift; local script=$1; shift
+  local args=("$@")
+  if [ -n "${VP_FAST:-}" ]; then
+    local found_dashdash=""
+    for a in "${args[@]}"; do [ "$a" = "--" ] && found_dashdash=1; done
+    if [ -n "$found_dashdash" ]; then
+      args+=("--fast")
+    else
+      args+=("--" "--fast")
+    fi
+  fi
   echo "=== $name  $(date -u +%H:%M:%S)" | tee -a "$LOG"
   local t0=$SECONDS
   timeout 5400 xvfb-run -a -s "-screen 0 ${RES}x24" "$GODOT" --path . \
-    --rendering-driver opengl3 --resolution ${RES} --script "$script" "$@" 2>&1 \
+    --rendering-driver opengl3 --resolution ${RES} --script "$script" "${args[@]}" 2>&1 \
     | grep -vE "$FILTER" | tail -40 >> "$LOG"
   echo "--- $name exit=${PIPESTATUS[0]} took=$((SECONDS-t0))s" | tee -a "$LOG"
 }
