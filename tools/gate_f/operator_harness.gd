@@ -3846,14 +3846,30 @@ func _step_open_menu(args: Dictionary, step_id: String) -> String:
 func _step_close_menu(args: Dictionary, step_id: String) -> String:
 	var control := str(args.get("control", "menu_cancel"))
 	var before := str(_probe.call("input_context"))
-	var sent := await _inject(control, HOLD_TAP)
-	if not bool(sent.get("ok", false)):
-		return "HARNESS-ERROR %s" % str(sent.get("why", ""))
-	await _settle_until(func() -> bool: return not str(_probe.call("input_context")).begins_with("menu"))
-	var after := str(_probe.call("input_context"))
-	if after.begins_with("menu"):
-		return "FAIL %s left the shell open: context %s -> %s" % [control, before, after]
-	return "%s closed the shell: context %s -> %s" % [control, before, after]
+	# Retried (added 2026-09-02), same reason `equip_tool` retries a hotbar
+	# press instead of trusting one: measured directly on S03's feed sequence,
+	# a `menu_cancel` here can land in a frame the shell is not actually
+	# reading it in (a sub-mode ending the same frame -- `tab_backpack.gd`'s
+	# `_end_targeting()`/`_end_confirm()`/`_end_held()` all restore grid focus
+	# synchronously, but not every one-frame window in between is guaranteed
+	# open to a fresh press) and reports "left the shell open" even though a
+	# SECOND press moments later closes it cleanly. A real player facing an
+	# unresponsive first B press just presses it again.
+	var max_attempts := maxi(1, int(args.get("max_attempts", 3)))
+	var after := before
+	for attempt in max_attempts:
+		var sent := await _inject(control, HOLD_TAP)
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		await _settle_until(func() -> bool: return not str(_probe.call("input_context")).begins_with("menu"))
+		after = str(_probe.call("input_context"))
+		if not after.begins_with("menu"):
+			if attempt > 0:
+				return "%s closed the shell on press %d: context %s -> %s" % [
+					control, attempt + 1, before, after]
+			return "%s closed the shell: context %s -> %s" % [control, before, after]
+	return "FAIL %s left the shell open after %d press(es): context %s -> %s" % [
+		control, max_attempts, before, after]
 
 
 # --- dialogue (GF-B-002 primitive 2 / CD-3) ----------------------------------

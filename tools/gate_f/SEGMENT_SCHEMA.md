@@ -373,7 +373,7 @@ does for it.
 | Action | Args | Does |
 |---|---|---|
 | `open_menu` | `tab` (optional), `control` (optional) | Presses the bound action — `game_menu`, or the tab's own shortcut from `data/config/menu.json`'s `shortcuts` map. Never calls `game_menu.gd::open()`: calling `open()` proves `open()` works and nothing about whether the button reaches it. FAILs if the input context did not become a `menu*` one. |
-| `close_menu` | `control` (default `menu_cancel`) | The same, in reverse. FAILs if the shell is still open. |
+| `close_menu` | `control` (default `menu_cancel`), `max_attempts` (default 3) | The same, in reverse. Retries up to `max_attempts` presses (added 2026-09-02: measured on S03's feed sequence, a `menu_cancel` can land in a frame a UI sub-mode's own synchronous cleanup has not actually opened back up to a fresh press, and reports the shell still open even though a second press moments later closes it cleanly — the same shape `equip_tool` retries a hotbar press for). FAILs only if the shell is still open after every attempt. |
 
 ### Evidence
 
