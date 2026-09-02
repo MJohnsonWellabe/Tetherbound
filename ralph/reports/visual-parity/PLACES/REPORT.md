@@ -1504,3 +1504,36 @@ rather than assumed.
    hypothesis.
 2. **Courtyard night 3 m disc** — median 5.82 vs ≥ 20.
 3. Sentry legibility at the new `gate-face` stand — unjudged.
+
+## R9.8 The pale panel: a second hypothesis tested and rejected
+
+After round 9 was pushed, the originally-stalled Warrens agent delivered a different and better-argued
+identification: not the mouth chamber's **wall** (round 9's guess) but its **ceiling** slab — the one
+ceiling in the cave that sits over open air at the doorway, every other being buried, carrying the same
+unconditional `_material(_rock(), 0, true)` near-white lerp and never touched by any wall or dressing
+round. It even reconstructed the `standing` camera and projected the slab to screen (0.92, 0.40), inside
+the reported box.
+
+**Tested it. It is also wrong.** With that edit applied and `smoke_warrens` passing:
+
+| measure | before | after |
+|---|---|---|
+| tight panel block luminance | 113.6 | **113.7** |
+| panel region px > 8 | — | **1.5 %** |
+| whole frame px > 8 | — | 1.7 % |
+
+Both figures are under the 5 % delivery threshold, i.e. no change. **The edit was reverted** rather than
+kept: it modifies interior-built geometry, which the owner has ruled untouchable, and it demonstrably
+buys nothing. Carrying unproven edits forward is how this lane accumulated three "fixed" claims for one
+defect.
+
+**Status: the pale panel is unidentified after two structured attempts.** What is now excluded: the mouth
+chamber's `-z` wall, the mouth chamber's ceiling, and the entrance brow/jamb dressing (which did change,
+25.7 %). What is established: large, flat, hard rectangular edges, speckled stone texture, brightest block
+luminance ~145 with std ~13, byte-stable across rounds 7, 8 and 9, and no node in the `BurrowWarrens`
+subtree projects into that screen region.
+
+Both attempts used *forward* projection — take a node, compute where it lands. That method has now
+produced two confident wrong answers. The next attempt should invert it: **ray-cast from the `04-warrens`
+`standing` camera through screen (0.80, 0.42) and report what the ray actually hits**, world-wide rather
+than within the site. If the hit belongs to another lane's files, it should be reported, not edited here.
