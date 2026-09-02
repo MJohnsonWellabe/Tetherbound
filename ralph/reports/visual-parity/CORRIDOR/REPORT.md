@@ -750,3 +750,21 @@ anchor touched there either) show no structural difference.
 
 Not committed, same convention as every round:
 `computed 825717 placements (3802 drained) across 11 layers`.
+
+---
+
+## Status at handoff, round 4
+
+Pushed to `claude/vp-corridor` — this commit adds no config/code changes,
+only this note, and is deliberately **not** `[skip ci]` so CI validates the
+branch (`tools/_capture_corridor.gd`'s new stations,
+`data/config/bands/band4_upper_meadows_ironwood/vegetation.json`'s first
+`layer_anchors`) before it is next merged.
+
+The corridor now covers all 16 stations, village edge to the Hall gate.
+Rounds: 1 (`f1d74889`), 2 (`d8aa35b6`), round-2 addendum (`ccfd57d5` +
+`e3ee39ec`), round 3 (`bb7c39e0` + `dd74ce6c` + `21b21bb7`), round 4
+(`43defff6` step 1, `fb27f52d` step 2). All 16 stations currently read as
+composed; the two capture-tool bugs found this pass (station 05's/12's
+gully-seat risk, `--only=`'s comma-list support) are both fixed and this
+round's station 12 was sited to avoid the same trap from the start.
