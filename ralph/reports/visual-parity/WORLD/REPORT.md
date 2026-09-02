@@ -379,3 +379,145 @@ frame's top edge, with no visible crisp disc edge inside the mass — roughly 18
 the ~12.3° the `sun_glow_falloff=120` config comment predicts. Better than the old fixed
 27° halo, but golden still reads as a soft light mass rather than a disc with a glow.
 Golden wants a tighter falloff than 120.0.
+
+---
+
+# Round 2
+
+Branch `claude/vp-world`. Perf table is the program coordinator's this round, by
+their instruction — not attempted here.
+
+## Values changed
+
+| file | key | old → new | why |
+|---|---|---|---|
+| `data/config/vegetation.json` | `trees`/`grove`/`saplings`/`bushes` `retexture_adjust` | **removed** | the runtime adjust path never worked, twice over (below) |
+| | those layers' `retexture` swap targets | → `derived/Leaves_NormalTree_C_desat55.png` (bushes: `_b100`) | baked offline instead |
+| | `variant_retint` | unchanged | still supplies the three tints |
+| new assets | `assets/environment/stylized_nature/derived/*.png` | *(new)* | brightness 1.05/1.00, saturation 0.55 |
+| `data/config/art.json` | `sky.sun_glow_falloff` | 200.0 → 600.0 | halo 9.5° → 5.5° |
+| | `sky.sun_glow` | 0.12 → **held at 0.12** | see *the stale-value correction* |
+| | `sky.cloud_edge_softness` | 0.06 → 0.10 | edges read blotchy at larger cloud size |
+| | `times.golden.sky.sun_glow_falloff` | 120.0 → 350.0 | halo 12.3° → 7.2° |
+| | `times.golden.sky.sun_disc_edge` | *(inherited 0.75)* → 0.7 | crisp modest disc |
+| | `times.night.sky.sun_glow_falloff` | *(none)* → 80.0 | moon needs a WIDE ~15° halo |
+| | `times.night.sky.sun_glow` | 0.05 → 0.12 | moon had no glow at all |
+| | `times.dawn.environment.exposure` | 0.8 → 0.55 | dominant cause of the red wash |
+| | `times.dawn.environment.fog_density` | 0.0009 → 0.0006 | secondary contributor |
+| `tools/_capture_locations.gd` | `02-mill-pond-approach` `back`/`up` | 7.0/3.2 → 13.0/9.2 | stand was inside a canopy |
+
+## The canopy fix — VERIFIED
+
+The runtime adjustment path failed for **two independent, separately confirmed**
+reasons, which is why two prior attempts did not move it:
+
+1. `vegetation.gd:615` called `image.adjust_bsc(...)`. **No such Godot method** —
+   the engine's is `adjust_bcs`. The render log carried `SCRIPT ERROR: Invalid
+   call. Nonexistent function 'adjust_bsc' in base 'Image'` eight times, once per
+   call. The desaturation had never executed, not once, since it was written.
+2. The derived `ImageTexture` has an empty `resource_path` and is dropped through
+   the `PackedScene` → `Terrain3DMeshAsset` round-trip. `take_over_path()` did not
+   fix it (pale-mint stayed at 0.93% against a 0.06% baseline).
+
+Baking offline sidesteps both: the derived sheets are ordinary imported textures
+with real paths, bound through the existing `retexture` swap
+(`vegetation.gd:688`, `albedo_texture = load(swap)`).
+
+All four adjusting layers resolve to **one** source texture,
+`Leaves_NormalTree_C.png` — confirmed by reading each model's
+`pbrMetallicRoughness.baseColorTexture` out of the `.gltf`, not guessed from
+filenames. TwistedTree and CherryBlossom already swap to it before any adjust ran.
+
+The bake matches the engine exactly: `Image::adjust_bcs` centres saturation on the
+plain arithmetic mean `(r+g+b)/3`, **not** luma weights (verified against
+`core/io/image.cpp` — my own instruction to the subagent said luma weights and was
+wrong; it checked and overrode me).
+
+- mean RGB 86.3/121.8/**0.0** → 82.6/103.1/**32.8**; blue max 0.0 → 80.3
+- mean HSV saturation 0.984 → 0.671; alpha byte-for-byte identical
+
+The zero blue channel was the whole problem: no multiply tint can desaturate a
+texel whose blue is 0, which is why two rounds of `variant_retint` still rendered
+fluorescent lime.
+
+**Verified in frame.** `02-mill-pond-approach-day` — the stand the judge could not
+read — now shows genuine deep and mid greens with visible per-tree tint variation,
+45.0% green pixels against 0.60% pale-mint, with the mill and pond legible behind.
+
+## The stale-value correction (worth propagating)
+
+The round-2 fix list said `sky.sun_glow` 0.35 → 0.25, intending to **dim** the
+glow. The file's actual base was already **0.12**, so applying the literal target
+would have **more than doubled** the glow's brightness — on the exact defect the
+round was fixing. Held at 0.12. If the sun now reads too dim rather than too
+broad, the faithful reading of the intended ratio is 0.12 × (0.25/0.35) ≈ 0.086,
+i.e. dimmer still.
+
+This is the second round where a prescribed value described a state the branch was
+not in (round 1's aerial values were already satisfied). Checking the tip before
+writing the list would save a round-trip.
+
+## Dawn red wash — diagnosis
+
+Dominant cause is `environment.exposure` at **0.8**, the highest of the three
+sunlit presets (day 0.6, golden 0.65) despite dawn having the **lowest**
+`sun.energy` (0.9) and the most saturated `sun.colour` (`#ffc3a0`). Exposure
+multiplies every HDR pixel uniformly regardless of depth or view direction — the
+only lever that can reach sky, far terrain **and** near ground alike, which is what
+"uniform red-orange including the near field" requires. Under this project's ACES
+tonemap an overexposed warm scene plateaus toward a saturated warm colour rather
+than clipping to white, matching the measurement exactly.
+
+The two-stand discrepancy (03 at R−G +96.8, 01 at −1.4) is framing, not config:
+`03-rise-overlook` is an elevated 15 m, ~275 m open vista with far more sunlit
+content to push into the plateau.
+
+Ruled out on evidence, not merely discounted:
+- `aerial_perspective` (0.8) — `ralph/DONE.md`'s EV8 entry records it as having no
+  measurable effect under `gl_compatibility`, which `project.godot` still uses.
+- a tonemap/adjustment leak from `night` — `_merged()` layers only base plus the one
+  named preset and never chains.
+
+## Golden's cool cast — NOT an inheritance bug
+
+Golden explicitly overrides both `sky.horizon_colour` and `environment.fog_colour`
+to a matching warm `#e8b784`; it is not silently taking the cool base `#b4c8cc`.
+Remaining contributors, all deliberate or out of scope: golden's cool
+`ambient_colour` `#8f9ec4`, its cool `cloud_shade`/`cloud_base`, and — the biggest
+suspect for a vista shot — the terrain's constant `aerial_fade_colour` `#aebcc4`.
+
+**That last one remains this area's top structural defect** (raised at the end of
+round 1, unaddressed): the terrain's aerial perspective colour never varies with
+time of day, while the sky's fog and horizon do. It makes the horizon glow at
+midnight and stay cold at golden hour.
+
+## Frames
+
+`ralph/reports/visual-parity/WORLD/round2/`:
+- `locations/` — 15 frames, village + mill-pond, day and night, 960×540.
+- `_sheet_locations.png` — contact sheet.
+
+Pale-mint on `01-village-standing` (1.83%) and `02-mill-pond-standing` (1.96%) is
+**bright sky and cloud**, not canopy — those stands frame open sky and pale walls,
+and the metric's 190–245 band catches both. Confirmed by eye on the approach frame,
+where the same metric reads 0.60% with visibly green trees.
+
+## Verified vs not
+
+| item | status |
+|---|---|
+| canopy leaf bake + swap | **VERIFIED in frame** (green canopies, tint variation) |
+| mill-pond camera lift | **VERIFIED** (mill and pond legible) |
+| cloud edge softness | visible in frame, soft edges, no blotching |
+| sun halo 600/350 | **NOT verified** — needs a frame with the sun in view |
+| moon glow (night falloff 80) | **NOT verified** — needs a night stand aimed at the moon |
+| dawn exposure 0.55 | **NOT verified** — needs a dawn stand |
+| tests / smokes | **NOT run** |
+
+## Render economics, again
+
+`tools/vp_capture.sh` launches a **separate Godot per tool**, and each pays the full
+world build — locations alone took 2137 s. Combined with the mandatory ~7 min
+scatter re-bake after any `vegetation.json` edit, a full capture set does not fit a
+75-minute budget on this GPU-less box. Batching everything a round needs into ONE
+world build, as round 1's stands render did, is the only approach that fits.
