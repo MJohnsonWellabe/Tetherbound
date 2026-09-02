@@ -212,6 +212,11 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### 16:31 UTC — WORLD round 8 judged: sun disc PROVEN, dawn far plain one-shot dispatched
+
+- `WORLD/JUDGE-round8.md`: (1) sun disc PROVEN — 01-golden bright core 12.41 % → 2.41 % of frame height, 03-golden 4.81 % → 1.30 %, golden mood statistically unchanged, moon halo 9.8 % → 2.4 % as a bonus; (2) dawn ground PARTIAL — near-camera ground fixed (03 foreground R−G 15.5 → 7.3, 01 hillside 31.5 → 25.7) but the mid/far plain at 03-rise-overlook-dawn is still orange (R−G 69.1 → 58.8) and now out-saturates its own sky (58.8 vs 33.9). No regressions across nine stands. Score 6.5/10 for sky/light vs the reference.
+- Coordinator diagnosis: the far plain is not the key light (fixed) but the distance fade — `art.json times.dawn` `fog_colour`/`horizon_colour` #e8b784 and the dawn `aerial_fade_colour` are a saturated orange-tan, so everything past ~150 m fades toward orange. **One shot dispatched 16:36** (owner rule): dawn fog/horizon → low-saturation pink-grey (~#d8bfb8, kept identical per the file's EV8 seam rule) and aerial ~#b9a4a2; proof = far-ground crop R−G ≤ 30 and below the sky crop's, sky saturation ≥ 0.25, no horizon seam (step ≤ 25). If it fails: revert, record as visual ceiling. WORLD then continues the VP10 draw-call pass and archives.
+
 ### Check-in #25 (16:22–16:30 UTC) — WORLD r8 delivered + merged; CORRIDOR r8 judged + merged, r9 (final) running; PLACES r10 running on the Fable decisions
 
 - **WORLD round 8** (`81d6ccbf`, 9 stands, art.json only) — coordinator's read of the r7→r8 sheet: 03-rise-overlook-dawn no longer washes the terrain orange (ground back to tan/ochre with cool rocks, sky still pink-gold); golden stands keep the mood with no blown disc; night stands unchanged (2.6–6.4 % px). Pixel diffs r7→r8: dawn overlook 29 %, others 4–11 %. **MERGED** (no bake inputs). Code-blind judge running (`WORLD/JUDGE-round8.md`); WORLD continues to the VP10 draw-call pass in the same session, then archives.
