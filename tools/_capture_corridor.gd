@@ -75,7 +75,23 @@ const UP := 2.4
 ## Landmark identity checked against each band's own `props.json` cluster
 ## centroids and `terrain_playground.json`'s own `crossings[]`/site entries
 ## (never guessed):
-##   09 (-110,3290): band3 pt1, the first bend entering the River Lock.
+##   09 (-30,4060): ROUND-6 ADDENDUM re-site, band3 pt9 (was pt1, -110,3290).
+##     JUDGE-b3b5-before.md and JUDGE-round5.md both named the same defect
+##     twice: this station is called "river-lock-entry" and showed no water.
+##     Checked directly: `data/config/terrain_playground.json`'s `river.course`
+##     (the actual carved geometry -- water.json's own `river` block is
+##     presentation only, colour/flow/reeds, and carries no course of its
+##     own) runs z 4080-4222 across the corridor's FULL x span (-1024 to
+##     1021, per the block's own OW5C comment), so any station in that
+##     z-band sees water regardless of x; the original pt1 (z=3290) sits
+##     ~800m short of it, a gap no anchor can close. Moved to pt9, inside the
+##     river's own z-band, looking at pt10 (-152,4170) where the Old Mill
+##     Crossing narrows sit -- the water is not just reachable but the actual
+##     crossing point.
+##     Breaks this pass's own "in walked order" station numbering (09 now
+##     sits geographically between what were stations 10/11 and 12) --
+##     accepted deliberately, disclosed in the report, because showing the
+##     water this station is named for outweighs numbering purity.
 ##   10 (230,3670): band3 pt5, matching `relay_approach_checkpoint`'s own
 ##     centroid (240.9,3673.7) to within 13m.
 ##   11 (350,3760): band3 pt6, exactly `tether_relay.json`'s site centre.
@@ -102,13 +118,13 @@ const STATIONS := [
 	["05-south-bridge",    Vector2(9.0, 1300.0),   Vector2(8.0, 1338.0)],
 	["06-stone-root-entry",Vector2(310.0, 1660.0), Vector2(400.0, 1800.0)],
 	["07-band2-mid",       Vector2(20.0, 2130.0),  Vector2(-150.0, 2210.0)],
-	["08-band2-far",       Vector2(-420.0, 2470.0),Vector2(-330.0, 2630.0)],
+	["08-band2-far",       Vector2(-422.5, 2469.7),Vector2(-330.0, 2630.0)],
 	["09-river-lock-entry",Vector2(-110.0, 3290.0),Vector2(-160.0, 3420.0)],
 	["10-relay-approach",  Vector2(230.0, 3670.0), Vector2(350.0, 3760.0)],
 	["11-relay",           Vector2(350.0, 3760.0), Vector2(280.0, 3900.0)],
 	["12-old-mill-crossing",Vector2(-152.0, 4170.0),Vector2(-152.0, 4235.0)],
 	["13-band4-entry-bend",Vector2(-300.0, 4990.0),Vector2(-420.0, 5140.0)],
-	["14-ridge-camp-approach",Vector2(-280.0, 6460.0),Vector2(-235.9, 6471.7)],
+	["14-ridge-camp-approach",Vector2(-280.0, 6460.0),Vector2(-242.7, 6470.2)],
 	["15-stronghold-approach",Vector2(80.0, 7370.0),Vector2(20.0, 7480.0)],
 	["16-hall-gate-approach",Vector2(20.0, 7480.0), Vector2(0.0, 7560.0)],
 ]
@@ -287,6 +303,39 @@ func _hide_huds() -> void:
 			(node as CanvasLayer).visible = false
 
 
+## ROUND 7 (JUDGE-round6.md): station 14's own tents/fire were re-sited off
+## the trail-vertex look because the coordinator's judging pipeline reported
+## a regression they could not see for themselves -- this prints hard proof
+## instead of another eyeballed claim. `ridge_patrol_camp`'s own props.json
+## entries for the fire (Bonfire_Fire, -233.9,6473.7) and tent (camp_tent,
+## -238.3,6473.6) are unprojected through the SAME camera transform the PNG
+## was captured from, so "inside_frame" here is exactly what the saved image
+## shows, not a separate geometric estimate.
+func _proof_camp_in_fov(name: String) -> void:
+	if name != "14-ridge-camp-approach":
+		return
+	# `get_visible_rect().size` does NOT match the saved PNG's own dimensions
+	# (found the hard way: it reported 1282/1298 as "inside" a supposed 1280
+	# wide frame) -- `root.size` is the actual render-target resolution the
+	# capture is saved from, so that is what "inside" is checked against here.
+	var viewport_size := Vector2(root.size)
+	var camera_viewport := _camera.get_viewport()
+	print("  [14 proof] root.size=%s camera.get_viewport()=%s same_as_root=%s vp_size=%s" % [
+		root.size, camera_viewport, camera_viewport == root, camera_viewport.size])
+	var probes := [["fire", Vector2(-233.9, 6473.7)], ["tent", Vector2(-238.3, 6473.6)]]
+	for probe: Array in probes:
+		var label: String = str(probe[0])
+		var spot: Vector2 = probe[1]
+		var world_pos := Vector3(spot.x, _surface(spot) + 1.0, spot.y)
+		var behind := _camera.is_position_behind(world_pos)
+		var screen := _camera.unproject_position(world_pos)
+		var inside := not behind and screen.x >= 0.0 and screen.x <= viewport_size.x \
+			and screen.y >= 0.0 and screen.y <= viewport_size.y
+		print("  [14 proof] %-4s world(%.1f,%.1f,%.1f) screen(%.0f,%.0f) of frame(%.0f,%.0f) behind=%s inside_frame=%s" % [
+			label, world_pos.x, world_pos.y, world_pos.z, screen.x, screen.y,
+			viewport_size.x, viewport_size.y, behind, inside])
+
+
 func _shoot(shot: Array) -> void:
 	var name: String = str(shot[0])
 	var eye: Vector2 = shot[1]
@@ -312,6 +361,7 @@ func _shoot(shot: Array) -> void:
 	_frame(back, _surface(back), target, _surface(target))
 	for i in _frames(POSE_FRAMES):
 		await process_frame
+	_proof_camp_in_fov(name)
 	await RenderingServer.frame_post_draw
 
 	var image := root.get_texture().get_image()

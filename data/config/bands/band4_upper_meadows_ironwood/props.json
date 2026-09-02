@@ -5,16 +5,17 @@
       "order": 4000,
       "name": "ridge_patrol_camp",
       "_why": "GATE-D4/prompt 65: spec Band 4 names 'ruined watch/occupation traces' and 'Team Tether patrol camps' among the region's regional identity and this band had zero prop clusters authored at package start. Sited on the watchtower spur beside the new patrol trainer (trainers.json order 4000) and 46m from captain_ridge -- the garrison the trainer belongs to, read the same way `old_quarry.gd`'s `quarry_station` and `ranger_camp` clusters read their own sites: a posting left mid-shift, not a stage set. Same prop family both of those already use (D24, one prop family) -- nothing here is new. A crate and barrel for supply, a bag and rope for gear, a whetstone for the same reason the quarry crew left one, and the axe standing in for a Team Tether tool rather than a mining one: the composition differs by what a patrol carries, not by a new mesh.",
+      "_why_r7": "VP4-CORRIDOR round 7 (JUDGE-round6.md / time-boxed dispatch). Three real-rendered camera candidates from the walked pt11->pt15 segment (eye=pt13/pt12/pt11, look held at pt15 or at the fire's own exact coordinate) all failed to show the camp: unproject_position() and a direct crop of the saved PNG both agreed the fire/tent never appear, even when the camera looks directly at the fire's own coordinate at 45m from the closest trail point (pt14) -- a result that was not fully diagnosed within this round's time-box (a `get_viewport()` identity check was queued but not completed). Rather than keep spending the round's remaining budget on that mystery, applied the coordinator's own explicit fallback: 'move the camp's dressing anchor... 5-10m toward the route... a legitimate corridor fix'. Every prop below (rest/craft_at/creature_bed included) shifted by the same rigid (dx=-6.83, dz=-1.52) -- 7m toward pt14 along the pt14->old-centroid bearing -- preserving the whole camp's internal layout exactly. `clearings[4000]` and the round-4/7 rock-shelf anchor in this band's vegetation.json move with it.",
       "_why_vp5": "VP5 visual-parity pass. This is the Upper Meadows' only authored camp, and it was built as five props strung along the ruin wall in a straight line with the fire off to one side -- legible as a supply drop, not as a camp. The supply pile now sits together W-SW of the fire, seating is arranged tangentially on both sides of it (the stool moved, a log seat added), firewood was added radial to the fire, and the whetstone -- the patrol's own grindstone -- sits south where the pile used to trail off in a line. The cluster also gains this band's only `rest` block: a named `rest` site the player could not previously use.",
       "rest": {
         "_why": "VP5. `ridge_patrol_camp` is the only authored camp in Upper Meadows and, until now, could not be rested at -- every other camp cluster in the chapter (band1's trail_camp, band3's riverwatch_rest and the_waystop, band4's own highfield_stockcamp) carries a `rest` block and this one did not. Sited 2.0m SE of the fire, in the open SE quarter clear of the supply pile (W-SW), the tent (west, against the ruin) and both seats, the same clearance geometry `camp.gd` and `rest_point.gd` use at every other camp. `bed_index: -16` is the next free reserved index -- the chapter's other four beds already hold -11 through -15 -- and `scripts/world/rest_point.gd` builds this exactly like those four: same mechanic, same `night_rest.gd` call, no second rest system.",
-        "at": [-232.3, 6473.7],
+        "at": [-239.13, 6472.18],
         "radius": 3.2,
         "label": "Rest until morning",
-        "craft_at": [-231.2, 6476.6],
+        "craft_at": [-238.03, 6475.08],
         "creature_bed": {
           "_why": "The bed sits in the open SE quarter of the camp, clear of the fire, both seats, the supply pile and the tent -- its own quarter the way `highfield_stockcamp`'s bed keeps its own quarter on the far side of that camp's fire from its tent. `bed_index -16` is the next free reserved index after this chapter's existing -11..-15.",
-          "at": [-230.9, 6470.9],
+          "at": [-237.73, 6469.38],
           "yaw_deg": -40.0,
           "bed_index": -16
         }
@@ -22,7 +23,7 @@
       "props": [
         {
           "model": "Crate_Wooden",
-          "at": [-236.6, 6471.2],
+          "at": [-243.43, 6469.68],
           "yaw_deg": -40.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -30,7 +31,7 @@
         },
         {
           "model": "Barrel",
-          "at": [-235.9, 6470.5],
+          "at": [-242.73, 6468.98],
           "yaw_deg": 10.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -38,7 +39,7 @@
         },
         {
           "model": "Bag",
-          "at": [-237.2, 6472.1],
+          "at": [-244.03, 6470.58],
           "yaw_deg": 95.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -46,7 +47,7 @@
         },
         {
           "model": "Rope_1",
-          "at": [-237.8, 6470.9],
+          "at": [-244.63, 6469.38],
           "yaw_deg": 60.0,
           "sink_m": 0.03,
           "scale": 1.0,
@@ -54,7 +55,7 @@
         },
         {
           "model": "Whetstone",
-          "at": [-233.8, 6469.6],
+          "at": [-240.63, 6468.08],
           "yaw_deg": -15.0,
           "sink_m": 0.02,
           "scale": 1.0,
@@ -62,7 +63,7 @@
         },
         {
           "model": "Axe_Bronze",
-          "at": [-235.4, 6472.5],
+          "at": [-242.23, 6470.98],
           "yaw_deg": 70.0,
           "pitch_deg": -68.0,
           "sink_m": 0.02,
@@ -71,7 +72,7 @@
         },
         {
           "model": "Bonfire_Fire",
-          "at": [-233.9, 6473.7],
+          "at": [-240.73, 6472.18],
           "yaw_deg": -35.0,
           "sink_m": 0.02,
           "scale": 0.42,
@@ -84,7 +85,7 @@
         },
         {
           "model": "campfire_stone_ring",
-          "at": [-233.9, 6473.7],
+          "at": [-240.73, 6472.18],
           "yaw_deg": 15.0,
           "sink_m": 0.03,
           "scale": 0.85,
@@ -94,7 +95,7 @@
         },
         {
           "model": "Stool",
-          "at": [-231.9, 6475.4],
+          "at": [-238.73, 6473.88],
           "yaw_deg": 215.0,
           "sink_m": 0.03,
           "scale": 1.0,
@@ -104,7 +105,7 @@
         },
         {
           "model": "camp_tent",
-          "at": [-238.3, 6473.6],
+          "at": [-245.13, 6472.08],
           "yaw_deg": -70.0,
           "sink_m": -0.64,
           "scale": 0.85,
@@ -113,7 +114,7 @@
         },
         {
           "model": "tree-log",
-          "at": [-235.6, 6475.8],
+          "at": [-242.43, 6474.28],
           "yaw_deg": 51.0,
           "sink_m": 0.03,
           "scale": 1.15,
@@ -122,7 +123,7 @@
         },
         {
           "model": "tree-log-small",
-          "at": [-233.2, 6471.2],
+          "at": [-240.03, 6469.68],
           "yaw_deg": 164.0,
           "pitch_deg": 4.0,
           "sink_m": 0.03,
@@ -140,7 +141,7 @@
         },
         {
           "model": "Rock_Medium_2",
-          "at": [-240.6, 6466.9],
+          "at": [-247.43, 6465.38],
           "yaw_deg": 80.0,
           "sink_m": 0.02,
           "scale": 0.2,
@@ -149,7 +150,7 @@
         },
         {
           "model": "Rock_Medium_1",
-          "at": [-238.9, 6469.0],
+          "at": [-245.73, 6467.48],
           "yaw_deg": 200.0,
           "sink_m": 0.02,
           "scale": 0.16,
@@ -158,7 +159,7 @@
         },
         {
           "model": "Rock_Medium_3",
-          "at": [-236.9, 6470.9],
+          "at": [-243.73, 6469.38],
           "yaw_deg": 320.0,
           "sink_m": 0.02,
           "scale": 0.23,
