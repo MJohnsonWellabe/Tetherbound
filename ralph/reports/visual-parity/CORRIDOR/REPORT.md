@@ -920,3 +920,18 @@ Not committed, same convention as every round:
    game (Pond Circuit/River Gorge Spoke; Quarry Haul Road/Mountain Trail
    Spoke), found by the same audit that fixed station 08's pair; neither is
    in view at any VP4 station and neither was touched.
+
+---
+
+## Status at handoff, round 5
+
+Pushed to `claude/vp-corridor` — this commit adds no config/code changes,
+only this note, and is deliberately **not** `[skip ci]` so CI validates the
+branch before it is next merged.
+
+Rounds: 1 (`f1d74889`), 2 (`d8aa35b6`), round-2 addendum (`ccfd57d5` +
+`e3ee39ec`), round 3 (`bb7c39e0` + `dd74ce6c` + `21b21bb7`), round 4
+(`43defff6` + `fb27f52d` + `c0cfe62d`), round 5 (`42b12878`). Three items
+are honestly still open (station 08's signpost legibility, station 14's
+camp visibility, station 09's structurally-unreachable water) and are
+recorded above rather than papered over.
