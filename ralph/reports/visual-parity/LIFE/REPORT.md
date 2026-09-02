@@ -761,3 +761,197 @@ trusting the printed contract alone. Boot 2 fixed both and is the shipped `round
    `01`/`02`'s night frames have not improved across three rounds now.
 4. Village-life: crop/inspect at 3x (as the round-5 judge did) to confirm whether Wilhelm and the
    Quarry Foreman are actually present-but-small in this frame, or genuinely out of shot.
+
+---
+
+## Round 7 — final LIFE round: species contrast, firelight, and the lane's final state
+
+Merged `claude/coordination-subagents-3fhz1x` into `claude/vp-life` first (clean, no conflicts),
+bringing in the round-6 code-blind judge (`JUDGE-round6.md`). This is the program's last budgeted
+LIFE round.
+
+Round 6's judge, summarized: pairing frame's composition problem solved (side by side, facing the
+vista, scale gap reduced to ~1.3-1.5x); village reads occupied (2 villagers + trainer); relay-camp-
+day the best group frame yet; ridge camp still the strongest overall. Still failing: (1) 03-band1-
+open-meadow reads as zero fauna at native size — the pipwing/bramblebun bodies are the same pale
+colour as the flowers around them; (2) relay-camp-night — fire and camp props read, the creatures
+beside them do not; (3) village-edge-night's creature is only marginally legible.
+
+One boot spent (of the round's own two-boot budget); the second was deliberately not spent — see
+"Why boot 2 was not spent" below.
+
+### 1. 03-band1-open-meadow — species swap, not another camera move
+
+The round-6 judge's own finding was specific: the SAME pale cluster occupied the SAME screen
+position in both round 5 and round 6 despite a camera change, because round 6 only moved the eye —
+it never changed what was actually standing there. `species.json` itself already carries the
+evidence for the fix: mudsnout's own `field_emission` comment records a direct
+`tools/_probe_grass_separation.gd` measurement naming it the darkest small creature in the roster
+(`#6e492c`) with its brightness multiplier tuned to a real 1.06-1.15 target ratio against grass — not
+a guess, reused evidence already on file from an earlier owner directive about creatures blending
+into grass. Swapped band1 order 1002 (was pipwing, rolled from `meadows_air` — dropped the `table`
+key too, since `roll_new_worlds` is true and a roll could silently put a pale species back on a
+future world reroll) to mudsnout, and order 1072 (was bramblebun) to trailpup — a second, visually
+distinct high-contrast ground species rather than doubling up on one.
+
+**Result**: `03-band1-open-meadow-day.png` is the single biggest change in this round. Three trailpup
+stand clustered together on the right side of frame, dark grey against green grass, completely
+unmistakable as a pack of animals with no zoom needed — a full turnaround from "reads as a flowering
+shrub." The bbox contract still shows only 1 of 5 individuals passing (the others are marginally
+outside the strict height/centring bands, not a legibility problem — the trailpup are plainly
+visible even where the contract's geometry is picky), but the actual bar the round-6 judge set
+("a judge must count >= 2 animals without zooming") is now met decisively.
+
+### 2. Relay-camp-night — clusters moved inside the fire's actual glow
+
+Round 6 moved the two clusters (orders 1073/1074) to ~6.4m from `trail_camp`'s Bonfire (344,935) —
+better than round 5's 20m+, but still outside where `campfire_glow.gd`'s ~8m light range actually
+reads as bright. Moved both to 3-3.6m from the fire, one on each side (radius tightened 3.0 -> 1.3
+so the scatter can't roll a body outside the light OR into the ~1m stone fire-ring itself); order
+1074's first attempted centre turned out to be only 1m from the camp's own creature-bed prop
+(the scatter disc would have fully contained it) and was moved again once that was checked by direct
+distance math rather than assumed from round 6's own figure.
+
+**Result**: at native size, `04-relay-camp-night.png` shows the fire and, right beside it, small pale
+shapes that are difficult to confidently call "creature" without looking closely — matching the
+round's own stated bar for this specific ask ("prove by a crop plus a luminance sample," not native-
+size legibility the way the day frames require). A 3x-zoomed, brightened crop
+(`/tmp/relay_night_crop.png`, not committed — reproducible from the shipped PNG) shows two trailpup
+standing directly in the firelight, clearly resolved as animals. A luminance sample confirms it
+quantitatively: creature patch average luminance 15.8 vs. background-tree patch 1.25 — a 12.7x ratio,
+well past the round's own ">= 2x" bar. The fix measurably worked; native-size confidence is moderate,
+crop/luminance proof is strong.
+
+### 3. Village-edge-night — moved closer; no lantern available to light it instead
+
+The dispatch's suggested fix ("near the village lantern") does not apply to this specific stand — a
+direct search of `props.json` found no lit prop within 25m of this eye (21,-32)/(30,-40), and this
+lane has no moon-angle data to aim a facing change at instead. The only lever actually available was
+proximity: moved order 1070's centre from (28,-40) to (25,-36), cutting its distance to the eye from
+~10.6m to ~5.7m. Mudsnout's `field_emission` brightens the material's own albedo regardless of
+ambient light, so closer should read better at both times of day this stand shares one eye for.
+
+**Result**: one of the two mudsnout individuals now measures 3.2m from the eye and passes the bbox
+contract outright (was 0/5 passing at this stand's night frame in round 6). Visually, a pale
+quadruped shape is now clearly discernible near the trainer/rock at native size — better than round
+6's "smudge that only resolves on close crop," though still the weakest of the three night stands
+Mill-pond remains the model for this (unchanged, still the only night stand where a creature reads
+cleanly without any zoom).
+
+### Why boot 2 was not spent
+
+All three of round 6's named defects showed real, provable improvement from boot 1's fixes: 03 is
+now a clear pass by the judge's own stated bar, relay-camp-night has strong (if not native-size)
+proof, and village-edge-night went from a coin-flip smudge to a bbox-passing, visually discernible
+shape. With every available cheap lever (species contrast, proximity, firelight siting) already
+spent on this pass, a second boot's likely return was marginal polish rather than a comparable
+further jump — and this is the lane's last budgeted round, so the second boot is left unspent rather
+than gambled on speculative iteration when the first boot's results already meet the stated bars.
+
+### Frame-by-frame verdict (round 7, boot 1 = final shipped state)
+
+| frame | verdict |
+|---|---|
+| `01-village-edge-day` | **PASS** (unchanged) |
+| `01-village-edge-night` | **IMPROVED** — mudsnout now closer, one individual passes the bbox contract, visually discernible (was marginal) |
+| `02-mill-pond-banks-day/night` | **PASS** / **PASS** (unchanged; night remains the model) |
+| `03-band1-open-meadow-day` | **PASS, decisively** — 3 trailpup unmistakable at native size (was: reads as a flowering shrub) |
+| `04-relay-camp-day` | **PASS** (unchanged) |
+| `04-relay-camp-night` | **IMPROVED, proven by crop/luminance** — 12.7x creature-vs-background luminance ratio; native-size confidence moderate |
+| `05-ridge-camp-day` | **PASS** (unchanged, still the strongest single frame) |
+| `00-village-life-day` | **PASS** (unchanged; 2 villagers + trainer legible) |
+| `06-starter-beside-trainer-day` | **VISUALLY PASS** (unchanged from round 6 — side by side, facing the vista, ~1.3-1.5x scale gap); contract FAIL for the same narrow-margin reason documented in round 6, not touched this round |
+
+### Tests, run on the branch tip after all round-7 changes
+
+| test | result |
+|---|---|
+| `tests/smoke_wild_streaming.gd` | **PASS** |
+| `tests/smoke_catching.gd` | **PASS** |
+| `tests/test_spawns_data.gd` | **PASS** (31 tests, 2677 assertions, 0 failed, run together with test_band_content.gd) |
+| `tests/test_band_content.gd` | **PASS** (same run) |
+
+### Boot budget
+
+One boot spent (of a two-boot budget); the second deliberately left unspent — see "Why boot 2 was
+not spent" above. A second, aborted boot attempt (launched before `tools/_capture_life.gd`'s
+`OUT_DIR` constant was updated to `round7`, so it would have written into a stale `round6` path) was
+caught and killed before any frames were produced or any budget was actually consumed by it.
+
+---
+
+## Final state (LIFE lane, VP9 "World Life")
+
+Seven rounds. Round 5's course correction remains the operating principle for every round since:
+**the deliverable is the game's own real population, never a staged one.** `tools/_capture_life.gd`
+spawns nothing for a shot; it positions the eye (with a raycast/sphere clearance sweep) and a camera
+pulled back from it, lets the world's own encounter streaming settle, and reports what is actually
+there. The only staged path (`--staged`) is a diagnostic never used for the deliverable since round
+4. The pairing frame uses the real party path — `CreatureSpecies.spawn()` -> `Game.party.add()` ->
+`EncounterDirector.summon_active_creature()` — the same calls the party screen's own "send this one
+out" flow makes.
+
+### Per-stand final state
+
+| stand | day | night | population source |
+|---|---|---|---|
+| 01-village-edge | PASS | improved, moderate | band1 order 0 (bramblebun, pinned/protected — see its own history) + order 1070 (mudsnout) |
+| 02-mill-pond-banks | PASS | PASS (best night stand) | band1 order 6 (paddlenewt). Second species (order 1071) removed by the program coordinator's own CI fix after it broke Creek Hollow's protected pocket — not replaced this round; see round 5/6's own reconciliation note |
+| 03-band1-open-meadow | PASS, decisive | n/a (day-only stand) | band1 order 1002 (mudsnout) + order 1072 (trailpup) |
+| 04-relay-camp | PASS | improved, proven by crop/luminance | band1 order 1073 (bramblebun) + order 1074 (trailpup) |
+| 05-ridge-camp | PASS, strongest overall | n/a (day-only stand) | band4 order 4076 + order 4102 |
+| 00-village-life | PASS | n/a (day-only stand) | existing VillageNPCs (Bram/Wilhelm/Quarry Foreman targeted; village_npcs.json itself never edited — see round 6's own owner-directive note on village crowding) |
+| 06-starter-beside-trainer (pairing) | visually PASS, contract fails on a narrow, understood scale margin | n/a | real party-grant/summon path, terrapup |
+
+### Known limitations, stated plainly
+
+- **Night is the weakest dimension overall.** Only mill-pond-night reads a creature cleanly without
+  any zoom; village-edge-night and relay-camp-night both required a crop or proximity fix to read at
+  all, and neither reaches mill-pond's own bar. No moon-angle/lighting-system investigation was ever
+  done in this lane — every night fix was a siting/species change, not a lighting one, because this
+  lane's own scope was the capture tool and spawn data, not shaders or light scripts.
+- **The pairing frame's ~1.3-1.5x scale gap is real and unresolved.** The composition itself (side by
+  side, facing the vista, both fully in frame) is solved as of round 6; the trainer/starter apparent-
+  size ratio was never closed because the two actors' `species.json`-declared sizes don't leave a
+  distance where both simultaneously satisfy the same height-fraction band — a species-data or
+  contract-tolerance question, not a camera one, and out of this round's remaining budget.
+- **Model/animation fidelity is unaddressed and out of scope.** The round-6 judge's own bar-question
+  answers named this directly: blocky low-poly silhouettes and flat toon shading versus Palworld's
+  reference bar, and the total absence of any action/combat framing (every shipped frame is a static
+  "standing near" shot). Not fixable by camera or spawn-data changes; needs asset/animation work this
+  lane never had scope for.
+- **Species diversity was traded for legibility at 03.** Both of that stand's clusters are now
+  ground-type quadrupeds (mudsnout, trailpup) chosen specifically for grass contrast; the original
+  air/ground pairing (pipwing/bramblebun) is gone from this specific stand. `pipwing` and `bramblebun`
+  both still spawn elsewhere in band1 (order 0's own pinned bramblebun cluster among them) — this
+  stand's own population changed, not the species' presence in the world.
+- **Mill-pond's second species is unresolved.** Order 1071 (mosshell) was removed by the program
+  coordinator's own CI fix (it broke Creek Hollow's protected pocket) and never replaced; the shipped
+  round5/round6 PNGs for that stand predate the removal and are not reproducible from current data.
+  A fix exists and is documented (site a new cluster outside Creek Hollow's rect, or retune orders
+  6/7 via the fixture-mirror rule) but was not this round's priority given the three named defects.
+
+### Villager-walk-loop — scope estimate (restated from round 6, not implemented)
+
+Per the round-6 and round-7 dispatches, scoped only:
+
+- `scripts/npc/npc_body.gd` is a `StaticBody3D` collider placed once by `stand_at()` and never moved
+  again; `_process()` only turns the body to face a nearby player. No movement method exists. A
+  walker needs a new method (~20-30 lines) and a small per-frame driver. Moving a `StaticBody3D`
+  every frame works in Godot but is not the physics server's optimized case — an acceptable but real
+  cost for 2-3 short loops.
+- `scripts/world/village_npcs.gd::_spawn()` reads `position`/`facing_deg` once at build time. A
+  patrol needs a new `patrol` field read here and a small controller handed to the NPC body
+  (~15-25 more lines).
+- `data/config/village_npcs.json` would gain `patrol` arrays for 2-3 villagers, hand-verified along
+  the WHOLE walked segment (not just its endpoints) with an extension to
+  `tools/_probe_civilian_placement.gd`, since a straight line between two clear points can still clip
+  a fence corner partway through.
+- **The real unknown**: pausing movement during an active greeting. `Interactable`'s prompt already
+  follows the body's transform automatically (low risk), but nothing in this investigation confirmed
+  whether the dialogue/`sequence_director` system exposes "a conversation with me is active" as a
+  simple query an NPC body could read, or whether that needs new plumbing. This is what decides
+  whether the feature is a half-day task or crosses into new subsystem territory — not resolved this
+  round, and not implementable without resolving it first.
+- **Estimate**: small-to-moderate, roughly 60-100 new lines across the two scripts plus 2-3 JSON
+  entries and a probe-tool extension, contingent on the dialogue-pause question above.
