@@ -1,40 +1,64 @@
 extends SceneTree
 
-## VP9 FOURTH SLICE. Round 3's own code-blind verdict: mill-pond fixed (two
-## turtles legible) and relay-camp-day is a real legible group at last, but
-## 01/03/05 regressed to camera-occluded close-ups (frame filled edge-to-edge
-## by a staged creature's own head/ear -- 05 was round 2's BEST frame and is
-## now texture noise), the mill-pond blob is STILL there beside the fixed
-## turtles (a different body than paddlenewt), night still shows almost
-## nothing at 01/04, and the pairing frame finally has a starter in it but it
-## fills the frame while the trainer is a cropped corner figure.
+## VP9 FIFTH SLICE -- COURSE CORRECTION. Rounds 3-4 staged wild creatures
+## directly via `EncounterDirector.spawn_wild()` purely for the shutter. The
+## owner's own VP9 brief already said not to do this: "do not fake life only
+## for screenshots. The visible population and the real gameplay population
+## must agree." Round 5 drops staging as the deliverable path entirely.
 ##
-## Round 4 makes composition a MEASURED CONTRACT instead of a distance guess:
-## every staged body's actual on-screen bounding box (all 8 AABB corners
-## projected and scaled into real image pixels, per the coordinator's own fix
-## for round 3's viewport-scale bug) must land fully inside the frame with a
-## margin and occupy a legible-but-not-clipping height fraction, or the stand
-## re-rolls its positions (up to 5 attempts) before saving. The near-clip
-## regression (01/03/05) was ungated distance in round 3 -- SPAWN
-## rejects/repositions any body closer than max(6m, 4x its own AABB longest
-## axis), which needed a live measurement per species rather than a shared
-## flat 5-10m band (a burrowback's footprint is not a pipwing's).
+## What this file does now:
+##  1. Every stand's eye is positioned (with `_clear_eye()`'s raycast/sphere
+##     clearance sweep, round 5's own fix for "the eye is inside static
+##     rock"), the world is given time to stream/activate nearby clusters,
+##     and NOTHING is hidden or spawned for the shot. The frame shows
+##     whatever the game's own `spawns.json` population actually puts there.
+##  2. The tool REPORTS which wild bodies are within 30m of the eye, their
+##     species, and their measured on-screen bbox (pass/fail against the
+##     same contract round 4/5 built) -- evidence of what supplied the
+##     frame, not a claim about it.
+##  3. Legibility is now entirely a DATA problem: `data/config/bands/*/
+##     spawns.json` gained new authored clusters this round so a 2-species,
+##     3-5-individual group actually stands 8-14m from each stand's own eye
+##     -- see each new cluster's own `_why_vp9_r5` comment for the id and
+##     distance. The tool does not move or invent population.
+##  4. The pairing frame uses the REAL summon path: `CreatureSpecies.spawn()`
+##     + `Game.party.add()` + `EncounterDirector.summon_active_creature()`
+##     -- the same three calls the party screen's own "send this one out"
+##     flow makes -- not `spawn_wild()`.
+##  5. One additional village-life frame reports the existing authored
+##     villager NPCs from the standing point `_capture_locations.gd` already
+##     uses for its own "01-village standing" shot.
+##
+## Round 4's staged-composition code is KEPT, gated behind `--staged`
+## (default off) as a diagnostic only -- never the deliverable. It answers
+## "can a body be framed legibly at all" for tuning field_emission/placement
+## in the data; it is not evidence about what a player actually sees.
+##
+## ROUND 5 ADDENDUM (bbox measurement): round 4's own code-blind judge found
+## 5 of 9 frames had a body pressed against the lens at 40-100% of frame
+## height while this tool's measurement reported ~10% and PASS. Root cause:
+## every creature (and the player) is a skinned, animated mesh, and
+## `VisualInstance3D.get_aabb()` on a skinned mesh reports the imported
+## BIND-POSE AABB, not the live posed extent. `_creature_global_aabb()` now
+## measures from the species' own DECLARED size (`species.json` height/
+## radius/footprint_allowance -- the same numbers `creature_body.gd::_fit()`
+## builds the collider from) instead of walking mesh geometry; the trainer
+## measures from its own COLLISION capsule (never skinned) rather than a
+## mesh walk, preferring a direct, non-hitbox-named `CollisionShape3D`.
+## `_save_diag()` draws the projected rect from the SAME `_screen_rect()`
+## the pass/fail verdict uses onto one real frame, the visual proof asked
+## for before any contract result was allowed to count.
 ##
 ##   xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x800 \
-##     --script tools/_capture_life.gd
+##     --script tools/_capture_life.gd [-- --staged] [-- --only=stands|starter|village]
 ##
-## VP_FAST=1 halves the settle budget.
-##
-## BUDGET: max two world boots this round (coordinator instruction). This
-## file renders every day+night stand in one process (`--only=stands`) and
-## the pairing frame in a second (`--only=starter`) -- the 5-reroll retry
-## loop below happens WITHIN a single boot's process time and does not count
-## against that cap.
+## VP_FAST=1 halves the settle budget. BUDGET: max two world boots.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/visual-parity/LIFE/round4"
+const OUT_DIR := "res://ralph/reports/visual-parity/LIFE/round5"
 
 const BOOT_FRAMES := 90
 const SETTLE_FRAMES := 60
@@ -43,37 +67,50 @@ const REPOSITION_SETTLE := 10
 const POSE_FRAMES := 4
 const FOV := 70.0
 
-## Bbox contract, per the coordinator's round-4 spec.
+## Bbox contract.
 const MARGIN_FRAC := 0.03
 const GROUP_MIN_H := 0.08
 const GROUP_MAX_H := 0.45
+const GROUP_WIDTH_CENTRAL := 0.8
 const PAIR_MIN_H := 0.25
 const PAIR_MAX_H := 0.45
 const MAX_REROLLS := 5
+const REPORT_RADIUS := 30.0
 
-## Same confirmed-clear eyes rounds 2-3 already proved geometry-free
-## backgrounds for; round 4 changes ONLY how staged bodies are placed and
-## measured in front of them.
+## Five evidence stands. `eye`/`facing_toward` are round 2-3's own
+## confirmed-clear camera geometry. Round 5 adds `_why_vp9_r5`-tagged
+## clusters in the band spawns.json files so the REAL population reads a
+## 2-species group from these eyes -- see each stand's cluster reference.
 const STANDS := [
 	{"id": "01-village-edge", "night": true,
 	 "eye": [21.0, -32.0], "facing_toward": [30.0, -40.0],
-	 "group": [{"species": "bramblebun", "count": 2}, {"species": "mudsnout", "count": 2}],
-	 "night_group": [{"species": "bramblebun", "count": 2}, {"species": "mudsnout", "count": 2}]},
+	 "cluster_note": "band1 order 0 (bramblebun, existing) + order 1070 (mudsnout, new)"},
 	{"id": "02-mill-pond-banks", "night": true,
 	 "eye": [-386.0, 520.0], "facing_toward": [-378.0, 528.0],
-	 "group": [{"species": "mosshell", "count": 2}, {"species": "paddlenewt", "count": 1}],
-	 "night_group": [{"species": "mosshell", "count": 2}, {"species": "paddlenewt", "count": 1}]},
+	 "cluster_note": "band1 order 6 (paddlenewt, existing) + order 1071 (mosshell, new)"},
 	{"id": "03-band1-open-meadow", "night": false,
 	 "eye": [-6.0, 700.0], "facing_toward": [-20.0, 700.0],
-	 "group": [{"species": "pipwing", "count": 2}, {"species": "bramblebun", "count": 2}]},
+	 "cluster_note": "band1 order 1002 (pipwing, existing) + order 1072 (bramblebun, new)"},
 	{"id": "04-relay-camp", "night": true,
 	 "eye": [332.0, 932.0], "facing_toward": [321.0, 928.5],
-	 "group": [{"species": "bramblebun", "count": 2}, {"species": "trailpup", "count": 2}],
-	 "night_group": [{"species": "bramblebun", "count": 2}, {"species": "duskhush", "count": 2}]},
+	 "cluster_note": "band1 order 1073 (bramblebun, new) + order 1074 (trailpup, new)",
+	 "night_eye": [330.0, 940.0], "night_facing_toward": [345.6, 935.4]},
 	{"id": "05-ridge-camp", "night": false,
 	 "eye": [-250.0, 6458.0], "facing_toward": [-260.9, 6451.7],
-	 "group": [{"species": "burrowback", "count": 2}, {"species": "trailpup", "count": 2}]},
+	 "cluster_note": "band4 order 4076 (burrowback, existing) + order 4102 (trailpup, new)"},
 ]
+
+## Staged-diagnostic-only groups (see file header). Never the deliverable.
+const STAGED_GROUPS := {
+	"01-village-edge": {"day": [{"species": "bramblebun", "count": 2}, {"species": "mudsnout", "count": 2}],
+		"night": [{"species": "bramblebun", "count": 2}, {"species": "mudsnout", "count": 2}]},
+	"02-mill-pond-banks": {"day": [{"species": "mosshell", "count": 2}, {"species": "paddlenewt", "count": 1}],
+		"night": [{"species": "mosshell", "count": 2}, {"species": "paddlenewt", "count": 1}]},
+	"03-band1-open-meadow": {"day": [{"species": "pipwing", "count": 2}, {"species": "bramblebun", "count": 2}]},
+	"04-relay-camp": {"day": [{"species": "bramblebun", "count": 2}, {"species": "trailpup", "count": 2}],
+		"night": [{"species": "bramblebun", "count": 2}, {"species": "duskhush", "count": 2}]},
+	"05-ridge-camp": {"day": [{"species": "burrowback", "count": 2}, {"species": "trailpup", "count": 2}]},
+}
 
 var _field: RefCounted = null
 var _world: Node = null
@@ -85,6 +122,7 @@ var _director: Node = null
 var _written: int = 0
 var _failures: int = 0
 var _rng := RandomNumberGenerator.new()
+var _staged_mode := false
 
 static var _fast_mode: bool = false
 
@@ -103,9 +141,13 @@ func _run() -> void:
 		quit(1)
 		return
 
-	_fast_mode = "--fast" in OS.get_cmdline_user_args() or OS.get_environment("VP_FAST") == "1"
+	var args := OS.get_cmdline_user_args()
+	_fast_mode = "--fast" in args or OS.get_environment("VP_FAST") == "1"
+	_staged_mode = "--staged" in args
 	if _fast_mode:
 		print("[fast] iteration mode: settle halved, msaa off")
+	if _staged_mode:
+		print("[staged] DIAGNOSTIC mode -- staged bodies, never the deliverable")
 	_rng.seed = 20260902
 
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
@@ -149,7 +191,7 @@ func _run() -> void:
 		return
 
 	var only := ""
-	for arg: String in OS.get_cmdline_user_args():
+	for arg: String in args:
 		if arg.begins_with("--only="):
 			only = arg.substr(7).strip_edges()
 
@@ -163,6 +205,10 @@ func _run() -> void:
 			var stand: Dictionary = entry as Dictionary
 			if bool(stand.get("night", false)):
 				await _shoot_stand(stand, "night")
+
+	if only == "" or only == "village":
+		await _pin("day")
+		await _shoot_village()
 
 	if only == "" or only == "starter":
 		await _pin("day")
@@ -193,228 +239,121 @@ func _pin(time: String) -> void:
 	print("[life] clock pinned to %s and frozen" % time)
 
 
-## Stage the stand's group under the bbox contract, print the mill-pond-style
-## nearby-wild diagnostic, hide any UNSTAGED wild body near the eye (this is
-## round 4's fix for "the mill-pond blob is a different body than the
-## paddlenewt you fixed" -- rather than guess which species it is, remove
-## whatever it is from the frame, and the diagnostic print names it either
-## way), shoot, then report the contract's own pass/fail per creature.
+## THE DELIVERABLE PATH: position the eye, let the world's own population
+## stream in, hide/spawn nothing, report what is actually there. Falls back
+## to the round-4 staged-diagnostic path only under `--staged`.
 func _shoot_stand(stand: Dictionary, suffix: String) -> void:
-	var id: String = str(stand["id"])
-	var eyeArr: Array = stand["eye"] as Array
-	var towardArr: Array = stand["facing_toward"] as Array
-	var eye := Vector2(float(eyeArr[0]), float(eyeArr[1]))
-	var toward := Vector2(float(towardArr[0]), float(towardArr[1]))
-	var facing := (toward - eye).normalized()
-	var side := Vector2(-facing.y, facing.x)
+	if _staged_mode:
+		await _shoot_stand_staged_diagnostic(stand, suffix)
+		return
 
+	var id: String = str(stand["id"])
+	var is_night := suffix == "night"
+	var eyeArr: Array = (stand["night_eye"] as Array) if (is_night and stand.has("night_eye")) else (stand["eye"] as Array)
+	var towardArr: Array = (stand["night_facing_toward"] as Array) if (is_night and stand.has("night_facing_toward")) else (stand["facing_toward"] as Array)
+	var eye_raw := Vector2(float(eyeArr[0]), float(eyeArr[1]))
+	var toward := Vector2(float(towardArr[0]), float(towardArr[1]))
+	var eye := _clear_eye(eye_raw, toward, "%s-%s" % [id, suffix])
 	var ground := _surface(eye)
 	_place(eye, ground)
-	_frame(eye, ground, eye + facing, ground)
+	_frame(eye, ground, toward, ground)
 	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
+	# Let encounter streaming activate/settle whatever the world's own
+	# population near this eye is doing -- no spawn, no hide.
+	for i in _frames(SETTLE_FRAMES):
+		await physics_frame
 
-	var is_night := suffix == "night"
-	var min_depth := 6.0 if is_night else 9.0
-	var max_depth := 8.0 if is_night else 12.0
-	var lateral_range := 2.0 if is_night else 3.0
-
-	var spec: Array = (stand["night_group"] as Array) if (is_night and stand.has("night_group")) else (stand["group"] as Array)
-	var eye3 := Vector3(eye.x, ground, eye.y)
-	print("  [%s-%s] nearby wild bodies within 30m of the eye (identifying any stray glow subject):" % [id, suffix])
-	_report_nearby_wild(eye3, 30.0)
-
-	var spawned: Array[Node3D] = []
-	var lane := 0
-	var total := 0
-	for entry: Variant in spec:
-		total += int((entry as Dictionary)["count"])
-	for entry: Variant in spec:
-		var g: Dictionary = entry as Dictionary
-		var species: String = str(g["species"])
-		for n in int(g["count"]):
-			var t := (float(lane) + 1.0) / float(total + 1)
-			var lateral := lerpf(-lateral_range, lateral_range, t)
-			var wild := await _stage_creature(
-				"%s_%s_%s_%d" % [id.replace("-", "_"), suffix, species, n],
-				species, eye, facing, side, min_depth, max_depth, lateral)
-			if wild != null:
-				spawned.append(wild)
-			lane += 1
-
-	_desync(spawned)
-	_hide_unstaged_nearby(eye3, 25.0, spawned)
 	_hide_huds()
-	_frame(eye, ground, eye + facing, ground)
+	_frame(eye, ground, toward, ground)
 	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
 
+	var eye3 := Vector3(eye.x, ground, eye.y)
+	print("  [%s-%s] cluster reference: %s" % [id, suffix, str(stand.get("cluster_note", "(none noted)"))])
+	print("  [%s-%s] real wild bodies within %.0fm of the eye:" % [id, suffix, REPORT_RADIUS])
 	var pass_count := 0
-	for wild in spawned:
-		if not is_instance_valid(wild):
-			continue
-		var chk := _bbox_check(_creature_global_aabb(wild), GROUP_MIN_H, GROUP_MAX_H)
-		print("    %-40s height_frac=%.2f -> %s (%s)" % [
-			wild.name, float(chk["height_frac"]), "PASS" if bool(chk["pass"]) else "FAIL", str(chk["reason"])])
-		if bool(chk["pass"]):
-			pass_count += 1
+	var total_count := 0
+	var species_seen: Dictionary = {}
+	if _director != null and _director.has_method("wild_creatures"):
+		for w: Variant in _director.call("wild_creatures"):
+			var body := w as Node3D
+			if body == null or not is_instance_valid(body):
+				continue
+			var d := body.global_position.distance_to(eye3)
+			if d > REPORT_RADIUS:
+				continue
+			total_count += 1
+			var sid := str(body.get("species_id"))
+			var chk := _bbox_check(_creature_global_aabb(body), GROUP_MIN_H, GROUP_MAX_H, GROUP_WIDTH_CENTRAL)
+			print("    %-30s species=%-12s dist=%5.1fm height_frac=%.2f -> %s (%s)" % [
+				body.name, sid, d, float(chk["height_frac"]), "PASS" if bool(chk["pass"]) else "FAIL", str(chk["reason"])])
+			if bool(chk["pass"]):
+				pass_count += 1
+				species_seen[sid] = true
+
+	if id == "01-village-edge" and suffix == "day" and total_count > 0:
+		var diag_aabbs: Array = []
+		for w: Variant in _director.call("wild_creatures"):
+			var body := w as Node3D
+			if body != null and is_instance_valid(body) and body.global_position.distance_to(eye3) <= REPORT_RADIUS:
+				diag_aabbs.append(_creature_global_aabb(body))
+		_save_diag("%s-%s" % [id, suffix], diag_aabbs)
 
 	_save("%s-%s" % [id, suffix])
-	print("  %-24s %-5s %d/%d staged creatures pass the bbox contract" % [
-		id, suffix, pass_count, spawned.size()])
-
-	for wild in spawned:
-		if is_instance_valid(wild):
-			wild.queue_free()
-	_restore_hidden()
-	await process_frame
+	print("  %-24s %-5s %d/%d real wild bodies pass the bbox contract, %d distinct species" % [
+		id, suffix, pass_count, total_count, species_seen.size()])
+	if total_count == 0:
+		print("  WARN %s-%s: no wild body registered within %.0fm at all" % [id, suffix, REPORT_RADIUS])
 
 
-## Spawn `species`, measure its ACTUAL global AABB (bodies vary hugely --
-## Burrowback's footprint is not Pipwing's), then place it at a depth/lateral
-## offset from `eye` along `facing`/`side` such that it clears BOTH the
-## near-clip floor (max(6m, 4x its own AABB longest axis) -- round 3's
-## regression on 01/03/05 was exactly a body inside this floor) and the bbox
-## contract (fully in frame with margin, height 8-45%). Re-rolls the depth/
-## lateral offset up to MAX_REROLLS times against the LIVE contract check
-## before giving up and keeping the last attempt.
-func _stage_creature(name: String, species: String, eye: Vector2, facing: Vector2, side: Vector2,
-		min_depth: float, max_depth: float, lateral: float) -> Node3D:
-	# Spawn far out of frame first, purely to measure the model's own AABB --
-	# translation does not change its size, so this measurement is valid at
-	# any later position after a yaw that stays the same.
-	var temp2 := eye + facing * 80.0
-	var temp3 := Vector3(temp2.x, _surface(temp2), temp2.y)
-	var wild: Node3D = _director.call("spawn_wild", species, temp3, {
-		"name": "Shot_%s" % name,
-		"wander_radius": 0.0,
-	}) as Node3D
-	if wild == null:
-		print("    FAIL %s: spawn_wild('%s') returned null" % [name, species])
-		return null
-	wild.rotation.y = atan2(facing.x, facing.y)
-	for i in range(2):
-		await process_frame
-
-	var measured := _creature_global_aabb(wild)
-	var longest := maxf(measured.size.x, maxf(measured.size.y, measured.size.z))
-	var floor_dist := maxf(6.0, 4.0 * longest)
-	var base_depth := clampf((min_depth + max_depth) * 0.5, floor_dist, maxf(floor_dist, max_depth))
-	print("    %-40s AABB size=%s longest=%.2fm near-clip-floor=%.1fm base_depth=%.1fm" % [
-		name, measured.size, longest, floor_dist, base_depth])
-
-	var attempt := 0
-	var chk: Dictionary = {}
-	while attempt <= MAX_REROLLS:
-		var depth := base_depth if attempt == 0 else maxf(floor_dist, base_depth + _rng.randf_range(-2.0, 3.0))
-		var lat := lateral if attempt == 0 else lateral + _rng.randf_range(-1.2, 1.2)
-		var pos2 := eye + facing * depth + side * lat
-		var pos3 := Vector3(pos2.x, _surface(pos2), pos2.y)
-		wild.global_position = pos3
-		wild.rotation.y = atan2(facing.x, facing.y)
-		for i in _frames(REPOSITION_SETTLE):
-			await physics_frame
-		var aabb := _creature_global_aabb(wild)
-		chk = _bbox_check(aabb, GROUP_MIN_H, GROUP_MAX_H)
-		print("      attempt=%d depth=%.1f lat=%.1f height_frac=%.2f -> %s (%s)" % [
-			attempt, depth, lat, float(chk["height_frac"]), "PASS" if bool(chk["pass"]) else "FAIL", str(chk["reason"])])
-		if bool(chk["pass"]):
-			break
-		attempt += 1
-
-	for i in _frames(SETTLE_FRAMES / (MAX_REROLLS + 1)):
+## The one extra ask: an existing-population frame at the village's own
+## standing point (`_capture_locations.gd`'s own '01-village standing' eye),
+## reporting the authored villager NPCs actually there.
+func _shoot_village() -> void:
+	var eye_raw := Vector2(10.0, -15.5)
+	var toward := Vector2(3.0, 1.0)
+	var eye := _clear_eye(eye_raw, toward, "00-village-life")
+	var ground := _surface(eye)
+	_place(eye, ground)
+	_frame(eye, ground, toward, ground)
+	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
-	return wild
+	for i in _frames(SETTLE_FRAMES):
+		await physics_frame
+	_hide_huds()
+	_frame(eye, ground, toward, ground)
+	for i in _frames(POSE_FRAMES):
+		await process_frame
+	await RenderingServer.frame_post_draw
 
-
-## Randomise each creature's own AnimationPlayer position so a group does not
-## share one identical, synchronised pose -- round 2's own named defect,
-## still true in round 3.
-func _desync(bodies: Array[Node3D]) -> void:
-	for body in bodies:
-		if not is_instance_valid(body):
+	var eye3 := Vector3(eye.x, ground, eye.y)
+	var count := 0
+	print("  [00-village-life] existing villager NPCs within 40m of the eye:")
+	for container_name: String in ["VillageNPCs", "Trainers"]:
+		var container: Node = _world.get_node_or_null(NodePath(container_name))
+		if container == null:
 			continue
-		body.rotation.y = _rng.randf_range(0.0, TAU)
-		for player in body.find_children("*", "AnimationPlayer", true, false):
-			var ap := player as AnimationPlayer
-			var current := ap.current_animation
-			if current == "":
-				var list := ap.get_animation_list()
-				if list.size() > 0:
-					current = list[0]
-					ap.play(current)
-			if current != "":
-				var anim := ap.get_animation(current)
-				if anim != null and anim.length > 0.05:
-					ap.seek(_rng.randf_range(0.0, anim.length), true)
+		for child in container.get_children():
+			var body := child as Node3D
+			if body == null or not is_instance_valid(body):
+				continue
+			var d := body.global_position.distance_to(eye3)
+			if d <= 40.0:
+				count += 1
+				print("    %-30s dist=%5.1fm" % [body.name, d])
+
+	_save("00-village-life-day")
+	print("  00-village-life         day   %d villager NPC(s) within 40m" % count)
+	if count == 0:
+		print("  WARN 00-village-life: no villager NPC registered within 40m")
 
 
-## Every wild body (the world's OWN authored population, not just what this
-## tool staged) within `radius` of the eye, printed with its species id --
-## the round-4 brief's own "identify the body" ask for the mill-pond blob,
-## generalised to every stand since the same class of stray un-staged
-## creature could sit near any of them.
-func _report_nearby_wild(eye3: Vector3, radius: float) -> void:
-	if _director == null or not _director.has_method("wild_creatures"):
-		return
-	for w: Variant in _director.call("wild_creatures"):
-		var body := w as Node3D
-		if body == null or not is_instance_valid(body):
-			continue
-		var d := body.global_position.distance_to(eye3)
-		if d <= radius:
-			var sid: Variant = body.get("species_id")
-			print("      [nearby] %-30s species=%-14s dist=%.1fm" % [
-				body.name, str(sid) if sid != null else "?", d])
-
-
-var _hidden: Array[Node3D] = []
-
-
-## The mill-pond fix: rather than guess which species the "still there"
-## glowing blob is, remove every UNSTAGED wild body near the eye from the
-## rendered frame outright. `_report_nearby_wild()` above already names it in
-## the log either way, satisfying the identification ask without betting the
-## fix on a guess.
-func _hide_unstaged_nearby(eye3: Vector3, radius: float, staged: Array[Node3D]) -> void:
-	if _director == null or not _director.has_method("wild_creatures"):
-		return
-	for w: Variant in _director.call("wild_creatures"):
-		var body := w as Node3D
-		if body == null or not is_instance_valid(body):
-			continue
-		if staged.has(body):
-			continue
-		if body.global_position.distance_to(eye3) <= radius:
-			print("      hiding unstaged %s (species=%s) for this shot" % [body.name, str(body.get("species_id"))])
-			body.visible = false
-			_hidden.append(body)
-
-
-func _restore_hidden() -> void:
-	for body in _hidden:
-		if is_instance_valid(body):
-			body.visible = true
-	_hidden.clear()
-
-
-## Pairing shot. Trainer at `base`; the starter stands `gap` metres CLOSER
-## to the camera than the trainer (round 4's explicit "creature on the
-## camera side of the trainer" -- not lateral side-by-side, which round 2
-## tried and round 3's rewrite already moved away from). `gap` is 1.0m, not
-## the brief's literal "2 m apart": Terrapup (2.3m) is taller than the
-## trainer (1.8m) and closer to the lens, so height in frame grows on BOTH
-## counts at once. Solving the two bbox-height constraints together (trainer
-## needs camera distance in roughly [2.9,5.1]m for 25-45% height at this
-## FOV; Terrapup needs roughly [3.7,6.6]m; camera distance to trainer is
-## (eye-to-midpoint)+gap/2) has NO solution at gap=2m -- trainer would need
-## to stand 5.65m+ from camera while its own contract caps it at ~5.1m. At
-## gap=1.0m the window opens: trainer ~5.0m, Terrapup ~4.0m, both inside
-## their own bands, and camera-to-midpoint lands at ~4.5m, matching the
-## brief's own number. The live bbox check re-verifies this per render
-## rather than trusting the arithmetic; a reroll adjusts the overall camera
-## distance if the estimate is off.
+## THE PAIRING FRAME, real party path: `CreatureSpecies.spawn()` + `Game.
+## party.add()` + `EncounterDirector.summon_active_creature()` -- the same
+## three calls the party screen's own "send this one out first" flow makes,
+## not `spawn_wild()`. gap=2m per the brief, back swept monotonically 4-7m.
 func _shoot_pairing() -> void:
 	var candidates: Array[Vector2] = [
 		Vector2(70.0, -70.0), Vector2(85.0, -55.0), Vector2(55.0, -85.0),
@@ -422,8 +361,8 @@ func _shoot_pairing() -> void:
 		Vector2(21.0, -32.0), Vector2(29.0, -34.0), Vector2(13.0, -30.0),
 	]
 	var facing_bearing := Vector2(1.0, -1.0).normalized()
-	var gap := 1.0
-	var base_back := 4.5
+	var gap := 2.0
+	var base_back := 5.0
 	var chosen := Vector2.ZERO
 	var found := false
 	for base: Vector2 in candidates:
@@ -455,18 +394,47 @@ func _shoot_pairing() -> void:
 	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
 
-	var spot2 := base - facing * gap
-	var spot := Vector3(spot2.x, _surface(spot2), spot2.y)
-	var wild: Node3D = _director.call("spawn_wild", "terrapup", spot, {
-		"name": "Shot_starter_terrapup",
-		"wander_radius": 0.0,
-	}) as Node3D
-	if wild == null:
-		print("  FAIL starter-beside-trainer: spawn_wild returned null")
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		print("  FAIL starter-beside-trainer: no /root/Game autoload")
 		_failures += 1
 		return
-	wild.rotation.y = atan2(facing.x, facing.y)
+	var party: RefCounted = game.get("party")
+	if party == null:
+		print("  FAIL starter-beside-trainer: Game.party is null")
+		_failures += 1
+		return
+	var starter: RefCounted = SPECIES.spawn("terrapup")
+	if starter == null:
+		print("  FAIL starter-beside-trainer: CreatureSpecies.spawn('terrapup') returned null")
+		_failures += 1
+		return
+	if not bool(party.call("add", starter)):
+		print("  FAIL starter-beside-trainer: Game.party.add(starter) returned false")
+		_failures += 1
+		return
+	print("  [pairing] granted terrapup to Game.party via the real add() path")
+	var summoned: bool = await _director.call("summon_active_creature")
+	if not summoned:
+		print("  FAIL starter-beside-trainer: summon_active_creature() returned false")
+		_failures += 1
+		return
+	var wild: Node3D = _director.call("ally_body")
+	if wild == null:
+		print("  FAIL starter-beside-trainer: ally_body() returned null after a successful summon")
+		_failures += 1
+		return
+	print("  [pairing] summoned via EncounterDirector.summon_active_creature() -- real party path")
+
+	# The follower's own AI walks it toward the player; give it a moment,
+	# then re-seat both bodies at the framed spot for a stable shot rather
+	# than fighting its live pathing every attempt.
 	for i in _frames(SETTLE_FRAMES):
+		await physics_frame
+	var spot2 := base - facing * gap
+	wild.global_position = Vector3(spot2.x, _surface(spot2), spot2.y)
+	wild.rotation.y = atan2(facing.x, facing.y)
+	for i in _frames(REPOSITION_SETTLE):
 		await physics_frame
 
 	var attempt := 0
@@ -474,7 +442,7 @@ func _shoot_pairing() -> void:
 	var creature_chk: Dictionary = {}
 	var ok := false
 	while attempt <= MAX_REROLLS:
-		var back := base_back if attempt == 0 else maxf(2.5, base_back + _rng.randf_range(-1.5, 1.5))
+		var back := lerpf(4.0, 7.0, float(attempt) / float(MAX_REROLLS))
 		var mid := (base + spot2) * 0.5
 		var camEye2 := mid - facing * back
 		var camGround := _surface(camEye2)
@@ -487,7 +455,7 @@ func _shoot_pairing() -> void:
 			await process_frame
 		await RenderingServer.frame_post_draw
 
-		var trainer_aabb := _player_aabb(_player)
+		var trainer_aabb := _player_visible_aabb(_player)
 		var creature_aabb := _creature_global_aabb(wild)
 		trainer_chk = _bbox_check(trainer_aabb, PAIR_MIN_H, PAIR_MAX_H)
 		creature_chk = _bbox_check(creature_aabb, PAIR_MIN_H, PAIR_MAX_H)
@@ -504,40 +472,251 @@ func _shoot_pairing() -> void:
 		base.x, base.y, spot2.x, spot2.y, "PASS" if ok else "FAIL"])
 	if not ok:
 		_failures += 1
-	wild.queue_free()
 	await process_frame
 
 
-## The player has no MeshInstance3D of its own visible in this rig (the
-## capture camera never attaches to the player's own visual root the way the
-## in-game third-person camera would necessarily reveal it), so its AABB is
-## approximated from its collision shape height/radius -- a CharacterBody3D's
-## own CollisionShape3D -- rather than walked for meshes the way a creature's
-## is. Falls back to a fixed human-scale box on the player's own position if
-## no collision shape is found.
+## ---- Round 4 staged-composition path, KEPT AS A DIAGNOSTIC ONLY (--staged).
+## Never the deliverable -- see file header. ----
+
+func _shoot_stand_staged_diagnostic(stand: Dictionary, suffix: String) -> void:
+	var id: String = str(stand["id"])
+	var is_night := suffix == "night"
+	var eyeArr: Array = (stand["night_eye"] as Array) if (is_night and stand.has("night_eye")) else (stand["eye"] as Array)
+	var towardArr: Array = (stand["night_facing_toward"] as Array) if (is_night and stand.has("night_facing_toward")) else (stand["facing_toward"] as Array)
+	var eye_raw := Vector2(float(eyeArr[0]), float(eyeArr[1]))
+	var toward := Vector2(float(towardArr[0]), float(towardArr[1]))
+	var eye := _clear_eye(eye_raw, toward, "%s-%s [staged]" % [id, suffix])
+	var facing := (toward - eye).normalized()
+	var side := Vector2(-facing.y, facing.x)
+
+	var ground := _surface(eye)
+	_place(eye, ground)
+	_frame(eye, ground, eye + facing, ground)
+	for i in _frames(ARRIVE_FRAMES):
+		await physics_frame
+
+	var min_depth := 6.0 if is_night else 9.0
+	var max_depth := 8.0 if is_night else 12.0
+	var lateral_range := 2.0 if is_night else 3.0
+
+	var groups: Dictionary = STAGED_GROUPS.get(id, {})
+	var spec: Array = groups.get(suffix, []) as Array
+	if spec.is_empty():
+		print("  [staged] %s-%s: no staged group defined for this suffix, skipping" % [id, suffix])
+		return
+
+	var spawned: Array[Node3D] = []
+	var lane := 0
+	var total := 0
+	for entry: Variant in spec:
+		total += int((entry as Dictionary)["count"])
+	for entry: Variant in spec:
+		var g: Dictionary = entry as Dictionary
+		var species: String = str(g["species"])
+		for n in int(g["count"]):
+			var t := (float(lane) + 1.0) / float(total + 1)
+			var lateral := lerpf(-lateral_range, lateral_range, t)
+			var wild := await _stage_creature(
+				"%s_%s_%s_%d" % [id.replace("-", "_"), suffix, species, n],
+				species, eye, facing, side, min_depth, max_depth, lateral)
+			if wild != null:
+				spawned.append(wild)
+			lane += 1
+
+	_desync(spawned)
+	_hide_huds()
+	_frame(eye, ground, eye + facing, ground)
+	for i in _frames(POSE_FRAMES):
+		await process_frame
+	await RenderingServer.frame_post_draw
+
+	var pass_count := 0
+	for wild in spawned:
+		if not is_instance_valid(wild):
+			continue
+		var chk := _bbox_check(_creature_global_aabb(wild), GROUP_MIN_H, GROUP_MAX_H, GROUP_WIDTH_CENTRAL)
+		print("    %-40s height_frac=%.2f -> %s (%s)" % [
+			wild.name, float(chk["height_frac"]), "PASS" if bool(chk["pass"]) else "FAIL", str(chk["reason"])])
+		if bool(chk["pass"]):
+			pass_count += 1
+
+	_save("%s-%s-STAGED" % [id, suffix])
+	print("  %-24s %-5s [staged] %d/%d pass the bbox contract" % [id, suffix, pass_count, spawned.size()])
+
+	for wild in spawned:
+		if is_instance_valid(wild):
+			wild.queue_free()
+	await process_frame
+
+
+func _stage_creature(name: String, species: String, eye: Vector2, facing: Vector2, side: Vector2,
+		min_depth: float, max_depth: float, lateral: float) -> Node3D:
+	var temp2 := eye + facing * 80.0
+	var temp3 := Vector3(temp2.x, _surface(temp2), temp2.y)
+	var wild: Node3D = _director.call("spawn_wild", species, temp3, {
+		"name": "Shot_%s" % name,
+		"wander_radius": 0.0,
+	}) as Node3D
+	if wild == null:
+		print("    FAIL %s: spawn_wild('%s') returned null" % [name, species])
+		return null
+	wild.rotation.y = atan2(facing.x, facing.y)
+	for i in range(2):
+		await process_frame
+
+	var measured := _creature_global_aabb(wild)
+	var longest := maxf(measured.size.x, maxf(measured.size.y, measured.size.z))
+	var floor_dist := maxf(3.5, 4.0 * longest)
+	var base_depth := clampf((min_depth + max_depth) * 0.5, floor_dist, maxf(floor_dist, max_depth))
+	print("    %-40s AABB size=%s longest=%.2fm near-clip-floor=%.1fm base_depth=%.1fm" % [
+		name, measured.size, longest, floor_dist, base_depth])
+
+	var attempt := 0
+	var chk: Dictionary = {}
+	while attempt <= MAX_REROLLS:
+		var depth := base_depth if attempt == 0 else lerpf(floor_dist, maxf(floor_dist, max_depth), _rng.randf())
+		var lat := lateral if attempt == 0 else lateral + _rng.randf_range(-1.2, 1.2)
+		var pos2 := eye + facing * depth + side * lat
+		var pos3 := Vector3(pos2.x, _surface(pos2), pos2.y)
+		wild.global_position = pos3
+		wild.rotation.y = atan2(facing.x, facing.y)
+		for i in _frames(REPOSITION_SETTLE):
+			await physics_frame
+		var aabb := _creature_global_aabb(wild)
+		chk = _bbox_check(aabb, GROUP_MIN_H, GROUP_MAX_H, GROUP_WIDTH_CENTRAL)
+		print("      attempt=%d depth=%.1f lat=%.1f height_frac=%.2f -> %s (%s)" % [
+			attempt, depth, lat, float(chk["height_frac"]), "PASS" if bool(chk["pass"]) else "FAIL", str(chk["reason"])])
+		if bool(chk["pass"]):
+			break
+		attempt += 1
+
+	for i in _frames(SETTLE_FRAMES / (MAX_REROLLS + 1)):
+		await physics_frame
+	return wild
+
+
+func _desync(bodies: Array[Node3D]) -> void:
+	for body in bodies:
+		if not is_instance_valid(body):
+			continue
+		body.rotation.y = _rng.randf_range(0.0, TAU)
+		for player in body.find_children("*", "AnimationPlayer", true, false):
+			var ap := player as AnimationPlayer
+			var current := ap.current_animation
+			if current == "":
+				var list := ap.get_animation_list()
+				if list.size() > 0:
+					current = list[0]
+					ap.play(current)
+			if current != "":
+				var anim := ap.get_animation(current)
+				if anim != null and anim.length > 0.05:
+					ap.seek(_rng.randf_range(0.0, anim.length), true)
+
+
+## ---- Shared geometry/measurement helpers ----
+
+func _clear_eye(intended: Vector2, look_toward: Vector2, label: String) -> Vector2:
+	var dir2 := (look_toward - intended)
+	if dir2.length() < 0.01:
+		print("    [%s] eye == look target; cannot derive a sightline, using eye as-is" % label)
+		return intended
+	dir2 = dir2.normalized()
+	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state
+	var candidate := intended
+	for attempt in range(5):
+		var ground := _surface(candidate)
+		var eye3 := Vector3(candidate.x, ground + 1.6, candidate.y)
+		var dir3 := Vector3(dir2.x, 0.0, dir2.y)
+		var blocked := false
+		var blocker_name := ""
+		var blocked_at := 0.0
+		if space != null:
+			var t := 0.3
+			while t <= 3.0:
+				var p := eye3 + dir3 * t
+				var shape := SphereShape3D.new()
+				shape.radius = 0.5
+				var query := PhysicsShapeQueryParameters3D.new()
+				query.shape = shape
+				query.transform = Transform3D(Basis(), p)
+				query.collide_with_bodies = true
+				query.collide_with_areas = false
+				for hit: Dictionary in space.intersect_shape(query, 4):
+					var body: Node = hit.get("collider") as Node
+					if body != null and not _under_terrain(body):
+						blocked = true
+						blocker_name = body.name
+						blocked_at = t
+						break
+				if blocked:
+					break
+				t += 0.5
+		if not blocked:
+			print("    [%s] eye (%.1f,%.1f) clear for the first 3m of its sightline (attempt %d)" % [
+				label, candidate.x, candidate.y, attempt])
+			return candidate
+		print("    [%s] eye (%.1f,%.1f) blocked by %s at %.1fm along sightline; retreating" % [
+			label, candidate.x, candidate.y, blocker_name, blocked_at])
+		candidate -= dir2 * 2.0
+	print("    [%s] WARN eye clearance unresolved after 5 attempts; using (%.1f,%.1f)" % [
+		label, candidate.x, candidate.y])
+	return candidate
+
+
+func _player_visible_aabb(body: Node3D) -> AABB:
+	var direct: Array = []
+	for child in body.get_children():
+		if child is CollisionShape3D:
+			direct.append(child)
+	var candidates: Array = direct if not direct.is_empty() else body.find_children("*", "CollisionShape3D", true, false)
+	var best: CollisionShape3D = null
+	var best_height := -1.0
+	for c in candidates:
+		var cs := c as CollisionShape3D
+		if cs == null or cs.shape == null:
+			continue
+		var lname := String(cs.name).to_lower()
+		if lname.contains("hitbox") or lname.contains("trigger") or lname.contains("interaction"):
+			continue
+		var h := 1.8
+		if cs.shape is CapsuleShape3D:
+			h = (cs.shape as CapsuleShape3D).height
+		elif cs.shape is BoxShape3D:
+			h = (cs.shape as BoxShape3D).size.y
+		if h > best_height:
+			best_height = h
+			best = cs
+	if best == null:
+		print("    WARN no usable CollisionShape3D found under the player; using a fixed human-scale box")
+		return _player_aabb(body)
+	print("    trainer collider chosen: %s (height=%.2f) of %d candidate(s)" % [best.name, best_height, candidates.size()])
+	return _shape_global_aabb(best)
+
+
+func _shape_global_aabb(cs: CollisionShape3D) -> AABB:
+	var shape := cs.shape
+	var height := 1.8
+	var radius := 0.35
+	if shape is CapsuleShape3D:
+		height = (shape as CapsuleShape3D).height
+		radius = (shape as CapsuleShape3D).radius
+	elif shape is BoxShape3D:
+		height = (shape as BoxShape3D).size.y
+		radius = maxf((shape as BoxShape3D).size.x, (shape as BoxShape3D).size.z) * 0.5
+	var centre := cs.global_position
+	var half := Vector3(radius, height * 0.5, radius)
+	return AABB(centre - half, half * 2.0)
+
+
 func _player_aabb(body: Node3D) -> AABB:
 	var shapes := body.find_children("*", "CollisionShape3D", true, false)
 	if shapes.size() > 0:
-		var cs := shapes[0] as CollisionShape3D
-		var shape := cs.shape
-		var height := 1.8
-		var radius := 0.35
-		if shape is CapsuleShape3D:
-			height = (shape as CapsuleShape3D).height
-			radius = (shape as CapsuleShape3D).radius
-		elif shape is BoxShape3D:
-			height = (shape as BoxShape3D).size.y
-			radius = maxf((shape as BoxShape3D).size.x, (shape as BoxShape3D).size.z) * 0.5
-		var centre := cs.global_position
-		var half := Vector3(radius, height * 0.5, radius)
-		return AABB(centre - half, half * 2.0)
+		return _shape_global_aabb(shapes[0] as CollisionShape3D)
 	var half2 := Vector3(0.35, 0.9, 0.35)
 	return AABB(body.global_position - half2, half2 * 2.0)
 
 
-## Candidate-stand check for the pairing shot: ground under the point must
-## be terrain (not a prop's own collider top), and no static body may stand
-## within 4m of it.
 func _stand_is_clear(at: Vector2) -> bool:
 	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state
 	if space == null:
@@ -571,19 +750,10 @@ func _under_terrain(body: Node) -> bool:
 	return false
 
 
-## ---- The bbox contract itself ----
-
 func _image_size() -> Vector2:
 	return Vector2(root.size)
 
 
-## unproject_position() operates in the camera's viewport's own
-## `get_visible_rect()` space, which under this project's stretch
-## configuration is the DESIGN resolution (e.g. 1920x1080), not the actual
-## `--resolution` pixels the PNG is saved at (e.g. 960x540 under VP_FAST).
-## Scaling by (image_size / visible_rect.size) maps into real saved-image
-## pixels -- this is round 3's own unresolved bug, fixed per the
-## coordinator's exact instruction.
 func _unproject_scaled(world_pos: Vector3) -> Vector2:
 	var vp_size: Vector2 = _camera.get_viewport().get_visible_rect().size
 	var scale: Vector2 = _image_size() / vp_size
@@ -600,36 +770,48 @@ func _aabb_corners(aabb: AABB) -> Array:
 	return c
 
 
-## Global AABB of every MeshInstance3D under `root_node`, merged -- the real
-## rendered extent of a creature, not a guess from its declared `height`.
+## Creature bbox from its own DECLARED size (species.json height/radius/
+## footprint_allowance -- the same numbers creature_body.gd::_fit() builds
+## the collider from), not a mesh walk. See file header's ADDENDUM section.
 func _creature_global_aabb(root_node: Node3D) -> AABB:
-	var points: Array = []
-	_collect_mesh_corners(root_node, points)
-	if points.is_empty():
-		return AABB(root_node.global_position - Vector3(0.3, 0.0, 0.3), Vector3(0.6, 1.0, 0.6))
-	var result := AABB(points[0], Vector3.ZERO)
-	for p in points:
-		result = result.expand(p)
-	return result
+	var species_id := str(root_node.get("species_id"))
+	if species_id != "" and SPECIES.has(species_id):
+		var ph: Dictionary = SPECIES.placeholder(species_id)
+		var height: float = float(ph.get("height", 1.8))
+		var radius: float = float(ph.get("radius", 0.4))
+		var footprint: float = float(ph.get("footprint_allowance", 1.5))
+		var horiz := radius * maxf(1.0, footprint * 0.65)
+		var half := Vector3(horiz, height * 0.5, horiz)
+		var centre := root_node.global_position + Vector3(0.0, height * 0.5, 0.0)
+		return AABB(centre - half, half * 2.0)
+	print("    WARN no species_id/placeholder for %s; using a fixed fallback box" % root_node.name)
+	return AABB(root_node.global_position - Vector3(0.3, 0.0, 0.3), Vector3(0.6, 1.0, 0.6))
 
 
-func _collect_mesh_corners(node: Node, out: Array) -> void:
-	if node is VisualInstance3D:
-		var vi := node as VisualInstance3D
-		var local_aabb := vi.get_aabb()
-		if local_aabb.size != Vector3.ZERO:
-			for corner in _aabb_corners(local_aabb):
-				out.append(vi.global_transform * corner)
-	for child in node.get_children():
-		_collect_mesh_corners(child, out)
-
-
-## Fully-inside-with-margin + legible-height check, using the corrected
-## scaled unproject. A corner behind the camera fails outright -- its
-## unprojected coordinate is meaningless (this is the exact failure mode
-## that made round 3's own assertion helper unreliable).
-func _bbox_check(aabb: AABB, min_h: float, max_h: float) -> Dictionary:
+func _bbox_check(aabb: AABB, min_h: float, max_h: float, width_central_frac: float = 1.0) -> Dictionary:
 	var image := _image_size()
+	var proj := _screen_rect(aabb)
+	if bool(proj["any_behind"]):
+		return {"pass": false, "reason": "part_behind_camera", "height_frac": 0.0}
+	var rect: Rect2 = proj["rect"]
+	var margin := image * MARGIN_FRAC
+	var inside := rect.position.x >= margin.x and rect.position.y >= margin.y \
+		and rect.end.x <= image.x - margin.x and rect.end.y <= image.y - margin.y
+	var width_margin := image.x * (1.0 - width_central_frac) * 0.5
+	var centred := rect.position.x >= width_margin and rect.end.x <= image.x - width_margin
+	var h_frac := rect.size.y / image.y
+	var size_ok := h_frac >= min_h and h_frac <= max_h
+	var reason := "ok"
+	if not inside:
+		reason = "outside_margin"
+	elif not centred:
+		reason = "outside_central_width"
+	elif not size_ok:
+		reason = "height_frac_%s" % ("too_small" if h_frac < min_h else "too_large")
+	return {"pass": inside and centred and size_ok, "reason": reason, "height_frac": h_frac}
+
+
+func _screen_rect(aabb: AABB) -> Dictionary:
 	var minv := Vector2(INF, INF)
 	var maxv := Vector2(-INF, -INF)
 	var any_behind := false
@@ -644,19 +826,9 @@ func _bbox_check(aabb: AABB, min_h: float, max_h: float) -> Dictionary:
 		minv.y = minf(minv.y, vp.y)
 		maxv.x = maxf(maxv.x, vp.x)
 		maxv.y = maxf(maxv.y, vp.y)
-	if any_behind:
-		return {"pass": false, "reason": "part_behind_camera", "height_frac": 0.0}
-	var margin := image * MARGIN_FRAC
-	var inside := minv.x >= margin.x and minv.y >= margin.y \
-		and maxv.x <= image.x - margin.x and maxv.y <= image.y - margin.y
-	var h_frac := (maxv.y - minv.y) / image.y
-	var size_ok := h_frac >= min_h and h_frac <= max_h
-	var reason := "ok"
-	if not inside:
-		reason = "outside_margin"
-	elif not size_ok:
-		reason = "height_frac_%s" % ("too_small" if h_frac < min_h else "too_large")
-	return {"pass": inside and size_ok, "reason": reason, "height_frac": h_frac}
+	if any_behind or minv.x == INF:
+		return {"rect": Rect2(), "any_behind": true}
+	return {"rect": Rect2(minv, maxv - minv), "any_behind": false}
 
 
 func _save(name: String) -> void:
@@ -672,6 +844,33 @@ func _save(name: String) -> void:
 		return
 	_written += 1
 	print("wrote %s" % path)
+
+
+func _save_diag(name: String, aabbs: Array) -> void:
+	var image := root.get_texture().get_image()
+	if image == null:
+		return
+	for aabb in aabbs:
+		var proj := _screen_rect(aabb as AABB)
+		if bool(proj["any_behind"]):
+			continue
+		_draw_rect_border(image, Rect2i(proj["rect"]), Color(1, 0, 0, 1), 3)
+	var path := "%s/%s-DIAG.png" % [OUT_DIR, name]
+	image.save_png(path)
+	print("wrote DIAG %s (%d rect(s) drawn)" % [path, aabbs.size()])
+
+
+func _draw_rect_border(image: Image, r: Rect2i, color: Color, thickness: int) -> void:
+	var w := image.get_width()
+	var h := image.get_height()
+	for x in range(maxi(0, r.position.x), mini(w, r.position.x + r.size.x)):
+		for t in range(thickness):
+			image.set_pixel(x, clampi(r.position.y + t, 0, h - 1), color)
+			image.set_pixel(x, clampi(r.position.y + r.size.y - 1 - t, 0, h - 1), color)
+	for y in range(maxi(0, r.position.y), mini(h, r.position.y + r.size.y)):
+		for t in range(thickness):
+			image.set_pixel(clampi(r.position.x + t, 0, w - 1), y, color)
+			image.set_pixel(clampi(r.position.x + r.size.x - 1 - t, 0, w - 1), y, color)
 
 
 func _hide_huds() -> void:
@@ -694,10 +893,6 @@ func _frame(eye: Vector2, eye_ground: float, target: Vector2, target_ground: flo
 	_camera.look_at(Vector3(target.x, target_ground + 1.70, target.y), Vector3.UP)
 
 
-## Same raycast-over-analytic reseat `_capture_locations.gd::_surface()` uses:
-## the streamed collision surface and the analytic heightfield disagree by
-## metres near water and slopes, and seating on the analytic value alone can
-## bury the camera underground.
 func _surface(at: Vector2) -> float:
 	var analytic: float = _field.height_at(at.x, at.y)
 	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state

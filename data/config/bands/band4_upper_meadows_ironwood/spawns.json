@@ -191,6 +191,21 @@
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/ridge country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as authored here."
     },
     {
+      "order": 4102,
+      "species": "trailpup",
+      "table": "meadows_rock",
+      "count": 2,
+      "centre": [
+        -255.0,
+        0.0,
+        6450.0
+      ],
+      "radius": 6.0,
+      "habitat": "rocky_shoulder",
+      "_why_vp9_r5": "VP9 LIFE round 5 course correction (owner directive: the visible population and the real gameplay population must agree -- no staged bodies at the shutter). The ridge-camp stand's eye (-250,6458) already has order 4076's Burrowback pair 12.6m off; this Trailpup pair sits 9.4m off the same eye so the stand reads 2 species / 5 individuals from where the camera actually stands, per the round's own contract.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/ridge country. Rolled from `meadows_rock`; at world seed 0 it stands up trailpup exactly as authored here."
+    },
+    {
       "order": 4011,
       "species": "mudsnout",
       "table": "meadows_open",

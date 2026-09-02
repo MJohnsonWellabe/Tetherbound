@@ -885,6 +885,67 @@
       ],
       "radius": 14.0,
       "_why_grove_resident": "T5-CAMPS, the OTHER half of the same documented sentence. docs/MEADOWS_MACRO_LAYOUT.md's ecology paragraph reads: \"grove (Trailpup/Duskhush/Burrowback) in Band 1's oak ring and Band 2\", and MEADOWS_PROGRESSION_SPEC.md section 13 lists the Grove as Trailpup / Duskhush at night / Burrowback. Band 1 held NEITHER named grove species: zero Duskhush and zero Trailpup, against 47 in band 2, 9 in band 3, 51 in band 4 and 9 in band 5. band2/spawns.json's own entry for order 2 even describes its Trailpup as \"carried from Band 1's oak ring\" -- carried from a population that was never placed. So this is not padding added to balance the Duskhush; it is the rest of the ecology the oak ring was specified to have. UNGATED, unlike the Duskhush beside it, because only Duskhush carries \"at night\" in either document -- Trailpup is the ring's ordinary daytime resident, and the contrast between the two is what makes the grove read differently after dark instead of merely emptier. TYPE BALANCE, stated rather than left to be discovered: tests/test_spawn_tables.gd::test_a_rolled_world_is_still_the_ground_dominant_meadows requires the chapter to stay >=50% Ground at every world seed, and it had exactly THREE creatures of headroom before this lane touched it (50.17% at the worst rolled seed). Duskhush is Air. Adding the night pocket alone took the worst seed to 49.0% and turned that test red -- measured, not predicted. Trailpup is Ground, so placing both named grove species together restores the biome identity the brief requires (50.5% at the worst seed) while implementing the same sentence. The thin margin is PRE-EXISTING and is now this chapter's binding constraint on any future Air content anywhere; see the handover. The far side's outer edge, the one site off the loop's own line -- the ring is a place with width, not a path with creatures on it. Ground probed: h=-1.38, 4.22 m relief, 15.1 deg worst slope, the roughest of the seven and still comfortably walkable."
+    },
+    {
+      "order": 1070,
+      "species": "mudsnout",
+      "count": 2,
+      "centre": [
+        28.0,
+        0.0,
+        -40.0
+      ],
+      "radius": 8.0,
+      "_why_vp9_r5": "VP9 LIFE round 5 course correction (owner directive: the visible population and the real gameplay population must agree -- no staged bodies at the shutter). This lane's own capture stand for the practice-meadow evidence point stands at (21,-32); order 0's bramblebun cluster (30,-40) already sits 12m off it. This second, second-SPECIES cluster sits alongside it (10.6m off the same eye) so the stand's own group reads as 2 species / 5 individuals from where the camera actually stands, per the round's own contract, without moving order 0 or touching its own pinned history."
+    },
+    {
+      "order": 1071,
+      "species": "mosshell",
+      "count": 2,
+      "habitat": "water_edge",
+      "centre": [
+        -379.0,
+        0.0,
+        525.0
+      ],
+      "radius": 4.0,
+      "_why_vp9_r5": "VP9 LIFE round 5 course correction, same reasoning as order 1070. The mill-pond bank stand (-386,520) already has order 6's Paddlenewt 11.3m off; this Mosshell pair sits 8.6m off the same eye, on the shore rather than in the water (habitat water_edge, matching order 8's own brooktail tag), so the stand reads 2 species from the actual bank standpoint instead of one."
+    },
+    {
+      "order": 1072,
+      "species": "bramblebun",
+      "count": 3,
+      "centre": [
+        -15.0,
+        0.0,
+        693.0
+      ],
+      "radius": 9.0,
+      "_why_vp9_r5": "VP9 LIFE round 5 course correction, same reasoning as order 1070. The band1 open-meadow stand (-6,700) already has order 1002's Pipwing 14m off; this Bramblebun trio sits 11.4m off the same eye on the open corridor ground, so the stand reads 2 species / 5 individuals rather than one distant pair."
+    },
+    {
+      "order": 1073,
+      "species": "bramblebun",
+      "count": 2,
+      "centre": [
+        325.0,
+        0.0,
+        928.0
+      ],
+      "radius": 6.0,
+      "_why_vp9_r5": "VP9 LIFE round 5 course correction, same reasoning as order 1070. The trail-camp/relay-camp stand (332,932) had NO cluster within the round's own 8-14m band -- order 1032's own Bramblebun sits 18.6m off, order 1059's Trailpup 55m off. Paired with order 1074's Trailpup, 8.1m off the same eye, this reads as a 2-species group actually within camera range of the camp clearing rather than scenery seen only from a distance."
+    },
+    {
+      "order": 1074,
+      "species": "trailpup",
+      "count": 2,
+      "centre": [
+        322.0,
+        0.0,
+        925.0
+      ],
+      "radius": 6.0,
+      "_why_vp9_r5": "VP9 LIFE round 5 course correction -- see order 1073, its own pair. 8.1m off the relay-camp stand's eye (332,932)."
     }
   ]
 }
