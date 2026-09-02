@@ -7,7 +7,7 @@ extends Node3D
 ## touched. Old death satchels never move once dropped and several can
 ## coexist — see death_satchel.gd, which this spawns fresh, once per death.
 ##
-## Wired the same way camp.gd/world_perimeter.gd are: a small component
+## Wired the same way player_bed.gd/world_perimeter.gd are: a small component
 ## `playground_world.gd` builds and hands the player node to, rather than
 ## logic living inside the world script itself.
 
@@ -138,10 +138,13 @@ func restore_from_game(game: Node) -> void:
 		satchel.call("restore", record.get("state", []), db)
 
 
-## The last-placed camp's bed, or the world's own opening spawn point if none
-## has been built yet — the camp/bed is already this project's one placed
-## rest point (camp.gd), and §22 does not name a different "home." A static,
-## dependency-free function so this is testable headless, no node required.
+## The last-placed bedroll, or the world's own opening spawn point if none
+## has been built yet — the bedroll is already this project's one placed
+## rest point (player_bed.gd), and §22 does not name a different "home."
+## OWNER-0902-CAMP-SPLIT: used to search for the bundled `camp` id; the
+## bedroll is the specific piece that carries the rest interaction now that
+## tent/campfire/bedroll place independently. A static, dependency-free
+## function so this is testable headless, no node required.
 static func resolve_home(buildings: Variant, fallback: Vector3) -> Vector3:
 	if not buildings is Array:
 		return fallback
@@ -150,7 +153,7 @@ static func resolve_home(buildings: Variant, fallback: Vector3) -> Vector3:
 		if not list[i] is Dictionary:
 			continue
 		var entry: Dictionary = list[i]
-		if str(entry.get("id", "")) != "camp":
+		if str(entry.get("id", "")) != "bedroll":
 			continue
 		var pos: Array = entry.get("position", [])
 		if pos.size() >= 3:
@@ -158,9 +161,9 @@ static func resolve_home(buildings: Variant, fallback: Vector3) -> Vector3:
 	return fallback
 
 
-## The same fade-out/act/fade-in shape camp.gd's own rest uses, built here
-## rather than shared: camp's version also advances the day and autosaves,
-## neither of which belongs to a death.
+## The same fade-out/act/fade-in shape player_bed.gd's own rest uses, built
+## here rather than shared: the bedroll's version also advances the day and
+## autosaves, neither of which belongs to a death.
 func _fade_and_respawn(at: Vector3) -> void:
 	if _player.has_method("set_locomotion_enabled"):
 		_player.call("set_locomotion_enabled", false)

@@ -3,9 +3,11 @@ extends "res://tests/test_case.gd"
 ## R3.3, GAME_DESIGN.md §22. Two pieces of pure logic, no scene required:
 ## death_satchel.gd's build() has to rehydrate a drained satchel exactly
 ## (durability included, nothing re-stacked), and player_death.gd's
-## resolve_home() has to pick the right respawn point. The fade/tween/
-## teleport wiring itself needs a live scene tree the same way camp.gd's own
-## rest does — nothing here pretends to cover that half.
+## resolve_home() has to pick the right respawn point — the bedroll
+## (OWNER-0902-CAMP-SPLIT: the specific piece that now carries the rest
+## interaction, not the old bundled `camp`). The fade/tween/teleport wiring
+## itself needs a live scene tree the same way player_bed.gd's own rest does
+## — nothing here pretends to cover that half.
 
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
@@ -90,27 +92,31 @@ func _has_a_populated_mesh_instance(node: Node) -> bool:
 	return false
 
 
-func test_resolve_home_falls_back_when_no_camp_has_been_placed() -> void:
+func test_resolve_home_falls_back_when_no_bedroll_has_been_placed() -> void:
 	var fallback := Vector3(1.0, 2.0, 3.0)
 	assert_eq(PLAYER_DEATH.resolve_home([], fallback), fallback)
 	assert_eq(PLAYER_DEATH.resolve_home("not an array", fallback), fallback)
 
 
-func test_resolve_home_uses_the_most_recently_placed_camp() -> void:
+func test_resolve_home_uses_the_most_recently_placed_bedroll() -> void:
 	# GAME_DESIGN.md §22 names no second camp case, but nothing stops a
 	# player building a second one -- the most recent is the only sane
-	# reading of "home" once that happens.
+	# reading of "home" once that happens. OWNER-0902-CAMP-SPLIT: a tent or
+	# campfire standing nearby must not count -- only the bedroll carries the
+	# rest interaction this respawn point actually is.
 	var fallback := Vector3.ZERO
 	var buildings: Array = [
 		{"id": "floor", "position": [5.0, 0.0, 5.0]},
-		{"id": "camp", "position": [10.0, 0.0, 20.0]},
+		{"id": "bedroll", "position": [10.0, 0.0, 20.0]},
+		{"id": "tent", "position": [50.0, 0.0, 60.0]},
+		{"id": "campfire", "position": [70.0, 0.0, 80.0]},
 		{"id": "wall", "position": [1.0, 0.0, 1.0]},
-		{"id": "camp", "position": [30.0, 0.0, 40.0]},
+		{"id": "bedroll", "position": [30.0, 0.0, 40.0]},
 	]
 	assert_eq(PLAYER_DEATH.resolve_home(buildings, fallback), Vector3(30.0, 0.0, 40.0))
 
 
 func test_resolve_home_ignores_malformed_entries_and_still_falls_back() -> void:
 	var fallback := Vector3(9.0, 9.0, 9.0)
-	var buildings: Array = [{"id": "camp", "position": [1.0, 2.0]}, "not a dict"]
+	var buildings: Array = [{"id": "bedroll", "position": [1.0, 2.0]}, "not a dict"]
 	assert_eq(PLAYER_DEATH.resolve_home(buildings, fallback), fallback)

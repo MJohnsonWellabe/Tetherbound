@@ -116,16 +116,19 @@ func test_every_entry_has_a_thumbnail() -> void:
 				"'%s' names thumbnail '%s', which does not exist" % [id, thumbnail])
 
 
+const HAND_AUTHORED_IDS := ["tent", "campfire", "bedroll", "storage"]
+
 func test_every_non_camp_entry_has_a_mesh_that_exists() -> void:
-	# R2.6/R2.7. `camp` and `storage` place through their own hand-authored
-	# scripts (camp.gd, storage_container.gd) and carry no `mesh` field of
-	# their own; every other entry is generic geometry placed by
-	# build_piece.gd from this path, so a missing one is a piece that arms in
-	# the menu and puts nothing in the world when placed.
+	# R2.6/R2.7. `tent`/`campfire`/`bedroll` (OWNER-0902-CAMP-SPLIT) and
+	# `storage` place through their own hand-authored scripts
+	# (camp_tent.gd/campfire.gd/player_bed.gd, storage_container.gd) and
+	# carry no `mesh` field of their own; every other entry is generic
+	# geometry placed by build_piece.gd from this path, so a missing one is a
+	# piece that arms in the menu and puts nothing in the world when placed.
 	for entry: Variant in _buildables():
 		var piece: Dictionary = entry
 		var id := str(piece.get("id", ""))
-		if id == "camp" or id == "storage":
+		if HAND_AUTHORED_IDS.has(id):
 			continue
 		var mesh_path := str(piece.get("mesh", ""))
 		assert_ne(mesh_path, "", "'%s' has no 'mesh' field" % id)

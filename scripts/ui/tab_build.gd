@@ -11,7 +11,7 @@ extends "res://scripts/ui/menu_tab.gd"
 ## through Settings-adjacent muscle memory still lands somewhere real.
 ##
 ## `build_menu.gd` is instantiated lazily and added under `get_tree().root`,
-## the same way `camp.gd`/`storage_container.gd` lazily add
+## the same way `campfire.gd`/`storage_container.gd` lazily add
 ## `craft_panel.gd`/`storage_panel.gd` — not parented to this tab, which gets
 ## torn down and rebuilt (`build()`) far more often than the menu itself
 ## should be recreated.
