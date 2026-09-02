@@ -1728,11 +1728,44 @@ func _walk_at_the_bridge(bridge: Node3D, player: CharacterBody3D, camera_rig: No
 		if player.has_method("_drop_breadcrumb"):
 			player.call("_drop_breadcrumb", player.global_position)
 
+	# THE SETTLE-AND-BREADCRUMB ABOVE IS NECESSARY BUT NOT SUFFICIENT, and this
+	# guard is the half that actually holds the check honest.
+	#
+	# `player_controller.gd::_recovery_position()` skips any breadcrumb closer
+	# than `_unstick_min_distance_m` (`movement.json`'s
+	# `min_recovery_distance_m`, 6.0m) -- correctly, since rewinding a metre
+	# just re-enters the same hole. But the breadcrumb planted above is at the
+	# spot the body was placed at, and when the body is entombed there it never
+	# moves horizontally, so that breadcrumb is ALWAYS inside the skip radius
+	# and can never be the one chosen. Recovery then falls back to the only
+	# other thing on record -- the perimeter cap-walk, kilometres away -- and
+	# `depth_past_crossing` scores the teleport as having strolled past a
+	# locked gate. Observed 3/3 attempts, byte-identical: entombed at
+	# (7.9, -3.4, 1319.0), recovered to (505.0, 8.2, 7678.4), reported
+	# "+6348.4m past the gap" against an unlocked run's honest +22.9m.
+	#
+	# So progress is only counted while the player is still WALKING, exactly as
+	# `_check_sigil_gate` already does for the same class of failure (a fall and
+	# respawn there, an entombment recovery here -- both teleports, both scored
+	# as progress by a walk that could not tell the difference). A step larger
+	# than STEP_SANITY_M in one physics frame is not a stride: stop and keep
+	# what was earned on foot.
+	#
+	# This deliberately does NOT touch the 6.0m skip radius. That rule is
+	# production behaviour protecting real players from being rewound into the
+	# hole they just fell in; a test that cannot describe its own teleports is
+	# the thing that is wrong here.
 	var best := -INF
+	var previous := player.global_position
 	Input.action_press("move_forward")
 	for i in BRIDGE_WALK_FRAMES:
 		await physics_frame
 		var here := player.global_position
+		if here.distance_to(previous) > STEP_SANITY_M:
+			print("      (walk abandoned at frame %d: the player moved %.0fm in one frame -- an entombment recovery, not a crossing)" % [
+				i, here.distance_to(previous)])
+			break
+		previous = here
 		best = maxf(best, float(bridge.call("depth_past_crossing", Vector2(here.x, here.z))))
 	Input.action_release("move_forward")
 	for i in 20:
