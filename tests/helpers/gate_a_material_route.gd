@@ -152,10 +152,16 @@ func _unlock_road_gate() -> bool:
 
 	var key: Node3D = _world.get_node_or_null(^"GateKey") as Node3D
 	if key != null and is_instance_valid(key):
-		if not await _walk_to(key.global_position, 1.65, _travel_budget(key.global_position)) \
-				and _player.global_position.distance_to(key.global_position) > WITHIN_REACH:
+		# Captured before the press, not read off `key` afterward: production
+		# pickup frees the world key node as part of a real completed pickup
+		# (found running this for real, OWNER-0901-PLAYER-SLEEP-V2) -- so the
+		# transcript line below used to crash with "previously freed" on
+		# exactly the success path it was meant to record.
+		var key_at := key.global_position
+		if not await _walk_to(key_at, 1.65, _travel_budget(key_at)) \
+				and _player.global_position.distance_to(key_at) > WITHIN_REACH:
 			_fail("controller could not reach the gate key at %s (stopped %.1fm short)" % [
-				key.global_position, _player.global_position.distance_to(key.global_position)])
+				key_at, _player.global_position.distance_to(key_at)])
 			return false
 		var key_prompt: Node3D = key.get_node_or_null(^"Interactable") as Node3D
 		if key_prompt == null:
@@ -163,8 +169,7 @@ func _unlock_road_gate() -> bool:
 		if not await _press_and_confirm(key_prompt):
 			_fail("the gate key would not come up on the interact line")
 			return false
-		transcript.append("took the old key at (%.1f, %.1f)" % [
-			key.global_position.x, key.global_position.z])
+		transcript.append("took the old key at (%.1f, %.1f)" % [key_at.x, key_at.z])
 	else:
 		transcript.append("gate key already taken; continuing to the gate")
 
