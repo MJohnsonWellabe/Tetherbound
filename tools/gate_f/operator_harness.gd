@@ -5566,16 +5566,29 @@ func _watch_for_events() -> void:
 	if _prev_party_size >= 0 and party.size() > _prev_party_size:
 		_emit("catch_result", {"observation": "party grew %d -> %d" % [_prev_party_size, party.size()]})
 	_prev_party_size = party.size()
-	for entry: Variant in party:
-		var creature: Dictionary = entry
+	for i in party.size():
+		var creature: Dictionary = party[i]
 		var name := str(creature.get("name", ""))
 		var level := int(creature.get("level", 0))
-		if _prev_levels.has(name) and level > int(_prev_levels[name]):
+		# Keyed by SLOT INDEX, not `name`: two wild-caught creatures of the same
+		# species share the same default label (a run's own party can carry
+		# three creatures all called "Bramblebun" -- exactly what this segment's
+		# own catch loop produces), and a name-keyed dict collapses them onto one
+		# shared "previous hp" cell. Whichever same-named entry the loop visited
+		# LAST each frame won that cell, so a fainted one and a healthy one
+		# alternating which wrote last re-triggered the hp>0 -> hp<=0 edge on
+		# every single tick -- measured on gate-f-run-20260901T220548Z-s03fix
+		# attempt 6: 8733 "faint" events, nearly all repeats of one already-
+		# fainted Bramblebun, one per physics frame for the rest of the segment.
+		# Party order is stable absent an explicit reorder action, which this
+		# loop never takes, so the slot index is the stable identity a shared
+		# name is not.
+		if _prev_levels.has(i) and level > int(_prev_levels[i]):
 			_emit("level_up", {"observation": "%s reached level %d" % [name, level]})
-		if float(creature.get("hp", 1.0)) <= 0.0 and float(_prev_levels.get("%s:hp" % name, 1.0)) > 0.0:
+		if float(creature.get("hp", 1.0)) <= 0.0 and float(_prev_levels.get("%d:hp" % i, 1.0)) > 0.0:
 			_emit("faint", {"observation": "%s fainted" % name})
-		_prev_levels[name] = level
-		_prev_levels["%s:hp" % name] = creature.get("hp", 1.0)
+		_prev_levels[i] = level
+		_prev_levels["%d:hp" % i] = creature.get("hp", 1.0)
 
 	_slow_watch_tick += 1
 	if _slow_watch_tick % SLOW_WATCH_EVERY == 0:
@@ -5715,10 +5728,13 @@ func _seed_change_detection() -> void:
 	var party: Array = _probe.call("party_state")
 	_prev_party_size = party.size()
 	_prev_levels.clear()
-	for entry: Variant in party:
-		var creature: Dictionary = entry
-		_prev_levels[str(creature.get("name", ""))] = int(creature.get("level", 0))
-		_prev_levels["%s:hp" % str(creature.get("name", ""))] = creature.get("hp", 1.0)
+	for i in party.size():
+		var creature: Dictionary = party[i]
+		# Keyed by slot index -- see the matching comment at the watch loop's
+		# own use of _prev_levels for why `name` collides across same-species
+		# party members.
+		_prev_levels[i] = int(creature.get("level", 0))
+		_prev_levels["%d:hp" % i] = creature.get("hp", 1.0)
 	_have_last_pos = false
 	# The new GF-B-011 detectors, seeded the same way and for the same reason:
 	# a boot must not report every item already in the satchel as newly
