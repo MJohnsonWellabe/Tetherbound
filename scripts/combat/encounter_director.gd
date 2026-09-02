@@ -115,6 +115,14 @@ var _wild_creatures: Array[Node3D] = []
 var _engaged_with: Node3D = null
 var _ally_body: Node3D = null
 var _ally: RefCounted = null
+## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. Resolved once in `_ready()` for
+## `_scatter_clear_spot()`'s spawn-siting check. `Vegetation` is a runtime
+## child `playground_world.gd::_dress_the_meadow()` adds by name, not a saved
+## scene node, so this is a lookup rather than an `@export`ed NodePath -- see
+## that function's own comment. Left null harmlessly on any world/test rig
+## that never dresses a meadow (`has_solid_scatter_near` is simply never
+## asked).
+var _vegetation: Node = null
 
 var _engage_range: float = 6.0
 var _prompt: String = ""
@@ -286,6 +294,12 @@ func _ready() -> void:
 	# `_ready` runs while the parent is still setting up its children, and
 	# add_child() is refused during that. One frame is enough to be out of it.
 	await get_tree().process_frame
+	# `Vegetation` is a runtime child `playground_world.gd::_dress_the_meadow()`
+	# adds during ITS OWN `_ready()`, which (children ready bottom-up) has not
+	# necessarily run yet at the top of this function -- resolved here,
+	# post-yield, rather than at the top, so the lookup runs after the world
+	# has actually dressed the meadow instead of racing it.
+	_vegetation = get_parent().get_node_or_null(^"Vegetation")
 	await _spawn_creatures()
 
 
@@ -392,11 +406,7 @@ func _spawn_creatures() -> void:
 			wild.name = "Wild_%s_%d_%d" % [species, int(spawn.get("order", index)), n + 1]
 			wild.set_script(WILD_SCRIPT)
 			get_parent().add_child(wild)
-			# sqrt on the radius fraction makes the points uniform over the
-			# disc's AREA; without it they bunch at the centre.
-			var angle := rng.randf_range(0.0, TAU)
-			var distance := radius * sqrt(rng.randf())
-			var spot := centre + Vector3(sin(angle), 0.0, cos(angle)) * distance
+			var spot := _pick_clear_spot(centre, radius, rng)
 			if not await _stand_on_ground(wild, spot):
 				push_error("no ground under the %s spawn point; it will be unreachable" % species)
 			# PW2 (BAND1-D1): the optional per-entry `elder` descriptor, read
@@ -924,6 +934,41 @@ func _follower_config() -> Dictionary:
 		return {}
 	var entry: Variant = (parsed as Dictionary).get("follower", {})
 	return entry if entry is Dictionary else {}
+
+
+## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. Draws a candidate spawn point the
+## same way this always has (uniform over the cluster disc's AREA -- sqrt on
+## the radius fraction, or points bunch at the centre) and retries, from the
+## SAME per-cluster `rng` so the meadow stays seeded/deterministic, if it
+## lands inside `vegetation.gd`'s baked scatter. See
+## `vegetation.gd::has_solid_scatter_near()`'s own comment for why this exists
+## and why it is siting rather than clearing.
+##
+## Bounded and falls back to spawning anyway rather than never spawning --
+## `CLEAR_ATTEMPTS` retries covers ordinary sparse-to-moderate scatter; a
+## cluster whose whole disc happens to be dense enough to fail every attempt
+## still gets its creature, on whichever candidate was tried last, because a
+## creature that fails to appear is a worse defect than one that spawns
+## partly occluded.
+const CLEAR_ATTEMPTS := 6
+## Added to each solid placement's own collision radius. Not the creature's
+## own collider (unknown at this point -- `populate()` has not run yet, and
+## running it early just to size this check would reorder the per-cluster
+## `rng` draws this whole file's own comments already warn is load-bearing).
+## A flat, conservative margin instead: bigger than any small creature's own
+## radius, smaller than a cluster's own disc, so the retry meaningfully moves
+## the candidate without exhausting the disc in ordinary spawn areas.
+const CLEAR_MARGIN := 0.8
+
+func _pick_clear_spot(centre: Vector3, radius: float, rng: RandomNumberGenerator) -> Vector3:
+	var spot := centre
+	for attempt in CLEAR_ATTEMPTS:
+		var angle := rng.randf_range(0.0, TAU)
+		var distance := radius * sqrt(rng.randf())
+		spot = centre + Vector3(sin(angle), 0.0, cos(angle)) * distance
+		if _vegetation == null or not bool(_vegetation.call("has_solid_scatter_near", spot, CLEAR_MARGIN)):
+			return spot
+	return spot
 
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:

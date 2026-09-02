@@ -188,6 +188,31 @@ var _mesh_ids: Dictionary = {}
 var _instance_positions: Dictionary = {}
 var _next_mesh_id: int = 0
 
+## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. The `bushes` layer's own config
+## carries `collides: false` (`data/config/vegetation.json`) -- ferns/shrubs
+## are visually solid but the player walks through them, so they hold no
+## entry in `_collision_batches` at all. `has_solid_scatter_near()` needs
+## them anyway (that is the exact layer the coordinator's worst-case creature
+## landed inside), so this is a second, narrow position list -- filled
+## alongside `_instance_positions` in `_build_batch()`, filtered to just this
+## one layer rather than reusing the general list, which also holds
+## thousands of grass/flower/groundmat instances that spawn siting has no
+## reason to avoid.
+var _bush_positions: PackedVector3Array = PackedVector3Array()
+## No authored `collision_radius` exists for a non-colliding layer to draw
+## from. vegetation.json's own `_comment_flower_scale_visual_census` measures
+## `Bush_Common`'s raw glTF bounding box directly at 1.91 x 1.97m (X/Z) before
+## scale; at this layer's `scale_max` 1.0 * `base_scale` 0.9, the realised
+## footprint reaches ~1.7-1.8m across, so 1.2m of radius (not quite half that
+## span) leaves a real margin rather than sitting flush with the canopy edge
+## -- `bushes` places in clumps (`clumps`/`per_clump`/`clump_radius` above),
+## so a candidate a bare edge-to-edge distance from ONE bush is routinely
+## still touching its neighbour's canopy, measured directly against a real
+## dense pair at (0.93, 701.08)/(1.10, 700.97) on this branch's own test
+## site, 0.2m apart -- a value tighter than this reads clear of the near
+## bush by the check and still visually inside the cluster's combined mass.
+const BUSH_VISUAL_RADIUS := 1.2
+
 ## COLL1 / §8.3: how close a collidable placement must be to the last point
 ## passed to `update_collision_streaming()` to keep a real `CollisionShape3D`.
 ## MultiMesh keeps drawing every instance in the world regardless -- this
@@ -272,6 +297,7 @@ func build(world_size: float, terrain: Node) -> void:
 	_tints.clear()
 	_mesh_ids.clear()
 	_instance_positions.clear()
+	_bush_positions.clear()
 	_next_mesh_id = 0
 	_harvested.clear()
 	_harvest_layer_counts.clear()
@@ -1048,6 +1074,10 @@ func _build_batch(model_path: String, placements: Array) -> void:
 		known.append((placements[i] as Dictionary)["position"])
 	_instance_positions[mesh_id] = known
 
+	if _layer_name_for(model_path) == "bushes":
+		for i in placements.size():
+			_bush_positions.append((placements[i] as Dictionary)["position"])
+
 	_placed += placements.size()
 	_draw_calls += 1
 	var t_c0 := Time.get_ticks_msec()
@@ -1425,6 +1455,24 @@ func _layer_for(model_path: String) -> Dictionary:
 	return {}
 
 
+## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. `_layer_for()`'s sibling for when
+## the caller needs the NAME rather than the config -- `has_solid_scatter_near()`
+## below needs to know "is this the bushes layer specifically" and a
+## dictionary alone cannot answer that (`vegetation.json`'s own `bushes` entry
+## has no `name` key; it IS the dictionary key). Same top-level-`models`-only
+## match as `_layer_for()`, and the same limitation: an anchor that overrides
+## its layer's `models` list (`bushes`' own water-margin anchors, "GATE-D")
+## is invisible to this, same as it already is to `_layer_for()`.
+func _layer_name_for(model_path: String) -> String:
+	var layers: Dictionary = RULES.config().get("layers", {})
+	for name: String in layers.keys():
+		if name.begins_with("_"):
+			continue
+		if model_path in (layers[name] as Dictionary).get("models", []):
+			return name
+	return ""
+
+
 ## Flatten an imported .glb down to a single Mesh.
 ##
 ## Kenney's nature models are one mesh under a couple of transform nodes, so the
@@ -1742,6 +1790,54 @@ func harvested_count() -> int:
 			if _bit_get(bytes, i):
 				total += 1
 	return total
+
+
+## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. Read-only sibling of `clear_area()`
+## below, for wild-creature spawn siting
+## (`encounter_director.gd::_spawn_creatures()`): is a candidate spawn point
+## close enough to a baked scatter placement that a creature standing there
+## would read as planted inside it? Traced from a real case: the
+## coordinator's own worst-case creature-visibility example (a small creature
+## standing inside a flowering bush, its whole silhouette broken) turned out
+## to be `vegetation.json`'s statically-baked `bushes` scatter layer, a
+## DIFFERENT thing from `grass_field.json`'s own procedural `cover_tiers`
+## bushes despite sharing the name. A `grass_field.gd`-side clearing lever
+## (tried and reverted, see `creature_body.gd`'s own history) can reach the
+## procedural one and not this one, because this is baked, off-limits to
+## re-bake or live culling per this branch's own brief, and simply not
+## spawning a creature on top of authored world dressing is more correct than
+## clearing the dressing out from under it anyway.
+##
+## Two sources, because they are not the same shape of data. Trees/rocks/
+## saplings/grove COLLIDE (`vegetation.json`'s own `collides: true`), so
+## `_collision_batches` already carries their positions and each layer's own
+## authored `radius` -- the same number a player's own footstep bounces off
+## of, reused rather than guessing a distance. `bushes` carries
+## `collides: false` -- ferns/shrubs the player walks straight through, so
+## they hold NO entry in `_collision_batches` at all despite being visually
+## the densest occluder in the whole layer set (and the exact one this was
+## traced from) -- `_bush_positions`/`BUSH_VISUAL_RADIUS` is the second,
+## narrower source that covers them.
+##
+## Read-only on purpose: `clear_area()` is the destructive sibling and stays
+## that way -- deleting authored dressing to make room for a creature is not
+## this method's job.
+func has_solid_scatter_near(centre: Vector3, extra: float) -> bool:
+	for batch: Dictionary in _collision_batches:
+		var reach: float = float(batch["radius"]) + extra
+		var reach_sq := reach * reach
+		for placement: Dictionary in (batch["placements"] as Array):
+			var spot: Vector3 = placement["position"]
+			if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() <= reach_sq:
+				return true
+	# `bushes` carries `collides: false` (walked through, never in
+	# `_collision_batches`) but is visually solid enough to bury a small
+	# creature standing among it -- see `_bush_positions`' own comment.
+	var bush_reach_sq := (BUSH_VISUAL_RADIUS + extra) * (BUSH_VISUAL_RADIUS + extra)
+	for spot: Vector3 in _bush_positions:
+		if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() <= bush_reach_sq:
+			return true
+	return false
 
 
 ## Remove every COLLIDABLE scatter instance whose position falls inside a
