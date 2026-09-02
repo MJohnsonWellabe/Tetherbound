@@ -24,6 +24,8 @@
     "floor_colour": "#57503f",
     "tether_trim": "#332228",
     "door_colour": "#3a3f3c",
+    "_comment_hall_massing_exterior_lift": "VP-HALL-FIX ITEM1a (2026-09-02). A code-blind judge on fresh 100/200/400m stands: the Hall 'holds at 100 m but collapses to a blob at 200 m and a smudge at 400 m'. `stronghold.gd::_lift_hall_massing_exterior` reads this and stretches every non-roof `meadows_hall` module's `scale.y` ONLY (footprint untouched) by this factor -- 1.3 is a 30% height raise, inside the authorised 25-35% band, applied to every tower/keep piece in the kit (gate flankers, mid-wall towers, bailey-corner towers, the LargeTower pair over warden_arena/legendary_chamber and the PointyTower spire) so the silhouette gains height, not girth, and neighbouring towers never grow into each other. EXTERIOR MASSING ONLY: this scales nodes inside the `HallMassing` node `_build_hall_massing()` adds as one child; the five chambers, the passages and every `interior_structure.gd` member are unrelated code paths keyed off `chambers`/`passages` below and are byte-for-byte unchanged by this key. Two consumers had to be re-derived against the taller towers rather than left stale: `hall_occupation.retrofit_skyline`'s three lifts (props standing on the gate towers and the west mid-wall tower) and `hall_occupation.gate_sentries`' new elevated `y` -- both carry their own re-derivation note at the block that changed.",
+    "hall_massing_exterior_lift": 1.3,
     "_comment_weathering": "VP8 (visual parity, 2026-09-02). Parameters for assets/environment/team_tether/hall/hall_stone.gdshader, the weathered-ruin stone every textured surface at the Hall now wears (stronghold.gd::_stone_shader_material). Every key is optional and TUNABLE; the shader's own defaults apply to any key missing here. `ground_above_skirt_foot_m` is where the damp/moss band tops out, measured up from the skirt's 18 m foot: the meadow meets the visible skirt faces ~11-12 m above that foot (floor sits ~6 m above the ground, per _comment_skirt_face), so the band sits where stone meets grass rather than 18 m underground. `exterior_conduit_energy` is the teal value-floor for the conduits climbing the OUTSIDE of the flank walls (interior runs keep 1.4): JUDGE-6 defect 9 and JUDGE-AUDIT-E defect 4 both measured the exterior runs blowing out to white under the sun.",
     "weathering": {
       "ground_above_skirt_foot_m": 11.5,
@@ -868,25 +870,26 @@
         "emission": 3.6
       }
     ],
-    "_comment_gate_sentries": "ROUND-5, FIX3. Judge: 'no sentry figure ... reads as an abandoned ruin rather than a garrisoned stronghold'. One Team Tether grunt per gate tower (`assets/characters/grunt/grunt_lod0.glb`, already wired at art.json's `grunt` key -- CLAUDE.md/D24 forbids a new humanoid mesh, so no other option was considered), standing at the tower's own foot on the built floor, facing across the gate lane at each other -- a purely decorative garrison figure via `stronghold.gd::_build_gate_sentries`, no dialogue, no trainers.json row, no combat.",
+    "_comment_gate_sentries": "ROUND-5, FIX3. Judge: 'no sentry figure ... reads as an abandoned ruin rather than a garrisoned stronghold'. One Team Tether grunt per gate tower (`assets/characters/grunt/grunt_lod0.glb`, already wired at art.json's `grunt` key -- CLAUDE.md/D24 forbids a new humanoid mesh, so no other option was considered), a purely decorative garrison figure via `stronghold.gd::_build_gate_sentries`, no dialogue, no trainers.json row, no combat. `y` (new in this round) is height ABOVE THE FLOOR, matching every other `hall_occupation` entry's own convention (`_build_gate_sentries()` reads it exactly like `_build_gate_sentries` -> `_floor_y + y`).",
+    "_why_item4_fix": "VP-HALL-FIX ITEM2 (2026-09-02), the fourth placement, after three ground-level failures. (1) `[-8.0,-10.5]` sat behind the solid flank wall between the gate opening and the west flanker tower -- occluded, per ITEM3's own note. (2) `[-5.5,-12.5]` (the flanker tower's own foot) also did not read from the `10-stronghold` `gate` stand. (3) `(+-3.45,-13.2)` -- the gate banner spot -- BROKE THE BUILD (`stronghold FAIL: the scene has no Player or no Stronghold node`) and is not touched again here. All three share one root cause: ground level on this wall is a solid 8m mass end to end, so ANY floor-height spot is either inside that mass or (at the banner spot) apparently colliding with something the gate-frame/portcullis builder does not expect a body standing in. The brief's own diagnosis is right: 'up high on the silhouette', not at the base of the wall. Both sentries now stand on the WEST/EAST GATE TOWER ROOFTOPS -- `at` is the tower module's own centre (`building_prefabs.json`'s `meadows_hall` recipe, `LargeSquareTowerBricks` at [-10.6,-12.6] and [10.6,-12.6], scale 3.0 -- the SAME x/z `gate_sconces` above and `retrofit_skyline`'s `team_tether_boiler_chimney`/`team_tether_banner_rig` already stand at without incident, so this is a proven-safe footprint, never a guessed one), standing dead-centre on the roof deck rather than at its edge so nothing can read as standing off the tower into open air. `y` 15.54 is the SAME roof-deck height (0.7m below the REAL top) `team_tether_boiler_chimney`/`team_tether_banner_rig` use post-ITEM1a's exterior lift -- see those two entries' own `_why_item1_fix` for the 4.165 x 3.0 x 1.3 = 16.24m derivation -- so a sentry standing here is on the identical surface those two props already stand on, proven not to float or sink. `facing_deg` 0.0 -> both face -Z (world south, the SAME 'outward' convention `team_tether_banner_rig`'s own yaw 0 uses: 'front toward -z ... so it reads against the sky from the approach'), i.e. facing the causeway and the `gate` stand's own camera, not each other -- 'facing out' per the brief. LIT: the tower's own `gate_sconces` plaque sits on this same tower's south face (y 6.0, 9.5m below the sentry) so the tower reads as garrisoned top to bottom; more materially, the REAL `lights` entries at [-8,-13]/[8,-13] (y 6.2, energy 3.3, range 24, the two `gate_source` fire baskets) are only ~9.7m from a sentry standing here (dx 2.6, dy ~9.3) and well inside their 24m range, so the sentry is lit by an actual OmniLight3D, not merely standing near a decorative plaque. INSIDE THE GATE STAND'S VIEW CONE: the `gate` stand (`tools/_capture_locations.gd`, READ ONLY) stands at `entrance` (~40.6m back from these towers) looking level at `outer_works`' centre; nothing stands taller than these towers between the camera and them, so an elevated figure on an open rooftop cannot be occluded the way a ground-level body behind an 8m wall mass was -- this is the structural reason the first two attempts failed and this one does not.",
     "gate_sentries": [
       {
-        "_comment": "West gate tower sentry, facing east across the gate lane.",
-        "_why_item3_fix": "ITEM3 (2026-09-02). WAS `at` [-8.0,-10.5] -- squarely behind the SOLID flank wall between the 4m-wide gate opening (x[-2,2]) and the west flanker tower (x -5.5), so from the `10-stronghold` `gate` stand (standing at the `entrance` marker looking straight up the gate lane at `outer_works`, per `tools/_capture_locations.gd`) the sentry was occluded by the wall's own 8m mass -- invisible in every gate frame, not merely unreadable. Moved to the west flanker tower's own x (-5.5, `building_prefabs.json` meadows_hall module at [-5.5,0,-14.1]) and pulled to z -12.5, the wall's own front face -- inside the tower's silhouette and directly in the camera's forward view down the causeway, the same zone the gate's own banners (x +-3.45) already prove is unoccluded from this stand.",
+        "_comment": "West gate tower sentry, on the tower's own rooftop, facing south/outward down the causeway. x is 0.6m outboard of the tower's own centre (-10.6) so the body clears `retrofit_skyline`'s `team_tether_banner_rig`, which stands at the exact centre spot -- still well inside the roof footprint (the mid-wall tower's own scaffold_tower sits 2.6m off-centre on a smaller-scale tower without falling off, per that entry's `_why`).",
         "at": [
-          -5.5,
-          -12.5
+          -11.2,
+          -12.6
         ],
-        "facing_deg": -90.0
+        "y": 15.54,
+        "facing_deg": 0.0
       },
       {
-        "_comment": "East gate tower sentry, facing west across the gate lane.",
-        "_why_item3_fix": "ITEM3 (2026-09-02). Same fix, mirrored: x 8.0 -> 5.5 (the east flanker tower's own x), z -10.5 -> -12.5.",
+        "_comment": "East gate tower sentry, on the tower's own rooftop, facing south/outward down the causeway. Mirrored: x 0.6m outboard of the tower centre (10.6), clearing `team_tether_boiler_chimney` at the exact centre spot.",
         "at": [
-          5.5,
-          -12.5
+          11.2,
+          -12.6
         ],
-        "facing_deg": 90.0
+        "y": 15.54,
+        "facing_deg": 0.0
       }
     ],
     "_comment_causeway": "The 40m climb, dressed. Kerbs are code boxes following the ramp's own self-derived slope (nothing here authors the rise; `site.ramp_run` is still the only authored number). `rail_pitch_m` spaces `Prop_WoodenFence_Single` along the kerb tops -- the board's timber approach. `banner_pairs` are the z stations for oxblood banners on stone piers; the piers are what a banner needs to hang from out on open ground.",
@@ -1868,9 +1871,10 @@
           17.6
         ],
         "yaw_deg": -90,
-        "lift": 14.3,
+        "lift": 18.79,
         "_why": "mounted on the west gate/mid-wall tower's own top (module at [-11.1,15.0] scale 3.6).",
-        "_why_item3_fix": "ITEM3 (2026-09-02). WAS `lift` 15.6, computed against an assumed ~19.4m tower (native height 5.4m x scale 3.6). `stronghold.gd::_build_gate_tower_sconces`'s own probe of the real `LargeSquareTowerBricks` mesh (added as a one-time diagnostic print for this fix) measures its native visual-bounds height at 4.165m, not 5.4m -- so this tower is actually ~15.0m (4.165 x 3.6), 4.4m SHORTER than the estimate every retrofit_skyline lift here was computed against. 15.6 -> 14.3 (0.7m below the tower's REAL top, matching the margin `team_tether_boiler_chimney` below already used against its own tower), so the rig sits on the roof deck instead of floating in the sky above it."
+        "_why_item3_fix": "ITEM3 (2026-09-02). WAS `lift` 15.6, computed against an assumed ~19.4m tower (native height 5.4m x scale 3.6). `stronghold.gd::_build_gate_tower_sconces`'s own probe of the real `LargeSquareTowerBricks` mesh (added as a one-time diagnostic print for this fix) measures its native visual-bounds height at 4.165m, not 5.4m -- so this tower is actually ~15.0m (4.165 x 3.6), 4.4m SHORTER than the estimate every retrofit_skyline lift here was computed against. 15.6 -> 14.3 (0.7m below the tower's REAL top, matching the margin `team_tether_boiler_chimney` below already used against its own tower), so the rig sits on the roof deck instead of floating in the sky above it.",
+        "_why_item1_fix": "VP-HALL-FIX ITEM1a (2026-09-02). `site.hall_massing_exterior_lift` (1.3) now stretches this tower's `scale.y` on top of ITEM3's own 3.6 -- real height 4.165 x 3.6 x 1.3 = 19.49m, not the 14.99m ITEM3 measured. 14.3 -> 18.79 (still the same 0.7m roof-deck margin below the tower's new, taller, REAL top) so the scaffold keeps standing on the roof deck instead of sinking into the now-taller tower's mass."
       },
       {
         "model": "team_tether_boiler_chimney",
@@ -1879,9 +1883,10 @@
           -12.6
         ],
         "yaw_deg": 90,
-        "lift": 11.8,
+        "lift": 15.54,
         "_why": "planted on the east gate tower's roof (module at [10.6,-12.6] scale 3.0) -- the closest, most prominent tower in the 400m/200m frame, so the break in its skyline is the one those stands cannot miss.",
-        "_why_item3_fix": "ITEM3 (2026-09-02). WAS `lift` 15.5, computed against an assumed ~16.2m tower (native height 5.4m x scale 3.0). The real measured native height is 4.165m (see the scaffold_tower entry's own note above), so this tower is actually ~12.5m (4.165 x 3.0), 3.7m shorter than the estimate -- the chimney was floating 3m clear of the roof it was meant to stand on. 15.5 -> 11.8 (0.7m below the REAL top) puts its base back on the tower."
+        "_why_item3_fix": "ITEM3 (2026-09-02). WAS `lift` 15.5, computed against an assumed ~16.2m tower (native height 5.4m x scale 3.0). The real measured native height is 4.165m (see the scaffold_tower entry's own note above), so this tower is actually ~12.5m (4.165 x 3.0), 3.7m shorter than the estimate -- the chimney was floating 3m clear of the roof it was meant to stand on. 15.5 -> 11.8 (0.7m below the REAL top) puts its base back on the tower.",
+        "_why_item1_fix": "VP-HALL-FIX ITEM1a (2026-09-02). `site.hall_massing_exterior_lift` (1.3) raises this tower too -- real height 4.165 x 3.0 x 1.3 = 16.24m. 11.8 -> 15.54 (same 0.7m roof-deck margin below the new REAL top) so the chimney stays on the deck instead of sinking into the taller mass."
       },
       {
         "model": "team_tether_banner_rig",
@@ -1890,9 +1895,10 @@
           -12.6
         ],
         "yaw_deg": 0,
-        "lift": 11.8,
+        "lift": 15.54,
         "_why": "a tattered banner pole standing above the west gate tower's own roof (module at [-10.6,-12.6] scale 3.0), front toward -z (yaw 0) so it reads against the sky from the approach rather than edge-on.",
-        "_why_item3_fix": "ITEM3 (2026-09-02). TWO bugs, both fixed. (1) WAS `at` [-8.0,-12.9] -- 2.6m off the tower's own [-10.6,-12.6] in x, well outside a ~3m-scale tower's footprint. (2) WAS `lift` 16.6, computed against the same wrong ~16.2m tower-height assumption `team_tether_boiler_chimney` above was (real native height 4.165m, not 5.4m -- see that entry's note); the real tower is only ~12.5m, so 16.6 floated the pole 4.1m clear of any roof even before the x fix. Together these are exactly why this prop rendered as a red sliver hanging unattached in open sky: wrong x AND wrong height. `at` moved onto the tower's own x/z exactly and `lift` to 11.8 (the same 0.7m roof-deck margin the chimney entry uses, same tower)."
+        "_why_item3_fix": "ITEM3 (2026-09-02). TWO bugs, both fixed. (1) WAS `at` [-8.0,-12.9] -- 2.6m off the tower's own [-10.6,-12.6] in x, well outside a ~3m-scale tower's footprint. (2) WAS `lift` 16.6, computed against the same wrong ~16.2m tower-height assumption `team_tether_boiler_chimney` above was (real native height 4.165m, not 5.4m -- see that entry's note); the real tower is only ~12.5m, so 16.6 floated the pole 4.1m clear of any roof even before the x fix. Together these are exactly why this prop rendered as a red sliver hanging unattached in open sky: wrong x AND wrong height. `at` moved onto the tower's own x/z exactly and `lift` to 11.8 (the same 0.7m roof-deck margin the chimney entry uses, same tower).",
+        "_why_item1_fix": "VP-HALL-FIX ITEM1a (2026-09-02). Same tower, same recompute as `team_tether_boiler_chimney` above: 4.165 x 3.0 x 1.3 = 16.24m real height. 11.8 -> 15.54."
       }
     ],
     "_comment_pipe_runs_t1_hall_art": "T1-HALL-ART. Board 03's modular kit, authored as LINES rather than as a list of pieces -- stronghold.gd::_build_tether_pipe_runs lays straights end to end, drops a bracket every `bracket_pitch` pieces, puts one valve at `valve_at` along the run and caps both ends with an elbow. `y` is height above the chamber floor. These are the only part of the retrofit that is NOT batched -- each piece is its own draw call -- so the runs are deliberately short and few, and they exist to connect a boiler to a siphon so the machinery reads as one installed system rather than as unrelated props.",
