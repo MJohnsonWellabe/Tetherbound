@@ -361,12 +361,22 @@ func _build_panel(world: Node3D, prefabs: RefCounted, prefab: String, centre: Ve
 ## reason a fence POST exists at every real fence corner and not just panels.
 func _build_corner_guards(world: Node3D, points: PackedVector2Array, gates: Array[Vector2],
 		clear: float, bury: float, vault_guard: float, total_height: float) -> void:
-	# Half-width of the square post, metres. 0.5m clears a panel's own 0.25m
-	# half-thickness with margin on both sides of the vertex, on both edges,
-	# whatever angle they meet at — the post does not need to reach further
-	# than the panels it is bridging.
-	const POST_HALF := 0.6
-	const POST_SAMPLE_STEP_M := 0.5
+	# Half-width of the square post, metres. OWNER-0902: first landed at 0.6,
+	# which overlapped each adjacent panel's near corner by only ~0.3m of true
+	# margin (measured directly: panel corners sat 0.29-0.30m from the vertex).
+	# The exhaustive PART 6 sweep still caught ONE corner jumping out through
+	# that overlap despite a measured VERTICAL clearance there of well over 2m
+	# -- not a height defect, a seam: two separately-built StaticBody3D shapes
+	# that only just overlap, at one specific running-jump timing out of seven
+	# tried, let the character's swept collision query find daylight at the
+	# exact line where the post's flat face meets the panel's flat face at an
+	# angle. A knife's-edge overlap is exactly the kind of margin that holds on
+	# most timings and fails on one. 1.1m turns that ~0.3m of true overlap into
+	# ~0.8m -- not a tuned minimum, a decisive margin, because a value this
+	# cheap (invisible collision only, never the visible mesh) is not worth
+	# re-deriving to the metre a third time.
+	const POST_HALF := 1.1
+	const POST_SAMPLE_STEP_M := 1.1
 	var n := points.size()
 	var built := 0
 	for i in n:
