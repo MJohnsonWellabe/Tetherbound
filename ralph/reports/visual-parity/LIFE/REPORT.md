@@ -401,3 +401,173 @@ defect, even after both were understood to be broken, per the round's explicit b
    look like framing/lateral-offset tuning rather than new mechanism work — a good target for a
    round that has render budget for a few extra `--only=stands` iterations rather than a fresh
    rewrite.
+
+---
+
+## Round 5 — course correction: the real population, not staged bodies
+
+The coordinator's round-5 dispatch came in three parts: (a) ranked fixes to round 4's own
+regressions, (b) an addendum revealing round 4's bbox measurement itself was unreliable (skinned
+meshes report a stale bind-pose AABB via `get_aabb()`, so a body filling 40-100% of the frame could
+still print PASS at ~10%), and (c) a course correction overriding both — quoting the owner's own
+VP9 text directly: *"do not fake life only for screenshots. The visible population and the real
+gameplay population must agree."* Staging `spawn_wild()` bodies in front of the capture camera,
+round 3 and round 4's whole approach, is exactly that. The deliverable changed shape entirely:
+
+- `tools/_capture_life.gd` no longer spawns or hides anything for a stand shot. It positions the
+  eye (with a raycast/sphere clearance sweep, `_clear_eye()`), lets the world's own encounter
+  streaming settle, and **reports** which real `wild_creatures()` bodies are within 30m and their
+  measured bbox — evidence of what supplied the frame, not a claim about it. The round-4 staged
+  path survives only behind a new `--staged` flag, never the deliverable.
+- Legibility became a **data** problem: `data/config/bands/*/spawns.json` gained new
+  `_why_vp9_r5`-tagged clusters so a real, authored 2-species group actually stands near each
+  stand's eye, instead of moving/hiding bodies in the tool.
+- The pairing frame now grants the starter through the real path — `CreatureSpecies.spawn()` →
+  `Game.party.add()` → `EncounterDirector.summon_active_creature()`/`ally_body()` — the same three
+  calls the party screen's own "send this one out" flow makes, not `spawn_wild()`. This works from
+  `--script` because `party_seam.gd`'s "no autoloads under `--script`" caveat is specific to
+  `tests/run_tests.gd`'s unit runner; `tests/smoke_opening.gd` already proves the real `Game`
+  autoload boots normally when the actual scene (`meadows_playground.tscn`) is loaded the way this
+  tool loads it, and `root.get_node_or_null(^"Game")` confirmed that empirically here too.
+- A new `00-village-life` frame reports the existing authored villager NPCs from
+  `_capture_locations.gd`'s own "01 standing" eye.
+- The addendum's bbox fix: creature AABB now comes from the species' own **declared** size
+  (`species.json` height/radius/footprint_allowance — the same numbers `creature_body.gd::_fit()`
+  builds the collider from), not a mesh walk; the player's AABB comes from its own **collision**
+  capsule (never skinned), preferring a direct, non-hitbox-named `CollisionShape3D`. A
+  `_save_diag()` overlay draws the same projected rect the pass/fail verdict uses onto
+  `01-village-edge-day`, as the addendum required before trusting any contract result again.
+
+### Boot 1: the deliverable path works, but the camera doesn't
+
+The first boot proved the mechanism end to end — real population reporting, the real pairing path,
+the diagnostic overlay all worked exactly as written — and it also proved the overlay was honest:
+`01-village-edge-day-DIAG.png`'s drawn rects matched what the eye actually saw. But most of the
+nine frames were dominated by a huge, out-of-focus body pressed against the lens
+(`02-mill-pond-banks-day`, `03-band1-open-meadow-day`), `05-ridge-camp-day` was an unreadable
+extreme closeup, and `00-village-life-day` was pure trainer-hair closeup with no village visible at
+all. Root cause, found by inspecting the frames rather than trusting the printed contract:
+`_shoot_stand()`/`_shoot_village()` placed the camera at the **exact same point** as the player.
+`_capture_locations.gd`, this tool's own sibling, never does this — its rig always pulls the camera
+back from the standing point (`back := eye - toward * back_m`) precisely because a camera
+co-located with the player looks straight into the trainer's own hood/hair at 0m. This file's
+round-5 rewrite dropped that offset. A second, compounding cause: several spawn clusters had a
+radius wide enough that a rolled individual could land almost on top of the camera — most visibly
+band4 order 4076, whose centre **is** the ridge-camp stand's own `facing_toward` point (12.6m from
+the eye) at a 12.0m radius, so an individual could roll to within 0.6m of the eye. That is exactly
+what produced the unreadable `05-ridge-camp-day` frame. These boot-1 frames are kept at
+`round5_boot1/` as before/after evidence.
+
+### Boot 2: camera pulled back, radii tightened
+
+Fixes made without spending a boot (verified with `--check-only` first): `STAND_BACK_M := 3.5`
+(matching `_capture_locations.gd`'s own `RIG["standing"].back` default) for the five wildlife
+stands, and `VILLAGE_BACK_M/VILLAGE_UP_M := 15.0/2.6` (copied verbatim from that same tool's own
+"01 standing" rig, since the village frame reuses its exact eye) for the village frame;
+`_frame()` gained optional `eye_up`/`look_up` params so the taller village rig doesn't disturb the
+stands' existing 1.70m eye height. Radius tightened on band1 orders 1070-1074 (8/4/9/6/6 → 3.0) and
+band4 order 4102 (6.0 → 3.0) — the round's own new clusters — plus two **pre-existing** clusters
+that shared the same problem, band1 order 1002 (14.0 → 5.0) and band4 order 4076 (12.0 → 4.0).
+Band1 order 0 was also tightened (15.0 → 5.0) in this pass, then **reverted back to 15.0** after
+`tests/smoke_catching.gd` failed against it — see "the one radius that had to stay wide" below.
+
+The second boot is the one shipped as `round5/`. Judged by looking at the actual PNGs, not the
+printed pass/fail (per the standing instruction: I judge blind; results, not intentions):
+
+| frame | cluster ids (per the tool's own `cluster_note`) | verdict |
+|---|---|---|
+| `01-village-edge-day` | band1 order 0 (bramblebun) + order 1070 (mudsnout) | **PASS** — trainer and a clearly legible creature both in frame, open composition. Auto-contract says 0/5 (all "too_small") — the creature reads recognizably at this resolution despite the strict 8% height floor; a real, honest improvement over boot 1's obstruction. |
+| `01-village-edge-night` | same | **PASS** — same composition at night, creature still legible. |
+| `02-mill-pond-banks-day` | band1 order 6 (paddlenewt) + order 1071 (mosshell) | **PASS** — trainer at the fence, a mosshell clearly visible across the water. Auto-contract agrees (2/5 pass, mosshell PASS). |
+| `02-mill-pond-banks-night` | same | **PASS** — moonlit lake, mosshell shape legible beside the fence. |
+| `03-band1-open-meadow-day` | band1 order 1002 (pipwing) + order 1072 (bramblebun) | **FAIL** — trainer alone in open meadow; no creature visible anywhere in this composition. The cluster is close enough by distance (9-16m, per the log) but apparently outside the camera's actual field of view. |
+| `04-relay-camp-day` | band1 order 1073 (bramblebun) + order 1074 (trailpup) | **PASS** — wolf-like and fluffy-white creatures both legible among the trees, reads as a populated camp. |
+| `04-relay-camp-night` | same | **FAIL** — too dark to read anything beyond the trainer's own silhouette; the auto-contract's 0/8 (mostly `part_behind_camera`) agrees something is wrong with this specific eye/camera geometry at night, not just exposure. |
+| `05-ridge-camp-day` | band4 order 4076 (rolled to shadelet this world) + order 4102 (rolled to galecrest) | **PASS**, and the clearest win of the round — two bird-like creatures beside the trainer, well-composed, hillside backdrop. Complete turnaround from boot 1's unreadable closeup. |
+| `00-village-life-day` | existing `VillageNPCs`/`Trainers` (14 within 40m, per the log) | **PARTIAL** — a genuinely nice establishing shot of the village (houses, fence, life "feels" present), but no individual person is clearly recognizable in this specific frame despite 14 NPCs being reported nearby. Fixed from boot 1's total failure (pure hair closeup) but not a clean pass. |
+| `06-starter-beside-trainer-day` | real party path (`terrapup` via `Game.party.add()`) | **VISUALLY PASS, contract FAIL** — see below. |
+
+Net: 6 of 9 stand/village frames now clearly show real, legible wildlife or village life (up from
+0 of 9 in boot 1's own worst frames); one (`00-village-life`) is a genuine partial; two
+(`03-band1-open-meadow-day`, `04-relay-camp-night`) are still real failures.
+
+**A note on species names in the cluster table above**: `roll_new_worlds` is `true` (round 1's own
+flip), so a `"table"`-driven cluster like order 4076/4102 rolls a fresh species per world boot —
+boot 1 and boot 2 rolled different creatures for the identical clusters (burrowback/trailpup vs.
+shadelet/galecrest). The cluster **id** is the durable reference this report and the tool's own
+`cluster_note` field point to; the specific species named in older `_why` comments should be read
+as "what it rolled once," not a promise.
+
+### The pairing frame's contract failure is very likely a tool bug, not a framing defect
+
+`06-starter-beside-trainer-day.png` is a good picture — trainer and terrapup both clearly in frame,
+reasonably composed, at every one of the 6 reroll attempts. But `_bbox_check()` printed impossible
+numbers against the trainer: `height_frac=3.37` at one attempt (337% of the frame's own height,
+which cannot happen for a box actually on screen), `part_behind_camera` at a camera position ~5m
+from the trainer with nothing between them. The camera transform used for the print is the same
+one used to render the (visually correct) PNG, so the render pipeline itself is not degenerate;
+the bug is somewhere in `_player_visible_aabb()`/`_shape_global_aabb()`'s box or `_screen_rect()`'s
+projection of it, not investigated further to this round's own bottom because the boot budget was
+spent on the higher-impact camera/radius fixes instead (round 4's "recommended next step" already
+flagged `_player_aabb()` as suspect). Flagging this honestly as a known, unresolved tool defect
+rather than either hiding the FAIL or reporting a false PASS: the image is good, the printed
+verdict is not to be trusted for this specific frame.
+
+### The one radius that had to stay wide
+
+Band1 order 0 (the "Practice Meadow" bramblebun cluster — `level: 2`, pinned, GAME-11/GAME-F2's own
+regression history) was tightened 15.0 → 5.0 alongside everything else in this round, and that
+broke `tests/smoke_catching.gd`: the test's own comment says the practice cluster must spawn
+reachable near (41, -48), 13.6m from this cluster's centre, and confirmed empirically — the test
+passes against a clean checkout (radius 15.0) and fails at radius 5.0 ("could not enter combat;
+nothing below this point was tested"). Reverted back to 15.0. This means `01-village-edge`'s own
+photographed bramblebun distances (10.8-16.7m per the boot-2 log) reflect one lucky roll of a
+cluster whose radius is, and must stay, wide enough to occasionally place a creature much closer or
+farther — the frame shipped is real evidence of what the eye can see, but not a guaranteed
+composition on every future world roll. Every other radius change in this round (band1 1002/
+1070-1074, band4 4076/4102) had no such test dependency and was left tightened.
+
+### Known defects, stated plainly
+
+- `03-band1-open-meadow-day` shows no creature at all despite two clusters reporting 9-16m
+  distances in the log — the population is near enough by the numbers but not inside the camera's
+  actual field of view. Not root-caused this round; worth checking `facing_toward` against where
+  the reported bodies actually sit relative to the (now camera-offset) eye.
+- `04-relay-camp-night` is too dark to read, and its own bbox report (`part_behind_camera` on every
+  wild body) suggests the geometry itself is off at this specific `night_eye`/`night_facing_toward`
+  pair, not just exposure/lighting.
+- `00-village-life-day` is a nice wide shot but does not clearly show an individual villager in this
+  particular frame, despite 14 being reported within 40m.
+- The pairing frame's bbox contract cannot be trusted (see above) — the picture is the real
+  evidence for that frame, not the printed verdict.
+- Order 0's radius could not be tightened without breaking `tests/smoke_catching.gd`; its stand-01
+  photo is not a guaranteed composition on a future world re-roll (see above).
+
+### Tests, run on the branch tip after all round-5 changes
+
+| test | result |
+|---|---|
+| `tests/smoke_wild_streaming.gd` | **PASS** — "wild streaming: OK — distant clusters sleep, near ones tick, engaged/fainting/respawning are never touched, and a round trip changes nothing about a creature's identity." |
+| `tests/smoke_catching.gd` | **PASS** (after reverting order 0's radius) — "catching: OK — a throw can be aimed, missed, and landed." |
+
+### Boot budget
+
+Two world boots used, as instructed by the round's own cap. Boot 1 (`round5_boot1/`) proved the
+real-population/real-pairing mechanism but exposed the camera/radius bugs above. Boot 2
+(`round5/`, the shipped evidence) ran after both fixes were made and verified with
+`--check-only`/JSON validation first, spending no boot on iteration. The pairing-frame bbox bug and
+the two remaining frame failures (`03-band1-open-meadow-day`, `04-relay-camp-night`) were left
+unresolved rather than spending a third boot the round did not budget for.
+
+### Recommended next step
+
+1. Root-cause `_player_visible_aabb()`/`_screen_rect()`'s pairing-frame measurement bug — the
+   picture is fine, the printed contract is not, and that gap should be closed before the contract
+   is trusted for a pairing shot again.
+2. `03-band1-open-meadow-day`: check the actual bearing from the (now offset) camera position to
+   the reported wild bodies — something is placing them outside frame despite plausible distances.
+3. `04-relay-camp-night`: re-derive `night_eye`/`night_facing_toward` the way `_clear_eye()` derives
+   day eyes, rather than the hand-picked override currently in `STANDS`.
+4. `00-village-life`: aim the eye/look pair at wherever the 14 nearby NPCs actually cluster, rather
+   than reusing `_capture_locations.gd`'s "01 standing" composition verbatim, since that shot was
+   never designed to guarantee a person in frame.
