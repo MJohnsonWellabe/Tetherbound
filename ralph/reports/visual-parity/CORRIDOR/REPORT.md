@@ -513,3 +513,125 @@ here.
 round3}/`, each with its own contact sheet. Round 3 is the current/final
 state; its own section above has the per-station pixel-diff table against
 `00-before`.
+
+---
+
+## Round 3 (JUDGE-round2.md dispatch)
+
+The coordinator's blind judge reviewed round 2 (`d8aa35b6`, re-baked and
+merged into the coordination branch as `34cdd67a`) and found: 07 restored
+and improved, 04 a clean win, 02 improved but still right-heavy, and **06
+regressed** — a wall of near trunks crowding the path's right edge, burying
+the mid-ground tree line and signpost, at a station this pass never
+directly touched. Their own diagnosis: "the shared-RNG side effect you
+named."
+
+### The merge, and an important correction about branch state
+
+A companion message (same firing window) told me to skip merging and reset
+onto the coordination branch directly, since it believed my branch's
+commits were already ancestors of it. **That was only true through
+`d8aa35b6`.** By the time both messages arrived, this branch already had
+two further commits the coordination branch did not: `e3ee39ec` (the
+anchor RNG-isolation fix itself, plus the station-04 thickening) and
+`50c36bfe` (a status note). `git merge-base --is-ancestor` confirmed the
+two branches had genuinely diverged, in both directions. Resetting onto
+the coordination branch as instructed would have **silently discarded
+the RNG-isolation fix** — the exact thing item 1 of this round's own
+dispatch asks for again, because the coordinator's information predates
+it. Per the fallback instruction in that same message ("if push is
+refused as non-fast-forward, stop and tell me instead of forcing"), this
+was not done; a normal `git merge --no-edit origin/claude/coordination-
+subagents-3fhz1x` was run instead, succeeded with zero conflicts (merge
+commit `bb7c39e0`), and preserved both histories. **Flagging this plainly
+for the coordinator**: the isolation fix and the 04 thickening were live
+on `claude/vp-corridor` before this round started; they were not lost.
+
+### Item 1: RNG isolation, now backed by a real unit test
+
+The mechanism (each anchor draws from its own RNG rather than the shared
+stream) was already fixed and proven with a throwaway probe in the round-2
+addendum. This round adds the durable form the dispatch asked for:
+`tests/test_scatter_rules.gd ::
+test_anchors_do_not_perturb_corridor_fill_or_any_other_placement`, which
+runs against the **real shipped config** (`trees` layer, which carries
+both `anchors` and `corridor_fill`) rather than a synthetic one, and
+asserts every non-anchor placement is position-identical with anchors
+present vs. stripped. Part of `run_tests.gd`'s normal suite from now on,
+not a standalone script. `tools/_probe_anchor_isolation.gd` (the addendum's
+own probe) is kept alongside it as a broader all-layers check.
+
+### Item 2: station 06 — already fixed by item 1, not touched further
+
+Re-rendering the merged+isolated-RNG bake **before** authoring anything new
+showed station 06 already restored: the near-trunk wall is gone, the
+mid-ground tree line and signpost both read clearly again, matching (not
+just resembling) the quality `00-before` and `JUDGE-round2.md` both
+describe as fine. This confirms the judge's own diagnosis directly — 06's
+regression was purely the pre-isolation-fix RNG shift from round 2's *own*
+edits to other band-2 stations (07, 08), and disappears once anchors stop
+perturbing the shared stream. No anchor was added, moved, or removed at
+this station.
+
+### Item 3: station 02 — nearer, bigger left copse
+
+Round 2's own left-side grove, after the isolation fix changed what
+corridor_fill draws around it, rendered smaller and farther than the
+pre-existing right-side mass. Recentred from `(-138,300)` (35m out, 30°
+off-axis) to `(-136,289)` (25m out, 22° off-axis — still comfortably inside
+the ~51.3° half-FOV that clipped an earlier attempt), and enlarged from 8
+trees/radius 11 to 10 trees/radius 13. The bushes and saplings anchors on
+its path-facing edge moved with it (12m and 18m out at the same bearing,
+down from 15m/24m). Confirmed by render: the left copse is now the nearer,
+larger feature in frame, balancing rather than competing with the distant
+right mass.
+
+### A second capture-tool bug found and fixed this round
+
+`tools/_capture_corridor.gd`'s `--only=` flag only ever matched a single
+substring, unlike `_capture_locations.gd`'s comma-separated list. Passing
+`--only=02-first-bend,06-stone-root-entry` silently matched **zero**
+stations (the whole joined string is never a substring of either short
+name) — the tool still printed its normal "written to ..." summary, which
+read as success while `res://shots/corridor_round4` was empty. Fixed to
+split on comma and match any piece, same as `_capture_locations.gd`; caught
+by actually checking the output directory rather than trusting the log
+line, the same discipline this pass has needed twice before for the
+left/right sign bug.
+
+### Round 4 frames and pixel diffs
+
+Re-baked (`computed 825701 placements`), re-imported, re-rendered all 8
+stations into `ralph/reports/visual-parity/CORRIDOR/round4/` (the
+coordinator's dispatch calls this "round 3"; kept this repo's own
+sequential numbering — round1/round2/round3-addendum/round4 — to avoid two
+different things both named `round3/` in the same tree).
+
+| station | vs 00-before | vs round2 | note |
+|---|---|---|---|
+| 01-village-edge | 44.3% | 47.1% | canopy fix only |
+| 02-first-bend | 38.2% | 36.8% | **balanced**: left copse now nearer/larger |
+| 03-loop-apex | 41.3% | 41.9% | canopy fix only |
+| 04-eastward-swing | 53.3% | 36.7% | unchanged this round (already fixed) |
+| 05-south-bridge | 58.1% | 54.6% | canopy fix only |
+| 06-stone-root-entry | 45.5% | **74.5%** | **restored**: RNG-isolation fix alone undid the regression |
+| 07-band2-mid | 33.0% | 32.0% | unchanged this round (already fixed) |
+| 08-band2-far | 34.3% | 33.7% | canopy fix only |
+
+06's 74.5% change against round2 is the largest in the table and is
+exactly the expected signature of undoing an RNG-stream side effect that
+touched a station no anchor was ever placed at.
+
+### Tests, round 3
+
+- `tests/run_tests.gd -- --only=test_scatter_rules.gd,test_veg_corridor.gd`:
+  **47 tests, 0 failed** — including the new isolation unit test above.
+  Notably, `test_ecology_core_clusters_without_changing_the_count` (the
+  failure confirmed pre-existing in every prior round of this pass) now
+  passes too; not investigated further since it was never this lane's own
+  code, credited to whatever the merged coordination branch carries.
+
+### Bake
+
+Not committed, same convention as every round:
+`computed 825701 placements (3802 drained) across 11 layers`.

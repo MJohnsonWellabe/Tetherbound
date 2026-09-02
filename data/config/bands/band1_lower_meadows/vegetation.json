@@ -99,10 +99,10 @@
         "count": 6
       },
       {
-        "_why": "ROUND 2 (JUDGE-round1.md), COORDINATES CORRECTED TWICE after this round's own renders: round 1's own additions at this station were confirmed present by crop diff but the round-1 judge found the station NET EMPTIER after the bake than before -- appending new anchors shifts every later draw's RNG position for the same layer corridor-wide, and here it looks to have thinned out whatever corridor-fill trees the before bake happened to land on this station's own screen-left. FIRST attempt ((-158,280)) rendered on screen-right, not left -- wrong side of the camera's true right axis `(-Fz,Fx)` = (-0.479,-0.878). SECOND attempt ((-126,302)) fixed the side (confirmed left, dot -25.0) but rendered invisible anyway: at 32.6m out it sat 50.8 degrees off the view axis, against a measured ~51.3-degree horizontal half-FOV at this aspect ratio -- literally the last half-degree of the frame, clipped/unreadable. This THIRD centre is built from angle, not just side: 35m out at 30 degrees off-axis (`eye + 35*(cos(30)*forward_unit + sin(30)*left_unit)`), comfortably inside the FOV rather than grazing its edge. Confirmed by render: a visible tree line now stands on screen-left. 8 trees (7-9 asked), radius 11 (trimmed from 13 so the cluster doesn't itself push instances back out past 40-45 degrees), two leaf variants only (CommonTree_1/_3, skipping _2) per the brief, >25m off the path centreline (past the 6m minimum).",
-        "at": [-138.0, 300.0],
-        "radius": 11.0,
-        "count": 8,
+        "_why": "ROUND 2 (JUDGE-round1.md), COORDINATES CORRECTED THREE TIMES across two rounds: round 1's own additions here were confirmed present by crop diff but judged net emptier than before (the pre-isolation-fix RNG-reshuffle bug, see round-2-addendum's own report section). Attempt 1 ((-158,280)) rendered on the wrong side (screen-right, not left). Attempt 2 ((-126,302)) fixed the side but sat 50.8 degrees off-axis, clipped at the edge of a ~51.3-degree half-FOV. Attempt 3 ((-138,300), 35m out at 30 degrees) fixed both, but JUDGE-round2.md (round against the isolation-fixed bake) called the frame 'still right-heavy -- new copse smaller/farther than the grove it replaced'. This FOURTH centre is closer (25m, within the FOV at 22 degrees off-axis) and bigger (10 trees, radius 13, up from 8/11) so it reads at a comparable size and prominence to the pre-existing right-side mass rather than a token gesture on the opposite side. Two leaf variants only (CommonTree_1/_3, skipping _2) per the original brief; >20m off the path centreline (past the 6m minimum).",
+        "at": [-136.0, 289.0],
+        "radius": 13.0,
+        "count": 10,
         "scale_min": 0.8,
         "scale_max": 1.3,
         "max_slope_deg": 24.0,
@@ -151,8 +151,8 @@
         "count": 3
       },
       {
-        "_why": "ROUND 2: 5 bushes on the round-2 grove's own PATH-FACING edge (the side toward station (-120,270)), per the brief. Coordinates corrected to the angle-based grove centre above (15m out at the same 30-degree bearing, i.e. between the eye and the grove core).",
-        "at": [-128.0, 283.0],
+        "_why": "ROUND 2: 5 bushes on the round-2 grove's own PATH-FACING edge, per the brief. Coordinates re-corrected alongside the grove's round-3 nearer/larger recentre (12m out at the same bearing, between the eye and the grove core).",
+        "at": [-128.0, 279.0],
         "radius": 7.0,
         "count": 5
       },
@@ -165,8 +165,8 @@
     ],
     "saplings": [
       {
-        "_why": "ROUND 2: 3 saplings on the same path-facing edge as the bushes above, completing the brief's 'bushes and saplings on its path-facing edge'. Coordinates corrected to the angle-based grove centre above (24m out at the same 30-degree bearing).",
-        "at": [-132.0, 290.0],
+        "_why": "ROUND 2: 3 saplings on the same path-facing edge as the bushes above, completing the brief's 'bushes and saplings on its path-facing edge'. Coordinates re-corrected alongside the grove's round-3 nearer/larger recentre (18m out at the same bearing).",
+        "at": [-131.0, 284.0],
         "radius": 6.0,
         "count": 3
       }
