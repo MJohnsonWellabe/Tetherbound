@@ -1,0 +1,7 @@
+=== PERF-ROG render stats (unlabelled) ===
+driver=X11  adapter=llvmpipe (LLVM 20.1.2, 256 bits)
+scatter_lod_ranges=false
+view                     draw calls     primitives      objects
+village_high                   3165        8622824         3306
+band1_open                     7659       11757306         6593
+hall_approach                  3844        4332388         4185

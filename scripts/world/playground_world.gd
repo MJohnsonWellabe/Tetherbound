@@ -17,6 +17,7 @@ const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
 const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
+const STRUCTURE_VISIBILITY_RANGE := preload("res://scripts/world/structure_visibility_range.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const WATER := preload("res://scripts/world/water.gd")
 const VILLAGE := preload("res://scripts/world/village.gd")
@@ -1042,18 +1043,21 @@ func _build_settlement() -> void:
 		# Door on the east wall faces the village square.
 		add_child(house)
 		house.call("build", _camera_rig, _player)
+		STRUCTURE_VISIBILITY_RANGE.apply(house, "grandpa_house")
 		BOOT_LOG.phase("settlement: grandpa house")
 
 	var village: Node3D = VILLAGE.new()
 	village.name = "Village"
 	add_child(village)
 	village.call("build")
+	STRUCTURE_VISIBILITY_RANGE.apply(village, "village")
 	BOOT_LOG.phase("settlement: village")
 
 	var props: Node3D = PROPS.new()
 	props.name = "Props"
 	add_child(props)
 	props.call("build")
+	STRUCTURE_VISIBILITY_RANGE.apply(props, "props")
 	BOOT_LOG.phase("settlement: props")
 
 	var village_npcs: Node3D = VILLAGE_NPCS.new()
@@ -1158,6 +1162,7 @@ func _build_settlement() -> void:
 	mill_crossing.name = "MillCrossing"
 	add_child(mill_crossing)
 	mill_crossing.call("build", self)
+	STRUCTURE_VISIBILITY_RANGE.apply(mill_crossing, "mill_crossing")
 
 	# SA4: the severed outward roads. Before the boundary ring because they
 	# stand INSIDE it (~160-200m out) and are the thing the player is meant to
@@ -1166,6 +1171,7 @@ func _build_settlement() -> void:
 	spokes.name = "SeveredSpokes"
 	add_child(spokes)
 	spokes.call("build", self)
+	STRUCTURE_VISIBILITY_RANGE.apply(spokes, "severed_spokes")
 	print("[playground] severed spokes standing: %s" % ", ".join(spokes.call("built")))
 
 	var perimeter: Node3D = WORLD_PERIMETER.new()
@@ -1249,6 +1255,7 @@ func _build_road_gate() -> void:
 	boundary.name = "VillageBoundary"
 	add_child(boundary)
 	boundary.call("build", self)
+	STRUCTURE_VISIBILITY_RANGE.apply(boundary, "village_boundary")
 
 	var game := get_node_or_null(^"/root/Game")
 	if KEY_PICKUP.was_taken(game, "castle_gate_key"):
@@ -1472,6 +1479,8 @@ func _build_burrow_warrens() -> void:
 	var director := get_node_or_null(^"EncounterDirector")
 	if not bool(warrens.call("build", self, _camera_rig, _player, director)):
 		push_warning("the Burrow Warrens did not build; the required dungeon is missing")
+	else:
+		STRUCTURE_VISIBILITY_RANGE.apply(warrens, "burrow_warrens")
 
 
 ## R8.2/SG38: the authored stronghold route behind `landmark.gd`'s castle, and

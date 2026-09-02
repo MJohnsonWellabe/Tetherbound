@@ -112,9 +112,32 @@ uniform float streak_strength : hint_range(0.0, 1.0) = 0.22;
 // in either evidence frame begins darkening now) and floor 0.7 (was 0.6, so
 // even fully-faded surfaces keep more of their weathered read). 400m keeps
 // its own beat -- 200..400 is still a real ramp, just shallower at the top.
-uniform float distance_darken_start = 200.0;
+// VP-HALL-FIX ITEM1d (2026-09-02). A code-blind judge at the GATE stand
+// itself (0m, not 100/200/400m) called the Hall "crushed to black up close",
+// stacked on top of `site.weathering.exterior.darken` 0.74 (see that key's
+// own `_why_exterior_round4` in stronghold.json for the base-tint half of
+// this fix) -- ITEM1c's own curve was still shaving up to 30% off a base
+// tint that was already too dark to lose any more. `distance_darken_start`
+// 200 -> 260 (>= the 250 floor the dispatch names, so nothing inside the
+// gate stand's own frame -- which per ITEM1c's own math can hold far Hall
+// geometry beyond 100m of camera distance -- starts fading a beat later
+// than before) and `distance_darken_floor` 0.7 -> 0.85 (worst-case distance
+// loss cut from 30% to 15% of the un-darkened tint) are BOTH required,
+// explicitly, by the dispatch that raised this item. `distance_darken_end`
+// is UNCHANGED at 400.0 -- the 400m silhouette read is the one thing this
+// curve got right, and only the ramp's steepness (not its far endpoint)
+// moves. Net effect at 400m: a surface that was floor-multiplied to 70% of
+// its tint is now multiplied to 85% -- LESS darkening than before at range.
+// That trade is deliberate and paid for on the other side of this fix: the
+// base exterior tint itself dropped enough (stronghold.json's `darken` 0.74
+// -> 0.48) that a LightRock-tier surface at 400m now reads at roughly
+// 0.52*0.85 = 0.442 of raw stone value versus the old 0.26*0.7 = 0.182 --
+// brighter in absolute terms, but the sky it silhouettes against is
+// brighter still, so the darker-than-sky read this curve exists to protect
+// is a contrast question, not an absolute-value one, and stays intact.
+uniform float distance_darken_start = 260.0;
 uniform float distance_darken_end = 400.0;
-uniform float distance_darken_floor : hint_range(0.0, 1.0) = 0.7;
+uniform float distance_darken_floor : hint_range(0.0, 1.0) = 0.85;
 
 varying vec3 world_pos;
 varying vec3 world_nrm;
