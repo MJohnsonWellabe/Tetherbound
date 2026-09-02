@@ -52,24 +52,27 @@ still broken by direct play** — treat these as the standing lesson that
 
 ---
 
-## 2. Owner playtest, 2026-09-01 — remaining items, still unconfirmed
+## 2. Owner playtest, 2026-09-01 — remaining items
 
 `ralph/OWNER_PLAYTEST_2026-09-01.md` is the full record. Of twelve dispatched
-same-day fixes, three are now confirmed broken again (§1 above). The other
-nine have not been re-checked by real play either — treat all of them as
-"believed fixed," not fixed, same as the three that already failed that test:
+same-day fixes, three are now confirmed broken again (§1 above). A second
+real-play confirmation pass, 2026-09-02 (owner, verbatim, going through this
+exact list): *"the knife looks fine, player sleep was impossible still, lag
+was gone but so was grass so it's not a good test. I didn't test bond but
+if it's coded remove it. small creatures in grass still want fixed. they're
+not super visible."*
 
-| # | finding | landed as |
-|---|---|---|
-| 1 | Knife not visible in hand | `OWNER-0901-KNIFE-VISIBILITY-V2` |
-| 2 | Severe lag, ~10 FPS — **game breaker** | `OWNER-0901-PERFORMANCE-LAG-V2` |
-| 3 | Interact works ~half the time — **game breaker** | `OWNER-0901-INTERACT-RELIABILITY-V2` |
-| 4 | No way for the player to sleep | `OWNER-0901-PLAYER-SLEEP` |
-| 7 | Unclear how to train a team | `OWNER-0901-TRAIN-CLARITY` |
-| 8 | Bond system illegible, wants discrete milestones | `OWNER-0901-BOND-MILESTONES` |
-| 9 | Creatures don't lie in bed except galecrest | `OWNER-0901-CREATURE-BED-POSE` (bed roster-fit landed separately, §3) |
-| 12 | Tournament `min_level` 6→5, Halda's guidance made concrete | `OWNER-0901-TOURNAMENT-LEVEL5` |
-| — | Small creatures disappear into grass | `OWNER-0901-CREATURE-GRASS-VISIBILITY` |
+| # | finding | landed as | now |
+|---|---|---|---|
+| 1 | Knife not visible in hand | `OWNER-0901-KNIFE-VISIBILITY-V2` | **confirmed fixed by real play** |
+| 2 | Severe lag, ~10 FPS — **game breaker** | `OWNER-0901-PERFORMANCE-LAG-V2` | **inconclusive** — the owner's retest happened while grass was off (it's back on as of today, `OWNER-0902-GRASS-ON`), which was the original fix's own mechanism, so this run couldn't actually test whether the fix still holds. Needs a fresh real-hardware playtest with grass in its current on state before this can be called fixed or broken. |
+| 3 | Interact works ~half the time — **game breaker** | `OWNER-0901-INTERACT-RELIABILITY-V2` | not covered by this pass, still just "believed fixed" |
+| 4 | No way for the player to sleep | `OWNER-0901-PLAYER-SLEEP` | **confirmed still broken** — "player sleep was impossible still." Reopened; needs a real fix, not another investigation. Note: the campsite was split into three pieces the same day (`OWNER-0902-CAMP-SPLIT`) and player rest now runs through the new `bedroll` piece (`scripts/build/player_bed.gd`) — check whether this complaint is about that path specifically, or a separate player-only sleep action (distinct from creature-bed rest) that was never built at all. |
+| 7 | Unclear how to train a team | `OWNER-0901-TRAIN-CLARITY` | not covered by this pass, still just "believed fixed" |
+| 8 | Bond system illegible, wants discrete milestones | `OWNER-0901-BOND-MILESTONES` | **closed, confirmed implemented by code inspection** (owner: "I didn't test bond but if it's coded remove it"). `docs/decisions/D70-bond-is-a-milestone-ladder-not-a-meter.md` records the real redesign: the old 0-100 point meter is gone, replaced by an ordered five-task ladder (`data/config/bond_milestones.json`, `scripts/creatures/bond_milestones.gd`) matching the owner's own example almost verbatim ("defeat 50 wild creatures together" is milestone 1, unmodified owner input). `scripts/ui/bond_meter.gd` (the display widget, name notwithstanding) draws the milestone tier and its progress sentence, not a raw percentage — no leftover old-meter UI. `tests/test_bond.gd` pins the ladder's sequential behavior. Real, not a stub. |
+| 9 | Creatures don't lie in bed except galecrest | `OWNER-0901-CREATURE-BED-POSE` (bed roster-fit landed separately, §3) | not re-covered by this pass |
+| 12 | Tournament `min_level` 6→5, Halda's guidance made concrete | `OWNER-0901-TOURNAMENT-LEVEL5` | not covered by this pass, still just "believed fixed" |
+| — | Small creatures disappear into grass | `OWNER-0901-CREATURE-GRASS-VISIBILITY` | **confirmed still broken, and now live again** — "small creatures in grass still want fixed. they're not super visible." Now more urgent than when this was filed: grass is back on as of today (`OWNER-0902-GRASS-ON`), so this is an active, current defect, not a dormant one. Needs a real fix. |
 
 **The village-gate lesson stands as recorded history:** the first dispatch on
 that finding claimed "nothing to fix" from a config read with no pushed

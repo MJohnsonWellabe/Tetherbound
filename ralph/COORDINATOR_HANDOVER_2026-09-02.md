@@ -18,6 +18,14 @@ left, in priority order:
 Read `CLAUDE.md` and `ralph/START_HERE.md` first, as always. This file is
 a snapshot of one session's handoff, not a replacement for either.
 
+**Updated same day, after a second real-play confirmation pass on §2a's
+list** (owner going through it directly): knife and bond are now confirmed
+done, player-sleep and small-creature-grass-visibility are confirmed real
+live bugs (not just "unconfirmed"), and the lag item's retest turned out
+invalid (done with grass off) so it's still genuinely open either way. §2a
+and §2c below carry the current, corrected state — this is not the
+original draft.
+
 ---
 
 ## 0. How this session worked, and why — read this before spawning anything
@@ -138,22 +146,37 @@ exact finding text, tell it to reproduce for real before touching anything,
 and hold it to the same landing discipline as §0. Do not accept a report
 back that isn't backed by a real run.
 
-### 2a. From the 2026-09-01 playtest (`ralph/OWNER_PLAYTEST_2026-09-01.md`) — nine items, all still just "believed fixed," none re-confirmed by real play
+### 2a. From the 2026-09-01 playtest (`ralph/OWNER_PLAYTEST_2026-09-01.md`)
 
-| # | finding, verbatim | landed as | what to actually check |
+**A second real-play confirmation pass happened 2026-09-02, after this
+handover was first drafted** — the owner went through this exact list.
+Verbatim: *"the knife looks fine, player sleep was impossible still, lag
+was gone but so was grass so it's not a good test. I didn't test bond but
+if it's coded remove it. small creatures in grass still want fixed. they're
+not super visible."* `ralph/BACKLOG.md` §2 has the full table with this
+folded in; summary here:
+
+| # | finding, verbatim | landed as | now |
 |---|---|---|---|
-| 1 | "Knife not visible in hand." Equipped but not rendering/attached. | `OWNER-0901-KNIFE-VISIBILITY-V2` | Equip a knife in a real headless/rendered run and confirm it's actually attached and visible, not just that the fix's own unit test passes. |
-| 2 | "Severe lag — frame rate collapsed to ~10 FPS." Called a **game breaker**. | `OWNER-0901-PERFORMANCE-LAG-V2` | **Read the flag below before treating this as closed at all — grass, the fix for this exact item, was just turned back on today.** |
-| 3 | "Interact button works about half the time." Called a **game breaker**. | `OWNER-0901-INTERACT-RELIABILITY-V2` | Needs a real controller-input-driven reproduction (real parsed input events, not a poll-only test per `ralph/conventions.md`), repeated enough times to catch a ~50% failure rate if it's still there. |
-| 4 | "Still no way for a person to sleep." (Player's own sleep, distinct from creature-bed rest.) | `OWNER-0901-PLAYER-SLEEP` | The campsite was split into three independent pieces today (`ralph/OWNER-0902-CAMP-SPLIT`, landed `852fe366`) — the player's own rest/sleep path now runs through the new `bedroll` piece (`scripts/build/player_bed.gd`). Confirm the player-sleep flow this item asks for actually works through that new path, not just that a creature can rest. |
-| 7 | "Still unclear how to train a team." No clear guidance on what training is or how to do it. | `OWNER-0901-TRAIN-CLARITY` | Real playthrough of the guidance/dialogue path; confirm a player who hasn't read any docs can find and use it. |
-| 8 | "Bond system is not legible... It needs to be a task." Wants discrete milestones (e.g. defeat 50 wild creatures together, visit somewhere, travel X miles) instead of a continuous meter. The owner left milestone 2 as "whatever" — a placeholder, not locked. | `OWNER-0901-BOND-MILESTONES` | Confirm the shipped UI actually reads as discrete milestones, not a relabeled meter. |
-| 12 | Tournament `min_level` 6 → 5; Halda's guidance must say explicitly what to do (feed, rest, reach level 5) instead of vague "train." | `OWNER-0901-TOURNAMENT-LEVEL5` | Confirm both halves landed — the level number and the dialogue rewrite are two separate things to check. |
-| — | "Small creatures disappear into grass." | `OWNER-0901-CREATURE-GRASS-VISIBILITY` | **Also flagged below — grass is back on as of today, making this directly relevant again, not historical.** |
+| 1 | "Knife not visible in hand." | `OWNER-0901-KNIFE-VISIBILITY-V2` | **Confirmed fixed by real play. Done, nothing to spawn.** |
+| 2 | "Severe lag — frame rate collapsed to ~10 FPS." Called a **game breaker**. | `OWNER-0901-PERFORMANCE-LAG-V2` | **Still genuinely unconfirmed either way** — the retest happened with grass off, so it didn't actually exercise current `main` (grass is back on). Needs a fresh real-hardware playtest specifically with grass in its current on state. See §2c. |
+| 3 | "Interact button works about half the time." Called a **game breaker**. | `OWNER-0901-INTERACT-RELIABILITY-V2` | Not covered by the 09-02 confirmation pass. Still just "believed fixed" — needs a real controller-input-driven reproduction (real parsed input events, not a poll-only test per `ralph/conventions.md`). |
+| 4 | "Still no way for a person to sleep." (Player's own sleep, distinct from creature-bed rest.) | `OWNER-0901-PLAYER-SLEEP` | **Confirmed still broken — "player sleep was impossible still."** Reopen for real, this is a live bug, not a re-verification task. The campsite was split into three pieces the same day as the original fix (`ralph/OWNER-0902-CAMP-SPLIT`) — the player's rest path now runs through the new `bedroll` piece (`scripts/build/player_bed.gd`). Check whether the complaint is about that specific path being broken/inaccessible, or whether a player-only sleep action (distinct from build-a-bed-and-rest) was never actually built at all — the original finding implies the latter. |
+| 7 | "Still unclear how to train a team." | `OWNER-0901-TRAIN-CLARITY` | Not covered by the 09-02 confirmation pass. Still just "believed fixed." |
+| 8 | "Bond system is not legible... It needs to be a task." | `OWNER-0901-BOND-MILESTONES` | **Closed — confirmed implemented by code inspection** (owner: "I didn't test bond but if it's coded remove it"). `docs/decisions/D70-bond-is-a-milestone-ladder-not-a-meter.md` + `data/config/bond_milestones.json` + `scripts/creatures/bond_milestones.gd` + `tests/test_bond.gd` are real: an ordered five-task ladder replacing the old 0-100 meter, matching the owner's own example nearly verbatim. Nothing to spawn here. |
+| 12 | Tournament `min_level` 6 → 5, Halda's guidance made concrete. | `OWNER-0901-TOURNAMENT-LEVEL5` | Not covered by the 09-02 confirmation pass. Still just "believed fixed." |
+| — | "Small creatures disappear into grass." | `OWNER-0901-CREATURE-GRASS-VISIBILITY` | **Confirmed still broken — "small creatures in grass still want fixed. they're not super visible."** Live, current, real bug — not speculative any more (grass is on). Needs a real fix session. |
 
 Item 9 (creatures don't lie in bed except galecrest) and item 5/6 (village
 gate, village population) from this same playtest **were** re-verified and
-re-fixed this session — do not redo them, see `ralph/BACKLOG.md` §1/§4.
+re-fixed earlier this session — do not redo them, see `ralph/BACKLOG.md` §1/§4.
+
+**Net effect on what to actually spawn from this section:** two real, live,
+owner-confirmed bugs — player sleep (item 4) and small-creature grass
+visibility — plus three items still genuinely unconfirmed either way
+(interact reliability, train-clarity, tournament-level5) that a real
+playthrough could close quickly. Knife and bond are done; don't spend a
+session on either.
 
 ### 2b. From the 2026-09-02 playtest (`ralph/OWNER_PLAYTEST_2026-09-02.md`) — items nothing has touched
 
@@ -185,18 +208,21 @@ measurement that actually decided the original game-breaker. It is
 genuinely possible that turning grass back on — even at 5x cheaper —
 reintroduces some or all of the original lag on real hardware. This is not
 a defect in today's work; it was a knowing tradeoff the owner chose with
-that limitation stated plainly. But it means:
-
-- Item 2 above (the lag game-breaker) cannot be considered "still fixed"
-  without a fresh real-hardware check now that grass is back on — the
-  fix that resolved it originally has been partially reversed.
-- The "small creatures disappear into grass" item is now live again in a
-  way it wasn't while grass was off.
+that limitation stated plainly. **This has since played out exactly as
+predicted:** the owner's 09-02 confirmation pass tried to retest item 2 and
+found the run itself invalid — *"lag was gone but so was grass so it's not
+a good test"* — grass was off during that retest, so it never actually
+exercised current `main` (grass has been on since earlier the same day).
+Item 2 is genuinely unresolved either way, not "probably fine." The other
+half of the prediction also confirmed: *"small creatures in grass still
+want fixed. they're not super visible"* — now a live, current bug, not a
+dormant one.
 
 **The single most valuable next real-world event for this whole list is
-another owner playtest on the ROG Ally itself**, the same way the 09-01 and
-09-02 playtests reopened things a code read alone had missed. No amount of
-container-side work can close item 2 for real without it.
+another owner playtest on the ROG Ally itself, specifically with grass in
+its current on state** — the same way the 09-01 and 09-02 playtests
+reopened things a code read alone had missed. No amount of container-side
+work can close item 2 for real without it.
 
 ---
 
