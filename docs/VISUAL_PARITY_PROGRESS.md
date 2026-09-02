@@ -79,6 +79,17 @@ lane sessions were interrupted and archived. What survived: code/config on `clau
 a single frame. SKY and WARRENS pushed nothing. Lane-branch code is reviewed and cherry-picked by the
 coordinator, never merged blind.
 
+**Area coordinators (Opus), spawned 2026-09-02 01:46 UTC from e3aba7d7** (owner directive: Opus
+coordinates, Sonnet codes/renders, Fable judges/plans):
+
+| area | passes | branch | session |
+|---|---|---|---|
+| WORLD | VP1 + VP2 + VP3 | `claude/vp-world` | session_01XigbWtMzp7EwN5SqzwLvYB |
+| PLACES | VP5 + VP6 + VP7 + VP8 | `claude/vp-places` | session_0182PYdBscd4KZMdDfwmmu63 |
+
+Round plans are delivered into the coordinator sessions by the program coordinator; each round ends
+with pushed frames + REPORT.md and the session stopping.
+
 **Operating model from here:** the coordinator (this session) judges and plans; rendering runs serially
 on the coordinator's box; the code-blind judge is a cheap Sonnet subagent inside this session; remote
 Sonnet coder sessions are spawned only for bounded, well-specified rounds when wall-clock parallelism
