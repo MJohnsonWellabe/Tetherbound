@@ -160,12 +160,18 @@ visual gain — left `false` for this reason; the flag stays available for futur
 | hall_approach | 3844 | 4,332,388 | 4185 | ≤ 4000 draws | PASS |
 | village_high | 3165 | 8,622,824 | 3306 | — | recorded, no budget set |
 
-**VP10 draw-call pass at band1_open: IN PROGRESS.** The growth since VP2 comes from VP3/VP4/VP9 content
-(hero trees, band layer anchors, authored wild clusters) plus main's own additions. Candidates identified
-but not yet measured: grass carpet `cull_tile_m` 24 → 32 (trades ~40% fewer carpet tiles for a small
-primitive rise — primitives have only 2% headroom left, so it must be re-measured before landing); instancer
-region-cell batching for near layers; prop material sharing. Assigned to the WORLD session; not yet
-re-measured or re-judged.
+**VP10 draw-call pass at band1_open: DONE — `structure_visibility_ranges` ON (one-shot measurement, KEPT).**
+`ralph/reports/visual-parity/VP10-perf/perf_visibility_ranges_on.txt`, same tool / settle 120/60/20 / 1280x720:
+
+| view | draw calls (OFF → ON) | primitives (OFF → ON) | objects (OFF → ON) | budget | verdict |
+|---|---|---|---|---|---|
+| band1_open | 7659 → **6847** | 11,757,306 → 11,718,510 | 6593 → 5858 | ≤ 7500 draws / ≤ 12.0M prims | **PASS** (8.7% draw headroom, 2.3% prim headroom) |
+| hall_approach | 3844 → 3847 | 4,332,388 → 4,325,660 | 4185 → 4188 | ≤ 4000 draws | PASS |
+| village_high | 3165 → 2880 | 8,622,824 → 8,532,978 | 3306 → 3021 | — | recorded |
+
+Visual check for the switch: `VP10-perf/survey_vis_on/_sheet_off_vs_on.png` (five survey stands, OFF left / ON
+right) — no structure missing or popping at any stand. The final VP11 recapture (§2/§3) was taken with the switch
+ON, and its own `VP11-final/perf_render_stats.txt` is the shipped number of record (table below once landed).
 
 ### Optimization decisions (carried into VP10)
 
@@ -311,16 +317,18 @@ implemented — see §6).
 
 ### VP10 — performance retention
 Not a visually-judged pass — a measurement pass on the merged tree via `tools/perf_render_stats.gd`. Evidence:
-`VP10-perf/perf_merged_1d1a2f74.txt`; `WORLD/REPORT.md` ("closing summary", VP10 item). Main finding: `band1_open`
-draw calls sat 2.1% over the provisional VP2 proxy (7659 vs 7500) on the merged tree, while primitives (11.76M ≤
-12.0M) and `hall_approach` (3844 ≤ 4000) both passed. Response: a per-group draw-call breakdown, not a fix, was the
-deliverable — it disproved the leading candidate by measurement (the grass carpet costs 133 draws, not thousands,
-since a MultiMesh is one draw per surface, not per instance) while finding 45.3% of draws unattributed and the
-per-group numbers surface-count upper bounds, not frustum-aware. A `structure_visibility_range` mechanism was built
-and merged **default-OFF and unmeasured**; the owner's one-shot rule allows exactly one further measurement (ON,
-pixel-diffed against the survey stands) before it is kept or left off permanently. **Final state: MEASURED**
-(`band1_open` 7659 draws vs the 7500 provisional proxy, primitives 11.76M ≤ 12.0M, `hall_approach` 3844 ≤ 4000;
-visibility-range switch shipped default-OFF, one-shot measurement pending).
+`VP10-perf/perf_merged_1d1a2f74.txt` (baseline, switch OFF), `VP10-perf/perf_visibility_ranges_on.txt` (switch ON),
+`VP10-perf/survey_vis_on/` + `_sheet_off_vs_on.png` (five survey stands OFF vs ON), `VP10-perf/DECISION-visibility-ranges.md`.
+First finding: `band1_open` draw calls sat 2.1% over the provisional VP2 proxy (7659 vs 7500) on the merged tree,
+while primitives (11.76M ≤ 12.0M) and `hall_approach` (3844 ≤ 4000) both passed. A per-group draw-call breakdown
+disproved the leading candidate by measurement (the grass carpet costs 133 draws, not thousands — a MultiMesh is one
+draw per surface, not per instance). A `structure_visibility_range` mechanism (per-group visibility ranges on
+authored structures/props, `data/config/performance.json` `structure_visibility_range`) was built, merged default-OFF,
+then given its one measurement under the owner's one-shot rule: ON brings `band1_open` to **6847 draws / 11.72M
+prims**, `hall_approach` 3847, `village_high` 2880, with the five survey stands pixel-compared OFF vs ON — no
+structure missing or popping at any stand (the 15–29% pixel diffs are grass/cloud motion). Unit guards
+`test_scatter_perf_budget` + `test_grass_field` 21/0. **Final state: PASS on the proxy budget** — switch KEPT ON
+(commit `222ea390`); on-device FPS remains the owner-side measurement (§4).
 
 ---
 
