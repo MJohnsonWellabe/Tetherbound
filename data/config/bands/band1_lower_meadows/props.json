@@ -206,45 +206,58 @@
         {
           "model": "log_large",
           "at": [
-            -19.2,
-            -15.6
+            -15.0,
+            -18.9
           ],
-          "yaw_deg": 40.0,
+          "yaw_deg": 10.0,
           "scale": 1.0,
           "dir": "res://assets/environment/nature",
-          "_why": "a woodpile at Grandpa's own path-side corner -- homely, private-house clutter (matching the differentiation T1-VILLAGE's inn/farmhouse work already established), not a public one's. Inside the farmhouse's own apron footprint (centre -22,-16, half_extents 5.3x3.3), 3m clear of the house wall."
+          "_why": "a woodpile against the farmhouse's east wall, 2m south of the door (built door node (-15.7,-16), wall extent x -16.05): homely, private-house clutter on the side the player walks up. Clear of the smoke_opening door lane (z ~ -15) by 3.9m and of the Grandpa's-house path by 4.4m."
         },
         {
           "model": "Crate_Wooden",
           "at": [
-            -19.8,
-            -15.1
+            -14.3,
+            -19.4
           ],
           "yaw_deg": -15.0,
           "scale": 1.0,
-          "_why": "set against the woodpile's own foot, not floating separately -- same 'one pile, not a scatter' rule farmhouse_yard's own props already follow."
+          "_why": "set against the woodpile's own foot (0.86m centre to centre, touching), not floating separately -- one pile, not a scatter."
         },
         {
           "model": "Barrel",
           "at": [
-            0.0,
-            -9.6
+            4.6,
+            -11.4
           ],
           "yaw_deg": 200.0,
           "scale": 1.0,
-          "_why": "at the inn's own path-side corner, facing the approach from the well -- a public house's clutter, not a private one's. Inside the inn's own apron footprint (centre -1.5,-9, half_extents 4.32x6.78)."
+          "_why": "the inn's cellar barrels, south of its east door (door node (3.5,-9); east wall collider ends at x 3.73, so 0.9m clear), on the square side where the well-to-inn path arrives. A public house's clutter, not a private home's.",
+          "name": "Barrel_inn_1"
         },
         {
           "model": "Bench",
           "at": [
-            -0.8,
-            -10.2
+            4.7,
+            -6.6
           ],
-          "yaw_deg": 227.0,
+          "yaw_deg": -90.0,
           "scale": 1.0,
-          "_why": "beside the barrel, facing the path -- somewhere to sit before going in, which is the whole difference an inn's own frontage needs over a private home's."
+          "_why": "a seat along the inn's east wall NORTH of the door, running with the wall (local X on world -Z, spanning z -8.0..-5.2, so the door's 1.6m leaf at z -9.8..-8.2 stays clear): somewhere to sit before going in, which is the whole difference an inn's frontage needs over a private home's."
+        },
+        {
+          "model": "Barrel",
+          "name": "Barrel_inn_2",
+          "at": [
+            4.9,
+            -12.2
+          ],
+          "yaw_deg": 40.0,
+          "scale": 1.0,
+          "_why": "VP5: the second barrel, touching the first (0.85m centre to centre) at a different yaw -- a pair set down together reads as stock, one alone reads as a prop."
         }
-      ]
+      ],
+      "_why_vp5": "VP5 (visual-parity village lane), 2026-09-02. Every one of the four E1 entries below was standing INSIDE a building: the log_large/Crate_Wooden pair at (-19.2,-15.6)/(-19.8,-15.1) sat inside Grandpa's house (grandpa_house.gd INNER_W 9.0 -> walls at x -26.8..-17.2, z -19.8..-12.2), and the Barrel/Bench at (0,-9.6)/(-0.8,-10.2) sat inside the inn's common room (inn recipe walls at local x +/-3, z +/-5 under yaw 90 -> world x -6.5..3.5, z -12..-6; the door is on the EAST face at (3.5,-9), not where the apron half-extents were read as saying). Measured against the built scene's collider extents with a scratch layout probe, not against the apron table. Moved OUTSIDE: the woodpile against the farmhouse's east wall south of the door, the inn's seat and barrels either side of its door on the square side, with village.json's new `doorstep` between them."
     },
     {
       "order": 1006,
@@ -253,38 +266,142 @@
       "props": [
         {
           "model": "Bench",
+          "name": "Bench_east",
           "at": [
-            24.0,
-            12.0
+            26.0,
+            9.6
           ],
-          "yaw_deg": 127.0,
+          "yaw_deg": 130.0,
           "scale": 1.0,
-          "_why": "east flank of the board, facing back toward it -- a place to sit and watch the bracket, 5.0m clear of the board's own prompt radius."
+          "_why": "east flank of the ring, facing north-west at the fight ground and the board; 3.2m from Halda (E1 had it at (24,12), 0.4m from her standing spot), 4.7m inside the east fence, 4.1m from the berry node."
+        },
+        {
+          "model": "Barrel",
+          "at": [
+            27.6,
+            11.2
+          ],
+          "yaw_deg": 25.0,
+          "scale": 1.0,
+          "_why": "a water barrel at the east bench's end (0.9m from it) -- the one thing a crowd on a warm day needs, and it stops the bench reading as a lone plank."
         },
         {
           "model": "Bench",
+          "name": "Bench_west",
           "at": [
-            16.0,
-            18.0
+            17.2,
+            18.6
           ],
           "yaw_deg": 307.0,
           "scale": 1.0,
-          "_why": "the board's other flank, facing back toward it, mirroring the east bench so the ground reads as an audience space rather than one stray seat."
+          "_why": "the board's other flank, facing back toward it across the ring, 2.1m east of the corridor road's centreline (its 0.7m half-width plus 1.1m shoulder is 1.8m, so it sits on the verge, not the road), 3m inside the new north-east fence."
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            23.0,
+            14.2
+          ],
+          "yaw_deg": 30.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "creature staging: the pile the next team's kit waits on, 3.4m east of the board (its prompt radius is 2.6m), 2.8m inside the fence, 2.3m from Halda's spot."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [
+            23.75,
+            14.9
+          ],
+          "yaw_deg": 0.0,
+          "scale": 1.0,
+          "_why": "water for the creature waiting its bout, touching the crate's north-east corner."
+        },
+        {
+          "model": "Bag",
+          "at": [
+            22.35,
+            14.7
+          ],
+          "yaw_deg": 120.0,
+          "scale": 1.0,
+          "_why": "a trainer's pack leaning on the crate's west face (0.82m centre to centre)."
+        },
+        {
+          "model": "Banner",
+          "name": "Banner_gate_west",
+          "at": [
+            14.0,
+            4.2
+          ],
+          "yaw_deg": 5.0,
+          "pitch_deg": -6.0,
+          "sink_m": -0.1,
+          "scale": 2.6,
+          "dir": "res://assets/buildings/quaternius_castle",
+          "retint": {
+            "Banner": "#3d6a38"
+          },
+          "_why": "the west post of the gateway pair flanking the corridor road where it enters the field from the square (road centreline x~19.9 at this z; cloth spans x 14.0..15.8 and faces along the road so a walker from the well sees it head-on). 5m from Bryn's stand at (13,9), 2.4m north of cottage_a's north-east collider extent. Green is the key art's own settlement banner; oxblood stays Team Tether's."
+        },
+        {
+          "model": "Banner",
+          "name": "Banner_gate_east",
+          "at": [
+            24.2,
+            3.6
+          ],
+          "yaw_deg": -5.0,
+          "pitch_deg": -6.0,
+          "sink_m": -0.1,
+          "scale": 2.6,
+          "dir": "res://assets/buildings/quaternius_castle",
+          "retint": {
+            "Banner": "#3d6a38"
+          },
+          "_why": "the east post of the pair, cloth x 24.2..26.0, 4.3m east of the road; 4.2m from the berry node at (28,6), 8m from Halda, 6.8m from Fenn."
+        },
+        {
+          "model": "Banner",
+          "name": "Banner_west_ring",
+          "at": [
+            10.5,
+            13.5
+          ],
+          "yaw_deg": 90.0,
+          "pitch_deg": -6.0,
+          "sink_m": -0.1,
+          "scale": 2.6,
+          "dir": "res://assets/buildings/quaternius_castle",
+          "retint": {
+            "Banner": "#3d6a38"
+          },
+          "_why": "the ring's west marker, facing east across the road at the fight ground; cloth spans z 11.7..13.5 at x 10.5, 6m west of the road, 4.7m from Bryn, 9.8m from the workshop oak."
         }
-      ]
+      ],
+      "_why_vp5": "VP5 (visual-parity village lane), 2026-09-02. Two blind judges (ralph/reports/visual-parity/VP0-baseline/JUDGE-village-pond.md, ralph/reports/audit/E-locations/JUDGE-AUDIT-E-locations-2026-08-31.md) read this ground as 'a plain open meadow ... no arena, ring, stands, or banner'. The geography fixes what a ring can be: the corridor spine (terrain_playground.json trail.bands[0], (27.5,-16)->(14,20)) runs straight through the field 4m west of the board, the three tournament trainers stand at (20,12) (band1 trainers.json) with an 11m combat arena (combat_arena.gd) around the fight, and the village fence runs 3.3m behind the board. So the ring is the road's east verge, bounded by the fence: the EVENT read comes from the key art's own settlement device -- green banners on posts (quaternius_castle `Banner`, retinted to the board's banner green, never Team Tether's oxblood) -- two of them flanking the road where it enters the ground, one on the ring's west side; the two spectator benches re-sited to face the ring from outside the trainers' axis (E1's east bench stood 0.4m from Halda, on top of her); and a small staging pile (crate, bucket, bag) by the board for the team waiting its turn, with a barrel by the east bench. Everything solid sits >= 7m from the arena centre (20,10) except the board-side staging pile, 4.5m off its axis. Positions checked against the built scene (board node (20,15) yaw -155, Halda (23.5,11.5), Bryn (13,9), the berry node (28,6), the trail road's actual line, and the NEW boundary edge (30,11)->(15.98,22.59), which is 2.5-4m from the pile and the west bench)."
     },
     {
       "order": 1000,
       "name": "trail_camp",
       "rest": {
         "_why": "T5-CADENCE, closing T4-REGIONS' third-ranked chapter gap (ralph/reports/REGION_AUDIT_2026-08-30.md: 'Camps are set dressing'). This is the best-dressed camp in the game -- 18 props, a bed, a lit bonfire, a bench and a stool -- and it is a named map landmark (`band1_trail_camp`), and until this block it could not be used for anything. The audit's exit-criterion verdict for band 1's camp/recovery row was FAIL, with the reason written as 'a map landmark that promises rest and delivers scenery'. `scripts/world/rest_point.gd` is what reads this; the offer it stands up is the SAME one the player-built Camp makes, not a better one.\n\nSITED at the fire, 1.6m east of it, because the fire is what makes this read as a camp from the trail and because that is exactly where `camp.gd` hangs its own rest prompt relative to its own fire. The fire ring is ~2.1m across (campfire_stone_ring at scale 1.05), so 1.6m clears the stones.",
-        "at": [345.6, 935.4],
+        "at": [
+          345.6,
+          935.4
+        ],
         "radius": 3.2,
         "label": "Rest until morning",
-        "craft_at": [342.4, 935.0],
+        "craft_at": [
+          342.4,
+          935.0
+        ],
         "creature_bed": {
           "_why": "The camp's own creature bed, and the half of this that makes 'recovery' mean anything 900m from home: `game_state.gd::_tick_creature_bed_recovery()` heals an occupant gradually whether or not the player is standing here, so a creature bedded down at the trail camp is genuinely unavailable and genuinely recovering -- exit criterion H3.\n\nADDED rather than converted. The `camp_bed` prop already in this cluster stays exactly where it is, inside the tent's mouth, as the TRAINER's own sleeping surface; a trail camp a trainer keeps has a place for the team as well as for the person, and that is one more instance of an already-installed mesh rather than a new asset. Sited south-east of the fire in the one genuinely open quarter of the camp: 3.2m from the fire, 2.8m from the firewood log, 2.3m from the tall-grass tuft, and clear of the tent/bed footprint on the opposite side. Yaw turns its long axis toward the fire the way the bench and stool already face it. VISUAL NOTE: sited from the measured prop layout, not from a frame -- worth a look when this camp is next captured.",
-          "at": [347.0, 934.0],
+          "at": [
+            347.0,
+            934.0
+          ],
           "yaw_deg": 55.0,
           "bed_index": -11
         }
@@ -579,7 +696,7 @@
     {
       "order": 1020,
       "name": "tether_waypost",
-      "_why": "T3-BRIDGE, owner-direction §5: 'Team Tether patrol or evidence' as its own checklist item, distinct from the wilds/trainers/resources already authored here and distinct from the south_bridge_grunt fight itself -- everything Team Tether in Band 1 before this was spoken (Oskar/the Foreman/the Ranger's dialogue, data/dialogue/village.json) or fought (the bridge). Nothing physical said it until now. Follows data/config/bands/band3_the_river_lock/props.json order 3000's own established grammar for this exact faction beat (a staked, retinted Banner claims ground) rather than inventing a new one, but stripped down to EVIDENCE per §32's reveal ladder (data/config/old_quarry.json's own _comment_evidence: 'no dialogue in this file, no interactable on the hardware, no note to read' at this stage of the ladder) -- no brazier, no held position, because nobody mans this one. A dropped crate and a staked banner read as 'they were through here, recently, and didn't stay' rather than 'this is a manned post', which is the correct claim for ground the player has not been challenged on yet. Sited on-route (within `tools/_probe_band1_cadence.py`'s own 60m on-route lateral call) at arc~2100m of 2403m -- inside the last kilometre before the south_bridge_grunt checkpoint (arc~2372m), so the escalation reads as: evidence, then the grunt himself. Checked clear of every other authored entry in this band (nearest, the order-1049 mudsnout pocket, is 48m off).",
+      "_why": "T3-BRIDGE, owner-direction \u00a75: 'Team Tether patrol or evidence' as its own checklist item, distinct from the wilds/trainers/resources already authored here and distinct from the south_bridge_grunt fight itself -- everything Team Tether in Band 1 before this was spoken (Oskar/the Foreman/the Ranger's dialogue, data/dialogue/village.json) or fought (the bridge). Nothing physical said it until now. Follows data/config/bands/band3_the_river_lock/props.json order 3000's own established grammar for this exact faction beat (a staked, retinted Banner claims ground) rather than inventing a new one, but stripped down to EVIDENCE per \u00a732's reveal ladder (data/config/old_quarry.json's own _comment_evidence: 'no dialogue in this file, no interactable on the hardware, no note to read' at this stage of the ladder) -- no brazier, no held position, because nobody mans this one. A dropped crate and a staked banner read as 'they were through here, recently, and didn't stay' rather than 'this is a manned post', which is the correct claim for ground the player has not been challenged on yet. Sited on-route (within `tools/_probe_band1_cadence.py`'s own 60m on-route lateral call) at arc~2100m of 2403m -- inside the last kilometre before the south_bridge_grunt checkpoint (arc~2372m), so the escalation reads as: evidence, then the grunt himself. Checked clear of every other authored entry in this band (nearest, the order-1049 mudsnout pocket, is 48m off).",
       "props": [
         {
           "model": "Crate_Wooden",
@@ -607,6 +724,63 @@
             "Banner": "#7a2430"
           },
           "_why": "Same module, same oxblood hex, same scale/pitch/sink_m as the river checkpoint's own staked banner (band3_the_river_lock/props.json order 3000) -- CLAUDE.md's reserved Team Tether accent, no new mesh, no new colour. Yaw and pitch match that entry's own reasoning, not a re-derivation: 2.6 gives the same ~1.8m reading height at the same distance a passing player judges it from, and the small negative pitch/sink_m keep the unmodelled buried pole end from floating. TUNABLE against the actual road bearing here (roughly -72deg by the spine's own (180,1200)-(30,1250) segment) once this can be rendered and checked; 15deg is a legible-to-a-passerby placeholder, not a probed value."
+        }
+      ]
+    },
+    {
+      "order": 1032,
+      "name": "cottage_b_backyard",
+      "_why": "VP5 (visual-parity village lane), 2026-09-02. The practice-meadow fence runs at [14,-20] and [19.5,-25.5] (village.json) read as 'a fence that starts and stops enclosing nothing' (2026-08-30 judge). With village.json's new cart parked behind cottage_b at [21.8,-20] the line now fences that cottage's back yard; this woodpile against the cottage's south wall is what a back yard holds. 1.8m clear of the cottage's south collider extent (z -16.84), 1.4m from the cart's north face, 4m from the practice path's shoulder.",
+      "props": [
+        {
+          "model": "log_large",
+          "at": [
+            19.0,
+            -18.6
+          ],
+          "yaw_deg": 15.0,
+          "scale": 1.0,
+          "dir": "res://assets/environment/nature",
+          "_why": "split logs stacked along the wall line."
+        },
+        {
+          "model": "tree-log-small",
+          "at": [
+            19.9,
+            -18.15
+          ],
+          "yaw_deg": 100.0,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "sink_m": 0.03,
+          "_why": "one round not yet split, dropped beside the stack at a different angle so the pile reads as work in progress, not a placed pair."
+        }
+      ]
+    },
+    {
+      "order": 1033,
+      "name": "garden_gate",
+      "_why": "VP5 (visual-parity village lane), 2026-09-02. The open east side of Grandpa's kitchen garden (farm.json plots, now railed on the north and west by village.json): a picking crate and the watering bucket set down where the beds are worked from. 0.9m east of the eastern plot column, 3.5m from Old Perrin's spot at (-15,-5), 3.7m from the deadwood node at (-14,-8).",
+      "props": [
+        {
+          "model": "FarmCrate_Apple",
+          "at": [
+            -17.4,
+            -9.3
+          ],
+          "yaw_deg": 20.0,
+          "scale": 1.0,
+          "_why": "the harvest crate, half full."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [
+            -17.9,
+            -8.4
+          ],
+          "yaw_deg": -30.0,
+          "scale": 1.0,
+          "_why": "the watering bucket, touching the crate's side."
         }
       ]
     }
