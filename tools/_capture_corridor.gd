@@ -314,7 +314,11 @@ func _hide_huds() -> void:
 func _proof_camp_in_fov(name: String) -> void:
 	if name != "14-ridge-camp-approach":
 		return
-	var viewport_size := root.get_visible_rect().size
+	# `get_visible_rect().size` does NOT match the saved PNG's own dimensions
+	# (found the hard way: it reported 1282/1298 as "inside" a supposed 1280
+	# wide frame) -- `root.size` is the actual render-target resolution the
+	# capture is saved from, so that is what "inside" is checked against here.
+	var viewport_size := Vector2(root.size)
 	var probes := [["fire", Vector2(-233.9, 6473.7)], ["tent", Vector2(-238.3, 6473.6)]]
 	for probe: Array in probes:
 		var label: String = str(probe[0])
@@ -324,8 +328,9 @@ func _proof_camp_in_fov(name: String) -> void:
 		var screen := _camera.unproject_position(world_pos)
 		var inside := not behind and screen.x >= 0.0 and screen.x <= viewport_size.x \
 			and screen.y >= 0.0 and screen.y <= viewport_size.y
-		print("  [14 proof] %-4s world(%.1f,%.1f,%.1f) screen(%.0f,%.0f) behind=%s inside_frame=%s" % [
-			label, world_pos.x, world_pos.y, world_pos.z, screen.x, screen.y, behind, inside])
+		print("  [14 proof] %-4s world(%.1f,%.1f,%.1f) screen(%.0f,%.0f) of frame(%.0f,%.0f) behind=%s inside_frame=%s" % [
+			label, world_pos.x, world_pos.y, world_pos.z, screen.x, screen.y,
+			viewport_size.x, viewport_size.y, behind, inside])
 
 
 func _shoot(shot: Array) -> void:
