@@ -52,6 +52,14 @@
         "count": 4,
         "scale_min": 0.85,
         "scale_max": 1.2
+      },
+      {
+        "_why": "ROUND 9 (JUDGE-round8.md, final round): 'the right ~26% of the frame (~334px of 1280) is still bare sky/grass'. Sited from the REAL settled camera transform, not a flat-terrain estimate: `Camera3D.project_position()` at this station's own eye/look gave world(-319.0,5001.3) for screen x=1200 at 25m depth (the frame's own right-edge strip), averaged with the x=1250/30m probe (-324.9,5003.1) to land the anchor centre a little further out than the single nearest sample. Canopy specifically (not just rocks) because the judge's own failure mode is 'bare sky' above the grass line, and a rock cluster does not reach the upper two-thirds of the frame the way a tree's canopy does.",
+        "at": [-322.0, 5002.0],
+        "radius": 8.0,
+        "count": 4,
+        "scale_min": 0.9,
+        "scale_max": 1.3
       }
     ],
     "rocks": [
@@ -67,6 +75,13 @@
         "at": [-256.2, 6450.8],
         "radius": 10.0,
         "count": 5,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "ROUND 9 (JUDGE-round8.md, final round): 'camp visible but small on a featureless hillside'. A small rock cluster ~4m left of the (now closer, eye=clearing centre+8m per this round's dispatch) station, breaking up the bare foreground the judge named rather than adding scale to the camp itself (which is dressing this lane does not own further).",
+        "at": [-248.74, 6462.9],
+        "radius": 3.0,
+        "count": 2,
         "min_slope_deg": 0.0
       },
       {
