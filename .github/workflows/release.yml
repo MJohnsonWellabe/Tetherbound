@@ -174,7 +174,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Generate the site's patch notes
-        # ralph/DONE.md is append-only, newest entry first, one `## <id> —
+        # archive/ralph/DONE.md is append-only, newest entry first, one `## <id> —
         # <title>` heading per shipped item — already written in the right
         # length and voice for this (see conventions.md's "Writing style").
         # No separate manual step for the owner: publishing is what generates
@@ -189,7 +189,7 @@ jobs:
           import re
           from datetime import datetime, timezone
 
-          with open("ralph/DONE.md", encoding="utf-8") as f:
+          with open("archive/ralph/DONE.md", encoding="utf-8") as f:
               text = f.read()
 
           headings = re.findall(r"^## (.+)$", text, re.MULTILINE)
