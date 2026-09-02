@@ -582,6 +582,16 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 		# defect this replaces (a halo whose angular width could not be
 		# tuned by any of the neighbouring sun keys above).
 		["sun_glow_falloff", "sun_glow_falloff"],
+		# Round 7: the disc's TRUE angular radius, in degrees. `sun_size` above
+		# is now inert for the disc -- it was thresholded as `1 - sun_size` and
+		# treated as a cosine, but its values were never derived from a real
+		# angle, so day's 0.022 was acos(1-0.022) = 12.0 degrees of RADIUS, a
+		# disc filling ~34% of frame height, and golden/dawn's 0.009 was ~22%.
+		# Expressed in degrees the numbers are checkable: at the capture's 70
+		# degree vertical FOV, 1.0 degree of radius is a 2.0 degree disc, 2.86%
+		# of frame height. `sun_size` is still passed above because the uniform
+		# is still declared; removing the pass-through would error.
+		["sun_angular_radius_deg", "sun_angular_radius_deg"],
 		# VP1: cumulus form, shell projection, cirrus layer, horizon haze.
 		["cloud_edge_softness", "edge_softness"], ["cloud_altitude", "cloud_altitude"],
 		["cloud_lit_contrast", "lit_contrast"],

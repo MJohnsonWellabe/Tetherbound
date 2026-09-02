@@ -4,10 +4,10 @@
   "clearings": [
     {
       "order": 4000,
-      "x": -235.0,
-      "z": 6470.0,
+      "x": -241.8,
+      "z": 6468.5,
       "radius": 13.0,
-      "_why": "The watchtower spur's new patrol trainer and prop cluster (trainers.json order 4000, props.json order 4000) -- an 11m arena and six ground-hugging props both need scatter off the pad for the same reason every other trainer/cluster site in the chapter gets one (see band1's own clearings[4] on the practice trainer)."
+      "_why": "The watchtower spur's new patrol trainer and prop cluster (trainers.json order 4000, props.json order 4000) -- an 11m arena and six ground-hugging props both need scatter off the pad for the same reason every other trainer/cluster site in the chapter gets one (see band1's own clearings[4] on the practice trainer). ROUND 7 (JUDGE-round6.md): moved with props.json's own ridge_patrol_camp cluster (dx=-6.83, dz=-1.52, 7m toward the walked route) -- see that file's own _why_r7."
     },
     {
       "order": 4001,
@@ -26,6 +26,7 @@
   ],
   "footprints": [],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR round 4. Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (see band1_lower_meadows/vegetation.json's own comment on this key for the merge mechanism and why it exists). Fixes station 13-band4-entry-bend in `tools/_capture_corridor.gd`'s before set (`ralph/reports/visual-parity/CORRIDOR/00-before-b3b5/13-band4-entry-bend-day.png`) -- the worst 'empty grass to sky' case in the whole round-4 set, ~60% open sky with only a small distant tree cluster dead-centre. Checked clear of this file's own clearings above (4000 at -235,6470 r13; 4001 at 400,6040 r15; 4002 at -330,5090 r12) before siting.",
+  "_comment_layer_anchors_vp4_round6": "VP4-CORRIDOR round 6 (JUDGE-round5.md). Round 4/5's station 13 fix only planted the LEFT side of the bend (the trees/bushes/rocks entries above, all sited between roughly x=-320 and x=-300): the judge's round-5 read is 'left copse works, but the right two-thirds is still bare and sky is half the frame'. The two new entries below (trees + rocks, second array element in each) sit further out (60-68m) and further round to the right (22-32 degrees off-axis, same view axis: (-300,4990)->(-420,5140)) than the existing right-side rock cluster at (-321,5003) (25m/20 degrees) so they read as a second, farther band of mass rather than duplicating it -- a farther copse plus a rock line, per the brief's own two suggested options, both taken since one alone left a visible gap between the near rock cluster and open sky at this distance. Checked clear of both existing station-13 anchors (nearest gap 24-32m to the left tree copse, 21-25m to the near rock cluster) and of clearings[4002] (-330,5090 r12, nearest new point 71m away).",
   "layer_anchors": {
     "trees": [
       {
@@ -35,6 +36,22 @@
         "count": 8,
         "scale_min": 0.85,
         "scale_max": 1.3
+      },
+      {
+        "_why": "ROUND 6, station 13 right two-thirds (JUDGE-round5.md): a second, farther tree copse on the RIGHT side of the bend, ~60m out at 22 degrees off-axis -- the near-mid gap the existing right-side rock cluster alone did not fill.",
+        "at": [-340.0, 5020.0],
+        "radius": 12.0,
+        "count": 6,
+        "scale_min": 0.85,
+        "scale_max": 1.3
+      },
+      {
+        "_why": "ROUND 8 (JUDGE-round7.md): 'partial' -- the right-side fill still does not reach the frame's right EDGE, only its mid-right. This anchor is closer and further right than every existing station-13 anchor: 32m out at roughly 22m lateral offset from the (-300,4990)->(-420,5140) path (per the brief's own '10-25m right of the path at 15-35m depth'), clear of the near rock cluster (-321,5003 r9, 20.5m away) and the round-6 copse (-340,5020 r12, ~19m away, radius kept small here specifically to avoid that overlap).",
+        "at": [-337.2, 5001.3],
+        "radius": 6.0,
+        "count": 4,
+        "scale_min": 0.85,
+        "scale_max": 1.2
       }
     ],
     "rocks": [
@@ -46,9 +63,16 @@
         "min_slope_deg": 0.0
       },
       {
-        "_why": "ROUND 4 ADDENDUM, station 14-ridge-camp-approach (JUDGE-b3b5-before.md): 'neither ridge nor camp is legible... no rise, ledge, or rock shelf anywhere in frame to signal elevation'. A rock cluster between the station and the (now re-sited, see tools/_capture_corridor.gd) look target at `ridge_patrol_camp`'s own centroid, reading as a shelf breaking the ground plane on the approach. Honest limit: vegetation anchors place objects, they cannot sculpt terrain, so this is a visual mass cue rather than authored elevation -- a genuine height-map change at the ridge is outside this lane's owned files.",
-        "at": [-260.0, 6465.0],
+        "_why": "ROUND 4 ADDENDUM, station 14-ridge-camp-approach (JUDGE-b3b5-before.md): 'neither ridge nor camp is legible... no rise, ledge, or rock shelf anywhere in frame to signal elevation'. A rock cluster between the station and the look target at `ridge_patrol_camp`'s own centroid, reading as a shelf breaking the ground plane on the approach. Honest limit: vegetation anchors place objects, they cannot sculpt terrain, so this is a visual mass cue rather than authored elevation -- a genuine height-map change at the ridge is outside this lane's owned files. ROUND 7 (JUDGE-round6.md) RELOCATED: this anchor's original centre (-260,6465) sat 20.6m out on a 45.6m eye(-280,6460)->camp(-235.9,6471.7) sightline with a lateral offset of ~0.3m -- essentially dead centre on the line -- and was the actual cause of that round's 'no camp/tent/fire appears' regression, not the look direction (three tested eye/look pairs that avoided the camp centroid entirely, keeping this same rock anchor untouched, all failed too: either the camp fell in a dense foreground tree mass or was too small/distant to read at all, confirmed by cropping the rendered frame at the camp's own unprojected screen position and finding only grass). Moved 15m left of the sightline (perpendicular, using this station's own view-axis right vector) at the same ~20m depth -- still reads as a shelf on the approach, now 29m from the camp instead of blocking the 20m point of a 45m line to it.",
+        "at": [-256.2, 6450.8],
         "radius": 10.0,
+        "count": 5,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "ROUND 6, station 13 right two-thirds: a rock line further right and further out than the new tree copse above, ~68m out at 32 degrees off-axis, so the far right edge of the frame (past the copse) is not the only untouched sky left. `min_slope_deg` 0, same gentle-meadow override as this layer's other station-13 entry.",
+        "at": [-364.0, 5013.0],
+        "radius": 11.0,
         "count": 5,
         "min_slope_deg": 0.0
       }
@@ -59,6 +83,40 @@
         "at": [-302.0, 5015.0],
         "radius": 7.0,
         "count": 4
+      }
+    ],
+    "groundmat": [
+      {
+        "_why": "ROUND 6, station 14-ridge-camp-approach (JUDGE-round5.md): 'bare dirt clearing edge' around the patrol pad (clearings[4000], -235,6470 r13, which this station's re-sited look target sits on). Groundmat at radius 15 from the pad centre -- 2m past the pad's own r13 rim, so the clear pad itself is untouched -- on the flank away from camera-right, clear of the round-4 rock-shelf anchor above (16m gap).",
+        "at": [-245.1, 6458.9],
+        "radius": 5.0,
+        "count": 14
+      },
+      {
+        "_why": "ROUND 6, station 14: the opposite flank of the same pad edge, same radius-15 siting logic, clear of the rock-shelf anchor (15m gap).",
+        "at": [-248.9, 6475.7],
+        "radius": 5.0,
+        "count": 14
+      },
+      {
+        "_why": "ROUND 6, station 14: the far side of the pad edge (away from the camera), completing the ring so the clearing does not read as bare dirt from any angle the player might approach from, not only this station's own.",
+        "at": [-220.4, 6473.3],
+        "radius": 5.0,
+        "count": 14
+      }
+    ],
+    "flowers": [
+      {
+        "_why": "ROUND 6, station 14: a colour accent riding the same groundmat edge points, sparser (this layer is an accent, not a fill).",
+        "at": [-245.1, 6458.9],
+        "radius": 5.0,
+        "count": 6
+      },
+      {
+        "_why": "ROUND 6, station 14: same edge, opposite flank.",
+        "at": [-248.9, 6475.7],
+        "radius": 5.0,
+        "count": 6
       }
     ]
   }

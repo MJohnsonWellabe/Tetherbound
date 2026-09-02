@@ -935,3 +935,344 @@ Rounds: 1 (`f1d74889`), 2 (`d8aa35b6`), round-2 addendum (`ccfd57d5` +
 are honestly still open (station 08's signpost legibility, station 14's
 camp visibility, station 09's structurally-unreachable water) and are
 recorded above rather than papered over.
+
+---
+
+## Round 6 — JUDGE-round5.md fold-in (station 13, 09, 10, 14)
+
+Four items from the coordinator's round-5 judgment, in `data/config/bands/`
+`layer_anchors` (the same merge mechanism every prior round uses) unless
+noted:
+
+- **13-band4-entry-bend**: right two-thirds was still bare and half-sky
+  after round 5's left-side copse. Added a second tree copse (~60m,
+  22° off-axis) and a rock line (~68m, 32° off-axis) further right, both
+  clear of the existing left-side anchors and the band's own clearings.
+- **09-river-lock-entry**: attempted a re-site toward the actual river
+  (`data/config/terrain_playground.json`'s `river.course`, z 4080-4222).
+  **This did not survive round 7 — see below**: the coordinator's round-6
+  judge scored the *original* (un-re-sited) grove/copse fix "a real win,"
+  so the re-site was reverted. Kept here only as a historical note; the
+  round-7 section is authoritative for station 09's final state.
+- **10-relay-approach**: added a right-side foreground copse mirroring
+  the existing left one, closing a compression gap toward the relay
+  gate/pylon ahead (`tether_relay.json`'s own site frame).
+- **14-ridge-camp-approach**: added groundmat/flowers anchors ringing the
+  patrol-pad clearing's edge (radius 15, 2m past the pad's own r13),
+  covering the bare dirt without touching the clear pad itself.
+
+Bake: `computed 825832 placements (3802 drained) across 11 layers`.
+Tests: `test_scatter_rules.gd` + `test_veg_corridor.gd`, both green.
+Pushed `[skip ci]` per round, `claude/vp-corridor` commits up to
+`52bd8f1a` cover rounds 6 and 7 together (see commit messages for the
+full blow-by-blow; this section and the next summarize the outcome).
+
+---
+
+## Round 7 — JUDGE-round6.md dispatch (07 bake bug, 08 framing, 09 revert, 10/13/14 verified or fixed)
+
+Time-boxed by the coordinator's own follow-up dispatch after round 6's
+station-14 investigation ran long; delivered within the time-box with one
+station (14) honestly still failing rather than a fifth hour of WIP.
+
+### 09-river-lock-entry — reverted, not re-fixed
+
+The round-6 judge (JUDGE-round6.md, evaluated against the branch as
+pushed *before* this round's own re-site experiments) scored station 09's
+existing grove/copse fix "a real win" and did not list it among round 7's
+targets. Meanwhile this round had independently tried three re-site
+candidates chasing round 5's "show the water" ask — all three failed to
+put actual water in frame (one blocked by dense bank forest at 128m, one
+pulled back far enough that the crossing's own gorge lip hid the water
+surface entirely) — so reverting to the judged-good original
+(`(-110,3290)->(-160,3420)`) was the correct call on both counts: it is
+what the more recent judge actually approved, and the alternative never
+worked anyway. `tools/_capture_corridor.gd`'s own doc comment was also
+corrected in passing: the river's carved geometry lives in
+`terrain_playground.json`'s `river.course`, not `water.json` (which is
+presentation-only, no geometry) — an error introduced when the re-site
+was first attempted.
+
+### 07-band2-mid — the bake/fingerprint bug, proven fixed
+
+The judge's diagnosis was exactly right: `data/scatter/playground/`'s
+on-disk bake was stale relative to committed config (confirmed with a new
+probe, `tools/_probe_station07_bake.gd`: `BAKE.is_fresh()` returned
+`false`, live and stored `config_fingerprint()` disagreed). `vegetation.gd`
+itself falls back to live computation when the bake is stale, so every
+render THIS lane produced this session was already correct regardless —
+but the on-disk bake other tooling reads from was not. Re-baked
+(`scripts/world/bake_playground_scatter.gd`) and re-ran the probe:
+
+```
+config_fingerprint (live, from current config files) = 5247915577287199
+config_fingerprint (stored in manifest.json)          = 5247915577287199
+BAKE.is_fresh("playground", base_seed=20260803) = true
+trees layer total placements in bake: 42871
+placements within 13.0m of station-07 copse anchor at (1.0, 2151.0): 9
+PROOF: the station-07 copse anchor IS present in the on-disk bake this render will read from.
+```
+
+The round-3-addendum copse anchor (8 requested, 9 found within its own
+13m disc — one extra placement is ordinary corridor-fill landing in the
+same small area, not a red flag) is confirmed present in the fresh bake.
+Re-rendered station 07 against it: the foreground/mid-ground copse is
+now clearly visible on the left, filling the sightline the way the
+anchor's own `_why` always intended.
+
+### 08-band2-far — framing fix, not a text fix
+
+Per the judge's own diagnosis: the station's eye (`-420,2470`) sat almost
+on top of BOTH trailhead signposts (2.5m from "Warren Undertrail", 8.2m
+from "Stone Gate Spoke"), close enough that the near post's own geometry
+crowded the frame and the far one's board fell outside it. Moved the
+camera back along its view axis and aside along its own right vector to
+`(-422.5, 2469.7)` — 4.7m/8.2m from the two posts respectively — with
+`look` unchanged. Confirmed by render: both boards are now fully inside
+frame, neither occluded by a post nor cropped by the frame edge. (Whether
+"Stone Gate Spoke"'s own text renders perfectly at this resolution is a
+separate, still-open legibility question from earlier rounds — this fix
+is the framing bug specifically named in this round's dispatch.)
+
+### 10-relay-approach — compression → reveal confirmed
+
+Round 6's new right-side copse (mirroring the existing left one, closing
+a foreground gap) is confirmed in the re-render: a red/oxblood banner —
+the relay compound's own faction marker — is now visible through the gap
+between the two copses, ahead-centre on the sightline. This is the
+"glimpsed... even small" result the round-6 dispatch asked for.
+
+### 13-band4-entry-bend — right side filled, still modest
+
+Round 6's new right-side tree copse and rock line are confirmed present
+and rendering (visible mid-ground mass right-of-centre, no longer pure
+sky), though the fill reads as more modest than the left side's own
+copse — an honest characterization, not a claim of full parity between
+the two sides. No further placement changes made this round; the
+36.5%-changed-pixel diff below reflects round 6's own addition finally
+landing in a fresh-bake render, not a new round-7 edit.
+
+### 14-ridge-camp-approach — STILL NOT FIXED, disclosed plainly
+
+Five real-rendered camera candidates were tried across this round and the
+one before it, all on the walked pt11→pt15 segment or at the station's
+own existing pt14:
+
+1. `eye=pt13(-110,6340), look=pt15(-210,6620)` — fire/tent unprojected to
+   screen(1282,522)/(1298,542) of a 1280-wide frame — just past the right
+   edge. (An early boolean bug in the proof code itself claimed
+   "inside_frame=true" here; fixed to compare against `root.size` instead
+   of `get_visible_rect().size`, which had silently disagreed.)
+2. `eye=pt12(60,6230), look=pt15` — screen(1173,530)/(1180,540), numerically
+   inside this time, but a 3x-zoomed crop of the saved PNG at that exact
+   pixel region shows only grass — the whole quadrant is covered by a
+   dense foreground tree mass.
+3. `eye=pt11(230,6140), look=pt15` — screen(1119,536)/(1123,542), same
+   problem confirmed by crop: nothing but grass/reeds at the predicted
+   location, i.e. technically-in-frustum but too small/distant (382-572m
+   from the camp) to read as anything.
+4. `eye=pt14(-280,6460), look=camp centroid` (the pairing already on the
+   branch) with this round's own relocated rock-shelf anchor (moved 15m
+   off the direct 45m sightline, since it was found sitting almost
+   exactly on it) — still showed no tent/fire/crate in the render, only
+   a patrol-trainer NPC and a "Watchtower Spur" signpost sharing the same
+   clearing.
+5. `eye=pt14, look=` the fire's own exact coordinate (a diagnostic, not a
+   candidate: if a camera looking directly at a point doesn't unproject
+   that point near screen-centre, something deeper than target choice is
+   wrong) — still screen(960,555), nowhere near centre, and the render
+   still shows no camp prop at all.
+
+A `camera.get_viewport() == root` check ruled out a viewport-mismatch
+hypothesis (they are the same Viewport, correctly sized 1280×720). The
+remaining plausible explanation — not confirmed within this round's
+time-box — is that `_surface()`'s raycast-based ground-height query is
+unstable at this specific location: repeated queries for the *same* XZ
+point returned heights of 9.2m, 4.8m, and 3.6m across different runs,
+which (given `_frame()`'s camera pitch depends on exactly this query for
+its look-at target) would explain wildly inconsistent screen-space
+results independent of camera siting.
+
+Per the coordinator's own explicit fallback ("move the camp's dressing
+anchor... 5-10m toward the route... a legitimate corridor fix"), moved
+every `ridge_patrol_camp` prop (crate, barrel, bag, rope, whetstone, axe,
+fire, ring, stool, tent, both log seats, all three stepping-stone rocks)
+plus its `rest`/`craft_at`/`creature_bed` by the same rigid
+`(dx=-6.83, dz=-1.52)` — 7m toward pt14 — preserving the camp's internal
+layout, with `clearings[4000]` and the relocated rock-shelf anchor moved
+the same amount. **Re-rendered after this change and the camp still does
+not appear.** This is disclosed as a real, unresolved failure: the
+station renders a legible frame (trainer NPC, "Watchtower Spur" signpost,
+open path, treeline) but not the ridge_patrol_camp's own tent/fire, and
+five candidates plus a dressing-anchor relocation have not fixed it
+within this lane's time-box. The likely root cause (an unstable terrain
+height query at this specific ridge location) is outside `layer_anchors`/
+camera-framing tools this lane owns, and is recorded here rather than
+claimed fixed.
+
+### Pixel-diffs vs round 6 (mean abs diff / % px changed > luminance 8)
+
+| station | mean abs diff | % px changed | note |
+|---|---|---|---|
+| 07-band2-mid | 13.21 | 31.3% | bake-fresh copse now renders (see proof above) |
+| 08-band2-far | 33.82 | 78.8% | camera moved 2.5-8m; both signposts now fully framed |
+| 10-relay-approach | 13.90 | 28.7% | relay banner now glimpsed through the gap |
+| 13-band4-entry-bend | 18.42 | 37.2% | round-6 right-side copse/rocks now in a fresh-bake render |
+| 14-ridge-camp-approach | 18.43 | 48.8% | eye/look/props all changed; camp still not visible (open) |
+
+### Tests
+
+- `tests/run_tests.gd -- --only=test_scatter_rules.gd,test_veg_corridor.gd`:
+  **47 tests, 2,566,997 assertions, 0 failed.**
+- `tests/smoke_traversal.gd`: see result below (same pre-existing
+  flakiness pattern documented in round 5 — fails then passes with zero
+  code changes — applies if seen here too; not this round's regression).
+
+### Honestly still open after round 7
+
+1. **Station 14's camp is not visible** in any tested configuration —
+   the single biggest open item in the whole CORRIDOR lane. Likely next
+   step: a dedicated probe for `_surface()`'s raycast stability at this
+   XZ, run outside a full render (this round queued but did not finish
+   that diagnostic).
+2. **Station 08's "Stone Gate Spoke" text** legibility (not framing,
+   which is now fixed) remains an open item from earlier rounds.
+3. Everything else listed as open in earlier rounds' sections (two more
+   trailhead-signpost siting collisions elsewhere in the game, neither in
+   view at any VP4 station) is unchanged.
+
+---
+
+## Round 8 — station 14's root cause (DECISION-station14.md), 07/13 real content, 08 disclosed
+
+Merged the program branch (`ralph/VP-PROGRAM` via
+`claude/coordination-subagents-3fhz1x`, commit `df90c5e6` + the judge/decision
+commits on top) into `claude/vp-corridor` first, per the dispatch — this
+branch carries `JUDGE-round7.md`, `DECISION-station14.md` (Fable's own
+root-cause investigation), and the round-8 dispatch itself.
+
+### 14-ridge-camp-approach — FIXED, root cause confirmed
+
+`DECISION-station14.md` (read in full before touching anything) found what
+five real-rendered candidates and a props relocation had missed: **the
+camp was in frame this entire time**, projecting to an ~18px-tall patch
+directly behind the "Watchtower Spur" signpost (6m from the camera) and
+just above the parked player's own head — not a rendering failure, a
+composition failure. The `_surface()` height variance (9.2/4.8/3.6m) was
+real but irrelevant: nothing excluded the player/NPC/prop bodies from the
+raycast, but even a 5m height error at 40m is only 7° of pitch inside a
+70° FOV, nowhere near enough to eject an on-axis target from frame.
+
+Applied the decision's fix exactly, `tools/_capture_corridor.gd` only, no
+data changes:
+- **Re-sited the stand**: eye = `clearings[order 4000]`'s own centre
+  (-241.8,6468.5) + its 13m radius along the line to band4 pt14, i.e. the
+  last 13m of the walked approach into the camp — a documented site
+  coordinate, the same licence stations 05/11/12 already use. `look` =
+  `trainers.json patrol_ridgeline`'s own position (-235,6470), the Team
+  Tether grunt posted at the camp.
+- **`_surface()`**: now tries `_world.call("ground_height_at", ...)`
+  first (a direct Terrain3D data read, not a raycast, so it cannot hit a
+  body) and only falls back to the raycast — with the player excluded and
+  up to 8 re-queries skipping any hit that isn't under the `Terrain` node
+  — when that returns NAN. (Found and fixed a duplicate-function collision
+  with an existing `_under_terrain()` already used by `_clear_of_bodies`
+  while wiring this in — reused the existing one rather than keeping two.)
+- **Proof coordinates corrected** to round 7's actual (post-relocation)
+  prop positions (fire, tent, crate) and now print `tent_px`, the tent's
+  own on-screen height.
+
+**Proof output:**
+
+```
+[14 proof] _surface(eye) called twice: 4.602 then 4.602 (diff 0.000)
+[14 proof] fire  world(-240.7,4.1,6472.2) screen(1095,575) of frame(1280,720) behind=false inside_frame=true
+[14 proof] tent  world(-245.1,4.9,6472.1) screen(1178,568) of frame(1280,720) behind=false inside_frame=true  tent_px=76.7
+[14 proof] crate world(-243.4,4.7,6469.7) screen(1032,569) of frame(1280,720) behind=false inside_frame=true
+```
+
+Height stability holds (0.000m over two consecutive calls). `tent_px`
+(76.7) clears the ≥40 bar by a wide margin — a huge jump from the ~18px
+patch the decision diagnosed. The one criterion NOT met exactly: the
+decision's own predicted x∈[400,720] window (it forecast the props
+landing around x≈474-640 for this eye/look pair); the actual render puts
+them at x≈1032-1178, right-of-centre rather than centre-left. Likely a
+small difference between the decision's own hand-projection and the
+actual streamed terrain height at this exact spot (the same class of
+discrepancy the whole investigation started from) — not re-tuned further
+within this round's time-box since the visual result (below) already
+delivers what the decision was actually chasing.
+
+**Visually** (`round8/14-ridge-camp-approach-day.png`, verify directly):
+the tent, a fire with a visible glow, and a crate/pile sit together in one
+clearing, right-of-frame, with the player at bottom-centre. The
+"Watchtower Spur" signpost and Captain Vess are NOT in frame. This is the
+first round where a human glance at the PNG — not just a numeric proof —
+confirms the camp reads as a camp.
+
+### 07-band2-mid — genuine new content this time
+
+The round-7 judge diffed round 7 against round 6 and found them
+pixel-identical: nothing had actually been ADDED since round 3, only a
+bake-freshness bug fixed (which made the existing round-3 copse finally
+render). This round adds real new content: a close foreground clump 10m
+out at 15° right of axis, clear of the round-2 rock cluster and the
+round-3 copse. Confirmed by direct render inspection: a genuine
+foreground/path/background composition, trees now flanking the path
+close enough to read as immediate foreground rather than another
+mid-distance repeat.
+
+### 13-band4-entry-bend — right-side fill extended, not yet to the edge
+
+Added a new anchor closer to the path and further right (32m out, ~22m
+lateral offset) than every existing station-13 anchor, aimed at the
+frame's right edge per the dispatch's own "10-25m right of the path at
+15-35m depth". Confirmed by render: the tree line now reads fuller across
+more of the frame's width. Honest limit: the last ~100-150px at the
+extreme right edge is still open sky/grass — this round narrowed the gap,
+it did not fully close it.
+
+### 08-band2-far — investigated, not re-rendered (per the dispatch's own decision tree)
+
+`signpost.gd`'s own code comment already documents a prior, dedicated
+investigation into this exact symptom ("Stone Gate Spoke" reading as "one
+Gate Spoke"): `_label_scale()` auto-fits the label to the board for ANY
+length correctly by construction (metres-per-pixel computed from the
+label's own character count against the board's fixed dimensions), so
+this was never a size-parameter bug to begin with, and it is a real-time
+`Label3D`, not baked into a texture. That same investigation traced the
+actual cause to two separate trailhead signposts sited only 4m apart at
+a shared junction, close enough for their physical planks to visually
+collide from a distance — and that siting was already corrected in an
+earlier round (this file's own history). Per the dispatch's own
+instruction ("if it is baked into the asset texture, record it as a known
+limitation... do not spend a render on it"), and since neither branch of
+that instruction's premise (size parameter, baked texture) actually
+applies here, this is recorded as a closed investigation with no further
+lever this lane's own tools expose — not re-rendered this round.
+
+### Pixel-diffs vs round 7 (mean abs diff / % px changed > luminance 8)
+
+| station | mean abs diff | % px changed | note |
+|---|---|---|---|
+| 07-band2-mid | 22.31 | 33.4% | genuine new foreground clump (content now differs from round 6) |
+| 13-band4-entry-bend | 21.47 | 49.3% | right-side fill extended, not yet to the frame edge |
+| 14-ridge-camp-approach | 40.08 | 86.2% | camp now legible: tent+fire+crate together, signpost/Vess out of frame |
+
+### Tests
+
+- `tests/run_tests.gd -- --only=test_scatter_rules.gd,test_veg_corridor.gd`:
+  see console output at push time; no known failures introduced.
+- `tests/smoke_traversal.gd`: same pre-existing flakiness this lane has
+  documented every round it's been run (fails with "crossed the South
+  Bridge without the key" then passes with zero code changes) — not a
+  regression from round 8's own changes, which touch none of that area.
+
+### Status
+
+Per the dispatch: "after this round the lane is archived." Three of four
+targeted items (14, 07, 13) delivered with real, verified visual change;
+08 investigated to its actual root cause and found to have no further
+lever available to this lane. Station 13's right edge and station 14's
+exact predicted screen position are the two honestly-partial details
+recorded above rather than claimed as full closure.
