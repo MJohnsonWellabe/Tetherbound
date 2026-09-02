@@ -212,6 +212,20 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### PLACES round 5 (`claude/vp-places` @ 09:17) — judged 09:45, MERGED 09:46 (`60994d60`)
+Evidence: `PLACES/round5/locations/` (12), `_sheet_r4_vs_r5.png`, `PLACES/JUDGE-round5.md`.
+- Lane: Warrens reshaped (223→89 boulders, spoil mounds, exterior base = den rock), storm slabs lifted above the Hall
+  skyline, braziers ×3 + a face torch (21/22 omnis), gate sconces + 2 sentries, banner constant → oxblood; perf
+  `hall_approach` 3848; smokes green; courtyard-night mean 8.38 (target 12 missed, reported honestly).
+- Judge: approach/gate night genuinely brighter with a lit window and sconce; Hall silhouette reads at 200/400 m;
+  den unchanged; a legible grunt in the courtyard by day. Still failing: Warrens exterior a rock bunker with a flush
+  door, threshold frame regressed (darker, overhang wedge, a third grey rock material); courtyard floor still black;
+  banners still poster-red (the constant did not reach the rendered material); no identifiable gate sentry; a
+  floating prop above the gate; storm band still a third of every day sky. Bars A/B still **no** for the set-pieces.
+- Merged for the night/Hall gains. Round 6 dispatched 09:47: palworld-02-style earth mound with the mouth cut in,
+  one rock family, courtyard floor light diagnostic then ≥ 12, banner material found and sampled, gate prop/sentries,
+  storm band halved.
+
 ### CORRIDOR round 2 (`claude/vp-corridor` @ 08:33) — judged 09:05, MERGED 09:06, re-baked
 Evidence: `CORRIDOR/00-before`, `round1`, `round2`, `CORRIDOR/JUDGE-round2.md`.
 - Judge: station 07 restored and improved (hero tree, rock landmark, horizon); 04 a clean win (left-flank horizon
