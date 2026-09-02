@@ -247,15 +247,15 @@ func _shoot_starter() -> void:
 	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
 
-	# Third attempt. First: further along `away` landed on the house's own
-	# roof collider ("outside" is only ~8.7m off the wall, grandpa_house.gd
-	# -- 7m more along that axis is still inside the roof overhang). Second:
-	# side*6 + away*1.5 stood almost in line with the creature, filling the
-	# frame with its own back. This clears the roof with real distance
-	# (14m along `away`, well past the ~8.7m overhang) and holds both
-	# figures and the house by standing off to the side too, rather than
-	# in line with either of them.
-	var camEye := Vector2(eye3.x, eye3.z) + away * 14.0 + side * 4.0
+	# Third attempt (away*14 + side*4) walked the raycast into ANOTHER
+	# building's wall -- the yard is not open ground for 14m in every
+	# direction either. Reverting to the second attempt's geometry
+	# (side*6 + away*1.5), the best of the three: it stands close enough
+	# behind the creature to read clearly (its own back fills the middle
+	# of frame, house and open yard behind it) without landing on any
+	# collider. First: further along `away` landed on the house's own roof
+	# ("outside" is only ~8.7m off the wall, grandpa_house.gd).
+	var camEye := Vector2(eye3.x, eye3.z) + side * 6.0 + away * 1.5
 	var camTarget := Vector2((eye3.x + spot.x) * 0.5, (eye3.z + spot.z) * 0.5)
 	_frame(camEye, _surface(camEye), camTarget, _surface(camTarget))
 	_hide_huds()
