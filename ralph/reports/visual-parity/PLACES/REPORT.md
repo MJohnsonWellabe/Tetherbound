@@ -5,6 +5,12 @@
 
 ## Current state at a glance (after round 9)
 
+> **OPEN DECISION — Warrens exterior.** After seven rounds in which the judge's core verdict never moved
+> ("a grey rock pile on lawn" → "still reading as a rock pile") and two regressions were introduced by
+> patching, PLACES has **paused Warrens-exterior work** and asked the program coordinator to choose between
+> rebuilding the exterior construction and continuing to patch it. See
+> `DECISION-REQUEST-WARRENS-EXTERIOR.md`. All other PLACES work continues.
+
 | | state |
 |---|---|
 | `hall_approach` draw calls | **3848 / 4000** — inside budget (was 4331 at baseline) |
