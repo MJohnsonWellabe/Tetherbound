@@ -462,6 +462,34 @@ static func set_aerial_fade_colour(colour: Color) -> void:
 	_aerial_material.call("set_shader_param", "aerial_fade_colour", colour)
 
 
+## WORLD-ART aerial-fade pass, VP3 fix (2026-09-02). `WorldLook` is a sibling
+## child of this same scene root, so Godot readies it (and its `_ready()`'s
+## `apply_time(DEFAULT_TIME)`, which calls `_apply_environment` ->
+## `set_aerial_fade_colour` above) BEFORE this node's own `_ready()` runs --
+## children are readied bottom-up, and WorldLook has no `await` of its own to
+## delay it, while this function's caller does. That first push therefore
+## always lands while `_aerial_material` is still null and is silently
+## dropped by that setter's own no-op guard: on every fresh boot the terrain
+## started life on `terrain_playground.json`'s baked-in constant, not on the
+## current time-of-day's `aerial_fade_colour`, until the passive clock's next
+## `_apply_blended()` tick happened to retry -- which a frozen capture clock
+## (`world_look.gd::set_clock_frozen`, used by every survey/capture tool) never
+## does, so a pinned capture frame could carry the wrong aerial fade with
+## nothing in the capture path ever re-driving it.
+##
+## Called right after `_apply_ground_materials()` installs the real material
+## (the earliest point `_aerial_material` can be valid), this re-asks WorldLook
+## to apply whatever time of day it already resolved to -- a plain re-push of
+## the SAME preset, not a new one -- so the one-frame ordering race can no
+## longer matter: whichever of the two `_ready()`s happens to run first, the
+## terrain ends this function with the correct preset's fade colour on it.
+func _reapply_look_after_ground_materials() -> void:
+	var look := get_node_or_null(^"WorldLook")
+	if look == null or not look.has_method("apply_time") or not look.has_method("time_of_day"):
+		return
+	look.call("apply_time", look.call("time_of_day"))
+
+
 func _ready() -> void:
 	var perf_cfg := PERF_CONFIG.config()
 	if perf_cfg.has("collision_stream_interval_s"):
@@ -492,6 +520,7 @@ func _ready() -> void:
 
 	_apply_ground_materials()
 	BOOT_LOG.phase("playground: ground materials/shader applied")
+	_reapply_look_after_ground_materials()
 
 	# Terrain3D needs a camera to decide which regions to keep resident. Without
 	# it the extension logs an error every physics frame and stops processing.
