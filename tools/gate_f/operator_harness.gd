@@ -2839,8 +2839,22 @@ func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 			by_group.append(node)
 		if node.has_method("label") and str(node.call("label")).to_lower() == lowered:
 			by_label.append(node)
+		# species_id is shared by wild bodies (wild_creature.gd) AND the
+		# player's own deployed party creature (follower_creature.gd,
+		# node name "AllyCreature") -- a caught Bramblebun walking behind the
+		# trainer answers to species_id "bramblebun" exactly like a wild one.
+		# Unfiltered, a ladder that walks to "a live bramblebun" ten times
+		# started resolving its OWN ally instead of a wild target the moment
+		# the first Bramblebun was caught and deployed -- the ally is always
+		# close, so it kept winning `rank 0`, `move_to_entity` "arrived" at
+		# it in ~0 m, and `interact_with` FAILed on "Put Bramblebun away" /
+		# "Bramblebun is out of the fight" instead of "Engage" (S03 attempt 7
+		# §4, attempts b/d/g/j). Restricted to `_poi_kind == "wild"` so a
+		# species match can only ever mean a wild creature, the same
+		# classification `poi:wild` already uses.
 		var species: Variant = node.get("species_id")
-		if species != null and str(species).to_lower() == lowered:
+		if species != null and str(species).to_lower() == lowered \
+				and str(_probe.call("_poi_kind", node)).to_lower() == "wild":
 			by_species.append(node)
 		if str(node.name).to_lower().contains(lowered):
 			by_substring.append(node)
