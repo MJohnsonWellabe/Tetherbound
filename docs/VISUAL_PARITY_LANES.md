@@ -53,17 +53,21 @@ Software rendering: FPS is meaningless, never quote it. Structural cost is
 `tools/perf_render_stats.gd` (draw calls / primitives) at fixed stands; run it with
 `--settle=120 --resettle=60 --sample=20` and record numbers in your report.
 
-## Roles (owner directive, 2026-09-02 01:15 UTC)
+## Roles (owner directive, 2026-09-02 01:45 UTC)
 
-- **Judge + planner: the coordinator (Fable).** Every round's frames are judged by a
-  code-blind visual judge (a fresh agent that sees ONLY frames, contact sheets, `docs/reference/`,
-  the website board and the rubric — never code, config, diffs, reports or git history), and the
-  coordinator turns that verdict into the next concrete fix list.
-- **Coder + renderer: a Sonnet session per lane.** It implements exactly the fix list it is given
-  in its owned files, renders the matched after frames, runs the named tests, pushes its lane
-  branch and report, then stops. "Coded" is not a result; a pushed frame is.
-- A lane never self-certifies. It may run its own blind judge as a sanity check, but the round is
-  closed only by the coordinator's judge.
+- **Judge + planner: the program coordinator (Fable).** Judges every round's frames (with a
+  code-blind judge that sees ONLY frames, contact sheets, `docs/reference/`, the website board and the
+  rubric) and writes the next concrete fix list per area. Merges into the program branch.
+- **Area coordinators: Opus sessions** (WORLD = VP1 sky + VP2 ground + VP3 vegetation; PLACES = VP5
+  village/tournament/camps + VP6 Warrens exterior + VP7 Relay + VP8 Hall). An area coordinator runs
+  ONE round at a time from the fix list it is given: it sets up the environment once, then delegates
+  every code edit and every render to Sonnet subagents (the `Agent` tool, `model: sonnet`) inside
+  its own container, verifies the pushed frames exist, runs the named tests, pushes its area branch
+  + report, and STOPS. It does not write code itself, does not read large files itself, does not
+  self-certify, and does not start a new round until the program coordinator sends the next list.
+- **Coders/renderers: Sonnet subagents.** Bounded tasks only: "edit these values in this file",
+  "run this capture command into this directory", "run these tests and report". "Coded" is not a
+  result; a pushed frame is.
 
 ## The loop, per round
 
