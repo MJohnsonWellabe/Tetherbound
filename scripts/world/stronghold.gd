@@ -4246,7 +4246,16 @@ const BOILER_STACK_TOP := Vector3(0.0, 4.0, 0.0)
 ## sideways gravity/spread are both up so the column reads as drifting wisps
 ## rather than a vertical rod. Same one CPUParticles3D per boiler, same one
 ## draw call, same billboarded soft-disc texture -- no geometry change.
+## VP-HALL-FIX-2 (2026-09-02): the widened retune above (spread 20deg,
+## sideways gravity 0.6, scale 3.0, amount 30) was verified against fresh
+## 200m/400m frames and reads as a horizon-spanning grey smog wall with drip
+## streaks, not a column -- worse than the band it replaced. Disabling via
+## config (site.boiler_smoke_enabled, default false) per the reviewer's own
+## stated fallback ("soft column or REMOVE it") rather than reworking the
+## curve again blind. Code kept intact for a later tuning pass.
 func _smoke_column(boiler: Node3D, spec: Dictionary) -> void:
+	if not bool(_config.get("site", {}).get("boiler_smoke_enabled", false)):
+		return
 	var smoke := CPUParticles3D.new()
 	smoke.name = "StackSmoke"
 	smoke.position = BOILER_STACK_TOP

@@ -7,6 +7,7 @@
   "_comment_stone_light": "T1-HALL-BUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §5's palette-proof step: `stone_light` (the works' own exterior wall / exterior-face-skin tone, `stronghold.gd::_stone_light`/`_exterior_face_material`) moves from the code default #786d5e to the design's #9c9083, so the works' true exterior wears the SAME value-ladder step as the castle kit's retuned walls -- 'one stone, one scale, one value ladder, both kits'. `stone`/`stone_dark`/`floor_colour` are interior tones this pass does not touch; nothing else in `site` changed.",
   "_comment_stone_skirt": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §5's foundation tier -- the darkest step on the ladder (skirt < works walls < DarkRock < LightRock < coping), at the coarser 0.22 tile so the foundation reads as BIGGER blocks than the wall above it. It is worn by a facing skin (`stronghold.gd::_build_skirt_facing`), not by the skirt slab itself: each chamber's floor slab IS its skirt (one box 18m deep whose top face is the room's walkable floor), so retinting the slab would repaint five interiors. Before this the building's whole visible plinth rendered as yard cobble seen edge-on, at a smaller stone scale than the wall standing on it -- the exact scale collision §5 resolves with a stated ladder.",
   "site": {
+    "boiler_smoke_enabled": false,
     "at": [
       8.0,
       7560.0

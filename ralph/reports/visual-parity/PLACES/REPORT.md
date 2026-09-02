@@ -551,3 +551,162 @@ these ARE directly comparable to `round2/`.
 The control matters: an unchanged stand moved 0.52 while the Grandpa's-yard night frame moved 2.83
 (a ~12 % lift on a dark frame). So the night change is a genuine local practical light, not a global
 exposure or tone shift — which is the failure mode "just brighten the night" would have produced.
+
+---
+
+# Round 3
+
+Merged `origin/claude/coordination-subagents-3fhz1x` (WORLD's canopy fix) clean, zero conflicts. It did
+touch `tools/_capture_locations.gd`, which this lane also owns — git merged it without conflict and the
+round-2 stand fixes (`hall-400m/200m/100m`, the re-aimed `route-out`) were verified present afterwards.
+Re-baked the scatter (272.8 s, third occurrence). **The re-bake produced byte-identical output to round
+2's** (825587 placements, 29819789 bytes), so WORLD's canopy fix is a material change, not a placement
+change — a re-bake was not actually required this round.
+
+## R3.1 Both headline fixes were the same class of bug: a value silently cancelled
+
+Two rounds of "apply the weathered shader" and "add tint variation" did nothing visible. In both cases
+the mechanism was already wired correctly and a number was being neutralised downstream.
+
+### Hall exterior (item 1) — the routing was never broken
+
+A headless diagnostic walked the live `Stronghold` subtree and dumped every `MeshInstance3D`'s material
+class. **Every stone and roof surface in the render already carried the `hall_stone` ShaderMaterial with
+`exterior:true`.** The only raw `StandardMaterial3D` nodes (`LightRock.001` `#817f78`, `DarkRock`
+`#68675f`, `Celing.001`, `MI_RoundTiles`) sit under `HallPrefabTemplates`, an invisible template holder
+that never renders. So round 2's conclusion was right and the fix list's premise ("only the courtyard
+interior got the shader") was wrong.
+
+Printing the shader's own resolved `tint` found the real defect: `darken` 0.24 against `#817f78` only
+reaches ≈(0.38, 0.38, 0.36) — **brighter than `site.stone_light` (`#66655e`), the ordinary lit-interior
+wall tone.** The weathering was landing *above* the interior tone instead of below it, so the exterior
+could never read as a dark ruin however much moss was added.
+
+| key | old | new |
+|---|---|---|
+| `weathering.exterior.darken` | 0.24 | **0.56** |
+| `desaturate` | 0.32 | 0.50 |
+| `moss_amount` | 0.62 | 0.78 |
+| `up_moss` | 0.72 | 0.85 |
+| `damp_height` | 6.6 | 8.5 |
+| `damp_strength` | 0.40 | 0.50 |
+| `streak_strength` | 0.30 | 0.38 |
+| `moss_colour` | `#243a10` | `#1f3510` |
+
+Final kit tint ≈(0.21, 0.21, 0.20), now darker than the skirt tier. Added `HALL_PIECE_VARIATION` 0.14, a
+deterministic per-piece tint bias seeded off `hash(name + index)` so towers differ from one another and
+the result is stable between captures; interior callers pass 0.0 and are numerically unchanged.
+
+### Warrens exterior (item 2) — variation was being 65 % eaten
+
+`mound.tint_variation` was applied to the raw tint **before** `_wear_the_cave_stone()`'s 35 % lerp toward
+rock colour, so only 35 % of it survived: a configured 0.16 became **≈0.056 effective**. That is why the
+judge saw uniform grey. Restructured so variation applies to the final lerped colour.
+
+`tint` `#c3bbab`→`#9c8a72` (warmer, ~20 % darker); `tint_variation` 0.16→**0.42** (now fully effective);
+new `apron_colour` `#2b2118`; exterior floor lerp-to-white 0.12→0.05; skirt boulders now sink by their own
+scale (`skirt_sink_min_m` 0.18, `skirt_sink_m` 0.6) instead of a flat 0.08, with a dark soil collar
+(`soil_collar_scale` 1.6) auto-applied to ~63 ground-contact boulders via a procedural
+`_boulder_soil_collar()` reusing the existing `_box()` primitive. Entrance jambs sink 0.3→0.5 / 0.25→0.45
+and the dark clamp widens [0.22, 0.55]→[0.32, 0.78] because the old ceiling was already saturating.
+**No new hand-placed props** (still the 12 from round 2).
+
+## R3.2 What the frames measure
+
+`round3/locations/`, `VP_FAST` 960x540 — same settings as round 2, so directly comparable.
+
+| frame | r2 mean | r3 mean | reading |
+|---|---|---|---|
+| `10-stronghold-gate-day` | 125.01 | **114.30** | −10.7, Hall darker |
+| `10-stronghold-approach-day` | 113.86 | **99.03** | −14.8, Hall darker |
+| `04-warrens-approach-day` | 118.90 | **112.25** | −6.6, mound darker/warmer |
+| `10-stronghold-courtyard-night` | 2.87 | 2.84 | **unchanged** |
+| `10-stronghold-gate-night` | 23.80 | 23.55 | **unchanged** |
+
+Items 1 and 2 landed and are measurable. The Hall now reads as a dark weathered mass with legible towers
+and crenellations at 200 m and 400 m, against green canopies (WORLD's fix arrived with the merge).
+
+## R3.3 Two things that did NOT land — stated plainly
+
+**Item 6, night lighting: FAILED.** The light retune (gate fires y 4.5→6.2, range 16→24, energy 2.6→3.3,
+new `attenuation` 1.3, the dead 0.35-energy courtyard ambient raised to a 1.7 warm fill, sky fills
+2.2/2.4→2.8/3.0, all within the existing 18/18 omni budget) produced **no measurable change in the
+frames**: courtyard-night 2.87→2.84, gate-night 23.80→23.55. `smoke_stronghold` still logs "18 exterior
+omni light(s) at the Hall (budget 18)", so the lights exist — they are simply not reaching these two
+camera stands. The courtyard at night remains crushed to black (mean 2.84). Needs a different diagnosis
+in round 4: probably the stand's own framing or a light-range/occlusion problem, not more energy.
+
+**Item 5, boiler smoke: REGRESSED, then removed.** The retune (alpha 0→0 at both ends, amount 48→30,
+spread 9°→20°, drift 0.35→0.6, peak scale 4.2→3.0) fixed the hard edge but the *widening* backfired
+badly at distance: in the 200 m and 400 m frames it became an enormous grey smog wall spanning the entire
+frame behind the Hall, swamping the sky and the silhouette the same round was trying to establish. Taking
+the reviewer's own stated fallback ("or remove it"), the smoke was put behind a config flag
+(`site.boiler_smoke_enabled`, default **false**), with the retuned code retained for a later attempt.
+
+**Then the re-render disproved the diagnosis.** With the flag verified false and `_smoke_column()`
+returning early, the grey band is **still there, unchanged**: the horizon band's mean moved 140.22 →
+139.68, a delta of **−0.54**, and the whole frame 117.54 → 117.05. So the mass in the 200 m/400 m frames
+**is not the boiler smoke** — neither the judge's attribution nor mine was right. It spans the entire
+frame width, far wider than any chimney plume, and carries vertical drip streaks, which reads more like
+precipitation, distance fog, or a horizon cloud layer than a point-source column. `_capture_locations.gd`
+does contain weather-pinning code and warns "no WorldWeather; weather cannot be pinned to clear", so a
+weather volume that is not actually being pinned clear is the first thing round 4 should check. That is
+SKY/WORLD territory, not VP8.
+
+The smoke flag is left **off** regardless: the retuned column was a regression on its own merits, and
+leaving it disabled removes one variable from the next diagnosis.
+
+## R3.4 Perf — the budget is met for the first time
+
+| view | round 2 | round 3 | delta |
+|---|---|---|---|
+| `hall_approach` | 4227 · 4,718,096 prims | **3791** · 4,355,544 | **−436 draw calls — under the 4000 ceiling** |
+| `village_high` | 4440 · 9,430,618 prims | **3122** · 8,579,260 | −1318 |
+
+`docs/PERFORMANCE_BUDGET.md`'s ≤ 4000 at `hall_approach` is **satisfied**, after being breached at 4331
+(round-1 baseline) and 4227 (round 2). Attribution caveat: this lane's round-3 work is net-zero mesh
+instances (+1 cable anchor plate, −1 removed courtyard floor conduit), so the −436 is largely the
+program-branch merge's own LOD/canopy work rather than PLACES. The lane's contribution is that it did not
+spend the headroom.
+
+## R3.5 Tests
+
+`smoke_stronghold` exit 0 (logs "18 exterior omni light(s) at the Hall (budget 18)"), `smoke_warrens`
+exit 0, `smoke_relay` exit 0 (`[relay_site] placed 5 of 5`). `tools/_capture_locations.gd` parses.
+`_capture_ground_and_sky.gd` still exits 1 on the grass-field-holds-no-instances failure reported in
+R2.5 — unchanged, still GROUND's.
+
+## R3.6 Relay addendum (items 3, 4)
+
+Cables now land on built sockets — a stone bracket pulled 0.18 m into the surface plus a teal cap
+cylinder (r 0.09, h 0.3) sharing the run's material *by identity* so `_kill_the_conduits()` still kills
+it. `sag_scale` moved from a hardcoded 0.6 to a configured **3.0**, taking a 4–6 m span from ~0.15–0.2 m
+droop (visually straight) to ~0.75–0.9 m. New `conduits.cable_radius` 0.03 (was the shared
+`CONDUIT_RADIUS` 0.055) and `cable_emission_energy` 0.4 (was 0.8), applied **per-instance** because
+`severed_spokes.gd` is outside this lane and caches that material by identity shared with the quarry and
+the spokes — editing it there would have dimmed unrelated sites.
+
+Staffing: a console guard and a platform hand on the deck (new `_build_deck_people()`, since ground-placed
+NPCs cannot reach the deck's absolute Y) and a ground patrol inside the `standing` stand's view cone.
+9 new objects, deliberately under the 10–16 suggested because the site already carries a crate cluster,
+barrier and banner from round 2.
+
+The `06-relay-apparatus` stand pointed almost dead at the sun — confirmed numerically from `art.json`
+(sun pitch −44, yaw 140 → horizontal direction (0.643, −0.766); old view direction (−0.095, −0.995), dot
+**0.996**). Moved `at` [1,−4] → [14,−4], new view direction (−0.939, 0.343), dot −0.867, ~150° off with
+the sun behind camera. **The reported "trainer clipped onto a roof" was not a real placement bug** — the
+shot's own ground sweep already read flat real terrain (4.9–5.8 m) everywhere except the look point; it
+was the old stand's extreme low, close, steeply-upward composition against the apparatus's overhang. No
+authored position was changed.
+
+## R3.7 Unresolved after round 3
+
+1. **Night at the Hall (item 6) failed** — courtyard-night still mean 2.84. Needs a different diagnosis,
+   not more light energy.
+2. **The horizon grey band is unidentified** — not the boiler smoke (disproved above). Check weather
+   pinning first.
+3. Grass field enabled but draws zero instances (R2.5) — still open, GROUND's.
+4. `smoke_traversal` South Bridge walk-around — still open, outside PLACES.
+5. `_judge_capture_hall.gd` has still never been run in any round — the Hall's golden/night gate-face
+   read remains unjudged.
+6. Contact sheets were not built this round (the capture's later stages were cut for time).
