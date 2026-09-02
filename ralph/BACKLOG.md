@@ -101,6 +101,59 @@ still live traps for the next coordinator:
   so coverage rises without geometry cost. Put to the owner; not yet decided.
   `grass_field.gd` is VP-owned since PR #20, so this is likely their work.
 
+### A recurring bug family in the evidence harness — worth one sweep, not ten discoveries
+
+Six separate failures today were the same shape: **a check that exists, reports
+green or fails for an unrelated-looking reason, and is not testing the thing it
+appears to test.** Each was found individually, at real cost. They are worth
+fixing as a class.
+
+- **Fixed slot offsets instead of item identity.** The Gate F harness repeatedly
+  addresses inventory by position: the revive `focus_item` fix, the knife
+  `hotbar_5` → `hotbar_4` correction (which cost S03 several hours and had been
+  "corrected" the wrong way once already), the feed sequence's berries lookup,
+  and a gather-node wrong-tool bug. A press on an empty slot selects nothing
+  silently, and the segment then fails somewhere downstream that looks unrelated.
+  **Grep `tools/gate_f/` and `tests/helpers/` for fixed-offset hotbar/inventory
+  lookups and convert them to lookup-by-identity in one pass.**
+- **`tools/_probe_camp_split.gd`** proved the bedroll heals the *trainer* and
+  never once assigned a creature to the creature bed — the actual subject of the
+  owner's complaint.
+- **`tests/smoke_gate_b_continuous.gd`**, the only automated
+  gather → build camp → sleep path, had been failing at its first village check
+  since Mira's gifts moved off Tam, so it never reached the sleep segment at all.
+- **The Gate F feed sequence "never actually fed anyone all session"** (its own
+  words) before it was fixed.
+- **`smoke_traversal.gd`** failed on attempt 1 of every run all day; `RETRIES: 3`
+  turned that into a green tick.
+
+The generalisation: **a green check is not evidence until something has seen it
+go red for the right reason.** Where practical, a test worth trusting should be
+provable by breaking the thing it guards.
+
+### Follow-ups filed today
+
+- **Creature-vs-ground contrast in shade.** The spawn-siting fix closes the
+  occlusion half of the owner's "small creatures in grass" complaint — a creature
+  no longer spawns inside a baked bush, and its silhouette is intact. But the
+  relocated spot can land in partial shade, where at 30% scale the creature still
+  reads as a dark smudge. The remaining lever is **creature material value and
+  saturation, possibly a rim light or a ground-contact shadow** — explicitly NOT
+  grass density (settled: keep 75k) and NOT `field_degreen` alone (measured as
+  modest on its own by two independent judges, one blind). Evidence is attached to
+  `ralph/reports/OWNER-0901-CREATURE-GRASS-VISIBILITY-V2/`.
+- **Two different things are both named "bushes".** `grass_field.json`'s
+  procedural `cover_tiers` bushes, and `vegetation.json`'s statically-baked
+  `bushes` scatter layer. `grass_clear`'s `built[]` mechanism reaches only the
+  first. The baked layer also carries `collides: false`, so it was invisible to
+  every collision-based check despite being the densest visual occluder in the
+  game. This collision cost a full lane cycle to discover; renaming one of them
+  would be cheap.
+- **MAIN STORY objective label truncates at 1280x800** — "Train with your team
+  before the …". The hint card carrying the full "how" is timed (~10s, once per
+  rung change), so a player who misses it sees a cut sentence until they open the
+  quest log.
+
 ### Still open
 
 - **Interact reliability (09-01 item 3) — the owner's own game-breaker.** Does
