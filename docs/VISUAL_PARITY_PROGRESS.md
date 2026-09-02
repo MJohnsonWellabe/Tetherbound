@@ -212,6 +212,14 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Check-in #26 (16:54 UTC) — Warrens decision agent found cancelled; clean restart launched; courtyard accepted
+
+- The Fable agent on the Warrens slab + courtyard (launched 15:52) had been stopped by the owner's 16:13 interruption of the coordinator turn; its 95 minutes produced no file. Under the owner's clean-restart rule a fresh Fable agent now owns the **Warrens slab** from the brief and the frames: ray-cast identification from the standing camera through the slab regions (physics hit or projected-AABB fallback), a source fix that never touches the owner-approved interior, one render with PIL proof (slab regions median ≤ 90, std ≥ 15, > 15 % px changed), `smoke_warrens`, commit with `round11-warrens/` evidence + `DECISION-warrens-restart.md`.
+- **Courtyard night: ACCEPTED** on the code-blind judge's visual read (r9 and r10: "lit pool around the trainer, trainer reads, rest acceptably dark"); the lane's 3 m-disc median metric (5.82 vs ≥ 20) is recorded as a known limitation of the metric, not of the frame.
+- Sentry clean-restart agent: probe tool committed (`tools/_probe_gate_sentries.gd`, d8731e88), parked on the Godot slot behind the local guard chain.
+- Lanes: WORLD pushed the dawn distance-fade pass (`6914302f`, frames pending); PLACES r11 (night stone) fired 16:53. CORRIDOR archived (session cost $92.70). CI queued on `b805d9d6`; program branch is 9 commits behind main (gameplay coordinator records only) — the next ship PR merges cleanly or re-merges main first.
+- Local: CORRIDOR r8 bake tests 12/12 green, traversal smoke running; PLACES r9 site smokes and the r9-corridor re-bake queued.
+
 ### 16:40–16:50 UTC — PLACES r10 (Hall stone FIXED) and CORRIDOR r9 (final) judged and merged; CORRIDOR archived; sentries to a clean Fable restart
 
 - **PLACES round 10** (`0161cbf2`) — the Fable Hall decision executed exactly: `darken` 0.48 → 0.0, `stone_light` #767268, `stone_dark` #5a554d, knob clamped ≤ 0.15. Lane proof: LightRock tint luminance 66 → 139.7/255; gate-day tower medians 64.1 / 72.4 (≥ 55), curtain 54.6 (≥ 45), 100 m towers 75.4 / 70.3 (≥ 50), silhouette gap 116 (≥ 60), 400 m bbox/horizon 0.74 (≤ 0.80); frames changed 84–91 % px. Judge `PLACES/JUDGE-round10.md`: **Hall stone PASS** — black cutout → lit stone with blocks, mortar, moss/ivy, sunlit pillars ~110–140 vs recessed arch ~40–70; **Hall 6/10** (from 3.5). Night stone PARTIAL (walls flat ambient, only banner accents). Sentries NOT VISIBLE even with the camera bug fixed (the tool's clearance capsule had counted the causeway deck as a body and swept the eye 6 m off it); the lane declared its own ceiling after five placements. Courtyard/Warrens controls unchanged; no regressions. **MERGED** `b805d9d6`.
