@@ -123,18 +123,25 @@ func _run() -> void:
 		quit(1)
 		return
 
-	await _pin("day")
-	for entry: Variant in STANDS:
-		await _shoot_stand(entry as Dictionary, "day")
+	var only := ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--only="):
+			only = arg.substr(7).strip_edges()
 
-	await _pin("night")
-	for entry: Variant in STANDS:
-		var stand: Dictionary = entry as Dictionary
-		if bool(stand.get("night", false)):
-			await _shoot_stand(stand, "night")
+	if only == "" or only == "stands":
+		await _pin("day")
+		for entry: Variant in STANDS:
+			await _shoot_stand(entry as Dictionary, "day")
 
-	await _pin("day")
-	await _shoot_starter()
+		await _pin("night")
+		for entry: Variant in STANDS:
+			var stand: Dictionary = entry as Dictionary
+			if bool(stand.get("night", false)):
+				await _shoot_stand(stand, "night")
+
+	if only == "" or only == "starter":
+		await _pin("day")
+		await _shoot_starter()
 
 	print("")
 	print("life survey: %d frames written, %d failed, into %s" % [_written, _failures, OUT_DIR])
@@ -204,8 +211,13 @@ func _shoot_stand(stand: Dictionary, suffix: String) -> void:
 func _shoot_starter() -> void:
 	var house: Node = _world.get_node_or_null(^"GrandpaHouse")
 	var eye3: Vector3
+	var away := Vector2(0.0, -1.0)
 	if house != null and house.has_method("marker"):
 		eye3 = house.call("marker", "outside")
+		var door: Vector3 = house.call("marker", "door")
+		var raw := Vector2(eye3.x - door.x, eye3.z - door.z)
+		if not raw.is_zero_approx():
+			away = raw.normalized()
 	else:
 		print("  WARN no GrandpaHouse.marker('outside'); falling back to the village well")
 		eye3 = Vector3(10.0, 0.0, -15.5)
@@ -217,7 +229,12 @@ func _shoot_starter() -> void:
 	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
 
-	var spot := eye3 + Vector3(1.6, 0.0, 1.2)
+	# Creature stands beside the player, ALONG the outward axis from the
+	# house rather than at a fixed world offset -- door/outside are a local
+	# +x pair, so a hardcoded (+1.6,+1.2) world nudge is only "beside" the
+	# player for whichever way the house happens to face.
+	var side := Vector2(-away.y, away.x)
+	var spot := eye3 + Vector3(side.x * 1.8, 0.0, side.y * 1.8)
 	spot.y = _surface(Vector2(spot.x, spot.z))
 	var wild: Node3D = _director.call("spawn_wild", "terrapup", spot, {
 		"name": "Shot_starter_terrapup",
@@ -230,7 +247,11 @@ func _shoot_starter() -> void:
 	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
 
-	var camEye := Vector2(eye3.x - 3.0, eye3.z - 3.4)
+	# Camera stands FURTHER out along the same outward axis than the player
+	# does (the house sits on the far side of "outside"), looking back at
+	# the player-and-creature pair with the house as backdrop -- not
+	# shoulder-to-shoulder with the player staring sideways at a wall.
+	var camEye := Vector2(eye3.x, eye3.z) + away * 7.0 + side * 2.0
 	var camTarget := Vector2((eye3.x + spot.x) * 0.5, (eye3.z + spot.z) * 0.5)
 	_frame(camEye, _surface(camEye), camTarget, _surface(camTarget))
 	_hide_huds()
