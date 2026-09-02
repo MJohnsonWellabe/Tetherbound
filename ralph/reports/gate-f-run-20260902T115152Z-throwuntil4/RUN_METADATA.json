@@ -1,0 +1,10 @@
+{
+  "run_id": "gate-f-run-20260902T115152Z-throwuntil4",
+  "purpose": "Verify the settle-loop fix: party growth checked correctly, not at the verdict instant.",
+  "candidate_sha": "fdee40cc7f4de6579f7591beebe7bb45e60852b2",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}
