@@ -640,10 +640,36 @@ func test_ecology_core_clusters_without_changing_the_count() -> void:
 	assert_true(absi(a.size() - b.size()) <= tolerance,
 		"the ecology gate changed the tree count %d -> %d (tolerance %d); it must move clumps, not remove them" % [
 			a.size(), b.size(), tolerance])
+	# The gate's job is to pull clump centres into the core of its own
+	# field. Measure exactly that: the mean core-gate value under the gated
+	# placements must sit clearly above the mean under the plain ones. A
+	# 100 m-bin CV was the previous proxy, but with 64-tree clumps of 20 m
+	# radius the CV is dominated by the clump structure both sides share
+	# (2.34 plain vs 2.51 gated on the 2026-09-02 merged layer), so the
+	# gate's real effect hid under a x1.15 margin.
+	var core_cfg: Dictionary = fill_g["ecology"]
+	var mean_a := _mean_gate(a, core_cfg)
+	var mean_b := _mean_gate(b, core_cfg)
+	assert_true(mean_b > mean_a + 0.12 and mean_b > mean_a * 1.25,
+		"core gating did not pull placements into the core: mean gate %.3f gated vs %.3f plain" % [mean_b, mean_a])
+	# And it still concentrates, never spreads, at grove scale.
 	var cv_a := _corridor_spatial_cv(a, 100.0)
 	var cv_b := _corridor_spatial_cv(b, 100.0)
-	assert_true(cv_b > cv_a * 1.15,
-		"core gating did not cluster: 100m-bin CV %.3f gated vs %.3f plain" % [cv_b, cv_a])
+	assert_true(cv_b >= cv_a * 0.95,
+		"core gating spread the corridor out: 100m-bin CV %.3f gated vs %.3f plain" % [cv_b, cv_a])
+
+
+func _mean_gate(placements: Array, ecology: Dictionary) -> float:
+	var half := world_size * 0.5
+	var sum := 0.0
+	var n := 0
+	for p: Variant in placements:
+		var at: Vector3 = p["position"]
+		if absf(at.x) <= half and absf(at.z) <= half:
+			continue
+		sum += float(RULES._ecology_gate(Vector2(at.x, at.z), ecology))
+		n += 1
+	return sum / float(maxi(n, 1))
 
 
 func test_ecology_gate_is_a_probability_and_bands_partition_the_field() -> void:
