@@ -212,6 +212,30 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### PLACES round 4 (`claude/vp-places` @ 08:18) — judged 08:33, MERGED 08:35 (`622b904e`)
+Evidence: `PLACES/round4/locations/` (12), `PLACES/round4/_sheet_r3_vs_r4.png`, `PLACES/JUDGE-round4.md`.
+- Lane findings: the grey band behind the Hall is the `rift_collapse` StormWall (three 520–620 m alpha slabs at
+  262–356 m), never the boiler smoke; Warrens boulders now carry a stain shader; 4 courtyard braziers (omni budget
+  18→22); storm-wall top softened; perf `hall_approach` 3843 (≤ 4000), smokes green.
+- Judge: Warrens recoloured, not reshaped — still a boulder-dome pile, and the standing frame now shows brown
+  exterior rock against the untouched grey interior; Hall 200/400 m and gate night perceptually unchanged;
+  courtyard night reads only with exposure boosted ~4×; banners poster-red; first "occupied" gate signals.
+  Bars A/B still **no** for the two set-pieces (daylight meadow shots alone would pass).
+- Merged as incremental gain (nothing regressed at native exposure). Round 5 dispatched 08:36: earthwork Warrens
+  (spoil mounds, soil apron, half-buried boulders, one rock family), Hall silhouette vs storm band (slabs lifted
+  above the skyline, Hall kept darker at distance), courtyard night ≥ 12 mean at native exposure with a face light,
+  sentries/lit windows/oxblood banners.
+
+### Program-branch guard after the WORLD r3 + LIFE r2 merge (08:20) and CI on `b0fc0328`
+- Local: bake 826,135 placements; `--import` ok; smoke_wild_streaming / catching / traversal / art / night_ecology
+  all exit 0 (traversal South Bridge no longer fails on the merged tree); `test_grass_field.gd + test_scatter_rules.gd`
+  55 tests, 1 failed: `test_ecology_core_clusters_without_changing_the_count`.
+- CI `b0fc0328`: every job green except `verify-scatter-rules` (same test: 100 m-bin CV 2.511 gated vs 2.329 plain,
+  needs ×1.15). Cause: the live `trees` layer now carries 19 authored anchors, 70 hero trees and water-edge bands
+  (main merge + VEG) appended identically to both sides; they are clustered by construction and inflate the plain
+  CV. Fix: the test strips `anchors/heroes/water_edge/verge/under` from both copies so it measures the corridor fill
+  the gate acts on (test-only change; the gate itself is unchanged).
+
 ### WORLD round 3 + LIFE round 2 — merged into the program branch 07:58 UTC (`3c87d9ea`)
 - WORLD r3 (day ground close-ups strongest to date; judge `WORLD/JUDGE-round3.md`) and LIFE r2 (5 stands re-framed,
   `field_emission` for paddlenewt/burrowback) merged without conflict; re-bake + guard smokes + grass/scatter unit tests
