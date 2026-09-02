@@ -64,6 +64,7 @@ const STALL_MSEC := 70
 const STALL_EVERY_N_TICKS := 3
 
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const PROMPT_ARBITER := preload("res://scripts/world/prompt_arbiter.gd")
 
 var _world: Node = null
 var _player: CharacterBody3D = null
@@ -427,10 +428,16 @@ func _section_station() -> void:
 
 ## --- 4. Build catalogue via the hammer (idle-frame clock) --------------------
 
-## `_hammer_opens_the_catalogue()` (playground_hud.gd) stands down whenever
-## the arbiter has an actionable winner, so this needs a spot with genuinely
-## nothing else offering -- searched for rather than hardcoded, since the
-## meadow's ~24k scattered harvest points make "clear ground" a moving target.
+## `_hammer_opens_the_catalogue()` (playground_hud.gd) stands down only when
+## the arbiter's winner is ACTIONABLE (`prompt_arbiter.gd::is_actionable`) --
+## `encounter_director.gd`'s own non-actionable "[RB] Call out <creature>"
+## status line, which the party makes near-universal once seeded, does NOT
+## stand it down (that is the whole point of `_winner_would_refuse_this_hand()`
+## in the real code: a line that was never going to consume the button should
+## not cost the hammer its own button either). So "clear" here means no
+## ACTIONABLE winner, matching that real gate exactly -- checking raw
+## `winner().is_empty()` instead made every spot in the world look occupied
+## and this search always failed.
 ##
 ## Searches the AUTHORED spawn clearing first (data/config/bands/
 ## band1_lower_meadows/vegetation.json's clearings[0]: x=0,z=0,r=16,
@@ -441,10 +448,12 @@ func _section_station() -> void:
 ## where even the spawn clearing has something (an NPC, a hand-placed
 ## harvest node) standing in every sampled spot.
 func _find_clear_spot() -> Vector3:
-	var spot := await _search_rings(Vector3.ZERO, [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0])
+	var near_radii: Array[float] = [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0]
+	var spot := await _search_rings(Vector3.ZERO, near_radii)
 	if spot != Vector3.INF:
 		return spot
-	return await _search_rings(_player.global_position, [0.0, 6.0, 12.0, 18.0, 24.0])
+	var far_radii: Array[float] = [0.0, 6.0, 12.0, 18.0, 24.0]
+	return await _search_rings(_player.global_position, far_radii)
 
 
 func _search_rings(base: Vector3, radii: Array[float]) -> Vector3:
@@ -455,7 +464,7 @@ func _search_rings(base: Vector3, radii: Array[float]) -> Vector3:
 			await _teleport_to(spot)
 			for i in 10:
 				await physics_frame
-			if (_arbiter.call("winner") as Dictionary).is_empty():
+			if not PROMPT_ARBITER.is_actionable(_arbiter.call("winner") as Dictionary):
 				return spot
 			if radius == 0.0:
 				break
