@@ -158,6 +158,32 @@ uniform float haze_strength : hint_range(0.0, 1.0) = 0.55;
 uniform vec3 haze_colour : source_color = vec3(0.72, 0.80, 0.76);
 
 // The sun disc the gradient sky never had.
+//
+// VP1 low-sun oval fix. `sun_size` below is a cosine-space radius: the old
+// disc test was `smoothstep(1.0 - sun_size, ..., dot(dir, sun_dir))`, i.e. it
+// thresholds against `1 - sun_size` directly as if that were a cosine. `dir`
+// and `sun_dir` ARE both unit vectors (`normalize()`d at the top of `sky()`),
+// so that dot product genuinely is cos(angle-between) -- the "dir not
+// normalised" theory is FALSE, confirmed by reading the top of `sky()`. The
+// real defect is that `sun_size` was never actually driven from a real
+// angular radius: at the golden/dawn value of 0.009, `1 - 0.009 = 0.991`
+// implies an angular radius of `acos(0.991) ~= 7.7 deg` (radius!), i.e. a
+// ~15.4-degree-diameter disc -- about 22% of the 70-degree-vertical capture
+// FOV, seven times the <=3% target, before perspective stretch off the
+// optical axis (see the `disc` line below) turns that oversized circle into
+// the reported oval. `sun_angular_radius_deg` below replaces `sun_size` as
+// the thing that actually drives the disc, expressed in real degrees so its
+// value means something: at its 1.0-degree default the disc is 2.0 degrees
+// across, 2.0/70 = 2.9% of frame height, under the 3% target with headroom
+// (the real sun is ~0.53 degrees across; a contained disc reads correctly at
+// several times that, the way this shader's moon already does).
+uniform float sun_angular_radius_deg : hint_range(0.05, 20.0) = 1.0;
+// DEPRECATED for the disc: `sky()` no longer reads this to size the disc --
+// see `sun_angular_radius_deg` above. Left declared, at its old default, only
+// so a caller that still sets it (an unmigrated `art.json` preset via
+// `world_look.gd::_apply_cloud_sky`) does not fail to find the uniform; the
+// value itself is now inert for this purpose. Migrate presets to
+// `sun_angular_radius_deg` and this can be deleted.
 uniform float sun_size : hint_range(0.0, 0.2) = 0.022;
 uniform float sun_glow : hint_range(0.0, 1.0) = 0.35;
 // How much of the disc's radius is falloff. 1.0 is a razor edge, 0.0 a full
@@ -327,9 +353,20 @@ void sky() {
 	// the falloff fraction as a uniform, so a time of day can ask for a crisp
 	// body (night, where a moon needs a rim) or a soft one (golden hour, where
 	// the sun is meant to bloom).
-	float sun_dot = dot(dir, sun_dir);
-	float disc = smoothstep(1.0 - sun_size, 1.0 - sun_size * disc_edge, sun_dot);
-	float glow = pow(clamp(sun_dot, 0.0, 1.0), sun_glow_falloff) * sun_glow;
+	// `dir`/`sun_dir` are already unit vectors from the top of `sky()`; the
+	// `normalize()` calls here are belt-and-suspenders so this test stays a
+	// true angular-radius test even if that ever changes upstream. `cos_radius`
+	// is the disc's true edge, converted from degrees once per pixel (cheap:
+	// one `cos`/`radians` against a uniform, not per-octave). `disc_edge`
+	// keeps its old meaning -- 1.0 a razor edge at `cos_radius`, 0.0 a full
+	// gradient from centre (`cos_ang` = 1) to rim -- by interpolating the
+	// smoothstep's near edge between 1.0 and `cos_radius` instead of scaling a
+	// cosine-space radius the way the old `sun_size * disc_edge` did.
+	float cos_ang = dot(normalize(dir), normalize(sun_dir));
+	float cos_radius = cos(radians(sun_angular_radius_deg));
+	float cos_inner = mix(1.0, cos_radius, disc_edge);
+	float disc = smoothstep(cos_radius, cos_inner, cos_ang);
+	float glow = pow(clamp(cos_ang, 0.0, 1.0), sun_glow_falloff) * sun_glow;
 	colour += sun_colour * (disc + glow) * LIGHT0_ENERGY;
 
 	COLOR = colour * sky_energy;
