@@ -853,3 +853,119 @@ because it also changes the mouth→hall corridor.
    concurrent edits to `scripts/world/stronghold.gd` on the same checkout. Any future attempt must run
    when the tree is quiescent.
 7. Contact sheets not built (time budget).
+
+---
+
+# Round 5
+
+Merged the program branch clean (zero conflicts). Re-baked — and this time the bake genuinely differed
+(826135 placements / 29838724 bytes vs the 825587 / 29819789 that had been byte-identical for three
+rounds), so the fingerprint was legitimately stale on this merge. The over-trigger note in R4.7 still
+stands for the three rounds where it was not.
+
+Judged `JUDGE-round4.md` in full before dispatching. Frames at **native exposure only**.
+
+## R5.1 A round-4 regression of mine, found by the judge and fixed
+
+The judge caught something worth recording as a mistake rather than a finding: round 4's Warrens recolour
+*introduced* a new defect — "within a single frame the 'earthwork' exterior rock (warm brown/green) now
+visibly disagrees in material and colour temperature with the 'cave' interior rock (cool grey) a few
+metres away."
+
+Cause: the exterior base was `_rock().lerp(mound.tint, 0.35)` with `mound.tint` `#9c8a72`, a warm tan
+chosen for its own sake and **never checked against the interior**. The interior wall base is `site.rock`
+(`#5b5147`) with no pull toward anything. Fix: `mound.tint` → `#5b5147`, which makes the lerp a no-op, so
+the exterior boulder base now *equals* the interior base exactly and the stain shader's earth (`#2b2118`)
+and moss (`#3a4a20`) overlays do 100 % of the excavated read instead of fighting a warm base tint.
+
+## R5.2 Warrens reshaped, not recoloured
+
+| key | old | new |
+|---|---|---|
+| perimeter + roof boulders | 223 | **89** |
+| `perimeter_spacing_m` / `roof_spacing_m` | 3.0 / 4.5 | 5.4 / 6.5 |
+| `perimeter_courses` | 3 | 2 |
+| `perimeter_scale` / `roof_scale` | [2.2, 3.6] / [1.6, 2.8] | [2.6, 5.8] / [2.0, 4.2] |
+| `perimeter_base_drop_m` / `sink_m` | 1.6 / 1.2 | 2.4 / 2.0 |
+| `skirt_count` | 260 | 210 |
+
+Fewer, larger, more varied, deeper buried. New `mound.spoil_mounds` + `_build_spoil_mounds()`: 3
+asymmetric heaps reusing installed `Rock_Medium_*` meshes squashed on Y and worn with the **same
+triplanar earth material the trodden ramp already uses**, so they read as dug spoil rather than more
+boulders. No new mesh assets. Mouth: jambs sunk 0.5→0.75 / 0.45→0.7 and enlarged 2.0→2.3 / 2.1→2.4;
+brow lowered 2.8→2.6, pushed 1.6→1.85 over the opening, enlarged 2.6→2.9.
+
+**Net object count −178.**
+
+## R5.3 Storm slabs lifted clear of the Hall
+
+`storm_wall.slabs[*].base` **−46.0 → 55.0** on all three. The Hall skyline was derived at ~37 m worst
+case (floor ~6 m above meadow + `legendary_chamber` height 22 + up to 9 m sited relief, because
+`_base_height` samples 63–74 m away), cross-checked against the 400 m stand's own `up` 28 / `look_up` 14.
+55 m clears that by 18 m — about 3–4° of sky at the 262–356 m slab distances, deliberately modest so the
+band does not float free of the horizon. Round 4's darkened palette and softened top falloff kept.
+
+**Trade-off, recorded in-file:** at the storm road's own close seam a sliver of clear ground now shows
+below the band where it previously ran to the horizon. Accepted under this round's explicit authorisation.
+
+## R5.4 Courtyard night and gate occupation
+
+Braziers at the authorised ×3 / ×1.5: energy 2.2→**6.6**, range 13.0→**19.5**. Dropped the two flank
+sky-fills (energy 3.0, range 60) — never named in any judge finding, so the least valuable spend — to free
+budget. Added a practical torch at (−7.0, 36.0), 3 m off the courtyard trainer's stand at local (−4, 36)
+and outside the arena's x[−5, 5], so faces have a light. **21 omnis against budget 22, 11 flickering
+fires, all `shadow_enabled = false`** (the outdoor shadow-casting cap is still 0).
+
+Gate: `_build_gate_tower_sconces()` adds 2 emissive-only plaques (zero omni cost) off measured
+`LargeSquareTowerBricks` bounds; `_build_gate_sentries()` adds 2 grunts through the same `CHARACTER_MODEL`
+path `trainer_npc.gd` uses — idle, no `trainers.json` row, no combat. `BANNER_COLOUR` `#6b2a20` →
+**`#5a1a1a`**, the authorised oxblood family.
+
+**Smoke left disabled.** Two blind tuning attempts have already regressed (a flat band, then a
+horizon-spanning smog wall) and no render was available mid-edit to verify a third. A missing wisp beats a
+third smog wall.
+
+## R5.5 Frames — r4 → r5, native exposure, same VP_FAST settings
+
+| frame | r4 mean | r5 mean | mean abs diff | px >8 |
+|---|---|---|---|---|
+| `10-stronghold-approach-night` | 22.48 | **34.86** | 13.24 | 67.0 % |
+| `10-stronghold-gate-night` | 23.18 | **33.43** | 12.63 | 64.4 % |
+| `11-castle-landmark-hall-100m-day` | 92.41 | 94.86 | 16.10 | 45.0 % |
+| `10-stronghold-courtyard-night` | 3.58 | **8.38** | 4.88 | 25.1 % |
+| `04-warrens-standing-day` | 38.31 | 27.40 | 15.30 | 33.4 % |
+| `10-stronghold-gate-day` | 113.78 | 109.44 | 9.67 | 29.4 % |
+| `04-warrens-approach-day` | 103.29 | 99.29 | 9.18 | 25.1 % |
+| `11-castle-landmark-hall-200m-day` | 117.24 | 116.70 | 8.65 | 28.7 % |
+| `10-stronghold-approach-day` | 98.72 | 97.99 | 8.00 | 27.5 % |
+| `10-stronghold-courtyard-day` | 37.40 | 35.30 | 6.77 | 28.5 % |
+| `11-castle-landmark-hall-400m-day` | 118.99 | 118.33 | 6.25 | 24.5 % |
+| `04-warrens-den-day` | 73.27 | 75.01 | 2.13 | 4.6 % |
+
+Contact sheet: `round5/_sheet_locations.png`.
+
+## R5.6 Perf and tests
+
+`hall_approach` **3848** (r4 3843, +5 for the 4 gate-face pieces) — **still under the 4000 ceiling**,
+152 calls of headroom. `village_high` 3162. `smoke_stronghold` exit 0, `smoke_warrens` exit 0.
+
+## R5.7 What still fails, stated plainly
+
+1. **The courtyard-night numeric target was missed.** The brief set "mean ≥ 12"; the frame is **8.38**.
+   It is a 134 % improvement over round 4's 3.58 and the qualitative goal is largely met at native
+   exposure — banners and sigils, ground, scaffold, barrels, a lit brazier and the grunt sentry all read
+   without any exposure boost — but 8.38 is not 12 and is reported as a miss, not rounded up.
+2. **The den frame drifted further from pixel-stable**: 1.8 % of pixels over 8 in round 4, **4.6 % now**.
+   The reshape's larger near-mouth boulders are visible through the doorway from the den stand. No
+   interior geometry, chamber, structure member, guardian or prize changed — `_build_chambers`,
+   `_build_passages`, `_build_interior_rock`, `_structure_*`, `_dress_the_guardian` and `_build_prize`
+   are untouched — but "pixel-stable" was the stated bar and this does not meet it. If the bar is strict,
+   the fix is raising `skip_front_m` so the enlarged boulders start further from the mouth.
+3. **200 m and 400 m remain weak.** The band lift is decisive at 100 m, where the Hall now silhouettes
+   against clean sky. At 200 m and 400 m the Hall is still small and low-contrast against a bright
+   horizon (means barely moved: 117.24→116.70, 118.99→118.33). The band is no longer the cause; the
+   remaining problem is the Hall's own angular size and its aerial fade converging with the sky.
+4. `10-stronghold-approach-night` and `gate-night` improved a lot in mean (+55 %, +44 %) but were not
+   inspected frame-by-frame this round for whether detail actually reads.
+5. Carried forward, all outside PLACES: grass field enabled but drawing zero instances;
+   `smoke_traversal`'s South Bridge walk-around; `_judge_capture_hall.gd` has still never produced frames.
