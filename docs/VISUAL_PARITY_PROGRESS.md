@@ -212,6 +212,17 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### CORRIDOR round 2 (`claude/vp-corridor` @ 08:33) — judged 09:05, MERGED 09:06, re-baked
+Evidence: `CORRIDOR/00-before`, `round1`, `round2`, `CORRIDOR/JUDGE-round2.md`.
+- Judge: station 07 restored and improved (hero tree, rock landmark, horizon); 04 a clean win (left-flank horizon
+  mass); 02 improved but still right-heavy; **06 regressed** — a near-trunk wall on the path's right buries the
+  mid-ground tree line and signpost (the shared-RNG side effect the lane itself named); 01/03/05/08 stable. The
+  "shattered-glass" canopies in these frames are the pre-merge leaf bug, already fixed on the program branch.
+- Merged clean (band `layer_anchors` + additive `_merge_band_layer_anchors`, `tools/_capture_corridor.gd`); bake
+  825,875 placements. Round 3 dispatched 09:06: anchor RNG isolation (own seeded stream + byte-identical fill test),
+  station 06 trunk wall, station 02 balance, re-render on the merged base via fast-forward checkout (the lane's
+  auto-mode classifier blocks `git merge`).
+
 ### Check-in #12 (09:00 UTC) — WORLD r4 judged, CORRIDOR r2 / LIFE r3 under judgement, CI fix landed
 - **CI:** `test_ecology_core_clusters_without_changing_the_count` rewritten to measure the mean core-gate value under
   the placements (the bin-CV proxy was dominated by the 64-tree clumps both sides share); 37/37 locally; pushed as
