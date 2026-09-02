@@ -51,10 +51,26 @@ Caveats, stated honestly:
   displaced off-axis (a `_clear_of_bodies` step-aside — the frames were pulled from the lane branch in 84ae00af and the
   capsule lift 6c7f8d1e may not have been on it); this run logs the eye exactly at the entrance marker, no NOTE line.
   The probe ran the current tool math, so the hits above are what round 11 photographs; the fix is not camera-dependent.
-- The flanks now read as very dark earth in the dome's shadow (L 2–3 — near black). That is ≤ 90 and is the material
-  the rest of the mound wears, but it is not yet the reference's "dark soil, roots, stone, moss" texture read. Next
-  mechanism if the judge wants more than "no longer a white panel": give the skin its own `exterior_cladding_colour`
-  (e.g. `#4a3a2a`, ~2× the apron value) so Ground030's grain survives the shadow, or run it through the stain shader
-  with a dark `base_tint` and `material_override` cleared. One data knob either way; no interior impact.
-
 `tests/smoke_warrens.gd` on this state: exit 0, "warrens smoke test passed" (mouth walkable, chambers enclosed, route walked, guardian/heartstone/reward intact).
+
+## Round 12 — the one knob (JUDGE-round11-warrens: "unlit black void, no grain" → `site.exterior_cladding_colour`)
+
+Data change only: the skin gets its own tint `#4a3a2a` (~2× the apron's `#2b2118`) via `_cladding_material()` — same
+Ground030 texture, triplanar scale and normal map as `_floor_material(true)`, no interior change, `exterior_cladding_m` 0.4 kept.
+One render, `round12-warrens/`:
+
+| region (standing-day) | r10 | r11 | **r12** | window asked |
+|---|---|---|---|---|
+| left flank median / std | 43.9 / 16.6 | 2.5 / 43.6 | **8.3 / 42.8** | 20–70 / ≥ 12 |
+| right flank median / std | 94.1 / 65.6 | 2.8 / 45.8 | **9.1 / 42.3** | 20–70 / ≥ 12 |
+| pixel (0.80, 0.42) | (151,144,126) | (3,3,1) | **(12,9,5)** | — |
+
+Std passes, median misses the 20–70 window: the flank sits in the mouth dome's cast shadow and is lit by ambient only, so a
+2× albedo lifted it ~3× (3 → 9) but not to 20. Grain is now visible on the flanks at 1:1 (speckle and darker pocks, warm
+brown hue (12,9,5) rather than neutral black) — the judge's own preference order (dark earth with visible grain beats black
+void) puts r12 closer to the reference than r11, so **r12 is the kept state**; r11 is recorded as the void ceiling.
+Approach-day: 20.5 % px changed vs r11, all of it in the top two rows (moving cloud layer, 46–76 % per cell); the mound and
+doorway rows are 0–3 % — composition unchanged. Den: 8.0 % px changed vs r11, all on the wandering guardian/trainer cells; wall and ceiling cells 0 % (interior untouched).
+Next mechanism if a 20+ median is still wanted: it is a LIGHT problem now, not a material one — either ~4–5× tint
+(`#8a6e50`, risks reading as dry clay in the sunlit approach) or a low-energy fill omni at the mouth (the judge's own
+suggestion), both one data knob; the skin material path is proven to move the region.

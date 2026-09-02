@@ -212,6 +212,10 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### 18:40 UTC — Warrens exterior CLOSED at round 12 (earth-skin cladding with its own tint)
+
+- Round 12 knob (`site.exterior_cladding_colour` #4a3a2a via `_cladding_material()`, same Ground030 triplanar/normal as the apron; interior untouched): standing-day flank medians r10 43.9 / 94.1 → r11 2.5 / 2.8 → **r12 8.3 / 9.1**, std 42.8 / 42.3 (grain visible: speckle, pocks, warm brown (12,9,5) instead of neutral black); the 20–70 median window was missed because the flanks sit in the mouth dome's cast shadow under ambient only. Approach/den compositions unchanged (diffs confined to cloud rows and the wandering guardian). Coordinator's read of `round12-warrens/04-warrens-standing-day.png`: a dark earthen burrow mouth with readable grain framing a lit stone tunnel — the reference's earth-burrow read, dark. **Kept state = r12**; brighter flanks recorded as a **lighting ceiling** (next mechanism: a low-energy fill omni at the mouth or a ~4× tint that risks reading as dry clay in sun — not attempted). Warrens exterior: FAIL (rounds 1–10) → PARTIAL/ACCEPTED with limitation.
+
 ### 18:35 UTC — Sentries CLOSED: night proven (chest-height per-sentry omni)
 
 - One-shot lighting mechanism (`gate_sentries[].night_light`: energy 2.4, range 4 m, attenuation 1.2, offset [0, 1.3, −0.6], colour (1.0, 0.72, 0.45), shadowless, child of the sentry body so it follows `facing_deg`; always-on like every other stronghold practical). Proof on one render (`round12-sentries-night/`, `DECISION-sentries-night.md`, commit `4d31d0f8`): west guard box mean luminance 5.1 → **29.17**, east 6.4 → **30.55** (≥ 25); head/harness/belt/torso/boots legible at 3×; day frame 1.0 % px diff vs round 11 (composition unaffected); `smoke_stronghold` exit 0. Coordinator's own read of the night frame: two warm-lit guards flanking the red door, fully readable. **Sentries: PASS day + night** — the r9/r10 "ceiling" was a placement error (half-buried bodies), not a ceiling.
