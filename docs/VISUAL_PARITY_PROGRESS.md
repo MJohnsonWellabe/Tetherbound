@@ -212,6 +212,23 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Check-in #17 (11:45 UTC) — LIFE round 5 judged and merged; CI green
+- **CI `308b4fca`** (CORRIDOR r3 bake): green. Local guards on the same tree: 50/50 tests, traversal, stronghold,
+  warrens all exit 0.
+- **LIFE round 5** (`f2fa8906`, real population): the tool no longer spawns or hides anything for a stand — it
+  positions the eye (clearance sweep, camera pulled back 3.5 m like `_capture_locations.gd`), lets streaming
+  settle and REPORTS which real wild bodies are in frame; legibility moved to authored clusters in band spawn
+  data; the pairing frame grants the starter through the real party/summon path; a `00-village-life` frame was
+  added. Judge `LIFE/JUDGE-round5.md`: lens occlusion mostly gone, **05-ridge-camp-day now the strongest frame**
+  (trainer + 2 legible creatures), mill pond solid, village edge day/night read; still failing: pairing frame
+  shows the starter at 2.5–3× the trainer's apparent size (hero reveal, not side-by-side), village-life shows one
+  camouflaged villager, night nearly black at relay camp, 03 open meadow aimed away from its clusters. Merged
+  `d55e6ad5` (spawn data + species + capture tool; no bake impact). Round 6 dispatched 11:49: same-depth pairing,
+  village gathering from existing villagers + a walker scope estimate, firelit night stand, re-aimed 03.
+- **WORLD**: bounded `TIME` in `sky_clouds.gdshader` pushed (`84f6bfd9`, `time_wrap` 2500 s derived so both
+  drift layers land on integer noise cells) — unverified by render; A/B in progress. Not merged until proven.
+- PLACES round 7 (+ relay-from-road) and CORRIDOR round 5 (all 16 stations) rendering.
+
 ### Check-in #16 (11:14 UTC)
 - Bake after the CORRIDOR r3 merge committed (`308b4fca`, 825,701 placements; 50/50 scatter/veg/perf tests).
 - **WORLD**: identity check proved the rendered Environment/Sky are the objects world_look mutates, and the
