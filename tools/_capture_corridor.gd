@@ -75,7 +75,23 @@ const UP := 2.4
 ## Landmark identity checked against each band's own `props.json` cluster
 ## centroids and `terrain_playground.json`'s own `crossings[]`/site entries
 ## (never guessed):
-##   09 (-110,3290): band3 pt1, the first bend entering the River Lock.
+##   09 (-30,4060): ROUND-6 ADDENDUM re-site, band3 pt9 (was pt1, -110,3290).
+##     JUDGE-b3b5-before.md and JUDGE-round5.md both named the same defect
+##     twice: this station is called "river-lock-entry" and showed no water.
+##     Checked directly: `data/config/terrain_playground.json`'s `river.course`
+##     (the actual carved geometry -- water.json's own `river` block is
+##     presentation only, colour/flow/reeds, and carries no course of its
+##     own) runs z 4080-4222 across the corridor's FULL x span (-1024 to
+##     1021, per the block's own OW5C comment), so any station in that
+##     z-band sees water regardless of x; the original pt1 (z=3290) sits
+##     ~800m short of it, a gap no anchor can close. Moved to pt9, inside the
+##     river's own z-band, looking at pt10 (-152,4170) where the Old Mill
+##     Crossing narrows sit -- the water is not just reachable but the actual
+##     crossing point.
+##     Breaks this pass's own "in walked order" station numbering (09 now
+##     sits geographically between what were stations 10/11 and 12) --
+##     accepted deliberately, disclosed in the report, because showing the
+##     water this station is named for outweighs numbering purity.
 ##   10 (230,3670): band3 pt5, matching `relay_approach_checkpoint`'s own
 ##     centroid (240.9,3673.7) to within 13m.
 ##   11 (350,3760): band3 pt6, exactly `tether_relay.json`'s site centre.
@@ -103,7 +119,7 @@ const STATIONS := [
 	["06-stone-root-entry",Vector2(310.0, 1660.0), Vector2(400.0, 1800.0)],
 	["07-band2-mid",       Vector2(20.0, 2130.0),  Vector2(-150.0, 2210.0)],
 	["08-band2-far",       Vector2(-420.0, 2470.0),Vector2(-330.0, 2630.0)],
-	["09-river-lock-entry",Vector2(-110.0, 3290.0),Vector2(-160.0, 3420.0)],
+	["09-river-lock-entry",Vector2(-121.5, 4142.5),Vector2(-152.0, 4235.0)],
 	["10-relay-approach",  Vector2(230.0, 3670.0), Vector2(350.0, 3760.0)],
 	["11-relay",           Vector2(350.0, 3760.0), Vector2(280.0, 3900.0)],
 	["12-old-mill-crossing",Vector2(-152.0, 4170.0),Vector2(-152.0, 4235.0)],

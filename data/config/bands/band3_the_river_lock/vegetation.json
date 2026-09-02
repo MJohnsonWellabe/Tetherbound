@@ -9,11 +9,12 @@
       "_why": "GATE-D3. The flat shoulder just past the spine's own bend into the relay approach ((230,3670) is a spine waypoint) -- measured with tools/_probe_band3.gd at 0.35m of spread over an 8m box, the flattest ground found anywhere in the band. This is the region's answer to prompt 64's camp/rest requirement: not a pre-built healer inside the gauntlet, but a real clearing, off the pickets' own ground and before either of them, where the player can actually plant a camp and rest before pushing in. A copse standing on it would defeat the point -- the camp placer needs open, walkable ground, the same reason clearings exist for every other hand-placed structure in the game."
     }
   ],
-  "_comment_layer_anchors_vp4": "VP4-CORRIDOR round 4 (JUDGE-b3b5-before.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (see band1_lower_meadows/vegetation.json's own comment on this key for the merge mechanism). Fixes stations 09-river-lock-entry and 10-relay-approach. Station 09's own name promises water ('the river lock') that this position genuinely cannot show -- `data/config/water.json`'s river `course` runs z 4080-4222 (the same river station 12/old-mill-crossing already frames well), ~800-900m further down the route than this station's z=3290; moving the station that close to 12 would just duplicate it and leave a gap earlier in the band. So this fixes the one part of the complaint vegetation actually reaches -- the 'empty grass to sky' mid-ground absence -- honestly, not by faking a water feature that isn't there. Checked clear of this file's own clearing above (210,3700 r11, the river-lock rest pad) before siting.",
+  "_comment_layer_anchors_vp4": "VP4-CORRIDOR round 4 (JUDGE-b3b5-before.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (see band1_lower_meadows/vegetation.json's own comment on this key for the merge mechanism). Fixes stations 09-river-lock-entry and 10-relay-approach. Station 09's own name promises water ('the river lock') that THIS position genuinely could not show -- `data/config/water.json`'s river `course` runs z 4080-4222 (the same river station 12/old-mill-crossing already frames well), ~800-900m further down the route than this station's original z=3290. Round 4 fixed only the reachable part of the complaint (the 'empty grass to sky' mid-ground absence) honestly, without faking a water feature that was not there. Round 6 (below) re-sites the station itself instead, per JUDGE-round5.md's own verdict that the water is the point of this station -- see `tools/_capture_corridor.gd`'s STATIONS comment for the re-site math. The two anchors below (trees/rocks/bushes at ~-130,3310 and the bushes at -108,3300) were authored against the OLD station-09 position and are NOT this station's fix any more; left in place as ordinary ambient vegetation on the old dirt path rather than deleted, since removing them fixes nothing round 6 asks for and this lane does not touch scatter it has no reason to touch. Checked clear of this file's own clearing above (210,3700 r11, the river-lock rest pad) before siting.",
+  "_comment_layer_anchors_vp4_round6": "VP4-CORRIDOR round 6 (JUDGE-round5.md): station 10 'reads as a generic campsite with no relay identity'. tether_relay.json's own site frame puts the compound gate at world (~342,3771.6) and the apparatus/pylon at (~346.5,3749) -- both close to dead ahead of this station's existing look target (350,3760, the site centre itself), 5 degrees right and 3 degrees left of axis respectively at ~140-151m. So the compound was always going to be near-centred at long range; what was missing was the near-camera framing to compress the eye toward it. The new trees entry below mirrors the existing left-side copse (259,3676) on the right at a matching ~28m distance, closing a foreground gap onto the gate/pylon ahead rather than moving the station -- compression (the two copses narrowing the near view) into reveal (the compound centred beyond the gap).",
   "layer_anchors": {
     "trees": [
       {
-        "_why": "VP4 station 09-river-lock-entry (-110,3290)->(-160,3420): JUDGE-b3b5-before.md ranked this the second-worst station -- 'a worn dirt path receding into open grass... no rock, no copse, no structure'. A tree copse 30m out at 22 degrees off the view axis, right side.",
+        "_why": "VP4 station 09-river-lock-entry (-110,3290)->(-160,3420): JUDGE-b3b5-before.md ranked this the second-worst station -- 'a worn dirt path receding into open grass... no rock, no copse, no structure'. A tree copse 30m out at 22 degrees off the view axis, right side. ROUND 6: this station is re-sited (see tools/_capture_corridor.gd) to show water; this anchor is no longer on the new sightline and stands only as ambient vegetation on the old path (see this file's own _comment_layer_anchors_vp4).",
         "at": [-130.0, 3312.0],
         "radius": 13.0,
         "count": 8,
@@ -25,6 +26,12 @@
         "at": [259.0, 3676.0],
         "radius": 12.0,
         "count": 7
+      },
+      {
+        "_why": "ROUND 6, station 10 compression->reveal (JUDGE-round5.md): a right-side copse mirroring the left one above at a matching ~28m/25-degree offset, so the two form a near-camera gap the compound (gate at world ~342,3771.6, ~5 degrees right of axis at 151m) is glimpsed through, rather than the relay reading as a generic campsite with nothing marking it as the compound ahead. Deliberately close enough to the left copse (24m gap) to read as a gate, not two unrelated clumps -- and clear of `relay_approach_checkpoint`'s prop cluster (240.9,3673.7, 20.2m away).",
+        "at": [243.0, 3694.0],
+        "radius": 9.0,
+        "count": 5
       }
     ],
     "rocks": [
@@ -46,6 +53,12 @@
       {
         "_why": "VP4 station 10: edge planting on the new left-side copse.",
         "at": [245.0, 3673.0],
+        "radius": 6.0,
+        "count": 3
+      },
+      {
+        "_why": "ROUND 6, station 10: edge planting on the new right-side copse.",
+        "at": [247.0, 3691.0],
         "radius": 6.0,
         "count": 3
       }
