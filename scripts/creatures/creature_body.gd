@@ -122,48 +122,23 @@ const TIER_RIM_STRENGTH := {
 	"rare": 0.26,
 }
 
-## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. `grass_field.gd` already has a
-## clearing mechanism for exactly this shape of problem -- a building's own
-## floor grows grass through it unless the floor says "nothing grows on the
-## ground I stand on" -- via `CLEAR_GROUP`/`CLEAR_RADIUS_META`
-## (`village.gd`/`burrow_warrens.gd` already use it, and it clears every field
-## tier: tufts, stones, bushes, flowers, litter, the far sheet, all four
-## shaders read the same `built[]` list). A blind visual-judge pass on this
-## branch's own frames found a creature standing *inside* a flowering cover-tier
-## bush, its whole outline broken by real leaf geometry in front of it -- a
-## defect no per-species material tint can reach, because those pixels belong
-## to a different mesh.
-##
-## NOT unconditional. `grass_field.gdshader::on_built_ground()`'s own comment
-## justifies its per-vertex loop by `built_count` being "ZERO almost
-## everywhere" -- a coordinator review measured that the Meadows carries 219+
-## wild individuals, so joining every spawned body to the group regardless of
-## distance would make `built_count` non-zero (and `built_bounds` wide)
-## across most of any populated band, defeating that early-out on the exact
-## draw the ~10 FPS handheld game-breaker traced to. `set_grass_clear_active()`
-## below is the toggle; ONLY the player's own creature (`follower_creature.gd`,
-## always within a few metres of the player by definition -- one or two
-## bodies, not a bloat risk) turns it on unconditionally. A wild creature's
-## membership is driven by `encounter_director.gd::_set_wild_active()`
-## instead, piggy-backing the EXISTING per-cluster player-distance activation
-## `_stream_clusters()` already computes for physics streaming -- no new
-## per-frame distance polling, and the group only ever holds whichever
-## cluster(s) the player is actually near, the same bound that keeps
-## `built_count` near zero the rest of the time.
-const GRASS_CLEAR_GROUP := "grass_clear"
-const GRASS_CLEAR_RADIUS_META := "grass_clear_radius"
-## Added to the collider radius, not used alone: a clearing sized to exactly
-## the collider would still leave field items overlapping the art, which
-## legitimately extends past the capsule for a long-bodied species (see
-## `_footprint_allowance`'s own comment). 0.6 is a modest fixed margin, not
-## scaled per-species -- a bigger creature already clears more of the field by
-## already having a bigger `_radius`, and a margin that grew with size would
-## turn a legendary's clearing into a visible bald disc.
-const GRASS_CLEAR_MARGIN := 0.6
-## Set whenever `_build_placeholder()` runs (species change, colourway
-## re-tint) so `set_grass_clear_active()` can update the meta without needing
-## its own copy of the radius maths.
-var _grass_clear_radius := 0.0
+## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. A local-suppression lever
+## (`grass_field.gd`'s existing `CLEAR_GROUP`/`CLEAR_RADIUS_META`, the same
+## path a building's own floor uses to keep grass from growing through it)
+## was tried here and reverted. It reaches `grass_field.json`'s own
+## procedural `cover_tiers` bushes but NOT `vegetation.json`'s separate,
+## statically-baked `bushes` scatter layer -- two different things both named
+## "bushes" -- and the coordinator's own worst-case example (a creature
+## standing inside a real bush) turned out to be the static one. Proven with
+## a real before/after render: pixel-identical in the bush region either way.
+## Left out rather than kept as a partial no-op, because it also carried a
+## real cost this session could not justify once it stopped solving the
+## problem: `grass_field.gdshader`'s per-vertex loop is only cheap because
+## `built_count` is zero almost everywhere, and the Meadows' 200+ wild
+## individuals would have kept it non-zero across most of any populated band.
+## See this branch's own report for the reasoning and the fix that replaced
+## it: spawn siting avoids baked scatter instead
+## (`scripts/combat/encounter_director.gd`).
 
 ## The grounding ray starts this far above the requested spot and traces this far
 ## down.
@@ -472,14 +447,6 @@ func _build_placeholder() -> void:
 	# diameter. Per species because it is a fact about the animal: a triceratops
 	# is genuinely several times longer than it is wide and a frog is not.
 	_footprint_allowance = float(look.get("footprint_allowance", FOOTPRINT_ALLOWANCE))
-	# Radius only -- NOT group membership, see `GRASS_CLEAR_GROUP`'s own
-	# comment for why this must stay opt-in per caller rather than automatic
-	# here. If membership is already active (a re-setup mid-game: colourway
-	# swap, shiny re-tint), refresh the meta so a size change is not left
-	# clearing the OLD radius.
-	_grass_clear_radius = _radius + GRASS_CLEAR_MARGIN
-	if is_in_group(GRASS_CLEAR_GROUP):
-		set_meta(GRASS_CLEAR_RADIUS_META, _grass_clear_radius)
 
 	# The collider is built from the SPECIES, never from the art.
 	#
@@ -1205,22 +1172,6 @@ func apply_size_multiplier(multiplier: float) -> void:
 
 func body_radius() -> float:
 	return _radius
-
-
-## The `grass_clear` toggle -- see `GRASS_CLEAR_GROUP`'s own comment for why
-## this is opt-in rather than automatic. Idempotent either direction: safe to
-## call every time a caller's own activation state changes, even if it did
-## not actually change (`encounter_director.gd::_stream_clusters()` only
-## calls this on a real active/inactive transition, but nothing here assumes
-## that). `grass_field.gd` reads a member's CURRENT `global_position` live
-## every time its ring moves, so a moving, still-active creature keeps
-## clearing wherever it actually stands without this needing to run again.
-func set_grass_clear_active(active: bool) -> void:
-	if active:
-		add_to_group(GRASS_CLEAR_GROUP)
-		set_meta(GRASS_CLEAR_RADIUS_META, _grass_clear_radius)
-	else:
-		remove_from_group(GRASS_CLEAR_GROUP)
 
 
 ## Where an attack aimed at this creature should be measured to: the middle of

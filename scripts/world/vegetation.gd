@@ -1744,6 +1744,40 @@ func harvested_count() -> int:
 	return total
 
 
+## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. Read-only sibling of `clear_area()`
+## below, for wild-creature spawn siting
+## (`encounter_director.gd::_spawn_creatures()`): is there a SOLID scatter
+## placement -- a tree, a rock, a bush, anything with a real collider -- close
+## enough to a candidate spawn point that a creature standing there would read
+## as planted inside it? Traced from a real case: the coordinator's own
+## worst-case creature-visibility example (a small creature standing inside a
+## flowering bush, its whole silhouette broken) turned out to be exactly this
+## -- `vegetation.json`'s statically-baked `bushes` scatter layer, a
+## DIFFERENT thing from `grass_field.json`'s own procedural `cover_tiers`
+## bushes despite sharing the name. A `grass_field.gd`-side clearing lever
+## (tried and reverted, see `creature_body.gd`'s own history) can reach the
+## procedural one and not this one, because this is baked, off-limits to
+## re-bake or live culling per this branch's own brief, and simply not
+## spawning a creature on top of authored world dressing is more correct than
+## clearing the dressing out from under it anyway.
+##
+## Reuses each batch's own `radius` (the same number a player's own footstep
+## already bounces off of) rather than one fixed distance, so a thin tree
+## trunk excludes a small disc and a bulky bush excludes a bigger one without
+## this needing to know which layer is which. Read-only on purpose:
+## `clear_area()` is the destructive sibling and stays that way -- deleting
+## authored dressing to make room for a creature is not this method's job.
+func has_solid_scatter_near(centre: Vector3, extra: float) -> bool:
+	for batch: Dictionary in _collision_batches:
+		var reach: float = float(batch["radius"]) + extra
+		var reach_sq := reach * reach
+		for placement: Dictionary in (batch["placements"] as Array):
+			var spot: Vector3 = placement["position"]
+			if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() <= reach_sq:
+				return true
+	return false
+
+
 ## Remove every COLLIDABLE scatter instance whose position falls inside a
 ## circle, render and collider both. Returns how many went.
 ##
