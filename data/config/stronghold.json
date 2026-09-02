@@ -37,7 +37,20 @@
       "damp_strength": 0.26,
       "streak_strength": 0.2,
       "floor_moss_amount": 0.3,
-      "floor_up_moss": 0.3
+      "floor_up_moss": 0.3,
+      "_why_exterior": "VP8-EXT (2026-09-02). The 400m approach stand (`hall_approach`, `hall_gate`) judged the works still 'the clean cream castle kit with pale towers' -- the shader was already reaching every kit tower/roof surface (`stronghold.gd::_weather_hall_massing`) and every outer curtain wall, coping, merlon, buttress, gate jamb/arch and skirt facing (all already textured through `_stone_shader_material`), but every one of those surfaces was sharing the SAME weathering intensity as the five lit rooms inside, and the kit's own retinted LightRock/DarkRock tint (building_prefabs.json, ~#817f78/#68675f) is a mid-value grey-tan on its own -- no amount of joint moss over that base reads as 'dark ruined mass' at range. This block is read ONLY by `stronghold.gd::_material`/`_stone_shader_material` callers that pass `exterior: true` (every genuinely outside-facing stone: kit massing, outer walls, coping/merlons/buttresses, the gate frame and arch, the skirt foundation) and OVERRIDES the block above term-by-term; the five interior chambers (`outer: false` walls, the floor, the ceiling) never read this block and are unchanged. `darken`/`desaturate` bias the TINT itself before the shader's own texture and moss terms are added, which is the lever the flat parity pass upstream (building_prefabs.json's own T1-HALL-4 value-drop notes) could not reach because it only ever retints the kit's raw StandardMaterial3D before this shader replaces it. `damp_height` is 2.2x the interior figure because the 'lower third' the approach silhouette needs covered is a fraction of a 15-38m tower, not a 6-22m chamber wall -- the interior number was measured against the room the player stands in, this one against the mass the player walks toward.",
+      "exterior": {
+        "darken": 0.24,
+        "desaturate": 0.32,
+        "macro_strength": 0.34,
+        "moss_amount": 0.62,
+        "moss_scale": 0.26,
+        "moss_colour": "#243a10",
+        "up_moss": 0.72,
+        "damp_height": 6.6,
+        "damp_strength": 0.4,
+        "streak_strength": 0.3
+      }
     },
     "exterior_conduit_energy": 0.45
   },

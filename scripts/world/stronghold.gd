@@ -486,13 +486,30 @@ const BUTTRESS_HEIGHT_FRAC := 0.80
 ## Returns `Material`, not `StandardMaterial3D`: callers that used to adjust
 ## `uv1_scale` on a duplicate now set the shader's `tile` through
 ## `_stone_variant()` below, which is the ONE place that knowledge lives.
+##
+## `exterior`: VP8-EXT (2026-09-02). The 400m approach stand judged the works'
+## own outer stone -- coping, merlons, buttresses, the gate frame, the skirt
+## foundation and every kit tower/roof surface `_weather_hall_massing` reaches
+## -- as still reading pale, "a clean cream castle kit", against the reference
+## board's dark ruined mass. The shader was already reaching every one of those
+## surfaces (`_weather_hall_massing` already retargets the kit's LightRock/
+## DarkRock slots; every call below already goes through this function's
+## `textured` branch); what none of them had was a WEATHERING BIAS distinct
+## from the lit interior rooms the same shader also dresses. A caller passes
+## `exterior: true` for anything the 400m stand actually sees from outside,
+## and `_stone_shader_material` below darkens/desaturates the tint and lifts
+## the moss/damp/macro terms by `site.weathering.exterior`, so the outside of
+## the building can read as a weathered ruin without crushing the value range
+## the interior rooms need (`_ceiling_colour`'s own note records what that
+## costs). Interior calls (chamber walls with `outer: false`, the floor, the
+## ceiling) pass nothing and are bit-for-bit unchanged.
 const HALL_STONE_SHADER := preload("res://assets/environment/team_tether/hall/hall_stone.gdshader")
-func _material(colour: Color, emissive := 0.0, textured := false) -> Material:
-	var key := "%s_%.2f_%s" % [colour.to_html(), emissive, textured]
+func _material(colour: Color, emissive := 0.0, textured := false, exterior := false) -> Material:
+	var key := "%s_%.2f_%s_%s" % [colour.to_html(), emissive, textured, exterior]
 	if _materials.has(key):
 		return _materials[key]
 	if textured:
-		var stone := _stone_shader_material(colour, STONE_TILE, emissive)
+		var stone := _stone_shader_material(colour, STONE_TILE, emissive, exterior)
 		_materials[key] = stone
 		return stone
 	# The textured branch used to live here: `T_UnevenBrick` world-triplanar at
@@ -523,24 +540,49 @@ func _material(colour: Color, emissive := 0.0, textured := false) -> Material:
 ## carries `site.at` and `_floor_y` by the time any material is asked for, so
 ## the band sits where the skirt meets the meadow rather than at world zero.
 ## Weathering numbers are TUNABLE from `stronghold.json`'s `site.weathering`
-## block; absent keys take the shader's defaults.
-func _stone_shader_material(colour: Color, tile: float, emissive := 0.0) -> ShaderMaterial:
+## block; absent keys take the shader's defaults. `exterior` layers
+## `site.weathering.exterior` on top -- see `_material`'s own header for why
+## this exists and which callers set it.
+func _stone_shader_material(colour: Color, tile: float, emissive := 0.0,
+		exterior := false) -> ShaderMaterial:
 	var m := ShaderMaterial.new()
 	m.shader = HALL_STONE_SHADER
-	m.set_shader_parameter("tint", colour)
+	var weathering: Dictionary = _config.get("site", {}).get("weathering", {}) as Dictionary
+	var ext: Dictionary = weathering.get("exterior", {}) as Dictionary if exterior else {}
+	var tint := colour
+	if exterior:
+		# Darken and desaturate the TINT itself, not only the shader's own
+		# weathering terms -- the kit's retinted LightRock/DarkRock slots
+		# (building_prefabs.json) are a fixed mid-value grey-tan handed in by
+		# the caller, and no amount of moss coverage over a pale base reads as
+		# "dark ruined mass" at 400m when most of a pixel is still that base.
+		var darken := clampf(float(ext.get("darken", 0.24)), 0.0, 0.95)
+		var desat := clampf(float(ext.get("desaturate", 0.32)), 0.0, 1.0)
+		tint = tint.darkened(darken)
+		var grey := Color(tint.get_luminance(), tint.get_luminance(), tint.get_luminance())
+		tint = tint.lerp(grey, desat)
+	m.set_shader_parameter("tint", tint)
 	m.set_shader_parameter("albedo_tex", STONE_ALBEDO)
 	m.set_shader_parameter("normal_tex", STONE_NORMAL)
 	m.set_shader_parameter("rough_tex", STONE_ROUGHNESS)
 	m.set_shader_parameter("tile", tile)
 	m.set_shader_parameter("emission_energy", emissive)
 	m.set_shader_parameter("damp_top_y", position.y + _floor_y - _skirt + _damp_lift())
-	var weathering: Dictionary = _config.get("site", {}).get("weathering", {}) as Dictionary
 	for param: String in ["macro_strength", "stone_strength", "moss_amount", "moss_scale",
 			"joint_threshold", "up_moss", "damp_height", "damp_strength", "streak_strength",
 			"macro_scale", "stone_scale"]:
 		if weathering.has(param):
 			m.set_shader_parameter(param, float(weathering[param]))
-	if weathering.has("moss_colour"):
+		# The exterior block only ever RAISES the same terms (more moss, a
+		# taller damp band, stronger macro variation): a kit tower stands
+		# 15-38m tall against a chamber wall's 6-22m, so the "lower third"
+		# the approach stand wants covered needs a taller absolute band than
+		# the interior weathering this same block seeds from.
+		if ext.has(param):
+			m.set_shader_parameter(param, float(ext[param]))
+	if ext.has("moss_colour"):
+		m.set_shader_parameter("moss_colour", Color(str(ext["moss_colour"])))
+	elif weathering.has("moss_colour"):
 		m.set_shader_parameter("moss_colour", Color(str(weathering["moss_colour"])))
 	if emissive > 0.0:
 		# Paint, not ruin: see above.
@@ -562,10 +604,10 @@ func _damp_lift() -> float:
 ## `duplicate() + uv1_scale` copies the floor, the exterior skin and the skirt
 ## used to make -- a ShaderMaterial has no `uv1_scale`, so the tile is a
 ## parameter set once here.
-func _stone_variant(key: String, colour: Color, tile: float) -> Material:
+func _stone_variant(key: String, colour: Color, tile: float, exterior := false) -> Material:
 	if _materials.has(key):
 		return _materials[key]
-	var m := _stone_shader_material(colour, tile)
+	var m := _stone_shader_material(colour, tile, 0.0, exterior)
 	_materials[key] = m
 	return m
 
@@ -651,7 +693,7 @@ func _timber() -> Color:
 ## cheapest cue that turns a flat box into built masonry, and the one the
 ## castle's own two-course curtain already uses.
 func _wall_material(outer: bool) -> Material:
-	return _material(_stone_light() if outer else _stone(), 0.0, true)
+	return _material(_stone_light() if outer else _stone(), 0.0, true, outer)
 
 
 func _floor_colour() -> Color:
@@ -1171,7 +1213,8 @@ func _build_exterior_facing() -> void:
 
 
 func _exterior_face_material() -> Material:
-	return _stone_variant("exterior_face_stone", _stone_light(), STONE_TILE * EXTERIOR_FACE_TILE_MULT)
+	return _stone_variant("exterior_face_stone", _stone_light(),
+		STONE_TILE * EXTERIOR_FACE_TILE_MULT, true)
 
 
 func _face_rect(rect: Dictionary) -> void:
@@ -1306,7 +1349,7 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 	var coping_size := Vector3(span, COPING_H, _wall_t + COPING_PROUD * 2.0) if along_x \
 		else Vector3(_wall_t + COPING_PROUD * 2.0, COPING_H, span)
 	_box(coping_size, Vector3(wall_centre.x, wall_top + COPING_H * 0.5, wall_centre.z),
-		_material(_stone_dark(), 0.0, true), false)
+		_material(_stone_dark(), 0.0, true, true), false)
 	# JUDGE-5 D5: "the crenellations are IDENTICAL CUBES at IDENTICAL SPACING".
 	# They were: one constant width, one constant height, one constant pitch,
 	# for every merlon on every wall of the fortress. A real crenellated parapet
@@ -1354,7 +1397,7 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 			merlon_size.z = w
 		var merlon_at := Vector3(wall_centre.x + d, wall_top + COPING_H + h * 0.5, wall_centre.z) \
 			if along_x else Vector3(wall_centre.x, wall_top + COPING_H + h * 0.5, wall_centre.z + d)
-		_box(merlon_size, merlon_at, _material(_stone_light(), 0.0, true), false)
+		_box(merlon_size, merlon_at, _material(_stone_light(), 0.0, true, true), false)
 	if breach_from >= 0:
 		var d0 := start + float(breach_from) * (MERLON_W + MERLON_GAP)
 		var d1 := start + float(breach_to - 1) * (MERLON_W + MERLON_GAP)
@@ -1388,7 +1431,7 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 			# crossed beams stuck on a flat face"), reintroduced in a new shape.
 			# A buttress is the SAME masonry as the wall it thickens, one step
 			# down so its shaded return still separates it.
-			_box(b_size, b_at, _material(_stone().lerp(_stone_light(), 0.55), 0.0, true), false)
+			_box(b_size, b_at, _material(_stone().lerp(_stone_light(), 0.55), 0.0, true, true), false)
 
 	if not hardware:
 		return
@@ -1680,10 +1723,10 @@ func _build_gate_frame() -> void:
 	for s in [-1.0, 1.0]:
 		_box(Vector3(jamb_w, jamb_h, _wall_t + jamb_proud),
 			Vector3(lateral + s * (width * 0.5 + jamb_w * 0.5), _floor_y + jamb_h * 0.5, jamb_z),
-			_material(_stone_dark(), 0.0, true), false)
+			_material(_stone_dark(), 0.0, true, true), false)
 	_box(Vector3(width + jamb_w * 2.0, 0.6, jamb_proud + _wall_t),
 		Vector3(lateral, _floor_y + jamb_h + 0.3, jamb_z),
-		_material(_stone_dark(), 0.0, true), false)
+		_material(_stone_dark(), 0.0, true, true), false)
 	# The gate pair hangs from above the lintel, down the flanking curtain
 	# either side of the arch -- the one spot every player is guaranteed to
 	# look at, and the face design §2 makes self-lit rather than sunlit.
@@ -1741,8 +1784,8 @@ func _build_gate_arch_and_portcullis(lateral: float, width: float, op_height: fl
 	# opening -- the frame read exactly as before, a rectangular hole. The
 	# jambs stand `jamb_proud` off the face; the ring stands a little further.
 	var proud_z := jamb_z - jamb_proud * 0.5 - ring_depth * 0.5 - 0.06
-	var stone := _material(_stone_dark().lerp(_stone_light(), 0.25), 0.0, true)
-	var key_stone := _material(_stone_light(), 0.0, true)
+	var stone := _material(_stone_dark().lerp(_stone_light(), 0.25), 0.0, true, true)
+	var key_stone := _material(_stone_light(), 0.0, true, true)
 	var holder := Node3D.new()
 	holder.name = "GateArch"
 	add_child(holder)
@@ -1902,7 +1945,7 @@ func _ground_hall_massing(massing: Node3D) -> void:
 	# A foot is the mass continuing to the ground, so it takes the wall's own
 	# stone, one step darker for the shaded return -- the shaft is below the
 	# building's shoulder and should sit in shadow, not announce itself.
-	var material := _material(_stone().lerp(_stone_light(), 0.35), 0.0, true)
+	var material := _material(_stone().lerp(_stone_light(), 0.35), 0.0, true, true)
 	var grounded := 0
 	for child in massing.get_children():
 		if child is not Node3D:
@@ -2025,8 +2068,12 @@ func _weather_hall_massing(massing: Node3D) -> void:
 				continue
 			var key := "kit_%s_%s" % [std.resource_name, std.albedo_color.to_html()]
 			if not done.has(key):
+				# Every module `_build_hall_massing` stands here is exterior kit
+				# massing (towers, the spire, the roof) -- there is no interior
+				# use of this function to protect, so it always asks for the
+				# `site.weathering.exterior` bias. See `_material`'s own header.
 				done[key] = _stone_variant(key, std.albedo_color,
-					STONE_TILE * (ROOF_TILE_MULT if is_roof else 1.0))
+					STONE_TILE * (ROOF_TILE_MULT if is_roof else 1.0), true)
 			mi.set_surface_override_material(surface, done[key])
 
 
@@ -2254,7 +2301,7 @@ func _slit_row(centre: Vector3, size: Vector2, height: float, side: String,
 	# only frames if it separates from what it is set into -- which is the same
 	# finding `_structure_colour()`'s own header already records for the
 	# interior members, arrived at again from outside.
-	var frame_material := _material(_stone_dressed(), 0.0, true)
+	var frame_material := _material(_stone_dressed(), 0.0, true, true)
 	# ONE surround box, not four. Measured: at five boxes per opening (void,
 	# two jambs, head, sill) the 44 openings on this building were 208 mesh
 	# instances and the single largest thing this lane added -- enough on their
@@ -2596,7 +2643,7 @@ func _build_causeway_dressing() -> void:
 		for s3 in [-1.0, 1.0]:
 			_box(Vector3(0.7, pier_h, 0.7),
 				Vector3(lateral + s3 * kerb_x, base + pier_h * 0.5, bz),
-				_material(_stone_light(), 0.0, true), false)
+				_material(_stone_light(), 0.0, true, true), false)
 			# `_hang_banner`'s own header: local +X must point along the mount's
 			# OUTWARD normal, so a west pier faces PI and an east pier faces 0.
 			_hang_banner(Vector3(lateral + s3 * (kerb_x + 0.35), base + pier_h * 0.95, bz),
@@ -2658,7 +2705,7 @@ func _brazier(holder: Node3D, spec: Dictionary, index: int) -> Node3D:
 		var pier := float(causeway.get("brazier_pier_m", 0.8))
 		if pier > 0.05:
 			_box(Vector3(0.62, pier, 0.62), Vector3(at.x, y + pier * 0.5, at.z),
-				_material(_stone_dressed(), 0.0, true), false)
+				_material(_stone_dressed(), 0.0, true, true), false)
 			y += pier
 	var brazier := Node3D.new()
 	brazier.name = "Brazier_%d" % index
@@ -2917,7 +2964,7 @@ func _build_yard_stairs() -> void:
 ## uses on the walls, for the same reason it is a skin there.
 func _skirt_material() -> Material:
 	return _stone_variant("skirt_stone",
-		Color(str(_config.get("site", {}).get("stone_skirt", "#8f8172"))), SKIRT_TILE)
+		Color(str(_config.get("site", {}).get("stone_skirt", "#8f8172"))), SKIRT_TILE, true)
 
 
 const SKIRT_TILE := 0.22
@@ -2928,7 +2975,7 @@ func _build_skirt_facing(face_height: float) -> void:
 	if face_height <= 0.5:
 		return
 	var skin := _skirt_material()
-	var course := _material(_stone_dark(), 0.0, true)
+	var course := _material(_stone_dark(), 0.0, true, true)
 	for id: String in _chambers:
 		var chamber: Dictionary = _chambers[id]
 		var centre := _local_of(chamber.get("at", []))
@@ -2962,7 +3009,7 @@ func _build_skirt_grounding() -> void:
 	if cfg.is_empty():
 		return
 	_build_skirt_facing(float(cfg.get("skirt_face_height_m", 8.0)))
-	var dark := _material(_stone_dark(), 0.0, true)
+	var dark := _material(_stone_dark(), 0.0, true, true)
 	var b_w := float(cfg.get("buttress_width_m", 1.4))
 	var b_proud := float(cfg.get("buttress_proud_m", 0.9))
 	var b_pitch := maxf(3.0, float(cfg.get("buttress_pitch_m", 7.0)))
