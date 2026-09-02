@@ -4459,12 +4459,13 @@
     {
       "id": "S03-234",
       "title": "focus the berries stack",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 2
+        "item": "berries",
+        "max_moves": 60
       },
-      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item"
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item",
+      "observation": "Fixed 2026-09-02: this used a hand-counted focus_move offset (2, 3, 4, 5, 6 for entrants 1-5 respectively) assuming a specific inventory fill order that drifts as the segment spends and gains items (orbs through the catch loop, gathered materials, shop purchases) -- the exact bug class this same file already fixed for the revive-recovery block (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02) and the knife hotbar slot (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a positional guess that happens to match a fresh save's layout and silently drifts wrong once anything upstream has spent or gained an item. focus_item reads the live cursor and satchel_slot_of('berries'), the way a player reading the bag would, regardless of where berries actually sits by the time each entrant is fed."
     },
     {
       "id": "S03-235",
@@ -4544,12 +4545,13 @@
     {
       "id": "S03-243",
       "title": "focus the berries stack",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "berries",
+        "max_moves": 60
       },
-      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item"
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item",
+      "observation": "Fixed 2026-09-02: this used a hand-counted focus_move offset (2, 3, 4, 5, 6 for entrants 1-5 respectively) assuming a specific inventory fill order that drifts as the segment spends and gains items (orbs through the catch loop, gathered materials, shop purchases) -- the exact bug class this same file already fixed for the revive-recovery block (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02) and the knife hotbar slot (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a positional guess that happens to match a fresh save's layout and silently drifts wrong once anything upstream has spent or gained an item. focus_item reads the live cursor and satchel_slot_of('berries'), the way a player reading the bag would, regardless of where berries actually sits by the time each entrant is fed."
     },
     {
       "id": "S03-244",
@@ -4639,12 +4641,13 @@
     {
       "id": "S03-253",
       "title": "focus the berries stack",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 4
+        "item": "berries",
+        "max_moves": 60
       },
-      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item"
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item",
+      "observation": "Fixed 2026-09-02: this used a hand-counted focus_move offset (2, 3, 4, 5, 6 for entrants 1-5 respectively) assuming a specific inventory fill order that drifts as the segment spends and gains items (orbs through the catch loop, gathered materials, shop purchases) -- the exact bug class this same file already fixed for the revive-recovery block (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02) and the knife hotbar slot (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a positional guess that happens to match a fresh save's layout and silently drifts wrong once anything upstream has spent or gained an item. focus_item reads the live cursor and satchel_slot_of('berries'), the way a player reading the bag would, regardless of where berries actually sits by the time each entrant is fed."
     },
     {
       "id": "S03-254",
@@ -4735,12 +4738,13 @@
     {
       "id": "S03-303",
       "title": "focus the berries stack",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 5
+        "item": "berries",
+        "max_moves": 60
       },
-      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item"
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item",
+      "observation": "Fixed 2026-09-02: this used a hand-counted focus_move offset (2, 3, 4, 5, 6 for entrants 1-5 respectively) assuming a specific inventory fill order that drifts as the segment spends and gains items (orbs through the catch loop, gathered materials, shop purchases) -- the exact bug class this same file already fixed for the revive-recovery block (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02) and the knife hotbar slot (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a positional guess that happens to match a fresh save's layout and silently drifts wrong once anything upstream has spent or gained an item. focus_item reads the live cursor and satchel_slot_of('berries'), the way a player reading the bag would, regardless of where berries actually sits by the time each entrant is fed."
     },
     {
       "id": "S03-304",
@@ -4831,12 +4835,13 @@
     {
       "id": "S03-313",
       "title": "focus the berries stack",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 6
+        "item": "berries",
+        "max_moves": 60
       },
-      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item"
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item",
+      "observation": "Fixed 2026-09-02: this used a hand-counted focus_move offset (2, 3, 4, 5, 6 for entrants 1-5 respectively) assuming a specific inventory fill order that drifts as the segment spends and gains items (orbs through the catch loop, gathered materials, shop purchases) -- the exact bug class this same file already fixed for the revive-recovery block (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02) and the knife hotbar slot (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a positional guess that happens to match a fresh save's layout and silently drifts wrong once anything upstream has spent or gained an item. focus_item reads the live cursor and satchel_slot_of('berries'), the way a player reading the bag would, regardless of where berries actually sits by the time each entrant is fed."
     },
     {
       "id": "S03-314",
