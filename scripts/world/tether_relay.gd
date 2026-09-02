@@ -231,12 +231,12 @@ func is_disabled() -> bool:
 ## --- the compound ----------------------------------------------------------
 
 
-## ROUND7 MATERIAL DEFECT. `severed_spokes.gd::_stone_material()` (still what
-## the decks/ramps' own collider-only pieces and the apparatus placeholder
-## massing wear -- out of this fix's scope) never sets `albedo_color`, which
-## defaults to WHITE and multiplies the T_UnevenBrick texture -- fine at a
-## grazing angle where the texture's own shading carries it, but under a
-## face-on sun it bleaches to near-white, exactly what
+## ROUND7 MATERIAL DEFECT, EXTENDED IN ROUND8. `severed_spokes.gd::
+## _stone_material()` (still what the apparatus placeholder massing wears --
+## genuinely out of scope, see the hero-asset seam header above) never sets
+## `albedo_color`, which defaults to WHITE and multiplies the T_UnevenBrick
+## texture -- fine at a grazing angle where the texture's own shading carries
+## it, but under a face-on sun it bleaches to near-white, exactly what
 ## `06-relay-road-day.png` measured. `stronghold.gd::_stone_shader_material`
 ## already carries the real fix (`hall_stone.gdshader`, a tint darkened and
 ## desaturated off a `site.weathering` block) for the Hall; this is the same
@@ -244,8 +244,12 @@ func is_disabled() -> bool:
 ## site's OWN `site.weathering` numbers in `tether_relay.json` rather than the
 ## Hall's -- see that block's own `_comment_weathering`/`_comment_darken_
 ## desaturate` for why the values differ. Cached once and shared by every
-## caller (`_build_walls`, `_build_gate`'s piers/lintel, `_build_ramps`) --
-## ONE ShaderMaterial resource, not one per mesh, so batching is unaffected.
+## caller -- `_build_walls`, `_build_gate`'s piers/lintel, `_build_ramps`, and,
+## as of ROUND8 (the round7 sweep missed these: the round7 "after" frame still
+## showed a large pale untextured slab), `_build_decks`' slab and legs (the
+## gantry and the 10x10 apparatus pad were exactly that slab),
+## `_build_console`'s cabinet, and `_build_cable_socket`'s bracket -- ONE
+## ShaderMaterial resource, not one per mesh, so batching is unaffected.
 func _weathered_stone_material() -> ShaderMaterial:
 	if _weathered_stone_cache != null:
 		return _weathered_stone_cache
@@ -525,6 +529,12 @@ func _build_decks() -> void:
 		slab.name = "Deck_%s" % id
 		slab.position = mid
 		slab.rotation.y = yaw
+		# ROUND8 MATERIAL DEFECT: `_stone_box` hands back the unweathered white
+		# stone -- the gantry and the 10x10 apparatus pad are exactly the "large
+		# flat pale untextured slab" the round7 wall/gate/ramp sweep missed
+		# (see `_weathered_stone_material`'s own header; that sweep covered
+		# walls/gate/ramp only). Swapped after the fact, same pattern.
+		(slab.mesh as BoxMesh).material = _weathered_stone_material()
 		holder.add_child(slab)
 		_works.call("_add_box_collider", holder, mid, Vector3(size.x, thickness, size.y), yaw)
 
@@ -555,6 +565,8 @@ func _build_decks() -> void:
 			leg.name = "Leg_%s_%.0f_%.0f" % [id, corner.x, corner.y]
 			leg.position = Vector3(spot.x, ground - 0.3 + height * 0.5, spot.y)
 			leg.rotation.y = yaw
+			# ROUND8 MATERIAL DEFECT: same swap as the slab above -- see there.
+			(leg.mesh as BoxMesh).material = _weathered_stone_material()
 			holder.add_child(leg)
 			_works.call("_add_box_collider", holder, leg.position,
 				Vector3(0.9, height, 0.9), yaw)
@@ -850,6 +862,11 @@ func _build_console(seam: Node3D, apparatus: Dictionary) -> void:
 	cabinet.name = "Cabinet"
 	cabinet.position = Vector3(0.0, size.y * 0.5, 0.0)
 	cabinet.rotation.y = yaw
+	# ROUND8 MATERIAL DEFECT: same swap as the deck slab -- see its own note.
+	# The console cabinet is built on both the placeholder and generated-model
+	# apparatus paths (it is never part of the massing), so this is a real
+	# compound feature, not placeholder scope.
+	(cabinet.mesh as BoxMesh).material = _weathered_stone_material()
 	holder.add_child(cabinet)
 
 	# The face. Teal while live, and the reason the console is findable from
@@ -1116,6 +1133,10 @@ func _build_cable_socket(holder: Node3D, run_id: String, landing: Vector3, dir: 
 	bracket.name = "CableSocket_%s_bracket" % run_id
 	bracket.position = landing - inward
 	bracket.rotation.y = yaw
+	# ROUND8 MATERIAL DEFECT: this doc comment already claimed "this site's own
+	# wall/deck material" -- it wasn't; `_stone_box` is always the unweathered
+	# white stone until swapped. Swapped here, same pattern as the deck slab.
+	(bracket.mesh as BoxMesh).material = _weathered_stone_material()
 	holder.add_child(bracket)
 	_cylinder(holder, "CableSocket_%s_cap" % run_id,
 		landing + Vector3.UP * 0.06, 0.09, 0.3, live as StandardMaterial3D)

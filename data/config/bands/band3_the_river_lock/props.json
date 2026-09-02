@@ -214,6 +214,22 @@
             "Banner": "#7a2430"
           },
           "_why": "SITE-DRESSING: staked at the west end of the barricade, squared to the same road bearing (36.9) as the crate it stands beside. The Medieval Castle kit's own Banner module, sourced standalone (assets/buildings/quaternius_castle/Banner.obj, already installed -- no new mesh) and retinted oxblood (#7a2430) via props.gd's new `retint` key, the SAME hex value building_prefabs.json already retints the stronghold gatehouse's own banners to (data/config/building_prefabs.json, `Banner` material). Oxblood is CLAUDE.md's danger-faction accent, permitted here per the lane brief because a held Team Tether checkpoint is exactly where it belongs -- a barricade of crates reads as an obstacle; a barricade with a staked banner over it reads as a claimed position. Slight negative pitch and `sink_m` so the pole's own buried end (unmodelled) does not float above the ground plane it is driven into. ROUND 2 (self-critique against the rendered frame): the raw mesh is a bolt of cloth only, 0.70x0.66m (tools/_probe_banner.gd-style AABB check, not committed), so the original scale 0.6 rendered as a barely-visible fleck of red 27m from the checkpoint camera -- a defect this pass's own bar-question review caught and fixed rather than shipped. 2.6 gives a 1.8m-tall banner, close to the 1.8m trainer's own height and readable at the road-approach distance the checkpoint is actually judged from."
+        },
+        {
+          "model": "Stool",
+          "at": [239.5, 3677.5],
+          "yaw_deg": 216.9,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "VP5 round8. The fire/bench group reads as a bivouac, not a watch -- nothing in the cluster looks down the road. A second, unpaired seat between the road barricade and the camp, turned 216.9 degrees (reciprocal of the checkpoint's own 36.9 road bearing) to face back down the approach the barricade is set on -- a picket sits here to watch the road, not the fire. Deliberately not paired with the bench: one seat faces in, one faces out."
+        },
+        {
+          "model": "Whetstone",
+          "at": [242.6, 3670.6],
+          "yaw_deg": -15.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "VP5 round8. Tucked against the bench's near end -- gear kept maintained reads as a post settled in for a stay, the same cue `ridge_patrol_camp` and `highfield_stockcamp` already use for a manned camp rather than a passing bivouac."
         }
       ]
     },

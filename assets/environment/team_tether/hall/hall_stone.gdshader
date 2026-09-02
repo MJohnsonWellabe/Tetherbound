@@ -93,23 +93,28 @@ uniform float streak_strength : hint_range(0.0, 1.0) = 0.22;
 
 // VP-HALL-FIX ITEM1b (2026-09-02). See the `fog_disabled` note above this
 // shader's `render_mode` line for the full reasoning; this is the manual
-// half of that fix. `tools/_capture_locations.gd`'s `hall-100m`/`-200m`/
-// `-400m` stands (READ ONLY, not edited by this pass) measure their distance
-// from the Hall's own mouth, not from an arbitrary camera, so the defaults
-// below are tuned to those same three figures: `distance_darken_start` 100
-// sits AT the 100m stand -- the one the judge said already "holds" -- so
-// that stand keeps its current read exactly (`d_fade` is 0 there, `colour`
-// is unmultiplied). The curve then ramps to `distance_darken_end` 400,
-// matching the 400m stand -- the one named as the evidence stand for
-// whether the silhouette separates from the ground -- where the darkening
-// reaches its floor and goes no further (CAPPED: `distance_darken_floor`
-// is a lower bound the mix can never cross, so nothing here can ever read
-// as pure black or invert the stone/skirt value ladder those other files
-// already author). The 200m stand lands partway up the ramp, which is the
-// correct partial-darkening beat for a stand between the two named ones.
-uniform float distance_darken_start = 100.0;
+// half of that fix -- a small, CAPPED darken curve keyed to
+// `tools/_capture_locations.gd`'s `hall-100m`/`-200m`/`-400m` stands (READ
+// ONLY, not edited by this pass), which measure distance from the Hall's own
+// mouth. Superseded by ITEM1c immediately below: the first tuning (start 100,
+// floor 0.6) read as flat and unlit up close, so the numbers changed --
+// the curve's shape and cap-safety reasoning still hold.
+// VP-HALL-FIX ITEM1c (2026-09-02). A code-blind judge at the 100m stand AND
+// at the `gate` stand (Stronghold/entrance, looking across the whole outer
+// works into the Hall) called the Hall "a flat unlit dark shape" -- the
+// darken was starting too close. `gate` stands only ~0m from the mouth, but
+// its FRAME still contains the Hall's own far walls/towers, which sit well
+// past 100m of THAT camera once you look across the outer works' depth;
+// with the old `distance_darken_start` 100 those far surfaces were already
+// partway down the curve (and the 100m stand's own near geometry, which can
+// sit a few metres closer than the mouth plane the stand distance is
+// measured from, was fading too). Raised per dispatch: start 200 (nothing
+// in either evidence frame begins darkening now) and floor 0.7 (was 0.6, so
+// even fully-faded surfaces keep more of their weathered read). 400m keeps
+// its own beat -- 200..400 is still a real ramp, just shallower at the top.
+uniform float distance_darken_start = 200.0;
 uniform float distance_darken_end = 400.0;
-uniform float distance_darken_floor : hint_range(0.0, 1.0) = 0.6;
+uniform float distance_darken_floor : hint_range(0.0, 1.0) = 0.7;
 
 varying vec3 world_pos;
 varying vec3 world_nrm;

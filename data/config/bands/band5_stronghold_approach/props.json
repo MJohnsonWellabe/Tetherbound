@@ -173,6 +173,14 @@
           "sink_m": 0.06,
           "scale": 1.0,
           "_why": "VP5. Set touching the barrel, one load rather than a scatter"
+        },
+        {
+          "model": "Stool",
+          "at": [-19.5, 7453.0],
+          "yaw_deg": 75.6,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "VP5 round8. An unpaired seat at the clearing's own road-facing edge, 4.6m clear of the fire group and turned to bearing 75.6 -- straight up the spine at the outer works (8.0,7560.0), the Hall itself. Every other seat here faces the fire; this one turns the last stop before the climax toward what the player is about to walk into, the read the site's own name (a traveller's halt facing the road ahead) was still missing."
         }
       ]
     },

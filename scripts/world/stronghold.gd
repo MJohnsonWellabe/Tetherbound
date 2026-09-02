@@ -3066,6 +3066,23 @@ func _build_gate_sentries() -> void:
 		var at := _local_of(spec.get("at", []))
 		body.position = Vector3(at.x, _floor_y + float(spec.get("y", 0.0)), at.z)
 		body.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
+		# VP-HALL-FIX ITEM3C (2026-09-02). The rank/emission path above was
+		# already correct (confirmed, not new here) and the roof position
+		# already sits inside the `gate` stand's cone (44m out, ~19m of
+		# vertical headroom at that distance against the sentry's 15.54m --
+		# see `gate_sentries`' own `_why_item4_fix`). What was still working
+		# against legibility: this `10-stronghold` capture group runs at
+		# NIGHT, and `art.json`'s `times.night.environment
+		# .character_emission_floor` is 0.5 -- HALF the daylight additive
+		# emission boost every other grunt gets (`character_model.gd`'s own
+		# `set_emission_floor_scale`) -- so a real human-scale (1.8m) figure
+		# 44m up and out, lit only by a real light 9.7m away plus a halved
+		# self-lit floor, is a handful of pixels even when everything else
+		# about it is correct. `scale` (tunable per entry, default 1.5) grows
+		# the body about its own feet-at-origin pivot -- same convention as
+		# `_load_prop`'s own `scale` key elsewhere in this file -- so it
+		# stands taller and wider on the same spot rather than moving it.
+		body.scale = Vector3.ONE * float(spec.get("scale", 1.5))
 		if body.has_method("play"):
 			body.call("play", "idle")
 		index += 1
