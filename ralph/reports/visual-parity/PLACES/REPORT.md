@@ -3,7 +3,7 @@
 **Branch** `claude/vp-places` · **start commit** `e3aba7d7` (VP0 merge of the GROUND+VEG lane code)
 **Owns** VP5 (village / tournament / camps), VP6 (Warrens exterior), VP7 (Relay), VP8 (Meadows Hall)
 
-## Current state at a glance (after round 10)
+## Current state at a glance — PLACES lane CLOSED after round 11
 
 > **OPEN DECISION — Warrens exterior.** After seven rounds in which the judge's core verdict never moved
 > ("a grey rock pile on lawn" → "still reading as a rock pile") and two regressions were introduced by
@@ -18,7 +18,8 @@
 | courtyard night | **FAILING — trainer 3 m disc median 5.82 vs a ≥ 20 target** (mean 11.31). Mean/median gap again: over half the disc is still dark. Any claim here must quote the median |
 | verification | every targeted frame now carries a round-over-round pixel diff; **under 5 % changed = failed delivery, not a proof.** Adopted after my round-8 "proof" turned out to be an absolute sample of a byte-identical region |
 | Hall stone | **FIXED round 10** — root cause was `Color.darkened` multiplying in sRGB (0.48 ⇒ ×0.24 linear) over a 0.202-linear texture = albedo 0.011, below coal. `darken` → 0.0. Tint 66 → **139.7/255**; every frame criterion passed |
-| gate sentries | **DECLARED AT VISUAL CEILING** after five failed attempts — see R10.2. Camera bug fixed and proven; figures still not visible |
+| gate sentries | **AT VISUAL CEILING** after five attempts; handed to a clean-restart agent on the program branch |
+| night stone | **AT VISUAL CEILING** — the mechanism was found (sconces are emissive plaques, not lights) but the fix measured darker and was reverted per the one-render rule. Note `gate-night` already passed before the round; only the inner jambs at `gate-face-night` are unlit |
 | storm band | moved back +150 m, alpha 0.4 — approach-stand sky coverage 22.7 % → **13.3 %**, under the 15 % target |
 | Warrens | doorway pale patch resolved at the root: both it and the right-side "panel" were the same `_wear_as_wall_stone()` path, now deleted. Brow [87.6,93.0,87.9], panel [88.4,89.3,74.2] |
 | relay | pad and colonnade fixed — pad [195.6,191.4,163.6] → **[98.1,89.8,69.1]**; walls/gate/deck/console all weathered |
