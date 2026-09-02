@@ -21,9 +21,16 @@ extends SceneTree
 ## get the two states this branch compares.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const SETTLE_FRAMES := 240
-const RESETTLE_FRAMES := 180
-const SAMPLE_FRAMES := 30
+## Defaults are the historical series (every number in docs/PERFORMANCE_BUDGET.md
+## was taken at 240/180/30) and stay so those stay comparable. VP program:
+## `--settle=N --resettle=N --sample=N` override them for an A/B where the
+## two states differ by tens of millions of primitives and the uncullable
+## state takes seconds per frame under llvmpipe -- 450 frames at that rate is
+## half an hour per view. Structural counters (draw calls, primitives) are
+## stable long before 240 frames; the settle exists for streaming, not noise.
+var SETTLE_FRAMES := 240
+var RESETTLE_FRAMES := 180
+var SAMPLE_FRAMES := 30
 
 ## Elevated views chosen to have DISTANT scatter in frame -- the pond and
 ## open-field views `capture_lod_before_after.gd` renders are the visual
@@ -71,6 +78,12 @@ func _run() -> void:
 		elif a.begins_with("--views="):
 			for v in a.substr("--views=".length()).split(",", false):
 				_views.append(v.strip_edges())
+		elif a.begins_with("--settle="):
+			SETTLE_FRAMES = maxi(1, int(a.substr("--settle=".length())))
+		elif a.begins_with("--resettle="):
+			RESETTLE_FRAMES = maxi(1, int(a.substr("--resettle=".length())))
+		elif a.begins_with("--sample="):
+			SAMPLE_FRAMES = maxi(1, int(a.substr("--sample=".length())))
 
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)

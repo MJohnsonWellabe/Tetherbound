@@ -225,6 +225,23 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 		text.pixel_size = fit
 		text.billboard = BaseMaterial3D.BILLBOARD_DISABLED
 		text.no_depth_test = false
+		# VP4-CORRIDOR: `Label3D.double_sided` defaults to true, which means
+		# each face's text is also visible (mirrored) from behind its own
+		# plank -- a real defect on a plank this thin (0.05m, with the two
+		# labels' quads just 0.012m apart), even though it turned out NOT to
+		# be the cause of station 08's "Stone Gate Spoke" reading as "one Gate
+		# Spoke": rendering a fresh frame with only this line changed left the
+		# corrupted text unchanged, which is what ruled it out. `_label_scale()`
+		# already fits any length correctly, so this was never a sizing bug --
+		# the actual cause was two separate trailhead signposts (`Warren
+		# Undertrail` and this one) sited only 4m apart at the same shared
+		# road junction, close enough for their physical planks to visually
+		# collide from a distance; fixed by separating them in
+		# `terrain_playground.json` instead (see that file's own note on the
+		# `Stone Gate Spoke` trailhead). Kept here regardless: double-sided
+		# text bleeding through a 5cm plank is a real defect in its own right,
+		# independent of this specific station's actual bug.
+		text.double_sided = false
 		text.rotation.y = side * PI * 0.5
 		text.position = Vector3(side * (ARM_THICKNESS * 0.5 + 0.006), 0.0, ARM_LENGTH * 0.5)
 		text.modulate = Color("#241a10")

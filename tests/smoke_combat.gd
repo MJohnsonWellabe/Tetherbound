@@ -250,7 +250,7 @@ func _the_combat_buttons_say_something_outside_a_fight() -> void:
 	# build_place/build_cancel and build_rotate_left/right (project.godot), so a
 	# refusal that fired while a piece was armed would talk over the build
 	# placer on every rotate.
-	game.set("pending_build", "camp")
+	game.set("pending_build", "tent")
 	var while_building := await _refusal_after(game, message, "combat_quick")
 	game.set("pending_build", "")
 	if not while_building.is_empty():

@@ -14,12 +14,14 @@ extends RefCounted
 ##
 ## It is deliberately HARDER than the tail the continuous file used to assert:
 ##
-## * the creature beds and composed camp are PLACED, through the real build menu and
+## * the creature beds and campsite (tent, campfire, bedroll -- three
+##   independently placed pieces since OWNER-0902-CAMP-SPLIT retired the old
+##   single bundled `camp` buy) are PLACED, through the real build menu and
 ##   the real placer, out of the materials the authored gather route actually
 ##   supplies -- the old tail called `build_real()` on whatever bed it could
 ##   find in the world, which is a bed the player never built;
 ## * the team is brought into condition by SLEEPING, one creature per bed per
-##   night, through `camp.gd`'s own rest -- not by calling
+##   night, through `player_bed.gd`'s own rest -- not by calling
 ##   `creature_condition.note_rest_completed()` on the party;
 ## * the tournament is entered through the marshal's own `greeting_when`
 ##   ladder, which means `tournament_condition_ready` has to be true for real;
@@ -56,7 +58,15 @@ const FIXTURE_SPOTS := {
 		Vector2(-8.0, 2.0), Vector2(-3.0, -6.0), Vector2(-9.0, -5.0), Vector2(-2.0, 5.0),
 		Vector2(-10.0, 0.0), Vector2(-6.0, 6.0), Vector2(-11.0, -3.0), Vector2(-4.0, 8.0),
 	],
-	"camp": [Vector2(5.0, 0.0), Vector2(5.0, 3.0), Vector2(7.0, -2.0), Vector2(0.0, 6.0)],
+	# OWNER-0902-CAMP-SPLIT: three ids sharing the old camp's four candidate
+	# offsets rather than three separate lists -- `_spent_spots` below is
+	# shared across every id this segment places, so the first piece to try
+	# an offset claims it and the next of the three naturally falls through
+	# to the next candidate, spreading tent/campfire/bedroll across distinct
+	# spots without three lists to keep in sync.
+	"tent": [Vector2(5.0, 0.0), Vector2(5.0, 3.0), Vector2(7.0, -2.0), Vector2(0.0, 6.0)],
+	"campfire": [Vector2(5.0, 0.0), Vector2(5.0, 3.0), Vector2(7.0, -2.0), Vector2(0.0, 6.0)],
+	"bedroll": [Vector2(5.0, 0.0), Vector2(5.0, 3.0), Vector2(7.0, -2.0), Vector2(0.0, 6.0)],
 }
 const BUILD_PATCH_XZ := BUILD_SEGMENT.BUILD_PATCH_XZ
 const PLACE_AHEAD := 3.0
@@ -103,7 +113,10 @@ var _spent_spots: Array = []
 ## Travel, built lazily because the bindings it needs are resolved after
 ## `run()` starts. See `stick_navigator.gd`.
 var _nav = null  # stick_navigator.gd; untyped so its methods read as methods
-var _camp: Node3D
+## OWNER-0902-CAMP-SPLIT: the standalone bedroll, the specific campsite piece
+## that carries the "Rest until morning" prompt now that tent/campfire/bedroll
+## place independently rather than as one bundled `camp`.
+var _bedroll: Node3D
 var _felled := 0
 var _exit_connected := false
 var _engage_distance := 3.6
@@ -145,7 +158,7 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	if skip_house:
 		if not await _stand_in_the_campsite_that_was_granted():
 			return _result()
-	elif not await _place_the_camp():
+	elif not await _place_the_campsite():
 		return _result()
 	if not await _place_the_creature_beds():
 		return _result()
@@ -259,7 +272,7 @@ func _place_the_creature_beds() -> bool:
 			return false
 		if index == 0:
 			if not _flag("home_built"):
-				_fail(("the camp and first Creature Bed are standing but home_built is unset; "
+				_fail(("the campsite and first Creature Bed are standing but home_built is unset; "
 					+ "home_progress.gd wants %s") % str(HOME_PROGRESS.required_pieces()))
 				return false
 			_objective_should_read("Care for your team", "home_built")
@@ -270,19 +283,27 @@ func _place_the_creature_beds() -> bool:
 	return true
 
 
-## The camp supplies the opening's tent, fire and player bedroll but is
-## intentionally incomplete until a Creature Bed is in place. This proves the
-## required camp is a real care setup, not an architecture shell.
-func _place_the_camp() -> bool:
-	_camp = await _place_fixture("camp")
-	if _camp == null:
+## The campsite supplies the opening's tent, fire and player bedroll -- three
+## independently placed pieces (OWNER-0902-CAMP-SPLIT retired the old single
+## bundled `camp` buy) -- but is intentionally incomplete until a Creature Bed
+## is in place. This proves the required campsite is a real care setup, not
+## an architecture shell.
+func _place_the_campsite() -> bool:
+	var tent := await _place_fixture("tent")
+	if tent == null:
+		return false
+	var campfire := await _place_fixture("campfire")
+	if campfire == null:
+		return false
+	_bedroll = await _place_fixture("bedroll")
+	if _bedroll == null:
 		return false
 	if _flag("home_built"):
-		_fail("a camp alone set home_built; the opening must also require a Creature Bed")
+		_fail("the campsite alone set home_built; the opening must also require a Creature Bed")
 		return false
-	transcript.append("placed the camp's tent, fire and bedroll; a Creature Bed is still needed; %s left"
+	transcript.append("placed the tent, campfire and bedroll; a Creature Bed is still needed; %s left"
 		% _stock())
-	_objective_should_read("Make camp", "camp")
+	_objective_should_read("Make camp", "the campsite")
 	return true
 
 
@@ -480,15 +501,15 @@ func _focused_row(panel: Node) -> int:
 
 
 func _sleep_at_camp() -> bool:
-	var prompt := _camp.get_node_or_null(^"Interactable") as Node3D
+	var prompt := _bedroll.get_node_or_null(^"Interactable") as Node3D
 	if prompt == null:
-		_fail("the placed camp has no 'Rest until morning' prompt")
+		_fail("the placed bedroll has no 'Rest until morning' prompt")
 		return false
 	if not await _walk_to_prompt(prompt, "camp bedroll"):
 		return false
 	await _tap(&"interact")
-	# `camp.gd` fades out over FADE_SECONDS and passes the night at the tween's
-	# midpoint; the whole fade back in is longer again.
+	# `player_bed.gd` fades out over FADE_SECONDS and passes the night at the
+	# tween's midpoint; the whole fade back in is longer again.
 	var waited := 0.0
 	while waited < 6.0:
 		await _tree.process_frame
