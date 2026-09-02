@@ -3473,17 +3473,25 @@
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
-      "id": "S03-109",
-      "title": "open the pause shell for camp",
+      "id": "S03-120note",
+      "title": "why this is now three placements, not one",
+      "action": "note",
+      "args": {
+        "text": "OWNER-0902-CAMP-SPLIT (main, merged into this branch 2026-09-02, b8d452f9): the old single 'camp' buildable (12 wood/8 stone/10 fiber, one placement) split into three independently placeable pieces -- tent (6 wood/4 fiber), campfire (2 wood/8 stone), bedroll (4 wood/6 fiber), same totals, never a stealth cost change. data/config/progression.json's required_pieces now lists tent/campfire/bedroll/creature_bed, one each, and home_built (home_progress.gd) is true only once GameState.placed_buildings holds all four. The three blocks below replace the old single open-menu/arm/place cycle with three, one per piece, each following the SAME shape the pre-existing creature_bed block already used successfully for the furniture category -- the first pattern this segment had for placing a specific named item out of several in one category, not a new invention."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-121",
+      "title": "open the pause shell for tent",
       "action": "open_menu",
       "args": {
         "tab": "map"
       },
-      "expected": "Section L.6 T02: exploration -> Build. Opened through the production path, never by calling open()",
-      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
+      "expected": "game_menu.gd opens over the world with the Map tab focused first"
     },
     {
-      "id": "S03-110",
+      "id": "S03-121a",
       "title": "cycle to the Build tab",
       "action": "press",
       "args": {
@@ -3492,120 +3500,117 @@
         "times": 2,
         "settle_frames": 12
       },
-      "expected": "four RB presses move from Satchel to Build, the fifth tab in data/config/menu.json",
-      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build."
+      "expected": "menu_tab_right cycles Map -> Build (T2-BUILDPLACE navigation, matches the creature_bed block below)"
     },
     {
-      "id": "S03-111",
+      "id": "S03-121b",
       "title": "the Build tab is up",
       "action": "assert",
       "args": {
         "check": "input_context",
         "equals": "menu_build"
       },
-      "expected": "input_context names the live tab: menu_build"
+      "expected": "input_context reports menu_build once the Build tab is focused"
     },
     {
-      "id": "S03-112",
+      "id": "S03-121c",
       "title": "open the build menu",
       "action": "press",
       "args": {
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "`tab_build.gd`'s one job is the handoff to the live build menu; its only focusable control is 'Open Build Menu'"
+      "expected": "ui_accept on the Build tab opens the placement catalogue"
     },
     {
-      "id": "S03-113",
+      "id": "S03-121d",
       "title": "let the build menu open",
       "action": "wait",
       "args": {
         "seconds": 2
       },
-      "expected": "`build_menu.gd` opens on whichever category and piece was last used this session, or the first of each the first time"
+      "expected": "build_menu.gd needs a couple of frames to build its grid"
     },
     {
-      "id": "S03-114",
+      "id": "S03-121e",
       "title": "the catalogue owns input",
       "action": "assert",
       "args": {
         "check": "context_prefix",
         "prefix": "build"
       },
-      "expected": "input_context is `build_catalogue`"
+      "expected": "input_context begins with build once the catalogue owns input"
     },
     {
-      "id": "S03-115",
-      "title": "arm camp",
+      "id": "S03-121g",
+      "title": "arm tent",
       "action": "press",
       "args": {
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "Section L.6 T02: 'ghost armed on pick'. The build menu arms the piece and closes; placement itself is `build_placer.gd`'s job"
+      "expected": "ui_accept on the focused cell arms a placement ghost for it"
     },
     {
-      "id": "S03-116",
+      "id": "S03-121h",
       "title": "let the ghost arm",
       "action": "wait",
       "args": {
         "seconds": 2
       },
-      "expected": "the placement camera takes over and the ghost follows the aim point"
+      "expected": "the ghost needs a couple of frames to appear and follow the reticle"
     },
     {
-      "id": "S03-117",
+      "id": "S03-121i",
       "title": "placement owns input",
       "action": "assert",
       "args": {
         "check": "input_context",
         "equals": "build_placement"
       },
-      "expected": "input_context is `build_placement`"
+      "expected": "input_context reports build_placement once a ghost is armed"
     },
     {
-      "id": "S03-118",
-      "title": "place camp",
+      "id": "S03-121j",
+      "title": "place tent",
       "action": "press",
       "args": {
         "control": "build_place",
         "hold": "tap"
       },
-      "expected": "Section E.3: the piece is paid for at its `data/items/buildables.json` cost -- free_build is OFF for the whole authoritative run"
+      "expected": "build_place commits the armed ghost at its current reticle position"
     },
     {
-      "id": "S03-118x",
-      "_comment": "RIG-T5-7, added by ralph/T5-PLAY 2026-08-30 at the owner's direction. Repeat placement is a DESIGNED feature (docs/ralph-prompts/40-BUILD-valheim-repeat-placement.md): `build_placer.gd` keeps the ghost armed after a placement so the next piece can be planted without reopening anything. `game_menu.gd::_read_actions()` then REFUSES to open the pause shell while `pending_build != \"\"`, deliberately and with its reason written beside it -- 'an armed ghost owns the whole construction control strip, including Y for Dismantle and B for Cancel'. So the `open_menu` that follows each placement in this segment was pressing `map` at a shell the game is documented not to give it. Measured, not read: all twelve build_placement failures in ralph/reports/gate-f-run-T5-PLAY/S03-superseded-1 carry `pending_build='floor'` in their own input_state. The cascade cost the whole chapter -- no home, no beds, so no rest and no feed, so BOTH creatures ended S03 fainted and the tournament's min_party_size of 3 was unreachable. `build_cancel` is the game's own exit and already suppresses the shared-B pause reopen (build_placer.gd). Uses only existing step vocabulary: no harness change.",
+      "id": "S03-121k",
       "title": "drop the armed ghost so the shell can open again",
       "action": "press",
       "args": {
         "control": "build_cancel",
         "hold": "tap"
       },
-      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
+      "expected": "build_cancel drops back to the world so the pause shell can reopen for the next piece"
     },
     {
-      "id": "S03-118y",
-      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
+      "id": "S03-121l",
       "title": "the world owns input again, so the shell will open",
       "action": "assert",
       "args": {
         "check": "input_context",
         "equals": "world"
       },
-      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
+      "expected": "input_context returns to world once the ghost is gone"
     },
     {
-      "id": "S03-119",
+      "id": "S03-121m",
       "title": "let the placement register",
       "action": "wait",
       "args": {
         "seconds": 2
       },
-      "expected": "`GameState.placed_buildings` gains the piece and `home_progress.gd::maybe_set_home_built` runs"
+      "expected": "GameState.placed_buildings needs a couple of frames to register the new entry"
     },
     {
-      "id": "S03-120",
+      "id": "S03-121n",
       "title": "step clear of the piece just placed",
       "action": "stick",
       "args": {
@@ -3614,7 +3619,309 @@
         "y": -0.35,
         "frames": 45
       },
-      "expected": "half a second of stick so the next ghost does not land on the piece already standing. `home_progress.gd` counts pieces rather than validating geometry, so the arrangement is the player's -- but two pieces fighting for one cell would be a placement failure worth recording"
+      "expected": "stepping off the just-placed piece keeps the next walk/interact from re-selecting it"
+    },
+    {
+      "id": "S03-131",
+      "title": "open the pause shell for campfire",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "game_menu.gd opens over the world with the Map tab focused first"
+    },
+    {
+      "id": "S03-131a",
+      "title": "cycle to the Build tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 12
+      },
+      "expected": "menu_tab_right cycles Map -> Build (T2-BUILDPLACE navigation, matches the creature_bed block below)"
+    },
+    {
+      "id": "S03-131b",
+      "title": "the Build tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_build"
+      },
+      "expected": "input_context reports menu_build once the Build tab is focused"
+    },
+    {
+      "id": "S03-131c",
+      "title": "open the build menu",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "ui_accept on the Build tab opens the placement catalogue"
+    },
+    {
+      "id": "S03-131d",
+      "title": "let the build menu open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "build_menu.gd needs a couple of frames to build its grid"
+    },
+    {
+      "id": "S03-131e",
+      "title": "the catalogue owns input",
+      "action": "assert",
+      "args": {
+        "check": "context_prefix",
+        "prefix": "build"
+      },
+      "expected": "input_context begins with build once the catalogue owns input"
+    },
+    {
+      "id": "S03-131f",
+      "title": "focus campfire",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 1
+      },
+      "observation": "OWNER-0902-CAMP-SPLIT split the old bundled camp into tent/campfire/bedroll, all in the \"survival\" category, file order data/items/buildables.json: tent, campfire, bedroll. build_menu.gd remembers the last ARMED piece per category (_last_piece_per_category, updated only on a successful arm, never on a bare cursor move) and lands the grid focus there on reopen -- so this is a RELATIVE move from whatever was armed last, not an absolute cell index: one step right from the previously-armed neighbour in file order, same as the pre-existing creature_bed block below already does within furniture.",
+      "expected": "focus_move lands the grid cursor on the named piece"
+    },
+    {
+      "id": "S03-131g",
+      "title": "arm campfire",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "ui_accept on the focused cell arms a placement ghost for it"
+    },
+    {
+      "id": "S03-131h",
+      "title": "let the ghost arm",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the ghost needs a couple of frames to appear and follow the reticle"
+    },
+    {
+      "id": "S03-131i",
+      "title": "placement owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "build_placement"
+      },
+      "expected": "input_context reports build_placement once a ghost is armed"
+    },
+    {
+      "id": "S03-131j",
+      "title": "place campfire",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "build_place commits the armed ghost at its current reticle position"
+    },
+    {
+      "id": "S03-131k",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "build_cancel drops back to the world so the pause shell can reopen for the next piece"
+    },
+    {
+      "id": "S03-131l",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context returns to world once the ghost is gone"
+    },
+    {
+      "id": "S03-131m",
+      "title": "let the placement register",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "GameState.placed_buildings needs a couple of frames to register the new entry"
+    },
+    {
+      "id": "S03-131n",
+      "title": "step clear of the piece just placed",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.35,
+        "y": -0.35,
+        "frames": 45
+      },
+      "expected": "stepping off the just-placed piece keeps the next walk/interact from re-selecting it"
+    },
+    {
+      "id": "S03-141",
+      "title": "open the pause shell for bedroll",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "game_menu.gd opens over the world with the Map tab focused first"
+    },
+    {
+      "id": "S03-141a",
+      "title": "cycle to the Build tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 12
+      },
+      "expected": "menu_tab_right cycles Map -> Build (T2-BUILDPLACE navigation, matches the creature_bed block below)"
+    },
+    {
+      "id": "S03-141b",
+      "title": "the Build tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_build"
+      },
+      "expected": "input_context reports menu_build once the Build tab is focused"
+    },
+    {
+      "id": "S03-141c",
+      "title": "open the build menu",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "ui_accept on the Build tab opens the placement catalogue"
+    },
+    {
+      "id": "S03-141d",
+      "title": "let the build menu open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "build_menu.gd needs a couple of frames to build its grid"
+    },
+    {
+      "id": "S03-141e",
+      "title": "the catalogue owns input",
+      "action": "assert",
+      "args": {
+        "check": "context_prefix",
+        "prefix": "build"
+      },
+      "expected": "input_context begins with build once the catalogue owns input"
+    },
+    {
+      "id": "S03-141f",
+      "title": "focus bedroll",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 1
+      },
+      "observation": "OWNER-0902-CAMP-SPLIT split the old bundled camp into tent/campfire/bedroll, all in the \"survival\" category, file order data/items/buildables.json: tent, campfire, bedroll. build_menu.gd remembers the last ARMED piece per category (_last_piece_per_category, updated only on a successful arm, never on a bare cursor move) and lands the grid focus there on reopen -- so this is a RELATIVE move from whatever was armed last, not an absolute cell index: one step right from the previously-armed neighbour in file order, same as the pre-existing creature_bed block below already does within furniture.",
+      "expected": "focus_move lands the grid cursor on the named piece"
+    },
+    {
+      "id": "S03-141g",
+      "title": "arm bedroll",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "ui_accept on the focused cell arms a placement ghost for it"
+    },
+    {
+      "id": "S03-141h",
+      "title": "let the ghost arm",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the ghost needs a couple of frames to appear and follow the reticle"
+    },
+    {
+      "id": "S03-141i",
+      "title": "placement owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "build_placement"
+      },
+      "expected": "input_context reports build_placement once a ghost is armed"
+    },
+    {
+      "id": "S03-141j",
+      "title": "place bedroll",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "build_place commits the armed ghost at its current reticle position"
+    },
+    {
+      "id": "S03-141k",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "build_cancel drops back to the world so the pause shell can reopen for the next piece"
+    },
+    {
+      "id": "S03-141l",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context returns to world once the ghost is gone"
+    },
+    {
+      "id": "S03-141m",
+      "title": "let the placement register",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "GameState.placed_buildings needs a couple of frames to register the new entry"
+    },
+    {
+      "id": "S03-141n",
+      "title": "step clear of the piece just placed",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.35,
+        "y": -0.35,
+        "frames": 45
+      },
+      "expected": "stepping off the just-placed piece keeps the next walk/interact from re-selecting it"
     },
     {
       "id": "S03-175",
