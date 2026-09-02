@@ -3059,7 +3059,7 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 			_stick_left = Vector2.ZERO
 			_drive_sticks()
 			nav.call("reset")
-			if answer and held % 20 == 0:
+			if answer and held % 20 == 0 and held_by == "narrative_modal":
 				# Both verbs, alternating. `input_contexts.json`'s
 				# `narrative_modal` context lists interact / ui_accept /
 				# menu_confirm as the answers to a modal, and the three panels
@@ -3074,6 +3074,20 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 				# primitive: a step that means to answer a conversation uses
 				# `advance_dialogue_until_closed`, which reads the panel instead
 				# of guessing at it (CD-3).
+				#
+				# `held_by == "narrative_modal"` (added 2026-09-02): held used to
+				# be enough on its own, and that pressed blind into ANY reason
+				# locomotion was disabled -- including a wild creature standing
+				# close enough to win `interaction_arbiter.gd`'s priority
+				# contest with its own live "Engage <creature>" prompt, which
+				# this then pressed, starting a real unplanned fight a travel
+				# script has no way to resolve. Measured directly: a gather
+				# ladder's second-swing press got the same `optional:true`
+				# guard for the identical reason: press only what you meant to
+				# press. Narrowed to the one input_context this mechanism was
+				# actually written for -- a held walk blocked by anything else
+				# (combat, a fade, a creature physically in the way) now just
+				# waits, the same as `answer_prompts:false` already does for it.
 				await _inject("interact" if (held / 20) % 2 == 0 else "menu_confirm", HOLD_TAP)
 			await physics_frame
 			_tick(1.0 / float(Engine.physics_ticks_per_second))

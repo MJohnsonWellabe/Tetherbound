@@ -341,17 +341,31 @@ just walking around an obstacle) — that combination is a plausibly real
 unreachable gap, not a walk that has not finished climbing yet.
 
 `answer_prompts` taps `interact` and `menu_confirm` alternately while a walk is
-held — the buttons a player presses to answer a modal. Both, because the three
-panels that own `input_contexts.json`'s `narrative_modal` context do not read the
-same one: `dialogue_panel.gd` advances on `interact` and
-`starter_picker.gd::_read_input` polls `menu_confirm`. Tapping only `interact`
-walked past Grandpa's conversation and then sat in front of the starter picker
-for a full held budget. It is **off by default and must stay
-off** in any segment whose subject is whether something blocks travel — a
-harness that quietly answered the dialogue would be hiding the finding. It is on
-in the self-check walks only because walking out of the spawn point triggers
-Grandpa's opening conversation, and the subject of those segments is the trace,
-not the conversation.
+held **and `input_context` is `narrative_modal`** — the buttons a player
+presses to answer a modal. Both verbs, because the three panels that own
+`input_contexts.json`'s `narrative_modal` context do not read the same one:
+`dialogue_panel.gd` advances on `interact` and `starter_picker.gd::_read_input`
+polls `menu_confirm`. Tapping only `interact` walked past Grandpa's
+conversation and then sat in front of the starter picker for a full held
+budget. It is **off by default and must stay off** in any segment whose
+subject is whether something blocks travel — a harness that quietly answered
+the dialogue would be hiding the finding. It is on in the self-check walks
+only because walking out of the spawn point triggers Grandpa's opening
+conversation, and the subject of those segments is the trace, not the
+conversation.
+
+The `input_context` gate is not optional even when `answer_prompts` is on
+(added 2026-09-02): before it existed, a held walk pressed blind on ANY reason
+locomotion was disabled, not only a narrative modal — including a wild
+creature standing close enough to win `interaction_arbiter.gd`'s
+priority-then-nearest contest with its own live "Engage &lt;creature&gt;"
+prompt over whatever the walk was actually near. That press then activated
+the engage, starting a real, unplanned wild fight a travel script has no
+script to resolve — the exact class of bug `interact_with`'s `optional: true`
+exists to stop for a deliberate press (see **Input** above); this closes the
+same hole in the ONE place a press fires without any step asking for it. Held
+for any OTHER reason now just waits, same as `answer_prompts: false` already
+does for it.
 
 
 ### Menus
