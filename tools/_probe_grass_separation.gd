@@ -70,6 +70,7 @@ func _run() -> void:
 		return
 	var extra_heights: Array[float] = []
 	var extra_emissions: Array[float] = []
+	var extra_degreens: Array[float] = []
 	var skip_baseline := false
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
@@ -82,6 +83,10 @@ func _run() -> void:
 			for token in arg.substr(17).split(","):
 				if token.strip_edges() != "":
 					extra_emissions.append(token.strip_edges().to_float())
+		elif arg.begins_with("--extra-degreen="):
+			for token in arg.substr(16).split(","):
+				if token.strip_edges() != "":
+					extra_degreens.append(token.strip_edges().to_float())
 		elif arg.begins_with("--species="):
 			SPECIES_ID = arg.substr(10)
 		elif arg == "--skip-baseline":
@@ -140,15 +145,25 @@ func _run() -> void:
 	var shipped_height: float = float(live_table.get("height", 0.78))
 	var shipped_rim: float = float(live_table.get("field_rim", 0.0))
 	var shipped_emission: float = float(live_table.get("field_emission", 0.0))
+	var shipped_degreen: float = float(live_table.get("field_degreen", 0.0))
 	variants.append({
 		"tag": "SHIPPED-%.2f" % shipped_height, "height": shipped_height, "rim": shipped_rim,
-		"emission": shipped_emission,
+		"emission": shipped_emission, "degreen": shipped_degreen,
 	})
 	for h in extra_heights:
-		variants.append({"tag": "TEST-h%.2f" % h, "height": h, "rim": shipped_rim, "emission": shipped_emission})
+		variants.append({
+			"tag": "TEST-h%.2f" % h, "height": h, "rim": shipped_rim, "emission": shipped_emission,
+			"degreen": shipped_degreen,
+		})
 	for e in extra_emissions:
 		variants.append({
 			"tag": "TEST-e%.2f" % e, "height": shipped_height, "rim": shipped_rim, "emission": e,
+			"degreen": shipped_degreen,
+		})
+	for g in extra_degreens:
+		variants.append({
+			"tag": "TEST-g%.2f" % g, "height": shipped_height, "rim": shipped_rim,
+			"emission": shipped_emission, "degreen": g,
 		})
 
 	for variant: Dictionary in variants:
@@ -173,9 +188,11 @@ func _shoot(variant: Dictionary, at: Vector3) -> void:
 	var original_height: float = float(table.get("height", 0.78))
 	var original_rim: float = float(table.get("field_rim", 0.0))
 	var original_emission: float = float(table.get("field_emission", 0.0))
+	var original_degreen: float = float(table.get("field_degreen", 0.0))
 	table["height"] = float(variant["height"])
 	table["field_rim"] = float(variant["rim"])
 	table["field_emission"] = float(variant.get("emission", 0.0))
+	table["field_degreen"] = float(variant.get("degreen", 0.0))
 
 	if _body != null and is_instance_valid(_body):
 		_body.queue_free()
@@ -191,13 +208,14 @@ func _shoot(variant: Dictionary, at: Vector3) -> void:
 	var path := "%s/grass-%s.png" % [_out_dir, variant["tag"]]
 	var image := get_root().get_texture().get_image()
 	image.save_png(ProjectSettings.globalize_path(path))
-	_written.append("%-14s height %.2f rim %.2f emission %.2f -> %s" % [
+	_written.append("%-14s height %.2f rim %.2f emission %.2f degreen %.2f -> %s" % [
 		variant["tag"], float(variant["height"]), float(variant["rim"]),
-		float(variant.get("emission", 0.0)), path])
+		float(variant.get("emission", 0.0)), float(variant.get("degreen", 0.0)), path])
 
 	table["height"] = original_height
 	table["field_rim"] = original_rim
 	table["field_emission"] = original_emission
+	table["field_degreen"] = original_degreen
 
 
 ## The same three steps `encounter_director.gd` takes for a real wild spawn:

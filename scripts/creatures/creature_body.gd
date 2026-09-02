@@ -67,6 +67,36 @@ const FIELD_RIM_MAX := 0.30
 ## screenshot" reason), and the owner directive names this species' modest
 ## scale as already exhausted.
 const FIELD_EMISSION_MAX := 3.0
+
+## OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. `field_emission` alone re-tested
+## against the real, camera-relative grass field (`grass_field.gd`, off during
+## the original 09-01 fix and back on since -- see this branch's own report)
+## still reads as blended for bramblebun specifically, and not because it is
+## too dim: `bramblebun_redesign`'s own reference art
+## (`assets/creatures/tetherbound/bramblebun_redesign/reference/side.png`)
+## paints real moss/lichen patches across its back and shoulders, measured off
+## the shipped albedo texture at mean hue 39.6 -- but that whole-texture mean
+## is dominated by the brown body fur; the moss patches themselves sample much
+## closer to the meadow's own measured ground hue (68.3,
+## `grass_field.json`'s `_comment_colour`) than the rest of the coat. A pure
+## multiply (`_brighten_node`'s original `factor` on every channel alike)
+## brightens those patches without ever moving them off that hue, so a
+## brighter creature can still read as "more grass" over the exact area a
+## human eye uses to separate silhouette from field. Terrapup and Mudsnout's
+## reference sheets carry no such green -- solid dirt-brown and tan/grey
+## respectively -- so `field_emission` alone remains correct for them; this is
+## a second, independently opt-in lever for the one species whose own paint
+## job works against a uniform brightness push.
+##
+## `field_degreen` (0.0 default, no-op) suppresses the green channel's share
+## of the same brightness push rather than adding a new colour: at
+## `strength=0.9, degreen=1.0` the red/blue channels still get the full 1.9x
+## `_apply_field_brightness()` always applied, but green gets roughly half of
+## that boost, which pulls a moss-hued pixel toward the coat's own warm brown
+## instead of a brighter version of the same green -- and does nothing at all
+## to pixels that are not green-dominant to begin with (the tan majority of
+## the coat), so the rest of the creature's palette is untouched.
+const FIELD_DEGREEN_MAX := 1.0
 const ALPHA_RIM_TINT := 0.15
 const ALPHA_AURA_COLOUR := Color("#ffd479")
 
@@ -764,12 +794,14 @@ func _apply_field_brightness() -> void:
 		return
 	var strength := clampf(
 		float(SPECIES.placeholder(species_id).get("field_emission", 0.0)), 0.0, FIELD_EMISSION_MAX)
+	var degreen := clampf(
+		float(SPECIES.placeholder(species_id).get("field_degreen", 0.0)), 0.0, FIELD_DEGREEN_MAX)
 	if strength <= 0.0:
 		return
-	_brighten_node(_model, strength)
+	_brighten_node(_model, strength, degreen)
 
 
-func _brighten_node(node: Node, strength: float) -> void:
+func _brighten_node(node: Node, strength: float, degreen: float = 0.0) -> void:
 	if node is MeshInstance3D:
 		var instance := node as MeshInstance3D
 		var mesh: Mesh = instance.mesh
@@ -785,12 +817,17 @@ func _brighten_node(node: Node, strength: float) -> void:
 			material.resource_name = "%s%s" % [material.resource_name, suffix]
 			instance.set_surface_override_material(surface, material)
 			var factor := 1.0 + strength
+			# Green channel gets a smaller share of the same push -- see
+			# `FIELD_DEGREEN_MAX`'s own comment. degreen=0 leaves this equal to
+			# `factor`, unchanged from before this lever existed.
+			var g_factor := 1.0 + strength * (1.0 - 0.5 * degreen)
 			var albedo := material.albedo_color
-			material.albedo_color = Color(albedo.r * factor, albedo.g * factor, albedo.b * factor, albedo.a)
+			material.albedo_color = Color(
+				albedo.r * factor, albedo.g * g_factor, albedo.b * factor, albedo.a)
 			if material.emission_enabled:
 				material.emission_energy_multiplier *= factor
 	for child in node.get_children():
-		_brighten_node(child, strength)
+		_brighten_node(child, strength, degreen)
 
 
 func _rim_light_node(node: Node, strength: float, tag: String) -> void:
