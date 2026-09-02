@@ -220,6 +220,11 @@ Evidence: `ralph/reports/visual-parity/PLACES/round3/` (warrens, stronghold, cas
   weathered mass with distinct towers from the gate and at 100 m; Warrens boulders vary in tone, entrance darkest.
 - Still open (VP8/VP6 round 4 candidates): Hall silhouette at 200–400 m is faint against the haze; no ivy/scaffold
   read at distance; Warrens is still a boulder pile without a soil apron read at the approach stand.
+- Code-blind judge (`PLACES/JUDGE-round3.md`): Hall gate/courtyard day "genuinely good"; 100/200 m improved (silhouette
+  and the pylon row now visible); 400 m still does not separate from the ground and a flat-edged grey storm band sits
+  behind the Hall; courtyard night near-black; **Warrens approach measured pixel-comparable to round 2** — the lane's
+  tint change did not reach that stand. Round 4 sent 07:40 (Warrens staining/apron/entrance with a pixel-diff proof,
+  Hall far read + storm band, courtyard night practicals).
 ### CORRIDOR round 1 (`claude/vp-corridor` @ 07:17) — coordinator verdict 07:25 UTC — NOT merged yet
 - Before/after pairs at 8 stations are nearly identical; the two emptiest sightlines (02-first-bend, 07-band2-mid)
   got nothing visible. The lane added a band `layer_anchors` merge in scatter_rules.gd (out of its file scope,
