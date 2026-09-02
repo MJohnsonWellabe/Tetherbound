@@ -5115,6 +5115,18 @@
       "expected": "B closes the shell and hands the world back"
     },
     {
+      "id": "S03-259a",
+      "title": "give tournament.gd a poll cycle to write the fed flag",
+      "action": "wait_until",
+      "args": {
+        "check": "flag_set",
+        "flag": "tournament_team_fed",
+        "budget_frames": 180,
+        "poll_frames": 10
+      },
+      "expected": "tournament.gd::_process() writes the two contract flags off a 1Hz poll (CONDITION_POLL_SECONDS), gated on the scene tree NOT being paused -- and every one of the five entrant satchel opens in the feed loop above pauses it (menu_backpack sets tree_paused). The loop's own close-then-immediately-reopen cadence between entrants leaves the tree unpaused for only a frame or two at a time, nowhere near a full second, so the poll that would have caught 'every entrant is now fed' never actually got a full unpaused second to fire in until AFTER the last close. This waits, live-checking the real flag rather than a guessed frame count, for exactly that one poll to land."
+    },
+    {
       "id": "S03-260",
       "title": "the whole team is fed",
       "action": "assert",
