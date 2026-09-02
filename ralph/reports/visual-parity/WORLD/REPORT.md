@@ -802,3 +802,102 @@ and the bisect tool differs from the stands tool in some other way.
 **Do not spend another round retuning `art.json` colours for this.** Three
 explanations have now been falsified by measurement, and the one surviving class
 of cause is tool/engine state, not art values.
+
+---
+
+# Round 4
+
+Branch `claude/vp-world`, merged from the program branch at round-4 start.
+
+## Two fix-list premises did not hold — checked before spending renders
+
+**Item 1 ("the red frames predate the exposure change").** They do not.
+`times.dawn.environment.exposure` 0.8 → 0.55 was committed at **06:08**; the stands
+rendered at **06:30** and were re-rendered at **07:20**. Both post-change, both red,
+and the two renders were **bit-identical**. Exposure was already excluded by
+measurement, and it could not have been the cause in any case: exposure scales R, G
+and B proportionally and cannot remove a hue cast.
+
+**Item 6 ("distant scatter reads sparser than round 2").** Measured on the same view:
+
+| | canopy pixels | far-band canopy |
+|---|---|---|
+| round 2 `03-rise-overlook` | 45.14% | 67.90% |
+| round 3 `03-rise-overlook-day` | 44.10% | **72.12%** |
+
+Distant scatter is not sparser; the far band gained 4.2 points. Lowering the ecology
+`contrast` for trees/grove would have reduced real density to chase a defect that is
+not a density change, partly undoing the VP3 clustering work. The likely real cause is
+**value separation**: round 3 darkened and blued `aerial_fade_colour` to `#7f8c9e`,
+bringing far canopy closer in value to the terrain behind it, so trees read as thin
+pins without any of them disappearing. That is what the per-time aerial work below
+addresses. **No vegetation change made.**
+
+This is the third and fourth time a prescribed value has described a state the branch
+was not in. Checking the tip first now routinely saves a render.
+
+## The structural fix: aerial perspective now varies with time of day
+
+Raised in every round since round 1; authorised this round.
+
+`terrain_playground.json`'s `shader.aerial_fade_colour` was a **constant**, and
+`playground_world.gd` read that block **once at scene setup**, while the sky's fog and
+horizon vary per preset. So distance faded toward the same colour at every hour.
+
+**The night inversion now has an exact mechanism:** night was inheriting day's
+`#7f8c9e`, which sits *above* night's own fog `#4d6a9e` in value. Distance was being
+faded toward something brighter than the sky it met — which is why a midnight vista
+measured 25.7/76.6/113.8 against its own foreground at 13.4/22.3/28.2.
+
+Plumbing: `playground_world.gd` caches the terrain material and exposes
+`set_aerial_fade_colour()`; `world_look.gd` pushes from inside the **shared**
+`_apply_environment()`, which both `apply_time()` and `_apply_blended()` already call,
+so pinned capture frames and the live clock both get it from one call site.
+`aerial_fade_colour` joins `_COLOUR_KEYS.environment` so `_blend_dict` lerps it rather
+than snapping at the segment midpoint. Uses `set_shader_param` with a `has_method`
+guard, matching the existing pattern at `playground_world.gd:837` — this is a Terrain3D
+material, not a stock `ShaderMaterial`.
+
+| preset | aerial | that preset's fog | relationship |
+|---|---|---|---|
+| day | `#7f8c9e` | `#b4c8cc` | cooler, a stop darker |
+| golden | `#c9a98a` | `#e8b784` | same warm hue, darker, less saturated |
+| dawn | `#c4a9a4` | `#e6bca4` | warm-neutral, darker |
+| night | `#2f3f63` | `#4d6a9e` | same cool hue, a full stop darker |
+
+Day uses the value actually on the branch after round 3, **not** the `#aebcc4` the fix
+list named (the pre-round-3 constant). Every preset gets an explicit key including day,
+because `_blend_dict` only lerps where BOTH segment endpoints define it — an unset day
+would have held dawn's dark colour across the entire dawn→day transition. A preset
+omitting the key is simply never pushed, so the terrain keeps its setup value.
+
+## Night ground (item 3)
+
+`times.night.environment.ambient_colour` `#34448a` → `#3d50a3`, a pure ×1.18 value
+scale with hue and saturation unchanged. Ambient lifts the NEAR field; the new night
+aerial darkens the FAR field; together they widen the near/far gap in the correct
+direction, reversing the inversion. `ambient_energy` and `exposure` deliberately
+untouched — this file's own VIS-WORLD precedent records that raising either
+re-introduces the "character pasted on black paper" defect.
+
+## Low sun (item 5) — mitigated, not fixed, and the stated mechanism is wrong
+
+golden and dawn `sun_size` 0.012 → 0.009 and `sun_glow` → 0.12, matching base.
+
+But the fix list's mechanism ("the halo term scales with the disc near the horizon") is
+not what the shader does. In `sky_clouds.gdshader` both `disc` and `glow` are pure
+functions of `sun_dot = dot(dir, sun_dir)` — **purely angular, with no elevation term
+anywhere**. The oval is a projection artifact: `EYEDIR` in a sky pass follows the
+camera's perspective, so a circle of constant angular radius renders as a circle only
+on the optical axis and as an ellipse off it, more eccentric further from screen
+centre — and none of the fixed survey framings aim at the sun. **No `sun_size` /
+`sun_glow` / `sun_glow_falloff` value can fully correct this.** Shrinking the disc makes
+the same stretch read as a small oval instead of a frame-filling mass. That is a
+mitigation. A real fix would need the sky shader to compensate for off-axis projection.
+
+## Still open
+
+- **The red wash.** Five explanations now falsified by measurement (weather roll,
+  exposure, camera, light-in-frame, config mutation). The repeat test — the same dawn
+  frame rendered four times in one boot — was running when the budget ran out.
+- Tests and smokes not run this round.
