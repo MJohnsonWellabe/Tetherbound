@@ -103,6 +103,14 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/locations"
 
+## Terrain3D streams its mesh off the PLAYER position, not the camera -- a
+## player parked far from the camera degrades the whole scene (sky, terrain,
+## near props) while every Environment/sky value at shutter still reads
+## correct (see tools/survey.gd's PARK_DISTANCE comment for the measured A/B).
+## This tool already carries the player to every shot's own `eye` point, so
+## this constant/print exist to make that guarantee loud rather than assumed.
+const MAX_CAMERA_PLAYER_DISTANCE := 20.0
+
 const BOOT_FRAMES := 90
 const SETTLE_FRAMES := 40    # on arrival at a site, so spawning catches up
 const ARRIVE_FRAMES := 18    # after the analytic seat, before the ray reseat
@@ -579,8 +587,12 @@ func _shoot(site_id: String, shot: Dictionary, suffix: String, first: bool) -> v
 		return
 	_written += 1
 	var here := Vector3(eye.x, ground, eye.y)
-	print("  %-26s %-5s eye(%.0f, %.1f, %.0f)  %d creatures, %d people within 160m" % [
-		frame_name, suffix, eye.x, ground, eye.y, _creatures_near(here), _people_near(here)])
+	var cam_player_dist := _camera.global_position.distance_to(_player.global_position)
+	print("  %-26s %-5s eye(%.0f, %.1f, %.0f)  %d creatures, %d people within 160m  cam-player %.1fm" % [
+		frame_name, suffix, eye.x, ground, eye.y, _creatures_near(here), _people_near(here), cam_player_dist])
+	if cam_player_dist > MAX_CAMERA_PLAYER_DISTANCE:
+		push_warning("_capture_locations.gd: %s-%s stands %.1fm from the player (max %.1fm) -- Terrain3D streaming may be degraded for this frame" % [
+			frame_name, suffix, cam_player_dist, MAX_CAMERA_PLAYER_DISTANCE])
 
 
 ## Turn a shot's declared viewpoint into world metres. Three declaration forms,

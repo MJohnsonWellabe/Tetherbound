@@ -108,6 +108,15 @@ extends SceneTree
 ## the awaited-frame count (corridor's own header measured that overhead at
 ## well under a minute for a heavier 143,630-prop world stand-up).
 
+## Terrain3D streams its mesh off the PLAYER position, not the camera -- a
+## player parked far from the camera degrades the whole scene (sky, terrain,
+## near props) while every Environment/sky value at shutter still reads
+## correct (see tools/survey.gd's PARK_DISTANCE comment for the measured A/B).
+## This tool already keeps the player on real ground at every single shot
+## (see the header's "THE WATER-HAZARD TRAP" section), so this constant/check
+## exist to make that guarantee loud rather than assumed.
+const MAX_CAMERA_PLAYER_DISTANCE := 20.0
+
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 ## T1-WORLD. Every shutter in this file now goes through `capture_check`, which
 ## did not exist when this tool was written. Its own header carries the full
@@ -1060,6 +1069,17 @@ func _check(name: String) -> void:
 
 func _capture(name: String) -> void:
 	_check(name)
+	# Terrain3D streams off the PLAYER position, not the camera -- see the
+	# header's water-hazard section and tools/survey.gd's PARK_DISTANCE
+	# comment for the measured A/B. Every shot in this file stands the player
+	# on real ground beside or near the camera by construction; this checks
+	# that stays true rather than assuming it, at the one choke point every
+	# framing (ground, elevated, vista, landmark, water eye, water grazing)
+	# already passes through.
+	var cam_player_dist := _camera.global_position.distance_to(_player.global_position)
+	if cam_player_dist > MAX_CAMERA_PLAYER_DISTANCE:
+		push_warning("_capture_ground_and_sky.gd: %s stands %.1fm from the player (max %.1fm) -- Terrain3D streaming may be degraded for this frame" % [
+			name, cam_player_dist, MAX_CAMERA_PLAYER_DISTANCE])
 	var image := root.get_texture().get_image()
 	if image == null:
 		_failures.append("%s: viewport returned no image" % name)
@@ -1070,7 +1090,7 @@ func _capture(name: String) -> void:
 		_failures.append("%s: save_png failed" % name)
 		print("FAIL %s: save_png failed" % name)
 		return
-	print("  %-28s -> %s" % [name, path])
+	print("  %-28s cam-player %.1fm  -> %s" % [name, cam_player_dist, path])
 
 
 func _all(node: Node) -> Array[Node]:
