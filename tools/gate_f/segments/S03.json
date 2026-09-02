@@ -4769,7 +4769,8 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "`_targeting_food` is set and the creature picker opens"
+      "expected": "`_targeting_food` is set and the creature picker opens",
+      "observation": "Fixed 2026-09-02, same bug class as the berries-stack and knife-slot fixes: this segment used to follow this step with a manual `focus_move(down, N-1)` per entrant (N-1 for entrant N), assuming the creature-target picker's focus starts at row 0 and the row order never changes. `tab_backpack.gd::_open_target_picker()` calls `_first_eligible_target_row().grab_focus()` on every open, and `_first_eligible_target_row()` walks the party in order and returns the first NOT-YET-FED one, skipping fed rows entirely -- so the picker already lands on the correct next entrant, with ZERO extra input, every single time it opens. A manual down-count on top of that is not merely redundant, it actively steers focus away from the auto-selected row -- and once the eligible-row count shrinks (2 of 5 left by entrant 3), a step still asking for 2+ downs has nowhere further to go and FAILs ('did not move focus off'), which then leaves the shell in a stuck state for every entrant after it. The manual step is removed: the very next press here should be `ui_accept` on whichever row the panel opened on."
     },
     {
       "id": "S03-238",
@@ -4855,17 +4856,8 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "`_targeting_food` is set and the creature picker opens"
-    },
-    {
-      "id": "S03-247",
-      "title": "focus entrant 2",
-      "action": "focus_move",
-      "args": {
-        "direction": "down",
-        "times": 1
-      },
-      "expected": "the picker lists the party; ineligible rows are disabled and out of the focus chain"
+      "expected": "`_targeting_food` is set and the creature picker opens",
+      "observation": "Fixed 2026-09-02, same bug class as the berries-stack and knife-slot fixes: this segment used to follow this step with a manual `focus_move(down, N-1)` per entrant (N-1 for entrant N), assuming the creature-target picker's focus starts at row 0 and the row order never changes. `tab_backpack.gd::_open_target_picker()` calls `_first_eligible_target_row().grab_focus()` on every open, and `_first_eligible_target_row()` walks the party in order and returns the first NOT-YET-FED one, skipping fed rows entirely -- so the picker already lands on the correct next entrant, with ZERO extra input, every single time it opens. A manual down-count on top of that is not merely redundant, it actively steers focus away from the auto-selected row -- and once the eligible-row count shrinks (2 of 5 left by entrant 3), a step still asking for 2+ downs has nowhere further to go and FAILs ('did not move focus off'), which then leaves the shell in a stuck state for every entrant after it. The manual step is removed: the very next press here should be `ui_accept` on whichever row the panel opened on."
     },
     {
       "id": "S03-248",
@@ -4951,17 +4943,8 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "`_targeting_food` is set and the creature picker opens"
-    },
-    {
-      "id": "S03-257",
-      "title": "focus entrant 3",
-      "action": "focus_move",
-      "args": {
-        "direction": "down",
-        "times": 2
-      },
-      "expected": "the picker lists the party; ineligible rows are disabled and out of the focus chain"
+      "expected": "`_targeting_food` is set and the creature picker opens",
+      "observation": "Fixed 2026-09-02, same bug class as the berries-stack and knife-slot fixes: this segment used to follow this step with a manual `focus_move(down, N-1)` per entrant (N-1 for entrant N), assuming the creature-target picker's focus starts at row 0 and the row order never changes. `tab_backpack.gd::_open_target_picker()` calls `_first_eligible_target_row().grab_focus()` on every open, and `_first_eligible_target_row()` walks the party in order and returns the first NOT-YET-FED one, skipping fed rows entirely -- so the picker already lands on the correct next entrant, with ZERO extra input, every single time it opens. A manual down-count on top of that is not merely redundant, it actively steers focus away from the auto-selected row -- and once the eligible-row count shrinks (2 of 5 left by entrant 3), a step still asking for 2+ downs has nowhere further to go and FAILs ('did not move focus off'), which then leaves the shell in a stuck state for every entrant after it. The manual step is removed: the very next press here should be `ui_accept` on whichever row the panel opened on."
     },
     {
       "id": "S03-258",
@@ -5048,17 +5031,8 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "`_targeting_food` is set and the creature picker opens"
-    },
-    {
-      "id": "S03-307",
-      "title": "focus entrant 4",
-      "action": "focus_move",
-      "args": {
-        "direction": "down",
-        "times": 3
-      },
-      "expected": "the picker lists the party; ineligible rows are disabled and out of the focus chain"
+      "expected": "`_targeting_food` is set and the creature picker opens",
+      "observation": "Fixed 2026-09-02, same bug class as the berries-stack and knife-slot fixes: this segment used to follow this step with a manual `focus_move(down, N-1)` per entrant (N-1 for entrant N), assuming the creature-target picker's focus starts at row 0 and the row order never changes. `tab_backpack.gd::_open_target_picker()` calls `_first_eligible_target_row().grab_focus()` on every open, and `_first_eligible_target_row()` walks the party in order and returns the first NOT-YET-FED one, skipping fed rows entirely -- so the picker already lands on the correct next entrant, with ZERO extra input, every single time it opens. A manual down-count on top of that is not merely redundant, it actively steers focus away from the auto-selected row -- and once the eligible-row count shrinks (2 of 5 left by entrant 3), a step still asking for 2+ downs has nowhere further to go and FAILs ('did not move focus off'), which then leaves the shell in a stuck state for every entrant after it. The manual step is removed: the very next press here should be `ui_accept` on whichever row the panel opened on."
     },
     {
       "id": "S03-308",
@@ -5145,17 +5119,8 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "`_targeting_food` is set and the creature picker opens"
-    },
-    {
-      "id": "S03-317",
-      "title": "focus entrant 5",
-      "action": "focus_move",
-      "args": {
-        "direction": "down",
-        "times": 4
-      },
-      "expected": "the picker lists the party; ineligible rows are disabled and out of the focus chain"
+      "expected": "`_targeting_food` is set and the creature picker opens",
+      "observation": "Fixed 2026-09-02, same bug class as the berries-stack and knife-slot fixes: this segment used to follow this step with a manual `focus_move(down, N-1)` per entrant (N-1 for entrant N), assuming the creature-target picker's focus starts at row 0 and the row order never changes. `tab_backpack.gd::_open_target_picker()` calls `_first_eligible_target_row().grab_focus()` on every open, and `_first_eligible_target_row()` walks the party in order and returns the first NOT-YET-FED one, skipping fed rows entirely -- so the picker already lands on the correct next entrant, with ZERO extra input, every single time it opens. A manual down-count on top of that is not merely redundant, it actively steers focus away from the auto-selected row -- and once the eligible-row count shrinks (2 of 5 left by entrant 3), a step still asking for 2+ downs has nowhere further to go and FAILs ('did not move focus off'), which then leaves the shell in a stuck state for every entrant after it. The manual step is removed: the very next press here should be `ui_accept` on whichever row the panel opened on."
     },
     {
       "id": "S03-318",
