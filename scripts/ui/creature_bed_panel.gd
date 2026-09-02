@@ -147,7 +147,13 @@ func _build_shell() -> void:
 
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", box)
-	panel.custom_minimum_size = Vector2(420, 0)
+	# OWNER-0902-REST-VISIBILITY: 420 -> 520. A real render caught the row's
+	# new time-remaining text ("Resting — HP 40 / 120 · 1:20 left") clipping
+	# mid-word against the old 370px row width -- this panel has no other
+	# layout budget to protect (unlike `party_strip.gd`'s tightly-measured
+	# HUD contract), so it is simply widened to fit the real longest string
+	# rather than the text being shortened to fit an arbitrary old width.
+	panel.custom_minimum_size = Vector2(520, 0)
 	center.add_child(panel)
 
 	var outer := VBoxContainer.new()
@@ -212,7 +218,7 @@ func _refresh() -> void:
 	for i in PARTY.MAX_CREATURES:
 		var creature: RefCounted = party.call("at", i)
 		var button := Button.new()
-		button.custom_minimum_size = Vector2(370, 52)
+		button.custom_minimum_size = Vector2(470, 52)  # tracks panel.custom_minimum_size above
 		button.focus_mode = Control.FOCUS_ALL
 		button.clip_text = true
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -233,7 +239,9 @@ func _refresh() -> void:
 			# spelled two ways, one of three the critique found across the game.
 			# Matched to the strip's spelling since that badge is the more-seen,
 			# more-established one (`party_strip.gd`'s own header/comments).
-			var status := "Resting — HP %d / %d" % [int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp"))))] \
+			var status := "Resting — HP %d / %d · %s" % [
+					int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp")))),
+					_rest_time_note(creature)] \
 				if this_bed else ("Resting elsewhere" if resting else ("KO" if fainted else "HP %d / %d" % [int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp"))))]))
 			button.text = "  %d.  %-16s %s" % [i + 1, str(creature.call("label")), status]
 			var occupied := _bed != null and int(_bed.call("occupant_index")) >= 0
@@ -258,6 +266,30 @@ func _refresh() -> void:
 				break
 
 	UITokens.make_text_legible(_root)
+
+
+## OWNER-0902-REST-VISIBILITY. Owner playtest finding 7: "No way to tell when
+## a creature finishes resting." This is the moment a player is most likely to
+## ask that question -- standing at the bed, looking at this exact row -- so
+## the answer lives here rather than only in a menu elsewhere. Reads
+## `progression.gd::rest_seconds_remaining()`, the same clock
+## `game_state.gd`'s own recovery tick uses, so this can never show a duration
+## that drifts from what actually happens if `full_heal_seconds` is retuned.
+func _rest_time_note(creature: RefCounted) -> String:
+	var seconds_left := PROGRESSION.rest_seconds_remaining(creature, PROGRESSION.config())
+	# HP recovery is the bed's own clock; sleeping at the bedroll always
+	# completes an occupied bed instantly regardless of that clock (see
+	# `progression.json`'s own `creature_bed` comment), so a creature already
+	# at full HP still needs "sleep to finish" rather than a bare "0s left"
+	# that would read as stuck.
+	if seconds_left <= 0.5:
+		return "ready — sleep to complete the rest"
+	return "%s left" % _format_seconds(seconds_left)
+
+
+func _format_seconds(seconds: float) -> String:
+	var whole := int(ceil(seconds))
+	return "%d:%02d" % [whole / 60, whole % 60]
 
 
 func _on_rest_row(index: int) -> void:

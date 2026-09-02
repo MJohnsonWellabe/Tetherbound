@@ -1,0 +1,110 @@
+frame                                sky%  horiz  hue  chrom% vspread    sat   nearL     seam    hit%
+
+frames
+-----------------------------------------------------------------------------------------------------
+ground-00-village-day.png            18.4   0.18    5  53.620    0.76   0.68   0.351 0.043@182  2.576
+                                     yellow 38%, chartreuse 27%, blue 18%, orange 9%
+ground-00-village-golden.png          6.2   0.06    3  80.374    0.90   0.75   0.078 0.021@119  0.376
+                                     orange 56%, yellow 31%, chartreuse 9%
+ground-00-village-night.png           0.0   0.00    2  35.959    0.38   0.51   0.006 0.017@233  0.004
+                                     blue 84%, green 7%
+ground-01-band1-opening-day.png      17.3   0.17    5  58.745    0.68   0.74   0.247 0.021@191  0.832
+                                     yellow 27%, chartreuse 26%, orange 23%, blue 17%
+ground-01-band1-opening-golden.png    3.3   0.03    2  81.876    0.80   0.76   0.031 0.021@131  0.034
+                                     orange 77%, yellow 20%
+ground-01-band1-opening-night.png     1.1   0.01    2  49.066    0.27   0.56   0.005 0.009@191  0.000
+                                     blue 86%, green 8%
+ground-02-band2-stone-root-cloudy.png    3.2   0.03    4  46.391    0.65   0.79   0.211 0.017@220  0.005
+                                     chartreuse 34%, orange 24%, yellow 22%, green 16%
+ground-02-band2-stone-root-day.png    3.2   0.03    4  46.860    0.69   0.82   0.290 0.019@167  0.290
+                                     chartreuse 31%, yellow 24%, orange 23%, green 18%
+ground-02-band2-stone-root-fog.png    3.2   0.03    5  39.276    0.62   0.57   0.283 0.016@220  0.066
+                                     chartreuse 37%, orange 21%, yellow 21%, green 13%
+ground-02-band2-stone-root-golden.png    0.0   0.00    2  90.774    0.63   0.89   0.151 0.014@113  0.801
+                                     orange 56%, yellow 38%
+ground-02-band2-stone-root-night.png    2.0   0.02    2  37.235    0.27   0.60   0.027 0.011@128  0.000
+                                     blue 62%, green 25%
+ground-02-band2-stone-root-rain.png    3.2   0.03    4  45.585    0.63   0.72   0.188 0.013@167  0.002
+                                     chartreuse 33%, orange 25%, yellow 20%, green 15%
+ground-03-band3-crossing-day.png     17.8   0.18    5  62.869    0.75   0.71   0.275 0.019@180  1.238
+                                     yellow 37%, orange 18%, chartreuse 18%, blue 17%
+ground-03-band3-crossing-golden.png    4.0   0.04    2  79.374    0.66   0.76   0.151 0.021@142  0.261
+                                     orange 62%, yellow 33%
+ground-03-band3-crossing-night.png    2.3   0.02    2  38.867    0.31   0.48   0.006 0.013@168  0.000
+                                     blue 91%, green 7%
+ground-04-band4-ironwood-day.png     29.0   0.29    5  57.886    0.73   0.65   0.233 0.028@258  0.268
+                                     blue 23%, yellow 23%, chartreuse 21%, orange 21%
+ground-04-band4-ironwood-golden.png    4.5   0.05    3  71.093    0.72   0.69   0.195 0.015@258  0.649
+                                     orange 54%, yellow 33%, blue 9%
+ground-04-band4-ironwood-night.png    0.1   0.00    2  46.963    0.51   0.45   0.010 0.009@154  0.000
+                                     blue 88%, green 6%
+ground-05-band5-approach-day.png      7.1   0.07    5  49.262    0.67   0.78   0.250 0.025@58   0.378
+                                     chartreuse 40%, yellow 35%, orange 13%, blue 7%
+ground-05-band5-approach-golden.png    0.0   0.00    2  89.650    0.67   0.84   0.027 0.026@43   0.023
+                                     orange 69%, yellow 26%
+ground-05-band5-approach-night.png    5.0   0.05    3  27.211    0.41   0.61   0.020 0.021@42   0.000
+                                     blue 74%, green 17%, cyan 6%
+ground-06-stronghold-day.png          8.3   0.08    4  53.502    0.75   0.64   0.345 0.027@205  0.844
+                                     yellow 52%, green 19%, chartreuse 13%, blue 10%
+ground-06-stronghold-golden.png       0.1   0.00    3  85.068    0.62   0.79   0.145 0.015@204  0.046
+                                     orange 67%, yellow 25%, chartreuse 6%
+ground-06-stronghold-night.png        5.4   0.05    3  34.981    0.39   0.46   0.015 0.032@205  0.004
+                                     blue 82%, green 11%, cyan 6%
+water-01-pond-eye.png                29.3   0.29    6  25.970    0.77   0.47   0.388 0.119@227  0.335
+                                     blue 29%, cyan 28%, green 17%, yellow 8%
+water-01-pond-grazing.png            34.1   0.34    4   4.718    0.67   0.31   0.595 0.221@261  0.074
+                                     green 36%, blue 30%, chartreuse 17%, cyan 13%
+water-02-river-eye.png               11.1   0.11    5  39.789    0.72   0.68   0.248 0.078@177  0.032
+                                     yellow 35%, chartreuse 32%, green 16%, blue 10%
+water-02-river-grazing.png           18.2   0.18    4  45.970    0.68   0.71   0.300 0.035@109  0.003
+                                     yellow 40%, chartreuse 33%, blue 14%, green 11%
+water-03-stream-eye.png              34.1   0.34    5  51.236    0.74   0.64   0.306 0.040@267  0.347
+                                     blue 37%, yellow 28%, chartreuse 19%, orange 7%
+water-03-stream-grazing.png          42.9   0.43    4  47.091    0.71   0.58   0.340 0.024@292  0.524
+                                     blue 38%, yellow 27%, chartreuse 24%, green 7%
+01-village-approach-day.png          35.2   0.35    5  48.667    0.74   0.56   0.318 0.049@306  2.375
+                                     blue 32%, yellow 24%, chartreuse 15%, green 15%
+01-village-approach-night.png         0.0   0.00    1  61.540    0.39   0.66   0.022 0.019@298  0.011
+                                     blue 90%
+01-village-grandpa-yard-day.png      25.9   0.26    5  55.298    0.80   0.59   0.399 0.035@294  5.695
+                                     orange 26%, blue 24%, yellow 21%, chartreuse 14%
+01-village-grandpa-yard-night.png     0.0   0.00    4  55.803    0.58   0.53   0.010 0.041@273  0.000
+                                     blue 77%, red 8%, green 6%, orange 5%
+01-village-route-out-day.png          4.5   0.05    3  75.766    0.87   0.49   0.434 0.043@290 12.223
+                                     orange 57%, yellow 28%, blue 9%
+01-village-route-out-night.png        0.5   0.01    3  57.570    0.74   0.50   0.036 0.040@290  0.001
+                                     blue 68%, orange 7%, chartreuse 6%
+01-village-standing-day.png          48.7   0.49    3  69.027    0.85   0.41   0.475 0.038@433  5.818
+                                     blue 46%, orange 29%, yellow 17%
+01-village-standing-night.png         0.2   0.00    1  79.974    0.78   0.68   0.054 0.033@429  0.001
+                                     blue 94%
+01-village-tournament-day.png        50.5   0.50    5  43.872    0.73   0.46   0.284 0.034@355  0.891
+                                     blue 41%, yellow 23%, chartreuse 22%, green 8%
+01-village-tournament-night.png       0.0   0.00    1  68.262    0.45   0.70   0.037 0.015@291  0.000
+                                     blue 94%
+01-village-twins-day.png             27.5   0.28    5  45.788    0.81   0.58   0.220 0.097@251  5.128
+                                     yellow 29%, blue 23%, chartreuse 23%, orange 12%
+01-village-twins-night.png            0.0   0.00    1  50.565    0.77   0.48   0.002 0.046@185  0.000
+                                     blue 94%
+02-mill-pond-approach-day.png        34.3   0.34    3   6.672    0.71   0.65   0.184 0.028@194  0.832
+                                     green 47%, blue 30%, chartreuse 17%
+02-mill-pond-standing-day.png        64.0   0.64    4  41.736    0.84   0.40   0.260 0.062@531  0.051
+                                     blue 62%, orange 14%, green 13%, chartreuse 5%
+02-mill-pond-wheel-day.png           58.4   0.58    4  36.955    0.72   0.40   0.315 0.059@471  0.254
+                                     blue 57%, orange 15%, green 13%, chartreuse 5%
+01-spawn-outward.png                 23.2   0.23    5  32.169    0.72   0.70   0.183 0.039@151  1.605
+                                     chartreuse 36%, blue 25%, yellow 22%, green 9%
+02-valley-floor.png                  22.3   0.22    4  50.179    0.70   0.64   0.387 0.020@139  0.103
+                                     yellow 42%, chartreuse 26%, blue 20%, green 10%
+03-rise-overlook.png                 35.5   0.35    5  13.601    0.55   0.31   0.445 0.014@76   0.000
+                                     blue 30%, chartreuse 28%, green 26%, yellow 9%
+04-three-quarter.png                 18.5   0.19    4   2.761    0.52   0.45   0.335 0.016@134  0.000
+                                     green 48%, chartreuse 25%, blue 20%, cyan 5%
+05-spawn-low-sun.png                  6.6   0.07    2  71.195    0.89   0.69   0.142 0.036@156  0.239
+                                     orange 54%, yellow 40%
+_sheet.png                            0.0   0.00    5  28.671    0.69   0.46   0.156 0.460@14   0.236
+                                     chartreuse 27%, yellow 21%, green 20%, blue 20%
+_sheet_ground.png                     0.0   0.00    5  47.045    0.76   0.60   0.367 0.466@3126  0.251
+                                     yellow 26%, chartreuse 22%, orange 22%, blue 18%
+_sheet_locations.png                  0.0   0.00    5  48.225    0.80   0.50   0.325 0.455@1570  1.786
+                                     blue 50%, orange 14%, chartreuse 12%, yellow 11%
