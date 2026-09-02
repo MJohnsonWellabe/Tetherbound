@@ -86,6 +86,8 @@ coordinates, Sonnet codes/renders, Fable judges/plans):
 |---|---|---|---|
 | WORLD | VP1 + VP2 + VP3 | `claude/vp-world` | session_01XigbWtMzp7EwN5SqzwLvYB |
 | PLACES | VP5 + VP6 + VP7 + VP8 | `claude/vp-places` | session_0182PYdBscd4KZMdDfwmmu63 |
+| LIFE (Sonnet, direct lane, spawned 05:36) | VP9 first slice: roll_new_worlds on, creature clusters at stands, creature/combat frames | `claude/vp-life` | session_01D9GHSeCLm2kM7uFYjod6TD |
+| CORRIDOR (Sonnet, direct lane, spawned 05:36) | VP4: mid-ground structure along the village→band 2 route via band vegetation anchors | `claude/vp-corridor` | session_01TRE9FUps52WdL4esFFFxK9 |
 
 Round plans are delivered into the coordinator sessions by the program coordinator; each round ends
 with pushed frames + REPORT.md and the session stopping.
