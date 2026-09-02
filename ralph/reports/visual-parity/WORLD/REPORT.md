@@ -1057,3 +1057,55 @@ whose setter returns silently when the cached material is null, and the terrain 
 is built after `world_look` first applies.
 
 Both red frames persist (+96.5, +78.2), unmoved by any colour edit.
+
+# Round 5 — the sky-radiance hypothesis is falsified, and a unifying suspicion
+
+| test at `03-rise-overlook` dawn | mean RGB | R−G |
+|---|---|---|
+| baseline (reproduces) | 146.3 / 49.9 / 42.6 | **+96.5** |
+| `fog_aerial_perspective = 0.0` only | 146.3 / 49.9 / 42.6 | **+96.5** (bit-identical) |
+| Sky `PROCESS_MODE_REALTIME` + `radiance_size` 128 | 146.3 / 49.9 / 42.6 | **+96.5** (bit-identical) |
+| settle 24 / 200 frames | 146.3 / 49.9 / 42.6 | +96.5 |
+| settle 1000 frames | 9.9 / 7.9 / 6.2 | +2.0 — **test artifact, see below** |
+
+Neither arm cleared it. **Eight explanations are now falsified by measurement.**
+
+**The hypothesis was structurally impossible, and this is the useful part.** It requires
+`fog_sky_affect` at its 1.0 default so fog paints sky as well as terrain. This project
+sets it to **0.0** — confirmed three ways: `art.json` line 121, `world_look.gd:668`
+(`env.fog_sky_affect = float(cfg.get("fog_sky_affect", 0.0))`, commented "Sky affect at
+zero, deliberately"), and a runtime print. With sky affect at zero, fog cannot tint the
+sky, so a fog-sourced wash over BOTH sky and ground was never possible. Worth checking
+before designing the next hypothesis.
+
+The 1000-frame settle result must NOT be read as "it resolves itself": the frame went
+near-black overall (same silhouette, everything dark), because the test parks the player
+at y=−500 with physics live, so it free-falls for the whole run and something scales its
+bounds off the player rather than the camera. A real long-settle test needs the player
+pinned or frozen.
+
+## The pattern nobody has named yet
+
+Across this investigation, **unrelated config mutations keep producing bit-identical
+frames**: two weather-freeze runs, two exposure states, `fog_aerial_perspective` 0.8 → 0,
+a whole sky process-mode change — all identical to the tenth. Meanwhile the round-4
+stands showed the per-time `aerial_fade_colour` moving a vista by +0.2/+0.6/+0.8 when a
+full stop of darkening was applied.
+
+That is the same signature twice: **changes that should alter the frame are not reaching
+the renderer.** Two independent instances (my aerial push, and these mutation arms) point
+at one class of cause — the mutation is applied to a different object than the one being
+rendered. The scene has a `WorldEnvironment` (`meadows_playground.tscn:33-34`) and
+`world_look.gd` also builds/owns Environment and Sky resources; a tool or a code path
+that mutates one while the camera renders the other would produce exactly this.
+
+**The test that would settle it, and it is not a render:** inside a running capture,
+print the identity of the Environment actually in use by the rendering camera
+(`get_viewport().find_world_3d().environment`) alongside the one `world_look` mutates,
+and compare. If they differ, that single fact explains both the aerial no-op AND why
+eight config explanations all "failed" — several may never have been tested at all,
+only assumed applied.
+
+Until that is checked, **no further conclusion should be drawn from a config toggle
+producing no change in this scene** — a null result there is currently indistinguishable
+from the change not being delivered.
