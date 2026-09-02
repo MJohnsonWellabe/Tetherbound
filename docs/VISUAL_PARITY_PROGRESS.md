@@ -212,6 +212,22 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### WORLD round 3 + LIFE round 2 — merged into the program branch 07:58 UTC (`3c87d9ea`)
+- WORLD r3 (day ground close-ups strongest to date; judge `WORLD/JUDGE-round3.md`) and LIFE r2 (5 stands re-framed,
+  `field_emission` for paddlenewt/burrowback) merged without conflict; re-bake + guard smokes + grass/scatter unit tests
+  run after the merge (results recorded below when the chain finishes).
+- LIFE round 2 code-blind judge (`LIFE/JUDGE-round2.md`, 08:03 UTC): both bar questions still **no**. Ranked gaps:
+  (1) the pairing frame `06-starter-beside-trainer-day` has **no starter in it** — the terrapup is spawned on the
+  far side of a boulder that sits exactly where the creature should stand; (2) no frame shows a living group legible
+  at native scale — the only real groups (relay camp, ridge camp) read only at 3–4× zoom; (3) night is functionally
+  empty — the green field-emission exists but is far too dim at the delivered distance. Also: the mill-pond
+  "creature" is a shapeless glowing blob (bug, not legibility), legible pairs share an identical pose, and the
+  relay-camp trees are a visibly different tree language from village-edge/ridge-camp trees (handed to WORLD/VEG).
+  Environment quality at these stands stepped up independently of wildlife (pond, open meadow, camps).
+- LIFE round 3 dispatched 08:06: pairing frame re-staged with a screen-space in-frame + line-of-sight assertion,
+  groups 5–10 m from camera with mixed species and de-synced poses, night stands with creatures ≤ 8 m and emission
+  strong enough to read, mill-pond blob root-caused, REPORT.md before/after per stand.
+
 ### PLACES round 3 (`claude/vp-places` @ 07:11) — coordinator verdict 07:25 UTC — MERGED
 Evidence: `ralph/reports/visual-parity/PLACES/round3/` (warrens, stronghold, castle-landmark 100/200/400 m, plus ground/water/survey).
 - Both headline fixes were "a value silently cancelled downstream": the Hall exterior already carried the weathered
