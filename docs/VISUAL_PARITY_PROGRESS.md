@@ -20,18 +20,18 @@ Passes are `VP0…VP11` (visual passes) — never conflate with gameplay Gate A/
 |---|---|---|---|---|
 | VP-PRE | complete (5/5 checks) | f4afc9d9 | f4afc9d9 | §VP-PRE below |
 | VP0 baseline | **complete** (evidence set reduced to village/pond/survey by owner call; other sites' befores are renderable from ca0575b8) | 401d7217 | 401d7217 | `ralph/reports/visual-parity/VP0-baseline/` (locations-1080p/, locations/, JUDGE-village-pond.md), `VP-PRE/` |
-| VP1 sky/light | in progress — first cut rendered (`VP1-3-after/survey/`), round 1 fix list with WORLD | 1ef3878a (first cut) | — | |
-| VP2 terrain/ground | in progress — cull tiles + far thinning + terrain material coded, perf table pending with WORLD | e3aba7d7 | — | |
-| VP3 vegetation | in progress — ecology gate + heroes + water bands + retints coded and baked, unjudged | e3aba7d7 | — | |
-| VP4 corridor | in flight (CORRIDOR Sonnet lane) | — | — | |
+| VP1 sky/light | candidate merged (WORLD r1–r3: cumulus sky, dawn/golden/night presets, sun_glow_falloff, moon); judge r3: day/golden "yes" for environment, dawn/night overlook red wash + low-sun halo open → WORLD r4 | 3c87d9ea | — | `WORLD/round1..3`, `WORLD/JUDGE-round*.md` |
+| VP2 terrain/ground | candidate merged (grass carpet ON with cull tiles/far thinning/mesh LOD, terrain grain/damp, aerial); proxy budget met (band1_open 11.80M / 7511; hall 3975); judge r3 calls ground close-ups the strongest frames | 3c87d9ea | — | `GROUND/`, `VP2-perf/`, `WORLD/JUDGE-round3.md` |
+| VP3 vegetation | candidate merged (ecology gate, under band, heroes, water-edge bands, desaturated leaf retints); judge r2/r3: groves read, distant scatter at overlook still uniform → WORLD r4 | 3c87d9ea | — | `WORLD/round2..3`, `VEG` tests |
+| VP4 corridor | round 1 judged (regressions at stations 02/07, groves vanished); CORRIDOR r2 rendering | — | — | `CORRIDOR/round1`, `CORRIDOR/JUDGE-round1.md` |
 | VP5 village/tournament/camps | first pass merged (PLACES r2); Bar B yes for village | adaee521 | 5b8a53a6 | `PLACES/round1`, `PLACES/round2` |
-| VP6 Warrens | exterior in flight (PLACES r3); den stand fixed | adaee521 | | |
-| VP7 Relay | first occupation pass merged; staffing/cables in PLACES r3 | adaee521 | | |
-| VP8 Hall | courtyard weathered + banners merged; exterior kit at distance in PLACES r3 | adaee521 | | |
-| VP9 world life | in flight (LIFE Sonnet lane: roll_new_worlds on, clusters at stands, life capture tool) | — | — | |
+| VP6 Warrens | tone variation merged (PLACES r3); soil-apron/exterior read still open → PLACES r4 | 81c4232a | | `PLACES/round3` |
+| VP7 Relay | occupation + staffing/cables merged (PLACES r3) | 81c4232a | | `PLACES/round3` |
+| VP8 Hall | dark weathered exterior merged (PLACES r3); silhouette at 200–400 m + storm band open → PLACES r4 | 81c4232a | | `PLACES/round3` |
+| VP9 world life | round 2 merged (5 stands, field_emission); judge r2: both bars still no → LIFE r3 (pairing assertion, groups ≤ 10 m, night emission, pond blob) | 3c87d9ea | — | `LIFE/round1..2`, `LIFE/JUDGE-round*.md` |
 | VP10–VP11 | not started | — | — | |
 
-**Current pass:** VP1–VP3 in parallel under the WORLD coordinator; VP5–VP8 render-and-verify under PLACES. **Next action:** at the 02:37 UTC check-in, judge the pushed frames on `claude/vp-world` / `claude/vp-places`, send round-2 fix lists, merge accepted rounds.
+**Current pass:** VP1–VP9 all have merged candidates on the program branch; WORLD r4 / PLACES r4 / CORRIDOR r2 / LIFE r3 in flight. **Next action:** check-in #11 (08:25 UTC): judge pushed frames, merge accepted rounds (re-bake), then VP10 perf retention on the merged tree.
 
 ## VP-PRE — environment capability check
 
