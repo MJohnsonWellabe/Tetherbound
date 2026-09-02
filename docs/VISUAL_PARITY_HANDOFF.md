@@ -474,6 +474,11 @@ the evidence package is complete and honest, not that the vision is reached (6.5
   came in from `main` after the program's judged set was fixed and were never part of a judged round. All
   three are stand-siting work in `tools/_capture_locations.gd`, not visual defects, and are left as-is so the
   final evidence stays one unedited run. — `VP11-final/locations/`; `tools/_probe_relay_fire_trees.gd`.
+- **`tools/survey_combat.gd` exits 1 on its action-timing guards under software GL** (charged attack never reaches
+  `charged_cost` / no hit inside 240 frames; the throw aim does not open) while still writing the six combat frames
+  (`VP11-final/combat/01..06`). The frames show approach, arena open, closing-in, wind-up and the quick attack; no
+  charged-hit or throw frame exists in any run of this program. A real-time capture on the Ally would not hit these
+  guards. — `VP11-final/capture.log`.
 - **`tools/_capture_ground_and_sky.gd` reports `GrassField … holds no instances` for every frame and exits 1**
   while still writing all 30 frames with the carpet visibly present. Identical in the VP1–VP3 checkpoint
   capture, so it is a stale guard (the camera-relative carpet is checked before it repopulates for the
