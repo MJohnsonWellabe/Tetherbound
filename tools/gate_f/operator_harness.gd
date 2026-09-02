@@ -3399,20 +3399,10 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 		if not bool(mgr.call("is_fighting")):
 			return "FAIL throw_until_caught: fight ended before throw %d (%s)" % [
 				attempt + 1, ", ".join(log)]
-		# Budget widened after a real run: `catch_resolving` clearing (the
-		# waits above) is necessary but not sufficient -- combat_manager.gd::
-		# _finish_catch()'s failure branch also re-engages the wild creature
-		# (`set_engaged`) and swaps the camera back (`_take_camera()`), and a
-		# real run showed input still not landing for a further ~2s past the
-		# verdict for a reason not fully chased down. Rather than guess a
-		# second hidden duration, this simply keeps trying for longer --
-		# `press_until` already reports PASS on zero presses if it is already
-		# armed, so a wider budget costs nothing when the shorter one would
-		# have worked anyway.
 		var armed := await _step_press_until({
 			"control": "interact",
 			"check": {"check": "input_context", "equals": "combat_aim"},
-			"max_presses": 15,
+			"max_presses": 5,
 			"settle_frames": 20,
 		}, "%s-arm%d" % [step_id, attempt + 1])
 		if armed.begins_with("FAIL") or armed.begins_with("HARNESS-ERROR"):
@@ -3443,7 +3433,25 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 		await _step_wait_until({"check": "catch_resolving", "equals": false,
 			"budget_frames": maxi(60, int(resolve_seconds * float(Engine.physics_ticks_per_second))),
 			"poll_frames": 3})
+		# `catch_resolving` clearing is the VERDICT, not the outcome finishing.
+		# Measured directly: a caught creature is not actually added to the
+		# party, and the fight does not actually end, until ~2.7s AFTER the
+		# verdict resolves (combat_manager.gd's post-catch sequence has its
+		# own beat past `_finish_catch()`). Checking party size the instant
+		# `catch_resolving` clears reads a real catch as a miss and burns the
+		# rest of this attempt trying to re-arm a fight that has already
+		# ended. So: wait, up to `resolve_seconds` again, for whichever
+		# happens first -- the party growing (caught) or the fight actually
+		# ending some other way (fled) -- and only conclude "still fighting,
+		# genuine miss" if neither happens in that window.
+		var settle_budget := maxi(1, int(resolve_seconds * float(Engine.physics_ticks_per_second)))
+		var settled := 0
 		var party_now := (_probe.call("party_state") as Array).size()
+		while party_now <= party_before and bool(mgr.call("is_fighting")) and settled < settle_budget:
+			await physics_frame
+			_tick(1.0 / float(Engine.physics_ticks_per_second))
+			settled += 1
+			party_now = (_probe.call("party_state") as Array).size()
 		log.append("throw %d (%s)" % [attempt + 1, "tracked" if not tracked.begins_with("FAIL") else "untracked"])
 		if party_now > party_before:
 			return "caught on throw %d of %d (%s)" % [attempt + 1, max_throws, ", ".join(log)]
