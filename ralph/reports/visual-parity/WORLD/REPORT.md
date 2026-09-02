@@ -954,3 +954,58 @@ Two readings, and I could not separate them before the budget ran out:
 Note this also connects the two symptoms: if night at *some* framings is red, then
 "dawn is red at 03 and clean at 01" and "night is red at the moon stand and clean at
 03" may be one defect selecting on framing, not two.
+
+### CORRECTION: the night flip is probably NOT this round's aerial change
+
+Above I flagged night reading +81.1 as a possible regression from the per-time aerial
+commit. Follow-up analysis identifies a simpler cause: **the two runs had different
+frame histories.** Round 3's run cycled the full day/golden/night/dawn set at
+`01-spawn-outward` BEFORE reaching `03-rise-overlook`; the repeat test went straight to
+`03-rise-overlook`. Different number of prior preset transitions, same config.
+
+So the aerial commit is not implicated, and the one-render discriminator I proposed
+above is no longer the priority. Keeping the flag recorded rather than deleting it,
+because the reasoning is what led here.
+
+### Leading mechanism: Godot's sky radiance re-bake has not converged
+
+`scenes/world/meadows_playground.tscn:33-34` sets the Environment's
+`ambient_light_source` and `reflected_light_source` to **SKY**, and `world_look.gd`
+pushes new sky `ShaderMaterial` uniforms on every `apply_time()` / `_apply_blended()`.
+Godot spreads that radiance convolution over several real frames rather than applying it
+synchronously with the parameter push. A camera with a lot of open sky in frame samples
+a partially-converged radiance; a camera buried in foliage barely does.
+
+This fits every observation, which is more than any config explanation managed:
+- **camera-dependent** — elevated, sky-heavy `03-rise-overlook` and `06-moon-stand` go
+  red; low, foliage-heavy `01-spawn-outward` stays clean through the identical
+  night→dawn transition (+3.7).
+- **sequence-dependent** — the number of prior transitions changes the result.
+- **deterministic and bit-identical across runs** — same frame counts, same partial
+  convergence.
+- **flat across four repeats** — it has plateaued, not drifted.
+- **immune to every config toggle** — six falsified explanations, all of them config.
+
+Code was ruled out properly, not assumed: `apply_time()` rebuilds a fully-merged,
+deep-duplicated dict each call; `adjustment_*` (`world_look.gd:669-672`) are set
+UNCONDITIONALLY via `cfg.get(key, default)`, so the "assigned only when present, never
+cleared" shape I hypothesised **does not exist** in this file; and `_apply_cloud_sky`'s
+conditional sets always receive the full base-merged dict.
+
+### The fix, and why it is now safe when it was not in round 1
+
+The fix belongs in the **capture tooling**, not gameplay: wait materially longer after
+`apply_time()` before the shutter — the current 20 physics + 4 process frames are not
+enough for radiance to converge — or sample R−G twice and capture only once two
+consecutive samples agree.
+
+Round 1 tried extra settle frames and it was correctly rejected, because back then the
+clock advanced during the wait and the frame drifted ~5 in-game hours off the pinned
+time. **That objection no longer applies:** `set_clock_frozen()` now pins the clock, so
+extra settle frames cost wall-clock and nothing else. The round-1 trap and the round-4
+fix are compatible precisely because the freeze landed in between.
+
+**The one render that proves it:** the same night→dawn sequence at `03-rise-overlook`,
+varying ONLY the settle length after `apply_time("dawn")` — 24 vs 200 vs 1000 frames. If
+R−G converges back toward the clean ≈ −12 as settle grows, this is confirmed and the
+tooling fix is right.
