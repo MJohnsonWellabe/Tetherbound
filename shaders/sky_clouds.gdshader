@@ -97,10 +97,18 @@ uniform float high_coverage : hint_range(0.0, 1.0) = 0.3;
 uniform float high_scale = 0.55;
 uniform float high_opacity : hint_range(0.0, 1.0) = 0.35;
 
-// Horizon haze: how far up the dome (in `up`, 0..1) the horizon colour reaches
+// Horizon haze: how far up the dome (in `up`, 0..1) the haze colour reaches
 // and how strongly it takes over at the line itself.
 uniform float haze_height : hint_range(0.0, 0.5) = 0.14;
 uniform float haze_strength : hint_range(0.0, 1.0) = 0.55;
+// VP1 sky retune round 1. The haze used to mix straight to `horizon_colour`,
+// which is right for the SEAM with the terrain fog but wrong for the haze
+// band itself: real atmospheric haze reads slightly cooler/bluer than the lit
+// horizon under it (more air, more scattered blue), and reusing the warm
+// horizon tint for both flattened the whole lower dome to one near-white
+// wash. Defaults to `horizon_colour`'s own default so an old preset that never
+// sets this keeps exactly the prior look.
+uniform vec3 haze_colour : source_color = vec3(0.72, 0.80, 0.76);
 
 // The sun disc the gradient sky never had.
 uniform float sun_size : hint_range(0.0, 0.2) = 0.022;
@@ -239,10 +247,14 @@ void sky() {
 		colour = mix(colour, cloud, clamp(density, 0.0, 1.0));
 	}
 
-	// Horizon haze band: lands on `horizon_colour`, which is also the terrain
-	// fog colour, so the land's aerial fade and the sky meet in one band.
+	// Horizon haze band: `haze_colour` defaults to `horizon_colour`'s own
+	// default (see that uniform's declaration) so an old preset that never
+	// sets it lands on the same seam-matching behaviour as before -- but a
+	// preset that DOES set `horizon_haze_colour` can bias the haze band
+	// slightly bluer than the horizon it sits on, which is closer to how real
+	// haze reads than repeating the horizon's own (often warm) tint.
 	float haze = 1.0 - smoothstep(0.0, max(haze_height, 1e-3), abs(up));
-	colour = mix(colour, horizon_colour, haze * haze_strength);
+	colour = mix(colour, haze_colour, haze * haze_strength);
 
 	// The sun disc, which the gradient sky never had at all.
 	//

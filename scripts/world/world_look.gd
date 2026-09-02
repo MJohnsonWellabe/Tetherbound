@@ -309,7 +309,9 @@ const _COLOUR_KEYS := {
 	"sky": ["top_colour", "horizon_colour", "ground_horizon_colour", "ground_bottom_colour",
 		# VP1: the cloud and sun colours used to snap at the blend midpoint
 		# because they were not listed here; a driven clock now lerps them.
-		"cloud_lit", "cloud_shade", "cloud_base", "sun_colour"],
+		"cloud_lit", "cloud_shade", "cloud_base", "sun_colour",
+		# VP1 sky retune round 1: the new haze tint blends the same way.
+		"horizon_haze_colour"],
 	"environment": ["fog_colour", "ambient_colour"],
 }
 
@@ -537,6 +539,10 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 		["cloud_lit", "cloud_lit"], ["cloud_shade", "cloud_shade"],
 		["cloud_base", "cloud_base"],
 		["sun_colour", "sun_colour"],
+		# VP1 sky retune round 1: the horizon haze band no longer reuses
+		# horizon_colour verbatim -- see sky_clouds.gdshader's own comment
+		# on the `haze_colour` uniform.
+		["horizon_haze_colour", "haze_colour"],
 	]:
 		if cfg.has(str(pair2[0])):
 			mat.set_shader_parameter(str(pair2[1]), _as_colour(cfg.get(str(pair2[0])), "#ffffff"))
