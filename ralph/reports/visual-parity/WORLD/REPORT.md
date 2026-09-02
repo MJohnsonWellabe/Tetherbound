@@ -1379,3 +1379,90 @@ The clean proof of the mechanism remains round 5e, where one variable changed
 inside a single boot and produced a 97-point swing.
 
 Evidence: `round5f-survey-after-fix/` (5 frames + sheet).
+
+---
+
+# Round 6 — close-out
+
+## Stands (9), after parking the actor 12 m behind the camera
+
+| frame | before | now |
+|---|---|---|
+| `03-rise-overlook-dawn` | +96.3 red | **+17.9** warm dawn |
+| `03-rise-overlook-night` | +80.8 red | **−16.7** dark blue |
+| `06-moon-stand-night` | +78.3 red | **−22.6** dark blue |
+| `03-rise-overlook-golden` | −16.3 **cool** | **+24.0** warm |
+| `03-rise-overlook-day` | −25.4 | −8.4 |
+
+The four `01-spawn-outward` controls are unchanged to the decimal (−11.6, +12.2,
+−10.1, +3.7) — that stand always placed its actor, so the fix must not move it, and
+does not. `03-day` now matches the verified player-at-camera arm (125.9/134.3/104.1
+vs 126.3/134.6/104.7) to within rounding.
+
+**`03-rise-overlook-golden` deserves attention.** It read cool at −16.2 and −16.3 and
+was a fix-list item across rounds 3 AND 4; warming `ambient_colour`, `cloud_shade` and
+`cloud_base` never moved it. It was this bug. With the player placed correctly it is
++24.0 warm, with no colour value touched. Some of what this lane diagnosed as art
+direction — the cool golden vista, and part of the night horizon glow attributed to the
+time-invariant aerial term — was one capture bug wearing different masks at different
+times of day. That is why the values kept *looking* wrong while *measuring* correct.
+
+Night glow also improves: the `03` night vista drops from mean ~72 to ~51 against a ~23
+foreground.
+
+## Survey (5), shipped tool
+
+| frame | mean RGB | R−G |
+|---|---|---|
+| 01-spawn-outward | 82.5/94.3/54.4 | −11.8 |
+| 02-valley-floor | 96.8/109.1/57.5 | −12.3 |
+| 03-rise-overlook | 125.1/133.8/103.9 | −8.7 |
+| 04-three-quarter | 94.7/107.0/52.3 | −12.3 |
+| 05-spawn-low-sun | 84.4/72.8/47.1 | **+11.6** |
+
+No frame washed; `05-spawn-low-sun`, black since before this program began, is a warm
+golden frame.
+
+## The 20 m assertion fires at one stand — and that is useful, not a failure
+
+```
+WARNING: survey.gd: 03-rise-overlook stands 26.0m from the player (max 20.0m)
+```
+
+Per-shot distances: 8.8 / 17.2 / **26.0** / 13.7 / 8.8 m.
+
+I predicted 18.9 m from `hypot(12, 14.6)`; the real value is 26.0 m because that stand
+is a **rise** — parking 12 m behind the camera goes downhill, so the park ground sits
+well below the eye's ground and the VERTICAL separation dominates. Shortening the
+horizontal park barely helps (at 8 m it is still ~25.9 m), so the 20 m ceiling is not
+reachable at this stand by parking behind it.
+
+It does not need to be: **the frame is clean at 26 m**, matching the verified
+player-at-camera values. The proven-clean reference is 14.6 m and the washed case was
+616 m, so 26 m is comfortably inside the safe region. Recommendation: keep the warning
+as a tripwire and either raise the ceiling to ~30 m or treat it as informational. Do NOT
+chase the number by shortening the park further — it cannot work, and the evidence says
+it is unnecessary.
+
+## Known limitation to carry forward (filed, not implemented)
+
+**Terrain3D streams its mesh off the PLAYER position.** Any future feature that renders
+from a viewpoint far from the player — a cutscene camera, a photo mode, a spectator or
+map view — must move the streaming anchor with the camera, or the whole scene degrades:
+sky, distant terrain and near geometry together, while every Environment and sky value
+still reads correct. This is exactly how the maroon wash presented, and it is why it
+defeated thirteen config-level hypotheses.
+
+## Program-wide: this pattern is not confined to this lane
+
+- `tools/capture_water.gd` parks the player at eye + (5000, 5000) — **~7071 m
+  horizontal**. Since Terrain3D streams on XZ, that is arguably worse than the 500 m
+  vertical drop. All four of its viewpoints lack an `actor` key.
+- ~21 further tools still do the literal 500 m drop (`capture_buildings`,
+  `capture_paths`, `capture_wayfinding`, `capture_inn`, `capture_well`,
+  `capture_stronghold_approach`, `diag_shadow_cascade`, …).
+- ~8 more use the horizontal 5000-offset shape (`survey_band2`, `capture_night_light`,
+  `_probe_golden_snap`, …).
+
+Any frame those tools have produced carries this defect. Out of scope for this lane, but
+it means evidence from them should be re-read with this in mind.
