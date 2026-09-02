@@ -204,6 +204,25 @@ func _run() -> void:
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	var field: RefCounted = HEIGHTFIELD.new()
 
+	# R6-CLOCK-FREEZE. Every viewpoint below calls apply_time() expecting an
+	# exact, reproducible pinned frame -- but world_look.gd's passive day/night
+	# clock (`_process`) is still running underneath it, and this loop's own
+	# SETTLE_AFTER_MOVE/POSE_FRAMES waits are real frames under software
+	# rendering (~1s each on this box). A previous attempt papered over a black
+	# golden-hour frame by adding 120 MORE such frames after apply_time("golden")
+	# and got a lit frame back that was not golden at all -- neutral midday --
+	# because those 120 frames let _process's own _apply_blended(hour) re-derive
+	# the sky from a clock that had drifted ~5 in-game hours off the pin (see
+	# world_look.gd::set_clock_frozen's own comment for the exact arithmetic).
+	# Freezing once, here, before the viewpoint loop starts, means every
+	# apply_time() call below stays pinned through its settle/pose frames with
+	# no drift, without touching SETTLE_AFTER_MOVE/POSE_FRAMES at all.
+	# has_method guards this tool against an older WorldLook that predates
+	# set_clock_frozen -- it should degrade to the old (drift-prone) behaviour
+	# rather than hard-fail.
+	if look != null and look.has_method("set_clock_frozen"):
+		look.call("set_clock_frozen", true)
+
 	var written: Array[String] = []
 	var failures: Array[String] = []
 

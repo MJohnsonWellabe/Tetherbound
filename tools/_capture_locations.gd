@@ -159,7 +159,8 @@ const SITES := [
 		"_why": "data/config/village.json's OW5D-relocated pond group: mill [-382,514], footbridge [-386.3,520], ranger_station [-350,507]; band1 props.json `bridge_repair_site` centroid [-391.4,521.1].",
 		"shots": [
 			{"label": "approach", "mode": "approach", "at": [-330.0, 492.0], "look": [-350.0, 507.0],
-			 "_why": "the pond route's own first waypoint. village.json's ranger_station entry names the route as points [-80,85] -> [-105,115] in the pre-OW5D frame; the OW5D offset is (-250,+407), so the route runs (-330,492) -> (-355,522) now. Standing at its head looks at the ranger station -- 'the first built thing between the settlement and the pond valley' in that file's own words -- with the mill beyond it.\n\nThe first draft of this eye was (-352,545) and the raycast reported no collision under it with an analytic height of -20.20 against a pond surface at -17.0: it was IN THE WATER, 38m north of the ranger station. Kept in the comment rather than silently corrected, because 'a plausible-looking coordinate 40m from the thing it names' is how this sweep has produced six frames of the wrong subject."},
+			 "back": 13.0, "up": 9.2,
+			 "_why": "the pond route's own first waypoint. village.json's ranger_station entry names the route as points [-80,85] -> [-105,115] in the pre-OW5D frame; the OW5D offset is (-250,+407), so the route runs (-330,492) -> (-355,522) now. Standing at its head looks at the ranger station -- 'the first built thing between the settlement and the pond valley' in that file's own words -- with the mill beyond it.\n\nThe first draft of this eye was (-352,545) and the raycast reported no collision under it with an analytic height of -20.20 against a pond surface at -17.0: it was IN THE WATER, 38m north of the ranger station. Kept in the comment rather than silently corrected, because 'a plausible-looking coordinate 40m from the thing it names' is how this sweep has produced six frames of the wrong subject.\n\nCODE-BLIND JUDGE, 2026-09-02: the shipped frame (bare RIG `back` 7.0/`up` 3.2) came back filled with leaf cards, camera seated inside a tree canopy on this trail-side approach -- `trees` (data/config/vegetation.json) are the everyday 7-9m broadleaf and this layer's own `corridor_fill.trail_bias` 0.85 sites most of its fill BESIDE the authored trail this eye stands on, so a copse this close to the route is the expected case, not a fluke. Pulled `back` 7.0->13.0 (+6m further from the target along the same eye->target axis) and `up` 3.2->9.2 (+6m higher above the ground under the camera -- ground-relative, per `_frame()`, not an absolute Y) to clear a canopy whose typical crown base sits well under the new eye height even on the tallest 9m form, without re-aiming: same `at`/`look`, so the shot still stands at the route's own first waypoint looking at the ranger station with the mill beyond it."},
 			{"label": "standing", "mode": "standing", "at": [-388.0, 526.0], "look": [-382.0, 514.0],
 			 "_why": "on the crossing just downstream of the footbridge, looking up at the mill's north face. Ray-seated at -16.5 against a pond surface of -17.0, so this stands on the bank rather than in the water -- checked, because the approach eye 30m away did NOT and it would have been easy to condemn all three together."},
 			{"label": "wheel", "mode": "detail", "at": [-390.0, 512.0], "look": [-386.0, 514.0],
@@ -457,21 +458,40 @@ func _any_night(only: Array[String]) -> bool:
 ## Pin the clock to `time`, then STOP both clocks. Order matters and freezing
 ## matters: a pin that is not frozen wears off across a multi-site pass and the
 ## late frames come back in a dusk wash under whatever weather rolled.
+##
+## R6-CLOCK-FREEZE. `_look.set_process(true)` here used to stay true for the
+## whole 30-frame wait below, on the (false) assumption that apply_time()
+## needed a live `_process` to take effect -- it does not, it is an ordinary
+## synchronous write (see the sibling tools/_capture_ground_and_sky.gd's own
+## header, which freezes WorldLook once and never unfreezes it for exactly
+## this reason). Those 30 unfrozen frames instead let world_look.gd's passive
+## clock advance `_elapsed_seconds` on every one of them; under software
+## rendering that is tens of real seconds, which at day_length_seconds/24 =
+## 25 real seconds per in-game hour is enough to walk a "night" pin most of
+## the way back toward day before the first shot ever fires. Freezing the
+## clock (rather than toggling `_look`'s whole `_process`) keeps apply_time()
+## pinned through the wait without needing that wait at all -- kept anyway so
+## an older WorldLook without set_clock_frozen (has_method guard below) still
+## gets the previous, drift-prone-but-working behaviour instead of a hard fail.
 func _pin(time: String) -> void:
 	if _weather != null:
 		_weather.set_process(true)
 		_weather.set_physics_process(true)
 		_weather.call("set_weather", "clear")
+	var look_frozen := _look != null and _look.has_method("set_clock_frozen")
 	if _look != null:
-		_look.set_process(true)
-		_look.set_physics_process(true)
+		if look_frozen:
+			_look.call("set_clock_frozen", true)
+		else:
+			_look.set_process(true)
+			_look.set_physics_process(true)
 		_look.call("apply_time", time)
 	for i in _frames(30):
 		await physics_frame
 	if _weather != null:
 		_weather.set_process(false)
 		_weather.set_physics_process(false)
-	if _look != null:
+	if _look != null and not look_frozen:
 		_look.set_process(false)
 		_look.set_physics_process(false)
 	print("[locations] clock pinned to %s and frozen" % time)

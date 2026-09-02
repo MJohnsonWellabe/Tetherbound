@@ -101,8 +101,49 @@ func _ready() -> void:
 const BLEND_INTERVAL := 0.2
 var _blend_accum: float = BLEND_INTERVAL
 
+## R6-CLOCK-FREEZE. OFF by default -- this exists purely for capture/diagnostic
+## tools and must never change gameplay's own experience of the day/night cycle.
+##
+## `day_length_seconds` is 600 (data/config/art.json), so one in-game HOUR is
+## 25 real seconds. Under software rendering (llvmpipe, no GPU on this box) a
+## single frame costs on the order of a real second, so `delta` above is huge
+## by normal-frame standards. A capture tool that calls `apply_time("golden")`
+## to pin an exact keyframe and then waits even 20-30 frames "to let the pose
+## settle" is really waiting 20-30 real seconds -- 0.8 to 1.2 in-game HOURS --
+## before the shutter, and every one of those frames' `_process` ticks fires
+## `_apply_blended(hour)` (below), which re-derives sun/sky/environment from
+## THAT drifted hour and overwrites whatever `apply_time()` just pinned. A
+## "golden hour" capture shot this way came back looking like flat midday --
+## not because golden hour was mistuned, but because the clock had already
+## walked most of the way back into the day preset's own hour range by the
+## time the frame was actually drawn.
+##
+## So `set_clock_frozen(true)` makes this function return before it does
+## anything the passive clock relies on: `_elapsed_seconds` stops advancing,
+## `_auto_day_accum` stops advancing (no automatic Game.day roll under a
+## frozen capture rig), and `_apply_blended()` never runs. `apply_time(name)`
+## itself is UNCHANGED and keeps working while frozen -- it still snaps
+## exactly and still pins `_elapsed_seconds` from the preset's own `hour` (see
+## that function's own comment) -- so a tool can freeze once, then call
+## `apply_time()` per viewpoint and pose for as many settle frames as it
+## likes with zero drift, restoring the "every survey/capture/diagnostic tool
+## calls apply_time() by name expecting a reproducible pinned frame" contract
+## this file has always claimed to honour.
+var _clock_frozen: bool = false
+
+
+## Capture/diagnostic-only. See `_clock_frozen`'s own comment for why this
+## exists and the arithmetic that makes it necessary. Never called from any
+## gameplay path -- leaving this off is what keeps the day/night cycle
+## exactly as it always was for a player.
+func set_clock_frozen(frozen: bool) -> void:
+	_clock_frozen = frozen
+
+
 func _process(delta: float) -> void:
 	if _cycle == null:
+		return
+	if _clock_frozen:
 		return
 	_elapsed_seconds += delta
 	var hour: float = _cycle.hour_at(_elapsed_seconds)
@@ -309,7 +350,9 @@ const _COLOUR_KEYS := {
 	"sky": ["top_colour", "horizon_colour", "ground_horizon_colour", "ground_bottom_colour",
 		# VP1: the cloud and sun colours used to snap at the blend midpoint
 		# because they were not listed here; a driven clock now lerps them.
-		"cloud_lit", "cloud_shade", "cloud_base", "sun_colour"],
+		"cloud_lit", "cloud_shade", "cloud_base", "sun_colour",
+		# VP1 sky retune round 1: the new haze tint blends the same way.
+		"horizon_haze_colour"],
 	"environment": ["fog_colour", "ambient_colour"],
 }
 
@@ -524,6 +567,11 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 		# `sky_clouds.gdshader`'s own note -- the night sky's "moon" was reading
 		# as a lens bloom because the disc was two-thirds gradient.
 		["sun_disc_edge", "disc_edge"],
+		# The glow halo's falloff exponent -- see the `sun_glow_falloff`
+		# uniform's own comment in sky_clouds.gdshader for the fixed-24.0
+		# defect this replaces (a halo whose angular width could not be
+		# tuned by any of the neighbouring sun keys above).
+		["sun_glow_falloff", "sun_glow_falloff"],
 		# VP1: cumulus form, shell projection, cirrus layer, horizon haze.
 		["cloud_edge_softness", "edge_softness"], ["cloud_altitude", "cloud_altitude"],
 		["cloud_lit_contrast", "lit_contrast"],
@@ -537,6 +585,10 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 		["cloud_lit", "cloud_lit"], ["cloud_shade", "cloud_shade"],
 		["cloud_base", "cloud_base"],
 		["sun_colour", "sun_colour"],
+		# VP1 sky retune round 1: the horizon haze band no longer reuses
+		# horizon_colour verbatim -- see sky_clouds.gdshader's own comment
+		# on the `haze_colour` uniform.
+		["horizon_haze_colour", "haze_colour"],
 	]:
 		if cfg.has(str(pair2[0])):
 			mat.set_shader_parameter(str(pair2[1]), _as_colour(cfg.get(str(pair2[0])), "#ffffff"))
