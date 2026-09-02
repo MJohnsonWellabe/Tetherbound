@@ -212,6 +212,15 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Program-branch health at 09:55 UTC
+- **CI `34cdd67a` (CORRIDOR r2 merge + bake): fully green** — first all-green run on the program branch (the
+  ecology test rewrite `00745630` was superseded by this push and cancelled).
+- Local guards on the merged tree: `test_scatter_rules + test_veg_corridor + test_scatter_perf_budget` 49 tests,
+  0 failed; `smoke_traversal` exit 0; after the PLACES r5 merge `smoke_stronghold` / `smoke_warrens` exit 0.
+- Program branch head `761393b3` carries: WORLD r1–r3, GROUND, VEG, LIFE r2, PLACES r2–r5, CORRIDOR r2, grass
+  carpet ON with cull tiles, fresh bake (825,875 placements). Not merged: WORLD r4 (no-op), LIFE r3 (occluded
+  stands), CORRIDOR r2 addendum (RNG isolation; lands with r3).
+
 ### PLACES round 5 (`claude/vp-places` @ 09:17) — judged 09:45, MERGED 09:46 (`60994d60`)
 Evidence: `PLACES/round5/locations/` (12), `_sheet_r4_vs_r5.png`, `PLACES/JUDGE-round5.md`.
 - Lane: Warrens reshaped (223→89 boulders, spoil mounds, exterior base = den rock), storm slabs lifted above the Hall
