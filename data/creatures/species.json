@@ -300,6 +300,8 @@
         "model": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
+        "_comment_field_emission_vp9": "VP9 LIFE round 2 (code-blind judge addendum): 'ridge camp shapes indistinguishable from rocks'. `colour` #6c7061 is a grey-olive rock tone by design (its own sheet: rock-nodule armour), which is exactly why it was reading as scenery rather than a creature next to the ridge camp's actual rocks. Same `field_emission` lever OWNER DIRECTIVE 2026-09-01 set for bramblebun/terrapup/mudsnout (creature_body.gd::_apply_field_brightness()), applied here for the first time -- unmeasured against tools/_probe_grass_separation.gd (no time in this round's budget to run the sweep), so 0.9 is bramblebun's own modest, no-glow value taken as the conservative default rather than terrapup/mudsnout's steeper 1.4 (both of those started BELOW 1.0 on measurement; this species has not been measured at all). TUNABLE, and due a real sweep before it is treated as settled.",
+        "field_emission": 0.9,
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate c). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
           "idle": "idle",
@@ -428,6 +430,8 @@
         "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
+        "_comment_field_emission_vp9": "VP9 LIFE round 2 (code-blind judge addendum): 'mill pond blue blob'. `colour` #2f7fd0 -- a saturated blue -- sits close in value to the pond's own water colour, so a Paddlenewt at the shoreline reads as a smudge on the water rather than a creature. Same `field_emission` lever OWNER DIRECTIVE 2026-09-01 set for bramblebun/terrapup/mudsnout (creature_body.gd::_apply_field_brightness()); unmeasured against tools/_probe_grass_separation.gd (that tool measures against a grass reference, not water, and there was no time in this round's budget to build a water-reference variant), so 0.9 is bramblebun's own modest, no-glow value taken as the conservative default. TUNABLE, and due a real water-background sweep before it is treated as settled.",
+        "field_emission": 0.9,
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md; R0.4's report also flags a cosmetic defect (tail is short/abrupt rather than the canon's long taper) that was not sculpt-fixed here, consistent with how Burrowback's claw-scale note and Tuskroot's plate-edge note were handled -- flagged, not fixed, since it is not a hard fail. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
           "idle": "idle",
