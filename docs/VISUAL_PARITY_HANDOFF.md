@@ -199,7 +199,10 @@ visual gain — left `false` for this reason; the flag stays available for futur
 
 Visual check for the switch: `VP10-perf/survey_vis_on/_sheet_off_vs_on.png` (five survey stands, OFF left / ON
 right) — no structure missing or popping at any stand. The final VP11 recapture (§2/§3) was taken with the switch
-ON, and its own `VP11-final/perf_render_stats.txt` is the shipped number of record (table below once landed).
+ON on the same code, so the **ON row above is the shipped number of record**. The recapture chain's own trailing
+perf series (`VP11-final/perf_render_stats.txt`) had not finished when the owner called wrap-up; if the file exists
+in the repo it was appended by that chain and should match the ON row within sampling noise, otherwise the VP10
+measurement stands.
 
 ### Optimization decisions (carried into VP10)
 
