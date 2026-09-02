@@ -3,13 +3,14 @@
 **Branch** `claude/vp-places` · **start commit** `e3aba7d7` (VP0 merge of the GROUND+VEG lane code)
 **Owns** VP5 (village / tournament / camps), VP6 (Warrens exterior), VP7 (Relay), VP8 (Meadows Hall)
 
-## Current state at a glance (after round 8)
+## Current state at a glance (after round 9)
 
 | | state |
 |---|---|
 | `hall_approach` draw calls | **3848 / 4000** — inside budget (was 4331 at baseline) |
 | guard smokes | `smoke_stronghold`, `smoke_warrens`, `smoke_relay` pass; `smoke_traversal` fails on a pre-existing South Bridge walk-around outside this lane |
-| courtyard night | **FAILING — median luminance 1.49 vs a ≥ 8 target** across 3 renders. Mean (9.47) and median (1.49) disagree 6×: a few brazier pools lift the mean while over half the frame is black. Mean was the wrong metric all along. The earlier ±26 % flicker claim does NOT reproduce (means span 9.30–9.54) |
+| courtyard night | **FAILING — trainer 3 m disc median 5.82 vs a ≥ 20 target** (mean 11.31). Mean/median gap again: over half the disc is still dark. Any claim here must quote the median |
+| verification | every targeted frame now carries a round-over-round pixel diff; **under 5 % changed = failed delivery, not a proof.** Adopted after my round-8 "proof" turned out to be an absolute sample of a byte-identical region |
 | Hall silhouette | **decisive at 400 m** — storm band cleared and +30 % exterior height; 100 m holds; **200 m still weak** |
 | storm band | moved back +150 m, alpha 0.4 — approach-stand sky coverage 22.7 % → **13.3 %**, under the 15 % target |
 | Warrens | doorway pale patch resolved at the root: both it and the right-side "panel" were the same `_wear_as_wall_stone()` path, now deleted. Brow [87.6,93.0,87.9], panel [88.4,89.3,74.2] |
