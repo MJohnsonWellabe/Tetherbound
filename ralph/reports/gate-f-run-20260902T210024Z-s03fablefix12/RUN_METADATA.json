@@ -1,0 +1,13 @@
+{
+  "run_id": "gate-f-run-20260902T210024Z-s03fablefix12",
+  "purpose": "Twelfth full S03 re-run, after merging forward OWNER-0901-PLAYER-SLEEP-V2 and OWNER-0901-TOURNAMENT-LEVEL5/TRAIN-CLARITY-V2. Verifies: S03-25 dialogue fix (advance_dialogue_until_closed), the real player_bed.gd collision fix (move_to_entity + companion recall + verified interact_with, replacing the fixed-coordinate walk and phantom rest-panel steps), and a new 20-round wild-fight training pass meant to close the real, validated tournament_training_ready (level 5) threshold. Watching whether S03-25w, S03-228, and the training-tracking checks (currently notes, pending restoration to asserts if this confirms) all clear.",
+  "candidate_sha": "ffff8fe2d6ede71d98094a887255b169faea8cdc",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "resolution": [1920, 1080],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S02-exit.json carried over from gate-f-run-20260902T161704Z-s03feedfix/S02",
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}
