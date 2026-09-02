@@ -86,34 +86,55 @@ deterministic state bug. `close_menu` now retries up to `max_attempts` (default
 the run after this landed had ZERO "close the shell" FAILs, for the first
 time this session.
 
-**Still open: "focus Feed" (S03-305/315, entrants 4 and 5).** `1 x ui_down did
-not move focus off` -- consistent, both cells 22 in the run that reached it
-cleanly, `focus_text` empty before and after (the grid's own icon-chip
-buttons, per `tab_backpack.gd`'s own comment that they carry no text). Two
-things worth recording rather than papering over:
+**CORRECTION, same day: the "feeding works for entrants 1-3" claim above was
+wrong, and the real bug was worse than a focus-navigation edge case.**
+Dispatched a second-opinion pass (Fable) on the `_on_slot`/`_read_use`
+contradiction rather than continue guessing from a static read, per the
+operator's standing instruction to do that when stuck. The static read was
+right, and its conclusion holds: pressing `ui_accept` on a grid slot only
+ever reaches `tab_backpack.gd::_on_slot()`'s pick-up/move/swap logic; the
+ONLY path into `_open_target_picker()` for food is `_read_use()`, gated on
+the `interact` action specifically (`data/config/input_contexts.json:83-86`
+confirms `interact` is the Satchel's own Use verb), a different physical pad
+button than `ui_accept` (`JoyBtn:2` vs `JoyBtn:0`). **No entrant was ever
+actually fed, in any run, all session.** The old 4-step sequence
+(`ui_accept` / `focus_move` down / `ui_accept` / `ui_accept`) picked the
+berries stack up, moved the grid cursor down one row per entrant, dropped it
+there, and picked it back up again -- confirmed directly against
+`gate-f-run-20260902T185617Z-s03fablefix8`'s own telemetry: berries count is
+**identical** (11) at the start and end of the feed window, the diff
+detector shows zero `craft`/inventory-loss events in that window, and the
+berries cursor cell walks 4 -> 10 -> 16 -> 22 -> 22 across entrants -- exactly
++1 grid row each time, on a 6-column grid, which is what a pick-up/move-down/
+drop sequence produces and has nothing to do with a target picker.
 
-- `_on_slot()` (the handler `_on_slot(slot)` binds to a grid button's
-  `pressed` signal, i.e. what an `ui_accept` press on a slot actually runs)
-  is pure pick-up/move/swap logic -- no food-picker branch anywhere in it.
-  `_read_use()`, the ONLY code path this file has into
-  `_open_target_picker()` for food, is gated on
-  `Input.is_action_just_pressed("interact")` (`USE_ACTION := "interact"`),
-  and `interact` and `ui_accept` are bound to DIFFERENT physical pad buttons
-  (`JoyBtn:2` vs `JoyBtn:0` in `project.godot`). Read straight, this segment's
-  own "open the slot's actions" step (`ui_accept`) should not be able to
-  reach the food picker at all -- and yet feeding demonstrably happens for
-  entrants 1-3 in every run this session (confirmed inventory deltas, "ate
-  the &lt;item&gt;" messages, real `CONDITION.feed` results). Something in this
-  chain is not what the static read above says it is, and that contradiction
-  was not resolved this session.
-- Whatever the real mechanism is, it stops delivering a place for `ui_down`
-  to land specifically at entrants 4 and 5, consistently, independent of the
-  `close_menu` fix (which cleared every OTHER symptom in this cluster).
+The apparent "it worked" evidence in the original write-up above was a
+SEPARATE bug: the event detector emitting `feed`
+(`operator_harness.gd::_diff_state`, the "rest and feed" block) keyed its
+`_prev_condition` state by party member NAME, and this team carries four
+creatures literally named "Bramblebun". Iterating the party, an unfed
+Bramblebun set `prev=false`; the NEXT Bramblebun in the array, if already
+fed from a different cause (satiety hadn't yet drained below the `fed_at`
+threshold), then read as a false "not-fed -> fed" transition against the
+first one's stale entry and emitted "Bramblebun is fed" -- a real-looking
+event describing nothing that actually happened to the creature it named.
+Fixed: `_prev_condition` is now keyed by party INDEX, not name.
 
-Recommend whoever next touches this file trace it live (a probe script or a
-debugger breakpoint on `_on_slot`/`_read_use`/`_open_target_picker`) rather
-than continuing from a static read -- this doc's own investigation hit its
-limit exactly there.
+**Fixed properly, both halves.** `open the slot's actions` steps now press
+`interact` (the real Use verb) instead of `ui_accept`. The `focus_move`
+steps are replaced with a new `focus_row{prefix:"N."}` harness action that
+reads the live picker row text and presses `ui_down` until it starts with
+the entrant's own number, rather than either a blind press count OR trusting
+`_open_target_picker()`'s own auto-focus -- which lands on the first row
+ELIGIBLE (not fainted, not already full), not the first not-yet-fed one, so
+a real feeding pass can legitimately re-land on the SAME entrant twice (one
+berry does not fill a creature) rather than advancing down the list. The
+redundant extra `ui_accept` ("choose Feed", a second pick-up-again press
+left over from the mis-modelled mechanism) is removed. `S03-260`
+(`tournament_team_fed`) remains the authoritative check that feeding
+actually landed.
+
+A ninth full run is in progress to verify feeding now actually happens.
 
 ## Part 3: not fixed here, and why
 

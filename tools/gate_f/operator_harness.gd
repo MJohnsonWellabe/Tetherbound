@@ -1820,6 +1820,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_focus_move(args, id)
 		"focus_item":
 			actual = await _step_focus_item(args, id)
+		"focus_row":
+			actual = await _step_focus_row(args, id)
 		"advance_dialogue_until_closed":
 			actual = await _step_advance_dialogue(args, id)
 		"assert_context":
@@ -4107,6 +4109,44 @@ func _step_focus_move(args: Dictionary, step_id: String) -> String:
 	return "%d x %s moved focus %s -> %s" % [times, control, _focus_name(before), _focus_name(after)]
 
 
+## Move focus down a picker list until the focused row's own text starts with
+## `prefix` -- e.g. `"3."` for the target picker's third row
+## (`tab_backpack.gd`'s rows read `"N.  Name  HP x / y"`, `tab_backpack.gd:1850-1857`).
+##
+## Written for the SAME reason `focus_item` reads the satchel cursor instead of
+## counting presses: a fixed `focus_move` press count assumes the row order and
+## the eligible-row count never change, and both do here. `_open_target_picker()`
+## auto-focuses the first ELIGIBLE row (not-fainted and not full, `_eligible()`),
+## which is the FIRST entrant only when every earlier entrant is either already
+## full or fainted -- one berry at a typical starting satiety leaves an entrant
+## still eligible, so a real feeding pass can auto-focus the SAME entrant twice
+## in a row rather than advancing down the list on its own. This presses
+## `ui_down` and reads the live row text after each press, rather than trusting
+## either the auto-focus or a press count to land on the entrant a step actually
+## means to feed.
+func _step_focus_row(args: Dictionary, step_id: String) -> String:
+	var prefix := str(args.get("prefix", ""))
+	if prefix.is_empty():
+		return "HARNESS-ERROR focus_row step %s has no prefix:\"...\"" % step_id
+	var max_presses := maxi(1, int(args.get("max_presses", 6)))
+	var have: Dictionary = _probe.call("input_state")
+	var text := str(have.get("focus_text", ""))
+	if text.begins_with(prefix):
+		return "focus_row '%s': already there (%s)" % [prefix, text]
+	for attempt in max_presses:
+		var sent := await _inject("ui_down", HOLD_TAP)
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		for f in 3:
+			await process_frame
+		have = _probe.call("input_state")
+		text = str(have.get("focus_text", ""))
+		if text.begins_with(prefix):
+			return "focus_row '%s': %d x ui_down reached it (%s)" % [prefix, attempt + 1, text]
+	return "FAIL focus_row '%s': %d x ui_down never reached it -- last row read \"%s\"" % [
+		prefix, max_presses, text]
+
+
 ## Move the satchel cursor onto the cell holding a named ITEM.
 ##
 ## GAME-9 / RIG-24. `focus_move` counts presses, and a count is only ever right
@@ -4929,6 +4969,21 @@ func _step_assert(args: Dictionary) -> Dictionary:
 				return {"ok": have >= want_min, "actual": "party size %d (wanted >= %d)" % [have, want_min]}
 			var want := int(args.get("equals", -1))
 			return {"ok": have == want, "actual": "party size %d (wanted %d)" % [have, want]}
+		"inventory_count":
+			# Live-read the satchel through the same snapshot the diff detector
+			# uses, rather than trusting a press sequence spent what it meant to.
+			var item_id := str(args.get("item", ""))
+			if item_id.is_empty():
+				return {"ok": false, "actual": "inventory_count check has no item:\"...\""}
+			var count := int((_probe.call("inventory_snapshot") as Dictionary).get(item_id, 0))
+			var ok2 := true
+			if args.has("max"):
+				ok2 = ok2 and count <= int(args["max"])
+			if args.has("min"):
+				ok2 = ok2 and count >= int(args["min"])
+			if args.has("equals"):
+				ok2 = ok2 and count == int(args["equals"])
+			return {"ok": ok2, "actual": "%s count %d" % [item_id, count]}
 		"region_is":
 			var want := str(args.get("equals", ""))
 			var player := _probe.call("player") as Node3D
@@ -6118,19 +6173,30 @@ func _watch_slow(context: String, party: Array) -> void:
 	# Read off `creature_condition.gd`'s own summary through the probe, which is
 	# what the HUD shows the player. A creature going from not-fed to fed IS the
 	# feed event; there is no other observable moment.
-	for entry: Variant in party:
-		var creature: Dictionary = entry
+	# Keyed by PARTY INDEX, not name (fixed 2026-09-02): two party members can
+	# share a species and its display name (S03's team carries four
+	# Bramblebun), and a name key merged their state into one entry. That
+	# read a still-hungry Bramblebun's "not fed" as the FOLLOWING Bramblebun's
+	# own previous state on the next sample, so an unrelated creature going
+	# from not-fed to fed anywhere in the party could report as "Bramblebun
+	# is fed" for a Bramblebun that was never touched -- which is exactly the
+	# false-positive evidence a whole feed sequence was misread as working
+	# by. Index is stable within a segment (the party does not reorder itself
+	# under a running script), so it is a safe key here even though it is not
+	# a durable identity across saves.
+	for i in party.size():
+		var creature: Dictionary = party[i]
 		var who := str(creature.get("name", ""))
 		var fed := bool(creature.get("fed", false))
 		var rested := bool(creature.get("rested", false))
-		var was_fed: Variant = _prev_condition.get("%s:fed" % who)
-		var was_rested: Variant = _prev_condition.get("%s:rested" % who)
+		var was_fed: Variant = _prev_condition.get("%d:fed" % i)
+		var was_rested: Variant = _prev_condition.get("%d:rested" % i)
 		if was_fed != null and fed and not bool(was_fed):
-			_emit("feed", {"observation": "%s is fed" % who})
+			_emit("feed", {"observation": "%s (party slot %d) is fed" % [who, i]})
 		if was_rested != null and rested and not bool(was_rested):
-			_emit("rest", {"observation": "%s is rested" % who})
-		_prev_condition["%s:fed" % who] = fed
-		_prev_condition["%s:rested" % who] = rested
+			_emit("rest", {"observation": "%s (party slot %d) is rested" % [who, i]})
+		_prev_condition["%d:fed" % i] = fed
+		_prev_condition["%d:rested" % i] = rested
 
 	var vitals: Dictionary = _probe.call("player_vitals")
 	if not vitals.is_empty():
