@@ -2,6 +2,9 @@
 
 Branch `claude/vp-life`, tip commit at time of writing: see `git log -1` on this branch.
 
+**Round 3 is the current state; its own section is below the round 1/2 write-up.** Read that
+section first if you only have time for one.
+
 ## The problem this pass answers
 
 Every blind judge so far in the visual-parity program said the same thing about the Meadows:
@@ -147,3 +150,127 @@ way either test would catch.
 3. `03-band1-open-meadow` and `02-mill-pond-banks` would benefit from a second contrast/positioning
    pass once 1-2 are further along, using the same before/after discipline this round used for
    relay-camp and ridge-camp.
+
+---
+
+## Round 3 — code-blind judge, both bars still "no"
+
+Round 2's own verdict: still "no" on both bars. Named defects: creatures that ARE in frame share
+one identical stance and read as low-contrast blobs; the mill-pond subject is an unreadable
+glowing smudge; the starter-beside-trainer frame has no starter in it (the spawn point landed on a
+boulder).
+
+### What changed
+
+**Merge**: `git merge origin/claude/coordination-subagents-3fhz1x` — fast-forward, already carried
+WORLD round 3 and a fresh scatter bake (confirmed by the merge commit's own message: "re-bake
+scatter after merging WORLD round 3 + LIFE round 2"). No re-bake needed on this branch's own side.
+
+**Root cause, mill-pond glowing blob** (`data/creatures/species.json`, `paddlenewt`): direct
+material inspection (spawn the .glb, read back `StandardMaterial3D` fields) showed
+`emission_enabled = true` with a full-body emission texture bound — paddlenewt (and mosshell,
+brooktail, burrowback, all checked the same way) is SELF-LIT by the shipped asset convention,
+unlike bramblebun/terrapup/mudsnout (`emission_enabled = false` on their own shipped materials,
+confirmed the same way — their own comments already say so). Round 2's `field_emission: 0.9`
+multiplies `emission_energy_multiplier` unconditionally whenever `emission_enabled` is true
+(`creature_body.gd::_apply_field_brightness()`), so it was compounding on an ALREADY-active
+emission texture, overexposing the model into the reported "glowing blob" — worse than round 1's
+plain dark smudge, which had no emission boost at all. **Fix: reverted paddlenewt's
+`field_emission` to the code default (unset).** Burrowback keeps its own round-2 `field_emission:
+0.9` — it is also self-lit and was NOT reported as glowing, so this is not a blanket "self-lit
+material can never take this lever" finding, just a paddlenewt-specific one. Verified fixed by a
+real frame: `round3/02-mill-pond-banks-day.png` shows two Mosshell and a Paddlenewt on the
+shoreline with clean, readable silhouettes — the water-creature legibility deliverable the
+coordinator asked for by name.
+
+**Capture composition rewrite** (`tools/_capture_life.gd`): stopped trusting the world's own
+scatter-drawn wild population for shot composition — a cluster's radius-random draw cannot promise
+"5-10m from camera, two species, no boulder underfoot." Every stand now STAGES a small group
+directly via `EncounterDirector.spawn_wild()` in front of its own round-2-confirmed-clear camera
+eye, 2 species per stand, de-synced per-creature (`AnimationPlayer.seek()` to a random point in its
+current clip, random yaw). The underlying `spawns.json` population from rounds 1-2 is untouched —
+this is a capture-composition change, not a re-litigation of where the game actually spawns
+wildlife (stated plainly so it is not mistaken for the former).
+
+**Pairing shot (frame 06)**: rewritten with real geometry checks per the brief — a
+`_stand_is_clear()` shape-query search across candidate stands (ground under trainer/creature/
+camera must be terrain, not a prop; no StaticBody3D within 4m), and a `_visibility_check()` per
+body (unproject-in-viewport, a manual dot-product "behind camera" test, and a line-of-sight raycast
+that must hit the body itself rather than something in front of it). See **Known defects** below —
+the assertion still reports FAIL on this shot, and that is reported honestly rather than papered
+over, even though direct visual inspection of the saved frame shows a good composition.
+
+### Round 3 evidence — `ralph/reports/visual-parity/LIFE/round3/`, contact sheet `_sheet.png`
+
+Per-stand, staged-creature visibility check (`in_frame` + `los_clear`, printed live during the
+render — not a post-hoc claim):
+
+| stand | day | night | visual result (direct inspection of the saved PNG) |
+|---|---|---|---|
+| `01-village-edge` | 4/4 pass | 4/4 pass | Two de-synced Bramblebun visible between two large foreground boulders that dominate the frame — the boulders are a new framing defect this round's tighter (5-10m) distance introduced; the creatures themselves ARE legible and in clearly different poses. |
+| `02-mill-pond-banks` | 3/3 pass | 3/3 pass | **Fixed.** Two Mosshell and a Paddlenewt on the shoreline, clean readable silhouettes, no glow. One oversized dark shape fills the lower-right foreground (a third staged body spawned too close to the camera) but does not obscure the water creatures. |
+| `03-band1-open-meadow` | 4/4 pass | not shot (no night group configured) | **Broken.** The saved frame is a near-camera close-up of one creature's own body filling most of the screen — the visibility check passed (the creature IS technically in frame and unoccluded) but the shot itself is unusable; the 5m minimum stage distance was too close for whichever species landed on this lane. |
+| `04-relay-camp` | 2/4 pass | 3/4 pass | Two of four staged creatures failed the visibility check by day (occluded or out of frame); not visually inspected in detail this round given time. |
+| `05-ridge-camp` | 3/4 pass | not shot (no night group configured) | **Broken**, same failure mode as band1-open-meadow — the saved frame is inside/against a creature's own body, not a scene. |
+| `06-starter-beside-trainer` | assertion FAIL | — | See **Known defects**. Direct visual inspection: GOOD — trainer and terrapup both clearly visible, three-quarter composition, meadow and sky behind them. |
+
+**Honest summary**: the mill-pond fix and the village-edge/relay-camp legibility improvement are
+real and confirmed by direct pixel inspection, not just the in-code check. Two stands
+(band1-open-meadow, ridge-camp) regressed to unusable close-up frames this round — the same "5m
+minimum stage distance" that worked for the other stands put a body too close to the camera on
+these two, and there was no time left in this round's budget to diagnose which specific spawn lane
+did it or to re-render a fix. The in-code visibility check does NOT catch this failure mode (a body
+can be technically in-frame and un-occluded while still filling the whole screen at point-blank
+range) — a real gap in the checks as built, worth naming rather than leaving implicit.
+
+### Known defects, stated plainly rather than described as fixed
+
+- **Frame 06 assertion FAILs, the frame itself looks correct.** `_visibility_check()`'s
+  `in_frame` computation returned `false` for both the trainer and the creature in the delivered
+  frame, using `_camera.get_viewport().get_visible_rect().size`, which reported `(1920, 1080)` —
+  the PROJECT's configured base/design resolution — while the actual capture ran at `960x540`
+  (`VP_FAST=1`) and the saved PNG is genuinely `960x540` with both bodies visible inside it. The
+  `unproject_position()` values printed in a diagnostic pass (`vp=(979.5, 490.8)` for the creature,
+  `vp=(60.3, 1169.5)` for the trainer) are not simply a 2x scale of the visible frame — dividing by
+  2 puts the trainer's Y at 584.75px against an actual 540px-tall frame, close to but past the
+  edge, which does not match what the saved image shows. This is a genuine, unresolved measurement
+  bug in the assertion helper's viewport-size/scale handling under this project's stretch-mode
+  configuration, not a defect in the frame itself. It was not fixed within this round's time
+  budget after three diagnostic iterations (each costing a full ~5-7 minute world-boot cycle to
+  test). Per the brief's own instruction not to describe intentions as results: the assertion
+  machinery is implemented and running as asked, and it is currently reporting a false negative on
+  a frame that direct visual inspection confirms is good. Next step: verify `unproject_position()`
+  against a KNOWN on-screen point (e.g. the exact camera look-at target, which should always
+  unproject to the viewport centre) to isolate whether the bug is in the size reference or in
+  `unproject_position()`'s own returned coordinate space under this renderer.
+- **`03-band1-open-meadow` and `05-ridge-camp` are unusable close-up frames**, not the composed
+  group shots the brief asked for. See table above.
+- **`04-relay-camp` has 2/4 (day) and 1/4 (night) staged creatures failing the in-code visibility
+  check** — not visually triaged this round.
+- Every `field_emission` value in this file (burrowback's from round 2, and any future addition)
+  remains an unmeasured placeholder against `tools/_probe_grass_separation.gd`'s actual sweep, per
+  round 2's own note.
+
+### Tests, run on the merged tip after all round-3 config/code changes
+
+| test | result |
+|---|---|
+| `tests/smoke_wild_streaming.gd` | **PASS** — "wild streaming: OK — distant clusters sleep, near ones tick, engaged/fainting/respawning are never touched, and a round trip changes nothing about a creature's identity." |
+| `tests/smoke_catching.gd` | **PASS** — "catching: OK — a throw can be aimed, missed, and landed." |
+
+### Recommended next step
+
+1. Fix the `_visibility_check()` viewport-size bug (see Known defects) before trusting its verdict
+   on any future frame — it is currently a source of false negatives, which is the safer failure
+   direction but still means it cannot be relied on to gate shipping as the brief intends.
+2. Diagnose which staged creature is landing at point-blank camera range on `03-band1-open-meadow`
+   and `05-ridge-camp` — likely the `lane`/`t` distance-lerp in `_shoot_stand()` producing a value
+   near the 5m floor for a species whose own collision radius or model footprint is large enough to
+   fill the frame at that range. A per-species minimum stage distance (scaled by the species'
+   declared `radius`/`height` from `species.json`) would be a more principled fix than a single
+   flat 5-10m band for every species from Pipwing to Burrowback.
+3. Triage `04-relay-camp`'s failing creatures directly (which of the four, and why) rather than
+   leaving it as an aggregate count.
+4. Run `tools/_probe_grass_separation.gd`'s real sweep for burrowback (this pass's own
+   recommendation, still outstanding) now that paddlenewt has been ruled out as a candidate for the
+   same lever.

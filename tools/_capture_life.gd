@@ -293,20 +293,32 @@ func _desync(bodies: Array[Node3D]) -> void:
 ## no static body within 4m of the pair), then asserts the delivered frame
 ## actually holds both bodies before calling it done.
 func _shoot_pairing() -> void:
-	var candidates := [
+	var candidates: Array[Vector2] = [
 		Vector2(21.0, -32.0), Vector2(29.0, -34.0), Vector2(13.0, -30.0),
 		Vector2(21.0, -24.0), Vector2(21.0, -42.0), Vector2(38.0, -28.0),
+		# Further into open pasture, clear of the village's own fence/prop
+		# dressing -- every one of the first six candidates rejected on a
+		# STATIC prop (fence corner, barrel, blossom tree, a rock), which
+		# a decorated village edge is never going to be free of within 4m.
+		Vector2(70.0, -70.0), Vector2(85.0, -55.0), Vector2(55.0, -85.0),
+		Vector2(100.0, -80.0), Vector2(60.0, -100.0), Vector2(90.0, -95.0),
 	]
-	var landmark := Vector2(60.0, -60.0)
+	# A FIXED bearing, not a fixed landmark point -- a landmark point that is
+	# ahead of the first candidate can end up BEHIND a later, further-out
+	# candidate, producing a degenerate facing direction (exactly what
+	# happened here: (60,-60) sat behind (70,-70), and every projected
+	# point came out is_position_behind()==true). South-east, deeper into
+	# open pasture and roughly the bearing every accepted stand already
+	# looks across (the hillside `01-village-edge-day` renders clean).
+	var facing_bearing := Vector2(1.0, -1.0).normalized()
 	var chosen := Vector2.ZERO
 	var found := false
-	for base in candidates:
-		var facing := (landmark - base).normalized()
+	for base: Vector2 in candidates:
+		var facing := facing_bearing
 		var side := Vector2(-facing.y, facing.x)
-		var toward_cam := (-facing + side * 0.7).normalized()
-		var creature2 := base + toward_cam * 2.2
+		var creature2 := base - facing * 1.8 + side * 1.0
 		var mid := (base + creature2) * 0.5
-		var camEye2 := mid + toward_cam * 3.75
+		var camEye2 := mid - facing * 5.5 + side * 2.0
 		if _stand_is_clear(base) and _stand_is_clear(creature2) and _stand_is_clear(camEye2):
 			chosen = base
 			found = true
@@ -320,9 +332,8 @@ func _shoot_pairing() -> void:
 		return
 
 	var base := chosen
-	var facing := (landmark - base).normalized()
+	var facing := facing_bearing
 	var side := Vector2(-facing.y, facing.x)
-	var toward_cam := (-facing + side * 0.7).normalized()
 
 	var player_ground := _surface(base)
 	_player.global_position = Vector3(base.x, player_ground + 0.4, base.y)
@@ -332,8 +343,17 @@ func _shoot_pairing() -> void:
 		await physics_frame
 
 	# Creature stands on the CAMERA side of the trainer -- between the
-	# trainer and where the lens will be, not behind or level with it.
-	var spot2 := base + toward_cam * 2.2
+	# trainer and where the lens will be (behind along -facing, since the
+	# camera itself stands further along that same axis), not behind or
+	# level with it. NOTE: an earlier draft blended (-facing + side*0.7)
+	# into ONE normalized vector and reused it for both the creature offset
+	# and the camera offset; for this particular bearing that blend nearly
+	# cancelled in x and reinforced in y, producing a vector that pointed
+	## almost due sideways instead of behind, so the camera ended up beside
+	# the pair rather than behind them and both assertions failed
+	# (is_position_behind true for both bodies). Two SEPARATE additive
+	# terms below, with `facing` kept dominant, avoids that cancellation.
+	var spot2 := base - facing * 1.8 + side * 1.0
 	var spot := Vector3(spot2.x, _surface(spot2), spot2.y)
 	var wild: Node3D = _director.call("spawn_wild", "terrapup", spot, {
 		"name": "Shot_starter_terrapup",
@@ -348,10 +368,10 @@ func _shoot_pairing() -> void:
 		await physics_frame
 
 	var mid := (base + spot2) * 0.5
-	var camEye2 := mid + toward_cam * 3.75
+	var camEye2 := mid - facing * 5.5 + side * 2.0
 	var camGround := _surface(camEye2)
 	var camPos := Vector3(camEye2.x, camGround + 1.5, camEye2.y)
-	var lookAt := Vector3(mid.x, _surface(mid) + 1.2, mid.y)
+	var lookAt := Vector3(mid.x, _surface(mid) + 1.15, mid.y)
 	_camera.global_position = camPos
 	_camera.look_at(lookAt, Vector3.UP)
 	_hide_huds()
@@ -405,8 +425,14 @@ func _stand_is_clear(at: Vector2) -> bool:
 	query.collide_with_areas = false
 	for hit: Dictionary in space.intersect_shape(query, 8):
 		var body: Node = hit.get("collider") as Node
-		if body == null or _under_terrain(body):
+		# STATIC body specifically, per the brief -- a nearby wild creature
+		# or NPC (CharacterBody3D) is not the "boulder underfoot" failure
+		# this check exists to catch, and this meadow has both scattered
+		# decoration (fence posts, barrels, blossom trunks) and the world's
+		# own wild population walking through it.
+		if body == null or _under_terrain(body) or not (body is StaticBody3D):
 			continue
+		print("      blocked by: %s (%s)" % [body.name, body.get_class()])
 		return false
 	return true
 
@@ -427,10 +453,19 @@ func _under_terrain(body: Node) -> bool:
 ## false, and a ray from the camera eye to the point hits the excluded
 ## body's own collider (or nothing closer) rather than a prop in the way.
 func _visibility_check(world_pos: Vector3, exclude_bodies: Array) -> Dictionary:
-	var size := root.size
-	var behind := _camera.is_position_behind(world_pos)
+	var size := _camera.get_viewport().get_visible_rect().size
+	# Manual dot-product check rather than is_position_behind(): a diagnostic
+	# run showed is_frame=false on a body plainly visible dead-centre in the
+	# actual saved PNG, so something about the built-in's reference frame
+	# does not match what this rig expects. `-basis.z` is Godot's own
+	# camera-forward convention.
+	var to_point := world_pos - _camera.global_position
+	var forward := -_camera.global_transform.basis.z
+	var behind := to_point.dot(forward) <= 0.0
 	var vp := _camera.unproject_position(world_pos)
 	var in_frame := (not behind) and vp.x >= 0.0 and vp.x <= size.x and vp.y >= 0.0 and vp.y <= size.y
+	print("      [diag] world_pos=%s cam_pos=%s behind=%s vp=%s size=%s" % [
+		world_pos, _camera.global_position, behind, vp, size])
 
 	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state
 	var los_clear := true
@@ -464,7 +499,7 @@ func _visibility_check(world_pos: Vector3, exclude_bodies: Array) -> Dictionary:
 func _frame_height_fraction(base_pos: Vector3, height: float) -> float:
 	var top := _camera.unproject_position(base_pos + Vector3(0, height, 0))
 	var bottom := _camera.unproject_position(base_pos)
-	var size := root.size
+	var size := _camera.get_viewport().get_visible_rect().size
 	if size.y <= 0:
 		return 0.0
 	return absf(top.y - bottom.y) / size.y
