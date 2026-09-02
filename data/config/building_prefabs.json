@@ -1597,10 +1597,14 @@
       ],
       "retint": {
         "MI_RockTrim": {
-          "color": "#f0e2c4",
+          "color": "#a39d8e",
           "metallic": 0.0
+        },
+        "MI_Brick": {
+          "color": "#b9b1a2"
         }
       },
+      "_why_retint_vp5": "VP5 (visual-parity village lane), 2026-09-02, owner: 'the well pad reads as clean white stone -- weather it'. The paler #f0e2c4 multiply below was chosen for its shadow behaviour, but in the daylight frames the curb and the four platform slabs clip toward white, brighter than the sky (the 2026-08-31 census's BACKLOG-VISUAL-VILLAGE-STONE-VALUE names the well and chimneys together). Dropped to #a39d8e -- a touch darker and cooler than the kit-wide MI_RockTrim baseline (#b4b1a6, building_prefabs.gd) so the oldest structure in the square reads older than the cottage skirts, not newer -- and the platform's MI_Brick course gets its first multiply (#b9b1a2) so the two stone surfaces of the curb weather together instead of one going grey beside a bright one. Metallic stays forced to 0.0 for the reason round 3 records below.",
       "_why_retint": "round 3 (EV6-remainder-well-rocktrim-shadow): rounds 1-2 kept pushing the colour multiply warmer and it kept not closing the gap, because colour was never the real defect -- MI_RockTrim imports with metallic=1.0 (confirmed via tools/_probe_rocktrim_material.gd), a bare-metal value no stone surface wants, versus the adjacent paving's MI_UnevenBrick at a correct metallic=0.0. Under the Compatibility renderer's realtime-only lighting (no reflection probes), a full-metal surface has almost no diffuse ambient response, so it goes flat and cold in shadow while a dielectric neighbour in the identical shadow reads normally warm -- exactly the asymmetry the round-2 critic named. Fixed at the actual layer: metallic forced to 0.0 through a new optional key on the retint schema (building_prefabs.gd::_apply_retint), keeping round 2's warm colour rather than reverting it."
     },
     "fence_run": {
@@ -1646,6 +1650,45 @@
             0.84,
             0.16
           ]
+        }
+      ]
+    },
+    "doorstep": {
+      "_why": "VP5 (visual-parity village lane), 2026-09-02. Two of the well's own paving tiles laid as a threshold outside a door. Every blind pass on the village since 2026-08-30 has named the same thing -- 'grass grows to the doorsteps', 'houses to their footings in hay' -- and the terrain paths (terrain_playground.json paths.routes, a different lane's file) reach only the well, the inn and Grandpa's. A threshold is the smallest honest piece of worked ground a door can have, in the one paving material the square already uses. It carries `Floor_` modules, so village.gd::_declare_ground tells the runtime grass ring to stop growing through it, which is the whole point. Laid at y 0.09 so its top sits ~0.05 above the ground the building is sunk to, the same proud-of-the-lawn height the well's apron has, not flush (a flush 2cm tile z-fights the terrain).",
+      "modules": [
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            -1.0,
+            0.09,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            1.0,
+            0.09,
+            0.0
+          ],
+          "yaw_deg": 90.0,
+          "_why": "turned a quarter so the two tiles' brick courses do not line up as one stamped strip"
+        }
+      ],
+      "colliders": [
+        {
+          "at": [
+            0.0,
+            0.05,
+            0.0
+          ],
+          "size": [
+            4.0,
+            0.1,
+            2.0
+          ],
+          "_why": "a 5cm lip the player steps onto without noticing; no box tall enough to catch a foot or a camera arm"
         }
       ]
     },
