@@ -3,16 +3,18 @@
 **Branch** `claude/vp-places` · **start commit** `e3aba7d7` (VP0 merge of the GROUND+VEG lane code)
 **Owns** VP5 (village / tournament / camps), VP6 (Warrens exterior), VP7 (Relay), VP8 (Meadows Hall)
 
-## Current state at a glance (after round 6)
+## Current state at a glance (after round 7)
 
 | | state |
 |---|---|
 | `hall_approach` draw calls | **3848 / 4000** — inside budget (was 4331 at baseline) |
 | guard smokes | `smoke_stronghold`, `smoke_warrens`, `smoke_relay` pass; `smoke_traversal` fails on a pre-existing South Bridge walk-around outside this lane |
-| courtyard night | **12.45 mean — target met**; floor at the trainer 2.4× brighter; extreme foreground still black |
-| Hall silhouette | decisive at 100 m (storm band lifted clear and halved); **still weak at 200 m / 400 m** |
-| Warrens | earth-mound material language, overhang wedge removed, threshold now the interior's exact wall material; **den stability restored (1.8 % of pixels > 8)** |
-| banners | material changed to `#5a1a1a`, but **not proven in-frame** — treat poster-red as open |
+| courtyard night | root cause found — brazier `attenuation` 1.4, not energy; now 1.0 at range 27. **Frame mean is ±26 % noisy (brazier flicker)** so single-frame comparisons are unreliable |
+| Hall silhouette | **decisive at 400 m** — storm band cleared and +30 % exterior height; 100 m holds; **200 m still weak** |
+| storm band | moved back +150 m, alpha 0.4 — approach-stand sky coverage 22.7 % → **13.3 %**, under the 15 % target |
+| Warrens | scale corrected after an overshoot; **doorway pale patch is BACK on the new dome pieces — open, top priority** |
+| banners | proven oxblood by the judge (`#5e1117`/`#6a241d`). Carry the finding: ACES tonemapping makes the picked hex misleading — `#5a1a1a` renders as RGB(119,15,24) |
+| round 8 | camps plan prepared at `ROUND8-CAMPS-PLAN.md`, not started |
 | Relay | occupied and cabled, but **its round-3 changes have never been rendered** |
 | open, outside PLACES | grass field enabled yet drawing zero instances; South Bridge gate walk-around; `_judge_capture_hall.gd` has never produced frames |
 
