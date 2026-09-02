@@ -217,4 +217,22 @@ band1             94515       2048.0     1359.9        278.508            339.4
 band2             77976       2047.7     1819.7        372.634            209.3
 band3             60083       2047.6     1579.9        323.500            185.7
 band4            106023       2047.9     2240.0        458.733            231.1
-band5             26429 
+band5             26429       2047.8      548.0        112.214            235.5
+stronghold         1930       2039.7      131.9         26.898             71.8
+
+NOTE: 'footprint ha' is the bounding box of this band's OWN placements,
+not an authored corridor width (none exists as a single number -- see
+this file's header). A band whose scatter clusters in a few dense
+clumps with wide empty gaps between will UNDER-state density here,
+since the empty gaps still count toward the bounding box.
+
+--- local density at the exact points perf_profile.gd/perf_site_survey.gd sample ---
+(circle of radius 60m around each point, 1.131 ha)
+site              count      density /ha
+village             985            870.9
+band1              1565           1383.8
+band2              1005            888.6
+band3               819            724.2
+band4               112             99.0
+band5              2275           2011.5
+stronghold         2695           2382.9
