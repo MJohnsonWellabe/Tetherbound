@@ -18,14 +18,14 @@ Passes are `VP0…VP11` (visual passes) — never conflate with gameplay Gate A/
 
 | pass | status | commit SHA | pushed SHA | evidence |
 |---|---|---|---|---|
-| VP-PRE | in progress | — | — | §VP-PRE below |
-| VP0 baseline | pending | — | — | `ralph/reports/visual-parity/VP0-baseline/` |
-| VP1 sky/light | pending | — | — | |
-| VP2 terrain/ground | pending | — | — | |
-| VP3 vegetation | pending | — | — | |
+| VP-PRE | complete (5/5 checks) | f4afc9d9 | f4afc9d9 | §VP-PRE below |
+| VP0 baseline | **complete** (evidence set reduced to village/pond/survey by owner call; other sites' befores are renderable from ca0575b8) | 401d7217 | 401d7217 | `ralph/reports/visual-parity/VP0-baseline/` (locations-1080p/, locations/, JUDGE-village-pond.md), `VP-PRE/` |
+| VP1 sky/light | in progress — first cut rendered (`VP1-3-after/survey/`), round 1 fix list with WORLD | 1ef3878a (first cut) | — | |
+| VP2 terrain/ground | in progress — cull tiles + far thinning + terrain material coded, perf table pending with WORLD | e3aba7d7 | — | |
+| VP3 vegetation | in progress — ecology gate + heroes + water bands + retints coded and baked, unjudged | e3aba7d7 | — | |
 | VP4–VP11 | not started | — | — | |
 
-**Current pass:** VP-PRE. **Next action:** (filled at end of each pass).
+**Current pass:** VP1–VP3 in parallel under the WORLD coordinator; VP5–VP8 render-and-verify under PLACES. **Next action:** at the 02:37 UTC check-in, judge the pushed frames on `claude/vp-world` / `claude/vp-places`, send round-2 fix lists, merge accepted rounds.
 
 ## VP-PRE — environment capability check
 
@@ -97,7 +97,17 @@ is worth their setup cost.
 
 ## Performance measurements
 
-(filled per pass; baseline in VP0)
+Tool: `tools/perf_render_stats.gd`, 1280x720, Compatibility, llvmpipe (structural counters only).
+
+| state | view | draw calls | primitives | objects | source |
+|---|---|---|---|---|---|
+| carpet OFF (shipped main) | band1_open | 7366 | 9,250,290 | 6361 | OWNER-0901-PERFORMANCE-LAG-V2 |
+| carpet ON, one MultiMesh (owner's laggy build) | band1_open | 7320 | 31,757,567 | 6315 | OWNER-0901-PERFORMANCE-LAG-V2 |
+| VP0 baseline: carpet ON, cull_tile_m=0 | band1_open | 7409 | 31,672,479 | 6378 | GROUND lane, `GROUND/perf/perf_before_tile0.txt` |
+| VP0 baseline: carpet ON, cull_tile_m=0 | village_high | 2860 | 28,277,296 | 3050 | same |
+| cull_tile_m=16 (+ far thinning/reach/LOD) | band1_open | pending | pending | | WORLD round 1 |
+
+Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw calls ≤ 4000.
 
 ## Judge history
 
