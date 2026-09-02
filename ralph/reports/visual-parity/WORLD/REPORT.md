@@ -1109,3 +1109,75 @@ only assumed applied.
 Until that is checked, **no further conclusion should be drawn from a config toggle
 producing no change in this scene** — a null result there is currently indistinguishable
 from the change not being delivered.
+
+# Round 5b — the red wash is ELAPSED-TIME driven, not preset or camera
+
+## Identity check: everything is the same object
+
+```
+viewport.find_world_3d().environment : id=-9223371912535603377  meadows_playground.tscn::Env_1
+capture Camera3D                     : environment override=null   attributes override=null
+scene CameraRig/Camera3D             : environment override=null   attributes override=null
+WorldEnvironment node                : same id
+world_look.gd (../WorldEnvironment)  : same id
+Sky / sky_material                   : same instances everywhere
+```
+
+**My "changes are not reaching the renderer" suspicion is FALSIFIED.** Delivery routing
+is correct and neither camera carries an override. Settled for the cost of a print.
+
+## The shutter-time diff is EMPTY — and that is the finding
+
+Comparing `01-spawn-outward-dawn` (clean) against `03-rise-overlook-dawn` (red), same
+preset, at shutter: `fog_enabled`, `fog_density`, `fog_light_color`,
+`fog_aerial_perspective`, `fog_sky_affect`, all `adjustment_*`, `ambient_light_color`,
+`ambient_light_energy`, `tonemap_mode`, `tonemap_exposure`, and the sky uniforms
+`sun_glow` / `sun_colour` / `horizon_colour` / `haze_colour` / `sun_glow_falloff` are
+**bit-identical**. The Environment and sky state are provably correct *on a washed frame*.
+
+## What it actually tracks
+
+- `03-rise-overlook-dawn` shot EARLY in a short run: **clean**, R−G ≈ +1.3.
+- With a longer post-teleport settle, the **`day`** preset — normal values at shutter —
+  rendered as a uniform maroon wash over the whole frame: sky, distant terrain AND near
+  rocks. Day R161/G77/B63; night R120/G39/B49. Mean and median match, so it is a uniform
+  cast, not a hot sun disc.
+
+**So it is neither preset-specific nor camera-specific.** It tracks elapsed render time.
+That vindicates the round-3 instinct (early frames clean, late frames red) which was
+abandoned when freezing `WorldWeather` did not fix it — the pattern was right, the cause
+was not weather.
+
+It also explains why eight explanations all "failed": **none of them touched elapsed
+time.** Config toggles produced bit-identical frames because the cause is not in the
+config.
+
+## Leading candidate — unbounded `TIME` in the sky shader
+
+`shaders/sky_clouds.gdshader` uses raw, unbounded `TIME` in two places:
+
+```glsl
+218: vec2 plane2 = dir.xz * (t * 2.6) * high_scale * vec2(0.35, 1.0) + wind * 1.8 * TIME;
+226: vec2 plane  = dir.xz * t * scale + wind * TIME;
+```
+
+This is the only term in the system that grows with elapsed render time and is immune to
+every config change tested. Under llvmpipe a stands run accumulates tens of minutes of
+`TIME`, where a single-frame tool accumulates seconds — matching "clean early, red late,
+never reproducible in a short tool".
+
+**Caveat, stated rather than glossed:** a sky-shader term cannot by itself tint NEAR
+ROCKS, and the drift magnitude at these elapsed times looks too small to destroy float
+precision on its own. So either the sky feeds everything through an ambient/radiance path
+(worth testing, given `ambient_sky_contribution` is non-zero on several presets), or the
+real cause is a different time-driven term — a post-process/glow reaction, or something
+in the software renderer's own accumulation. **Not proven.**
+
+## The test that settles it, and it is cheap
+
+Render the SAME frame twice in one boot — once immediately, once after N idle frames with
+nothing else changed — and print `TIME` at each shutter. If the second is red, bisect N.
+Then clamp: replace `TIME` with `mod(TIME, P)` for a wind period `P` and re-render.
+
+Anyone continuing this: **do not spend another round on colour values.** Nine explanations
+are now falsified and the config is proven correct at shutter on a washed frame.
