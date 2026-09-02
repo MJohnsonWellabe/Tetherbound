@@ -217,3 +217,7 @@ chapter that passes the vision and reaches Gate F clean.
 Git history preserves superseded operating instructions, including the
 deleted `BACKLOG.md`/`BLOCKED.md` themselves. Do not carry obsolete process
 forward merely because an old document described it.
+
+## Meadows visual work
+
+The Visual Parity program (VP0–VP11) is complete and on `main`. For any further Meadows visual work read `docs/VISUAL_NEXT_AGENT_HANDOFF.md` first, then `docs/VISUAL_PARITY_HANDOFF.md` (evidence package) and `docs/VISUAL_PARITY_PROGRESS.md` (ledger).

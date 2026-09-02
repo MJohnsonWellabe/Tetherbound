@@ -609,7 +609,7 @@ func _stone_shader_material(colour: Color, tile: float, emissive := 0.0,
 		# (building_prefabs.json) are a fixed mid-value grey-tan handed in by
 		# the caller, and no amount of moss coverage over a pale base reads as
 		# "dark ruined mass" at 400m when most of a pixel is still that base.
-		var darken := clampf(float(ext.get("darken", 0.24)), 0.0, 0.95)
+		var darken := clampf(float(ext.get("darken", 0.0)), 0.0, 0.15)  # sRGB darken; 0.15 ≈ ×0.7 linear
 		var desat := clampf(float(ext.get("desaturate", 0.32)), 0.0, 1.0)
 		tint = tint.darkened(darken)
 		var grey := Color(tint.get_luminance(), tint.get_luminance(), tint.get_luminance())
@@ -3030,6 +3030,13 @@ func _build_gate_tower_sconces() -> void:
 ## (NP2-grunt-wire) onto `assets/characters/grunt/grunt_lod0.glb`, the
 ## rank-and-file rig `docs/art/HUMANOID_ASSET_INVENTORY.md` names for exactly
 ## this: ordinary Team Tether personnel. No new mesh, per CLAUDE.md/D24.
+## ROUND12 (2026-09-02): `night_light`, per-entry, is one shadowless OmniLight3D
+## parented to the body at chest height, offset toward the camera side so it
+## lights the figure's own front rather than its back -- see `stronghold.json`'s
+## `gate_sentries[].night_light` for the full why. No `is_dark()` gate: neither
+## `_build_hall_fire()` nor `_build_gate_tower_sconces()` switch off by day
+## either, and a 4m-range chest-height omni is invisible in daylight ambient on
+## its own, so it stays always-on like every other stronghold practical.
 ## ITEM3B (2026-09-02). WAS `body.call("build", "grunt")` -- the bare species
 ## config, with no `emission_floor`. Every OTHER grunt the player meets is a
 ## trainer built through `trainer_npc.gd::model_config()`, which reads
@@ -3042,6 +3049,7 @@ func _build_gate_tower_sconces() -> void:
 ## rendering at the same near-black value that makes it "not identifiable" in
 ## the first place. `NPC_RANKS.config_for("grunt")` gets the SAME merged
 ## config a trainer's own grunt body would.
+const SENTRY_LIGHT_COLOUR := Color(1.0, 0.72, 0.45)
 func _build_gate_sentries() -> void:
 	var list: Array = _occupation().get("gate_sentries", []) as Array
 	if list.is_empty():
@@ -3064,27 +3072,51 @@ func _build_gate_sentries() -> void:
 			continue
 		body.name = "GateSentry_%d" % index
 		var at := _local_of(spec.get("at", []))
-		body.position = Vector3(at.x, _floor_y + float(spec.get("y", 0.0)), at.z)
+		# VP8 sentries restart (2026-09-02). `on_causeway` is the same flag
+		# `_build_garrison_camp` / `_brazier` already take, for the same reason:
+		# the ramp deck falls ~0.28m per metre south of the wall's outer face,
+		# so a body posted just OUTSIDE the jambs stands on `_causeway_y`, not
+		# on `_floor_y` (which would float it). See `gate_sentries`' own
+		# `_why_restart` for why the posts moved off the jamb face.
+		var base_y := _floor_y
+		if bool(spec.get("on_causeway", false)):
+			base_y = _causeway_y(at.z)
+		body.position = Vector3(at.x, base_y + float(spec.get("y", 0.0)), at.z)
 		body.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
-		# VP-HALL-FIX ITEM3C (2026-09-02). The rank/emission path above was
-		# already correct (confirmed, not new here) and the roof position
-		# already sits inside the `gate` stand's cone (44m out, ~19m of
-		# vertical headroom at that distance against the sentry's 15.54m --
-		# see `gate_sentries`' own `_why_item4_fix`). What was still working
-		# against legibility: this `10-stronghold` capture group runs at
-		# NIGHT, and `art.json`'s `times.night.environment
-		# .character_emission_floor` is 0.5 -- HALF the daylight additive
-		# emission boost every other grunt gets (`character_model.gd`'s own
-		# `set_emission_floor_scale`) -- so a real human-scale (1.8m) figure
-		# 44m up and out, lit only by a real light 9.7m away plus a halved
-		# self-lit floor, is a handful of pixels even when everything else
-		# about it is correct. `scale` (tunable per entry, default 1.5) grows
-		# the body about its own feet-at-origin pivot -- same convention as
-		# `_load_prop`'s own `scale` key elsewhere in this file -- so it
-		# stands taller and wider on the same spot rather than moving it.
-		body.scale = Vector3.ONE * float(spec.get("scale", 1.5))
+		# VP-HALL-FIX ITEM3D (2026-09-02), REVERT. ITEM3C (above, historical)
+		# grew each sentry 1.5x about its own feet to fight legibility on a
+		# rooftop 44m out and 15.5m up -- at real grunt height (~1.8m) that is
+		# a 2.7m human, not acceptable in the game per the dispatch that
+		# reverts it. No scale is applied at all now: `build_from_config`
+		# above already builds the rank-correct grunt at its own native size,
+		# same as every other trainer this file places. Legibility instead
+		# comes from WHERE the sentry stands (`gate_sentries` moved back to
+		# the gate posts at floor level, see that key's own `_why_ground`)
+		# and from the real sconce/brazier lights already at the gate face,
+		# not from an oversized body.
 		if body.has_method("play"):
 			body.call("play", "idle")
+		var night_light: Dictionary = spec.get("night_light", {}) as Dictionary
+		if not night_light.is_empty():
+			var offset_raw: Array = night_light.get("offset", [0.0, 1.3, -0.6]) as Array
+			var offset := Vector3(
+				float(offset_raw[0]) if offset_raw.size() > 0 else 0.0,
+				float(offset_raw[1]) if offset_raw.size() > 1 else 1.3,
+				float(offset_raw[2]) if offset_raw.size() > 2 else -0.6)
+			var light := OmniLight3D.new()
+			light.name = "SentryLight"
+			light.light_color = SENTRY_LIGHT_COLOUR
+			light.light_energy = float(night_light.get("energy", 2.4))
+			light.omni_range = float(night_light.get("range", 4.0))
+			light.omni_attenuation = float(night_light.get("attenuation", 1.2))
+			light.shadow_enabled = false
+			light.position = offset
+			# Parented to the body itself, not `holder` -- so the offset lands in
+			# the BODY's own local space and follows `facing_deg` automatically;
+			# both current entries face 0.0 (local -Z = world south = the
+			# causeway approach = the gate-face camera), so -Z here already puts
+			# the light in front of the figure without a per-entry yaw lookup.
+			body.add_child(light)
 		index += 1
 
 

@@ -166,23 +166,52 @@
           "model": "Bonfire_Fire",
           "at": [241.4, 3667.3],
           "yaw_deg": 60.0,
-          "sink_m": 0.02,
-          "scale": 0.45,
-          "glow_scale": 1.5,
+          "sink_m": 0.03,
+          "scale": 0.6,
+          "glow_scale": 1.9,
           "dir": "res://assets/props/quaternius_survival",
           "glow": "campfire",
           "_why": "SITE-DRESSING: the watch post's own brazier -- the D1 fire (Bonfire_Fire.obj's real `Fire` surface + ignite()), scaled down to a held checkpoint's small fire rather than a rest camp's. Set at the bench's other end from the bag, so the seat sits between fire and water the way the picket actually uses it -- this is the 'tent or brazier' the checkpoint's own camp was still missing.",
-          "_why_vp5": "VP5. The blind judge could not find a fire to read this camp around; scale 0.38 and no glow_scale made it the smallest, dimmest fire in the band's own picket. Grown to 0.45 with glow_scale 1.5 so it stands as a legible focal point the moved seating, supply pile and tent now arrange around, without matching a full rest camp's size."
+          "_why_vp5": "VP5. The blind judge could not find a fire to read this camp around; scale 0.38 and no glow_scale made it the smallest, dimmest fire in the band's own picket. Grown to 0.45 with glow_scale 1.5 so it stands as a legible focal point the moved seating, supply pile and tent now arrange around, without matching a full rest camp's size.",
+          "_why_vp5_round9": "VP5 round9, coordinator spec 'a larger fire pit ring'. Grown again, 0.45->0.6 and glow_scale 1.5->1.9, now that a third seat and the ring's own firewood sit close around it -- the composition needed a bigger flame to be the thing they gather around rather than a brazier a bench happens to stand near."
         },
         {
           "model": "campfire_stone_ring",
           "at": [241.4, 3667.3],
           "yaw_deg": -10.0,
-          "sink_m": 0.03,
-          "scale": 0.8,
+          "sink_m": 0.04,
+          "scale": 1.05,
           "dir": "res://assets/props/generated_camp",
           "_why": "SITE-DRESSING: matches the brazier's own footprint, the same D1 owner-referenced ring mesh (already committed, no new generation).",
-          "_why_vp5": "VP5. Grown from 0.5 to 0.8 to match the brazier's own enlargement above; sink_m raised to 0.03 to keep the ring's base seated against the taller fire."
+          "_why_vp5": "VP5. Grown from 0.5 to 0.8 to match the brazier's own enlargement above; sink_m raised to 0.03 to keep the ring's base seated against the taller fire.",
+          "_why_vp5_round9": "VP5 round9. Grown again to 1.05 (from 0.8) to match the enlarged brazier above and give the fire pit the 'larger ring, logs and stones around it' read the coordinator's spec asks for; sink_m raised to 0.04 to keep the taller ring's base seated."
+        },
+        {
+          "model": "tree-log-small",
+          "at": [242.55, 3667.65],
+          "yaw_deg": 73.0,
+          "pitch_deg": 3.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "VP5 round9. Firewood laid radial against the enlarged ring's own east edge -- 'built with logs and stones around it', the same radial-vs-tangential rule this chapter's other camps use to tell firewood from a seat. Kenney's textured CC0 log, the same mesh the checkpoint's own seating already uses."
+        },
+        {
+          "model": "tree-log",
+          "at": [240.0, 3666.3],
+          "yaw_deg": -22.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "VP5 round9. A third seat, 0.7m from the existing SW log so the two read as one pulled-together perch rather than a matched pair set at even distances -- the Bench stays the camp's one unpaired seat across the fire from this touching pair, the asymmetric read the coordinator's spec names directly ('two pieces touching and one unpaired'). Within 1.7m of the fire, closer than its neighbour, so the pairing is uneven rather than mirrored."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [243.9, 3670.6],
+          "yaw_deg": 100.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "VP5 round9. Set against the east supply pile's own crate -- the checkpoint's kettle, standing in for the model this catalogue does not have (no kettle/pot mesh is installed; the bucket already carries this role at `riverwatch_rest` and `northbank_ironwood_cut`). Touching the crate rather than merely near it, closing the pile into 3.9m of the fire."
         },
         {
           "model": "tree-log",
