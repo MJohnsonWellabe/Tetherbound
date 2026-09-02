@@ -8,7 +8,7 @@ extends CanvasLayer
 ## a catalogue, not cutting away to a separate screen.
 ##
 ## Reachable today from the pause menu's Build tab (`tab_build.gd`), which
-## lazily instantiates and opens this the same way `camp.gd`/
+## lazily instantiates and opens this the same way `campfire.gd`/
 ## `storage_container.gd` lazily instantiate `craft_panel.gd`/
 ## `storage_panel.gd` — added straight under `get_tree().root`, not parented
 ## to any one scene, since it has to survive whichever world scene opened it.

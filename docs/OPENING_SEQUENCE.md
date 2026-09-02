@@ -53,7 +53,8 @@ whole of it: the warm greeting, Team Tether — returned, holding the eight
 places of power, creatures chained to the stones — why he cannot go himself, and
 then the gifts. The gifts are not a cutscene grant: each `give:` effect sits on
 the exact line that speaks it (`give:orb_basic:50`, `give:potion_small:3`,
-`give:berries:5`, and `give:revive:2` since D40), so the satchel fills as he
+`give:berries:5`, and `give:revive:10` since D40, raised from 2 by owner
+directive 2026-09-02 — see D40's amendment), so the satchel fills as he
 says the words.
 
 **Moved 2026-08-28 (`66eb47ec`), and it took three days and two capstone runs

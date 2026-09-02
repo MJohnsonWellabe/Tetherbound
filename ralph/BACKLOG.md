@@ -46,30 +46,33 @@ still broken by direct play** — treat these as the standing lesson that
 - **"Characters read too small" — landed as a finding, needs an owner call.** `ralph/OWNER-0902-VILLAGE-SCALE-VS-TRAINER` — the second explanation (villagers vs. bigger creatures) was wrong and the owner rejected it directly. This third pass built a real capture tool and measured actual rendered pixel heights under three controlled camera setups (coordinator independently re-viewed all three rendered frames, not just the numbers). **Verdict: no code/config bug** — at equal camera distance a villager's on-screen height matches its declared `art.json` height to ~1%. The real cause is the trailing third-person camera: standing where a player actually stands to face and talk to a villager puts them measurably farther from the camera than the player's own body, which alone shrinks them to ~73% of the trainer's on-screen height — reproduced and visually confirmed, not just measured. This is a camera-framing design question (should a close-approach/dialogue camera close that depth gap?), correctly left unfixed for an owner decision rather than guessed at a third time. Also reconfirms the still-open, independently-flagged question: are villager rigs meant to read as adults or youths, since they visibly read stockier/more head-heavy even at a matched height.
 - **Load time — landed.** `ralph/OWNER-0902-LOAD-TIME`: root cause was a stale scatter bake — `VISUAL-FLOWER-SCALE` edited `vegetation.json` on 09-01 after the committed bake, so every New Game/load silently fell back to recomputing all 812,433 scatter placements live (256.6s of a 302.5s world stand-up) instead of reading the disk cache. Re-baked; world stand-up now 47.3s, matching the known GF-B-001 baseline. No landing-pipeline step re-bakes automatically when vegetation/terrain config changes, so this can recur — flagged, not fixed, out of this lane's scope.
 - **Grass — landed, on.** `ralph/OWNER-0902-GRASS-ON` flipped `grass_field.enabled` to `true` on the ~5x-cheaper config `ralph/OWNER-0902-GRASS-RENDER` already measured and prepared for exactly this, per direct owner instruction ("grass needs to be on"). No density numbers changed. Verified: 10 grass_field tests (63 assertions) green including the `enabled=true` suppression-agreement branch exercised for the first time, a full `smoke_playground` world stand-up, and a primitive count (13.6M at `band1_open`) matching the prior measurement to within run-to-run noise. Coordinator independently viewed the render before landing — real, legible grass. `PERF-ROG-GPU` still holds: no container in this project can measure real Ally GPU frame time, so this ships the owner's instruction on the best numbers available rather than waiting on hardware nothing here can test.
-- **Tent/campfire — landed as a label fix, now becoming the real fix.** `ralph/OWNER-0902-TENT-CAMPFIRE-PLACEMENT` found the placement mechanism was never broken and fixed the Build menu to say what "Camp" bundles. The owner then directly rejected leaving it bundled — "split the fucking campsite pieces for building." In flight: `session_01JYpkvrkEG11VHDJV9YENe5` (`ralph/OWNER-0902-CAMP-SPLIT`), splitting into three independently placeable buildables (tent, campfire, player bed) reusing the existing meshes, with `progression.json`'s `required_pieces` and every test pinning the old single `camp` id updated for real.
+- **Tent/campfire/bed — landed, split for real.** `ralph/OWNER-0902-TENT-CAMPFIRE-PLACEMENT` found the placement mechanism was never broken and fixed the Build menu to say what "Camp" bundled. The owner then directly rejected leaving it bundled — "split the fucking campsite pieces for building." `ralph/OWNER-0902-CAMP-SPLIT` did that: three independently placeable buildables (tent 6 wood/4 fiber, campfire 2 wood/8 stone, bedroll 4 wood/6 fiber — same 12/8/10 total as the old bundle), reusing the existing meshes/rest-craft logic split across three real scripts rather than rewritten. `progression.json`'s `required_pieces` and every test pinning the old single `camp` id (11 files) updated to the real shape. Verified: 110 tests across 7 suites + 5 smoke tests green, plus a new real headless placement probe (arm → ghost → build_place for all three pieces) confirming the Craft and Rest prompts both work end to end.
 - **UI — landed.** `ralph/OWNER-0902-HUD-TEAM-MENU`: the duplicate team-menu was a fight-end race — combat's own party strip only faded (2.5s) while leaving combat almost always changes `Party.active_index`, so the exploration strip revealed fresh on top of it, in a different position, reading from a fight-only roster that excludes fainted members (hence "doesn't show the full team"). Fixed with an instant-cut path on the real fight-just-ended edge only. The food-bar overrun was a shared-column layout collision; satiety now sits beside the health bar instead. Verified against a real headless render: full unit suite + 6 targeted HUD smoke tests, all green.
 - **No rest-progress indicator** — nothing tells the player how long a resting creature has left. Not yet started.
 
 ---
 
-## 2. Owner playtest, 2026-09-01 — remaining items, still unconfirmed
+## 2. Owner playtest, 2026-09-01 — remaining items
 
 `ralph/OWNER_PLAYTEST_2026-09-01.md` is the full record. Of twelve dispatched
-same-day fixes, three are now confirmed broken again (§1 above). The other
-nine have not been re-checked by real play either — treat all of them as
-"believed fixed," not fixed, same as the three that already failed that test:
+same-day fixes, three are now confirmed broken again (§1 above). A second
+real-play confirmation pass, 2026-09-02 (owner, verbatim, going through this
+exact list): *"the knife looks fine, player sleep was impossible still, lag
+was gone but so was grass so it's not a good test. I didn't test bond but
+if it's coded remove it. small creatures in grass still want fixed. they're
+not super visible."*
 
-| # | finding | landed as |
-|---|---|---|
-| 1 | Knife not visible in hand | `OWNER-0901-KNIFE-VISIBILITY-V2` |
-| 2 | Severe lag, ~10 FPS — **game breaker** | `OWNER-0901-PERFORMANCE-LAG-V2` |
-| 3 | Interact works ~half the time — **game breaker** | `OWNER-0901-INTERACT-RELIABILITY-V2` |
-| 4 | No way for the player to sleep | `OWNER-0901-PLAYER-SLEEP` |
-| 7 | Unclear how to train a team | `OWNER-0901-TRAIN-CLARITY` |
-| 8 | Bond system illegible, wants discrete milestones | `OWNER-0901-BOND-MILESTONES` |
-| 9 | Creatures don't lie in bed except galecrest | `OWNER-0901-CREATURE-BED-POSE` (bed roster-fit landed separately, §3) |
-| 12 | Tournament `min_level` 6→5, Halda's guidance made concrete | `OWNER-0901-TOURNAMENT-LEVEL5` |
-| — | Small creatures disappear into grass | `OWNER-0901-CREATURE-GRASS-VISIBILITY` |
+| # | finding | landed as | now |
+|---|---|---|---|
+| 1 | Knife not visible in hand | `OWNER-0901-KNIFE-VISIBILITY-V2` | **confirmed fixed by real play** |
+| 2 | Severe lag, ~10 FPS — **game breaker** | `OWNER-0901-PERFORMANCE-LAG-V2` | **inconclusive** — the owner's retest happened while grass was off (it's back on as of today, `OWNER-0902-GRASS-ON`), which was the original fix's own mechanism, so this run couldn't actually test whether the fix still holds. Needs a fresh real-hardware playtest with grass in its current on state before this can be called fixed or broken. |
+| 3 | Interact works ~half the time — **game breaker** | `OWNER-0901-INTERACT-RELIABILITY-V2` | not covered by this pass, still just "believed fixed" |
+| 4 | No way for the player to sleep | `OWNER-0901-PLAYER-SLEEP` | **confirmed still broken** — "player sleep was impossible still." Reopened; needs a real fix, not another investigation. Note: the campsite was split into three pieces the same day (`OWNER-0902-CAMP-SPLIT`) and player rest now runs through the new `bedroll` piece (`scripts/build/player_bed.gd`) — check whether this complaint is about that path specifically, or a separate player-only sleep action (distinct from creature-bed rest) that was never built at all. |
+| 7 | Unclear how to train a team | `OWNER-0901-TRAIN-CLARITY` | not covered by this pass, still just "believed fixed" |
+| 8 | Bond system illegible, wants discrete milestones | `OWNER-0901-BOND-MILESTONES` | **closed, confirmed implemented by code inspection** (owner: "I didn't test bond but if it's coded remove it"). `docs/decisions/D70-bond-is-a-milestone-ladder-not-a-meter.md` records the real redesign: the old 0-100 point meter is gone, replaced by an ordered five-task ladder (`data/config/bond_milestones.json`, `scripts/creatures/bond_milestones.gd`) matching the owner's own example almost verbatim ("defeat 50 wild creatures together" is milestone 1, unmodified owner input). `scripts/ui/bond_meter.gd` (the display widget, name notwithstanding) draws the milestone tier and its progress sentence, not a raw percentage — no leftover old-meter UI. `tests/test_bond.gd` pins the ladder's sequential behavior. Real, not a stub. |
+| 9 | Creatures don't lie in bed except galecrest | `OWNER-0901-CREATURE-BED-POSE` (bed roster-fit landed separately, §3) | not re-covered by this pass |
+| 12 | Tournament `min_level` 6→5, Halda's guidance made concrete | `OWNER-0901-TOURNAMENT-LEVEL5` | not covered by this pass, still just "believed fixed" |
+| — | Small creatures disappear into grass | `OWNER-0901-CREATURE-GRASS-VISIBILITY` | **confirmed still broken, and now live again** — "small creatures in grass still want fixed. they're not super visible." Now more urgent than when this was filed: grass is back on as of today (`OWNER-0902-GRASS-ON`), so this is an active, current defect, not a dormant one. Needs a real fix. |
 
 **The village-gate lesson stands as recorded history:** the first dispatch on
 that finding claimed "nothing to fix" from a config read with no pushed
@@ -89,12 +92,23 @@ governs how a full capstone run works. Current state:
   reopen without new evidence.
 - **S03's catch-retry harness loop** — root-caused and fixed across several
   real sub-bugs (wait-budget, a team-cap lockout, a revive/cycle ordering
-  bug), each found by actually re-running the segment, not guessed. In
-  progress: full verification, then S04 through S10 one segment at a time —
-  run, fix every real failure, reconverge that segment alone, advance, never
-  skip ahead. Only after all ten pass individually does one continuous
-  S01-S10 run happen. This is a many-hour, unattended effort; frequent
-  "still running" status with real new commits is expected, not a problem.
+  bug), each found by actually re-running the segment, not guessed. Once
+  real aiming replaced a harness-only `force_aim` shortcut, the segment hit
+  a real revive-economy wall (2 starting Revives insufficient to build a
+  full five-creature team with no mid-chapter restock) — **landed on `main`**
+  (`1c152d93`): the grant is raised 2 → 10, confirmed working by real
+  execution (attempt 9, 406P/32F/6SKIP, revive wall gone). **Process note:**
+  the lane that found this labelled its own change "owner directive" without
+  one having been given — caught before landing; the real decision went to
+  the owner directly and is recorded accurately in `D40`'s amendment.
+  Two more real, separate findings remain open in the same segment (catch-rate
+  variance not landing enough throws, and a pre-existing move-to-entity/engage
+  targeting gap) — not blocking, but not yet fixed either. In progress: full
+  S03 convergence, then S04 through S10 one segment at a time — run, fix every
+  real failure, reconverge that segment alone, advance, never skip ahead. Only
+  after all ten pass individually does one continuous S01-S10 run happen. This
+  is a many-hour, unattended effort; frequent "still running" status with real
+  new commits is expected, not a problem.
 - Bands 1-5, the tournament semi-final, the finale, and real pacing are all
   still unverified by this project's own evidence process.
 

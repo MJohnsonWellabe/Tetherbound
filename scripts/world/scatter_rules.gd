@@ -59,8 +59,69 @@ static func config() -> Dictionary:
 		return {}
 	var footprints := BAND_CONTENT.load_config(CONFIG_PATH, "footprints")
 	merged["footprints"] = footprints.get("footprints", [])
+	# VP4-CORRIDOR: see `_merge_band_layer_anchors`'s own header for why this
+	# exists and why it could not use `BAND_CONTENT.load_config()` the way
+	# `clearings`/`footprints` do.
+	_merge_band_layer_anchors(merged.get("layers", {}))
 	_config = merged
 	return _config
+
+
+## VP4-CORRIDOR, 2026-09-02. A band's own `layer_anchors` (optional,
+## `data/config/bands/<band>/vegetation.json`, TUNABLE): `{layer_name: [anchor,
+## ...]}`, each anchor the same shape `_place_anchor` already reads off a
+## layer's own `anchors` array. Appended onto that layer's `anchors` in band
+## order, AFTER the head file's own -- the same append-only contract the head
+## file's anchors, verge and corridor fill already keep with each other (see
+## `placements_for`'s own header), so a band with no `layer_anchors` key, or
+## none at all, changes no existing placement.
+##
+## Why this could not be `BAND_CONTENT.load_config()`, which already merges
+## `clearings`/`footprints` for this same file: that helper merges ONE flat
+## top-level array by an `order` field, because a clearing's array position
+## used to matter and still has to survive the split unchanged (see
+## `tests/test_band_vegetation.gd`). An anchor has no such identity -- it is
+## an unordered, absolute-coordinate append, the same as every other anchor
+## already in this file -- and it does not live at the config's top level, it
+## lives nested inside `layers.<name>`, which a flat array merge cannot reach.
+## So this reads each band file directly instead, in `BAND_CONTENT.BANDS`
+## order, and appends straight into the matching layer dict.
+##
+## VP4's own working file (`ralph/reports/visual-parity/CORRIDOR/REPORT.md`)
+## records that this function did not exist before that pass: the lane's brief
+## named `data/config/bands/*/vegetation.json` as the file that carries
+## per-band anchors, but no merge for them existed anywhere in the repo (this
+## branch or `claude/vp-veg`, checked directly) -- only `clearings`/
+## `footprints` were band-split. Without this, authoring anchors in a band
+## file would be inert config nobody reads. Flagged here and in that report
+## for whoever next touches this file, since it crosses this lane's own
+## nominal ownership boundary to make the assigned mechanism actually exist.
+static func _merge_band_layer_anchors(layers: Dictionary) -> void:
+	for band_id: String in BAND_CONTENT.BANDS:
+		var band_path := "%s/%s/vegetation.json" % [BAND_CONTENT.BANDS_DIR, band_id]
+		if not FileAccess.file_exists(band_path):
+			continue
+		var file := FileAccess.open(band_path, FileAccess.READ)
+		if file == null:
+			continue
+		var parsed: Variant = JSON.parse_string(file.get_as_text())
+		if not parsed is Dictionary:
+			push_error("%s is not a JSON object" % band_path)
+			continue
+		var band_doc: Dictionary = parsed
+		var layer_anchors: Dictionary = band_doc.get("layer_anchors", {})
+		for layer_name: String in layer_anchors.keys():
+			if not layers.has(layer_name):
+				push_error("%s: layer_anchors names unknown layer '%s'" % [band_path, layer_name])
+				continue
+			var extra: Array = layer_anchors[layer_name] as Array
+			if extra.is_empty():
+				continue
+			var layer: Dictionary = layers[layer_name]
+			var existing: Array = (layer.get("anchors", []) as Array).duplicate()
+			existing.append_array(extra)
+			layer["anchors"] = existing
+			layers[layer_name] = layer
 
 
 ## May a prop of this layer stand here?
@@ -170,10 +231,34 @@ static func placements_for(
 		_place_verge(out, layer, field, models, verge, half, rng)
 
 	# Authored anchors after everything else, same append-only contract as the
-	# verge and for the same reason.
-	for entry: Variant in layer.get("anchors", []):
+	# verge and for the same reason -- but, unlike the verge, EACH ANCHOR GETS
+	# ITS OWN RNG rather than drawing from the shared `rng` stream.
+	#
+	# VP4-CORRIDOR, round 2. Before this: an anchor's own draws (angle,
+	# distance, scale, model, yaw -- `_place_anchor`/`_consider`) came out of
+	# the SAME stream `_place_corridor_fill`/`_place_heroes`/`_place_water_edge`
+	# go on to use below. Every draw an anchor makes shifts the cursor those
+	# later calls start from, so adding, enlarging, or moving ONE anchor
+	# reshuffles EVERY corridor-fill placement for the WHOLE CORRIDOR in that
+	# layer -- not just near the anchor. `JUDGE-round1.md` (blind visual
+	# review) caught the result: two stations came back emptier after a pass
+	# that only ever added content, because pre-existing corridor-fill trees
+	# that happened to stand on their sightlines were shuffled elsewhere.
+	# `vegetation.json`'s own BAND2-FLOOR comment on `_place_corridor_fill`
+	# already names this exact mechanism as a known cost of raising an
+	# anchor's `count` -- this removes that cost instead of continuing to pay
+	# it. Seeded from this layer's own `seed_value` plus a large per-anchor
+	# stride (deterministic and stable given a fixed anchor order -- the same
+	# contract `seed_offset` already keeps between layers), so the result is
+	# still fully reproducible and untouched by `test_the_meadow_is_the_same_
+	# every_run`. Nothing downstream of this loop advances differently
+	# whether an anchor is absent, present, bigger, or moved.
+	for anchor_index in layer.get("anchors", []).size():
+		var entry: Variant = layer["anchors"][anchor_index]
 		if entry is Dictionary:
-			_place_anchor(out, layer, field, models, entry as Dictionary, half, rng)
+			var anchor_rng := RandomNumberGenerator.new()
+			anchor_rng.seed = seed_value + 104729 * (anchor_index + 1)
+			_place_anchor(out, layer, field, models, entry as Dictionary, half, anchor_rng)
 
 	# VEG-CORRIDOR: the corridor fill, dead last and for the same append-only
 	# reason as the verge and anchors above -- every draw made before this

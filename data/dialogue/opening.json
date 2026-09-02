@@ -34,6 +34,7 @@
       "_comment_gifts_cost": "Each half of the removal cost a Gate F capstone run its chapter. CAP-1 (ralph/reports/FINDING-CAP1-TUTORIAL-CATCH-FAINT-2026-08-31.md) was the Revives: a FAINTED starter with nothing in the satchel able to raise it. CAP-2 (ralph/reports/FINDING-CAP2-NO-HEAL-FOR-LIVING-DAMAGE-2026-08-31.md) is the potions: a LIVING starter carried out of the tutorial at 53.0 of 117.6 with nothing able to top it up, into a village training fight it then lost. A Revive refuses a creature that has not fainted (D40) and CAP-1's faint floor is gated on `party.all_fainted()`, so neither answer covers ordinary battle damage -- and the only other full heal in the game is a creature bed, a buildable whose fiber is past tools the player does not have yet.",
       "_comment_gifts_placement": "All four sit here rather than on `grandpa_house` where D40 and OPENING_SEQUENCE.md put them, for the reason `66eb47ec` moved the orbs: a `give:` effect belongs on the beat before its first possible use, not in a briefing three beats earlier. Order is the pack's original order -- orbs, potions, berries, Revives -- which is also hurt, fed, fallen.",
       "_comment_orb_count": "TUNABLE, owner directive: raised 15 -> 50. `tournament.json`'s `min_party_size` is 5 -- a full five-creature team, not the three the village tutorial ladder alone builds -- and the starter is only one of those five, so the tutorial's own catch plus building the rest of the roster before sign-up draws on this same supply. 15 was measured tight: even the tutorial's own bramblebun, given the highest catch_rate in species.json specifically so its catch cannot fail twice, still cost 2-4 landed-throw attempts in practice, before any of the other four team members are caught at ordinary (lower) catch rates. 50 leaves real room to miss and still reach the tournament with a full team, without touching catch odds/accuracy (GAME_DESIGN.md 15's affordability rule) or making orb_greater/orb_prime redundant, since they stay strictly better per throw.",
+      "_comment_revive_count": "TUNABLE, owner directive 2026-09-02: raised 2 -> 10. ralph/GATE-F-S03-CATCH-LOOP's attempt 7 (ralph/reports/FINDING-S03-ATTEMPT7-TRACKAIM-REVIVE-WALL-2026-09-02.md) measured the 2-Revive grant against the same catch-to-a-team-of-five loop this orb count above is sized for: real, working aim-steering still only reached a party of 3 before every recovery attempt from the 4th catch onward FAILed with nothing left to revive a fainted party member, stalling the ladder for good with no way to retreat and restock mid-chapter. Sized like the orb count directly above it: covers repeated faints across a full five-creature build-out with room to miss, not a single emergency.",
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
@@ -51,8 +52,8 @@
           "effect": "give:berries:5"
         },
         {
-          "text": "And two Revives, at the bottom. A creature that's gone down won't get up on its own — don't waste them.",
-          "effect": "give:revive:2"
+          "text": "And ten Revives, at the bottom. A creature that's gone down won't get up on its own — don't waste them.",
+          "effect": "give:revive:10"
         },
         {
           "text": "Then come back and show me.",

@@ -8,7 +8,24 @@
     ],
     "approach_bearing_deg": -34.4,
     "_frame": "Everything below is authored in the site's OWN frame: `s` runs along the approach bearing (positive = deeper in, the direction the conduits already walk toward the stronghold), `t` runs across it, both in metres. tether_relay.gd converts with u = (0.565,-0.826) and p = (-u.z, u.x). Authoring in world XZ instead would make every tuning nudge a two-number trigonometry problem, and the five people SE25/SE27 stood up here are all within 1m of t=0 \u2014 the road IS the axis, so the axis is the frame.",
-    "_ground": "Probed with the real heightfield (tools/_probe_relay_site.gd). The site is a gentle south-east-facing shoulder: ground runs -5.6m at s=-24 up to -1.0m at s=+20, about 6 degrees along the approach, with a further ~2m fall toward +t. Nothing here needed a terrain flat; every wall, leg and pad is seated on its own sampled ground."
+    "_ground": "Probed with the real heightfield (tools/_probe_relay_site.gd). The site is a gentle south-east-facing shoulder: ground runs -5.6m at s=-24 up to -1.0m at s=+20, about 6 degrees along the approach, with a further ~2m fall toward +t. Nothing here needed a terrain flat; every wall, leg and pad is seated on its own sampled ground.",
+    "_comment_weathering": "ROUND7 MATERIAL DEFECT (ralph/reports/visual-parity/PLACES/round7/relay-before/06-relay-road-day.png). The compound's walls/gate/ramp were `severed_spokes.gd::_stone_material()` -- T_UnevenBrick under a StandardMaterial3D with NO `albedo_color` set at all, i.e. an implicit WHITE (1,1,1) tint. Under this site's own strong daylight key that bleached every sun-facing stone face to near-white (measured RGB(195.6,191.4,163.6) on the ground; the walls/gate/ramp read the same way) -- exactly the 'uniform clean stone'/'pale cream' defect `stronghold.gd`'s own VP8/VP8-EXT passes already fixed for the Hall with `hall_stone.gdshader` and a real darkened/desaturated `site.weathering` tint. `tether_relay.gd::_weathered_stone_material()` gives the relay's own walls/gate-piers/gate-lintel/ramp that same shader, reusing the identical installed T_UnevenBrick textures `severed_spokes.gd` already preloads (no new texture) and this site's OWN numbers below rather than the Hall's -- a smaller, closer-range compound than the Hall's towers wants a shallower damp band and less moss. `tile` 3.2 matches `severed_spokes.gd::STONE_TILE` (the value the rest of this site's untouched stone -- decks, apparatus massing -- still tiles at) so switching only the walls/gate/ramp to the shader does not visibly re-scale the brick course against the stone next to it. Cached ONCE (`_weathered_stone_material()`'s own cache), shared by every wall run, both gate piers, the lintel and every ramp slab -- one ShaderMaterial resource, not one per mesh, so batching is unaffected.",
+    "weathering": {
+      "base_tint": "#c9c2b3",
+      "_comment_base_tint": "The stone's un-weathered value before darken/desaturate -- a light warm grey-tan, the same family `building_prefabs.json`'s LightRock/DarkRock retints use for this same kit elsewhere. TUNABLE.",
+      "darken": 0.5,
+      "desaturate": 0.4,
+      "_comment_darken_desaturate": "Same mechanism as `stronghold.json`'s `site.weathering.exterior` (darken 0.74, desaturate 0.5 there), tuned lighter here: the Hall is a distant ruin meant to read as a dark mass at 400m, the relay is a working compound the player stands inside of at 2-10m and a stone this dark would go flat/black under the same strong sun that bleached it white before. 0.5/0.4 is the middle of that band -- weathered, not blackened.",
+      "moss_amount": 0.22,
+      "up_moss": 0.35,
+      "damp_height": 1.6,
+      "damp_strength": 0.3,
+      "streak_strength": 0.12,
+      "_comment_moss_damp": "Lower than the Hall's defaults (0.7/0.9/4.0/0.4/0.22): these walls are 2.6-7.2m of RECENT industrial masonry (this site's own header: 'a natural site partly industrialised'), not a centuries-ruined castle -- some weathering so the stone reads as real quarried rock instead of the old flat white, not the Hall's full overgrowth.",
+      "moss_colour": "#3a5426",
+      "tile": 3.2,
+      "_comment_tile": "Matches `severed_spokes.gd::STONE_TILE` (3.2), the tiling the rest of this site's untouched stone -- decks, ramps' own collider mesh, the apparatus placeholder massing -- already carries, so the switch to the shader does not visibly re-scale the brick course."
+    }
   },
   "_comment_walls": "The compound. Team Tether's own masonry grammar, borrowed wholesale from severed_spokes.gd (`_ground_wall`, the stone material, the oxblood faction accent) rather than reimplemented \u2014 D24's 'one prop family' applied to the faction's buildings the same way the pylons already apply it to its hardware. PARTLY industrialised is the brief, so this is not a sealed box: a real wall across the approach face with the gate in it, flanks running back to enclose the yard, and an OPEN back where the compound simply gives out onto the drained ground. The player is meant to arrive at a front door, not to be locked in a room.",
   "walls": [
@@ -407,10 +424,29 @@
     "radius": 46.0,
     "cell": 3.0,
     "lift": 0.09,
-    "tint": "#a89d84",
-    "max_alpha": 0.72,
-    "_comment_tint": "Deliberately close to terrain_playground.json's own `drains.tint` (#bfb6a0), a shade further down because this skin ADDS over an untinted bake where the bake's own tint MULTIPLIES the albedo. Desaturated warm grey: sun-killed ground, not ash. TUNABLE.",
-    "_comment_lift": "Metres above the sampled ground. Small enough not to read as a floating sheet, large enough that a 3m cell over 6-degree ground never lets the terrain poke through."
+    "tint": "#584d3f",
+    "max_alpha": 0.4,
+    "_comment_tint": "ROUND8 MATERIAL DEFECT: was `#a89d84`, a pale warm grey (~RGB 168,157,132) chosen back when this skin drew directly over the RAW (bright, near-white) terrain -- see the old wording this replaces, below. `_build_ground_pad` now lays a real OPAQUE dark earth pad (`ground_pad.tint` #463c30, ~RGB 70,60,48) UNDER this skin across the whole compound floor, at a lower lift (0.03 vs this skin's 0.09), so `#a89d84` at `max_alpha` 0.72 was painting a pale sheet back over that pad and undoing it -- measured RGB(191,188,167) on `06-relay-road-day.png`, essentially unchanged from the pre-pad RGB(195.6,191.4,163.6). Old alpha-blend math: 0.72*(168,157,132) + 0.28*pad = ~(141,130,108) on channel R alone already above the 130 target. Fixed per option (a): darkened toward the pad's own family (`#584d3f`, ~RGB 88,77,63) and `max_alpha` cut from 0.72 to 0.4, so this skin now MODULATES the pad -- a subtle drain-driven darkening at the authored stations -- rather than replacing it. Expected composite at full alpha (assuming the pad's own composite reads close to its `ground_pad.tint` albedo, per that block's own header): 0.4*(88,77,63) + 0.6*(70,60,48) = ~RGB(77,68,54), a dark brown/grey well under the 130 target and nowhere near cream. TUNABLE, but keep it darker than or close to `ground_pad.tint` -- restoring a pale value here re-breaks this exact defect.",
+    "_comment_lift": "Metres above the sampled ground. Small enough not to read as a floating sheet, large enough that a 3m cell over 6-degree ground never lets the terrain poke through. Still above `ground_pad.lift` (0.03) so this skin draws visibly on top of the pad rather than z-fighting it."
+  },
+  "_comment_ground_pad": "ROUND7 MATERIAL DEFECT: the yard's own ground read bleached near-white (RGB 195.6,191.4,163.6 measured on `06-relay-road-day.png`) because the only thing painted over the real terrain there was `dead_ground` -- a translucent, UNTEXTURED vertex-colour wash (alpha capped at 0.72) with nothing solid under it, so up to 28% of the frame was always the raw (bright) terrain bleeding through, and the other 72% was a flat tint with no texture at all. `tether_relay.gd::_build_ground_pad` lays a real OPAQUE ground mesh first -- the same triplanar Ground030 dirt/pebble material `burrow_warrens.gd::_floor_material(true)` already wears for trodden approach ground, and the village `doorstep` prefab solves the same 'worked ground at a threshold' problem with the same idea (a real surface, not a colour wash) -- so the compound floor no longer depends on the terrain underneath it at all. `dead_ground`/`scorch_marks` (below) are UNCHANGED and still draw on top of this, now over dark packed earth instead of raw terrain, which is what they were always meant to weather. Authored in the site's own (s,t) frame like every other builder here, over a box a little larger than the wall footprint (walls run s -14..10, t -16..16) so the packed ground reads under the gate threshold and a couple of metres past the flanks rather than stopping exactly at the wall line.",
+  "ground_pad": {
+    "enabled": true,
+    "s_min": -27.0,
+    "s_max": 22.0,
+    "t_min": -19.0,
+    "t_max": 19.0,
+    "_comment_bounds": "s -27..22 covers the road from just past the west_run's own outermost pylon (-26,-28's s) through the yard to past the apparatus pad (s=12 edge); t -19..19 clears both flank walls (t=+-16) by 3m so the packed ground has a worn verge rather than a hard-edged rectangle.",
+    "cell": 2.0,
+    "lift": 0.03,
+    "_comment_lift": "Beneath `dead_ground`'s own 0.09 lift, so that skin still paints visibly on TOP of this one rather than z-fighting it.",
+    "tint": "#463c30",
+    "_comment_tint": "Packed dark earth/gravel -- close to `burrow_warrens.gd`'s own trodden-ground read (that file's `_apron_colour()` lerped toward `ROCK_TINT` at only 0.05, i.e. stays near its own dark source value) rather than the near-white the raw terrain bled through as. TUNABLE.",
+    "uv_scale": 0.32,
+    "roughness": 0.97,
+    "wear_band_t": 3.4,
+    "wear_darken": 0.4,
+    "_comment_wear": "'visible boot/tyre wear': a per-vertex darkening multiplier centred on t=0 -- the road/gantry axis every one of `relay_site.json`'s people and this file's own conduit runs already treat as the site's spine -- fading out over `wear_band_t` metres either side, so the worn track down the compound's own throughline reads darker than the ground either side of it. Procedural (vertex colour, computed from each sample's own t), no new texture."
   },
   "_comment_scorch_marks": "E3-RELAY-POPULATION (ralph/reports/audit/E-2026-08-31.md \u00a7E3): irregular charred ground patches, `tether_relay.gd::_build_scorch_marks` -- same no-new-asset shape as `dead_ground` above (a painted, seeded triangle fan, no collider, no shadow), at the two points a lived-in station would actually mark: where the posted sentry stands, and at the loose-tools workstation (`data/config/bands/band3_the_river_lock/props.json`'s `relay_station` cluster). Local (s,t) frame, same as everything else in this file.",
   "scorch_marks": [

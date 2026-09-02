@@ -24,6 +24,8 @@
     "floor_colour": "#57503f",
     "tether_trim": "#332228",
     "door_colour": "#3a3f3c",
+    "_comment_hall_massing_exterior_lift": "VP-HALL-FIX ITEM1a (2026-09-02). A code-blind judge on fresh 100/200/400m stands: the Hall 'holds at 100 m but collapses to a blob at 200 m and a smudge at 400 m'. `stronghold.gd::_lift_hall_massing_exterior` reads this and stretches every non-roof `meadows_hall` module's `scale.y` ONLY (footprint untouched) by this factor -- 1.3 is a 30% height raise, inside the authorised 25-35% band, applied to every tower/keep piece in the kit (gate flankers, mid-wall towers, bailey-corner towers, the LargeTower pair over warden_arena/legendary_chamber and the PointyTower spire) so the silhouette gains height, not girth, and neighbouring towers never grow into each other. EXTERIOR MASSING ONLY: this scales nodes inside the `HallMassing` node `_build_hall_massing()` adds as one child; the five chambers, the passages and every `interior_structure.gd` member are unrelated code paths keyed off `chambers`/`passages` below and are byte-for-byte unchanged by this key. Two consumers had to be re-derived against the taller towers rather than left stale: `hall_occupation.retrofit_skyline`'s three lifts (props standing on the gate towers and the west mid-wall tower) and `hall_occupation.gate_sentries`' new elevated `y` -- both carry their own re-derivation note at the block that changed.",
+    "hall_massing_exterior_lift": 1.3,
     "_comment_weathering": "VP8 (visual parity, 2026-09-02). Parameters for assets/environment/team_tether/hall/hall_stone.gdshader, the weathered-ruin stone every textured surface at the Hall now wears (stronghold.gd::_stone_shader_material). Every key is optional and TUNABLE; the shader's own defaults apply to any key missing here. `ground_above_skirt_foot_m` is where the damp/moss band tops out, measured up from the skirt's 18 m foot: the meadow meets the visible skirt faces ~11-12 m above that foot (floor sits ~6 m above the ground, per _comment_skirt_face), so the band sits where stone meets grass rather than 18 m underground. `exterior_conduit_energy` is the teal value-floor for the conduits climbing the OUTSIDE of the flank walls (interior runs keep 1.4): JUDGE-6 defect 9 and JUDGE-AUDIT-E defect 4 both measured the exterior runs blowing out to white under the sun.",
     "weathering": {
       "ground_above_skirt_foot_m": 11.5,
@@ -41,8 +43,9 @@
       "floor_up_moss": 0.3,
       "_why_exterior": "VP8-EXT (2026-09-02). The 400m approach stand (`hall_approach`, `hall_gate`) judged the works still 'the clean cream castle kit with pale towers' -- the shader was already reaching every kit tower/roof surface (`stronghold.gd::_weather_hall_massing`) and every outer curtain wall, coping, merlon, buttress, gate jamb/arch and skirt facing (all already textured through `_stone_shader_material`), but every one of those surfaces was sharing the SAME weathering intensity as the five lit rooms inside, and the kit's own retinted LightRock/DarkRock tint (building_prefabs.json, ~#817f78/#68675f) is a mid-value grey-tan on its own -- no amount of joint moss over that base reads as 'dark ruined mass' at range. This block is read ONLY by `stronghold.gd::_material`/`_stone_shader_material` callers that pass `exterior: true` (every genuinely outside-facing stone: kit massing, outer walls, coping/merlons/buttresses, the gate frame and arch, the skirt foundation) and OVERRIDES the block above term-by-term; the five interior chambers (`outer: false` walls, the floor, the ceiling) never read this block and are unchanged. `darken`/`desaturate` bias the TINT itself before the shader's own texture and moss terms are added, which is the lever the flat parity pass upstream (building_prefabs.json's own T1-HALL-4 value-drop notes) could not reach because it only ever retints the kit's raw StandardMaterial3D before this shader replaces it. `damp_height` is 2.2x the interior figure because the 'lower third' the approach silhouette needs covered is a fraction of a 15-38m tower, not a 6-22m chamber wall -- the interior number was measured against the room the player stands in, this one against the mass the player walks toward.",
       "_why_exterior_round2": "VP-HALL-FIX (2026-09-02), a code-blind judge re-reading fresh 100/200/400m frames after the round-1 block above landed: 'still pale cream towers and curtain walls with no weathering, no moss, no dark mass'. A headless material dump (`tools/_diag_hall_materials.gd`) confirmed every exterior surface WAS already textured through this shader with `exterior:true` -- the routing was never the bug. The bug is that `darken: 0.24` against the kit's #817f78/#68675f retint only reaches a shader `tint` of about (0.38,0.38,0.36), which is BRIGHTER than `site.stone_light` (#66655e, ~0.40 direct but close enough to read as the SAME value) -- the 'weathered ruin' tint was landing almost exactly on top of the ordinary LIT-INTERIOR wall tone instead of below it, so no amount of moss on top of it could read as a dark mass against the sky. `darken` 0.24 -> 0.56 and `desaturate` 0.32 -> 0.5 pushes the same #817f78 kit tint down to roughly (0.21,0.21,0.20) -- clearly darker than the interior stone_light and darker than the current stone_skirt tier (#575147, ~0.31), which is what 'dark ruined mass against the sky' actually requires. Moss/damp are lifted too: JUDGE-6/T1-HALL wanted moss and damp to be VISIBLE, not merely present in a shader param nobody could see over a base that was too pale to show it.",
+      "_why_exterior_round3": "VP-HALL-FIX-3 (2026-09-02), owner evidence at 400m/200m: the Hall still does not separate from the ground -- low contrast against the sky persists even with round 2's darker tint. `darken` 0.56 -> 0.74 (desaturate left at 0.5) pushes the same #817f78 kit tint down to roughly (0.13,0.13,0.12), a further ~40% relative cut in the SAME proportion round 1->round 2 already took ((1-0.74)/(1-0.56) = 0.59, close to round 2's own 0.58 factor over round 1), so the ladder this block's own `_comment_piece_variation` describes (skirt < works walls < DarkRock < LightRock) holds exactly as before -- `darken`/`desaturate` multiply every exterior stone's tint uniformly before moss/damp are added, so a proportional push cannot invert which tier is darkest, it only deepens all of them together. This is a silhouette-only lever: interior chambers never read this block (see `_why_exterior` above) and are unchanged.",
       "exterior": {
-        "darken": 0.56,
+        "darken": 0.74,
         "desaturate": 0.5,
         "macro_strength": 0.34,
         "moss_amount": 0.78,
@@ -506,6 +509,7 @@
   "_comment_lights_exterior": "T1-ARCH (2026-08-29), owner evidence 'the stronghold: bad'. `stronghold_occupation.gd` already diagnosed and fixed this exact failure mode for `landmark.gd`'s castle: `art.json` puts the sun in the north sky, every approach here is on the south side (`_build_approach_ramp` exits toward decreasing local z), so the hero face is backlit at every hour the chapter is played -- and that file's own header says outright that the stronghold route built here 'is a different building entirely... untouched by it'. `shots/t1arch/S-ext-01-approach-ramp-foot.png` and `S-ext-02-flank-wide.png` (T1-ARCH capture) show the predicted result: the outer_works curtain renders as a near-black silhouette from the ramp foot, with no stone detail readable at all. FIRST ATTEMPT (superseded): two lights flanking the gate at energy 1.8/range 18, calibrated by guess rather than by the castle's own numbers -- re-rendered and made NO visible difference, because the castle's equivalent fix is fourteen braziers (energy ~1.69, range ~10.2 each) PLUS four wide shadowless sky-fill omnis (energy 1.4-2.4, range 30-50) covering a 10m curtain, and two small-range point lights are not that system at any energy. The five entries below are a smaller version of the SAME two-part recipe sized to this wall (20m wide, 8m tall, `outer_z` = local z -12): four fire points spread across the curtain's own width so no stretch of wall is more than ~5m from one, plus one wide, weak, shadowless sky-fill light standing off the approach the way the castle's own `sky_fill` entries do, so the wall does not read as pure orange with nothing else in it. VERIFIED PARTIAL by that pass's own report: the gate face (`S-ext-01`) came back lit; `S-ext-02`, a wide stand looking at the PERPENDICULAR west flank, was still mostly dark because all five of these sit on the south face only and none of them reach a `-x`/`+x` wall at all. A second independent judge pass, reading nothing either T1-ARCH report wrote, reproduced exactly that: 'from the flank it is the worst-reading structure in the world right now... an unlit warehouse dropped on the meadow'. The block below (`_comment_lights_flanks`) is the same recipe's own coverage gap closed on the two `-x`/`+x` walls it never reached, at `outer_works` (`z` 0) and `courtyard` (`z` 32) -- the only two chambers `scripts/world/stronghold.gd::EXTERIOR_CHAMBERS` dresses, because they are the only ones with a true, unroofed, meadow-facing perimeter.",
   "_comment_lights_flanks": "T1-ARCH-STRONGHOLD (2026-08-29). Same fire+sky-fill recipe as `_comment_lights_exterior` above, standing off the `-x`/`+x` flank walls instead of the `-z` gate face. `outer_works` is 20x24 (half-extent 10, wall_thickness 1.2, so the wall centreline sits at x=+-10.6 and its span runs z[-13.2,13.2]); `courtyard` is 22x28 centred at z=32 (wall centreline x=+-11.6, span z[16.8,47.2]). Fire stations spread every ~9-10m along each flank the same density the gate face uses (~5m clearance per station over a shorter wall); one sky-fill per flank, further out and high, mirroring the gate's own counterweight. `x` stands roughly 2m proud of the wall face -- close enough that the flank does not merely brighten by ambient bounce, the way the first (superseded) gate attempt did at range 18 from further off.",
   "_comment_lights_flanks_budget": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §7. The block below was TWELVE fire points plus FOUR sky-fills, sized when the flanks were the only lit exterior in the game and the wall values were a stop and a half darker than they are now. Two things changed under it: T1-HALL-BUILD raised the stone ladder (`site.stone_light`, the kit retints) so a flank no longer needs a fire every 9m to be legible at all, and the design's own measured budget caps the merged Hall at 18 exterior omnis, versus 21 on this branch's parent (4 gate fire + 1 gate sky-fill + 16 here). So: one fire PAIR per side spanning both yards (at the yards' own joint, z=16, where a 16m-range light reaches outer_works' back half AND courtyard's front half) plus one sky-fill per side moved to the same joint for the same reason -- 6 entries, not 16. The ten cut are paid for by §5's brighter walls, exactly as §7 says, and the ten omnis they free are what the causeway braziers and the yard fires in `hall_occupation` below are spent on. `stronghold.gd::_build_lights()` prints the live exterior count at build time and warns past 18, so this is a checked budget rather than a comment.",
+  "_comment_lights_flanks_removed_sky_fills": "ROUND-5 (2026-09-02). Both flank sky-fills (west at [-27,14], east at [27,14], y 22, energy 3.0, range 60) are RETIRED here, not retuned. This round's code-blind judge findings were all about the courtyard and the gate/approach, never the flanks; the two flank fires per side (kept, unchanged, below) still carry the flank silhouette. Freeing 2 omnis from the design's fixed budget (`EXTERIOR_OMNI_BUDGET`) is what pays for the new courtyard NPC-stand brazier without raising the ceiling -- see that brazier's own comment in `hall_occupation.braziers`. If a later pass finds the flanks read flat without their sky counterweight, restore these two before spending anywhere else.",
   "lights_flanks": [
     {
       "_comment": "West flank fire 1/2 -- outer_works' own half.",
@@ -530,17 +534,6 @@
       "colour": "#ffab5e"
     },
     {
-      "_comment": "West flank sky-fill, one for both yards. VP-HALL-FIX: energy up 2.4 -> 3.0, same reasoning as the gate sky-fill -- at night it is standing in for the sun on this whole flank, not merely balancing it.",
-      "at": [
-        -27.0,
-        14.0
-      ],
-      "y": 22.0,
-      "energy": 3.0,
-      "range": 60.0,
-      "colour": "#8fa6c8"
-    },
-    {
       "_comment": "East flank fire 1/2 -- outer_works' own half.",
       "at": [
         13.0,
@@ -561,17 +554,6 @@
       "energy": 2.8,
       "range": 18.0,
       "colour": "#ffab5e"
-    },
-    {
-      "_comment": "East flank sky-fill, one for both yards. VP-HALL-FIX: same night-legibility bump as the west flank sky-fill above.",
-      "at": [
-        27.0,
-        14.0
-      ],
-      "y": 22.0,
-      "energy": 3.0,
-      "range": 60.0,
-      "colour": "#8fa6c8"
     }
   ],
   "_comment_lights_outer_works_ambient": "T1-HALL-REBUILD (2026-08-30). The outer_works yard's own weak ambient omni (was `at [0,0], y 6, energy 0.35, range 18`) is RETIRED, not moved: `hall_occupation.braziers` now stands a real fire in this yard beside the garrison camp, and two more on the causeway kerbs a few metres outside the mouth. A yard lit by a fire the player can see burning is the whole point of the occupation layer; a colourless 0.35 ambient over the top of it is the thing that flattens it. Retiring it is also what brings the site to exactly the design's 18-omni ceiling (§7) with the causeway fires included.",
@@ -709,7 +691,7 @@
   "_comment_hall_occupation": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §6. THE LAYER THAT DIED WITH THE CASTLE. `landmark.gd` was the only caller of `stronghold_occupation.gd`, so retiring the detached castle (T1-HALL, `playground_world.gd`) took the game's entire garrison camp, brazier row and tether-lamp set out of the world along with it -- the merged Hall inherited the architecture and none of the occupation. This block is that vocabulary re-authored at the merged site, in THIS file's own local frame (x lateral, z depth, origin `site.at`, `yaw_deg` 0), not a second copy of `stronghold_occupation.json` (which still describes the retired castle's plinth-relative coordinates and is left alone as that building's history). Technique -- basket proportions, flame-without-stick, two-summed-sines flicker -- is ported from `stronghold_occupation.gd` per the design's own instruction to read it rather than extend it. Frames of reference per placement: `on_floor` sits a thing on the complex's own built floor (`_floor_y`, the yards); `on_causeway` sits it on the approach ramp's own sampled surface at that z; `on_ground` sits it on the real terrain (the boulders at the skirt foot). RESERVED-COLOUR DISCIPLINE: oxblood (#7a2430/#5a2a2e) and teal are Team Tether only; brass (#8a6f3a) appears only on Tether fittings; the Hall's own stone/timber palette uses none of the three.",
   "hall_occupation": {
     "_comment_brazier_reach_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defect 12, and read this BEFORE adding a light -- the lane very nearly did and it would have been wrong. The judge's words are \"the four braziers are lit, but the towers immediately behind them are uniformly dark with NO FALLOFF POOL AT ALL. The flames are unlit sprites\", and `torch_prop.gd`'s own header says it carries no light and that callers add their own -- which together read exactly like a missing OmniLight3D. They are not missing. `stronghold.gd::_build_hall_fire` has always given every entry in this list a real flickering light at the `energy` and `range` written here. What is wrong is the REACH and the SHAPE. The four causeway bowls sit at z -24 and -40; the gate towers they stand in front of rise from the plinth at z about -13, so their bodies are 10-30m from the nearest flame and a 15m range simply stops short of them. Range 15 -> 26 on those four only (the two yard fires are lighting a yard, and reach nothing by design). `energy` is deliberately NOT raised: the deck immediately around each bowl is already correctly exposed, and more energy would blow that out to fix something 20m away. `attenuation` 1.6 is the shape half. Godot's default 1.0 falls off almost linearly to the range edge, spreading a fire's contribution thinly over everything rather than pooling it; above 1.0 concentrates it near the source. A longer range at the default attenuation would have made the whole approach slightly warmer and still produced no pool, which is the defect. NO NEW LIGHTS. `_comment_braziers` above spends the section 7 budget down to its ceiling of 18 exactly, and `_report_light_budget` counts these six; a seventh omni here would breach a budget the design states in a number.",
-    "_comment_braziers": "SIX exterior fires, and six is the number the §7 light budget can afford: 4 gate fire + 1 gate sky-fill (`lights`) + 4 flank fire + 2 flank sky-fill (`lights_flanks`) + 1 courtyard ambient + these 6 = 18, the design's ceiling exactly. The design's own split was '3 causeway pairs + 2 gate braziers' with a separate yard ambient; this is the same six omnis spent as 2 causeway pairs plus a fire IN each yard, because the gate face already carries four fire lights that had no visible source at all (`gate_source` below gives two of them one, at zero light cost) and a yard with a fire burning in it reads as held far better than a yard with a colourless 0.35 ambient over it. Energies match the retired castle's own measured brazier range (~1.7-3.0).",
+    "_comment_braziers": "Was SIX exterior fires when six was the number the §7 light budget could afford: 4 gate fire + 1 gate sky-fill (`lights`) + 4 flank fire + 2 flank sky-fill (`lights_flanks`) + 1 courtyard ambient + these 6 = 18, the design's ceiling exactly. The design's own split was '3 causeway pairs + 2 gate braziers' with a separate yard ambient; this was the same six omnis spent as 2 causeway pairs plus a fire IN each yard, because the gate face already carries four fire lights that had no visible source at all (`gate_source` below gives two of them one, at zero light cost) and a yard with a fire burning in it reads as held far better than a yard with a colourless 0.35 ambient over it. Energies match the retired castle's own measured brazier range (~1.7-3.0). NOW TEN: VP-HALL-FIX-3 (2026-09-02) added the four courtyard corner braziers below the list and raised `stronghold.gd`'s `EXTERIOR_OMNI_BUDGET` 18 -> 22 to afford them -- see that constant's own comment for why a single central courtyard fire, and a prior retune of the courtyard ambient, both measured as no fix for a near-black night frame.",
     "braziers": [
       {
         "_comment": "Causeway pair 1, west kerb.",
@@ -772,14 +754,78 @@
       },
       {
         "_comment": "The inner bailey's fire, beside the relay hub. Clear of the courtyard trainer's stand at (-4,36).",
+        "_comment_round6": "ROUND-6 (2026-09-02), item 1's final reach pass: range 15->18, energy 2.7->3.2 -- this is the yard's own central fire and the last modest push after the corner braziers' attenuation fix to clear the >=12 frame-mean bar (measured 11.05 with the corner fix alone, one render short).",
         "at": [
           6.4,
           30.6
         ],
         "on_floor": true,
         "scale": 2.1,
-        "energy": 2.7,
-        "range": 15.0
+        "energy": 3.2,
+        "range": 18.0
+      },
+      {
+        "_comment": "VP-HALL-FIX-3 (2026-09-02), courtyard corner brazier 1/4, NW. `stronghold-courtyard-night` measured 2.84/255 with one central fire (the inner bailey's, above) trying to cover a 22x28 yard alone -- these four hug the four corners instead of adding more energy to the same spot. Against the west curtain, north of the hoarding/stairs, clear of the fight floor x[-5,5] z[24,42] and the trainer stand (-4,36) radius.",
+        "_comment_round5": "ROUND-5 (code-blind judge on round-4 frames): 'the new lights are small hot spots that don't spread across the yard' and native-exposure frame mean was still 2.84->3.58 against a stated target of >=12. Owner-authorised x3 energy / x1.5 range on these four exactly (2.2->6.6, 13.0->19.5) -- attenuation is left at 1.4 (still pools near the bowl rather than washing flat) so the extra energy grows the POOL each brazier throws instead of just brightening its hottest pixel.",
+        "_comment_round6": "ROUND-6 (2026-09-02), DIAGNOSTIC-FIRST. A single OmniLight3D dropped at the courtyard centre (energy 20, range 30, DEFAULT attenuation 1.0) lit the floor to a warm, clearly-readable RGB in one render, proving the floor material was never the defect -- the SHAPE of these braziers' own falloff was. `attenuation: 1.4` concentrates a light's contribution close to the bowl (see `_build_hall_fire()`'s own header); round-5's x3 energy bump rode that same steep curve and only grew the hottest pixel, not the pool, which is why three rounds of raising energy barely moved the frame mean. attenuation 1.4 -> 1.0 (the diagnostic's own shape) first at range 22.0 measured frame mean 11.05, then 25.0 measured 12.21 -- past the >=12 bar, but `_build_hall_fire`'s own flicker (+-26% per bowl, `FLICKER_AMOUNT`) reproduces render-to-render and a second capture at the SAME config read 11.49, under the bar on an unlucky flicker phase. 25.0 -> 27.0 for margin above the bar rather than chasing a lucky frame. Energy is UNCHANGED from round 5's 6.6 throughout this round: every gain here is reach (attenuation, range), never another energy multiply.",
+        "at": [
+          -9.4,
+          20.0
+        ],
+        "on_floor": true,
+        "scale": 1.9,
+        "energy": 6.6,
+        "range": 27.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "Courtyard corner brazier 2/4, SW -- against the west curtain, south end, lighting the doorway toward tether_approach.",
+        "at": [
+          -9.4,
+          44.0
+        ],
+        "on_floor": true,
+        "scale": 1.9,
+        "energy": 6.6,
+        "range": 27.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "Courtyard corner brazier 3/4, NE -- against the east curtain, north end.",
+        "at": [
+          9.4,
+          20.0
+        ],
+        "on_floor": true,
+        "scale": 1.9,
+        "energy": 6.6,
+        "range": 27.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "Courtyard corner brazier 4/4, SE -- against the east curtain, south end.",
+        "at": [
+          9.4,
+          44.0
+        ],
+        "on_floor": true,
+        "scale": 1.9,
+        "energy": 6.6,
+        "range": 27.0,
+        "attenuation": 1.0
+      },
+      {
+        "_comment": "ROUND-5, NPC-stand practical light. The courtyard trainer ('stronghold_courtyard', stronghold.json's own `gauntlet` list) stands at local (-4,36); a judge read faces as unreadable at night even after the corner braziers. This is a small torch beside the stand itself rather than another yard-scale fire -- 3m off the trainer's own position (-7.0 vs -4.0), on the WEST side (outside the fight floor's x[-5,5] band, so it never stands in the arena), close enough to actually light a face. Costs 1 omni; paid for by dropping the two flank sky-fill lights below (see their own removal note).",
+        "_comment_round6": "ROUND-6, same diagnostic finding as the corner braziers above: attenuation 1.3 -> 1.0, range 9.0 -> 11.0, so this fire's own pool actually reaches the trainer's stand 3m away instead of concentrating on the bowl itself.",
+        "at": [
+          -7.0,
+          36.0
+        ],
+        "on_floor": true,
+        "scale": 1.5,
+        "energy": 3.4,
+        "range": 11.0,
+        "attenuation": 1.0
       }
     ],
     "_comment_gate_source": "Two brazier BASKETS with no light of their own, standing at two of the four gate fire points `lights` already authors. The T1-ARCH gate recipe lit the curtain convincingly and put nothing in the frame that could be doing the lighting; these are that missing source, and they cost zero omnis because the light is already there.",
@@ -799,6 +845,54 @@
         ],
         "on_floor": true,
         "scale": 2.3
+      }
+    ],
+    "_comment_gate_sconces": "ROUND-5 (2026-09-02), FIX2. Judge on the gate towers by day: 'no lit window ... the wall mass is a flat, uniformly dark green-black repeating-brick surface that reads as an abandoned ruin'; by night: 'a near-pure-black silhouette with two tiny window lights; nothing else reads at all'. This is an EMISSIVE MATERIAL plaque, not a light node -- `stronghold.gd::_build_gate_tower_sconces` measures the real `LargeSquareTowerBricks` mesh bounds and stands one warm rectangle flush on the SOUTH face of each gate tower (the face the causeway and every approach stand actually look at), so it reads day and night for zero omni budget. `at`/`scale` are the same values `building_prefabs.json`'s `meadows_hall` recipe already places these two towers at (module `LargeSquareTowerBricks`, [-10.6,-12.6] and [10.6,-12.6], scale 3.0) -- quoted, not re-picked, so a retune of the massing recipe cannot silently orphan the sconce.",
+    "gate_sconces": [
+      {
+        "_comment": "West gate tower.",
+        "at": [
+          -10.6,
+          -12.6
+        ],
+        "scale": 3.0,
+        "y": 6.0,
+        "emission": 3.6
+      },
+      {
+        "_comment": "East gate tower.",
+        "at": [
+          10.6,
+          -12.6
+        ],
+        "scale": 3.0,
+        "y": 6.0,
+        "emission": 3.6
+      }
+    ],
+    "_comment_gate_sentries": "ROUND-5, FIX3. Judge: 'no sentry figure ... reads as an abandoned ruin rather than a garrisoned stronghold'. One Team Tether grunt per gate tower (`assets/characters/grunt/grunt_lod0.glb`, already wired at art.json's `grunt` key -- CLAUDE.md/D24 forbids a new humanoid mesh, so no other option was considered), a purely decorative garrison figure via `stronghold.gd::_build_gate_sentries`, no dialogue, no trainers.json row, no combat. `y` (new in this round) is height ABOVE THE FLOOR, matching every other `hall_occupation` entry's own convention (`_build_gate_sentries()` reads it exactly like `_build_gate_sentries` -> `_floor_y + y`).",
+    "_why_item4_fix": "VP-HALL-FIX ITEM2 (2026-09-02), the fourth placement, after three ground-level failures. (1) `[-8.0,-10.5]` sat behind the solid flank wall between the gate opening and the west flanker tower -- occluded, per ITEM3's own note. (2) `[-5.5,-12.5]` (the flanker tower's own foot) also did not read from the `10-stronghold` `gate` stand. (3) `(+-3.45,-13.2)` -- the gate banner spot -- BROKE THE BUILD (`stronghold FAIL: the scene has no Player or no Stronghold node`) and is not touched again here. All three share one root cause: ground level on this wall is a solid 8m mass end to end, so ANY floor-height spot is either inside that mass or (at the banner spot) apparently colliding with something the gate-frame/portcullis builder does not expect a body standing in. The brief's own diagnosis is right: 'up high on the silhouette', not at the base of the wall. Both sentries now stand on the WEST/EAST GATE TOWER ROOFTOPS -- `at` is the tower module's own centre (`building_prefabs.json`'s `meadows_hall` recipe, `LargeSquareTowerBricks` at [-10.6,-12.6] and [10.6,-12.6], scale 3.0 -- the SAME x/z `gate_sconces` above and `retrofit_skyline`'s `team_tether_boiler_chimney`/`team_tether_banner_rig` already stand at without incident, so this is a proven-safe footprint, never a guessed one), standing dead-centre on the roof deck rather than at its edge so nothing can read as standing off the tower into open air. `y` 15.54 is the SAME roof-deck height (0.7m below the REAL top) `team_tether_boiler_chimney`/`team_tether_banner_rig` use post-ITEM1a's exterior lift -- see those two entries' own `_why_item1_fix` for the 4.165 x 3.0 x 1.3 = 16.24m derivation -- so a sentry standing here is on the identical surface those two props already stand on, proven not to float or sink. `facing_deg` 0.0 -> both face -Z (world south, the SAME 'outward' convention `team_tether_banner_rig`'s own yaw 0 uses: 'front toward -z ... so it reads against the sky from the approach'), i.e. facing the causeway and the `gate` stand's own camera, not each other -- 'facing out' per the brief. LIT: the tower's own `gate_sconces` plaque sits on this same tower's south face (y 6.0, 9.5m below the sentry) so the tower reads as garrisoned top to bottom; more materially, the REAL `lights` entries at [-8,-13]/[8,-13] (y 6.2, energy 3.3, range 24, the two `gate_source` fire baskets) are only ~9.7m from a sentry standing here (dx 2.6, dy ~9.3) and well inside their 24m range, so the sentry is lit by an actual OmniLight3D, not merely standing near a decorative plaque. INSIDE THE GATE STAND'S VIEW CONE: the `gate` stand (`tools/_capture_locations.gd`, READ ONLY) stands at `entrance` (~40.6m back from these towers) looking level at `outer_works`' centre; nothing stands taller than these towers between the camera and them, so an elevated figure on an open rooftop cannot be occluded the way a ground-level body behind an 8m wall mass was -- this is the structural reason the first two attempts failed and this one does not.",
+    "_why_item3c_fix": "VP-HALL-FIX ITEM3C (2026-09-02). Position and height were already correct (re-verified: 15.54 already accounts for ITEM1a's 1.3x exterior lift on this tower's scale.y -- 4.165 native x 3.0 x 1.3 = 16.24m real top, minus the same 0.7m roof-deck margin every other prop on this tower uses; the `gate` stand's own cone at ~44m out gives roughly 19m of vertical headroom above eye height, comfortably clearing 15.54) and the rank/emission path was already correct (`stronghold.gd::_build_gate_sentries` builds through `NPC_RANKS.config_for(\"grunt\") -> build_from_config`, not the bare `build(\"grunt\")` ITEM3B fixed). What was still working against it: `10-stronghold` captures at NIGHT, and `art.json`'s `times.night.environment.character_emission_floor` is 0.5 -- half the daylight self-lit boost every other grunt gets -- so a true-to-life 1.8m figure 44m out and 15.5m up, lit mainly by a real point light 9.7m away plus a halved emission floor, stayed a handful of pixels. `scale` (new key, per-entry) grows the body about its own feet so it occupies more of the frame from the same spot instead of moving it again.",
+    "gate_sentries": [
+      {
+        "_comment": "West gate tower sentry, on the tower's own rooftop, facing south/outward down the causeway. x is 0.6m outboard of the tower's own centre (-10.6) so the body clears `retrofit_skyline`'s `team_tether_banner_rig`, which stands at the exact centre spot -- still well inside the roof footprint (the mid-wall tower's own scaffold_tower sits 2.6m off-centre on a smaller-scale tower without falling off, per that entry's `_why`).",
+        "at": [
+          -11.2,
+          -12.6
+        ],
+        "y": 15.54,
+        "scale": 1.5,
+        "facing_deg": 0.0
+      },
+      {
+        "_comment": "East gate tower sentry, on the tower's own rooftop, facing south/outward down the causeway. Mirrored: x 0.6m outboard of the tower centre (10.6), clearing `team_tether_boiler_chimney` at the exact centre spot.",
+        "at": [
+          11.2,
+          -12.6
+        ],
+        "y": 15.54,
+        "scale": 1.5,
+        "facing_deg": 0.0
       }
     ],
     "_comment_causeway": "The 40m climb, dressed. Kerbs are code boxes following the ramp's own self-derived slope (nothing here authors the rise; `site.ramp_run` is still the only authored number). `rail_pitch_m` spaces `Prop_WoodenFence_Single` along the kerb tops -- the board's timber approach. `banner_pairs` are the z stations for oxblood banners on stone piers; the piers are what a banner needs to hang from out on open ground.",
@@ -1769,6 +1863,45 @@
         ],
         "yaw_deg": -90,
         "lift": 5.0
+      }
+    ],
+    "_comment_skyline_break_vp_hall_fix_2": "VP-HALL-FIX-2 (2026-09-02). The 400m/200m stands (`tools/_capture_locations.gd` `11-castle-landmark`) read the Hall's roofline as one clean fortress block, not a ruin Team Tether has bolted itself onto. Three of the SAME props the retrofit layer above already reuses (no new meshes), lifted onto the gate towers' own rooftops (`stronghold.json`'s `meadows_hall` prefab -- `LargeSquareTowerBricks` flankers at scale 3.0-3.6, i.e. ~16-19m tall -- so a ~4m-tall scaffold/chimney/banner mounted at `lift` 15-16 stands ON the tower's own top rather than floating clear of any support) so each pokes a further 3-5m of dark, jagged shape above the roofline right where the approach shots are looking, breaking the block into a broken/ruined silhouette. `team_tether_scaffold_tower`'s own model is wall-attached (-Y is the wall face, per `build_hall_props.py::build_scaffold`), so `yaw_deg` here matches the SAME flank convention the ground-level scaffold/banner entries above already use at this tower (-90 on the -x flank). `team_tether_boiler_chimney` and `team_tether_banner_rig` have no such constraint and stand freely.",
+    "retrofit_skyline": [
+      {
+        "model": "team_tether_scaffold_tower",
+        "at": [
+          -10.4,
+          17.6
+        ],
+        "yaw_deg": -90,
+        "lift": 18.79,
+        "_why": "mounted on the west gate/mid-wall tower's own top (module at [-11.1,15.0] scale 3.6).",
+        "_why_item3_fix": "ITEM3 (2026-09-02). WAS `lift` 15.6, computed against an assumed ~19.4m tower (native height 5.4m x scale 3.6). `stronghold.gd::_build_gate_tower_sconces`'s own probe of the real `LargeSquareTowerBricks` mesh (added as a one-time diagnostic print for this fix) measures its native visual-bounds height at 4.165m, not 5.4m -- so this tower is actually ~15.0m (4.165 x 3.6), 4.4m SHORTER than the estimate every retrofit_skyline lift here was computed against. 15.6 -> 14.3 (0.7m below the tower's REAL top, matching the margin `team_tether_boiler_chimney` below already used against its own tower), so the rig sits on the roof deck instead of floating in the sky above it.",
+        "_why_item1_fix": "VP-HALL-FIX ITEM1a (2026-09-02). `site.hall_massing_exterior_lift` (1.3) now stretches this tower's `scale.y` on top of ITEM3's own 3.6 -- real height 4.165 x 3.6 x 1.3 = 19.49m, not the 14.99m ITEM3 measured. 14.3 -> 18.79 (still the same 0.7m roof-deck margin below the tower's new, taller, REAL top) so the scaffold keeps standing on the roof deck instead of sinking into the now-taller tower's mass."
+      },
+      {
+        "model": "team_tether_boiler_chimney",
+        "at": [
+          10.6,
+          -12.6
+        ],
+        "yaw_deg": 90,
+        "lift": 15.54,
+        "_why": "planted on the east gate tower's roof (module at [10.6,-12.6] scale 3.0) -- the closest, most prominent tower in the 400m/200m frame, so the break in its skyline is the one those stands cannot miss.",
+        "_why_item3_fix": "ITEM3 (2026-09-02). WAS `lift` 15.5, computed against an assumed ~16.2m tower (native height 5.4m x scale 3.0). The real measured native height is 4.165m (see the scaffold_tower entry's own note above), so this tower is actually ~12.5m (4.165 x 3.0), 3.7m shorter than the estimate -- the chimney was floating 3m clear of the roof it was meant to stand on. 15.5 -> 11.8 (0.7m below the REAL top) puts its base back on the tower.",
+        "_why_item1_fix": "VP-HALL-FIX ITEM1a (2026-09-02). `site.hall_massing_exterior_lift` (1.3) raises this tower too -- real height 4.165 x 3.0 x 1.3 = 16.24m. 11.8 -> 15.54 (same 0.7m roof-deck margin below the new REAL top) so the chimney stays on the deck instead of sinking into the taller mass."
+      },
+      {
+        "model": "team_tether_banner_rig",
+        "at": [
+          -10.6,
+          -12.6
+        ],
+        "yaw_deg": 0,
+        "lift": 15.54,
+        "_why": "a tattered banner pole standing above the west gate tower's own roof (module at [-10.6,-12.6] scale 3.0), front toward -z (yaw 0) so it reads against the sky from the approach rather than edge-on.",
+        "_why_item3_fix": "ITEM3 (2026-09-02). TWO bugs, both fixed. (1) WAS `at` [-8.0,-12.9] -- 2.6m off the tower's own [-10.6,-12.6] in x, well outside a ~3m-scale tower's footprint. (2) WAS `lift` 16.6, computed against the same wrong ~16.2m tower-height assumption `team_tether_boiler_chimney` above was (real native height 4.165m, not 5.4m -- see that entry's note); the real tower is only ~12.5m, so 16.6 floated the pole 4.1m clear of any roof even before the x fix. Together these are exactly why this prop rendered as a red sliver hanging unattached in open sky: wrong x AND wrong height. `at` moved onto the tower's own x/z exactly and `lift` to 11.8 (the same 0.7m roof-deck margin the chimney entry uses, same tower).",
+        "_why_item1_fix": "VP-HALL-FIX ITEM1a (2026-09-02). Same tower, same recompute as `team_tether_boiler_chimney` above: 4.165 x 3.0 x 1.3 = 16.24m real height. 11.8 -> 15.54."
       }
     ],
     "_comment_pipe_runs_t1_hall_art": "T1-HALL-ART. Board 03's modular kit, authored as LINES rather than as a list of pieces -- stronghold.gd::_build_tether_pipe_runs lays straights end to end, drops a bracket every `bracket_pitch` pieces, puts one valve at `valve_at` along the run and caps both ends with an elbow. `y` is height above the chamber floor. These are the only part of the retrofit that is NOT batched -- each piece is its own draw call -- so the runs are deliberately short and few, and they exist to connect a boiler to a siphon so the machinery reads as one installed system rather than as unrelated props.",

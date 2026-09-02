@@ -15,17 +15,22 @@ extends Node
 ## `GameState.build_cost_for` / `can_afford`, which is the one gate the
 ## free-build toggle is allowed to bend (docs/decisions/D16).
 ##
-## `camp` and `storage` keep their own hand-authored geometry (`camp.gd`,
-## `storage_container.gd`) because each carries state and an interaction, not
-## just a mesh. Every other `buildables.json` entry (R2.6: floor, wall, door,
-## roof, fence; R2.7: workbench) is plain geometry, placed generically through
-## `build_piece.gd` from the catalogue's own `mesh` path.
+## `tent`/`campfire`/`bedroll` (OWNER-0902-CAMP-SPLIT, the three independently
+## placeable pieces the old bundled `camp` buildable split into) and `storage`
+## keep their own hand-authored geometry (`camp_tent.gd`, `campfire.gd`,
+## `player_bed.gd`, `storage_container.gd`) because each carries state, sink-
+## compensated positioning, or an interaction, not just a mesh. Every other
+## `buildables.json` entry (R2.6: floor, wall, door, roof, fence; R2.7:
+## workbench) is plain geometry, placed generically through `build_piece.gd`
+## from the catalogue's own `mesh` path.
 ##
 ## BG1: this is the ONE placement system, serving both the player's own base
 ## (M8's original purpose) and the OF4 castle rebuild (D28) — there is no
 ## second, landmark-only copy of any of this.
 
-const CAMP := preload("res://scripts/build/camp.gd")
+const CAMP_TENT := preload("res://scripts/build/camp_tent.gd")
+const CAMPFIRE := preload("res://scripts/build/campfire.gd")
+const PLAYER_BED := preload("res://scripts/build/player_bed.gd")
 const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const BUILD_DOOR := preload("res://scripts/build/build_door.gd")
@@ -50,7 +55,7 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 ## real `village_door.gd` hinge/prompt build_piece.gd cannot give it, not
 ## saved state (open/closed does not persist across save/load, same as every
 ## authored village door today).
-const STATEFUL_IDS := ["camp", "storage", "creature_bed", "door"]
+const STATEFUL_IDS := ["tent", "campfire", "bedroll", "storage", "creature_bed", "door"]
 
 ## R3.1. Every node this script has planted for real, ghost excluded — how
 ## `restore_from_game` finds and clears the old set before rebuilding from a
@@ -59,7 +64,7 @@ const PLACED_GROUP := "placed_building"
 const BUILD_PLACER_GROUP := "build_placer"
 
 ## Which catalogue id a placed node came from, stashed as node metadata
-## rather than a new exported var on `build_piece.gd`/`camp.gd`/
+## rather than a new exported var on `build_piece.gd`/`campfire.gd`/
 ## `storage_container.gd` — those three scripts do not otherwise need to know
 ## their own catalogue id, and every reader of it (only `_neighbour_positions`
 ## below) lives in this file.
@@ -345,9 +350,17 @@ func _show_ghost(game: Node, armed: String) -> void:
 
 	if _ghost == null or not is_instance_valid(_ghost):
 		_ghost_id = armed
-		if armed == "camp":
-			_ghost = CAMP.new()
-			_ghost.name = "CampGhost"
+		if armed == "tent":
+			_ghost = CAMP_TENT.new()
+			_ghost.name = "TentGhost"
+			_ghost.call("build_ghost")
+		elif armed == "campfire":
+			_ghost = CAMPFIRE.new()
+			_ghost.name = "CampfireGhost"
+			_ghost.call("build_ghost")
+		elif armed == "bedroll":
+			_ghost = PLAYER_BED.new()
+			_ghost.name = "BedrollGhost"
 			_ghost.call("build_ghost")
 		elif armed == "storage":
 			_ghost = STORAGE_CONTAINER.new()
@@ -531,7 +544,7 @@ static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 ## below — spends nothing and does not touch position, so a save restore can
 ## reuse it without re-charging the satchel for a piece it already paid for.
 ## `yaw_deg` is applied to the whole node: every stateful piece's own
-## sub-parts (`camp.gd`'s fire/bedroll, `storage_container.gd`'s prompt) are
+## sub-parts (`campfire.gd`'s ring/flame, `storage_container.gd`'s prompt) are
 ## positioned in ITS local space, so rotating the root carries them with it.
 ##
 ## `index` (R3.1-remainder) is this node's future position in
@@ -543,9 +556,19 @@ static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 ## yet to restore.
 func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = -1, state_data: Variant = null) -> Node3D:
 	var placed: Node3D = null
-	if id == "camp":
-		placed = CAMP.new()
-		placed.name = "Camp"
+	if id == "tent":
+		placed = CAMP_TENT.new()
+		placed.name = "Tent"
+		get_parent().add_child(placed)
+		placed.call("build_real")
+	elif id == "campfire":
+		placed = CAMPFIRE.new()
+		placed.name = "Campfire"
+		get_parent().add_child(placed)
+		placed.call("build_real")
+	elif id == "bedroll":
+		placed = PLAYER_BED.new()
+		placed.name = "Bedroll"
 		get_parent().add_child(placed)
 		placed.call("build_real")
 	elif id == "storage":
@@ -577,7 +600,7 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 		# "use the workbench to craft capture orbs, knives, axes, pickaxes" --
 		# it was placeable geometry with no interaction at all, which is most
 		# of why the owner reported building as not working: the loop's centre
-		# piece did nothing. Same Craft prompt the campfire carries (camp.gd's
+		# piece did nothing. Same Craft prompt the campfire carries (campfire.gd's
 		# R2.4 pattern), opening the same panel, so "at the campfire or
 		# workbench" -- the claim craft_panel.gd has made in its own header
 		# since R2.4 -- is finally true rather than half true. Attached here
@@ -602,7 +625,7 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 
 
 ## The workbench's half of R2.4's "at the campfire or workbench". One panel
-## instance, lazily built, exactly as camp.gd::_on_craft() keeps its own --
+## instance, lazily built, exactly as campfire.gd::_on_craft() keeps its own --
 ## two stations, one screen, zero copies of the recipe logic.
 var _craft_panel: CanvasLayer = null
 

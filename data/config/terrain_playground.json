@@ -857,9 +857,10 @@
         ]
       },
       {
+        "_why_vp4_separation": "VP4-CORRIDOR round 4 addendum. `at` moved from (-419.56,2472.46) to (-422.10,2477.89) -- 10.1m from 'Warren Undertrail's own trailhead sign (-417.83,2468.76) along the same bearing the two signs already stood apart on (was 4.08m), rather than a new direction. Both trailheads mark roads that fork from the identical junction point (-420,2470), so both signs generated only ~2-4m off that one point and stood close enough together that a blind visual pass on tools/_capture_corridor.gd's station 08 (which stands almost on this exact junction) read their overlapping planks as one signpost's text rendering corrupted/clipped ('Stone Gate Spoke' showing as 'one Gate Spoke', 'Warren Undertrail' as illegible) -- not a text-fitting bug (scripts/world/signpost.gd's own `_label_scale()` already fits any length correctly, and Label3D.double_sided was also checked and set false as a legitimate but insufficient fix), but two physical signposts standing close enough to visually collide. `points` (the arm's own bearing) is unchanged, so the arm still points correctly down the Stone Gate spoke road; only the post's own siting moved. Two OTHER trailhead pairs with the same shared-junction pattern (Pond Circuit/River Gorge Spoke at 2.25m, Quarry Haul Road/Mountain Trail Spoke at 4.21m) were found by the same audit but are not in view at any VP4 corridor station and are left for whoever next touches signpost siting.",
         "at": [
-          -419.56,
-          2472.46
+          -422.10,
+          2477.89
         ],
         "label": "Stone Gate Spoke",
         "points": [
