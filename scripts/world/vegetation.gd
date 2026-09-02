@@ -200,11 +200,18 @@ var _next_mesh_id: int = 0
 ## reason to avoid.
 var _bush_positions: PackedVector3Array = PackedVector3Array()
 ## No authored `collision_radius` exists for a non-colliding layer to draw
-## from. `_comment_scale_visual_groundcover` in vegetation.json measures this
-## layer's realised canopy up to ~1.42m tall at max scale; 0.8m (roughly half
-## that, matching the `trees`/`rocks` layers' own 0.6/0.9 collision radii in
-## the same file) is the visual footprint this stands in for.
-const BUSH_VISUAL_RADIUS := 0.8
+## from. vegetation.json's own `_comment_flower_scale_visual_census` measures
+## `Bush_Common`'s raw glTF bounding box directly at 1.91 x 1.97m (X/Z) before
+## scale; at this layer's `scale_max` 1.0 * `base_scale` 0.9, the realised
+## footprint reaches ~1.7-1.8m across, so 1.2m of radius (not quite half that
+## span) leaves a real margin rather than sitting flush with the canopy edge
+## -- `bushes` places in clumps (`clumps`/`per_clump`/`clump_radius` above),
+## so a candidate a bare edge-to-edge distance from ONE bush is routinely
+## still touching its neighbour's canopy, measured directly against a real
+## dense pair at (0.93, 701.08)/(1.10, 700.97) on this branch's own test
+## site, 0.2m apart -- a value tighter than this reads clear of the near
+## bush by the check and still visually inside the cluster's combined mass.
+const BUSH_VISUAL_RADIUS := 1.2
 
 ## COLL1 / §8.3: how close a collidable placement must be to the last point
 ## passed to `update_collision_streaming()` to keep a real `CollisionShape3D`.

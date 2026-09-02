@@ -21,11 +21,12 @@ const SITE_X := 0.0
 const SITE_Z := 700.0
 const EYE_HEIGHT := 1.78
 const RANGE := 6.5
-## Matches the cluster radius that actually put a creature in this exact
-## bush -- large enough that the un-sited draw reliably lands on it (this IS
-## where it landed with distance 0 in the earlier probe), small enough that
-## the whole disc is in frame.
-const CLUSTER_RADIUS := 2.0
+## `_diag_bush_positions.gd` measured band1_lower_meadows/spawns.json's real
+## cluster radii: 0.0-22.0m, average ~13.7m. 8.0m is nearer that real average
+## than this probe's own first attempt (2.0m, which turned out to be an
+## unrealistically tight stand-in and made even a correctly-working retry
+## look like it wasn't finding real clearance).
+const CLUSTER_RADIUS := 8.0
 const CLEAR_ATTEMPTS := 6
 const CLEAR_MARGIN := 0.8
 
@@ -118,6 +119,22 @@ func _run() -> void:
 	for i in POSE_FRAMES:
 		await physics_frame
 	_save("after-sited")
+
+	# Re-aim the SAME camera stand-back distance directly at the new spot,
+	# rather than the old centre -- confirms whether the creature is
+	# genuinely clear of the bush's own geometry, separate from whether it
+	# happens to still sit behind the bush from one particular viewing angle
+	# (a real, separate limitation of XZ-distance siting: it prevents a
+	# creature spawning literally inside scatter, not occlusion from every
+	# possible camera angle, which depends on where the player ends up
+	# standing and is not known at spawn time).
+	var stand2 := spot - Vector3(RANGE, 0.0, 0.0)
+	stand2.y = _ground(stand2)
+	_camera.global_position = stand2 + Vector3(0.0, EYE_HEIGHT, 0.0)
+	_camera.look_at(spot + Vector3(0.0, 0.45, 0.0), Vector3.UP)
+	for i in 20:
+		await physics_frame
+	_save("after-sited-aimed-at-spot")
 
 	print("done")
 	quit(0)
