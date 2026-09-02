@@ -184,6 +184,7 @@ func _run() -> void:
 				print("           => on-screen height %.0f px, distance %.1f m" % [
 					absf(f[1] - h[1]), cam_pos.distance_to(feet)])
 			_ray_check(cam_pos, feet + Vector3(0.0, 0.9, 0.0), body)
+			_seat_check(feet, body)
 	# lights near the posts
 	print("")
 	var post_mid := sh.to_global(Vector3(0.0, _floor_y_of(sh, outer_works), -13.1))
@@ -220,6 +221,25 @@ func _project(label: String, p: Vector3, cam: Vector3, forward: Vector3) -> Arra
 	print("[project] %-24s %s  -> px (%.0f, %.0f)  %s" % [
 		label, _v(p), sx, sy, "on-screen" if on else "OFF-SCREEN"])
 	return [sx, sy]
+
+
+## Is there a walkable surface directly under the feet, and how far off it are they?
+func _seat_check(feet: Vector3, body: Node) -> void:
+	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state
+	if space == null:
+		return
+	var query := PhysicsRayQueryParameters3D.create(feet + Vector3(0.0, 1.0, 0.0), feet - Vector3(0.0, 3.0, 0.0))
+	query.collide_with_areas = false
+	if _player != null:
+		query.exclude = [_player.get_rid()]
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		print("           seat under %s: NOTHING within 3m below the feet" % body.name)
+	else:
+		var y := float((hit["position"] as Vector3).y)
+		print("           seat under %s: %s at y %.2f -> feet are %.2f m %s it" % [
+			body.name, _path(_world, hit.get("collider") as Node), y, absf(feet.y - y),
+			"above" if feet.y >= y else "BELOW"])
 
 
 func _ray_check(from: Vector3, to: Vector3, body: Node) -> void:

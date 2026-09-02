@@ -3064,7 +3064,16 @@ func _build_gate_sentries() -> void:
 			continue
 		body.name = "GateSentry_%d" % index
 		var at := _local_of(spec.get("at", []))
-		body.position = Vector3(at.x, _floor_y + float(spec.get("y", 0.0)), at.z)
+		# VP8 sentries restart (2026-09-02). `on_causeway` is the same flag
+		# `_build_garrison_camp` / `_brazier` already take, for the same reason:
+		# the ramp deck falls ~0.28m per metre south of the wall's outer face,
+		# so a body posted just OUTSIDE the jambs stands on `_causeway_y`, not
+		# on `_floor_y` (which would float it). See `gate_sentries`' own
+		# `_why_restart` for why the posts moved off the jamb face.
+		var base_y := _floor_y
+		if bool(spec.get("on_causeway", false)):
+			base_y = _causeway_y(at.z)
+		body.position = Vector3(at.x, base_y + float(spec.get("y", 0.0)), at.z)
 		body.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
 		# VP-HALL-FIX ITEM3D (2026-09-02), REVERT. ITEM3C (above, historical)
 		# grew each sentry 1.5x about its own feet to fight legibility on a
