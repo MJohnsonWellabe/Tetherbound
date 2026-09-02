@@ -68,11 +68,74 @@ not super visible."*
 | 2 | Severe lag, ~10 FPS — **game breaker** | `OWNER-0901-PERFORMANCE-LAG-V2` | **inconclusive** — the owner's retest happened while grass was off (it's back on as of today, `OWNER-0902-GRASS-ON`), which was the original fix's own mechanism, so this run couldn't actually test whether the fix still holds. Needs a fresh real-hardware playtest with grass in its current on state before this can be called fixed or broken. |
 | 3 | Interact works ~half the time — **game breaker** | `OWNER-0901-INTERACT-RELIABILITY-V2` | not covered by this pass, still just "believed fixed" |
 | 4 | No way for the player to sleep | `OWNER-0901-PLAYER-SLEEP` | **confirmed still broken** — "player sleep was impossible still." Reopened; needs a real fix, not another investigation. Note: the campsite was split into three pieces the same day (`OWNER-0902-CAMP-SPLIT`) and player rest now runs through the new `bedroll` piece (`scripts/build/player_bed.gd`) — check whether this complaint is about that path specifically, or a separate player-only sleep action (distinct from creature-bed rest) that was never built at all. |
-| 7 | Unclear how to train a team | `OWNER-0901-TRAIN-CLARITY` | not covered by this pass, still just "believed fixed" |
+| 7 | Unclear how to train a team | `OWNER-0901-TRAIN-CLARITY` | **confirmed fixed by real headless execution, 2026-09-02 re-verification** (`ralph/OWNER-0901-TRAIN-CLARITY-V2`) — see below |
 | 8 | Bond system illegible, wants discrete milestones | `OWNER-0901-BOND-MILESTONES` | **closed, confirmed implemented by code inspection** (owner: "I didn't test bond but if it's coded remove it"). `docs/decisions/D70-bond-is-a-milestone-ladder-not-a-meter.md` records the real redesign: the old 0-100 point meter is gone, replaced by an ordered five-task ladder (`data/config/bond_milestones.json`, `scripts/creatures/bond_milestones.gd`) matching the owner's own example almost verbatim ("defeat 50 wild creatures together" is milestone 1, unmodified owner input). `scripts/ui/bond_meter.gd` (the display widget, name notwithstanding) draws the milestone tier and its progress sentence, not a raw percentage — no leftover old-meter UI. `tests/test_bond.gd` pins the ladder's sequential behavior. Real, not a stub. |
 | 9 | Creatures don't lie in bed except galecrest | `OWNER-0901-CREATURE-BED-POSE` (bed roster-fit landed separately, §3) | not re-covered by this pass |
-| 12 | Tournament `min_level` 6→5, Halda's guidance made concrete | `OWNER-0901-TOURNAMENT-LEVEL5` | not covered by this pass, still just "believed fixed" |
+| 12 | Tournament `min_level` 6→5, Halda's guidance made concrete | `OWNER-0901-TOURNAMENT-LEVEL5` | **confirmed fixed by real headless execution, 2026-09-02 re-verification** (`ralph/OWNER-0901-TRAIN-CLARITY-V2`) — see below |
 | — | Small creatures disappear into grass | `OWNER-0901-CREATURE-GRASS-VISIBILITY` | **confirmed still broken, and now live again** — "small creatures in grass still want fixed. they're not super visible." Now more urgent than when this was filed: grass is back on as of today (`OWNER-0902-GRASS-ON`), so this is an active, current defect, not a dormant one. Needs a real fix. |
+
+**Items 7 and 12 re-verified 2026-09-02, real execution not a code read.** A
+local Godot 4.7-stable headless binary (the same version CI pins) was
+downloaded and used to actually import and run this checkout, because no
+Godot binary exists by default in this container and a code read alone has
+burned this project before (village gate, thrice). Findings:
+
+- `data/config/tournament.json`'s `min_level` is `5`, and nothing else
+  overrides it: `scripts/world/tournament.gd::required_level()`'s `6` is
+  only a never-triggered missing-config fallback. `tests/test_tournament.gd`
+  (85 tests, 1070 assertions, all green on this run) exercises the real
+  threshold dynamically via `TOURNAMENT.required_level()`, including
+  `test_a_party_at_the_authored_level_is_trained` and
+  `test_one_level_below_the_threshold_is_not_trained` — a level-4 party
+  fails, a level-5 party passes.
+- Halda's `tournament_halda_train` line (`data/dialogue/bands/band1_lower_meadows.json`)
+  already reads: *"Feed them. Rest them — a Creature Bed or your own
+  bedroll, either does it. Get them to level five, then we'll talk."* — the
+  vague-"train" complaint item 12 named is gone from her actual voice line,
+  not just from a comment.
+- `tests/smoke_tournament_bracket.gd` (a real simulated playthrough, run
+  directly, not through a code read) drove an actual party from too-small
+  through every one of Halda's branches — `tournament_halda_closed` →
+  `tournament_halda_train` → `tournament_halda_condition` → fed/rested →
+  `tournament_halda_signup` → all three rounds **actually fought** (real
+  combat simulation, not stubbed) → champion → saddle pattern granted.
+  Output: `smoke: OK — the tournament can be entered, lost, retried, fought
+  through all three rounds and won, once.` This is the closest thing to
+  "playing it" available without an interactive session, and it exercises
+  the real game code, not a mock.
+- Item 7's own root cause was broader than item 12's dialogue fix alone:
+  `data/progression/objectives.json`'s `tournament_train_team` rung already
+  carries the concrete `how` text (*"Villagers who offer a fight are the
+  training -- Bryn at the practice ring first. Wins are levels. Get your
+  whole team to level 5."*, landed same-day as item 12's fix, `e202559b`)
+  — but that text lives in `quest_log.gd::tracked_hint()`, which for months
+  had "been written and tested... with nothing rendering it" (the code's
+  own words, `scripts/ui/playground_hud.gd`'s `_build_objective_hint_card`
+  comment). **That gap is already closed too** — `HIST-036` wired a real
+  timed HUD card that draws `tracked_hint()` on screen whenever the tracked
+  objective changes. Ran `tests/smoke_objective_hint_card.gd` for real
+  (not read): PASS, "the objective hint reaches the screen and its card
+  fits its band" — measured at 1920×1080, all 27 authored hints (including
+  this one) fit their card, and `Game.objective_hint reaches the card's own
+  label` is confirmed live-wired, not dead data.
+- Bryn (the practice-fight trainer the hint names) is real and placed
+  (`data/config/bands/band1_lower_meadows/trainers.json`), fields a
+  level-2 team, and his own challenge line frames the fight as training
+  ("no idea what it can do yet... beat them both and you'll know something
+  you can't be told") — so the guidance's claim is mechanically true, not
+  just narratively plausible.
+- Bond milestones (item 8, closed separately) do not carry any of this
+  load — `docs/decisions/D70` confirms it is a companionship/attachment
+  ladder (battles fought together, landmarks, distance, rest, feeding
+  *together*), unrelated to a creature's own combat level. It neither
+  duplicates nor substitutes for the training guidance above.
+
+No code change was needed for either item — both were already correctly
+implemented, and item 7's landing (`e202559b`) undersold its own fix by
+citing only the objectives-data text without knowing at the time that the
+HUD surface for it had also already shipped (`HIST-036`, an unrelated
+lane). What was missing until now was real-execution proof, which this
+pass supplies. Branch: `ralph/OWNER-0901-TRAIN-CLARITY-V2`.
 
 **The village-gate lesson stands as recorded history:** the first dispatch on
 that finding claimed "nothing to fix" from a config read with no pushed
