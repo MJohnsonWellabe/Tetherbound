@@ -266,3 +266,214 @@ Captured (36 frames): all eight sites at every day stand, plus night at `01-vill
 
 **Recommended next step:** do not add dressing in round 2. Run the resolution-matched re-render and the
 after-perf first, reconcile item 5, and judge density from frames that are comparable.
+
+---
+
+# Round 2
+
+**Branch** `claude/vp-places` · run against the program branch merged forward (main's 58 commits).
+
+## R2.0 The merge — nothing to reconcile, and why
+
+`git merge origin/claude/coordination-subagents-3fhz1x` brought 71 commits and merged **clean, zero
+conflicts**. The instruction was to resolve conflicts in my owned files by keeping both the owner fix and
+the lane dressing. **No such conflict arose**, and the reason is worth stating rather than glossing:
+
+| owner fix | files it actually touched |
+|---|---|
+| `OWNER-0902-VILLAGE-POPULATION-REGRESSION` | `data/config/village_npcs.json` |
+| `OWNER-0902-VILLAGE-READABILITY` | `data/config/terrain_playground.json`, `scripts/world/shop_interior.gd` |
+| `OWNER-0902-VILLAGE-GATE-REGRESSION` | corner-guard work, not `village_boundary.json`'s gate list |
+
+The vp-village dressing edits `village.json` and `village_boundary.json`. The population fix edits
+`village_npcs.json`. **They are disjoint files**, so both survive intact — the headcount cut and the
+dressing coexist with no merge decision required. `git diff --name-only HEAD@{1}..HEAD` over all my owned
+files returns empty.
+
+One merge mechanic did bite: the merge **aborted** first time, because my locally re-baked
+`data/scatter/**` (held under `skip-worktree`) collided with incoming bake changes. Resolved by clearing
+`skip-worktree`, `git checkout -- data/scatter`, merging, then re-baking and re-guarding.
+
+**And the stale bake recurred exactly as round 1 predicted.** The incoming merge moved
+`terrain_playground.json` again (`19b3b543`, the readability fix), so the fingerprint went stale and the
+re-bake cost `825587 placements … in 266517 ms` — another 266 s per world stand-up. This is the second
+occurrence in two rounds. Round 1's item 6 recommendation stands and is now evidenced twice.
+
+## R2.1 Fixes, in the coordinator's priority order
+
+### 1. Hall exterior at distance (VP8) — the judged diagnosis was wrong
+
+The fix list said "the weathered `hall_stone` shader is not reaching the exterior kit pieces / towers /
+curtain walls." **It already was.** A headless probe instantiating the real `meadows_hall` prefab
+confirmed `_weather_hall_massing()` (`scripts/world/stronghold.gd`) already converts 32 of the kit's 45
+surfaces — towers, gatehouse flankers, spire, roof — to `HALL_STONE_SHADER` via `_stone_variant()`.
+
+The **actual** cause: every exterior stone surface used the *same weathering intensity as the five lit
+interior rooms*, applied over the kit's own retinted tint (`LightRock` ≈ `#817f78`, a mid-value grey-tan)
+with no darkening bias. Shared joint-moss at interior strength over a mid-grey tint cannot read as a dark
+ruined mass at 400 m no matter how it is tuned.
+
+Fix: a new `exterior` flag threaded `_material()` → `_stone_shader_material()` → `_stone_variant()`, set
+true at every genuinely outward-facing call site (outer walls, coping/merlons/buttresses, gate
+jamb/lintel/voussoirs/keystone, skirt + grounding buttress, massing foot shafts, window slits, causeway
+banner and brazier piers, and the kit conversion itself). Interior chamber walls, floors, ceilings,
+timber, iron and all `_tether_material()`/`_live_material()` emissive pieces are untouched.
+
+New `site.weathering.exterior` block in `stronghold.json` — `darken` 0.24, `desaturate` 0.32,
+`macro_strength` 0.24→0.34, `moss_amount` 0.46→0.62, `up_moss` 0.55→0.72, `damp_height` **3.0→6.6**
+(sized for a 15–38 m tower's lower third rather than a 6–22 m room wall), `damp_strength` 0.26→0.40,
+`streak_strength` 0.20→0.30, `moss_colour` `#243a10`. The base block and all five interior chambers are
+byte-identical.
+
+**Draw calls: zero new mesh instances.** Every change is a material swap on an existing `MeshInstance3D`
+or a parameter change on an already-shared cached `ShaderMaterial`. The `_materials` cache key gained the
+`exterior` flag so outer and inner variants of one base colour are two shared instances rather than
+colliding — same batching discipline, one more axis.
+
+Parapet broken-top variation (asked for in the fix list) **already existed** — `_dress_exterior_wall()`
+per-merlon width/height/seating jitter, 5.5 %/13 % broken-stub rolls, and `parapet_breach_chance` 0.75
+driving `_parapet_rubble_heap()`. Verified by reading it; left alone rather than duplicated.
+
+### 2. Broken stands (tool only) — `tools/_capture_locations.gd`
+
+- **`04-warrens-den`**: `back` 3.2→1.5, `up` 1.70→2.2, `look_up` 1.6→1.15, now aimed at the guardian's own
+  scaled half-height rather than a human chest-height default. Keeps the camera within 1.5 m of room
+  centre, clear of interior rock at any RNG seed.
+- **`06-relay-approach`**: root cause found in config — `tether_relay.json`'s `site._ground` only documents
+  probed ground from `s=-24` to `s=+20`, but the eye sat at `s=-46` and the default `back` 7.0 walked it to
+  `s=-53`, 29 m into unprobed terrain. Now `at [-20,0]` with `back` 4.0, landing on `s=-24`, the site's own
+  outermost sampled point.
+- **`11-castle-landmark`**: the old landmark was merged into the Hall, so all three stands pointed at empty
+  hills. Re-aimed off the Hall's own markers (`site.at [8,7560]`; `entrance` == `ramp_foot` at world
+  z 7506.8) at 400/200/100 m along the causeway. **The three shots are RENAMED**
+  `approach`/`gate`/`banners` → **`hall-400m`/`hall-200m`/`hall-100m`**, so those filenames do not line up
+  with round 1's. The site id `11-castle-landmark` is unchanged.
+
+### 3. Relay occupation (VP7, first pass) — 14 new objects
+
+3 Team Tether grunts on site (1 added; `assets/characters/grunt/grunt_lod0.glb`, authorised by
+`docs/art/HUMANOID_ASSET_INVENTORY.md` line 31 — no new humanoid); a 4-piece tool cluster on the deck at
+absolute `deck_y` 10.0 (ground-sampled props here would fall 2–8 m through the slab); a 3-piece
+deliberately asymmetric barrier with a 3.4 m walkable gap; a scorch ring on the pad; one oxblood banner
+following `band3` order 3000's established grammar.
+
+Plus a genuine code fix found while doing it: the three cable runs **stopped 7–8 m short of the
+apparatus**. Each now gets a final sagged span from that run's real last-pylon attach point to a point
+derived from real config (`grounding_base.radius` 3.4 out from `apparatus.at`, at half `apparatus.height`
+above `deck_y`), sharing the cached lit-conduit material by identity so `_kill_the_conduits()` still
+switches them off.
+
+### 4. Warrens exterior (VP6) — 12 new objects, interior untouched
+
+Root cause of "flat grey rock pile": `_place_rock()` and `_build_site_skirt()` both called
+`_wear_the_cave_stone()` with one fixed tint, and `_material()` caches by resulting colour — so **every**
+mound and skirt boulder shared one literal material. New `mound.tint_variation` 0.16 plus a `_varied_tint()`
+helper give a quantised 5-value spread. The approach apron now fans (`apron_mouth_width_m` 8.0 at the door,
+`apron_far_width_m` 4.6 six metres out, the old fixed value) with the grass-clear radius scaled to match.
+12 objects: 3 darkened jamb/brow rocks framing the mouth as a dark focal point, 8 fern/scrub in two
+flanking clusters, 1 worn threshold pebble.
+
+**Interior untouched**, and the argument is structural, not a promise: every edit lives in
+`_build_approach_apron()`, `_build_mound()`, `_build_site_skirt()` and a new additive
+`_build_entrance_dressing()`. None of `_build_chambers`, `_build_passages`, `_build_interior_rock`,
+`_build_structure`, `_build_den_atmosphere` or `_build_prize` is touched, and `_place_rock()`'s new
+`variation` parameter defaults to 0.0 with no interior caller passing it.
+
+### 5. Well pad (VP5)
+
+Second pass, because the frame said the first was not enough. `MI_RockTrim` `#a39d8e`→`#7f7366`,
+`MI_Brick` `#b9b1a2`→`#8f8375`, and **`MI_UnevenBrick` `#7f766c` added** — the apron/flagstone material had
+**no retint at all** before, which is why the pad still read as a clean disc after the curb was darkened.
+Roughness was ruled out by probing the glTF directly: `roughnessFactor` is absent, so it already imports
+fully matte and low roughness was not the cause.
+
+## R2.2 Perf — the draw-call constraint held, and improved
+
+`--views=hall_approach,village_high --settle=120 --resettle=60 --sample=20`, fixed 1280x720 both runs.
+
+| view | before (round 1, `00-before`) | after (round 2) | delta |
+|---|---|---|---|
+| `hall_approach` | 4331 draw calls · 13,212,179 prims · 4676 obj | **4227** · 4,718,096 · 4572 | **−104 draw calls**, −64 % primitives |
+| `village_high` | 4376 draw calls · 18,087,761 prims · 4474 obj | 4440 · 9,430,618 · 4534 | +64 draw calls, −48 % primitives |
+
+**The constraint was "stay ≤ 4000; the 4331 baseline is inherited; do not add draw calls net."** At
+`hall_approach` the count went *down* 104 despite all the Hall exterior work — consistent with that work
+being pure material swaps with zero new mesh instances, plus the extended material cache still sharing
+instances. `village_high` rose 64, which is the ~30 village objects the vp-village dressing added.
+
+**Two honest caveats.** First, `hall_approach` is still **4227 against a 4000 ceiling** — the inherited
+breach is NOT resolved, only slightly reduced, and it remains a real open failure against
+`docs/PERFORMANCE_BUDGET.md`. Second, the before number was measured **before** the program-branch merge,
+so the large primitive drops are not attributable to this lane alone; main's own grass/scatter and LOD
+work landed in between. The draw-call comparison is the meaningful one for judging this lane's changes;
+the primitive comparison is mostly other people's work.
+
+## R2.3 Tests
+
+Re-run on the fully combined tree (all five fixes together), not just per-agent:
+
+| test | exit | result |
+|---|---|---|
+| `smoke_stronghold` | 0 | PASS |
+| `smoke_relay` | 0 | PASS |
+| `smoke_warrens` | 0 | PASS |
+| `smoke_traversal` | 1 | FAIL — pre-existing South Bridge, verbatim below |
+
+```
+traversal FAIL: crossed the South Bridge without the key (6348.4m past the gap) — the gate can be walked around
+```
+
+Unchanged from round 1, in files neither this lane nor the merge touches. Reported, not fixed, per the
+fix list's own instruction.
+
+Nothing the round-2 dressing placed blocks anything: `smoke_relay` still fights the captain and rescues
+the captive (`[relay_site] placed 4 of 4`, Gear granted) with the new barrier, banner and deck cluster in
+place; `smoke_warrens` still walks entrance→branch (52 m), guardian fight, vault door and reward with the
+12 new entrance pieces in place.
+
+## R2.4 Frames
+
+`ralph/reports/visual-parity/PLACES/round2/locations/` — 27 frames, `VP_FAST` 960x540. The `locations`
+stage took **423 s** against round 1's 3093 s: the fast path plus a fresh bake.
+
+Every frame carries real content (per-channel stddev across the frame; round 1's broken stands read ~0):
+
+- `04-warrens-den-day` **31.78** (was solid green) — fixed
+- `06-relay-approach-day` **50.39** (was solid green) — fixed
+- `11-castle-landmark-hall-400m/200m/100m-day` **49.76 / 46.90 / 49.41** — re-aimed at the Hall, all render
+- all `01-village`, `10-stronghold` day frames 54–65; night frames 26–37
+
+## R2.5 Two findings outside PLACES that the coordinator should see
+
+**1. The grass carpet is enabled but draws nothing.** `tools/_capture_ground_and_sky.gd` exited 1 with
+this, repeated for every band and every clock:
+
+```
+FAIL: ground-00-village-day: the GrassField exists but holds no instances -- nothing to draw
+```
+
+`data/config/grass_field.json` has `enabled` = **true**, set by a direct owner directive recorded in the
+file itself (`_comment_enabled_ownerplaytest_20260902b`: "grass needs to be on"). So this is not the flag
+being off — it is the flag being on and the field producing **zero instances**. That means the owner's
+decision is currently not reaching the renderer, and **every frame in this round was captured with no
+grass**. That matters for judging: "a flat grey rock pile on lawn" is a lawn made of baked scatter, not
+the intended grass carpet. GROUND lane owns these files; PLACES did not touch them.
+
+**2. `tools/survey.gd` now exits 0.** Round 1's `05-spawn-low-sun` flat-frame failure is gone, fixed by
+something in the merged program branch. Closing that round-1 item.
+
+Also flagged from the frames, not fixed: `10-stronghold-courtyard-night` is nearly black (mean RGB
+1.0/2.4/5.2, stddev 10.73) where every other night frame sits at 26–37. May be correct for an unlit
+courtyard, may be a defect — a judge should rule.
+
+## R2.6 Unresolved
+
+1. `hall_approach` still **4227 vs the 4000 ceiling**. Not resolved, only reduced.
+2. Grass draws zero instances despite being enabled by owner directive (R2.5) — highest-value cross-lane bug.
+3. `smoke_traversal` South Bridge walk-around, pre-existing, needs routing.
+4. The stale-bake trap fired a **second time** this round. Two rounds, two occurrences, ~270 s each per
+   stand-up. It needs to be in the environment recipe or gated in CI.
+5. Before/after still not resolution-matched (1280x720 vs `VP_FAST` 960x540). Judge for content, not sharpness.
+6. `tools/_judge_capture_hall.gd` was not run in either round — the time budget went to the locations set
+   both times. The Hall's golden/night gate-face read is therefore still unjudged, which is exactly the
+   frame `exterior_conduit_energy` 0.45 exists to fix.
