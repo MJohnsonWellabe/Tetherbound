@@ -23,5 +23,52 @@
       "radius": 30.0,
       "_why": "BAND2-63-WARRENS: the Burrow Warrens' new mouth (burrow_warrens.json `_comment_resiting`). The cave stands in a rock knoll of its own here, and the driven run found the doorway itself blocked by a `CommonTree_3` growing where the entrance is -- the scatter had no idea the cave had moved, because nothing told it. Radius 30 covers the whole footprint plus the apron and the last stretch of the approach, so the outcrop reads as rock breaking out of the ground rather than a boulder pile in a wood, and so nothing is standing in the doorway. This clearing does NOT take effect until the coordinator's single re-bake -- GATE_D_LANE_CONTRACT.md sec4's inherited fingerprint defect, the same one the `ranger_camp` clearing above is waiting on."
     }
-  ]
+  ],
+  "_comment_layer_anchors_vp4": "VP4-CORRIDOR. See band1_lower_meadows/vegetation.json's own comment on this same key for the merge mechanism and why it exists; ralph/reports/visual-parity/CORRIDOR/REPORT.md has the before/after frames these fix. Checked clear of this file's own clearings above (the quarry at 400,1800 r17; ranger_camp at -259,2256.5 r15; the Warrens mouth at -357,2610 r30) before siting.",
+  "layer_anchors": {
+    "trees": [
+      {
+        "_why": "VP4 station 06-stone-root-entry (310,1660)->(400,1800): the before frame had a signpost but an otherwise bare gap between the player and a thin horizon tree line on entering Band 2. A tree line flanking the path's left side, ~65m ahead.",
+        "at": [340.0, 1748.0],
+        "radius": 11.0,
+        "count": 6
+      },
+      {
+        "_why": "VP4 station 07-band2-mid (20,2130)->(-150,2210): the worst 'empty grass to sky' case in the whole pass -- bald ground from the player's feet to the horizon on both sides. A tree line flanking the left side of the path ~70m ahead, opposite the rock cluster below.",
+        "at": [-54.0, 2137.0],
+        "radius": 11.0,
+        "count": 6
+      }
+    ],
+    "rocks": [
+      {
+        "_why": "VP4 station 06-stone-root-entry: a rock cluster on the right side of the path, matching this band's own 'Stone & Root' identity as well as filling the sightline. `min_slope_deg` overridden to 0 for the same reason as band 1's bend cluster -- this shoulder reads as gentle meadow, not the layer's usual 6-degree floor.",
+        "at": [365.0, 1697.0],
+        "radius": 12.0,
+        "count": 5,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "VP4 station 07-band2-mid: a second mid-ground anchor on the right side of the path, ~110m ahead, so the sightline reads compression (near trees) -> open -> a second landmark rather than one clump and then bare ground again.",
+        "at": [-70.0, 2197.0],
+        "radius": 10.0,
+        "count": 4,
+        "min_slope_deg": 0.0
+      }
+    ],
+    "bushes": [
+      {
+        "_why": "VP4 station 06: edge planting on the new tree line.",
+        "at": [350.0, 1705.0],
+        "radius": 6.0,
+        "count": 3
+      },
+      {
+        "_why": "VP4 station 07: edge planting on the new tree line.",
+        "at": [-60.0, 2145.0],
+        "radius": 6.0,
+        "count": 3
+      }
+    ]
+  }
 }

@@ -83,6 +83,46 @@
       "_why": "BAND1-D1 / prompt 30: Old Bram's ground (trainers.json order 1010) and the arena his fight forms in. Same reasoning as clearings 3, 4 and 1900 -- a trainer battle arena is ~11m across and forms between the player and the creature their opponent just sent out, so without this the region's hardest optional fight is watched through a tree. NOTE for the coordinator: does NOT invalidate the baked scatter on this branch (GATE_D_LANE_CONTRACT section 4); needs the single integration re-bake."
     }
   ],
+  "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",
+  "layer_anchors": {
+    "trees": [
+      {
+        "_why": "VP4 station 01-village-edge (14,20)->(8,90): the before frame's right-hand gap between the practice-field fence and the far tree line was bare grass all the way to the sky. A copse on the opposite side of the path from the fence, between the player and the horizon line, so the sightline gets a mid-ground read on both sides instead of only the fence side.",
+        "at": [45.0, 58.0],
+        "radius": 11.0,
+        "count": 7
+      },
+      {
+        "_why": "VP4 station 02-first-bend (-120,270)->(-230,330): the before frame was open grass with nothing between the player and a thin, distant tree line -- the worst 'empty grass to sky' case in band 1. A tree line flanking the outside of the path's own bend, opposite the rock cluster below, gives the bend a compression -> reveal read instead of a flat field.",
+        "at": [-95.0, 292.0],
+        "radius": 12.0,
+        "count": 6
+      }
+    ],
+    "rocks": [
+      {
+        "_why": "VP4 station 02-first-bend: a rock cluster at the bend itself (bible sec4C names this combination explicitly), mixed sizes via the layer's own 0.28-2.1 scale span. `min_slope_deg` overridden to 0 -- the layer's own floor of 6 degrees would reject most draws on this gentle meadow bend, the same override `_place_anchor`'s own doc names for a hillside outcrop, used here for the opposite reason (too flat, not too steep).",
+        "at": [-150.0, 250.0],
+        "radius": 10.0,
+        "count": 4,
+        "min_slope_deg": 0.0
+      }
+    ],
+    "bushes": [
+      {
+        "_why": "VP4 station 01: 2-4 bushes on the new tree copse's own edge, per the brief's own recipe.",
+        "at": [36.0, 66.0],
+        "radius": 6.0,
+        "count": 3
+      },
+      {
+        "_why": "VP4 station 02: edge planting beside the bend's rock cluster.",
+        "at": [-146.0, 246.0],
+        "radius": 6.0,
+        "count": 3
+      }
+    ]
+  },
   "footprints": [
     {
       "order": 0,
