@@ -85,8 +85,12 @@ const UP := 2.4
 ##     this is the same fix, applied before it could bite twice. Looks at
 ##     road[2] (-152,4235), the far landing.
 ##   13 (-300,4990): band4 pt2, a bend just after crossing into Band 4.
-##   14 (-280,6460): band4 pt14, matching `ridge_patrol_camp`'s own centroid
-##     (-235.9,6471.7) to within 55m.
+##   14 (-280,6460): band4 pt14. ROUND-4 ADDENDUM: `look` re-sited from the
+##     next trail vertex to `ridge_patrol_camp`'s own props.json centroid
+##     (-235.9,6471.7) -- the trail-vertex look put the camp 51.5 degrees off
+##     axis, just past the ~51.3-degree half-FOV, so it never entered frame
+##     at all (`JUDGE-b3b5-before.md`'s own finding: "neither ridge nor camp
+##     is legible"). Still a documented site coordinate, not eyeballed.
 ##   15 (80,7370): band5 pt3, a bend on the final approach.
 ##   16 (20,7480): band5 pt4, looking at pt5 (0,7560) -- `stronghold.json`'s
 ##     own site centre, i.e. the Hall gate itself.
@@ -104,7 +108,7 @@ const STATIONS := [
 	["11-relay",           Vector2(350.0, 3760.0), Vector2(280.0, 3900.0)],
 	["12-old-mill-crossing",Vector2(-152.0, 4170.0),Vector2(-152.0, 4235.0)],
 	["13-band4-entry-bend",Vector2(-300.0, 4990.0),Vector2(-420.0, 5140.0)],
-	["14-ridge-camp-approach",Vector2(-280.0, 6460.0),Vector2(-210.0, 6620.0)],
+	["14-ridge-camp-approach",Vector2(-280.0, 6460.0),Vector2(-235.9, 6471.7)],
 	["15-stronghold-approach",Vector2(80.0, 7370.0),Vector2(20.0, 7480.0)],
 	["16-hall-gate-approach",Vector2(20.0, 7480.0), Vector2(0.0, 7560.0)],
 ]
@@ -204,7 +208,7 @@ func _run() -> void:
 
 	await _pin("day")
 	for entry: Variant in STATIONS:
-		var shot: Array = entry as Array
+		var shot: Array = _resolved_station(entry as Array)
 		if only.is_empty() or _selected(only, str(shot[0])):
 			await _shoot(shot)
 
@@ -214,6 +218,37 @@ func _run() -> void:
 	print("density and silhouette are trustworthy; frame times are not a")
 	print("performance measurement.")
 	quit(0)
+
+
+## Round-4 addendum, station 11-relay only. The relay's yard is authored in
+## its own (s,t) frame off a -34.4 degree approach bearing
+## (`tether_relay.json`), so a hand-picked WORLD coordinate for "just inside
+## the gate looking at the apparatus" would mean re-deriving that rotation --
+## exactly the kind of hand math that produced this pass's own left/right
+## sign bug twice already. `tools/_capture_locations.gd` solved this once,
+## correctly, by asking the site's own `TetherRelay.world_of()` for the
+## mapping; its `standing` shot's local `at`=(-8,-2) `look`=(7,-9) (just
+## inside the gate, looking at the apparatus pad) is reused verbatim here
+## rather than re-derived. The judge's own before-frame verdict for this
+## corridor (`JUDGE-b3b5-before.md`) found the apparatus not in frame at all
+## with the trail-vertex eye this station used until now; this fixes that
+## without touching any relay config.
+func _relay_world(local: Vector2) -> Variant:
+	var node: Node = _world.get_node_or_null(^"TetherRelay")
+	if node == null or not node.has_method("world_of"):
+		print("  WARN TetherRelay has no world_of(); station 11 falls back to its trail-vertex eye")
+		return null
+	return node.call("world_of", local) as Vector2
+
+
+func _resolved_station(shot: Array) -> Array:
+	if str(shot[0]) != "11-relay":
+		return shot
+	var eye: Variant = _relay_world(Vector2(-8.0, -2.0))
+	var look: Variant = _relay_world(Vector2(7.0, -9.0))
+	if eye == null or look == null:
+		return shot
+	return [shot[0], eye, look]
 
 
 func _selected(only: Array[String], station_id: String) -> bool:

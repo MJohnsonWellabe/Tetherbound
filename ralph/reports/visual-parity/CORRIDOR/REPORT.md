@@ -768,3 +768,155 @@ Rounds: 1 (`f1d74889`), 2 (`d8aa35b6`), round-2 addendum (`ccfd57d5` +
 composed; the two capture-tool bugs found this pass (station 05's/12's
 gully-seat risk, `--only=`'s comma-list support) are both fixed and this
 round's station 12 was sited to avoid the same trap from the start.
+
+---
+
+## Round 5 — station 07 regression, band 3-5 judged fixes, signpost siting
+
+Two coordinator messages, folded into one bake/render cycle as instructed:
+(1) `JUDGE-round3.md`'s addendum — station 07 regressed below baseline, and
+station 08's signpost text is clipped; (2) `JUDGE-b3b5-before.md` — a
+per-station ranked fix list for the 8 new stations, with three requiring
+re-siting (09, 10, 14), one requiring hands-off verification only (11), one
+light-touch left to PLACES (15), and two already passing (12, 16).
+
+### Station 07 (band2_stone_and_root/vegetation.json)
+
+`JUDGE-round3.md`: "it lost its one foreground/mid-ground tree cluster...
+canopy-shader fixes cannot fix a station whose problem is scatter
+placement." Every existing anchor here (the ridge line, hero tree, rocks)
+sits 60-75m out or is a single tree — none of them a real foreground copse.
+Added: 8 trees, radius 13, 28m out at 22° off-axis (left side, where only
+the lone hero tree stood), plus 4 edge bushes. Confirmed by render: real
+near-field mass now stands left of the path.
+
+### Station 08 signpost — investigated, partially fixed, honestly incomplete
+
+The judge named "the left signpost's text is clipped/overflowing its
+plank" across every round. Investigation: `scripts/world/signpost.gd`'s
+`_label_scale()` already fits any label length correctly, ruling out a
+sizing bug. First hypothesis — `Label3D.double_sided` (default true)
+letting the mirrored back-face text bleed through a 5cm plank — was coded
+and tested: re-rendering with only that line changed left the corrupted
+text unchanged, which **ruled it out**. Second finding, confirmed with
+data: `Warren Undertrail` and `Stone Gate Spoke` are two separate
+trailhead signposts both generated near the identical shared road junction
+(-420,2470), landing only 4.08m apart — station 08 stands almost on that
+junction. Separated `Stone Gate Spoke` to 10.1m from its neighbour in
+`terrain_playground.json` (arm bearing unchanged). **Rendered result: the
+text is still not fully legible after this fix.** Kept both changes (the
+double-sided fix is a real defect in its own right; the separation is
+correct regardless) but this is reported as an **open, only partially
+understood defect** rather than claimed as solved — likely compounded by
+the board's small absolute size at typical viewing distance, which is a
+legibility/scale question this pass did not have budget to chase further.
+Two other trailhead pairs sharing the same shared-junction pattern (Pond
+Circuit/River Gorge Spoke at 2.25m, Quarry Haul Road/Mountain Trail Spoke
+at 4.21m) were found by the same audit; neither is in view at any VP4
+corridor station and both are left for whoever next touches signpost
+siting.
+
+### Stations 09, 10, 14 — re-sited and/or anchored per `JUDGE-b3b5-before.md`
+
+- **09-river-lock-entry**: added a tree copse (30m, 22° off-axis, right)
+  and a near-camera rock/bush cluster (15m, 15° off-axis, left) to
+  `band3_the_river_lock/vegetation.json` (this band's first-ever
+  `layer_anchors`). **Not fixed, disclosed honestly**: the judge's water
+  complaint. `data/config/water.json`'s river `course` runs z 4080-4222 —
+  the same river station 12 already frames — 800-900m further down the
+  route than this station's z=3290. Moving the station that close to 12
+  would duplicate it and leave a gap earlier in the band, so the station
+  stays at its trail-vertex position and the mid-ground defect (the part
+  vegetation can actually reach) is fixed instead of faking a water
+  feature that structurally isn't there. The stray creature at the frame
+  edge is wildlife AI, not scatter, and not deterministic across renders —
+  left alone.
+- **10-relay-approach**: added a copse (30m, 22° off-axis) to claim the
+  frame's empty left half, per the judge's own fix. Rendered result: real
+  new trees now stand behind the camp furniture, adding mid-ground mass
+  where there was none — not exactly "claiming the left third" as
+  literally as intended (the copse reads more center-left than pure-left),
+  but a genuine improvement on the actual defect named.
+- **14-ridge-camp-approach**: `look` re-sited in `tools/_capture_corridor.gd`
+  from the next trail vertex to `ridge_patrol_camp`'s own props.json
+  centroid (-235.9,6471.7) — the trail-vertex look put the camp 51.5° off
+  axis, past the ~51.3° half-FOV, so it was never in frame at all. Added a
+  rock cluster between the station and the camp for a "ridge shelf" visual
+  cue. **Rendered result, disclosed honestly: still does not clearly show
+  the tent/fire silhouette.** The look direction genuinely changed (67-69%
+  pixel diff against both the before-set and round 5, confirming the
+  re-aim took effect), but whatever is now in frame does not read as a
+  camp. Given this pass's remaining budget, this is left as an open item
+  rather than iterated further blind — the honest state is "re-sited,
+  camp still not legible," not "fixed."
+
+### Station 11 — framing only, no relay files touched
+
+Per the coordinator's explicit instruction ("PLACES owns the compound
+materials... do NOT touch relay files; only make sure your station frames
+the compound so the apparatus is visible"). The apparatus was not in frame
+at all with the trail-vertex eye. Extended `tools/_capture_corridor.gd`
+with a relay-local coordinate resolver (`_relay_world()`, calling
+`TetherRelay.world_of()`) reusing `tools/_capture_locations.gd`'s own
+already-proven `standing` shot local coordinates (`at`=(-8,-2),
+`look`=(7,-9)) verbatim, rather than hand-deriving the site's rotated
+frame — the same left/right sign-error trap this pass has hit twice
+already. Confirmed by render: the apparatus is now clearly centred in
+frame. No `tether_relay.json` or other relay config touched.
+
+### Stations 12, 15, 16 — left alone
+
+12 and 16 already pass per the judge; 15's fix (Hall silhouette contrast
+against smoke) is explicitly PLACES' material/lighting work, not a
+placement fix.
+
+### Round 6 frames and verification
+
+Re-baked (`computed 825759 placements`), re-imported, re-rendered all 16
+stations into `ralph/reports/visual-parity/CORRIDOR/round6/`.
+
+| station | vs 00-before-b3b5 | vs round5 | note |
+|---|---|---|---|
+| 09-river-lock-entry | 30.6% | 5.3% | copse + rock added |
+| 10-relay-approach | 26.4% | 7.5% | copse added |
+| 11-relay | 85.7% | 84.0% | station re-sited to the relay-local apparatus view |
+| 12-old-mill-crossing | 21.8% | 3.9% | untouched (canopy/creature variance) |
+| 13-band4-entry-bend | 26.5% | 6.7% | unchanged this round (already fixed round 4) |
+| 14-ridge-camp-approach | 67.1% | 69.4% | look re-sited; camp still not clearly visible (open item) |
+| 15-stronghold-approach | 18.0% | 1.8% | untouched, left to PLACES |
+| 16-hall-gate-approach | 26.8% | 4.1% | untouched, already passes |
+
+Also verified against round5: 07-band2-mid 6.6% (the new copse), 08-band2-far
+20.4% (the signpost separation moved one post; canopy/creature variance
+accounts for the rest).
+
+### Tests, round 5 (this cycle)
+
+- `tests/run_tests.gd -- --only=test_scatter_rules.gd,test_veg_corridor.gd`:
+  **47 tests, 0 failed**.
+- `tests/smoke_traversal.gd`: run twice, **FAIL then PASS**, identical
+  failure text/distance to the original pre-existing bug both times it
+  failed across this whole pass, with zero code changes between the two
+  runs in this cycle — confirmed **flaky**, not a regression from this
+  round's own changes (which never touch the South Bridge/gate area).
+
+### Bake
+
+Not committed, same convention as every round:
+`computed 825759 placements (3802 drained) across 11 layers`.
+
+### Honestly still open
+
+1. **Station 08's signpost text** is still not fully legible after two
+   attempted fixes (double-sided text, sign separation); root cause not
+   conclusively identified within this pass's budget.
+2. **Station 14's camp** is still not visible after re-siting the look
+   target; the aim direction demonstrably changed but whatever it now
+   frames does not read as "ridge camp."
+3. **Station 09's water complaint** is structurally unfixable at this
+   station's position — the river is ~800m further down the route — and is
+   not attempted.
+4. Two more trailhead-signpost siting collisions exist elsewhere in the
+   game (Pond Circuit/River Gorge Spoke; Quarry Haul Road/Mountain Trail
+   Spoke), found by the same audit that fixed station 08's pair; neither is
+   in view at any VP4 station and neither was touched.

@@ -60,6 +60,14 @@
         "count": 12,
         "scale_min": 0.9,
         "scale_max": 1.2
+      },
+      {
+        "_why": "ROUND 3 ADDENDUM (JUDGE-round3.md): station 07 was found WORSE THAN BASELINE -- 'it lost its one foreground/mid-ground tree cluster... canopy-shader fixes cannot fix a station whose problem is scatter placement, not rendering'. Every existing anchor at this station (the ridge line above and the hero tree/rocks/bushes below) sits 60-75m out or is a single tree -- none of them is a real foreground/mid-ground COPSE the way the judge's own baseline description names ('a real tree cluster occupies the left third of the frame at near-mid range'). This is that copse: 8 trees, radius 13, 28m out at 22 degrees off the view axis (left side, where only the lone hero tree stood before) -- close enough to read as foreground/mid-ground mass, not another horizon element. Clear of every other anchor here (>34m from the hero tree, >35m from the rocks/bushes pair).",
+        "at": [1.0, 2151.0],
+        "radius": 13.0,
+        "count": 8,
+        "scale_min": 0.85,
+        "scale_max": 1.3
       }
     ],
     "rocks": [
@@ -101,6 +109,12 @@
       {
         "_why": "ROUND 2: 4 bushes near the new round-2 rock cluster, per the brief. Coordinates corrected alongside the rock cluster above.",
         "at": [6.0, 2120.0],
+        "radius": 6.0,
+        "count": 4
+      },
+      {
+        "_why": "ROUND 3 ADDENDUM: edge planting on the new station-07 foreground copse.",
+        "at": [10.0, 2141.0],
         "radius": 6.0,
         "count": 4
       }
