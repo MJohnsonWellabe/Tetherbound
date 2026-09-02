@@ -609,7 +609,7 @@ func _stone_shader_material(colour: Color, tile: float, emissive := 0.0,
 		# (building_prefabs.json) are a fixed mid-value grey-tan handed in by
 		# the caller, and no amount of moss coverage over a pale base reads as
 		# "dark ruined mass" at 400m when most of a pixel is still that base.
-		var darken := clampf(float(ext.get("darken", 0.24)), 0.0, 0.95)
+		var darken := clampf(float(ext.get("darken", 0.0)), 0.0, 0.15)  # sRGB darken; 0.15 ≈ ×0.7 linear
 		var desat := clampf(float(ext.get("desaturate", 0.32)), 0.0, 1.0)
 		tint = tint.darkened(darken)
 		var grey := Color(tint.get_luminance(), tint.get_luminance(), tint.get_luminance())
