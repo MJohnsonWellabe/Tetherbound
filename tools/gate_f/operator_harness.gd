@@ -3418,7 +3418,21 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 		var sent := await _inject(throw_control, _hold_frames("tap"))
 		if not bool(sent.get("ok", false)):
 			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
-		await _step_wait({"seconds": resolve_seconds})
+		# NOT a fixed wait: `combat_manager.gd`'s post-strike resolve sequence
+		# (absorb -> shake x N -> settle -> verdict) runs to a length that
+		# depends on the SHAKE COUNT catching.json rolls per throw (a near
+		# miss shakes more than a hopeless one), which a guessed duration
+		# cannot know -- a fixed 6.0s here once undershot a max-shake resolve
+		# and cost a whole re-arm cycle, `_read_player_input()` silently
+		# dropping interact presses because `_catch_phase` was still
+		# non-NONE. Phase 1 confirms the strike actually started resolving
+		# (skips itself harmlessly if the orb missed the body outright and
+		# there is nothing to resolve); phase 2 waits for the real end.
+		await _step_wait_until({"check": "catch_resolving", "equals": true,
+			"budget_frames": 180, "poll_frames": 3})
+		await _step_wait_until({"check": "catch_resolving", "equals": false,
+			"budget_frames": maxi(60, int(resolve_seconds * float(Engine.physics_ticks_per_second))),
+			"poll_frames": 3})
 		var party_now := (_probe.call("party_state") as Array).size()
 		log.append("throw %d (%s)" % [attempt + 1, "tracked" if not tracked.begins_with("FAIL") else "untracked"])
 		if party_now > party_before:
@@ -4622,6 +4636,23 @@ func _step_assert(args: Dictionary) -> Dictionary:
 			var want := str(args.get("prefix", ""))
 			var have := str(_probe.call("input_context"))
 			return {"ok": have.begins_with(want), "actual": "input_context=%s (wanted prefix %s)" % [have, want]}
+		"catch_resolving":
+			# combat_manager.gd::_tick_active() reads `_catch_phase` (ABSORB ->
+			# WAIT -> SHAKING -> VERDICT) BEFORE `_read_player_input()` and
+			# returns early while it is anything but NONE -- interact presses
+			# during that window are silently dropped, not queued. The window's
+			# real length depends on the SHAKE COUNT catching.json's own
+			# `resolve` block rolls per throw (a near miss shakes more times
+			# than a hopeless one, `resolve.max_shakes_on_failure`), which a
+			# fixed `wait` cannot know in advance -- `throw_until_caught`
+			# guessed 6.0s once and a throw that rolled the max shake count
+			# outlasted it, so three re-arm presses all landed while
+			# `_catch_phase` was still non-NONE and none of them registered.
+			# `combat_manager.gd::is_resolving_catch()` is the live truth.
+			var want_resolving := bool(args.get("equals", false))
+			var mgr2 := _probe.call("combat_manager") as Node
+			var resolving := bool(mgr2.call("is_resolving_catch")) if mgr2 != null and mgr2.has_method("is_resolving_catch") else false
+			return {"ok": resolving == want_resolving, "actual": "catch_resolving=%s (wanted %s)" % [resolving, want_resolving]}
 		"enemy_hp_fraction":
 			# S03's catch ladder chipped a fixed `times: 3` regardless of how
 			# much that actually left on the target -- measured across a real
