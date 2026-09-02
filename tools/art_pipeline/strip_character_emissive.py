@@ -39,7 +39,7 @@ WHY THE SOURCE ASSET AND NOT A RUNTIME OVERRIDE
 instantiate the imported scene and neither constructs materials, so there is no
 single existing choke point to patch. Six rigs reachable from several spawn
 paths is precisely the shape where a runtime fix silently misses one -- the
-failure class `ralph/conventions.md` already records twice ("a value written to
+failure class `docs/AGENT_WORKFLOW.md` already records twice ("a value written to
 config, read back from config, and never reaching the shader"). Fixing the
 asset fixes every path at once and is verifiable with tools/_char_probe.gd.
 
@@ -55,7 +55,7 @@ exits non-zero only if it cannot parse a file.
 
 Re-run `godot --headless --path . --import` afterwards: the import cache holds
 the OLD material, and a capture run reads the imported form, not the .glb
-(ralph/conventions.md, "Art pipeline traps").
+(docs/AGENT_WORKFLOW.md, "Art pipeline traps").
 """
 
 import json

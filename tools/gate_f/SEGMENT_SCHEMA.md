@@ -2,7 +2,7 @@
 
 What `tools/gate_f/segments/*.json` may contain, and exactly what
 `tools/gate_f/operator_harness.gd` does with each action. This is the contract
-between the person transcribing `ralph/GATE_F_MASTER_PROTOCOL.md` §E's step
+between the person transcribing `docs/acceptance/GATE_F_MASTER_PROTOCOL.md` §E's step
 tables and the harness that plays them.
 
 Written before the S01–S10 / X01–X08 files exist, on purpose: a vocabulary
@@ -55,7 +55,7 @@ a button and no way to say "hold it".
 
 ### Evidence lanes
 
-Added 2026-08-27, owner decision, recorded in `ralph/GATE_F_MASTER_PROTOCOL.md`
+Added 2026-08-27, owner decision, recorded in `docs/acceptance/GATE_F_MASTER_PROTOCOL.md`
 §H.1 with the measurement behind it. In short: a rendered frame of the Meadows
 costs 12,721 ms on the Gate F container against 6.1 ms in logic mode, and the
 eighteen protocol segments ask for 4,607,802 physics frames. Continuous
@@ -187,7 +187,7 @@ half alone fails on a different part of the game:
 - `Input.action_press` alone **cannot move UI focus**. Focus neighbours are
   walked from real InputEvents arriving through the viewport. A poll-only test
   reports a working menu while the stick moves nothing
-  (`ralph/conventions.md`; `tests/smoke_menu.gd` is the worked example).
+  (`docs/AGENT_WORKFLOW.md`; `tests/smoke_menu.gd` is the worked example).
 - A parsed `InputEventJoypadMotion` alone **cannot move the player**.
   `player_controller.gd` and `camera_rig.gd` read `Input.get_vector()`, a poll.
   Measured on `main`: the stick "held" in all eight directions moved the player
@@ -279,7 +279,7 @@ the PILOTED creature falls. Every one of those steps reported PASS, because a
 press step only ever asserts that input was injected — the same defect shape
 RIG-26 found on engage steps.
 
-`type_name` exists because naming is mandatory (`docs/OPENING_SEQUENCE.md`) and
+`type_name` exists because naming is mandatory (`docs/specs/OPENING_SEQUENCE.md`) and
 it is the one beat nothing else in this vocabulary can reach: `name_prompt.gd`
 in pad mode is a letter grid driven by `ui_*` and `menu_confirm`, so "press
 confirm until it goes away" types the same letter forever and never finds Done.
@@ -745,7 +745,7 @@ the segment: an unanswerable check is not an uncommittable file.
 
 ### Event types — §C.1's enum, restated here because CI cannot see the protocol
 
-`ralph/GATE_F_MASTER_PROTOCOL.md` §C.1 is the source of truth for this list. It
+`docs/acceptance/GATE_F_MASTER_PROTOCOL.md` §C.1 is the source of truth for this list. It
 is restated here for one concrete reason: **`verify-unit-tests` sparse-checks
 out `!/ralph/`**, so a test that parses the enum from the protocol reads an
 empty file in CI and can enforce nothing. That is not hypothetical — it is how

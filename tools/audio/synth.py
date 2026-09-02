@@ -3,7 +3,7 @@
 
 `gen_ui_cues.py` (spec 20) established the pattern this generalises: the game's
 audio is WRITTEN, in Python, from the standard library plus numpy, and the .wav
-output is committed. Nothing is fetched, so `docs/ASSET_LEDGER.md` needs one row
+output is committed. Nothing is fetched, so `docs/specs/ASSET_LEDGER.md` needs one row
 saying "written for this task" rather than a licence audit per file, and nobody
 has to wonder whether a sample library is redistributable in a shipped build.
 

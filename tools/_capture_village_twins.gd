@@ -8,7 +8,7 @@ extends SceneTree
 ##     --rendering-driver opengl3 --resolution 1920x1080 \
 ##     --script tools/_capture_village_twins.gd -- --tag=before
 ##
-## NEVER `--headless` with a real rendering driver (`ralph/conventions.md`).
+## NEVER `--headless` with a real rendering driver (`docs/AGENT_WORKFLOW.md`).
 ##
 ## No world scene: `building_prefabs.gd::instantiate()` builds a prefab from
 ## its recipe with nothing else standing, so the two buildings can be put next

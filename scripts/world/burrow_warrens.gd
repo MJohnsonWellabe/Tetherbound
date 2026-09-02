@@ -1345,7 +1345,7 @@ func _build_mouth_dome() -> void:
 ##
 ## The terrain, the scatter and the grass drew no complaint. The two spaces
 ## this project ASSEMBLES did. And the before-frames of this cave say exactly
-## why: `docs/evidence/content-0828/04-vault-prize-after.png` is a perfect
+## why: `archive/reports/docs-evidence-full/content-0828/04-vault-prize-after.png` is a perfect
 ## rectangular box -- four flat walls meeting at hard 90-degree corners, a flat
 ## ceiling, a flat floor, one triplanar texture at one scale across all of it.
 ## The meadow next door has hundreds of pieces of variety per comparable area.

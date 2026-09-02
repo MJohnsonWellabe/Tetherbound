@@ -16,7 +16,7 @@ extends SceneTree
 ##     --script tools/_capture_structures.gd
 ##
 ## NEVER `--headless` with `--rendering-driver opengl3`: verified 2026-08-22
-## (ralph/conventions.md, "Art pipeline traps") that combination hangs
+## (docs/AGENT_WORKFLOW.md, "Art pipeline traps") that combination hangs
 ## forever with no error and no crash -- it prints its first line and then
 ## sits in silence until killed, leaving a zombie Godot process pinned to
 ## this worktree burning CPU. Drop `--headless`, keep `xvfb-run` for the

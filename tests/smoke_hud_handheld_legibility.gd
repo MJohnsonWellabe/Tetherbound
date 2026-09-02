@@ -2,7 +2,7 @@ extends SceneTree
 
 ## OP21-11 measured at the device the owner actually plays on. The rest of
 ## `smoke_exploration_legend.gd` measures the 1920x1080 authoring canvas —
-## exactly the resolution `ralph/conventions.md`'s own SETTINGS-SCROLL note
+## exactly the resolution `docs/AGENT_WORKFLOW.md`'s own SETTINGS-SCROLL note
 ## warns is roomy enough to hide a real handheld defect. This file forces
 ## `root.size` down to the Ally's real panel resolution instead and asserts
 ## real pixel measurements there, not "it looks bigger."

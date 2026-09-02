@@ -1,7 +1,7 @@
 extends SceneTree
 
 ## Gate F operator harness: plays a segment step-script against the REAL game
-## and writes the telemetry `ralph/GATE_F_MASTER_PROTOCOL.md` §C specifies.
+## and writes the telemetry `docs/acceptance/GATE_F_MASTER_PROTOCOL.md` §C specifies.
 ##
 ##   # logic-only (fast, renders nothing, capture steps become file:null)
 ##   godot --headless --path . --script tools/gate_f/operator_harness.gd -- \
@@ -21,7 +21,7 @@ extends SceneTree
 ## ## The two traps this file is shaped around
 ##
 ## **`--headless` plus `--rendering-driver opengl3` hangs forever.** No error,
-## no partial output, exit 124 from `timeout` (`ralph/conventions.md`, the most
+## no partial output, exit 124 from `timeout` (`docs/AGENT_WORKFLOW.md`, the most
 ## expensive trap in this repo). So there is no flag here that produces that
 ## combination: capture mode is xvfb WITHOUT `--headless`, and logic mode is
 ## `--headless` WITHOUT a driver. `_capture_available()` decides which world it
@@ -68,7 +68,7 @@ const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 
 ## Harness tunables live in a file so a run can be re-cadenced without editing
 ## GDScript. NOT under `data/config/`: nothing the game ships reads this, and
-## `ralph/GATE_F_INSTRUMENTATION_REQUEST.md` §10 forbids touching the game's
+## `docs/acceptance/GATE_F_INSTRUMENTATION_REQUEST.md` §10 forbids touching the game's
 ## data configs. Missing file = the defaults below, so the harness still runs
 ## from a bare checkout.
 const CONFIG_PATH := "res://tools/gate_f/harness_config.json"
@@ -4277,7 +4277,7 @@ func _focus_name(state: Dictionary) -> String:
 
 ## Type a name into the live naming prompt on the pad's on-screen grid.
 ##
-## Naming is mandatory (`docs/OPENING_SEQUENCE.md`) and it is the one beat the
+## Naming is mandatory (`docs/specs/OPENING_SEQUENCE.md`) and it is the one beat the
 ## rest of this vocabulary cannot reach: `name_prompt.gd` in gamepad mode is a
 ## letter grid driven by `ui_*` and `menu_confirm`, so "press confirm until it
 ## goes away" types the same letter forever and never finds Done. Without this

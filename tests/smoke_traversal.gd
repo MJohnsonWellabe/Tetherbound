@@ -67,7 +67,7 @@ const COLLISION_DYNAMIC_GAME := 1
 ## world" when nothing is wrong. CI hit exactly that — the forward leg from the
 ## D50 grew the baked world from a ±256m square (`terrain_playground.json`
 ## `world_size` 512, centred on the origin) to an 8192 x 2048m corridor: x in
-## [-1024, 1024], z in [-512, 7680] — `docs/MEADOWS_MACRO_LAYOUT.md` §2, the
+## [-1024, 1024], z in [-512, 7680] — `docs/specs/MEADOWS_MACRO_LAYOUT.md` §2, the
 ## same bounds `world_perimeter.gd`'s own `WORLD_X_WEST`/`WORLD_X_EAST`/
 ## `WORLD_Z_NORTH`/`WORLD_Z_SOUTH` use. A single `WORLD_EDGE` scalar checked
 ## against `absf(x)`/`absf(z)` assumed a square centred on the origin; the

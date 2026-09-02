@@ -27,7 +27,7 @@ extends "res://tests/test_case.gd"
 ## and the alternative reading (no authored number may ever be tuned again after
 ## the split) would freeze the game's balance permanently, which nobody
 ## intended. `captain_field` and `captain_ridge`'s team levels were updated here
-## for exactly that reason; see docs/MEADOWS_PROGRESSION_CURVE.md section 4 for
+## for exactly that reason; see docs/specs/MEADOWS_PROGRESSION_CURVE.md section 4 for
 ## why they moved. Nothing else in the fixtures has been touched, and the
 ## identity keys above are still pinned forever.
 ##

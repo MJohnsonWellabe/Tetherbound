@@ -27,7 +27,7 @@ approved in the follow-up session (alongside pal progression, explicit
 capture odds, and mid-combat switching — `D30`, `D31`, `D32`).
 
 This is a scoped amendment, not the mandatory-hunger system `CLAUDE.md`'s
-ask-first list warns against. `ralph/conventions.md`'s "no starvation-death
+ask-first list warns against. `docs/AGENT_WORKFLOW.md`'s "no starvation-death
 meter and never will be" is about the death clock specifically, and that
 clock still does not exist.
 

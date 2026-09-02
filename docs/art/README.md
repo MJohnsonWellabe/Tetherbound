@@ -11,7 +11,7 @@ Use the most specific current source:
 - **Character/reference precedence:** `REFERENCE_CANON.md`
 - **Whole Meadows roster list:** `ROSTER_MANIFEST.md`
 - **3D production pipeline:** `TETHERBOUND_3D_ART_PIPELINE.md`
-- **Asset provenance/license:** `docs/ASSET_LEDGER.md`
+- **Asset provenance/license:** `docs/specs/ASSET_LEDGER.md`
 
 Older production reports are valuable for pipeline history, but current asset availability comes from the inventory above and current files on `main`.
 

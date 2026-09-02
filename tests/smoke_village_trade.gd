@@ -4,7 +4,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_village_trade.gd
 ##
-## **Headless, never under xvfb** — docs/HANDOFF.md §10, same as every other
+## **Headless, never under xvfb** — archive/docs/HANDOFF.md §10, same as every other
 ## scene-booting test here.
 ##
 ## The sibling of `tests/smoke_village_smith.gd`, and split from

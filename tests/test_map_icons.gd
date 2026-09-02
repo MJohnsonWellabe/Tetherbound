@@ -19,7 +19,7 @@ const ICON_DIR := "res://assets/ui/icons/map/"
 ## `map_landmarks.json` never mentions them — `objective` is the tracked-
 ## objective diamond, `question` is the undiscovered-silhouette fallback
 ## (`autoload/map_state.gd`'s `silhouette` flag), `camp` is the trainer camp's
-## dynamic marker icon (`docs/MEADOWS_PROGRESSION_SPEC.md`'s camp beats add
+## dynamic marker icon (`docs/specs/MEADOWS_PROGRESSION_SPEC.md`'s camp beats add
 ## markers through `MapState.add_dynamic_marker()`, never through the static
 ## landmark table).
 const ALWAYS_REQUIRED: Array[String] = ["objective", "question", "camp"]

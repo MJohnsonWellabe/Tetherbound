@@ -105,7 +105,7 @@ const GLYPHS := {
 	## piece of text, on the one HUD row that is up during ordinary exploration.
 	## `party_cycle`'s keyboard binding really is C (`project.godot`,
 	## physical_keycode 67); the keycap was simply never extracted from the
-	## already-vendored CC0 pack. `docs/ASSET_LEDGER.md` carries the row.
+	## already-vendored CC0 pack. `docs/specs/ASSET_LEDGER.md` carries the row.
 	"party_cycle": {"keyboard": "keyboard_c.png", "gamepad": "xbox_lb.png"},
 
 	## HD2's quick-access hotbar. Five slots, each its own single direct
@@ -189,7 +189,7 @@ const GLYPHS := {
 	## treatment `build_snap_cycle` above already gets for Shift.
 	##
 	## PT-17 then sourced `keyboard_h.png` fresh from that same raw Kenney pack
-	## (`docs/ASSET_LEDGER.md`) for its own rename verb, which reuses this same
+	## (`docs/specs/ASSET_LEDGER.md`) for its own rename verb, which reuses this same
 	## `backpack_split` binding (H / gamepad R3) rather than adding a new
 	## action -- see `tab_creatures.gd`'s own header for why borrowing beats a
 	## second action, and `torch_toggle` above for R3's other, mutually
@@ -216,7 +216,7 @@ const GLYPHS := {
 
 ## Actions whose PAD button lives on a DIFFERENT action.
 ##
-## CONTROLLER-MAP (`ralph/OWNER_DIRECTIVES_2026-08-22.md` §1, recorded as
+## CONTROLLER-MAP (`docs/owner/OWNER_DIRECTIVES_2026-08-22.md` §1, recorded as
 ## `docs/decisions/D68`) re-authored the pad map and moved several verbs onto
 ## buttons that already had an action of their own. The verb still exists on the
 ## pad; the action named for it no longer carries a joypad event.
@@ -345,7 +345,7 @@ static func key_name_for_action(action: String) -> String:
 ##
 ## Only for the glyph fallback above: an action with a live pad binding and no
 ## art should say which button it is, not which key it is. Covers the buttons
-## `ralph/OWNER_DIRECTIVES_2026-08-22.md`'s authored map actually uses; anything
+## `docs/owner/OWNER_DIRECTIVES_2026-08-22.md`'s authored map actually uses; anything
 ## outside that returns "" and falls through to the key name as before, which
 ## is the honest answer for an action a pad genuinely cannot reach.
 static func pad_button_name_for_action(id: String) -> String:

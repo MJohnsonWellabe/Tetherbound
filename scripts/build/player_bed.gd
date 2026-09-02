@@ -18,7 +18,7 @@ extends Node3D
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 
-## The camp set's own bed -- `docs/ASSET_LEDGER.md`'s generated_camp asset,
+## The camp set's own bed -- `docs/specs/ASSET_LEDGER.md`'s generated_camp asset,
 ## already used at ground level for the trainer's own sleeping spot before
 ## this split (and, unscaled, distinct from `creature_bed.gd`'s squashed pad
 ## composition of the SAME mesh for a creature's own rest).

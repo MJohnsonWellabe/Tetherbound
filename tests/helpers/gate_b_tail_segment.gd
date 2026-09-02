@@ -26,7 +26,7 @@ extends RefCounted
 ## * the tournament is entered through the marshal's own `greeting_when`
 ##   ladder, which means `tournament_condition_ready` has to be true for real;
 ## * the three rounds are FOUGHT, through `encounter_director`;
-## * Gate B ends where `ralph/ACTIVE_GAME_PLAN.md` says it ends -- on the
+## * Gate B ends where `docs/ROADMAP.md` says it ends -- on the
 ##   OBJECTIVE to leave for the South Bridge, not on the bridge already open.
 
 const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
@@ -382,7 +382,7 @@ func _sleep_the_team_into_condition() -> bool:
 	#   a team ... is still not in condition: ["Terrapup is unhappy."]
 	#
 	# What a player does when the marshal turns them away is go home and sleep
-	# again, so that is what this does. Recorded in `ralph/BACKLOG.md` as a
+	# again, so that is what this does. Recorded in `docs/CURRENT_STATE.md` as a
 	# chapter finding too: one bad fight costs a night.
 	for night in 3:
 		var day_before := int(_game.get("day"))
@@ -759,7 +759,7 @@ func _fight_and_win(spec: Dictionary) -> bool:
 
 ## --- 7: where Gate B ends ------------------------------------------------------
 
-## `ralph/ACTIVE_GAME_PLAN.md`: Gate B ends on "objective to leave for South
+## `docs/ROADMAP.md`: Gate B ends on "objective to leave for South
 ## Bridge". Not on the bridge already open -- crossing it is Gate C's first
 ## beat, and a run that sets `south_bridge_open` itself CONSUMES the objective
 ## Gate B is supposed to finish pointing at.

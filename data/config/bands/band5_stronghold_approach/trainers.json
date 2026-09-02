@@ -6,7 +6,7 @@
       "id": "stronghold_patrol",
       "name": "Patrolman Verrick",
       "_comment": "SG38, spec Sec8 'Outer Works: patrol trainer'. The first Team Tether body the player meets inside the stronghold's own works, and the lowest rank on Sec36's ladder -- a grunt on a walk, not a gatekeeper. Two creatures, both a little above the captains' band: this fight's job is to tell an under-levelled party to turn around while turning around is still cheap.",
-      "_comment_ow5d": "OW5D relocation, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: same (-141.8,+7775.4) offset as stronghold.json's `site.at` (141.8,-215.4)->(0,7560), since this fallback mirrors the room's own (translation-only) position.",
+      "_comment_ow5d": "OW5D relocation, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: same (-141.8,+7775.4) offset as stronghold.json's `site.at` (141.8,-215.4)->(0,7560), since this fallback mirrors the room's own (translation-only) position.",
       "rank": "grunt",
       "placed_by": "stronghold",
       "position": [
@@ -235,7 +235,7 @@
       "defeat_flag": "defeated_stronghold_outer_watch",
       "rechallenge": false,
       "base": "grunt_a",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 5006,

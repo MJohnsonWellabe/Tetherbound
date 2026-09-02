@@ -18,7 +18,7 @@ extends SceneTree
 ## load time (correct, just slow) rather than serving a stale bake silently.
 ##
 ## World name is fixed at "playground" for now, matching `data/terrain/playground`.
-## A multi-region world (`docs/MEADOWS_MACRO_LAYOUT.md`) reruns this unchanged --
+## A multi-region world (`docs/specs/MEADOWS_MACRO_LAYOUT.md`) reruns this unchanged --
 ## the region partitioning already exists, it has just never had more than
 ## four regions to split across.
 

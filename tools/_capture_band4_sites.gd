@@ -1,7 +1,7 @@
 extends SceneTree
 
 ## GATE-D4/prompt 65: fixed frames of the new Band 4 content for the blind
-## visual pass (ralph/conventions.md "Visual-affecting work needs a blind
+## visual pass (docs/AGENT_WORKFLOW.md "Visual-affecting work needs a blind
 ## pass"). Same shape as tools/capture_site_shots.gd -- real frames, no HUD,
 ## no touch-ups.
 ##

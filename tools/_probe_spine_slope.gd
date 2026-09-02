@@ -19,7 +19,7 @@ extends SceneTree
 ##   * ASSERTING that an authored route does not cross authored terrain is a
 ##     CONFIG question, and the config is the only thing that can answer it.
 ##
-## `ralph/BACKLOG.md` states this constraint in as many words, as something
+## `docs/CURRENT_STATE.md` states this constraint in as many words, as something
 ## `OW5C` inherited from `OF15`: "No trail segment may cross ground steeper
 ## than `floor_max_angle`. Assert it with a probe over the candidate route
 ## BEFORE the bake, not by walking it afterwards: `height_at` is analytic and

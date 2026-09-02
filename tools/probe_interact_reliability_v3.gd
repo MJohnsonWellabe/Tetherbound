@@ -1,7 +1,7 @@
 extends SceneTree
 ## OWNER-0901-INTERACT-RELIABILITY-V3.
 ##
-## V2 (ralph/DONE.md, tools/probe_interact_flake.gd + probe_interact_approach.gd
+## V2 (archive/ralph/DONE.md, tools/probe_interact_flake.gd + probe_interact_approach.gd
 ## + probe_interact_lag.gd + probe_arbiter_race.gd) closed one real staleness
 ## window in interaction_arbiter.gd but said so itself, in its own commit
 ## message: "not a confirmed root cause of the owner's 'about half the time'
@@ -46,7 +46,7 @@ extends SceneTree
 ##   godot --headless --path . --script tools/probe_interact_reliability_v3.gd
 ##
 ## Every situation prints its own N attempts / M misses. Nothing here retries
-## a press that missed -- one tap, one verdict, per `ralph/conventions.md`'s
+## a press that missed -- one tap, one verdict, per `docs/AGENT_WORKFLOW.md`'s
 ## own rule that a poll-only/forgiving-retry test hides the exact flake rate
 ## an owner report like this one is asking about.
 

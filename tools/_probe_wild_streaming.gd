@@ -43,7 +43,7 @@ const REAL_START := Vector3(40.0, 0.0, -62.0)
 ## corridor's real occupied width/length (data/config/bands/*/spawns.json
 ## entries sit within x in [-450, 300], z in [-40, 7000]) so every point
 ## lands on baked, walkable ground the same way the real table's own entries
-## do (`docs/MEADOWS_MACRO_LAYOUT.md` §2's corridor covers this whole span).
+## do (`docs/specs/MEADOWS_MACRO_LAYOUT.md` §2's corridor covers this whole span).
 const SYNTH_CLUSTER_COUNT := 120
 const SYNTH_PER_CLUSTER := 8
 const SYNTH_RADIUS := 15.0

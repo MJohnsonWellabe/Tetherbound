@@ -1,6 +1,6 @@
 {
   "_comment": "BAND-SPLIT. Band-local trainers for band2_stone_and_root. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order trainers are placed. A new entry in this band takes an unused order in this band's reserved range 2000-2999, which no other band can collide with; do not renumber an existing one.",
-  "_comment_mq2b": "MQ2B checked this deliberately rather than leaving it empty by omission. Neither `docs/MEADOWS_PROGRESSION_SPEC.md` section 3 nor `docs/MEADOWS_MACRO_LAYOUT.md` names a Band 2 trainer, and the macro-layout doc calls this band's human occupation 'abandoned' -- the ranger camp is empty, the quarry has nobody in it. The band's required fight is the Burrow Warrens guardian (burrow_warrens.json), not a trainer battle. If a future pass wants a Band 2 trainer, that is new named-character authorship (CLAUDE.md's ask-before-inventing list), not a gap this file forgot to fill.",
+  "_comment_mq2b": "MQ2B checked this deliberately rather than leaving it empty by omission. Neither `docs/specs/MEADOWS_PROGRESSION_SPEC.md` section 3 nor `docs/specs/MEADOWS_MACRO_LAYOUT.md` names a Band 2 trainer, and the macro-layout doc calls this band's human occupation 'abandoned' -- the ranger camp is empty, the quarry has nobody in it. The band's required fight is the Burrow Warrens guardian (burrow_warrens.json), not a trainer battle. If a future pass wants a Band 2 trainer, that is new named-character authorship (CLAUDE.md's ask-before-inventing list), not a gap this file forgot to fill.",
   "_comment_band2_63_third_picket": "BAND2-63. That reasoning held at two pickets over 1820m; the coordinator's own checkpoint flagged it as close to prompt 59's 'no major region is simply wild traversal followed by one boss' with the Warrens guardian standing in for the boss. A THIRD grunt, past the Warrens rather than before it, is the same ordinary picket-siting CLAUDE.md's ask-list already exempts (an unnamed rank-and-file member of an existing faction, on the existing grunt rig, material-differentiated the way Dorn and Pell already are) -- not the new named character with real story weight the header comment above was actually warning against. Sited deep in the oak forest past the Warrens' second mouth, escalating past Pell the same way Pell escalated past Dorn, and reinforcing the region's own curiosity beat: Team Tether did not stop at the quarry or the warrens, they are still moving south toward wherever Band 3's relay picks them up.",
   "trainers": [
     {
@@ -41,7 +41,7 @@
       "defeat_flag": "defeated_quarry_dorn",
       "rechallenge": false,
       "base": "grunt_b",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 2001,
@@ -90,7 +90,7 @@
       "defeat_flag": "defeated_warrens_pell",
       "rechallenge": false,
       "base": "grunt_c",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 2002,
@@ -130,7 +130,7 @@
       "defeat_flag": "defeated_band2_outrider_kest",
       "rechallenge": false,
       "base": "grunt_a",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 2003,

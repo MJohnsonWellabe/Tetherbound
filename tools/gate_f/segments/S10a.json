@@ -5,11 +5,11 @@
   "record_hz": 0.5,
   "title": "Finale I: Hall entry -> gauntlet -> recovery -> elite",
   "lane": "journey",
-  "_comment": "Transcribed verbatim from the original S10.json (steps S10-01..S10-50, renumbered S10a-01..), which was itself transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section E.1 (CB-06), section G (GF-13-FINALE-01, GF-14-COMBAT-06) and section H.",
+  "_comment": "Transcribed verbatim from the original S10.json (steps S10-01..S10-50, renumbered S10a-01..), which was itself transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B (span), section E.1 (CB-06), section G (GF-13-FINALE-01, GF-14-COMBAT-06) and section H.",
   "_comment_warden_coordinate": "AMBIGUITY carried over from S10.json, unaffected by the split: section E.1 CB-06 gives warden_aldis as (90.2,7569.4), which is exactly what data/config/bands/band5_stronghold_approach/trainers.json says. data/config/stronghold.json puts the `warden_arena` chamber at offset (0,90.2) from site.at (0,7560) -- that is (0,7650.2). The two numbers look like the same pair transposed. The discrepancy is recorded rather than silently corrected; it does not affect this segment (the Warden fight itself is in S10b).",
   "evidence_lane": "logic",
   "capture_lane": "S10aC",
-  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, ralph/GATE_F_MASTER_PROTOCOL.md §H.1. LOGIC lane: headless, mechanics/telemetry/step verdicts. Its own §G ids (GF-13-FINALE-01, GF-14-COMBAT-06) are DELEGATED to S10aC. The harness refuses to start this segment if S10aC does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it.",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, docs/acceptance/GATE_F_MASTER_PROTOCOL.md §H.1. LOGIC lane: headless, mechanics/telemetry/step verdicts. Its own §G ids (GF-13-FINALE-01, GF-14-COMBAT-06) are DELEGATED to S10aC. The harness refuses to start this segment if S10aC does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it.",
   "steps": [
     {
       "id": "S10a-01",

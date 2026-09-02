@@ -29,7 +29,7 @@ extends "res://tests/test_case.gd"
 ## data) rather than re-running the 60-second compute path itself, which
 ## would make this test the exact cost it exists to prevent.
 ##
-## Per ralph/conventions.md: "an assertion that cannot fail is not a test."
+## Per docs/AGENT_WORKFLOW.md: "an assertion that cannot fail is not a test."
 ## Every assertion below fails today if the bake this task committed is ever
 ## deleted, goes stale (a vegetation.json/terrain_playground.json edit with
 ## no re-bake -- `BAKE.is_fresh()`'s own fingerprint check), or the corridor's

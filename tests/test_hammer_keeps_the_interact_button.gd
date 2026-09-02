@@ -2,7 +2,7 @@ extends "res://tests/test_case.gd"
 
 ## The build hammer must not forfeit the interact button to a status line.
 ##
-## Under CONTROLLER-MAP (`ralph/OWNER_DIRECTIVES_2026-08-22.md` §1) `build_open`
+## Under CONTROLLER-MAP (`docs/owner/OWNER_DIRECTIVES_2026-08-22.md` §1) `build_open`
 ## has no pad button: "Build hammer is the same pattern: select it, press
 ## interact, you are in build mode." So `playground_hud.gd::
 ## _hammer_opens_the_catalogue()` is the ONLY route into build mode on a pad.

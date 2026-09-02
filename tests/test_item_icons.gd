@@ -8,7 +8,7 @@ extends "res://tests/test_case.gd"
 ## file actually loads as a texture rather than just passing
 ## ResourceLoader.exists(). It also checks the small shared UI icon set
 ## (assets/ui/icons/ui/) that joined the same vendoring pass — see
-## docs/ASSET_LEDGER.md's "Item + shared UI icons" row for the per-file source
+## docs/specs/ASSET_LEDGER.md's "Item + shared UI icons" row for the per-file source
 ## mapping.
 
 const ITEMS_PATH := "res://data/items/items.json"

@@ -251,7 +251,7 @@ static func hide_fire_surface(prop: Node) -> void:
 ## tileable cut-log/bark diffuse that was never the rejected part. No new
 ## Meshy spend, no shape change to the log geometry that already reads fine
 ## -- same "one mesh, many materials" reuse this codebase already uses
-## elsewhere (`docs/ASSET_LEDGER.md`'s `tm_orb` entry). Called from every
+## elsewhere (`docs/specs/ASSET_LEDGER.md`'s `tm_orb` entry). Called from every
 ## site that also calls `ignite()` on the same prop (`camp.gd`'s player-built
 ## fire, `props.gd`'s `glow: "campfire"` branch for every authored fire), so
 ## the fix is shared rather than scoped to one caller -- the exact mistake

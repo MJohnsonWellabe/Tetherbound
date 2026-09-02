@@ -757,7 +757,7 @@ func _the_meadow_was_dressed() -> void:
 	# in the world", and this failed all ten layers on a world the line above it
 	# had just reported as holding 129,419 props in 42 batches -- an assertion
 	# contradicting its own preceding print. Nothing caught it because ci.yml
-	# never ran smoke_art.gd; `ralph/conventions.md` tells every agent to run it
+	# never ran smoke_art.gd; `docs/AGENT_WORKFLOW.md` tells every agent to run it
 	# by hand for creature and model work, which taught them to expect ten
 	# failures and ignore the file.
 	#

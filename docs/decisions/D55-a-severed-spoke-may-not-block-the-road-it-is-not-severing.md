@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-17 · **Decided by:** `SPINE-WEDGE`, against
 `OW5-walk`'s corridor measurements, `docs/decisions/D50` §4–5 and
-`ralph/BACKLOG.md`'s `OW5C`/`OF15` slope constraint
+`docs/CURRENT_STATE.md`'s `OW5C`/`OF15` slope constraint
 
 ## What was asked, and what turned out to be true
 
@@ -125,7 +125,7 @@ coordinates of the things they lead to**, and the legs between them were never
 surveyed against anything. `trail`'s own comment says so: *"Coordinates are the
 layout's own authored intent, not yet surveyed against `height_at` — `OW5C`'s
 own job, before content, is to probe every metre of this for slope beyond the
-player's `floor_max_angle` before it is treated as final."* `ralph/BACKLOG.md`
+player's `floor_max_angle` before it is treated as final."* `docs/CURRENT_STATE.md`
 states the same constraint as something `OW5C` inherited from `OF15`. It was
 never done.
 

@@ -23,7 +23,7 @@ extends SceneTree
 ## That retarget was only HALF applied when CONTROLLER-MAP landed. The control
 ## case below still pressed d-pad left and demanded that it cycle the active
 ## creature -- the exact binding
-## `ralph/OWNER_DIRECTIVES_2026-08-22.md` section 1 removed, and whose removal
+## `docs/owner/OWNER_DIRECTIVES_2026-08-22.md` section 1 removed, and whose removal
 ## is the whole point of the remap ("the d-pad is hotbar 2-5 in every context
 ## including combat"). So this file failed on `main` from the moment the merge
 ## landed, asserting the banned map. No CI shard runs it, so nothing said so.
@@ -39,7 +39,7 @@ extends SceneTree
 ## routes ownership rather than coincidentally leaving both paths alone.
 ##
 ## Real `InputEventJoypadButton` through `Input.parse_input_event`, not
-## `Input.action_press` -- `ralph/conventions.md`: a poll-only press cannot
+## `Input.action_press` -- `docs/AGENT_WORKFLOW.md`: a poll-only press cannot
 ## move Control focus, so a poll-only test would report a working build menu
 ## while the grid never moved. `smoke_gate_a_map_cycle.gd` establishes this
 ## same real-pad-through-full-world pattern for the sibling Gate A checks.
@@ -201,7 +201,7 @@ func _check_build_menu_owns_the_same_press() -> void:
 
 
 ## One physical button, sent once. Real `InputEventJoypadButton` through the
-## live InputMap, per `ralph/conventions.md` -- this is what lets the same
+## live InputMap, per `docs/AGENT_WORKFLOW.md` -- this is what lets the same
 ## press resolve to `hotbar_2` (project.godot override) AND the built-in
 ## `ui_left` Control focus reads, exactly as it does on the ROG Ally.
 func _press_dpad_left() -> void:

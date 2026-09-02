@@ -2,7 +2,7 @@
 
 > Extended by D23 (owner spec, 2026-08-11): the spec's §13 supplies a
 > wild-species-by-area table, which is the schema extension this decision
-> deliberately deferred. `R5.3` in `ralph/BACKLOG.md` is where it lands.
+> deliberately deferred. `R5.3` in `docs/CURRENT_STATE.md` is where it lands.
 
 **Status:** accepted
 **Milestone:** the owner's first-playtest overhaul, 2026-08-09
@@ -56,7 +56,7 @@ table creates for free. Mudsnout now actually spawns.
 
 **The evolution system itself remains unbuilt**, deliberately. This decision
 changes what the world contains, not what the code can do; the mechanic is
-Ralph Phase 4 (`ralph/BACKLOG.md`), and until it lands a caught Mudsnout
+Ralph Phase 4 (`docs/CURRENT_STATE.md`), and until it lands a caught Mudsnout
 simply stays a Mudsnout. That gap is acceptable for the slice's current play
 gates and is recorded in the backlog rather than rushed here.
 

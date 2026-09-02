@@ -23,7 +23,7 @@ extends Node3D
 ##   * GPUParticles3D behaviour is not trustworthy under the software renderer
 ##     the surveys capture with, so an effect built from particles cannot be
 ##     judged from a rendered frame -- and a visual-affecting change that cannot
-##     be judged from a frame cannot ship under ralph/conventions.md.
+##     be judged from a frame cannot ship under docs/AGENT_WORKFLOW.md.
 ##   * Additive blending renders at a fraction of its nominal strength under the
 ##     Compatibility renderer, which made a whole effect invisible once.
 ##   * A flat-on-the-ground ring is the one shape in this codebase that has an

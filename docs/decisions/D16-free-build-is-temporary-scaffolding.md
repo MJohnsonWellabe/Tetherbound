@@ -141,7 +141,7 @@ assert exactly that boundary — crafting has its own materials loop
 (`GameState.recipe_cost_for`/`can_craft`/`craft`) and deliberately did not
 consult the toggle.
 
-The owner's `ralph/OWNER_PLAYTEST_2026-08-21.md` (OP21-10) overrules that
+The owner's `docs/owner/OWNER_PLAYTEST_2026-08-21.md` (OP21-10) overrules that
 scoping: if building is free in the current mode, a structure's prerequisite
 crafting must not be the one step that still drains the satchel. A build
 costing nothing while its own recipe eats materials reads as inconsistent

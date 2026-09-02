@@ -1,5 +1,5 @@
 {
-  "_comment": "The first fifteen minutes, as data. Beats, placements and the conversations they run — docs/OPENING_SEQUENCE.md is the prose version of this file and the two are meant to be read together.",
+  "_comment": "The first fifteen minutes, as data. Beats, placements and the conversations they run — docs/specs/OPENING_SEQUENCE.md is the prose version of this file and the two are meant to be read together.",
   "_comment_tunable": "Every distance and speed here is TUNABLE and none of it is a mechanic. The expected feedback is 'the walk to Grandpa is too long' and 'my creature keeps treading on me', and both have to be answerable by editing this file.",
   "_comment_positions": "All offsets are metres from the player's spawn point, which playground_world.gd puts on the baked ground at the world origin. Y is never given: everything is stood on the ground by asking the world for its height (docs/decisions/D09), never by a raycast and never by a hand-placed Y that rots the next time the terrain is baked.",
 
@@ -24,7 +24,7 @@
 
   "starters": {
     "_comment": "GAME_DESIGN.md 3: three unique starters, Ground/Water/Air, and the two you do not take stay with him.",
-    "_comment_reversal": "REVERSED 2026-08-11 (SA0-orbs, owner directive): this used to say the three wait outside Grandpa's door as standing bodies you walk up to, NOT a menu, and called that decided and load-bearing. The owner asked for the opposite: 'the starters should be in orbs and you preview them while talking to Grandpa.' scripts/ui/starter_picker.gd now previews all three, live, indoors, the moment his briefing ends -- see docs/OPENING_SEQUENCE.md's own record of the same reversal. `species` below is the only field the live game still reads; `forward`/`spread`/`prompt_radius` are kept only because scripts/story/opening_beats.gd::starter_offsets() and its unit test still exist as a utility, not because anything places a body with them any more.",
+    "_comment_reversal": "REVERSED 2026-08-11 (SA0-orbs, owner directive): this used to say the three wait outside Grandpa's door as standing bodies you walk up to, NOT a menu, and called that decided and load-bearing. The owner asked for the opposite: 'the starters should be in orbs and you preview them while talking to Grandpa.' scripts/ui/starter_picker.gd now previews all three, live, indoors, the moment his briefing ends -- see docs/specs/OPENING_SEQUENCE.md's own record of the same reversal. `species` below is the only field the live game still reads; `forward`/`spread`/`prompt_radius` are kept only because scripts/story/opening_beats.gd::starter_offsets() and its unit test still exist as a utility, not because anything places a body with them any more.",
     "species": ["terrapup", "ripplet", "galewisp"],
     "_comment_placement": "Unused by the live opening since the reversal above. Kept for opening_beats.gd::starter_offsets(), still unit-tested.",
     "forward": 4.5,
@@ -49,9 +49,9 @@
   "encounter": {
     "_comment": "Beat 6-8. The species is not named here: encounter_director.gd already spawns a bramblebun as its peaceful practice creature and this points at that one, so there is one wild creature rather than two standing in the same meadow.",
     "species": "bramblebun",
-    "_comment_species": "docs/OPENING_SEQUENCE.md: highest catch_rate in species.json (0.60), chosen for the opening's forgiving first catch.",
+    "_comment_species": "docs/specs/OPENING_SEQUENCE.md: highest catch_rate in species.json (0.60), chosen for the opening's forgiving first catch.",
     "max_catch_failures": 1,
-    "_comment_catch_bound": "docs/OPENING_SEQUENCE.md says the tutorial catch cannot fail twice. This bounds only landed, otherwise-legal throws at this configured species while the opening is on its encounter beat. Physical misses, fainted targets and trained creatures never reach the roll and ordinary catches never read this value.",
+    "_comment_catch_bound": "docs/specs/OPENING_SEQUENCE.md says the tutorial catch cannot fail twice. This bounds only landed, otherwise-legal throws at this configured species while the opening is on its encounter beat. Physical misses, fainted targets and trained creatures never reach the roll and ordinary catches never read this value.",
     "catch_orb_floor": 5,
     "_comment_faint_floor": "CAP-1 (ralph/reports/gate-f-capstone-1/CAP-1-FINDING.md, reproduced on four fresh runs; two of the four ended unrecoverable). The THIRD way to fail the tutorial, and the only one nothing covered. `max_catch_failures` bounds the landed throw, `catch_orb_floor` bounds the orb supply -- and neither of them bounds the fight. The bramblebun does not stop attacking while you aim (data/config/catching.json: 'that cost is the whole design'), so a run of missed throws ends with the starter fainted, and at this point in the chapter there is NOTHING that puts it back up: potions refuse a fainted creature outright (D40), a creature bed is a buildable that needs Tam's tools from past the road gate, and a night's sleep only heals creatures actually put to bed (night_rest.gd -> game_state.complete_creature_bed_rests). A party of one fainted creature then refuses every engagement in the game (encounter_director.gd::_engageable) while the beat waits for a catch that can no longer be attempted -- the same hard dead-end catch_orb_floor exists to prevent, reached by the other door.\n\nSo while THIS encounter beat is live and no fight is running, a wholly fainted party is put back on its feet. Fraction of max HP restored; 1.0 because a starter revived at a sliver just loses the rematch to a bramblebun that came back at full, and OPENING_SEQUENCE.md's whole claim for this beat is that it is forgiving. TUNABLE, and bounded exactly like the orb floor: `sequence_director.gd` gates it on the opening's own beat, which ends permanently at the first catch, so nothing here follows the player into a fight the opening has nothing to do with. Set to 0 to disable.",
     "faint_recovery_fraction": 1.0,
@@ -124,7 +124,7 @@
   },
 
   "fade": {
-    "_comment": "Beat 1 fades in from black on the bed upstairs. This used to say the fade was there INSTEAD of an interior; the interior is now real (docs/OPENING_SEQUENCE.md records the reversal) and the fade is simply how waking up looks.",
+    "_comment": "Beat 1 fades in from black on the bed upstairs. This used to say the fade was there INSTEAD of an interior; the interior is now real (docs/specs/OPENING_SEQUENCE.md records the reversal) and the fade is simply how waking up looks.",
     "seconds": 1.6,
     "hold_seconds": 0.5
   }

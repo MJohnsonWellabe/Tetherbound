@@ -8,7 +8,7 @@ extends SceneTree
 ##     --script tools/capture_loft_exit.gd
 ##
 ## Two testers — one of them the owner, twice — could not find the stairs out
-## of the opening room. `docs/reviews/2026-08-15-full-blind-playtest/
+## of the opening room. `archive/reports/docs-reviews-full/2026-08-15-full-blind-playtest/
 ## PLAYER_LOG.md` beats 16-20 record the shape of it: a 4x90 panorama from the
 ## get-up spot, no stairs seen, then a jump over the rail. So this renders that
 ## panorama plus the two frames the panorama's gaps hide, through the REAL

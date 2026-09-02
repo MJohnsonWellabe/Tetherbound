@@ -747,7 +747,7 @@ def icon_coin() -> Image.Image:
 
     Deliberately generated here rather than reusing the old Kenney `coin`
     glyph that still sits (stale) inside `assets/ui/icons/ui/orb_tier_basic.png`
-    -- see docs/ASSET_LEDGER.md's own note on that copy. Same silhouette
+    -- see docs/specs/ASSET_LEDGER.md's own note on that copy. Same silhouette
     language as every other item in this file, so the satchel does not gain a
     web glyph in the middle of a set of drawn objects.
     """

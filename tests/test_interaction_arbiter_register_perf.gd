@@ -11,7 +11,7 @@ extends "res://tests/test_case.gd"
 ## bake fresh, this box). The fix mirrors `_providers` in a `_provider_set`
 ## Dictionary for O(1) membership.
 ##
-## Per ralph/conventions.md: "an assertion that cannot fail is not a test."
+## Per docs/AGENT_WORKFLOW.md: "an assertion that cannot fail is not a test."
 ## `test_register_perf_budget` fails outright on an unfixed O(n) `has()`
 ## scan -- verified by reverting the fix locally and re-running: at N=6000
 ## the O(n) version took several times the budget below on this box, while

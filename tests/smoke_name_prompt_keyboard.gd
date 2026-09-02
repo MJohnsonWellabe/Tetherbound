@@ -87,7 +87,7 @@ func _on_confirmed(creature_name: String) -> void:
 ## default key (project.godot) -- the exact reported case. Injected as a real
 ## `InputEventKey`, not `Input.action_press`: the naming field is a `LineEdit`
 ## now, reading through Godot's own Control input pipeline, and only a
-## genuine key event exercises that path the way docs/HANDOFF.md §10 already
+## genuine key event exercises that path the way archive/docs/HANDOFF.md §10 already
 ## requires for every other piece of UI navigation in this suite.
 func _typing_a_colliding_letter_lands_in_the_field_not_the_menu() -> void:
 	_prompt.call("open", "Test")

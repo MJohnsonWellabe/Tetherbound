@@ -13,7 +13,7 @@ const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const TENT := "res://assets/props/generated_camp/camp_tent.glb"
 ## T1-CAMP, carried over from camp.gd: measured (tools/_probe_t1_camp.gd) --
 ## camp_tent.glb's own local origin sits 0.611m above its own geometric base,
-## the same glTF-export quirk `docs/ASSET_LEDGER.md` documents a `sink_m:
+## the same glTF-export quirk `docs/specs/ASSET_LEDGER.md` documents a `sink_m:
 ## -0.64` compensation for on this same mesh's AUTHORED placement
 ## (band1_lower_meadows/props.json). `build_piece.gd` positions a placed
 ## piece's model at its own local origin with no such support, so without

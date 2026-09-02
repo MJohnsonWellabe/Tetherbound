@@ -5,7 +5,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tools/diag_combat_animation.gd
 ##
-## R4.11 (ralph/BACKLOG.md): the owner reported creatures "static posed and
+## R4.11 (docs/CURRENT_STATE.md): the owner reported creatures "static posed and
 ## sliding around" in combat. `tools/diag_animation_moves.gd` already ruled
 ## out the two causes that look identical in game (a clip that never plays,
 ## or one that drives no bones) — the clips are real and move real bones.

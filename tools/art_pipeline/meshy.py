@@ -277,7 +277,7 @@ def negative_for(species: str) -> str:
         negative = negative.replace(term, "", 1)
     return negative
 
-## Per-species prompt, from docs/art/CLAUDE_BUILD_PROMPTS.md. The markdown is
+## Per-species prompt, from archive/docs/art/CLAUDE_BUILD_PROMPTS.md. The markdown is
 ## authoritative over anything an image generator wrote onto a sheet, so the
 ## words that drive generation come from there rather than from reading a PNG.
 SPECIES_PROMPTS = {
@@ -542,7 +542,7 @@ SPECIES_PROMPTS = {
         "body of weathered bark and wood with golden vein patterns winding "
         "along the flanks and legs, cream muzzle, leaf tuft at the tail, "
         "calm noble expression, ancient and serene, standing tall and still"),
-    # From docs/art/CLAUDE_BUILD_PROMPTS.md §17. His reference is the weakest
+    # From archive/docs/art/CLAUDE_BUILD_PROMPTS.md §17. His reference is the weakest
     # in the pack — four ~90px figures cut from board 05, not a production
     # sheet — so the words carry more of the load here than for the starters.
     # Round 2 wording. The blind critique of round 1 found humanoid failures
@@ -859,7 +859,7 @@ SPECIES_PROMPTS = {
 
     # ---------------------------------------------------------------------
     # T1-CREATURE-MESH. The Meadows Creature Expansion (owner brief
-    # 2026-08-30, docs/owner-direction/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md),
+    # 2026-08-30, docs/owner/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md),
     # the five NEW-MESH creatures out of the nine named there -- the other
     # four (Nightburrow, Stormtrail, Riftfrill, Ashtusk) are recolor/VFX
     # passes on existing meshes and never reach this dict. Written from each
@@ -1216,7 +1216,7 @@ def reference_views(species: str) -> dict[str, pathlib.Path]:
 def prompt_for(species: str) -> str:
     if species not in SPECIES_PROMPTS:
         sys.exit(f"no prompt for '{species}'. Known: {', '.join(SPECIES_PROMPTS)}.\n"
-                 f"Add one from docs/art/CLAUDE_BUILD_PROMPTS.md.")
+                 f"Add one from archive/docs/art/CLAUDE_BUILD_PROMPTS.md.")
     style = STYLE_PROP if species in PROPS else STYLE
     return f"{SPECIES_PROMPTS[species]}. {style}"
 
@@ -1355,7 +1355,7 @@ def cmd_fetch(args) -> None:
     if task.get("thumbnail_url"):
         urllib.request.urlretrieve(task["thumbnail_url"], out / "thumbnail.png")
 
-    # Provenance, written next to the asset so docs/ASSET_LEDGER.md can be filled
+    # Provenance, written next to the asset so docs/specs/ASSET_LEDGER.md can be filled
     # in from fact rather than memory. No key, no signed URLs — those expire and
     # leak.
     (out / "provenance.json").write_text(json.dumps({
@@ -1480,7 +1480,7 @@ def cmd_text(args) -> None:
 
     The three starters, the trainer, Grandpa, the Warden and the legendary all
     have drawn reference. The twelve wild Meadows species do not — they exist
-    as prose in docs/art/CLAUDE_BUILD_PROMPTS.md and as scattered silhouette
+    as prose in archive/docs/art/CLAUDE_BUILD_PROMPTS.md and as scattered silhouette
     donors on the exploration boards, which is not enough to reconcile a
     multi-view reconstruction.
 

@@ -69,7 +69,7 @@ func _init() -> void:
 	print("--- band 0: home meadow, the night hook ---")
 	_report("home_east      (1050)", 60.0, 46.0)
 	_report("home_north     (1051)", 4.0, 160.0)
-	# BAND 1 -- the oak grove ring. docs/MEADOWS_MACRO_LAYOUT.md: "grove
+	# BAND 1 -- the oak grove ring. docs/specs/MEADOWS_MACRO_LAYOUT.md: "grove
 	# (Trailpup/Duskhush/Burrowback) in Band 1's oak ring and Band 2". Band 1
 	# held NEITHER named grove species. Both halves go in here: Duskhush gated
 	# to night, Trailpup ungated as the ring's ordinary resident population.

@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/_probe_grass_pass.gd -- --out=shots/grass_r0
 ##
 ## NEVER with `--headless` and a real rendering driver: that combination hangs
-## forever with no error (ralph/conventions.md, "Art pipeline traps").
+## forever with no error (docs/AGENT_WORKFLOW.md, "Art pipeline traps").
 ##
 ## Why a new tool rather than `--only=` against `_probe_corridor_survey.gd`:
 ## that survey is twelve day eyes plus four night ones at 45 settle frames

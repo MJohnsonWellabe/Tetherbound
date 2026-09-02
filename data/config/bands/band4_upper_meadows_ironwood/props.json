@@ -202,7 +202,7 @@
           "scale": 1.0,
           "sink_m": 0.04,
           "dir": "res://assets/props/generated_camp",
-          "_why": "the camp's centre. The owner-referenced ring already committed under assets/props/generated_camp (docs/ASSET_LEDGER.md) and already used by band 1's trail camp and band 4's own ridge posting -- third use, nothing generated. Scale 1.0 (~2.0m) sits between band 1's rest camp (1.05) and the patrol posting's (0.55): a working camp, not a picket's brazier."
+          "_why": "the camp's centre. The owner-referenced ring already committed under assets/props/generated_camp (docs/specs/ASSET_LEDGER.md) and already used by band 1's trail camp and band 4's own ridge posting -- third use, nothing generated. Scale 1.0 (~2.0m) sits between band 1's rest camp (1.05) and the patrol posting's (0.55): a working camp, not a picket's brazier."
         },
         {
           "model": "Bonfire_Fire",

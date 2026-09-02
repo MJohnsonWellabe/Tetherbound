@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-18 · **Decided by:** direct diagnosis (`MAT-BLOCKOUT`), following
 the precedent `EV2-landmark-oak` already set once for a single asset.
-**Source:** `ralph/BACKLOG.md`'s `MAT-BLOCKOUT` entry; `ralph/NOTES.md` (dated
+**Source:** `docs/CURRENT_STATE.md`'s `MAT-BLOCKOUT` entry; `ralph/NOTES.md` (dated
 2026-08-18) has the full before/after evidence.
 
 ## The decision

@@ -2,7 +2,7 @@ extends RefCounted
 
 ## Read-only accessors over LIVE game state, for the Gate F operator harness.
 ##
-## `ralph/GATE_F_INSTRUMENTATION_REQUEST.md` §2. Loaded by
+## `docs/acceptance/GATE_F_INSTRUMENTATION_REQUEST.md` §2. Loaded by
 ## `tools/gate_f/operator_harness.gd` with `preload()`; deliberately NOT an
 ## autoload in `project.godot`, so a shipped build never carries it and no
 ## gameplay `_process` can reach it.
@@ -31,7 +31,7 @@ extends RefCounted
 ##
 ## ## What is deliberately absent
 ##
-## No VRAM, no device frame rate. `ralph/GATE_F_MASTER_PROTOCOL.md` §C.1 marks
+## No VRAM, no device frame rate. `docs/acceptance/GATE_F_MASTER_PROTOCOL.md` §C.1 marks
 ## both [OWNER-ONLY]: this container has a software rasteriser and no handheld,
 ## so any number it produced would be a fabrication wearing a real field name.
 ## The fields do not exist rather than carrying a guess.

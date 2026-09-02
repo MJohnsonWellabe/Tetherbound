@@ -1,7 +1,7 @@
 extends SceneTree
 
 ## OP-0830-1. Frames of the village's new edge, for the mandatory blind-judge
-## pass (`ralph/conventions.md`) — new geometry in the world, so a look is not
+## pass (`docs/AGENT_WORKFLOW.md`) — new geometry in the world, so a look is not
 ## enough, and "the collider holds" is not the same claim as "the player can see
 ## why it holds". Spec §1E is explicit that invisible collision may only SUPPORT
 ## a visible boundary; these frames are how that half is checked.

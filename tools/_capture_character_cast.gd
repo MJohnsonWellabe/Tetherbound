@@ -17,7 +17,7 @@ extends SceneTree
 ## no error, no crash, no partial output, exit 124/143 from `timeout`. It also
 ## leaves a ZOMBIE Godot process still burning CPU after the lane that started
 ## it gives up, which is the single most expensive trap in this repo
-## (`ralph/conventions.md`, "Art pipeline traps"). Drop `--headless`, keep
+## (`docs/AGENT_WORKFLOW.md`, "Art pipeline traps"). Drop `--headless`, keep
 ## `xvfb-run` for the virtual display -- the identical script then writes its
 ## PNGs and exits 0.
 ##
@@ -144,7 +144,7 @@ const CAST := [
 	# in the old olive/tan/slate. A blind round shown only `rank-captain` would
 	# have confirmed the faction colour had landed while every captain a player
 	# actually fights still had none of it -- the same class of harness defect
-	# `ralph/VISUAL_LEDGER.md` records six of, where "a fix that lives in one tool
+	# `archive/ralph/VISUAL_LEDGER.md` records six of, where "a fix that lives in one tool
 	# does not protect the next tool that does the same thing".
 	{"slug": "captain-field", "kind": "trainer", "key": "captain_field"},
 	{"slug": "captain-ridge", "kind": "trainer", "key": "captain_ridge"},
@@ -397,7 +397,7 @@ func _build_environment(world: Node3D) -> void:
 	# `DirectionalLight3D.shadow_enabled` to FALSE on a bare stage while the
 	# shipped world sets it true from `art.json`, and fixed there. This tool does
 	# exactly the same job and never received the fix -- which is
-	# `ralph/VISUAL_LEDGER.md`'s own recurring lesson, stated in that file as "a
+	# `archive/ralph/VISUAL_LEDGER.md`'s own recurring lesson, stated in that file as "a
 	# fix that lives in one tool does not protect the next tool that does the
 	# same thing", recorded against six separate instances before this one.
 	#

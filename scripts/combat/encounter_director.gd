@@ -175,7 +175,7 @@ var _wild_respawn: Dictionary = {}
 ## --- STREAM-D: distance-based activation ------------------------------------
 ##
 ## The owner has directed wild density up from ~70 to roughly 700-1100 across
-## the chapter (`ralph/DONE.md` carries the exact wording). Two things do not
+## the chapter (`archive/ralph/DONE.md` carries the exact wording). Two things do not
 ## scale to that: `_spawn_creatures()` below instantiates and never despawns
 ## anything, and `wild_creature.gd`'s `_physics_process()` ticks
 ## unconditionally regardless of distance. This is the fix for the second one

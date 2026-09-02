@@ -3,7 +3,7 @@ extends RefCounted
 ## CONTENT-0828B -- the constructed-interior method.
 ##
 ## The owner localised "some locations still look lame" to a CLASS rather than
-## to a list of sites (`ralph/OWNER_PLAYTEST_2026-08-28.md` §4a):
+## to a list of sites (`docs/owner/OWNER_PLAYTEST_2026-08-28.md` §4a):
 ##
 ##   "burrow warrens and the castle are the lame looking locations. basically
 ##    everywhere we had to build an under ground or build a building"

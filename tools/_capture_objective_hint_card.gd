@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/_capture_objective_hint_card.gd
 ##
 ## NEVER `--headless` with a real rendering driver -- it hangs forever with no
-## error (`ralph/conventions.md`, the single most expensive trap in this repo).
+## error (`docs/AGENT_WORKFLOW.md`, the single most expensive trap in this repo).
 ##
 ## Three frames, same camera, same world, same seeded state:
 ##

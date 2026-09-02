@@ -8,7 +8,7 @@ extends SceneTree
 ##     --script tools/_probe_grass_field.gd -- --out=shots/field_r0
 ##
 ## NEVER with `--headless` and a real rendering driver: that combination hangs
-## forever with no error (ralph/conventions.md, "Art pipeline traps").
+## forever with no error (docs/AGENT_WORKFLOW.md, "Art pipeline traps").
 ##
 ## This is a GO/NO-GO, and it is deliberately the cheapest possible version of
 ## the question. It stands the real world up, hangs a `GrassField` off it with

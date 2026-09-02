@@ -58,7 +58,7 @@
   },
   "problems": [
     "54,797 triangles, over the 30,000 budget \u2014 needs a decimate or retopology pass",
-    "no material carries a texture \u2014 this is the exact defect two blind reviews named on the existing roster (docs/reviews/MA-01, MA-02)",
+    "no material carries a texture \u2014 this is the exact defect two blind reviews named on the existing roster (archive/reports/docs-reviews-full/MA-01, MA-02)",
     "Mesh0: 18675 non-manifold edges",
     "Mesh0: 10055 duplicate vertices \u2014 will split under deformation",
     "Mesh0: 825 microscopic disconnected components",

@@ -4,7 +4,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_gate_b_tail.gd
 ##
-## **Headless, never under xvfb** (docs/HANDOFF.md §10).
+## **Headless, never under xvfb** (archive/docs/HANDOFF.md §10).
 ##
 ## `tests/smoke_gate_b_continuous.gd` is Gate B's evidence and plays the whole
 ## chapter opening in one pass. It has never got past the village -- so every

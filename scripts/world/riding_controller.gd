@@ -481,7 +481,7 @@ func interaction_offer(from: Vector3) -> Dictionary:
 	# distance indefinitely, so a rider who dismounts next to whatever they
 	# actually came to interact with -- ride up to a captain, dismount,
 	# challenge is this segment's OWN designed sequence
-	# (`ralph/GATE_F_MASTER_PROTOCOL.md` section B's S08 span: "...saddle &
+	# (`docs/acceptance/GATE_F_MASTER_PROTOCOL.md` section B's S08 span: "...saddle &
 	# riding -> three captains...") -- has their own dismissed mount silently
 	# winning `prompt_arbiter.gd`'s nearest-wins tiebreak and remounting them
 	# instead of opening the challenge. Found live by `ralph/GATE-F-LEG-S08`'s

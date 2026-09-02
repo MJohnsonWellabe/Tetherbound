@@ -4,7 +4,7 @@
   "lane": "diag",
   "evidence_lane": "logic",
   "_comment_evidence_lane": "Section H/G evidence split, owner decision 2026-08-27. This self-check has no prescribed capture and exists to prove the harness can drive the game; it is the logic lane by design. Declaring it turns the continuous record off explicitly rather than leaving it to record_default_hz, which is what made a logic-only self-check trip the capture pre-flight.",
-  "_comment": "NOT a protocol segment. Acceptance evidence for ralph/GATE_F_INSTRUMENTATION_REQUEST.md item 4 and section 7: the whole handoff, driven end to end through production paths and synthetic physical input, with no game code change. Slot 4 is the handoff slot (autosave is 0; 1-3 stay free for natural play coverage).",
+  "_comment": "NOT a protocol segment. Acceptance evidence for docs/acceptance/GATE_F_INSTRUMENTATION_REQUEST.md item 4 and section 7: the whole handoff, driven end to end through production paths and synthetic physical input, with no game code change. Slot 4 is the handoff slot (autosave is 0; 1-3 stay free for natural play coverage).",
   "_comment_why_a_walk_first": "The player is moved somewhere distinctive before saving on purpose. A save taken at the spawn point round-trips to a position a FRESH boot would also produce, so the load would prove nothing.",
   "steps": [
     {

@@ -410,7 +410,7 @@ func _report() -> void:
 ## "Could not engage" is a symptom with several causes -- out of range, the
 ## creature already down, the arbiter offering a different interactable, the
 ## director declining the offer -- and the run that reported it gave no way to
-## tell them apart. `ralph/conventions.md` asks a failure to say where to look.
+## tell them apart. `docs/AGENT_WORKFLOW.md` asks a failure to say where to look.
 func _why_the_engage_failed(target: Node3D) -> String:
 	var reasons: Array[String] = []
 	if not is_instance_valid(target):

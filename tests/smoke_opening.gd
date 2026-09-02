@@ -4,11 +4,11 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_opening.gd
 ##
-## **Headless, never under xvfb.** docs/HANDOFF.md §10: xvfb plus software GL
+## **Headless, never under xvfb.** archive/docs/HANDOFF.md §10: xvfb plus software GL
 ## runs the scene-booting tests around 25× slower and flakes under CPU load, and
 ## this one drives a long sequence of timed presses.
 ##
-## docs/OPENING_SEQUENCE.md beats 1–5, driven the way a player drives them:
+## docs/specs/OPENING_SEQUENCE.md beats 1–5, driven the way a player drives them:
 ## walk, press the interact button the prompt is offering, read what appears on
 ## screen, name the creature on the on-screen grid. Nothing here calls a beat
 ## method directly. Calling the method would prove the method works and nothing
@@ -25,7 +25,7 @@ extends SceneTree
 ##     covers that against a stand-in; THIS is the test that proves the name in
 ##     project.godot's `[autoload]` block and the name the seam looks for are the
 ##     same string, because it is the only one that boots the real autoload.
-##   - **the naming grid being drivable.** docs/HANDOFF.md §10: UI navigation
+##   - **the naming grid being drivable.** archive/docs/HANDOFF.md §10: UI navigation
 ##     cannot be tested with `Input.action_press` alone. The prompt is the
 ##     project's first text entry and ships to a handheld with no keyboard; a
 ##     poll-only test reports a working grid while the stick moves nothing.
@@ -570,7 +570,7 @@ func _grandpa_says_his_piece() -> void:
 
 ## Beat 4. `SA0-orbs`, owner directive 2026-08-11: the choice is previewed in
 ## orbs while still indoors with Grandpa, not made by walking up to a body in
-## the meadow — docs/OPENING_SEQUENCE.md records the reversal from the earlier
+## the meadow — docs/specs/OPENING_SEQUENCE.md records the reversal from the earlier
 ## staging this test used to drive. The director opens the picker on its own,
 ## the frame after Grandpa's conversation closes (`_grandpa_says_his_piece`
 ## above already drove that close for real), so this only has to prove the
@@ -596,7 +596,7 @@ func _a_starter_can_be_chosen() -> void:
 	# `Input.is_action_just_pressed` poll in one `_physics_process` if/elif
 	# chain, never Control focus (no `_gui_input`, no `grab_focus`). `_press`'s
 	# belt-and-braces parsed event is for readers that need a real Control
-	# event to move focus (docs/HANDOFF.md §10); this reader doesn't have one,
+	# event to move focus (archive/docs/HANDOFF.md §10); this reader doesn't have one,
 	# so the parsed event is pure redundancy here — and under load it can
 	# register "just pressed" a physics frame later than the action-state
 	# path (the same two-signals-different-frames race `_press_polled`'s own
@@ -641,7 +641,7 @@ func _a_starter_can_be_chosen() -> void:
 	print("beat 4: chose an orb with the pad, the picker closed")
 
 
-## Beat 5, and the reason docs/HANDOFF.md §10 has a rule in it.
+## Beat 5, and the reason archive/docs/HANDOFF.md §10 has a rule in it.
 ##
 ## The grid is walked with `ui_*` and fired with `menu_confirm`, both sent as
 ## real events as well as pressed actions. The first move is checked on its own:
@@ -937,7 +937,7 @@ func _the_road_gate_stops_until_the_key_is_found() -> void:
 ## and the naming grid poll. It does NOT put an event through the tree, so on its
 ## own it cannot move Control focus — and the pause menu, which the player can
 ## open at any point during the opening, is entirely focus-driven. Sending both
-## is docs/HANDOFF.md §10's rule, and smoke_menu.gd is where it was learned.
+## is archive/docs/HANDOFF.md §10's rule, and smoke_menu.gd is where it was learned.
 ##
 ## Held across physics frames rather than process frames: both screens read input
 ## in `_physics_process`, deliberately, so that they and the interaction arbiter
@@ -959,7 +959,7 @@ func _press(action: String) -> void:
 ## and braces — and under a heavy scene the two can land in DIFFERENT physics
 ## frames, which a polling reader counts as two presses. Typing "Bud" came out
 ## "Buudd". Focus navigation genuinely needs the parsed event (see
-## docs/HANDOFF.md on `ui_*`); confirming a grid cell does not.
+## archive/docs/HANDOFF.md on `ui_*`); confirming a grid cell does not.
 func _press_polled(action: String) -> void:
 	Input.action_press(action)
 	for i in 3:

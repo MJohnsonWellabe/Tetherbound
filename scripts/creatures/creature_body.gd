@@ -217,7 +217,7 @@ var tier: String = ""
 
 ## T1-CREATURE-ART. Non-empty for a body wearing an ASPECT VARIANT's recolor +
 ## glow + VFX treatment (Nightburrow, Stormtrail, Riftfrill, Ashtusk --
-## docs/owner-direction/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md), independent
+## docs/owner/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md), independent
 ## of `shiny`/`alpha`: an Aspect variant is its own species identity (own
 ## typing, own catch data, owned by T3-CREATURES' species.json entries), not a
 ## per-individual roll on an existing one, so it is never combined with the
@@ -647,7 +647,7 @@ func _refresh_shiny_tint() -> void:
 		_apply_aspect_vfx()
 		_apply_alpha_presence()
 		return
-	## OF28 (owner directive, quoted in ralph/BACKLOG.md): a colourway is a
+	## OF28 (owner directive, quoted in docs/CURRENT_STATE.md): a colourway is a
 	## REPAINT, never a tint — "if our newt is blue, I want red. not blue
 	## with a red shade over it." tools/repaint_creature_textures.py writes
 	## two sets of siblings from data/creatures/shiny_colourways.json:

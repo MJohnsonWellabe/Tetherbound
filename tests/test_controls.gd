@@ -88,7 +88,7 @@ func test_defaults_are_read_out_of_the_input_map() -> void:
 
 ## Actions that deliberately ship with NO gamepad binding.
 ##
-## The owner's 2026-08-22 controller map (ralph/OWNER_DIRECTIVES_2026-08-22.md
+## The owner's 2026-08-22 controller map (docs/owner/OWNER_DIRECTIVES_2026-08-22.md
 ## section 1) is fourteen buttons wide and every one is spoken for, so six verbs
 ## came off the pad rather than being folded into a held-button chord, which the
 ## same directive bans. Each still has a keyboard key and each is still

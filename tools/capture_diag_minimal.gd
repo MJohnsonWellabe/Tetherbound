@@ -6,8 +6,8 @@ extends SceneTree
 ##     --rendering-driver opengl3 --resolution 1920x1080 \
 ##     --script tools/capture_diag_minimal.gd
 ##
-## `ralph/conventions.md` has named this file since 2026-08-22 as "a 120-second
-## smoke test for exactly this", and `ralph/GATE_F_MASTER_PROTOCOL.md` §A.4 and
+## `docs/AGENT_WORKFLOW.md` has named this file since 2026-08-22 as "a 120-second
+## smoke test for exactly this", and `docs/acceptance/GATE_F_MASTER_PROTOCOL.md` §A.4 and
 ## §I.8 both gate the Gate F capture lane on it. It did not exist. This is that
 ## file, written to the description the two documents already give it.
 ##

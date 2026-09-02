@@ -2,7 +2,7 @@
   "id": "selfcheck_capture",
   "title": "Harness self-check: capture mode writes real PNGs and honest manifest rows",
   "lane": "diag",
-  "_comment": "NOT a protocol segment. Acceptance evidence for ralph/GATE_F_INSTRUMENTATION_REQUEST.md item 3. Run it BOTH ways and compare: under xvfb + opengl3 every capture row carries a file, and under plain --headless every row carries file:null and a reason. Both are correct results; the same segment producing both is what proves the harness is asking DisplayServer rather than trusting a flag.",
+  "_comment": "NOT a protocol segment. Acceptance evidence for docs/acceptance/GATE_F_INSTRUMENTATION_REQUEST.md item 3. Run it BOTH ways and compare: under xvfb + opengl3 every capture row carries a file, and under plain --headless every row carries file:null and a reason. Both are correct results; the same segment producing both is what proves the harness is asking DisplayServer rather than trusting a flag.",
   "_comment_why_the_title_scene": "This boots the title, not the Meadows. The Meadows takes ~90 s to stand up on this container's CPU and renders 466k props through llvmpipe, which turns a two-frame capture check into a many-minute one; nothing about whether get_viewport().get_texture() writes a PNG is answered better by a heavier scene. A real protocol segment captures the world, and that cost is real and belongs to the run rather than to the smoke check.",
 
   "steps": [

@@ -15,7 +15,7 @@ extends SceneTree
 ##     --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/_capture_grass_on_band1_open.gd
 ##
-## NEVER `--headless` with a real rendering driver (ralph/conventions.md).
+## NEVER `--headless` with a real rendering driver (docs/AGENT_WORKFLOW.md).
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT := "res://ralph/reports/OWNER-0902-GRASS-ON/shots"

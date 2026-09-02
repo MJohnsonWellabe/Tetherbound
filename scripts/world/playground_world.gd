@@ -156,7 +156,7 @@ const GATE_KEY_AT := Vector2(30.7, -15.9)
 ## 4.2m) never contest. `SIGIL_GATE_YAW_DEG` puts the leaf across the bearing
 ## to the Hall (72.4 degrees from here) and is TUNABLE by eye, exactly like
 ## `GATE_YAW_DEG` above and for the same reason.
-## OW5D relocation, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved from
+## OW5D relocation, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved from
 ## (130,-176) to the table's explicit new coordinate (0,7400), alongside
 ## stronghold.json's `site.at` moving to (0,7560). `SIGIL_GATE_YAW_DEG` is
 ## left UNCHANGED below and is almost certainly wrong for the new site: the
@@ -336,7 +336,7 @@ const TM_AT := {
 	# Ground-dominant Meadows) and a real ladder step above the two starting
 	# TMs (stone_rush 1.0/burrow_strike 1.1 power, data/moves/moves.json) below
 	# earth_fist (1.4, Captain Field's trainer reward) and earthshatter (2.0,
-	# apex). Sited on the quarry_rim_overlook loop (docs/MEADOWS_MACRO_LAYOUT.md
+	# apex). Sited on the quarry_rim_overlook loop (docs/specs/MEADOWS_MACRO_LAYOUT.md
 	# row 2: departs (310,1660), rejoins (330,1950)), further into the loop
 	# than the rejoin's own potion_large (harvest.json order 2013) so the two
 	# don't crowd one spot -- MEASURED, tools/_probe_density_sites.gd: worst

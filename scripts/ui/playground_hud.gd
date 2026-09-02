@@ -86,7 +86,7 @@ const PERF_TRACE := preload("res://scripts/world/perf_trace.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 
-## EV9's owner-commissioned HUD glyphs (`docs/ASSET_LEDGER.md`, staged
+## EV9's owner-commissioned HUD glyphs (`docs/specs/ASSET_LEDGER.md`, staged
 ## `369ecc5`). `orb_capture.png` has no mount yet — there is no orb-count
 ## panel anywhere in this HUD to hang it on (removed somewhere between the
 ## first EV9 slice's own note and this file's later full rewrite; a fresh

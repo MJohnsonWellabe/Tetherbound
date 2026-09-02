@@ -5,10 +5,10 @@
   "record_hz": 0.5,
   "title": "Finale III: world healing I -- the drained approach and Old Mill Crossing",
   "lane": "journey",
-  "_comment": "Transcribed verbatim from the original S10.json (steps S10-89..S10-93, renumbered S10c-89..), which was itself transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B ('world healing'), section D (RT-13, the post-win walk-back), section E.5 (objective `see_what_changed`), section E.6.15 (backtrack across story transitions) and section G (GF-13-FINALE-05).",
+  "_comment": "Transcribed verbatim from the original S10.json (steps S10-89..S10-93, renumbered S10c-89..), which was itself transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B ('world healing'), section D (RT-13, the post-win walk-back), section E.5 (objective `see_what_changed`), section E.6.15 (backtrack across story transitions) and section G (GF-13-FINALE-05).",
   "evidence_lane": "logic",
   "capture_lane": "S10cC",
-  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, ralph/GATE_F_MASTER_PROTOCOL.md §H.1. LOGIC lane: headless, mechanics/telemetry/step verdicts. Its own §G id (GF-13-FINALE-05, the healed meadow) is DELEGATED to S10cC. Because that capture happens right after the short approach_drain walk and BEFORE the giant Crossing walk, S10cC's own derived capture lane does not have to walk the Crossing leg either (tools/gate_f/derive_capture_lane.py keeps only up to a segment's LAST capture) -- a beneficial side effect of the split noted in the handover report.",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, docs/acceptance/GATE_F_MASTER_PROTOCOL.md §H.1. LOGIC lane: headless, mechanics/telemetry/step verdicts. Its own §G id (GF-13-FINALE-05, the healed meadow) is DELEGATED to S10cC. Because that capture happens right after the short approach_drain walk and BEFORE the giant Crossing walk, S10cC's own derived capture lane does not have to walk the Crossing leg either (tools/gate_f/derive_capture_lane.py keeps only up to a segment's LAST capture) -- a beneficial side effect of the split noted in the handover report.",
   "steps": [
     {
       "id": "S10c-01",

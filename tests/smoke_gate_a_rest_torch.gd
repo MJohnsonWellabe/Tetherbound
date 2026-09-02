@@ -151,7 +151,7 @@ func _exercise_repeated_torch() -> void:
 		_fail("Player has no production torch/tool-hold nodes")
 		return
 
-	# CONTROLLER-MAP, ralph/OWNER_DIRECTIVES_2026-08-22.md section 1: "Torch is
+	# CONTROLLER-MAP, docs/owner/OWNER_DIRECTIVES_2026-08-22.md section 1: "Torch is
 	# a tool that lives in the bar ('torch doesn't need a button')."
 	# `torch_place` kept its keyboard key and lost its pad binding, so tapping
 	# it here failed the InputMap lookup outright and every torch assertion

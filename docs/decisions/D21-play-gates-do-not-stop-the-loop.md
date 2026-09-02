@@ -8,7 +8,7 @@ The owner, restarting Ralph after the D18–D20 overhaul shipped: *"restart
 Ralph and don't have it stop for a play test. just keep running through the
 backlog with no intervention."*
 
-`▶` items in `ralph/BACKLOG.md` change meaning from **gate** (the loop parks
+`▶` items in `docs/CURRENT_STATE.md` change meaning from **gate** (the loop parks
 until the owner plays) to **checkpoint** (the loop lists the pending playtest
 in `BLOCKED.md`'s play-gate section for the owner and keeps building past
 it). The owner plays in parallel, on their own schedule, and their feedback
@@ -39,9 +39,9 @@ on them, which bounds the rework.
 
 ## Where it is wired
 
-- `ralph/PROMPT.md` — loop step 1, the blocked-reasons list, and successor
+- `docs/AGENT_WORKFLOW.md` — loop step 1, the blocked-reasons list, and successor
   scheduling.
-- `ralph/BACKLOG.md` — the legend.
+- `docs/CURRENT_STATE.md` — the legend.
 - `ralph/BLOCKED.md` — the play-gate section becomes the owner's playtest
   queue.
 - `ralph/MANUAL.md` — manual task 5.

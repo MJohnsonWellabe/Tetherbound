@@ -64,7 +64,7 @@ Deterministic: the same spec always writes the same bytes, so a re-run is a
 no-op in git and a spec change is a reviewable diff.
 
 Re-run `godot --headless --path . --import` afterwards -- a capture reads the
-IMPORTED texture, not the file on disk (ralph/conventions.md, "Art pipeline
+IMPORTED texture, not the file on disk (docs/AGENT_WORKFLOW.md, "Art pipeline
 traps").
 """
 

@@ -56,7 +56,7 @@ this bigger than a landmark-only task:
 
 The owner confirmed, given both gaps, that building the real system first
 is the right call rather than faking it with civilian parts or scoping
-down to the static recipe format alone (`ralph/BACKLOG.md`'s `BG1`, `BG2`,
+down to the static recipe format alone (`docs/CURRENT_STATE.md`'s `BG1`, `BG2`,
 `OF4-rebuild` carry this forward).
 
 ## What was rejected

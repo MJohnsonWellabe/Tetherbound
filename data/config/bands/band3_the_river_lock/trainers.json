@@ -7,7 +7,7 @@
       "name": "Hess",
       "_comment": "SE25. Spec sec3 Band 3 / sec12: 'two or three Team Tether trainers and a relay captain' at the relay station. The OUTER picket -- the first Team Tether personnel the player is ever stopped by, met on the approach road well before the site itself. Levels are Band 3 (~8-12) and ALL TUNABLE; never player-scaled (spec sec11/D30: a level is a real level, and the world does not move to meet you).",
       "_site": "SE23 IS NOT BUILT YET. These four stand at the relay SITE, whose one authored coordinate is data/config/relay_site.json's `site.centre` [108, 34] -- on the quarry's own conduit bearing toward the stronghold (old_quarry.json's [229.8,-144.4]), 150m out from the quarry floor. Every position below is derived from that centre. When SE23 builds the station it should ADOPT relay_site.json's centre rather than pick another, and move these four with it if it needs to.",
-      "_comment_ow5d": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved by the same uniform (+242,+3726) offset as relay_site.json's `site.centre` (108,34)->(350,3760).",
+      "_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved by the same uniform (+242,+3726) offset as relay_site.json's `site.centre` (108,34)->(350,3760).",
       "_comment_gate_d3": "GATE-D3. OW5D's own placement, along the site's internal conduit bearing, left Hess only ~22m short of the site centre -- alongside Orrin, Dell and Vance in an 18m span, which is exactly what prompt 64 names as the failure: 'The route should not jump from wilderness directly into the four-person relay gauntlet.' Moved OUT onto the spine road itself (terrain_playground.json trail.bands[2], the (230,3670)->(350,3760) leg the player actually walks into the region), 140m short of the site centre. `facing_deg` recomputed for the new leg: the trainer faces back down the direction the player arrives from, opposite the (0.8,0.6) travel bearing of this leg, atan2(-0.8,-0.6) = -126.9 deg (not the old -34.4, which described the site's own separate conduit-approach frame Orrin/Dell/Vance still stand on). Ground measured with a scratch heightfield probe (tools/_probe_band3.gd, not committed): -3.20m, 1.04m of spread over an 8m box -- flatter than the old site, comfortably inside an 11m arena.",
       "rank": "grunt",
       "position": [
@@ -42,7 +42,7 @@
       "defeat_flag": "defeated_relay_hess",
       "rechallenge": false,
       "base": "grunt_b",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 5,
@@ -83,7 +83,7 @@
       "defeat_flag": "defeated_relay_orrin",
       "rechallenge": false,
       "base": "grunt_c",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 6,
@@ -127,7 +127,7 @@
       "defeat_flag": "defeated_relay_dell",
       "rechallenge": false,
       "base": "officer_a",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 7,
@@ -179,7 +179,7 @@
       "defeat_flag": "relay_captain_defeated",
       "rechallenge": false,
       "base": "captain_a",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 13,
@@ -239,7 +239,7 @@
       "rechallenge": false,
       "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86.",
       "base": "captain_b",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     }
   ],
   "_comment_river_nest_doss": "CI-TRAINER-CENSUS, 2026-08-30. `river_nest_doss` (order 3000) briefly lived here as Band 3's 'River Nest' Local Request -- spec sec6's 'aggressive Water/Air creatures block a fishing location', with Doss's own paddlenewt/galecrest team standing for the pair. It was removed the same day it was added: it was the third brand-new distinct trainer opponent T3-ACTIVITIES tried to add in one pass, and `tests/test_chapter_content_map.gd::test_the_chapter_fields_the_number_of_trainers_it_is_aiming_for` caps the chapter at 24 distinct opponents with no headroom left (see that test's own header on why the ceiling is the wrong lever to move). Doss still exists -- same site, same character, same reward -- as a gather-and-give NPC built by `scripts/world/river_nest_clear.gd` instead of a trainers.json row; see that file's header for the full reasoning."

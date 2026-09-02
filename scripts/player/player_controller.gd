@@ -4,7 +4,7 @@ extends CharacterBody3D
 ##
 ## M1's whole job. Nothing here knows about creatures, combat or the world beyond the
 ## ground it stands on, and it should stay that way until traversal feels good
-## on the Ally (docs/MEADOWS_VERTICAL_SLICE.md M1 acceptance).
+## on the Ally (docs/specs/MEADOWS_VERTICAL_SLICE.md M1 acceptance).
 ##
 ## Every number comes from data/config/movement.json. If a value is typed into
 ## this file, that is a bug: the owner's feedback in M1 is going to be "too

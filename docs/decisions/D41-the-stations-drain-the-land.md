@@ -98,9 +98,9 @@ form the reveal can take and costs no new dialogue.
 
 ## What changes on disk
 
-- `docs/MEADOWS_PROGRESSION_SPEC.md` — pointers at §9, §23, §29 and §32. The
+- `docs/specs/MEADOWS_PROGRESSION_SPEC.md` — pointers at §9, §23, §29 and §32. The
   prose is not rewritten; this doc is the extension.
-- `ralph/BACKLOG.md` — implementation notes spliced into `SD16` (the quarry
+- `docs/CURRENT_STATE.md` — implementation notes spliced into `SD16` (the quarry
   debuts the drained-ground grammar), `SE23` (the drain is strongest at the
   relay), `SG44` (the collapse frees the meadow, not only the far view) and
   `SG46` (the healing is part of the region's answer).

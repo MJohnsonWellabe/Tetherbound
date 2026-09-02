@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-17 · **Decided by:** `RIVER-GATE`, against
 `docs/decisions/D46-the-river-divides-the-map-and-costs-one-spoke.md`,
-`docs/MEADOWS_PROGRESSION_SPEC.md` §3 Band 3, and `OW5-walk`'s measurements
+`docs/specs/MEADOWS_PROGRESSION_SPEC.md` §3 Band 3, and `OW5-walk`'s measurements
 
 ## The decision
 

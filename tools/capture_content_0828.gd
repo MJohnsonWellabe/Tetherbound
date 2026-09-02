@@ -28,7 +28,7 @@ extends SceneTree
 ##
 ## Same caveat as that file: Compatibility renderer under software GL, so
 ## composition, silhouette and relative value are trustworthy and fine lighting
-## judgement is not. `ralph/conventions.md` forbids grading your own frames;
+## judgement is not. `docs/AGENT_WORKFLOW.md` forbids grading your own frames;
 ## this file only produces them.
 ##
 ## `--before` writes into `shots/content_0828_before/` instead, so the same

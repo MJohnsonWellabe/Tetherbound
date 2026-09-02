@@ -358,9 +358,9 @@
         "_comment_ambient_colour_worldart_groundtint": "WORLD-ART coordinator, ground-tint pass, 2026-09-02 (item 2, ground-only). #8090ac (R128 G144 B172, H218 S26% V67%) -> #788ab4 (R120 G138 B180, H222 S33% V71%), a paired counterweight to the `sun.colour` cut directly above: same cool-blue hue family (already the right direction -- this key was already R<G<B, i.e. already cool, not itself a cause of the orange wash), saturation and value nudged up a little so shadowed/fill-lit ground reads a real cool tint against the now-less-saturated warm key, which is what makes a dawn read as a warm-lit/cool-shadowed dawn rather than a uniform orange-tinted or a uniform grey one. `ambient_energy` is deliberately NOT touched -- this file's own VIS-WORLD/T1-HALL-4 comments on the base and night blocks establish that ambient multiplies albedo uniformly and so lifts the brightest thing in frame the most, which is the wrong lever for a hue fix.",
         "ambient_colour": "#788ab4",
         "ambient_sky_contribution": 0.3,
-        "_comment_aerial_perspective_round2": "VP1 sky retune round 2, item 2. Left at 0.8 (the highest of any preset) DELIBERATELY, not overlooked: this codebase already ran the exact experiment. `tools/diag_horizon_haze.gd` renders this same `03-rise-overlook` stand and sweeps `env.fog_aerial_perspective` from 0.35 up to 1.0 looking for a haze-band fix; `ralph/DONE.md`'s EV8 entry records the result plainly -- 'fog_aerial_perspective: no measurable effect under Compatibility'. `project.godot` still runs `gl_compatibility` (D01), so that finding still applies here: raising or lowering this value on this exact viewpoint is not expected to change the rendered frame at all, and it is not a plausible contributor to the red wash. Named explicitly in case a future pass is tempted to chase it again.",
+        "_comment_aerial_perspective_round2": "VP1 sky retune round 2, item 2. Left at 0.8 (the highest of any preset) DELIBERATELY, not overlooked: this codebase already ran the exact experiment. `tools/diag_horizon_haze.gd` renders this same `03-rise-overlook` stand and sweeps `env.fog_aerial_perspective` from 0.35 up to 1.0 looking for a haze-band fix; `archive/ralph/DONE.md`'s EV8 entry records the result plainly -- 'fog_aerial_perspective: no measurable effect under Compatibility'. `project.godot` still runs `gl_compatibility` (D01), so that finding still applies here: raising or lowering this value on this exact viewpoint is not expected to change the rendered frame at all, and it is not a plausible contributor to the red wash. Named explicitly in case a future pass is tempted to chase it again.",
         "aerial_perspective": 0.8,
-        "_comment_exposure_round2": "VP1 sky retune round 2, item 2 (dawn red wash, code-blind judge on `03-rise-overlook-dawn`: mean RGB 160.7/63.9/54.8, R-minus-G +96.8, versus `01-spawn-outward-dawn`'s neutral -1.4). DIAGNOSIS: candidates checked in the order the brief gave. (1) fog reaching the near field -- ruled out as the DOMINANT cause: `fog_density` here was 0.0009, only 64% above day's 0.00055 and, by this file's own established exponential-fog math (see the base block's R9.4/EV8 comments), does not cross 50% opacity until ~770m -- real for a genuinely distant vista, but that alone does not explain a wash reaching the near ground. `fog_sky_affect` is 0 (inherited from base, dawn does not override it) so the sky itself is not additionally fog-tinted. `aerial_perspective` at 0.8 was the standout-highest number in this block, but see the dedicated comment on that key: this codebase's own `tools/diag_horizon_haze.gd` + `ralph/DONE.md` (EV8) already measured it as having NO effect under the `gl_compatibility` renderer this project ships (D01) -- ruled out, not just discounted. (2) exposure interacting with a strong sun colour/energy -- CONFIRMED DOMINANT. `exposure` here was 0.8, the HIGHEST of the three sunlit presets (day 0.6, golden 0.65, dawn 0.8) despite dawn's `sun.energy` (0.9) being the LOWEST of the three (day 1.4, golden 1.3) -- i.e. the dimmest sun of the day was being given the biggest post-exposure multiplier, on top of the warmest, most saturated `sun.colour` (#ffc3a0) of any daylight preset. Exposure multiplies every HDR pixel uniformly before the ACES tonemap regardless of distance or view direction, which is the one lever in this block that can plausibly reach sky, far terrain AND near ground identically -- unlike fog, which is depth-gated. This file's own `environment._comment` already documents that this project's ACES tonemap 'holds highlights... instead of clipping them to white', i.e. an overexposed warm-lit scene here plateaus toward a saturated warm colour rather than blowing to neutral white -- which is exactly a 'near-uniform deep red-orange' rather than a blown-white result, and exactly what an already-warm, low-grazing-light scene does when pushed harder into exposure than a cooler-lit midday scene is. That this shows up strongly on `03-rise-overlook` (an elevated stand, eye_h 15m, looking ~275m out over open sky and sunlit slope, per tools/survey.gd) and not on `01-spawn-outward` (eye_h 2.2m, a closer, more ground-level framing) is consistent with this theory without contradicting it: the SAME exposure value applies to both, but the overlook's frame is simply far more sky- and sunlit-slope-heavy, so the same multiplier has vastly more bright warm content to push into the ACES highlight plateau. (3) an adjustment/tonemap block inherited from `night` via `_merged()` -- RULED OUT with code evidence, not just inference: `world_look.gd::_merged()` builds each section as `base[section]` overridden ONLY by `times[name][section]` for the ONE named preset being applied (`apply_time()`, which `tools/survey.gd` calls directly by name per its own header comment) -- there is no chaining through `night`. `times.dawn.environment` above sets no `adjustment_*` keys of its own, so it inherits the neutral (1.0/1.0/1.0) values from the BASE `environment` block, exactly like `day` does, not night's tuned 0.72 saturation / 1.08 contrast. FIX: `exposure` 0.8 -> 0.55, below day's own 0.6, matching the fact that dawn's sun is the dimmest of the three and does not need the largest exposure boost of the three -- paired with the smaller supporting `fog_density` cut above for the genuine, secondary far-field contribution. Horizon stays warm (`fog_colour`/`horizon_colour` untouched, still #e6bca4, still identical to each other) and the overhead sky stays cool (`sky.top_colour` #4a6a9a untouched) -- this preset should still read as dawn, just without every pixel in a vista shot being pushed into the same saturated warm plateau.",
+        "_comment_exposure_round2": "VP1 sky retune round 2, item 2 (dawn red wash, code-blind judge on `03-rise-overlook-dawn`: mean RGB 160.7/63.9/54.8, R-minus-G +96.8, versus `01-spawn-outward-dawn`'s neutral -1.4). DIAGNOSIS: candidates checked in the order the brief gave. (1) fog reaching the near field -- ruled out as the DOMINANT cause: `fog_density` here was 0.0009, only 64% above day's 0.00055 and, by this file's own established exponential-fog math (see the base block's R9.4/EV8 comments), does not cross 50% opacity until ~770m -- real for a genuinely distant vista, but that alone does not explain a wash reaching the near ground. `fog_sky_affect` is 0 (inherited from base, dawn does not override it) so the sky itself is not additionally fog-tinted. `aerial_perspective` at 0.8 was the standout-highest number in this block, but see the dedicated comment on that key: this codebase's own `tools/diag_horizon_haze.gd` + `archive/ralph/DONE.md` (EV8) already measured it as having NO effect under the `gl_compatibility` renderer this project ships (D01) -- ruled out, not just discounted. (2) exposure interacting with a strong sun colour/energy -- CONFIRMED DOMINANT. `exposure` here was 0.8, the HIGHEST of the three sunlit presets (day 0.6, golden 0.65, dawn 0.8) despite dawn's `sun.energy` (0.9) being the LOWEST of the three (day 1.4, golden 1.3) -- i.e. the dimmest sun of the day was being given the biggest post-exposure multiplier, on top of the warmest, most saturated `sun.colour` (#ffc3a0) of any daylight preset. Exposure multiplies every HDR pixel uniformly before the ACES tonemap regardless of distance or view direction, which is the one lever in this block that can plausibly reach sky, far terrain AND near ground identically -- unlike fog, which is depth-gated. This file's own `environment._comment` already documents that this project's ACES tonemap 'holds highlights... instead of clipping them to white', i.e. an overexposed warm-lit scene here plateaus toward a saturated warm colour rather than blowing to neutral white -- which is exactly a 'near-uniform deep red-orange' rather than a blown-white result, and exactly what an already-warm, low-grazing-light scene does when pushed harder into exposure than a cooler-lit midday scene is. That this shows up strongly on `03-rise-overlook` (an elevated stand, eye_h 15m, looking ~275m out over open sky and sunlit slope, per tools/survey.gd) and not on `01-spawn-outward` (eye_h 2.2m, a closer, more ground-level framing) is consistent with this theory without contradicting it: the SAME exposure value applies to both, but the overlook's frame is simply far more sky- and sunlit-slope-heavy, so the same multiplier has vastly more bright warm content to push into the ACES highlight plateau. (3) an adjustment/tonemap block inherited from `night` via `_merged()` -- RULED OUT with code evidence, not just inference: `world_look.gd::_merged()` builds each section as `base[section]` overridden ONLY by `times[name][section]` for the ONE named preset being applied (`apply_time()`, which `tools/survey.gd` calls directly by name per its own header comment) -- there is no chaining through `night`. `times.dawn.environment` above sets no `adjustment_*` keys of its own, so it inherits the neutral (1.0/1.0/1.0) values from the BASE `environment` block, exactly like `day` does, not night's tuned 0.72 saturation / 1.08 contrast. FIX: `exposure` 0.8 -> 0.55, below day's own 0.6, matching the fact that dawn's sun is the dimmest of the three and does not need the largest exposure boost of the three -- paired with the smaller supporting `fog_density` cut above for the genuine, secondary far-field contribution. Horizon stays warm (`fog_colour`/`horizon_colour` untouched, still #e6bca4, still identical to each other) and the overhead sky stays cool (`sky.top_colour` #4a6a9a untouched) -- this preset should still read as dawn, just without every pixel in a vista shot being pushed into the same saturated warm plateau.",
         "exposure": 0.55,
         "_comment_aerial_fade_colour_worldart": "WORLD-ART coordinator, aerial-fade pass, 2026-09-02. New key, coordinator's value. `#c4a9a4` (R196 G169 B164, H8 S16% V77%) against this preset's own `fog_colour`/`sky.horizon_colour` #e6bca4 (H24 S29% V90%): warm-neutral, a stop darker and less saturated, same darker/duller-than-fog relationship as day's `#7f8c9e`, golden's `#c9a98a` and night's `#2f3f63` each carry against their own fog/horizon -- so far ground settles into shadow-of-distance rather than rising to meet dawn's own bright warm horizon band.",
         "aerial_fade_colour": "#c4a9a4"
@@ -370,7 +370,7 @@
   },
   "_comment_creature_motion_removed": "The procedural bob that used to be configured here is gone. The creatures are rigged and animated now, so they have real idle, walk, run, attack and death clips \u2014 faking motion on top of that would fight the animation.",
   "grandpa": {
-    "_comment": "Grandpa Elias. He stands where he is put and talks \u2014 beat 3 of docs/OPENING_SEQUENCE.md \u2014 so `idle` is the only clip he needs today. The other four ship with him because they cost nothing to author on the same skeleton and he will eventually walk.",
+    "_comment": "Grandpa Elias. He stands where he is put and talks \u2014 beat 3 of docs/specs/OPENING_SEQUENCE.md \u2014 so `idle` is the only clip he needs today. The other four ship with him because they cost nothing to author on the same skeleton and he will eventually walk.",
     "model": "res://assets/characters/grandpa/grandpa_lod0.glb",
     "height": 1.72,
     "_comment_height": "Shorter than the 1.8m trainer. He is an old man and the silhouette should say so before the dialogue does.",
@@ -553,7 +553,7 @@
     "animation_libraries": []
   },
   "grunt_a": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/grunt_a/grunt_a_lod0.glb",
     "height": 1.7,
     "model_yaw": 0.0,
@@ -571,7 +571,7 @@
     "animation_libraries": []
   },
   "grunt_b": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/grunt_b/grunt_b_lod0.glb",
     "height": 1.7,
     "model_yaw": 0.0,
@@ -589,7 +589,7 @@
     "animation_libraries": []
   },
   "grunt_c": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/grunt_c/grunt_c_lod0.glb",
     "height": 1.7,
     "model_yaw": 0.0,
@@ -607,7 +607,7 @@
     "animation_libraries": []
   },
   "officer_a": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/officer_a/officer_a_lod0.glb",
     "height": 1.8,
     "model_yaw": 0.0,
@@ -625,7 +625,7 @@
     "animation_libraries": []
   },
   "officer_b": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/officer_b/officer_b_lod0.glb",
     "height": 1.8,
     "model_yaw": 0.0,
@@ -643,7 +643,7 @@
     "animation_libraries": []
   },
   "captain_a": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/captain_a/captain_a_lod0.glb",
     "height": 1.9,
     "model_yaw": 0.0,
@@ -661,7 +661,7 @@
     "animation_libraries": []
   },
   "captain_b": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/captain_b/captain_b_lod0.glb",
     "height": 1.9,
     "model_yaw": 0.0,
@@ -679,7 +679,7 @@
     "animation_libraries": []
   },
   "innkeeper": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/innkeeper/innkeeper_lod0.glb",
     "height": 1.78,
     "model_yaw": 0.0,
@@ -697,7 +697,7 @@
     "animation_libraries": []
   },
   "inn_helper": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/inn_helper/inn_helper_lod0.glb",
     "height": 1.5,
     "model_yaw": 0.0,
@@ -715,7 +715,7 @@
     "animation_libraries": []
   },
   "trader": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/trader/trader_lod0.glb",
     "height": 1.75,
     "model_yaw": 0.0,
@@ -733,7 +733,7 @@
     "animation_libraries": []
   },
   "craftsperson": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/craftsperson/craftsperson_lod0.glb",
     "height": 1.78,
     "model_yaw": 0.0,
@@ -751,7 +751,7 @@
     "animation_libraries": []
   },
   "creature_caretaker": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/creature_caretaker/creature_caretaker_lod0.glb",
     "height": 1.72,
     "model_yaw": 0.0,
@@ -769,7 +769,7 @@
     "animation_libraries": []
   },
   "farmer": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/farmer/farmer_lod0.glb",
     "height": 1.75,
     "model_yaw": 0.0,
@@ -787,7 +787,7 @@
     "animation_libraries": []
   },
   "local_historian": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/local_historian/local_historian_lod0.glb",
     "height": 1.65,
     "model_yaw": 0.0,
@@ -805,7 +805,7 @@
     "animation_libraries": []
   },
   "young_trainer": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
     "height": 1.5,
     "model_yaw": 0.0,
@@ -823,7 +823,7 @@
     "animation_libraries": []
   },
   "rival_trainer": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/rival_trainer/rival_trainer_lod0.glb",
     "height": 1.6,
     "model_yaw": 0.0,
@@ -841,7 +841,7 @@
     "animation_libraries": []
   },
   "field_researcher": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
     "height": 1.7,
     "model_yaw": 0.0,
@@ -859,7 +859,7 @@
     "animation_libraries": []
   },
   "wandering_trainer": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
     "height": 1.78,
     "model_yaw": 0.0,
@@ -877,7 +877,7 @@
     "animation_libraries": []
   },
   "lost_traveler": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/lost_traveler/lost_traveler_lod0.glb",
     "height": 1.72,
     "model_yaw": 0.0,
@@ -895,7 +895,7 @@
     "animation_libraries": []
   },
   "alpha_tracker": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/alpha_tracker/alpha_tracker_lod0.glb",
     "height": 1.78,
     "model_yaw": 0.0,
@@ -913,7 +913,7 @@
     "animation_libraries": []
   },
   "courier": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/courier/courier_lod0.glb",
     "height": 1.55,
     "model_yaw": 0.0,
@@ -931,7 +931,7 @@
     "animation_libraries": []
   },
   "former_tether_member": {
-    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+    "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/former_tether_member/former_tether_member_lod0.glb",
     "height": 1.7,
     "model_yaw": 0.0,

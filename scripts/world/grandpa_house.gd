@@ -303,7 +303,7 @@ func _build_stairs() -> void:
 ##
 ## Two testers — one of them the owner, twice — could not find these stairs
 ## and jumped off the mezzanine instead
-## (docs/reviews/2026-08-15-full-blind-playtest/PLAYER_LOG.md beats 16-20:
+## (archive/reports/docs-reviews-full/2026-08-15-full-blind-playtest/PLAYER_LOG.md beats 16-20:
 ## "no stairs/exit visible in any frame yet from this room"). The cause is
 ## geometric and total: the loft floor's own east edge occludes everything
 ## below it, and every tread of this flight sits below that edge. Measured

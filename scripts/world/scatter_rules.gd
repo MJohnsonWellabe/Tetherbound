@@ -657,7 +657,7 @@ static func _place_corridor_fill(
 	# copses across ground the player's own route never approaches, so a
 	# viewpoint standing ON the trail can render bare no matter how the
 	# per-clump/per-stray counts are tuned -- confirmed, not guessed:
-	# docs/reviews/band2/round-05 measured HARVEST-ALL's 4x thickening as
+	# archive/reports/docs-reviews-full/band2/round-05 measured HARVEST-ALL's 4x thickening as
 	# byte-identical `spread` and pixel-identical frames on these same eight
 	# viewpoints, because none of them happened to sit near a kept clump.
 	var trail_bias := clampf(float(fill.get("trail_bias", 0.0)), 0.0, 1.0)

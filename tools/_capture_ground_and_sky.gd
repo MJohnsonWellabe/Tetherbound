@@ -15,7 +15,7 @@ extends SceneTree
 ##     --script tools/_capture_ground_and_sky.gd
 ##
 ## NEVER `--headless` with a real rendering driver: verified 2026-08-22 (see
-## ralph/conventions.md, "Art pipeline traps") that the combination hangs
+## docs/AGENT_WORKFLOW.md, "Art pipeline traps") that the combination hangs
 ## forever with no error, no crash, no partial output -- and leaves a zombie
 ## Godot process burning CPU after the lane that started it gives up. Always
 ## `xvfb-run` for the virtual display, `--rendering-driver opengl3` for a real

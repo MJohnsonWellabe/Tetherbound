@@ -17,7 +17,7 @@ extends SceneTree
 ## same honest gap `smoke_creature_control.gd`/`smoke_art.gd`/
 ## `smoke_mouse_look.gd`/`smoke_no_double_prompt.gd`/`smoke_wake_softlock.gd`
 ## already carry -- five smoke tests exist and are not CI-wired; this is a
-## sixth, not a new pattern. Recorded in `ralph/DONE.md` rather than left
+## sixth, not a new pattern. Recorded in `archive/ralph/DONE.md` rather than left
 ## silent.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"

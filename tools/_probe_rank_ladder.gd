@@ -5,7 +5,7 @@ extends SceneTree
 ##   godot --headless --path . --script tools/_probe_rank_ladder.gd
 ##
 ## `npc_ranks.json` builds grunt/officer/captain as three steps on one value
-## ladder, and C2 of `ralph/MEADOWS_EXIT_CRITERION.md` requires that ladder to
+## ladder, and C2 of `docs/acceptance/MEADOWS_EXIT_CRITERION.md` requires that ladder to
 ## read on sight. T1-LIGHT then closed the black-NPC defect by reviving
 ## `character_model.gd`'s ADDITIVE emission floor -- but that floor is gated on
 ## `tint luminance < 0.95`, and the captain's own tint is `#ffffff`. So the

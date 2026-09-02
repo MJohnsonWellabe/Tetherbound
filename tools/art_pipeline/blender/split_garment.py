@@ -7,7 +7,7 @@
 WHY THIS EXISTS. `NP4`'s two remaining defects — villager_male's trousers
 reading colder and darker than `docs/art/reference/12_NPC_Bases_Reusable.png`,
 and a stain on one of villager_female's shins — were both unfixable for the
-same structural reason, recorded twice in `ralph/BACKLOG.md`: these Meshy
+same structural reason, recorded twice in `docs/CURRENT_STATE.md`: these Meshy
 bases are ONE mesh with ONE material over ONE fused atlas, so every attempt to
 correct a garment corrected the satchel, the boots and the face fringe with
 it. Retexturing was tried twice per defect and ruled out; a UV-space mask

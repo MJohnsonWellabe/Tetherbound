@@ -121,7 +121,7 @@ file cannot drop them silently.
 
 That change left the potions and berries out, calling them "a pacing question
 about the opening's supply." They were not one. Nobody had ever decided the
-opening should ship without them: `docs/OPENING_SEQUENCE.md` beat 3 still names
+opening should ship without them: `docs/specs/OPENING_SEQUENCE.md` beat 3 still names
 the pack as *"orbs, potions, berries"* and still spells the three effects out
 by name, `D18` still calls it *"a parting gift of orbs and potions"*, and this
 file's own §"The decision" adds the Revives *"alongside the existing

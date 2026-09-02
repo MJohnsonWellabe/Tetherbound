@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Visual-parity evidence capture (VP program, docs/VISUAL_PARITY_LANES.md).
+# Visual-parity evidence capture (VP program, archive/docs/VISUAL_PARITY_LANES.md).
 # Runs the capture tools serially, builds contact sheets, copies frames into an
 # evidence dir, then measures the perf proxy. Env: GODOT, RES (default
 # 1280x720), LIGHT=1 skips combat/buildings, REPO overrides the checkout.

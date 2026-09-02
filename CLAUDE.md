@@ -1,141 +1,116 @@
 # CLAUDE.md — TETHERBOUND CODING AGENT INSTRUCTIONS
 
-You are implementing **Tetherbound**, a Godot-based Windows-first third-person open-world creature-training adventure with gathering, crafting, building, exploration, care, and real-time creature combat.
+You are implementing **Tetherbound**, a Godot 4.7 Windows-first third-person open-world
+creature-training adventure with gathering, crafting, building, exploration, care, and
+real-time creature combat.
 
 ## Start here
 
-For any current Meadows work, read **`ralph/START_HERE.md` first**. It is the single current routing document.
+Read **`docs/00_START_HERE.md`** first. It is the single routing document: what the
+game is, the current gate, which files are authoritative, what to read for each kind of
+work, validation expectations, branch rules, and the definition of done.
 
-Do not select work from an old milestone guide, handover, or the top of `ralph/BACKLOG.md` until `START_HERE.md` has routed you through the active game plan.
+Do not select work from anything under `archive/`. Do not cold-read history.
 
-The current execution principle is binding:
+The execution principle is binding:
 
-> **A region/system is not done because code/data exists. It is done when the complete player path produces the intended Tetherbound experience.**
+> **A region or system is not done because code and data exist. It is done when the
+> complete player path produces the intended Tetherbound experience.**
 
 ## Mission
 
-Finish the Meadows as a complete enjoyable first chapter, not as a collection of implemented systems.
-
-The player should build and care about a permanent team of five creatures, become stronger through meaningful encounters and preparation, travel through increasingly demanding Meadows regions, defeat Team Tether and the Warden, face the legendary roster choice, and see the world respond to that victory.
-
-The target is roughly a **3–4 hour focused first clear**, with additional time available for exploration, team experimentation, optional trainers, gathering, building, and side content.
+Finish the Meadows as a complete, enjoyable first chapter, not as a collection of
+implemented systems. The player builds and cares about a permanent team of five, grows
+stronger through meaningful encounters and preparation, travels through increasingly
+demanding Meadows regions, defeats Team Tether and the Warden, faces the legendary roster
+choice, and sees the world respond. Target: a **3–4 hour focused first clear**, with
+more time available for exploration, team experimentation, optional trainers, gathering,
+building and side content. `docs/GAME_VISION.md` is the experience contract.
 
 ## Hard rules
 
 These override lower-level prompts and implementation convenience:
 
 - Godot is locked.
-- Windows / ROG Ally is primary.
-- Controller first.
-- Solo.
-- Player can own **only five creatures total**.
-- Never implement creature storage, a reserve box, or a hidden sixth slot.
-- Human never fights.
-- Creatures do not perform base jobs.
-- Creature combat is real-time and directly piloted.
-- No shields.
-- Catching is available during wild combat.
-- Trainer-owned creatures cannot be caught.
-- No hunting/butchering.
-- Light satiety only: slow drain, food restores/buffs, soft drawbacks when low, **no starvation death**.
+- Windows / ROG Ally is primary. Controller first. Solo.
+- The player can own **only five creatures total**. Never implement creature storage, a
+  reserve box, or a hidden sixth slot.
+- The human never fights. Creatures do not perform base jobs.
+- Creature combat is real-time and directly piloted. No shields.
+- Catching is available during wild combat. Trainer-owned creatures cannot be caught.
+- No hunting or butchering.
+- Light satiety only: slow drain, food restores and buffs, soft drawbacks when low,
+  **no starvation death**.
 - Slot/stack inventory; no carry-weight system.
 - Multiple death satchels persist.
-- No Biome 2 implementation until Meadows passes its exit gate. Any reconnection view is distant/non-enterable.
-- **No new creature meshes or Meshy generations for Meadows.** Use installed creature meshes; differentiate with materials, textures, modest scale, animation, VFX, habitat, behavior, traits, and encounter context.
+- No Biome 2 implementation until the Meadows passes its exit gate
+  (`docs/acceptance/MEADOWS_EXIT_CRITERION.md`). Any reconnection view is distant and
+  non-enterable.
+- **No new creature meshes or Meshy generations for the Meadows.** Use installed
+  creature meshes; differentiate with materials, textures, modest scale, animation, VFX,
+  habitat, behaviour, traits and encounter context.
 - **Never spend a Meshy generation without owner-supplied reference art.**
-- One nature family, one village family, one prop family. Meshy is reserved for Team Tether hero objects such as pylons, relay apparatus, and the tether machine.
-- **Reuse the installed humanoid cast before generating anything new.** Current `main` has six production humanoid rigs: trainer, Grandpa, Warden, villager male, villager female, and Team Tether grunt. `docs/art/HUMANOID_ASSET_INVENTORY.md` is authoritative for current humanoid availability and reuse. Use existing per-material variants/rank presentation/configuration rather than making every NPC a unique mesh. A new humanoid mesh is exceptional, must solve a real unmet player-facing need, and still requires owner-supplied reference art.
-- **The Warden is already rebuilt from the owner-supplied board-16 character sheet.** Do not reopen historical notes claiming his face is painted/unmodelled or that he still needs a production sheet; inspect the current installed `assets/characters/warden/warden_lod0.glb` instead.
-- Do not silently invent a major gameplay/story decision.
+- One nature family, one village family, one prop family. Meshy is reserved for Team
+  Tether hero objects (pylons, relay apparatus, the tether machine).
+- **Reuse the installed humanoid cast** (trainer, Grandpa, Warden, villager male,
+  villager female, Team Tether grunt). `docs/art/HUMANOID_ASSET_INVENTORY.md` is
+  authoritative. A new humanoid mesh is exceptional and still needs owner reference art.
+- The Warden is already rebuilt from the owner's board-16 sheet; inspect
+  `assets/characters/warden/warden_lod0.glb` rather than trusting older notes.
+- Creatures should stand taller than the 1.80 m trainer; resolve relative-scale defects
+  by growing the smaller side, never by shrinking (owner directive 2026-09-01).
+- Do not silently invent a major gameplay or story decision.
 
-## Canon / precedence
+## Precedence
 
-For current work, use this precedence:
+1. newest owner directive or playtest in `docs/owner/`;
+2. this file and `docs/decisions/`;
+3. `docs/specs/MEADOWS_PROGRESSION_SPEC.md`;
+4. `docs/GAME_VISION.md`;
+5. the other `docs/*.md` source-of-truth files;
+6. `docs/prompts/` task contracts;
+7. anything in `archive/` (history only).
 
-1. explicit newer owner directives / owner-play evidence;
-2. `docs/MEADOWS_PROGRESSION_SPEC.md` and settled decisions;
-3. `docs/TETHERBOUND_GAME_VISION.md` for experience-level intent;
-4. `docs/GAME_DESIGN.md` / `docs/MEADOWS_VERTICAL_SLICE.md` where not superseded;
-5. task-specific detailed prompts;
-6. historical backlog wording.
+`docs/decisions/D23-the-meadows-is-the-first-game.md` records why the Meadows spec wins
+over older design prose. Preserve its named carve-outs.
 
-For humanoid asset availability/current Warden production state, `docs/art/HUMANOID_ASSET_INVENTORY.md` supersedes older historical statements in `docs/art/HUMANOIDS_PRODUCTION_REPORT.md` and `docs/art/REFERENCE_CANON.md`.
+## How work is chosen
 
-`docs/decisions/D23-the-meadows-is-the-first-game.md` remains the canon record for why the later Meadows spec wins over older conflicting design prose. Preserve its named carve-outs.
-
-## How current work is chosen
-
-Do not blindly work top-down through `ralph/BACKLOG.md`.
-
-- `ralph/ACTIVE_GAME_PLAN.md` determines the current gameplay gate/package.
-- `ralph/ACTIVE_TASKS.md` is the compact manifest for the current gate.
-- `ralph/BACKLOG.md` is the complete ledger/history and is consulted for the selected task, not cold-read as a startup document.
-- `docs/ralph-prompts/` contains detailed implementation contracts.
-- `ralph/PROMPT_COMPATIBILITY_MAP.md` prevents duplicate work from overlapping historical prompts.
-
-A child task can ship independently. The owning gameplay package does **not** pass until its continuous player evidence path passes.
+`docs/ROADMAP.md` names the current gate, its bounded tasks, who does them, and the
+acceptance evidence. `docs/CURRENT_STATE.md` is the evidence-backed status. A child task
+ships independently; its gate passes only when the continuous player path passes.
 
 ## Working style
 
-For each implementation task:
+For every implementation task:
 
-1. Inspect current `main` before changing anything.
-2. Reproduce/verify the actual player-facing state.
-3. Read only the relevant spec/code/prompt sections.
-4. Implement the smallest coherent fix/feature that satisfies the current package.
-5. Run relevant tests and the real interaction path.
-6. For visual-affecting work, render the actual change and follow `ralph/conventions.md` visual-judge requirements.
-7. Preserve working behavior outside scope.
-8. Put tunable values in data/config when they will vary.
-9. Record meaningful findings/decisions in the appropriate repo docs.
-10. Ship through the Ralph branch/CI process; do not bypass it for implementation code.
+1. Inspect current `main` and reproduce the actual player-facing state first.
+2. Read only the relevant spec, code, tests and prompt sections.
+3. Implement the smallest coherent change that satisfies the task.
+4. Run the named tests and the real interaction path; tests exercise real behaviour.
+5. For visual work, render the change and run the blind visual judge.
+6. Preserve working behaviour outside scope; put tunables in `data/config`.
+7. Record findings in `docs/CURRENT_STATE.md` (status) or `docs/decisions/` (decisions).
+8. Ship on a branch through CI and a pull request; verify the landing on `main`.
 
-For package/gate work, additionally:
-
-11. Play the full evidence segment named in `ralph/ACTIVE_GAME_PLAN.md`.
-12. Record player purpose, team progression, meaningful choices, wild/trainer/resource/rest cadence, dead-travel intervals, reliability failures, and regional presentation.
-13. Fix the highest-impact player-facing failure and replay.
-14. Continue automatically when the evidence criteria pass. These are not owner-blocking approval gates.
-
-## Evidence-backed “already fixed” is valid
-
-The repo has repeatedly accumulated stale bug prose after code changed.
-
-If current `main` already satisfies a child prompt, verify it and reconcile bookkeeping. Do not rewrite a working system just to produce a diff.
-
-A newer owner reproduction of the same failure reopens it even if old `DONE.md` says it shipped.
+Evidence-backed "already fixed" is valid: verify and reconcile rather than rewrite. A
+newer owner reproduction reopens any item a ledger says is fixed.
 
 ## Ask instead of inventing
 
-Ask/flag only when implementation truly requires choosing between materially different game behaviors not settled by the repo.
+Ask only when implementation requires choosing between materially different game
+behaviours nothing in the repo settles: dodge/block, the five-creature limit, human
+weapons, the type system, creature storage, a major story rewrite, traversal philosophy,
+harsher hunger, the stronghold structure. Implementing a documented owner directive is
+ordinary work.
 
-Examples:
+## Process rules that cost real time to learn
 
-- adding dodge/block;
-- changing the five-creature limit;
-- adding human weapons;
-- changing the type system;
-- adding creature storage;
-- major story rewrite;
-- changing traversal philosophy;
-- adding harsher hunger/thirst;
-- changing the stronghold structure.
+- A CI run under five minutes verified nothing. Check that code jobs ran.
+- A retry that turns 0-for-1 into green is a finding, not a pass.
+- A self-report is not evidence; check the branch and the run.
+- Commit evidence verdicts, not screenshot or telemetry payloads.
+- Address inventory by item identity, never by slot number.
+- Never `--headless` together with a rendering driver.
 
-Implementing a documented owner directive is ordinary work, not invention.
-
-## Asset work
-
-Candidate assets may be sourced for this private project when needed, but:
-
-- maintain visual cohesion;
-- record provenance/license in `docs/ASSET_LEDGER.md`;
-- never assume redistributability;
-- test scale/materials in-engine;
-- inspect `docs/art/HUMANOID_ASSET_INVENTORY.md` before any human/NPC asset work;
-- do not use placeholder ugliness as evidence that final biome/creature/combat/release/stronghold presentation is good enough.
-
-## Current objective
-
-The old M0/M1 “movement playground” startup era is historical.
-
-**Current work begins at the first incomplete item in Gate A of `ralph/ACTIVE_GAME_PLAN.md`, reconciled against current `main`, then self-chains through the Meadows gameplay gates to Prompt 70.**
+Full process: `docs/AGENT_WORKFLOW.md`.

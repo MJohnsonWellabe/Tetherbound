@@ -139,7 +139,7 @@ and it should say so out loud.
 ## Re-evaluated at `OW5B`, 2026-08-17 — kept as is, by explicit choice
 
 This is the re-bake the postscript above named: the terrain is being re-baked
-for a reason (`docs/MEADOWS_MACRO_LAYOUT.md`, growing the world to the
+for a reason (`docs/specs/MEADOWS_MACRO_LAYOUT.md`, growing the world to the
 Meadows corridor) that has nothing to do with the healing system, and the
 postscript is explicit that inheriting the old behaviour silently is not
 acceptable here — it has to be chosen.

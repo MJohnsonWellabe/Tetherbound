@@ -7,7 +7,7 @@ extends SceneTree
 ##     --rendering-driver opengl3 --resolution 1920x1080 \
 ##     --script tools/_capture_party_strip_rows.gd -- --tag=after
 ##
-## NEVER `--headless` with a real rendering driver (`ralph/conventions.md`).
+## NEVER `--headless` with a real rendering driver (`docs/AGENT_WORKFLOW.md`).
 ##
 ## No world scene, deliberately: this is the same framing `GF-B-005-006`'s own
 ## before/after pair used for this widget, and what is being judged here is

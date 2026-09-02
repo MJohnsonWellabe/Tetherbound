@@ -1,10 +1,10 @@
 ; Tetherbound — Godot project settings.
 ;
-; Engine is LOCKED to Godot 4 (docs/GAME_DESIGN.md §4). Pinned to 4.7-stable;
+; Engine is LOCKED to Godot 4 (docs/specs/GAME_DESIGN.md §4). Pinned to 4.7-stable;
 ; see docs/decisions/D01-godot-version-and-renderer.md before changing it.
 ;
 ; Most of this file is the input map. It is here rather than in code because
-; docs/TECHNICAL_START.md §Input requires actions, never raw device checks
+; docs/TECHNICAL_ARCHITECTURE.md §Input requires actions, never raw device checks
 ; scattered through gameplay. Every action carries a keyboard/mouse binding AND
 ; an Xbox-layout gamepad binding, because controller is the primary input and
 ; keyboard is the fallback, not the other way round.

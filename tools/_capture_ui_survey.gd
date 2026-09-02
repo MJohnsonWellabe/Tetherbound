@@ -13,7 +13,7 @@ extends SceneTree
 ## bare ColorRect with no project scenes: `--headless` + `--rendering-driver
 ## opengl3` prints one line and then hangs forever with no error, no crash and
 ## no partial output -- exit 124/143 from `timeout`. It is the COMBINATION
-## that hangs, not the scene weight (`ralph/conventions.md`, "Art pipeline
+## that hangs, not the scene weight (`docs/AGENT_WORKFLOW.md`, "Art pipeline
 ## traps already paid for" -- the single most expensive trap in this repo,
 ## having already cost four abandoned LOD captures and two abandoned HUD
 ## captures on one day alone, one of them a 43-minute hang). Drop `--headless`,
@@ -217,7 +217,7 @@ func _run() -> void:
 ##
 ## Pinned once here rather than per-frame so it covers BOTH phases -- the
 ## standalone panels and the world-anchored HUD -- and cannot wear off partway
-## the way an unfrozen clock pin does (`ralph/VISUAL_LEDGER.md`, "Pin the clock
+## the way an unfrozen clock pin does (`archive/ralph/VISUAL_LEDGER.md`, "Pin the clock
 ## AND freeze it"). `06-hud-input-glyphs` still flips to the keyboard form for
 ## one frame, so the sheet keeps showing both halves of every dual binding.
 func _pin_owner_device() -> void:
@@ -418,7 +418,7 @@ func _shoot_title_screen() -> void:
 ## `rotation.y = 200 degrees` on build -- a front three-quarter -- and then
 ## spin away from it. Freezing `_process` leaves each model exactly on the
 ## authored angle, which is the pose the screens were designed around and the
-## only one a still frame can fairly judge. `ralph/VISUAL_LEDGER.md` already
+## only one a still frame can fairly judge. `archive/ralph/VISUAL_LEDGER.md` already
 ## carries the same lesson about the clock: pin it AND freeze it.
 ##
 ## This does not hide a defect. A player still sees the far side as it turns;
@@ -824,7 +824,7 @@ func _phase_world() -> void:
 		# on X and -512..7680 on Z (`data/config/terrain_playground.json`'s
 		# `world_bounds`) -- about a thousandth of one percent of it -- so both
 		# map instruments were photographed in a state no player who had walked
-		# anywhere would ever see. `ralph/VISUAL_LEDGER.md`'s own POPULATION
+		# anywhere would ever see. `archive/ralph/VISUAL_LEDGER.md`'s own POPULATION
 		# rule is the same point about inventories and quest logs: an empty
 		# instrument tells a blind critic nothing about hierarchy or legibility,
 		# and round 1 duly spent findings calling the full map "a black column"

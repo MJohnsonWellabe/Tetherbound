@@ -4,7 +4,7 @@ extends TestCase
 ##
 ##   godot --headless --path . --script tests/run_tests.gd -- --only=gate_f
 ##
-## `ralph/GATE_F_PROTOCOL.md` §1.5 freezes a candidate SHA and then forbids the
+## `docs/acceptance/GATE_F_PROTOCOL.md` §1.5 freezes a candidate SHA and then forbids the
 ## operator to change code. Anything wrong with the harness after that point is
 ## a blocker and a re-freeze. So the failures worth a test here are the ones
 ## that would only surface halfway through a four-hour run:
@@ -165,7 +165,7 @@ func _segment_files() -> Array[String]:
 
 func test_there_is_at_least_one_segment_script() -> void:
 	# A green suite over an empty directory would be the "passes because the
-	# feature is absent" failure ralph/conventions.md names.
+	# feature is absent" failure docs/AGENT_WORKFLOW.md names.
 	assert_true(_segment_files().size() >= 2,
 		"tools/gate_f/segments/ holds %d step-scripts; the two self-checks alone should be there"
 			% _segment_files().size())
@@ -599,7 +599,7 @@ func _fence_crossings(outline: PackedVector2Array, from: Vector2, to: Vector2) -
 # way to ask the probe anything about live state. Measured, not assumed -- the
 # first cut of this file had three such tests and all three passed by returning
 # early on a null tree, which is exactly the assertion-that-cannot-fail
-# `ralph/conventions.md` says shipped a real bug on this project for weeks.
+# `docs/AGENT_WORKFLOW.md` says shipped a real bug on this project for weeks.
 #
 # That is also `docs/decisions/D02`'s stated scope for this runner: pure logic,
 # not scenes. The live-state half lives in `tests/smoke_gate_f_probe.gd`, which

@@ -23,14 +23,14 @@ extends SceneTree
 ## `aspect_source_species` placeholder fields. See this lane's handover for
 ## the exact data contract.
 ##
-## xvfb invocation (ralph/conventions.md's own, copied verbatim):
+## xvfb invocation (docs/AGENT_WORKFLOW.md's own, copied verbatim):
 ##
 ##   xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/_capture_aspect_variants.gd
 ##
 ## NEVER --headless alongside a real rendering driver -- hangs forever with
-## no error (ralph/conventions.md's own "single most expensive trap").
+## no error (docs/AGENT_WORKFLOW.md's own "single most expensive trap").
 
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")

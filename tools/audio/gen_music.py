@@ -3,7 +3,7 @@
 
 Run: `python3 tools/audio/gen_music.py` (or `gen_all.py`).
 
-The beats are named in `docs/TETHERBOUND_GAME_VISION.md`, and each cue below
+The beats are named in `docs/GAME_VISION.md`, and each cue below
 says which line of it that cue is answering. Nothing here is invented mood: the
 Warden is "the culmination of the chapter" (§10), the release ceremony needs
 "enough history to hurt" (§ Meadows Hall), and home "should remain emotionally

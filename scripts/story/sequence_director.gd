@@ -1,7 +1,7 @@
 extends Node
 
 ## The first fifteen minutes: which beat we are on, and what is possible during
-## it. docs/OPENING_SEQUENCE.md is the prose version and the two are meant to be
+## it. docs/specs/OPENING_SEQUENCE.md is the prose version and the two are meant to be
 ## read together.
 ##
 ## Everything this drives already existed and none of it was connected. There
@@ -25,7 +25,7 @@ extends Node
 ## behaviour: Grandpa turns to look at you because `npc_body.gd` does that.
 ##
 ## The three starters no longer get bodies of their own in the meadow
-## (`SA0-orbs`, owner directive 2026-08-11 — see docs/OPENING_SEQUENCE.md's
+## (`SA0-orbs`, owner directive 2026-08-11 — see docs/specs/OPENING_SEQUENCE.md's
 ## own record of the reversal). They are previewed live, in orbs, by
 ## `starter_picker.gd`, which this file opens once Grandpa's briefing ends and
 ## reads back a choice from — the same "ask a panel, read the outcome" split
@@ -821,7 +821,7 @@ func _maybe_open_picker() -> void:
 
 ## Beat 1 is a fade-in from black rather than an interior, which saves an entire
 ## interior art pass for a beat that lasts forty seconds
-## (docs/OPENING_SEQUENCE.md). Both numbers are in data/config/opening.json and
+## (docs/specs/OPENING_SEQUENCE.md). Both numbers are in data/config/opening.json and
 ## until now nothing read them.
 ##
 ## Built in code rather than added to the scene: it is two nodes with no layout,
@@ -1126,7 +1126,7 @@ func _on_starter_picker_chosen(index: int) -> void:
 	if index < 0 or index >= _starter_species.size():
 		return
 	_choice = index
-	# Naming is mandatory, not skippable (docs/OPENING_SEQUENCE.md): a creature you did
+	# Naming is mandatory, not skippable (docs/specs/OPENING_SEQUENCE.md): a creature you did
 	# not name is a creature you did not adopt. The panel has no cancel, and the beat
 	# does not advance until it comes back with a word.
 	_name_prompt.call("open", _display_name(_starter_species[index]))
@@ -1325,16 +1325,22 @@ func _hold_the_tutorial_team_floor() -> void:
 	game.call("push_world_message", "Your creature is back on its feet. Try again.")
 
 
-## Is the fight on screen the authored practice catch? Beat AND species, for the
-## reason `_on_combat_entered` gives: another Bramblebun fought later must not
-## inherit the opening's assists.
+## Is the fight on screen one the opening's dead-end protections must cover?
+## Beat alone, not beat AND species. `_engageable()` (encounter_director.gd)
+## offers the nearest wild creature of ANY species in range, not specifically
+## the tutorial Bramblebun, so a player can reach the ENCOUNTER beat against a
+## different wild creature before ever meeting it -- and that fight can run the
+## satchel dry or faint the starter exactly like the authored one. Found
+## 2026-09-02 by `smoke_gate_a_opening_segment`, whose real interact press
+## engaged a Mudsnout: the orb floor never applied and the opening dead-ended
+## with zero orbs. The beat is the real bound, the same one
+## `_hold_the_tutorial_team_floor()` already relies on alone: it ends
+## permanently at the first catch, so nothing here leaks into a later fight
+## regardless of species.
 func _is_tutorial_catch() -> bool:
 	if _beat != BEATS.ENCOUNTER or _manager == null:
 		return false
-	var enemy: RefCounted = _manager.call("enemy") as RefCounted
-	if enemy == null:
-		return false
-	return str(enemy.get("species_id")) == str(BEATS.encounter().get("species", ""))
+	return _manager.call("enemy") != null
 
 
 func _on_combat_exited(outcome: String) -> void:

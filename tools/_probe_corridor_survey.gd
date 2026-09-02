@@ -10,7 +10,7 @@ extends SceneTree
 ##     --script tools/_probe_corridor_survey.gd
 ##
 ## NEVER with `--headless` and a real rendering driver: that combination hangs
-## forever with no error (ralph/conventions.md, "Art pipeline traps").
+## forever with no error (docs/AGENT_WORKFLOW.md, "Art pipeline traps").
 ##
 ## This tool is the union of three earlier tools' hard-won corrections, because
 ## each of them had exactly one of the three and the other two were still bugs:

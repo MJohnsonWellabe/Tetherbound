@@ -80,7 +80,7 @@ const PLACED_INDEX_META := "placed_index"
 ## "Building" controls group): rotates the armed ghost one FIXED 90-degree
 ## step, regardless of `_rotation_step_deg` below. Keyboard T and gamepad
 ## D-pad down were both unused by any existing action — see the input-map
-## audit in this file's own commit message / ralph/DONE.md entry. Kept
+## audit in this file's own commit message / archive/ralph/DONE.md entry. Kept
 ## working unchanged by D34 (`build_rotate_left`/`build_rotate_right` are
 ## additive, not a replacement) so muscle memory from BG1 still turns a piece.
 const ROTATE_ACTION := "build_rotate"

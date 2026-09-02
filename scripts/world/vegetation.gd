@@ -16,7 +16,7 @@ extends Node3D
 ## measured in isolation from the placement compute. The scatter's ~36s boot
 ## cost, before and after this swap, is ~99.6% `scatter_rules.all_placements()`
 ## itself (measured: 36.1s of a 36.3s total build), which this file does not
-## touch and is not this task's scope — see `docs/MEADOWS_MACRO_LAYOUT.md`
+## touch and is not this task's scope — see `docs/specs/MEADOWS_MACRO_LAYOUT.md`
 ## §1.1 on `road_polylines()`'s uncached per-pixel rebuild, owned by a
 ## different lane. So this swap is NOT a boot-time win today, and does not
 ## claim to be. What it buys is architectural: MultiMesh has no per-region

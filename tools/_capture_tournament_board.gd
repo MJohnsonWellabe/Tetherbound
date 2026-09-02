@@ -7,7 +7,7 @@ extends SceneTree
 ##     --script tools/_capture_tournament_board.gd
 ##
 ## Plain `--headless` with `--rendering-driver opengl3` hangs forever; the
-## xvfb invocation above is the one that works (ralph/conventions.md).
+## xvfb invocation above is the one that works (docs/AGENT_WORKFLOW.md).
 ##
 ## Two frames, because the board has two jobs and they fail differently:
 ##

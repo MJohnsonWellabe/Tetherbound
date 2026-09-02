@@ -15,7 +15,7 @@ extends RefCounted
 ## the village centroid computed from the villagers' own data (Tam went from 20m
 ## to 11m away and it still failed), and sidestepping when something else held
 ## the interact line (the player never gets close enough to sidestep). Both are
-## recorded in `ralph/BACKLOG.md` under CONTINUOUS-CORE so they are not retried.
+## recorded in `docs/CURRENT_STATE.md` under CONTINUOUS-CORE so they are not retried.
 ##
 ## The opening leaves the player standing on the authored path, where
 ## straight-line walking works. No computed coordinate reproduces that, which is
@@ -41,7 +41,7 @@ const NAME_ENTRY := preload("res://scripts/ui/name_entry.gd")
 const NPC_GATHER_SEGMENT := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
 const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
-## CONTROLLER-MAP (ralph/OWNER_DIRECTIVES_2026-08-22.md section 1) took the pad
+## CONTROLLER-MAP (docs/owner/OWNER_DIRECTIVES_2026-08-22.md section 1) took the pad
 ## binding off `combat_throw`: the orb is a hotbar item now and X throws it, so
 ## `interact` IS the pad's throw button. combat_manager.gd::_throw_pressed and
 ## throw_aim.gd both read it beside `combat_throw`'s surviving keyboard F. This

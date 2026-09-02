@@ -3,7 +3,7 @@ extends "res://tests/test_case.gd"
 ## The opening must not be able to run out of orbs.
 ##
 ## `combat_manager.gd::configure_tutorial_catch_assist()` keeps half of
-## docs/OPENING_SEQUENCE.md's promise that the practice catch cannot fail twice:
+## docs/specs/OPENING_SEQUENCE.md's promise that the practice catch cannot fail twice:
 ## `catch_math.apply_failure_bound()` converts the second FAILED ROLL. It counts
 ## landed throws on purpose -- a throw that never reached the creature is not a
 ## failed catch -- and that leaves the other half open. A player who MISSES is

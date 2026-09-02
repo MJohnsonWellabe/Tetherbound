@@ -33,7 +33,7 @@ Your job is to:
 7. Do not mass-generate the full roster until Terrapup passes the quality gate.
 8. Prefer visual iteration and comparison over accepting the first generated mesh.
 9. Record all important technical/art decisions in the repo.
-10. Record provenance and license information for every third-party or AI-generated asset in `docs/ASSET_LEDGER.md`.
+10. Record provenance and license information for every third-party or AI-generated asset in `docs/specs/ASSET_LEDGER.md`.
 
 The goal is not merely to produce a `.glb`.
 
@@ -948,7 +948,7 @@ For every downloaded, generated, remeshed, rigged, or animated asset record:
 
 Update:
 
-`docs/ASSET_LEDGER.md`
+`docs/specs/ASSET_LEDGER.md`
 
 Never assume an asset is redistributable.
 
@@ -1107,7 +1107,7 @@ Do not lower the bar merely because they are harder.
 
 For Terrapup create:
 
-`docs/art/TERRAPUP_PRODUCTION_REPORT.md`
+`archive/docs/art/TERRAPUP_PRODUCTION_REPORT.md`
 
 Record:
 

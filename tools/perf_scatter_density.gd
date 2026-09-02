@@ -1,6 +1,6 @@
 extends SceneTree
 
-## T1-PERF (2026-08-30). docs/PERFORMANCE_BUDGET.md needs a real scatter
+## T1-PERF (2026-08-30). docs/specs/PERFORMANCE_BUDGET.md needs a real scatter
 ## density number ("per hectare") and nothing in the repo derives one --
 ## `ralph/PERF_ROG_REPORT.md` and `HALL_DESIGN_2026-08-30.md` both report raw
 ## placement counts, never an area-normalised density.
@@ -8,7 +8,7 @@ extends SceneTree
 ## Correct headless: --headless (no RenderingServer numbers are read here,
 ## unlike perf_render_stats.gd / perf_site_survey.gd, so the Dummy driver's
 ## zeroed RENDER_* monitors do not matter and the render-driver trap in
-## ralph/conventions.md does not apply).
+## docs/AGENT_WORKFLOW.md does not apply).
 ##
 ##   godot --headless --path . --script tools/perf_scatter_density.gd
 ##

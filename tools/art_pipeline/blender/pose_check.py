@@ -8,7 +8,7 @@ vertices ("these will tear in animation") but a vertex count alone does not
 say whether the tear is visible or is three stray interior verts nobody will
 ever see. This renders the actual bent pose so that question gets answered
 by a frame, not a guess — the same "a rendered frame, not a passing parse
-test" standard `ralph/conventions.md` asks for everywhere else.
+test" standard `docs/AGENT_WORKFLOW.md` asks for everywhere else.
 
 Reuses turntable.py's normalise/lighting/ground/camera helpers by import
 rather than duplicating them.

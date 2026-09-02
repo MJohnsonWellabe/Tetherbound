@@ -1,7 +1,7 @@
 # D53 — Dynamic terrain collision: the vendored addon clamps `collision_radius` to 256, not the 512 §8.2 assumed
 
 **Date:** 2026-08-16 · **Decided by:** `ralph/BAKE-GUARDS`, correcting
-`docs/MEADOWS_MACRO_LAYOUT.md` §8.2
+`docs/specs/MEADOWS_MACRO_LAYOUT.md` §8.2
 
 ## The finding
 

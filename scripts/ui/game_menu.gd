@@ -634,7 +634,7 @@ func legend(template: String) -> String:
 ## so every other way can be lost. Hold the pad's Menu and View buttons together,
 ## or F10 on a keyboard, for a second and a half.
 ##
-## docs/TECHNICAL_START.md says never to scatter raw device checks through
+## docs/TECHNICAL_ARCHITECTURE.md says never to scatter raw device checks through
 ## gameplay. This is the exception the rule needs: it is the one check that must
 ## keep working when the input map cannot be trusted, and it lives in one place.
 func _read_panic(delta: float) -> void:

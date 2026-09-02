@@ -693,7 +693,7 @@ func _check_debug_teleport() -> void:
 	# menu (and so the world) is still paused.
 	#
 	# OW5E: expectations are DERIVED from the same config the corridor's own
-	# relocation table (docs/MEADOWS_MACRO_LAYOUT.md section 10) moves — the
+	# relocation table (docs/specs/MEADOWS_MACRO_LAYOUT.md section 10) moves — the
 	# `the_pond` region's centre and the `river_gorge` spoke's own road-end —
 	# rather than a pasted-in coordinate. A pasted literal is exactly what went
 	# stale here once already (the pre-corridor (-92,100)/(-90.1,169.5) this

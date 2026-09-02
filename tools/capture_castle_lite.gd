@@ -6,7 +6,7 @@ extends SceneTree
 ## rendering. The full `tools/capture_wayfinding.gd` loads the entire
 ## `meadows_playground.tscn` scene and its ~30-100+ minute build cost under
 ## this container's software (xvfb + opengl3/llvmpipe) renderer, documented
-## in `ralph/DONE.md` precedent, exceeds any single foreground command's
+## in `archive/ralph/DONE.md` precedent, exceeds any single foreground command's
 ## timeout here. This reuses the SAME terrain bake, the SAME ground
 ## materials, the SAME lighting/environment/fog settings as the real scene
 ## (copied from meadows_playground.tscn's own WorldEnvironment/Sun nodes),
@@ -22,7 +22,7 @@ extends SceneTree
 ## real scene already relies on, just driven by hand instead of by `_ready`.
 ##
 ## `OF4-rebuild`'s blind-critique pass stopped after round 4 with an open
-## remainder (the gate opening's jagged seam, see `ralph/DONE.md`) rather
+## remainder (the gate opening's jagged seam, see `archive/ralph/DONE.md`) rather
 ## than a clean convergence -- keep this around for whoever resumes that
 ## pass; delete it once the remainder is actually closed and nobody needs
 ## this verification path again. Not a permanent addition to tools/.

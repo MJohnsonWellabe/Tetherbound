@@ -8,7 +8,7 @@
 
 ## 0. Who decided this, and why it is written down
 
-`ralph/BACKLOG.md`'s PT-03 says **the owner picks the affordance** among three:
+`docs/CURRENT_STATE.md`'s PT-03 says **the owner picks the affordance** among three:
 a warm light at the stair head, geometry that frames rather than avoids the
 opening, or a look-toward bias on the interior camera profile. He was not
 available per-decision and asked the loop to keep moving, so the coding session
@@ -22,7 +22,7 @@ tagged tier.
 ## 1. The defect is occlusion, not darkness
 
 Two testers — one of them the owner, twice — could not leave the first room of
-the game. `docs/reviews/2026-08-15-full-blind-playtest/PLAYER_LOG.md` beats
+the game. `archive/reports/docs-reviews-full/2026-08-15-full-blind-playtest/PLAYER_LOG.md` beats
 16–20 record what that actually looked like: a 4×90° panorama from the get-up
 spot that found no stairs, then a jump over the mezzanine rail, then a player
 balanced on the rail cap.

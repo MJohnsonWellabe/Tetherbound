@@ -351,7 +351,7 @@ func art_transform() -> Transform3D:
 
 
 ## A palette swap on an existing rig (R7.2's villagers) rather than a second
-## Meshy generation: `docs/ASSET_LEDGER.md`'s only other free humanoid, KayKit's
+## Meshy generation: `docs/specs/ASSET_LEDGER.md`'s only other free humanoid, KayKit's
 ## Ranger, is a ~2-heads-tall toon character next to the trainer/Grandpa/Warden's
 ## photoreal-ish proportions, and picking it would silently settle the open
 ## question in `ralph/BLOCKED.md` ("Creature and human art-pipeline cohesion")
@@ -411,7 +411,7 @@ func _palette_node(node: Node, palette: Dictionary) -> void:
 ## every character that asks for the same one, instead of `source.duplicate()`
 ## per character — the "mints a material per variant" mistake NP1 was told not
 ## to repeat. `vegetation.gd::_retint()`'s `_tint_for()` proves the same
-## pattern for foliage (`ralph/BACKLOG.md`'s `SA1-lod`, keyed by everything
+## pattern for foliage (`docs/CURRENT_STATE.md`'s `SA1-lod`, keyed by everything
 ## that can change the output); this is that cache for humans.
 ##
 ## STALE-PROSE WARNING, GF-B-010, 2026-08-27. Everything below about emission

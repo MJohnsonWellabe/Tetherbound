@@ -5,7 +5,7 @@ extends SceneTree
 ##   godot --headless --path . --script tests/smoke_gate_f_probe.gd
 ##
 ## **Headless, never under xvfb** — this renders nothing, and under software GL
-## it takes 25x longer and flakes under load (`ralph/conventions.md`).
+## it takes 25x longer and flakes under load (`docs/AGENT_WORKFLOW.md`).
 ##
 ## ## Why this is a smoke test and not a unit test
 ##
@@ -20,7 +20,7 @@ extends SceneTree
 ##
 ## ## What it is for
 ##
-## `ralph/GATE_F_MASTER_PROTOCOL.md` §C.5 is the whole point of the probe:
+## `docs/acceptance/GATE_F_MASTER_PROTOCOL.md` §C.5 is the whole point of the probe:
 ## telemetry reads live game state, "never a parallel reimplementation". A probe
 ## that disagrees with the game is worse than no probe — the operator writes
 ## down what it said and Phase B reasons about a number no player ever saw. The

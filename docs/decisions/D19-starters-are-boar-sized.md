@@ -69,7 +69,7 @@ less ground. The arena radius and the `camera` block in
 `data/config/combat.json` are the dials, both already labelled tunable. This
 decision deliberately does not pre-tune them — whether the fight feels
 cramped is a playtest finding, and the next play gate (the new first day,
-`ralph/BACKLOG.md`) is where it gets found.
+`docs/CURRENT_STATE.md`) is where it gets found.
 
 Attack reach and the catch formula's accuracy bonus derive from
 `body_radius()`, so they scaled with the heights automatically, exactly as

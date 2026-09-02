@@ -1,73 +1,66 @@
 # Tetherbound
 
-Tetherbound is a third-person open-world creature-training adventure built in Godot 4 for Windows/handheld PCs, with controller-first play, gathering, crafting, building, exploration, care, and real-time creature combat.
+Tetherbound is a third-person open-world creature-training adventure built in Godot 4.7
+for Windows and handheld PCs (ROG Ally first), controller-first, with gathering,
+crafting, building, exploration, care, and real-time piloted creature combat.
 
-The defining rule is:
+The defining rule:
 
 > **You may own five creatures, total.**
 
-There is no reserve box and no hidden storage team. Catching beyond five forces a real keep/release choice. The game is built around making those five increasingly capable and personally meaningful.
+No reserve box, no hidden storage. Catching beyond five forces a real keep/release
+choice. The game is built around making those five capable and personally meaningful.
 
 ## Play it
 
 Windows builds are published from `main`:
-
 **[Download the latest build](https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip)**
 
-On ROG Ally, use **Gamepad Mode**. Desktop Mode sends controls as mouse/keyboard and can make an otherwise running build appear unresponsive.
+On the ROG Ally use **Gamepad Mode**; Desktop Mode sends mouse/keyboard input and an
+otherwise working build looks unresponsive. Check the release asset's timestamp: a merge
+to `main` does not always publish a build.
 
 ## Run from source
 
-1. Install Godot 4.7.
-2. Clone this repository.
-3. Import `project.godot` in Godot.
-4. Press F5 to run the project.
+1. Install Godot 4.7-stable.
+2. Clone this repository and import `project.godot`.
+3. Press F5. Godot's Debugger/Output panels show runtime errors.
+4. Export: Project → Export → the Windows Desktop preset (configured in
+   `export_presets.cfg`).
 
-`GODOT_AND_CLAUDE_START_HERE.md` is the human setup guide.
+Headless verification from a shell:
 
-## Autonomous Claude / Ralph work
+```
+godot --headless --path . --import
+godot --headless --path . --script tests/run_tests.gd          # unit suite, ~28 min
+godot --headless --path . --script tests/smoke_opening.gd      # one smoke test
+```
 
-For any coding-agent or Ralph session:
+## Working on the project (humans and agents)
 
-**Start with `CLAUDE.md`, then `ralph/START_HERE.md`.**
-
-Do not start from the old milestone sequence or read the giant backlog top-down.
-
-Current Meadows execution is organized around **finished gameplay gates**, not a flat feature queue:
-
-- trustworthy core verbs;
-- fresh start through the village tournament;
-- progression/reward/trainer/wild/rest backbone;
-- finished Lower Meadows;
-- finished Quarry / Burrow Warrens;
-- finished River / Tether Relay;
-- finished Upper Meadows;
-- finished Stronghold Approach;
-- Warden / legendary finale;
-- full 3–4 hour Meadows integration playthrough.
-
-The complete routing and execution order is in `ralph/START_HERE.md` and `ralph/ACTIVE_GAME_PLAN.md`.
-
-## Current authoritative documents
+**Start with `CLAUDE.md`, then `docs/00_START_HERE.md`.** Everything else in `docs/` is
+reached from there. `archive/` is history and is not a starting point.
 
 | Document | Purpose |
 |---|---|
-| `CLAUDE.md` | Hard rules and coding-agent contract. |
-| `ralph/START_HERE.md` | Single current autonomous-work entry point. |
-| `docs/TETHERBOUND_GAME_VISION.md` | Experience-level definition of the finished Meadows game. |
-| `ralph/ACTIVE_GAME_PLAN.md` | Current gameplay-gate execution order. |
-| `ralph/ACTIVE_TASKS.md` | Compact current-gate task manifest. |
-| `docs/MEADOWS_PROGRESSION_SPEC.md` | Canonical Meadows chapter/progression detail. |
-| `docs/GAME_DESIGN.md` | Broader game design where not superseded by later Meadows decisions. |
-| `docs/TECHNICAL_START.md` | Project/data/code structure. |
-| `ralph/conventions.md` | Branch, CI, testing, visual-judge, and shipping conventions. |
-
-## History/reference
-
-The repository intentionally retains extensive design and Ralph history. Files such as `ralph/BACKLOG.md`, `ralph/DONE.md`, `ralph/BLOCKED.md`, dated handovers, and older prompt/manual files are references, not startup documents.
-
-Search them for a specific task or decision when needed; do not load them wholesale into a fresh agent session.
+| `CLAUDE.md` | Hard rules and the agent contract |
+| `docs/00_START_HERE.md` | Routing: current stage, what is authoritative, validation, done |
+| `docs/GAME_VISION.md` | What the finished Meadows chapter should feel like |
+| `docs/CURRENT_STATE.md` | Evidence-backed status and known issues |
+| `docs/ROADMAP.md` | Sequential gates with tasks and acceptance |
+| `docs/AGENT_WORKFLOW.md` | How work is briefed, tested, rendered, landed |
+| `docs/GAMEPLAY_SYSTEMS.md`, `docs/WORLD_AND_CONTENT.md`, `docs/CREATURE_DESIGN.md` | System, world and creature references |
+| `docs/TECHNICAL_ARCHITECTURE.md` | Engine, structure, pipelines, CI |
+| `docs/VISUAL_BIBLE.md` | Visual target and gap list |
 
 ## Scope
 
-Meadows is the current game. No second biome implementation until the Meadows chapter passes its full exit/integration gate.
+The Meadows is the current game. No second biome until the Meadows passes its exit gate.
+
+## Owner playtesting
+
+Automated evidence is required but real-device play remains the most valuable signal.
+Useful feedback is experiential and specific: "input froze after leaving this menu",
+"this road has too much empty running", "I do not understand why I am going here", "I
+never need to stop and rest". Record it in `docs/owner/`; it outranks every other
+document for what it covers and reopens anything a ledger says is fixed.

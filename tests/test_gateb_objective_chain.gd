@@ -87,7 +87,7 @@ func test_completing_the_whole_chain_reaches_the_south_bridge_handoff_then_the_n
 	# move on to whatever `data/progression/objectives.json` names as the
 	# very next main entry after `south_bridge_open` -- Gate C/D1's own call,
 	# not this file's. Read straight from data rather than hardcoding a label
-	# (ralph/conventions.md: assert the rule, derive the value) so this test
+	# (docs/AGENT_WORKFLOW.md: assert the rule, derive the value) so this test
 	# does not go stale the next time a beat is inserted between the bridge
 	# and the captains, the way `clear_the_burrow_warrens` etc. already were.
 	var file := FileAccess.open("res://data/progression/objectives.json", FileAccess.READ)
@@ -111,7 +111,7 @@ func test_completing_the_whole_chain_reaches_the_south_bridge_handoff_then_the_n
 
 
 func test_the_chain_fails_without_any_flags_set_reflecting_an_incomplete_opening() -> void:
-	# Sanity check on the assertions themselves (ralph/conventions.md: an
+	# Sanity check on the assertions themselves (docs/AGENT_WORKFLOW.md: an
 	# assertion that cannot fail is not a test) -- a fresh game must NOT
 	# already read as the South Bridge handoff.
 	var text: String = log_reader.tracked_text(progression)

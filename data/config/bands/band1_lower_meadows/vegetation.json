@@ -83,7 +83,7 @@
       "_why": "BAND1-D1 / prompt 30: Old Bram's ground (trainers.json order 1010) and the arena his fight forms in. Same reasoning as clearings 3, 4 and 1900 -- a trainer battle arena is ~11m across and forms between the player and the creature their opponent just sent out, so without this the region's hardest optional fight is watched through a tree. NOTE for the coordinator: does NOT invalidate the baked scatter on this branch (GATE_D_LANE_CONTRACT section 4); needs the single integration re-bake."
     }
   ],
-  "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",
+  "_comment_layer_anchors_vp4": "VP4-CORRIDOR (archive/docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",
   "layer_anchors": {
     "trees": [
       {
@@ -189,7 +189,7 @@
     },
     {
       "order": 2,
-      "_comment_ow5d": "OW5D relocation (footprints[2], docs/MEADOWS_MACRO_LAYOUT.md section 10.2): (-132,107) -> (-382,514), same offset as the mill.",
+      "_comment_ow5d": "OW5D relocation (footprints[2], docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2): (-132,107) -> (-382,514), same offset as the mill.",
       "x": -382.0,
       "z": 514.0,
       "radius": 5.5,

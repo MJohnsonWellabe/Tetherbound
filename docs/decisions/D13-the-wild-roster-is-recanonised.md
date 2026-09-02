@@ -108,7 +108,7 @@ file, applied at load by `pal_body._fit()`.
   evolution link has no representation in data yet. There is no evolution
   system in the project at all; this is the first thing that will ask for one.
 - `bramblebun` is unaffected: still a base wild Ground species, still the
-  first creature the player meets in `docs/OPENING_SEQUENCE.md`.
+  first creature the player meets in `docs/specs/OPENING_SEQUENCE.md`.
 - The thirteen text-to-3D prompts committed in `tools/art_pipeline/meshy.py`
   were written against the old roster. Ridgewolf's is now dead, Mudsnout has
   none, and every other prompt should be rewritten from these sheets rather

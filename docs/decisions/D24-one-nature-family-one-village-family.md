@@ -1,7 +1,7 @@
 # D24 — One nature family, one village family, one prop family
 
 **Date:** 2026-08-11 · **Decided by:** the owner, in two supplied documents —
-`docs/ENVIRONMENT_AND_UI_BIBLE.md` and the `NPC BASES (REUSABLE)` board at
+`docs/specs/ENVIRONMENT_AND_UI_BIBLE.md` and the `NPC BASES (REUSABLE)` board at
 `docs/art/reference/12_NPC_Bases_Reusable.png`.
 
 ## Why this exists
@@ -103,8 +103,8 @@ work is needed regardless.
 
 ## Where it is wired
 
-`docs/ENVIRONMENT_AND_UI_BIBLE.md` (the document), `CLAUDE.md` (hard rules),
-`ralph/conventions.md`, `ralph/BACKLOG.md` (Phase -0.6 `EV1`–`EV10`, Phase -0.55
+`docs/specs/ENVIRONMENT_AND_UI_BIBLE.md` (the document), `CLAUDE.md` (hard rules),
+`docs/AGENT_WORKFLOW.md`, `docs/CURRENT_STATE.md` (Phase -0.6 `EV1`–`EV10`, Phase -0.55
 `NP1`–`NP4`), `ralph/BLOCKED.md` (the vernacular question closed, the
-reference-sheet list opened), `docs/ASSET_LEDGER.md` (a row per acquired pack,
+reference-sheet list opened), `docs/specs/ASSET_LEDGER.md` (a row per acquired pack,
 before its commit).

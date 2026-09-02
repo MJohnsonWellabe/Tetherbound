@@ -251,7 +251,7 @@ func throw_launch_used_assist(throw: Node) -> bool:
 	return point is Vector3 and point != Vector3.INF
 
 
-## CONTROLLER-MAP, ralph/OWNER_DIRECTIVES_2026-08-22.md section 1: the orb is
+## CONTROLLER-MAP, docs/owner/OWNER_DIRECTIVES_2026-08-22.md section 1: the orb is
 ## selected on the quick bar and thrown with X ("interact -- talk, gather,
 ## chop, mine, mount, throw the selected orb"). `combat_throw` kept its
 ## keyboard F and lost its pad button, and RIGHT SHOULDER -- which used to

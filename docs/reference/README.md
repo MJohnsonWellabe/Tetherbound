@@ -29,7 +29,7 @@ It carries five usable things:
    be rather than against a general impression.
 4. **A creature silhouette row** — rabbit, boar, deer, raptor, turtle, canine.
    This was the acceptance test for a bought creature pack: cover those six
-   cohesively, or bend `docs/GAME_DESIGN.md` §26 to fit what the pack holds.
+   cohesively, or bend `docs/specs/GAME_DESIGN.md` §26 to fit what the pack holds.
    **That trade is off the table now.** The owner's reference pack names all
    nineteen characters and gives production sheets for four of them, so the
    roster is built to the design rather than the design to the roster. The row

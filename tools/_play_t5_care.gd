@@ -4,7 +4,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tools/_play_t5_care.gd
 ##
-## `ralph/MEADOWS_EXIT_CRITERION.md` section H was entirely unevidenced: over a
+## `docs/acceptance/MEADOWS_EXIT_CRITERION.md` section H was entirely unevidenced: over a
 ## long night of parallel lanes nobody verified building, survival or creature
 ## care by playing them. This drives the SHIPPING screens the way a player
 ## reaches them -- real `InputEventJoypadButton`s through the live InputMap,

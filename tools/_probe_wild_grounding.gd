@@ -37,7 +37,7 @@ extends SceneTree
 ## This is NOT a band-content defect and must not be fixed in a band's
 ## spawns.json: no placement change can help a body with no floor under it.
 ## It belongs with distance activation / creature streaming, which
-## `ralph/DONE.md`'s GATE-D3 entry already names as the coordinator's own lane.
+## `archive/ralph/DONE.md`'s GATE-D3 entry already names as the coordinator's own lane.
 ## This probe exists so that lane can reproduce it in one boot and prove it
 ## fixed.
 ##

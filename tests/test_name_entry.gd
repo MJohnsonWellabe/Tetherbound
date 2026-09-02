@@ -3,7 +3,7 @@ extends "res://tests/test_case.gd"
 ## Naming the first creature, from a gamepad.
 ##
 ## GAME_DESIGN.md §2 lists naming first among the things that make five creatures
-## matter, and docs/OPENING_SEQUENCE.md makes it mandatory. It is also the first
+## matter, and docs/specs/OPENING_SEQUENCE.md makes it mandatory. It is also the first
 ## text entry in the project, on a handheld with no keyboard — Godot's virtual
 ## keyboard does nothing on Windows — so the grid below IS the input method,
 ## not a fallback for one.

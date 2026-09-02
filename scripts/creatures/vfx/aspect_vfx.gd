@@ -3,7 +3,7 @@ extends Node3D
 ## T1-CREATURE-ART. Idle VFX for an Aspect variant: purple flame
 ## (Nightburrow), electric arcs (Stormtrail), rift motes (Riftfrill) or
 ## ember/smoke (Ashtusk), plus a glowing-eyes billboard shared by all four --
-## docs/owner-direction/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md names one of
+## docs/owner/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md names one of
 ## these on every one of the four boards, and Nightburrow's own sheet is
 ## explicit that this is pass/fail, not decorative: "the purple flame effect
 ## is important. Without emissive/VFX treatment, this variant is not
@@ -16,7 +16,7 @@ extends Node3D
 ##     renderer this project's survey captures run under, so an effect built
 ##     from a real particle system cannot be judged from a rendered frame --
 ##     and a visual-affecting change that cannot be judged from a frame
-##     cannot ship under ralph/conventions.md.
+##     cannot ship under docs/AGENT_WORKFLOW.md.
 ##   * Additive blending renders at a fraction of its nominal strength under
 ##     the Compatibility renderer -- BLEND_MODE_MIX only, same as alpha_aura.
 ##   * Camera-facing ImmediateMesh billboards, vertex-coloured fade to a

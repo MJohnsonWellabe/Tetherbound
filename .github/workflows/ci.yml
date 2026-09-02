@@ -155,9 +155,22 @@ jobs:
           # (skills). A .json under data/ or a workflow file can reach the
           # export, so those still get the full build. Screenshot refreshes
           # were costing a full build per JPEG before site/ was here.
+          #
+          # BASE CHOICE, corrected 2026-09-02. Diffing a branch push against
+          # `github.event.before` (the branch's previous push) is how a
+          # branch that pushed code, then pushed a report, got every verify
+          # job SKIPPED on the second push and a 75-second `success` --
+          # three times in one day, with the code never executed. A branch
+          # is verified against what it would land on `main`, so for any
+          # push that is not to `main` itself the base is the merge-base
+          # with `origin/main`. Pushes to `main` keep `before`: there the
+          # previous tip is exactly what changed.
           base=""
           if [ -n "${BASE_SHA:-}" ]; then
             base="$BASE_SHA"
+          elif [ "${GITHUB_REF_NAME:-}" != "main" ]; then
+            git fetch --no-tags --depth=0 origin main 2>/dev/null || true
+            base="$(git merge-base origin/main HEAD 2>/dev/null || true)"
           elif [ -n "${BEFORE:-}" ] \
                && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] \
                && git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
@@ -198,7 +211,7 @@ jobs:
           # so there is no early exit and no SIGPIPE. `|| true` because grep
           # exits 1 when it finds nothing, which here means "docs only".
           noncode="$(printf '%s\n' "$changed" \
-            | grep -vE '(\.md$|^site/|^docs/|^ralph/|^\.claude/)' || true)"
+            | grep -vE '(\.md$|^site/|^docs/|^ralph/|^archive/|^\.claude/)' || true)"
           if [ -z "$changed" ] || [ -n "$noncode" ]; then
             echo "code=true" >> "$GITHUB_OUTPUT"
           else
@@ -253,6 +266,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Check the playground scatter bake is fresh
         run: |
@@ -309,6 +323,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
 
       - name: Cache Godot editor and export templates
         id: cache-godot
@@ -455,6 +470,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Run the corridor vegetation regression checks
         run: |
@@ -508,6 +524,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Run the scatter rules regression checks
         run: |
@@ -557,6 +574,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Run the harvest regression checks
         run: |
@@ -602,6 +620,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify playground
         if: ${{ !cancelled() }}
@@ -788,6 +807,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify free_build
         if: ${{ !cancelled() }}
@@ -998,6 +1018,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify combat
         if: ${{ !cancelled() }}
@@ -1112,6 +1133,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify warrens
         if: ${{ !cancelled() }}
@@ -1198,7 +1220,7 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
-      # GATE-D. smoke_art.gd was in NO ci job at all; ralph/conventions.md
+      # GATE-D. smoke_art.gd was in NO ci job at all; docs/AGENT_WORKFLOW.md
       # requires it and nothing ran it. Kept here, now as its own leg.
       - name: Verify art
         if: ${{ !cancelled() }}
@@ -1247,6 +1269,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify title_load_game
         if: ${{ !cancelled() }}
@@ -1432,6 +1455,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify gate_a_opening_segment
         if: ${{ !cancelled() }}
@@ -1655,6 +1679,7 @@ jobs:
             !/docs/
             !/shots/
             !/assets_raw/
+            !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify the village, material and paid-build continuation (KNOWN RED)
         run: |

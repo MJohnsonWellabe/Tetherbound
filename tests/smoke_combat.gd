@@ -463,7 +463,7 @@ func _a_swing_at_empty_air_misses() -> void:
 	# collider with no floor to catch it, and it fell through the world for the
 	# rest of the fight -- the actual cause behind this file's own flake entry,
 	# found by watching real position/velocity logs across ~20 runs rather than
-	# reasoning about it (`ralph/BACKLOG.md` LP1, `ralph/PROMPT.md`'s R4.11/RB3
+	# reasoning about it (`docs/CURRENT_STATE.md` LP1, `docs/AGENT_WORKFLOW.md`'s R4.11/RB3
 	# precedent).
 	if not bool(_ally.call("place_on_ground", target)):
 		_ally.global_position = target

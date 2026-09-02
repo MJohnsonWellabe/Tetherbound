@@ -3516,7 +3516,7 @@ func _tint_node(node: Node, colour: Color) -> void:
 ## braziers `hall_occupation.braziers` now carries (one per corner of the 22 x
 ## 28 yard, all `shadow_enabled = false` like every light `_build_hall_fire`
 ## builds, so this is a total-omni raise only -- the harder shadow-casting
-## cap `docs/PERFORMANCE_BUDGET.md` states (<=4 reaching any one point) is
+## cap `docs/specs/PERFORMANCE_BUDGET.md` states (<=4 reaching any one point) is
 ## unaffected, since it stays at zero here as everywhere else in this file.
 ##
 ## ROUND-5 (2026-09-02): tripled the four courtyard corner braziers' energy

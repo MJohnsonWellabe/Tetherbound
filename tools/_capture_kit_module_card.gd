@@ -8,7 +8,7 @@ extends SceneTree
 ##     --rendering-driver opengl3 --resolution 1920x1080 \
 ##     --script tools/_capture_kit_module_card.gd -- --module=Roof_Dormer_RoundTile
 ##
-## NEVER `--headless` with a real rendering driver (`ralph/conventions.md`).
+## NEVER `--headless` with a real rendering driver (`docs/AGENT_WORKFLOW.md`).
 ##
 ## Written for `HIST-164`. `building_prefabs.json`'s format is a bare
 ## `at`/`yaw_deg` per module with no offset or facing convention recorded

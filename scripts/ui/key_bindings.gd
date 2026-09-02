@@ -21,7 +21,7 @@ extends RefCounted
 ## something that can be tested headlessly, and the thing that holds one of them
 ## is somebody else's job.
 
-## Bumped when the on-disk shape changes. docs/TECHNICAL_START.md asks for
+## Bumped when the on-disk shape changes. docs/TECHNICAL_ARCHITECTURE.md asks for
 ## versioned data from the start, and this is the project's first file in
 ## user:// — getting a version field in before there is anything to migrate is
 ## the whole point of the requirement.

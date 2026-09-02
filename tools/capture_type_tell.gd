@@ -6,7 +6,7 @@ extends SceneTree
 ##     godot --path . --rendering-driver opengl3 \
 ##     --script tools/capture_type_tell.gd
 ##
-## `ralph/conventions.md` ("Visual-affecting work needs a blind pass, not a
+## `docs/AGENT_WORKFLOW.md` ("Visual-affecting work needs a blind pass, not a
 ## look") requires representative frames of the actual change before a
 ## visual-affecting task is done, and endorses a small purpose-built capture
 ## where the existing tools do not fit. They do not fit here, for one specific

@@ -218,7 +218,7 @@ func test_a_facing_of_nothing_still_produces_a_row() -> void:
 
 func test_the_tutorial_creature_is_the_one_with_the_best_catch_rate_and_a_failure_bound() -> void:
 	# The high base rate makes the first attempt honestly likely. The explicit
-	# bound is what actually enforces docs/OPENING_SEQUENCE.md's stronger
+	# bound is what actually enforces docs/specs/OPENING_SEQUENCE.md's stronger
 	# promise that the tutorial catch cannot fail twice.
 	var encounter := BEATS.encounter()
 	var id := str(encounter.get("species", ""))

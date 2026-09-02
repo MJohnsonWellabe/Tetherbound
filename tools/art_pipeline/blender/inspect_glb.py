@@ -319,7 +319,7 @@ def verdicts(report: dict) -> list[str]:
     if not any(m["textured"] for m in report["materials"]):
         problems.append(
             "no material carries a texture — this is the exact defect two blind "
-            "reviews named on the existing roster (docs/reviews/MA-01, MA-02)")
+            "reviews named on the existing roster (archive/reports/docs-reviews-full/MA-01, MA-02)")
 
     for mesh in meshes:
         if mesh["non_manifold_edges"]:

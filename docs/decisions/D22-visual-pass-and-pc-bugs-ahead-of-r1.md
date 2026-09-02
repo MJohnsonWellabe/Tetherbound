@@ -10,7 +10,7 @@ The character when running or walking doesn't have an animation. Do the
 fixes from the visual pass until the visual pass work is done, then go onto
 R1-R8."*
 
-`ralph/BACKLOG.md` gained two new phases ahead of Phase 1:
+`docs/CURRENT_STATE.md` gained two new phases ahead of Phase 1:
 
 - **Phase -1** — the two owner-reported PC bugs (mouse look, no locomotion
   animation), each with an investigation head start so the first firing

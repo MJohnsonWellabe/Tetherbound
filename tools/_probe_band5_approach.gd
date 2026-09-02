@@ -4,7 +4,7 @@ extends SceneTree
 ## asks for time/distance, wild/trainer/resource opportunities, route
 ## readability, whether the stronghold grows in visual dominance, whether
 ## faction occupation escalates, and the longest dead-travel interval -- and
-## `ralph/lanes/COMMON.md` §10.3 asks for that as a REAL DRIVEN RUN rather than
+## `archive/ralph/lanes/COMMON.md` §10.3 asks for that as a REAL DRIVEN RUN rather than
 ## a unit test. This walks the authored spine through the live world, so every
 ## number below comes from the same scene the player gets.
 ##
@@ -173,7 +173,7 @@ func _cadence() -> void:
 ## Six viewpoints down the route, all at eye height on the spine, each looking
 ## at the works. What they are FOR: whether the pylon line reads as a bearing,
 ## and whether the stronghold grows. Judged by an independent critic, never here
-## -- `ralph/lanes/COMMON.md` §8.
+## -- `archive/ralph/lanes/COMMON.md` §8.
 func _captures(world: Node, suffix: String) -> void:
 	# ROUND 1 WAS INVALID AND THIS IS WHY. The first pass moved only the CAMERA
 	# down the route and left the player at spawn, 7km south. Creature spawning

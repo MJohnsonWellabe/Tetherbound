@@ -3,11 +3,11 @@ extends CanvasLayer
 ## The starter choice, previewed in orbs while still indoors with Grandpa.
 ##
 ## Replaces walking up to three creatures stood outside the door — the earlier
-## staging docs/OPENING_SEQUENCE.md called "physical, not a menu" — with a
+## staging docs/specs/OPENING_SEQUENCE.md called "physical, not a menu" — with a
 ## picker that opens the moment his briefing ends: three orbs, each holding a
 ## live view of the creature inside it. Owner directive, 2026-08-11 (`SA0-orbs`):
 ## "the starters should be in orbs and you preview them while talking to
-## Grandpa." The reversal is recorded in docs/OPENING_SEQUENCE.md and
+## Grandpa." The reversal is recorded in docs/specs/OPENING_SEQUENCE.md and
 ## data/config/opening.json, not just here.
 ##
 ## Modal, built the same way as name_prompt.gd: polled state, no pushed

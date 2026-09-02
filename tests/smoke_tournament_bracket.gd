@@ -5,7 +5,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_tournament_bracket.gd
 ##
-## **Headless, never under xvfb** — docs/HANDOFF.md §10, same as every other
+## **Headless, never under xvfb** — archive/docs/HANDOFF.md §10, same as every other
 ## scene-booting test here.
 ##
 ## `tests/test_tournament.gd` proves the tournament as DATA: eight slots, three
@@ -29,7 +29,7 @@ extends SceneTree
 ##   4. signing up sets `tournament_entered`, and the board in the field
 ##      changes what it says
 ##   5. the quarter-final is LOST on purpose — the owner's own rule
-##      (`ralph/OWNER_DIRECTIVES_2026-08-22.md` §2: "You can lose and retry
+##      (`docs/owner/OWNER_DIRECTIVES_2026-08-22.md` §2: "You can lose and retry
 ##      after healing your creatures") — and the round is still on offer
 ##      afterward, with nothing consumed and no flag set
 ##   6. all three rounds are then fought and won for real, through the

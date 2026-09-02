@@ -8,7 +8,7 @@ extends SceneTree
 ## The question this exists to answer is not "is the multiplier applied" —
 ## `tests/test_type_chart.gd` owns that, and `tests/smoke_combat.gd` proves the
 ## manager consults the chart at all. The question is the one on
-## `ralph/MEADOWS_EXIT_CRITERION.md` §I1: **type matchups are legible in the
+## `docs/acceptance/MEADOWS_EXIT_CRITERION.md` §I1: **type matchups are legible in the
 ## moment.** A player who brings the wrong creature must find that out *during*
 ## the fight, in time to do something about it, rather than by losing.
 ##

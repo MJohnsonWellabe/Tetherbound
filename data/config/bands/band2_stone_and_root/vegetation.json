@@ -3,7 +3,7 @@
   "clearings": [
     {
       "order": 8,
-      "_comment_ow5d": "OW5D relocation (clearings[8], named explicitly in docs/MEADOWS_MACRO_LAYOUT.md section 10.2 as `vegetation.clearings[8]`): (23,158) -> (400,1800), same offset as the quarry floor.",
+      "_comment_ow5d": "OW5D relocation (clearings[8], named explicitly in docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2 as `vegetation.clearings[8]`): (23,158) -> (400,1800), same offset as the quarry floor.",
       "x": 400.0,
       "z": 1800.0,
       "radius": 17.0,

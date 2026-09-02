@@ -1,0 +1,110 @@
+# START HERE — Tetherbound
+
+**Read this first. It is the only routing document.** Rewritten 2026-09-02 at the
+repository reset; it replaces `ralph/START_HERE.md`, the coordinator handovers and the
+dated backlogs, which are now under `archive/`.
+
+## What Tetherbound is
+
+A third-person open-world creature-training adventure in Godot 4.7 for Windows and the
+ROG Ally, controller-first, solo. The player owns **five creatures, total**, pilots them
+directly in real-time combat, and supports the team with gathering, crafting, building,
+care and rest. The first and only chapter in scope is **the Meadows**: wake at Grandpa's
+farmhouse, win the village tournament, travel south through five increasingly demanding
+bands, break Team Tether's relay, take the three Sigils, defeat the Warden in Meadows
+Hall, free the legendary, and choose the final five. Target: a 3–4 hour focused first
+clear. `docs/GAME_VISION.md` is the experience contract.
+
+## Current stage
+
+**Gate 1 of `docs/ROADMAP.md` — the first session (wake → tournament → leave) must be
+proven by continuous play.** All chapter systems exist in code and data (see
+`docs/CURRENT_STATE.md` for the evidence-backed status of each); the unit suite is green
+(1728 tests); most player-path smokes pass. Three do not, and they are the current work:
+the opening-segment orb floor, the continuous Gate B objective/gather route, and the
+first-attempt `smoke_traversal` failure at the South Bridge (a real world hole).
+
+## What is authoritative
+
+| Question | Read |
+|---|---|
+| Hard rules for any change | `CLAUDE.md` |
+| What the finished chapter should feel like | `docs/GAME_VISION.md` |
+| What is true right now (status, known issues, evidence) | `docs/CURRENT_STATE.md` |
+| What to do next, in what order, with what acceptance | `docs/ROADMAP.md` |
+| How agents work here (tiers, briefs, CI, testing, renders, done) | `docs/AGENT_WORKFLOW.md` |
+| How a system works, where its code/data/tests are | `docs/GAMEPLAY_SYSTEMS.md` |
+| Where things are in the world and how much content exists | `docs/WORLD_AND_CONTENT.md` |
+| Creatures: roster, rules, scale, art constraints | `docs/CREATURE_DESIGN.md` |
+| Visual target, judging rubric, current visual gap list | `docs/VISUAL_BIBLE.md`, `.claude/skills/visual-judge/SKILL.md` |
+| Engine, architecture, directory map, pipelines, CI | `docs/TECHNICAL_ARCHITECTURE.md` |
+| Owner playtests and directives (verbatim; outrank everything) | `docs/owner/` |
+| Settled design decisions (append-only) | `docs/decisions/` |
+| Detailed implementation contracts per task | `docs/prompts/` |
+| Long-form owner-supplied specs (progression, macro layout, design) | `docs/specs/` |
+| Chapter acceptance and the Gate F full-playtest protocol | `docs/acceptance/` |
+| Reference art (key art, Palworld bar) | `docs/reference/` |
+| What was moved/archived/removed in the reset and why | `docs/CLEANUP_MANIFEST.md` |
+
+Precedence when documents disagree: newest owner directive or playtest in `docs/owner/`
+→ `CLAUDE.md` → `docs/decisions/` → `docs/specs/MEADOWS_PROGRESSION_SPEC.md` →
+`docs/GAME_VISION.md` → the rest of `docs/` → `docs/prompts/` → anything in `archive/`.
+
+## What to read for different kinds of work
+
+- **Gameplay bug or feature:** this file → `CURRENT_STATE.md` → `ROADMAP.md` (find the
+  task) → `GAMEPLAY_SYSTEMS.md` (the system section) → the named prompt in `docs/prompts/`
+  → the code and its tests. Then `AGENT_WORKFLOW.md` §4–6 before you push.
+- **World or visual work:** add `VISUAL_BIBLE.md`, `WORLD_AND_CONTENT.md`, the render
+  rules in `AGENT_WORKFLOW.md` §7, and the visual-judge skill. Never judge your own
+  frames.
+- **Creature work:** add `CREATURE_DESIGN.md` and `docs/art/HUMANOID_ASSET_INVENTORY.md`
+  for humans. No new meshes.
+- **Process, CI, tooling:** `TECHNICAL_ARCHITECTURE.md` and `AGENT_WORKFLOW.md`.
+- **Coordinating several agents:** `AGENT_WORKFLOW.md` §1–3 and §11, then `ROADMAP.md`.
+
+## Known issues right now
+
+See `docs/CURRENT_STATE.md` §3 for the ranked list. Headline items: opening orb-floor
+smoke red; continuous Gate B objective chain stalls on "Gather supplies for your team's
+camp" after tournament readiness; South Bridge entombment at (7.9, −3.4, 1319); Bram's
+shop exit clips furniture; objective label truncates at 1280×800; four items only the
+owner's ROG Ally can close (interact reliability, frame rate with grass on, player
+sleep, day/night advancing).
+
+## Validation expectations
+
+- Unit: `godot --headless --path . --script tests/run_tests.gd` (≈28 min; use
+  `-- --only=file.gd::test` for one).
+- Smoke: `godot --headless --path . --script tests/smoke_<name>.gd`.
+- Visual: render with `tools/survey.sh` (xvfb, Compatibility renderer) and run the blind
+  judge. Never `--headless` with a rendering driver.
+- CI: a run under five minutes verified nothing. A full run is 35–45 minutes.
+- Import: `godot --headless --path . --import` on a fresh checkout; CI fails on script or
+  resource errors.
+
+## Branch rules
+
+Branch from current `main`. `ralph/<TASK>` runs CI and is the shipping prefix;
+`claude/<task>` for orchestrator sessions; `scratch/<x>` for throwaways. Never push to
+`main`. Land through a pull request whose head commit is code. Confirm with
+`git merge-base --is-ancestor`. Full rules: `AGENT_WORKFLOW.md` §5.
+
+## Definition of done
+
+A child task is done when its player-facing acceptance criterion holds on `main`, its
+tests pass on first attempt, its visual evidence passes if visual, and the orchestrator
+verified it. A gate is done when the continuous player path in `ROADMAP.md` passes with
+the evidence template filled in. Code existing is not done.
+
+## Directories
+
+```
+autoload/ scenes/ scripts/ shaders/ data/ assets/ addons/   the game (see TECHNICAL_ARCHITECTURE.md)
+tests/                                                    unit + smoke suites, fixtures, helpers
+tools/                                                    capture, art pipeline, Gate F harness, CI scripts
+docs/                                                     this source of truth
+ralph/                                                    evidence output root only (ralph/reports/, payload ignored)
+archive/                                                  history: old control-plane docs, handovers, report summaries
+site/                                                     the download page
+```

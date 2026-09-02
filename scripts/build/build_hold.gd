@@ -20,7 +20,7 @@ extends RefCounted
 ## Both of those follow the player, so there is nowhere to stand clear of them:
 ## a controller player with a rideable creature out could not open Build in the
 ## open field at all, which is the shape of the owner's original "building
-## doesn't work" report. Note which one it actually was -- `ralph/DONE.md`'s
+## doesn't work" report. Note which one it actually was -- `archive/ralph/DONE.md`'s
 ## GATEB-TAIL entry blamed the "Put away" line, but that line is built
 ## `actionable: false` and `playground_hud.gd::_hammer_opens_the_catalogue()`
 ## already ignores those. The ride offer is the one that takes the button.

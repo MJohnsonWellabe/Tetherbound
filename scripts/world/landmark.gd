@@ -7,7 +7,7 @@ extends Node3D
 ## silhouette this file used to build (`SHADER_CODE`, `CylinderMesh`/
 ## `BoxMesh`/`PrismMesh` under one unshaded flat-fill material -- six blind
 ## critique rounds of tuning that geometry, recorded below and in
-## `ralph/DONE.md`'s `OF4`/`OF4-visual-remainder`/`OF9`/`OF13` entries, is
+## `archive/ralph/DONE.md`'s `OF4`/`OF4-visual-remainder`/`OF9`/`OF13` entries, is
 ## kept as history, not as the current build) and asked for the real thing:
 ## "then don't worry about it being a silhouette. just make it render the
 ## actual built castle." `BG1` (a real grid/rotate/snap placement system) and
@@ -55,7 +55,7 @@ extends Node3D
 ## stronghold's own route.
 ## ---------------------------------------------------------------------
 ##
-## OW5D (docs/MEADOWS_MACRO_LAYOUT.md section 10.2) grew the Meadows into an
+## OW5D (docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2) grew the Meadows into an
 ## 11.6km corridor and moved the Sigil Gate to (63.6,7400) and
 ## `stronghold.json`'s `site.at` to (0,7560) -- but `RISE_CENTRE + OFFSET`
 ## below (the old `OF9`/`OF13` site, see history below) stayed on the
@@ -285,7 +285,7 @@ func build(world: Node) -> void:
 
 ## T1-CASTLE (2026-08-29). `ralph/reports/T1-ARCH_buildings_2026-08-29.md`
 ## diagnosed the owner's "up close the castle reads pale, flat and
-## plastic/toylike" verdict (`ralph/OWNER_FEEDBACK_2026-08-29_BUILDINGS.md`)
+## plastic/toylike" verdict (`docs/owner/OWNER_FEEDBACK_2026-08-29_BUILDINGS.md`)
 ## as real and NOT a broken retint: a wall face pixel-samples to the authored
 ## `LightRock` colour, correctly brightened by direct sun. The report's own
 ## conclusion was that the Quaternius kit is solid-colour and no-texture, with

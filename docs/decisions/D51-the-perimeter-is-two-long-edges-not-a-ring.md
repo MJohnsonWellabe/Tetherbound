@@ -1,7 +1,7 @@
 # D51 — The perimeter is two long edges with a style sequence, not a ring
 
 **Date:** 2026-08-16 · **Decided by:** `OW5A`, against
-`docs/MEADOWS_PROGRESSION_SPEC.md` §1E and `docs/decisions/D50`
+`docs/specs/MEADOWS_PROGRESSION_SPEC.md` §1E and `docs/decisions/D50`
 
 **Model note:** part of `OW5`, tagged `model: fable`, run at **opus** on the
 owner's direction because he has no Fable usage left. Not a Fable pass.

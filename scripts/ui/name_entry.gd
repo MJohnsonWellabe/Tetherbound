@@ -150,7 +150,7 @@ func backspace() -> void:
 		text = text.substr(0, text.length() - 1)
 
 
-## Naming is MANDATORY (docs/OPENING_SEQUENCE.md: "a creature you did not name is a
+## Naming is MANDATORY (docs/specs/OPENING_SEQUENCE.md: "a creature you did not name is a
 ## creature you did not adopt"), so this is the only gate on the whole beat. Nothing
 ## anywhere offers a skip.
 func is_valid() -> bool:

@@ -4,9 +4,9 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_gate_b_continuous.gd
 ##
-## **Headless, never under xvfb** (docs/HANDOFF.md §10).
+## **Headless, never under xvfb** (archive/docs/HANDOFF.md §10).
 ##
-## `ralph/ACTIVE_GAME_PLAN.md` states Gate B's evidence as one continuous play:
+## `docs/ROADMAP.md` states Gate B's evidence as one continuous play:
 ##
 ##     wake -> Grandpa -> starter -> naming -> first wild fight/catch -> build a
 ##     team -> train -> gather -> build small home -> creature bed -> player
@@ -82,7 +82,7 @@ const TEST_DIR := "user://test_saves_gate_b_continuous/"
 ## the party's own condition). Rows either side are untouched.
 ##
 ## `south_bridge_open` is deliberately not a row here: Gate B's own evidence
-## line ends on "objective to leave for South Bridge" (`ralph/ACTIVE_GAME_PLAN.md`),
+## line ends on "objective to leave for South Bridge" (`docs/ROADMAP.md`),
 ## and a run that sets that flag itself consumes the objective the chapter is
 ## supposed to finish pointing at. Crossing the bridge is Gate C's first beat.
 const LADDER := [
@@ -159,7 +159,7 @@ func _play_the_opening() -> bool:
 	# centroid computed from the villagers' own data (Tam went from 20m to 11m
 	# and it still failed) and sidestepping when something else held the interact
 	# line (the player never gets close enough to sidestep). Both are recorded
-	# in ralph/BACKLOG.md so they are not retried.
+	# in docs/CURRENT_STATE.md so they are not retried.
 	#
 	# `gate_a_opening_drive.gd` is the same drive `smoke_gate_a_opening_segment.gd`
 	# runs, extracted so both play it rather than two files each knowing how.
@@ -476,7 +476,7 @@ func _find_by_script(from: Node, tail: String) -> Node:
 
 ## A real joypad press through the live InputMap.
 ##
-## NOT `Input.action_press()`. docs/HANDOFF.md §10: poll-only input cannot move
+## NOT `Input.action_press()`. archive/docs/HANDOFF.md §10: poll-only input cannot move
 ## Control focus or activate a focused Button, so a title screen driven that way
 ## never starts the game -- the first version of this file used it and reported
 ## "Start New Game never reached the Meadows world", which was the press never

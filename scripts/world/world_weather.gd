@@ -3,7 +3,7 @@ extends Node
 ## M10 / R5.2: weather variants -- rain, fog, an overcast "cloudy" look, and
 ## "clear" (no override) -- layered on top of whatever world_look.gd's active
 ## time-of-day preset already set. See data/config/weather.json for the
-## tunable numbers and docs/GAME_DESIGN.md §24 for the full weather list this
+## tunable numbers and docs/specs/GAME_DESIGN.md §24 for the full weather list this
 ## slice draws from (thunderstorms are explicitly out of scope here).
 ##
 ## Kept as its own node rather than folded into world_look.gd: weather is an

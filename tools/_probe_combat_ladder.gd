@@ -7,7 +7,7 @@ extends SceneTree
 ##   godot --headless --path . --script tools/_probe_combat_ladder.gd -- --pilot=brawler
 ##   godot --headless --path . --script tools/_probe_combat_ladder.gd -- --switching
 ##
-## `ralph/MEADOWS_EXIT_CRITERION.md` §G5 asks that major fights test different
+## `docs/acceptance/MEADOWS_EXIT_CRITERION.md` §G5 asks that major fights test different
 ## aspects of the five, and §I1 that combat be readable and responsive. Neither
 ## is answerable from `trainers.json`. What a rung IS — trivial, fair, a wall —
 ## is a property of the fight, and the fight has a real-time piloted opponent in

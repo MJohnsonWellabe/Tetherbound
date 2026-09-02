@@ -17,7 +17,7 @@ Three things ship together because they are one idea:
 
 1. **The house is real.** Grandpa's farmhouse has an interior — bed, stairs,
    the room where he waits — built from the Quaternius Farm Buildings and
-   Ultimate Furniture packs (CC0, recorded in `docs/ASSET_LEDGER.md`). The
+   Ultimate Furniture packs (CC0, recorded in `docs/specs/ASSET_LEDGER.md`). The
    camera switches to an interior profile via `camera_rig`'s `set_target`
    profiles and back on exit.
 2. **The gifts are real items.** `orb_basic` and `potion_small` are entries in
@@ -38,7 +38,7 @@ greeter in it, not a home being left.
 
 **The design already said this.** `GAME_DESIGN.md` §33's first-day criterion
 begins *"Wake at Grandpa's home"*, and §24: the player *lives with Grandpa*,
-his home is the safe starting location. `docs/OPENING_SEQUENCE.md`'s "no
+his home is the safe starting location. `docs/specs/OPENING_SEQUENCE.md`'s "no
 interior" note was a cost-saving call with its own revisit clause written in —
 *"Revisit only if the fade-in reads as cheap in playtest"* — and that is
 exactly what happened. This is the revisit, on the terms the original decision
@@ -83,4 +83,4 @@ config default.
 - `data/config/opening.json` — the wake/house beats
 - `data/dialogue/` — Grandpa's gift lines and the `give:item:count` effects
 - `data/items.json` — `orb_basic`, `potion_small`
-- `docs/ASSET_LEDGER.md` — the two Quaternius packs
+- `docs/specs/ASSET_LEDGER.md` — the two Quaternius packs

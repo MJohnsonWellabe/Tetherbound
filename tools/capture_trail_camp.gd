@@ -2,7 +2,7 @@ extends SceneTree
 
 ## Frames of the BAND1-D1 `trail_camp` prop cluster (data/config/bands/
 ## band1_lower_meadows/props.json order 1000) for the mandatory blind-judge
-## pass (ralph/conventions.md) -- a new prop cluster is visual-affecting.
+## pass (docs/AGENT_WORKFLOW.md) -- a new prop cluster is visual-affecting.
 ## Same shape as tools/capture_prop_clusters.gd: a close look ("does this
 ## imply a purpose") and a wider look with the spine's own bend in frame, so
 ## the camp reads as sited beside a real place, not dropped in open field.

@@ -10,7 +10,7 @@ extends SceneTree
 ##     --script tools/_capture_locations.gd [-- --only=<site>]
 ##
 ## NEVER with `--headless` and a real rendering driver: that combination hangs
-## forever with no error (ralph/conventions.md, "Art pipeline traps").
+## forever with no error (docs/AGENT_WORKFLOW.md, "Art pipeline traps").
 ##
 ## WHY THIS TOOL EXISTS, given two surveys already shoot this world.
 ## `_probe_corridor_survey.gd` shoots the travel corridor: points on a route,
@@ -51,7 +51,7 @@ extends SceneTree
 ## THE CORRECTIONS BELOW ARE NOT MINE. They are `_probe_corridor_survey.gd`'s,
 ## carried over deliberately, because this sweep has now watched a fix that
 ## lived in one tool fail to protect the next tool that did the same thing six
-## separate times (ralph/VISUAL_LEDGER.md, "This sweep's own harness defects"):
+## separate times (archive/ralph/VISUAL_LEDGER.md, "This sweep's own harness defects"):
 ##
 ##  - carry the PLAYER to each viewpoint, not just the camera: creature
 ##    spawning is driven off the player, and the 1.80 m trainer is the rubric's

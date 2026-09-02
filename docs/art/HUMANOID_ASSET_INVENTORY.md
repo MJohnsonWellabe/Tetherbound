@@ -4,7 +4,7 @@
 
 This file is the source of truth for **which humanoid character meshes already exist on current `main` and should be reused**.
 
-It supersedes older availability/status statements in `docs/art/HUMANOIDS_PRODUCTION_REPORT.md` and `docs/art/REFERENCE_CANON.md` where those files describe only the trainer/Grandpa/Warden set or say the Warden still needs to be rebuilt.
+It supersedes older availability/status statements in `archive/docs/art/HUMANOIDS_PRODUCTION_REPORT.md` and `docs/art/REFERENCE_CANON.md` where those files describe only the trainer/Grandpa/Warden set or say the Warden still needs to be rebuilt.
 
 ## Current production humanoid rigs
 

@@ -332,7 +332,7 @@ func _physics_process(delta: float) -> void:
 		_activate()
 	elif Input.is_action_just_pressed("menu_cancel"):
 		# Backspace, not cancel. Naming is mandatory
-		# (docs/OPENING_SEQUENCE.md), so there is nothing to back out to and B
+		# (docs/specs/OPENING_SEQUENCE.md), so there is nothing to back out to and B
 		# would otherwise be a dead button on the one screen that needs it most.
 		_entry.backspace()
 		_draw()

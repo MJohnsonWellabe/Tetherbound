@@ -21,7 +21,7 @@ extends SceneTree
 ##     --script tools/_probe_leaf_cut.gd -- --out=shots/leaf_r1
 ##
 ## NEVER with `--headless` and a real rendering driver: that combination hangs
-## forever with no error (ralph/conventions.md, "Art pipeline traps").
+## forever with no error (docs/AGENT_WORKFLOW.md, "Art pipeline traps").
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")

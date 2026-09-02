@@ -11,7 +11,7 @@ extends Node3D
 ##   4. Does the exported Windows build behave the same as the editor?
 ##
 ## It is deliberately not a movement prototype. Movement feel is M1 and has its
-## own acceptance gate (docs/MEADOWS_VERTICAL_SLICE.md). The capsule moves only
+## own acceptance gate (docs/specs/MEADOWS_VERTICAL_SLICE.md). The capsule moves only
 ## enough to prove the sticks are wired to the right axes.
 
 ## Metres per second. Placeholder for the probe only. The real value is TUNABLE
@@ -43,7 +43,7 @@ func _on_joy_connection_changed(device_id: int, connected: bool) -> void:
 func _physics_process(delta: float) -> void:
 	# Read through the input map, never through raw device polling. Every
 	# gameplay system in this project reads intent this way; see
-	# docs/TECHNICAL_START.md, section Input.
+	# docs/TECHNICAL_ARCHITECTURE.md, section Input.
 	var move := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 
 	_player.velocity.x = move.x * PROBE_SPEED
