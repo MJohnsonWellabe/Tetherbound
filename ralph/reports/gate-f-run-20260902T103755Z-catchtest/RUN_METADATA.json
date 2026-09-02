@@ -1,0 +1,17 @@
+{
+  "run_id": "gate-f-run-20260902T103755Z-catchtest",
+  "purpose": "Fast single-attempt catch-mechanics test (S03CT.json), not part of the S01-S10 evidence chain. Verifies operator_harness.gd's new enemy_hp_fraction check + press_until chip-down (requested directly by the owner: chip further before throwing) does not faint the target and meaningfully raises catch odds.",
+  "candidate_sha": "a0a0f50e2fb1f7a058906372f17dbfc924221ef0",
+  "candidate_ref": "ralph/GATE-F-S03-CATCH-LOOP",
+  "candidate_note": "Adds operator_harness.gd::_step_assert's enemy_hp_fraction check and switches S03.json's 10 chip-down steps from a fixed times:3 press to press_until(enemy_hp_fraction at_most 0.3, max_presses 10).",
+  "freeze_record_note": "Operator-authored scratch test, same precedent as this branch's other verification runs.",
+  "godot_version": "4.7.stable.official.5b4e0cb0f",
+  "binary": { "path": "/root/.cache/tetherbound-art/godot" },
+  "lanes": { "logic": { "display_server": "headless", "renderer": "none" } },
+  "resolution": [1920, 1080],
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with action press/release",
+  "save_state": "S02-exit.json carried over from gate-f-run-20260901T220548Z-s03fix/S02",
+  "date": "2026-09-02",
+  "operator": "sonnet-agent",
+  "free_build": false
+}

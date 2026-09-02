@@ -1788,6 +1788,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_press_multi(args, id)
 		"press_until":
 			actual = await _step_press_until(args, id)
+		"chip_to_floor":
+			actual = await _step_chip_to_floor(args, id)
 		"track_aim":
 			actual = await _step_track_aim(args, id)
 		"force_aim":
@@ -3264,6 +3266,93 @@ func _step_press_until(args: Dictionary, step_id: String) -> String:
 		if bool(now.get("ok", false)):
 			return "%d x %s reached it: %s" % [attempt + 1, control, last]
 	return "FAIL %d x %s did not reach it; last saw %s" % [budget, control, last]
+
+
+## Chip a live wild target down to as close to zero HP as the fight will
+## actually bear, WITHOUT a fixed hit count or a fixed HP-fraction floor
+## guessed in advance.
+##
+## S03's catch ladder first used a blind `times: 3` (real defect: `times: 20`
+## had killed the target outright once, `fainted` and uncatchable), then a
+## fixed `enemy_hp_fraction at_most: 0.3` press_until -- both leave a real,
+## computable amount of catching.json's own reward curve on the table,
+## because neither one asks how much damage THIS fight's quick attack is
+## actually dealing before deciding when to stop. It can be asked:
+## `combat_math.gd::rolled_damage()`'s only per-swing randomness against a
+## fixed target is `variance` (+/-10% of the roll) -- `type_mult`/`power`/
+## attack/defence are the SAME for every quick attack this creature throws at
+## this target, so the first hit already reveals, within +/-10%, what every
+## later one will cost. This step learns that from the fight itself: after
+## each swing it records the actual damage dealt, and refuses to throw the
+## NEXT swing only once the target's remaining HP would not survive the
+## LARGEST hit seen so far scaled up by `safety_factor` (default 1.25,
+## comfortably past the 1.1/0.9 = 1.222 worst-case roll-to-roll swing) --
+## which is the same arithmetic a player would do in their head: "that hit
+## took 13, I have 16 left, one more could take 14.3, still safe; a fourth
+## could not." `floor_fraction` (default 0.01, i.e. 1% of max HP) is a small
+## absolute cushion on top of that prediction, against float rounding and
+## anything this model has not accounted for -- never the primary guard.
+func _step_chip_to_floor(args: Dictionary, step_id: String) -> String:
+	var control := str(args.get("control", "combat_quick"))
+	var hold := _hold_frames(args.get("hold", "tap"))
+	var settle := maxi(1, int(args.get("settle_frames", 30)))
+	var budget := maxi(1, int(args.get("max_presses", 15)))
+	var safety := float(args.get("safety_factor", 1.25))
+	var floor_frac := float(args.get("floor_fraction", 0.01))
+
+	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
+	if not skip_if.is_empty():
+		var moot := _step_assert(skip_if)
+		if bool(moot.get("ok", false)):
+			return "SKIPPED chip_to_floor: not needed (%s)" % str(moot.get("actual", ""))
+
+	var mgr := _probe.call("combat_manager") as Node
+	if mgr == null or not mgr.has_method("enemy"):
+		return "HARNESS-ERROR chip_to_floor step %s has no CombatManager" % step_id
+	var foe: RefCounted = mgr.call("enemy")
+	if foe == null:
+		return "FAIL chip_to_floor: no live enemy to chip"
+	var max_hp := float(foe.get("max_hp"))
+	if max_hp <= 0.0:
+		return "FAIL chip_to_floor: enemy max_hp is %.1f, cannot compute a floor" % max_hp
+	var floor_hp := max_hp * floor_frac
+
+	var hp := float(foe.get("hp"))
+	var max_hit := 0.0
+	var presses := 0
+	var hits: Array[String] = []
+	for attempt in budget:
+		# The predictive stop: only reached once at least one real hit has
+		# been observed. The very first swing always goes in blind -- there
+		# is no data yet, and a single hit has never come close to fainting
+		# a fresh, healthy practice-cluster target in any run measured so far.
+		if max_hit > 0.0 and hp - max_hit * safety <= floor_hp:
+			break
+		if not is_instance_valid(foe):
+			return "FAIL chip_to_floor: enemy left the fight after %d press(es) (hits: %s)" % [
+				presses, ", ".join(hits)]
+		var sent := await _inject(control, hold)
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		for i in settle:
+			await physics_frame
+		if not is_instance_valid(foe):
+			return "FAIL chip_to_floor: enemy left the fight mid-swing after %d press(es) (hits: %s)" % [
+				presses, ", ".join(hits)]
+		var now := float(foe.get("hp"))
+		var dealt := hp - now
+		if dealt > max_hit:
+			max_hit = dealt
+		hp = now
+		presses += 1
+		hits.append("%.1f" % dealt)
+		if bool(foe.get("fainted")) or hp <= 0.0:
+			return ("FAIL chip_to_floor: target fainted after %d press(es) (hits: %s) -- " +
+				"safety_factor %.2f was not enough margin against this target, widen it") % [
+					presses, ", ".join(hits), safety]
+
+	return "%d x %s: enemy hp %.1f/%.1f (%.1f%%), hits dealt [%s], largest %.1f" % [
+		presses, control, hp, max_hp, 100.0 * hp / max_hp, ", ".join(hits), max_hit]
 
 
 ## RIG-F3 — track the live target during aim; do not throw at a stale point.

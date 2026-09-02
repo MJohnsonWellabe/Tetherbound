@@ -8,8 +8,8 @@
   "_comment_answer_prompts": "answer_prompts stays OFF on every walk, per the schema's rule.",
   "evidence_lane": "logic",
   "capture_lane": "S03C",
-  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S03C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S03C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
-  "_comment_record_hz_split": "AMENDED for the §H/§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because §H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- §H's prescribed frames move to S03C, which may run BOUNDED record windows around a named state.",
+  "_comment_evidence_lane": "\u00a7H/\u00a7G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md \u00a7H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the \u00a7G ids its steps would have taken are DELEGATED to S03C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S03C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the \u00a7H/\u00a7G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because \u00a7H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- \u00a7H's prescribed frames move to S03C, which may run BOUNDED record windows around a named state.",
   "steps": [
     {
       "id": "S03-01",
@@ -391,19 +391,17 @@
     {
       "id": "S03-35a",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press_until",
+      "action": "chip_to_floor",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
         "settle_frames": 30,
-        "max_presses": 10,
-        "check": {
-          "check": "enemy_hp_fraction",
-          "at_most": 0.3
-        }
+        "max_presses": 15,
+        "safety_factor": 1.25,
+        "floor_fraction": 0.01
       },
-      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
-      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
       "id": "S03-36a",
@@ -596,19 +594,17 @@
     {
       "id": "S03-35b",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press_until",
+      "action": "chip_to_floor",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
         "settle_frames": 30,
-        "max_presses": 10,
-        "check": {
-          "check": "enemy_hp_fraction",
-          "at_most": 0.3
-        }
+        "max_presses": 15,
+        "safety_factor": 1.25,
+        "floor_fraction": 0.01
       },
-      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
-      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
       "id": "S03-36b",
@@ -801,19 +797,17 @@
     {
       "id": "S03-35c",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press_until",
+      "action": "chip_to_floor",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
         "settle_frames": 30,
-        "max_presses": 10,
-        "check": {
-          "check": "enemy_hp_fraction",
-          "at_most": 0.3
-        }
+        "max_presses": 15,
+        "safety_factor": 1.25,
+        "floor_fraction": 0.01
       },
-      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
-      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
       "id": "S03-36c",
@@ -1006,19 +1000,17 @@
     {
       "id": "S03-35d",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press_until",
+      "action": "chip_to_floor",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
         "settle_frames": 30,
-        "max_presses": 10,
-        "check": {
-          "check": "enemy_hp_fraction",
-          "at_most": 0.3
-        }
+        "max_presses": 15,
+        "safety_factor": 1.25,
+        "floor_fraction": 0.01
       },
-      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
-      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
       "id": "S03-36d",
@@ -1211,19 +1203,17 @@
     {
       "id": "S03-35e",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press_until",
+      "action": "chip_to_floor",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
         "settle_frames": 30,
-        "max_presses": 10,
-        "check": {
-          "check": "enemy_hp_fraction",
-          "at_most": 0.3
-        }
+        "max_presses": 15,
+        "safety_factor": 1.25,
+        "floor_fraction": 0.01
       },
-      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
-      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
       "id": "S03-36e",
@@ -1416,19 +1406,17 @@
     {
       "id": "S03-35f",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press_until",
+      "action": "chip_to_floor",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
         "settle_frames": 30,
-        "max_presses": 10,
-        "check": {
-          "check": "enemy_hp_fraction",
-          "at_most": 0.3
-        }
+        "max_presses": 15,
+        "safety_factor": 1.25,
+        "floor_fraction": 0.01
       },
-      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
-      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
       "id": "S03-36f",
@@ -1621,19 +1609,17 @@
     {
       "id": "S03-35g",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press_until",
+      "action": "chip_to_floor",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
         "settle_frames": 30,
-        "max_presses": 10,
-        "check": {
-          "check": "enemy_hp_fraction",
-          "at_most": 0.3
-        }
+        "max_presses": 15,
+        "safety_factor": 1.25,
+        "floor_fraction": 0.01
       },
-      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
-      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
       "id": "S03-36g",
@@ -1826,19 +1812,17 @@
     {
       "id": "S03-35h",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press_until",
+      "action": "chip_to_floor",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
         "settle_frames": 30,
-        "max_presses": 10,
-        "check": {
-          "check": "enemy_hp_fraction",
-          "at_most": 0.3
-        }
+        "max_presses": 15,
+        "safety_factor": 1.25,
+        "floor_fraction": 0.01
       },
-      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
-      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
       "id": "S03-36h",
@@ -2031,19 +2015,17 @@
     {
       "id": "S03-35i",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press_until",
+      "action": "chip_to_floor",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
         "settle_frames": 30,
-        "max_presses": 10,
-        "check": {
-          "check": "enemy_hp_fraction",
-          "at_most": 0.3
-        }
+        "max_presses": 15,
+        "safety_factor": 1.25,
+        "floor_fraction": 0.01
       },
-      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
-      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
       "id": "S03-36i",
@@ -2236,19 +2218,17 @@
     {
       "id": "S03-35j",
       "title": "trim it with quick attacks (do not kill it)",
-      "action": "press_until",
+      "action": "chip_to_floor",
       "args": {
         "control": "combat_quick",
         "hold": "tap",
         "settle_frames": 30,
-        "max_presses": 10,
-        "check": {
-          "check": "enemy_hp_fraction",
-          "at_most": 0.3
-        }
+        "max_presses": 15,
+        "safety_factor": 1.25,
+        "floor_fraction": 0.01
       },
-      "expected": "the target is WEAKENED to roughly 30% of its own max HP or less -- not defeated, a defeated wild cannot be caught -- landing the throw in catching.json's steep reward band (hp_factor climbs from ~0.10 at full HP toward ~1.0 near empty) instead of its flat top.",
-      "observation": "RIG, 2026-08-31: `combat_quick` x20 KILLED a 106 HP target, so a fixed `times: 3` (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly this run (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. Requested directly by the owner in this session, 2026-09-02 ('we need to chip them down further'): this now reads the LIVE enemy_hp_fraction (operator_harness.gd's new check, added for this) after every hit and stops at the threshold instead of a guessed count. Bounded against the same overkill this step's own history already hit once: quick attacks measured 8%-14% of max HP each in that same run, so a 30% floor leaves comfortable margin above zero, and `max_presses: 10` caps the loop if a tankier target does not converge -- FAILing loud with whatever fraction it actually reached rather than hanging."
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
       "id": "S03-36j",
