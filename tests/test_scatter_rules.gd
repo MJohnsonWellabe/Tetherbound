@@ -554,6 +554,80 @@ func test_an_anchor_override_does_not_leak_into_the_rest_of_the_layer() -> void:
 			steep_away_from_the_anchor)
 
 
+## VP4-CORRIDOR round 2 addendum. `placements_for()` used to draw an
+## anchor's own angle/distance/scale/model/yaw rolls from the SAME
+## `RandomNumberGenerator` stream `_place_corridor_fill`/`_place_heroes`/
+## `_place_water_edge` go on to read after it -- so adding, enlarging, or
+## moving one anchor shifted the cursor those later calls start from and
+## reshuffled every corridor-fill placement for the WHOLE CORRIDOR in that
+## layer, not just near the anchor. `JUDGE-round1.md`'s blind review caught
+## the result on the real config: two stations came back emptier after a
+## pass that only ever added content, because pre-existing corridor-fill
+## trees that happened to stand on their sightlines were moved elsewhere.
+## Fixed by giving each anchor its own RNG (seeded from this layer's own
+## seed plus a per-anchor stride) so the shared stream is never advanced by
+## the anchors loop at all.
+##
+## This pins that property directly against the REAL shipped config (not a
+## synthetic layer) on the `trees` layer, which carries both `anchors` and
+## `corridor_fill`: every placement the anchors-STRIPPED run produces
+## outside every anchor's own radius must appear position-identical in the
+## anchors-PRESENT run. A regression here means an anchor is once again
+## perturbing content it has no business touching.
+func test_anchors_do_not_perturb_corridor_fill_or_any_other_placement() -> void:
+	var layer := _layer("trees")
+	assert_false((layer.get("anchors", []) as Array).is_empty(),
+		"the shipped trees layer has no anchors; this test would prove nothing")
+	assert_false((layer.get("corridor_fill", {}) as Dictionary).is_empty(),
+		"the shipped trees layer has no corridor_fill; this test would prove nothing")
+
+	var seed_value := int(RULES.config().get("seed", 1))
+	var with_anchors := RULES.placements_for(layer, field, world_size, seed_value)
+	var stripped: Dictionary = layer.duplicate(true)
+	stripped.erase("anchors")
+	var without_anchors := RULES.placements_for(stripped, field, world_size, seed_value)
+
+	var discs: Array = []
+	for entry: Variant in layer.get("anchors", []):
+		var anchor: Dictionary = entry as Dictionary
+		var at: Array = anchor.get("at", [])
+		if at.size() < 2:
+			continue
+		discs.append([Vector2(float(at[0]), float(at[1])),
+			maxf(float(anchor.get("radius", 8.0)), 0.0) + 0.5])
+
+	var with_positions: Array[Vector3] = []
+	for placement: Dictionary in with_anchors:
+		with_positions.append(placement["position"])
+
+	var checked := 0
+	var mismatched := 0
+	for placement: Dictionary in without_anchors:
+		var spot: Vector3 = placement["position"]
+		var inside_an_anchor := false
+		for disc: Array in discs:
+			var centre: Vector2 = disc[0]
+			var radius: float = disc[1]
+			if Vector2(spot.x, spot.z).distance_to(centre) <= radius:
+				inside_an_anchor = true
+				break
+		if inside_an_anchor:
+			continue
+		checked += 1
+		var found := false
+		for candidate: Vector3 in with_positions:
+			if candidate.is_equal_approx(spot):
+				found = true
+				break
+		if not found:
+			mismatched += 1
+	assert_true(checked > 100,
+		"only %d non-anchor placements to check; this test would prove nothing" % checked)
+	assert_eq(mismatched, 0,
+		"%d of %d non-anchor placements moved when anchors were added; anchors are perturbing the shared RNG stream again" % [
+			mismatched, checked])
+
+
 func test_path_standoff_is_a_stable_property_of_position() -> void:
 	# No RNG state: the same spot must always get the same standoff, or the
 	# meadow's edge would depend on placement order and no survey frame could
