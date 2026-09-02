@@ -1,71 +1,73 @@
 extends SceneTree
 
-## VP9 FIRST SLICE. Every blind judge so far has said "no creature appears in
-## any frame" of a creature-bonding game. `tools/_capture_locations.gd` shoots
-## the game's PLACES; this shoots the same five evidence stands specifically
-## to answer whether the wild population this pass moved/added into them is
-## actually visible from where a player stands, day and night where the
-## brief asks for both, plus one frame of the player's own starter beside the
-## trainer. Modelled directly on `_capture_locations.gd`'s boot/pin/freeze/
-## raycast-reseat pattern -- see that file's header for the traps this one
-## inherits (headless+opengl3 hangs forever; a clock pin that is not frozen
-## wears off; the analytic heightfield and the streamed collision surface
-## disagree near water).
+## VP9 THIRD SLICE. Round 1 got a wild cluster within range of every evidence
+## stand; round 2 moved the capture eye from a 25-40m PLACEMENT distance to
+## an 8-15m CAMERA distance so those clusters would actually show up in
+## frame. Round 3's own code-blind verdict: still "no" on both bars --
+## creatures that ARE in frame read as low-contrast blobs sharing one
+## identical stance, the mill-pond subject is an unreadable glowing smudge,
+## and the starter-beside-trainer frame has no starter in it at all (the
+## spawn point landed on a boulder).
+##
+## Round 3 stops relying on the WORLD's own scatter-drawn wild population for
+## composition -- a cluster's radius-random draw cannot promise "5-10m from
+## camera, two species, no boulder underfoot" -- and instead STAGES a small
+## group directly via `EncounterDirector.spawn_wild()` at each of the five
+## stands, with real geometry checks (raycast, unproject, line-of-sight)
+## gating every placement rather than eyeballed coordinates. The underlying
+## spawns.json population from rounds 1-2 is untouched; this is a capture
+## composition fix, not a re-litigation of where the game actually spawns
+## wildlife.
 ##
 ##   xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/_capture_life.gd
 ##
-## VP_FAST=1 halves the settle budget and renders at whatever resolution the
-## caller passed on the command line (960x540 for iteration rounds).
+## VP_FAST=1 halves the settle budget.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/visual-parity/LIFE/round2"
+const OUT_DIR := "res://ralph/reports/visual-parity/LIFE/round3"
 
 const BOOT_FRAMES := 90
-## ROUND 2: raised from 40/18. The round-1 verdict asked explicitly to "wait
-## for the cluster to be streamed in and settled (encounter streaming
-## radius) before the shutter" -- these eyes now stand 8-15m from their
-## cluster, well inside activation range, but a tighter eye also means less
-## margin for a creature still mid-spawn-settle to be caught between frames.
 const SETTLE_FRAMES := 70
 const ARRIVE_FRAMES := 30
 const POSE_FRAMES := 4
 const FOV := 70.0
-const EYE_UP := 1.70
 
-## Five evidence stands the LIFE brief names by the coordinates of the wild
-## cluster this pass sited/confirmed near each, not by eye. `look` is that
-## cluster's own authored `centre` (data/config/bands/*/spawns.json), so a
-## miss here means the population moved, not that the frame was aimed wrong.
+## Five evidence stands. `eye`/`facing` are round 2's own confirmed-clear
+## camera geometry (every one of these rendered a clean, geometry-free
+## background in round 2 -- see round2/*.png); round 3 keeps the eye and
+## STAGES a group directly in front of it instead of trusting a scattered
+## cluster's own random draw to land at a legible distance.
 ##
-## ROUND 2 (program coordinator, round-1 verdict): the placement work landed
-## but the evidence did not show it -- village-edge and relay-camp read as
-## "tiny figures"/"pale blobs" from the round-1 25-40m eyes, the pond eye
-## stood IN the water looking at the mill instead of on the bank looking at
-## the water species, and band1-open-meadow's eye landed inside a mesh
-## (solid green frame, near clip inside geometry). Every `at` below is now
-## 8-15m from its `look` cluster centre -- close enough that a 2-4 creature
-## cluster reads at real size -- rather than the 25-40m the brief's PLACEMENT
-## instruction asked for (that number sited the wild cluster in the world
-## relative to the named stand; it was never a camera-composition distance).
+## `group` entries are `{species, count}`; `night` species substitutes the
+## day roster for the night pass where the stand has one (duskhush is the
+## night specialist near the relay camp). Species chosen from the SAME
+## table the band's own spawns.json already draws that stand's population
+## from (meadows_open/meadows_rock/meadows_water/meadows_air per
+## data/config/spawn_tables.json), so the staged group reads as the same
+## ecology the world's own population already puts there, not an invented
+## roster.
 const STANDS := [
 	{"id": "01-village-edge", "night": true,
-	 "at": [21.0, -32.0], "look": [30.0, -40.0],
-	 "_why": "12m from band1 spawns.json order 0's bramblebun cluster centre (30,0,-40) -- the Practice Meadow teaching-fight cluster, ungated so it reads day and night alike. Round 1's eye (14,-25.5) stood 21.6m off and the cluster read as two tiny figures."},
+	 "eye": [21.0, -32.0], "facing_toward": [30.0, -40.0],
+	 "group": [{"species": "bramblebun", "count": 2}, {"species": "mudsnout", "count": 2}],
+	 "night_group": [{"species": "bramblebun", "count": 2}, {"species": "mudsnout", "count": 2}]},
 	{"id": "02-mill-pond-banks", "night": true,
-	 "at": [-386.0, 520.0], "look": [-378.0, 528.0],
-	 "_why": "ON THE BANK, not in the water -- round 1's eye (-368,545) rendered as open water with the mill in the distance and no creature in frame at all. This eye is `_capture_locations.gd`'s own '02-mill-pond standing' point, confirmed there by raycast to sit on the bank (-16.5 against pond level -17.0). Look is order 6's paddlenewt cluster centre (-378,528), 11.3m off, along the shoreline rather than across the water at the mill."},
+	 "eye": [-386.0, 520.0], "facing_toward": [-378.0, 528.0],
+	 "group": [{"species": "mosshell", "count": 2}, {"species": "paddlenewt", "count": 1}],
+	 "night_group": [{"species": "mosshell", "count": 2}, {"species": "paddlenewt", "count": 1}]},
 	{"id": "03-band1-open-meadow", "night": false,
-	 "at": [-6.0, 700.0], "look": [-20.0, 700.0],
-	 "_why": "round 1's eye (10,685) rendered solid green -- the near clip plane inside a mesh, not the open meadow. This eye stands due east of order 1002's pipwing cluster centre (-20,700) on the same z as the cluster itself (open corridor ground, not the off-axis approach that clipped something), 14m off."},
+	 "eye": [-6.0, 700.0], "facing_toward": [-20.0, 700.0],
+	 "group": [{"species": "pipwing", "count": 2}, {"species": "bramblebun", "count": 2}]},
 	{"id": "04-relay-camp", "night": true,
-	 "at": [332.0, 932.0], "look": [321.0, 928.5],
-	 "_why": "11.3m from a point 8m east of order 1032's bramblebun cluster centre (314,927.5, radius 17 so still inside the disc) -- round 1's eye (344,935) stood 30.9m off and read as 'two pale blobs at 60m'; the corrected-distance round-2 render then read as 'a tan pair in tree shadow' (round-1's own frame showed trees on the west side of this cluster, open trail to the east). Shifted east toward the open trail side rather than re-tuning bramblebun's shared field_emission, which is already owner-set for grass separation everywhere else the species spawns and would risk a glow complaint if pushed further just to fight shade at one stand."},
+	 "eye": [332.0, 932.0], "facing_toward": [321.0, 928.5],
+	 "group": [{"species": "bramblebun", "count": 2}, {"species": "trailpup", "count": 2}],
+	 "night_group": [{"species": "bramblebun", "count": 2}, {"species": "duskhush", "count": 2}]},
 	{"id": "05-ridge-camp", "night": false,
-	 "at": [-250.0, 6458.0], "look": [-260.9, 6451.7],
-	 "_why": "12.6m from this pass's own order-4076 burrowback cluster (-260.9,6451.7) -- round 1's eye (-236,6472) stood 32.1m off, off the watchtower spur the same as before."},
+	 "eye": [-250.0, 6458.0], "facing_toward": [-260.9, 6451.7],
+	 "group": [{"species": "burrowback", "count": 2}, {"species": "trailpup", "count": 2}]},
 ]
 
 var _field: RefCounted = null
@@ -77,6 +79,7 @@ var _weather: Node = null
 var _director: Node = null
 var _written: int = 0
 var _failures: int = 0
+var _rng := RandomNumberGenerator.new()
 
 static var _fast_mode: bool = false
 
@@ -98,6 +101,7 @@ func _run() -> void:
 	_fast_mode = "--fast" in OS.get_cmdline_user_args() or OS.get_environment("VP_FAST") == "1"
 	if _fast_mode:
 		print("[fast] iteration mode: settle halved, msaa off")
+	_rng.seed = 20260902
 
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	_field = HEIGHTFIELD.new()
@@ -157,7 +161,7 @@ func _run() -> void:
 
 	if only == "" or only == "starter":
 		await _pin("day")
-		await _shoot_starter()
+		await _shoot_pairing()
 
 	print("")
 	print("life survey: %d frames written, %d failed, into %s" % [_written, _failures, OUT_DIR])
@@ -184,61 +188,141 @@ func _pin(time: String) -> void:
 	print("[life] clock pinned to %s and frozen" % time)
 
 
+## Stage a small group 5-10m (day) / <=8m (night) in front of the stand's
+## own confirmed-clear eye, two species, de-synced pose and facing, then
+## shoot. Round-2 verdict: "every legible pair shares an identical stance"
+## -- de-sync is not cosmetic here, it is the specific defect named.
 func _shoot_stand(stand: Dictionary, suffix: String) -> void:
 	var id: String = str(stand["id"])
-	var at: Array = stand["at"] as Array
-	var look: Array = stand["look"] as Array
-	var eye := Vector2(float(at[0]), float(at[1]))
-	var target := Vector2(float(look[0]), float(look[1]))
+	var eyeArr: Array = stand["eye"] as Array
+	var towardArr: Array = stand["facing_toward"] as Array
+	var eye := Vector2(float(eyeArr[0]), float(eyeArr[1]))
+	var toward := Vector2(float(towardArr[0]), float(towardArr[1]))
+	var facing := (toward - eye).normalized()
+	var side := Vector2(-facing.y, facing.x)
 
 	var ground := _surface(eye)
 	_place(eye, ground)
-	_frame(eye, ground, target, _surface(target))
+	_frame(eye, ground, eye + facing, ground)
 	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
-	ground = _surface(eye)
-	_place(eye, ground)
-	_frame(eye, ground, target, _surface(target))
+
+	var max_dist := 8.0 if suffix == "night" else 10.0
+	var min_dist := 5.0 if suffix == "night" else 5.0
+	var spec: Array = (stand["night_group"] as Array) if (suffix == "night" and stand.has("night_group")) else (stand["group"] as Array)
+	var spawned: Array[Node3D] = []
+	var lane := 0
+	var lanes := spec.size() * 3
+	for entry: Variant in spec:
+		var g: Dictionary = entry as Dictionary
+		var species: String = str(g["species"])
+		for n in int(g["count"]):
+			var t := (float(lane) + 1.0) / float(lanes + 1)
+			var dist := lerpf(min_dist, max_dist, t)
+			var lateral := lerpf(-0.6, 0.6, t) * max_dist * 0.5
+			var pos2 := eye + facing * dist + side * lateral
+			var pos := Vector3(pos2.x, _surface(pos2), pos2.y)
+			var wild: Node3D = _director.call("spawn_wild", species, pos, {
+				"name": "Shot_%s_%s_%d" % [id.replace("-", "_"), species, n],
+				"wander_radius": 0.0,
+			}) as Node3D
+			if wild != null:
+				spawned.append(wild)
+				wild.rotation.y = _rng.randf_range(0.0, TAU)
+			lane += 1
+
 	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
 
+	_desync(spawned)
 	_hide_huds()
-	_frame(eye, ground, target, _surface(target))
+	_frame(eye, ground, eye + facing, ground)
 	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
 
-	var here := Vector3(eye.x, ground, eye.y)
-	var n := _creatures_near(here)
+	var visible_count := 0
+	for wild in spawned:
+		if not is_instance_valid(wild):
+			continue
+		var chk := _visibility_check(wild.global_position + Vector3(0, 0.5, 0), [wild])
+		print("    %-24s in_frame=%s los=%s reason=%s" % [
+			wild.name, chk["in_frame"], chk["los_clear"], chk["reason"]])
+		if bool(chk["in_frame"]) and bool(chk["los_clear"]):
+			visible_count += 1
+
 	_save("%s-%s" % [id, suffix])
-	print("  %-24s %-5s eye(%.0f,%.1f,%.0f)  %d wild creatures within 60m" % [
-		id, suffix, eye.x, ground, eye.y, n])
-	if n <= 0:
-		print("  WARN %s: no wild creature registered within 60m of this stand" % id)
+	print("  %-24s %-5s %d/%d staged creatures pass in-frame+line-of-sight" % [
+		id, suffix, visible_count, spawned.size()])
+	if visible_count < spawned.size():
+		print("  WARN %s-%s: %d of %d staged creatures failed the visibility check" % [
+			id, suffix, spawned.size() - visible_count, spawned.size()])
+
+	for wild in spawned:
+		if is_instance_valid(wild):
+			wild.queue_free()
+	await process_frame
 
 
-## The player's own starter, standing beside the trainer body -- the same
-## `EncounterDirector.spawn_wild()` mechanism `_capture_creature_animation_
-## world.gd` uses to put a creature in the world, not the party/save-state
-## `summon_active_creature()` path, which needs a live save to have a party
-## in it at all.
-##
-## ROUND 2 (program coordinator): round 1 staged this at Grandpa's yard and
-## burned three re-renders fighting the house's own roof/wall colliders
-## (`_capture_locations.gd`'s own header calls this exact trap out -- a
-## raycast near a building routinely hits ITS collider, not the ground), and
-## the surviving frame showed only the creature's own back with no trainer
-## in shot. Moved to the open Practice Meadow instead -- the same ground
-## `01-village-edge` already renders clean, confirmed clear of geometry by
-## that very frame -- and reframed as the coordinator's "website hero" ask:
-## trainer and starter side by side, three-quarter view from behind and to
-## the side, both fully in frame, facing out over the meadow toward the
-## grass knoll `01-village-edge-day` shows on the horizon.
-func _shoot_starter() -> void:
-	var base := Vector2(21.0, -32.0)
+## Randomise each creature's own AnimationPlayer position so a group does not
+## share one identical, synchronised pose -- round 2's own named defect.
+func _desync(bodies: Array[Node3D]) -> void:
+	for body in bodies:
+		if not is_instance_valid(body):
+			continue
+		body.rotation.y = _rng.randf_range(0.0, TAU)
+		for player in body.find_children("*", "AnimationPlayer", true, false):
+			var ap := player as AnimationPlayer
+			var current := ap.current_animation
+			if current == "":
+				var list := ap.get_animation_list()
+				if list.size() > 0:
+					current = list[0]
+					ap.play(current)
+			if current != "":
+				var anim := ap.get_animation(current)
+				if anim != null and anim.length > 0.05:
+					ap.seek(_rng.randf_range(0.0, anim.length), true)
+
+
+## The pairing shot: trainer and starter side by side, three-quarter view.
+## Round 2's own frame had NO starter in it -- the spawn point coincided
+## with a boulder. Round 3 does not guess a fixed coordinate: it searches a
+## small set of candidate stands and only accepts one that passes real
+## geometry checks (ground under all three points is terrain, not a prop;
+## no static body within 4m of the pair), then asserts the delivered frame
+## actually holds both bodies before calling it done.
+func _shoot_pairing() -> void:
+	var candidates := [
+		Vector2(21.0, -32.0), Vector2(29.0, -34.0), Vector2(13.0, -30.0),
+		Vector2(21.0, -24.0), Vector2(21.0, -42.0), Vector2(38.0, -28.0),
+	]
 	var landmark := Vector2(60.0, -60.0)
+	var chosen := Vector2.ZERO
+	var found := false
+	for base in candidates:
+		var facing := (landmark - base).normalized()
+		var side := Vector2(-facing.y, facing.x)
+		var toward_cam := (-facing + side * 0.7).normalized()
+		var creature2 := base + toward_cam * 2.2
+		var mid := (base + creature2) * 0.5
+		var camEye2 := mid + toward_cam * 3.75
+		if _stand_is_clear(base) and _stand_is_clear(creature2) and _stand_is_clear(camEye2):
+			chosen = base
+			found = true
+			print("  [pairing] candidate (%.0f,%.0f) passed the ground/clearance check" % [base.x, base.y])
+			break
+		else:
+			print("  [pairing] candidate (%.0f,%.0f) REJECTED (prop underfoot or a static body within 4m)" % [base.x, base.y])
+	if not found:
+		print("  FAIL starter-beside-trainer: no candidate stand cleared the geometry check")
+		_failures += 1
+		return
+
+	var base := chosen
 	var facing := (landmark - base).normalized()
 	var side := Vector2(-facing.y, facing.x)
+	var toward_cam := (-facing + side * 0.7).normalized()
 
 	var player_ground := _surface(base)
 	_player.global_position = Vector3(base.x, player_ground + 0.4, base.y)
@@ -247,7 +331,9 @@ func _shoot_starter() -> void:
 	for i in _frames(ARRIVE_FRAMES):
 		await physics_frame
 
-	var spot2 := base + side * 2.2
+	# Creature stands on the CAMERA side of the trainer -- between the
+	# trainer and where the lens will be, not behind or level with it.
+	var spot2 := base + toward_cam * 2.2
 	var spot := Vector3(spot2.x, _surface(spot2), spot2.y)
 	var wild: Node3D = _director.call("spawn_wild", "terrapup", spot, {
 		"name": "Shot_starter_terrapup",
@@ -257,22 +343,131 @@ func _shoot_starter() -> void:
 		print("  FAIL starter-beside-trainer: spawn_wild returned null")
 		_failures += 1
 		return
+	wild.rotation.y = atan2(facing.x, facing.y)
 	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
 
 	var mid := (base + spot2) * 0.5
-	var camEye := mid - facing * 5.5 + side * -3.0
-	var camTarget := mid + facing * 10.0
-	_frame(camEye, _surface(camEye), camTarget, _surface(camTarget))
+	var camEye2 := mid + toward_cam * 3.75
+	var camGround := _surface(camEye2)
+	var camPos := Vector3(camEye2.x, camGround + 1.5, camEye2.y)
+	var lookAt := Vector3(mid.x, _surface(mid) + 1.2, mid.y)
+	_camera.global_position = camPos
+	_camera.look_at(lookAt, Vector3.UP)
 	_hide_huds()
 	for i in _frames(POSE_FRAMES):
 		await process_frame
 	await RenderingServer.frame_post_draw
+
+	# ASSERTIONS. Never ship a pairing frame that fails these -- the whole
+	# point of round 3's rewrite here is that round 2 shipped a frame that
+	# would have failed exactly this check.
+	var creature_centre := wild.global_position + Vector3(0, 1.1, 0)
+	var trainer_centre := _player.global_position + Vector3(0, 0.9, 0)
+	var creature_chk := _visibility_check(creature_centre, [wild])
+	var trainer_chk := _visibility_check(trainer_centre, [_player])
+	var creature_height_frac := _frame_height_fraction(wild.global_position, 2.3)
+	var trainer_height_frac := _frame_height_fraction(_player.global_position, 1.8)
+	var ok := bool(creature_chk["in_frame"]) and bool(creature_chk["los_clear"]) \
+		and bool(trainer_chk["in_frame"]) and bool(trainer_chk["los_clear"]) \
+		and creature_height_frac >= 0.25 and trainer_height_frac >= 0.20
+
+	print("  [pairing] creature: in_frame=%s los=%s height_frac=%.2f" % [
+		creature_chk["in_frame"], creature_chk["los_clear"], creature_height_frac])
+	print("  [pairing] trainer:  in_frame=%s los=%s height_frac=%.2f" % [
+		trainer_chk["in_frame"], trainer_chk["los_clear"], trainer_height_frac])
+	print("  [pairing] ASSERTION %s" % ("PASS" if ok else "FAIL"))
+
 	_save("06-starter-beside-trainer-day")
-	print("  06-starter-beside-trainer  day  player(%.0f,%.0f) terrapup(%.0f,%.0f)" % [
-		base.x, base.y, spot2.x, spot2.y])
+	print("  06-starter-beside-trainer  day  player(%.0f,%.0f) terrapup(%.0f,%.0f) assertion=%s" % [
+		base.x, base.y, spot2.x, spot2.y, "PASS" if ok else "FAIL"])
+	if not ok:
+		_failures += 1
 	wild.queue_free()
 	await process_frame
+
+
+## Candidate-stand check for the pairing shot: ground under the point must
+## be terrain (not a prop's own collider top), and no static/wild/NPC body
+## may stand within 4m of it. This is what round 2 skipped -- its spawn
+## point coincided with a boulder nobody checked for.
+func _stand_is_clear(at: Vector2) -> bool:
+	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state
+	if space == null:
+		return true
+	var ground := _surface(at)
+	var query := PhysicsShapeQueryParameters3D.new()
+	var shape := SphereShape3D.new()
+	shape.radius = 4.0
+	query.shape = shape
+	query.transform = Transform3D(Basis(), Vector3(at.x, ground + 1.0, at.y))
+	query.collide_with_bodies = true
+	query.collide_with_areas = false
+	for hit: Dictionary in space.intersect_shape(query, 8):
+		var body: Node = hit.get("collider") as Node
+		if body == null or _under_terrain(body):
+			continue
+		return false
+	return true
+
+
+func _under_terrain(body: Node) -> bool:
+	var terrain: Node = _world.get_node_or_null(^"Terrain")
+	if terrain == null:
+		return false
+	var node: Node = body
+	while node != null:
+		if node == terrain:
+			return true
+		node = node.get_parent()
+	return false
+
+
+## Camera3D.unproject_position inside the viewport, is_position_behind
+## false, and a ray from the camera eye to the point hits the excluded
+## body's own collider (or nothing closer) rather than a prop in the way.
+func _visibility_check(world_pos: Vector3, exclude_bodies: Array) -> Dictionary:
+	var size := root.size
+	var behind := _camera.is_position_behind(world_pos)
+	var vp := _camera.unproject_position(world_pos)
+	var in_frame := (not behind) and vp.x >= 0.0 and vp.x <= size.x and vp.y >= 0.0 and vp.y <= size.y
+
+	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state
+	var los_clear := true
+	if space != null:
+		var query := PhysicsRayQueryParameters3D.create(_camera.global_position, world_pos)
+		query.collide_with_areas = false
+		var rids: Array[RID] = []
+		for b in exclude_bodies:
+			if b is CollisionObject3D:
+				rids.append((b as CollisionObject3D).get_rid())
+		query.exclude = rids
+		var hit := space.intersect_ray(query)
+		if not hit.is_empty():
+			var hit_dist: float = (hit["position"] as Vector3).distance_to(_camera.global_position)
+			var total_dist: float = world_pos.distance_to(_camera.global_position)
+			los_clear = hit_dist >= total_dist - 1.0
+
+	var reason := "ok"
+	if behind:
+		reason = "behind_camera"
+	elif not in_frame:
+		reason = "outside_viewport"
+	elif not los_clear:
+		reason = "occluded"
+	return {"in_frame": in_frame, "los_clear": los_clear, "reason": reason}
+
+
+## What fraction of the viewport's height a `height`-tall body at
+## `base_pos` (its feet) occupies, via unproject rather than a guessed FOV
+## convention -- robust regardless of Camera3D.keep_aspect.
+func _frame_height_fraction(base_pos: Vector3, height: float) -> float:
+	var top := _camera.unproject_position(base_pos + Vector3(0, height, 0))
+	var bottom := _camera.unproject_position(base_pos)
+	var size := root.size
+	if size.y <= 0:
+		return 0.0
+	return absf(top.y - bottom.y) / size.y
 
 
 func _save(name: String) -> void:
@@ -306,8 +501,8 @@ func _place(at: Vector2, ground: float) -> void:
 
 
 func _frame(eye: Vector2, eye_ground: float, target: Vector2, target_ground: float) -> void:
-	_camera.global_position = Vector3(eye.x, eye_ground + EYE_UP, eye.y)
-	_camera.look_at(Vector3(target.x, target_ground + EYE_UP, target.y), Vector3.UP)
+	_camera.global_position = Vector3(eye.x, eye_ground + 1.70, eye.y)
+	_camera.look_at(Vector3(target.x, target_ground + 1.70, target.y), Vector3.UP)
 
 
 ## Same raycast-over-analytic reseat `_capture_locations.gd::_surface()` uses:
@@ -326,15 +521,3 @@ func _surface(at: Vector2) -> float:
 	if hit.is_empty():
 		return analytic
 	return float((hit["position"] as Vector3).y)
-
-
-func _creatures_near(at: Vector3) -> int:
-	if _director == null or not _director.has_method("wild_creatures"):
-		return -1
-	var n := 0
-	for wild: Variant in _director.call("wild_creatures"):
-		var body: Node3D = wild as Node3D
-		if body != null and is_instance_valid(body):
-			if body.global_position.distance_to(at) <= 60.0:
-				n += 1
-	return n
