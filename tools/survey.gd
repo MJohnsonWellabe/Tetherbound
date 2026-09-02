@@ -43,12 +43,27 @@ const ACTOR_CLEARANCE := 0.4
 ## How far behind the camera the player is parked when a viewpoint has no
 ## `actor` entry. See the history in `_place_actor`: this used to be 500m
 ## (straight down) and that was still far enough to break Terrain3D's own
-## streaming for the whole shot. 30m keeps the player inside the same
+## streaming for the whole shot. 12m keeps the player inside the same
 ## streaming region as the camera -- comparable to the ~14.6m separation that
 ## measured correctly in the A/B below -- while `_place_actor`'s geometry
 ## keeps it out of frame regardless of distance, so this only has to be
-## "close", not "far and hidden".
-const PARK_DISTANCE := 30.0
+## "close", not "far and hidden". The program coordinator's rule is no stand
+## may render with the player more than 20m from the camera; see the
+## per-shot distance print/warning below, which checks this every shutter.
+
+## WHY 12m AND NOT MORE. The park point is 180 degrees behind the camera, so it
+## is out of frame at ANY distance -- the limit is not framing, it is the 20m
+## camera-to-player ceiling this program adopted after the maroon-wash bug.
+## Elevated stands separate vertically as well: `03-rise-overlook` sits at
+## eye_h 15.0, so the player on the ground is already ~14.6m below it, and the
+## true separation is hypot(park, 14.6). At park=18 that is 23.2m -- OVER the
+## ceiling. At 12 it is 18.9m, and `04-three-quarter` (eye_h 8.0) is 14.2m.
+## Raising this constant silently pushes elevated stands back over the line.
+const PARK_DISTANCE := 12.0
+
+## The program coordinator's ceiling on camera->player separation at
+## shutter. Anything past this is loud (push_warning), never silent.
+const MAX_CAMERA_PLAYER_DISTANCE := 20.0
 
 ## Vertical FOV, matching the gameplay camera. The horizon maths below depends
 ## on it, and Godot treats `fov` as the vertical angle at 16:9.
@@ -339,7 +354,18 @@ func _run() -> void:
 		# dark scene. Better to fail the run than hand it to a critic.
 		if flat < 0.01:
 			failures.append("%s: frame is almost a single flat colour (spread %.4f); nothing rendered" % [name, flat])
-		print("  %-22s spread %.3f  -> %s" % [name, flat, path])
+		# Terrain3D streams its mesh off the PLAYER position (see PARK_DISTANCE's
+		# own comment for the measured A/B), so a player parked far from the
+		# camera degrades the whole scene while every Environment/sky value at
+		# shutter still reads correct -- the exact failure this print/warning
+		# exists to make impossible to regress silently.
+		var cam_player_dist := INF
+		if player != null:
+			cam_player_dist = camera.global_position.distance_to(player.global_position)
+		print("  %-22s spread %.3f  cam-player %.1fm  -> %s" % [name, flat, cam_player_dist, path])
+		if cam_player_dist > MAX_CAMERA_PLAYER_DISTANCE:
+			push_warning("survey.gd: %s stands %.1fm from the player (max %.1fm) -- Terrain3D streaming may be degraded for this frame" % [
+				name, cam_player_dist, MAX_CAMERA_PLAYER_DISTANCE])
 
 	print("")
 	print("%d frames -> %s" % [written.size(), OUT_DIR])
