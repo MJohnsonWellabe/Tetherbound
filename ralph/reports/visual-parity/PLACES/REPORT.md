@@ -985,3 +985,116 @@ Contact sheet: `round5/_sheet_locations.png`.
    inspected frame-by-frame this round for whether detail actually reads.
 5. Carried forward, all outside PLACES: grass field enabled but drawing zero instances;
    `smoke_traversal`'s South Bridge walk-around; `_judge_capture_hall.gd` has still never produced frames.
+
+---
+
+# Round 6
+
+Merged the program branch clean; re-baked (825875 placements, 336 s). Read `JUDGE-round5.md` in full.
+All numbers below are at **native exposure** — no boosted crops used as evidence anywhere.
+
+## R6.1 Per item: proven or not
+
+| # | item | verdict |
+|---|---|---|
+| 1 | Warrens as earth mound | **partly proven** — material language and shape changed, overhang wedge gone, den stability restored |
+| 2 | Courtyard night mean ≥ 12 | **PROVEN** — 8.38 → **12.45**, floor at the trainer 2.4× brighter |
+| 3 | Banners oxblood | **NOT proven** — see R6.4 |
+| 4 | Gate: floating prop removed, sentries in view | **partly proven** — needs judge confirmation |
+| 5 | Storm band halved | **proven in config, weak in frame** — see R6.5 |
+
+## R6.2 Frames, r5 → r6
+
+| frame | r5 | r6 | mean abs diff | px >8 |
+|---|---|---|---|---|
+| `10-stronghold-courtyard-night` | 8.38 | **12.45** | 6.66 | 46.8 % |
+| `04-warrens-standing-day` | 27.40 | **34.86** | 13.02 | 36.0 % |
+| `04-warrens-approach-day` | 99.29 | 92.06 | 13.01 | 27.8 % |
+| `11-castle-landmark-hall-100m-day` | 94.86 | 103.31 | 10.80 | 28.9 % |
+| `10-stronghold-gate-day` | 109.44 | 114.27 | 9.95 | 28.2 % |
+| `10-stronghold-courtyard-day` | 35.30 | 42.74 | 8.36 | 30.9 % |
+| `10-stronghold-approach-day` | 97.99 | 100.29 | 7.72 | 26.8 % |
+| `10-stronghold-gate-night` | 33.43 | 31.35 | 4.12 | 15.0 % |
+| `11-castle-landmark-hall-200m-day` | 116.70 | 119.33 | 4.20 | 17.4 % |
+| `11-castle-landmark-hall-400m-day` | 118.33 | 119.60 | 3.27 | 13.5 % |
+| `10-stronghold-approach-night` | 34.86 | 32.70 | 3.10 | 9.9 % |
+| `04-warrens-den-day` | 75.01 | 74.98 | **0.68** | **1.8 %** |
+
+**Den stability restored.** It had drifted to 4.6 % of pixels over 8 in round 5; `skip_front_m` 6.0 → 10.0
+brings it back to 0.68 / 1.8 %, the round-4 level.
+
+## R6.3 Courtyard night — target met, with the caveat that matters
+
+| sample (courtyard-night) | r5 | r6 |
+|---|---|---|
+| **frame mean** | 8.38 | **12.45** ✅ target ≥ 12 |
+| floor at the trainer (mid-court) | [9.5, 1.7, 1.1] | **[23.1, 5.5, 2.5]** |
+| floor mid-centre | [12.6, 3.7, 5.0] | **[30.2, 9.0, 8.0]** |
+| left half | [9.9, 5.7, 8.7] | **[18.6, 7.1, 9.6]** |
+| extreme foreground strip (y 85–97 %) | [0.2, 0, 0] | [3.4, 0.2, 0.1] |
+
+The floor around the trainer is 2.4× brighter and now genuinely reads; the left half nearly doubled and is
+no longer "literal black". **The one region still effectively black is the extreme foreground strip**
+(nearest the camera, below the player, outside every brazier pool) at [3.4, 0.2, 0.1]. That is a light
+falloff artefact of the stand's low camera, not the courtyard floor as such.
+
+**Method note for the judge:** my first sample of "the floor" hit that foreground strip and read
+[4.8, 0.6, 0.4], which would have supported "the floor is still black". Looking at the frame showed the
+mid-court cobbles clearly lit. A single sample rectangle can support the opposite conclusion depending on
+where it lands — worth stating, since this round's brief asked for pixel samples as proof.
+
+## R6.4 Banners — NOT proven, and I am flagging it rather than claiming it
+
+Night banner patch went [63.4, 34.8, 48.0] → [103.6, 51.0, 61.7] — brighter and still clearly red-family.
+The **day** banner patch went [150.9, 107.8, 108.4] → [165.9, 129.6, 121.2], i.e. *lighter and less
+saturated*, which is the wrong direction for oxblood.
+
+I do not trust either as proof. The sample rectangle was derived from the night frame's banner position
+and the day stand frames the courtyard differently, so the day patch is probably sampling wall stone
+rather than cloth. **The honest position: the banner material was changed, but I have not proven with a
+reliable pixel sample that the rendered banners are now `#5a1a1a`.** The judge's poster-red finding should
+be treated as open until a sample taken from a known-banner region confirms it.
+
+## R6.5 Storm band — config change proven, frame effect small
+
+Heights halved (185→92.5, 225→112.5, 150→75), alpha 0.94/0.88/0.72 → **0.6** on all three, `base` held at
+55.0 so round 5's 18 m clearance over the ~37 m Hall skyline is untouched (halving height only pulls the
+top edge down).
+
+But the gate-day sky strip (top 12 % of frame) barely moved: [89.9, 130.2, 153.7] → [92.3, 131.6, 154.6].
+The band is a little lighter, not obviously smaller in that strip. The 100 m frame did brighten
+meaningfully (94.86 → 103.31, 28.9 % of pixels). **Provisional read: better, not the "distant storm line"
+the brief asked for.** Judge from the frames.
+
+## R6.6 Warrens
+
+`_build_mound()`'s grid now wears `_wear_as_earth()` — the trodden-ramp triplanar earth material — instead
+of boulder stone, with fewer/larger overlapping pieces: mound mass 89 → 66, plus 5 hand-placed half-buried
+accent stones that are now the only exterior geometry still reading as bare rock. Spoil heaps 3 → 2.
+Net object count −19.
+
+**The overhang wedge was my own cumulative over-tuning.** It was the entrance brow stone, which three
+successive rounds had grown to `scale` 2.9 / `offset.z` −1.85 and darkened to `.darkened(0.86)`. Pulled
+back to 1.9 / −1.05 / y 2.9 and re-materialled. `04-warrens-standing-day` went 27.40 → 34.86, consistent
+with a large black wedge leaving the frame.
+
+**One rock family at the threshold:** new `_wear_as_wall_stone()` applies `_material(_rock(), 0.0, true)` —
+the exact same `StandardMaterial3D` and cache key the chamber walls use (`site.rock` `#5b5147`) — to both
+jambs and the brow, replacing the exterior lerp-then-darken path that produced the judge's "third
+cold-grey material".
+
+## R6.7 Perf and tests
+
+`hall_approach` **3843** (r5 3848) — under the 4000 ceiling, 157 calls of headroom. `village_high` 3169.
+`smoke_stronghold` exit 0, `smoke_warrens` exit 0. Contact sheet at `round6/_sheet_locations.png`.
+
+## R6.8 What still fails
+
+1. **Banners unproven** (R6.4) — needs a sample from a known-banner region.
+2. **Storm band's frame effect is small** despite a large config change (R6.5).
+3. **Extreme foreground of the courtyard-night frame is still black** — light falloff at the stand's low
+   camera, not the floor material.
+4. **200 m / 400 m Hall still barely moves** (4.20 and 3.27 mean abs diff). Angular size and aerial fade,
+   as diagnosed in R5.7 — untouched again this round.
+5. Carried, outside PLACES: grass field enabled but drawing zero instances; South Bridge walk-around;
+   `_judge_capture_hall.gd` still never run; the Relay's round-3 work still never rendered.
