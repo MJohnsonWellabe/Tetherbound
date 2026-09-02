@@ -520,10 +520,12 @@ jobs:
   # step failed, same as `fail-fast: false` gave the old matrix.
   verify-core-verb-shard:
     runs-on: ubuntu-latest
-    # Sum of these seven tests' own run time measured 2026-09-01: 1,392s
-    # (23.2 min), including a flaky-retry run of smoke_traversal.gd that spent
-    # all 3 attempts. ~35 min leaves real margin above that for checkout/setup
-    # plus a worse retry day.
+    # Sum of the original seven tests' own run time measured 2026-09-01:
+    # 1,392s (23.2 min), including a flaky-retry run of smoke_traversal.gd
+    # that spent all 3 attempts. ~35 min leaves real margin above that for
+    # checkout/setup plus a worse retry day; smoke_catch_aim_slowdown.gd
+    # added 2026-09-02 is short (one fight, two ~1s measurement windows) and
+    # fits comfortably in that margin.
     timeout-minutes: 35
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -619,6 +621,29 @@ jobs:
       - name: Verify catching
         if: ${{ !cancelled() }}
         env: { SMOKE: catching, RETRIES: 2 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
+      # OWNER PLAYTEST 2026-09-02 finding #6: "creatures should move a little
+      # less or in slow motion once you go into catch mode." Proves the target
+      # covers less ground in a fixed window while the aim is open than it
+      # does with the aim closed -- see the test's own header for why a
+      # re-armed CLOSE beat makes the comparison deterministic rather than at
+      # the mercy of whatever beat the AI happened to be in.
+      - name: Verify catch aim slowdown
+        if: ${{ !cancelled() }}
+        env: { SMOKE: catch_aim_slowdown, RETRIES: 2 }
         run: |
           set -uo pipefail
           n=0

@@ -31,8 +31,7 @@ on this project already.
 - **No generation without an owner-supplied reference sheet.** Credits stopped
   being the constraint on 2026-08-11; reference art is. If a task appears to
   need a new model and no board exists in `docs/art/reference/`, that is a
-  `BLOCKED.md` entry, not a spend. `BLOCKED.md` carries the standing list of
-  what the owner still has to draw.
+  `BACKLOG.md` entry recording what the owner still has to draw, not a spend.
 - **One nature family, one village family, one prop family** (D24). An asset
   that joins no existing family does not land, however good its store page
   looks. Meshy is reserved for Team Tether hero objects.
@@ -357,7 +356,7 @@ Before marking a visual-affecting task done:
    wall rather than to keep finding reasons to run again.
 4. When it converges without passing, do not mark the task done and do not
    keep silently iterating. Record it plainly — what was tried, what the
-   critic still says is wrong, and why — either as a `BLOCKED.md` entry (if
+   critic still says is wrong, and why — either as a `BACKLOG.md` entry (if
    it needs a decision only the owner can make, e.g. an asset that needs
    replacing rather than tuning) or as a clearly-labelled remainder item in
    `BACKLOG.md`, the same pattern R7.1-remainder already uses.
@@ -373,7 +372,7 @@ right on its own — **R9.4 already ran uncapped, four rounds, four blind
 critics**, moved every measurable axis, and both critics still ranked *"needs
 art that is not in the build"* first. It had not stopped early; it had run out
 of things tuning could reach. That is the wall this stopping rule is designed to
-detect quickly, and hitting it is a `BLOCKED.md` entry or an `EV`-item
+detect quickly, and hitting it is a `BACKLOG.md` entry or an `EV`-item
 dependency, never a reason to render the same frame a tenth time.
 
 **One hard budget guard remains.** If you are running low on context, stop at

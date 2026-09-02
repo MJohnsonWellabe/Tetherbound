@@ -384,7 +384,7 @@
     "shoulder": 1.1,
     "routes": [
       {
-        "_why": "the square to Grandpa's door",
+        "_why": "the square to Grandpa's door. OWNER-0902 (owner playtest finding 8, 'village shape still makes no sense, especially around Grandpa's house'): the old endpoint [-18,-15] sat INSIDE the house's own exterior footprint, not outside its door. `scripts/world/grandpa_house.gd`'s EXT_HALF_W/EXT_HALF_D (5.0/3.0) plus `playground_world.gd`'s unrotated HOUSE_AT (-22,-16) put the house's wall lines at x:[-27,-17]/z:[-19,-13] -- [-18,-15] is 1m inside the east wall, not a stand-off short of the door. That wall line moved 0.5m EAST when the EV6 kit rebuild widened the house from the old ~9m-wide shell to the kit's 10m-wide `farmhouse_shell` (this file's own header), which is very likely why this read fine before and reads wrong 'now': the painted dirt path ran a little short of the wall before and now runs into it. The door itself sits at local (INNER_W*0.5+WALL_T+1.2, 0, 0) = world (-15.7,-16) -- 1.3m proud of that wall. New endpoint (-16.5,-16.0) sits 0.5m clear of the wall on the square side, aligned with the door's own z, so the painted path visibly reaches the doorway instead of disappearing into the east wall.",
         "label": "Grandpa's House",
         "points": [
           [
@@ -396,8 +396,8 @@
             -13.0
           ],
           [
-            -18.0,
-            -15.0
+            -16.5,
+            -16.0
           ]
         ]
       },
