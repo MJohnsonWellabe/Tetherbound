@@ -1466,3 +1466,28 @@ defeated thirteen config-level hypotheses.
 
 Any frame those tools have produced carries this defect. Out of scope for this lane, but
 it means evidence from them should be re-read with this in mind.
+
+## Round-7 tests — the long-standing failure is resolved
+
+```
+56 tests, 1117458 assertions, 0 failed
+art: OK — models loaded, sized to their colliders, and the meadow is dressed.
+```
+
+`test_scatter_rules.gd :: test_ecology_core_clusters_without_changing_the_count` had failed
+in rounds 4 and 6 (100 m-bin CV ratio 1.064 against a required 1.15). It now passes, and the
+suite has grown 55 → 56 tests, so the fix came in with the merged program branch rather than
+from this lane. The one outstanding test failure this lane had been carrying is closed.
+
+## Round-7 survey
+
+| frame | mean RGB | R−G | saturation |
+|---|---|---|---|
+| 01-spawn-outward | 82.9/94.6/54.7 | −11.7 | 0.694 |
+| 02-valley-floor | 96.1/108.4/56.7 | −12.3 | 0.640 |
+| 03-rise-overlook | 125.2/134.0/103.9 | −8.8 | 0.360 |
+| 04-three-quarter | 96.6/109.0/55.2 | −12.4 | 0.654 |
+| 05-spawn-low-sun | 82.6/70.8/45.0 | +11.8 | 0.695 |
+
+Stable against round 6 (−11.8, −12.3, −8.7, −12.3, +11.6), so the sun-disc rework, dawn
+retune and seam fix did not disturb the day survey.
