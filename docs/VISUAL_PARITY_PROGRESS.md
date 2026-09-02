@@ -212,6 +212,24 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Check-in #14 (10:06 UTC)
+- **WORLD round 5** (`3a0fd9f8`, report only): both discriminators (fog_aerial_perspective 0; Sky REALTIME) produced
+  bit-identical frames — eight explanations falsified; `fog_sky_affect` is 0.0 in this project so the fog/radiance
+  mechanism was structurally impossible. The lane's own new suspicion is the useful one: unrelated config
+  mutations keep producing **bit-identical** frames and the per-time aerial push moved a vista by < 1/255 —
+  changes may be mutating an Environment/Sky other than the one the camera renders. Round 5b dispatched 10:08:
+  print the rendered World3D environment / camera override / world_look's Environment identities in one boot,
+  fix ownership if they differ and prove delivery with one toggle, else print the per-frame env/sky values for
+  01-dawn (clean) vs 03-dawn (red); fix the aerial push ordering.
+- **LIFE round 4** (`0786e323`, 9 frames): bbox contract + AABB near-clip floor + hiding unstaged wild bodies; 01
+  day/night and 04 day pass and read; mill-pond blob gone; but the pairing frame regressed to creature-only (the
+  trainer was measured from a CollisionShape3D, not visible geometry), 05 eye is inside rock, 03 Pipwing never
+  cleared the 8% floor, mill-pond has a staged body crowding the right edge. Not merged. Round 5 dispatched 10:08
+  (visible-geometry trainer AABB, eye clearance sweep, small-species floor, central-80% lateral bound, night 04
+  under lantern light; max two boots). Judge running.
+- CORRIDOR round 3 (RNG isolation done, station 02 re-render) and PLACES round 6 (courtyard floor diagnostic,
+  earth-mound Warrens) in progress.
+
 ### Program-branch health at 09:55 UTC
 - **CI `34cdd67a` (CORRIDOR r2 merge + bake): fully green** — first all-green run on the program branch (the
   ecology test rewrite `00745630` was superseded by this push and cancelled).
