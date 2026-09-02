@@ -137,7 +137,13 @@ Budget: band1_open primitives ≤ 12.0M, draw calls ≤ 7500; hall_approach draw
 
 ## Regressions / unresolved problems
 
-(none yet)
+- **VP1-G0 (golden frame black):** no longer reproduces on the branch tip with fast mode (05-spawn-low-sun renders,
+  spread 1.585). Root cause not isolated (settle count / merged shader changes are the candidates). The golden
+  frame that now renders is badly overexposed: a giant white sun disc, trees blown to white — WORLD round 2.
+- **Capture time sink is the stale bake, not rendering:** with the scatter bake fingerprint stale, every capture
+  process spends ~348 s at boot recomputing placements (`[vegetation] boot phases placements=348106`). Re-bake
+  after any `vegetation.json` / `terrain_playground.json` change before capturing; fast mode alone changed
+  nothing (11m42 vs 10m49) because boot dominated.
 
 ## Resume note
 
