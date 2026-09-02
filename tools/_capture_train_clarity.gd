@@ -115,20 +115,24 @@ func _run() -> void:
 	# change and the card never reveals. Force a real change first (a
 	# different placeholder), settle, THEN set the real text so the reveal
 	# fires the way it does for an actual player crossing into this rung.
-	print("DEBUG before: last_text=%s game_text=%s game_hint=%s" % [
-		_hud.get(&"_objective_last_text"), _game.get("objective_text"), _game.get("objective_hint")])
 	_hud.call("_hide_objective_hint_card")
 	_game.set("objective_hint", "")
 	_game.set("objective_text", "")
 	await _settle(3)
-	print("DEBUG mid: last_text=%s game_text=%s game_hint=%s card_visible=%s" % [
-		_hud.get(&"_objective_last_text"), _game.get("objective_text"), _game.get("objective_hint"), _card_visible()])
 	_game.set("objective_hint", hint)
 	_game.set("objective_text", label)
-	await _settle(6)
-	print("DEBUG after: last_text=%s game_text=%s game_hint=%s card_visible=%s until=%s now=%s" % [
-		_hud.get(&"_objective_last_text"), _game.get("objective_text"), _game.get("objective_hint"),
-		_card_visible(), _hud.get(&"_objective_hint_until"), Time.get_ticks_msec() / 1000.0])
+	# ONE frame, not several, before pinning. Under llvmpipe software
+	# rasterisation over this world's full prop/grass/vegetation count, a
+	# single real render frame can cost several wall-clock seconds -- close
+	# to or past the hint's own ~10s dwell window (`OBJECTIVE_HINT_SECONDS_*`
+	# in playground_hud.gd). Settling further BEFORE pinning risks
+	# `_tick_objective_hint()`'s own auto-hide firing first, which is exactly
+	# what happened on the first two capture attempts (card_visible=false,
+	# _objective_hint_until=0.0 by the time of the check) -- the reveal ran
+	# and then immediately expired between frames, not "never revealed".
+	await _settle(1)
+	_hud.set(&"_objective_hint_until", Time.get_ticks_msec() / 1000.0 + 3600.0)
+	await _settle(3)
 	if not _card_visible():
 		_fail("the hint card did not reveal for the capture")
 	# Hold the reveal open across the shutter -- the real dwell window is
