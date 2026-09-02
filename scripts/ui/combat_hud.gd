@@ -114,6 +114,18 @@ var _last_reticle_screen_pos: Vector2 = Vector2.ZERO
 ## The always-on party strip (spec 9.4). Built in code, mounted at
 ## `_party_strip_position()`.
 var _party_strip: Control = null
+## OWNER-0902-HUD-TEAM-MENU: edge-detects the fight-just-ended frame for
+## `_show_fight(false)`'s `hide_now()` call below -- `_process()` calls
+## `_show_fight(false)` on EVERY frame nothing is fighting, not just the one
+## right after a fight ends (a bare-instantiated HUD with no `_manager` at
+## all runs this branch every frame, forever). `hide_now()` is a hard,
+## immediate cut, correct exactly once -- on the frame a real fight just
+## stopped -- but wrong to repeat on every idle frame after: it would fight
+## any other caller trying to hold the strip open outside the normal
+## `is_fighting()` reveal path (`smoke_combat_hud_left_column.gd` does
+## exactly this to measure the strip's geometry). This field is what lets
+## `_show_fight(false)` tell "just ended" from "already idle."
+var _was_fighting: bool = false
 
 ## --- T3-TYPECHART: the per-hit type verdict ---------------------------------
 ##
@@ -413,10 +425,12 @@ func _process(delta: float) -> void:
 
 	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
 	if not fighting:
-		_show_fight(false)
+		_show_fight(false, _was_fighting)
+		_was_fighting = false
 		return
 
-	_show_fight(true)
+	_was_fighting = true
+	_show_fight(true, false)
 	_draw_enemy()
 	_draw_ally()
 	_draw_grid()
@@ -425,7 +439,11 @@ func _process(delta: float) -> void:
 	_update_party_strip()
 
 
-func _show_fight(visible_now: bool) -> void:
+## `just_ended`: true only on the single frame `fighting` flips from true to
+## false (see `_was_fighting`'s own header) -- distinguishes "the fight just
+## stopped" from every idle frame after it, which keep calling this with
+## `visible_now=false` but must not repeat the hard cut below.
+func _show_fight(visible_now: bool, just_ended: bool = false) -> void:
 	_enemy_panel.visible = visible_now
 	_ally_panel.visible = visible_now
 	_go_text.visible = visible_now
@@ -435,7 +453,23 @@ func _show_fight(visible_now: bool) -> void:
 		_aim_row.visible = false
 		_catch_row.visible = false
 		if _party_strip != null:
-			_party_strip.call("set_pinned", false)
+			if just_ended:
+				# OWNER-0902-HUD-TEAM-MENU: `set_pinned(false)` merely starts
+				# this strip's own graceful fade (`T_PARTY_FADE`, 2.5s) -- the
+				# right call while still mid-fight (see that function's own
+				# header), but wrong here: the fight has fully ended,
+				# `playground_hud.gd`'s own exploration strip is about to
+				# reveal fresh in its place (leaving combat almost always
+				# changes `Party.active_index`/`revision`), and a lingering
+				# fade left both up together, in different screen positions,
+				# reading as the roster panel showing twice -- with this one,
+				# fed only the creatures still able to fight, showing fewer
+				# than the full team. `hide_now()` drops it instantly instead,
+				# so there is nothing left to collide with the exploration
+				# HUD's own reveal.
+				_party_strip.call("hide_now")
+			else:
+				_party_strip.call("set_pinned", false)
 		if _orb_cluster != null:
 			_orb_cluster.visible = false
 		# T3-TYPECHART. Cleared with the rest of the fight, not left to age out
