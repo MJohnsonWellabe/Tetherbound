@@ -1289,3 +1289,64 @@ whenever the rendering viewpoint is far from the player, which is a real gamepla
 (cutscenes, distant cameras), not just a capture artifact.
 
 Evidence: `round5d-transition/` (3 frames).
+
+---
+
+# ROUND 5e — SOLVED: the red wash is CAMERA/PLAYER SEPARATION
+
+One boot. The known-washing four-shot sequence run twice, back to back, changing exactly
+one thing: whether the player is placed at the camera.
+
+| shot | cam→player dist | mean RGB | R−G |
+|---|---|---|---|
+| P1-01-spawn-outward-dawn | 8.75 m | 0.1699/0.1549/0.1260 | +3.81 clean |
+| P1-03-rise-overlook-dawn | 536.79 m | 0.2799/0.3195/0.3304 | −10.09 clean |
+| P1-03-rise-overlook-day | 576.73 m | 0.2943/0.4657/0.5010 | −43.69 clean |
+| **P1-03-rise-overlook-night** | **616.66 m** | 0.4695/0.1524/0.1920 | **+80.84 RED** |
+| P2-01-spawn-outward-dawn | 1.80 m | 0.1599/0.1364/0.1253 | +5.99 clean |
+| P2-03-rise-overlook-dawn | 14.60 m | 0.3585/0.2884/0.2251 | +17.86 clean |
+| P2-03-rise-overlook-day | 14.60 m | 0.4952/0.5279/0.4106 | −8.35 clean |
+| **P2-03-rise-overlook-night** | **14.60 m** | 0.1270/0.1927/0.2804 | **−16.77 CLEAN** |
+
+**The wash disappears when the player is at the camera.** Same stand, same preset, same
+boot, same sequence, same elapsed time — a **97-point** swing on the only variable changed.
+P1's night reproduces round 5b's +80.9 to within 0.1, so the positive control is real.
+
+Player position moves the frame at every stand, not just in the washed case: `03-dawn` went
+−10.09 → +17.86 and `03-day` −43.69 → −8.35 on placement alone.
+
+## Why every previous hypothesis failed
+
+`render_world_r3.gd::_place_actor()` returns early when a stand has no `actor` key — and
+`03-rise-overlook` has none. It does not leave the player at spawn; it drops it **500 m
+straight down at the stand's eye XZ with physics live**, so it free-falls for the rest of the
+run. That is the same condition that produced the near-black frame I earlier dismissed as a
+harness artifact. It was the same bug, at a different magnitude.
+
+This explains the signature that defeated thirteen hypotheses: every Environment and sky
+value is *correct* at shutter, because the values were never wrong. Nothing in the config,
+the presets, the camera, the clock or the shader was involved — so no config toggle could
+ever move it, and every toggle produced bit-identical frames.
+
+## What is a real defect vs a capture artifact
+
+- **Capture tooling (certain):** any stand without an `actor` key renders with the player
+  free-falling hundreds of metres away. Every VP stands frame ever taken at
+  `03-rise-overlook` is affected. **Fix: give every stand an `actor`, or make `_place_actor`
+  place at the eye by default instead of returning early.**
+- **Engine/gameplay (needs a decision):** something in the render pipeline scales off player
+  position strongly enough to invert a night frame's hue at ~600 m. Whether that can occur in
+  real play (a distant or cutscene camera, a long fall) is worth one deliberate check. If it
+  can, it is a shipping bug, not a tooling one.
+
+## Corrections this supersedes
+
+- Round 5b's "the wash tracks elapsed render time" — **wrong**; elapsed time was a correlate.
+- Round 5c's "transitions are the trigger" — **wrong**; preset cycling and teleporting are
+  both clean (round 5d).
+- The `TIME` wrap (`84f6bfd9`) is **not** the fix. It stays as a genuine latent-bug fix and is
+  now confirmed harmless (the A/B showed 0.17 R−G with the wrap active).
+- `03-day` no longer washes even in P1, while `03-night` still does. Likely the aerial
+  re-apply fix (`04bbb286`) removed one contributor; not proven, and not needed now.
+
+Evidence: `round5e-SOLVED/` (8 frames + `_sheet_SOLVED.png`).
