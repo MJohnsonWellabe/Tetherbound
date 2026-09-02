@@ -2,19 +2,245 @@
   "_comment": "The settlement around the village square. EV6: every structure is a PREFAB from data/config/building_prefabs.json, composed from the Medieval Village MegaKit (docs/ASSET_LEDGER.md, D24 -- the one civilian architectural family) and placed by scripts/world/village.gd: stood on the ground by asking the world (D09), given the prefab's own colliders or one AABB box, at kit-native scale (no scale corrections -- the kit is authored in real metres, walls measured 2.0w x 3.12h). Positions are world metres on the square flat at [10,-10] (terrain_playground.json `flats`, radius 18 -- every footprint sits inside it, so no new flattening was needed). ALL TUNABLE.",
   "_comment_layout": "Grandpa's house (grandpa_house.gd, not listed here -- it owns the opening's markers and collision, but its exterior is the `farmhouse_shell` prefab from building_prefabs.json, same kit family as everything below) sits west at [-22,-16], gable front and door facing the square. The workshop anchors the square's north where the old Barn stood, its open arch bay facing south-west so the EV7 work_area cluster (anvil, workbench at ~[-5,-3]) reads as its yard; the two cottages hold the north-east and east, both fronting the square; the well marks the centre where the four dirt paths meet, on its own paved apron; the fences run along the practice-meadow path so day one is bracketed by the settlement on one side and open grass on the other. The TowerWindmill is gone, not replaced: the kit has no windmill, bible sec12's mill is water/bridge architecture, and EV5's water does not exist yet -- a mismatched second-family landmark is exactly the split-the-difference failure D24 closed (see EV6-remainder in ralph/BACKLOG.md).",
   "structures": [
-    { "prefab": "well", "at": [10.0, -10.0], "yaw_deg": 15.0, "_why": "the square's centre; slightly off-axis so the square does not read as gridded" },
-    { "prefab": "workshop", "at": [2.0, 2.0], "yaw_deg": -125.0, "_why": "the big working building, north of the square, arch bay facing the work_area cluster" },
-    { "prefab": "wagon", "at": [6.5, -1.5], "yaw_deg": -150.0, "_why": "parked off the workshop's front-right corner, mid-delivery" },
-    { "prefab": "cottage_a", "at": [18.0, -2.0], "yaw_deg": -135.0, "interior": "shop", "_why": "a neighbour's house, north-east of the square, door facing the well. OF31/D39: this is Mira's, and the owner asked for the merchant to have 'a store in his house' -- so the recipe now authors wall colliders with the doorway left open and `interior: shop` (scripts/world/shop_interior.gd, attached by village.gd) puts a floor, a counter and a lamp inside it. Position and yaw unchanged; the door already faced the well." },
-    { "prefab": "cottage_b", "at": [21.0, -14.0], "yaw_deg": -70.0, "interior": "cottage", "_why": "the stone cottage, east of the square, fronting the well. R7.8: was a solid AABB brick with a painted-on door; now the recipe authors a doorway hole and `interior: cottage` (scripts/world/cottage_interior.gd) puts a room behind it. Position and yaw unchanged." },
-    { "prefab": "fence_run", "at": [14.0, -20.0], "yaw_deg": 55.0, "_why": "along the practice-meadow path" },
-    { "prefab": "fence_run", "at": [19.5, -25.5], "yaw_deg": 55.0, "_why": "along the practice-meadow path" },
-    { "prefab": "fence_run", "at": [3.0, -18.0], "yaw_deg": 100.0, "_why": "the yard edge between square and Grandpa's" },
-    { "prefab": "square_oak_a", "at": [25.5, -9.5], "yaw_deg": 40.0, "scale": 1.25, "_why": "canopy behind the cottage pair -- the key art frames its square with trees and the scatter's clearings hold them off by design, so the settlement's own trees are authored here. 5m+ clear of route 4's path edge and 4.9m from the nearest villager." },
-    { "prefab": "square_oak_b", "at": [1.0, 10.5], "yaw_deg": 160.0, "scale": 1.15, "_why": "behind the workshop, crown just above its ridge from the square. 8m+ clear of the north-west path." },
-    { "prefab": "mill", "at": [-382.0, 514.0], "yaw_deg": 0.0, "ground": "highest", "_why": "EV6-remainder: bible sec12's mill at a real crossing, on EV5's stream where it approaches the pond. West wall sits at the carve's edge so the wheel (local x -4.0) hangs over the channel and its bottom paddles meet the stream surface; grounded 'highest' because the wheel's own AABB corner is the streambed. Sited on the mill-crossing terrain flat at [-133,109] (terrain_playground.json).", "_comment_ow5d": "OW5D relocation, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved from (-132,107) to (-382,514) with the rest of the pond/mill group -- see terrain_playground.json flats[4]/building_aprons.footprints[5] and vegetation.json footprints[2]/clearings[5] for the matching moves. `_why` above still describes the OLD site's [-133,109] flat by number; the flat itself moved (same offset) but the prose was not rewritten to avoid drifting from the original author's reasoning -- the mill still sits on that flat, just at its new coordinates." },
-    { "prefab": "footbridge", "at": [-386.3, 520.0], "yaw_deg": -5.0, "ground": "highest", "_why": "the crossing itself, just downstream of the mill's north face -- deck spans the 5m carve bank to bank (centreline x~-136.3 at z=113), yawed to sit square across the stream's local bearing. Grounded 'highest' for the same reason as the mill.", "_comment_ow5d": "OW5D relocation: (-136.3,113) -> (-386.3,520), same (-250,+407) offset as the mill and the pond." },
-    { "prefab": "ranger_station", "at": [-350.0, 507.0], "yaw_deg": 75.0, "interior": "cottage", "_why": "EV6-remainder: the ranger station, on the pond route's west shoulder where the route (points [-80,85] -> [-105,115]) overlooks the water -- the first built thing between the settlement and the pond valley, watching the wilds. Door yawed east toward the path; east wall clears the path's 3m shoulder by ~0.8m at the closest point. On its own small flat at [-100,100].", "_comment_ow5d": "OW5D relocation: (-100,100) -> (-350,507) per docs/MEADOWS_MACRO_LAYOUT.md section 10.2. `yaw_deg` 75 is UNCHANGED -- the table only specifies the new position, and re-deriving the door-facing angle for the new pond-route geometry is a judgement call left to the reviewer/OW5C (which owns the pond route's actual new path polyline). Flagged, not guessed at." },
-    { "prefab": "inn", "at": [-1.5, -9.0], "yaw_deg": 90.0, "interior": "inn", "_why": "R7.9, owner-requested: an inn where the villagers can stay. West of the well, inside the village-square flat (terrain_playground.json centre [10,-10], radius 18), door facing east toward the square. RESITED from an unpushed prior lane's own [-4,-8]/95deg draft (recorded in ralph/NOTES.md's R7.9 entry): a headless probe sampling terrain_playground.json's own height_at() across the inn's full 6x10 footprint (not just its centre and corners) found that draft's back third sitting outside the flat pad's radius-18 boundary -- the pad is a hard 0.9m plateau out to exactly 18m from centre and jumps to natural terrain by 19m (measured, no smoothstep gradient inside a metre of it), so a footprint that crosses the line reads as grass standing on the interior floor, not a subtle slope. This site's own footprint (dense-sampled, 2m x-step / 1m z-step) is flat at 0.900 everywhere, and its four rotated corners clear the workshop, wagon, well, both cottages and the practice-meadow fence run by 4m+ (rectangle-corner distance, not centre-to-centre) -- verified computationally, not eyeballed, the same discipline village_npcs.json's own Mira-position derivation used. `inn`'s recipe (building_prefabs.json) clones farmhouse_shell's massing with a real door leaf and doorway-hole colliders R7.8's shell lacked; `scripts/world/inn_interior.gd` is the third interior template, a common room (counter, two guest tables, one bed nook) rather than a stretch of the two generic house templates." }
-  ]
+    {
+      "prefab": "well",
+      "at": [
+        10.0,
+        -10.0
+      ],
+      "yaw_deg": 15.0,
+      "_why": "the square's centre; slightly off-axis so the square does not read as gridded"
+    },
+    {
+      "prefab": "workshop",
+      "at": [
+        2.0,
+        2.0
+      ],
+      "yaw_deg": -125.0,
+      "_why": "the big working building, north of the square, arch bay facing the work_area cluster"
+    },
+    {
+      "prefab": "wagon",
+      "at": [
+        6.5,
+        -1.5
+      ],
+      "yaw_deg": -150.0,
+      "_why": "parked off the workshop's front-right corner, mid-delivery"
+    },
+    {
+      "prefab": "cottage_a",
+      "at": [
+        18.0,
+        -2.0
+      ],
+      "yaw_deg": -135.0,
+      "interior": "shop",
+      "_why": "a neighbour's house, north-east of the square, door facing the well. OF31/D39: this is Mira's, and the owner asked for the merchant to have 'a store in his house' -- so the recipe now authors wall colliders with the doorway left open and `interior: shop` (scripts/world/shop_interior.gd, attached by village.gd) puts a floor, a counter and a lamp inside it. Position and yaw unchanged; the door already faced the well."
+    },
+    {
+      "prefab": "cottage_b",
+      "at": [
+        21.0,
+        -14.0
+      ],
+      "yaw_deg": -70.0,
+      "interior": "cottage",
+      "_why": "the stone cottage, east of the square, fronting the well. R7.8: was a solid AABB brick with a painted-on door; now the recipe authors a doorway hole and `interior: cottage` (scripts/world/cottage_interior.gd) puts a room behind it. Position and yaw unchanged."
+    },
+    {
+      "prefab": "fence_run",
+      "at": [
+        14.0,
+        -20.0
+      ],
+      "yaw_deg": 55.0,
+      "_why": "along the practice-meadow path"
+    },
+    {
+      "prefab": "fence_run",
+      "at": [
+        19.5,
+        -25.5
+      ],
+      "yaw_deg": 55.0,
+      "_why": "along the practice-meadow path"
+    },
+    {
+      "prefab": "fence_run",
+      "at": [
+        3.0,
+        -18.0
+      ],
+      "yaw_deg": 100.0,
+      "_why": "the yard edge between square and Grandpa's"
+    },
+    {
+      "prefab": "square_oak_a",
+      "at": [
+        25.5,
+        -9.5
+      ],
+      "yaw_deg": 40.0,
+      "scale": 1.25,
+      "_why": "canopy behind the cottage pair -- the key art frames its square with trees and the scatter's clearings hold them off by design, so the settlement's own trees are authored here. 5m+ clear of route 4's path edge and 4.9m from the nearest villager."
+    },
+    {
+      "prefab": "square_oak_b",
+      "at": [
+        1.0,
+        10.5
+      ],
+      "yaw_deg": 160.0,
+      "scale": 1.15,
+      "_why": "behind the workshop, crown just above its ridge from the square. 8m+ clear of the north-west path."
+    },
+    {
+      "prefab": "mill",
+      "at": [
+        -382.0,
+        514.0
+      ],
+      "yaw_deg": 0.0,
+      "ground": "highest",
+      "_why": "EV6-remainder: bible sec12's mill at a real crossing, on EV5's stream where it approaches the pond. West wall sits at the carve's edge so the wheel (local x -4.0) hangs over the channel and its bottom paddles meet the stream surface; grounded 'highest' because the wheel's own AABB corner is the streambed. Sited on the mill-crossing terrain flat at [-133,109] (terrain_playground.json).",
+      "_comment_ow5d": "OW5D relocation, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved from (-132,107) to (-382,514) with the rest of the pond/mill group -- see terrain_playground.json flats[4]/building_aprons.footprints[5] and vegetation.json footprints[2]/clearings[5] for the matching moves. `_why` above still describes the OLD site's [-133,109] flat by number; the flat itself moved (same offset) but the prose was not rewritten to avoid drifting from the original author's reasoning -- the mill still sits on that flat, just at its new coordinates."
+    },
+    {
+      "prefab": "footbridge",
+      "at": [
+        -386.3,
+        520.0
+      ],
+      "yaw_deg": -5.0,
+      "ground": "highest",
+      "_why": "the crossing itself, just downstream of the mill's north face -- deck spans the 5m carve bank to bank (centreline x~-136.3 at z=113), yawed to sit square across the stream's local bearing. Grounded 'highest' for the same reason as the mill.",
+      "_comment_ow5d": "OW5D relocation: (-136.3,113) -> (-386.3,520), same (-250,+407) offset as the mill and the pond."
+    },
+    {
+      "prefab": "ranger_station",
+      "at": [
+        -350.0,
+        507.0
+      ],
+      "yaw_deg": 75.0,
+      "interior": "cottage",
+      "_why": "EV6-remainder: the ranger station, on the pond route's west shoulder where the route (points [-80,85] -> [-105,115]) overlooks the water -- the first built thing between the settlement and the pond valley, watching the wilds. Door yawed east toward the path; east wall clears the path's 3m shoulder by ~0.8m at the closest point. On its own small flat at [-100,100].",
+      "_comment_ow5d": "OW5D relocation: (-100,100) -> (-350,507) per docs/MEADOWS_MACRO_LAYOUT.md section 10.2. `yaw_deg` 75 is UNCHANGED -- the table only specifies the new position, and re-deriving the door-facing angle for the new pond-route geometry is a judgement call left to the reviewer/OW5C (which owns the pond route's actual new path polyline). Flagged, not guessed at."
+    },
+    {
+      "prefab": "inn",
+      "at": [
+        -1.5,
+        -9.0
+      ],
+      "yaw_deg": 90.0,
+      "interior": "inn",
+      "_why": "R7.9, owner-requested: an inn where the villagers can stay. West of the well, inside the village-square flat (terrain_playground.json centre [10,-10], radius 18), door facing east toward the square. RESITED from an unpushed prior lane's own [-4,-8]/95deg draft (recorded in ralph/NOTES.md's R7.9 entry): a headless probe sampling terrain_playground.json's own height_at() across the inn's full 6x10 footprint (not just its centre and corners) found that draft's back third sitting outside the flat pad's radius-18 boundary -- the pad is a hard 0.9m plateau out to exactly 18m from centre and jumps to natural terrain by 19m (measured, no smoothstep gradient inside a metre of it), so a footprint that crosses the line reads as grass standing on the interior floor, not a subtle slope. This site's own footprint (dense-sampled, 2m x-step / 1m z-step) is flat at 0.900 everywhere, and its four rotated corners clear the workshop, wagon, well, both cottages and the practice-meadow fence run by 4m+ (rectangle-corner distance, not centre-to-centre) -- verified computationally, not eyeballed, the same discipline village_npcs.json's own Mira-position derivation used. `inn`'s recipe (building_prefabs.json) clones farmhouse_shell's massing with a real door leaf and doorway-hole colliders R7.8's shell lacked; `scripts/world/inn_interior.gd` is the third interior template, a common room (counter, two guest tables, one bed nook) rather than a stretch of the two generic house templates."
+    },
+    {
+      "prefab": "doorstep",
+      "at": [
+        14.4,
+        -4.2
+      ],
+      "yaw_deg": -135.0,
+      "_why": "VP5: cottage_a's threshold, 1.1m outside its door (built door node at (15.17,-3.41), leaf facing south-west toward the well), on the square flat."
+    },
+    {
+      "prefab": "doorstep",
+      "at": [
+        18.4,
+        -12.0
+      ],
+      "yaw_deg": -70.0,
+      "_why": "VP5: cottage_b's threshold, 1.1m outside its door (built door node at (19.46,-12.38), facing west-north-west toward the well)."
+    },
+    {
+      "prefab": "doorstep",
+      "at": [
+        4.6,
+        -9.0
+      ],
+      "yaw_deg": 90.0,
+      "_why": "VP5: the inn's threshold, 1.1m outside its door (built door node at (3.5,-9.0), east face). The inn's own frontage props (band1 props.json `village_twins_yard`) sit either side of it, so the door reads as the one public threshold in the square."
+    },
+    {
+      "prefab": "fence_run",
+      "at": [
+        -22.0,
+        -4.3
+      ],
+      "yaw_deg": 0.0,
+      "_why": "VP5: the north rail of Grandpa's kitchen garden. farm.json's six plots sit in a 2x3 block at x -24.4..-19.6, z -9.0..-6.6, north of the house, and until now stood in open lawn -- the 2026-08-31 baseline judge: 'fenced paddocks appear ... with nothing in them' and, the other way round, a worked garden with no fence reads as scatter. This rail and the west one below make the plots an enclosure that visibly encloses something. East and south left open, which is the side the player and Old Perrin (-15,-5) approach the beds from."
+    },
+    {
+      "prefab": "fence_run",
+      "at": [
+        -26.8,
+        -7.8
+      ],
+      "yaw_deg": 90.0,
+      "_why": "VP5: the garden's west rail; 0.95m clear of the farmhouse's north wall extent (z -11.85), 1.2m clear of the western plot column."
+    },
+    {
+      "prefab": "wagon",
+      "at": [
+        -29.0,
+        -4.0
+      ],
+      "yaw_deg": 15.0,
+      "_why": "VP5: the farm's own cart, drawn up beside the garden's west rail with its shafts toward the field road -- the key art's settlement panel sells a lived-in yard with exactly a well, a fence line and a cart. 3.2m from the berry bush at (-32,-1), 2.4m from the west plot column, well inside the boundary (x -40 at this z)."
+    },
+    {
+      "prefab": "wagon",
+      "at": [
+        21.8,
+        -20.0
+      ],
+      "yaw_deg": 75.0,
+      "_why": "VP5: a second cart parked behind cottage_b, long axis east-west between the cottage's south wall (extent z -16.84) and the practice-meadow fence run at [19.5,-25.5], so that fence line now fences a yard with something in it. 1.6m clear of the practice-meadow path's shoulder (route [10,-10]->[18,-24] is at x~15.7 here), 4.2m from Ren at (26,-19), 4m from the fiber node at (24,-24)."
+    },
+    {
+      "prefab": "fence_run",
+      "at": [
+        -11.0,
+        -9.5
+      ],
+      "yaw_deg": 0.0,
+      "_why": "VP5: a yard rail between the inn's west gable (x -6.5) and Grandpa's garden, closing the north side of the open lawn the `twins` capture frame (eye [-11.5,-21] looking north) shows between the two buildings -- 'two houses dropped in a meadow, nothing between them'. 1.4m gap to the inn wall so the lane stays walkable; 4.5m south of the Grandpa's-house path at this x; the deadwood node at (-14,-8) sits 1.5m past its west end."
+    },
+    {
+      "prefab": "square_oak_a",
+      "at": [
+        31.5,
+        1.5
+      ],
+      "yaw_deg": 75.0,
+      "scale": 1.1,
+      "_why": "VP5: village-edge canopy on the east, between Fenn's corner and the boundary fence (3.9m inside the [37,-2]->[30,11] edge), so the settlement is framed by trees on the side the tournament and route-out frames look toward rather than ending in bare fence. 5m from the berry node at (28,6), 7m from Fenn."
+    },
+    {
+      "prefab": "square_oak_b",
+      "at": [
+        5.0,
+        21.0
+      ],
+      "yaw_deg": 200.0,
+      "scale": 1.05,
+      "_why": "VP5: village-edge canopy on the north, 4.2m inside the fence's [11.6,22.21]->[0.37,27.23] run and 8.9m west of the corridor road's gate, so the road leaves the village under a tree rather than across a lawn. 5.8m from the berry node at (0,18)."
+    },
+    {
+      "prefab": "square_oak_a",
+      "at": [
+        -5.0,
+        -33.0
+      ],
+      "yaw_deg": 300.0,
+      "scale": 1.2,
+      "_why": "VP5: village-edge canopy on the south, closing the open grass the approach frame (eye [27,-31]) sees behind the square. 7.6m from the fiber node at (2,-30), 11m from Garrick and the deadwood at (6,-34), 35m from the practice cluster's spawn disk."
+    }
+  ],
+  "_comment_vp5": "VP5 (visual-parity village lane), 2026-09-02: the entries after `inn` are daylight dressing -- three door thresholds, two garden rails plus a yard rail, two carts and three edge oaks -- placed against the BUILT scene's collider extents (a scratch layout probe printing every structure's world AABB, door node, marker and NPC), not against the recipe comments. The owner's standing constraint applies: not one more object than the yard needs, no new villagers."
 }

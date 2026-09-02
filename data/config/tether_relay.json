@@ -293,6 +293,85 @@
       }
     ]
   },
+  "_comment_cable_links": "E-relay-dress (this pass): each conduit run above stops at its own LAST authored pylon -- west_run ends at local (0.5,-14.5), east_run at (14.5,-9), south_run at (6,-16.5) -- all 7-8m short of the apparatus centre at (7,-9). The runs converge ON the site but never actually touch the object they power, which is exactly the 'bare concrete slabs and pylons with nobody there' gap the render caught: cables that stop short read as floating hardware, not as infrastructure feeding a machine. `tether_relay.gd::_build_cable_links` adds one more sagged span per listed run, from that run's own last pylon's real top-frame attach point (ground-0.22+conduits.height*0.66, the exact formula `_build_pylons` already uses) to a point on the apparatus's own footprint: `apparatus.massing.grounding_base.radius` (3.4m) out from `apparatus.at`, toward whichever pylon is arriving, at half `apparatus.height` (4.2m) up from `apparatus.deck_y` (10.0) -- every number here is read off this file's own `apparatus`/`conduits` blocks above, not guessed.",
+  "cable_links": {
+    "runs": ["west_run", "east_run", "south_run"]
+  },
+  "_comment_deck_props": "E-relay-dress: the raised apparatus pad -- the site's own 'work platform' -- was bare stone: a hero object and a console with nobody's kit anywhere near either. One compact cluster in the pad's south-east corner (local s~9.5-10.9, t~-6.1..-4.6), 4.7-5.1m from the apparatus centre (7,-9) so it clears the grounding base's 3.4m radius and its splayed feet with room to spare, and 6-8.9m from the console at (2.9,-9) so it never competes with that prompt. Placed at the pad's own absolute `deck_y` (10.0, the same value `decks[1].deck_y` authors) rather than sampled ground -- a prop dropped by ground height here would fall two-to-eight metres through the slab into the real terrain below it.",
+  "deck_props": {
+    "deck_y": 10.0,
+    "list": [
+      {
+        "model": "Crate_Wooden",
+        "at": [10.4, -5.4],
+        "yaw_offset_deg": 205.0,
+        "scale": 1.0,
+        "_why": "the cluster's anchor, in the pad's own south-east corner -- 1.6m off the s=12 edge, 1.4m off the t=-4 edge, 4.95m from the apparatus centre"
+      },
+      {
+        "model": "Barrel",
+        "at": [10.9, -6.1],
+        "yaw_offset_deg": 40.0,
+        "scale": 1.0,
+        "_why": "touching the crate's own corner -- one load, not two, and the same 'touching pile reads as one' rule every ground-level cluster in this band already uses"
+      },
+      {
+        "model": "Whetstone",
+        "at": [9.5, -4.6],
+        "yaw_offset_deg": -20.0,
+        "scale": 1.0,
+        "_why": "the same worked-tool read the yard workstation already gives the ground level (props.json's `relay_station`), echoed up here so the platform itself shows somebody servicing the hardware, not just a stack of stock"
+      },
+      {
+        "model": "Axe_Bronze",
+        "at": [9.9, -4.9],
+        "pitch_deg": -70.0,
+        "yaw_offset_deg": 60.0,
+        "scale": 1.0,
+        "_why": "leaned beside the whetstone, 1.2m from the crate -- the whole cluster spans under 2m across, one workstation rather than four separate objects"
+      }
+    ]
+  },
+  "_comment_barrier": "E-relay-dress: a barricade across the open road, 5.5m short of the gate piers (gate `at` s=-14, piers to s=-15.3) so it reads as a checkpoint held on the approach rather than crowding the gate's own open threshold -- the gate keeps its no-leaves design (`_comment_gate` above: Team Tether does not expect anyone to walk up this road), and this barrier is the thing that says otherwise before a visitor ever reaches it. A 3.4m gap at t -1.4..1.4 keeps the road itself walkable, the same 'line with a walked-through gap' grammar `relay_approach_checkpoint` already uses 400m up this same road (data/config/bands/band3_the_river_lock/props.json, order 3001) -- and deliberately asymmetric (crate+barrel west, one crate alone east) rather than mirrored, for the same reason that cluster's own round-4 note gives: a mirrored barricade reads as generated, not built.",
+  "barrier": {
+    "list": [
+      {
+        "model": "Crate_Wooden",
+        "at": [-19.5, -2.6],
+        "yaw_offset_deg": 15.0,
+        "sink_m": 0.06,
+        "scale": 1.0,
+        "_why": "west end of the line, squared close to the approach bearing so its face reads as blocking the road rather than sitting at an accident of an angle"
+      },
+      {
+        "model": "Barrel",
+        "at": [-19.9, -1.7],
+        "yaw_offset_deg": -20.0,
+        "sink_m": 0.05,
+        "scale": 1.0,
+        "_why": "set against the crate, one load closing the west end"
+      },
+      {
+        "model": "Crate_Wooden",
+        "at": [-19.2, 2.2],
+        "yaw_offset_deg": -10.0,
+        "sink_m": 0.06,
+        "scale": 1.0,
+        "_why": "east end, alone -- the asymmetry against the west end's pair is deliberate, not a missing piece"
+      }
+    ]
+  },
+  "_comment_banner": "E-relay-dress: staked at the barrier's own west end, the same 'staked, retinted Team Tether banner' grammar this band already repeats three times over (data/config/bands/band3_the_river_lock/props.json: `relay_approach_checkpoint`, `tether_haulage_wreck`, `crossing_watchpost`) -- the Medieval Castle kit's own Banner module (assets/buildings/quaternius_castle/Banner.obj, already installed, no new mesh), retinted the same oxblood #7a2430 through the identical `retint` mechanism `props.gd`/`building_prefabs.gd` already carry. A barricade of crates reads as an obstacle; a barricade with a staked banner over it reads as a claimed position.",
+  "banner": {
+    "model": "Banner",
+    "dir": "res://assets/buildings/quaternius_castle",
+    "at": [-19.6, -3.6],
+    "yaw_offset_deg": 15.0,
+    "pitch_deg": -6.0,
+    "sink_m": -0.1,
+    "scale": 2.6,
+    "retint": { "Banner": "#7a2430" }
+  },
   "_comment_dead_ground": "D41, at full strength, and an HONEST PARTIAL, UPDATED AT OW5B. The authored source for the drain is terrain_playground.json's `drains.stations`, and `playground_heightfield.drain_factor()` is what every consumer asks. `scatter_rules.gd` thins vegetation at run time from that data directly, no bake dependency. The bake's colour/control maps are a THIRD consumer and were, as of OW5B (2026-08-17), re-baked with `drains.stations[4..6]` (the relay's three stations) in them -- but at the relay's PRE-relocation coordinates (108,34), because OW5B bakes landform only and does not move content. OW5D moves the relay's `site.centre` to (350,3760) in the SAME sitting, which strands that bake: the discoloured texture stays behind at the old, now-empty coordinates, and nothing paints the new site. So `enabled` STAYS TRUE here through OW5B and OW5C -- flipping it now would leave the relocated relay with no discolouration at all, on this bake or the runtime skin either. OW5D's own job, once it updates `drains.stations[4..6]`'s centres to (350,3760)-relative positions, is to re-bake ONLY the one region the new site falls in (region (0,7) at the 512m corridor pitch -- `build_playground_terrain.gd -- --regions=0:7`, seconds not hours, per OW5B's own per-region bake) and set `enabled` to false AS THE LAST STEP of that re-bake, once the baked texture actually agrees with the relay's shipped position. Same reasoning and same fix applies to the Old Quarry's `drains.stations[0..3]` at its own new region (0,3).",
   "dead_ground": {
     "enabled": true,
@@ -317,6 +396,13 @@
       "at": [-3.0, -6.0],
       "radius": 2.0,
       "_why": "at the tool workstation on the standing-shot sightline, next to the Relay Watch grunt"
+    },
+    {
+      "id": "apparatus_pad",
+      "at": [7.0, -9.0],
+      "radius": 3.6,
+      "deck_y": 10.0,
+      "_why": "E-relay-dress: under the hero object itself, on the pad's own top surface (`deck_y`) rather than the real ground two-to-eight metres below the raised slab -- a mark sampled against real terrain here would paint a patch nobody standing on the platform could ever see. Radius 3.6 just clears `apparatus.massing.grounding_base.radius` (3.4) plus its splayed feet, so the ring reads as scorched stone the machine stands IN, not a disc floating past its own base -- the `06-relay-apparatus` shot's own 'bare concrete slab' the audit named directly."
     }
   ],
   "_comment_props": "The site's loose gear \u2014 crates, barrels, tooling \u2014 belongs in data/config/props.json as a `relay_station` cluster, placed by props.gd like every other cluster, and is deliberately NOT duplicated here. GATE-D3 authored that cluster (`data/config/bands/band3_the_river_lock/props.json`, order 3002); E3-RELAY-POPULATION added three more props to it, on the same sightline as the scorch marks and the new grunts above. Nothing in this file or in tether_relay.gd had to change when either landed.",

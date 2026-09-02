@@ -428,7 +428,9 @@ func _member(size: Vector3, at: Vector3, role: String) -> void:
 	box.size = size
 	mesh.mesh = box
 	var material: Variant = _material_for.call(role)
-	if material is StandardMaterial3D:
+	# VP8: a consumer may hand back a ShaderMaterial (the Hall's weathered
+	# stone) as readily as a StandardMaterial3D; the member wears whichever.
+	if material is Material:
 		mesh.material_override = material
 	mesh.position = at
 	if _jitter > 0.0:

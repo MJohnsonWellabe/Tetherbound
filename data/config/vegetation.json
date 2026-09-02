@@ -104,8 +104,9 @@
       "harvest_amount": 3,
       "_comment_leaf": "R9.4. Leaves_NormalTree_C.png measures RGB(88,123,0) -- saturation 1.00, the maximum a colour can have, at hue 77, which is the same chartreuse the ground already is. The blind critic measured 91% of every saturated pixel in frames 01 and 04 inside one 30-degree hue bin and called the world monochromatic; the canopy was reinforcing the ground rather than contrasting with it. Leaves.png is the same pack's muted leaf -- RGB(114,131,50), saturation 0.62 -- and the retint warms it one step further off the grass hue. Same mechanism the bushes layer has used since the crimson-bush fix. No new asset. TUNABLE. R9.4 round 2: the retint now aims at palette.json's meadow.leaf_green_deep (#496c34, hue 98) rather than at a warm cream. Round 1 swapped the texture and stopped the canopy being the MOST saturated thing in frame, but left it at hue ~70 -- the same family as the ground, so frame_stats still measured 85-89% of chromatic pixels in one hue bin against the references' three to five. A canopy has to be a different green from the grass under it, not a brighter one.",
       "_comment_leaf_magenta_fix": "Backlog item 'A near-field tree renders with magenta/red-striped foliage', found in `dome-overview.png`/`road-end-lookup.png`. R9.4's own description of Leaves.png as a single 'muted leaf' colour was wrong: it is a MULTI-SPECIES SAMPLE SHEET -- green, blue, orange and a saturated magenta/pink leaf pair (measured RGB(216,55,135), full alpha) all on one 512x512 canvas. CommonTree's leaf cards are alpha-cutout billboards that each sample nearly the FULL 0-1 UV square (measured directly: median per-triangle UV bounding box 0.80x1.00 on CommonTree_1's canopy primitive), the same technique Leaves_NormalTree_C.png's own single-hue 'flower of leaflets' layout was built for. Pointed at Leaves.png instead, every card renders ALL of the atlas's leaf shapes at once, in their true colours -- confirmed with an isolated close-up repro (single tree, no terrain, no distance blending) that shows green, teal, orange AND magenta/crimson shards on one canopy. Reverted the swap target back to Leaves_NormalTree_C.png -- already proven safe as the `bushes` layer's own crimson-bush fix -- which removes the contamination entirely. Traded off: the round-2 desaturation this comment describes relied on Leaves.png's nonzero blue channel (texture*tint can only ever REDUCE saturation, never below what the base texture's own minimum channel allows, and Leaves_NormalTree_C.png's blue channel is 0 -- pinned at max saturation regardless of tint). The 3-step variant_retint hue spread below (94/97/81 degrees post-multiply) still applies and still gives CommonTree three distinguishable greens; only the saturation reduction R9.4 round 1 bought is given back. Not re-litigated here -- flagged honestly, not silently reintroduced.",
+      "_comment_retexture_baked_desat": "PALE-MINT BAKE, 2026-09-02. OLD: `Leaves_NormalTree` -> `Leaves_NormalTree_C.png` (a no-op swap to its own native texture) plus the `retexture_adjust` block below (now superseded, see its comment) doing the actual saturation-0.55/brightness-1.05 edit at load time via `Image.adjust_bsc`. NEW: swapped directly to the offline-baked `derived/Leaves_NormalTree_C_desat55.png`, which already has that exact adjustment applied by tools/... (see scratchpad bake script referenced in the VP3 comment below) with Pillow, matching Godot's real `Image::adjust_bcs` maths (brightness multiply, then contrast lerp about 0.5 -- a no-op at contrast 1.0 -- then saturation lerp toward the plain per-pixel average of R/G/B, NOT a luma-weighted average). Two independent bugs made the in-engine version never actually reach the screen: `adjust_bsc` does not exist as an Image method (SCRIPT ERROR, nonexistent function, confirmed in the render log) so it silently never ran; and even fixed, the derived `ImageTexture` has an empty `resource_path` that the PackedScene/Terrain3DMeshAsset round-trip drops. Baking to a real file with a real res:// path and an ordinary `.import` sidecar sidesteps both.",
       "retexture": {
-        "Leaves_NormalTree": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
+        "Leaves_NormalTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"
       },
       "retint": {
         "Leaves_NormalTree": "#a9d18c"
@@ -330,13 +331,7 @@
         "res://assets/environment/stylized_nature/CommonTree_2.gltf": 0.86,
         "res://assets/environment/stylized_nature/CommonTree_3.gltf": 1.0
       },
-      "_comment_retexture_adjust_vp3": "VP3: `retexture_adjust` (vegetation.gd::_adjusted_texture). Leaves_NormalTree_C.png has a ZERO blue channel on every texel, so no multiply tint can ever take a canopy below HSV saturation 1.0 -- which is the whole reason two rounds of variant_retint still rendered fluorescent lime. Saturation 0.55 mixes 45% toward grey at load time (no new asset, same leaf sheet), which finally gives the tints below a blue channel to work with; the three variant colours are then re-derived so the family lands at spring / deep-cool / warm yellow-green rather than three lime values.",
-      "retexture_adjust": {
-        "Leaves_NormalTree": {
-          "saturation": 0.55,
-          "brightness": 1.05
-        }
-      },
+      "_comment_retexture_adjust_SUPERSEDED_vp3": "VP3 (superseded 2026-09-02, PALE-MINT BAKE, see `_comment_retexture_baked_desat` above): `retexture_adjust` (vegetation.gd::_adjusted_texture) used to do this at load time via `Image.adjust_bsc`. Leaves_NormalTree_C.png has a ZERO blue channel on every texel, so no multiply tint can ever take a canopy below HSV saturation 1.0 -- which is the whole reason two rounds of variant_retint still rendered fluorescent lime. Saturation 0.55 mixes 45% toward grey, which finally gives the tints below a blue channel to work with; the three variant colours are then re-derived so the family lands at spring / deep-cool / warm yellow-green rather than three lime values. THE REASONING STILL HOLDS -- only the mechanism changed, because `adjust_bsc` is not a real Image method (it's `adjust_bcs`; the render log shows SCRIPT ERROR: Invalid call, Nonexistent function 'adjust_bsc') so this block never actually ran, and even corrected the resulting runtime ImageTexture's empty resource_path gets dropped by the PackedScene/Terrain3DMeshAsset round-trip. The `retexture_adjust` key itself is REMOVED from this layer (not left inert) because leaving it would double-apply the same saturation/brightness edit on top of the now-pre-baked `derived/Leaves_NormalTree_C_desat55.png` swap above.",
       "_comment_heroes_vp3": "VP3: HERO TREES, scatter_rules.gd::_place_heroes. A few lone 12-19m CommonTrees standing in the OPEN band of the shared tree field -- in the clearings between groves, on the trail, at least 90m from each other -- the landmark silhouette every reference board has and a copse of same-sized trees cannot produce. ~70 tries over the ~12km route network is roughly one every 170m of walking. TUNABLE.",
       "heroes": {
         "count": 70,
@@ -418,9 +413,10 @@
       "_comment_leaf": "R9.4. THE RED LEAK, found by two independent blind reviews eleven days apart. Leaves_TwistedTree_C.png is RGB(167,23,23) -- hue 0, saturation 0.86, a crimson autumn leaf -- which made the grove the most saturated warm thing in the whole survey, on decorative trees beside the starting village. docs/reference/README.md and the visual-judge rubric both reserve deep red/oxblood for Team Tether danger, and spending it on scenery leaves the faction nothing to claim. The bushes layer hit this exact texture and fixed it by swapping -- see its retexture block and _retint()'s own comment in vegetation.gd -- the grove was simply never given the same treatment. No multiply turns red into green, so it has to be a swap. TUNABLE. R9.4 round 2: the retint now aims at palette.json's meadow.leaf_green_deep (#496c34, hue 98) rather than at a warm cream. Round 1 swapped the texture and stopped the canopy being the MOST saturated thing in frame, but left it at hue ~70 -- the same family as the ground, so frame_stats still measured 85-89% of chromatic pixels in one hue bin against the references' three to five. A canopy has to be a different green from the grass under it, not a brighter one.",
       "_comment_leaf_magenta_fix": "Magenta-canopy fix (see `trees` layer's own comment for the full mechanism): Leaves.png is a multi-species sample sheet, not a single muted leaf, and this layer's leaf cards sample nearly the whole canvas the same way CommonTree's do -- so the hero oaks carried the same green/blue/orange/magenta contamination. Swap target changed to Leaves_NormalTree_C.png, matching the `bushes` layer's own already-safe choice for this exact material.",
       "_comment_cherryblossom_material": "EV2-landmark-ceiling's blind-verify render (a close-up of the shipped CherryBlossom_3 instance, since none of tools/survey.gd's 5 fixed cameras happen to land near a grove clump) found the canopy still rendering its native pink/purple cherry-blossom texture, in the flesh, not swapped -- every retexture/retint/variant_retint key below was `Leaves_TwistedTree`, and CherryBlossom_3.gltf's own leaf material is named `Leaves_CherryBlossom` (checked directly against the glTF JSON), a different string that none of them ever matched. Added alongside, not instead of, the TwistedTree keys -- both models share this layer.",
+      "_comment_retexture_baked_desat": "PALE-MINT BAKE, 2026-09-02 (see `trees` layer's `_comment_retexture_baked_desat` for the full mechanism/history). OLD: both keys swapped to the native `Leaves_NormalTree_C.png`, then the `retexture_adjust` block below (now superseded) desaturated it in-engine at load time -- which never actually ran (`adjust_bsc` is not a real method) and would have been dropped even fixed (empty resource_path). NEW: both swap straight to the offline-baked `derived/Leaves_NormalTree_C_desat55.png` -- same saturation 0.55 / brightness 1.05 as before, computed with Pillow to match Godot's real `Image::adjust_bcs`.",
       "retexture": {
-        "Leaves_TwistedTree": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png",
-        "Leaves_CherryBlossom": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
+        "Leaves_TwistedTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png",
+        "Leaves_CherryBlossom": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"
       },
       "retint": {
         "Leaves_TwistedTree": "#a9d18c",
@@ -511,17 +507,7 @@
           "radius": 22.0
         }
       ],
-      "retexture_adjust": {
-        "Leaves_TwistedTree": {
-          "saturation": 0.55,
-          "brightness": 1.05
-        },
-        "Leaves_CherryBlossom": {
-          "saturation": 0.55,
-          "brightness": 1.05
-        }
-      },
-      "_comment_retexture_adjust_vp3": "VP3: `retexture_adjust` (vegetation.gd::_adjusted_texture). Leaves_NormalTree_C.png has a ZERO blue channel on every texel, so no multiply tint can ever take a canopy below HSV saturation 1.0 -- which is the whole reason two rounds of variant_retint still rendered fluorescent lime. Saturation 0.55 mixes 45% toward grey at load time (no new asset, same leaf sheet), which finally gives the tints below a blue channel to work with; the three variant colours are then re-derived so the family lands at spring / deep-cool / warm yellow-green rather than three lime values.",
+      "_comment_retexture_adjust_SUPERSEDED_vp3": "VP3 (superseded 2026-09-02, PALE-MINT BAKE, see `trees` layer for full mechanism/history): `retexture_adjust` (vegetation.gd::_adjusted_texture) used to do this at load time via `Image.adjust_bsc`. Leaves_NormalTree_C.png has a ZERO blue channel on every texel, so no multiply tint can ever take a canopy below HSV saturation 1.0 -- which is the whole reason two rounds of variant_retint still rendered fluorescent lime. Saturation 0.55 mixes 45% toward grey, which finally gives the tints below a blue channel to work with; the three variant colours are then re-derived so the family lands at spring / deep-cool / warm yellow-green rather than three lime values. THE REASONING STILL HOLDS -- only the mechanism changed: `adjust_bsc` is not a real Image method so this never ran, and even fixed the resulting ImageTexture's empty resource_path is dropped by the PackedScene/Terrain3DMeshAsset round-trip. The `retexture_adjust` key is REMOVED (not left inert) because the `retexture` swap above now points straight at the pre-baked `derived/Leaves_NormalTree_C_desat55.png`, and leaving this in place would double-apply the same edit.",
       "_comment_heroes_vp3": "VP3: the lone landmark oak -- one tall twisted tree or one broad crown at ~1.25x this layer's ceiling, in a clearing, 220m+ from the last one. See `trees.heroes`. TUNABLE.",
       "heroes": {
         "count": 24,
@@ -599,8 +585,9 @@
       "collides": true,
       "collision_radius": 0.35,
       "_comment_leaf_magenta_fix": "Same magenta-canopy fix as the `trees` layer above (see its comment for the full mechanism) -- CommonTree_4/_5 share the Leaves_NormalTree material and the same full-canvas leaf-card technique, so they carried the identical green/blue/orange/magenta contamination from Leaves.png.",
+      "_comment_retexture_baked_desat": "PALE-MINT BAKE, 2026-09-02 (see `trees` layer's `_comment_retexture_baked_desat` for the full mechanism/history). OLD: no-op swap to native `Leaves_NormalTree_C.png` plus the `retexture_adjust` block below (now superseded) desaturating it in-engine at load, which never actually ran. NEW: swapped straight to the offline-baked `derived/Leaves_NormalTree_C_desat55.png`, same saturation 0.55 / brightness 1.05.",
       "retexture": {
-        "Leaves_NormalTree": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
+        "Leaves_NormalTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"
       },
       "_comment_variant": "The same two non-spring variants as the standard canopy, so the sapling layer reads as the same species at a different age rather than a third palette.",
       "variant_retint": {
@@ -641,12 +628,7 @@
           "_why": "late-ridge: centred on harvest.json order 2004/2007 (68-76,2965-2972), tools/survey_band2.gd's 05-late-ridge-day frame."
         }
       ],
-      "retexture_adjust": {
-        "Leaves_NormalTree": {
-          "saturation": 0.55,
-          "brightness": 1.05
-        }
-      },
+      "_comment_retexture_adjust_SUPERSEDED_vp3": "Superseded 2026-09-02, PALE-MINT BAKE (see `trees` layer for full mechanism/history). This block used to desaturate `Leaves_NormalTree_C.png` at load time via `Image.adjust_bsc`, which is not a real method and never ran. Removed rather than left inert, because the `retexture` swap above now points straight at the pre-baked `derived/Leaves_NormalTree_C_desat55.png` and leaving this would double-apply the edit.",
       "retint": {
         "Leaves_NormalTree": "#a9d18c"
       },
@@ -857,8 +839,10 @@
       "lod_fade_margin": 30.0,
       "collides": false,
       "_comment_retexture": "Bush_Common and Bush_Common_Flowers use the material `Leaves_TwistedTree`, whose texture the pack ships CRIMSON \u2014 it is the autumn variant of the twisted oak. Unswapped, every bush in the meadow came out blood red, and no colour multiply turns red into green. This points them at the pack's own green leaf instead.",
+      "_comment_retexture_baked_desat": "PALE-MINT BAKE, 2026-09-02 (see `trees` layer's `_comment_retexture_baked_desat` for the full mechanism/history). OLD: `Leaves_TwistedTree` swapped to native `Leaves_NormalTree_C.png`; `Leaves_NormalTree` (Bush_Common_Flowers' own native material -- no swap entry existed for it here) used that same native texture directly; the `retexture_adjust` block below (now superseded) desaturated both in-engine at load, at brightness 1.0 -- one step darker than the trees/grove/saplings adjustment's brightness 1.05, because this layer's own `_comment_retint_vp3` retint step already relies on the sheet not being brightened first. NEW: both keys now swap straight to the offline-baked `derived/Leaves_NormalTree_C_desat55_b100.png` -- the brightness-1.0 bake, matching this layer's own settings exactly (NOT the trees/grove/saplings brightness-1.05 file, which would shift this layer's tuned retint).",
       "retexture": {
-        "Leaves_TwistedTree": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
+        "Leaves_TwistedTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png",
+        "Leaves_NormalTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
       },
       "_comment_harvest_fiber": "EXPEDITION-REST/REWARD-ECONOMY. Fiber had NO renewable source. Wood comes from the `trees` layer and stone from `rocks`, both at harvest_fraction 1.0 and both available anywhere the corridor has vegetation -- but fiber came only from five authored nodes in bands/band1_lower_meadows/harvest.json, all at z<=312, totalling 20, with no respawn anywhere in the system (D60 removed respawn outright). Against that: the recipes want 28 fiber (the Riding Saddle alone is 8, orb_prime 4, orb_greater 3) and the buildables want 22 more (camp 10, creature_bed 8, storage 4). 20 in the world against 50 asked for, all of it in the first 300m of a 7.5km chapter.\nThe consequence was prompt 61's whole premise: 'the player reaches a memorable buildable clearing with nearby basic resources ... place an injured creature in its physical bed'. Past Band 1 a player could not build a camp or a creature bed at any price, because the material did not exist to be gathered -- and a player who crafted the saddle and a Greater Orb on the critical path (13 fiber) could not afford one creature bed for the rest of the game.\nFixed on the mechanism that already ships, not a new one: `bushes` -- ferns and broad plants, the layer whose own comment calls it 'the middle layer' -- now yields fiber the same way trees yield wood. harvest_fraction 0.2 rather than trees' 1.0, using the lever _mark_harvestable's own comment describes as being there for exactly this ('a rare-resource species, say'): roughly one bush in five carries a prompt, so fiber is findable everywhere without adding a prompt to every shrub on the ROG's screen or doubling the world's harvest-point count. The stride is over draw order, not model, so the flowering bushes in this layer's model list carry it as often as the ferns do. ALL TUNABLE.",
       "harvest_item": "fiber",
@@ -1006,16 +990,7 @@
         }
       ],
       "_comment_retint_vp3": "VP3: this layer swapped its leaf to the green sheet and then rendered it UNTINTED at full brightness -- the 'neon spherical two-tone bush' of every village frame. Same fix as the trees: desaturate the sheet at load, then a per-model tint so the four shrub silhouettes are four greens in one family (Bush_Common deep, the flowering bush mid with lilac heads matching the flower tier, ferns cooler, the broad plant paler). `Flowers` on Bush_Common_Flowers was pure Flowers.png at full brightness; pulled to the same muted lilac the flowers layer already uses.",
-      "retexture_adjust": {
-        "Leaves_TwistedTree": {
-          "saturation": 0.55,
-          "brightness": 1.0
-        },
-        "Leaves_NormalTree": {
-          "saturation": 0.55,
-          "brightness": 1.0
-        }
-      },
+      "_comment_retexture_adjust_SUPERSEDED_vp3": "Superseded 2026-09-02, PALE-MINT BAKE (see `trees` layer for full mechanism/history). This block used to desaturate both materials' sheet at load time via `Image.adjust_bsc`, which is not a real method and never ran. Removed rather than left inert, because the `retexture` swaps above now point straight at the pre-baked `derived/Leaves_NormalTree_C_desat55_b100.png` and leaving this would double-apply the edit.",
       "retint": {
         "Leaves_TwistedTree": "#7fa86a",
         "Leaves_NormalTree": "#7fa86a",
