@@ -19,6 +19,20 @@
 
   "people": [
     {
+      "name": "Relay Patrol",
+      "rank": "grunt",
+      "base": "grunt_c",
+      "position": [343.9, 3758.3],
+      "facing_deg": 145.6,
+      "_why_here": "FIX 2 (code-blind judge pass, tether_relay.json's own branch): the site's three existing grunts sit outside the `06-relay` `standing`/`apparatus` stands' own view cones. This one does not -- local (s=-2, t=-6), on the open yard floor between the gate and the ramp foot, clear of the ramp's own s<=-5.5 run and the gantry's t[-12.6,-9.4] band, 3-4m from Relay Watch and Relay Deckhand (not on top of either). Forward of `06-relay`'s `standing` eye (local [-8,-2], so ahead of camera rather than behind it) and within its view cone toward the apparatus. `facing_deg` 145.6 -- the same 'facing deeper into the compound' bearing Sela and Relay Watch already use -- reads as a beat walked toward the platform rather than a body parked facing the wall. `base: grunt_c`: distinct from Relay Watch's `grunt_a` and Relay Deckhand's `grunt_b`, both of which stand within a few metres in the same frame.",
+      "place_when": [
+        {
+          "unless_flag": "relay_disabled",
+          "_why": "Same as the sentry, the watch and the deckhand: a live station has a patrol on its own approach; a dead one does not."
+        }
+      ]
+    },
+    {
       "name": "Relay Sentry",
       "rank": "grunt",
       "position": [342.3, 3772.32],
