@@ -81,7 +81,9 @@
     "response_exponent": 2.0,
     "_comment_near": "Extra sensitivity scale while the reticle is over the creature, so the last degrees of a line-up do not overshoot. Tunable.",
     "near_target_scale": 0.6,
-    "_comment_guard": "Seconds of input ignored on entering aim mode, so the press that opens the aim is not also read as the release."
+    "_comment_guard": "Seconds of input ignored on entering aim mode, so the press that opens the aim is not also read as the release.",
+    "_comment_target_slowdown": "OWNER PLAYTEST 2026-09-02 finding #6: 'aiming at the creature is too hard... they should move a little less or in slow motion once you go into catch mode.' Read by wild_creature.gd, not this file's own camera code — while the player is aiming (throw_aim.gd's AIMING state, wired through combat_manager.gd::_tick_active), the TARGET's own combat movement speed is multiplied by this. Scoped to the one creature being aimed at, not a global time dilation, so the throw/camera/rest of the fight keep their normal pace. 1.0 would be no change; lower is slower. TUNABLE.",
+    "target_slowdown_scale": 0.35
   },
 
   "resolve": {

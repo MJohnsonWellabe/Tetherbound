@@ -767,6 +767,15 @@ func _tick_active(delta: float) -> void:
 	if _buffer_left <= 0.0:
 		_buffered_attack = ""
 
+	# OWNER PLAYTEST 2026-09-02 finding #6: aiming a catch is too hard because
+	# the target keeps moving at normal combat speed through the whole window.
+	# `throw_aim.gd` owns whether an aim is open; `wild_creature.gd` owns its
+	# own movement speed. This is the one place that already talks to both
+	# every tick, so it is the wire between them rather than either side
+	# reaching for the other.
+	if _wild != null and _wild.has_method("set_catch_aim_active"):
+		_wild.call("set_catch_aim_active", bool(_throw.call("is_aiming")))
+
 	if _catch_phase != CatchPhase.NONE:
 		_tick_catch_resolution(delta)
 		return
