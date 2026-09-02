@@ -256,6 +256,13 @@ Captured (36 frames): all eight sites at every day stand, plus night at `01-vill
    `main` is the program coordinator's call and would change what these before-frames mean, so this lane
    did not do it. It should be settled before round 2 dresses anything further.
 6. **The stale-bake trap will recur for every lane** (§4). Bake in the environment recipe or gate in CI.
+7. **`origin/claude/vp-hall` shipped both new shaders without their `.uid` sidecars.** Every one of the
+   eight pre-existing `*.gdshader` files in this repo has a tracked `*.gdshader.uid` beside it, and
+   `main` has already had to land one of these separately ("Add missing .uid sidecar for
+   smoke_catch_aim_slowdown.gd"). Godot regenerated `hall_stone.gdshader.uid` and
+   `banner_cloth.gdshader.uid` on import here and this lane committed them. Without them the UIDs are
+   re-minted per checkout, so any future `.tres`/scene reference to these shaders by UID would break.
+   Fixed here; worth telling the Hall lane so the next shader it adds ships with its sidecar.
 
 **Recommended next step:** do not add dressing in round 2. Run the resolution-matched re-render and the
 after-perf first, reconcile item 5, and judge density from frames that are comparable.
