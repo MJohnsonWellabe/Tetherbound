@@ -212,6 +212,14 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Owner directive 12:20 UTC — ship to `main` as we go
+The owner overrode the brief's "do not merge": program work goes to `main` continuously. Mechanism (repo
+convention, `ralph/conventions.md` Shipping): `main` is never pushed directly; the program branch tip is mirrored to
+`ralph/VP-PROGRAM`, CI runs there, and `ralph-sweep.yml` is dispatched to fast-forward `main` (the sweep deletes the
+mirror branch after shipping; it is recreated from the program tip for every ship). `origin/main` was merged into the
+program branch first (`dbfec0be`, clean, 7 commits incl. the campsite split) so the ship is a fast-forward. Cadence:
+after every merge whose CI is green.
+
 ### Check-in #17 (11:45 UTC) — LIFE round 5 judged and merged; CI green
 - **CI `308b4fca`** (CORRIDOR r3 bake): green. Local guards on the same tree: 50/50 tests, traversal, stronghold,
   warrens all exit 0.
