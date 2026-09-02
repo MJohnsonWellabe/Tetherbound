@@ -658,3 +658,252 @@ func test_ecology_gate_is_a_probability_and_bands_partition_the_field() -> void:
 		assert_true(not (c > 0.6 and o > 0.6), "core and open both high at %s" % str(p))
 	assert_true(core_sum > 20.0 and open_sum > 20.0, "one band never accepts anything")
 	assert_eq(RULES._ecology_gate(Vector2(5.0, 5.0), {}), 1.0, "no block must be a pass-through")
+
+
+# --- VP3 heroes, water edge, under band ---------------------------------------
+
+func test_under_band_accepts_both_fringe_and_interior() -> void:
+	# `under` is `max(edge, core)` (see `_ecology_gate`'s own header): the
+	# understory belongs BOTH at the grove's fringe and beneath its canopy, so
+	# a species gated on it must never be turned away at a spot either of the
+	# other two bands would have accepted. Same salt/wavelength/gamma as the
+	# ecology tests above so all three dictionaries read the same noise field.
+	var core_cfg := {"salt": 7001, "wavelength": 120.0, "band": "core", "gamma": 2.5, "contrast": 1.0}
+	var edge_cfg := {"salt": 7001, "wavelength": 120.0, "band": "edge", "gamma": 2.5, "contrast": 1.0}
+	var under_cfg := {"salt": 7001, "wavelength": 120.0, "band": "under", "gamma": 2.5, "contrast": 1.0}
+	for i in 300:
+		var p := Vector2(-900.0 + float(i) * 4.7, 300.0 + float(i) * 17.3)
+		var core_g: float = RULES._ecology_gate(p, core_cfg)
+		var edge_g: float = RULES._ecology_gate(p, edge_cfg)
+		var under_g: float = RULES._ecology_gate(p, under_cfg)
+		assert_true(under_g >= core_g - 0.000001,
+			"under (%.4f) fell below core (%.4f) at %s" % [under_g, core_g, str(p)])
+		assert_true(under_g >= edge_g - 0.000001,
+			"under (%.4f) fell below edge (%.4f) at %s" % [under_g, edge_g, str(p)])
+
+	# `floor`: the acceptance a band never drops below. Proved two ways at the
+	# same 300 points -- a floored block never dips under it, and the same
+	# block WITHOUT a floor does dip under it somewhere, so the assertion
+	# above is not vacuously true of every config.
+	var floored := {"salt": 7001, "wavelength": 120.0, "band": "open", "gamma": 2.5, "contrast": 1.0, "floor": 0.3}
+	var unfloored := {"salt": 7001, "wavelength": 120.0, "band": "open", "gamma": 2.5, "contrast": 1.0}
+	var dipped_without_floor := false
+	for i in 300:
+		var p := Vector2(-900.0 + float(i) * 4.7, 300.0 + float(i) * 17.3)
+		var g_floored: float = RULES._ecology_gate(p, floored)
+		var g_unfloored: float = RULES._ecology_gate(p, unfloored)
+		assert_true(g_floored >= 0.3 - 0.000001,
+			"floor 0.3 was violated: got %.4f at %s" % [g_floored, str(p)])
+		if g_unfloored < 0.3:
+			dipped_without_floor = true
+	assert_true(dipped_without_floor,
+		"the unfloored block never dropped below 0.3 across 300 points; the floor test proves nothing")
+
+
+## VP3. A small, hand-built layer for the heroes/water_edge tests below --
+## clumps/strays at 0 and no corridor_fill by default, so `placements_for`
+## does only the block under test (per-call overrides, e.g. test c's
+## clumps/strays, give it something to append after).
+func _hero_and_edge_layer(overrides: Dictionary = {}) -> Dictionary:
+	var layer := {
+		"models": _layer("trees").get("models", []),
+		"clumps": 0, "per_clump": 0, "strays": 0, "clump_radius": 10.0,
+		"max_slope_deg": 60.0, "min_height": -1000.0,
+		"clear_radius": 0.0, "cleared_by_clearings": false,
+	}
+	for key: String in overrides.keys():
+		layer[key] = overrides[key]
+	return layer
+
+
+## Distance from `p` to the nearest VERTEX (not the nearest point on the
+## line) of a `_polyline_segments` result -- what "within Nm of a stream
+## point / river vertex / pond shore point" means below.
+func _nearest_vertex_distance(p: Vector2, segments: Dictionary) -> float:
+	var seg_a: PackedVector2Array = segments.get("a", PackedVector2Array())
+	var seg_b: PackedVector2Array = segments.get("b", PackedVector2Array())
+	var best := INF
+	for v in seg_a:
+		best = minf(best, p.distance_to(v))
+	if seg_b.size() > 0:
+		best = minf(best, p.distance_to(seg_b[seg_b.size() - 1]))
+	return best
+
+
+func test_heroes_absent_or_empty_changes_nothing() -> void:
+	# Same backward-compatibility guarantee as the anchors/verge/water_edge
+	# no-op tests: a layer that does not opt in must place identically
+	# whether the key is an empty dictionary or absent entirely.
+	var with_empty := _hero_and_edge_layer()
+	with_empty["heroes"] = {}
+	var without_the_key := _hero_and_edge_layer()
+	var a := RULES.placements_for(with_empty, field, world_size, 55)
+	var b := RULES.placements_for(without_the_key, field, world_size, 55)
+	assert_eq(a.size(), b.size())
+	for i in a.size():
+		assert_true((a[i]["position"] as Vector3).is_equal_approx(b[i]["position"]),
+			"an empty heroes block moved a placement; it must be a no-op")
+
+
+func test_heroes_append_only_and_respect_spacing() -> void:
+	# Three properties in one draw, the same shape as
+	# `test_an_anchor_appends_its_own_count_where_it_was_asked_for`: heroes
+	# never perturb the layer's own clump/stray draws (append-only), every
+	# extra is oversized by its own scale override, and no two extras stand
+	# closer than `spacing`.
+	var layer_a := _hero_and_edge_layer({"clumps": 3, "per_clump": 4, "strays": 5})
+	var layer_b: Dictionary = layer_a.duplicate(true)
+	layer_b["heroes"] = {
+		"count": 12, "spacing": 80.0, "scale_min": 1.6, "scale_max": 2.0,
+		"trail_offset_min": 10.0, "trail_offset_max": 30.0,
+	}
+	var a := RULES.placements_for(layer_a, field, world_size, 55)
+	var b := RULES.placements_for(layer_b, field, world_size, 55)
+	assert_true(b.size() >= a.size() + 3,
+		"heroes placed fewer than 3 extras: %d -> %d" % [a.size(), b.size()])
+	for i in a.size():
+		assert_true((a[i]["position"] as Vector3).is_equal_approx((b[i]["position"] as Vector3)),
+			"adding heroes moved a clump/stray placement; heroes must only append")
+
+	var extras: Array = b.slice(a.size(), b.size())
+	var base_scale := float(layer_a.get("base_scale", 1.0))
+	for i in extras.size():
+		var placement: Dictionary = extras[i]
+		assert_true(float(placement["scale"]) >= 1.6 * base_scale - 0.0001,
+			"a hero placed at scale %.2f, below its own 1.6x-base minimum" % float(placement["scale"]))
+		var spot: Vector3 = placement["position"]
+		var nearest: Vector2 = field.nearest_point_on_paths(spot.x, spot.z)
+		var trail_distance := Vector2(spot.x, spot.z).distance_to(nearest)
+		assert_true(trail_distance <= 32.0,
+			"a hero landed %.2fm from the nearest path, outside its 30m offset reach" % trail_distance)
+		for j in range(i + 1, extras.size()):
+			var other: Vector3 = (extras[j] as Dictionary)["position"]
+			var apart := Vector2(spot.x, spot.z).distance_to(Vector2(other.x, other.z))
+			assert_true(apart >= 80.0 - 0.01,
+				"two heroes landed %.2fm apart, inside the 80m spacing minimum" % apart)
+
+
+func test_water_edge_absent_or_empty_changes_nothing() -> void:
+	var with_empty := _hero_and_edge_layer()
+	with_empty["water_edge"] = {}
+	var without_the_key := _hero_and_edge_layer()
+	var a := RULES.placements_for(with_empty, field, world_size, 55)
+	var b := RULES.placements_for(without_the_key, field, world_size, 55)
+	assert_eq(a.size(), b.size())
+	for i in a.size():
+		assert_true((a[i]["position"] as Vector3).is_equal_approx(b[i]["position"]),
+			"an empty water_edge block moved a placement; it must be a no-op")
+
+
+func test_water_edge_lands_on_the_bank_and_never_in_the_water() -> void:
+	var layer := _hero_and_edge_layer({
+		"water_edge": {
+			"per_100m": 20.0,
+			"sources": {"stream": 1.0, "river": 1.0, "pond": 1.0},
+			"offset_min": 0.5, "offset_max": 6.0,
+		},
+	})
+	var placements := RULES.placements_for(layer, field, world_size, 55)
+	assert_true(placements.size() >= 20, "water_edge placed only %d instances" % placements.size())
+
+	var courses: Dictionary = RULES._water_segments(field)
+	var level := field.water_level()
+	var near_stream := false
+	var near_river := false
+	var near_pond := false
+	for placement in placements:
+		var spot: Vector3 = placement["position"]
+		# Guaranteed by `_consider`'s own gates and `_drop_below_waterline` --
+		# the point of this loop is to confirm a water_edge draw never slips
+		# past them, not to re-derive them.
+		assert_true(field.stream_factor(spot.x, spot.z) <= 0.35,
+			"a water-edge instance landed in the stream channel")
+		assert_true(field.river_factor(spot.x, spot.z) <= 0.2,
+			"a water-edge instance landed in the river channel")
+		assert_true(spot.y >= level - 0.5, "a water-edge instance landed below the waterline")
+		var at := Vector2(spot.x, spot.z)
+		if courses.has("stream") and _nearest_vertex_distance(at, courses["stream"]) <= 12.0:
+			near_stream = true
+		if courses.has("river") and _nearest_vertex_distance(at, courses["river"]) <= 40.0:
+			near_river = true
+		if courses.has("pond") and _nearest_vertex_distance(at, courses["pond"]) <= 12.0:
+			near_pond = true
+	assert_true(near_stream, "no water-edge instance landed within 12m of a stream point")
+	assert_true(near_river, "no water-edge instance landed within 40m of a river course vertex")
+	assert_true(near_pond, "no water-edge instance landed within 12m of the pond shore")
+
+
+func test_water_segments_carry_reach_and_pond_is_outward() -> void:
+	var courses: Dictionary = RULES._water_segments(field)
+	assert_true(courses.has("stream"), "no stream course built from the field's own config")
+	assert_true(courses.has("river"), "no river course built from the field's own config")
+	assert_true(courses.has("pond"), "no pond course traced from the field's own config")
+
+	# The stream's bank reach is derived from the terrain config's own
+	# width/shoulder, not hard-coded here, so this stays true if either is
+	# retuned.
+	var stream_cfg: Dictionary = HEIGHTFIELD.load_config().get("water", {}).get("stream", {})
+	var expected_stream_reach := float(stream_cfg.get("width", 2.4)) * 0.5 + float(stream_cfg.get("shoulder", 1.2))
+	var stream_reach_a: PackedFloat32Array = courses["stream"].get("reach_a", PackedFloat32Array())
+	assert_true(stream_reach_a.size() > 0, "the stream carries no reach at all")
+	assert_almost_eq(stream_reach_a[0], expected_stream_reach, 0.01,
+		"the stream's bank reach does not match its own width/shoulder config")
+
+	var river_reach_a: PackedFloat32Array = courses["river"].get("reach_a", PackedFloat32Array())
+	var river_reach_b: PackedFloat32Array = courses["river"].get("reach_b", PackedFloat32Array())
+	assert_true(river_reach_a.size() > 0, "the river carries no reach at all")
+	var max_river_reach := 0.0
+	for v in river_reach_a:
+		max_river_reach = maxf(max_river_reach, v)
+	for v in river_reach_b:
+		max_river_reach = maxf(max_river_reach, v)
+	assert_true(max_river_reach > 10.0,
+		"the river's widest bank reach was only %.2fm; the river is much wider than the stream" % max_river_reach)
+
+	assert_true(courses["pond"].has("outward_from"), "the pond course has no outward_from centre")
+
+	# The pond's shore is a closed loop, so `_sample_near_trail` must take
+	# only the side facing away from its centre -- the dry side. Sampled
+	# rather than asserted geometrically: a sample that lands dry is proof
+	# the sampler chose correctly, wherever the shore happens to bend.
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 55
+	var level := field.water_level()
+	var dry := 0
+	var total_samples := 200
+	for i in total_samples:
+		var p: Vector2 = RULES._sample_near_trail(rng, courses["pond"], 1.0, 5.0)
+		if p == Vector2.INF:
+			continue
+		var h: float = field.height_at(p.x, p.y)
+		if not is_nan(h) and h > level - 0.6:
+			dry += 1
+	assert_true(dry >= int(total_samples * 0.9),
+		"only %d/%d pond-edge samples landed on the dry side; outward_from is not steering away from the water" % [
+			dry, total_samples])
+
+
+func test_sample_near_trail_adds_reach() -> void:
+	# A hand-built east-pointing segment: tangent (1,0), normal (0,1), so a
+	# lateral offset lands entirely on the y axis and the reach's effect is
+	# exact, not approximate.
+	var with_reach := RULES._polyline_segments(
+		[PackedVector2Array([Vector2(0.0, 0.0), Vector2(100.0, 0.0)])],
+		[PackedFloat32Array([10.0, 10.0])]
+	)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 55
+	for i in 50:
+		var p: Vector2 = RULES._sample_near_trail(rng, with_reach, 2.0, 2.0)
+		assert_almost_eq(absf(p.y), 12.0, 0.01,
+			"a 2.0m offset with a 10.0m reach landed at |y|=%.2f, not 12.0" % absf(p.y))
+
+	var without_reach := RULES._polyline_segments(
+		[PackedVector2Array([Vector2(0.0, 0.0), Vector2(100.0, 0.0)])]
+	)
+	var rng2 := RandomNumberGenerator.new()
+	rng2.seed = 55
+	for i in 50:
+		var p: Vector2 = RULES._sample_near_trail(rng2, without_reach, 2.0, 2.0)
+		assert_almost_eq(absf(p.y), 2.0, 0.01,
+			"with no reach, a 2.0m offset landed at |y|=%.2f, not 2.0" % absf(p.y))
