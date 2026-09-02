@@ -655,3 +655,98 @@ the way (station-05's gully seat, `--only=`'s single-substring match) are
 both fixed and unlikely to recur since both are now either structurally
 avoided (05) or covered by a working comma-split (06/02's targeted
 re-renders this round exercised it directly).
+
+---
+
+## Round 4 — extending the journey, Band 2 far → Hall gate
+
+The coordinator's brief: only village → Band 2 had been walked; VP4 asks
+for the major continuous player journey. Extended `tools/_capture_corridor.gd`
+with 8 more stations (09-16) covering Band 3's river lock, relay approach,
+the relay, and the Old Mill Crossing; Band 4's entry bend and ridge-camp
+approach; Band 5's stronghold approach and the Hall gate itself.
+
+### Station derivation (never hand-picked)
+
+Every new station is a literal `terrain_playground.json` `trail.bands[]`
+vertex, `look` the next vertex along the same polyline — same contract as
+stations 01-08. Landmark identity checked against `props.json` centroids
+and `crossings[]`/site entries, not eyeballed:
+
+| station | at | look | derivation |
+|---|---|---|---|
+| 09-river-lock-entry | (-110, 3290) | (-160, 3420) | band3 trail pt1, first bend entering the River Lock |
+| 10-relay-approach | (230, 3670) | (350, 3760) | band3 pt5, within 13m of `relay_approach_checkpoint`'s own centroid (240.9, 3673.7) |
+| 11-relay | (350, 3760) | (280, 3900) | band3 pt6, exactly `tether_relay.json`'s site centre |
+| 12-old-mill-crossing | (-152, 4170) | (-152, 4235) | `crossings[1]` (old_mill_crossing) road[0]/road[2] — **not** the channel centre (-152,4203), which carves a 15m gully the same way South Bridge's mid-span did to station 05 in round 1 |
+| 13-band4-entry-bend | (-300, 4990) | (-420, 5140) | band4 pt2, a bend just after crossing into Band 4 |
+| 14-ridge-camp-approach | (-280, 6460) | (-210, 6620) | band4 pt14, within 55m of `ridge_patrol_camp`'s own centroid (-235.9, 6471.7) |
+| 15-stronghold-approach | (80, 7370) | (20, 7480) | band5 pt3, a bend on the final approach |
+| 16-hall-gate-approach | (20, 7480) | (0, 7560) | band5 pt4, looking at pt5 (0,7560) — `stronghold.json`'s own site centre |
+
+### Step 1: before frames, judged first
+
+Rendered and pushed `ralph/reports/visual-parity/CORRIDOR/00-before-b3b5/`
+(8 frames + sheet) **before authoring anything**, per the coordinator's own
+instruction. First look, by eye: 7 of 8 stations already read as composed —
+the relay compound gate (11), the mill building on its rise with the river
+visible (12), the stronghold silhouette with smoke (15), and the Hall gate
+itself with its bridge and apparatus (16) are all already strong, carried
+by existing site/building placements rather than vegetation. **Station 13
+(band4-entry-bend)** is the clear outlier: ~60% open sky, a single small
+distant tree cluster dead-centre, otherwise bare grass to the horizon on
+both sides — the purest "player → empty grass → sky" case in the whole
+16-station set. Station 09 has real (if modest) flanking trees already and
+was left alone.
+
+### Step 2: one fix, band4 only
+
+`data/config/bands/band4_upper_meadows_ironwood/vegetation.json` gains its
+first-ever `layer_anchors` key (this band had zero prior anchors): a tree
+copse (8 trees, radius 13) 40m out at 25° off the view axis on the bend's
+left, a rock cluster (4 mixed sizes, `min_slope_deg: 0`) 25m out at 20° on
+the right/outside, and 4 edge bushes. Checked clear of the band's existing
+authored clearings (the patrol-trainer pad, the two camp pads) before
+siting. No other station touched — 09 and the six already-strong ones stay
+as-is, per the "no clutter" instruction.
+
+### Round 5 frames and verification
+
+Re-baked (`computed 825717 placements`), re-imported, re-rendered all 16
+stations into `ralph/reports/visual-parity/CORRIDOR/round5/`.
+
+| station | vs 00-before-b3b5 | note |
+|---|---|---|
+| 09-river-lock-entry | 28.1% | untouched; diff is cloud/creature variance between renders, confirmed by eye |
+| 10-relay-approach | 22.4% | untouched, same |
+| 11-relay | 17.1% | untouched, same |
+| 12-old-mill-crossing | 21.6% | untouched, same |
+| 13-band4-entry-bend | 26.7% | **fixed**: real tree copse now fills the left side, rock cluster on the right |
+| 14-ridge-camp-approach | 19.8% | untouched, same |
+| 15-stronghold-approach | 18.3% | untouched, same |
+| 16-hall-gate-approach | 27.3% | untouched, same |
+
+The 17-28% diffs at every untouched station (no anchor added, no config
+touched in bands 3/5) are not a placement regression — spot-checked 16 by
+eye (castle, bridge, apparatus, companion creature, rocks, trees all intact
+and well-composed) and it matches `00-before-b3b5` in every structural
+respect; the difference is cloud animation and NPC/creature position,
+neither of which the day-clock pin/freeze holds still frame-to-frame
+across separate process runs. The isolation fix from round 3 is doing its
+job here: adding anchors only to band4 changed **zero** of band3's or
+band5's own scatter, confirmed by the fact that only station 13 (band4)
+gained new content while 09/10/11/12 (band3) and 14/15/16 (band4/5, no
+anchor touched there either) show no structural difference.
+
+### Tests, round 4
+
+- `tests/run_tests.gd -- --only=test_scatter_rules.gd,test_veg_corridor.gd`:
+  **47 tests, 0 failed**.
+- `tests/smoke_traversal.gd`: **PASS** (includes the Old Mill Crossing's
+  own locked/unlocked check, unaffected by the new station or the new
+  anchor).
+
+### Bake
+
+Not committed, same convention as every round:
+`computed 825717 placements (3802 drained) across 11 layers`.
