@@ -1664,50 +1664,26 @@ func _wear_as_earth(node: Node) -> void:
 			instance.set_surface_override_material(surface, earth)
 
 
-## EXT-08-EARTHMOUND, item 5. Round 5's judge: "the threshold rock is a third
-## cold-grey material matching neither exterior nor den." The mouth jambs and
-## brow used to draw through `_wear_the_cave_stone()`'s exterior branch --
-## `_rock().lerp(tint, 0.35)` at `normal_scale` 1.15, then darkened up to 0.86
-## toward black by `_build_entrance_dressing()`'s own `dark: true` clamp --
-## three knobs away from what the den's own wall three metres away actually
-## is, and the darkening is very likely what the judge saw as "a black
-## overhang wedge" on the brow specifically (see that entry's own JSON
-## comment for the size/reach fix alongside this).
-##
-## This wears them with the SAME rock colour and the SAME Rock030 texture the
-## chamber walls/ceiling are built from -- `_material(_rock(), ...)`, no lerp
-## toward a second colour, no darkening. It is the identical family EXT-08
-## put here and the round-6 judge confirmed that half worked.
-##
-## EXT-09-DOORPATCH, round 6 regression: a code-blind judge on the very next
-## round called this "a hard-edged white/grey patch over the doorway... the
-## biggest new defect." The one knob this call left at the INTERIOR default is
-## `normal_scale` -- `_material()`'s own header (T1-WARRENS-EXT) already
-## diagnosed and fixed exactly this failure mode for every OTHER piece of
-## exterior rock on this outcrop: normal_scale 2.2 is tuned for the cave's
-## dim, shadowless interior omnis, and under a real directional sun on
-## boulders scaled 1.9-2.4x (these three jambs/brow, per `entrance_dressing`'s
-## own `scale`) the per-pixel normal perturbation outruns what the triplanar
-## blend can filter at distance -- `_wear_the_cave_stone(..., exterior=true)`
-## already passes 1.15 for this reason for every other exterior boulder on
-## this outcrop (mound, skirt, accents). `_wear_as_wall_stone()` is the one
-## caller that skipped that fix, because it calls `_material()` directly
-## rather than through `_wear_the_cave_stone()`, and the default it silently
-## picked up is the interior's 2.2 -- reproducing, on the one exterior surface
-## still wearing the wall's un-adjusted material, the identical aliasing bug
-## already fixed everywhere else outdoors. Passing the SAME exterior value
-## `_wear_the_cave_stone(exterior=true)` already uses is not a new tint or a
-## third material family -- `_material()` caches by colour+emissive+textured+
-## normal_scale, and colour/texture are untouched -- it is the SAME rock, the
-## SAME Rock030 photo, read at the exposure every other exterior piece of it
-## already reads at.
-func _wear_as_wall_stone(node: Node) -> void:
-	var stone := _material(_rock(), 0.0, true, 1.15)
-	for child in _mesh_boxes_nodes(node):
-		var instance := child as MeshInstance3D
-		var mesh := instance.mesh
-		for surface in (mesh.get_surface_count() if mesh != null else 0):
-			instance.set_surface_override_material(surface, stone)
+## EXT-08-EARTHMOUND, item 5 / EXT-09-DOORPATCH / EXT-11-DOORPATCH2. The mouth
+## jambs and brow's material history: EXT-08 first wore them with the wall's
+## own flat `_material(_rock(), ...)` so they would read as "the same rock the
+## den is built from" rather than a third tint (round 5's own complaint).
+## EXT-09 found that call was missing the exterior `normal_scale` fix every
+## other outdoor boulder on this outcrop already carries (a round-6 regression,
+## "a hard-edged white/grey patch over the doorway"), and passed 1.15. Round 7
+## brought the SAME pale-patch defect back a second time regardless -- this
+## time from the material's own albedo, not its normal_scale: `_material()`'s
+## textured branch always lerps 75% toward the near-white `ROCK_TINT`
+## (MAT-BLOCKOUT, tuned so a DIM interior room gets enough contrast) and paints
+## that flat across a whole boulder end to end, which reads fine indoors and
+## reads as one uniform pale slab in real outdoor sun with nothing to break it
+## up. `_build_entrance_dressing()`'s own `dark: true` branch now wears these
+## pieces with `_wear_the_cave_stone(..., true, ...)` -- the SAME
+## `warrens_boulder_stain.gdshader` treatment every other exterior boulder on
+## this outcrop already wears, tinted with `_rock()` itself so the base colour
+## is still verbatim the wall's own rock (see that call site's own comment) --
+## instead of this function, which is removed: it had exactly one caller and
+## was, across two separate rounds, the source of the bug.
 
 
 ## One shared `ShaderMaterial` per (tint, height-bucket) pair, cached in the
@@ -1997,16 +1973,47 @@ func _build_entrance_dressing() -> void:
 				# cold-grey material matching neither exterior nor den." A
 				# darkened, lower-normal-scale variant of the EXTERIOR stone
 				# was never going to match the wall it sits beside no matter
-				# how far the clamp moved. `_wear_as_wall_stone()` is not a
-				# fourth tint -- it is the chamber wall's own material,
-				# verbatim, so the jambs and the brow read as the same rock
-				# the den is built from, not a third one.
+				# how far the clamp moved.
+				#
+				# EXT-11-DOORPATCH2. The round-5 fix above (`_wear_as_wall_stone()`,
+				# verbatim `_material(_rock(), ...)`, the wall's OWN StandardMaterial3D)
+				# then produced this exact "pale patch over the doorway" defect TWICE:
+				# round 6 (missing exterior normal_scale, fixed to 1.15 in round 7) and
+				# round 7 again -- this time on the brow AND the right jamb, from the
+				# MATERIAL itself, not its normal_scale. `_material()`'s textured
+				# branch lerps whatever colour it is given 75% toward the near-white
+				# `ROCK_TINT` (MAT-BLOCKOUT, tuned so a DIM interior room gets enough
+				# contrast) and paints that flat across the WHOLE boulder -- correct
+				# indoors, but under real outdoor sun with no per-surface falloff it
+				# is one uniform pale slab: exactly "a sharply pale grey boulder
+				# directly above the doorway" (the brow, offset [0.2,-1.05]) and, on
+				# the right jamb's own large low-poly facets seen close and near
+				# face-on, "a large flat pale panel that reads as an untextured
+				# back-face" (offset [3.1,-0.5]). Every OTHER exterior boulder on
+				# this outcrop (mound, accent boulders) never shows this because
+				# `_wear_the_cave_stone(exterior=true)` routes through
+				# `warrens_boulder_stain.gdshader`, whose own mid-band tint is the
+				# SAME 0.75 lerp (so the unstained rock still matches exactly) but
+				# blends a dark stain toward each piece's OWN foot and moss onto its
+				# OWN up-facing surfaces per fragment, never one flat colour end to
+				# end -- and carries no normal map to alias in the first place.
+				# Calling that SAME shader here, with `_rock()` passed as the tint
+				# instead of the mound's own cooler `base_tint`, makes
+				# `base := _rock().lerp(_rock(), 0.35)` -- `_rock()` unchanged -- so
+				# the jambs and brow still read as verbatim the chamber wall's own
+				# rock colour, exactly what the round-5 fix asked for, just worn by
+				# the SAME per-boulder process the rest of this outcrop already
+				# wears rather than a flat StandardMaterial3D that was never built
+				# to sit in daylight. Not a third material family: same texture,
+				# same rock colour, same shader every other exterior boulder here
+				# already uses. `_wear_as_wall_stone()` itself is removed -- this
+				# was its one and only caller.
 				# `is_dark_ground_jamb` still marks the two ground-contact
 				# jambs (not the elevated brow, `y_m` present) for the soil
 				# collar below -- the doorway's own framing stones planting
 				# into visible dirt rather than grass.
 				is_dark_ground_jamb = not spec.has("y_m")
-				_wear_as_wall_stone(art)
+				_wear_the_cave_stone(art, _rock(), true, variation, rng, art.global_position.y)
 			else:
 				_wear_the_cave_stone(art, base_tint, true, variation, rng, art.global_position.y)
 			_keep_rock_out_of_the_rooms(art)
