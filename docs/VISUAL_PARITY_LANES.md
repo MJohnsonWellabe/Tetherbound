@@ -53,6 +53,18 @@ Software rendering: FPS is meaningless, never quote it. Structural cost is
 `tools/perf_render_stats.gd` (draw calls / primitives) at fixed stands; run it with
 `--settle=120 --resettle=60 --sample=20` and record numbers in your report.
 
+## Roles (owner directive, 2026-09-02 01:15 UTC)
+
+- **Judge + planner: the coordinator (Fable).** Every round's frames are judged by a
+  code-blind visual judge (a fresh agent that sees ONLY frames, contact sheets, `docs/reference/`,
+  the website board and the rubric — never code, config, diffs, reports or git history), and the
+  coordinator turns that verdict into the next concrete fix list.
+- **Coder + renderer: a Sonnet session per lane.** It implements exactly the fix list it is given
+  in its owned files, renders the matched after frames, runs the named tests, pushes its lane
+  branch and report, then stops. "Coded" is not a result; a pushed frame is.
+- A lane never self-certifies. It may run its own blind judge as a sanity check, but the round is
+  closed only by the coordinator's judge.
+
 ## The loop, per round
 
 1. Reproduce the current state (before frames). 2. Fix the highest-impact visible problems in
