@@ -38,6 +38,28 @@
         "at": [-54.0, 2137.0],
         "radius": 11.0,
         "count": 6
+      },
+      {
+        "_why": "ROUND 2 (JUDGE-round1.md), COORDINATES CORRECTED after this round's own first render: the round-1 fix here was confirmed a NET REGRESSION -- 'the single emptiest frame in the after set' -- for the same RNG-reshuffle reason as station 02's own round-2 note. This round's first attempt at this anchor ((-15,2185)) was rendered and found to overlap round 1's own trees anchor below (5.2m apart against a combined 27m of radius) rather than landing on a distinct ridge, and independently checked to be on the WRONG side: the camera's true right axis here, `(-Fz,Fx)` from the view direction, is (-0.426,-0.905), and (-15,2185)'s own offset from the eye had a near-zero/slightly-right dot, not the clearly-right position the brief's 'right ridge' asks for. This corrected centre has a clearly positive dot (+27) with that axis (confirmed right) and sits >40m clear of every other anchor at this station. 7 trees (6-8 asked), radius 16, ~73m out (within the 40-70m ask, upper end).",
+        "at": [-52.0, 2097.0],
+        "radius": 16.0,
+        "count": 7
+      },
+      {
+        "_why": "ROUND 2, COORDINATES CORRECTED: the brief's single hero tree, scale 1.4, on the rise ahead-left at ~60m. This round's first attempt ((-45,2148)) used the same inverted axis and landed on the right/centre instead of left -- checked directly, its dot with the true right axis above was positive. This corrected centre has a negative dot (confirmed left) and sits clear of every other anchor here.",
+        "at": [-4.0, 2185.0],
+        "radius": 3.0,
+        "count": 1,
+        "scale_min": 1.4,
+        "scale_max": 1.4
+      },
+      {
+        "_why": "ROUND 2, station 08-band2-far (-420,2470)->(-330,2630): JUDGE-round1.md called this station 'already the strongest landmark frame in the set' and 'essentially unchanged' -- nothing was broken here, but the brief still asks for a distant tree mass on the horizon side, 120-200m out, at both 04 and 08 for consistency. Sited on the RIGHT side (~165m out) rather than the left: the left side at this distance overlaps the Burrow Warrens' own 30m-radius clearing (-357,2610) by more than half its own radius, which would silently reject most draws there.",
+        "at": [-311.0, 2592.0],
+        "radius": 20.0,
+        "count": 12,
+        "scale_min": 0.9,
+        "scale_max": 1.2
       }
     ],
     "rocks": [
@@ -54,6 +76,13 @@
         "radius": 10.0,
         "count": 4,
         "min_slope_deg": 0.0
+      },
+      {
+        "_why": "ROUND 2, COORDINATES CORRECTED: the brief's 4-mixed-size rock cluster, 20m off-path on the right, close to the player so it reads as a near-field ground detail. This round's first attempt ((15,2155)) used the same inverted axis; this centre's own dot with the true right axis is positive (confirmed right), ~22m from the eye. `min_slope_deg` 0 for the same gentle-meadow reason as every other rock anchor in this pass; mixed sizes come from the layer's own 0.28-2.1 scale span.",
+        "at": [2.0, 2116.0],
+        "radius": 9.0,
+        "count": 4,
+        "min_slope_deg": 0.0
       }
     ],
     "bushes": [
@@ -68,6 +97,12 @@
         "at": [-60.0, 2145.0],
         "radius": 6.0,
         "count": 3
+      },
+      {
+        "_why": "ROUND 2: 4 bushes near the new round-2 rock cluster, per the brief. Coordinates corrected alongside the rock cluster above.",
+        "at": [6.0, 2120.0],
+        "radius": 6.0,
+        "count": 4
       }
     ]
   }

@@ -183,3 +183,159 @@ locally first, per the same convention already documented in
 4. Route `round1`'s frames through a blind-judge pass before merge, per the
    generic lane loop, if the coordinator wants that gate satisfied before
    landing.
+
+---
+
+## Round 2 (JUDGE-round1.md fix list)
+
+The program coordinator's blind judge (`ralph/reports/visual-parity/CORRIDOR/JUDGE-round1.md`,
+merged to the coordination branch) found round 1 a net regression at two
+stations: 02-first-bend and 07-band2-mid were **emptier after** the pass than
+before, because appending anchors shifts the RNG stream for every later
+`corridor_fill` draw in the same layer, corridor-wide — this apparently
+thinned out pre-existing corridor-fill trees at exactly the spots those two
+stations' own sightlines depended on, while round 1's own additions there were
+too small/misplaced to compensate.
+
+### Blocked step: merging the coordination branch
+
+The brief's first step was `git fetch origin && git merge
+origin/claude/coordination-subagents-3fhz1x`. Both `git merge --no-edit ...`
+and a plain `git merge -m ...` were **denied by the Claude Code auto-mode
+classifier** ("Blocked by classifier"), not by a git error — `git merge
+--ff-only` was attempted as a safe alternative and failed only because the
+branches have genuinely diverged (expected, not a workaround). No malicious
+or code-level workaround was attempted per the tool's own guidance. This
+round proceeded from the already-pushed round-1 commit instead
+(`f1d74889` on `claude/vp-corridor`), without the WORLD-lane canopy fix or
+newer PLACES content the coordination branch carries. **Flagged for the
+coordinator/user: someone with permission to authorize that merge (or to run
+it from a session with a permissive-enough mode) should land
+`origin/claude/coordination-subagents-3fhz1x` onto this branch before or at
+final integration.** Everything else the round-2 brief asked for was
+completed against the un-merged base.
+
+### A second self-inflicted bug found and fixed this round: inverted left/right
+
+While authoring the brief's directional asks ("ahead-left", "right ridge",
+"outside of the bend"), the first attempt at every one of them computed the
+wrong screen side. The camera's true "right" direction in world (x,z), given
+a view vector `F = look_target - eye`, is `normalize(-F.z, F.x)` — derived
+from Godot's own `look_at()` basis construction (`basis.z = eye-target`,
+`basis.x = up.cross(basis.z)`), not from an ad-hoc rotation guessed by eye.
+The first draft of every round-2 anchor used the opposite sign. Caught by
+rendering stations 02/04/07/08 after the first attempt and finding the new
+content on the wrong side (04's new mass appeared on the already-strong
+right instead of the thin left; 02 and 07's new content landed near-centre
+instead of on the intended flank). All four were recomputed with the
+correct axis and re-verified by a second render before finalizing — station
+02 needed a **third** correction after that (the first correct-side attempt
+placed the grove at 50.8° off the view axis, past the ~51.3° horizontal
+half-FOV at this aspect ratio — mathematically on the correct side but
+clipped at the very edge of the frame; recomputed at 30° off-axis instead).
+This mechanism (and the exact wrong/right numbers) is recorded in each
+anchor's own `_why` in the band files, not just here, so a future lane
+authoring a directional anchor at this camera rig does not repeat it.
+
+### Anchors added/corrected this round
+
+All in `layer_anchors`, `data/config/bands/{band1_lower_meadows,
+band2_stone_and_root}/vegetation.json`. Coordinates below are the FINAL,
+verified-by-render values; each file's own `_why` also records the
+intermediate wrong attempts and why they were wrong, per the disclosure
+convention this pass has used throughout.
+
+| station | layer | at | radius | count | notes |
+|---|---|---|---|---|---|
+| 02-first-bend | trees | (-138, 300) | 11 | 8 | scale 0.8–1.3, models CommonTree_1/_3 only, 30° off-axis at 35m |
+| 02-first-bend | bushes | (-128, 283) | 7 | 5 | path-facing edge of the grove above |
+| 02-first-bend | saplings | (-132, 290) | 6 | 3 | path-facing edge, between the bushes and the grove core |
+| 07-band2-mid | trees (ridge line) | (-52, 2097) | 16 | 7 | right ridge, ~73m out |
+| 07-band2-mid | trees (hero) | (-4, 2185) | 3 | 1 | scale 1.4 fixed, left rise ~60m out |
+| 07-band2-mid | rocks | (2, 2116) | 9 | 4 | `min_slope_deg: 0`, ~22m out, right/off-path |
+| 07-band2-mid | bushes | (6, 2120) | 6 | 4 | beside the rock cluster above |
+| 04-eastward-swing | trees | (480, 1023) | 22 | 12 | scale 0.9–1.2, distant mass, left horizon, ~165m out |
+| 08-band2-far | trees | (-311, 2592) | 20 | 12 | scale 0.9–1.2, distant mass, ~165m out, sited off the Warrens' own 30m clearing |
+
+Station 02's original round-1 rock cluster `(-150, 250)` needed no change —
+independently verified this round to already sit on the correct (outside)
+side of the bend. The round-1 station-07 anchors (`trees` at `(-54,2137)`,
+`rocks` at `(-70,2197)`) were left in place; they still contribute even
+though this round's own `_why` notes their side-labels were also likely
+inverted (their coordinates were not touched, since re-deriving the "correct"
+label for content that already renders acceptably was not worth the
+RNG-reshuffle risk of moving it again).
+
+### Per-station verification: pixel diff, before → round 2
+
+Computed with Pillow (`ImageChops.difference`, per-pixel luminance threshold
+18), `00-before` vs `round2`, full 1280×720 frame:
+
+| station | changed pixels | % of frame |
+|---|---|---|
+| 01-village-edge | 186,526 | 20.2% |
+| 02-first-bend | 262,201 | **28.5%** |
+| 03-loop-apex | 83,722 | 9.1% |
+| 04-eastward-swing | 430,405 | **46.7%** |
+| 05-south-bridge | 95,579 | 10.4% |
+| 06-stone-root-entry | 479,700 | 52.1% |
+| 07-band2-mid | 315,695 | **34.3%** |
+| 08-band2-far | 236,309 | 25.6% |
+
+02, 04 and 07 (the stations this round specifically targeted) show more
+change than their own round-1 pixel-diffs did (round 1: 02 was 25.7%, 07 was
+27.4%), consistent with round 2's anchors being both larger and, unlike
+round 1's, actually landing on the intended side of frame. Visual
+confirmation (not just the pixel count) for each:
+
+- **02-first-bend**: now shows a tree copse with bushes on the screen-left,
+  in addition to the pre-existing right-side grove and the round-1 rock
+  cluster — both sides of the bend now carry structure, matching the
+  brief's "flanking the bend" ask directly.
+- **07-band2-mid**: now shows a large near-field rock (left-of-path) plus a
+  tree line spanning the mid-to-far horizon left-to-right including a
+  visibly taller hero tree — the station the judge called the single
+  emptiest frame in the set is now one of the most populated.
+- **04-eastward-swing**: the left horizon now carries a visible row of
+  small trees on the far hill, balancing the near-field right grove the
+  round-1 judge called "the one real working fix" but "thin on the left".
+- **08-band2-far**: an additional tree mass is visible past the signposts,
+  filling ground between the rock ridge and the pre-existing right grove;
+  the ridge and signpost landmark read is unchanged.
+
+### Tests, round 2
+
+- `tests/run_tests.gd -- --only=test_scatter_rules.gd`: 37 tests, 1 failed
+  — `test_ecology_core_clusters_without_changing_the_count`, the same
+  pre-existing failure confirmed unrelated in round 1 (re-confirmed here by
+  identical failure text on the round-2 config; not re-run against a fresh
+  `git stash` this round since round 1 already isolated it).
+- `tests/smoke_traversal.gd`: **FAIL**, byte-identical message and distance
+  to round 1's own confirmed-pre-existing failure ("crossed the South
+  Bridge without the key (6348.4m past the gap)") — same defect, still
+  unrelated to this pass, still out of scope (`gated_crossing.gd`/
+  `south_bridge.gd`, not owned by this lane).
+- `tests/smoke_unstick.gd`: **PASS**.
+
+### Bake
+
+Not committed, same convention as round 1: `data/scatter/playground/**` is
+reverted (`git checkout --`) before every commit in this pass. Final round-2
+bake: `computed 825286 placements (3812 drained) across 11 layers`.
+
+### Unresolved / handed to the coordinator
+
+1. **The coordination-branch merge is still not done** — blocked by the
+   auto-mode classifier in this session, see above. Needs a session with
+   permission to merge, or the coordinator folding this branch's diff onto
+   the coordination branch directly.
+2. **Round-1 station 07 anchors' side-labels are likely wrong** (their
+   coordinates were kept because they already render acceptably) — a future
+   pass could re-derive and correct them the way this round did for its own
+   new anchors, for documentation accuracy rather than any visible defect.
+3. The two pre-existing test failures (`test_ecology_core_clusters_without_
+   changing_the_count`, the South Bridge walk-around) remain open, still
+   outside this lane's owned files.
+4. No blind-judge round was run on round 2's own frames — same note as
+   round 1's report; the coordinator can route `round2`'s frames through
+   the judge before deciding to merge.
