@@ -212,6 +212,41 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Check-in #17 (11:45 UTC) — LIFE round 5 judged and merged; CI green
+- **CI `308b4fca`** (CORRIDOR r3 bake): green. Local guards on the same tree: 50/50 tests, traversal, stronghold,
+  warrens all exit 0.
+- **LIFE round 5** (`f2fa8906`, real population): the tool no longer spawns or hides anything for a stand — it
+  positions the eye (clearance sweep, camera pulled back 3.5 m like `_capture_locations.gd`), lets streaming
+  settle and REPORTS which real wild bodies are in frame; legibility moved to authored clusters in band spawn
+  data; the pairing frame grants the starter through the real party/summon path; a `00-village-life` frame was
+  added. Judge `LIFE/JUDGE-round5.md`: lens occlusion mostly gone, **05-ridge-camp-day now the strongest frame**
+  (trainer + 2 legible creatures), mill pond solid, village edge day/night read; still failing: pairing frame
+  shows the starter at 2.5–3× the trainer's apparent size (hero reveal, not side-by-side), village-life shows one
+  camouflaged villager, night nearly black at relay camp, 03 open meadow aimed away from its clusters. Merged
+  `d55e6ad5` (spawn data + species + capture tool; no bake impact). Round 6 dispatched 11:49: same-depth pairing,
+  village gathering from existing villagers + a walker scope estimate, firelit night stand, re-aimed 03.
+- **WORLD**: bounded `TIME` in `sky_clouds.gdshader` pushed (`84f6bfd9`, `time_wrap` 2500 s derived so both
+  drift layers land on integer noise cells) — unverified by render; A/B in progress. Not merged until proven.
+- PLACES round 7 (+ relay-from-road) and CORRIDOR round 5 (all 16 stations) rendering.
+
+### Check-in #16 (11:14 UTC)
+- Bake after the CORRIDOR r3 merge committed (`308b4fca`, 825,701 placements; 50/50 scatter/veg/perf tests).
+- **WORLD**: identity check proved the rendered Environment/Sky are the objects world_look mutates, and the
+  shutter-time env/sky state is bit-identical between a clean and a red frame — the wash tracks **elapsed render
+  time** (a clean early `03-rise-overlook-dawn`, and a `day` frame going maroon after a long settle). Both the lane
+  and the coordinator converge on unbounded shader `TIME` in `sky_clouds.gdshader` (cloud drift offsets) breaking
+  noise precision at large values, with the SKY ambient/radiance path carrying it onto terrain. Wrap test dispatched
+  11:15 (`mod(TIME, period)`), plus the aerial push re-apply after ground materials (`04bbb286`).
+- **CORRIDOR**: bands 3–5 before frames pushed (stations 09–16) and judged (`CORRIDOR/JUDGE-b3b5-before.md`):
+  12 and 16 pass, 15 borderline, 10/14 weak, **09/11/13 fail** (13 is textbook empty grass → sky). Ranked fix list
+  dispatched 11:18; round 5 will render all 16 stations as one set.
+- **Defect found from the road**: the Team Tether relay compound renders as untextured white walls on a bleached
+  ground pad at station 11 (`00-before-b3b5/11-relay-day.png`) — a VP7 failure the relay-apparatus stand never
+  showed. Sent to PLACES as a round-7 addendum with a new `06-relay-road` stand.
+- **LIFE** round 5 (real population): boot-1 frames pushed before a camera/cluster fix; boot 2 in progress; the
+  session compacted its context once. Judge after boot 2.
+- **PLACES** round 7 in progress.
+
 ### Check-in #15 (10:38 UTC) — CORRIDOR r3 and PLACES r6 judged and merged
 - **CORRIDOR round 3** (lane folder `round4/`, `dd74ce6c`): anchor RNG isolation with a shipped-config unit test
   (`test_anchors_do_not_perturb_corridor_fill_or_any_other_placement`), station 02 rebalanced, station 06 restored
