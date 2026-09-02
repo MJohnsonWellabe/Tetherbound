@@ -1678,6 +1678,35 @@ func _check_the_quarry(world: Node, player: CharacterBody3D, failures: Array[Str
 ## entry's own `_comment_stranded_p3_deck_clearance` and
 ## `ralph/GATE_D_REMAINDERS.md` §8. Nothing in this walk needed to change; kept
 ## as it was before this investigation.
+## BREADCRUMB-TELEPORT-RACE. This teleports the player straight to the bridge
+## rather than walking them there, and `player_controller.gd`'s entombment
+## failsafe (`_recover_if_entombed`/`_drop_breadcrumb`) only ever records a
+## breadcrumb on a frame where the body is BOTH on the floor AND has moved
+## more than `_unstick_progress_m` (8cm) since its last recorded anchor. A
+## fresh teleport satisfies the second half every frame of the fall (each
+## frame's position differs from the last-updated anchor by more than 8cm)
+## but never the first half until the body actually lands -- and the anchor
+## keeps sliding to match the falling position every one of those airborne
+## frames, so by the exact frame landing happens the remaining delta from the
+## just-updated anchor can easily be under 8cm again. When that race loses,
+## the ONLY breadcrumb on record stays whatever real ground the player last
+## walked away from under their own power somewhere else entirely in the
+## world -- for this file, the perimeter cap-walk, kilometres away. Getting
+## held at the still-locked gate for `unstick_after` seconds then recovers
+## the player onto THAT breadcrumb instead of the bridge approach, which
+## reads as having walked straight through the gate.
+##
+## A real player is never teleported, so this is a pure test-harness gap, not
+## a production bug -- confirmed against `player_controller.gd`'s own header
+## on `_recover_if_entombed`: "RECOVERY REWINDS, IT DOES NOT INVENT. The first
+## choice is always a breadcrumb -- ground this body stood on and walked away
+## from" is exactly what the entombment failsafe promises and is doing
+## correctly; it has just never been told about a spot the harness placed the
+## body at directly. Fixed here, not there: settle for real (wait for
+## `is_on_floor()`, not a fixed frame count that may land mid-fall depending
+## on the drop height) and then hand the controller a real breadcrumb at
+## journey's start explicitly, the one production movement would have left
+## walking up to the bridge for real.
 func _walk_at_the_bridge(bridge: Node3D, player: CharacterBody3D, camera_rig: Node3D) -> float:
 	var start: Vector2 = bridge.call("near_point", BRIDGE_START_BACK)
 	var target: Vector2 = bridge.call("far_point", BRIDGE_START_BACK)
@@ -1686,8 +1715,18 @@ func _walk_at_the_bridge(bridge: Node3D, player: CharacterBody3D, camera_rig: No
 	player.velocity = Vector3.ZERO
 	var outward := Vector3(target.x - start.x, 0.0, target.y - start.y).normalized()
 	camera_rig.set("yaw", Vector3(0.0, 0.0, -1.0).signed_angle_to(outward, Vector3.UP))
+	for i in 90:
+		await physics_frame
+		if player.call("is_on_floor"):
+			break
+	# A few more frames once grounded, not just the first frame `is_on_floor()`
+	# reads true: the landing can still be settling (a small bounce or slide)
+	# for a frame or two, and `_drop_breadcrumb` is only asked once, so it
+	# should record a position the body is actually resting at.
 	for i in 10:
 		await physics_frame
+		if player.has_method("_drop_breadcrumb"):
+			player.call("_drop_breadcrumb", player.global_position)
 
 	var best := -INF
 	Input.action_press("move_forward")
