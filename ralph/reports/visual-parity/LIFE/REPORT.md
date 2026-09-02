@@ -274,3 +274,130 @@ range) — a real gap in the checks as built, worth naming rather than leaving i
 4. Run `tools/_probe_grass_separation.gd`'s real sweep for burrowback (this pass's own
    recommendation, still outstanding) now that paddlenewt has been ruled out as a candidate for the
    same lever.
+
+---
+
+## Round 4 — measured bbox contract, "max two world boots"
+
+Round 3 verdict, code-blind: mill-pond fixed (two turtles legible) and relay-camp-day a real
+legible group at native size — but 01/03/05 regressed to camera-occluded close-ups, the mill-pond
+blob was STILL there beside the fixed turtles (a different body than the paddlenewt fix touched),
+night showed almost nothing at 01/04, and the pairing frame finally had a starter in it but it
+filled the frame while the trainer was a cropped corner figure.
+
+Round 4's brief made composition a measured contract rather than a distance guess, capped at two
+world boots for this round. `tools/_capture_life.gd` was rewritten (not just tuned): every staged
+body's actual on-screen bounding box — all 8 AABB corners of every `MeshInstance3D` under it,
+projected and scaled into REAL image pixels — must land fully inside the frame with a 3% margin and
+occupy 8-45% (groups) / 25-45% (pairing) of frame height, verified live and re-rolled (repositioned,
+re-measured) up to 5 times before a stand is saved. Every staged body is also gated against a
+near-clip floor of `max(6m, 4x its own measured AABB longest axis)` from the camera — the round-3
+regression on 01/03/05 was exactly a body placed inside that floor, using a single flat distance
+band that did not know a Burrowback's footprint is not a Pipwing's.
+
+### Before (round 3) / after (round 4)
+
+| stand | round 3 | round 4 |
+|---|---|---|
+| `01-village-edge` day/night | Camera-occluded close-up (regression) | **Fixed.** 4/4 bbox-contract pass both day and night. Two clearly legible, de-synced creatures per pass (Bramblebun day, Mudsnout night) with real terrain (foreground boulders, not occlusion) around them. |
+| `02-mill-pond-banks` day/night | Two turtles legible, but a glowing blob STILL present beside them | **Turtles still clean, blob identified and removed** (see below) — but a large dark shape now crowds the frame's right edge; likely the staged Paddlenewt itself at an angle its AABB check did not catch as a framing problem. Net: better (blob gone) but not clean. |
+| `03-band1-open-meadow` | Camera-occluded close-up (regression) | **Partially fixed, 1/4 pass.** No longer a close-up — real open-field frame — but Pipwing (the smallest creature in the roster) never got close enough to clear the 8% height floor in 6 attempts; see Known defects. |
+| `04-relay-camp` day | Round 3's one real pass | **Confirmed and improved**, 4/4 pass — three creatures (2 Bramblebun, 1 Trailpup) clearly legible in a forest clearing, genuinely the strongest frame in this round. |
+| `04-relay-camp` night | "almost nothing" | **Improved, 4/4 pass**, but visually still weak — creatures are present and lit but small/dim against the dark canopy, not a strong night read. |
+| `05-ridge-camp` | Round 2's best frame, now texture noise | **Still broken, unrelated to this round's fix.** The bbox contract reports 4/4 pass (every staged creature measured at a legible 11-12% height, correctly placed 10.5-12.9m out) — the actual saved frame is still a camera-inside-geometry close-up. The fixed camera EYE for this stand appears to be embedded in static rock terrain, independent of creature placement; this predates round 4 (round 3 had the identical failure at the identical eye) and this round's fix does not touch stand eyes at all. |
+| `06-starter-beside-trainer` | Starter finally present, filled the frame, trainer a cropped corner figure | **Regressed.** All 6 reroll attempts FAILED the contract, and the delivered frame shows ONLY the Terrapup — no trainer at all. See Known defects: `_player_aabb()`'s measurement is producing erratic, physically-inconsistent results across attempts (see the pasted assertion output below). |
+
+### Mill-pond blob — identified and handled generally, not guessed
+
+Per-eye diagnostic (`_report_nearby_wild()`), the world's OWN authored population near the mill-pond
+eye at shutter time:
+
+```
+[nearby] Wild_paddlenewt_6_1  species=paddlenewt  dist=11.8m
+[nearby] Wild_paddlenewt_6_2  species=paddlenewt  dist=11.1m
+[nearby] Wild_brooktail_8_1   species=brooktail   dist=29.0m
+```
+
+Rather than bet the fix on guessing which of these was the round-3 blob, round 4 hides every
+UNSTAGED wild body within 25m of a stand's eye before the shutter (`_hide_unstaged_nearby()`) — the
+two authored Paddlenewt (order 6) and the Brooktail (order 8) are all invisible in the round-4
+frame regardless of which one was actually glowing. The round-3 "still there" blob does not
+reproduce in `round4/02-mill-pond-banks-day.png`. What remains in that frame is a large dark shape
+crowding the right edge, which the diagnostic above and the staging log both attribute to this
+round's OWN staged Paddlenewt (`Shot_02_mill_pond_banks_day_paddlenewt_0`, placed at depth 10.5m,
+lateral 1.5m, bbox-contract PASS at height_frac 0.10) rather than an unfixed world body — a framing
+defect, not a re-emergence of the emission bug.
+
+### Known defects, stated plainly
+
+- **`_player_aabb()` produces erratic, physically-inconsistent trainer measurements.** Full
+  per-attempt log from the pairing shot, six rerolls, all FAIL:
+
+  ```
+  attempt=0 back=4.5 trainer=0.00(part_behind_camera) creature=0.61(too_large)
+  attempt=1 back=6.0 trainer=0.80(outside_margin)     creature=0.45(too_large)
+  attempt=2 back=3.5 trainer=0.00(part_behind_camera) creature=0.86(outside_margin)
+  attempt=3 back=5.4 trainer=1.25(outside_margin)     creature=0.49(too_large)
+  attempt=4 back=6.0 trainer=0.81(outside_margin)     creature=0.45(too_large)
+  attempt=5 back=3.9 trainer=0.00(part_behind_camera) creature=0.75(outside_margin)
+  ```
+
+  Moving the camera further from a fixed trainer position should move its measured height
+  monotonically smaller, not swing between "behind the camera" and "125% of frame height" between
+  adjacent attempts (back=5.4 -> 1.25; back=6.0 -> 0.80/0.81, twice, consistently -- suggesting the
+  measurement is at least DETERMINISTIC for a given back distance, just not behaving like a normal
+  perspective projection of a small, fixed, nearby box). The most likely cause: `find_children("*",
+  "CollisionShape3D", true, false)`'s `shapes[0]` is not the player's main body capsule -- the
+  player rig likely carries more than one `CollisionShape3D` (an interaction trigger, an attack
+  hitbox, or similar), and the first one `find_children` returns is not guaranteed to be the visible
+  body. This was not caught before spending the round's second and final boot on it. The delivered
+  frame (`06-starter-beside-trainer-day.png`) shows a large, well-composed, clearly legible Terrapup
+  and NO trainer at all -- worse on the "both bodies visible" axis than round 3's frame, though
+  better composed for the creature alone.
+- **`05-ridge-camp`'s eye position is embedded in static rock geometry**, independent of this
+  round's fix (creature placement measured correctly; the background itself is broken). Next
+  session should treat this as a location-eye defect, not a staging defect, and re-derive the eye
+  the way `_capture_locations.gd`'s own header describes fixing exactly this class of bug (raycast
+  the eye's own footprint before trusting a hand-picked coordinate near a rocky site).
+- **Pipwing (and likely other Small-tier species) cannot always reach a legible height fraction
+  within the reroll's random search range.** The reroll perturbs depth by `+/-2..3m` around a
+  base depth; for a species whose AABB longest axis floor sits well below the day band's 9-12m
+  target (Pipwing: longest axis 0.76m, floor 6.0m, but the random search only reached ~8.5-13.3m
+  across its 6 attempts, never approaching the true 6.0m floor where it would likely have passed).
+  The search range should scale toward the floor, not just jitter around the original band's
+  midpoint, when a species' floor sits meaningfully below that band.
+- A benign `SCRIPT ERROR: Trying to cast a freed object` fires periodically from
+  `_report_nearby_wild()` (a `wild_creatures()` entry freed between the director's own list and
+  this tool's iteration over it) -- logged, did not interrupt the render (`life survey: 8 frames
+  written, 0 failed` for the stands boot), but is a real robustness gap worth an `is_instance_valid`
+  guard before the cast rather than after.
+
+### Tests, run on the branch tip after all round-4 changes
+
+| test | result |
+|---|---|
+| `tests/smoke_wild_streaming.gd` | **PASS** — "wild streaming: OK — distant clusters sleep, near ones tick, engaged/fainting/respawning are never touched, and a round trip changes nothing about a creature's identity." |
+| `tests/smoke_catching.gd` | **PASS** — "catching: OK — a throw can be aimed, missed, and landed." |
+
+### Boot budget
+
+Two world boots used, as instructed: boot 1 (`--only=stands`, all day+night stand frames, the
+per-creature reroll loop happening within that single process) and boot 2 (`--only=starter`, the
+pairing shot). No third boot was spent chasing either the pairing-shot bug or the ridge-camp eye
+defect, even after both were understood to be broken, per the round's explicit budget.
+
+### Recommended next step
+
+1. Fix `_player_aabb()` before trusting the pairing-shot contract again — inspect the player rig's
+   actual `CollisionShape3D` children directly (print all of them, their shapes and global
+   positions) rather than assuming `shapes[0]` is the body capsule.
+2. Re-derive `05-ridge-camp`'s eye the way `_capture_locations.gd` derives its own eyes — raycast
+   footprint clearance before trusting the coordinate, the same fix class as round 2's mill-pond
+   underwater-eye bug.
+3. Scale the `_stage_creature()` reroll search range toward `floor_dist` when a species' own floor
+   sits well below the target band's midpoint (Pipwing's case), rather than jittering around the
+   original band regardless of species size.
+4. `02-mill-pond-banks-day`'s crowding dark shape and `04-relay-camp-night`'s weak legibility both
+   look like framing/lateral-offset tuning rather than new mechanism work — a good target for a
+   round that has render budget for a few extra `--only=stands` iterations rather than a fresh
+   rewrite.
