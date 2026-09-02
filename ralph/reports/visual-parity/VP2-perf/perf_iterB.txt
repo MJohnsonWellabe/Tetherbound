@@ -1,0 +1,224 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+ERROR: Condition "status < 0" is true. Returning: ERR_CANT_OPEN
+   at: init_output_device (drivers/alsa/audio_driver_alsa.cpp:97)
+WARNING: All audio drivers failed, falling back to the dummy driver.
+     at: initialize (servers/audio/audio_server.cpp:258)
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _build_terrain (res://scripts/world/playground_world.gd:690)
+         [1] _ready (res://scripts/world/playground_world.gd:447)
+WARNING: Terrain3DTextureAsset#0001:set_albedo_texture:79: Texture 'meadow_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#0001:set_normal_texture:100: Texture 'meadow_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#1248:set_albedo_texture:79: Texture 'verge_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#1248:set_normal_texture:100: Texture 'verge_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#3731:set_albedo_texture:79: Texture 'rock_scree_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#3731:set_normal_texture:100: Texture 'rock_scree_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#0724:set_albedo_texture:79: Texture 'dirt_path_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#0724:set_normal_texture:100: Texture 'dirt_path_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#7720:set_albedo_texture:79: Texture 'wet_earth_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#7720:set_normal_texture:100: Texture 'wet_earth_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#2140:set_albedo_texture:79: Texture 'forest_floor_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:868)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+WARNING: Terrain3DTextureAsset#2140:set_normal_texture:100: Texture 'forest_floor_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:871)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:714)
+         [2] _ready (res://scripts/world/playground_world.gd:466)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 386009 placements, 440634 skipped]=2620 reorder[16 layers]=452
+[vegetation] grass field is on; 440634 placements across 2 layers left unbuilt (grass, flowers)
+SCRIPT ERROR: Invalid call. Nonexistent function 'adjust_bsc' in base 'Image'.
+          at: _adjusted_texture (res://scripts/world/vegetation.gd:615)
+          GDScript backtrace (most recent call first):
+              [0] _adjusted_texture (res://scripts/world/vegetation.gd:615)
+              [1] _tint_for (res://scripts/world/vegetation.gd:675)
+              [2] _retint (res://scripts/world/vegetation.gd:561)
+              [3] _make_mesh_asset (res://scripts/world/vegetation.gd:893)
+              [4] _register_mesh_assets (res://scripts/world/vegetation.gd:736)
+              [5] build (res://scripts/world/vegetation.gd:399)
+              [6] _dress_the_meadow (res://scripts/world/playground_world.gd:933)
+              [7] _ready (res://scripts/world/playground_world.gd:482)
+SCRIPT ERROR: Invalid call. Nonexistent function 'adjust_bsc' in base 'Image'.
+          at: _adjusted_texture (res://scripts/world/vegetation.gd:615)
+          GDScript backtrace (most recent call first):
+              [0] _adjusted_texture (res://scripts/world/vegetation.gd:615)
+              [1] _tint_for (res://scripts/world/vegetation.gd:675)
+              [2] _retint (res://scripts/world/vegetation.gd:561)
+              [3] _make_mesh_asset (res://scripts/world/vegetation.gd:893)
+              [4] _register_mesh_assets (res://scripts/world/vegetation.gd:736)
+              [5] build (res://scripts/world/vegetation.gd:399)
+              [6] _dress_the_meadow (res://scripts/world/playground_world.gd:933)
+              [7] _ready (res://scripts/world/playground_world.gd:482)
+SCRIPT ERROR: Invalid call. Nonexistent function 'adjust_bsc' in base 'Image'.
+          at: _adjusted_texture (res://scripts/world/vegetation.gd:615)
+          GDScript backtrace (most recent call first):
+              [0] _adjusted_texture (res://scripts/world/vegetation.gd:615)
+              [1] _tint_for (res://scripts/world/vegetation.gd:675)
+              [2] _retint (res://scripts/world/vegetation.gd:561)
+              [3] _make_mesh_asset (res://scripts/world/vegetation.gd:893)
+              [4] _register_mesh_assets (res://scripts/world/vegetation.gd:736)
+              [5] build (res://scripts/world/vegetation.gd:399)
+              [6] _dress_the_meadow (res://scripts/world/playground_world.gd:933)
+              [7] _ready (res://scripts/world/playground_world.gd:482)
+SCRIPT ERROR: Invalid call. Nonexistent function 'adjust_bsc' in base 'Image'.
+          at: _adjusted_texture (res://scripts/world/vegetation.gd:615)
+          GDScript backtrace (most recent call first):
+              [0] _adjusted_texture (res://scripts/world/vegetation.gd:615)
+              [1] _tint_for (res://scripts/world/vegetation.gd:675)
+              [2] _retint (res://scripts/world/vegetation.gd:561)
+              [3] _make_mesh_asset (res://scripts/world/vegetation.gd:893)
+              [4] _register_mesh_assets (res://scripts/world/vegetation.gd:736)
+              [5] build (res://scripts/world/vegetation.gd:399)
+              [6] _dress_the_meadow (res://scripts/world/playground_world.gd:933)
+              [7] _ready (res://scripts/world/playground_world.gd:482)
+SCRIPT ERROR: Invalid call. Nonexistent function 'adjust_bsc' in base 'Image'.
+          at: _adjusted_texture (res://scripts/world/vegetation.gd:615)
+          GDScript backtrace (most recent call first):
+              [0] _adjusted_texture (res://scripts/world/vegetation.gd:615)
+              [1] _tint_for (res://scripts/world/vegetation.gd:675)
+              [2] _retint (res://scripts/world/vegetation.gd:561)
+              [3] _make_mesh_asset (res://scripts/world/vegetation.gd:893)
+              [4] _register_mesh_assets (res://scripts/world/vegetation.gd:736)
+              [5] build (res://scripts/world/vegetation.gd:399)
+              [6] _dress_the_meadow (res://scripts/world/playground_world.gd:933)
+              [7] _ready (res://scripts/world/playground_world.gd:482)
+SCRIPT ERROR: Invalid call. Nonexistent function 'adjust_bsc' in base 'Image'.
+          at: _adjusted_texture (res://scripts/world/vegetation.gd:615)
+          GDScript backtrace (most recent call first):
+              [0] _adjusted_texture (res://scripts/world/vegetation.gd:615)
+              [1] _tint_for (res://scripts/world/vegetation.gd:675)
+              [2] _retint (res://scripts/world/vegetation.gd:561)
+              [3] _make_mesh_asset (res://scripts/world/vegetation.gd:893)
+              [4] _register_mesh_assets (res://scripts/world/vegetation.gd:736)
+              [5] build (res://scripts/world/vegetation.gd:399)
+              [6] _dress_the_meadow (res://scripts/world/playground_world.gd:933)
+              [7] _ready (res://scripts/world/playground_world.gd:482)
+SCRIPT ERROR: Invalid call. Nonexistent function 'adjust_bsc' in base 'Image'.
+          at: _adjusted_texture (res://scripts/world/vegetation.gd:615)
+          GDScript backtrace (most recent call first):
+              [0] _adjusted_texture (res://scripts/world/vegetation.gd:615)
+              [1] _tint_for (res://scripts/world/vegetation.gd:675)
+              [2] _retint (res://scripts/world/vegetation.gd:561)
+              [3] _make_mesh_asset (res://scripts/world/vegetation.gd:893)
+              [4] _register_mesh_assets (res://scripts/world/vegetation.gd:736)
+              [5] build (res://scripts/world/vegetation.gd:399)
+              [6] _dress_the_meadow (res://scripts/world/playground_world.gd:933)
+              [7] _ready (res://scripts/world/playground_world.gd:482)
+SCRIPT ERROR: Invalid call. Nonexistent function 'adjust_bsc' in base 'Image'.
+          at: _adjusted_texture (res://scripts/world/vegetation.gd:615)
+          GDScript backtrace (most recent call first):
+              [0] _adjusted_texture (res://scripts/world/vegetation.gd:615)
+              [1] _tint_for (res://scripts/world/vegetation.gd:675)
+              [2] _retint (res://scripts/world/vegetation.gd:561)
+              [3] _make_mesh_asset (res://scripts/world/vegetation.gd:893)
+              [4] _register_mesh_assets (res://scripts/world/vegetation.gd:736)
+              [5] build (res://scripts/world/vegetation.gd:399)
+              [6] _dress_the_meadow (res://scripts/world/playground_world.gd:933)
+              [7] _ready (res://scripts/world/playground_world.gd:482)
+[vegetation] boot phases (ms): placements=3319 mark_harvestable=105 group_by_model=378 register_mesh_assets=67 build_batches_total=7673 (of which harvest_points[57349 nodes]=5629, initial_collision_stream[52269 solid]=242) update_mmis=3420
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 16m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   6228 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(12945031430201) region_map=1024 entries
+[playground] scattered 384953 props in 35 batches (57349 harvestable, 0 already chopped, 139/52269 collision resident)
+[water] pond quads 2538, stream points 46, reeds 152, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 49, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 130, bank scrub 60
+[village] placed 14 structures
+[props] placed 224 props in 30 clusters (5 usable rest points)
+[village_npcs] placed 17 of 19
+[relay_site] placed 3 of 3
+[trainers] placed 19 trainer(s)
+[quarry] 2 foundations, 4 pylons standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 131 harvest nodes
+[playground] placed 6 farm plots
+[warrens] cleared 660 scattered trees/rocks inside the 30m site radius
+[warrens] planted 134 pieces of ground cover around the site
+[warrens] 181 pieces of interior rock across 5 chambers
+[warrens] 188 structural members across 5 chambers
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 201 scattered prop(s) standing inside the five spaces
+[stronghold] 18 exterior omni light(s) at the Hall (budget 18), 6 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+=== PERF-ROG render stats (iterB-main-density-plus-tiles) ===
+driver=X11  adapter=llvmpipe (LLVM 20.1.2, 256 bits)
+scatter_lod_ranges=true
+
+view                     draw calls     primitives      objects
+village_high                   4408        9386569         4504
+band1_open                     8593       12583284         7573
+hall_approach                  4424        4627194         4769
