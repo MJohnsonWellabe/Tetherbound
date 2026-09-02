@@ -212,6 +212,10 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### 18:35 UTC — Sentries CLOSED: night proven (chest-height per-sentry omni)
+
+- One-shot lighting mechanism (`gate_sentries[].night_light`: energy 2.4, range 4 m, attenuation 1.2, offset [0, 1.3, −0.6], colour (1.0, 0.72, 0.45), shadowless, child of the sentry body so it follows `facing_deg`; always-on like every other stronghold practical). Proof on one render (`round12-sentries-night/`, `DECISION-sentries-night.md`, commit `4d31d0f8`): west guard box mean luminance 5.1 → **29.17**, east 6.4 → **30.55** (≥ 25); head/harness/belt/torso/boots legible at 3×; day frame 1.0 % px diff vs round 11 (composition unaffected); `smoke_stronghold` exit 0. Coordinator's own read of the night frame: two warm-lit guards flanking the red door, fully readable. **Sentries: PASS day + night** — the r9/r10 "ceiling" was a placement error (half-buried bodies), not a ceiling.
+
 ### 18:25 UTC — WORLD closed and archived: dawn far plain at ceiling (mechanism, not values); VP10 recorded at the measured state
 
 - **WORLD round 9 (final)** (`e832d5cd`): the dawn far-plain one-shot FAILED its proof and was reverted. Ceiling established with numbers: `sky.horizon_colour` must stay byte-identical to `environment.fog_colour` (`fog_sky_affect` 0, the seam invariant rounds 3 and 7 stabilised), so desaturating the far-ground fade desaturates the sky in lockstep — sky saturation collapsed 0.363 → 0.136 against a 0.25 floor even with `cloud_lit`/`horizon_haze_colour` compensation. Reaching the reference DAWN relationship (saturated sky over hazy far ground) needs a mechanism change (a ground-fade colour decoupled from `fog_colour`, or `fog_sky_affect` > 0), explicitly NOT attempted inside a time box. Rejected frames kept at `WORLD/round9/dawn-distancefade/REJECTED-*.png`.
