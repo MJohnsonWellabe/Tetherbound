@@ -39,17 +39,19 @@
       "floor_moss_amount": 0.3,
       "floor_up_moss": 0.3,
       "_why_exterior": "VP8-EXT (2026-09-02). The 400m approach stand (`hall_approach`, `hall_gate`) judged the works still 'the clean cream castle kit with pale towers' -- the shader was already reaching every kit tower/roof surface (`stronghold.gd::_weather_hall_massing`) and every outer curtain wall, coping, merlon, buttress, gate jamb/arch and skirt facing (all already textured through `_stone_shader_material`), but every one of those surfaces was sharing the SAME weathering intensity as the five lit rooms inside, and the kit's own retinted LightRock/DarkRock tint (building_prefabs.json, ~#817f78/#68675f) is a mid-value grey-tan on its own -- no amount of joint moss over that base reads as 'dark ruined mass' at range. This block is read ONLY by `stronghold.gd::_material`/`_stone_shader_material` callers that pass `exterior: true` (every genuinely outside-facing stone: kit massing, outer walls, coping/merlons/buttresses, the gate frame and arch, the skirt foundation) and OVERRIDES the block above term-by-term; the five interior chambers (`outer: false` walls, the floor, the ceiling) never read this block and are unchanged. `darken`/`desaturate` bias the TINT itself before the shader's own texture and moss terms are added, which is the lever the flat parity pass upstream (building_prefabs.json's own T1-HALL-4 value-drop notes) could not reach because it only ever retints the kit's raw StandardMaterial3D before this shader replaces it. `damp_height` is 2.2x the interior figure because the 'lower third' the approach silhouette needs covered is a fraction of a 15-38m tower, not a 6-22m chamber wall -- the interior number was measured against the room the player stands in, this one against the mass the player walks toward.",
+      "_why_exterior_round2": "VP-HALL-FIX (2026-09-02), a code-blind judge re-reading fresh 100/200/400m frames after the round-1 block above landed: 'still pale cream towers and curtain walls with no weathering, no moss, no dark mass'. A headless material dump (`tools/_diag_hall_materials.gd`) confirmed every exterior surface WAS already textured through this shader with `exterior:true` -- the routing was never the bug. The bug is that `darken: 0.24` against the kit's #817f78/#68675f retint only reaches a shader `tint` of about (0.38,0.38,0.36), which is BRIGHTER than `site.stone_light` (#66655e, ~0.40 direct but close enough to read as the SAME value) -- the 'weathered ruin' tint was landing almost exactly on top of the ordinary LIT-INTERIOR wall tone instead of below it, so no amount of moss on top of it could read as a dark mass against the sky. `darken` 0.24 -> 0.56 and `desaturate` 0.32 -> 0.5 pushes the same #817f78 kit tint down to roughly (0.21,0.21,0.20) -- clearly darker than the interior stone_light and darker than the current stone_skirt tier (#575147, ~0.31), which is what 'dark ruined mass against the sky' actually requires. Moss/damp are lifted too: JUDGE-6/T1-HALL wanted moss and damp to be VISIBLE, not merely present in a shader param nobody could see over a base that was too pale to show it.",
       "exterior": {
-        "darken": 0.24,
-        "desaturate": 0.32,
+        "darken": 0.56,
+        "desaturate": 0.5,
         "macro_strength": 0.34,
-        "moss_amount": 0.62,
+        "moss_amount": 0.78,
         "moss_scale": 0.26,
-        "moss_colour": "#243a10",
-        "up_moss": 0.72,
-        "damp_height": 6.6,
-        "damp_strength": 0.4,
-        "streak_strength": 0.3
+        "moss_colour": "#1f3510",
+        "up_moss": 0.85,
+        "damp_height": 8.5,
+        "damp_strength": 0.5,
+        "streak_strength": 0.38,
+        "_comment_piece_variation": "VP-HALL-FIX. `stronghold.gd::_weather_hall_massing` seeds a small per-module tint bias off each kit piece's own name/index (+-`HALL_PIECE_VARIATION`, currently 0.14) ON TOP of `darken` above, so neighbouring towers read as distinct quarried masses instead of one flat tone repeated across the whole massing -- stable across rebuilds (name-hashed, not frame-random), costs zero draw calls (same mesh instances, different cached ShaderMaterial per piece)."
       }
     },
     "exterior_conduit_energy": 0.45
@@ -480,13 +482,8 @@
     "corner_width_m": 1.0,
     "corner_project_m": 0.48
   },
-  "_comment_conduits": "Lit teal cable runs along the floor, every one of them pointing deeper. `from`/`to` are chamber ids; the run is drawn between their centres at ankle height and is DECORATION ONLY (no collider) so it can never block a doorway or trip a fight.",
+  "_comment_conduits": "Lit teal cable runs along the floor, every one of them pointing deeper. `from`/`to` are chamber ids; the run is drawn between their centres at ankle height and is DECORATION ONLY (no collider) so it can never block a doorway or trip a fight. VP-HALL-FIX (2026-09-02): the `courtyard`->`tether_approach` run is REMOVED. `courtyard` is one of only two open-sky yards (`stronghold.gd::EXTERIOR_CHAMBERS`) with no walls to hide a floor strip against and no visible junction box at either end -- a judge read it as 'an unanchored beam on the courtyard floor', and unlike the three runs kept below it had no wall or doorway threshold to plug into on the open-yard side. The three remaining runs are all between ROOFED interior chambers, where a lit cable crossing a machine-room floor is the read the occupation layer is going for.",
   "conduits": [
-    {
-      "from": "courtyard",
-      "to": "tether_approach",
-      "offset": 3.0
-    },
     {
       "from": "tether_approach",
       "to": "warden_arena",
@@ -532,13 +529,13 @@
       "colour": "#ffab5e"
     },
     {
-      "_comment": "West flank sky-fill, one for both yards.",
+      "_comment": "West flank sky-fill, one for both yards. VP-HALL-FIX: energy up 2.4 -> 3.0, same reasoning as the gate sky-fill -- at night it is standing in for the sun on this whole flank, not merely balancing it.",
       "at": [
         -27.0,
         14.0
       ],
       "y": 22.0,
-      "energy": 2.4,
+      "energy": 3.0,
       "range": 60.0,
       "colour": "#8fa6c8"
     },
@@ -565,13 +562,13 @@
       "colour": "#ffab5e"
     },
     {
-      "_comment": "East flank sky-fill, one for both yards.",
+      "_comment": "East flank sky-fill, one for both yards. VP-HALL-FIX: same night-legibility bump as the west flank sky-fill above.",
       "at": [
         27.0,
         14.0
       ],
       "y": 22.0,
-      "energy": 2.4,
+      "energy": 3.0,
       "range": 60.0,
       "colour": "#8fa6c8"
     }
@@ -579,14 +576,15 @@
   "_comment_lights_outer_works_ambient": "T1-HALL-REBUILD (2026-08-30). The outer_works yard's own weak ambient omni (was `at [0,0], y 6, energy 0.35, range 18`) is RETIRED, not moved: `hall_occupation.braziers` now stands a real fire in this yard beside the garrison camp, and two more on the causeway kerbs a few metres outside the mouth. A yard lit by a fire the player can see burning is the whole point of the occupation layer; a colourless 0.35 ambient over the top of it is the thing that flattens it. Retiring it is also what brings the site to exactly the design's 18-omni ceiling (§7) with the causeway fires included.",
   "lights": [
     {
-      "_comment": "T1-ARCH exterior fire 1/4, spread across the curtain's own width.",
+      "_comment": "T1-ARCH exterior fire 1/4, spread across the curtain's own width. VP-HALL-FIX (night): this is one of the two `gate_source` points with a real basket standing at it, so it is the pair that got the night-legibility budget -- y/range/energy up and `attenuation` added so the pool climbs the gate face and reaches the great tower's banner instead of stopping at the ground, without a new omni (same 18-light budget).",
       "at": [
         -8.0,
         -13.0
       ],
-      "y": 4.5,
-      "energy": 2.6,
-      "range": 16.0,
+      "y": 6.2,
+      "energy": 3.3,
+      "range": 24.0,
+      "attenuation": 1.3,
       "colour": "#ffab5e"
     },
     {
@@ -612,36 +610,39 @@
       "colour": "#ffab5e"
     },
     {
-      "_comment": "T1-ARCH exterior fire 4/4.",
+      "_comment": "T1-ARCH exterior fire 4/4. VP-HALL-FIX (night): the other `gate_source` basket point -- same night-legibility bump as fire 1/4 above.",
       "at": [
         8.0,
         -13.0
       ],
-      "y": 4.5,
-      "energy": 2.6,
-      "range": 16.0,
+      "y": 6.2,
+      "energy": 3.3,
+      "range": 24.0,
+      "attenuation": 1.3,
       "colour": "#ffab5e"
     },
     {
-      "_comment": "T1-ARCH sky fill -- the castle's own counterweight so the wall reads as fire-against-sky rather than as one warm flood. High and south of the wall, wide and weak, shadowless like every other light in this file.",
+      "_comment": "T1-ARCH sky fill -- the castle's own counterweight so the wall reads as fire-against-sky rather than as one warm flood. High and south of the wall, wide and weak, shadowless like every other light in this file. VP-HALL-FIX: energy up 2.2 -> 2.8 -- at night this is the ONLY light reaching the upper gate towers at all, so it has to do double duty as the sun's stand-in, not merely the day's cool counterweight.",
       "at": [
         0.0,
         -30.0
       ],
       "y": 20.0,
-      "energy": 2.2,
+      "energy": 2.8,
       "range": 45.0,
       "colour": "#8fa6c8"
     },
     {
+      "_comment": "VP-HALL-FIX (night): was a near-dead 0.35-energy grey ambient that did nothing after dark -- 'stronghold-courtyard-night' crushed to black around it. Retuned to a real warm fill, sited a few metres from the inner bailey's own brazier (`hall_occupation.braziers`, at [6.4,30.6]) so it reads as that fire's glow reaching the yard rather than an unexplained light. Same entry, same budget slot -- no new omni.",
       "at": [
         0.0,
         32.0
       ],
-      "y": 7.0,
-      "energy": 0.35,
-      "range": 22.0,
-      "colour": "#9aa6a0"
+      "y": 6.5,
+      "energy": 1.7,
+      "range": 28.0,
+      "attenuation": 1.2,
+      "colour": "#e0975a"
     },
     {
       "at": [
