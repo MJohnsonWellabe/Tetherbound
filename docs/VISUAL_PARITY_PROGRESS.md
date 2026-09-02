@@ -165,6 +165,18 @@ Code-blind judge: `PLACES/JUDGE-round1.md`. Bar A soft yes for village/stronghol
 - PLACES also found: `smoke_traversal` fails on the merged tree at the South Bridge (pre-existing on main, outside
   PLACES), and that 34–58 main commits were missing from the program branch (now merged, ce235831).
 
+### WORLD round 2 (`claude/vp-world` @ bf92e754) — coordinator verdict 2026-09-02 05:45 UTC — MERGED into the program branch
+Evidence: `ralph/reports/visual-parity/WORLD/round2/` (village/pond 15 frames + survey 5, sheets).
+- **Canopy regression fixed and verified in frame**: root causes were `Image.adjust_bsc` (nonexistent; the engine's is
+  `adjust_bcs`, so the desaturation never ran and the aborted call left a null albedo → white) and a path-less runtime
+  ImageTexture dropped through the Terrain3DMeshAsset round-trip. Fix: desaturated leaf sheets baked offline to
+  `assets/environment/stylized_nature/derived/*.png` (derived textures, no new meshes) and bound via the existing
+  `retexture` swap. Trees now read deep/mid green with three visible tints.
+- Sun halo tightened (day 5.5°, golden 7.2°), night moon given a glow, cloud edges softened, dawn exposure 0.8→0.55,
+  pond-approach stand moved out of the canopy.
+- Open for round 3: golden still reads as a soft light mass (WORLD's own measurement), a night stand aimed at the moon's
+  azimuth is needed to judge the moon, `03-rise-overlook-golden` reads cool/grey.
+
 ## Implementation decisions
 
 - `data/config/grass_field.json` is **ON** for this program (owner directive 2026-09-01: "I don't see how a
