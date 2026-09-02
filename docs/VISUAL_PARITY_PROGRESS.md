@@ -212,6 +212,25 @@ are the loudest elements).
 - PLACES round 3 in flight (VP7 cables/staffing commits landed 06:47; Hall exterior + Warrens next).
 - CORRIDOR: running (rendering + one test failure), nothing pushed at 06:50.
 
+### Check-in #19 (12:59 UTC) — LIFE r6 merged; CI fix; WORLD 5c
+- **Ship-to-main**: the first mirror run (`dbfec0be`) failed two unit tests that came from LIFE r5, not from
+  `main`: `test_spawns_data` (new mosshell cluster 1071 inside the Creek Hollow footprint → 9 clusters / 11
+  creatures vs the authored 8 / 9) and `test_band_content` (a doc key on band1 order 0 not mirrored into the
+  band-split fixture). Fixed on the program branch (`095cee94`: cluster 1071 removed, fixture mirrored; 31/31
+  locally), mirror moved to that SHA, CI queued; sweep when green.
+- **LIFE round 6** (`6aa21e95`): pairing rewritten side-by-side at equal depth with a flatness-selected stand;
+  village-life re-aimed at the one natural villager group (village_npcs.json deliberately untouched per the
+  owner's "too many people" directive); relay-camp clusters moved into the bonfire's light. Judge
+  `LIFE/JUDGE-round6.md`: **pairing composition solved**, village reads occupied (2 villagers), relay-camp-day the
+  best frame; open meadow still reads as zero fauna (camouflaged species), relay-camp-night creatures unread.
+  Merged `02292cf7`. Round 7 dispatched 13:07 as the lane's final round (high-contrast species at 03, bodies
+  inside the firelight, walker scope estimate, final state section).
+- **WORLD 5c** (`d2c80263`): matched-TIME A/B — neither arm washed out to 2,900 s; elapsed time is a correlate,
+  not the cause; the `TIME` wrap stays as a latent fix. The trigger is a stand/preset TRANSITION. Final
+  diagnostic dispatched 13:01: dump and mechanically diff every Environment / DirectionalLight3D / sky-uniform /
+  camera property between a clean and a washed shot across a preset cycle and a teleport.
+- CORRIDOR round 6 and PLACES round 8 (+ camps) in progress.
+
 ### Check-in #18 (12:28 UTC) — CORRIDOR r5 and PLACES r7 judged and merged
 - **CORRIDOR round 5** (16 stations, `fb27f52d`): band4's first `layer_anchors` (copse + rock cluster at station 13).
   Judge `CORRIDOR/JUDGE-round5.md`: 01–06, 12, 16 solid; 13 borderline (right two-thirds bare); 09 better but no
