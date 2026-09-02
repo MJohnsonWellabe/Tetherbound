@@ -434,6 +434,33 @@ var _terrain: Node3D = null
 var _vegetation: Node3D = null
 var _spawn_position: Vector3 = Vector3.ZERO
 
+## WORLD-ART aerial-fade pass, 2026-09-02. The terrain material this world
+## built, kept so a later time-of-day change can push a new distance-fade
+## colour at it -- `_apply_ground_shader` below used to read
+## `terrain_playground.json`'s `aerial_fade_colour` exactly ONCE, at scene
+## setup, and nothing ever touched it again, while the sky's own fog/horizon
+## colours already vary continuously with `world_look.gd`'s clock. Static,
+## and mirrors `character_model.gd`'s `_emission_floor_scale` static-setter
+## pattern for the identical reason given there: a value read only at build
+## time is frozen at whatever hour the world happened to boot at.
+static var _aerial_material: Object = null
+
+
+## Called by `world_look.gd::_apply_environment` (so both `apply_time()` and
+## the driven clock's `_apply_blended()` reach this the same way, since both
+## funnel through that one function) whenever `art.json`'s merged environment
+## config carries an `aerial_fade_colour` for the current moment. A no-op if
+## this world has not built a terrain material yet, or if this Terrain3D
+## build's shader has no such uniform installed -- `_apply_ground_shader`'s
+## own shader-override install already warns by name if that ever happens,
+## so this stays silent rather than doubling that warning on every clock tick.
+static func set_aerial_fade_colour(colour: Color) -> void:
+	if _aerial_material == null or not is_instance_valid(_aerial_material):
+		return
+	if not _aerial_material.has_method("set_shader_param"):
+		return
+	_aerial_material.call("set_shader_param", "aerial_fade_colour", colour)
+
 
 func _ready() -> void:
 	var perf_cfg := PERF_CONFIG.config()
@@ -742,6 +769,12 @@ func _apply_ground_materials() -> void:
 ## real properties and leaves the rest reachable only through
 ## `set_shader_param`, and setting one the wrong way fails silently.
 func _apply_ground_shader(material: Object) -> void:
+	# WORLD-ART aerial-fade pass. Kept BEFORE any early return below so
+	# world_look.gd's static setter can always reach this world's terrain
+	# material once it exists, even on a boot path where `shader` config is
+	# missing and the rest of this function returns early.
+	_aerial_material = material
+
 	# Terrain3DMaterial exposes exactly TWO of these as real properties. The rest
 	# — blend_sharpness, dual_scale_*, mipmap_bias and the macro variation
 	# colours — are shader uniforms, reachable only through set_shader_param.
