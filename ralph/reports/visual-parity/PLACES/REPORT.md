@@ -3,7 +3,7 @@
 **Branch** `claude/vp-places` · **start commit** `e3aba7d7` (VP0 merge of the GROUND+VEG lane code)
 **Owns** VP5 (village / tournament / camps), VP6 (Warrens exterior), VP7 (Relay), VP8 (Meadows Hall)
 
-## Current state at a glance (after round 9)
+## Current state at a glance (after round 10)
 
 > **OPEN DECISION — Warrens exterior.** After seven rounds in which the judge's core verdict never moved
 > ("a grey rock pile on lawn" → "still reading as a rock pile") and two regressions were introduced by
@@ -17,7 +17,8 @@
 | guard smokes | `smoke_stronghold`, `smoke_warrens`, `smoke_relay` pass; `smoke_traversal` fails on a pre-existing South Bridge walk-around outside this lane |
 | courtyard night | **FAILING — trainer 3 m disc median 5.82 vs a ≥ 20 target** (mean 11.31). Mean/median gap again: over half the disc is still dark. Any claim here must quote the median |
 | verification | every targeted frame now carries a round-over-round pixel diff; **under 5 % changed = failed delivery, not a proof.** Adopted after my round-8 "proof" turned out to be an absolute sample of a byte-identical region |
-| Hall silhouette | **decisive at 400 m** — storm band cleared and +30 % exterior height; 100 m holds; **200 m still weak** |
+| Hall stone | **FIXED round 10** — root cause was `Color.darkened` multiplying in sRGB (0.48 ⇒ ×0.24 linear) over a 0.202-linear texture = albedo 0.011, below coal. `darken` → 0.0. Tint 66 → **139.7/255**; every frame criterion passed |
+| gate sentries | **DECLARED AT VISUAL CEILING** after five failed attempts — see R10.2. Camera bug fixed and proven; figures still not visible |
 | storm band | moved back +150 m, alpha 0.4 — approach-stand sky coverage 22.7 % → **13.3 %**, under the 15 % target |
 | Warrens | doorway pale patch resolved at the root: both it and the right-side "panel" were the same `_wear_as_wall_stone()` path, now deleted. Brow [87.6,93.0,87.9], panel [88.4,89.3,74.2] |
 | relay | pad and colonnade fixed — pad [195.6,191.4,163.6] → **[98.1,89.8,69.1]**; walls/gate/deck/console all weathered |
@@ -1633,3 +1634,14 @@ position) before any placement is argued.
 | `11-castle-landmark-hall-200m-day` | 114.58 | 120.31 | 11.57 | 28.3 % |
 
 All well above the 5 % delivery threshold.
+
+## R10.4 Perf and tests
+
+`hall_approach` **3845** — under the 4000 ceiling (the round was data-only: no geometry added).
+`village_high` 3176. `smoke_stronghold` exit 0, `smoke_authored_camps` exit 0.
+
+## R10.5 Warrens status this round: untouched, still paused
+
+Round 10 changed no Warrens file — only frames were re-rendered as part of the capture set. The exterior
+remains **paused pending the rebuild-vs-patch decision** in `DECISION-REQUEST-WARRENS-EXTERIOR.md`, and
+the pale panel remains unidentified after two rejected hypotheses (R9.3, R9.8).
