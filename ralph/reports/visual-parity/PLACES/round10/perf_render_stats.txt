@@ -1,0 +1,168 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+ERROR: Condition "status < 0" is true. Returning: ERR_CANT_OPEN
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _build_terrain (res://scripts/world/playground_world.gd:746)
+         [1] _ready (res://scripts/world/playground_world.gd:502)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:437)
+       [1] apply_size_multiplier (res://scripts/creatures/creature_body.gd:1098)
+       [2] _make_alpha (res://scripts/combat/encounter_director.gd:681)
+       [3] _spawn_creatures (res://scripts/combat/encounter_director.gd:469)
+       [4] _stand_on_ground (res://scripts/combat/encounter_director.gd:932)
+WARNING: Terrain3DTextureAsset#6358:set_albedo_texture:79: Texture 'meadow_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:930)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:770)
+         [2] _ready (res://scripts/world/playground_world.gd:521)
+WARNING: Terrain3DTextureAsset#6358:set_normal_texture:100: Texture 'meadow_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:933)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:770)
+         [2] _ready (res://scripts/world/playground_world.gd:521)
+WARNING: Terrain3DTextureAsset#8018:set_albedo_texture:79: Texture 'verge_grass_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:930)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:770)
+         [2] _ready (res://scripts/world/playground_world.gd:521)
+WARNING: Terrain3DTextureAsset#8018:set_normal_texture:100: Texture 'verge_grass_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:933)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:770)
+         [2] _ready (res://scripts/world/playground_world.gd:521)
+WARNING: Terrain3DTextureAsset#0365:set_albedo_texture:79: Texture 'rock_scree_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:930)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:770)
+         [2] _ready (res://scripts/world/playground_world.gd:521)
+WARNING: Terrain3DTextureAsset#0365:set_normal_texture:100: Texture 'rock_scree_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:933)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:770)
+         [2] _ready (res://scripts/world/playground_world.gd:521)
+WARNING: Terrain3DTextureAsset#7358:set_albedo_texture:79: Texture 'dirt_path_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:930)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:770)
+         [2] _ready (res://scripts/world/playground_world.gd:521)
+WARNING: Terrain3DTextureAsset#7358:set_normal_texture:100: Texture 'dirt_path_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:933)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:770)
+         [2] _ready (res://scripts/world/playground_world.gd:521)
+WARNING: Terrain3DTextureAsset#4354:set_albedo_texture:79: Texture 'wet_earth_Color' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:930)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:770)
+         [2] _ready (res://scripts/world/playground_world.gd:521)
+WARNING: Terrain3DTextureAsset#4354:set_normal_texture:100: Texture 'wet_earth_NormalGL' has no mipmaps. Change on the Import panel if desired.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_texture_list (res://scripts/world/playground_world.gd:933)
+         [1] _apply_ground_materials (res://scripts/world/playground_world.gd:770)
+         [2] _ready (res://scripts/world/playground_world.gd:521)
+WARNING: Terrain3DTextureAsset#8739:set_albedo_texture:79: Texture 'forest_f

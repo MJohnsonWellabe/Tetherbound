@@ -1543,3 +1543,93 @@ Both attempts used *forward* projection — take a node, compute where it lands.
 produced two confident wrong answers. The next attempt should invert it: **ray-cast from the `04-warrens`
 `standing` camera through screen (0.80, 0.42) and report what the ray actually hits**, world-wide rather
 than within the site. If the hit belongs to another lane's files, it should be reported, not edited here.
+
+---
+
+# Round 10
+
+Applied `DECISION-hall-sentries.md` **verbatim** — no substituted hypothesis, no tuning beyond what it
+specifies, and none of the four things it forbids (`hall_stone.gdshader`, `distance_darken_*`, the sun,
+added lights) was touched.
+
+## R10.1 Failure A — PROVEN on every criterion
+
+The decision's root cause is correct, and it explains why three of my own rounds failed to move this:
+`Color.darkened` multiplies **sRGB** channels, so `darken` 0.48 is **×0.24 in linear light**, applied over
+`T_UnevenBrick_BaseColor` whose mean is 0.202 linear. Effective albedo **0.011** — below coal at 0.04. My
+round-9 cut of 0.74 → 0.48 was directionally right and still left the whole façade under the ACES toe,
+which is exactly why "it changed 37 % of pixels" and "it still looks black" were both true at once. No
+lighting or shader change could have rescued an albedo of 0.011, and I spent rounds trying.
+
+Applied: `darken` 0.48 → **0.0**; `stone_light` `#66655e` → **`#767268`**; **added** `stone_dark`
+`#5a554d` (jambs and coping had been falling back to the code default `#463f37`); and the
+`_stone_shader_material` knob clamped to ≤ 0.15 with default 0.0, so the toe cannot be rebuilt.
+
+**Tint proof** (headless walk of `Stronghold`'s `hall_stone` ShaderMaterials, diagnostic deleted after):
+
+| material | luminance | threshold |
+|---|---|---|
+| kit `LightRock` | **139.7 / 255** (was 66) | ≥ 120 |
+| `exterior_face_stone` | **114.1 / 255** | ≥ 100 |
+
+**Frame proof**, the decision's own 960x540 boxes:
+
+| measure | result | threshold |
+|---|---|---|
+| gate-day L tower (380,150)-(410,230) | **64.1** | ≥ 55 |
+| gate-day R tower (520,150)-(545,230) | **72.4** | ≥ 55 |
+| gate-day curtain (440,190)-(500,215) | **54.6** | ≥ 45 |
+| 100 m L tower (440,235)-(465,300) | **75.4** | ≥ 50 |
+| 100 m R tower (500,235)-(520,300) | **70.3** | ≥ 50 |
+| silhouette gap (grass 180.3 − tower 64.1) | **116.2** | ≥ 60 |
+| 400 m hall bbox ÷ horizon strip | **0.74** | ≤ 0.80 |
+
+The gate-face frame now shows mid-tone weathered stone with individual blocks, mortar joints, moss and
+ivy, oxblood banners and the portcullis — where round 9 was a flat black cutout.
+
+## R10.2 Failure B — camera fixed and proven; sentries still not visible
+
+The tool bug was real and is fixed. `_clear_of_bodies` had been sweeping a capsule whose bottom rested on
+`ApproachRampBody`'s own top surface, counting the deck it had just been seated on as an occupant, and
+stepping the eye 6 m west off the 7 m causeway onto meadow 9 m below. Capsule centre `ground + 1.3` →
+**`ground + 1.45`**, `gate-face` `pull_back` −24.23 → **−33.1**.
+
+**That half is proven.** The tool now prints `10-stronghold-gate-face day eye(8, 4.2, 7540)` with **no
+"moved aside" note**, the arch is centred, and the frame changed 91.3 % of pixels.
+
+**But the sentries are still not visible**, and the decision's own figure criteria mostly fail:
+
+| criterion | result | threshold |
+|---|---|---|
+| day left figure x≈404 | 34.9 | ≥ 45 |
+| day right figure x≈556 | **55.0** | ≥ 45 |
+| day left-half box (50,100)-(400,400) | 21.6 (was 7) | ≥ 30 |
+| night left figure | 0.1 | ≥ 25 |
+| night right figure | 6.3 | ≥ 25 |
+
+Two of six pass. Looking at the frame, no humanoid figures are present at either position — the values
+that do pass are stone and shadow, not grunts. The occlusion explanation was correct and has been
+removed; something else is keeping them out of frame.
+
+**This is the fifth consecutive failed attempt at the gate sentries** (ground level behind the flank wall;
+flanker tower foot; the gate banner spot, which broke the build; tower rooftops at 1.5× scale, reverted;
+now gate posts with a corrected camera). Under the owner rule now in force — *a round that does not show
+solid, judged progress ends the item* — **PLACES is declaring the gate sentries at their visual ceiling
+and stopping work on them**, rather than opening a sixth attempt. The recommendation, if they are wanted,
+is a restart by a clean agent from the brief with no attachment to any of the five prior placements, and
+with the first step being to prove a grunt renders at that stand at all (a single test figure at a known
+position) before any placement is argued.
+
+## R10.3 Delivery check, round 9 → round 10
+
+| frame | prev | cur | mean abs diff | px > 8 |
+|---|---|---|---|---|
+| `10-stronghold-gate-face-day` | 40.54 | 39.95 | 47.60 | **91.3 %** |
+| `10-stronghold-gate-day` | 119.57 | 99.77 | 50.99 | **88.0 %** |
+| `10-stronghold-gate-face-night` | 10.34 | 4.78 | 13.48 | 46.0 % |
+| `10-stronghold-gate-night` | 31.72 | 28.44 | 14.75 | 44.8 % |
+| `11-castle-landmark-hall-100m-day` | 94.84 | 99.66 | 13.52 | 33.8 % |
+| `11-castle-landmark-hall-400m-day` | 114.56 | 120.07 | 11.59 | 28.8 % |
+| `11-castle-landmark-hall-200m-day` | 114.58 | 120.31 | 11.57 | 28.3 % |
+
+All well above the 5 % delivery threshold.
