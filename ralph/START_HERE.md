@@ -10,7 +10,27 @@ more — it happened once already (2026-09-01, docs cleanup) and happened again
 the same day (below), on owner instruction that the accumulated Ralph
 backlog files were no longer relevant.
 
-## Current state, 2026-09-02 — read `ralph/COORDINATOR_HANDOVER_2026-09-02.md` first
+## Current state, 2026-09-02 evening — read `ralph/COORDINATOR_HANDOVER_2026-09-02_EVENING.md` first
+
+A second coordinator session (backlog + Gate F) ran through the afternoon
+and evening and wrote the current routing document there. Read it before
+the morning handover below, which it supersedes on anything the two
+disagree on — most importantly the morning file's "player sleep is a
+confirmed live bug", which turned out to be measured against a build that
+did not contain the Bedroll.
+
+Three things in it are load-bearing for anyone selecting work:
+
+- **This repo's CI can show green over a red or entirely unverified tree**,
+  by three separate mechanisms. A run under ~5 minutes is not a
+  verification. §0 of that file.
+- **The South Bridge entombment at (7.9, -3.4, 1319) is a real, open world
+  defect**, not a test defect, and is the highest-value unclaimed item.
+  §3.
+- **Two backlog items can only be closed on the owner's ROG Ally** and
+  should not be handed to a session. §7.
+
+## Current state, 2026-09-02 (morning) — `ralph/COORDINATOR_HANDOVER_2026-09-02.md`
 
 A coordinator session just wound down and wrote a full handover to that
 file: how Gate F stands, which owner-playtest backlog items still need a
