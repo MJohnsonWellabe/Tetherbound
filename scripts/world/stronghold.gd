@@ -3030,6 +3030,13 @@ func _build_gate_tower_sconces() -> void:
 ## (NP2-grunt-wire) onto `assets/characters/grunt/grunt_lod0.glb`, the
 ## rank-and-file rig `docs/art/HUMANOID_ASSET_INVENTORY.md` names for exactly
 ## this: ordinary Team Tether personnel. No new mesh, per CLAUDE.md/D24.
+## ROUND12 (2026-09-02): `night_light`, per-entry, is one shadowless OmniLight3D
+## parented to the body at chest height, offset toward the camera side so it
+## lights the figure's own front rather than its back -- see `stronghold.json`'s
+## `gate_sentries[].night_light` for the full why. No `is_dark()` gate: neither
+## `_build_hall_fire()` nor `_build_gate_tower_sconces()` switch off by day
+## either, and a 4m-range chest-height omni is invisible in daylight ambient on
+## its own, so it stays always-on like every other stronghold practical.
 ## ITEM3B (2026-09-02). WAS `body.call("build", "grunt")` -- the bare species
 ## config, with no `emission_floor`. Every OTHER grunt the player meets is a
 ## trainer built through `trainer_npc.gd::model_config()`, which reads
@@ -3042,6 +3049,7 @@ func _build_gate_tower_sconces() -> void:
 ## rendering at the same near-black value that makes it "not identifiable" in
 ## the first place. `NPC_RANKS.config_for("grunt")` gets the SAME merged
 ## config a trainer's own grunt body would.
+const SENTRY_LIGHT_COLOUR := Color(1.0, 0.72, 0.45)
 func _build_gate_sentries() -> void:
 	var list: Array = _occupation().get("gate_sentries", []) as Array
 	if list.is_empty():
@@ -3088,6 +3096,27 @@ func _build_gate_sentries() -> void:
 		# not from an oversized body.
 		if body.has_method("play"):
 			body.call("play", "idle")
+		var night_light: Dictionary = spec.get("night_light", {}) as Dictionary
+		if not night_light.is_empty():
+			var offset_raw: Array = night_light.get("offset", [0.0, 1.3, -0.6]) as Array
+			var offset := Vector3(
+				float(offset_raw[0]) if offset_raw.size() > 0 else 0.0,
+				float(offset_raw[1]) if offset_raw.size() > 1 else 1.3,
+				float(offset_raw[2]) if offset_raw.size() > 2 else -0.6)
+			var light := OmniLight3D.new()
+			light.name = "SentryLight"
+			light.light_color = SENTRY_LIGHT_COLOUR
+			light.light_energy = float(night_light.get("energy", 2.4))
+			light.omni_range = float(night_light.get("range", 4.0))
+			light.omni_attenuation = float(night_light.get("attenuation", 1.2))
+			light.shadow_enabled = false
+			light.position = offset
+			# Parented to the body itself, not `holder` -- so the offset lands in
+			# the BODY's own local space and follows `facing_deg` automatically;
+			# both current entries face 0.0 (local -Z = world south = the
+			# causeway approach = the gate-face camera), so -Z here already puts
+			# the light in front of the figure without a per-entry yaw lookup.
+			body.add_child(light)
 		index += 1
 
 

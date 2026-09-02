@@ -888,7 +888,14 @@
         ],
         "on_causeway": true,
         "y": 0.0,
-        "facing_deg": 0.0
+        "facing_deg": 0.0,
+        "night_light": {
+          "_comment": "ROUND12 (2026-09-02). `gate_sconces` is an emissive PLAQUE with no light node, and the real gate_source/lights OmniLights sit at the tower base, 6-10m away -- neither reaches the INNER jamb face this body stands against, so at night the figure reads as a near-black silhouette (measured luma 5.1) against the lit doorway behind it (20.3). One shadowless warm OmniLight3D, parented to the body at chest height and offset toward the camera (-z local, the same 'facing out down the causeway' direction this entry's own `facing_deg` 0.0 already points, so the offset sits in FRONT of the figure, not behind it) so it lights the face the gate-face camera actually sees. No day/night gate: `_build_hall_fire()`/`_build_gate_tower_sconces()` carry no `is_dark()` check either -- every stronghold practical is a fixed OmniLight3D/emissive plaque that reads faint by day and pooled at night purely from the global sun exposure, not from being switched -- and an omni this small (4m range, chest height) is lost in daylight ambient regardless.",
+          "energy": 2.4,
+          "range": 4.0,
+          "attenuation": 1.2,
+          "offset": [0.0, 1.3, -0.6]
+        }
       },
       {
         "_comment": "East gate post sentry, mirrored: 1.5m east of the arch's own centreline, on the causeway deck 0.7m in front of the east jamb's proud face. Lit by the east `gate_sconces` light (5.4m) and the east `gate_source` brazier pair.",
@@ -898,7 +905,14 @@
         ],
         "on_causeway": true,
         "y": 0.0,
-        "facing_deg": 0.0
+        "facing_deg": 0.0,
+        "night_light": {
+          "_comment": "Mirror of the west post's `night_light` -- see that entry for the full derivation.",
+          "energy": 2.4,
+          "range": 4.0,
+          "attenuation": 1.2,
+          "offset": [0.0, 1.3, -0.6]
+        }
       }
     ],
     "_comment_causeway": "The 40m climb, dressed. Kerbs are code boxes following the ramp's own self-derived slope (nothing here authors the rise; `site.ramp_run` is still the only authored number). `rail_pitch_m` spaces `Prop_WoodenFence_Single` along the kerb tops -- the board's timber approach. `banner_pairs` are the z stations for oxblood banners on stone piers; the piers are what a banner needs to hang from out on open ground.",
