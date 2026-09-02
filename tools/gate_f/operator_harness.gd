@@ -1790,6 +1790,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_press_until(args, id)
 		"chip_to_floor":
 			actual = await _step_chip_to_floor(args, id)
+		"equip_tool":
+			actual = await _step_equip_tool(args, id)
 		"throw_until_caught":
 			actual = await _step_throw_until_caught(args, id)
 		"track_aim":
@@ -2979,6 +2981,14 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 	var held_by := ""
 	var what := "?"
 	var target := player.global_position
+	# RIG-F5 correction (Fable, 2026-09-02): a flat arrival with a small
+	# vertical gap (a slope, a curb, a step up to a node) is a walk that has
+	# not finished climbing, not an unreachable target -- failing on it
+	# immediately is what turned ordinary gather-node terrain into FAILs
+	# after the VP terrain change. Track whether the 3D gap is still
+	# shrinking; only give up when it stops.
+	var close_3d_best_solid := INF
+	var close_3d_stall_frames := 0
 	nav.call("reset")
 	while walked < budget:
 		var aim: Dictionary = target_fn.call()
@@ -3005,17 +3015,38 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 			if solid <= close:
 				arrived = true
 				break
-			# Directly under (or over) it and unable to close the gap by
-			# walking. Reported as the vertical fact it is, rather than as an
-			# arrival: this is the exact shape that produced 31 interacts
-			# through a floor.
-			_stick_left = Vector2.ZERO
-			_drive_sticks()
-			await physics_frame
-			return ("FAIL reached %s in plan view (%.2f m in x/z) but it is %.2f m away in 3D -- "
-				+ "%.2f m of that is vertical. Walking cannot close it, and an `interact` from "
-				+ "here would press through the floor.") % [what, to.length(), solid,
-					absf(target.y - player.global_position.y)]
+			var vertical := absf(target.y - player.global_position.y)
+			if vertical >= close:
+				# The gap is vertical alone -- directly under (or over) the
+				# target and unable to close it by walking, no matter how
+				# long this loop runs. Reported as the vertical fact it is,
+				# rather than as an arrival: this is the exact shape that
+				# produced 31 interacts through a floor.
+				_stick_left = Vector2.ZERO
+				_drive_sticks()
+				await physics_frame
+				return ("FAIL reached %s in plan view (%.2f m in x/z) but it is %.2f m away in 3D -- "
+					+ "%.2f m of that is vertical, which alone is at or past the %.2f m tolerance. "
+					+ "Walking cannot close it, and an `interact` from here would press through "
+					+ "the floor.") % [what, to.length(), solid, vertical, close]
+			# Small vertical gap: keep walking rather than failing on the
+			# flat distance alone. Fail only once the 3D gap stops shrinking
+			# (stalled, not merely not-yet-arrived) while genuinely close
+			# flat, which means the remaining gap is not something walking
+			# is going to fix.
+			elif solid < close_3d_best_solid - 0.02:
+				close_3d_best_solid = solid
+				close_3d_stall_frames = 0
+			else:
+				close_3d_stall_frames += 1
+				if close_3d_stall_frames > 90 and to.length() < 0.8:
+					_stick_left = Vector2.ZERO
+					_drive_sticks()
+					await physics_frame
+					return ("FAIL stalled %.2f m away (3D) from %s -- %.2f m flat, %.2f m vertical -- "
+						+ "and not closing after %d frames of walking. The remaining gap is not one "
+						+ "walking is fixing.") % [solid, what, to.length(), vertical,
+							close_3d_stall_frames]
 		if not bool(nav.call("can_walk")):
 			# Locomotion is off: a fight, a fade, a conversation. Frames spent
 			# held are not frames spent walking, so they do not count against
@@ -3278,6 +3309,56 @@ func _step_press_until(args: Dictionary, step_id: String) -> String:
 		if bool(now.get("ok", false)):
 			return "%d x %s reached it: %s" % [attempt + 1, control, last]
 	return "FAIL %d x %s did not reach it; last saw %s" % [budget, control, last]
+
+
+## Equip a named tool by its own hotbar slot, verified and retried -- never a
+## blind press.
+##
+## Fable's diagnosis (2026-09-02, `FINDING-S03-POSTMERGE-TERRAIN-VARIANCE-
+## 2026-09-02.md`'s correction): S03's gather ladder pressed `hotbar_N` blind
+## before every node, no verification, and it silently failed roughly a
+## third of the time. Two real reasons, both invisible to a bare `press`:
+## (1) the SAME slot's button TOGGLES -- pressing the currently-equipped
+## tool's own slot un-equips it rather than re-equipping it, which is
+## harmless here because this step never presses a slot that already holds
+## the wanted tool; (2) a press landing while a swing from the PREVIOUS
+## gather is still resolving (`tool_hold.gd`) is dropped outright, not
+## queued -- correlating every equip press in a real run against
+## `equipped.item` showed exactly this shape, presses that took immediately
+## after `harvest_logic.gd`'s own gather animation and presses that silently
+## missed while one was still finishing. `harvest_node.gd` then correctly
+## REFUSES a wrong-tool gather ("Needs a Knife.") -- the old script read
+## that refusal as a reach problem because nothing ever checked what tool
+## was actually in hand.
+##
+## Contract: no-ops (0 presses) if the tool is already equipped. Otherwise
+## presses `control`, settles (long enough for an in-flight swing to
+## finish), and checks `equipped().item`; retries up to `max_attempts`
+## (default 3) before FAILing loud with what is actually equipped instead
+## of what was wanted.
+func _step_equip_tool(args: Dictionary, step_id: String) -> String:
+	var tool := str(args.get("tool", ""))
+	var control := str(args.get("control", ""))
+	if tool.is_empty() or control.is_empty():
+		return "HARNESS-ERROR equip_tool step %s needs both tool and control" % step_id
+	var max_attempts := maxi(1, int(args.get("max_attempts", 3)))
+	var settle := maxi(1, int(args.get("settle_frames", 60)))
+
+	var have := str((_probe.call("equipped") as Dictionary).get("item", ""))
+	if have == tool:
+		return "already equipped (%s)" % tool
+
+	for attempt in max_attempts:
+		var sent := await _inject(control, _hold_frames("tap"))
+		if not bool(sent.get("ok", false)):
+			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		for i in settle:
+			await physics_frame
+		have = str((_probe.call("equipped") as Dictionary).get("item", ""))
+		if have == tool:
+			return "%d x %s: equipped %s" % [attempt + 1, control, tool]
+	return "FAIL equip_tool: wanted %s, holding '%s' after %d press(es) of %s" % [
+		tool, have, max_attempts, control]
 
 
 ## Chip a live wild target down to as close to zero HP as the fight will

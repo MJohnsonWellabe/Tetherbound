@@ -93,3 +93,58 @@ This run: 17 FAILs (was 11 before the merge, 12 before that -- both of
 those numbers are superseded, per your own instruction). The regression
 from 11 to 17 is entirely the materials-shortfall cascade above, not new
 defects in either of this session's own fixes.
+
+## Correction, 2026-09-02: the terrain-rebake theory above is wrong
+
+A second opinion (Fable, dispatched per the operator's standing instruction
+to use it when genuinely stuck) went node-by-node instead of stopping at
+"consistent with more nodes failing" and found the real cause. It is **not**
+PR #20's scatter rebake. Two separate, already-present bugs account for the
+gather shortfall, and the terrain theory does not survive contact with
+either the harvest data or this run's own telemetry:
+
+1. **Wrong-tool gathering, silently refused.** `harvest_node.gd::_on_gathered()`
+   checks the actually-held tool against `items.json`'s `gathered_with` for
+   that resource and, if it does not match, returns after a `push_world_message`
+   toast ("Needs a Knife.") -- no inventory change, no error, and nothing this
+   harness was reading before now. The gather ladder's equip steps press a
+   hotbar slot once per tool switch and assume that press landed. It does not
+   always: `playground_hud.gd`'s hotbar **toggles** -- pressing the slot that
+   is ALREADY equipped un-equips it rather than re-selecting it -- and a press
+   arriving while a tool swing (`tool_hold.gd`) is still in flight is dropped,
+   not queued. Either failure mode leaves the wrong tool (or nothing) equipped
+   at a node, which reads, from outside, exactly like "the node yielded
+   nothing" -- indistinguishable, with the old vocabulary, from a walk that
+   landed short.
+2. **`move_to`'s RIG-F5 gap, applied too bluntly.** `move_to_entity` already
+   had `close_3d`; plain `move_to` (used for every gather walk) did not, so a
+   node sitting on a step or slope relative to the walk's approach could read
+   "close enough" in x/z while still short in 3D. That part of the original
+   theory was directionally right -- but the fix that would have addressed it
+   (`close_3d` on gather walks) was never applied before this run, so it
+   cannot be what changed. What actually varies run to run is upstream of
+   that: the tool-equip failures above, which are non-deterministic in
+   exactly the "sometimes 4 of 8, sometimes 0 of 8" way this doc's numbers
+   showed, and were misread here as terrain variance because both failure
+   shapes surface downstream as "the node paid out nothing."
+
+**The "very likely PR #20 (Meadows Visual Parity)" claim above is retracted.**
+No scatter-rebake evidence was ever actually checked against VP's own commit
+-- it was inferred from the shape of the shortfall, and the shape has a
+closer, already-present explanation that does not require the VP merge to be
+involved at all. Nothing here says VP definitely did NOT move any scatter
+coordinates; it says the gather shortfall in this run is not evidence that it
+did, and should not be cited as such.
+
+Fix applied in `tools/gate_f/operator_harness.gd` / `tools/gate_f/segments/S03.json`:
+a new `equip_tool` action (presses, then re-reads the live equipped item,
+retrying up to `max_attempts` times before failing) replaces every blind
+hotbar press in the gather ladder; the "work the node" press is split into a
+verified `interact_with{expect_prompt:...}` first tap (which now genuinely
+FAILs on a wrong-tool refusal, since inventory does not change) plus a
+best-effort plain second tap; `close_enough` on the 20 gather walks tightened
+2.2 -> 1.8 and `close_3d: true` enabled on them, now that `_walk_loop`'s
+close_3d branch keeps walking through a small, closing vertical gap instead
+of failing on the first frame it appears (see `tools/gate_f/SEGMENT_SCHEMA.md`,
+`move_to`'s RIG-F5 note). Re-verification is a fresh full S03 run, not yet
+captured as of this edit.

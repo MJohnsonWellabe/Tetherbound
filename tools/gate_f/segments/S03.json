@@ -2671,10 +2671,12 @@
     {
       "id": "S03-65-equip",
       "title": "equip the axe",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "axe",
         "control": "hotbar_2",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
       "observation": "Added 2026-09-02, FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md. This is the FIRST gather node in the ladder, and unlike every later node it had no individual equip step of its own -- S03-56c..j binds axe/pickaxe/knife to hotbar slots 2/3/4 but never itself presses a hotbar button to make one ACTIVE, so this node was worked with nothing equipped and yielded no wood (0 of 7 wood attempts at this specific position, gate-f-run-20260902T122646Z-s03full). Every later node already has its own equip step for exactly this reason; this one was missing it by omission, not by design -- the ladder was authored assuming the last S03-56 assign (axe, S03-56i) would leave axe equipped, but assigning a tool to a hotbar slot and equipping it are two different actions."
@@ -2689,9 +2691,10 @@
           -28.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -2699,22 +2702,34 @@
     {
       "id": "S03-66",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-66-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-67-equip",
       "title": "equip the knife",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "knife",
         "control": "hotbar_4",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
       "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
@@ -2729,9 +2744,10 @@
           -22.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -2739,14 +2755,24 @@
     {
       "id": "S03-68",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-68-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
     },
     {
       "id": "S03-69",
@@ -2758,9 +2784,10 @@
           -16.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Pick berries'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -2768,22 +2795,34 @@
     {
       "id": "S03-70",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Pick berries",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-70-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-71-equip",
       "title": "equip the pickaxe",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "pickaxe",
         "control": "hotbar_3",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
@@ -2797,9 +2836,10 @@
           -34.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Prise loose stones'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -2807,22 +2847,34 @@
     {
       "id": "S03-72",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Prise loose stones",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-72-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-73-equip",
       "title": "equip the knife",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "knife",
         "control": "hotbar_4",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
       "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
@@ -2837,9 +2889,10 @@
           -24.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -2847,22 +2900,34 @@
     {
       "id": "S03-74",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-74-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-75-equip",
       "title": "equip the axe",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "axe",
         "control": "hotbar_2",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
@@ -2876,9 +2941,10 @@
           -16.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -2886,22 +2952,34 @@
     {
       "id": "S03-76",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-76-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-77-equip",
       "title": "equip the knife",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "knife",
         "control": "hotbar_4",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
       "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
@@ -2916,9 +2994,10 @@
           -8.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -2926,22 +3005,34 @@
     {
       "id": "S03-78",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-78-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-79-equip",
       "title": "equip the axe",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "axe",
         "control": "hotbar_2",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
@@ -2955,9 +3046,10 @@
           -28.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
       "observation": "GAME-F1: this node stood at (44, -24), 2.3 m outside the village fence. Moved inside, so the walk no longer crosses the boundary."
@@ -2965,22 +3057,34 @@
     {
       "id": "S03-80",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-80-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-81-equip",
       "title": "equip the pickaxe",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "pickaxe",
         "control": "hotbar_3",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
@@ -2994,9 +3098,10 @@
           -34.5
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Prise loose stones'",
       "observation": "GAME-F1: this node stood at (52, -30), 3.5 m outside the village fence -- and it is one of only three stone nodes the village authors, against a camp+bed bill of 8 stone. Moved inside."
@@ -3004,14 +3109,24 @@
     {
       "id": "S03-82",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Prise loose stones",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-82-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
     },
     {
       "id": "S03-83",
@@ -3023,9 +3138,10 @@
           -36.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Pick berries'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -3033,22 +3149,34 @@
     {
       "id": "S03-84",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Pick berries",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-84-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-85-equip",
       "title": "equip the knife",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "knife",
         "control": "hotbar_4",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
       "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
@@ -3063,9 +3191,10 @@
           -40.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -3073,22 +3202,34 @@
     {
       "id": "S03-86",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-86-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-87-equip",
       "title": "equip the axe",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "axe",
         "control": "hotbar_2",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
@@ -3102,9 +3243,10 @@
           -44.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -3112,22 +3254,34 @@
     {
       "id": "S03-88",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-88-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-89-equip",
       "title": "equip the knife",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "knife",
         "control": "hotbar_4",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
       "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
@@ -3142,9 +3296,10 @@
           -46.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -3152,22 +3307,34 @@
     {
       "id": "S03-90",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-90-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-91-equip",
       "title": "equip the axe",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "axe",
         "control": "hotbar_2",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
@@ -3181,9 +3348,10 @@
           -34.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -3191,22 +3359,34 @@
     {
       "id": "S03-92",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-92-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-93-equip",
       "title": "equip the knife",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "knife",
         "control": "hotbar_4",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
       "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
@@ -3221,9 +3401,10 @@
           -30.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -3231,14 +3412,24 @@
     {
       "id": "S03-94",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-94-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
     },
     {
       "id": "S03-95",
@@ -3250,9 +3441,10 @@
           -20.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -3260,22 +3452,34 @@
     {
       "id": "S03-96",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-96-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-97-equip",
       "title": "equip the axe",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "axe",
         "control": "hotbar_2",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
@@ -3289,9 +3493,10 @@
           -8.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -3299,22 +3504,34 @@
     {
       "id": "S03-98",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-98-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-99-equip",
       "title": "equip the knife",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "knife",
         "control": "hotbar_4",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
       "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
@@ -3329,9 +3546,10 @@
           -14.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -3339,22 +3557,34 @@
     {
       "id": "S03-100",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Strip meadow grass",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-100-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-101-equip",
       "title": "equip the pickaxe",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "pickaxe",
         "control": "hotbar_3",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
@@ -3368,9 +3598,10 @@
           6.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Prise loose stones'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -3378,22 +3609,34 @@
     {
       "id": "S03-102",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Prise loose stones",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
     },
     {
+      "id": "S03-102-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
+    },
+    {
       "id": "S03-103-equip",
       "title": "equip the axe",
-      "action": "press",
+      "action": "equip_tool",
       "args": {
+        "tool": "axe",
         "control": "hotbar_2",
-        "hold": "tap"
+        "max_attempts": 3,
+        "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
     },
@@ -3407,9 +3650,10 @@
           8.0
         ],
         "budget_frames": 3000,
-        "close_enough": 2.2,
+        "close_enough": 1.8,
         "held_budget_frames": 3600,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
@@ -3417,14 +3661,24 @@
     {
       "id": "S03-104",
       "title": "work the node",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
+        "expect_prompt": "Gather deadwood",
         "hold": "tap",
-        "times": 2,
         "settle_frames": 90
       },
       "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-104-again",
+      "action": "press",
+      "title": "work the node (second swing)",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "the same node usually needs a second hit to fully deplete; a plain press because the node -- and its prompt -- may already be gone after the first verified hit, which interact_with would otherwise (correctly) FAIL on."
     },
     {
       "id": "S03-105",
