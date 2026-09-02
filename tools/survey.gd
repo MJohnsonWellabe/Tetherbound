@@ -174,6 +174,45 @@ func _run() -> void:
 	var world: Node = packed.instantiate()
 	root.add_child(world)
 
+	var written: Array[String] = []
+	var failures: Array[String] = []
+
+	# R6-CLOCK-FREEZE (weather half). world_look.gd's set_clock_frozen (below)
+	# only gates WorldLook's own `_process` -- it says nothing about
+	# WorldWeather, a SEPARATE node with its own `_process` that rolls a new
+	# weather preset on a real-time timer (weather.json cycle_seconds_min/max,
+	# 240-480s) and, on every roll, calls world_look.gd::set_weather(), which
+	# unconditionally re-derives sun/sky/environment via _apply_blended() --
+	# see that function's own body: it has no `_clock_frozen` check at all,
+	# because it is meant to work "even while frozen" for the ordinary case of
+	# a capture tool calling set_weather() directly. A random roll firing mid-
+	# run comes in through that same unguarded door. A 5-viewpoint pass here is
+	# comfortably inside the 240-480s window under software rendering (this
+	# tool's own SETTLE_FRAMES alone is ~240 real seconds), while a short
+	# 1-2 viewpoint smoke test is not -- which is exactly why an isolated
+	# clock-freeze check on a couple of viewpoints came back looking correct
+	# while the full five-viewpoint run did not: nothing about the mechanism
+	# differs, only whether 240-480 real seconds had elapsed yet.
+	#
+	# tools/_capture_ground_and_sky.gd and tools/_capture_locations.gd (both
+	# golden/night frames render correctly through them) already freeze BOTH
+	# WorldLook and WorldWeather for exactly this reason -- this tool only
+	# froze the first. Forced to "clear" and frozen HERE, before the very
+	# first settle frame, rather than alongside WorldLook's own freeze below:
+	# freezing it after the 240-frame initial settle would be freezing it
+	# after it already had up to 240 real seconds -- most of the roll window
+	# -- to fire once unobserved.
+	var weather: Node = world.get_node_or_null(^"WorldWeather")
+	if weather != null and weather.has_method("set_weather"):
+		weather.call("set_weather", "clear")
+		weather.set_process(false)
+		weather.set_physics_process(false)
+	else:
+		failures.append("no WorldWeather node with set_weather; its random cycle " +
+			"timer is free to roll mid-run and overwrite a pinned time of day " +
+			"through world_look.gd's own set_weather(), which is not gated by " +
+			"the clock freeze")
+
 	for i in _frames(SETTLE_FRAMES):
 		await physics_frame
 
@@ -204,27 +243,29 @@ func _run() -> void:
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	var field: RefCounted = HEIGHTFIELD.new()
 
-	# R6-CLOCK-FREEZE. Every viewpoint below calls apply_time() expecting an
-	# exact, reproducible pinned frame -- but world_look.gd's passive day/night
-	# clock (`_process`) is still running underneath it, and this loop's own
-	# SETTLE_AFTER_MOVE/POSE_FRAMES waits are real frames under software
-	# rendering (~1s each on this box). A previous attempt papered over a black
-	# golden-hour frame by adding 120 MORE such frames after apply_time("golden")
-	# and got a lit frame back that was not golden at all -- neutral midday --
-	# because those 120 frames let _process's own _apply_blended(hour) re-derive
-	# the sky from a clock that had drifted ~5 in-game hours off the pin (see
-	# world_look.gd::set_clock_frozen's own comment for the exact arithmetic).
-	# Freezing once, here, before the viewpoint loop starts, means every
-	# apply_time() call below stays pinned through its settle/pose frames with
-	# no drift, without touching SETTLE_AFTER_MOVE/POSE_FRAMES at all.
+	# R6-CLOCK-FREEZE (WorldLook half; see the WorldWeather freeze above for
+	# the other half of "the clock"). Every viewpoint below calls apply_time()
+	# expecting an exact, reproducible pinned frame -- but world_look.gd's
+	# passive day/night clock (`_process`) is still running underneath it, and
+	# this loop's own SETTLE_AFTER_MOVE/POSE_FRAMES waits are real frames under
+	# software rendering (~1s each on this box). A previous attempt papered
+	# over a black golden-hour frame by adding 120 MORE such frames after
+	# apply_time("golden") and got a lit frame back that was not golden at all
+	# -- neutral midday -- because those 120 frames let _process's own
+	# _apply_blended(hour) re-derive the sky from a clock that had drifted ~5
+	# in-game hours off the pin (see world_look.gd::set_clock_frozen's own
+	# comment for the exact arithmetic).
+	# Freezing once, here, BEFORE the viewpoint loop starts (and therefore
+	# before every apply_time() call the loop makes), means every apply_time()
+	# call below stays pinned through its settle/pose frames with no drift,
+	# without touching SETTLE_AFTER_MOVE/POSE_FRAMES at all. Freezing alone is
+	# not enough on its own, though -- WorldLook's OWN clock was never the
+	# whole story here, see the WorldWeather block above.
 	# has_method guards this tool against an older WorldLook that predates
 	# set_clock_frozen -- it should degrade to the old (drift-prone) behaviour
 	# rather than hard-fail.
 	if look != null and look.has_method("set_clock_frozen"):
 		look.call("set_clock_frozen", true)
-
-	var written: Array[String] = []
-	var failures: Array[String] = []
 
 	# Terrain3D has to be told about this camera too. `make_current()` only
 	# changes what the viewport renders from; Terrain3D streams its regions —
@@ -253,6 +294,13 @@ func _run() -> void:
 		_place_actor(player, field, camera, view)
 		if look != null:
 			look.call("apply_time", str(view.get("time", "day")))
+			# Proof the pin held: printed AFTER apply_time() and BEFORE the
+			# settle/pose wait below, so a re-run can compare this against the
+			# named viewpoint's own `time` and catch drift the moment it
+			# starts, rather than only inferring it from a wrong-looking PNG.
+			if look.has_method("time_of_day") and look.has_method("hour"):
+				print("DIAG %s: time=%s hour=%.3f" % [
+					name, str(look.call("time_of_day")), float(look.call("hour"))])
 		else:
 			failures.append("%s: no WorldLook node, so the time of day is whatever the scene was saved with" % name)
 

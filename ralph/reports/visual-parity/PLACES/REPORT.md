@@ -710,3 +710,146 @@ authored position was changed.
 5. `_judge_capture_hall.gd` has still never been run in any round — the Hall's golden/night gate-face
    read remains unjudged.
 6. Contact sheets were not built this round (the capture's later stages were cut for time).
+
+---
+
+# Round 4
+
+Merged `origin/claude/coordination-subagents-3fhz1x` clean, zero conflicts; it touched none of this
+lane's owned files and none of the scatter-fingerprint config, so no re-bake was owed on that account.
+A re-bake was run anyway, because round 3's cleanup restored the working tree to the *committed* bake
+(the local one is deliberately never committed), which is stale against current config.
+
+## R4.0 The "not reaching that stand" premise — measured, and false
+
+The fix list opens: *"the judge measured `04-warrens-approach-day` as pixel-comparable to round 2 — your
+tint/variation change is not reaching that stand. Prove change with a pixel-diff count before anything
+else."* Done, first thing. Round 2 vs round 3, same `VP_FAST` 960x540 settings both sides:
+
+| frame | mean abs diff | px differing >2 | >8 | >24 | byte-identical? |
+|---|---|---|---|---|---|
+| `04-warrens-approach-day` | **19.92** | 82.1 % | 56.1 % | 33.4 % | no |
+| `04-warrens-standing-day` | 17.45 | 72.5 % | 35.9 % | 25.5 % | no |
+| `04-warrens-den-day` | 5.80 | 41.8 % | 14.3 % | 12.0 % | no |
+
+A third of the approach frame's pixels moved by more than 24/255. **The change reaches the stand.** The
+plumbing is not the problem and round 4 did not spend time re-proving it.
+
+What *is* true is that the art-direction goal is still unmet — "reads as a flat grey pile" can be
+perfectly accurate about a frame that has nonetheless changed a great deal. So the deeper work in item 1
+(lower-half staining, suppressed carpet on the apron, a wider darker mouth) was done on its merits. The
+correction matters only so the next round does not go hunting for a plumbing bug that does not exist.
+
+This is the **second** judge finding of the form "your change did not land" that measurement has
+contradicted (the first was round 1's "every after-frame is pixel-identical", refuted in the round-2
+addendum). Both times the frames had in fact changed substantially. Recommend the judging step compare
+frames of identical dimensions and report a diff statistic alongside the verdict, so a perceptual
+judgement ("it still reads flat") is not relayed as a mechanical one ("the change is not reaching the
+render") — they call for completely different fixes.
+
+## R4.1 The grey band, finally identified — and it was never the Hall's
+
+Three rounds have now chased this. Round 3 disproved the boiler-smoke theory by disabling the smoke and
+measuring a −0.54 change. This round found the actual source by searching outward from the Hall:
+
+**`StormWall`, built by `scripts/world/rift_collapse.gd` from `data/config/rift_collapse.json`'s
+`storm_wall` block** — three alpha-blended `QuadMesh` slabs, 520–620 m wide and 150–225 m tall, standing
+262–356 m out. That is why it spans the entire frame behind the Hall regardless of what the Hall does,
+and why two rounds of Hall-side fixes could never touch it.
+
+**Scope deviation, declared:** `rift_collapse.*` belongs to **no lane** in
+`docs/VISUAL_PARITY_LANES.md`'s ownership table. It was edited here only because the round-4 fix list
+explicitly assigns this band to PLACES. The change is deliberately conservative — values and falloff
+only; slab count, size and position untouched:
+
+| what | old | new |
+|---|---|---|
+| slab colours | `#39404f` / `#2b3140` / `#454d5d` | `#2e333f` / `#222733` / `#373e4a` |
+| `_slab_mask()` top falloff | `smoothstep(top−0.005, top+0.042)` | `smoothstep(top−0.02, top+0.09)` |
+
+The top now dissolves over ~11 % of slab height instead of ~4.7 %; that 4.7 % edge is what read as a flat
+plate. In the round-4 400 m frame the top edge does graduate into the sky rather than terminating in a
+line. **It is improved, not solved** — the band still spans the frame and still limits how much the Hall
+separates at 400 m. If the next round wants it gone from these shots, the honest options are moving the
+slabs, shrinking them, or excluding them from this sightline — all structural, and all needing whoever
+owns `rift_collapse` to sign off.
+
+## R4.2 Frames — every change measured against round 3
+
+`round4/locations/`, `VP_FAST` 960x540, identical settings to round 3.
+
+| frame | r3 mean | r4 mean | mean abs diff | px >8 |
+|---|---|---|---|---|
+| `04-warrens-approach-day` | 112.25 | **103.29** | 9.58 | 13.0 % |
+| `04-warrens-standing-day` | 57.92 | **38.31** | 22.29 | 48.3 % |
+| `04-warrens-den-day` | 73.23 | 73.27 | 0.68 | 1.8 % |
+| `10-stronghold-courtyard-night` | 2.83 | **3.58** | 0.78 | 6.4 % |
+| `10-stronghold-gate-night` | 23.52 | 23.18 | 3.74 | 15.7 % |
+| `10-stronghold-gate-day` | 113.88 | 113.78 | 7.00 | 23.8 % |
+| `11-castle-landmark-hall-400m-day` | 118.55 | 118.99 | 4.23 | 16.0 % |
+| `11-castle-landmark-hall-200m-day` | 117.05 | 117.24 | 4.07 | 15.4 % |
+
+**Den frame stability:** the fix list required the den frame stay pixel-stable. It is *nearly* so — mean
+abs diff 0.68, 1.8 % of pixels over 8 — but it is **not** byte-identical. The residue is the new boulder
+stain reaching entrance-jamb rocks that are partly visible from the den stand. No interior geometry,
+chamber, structure member, guardian or prize changed; the movement is material-only on exterior boulders
+seen through the mouth. Reported rather than glossed, since "pixel-stable" was the stated bar.
+
+## R4.3 Courtyard night — improved, not fixed
+
+Round 3's retune produced no measurable change (2.87 → 2.84) because the exterior omni budget was full at
+18/18 and had nowhere to go. This round raised `EXTERIOR_OMNI_BUDGET` 18 → **22** deliberately and added
+4 real corner braziers through the same `_brazier()`/`_build_hall_fire()` path every existing fire uses
+(energy 2.2, range 13, attenuation 1.4), clear of the fight floor. All non-shadowed —
+`_build_hall_fire()` sets `shadow_enabled = false` unconditionally, so
+`docs/PERFORMANCE_BUDGET.md`'s outdoor shadow-casting cap is still 0. Final: **22 exterior omnis,
+10 flickering fires**, confirmed by the smoke test's own log line.
+
+Result: 2.83 → 3.58 mean. In the frame the two oxblood banners and their sigils now read clearly, along
+with the scaffold, barrels and warm light points — where round 3 was effectively black. **But the frame
+is still very dark overall and faces are not lit.** If the bar is "faces read", this is not there yet and
+a further pass is owed.
+
+## R4.4 Perf — still inside budget
+
+| view | round 3 | round 4 |
+|---|---|---|
+| `hall_approach` | 3791 | **3843** (+52) |
+| `village_high` | 3122 | 3122 |
+
+The +52 is the round's +7 mesh instances (3 skyline retrofit props, 4 brazier baskets). **`hall_approach`
+remains under the 4000 ceiling**, with 157 calls of headroom.
+
+## R4.5 Tests
+
+`smoke_stronghold` exit 0 (logs 22/22 lights, 10 flickering fires); `smoke_warrens` exit 0 (walk-in
+16.0 m, full 52 m route, guardian and reward unchanged). Nothing added blocks the mouth, approach or a
+spawn.
+
+## R4.6 A deliberate non-change needing owner sign-off
+
+The fix list asked for "a wider, darker entrance opening" at the Warrens. The darker half was done. The
+**wider** half was not, deliberately: `passages[0].width` is the literal mouth-to-hall opening, and that
+number cuts the wall opening shared by the mouth chamber's *interior* wall and the exterior facade.
+Widening it would change interior architecture the owner has judged good and explicitly ruled untouchable.
+The visual frame around the doorway was widened instead (jamb offsets ±2.5→±3.1, scales 1.7/1.8→2.0/2.1,
+brow y 3.1→2.8 / z −1.2→−1.6 / scale 2.2→2.6, flora +0.6 m out and ~30–35 % larger, darken clamp
+[0.32,0.78]→[0.40,0.86]). Widening the actual doorway is available but needs a conscious decision,
+because it also changes the mouth→hall corridor.
+
+## R4.7 Unresolved after round 4
+
+1. **Courtyard night still dark** (mean 3.58); banners read, faces do not.
+2. **Storm band improved but still dominant** at 400 m; removing it from that sightline is structural and
+   needs the `rift_collapse` owner.
+3. **The scatter fingerprint over-triggers.** The bake output has been byte-identical for three
+   consecutive rounds (825587 placements, 29819789 bytes) while the fingerprint kept going stale off
+   `terrain_playground.json` edits that change no placement — ~270 s wasted per lane per occurrence.
+   Narrowing the fingerprint to the keys that actually affect scatter would pay for itself immediately.
+4. Grass field enabled but drawing zero instances — still open, GROUND's.
+5. `smoke_traversal` South Bridge walk-around — still open, outside PLACES.
+6. `_judge_capture_hall.gd` has still never produced frames. An orphaned round-1 subagent attempted it
+   three times this session and failed each time, and its own diagnosis is worth keeping: it was racing
+   concurrent edits to `scripts/world/stronghold.gd` on the same checkout. Any future attempt must run
+   when the tree is quiescent.
+7. Contact sheets not built (time budget).
