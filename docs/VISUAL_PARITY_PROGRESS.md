@@ -140,6 +140,21 @@ coordinator's fast render of the same tip (`WORLD-coord-fast`, village/pond/surv
   swap; (2) sun halo still too large (falloff 200/120 → 600/350); (3) dawn overlook is a uniform red
   wash. Perf table not measured by WORLD; the program coordinator measures tiles 0/16 locally.
 
+### PLACES round 1 (Opus coordinator, `claude/vp-places` @ 45238cab) — verdicts 2026-09-02 04:45 UTC
+Evidence: `ralph/reports/visual-parity/PLACES/00-before/` (42 frames + survey/ground) and `PLACES/round1/locations/` (36).
+Code-blind judge: `PLACES/JUDGE-round1.md`. Bar A soft yes for village/stronghold, no for relay/landmarks; Bar B yes.
+- Judge: every after-frame is pixel-identical to its before-frame — the merged VILLAGE/HALL code did not reach the
+  round-1 render (root-cause step added to round 2). Village reads as a cozy inhabited settlement day and night;
+  trail camp is the strongest place (legible fire, placed props); waystop good (Hall silhouette + smoke); stronghold
+  courtyard "nails ruin + Team Tether industry"; relay reads abandoned, not active; 04-warrens-den and
+  06-relay-approach are camera-in-geometry frames; 11-castle-landmark stands show empty grassland; no village gate
+  visible in any road frame; night NPCs silhouetted; cardboard tree cards and roof-tile moiré need art, not staging.
+- Coordinator: Hall exterior at distance still reads cream castle kit; relay needs occupation; warrens exterior flat grey.
+- Round 2 sent 04:50 (+ addendum 04:56): verify frames differ, Hall exterior weathering on all kit pieces, fix the
+  three broken/empty stands, relay occupation first pass, warrens exterior, well pad, gate visible, night NPC light.
+- PLACES also found: `smoke_traversal` fails on the merged tree at the South Bridge (pre-existing on main, outside
+  PLACES), and that 34–58 main commits were missing from the program branch (now merged, ce235831).
+
 ## Implementation decisions
 
 - `data/config/grass_field.json` is **ON** for this program (owner directive 2026-09-01: "I don't see how a
