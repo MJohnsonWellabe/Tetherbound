@@ -19,6 +19,8 @@
     "floor_clearance": 0.35,
     "_comment_exterior_cladding": "VP6 WARRENS CLEAN RESTART 2026-09-02. Metres of collision-free Ground030 earth skin (the apron/mouth-dome material, `_floor_material(true)`) stood proud of the OUTER face of the mouth chamber's front wall, full span and skirt-to-top height, so the doorway flanks/brow read as dug earth instead of the wall box's own near-white `_material(_rock(),0,true)` face -- tools/_probe_warrens_slab_ray.gd ray-cast the round-10 pale slab to exactly that face. The wall box (whose inner face is the mouth chamber interior) is untouched. 0 disables.",
     "exterior_cladding_m": 0.4,
+    "_comment_exterior_cladding_colour": "ROUND 12 (JUDGE-round11-warrens: flanks read as unlit black void, no grain). The skin's own albedo tint over Ground030, ~2x the apron's #2b2118 so the earth grain survives the mouth dome's shadow. Absent = apron material.",
+    "exterior_cladding_colour": "#4a3a2a",
     "wall_thickness": 1.2,
     "skirt": 10.0,
     "rock": "#5b5147",

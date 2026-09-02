@@ -642,6 +642,34 @@ func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: f
 ## built `exterior=true` (`_build_chambers()`), so "outward" is local -z; the
 ## `along_x` branch is the one that runs, the other is kept for symmetry.
 ## Setting the knob to 0 disables the skin and restores the old frame.
+## ROUND 12 (judge on round 11: flanks read as "an unlit black void, no
+## grain" -- the apron's `#2b2118` at a 0.05 lerp is tuned for sunlit trodden
+## ground and goes to black in the mouth dome's shadow). Same Ground030 earth,
+## same triplanar scale and normal map as `_floor_material(true)`, but its own
+## albedo tint from `site.exterior_cladding_colour` (~2x the apron value) so
+## the grain survives the shadow. Falls back to the apron material when the
+## key is absent, so an untouched site is unaffected. Cached under its own key.
+func _cladding_material() -> StandardMaterial3D:
+	var site: Dictionary = _config.get("site", {})
+	if not site.has("exterior_cladding_colour"):
+		return _floor_material(true)
+	var key := "cladding"
+	if _materials.has(key):
+		return _materials[key]
+	var m := StandardMaterial3D.new()
+	m.roughness = 0.98
+	m.albedo_texture = FLOOR_ALBEDO
+	m.albedo_color = Color(str(site.get("exterior_cladding_colour")))
+	m.normal_enabled = true
+	m.normal_texture = FLOOR_NORMAL
+	m.normal_scale = 1.8
+	m.uv1_triplanar = true
+	m.uv1_scale = Vector3.ONE * FLOOR_UV_SCALE
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_materials[key] = m
+	return m
+
+
 func _clad_exterior_face(wall: MeshInstance3D, size: Vector3, piece_at: Vector3, along_x: bool) -> void:
 	var site: Dictionary = _config.get("site", {})
 	var thickness := float(site.get("exterior_cladding_m", 0.4))
@@ -652,7 +680,7 @@ func _clad_exterior_face(wall: MeshInstance3D, size: Vector3, piece_at: Vector3,
 	var clad_size := Vector3(size.x, size.y, thickness) if along_x else Vector3(thickness, size.y, size.z)
 	box.size = clad_size
 	skin.mesh = box
-	skin.material_override = _floor_material(true)
+	skin.material_override = _cladding_material()
 	var outward := Vector3(0.0, 0.0, -(_wall_t * 0.5 + thickness * 0.5)) if along_x \
 		else Vector3(-(_wall_t * 0.5 + thickness * 0.5), 0.0, 0.0)
 	skin.position = piece_at + outward
