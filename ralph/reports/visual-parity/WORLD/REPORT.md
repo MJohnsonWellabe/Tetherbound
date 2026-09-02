@@ -239,3 +239,81 @@ material textures.
 Run fix D's perf A/B and the test/smoke set, in that order, in as few Godot launches as
 possible — they are the two hard gaps and neither needs a fix first. Judge the night
 frames for the moon-glow question before anything else is tuned.
+
+---
+
+## Round-1 verification render — results
+
+8 frames, 2 stands x 4 times, 1280x720, one world build.
+`round1/stands/` + `_sheet_stands.png`.
+
+| frame | mean RGB | R-G | palemint% | nearwhite% |
+|---|---|---|---|---|
+| 01-spawn-outward-day | 80.7 100.2 59.4 | -19.5 | 0.93 | 0.00 |
+| 01-spawn-outward-golden | 77.3 72.9 40.7 | +4.4 | 2.11 | 0.00 |
+| 01-spawn-outward-night | 8.6 18.6 23.2 | -10.0 | 0.01 | 0.00 |
+| 01-spawn-outward-dawn | 58.6 60.0 43.6 | -1.4 | 0.01 | 0.00 |
+| 03-rise-overlook-day | 103.9 130.1 119.2 | -26.2 | 0.00 | 0.00 |
+| 03-rise-overlook-golden | 82.0 100.7 102.2 | -18.7 | 0.00 | 0.00 |
+| 03-rise-overlook-night | 18.8 68.3 104.0 | -49.5 | 0.00 | 0.00 |
+| 03-rise-overlook-dawn | 160.7 63.9 54.8 | **+96.8** | 0.00 | 0.00 |
+
+### Verdicts
+
+**Clock freeze — PASS.** All 8 DIAG lines pinned exactly: day `hour=8.0000`,
+golden `hour=18.0000`, night `hour=0.0000`, dawn `hour=5.0000`. No drift across
+settle and pose frames, at either stand.
+
+**Canopy binding (`take_over_path()`) — FAIL.** Pale-mint on `01-spawn-outward`
+day is 0.93%, against 1.07% for the broken first cut and **0.06% for the
+pre-regression VP-PRE baseline**. Still ~15x baseline. The comparison is
+conservative: the current frame is *darker* than VP-PRE (80.7/100.2/59.4 vs
+112.4/121.0/73.7), which should push pale-mint down, yet it went up. The fix did
+not restore the binding. Consistent with the subagent never having independently
+confirmed the drop inside Terrain3D's registration. Next attempt should use the
+diagnostic that was skipped: read back `albedo_texture` on the registered asset
+and see whether it is null, before trying another fix. The `user://` round-trip
+is the untried alternative.
+
+Caveat on the metric: pale-mint only fires on bright pixels (190-245), so dark
+frames (night, dawn, and both `03-rise-overlook` views) cannot register white
+canopies at all. Only the day frames test this.
+
+**Sun glow / golden exposure — INCONCLUSIVE, needs an eye.** `nearwhite` is
+0.00% in all 8 frames, so nothing is blowing out any more. But `nearwhite` was
+also 0.00% *before* the glow fix, so it never was the right measure of the blob
+— the halo saturated to white over a wide solid angle without necessarily
+clipping. Disc diameter in pixels was not measured. Judge from
+`_sheet_stands.png`.
+
+**Golden may now be too dark.** `01-spawn-outward-golden` mean fell from 117.2
+(pre-exposure-change, clock-frozen) to 77.3. The exposure 1.0 -> 0.65 was applied
+on the strength of "trees blown to white", which the numbers now attribute mostly
+to the canopy binding bug, not to exposure. If the canopy fix lands properly,
+revisit whether 0.65 was needed at all.
+
+### New defect found by this render: aerial perspective is time-invariant
+
+`terrain_playground.json` `shader.aerial_fade_colour` is a fixed `#aebcc4` and
+does not vary with time of day, while the sky's fog and horizon do. Two
+independent symptoms in these frames:
+
+- `03-rise-overlook-night` means 18.8 68.3 **104.0** — the distance is *brighter
+  and bluer than the foreground at midnight* (compare `01-spawn-outward-night` at
+  8.6 18.6 23.2). Night's fog (`#31446f`) and horizon (`#3d5285`) go properly
+  dark, but the terrain's own aerial term keeps pulling far hills toward a bright
+  cool grey, so the horizon glows.
+- `03-rise-overlook-golden` is R-G **-18.7** with blue above green, i.e. cool,
+  at 18:00. Golden only reads warm at the sun-facing stand (`01` at +4.4).
+
+Fix direction: drive the aerial fade colour/strength per time-of-day the way the
+sky keys already are, instead of a constant. This likely also contributes to the
+systematic darkening noted above, since the aerial term fights the lighting at
+every hour except midday. **Strongest candidate for round 2.**
+
+### Also worth an eye
+
+`03-rise-overlook-dawn` is R-G **+96.8** (160.7 63.9 54.8) — an almost
+monochrome red frame, against a neutral -1.4 for the same time at stand 01.
+Plausibly a sunrise viewed head-on, but the magnitude is extreme and it was not
+diagnosed.
