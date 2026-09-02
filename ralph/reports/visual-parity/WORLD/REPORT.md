@@ -1350,3 +1350,32 @@ ever move it, and every toggle produced bit-identical frames.
   re-apply fix (`04bbb286`) removed one contributor; not proven, and not needed now.
 
 Evidence: `round5e-SOLVED/` (8 frames + `_sheet_SOLVED.png`).
+
+## Round 5f — survey after the actor-parking fix
+
+The SHIPPED `tools/survey.gd`, all five frames, 960x540:
+
+| frame | mean RGB | R−G | round 2 | Δ |
+|---|---|---|---|---|
+| 01-spawn-outward | 82.9/94.5/54.5 | −11.6 | −20.1 | 8.5 |
+| 02-valley-floor | 96.9/109.2/57.5 | −12.3 | −18.7 | 6.4 |
+| **03-rise-overlook** | 125.1/133.9/103.9 | −8.8 | −26.3 | **17.5** |
+| **04-three-quarter** | 94.5/106.8/52.2 | −12.3 | −41.7 | **29.4** |
+| 05-spawn-low-sun | 84.0/72.5/47.1 | **+11.5** | **BLACK** | — |
+
+**No frame is washed.** All five sit between −12.3 and +11.5, and
+`05-spawn-low-sun` — pure black through rounds 1 and 2 — is now a warm golden
+frame, the last of the original defects to close.
+
+The two stands that were parking the player 500 m under the world (`03`, `04`)
+moved most, 17.5 and 29.4 points against 6–9 for the three controls. That is the
+right direction.
+
+**Evidential caveat, stated rather than glossed:** this is a cross-round
+comparison and `art.json` changed substantially in between (day sun disc and
+colour, golden ambient and clouds, per-time aerial, night horizon/ambient), so
+every frame would move somewhat regardless. It corroborates; it does not prove.
+The clean proof of the mechanism remains round 5e, where one variable changed
+inside a single boot and produced a 97-point swing.
+
+Evidence: `round5f-survey-after-fix/` (5 frames + sheet).
