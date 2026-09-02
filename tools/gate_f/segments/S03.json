@@ -2369,6 +2369,1114 @@
       "expected": "The world must have input back before walking to Mira's door."
     },
     {
+      "id": "S03-51m",
+      "title": "why this training pass exists",
+      "action": "note",
+      "args": {
+        "text": "Added 2026-09-02, per direct instruction to close every real S03 FAIL rather than record and stop: `tournament_training_ready` (entry.min_level=5, checked against the full five-creature roster) is a REAL, validated threshold -- OWNER-0901-TRAIN-CLARITY-V2/OWNER-0901-TOURNAMENT-LEVEL5 confirmed it with a real headless test suite and a real simulated tournament win, and objectives.json's own authored guidance already tells the player 'Wins are levels. Get your whole team to level 5' -- not a made-up number this segment invents pacing to satisfy. One Bryn fight alone leaves the team at a uniform level 3 (a ~600 XP/creature gap to level 5, progression.gd's xp_to_next curve). `combat_manager.gd::_award_victory()` pays the active pilot the FULL award and every OTHER non-fainted party member `party_share` (35%) of it on every win -- so a wild fight anywhere trains the whole team at once, not just whoever is piloting, and rotating the pilot between fights (party_cycle below) spreads the full award around instead of stacking it on one creature. The blocks below engage whichever wild bramblebun the catch loop's own ten-attempt ladder did not need (rank 10+, clamping to whatever is actually left the same way the catch loop's own `rank` already does) and fight it to a real resolution -- `fight_until_resolved`, no `until_flag`, so it costs nothing and reports cleanly even on a round that finds nothing left to fight."
+      }
+    },
+    {
+      "id": "S03-51n0a",
+      "title": "walk to another wild bramblebun for training (round 1)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 10,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n0b",
+      "title": "engage it (training round 1)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n0c",
+      "title": "fight it to resolution (training round 1)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n0d",
+      "title": "cycle the pilot before the next round (training round 1)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n0e",
+      "title": "let the party swap finish (training round 1)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n1a",
+      "title": "walk to another wild bramblebun for training (round 2)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 11,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n1b",
+      "title": "engage it (training round 2)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n1c",
+      "title": "fight it to resolution (training round 2)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n1d",
+      "title": "cycle the pilot before the next round (training round 2)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n1e",
+      "title": "let the party swap finish (training round 2)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n2a",
+      "title": "walk to another wild bramblebun for training (round 3)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 12,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n2b",
+      "title": "engage it (training round 3)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n2c",
+      "title": "fight it to resolution (training round 3)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n2d",
+      "title": "cycle the pilot before the next round (training round 3)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n2e",
+      "title": "let the party swap finish (training round 3)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n3a",
+      "title": "walk to another wild bramblebun for training (round 4)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 13,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n3b",
+      "title": "engage it (training round 4)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n3c",
+      "title": "fight it to resolution (training round 4)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n3d",
+      "title": "cycle the pilot before the next round (training round 4)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n3e",
+      "title": "let the party swap finish (training round 4)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n4a",
+      "title": "walk to another wild bramblebun for training (round 5)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 14,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n4b",
+      "title": "engage it (training round 5)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n4c",
+      "title": "fight it to resolution (training round 5)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n4d",
+      "title": "cycle the pilot before the next round (training round 5)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n4e",
+      "title": "let the party swap finish (training round 5)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n5a",
+      "title": "walk to another wild bramblebun for training (round 6)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 15,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n5b",
+      "title": "engage it (training round 6)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n5c",
+      "title": "fight it to resolution (training round 6)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n5d",
+      "title": "cycle the pilot before the next round (training round 6)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n5e",
+      "title": "let the party swap finish (training round 6)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n6a",
+      "title": "walk to another wild bramblebun for training (round 7)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 16,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n6b",
+      "title": "engage it (training round 7)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n6c",
+      "title": "fight it to resolution (training round 7)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n6d",
+      "title": "cycle the pilot before the next round (training round 7)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n6e",
+      "title": "let the party swap finish (training round 7)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n7a",
+      "title": "walk to another wild bramblebun for training (round 8)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 17,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n7b",
+      "title": "engage it (training round 8)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n7c",
+      "title": "fight it to resolution (training round 8)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n7d",
+      "title": "cycle the pilot before the next round (training round 8)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n7e",
+      "title": "let the party swap finish (training round 8)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n8a",
+      "title": "walk to another wild bramblebun for training (round 9)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 18,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n8b",
+      "title": "engage it (training round 9)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n8c",
+      "title": "fight it to resolution (training round 9)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n8d",
+      "title": "cycle the pilot before the next round (training round 9)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n8e",
+      "title": "let the party swap finish (training round 9)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n9a",
+      "title": "walk to another wild bramblebun for training (round 10)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 19,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n9b",
+      "title": "engage it (training round 10)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n9c",
+      "title": "fight it to resolution (training round 10)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n9d",
+      "title": "cycle the pilot before the next round (training round 10)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n9e",
+      "title": "let the party swap finish (training round 10)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n10a",
+      "title": "walk to another wild bramblebun for training (round 11)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 20,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n10b",
+      "title": "engage it (training round 11)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n10c",
+      "title": "fight it to resolution (training round 11)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n10d",
+      "title": "cycle the pilot before the next round (training round 11)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n10e",
+      "title": "let the party swap finish (training round 11)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n11a",
+      "title": "walk to another wild bramblebun for training (round 12)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 21,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n11b",
+      "title": "engage it (training round 12)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n11c",
+      "title": "fight it to resolution (training round 12)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n11d",
+      "title": "cycle the pilot before the next round (training round 12)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n11e",
+      "title": "let the party swap finish (training round 12)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n12a",
+      "title": "walk to another wild bramblebun for training (round 13)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 22,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n12b",
+      "title": "engage it (training round 13)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n12c",
+      "title": "fight it to resolution (training round 13)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n12d",
+      "title": "cycle the pilot before the next round (training round 13)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n12e",
+      "title": "let the party swap finish (training round 13)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n13a",
+      "title": "walk to another wild bramblebun for training (round 14)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 23,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n13b",
+      "title": "engage it (training round 14)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n13c",
+      "title": "fight it to resolution (training round 14)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n13d",
+      "title": "cycle the pilot before the next round (training round 14)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n13e",
+      "title": "let the party swap finish (training round 14)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n14a",
+      "title": "walk to another wild bramblebun for training (round 15)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 24,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n14b",
+      "title": "engage it (training round 15)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n14c",
+      "title": "fight it to resolution (training round 15)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n14d",
+      "title": "cycle the pilot before the next round (training round 15)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n14e",
+      "title": "let the party swap finish (training round 15)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n15a",
+      "title": "walk to another wild bramblebun for training (round 16)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 25,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n15b",
+      "title": "engage it (training round 16)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n15c",
+      "title": "fight it to resolution (training round 16)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n15d",
+      "title": "cycle the pilot before the next round (training round 16)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n15e",
+      "title": "let the party swap finish (training round 16)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n16a",
+      "title": "walk to another wild bramblebun for training (round 17)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 26,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n16b",
+      "title": "engage it (training round 17)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n16c",
+      "title": "fight it to resolution (training round 17)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n16d",
+      "title": "cycle the pilot before the next round (training round 17)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n16e",
+      "title": "let the party swap finish (training round 17)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n17a",
+      "title": "walk to another wild bramblebun for training (round 18)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 27,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n17b",
+      "title": "engage it (training round 18)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n17c",
+      "title": "fight it to resolution (training round 18)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n17d",
+      "title": "cycle the pilot before the next round (training round 18)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n17e",
+      "title": "let the party swap finish (training round 18)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n18a",
+      "title": "walk to another wild bramblebun for training (round 19)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 28,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n18b",
+      "title": "engage it (training round 19)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n18c",
+      "title": "fight it to resolution (training round 19)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n18d",
+      "title": "cycle the pilot before the next round (training round 19)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n18e",
+      "title": "let the party swap finish (training round 19)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
+      "id": "S03-51n19a",
+      "title": "walk to another wild bramblebun for training (round 20)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "rank": 29,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "optional": true
+      },
+      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+    },
+    {
+      "id": "S03-51n19b",
+      "title": "engage it (training round 20)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "optional": true,
+        "settle_frames": 20
+      },
+      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
+    },
+    {
+      "id": "S03-51n19c",
+      "title": "fight it to resolution (training round 20)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90
+      },
+      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+    },
+    {
+      "id": "S03-51n19d",
+      "title": "cycle the pilot before the next round (training round 20)",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+    },
+    {
+      "id": "S03-51n19e",
+      "title": "let the party swap finish (training round 20)",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      }
+    },
+    {
       "id": "S03-52",
       "title": "walk to just outside Mira's shut door",
       "action": "move_to",

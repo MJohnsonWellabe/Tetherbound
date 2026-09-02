@@ -2781,8 +2781,18 @@ func _step_move_to_entity(args: Dictionary) -> String:
 	var spec := str(args.get("entity", ""))
 	if spec.is_empty():
 		return "HARNESS-ERROR move_to_entity needs entity:\"<name|group|label|species>\""
+	# `optional` (added 2026-09-02): for a step that names a `rank` past
+	# however many actually spawned -- e.g. an opportunistic training pass
+	# that asks for the 15th-nearest wild creature in a meadow that may only
+	# hold 10 -- "not found" is an expected outcome, not a defect. Every
+	# other caller keeps the loud FAIL: a segment step naming a SPECIFIC
+	# entity it expects to exist (a build, a named NPC) not finding it is
+	# real information a SKIP would bury.
+	var optional := bool(args.get("optional", false))
 	var found := _find_entity(spec, args)
 	if not bool(found.get("ok", false)):
+		if optional:
+			return "SKIPPED move_to_entity (optional): %s" % str(found.get("why", ""))
 		return "FAIL %s" % str(found.get("why", ""))
 	var node: Node3D = found["node"]
 	var what := "%s (%s)" % [spec, str(found.get("how", ""))]
