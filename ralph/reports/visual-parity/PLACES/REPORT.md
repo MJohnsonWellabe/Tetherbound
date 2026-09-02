@@ -477,3 +477,61 @@ courtyard, may be a defect — a judge should rule.
 6. `tools/_judge_capture_hall.gd` was not run in either round — the time budget went to the locations set
    both times. The Hall's golden/night gate-face read is therefore still unjudged, which is exactly the
    frame `exterior_conduit_energy` 0.45 exists to fix.
+
+---
+
+# Round 2 addendum — the "frames are identical" finding is not reproducible
+
+The program coordinator relayed a code-blind judge finding: *"every round-1 after-frame pixel-identical
+in content to its before-frame, so the merged dressing never reached the round-1 render — most likely the
+capture ran from the pre-merge tree, or the capture tool's world does not instantiate the changed config."*
+
+Checked against the artefacts. **The premise does not hold**, and the merged dressing did reach the render.
+
+## (a) The render tree included both merges
+
+| event | time (UTC) |
+|---|---|
+| merge `origin/claude/vp-village` (`908d703d`) | 03:44:40 |
+| merge `origin/claude/vp-hall` (`57a8e3a9`) | 03:44:41 |
+| `godot --headless --path . --import` (picks up the two new shaders) | 03:44:56 |
+| round-1 `locations` capture starts (`round1/capture.log` line 1) | **03:45:03** |
+
+The capture began 22 s after the merges and after a re-import, from the same working tree. `vp_capture.sh`
+reads config from the working tree, and the JSON config is read at run time, not from the `.import` cache.
+
+## (b) The frames are not identical, by md5 or by content
+
+`01-village-route-out-day`: `00-before` is **1280x720** md5 `12c27e85…`; `round1` is **960x540** md5
+`3d80c3b7…`; `round2` is 960x540 md5 `031684a4…`. Three distinct images, and the before/after pair are not
+even the same dimensions — a pixel comparison between them is not defined.
+
+Comparing content properly (before downscaled to 960x540, mean absolute per-pixel difference, and the
+share of pixels differing by more than 8/255):
+
+| frame | mean abs diff | % pixels > 8 |
+|---|---|---|
+| `01-village-tournament-day` | 33.32 | 84.4 % |
+| `10-stronghold-courtyard-day` | 22.87 | 84.6 % |
+| `10-stronghold-gate-day` | 22.32 | 64.2 % |
+| `01-village-standing-day` | 17.38 | 57.8 % |
+| `01-village-route-out-day` | 16.16 | 46.9 % |
+| `04-warrens-approach-day` | 15.47 | 56.2 % |
+
+**Likely cause of the false finding:** the before/after resolution mismatch this report flagged in §7
+(1280x720 full-settle vs `VP_FAST` 960x540, no MSAA/SSAA). A viewer that letterboxes or rescales one to
+the other's frame can make two genuinely different images read as the same picture. The mismatch was
+forced by the round-1 time budget and remains item 5 of the round-1 unresolved list; this is the second
+concrete cost it has caused.
+
+## (c) The config-not-instantiated hypothesis is independently refuted
+
+- Round 2's Hall work began with a headless probe that instantiated the real `meadows_hall` prefab and
+  found `HALL_STONE_SHADER` **already applied to 32 of the kit's 45 surfaces** via
+  `_weather_hall_massing()`. The config reaches the world builder.
+- `round1` and `round2` frames differ at **identical** capture settings (both `VP_FAST` 960x540) —
+  e.g. `01-village-route-out-day` `3d80c3b7…` vs `031684a4…`, which is the well retint landing.
+
+**Conclusion: no re-render of round 1 is warranted on this finding, and no cache/stale-import defect
+exists to fix.** What is warranted is closing the resolution mismatch so the judge is never handed a
+mismatched pair again.
