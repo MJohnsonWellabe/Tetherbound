@@ -1232,3 +1232,60 @@ teleport and repeat. That isolates the two candidates in at most two short runs,
 neither needs to run for an hour.
 
 Evidence: `round5c-wrap-ab/` (10 frames), `round5c-onset/` (2 frames).
+
+# Round 5d — transitions are NOT the trigger either; a camera/player-separation lead
+
+One boot at `03-rise-overlook`, preset `day` throughout, three shots differing only in what
+happened between them:
+
+| shot | preceded by | mean RGB | R−G |
+|---|---|---|---|
+| A | fresh arrival + `apply_time("day")` | 0.3726/0.3992/0.3107 | −6.78 |
+| B | preset cycle golden→night→dawn→day, SAME camera, NO teleport | 0.4904/0.5252/0.4088 | −8.89 |
+| C | teleport 03→01→03, NO preset change | 0.4908/0.5254/0.4088 | −8.80 |
+
+**All three clean.** So neither `apply_time()` preset switching NOR teleporting between
+stands triggers the wash. Both remaining candidates from round 5c are eliminated —
+thirteen explanations now falsified by measurement.
+
+Shot A also reproduces the previous run's N=0 almost exactly (−6.78 vs −6.76, mean 0.3726
+vs 0.3720), so the harness is stable across boots and these nulls are trustworthy.
+
+## The one structural difference that remains — and there is direct evidence for it
+
+This tool places the actor at each stand and freezes it on the ground. The tools whose runs
+DID wash do not: `render_world_r3.gd:389` reads
+
+```gdscript
+if not view.has("actor"):
+    return
+```
+
+and the `03-rise-overlook` stand has **no `actor` key**. So in every washed run the player
+was left at spawn while the camera teleported ~200 m away. In every clean run the player sat
+at the camera.
+
+The supporting evidence is direct, and it was recorded earlier as a discarded artifact: a
+settle test that parked the player at y=−500 with physics live produced a **near-black whole
+frame** — same terrain silhouette, everything dark. That is proof that player position alone
+can globally change what renders, independent of camera, preset and config. It was set aside
+as "a harness artifact" at the time; in light of these nulls it looks like the same
+phenomenon at a different magnitude.
+
+So the working hypothesis is **camera/player separation**, not time, not preset, not
+teleporting per se.
+
+## The test, and it is short
+
+Re-run the exact sequence that washed (`01-dawn` → `03-dawn` → `03-day` → `03-night` via
+`render_world_r3.gd`) TWICE:
+1. unchanged — expect the wash at shot 3, reproducing the known result;
+2. with an `actor` key added to the `03-rise-overlook` stand so the player is placed at the
+   camera — if the wash disappears, camera/player separation is the mechanism.
+
+That is one variable, a known-positive control, and no long idles. If it reproduces, the
+in-game consequence matters more than the capture bug: it would mean the look degrades
+whenever the rendering viewpoint is far from the player, which is a real gameplay condition
+(cutscenes, distant cameras), not just a capture artifact.
+
+Evidence: `round5d-transition/` (3 frames).
