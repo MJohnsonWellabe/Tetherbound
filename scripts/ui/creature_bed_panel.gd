@@ -147,7 +147,13 @@ func _build_shell() -> void:
 
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", box)
-	panel.custom_minimum_size = Vector2(420, 0)
+	# OWNER-0902-REST-VISIBILITY: 420 -> 520. A real render caught the row's
+	# new time-remaining text ("Resting — HP 40 / 120 · 1:20 left") clipping
+	# mid-word against the old 370px row width -- this panel has no other
+	# layout budget to protect (unlike `party_strip.gd`'s tightly-measured
+	# HUD contract), so it is simply widened to fit the real longest string
+	# rather than the text being shortened to fit an arbitrary old width.
+	panel.custom_minimum_size = Vector2(520, 0)
 	center.add_child(panel)
 
 	var outer := VBoxContainer.new()
@@ -212,7 +218,7 @@ func _refresh() -> void:
 	for i in PARTY.MAX_CREATURES:
 		var creature: RefCounted = party.call("at", i)
 		var button := Button.new()
-		button.custom_minimum_size = Vector2(370, 52)
+		button.custom_minimum_size = Vector2(470, 52)  # tracks panel.custom_minimum_size above
 		button.focus_mode = Control.FOCUS_ALL
 		button.clip_text = true
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
