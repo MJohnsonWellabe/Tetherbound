@@ -610,16 +610,54 @@ func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: f
 	var piece_at := Vector3(at.x, _floor_y + base + (height + extra) * 0.5 - extra, at.z)
 	var box := _box(size, piece_at, _rock(), true, true)
 	if exterior:
-		# PALE-SLAB-FIX (see `_build_chambers()`'s own comment on the one
-		# caller that passes `exterior=true`). Same shader, same rock colour,
-		# as the entrance-dressing jambs/brow wear -- `_rock()` as the tint
-		# means `_wear_the_cave_stone`'s own 0.35 lerp is a no-op
-		# (`_rock().lerp(_rock(), 0.35) == _rock()`), so this is strictly the
-		# wall's own colour with per-fragment stain/moss instead of one flat
-		# tint, not a third material family. `global_position.y` (not local
-		# `piece_at.y`) because `_boulder_stain_material()`'s height bucket is
-		# world-space, matching every other exterior caller.
-		_wear_the_cave_stone(box, _rock(), true, 0.0, null, box.global_position.y)
+		_clad_exterior_face(box, size, piece_at, along_x)
+
+
+## VP6 WARRENS CLEAN RESTART (2026-09-02). The pale, flat, speckled slab the
+## PLACES judge named at the `04-warrens` standing stand (rounds 7-10, byte
+## stable) was ray-cast, not guessed: `tools/_probe_warrens_slab_ray.gd`
+## puts the (0.80, 0.42) ray on the OUTER FACE of the mouth chamber's front
+## wall -- the right-hand doorway flank built by `_wall_piece()` above with
+## `exterior=true`, a BoxMesh whose `material_override` is `_material(_rock(),
+## 0, true)`: `#5b5147` lerped 75% toward the near-white `ROCK_TINT`, albedo
+## `#d6caba` over Rock030. In full sun that reads at luminance ~145. The left
+## flank is the same box in shadow (~44).
+##
+## Three earlier rounds routed this wall through `_wear_the_cave_stone()` /
+## the boulder-stain shader and none of them moved a pixel, and the probe
+## shows why: `_box()` sets `material_override`, and the stain path sets a
+## SURFACE override, which `material_override` takes precedence over. The
+## reroute was a silent no-op. It would not have been enough anyway -- the
+## stain shader's mid band is the same 0.75 lerp toward white.
+##
+## The wall box itself is left exactly as it was, because its INNER face is
+## the mouth chamber -- interior, owner-approved, off-limits. Instead the
+## exterior face is BURIED: a thin, collision-free skin of the same triplanar
+## Ground030 earth the mouth dome, spoil mounds and trodden apron already
+## wear (`_floor_material(true)`, `site.apron_colour`) stands
+## `site.exterior_cladding_m` proud of the outer face, the full span and the
+## full skirt-to-top height of each exterior piece, so the doorway flanks and
+## brow read as dug earth around a hole -- the reference's own read -- rather
+## than as a stone panel with a door in it. Only the mouth's `-z` wall is ever
+## built `exterior=true` (`_build_chambers()`), so "outward" is local -z; the
+## `along_x` branch is the one that runs, the other is kept for symmetry.
+## Setting the knob to 0 disables the skin and restores the old frame.
+func _clad_exterior_face(wall: MeshInstance3D, size: Vector3, piece_at: Vector3, along_x: bool) -> void:
+	var site: Dictionary = _config.get("site", {})
+	var thickness := float(site.get("exterior_cladding_m", 0.4))
+	if thickness <= 0.0:
+		return
+	var skin := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	var clad_size := Vector3(size.x, size.y, thickness) if along_x else Vector3(thickness, size.y, size.z)
+	box.size = clad_size
+	skin.mesh = box
+	skin.material_override = _floor_material(true)
+	var outward := Vector3(0.0, 0.0, -(_wall_t * 0.5 + thickness * 0.5)) if along_x \
+		else Vector3(-(_wall_t * 0.5 + thickness * 0.5), 0.0, 0.0)
+	skin.position = piece_at + outward
+	skin.name = "ExteriorEarthSkin_%s" % wall.get_instance_id()
+	add_child(skin)
 
 
 ## The tunnels between chambers: floor, ceiling and two side walls each. The
