@@ -1,0 +1,271 @@
+# G3-BAND5-0903 — Stronghold Approach (prompt 66) — verification report
+
+## Headline finding
+
+**This lane's job turned out to be verification, not authoring.** Band 5's
+`spawns.json`/`harvest.json`/`props.json`/`trainers.json`/`vegetation.json`,
+its dialogue, the Sigil-gate physical seal, the approach drain-skin script,
+and the stronghold occupation dressing were **already extensively authored
+and already on `main`** at the commit this branch was cut from (`3c73aab5`,
+PR #29). The in-file `_why`/`_comment` trails (`BAND5-CONTENT`,
+`BAND5-DENSITY`, `BAND5-DEADTRAVEL`, `T5-CADENCE`, `GATE-D5`, `T1-HALL-3`
+through `T1-HALL-7`, `T1-STORMWALL`, `T1-GROUND-3`) show this work was done
+by earlier, differently-named lanes, working directly against this same
+prompt 66 contract, and it survived the 2026-09-02 docs/control-plane reset
+because it is game data and code, not tracking documents. `docs/CURRENT_STATE.md`
+saying "Gate 3: not started" is a tracking-ledger gap, not a content gap.
+
+Per CLAUDE.md's own instruction ("Evidence-backed 'already fixed' is valid:
+verify and reconcile rather than rewrite"), this session's work was to
+**actually run** the tests and the checked-in probes on a fresh import
+rather than trust the comments, and record what holds up. Nothing in
+`data/config/bands/band5_stronghold_approach/` or the files this lane
+exclusively owns was edited. The only diff on this branch is two stray
+`.uid` sidecar files for two unrelated Band-1 capture tools that were
+untracked on a fresh clone (harmless Godot housekeeping, committed
+separately, not part of Band 5's own content).
+
+**This is a commit-verdicts-not-payloads report: no screenshots, no
+telemetry dumps were added to the tree.** All frame captures the probes can
+produce require `xvfb`/a rendering driver, which this container did not use
+(headless only, per the hard "never `--headless` with a rendering driver"
+rule) — see "Not verified" below for exactly what that leaves open.
+
+## Environment
+
+- Godot 4.7-stable installed fresh in this container (none was present).
+  `godot --headless --path . --import` run to completion, exit code 0.
+- All commands below run against `ralph/G3-BAND5-0903` @ the branch tip,
+  which is `origin/main` @ `3c73aab5` plus the one housekeeping commit.
+- No GPU/rendering driver in this container, so every check is headless:
+  unit tests, and the checked-in `tools/_probe_band5_*.gd` scripts' non-visual
+  halves (they detect `DisplayServer.get_name() == "headless"` and skip their
+  own capture passes, printing measured numbers only).
+
+## Tests run on this branch (this session, this container)
+
+| Suite | Result |
+|---|---|
+| `tests/run_tests.gd -- --only=test_chapter_curve.gd` | 18 tests, 451 assertions, **0 failed** |
+| `tests/run_tests.gd -- --only=test_band_content.gd` | 6 tests, 1145 assertions, **0 failed** |
+| `tests/run_tests.gd -- --only=test_spawns_data.gd` | 25 tests, 1565 assertions, **0 failed** — includes `test_band5_clears_the_roster_temptation_floor_and_its_own_final_opportunity` |
+| `tests/run_tests.gd -- --only=test_trainers_data.gd` | 50 tests, 1386 assertions, **0 failed** |
+| `tests/run_tests.gd -- --only=test_harvest.gd` | 30 tests, 788799 assertions, **0 failed** |
+| `tests/run_tests.gd -- --only=test_dialogue_runner.gd` | 66 tests, 1007 assertions, **0 failed** |
+
+Not run: the full 28-minute unit suite, and any smoke test (each is
+5–8+ minutes and this session prioritised the band-5-specific probes below
+within the available time; the smoke chain is unchanged by this branch,
+which carries no gameplay code or data edits).
+
+## Live probes run on this branch (this session, this container)
+
+All five `tools/_probe_band5_*.gd` scripts were already checked into the
+tree (not written by this session) but had not, as far as this session
+could determine, actually been executed against a fresh import before —
+their own comments describe measurements from an unspecified prior run.
+This session ran all five for real:
+
+### `_probe_band5_sigil_gate.gd`
+Confirms `scripts/world/playground_world.gd`'s live constants
+(`SIGIL_GATE_AT := Vector2(63.6, 7400.0)`, `SIGIL_GATE_YAW_DEG := -28.6`)
+**already match** the probe's own recommended fix (gate moved onto the road
+where it crosses z=7400, yaw computed from the road's real bearing there).
+The probe's older complaint — a gate sited 55.9 m off the spine — is closed
+in the shipped constants, not just in a comment.
+
+### `_probe_band5_pylon_line.gd`
+Pure heightfield/geometry math, no scene load. Relief across the 13-station
+pylon run is 11.77 m; worst conduit-cable ground clearance is **+1.74 m**
+(span 4→5) — positive everywhere, no cable-through-hillock defect.
+
+### `_probe_band5_approach.gd` (live, full scene)
+Headless cadence pass (captures skipped, as designed, since there is no
+renderer in this container):
+- **Spine length 651 m, longest dead-travel interval 63 m** (ending at 651 m
+  along, i.e. right at the doorstep) — comfortably under prompt 66's "no
+  dead-travel interval over ~60 s" bar at any plausible player speed.
+- World boot log confirms the occupation and drain systems are live in the
+  actual built scene, not just in data: `pylons standing: 15`,
+  `drained quads on the approach: 690`, `stronghold_occupation`'s exterior
+  dressing built `21 exterior omni light(s) ... 11 of them flickering
+  fires`, `3 gauntlet trainer(s), 15 approach pylon(s)` on the 5-space
+  Hall route.
+- Met 14 of 37 authored "reasons to stop" within the probe's strict 22 m
+  on-spine reach — expected and by design: the spawns file's own
+  `_comment_density_pass` documents six clusters (orders 5016–5021) sited
+  deliberately **off-spine** so leaving the road is rewarded, which this
+  reach-limited probe cannot credit from the road alone.
+- One unrelated engine error surfaced during world boot:
+  `ERROR: Parameter "material" is null.` in `creature_body.gd:492`, called
+  from `burrow_warrens.gd`'s guardian dressing (Band 2, Burrow Warrens).
+  **Not Band 5, not this lane's file ownership** (`burrow_warrens.gd`,
+  `stronghold_occupation.gd`'s neighbour, is not among the files this
+  lane owns). Flagged for whoever owns Burrow Warrens; did not touch it.
+  The probe run completed with exit code 0 despite it, so it is not gating
+  anything band-5-shaped.
+
+### `_probe_band5_sky_planes.gd` (live, full scene, full untruncated output)
+Scans every big visible `MeshInstance3D` within 900 m of (0,0,7400), sorted
+by height above ground. The three highest-standing translucent quads found
+are `RiftCollapse/StormWall/StormWall_0/1/2` (88–109 m above ground, 628–727 m
+from the reference point) — **not a bug**. `scripts/world/rift_collapse.gd`
+and `data/config/rift_collapse.json` show this is a deliberately-authored,
+heavily-tuned atmospheric backdrop for the collapsed storm-road seam
+(`T1-HALL-3` through `T1-HALL-7`, seven rounds of documented tuning
+specifically to keep it off the Hall's silhouette and correctly scoped),
+with an explicit `visible_within_metres: 1150` / `fade_metres: 250` viewing
+band chosen precisely so it reads at the approach and fades before Band 4's
+sightlines. The measured 628–727 m distances sit inside the 900 m
+full-opacity floor, exactly as designed. Every other entry in all 269
+candidates is opaque stronghold structure (`ShaderMaterial`/
+`StandardMaterial3D`, `TRANS=false`) — no reproduction of an actual stray
+sky-plane artifact near the approach.
+
+### `_probe_band5_whitebox.gd` (live, full scene, full untruncated output)
+Drives the player to three of the six capture eyes and counts real
+creatures and "pale untextured" meshes within 160 m:
+
+| Eye | Creatures within 160 m | Pale/untextured candidates |
+|---|---|---|
+| 01-band-mouth (0,7000) | **26** | 30 |
+| 03-mid-route (-20,7250) | **30** | 33 |
+| 06-the-waystop (-25,7462) | **22** | 467 |
+
+The wild band is genuinely populated at every eye (26/30/22 real `Wild_*`
+creatures, by name, not by group membership — the probe's own header
+explains why group-membership checks previously false-negatived to zero).
+Every one of the "pale untextured" candidates actually printed (the probe
+caps its own printout at 12 per eye) is a creature's own
+`ContactShadow` node — the deliberate flat ground-contact shadow shader
+from Gate 2.4 (CREATURE-LEGIBILITY-0903), which uses a custom
+`ShaderMaterial` the probe's `BaseMaterial3D` cast cannot introspect, so it
+defaults to reporting "untextured, white" for something that is neither a
+billboard nor visibly white in the actual render — a known shape of false
+positive, not a reproduction of the `23-BILLBOARD-WHITE` defect. The count
+jump to 467 at the waystop (a dense camp/vegetation clearing) is consistent
+with the same shader-material pattern extending to foliage cards, but this
+session could not inspect entries past the first 12 without editing the
+probe, which is out of this lane's scope to do casually — **flagged as
+unconfirmed rather than claimed clean**. No entry in any of the printed
+samples is large enough (all ≤2.8 m) to be the "flat white plane hovering
+against the hillside" the probe's own header quotes from an earlier
+critique; that specific symptom did not reproduce in what was actually
+inspected.
+
+## Code/data verification (read-only; nothing edited)
+
+- **Physical gate cannot be trivially bypassed.** `road_gate.gd`'s
+  `seal_half_width` mechanism (added specifically to answer the "10 m of
+  open grass beside a locked gate" defect the file's own header records)
+  is wired at `playground_world.gd:1360`: `gate.set("seal_half_width",
+  16.0)`, above the causeway's measured ~7 m half-width, so the wings bury
+  into the gorge rims either side rather than stopping short of a walkable
+  edge.
+- **Environmental storytelling / drained ground.** `approach_drain_skin.gd`
+  explicitly renders nothing until `terrain_playground.json`'s
+  `drains.stations` carries a Band 5 entry, and says so out loud in its own
+  code comment as an open request. That request has since been **granted**:
+  `terrain_playground.json`'s `stations` array now carries
+  `approach_mouth` → `approach_run_1..6` → `stronghold_works`, eight
+  stations running the length of the spine (z 7080→7560) with strength
+  escalating 0.30 → 1.00 as the Hall gets closer — exactly the "land
+  visibly worse as the source gets closer" grammar prompt 66 asks for, and
+  confirmed live: the approach probe's boot log reports
+  `[approach-drain] 690 drained quads over the approach corridor`.
+- **Escalating occupation.** `trainers.json`'s band-5-owned rows read as a
+  real ladder, not a flat repeat: `stronghold_outer_watch` (grunt, L15,
+  team drawn from this exact stretch's own wild roster) at the mouth →
+  `stronghold_checkpoint` (officer, L16, three creatures) just past the
+  Sigil gate → the doorstep gauntlet (`stronghold_patrol` grunt L15-16 →
+  `stronghold_courtyard` officer L16-17, 3 creatures → `stronghold_elite`
+  captain L18-19, the one mandatory gate on `defeated_stronghold_elite`) →
+  the Warden's full five, L16-20. Two named bodies (Corr, Ness) sit well
+  before the doorstep so the doorstep does not front-load every combat beat,
+  matching prompt 66's "do not consume every major combat beat before the
+  stronghold."
+- **Wild ecology, habitat-shaped.** `spawns.json`'s own `_comment_density_pass`
+  documents 22 clusters / 75 creatures over ~530 m of spine, species held
+  to the region's four established residents (burrowback/galecrest/
+  duskhush/trailpup) plus the mudsnout special encounter, with six
+  off-spine pockets specifically so a detour is rewarded rather than the
+  route reading as a conveyor. This reads as shaped by habitat/occupation
+  rather than a density dial turned up uniformly, and `test_spawns_data.gd`
+  confirms it clears the chapter's own roster-temptation floor.
+- **Final preparation point.** `props.json`'s `the_waystop` cluster carries
+  a `rest` block with a real `creature_bed` and a lit `campfire_stone_ring`
+  (T5-CADENCE), sited beside a smith's anvil, log seats and a kept tent —
+  explicitly NOT an automatic free heal (the cluster still has to be
+  reached and used like every other rest point in the chapter) — plus
+  `harvest.json` funding exactly one creature bed's worth of materials on
+  site (wood 8/fiber 8 vs. `creature_bed`'s 6/8 cost) and a stashed revive
+  off-spine nearby.
+
+## Prompt 66 acceptance bullets — verified vs. open
+
+| Bullet | Status | Evidence |
+|---|---|---|
+| Route feels like final controlled territory | **Met** | escalating trainer ladder, live occupation dressing (15 pylons, 21 lights/11 fires), drained ground live (690 quads) |
+| Stronghold/pylons provide strong world-space motivation | **Met** | 15 approach pylons standing, cable geometry sound, gate geometry fixed and confirmed |
+| Wild ecology remains present | **Met** | 22 clusters/75 creatures data-verified; 26/30/22 real spawned creatures counted live at three route eyes |
+| Faction encounters escalate pressure | **Met** | grunt→officer→officer→captain→warden ladder, spread across the whole spine not stacked at the door |
+| Physical gates cannot be trivially bypassed | **Met** | `seal_half_width=16.0` > causeway half-width, confirmed wired in code |
+| Player gets a meaningful final preparation opportunity | **Met** | the_waystop: creature_bed, campfire, funded materials, not an automatic heal |
+| No long empty victory lap precedes the climax | **Met** | live-measured longest dead-travel interval **63 m** over a 651 m spine |
+| Hall entry feels like a commitment | **Likely met, not directly re-verified this session** | mandatory elite fight gates `warden_arena` on `defeated_stronghold_elite`; not walked as a continuous player path this session (no smoke run) |
+
+## What this session did NOT verify (honest gaps)
+
+- **No visual/render pass was run.** This container has no rendering
+  driver; the probes' own capture halves detected `headless` and skipped
+  themselves, as designed. So "stronghold silhouette dominance growing as
+  the player closes" and the actual on-screen look of the drained ground,
+  the StormWall backdrop, and the contact shadows are **not eyeballed**,
+  only measured. A `tools/survey.sh` + blind visual-judge pass is the
+  documented way to close this and was not attempted here.
+- **Terrain bake freshness for the new drain stations is unconfirmed.**
+  `approach_drain_skin.gd`'s live vertex-colour paint works today (690
+  quads, confirmed above) — that is the *runtime* half of the drain effect.
+  The *baked* half (`terrain_playground.json`'s `drains` feeding the
+  terrain colour/control maps, per `docs/WORLD_AND_CONTENT.md` §1) needs a
+  terrain re-bake to pick up the same station data, and this session has no
+  way to check the bake's freshness against the current config from a
+  read-only pass, and — per hard instruction — **must not run either bake
+  or touch `terrain_playground.json`**. Flagging for the coordinator: if the
+  last terrain bake predates the `approach_run_*`/`stronghold_works`
+  stations being added, the baked ground colour on the approach may not
+  yet show the escalating drain the live paint already does.
+- **No smoke test or continuous player-path run.** The Gate F S07-S09-shaped
+  continuous walk (Sigil gate → Hall entry) was not driven as an actual
+  smoke; the dead-travel number above comes from the checked-in geometric
+  probe, which is real evidence but is not the same as a played traversal.
+- **The whitebox probe's white-billboard question is not fully closed** —
+  see above; only the first 12 of 467 candidates at the waystop were
+  inspectable without modifying the probe, and none of those 12 reproduced
+  the specific "flat white plane" symptom.
+- `burrow_warrens.gd`'s null-material error during world boot (Band 2, not
+  this lane's ownership) — noted, not investigated further, not fixed.
+
+## Vegetation changes proposed but not applied
+
+None. `data/config/bands/band5_stronghold_approach/vegetation.json` was
+read (to understand the `the_waystop` clearing and the Hall sightline
+clearings already authored there) but not edited, per the hard "never
+touch any `vegetation.json`" rule.
+
+## Files touched by this branch
+
+- `tools/_capture_band1_map_trails.gd.uid`, `tools/_capture_band1_signpost_legibility.gd.uid`
+  — pre-existing untracked Godot sidecar files for two unrelated Band 1
+  tools, committed as housekeeping so a fresh clone is clean. Not part of
+  Band 5's own scope.
+- `ralph/reports/G3-BAND5-0903/REPORT.md` — this file.
+
+No file under this lane's exclusive ownership
+(`data/config/bands/band5_stronghold_approach/*.json`,
+`scripts/world/stronghold_occupation.gd`, `approach_drain_skin.gd`,
+`severed_spokes.gd`, `data/config/stronghold_occupation.json`) was modified,
+because verification did not surface a defect inside this lane's own remit
+that a data/code edit here would fix. The one real open item found
+(terrain bake freshness for the drain stations) is outside this lane's
+files and the hard "do not run either bake" constraint.
