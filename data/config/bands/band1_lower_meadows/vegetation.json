@@ -233,22 +233,22 @@
         ]
       },
       {
-        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.4): the near tree at comp4-rise-look-back, pinned with its own anchor so a re-bake cannot lose it -- the stand's own Owner line asks for exactly this ('pin it with a trees anchor x1... so a re-bake cannot lose it'). Moved off the plan's own guessed centre (-243,338), which a live bake (`godot --headless --path . --script scripts/world/bake_playground_scatter.gd`) placed 0 of 1: that point is 8.1m inside MID-LAYER-0903's crest-window clearing (clearings order 1904, (-244,346) r14), which excludes trees unconditionally regardless of which stand is looking through it. This centre is 17.1m clear of that clearing and 4.5m from the comp4 eye (-236,334) -- still the near-left tree the stand asks for. `max_slope_deg` overridden 21 -> 24: measured at 20.4 degrees, close enough to the layer's 21-degree ceiling that a single-instance anchor (no fallback candidate) could fail outright on an unlucky RNG draw within its own 2m radius.",
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.4): the near tree at comp4-rise-look-back, pinned with its own anchor so a re-bake cannot lose it -- the stand's own Owner line asks for exactly this ('pin it with a trees anchor x1... so a re-bake cannot lose it'). Re-sited TWICE off the plan's own guessed centre (-243,338): first to (-238,330) because a live bake placed 0 of 1 there (8.1m inside MID-LAYER-0903's crest-window clearing, clearings order 1904, (-244,346) r14); then, after `_capture_band1_composition.gd`'s own eye/target/FOV (`comp4-rise-look-back`: eye (-236,334), target (10,-10), FOV 70) showed that (-238,330) sits 62 degrees off the camera's forward axis -- outside the 35-degree half-FOV, i.e. never in frame regardless of what placed there -- to a point computed directly from the stand's own forward/right axes (7m ahead, 3m left, the same 'near, left' the plan's own Look line asks for), 23 degrees off-axis and comfortably inside the FOV. `max_slope_deg` overridden 21 -> 28 (was 24): the new centre measures 23.6 degrees, inside a mere 0.4 degrees of the old 24-degree ceiling, too tight a margin for a single-instance, 2m-radius anchor with no fallback candidate.",
         "at": [
-          -238.0,
-          330.0
+          -234.4,
+          326.6
         ],
         "radius": 2.0,
         "count": 1,
         "scale_min": 1.4,
         "scale_max": 1.4,
-        "max_slope_deg": 24.0
+        "max_slope_deg": 28.0
       },
       {
-        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1): the frame trunk at comp1-village-approach, the near element that replaces the corridor-fill boulder as this frame's ruler -- one trunk cut by the top-left edge, canopy over the eye.",
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1): the frame trunk at comp1-village-approach, the near element that replaces the corridor-fill boulder as this frame's ruler -- one trunk cut by the top-left edge, canopy over the eye. Re-sited off the plan's own guessed centre (-58,199): computed against comp1's own eye/target (`_capture_band1_composition.gd`: eye (-52,194), target (10,-10)), that point is 146.7 degrees off the camera's forward axis -- BEHIND the eye, not in front of it, so it could never appear in the frame no matter how reliably it placed (confirmed live: the tree placed every bake, and the rendered frame still showed the pre-existing rock line as the only near element, matching the blind judge's after-set read of `comp1-village-approach`, 'the large grey boulder beside them is a good scale reference,' no tree named at all). This centre is computed directly from the stand's own forward/right axes (6m ahead, 3m left, matching the plan's own 'near, left, 4-7m'), 27 degrees off-axis and in front of the camera.",
         "at": [
-          -58.0,
-          199.0
+          -53.1,
+          187.4
         ],
         "radius": 2.0,
         "count": 1,
