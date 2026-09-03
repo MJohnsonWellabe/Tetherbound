@@ -72,6 +72,16 @@ SEGMENTS = [
         "id": "head",
         "title": "Gate B — title through the village tournament to South Bridge",
         "script": "tests/smoke_gate_b_continuous.gd",
+        # CI-TRUTH-0903: the script's own default (no flag) now stops after
+        # tournament readiness -- see its header for why -- because CI gates
+        # on that reliable prefix and leaves the gather route/tail as a
+        # known-red job. This chapter run's own `covers` line below still
+        # promises "gathering, villagers, home, creature bed, sleep,
+        # tournament, South Bridge", so it has to ask for the whole thing
+        # explicitly or it would silently stop testing everything past
+        # tournament readiness while still reporting a clean PASS -- exactly
+        # the kind of quiet gap this lane exists to catch.
+        "script_args": ["--gate-b-full-chain"],
         "kind": "test",
         "timeout": 3600,
         "covers": "title, fresh save, opening, first catch, team, tools, gathering, "
@@ -141,6 +151,9 @@ def run_segment(segment: dict, godot: str, logdir: Path) -> dict:
     """Run one segment to completion and return what the record needs."""
     log_path = logdir / f"{segment['id']}.log"
     cmd = [godot, "--headless", "--path", str(REPO), "--script", segment["script"]]
+    script_args = segment.get("script_args", [])
+    if script_args:
+        cmd += ["--"] + list(script_args)
     started = time.time()
     try:
         proc = subprocess.run(

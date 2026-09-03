@@ -4,17 +4,31 @@
 #
 #   tools/ci/ship_branch.sh <branch> [<verified-sha>]
 #
-# Two callers, one implementation:
+# One caller now: `ralph-merge.yml`, which passes the sha CI just went green
+# on (event-driven, immediate) and is itself `workflow_dispatch`-only --
+# "manual consolidation is now the sole path to main", per its own header --
+# kept for audit/recovery rather than fired automatically.
 #
-#   - `ralph-merge.yml` passes the sha CI just went green on. Event-driven,
-#     immediate.
-#   - `ralph-sweep.yml` passes no sha. The script then looks up whether the
-#     branch tip has a green run of its own. Poll-driven, catches whatever the
-#     events missed.
+# `ralph-sweep.yml` was the second caller (poll-driven: passed no sha, and
+# the script looked up whether the branch tip had a green run of its own) and
+# is why this routine was pulled out of inline YAML in the first place --
+# CI-TRUTH-0903 removed it. It landed every green `ralph/**` branch AT ONCE
+# by fast-forward and dispatched a release, bypassing the pull-request review
+# every other landing on this project now goes through
+# (`docs/AGENT_WORKFLOW.md` §5); running it against the branches alive on
+# 2026-09-03 would have fast-forwarded several mid-flight consolidation
+# lanes straight past the PR that was already collecting them. Its last real
+# dispatch (2026-09-02) was not a bug — it correctly refused two branches
+# with genuine merge conflicts and exited 1 to say so — but a workflow whose
+# only safe operator action is "read the log before ever running it" is
+# worse than no workflow. Pull requests are the landing path; kept here as
+# comment rather than deleted from this file's memory, in case a future
+# poll-driven backstop is designed again from a clean slate.
 #
-# It lives in a script rather than inline YAML because there are now two callers
-# and this routine has already destroyed unmerged work once (see the delete step
-# below). Two hand-maintained copies of it is not a risk worth taking.
+# This script itself is retained as `ralph-merge.yml`'s one implementation --
+# still useful for its audit/recovery dispatch — and the delete step below
+# is exactly why it stays a script rather than inline YAML even with one
+# caller: a hand-copied second version is not a risk worth taking twice.
 #
 # WHY A SWEEPER EXISTS AT ALL — the bug this file was extracted to fix.
 #

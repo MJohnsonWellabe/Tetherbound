@@ -618,9 +618,10 @@
         "_comment_ow5d": "OW5D: translated with south_bridge crossings[0] by the same (-5,+1250)."
       },
       {
+        "_why_band1_discovery_0903": "BAND1-DISCOVERY-0903, docs/specs/BAND1_COMPOSITION_PLAN.md 5.3/6.1. Was (-357.76,401.12) -- past the Rise crest on the descent, so the one overlook on the whole route (arc 443, (-218,324), the composition plan's `comp3-rise-overlook-pond` stand) said nothing about where the road goes; a player reading the crest window saw no sign at all until 129m further down, after the decision to leave the road for the discovery cache was already behind them. Moved to the crest itself so the fingerpost stands IN the window the composition plan builds there (the hero TwistedTree near-left, Dara's fight visible on the road, the pond and mill beyond) -- 'Pond Circuit' now answers the question the frame is already asking ('that is where you are going') at the exact point a player can act on it. `points` (the arm's own bearing, independent of `at` per every other trailhead in this table) is untouched: it still aims toward the pond/mill from (-360,400), a bearing that reads correctly from the new post position 130m north-east of it, same as every offset-post/aimed-arm trailhead already in this file.",
         "at": [
-          -357.76,
-          401.12
+          -228.0,
+          331.0
         ],
         "label": "Pond Circuit",
         "points": [

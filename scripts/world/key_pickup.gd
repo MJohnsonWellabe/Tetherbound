@@ -230,8 +230,13 @@ func _on_picked_up() -> void:
 		return
 	var inventory: RefCounted = game.get("inventory")
 	if not bool(inventory.call("has_room_for", _item_id, 1)):
-		# Refused, visibly, same as harvest_node.gd: the key stays on the
-		# ground and keeps offering rather than vanishing into a full satchel.
+		# INTERACT-SWEEP-0903: this comment used to claim "refused, visibly" and
+		# then did no such thing -- the prompt just kept offering, which is not a
+		# response to THIS press, it is the absence of one. A player who presses
+		# on a full satchel saw nothing happen at all, indistinguishable from a
+		# dropped press. `item_cache_pickup.gd`/`tm_pickup.gd`'s own refusal
+		# already speaks; this now matches them instead of asserting it did.
+		game.call("push_world_message", "Satchel is full.")
 		return
 	inventory.call("add", _item_id, 1)
 	var progression: RefCounted = game.get("progression")

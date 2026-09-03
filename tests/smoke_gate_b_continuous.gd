@@ -49,6 +49,35 @@ extends SceneTree
 ## advances through all twelve Gate B flags IN ORDER, each one moving the
 ## tracked line, ending on the South Bridge objective. A beat that fires its
 ## flag without the line moving is a beat the player cannot see they finished.
+##
+## ## CORE vs FULL CHAIN (CI-TRUTH-0903)
+##
+## This file used to run in no CI job at all -- not even a known-red one --
+## which is exactly how two of `gate_b_tail_segment.gd`'s own assertions sat
+## failing against label strings that had never existed in
+## `data/progression/objectives.json`: nothing was watching, so nothing
+## noticed. It gates nothing by default.
+##
+## The whole run is not equally trustworthy. The opening, the road gate, the
+## village visit for tools and tournament readiness are the four beats that
+## have passed reliably across many runs; the gather route (this branch's own
+## `tools/_probe_gather_route_fiber_141_0903.gd` diagnosed a real walker-vs-
+## boundary-geometry failure on 2026-09-03 -- not scatter congestion, see that
+## probe's own header) and everything downstream of it (the tail: house,
+## beds, nights, the bracket) have never yet finished a run cleanly. Gating CI
+## on the whole file would either go red on every PR for a beat nobody
+## regressed, or -- the worse failure mode this project has already lived
+## through once (`docs/CURRENT_STATE.md` §4) -- get `continue-on-error`'d into
+## invisibility.
+##
+## So the CORE (default, no flag) stops after tournament readiness and is
+## what `ci.yml`'s `verify-gate-b-core` job gates on. `--gate-b-full-chain`
+## extends into the gather route and the tail, same as the whole file always
+## did, and is what `verify-gate-b-full-known-red` runs -- allowed to fail,
+## same shape as `verify-continuous-core-known-red`'s own known-red job for
+## Gate A. When the gather route and tail are reliable, drop the flag split
+## and let CI gate on the whole file again by default.
+const FULL_CHAIN_FLAG := "--gate-b-full-chain"
 
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
@@ -122,9 +151,11 @@ var _player: CharacterBody3D = null
 var _rig: Node3D = null
 var _progression: RefCounted = null
 var _reached: Array[String] = []
+var _full_chain := false
 
 
 func _init() -> void:
+	_full_chain = OS.get_cmdline_user_args().has(FULL_CHAIN_FLAG)
 	_run()
 
 
@@ -141,6 +172,12 @@ func _run() -> void:
 		_finish()
 		return
 	if not await _ready_a_tournament_team():
+		_finish()
+		return
+	if not _full_chain:
+		_checkpoint("CORE stops here (opening, road gate, village tools, tournament "
+			+ "readiness); pass %s to continue into the gather route and the tail"
+			% FULL_CHAIN_FLAG)
 		_finish()
 		return
 	if not await _gather_and_walk_home():
@@ -615,8 +652,12 @@ func _finish() -> void:
 	_wipe_test_dir()
 	print("")
 	if _failures.is_empty():
-		print("gate B continuous: OK — a fresh save walked all %d objectives to South Bridge"
-			% LADDER.size())
+		if _full_chain:
+			print("gate B continuous: OK — a fresh save walked all %d objectives to South Bridge"
+				% LADDER.size())
+		else:
+			print("gate B continuous (CORE): OK — a fresh save walked opening, road gate, "
+				+ "village tools and tournament readiness in order")
 		quit(0)
 		return
 	for line: String in _failures:

@@ -9,6 +9,7 @@ extends Node3D
 ## (`creature_bed.gd` carries the identical pattern for the same reason).
 
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
+const CAMP_FILL_LIGHT := preload("res://scripts/world/camp_fill_light.gd")
 
 const TENT := "res://assets/props/generated_camp/camp_tent.glb"
 
@@ -96,6 +97,7 @@ func build_real() -> void:
 	add_child(_piece)
 	_piece.position.y = TENT_SINK
 	_piece.call("build_real", TENT, {}, TENT_SCALE, NON_BLOCKING_LAYER)
+	CAMP_FILL_LIGHT.attach(self, PEAK_HEIGHT * 0.5)
 
 
 func tint_ghost(ok: bool) -> void:

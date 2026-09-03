@@ -19,6 +19,7 @@ const DAY_CYCLE := preload("res://scripts/world/day_cycle.gd")
 ## T1-WORLD: for the character emission floor only -- see `_apply_environment`.
 ## Preloaded for its STATIC setter; this node never builds or owns a character.
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
+const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 ## WORLD-ART aerial-fade pass, 2026-09-02. For the terrain's distance-fade
 ## colour only -- see `_apply_environment`'s own comment on
 ## `aerial_fade_colour`. Preloaded for its STATIC setter, same reasoning as
@@ -641,6 +642,12 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# ramping, because `av = a.get(key, bv)` silently defaults the FROM side to
 	# the TO side's value).
 	CHARACTER_MODEL.set_emission_floor_scale(float(cfg.get("character_emission_floor", 1.0)))
+	# NIGHT-LEGIBILITY (ROADMAP 2.7). Same clock, same reasoning, a different
+	# default: creatures that already ship self-lit are untouched by this (see
+	# creature_body.gd::_apply_night_floor's own comment), and every other
+	# time-of-day block leaves this key unset -- 0.0 default, so day/golden/
+	# dawn stay exactly as measured before this floor existed.
+	CREATURE_BODY.set_emission_floor_scale(float(cfg.get("creature_emission_floor", 0.0)))
 
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env.tonemap_exposure = float(cfg.get("exposure", 1.0))

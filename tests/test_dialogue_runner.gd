@@ -327,6 +327,36 @@ func test_a_villager_with_no_branches_always_says_the_same_thing() -> void:
 	assert_eq(VILLAGE_NPCS.greeting_for(mira, progression), "village_mira")
 
 
+## --- village_npcs.has_anything_to_say(): the INTERACT-SWEEP-0903 gate on -----
+## --- whether a body draws a "Greet" prompt at all ----------------------------
+##
+## `data/config/relay_site.json`'s four Team Tether set-dressing bodies
+## ("Relay Patrol"/"Sentry"/"Watch"/"Deckhand") author neither `greeting` nor
+## `greeting_when` -- before this, `village_npcs.gd::_spawn()` still handed
+## every one of them an actionable "Greet <name>" prompt, and pressing it hit
+## `_on_greeted()`'s `conversation_id == ""` branch, which does nothing at
+## all. Pinned here at the pure predicate `_spawn()` now checks before ever
+## building that prompt.
+
+func test_a_spec_with_no_greeting_and_no_branches_has_nothing_to_say() -> void:
+	assert_false(VILLAGE_NPCS.has_anything_to_say({"name": "Relay Patrol"}),
+		"a spec authoring neither greeting nor greeting_when must not draw a prompt that answers a press with nothing")
+
+
+func test_a_plain_greeting_alone_is_enough_to_say_something() -> void:
+	assert_true(VILLAGE_NPCS.has_anything_to_say({"greeting": "village_mira"}))
+
+
+func test_an_empty_greeting_with_a_real_branch_still_has_something_to_say() -> void:
+	assert_true(VILLAGE_NPCS.has_anything_to_say(
+		{"greeting": "", "greeting_when": [{"conversation": "relay_captive_held"}]}),
+		"greeting_when alone is a real source of a line, same as greeting_for() itself reads it")
+
+
+func test_an_empty_greeting_with_an_empty_branch_list_has_nothing_to_say() -> void:
+	assert_false(VILLAGE_NPCS.has_anything_to_say({"greeting": "", "greeting_when": []}))
+
+
 func test_the_one_time_gift_is_offered_once_and_then_never_again() -> void:
 	var progression: RefCounted = PROGRESSION_STATE.new()
 	assert_eq(VILLAGE_NPCS.greeting_for(TAM, progression), TOOLS_CONVERSATION,
