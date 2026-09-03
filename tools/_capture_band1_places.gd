@@ -68,15 +68,21 @@ const VIEWPOINTS := [
 		# terrain_playground.json) -- the round-1 frame was shot from
 		# underwater looking up through the surface, which is exactly the
 		# "smeared dark-cyan band over a featureless plain" the blind judge
-		# called the single worst frame in the set. Moved to (-325,560),
-		# height -16.40 (just above the waterline, the damp shore ring), on
-		# the shore opposite the mill so the frame looks across the open
-		# water at it instead of sitting inside the basin.
+		# called the single worst frame in the set.
+		# ROUND 2 FIX: (-325,560) was on dry shore, but this pocket is
+		# deliberately the densest vegetation on the map (contract: "do not
+		# thin it") -- a headless clearance probe found every shoreline
+		# point within ~2m of a trunk, and the round-2 render put one dead
+		# centre in the lens. Moved to (-390,510), inside the mill's own
+		# clearing (vegetation.json clearings order 5, radius 15 around
+		# (-383.5,517), kept clear of blocking vegetation by design) and
+		# 31m from the nearest tree, looking out across the open water
+		# instead of standing in the reeds.
 		"name": "place3-pond-pocket",
-		"eye": Vector2(-325.0, 560.0), "eye_h": 2.2,
-		"target": Vector2(-383.5, 517.0), "target_h": 3.0,
+		"eye": Vector2(-390.0, 510.0), "eye_h": 2.2,
+		"target": Vector2(-350.0, 560.0), "target_h": -14.0,
 		"time": "day", "horizon": 0.30,
-		"actor": Vector2(-322.0, 556.0),
+		"actor": Vector2(-387.0, 506.0),
 	},
 	{
 		# Place 4: the Long Field (arc 1200-1950). Looking at the second
