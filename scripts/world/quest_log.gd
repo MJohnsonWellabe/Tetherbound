@@ -9,10 +9,11 @@ extends RefCounted
 ##
 ## Deliberately NOT a quest engine (spec §19, CLAUDE.md): no branching, no
 ## prerequisites. An entry is DONE the instant its own `flag_id` is set -- or,
-## for the one entry carrying `retired_by` (T5-STORY-2), once that single flag
-## says its moment has passed; see `_done()` for the measured chapter-scale
-## failure that answer exists for. The tracked line is still just the first
-## "main" entry not yet done, in file order.
+## for an entry carrying `retired_by` (T5-STORY-2), once that single flag says
+## its moment has passed; see `_done()` for the measured chapter-scale failure
+## that answer exists for, and OBJECTIVE-CAMP-0903 for the second, unrelated
+## rung it now also covers. The tracked line is still just the first "main"
+## entry not yet done, in file order.
 ##
 ## TUTORIAL-CHAIN (OP23-04) added the second and third, both PRESENTATION and
 ## neither a prerequisite:
@@ -120,9 +121,9 @@ func _hidden(entry: Dictionary, progression: RefCounted) -> bool:
 
 ## Is this entry behind the player?
 ##
-## Normally that is exactly its own `flag_id`, and for every entry in the file
-## but one it still is. `retired_by` (optional, T5-STORY-2) adds the second
-## answer: **this rung's moment has passed**, whatever its own flag says now.
+## Normally that is exactly its own `flag_id`. `retired_by` (optional,
+## T5-STORY-2) adds the second answer: **this rung's moment has passed**,
+## whatever its own flag says now.
 ##
 ## It exists because of one measured, chapter-scale failure.
 ## `tournament_team_fed` is the chain's one VOLATILE flag -- `tournament.gd`'s
@@ -148,6 +149,13 @@ func _hidden(entry: Dictionary, progression: RefCounted) -> bool:
 ## reading: a player standing at the Warden with `tournament_entered` set did
 ## feed their team before they signed up, months of game-time ago, and the log
 ## is a record of what they have done.
+##
+## OBJECTIVE-CAMP-0903 gave the mechanism its second user: `home_built` retires
+## `home_materials_gathered` (owner playtest 2026-09-03 item 1 -- a camp built
+## in free-build mode never triggers the tracked harvest that sets the gather
+## flag, so the rung outlived the camp it exists for). Same shape, same
+## honesty -- a camp standing IS the proof gathering happened, whichever route
+## got there.
 func _done(entry: Dictionary, progression: RefCounted) -> bool:
 	var retired_by := str(entry.get("retired_by", ""))
 	if not retired_by.is_empty() and bool(progression.call("has", retired_by)):

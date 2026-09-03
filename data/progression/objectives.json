@@ -66,9 +66,11 @@
     {
       "id": "tournament_gather_materials",
       "flag_id": "home_materials_gathered",
+      "retired_by": "home_built",
       "label": "Gather supplies for your team's camp.",
       "how": "Select a tool on the hotbar, then {interact} at a tree, an outcrop or a bush.",
-      "_comment": "FIRST-HOUR-FUN-REBUILD. The existing material flag remains save-compatible, but its next step is the compact Camp rather than a mandatory house."
+      "_comment": "FIRST-HOUR-FUN-REBUILD. The existing material flag remains save-compatible, but its next step is the compact Camp rather than a mandatory house.",
+      "_comment_retired_by": "OBJECTIVE-CAMP-0903, owner playtest 2026-09-03 item 1: \"After I have already built a camp it keeps telling me to gather supplies. I built in free mode so I never had to but if you've already bypassed it, it should move on.\" `home_materials_gathered` is written only from a real harvest (`harvest_node.gd`/`felled_resource.gd` calling `home_progress.gd::maybe_set_materials_gathered`) -- free build waives what PLACING costs but a player who never triggers a tracked harvest never sets this flag, however many materials they actually hold. `home_built` (`build_placer.gd`, checked after every real placement including a free-build one, and again on `restore_from_game` for an older save) is the honest, always-correct answer to \"is the camp standing\" regardless of route. The second entry to use `retired_by` (`quest_log.gd::_done()`'s mechanism, first written for `tournament_team_fed`): the camp existing retires the rung that exists to produce it, exactly the way `tournament_entered` retires the feeding rung below -- one flag, checked with `has`, still not the branching sec19/CLAUDE.md ban. Pinned by `test_camp_already_built_retires_the_gather_rung` and `test_the_guided_view_advances_past_a_camp_built_without_the_gather_flag` in `tests/test_quest_log.gd`."
     },
     {
       "id": "tournament_build_home",

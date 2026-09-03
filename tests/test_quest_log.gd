@@ -722,6 +722,56 @@ func test_the_gate_rung_gives_an_instruction_rather_than_a_riddle() -> void:
 			+ "one fact that turns this beat from a puzzle into an instruction")
 
 
+## --- OBJECTIVE-CAMP-0903: the camp retires the gather rung -------------------
+##
+## Owner playtest 2026-09-03 item 1: "After I have already built a camp it
+## keeps telling me to gather supplies. I built in free mode so I never had to
+## but if you've already bypassed it, it should move on." `home_materials_
+## gathered` is written only by a real tracked harvest
+## (`harvest_node.gd`/`felled_resource.gd`); a camp built without ever
+## triggering one -- free build, or materials the player already held -- left
+## the gather rung as the permanent tracked line even with the camp standing.
+## `home_built` (checked after every real placement, whatever route placed it)
+## now retires it, the same mechanism `tournament_entered` already uses on
+## `tournament_team_fed` above.
+
+func test_camp_already_built_retires_the_gather_rung() -> void:
+	_complete_main_up_to("home_materials_gathered")
+	progression.set_flag("home_built")
+	assert_false(progression.has("home_materials_gathered"),
+		"this test's premise is a camp built without the gather flag ever firing")
+	var gather_entry: Dictionary = {}
+	for raw: Variant in log_reader.main_entries(progression):
+		var entry := raw as Dictionary
+		if str(entry.get("label", "")).to_lower().find("gather") != -1:
+			gather_entry = entry
+	assert_false(gather_entry.is_empty(), "objectives.json has no gather-supplies rung")
+	assert_true(bool(gather_entry.get("done", false)),
+		"the gather rung still reads not-done once the camp it exists for is already standing")
+	var tracked: String = log_reader.tracked_text(progression)
+	assert_true(tracked.to_lower().find("gather") == -1,
+		"the tracked line is still 'gather supplies' after the camp was already built; got '%s'" % tracked)
+	assert_true(tracked.find("Creature Bed") != -1,
+		"a camp built without the gather flag should hand the tracked line straight to the next open rung; got '%s'" % tracked)
+
+
+## Same state, the guided log's own code path (breaks on first not-done
+## instead of scanning for the first unset flag) -- a free-build camp must not
+## leave that view stuck on "Gather supplies" either.
+func test_the_guided_view_advances_past_a_camp_built_without_the_gather_flag() -> void:
+	_complete_main_up_to("home_materials_gathered")
+	progression.set_flag("home_built")
+	var guided: Array = log_reader.guided_entries(progression)
+	assert_false(guided.is_empty(), "a camp built without the gather flag emptied the guided view")
+	var current := guided[guided.size() - 1] as Dictionary
+	assert_true(str(current.get("label", "")).find("Creature Bed") != -1,
+		"the guided view's open rung is stuck behind the already-built camp; got '%s'" % str(current.get("label", "")))
+	for i in guided.size() - 1:
+		var row := guided[i] as Dictionary
+		assert_true(bool(row.get("done", false)),
+			"'%s' is shown open behind the current rung even though the camp is already built" % str(row.get("label", "")))
+
+
 ## The rung the ladder was missing: the tools everything below it needs.
 func test_the_ladder_hands_over_tools_before_it_asks_for_gathering() -> void:
 	var order := _flag_order()
