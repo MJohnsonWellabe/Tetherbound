@@ -36,12 +36,33 @@ the only creature and no step-script assigned it to a bed). S03 has since been p
 extensively with revive steps. **Whether a healthy S03→S09 chain now exists is unknown,
 and establishing it is the coordinator's own task**, not a lane's.
 
-So Gate 3 has two halves running at once:
+So Gate 3 has two kinds of evidence running at once, and they answer different
+questions. Conflating them is exactly what made run 3 unreadable.
 
-- **Evidence** (coordinator): get the Gate F chain healthy enough that bands 2–5 are
-  actually reached, then read what it says about them.
-- **Content** (six lanes): bring each band and the finale up to its prompt's standard
-  on the parts that do not need the chain to be healthy first.
+- **Does this band play?** Owned by the band lane, answered by running *its own*
+  segment against a **synthetic entry save** built the way `tools/gate_f/seed_s09_exit.gd`
+  and `build_s10b_synthetic_seed.gd` already do it. Each lane writes
+  `tools/gate_f/build_s0N_entry_synthetic.gd`, sourcing party, levels and flags from
+  `data/config/chapter_curve.json`'s own band row, then runs S06 / S07 / S08 / S09 and
+  fills in `docs/ROADMAP.md`'s evidence template. This parallelises; it is why the
+  lanes exist.
+- **Does the chapter play?** Owned by the coordinator, answered by the continuous
+  S01→S10e chain. Only it can say whether the party actually arriving at Band 4 is the
+  party the curve assumes, whether the bands connect, and whether travel between them
+  is dead.
+
+`seed_s09_exit.gd`'s header already states the rule that keeps the first honest: every
+claim from a constructed entry takes the form *"S0N, given a clean entry, does X"* —
+never *"the chapter does X"*. A synthetic seed asserts the state a lane believes the
+player arrives in. Whether they actually arrive in it is the chain's question, not the
+lane's, and a lane that blurs the two is re-creating run 3's error in miniature.
+
+**This was missing from the first round of lane briefs and was added by addendum on
+2026-09-03.** G3-BAND2 had already returned a config-verified "already satisfied"
+verdict without a played S06 and was reopened for it. Verification against data and
+against a system smoke is real work and its findings stand — but `smoke_warrens.gd`
+walking the cave is not the same instrument as S06 walking the band, and only the
+second one can answer prompt 63's actual question.
 
 ## 2. Why this parallelises, against the brief's advice
 
