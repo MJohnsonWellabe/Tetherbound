@@ -35,6 +35,21 @@ extends SceneTree
 ## the walk so far. Target, per the task brief: at least one creature within
 ## 25m in every 100m leg, and at least 6 distinct species seen by the time the
 ## Pond leg (arc ~900-1200) ends.
+##
+## Legs are bucketed by ARC-LENGTH PROJECTION onto the authored polyline, not
+## by raw cumulative walked-path length. First cut of this probe used walked
+## distance directly and produced a false gap: `stick_navigator.gd`'s own
+## sideways-detour/stall recovery near the village edge (nothing to do with
+## this pass's wildlife changes) covers real metres of path without making
+## real arc progress, so "the 100th-200th metre walked" landed on a stretch
+## of ground the player never actually advanced through, and separately a
+## repeated stuck loop at the known South Bridge gully hole
+## (`docs/00_START_HERE.md`'s own listed issue, `(7.9,-3.4,1319)`) inflated
+## total walked distance to 2,786m against the route's real 2,403m, inventing
+## phantom legs past the real finish. Projecting each sample onto the nearest
+## point of `trail.bands[0]` reports against the same arc-length
+## BAND1_ROUTE_CONTRACT.md itself measures, is immune to in-place thrashing,
+## and cannot produce a leg number past the route's real length.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
@@ -50,10 +65,8 @@ const SETTLE_FRAMES := 420
 
 ## Sighting radius the task asks for.
 const SIGHT_RADIUS := 25.0
-## One bucket per 100m of REAL walked distance -- not arc-length along the
-## authored polyline, because a detour or a stall genuinely walks further,
-## and this probe is measuring what a real walk produces, not re-deriving the
-## config.
+## One bucket per 100m of arc-length along the authored polyline -- see the
+## header note above for why this replaced raw walked-path length.
 const LEG_METRES := 100.0
 ## Arc-length window BAND1_ROUTE_CONTRACT.md names for the Pond pocket. Used
 ## only to mark which leg the "6 species by the Pond" target checks against.
@@ -71,6 +84,10 @@ var _player: CharacterBody3D
 var _rig: Node3D
 var _director: Node = null
 var _nav = null
+
+var _route_points: Array[Vector2] = []
+var _route_lengths: Array[float] = []
+var _route_total := 0.0
 
 var _walked_total := 0.0
 var _prev_pos := Vector3.ZERO
@@ -106,12 +123,18 @@ func _run() -> void:
 	var population: Array = _director.call("wild_creatures")
 	print("wild population at boot: %d creatures" % population.size())
 
-	var points := _route_points()
-	if points.size() < 2:
+	_route_points = _load_route_points()
+	if _route_points.size() < 2:
 		print("PROBE FAIL: band1_lower_meadows trail has fewer than 2 points")
 		quit(1)
 		return
-	print("route: %d authored points, village square to South Bridge" % points.size())
+	_route_lengths = [0.0]
+	for i in range(1, _route_points.size()):
+		_route_lengths.append(_route_lengths[-1] + _route_points[i - 1].distance_to(_route_points[i]))
+	_route_total = _route_lengths[-1]
+	var points := _route_points
+	print("route: %d authored points, village square to South Bridge, %.1fm arc-length" % [
+		points.size(), _route_total])
 
 	var start := Vector3(points[0].x, 0.0, points[0].y)
 	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
@@ -131,9 +154,9 @@ func _run() -> void:
 		var budget := maxi(MIN_BUDGET, int(leg_len * BUDGET_PER_METRE))
 		var arrived: bool = await _nav.walk_to(target, budget, 1.5)
 		if not arrived:
-			print("  waypoint %d/%d NOT reached from %s toward (%.0f, %.0f) -- teleporting past it "
-				+ "(this distance is walked, not skipped, in the leg accounting, since the body "
-				+ "already covered ground getting stuck; only the final short hop is not sampled)" % [
+			print(("  waypoint %d/%d NOT reached from %s toward (%.0f, %.0f) -- teleporting past it "
+				+ "(arc-length accounting is unaffected: the leg buckets are the projected position, "
+				+ "not the path length spent getting stuck)") % [
 				i, points.size() - 1, str(_player.global_position), target_xz.x, target_xz.y])
 			_player.global_position = target
 			_player.velocity = Vector3.ZERO
@@ -141,14 +164,15 @@ func _run() -> void:
 			for f in 30:
 				await physics_frame
 
-	print("\nwalked %.1fm of real path over %d sampled frames" % [_walked_total, _samples])
+	print("\nwalked %.1fm of real path (route arc-length %.1fm) over %d sampled frames" % [
+		_walked_total, _route_total, _samples])
 	_report()
 	quit(0)
 
 
 ## The authored band1 spine, verbatim -- already prefixed with the village
 ## square and `road_gate`, per BAND1_ROUTE_CONTRACT.md's own header.
-func _route_points() -> Array[Vector2]:
+func _load_route_points() -> Array[Vector2]:
 	var f := FileAccess.open(TERRAIN_CONFIG, FileAccess.READ)
 	var out: Array[Vector2] = []
 	if f == null:
@@ -176,6 +200,29 @@ func _drive_stick(x: float, y: float) -> void:
 	_sample()
 
 
+## Nearest-point arc-length projection onto `_route_points`/`_route_lengths` --
+## the same method `tools/_probe_band1_cadence.py` uses to place every POI
+## in BAND1_ROUTE_CONTRACT.md's own arc-length terms, ported to GDScript so
+## this probe can bucket a live position the identical way.
+func _project_arc(pos: Vector2) -> float:
+	var best_arc := 0.0
+	var best_dist := INF
+	for i in range(1, _route_points.size()):
+		var a := _route_points[i - 1]
+		var b := _route_points[i]
+		var seg := b - a
+		var seg_len := seg.length()
+		if seg_len < 0.0001:
+			continue
+		var t := clampf((pos - a).dot(seg) / (seg_len * seg_len), 0.0, 1.0)
+		var nearest := a + seg * t
+		var dist := pos.distance_to(nearest)
+		if dist < best_dist:
+			best_dist = dist
+			best_arc = _route_lengths[i - 1] + t * seg_len
+	return best_arc
+
+
 func _sample() -> void:
 	var now := _player.global_position
 	var step := Vector2(now.x - _prev_pos.x, now.z - _prev_pos.z).length()
@@ -187,10 +234,12 @@ func _sample() -> void:
 	_prev_pos = now
 	_samples += 1
 
-	var leg := int(_walked_total / LEG_METRES)
+	var arc := _project_arc(Vector2(now.x, now.z))
+	var leg := int(arc / LEG_METRES)
 	if leg != _last_leg_logged:
 		_last_leg_logged = leg
-		print("  [leg %d starts] walked=%.1fm real position=(%.1f, %.1f)" % [leg, _walked_total, now.x, now.z])
+		print("  [leg %d starts] arc=%.1fm walked=%.1fm real position=(%.1f, %.1f)" % [
+			leg, arc, _walked_total, now.x, now.z])
 	var nearby := 0
 	var here := Vector2(now.x, now.z)
 	for w: Variant in (_director.call("wild_creatures") as Array):
@@ -220,7 +269,7 @@ func _sample() -> void:
 ## walk. Filled to 0 nearby / 0 leg-species, with the cumulative species
 ## count carried forward from the last leg actually sampled.
 func _fill_leg_gaps() -> void:
-	var max_leg := int(_walked_total / LEG_METRES)
+	var max_leg := int(_route_total / LEG_METRES)
 	var running_species := 0
 	for l in range(max_leg + 1):
 		if _leg_max_nearby.has(l):
@@ -265,12 +314,12 @@ func _report() -> void:
 	var pond_leg := int(POND_END_ARC / LEG_METRES) - 1
 	if not _leg_cumulative_species_at_end.has(pond_leg) and not legs.is_empty():
 		# The walk never reached this far (stopped short at an unrecoverable
-		# wedge, or the real walked distance fell short of the Pond's arc
-		# window) -- report against the furthest leg actually reached rather
-		# than a leg that was never sampled, and say so plainly.
+		# wedge before the Pond's own arc window) -- report against the
+		# furthest leg actually reached rather than a leg that was never
+		# sampled, and say so plainly.
 		var furthest: int = legs[legs.size() - 1]
-		print("\nNOTE: the walk's own pacing only reached leg %d; the Pond's arc window (leg %d) "
-			+ "was never sampled. Reporting against the furthest leg actually reached instead." % [
+		print(("\nNOTE: the walk's own pacing only reached leg %d; the Pond's arc window (leg %d) "
+			+ "was never sampled. Reporting against the furthest leg actually reached instead.") % [
 			furthest, pond_leg])
 		pond_leg = furthest
 	var pond_species := int(_leg_cumulative_species_at_end.get(pond_leg, 0))
