@@ -34,6 +34,10 @@ const BUILD_HOLD := preload("res://scripts/build/build_hold.gd")
 ## this only ever asks it for numbers and teams.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+## WORLD-LIFE-0903. Pure `RefCounted`, offline-constructible (no live
+## Terrain3D needed -- see its own header), so this is safe to build in the
+## unit suite too. Used only for `path_factor()`'s road query below.
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 ## OP21-03/OP21-06: shared input-ownership answer, the same one
 ## `playground_hud.gd::_world_input_allowed()` already asks. Without this,
 ## `_read_creature_control_input()` read the party-cycle action
@@ -123,6 +127,11 @@ var _ally: RefCounted = null
 ## that never dresses a meadow (`has_solid_scatter_near` is simply never
 ## asked).
 var _vegetation: Node = null
+
+## WORLD-LIFE-0903. Built lazily by `_wander_target_clear_of_road()`, once,
+## and reused for the life of this director -- `HEIGHTFIELD.new()` parses the
+## whole terrain config, which is wasted work to repeat per wander tick.
+var _road_field: RefCounted = null
 
 var _engage_range: float = 6.0
 var _prompt: String = ""
@@ -478,6 +487,21 @@ func _spawn_creatures() -> void:
 			if n == 0:
 				_make_alpha(wild, species, spawn, centre.z)
 			var wild_cfg: Dictionary = MATH.config().get("wild", {})
+			# WORLD-LIFE-0903 (BAND1_ROUTE_CONTRACT.md). A cluster's own
+			# `wander_radius` overrides `wild_creature.gd`'s open-meadow default
+			# (7m) for every member of THIS cluster -- the herd/water-edge
+			# clusters the route contract asks to read as visible life rather
+			# than static props. Absent key means every cluster that existed
+			# before this: unchanged. Applied BEFORE the elder merge below so an
+			# elder's own `wander_radius` (a different lane's mechanism, PW2)
+			# still wins if a cluster somehow carried both.
+			if spawn.has("wander_radius"):
+				wild_cfg = wild_cfg.duplicate()
+				wild_cfg["wander_radius"] = float(spawn["wander_radius"])
+				# The road clearance check only matters once a cluster's disc can
+				# plausibly reach the road; every other cluster in the game (no
+				# `wander_radius` key) never asks for it and pays nothing.
+				wild.call("set_clearance_check", Callable(self, "_wander_target_clear_of_road"))
 			if not elder.is_empty():
 				wild_cfg = _apply_elder(wild, elder, wild_cfg)
 			wild.call("configure", wild_cfg)
@@ -959,6 +983,20 @@ const CLEAR_ATTEMPTS := 6
 ## radius, smaller than a cluster's own disc, so the retry meaningfully moves
 ## the candidate without exhausting the disc in ordinary spawn areas.
 const CLEAR_MARGIN := 0.8
+
+## WORLD-LIFE-0903. True when `pos` is clear of every authored road/trail --
+## `playground_heightfield.gd::path_factor()`, the same road geometry the
+## terrain bake and the vegetation scatter already agree on, returns 0.0 past
+## a road's shoulder and rises to 1.0 on its painted centreline. Handed to
+## `wild_creature.gd::set_clearance_check()` for a cluster whose `wander_radius`
+## was widened enough to reach the road (see `_spawn_creatures()` below), so a
+## wide wander disc can visibly cross the road without ever settling a
+## destination standing on it.
+func _wander_target_clear_of_road(pos: Vector3) -> bool:
+	if _road_field == null:
+		_road_field = HEIGHTFIELD.new()
+	return float(_road_field.call("path_factor", pos.x, pos.z)) <= 0.0
+
 
 func _pick_clear_spot(centre: Vector3, radius: float, rng: RandomNumberGenerator) -> Vector3:
 	var spot := centre
