@@ -138,6 +138,26 @@ func test_no_tournament_round_stands_up_a_second_body() -> void:
 			"'%s' does not name a placer; trainer_npc.gd would stand up a duplicate body for it" % trainer_id)
 
 
+## TOURNAMENT-FLOW-0903. Every round needs its own `at_ring_flag` and
+## `begin_conversation` so the ceremony (ring-entrance banter, then an
+## explicit begin-the-round choice) can be built for it, and the three rounds
+## must not collide on the same flag or conversation id -- that would let
+## entering one round's ring silently arm another's begin line.
+func test_every_round_names_a_distinct_at_ring_flag_and_begin_conversation() -> void:
+	var flags: Array[String] = []
+	var conversations: Array[String] = []
+	for entry: Variant in TOURNAMENT.rounds():
+		var spec := entry as Dictionary
+		var flag := str(spec.get("at_ring_flag", ""))
+		var begin := str(spec.get("begin_conversation", ""))
+		assert_ne(flag, "", "round '%s' names no at_ring_flag" % str(spec.get("id", "")))
+		assert_ne(begin, "", "round '%s' names no begin_conversation" % str(spec.get("id", "")))
+		assert_false(flags.has(flag), "two rounds share the at_ring_flag '%s'" % flag)
+		assert_false(conversations.has(begin), "two rounds share the begin_conversation '%s'" % begin)
+		flags.append(flag)
+		conversations.append(begin)
+
+
 ## "The final opponent rides a Meadowhart." And Burrowback stays non-rideable
 ## -- the owner suggested it and then accepted Meadowhart instead, so a later
 ## edit quietly moving the mount is a change to a locked decision.
@@ -324,6 +344,103 @@ func test_the_marshal_walks_the_whole_ladder_in_order() -> void:
 		"a champion should get the champion's line, and it should carry the riding news")
 
 
+## TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 2: "Starting the
+## tournament was hard even after I had everything. I had to talk to the
+## starter several times." A team built, trained, fed, rested and camped
+## before the player ever walked up to Halda used to hear the registration
+## briefing FIRST regardless -- a throwaway conversation that only repeated
+## what the player had already done -- and only offered sign-up on a second
+## visit. Fixed so a fully ready team's first-ever conversation with her is
+## the sign-up itself.
+func test_a_team_that_is_already_ready_before_ever_meeting_the_marshal_is_offered_sign_up_in_one_visit() -> void:
+	var marshal := _marshal()
+	assert_false(marshal.is_empty(), "no marshal to walk")
+	if marshal.is_empty():
+		return
+	for flag: String in ["tournament_team_ready", "tournament_training_ready",
+			"tournament_condition_ready", "home_built", "creature_bed_built", "player_slept_at_home"]:
+		progression.set_flag(flag)
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_signup",
+		"a fully ready team's very first conversation with the marshal should be the sign-up, not the registration briefing")
+
+
+## And a team that is ready on BODIES but not yet on levels, condition or camp
+## before that first meeting should land straight on the specific branch that
+## names what is actually missing -- never the generic register speech, which
+## would just repeat a checklist the player has already half-finished.
+func test_a_team_ready_but_untrained_before_ever_meeting_the_marshal_skips_registration() -> void:
+	var marshal := _marshal()
+	if marshal.is_empty():
+		return
+	progression.set_flag("tournament_team_ready")
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_train",
+		"a team-ready-but-untrained party's first meeting should name training, not the register speech")
+
+
+## The one case the register branch is still FOR: a player who has not even
+## assembled a team yet. That is a genuinely fresh start, and the full
+## checklist is the right thing to say once.
+func test_a_genuinely_fresh_player_still_gets_the_registration_briefing_first() -> void:
+	var marshal := _marshal()
+	if marshal.is_empty():
+		return
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_register",
+		"a player with no team yet should still meet the registration briefing first")
+
+
+## TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: "you enter then you
+## choose to start the battle then it announces you won and announces the
+## next round." Walk the ceremony half of the ladder: the ring-entrance
+## banter is offered first, the explicit begin-the-round line only once the
+## player is actually at_ring, and winning moves straight to the NEXT round's
+## own banter (not its begin line) so the same two-step ceremony repeats.
+func test_the_marshal_offers_the_explicit_begin_choice_only_once_the_player_is_at_ring() -> void:
+	var marshal := _marshal()
+	assert_false(marshal.is_empty(), "no marshal to walk")
+	if marshal.is_empty():
+		return
+
+	progression.set_flag("tournament_entered")
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_quarter",
+		"entering the draw should first offer the opponent's ring-entrance banter")
+	progression.set_flag("tournament_quarter_at_ring")
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_quarter_begin",
+		"once at ring, the marshal's ladder should offer the explicit begin-the-round line")
+
+	progression.set_flag("tournament_quarter_won")
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_semi",
+		"winning the quarter should move straight to the semi-final's own ring-entrance banter")
+	progression.set_flag("tournament_semi_at_ring")
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_semi_begin",
+		"once at ring for the semi, the marshal should offer its begin-the-round line")
+
+	progression.set_flag("tournament_semi_won")
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_final",
+		"winning the semi should move straight to the final's own ring-entrance banter")
+	progression.set_flag("tournament_final_at_ring")
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_final_begin",
+		"once at ring for the final, the marshal should offer its begin-the-round line")
+
+	progression.set_flag("tournament_won")
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_champion",
+		"winning the final should still hand off to the champion's line")
+
+
+## A round lost after reaching the ring must not repeat the ceremony's banter
+## half -- `at_ring_flag` is a contract flag, never cleared, so a retry lands
+## straight back on the begin-the-round line rather than making the player sit
+## through the opponent's pre-fight speech again.
+func test_a_lost_round_retried_from_the_ring_skips_the_banter_and_offers_begin_again() -> void:
+	var marshal := _marshal()
+	if marshal.is_empty():
+		return
+	progression.set_flag("tournament_entered")
+	progression.set_flag("tournament_quarter_at_ring")
+	# Fought and lost: quarter_won stays unset, at_ring stays set.
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_quarter_begin",
+		"a round lost after entering the ring should go straight back to the begin-the-round line, not repeat the banter")
+
+
 ## RG19-spec/D68. Condition gates ENTRY, not the bracket. A team that tires
 ## out or goes hungry between rounds must still be offered the round it is in
 ## the middle of -- being sent back out to feed somebody with a bout half
@@ -357,28 +474,58 @@ func test_a_lost_round_is_still_on_offer() -> void:
 		"after losing round 2 the marshal should offer round 2 again, not move on and not lock the player out")
 
 
-## Each round conversation ends on its own `battle:` effect, on the LAST line.
-## Same contract `trainer_npc.gd` and `sequence_director.gd` both rely on: the
-## fight starts when the box closes, so an effect on an earlier line drops an
-## arena on top of an open dialogue box.
-func test_each_round_conversation_ends_on_its_own_battle_effect() -> void:
+## The effects on a conversation's own LAST line, whether authored as a single
+## `effect` string or an `effects` array. Shared by every ceremony test below
+## so the two authoring shapes are read the same way everywhere.
+func _last_line_effects(conversation_id: String) -> Array:
+	var lines: Array = (RUNNER.table().get(conversation_id, {}) as Dictionary).get("lines", [])
+	if lines.is_empty():
+		return []
+	var last: Variant = lines[lines.size() - 1]
+	if not last is Dictionary:
+		return []
+	var line := last as Dictionary
+	if line.has("effects"):
+		return line.get("effects", []) as Array
+	if line.has("effect"):
+		return [str(line.get("effect", ""))]
+	return []
+
+
+## TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: "you enter then you
+## choose to start the battle". Each round is now TWO conversations -- the
+## ring-entrance banter (`conversation`) and the explicit begin-the-round line
+## (`begin_conversation`) -- and it is `begin_conversation` that has to end on
+## the `battle:` effect, not the banter. Same contract `trainer_npc.gd` and
+## `sequence_director.gd` both rely on: the fight starts when the box closes,
+## so an effect on an earlier line drops an arena on top of an open dialogue
+## box.
+func test_each_rounds_begin_conversation_ends_on_its_own_battle_effect() -> void:
+	for entry: Variant in TOURNAMENT.rounds():
+		var spec := entry as Dictionary
+		var id := str(spec.get("begin_conversation", ""))
+		assert_ne(id, "", "round '%s' names no begin_conversation" % str(spec.get("id", "")))
+		var effects := _last_line_effects(id)
+		assert_true(effects.has("battle:%s" % str(spec.get("trainer", ""))),
+			"'%s' should end on battle:%s; its last line's effects are %s" % [id, str(spec.get("trainer", "")), str(effects)])
+
+
+## And the ring-entrance banter must NOT end on that effect -- the whole point
+## of splitting the round in two is that hearing the opponent's pre-fight line
+## does not, by itself, start the fight. It sets `at_ring_flag` instead, which
+## is what actually gates `begin_conversation` in village_npcs.json's ladder.
+func test_each_rounds_banter_conversation_sets_at_ring_and_starts_no_battle() -> void:
 	for entry: Variant in TOURNAMENT.rounds():
 		var spec := entry as Dictionary
 		var id := str(spec.get("conversation", ""))
-		var lines: Array = (RUNNER.table().get(id, {}) as Dictionary).get("lines", [])
-		assert_false(lines.is_empty(), "round conversation '%s' has no lines" % id)
-		if lines.is_empty():
-			continue
-		var last: Variant = lines[lines.size() - 1]
-		var effects: Array = []
-		if last is Dictionary:
-			var line := last as Dictionary
-			if line.has("effects"):
-				effects = line.get("effects", []) as Array
-			elif line.has("effect"):
-				effects = [str(line.get("effect", ""))]
-		assert_true(effects.has("battle:%s" % str(spec.get("trainer", ""))),
-			"'%s' should end on battle:%s; its last line is %s" % [id, str(spec.get("trainer", "")), str(last)])
+		var at_ring_flag := str(spec.get("at_ring_flag", ""))
+		assert_ne(at_ring_flag, "", "round '%s' names no at_ring_flag" % str(spec.get("id", "")))
+		var effects := _last_line_effects(id)
+		assert_true(effects.has("flag:%s" % at_ring_flag),
+			"'%s' should end on flag:%s so entering the ring does not itself start the fight; its effects are %s"
+				% [id, at_ring_flag, str(effects)])
+		assert_false(effects.has("battle:%s" % str(spec.get("trainer", ""))),
+			"'%s' still starts the fight on its own; the explicit begin-the-round choice would do nothing" % id)
 
 
 ## Entering is what `tournament_entered` means, and the sign-up line is the one
@@ -415,6 +562,20 @@ func test_the_registrar_briefing_writes_the_opening_registration_handoff() -> vo
 		if effects.has("flag:opening:tournament_registered"):
 			found = true
 	assert_true(found, "Halda's first registration briefing never sets opening:tournament_registered")
+
+
+## TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 2: "even after I had
+## everything, I had to talk to the starter several times". The register
+## branch is narrowed to fire only while the team is not yet team-ready
+## (below), so `tournament_halda_signup`, `_camp`, `_condition` and `_train`
+## can each be a player's FIRST-EVER conversation with Halda. Every one of
+## them has to write the opening handoff itself, or a team that was ready
+## before it ever met her would never trip it at all.
+func test_every_branch_that_can_be_a_first_meeting_writes_the_opening_registration_handoff() -> void:
+	for id: String in ["tournament_halda_signup", "tournament_halda_camp",
+			"tournament_halda_condition", "tournament_halda_train"]:
+		assert_true(_last_line_effects(id).has("flag:opening:tournament_registered"),
+			"'%s' can be the player's first meeting with the marshal but never writes opening:tournament_registered" % id)
 
 
 ## Qualification is intentionally a compact camp, not legacy house architecture
@@ -660,6 +821,40 @@ func test_the_boards_spoken_line_tracks_the_bracket() -> void:
 	progression.set_flag("tournament_won")
 	assert_true(TOURNAMENT.status_line(progression).to_lower().contains("champion"),
 		"a won tournament should read as won")
+
+
+## --- TOURNAMENT-FLOW-0903: the win/next-round announcement --------------------
+
+## Owner playtest 2026-09-03 item 3: "it announces you won and announces the
+## next round." Pure and static, same reason `status_line()` is: a test should
+## be able to pin the exact wording without a node standing in a world.
+func test_round_result_message_names_the_next_round() -> void:
+	var msg := TOURNAMENT.round_result_message(0)
+	assert_true(msg.contains("Semi-final"),
+		"winning the quarter-final should announce the semi-final by name: '%s'" % msg)
+	assert_true(msg.contains("Tam"),
+		"winning the quarter-final should name the next opponent: '%s'" % msg)
+
+	var msg2 := TOURNAMENT.round_result_message(1)
+	assert_true(msg2.contains("Final"),
+		"winning the semi-final should announce the final by name: '%s'" % msg2)
+	assert_true(msg2.contains("Oskar"),
+		"winning the semi-final should name the finalist: '%s'" % msg2)
+
+
+## "Or the championship." The last round's win has no next round to name, so
+## it announces the title instead.
+func test_round_result_message_announces_the_championship_for_the_final_round() -> void:
+	var msg := TOURNAMENT.round_result_message(TOURNAMENT.rounds().size() - 1)
+	assert_true(msg.to_lower().contains("champion"),
+		"winning the final should announce the championship, not a round that does not exist: '%s'" % msg)
+
+
+## An out-of-range index (the capture-tool / bare-call case) must not crash a
+## polling node; an empty string is the cautious, silent answer.
+func test_round_result_message_is_empty_for_an_out_of_range_index() -> void:
+	assert_eq(TOURNAMENT.round_result_message(-1), "")
+	assert_eq(TOURNAMENT.round_result_message(TOURNAMENT.rounds().size()), "")
 
 
 ## --- the board's own placement ------------------------------------------------
