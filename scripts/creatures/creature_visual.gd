@@ -54,3 +54,31 @@ static func shiny_chance() -> float:
 ## in the warrens, where an unlit creature would be a black shape.
 static func emission_scale() -> float:
 	return float(config().get("emission_scale", 1.0))
+
+
+## CREATURE-LEGIBILITY-0903. The ground-contact shadow block -- see this key's
+## own `_comment_contact_shadow` in the config file for why it exists and why
+## it applies to every creature rather than opting in per species.
+static func contact_shadow() -> Dictionary:
+	var block: Variant = config().get("contact_shadow", {})
+	return block if block is Dictionary else {}
+
+
+static func contact_shadow_enabled() -> bool:
+	return bool(contact_shadow().get("enabled", true))
+
+
+static func contact_shadow_radius_scale() -> float:
+	return float(contact_shadow().get("radius_scale", 1.35))
+
+
+static func contact_shadow_opacity() -> float:
+	return float(contact_shadow().get("opacity", 0.45))
+
+
+static func contact_shadow_core_fraction() -> float:
+	return float(contact_shadow().get("core_fraction", 0.35))
+
+
+static func contact_shadow_edge_power() -> float:
+	return float(contact_shadow().get("edge_power", 1.6))
