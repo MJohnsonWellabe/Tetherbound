@@ -78,11 +78,22 @@ const VIEWPOINTS := [
 		# (-383.5,517), kept clear of blocking vegetation by design) and
 		# 31m from the nearest tree, looking out across the open water
 		# instead of standing in the reeds.
+		# MID-LAYER-0903 RE-SITE (docs/specs/BAND1_COMPOSITION_PLAN.md 5.5,
+		# 6.3): (-390,510) stood 3m from the mill's own wall, inside its
+		# footprint, and shot a stone wall -- "the camera is on the wrong
+		# side of the building" (JUDGE-before.md). Moved to the fisher's
+		# camp (props `pond_fisher_camp`, band1 props.json), looking north
+		# across the water at the mill (-383.5,517) 72m away: bench and
+		# firepit near-left, water mid, mill and footbridge far, the
+		# far-bank grove (5.3's anchor at (-420,560)) behind them. This
+		# invalidates comparison with the WORLD-TREES before/after sheet for
+		# this one frame; the two before frames of the old stand are the
+		# record of why (BAND1_COMPOSITION_PLAN.md 6.3).
 		"name": "place3-pond-pocket",
-		"eye": Vector2(-390.0, 510.0), "eye_h": 2.2,
-		"target": Vector2(-350.0, 560.0), "target_h": -14.0,
+		"eye": Vector2(-398.0, 588.0), "eye_h": 2.2,
+		"target": Vector2(-383.5, 517.0), "target_h": 2.0,
 		"time": "day", "horizon": 0.30,
-		"actor": Vector2(-387.0, 506.0),
+		"actor": Vector2(-396.0, 585.0),
 	},
 	{
 		# Place 4: the Long Field (arc 1200-1950). Looking at the second
