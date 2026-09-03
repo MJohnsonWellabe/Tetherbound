@@ -561,13 +561,27 @@ func _a_full_satchel_gather_still_says_so(world: Node) -> Array[String]:
 		"saddle", "orb_basic", "orb_greater", "potion_small", "revive", "axe",
 		"pickaxe", "hammer", "knife", "hoe", "fishing_rod", "torch",
 	]
+	# SNAPSHOT FIRST. This check fills the satchel to capacity, and everything
+	# after it in this file gathers, tills, sows and picks against the SAME
+	# live inventory. The first version did not put it back, and the cost was
+	# not one failure but eight: the knife would not equip, tilling left the
+	# bed fallow, sowing reported spending -1 seeds, and picking a ripe bed
+	# paid out nothing -- a cascade that reads like four separate broken
+	# systems and is actually one test leaving the world dirty behind it.
+	# `stack_at`/`set_slot` are the honest pair here: they restore durability
+	# and stack sizes exactly, where re-adding by id would not.
+	var saved_slots: Array = []
+	for index in int(inventory.call("slot_count")):
+		saved_slots.append(inventory.call("stack_at", index))
 	for id in filler_ids:
 		if bool(inventory.call("is_full")):
 			break
 		inventory.call("add", id, 1)
 	if not bool(inventory.call("is_full")):
+		_restore_satchel(inventory, saved_slots)
 		return ["could not fill the satchel for the full-satchel feedback check"] as Array[String]
 	if bool(inventory.call("has_room_for", "berries", int(berry_node.call("resource_amount")))):
+		_restore_satchel(inventory, saved_slots)
 		return ["satchel reports full but still has room for berries; test fixture is wrong"] as Array[String]
 
 	game.call("take_pending_world_message")
@@ -575,8 +589,30 @@ func _a_full_satchel_gather_still_says_so(world: Node) -> Array[String]:
 	message.visible = false
 	var before := int(inventory.call("count", "berries"))
 	berry_node.call("gather")
-	for i in 6:
+	# WAIT FOR THE SWING, because with a tool in hand the press does not answer
+	# itself in six frames.
+	#
+	# `harvest_node.gd::_on_gathered(null)` hands a tool-in-hand press to
+	# `swing_answers_the_prompt()` FIRST and returns; the full-satchel branch
+	# that says "Satchel is full." sits below that, and is reached on the
+	# swing's own resolution one ~37-frame swing later, when `gather()` is
+	# called again with the prop that swung. Six frames caught neither the
+	# message nor the end of the swing -- so this check reported the fix
+	# missing, and left a swing running that made the NEXT check's
+	# `tool_hold.swing()` refuse and cascaded into every farm assertion after
+	# it. The player-true wait is the swing.
+	var player_body := world.get_node_or_null(^"Player")
+	var hold: Node = player_body.get("tool_hold") if player_body != null else null
+	for i in 240:
+		if message.visible and message.text == "Satchel is full.":
+			break
 		await process_frame
+	# Leave no swing in flight behind us, whatever the assertions say.
+	if hold != null:
+		for i in 120:
+			if not bool(hold.call("is_swinging")):
+				break
+			await process_frame
 
 	if int(inventory.call("count", "berries")) != before:
 		found.append("a full satchel still accepted a berries gather")
@@ -586,7 +622,32 @@ func _a_full_satchel_gather_still_says_so(world: Node) -> Array[String]:
 			% [message.text, message.visible])
 	else:
 		print("full-satchel feedback: %s" % message.text)
+	_restore_satchel(inventory, saved_slots)
 	return found
+
+
+## Put the satchel back exactly as it was, slot for slot.
+##
+## Restoring by `add()` would be wrong twice over: it cannot reproduce a
+## partially-worn tool's durability, and it cannot reproduce which slot a stack
+## sat in, which `move_slot`/`find_slot` callers downstream can see.
+## `null` for an empty slot, NOT the `{}` that `stack_at()` hands back.
+##
+## `stack_at()` returns `{}` for an empty slot, but `set_slot()` stores exactly
+## what it is given, and `is_full()`/`used_slots()` test `stack == null` rather
+## than emptiness. Restoring `{}` therefore leaves every previously-empty slot
+## counting as OCCUPIED: the satchel reports full forever after, and every
+## later check in this file fails in a way that looks like a broken farm --
+## tilling leaves the bed fallow, sowing spends -1 seeds, picking pays out
+## nothing. Cost an hour of blaming the wrong change; the empty case is the
+## whole of the fix.
+func _restore_satchel(inventory: RefCounted, saved_slots: Array) -> void:
+	for index in saved_slots.size():
+		var stack: Variant = saved_slots[index]
+		var restored: Variant = null
+		if typeof(stack) == TYPE_DICTIONARY and not (stack as Dictionary).is_empty():
+			restored = stack
+		inventory.call("set_slot", index, restored)
 
 
 ## RG2, owner-reported ROG playtest: "I can pull out a pickaxe and such but I
