@@ -83,7 +83,7 @@ P0 blocks normal play. P1 major. P2 significant quality. P3 polish.
 | P2 | ~~Bram's shop exit clips furniture~~ | `scripts/world/shop_interior.gd` | **closed (Gate 1.3), BRAM-EXIT-0903** — misfiled: Bram is the innkeeper in `scripts/world/inn_interior.gd`, a room `probe_shop_exit_clearance.gd` (Mira's cottage only) never covered. A real player driven by genuine single-direction stick input clears every furnished pocket in the inn (bar, both guest tables, bed nook, barrels, doorway — `tools/gate_f/probe_inn_exit_clearance.gd`, 6/6), and `gate_a_npc_gather_segment.gd::_exit_through`'s existing regain-door-axis shape reaches Oskar's leg from every realistic post-dialogue position. Confirmed live in `tests/smoke_gate_b_continuous.gd`: all three Bram cycles exit and resume movement in ~1s each (GATE A NPC/GATHER +53–58s), no clipping. The underlying fix (regain the door axis before departing) already existed from an earlier session; it was never verified against the real site. Closed by adding that verification, not by a code change. |
 | P2 | Gather-route walker cannot reach authored wood at (16, −28) | harness walker / authoring | open (Gate 1.x) |
 | P2 | MAIN STORY objective label truncates at 1280×800 | `scripts/ui/playground_hud.gd` | open (Gate 1.4) |
-| P2 | Small creatures vanish into grass | creature material value, contact shadow | open (Gate 2.4) |
+| P2 | ~~Small creatures vanish into grass~~ | creature material value, contact shadow | **closed (Gate 2.4), CREATURE-LEGIBILITY-0903** — Bramblebun-vs-ground luminance measured off real rendered frames (`tools/_probe_grass_separation.gd`, Rec.709 luma, verified unchanged at 30% scale): shipped 1.331:1, raised to 1.568:1 by re-sweeping `field_emission` (already a per-species lever from an earlier pass, whose own 1.06-1.15 target was well under this gate's 1.5:1 bar) 0.9 → 2.5. Every creature body also now gets a flat, unshaded ground-contact ellipse (`shaders/creature_contact_shadow.gdshader`, `creature_body.gd::_apply_ground_contact_shadow()`) answering the Compatibility renderer's missing SSAO — verified headless (`tools/_probe_contact_shadow_check.gd`). Spawn siting away from shrubs was already implemented (`encounter_director.gd::_pick_clear_spot()` + `vegetation.gd::has_solid_scatter_near()`) and verified still wired into the one spawn path every `spawns.json` entry uses; left unmodified. Blind visual judge (code-blind, `.claude/skills/visual-judge/SKILL.md`): "reads clearly... real value separation now, unlike before... comparable to how Palworld's pale creatures separate from grass" — flagged the coat as reading a little flat/blown-out at this value push, a real note left for a future shading pass, not a blocker for this gate's own criterion. Full numbers, before/after contact sheet and judge transcript in `ralph/reports/CREATURE-LEGIBILITY-0903/REPORT.md`. Only Bramblebun was re-measured against the new 1.5:1 bar; Mudsnout/Terrapup/Burrowback still carry the earlier pass's 1.06-1.15-tuned `field_emission` values, unreviewed against this stricter bar. |
 | P2 | Villagers read too small in dialogue | camera depth at conversation distance, not a scale bug | owner decision pending on a dialogue camera |
 | P2 | `data/terrain/playground` has no freshness guard (scatter does) | tests/CI | open (Gate 1.5) |
 | P2 | Harness fixed-slot inventory lookups | `tools/gate_f/`, `tests/helpers/` | open (Gate 1.6) |
@@ -96,6 +96,15 @@ Two questions put to the owner and not answered: whether the grass clump-card bl
 redesign proceeds; whether Grandpa's loft bed was ever tried.
 
 ## 4. Process findings that changed how work is verified
+
+- Raising `OBJECTIVE_LINES` 2 -> 4 to stop long objective titles truncating also
+  raised the block's FLOOR, because `OBJECTIVE_BLOCK_HEIGHT` was derived from the cap:
+  168.8px -> 261.6px reserved permanently, a third of the 1280x800 handheld screen held
+  open for a panel reading "Win the village tournament." No test caught it — the
+  truncation check only asks whether text is clipped, never whether the panel is bigger
+  than its contents. **A fix measured on the case that motivated it can still regress
+  every other case.** Split into `OBJECTIVE_MIN_LINES` (floor) and `OBJECTIVE_LINES`
+  (cap) on 2026-09-03; the panel still grows to four lines when the text needs them.
 
 - `smoke_title_new_game.gd` passed in CI and failed on any machine that had run
   another smoke first, because `title_screen.gd` interposes a "Start a fresh game?"
@@ -136,6 +145,7 @@ into `claude/do-this-2t7fny`, which feeds PR #26.
 | SOUTH-BRIDGE-HOLE | no player-facing change, and now with a cause rather than a shrug: the entombment is the site guard's own teleport outrunning Terrain3D's Dynamic/Game collision radius, not the crossing. The guard waits for the ground before judging it | 4/4 green after the wait, 2/3 before; the red run's coordinates are in the §2 row. **Closed as a harness defect** — reopen on any reproduction from a walked path rather than a placement |
 | BRAM-EXIT | no code change: the item was misfiled. Bram is the innkeeper (`inn_interior.gd`), not the shop (`shop_interior.gd`, which is Mira's), and the existing door-axis exit fix already covers his room; it had simply never been probed there | new `tools/gate_f/probe_inn_exit_clearance.gd` clears the doorway from 6 of 6 furnished pockets; all three Bram cycles in `smoke_gate_b_continuous` exit cleanly |
 | WORLD-RULES | gathered harvest nodes stay gone permanently (a progression flag per node, restored on load); the three starters are removed from every band trainer roster and replaced with same-type non-starters. D72 records both | verification in progress at time of writing; the lane reported one unnamed failing smoke and was asked for it |
+| BAND1-COMPOSITION (ROADMAP 2.1) | no player-facing change: the design document `docs/specs/BAND1_COMPOSITION_PLAN.md` that 2.2/2.3/2.5/2.6 implement. Per stand (village approach, route out, the Rise forward and back, the Pond reveal/arrival/shore, the bridge approach and rim, plus the Long Field and the five survey stands): eye/look pair, what sits at each depth, which lane builds it, what the re-render must prove. Headline decision: the Rise crest is rebuilt as a window onto the Pond, not a grove | sixteen stands rendered from the merged tree after a fresh import (`ralph/reports/BAND1-COMPOSITION-0903/_sheet_*_before.png`); code-blind judge Bar A **no** / Bar B **no** (`JUDGE-before.md`): zero readable creatures in sixteen frames, one tree/rock/plant, distance a fog void; `comp4-rise-look-back` named as the template. Two capture stands were re-sited from the terrain profile (`tools/_probe_band1_composition.gd`) after their first frames proved the ground wrong: the pond reveal is at arc 560 not 600, the bridge rim at arc 2253 not 2300 |
 
 ## 5. Gate status
 
@@ -143,7 +153,9 @@ into `claude/do-this-2t7fny`, which feeds PR #26.
 - **Gate 1 (first session):** open, and much closer. `smoke_gate_b_continuous` now plays 22 minutes continuously — opening (orb floor held, correct two-creature party), village, tools, tournament readiness, gathering, tent/campfire/bedroll — against an opening that dead-ended this morning. Of the two failures it then reported, one was the harness (objective rungs asserted by prose that never existed; now asserted by id) and one is real and important: the interact-reliability game-breaker, reproduced in-container for the first time (see §3). Every other Gate 1 acceptance smoke is green on first attempt.
   combat, tournament, village. Red: opening orb floor (fix pending landing), objective
   chain after tournament readiness, gather route, South Bridge traversal on first attempt.
-- **Gate 2 (core world complete):** not started. Fresh survey frames and the blind
-  critique are in `docs/VISUAL_BIBLE.md` §4.
+- **Gate 2 (core world complete):** 2.1 (composition plan) delivered as
+  `docs/specs/BAND1_COMPOSITION_PLAN.md` with its judged before-frames; 2.2/2.3/2.5/2.6
+  unblocked. Fresh survey frames and the earlier blind critique are in
+  `docs/VISUAL_BIBLE.md` §4; the 2.1 judge is the current before-verdict for the route.
 - **Gate 3 / 4:** not started. Gate F S03 reached 6 failures outside its lane's scope;
   S04–S10 unverified as a chain.

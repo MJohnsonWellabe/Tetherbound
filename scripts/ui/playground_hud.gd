@@ -444,8 +444,25 @@ const SENTENCE_LINE_RATIO := 1.45
 ## run, so a future title that needs a 5th line fails loudly here instead of
 ## shipping silently truncated.
 const OBJECTIVE_LINES := 4
+## How many lines the block RESERVES when the text does not need them, which is
+## a different question from how many it will grow to hold.
+##
+## These were one number until 2026-09-03 and the block height was derived from
+## the cap, so raising the cap 2 -> 4 to stop long titles truncating also raised
+## the FLOOR: 168.8px -> 261.6px, reserved permanently, for every objective
+## including the one-liners. On the 1280x800 handheld this game is built for
+## that is a third of the screen height held open for a panel whose text says
+## "Win the village tournament." The truncation fix was right and stays; this
+## is the half of it that got carried along by the shared constant.
+##
+## `_layout_objective_block()` below already grows the panel past this floor
+## whenever the text needs it (`maxf(OBJECTIVE_BLOCK_HEIGHT, ...)` against the
+## capped text height), so the long titles that motivated the cap still get
+## their four lines. Two is the measured two-line design height this block was
+## fitted to and the value it shipped at before the cap moved.
+const OBJECTIVE_MIN_LINES := 2
 const OBJECTIVE_BLOCK_HEIGHT := OBJECTIVE_EYEBROW_ROW + OBJECTIVE_INSET \
-	+ float(OBJECTIVE_LINES) * float(HUD_SENTENCE_FONT_SIZE) * SENTENCE_LINE_RATIO \
+	+ float(OBJECTIVE_MIN_LINES) * float(HUD_SENTENCE_FONT_SIZE) * SENTENCE_LINE_RATIO \
 	+ OBJECTIVE_INSET
 ## Padding between the new backing panel's edge and the eyebrow/subtext
 ## labels inside it -- both were flush to the block's own right edge back
