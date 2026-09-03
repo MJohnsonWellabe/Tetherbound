@@ -42,6 +42,18 @@ var _player: Node3D = null
 var _target: Vector3 = Vector3.ZERO
 var _pause_left: float = 0.0
 
+## WORLD-LIFE-0903. Optional: `Callable(pos: Vector3) -> bool`, true when `pos`
+## is a fine place to wander to. Unset (the default) for every wild creature
+## that has ever existed -- the plain disc pick below is unchanged for them.
+## `encounter_director.gd` hands one in for a band1 route cluster whose
+## `wander_radius` was widened enough to reach the road (BAND1_ROUTE_CONTRACT.md:
+## herds and water-edge clusters now cross or graze beside it), because a
+## wider disc can otherwise land a destination standing on the painted trail
+## itself -- band1's road is only ~1.8m either side of its own centreline,
+## well inside a 20m wander disc. This node has no idea what a "road" is and
+## is not going to learn; it only ever asks the callback yes/no.
+var _clearance_check: Callable = Callable()
+
 ## Aggression. A creature that will start a fight on its own, per GAME_DESIGN.md
 ## pillar 3 and §14. Peaceful creatures are untouched by all of this: §14's "not
 ## simple proximity" rule is scoped to them, and they still only ever fight when
@@ -287,10 +299,28 @@ func _wander(delta: float) -> void:
 	request_move(to.normalized(), _wander_speed)
 
 
+## Retries against `_clearance_check` the same shape `encounter_director.gd`'s
+## own `_pick_clear_spot()` already uses for the initial scatter -- a handful
+## of attempts from the SAME per-instance `_rng` (never seeded, so this was
+## never part of the world's determinism promise), falling back to the last
+## candidate rather than freezing in place if every attempt lands on the road.
+const WANDER_CLEAR_ATTEMPTS := 8
+
 func _pick_destination() -> Vector3:
-	var angle := _rng.randf_range(0.0, TAU)
-	var distance := _rng.randf_range(1.0, _wander_radius)
-	return home + Vector3(sin(angle), 0.0, cos(angle)) * distance
+	var candidate := home
+	for attempt in WANDER_CLEAR_ATTEMPTS:
+		var angle := _rng.randf_range(0.0, TAU)
+		var distance := _rng.randf_range(1.0, _wander_radius)
+		candidate = home + Vector3(sin(angle), 0.0, cos(angle)) * distance
+		if not _clearance_check.is_valid() or bool(_clearance_check.call(candidate)):
+			return candidate
+	return candidate
+
+
+## See `_clearance_check`'s own comment. A no-op call for every wild creature
+## the director does not opt in.
+func set_clearance_check(check: Callable) -> void:
+	_clearance_check = check
 
 
 ## --- combat ---------------------------------------------------------------

@@ -13,6 +13,15 @@ extends RefCounted
 ## default, so a cluster cannot become rolled by accident, only by an edit that
 ## shows up in a diff.
 ##
+## WORLD-LIFE-0903: a spawn entry may also carry `wander_radius` (metres),
+## read by `encounter_director.gd::_spawn_creatures()` and applied to every
+## member of that cluster via `wild_creature.gd::configure()`, overriding its
+## open-meadow default of 7m. This file never reads that key itself -- rolling
+## a species and rolling how far it wanders are independent, and `_apply_plan()`
+## duplicates a spawn entry wholesale before overwriting only `species`/`tier`/
+## `time`/`weather`/`alpha`, so a rolled cluster keeps its authored
+## `wander_radius` exactly as an anchor does.
+##
 ## ## Pure logic, no nodes
 ##
 ## Everything here is static and takes its config as an argument, so
