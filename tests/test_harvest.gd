@@ -709,20 +709,6 @@ func test_authored_node_exposes_read_only_resource_identity_for_route_selection(
 	node.free()
 
 
-func test_gather_hides_the_visual_and_respawn_restores_it() -> void:
-	var node: Node3D = HARVEST_NODE.new()
-	node.call("setup", WOOD_SPEC)
-	var visual: Node3D = node.get("_visual")
-	assert_true(is_instance_valid(visual) and visual.visible, "a fresh node's visual must start visible")
-
-	# The state `_on_gathered()` itself sets on a successful gather (harvest_node.gd
-	# lines ~101-104) -- set directly here rather than through `_on_gathered()`,
-	# which needs the `/root/Game` autoload this runner never boots.
-	visual.visible = false
-	node.set("_respawn_left", HARVEST_NODE.RESPAWN_SECONDS)
-	node.set_process(true)
-	assert_false(visual.visible, "gathering must hide the visual")
-
-	node.call("_process", HARVEST_NODE.RESPAWN_SECONDS + 0.01)
-	assert_true(visual.visible, "the respawn timer must restore the visual once it elapses")
-	node.free()
+# D72: gathering no longer hides-and-respawns. See "D72: gathered stays gone"
+# above for the flag_id()/was_taken()/restore_progression_from_game() coverage
+# that replaces this test.
