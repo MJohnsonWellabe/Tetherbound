@@ -27,8 +27,9 @@ them were not what they claimed:
 - The opening-segment orb floor is **fixed** (gate on the beat, not the species).
 - The Gate B objective chain was **never stalling** — two assertions were pinned to label
   strings that had never existed in `objectives.json`, behind a job that did not gate. The
-  gather-route half is real and is the settlement fence's concave corner past TrailGate,
-  not scatter density.
+  gather-route half was real, and is now **fixed**: the corner past TrailGate was a
+  harness defect, not a world defect — a real body clears it on a plain stick-hold; only
+  `stick_navigator.gd`'s stall/flip logic could not round it (FENCE-CORNER-0903).
 - The South Bridge `smoke_traversal` failure was **a harness defect, not a world hole**: a
   teleport outran Terrain3D's camera-following collision, so the body fell before the
   ground existed under it. The crossing's geometry was never changed and never needed to be.
@@ -98,8 +99,11 @@ Headline items still open:
 - The tutorial catch is unstable across knockout / re-engage rounds.
 - Bramblebun reads as a self-lit glow at night: `field_emission` was raised to 2.5 for
   daytime grass separation and the multiply is not time-of-day scaled.
-- The settlement fence's concave corner past TrailGate stops the scripted gather-route
-  walk. Lane `FENCE-CORNER` is deciding whether that is a world defect or a harness one.
+- Gate B's tail stalls placing creature beds (3 of 5), and the objective does not advance
+  off "Make camp for your team". Found only after the gather-route fix let the run get
+  that far.
+- Gate B's walk back to the Practice Meadow clearing stalls ~27–32 m short. Same reason:
+  newly reachable, not newly broken.
 - Bram's shop exit clips furniture.
 - Gate 2's task list (2.1–2.7) is complete while its blind-judge bar is not met; task
   2.8 decides what that means. See `docs/GATE3_COORDINATOR_BRIEF.md` §2.

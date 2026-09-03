@@ -167,11 +167,19 @@ From `CLAUDE.md` and paid for in real time:
 
 - `main` = `3c73aab5`. Gate 2 tasks 2.1–2.7 all landed. Both bakes fresh.
 - **Lane `GATE-2-EVIDENCE` (task 2.8)** — running. Its verdict gates your visual slices.
-- **Lane `FENCE-CORNER`** — running, branch `ralph/FENCE-CORNER-0903`. Concerns the
-  concave corner past TrailGate in `village_boundary.json` that the scripted walk cannot
-  round. Its open question is whether that is a **world** defect or a **harness** defect
-  (`stick_navigator.gd` lives in `tests/helpers/`). If it lands as a world fix touching
-  `village_boundary.json`, it does not touch a bake input — but check before assuming.
+- **Lane `FENCE-CORNER`** — **landed.** Verdict: **harness defect, not world defect.**
+  Settled the right way — by driving a real player body at the corner with *no* navigator,
+  which isolates the world from the harness instead of reasoning about it. A plain
+  stick-hold clears the corner; `stick_navigator.gd`'s stall/flip logic could not.
+  `village_boundary.gd`/`.json` untouched. Worth knowing as precedent: **when a scripted
+  walk fails, prove the world is at fault before you change the world.** Gate 3 runs
+  segments S06–S10 through this same harness and will meet this class of failure again.
+- That fix got `smoke_gate_b_continuous --gate-b-full-chain` through the whole gather
+  route for the first time, which immediately surfaced **two new P2s further down the
+  chain** (creature-bed placement stalls at 3 of 5 with the objective stuck on "Make camp
+  for your team"; and the walk back to the Practice Meadow stalls ~27–32 m short). Both
+  are newly *reachable*, not newly broken — expect more of this as you push deeper into
+  the chain, and do not read a newly-visible failure as a regression.
 - Open P1/P2 issues you may inherit are listed in `docs/CURRENT_STATE.md` §3. Two worth
   knowing: the tutorial catch is unstable across KO/re-engage rounds, and Bramblebun's
   `field_emission` (raised to 2.5 for daytime grass separation) reads as a self-lit glow
