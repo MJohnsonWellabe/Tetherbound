@@ -137,6 +137,52 @@ into `claude/do-this-2t7fny`, which feeds PR #26.
 | BRAM-EXIT | no code change: the item was misfiled. Bram is the innkeeper (`inn_interior.gd`), not the shop (`shop_interior.gd`, which is Mira's), and the existing door-axis exit fix already covers his room; it had simply never been probed there | new `tools/gate_f/probe_inn_exit_clearance.gd` clears the doorway from 6 of 6 furnished pockets; all three Bram cycles in `smoke_gate_b_continuous` exit cleanly |
 | WORLD-RULES | gathered harvest nodes stay gone permanently (a progression flag per node, restored on load); the three starters are removed from every band trainer roster and replaced with same-type non-starters. D72 records both | verification in progress at time of writing; the lane reported one unnamed failing smoke and was asked for it |
 
+## 4c. BAND1-DISCOVERY-0903 (Gate 2 task 2.6, branch `ralph/BAND1-DISCOVERY-0903`, not yet merged)
+
+Points of interest: one optional discovery with a real reward, signposts legible at
+1280×800, trails visible on the map.
+
+- **The discovery already existed as data** (WORLD-CONTENT: `tm_rock_throw` cache at
+  `playground_world.gd` `CACHE_AT`, marked by `rise_cache_marker` in band1
+  `props.json`) — this lane's job was making it read as a landmark from the route, per
+  `docs/specs/BAND1_COMPOSITION_PLAN.md` 5.3/6.1 (the Gate 2.1 pass). The marker's
+  scale went 0.9 → 1.3 so it survives the 170 m sightline from the Rise crest overlook,
+  and the crest's own "Pond Circuit" trailhead (`terrain_playground.json`
+  `paths.trailheads`) moved from (−357.76,401.12) — past the crest, on the descent — to
+  the crest itself at (−228,331), so the one overlook on the route stands in the
+  composition plan's own window and names where the road goes at the point a player can
+  still act on it. **Why the reward is real:** at this point in Band 1 the player holds
+  ~30 starting coins (`trade.json` `starting_coins`) against a 120-coin shop price for
+  the same TM (`trade.json` `mira.goods.tm_rock_throw`); finding it free changes what
+  they can afford to save toward next, not a chore for something already in hand.
+- **Signpost legibility (`docs/VISUAL_BIBLE.md` §4 item 8, "signpost text is a
+  `Label3D` resolution smear"):** `signpost.gd`'s `LABEL_FONT_SIZE` 48 → 144
+  (`outline_size` scaled the same 3× to hold GF-B-013's contrast ratio). `_label_scale()`
+  already fits `pixel_size` to `LABEL_FONT_SIZE`, so this raises glyph-atlas resolution
+  without changing any board's or letter's size in the world. Confirmed by real capture
+  at 1280×800 (`tools/_capture_band1_signpost_legibility.gd`,
+  `shots/wayfinding/south-bridge-trailhead.png` and `crest-trailhead-pond-circuit.png`):
+  "South Bridge" and "...ond Circuit" read with clean letterforms at normal viewing
+  distance, not a blur. Applies to every fingerpost/trailhead in the game (all go
+  through this one file).
+- **Trails on the map:** found already implemented, not a gap. `map_baker.gd`'s route
+  overlay unions `paths.routes`/`approaches`, `spokes.routes`, `crossings`,
+  `trail.bands` and `trail.loops` via `playground_heightfield.gd::road_polylines()`
+  (`52-MAP-all-authored-trails-visible.md`'s acceptance). Confirmed by a real capture
+  after revealing every waypoint of Band 1's own spine (`trail.bands[0]`) and the Pond
+  Circuit loop (`trail.loops[0]`) — `tools/_capture_band1_map_trails.gd`,
+  `shots/_diag/band1_map_trails_zoomed.png` — shows the winding corridor as one
+  continuous trail line through the fogged-in reveal, not disconnected dots or a gap
+  where the loop should be. No map/baker code changed.
+- Tests run on a clean `--import` (Godot 4.7-stable): `test_band_content.gd` 6/6,
+  `test_playground_heightfield.gd` 15/15, `test_map_baker.gd` 7/7, `test_harvest.gd`
+  30/30. Not run: the full unit suite or `smoke_playground` — this container has no
+  GPU, and `--rendering-driver opengl3` under `xvfb-run` (required for any capture)
+  measured 30–50 minutes per two-or-three-frame capture of the full `meadows_playground`
+  scene (vs. `smoke_playground`'s own reported 334 s headless), which the session's time
+  budget could not repeat for a full smoke chain on top of the three capture runs it did
+  complete.
+
 ## 5. Gate status
 
 - **Gate 0 (reset):** this session; see `docs/CLEANUP_MANIFEST.md`.
