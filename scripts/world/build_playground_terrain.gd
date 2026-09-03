@@ -14,6 +14,7 @@ extends SceneTree
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const ALIGNMENT := preload("res://scripts/world/terrain_region_alignment.gd")
+const TERRAIN_BAKE := preload("res://scripts/world/terrain_bake.gd")
 const DATA_DIR := "res://data/terrain/playground"
 
 # Terrain3DData.MapType. The enum is not reachable through ClassDB on this
@@ -168,6 +169,13 @@ func _run() -> void:
 	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(data_dir)):
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(data_dir))
 	data.call("save_directory", data_dir)
+
+	# Stamp the freshness manifest only for a full bake: a `--regions=` subset
+	# run (the bit-identity test's own use of this script) touches a fraction
+	# of the world and must never mark the WHOLE world fresh against the
+	# live config. See terrain_bake.gd::write_manifest.
+	if full_bake:
+		TERRAIN_BAKE.write_manifest(data_dir, locations.size())
 
 	print("baked -> %s (%d region(s))" % [data_dir, locations.size()])
 	quit(0)
