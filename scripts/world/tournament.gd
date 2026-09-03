@@ -34,6 +34,14 @@ extends Node3D
 ## Neither job needs a quest engine and neither builds one -- spec sec19 and
 ## CLAUDE.md both ban that, and `progression_state.gd` is still a flat set of
 ## ids that are either set or not.
+##
+## TOURNAMENT-FLOW-0903 (owner playtest 2026-09-03) added a third, small job:
+## the win/next-round announcement, `_announce_new_round_wins()` below. Each
+## round is now two conversations (village_npcs.json's own ladder) -- ring-
+## entrance banter, then an explicit "begin the round" line -- and this file
+## still writes no state machine for that either: it just polls the same
+## `won_flag`s it already reads for the board and pushes one toast through
+## `Game.push_world_message()` the instant a round's flag flips true.
 
 const CONFIG_PATH := "res://data/config/tournament.json"
 
@@ -136,6 +144,15 @@ var _built := false
 ## `progression_state.gd` has no signal, by design.
 var _progression_revision := -1
 var _party_revision := -1
+
+## TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: "it announces you
+## won and announces the next round". Which round `won_flag`s this node has
+## already pushed a toast for, so a flag that was already true when the
+## board was BUILT (a reload mid-bracket, a capture tool) is never announced
+## retroactively -- only a flag that flips true while this node is polling,
+## which is what "just won it" actually means. Keyed by flag id rather than
+## round index so a round with no `won_flag` cannot collide with round 0.
+var _announced_won_flags: Dictionary = {}
 
 
 ## `world` is asked for ground height the same way `signpost.gd` and
@@ -383,6 +400,37 @@ func _refresh(force: bool) -> void:
 	_repaint_bracket(progression)
 	if _prompt != null:
 		_prompt.set("label", status_line(progression))
+	# Not on a forced refresh: `build()` calls `_refresh(true)` once before the
+	# player has done anything, and a save reloaded mid-bracket would otherwise
+	# re-announce a round the player won an hour ago the instant the scene
+	# stands back up. Every real win happens while this node is already alive
+	# and polling, which is exactly the path that reaches here with force=false.
+	if not force:
+		_announce_new_round_wins(progression)
+
+
+## TOURNAMENT-FLOW-0903. The fight ends, `encounter_director._record_trainer_
+## defeat()` writes the round's `won_flag` (its own contract flag machinery,
+## untouched by this file), and the very next poll here sees it and pushes one
+## toast naming the win and what comes next -- owner playtest 2026-09-03 item
+## 3's "it announces you won and announces the next round". One combined
+## message rather than two: `Game.push_world_message()` holds a single pending
+## line (see `game_state.gd::push_world_message()`), so a second push in the
+## same poll would silently replace the first before the HUD ever showed it.
+func _announce_new_round_wins(progression: RefCounted) -> void:
+	if progression == null:
+		return
+	var list := rounds()
+	for i in list.size():
+		var flag := str((list[i] as Dictionary).get("won_flag", ""))
+		if flag.is_empty() or _announced_won_flags.has(flag):
+			continue
+		if not bool(progression.call("has", flag)):
+			continue
+		_announced_won_flags[flag] = true
+		var game := get_node_or_null(^"/root/Game")
+		if game != null and game.has_method("push_world_message"):
+			game.call("push_world_message", round_result_message(i))
 
 
 ## Write the current bracket onto the slots.
@@ -802,6 +850,25 @@ static func status_line(progression: RefCounted) -> String:
 			return "Tournament board: %s, you vs %s" % [
 				str(spec.get("label", "Next")), str(spec.get("opponent", "?"))]
 	return "Tournament board"
+
+
+## TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: "it announces you
+## won and announces the next round". Pure and static like `status_line()`
+## above, so a test can pin the exact wording without a node in a world.
+## `round_index` is the round just won, as its position in `rounds()`; the
+## last round's win names the championship instead of a fourth round that
+## does not exist.
+static func round_result_message(round_index: int) -> String:
+	var list := rounds()
+	if round_index < 0 or round_index >= list.size():
+		return ""
+	var spec := list[round_index] as Dictionary
+	var label := str(spec.get("label", "Round"))
+	if round_index + 1 < list.size():
+		var next := list[round_index + 1] as Dictionary
+		return "%s won! Next: %s, you vs %s." % [
+			label, str(next.get("label", "Next")), str(next.get("opponent", "?"))]
+	return "%s won! Champion of the Lower Meadows." % label
 
 
 ## --- the table ----------------------------------------------------------------

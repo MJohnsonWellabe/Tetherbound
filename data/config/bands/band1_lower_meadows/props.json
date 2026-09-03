@@ -326,60 +326,10 @@
           "yaw_deg": 120.0,
           "scale": 1.0,
           "_why": "a trainer's pack leaning on the crate's west face (0.82m centre to centre)."
-        },
-        {
-          "model": "Banner",
-          "name": "Banner_gate_west",
-          "at": [
-            14.0,
-            4.2
-          ],
-          "yaw_deg": 5.0,
-          "pitch_deg": -6.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
-          "retint": {
-            "Banner": "#3d6a38"
-          },
-          "_why": "the west post of the gateway pair flanking the corridor road where it enters the field from the square (road centreline x~19.9 at this z; cloth spans x 14.0..15.8 and faces along the road so a walker from the well sees it head-on). 5m from Bryn's stand at (13,9), 2.4m north of cottage_a's north-east collider extent. Green is the key art's own settlement banner; oxblood stays Team Tether's."
-        },
-        {
-          "model": "Banner",
-          "name": "Banner_gate_east",
-          "at": [
-            24.2,
-            3.6
-          ],
-          "yaw_deg": -5.0,
-          "pitch_deg": -6.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
-          "retint": {
-            "Banner": "#3d6a38"
-          },
-          "_why": "the east post of the pair, cloth x 24.2..26.0, 4.3m east of the road; 4.2m from the berry node at (28,6), 8m from Halda, 6.8m from Fenn."
-        },
-        {
-          "model": "Banner",
-          "name": "Banner_west_ring",
-          "at": [
-            10.5,
-            13.5
-          ],
-          "yaw_deg": 90.0,
-          "pitch_deg": -6.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
-          "retint": {
-            "Banner": "#3d6a38"
-          },
-          "_why": "the ring's west marker, facing east across the road at the fight ground; cloth spans z 11.7..13.5 at x 10.5, 6m west of the road, 4.7m from Bryn, 9.8m from the workshop oak."
         }
       ],
-      "_why_vp5": "VP5 (visual-parity village lane), 2026-09-02. Two blind judges (ralph/reports/visual-parity/VP0-baseline/JUDGE-village-pond.md, ralph/reports/audit/E-locations/JUDGE-AUDIT-E-locations-2026-08-31.md) read this ground as 'a plain open meadow ... no arena, ring, stands, or banner'. The geography fixes what a ring can be: the corridor spine (terrain_playground.json trail.bands[0], (27.5,-16)->(14,20)) runs straight through the field 4m west of the board, the three tournament trainers stand at (20,12) (band1 trainers.json) with an 11m combat arena (combat_arena.gd) around the fight, and the village fence runs 3.3m behind the board. So the ring is the road's east verge, bounded by the fence: the EVENT read comes from the key art's own settlement device -- green banners on posts (quaternius_castle `Banner`, retinted to the board's banner green, never Team Tether's oxblood) -- two of them flanking the road where it enters the ground, one on the ring's west side; the two spectator benches re-sited to face the ring from outside the trainers' axis (E1's east bench stood 0.4m from Halda, on top of her); and a small staging pile (crate, bucket, bag) by the board for the team waiting its turn, with a barrel by the east bench. Everything solid sits >= 7m from the arena centre (20,10) except the board-side staging pile, 4.5m off its axis. Positions checked against the built scene (board node (20,15) yaw -155, Halda (23.5,11.5), Bryn (13,9), the berry node (28,6), the trail road's actual line, and the NEW boundary edge (30,11)->(15.98,22.59), which is 2.5-4m from the pile and the west bench)."
+      "_why_vp5": "VP5 (visual-parity village lane), 2026-09-02. Two blind judges (ralph/reports/visual-parity/VP0-baseline/JUDGE-village-pond.md, ralph/reports/audit/E-locations/JUDGE-AUDIT-E-locations-2026-08-31.md) read this ground as 'a plain open meadow ... no arena, ring, stands, or banner'. The geography fixes what a ring can be: the corridor spine (terrain_playground.json trail.bands[0], (27.5,-16)->(14,20)) runs straight through the field 4m west of the board, the three tournament trainers stand at (20,12) (band1 trainers.json) with an 11m combat arena (combat_arena.gd) around the fight, and the village fence runs 3.3m behind the board. So the ring is the road's east verge, bounded by the fence: the two spectator benches face the ring from outside the trainers' axis (E1's east bench stood 0.4m from Halda, on top of her); and a small staging pile (crate, bucket, bag) by the board for the team waiting its turn, with a barrel by the east bench. Everything solid sits >= 7m from the arena centre (20,10) except the board-side staging pile, 4.5m off its axis. Positions checked against the built scene (board node (20,15) yaw -155, Halda (23.5,11.5), Bryn (13,9), the berry node (28,6), the trail road's actual line, and the NEW boundary edge (30,11)->(15.98,22.59), which is 2.5-4m from the pile and the west bench).",
+      "_why_vp5_removed_0903": "TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: 'I don't like the flags around the tournament area.' VP5 above added three flat cloth-quad `Banner` props (quaternius_castle's Banner.obj -- the same bolt-of-cloth mesh band3_the_river_lock/props.json and tether_relay.json already retint oxblood for Team Tether's own checkpoints, retinted village green here instead) to answer two blind judges' 'no arena, ring, stands, or banner'. It is the only cloth/pennant mesh installed in the project (checked: no other pennant/flag geometry exists under assets/), so there is no different asset to swap it for without a new Meshy generation, which CLAUDE.md reserves for Team Tether hero objects and forbids for the Meadows outright. Removed rather than reworked: `Banner_gate_west`, `Banner_gate_east` and `Banner_west_ring` are gone, and the ring's event read now comes from the benches, the staging pile, the board and the ceremony itself (tournament.gd's begin-the-round/win/next-round beats, same lane) rather than from set dressing the owner explicitly said he does not like."
     },
     {
       "order": 1000,

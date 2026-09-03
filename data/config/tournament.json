@@ -30,6 +30,8 @@
       "trainer": "tournament_quarter_mira",
       "opponent": "Mira",
       "conversation": "tournament_quarter",
+      "at_ring_flag": "tournament_quarter_at_ring",
+      "begin_conversation": "tournament_quarter_begin",
       "won_flag": "tournament_quarter_won"
     },
     {
@@ -38,6 +40,8 @@
       "trainer": "tournament_semi_tam",
       "opponent": "Tam",
       "conversation": "tournament_semi",
+      "at_ring_flag": "tournament_semi_at_ring",
+      "begin_conversation": "tournament_semi_begin",
       "won_flag": "tournament_semi_won"
     },
     {
@@ -46,10 +50,12 @@
       "trainer": "tournament_final_oskar",
       "opponent": "Oskar",
       "conversation": "tournament_final",
+      "at_ring_flag": "tournament_final_at_ring",
+      "begin_conversation": "tournament_final_begin",
       "won_flag": "tournament_won"
     }
   ],
-  "_comment_rounds": "Three, in order. `trainer` is a real trainers.json id whose `reward.flags` sets `won_flag` -- so the round is recorded by the SAME code path that records every other trainer defeat in the chapter, and there is no second place where a win is remembered. `conversation` is the marshal's line that ends on `battle:<trainer>`; the fight starts when that dialogue box closes, exactly as a villager's challenge does.",
+  "_comment_rounds": "Three, in order. `trainer` is a real trainers.json id whose `reward.flags` sets `won_flag` -- so the round is recorded by the SAME code path that records every other trainer defeat in the chapter, and there is no second place where a win is remembered. `conversation` is the opponent's ring-entrance banter and ends on `flag:<at_ring_flag>`; `begin_conversation` is the short, explicit 'begin the round' line owner playtest 2026-09-03 item 3 asked for, and it is the one that ends on `battle:<trainer>` -- the fight starts when THAT box closes, not the banter's. `at_ring_flag` is never cleared once set (a contract flag, same idiom as `tournament_team_ready`), so retrying a lost round goes straight back to `begin_conversation` and does not repeat the banter.",
   "_comment_final_mount": "The final opponent rides a Meadowhart -- owner-locked. Meadowhart is already the authored first mount (data/creatures/species.json, `rideable.requires_item: \"saddle\"`), so the reward the win grants points straight at the creature the player just fought. Burrowback deliberately stays non-rideable.",
   "_comment_retry": "Losing a round is not fatal and not final: the round's flag is simply not set, the marshal offers the same round again, and the player heals their team first (the creature bed, a potion, the inn). Owner-locked: 'You can lose and retry after healing your creatures.' Nothing here needs to implement that -- `encounter_director._finish_trainer_battle(false)` already ends a lost trainer battle with no flag and no reward, and `can_challenge()` already refuses while the player's creature is fainted, which is what sends them off to heal.",
 

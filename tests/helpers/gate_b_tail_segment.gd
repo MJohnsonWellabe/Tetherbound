@@ -653,8 +653,15 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		_fail("%s names trainer '%s', which trainers.json does not define" % [label, trainer_id])
 		return false
 
+	# TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: "you enter then
+	# you choose to start the battle". Each round is now two conversations --
+	# the ring-entrance banter, which starts nothing and only sets the round's
+	# `at_ring_flag`, and `begin_conversation`, the explicit begin-the-round
+	# line that actually opens the fight.
 	var chosen := VILLAGE_NPCS.greeting_for(_villager(TOURNAMENT.marshal_name()), _progression)
 	var conversation := str(spec.get("conversation", ""))
+	var begin_conversation := str(spec.get("begin_conversation", ""))
+	var at_ring_flag := str(spec.get("at_ring_flag", ""))
 	if chosen != conversation:
 		_fail("before the %s the marshal should offer '%s'; her ladder chose '%s'"
 			% [label, conversation, chosen])
@@ -662,12 +669,27 @@ func _fight_and_win(spec: Dictionary) -> bool:
 	await _play(conversation)
 	for _i in 12:
 		await _tree.process_frame
+	if bool(_director.call("trainer_battle_active")):
+		_fail("'%s' started the %s battle by itself; the explicit begin-the-round choice would do nothing" % [conversation, label])
+		return false
+	if at_ring_flag != "" and not _flag(at_ring_flag):
+		_fail("'%s' closed but never set '%s'; the marshal would never offer the begin-the-round line" % [conversation, at_ring_flag])
+		return false
+
+	chosen = VILLAGE_NPCS.greeting_for(_villager(TOURNAMENT.marshal_name()), _progression)
+	if chosen != begin_conversation:
+		_fail("at the ring before the %s the marshal should offer '%s'; her ladder chose '%s'"
+			% [label, begin_conversation, chosen])
+		return false
+	await _play(begin_conversation)
+	for _i in 12:
+		await _tree.process_frame
 	if not bool(_director.call("trainer_battle_active")):
-		_fail("'%s' closed and no %s battle started" % [conversation, label])
+		_fail("'%s' closed and no %s battle started" % [begin_conversation, label])
 		return false
 	if str(_director.call("trainer_battle_id")) != trainer_id:
 		_fail("'%s' started a battle against '%s' rather than '%s'"
-			% [conversation, str(_director.call("trainer_battle_id")), trainer_id])
+			% [begin_conversation, str(_director.call("trainer_battle_id")), trainer_id])
 		return false
 	if not _exit_connected:
 		_manager.connect("exited", func(outcome: String) -> void:
