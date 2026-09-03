@@ -79,7 +79,8 @@
           "contrast": 0.93
         },
         "trail_bias": 0.85,
-        "trail_offset_min": 15.0,
+        "_why_world_trees_0903": "WORLD-TREES-0903, BAND1_ROUTE_CONTRACT.md. 15.0 -> 6.0. BAND1_ROUTE_INVESTIGATION.md section 3 measured this floor as a structural 15m dead zone flanking the road everywhere: no corridor_fill tree candidate was ever centred closer than 15m to the trail, so the immediate near-field the player is looking at while walking is kept clear of everything except the three curated anchor stations. 6.0 keeps candidates clear of the 3m painted path plus a shoulder (matching the `bushes` layer's own 10.0 floor, roughly halved again for a canopy tree's wider trunk/root spread) while bringing the nearest procedural fill into the player's immediate view cone. Perf-proxy cost is near-zero: this only moves where the already-budgeted density_scale 6.0 candidates land, not how many exist.",
+        "trail_offset_min": 6.0,
         "trail_offset_max": 65.0
       },
       "_comment_ridge_bias": "R7.1-remainder: specific sightlines toward the true horizon (the last real hilltops before Terrain3D's own procedural background takes over past the 512m bake) could still land on a gap between clumps, even though far clumps exist elsewhere. ridge_bias makes a fraction of this layer's clumps sample several candidate centres (scatter_rules.gd::_clump_centre, RIDGE_CANDIDATES=6 within RIDGE_SEARCH_RADIUS=140m) and keep the highest, biasing toward hilltops/ridge crests without hand-picked coordinates. Not a density increase \u2014 same clump count, biased placement. Tune by rendering, not by feel.\n\nVP3-ITEM9 (2026-09-02, VEG lane): 0.75 -> 0.4, found by a code-blind judge reading `02-valley-floor.png` and naming a row of small canopies at visibly even spacing along the right edge, which reads as procedural furniture. Root cause traced by reading the mechanism, not guessed: at 0.75 nearly three in four of this layer's clumps (13 in the origin square alone) independently search the same local high ground and keep the tallest of 6 tries, and a single elongated ridge is close to one-dimensional -- many independently-biased clumps converging on the same short run of crest, each contributing its own uniformly-random-angle instances, reads from a shallow/oblique angle as a near-regular march along that crest, not as the intended occasional landmark silhouette. 0.4 keeps the R7.1 benefit (a large minority of clumps still reach for a nearby hilltop, so far sightlines still gain a landmark) while returning most clumps to their plain uniform centre, breaking the one-ridge pile-up back into the varied, gapped placement the rest of this layer's own clumping already reads as. Only this layer's `ridge_bias` moved -- `_clump_centre`'s own RIDGE_CANDIDATES/RIDGE_SEARCH_RADIUS are code constants, out of this file's reach, and clumps/per_clump/strays (which the corridor-fill placement floor and boot budget are tuned against) are untouched.",
@@ -323,6 +324,50 @@
           "count": 18,
           "max_slope_deg": 26.0,
           "radius": 24.0
+        },
+        {
+          "_why": "WORLD-TREES-0903, BAND1_ROUTE_CONTRACT.md Place 1 (the Gate Meadow, arc 0-450): 'a tree station of 6-9 mixed-height trees at 8-12m either side of the road within 120m of the gate.' The owner's 2026-09-03 playtest named the first two minutes out of the village as a bare field; BAND1_ROUTE_INVESTIGATION.md legs 0-2 measured 8-26 trees per 150m leg here against 100-575 further out. This is the east flank, sited by probing the heightfield (tools/_probe_band1_worldtrees.gd) for a low-slope spot 8-9m off the authored trail.gd `band1_lower_meadows` spine, clear of the village square/practice-field/practice-trainer clearings. `scale_min/max` widened past the layer default for a visible age range (mixed-height).",
+          "at": [
+            20.0,
+            50.0
+          ],
+          "radius": 9.0,
+          "count": 5,
+          "scale_min": 0.5,
+          "scale_max": 1.6
+        },
+        {
+          "_why": "WORLD-TREES-0903, Place 1, west flank -- same station, opposite side of the road so the gate meadow reads as flanked rather than one-sided. Probed at 9.1m off the trail, clear of every village-hub clearing. 5 + 4 trees across both flanks is inside the contract's 6-9 count.",
+          "at": [
+            -5.0,
+            95.0
+          ],
+          "radius": 6.0,
+          "count": 4,
+          "scale_min": 0.5,
+          "scale_max": 1.6
+        },
+        {
+          "_why": "WORLD-TREES-0903, Place 4 (the Long Field): the first of BAND1_ROUTE_INVESTIGATION.md's two named thin legs, arc 1050-1200 (86 trees against 300-580 on the legs either side). Sited by probing for a flat shelf 20-25m off the trail between the (-190,650) and (-50,700) waypoints (tools/_probe_band1_worldtrees.gd), clear of any existing clearing/footprint. 10 trees with a wide scale spread reads as an authored grove, not a repeated stamp; the matching glade clearing sits at (-104,660) in the band file so the grove has an open pocket rather than a solid wall of canopy.",
+          "at": [
+            -120.0,
+            650.0
+          ],
+          "radius": 14.0,
+          "count": 10,
+          "scale_min": 0.55,
+          "scale_max": 1.6
+        },
+        {
+          "_why": "WORLD-TREES-0903, Place 4: the second named thin leg, arc 2100-2250 (19 trees, the lowest of any leg past the opening). Sited the same way, 12-13m off the trail between the (180,1200) and (30,1250) waypoints. Matching glade clearing at (21,1245) in the band file.",
+          "at": [
+            5.0,
+            1235.0
+          ],
+          "radius": 14.0,
+          "count": 10,
+          "scale_min": 0.55,
+          "scale_max": 1.6
         }
       ],
       "_comment_model_scale_vp3": "VP3: per-model size classes on top of the shared range (scatter_rules.gd `model_scale`, RNG-safe). CommonTree_1 (widest canopy) becomes the big broad form, _2 (deep-green variant) the compact one, so the three variants differ in SIZE as well as tint and a copse carries an age range rather than three tints of one silhouette.",
@@ -505,6 +550,21 @@
           "count": 9,
           "max_slope_deg": 24.0,
           "radius": 22.0
+        },
+        {
+          "_why": "WORLD-TREES-0903, BAND1_ROUTE_CONTRACT.md Place 2 (The Rise, arc 450-900): 'a hero tree on the crest visible from the gate.' `tools/_probe_band1_worldtrees.gd` scanned the heightfield around the arc's own waypoints and found this the local high point (h=11.37 against 9-11 for every other candidate within 60m, slope 4.3 degrees), 8m off the trail where the road climbs the shoulder -- there is no authored `rises.peaks` landform out here (peaks[0] is the tutorial mound at the village, a different 'rise'), so the crest is this stretch's own rolling high ground. `TwistedTree_2` only: EV2 measured it the tallest form in the approved subset (18.95m), the 'tall landmark tree' slot, and a single tree reads as a landmark where a pair would read as a stand.",
+          "at": [
+            -224.0,
+            336.0
+          ],
+          "radius": 4.0,
+          "count": 1,
+          "models": [
+            "res://assets/environment/stylized_nature/TwistedTree_2.gltf"
+          ],
+          "scale_min": 1.1,
+          "scale_max": 1.15,
+          "max_slope_deg": 20.0
         }
       ],
       "_comment_retexture_adjust_SUPERSEDED_vp3": "VP3 (superseded 2026-09-02, PALE-MINT BAKE, see `trees` layer for full mechanism/history): `retexture_adjust` (vegetation.gd::_adjusted_texture) used to do this at load time via `Image.adjust_bsc`. Leaves_NormalTree_C.png has a ZERO blue channel on every texel, so no multiply tint can ever take a canopy below HSV saturation 1.0 -- which is the whole reason two rounds of variant_retint still rendered fluorescent lime. Saturation 0.55 mixes 45% toward grey, which finally gives the tints below a blue channel to work with; the three variant colours are then re-derived so the family lands at spring / deep-cool / warm yellow-green rather than three lime values. THE REASONING STILL HOLDS -- only the mechanism changed: `adjust_bsc` is not a real Image method so this never ran, and even fixed the resulting ImageTexture's empty resource_path is dropped by the PackedScene/Terrain3DMeshAsset round-trip. The `retexture_adjust` key is REMOVED (not left inert) because the `retexture` swap above now points straight at the pre-baked `derived/Leaves_NormalTree_C_desat55.png`, and leaving this in place would double-apply the same edit.",
@@ -758,6 +818,23 @@
             "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
           ],
           "_why": "BAND2-FLOOR: late-ridge litter toward the Band 3 seam -- centred on harvest.json order 2004/2007 (68-76,2965-2972), the ground tools/survey_band2.gd's 05-late-ridge-day frame looks at."
+        },
+        {
+          "_why": "WORLD-TREES-0903, BAND1_ROUTE_CONTRACT.md Place 2 (The Rise): 'the discovery: a cache 40-60m off the crest (TM or the Ironwood-tier recipe) marked by a lone dead tree.' The cache item itself is WORLD-CONTENT's `item_cache_pickup` entry, not this layer's -- this is only the marker a player scans the crest for. Sited 54m from the hero-tree crest anchor at (-224,336) (tools/_probe_band1_worldtrees.gd), on flat ground (slope 0.8) 30m off the trail so it reads as a deliberate detour, not something glimpsed from the road.",
+          "at": [
+            -276.0,
+            320.0
+          ],
+          "radius": 3.0,
+          "count": 1,
+          "models": [
+            "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+            "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+            "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+          ],
+          "scale_min": 0.85,
+          "scale_max": 1.1,
+          "max_slope_deg": 20.0
         }
       ],
       "max_slope_deg": 20.0,
@@ -1380,6 +1457,15 @@
       "_comment_colour_jitter_r9_4_remainder_8": "Same mechanism R7.1-remainder used for grass -- per-instance MultiMesh colour multiplier, zero extra draw calls or geometry (vegetation.gd). Pulled back from round 2's 0.22: a wide VALUE-only jitter reinforces exactly the lighting-looking-like-variety confound round 2's critic named, so this now does modest per-instance value spread on top of the three real hue families above rather than trying to carry the whole effect itself. Applies to the pebble meshes too (material PathRocks, untouched by variant_retint above), a second, cheaper source of per-instance variety in the same clump.",
       "colour_jitter": 0.16,
       "_comment_scale_r9_4": "R9.4. Was 0.35-1.3, a 3.7x span that still read as one size because most draws land near the middle. Widened to 0.28-2.1 so a clump has boulders AND pebbles in it. TUNABLE.",
+      "_why_model_scale_world_trees_0903": "WORLD-TREES-0903, BAND1_ROUTE_CONTRACT.md: 'rock-form variety so the single dark boulder is not the default foreground rock.' VISUAL_BIBLE.md's own fresh-survey verdict named 'the same flat dark boulder... the dominant foreground object in three of five frames'. `models` picks uniformly across all six meshes (scatter_rules.gd:1487) and `scale_min/max` (0.28-2.1) applies identically to every one of them, so which of the three medium forms happens to draw the layer's own large end at a given survey stand is pure chance -- Rock_Medium_2, this layer's cool blue-grey slate variant_retint (#6f7679, the darkest of the three hue families), is exactly as likely as either warmer form to be the one that lands big and close. `model_scale` (the same per-model multiplier `trees.model_scale` already uses, RNG-safe -- it only scales the final instance, it does not change which candidates are kept or reshuffle any other placement) pulls the dark slate form down and the two warmer forms up, so a given draw is more often a warm tan or rust-brown boulder at the front of frame and less often the dark one repeating there. Pebbles get their own, smaller multiplier for the same reason in miniature: at scale 2.1 a Pebble_Round mesh reads as an undersized, wrong boulder rather than a big pebble.",
+      "model_scale": {
+        "res://assets/environment/stylized_nature/Rock_Medium_1.gltf": 1.15,
+        "res://assets/environment/stylized_nature/Rock_Medium_2.gltf": 0.75,
+        "res://assets/environment/stylized_nature/Rock_Medium_3.gltf": 1.1,
+        "res://assets/environment/stylized_nature/Pebble_Round_1.gltf": 0.55,
+        "res://assets/environment/stylized_nature/Pebble_Round_2.gltf": 0.55,
+        "res://assets/environment/stylized_nature/Pebble_Round_3.gltf": 0.55
+      },
       "_comment_anchors_of4_mound": "OF4-remainder-mound. Authored outcrops and a talus apron on the ONLY faces of `rises.peaks[0]` the village square and the Rise road can see (the arc from the north-west limb round to the south-west, computed from the two vantage eyes with `tools/_probe_mound.gd`, not guessed). A whole-map placement dump found FOUR rock instances in that entire wedge and none of them on the landform: this layer's own 44-degree ceiling excludes most of a 46m rise's flank, so the layer whose stated job is to make steep ground read as stone was locked out of the steepest ground in the game, and a blind critic read the hill as 'an enlarged pebble' with 'nothing on it, in it, or at the top of it'. Each anchor raises `max_slope_deg` FOR ITS OWN DRAWS ONLY (scatter_rules.gd::_place_anchor) -- the meadow scatter's ceiling is unchanged, so this cannot put boulders on cliffs anywhere else. The `west-spur` pair also absorbs the lone boulder at (80.3,-63.9) that two blind critics independently called 'a stray blob / floating chunk': it is still there, now with company. ALL TUNABLE.",
       "_comment_anchors_of4_mound_r2": "Round 2 restructure, and the reason the anchors come in PAIRS. Round 1 gave each site 7-9 boulders in one 1.4-3.2 scale band, and the blind critic's worst-scale-offender finding was the fix itself: 'roughly twenty-five to thirty of them on one hillside... they shrink the hill -- a landform you can count off in five or six boulder-widths from foot to crest is not a landmark... and they are all the same size. No cobbles, no gravel, no single house-sized monolith.' A rock that is a scale REFERENCE has to be either much bigger or much smaller than the thing beside it; a field of same-sized blocks is a ruler with one mark on it. So every site is now a `-block` anchor (one or two large stones) plus a `-rubble` anchor at the same centre and a wider radius (ten-odd cobbles), the big stones weighted toward the FOOT where gravity actually leaves them rather than spread evenly up the face, and `sink` buries a fraction of each so they sit in the ground instead of resting tangent on it. Large stones (scale >= 1.9) went from ~40 to 11.",
       "_why_wall_foot_skirt_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defect 13 (its item 4, \"the wall NEVER MEETS THE GROUND\"): \"the grass rises and is simply cut by the wall plane -- no plinth, no footing, no rubble skirt, no dirt, no darkening ... the fortress is PASTED ONTO the terrain rather than founded in it\", and the fix list is explicit that \"this can be scatter and terrain painting, NOT NEW MESHES\". So it is scatter, in the layer that already owns loose stone, using the anchor mechanism this layer already uses sixteen times elsewhere -- no new asset, no new layer, no new material. Sited on the three wall feet the judged stands actually look at, derived from stronghold.json's own chamber at/size plus wall thickness rather than eyeballed: the outer works' and courtyard's east flank (`H-05`'s subject), the legendary chamber's west elevation (`H-06`'s subject), and the north gate face the causeway climbs to (`H-02`/`H-03`/`H-04`). Each is a line of small, heavily sunk stones in a band a few metres off the wall, thinning outward -- masonry that has come down off the wall and been left, which is what a footing skirt IS on a building the board describes as a reclaimed ruin. `min_slope_deg` is overridden to 0 on every one of these and that override is load-bearing: the layer's own floor is 6 degrees, so on the flat, made ground at a wall foot -- exactly where this skirt has to go -- every draw would have been rejected and the anchors would have rendered nothing at all. `scale_min/max` stay small (0.25-0.75) so this reads as rubble against a 12m wall and never as boulders parked by a door, and `sink` runs deep so the stones sit IN the ground, which is the half of the defect that is about contact rather than about content.",
