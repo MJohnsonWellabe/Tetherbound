@@ -164,6 +164,52 @@ into `claude/do-this-2t7fny`, which feeds PR #26.
 | BAND1-ECOLOGY (`ralph/BAND1-ECOLOGY-0903`) | Task 2.5: the practice meadow, the Pond pocket, the Rise and the bridge approach each now read as an authored place with one temptation creature and one person with a real reason to be there — see the branch's own final report for the four-place breakdown. Two of the four temptations (elder Mosshell at the Pond, the Meadowhart pair at the bridge) were already pinned by `test_band1_clears_the_roster_temptation_floor`; this pass confirmed them and authored the other two (the practice meadow's resident Galecrest, order 12; a second Galecrest sighting moved to the Rise's discovery cache). Implemented `docs/specs/BAND1_COMPOSITION_PLAN.md` §5.3's Rise siting (shepherd_the_rise, the Galecrest pair order 1013, and the Bramblebun order 1014 moved into the crest's overlook window) with 2D clearance re-verified against every neighbouring cluster by direct coordinate math. Did NOT move order 6's Paddlenewt per the same plan section: it is one of this file's most depth-fragile, previously-mistuned entries and a blind reposition risked resubmerging it. Left the Pond's Nan as dialogue-only, matching `docs/specs/BAND1_ROUTE_CONTRACT.md`'s explicit "no fight" call for that place, rather than inventing a battle trainer there. | **Run by the orchestrating session after the lane pushed, because the lane had no Godot binary in its container and said so: `test_spawn_tables` 27/27, `test_spawns_data` 25/25, `test_trainers_data` 50/50, `test_starters_are_exclusive` 7/7 and `test_band_content` 6/6, all 0 failed on the lane's own branch.** The lane's static reasoning below held up. What it could NOT check and this run did not either: slope and ground height at the moved cluster centres — the lane's own `_why` comments flag that ("no Godot binary was available ... slope at the new point was not independently re-measured"), and `smoke_wild_streaming` passing is indirect evidence rather than a measurement. The lane's static means were: all edited JSON re-parses cleanly; every new key added to a baseline-protected `order` (0-12) is `_comment_`-prefixed so `test_band_content`'s mirror-exemption rule applies and no fixture edit was needed; no `species` value touched is a starter (checked by the same recursive walk `test_starters_are_exclusive` runs, reproduced in Python); no `order` collides within the band; every moved cluster's real-world XZ distance to its neighbours was computed directly from the JSON (not simulated in-engine) and stays clear of every existing challenge/engage prompt. The named tests have now been run and pass; the ground-slope check remains outstanding.
 | INTERACT-SWEEP-0903 | audit of every interact-button/world-verb consumer for the swing bug's CLASS ("one press, one visible consequence, or an honest refusal"), not just its one instance. Found and fixed two real instances of the class (see §3's two new P1 rows: the four silent full-satchel refusals, the four mute relay-NPC "Greet" prompts). Everything else read (`interaction_arbiter.gd`, `prompt_arbiter.gd`, `interactable.gd`, `tool_hold.gd`, `build_placer.gd`, `road_gate.gd`, `gated_crossing.gd`) already answers every refusal it can reach with a drawn line, a played `ui_error`, a jar animation or a pushed HUD message — no further instance found in those files | see the ranked list in the lane's own final report; `test_dialogue_runner.gd` (+4), `smoke_playground.gd` (+1) added. Neither run in this sandbox — no local Godot binary is available in this remote session; CI on `ralph/INTERACT-SWEEP-0903` is the first real execution of any of it |
 
+## 4c. BAND1-DISCOVERY-0903 (Gate 2 task 2.6, branch `ralph/BAND1-DISCOVERY-0903`, not yet merged)
+
+Points of interest: one optional discovery with a real reward, signposts legible at
+1280×800, trails visible on the map.
+
+- **The discovery already existed as data** (WORLD-CONTENT: `tm_rock_throw` cache at
+  `playground_world.gd` `CACHE_AT`, marked by `rise_cache_marker` in band1
+  `props.json`) — this lane's job was making it read as a landmark from the route, per
+  `docs/specs/BAND1_COMPOSITION_PLAN.md` 5.3/6.1 (the Gate 2.1 pass). The marker's
+  scale went 0.9 → 1.3 so it survives the 170 m sightline from the Rise crest overlook,
+  and the crest's own "Pond Circuit" trailhead (`terrain_playground.json`
+  `paths.trailheads`) moved from (−357.76,401.12) — past the crest, on the descent — to
+  the crest itself at (−228,331), so the one overlook on the route stands in the
+  composition plan's own window and names where the road goes at the point a player can
+  still act on it. **Why the reward is real:** at this point in Band 1 the player holds
+  ~30 starting coins (`trade.json` `starting_coins`) against a 120-coin shop price for
+  the same TM (`trade.json` `mira.goods.tm_rock_throw`); finding it free changes what
+  they can afford to save toward next, not a chore for something already in hand.
+- **Signpost legibility (`docs/VISUAL_BIBLE.md` §4 item 8, "signpost text is a
+  `Label3D` resolution smear"):** `signpost.gd`'s `LABEL_FONT_SIZE` 48 → 144
+  (`outline_size` scaled the same 3× to hold GF-B-013's contrast ratio). `_label_scale()`
+  already fits `pixel_size` to `LABEL_FONT_SIZE`, so this raises glyph-atlas resolution
+  without changing any board's or letter's size in the world. Confirmed by real capture
+  at 1280×800 (`tools/_capture_band1_signpost_legibility.gd`,
+  `shots/wayfinding/south-bridge-trailhead.png` and `crest-trailhead-pond-circuit.png`):
+  "South Bridge" and "...ond Circuit" read with clean letterforms at normal viewing
+  distance, not a blur. Applies to every fingerpost/trailhead in the game (all go
+  through this one file).
+- **Trails on the map:** found already implemented, not a gap. `map_baker.gd`'s route
+  overlay unions `paths.routes`/`approaches`, `spokes.routes`, `crossings`,
+  `trail.bands` and `trail.loops` via `playground_heightfield.gd::road_polylines()`
+  (`52-MAP-all-authored-trails-visible.md`'s acceptance). Confirmed by a real capture
+  after revealing every waypoint of Band 1's own spine (`trail.bands[0]`) and the Pond
+  Circuit loop (`trail.loops[0]`) — `tools/_capture_band1_map_trails.gd`,
+  `shots/_diag/band1_map_trails_zoomed.png` — shows the winding corridor as one
+  continuous trail line through the fogged-in reveal, not disconnected dots or a gap
+  where the loop should be. No map/baker code changed.
+- Tests run on a clean `--import` (Godot 4.7-stable): `test_band_content.gd` 6/6,
+  `test_playground_heightfield.gd` 15/15, `test_map_baker.gd` 7/7, `test_harvest.gd`
+  30/30, `smoke_playground.gd` OK (headless, real day-1 farm/build/gather/recall path).
+  Not run: the full unit suite — this container has no GPU, and `--rendering-driver
+  opengl3` under `xvfb-run` (required for any capture) measured 30–50 minutes per
+  two-or-three-frame capture of the full `meadows_playground` scene (vs.
+  `smoke_playground`'s own 334 s headless), which the session's time budget could not
+  repeat for a 28-minute full suite on top of the three capture runs it did complete.
+
 ## 5. Gate status
 
 - **Gate 0 (reset):** this session; see `docs/CLEANUP_MANIFEST.md`.

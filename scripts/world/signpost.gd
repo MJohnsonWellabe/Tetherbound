@@ -71,7 +71,22 @@ const ARM_SPACING := 0.44
 const ARM_START_HEIGHT := 2.05
 ## R9.4. Point size is fixed; `_label_scale()` fits metres-per-pixel to the
 ## plank instead, so a long destination name shrinks rather than overrunning.
-const LABEL_FONT_SIZE := 48
+##
+## BAND1-DISCOVERY-0903: was 48. `docs/VISUAL_BIBLE.md` §4 item 8 names the
+## surviving defect precisely -- "signpost text is a `Label3D` resolution
+## smear" -- and it is a resolution problem, not a sizing one: `_label_scale()`
+## below sets `pixel_size` to `k / LABEL_FONT_SIZE` for both its board-height
+## and board-width fits, so the WORLD-SPACE size of a letter (`font_size *
+## pixel_size`) stays the same regardless of what `LABEL_FONT_SIZE` is -- only
+## the glyph atlas's own raster resolution changes. At 48px a Label3D bakes an
+## 'm' at well under 48px tall net of ascender/descender padding, then that
+## same texture is magnified onto a physical board the player reads from a
+## few metres away; the letterforms blur exactly the way any low-res texture
+## does when a camera gets close to it. 3x raises the atlas resolution without
+## moving a single mesh, sign, or route -- the board stays the same size in
+## the world, and `outline_size` below is scaled by the same 3x so the ratio
+## GF-B-013 tuned (outline as a fraction of the em) is unchanged.
+const LABEL_FONT_SIZE := 144
 
 var _placed := 0
 
@@ -265,7 +280,14 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 		# against both the pale sky and the dark structures these labels cross,
 		# which is the job the outline was added for (R7.1-visual round 1, when
 		# it was 0 and letters vanished over a roof).
-		text.outline_size = 4
+		#
+		# BAND1-DISCOVERY-0903: 4 -> 12, holding the same ~8% of the em now
+		# that LABEL_FONT_SIZE went 48 -> 144. `outline_size` is in font pixels
+		# like `font_size` is, so leaving it at 4 against the new 144pt face
+		# would have thinned the outline to ~3% of the em -- the letters would
+		# render sharper (the actual fix above) but lose the contrast edge
+		# GF-B-013 tuned against the sky and dark structures these labels cross.
+		text.outline_size = 12
 		text.outline_modulate = Color("#f4ecd8")
 		arm.add_child(text)
 
