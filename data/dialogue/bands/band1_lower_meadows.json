@@ -274,6 +274,58 @@
         "That's everything. Give me an hour and this'll be rolling again.",
         "Not many stop to help a stranger's cart. I won't forget it."
       ]
+    },
+    "shepherd_the_rise_challenge": {
+      "speaker": "Dara",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2: 'teaches nothing, is a fight you can see coming'. No lesson, no fetch, no flag until beaten -- a plain first fight on the open road, the shape prompt 30 asks optional field trainers to have.",
+      "lines": [
+        "Gate's not far behind you. Long way to anywhere from here, if you're not ready for it.",
+        "I mind this stretch. Trailpups mostly -- yours look fresh off the practice field, same as mine were once.",
+        {
+          "text": "Two of mine against your two, then. See how fresh really holds up.",
+          "effect": "battle:shepherd_the_rise"
+        }
+      ]
+    },
+    "shepherd_the_rise_defeated": {
+      "speaker": "Dara",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Ha! Faster on their feet than I gave you credit for.",
+        "Keep to the road. Long field ahead, then the water. Mind the bridge before you get there -- Tether's got somebody posted on it now."
+      ]
+    },
+    "wanderer_trail_camp_challenge": {
+      "speaker": "Gil",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 4. The second and harder of the two new field trainers, deep enough into the Long Field that it reads as the road's own difficulty climbing toward the South Bridge checkpoint rather than a repeat of the Rise's gentler fight.",
+      "lines": [
+        "Another one bound for the crossing. They're not letting much through without a fuss these days.",
+        "I've walked this road longer than most who try it. My team's earned its keep.",
+        {
+          "text": "Let's see what you've learned since the village, then.",
+          "effect": "battle:wanderer_trail_camp"
+        }
+      ]
+    },
+    "wanderer_trail_camp_defeated": {
+      "speaker": "Gil",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Well fought. You've come a long way from whatever field you started in.",
+        "Camp's just up ahead if you need it. After that it's a straight run to the bridge -- and whoever's standing on it."
+      ]
+    },
+    "pond_fisher_greeting": {
+      "speaker": "Nan",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3: 'a fisher NPC who mentions the South Bridge and the captured keeper (dialogue only, no fight)'. The captured keeper is the relay's own captive (data/dialogue/relay.json's Sela, freed via `captive_rescued`; MEADOWS_PROGRESSION_SPEC.md sec on the river crossing: 'the bridge keeper / ranger / researcher who knows the mechanism has been captured'), named here only as rumour a Band 1 fisher would plausibly have heard -- the player has no way to know who she is yet, which is the point of a rumour this early.",
+      "lines": [
+        "Quiet out here since the company came through. Even the fish keep low these days.",
+        "Word's gone round they've got someone locked up past that bridge. One of the border scouts, so they say. Nobody's seen her since.",
+        "You crossing? Mind the one standing watch. He won't just wave you through."
+      ]
     }
   }
 }

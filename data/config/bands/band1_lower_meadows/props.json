@@ -753,6 +753,119 @@
           "_why": "The door light itself. `scale` 0.22 -- roughly half band4's already-small 0.42 patrol posting -- keeps the log pile door-side-brazier small rather than reading as a hearth blocking the threshold; `glow_scale` deliberately left at the chapter's own 1.0 default (LIGHT_RANGE 8.0m, LIGHT_BASE_ENERGY 3.4, warm colour (1.0,0.68,0.32) -- campfire_glow.gd's own constants) rather than dimmed further, because the judge's finding was specifically that NPCs at the door are ILLEGIBLE at night: an 8m warm pool centred 1.24m from the door is what actually reads Oskar/Grandpa's faces, and every other camp in the chapter already proves this exact energy/range reads as a warm practical light rather than daylight at night without complaint. `yaw_deg` 35 (not a flat 0/90) so the log pile does not stand squared-off against the wall, matching this file's own 'not one more object than the yard needs, every object placed on purpose' convention for the rest of the dooryard."
         }
       ]
+    },
+    {
+      "order": 1049,
+      "name": "rise_cache_marker",
+      "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2 (the Rise): the discovery cache (playground_world.gd CACHE_AT['tm_rock_throw']) is 'marked by a lone dead tree'. One tree, not a station -- the point is a single silhouette a player notices from a distance and walks toward, not a grove. Reuses the installed DeadTree_2 model every wood harvest node in this band already uses (CLAUDE.md: no new mesh), scaled up from harvest.json's 0.22 gathering-node convention to read as a real dead tree rather than a stick, since this one carries no gather prompt of its own -- the cache beside it does. Sited at the exact cache position (-382.8,355.5), ~50m off the road at arc 603 (the ALREADY-STANDING 'Pond Circuit' trailhead crest, terrain_playground.json paths.trailheads), a real ground scan (tools/_probe_world_content_0903c.gd): dry, worst slope 11.8 degrees over a 2m pad.",
+      "props": [
+        {
+          "model": "DeadTree_2",
+          "at": [
+            -382.8,
+            355.5
+          ],
+          "yaw_deg": 40.0,
+          "scale": 0.9,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "The marker itself, at the cache's own coordinates so the tree and the find read as one thing from any approach angle. Same model/directory harvest.json's wood nodes already load (DeadTree_2.gltf), just scaled up (0.9 vs the gathering convention's 0.22) since this one carries no gather prompt of its own."
+        }
+      ]
+    },
+    {
+      "order": 1050,
+      "name": "pond_fisher_camp",
+      "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3 (the Pond pocket): 'one bench-and-firepit camp prop within sight of the water'. Deliberately minimal -- one seat and one fire, not a second trail_camp -- so it reads as a single traveller's stop (the fisher's own) rather than a second authored campsite competing with the band's real rest point 700m south. Sited by a real ground scan of the pond's own shore (tools/_probe_world_content_0903b.gd; the water is at level -17.0 and the straight-line candidate off the road here came back underwater): this point is dry (h=-14.48, 2.52m above the waterline), on the pond's south-east shore, 10m from the fisher NPC (village_npcs.json-pattern placement, data/config/bands/band1_lower_meadows/pond_npc.json) so the two read as one scene, and clear (>=30m) of the bridge_repair_site prop cluster and every wild cluster already authored at the pond.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "at": [
+            -395.5,
+            583.5
+          ],
+          "yaw_deg": 200.0,
+          "scale": 0.3,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "_why": "The firepit -- a small fire, between the trail camp's 0.45 and the doorway lantern's 0.22, sized for one person's camp rather than a rest stop. Same solved Bonfire_Fire+ignite()+campfire_glow.gd recipe every camp in the chapter uses (CLAUDE.md: no new mesh)."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [
+            -395.5,
+            583.5
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.65,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": 0.04,
+          "_why": "A small stone ring around the fire, scaled down from the trail camp's own 1.05 (a ~2.1m ring) to match this camp's one-person scale."
+        },
+        {
+          "model": "Bench",
+          "at": [
+            -393.0,
+            585.3
+          ],
+          "yaw_deg": 150.0,
+          "scale": 1.0,
+          "_why": "The seat, facing the fire across it and out toward the water beyond -- a place to sit and watch a line, which is what the fisher NPC beside this cluster is doing."
+        }
+      ]
+    },
+    {
+      "order": 1051,
+      "name": "bridge_approach_fence",
+      "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 5 (the Bridge approach): 'a broken-fence line leading the eye toward the South Bridge on the approach'. Four sections of the settlement's own wooden-fence kit (quaternius_medieval, already vendored -- CLAUDE.md: no new prop family), NOT village.json's structural `fence_run` prefab (that is a sealed boundary line with gate logic; this is scenery, an old field-fence nobody has mended). Run along the road's own shoulder from arc 2170 to arc 2250 of trail.bands[0], 8-10m off the centreline, ending short of the south_bridge_grunt checkpoint (order 1000, arc 2371) so the eye is led TO the gate rather than past it. The third section is toppled (`pitch_deg`) -- the 'broken' the route contract asks for, not just an intact line -- reading as an old field boundary from before Team Tether closed the crossing, left to rot the way the tether_waypost cluster (order 1020) reads as evidence rather than a manned position.",
+      "props": [
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            81.9,
+            1223.2
+          ],
+          "yaw_deg": -71.6,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "First section, arc 2170, running with the road's own bearing."
+        },
+        {
+          "model": "Prop_WoodenFence_Extension1",
+          "at": [
+            62.9,
+            1229.6
+          ],
+          "yaw_deg": -71.6,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "Second section, arc 2190, continuing the line."
+        },
+        {
+          "model": "Prop_WoodenFence_Extension2",
+          "at": [
+            43.9,
+            1235.9
+          ],
+          "yaw_deg": -60.0,
+          "pitch_deg": 72.0,
+          "sink_m": -0.15,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "Third section, arc 2210 -- the broken one, tipped almost flat (`pitch_deg` 72, the same lean mechanic `bridge_repair_site`'s axe already uses on this prop family's fixed vertical authoring) with its foot sunk into the grass rather than floating."
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            22.4,
+            1244.7
+          ],
+          "yaw_deg": -49.4,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "Fourth section, arc 2230, the road's bend toward the bridge -- the line's last intact panel before the gap the broken section leaves, ending the eye's path at the checkpoint ahead rather than at the fence itself."
+        }
+      ]
     }
   ]
 }
