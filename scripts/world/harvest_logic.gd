@@ -103,8 +103,11 @@ static func swing_answers_the_prompt(node: Node3D, game: Node) -> bool:
 	var hold: Node3D = player.get("tool_hold")
 	if hold == null or not hold.has_method("swing_at"):
 		return false
-	if bool(hold.call("is_swinging")):
-		# Already mid-swing: that swing resolves on its own and will gather
-		# something itself. Yielding here as well would double the press.
-		return true
+	# No `is_swinging()` short-circuit here any more. It used to return true on
+	# the reasoning that the running swing "will gather something itself", and
+	# that was the bug: `tool_hold.gd::_resolve_swing()` resolves against the
+	# swing's own target, which is whatever the PREVIOUS press aimed it at, not
+	# the node this press names. `swing_at()` now owns that decision -- it
+	# re-aims a swing that has not hit yet, and refuses one that already has so
+	# this returns false and the caller's own direct yield answers the press.
 	return bool(hold.call("swing_at", node))

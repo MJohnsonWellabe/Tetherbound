@@ -145,10 +145,54 @@ func prop_node() -> Node3D:
 ## the prompt on THAT node, so that node is what the swing hits, and the cone
 ## search stays what it has always been -- the answer for a swing nobody aimed.
 func swing_at(node: Node) -> bool:
-	if node == null or not is_instance_valid(node) or not swing():
+	if node == null or not is_instance_valid(node):
+		return false
+	# A SWING ALREADY IN FLIGHT IS TWO DIFFERENT SITUATIONS, and treating them
+	# as one is the reported "interact works about half the time".
+	#
+	# What used to happen: `swing()` refused outright while a swing was
+	# running, `swing_at()` returned false, and `harvest_logic.gd::
+	# swing_answers_the_prompt()` claimed the press ANYWAY on the reasoning
+	# that "that swing resolves on its own and will gather something itself".
+	# It resolves against `_swing_target` (see `_resolve_swing()`), which is
+	# whatever the PREVIOUS press aimed it at -- or, for an unaimed `use_tool`
+	# swing, whatever a cone search finds nearest. Neither is necessarily the
+	# node the player just pressed. So the press was answered by a swing that
+	# hit something else, or nothing, and the bush the player was standing at
+	# yielded nothing. Sometimes the cone happened to pick the same node and it
+	# looked fine, which is exactly why this reads as intermittent.
+	#
+	# Reproduced in-container 2026-09-03 by `smoke_gate_b_continuous` (run 2 of
+	# 3, axe equipped and in hand, arbiter winner the node's own Interactable,
+	# and no swing started).
+	#
+	# The rule now follows the impact frame, because that is what decides
+	# whether the running swing can still be spent:
+	#
+	#   * BEFORE the impact -- re-aim it at this node. The newest press is the
+	#     honest one, which is the same argument this function's header already
+	#     makes for preferring the pressed node over a cone search.
+	#   * AFTER the impact -- the swing is spent and cannot gather again, so
+	#     refuse and let the caller answer the press itself
+	#     (`harvest_node.gd::_on_gathered()` falls through to its direct yield).
+	#     A press that costs the player a swing animation is a far smaller
+	#     thing than a press that does nothing at all.
+	if is_swinging():
+		if _swing_resolved:
+			return false
+		_swing_target = node
+		return true
+	if not swing():
 		return false
 	_swing_target = node
 	return true
+
+
+## What the in-flight swing will resolve against, or null when it is unaimed
+## (a `use_tool` swing that will cone-search) or nothing is swinging. Exposed
+## so a test can assert the re-aim above without reaching into a private field.
+func swing_target() -> Node:
+	return _swing_target
 
 
 ## Begin a swing. Refused (returns false) with nothing in hand or with one
