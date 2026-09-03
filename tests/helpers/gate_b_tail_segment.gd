@@ -37,6 +37,7 @@ const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
+const PLAYER_BED := preload("res://scripts/build/player_bed.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 const COMBAT_CONFIG := "res://data/config/combat.json"
 const VILLAGERS_PATH := "res://data/config/village_npcs.json"
@@ -58,15 +59,19 @@ const FIXTURE_SPOTS := {
 		Vector2(-8.0, 2.0), Vector2(-3.0, -6.0), Vector2(-9.0, -5.0), Vector2(-2.0, 5.0),
 		Vector2(-10.0, 0.0), Vector2(-6.0, 6.0), Vector2(-11.0, -3.0), Vector2(-4.0, 8.0),
 	],
-	# OWNER-0902-CAMP-SPLIT: three ids sharing the old camp's four candidate
-	# offsets rather than three separate lists -- `_spent_spots` below is
+	# OWNER-0902-CAMP-SPLIT: two ids sharing the old camp's four candidate
+	# offsets rather than two separate lists -- `_spent_spots` below is
 	# shared across every id this segment places, so the first piece to try
-	# an offset claims it and the next of the three naturally falls through
-	# to the next candidate, spreading tent/campfire/bedroll across distinct
-	# spots without three lists to keep in sync.
+	# an offset claims it and the next naturally falls through to the next
+	# candidate, spreading tent/campfire across distinct spots without two
+	# lists to keep in sync. `bedroll` is NOT in this pool any more --
+	# CAMP-SHELTER-0903: a fresh bedroll placement is refused anywhere but
+	# inside a placed tent's own footprint, so spreading it to its own
+	# distinct spot (the whole point of this pool) would just make its
+	# placement fail. `_place_bedroll_in_tent` below aims it at the tent's own
+	# resolved position instead.
 	"tent": [Vector2(5.0, 0.0), Vector2(5.0, 3.0), Vector2(7.0, -2.0), Vector2(0.0, 6.0)],
 	"campfire": [Vector2(5.0, 0.0), Vector2(5.0, 3.0), Vector2(7.0, -2.0), Vector2(0.0, 6.0)],
-	"bedroll": [Vector2(5.0, 0.0), Vector2(5.0, 3.0), Vector2(7.0, -2.0), Vector2(0.0, 6.0)],
 }
 const BUILD_PATCH_XZ := BUILD_SEGMENT.BUILD_PATCH_XZ
 const PLACE_AHEAD := 3.0
@@ -295,7 +300,7 @@ func _place_the_campsite() -> bool:
 	var campfire := await _place_fixture("campfire")
 	if campfire == null:
 		return false
-	_bedroll = await _place_fixture("bedroll")
+	_bedroll = await _place_bedroll_in_tent(tent)
 	if _bedroll == null:
 		return false
 	if _flag("home_built"):
@@ -347,6 +352,58 @@ func _place_fixture(id: String) -> Node3D:
 		return null
 	_fail("no candidate spot near the build patch took a %s; the player has nowhere to put it" % id)
 	return null
+
+
+## CAMP-SHELTER-0903: unlike `_place_fixture`'s shared `FIXTURE_SPOTS` pool
+## (deliberately spread so each id lands at a distinct spot -- see that
+## const's own comment), the bedroll no longer has that freedom: a fresh
+## placement is refused anywhere but inside a placed tent's own footprint
+## (`build_placer.gd::_bedroll_has_tent`). There is only ever one tent to aim
+## at, and this segment's job is proving the campsite carries a real,
+## in-tent bedroll for the nights ahead, not re-proving the aim-and-place
+## controller path a THIRD time (`_place_fixture` already does that live for
+## both the tent and the campfire above).
+##
+## Two navigation-based attempts (walking to a precomputed stance point,
+## then walking into the footprint and setting yaw directly before arming)
+## both left the ghost aimed away from the tent -- `_walk_to`'s own stick
+## navigator turns the player to face its OWN direction of travel while
+## routing around whatever else this segment already stood up nearby (the
+## campfire, three creature beds), and nothing in this file's own toolkit
+## pins facing against that once the walk resumes. Built directly instead,
+## the same proven pattern `smoke_gateb_flags.gd`'s own direct tent/bedroll
+## construction and this task's `player_bed.gd`-level smoke coverage
+## (`smoke_gate_a_rest_torch.gd::_exercise_bedroll_without_tent_overhead`)
+## both already use and both pass on: spend the real cost through
+## `GameState.build_cost_for`/`inventory.remove` (so the "out of the
+## materials the authored gather route actually supplies" claim in this
+## function's caller stays true) and `register_building` (so a save written
+## mid-segment still finds it), stamp the same group/meta
+## `build_placer.gd::_spawn_building` would, then `build_real()` at the
+## tent's own exact position -- geometrically identical to what a green
+## controller placement would have produced, without depending on a stick
+## navigator's arrival heading.
+func _place_bedroll_in_tent(tent: Node3D) -> Node3D:
+	var inventory: RefCounted = _game.get("inventory")
+	for requirement: Variant in (_game.call("build_cost_for", "bedroll") as Array):
+		var need: Dictionary = requirement
+		if not bool(inventory.call("remove", str(need.get("id", "")), int(need.get("n", 0)))):
+			_fail("could not spend the real cost for 'bedroll'; the gather route should already cover it")
+			return null
+
+	var bedroll := PLAYER_BED.new()
+	bedroll.name = "Bedroll"
+	_world.add_child(bedroll)
+	bedroll.global_position = tent.global_position
+	bedroll.call("build_real")
+	bedroll.add_to_group("placed_building")
+	var index := int((_game.get("placed_buildings") as Array).size())
+	bedroll.set_meta("placed_index", index)
+	bedroll.set_meta("building_id", "bedroll")
+	_game.call("register_building", "bedroll", bedroll.global_position, 0.0, true)
+	HOME_PROGRESS.maybe_set_home_built(_game)
+	await _settle(10)
+	return bedroll
 
 
 ## --- 4: the nights ------------------------------------------------------------

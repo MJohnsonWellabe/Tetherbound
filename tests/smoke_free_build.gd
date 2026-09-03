@@ -293,8 +293,16 @@ func _check_the_first_day_arc(world: Node) -> void:
 
 	# OWNER-0902-CAMP-SPLIT: rest now lives on the standalone bedroll, not the
 	# tent -- fund and plant one the same way the tent was above.
+	# CAMP-SHELTER-0903: a bedroll placement is now refused anywhere but
+	# inside a placed tent's own footprint, and the player has since walked
+	# away to the workbench and back -- aimed back at the tent's own resolved
+	# position (the same forward-direction math the live ghost itself uses),
+	# not wherever the player happens to be standing now.
 	inventory.call("add", "wood", 4)
 	inventory.call("add", "fiber", 6)
+	player.global_position = (tent as Node3D).global_position - _forward(world, player) * BUILD_PLACER.PLACE_AHEAD
+	for i in 10:
+		await physics_frame
 	_game.set("pending_build", "bedroll")
 	for i in 30:
 		await physics_frame
@@ -316,12 +324,38 @@ func _check_the_first_day_arc(world: Node) -> void:
 		await physics_frame
 
 	# Rest. The bedroll's own prompt, through the arbiter.
+	#
+	# CAMP-SHELTER-0903: the bedroll is now forced to stand inside the tent's
+	# own footprint, which this run's build patch also put the workbench
+	# close beside (both placed a few steps apart in the same small camp
+	# cluster) -- a flat `bedroll.global_position + Vector3(1.6, 0.5, 0.0)`
+	# stance, pressed blind, sometimes lands within the WORKBENCH's own
+	# `CraftInteractable` radius (2.6m, same as the bedroll's own prompt) and
+	# fires that instead, which never advances the day (a live probe caught
+	# this exact race: `arbiter.winning_provider` was `CraftInteractable`,
+	# not the bedroll's own `Interactable`, at the old stance). Standing at
+	# the bedroll's own prompt instead of a hand-picked offset, and
+	# confirming the arbiter actually resolved to THAT prompt before
+	# pressing, closes the race rather than gambling on it not recurring.
+	var rest_prompt := bedroll.get_node_or_null(^"Interactable") as Node3D
+	if rest_prompt == null:
+		_fail("the placed bedroll has no Rest interaction")
+		return
 	var day_before := int(_game.get("day"))
 	var vitals: RefCounted = player.get("vitals")
 	vitals.set("health", 40.0)
-	player.global_position = bedroll.global_position + Vector3(1.6, 0.5, 0.0)
-	for i in 30:
+	player.global_position = rest_prompt.global_position + Vector3(0.3, 0.5, 0.3)
+	var rest_arbiter := get_first_node_in_group("interaction_arbiter")
+	var won := false
+	for i in 60:
 		await physics_frame
+		if rest_arbiter != null and rest_arbiter.call("winning_provider") == rest_prompt:
+			won = true
+			break
+	if not won:
+		_fail("the bedroll's own Rest prompt never won arbitration (won by %s instead)"
+			% str(rest_arbiter.call("winning_provider") if rest_arbiter != null else "no arbiter"))
+		return
 	Input.action_press("interact")
 	await physics_frame
 	await physics_frame

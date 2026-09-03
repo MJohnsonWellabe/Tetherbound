@@ -521,23 +521,54 @@ static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 				rise = maxf(rise, absf(h - ground))
 	var occupied := BUILD_SNAP.occupied(armed, spot, buildings)
 	var too_steep := rise > MAX_SLOPE_RISE
+	# CAMP-SHELTER-0903, owner playtest 2026-09-03 item 7: "The bed for the
+	# human should be placeable in the tent and not outside of it." Only the
+	# bedroll carries this constraint -- the creature bed and every other
+	# buildable stay exactly as legal as they were.
+	var needs_tent := armed == "bedroll" and not _bedroll_has_tent(spot, buildings)
 	var afford := _can_afford(game, armed)
 	var reason := ""
 	if occupied:
 		reason = "Something is already here"
 	elif too_steep:
 		reason = "Too steep to build here"
+	elif needs_tent:
+		reason = "A bedroll needs to be inside a tent"
 	elif not afford:
 		reason = "Can't afford this — check the build menu for what's short"
 	return {
 		"has_ground": true,
-		"ok": not too_steep and not occupied and afford,
+		"ok": not too_steep and not occupied and not needs_tent and afford,
 		"reason": reason,
 		"position": spot,
 		"snapped_to_neighbour": snapped_to_neighbour,
 		"structural": bool(resolved.get("structural", false)),
 		"yaw_deg": float(resolved.get("yaw_deg", NAN)),
 	}
+
+
+## CAMP-SHELTER-0903. True if `spot` falls under any placed (non-removed)
+## tent's roof, per `camp_tent.gd::contains_point`. `buildings` is the same
+## caller-supplied array `evaluate_placement` already receives -- live
+## `game.placed_buildings` for the real ghost, that array plus
+## `planned_records` for a planner preview -- so a tent placed earlier in the
+## SAME planned sequence already counts, exactly as `BUILD_SNAP.occupied`
+## already treats a planned-but-not-yet-registered piece as real.
+static func _bedroll_has_tent(spot: Vector3, buildings: Array) -> bool:
+	for raw_entry: Variant in buildings:
+		if typeof(raw_entry) != TYPE_DICTIONARY:
+			continue
+		var entry := raw_entry as Dictionary
+		if bool(entry.get("removed", false)) or str(entry.get("id", "")) != "tent":
+			continue
+		var pos: Array = entry.get("position", [])
+		if pos.size() != 3:
+			continue
+		var tent_pos := Vector3(float(pos[0]), float(pos[1]), float(pos[2]))
+		var yaw_deg := float(entry.get("yaw_deg", 0.0))
+		if CAMP_TENT.contains_point(tent_pos, yaw_deg, spot):
+			return true
+	return false
 
 
 ## The plain node-creation half of placement, shared with `restore_from_game`

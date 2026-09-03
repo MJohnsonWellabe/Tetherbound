@@ -42,11 +42,34 @@ func build_ghost(mesh_path: String, model_scale: Vector3 = Vector3.ONE) -> void:
 ## measured 3.30w x 1.95d against the 2m module it is placed one-per-floor-
 ## tile on). Defaults to no-op `Vector3.ONE` for every piece that already
 ## fits its module, which is every piece but the roof today.
-func build_real(mesh_path: String, light: Dictionary = {}, model_scale: Vector3 = Vector3.ONE) -> void:
-	_spawn(mesh_path, true, light, model_scale)
+##
+## CAMP-SHELTER-0903: `collision_layer` defaults to Godot's own default (1) --
+## every existing caller keeps its solid box collider, blocking the player and
+## the camera's own SpringArm3D the same as always (both default to
+## `collision_mask` 1 too). `camp_tent.gd` now passes 2 -- the tent grew large
+## enough to stand inside for OWNER-0902-...-0903's "tent over your head to
+## sleep" rule, and this generic collider is one box spanning the WHOLE mesh
+## AABB (below), floor to ridge pole, with nothing shaped like a hollow
+## interior. Left on layer 1, a scaled-up tent started shoving the trainer
+## straight back out of the footprint the new rest check requires them to
+## stand in -- confirmed live: a headless placement probe measured the
+## trainer pushed from x=0.35 out to x=1.58, exactly the tent's own collider
+## edge plus the trainer's own 0.4m capsule radius. Moving it to a layer nothing
+## else's `collision_mask` includes (rather than dropping collision to 0
+## outright) keeps it a real `StaticBody3D` a raycast can still find --
+## `build_placer.gd::_update_dismantle_target`'s centre-screen ray builds its
+## `PhysicsRayQueryParameters3D` with the default (all-layers) mask, so a
+## placed tent stays targetable and dismantlable even though the player (and
+## the camera arm) now pass through its canvas. `0` still means "no collider
+## at all", the exact old `collision: false` meaning, for anything that ever
+## wants that instead.
+func build_real(mesh_path: String, light: Dictionary = {}, model_scale: Vector3 = Vector3.ONE,
+		collision_layer: int = 1) -> void:
+	_spawn(mesh_path, true, light, model_scale, collision_layer)
 
 
-func _spawn(mesh_path: String, solid: bool, light: Dictionary, model_scale: Vector3 = Vector3.ONE) -> void:
+func _spawn(mesh_path: String, solid: bool, light: Dictionary, model_scale: Vector3 = Vector3.ONE,
+		collision_layer: int = 1) -> void:
 	if not ResourceLoader.exists(mesh_path):
 		push_warning("build piece missing: %s" % mesh_path)
 		return
@@ -57,7 +80,7 @@ func _spawn(mesh_path: String, solid: bool, light: Dictionary, model_scale: Vect
 	BUILD_MATERIAL_FINISH.apply(_model)
 	if not light.is_empty():
 		_build_light(light)
-	if not solid:
+	if not solid or collision_layer == 0:
 		return
 
 	var combined := AABB()
@@ -79,6 +102,7 @@ func _spawn(mesh_path: String, solid: bool, light: Dictionary, model_scale: Vect
 	var size := combined.size * model_scale
 
 	var body := StaticBody3D.new()
+	body.collision_layer = collision_layer
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
 	box.size = size
