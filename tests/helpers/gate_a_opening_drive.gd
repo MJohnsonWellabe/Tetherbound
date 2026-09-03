@@ -140,17 +140,39 @@ func run(tree: SceneTree) -> Dictionary:
 	# never met it and reported the stall as "never reached the Meadows world" --
 	# which is the one screen a returning player meets EVERY time, so answering
 	# it here is the production path, not a test convenience.
-	var confirm := _tree.root.get_viewport().gui_get_focus_owner() as Button
-	if confirm != null and confirm.text == "Start Fresh Game":
-		_checkpoint("answered the returning-player fresh-game confirmation")
-		await _tap_action("ui_accept")
+	# WATCH FOR THE CONFIRMATION WHILE WAITING FOR THE WORLD, rather than
+	# sampling for it once and then waiting.
+	#
+	# The single sample this used to take assumed the dialog was built AND
+	# focused within `_tap_action()`'s eight physics frames. When it was not,
+	# nothing answered it, and the loop below then spun its full 2400 frames
+	# against a title screen holding a modal before reporting "Start New Game
+	# never reached the configured Meadows world" -- a message that describes
+	# the symptom and hides the cause completely. Seen 2026-09-03: two
+	# consecutive `smoke_gate_b_continuous` runs of the same commit, one
+	# failing here at the title and one driving 25 minutes of play.
+	#
+	# Folding the check into the wait removes the ordering assumption: whatever
+	# frame the dialog lands on, the next iteration answers it. `_answered`
+	# keeps that to one press, so a second dialog would be a real failure
+	# rather than something this quietly clicks through forever.
+	var answered_confirmation := false
 	for _i in 2400:
 		if _tree.current_scene != null and _tree.current_scene.scene_file_path == WORLD_SCENE:
 			_world = _tree.current_scene
 			break
+		if not answered_confirmation:
+			var confirm := _tree.root.get_viewport().gui_get_focus_owner() as Button
+			if confirm != null and confirm.text == "Start Fresh Game":
+				answered_confirmation = true
+				_checkpoint("answered the returning-player fresh-game confirmation")
+				await _tap_action("ui_accept")
+				continue
 		await _tree.process_frame
 	if _world == null:
-		_fail("Start New Game never reached the configured Meadows world")
+		_fail(("Start New Game never reached the configured Meadows world "
+			+ "(fresh-game confirmation %s)")
+			% ("answered" if answered_confirmation else "never appeared"))
 		return _result()
 	_checkpoint("new game world entered")
 	for _i in 300:

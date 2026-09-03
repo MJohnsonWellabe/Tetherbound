@@ -97,6 +97,16 @@ redesign proceeds; whether Grandpa's loft bed was ever tried.
 
 ## 4. Process findings that changed how work is verified
 
+- Two harnesses failed at the title screen on a profile that had a save, and both
+  reported it as something else entirely. `title_screen.gd` interposes a "Start a fresh
+  game?" confirmation whenever a slot is occupied; `smoke_title_new_game.gd` never
+  answered it, and `gate_a_opening_drive.gd` sampled for it exactly once immediately
+  after the press and missed it whenever the dialog landed a frame late. The messages
+  were "Start New Game carried the old Warden victory into Meadows" and "Start New Game
+  never reached the configured Meadows world" — neither of which names a modal. Both now
+  watch for the confirmation across the wait rather than at one instant. **An assertion
+  about a later step will happily describe an earlier step's failure.**
+
 - Raising `OBJECTIVE_LINES` 2 -> 4 to stop long objective titles truncating also
   raised the block's FLOOR, because `OBJECTIVE_BLOCK_HEIGHT` was derived from the cap:
   168.8px -> 261.6px reserved permanently, a third of the 1280x800 handheld screen held
