@@ -190,7 +190,7 @@ static func resolve(
 ##
 ## This does not belong in `resolve()` itself: ordinary catches must retain the
 ## uncapped geometric odds above. The opening sequence has one explicit content
-## promise of its own (docs/OPENING_SEQUENCE.md: its tutorial catch cannot fail
+## promise of its own (docs/specs/OPENING_SEQUENCE.md: its tutorial catch cannot fail
 ## twice), so CombatManager opts into this helper only for that configured beat
 ## and species. `prior_failures` counts landed, legal throws; physical misses and
 ## refusals never call catch resolution and therefore never advance the bound.

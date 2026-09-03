@@ -2,13 +2,13 @@ extends Node3D
 
 ## T3-BAND4: a ruined watchtower on the Upper Meadows' own wind ridge --
 ## spec's Band 4 area list already names "ruined watchtower" as part of this
-## region's identity (docs/MEADOWS_PROGRESSION_SPEC.md section 3) and nothing
+## region's identity (docs/specs/MEADOWS_PROGRESSION_SPEC.md section 3) and nothing
 ## had ever built it. Sited at the band4->band5 seam, the chapter's second
 ## worst authored-content gap (852m, ralph/reports/
 ## finding-post-tournament-cadence-2026-08-29.md): after Captain Vess the
 ## route runs empty until the Stronghold Approach picks up again, and a
 ## broken tower on the skyline is the "anticipate something clearly visible
-## ahead" beat the owner's cadence rule (docs/owner-direction/
+## ahead" beat the owner's cadence rule (docs/owner/
 ## TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 12) asks for -- seen
 ## from well past the corridor probe's own 30m notice radius, same as the
 ## Stronghold silhouette itself.

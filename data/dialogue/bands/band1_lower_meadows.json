@@ -1,6 +1,7 @@
 {
   "_comment": "BAND-SPLIT-2. This band's own dialogue container. Same `{\"conversations\": {...}}` shape as opening.json/village.json/trainers.json/relay.json/stronghold.json/meadows_freed.json, merged onto the same table by scripts/story/dialogue_runner.gd::table() (EXTRA_DIALOGUE_PATHS). Unlike the four content configs BAND-SPLIT cut, this is a dictionary keyed by conversation id, not a positional array -- there is no `order` to preserve, because lookup is always by id and never by position. A trainer or NPC placed in band1_lower_meadows gets its dialogue written here instead of appended to trainers.json, so a band author never has to touch a file another band is also writing to.",
-  "_comment_tournament_1": "TOURNAMENT-1 / FIRST-HOUR-FUN-REBUILD. The village tournament's whole script, plus the South Bridge gatekeeper's. Halda is the marshal (data/config/village_npcs.json); her ordered `greeting_when` list uses existing progression flags, not a tournament state machine. Her first registration conversation sets `opening:tournament_registered` and names the complete-team, camp, Creature Bed, rest/recovery and strength requirements. The three round conversations end on `battle:<trainer_id>` and are spoken by the OPPONENT rather than by Halda, because the fight starts the frame that box closes and the last voice the player hears should be the person about to send a creature out.",
+  "_comment_tournament_1": "TOURNAMENT-1 / FIRST-HOUR-FUN-REBUILD. The village tournament's whole script, plus the South Bridge gatekeeper's. Halda is the marshal (data/config/village_npcs.json); her ordered `greeting_when` list uses existing progression flags, not a tournament state machine. Registration names the complete-team, camp, Creature Bed, rest/recovery and strength requirements and sets `opening:tournament_registered` -- and, per TOURNAMENT-FLOW-0903 below, so does every other branch that can be a player's first meeting with her, so a team that was ready before it ever met Halda is never sent through the registration speech at all. Each round is now TWO conversations, spoken by the OPPONENT rather than by Halda (the last voice the player hears should be the person about to send a creature out): the ring-entrance banter, which sets `tournament_<round>_at_ring` and starts nothing, and `tournament_<round>_begin`, the explicit 'begin the round' line that ends on `battle:<trainer_id>` -- owner playtest 2026-09-03 item 3's 'you enter then you choose to start the battle'.",
+  "_comment_tournament_flow_0903": "TOURNAMENT-FLOW-0903, 2026-09-03. Two owner playtest findings, both about how the tournament FEELS to walk into rather than what it fights: (2) 'Starting the tournament was hard even after I had everything. I had to talk to the starter several times' -- village_npcs.json's Halda ladder put the registration briefing ahead of every readiness branch regardless of how ready the team already was, so a player who had already trained, fed, rested and camped a full team before ever meeting her still had to sit through the register speech and talk to her again before sign-up was even offered. Fixed by narrowing registration's own branch to the case it is actually for (`unless_flag` now also requires the team NOT be ready yet), so a team that is already ready meets whichever specific branch names it -- sign-up if everything holds, camp/condition/train otherwise -- in ONE visit. (3) 'you enter then you choose to start the battle then it announces you won and announces the next round' -- see the round comment above for the two-conversation split, and scripts/world/tournament.gd's `_announce_new_round_wins()`/`round_result_message()` for the win/next-round announcement, pushed through the same one-shot `Game.push_world_message()` toast every other world event already uses.",
   "_comment_saddle": "`tournament_halda_champion` is the NPC line the owner directive asks for: it says out loud that a Meadowhart can be ridden, and that the saddle needs rootstone from past the crossing. It does NOT carry a `flag:` effect -- the saddle pattern is granted by `tournament_final_oskar`'s own `reward.flags` the moment the final is won, so a player who never walks back to Halda still has it. The line explains the prize; it is not the prize. That split is deliberate: a reward that can only be collected by re-reading a conversation is a reward that gets lost.",
   "_comment_portraits": "Every conversation here uses the trainer portrait plate, the only villager portrait on disk (assets/ui/portraits/ holds grandpa.png and trainer.png and nothing else). tests/test_dialogue_runner.gd::test_every_conversation_has_a_speaker_and_a_portrait_that_is_really_there requires a real file, and CLAUDE.md's prototyping rule allows the stand-in. The grunt in particular should get a faction plate when Team Tether has portrait art of its own.",
   "conversations": {
@@ -37,38 +38,51 @@
     "tournament_halda_train": {
       "speaker": "Halda",
       "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment_registration": "TOURNAMENT-FLOW-0903. This can be a player's FIRST-EVER conversation with Halda -- one who built the whole roster before ever walking up to her skips `tournament_halda_register` entirely (village_npcs.json's own branch order), so this line also writes the opening handoff. Owner playtest 2026-09-03 item 2: 'even after I had everything, I had to talk to the starter several times' -- the fix is that a ready-enough team is never told the register speech at all, and every branch that could be the first meeting still marks it met.",
       "lines": [
         "All five. Good. Now look at them.",
         "Half that lot have never taken a real hit. I'd be signing them up for a hiding.",
-        "Feed them. Rest them — a Creature Bed or your own bedroll, either does it. Get them to level five, then we'll talk."
+        {
+          "text": "Feed them. Rest them — a Creature Bed or your own bedroll, either does it. Get them to level five, then we'll talk.",
+          "effect": "flag:opening:tournament_registered"
+        }
       ]
     },
     "tournament_halda_condition": {
       "speaker": "Halda",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "_comment": "RG19-spec/D68. The entry gate the owner named in his own words: 'They have to be well rested, well fed, and happy.' Shown when the team is big enough and levelled enough but not in shape. Deliberately written as a reason and a to-do list, not a refusal -- she names the three things and where to go and do them, and the team screen's own condition line says WHICH creature is short of WHICH. The thresholds are in data/config/creature_condition.json and are not repeated here or anywhere else.",
+      "_comment_registration": "TOURNAMENT-FLOW-0903, same reasoning as tournament_halda_train's own comment: this can be a first meeting too, so it also writes the opening handoff.",
       "lines": [
         "Levels aren't the whole of it. Look at the state of them.",
         "That one's dead on its feet, and that one hasn't eaten since you found it. Tired creatures in front of a crowd doesn't go well for anyone.",
-        "Beds at home, a proper feed, some time where nothing's trying to bite them. Then I'll put your name up."
+        {
+          "text": "Beds at home, a proper feed, some time where nothing's trying to bite them. Then I'll put your name up.",
+          "effect": "flag:opening:tournament_registered"
+        }
       ]
     },
     "tournament_halda_camp": {
       "speaker": "Halda",
       "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment_registration": "TOURNAMENT-FLOW-0903, same reasoning as tournament_halda_train's own comment: this can be a first meeting too, so it also writes the opening handoff.",
       "lines": [
         "They look strong enough. Now show me they have somewhere safe to come back to.",
-        "A proper camp, a Creature Bed, one real night of recovery. A team that can fight isn't yet a team you can keep."
+        {
+          "text": "A proper camp, a Creature Bed, one real night of recovery. A team that can fight isn't yet a team you can keep.",
+          "effect": "flag:opening:tournament_registered"
+        }
       ]
     },
     "tournament_halda_signup": {
       "speaker": "Halda",
       "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment_registration": "TOURNAMENT-FLOW-0903. A team that was already fully ready -- five trained creatures, rested, fed and camped -- before it ever met Halda gets sign-up as its ONE and only conversation with her, so this line also writes the opening handoff that `tournament_halda_register` used to own alone.",
       "lines": [
         "Now that's a team. Look at them stood there like they've done this before.",
         {
           "text": "Right. Slot one — I've drawn you Mira first. She'll not go easy on you for selling you a potion. Board's up behind me.",
-          "effect": "flag:tournament_entered"
+          "effects": ["flag:tournament_entered", "flag:opening:tournament_registered"]
         }
       ]
     },
@@ -87,7 +101,18 @@
       "lines": [
         "First bout, then. Don't look at me like that — the meadow doesn't care who's nice to it either.",
         {
-          "text": "Whole team out this time. Nothing held back.",
+          "text": "Get yourselves into the ring. Whole team out this time — nothing held back.",
+          "effect": "flag:tournament_quarter_at_ring"
+        }
+      ]
+    },
+    "tournament_quarter_begin": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "TOURNAMENT-FLOW-0903 / owner playtest 2026-09-03 item 3: 'you enter then you choose to start the battle'. The ring-entrance banter above no longer starts the fight itself -- it only sets tournament_quarter_at_ring -- so a second, deliberate greeting is what actually opens it. Short on purpose: the owner wants ceremony, not delay.",
+      "lines": [
+        {
+          "text": "Ring's yours. Begin the round whenever you're ready.",
           "effect": "battle:tournament_quarter_mira"
         }
       ]
@@ -105,7 +130,17 @@
       "lines": [
         "Semi-final. Fen put up more than the board says — I've a limp to prove it.",
         {
-          "text": "You know my lesson. Let's see if you learned it or just heard it.",
+          "text": "Get into the ring. You know my lesson — let's see if you learned it or just heard it.",
+          "effect": "flag:tournament_semi_at_ring"
+        }
+      ]
+    },
+    "tournament_semi_begin": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        {
+          "text": "Ring's yours. Begin the round whenever you're ready.",
           "effect": "battle:tournament_semi_tam"
         }
       ]
@@ -124,7 +159,17 @@
         "Final. Bryn took me to the last creature in the semi and I'm still short of breath.",
         "You'll not have seen this one on the road. She's not a fighter by trade — she's a road, if you know how to sit on her.",
         {
-          "text": "Beat her and the pattern's yours. Come on.",
+          "text": "Beat her and the pattern's yours. Get into the ring.",
+          "effect": "flag:tournament_final_at_ring"
+        }
+      ]
+    },
+    "tournament_final_begin": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        {
+          "text": "Ring's yours. Begin the round whenever you're ready.",
           "effect": "battle:tournament_final_oskar"
         }
       ]
@@ -228,6 +273,58 @@
       "lines": [
         "That's everything. Give me an hour and this'll be rolling again.",
         "Not many stop to help a stranger's cart. I won't forget it."
+      ]
+    },
+    "shepherd_the_rise_challenge": {
+      "speaker": "Dara",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2: 'teaches nothing, is a fight you can see coming'. No lesson, no fetch, no flag until beaten -- a plain first fight on the open road, the shape prompt 30 asks optional field trainers to have.",
+      "lines": [
+        "Gate's not far behind you. Long way to anywhere from here, if you're not ready for it.",
+        "I mind this stretch. Trailpups mostly -- yours look fresh off the practice field, same as mine were once.",
+        {
+          "text": "Two of mine against your two, then. See how fresh really holds up.",
+          "effect": "battle:shepherd_the_rise"
+        }
+      ]
+    },
+    "shepherd_the_rise_defeated": {
+      "speaker": "Dara",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Ha! Faster on their feet than I gave you credit for.",
+        "Keep to the road. Long field ahead, then the water. Mind the bridge before you get there -- Tether's got somebody posted on it now."
+      ]
+    },
+    "wanderer_trail_camp_challenge": {
+      "speaker": "Gil",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 4. The second and harder of the two new field trainers, deep enough into the Long Field that it reads as the road's own difficulty climbing toward the South Bridge checkpoint rather than a repeat of the Rise's gentler fight.",
+      "lines": [
+        "Another one bound for the crossing. They're not letting much through without a fuss these days.",
+        "I've walked this road longer than most who try it. My team's earned its keep.",
+        {
+          "text": "Let's see what you've learned since the village, then.",
+          "effect": "battle:wanderer_trail_camp"
+        }
+      ]
+    },
+    "wanderer_trail_camp_defeated": {
+      "speaker": "Gil",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Well fought. You've come a long way from whatever field you started in.",
+        "Camp's just up ahead if you need it. After that it's a straight run to the bridge -- and whoever's standing on it."
+      ]
+    },
+    "pond_fisher_greeting": {
+      "speaker": "Nan",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3: 'a fisher NPC who mentions the South Bridge and the captured keeper (dialogue only, no fight)'. The captured keeper is the relay's own captive (data/dialogue/relay.json's Sela, freed via `captive_rescued`; MEADOWS_PROGRESSION_SPEC.md sec on the river crossing: 'the bridge keeper / ranger / researcher who knows the mechanism has been captured'), named here only as rumour a Band 1 fisher would plausibly have heard -- the player has no way to know who she is yet, which is the point of a rumour this early.",
+      "lines": [
+        "Quiet out here since the company came through. Even the fish keep low these days.",
+        "Word's gone round they've got someone locked up past that bridge. One of the border scouts, so they say. Nobody's seen her since.",
+        "You crossing? Mind the one standing watch. He won't just wave you through."
       ]
     }
   }

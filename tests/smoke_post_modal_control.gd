@@ -185,7 +185,7 @@ func _exercise_bed(cycle: int) -> void:
 func _exercise_world_build(cycle: int) -> void:
 	await _teleport_to(Vector3(100.0 + cycle * 24.0, 0.0, 80.0))
 	var before := _placed_total()
-	# CONTROLLER-MAP, ralph/OWNER_DIRECTIVES_2026-08-22.md section 1: "Build
+	# CONTROLLER-MAP, docs/owner/OWNER_DIRECTIVES_2026-08-22.md section 1: "Build
 	# hammer is the same pattern: select it, press interact, you are in build
 	# mode. `build_open` loses its button." It is keyboard-only now, so tapping
 	# it on a pad opened nothing and this reported Build as broken. Equip the

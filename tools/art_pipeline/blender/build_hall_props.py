@@ -17,7 +17,7 @@ three of the pack's own stated requirements, and the trade is worth naming:
   - "Low-to-medium detail density; avoid tiny surface clutter" and "prioritize
     large forms, strong shapes, and functional readability". Primitives assembled
     to a board's proportions produce exactly that. Meshy's failure mode on this
-    project has been the opposite -- see the camp-set row in docs/ASSET_LEDGER.md,
+    project has been the opposite -- see the camp-set row in docs/specs/ASSET_LEDGER.md,
     where a tent took eight candidates over six rounds and the owner still chose
     round one.
   - "Prefer separate logical pieces" / "Separate the machine into clear modular

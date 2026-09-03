@@ -3,7 +3,7 @@
 
 Nightburrow (Burrowback), Stormtrail (Trailpup), Riftfrill (Paddlenewt) and
 Ashtusk (Tuskroot) -- the owner brief in
-docs/owner-direction/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md and the four
+docs/owner/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md and the four
 reference boards under docs/art/reference/creature-expansion-2026-08-30/.
 Spec lives in data/creatures/aspect_variants.json; read that file's own
 `_comment`/`_comment_glow` first, they explain the two-pass design (an

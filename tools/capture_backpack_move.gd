@@ -130,7 +130,7 @@ func _run() -> void:
 	quit(0)
 
 
-## Both halves of a press, for the reason ralph/conventions.md records: focus
+## Both halves of a press, for the reason docs/AGENT_WORKFLOW.md records: focus
 ## navigation and Button.pressed need a real event, action state alone is not
 ## enough, and a capture driven only by `action_press` would photograph a
 ## screen nothing had happened on.

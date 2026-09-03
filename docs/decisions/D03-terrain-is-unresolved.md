@@ -2,10 +2,10 @@
 
 Kind: open question
 
-Godot 4 ships no terrain system. `docs/MEADOWS_VERTICAL_SLICE.md` M1 requires
+Godot 4 ships no terrain system. `docs/specs/MEADOWS_VERTICAL_SLICE.md` M1 requires
 "rolling terrain" and M7 requires an authored region with hills, a grove, a
 stream and an outcrop. Neither is reachable without picking one of these, and
-`docs/TECHNICAL_START.md` does not mention terrain at all. This record exists to
+`docs/TECHNICAL_ARCHITECTURE.md` does not mention terrain at all. This record exists to
 stop that gap being discovered halfway through M1.
 
 ## The options

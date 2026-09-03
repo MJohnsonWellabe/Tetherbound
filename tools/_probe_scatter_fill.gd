@@ -19,7 +19,7 @@ extends SceneTree
 ## collider on every side of it. So the "stopped 46.9m short" this probe
 ## reported was the player failing to get OUT OF THE BEDROOM, not the failure
 ## the continuous run hits; the run has been outdoors for twenty minutes by
-## then. `ralph/DONE.md`'s GATEB-PATH entry reads that number as evidence about
+## then. `archive/ralph/DONE.md`'s GATEB-PATH entry reads that number as evidence about
 ## hill climbing, and it is not evidence about hills at all.
 ##
 ## `AUTHORED_ROUTE`'s last stop is (-168, 312), so that is where the fill

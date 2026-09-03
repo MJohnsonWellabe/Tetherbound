@@ -3,7 +3,7 @@ extends "res://tests/test_case.gd"
 ## The opening must not be able to run out of orbs.
 ##
 ## `combat_manager.gd::configure_tutorial_catch_assist()` keeps half of
-## docs/OPENING_SEQUENCE.md's promise that the practice catch cannot fail twice:
+## docs/specs/OPENING_SEQUENCE.md's promise that the practice catch cannot fail twice:
 ## `catch_math.apply_failure_bound()` converts the second FAILED ROLL. It counts
 ## landed throws on purpose -- a throw that never reached the creature is not a
 ## failed catch -- and that leaves the other half open. A player who MISSES is
@@ -126,11 +126,16 @@ func test_the_floor_cannot_follow_the_player_out_of_the_opening() -> void:
 		return
 	var end := source.find("\nfunc ", start + 1)
 	var body := source.substr(start, (end - start) if end > start else -1)
-	# Same gate as the failure bound: beat AND species. A floor that checked only
-	# the beat would restock a player fighting something else in the meadow, and
-	# one that checked only the species would follow every later Bramblebun.
+	# The gate is the BEAT, and only the beat. It used to be beat AND species,
+	# and that was the 2026-09-02 dead end: `_engageable()` offers the nearest
+	# wild creature of any species, so a player whose first fight was a Mudsnout
+	# never got the floor and ran the satchel to zero
+	# (`smoke_gate_a_opening_segment`). The beat is the real bound -- ENCOUNTER
+	# ends permanently at the first catch, so nothing can follow the player out
+	# of the opening whatever species they fight later. A species check would
+	# reopen the dead end, so its absence is asserted, not tolerated.
 	assert_true(body.contains("_is_tutorial_catch()"),
-		"the orb floor does not check that this is the authored practice catch; "
+		"the orb floor does not check that this is the opening's first fight; "
 		+ "it would restock fights the opening has nothing to do with")
 	var predicate_start := source.find("func _is_tutorial_catch(")
 	assert_true(predicate_start >= 0, "sequence_director.gd has no _is_tutorial_catch predicate")
@@ -142,8 +147,13 @@ func test_the_floor_cannot_follow_the_player_out_of_the_opening() -> void:
 	)
 	assert_true(predicate.contains("BEATS.ENCOUNTER"),
 		"_is_tutorial_catch does not check the beat")
-	assert_true(predicate.contains("species_id"),
-		"_is_tutorial_catch does not check the species")
+	var predicate_code := ""
+	for line in predicate.split("\n"):
+		if not line.strip_edges().begins_with("#"):
+			predicate_code += line + "\n"
+	assert_false(predicate_code.contains("species_id"),
+		"_is_tutorial_catch gates on species again; any first wild fight must get "
+		+ "the floor, or the opening can dead-end with an empty satchel")
 
 
 func test_the_floor_reads_its_size_from_config_rather_than_a_literal() -> void:

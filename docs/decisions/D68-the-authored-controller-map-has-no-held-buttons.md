@@ -1,7 +1,7 @@
 # D68 — The authored controller map has no held buttons
 
 **Status:** accepted, 2026-08-22. Owner directive, recorded in
-`ralph/OWNER_DIRECTIVES_2026-08-22.md` section 1.
+`docs/owner/OWNER_DIRECTIVES_2026-08-22.md` section 1.
 
 ## The decision
 

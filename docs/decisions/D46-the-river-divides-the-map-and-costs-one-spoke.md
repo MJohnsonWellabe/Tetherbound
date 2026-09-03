@@ -1,7 +1,7 @@
 # D46 — The river really divides the map, and that costs exactly one spoke
 
 **Date:** 2026-08-16 · **Decided by:** the SE21/SE22 build, against
-`docs/MEADOWS_PROGRESSION_SPEC.md` §3 Band 3 and `SC14`'s recorded limit
+`docs/specs/MEADOWS_PROGRESSION_SPEC.md` §3 Band 3 and `SC14`'s recorded limit
 
 ## The decision
 

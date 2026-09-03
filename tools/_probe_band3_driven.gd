@@ -14,7 +14,7 @@ extends SceneTree
 ## over a config file. It cannot see a cluster that authored fine and then
 ## spawned nowhere, a harvest node the scatter buried, a prop cluster that
 ## built on a slope the player never walks past, or a stretch that reads dead
-## because the road bends away from content sitting 30m off it. `ralph/lanes/
+## because the road bends away from content sitting 30m off it. `archive/ralph/lanes/
 ## COMMON.md` §10.3 asks every lane for "a real driven run through your region,
 ## not only unit tests", and this is Band 3's.
 ##
@@ -35,7 +35,7 @@ extends SceneTree
 ## to rescue, so a stall is named and stepped over.
 ##
 ## Headless on purpose. Nothing here renders; the visual pass is a separate
-## tool and a separate critic (`ralph/conventions.md`).
+## tool and a separate critic (`docs/AGENT_WORKFLOW.md`).
 ##
 ## Read the printed summary, not the exit code: Terrain3D aborts on shutdown
 ## by design (D06).

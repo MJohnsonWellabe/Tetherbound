@@ -1207,7 +1207,7 @@ func _joy_motion_for(action: StringName) -> InputEventJoypadMotion:
 ##
 ## `gate_a_npc_gather_segment.gd` -- the one segment that does reach its
 ## targets -- has always used `Input.action_press()` with a strength for
-## exactly this. docs/HANDOFF.md §10's rule is unchanged and still applies to
+## exactly this. archive/docs/HANDOFF.md §10's rule is unchanged and still applies to
 ## everything else in this file: a poll cannot move Control focus or activate a
 ## Button, so BUTTONS stay parsed events (`_tap_action`) and only the two
 ## polled analogue sticks change.

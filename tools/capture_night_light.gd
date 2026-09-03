@@ -2,7 +2,7 @@ extends SceneTree
 
 ## NIGHT-LIGHT: does night actually render a scene, or crush to near-black.
 ##
-## Three consecutive blind critic rounds (docs/reviews/band2/round-01..03)
+## Three consecutive blind critic rounds (archive/reports/docs-reviews-full/band2/round-01..03)
 ## ranked night's near-total-black frames in their top three findings, and
 ## round 2 confirmed by moving the camera from ~85m to ~10m that it is not a
 ## framing problem -- the SAME viewpoints tools/survey_band2.gd already shoots

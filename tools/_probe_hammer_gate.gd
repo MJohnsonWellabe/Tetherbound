@@ -5,7 +5,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tools/_probe_hammer_gate.gd
 ##
-## `ralph/DONE.md`'s GATEB-TAIL entry blames the "Put <name> away" fallback,
+## `archive/ralph/DONE.md`'s GATEB-TAIL entry blames the "Put <name> away" fallback,
 ## but `encounter_director.gd::_creature_control_offer()` builds that with
 ## `actionable: false` and `playground_hud.gd::_hammer_opens_the_catalogue()`
 ## explicitly stopped deferring to non-actionable lines. So the line the hammer

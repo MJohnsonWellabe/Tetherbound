@@ -4,7 +4,7 @@ extends SceneTree
 ## route from the village edge (z~20) through the South Bridge (z~1330),
 ## Band 2 (z~2470), Band 3's river lock/relay/mill crossing, Band 4's upper
 ## meadows/ironwood and ridge camp, Band 5's stronghold approach, to the Hall
-## gate itself (z~7560), day only -- the eyes VP4 (docs/VISUAL_PARITY_STAGED_
+## gate itself (z~7560), day only -- the eyes VP4 (archive/docs/VISUAL_PARITY_STAGED_
 ## GOAL_PROMPT_V2.md) judges "player -> empty grass -> sky" against.
 ##
 ## Round 4 (stations 09-16): extends the original 8 (village -> Band 2 far,
@@ -17,7 +17,7 @@ extends SceneTree
 ##     --script tools/_capture_corridor.gd [-- --out=res://shots/corridor_x --fast]
 ##
 ## NEVER with `--headless` and a real rendering driver: that combination hangs
-## forever with no error (ralph/conventions.md, "Art pipeline traps").
+## forever with no error (docs/AGENT_WORKFLOW.md, "Art pipeline traps").
 ##
 ## Modelled on `tools/_capture_locations.gd`'s boot/pin/clock-freeze pattern and
 ## `tools/_probe_corridor_survey.gd`'s single-eye-per-station rig (both read in

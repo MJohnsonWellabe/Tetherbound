@@ -33,7 +33,7 @@ The distinction that matters:
 
 ## What two rounds of blind review established
 
-Round 1 (`docs/reviews/MA-01-first-art-pass.md`), unprompted, led with it: *"the
+Round 1 (`archive/reports/docs-reviews-full/MA-01-first-art-pass.md`), unprompted, led with it: *"the
 roster is one adequate stock mesh, one blob, and a Minecraft skin."*
 
 Round 2 (`MA-02`), after the entire roster was replaced with better art from

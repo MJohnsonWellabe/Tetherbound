@@ -2,13 +2,13 @@
   "id": "S03",
   "title": "Village tutorial ladder: Tam's tools -> team of five -> training -> gathering -> camp + creature bed -> sleep -> feed",
   "lane": "journey",
-  "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section D (RT-02), section E.1 (CB-02), section E.3 (S03 builds the tutorial home and three creature beds under the real economy, free_build OFF), section E.5 (navigation record at each of the eight main-chain objectives this segment crosses), section G (GF-03-VILLAGE-02, GF-18-MAP-01, GF-20-NIGHT-01/02, GF-14-COMBAT-02) and section H (0.1 Hz segment).",
+  "_comment": "Transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B (span), section D (RT-02), section E.1 (CB-02), section E.3 (S03 builds the tutorial home and three creature beds under the real economy, free_build OFF), section E.5 (navigation record at each of the eight main-chain objectives this segment crosses), section G (GF-03-VILLAGE-02, GF-18-MAP-01, GF-20-NIGHT-01/02, GF-14-COMBAT-02) and section H (0.1 Hz segment).",
   "_comment_economy": "Section E.3: 'The authoritative run keeps free_build OFF everywhere'. Nothing in this file touches the Settings toggle; the camp and the creature bed are paid for out of the twenty village harvest nodes walked below. The real bill, read from data/items/buildables.json through scripts/build/home_progress.gd::materials_threshold(), is camp (12 wood / 8 stone / 10 fiber) plus one creature_bed (6 wood / 8 fiber) = 18 / 8 / 18. One sweep of the twenty nodes yields 28 / 9 / 32, so the budget clears with +10 wood, +1 stone and +14 fiber. The stone margin is ONE node wide and is the number to watch: the village authors only three stone nodes, and until GAME-F1 was fixed one of them stood outside the fence, which put reachable stone at 6 against a bill of 8.",
   "_comment_catalogue": "AMBIGUITY: the protocol does not enumerate S03's build-catalogue navigation (section E.3 step 2 enumerates X02's 2x2 lab structure, not S03's home). The focus counts below are derived from data/items/buildables.json's category order and build_menu.gd's CATEGORY_ORDER, and from build_menu.gd remembering the last category and piece per session. They are a transcriber's derivation, not the protocol's words, and a focus_move that does not land FAILs loudly rather than silently selecting the wrong piece.",
   "_comment_answer_prompts": "answer_prompts stays OFF on every walk, per the schema's rule.",
   "evidence_lane": "logic",
   "capture_lane": "S03C",
-  "_comment_evidence_lane": "\u00a7H/\u00a7G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md \u00a7H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the \u00a7G ids its steps would have taken are DELEGATED to S03C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S03C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_evidence_lane": "\u00a7H/\u00a7G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md \u00a7H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the \u00a7G ids its steps would have taken are DELEGATED to S03C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S03C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
   "_comment_record_hz_split": "AMENDED for the \u00a7H/\u00a7G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because \u00a7H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- \u00a7H's prescribed frames move to S03C, which may run BOUNDED record windows around a named state.",
   "steps": [
     {
@@ -2067,12 +2067,12 @@
     {
       "id": "S03-39f",
       "title": "focus the Revive draught",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "revive"
       },
-      "expected": "The satchel fills in acquisition order from S02's opening -- orb_basic, potion_small, berries, revive -- then Tam's knife and torch (already given by S03-26 before this point), matching S03-56d's own read of the same grid. Revive sits 3 cells right of slot 0."
+      "observation": "HARNESS-HYGIENE-0903. Was `focus_move {right, times: 3}`, a positional guess that Revive sits exactly 3 cells right of slot 0 in the satchel's acquisition-order fill -- the same bug class already fixed for the berries-focus step below (see S03-56d's own note and FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) and for equip_tool's hotbar lookup. `focus_item` reads the live cursor and `satchel_slot_of('revive')` instead of assuming a fill order that upstream catching/spending can move.",
+      "expected": "the satchel cursor lands on whichever cell currently holds the Revive stack"
     },
     {
       "id": "S03-39g",
@@ -2311,12 +2311,12 @@
     {
       "id": "S03-51f",
       "title": "focus the Revive draught",
-      "action": "focus_move",
+      "action": "focus_item",
       "args": {
-        "direction": "right",
-        "times": 3
+        "item": "revive"
       },
-      "expected": "Same grid position as S03-39f: nothing between the two openings adds an item ahead of Revive's slot 3."
+      "observation": "HARNESS-HYGIENE-0903, same fix as S03-39f: reads the live cursor and satchel_slot_of('revive') instead of assuming a fixed grid position.",
+      "expected": "the satchel cursor lands on whichever cell currently holds the Revive stack"
     },
     {
       "id": "S03-51g",
@@ -3799,7 +3799,6 @@
       "action": "equip_tool",
       "args": {
         "tool": "axe",
-        "control": "hotbar_2",
         "max_attempts": 3,
         "settle_frames": 60
       },
@@ -3853,12 +3852,11 @@
       "action": "equip_tool",
       "args": {
         "tool": "knife",
-        "control": "hotbar_4",
         "max_attempts": 3,
         "settle_frames": 60
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
-      "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
     },
     {
       "id": "S03-67",
@@ -3948,7 +3946,6 @@
       "action": "equip_tool",
       "args": {
         "tool": "pickaxe",
-        "control": "hotbar_3",
         "max_attempts": 3,
         "settle_frames": 60
       },
@@ -4001,12 +3998,11 @@
       "action": "equip_tool",
       "args": {
         "tool": "knife",
-        "control": "hotbar_4",
         "max_attempts": 3,
         "settle_frames": 60
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
-      "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
     },
     {
       "id": "S03-73",
@@ -4055,7 +4051,6 @@
       "action": "equip_tool",
       "args": {
         "tool": "axe",
-        "control": "hotbar_2",
         "max_attempts": 3,
         "settle_frames": 60
       },
@@ -4108,12 +4103,11 @@
       "action": "equip_tool",
       "args": {
         "tool": "knife",
-        "control": "hotbar_4",
         "max_attempts": 3,
         "settle_frames": 60
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
-      "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
     },
     {
       "id": "S03-77",
@@ -4162,7 +4156,6 @@
       "action": "equip_tool",
       "args": {
         "tool": "axe",
-        "control": "hotbar_2",
         "max_attempts": 3,
         "settle_frames": 60
       },
@@ -4215,7 +4208,6 @@
       "action": "equip_tool",
       "args": {
         "tool": "pickaxe",
-        "control": "hotbar_3",
         "max_attempts": 3,
         "settle_frames": 60
       },
@@ -4309,12 +4301,11 @@
       "action": "equip_tool",
       "args": {
         "tool": "knife",
-        "control": "hotbar_4",
         "max_attempts": 3,
         "settle_frames": 60
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
-      "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
     },
     {
       "id": "S03-85",
@@ -4363,7 +4354,6 @@
       "action": "equip_tool",
       "args": {
         "tool": "axe",
-        "control": "hotbar_2",
         "max_attempts": 3,
         "settle_frames": 60
       },
@@ -4416,12 +4406,11 @@
       "action": "equip_tool",
       "args": {
         "tool": "knife",
-        "control": "hotbar_4",
         "max_attempts": 3,
         "settle_frames": 60
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
-      "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
     },
     {
       "id": "S03-89",
@@ -4470,7 +4459,6 @@
       "action": "equip_tool",
       "args": {
         "tool": "axe",
-        "control": "hotbar_2",
         "max_attempts": 3,
         "settle_frames": 60
       },
@@ -4523,12 +4511,11 @@
       "action": "equip_tool",
       "args": {
         "tool": "knife",
-        "control": "hotbar_4",
         "max_attempts": 3,
         "settle_frames": 60
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
-      "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
     },
     {
       "id": "S03-93",
@@ -4618,7 +4605,6 @@
       "action": "equip_tool",
       "args": {
         "tool": "axe",
-        "control": "hotbar_2",
         "max_attempts": 3,
         "settle_frames": 60
       },
@@ -4671,12 +4657,11 @@
       "action": "equip_tool",
       "args": {
         "tool": "knife",
-        "control": "hotbar_4",
         "max_attempts": 3,
         "settle_frames": 60
       },
-      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out. SLOT IS hotbar_4, CONFIRMED TWICE INDEPENDENTLY -- see the observation below before ever changing this again.",
-      "observation": "GROUND TRUTH, 2026-09-02 (do not flip this a third time on the strength of one run alone): hotbar_4 is correct, confirmed by TWO independent sources against the identical S03-56d..i assign sequence -- (1) tools/gate_f/probe_tool_equip_depleted_bag.gd, an isolated probe that reconstructs a realistically-depleted bag and asserts hotbar_4==\"knife\" as its own PASS condition; (2) this run's own actual save state (ralph/reports/gate-f-run-20260902T122646Z-s03full/S03/saves/S03-exit.json), which records the live hotbar as ['', 'axe', 'pickaxe', 'knife', ''] -- knife at index 3, which hotbar_4 selects (playground_hud.gd HOTBAR_ACTIONS[i] maps to hotbar array index i, 0-indexed both sides). This step used to read hotbar_4 correctly, then a 2026-08-31 'SLOT CORRECTED' pass changed it to hotbar_5 on the strength of ONE different run's exit save, which recorded the knife one slot over -- that generalised from a single sample and was itself the regression: hotbar_5 is empty in this run's save, so every knife-equip press silently selected nothing, zero fiber came out of 8 fiber-node visits against an 18-fiber bill, and S03-105 (home_materials_gathered) failed outright (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md). Reverted to hotbar_4. If a future run's save ever again shows the knife somewhere else, that is real signal that hotbar assignment is NOT deterministic and needs a live-read fix (the same class of fix focus_item already gave the FOCUS half of this sequence) -- not another one-run slot-number edit."
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
     },
     {
       "id": "S03-99",
@@ -4725,7 +4710,6 @@
       "action": "equip_tool",
       "args": {
         "tool": "pickaxe",
-        "control": "hotbar_3",
         "max_attempts": 3,
         "settle_frames": 60
       },
@@ -4778,7 +4762,6 @@
       "action": "equip_tool",
       "args": {
         "tool": "axe",
-        "control": "hotbar_2",
         "max_attempts": 3,
         "settle_frames": 60
       },

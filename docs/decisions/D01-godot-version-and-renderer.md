@@ -2,7 +2,7 @@
 
 Kind: implementation
 
-`docs/GAME_DESIGN.md` §4 locks Godot and says "4.x". This pins the specifics so
+`docs/specs/GAME_DESIGN.md` §4 locks Godot and says "4.x". This pins the specifics so
 a version drift is a deliberate act rather than whatever the owner installed
 last.
 
@@ -46,7 +46,7 @@ original reasoning for ruling out a phone-first renderer class
 holds — Compatibility here is chosen for Vulkan-avoidance on Windows, not
 for a mobile target.
 
-**GDScript**, per `docs/TECHNICAL_START.md`. C# would add a build step, a .NET
+**GDScript**, per `docs/TECHNICAL_ARCHITECTURE.md`. C# would add a build step, a .NET
 dependency on the export machine, and slower iteration, in exchange for typing
 this project gets more cheaply from tests.
 

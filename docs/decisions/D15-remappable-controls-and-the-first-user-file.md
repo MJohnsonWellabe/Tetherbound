@@ -85,7 +85,7 @@ Every route back has to survive that:
   map, which is the whole point: every other way in goes through an action the
   player is allowed to move, so every other way can be lost.
 
-  `docs/TECHNICAL_START.md` says never to scatter raw device checks through
+  `docs/TECHNICAL_ARCHITECTURE.md` says never to scatter raw device checks through
   gameplay. This is the exception that rule needs — it is the one check that has
   to keep working when the input map is what is broken — and it lives in exactly
   one place, `scripts/ui/game_menu.gd`.
@@ -111,7 +111,7 @@ save system has somewhere obvious to go, and that is as far as this work builds
 towards one — **no save system was written**.
 
 The file is JSON to match the rest of the project's data, and carries a
-`version` field from its very first write, as `docs/TECHNICAL_START.md` asks.
+`version` field from its very first write, as `docs/TECHNICAL_ARCHITECTURE.md` asks.
 It has named sections (`controls`) so display and audio join this file rather
 than each inventing one of their own.
 

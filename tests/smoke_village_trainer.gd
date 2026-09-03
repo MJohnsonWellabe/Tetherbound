@@ -5,7 +5,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_village_trainer.gd
 ##
-## **Headless, never under xvfb** — docs/HANDOFF.md §10, same as every other
+## **Headless, never under xvfb** — archive/docs/HANDOFF.md §10, same as every other
 ## scene-booting test here.
 ##
 ## `tests/smoke_trainer_battle.gd` already proves the WHOLE fight lifecycle —

@@ -17,7 +17,7 @@ extends SceneTree
 ##   godot --headless --path . --script tests/smoke_dpad_hotbar_vs_cycle.gd
 ##
 ## Real `InputEventJoypadButton` through `Input.parse_input_event`, not
-## `Input.action_press` -- `ralph/conventions.md`. A single physical press is
+## `Input.action_press` -- `docs/AGENT_WORKFLOW.md`. A single physical press is
 ## sent for each check, because the defect was one press doing two things; the
 ## only way to prove the fix actually resolves ownership rather than
 ## coincidentally leaving both paths alone is to send it once and read both
@@ -26,7 +26,7 @@ extends SceneTree
 ## `smoke_gate_a_map_cycle.gd` establishes the same real-pad-through-full-world
 ## pattern this borrows.
 ##
-## RETARGETED for CONTROLLER-MAP. `ralph/OWNER_DIRECTIVES_2026-08-22.md` section
+## RETARGETED for CONTROLLER-MAP. `docs/owner/OWNER_DIRECTIVES_2026-08-22.md` section
 ## 1 bans hold-to-modify chords outright ("don't make a user hold a button down
 ## for any action") and REVERTS the hold-LB chord this file was written around.
 ## Under the owner's authored map the d-pad is hotbar 2-5 in EVERY context and

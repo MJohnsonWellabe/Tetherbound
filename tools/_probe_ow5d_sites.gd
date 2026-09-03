@@ -96,7 +96,7 @@ func _init() -> void:
 
 	print("")
 	print("Read worst-slope and spread against: player floor_max_angle 45deg, ridden-creature")
-	print("climb limit 60deg (docs/MEADOWS_MACRO_LAYOUT.md section 1.2). A site flagged STEEP")
+	print("climb limit 60deg (docs/specs/MEADOWS_MACRO_LAYOUT.md section 1.2). A site flagged STEEP")
 	print("or NEAR/BELOW WATER LEVEL above needs re-siting or a skirt/flat before it is final --")
 	print("this probe does not decide that, it only reports what is there today.")
 	quit(0)

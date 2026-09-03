@@ -3,7 +3,7 @@ extends SceneTree
 ## VEG-WHITECARD. Boots the REAL meadows_playground scene (same shape as
 ## tools/survey_band2.gd) and checks every LIVE MultiMeshInstance3D the
 ## vegetation scatter produced for a surface with no bound texture -- the
-## "blank white cross-quad billboard" defect docs/reviews/band2/round-06
+## "blank white cross-quad billboard" defect archive/reports/docs-reviews-full/band2/round-06
 ## found, four of eight day frames.
 ##
 ## Root cause (see vegetation.gd::_register_mesh_assets' own comment): a

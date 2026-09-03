@@ -8,10 +8,10 @@ extends SceneTree
 ##     --script tools/_probe_grass_indoors.gd -- --out=shots/indoors
 ##
 ## NEVER with `--headless` and a real rendering driver: that combination hangs
-## forever with no error (ralph/conventions.md, "Art pipeline traps").
+## forever with no error (docs/AGENT_WORKFLOW.md, "Art pipeline traps").
 ##
 ## THE REPORT THIS ANSWERS is the owner's, 2026-08-28: "grass grows through
-## indoor buildings now". `ralph/OWNER_PLAYTEST_2026-08-28.md` §7. The word
+## indoor buildings now". `docs/owner/OWNER_PLAYTEST_2026-08-28.md` §7. The word
 ## that dates it is NOW -- the field was switched on the day before.
 ##
 ## THREE EXPOSURES PER SITE, FROM ONE BOOT, which is the whole design of this

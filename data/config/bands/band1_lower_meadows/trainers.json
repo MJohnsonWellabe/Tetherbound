@@ -7,7 +7,7 @@
       "name": "Bryn",
       "_placeholder": "SC12/SC13 replaced R8.1's placeholder role with Mira, Oskar and Tam below (villager-greeting trainers, `placed_by: \"village_npcs\"`) -- but this entry stays. tests/smoke_trainer_battle.gd is the ONE test that drives a trainer through trainer_npc.gd's OWN placement-and-prompt system end to end (a real Terrain3D body, a real 'Challenge Bryn' prompt, a real interact-button press) rather than through a villager's greeting_when/battle: route, and there is no other standalone trainer in the game yet for it to stand up. Deleting Bryn would delete that coverage, not just a placeholder -- so it is kept, and noted here rather than silently left behind. A future standalone trainer (the relay station's, a captain's) can take over this exact role later.",
       "config_key": "young_trainer",
-      "_comment_body_t1_cast": "T1-CAST, 2026-08-30, owner directive: use the bodies that were generated instead of repainting the same two villager rigs. `young_trainer` is one of the 24 NPC-cast bodies (docs/ASSET_LEDGER.md, T1-NPC-CAST) that was installed, rigged, animated and wired into art.json and then stood NOWHERE in the game -- T1-CREATURE-RIG placed it as a new Band 1 battle, T3-LADDER correctly removed that battle for blowing the 24-opponent census ceiling, and the body was stranded rather than reassigned. Reassigning an EXISTING fight spends no census budget and costs no Meshy generation. Bryn is the chapter's first trainer, standing on the practice field north of the square; a dedicated trainer body reads as a trainer there where a repainted farmer did not. The old `hair` override is dropped with the rig: the generated bodies carry their own baked hair, the way every civilian placed in village_npcs.json this week already does.",
+      "_comment_body_t1_cast": "T1-CAST, 2026-08-30, owner directive: use the bodies that were generated instead of repainting the same two villager rigs. `young_trainer` is one of the 24 NPC-cast bodies (docs/specs/ASSET_LEDGER.md, T1-NPC-CAST) that was installed, rigged, animated and wired into art.json and then stood NOWHERE in the game -- T1-CREATURE-RIG placed it as a new Band 1 battle, T3-LADDER correctly removed that battle for blowing the 24-opponent census ceiling, and the body was stranded rather than reassigned. Reassigning an EXISTING fight spends no census budget and costs no Meshy generation. Bryn is the chapter's first trainer, standing on the practice field north of the square; a dedicated trainer body reads as a trainer there where a repainted farmer did not. The old `hair` override is dropped with the rig: the generated bodies carry their own baked hair, the way every civilian placed in village_npcs.json this week already does.",
       "position": [
         13.0,
         9.0
@@ -91,7 +91,8 @@
       "defeated": "village_oskar_beaten",
       "team": [
         {
-          "species": "terrapup",
+          "_why_d72": "D72 (owner playtest 2026-09-03, finding 10): the two starters belong to the opening choice alone, so no other trainer in the chapter may field one. This slot held a starter and now holds the nearest non-starter of the same type already used in this band file, at the same authored level -- index, id, level and reward are untouched. Mirrored in tests/fixtures/band_split_baseline/trainers.json in the same change, per that fixture's TRACKED MIRROR policy.",
+          "species": "meadowhart",
           "level": 6
         },
         {
@@ -190,7 +191,7 @@
       "defeat_flag": "defeated_south_bridge_grunt",
       "rechallenge": false,
       "base": "grunt_a",
-      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
       "order": 1001,
@@ -290,7 +291,7 @@
       "defeated": "tournament_final_beaten",
       "team": [
         {
-          "species": "terrapup",
+          "species": "mudsnout",
           "level": 10
         },
         {
@@ -319,11 +320,89 @@
       "rechallenge": false
     },
     {
+      "order": 1040,
+      "id": "shepherd_the_rise",
+      "name": "Dara",
+      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2 ('the shepherd on the Rise', 'fields two Trailpups, teaches nothing, is a fight you can see coming'). Answers the route contract's own measured finding: beyond the village hub Band 1 fielded ONE on-route trainer (the South Bridge grunt) across 2,270m, with the 2026-09-03 owner playtest naming the open road itself as empty ('nothing outside the village... nothing to do'). This is the first trainer the player meets after leaving the gate -- low-stakes on purpose, a step up from the village practice fight rather than a wall.",
+      "config_key": "villager_ranger",
+      "_comment_body": "T1-CAST reuse, CLAUDE.md: no new humanoid mesh. `villager_ranger` is the same outdoorsy tint Sela/Halda already use -- a person who works outside, which a shepherd is.",
+      "position": [
+        -377.0,
+        456.8
+      ],
+      "facing_deg": 125.0,
+      "_why_here": "Sited by probing the corridor spine (tools/_probe_band1_content_spacing.py's own arc/lateral method) then a real ground grid-search (tools/_probe_world_content_0903.gd / _0903b.gd, playground_heightfield.gd's own height_at()): arc ~650 of trail.bands[0]'s 2,403m, inside the route contract's own arc 450-900 'Rise' composition window, ~50m past the ALREADY-STANDING 'Pond Circuit' trailhead signpost (terrain_playground.json paths.trailheads, arc 603, built automatically by playground_world.gd's own `_build_trailhead_signposts()`) -- so the route contract's own 'flat shoulder with a signpost' is real, existing content, not a second sign duplicating it. Also just past the existing Galecrest pair the contract's Place 2 already describes ('a Galecrest pair that circles and lands near the crest', spawns.json order 1013, arc 440). The first candidate on this shoulder measured 12.9 degrees worst-case slope over a 5m pad; a 20x20m grid search around it found this point at 5.4 degrees, a real flat shoulder rather than a guess. Comfortably before the Pond pocket's own authored content starts (arc ~770, bridge_repair_site/paddlenewt/brooktail/mosshell/reedwing) so the fight does not crowd the approved-lush reference. Clear (>=62m) of every existing wild cluster in the window (mudsnout order 1015 at arc550, pipwing order 1016 at arc605, bramblebun order 1018 at arc715). `facing_deg` turns back up the road toward the gate, the direction 'a fight you can see coming' implies.",
+      "challenge": "shepherd_the_rise_challenge",
+      "defeated": "shepherd_the_rise_defeated",
+      "team": [
+        {
+          "species": "trailpup",
+          "level": 3
+        },
+        {
+          "species": "trailpup",
+          "level": 4
+        }
+      ],
+      "_comment_team": "Two Trailpups per the route contract's own wording. Levels 3-4, just above Bryn's practice pair (2-3) and below Mira's (4) -- the gentle first step past the village gate, within chapter_curve.json's band1 trainer_levels [2,7] (tests/test_chapter_curve.gd).",
+      "reward": {
+        "coins": 15,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_shepherd_the_rise",
+      "rechallenge": false
+    },
+    {
+      "order": 1041,
+      "id": "wanderer_trail_camp",
+      "name": "Gil",
+      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 4 ('the wanderer at the trail camp', Mudsnout and Pipwing). The second of the route contract's two new trainers, sited deep enough into the Long Field that the 2,221m stretch beyond the village hub is never more than ~930m from a fight (the mathematical floor for two trainers across that span given the Pond pocket at arc ~770-990 must stay undisturbed and old_champion_bram's own off-route fight at arc 1482 must not be crowded -- see this band's own walk-log evidence) rather than the single 2,221m gap that stood before this pass.",
+      "config_key": "wandering_trainer",
+      "_comment_body": "T1-CAST reuse, CLAUDE.md: no new humanoid mesh. `wandering_trainer` is the same weathered, travelled body old_champion_bram already uses -- a second wanderer on the same road is the honest use of a rig built for exactly this, not a repaint of a villager.",
+      "position": [
+        328.3,
+        905.1
+      ],
+      "facing_deg": 210.0,
+      "_why_here": "arc ~1580 of trail.bands[0], inside the route contract's own 1200-1950 'Long Field' window and ~40m short of the existing trail_camp prop cluster (props.json order 1000, centre ~344,935) -- close enough that the camp's fire and tent are the reason a traveller stopped here, far enough (>=26m from every trail_camp prop and the trailpup/wood-node content around it) that the fight's own clearing does not stand on top of the camp. Refined from the arc/lateral candidate by a real ground grid-search (tools/_probe_world_content_0903b.gd): the first candidate measured 10.1 degrees worst-case slope over a 5m pad, this point 5.4 degrees. Also kept >=110m from old_champion_bram's off-route fight (195,905) so the two optional/authored battles in this stretch of road do not read as clustered.",
+      "challenge": "wanderer_trail_camp_challenge",
+      "defeated": "wanderer_trail_camp_defeated",
+      "team": [
+        {
+          "species": "mudsnout",
+          "level": 6
+        },
+        {
+          "species": "pipwing",
+          "level": 7
+        }
+      ],
+      "_comment_team": "Mudsnout and Pipwing per the route contract's own wording, at the top of chapter_curve.json's band1 trainer_levels [2,7] -- the last ordinary-strength fight before the South Bridge grunt (a gate_fight, exempt from this band and fielding 10-12), so the road's own difficulty keeps climbing right up to the checkpoint rather than flattening out after the Rise.",
+      "reward": {
+        "coins": 22,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_wanderer_trail_camp",
+      "rechallenge": false
+    },
+    {
       "order": 1010,
       "id": "old_champion_bram",
       "name": "Old Bram",
       "config_key": "wandering_trainer",
-      "_comment_body_t1_cast": "T1-CAST, 2026-08-30, owner directive: use the bodies that were generated. The previous entry hung white hair on `villager_farmer` to say 'old' -- and its own comment named the real problem it could not solve, that the only OTHER old body in the game is Grandpa's and 'a second NPC wearing Grandpa's face reads as Grandpa'. `wandering_trainer` answers both: a weathered, bearded, travelled body that is neither Grandpa nor a repainted villager, already installed/rigged/animated (docs/ASSET_LEDGER.md, T1-NPC-CAST) and standing nowhere until now. It also fixes a straight mismatch nobody had caught: `villager_farmer` resolves to `villager_female_lod0.glb`, so the retired champion called Old Bram was wearing the female villager rig, while the same character's own `village_npcs.json` entry uses the male one. Baked hair replaces the override, as with Bryn.",
+      "_comment_body_t1_cast": "T1-CAST, 2026-08-30, owner directive: use the bodies that were generated. The previous entry hung white hair on `villager_farmer` to say 'old' -- and its own comment named the real problem it could not solve, that the only OTHER old body in the game is Grandpa's and 'a second NPC wearing Grandpa's face reads as Grandpa'. `wandering_trainer` answers both: a weathered, bearded, travelled body that is neither Grandpa nor a repainted villager, already installed/rigged/animated (docs/specs/ASSET_LEDGER.md, T1-NPC-CAST) and standing nowhere until now. It also fixes a straight mismatch nobody had caught: `villager_farmer` resolves to `villager_female_lod0.glb`, so the retired champion called Old Bram was wearing the female villager rig, while the same character's own `village_npcs.json` entry uses the male one. Baked hair replaces the override, as with Bryn.",
       "position": [
         195.0,
         905.0
@@ -343,7 +422,7 @@
           "level": 7
         }
       ],
-      "_comment_team": "Levels 6-7, at the TOP of chapter_curve.json's band1 trainer band of [2, 7]. The first cut of this entry fielded 11-12 and tests/test_chapter_curve.gd failed it twice, correctly. The reasoning behind 11-12 was that the player meets Bram after winning a level 10-11 tournament final, so an optional fight pitched below that is not worth an 80m detour -- but that reasoning read the curve off the wrong row. The tournament finals are `gate_fight: true` and the curve test EXEMPTS gate fights on purpose; they are the chapter's staged set-piece, not the region's baseline. What band1 actually says is team enter 3, exit 8, so 7 is the strongest ordinary trainer this region is allowed to field and is a fair fight against the level-8 team the curve expects to leave here. GATE_D_LANE_CONTRACT section 3: author TO the curve, never edit it to fit content you wrote. There is a real tension underneath this -- see the coordinator request in ralph/DONE.md -- but it is a curve question and it is not a lane's to settle. Both species are already band1 residents (spawns.json), so the team is drawn from the ecology the player has been meeting. Meadowhart leads because it is the species the tournament champion line already tells the player can be ridden: seeing one fight for somebody else is the setup for wanting one.",
+      "_comment_team": "Levels 6-7, at the TOP of chapter_curve.json's band1 trainer band of [2, 7]. The first cut of this entry fielded 11-12 and tests/test_chapter_curve.gd failed it twice, correctly. The reasoning behind 11-12 was that the player meets Bram after winning a level 10-11 tournament final, so an optional fight pitched below that is not worth an 80m detour -- but that reasoning read the curve off the wrong row. The tournament finals are `gate_fight: true` and the curve test EXEMPTS gate fights on purpose; they are the chapter's staged set-piece, not the region's baseline. What band1 actually says is team enter 3, exit 8, so 7 is the strongest ordinary trainer this region is allowed to field and is a fair fight against the level-8 team the curve expects to leave here. GATE_D_LANE_CONTRACT section 3: author TO the curve, never edit it to fit content you wrote. There is a real tension underneath this -- see the coordinator request in archive/ralph/DONE.md -- but it is a curve question and it is not a lane's to settle. Both species are already band1 residents (spawns.json), so the team is drawn from the ecology the player has been meeting. Meadowhart leads because it is the species the tournament champion line already tells the player can be ridden: seeing one fight for somebody else is the setup for wanting one.",
       "reward": {
         "coins": 60,
         "items": [

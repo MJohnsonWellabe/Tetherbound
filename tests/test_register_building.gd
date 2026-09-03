@@ -1,7 +1,7 @@
 extends "res://tests/test_case.gd"
 
 ## `GameState.register_building` — BG1 added an optional `yaw_deg` parameter
-## alongside the existing `id`/`position` (docs/decisions/D28, `ralph/BACKLOG.md`
+## alongside the existing `id`/`position` (docs/decisions/D28, `docs/CURRENT_STATE.md`
 ## `BG1`). `tests/test_save_format.gd` proves the round trip through a save
 ## file; this proves the accessor's own contract in isolation, the same split
 ## `test_free_build.gd` uses for `GameState`'s other accessors.

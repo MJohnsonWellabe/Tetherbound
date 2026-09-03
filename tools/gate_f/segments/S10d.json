@@ -5,7 +5,7 @@
   "record_hz": 0.5,
   "title": "Finale IV: world healing II -- the Tether Relay, the Burrow Warrens, the South Bridge",
   "lane": "journey",
-  "_comment": "Transcribed verbatim from the original S10.json (steps S10-94..S10-98, renumbered S10d-94..), which was itself transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section E.6.14 (revisit completed areas: relay, Warrens) and section E.6.15 (backtrack across story transitions: the South Bridge).",
+  "_comment": "Transcribed verbatim from the original S10.json (steps S10-94..S10-98, renumbered S10d-94..), which was itself transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section E.6.14 (revisit completed areas: relay, Warrens) and section E.6.15 (backtrack across story transitions: the South Bridge).",
   "evidence_lane": "logic",
   "_comment_evidence_lane": "§H.1 evidence split. This sub-segment plans no §G frame -- GF-13-FINALE-05 was already taken in S10c and nothing else in the original S10 protocol prescribes a shot along this leg of the walk-back -- so it hands nothing over and needs no capture_lane, exactly as X06/X08 declare no capture lane in the un-split protocol (see derive_capture_lane.py's NO_CAPTURE_LANE). It is still declared `evidence_lane: logic` for the other half of that declaration: without it the segment would inherit §H's default 0.1 Hz continuous record, which is the per-rendered-frame recording the whole evidence split exists to avoid paying for.",
   "steps": [

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """OF28: generate shiny colourway textures by REPAINTING, not tinting.
 
-Owner directive (2026-08-15, quoted in ralph/BACKLOG.md OF28): "the shinys
+Owner directive (2026-08-15, quoted in docs/CURRENT_STATE.md OF28): "the shinys
 shouldn't be a tint. it should be repainting the character... if our newt is
 blue, I want red. not blue with a red shade over it. for the white and black
 striped badger maybe it becomes blue stripes."

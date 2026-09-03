@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Claim, heartbeat, release and validate blocks in ralph/STATUS.md's live
+"""Claim, heartbeat, release and validate blocks in archive/ralph/STATUS.md's live
 lease list (the file on the `ralph-status` branch, never `main`'s frozen copy).
 
-    tools/ralph_status.py claim    --file ralph/STATUS.md --firing X --session Y \
+    tools/ralph_status.py claim    --file archive/ralph/STATUS.md --firing X --session Y \
         --task Z --area A [--area B ...] --state started [--note "..."]
-    tools/ralph_status.py heartbeat --file ralph/STATUS.md --firing X --task Z \
+    tools/ralph_status.py heartbeat --file archive/ralph/STATUS.md --firing X --task Z \
         --state working --note "..."
-    tools/ralph_status.py release  --file ralph/STATUS.md --firing X --task Z
-    tools/ralph_status.py check    --file ralph/STATUS.md
+    tools/ralph_status.py release  --file archive/ralph/STATUS.md --firing X --task Z
+    tools/ralph_status.py check    --file archive/ralph/STATUS.md
 
 LP6: STATUS.md kept growing past its own `## END LEASES` marker because a
 firing edited the file by eye, scrolled to what it thought was the end, and

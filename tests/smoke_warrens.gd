@@ -34,6 +34,7 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 ## multiplier is checked against the animal rather than against a number
 ## copied into this file.
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const BURROW_WARRENS := preload("res://scripts/world/burrow_warrens.gd")
 const SETTLE_FRAMES := 240
 const PUSH_FRAMES := 240
 ## The walked route (`_the_route_can_be_walked`): how close counts as arrived,
@@ -90,6 +91,7 @@ func _run() -> void:
 	await _the_route_can_be_walked(player, warrens, progression)
 	_the_heartstone_is_obtainable_and_arms_the_evolution_gate(warrens, inventory, progression)
 	_the_story_reward_pays_once(warrens, inventory, progression)
+	await _a_cleared_guardian_does_not_come_back(world, progression)
 
 	print("")
 	if _failures.is_empty():
@@ -510,6 +512,42 @@ func _the_story_reward_pays_once(warrens: Node3D, inventory: RefCounted,
 		_fail("a second clear still moved the satchel")
 	if not bool(progression.call("has", "warrens_cleared")):
 		_fail("the cleared flag did not survive the second call")
+
+
+## WARRENS-ONCE, owner playtest 2026-09-03 item 9: "After I fight it and
+## catch it or kill it I shouldn't get another chance." `_the_story_reward_
+## pays_once` above already proves the STORY payout is once-only; this is the
+## other half -- that the guardian itself does not spawn a second time once
+## the dungeon rebuilds, which is what "leave and come back" or a reload
+## actually does to this scene. Builds a SECOND `BurrowWarrens` against the
+## real, already-cleared `/root/Game` progression store this whole test has
+## been writing to, reusing the same `world` and `EncounterDirector` the
+## first one stands in (`playground_world.gd::_build_burrow_warrens()`'s own
+## wiring), and the mechanism under test
+## (`encounter_director.gd::spawn_wild()`'s `once_id` gate) has to refuse the
+## guardian outright.
+func _a_cleared_guardian_does_not_come_back(world: Node, progression: RefCounted) -> void:
+	if not bool(progression.call("has", "warrens_cleared")):
+		_fail("the warrens was not left cleared; the once-only check below proves nothing")
+		return
+	var director := world.get_node_or_null(^"EncounterDirector")
+	if director == null:
+		_fail("no EncounterDirector on the world; the once-only check cannot spawn a second warrens")
+		return
+	var second: Node3D = BURROW_WARRENS.new()
+	second.name = "BurrowWarrensOnceCheck"
+	world.add_child(second)
+	var built := bool(second.call("build", world, null, null, director))
+	if not built:
+		_fail("a second Burrow Warrens would not even build")
+	else:
+		var guardian: Variant = second.call("guardian")
+		if guardian != null:
+			_fail("the guardian spawned again in a cave that is already cleared; "
+				+ "the owner's 'I shouldn't get another chance' is not held")
+		else:
+			print("second build of a cleared warrens spawned no guardian, as it should not")
+	second.queue_free()
 
 
 ## --- harness ---------------------------------------------------------------

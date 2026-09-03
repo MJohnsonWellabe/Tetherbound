@@ -4,13 +4,13 @@
   "record_hz": 0.5,
   "title": "Opening: wake upstairs -> starter caught & named -> first wild catch -> road gate open",
   "lane": "journey",
-  "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span and handoff), section D (RT-01), section E.2 (CT-01), section E.5 (navigation record at objectives `opening_hear_grandpa`, `opening_first_catch` and `open_road_gate`), section G (GF-02, GF-03-VILLAGE-01, GF-14-01, GF-15-01/02, GF-21-WEATHER-01) and section H (mandatory 0.5 Hz segment).",
+  "_comment": "Transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B (span and handoff), section D (RT-01), section E.2 (CT-01), section E.5 (navigation record at objectives `opening_hear_grandpa`, `opening_first_catch` and `open_road_gate`), section G (GF-02, GF-03-VILLAGE-01, GF-14-01, GF-15-01/02, GF-21-WEATHER-01) and section H (mandatory 0.5 Hz segment).",
   "_gap_e5_opening_rungs": "§E.5 GAP, recorded rather than quietly dropped (ralph/GATE-F-E5, 2026-08-30). OP-0830-4 added three rungs ahead of `opening_first_catch`: 1 `opening_hear_grandpa`, 2 `opening_take_starter`, 3 `opening_show_grandpa`. §E.5 asks for a navigation record at EACH main-chain objective. This segment carries one for rung 1 (S02-12) and one for rung 4 (S02-29), because those two records already existed and only needed retargeting to the rungs they actually describe. Rungs 2 and 3 have NO §E.5 record here, and none was invented: this lane corrected a transcription, it did not play the segment, and a navigation record is a played observation (what was legible on screen, time-to-route-decision, the frame it was reasoned from) that cannot honestly be written from a diff. Both rungs are in-house modal beats -- the starter picker and the naming grid draw their own prompts -- so the likely finding is `no navigation decision exists at this rung`, but that is a prediction, not a record. Owed to the Gate F lane on the next S02 run.",
   "_comment_answer_prompts": "Every move_to in this file leaves `answer_prompts` OFF. The schema is explicit that it 'must stay off in any segment whose subject is whether something blocks travel', and this segment's subject IS the opening's conversations -- a harness quietly answering Grandpa would hide the finding. Every dialogue below is advanced by its own explicit press step.",
   "_comment_no_teleport": "Section 0.6 / section J: production paths only, teleport is DIAG-only. Every position in this file is reached by walking.",
   "evidence_lane": "logic",
   "capture_lane": "S02C",
-  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in ralph/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S02C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S02C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S02C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S02C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
   "_comment_record_hz_split": "AMENDED for the §H/§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because §H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- §H's prescribed frames move to S02C, which may run BOUNDED record windows around a named state.",
   "steps": [
     {
@@ -124,7 +124,7 @@
         "check": "objective_is",
         "id": "opening_hear_grandpa"
       },
-      "expected": "Section E.5's first of 27 main-chain objectives: `opening_hear_grandpa`, 'Go down and hear Grandpa out.' RETARGETED 2026-08-30 (ralph/GATE-F-E5) from `opening_first_catch`, which OP-0830-4 demoted to rung 4 of 27 -- see the ladder table in ralph/GATE_F_MASTER_PROTOCOL.md section E.5"
+      "expected": "Section E.5's first of 27 main-chain objectives: `opening_hear_grandpa`, 'Go down and hear Grandpa out.' RETARGETED 2026-08-30 (ralph/GATE-F-E5) from `opening_first_catch`, which OP-0830-4 demoted to rung 4 of 27 -- see the ladder table in docs/acceptance/GATE_F_MASTER_PROTOCOL.md section E.5"
     },
     {
       "id": "S02-12",
@@ -143,7 +143,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 1: 'The bed's \"Get up\" prompt is the only interactable in the world'"
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 1: 'The bed's \"Get up\" prompt is the only interactable in the world'"
     },
     {
       "id": "S02-14",
@@ -180,7 +180,7 @@
         "budget_frames": 1800,
         "close_enough": 1.5
       },
-      "expected": "`stairs_bottom`, world (-18.0, 0.12, -18.1). This is the step that actually changes floor: y goes from ~4.9 to ~0.1. docs/OPENING_SEQUENCE.md beat 2's 'Walk DOWN through the house to Grandpa' is this descent."
+      "expected": "`stairs_bottom`, world (-18.0, 0.12, -18.1). This is the step that actually changes floor: y goes from ~4.9 to ~0.1. docs/specs/OPENING_SEQUENCE.md beat 2's 'Walk DOWN through the house to Grandpa' is this descent."
     },
     {
       "id": "S02-15",
@@ -194,7 +194,7 @@
         "budget_frames": 2400,
         "close_enough": 1.5
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 2: 'Walk down through the house to Grandpa'. This walk is the start of section D's RT-01 (Grandpa's house -> village center)",
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 2: 'Walk down through the house to Grandpa'. This walk is the start of section D's RT-01 (Grandpa's house -> village center)",
       "observation": "Target changed from the house ORIGIN [-22,-16] to Grandpa's own marker (grandpa_house.gd:137, world -24.4/-14.8), and routed via the two stair markers above. Reason, measured: `move_to` compares x/z only, and the bed is 0.89 m from Grandpa IN X/Z while 3.3 m above him in y -- so the old target was satisfied on the loft and the segment pressed `interact` 31 times through the floor. See tools/opening_fix/FINDING.md on ralph/OPENING-STARTER-FOCUS."
     },
     {
@@ -205,7 +205,7 @@
         "control": "interact",
         "hold": "tap"
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 3: one conversation, `grandpa_house`, carries the briefing, the gifts and the five-creature rule said in fiction"
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 3: one conversation, `grandpa_house`, carries the briefing, the gifts and the five-creature rule said in fiction"
     },
     {
       "id": "S02-17",
@@ -284,7 +284,7 @@
         "control": "ui_right",
         "hold": "tap"
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 4: 'Look left and right between them'. `starter_picker.gd::_read_input` moves on ui_left/ui_right"
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 4: 'Look left and right between them'. `starter_picker.gd::_read_input` moves on ui_left/ui_right"
     },
     {
       "id": "S02-24",
@@ -312,7 +312,7 @@
       "args": {
         "name": "Moss"
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 5: 'Naming is mandatory'. The name is typed on the pad's on-screen letter grid with real presses and confirmed with Done"
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 5: 'Naming is mandatory'. The name is typed on the pad's on-screen letter grid with real presses and confirmed with Done"
     },
     {
       "id": "S02-27",
@@ -390,7 +390,7 @@
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 6: 'A wild Bramblebun is grazing down the path. Engage'. `answer_prompts` is off, so anything that stops this walk is recorded rather than answered",
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 6: 'A wild Bramblebun is grazing down the path. Engage'. `answer_prompts` is off, so anything that stops this walk is recorded rather than answered",
       "observation": "answer_prompts turned ON for this walk. The schema says it must stay off in any segment whose subject is whether something blocks travel -- and something does block travel here. It is turned on only because that finding is already fully recorded and is not being hidden: attempts 2-4 are preserved as S02-superseded-2/3 and in BLOCKER.md, with the measurement that a DialoguePanel owns input for exactly 7201 held frames across three different press counts. A developer probe (tools/opening_fix/probe_named_hold.gd on ralph/OPENING-STARTER-FOCUS) reproduced it: after naming, `grandpa_named` sits open on line 1 waiting for a press, which is correct behaviour for a dialogue box. What answers it here is the same interact tap a player makes. The purpose of this change is to release S03-S10 and X01-X06, which are all blocked behind this one save."
     },
     {
@@ -610,7 +610,7 @@
         "hold": "tap"
       },
       "expected": "landed throw 2 resolves; a `catch_throw` and a `catch_result` are emitted for it",
-      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/specs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
     },
     {
       "id": "S02-43ew",
@@ -620,7 +620,7 @@
         "seconds": 6
       },
       "expected": "the orb flies, lands and resolves",
-      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/specs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
     },
     {
       "id": "S02-43f",
@@ -660,7 +660,7 @@
         "hold": "tap"
       },
       "expected": "landed throw 3 resolves; a `catch_throw` and a `catch_result` are emitted for it",
-      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/specs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
     },
     {
       "id": "S02-43gw",
@@ -670,7 +670,7 @@
         "seconds": 6
       },
       "expected": "the orb flies, lands and resolves",
-      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/specs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
     },
     {
       "id": "S02-43h",
@@ -774,7 +774,7 @@
         "times": 12,
         "settle_frames": 20
       },
-      "expected": "docs/OPENING_SEQUENCE.md beat 9: 'follow the dirt road out, gather what the verges offer, and make camp before dark'. His final line emits `beat:free_play`",
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 9: 'follow the dirt road out, gather what the verges offer, and make camp before dark'. His final line emits `beat:free_play`",
       "observation": "T2-GATEF-RUN6: deliberately left as a tolerant press count, unlike S02-28. Grandpa's road line only exists once the first catch has advanced the beat, so whether a modal is open here is downstream of GAME-11's coin toss. `advance_dialogue_until_closed` is strict and BLOCKERs when nothing is open, which derailed the segment and cost 26 steps and the exit save on a run whose only real defect was upstream. The following `assert input_context == world` still names a modal that is left holding locomotion, which is what the audit is for -- it records the condition without throwing the rest of the segment away. Revisit once GAME-11 is fixed and the catch is reliable; then this can be strict too."
     },
     {

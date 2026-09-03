@@ -51,7 +51,7 @@ var _climax: Node = null
 var _spec: Dictionary = {}
 var _flag_writes: int = 0
 
-## CI-BOSS (ralph/BACKLOG.md, filed 2026-08-17): `verify-boss` has twice
+## CI-BOSS (docs/CURRENT_STATE.md, filed 2026-08-17): `verify-boss` has twice
 ## failed with "the boss fight never resolved inside 9000 frames" on branches
 ## whose own diffs could not touch combat. The suspicion this test could not
 ## previously confirm or rule out was that the player's own attack was

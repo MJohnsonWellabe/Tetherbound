@@ -57,7 +57,7 @@ extends SceneTree
 ## fragment()-tail block reading it) for the exact patch.
 ##
 ## Invocation (never --headless with a rendering driver; see
-## ralph/conventions.md "Art pipeline traps"):
+## docs/AGENT_WORKFLOW.md "Art pipeline traps"):
 ##
 ##   xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x800 \

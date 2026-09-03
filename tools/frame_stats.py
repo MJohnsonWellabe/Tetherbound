@@ -6,7 +6,7 @@
 
 A critic round is expensive and slow, and spending one to discover that a fix
 did not land is waste. Everything here is a metric the critic itself quantified
-in `docs/reviews/MA-02-*.md`, reimplemented so the same number can be checked
+in `archive/reports/docs-reviews-full/MA-02-*.md`, reimplemented so the same number can be checked
 after every change.
 
 This measures. It does not judge — the numbers say whether a change moved the

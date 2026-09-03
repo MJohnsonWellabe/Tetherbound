@@ -3,7 +3,7 @@ extends SceneTree
 ## OF28: render each colourway-authored species twice — ordinary and shiny —
 ## side by side, same flat light as tools/preview_creatures.gd. The judge for
 ## "a shiny is a genuinely different colourway, not a shade" (the owner's own
-## words, ralph/BACKLOG.md OF28) is this frame, never a material unit test.
+## words, docs/CURRENT_STATE.md OF28) is this frame, never a material unit test.
 ##
 ##   xvfb-run -a -s "-screen 0 1280x720x24" ~/godot-bin/godot --path . \
 ##     --rendering-driver opengl3 --script tools/capture_shiny_pairs.gd

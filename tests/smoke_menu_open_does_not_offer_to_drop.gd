@@ -22,7 +22,7 @@ extends SceneTree
 ## confirmation appeared AND that one B closes the menu.
 ##
 ## Real `InputEventJoypadButton` through the live InputMap, per
-## ralph/conventions.md -- an `Input.action_press` of `game_menu` alone would
+## docs/AGENT_WORKFLOW.md -- an `Input.action_press` of `game_menu` alone would
 ## never reproduce this at all, because the whole bug is one physical button
 ## resolving to two actions.
 

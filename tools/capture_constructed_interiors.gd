@@ -7,7 +7,7 @@ extends SceneTree
 ##     --script tools/capture_constructed_interiors.gd
 ##
 ## NEVER `--headless` with a real rendering driver -- it hangs forever with no
-## error and no output (`ralph/conventions.md`, the most expensive trap in this
+## error and no output (`docs/AGENT_WORKFLOW.md`, the most expensive trap in this
 ## repo).
 ##
 ## The owner localised "some locations still look lame" to a class of space:

@@ -20,6 +20,7 @@ extends SceneTree
 
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 const PLAYER_BED := preload("res://scripts/build/player_bed.gd")
+const CAMP_TENT := preload("res://scripts/build/camp_tent.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
@@ -174,6 +175,19 @@ func _check_player_slept_flag() -> void:
 	var progression: RefCounted = _game.get("progression")
 	if bool(progression.call("has", "player_slept_at_home")):
 		_fail("player_slept_at_home was already set before resting")
+	# CAMP-SHELTER-0903: `_on_rest` now refuses without a tent overhead --
+	# this bypasses `build_placer.gd` entirely (a direct `build_real()` call,
+	# same as the bed below), so the group membership and `building_id` meta
+	# `_spawn_building` would normally stamp on a real placement are set by
+	# hand here; `player_bed.gd::_tent_overhead` reads exactly those two
+	# things off whatever else is standing in `PLACED_GROUP`.
+	var tent := CAMP_TENT.new()
+	tent.name = "TestTent"
+	_world.add_child(tent)
+	tent.call("build_real")
+	tent.add_to_group("placed_building")
+	tent.set_meta("building_id", "tent")
+
 	var bed := PLAYER_BED.new()
 	bed.name = "TestBedroll"
 	_world.add_child(bed)

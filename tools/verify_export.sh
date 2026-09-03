@@ -157,6 +157,25 @@ for path in "data/terrain/playground" "data/config/art.json" "data/creatures/spe
     FAIL=1
   fi
 done
+# The scatter bake's region files are plain .bin, not Godot resources, so
+# `export_filter=all_resources` never packed them until export_presets.cfg
+# grew an include_filter for them (2026-09-03). The 2026-09-02 release shipped
+# the manifest and none of the regions: the world loaded with no tree, bush or
+# rock anywhere, and this script passed it. Count the regions the manifest
+# names and require every one of them in the pack.
+REGIONS_EXPECTED=$(python3 -c 'import json;print(len(json.load(open("data/scatter/playground/manifest.json"))["regions"]))' 2>/dev/null || echo 0)
+REGIONS_PACKED=$(grep -cF "data/scatter/playground/region_" "$STRINGS_OUT")
+if [ "$REGIONS_EXPECTED" -eq 0 ] || [ "$REGIONS_PACKED" -lt "$REGIONS_EXPECTED" ]; then
+  echo "verify FAILED: scatter bake incomplete in the .pck ($REGIONS_PACKED of $REGIONS_EXPECTED region files)."
+  echo "  The exported world would have no trees, bushes or rocks. Check"
+  echo "  export_presets.cfg include_filter covers data/scatter/*.bin."
+  FAIL=1
+fi
+if grep -q "scatter bake .* is missing\|scatter bake manifest names region" "$LOG"; then
+  echo "verify FAILED: the exported build could not open its scatter bake."
+  grep -m3 "scatter bake" "$LOG" | sed 's/^/  /'
+  FAIL=1
+fi
 
 # 3. The creatures found ground. This is the symptom that reaches a player:
 #    the encounter director reports it when a spawn point has nothing under it.

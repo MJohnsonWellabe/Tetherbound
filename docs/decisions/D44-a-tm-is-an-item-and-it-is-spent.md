@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-15 · **Decided by:** the owner, in a playtest report:
 *"I can pick up a TM but it needs to go in my inventory and then I see it's
-stats and choose who to teach it to."* (`ralph/BACKLOG.md`, OF29.)
+stats and choose who to teach it to."* (`docs/CURRENT_STATE.md`, OF29.)
 
 ## The decision
 
@@ -24,7 +24,7 @@ stats and choose who to teach it to."* (`ralph/BACKLOG.md`, OF29.)
    greyed with the reason in the row text ("already knows it" / "can't learn
    it"), and a refusal-to-open when nobody on the belt qualifies.
 4. **Teaching consumes the TM.** One disc teaches one creature. This
-   overrules `docs/GAME_DESIGN.md` §13's "Not consumed after one teaching"
+   overrules `docs/specs/GAME_DESIGN.md` §13's "Not consumed after one teaching"
    and the R4.4 implementation built on it.
 5. **The silent auto-teach is gone.** `tab_creatures.gd`'s `TEACH_ACTION`
    picked both the TM and the moment for the player and showed neither. It

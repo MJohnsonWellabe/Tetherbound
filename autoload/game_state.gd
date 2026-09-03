@@ -1097,11 +1097,31 @@ func autosave_slot() -> int:
 	return int(SAVE_GAME.AUTOSAVE_SLOT)
 
 
+## Whether a slot holds a save. Safe to ask BEFORE this autoload has run its
+## own `_ready()`, which is not a theoretical window: `title_screen.gd` asks
+## twice while building its menu, and a boot that reached it first logged
+## `Cannot call method 'call' on a null value` at this line every time. The
+## screen self-healed on the next frame, so it never became a visible bug --
+## it just meant every boot log opened with an engine error, which is exactly
+## the noise that hides a real one.
+##
+## `false` rather than a push_error: a caller asking "is there a save" before
+## the save system exists is asking too early, and the honest answer to give a
+## menu is "do not offer Continue yet" -- it asks again once the autoload is
+## up. Anything that needs to distinguish "no save" from "cannot tell yet"
+## should wait for `Game` to be ready instead of reading this.
 func has_save(slot: int) -> bool:
+	if save_system == null:
+		return false
 	return bool(save_system.call("has_slot", slot))
 
 
+## Same window, same reasoning as `has_save()` above: an empty Dictionary is
+## what a slot with nothing in it returns anyway, so a too-early caller gets
+## the same shape rather than a crash.
 func save_slot_info(slot: int) -> Dictionary:
+	if save_system == null:
+		return {}
 	return save_system.call("slot_info", slot)
 
 

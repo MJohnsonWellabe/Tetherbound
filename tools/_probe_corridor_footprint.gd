@@ -5,7 +5,7 @@ extends SceneTree
 ##   godot --headless --path . --script tools/_probe_corridor_footprint.gd
 ##
 ## CORRECTIONS, 2026-08-16 (OW5A revision 2). A blind review found two errors in
-## this header and in how docs/MEADOWS_MACRO_LAYOUT.md read the output. Both are
+## this header and in how docs/specs/MEADOWS_MACRO_LAYOUT.md read the output. Both are
 ## corrected in place below rather than deleted, because the wrong versions were
 ## quoted into three documents and the next reader needs to see which is which.
 ##
@@ -18,14 +18,14 @@ extends SceneTree
 ##       Report blocked_60 against depth. The repo's own recorded figures agree
 ##       with the mean and not the peak: severed_spokes.gd:24 says 57-66 deg,
 ##       smoke_riding.gd:163 pins SHALLOWEST_SPOKE_WALL_DEG := 65.0, and
-##       ralph/DONE.md:16 records storm_road at 65.6. atan(depth/rim) for
+##       archive/ralph/DONE.md:16 records storm_road at 65.6. atan(depth/rim) for
 ##       storm_road's 11m over a 5m rim is exactly 65.6. THE REAL MARGIN OVER
 ##       THE RIDDEN 60 IS ~5 DEGREES, NOT ~15.
 ##
 ##   (B) THERE IS NO "12 MINUTE" BAKE FIGURE IN THIS REPO. Section 2's header
 ##       below claimed three recorded times and the layout document then said
 ##       this probe's 11.3 min "confirms the 12". Grepped: the only recorded
-##       bake times are ralph/DONE.md:2752 (~5.5 min) and D45 /
+##       bake times are archive/ralph/DONE.md:2752 (~5.5 min) and D45 /
 ##       meadow_healing.gd (~15 min). They differ by 2.7x, neither matches 11.3,
 ##       and both are whole-bake wall-clock against this probe's field-work-only
 ##       figure. The unit cost is MEASURED but UNVALIDATED. Say so.
@@ -66,7 +66,7 @@ extends SceneTree
 ##
 ## 2. BAKE COST PER PIXEL. `build_playground_terrain.gd` makes two full passes
 ##    over a size*size grid. The repo carries two conflicting bake times (5.5
-##    min in ralph/DONE.md:2752, ~15 min in D45 / meadow_healing.gd) and neither
+##    min in archive/ralph/DONE.md:2752, ~15 min in D45 / meadow_healing.gd) and neither
 ##    was re-measured after the river landed, so the corridor projection has
 ##    nothing honest to stand on. This times both passes' per-pixel field work
 ##    on representative tiles and prints a projection. It deliberately does NOT

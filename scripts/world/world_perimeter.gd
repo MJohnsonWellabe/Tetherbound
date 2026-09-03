@@ -5,7 +5,7 @@ extends Node3D
 ## perimeter ... invisible collision only supporting a visible boundary,
 ## never being the boundary", plus the below-world kill-volume failsafe.
 ## What changes is the SHAPE, per `docs/decisions/D51` and
-## `docs/MEADOWS_MACRO_LAYOUT.md` §6 — read both before touching this file.
+## `docs/specs/MEADOWS_MACRO_LAYOUT.md` §6 — read both before touching this file.
 ##
 ## D50 grew the Meadows from a 512m square to an 8192 x 2048m corridor,
 ## `x` in [-1024, 1024], `z` in [-512, 7680]. A 235m-radius ring cannot

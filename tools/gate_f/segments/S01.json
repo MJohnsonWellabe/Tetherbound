@@ -8,7 +8,7 @@
   "evidence_lane": "logic",
   "capture_lane": "S01C",
   "_comment_evidence_lane": "Section H/G evidence split, owner decision 2026-08-27. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame. It takes no prescribed frame; GF-01-TITLE-01 is DELEGATED to S01C, which declares it in its \"owes\" list. The harness refuses to start this segment if S01C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for.",
-  "_comment": "Transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section G (GF-01-TITLE-01) and section H (S01 is one of the mandatory 0.5 Hz continuous-evidence segments). No teleport: section 0.6, production paths only.",
+  "_comment": "Transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B (span), section G (GF-01-TITLE-01) and section H (S01 is one of the mandatory 0.5 Hz continuous-evidence segments). No teleport: section 0.6, production paths only.",
   "_comment_no_handoff": "Section B gives S01 the entry save 'none (fresh)' and the handoff 'in-memory (no save yet exists pre-starter)'. So this file deliberately ends WITHOUT a Save-tab save and without save_out -- it is the one journey segment that hands nothing to the next one on disk.",
   "steps": [
     {
@@ -108,7 +108,7 @@
         "check": "region_is",
         "equals": "grandpas_village"
       },
-      "expected": "map_state.gd's own containment puts the fresh spawn in `grandpas_village` -- the opening starts inside Grandpa's farmhouse (docs/OPENING_SEQUENCE.md beat 1)"
+      "expected": "map_state.gd's own containment puts the fresh spawn in `grandpas_village` -- the opening starts inside Grandpa's farmhouse (docs/specs/OPENING_SEQUENCE.md beat 1)"
     },
     {
       "id": "S01-11",

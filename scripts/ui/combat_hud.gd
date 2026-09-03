@@ -355,7 +355,7 @@ func _build_effect_banner() -> void:
 ## 258 — and a banner placed at the authored 232 straddled the plate's bottom
 ## edge, half on the panel and half on the world, which reads as a layout bug
 ## rather than as a deliberate element. Caught by actually rendering the frame,
-## which is the entire argument for `ralph/conventions.md`'s render-before-done
+## which is the entire argument for `docs/AGENT_WORKFLOW.md`'s render-before-done
 ## rule.
 ##
 ## Falls back to the authored offset when called from `_ready()`, before the

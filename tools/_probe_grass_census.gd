@@ -6,7 +6,7 @@ extends SceneTree
 ##   godot --headless --path . --script tools/_probe_grass_census.gd
 ##
 ## `--headless` is correct here: this reads baked placement data and renders
-## nothing (ralph/conventions.md's hang trap is `--headless` plus a real
+## nothing (docs/AGENT_WORKFLOW.md's hang trap is `--headless` plus a real
 ## rendering driver, which this never asks for).
 ##
 ## Written because the ground-cover argument on this project keeps being made

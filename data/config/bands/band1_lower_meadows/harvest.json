@@ -506,6 +506,110 @@
    "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
    "model_scale": 0.22,
    "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note). Same barehanded-yield reasoning as order 1037, for wood. Sited between the practice meadow and the RoadGate, clear (>=4m) of the trainer_camp prop cluster (props.json order 2) and the new potion pickup at order 1035."
+  },
+  {
+   "order": 1040,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    -10.8,
+    104.1
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_world_content": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md ('no 250m of route without a gatherable', measured by tools/_probe_band1_content_spacing.py). Beyond the fiber node at arc 160 (order 1000) the next gatherable stood at arc 393, a 233m gap that already passed but left the immediate post-gate stretch (arc ~100-160) with only one node type -- this adds a stone option 10m off the road shoulder at arc 130, so the first 200m past the RoadGate offers wood, stone AND fiber rather than fiber alone."
+  },
+  {
+   "order": 1041,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    -326.9,
+    368.5
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22,
+   "_why_world_content": "WORLD-CONTENT. Closes the 566m gap the probe found between arc 393 and arc 960 (the longest gatherable-free stretch on the route): this stop, paired with the berries stop below, splits it into three legs of ~167/120/280m -- wait, see order 1043's own note for the final split. Sited 12m off the road at arc 560, on the road's approach to 'the Rise' place (docs/specs/BAND1_ROUTE_CONTRACT.md place 2), clear (>=28m) of the mudsnout cluster at arc 550 (spawns.json order 1015) and the pipwing cluster at arc 605 (order 1016)."
+  },
+  {
+   "order": 1042,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    -390.6,
+    470.5
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_world_content": "WORLD-CONTENT. A stone stop within sight of the road at arc 680, near the shepherd trainer (trainers.json order 1040, arc 650) so 'the Rise' reads as a place with something to do as well as someone to fight. Clear (>=30m) of the shepherd's own fight and every wild cluster in the window (bramblebun order 1018 at arc 715 is 44m away)."
+  },
+  {
+   "order": 1043,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    -375.0,
+    579.6
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 1.2,
+   "_why_world_content": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3 (the Pond pocket) names 'a fiber node and berries' explicitly; a fiber node already stands at the pocket's own edge (order 1005, arc 960) but berries did not exist anywhere in the pond stretch. Sited by a real ground scan of the pond's own shore (tools/_probe_world_content_0903b.gd -- the water is at level -17.0, and the first straight-line candidate off the road here came back underwater at -18.87): this point is dry (h=-14.65, 2.35m above the waterline), 20m off the road at arc 821, on the same shore as the fisher NPC and the camp prop below, clear (>=19m) of the mosshell/paddlenewt/brooktail wild clusters and the bridge_repair_site prop cluster already authored here -- the approved-lush reference is unthinned, this only adds a resource among content already there. With orders 1041/1042 above, the 566m gap between arc 393 and arc 960 is now four legs of 167m, 120m, 141m and 139m -- all under the 250m target."
+  },
+  {
+   "order": 1044,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    126.8,
+    762.8
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22,
+   "_why_world_content": "WORLD-CONTENT. Closes the 410m gap between arc 1207 (order 1002) and arc 1617 (order 1010): this wood stop at arc 1350 and the stone stop below at arc 1470 split it into 143/120/147m legs. Sited 14m off the road, matching docs/specs/BAND1_ROUTE_CONTRACT.md place 4's 'a stone node and a wood node every ~250m' for the Long Field. Clear (>=60m) of old_champion_bram's off-route fight at arc 1482."
+  },
+  {
+   "order": 1045,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    221.7,
+    841.5
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_world_content": "WORLD-CONTENT. Paired with order 1044 above -- see its note. Sited 14m off the road at arc 1470, clear (>=69m) of old_champion_bram's fight and (>=48m) of the trailpup cluster at arc 1476 (spawns.json order 1058)."
+  },
+  {
+   "order": 1046,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    107.5,
+    1236.8
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22,
+   "_why_world_content": "WORLD-CONTENT. Closes the 358m gap between arc 2045 (order 1006) and the South Bridge (arc 2403), the Bridge approach's own stretch (docs/specs/BAND1_ROUTE_CONTRACT.md place 5). This wood stop at arc 2150 and the stone stop below split it into 105/150/103m legs. Sited 12m off the road, clear of the broken_cart local-request site (playground_world.gd BROKEN_CART_AT, 80,1240)."
+  },
+  {
+   "order": 1047,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    -32.7,
+    1288.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_world_content": "WORLD-CONTENT. Paired with order 1046 above -- see its note. Sited 12m off the road at arc 2300, clear (>=53m) of the south_bridge_grunt checkpoint (trainers.json order 1000, 14,1314) so the last stop before the gate reads as a stop, not a distraction from the fight."
   }
  ],
  "_why_gate_b_three_beds_superseded_2026_08_31": "SUPERSEDED, kept because it is the record of why orders 1020-1027 exist and where they were sited. The arithmetic in the note below -- house 39 wood / 34 stone, THREE creature beds, camp, totalling 69 / 42 / 34 -- is the pre-FIRST-HOUR-FUN-REBUILD bill and the game no longer asks for any of it. data/config/progression.json home.required_pieces is now {camp: 1, creature_bed: 1}, and data/progression/objectives.json calls one bed the mandatory care lesson and tournament proof, with tests/test_quest_log.gd asserting the rung must not require one bed per entrant. The real bill, read through scripts/build/home_progress.gd::materials_threshold(), is 18 wood / 8 stone / 18 fiber, which the twenty village nodes cover in one pass at 28 / 9 / 32. The raise those orders made is therefore no longer load-bearing for the opening -- but it is NOT reverted here, because the surplus is what gives the ladder any margin at all, and because tools/gate_f/segments/S03.json measured the sweep against the OLD bill and reported a shortfall (GAME-F5) that only ever existed in the step script. The one number still worth watching is STONE: three authored nodes, 9 total, against a bill of 8. That is a one-node margin -- and until GAME-F1 was fixed one of those three stood outside the village fence, which put reachable stone at 6 and made the opening build rung unaffordable with no number anywhere being wrong. tests/helpers/gate_a_material_route.gd::TARGET_STOCK is still the old 69 / 42 / 34 and is stale in the same way.",

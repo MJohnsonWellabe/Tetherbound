@@ -90,7 +90,7 @@ today's world (`terrain_playground.json`'s `world_size` 512), copied into
 `autoload/map_state.gd` as the constants `GRID`, `CELL` and `ORIGIN`.
 
 `D50` makes the Meadows an 8192×2048m corridor, not a 512m square, and
-`docs/MEADOWS_MACRO_LAYOUT.md` §8.6 found three files that had each quietly
+`docs/specs/MEADOWS_MACRO_LAYOUT.md` §8.6 found three files that had each quietly
 copied the ±256m assumption in as a hard-coded constant, `map_state.gd`
 among them. Left alone, fixing the world size would have meant silently
 editing `GRID`, `CELL` and `ORIGIN` to match — the same failure mode `D09`

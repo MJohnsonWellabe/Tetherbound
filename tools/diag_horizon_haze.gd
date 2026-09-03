@@ -1,7 +1,7 @@
 extends SceneTree
 
 ## EV8: the world past the 512m bake reads as a pale, sharply-edged wall
-## instead of atmosphere (see ralph/BACKLOG.md EV8 / R9.4-remainder-2). This
+## instead of atmosphere (see docs/CURRENT_STATE.md EV8 / R9.4-remainder-2). This
 ## renders 03-rise-overlook -- the frame that shows the defect worst -- once
 ## per fog variant in a single scene load, to find a haze treatment that reads
 ## as depth rather than as an absence, without re-fogging the midground R9.4

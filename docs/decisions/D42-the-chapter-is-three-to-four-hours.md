@@ -6,8 +6,8 @@ the meadows should only play 3-4 hours. Not the longer end."
 ## The decision
 
 The Meadows chapter's target first-completion time is **3–4 hours**. This
-replaces the **4–7 hours** in `docs/MEADOWS_PROGRESSION_SPEC.md` §0/§3 and the
-**4–8 hour** band in `docs/GAME_DESIGN.md` §29/§30, everywhere those numbers
+replaces the **4–7 hours** in `docs/specs/MEADOWS_PROGRESSION_SPEC.md` §0/§3 and the
+**4–8 hour** band in `docs/specs/GAME_DESIGN.md` §29/§30, everywhere those numbers
 state a target. Longer runs for exploration, team-building, optional trainers,
 gathering and catching are still expected and still fine — the target is the
 main-line completion time, not a ceiling on play.

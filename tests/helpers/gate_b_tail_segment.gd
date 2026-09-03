@@ -26,7 +26,7 @@ extends RefCounted
 ## * the tournament is entered through the marshal's own `greeting_when`
 ##   ladder, which means `tournament_condition_ready` has to be true for real;
 ## * the three rounds are FOUGHT, through `encounter_director`;
-## * Gate B ends where `ralph/ACTIVE_GAME_PLAN.md` says it ends -- on the
+## * Gate B ends where `docs/ROADMAP.md` says it ends -- on the
 ##   OBJECTIVE to leave for the South Bridge, not on the bridge already open.
 
 const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
@@ -37,6 +37,7 @@ const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
+const PLAYER_BED := preload("res://scripts/build/player_bed.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 const COMBAT_CONFIG := "res://data/config/combat.json"
 const VILLAGERS_PATH := "res://data/config/village_npcs.json"
@@ -58,15 +59,19 @@ const FIXTURE_SPOTS := {
 		Vector2(-8.0, 2.0), Vector2(-3.0, -6.0), Vector2(-9.0, -5.0), Vector2(-2.0, 5.0),
 		Vector2(-10.0, 0.0), Vector2(-6.0, 6.0), Vector2(-11.0, -3.0), Vector2(-4.0, 8.0),
 	],
-	# OWNER-0902-CAMP-SPLIT: three ids sharing the old camp's four candidate
-	# offsets rather than three separate lists -- `_spent_spots` below is
+	# OWNER-0902-CAMP-SPLIT: two ids sharing the old camp's four candidate
+	# offsets rather than two separate lists -- `_spent_spots` below is
 	# shared across every id this segment places, so the first piece to try
-	# an offset claims it and the next of the three naturally falls through
-	# to the next candidate, spreading tent/campfire/bedroll across distinct
-	# spots without three lists to keep in sync.
+	# an offset claims it and the next naturally falls through to the next
+	# candidate, spreading tent/campfire across distinct spots without two
+	# lists to keep in sync. `bedroll` is NOT in this pool any more --
+	# CAMP-SHELTER-0903: a fresh bedroll placement is refused anywhere but
+	# inside a placed tent's own footprint, so spreading it to its own
+	# distinct spot (the whole point of this pool) would just make its
+	# placement fail. `_place_bedroll_in_tent` below aims it at the tent's own
+	# resolved position instead.
 	"tent": [Vector2(5.0, 0.0), Vector2(5.0, 3.0), Vector2(7.0, -2.0), Vector2(0.0, 6.0)],
 	"campfire": [Vector2(5.0, 0.0), Vector2(5.0, 3.0), Vector2(7.0, -2.0), Vector2(0.0, 6.0)],
-	"bedroll": [Vector2(5.0, 0.0), Vector2(5.0, 3.0), Vector2(7.0, -2.0), Vector2(0.0, 6.0)],
 }
 const BUILD_PATCH_XZ := BUILD_SEGMENT.BUILD_PATCH_XZ
 const PLACE_AHEAD := 3.0
@@ -295,7 +300,7 @@ func _place_the_campsite() -> bool:
 	var campfire := await _place_fixture("campfire")
 	if campfire == null:
 		return false
-	_bedroll = await _place_fixture("bedroll")
+	_bedroll = await _place_bedroll_in_tent(tent)
 	if _bedroll == null:
 		return false
 	if _flag("home_built"):
@@ -349,6 +354,58 @@ func _place_fixture(id: String) -> Node3D:
 	return null
 
 
+## CAMP-SHELTER-0903: unlike `_place_fixture`'s shared `FIXTURE_SPOTS` pool
+## (deliberately spread so each id lands at a distinct spot -- see that
+## const's own comment), the bedroll no longer has that freedom: a fresh
+## placement is refused anywhere but inside a placed tent's own footprint
+## (`build_placer.gd::_bedroll_has_tent`). There is only ever one tent to aim
+## at, and this segment's job is proving the campsite carries a real,
+## in-tent bedroll for the nights ahead, not re-proving the aim-and-place
+## controller path a THIRD time (`_place_fixture` already does that live for
+## both the tent and the campfire above).
+##
+## Two navigation-based attempts (walking to a precomputed stance point,
+## then walking into the footprint and setting yaw directly before arming)
+## both left the ghost aimed away from the tent -- `_walk_to`'s own stick
+## navigator turns the player to face its OWN direction of travel while
+## routing around whatever else this segment already stood up nearby (the
+## campfire, three creature beds), and nothing in this file's own toolkit
+## pins facing against that once the walk resumes. Built directly instead,
+## the same proven pattern `smoke_gateb_flags.gd`'s own direct tent/bedroll
+## construction and this task's `player_bed.gd`-level smoke coverage
+## (`smoke_gate_a_rest_torch.gd::_exercise_bedroll_without_tent_overhead`)
+## both already use and both pass on: spend the real cost through
+## `GameState.build_cost_for`/`inventory.remove` (so the "out of the
+## materials the authored gather route actually supplies" claim in this
+## function's caller stays true) and `register_building` (so a save written
+## mid-segment still finds it), stamp the same group/meta
+## `build_placer.gd::_spawn_building` would, then `build_real()` at the
+## tent's own exact position -- geometrically identical to what a green
+## controller placement would have produced, without depending on a stick
+## navigator's arrival heading.
+func _place_bedroll_in_tent(tent: Node3D) -> Node3D:
+	var inventory: RefCounted = _game.get("inventory")
+	for requirement: Variant in (_game.call("build_cost_for", "bedroll") as Array):
+		var need: Dictionary = requirement
+		if not bool(inventory.call("remove", str(need.get("id", "")), int(need.get("n", 0)))):
+			_fail("could not spend the real cost for 'bedroll'; the gather route should already cover it")
+			return null
+
+	var bedroll := PLAYER_BED.new()
+	bedroll.name = "Bedroll"
+	_world.add_child(bedroll)
+	bedroll.global_position = tent.global_position
+	bedroll.call("build_real")
+	bedroll.add_to_group("placed_building")
+	var index := int((_game.get("placed_buildings") as Array).size())
+	bedroll.set_meta("placed_index", index)
+	bedroll.set_meta("building_id", "bedroll")
+	_game.call("register_building", "bedroll", bedroll.global_position, 0.0, true)
+	HOME_PROGRESS.maybe_set_home_built(_game)
+	await _settle(10)
+	return bedroll
+
+
 ## --- 4: the nights ------------------------------------------------------------
 
 ## Every entrant into its own bed, then ONE night.
@@ -382,7 +439,7 @@ func _sleep_the_team_into_condition() -> bool:
 	#   a team ... is still not in condition: ["Terrapup is unhappy."]
 	#
 	# What a player does when the marshal turns them away is go home and sleep
-	# again, so that is what this does. Recorded in `ralph/BACKLOG.md` as a
+	# again, so that is what this does. Recorded in `docs/CURRENT_STATE.md` as a
 	# chapter finding too: one bad fight costs a night.
 	for night in 3:
 		var day_before := int(_game.get("day"))
@@ -653,8 +710,15 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		_fail("%s names trainer '%s', which trainers.json does not define" % [label, trainer_id])
 		return false
 
+	# TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: "you enter then
+	# you choose to start the battle". Each round is now two conversations --
+	# the ring-entrance banter, which starts nothing and only sets the round's
+	# `at_ring_flag`, and `begin_conversation`, the explicit begin-the-round
+	# line that actually opens the fight.
 	var chosen := VILLAGE_NPCS.greeting_for(_villager(TOURNAMENT.marshal_name()), _progression)
 	var conversation := str(spec.get("conversation", ""))
+	var begin_conversation := str(spec.get("begin_conversation", ""))
+	var at_ring_flag := str(spec.get("at_ring_flag", ""))
 	if chosen != conversation:
 		_fail("before the %s the marshal should offer '%s'; her ladder chose '%s'"
 			% [label, conversation, chosen])
@@ -662,12 +726,27 @@ func _fight_and_win(spec: Dictionary) -> bool:
 	await _play(conversation)
 	for _i in 12:
 		await _tree.process_frame
+	if bool(_director.call("trainer_battle_active")):
+		_fail("'%s' started the %s battle by itself; the explicit begin-the-round choice would do nothing" % [conversation, label])
+		return false
+	if at_ring_flag != "" and not _flag(at_ring_flag):
+		_fail("'%s' closed but never set '%s'; the marshal would never offer the begin-the-round line" % [conversation, at_ring_flag])
+		return false
+
+	chosen = VILLAGE_NPCS.greeting_for(_villager(TOURNAMENT.marshal_name()), _progression)
+	if chosen != begin_conversation:
+		_fail("at the ring before the %s the marshal should offer '%s'; her ladder chose '%s'"
+			% [label, begin_conversation, chosen])
+		return false
+	await _play(begin_conversation)
+	for _i in 12:
+		await _tree.process_frame
 	if not bool(_director.call("trainer_battle_active")):
-		_fail("'%s' closed and no %s battle started" % [conversation, label])
+		_fail("'%s' closed and no %s battle started" % [begin_conversation, label])
 		return false
 	if str(_director.call("trainer_battle_id")) != trainer_id:
 		_fail("'%s' started a battle against '%s' rather than '%s'"
-			% [conversation, str(_director.call("trainer_battle_id")), trainer_id])
+			% [begin_conversation, str(_director.call("trainer_battle_id")), trainer_id])
 		return false
 	if not _exit_connected:
 		_manager.connect("exited", func(outcome: String) -> void:
@@ -759,7 +838,7 @@ func _fight_and_win(spec: Dictionary) -> bool:
 
 ## --- 7: where Gate B ends ------------------------------------------------------
 
-## `ralph/ACTIVE_GAME_PLAN.md`: Gate B ends on "objective to leave for South
+## `docs/ROADMAP.md`: Gate B ends on "objective to leave for South
 ## Bridge". Not on the bridge already open -- crossing it is Gate C's first
 ## beat, and a run that sets `south_bridge_open` itself CONSUMES the objective
 ## Gate B is supposed to finish pointing at.

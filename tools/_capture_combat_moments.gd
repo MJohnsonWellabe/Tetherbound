@@ -21,7 +21,7 @@ extends SceneTree
 ##     --script tools/_capture_combat_moments.gd
 ##
 ## NEVER `--headless` together with a real rendering driver. Verified
-## 2026-08-22 (ralph/conventions.md, "Art pipeline traps"): that combination
+## 2026-08-22 (docs/AGENT_WORKFLOW.md, "Art pipeline traps"): that combination
 ## hangs FOREVER with no error, no crash, no partial output — and leaves a
 ## zombie Godot process burning CPU after the lane that started it gives up.
 ## `--headless` alone is correct and fast for tests, which render nothing;
@@ -297,7 +297,7 @@ func _collect_nodes() -> bool:
 ## `_capture_ground_and_sky.gd`, which settled on this after its own pin wore
 ## off mid-pass.
 ##
-## `ralph/VISUAL_LEDGER.md` names this trap by name -- "Pin the clock AND freeze
+## `archive/ralph/VISUAL_LEDGER.md` names this trap by name -- "Pin the clock AND freeze
 ## it. A pin that is not frozen wears off across a multi-viewpoint pass and the
 ## late frames come back in a dusk wash" -- and this tool did NEITHER. Round 2's
 ## blind critic found it without being told to look: "Exposure disagrees across
@@ -658,7 +658,7 @@ func _run_elite_encounter() -> void:
 	# creature to the elder's spawn is 13m away; likely the wrong creature". The
 	# elder's own spawn entry gives it `wander_radius: 1.5`, so it cannot BE 13m
 	# from its centre -- which means it had not spawned yet and the search found
-	# somebody else entirely. `ralph/VISUAL_LEDGER.md` carries the reason as a
+	# somebody else entirely. `archive/ralph/VISUAL_LEDGER.md` carries the reason as a
 	# standing fact: "a capture with the player parked away from the shot
 	# photographs an empty world, because creature spawning is driven off the
 	# player." The tool was asking who was standing in a clearing it had not

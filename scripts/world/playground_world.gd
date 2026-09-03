@@ -156,7 +156,7 @@ const GATE_KEY_AT := Vector2(30.7, -15.9)
 ## 4.2m) never contest. `SIGIL_GATE_YAW_DEG` puts the leaf across the bearing
 ## to the Hall (72.4 degrees from here) and is TUNABLE by eye, exactly like
 ## `GATE_YAW_DEG` above and for the same reason.
-## OW5D relocation, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved from
+## OW5D relocation, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved from
 ## (130,-176) to the table's explicit new coordinate (0,7400), alongside
 ## stronghold.json's `site.at` moving to (0,7560). `SIGIL_GATE_YAW_DEG` is
 ## left UNCHANGED below and is almost certainly wrong for the new site: the
@@ -336,7 +336,7 @@ const TM_AT := {
 	# Ground-dominant Meadows) and a real ladder step above the two starting
 	# TMs (stone_rush 1.0/burrow_strike 1.1 power, data/moves/moves.json) below
 	# earth_fist (1.4, Captain Field's trainer reward) and earthshatter (2.0,
-	# apex). Sited on the quarry_rim_overlook loop (docs/MEADOWS_MACRO_LAYOUT.md
+	# apex). Sited on the quarry_rim_overlook loop (docs/specs/MEADOWS_MACRO_LAYOUT.md
 	# row 2: departs (310,1660), rejoins (330,1950)), further into the loop
 	# than the rejoin's own potion_large (harvest.json order 2013) so the two
 	# don't crowd one spot -- MEASURED, tools/_probe_density_sites.gd: worst
@@ -368,11 +368,37 @@ const TM_AT := {
 ## "genuinely off-path, worth the detour" placement the brief asked for a
 ## permanent elixir to get. MEASURED, tools/_probe_pickups_sites.gd: worst
 ## slope 7.3 degrees over a 2m pad, clear of every other authored node.
+## WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2 (the Rise): "a
+## cache 40-60m off the crest marked by a lone dead tree, holding either a TM
+## the band's species can learn or the Ironwood-tier recipe -- check
+## data/moves/tms.json and data/recipes/ and pick the one a level-5 to
+## level-8 team actually benefits from".
+##
+## tm_rock_throw, not an Ironwood recipe. `data/recipes/recipes_ironwood.json`
+## needs `ironwood`/`rootstone` in every entry (its own header: "NOTHING THE
+## STRONGHOLD NEEDS MAY REQUIRE A THIRD NEW MATERIAL" -- baseline, Rootstone,
+## Ironwood only), and neither material exists anywhere near Band 1: rootstone
+## is Band 2's Old Quarry, ironwood is Band 4's upper Meadows. A level-5 to
+## level-8 team standing on the Rise cannot spend an Ironwood recipe on the
+## day they find it -- it would sit unusable in the recipe book for two whole
+## bands. tm_rock_throw is Ground-type (`data/moves/moves.json`), which most
+## of Band 1's roster already is (bramblebun/terrapup/mudsnout/meadowhart/
+## burrowback/trailpup all resolve to `type: "ground"` in species.json), and
+## it is the one Ground TM in the game with NO free world pickup anywhere
+## (`tm_stone_rush`/`tm_burrow_strike` are the opening-field TMs at TM_AT
+## above; `tm_stone_spike` is the Old Quarry's; `tm_earth_fist` is Captain
+## Field's Band 4 trainer reward, data/config/bands/band4_upper_meadows_ironwood/trainers.json)
+## -- Mira sells it for 120 coins (data/config/trade.json), well past what a
+## team this early has banked. A free copy on a curiosity-rewarded detour is a
+## real Band 1 upgrade the day it is found, not a recipe waiting for a
+## material two regions away.
 const CACHE_AT := {
 	"elixir_might": Vector2(-165.0, 7065.0),
+	"tm_rock_throw": Vector2(-382.8, 355.5),
 }
 const CACHE_LABEL := {
 	"elixir_might": "Take the elixir",
+	"tm_rock_throw": "Take the TM",
 }
 const CACHE_MODEL := "res://assets/props/quaternius_fantasy/Barrel.gltf"
 const CACHE_MODEL_SCALE := 0.9
@@ -1078,6 +1104,14 @@ func _build_settlement() -> void:
 	relay_npcs.name = "RelayNPCs"
 	add_child(relay_npcs)
 	relay_npcs.call("build", _player, VILLAGE_NPCS.RELAY_CONFIG_PATH)
+
+	# WORLD-CONTENT: the Pond fisher (docs/specs/BAND1_ROUTE_CONTRACT.md place
+	# 3), a third list for the same placer -- see PondNPCs config's own header
+	# for why this reuses village_npcs.gd rather than a new mechanism.
+	var pond_npcs: Node3D = VILLAGE_NPCS.new()
+	pond_npcs.name = "PondNPCs"
+	add_child(pond_npcs)
+	pond_npcs.call("build", _player, VILLAGE_NPCS.POND_CONFIG_PATH)
 
 	var trainers: Node3D = TRAINER_NPCS.new()
 	trainers.name = "Trainers"

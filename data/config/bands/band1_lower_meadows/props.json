@@ -326,60 +326,10 @@
           "yaw_deg": 120.0,
           "scale": 1.0,
           "_why": "a trainer's pack leaning on the crate's west face (0.82m centre to centre)."
-        },
-        {
-          "model": "Banner",
-          "name": "Banner_gate_west",
-          "at": [
-            14.0,
-            4.2
-          ],
-          "yaw_deg": 5.0,
-          "pitch_deg": -6.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
-          "retint": {
-            "Banner": "#3d6a38"
-          },
-          "_why": "the west post of the gateway pair flanking the corridor road where it enters the field from the square (road centreline x~19.9 at this z; cloth spans x 14.0..15.8 and faces along the road so a walker from the well sees it head-on). 5m from Bryn's stand at (13,9), 2.4m north of cottage_a's north-east collider extent. Green is the key art's own settlement banner; oxblood stays Team Tether's."
-        },
-        {
-          "model": "Banner",
-          "name": "Banner_gate_east",
-          "at": [
-            24.2,
-            3.6
-          ],
-          "yaw_deg": -5.0,
-          "pitch_deg": -6.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
-          "retint": {
-            "Banner": "#3d6a38"
-          },
-          "_why": "the east post of the pair, cloth x 24.2..26.0, 4.3m east of the road; 4.2m from the berry node at (28,6), 8m from Halda, 6.8m from Fenn."
-        },
-        {
-          "model": "Banner",
-          "name": "Banner_west_ring",
-          "at": [
-            10.5,
-            13.5
-          ],
-          "yaw_deg": 90.0,
-          "pitch_deg": -6.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
-          "retint": {
-            "Banner": "#3d6a38"
-          },
-          "_why": "the ring's west marker, facing east across the road at the fight ground; cloth spans z 11.7..13.5 at x 10.5, 6m west of the road, 4.7m from Bryn, 9.8m from the workshop oak."
         }
       ],
-      "_why_vp5": "VP5 (visual-parity village lane), 2026-09-02. Two blind judges (ralph/reports/visual-parity/VP0-baseline/JUDGE-village-pond.md, ralph/reports/audit/E-locations/JUDGE-AUDIT-E-locations-2026-08-31.md) read this ground as 'a plain open meadow ... no arena, ring, stands, or banner'. The geography fixes what a ring can be: the corridor spine (terrain_playground.json trail.bands[0], (27.5,-16)->(14,20)) runs straight through the field 4m west of the board, the three tournament trainers stand at (20,12) (band1 trainers.json) with an 11m combat arena (combat_arena.gd) around the fight, and the village fence runs 3.3m behind the board. So the ring is the road's east verge, bounded by the fence: the EVENT read comes from the key art's own settlement device -- green banners on posts (quaternius_castle `Banner`, retinted to the board's banner green, never Team Tether's oxblood) -- two of them flanking the road where it enters the ground, one on the ring's west side; the two spectator benches re-sited to face the ring from outside the trainers' axis (E1's east bench stood 0.4m from Halda, on top of her); and a small staging pile (crate, bucket, bag) by the board for the team waiting its turn, with a barrel by the east bench. Everything solid sits >= 7m from the arena centre (20,10) except the board-side staging pile, 4.5m off its axis. Positions checked against the built scene (board node (20,15) yaw -155, Halda (23.5,11.5), Bryn (13,9), the berry node (28,6), the trail road's actual line, and the NEW boundary edge (30,11)->(15.98,22.59), which is 2.5-4m from the pile and the west bench)."
+      "_why_vp5": "VP5 (visual-parity village lane), 2026-09-02. Two blind judges (ralph/reports/visual-parity/VP0-baseline/JUDGE-village-pond.md, ralph/reports/audit/E-locations/JUDGE-AUDIT-E-locations-2026-08-31.md) read this ground as 'a plain open meadow ... no arena, ring, stands, or banner'. The geography fixes what a ring can be: the corridor spine (terrain_playground.json trail.bands[0], (27.5,-16)->(14,20)) runs straight through the field 4m west of the board, the three tournament trainers stand at (20,12) (band1 trainers.json) with an 11m combat arena (combat_arena.gd) around the fight, and the village fence runs 3.3m behind the board. So the ring is the road's east verge, bounded by the fence: the two spectator benches face the ring from outside the trainers' axis (E1's east bench stood 0.4m from Halda, on top of her); and a small staging pile (crate, bucket, bag) by the board for the team waiting its turn, with a barrel by the east bench. Everything solid sits >= 7m from the arena centre (20,10) except the board-side staging pile, 4.5m off its axis. Positions checked against the built scene (board node (20,15) yaw -155, Halda (23.5,11.5), Bryn (13,9), the berry node (28,6), the trail road's actual line, and the NEW boundary edge (30,11)->(15.98,22.59), which is 2.5-4m from the pile and the west bench).",
+      "_why_vp5_removed_0903": "TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: 'I don't like the flags around the tournament area.' VP5 above added three flat cloth-quad `Banner` props (quaternius_castle's Banner.obj -- the same bolt-of-cloth mesh band3_the_river_lock/props.json and tether_relay.json already retint oxblood for Team Tether's own checkpoints, retinted village green here instead) to answer two blind judges' 'no arena, ring, stands, or banner'. It is the only cloth/pennant mesh installed in the project (checked: no other pennant/flag geometry exists under assets/), so there is no different asset to swap it for without a new Meshy generation, which CLAUDE.md reserves for Team Tether hero objects and forbids for the Meadows outright. Removed rather than reworked: `Banner_gate_west`, `Banner_gate_east` and `Banner_west_ring` are gone, and the ring's event read now comes from the benches, the staging pile, the board and the ceremony itself (tournament.gd's begin-the-round/win/next-round beats, same lane) rather than from set dressing the owner explicitly said he does not like."
     },
     {
       "order": 1000,
@@ -430,7 +380,7 @@
           "scale": 1.05,
           "dir": "res://assets/props/generated_camp",
           "sink_m": 0.04,
-          "_why": "Replaces round 3's six hand-placed Rock_Medium instances with one Meshy-generated ring mesh, textured to match the reference board's own fire-ring stones. Raw 2.00m diameter; 0.85 gives ~1.7m, the same footprint the six-stone version measured at (0.82-0.94m radius). The fire and its glow overlay sit inside the ring's own empty centre, which is why this prop carries no `glow` key of its own -- the flame is the Bonfire above, not this. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/ASSET_LEDGER.md) -- an explicit owner directive and reference art, which is the actual prerequisite CLAUDE.md's Meshy-generation rule enforces; that board's own bed panel carried another game's paw-print/leaf emblem and both were removed from the crops before submission plus banned in the negative prompt (tools/art_pipeline/meshy.py NEGATIVE_CAMP_BED) before generation, not after. ROUND 3: a dispatched Fable fidelity review against the reference found the stones individually too small/flat and too gapped relative to the reference's tightly packed boulders -- a defect internal to this single rigid mesh that scale cannot fully fix (relative gaps and per-stone height-to-footprint ratio are baked into the geometry), but a straight size increase at least makes each stone read chunkier. Scale raised 0.85 -> 1.05, ~1.7m -> ~2.1m diameter -- the only lever available without a further regeneration, which Fable rated this piece as not clearly needing (the tent did)."
+          "_why": "Replaces round 3's six hand-placed Rock_Medium instances with one Meshy-generated ring mesh, textured to match the reference board's own fire-ring stones. Raw 2.00m diameter; 0.85 gives ~1.7m, the same footprint the six-stone version measured at (0.82-0.94m radius). The fire and its glow overlay sit inside the ring's own empty centre, which is why this prop carries no `glow` key of its own -- the flame is the Bonfire above, not this. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/specs/ASSET_LEDGER.md) -- an explicit owner directive and reference art, which is the actual prerequisite CLAUDE.md's Meshy-generation rule enforces; that board's own bed panel carried another game's paw-print/leaf emblem and both were removed from the crops before submission plus banned in the negative prompt (tools/art_pipeline/meshy.py NEGATIVE_CAMP_BED) before generation, not after. ROUND 3: a dispatched Fable fidelity review against the reference found the stones individually too small/flat and too gapped relative to the reference's tightly packed boulders -- a defect internal to this single rigid mesh that scale cannot fully fix (relative gaps and per-stone height-to-footprint ratio are baked into the geometry), but a straight size increase at least makes each stone read chunkier. Scale raised 0.85 -> 1.05, ~1.7m -> ~2.1m diameter -- the only lever available without a further regeneration, which Fable rated this piece as not clearly needing (the tent did)."
         },
         {
           "model": "Bench",
@@ -537,7 +487,7 @@
           "yaw_deg": 0.0,
           "scale": 1.05,
           "dir": "res://assets/props/generated_camp",
-          "_why": "Owner's pick from the eight-candidate contact sheet: round 1's multi-image-to-3D result. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/ASSET_LEDGER.md). Round 1's geometry (multi-image-to-3D, three reference crops, refine tier) is the version the owner chose after reviewing a contact sheet of all eight candidates generated across rounds 1-5 -- rounds 2-3 tried to fix its proportions via image reference changes and converged on the same shape (images dominate text in this pipeline); round 4-5 tried text-to-3D instead and traded the proportion problem for a construction-fidelity problem (a teepee, then missing patches/rigging/weathering once corrected to an A-frame). Kept round 1: weathered patched canvas, crossed lashed pole tips at both ends, matches the reference board's own material and stitching most closely of any candidate even though its proportions read flatter than the reference.",
+          "_why": "Owner's pick from the eight-candidate contact sheet: round 1's multi-image-to-3D result. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/specs/ASSET_LEDGER.md). Round 1's geometry (multi-image-to-3D, three reference crops, refine tier) is the version the owner chose after reviewing a contact sheet of all eight candidates generated across rounds 1-5 -- rounds 2-3 tried to fix its proportions via image reference changes and converged on the same shape (images dominate text in this pipeline); round 4-5 tried text-to-3D instead and traded the proportion problem for a construction-fidelity problem (a teepee, then missing patches/rigging/weathering once corrected to an A-frame). Kept round 1: weathered patched canvas, crossed lashed pole tips at both ends, matches the reference board's own material and stitching most closely of any candidate even though its proportions read flatter than the reference.",
           "sink_m": -0.64
         },
         {
@@ -549,7 +499,7 @@
           "yaw_deg": 0.0,
           "scale": 1.0,
           "dir": "res://assets/props/generated_camp",
-          "_why": "Replaces round 3b's ground bedroll with a proper raised camp bed -- lashed log frame, stuffed mattress, pillow -- matching the board's own PAL BED panel far more closely than a flat bedroll ever could. Raw 1.23 x 0.41 x 1.90m needs no scaling. Laid inside the tent's mouth, its long axis parallel to the tent's ridge, head end under the canvas. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/ASSET_LEDGER.md) -- an explicit owner directive and reference art, which is the actual prerequisite CLAUDE.md's Meshy-generation rule enforces; that board's own bed panel carried another game's paw-print/leaf emblem and both were removed from the crops before submission plus banned in the negative prompt (tools/art_pipeline/meshy.py NEGATIVE_CAMP_BED) before generation, not after.",
+          "_why": "Replaces round 3b's ground bedroll with a proper raised camp bed -- lashed log frame, stuffed mattress, pillow -- matching the board's own PAL BED panel far more closely than a flat bedroll ever could. Raw 1.23 x 0.41 x 1.90m needs no scaling. Laid inside the tent's mouth, its long axis parallel to the tent's ridge, head end under the canvas. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/specs/ASSET_LEDGER.md) -- an explicit owner directive and reference art, which is the actual prerequisite CLAUDE.md's Meshy-generation rule enforces; that board's own bed panel carried another game's paw-print/leaf emblem and both were removed from the crops before submission plus banned in the negative prompt (tools/art_pipeline/meshy.py NEGATIVE_CAMP_BED) before generation, not after.",
           "sink_m": -0.21
         },
         {
@@ -801,6 +751,119 @@
           "sink_m": 0.03,
           "glow": "campfire",
           "_why": "The door light itself. `scale` 0.22 -- roughly half band4's already-small 0.42 patrol posting -- keeps the log pile door-side-brazier small rather than reading as a hearth blocking the threshold; `glow_scale` deliberately left at the chapter's own 1.0 default (LIGHT_RANGE 8.0m, LIGHT_BASE_ENERGY 3.4, warm colour (1.0,0.68,0.32) -- campfire_glow.gd's own constants) rather than dimmed further, because the judge's finding was specifically that NPCs at the door are ILLEGIBLE at night: an 8m warm pool centred 1.24m from the door is what actually reads Oskar/Grandpa's faces, and every other camp in the chapter already proves this exact energy/range reads as a warm practical light rather than daylight at night without complaint. `yaw_deg` 35 (not a flat 0/90) so the log pile does not stand squared-off against the wall, matching this file's own 'not one more object than the yard needs, every object placed on purpose' convention for the rest of the dooryard."
+        }
+      ]
+    },
+    {
+      "order": 1049,
+      "name": "rise_cache_marker",
+      "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2 (the Rise): the discovery cache (playground_world.gd CACHE_AT['tm_rock_throw']) is 'marked by a lone dead tree'. One tree, not a station -- the point is a single silhouette a player notices from a distance and walks toward, not a grove. Reuses the installed DeadTree_2 model every wood harvest node in this band already uses (CLAUDE.md: no new mesh), scaled up from harvest.json's 0.22 gathering-node convention to read as a real dead tree rather than a stick, since this one carries no gather prompt of its own -- the cache beside it does. Sited at the exact cache position (-382.8,355.5), ~50m off the road at arc 603 (the ALREADY-STANDING 'Pond Circuit' trailhead crest, terrain_playground.json paths.trailheads), a real ground scan (tools/_probe_world_content_0903c.gd): dry, worst slope 11.8 degrees over a 2m pad.",
+      "props": [
+        {
+          "model": "DeadTree_2",
+          "at": [
+            -382.8,
+            355.5
+          ],
+          "yaw_deg": 40.0,
+          "scale": 0.9,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "The marker itself, at the cache's own coordinates so the tree and the find read as one thing from any approach angle. Same model/directory harvest.json's wood nodes already load (DeadTree_2.gltf), just scaled up (0.9 vs the gathering convention's 0.22) since this one carries no gather prompt of its own."
+        }
+      ]
+    },
+    {
+      "order": 1050,
+      "name": "pond_fisher_camp",
+      "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3 (the Pond pocket): 'one bench-and-firepit camp prop within sight of the water'. Deliberately minimal -- one seat and one fire, not a second trail_camp -- so it reads as a single traveller's stop (the fisher's own) rather than a second authored campsite competing with the band's real rest point 700m south. Sited by a real ground scan of the pond's own shore (tools/_probe_world_content_0903b.gd; the water is at level -17.0 and the straight-line candidate off the road here came back underwater): this point is dry (h=-14.48, 2.52m above the waterline), on the pond's south-east shore, 10m from the fisher NPC (village_npcs.json-pattern placement, data/config/bands/band1_lower_meadows/pond_npc.json) so the two read as one scene, and clear (>=30m) of the bridge_repair_site prop cluster and every wild cluster already authored at the pond.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "at": [
+            -395.5,
+            583.5
+          ],
+          "yaw_deg": 200.0,
+          "scale": 0.3,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "_why": "The firepit -- a small fire, between the trail camp's 0.45 and the doorway lantern's 0.22, sized for one person's camp rather than a rest stop. Same solved Bonfire_Fire+ignite()+campfire_glow.gd recipe every camp in the chapter uses (CLAUDE.md: no new mesh)."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [
+            -395.5,
+            583.5
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.65,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": 0.04,
+          "_why": "A small stone ring around the fire, scaled down from the trail camp's own 1.05 (a ~2.1m ring) to match this camp's one-person scale."
+        },
+        {
+          "model": "Bench",
+          "at": [
+            -393.0,
+            585.3
+          ],
+          "yaw_deg": 150.0,
+          "scale": 1.0,
+          "_why": "The seat, facing the fire across it and out toward the water beyond -- a place to sit and watch a line, which is what the fisher NPC beside this cluster is doing."
+        }
+      ]
+    },
+    {
+      "order": 1051,
+      "name": "bridge_approach_fence",
+      "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 5 (the Bridge approach): 'a broken-fence line leading the eye toward the South Bridge on the approach'. Four sections of the settlement's own wooden-fence kit (quaternius_medieval, already vendored -- CLAUDE.md: no new prop family), NOT village.json's structural `fence_run` prefab (that is a sealed boundary line with gate logic; this is scenery, an old field-fence nobody has mended). Run along the road's own shoulder from arc 2170 to arc 2250 of trail.bands[0], 8-10m off the centreline, ending short of the south_bridge_grunt checkpoint (order 1000, arc 2371) so the eye is led TO the gate rather than past it. The third section is toppled (`pitch_deg`) -- the 'broken' the route contract asks for, not just an intact line -- reading as an old field boundary from before Team Tether closed the crossing, left to rot the way the tether_waypost cluster (order 1020) reads as evidence rather than a manned position.",
+      "props": [
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            81.9,
+            1223.2
+          ],
+          "yaw_deg": -71.6,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "First section, arc 2170, running with the road's own bearing."
+        },
+        {
+          "model": "Prop_WoodenFence_Extension1",
+          "at": [
+            62.9,
+            1229.6
+          ],
+          "yaw_deg": -71.6,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "Second section, arc 2190, continuing the line."
+        },
+        {
+          "model": "Prop_WoodenFence_Extension2",
+          "at": [
+            43.9,
+            1235.9
+          ],
+          "yaw_deg": -60.0,
+          "pitch_deg": 72.0,
+          "sink_m": -0.15,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "Third section, arc 2210 -- the broken one, tipped almost flat (`pitch_deg` 72, the same lean mechanic `bridge_repair_site`'s axe already uses on this prop family's fixed vertical authoring) with its foot sunk into the grass rather than floating."
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            22.4,
+            1244.7
+          ],
+          "yaw_deg": -49.4,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "Fourth section, arc 2230, the road's bend toward the bridge -- the line's last intact panel before the gap the broken section leaves, ending the eye's path at the checkpoint ahead rather than at the fence itself."
         }
       ]
     }

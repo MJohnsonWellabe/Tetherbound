@@ -94,7 +94,7 @@ func _one_cycle(trial: int) -> void:
 
 
 ## REAL InputEventJoypadButton through Input.parse_input_event(), not
-## Input.action_press() -- OW4/UI-PAD1 (ralph/DONE.md) both found real
+## Input.action_press() -- OW4/UI-PAD1 (archive/ralph/DONE.md) both found real
 ## controller behaviour Input.action_press() cannot reproduce because it
 ## never travels the InputMap the way an actual pad event does. Interleaved
 ## with a continuous low-level right-stick "look" motion stream on every

@@ -35,6 +35,12 @@ const CONFIG_PATH := "res://data/config/village_npcs.json"
 ## are not villagers and calling them that in their own file would be a lie.
 const RELAY_CONFIG_PATH := "res://data/config/relay_site.json"
 
+## WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3: a third list for
+## the same placer, the Pond's fisher -- same reasoning as RELAY_CONFIG_PATH
+## above (a `people` entry needs a body, a greeting prompt and nothing else a
+## villager does not already have).
+const POND_CONFIG_PATH := "res://data/config/bands/band1_lower_meadows/pond_npc.json"
+
 var _placed := 0
 var _player: Node3D = null
 var _specs: Array = []

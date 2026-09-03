@@ -55,7 +55,7 @@
     }
   ],
 
-  "_comment_backpack": "`columns` x rows must equal autoload/inventory.gd's SLOT_COUNT, which tests/test_menu_data.gd checks. No `hotbar_columns` key exists here despite an earlier version of this comment saying it did -- GAME_DESIGN.md 19's quick-select band is unbuilt; see HD2 (ralph/BACKLOG.md, area: ui) for the real hotbar work.",
+  "_comment_backpack": "`columns` x rows must equal autoload/inventory.gd's SLOT_COUNT, which tests/test_menu_data.gd checks. No `hotbar_columns` key exists here despite an earlier version of this comment saying it did -- GAME_DESIGN.md 19's quick-select band is unbuilt; see HD2 (docs/CURRENT_STATE.md, area: ui) for the real hotbar work.",
   "backpack": {
     "columns": 6,
     "tile_width": 168,
@@ -100,8 +100,8 @@
         },
         {
           "name": "The world",
-          "note": "CONTROLLER-MAP (owner directive 2026-08-22) re-authored the pad map and four of these verbs came off it entirely: `use_tool` (chopping and mining are interact now), `torch_toggle` and `torch_place` (the torch is a hotbar tool -- \"torch doesn't need a button\"), and `build_open` (so is the build hammer). All four keep their keyboard keys and stay rebindable here; their gamepad column reads unbound, which is correct rather than broken. LT and RT are the creature's charged and quick attacks and nothing else.",
-          "actions": ["interact", "inventory", "map", "game_menu", "camera_recenter", "party_cycle", "creature_recall", "use_tool", "torch_toggle", "build_open", "torch_place"]
+          "note": "CONTROLLER-MAP (owner directive 2026-08-22) re-authored the pad map and four of these verbs came off it entirely: `use_tool` (chopping and mining are interact now), `torch_toggle` and `torch_place` (the torch is a hotbar tool -- \"torch doesn't need a button\"), and `build_open` (so is the build hammer). All four keep their keyboard keys and stay rebindable here; their gamepad column reads unbound, which is correct rather than broken. HUD-INPUT-0903 (owner playtest 2026-09-03: \"there should be a shortcut button to map and to building\") gave Build a real pad button back without spending a chord: `build_shortcut` is a second action (keyboard B, the same key `build_open` already used; gamepad LT) read only in the world context (data/config/input_contexts.json), so LT can never mean two things at once with `build_rotate_left`'s own LT during placement -- see project.godot's own comment on the action. `map` already had View from the authored map and needed no change; it is also always shown in the exploration legend. LT and RT are otherwise the creature's charged and quick attacks and nothing else.",
+          "actions": ["interact", "inventory", "map", "game_menu", "camera_recenter", "party_cycle", "creature_recall", "use_tool", "torch_toggle", "build_open", "build_shortcut", "torch_place"]
         },
         {
           "name": "Quick items",
@@ -153,6 +153,7 @@
         "torch_toggle": "Toggle your torch (it also lights itself after dark)",
         "use_tool": "Swing the equipped tool",
         "build_open": "Open the build menu",
+        "build_shortcut": "Open the build menu (direct shortcut)",
         "torch_place": "Draw or stow your torch",
         "build_rotate": "Rotate the build ghost",
         "hotbar_1": "Use quick-item slot 1",

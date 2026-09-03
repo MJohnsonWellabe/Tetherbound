@@ -38,7 +38,7 @@ const VIEWPOINTS := [
 	},
 	{
 		# Same deposit, further back at 02b's own distance/angle, for a direct
-		# before/after comparison against docs/reviews/band2/round-0*/02b-*.jpg.
+		# before/after comparison against archive/reports/docs-reviews-full/band2/round-0*/02b-*.jpg.
 		"name": "rootstone-context-day",
 		"eye": Vector2(390.0, 1791.0), "eye_h": 1.8,
 		"target": Vector2(402.0, 1800.0), "target_h": 1.2,

@@ -117,7 +117,7 @@ static func suppressed_layers() -> Dictionary:
 # random points any more.
 #
 # THE DEFECT THIS ANSWERS, in the owner's words on 2026-08-28: "the grass
-# rerenders like every step". `ralph/OWNER_PLAYTEST_2026-08-28.md` is the
+# rerenders like every step". `docs/owner/OWNER_PLAYTEST_2026-08-28.md` is the
 # record, and the same note carries the other half of the report -- "don't
 # change the look of my grass, it's awesome" -- so this is a placement change
 # that is required to leave density, colour, silhouette, wind and every cover
@@ -363,7 +363,7 @@ static func _fill_lattice(mm: MultiMesh, plan: Array, cell: float) -> int:
 ## the ~7,000 the frame already carries -- `PERF-ROG-GPU` records that
 ## Compatibility's cost is batches, and these are small batches), primitives
 ## fall by the tiles that are not. Measured with tools/perf_render_stats.gd,
-## recorded in docs/VISUAL_PARITY_PROGRESS.md.
+## recorded in archive/docs/VISUAL_PARITY_PROGRESS.md.
 ##
 ## `cull_tile_m` 0 restores the single-MultiMesh path exactly, for A/B
 ## measurement. Forced to a whole multiple of the lattice cell so a tile edge

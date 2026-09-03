@@ -113,7 +113,7 @@ func _run() -> void:
 		# ramps a red drowning vignette over the whole frame (this is exactly
 		# what produced the crimson hour-22/23.9/0.1/2.0 frames judged blind
 		# on 2026-08-29 -- see ralph/reports/JUDGE-VISUAL-2026-08-29.md and
-		# ralph/DONE.md's SURVEY_BAND2 entry). Parked far away in XZ too so it
+		# archive/ralph/DONE.md's SURVEY_BAND2 entry). Parked far away in XZ too so it
 		# throws no shadow into the framed viewpoint.
 		var far_xz := EYE + Vector2(5000.0, 5000.0)
 		player.global_position = Vector3(far_xz.x, field.height_at(far_xz.x, far_xz.y) + 1.0, far_xz.y)

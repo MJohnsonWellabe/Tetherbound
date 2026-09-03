@@ -29,7 +29,7 @@ extends SceneTree
 ##     --script tools/_capture_item_art.gd
 ##
 ## NEVER `--headless` with a real `--rendering-driver`: verified on this box
-## (ralph/conventions.md, "Art pipeline traps") that the combination hangs
+## (docs/AGENT_WORKFLOW.md, "Art pipeline traps") that the combination hangs
 ## forever with no error and no crash -- the process prints its first line and
 ## then sits in silence until killed, leaving a zombie Godot process pinned to
 ## whatever cwd it started in. `--headless` alone is correct and fast for
@@ -51,7 +51,7 @@ extends SceneTree
 ## ## Why held/world shots are a bare stage, not `meadows_playground.tscn`
 ##
 ## `capture_chop_swing.gd`'s own header already paid for this lesson --
-## `ralph/BACKLOG.md`'s PERF-LOD entry records four capture attempts that died
+## `docs/CURRENT_STATE.md`'s PERF-LOD entry records four capture attempts that died
 ## to the corridor's ~130k-prop boot cost on this exact container, one at 43
 ## minutes with no frame written. Nothing photographed here needs the
 ## corridor: it needs one player body, one bone-attached prop, or one

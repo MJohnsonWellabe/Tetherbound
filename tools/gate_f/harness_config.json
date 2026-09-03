@@ -1,5 +1,5 @@
 {
-  "_comment": "Operator-harness tunables for the Gate F run (tools/gate_f/operator_harness.gd). Deliberately NOT under data/config/: nothing the game ships reads this file, and ralph/GATE_F_INSTRUMENTATION_REQUEST.md section 10 forbids touching the game's data configs. Delete the file and the harness runs on the same values, hard-coded as defaults, so a bare checkout still works.",
+  "_comment": "Operator-harness tunables for the Gate F run (tools/gate_f/operator_harness.gd). Deliberately NOT under data/config/: nothing the game ships reads this file, and docs/acceptance/GATE_F_INSTRUMENTATION_REQUEST.md section 10 forbids touching the game's data configs. Delete the file and the harness runs on the same values, hard-coded as defaults, so a bare checkout still works.",
 
   "_comment_trace_hz": "route.csv sample rate. The protocol section C.2 fixes it at 2 Hz for the run that produces Gate F evidence; the key is here so a diagnostic rerun can raise it without a code edit. Raising it costs frame time -- measure with --gatef-mode=overhead and record the result rather than assuming it is free.",
   "trace_hz": 2.0,

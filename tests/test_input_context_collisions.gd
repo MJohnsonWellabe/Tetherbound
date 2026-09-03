@@ -90,7 +90,7 @@ func test_no_two_live_actions_share_a_joypad_input() -> void:
 			if alias_of.get(action, action) == alias_of.get(other, other):
 				continue
 			_fail(
-				"context '%s': '%s' and '%s' are both live and both bound to %s. One press, two verbs. Held-button chords are banned (ralph/OWNER_DIRECTIVES_2026-08-22.md section 1), so the fix is to move or merge a verb, not to make one of them a hold." % [
+				"context '%s': '%s' and '%s' are both live and both bound to %s. One press, two verbs. Held-button chords are banned (docs/owner/OWNER_DIRECTIVES_2026-08-22.md section 1), so the fix is to move or merge a verb, not to make one of them a hold." % [
 					name, other, action, _human(code),
 				]
 			)

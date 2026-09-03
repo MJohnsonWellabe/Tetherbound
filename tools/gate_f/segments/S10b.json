@@ -5,11 +5,11 @@
   "record_hz": 0.5,
   "title": "Finale II: Warden -> legendary -> release ceremony",
   "lane": "journey",
-  "_comment": "Transcribed verbatim from the original S10.json (steps S10-51..S10-88, renumbered S10b-51..), which was itself transcribed from ralph/GATE_F_MASTER_PROTOCOL.md section B (span), section E.1 (CB-06), section E.5 (objectives `defeat_the_warden`, `shut_down_the_machine`, `settle_the_roster`), section G (GF-13-FINALE-02/03/04) and section H (the mandatory 0.5 Hz Warden capture_seq).",
+  "_comment": "Transcribed verbatim from the original S10.json (steps S10-51..S10-88, renumbered S10b-51..), which was itself transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B (span), section E.1 (CB-06), section E.5 (objectives `defeat_the_warden`, `shut_down_the_machine`, `settle_the_roster`), section G (GF-13-FINALE-02/03/04) and section H (the mandatory 0.5 Hz Warden capture_seq).",
   "_comment_warden_coordinate": "RESOLVED, GATE-F-LEG-S10AB 2026-08-31. This file used to record an unreconciled ambiguity: section E.1 CB-06 and band5's trainers.json both give warden_aldis as (90.2,7569.4), while stronghold.json puts the `warden_arena` chamber at site.at (8,7560) plus local (0,90.2) -- and the two 'look like the same pair transposed'. They are: the trainers.json row is a stale pre-OW5D fallback written when the Hall's chambers ran along +x, and it says so itself (`_position_note`: \"FALLBACK ONLY\"). MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31). The Warden's body stands at world (8,7658.2); (90.2,7569.4) is 120 m away in open ground outside the building. The step-script now walks to the measured stand.",
   "evidence_lane": "logic",
   "capture_lane": "S10bC",
-  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, ralph/GATE_F_MASTER_PROTOCOL.md §H.1. LOGIC lane: headless, mechanics/telemetry/step verdicts. Its own §G ids (GF-13-FINALE-02, the S10-SEQ-warden capture_seq, GF-13-FINALE-03, GF-13-FINALE-04) are DELEGATED to S10bC. The harness refuses to start this segment if S10bC does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it.",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, docs/acceptance/GATE_F_MASTER_PROTOCOL.md §H.1. LOGIC lane: headless, mechanics/telemetry/step verdicts. Its own §G ids (GF-13-FINALE-02, the S10-SEQ-warden capture_seq, GF-13-FINALE-03, GF-13-FINALE-04) are DELEGATED to S10bC. The harness refuses to start this segment if S10bC does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it.",
   "steps": [
     {
       "id": "S10b-01",

@@ -11,7 +11,7 @@ extends SceneTree
 ##     --script tools/_capture_t1_cast_world.gd
 ##
 ## NEVER `--headless` with a real rendering driver -- it hangs forever and
-## leaves a zombie process burning CPU (`ralph/conventions.md`, "Art pipeline
+## leaves a zombie process burning CPU (`docs/AGENT_WORKFLOW.md`, "Art pipeline
 ## traps"). Keep `xvfb-run`.
 ##
 ## Every shutter runs `tools/capture_check.gd`, which is the whole reason this

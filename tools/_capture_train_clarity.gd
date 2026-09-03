@@ -12,7 +12,7 @@ extends SceneTree
 ##     --script tools/_capture_train_clarity.gd
 ##
 ## NEVER `--headless` with a real rendering driver -- it hangs forever with no
-## error (`ralph/conventions.md`).
+## error (`docs/AGENT_WORKFLOW.md`).
 ##
 ## 1280x800 is `tests/smoke_hud_handheld_legibility.gd`'s own HANDHELD_SIZE
 ## (the ROG Ally's real panel resolution), not the 1920x1080 the HIST-036

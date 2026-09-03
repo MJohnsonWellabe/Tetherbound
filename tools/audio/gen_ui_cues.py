@@ -4,7 +4,7 @@
 Nine short, subtle cues, 44100 Hz 16-bit mono WAV, written straight to
 assets/ui/audio/ with the wave/struct standard-library modules -- no network
 fetch, no third-party samples, so provenance is "written for this task" per
-docs/ASSET_LEDGER.md's row for these files.
+docs/specs/ASSET_LEDGER.md's row for these files.
 
 Run: python3 tools/audio/gen_ui_cues.py
 Regenerate any time the cue list changes; nothing hand-edits the .wav files

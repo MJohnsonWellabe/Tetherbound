@@ -140,7 +140,7 @@ func test_the_healing_gift_covers_the_damage_the_capstone_carried_out_of_s02() -
 		% [granted, deficit, CAP2_STARTER_HP, CAP2_STARTER_MAX_HP])
 
 
-## The third item in the pack. `docs/OPENING_SEQUENCE.md` beat 3 names it as
+## The third item in the pack. `docs/specs/OPENING_SEQUENCE.md` beat 3 names it as
 ## "orbs, potions, berries" and `66eb47ec` took all three; berries are also the
 ## bulk of `potion_small`'s own recipe, so they are the renewable half of the
 ## answer above once the knife arrives.

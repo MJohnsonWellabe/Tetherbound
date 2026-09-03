@@ -53,7 +53,7 @@ visual-affecting work, and **nearly every item in Phases -0.9 through -0.55 is
 visual-affecting.** It costs nothing to adopt.
 
 **Adopted — parallel lanes** (the owner's choice between the options offered).
-Per-`area:` leases in `ralph/STATUS.md`, one block per live firing, so disjoint
+Per-`area:` leases in `archive/ralph/STATUS.md`, one block per live firing, so disjoint
 work runs concurrently. Honestly 2–3 lanes, not 5: `terrain` is one lane however
 many items sit in it, because they share `terrain_playground.json` and a rebake.
 
@@ -112,7 +112,7 @@ game is good.
 
 ## Where it is wired
 
-`ralph/PROMPT.md` (leases per area, the batching rules, local critic iteration,
-chained successors, the bookkeeping-rebase rule), `ralph/STATUS.md` (multi-block
-format, 40-minute expiry), `ralph/conventions.md` (the corrected 5.2-minute CI
-figure, local iteration), `ralph/BACKLOG.md` (`area:` on every new item).
+`docs/AGENT_WORKFLOW.md` (leases per area, the batching rules, local critic iteration,
+chained successors, the bookkeeping-rebase rule), `archive/ralph/STATUS.md` (multi-block
+format, 40-minute expiry), `docs/AGENT_WORKFLOW.md` (the corrected 5.2-minute CI
+figure, local iteration), `docs/CURRENT_STATE.md` (`area:` on every new item).

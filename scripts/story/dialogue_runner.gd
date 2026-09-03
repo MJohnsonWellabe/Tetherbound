@@ -4,7 +4,7 @@ extends RefCounted
 ##
 ## Ported from the previous prototype's `src/ui/DialogueRunner.ts`, minus
 ## branching. That version supported choices and used them for the starter
-## pick; this one deliberately cannot, because docs/OPENING_SEQUENCE.md decided
+## pick; this one deliberately cannot, because docs/specs/OPENING_SEQUENCE.md decided
 ## the starter is chosen by walking up to a creature. A dialogue system that can
 ## branch is a dialogue system that will be asked to hold the choice again.
 ##

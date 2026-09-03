@@ -17,8 +17,19 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
+const CAMP_TENT := preload("res://scripts/build/camp_tent.gd")
+const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 
-## The camp set's own bed -- `docs/ASSET_LEDGER.md`'s generated_camp asset,
+## CAMP-SHELTER-0903, owner playtest 2026-09-03 item 7: "You should have to
+## have the tent over your head to sleep." Duplicated from
+## `build_placer.gd::PLACED_GROUP`/`BUILDING_ID_META` rather than preloading
+## that script from here -- `build_placer.gd` already preloads THIS file to
+## spawn a placed bedroll, and a two-way preload cycle between them is worth
+## avoiding for two string literals that are load-bearing nowhere else.
+const PLACED_GROUP := "placed_building"
+const BUILDING_ID_META := "building_id"
+
+## The camp set's own bed -- `docs/specs/ASSET_LEDGER.md`'s generated_camp asset,
 ## already used at ground level for the trainer's own sleeping spot before
 ## this split (and, unscaled, distinct from `creature_bed.gd`'s squashed pad
 ## composition of the SAME mesh for a creature's own rest).
@@ -61,6 +72,24 @@ func tint_ghost(ok: bool) -> void:
 		_piece.call("tint_ghost", ok)
 
 
+## CAMP-SHELTER-0903. True if any placed, non-removed tent's roof (per
+## `camp_tent.gd::contains_point`) currently covers this bedroll's own
+## position. Reads the live scene tree rather than `GameState.placed_buildings`
+## directly -- this node IS one of the placed pieces that tree already tracks,
+## and a tent standing beside it is another, so walking `PLACED_GROUP` finds
+## both without this file needing to know how `GameState` stores either.
+func _tent_overhead() -> bool:
+	for node: Node in get_tree().get_nodes_in_group(PLACED_GROUP):
+		if str(node.get_meta(BUILDING_ID_META, "")) != "tent":
+			continue
+		var tent := node as Node3D
+		if tent == null or not is_instance_valid(tent):
+			continue
+		if CAMP_TENT.contains_point(tent.global_position, rad_to_deg(tent.rotation.y), global_position):
+			return true
+	return false
+
+
 ## Rest: fade out, new day, everyone healed, fade in. The fade is the same
 ## two-node canvas the opening's wake uses, built here because a bedroll can
 ## exist in a world with no sequence director.
@@ -68,6 +97,16 @@ func _on_rest() -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; the night cannot pass")
+		return
+
+	# CAMP-SHELTER-0903: a live footprint check against whatever tent is
+	# CURRENTLY standing, not a flag recorded at placement time -- so a
+	# bedroll a tent was later dismantled from stops sleeping, and (the flip
+	# side, for save compatibility) a bedroll placed before this rule existed
+	# starts working the moment a tent goes up over it, with no migration.
+	if not _tent_overhead():
+		game.call("push_world_message", "You need a tent over the bedroll to rest here")
+		AUDIO_CUES.play(&"ui_error")
 		return
 
 	var layer := CanvasLayer.new()

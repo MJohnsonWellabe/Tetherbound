@@ -1,0 +1,17 @@
+{
+  "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3 (the Pond pocket): 'a fisher NPC who mentions the South Bridge (dialogue only, no fight)'. `village_npcs.gd::build()` already takes an optional config_path and places a second list of people from it -- `data/config/relay_site.json` proves the pattern at a non-village location (the relay station, 3700m from the square) -- so this is a second config for the same builder rather than a new placement system. `people` (not `villagers`, matching relay_site.json's own naming: the fisher lives at the Pond, not the square).",
+  "people": [
+    {
+      "name": "Nan",
+      "config_key": "villager_ranger",
+      "_comment_body": "T1-CAST reuse, CLAUDE.md: no new humanoid mesh. `villager_ranger` is the same outdoorsy tint Sela/Halda already use.",
+      "position": [
+        -395.0,
+        595.0
+      ],
+      "facing_deg": 340.0,
+      "_why_here": "Sited by a real ground scan of the pond's own shore (tools/_probe_world_content_0903b.gd): dry ground (h=-13.98, 3.02m above the water.level -17.0 waterline), on the pond's south-east shore, 10m from the bench-and-firepit camp prop (props.json order 1050) so the two read as one scene, facing out over the water the way a line-fisher would.",
+      "greeting": "pond_fisher_greeting"
+    }
+  ]
+}

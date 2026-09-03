@@ -27,7 +27,7 @@ const CREATURE_BED_FLAG := "creature_bed_built"
 ## placed in the world by `band1_lower_meadows/props.json`, and was generated
 ## from an OWNER-SUPPLIED reference board
 ## (`docs/art/reference/owner-board-2026-08-23-camp-set.png`,
-## `docs/ASSET_LEDGER.md`). A lashed log frame with a stuffed mattress belongs to
+## `docs/specs/ASSET_LEDGER.md`). A lashed log frame with a stuffed mattress belongs to
 ## this game; a bedroom suite does not. No new asset, no generation, and CLAUDE.md's
 ## reuse-what-is-installed rule is the reason to prefer it rather than an exception to it.
 ##
@@ -109,7 +109,7 @@ const REST_ANCHOR := Vector3(0.0, 0.29, 0.0)
 
 ## T1-CAMP: measured (tools/_probe_t1_camp.gd) -- camp_bed.glb's own local
 ## origin sits 0.215m above its own geometric base, the same glTF-export
-## quirk `docs/ASSET_LEDGER.md` already documents a `sink_m: -0.21`
+## quirk `docs/specs/ASSET_LEDGER.md` already documents a `sink_m: -0.21`
 ## compensation for on this mesh's AUTHORED placement
 ## (band1_lower_meadows/props.json). Without the lift a placed pad sinks a
 ## fifth of a metre into the ground. RAW value -- multiplied by PAD_SCALE.y

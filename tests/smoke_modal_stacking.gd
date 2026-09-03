@@ -77,7 +77,7 @@ func _fail(message: String) -> void:
 
 ## The control. Without this, every check below would pass on a menu that never
 ## opens at all — the "passes because the feature is absent" failure
-## ralph/conventions.md names.
+## docs/AGENT_WORKFLOW.md names.
 func _check_the_shell_opens_with_nothing_in_the_way() -> void:
 	await _press("inventory")
 	if not bool(_menu.call("is_open")):
@@ -200,7 +200,7 @@ func _species() -> Array[String]:
 
 ## Both paths, because the shell uses both: `Input.action_press` for its own
 ## polling and a parsed event for the focus half of a controller menu
-## (docs/HANDOFF.md §10, and smoke_menu.gd is where that was learned).
+## (archive/docs/HANDOFF.md §10, and smoke_menu.gd is where that was learned).
 ##
 ## Process frames, not physics: `game_menu.gd` reads its actions in `_process`.
 func _press(action: String) -> void:

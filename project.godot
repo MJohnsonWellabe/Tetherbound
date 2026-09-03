@@ -1,10 +1,10 @@
 ; Tetherbound — Godot project settings.
 ;
-; Engine is LOCKED to Godot 4 (docs/GAME_DESIGN.md §4). Pinned to 4.7-stable;
+; Engine is LOCKED to Godot 4 (docs/specs/GAME_DESIGN.md §4). Pinned to 4.7-stable;
 ; see docs/decisions/D01-godot-version-and-renderer.md before changing it.
 ;
 ; Most of this file is the input map. It is here rather than in code because
-; docs/TECHNICAL_START.md §Input requires actions, never raw device checks
+; docs/TECHNICAL_ARCHITECTURE.md §Input requires actions, never raw device checks
 ; scattered through gameplay. Every action carries a keyboard/mouse binding AND
 ; an Xbox-layout gamepad binding, because controller is the primary input and
 ; keyboard is the fallback, not the other way round.
@@ -371,6 +371,32 @@ build_rotate={
 build_open={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":66,"pressed":false,"script":null)
+]
+}
+; HUD-INPUT-0903 (owner playtest 2026-09-03: "there should be a shortcut
+; button to map and to building"). `build_open` itself cannot take a pad
+; button -- D68's fourteen-button map has no free one, and `build_open` is
+; also live while a build ghost is armed (playground_hud.gd's "reopen the
+; catalogue" case), which collides with `build_rotate_left`/`build_rotate_right`
+; on LT/RT there. A SEPARATE action sidesteps that: `build_shortcut` is only
+; ever read in the `world` context (data/config/input_contexts.json), so LT
+; (idle during ordinary exploration -- D68: "LT/RT are idle while no
+; creature is out") is free for it there, and `playground_hud.gd`'s handler
+; gates it through the same `_world_input_allowed()` the build hammer uses,
+; which is already false while a ghost is armed (the arbiter is disabled
+; during placement) -- so a rotate pull can never also reopen the catalogue.
+; Same dual-use argument D35 already established for combat/build sharing
+; these triggers, applied to a third, mutually-exclusive reader. Keyboard B
+; is `build_open`'s own key, restated here rather than left unbound: both
+; actions do the same thing and `_read_world_hotkeys()` handles `build_open`
+; first and returns, so a keyboard press never double-fires; a purely
+; gamepad-only entry would also fail `test_controls.gd`'s "every rebindable
+; action has both halves" check, which no other action on this screen
+; violates.
+build_shortcut={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":66,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
 ]
 }
 build_dismantle={

@@ -36,7 +36,7 @@ extends SceneTree
 ## not a GPU-verified active count. Shadow-casting is a real boolean read
 ## per light (`shadow_enabled`), not estimated.
 ##
-## NEVER add `--headless` here (hangs forever per ralph/conventions.md) --
+## NEVER add `--headless` here (hangs forever per docs/AGENT_WORKFLOW.md) --
 ## this tool reads RENDER_* monitors, unlike `tools/perf_scatter_density.gd`,
 ## which is headless-safe because it reads no rendering monitor at all.
 

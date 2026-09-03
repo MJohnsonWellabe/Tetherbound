@@ -36,7 +36,7 @@ Honesty about the seam matters more than the word.  Three things are true:
 
 ## Method law
 
-`ralph/lanes/COORDINATORS.md`: iterate on focused segment probes, never on full
+`archive/ralph/lanes/COORDINATORS.md`: iterate on focused segment probes, never on full
 runs.  `--only` exists for that -- fix one segment, re-run that segment, and
 only then spend the full chapter.  The whole chapter is ~11 minutes of harness
 wall time, so a full run is cheap enough to end on rather than something to

@@ -14,7 +14,7 @@ extends SceneTree
 ##
 ## So: each species alone, lit flatly, at the size its collider claims, with a
 ## 1.8m trainer-height bar beside it for scale. This is the ruler the visual
-## rubric was missing (`docs/reviews/MA-03`, the calibration miss).
+## rubric was missing (`archive/reports/docs-reviews-full/MA-03`, the calibration miss).
 
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const BODY := preload("res://scripts/creatures/creature_body.gd")

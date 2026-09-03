@@ -1,8 +1,8 @@
 # D50 — The Meadows is a long narrow corridor, and the walk is forty minutes
 
 **Date:** 2026-08-16 · **Decided by:** `OW5A`, against the owner's directive of
-the same day, `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` §5, and
-`docs/MEADOWS_PROGRESSION_SPEC.md` §3
+the same day, `docs/owner/MEADOWS_QUALITY_REBUILD_PLAN.md` §5, and
+`docs/specs/MEADOWS_PROGRESSION_SPEC.md` §3
 
 **Model note:** `OW5` is tagged `model: fable` and §5 says "START WITH FABLE".
 The owner has directed that fable-tagged items run at **opus** for now because
@@ -14,7 +14,7 @@ region-aligned**: 8192 × 1536 m centred on the origin, which puts its long
 edges at x = ±768 while Terrain3D's region lattice at `region_size` 256 and
 `vertex_spacing` 2.0 falls every 512 m. The width is now **2048 m** and the
 region count **64, not 48**. Every figure downstream has been recomputed here
-and in `docs/MEADOWS_MACRO_LAYOUT.md`. The trail, the bands and the 40-minute
+and in `docs/specs/MEADOWS_MACRO_LAYOUT.md`. The trail, the bands and the 40-minute
 target are unchanged.
 
 ## The decision
@@ -31,7 +31,7 @@ The trail through it is **11,594 m**, which is **38.6 minutes** of walking at
 `movement.json` `walk_speed` 5.0 and **3.86 in-game days** at `art.json`
 `day_length_seconds` 600. Camping on the way is forced.
 
-The full layout is `docs/MEADOWS_MACRO_LAYOUT.md`. This decision records the
+The full layout is `docs/specs/MEADOWS_MACRO_LAYOUT.md`. This decision records the
 footprint, the target and what they cost.
 
 ## What the owner asked for
@@ -143,7 +143,7 @@ longest unbroken ≥60° run — and the original version ignored it.
 **Third, the repo already recorded the right number three times, and it is ~65°,
 not ~80°.** `severed_spokes.gd:24` says spoke carves are "57–66 degree walls";
 `tests/smoke_riding.gd:163` pins `SHALLOWEST_SPOKE_WALL_DEG := 65.0`;
-`ralph/DONE.md:16` records the shipped `storm_road` at **65.6°**. Computed
+`archive/ralph/DONE.md:16` records the shipped `storm_road` at **65.6°**. Computed
 straight from the config, the mean wall is `atan(depth / rim)`:
 
 | carve | depth / rim | mean wall | margin over 60° |
@@ -183,7 +183,7 @@ Conditions attached, and they are what `OW5B` is held to:
   both of `build_playground_terrain.gd`'s passes. The original version claimed
   this was "validated against the known 512 m figure… which is the repo's '12
   min'". **There is no 12-minute figure anywhere in this tree.** The only
-  recorded bake times are `ralph/DONE.md:2752`'s **~5.5 min** and
+  recorded bake times are `archive/ralph/DONE.md:2752`'s **~5.5 min** and
   `D45`/`meadow_healing.gd`'s **~15 min** — which disagree with each other by
   2.7× and with the probe's 11.3 by 2.05× and 0.75×, and which are whole-bake
   wall-clock times against the probe's field-work-only figure. **The unit cost
@@ -250,7 +250,7 @@ trivially, with a far side 3,400 m deep and no search to run.
 said flatly "the storm road is recovered; all seven spokes stand." **The shipped
 game has a severed storm road**: `scripts/world/rift_collapse.gd` is built
 against it, `tests/smoke_riding.gd` and `tests/smoke_boss.gd` assert against its
-walls, and `ralph/DONE.md:16` records it as delivered with 65.6° walls. Nothing
+walls, and `archive/ralph/DONE.md:16` records it as delivered with 65.6° walls. Nothing
 in `OW5A` has moved a metre of terrain.
 
 Stated correctly:

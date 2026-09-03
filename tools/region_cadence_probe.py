@@ -3,7 +3,7 @@
 
 WHY THIS EXISTS
 ---------------
-`docs/owner-direction/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md` section 12 sets
+`docs/owner/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md` section 12 sets
 the authoritative cadence target:
 
     During required traversal, the player should rarely go more than roughly

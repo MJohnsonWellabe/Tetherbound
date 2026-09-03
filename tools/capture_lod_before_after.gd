@@ -2,7 +2,7 @@ extends SceneTree
 
 ## PERF-2. Before/after evidence for Terrain3DMeshAsset LOD configuration
 ## (`vegetation.gd::_make_mesh_asset()`). Two views, matching the composition
-## constraints named in `ralph/ACTIVE_GAME_PLAN.md` and OP21-01:
+## constraints named in `docs/ROADMAP.md` and OP21-01:
 ##
 ##   1. the approved lush pond-side pocket (dense trees/plants close in)
 ##   2. an open-field stretch with a long sightline (tests LOD pop/thinning

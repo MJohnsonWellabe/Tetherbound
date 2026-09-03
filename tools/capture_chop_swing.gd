@@ -22,7 +22,7 @@ extends SceneTree
 ## it photographs IS the world's light. Nothing here is: this is one body, one
 ## clip and one prop in the trainer's hand. The corridor's boot — terrain,
 ## ~130k scatter instances, village, stronghold, relay — is pure cost, and
-## `ralph/BACKLOG.md`'s `PERF-LOD` entry records four capture attempts that
+## `docs/CURRENT_STATE.md`'s `PERF-LOD` entry records four capture attempts that
 ## died to exactly that cost on exactly this container, one of them at 43
 ## minutes without emitting a frame. So this builds the sun/sky rig, a flat
 ## pad, the real `scenes/player/player.tscn` and one real harvest node, the

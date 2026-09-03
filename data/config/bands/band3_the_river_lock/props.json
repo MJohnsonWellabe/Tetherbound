@@ -52,7 +52,7 @@
           "scale": 0.95,
           "sink_m": 0.04,
           "dir": "res://assets/props/generated_camp",
-          "_why": "T5-CADENCE. This site is named `riverwatch_rest`, is sited on the flattest measured ground in the band, and had no fire -- the one cue this world uses everywhere else to say 'you can stop here'. Band 1's trail camp and band 4's ridge posting both pair this owner-referenced ring (docs/ASSET_LEDGER.md, already committed -- nothing generated) with a scaled `Bonfire_Fire`; this is the third use, not a new asset. Sited 2.4m off the bench's own face, the same fire-to-bench distance band 1's camp measures, on the open side away from the bed and the crate."
+          "_why": "T5-CADENCE. This site is named `riverwatch_rest`, is sited on the flattest measured ground in the band, and had no fire -- the one cue this world uses everywhere else to say 'you can stop here'. Band 1's trail camp and band 4's ridge posting both pair this owner-referenced ring (docs/specs/ASSET_LEDGER.md, already committed -- nothing generated) with a scaled `Bonfire_Fire`; this is the third use, not a new asset. Sited 2.4m off the bench's own face, the same fire-to-bench distance band 1's camp measures, on the open side away from the bed and the crate."
         },
         {
           "model": "Bonfire_Fire",
@@ -246,6 +246,7 @@
         },
         {
           "model": "Stool",
+          "dir": "res://assets/props/quaternius_furniture",
           "at": [239.5, 3677.5],
           "yaw_deg": 216.9,
           "sink_m": 0.04,

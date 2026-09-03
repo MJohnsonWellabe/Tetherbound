@@ -7,7 +7,7 @@ extends SceneTree
 ##     --script tools/_capture_t1_rig2_meadows.gd
 ##
 ## NEVER add `--headless` alongside the rendering driver -- that combination
-## hangs forever with no error (`ralph/conventions.md`, "Art pipeline traps
+## hangs forever with no error (`docs/AGENT_WORKFLOW.md`, "Art pipeline traps
 ## already paid for", and `tools/_capture_creature_roster.gd`'s own header).
 ##
 ## WHY NOT A PREVIEW SCENE. `tools/preview_creatures.gd` and

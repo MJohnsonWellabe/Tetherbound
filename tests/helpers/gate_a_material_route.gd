@@ -38,7 +38,6 @@ const FELLED_RESOURCE_PATH := "res://scripts/world/felled_resource.gd"
 ## further out, because the directive is about what the first day's own loop
 ## can pay for.
 const TARGET_STOCK := {"wood": 69, "stone": 42, "fiber": 34}
-const TOOL_ACTION := {"wood": &"hotbar_1", "stone": &"hotbar_2", "fiber": &"hotbar_3"}
 const TOOL_ID := {"wood": "axe", "stone": "pickaxe", "fiber": "knife"}
 const AUTHORED_ROUTE: Array[Dictionary] = [
 	{"item": "wood", "amount": 4, "at": Vector2(16.0, -28.0)},
@@ -189,8 +188,56 @@ func _unlock_road_gate() -> bool:
 	if not bool(gate.call("is_open")):
 		_fail("the road gate was tried with the key in the satchel and stayed shut")
 		return false
+	# GATHER-ROUTE-0903. `road_gate.gd::_on_tried()` opens the gate AND calls
+	# `_say(unlocked_conversation)`, which starts the SAME "dialogue_panel"
+	# group node every villager visit uses -- but unlike every villager visit
+	# in this file and in `gate_a_npc_gather_segment.gd`, nothing here ever
+	# waited for that conversation or pressed to close it.
+	#
+	# A player leaves it open and `sequence_director.gd::_refresh_lockout()`
+	# keeps `locomotion_enabled` false for as long as it stays that way --
+	# there was never a reachability problem past this point. Measured
+	# directly (`tools/_probe_gather_route_reach_0903b.gd`): locomotion reads
+	# false, with no fight running and no aggressive creature within 17m, on
+	# EVERY sampled second from the moment the gate opens onward, and the
+	# resulting stall silently burns `stick_navigator.gd`'s own ten-minute
+	# `HELD_FRAMES` allowance (built for a real wild fight, which this is
+	# not) before the leg gives up and reports a bogus "stopped 22.9m short"
+	# -- the walk never took a single step.
+	if not await _clear_gate_conversation():
+		_fail("the road gate's own conversation would not close, so locomotion never came back")
+		return false
 	transcript.append("unlocked the road gate with the old key")
 	return true
+
+
+## Wait for and dismiss whatever `road_gate.gd::_say()` put up, the same way
+## `_visit_villager()` closes a villager's dialogue -- then wait for
+## `locomotion_enabled()` to actually flip back true, since
+## `_refresh_lockout()` only does that on its own next process frame.
+func _clear_gate_conversation() -> bool:
+	var panel := _tree.get_first_node_in_group("dialogue_panel")
+	if panel == null:
+		return true
+	# The conversation opens on the same frame `_on_tried()` runs, but give it
+	# a few frames of margin rather than assume that ordering.
+	for _i in 30:
+		if bool(panel.call("is_open")):
+			break
+		await _tree.physics_frame
+	if not bool(panel.call("is_open")):
+		return true
+	for _i in 40:
+		if not bool(panel.call("is_open")):
+			break
+		await _tap_action(&"interact")
+	if bool(panel.call("is_open")):
+		return false
+	for _i in 60:
+		if bool(_player.call("locomotion_enabled")):
+			return true
+		await _tree.physics_frame
+	return false
 
 
 func _verify_tool_hotbar() -> bool:
@@ -578,6 +625,15 @@ func _who(node: Variant) -> String:
 ## `gate_a_npc_gather_segment.gd` fixed the identical thing after two runs of
 ## the same file failed at two different points with no code change between
 ## them; the same reasoning applies to the same toggle here.
+##
+## HARNESS-HYGIENE-0903: the control pressed is read live via
+## `game_state.gd::hotbar_slot_of(expected_tool)`, not the fixed `TOOL_ACTION`
+## map this used to press unconditionally. That map was a claim about where an
+## earlier assign sequence bound each tool, and the exact class of bug
+## `tools/gate_f/operator_harness.gd::_step_equip_tool` was fixed for
+## (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a fixed slot
+## number goes stale the moment anything upstream binds tools in a different
+## order.
 func _equip(item_id: String) -> bool:
 	var expected_tool := str(TOOL_ID[item_id])
 	# A visible swing owns the held prop for its whole animation and the player
@@ -589,7 +645,11 @@ func _equip(item_id: String) -> bool:
 				break
 			await _tree.physics_frame
 	if str(_game.get("equipped_tool")) != expected_tool:
-		await _tap_action(TOOL_ACTION[item_id])
+		var slot := int(_game.call("hotbar_slot_of", expected_tool))
+		if slot < 0:
+			_fail("'%s' is not on the hotbar at all (checked live via hotbar_slot_of, not a fixed slot guess)" % expected_tool)
+			return false
+		await _tap_action(StringName("hotbar_%d" % (slot + 1)))
 	for _i in 45:
 		var hold: Node = _player.get("tool_hold")
 		if str(_game.get("equipped_tool")) == expected_tool and hold != null and hold.call("prop_node") != null:

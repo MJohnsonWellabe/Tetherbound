@@ -129,7 +129,7 @@ func _start_mira_battle_through_dialogue() -> void:
 		await physics_frame
 
 
-## CONTROLLER-MAP, ralph/OWNER_DIRECTIVES_2026-08-22.md section 1: "Fleeing is
+## CONTROLLER-MAP, docs/owner/OWNER_DIRECTIVES_2026-08-22.md section 1: "Fleeing is
 ## RB. Putting the creature away IS disengaging; flee gets no button of its
 ## own." `combat_run` kept its keyboard Escape and lost its pad button, and
 ## `combat_manager.gd::_flee_pressed()` reaches the pad through

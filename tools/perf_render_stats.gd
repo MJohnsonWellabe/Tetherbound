@@ -9,7 +9,7 @@ extends SceneTree
 ##
 ## NEVER add `--headless`. Two separate reasons, and both matter here:
 ## `--headless` hangs forever in combination with a real rendering driver
-## (ralph/conventions.md, the single most expensive trap in this repo), and
+## (docs/AGENT_WORKFLOW.md, the single most expensive trap in this repo), and
 ## even if it did not, Godot's Dummy driver reports zero for every RENDER_*
 ## monitor -- which is exactly the number this tool exists to read.
 ##
@@ -21,7 +21,7 @@ extends SceneTree
 ## get the two states this branch compares.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-## Defaults are the historical series (every number in docs/PERFORMANCE_BUDGET.md
+## Defaults are the historical series (every number in docs/specs/PERFORMANCE_BUDGET.md
 ## was taken at 240/180/30) and stay so those stay comparable. VP program:
 ## `--settle=N --resettle=N --sample=N` override them for an A/B where the
 ## two states differ by tens of millions of primitives and the uncullable

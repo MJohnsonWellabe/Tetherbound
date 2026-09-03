@@ -9,7 +9,7 @@ extends SceneTree
 ##
 ## NEVER with --headless: that silently swaps in the Dummy rendering driver
 ## and the capture hangs forever on frame_post_draw (see RENDER-PERF-DIAG in
-## ralph/DONE.md).
+## archive/ralph/DONE.md).
 ##
 ## Same conventions as tools/survey.gd: fixed named viewpoints, XZ plus a
 ## height above the baked ground, horizon placed as a stated fraction of

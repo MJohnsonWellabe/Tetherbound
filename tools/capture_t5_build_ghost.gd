@@ -18,7 +18,7 @@ extends SceneTree
 ## staged plane would answer a different one.
 ##
 ## `tools/capture_check.gd` runs at every shutter, per the evidence rule in
-## `ralph/MEADOWS_EXIT_CRITERION.md`: a frame that quietly lost the grass field
+## `docs/acceptance/MEADOWS_EXIT_CRITERION.md`: a frame that quietly lost the grass field
 ## would otherwise be evidence for the opposite conclusion.
 ##
 ## Software rendering (D06 Compatibility). Composition, contrast and silhouette

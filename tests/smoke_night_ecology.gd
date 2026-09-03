@@ -8,10 +8,10 @@ extends SceneTree
 ## night-gated spawns -- 0 `time` entries across all 55 clusters -- so the
 ## player's entire opening was identical by day and after dark, in a game that
 ## ships a real day/night clock. Criterion 13 of the region checklist
-## (`ralph/MEADOWS_EXIT_CRITERION.md` section E) is a PER-REGION requirement and
+## (`docs/acceptance/MEADOWS_EXIT_CRITERION.md` section E) is a PER-REGION requirement and
 ## band 2 was the only region in the chapter meeting it.
 ##
-## This is deliberately not a config test. `ralph/MEADOWS_EXIT_CRITERION.md`'s
+## This is deliberately not a config test. `docs/acceptance/MEADOWS_EXIT_CRITERION.md`'s
 ## evidence rule is explicit that "config-level assertions and passing tests are
 ## not evidence that a player can reach a thing. A played path is." Asserting
 ## that `"time": "night"` appears in a JSON file would prove nothing that

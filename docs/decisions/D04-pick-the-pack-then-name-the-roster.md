@@ -2,7 +2,7 @@
 
 Kind: conflict
 
-`docs/GAME_DESIGN.md` §26 names twelve wild species by ecological role — rabbit,
+`docs/specs/GAME_DESIGN.md` §26 names twelve wild species by ecological role — rabbit,
 boar, canine into wolf, rideable deer, badger, frog, turtle, otter, waterfowl,
 small bird, owl, hawk — and then says "final names and exact models should be
 chosen around the best cohesive asset set available."

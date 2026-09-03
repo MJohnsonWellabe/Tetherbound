@@ -6,7 +6,7 @@ extends SceneTree
 ##   godot --headless --path . --script tools/_probe_den_door_sightline.gd
 ##
 ## (Headless is correct here: this renders nothing, it only measures. The
-## `--headless` hang `ralph/conventions.md` warns about is specifically
+## `--headless` hang `docs/AGENT_WORKFLOW.md` warns about is specifically
 ## `--headless` combined with a real rendering driver.)
 ##
 ## WHY THIS EXISTS. CONTENT-0828's claim for the Warrens payoff is that the

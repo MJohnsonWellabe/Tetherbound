@@ -18,7 +18,7 @@ extends SceneTree
 ## colourway directly off its own species id, same call the existing aspect
 ## capture tool already makes for the variant half.
 ##
-## xvfb invocation (ralph/conventions.md's own, copied verbatim):
+## xvfb invocation (docs/AGENT_WORKFLOW.md's own, copied verbatim):
 ##
 ##   xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x800 \

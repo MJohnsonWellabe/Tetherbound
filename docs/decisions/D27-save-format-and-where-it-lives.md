@@ -9,7 +9,7 @@
 `docs/decisions/D15` wrote `user://saves/` into the file layout and then
 explicitly did not build a save system, on purpose — "persisting the party
 and the world is its own milestone with its own migration story." Until this,
-`docs/HANDOFF.md` §4 could still say "there is still not one write to
+`archive/docs/HANDOFF.md` §4 could still say "there is still not one write to
 `user://` outside settings" and be correct.
 
 ## What was decided

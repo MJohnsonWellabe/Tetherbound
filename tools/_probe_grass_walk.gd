@@ -8,7 +8,7 @@ extends SceneTree
 ##     --script tools/_probe_grass_walk.gd -- --out=shots/reroll_before
 ##
 ## NEVER with `--headless` and a real rendering driver: that combination hangs
-## forever with no error (ralph/conventions.md, "Art pipeline traps").
+## forever with no error (docs/AGENT_WORKFLOW.md, "Art pipeline traps").
 ##
 ## WHY A SECOND GRASS TOOL. `tools/_probe_grass_pass.gd` answers "does the
 ## meadow look right", and it answers it from stills. The owner's 2026-08-28

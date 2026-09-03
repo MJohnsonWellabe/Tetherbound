@@ -2,7 +2,7 @@
   "id": "selfcheck_menu",
   "title": "Harness self-check: world -> menu -> world through synthetic physical input",
   "lane": "diag",
-  "_comment": "NOT a protocol segment. This is the acceptance evidence for ralph/GATE_F_INSTRUMENTATION_REQUEST.md item 1: the harness boots the real scene, opens the pause shell with a real physical event, moves focus with parse_input_event, and closes it, with events.jsonl showing input_context transitioning world -> menu -> world and the focus fields populated. The real S01-S10 / X01-X08 files are transcribed separately from protocol section E.",
+  "_comment": "NOT a protocol segment. This is the acceptance evidence for docs/acceptance/GATE_F_INSTRUMENTATION_REQUEST.md item 1: the harness boots the real scene, opens the pause shell with a real physical event, moves focus with parse_input_event, and closes it, with events.jsonl showing input_context transitioning world -> menu -> world and the focus fields populated. The real S01-S10 / X01-X08 files are transcribed separately from protocol section E.",
 
   "steps": [
     {

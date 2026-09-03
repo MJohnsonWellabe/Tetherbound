@@ -15,7 +15,7 @@ extends RefCounted
 ## hidden to revealed, never back. A `PackedByteArray` rather than a
 ## `Dictionary` of cells because the grid is fixed-size (today 128x128 =
 ## 16384 cells, derived from `terrain_playground.json` — see `grid_x()`/
-## `grid_z()` below, `docs/MEADOWS_MACRO_LAYOUT.md` §8.6) and dense enough
+## `grid_z()` below, `docs/specs/MEADOWS_MACRO_LAYOUT.md` §8.6) and dense enough
 ## that a byte array is both the cheaper storage and the format the eventual
 ## fog texture wants anyway.
 ##
@@ -27,7 +27,7 @@ extends RefCounted
 ## Pure logic, no `Node`, no transform — testable headlessly the same way
 ## party.gd and inventory.gd are (tests/test_map_state.gd).
 
-## Tunable. `docs/MEADOWS_MACRO_LAYOUT.md` §8.6a recommends 16.0 for the
+## Tunable. `docs/specs/MEADOWS_MACRO_LAYOUT.md` §8.6a recommends 16.0 for the
 ## corridor world (§8.6a's own math: 1 MB/save at CELL 4.0 over 8192x2048m vs
 ## 65 KB at 16.0, for a reveal radius that is already 3 cells wide either
 ## way) — that is a recommendation for whoever lands the corridor config, not
@@ -36,7 +36,7 @@ const CELL := 4.0
 const WORLD_EXTENT := preload("res://scripts/world/world_extent.gd")
 
 ## `GRID`/`ORIGIN` used to be hard-coded consts assuming a ±256m square world
-## (`docs/decisions/D33` said so explicitly). `docs/MEADOWS_MACRO_LAYOUT.md`
+## (`docs/decisions/D33` said so explicitly). `docs/specs/MEADOWS_MACRO_LAYOUT.md`
 ## §8.6 names this file as the one place that hard-coded assumption gets
 ## WRITTEN TO THE SAVE FILE — `save_data()`'s `visited_b64` below — so it is
 ## the one map-system file where a silent constant edit is a save-format
@@ -602,7 +602,7 @@ func reveal_circle(world_pos: Vector3, radius: float) -> void:
 ## The ground the player is presumed to already know, revealed before they
 ## have walked a step.
 ##
-## `ralph/OWNER_DIRECTIVES_2026-08-22.md` section 3: "The village and the roads
+## `docs/owner/OWNER_DIRECTIVES_2026-08-22.md` section 3: "The village and the roads
 ## out of it start revealed... The player does not start blind in their own
 ## home town." The fog itself was never broken -- it was working exactly as
 ## OW3 built it, from zero reveal -- so a fresh save opened a black rectangle

@@ -28,7 +28,7 @@ extends SceneTree
 ## counts), which the Dummy driver reports honestly. `--mode=render` re-runs
 ## the same sites under `xvfb-run` + `opengl3` when the RenderingServer's own
 ## draw-call/primitive counters are wanted; see this file's `_render_stats()`.
-## Never add `--headless` to that invocation (ralph/conventions.md).
+## Never add `--headless` to that invocation (docs/AGENT_WORKFLOW.md).
 ##
 ## HOW COSTS ARE ATTRIBUTED. Godot's `TIME_PROCESS`/`TIME_PHYSICS_PROCESS`
 ## monitors are whole-frame totals: they say the frame cost 40ms, never which

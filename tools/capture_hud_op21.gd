@@ -16,7 +16,7 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/_diag"
 
-## HUD-LAYOUT: 240 -> 60. `ralph/conventions.md` and this project's own
+## HUD-LAYOUT: 240 -> 60. `docs/AGENT_WORKFLOW.md` and this project's own
 ## CLAUDE.md task headers both name this exact cold-boot cost as the
 ## dominant bottleneck for this tool -- 129k scattered props settling under
 ## software (llvmpipe) rendering, worse still under CI/container CPU

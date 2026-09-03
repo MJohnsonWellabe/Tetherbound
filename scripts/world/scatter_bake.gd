@@ -132,8 +132,26 @@ static func is_fresh(world_name: String, base_seed: int) -> bool:
 	var manifest := _read_manifest(world_name)
 	if manifest.is_empty():
 		return false
-	return int(manifest.get("base_seed", -1)) == base_seed \
-		and int(manifest.get("config_fingerprint", 0)) == config_fingerprint()
+	if int(manifest.get("base_seed", -1)) != base_seed \
+			or int(manifest.get("config_fingerprint", 0)) != config_fingerprint():
+		return false
+	# A manifest is not a bake. The Windows release built 2026-09-02 22:12
+	# carried manifest.json (a .json is a Godot resource, so `all_resources`
+	# exports it) and NONE of the 256 region .bin files (not resources, so
+	# they were never packed). This function said "fresh", `load_all()`
+	# push_error'd once per missing region and returned empty layers, and the
+	# owner played a world with no tree, bush or rock anywhere -- "just field
+	# and grass in every direction" -- while every in-editor test saw the files
+	# and passed. So freshness also requires the region files the manifest
+	# names to actually be openable; when they are not, the caller takes the
+	# live-compute path, which is slow but produces the world.
+	for entry: Variant in manifest.get("regions", []):
+		var pair: Array = entry
+		var path := _region_path(world_name, Vector2i(int(pair[0]), int(pair[1])))
+		if not FileAccess.file_exists(path):
+			push_error("scatter bake '%s' is missing %s; treating the bake as absent" % [world_name, path])
+			return false
+	return true
 
 
 static func _read_manifest(world_name: String) -> Dictionary:

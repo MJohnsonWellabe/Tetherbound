@@ -1,7 +1,7 @@
 extends SceneTree
 
 ## GATE-D3. Frames of Band 3 -- the river, the Old Mill Crossing, and the
-## Tether Relay -- for the blind visual pass `ralph/conventions.md` requires of
+## Tether Relay -- for the blind visual pass `docs/AGENT_WORKFLOW.md` requires of
 ## any visually load-bearing regional work.
 ##
 ##   xvfb-run -a -s "-screen 0 1280x720x24" \

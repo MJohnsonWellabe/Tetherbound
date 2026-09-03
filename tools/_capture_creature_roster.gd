@@ -20,7 +20,7 @@ extends SceneTree
 ## nothing in the repo puts the REAL trainer rig beside one creature at a
 ## time.
 ##
-## xvfb invocation (`ralph/conventions.md`, "Art pipeline traps already paid
+## xvfb invocation (`docs/AGENT_WORKFLOW.md`, "Art pipeline traps already paid
 ## for" -- copied verbatim, do not improvise a different one):
 ##
 ##   xvfb-run -a -s "-screen 0 1280x800x24" godot --path . \
@@ -217,7 +217,7 @@ const PAIR_CREATURE_POS := Vector3(0.0, 0.0, 0.0)
 ## the front-on frame barely moved, because nearly all of it is on the back.
 ##
 ## A survey that cannot show the thing it changed cannot be judged on it, which
-## is the same class of defect `ralph/VISUAL_LEDGER.md` already records six of
+## is the same class of defect `archive/ralph/VISUAL_LEDGER.md` already records six of
 ## under "this sweep's own harness defects". 145 degrees rather than a flat 180
 ## so the frame still carries some of the head and flank and reads as a
 ## three-quarter rear rather than a wall of back.

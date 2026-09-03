@@ -25,7 +25,7 @@ extends SceneTree
 ## controller input" has to land somewhere real, not just land nowhere).
 ##
 ## Real `InputEventJoypadButton`/`InputEventAction` through the live input
-## surface, not method calls -- `ralph/conventions.md`: a poll-only press
+## surface, not method calls -- `docs/AGENT_WORKFLOW.md`: a poll-only press
 ## cannot move Control focus.
 
 const HUD_SCENE := "res://scenes/ui/playground_hud.tscn"

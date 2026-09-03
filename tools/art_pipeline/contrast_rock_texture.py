@@ -48,7 +48,7 @@ not move it.
 
     python3 tools/art_pipeline/contrast_rock_texture.py [--dry-run]
 
-Rock030 is CC0 (docs/ASSET_LEDGER.md), so a derivative is permitted; the
+Rock030 is CC0 (docs/specs/ASSET_LEDGER.md), so a derivative is permitted; the
 ledger entry records this edit alongside the brightness one. Run once --
 running it twice compounds, the same caveat the sibling scripts carry.
 """

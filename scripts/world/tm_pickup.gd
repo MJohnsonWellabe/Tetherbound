@@ -123,7 +123,7 @@ func _deactivate() -> void:
 ## (`playground_world.gd::TM_AT`), so this is five rotation writes a frame.
 ## TM-ORB, 2026-08-28. The owner supplied a reference board and directed the
 ## generation (docs/art/reference/tm_orb_board.png, ledger entry in
-## docs/ASSET_LEDGER.md), so the disc this file built is superseded by an orb.
+## docs/specs/ASSET_LEDGER.md), so the disc this file built is superseded by an orb.
 ##
 ## What the disc version got RIGHT is kept, because it was paid for and none of
 ## it is about the shape: the plinth, the slow spin, the short-range light, and

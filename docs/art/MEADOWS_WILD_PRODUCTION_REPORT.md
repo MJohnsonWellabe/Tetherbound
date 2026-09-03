@@ -10,7 +10,7 @@ shipped — real GLBs with textures sit in
 `assets/pals/tetherbound/{bramblebun,mudsnout,trailpup}/models/` and
 `species.json` already points at them. Their `_comment_art` fields cite this
 file, and for a while nobody could find their candidate-selection record —
-it never went through `ralph/DONE.md` (that file's R0.1 entry accounts for
+it never went through `archive/ralph/DONE.md` (that file's R0.1 entry accounts for
 the ten species above, not these three, which predate the Ralph loop).
 The record does exist, though: it survived in the git history that produced
 these three, not in `ralph/`. Commit `d2520f0` ("Bramblebun stops being a
@@ -22,7 +22,7 @@ and Trailpup...") records both: Mudsnout candidate c for the spine bristle
 ridge (on the Terrapup precedent that silhouette beats surface — candidate
 b had the better snout disc and lost on the ridge), Trailpup candidate b for
 its longest/narrowest muzzle and the only clear shoulder ruff. Both commits'
-reasoning is already condensed into `docs/ASSET_LEDGER.md`'s rows for these
+reasoning is already condensed into `docs/specs/ASSET_LEDGER.md`'s rows for these
 three creatures — this note exists so a future reader does not have to
 git-archaeology it again.
 
@@ -84,7 +84,7 @@ in the individual scorecards: `shots/candidates/<species>-compare.md`.
   blocked**: `finish.py rig`'s animate step is hardcoded to
   `animate_quadruped.py` regardless of `--kind`, and no `animate_bird.py`
   exists yet — see `BLOCKED.md`.
-- **R0.8** owes a provenance row per creature in `docs/ASSET_LEDGER.md` —
+- **R0.8** owes a provenance row per creature in `docs/specs/ASSET_LEDGER.md` —
   done for all six finished quadrupeds. The missing
   Bramblebun/Mudsnout/Trailpup production record noted above is now found
   and cited, not missing.

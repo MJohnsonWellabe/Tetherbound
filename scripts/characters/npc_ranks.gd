@@ -38,7 +38,7 @@ static func rank_ids() -> Array:
 ## `base_override`, when non-empty, replaces the rank's own `base` key for
 ## this one call only — T3-INSTALL, 2026-08-30. Wires the seven generated-but-
 ## unused NPC meshes (`grunt_a/b/c`, `officer_a/b`, `captain_a/b`,
-## `docs/ASSET_LEDGER.md`) into the rank ladder: every grunt/officer/captain
+## `docs/specs/ASSET_LEDGER.md`) into the rank ladder: every grunt/officer/captain
 ## in the game shared exactly one body per rank before this, which is the
 ## same "one character repainted four times" defect NP2-grunt-wire already
 ## fixed once for ranks vs the Warden, just one rung down. A trainer entry

@@ -21,7 +21,7 @@ extends SceneTree
 ##   EncounterDirector  Put Meadowhart away  d=0.00  prio=-1 actionable=false
 ##   WINNER: 'Ride Meadowhart' -> the hammer gate would FORFEIT the press
 ##
-## Note which provider it was. `ralph/DONE.md`'s GATEB-TAIL entry blamed the
+## Note which provider it was. `archive/ralph/DONE.md`'s GATEB-TAIL entry blamed the
 ## "Put away" line; that line is built `actionable: false` and the hammer gate
 ## already ignores those. Blaming the wrong one is why this test asserts on the
 ## RIDE offer specifically.

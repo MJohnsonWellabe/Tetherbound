@@ -3,7 +3,7 @@
 > Vocabulary note: written when the game called its creatures "pals"; R1.1 (2026-08-14) renamed the term to "creature" throughout the codebase without rewriting this historical record.
 **Date:** 2026-08-11 · **Decided by:** the owner, in a supplied specification,
 after playing the published Windows build.
-**Source:** `docs/MEADOWS_PROGRESSION_SPEC.md`, stored verbatim. This record is
+**Source:** `docs/specs/MEADOWS_PROGRESSION_SPEC.md`, stored verbatim. This record is
 the integration of that document, not a summary of it — read the spec for what
 to build and this for what it changes.
 
@@ -70,7 +70,7 @@ before the game, the Meadows is the first game.*
 meshes are the meshes. Differentiation is material, texture, roughness/value,
 modest scale, animation, VFX, habitat, behaviour, combat role and spawn context
 — and nothing else. This is a budget the owner holds, not an art opinion, which
-is why it is restated in `CLAUDE.md` and `ralph/conventions.md` rather than
+is why it is restated in `CLAUDE.md` and `docs/AGENT_WORKFLOW.md` rather than
 living only here. The lever it leaves is
 `tools/art_pipeline/blender/grade.py`'s repair path, which needs neither
 Blender nor credits.
@@ -182,11 +182,11 @@ credits.
 
 ## Where it is wired
 
-`docs/MEADOWS_PROGRESSION_SPEC.md` (the spec itself), `CLAUDE.md` (hard rules
-and the flag-list clarification), `ralph/conventions.md` (restated for a
-memoryless firing), `ralph/PROMPT.md` (read-first list), `ralph/BACKLOG.md`
+`docs/specs/MEADOWS_PROGRESSION_SPEC.md` (the spec itself), `CLAUDE.md` (hard rules
+and the flag-list clarification), `docs/AGENT_WORKFLOW.md` (restated for a
+memoryless firing), `docs/AGENT_WORKFLOW.md` (read-first list), `docs/CURRENT_STATE.md`
 (Phase -0.75, Phase 3.5, Phase 8 restructured, Phase 8.5),
 `ralph/BLOCKED.md` (the art question narrowed to its human half),
-`docs/HANDOFF.md` (state), `docs/MEADOWS_VERTICAL_SLICE.md` and
-`docs/GAME_DESIGN.md` (amended in place), `docs/OPENING_SEQUENCE.md` (the door
+`archive/docs/HANDOFF.md` (state), `docs/specs/MEADOWS_VERTICAL_SLICE.md` and
+`docs/specs/GAME_DESIGN.md` (amended in place), `docs/specs/OPENING_SEQUENCE.md` (the door
 gate), and one-line forward references on `docs/decisions/D13` and `D20`.

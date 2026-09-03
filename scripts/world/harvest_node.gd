@@ -9,6 +9,17 @@ extends Node3D
 ## so "gather enough to make camp" is playable today without touching ten
 ## thousand MultiMesh instances. When M8 lands, these become the tutorial-only
 ## seed spots or disappear — either is fine, nothing else depends on them.
+##
+## D72, owner directive: "When you gather something it shouldn't come back. A
+## bush, a tree, a stone. It should be gone." This used to hide the prop and
+## restore it after `RESPAWN_SECONDS` -- the one gather point in the game that
+## still came back, after `vegetation.gd`'s own trees/rocks (D60/D67) and
+## every other pickup (`key_pickup.gd`, `item_cache_pickup.gd`, `tm_pickup.gd`)
+## had already gone permanent. Same fix, same shape as those three: a
+## `progression` flag keyed by this node's own stable identity, checked in
+## `setup()` and replayed on a mid-session load through the `progression_restore`
+## group (`autoload/game_state.gd::load_game()`), so a save never brings a
+## gathered node back.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
@@ -39,7 +50,18 @@ const ROCK_NORMAL := preload("res://assets/environment/terrain/Rock030_NormalGL.
 const ROCK_UV_SCALE := 0.46
 const ROCK_CEILING_MATERIAL := "Rocks"
 
-const RESPAWN_SECONDS := 60.0
+## D72. Owned-and-set-once identity for the progression flag below, kept
+## permanently rather than ticking back down — a node this old still gets read
+## by `tests/helpers/gate_a_material_route.gd::_is_unspent()` and
+## `tests/helpers/gate_a_npc_gather_segment.gd::_nearest_authored_node()`
+## through `node.get("_respawn_left")`, and a field that no longer exists reads
+## back as `null`, which `float()` refuses rather than coercing. A gathered
+## node is freed outright (`_deactivate()` below), so those callers' own
+## `is_inside_tree()`/prompt-enabled checks already exclude it; this field only
+## has to keep existing, never has to become true again.
+var _respawn_left: float = 0.0
+
+const FLAG_PREFIX := "harvest_node:"
 
 var _item_id: String = ""
 var _amount: int = 0
@@ -48,7 +70,14 @@ var _model_path: String = ""
 var _model_scale: float = 1.0
 var _prompt: Node3D = null
 var _visual: Node3D = null
-var _respawn_left: float = 0.0
+## D72. This node's own stable identity for the progression flag, derived from
+## `spec` rather than assigned by a caller: authored band nodes
+## (`data/config/bands/<band>/harvest.json`, merged by `band_content.gd`) carry
+## a globally-unique `order`, enforced by that merge itself; a caller with no
+## `order` (`burrow_warrens.gd`'s deposits, this file's own tests) falls back
+## to its item id plus its authored `at`, which is exactly as stable for a
+## fixed, hand-placed spec.
+var _node_id: String = ""
 
 
 func setup(spec: Dictionary) -> void:
@@ -57,6 +86,9 @@ func setup(spec: Dictionary) -> void:
 	_label = str(spec.get("label", "Gather"))
 	_model_path = str(spec.get("model", ""))
 	_model_scale = float(spec.get("model_scale", 1.0))
+	var order: Variant = spec.get("order")
+	_node_id = ("order:%s" % str(order)) if order != null else ("%s@%s" % [_item_id, str(spec.get("at", []))])
+	add_to_group("progression_restore")
 
 	_build_visual()
 	_prompt = INTERACTABLE.new()
@@ -65,6 +97,46 @@ func setup(spec: Dictionary) -> void:
 	_prompt.call("configure", _label, 2.4, true)
 	_prompt.connect("activated", _on_gathered)
 	add_child(_prompt)
+	var game := get_node_or_null(^"/root/Game")
+	if was_taken(game, _node_id):
+		_deactivate()
+
+
+## Stable per-node flag id -- pure, so a route/test can predict it without a
+## live Game autoload, the same seam `key_pickup.gd::flag_id()` and
+## `item_cache_pickup.gd::flag_id()` already give their own callers.
+static func flag_id(node_id: String) -> String:
+	return FLAG_PREFIX + node_id
+
+
+static func was_taken(game: Node, node_id: String) -> bool:
+	if game == null or node_id == "":
+		return false
+	var progression: RefCounted = game.get("progression")
+	return progression != null and bool(progression.call("has", flag_id(node_id)))
+
+
+## RG7's generic reconciliation seam (`autoload/game_state.gd::load_game()`),
+## the same one `key_pickup.gd`/`item_cache_pickup.gd`/`tm_pickup.gd` already
+## answer: a mid-session load must hide/free an already-gathered node the live
+## world still has standing.
+func restore_progression_from_game(game: Node) -> void:
+	if was_taken(game, _node_id):
+		_deactivate()
+
+
+## Permanent removal, once gathered or once a load says this node already was:
+## the prompt stops offering, the shared highlight lets go, and the node frees
+## itself -- the same shape `key_pickup.gd::_deactivate()` and
+## `item_cache_pickup.gd::_deactivate()` already use for their own one-time
+## finds.
+func _deactivate() -> void:
+	if _prompt != null and is_instance_valid(_prompt):
+		_prompt.call("set_enabled", false)
+	if _visual != null:
+		PICKUP_GLOW.detach(_visual)
+	visible = false
+	queue_free()
 
 
 ## Read-only identity for controller-driven evidence and route selection.
@@ -118,12 +190,9 @@ func _build_visual() -> void:
 	else:
 		_visual = _box_visual()
 	add_child(_visual)
-	# OP-0830-3. Attached to `_visual` rather than to `self` on purpose: a
-	# gathered node hides its visual and keeps the script alive for the respawn
-	# timer (`_process` below), so `_visual` is the node whose visibility
-	# actually answers "is there something here to pick up right now" -- and
-	# pickup_glow.gd tracks that, so a depleted node stops glowing and a
-	# respawned one starts again with no extra wiring on either side.
+	# OP-0830-3. Attached to `_visual` rather than to `self` on purpose:
+	# `_deactivate()` detaches this by the same reference, so pickup_glow.gd
+	# never carries a highlight for a node whose visual is already gone.
 	# OWNER PLAYTEST 2026-08-30B item 3. `_item_kind()` is what lets one node
 	# type glow for a buried potion and stay dark for a wood/stone/fiber
 	# deposit -- see `pickup_glow.gd::is_glow_kind()`.
@@ -349,25 +418,17 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 	# a bare-handed or wrong-tool gather has no tool in play to damage.
 	if required_slot >= 0:
 		inventory.call("damage_tool", required_slot)
-	_visual.visible = false
-	_prompt.call("set_enabled", false)
-	_respawn_left = RESPAWN_SECONDS
-	set_process(true)
-
-
-func _process(delta: float) -> void:
-	if _respawn_left <= 0.0:
-		set_process(false)
-		return
-	_respawn_left -= delta
-	if _respawn_left <= 0.0:
-		_visual.visible = true
-		_prompt.call("set_enabled", true)
-		set_process(false)
+	# D72: gone, not resting. A progression flag (the same store
+	# `key_pickup.gd`/`item_cache_pickup.gd`/`tm_pickup.gd` already write to)
+	# so a reload never brings this node back, then the permanent removal
+	# every other one-time pickup already uses.
+	var progression: RefCounted = game.get("progression")
+	if progression != null and not _node_id.is_empty():
+		progression.call("set_flag", flag_id(_node_id))
+	_deactivate()
 
 
 func _ready() -> void:
-	set_process(false)
 	# So a tool swing can find this without knowing which of the two gather
 	# scripts drew it (`harvest_logic.gd::GROUP`).
 	add_to_group(HARVEST_LOGIC.GROUP)
@@ -377,7 +438,7 @@ func _ready() -> void:
 ## Public so a tool swing (`scripts/player/tool_hold.gd`) can drive the exact
 ## same path the prompt drives -- one gather implementation, two ways to reach
 ## it, so a swing and a press can never disagree about yield, tool gating,
-## durability or respawn.
+## durability or permanence.
 func gather(equipped_tool: Variant = null) -> void:
 	_on_gathered(equipped_tool)
 

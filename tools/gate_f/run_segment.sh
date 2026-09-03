@@ -16,7 +16,7 @@
 # Three things about running Gate F are non-obvious, each already paid for:
 #
 #   1. `--headless` together with `--rendering-driver opengl3` HANGS FOREVER.
-#      No error, no crash, exit 124 from `timeout`. ralph/conventions.md calls
+#      No error, no crash, exit 124 from `timeout`. docs/AGENT_WORKFLOW.md calls
 #      it the single most expensive trap in this repo. The two modes below are
 #      the only two shapes that work, and neither can be typed into the other
 #      by accident because this script owns both.
@@ -98,7 +98,7 @@ done
 
 # --- zombie guard -------------------------------------------------------------
 #
-# ralph/conventions.md's own recipe. A Godot whose cwd reads "(deleted)" is
+# docs/AGENT_WORKFLOW.md's own recipe. A Godot whose cwd reads "(deleted)" is
 # pinned to a worktree that has been pruned out from under it and can never do
 # anything useful again; anything else is left alone, because killing a lane's
 # live run to tidy up is worse than the orphan.

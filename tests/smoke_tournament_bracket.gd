@@ -5,7 +5,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_tournament_bracket.gd
 ##
-## **Headless, never under xvfb** — docs/HANDOFF.md §10, same as every other
+## **Headless, never under xvfb** — archive/docs/HANDOFF.md §10, same as every other
 ## scene-booting test here.
 ##
 ## `tests/test_tournament.gd` proves the tournament as DATA: eight slots, three
@@ -29,7 +29,7 @@ extends SceneTree
 ##   4. signing up sets `tournament_entered`, and the board in the field
 ##      changes what it says
 ##   5. the quarter-final is LOST on purpose — the owner's own rule
-##      (`ralph/OWNER_DIRECTIVES_2026-08-22.md` §2: "You can lose and retry
+##      (`docs/owner/OWNER_DIRECTIVES_2026-08-22.md` §2: "You can lose and retry
 ##      after healing your creatures") — and the round is still on offer
 ##      afterward, with nothing consumed and no flag set
 ##   6. all three rounds are then fought and won for real, through the
@@ -82,6 +82,10 @@ const FLAGS_TO_CLEAR: PackedStringArray = [
 	"tournament_quarter_won", "tournament_semi_won", "tournament_won",
 	"tournament_condition_ready", "recipe_saddle", "opening:tournament_registered",
 	"home_built", "creature_bed_built", "player_slept_at_home",
+	# TOURNAMENT-FLOW-0903: the ceremony's own contract flags, never cleared by
+	# play but cleared here so a stray prior state cannot skip this run's
+	# ring-entrance banter straight to the begin-the-round line.
+	"tournament_quarter_at_ring", "tournament_semi_at_ring", "tournament_final_at_ring",
 ]
 
 ## Where the player stands to fight. `practice_trainer`'s own vetted-clear spot
@@ -106,6 +110,7 @@ var _manager: Node = null
 var _director: Node = null
 var _panel: Node = null
 var _board: Node = null
+var _hud: Node = null
 var _game: Node = null
 
 var _felled := 0
@@ -178,6 +183,7 @@ func _collect_nodes() -> bool:
 	_director = _world.get_node_or_null(^"EncounterDirector")
 	_panel = _world.get_node_or_null(^"DialoguePanel")
 	_board = _world.get_node_or_null(^"Tournament")
+	_hud = _world.get_node_or_null(^"PlaygroundHUD")
 	_game = root.get_node_or_null(^"/root/Game")
 	if _player == null or _rig == null or _manager == null or _director == null or _panel == null:
 		_fail("the scene is missing the player, camera rig, combat manager, director or dialogue panel")
@@ -443,7 +449,7 @@ func _signing_up_enters_the_draw() -> bool:
 
 func _a_lost_round_can_be_retried() -> bool:
 	var spec := TOURNAMENT.round_spec("quarter")
-	var conversation := str(spec.get("conversation", ""))
+	var begin_conversation := str(spec.get("begin_conversation", ""))
 	var won_flag := str(spec.get("won_flag", ""))
 	if not await _open_the_round(spec):
 		return false
@@ -468,7 +474,11 @@ func _a_lost_round_can_be_retried() -> bool:
 	if bool(progression.call("has", won_flag)):
 		_fail("the quarter-final was LOST but '%s' was set anyway" % won_flag)
 		return false
-	if not _marshal_says(conversation, "a round that was lost"):
+	# TOURNAMENT-FLOW-0903: `at_ring_flag` is a contract flag and is never
+	# cleared by a loss, so the retry goes straight back to the explicit
+	# begin-the-round line rather than repeating the opponent's ring-entrance
+	# banter.
+	if not _marshal_says(begin_conversation, "a round that was lost, retried from the ring"):
 		return false
 	print("loss: the quarter-final is still on offer, and '%s' is still unset" % won_flag)
 
@@ -644,9 +654,42 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		return false
 
 	await _let_the_board_poll()
-	print("%s: won in %d action frames, %d creatures felled, %d coins paid, board now reads '%s'" % [
-		label, frames, felled, paid, TOURNAMENT.status_line(progression)])
+
+	# TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: "it announces you
+	# won and announces the next round." tournament.gd polls the round's own
+	# won_flag and pushes the toast through the same one-shot
+	# Game.push_world_message() the trainer's coin reward just used above --
+	# by the time the board has had its ten frames to poll, this has already
+	# overwritten that reward toast with the round result. Read it from the
+	# HUD's own message label rather than `take_pending_world_message()`
+	# directly: `playground_hud.gd::_update_world_message()` drains that same
+	# one-shot queue every frame the real HUD is in the tree (it is, in this
+	# scene), so a second read here would just race it for an empty string --
+	# this checks what the PLAYER actually saw instead.
+	var round_index := -1
+	var rounds_list := TOURNAMENT.rounds()
+	for i in rounds_list.size():
+		if str((rounds_list[i] as Dictionary).get("id", "")) == str(spec.get("id", "")):
+			round_index = i
+			break
+	var expected := TOURNAMENT.round_result_message(round_index) if round_index >= 0 else ""
+	var announced := _last_hud_message()
+	if expected != "" and announced != expected:
+		_fail("%s: expected the win/next-round toast '%s', got '%s'" % [label, expected, announced])
+		return false
+
+	print("%s: won in %d action frames, %d creatures felled, %d coins paid, announced '%s', board now reads '%s'" % [
+		label, frames, felled, paid, announced, TOURNAMENT.status_line(progression)])
 	return true
+
+
+## The text the world-message toast most recently showed, read off the HUD's
+## own label rather than the one-shot `Game` queue it already drained.
+func _last_hud_message() -> String:
+	if _hud == null:
+		return ""
+	var label: Label = _hud.get("_hotbar_message") as Label
+	return str(label.text) if label != null else ""
 
 
 ## --- 8-9: the prize, and the steady state --------------------------------------
@@ -697,23 +740,42 @@ func _marshal_says(expected: String, situation: String) -> bool:
 	return true
 
 
-## Play the round's conversation and confirm it actually opened that round's
-## fight against that round's trainer.
+## Play the round's TWO conversations and confirm the ceremony holds:
+## entering the ring starts nothing by itself, the marshal only then offers
+## the explicit begin-the-round line, and THAT is what actually opens the
+## fight against that round's trainer. TOURNAMENT-FLOW-0903, owner playtest
+## 2026-09-03 item 3: "you enter then you choose to start the battle."
 func _open_the_round(spec: Dictionary) -> bool:
 	var conversation := str(spec.get("conversation", ""))
+	var begin_conversation := str(spec.get("begin_conversation", ""))
+	var at_ring_flag := str(spec.get("at_ring_flag", ""))
 	var trainer_id := str(spec.get("trainer", ""))
+	var progression: RefCounted = _game.get("progression")
+
 	await _play(conversation)
+	for i in 10:
+		await process_frame
+	if bool(_director.call("trainer_battle_active")):
+		_fail("'%s' started the battle by itself; the explicit begin-the-round choice would do nothing" % conversation)
+		return false
+	if at_ring_flag != "" and not bool(progression.call("has", at_ring_flag)):
+		_fail("'%s' closed but never set '%s'; the marshal would never offer the begin-the-round line" % [conversation, at_ring_flag])
+		return false
+	if not _marshal_says(begin_conversation, "standing at the ring, ready to begin"):
+		return false
+
+	await _play(begin_conversation)
 	# `sequence_director.gd::_maybe_start_battle()` fires the frame AFTER the
 	# dialogue box closes — the same deferred-start contract every villager
 	# challenge uses.
 	for i in 10:
 		await process_frame
 	if not bool(_director.call("trainer_battle_active")):
-		_fail("'%s' closed but no tournament battle started" % conversation)
+		_fail("'%s' closed but no tournament battle started" % begin_conversation)
 		return false
 	if str(_director.call("trainer_battle_id")) != trainer_id:
 		_fail("'%s' started a battle against '%s' rather than '%s'" % [
-			conversation, str(_director.call("trainer_battle_id")), trainer_id])
+			begin_conversation, str(_director.call("trainer_battle_id")), trainer_id])
 		return false
 	if not _exit_connected:
 		_manager.connect("exited", func(outcome: String) -> void:
