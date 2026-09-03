@@ -75,7 +75,10 @@ on:
     # Leaving it out meant CI never ran on those branches at all, so the merge
     # workflow sat waiting on a success that could not arrive -- the loop would
     # have pushed work forever and shipped none of it.
-    branches: [main, 'claude/**', 'ralph/**']
+    # claude/** dropped 2026-09-03: orchestrator branches land through a pull
+    # request, whose pull_request event already runs CI once; the push trigger
+    # ran every job a second time per push and doubled the queue the lanes wait in.
+    branches: [main, 'ralph/**']
   pull_request:
   workflow_dispatch:
 
