@@ -421,7 +421,24 @@ const OBJECTIVE_EYEBROW_ROW := 36.0
 ## previous 38px font rendered 109px (109 / 2 / 38 = 1.43), and at 32px they
 ## render 93 (93 / 2 / 32 = 1.45).
 const SENTENCE_LINE_RATIO := 1.45
-const OBJECTIVE_LINES := 2
+## HARNESS-HYGIENE-0903 (owner playtest finding, "Train with your team before
+## the …"): raised 2 -> 4. `max_lines_visible` + `OVERRUN_TRIM_WORD_ELLIPSIS`
+## (`_build_objective_block()` below) never lets the label overflow its own
+## box, which is exactly why `smoke_objective_hint_card.gd`'s pre-existing
+## "plate holds its text" check passed while this bug shipped: a WIDGET that
+## cannot overflow can still silently drop the tail of a sentence into "…" if
+## the cap is smaller than the wrap the real string needs, and nothing before
+## this measured that gap. Measured directly against every `main` entry in
+## `data/progression/objectives.json` at `OBJECTIVE_MAX_WIDTH`'s inner width,
+## at both 1280x800 and 1920x1080 (`canvas_items` stretch keeps the logical
+## layout identical between them, so the wrap count does not change with the
+## window): 15 of 27 authored titles wrapped past 2 lines, up to 4 for "Reach
+## South Bridge -- Team Tether holds the crossing." 4 is that measured worst
+## case, not a guess -- `smoke_objective_hint_card.gd`'s
+## `_check_no_authored_objective_title_is_clipped` re-measures this on every
+## run, so a future title that needs a 5th line fails loudly here instead of
+## shipping silently truncated.
+const OBJECTIVE_LINES := 4
 const OBJECTIVE_BLOCK_HEIGHT := OBJECTIVE_EYEBROW_ROW + OBJECTIVE_INSET \
 	+ float(OBJECTIVE_LINES) * float(HUD_SENTENCE_FONT_SIZE) * SENTENCE_LINE_RATIO \
 	+ OBJECTIVE_INSET
