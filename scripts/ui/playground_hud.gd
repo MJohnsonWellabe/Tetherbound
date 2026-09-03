@@ -371,26 +371,31 @@ const VITALS_HEIGHT_WITHOUT_HP := VITALS_FOOD_ONLY_ROW_Y + 34.0 + 6.0
 ## `VITALS_HP_ROW_Y`) starts at local y 0 instead.
 const HEALTH_BAR_ROW_Y := 8.0
 const HEALTH_BAR_CONTENT_HEIGHT := 34.0
-## Clearance kept between the widget's own backing plate and the true canvas
-## bottom edge. Reuses `UITokens.GAP`, the same small-gap token
-## `PARTY_ACTIVE_GAP` above already borrows, rather than a new number.
-const HEALTH_BAR_BOTTOM_MARGIN := UITokens.GAP
-## OWNER-0902-HUD-TEAM-MENU: the satiety plate's own bottom margin, separate
-## from `HEALTH_BAR_BOTTOM_MARGIN` because the two plates are not the same
-## height -- satiety's (buff row included) is taller, so fitting it inside
-## the same fixed 96px band with the same margin the shorter HP plate uses
-## leaves no room to spare. MEASURED against that band: satiety plate 86
-## (`VITALS_HEIGHT_WITHOUT_HP` 70 + `VITALS_PLATE_OVERHANG` x2) + this
-## margin (6) = 92, four clear px inside the 96px `Root/BottomDock` leaves
-## below it (`smoke_hud_handheld_legibility.gd` checks this against the real
-## rendered dock, not just this arithmetic).
+## Clearance kept between the satiety plate's own backing plate and the true
+## canvas bottom edge -- satiety is the LOWER of the two stacked plates (owner
+## playtest 2026-09-03, item 8: "the food bar and health bar need to be
+## stacked not next to each other"), so this is the one true-bottom anchor the
+## pair needs; the health bar above it derives its own position from this
+## plate's real top instead of a second canvas-bottom margin.
 const BOTTOM_VITALS_MARGIN := 6.0
-## Horizontal gap between the health bar and the satiety bar now that they
-## sit side by side in that same band -- there is no vertical room left to
-## stack them (see `BOTTOM_VITALS_MARGIN`'s own header), but the band has
-## width to spare this far from the central third. Reuses `UITokens.GAP`,
-## the same token `HEALTH_BAR_BOTTOM_MARGIN` already borrows.
-const BOTTOM_VITALS_COLUMN_GAP := UITokens.GAP
+## Vertical gap between the health plate and the satiety plate now that they
+## are stacked, health above food. Reuses `UITokens.GAP`, the same small-gap
+## token `PARTY_ACTIVE_GAP` above already borrows, rather than a new number.
+##
+## OWNER-HUD-INPUT-0903 supersedes OWNER-0902-HUD-TEAM-MENU's side-by-side
+## arrangement here. That pass put the two plates beside each other because
+## `vitals_position()` still anchored inside the SAME bottom-up left-stack
+## chain the roster/creature panel use back then, and a tall roster reveal
+## could run straight into the food bar sitting underneath it in that chain
+## (owner playtest 2026-09-02, finding #11: "the team menu overruns the food
+## bar"). Neither plate has been part of that chain since -- both
+## `vitals_position()` and `player_health_bar_position()` derive purely from
+## `canvas_height`, with no dependency on the creature panel or party strip's
+## own height (see `_reflow_left_stack()`) -- so stacking them again does not
+## reopen the original defect: `left_stack_bottom()` (where the roster reveal
+## bottoms out) sits roughly 350px above where this pair now lives, at every
+## supported aspect (`test_stacked_vitals_clear_the_left_stack_reveal`).
+const VITALS_STACK_GAP := UITokens.GAP
 
 const STAMINA_ARC_POS := Vector2(960.0 + 48.0, 540.0 - 160.0 * 0.5) ## centred-right of screen centre
 
@@ -1497,52 +1502,32 @@ static func left_stack_bottom(canvas_height: float) -> float:
 	return canvas_height + BOTTOM_DOCK_TOP_OFFSET - LEFT_STACK_CLEARANCE
 
 
-## OWNER-0902-HUD-TEAM-MENU (owner playtest 2026-09-02, finding #11: "the
-## team menu overruns the food bar. Food bar needs to go down by the health
-## bar."). Used to anchor off `left_stack_bottom()`, in the SAME column the
-## roster (`party_strip_position()`) and the active-creature panel
-## (`creature_block_position()`) stack bottom-up in -- so a tall reveal in
-## that column (the five-row roster, or a creature panel whose content grew)
-## pushed straight down into the satiety bar sitting right underneath it,
-## which is exactly the "overrun" the owner played into. Re-anchored here to
-## sit BESIDE `player_health_bar_position()` instead, both near the true
-## canvas bottom -- off in its own corner the roster column never reaches,
-## and reading as one vitals unit is what the owner actually asked for.
-##
-## Beside, not above: `Root/BottomDock` leaves a fixed 96px band below it
-## regardless of canvas height (see `player_health_bar_position()`'s own
-## header), and that is not enough vertical room for both plates stacked --
-## the satiety plate alone (its buff row included) very nearly fills it on
-## its own (`BOTTOM_VITALS_MARGIN`'s own header has the exact numbers).
-## Sitting side by side instead costs width, which this corner has to spare
-## this far from the central third, not height, which it does not.
+## OWNER-HUD-INPUT-0903 (owner playtest 2026-09-03, item 8: "the food bar and
+## health bar need to be stacked not next to each other"). The satiety plate
+## is the LOWER of the two -- anchored directly off the true canvas bottom
+## (`BOTTOM_VITALS_MARGIN`) -- with `player_health_bar_position()` deriving
+## its own position from THIS plate's real top instead of a second
+## independent canvas-bottom margin, so the two can never drift apart or
+## overlap regardless of either row's height. See `VITALS_STACK_GAP`'s own
+## header for why stacking here no longer reopens OWNER-0902-HUD-TEAM-MENU's
+## "team menu overruns the food bar" defect.
 static func vitals_position(canvas_height: float) -> Vector2:
-	var health_pos: Vector2 = player_health_bar_position(canvas_height)
 	var plate_bottom := canvas_height - BOTTOM_VITALS_MARGIN
 	var plate_top := plate_bottom - (VITALS_HEIGHT_WITHOUT_HP + VITALS_PLATE_OVERHANG * 2.0)
-	var x := health_pos.x + VITALS_WIDTH + BOTTOM_VITALS_COLUMN_GAP
-	return Vector2(x, plate_top + VITALS_PLATE_OVERHANG)
+	return Vector2(CREATURE_BLOCK_X, plate_top + VITALS_PLATE_OVERHANG)
 
 
-## HUD-BACKLOG-20. Independent of `left_stack_bottom()` on purpose -- the
-## rest of the left column stacks bottom-up from `Root/BottomDock`'s real top
-## edge (see that function's own header), but `Root/BottomDock` reserves the
-## same nominal footprint regardless of X, and this widget sits far enough
-## left (`CREATURE_BLOCK_X`) that it never shares paint with the dock's own
-## right-aligned hotbar or centred prompt. So instead of competing for room
-## above the dock the way the roster/creature panel must, this
-## widget anchors to `Root/BottomDock`'s own OTHER real edge: that Control's
-## `offset_bottom` (-96 in `playground_hud.tscn`) leaves it always exactly
-## 96px short of the true canvas bottom, regardless of any transient growth
-## in its message row or a wrapped prompt (both of which only ever push the
-## dock's TOP edge up -- confirmed on real `get_global_rect()` measurements,
-## not assumed). `HEALTH_BAR_BOTTOM_MARGIN` plus this widget's own plate
-## overhang leaves a comfortable clearance inside that fixed 96px, so this
-## never needs LEFT_STACK_CLEARANCE-style tuning against dock growth the way
-## the rest of the column does. `vitals_position()` above now derives its X
-## from this function's result, to sit beside it rather than above it.
+## HUD-BACKLOG-20, restacked by OWNER-HUD-INPUT-0903 (see `vitals_position()`'s
+## own header). The health plate sits directly ABOVE the satiety plate,
+## sharing its X (`CREATURE_BLOCK_X`) and width (`VITALS_WIDTH`) so "health
+## above food" reads as one column with a matching left edge, not two
+## independently placed widgets that happen to line up. Deriving the gap from
+## the food plate's REAL top (rather than a second hand-measured canvas-bottom
+## margin) is what makes that true regardless of either plate's own height.
 static func player_health_bar_position(canvas_height: float) -> Vector2:
-	var plate_bottom := canvas_height - HEALTH_BAR_BOTTOM_MARGIN
+	var food_pos: Vector2 = vitals_position(canvas_height)
+	var food_plate_top := food_pos.y - VITALS_PLATE_OVERHANG
+	var plate_bottom := food_plate_top - VITALS_STACK_GAP
 	var plate_top := plate_bottom - (HEALTH_BAR_CONTENT_HEIGHT + VITALS_PLATE_OVERHANG * 2.0)
 	return Vector2(CREATURE_BLOCK_X, plate_top + VITALS_PLATE_OVERHANG)
 
@@ -2961,16 +2946,23 @@ func _exploration_legend_text(prompt_owns_recall: bool = false,
 		creature_is_out: bool = false) -> String:
 	var normal := UITokens.TEXT_PRIMARY
 	var change_tint := normal if _cycleable_party_count() > 1 else UITokens.TEXT_MUTED
-	# CONTROLLER-MAP: Build and Torch left this legend with their buttons. Both
-	# are hotbar tools now -- select the hammer or the torch on the bar and
-	# press interact -- so a legend line naming a pad button for either would
-	# be naming a button that does something else (B is satchel slot 1). Their
-	# keyboard shortcuts survive and are still listed in Settings > Controls.
-	# Call Out took the space, because RB is the one world verb with no other
-	# on-screen home.
+	# CONTROLLER-MAP: Torch left this legend with its button -- it is a hotbar
+	# tool now, select it on the bar and press interact -- so a legend line
+	# naming a pad button for it would be naming a button that does something
+	# else (B is satchel slot 1). Its keyboard shortcut survives and is still
+	# listed in Settings > Controls. Call Out took the space it used to sit
+	# in, because RB is the one world verb with no other on-screen home.
+	#
+	# HUD-INPUT-0903 (owner playtest 2026-09-03: "there should be a shortcut
+	# button to map and to building"). Build gets its OWN line back here,
+	# unlike Torch: `build_shortcut` (LT / keyboard B, same key `build_open`
+	# already used) is a real, direct binding rather than the
+	# hammer-then-interact route, so naming its button is naming a button that
+	# genuinely does this on both devices.
 	var entries: Array[String] = [
 		_legend_entry("map", "Map", normal),
 		_legend_entry("inventory", "Satchel", normal),
+		_legend_entry("build_shortcut", "Build", normal),
 	]
 	# Stand down while the contextual prompt directly above is already naming
 	# this button, with the creature's actual name on it. Two labels for one
@@ -3493,6 +3485,19 @@ func _read_world_hotkeys() -> void:
 	if not _world_input_allowed():
 		return
 	if _hammer_opens_the_catalogue():
+		BUILD_MENU.get_or_make(get_tree()).call_deferred("open")
+		return
+	# HUD-INPUT-0903 (owner playtest 2026-09-03: "there should be a shortcut
+	# button to map and to building"). A direct LT press opens the catalogue
+	# without equipping the hammer first -- see project.godot's own comment on
+	# `build_shortcut` for why LT is free to give it. Gated through the exact
+	# same `_world_input_allowed()` call the hammer route above already passed
+	# to reach this line, which is what keeps this from ever firing while a
+	# panel owns input, a fight is running, or a build ghost is already armed
+	# (the arbiter is disabled in all three, and `allow_armed_build` defaults
+	# to false here) -- the same input_owner path, not a parallel one that
+	# could disagree with it and soft-lock the world.
+	if Input.is_action_just_pressed(&"build_shortcut") and not _build_menu_is_open():
 		BUILD_MENU.get_or_make(get_tree()).call_deferred("open")
 		return
 	if Input.is_action_just_pressed(&"torch_place"):

@@ -126,28 +126,52 @@ func test_left_stack_clears_bottom_dock_at_every_supported_aspect() -> void:
 		)
 
 
-## OWNER-0902-HUD-TEAM-MENU (owner playtest 2026-09-02, finding #11: "the team
-## menu overruns the food bar. Food bar needs to go down by the health bar.").
-## `vitals_position()` used to anchor in the same column the roster and the
-## creature panel stack bottom-up in, which is how a tall reveal there ran
-## into the food bar sitting underneath it. It now anchors directly off
-## `player_health_bar_position()` instead, so HP and satiety read as one
-## vitals unit near the true canvas bottom -- this proves that relationship
-## on geometry.
-##
-## Beside, not above: `vitals_position()`'s own header has the exact reason
-## (the fixed 96px band below `Root/BottomDock` cannot fit both plates
-## stacked). This checks the two share the same Y and sit a fixed gap apart
-## in X instead.
-func test_vitals_cluster_sits_a_fixed_gap_beside_the_health_bar() -> void:
+## OWNER-HUD-INPUT-0903 (owner playtest 2026-09-03, item 8: "the food bar and
+## health bar need to be stacked not next to each other"). Supersedes the
+## OWNER-0902-HUD-TEAM-MENU side-by-side arrangement this test used to check
+## (see `vitals_position()`'s own header for why stacking is safe again): the
+## two plates must now share the same X and width, with the health plate
+## sitting directly above the food plate and a fixed gap between them.
+func test_health_bar_stacks_directly_above_the_food_bar() -> void:
 	for canvas_h in [1080.0, 1200.0]:
 		var health_pos: Vector2 = PLAYGROUND_HUD.player_health_bar_position(canvas_h)
 		var vitals_pos: Vector2 = PLAYGROUND_HUD.vitals_position(canvas_h)
 		assert_almost_eq(
-			vitals_pos.x - (health_pos.x + PLAYGROUND_HUD.VITALS_WIDTH),
-			PLAYGROUND_HUD.BOTTOM_VITALS_COLUMN_GAP,
+			health_pos.x, vitals_pos.x, 0.001,
+			"the health bar and the food bar must share the same left edge at canvas height %.0f" % canvas_h
+		)
+		assert_true(
+			health_pos.y < vitals_pos.y,
+			"the health bar must sit above the food bar (health y %.1f, food y %.1f) at canvas height %.0f" % [
+				health_pos.y, vitals_pos.y, canvas_h,
+			]
+		)
+		var health_plate_bottom := health_pos.y + PLAYGROUND_HUD.HEALTH_BAR_CONTENT_HEIGHT \
+				+ PLAYGROUND_HUD.VITALS_PLATE_OVERHANG
+		var food_plate_top := vitals_pos.y - PLAYGROUND_HUD.VITALS_PLATE_OVERHANG
+		assert_almost_eq(
+			food_plate_top - health_plate_bottom,
+			PLAYGROUND_HUD.VITALS_STACK_GAP,
 			0.001,
-			"the satiety plate must sit a fixed gap to the right of the health bar at canvas height %.0f" % canvas_h
+			"the two plates must sit a fixed gap apart with no overlap at canvas height %.0f" % canvas_h
+		)
+
+
+## OWNER-HUD-INPUT-0903: stacking the health and food plates only reopens the
+## OWNER-0902-HUD-TEAM-MENU "team menu overruns the food bar" defect if the
+## pair is still close enough to the roster's own reveal to collide with it.
+## Both plates derive purely from `canvas_height` (see `_reflow_left_stack()`),
+## so this proves the real clearance between them on geometry rather than by
+## inspection.
+func test_stacked_vitals_clear_the_left_stack_reveal() -> void:
+	for canvas_h in [1080.0, 1200.0]:
+		var health_pos: Vector2 = PLAYGROUND_HUD.player_health_bar_position(canvas_h)
+		var dock_top: float = PLAYGROUND_HUD.left_stack_bottom(canvas_h)
+		assert_true(
+			health_pos.y - PLAYGROUND_HUD.VITALS_PLATE_OVERHANG > dock_top,
+			"the stacked vitals pair (health plate top %.1f) must stay clear of the left stack's own bottom (%.1f) at canvas height %.0f" % [
+				health_pos.y - PLAYGROUND_HUD.VITALS_PLATE_OVERHANG, dock_top, canvas_h,
+			]
 		)
 
 
