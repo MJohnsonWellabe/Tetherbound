@@ -17,12 +17,28 @@ clear. `docs/GAME_VISION.md` is the experience contract.
 
 ## Current stage
 
-**Gate 1 of `docs/ROADMAP.md` — the first session (wake → tournament → leave) must be
-proven by continuous play.** All chapter systems exist in code and data (see
-`docs/CURRENT_STATE.md` for the evidence-backed status of each); the unit suite is green
-(1728 tests); most player-path smokes pass. Three do not, and they are the current work:
-the opening-segment orb floor, the continuous Gate B objective/gather route, and the
-first-attempt `smoke_traversal` failure at the South Bridge (a real world hole).
+**Gate 1 is nearly proven and Gate 2 is open** (`docs/ROADMAP.md`). All chapter systems
+exist in code and data — `docs/CURRENT_STATE.md` is the evidence-backed status of each and
+outranks this summary.
+
+Updated 2026-09-03. The three failures this section used to name are resolved, and two of
+them were not what they claimed:
+
+- The opening-segment orb floor is **fixed** (gate on the beat, not the species).
+- The Gate B objective chain was **never stalling** — two assertions were pinned to label
+  strings that had never existed in `objectives.json`, behind a job that did not gate. The
+  gather-route half is real and is the settlement fence's concave corner past TrailGate,
+  not scatter density.
+- The South Bridge `smoke_traversal` failure was **a harness defect, not a world hole**: a
+  teleport outran Terrain3D's camera-following collision, so the body fell before the
+  ground existed under it. The crossing's geometry was never changed and never needed to be.
+
+`smoke_gate_b_continuous` now drives ~25 minutes of continuous play, and its reliable
+prefix gates in CI.
+
+**If you are picking up an in-flight orchestration session, read
+`docs/HANDOFF_2026-09-03.md` first** — it carries the live lane state, the open PR, and the
+traps that have already cost this project time.
 
 ## What is authoritative
 
