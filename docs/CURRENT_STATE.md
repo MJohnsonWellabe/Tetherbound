@@ -239,19 +239,82 @@ Points of interest: one optional discovery with a real reward, signposts legible
 - **Gate 1 (first session):** open, and much closer. `smoke_gate_b_continuous` now plays 22 minutes continuously — opening (orb floor held, correct two-creature party), village, tools, tournament readiness, gathering, tent/campfire/bedroll — against an opening that dead-ended this morning. Of the two failures it then reported, one was the harness (objective rungs asserted by prose that never existed; now asserted by id) and one is real and important: the interact-reliability game-breaker, reproduced in-container for the first time (see §3). Every other Gate 1 acceptance smoke is green on first attempt.
   combat, tournament, village. Red: opening orb floor (fix pending landing), objective
   chain after tournament readiness, gather route, South Bridge traversal on first attempt.
-- **Gate 2 (core world complete):** 2.1 (composition plan) delivered as
-  `docs/specs/BAND1_COMPOSITION_PLAN.md` with its judged before-frames; **2.1 through 2.7 have
-  all landed** — 2.2 (MID-LAYER), 2.3 (TREE-SILHOUETTE), 2.4 (CREATURE-LEGIBILITY), 2.5
-  (BAND1-ECOLOGY), 2.6 (BAND1-DISCOVERY), 2.7 (NIGHT-LEGIBILITY); see §3 for 2.4's and 2.7's
-  measured close-outs. **2.8 (the Gate 2 evidence run) is the only task left in the gate**, and
-  it cannot start until the merge carrying 2.2/2.3/2.6 is on `main`.
-  Fresh survey frames and the earlier blind critique are in `docs/VISUAL_BIBLE.md` §4;
-  `ralph/reports/TREE-SILHOUETTE-0903/JUDGE-after.md` is the current after-verdict for the route
-  and still answers both bar questions **no**, same as MID-LAYER's own after-judge. That is not a
-  task still outstanding: the gaps that judge names are props, fence, signposts as set dressing,
-  the mill's windmill sails, lighting and terrain — none of which is any of 2.2–2.7's scope, all
-  of which are vegetation, creature and night work. **So Gate 2's own task list can complete with
-  the blind judge still answering no.** Whether that verdict is acceptable is 2.8's question to
-  answer against the gate's acceptance bar, not a defect in the tasks that landed.
+- **Gate 2 (core world complete):** **task list complete; the gate FAILS its acceptance, with
+  scoped follow-ups.** 2.1 through 2.7 all landed (2.1 composition plan, 2.2 MID-LAYER, 2.3
+  TREE-SILHOUETTE, 2.4 CREATURE-LEGIBILITY, 2.5 BAND1-ECOLOGY, 2.6 BAND1-DISCOVERY, 2.7
+  NIGHT-LEGIBILITY; see §3 for 2.4's and 2.7's measured close-outs). **2.8, the evidence run, is
+  now done** (`ralph/GATE2-EVIDENCE-0903`, from `main` `3c73aab5`); its full report, the four
+  blockers it had to fix before the route could be played at all, the dead-travel list, the
+  proposed correction to the gate's own acceptance bar and the follow-up task list are in
+  `ralph/reports/GATE2-EVIDENCE-0903/REPORT.md`, with the code-blind judge in `JUDGE.md` beside
+  it. Verdict and evidence template below.
+
+  **The route was played continuously for the first time:** Gate F `S04` (tournament sign-up,
+  three bracket rounds, champion line) and `S05` (village → band 1 spine → the Pond → the Old
+  Bram detour and its fight → Trail Camp → South Bridge gatekeeper → gate opened → crossed),
+  1,169 s of play clock, 2,360 m walked, **S04 82 P / 1 F and S05 106 P / 1 F**. Both remaining
+  failures are one stale instrument threshold (`route_rows_at_least` describing segment
+  durations neither segment has any more), not game defects. Entry state was seeded from the
+  freshest *played* S03 exit save with its party levelled to `tournament.json`'s entry floor
+  through the real level arithmetic — the same allowance `smoke_gate_b_continuous` makes in CI,
+  recorded in `tools/gate_f/build_gate2_seed.gd`; everything from the sign-up onward is played.
+
+  **Evidence template.**
+  - *Player purpose:* win the tournament, then take the team south to the chapter's first
+    physical gate. The visible challenge is Team Tether holding the South Bridge; the
+    gatekeeper's own fight yields the key, and the player is never told a level requirement.
+  - *Team progression:* in at 5 × L5 rested and fed; out of the tournament at L7/L6/L7/L6/L7
+    with eight level-ups and **three of five on 0 HP**; across the bridge at L7/L7/L7/L8/L8.
+    Mid-fight rotation happened at both fights, but **no catch and no keep-or-release decision
+    occurred on the direct route**, so 2.5's "at least one roster decision in play" is only
+    half met — scoped as 2.12.
+  - *World interaction:* 4 fights, 5 resource stops, 3 landmark discoveries, 2 objective
+    transitions, one optional detour taken and won, one care action, one build. The harness's
+    POI meter reset ten times over 2.26 km — roughly one point of interest every 220 m.
+  - *Empty travel:* **two intervals over 60 s, both marginal** — 63 s / 346 m from the village
+    gate onto the band 1 spine (t 192–255), and 71 s / 427 m from the Trail Camp to the bridge
+    approach (t 579–650). Nothing over 75 s anywhere. Both classified intentional breathing room
+    at the top of their range; the second is the weaker, being the approach to the chapter's
+    first gate. Listed with start/end coordinates in the report; computed by
+    `tools/gate_f/dead_travel_intervals.py`, added because `chain_pacing.py` reports only the
+    single worst gap per segment.
+  - *Reliability:* no freezes, no input loss, no save/load failures, no bad collision on the
+    played route. Both segments wrote and reloaded exit saves through the production Save tab.
+  - *Presentation:* the blind judge's answer, `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md`,
+    judged on 16 frames taken from the played route's own 2 Hz trace (gameplay camera, HUD on,
+    real positions/headings/clock hours) rather than posed stands.
+  - *Decision:* **FAIL.** Passes on dead travel, on the perf proxy, and on reliability of the
+    played path; fails on presentation and on the roster-pressure clause.
+
+  **Perf proxy re-confirmed:** `band1_open` **6,891 draws / 10,788,459 primitives / 5,922
+  objects** against the ≤ 7,500 / ≤ 12.0 M budget — GRASS-CULL-0903's 6,897 / 10,803,803
+  reproduced to within noise.
+
+  **Four blockers were fixed to make the route playable, and three had been failing silently
+  since 2026-08-30:** (1) `S04` walked to a marshal coordinate that was already satisfied from
+  the bracket board, leaving the player 4.6 m from Halda — fourteen blind interact presses, no
+  dialogue, `tournament_entered` never set; (2) the three rounds still used one greeting and a
+  fixed press count against TOURNAMENT-FLOW-0903's two-greeting rounds; (3) the bracket board's
+  own read-out was never closed, so the Save tab never opened and the segment wrote **no exit
+  save**; (4) with a fully healthy party **both** route fights refused to start, because the
+  active creature is deployed straight after the load while it is still on 0 HP from the
+  tournament final, and `encounter_director.gd::can_challenge()` needs a live ally body —
+  `south_bridge_open` could not be earned at all until a `creature_recall` press was added after
+  the revives. Owner instruction 2026-09-03 ("give revives after the tournament") is implemented
+  as a production-menu recovery block asserted by the satchel dropping 10 → 7 Revives.
+
+- **Gate 2's Pond stall — the walker, not the world (open, scoped as 2.9).** Walking straight at
+  the Old Bram detour from the Pond shore, `stick_navigator.gd` freezes a real player body at
+  **(−328.7, −14.2, 505.3)** — to a centimetre, on three independent runs — for **543 play
+  seconds** with locomotion enabled throughout ("0 held"); on the first run it never recovered
+  and the leg reported "stopped 658.8 m short". This is **not** a world hole:
+  `tools/gate_f/probe_pond_stranding.gd` stands the real body at that exact coordinate and at
+  eight points on a 6 m ring, injects a real full-deflection stick, and finds **0 of 10 stands
+  wedged** — every stand walks 12–17 m in five or more of eight bearings, resting on the
+  authored heightfield (worst delta 0.09 m), `on_floor`, touching nothing but `Terrain3D`. The
+  Pond is a real 14 m basin (water surface authored at −17.0 m) and the evidence run now authors
+  the climb out of its north-east shoulder (`S05-32x`, the RIG-F6 precedent — legs checked
+  against a route that was actually walked, never a teleport past geometry): 23 s instead of 543.
+
 - **Gate 3 / 4:** not started. Gate F S03 reached 6 failures outside its lane's scope;
   S04–S10 unverified as a chain.
