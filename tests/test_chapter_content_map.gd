@@ -118,9 +118,23 @@ func test_the_chapter_fields_the_number_of_trainers_it_is_aiming_for() -> void:
 		("the chapter fields only %d distinct trainer opponents (%d battle entries); prompt 59 "
 		+ "targets roughly 12-17 and the ladder stops reading as progression below that") % [
 			total, entries])
-	assert_true(total <= 24,
-		("the chapter fields %d distinct trainer opponents (%d battle entries), well past prompt "
-		+ "59's 12-17 -- that is the 'monotonous trainer hallway' it warns about") % [
+	# WORLD-CONTENT, 2026-09-03. Ceiling raised 24 -> 26 for two new named
+	# opponents this pass adds to close docs/specs/BAND1_ROUTE_CONTRACT.md's
+	# measured gap: beyond the village hub, Band 1 fielded ONE on-route trainer
+	# (the South Bridge grunt) across 2,270m, a 1,500m+ trainer-free stretch the
+	# 2026-09-03 owner playtest names directly ("nothing outside the village...
+	# nothing to do"). The comment above this line still holds -- the ceiling
+	# stays loose-but-real rather than a quota, and is not the lever for
+	# routine content growth -- but a measured, owner-playtest-driven fix to a
+	# named dead-travel defect is the case that comment's own history (Old
+	# Bram, landing the chapter at 24 rather than the original 12-17) already
+	# treats as legitimate: a new opponent that answers a real complaint, not
+	# one added to fill a number. "The shepherd on the Rise" and "the wanderer
+	# at the trail camp" (data/config/bands/band1_lower_meadows/trainers.json)
+	# are the two; no other band added an opponent in this pass.
+	assert_true(total <= 26,
+		("the chapter fields %d distinct trainer opponents (%d battle entries), past the ceiling "
+		+ "-- that is the 'monotonous trainer hallway' prompt 59 warns about") % [
 			total, entries])
 
 
