@@ -130,6 +130,13 @@
       "z": 1297.0,
       "radius": 8.0,
       "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): removes the accidental corridor-fill boulder in the hollow (about (-25,1295)) so the hollow stays a hollow, not a snagged obstacle."
+    },
+    {
+      "order": 1909,
+      "x": -397.0,
+      "z": 586.0,
+      "radius": 16.0,
+      "_why": "TREE-SILHOUETTE-0903. MID-LAYER-0903 re-sited place3-pond-pocket's capture stand to the fisher's camp (6.3) and fixed 'shooting the mill's wall from 3m', but left the Pond's own unthinned grove standing between the eye and the water: JUDGE-after.md called the re-sited frame 'the darkest, most cluttered... at least four tree trunks cross the frame at odd diagonal angles with almost no negative space... arguably fails the 30%-size test outright', with the player 'nearly swallowed by the surrounding foliage' and the pond itself 'wedged behind trunks' at ~8% of frame. That was left for this lane -- the grove anchors are 2.3's. A near-field trunk 4-8m from an 8m-high eye occupies far more of the frame than anything near the 72m-distant mill, so the fix is a clearing over the CAMP and the first ~15-20m toward the water, not a thinning of the pocket itself: the far 50m of grove between this clearing's edge and the mill's own clearing (order 5, (-383.5,517) r15) is untouched, and the far-side grove this lane adds at (-448,590) r14 stays 51m clear of this circle's own edge, so 'the density does not change' (5.5's own rule) still holds for the pocket as a whole. Centred on the fisher NPC/bench-and-firepit camp (pond_npc.json, props.json order 1050, both ~(-395.5,583.5)) rather than the bare eye coordinate, so the clearing reads as the camp's own clearing -- a traveller's stop in the wood -- and not a bald disc with no reason to be there. Reeds (this file's own drygrass anchor at (-392,586)) are unaffected: grass/drygrass/flowers are exempt from `clearings` (scatter_rules.gd::_gate, `cleared_by_clearings`)."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",
@@ -145,29 +152,148 @@
         "count": 7
       },
       {
-        "_why": "VP4 station 02-first-bend (-120,270)->(-230,330): the before frame was open grass with nothing between the player and a thin, distant tree line -- the worst 'empty grass to sky' case in band 1. A tree line flanking the outside of the path's own bend, opposite the rock cluster below, gives the bend a compression -> reveal read instead of a flat field.",
+        "_why": "VP4 station 02-first-bend (-120,270)->(-230,330), TREE-SILHOUETTE-0903 recipe: 5.4's own eye (comp4-rise-look-back) reads this copse as a mid-distance mass and BAND1_COMPOSITION_PLAN.md 5.4's Now/Judged both name it 'a flat row'/'a hedge of lollipops' -- one species at one height. Split into three co-located sub-anchors (section 3's copse recipe: one tree tall, two short, the rest between) so the outline has a peak and a shoulder instead of a level top; count and footprint unchanged (1+2+3=6, same radius/centre).",
         "at": [
           -95.0,
           292.0
         ],
         "radius": 12.0,
-        "count": 6
+        "count": 1,
+        "scale_min": 1.4,
+        "scale_max": 1.55
       },
       {
-        "_why": "ROUND 2 (JUDGE-round1.md), COORDINATES CORRECTED THREE TIMES across two rounds: round 1's own additions here were confirmed present by crop diff but judged net emptier than before (the pre-isolation-fix RNG-reshuffle bug, see round-2-addendum's own report section). Attempt 1 ((-158,280)) rendered on the wrong side (screen-right, not left). Attempt 2 ((-126,302)) fixed the side but sat 50.8 degrees off-axis, clipped at the edge of a ~51.3-degree half-FOV. Attempt 3 ((-138,300), 35m out at 30 degrees) fixed both, but JUDGE-round2.md (round against the isolation-fixed bake) called the frame 'still right-heavy -- new copse smaller/farther than the grove it replaced'. This FOURTH centre is closer (25m, within the FOV at 22 degrees off-axis) and bigger (10 trees, radius 13, up from 8/11) so it reads at a comparable size and prominence to the pre-existing right-side mass rather than a token gesture on the opposite side. Two leaf variants only (CommonTree_1/_3, skipping _2) per the original brief; >20m off the path centreline (past the 6m minimum).",
+        "_why": "station 02-first-bend, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
+        "at": [
+          -95.0,
+          292.0
+        ],
+        "radius": 12.0,
+        "count": 2,
+        "scale_min": 0.5,
+        "scale_max": 0.65
+      },
+      {
+        "_why": "station 02-first-bend, the body between the peak and the shoulder -- see the peak sub-anchor above.",
+        "at": [
+          -95.0,
+          292.0
+        ],
+        "radius": 12.0,
+        "count": 3,
+        "scale_min": 0.75,
+        "scale_max": 1.2
+      },
+      {
+        "_why": "ROUND 2 (JUDGE-round1.md), COORDINATES CORRECTED THREE TIMES across two rounds: round 1's own additions here were confirmed present by crop diff but judged net emptier than before (the pre-isolation-fix RNG-reshuffle bug, see round-2-addendum's own report section). Attempt 1 ((-158,280)) rendered on the wrong side (screen-right, not left). Attempt 2 ((-126,302)) fixed the side but sat 50.8 degrees off-axis, clipped at the edge of a ~51.3-degree half-FOV. Attempt 3 ((-138,300), 35m out at 30 degrees) fixed both, but JUDGE-round2.md (round against the isolation-fixed bake) called the frame 'still right-heavy -- new copse smaller/farther than the grove it replaced'. This FOURTH centre is closer (25m, within the FOV at 22 degrees off-axis) and bigger (10 trees, radius 13, up from 8/11) so it reads at a comparable size and prominence to the pre-existing right-side mass rather than a token gesture on the opposite side. Two leaf variants only (CommonTree_1/_3, skipping _2) per the original brief; >20m off the path centreline (past the 6m minimum). TREE-SILHOUETTE-0903: split into the same copse recipe as the (-95,292) station above (peak/shoulder/body sub-anchors at this same centre/radius, count and model list unchanged, 1+2+7=10) for the same reason -- BAND1_COMPOSITION_PLAN.md 5.4 names this exact mass 'a flat row'.",
         "at": [
           -136.0,
           289.0
         ],
         "radius": 13.0,
-        "count": 10,
-        "scale_min": 0.8,
-        "scale_max": 1.3,
+        "count": 1,
+        "scale_min": 1.4,
+        "scale_max": 1.5,
         "max_slope_deg": 24.0,
         "models": [
           "res://assets/environment/stylized_nature/CommonTree_1.gltf",
           "res://assets/environment/stylized_nature/CommonTree_3.gltf"
         ]
+      },
+      {
+        "_why": "the fourth-centre grove, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
+        "at": [
+          -136.0,
+          289.0
+        ],
+        "radius": 13.0,
+        "count": 2,
+        "scale_min": 0.55,
+        "scale_max": 0.7,
+        "max_slope_deg": 24.0,
+        "models": [
+          "res://assets/environment/stylized_nature/CommonTree_1.gltf",
+          "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+        ]
+      },
+      {
+        "_why": "the fourth-centre grove, the body between the peak and the shoulder -- see the peak sub-anchor above.",
+        "at": [
+          -136.0,
+          289.0
+        ],
+        "radius": 13.0,
+        "count": 7,
+        "scale_min": 0.8,
+        "scale_max": 1.25,
+        "max_slope_deg": 24.0,
+        "models": [
+          "res://assets/environment/stylized_nature/CommonTree_1.gltf",
+          "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+        ]
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.4): the near tree at comp4-rise-look-back, pinned with its own anchor so a re-bake cannot lose it -- the stand's own Owner line asks for exactly this ('pin it with a trees anchor x1... so a re-bake cannot lose it'). Re-sited TWICE off the plan's own guessed centre (-243,338): first to (-238,330) because a live bake placed 0 of 1 there (8.1m inside MID-LAYER-0903's crest-window clearing, clearings order 1904, (-244,346) r14); then, after `_capture_band1_composition.gd`'s own eye/target/FOV (`comp4-rise-look-back`: eye (-236,334), target (10,-10), FOV 70) showed that (-238,330) sits 62 degrees off the camera's forward axis -- outside the 35-degree half-FOV, i.e. never in frame regardless of what placed there -- to a point computed directly from the stand's own forward/right axes (7m ahead, 3m left, the same 'near, left' the plan's own Look line asks for), 23 degrees off-axis and comfortably inside the FOV. `max_slope_deg` overridden 21 -> 28 (was 24): the new centre measures 23.6 degrees, inside a mere 0.4 degrees of the old 24-degree ceiling, too tight a margin for a single-instance, 2m-radius anchor with no fallback candidate.",
+        "at": [
+          -234.4,
+          326.6
+        ],
+        "radius": 2.0,
+        "count": 1,
+        "scale_min": 1.4,
+        "scale_max": 1.4,
+        "max_slope_deg": 28.0
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1): the frame trunk at comp1-village-approach, the near element that replaces the corridor-fill boulder as this frame's ruler -- one trunk cut by the top-left edge, canopy over the eye. Re-sited off the plan's own guessed centre (-58,199): computed against comp1's own eye/target (`_capture_band1_composition.gd`: eye (-52,194), target (10,-10)), that point is 146.7 degrees off the camera's forward axis -- BEHIND the eye, not in front of it, so it could never appear in the frame no matter how reliably it placed (confirmed live: the tree placed every bake, and the rendered frame still showed the pre-existing rock line as the only near element, matching the blind judge's after-set read of `comp1-village-approach`, 'the large grey boulder beside them is a good scale reference,' no tree named at all). This centre is computed directly from the stand's own forward/right axes (6m ahead, 3m left, matching the plan's own 'near, left, 4-7m'), 27 degrees off-axis and in front of the camera.",
+        "at": [
+          -53.1,
+          187.4
+        ],
+        "radius": 2.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+        ],
+        "scale_min": 1.5,
+        "scale_max": 1.5
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.2/5.3): the crest's other two trees, right of the road behind the outcrop -- they make the crest a crown of three from 360m at comp2-route-out without entering the window clearing MID-LAYER-0903 cut on the basin side. `max_slope_deg` overridden 21 -> 26: tools/_probe_tree_silhouette_0903.gd measured this centre at 22.2 degrees (the crest shoulder MID-LAYER-0903's own outcrop anchor is built on, 5.3), over the layer's 21-degree ceiling.",
+        "at": [
+          -232.0,
+          330.0
+        ],
+        "radius": 4.0,
+        "count": 2,
+        "models": [
+          "res://assets/environment/stylized_nature/CommonTree_1.gltf"
+        ],
+        "scale_min": 1.25,
+        "scale_max": 1.35,
+        "max_slope_deg": 26.0
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.3, 5.5): the basin far-side grove, the dark mass behind the mill the crest window (comp3) reads it against -- 5.3's own recipe. Re-sited off the plan's own guessed centre: tools/_probe_tree_silhouette_0903.gd measured (-420,560) at h=-20.2, 3.2m UNDER the -17.0 waterline (open pond, not the far bank). tools/_probe_farbank_0903.gd then swept the basin's south-west shore for real dry ground; this centre is dry (h=-15.69, 1.3m above waterline) at a buildable 11.8-degree slope, AND sits almost exactly on the crest eye (-218,324) -> mill (-383.5,517) bearing extended past the mill (351.7m from the crest eye, inside the plan's stated 300-330m -- 22m over, the honest cost of moving from a guess to real ground), so it still reads as 'behind the mill' from the one eye (comp3) this element's Owner line is actually for. It sits 51m clear of TREE-SILHOUETTE-0903's own shore clearing (clearings order 1909, (-397,586) r16) -- no overlap with either that opening or the mill's own clearing (clearings order 5).",
+        "at": [
+          -448.0,
+          590.0
+        ],
+        "radius": 14.0,
+        "count": 10,
+        "scale_min": 0.8,
+        "scale_max": 1.6
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): the far-rim treeline behind the South Bridge, on the far bank south of the trail's end -- the dark mass the pale bridge parapet is composed against instead of sky or bare slope (comp8-bridge-rim); also breaks the horizon.",
+        "at": [
+          15.0,
+          1385.0
+        ],
+        "radius": 14.0,
+        "count": 9,
+        "scale_min": 0.8,
+        "scale_max": 1.6
       },
       {
         "_why": "ROUND 2, station 04-eastward-swing (360,910)->(430,1020), COORDINATES CORRECTED: JUDGE-round1.md called round 1's fix here 'the one real, working fix' but named the LEFT flank 'thin'. This round's first attempt ((412,1067)) used the same inverted left/right axis as station 02's grove above and rendered on the already-strong right side instead -- checked directly, its offset from the eye has a POSITIVE dot with the camera's true right axis here ((-0.843,0.537), from the same `(-Fz,Fx)` derivation), i.e. right, not left. This corrected centre has a NEGATIVE dot (-40.0, confirmed left) with that axis, ~165m out (within the 120-200m ask), balancing the already-good right flank without adding anything near the camera or path.",
@@ -553,6 +679,89 @@
         "scale_min": 0.8,
         "scale_max": 1.0,
         "min_height": -17.5
+      }
+    ],
+    "deadfall": [
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1): one dead tree at the mound's south-west foot copse, on the skyline side (section 3's punctuation role) -- a grey vertical in the new copse's green line, the discovery-marker technique this exact plan already retired at (-276,320) (6.1) reused here for silhouette, not for wayfinding. `models` narrowed to the three dead trees, no mushrooms -- this ground is open meadow, not forest floor.",
+        "at": [
+          60.5,
+          -133.7
+        ],
+        "radius": 10.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+        ],
+        "max_slope_deg": 25.0,
+        "scale_min": 0.85,
+        "scale_max": 1.1
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.3): the far-side grove's one dead tree, breaking its green line the way every copse in this band now does. Sited inside the grove's own re-centred footprint (-448,590) rather than the plan's original (-432,548), which tools/_probe_tree_silhouette_0903.gd measured underwater -- see the grove anchor's own `_why` for the full re-siting.",
+        "at": [
+          -442.0,
+          596.0
+        ],
+        "radius": 6.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+        ],
+        "scale_min": 0.9,
+        "scale_max": 1.2
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): the far-rim treeline's one dead tree, on the skyline side behind the bridge.",
+        "at": [
+          30.0,
+          1378.0
+        ],
+        "radius": 5.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+        ],
+        "scale_min": 0.9,
+        "scale_max": 1.2
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): the Long Field's first grove, one dead tree on its skyline side -- the copse recipe's punctuation piece, same as every other reshaped copse in this pass.",
+        "at": [
+          -120.0,
+          650.0
+        ],
+        "radius": 14.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+        ],
+        "scale_min": 0.85,
+        "scale_max": 1.1
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): the Long Field's second grove, same recipe as the first.",
+        "at": [
+          5.0,
+          1235.0
+        ],
+        "radius": 14.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+        ],
+        "scale_min": 0.85,
+        "scale_max": 1.1
       }
     ]
   },
