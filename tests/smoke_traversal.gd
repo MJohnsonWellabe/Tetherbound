@@ -933,6 +933,11 @@ func _check_kill_volume(world: Node, player: CharacterBody3D, failures: Array[St
 ## to this test — the only coordinate that would need to change if the span
 ## width or gully depth changed is inside those nodes' own scripts, not here.
 const BRIDGE_START_BACK := 11.0
+## How far below the approach placement counts as "the ground is there now".
+## Comfortably more than the 1.0 m the body is placed above it, so a shape that
+## has arrived is always found, and far less than the 11 m carve beside it, so
+## the gully floor can never be mistaken for the approach.
+const GROUND_ARRIVAL_PROBE_M := 3.0
 const BRIDGE_WALK_FRAMES := 420
 ## The player has crossed when they are this far past the gully's centre —
 ## past the span's far landing (9.2m) with room to spare, so a player merely
@@ -972,6 +977,49 @@ func _assert_south_bridge_site_sound(world: Node, player: CharacterBody3D, failu
 	var placed := Vector3(site.x, ground + 1.0, site.y)
 	player.global_position = placed
 	player.velocity = Vector3.ZERO
+
+	# HOLD THE BODY UP UNTIL THERE IS GROUND UNDER IT, and the reason is the
+	# whole reason this assertion was intermittent.
+	#
+	# `playground_world.gd::_apply_dynamic_collision()` runs Terrain3D in
+	# Dynamic/Game: real collision shapes exist only in a radius around the
+	# CAMERA and are rebuilt as it moves. This teleport puts the body 1.3 km
+	# from wherever the previous check left it, and the camera rig follows the
+	# player rather than snapping to it, so for the frames while it is catching
+	# up there is no terrain shape under the site at all. The body falls
+	# through, the shapes arrive around it, and every one of the eight compass
+	# probes is then correctly sealed -- against a body that is 0.7 m INSIDE
+	# the ground it was placed a metre above.
+	#
+	# Measured, not reasoned: two consecutive local runs of this file, one
+	# green and one red, the red one resting at (7.90, -3.60, 1319.0) against a
+	# `ground_height_at` of -2.90 -- and `_walk_at_the_bridge`'s own header
+	# below records the same coordinates from the run that first found this
+	# ((7.9, -3.4, 1319.0), 3 of 3 attempts). CI, on slower hardware, lost the
+	# race every time; this box won it about half the time.
+	#
+	# A player never reaches that state on the real path: they WALK to the
+	# bridge and the collision radius travels with them. So the honest question
+	# -- is the approach sound to stand on -- can only be asked once the ground
+	# is there to stand on. `test_move` straight down from the placement is the
+	# same physics query the entombment predicate uses (never a raycast: D09).
+	var probe_from := player.global_transform
+	probe_from.origin = placed
+	var ground_arrived := false
+	for i in 300:
+		player.global_position = placed
+		player.velocity = Vector3.ZERO
+		await physics_frame
+		if player.call("test_move", probe_from, Vector3.DOWN * GROUND_ARRIVAL_PROBE_M):
+			ground_arrived = true
+			break
+	if not ground_arrived:
+		failures.append(
+			("no terrain collision ever arrived under the South Bridge approach site %s: "
+			+ "nothing within %.1f m below the placement after 300 physics frames")
+			% [str(site), GROUND_ARRIVAL_PROBE_M])
+		return
+
 	for i in 90:
 		await physics_frame
 		if player.call("is_on_floor"):
