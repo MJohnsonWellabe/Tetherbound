@@ -18,38 +18,50 @@ extends SceneTree
 ## (`playground_heightfield.gd::road_polylines()`); this capture does not
 ## exercise a different code path than a real playthrough would, it only
 ## reveals the fog a real Band 1 walk would have earned by this point in the
-## chapter (village -> road gate -> the Rise crest -> the Pond Circuit loop ->
-## the Long Field -> the bridge approach -> South Bridge) using the same
-## debug-only `reveal_circle` capture_map_tab.gd already relies on for its
-## own "day 1" frame, at a wider radius along more of the corridor.
+## chapter, using the same debug-only `reveal_circle` capture_map_tab.gd
+## already relies on for its own "day 1" frame -- at EVERY waypoint of
+## `trail.bands[0]` (the real Band 1 spine polyline) and `trail.loops[0]`
+## (the Pond Circuit loop), not a handful of hand-picked stands, so
+## consecutive circles overlap and the trail reads as one continuous line
+## rather than disconnected blobs.
+##
+## Two frames: the whole-Meadows view (zoom 1, what a player sees by
+## default) and a zoomed Band 1 view (the tab's own 8x zoom level, panned
+## by teleporting the player to the Pond -- `tab_map.gd::
+## _follow_player_if_not_panned()` re-centres on the player itself, the
+## same mechanism a real zoomed-in player already relies on) so the
+## individual trail segments (the spine's bend at the Rise, the Pond
+## Circuit's own loop shape) are legible rather than a few pixels wide.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
+const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const OUT_DIR := "res://shots/_diag"
 const SETTLE_FRAMES := 240
 
-## A generous walked-corridor reveal along Band 1's own route (arc 0-2400,
-## terrain_playground.json / trail.bands[0] and the pond_circuit loop), not a
-## reveal_all() cheat -- each point is somewhere the route contract or the
-## composition plan actually puts the player, so the revealed shape traces
-## the corridor a real first playthrough leaves fogged-in, at a radius wide
-## enough that neighbouring trail geometry (the Pond Circuit loop's far leg,
-## the Long Field's two groves) is not clipped at the reveal's own edge.
-const REVEAL_RADIUS := 90.0
-const WALKED_POINTS := [
-	Vector3(0.0, 0.0, 0.0),        # village square
-	Vector3(9.0, 0.0, 40.0),       # road gate / Gate Meadow
-	Vector3(-228.0, 0.0, 331.0),   # the Rise crest (comp3 eye)
-	Vector3(-320.0, 0.0, 378.0),   # pond reveal (comp7 eye)
-	Vector3(-382.8, 0.0, 355.5),   # the discovery cache (tm_rock_throw)
-	Vector3(-387.0, 0.0, 442.0),   # pond arrival (comp5 eye)
-	Vector3(-395.0, 0.0, 545.0),   # pond_circuit far leg
-	Vector3(-260.0, 0.0, 630.0),   # pond_circuit rejoin leg
-	Vector3(-190.0, 0.0, 650.0),   # pond_circuit rejoins the spine
-	Vector3(0.0, 0.0, 900.0),      # the Long Field
-	Vector3(344.0, 0.0, 935.0),    # the trail camp
-	Vector3(0.0, 0.0, 1250.0),     # bridge approach / fence line
-	Vector3(9.0, 0.0, 1300.0),     # South Bridge rim
-]
+const REVEAL_RADIUS := 55.0
+
+
+func _band1_walked_points() -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	var file := FileAccess.open(TERRAIN_CONFIG, FileAccess.READ)
+	if file == null:
+		return out
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not (parsed is Dictionary):
+		return out
+	var cfg: Dictionary = parsed
+	var trail: Dictionary = cfg.get("trail", {})
+	for band: Variant in trail.get("bands", []):
+		if str((band as Dictionary).get("id", "")) == "band1_lower_meadows":
+			for point: Variant in (band as Dictionary).get("points", []):
+				out.append(Vector3(float(point[0]), 0.0, float(point[1])))
+	for loop: Variant in trail.get("loops", []):
+		if str((loop as Dictionary).get("id", "")) == "pond_circuit":
+			for point: Variant in (loop as Dictionary).get("points", []):
+				out.append(Vector3(float(point[0]), 0.0, float(point[1])))
+	# The discovery cache itself, off the spine and off the loop.
+	out.append(Vector3(-382.8, 0.0, 355.5))
+	return out
 
 
 func _init() -> void:
@@ -82,11 +94,21 @@ func _run() -> void:
 		quit(1)
 		return
 	var map_state: RefCounted = game.get("map")
+	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 
-	for point in WALKED_POINTS:
+	var walked := _band1_walked_points()
+	if walked.is_empty():
+		push_error("band1_lower_meadows / pond_circuit not found in %s" % TERRAIN_CONFIG)
+		quit(1)
+		return
+	for point in walked:
 		map_state.reveal_circle(point, REVEAL_RADIUS)
 		map_state.mark_visited(point)
 
+	var written: Array[String] = []
+	var failures: Array[String] = []
+
+	# --- (a) whole-Meadows view, zoom 1 -- what a player sees by default ---
 	menu.call("open", "map")
 	# tab_map.gd's own SETTLE_FRAMES=6 self-expiring redraw exists for a
 	# documented software-rendering race (a freshly baked ImageTexture is not
@@ -95,20 +117,59 @@ func _run() -> void:
 	for i in 90:
 		await process_frame
 	await RenderingServer.frame_post_draw
+	await _shoot("band1_map_trails_overview", written, failures)
+	menu.call("close")
+	for i in 4:
+		await process_frame
+
+	# --- (b) zoomed Band 1 view, panned to the Pond by teleporting the
+	# player there before opening -- tab_map.gd's own
+	# `_follow_player_if_not_panned()` re-centres the view on the player
+	# every poll() while zoomed and not manually panned, the same mechanism
+	# a real player already relies on to see their own neighbourhood zoomed
+	# in; this does not add a second camera/pan mechanism. `state()` in
+	# menu_tab.gd is literally `menu.get("game")` -- the Game autoload --
+	# and tab_map.gd reads/writes its own remembered zoom as the autoload's
+	# plain `map_last_zoom: float` property (autoload/game_state.gd:377), so
+	# setting it directly here is the same call the tab's own zoom-in input
+	# handler makes, not a second mechanism.
+	if player != null:
+		player.global_position = Vector3(-320.0, 0.0, 420.0)
+	game.set("map_last_zoom", 8.0)
+	menu.call("open", "map")
+	for i in 90:
+		await process_frame
+	await RenderingServer.frame_post_draw
+	await _shoot("band1_map_trails_zoomed", written, failures)
+
+	print("")
+	print("%d frames -> %s" % [written.size(), OUT_DIR])
+	print("Software rendering. Frame times from this harness are NOT a performance measurement.")
+
+	if not failures.is_empty():
+		print("")
+		for line in failures:
+			print("FAIL: %s" % line)
+		quit(1)
+		return
+	quit(0)
+
+
+func _shoot(name: String, written: Array[String], failures: Array[String]) -> void:
+	for i in 4:
+		await process_frame
+	await RenderingServer.frame_post_draw
 
 	var image := root.get_texture().get_image()
 	if image == null:
-		push_error("viewport returned no image")
-		quit(1)
+		failures.append("%s: viewport returned no image" % name)
 		return
 
-	var path := "%s/band1_map_trails.png" % OUT_DIR
+	var path := "%s/%s.png" % [OUT_DIR, name]
 	var error := image.save_png(path)
 	if error != OK:
-		push_error("save_png failed (%d)" % error)
-		quit(1)
+		failures.append("%s: save_png failed (%d)" % [name, error])
 		return
 
-	print("band1_map_trails -> %s" % path)
-	print("Software rendering. Frame times from this harness are NOT a performance measurement.")
-	quit(0)
+	written.append(path)
+	print("  %-30s -> %s" % [name, path])
