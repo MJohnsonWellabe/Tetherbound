@@ -143,10 +143,14 @@ reproduced from the branch is treated as failed.
 
 ## 8. Evidence hygiene
 
-- Commit the written verdict and at most one contact sheet per round. Do not commit
-  per-frame screenshots, telemetry `.jsonl`, or save handoffs; `.gitignore` now refuses
-  them under `ralph/reports/`. 2.8 GB of payload accumulated in three days before this
-  rule.
+- Commit the written verdict and at most one contact sheet per round, named
+  `_sheet*.png` (a leading underscore is what the ignore rules let through). Do not
+  commit per-frame screenshots or telemetry `.jsonl`/`.csv`; `.gitignore` refuses them
+  under the capture-round directories of `ralph/reports/`. 2.8 GB of payload
+  accumulated in three days before this rule. The one exception is a Gate F run
+  directory (`ralph/reports/gate-f-*/`): the protocol requires its prescribed captures
+  and save handoffs in the tree, the harness checks that with `git check-ignore`, and a
+  run is 50–80 MB, so run the authoritative pass once, not twelve times.
 - Owner playtests and directives are recorded verbatim in `docs/owner/` and outrank every
   other document for what they cover. A fresh owner reproduction reopens any item a
   ledger says is fixed.
