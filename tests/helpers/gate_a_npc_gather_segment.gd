@@ -385,6 +385,25 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	if prop_raw != null:
 		prop_before = "<freed>" if not is_instance_valid(prop_raw) \
 			else "%s(%s)" % [str(prop_raw.get_class()), str(prop_raw.name)]
+	# Was a swing ALREADY running when the button went down?
+	#
+	# This is the one thing the failure below could not tell you, and it
+	# separates the only two stories that fit the evidence it does print.
+	# `harvest_logic.gd::swing_answers_the_prompt()` returns TRUE without
+	# starting anything when a swing is already in flight -- "that swing
+	# resolves on its own and will gather something itself" -- so a press that
+	# lands in the tail of a previous swing is answered by that older swing and
+	# starts no new one. `_tap_action()` then waits 8 physics frames, which is
+	# long enough for the tail of a ~37-frame swing to finish, and the sample
+	# below reads `is_swinging=false` on a press that was in fact swallowed.
+	# The other story is that the press reached a genuinely idle hand and the
+	# swing simply never began. `hold.equipped()` is sampled for the same
+	# reason: `swing()` refuses on an empty hand, and tool_hold's own idea of
+	# what is equipped is a DIFFERENT variable from `Game.equipped_tool`, which
+	# is what the check above proved -- the two disagreeing is its own bug and
+	# would look identical from outside.
+	var swinging_before := bool(hold.call("is_swinging"))
+	var hold_equipped_before := str(hold.call("equipped"))
 	await _tap_action(&"interact")
 	if not bool(hold.call("is_swinging")):
 		# Say WHY, not just that. This assertion has never once run in CI --
@@ -405,9 +424,12 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 			str(hold.call("prop_node")),
 			str(hold.call("is_swinging")),
 			str(node.name) if node != null else "<null>"])
-		_fail("  ...and BEFORE the press: equipped=%s prop=%s | winner parent=%s" % [
+		_fail(("  ...and BEFORE the press: equipped=%s prop=%s swinging=%s hold_equipped=%s "
+			+ "| winner parent=%s") % [
 			equipped_before,
 			prop_before,
+			str(swinging_before),
+			hold_equipped_before,
 			str((winner as Node).get_parent().name) if winner is Node \
 				and (winner as Node).get_parent() != null else "<none>"])
 		return false

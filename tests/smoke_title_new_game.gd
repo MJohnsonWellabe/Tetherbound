@@ -58,6 +58,28 @@ func _run() -> void:
 		return
 	await _pad(button_index)
 
+	# ANSWER THE RETURNING-PLAYER CONFIRMATION, which this file used to assume
+	# it would never meet.
+	#
+	# `title_screen.gd::_on_new_pressed()` interposes a "Start a fresh game?"
+	# confirmation whenever ANY save slot is occupied, with "Start Fresh Game"
+	# already focused. On a fresh CI runner `user://` is empty, so the press
+	# above went straight through and this test passed; on any machine that has
+	# ever run another smoke -- which is every developer machine, and this
+	# container, where `saves/slot_0.json` exists -- the press landed on the
+	# confirmation instead and every assertion below failed at once. The
+	# reported symptoms were spectacular and completely misleading: "Start New
+	# Game carried the old Warden victory into Meadows", about a game that had
+	# not left the title screen. Verified 2026-09-03 by running this file
+	# against an unmodified `main`.
+	#
+	# Answering it is the production path, not a test convenience: it is the
+	# screen a returning player meets every single time they start over, and
+	# `gate_a_opening_drive.gd` already answers it for the same reason.
+	var confirm := root.get_viewport().gui_get_focus_owner() as Button
+	if confirm != null and confirm.text == "Start Fresh Game":
+		await _pad(button_index)
+
 	# change_scene_to_file() is requested after one title frame.  World _ready()
 	# is intentionally allowed to finish: seeing only a queued path would repeat
 	# the old false-positive where the title never actually reached Meadows.
