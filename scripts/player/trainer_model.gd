@@ -31,6 +31,14 @@ var _throwing_for: float = 0.0
 ## (`CLIPS["chop"]`, baked into `trainer_lod0.glb`), and the swing role is its
 ## own role rather than a second name for throwing.
 var _tool_swing_for: float = 0.0
+
+## How far from where the lying pose was applied still counts as being in the
+## bed. Same 3.2 m `sequence_director.gd` uses for walking off the mattress.
+const LYING_ANCHOR_RADIUS_M := 3.2
+
+## Where the body was when the lying pose was applied. `Vector3.INF` means
+## "not lying", so a standing trainer never carries a stale anchor.
+var _lying_anchor: Vector3 = Vector3.INF
 ## movement.json's `gait_feel` block (MQ1A, TUNABLE) — momentum-tilt limits for
 ## character_model.gd's apply_momentum_tilt(). Read once at ready.
 var _gait_feel: Dictionary = {}
@@ -77,7 +85,31 @@ func _physics_process(delta: float) -> void:
 	# trainer isn't reliably grounded the instant it starts moving off a
 	# raised mattress, and the thing that actually means "getting up now" is
 	# the player asking to move, not where physics has settled them yet.
-	if is_lying() and float(_player.call("ground_speed")) > 0.4:
+	# ...and a THIRD exit, added 2026-09-03: the body was moved off the bed
+	# without walking. `ground_speed` stays 0 through a teleport, so a harness
+	# (or a debug warp, or any future fast travel) that sets `global_position`
+	# directly used to carry the flat bed pose to the far side of the map with
+	# nothing to clear it. That went unnoticed while `set_lying(true)` rendered
+	# a collapsed lump; once OPENING-BED-0903 made the pose a real lying body,
+	# `smoke_gate_a_rest_torch` caught it at once — the trainer drew a torch
+	# while still lying, so the flame sat beside the prop origin instead of
+	# above it.
+	#
+	# Measured from where the pose was APPLIED, not frame to frame: the wake
+	# beat teleports the player into the bed and poses them there, so a bare
+	# "position jumped" rule clears the pose it was setting (it did, once —
+	# `smoke_opening` went red on "the trainer is not lying down at the start
+	# of the wake beat"). The radius is the one `sequence_director.gd` already
+	# uses for walking off the mattress, so both exits agree on how far from
+	# the bed still counts as in it.
+	if is_lying():
+		if _lying_anchor == Vector3.INF:
+			_lying_anchor = _player.global_position
+	else:
+		_lying_anchor = Vector3.INF
+	var left_the_bed := _lying_anchor != Vector3.INF \
+		and _player.global_position.distance_to(_lying_anchor) > LYING_ANCHOR_RADIUS_M
+	if is_lying() and (float(_player.call("ground_speed")) > 0.4 or left_the_bed):
 		set_lying(false)
 	# Only the throw and the chop are committed one-shots (timed by
 	# _throwing_for / _tool_swing_for); idle,
