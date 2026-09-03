@@ -371,8 +371,12 @@ func _harvest(game: Node, inventory: RefCounted, items: RefCounted) -> void:
 	if amount <= 0:
 		return
 	if not bool(inventory.call("has_room_for", _crop_id, amount)):
-		# Refused, visibly: the crop stays ripe and the prompt keeps offering,
-		# the same honest "your satchel is full" both other gather bodies give.
+		# INTERACT-SWEEP-0903: this claimed "refused, visibly" without ever
+		# saying anything -- `FARM_LOGIC.is_actionable()` has no notion of
+		# satchel capacity, so the prompt stays green and a press on a full
+		# satchel produced nothing a player could tell apart from a dropped
+		# press. Now speaks, matching `harvest_node.gd`'s own fix.
+		game.call("push_world_message", "Satchel is full.")
 		return
 	inventory.call("add", _crop_id, amount)
 	var required_slot := int(gathered["required_slot"])

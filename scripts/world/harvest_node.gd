@@ -392,8 +392,12 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 				game.call("push_world_message", "Needs a %s." % str(items.call("item_name", required_tool)))
 		return
 	if not bool(inventory.call("has_room_for", _item_id, actual_amount)):
-		# Refused, visibly: the node stays and the prompt keeps offering, which
-		# is the honest version of "your satchel is full".
+		# INTERACT-SWEEP-0903: this used to claim "refused, visibly" while doing
+		# nothing a player could actually see -- the prompt staying up is not
+		# feedback about THIS press, it is silence. Now says so, the same as
+		# `item_cache_pickup.gd`/`tm_pickup.gd` already do for their own full-
+		# satchel refusal.
+		game.call("push_world_message", "Satchel is full.")
 		return
 	inventory.call("add", _item_id, actual_amount)
 	# GATEB-FLAGS: `home_materials_gathered` (data/progression/objectives.json).

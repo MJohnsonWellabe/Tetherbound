@@ -262,6 +262,11 @@ func _on_gathered() -> void:
 	if inventory == null:
 		return
 	if not bool(inventory.call("has_room_for", _item_id, _amount)):
+		# INTERACT-SWEEP-0903: the header above already claimed this refusal
+		# was visible; the code did not actually say anything, so a press on a
+		# full satchel looked exactly like a dropped one. Now it says so, same
+		# wording as `harvest_node.gd`/`key_pickup.gd`'s own fix.
+		game.call("push_world_message", "Satchel is full.")
 		return
 	inventory.call("add", _item_id, _amount)
 	# Owner feedback: the pickup must visibly say what entered the satchel. Use

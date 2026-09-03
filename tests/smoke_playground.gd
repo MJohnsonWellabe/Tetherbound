@@ -134,6 +134,7 @@ func _run() -> void:
 	failures.append_array(await _swinging_the_tool_connects_after_walking_up_to_a_tree(world))
 	failures.append_array(await _chopping_stands_a_felled_pickup_that_pays_out_on_a_second_gather(world))
 	failures.append_array(await _an_authored_tool_gather_reports_the_exact_pickup(world))
+	failures.append_array(await _a_full_satchel_gather_still_says_so(world))
 	failures.append_array(await _a_swing_plays_the_chop_and_lands_on_its_impact_frame(world))
 	failures.append_array(await _build_open_opens_the_menu_from_the_world(world))
 	failures.append_array(await _the_recall_prompt_never_overlaps_the_hotbar(world))
@@ -511,6 +512,80 @@ func _an_authored_tool_gather_reports_the_exact_pickup(world: Node) -> Array[Str
 				credited, message.text, expected])
 		else:
 			print("authored gather feedback: %s" % message.text)
+	return found
+
+
+## INTERACT-SWEEP-0903. `harvest_node.gd`/`key_pickup.gd`/`felled_resource.gd`/
+## `farm_plot.gd` each carried a `has_room_for()` refusal whose own comment
+## claimed "refused, visibly" while the code beneath it did nothing but
+## `return` -- the prompt stayed up, which is not feedback about the press
+## that was just made, it is the absence of any. A player pressing interact
+## on a full satchel saw exactly what a dropped press looks like: nothing.
+## `item_cache_pickup.gd`/`tm_pickup.gd` already spoke ("Satchel is full.")
+## on the identical refusal, so the fix makes the other four match them
+## instead of merely asserting they already did.
+##
+## Proven on `harvest_node.gd`'s own authored berries spot (bare-handed:
+## berries carry no `gathered_with`, so this isolates the has_room_for
+## refusal from the axe/tool gating `_an_authored_tool_gather_reports_the_
+## exact_pickup` above already exercises) with the satchel filled to its
+## last slot by hand.
+func _a_full_satchel_gather_still_says_so(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var game := world.get_node_or_null(^"/root/Game")
+	var hud := world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	var message := hud.get_node_or_null(^"Root/BottomDock/HotbarPanel/Margin/Layout/Message") as Label \
+		if hud != null else null
+	if game == null or message == null:
+		return ["full-satchel feedback check is missing Game/HUD message wiring"] as Array[String]
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		return ["Game exposes no inventory for full-satchel feedback verification"] as Array[String]
+
+	var berry_node: Node3D = null
+	for node: Node in get_nodes_in_group("harvestable"):
+		if node is Node3D and node.get_script() == HARVEST_NODE_SCRIPT \
+				and str(node.get("_item_id")) == "berries" and is_instance_valid(node):
+			berry_node = node as Node3D
+			break
+	if berry_node == null:
+		return ["the live world has no authored berries node for full-satchel verification"] as Array[String]
+
+	# Every catalogued item but the one this check gathers, so filling slots
+	# never collides with the thing being tested for room. More ids than any
+	# satchel has slots for; already-occupied ids just top off an existing
+	# stack rather than opening a new one, so this loop still converges.
+	var filler_ids: Array[String] = [
+		"coin", "wood", "stone", "fiber", "berry_seeds", "rootstone", "ironwood",
+		"potion_large", "field_sigil", "ridge_sigil", "river_sigil", "saddle_frame",
+		"saddle", "orb_basic", "orb_greater", "potion_small", "revive", "axe",
+		"pickaxe", "hammer", "knife", "hoe", "fishing_rod", "torch",
+	]
+	for id in filler_ids:
+		if bool(inventory.call("is_full")):
+			break
+		inventory.call("add", id, 1)
+	if not bool(inventory.call("is_full")):
+		return ["could not fill the satchel for the full-satchel feedback check"] as Array[String]
+	if bool(inventory.call("has_room_for", "berries", int(berry_node.call("resource_amount")))):
+		return ["satchel reports full but still has room for berries; test fixture is wrong"] as Array[String]
+
+	game.call("take_pending_world_message")
+	message.text = ""
+	message.visible = false
+	var before := int(inventory.call("count", "berries"))
+	berry_node.call("gather")
+	for i in 6:
+		await process_frame
+
+	if int(inventory.call("count", "berries")) != before:
+		found.append("a full satchel still accepted a berries gather")
+	if not message.visible or message.text != "Satchel is full.":
+		found.append(
+			"a full-satchel gather press produced no 'Satchel is full.' feedback (text='%s' visible=%s)"
+			% [message.text, message.visible])
+	else:
+		print("full-satchel feedback: %s" % message.text)
 	return found
 
 
