@@ -1688,6 +1688,80 @@ jobs:
           done
           exit 1
 
+  # CI-TRUTH-0903. `tests/smoke_gate_b_continuous.gd` used to run in NO CI job
+  # at all -- not even a known-red one -- which is exactly how two of
+  # `gate_b_tail_segment.gd`'s own assertions sat failing against label
+  # strings that had never existed in `data/progression/objectives.json`:
+  # nothing was watching, so nothing noticed (`docs/CURRENT_STATE.md` §4).
+  #
+  # The file's default (no flag) run now stops after tournament readiness --
+  # the opening, the road gate, the village visit for tools and tournament
+  # readiness are the beats that have actually passed reliably. This is
+  # THAT part, gating: a regression in any of the four is caught the same
+  # push it lands on, same as every other required job. The gather route and
+  # the tail (house, beds, nights, the bracket) are NOT run here -- see
+  # `verify-gate-b-full-known-red` below for why and where they still run.
+  verify-gate-b-core:
+    runs-on: ubuntu-latest
+    # Measured locally: opening through tournament readiness is a small
+    # fraction of the full ~25-minute continuous run (it stops well short of
+    # the gather route, the file's own single most expensive section). 20
+    # minutes leaves headroom for checkout/setup and a slow CI runner without
+    # inviting the full chain back in by accident.
+    timeout-minutes: 20
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      # RETRIES: 2, not 1. `docs/CURRENT_STATE.md` §3 already tracks a real,
+      # open P1 here: the tutorial catch's clear-shot-to-target search is
+      # unstable across KO/re-engage rounds inside this same opening drive
+      # (verified locally 2026-09-03 -- one of two runs on an unrelated commit
+      # failed with "could not find a spot with a clear line to the
+      # Bramblebun 9 times running", the other passed clean). That is the
+      # opening's own bug to fix, not this job's to hide -- but a single
+      # attempt would make this job flake on a beat nobody touched, which is
+      # exactly the "RETRIES rescuing a deterministic failure" trap this
+      # lane exists to catch when it is 3 attempts on a job that fails
+      # every time. 2 matches `verify-gate-a-ui-build-shard`'s own retry
+      # budget for `smoke_opening.gd`, which plays the identical drive.
+      - name: Verify gate_b_continuous (CORE — opening through tournament readiness)
+        env: { RETRIES: 2 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_gate_b_continuous.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script tests/smoke_gate_b_continuous.gd; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_gate_b_continuous.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
+
   verify-continuous-core-known-red:
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -1727,6 +1801,59 @@ jobs:
           set -euo pipefail
           godot --headless --path . --script tests/smoke_gate_a_opening_segment.gd -- --gate-a-continuous-core
 
+  # CI-TRUTH-0903's other half of the split above: the gather route and the
+  # tail (house, three creature beds, the nights, feeding, the marshal's
+  # entry gate, all three tournament rounds), which have never yet finished a
+  # run cleanly. Its current known failure is the gather-route walker --
+  # `controller could not reach authored fiber at (-5.0, 141.0) (stopped
+  # 114.6m short)` -- diagnosed by `tools/_probe_gather_route_fiber_141_0903.gd`,
+  # checked in beside this job. NOT scatter congestion (harvestable density
+  # along the leg stays at 0-2 nodes per 4m throughout): the walker correctly
+  # opens the shared village-boundary gate and passes through it, then meets
+  # the SAME boundary fence turning a concave corner just past the gate
+  # (`village_boundary.gd`, dated 2026-09-02, predates today's world/scatter
+  # lanes) that runs perpendicular to the line toward the target --
+  # `stick_navigator.gd`'s wall-hugging measures progress as straight-line
+  # closing distance on a target 114m away, which a perpendicular slide barely
+  # moves, so it re-triggers short detours that flip side almost every attempt
+  # instead of clearing the corner. See `docs/CURRENT_STATE.md` for the full
+  # numbers. Fixing this is out of this job's scope either way: it is
+  # `stick_navigator.gd`'s own corner-following (test harness) or the gather
+  # route's authoring (GATHER-ROUTE lane), never `data/config/vegetation.json`
+  # or the band vegetation files -- those are MID-LAYER's, and editing them
+  # here would silently move the scatter bake's own fingerprint.
+  #
+  # Same shape as `verify-continuous-core-known-red` above: workflow_dispatch
+  # only, allowed to fail, kept runnable for a deliberate manual inspection
+  # rather than flipped straight to gating and making every PR red for a beat
+  # nobody regressed. Promote this to a gating job once the gather route and
+  # the tail pass reliably; drop `--gate-b-full-chain` from
+  # `smoke_gate_b_continuous.gd` at the same time and let `verify-gate-b-core`
+  # above run the whole file again.
+  verify-gate-b-full-known-red:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: changes
+    if: github.event_name == 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Verify gate_b_continuous (FULL CHAIN — gather route and tail, KNOWN RED)
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tests/smoke_gate_b_continuous.gd -- --gate-b-full-chain
+
   # Main only. Ralph dispatches CI after a clean branch rebase; treating that
   # workflow_dispatch as an export request made every rebase pay this tail.
   # The export tail was ~40% of every branch
@@ -1751,6 +1878,7 @@ jobs:
       - verify-regions-shard
       - verify-owner-regressions-shard
       - verify-gate-evidence-shard
+      - verify-gate-b-core
     if: |
       needs.changes.outputs.code == 'true' &&
       github.ref == 'refs/heads/main'
