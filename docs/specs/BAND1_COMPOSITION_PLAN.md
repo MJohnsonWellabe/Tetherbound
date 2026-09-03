@@ -451,9 +451,14 @@ trunks; at the shore, the **fisher on the bench** with the mill across the water
 **Now (reveal, first siting at arc 600):** two signpost posts fill the centre at 1 m,
 a trunk behind them, the grove's near edge across the whole right half at 15–40 m, the
 road at right, no water anywhere; the far ridge at left is bare. The stand was in the
-wrong place and it proved where the right place is. **Now (reveal, arc 560):** see the
-re-rendered `comp7` in `_sheet_composition_before.png`; §1.3 records the second
-judge's read of it. **Now (arrival):**
+wrong place and it proved where the right place is. **Now (reveal, arc 560):** the profile was right about the ground and the plan is
+right about the window. The road descends right, an open slope rises left, the pocket's
+grove line runs across the whole distance and **the mill's red roof shows above it at
+centre**, 150 m away, the first built thing on the sightline since the village; the
+water is still not visible, because the grove's road-side edge between arc 590 and 650
+stands between the eye and the sheet. The trainer is 6 m ahead on the road. No creature.
+The far ridge left is bare. The second judge's read is in `JUDGE-before.md` ("Second
+pass"). **Now (arrival):**
 a dense grove of same-height red trunks fills the frame, the water is a strip glimpsed
 between trunks, Dara stands among the trees on the left, a fallen branch is the right
 near element; there is no window to the water and the footbridge is not visible. **Now
@@ -551,8 +556,14 @@ right edge. **Now (rim, first siting at arc 2300):** a 4 m pale boulder at 5 m f
 with the trainer behind it; a dead tree on the far skyline; groves left and right; no
 bridge. A corridor-fill rock happens to stand exactly where this plan wants an authored
 upright, which says the instinct is right and the object is wrong. **Now (rim, arc
-2253):** see the re-rendered `comp8`; §1.3 records the second judge's read. **Now
-(place5):** the gully's cut
+2253):** the road runs straight through the second Long Field grove (anchor (5,1235),
+r 14, 30 m from the eye): trunks both sides, canopy over the top edge, a Bramblebun
+pale against the shade on the left at 40 m, and at the far end of the road's gap a
+small orange shape at 64 m that is the bridge's timber, with the far bank's slope
+behind it. The grove was placed by WORLD-TREES as a thin-leg fill 12–13 m off the
+trail; the trail's bend at (30,1250) brings the road through it, and by accident it is
+the best gate on the route. The second judge's read is in `JUDGE-before.md` ("Second
+pass"). **Now (place5):** the gully's cut
 walls are hard-edged grass planes, the road runs into a trench, a bare dead tree stands
 on the far skyline, the bridge itself is not in frame.
 
@@ -575,9 +586,10 @@ plan's). `comp8` was rendered after the judge's pass; see §1.3.
 | Approach, near, right, 6–12 m | rock line | `Rock_Medium_1/_2` ×5, 0.5–1.2, `sink` 0.4, anchor at (98,1236) r 6 | right shoulder, converging with the fence | the two lines gather the road |
 | Approach, mid, 60 m | the Tether waypost | props `tether_waypost` at (156,1227): rotate the crate and banner so the banner's face is toward this eye (`yaw_deg` 15 → ~105) | | the oxblood banner is the one faction colour on the route; end-on it is a brown block |
 | Approach, mid, 100 m, left | the second grove | 5.6 recipe | on the ridge | the mass; already there |
-| Approach, mid-far, 100 m | the **rim uprights** | `rocks` anchor: `Rock_Medium_3` ×2 at 1.8–2.2, `max_slope_deg` 60, `sink` 0.6, at (4,1262) and (19,1268) | either side of the road on the rim at arc 2253 | two stone uprights mark where the road crests and drops; from 100 m they are the only vertical on the line and they say "gate". The accidental corridor boulder at about (−25,1295) in the hollow is removed by a clearing (centre (−27,1297), r 8) so the hollow stays a hollow |
+| Approach, mid-far, 100 m | **the grove is the gate** | existing `trees` anchor (5,1235) r 14 count 10: keep; add a road-gap rule: no trunk within 5 m of the centreline through it (a `clearings` entry centre (12,1258) r 5 on the road only); §3 copse recipe (one ≥1.4, two ≤0.7); `saplings` ×4 on its approach side at (40,1240) r 6 | the rim at arc 2253, where the road already passes through this grove | from the approach the eye is gathered by the fence and the rock line to a dark canopy mass with a light gap in it where the road goes; that gap is the notch. No stone uprights are needed: the trunks are the uprights. The accidental corridor boulder at about (−25,1295) in the hollow is removed by a clearing (centre (−27,1297), r 8) so the hollow stays a hollow |
 | Approach, distance, 200 m+ | the far rim's treeline | `trees` anchor at (15,1385) r 14 count 9, scale 0.8–1.6, plus `deadfall` ×1 at (30,1378) | on the far bank behind the bridge, south of the trail's end (0,1360) | the dark mass behind the pale bridge parapet; breaks the horizon |
-| Rim, near, both sides, 3–8 m | the two uprights (above) | | | the one place on the route where both sides carry a near element, because a gate is a tunnel on purpose |
+| Rim, near, both sides, 3–8 m | the grove's trunks (above) | | | the one place on the route where both sides carry a near element, because a gate is a tunnel on purpose; the canopy must close over the top edge and the road's gap must show the bridge at its end |
+| Rim, mid, 64 m | the bridge parapet | `crossings` south_bridge, unchanged | at the end of the road gap | it must read as timber, not as "a fence across the road" (judge): 2.6 checks the parapet's retint against the fence kit so the two are not the same pale yellow, and the far-rim grove (below) is the dark ground it sits on |
 | Rim, mid, 20–50 m | the hollow | terrain, unchanged; `bushes` ×8 and `drygrass` on its floor by anchor at (−20,1300) r 12 | between the rim and the abutment | the dip reads as a dip because its floor is a different texture from the slopes |
 | Rim, near, 0–15 m, the cut walls | rock skirt | `rocks` anchor along the rim, `Rock_Medium_2` ×8, 0.6–1.2, `max_slope_deg` 70, `min_slope_deg` 25, `sink` 0.5, at (−10,1318) r 22 | the gully's walls | the walls become stone; grass at 45° is the defect the judge saw in `place5` |
 | Rim, mid, 20 m | the grunt | trainers `south_bridge_grunt` at (14,1314), unchanged | on the near abutment | the living subject; he is the gate's keeper |
