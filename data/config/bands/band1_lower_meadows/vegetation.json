@@ -81,6 +81,20 @@
       "z": 905.0,
       "radius": 13.0,
       "_why": "BAND1-D1 / prompt 30: Old Bram's ground (trainers.json order 1010) and the arena his fight forms in. Same reasoning as clearings 3, 4 and 1900 -- a trainer battle arena is ~11m across and forms between the player and the creature their opponent just sent out, so without this the region's hardest optional fight is watched through a tree. NOTE for the coordinator: does NOT invalidate the baked scatter on this branch (GATE_D_LANE_CONTRACT section 4); needs the single integration re-bake."
+    },
+    {
+      "order": 1902,
+      "x": -104.0,
+      "z": 660.0,
+      "radius": 8.0,
+      "_why": "WORLD-TREES-0903, BAND1_ROUTE_CONTRACT.md Place 4: 'trees clustered into two groves... each 8-12 trees with scale variety and a clearing.' This is the first grove's glade -- an open pocket just outside the (-120,650) tree anchor's own 14m radius (vegetation.json layers.trees.anchors) rather than centred on it, so it does not eat into the anchor's own placement budget. Gives the grove a foreground/mid-ground read (an open patch beside the canopy) instead of a solid wall of trees, and leaves the ground clear for WORLD-LIFE's own siting in the same area. NOTE for the coordinator: scatter_bake.gd::config_fingerprint() does not hash band vegetation files (GATE_D_LANE_CONTRACT section 4), so this does NOT invalidate the baked scatter on this branch and needs the single integration re-bake."
+    },
+    {
+      "order": 1903,
+      "x": 21.0,
+      "z": 1245.0,
+      "radius": 8.0,
+      "_why": "WORLD-TREES-0903, Place 4: the second grove's glade, same reasoning as clearing 1902 -- an open pocket beside the (5,1235) tree anchor rather than centred on it. NOTE for the coordinator: does NOT invalidate the baked scatter on this branch (GATE_D_LANE_CONTRACT section 4); needs the single integration re-bake."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",
