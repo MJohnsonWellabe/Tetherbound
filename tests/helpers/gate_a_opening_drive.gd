@@ -47,6 +47,10 @@ const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
 ## throw_aim.gd both read it beside `combat_throw`'s surviving keyboard F. This
 ## harness may only press what a pad can press, so it presses that.
 const THROW_ACTION := &"interact"
+## What `combat_manager.gd` records for a fight that ended in a capture
+## (`OUTCOME_CAUGHT`). Named here because the catch loop has to tell that apart
+## from a fight your own creature simply won.
+const CAUGHT_OUTCOME := "caught"
 const CHOSEN_NAME := "Bud"
 ## Inside this the aim is on the creature and the loop stops. Per axis, because
 ## that is how the rig splits the two sticks.
@@ -427,8 +431,38 @@ func _catch_with_real_throws() -> bool:
 		# that lands between frames; with this in place it should never fire.
 		_hold_the_fight_where_it_was()
 		if not bool(_combat.call("is_fighting")):
-			# The fight ENDED, which over a long catch usually means your own
-			# creature finished the Bramblebun off -- the launch log shows it
+			# FIRST: did the fight end because the catch LANDED?
+			#
+			# This branch used to assume "the fight ended" meant "your creature
+			# killed it", and that assumption produced both of the failures
+			# `smoke_gate_b_continuous` showed on 2026-09-03, from one race.
+			# The post-throw wait below breaks on EITHER a catch result or the
+			# fight ending; when a successful catch ends the fight in the same
+			# frame the result signal is delivered, the wait can break on the
+			# fight and find `_catch_results` still one short, fall out of the
+			# bottom of the loop, and arrive back here -- at which point a
+			# caught creature was reported as a knockout, this drive walked off
+			# to a second wild creature and caught THAT one too, and the run
+			# ended "with 3 party members, expected two".
+			#
+			# The other failure is the same race one step further on: a real
+			# catch ends the opening's ENCOUNTER beat permanently, so
+			# `sequence_director.gd::_is_tutorial_catch()` correctly stops
+			# applying the orb floor, and the second fight this drive should
+			# never have started then ran the satchel dry -- reported as
+			# "catch_orb_floor did not apply" against a floor working exactly
+			# as written.
+			#
+			# `outcome()` is what the combat manager actually recorded, so ask
+			# it rather than inferring from the absence of a fight.
+			if str(_combat.call("outcome")) == CAUGHT_OUTCOME:
+				_checkpoint(("the catch landed as the fight ended on launch %d "
+					+ "(%d strike(s), %d miss(es))") % [
+					launches, _throw_strikes, _throw_misses,
+				])
+				return true
+			# Otherwise your own creature finished the Bramblebun off -- the
+			# launch log shows it
 			# intercepting orbs (`first_hit=AllyCreature`) throughout. The
 			# design expects this: `sequence_director.gd::_on_combat_exited`
 			# says so in as many words -- "They won it instead of catching it,
