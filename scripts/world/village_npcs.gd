@@ -211,8 +211,21 @@ func _spawn(spec: Dictionary, player: Node3D) -> void:
 	# and those change while the player is standing in the square. Resolving it
 	# here, once, at build time would freeze Tam on whatever branch was true
 	# when the settlement was built.
-	var prompt: Node3D = npc.call("add_prompt", "Greet %s" % display_name)
-	prompt.connect("activated", _on_greeted.bind(spec))
+	#
+	# INTERACT-SWEEP-0903: only when this spec could ever actually say
+	# something. Without this guard every one of `data/config/relay_site.json`'s
+	# four unnamed Team Tether bodies ("Relay Patrol"/"Sentry"/"Watch"/
+	# "Deckhand" — pure camera-composition set dressing, no `greeting` or
+	# `greeting_when` authored) drew an actionable "Greet <name>" prompt that
+	# `_on_greeted()`'s own `conversation_id == ""` branch answers with nothing
+	# at all — a press a player standing at the relay checkpoint could not
+	# tell apart from a dropped one. `interactable.gd`'s own header already
+	# states the rule this applies to dialogue: "off means no offer at all —
+	# not a greyed one... a visible prompt the button refuses is worse than no
+	# prompt."
+	if has_anything_to_say(spec):
+		var prompt: Node3D = npc.call("add_prompt", "Greet %s" % display_name)
+		prompt.connect("activated", _on_greeted.bind(spec))
 	_placed += 1
 
 
@@ -268,6 +281,23 @@ func _on_greeted(spec: Dictionary) -> void:
 ## is skipped in that case and the plain `greeting` wins. Deliberately the
 ## cautious direction: an `unless_flag` branch treated as matching would hand
 ## out a one-time gift on every single greeting, forever.
+
+## INTERACT-SWEEP-0903. Whether `greeting_for()` could EVER return a
+## non-empty conversation for this spec -- static and pure, mirroring that
+## function's own two sources (`greeting`, `greeting_when`) without needing a
+## live progression store, so `_spawn()` can decide at BUILD time whether a
+## "Greet" prompt is worth drawing at all. A spec with neither is one nothing
+## in the game will ever change into having something to say (`greeting_when`
+## only narrows or overrides an existing line; it cannot conjure one out of
+## an empty `greeting` on its own), so this is safe to answer once, up front,
+## rather than re-checking on every `_refresh_placements()` pass.
+static func has_anything_to_say(spec: Dictionary) -> bool:
+	if not str(spec.get("greeting", "")).is_empty():
+		return true
+	var branches: Variant = spec.get("greeting_when", [])
+	return branches is Array and not (branches as Array).is_empty()
+
+
 static func greeting_for(spec: Dictionary, progression: RefCounted) -> String:
 	var fallback := str(spec.get("greeting", ""))
 	if progression == null:
