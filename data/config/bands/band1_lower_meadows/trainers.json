@@ -91,7 +91,7 @@
       "defeated": "village_oskar_beaten",
       "team": [
         {
-          "species": "terrapup",
+          "species": "meadowhart",
           "level": 6
         },
         {
@@ -290,7 +290,7 @@
       "defeated": "tournament_final_beaten",
       "team": [
         {
-          "species": "terrapup",
+          "species": "mudsnout",
           "level": 10
         },
         {

@@ -15,6 +15,7 @@ const RULES := preload("res://scripts/world/scatter_rules.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
+const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 
 ## A real authored spot from data/config/harvest.json, kept inline rather than
 ## re-parsed from the file: OF20's bug was specific to loading a `.gltf` model
@@ -547,19 +548,116 @@ func test_marking_is_deterministic_for_the_same_seed() -> void:
 	veg.free()
 
 
-# --- OF20: harvest_node.gd's model loading and the hide/respawn cycle ------
+# --- OF20: harvest_node.gd's model loading ----------------------------------
 #
 # Both of these run `HarvestNode` standing entirely alone -- never added to
 # any tree -- the same "pure logic" shape as the rest of this file (D02). That
 # is enough to cover OF20's actual bug: `_build_visual()`'s PackedScene-vs-
-# Mesh branch and `_process()`'s respawn timer touch nothing but the node's
-# own children. What is deliberately NOT exercised here is `_on_gathered()`'s
-# inventory half, which needs the real `/root/Game` autoload -- unreachable
-# from a node with no SceneTree (see `test_party_seam.gd`'s header for why
-# `run_tests.gd` boots none) -- and is already covered pure-logic-only by
-# `harvest_logic.gd`'s own tests above. The respawn case below reproduces the
-# hidden -> respawned half of that cycle directly, the same fields
-# `_on_gathered()` itself sets on a successful gather.
+# Mesh branch touches nothing but the node's own children. What is
+# deliberately NOT exercised here is `_on_gathered()`'s inventory half, which
+# needs the real `/root/Game` autoload -- unreachable from a node with no
+# SceneTree (see `test_party_seam.gd`'s header for why `run_tests.gd` boots
+# none) -- and is already covered pure-logic-only by `harvest_logic.gd`'s own
+# tests above.
+
+
+# --- D72: gathered stays gone -- flag_id()/was_taken()/restore, the same
+# contract `test_item_cache_pickup.gd` already proves for item_cache_pickup.gd.
+# `was_taken()`/`restore_progression_from_game()` both take `game: Node` and
+# read its `progression` property through the ordinary `Object.get()` -- a
+# plain `Node` carrying the real flag store, the same double
+# `test_item_cache_pickup.gd::FakeCacheGame` uses, stands in without a live
+# SceneTree.
+
+
+class FakeHarvestGame:
+	extends Node
+	var progression: RefCounted = PROGRESSION_STATE.new()
+
+
+func test_flag_id_is_the_harvest_node_prefix_plus_the_node_id() -> void:
+	assert_eq(HARVEST_NODE.flag_id("order:5"), "harvest_node:order:5")
+
+
+func test_was_taken_is_false_with_no_game_at_all() -> void:
+	assert_false(HARVEST_NODE.was_taken(null, "order:5"),
+		"a missing autoload must read as 'not taken', the cautious direction for a permanent removal")
+
+
+func test_was_taken_reads_the_real_flag_store() -> void:
+	var game := FakeHarvestGame.new()
+	assert_false(HARVEST_NODE.was_taken(game, "order:5"))
+	game.progression.set_flag(HARVEST_NODE.flag_id("order:5"))
+	assert_true(HARVEST_NODE.was_taken(game, "order:5"))
+	game.free()
+
+
+func test_was_taken_is_per_node_not_global() -> void:
+	var game := FakeHarvestGame.new()
+	game.progression.set_flag(HARVEST_NODE.flag_id("order:5"))
+	assert_false(HARVEST_NODE.was_taken(game, "order:6"),
+		"one node's flag must not read as every node having been gathered")
+	game.free()
+
+
+## `order` is what every real authored node carries (band_content.gd enforces
+## it unique); a caller with no `order` (burrow_warrens.gd's deposits, this
+## test's own WOOD_SPEC) still needs a stable id, derived from its item and
+## authored `at` instead.
+func test_setup_derives_its_id_from_order_when_present() -> void:
+	var node: Node3D = HARVEST_NODE.new()
+	node.call("setup", {"item": "wood", "amount": 4, "order": 2013})
+	assert_eq(str(node.get("_node_id")), "order:2013")
+	node.free()
+
+
+func test_setup_falls_back_to_item_and_position_when_order_is_absent() -> void:
+	var node: Node3D = HARVEST_NODE.new()
+	node.call("setup", {"item": "stone", "amount": 2, "at": [4.0, -2.0]})
+	assert_eq(str(node.get("_node_id")), "stone@[4.0, -2.0]")
+	node.free()
+
+
+## `_deactivate()` calls `queue_free()`, deferred to the next idle frame --
+## this harness never steps the SceneTree (D02), so `is_instance_valid()`
+## right after the call would still read true regardless of whether
+## deactivation ran. `visible` is set synchronously, before the deferred free,
+## so it is what a test without a running tree can actually observe -- the
+## same shape `test_item_cache_pickup.gd` uses for its own restore test.
+func test_restore_deactivates_a_node_whose_flag_is_already_set() -> void:
+	var node: Node3D = HARVEST_NODE.new()
+	node.call("setup", WOOD_SPEC)
+	var game := FakeHarvestGame.new()
+	game.progression.set_flag(HARVEST_NODE.flag_id(str(node.get("_node_id"))))
+
+	node.call("restore_progression_from_game", game)
+
+	assert_false(node.visible, "an already-gathered node must hide itself on restore, the same as key_pickup.gd's contract")
+	node.free()
+	game.free()
+
+
+func test_restore_leaves_an_ungathered_node_alone() -> void:
+	var node: Node3D = HARVEST_NODE.new()
+	node.call("setup", WOOD_SPEC)
+	var game := FakeHarvestGame.new()
+
+	node.call("restore_progression_from_game", game)
+
+	assert_true(node.visible, "a node nobody has gathered yet must stay visible after a restore call")
+	node.free()
+	game.free()
+
+
+## `setup()` itself already checks `was_taken()` through the real `/root/Game`
+## lookup path, which resolves to null on a freestanding node -- so `setup()`
+## on a fresh, untouched flag store must leave the node active.
+func test_setup_on_a_fresh_flag_store_leaves_the_node_active() -> void:
+	var node: Node3D = HARVEST_NODE.new()
+	node.call("setup", WOOD_SPEC)
+	assert_true(is_instance_valid(node), "setup() must not free a node nobody has gathered yet")
+	if is_instance_valid(node):
+		node.free()
 
 
 func _walk(node: Node) -> Array[Node]:

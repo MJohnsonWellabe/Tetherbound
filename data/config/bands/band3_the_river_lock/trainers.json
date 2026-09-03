@@ -62,7 +62,7 @@
       "defeated": "relay_orrin_defeated",
       "team": [
         {
-          "species": "terrapup",
+          "species": "burrowback",
           "level": 9
         },
         {
@@ -110,7 +110,7 @@
           "level": 10
         },
         {
-          "species": "galewisp",
+          "species": "galecrest",
           "level": 10
         }
       ],
