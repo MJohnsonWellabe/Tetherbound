@@ -38,7 +38,6 @@ const FELLED_RESOURCE_PATH := "res://scripts/world/felled_resource.gd"
 ## further out, because the directive is about what the first day's own loop
 ## can pay for.
 const TARGET_STOCK := {"wood": 69, "stone": 42, "fiber": 34}
-const TOOL_ACTION := {"wood": &"hotbar_1", "stone": &"hotbar_2", "fiber": &"hotbar_3"}
 const TOOL_ID := {"wood": "axe", "stone": "pickaxe", "fiber": "knife"}
 const AUTHORED_ROUTE: Array[Dictionary] = [
 	{"item": "wood", "amount": 4, "at": Vector2(16.0, -28.0)},
@@ -578,6 +577,15 @@ func _who(node: Variant) -> String:
 ## `gate_a_npc_gather_segment.gd` fixed the identical thing after two runs of
 ## the same file failed at two different points with no code change between
 ## them; the same reasoning applies to the same toggle here.
+##
+## HARNESS-HYGIENE-0903: the control pressed is read live via
+## `game_state.gd::hotbar_slot_of(expected_tool)`, not the fixed `TOOL_ACTION`
+## map this used to press unconditionally. That map was a claim about where an
+## earlier assign sequence bound each tool, and the exact class of bug
+## `tools/gate_f/operator_harness.gd::_step_equip_tool` was fixed for
+## (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a fixed slot
+## number goes stale the moment anything upstream binds tools in a different
+## order.
 func _equip(item_id: String) -> bool:
 	var expected_tool := str(TOOL_ID[item_id])
 	# A visible swing owns the held prop for its whole animation and the player
@@ -589,7 +597,11 @@ func _equip(item_id: String) -> bool:
 				break
 			await _tree.physics_frame
 	if str(_game.get("equipped_tool")) != expected_tool:
-		await _tap_action(TOOL_ACTION[item_id])
+		var slot := int(_game.call("hotbar_slot_of", expected_tool))
+		if slot < 0:
+			_fail("'%s' is not on the hotbar at all (checked live via hotbar_slot_of, not a fixed slot guess)" % expected_tool)
+			return false
+		await _tap_action(StringName("hotbar_%d" % (slot + 1)))
 	for _i in 45:
 		var hold: Node = _player.get("tool_hold")
 		if str(_game.get("equipped_tool")) == expected_tool and hold != null and hold.call("prop_node") != null:
