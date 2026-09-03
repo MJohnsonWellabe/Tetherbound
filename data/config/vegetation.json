@@ -152,14 +152,40 @@
           "max_slope_deg": 25.0
         },
         {
-          "_why": "south-west foot: just a pair, so the line is not continuous STRONGHOLD-R2: moved (70,-128) -> (60.5,-133.7). `paths.approaches`'s stronghold road contours the rise's south-west foot and passed 1.92m from the old centre, putting most of this anchor's own 9m disc inside the road's worn band -- measured, not assumed: with the road, seed 1 placed 0 of 2 and seed 99 placed 1 of 2; with the road stashed out, all three seeds the suite uses placed both (tools/_probe_anchor_seeds.gd, this task). The production seed still placed both either way, which is exactly why it is worth moving rather than leaving: a pair of trees that survives on one seed and vanishes on the next is a trap for whoever next reseeds. The new centre is 9.16m clear of every road on 1.7-degree ground; the road's own NE side is the rise's 40-50 degree collar and has no room at all, so the move is out onto the meadow rather than up the flank. Still a pair at the foot, still not a continuous line.",
+          "_why": "south-west foot: TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1) grows this from a bare pair to the mound's own foot copse -- comp1-village-approach and comp4-rise-look-back both look at this face and the mound read as 'a bare lump' with nothing of known size against it. Split into three co-located sub-anchors (same centre/radius the STRONGHOLD-R2 move below already cleared of the road) for the copse recipe BAND1_COMPOSITION_PLAN.md section 3 asks every copse to carry: one tree tall, two short, the rest between -- so the foot reads as a wood with an age range, not a stamp. STRONGHOLD-R2's own siting still holds: 9.16m clear of every road on 1.7-degree ground, moved off the stronghold approach's worn band (70,-128) -> (60.5,-133.7).",
           "at": [
             60.5,
             -133.7
           ],
-          "radius": 9.0,
+          "radius": 10.0,
+          "count": 1,
+          "max_slope_deg": 25.0,
+          "scale_min": 1.4,
+          "scale_max": 1.6
+        },
+        {
+          "_why": "south-west foot, shoulder pair -- see the peak sub-anchor above for the recipe and the siting history.",
+          "at": [
+            60.5,
+            -133.7
+          ],
+          "radius": 10.0,
           "count": 2,
-          "max_slope_deg": 25.0
+          "max_slope_deg": 25.0,
+          "scale_min": 0.7,
+          "scale_max": 0.85
+        },
+        {
+          "_why": "south-west foot, the body between the peak and the shoulder -- see the peak sub-anchor above for the recipe and the siting history.",
+          "at": [
+            60.5,
+            -133.7
+          ],
+          "radius": 10.0,
+          "count": 4,
+          "max_slope_deg": 25.0,
+          "scale_min": 0.9,
+          "scale_max": 1.3
         },
         {
           "_why": "BAND2-FLOOR round 2: a blind critique of this exact anchor's own frame (01-early-forest-day) still read the treeline as 'near-identical canopy size/height/tint... a scatter-brush pass'. Scale pushed further (1.4-1.75 -> 1.55-2.0, RNG-safe: a wider scale_min/scale_max range draws the same one randf_range() call per placed instance regardless of its bounds) so the two old trees are unmistakably a different age class. `count` deliberately left at 2, NOT raised -- `_place_anchor`'s attempt budget is `count * ANCHOR_ATTEMPTS_PER_INSTANCE`, drawn from this layer's single shared RNG stream (scatter_rules.gd::all_placements), and `_place_corridor_fill` runs after every anchor in that same stream for the WHOLE CORRIDOR, not just Band 2 -- raising `count` here was tried, rendered, and found to reshuffle corridor-wide tree corridor_fill enough that this exact frame's own midground/background treeline (the coverage that answers the region's core 'is there a forest here' complaint) thinned out, trading a solved complaint for a resurfaced one. Centred on the harvest.json order 2005/2006 cluster (135-145,1538-1543), the exact ground tools/survey_band2.gd's 01-early-forest-day frame looks at. This layer's own scale_min/max (0.55-1.35) already varies size but tops out short of an OLD tree beside young growth, which is the age-range read a closed canopy needs and the girth half of the same blind critique's complaint ('no leaf litter, undergrowth, fallen branches, saplings... uniform salmon trunks'). docs/reviews/band2/round-05 already measured that the corridor-wide trail-biased fill lands near none of Band 2's eight survey viewpoints by chance -- a density multiplier has nothing to multiply at a site it never reaches, so this is a hand-placed anchor, not a tuning number.",
@@ -326,48 +352,136 @@
           "radius": 24.0
         },
         {
-          "_why": "WORLD-TREES-0903, BAND1_ROUTE_CONTRACT.md Place 1 (the Gate Meadow, arc 0-450): 'a tree station of 6-9 mixed-height trees at 8-12m either side of the road within 120m of the gate.' The owner's 2026-09-03 playtest named the first two minutes out of the village as a bare field; BAND1_ROUTE_INVESTIGATION.md legs 0-2 measured 8-26 trees per 150m leg here against 100-575 further out. This is the east flank, sited by probing the heightfield (tools/_probe_band1_worldtrees.gd) for a low-slope spot 8-9m off the authored trail.gd `band1_lower_meadows` spine, clear of the village square/practice-field/practice-trainer clearings. `scale_min/max` widened past the layer default for a visible age range (mixed-height).",
+          "_why": "WORLD-TREES-0903, BAND1_ROUTE_CONTRACT.md Place 1 (the Gate Meadow, arc 0-450): 'a tree station of 6-9 mixed-height trees at 8-12m either side of the road within 120m of the gate.' The owner's 2026-09-03 playtest named the first two minutes out of the village as a bare field; BAND1_ROUTE_INVESTIGATION.md legs 0-2 measured 8-26 trees per 150m leg here against 100-575 further out. This is the east flank, sited by probing the heightfield (tools/_probe_band1_worldtrees.gd) for a low-slope spot 8-9m off the authored trail.gd `band1_lower_meadows` spine, clear of the village square/practice-field/practice-trainer clearings. TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1/5.2): count 5 -> 6, split into the section-3 copse recipe (peak/shoulder/body sub-anchors at this same centre/radius, 1+2+3=6) -- 'the taller side' of the gate the road passes through, per 5.2's own plan table.",
           "at": [
             20.0,
             50.0
           ],
           "radius": 9.0,
-          "count": 5,
-          "scale_min": 0.5,
+          "count": 1,
+          "scale_min": 1.4,
           "scale_max": 1.6
         },
         {
-          "_why": "WORLD-TREES-0903, Place 1, west flank -- same station, opposite side of the road so the gate meadow reads as flanked rather than one-sided. Probed at 9.1m off the trail, clear of every village-hub clearing. 5 + 4 trees across both flanks is inside the contract's 6-9 count.",
+          "_why": "Gate Meadow east flank, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
           "at": [
-            -5.0,
-            95.0
+            20.0,
+            50.0
           ],
-          "radius": 6.0,
-          "count": 4,
-          "scale_min": 0.5,
-          "scale_max": 1.6
+          "radius": 9.0,
+          "count": 2,
+          "scale_min": 0.6,
+          "scale_max": 0.8
         },
         {
-          "_why": "WORLD-TREES-0903, Place 4 (the Long Field): the first of BAND1_ROUTE_INVESTIGATION.md's two named thin legs, arc 1050-1200 (86 trees against 300-580 on the legs either side). Sited by probing for a flat shelf 20-25m off the trail between the (-190,650) and (-50,700) waypoints (tools/_probe_band1_worldtrees.gd), clear of any existing clearing/footprint. 10 trees with a wide scale spread reads as an authored grove, not a repeated stamp; the matching glade clearing sits at (-104,660) in the band file so the grove has an open pocket rather than a solid wall of canopy.",
+          "_why": "Gate Meadow east flank, the body between the peak and the shoulder -- see the peak sub-anchor above.",
+          "at": [
+            20.0,
+            50.0
+          ],
+          "radius": 9.0,
+          "count": 3,
+          "scale_min": 0.9,
+          "scale_max": 1.3
+        },
+        {
+          "_why": "WORLD-TREES-0903, Place 1, west flank -- same station, opposite side of the road so the gate meadow reads as flanked rather than one-sided. Probed at 9.1m off the trail, clear of every village-hub clearing. TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1/5.2): moved (-5,95) -> (-4,58) so the two flanks straddle the road at the same arc with a 16m gap it runs through (the 'gate' 5.2 names), radius 6->7, count 4->5, scale ceiling narrowed to 0.5-1.1 -- 'the shorter side', so the gate reads as two different heights, not a mirror of the east flank. Split into the same copse recipe (1+2+2=5).",
+          "at": [
+            -4.0,
+            58.0
+          ],
+          "radius": 7.0,
+          "count": 1,
+          "scale_min": 1.0,
+          "scale_max": 1.1
+        },
+        {
+          "_why": "Gate Meadow west flank, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
+          "at": [
+            -4.0,
+            58.0
+          ],
+          "radius": 7.0,
+          "count": 2,
+          "scale_min": 0.5,
+          "scale_max": 0.6
+        },
+        {
+          "_why": "Gate Meadow west flank, the body between the peak and the shoulder -- see the peak sub-anchor above.",
+          "at": [
+            -4.0,
+            58.0
+          ],
+          "radius": 7.0,
+          "count": 2,
+          "scale_min": 0.7,
+          "scale_max": 0.9
+        },
+        {
+          "_why": "WORLD-TREES-0903, Place 4 (the Long Field): the first of BAND1_ROUTE_INVESTIGATION.md's two named thin legs, arc 1050-1200 (86 trees against 300-580 on the legs either side). Sited by probing for a flat shelf 20-25m off the trail between the (-190,650) and (-50,700) waypoints (tools/_probe_band1_worldtrees.gd), clear of any existing clearing/footprint. The matching glade clearing sits at (-104,660) in the band file so the grove has an open pocket rather than a solid wall of canopy. TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): split into the section-3 copse recipe (peak/shoulder/body sub-anchors at this same centre/radius, 1+2+7=10) -- place4-long-field's own Judged line named 'every trunk the same girth'.",
           "at": [
             -120.0,
             650.0
           ],
           "radius": 14.0,
-          "count": 10,
-          "scale_min": 0.55,
+          "count": 1,
+          "scale_min": 1.4,
           "scale_max": 1.6
         },
         {
-          "_why": "WORLD-TREES-0903, Place 4: the second named thin leg, arc 2100-2250 (19 trees, the lowest of any leg past the opening). Sited the same way, 12-13m off the trail between the (180,1200) and (30,1250) waypoints. Matching glade clearing at (21,1245) in the band file.",
+          "_why": "Long Field first grove, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
+          "at": [
+            -120.0,
+            650.0
+          ],
+          "radius": 14.0,
+          "count": 2,
+          "scale_min": 0.55,
+          "scale_max": 0.7
+        },
+        {
+          "_why": "Long Field first grove, the body between the peak and the shoulder -- see the peak sub-anchor above.",
+          "at": [
+            -120.0,
+            650.0
+          ],
+          "radius": 14.0,
+          "count": 7,
+          "scale_min": 0.8,
+          "scale_max": 1.3
+        },
+        {
+          "_why": "WORLD-TREES-0903, Place 4: the second named thin leg, arc 2100-2250 (19 trees, the lowest of any leg past the opening). Sited the same way, 12-13m off the trail between the (180,1200) and (30,1250) waypoints. Matching glade clearing at (21,1245) in the band file. TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): same copse-recipe split as the first grove above (1+2+7=10) -- this is also the grove the bridge-approach road passes through (5.7's 'the grove is the gate'), so its own peak now stands where comp6's approach gathers the eye.",
           "at": [
             5.0,
             1235.0
           ],
           "radius": 14.0,
-          "count": 10,
-          "scale_min": 0.55,
+          "count": 1,
+          "scale_min": 1.4,
           "scale_max": 1.6
+        },
+        {
+          "_why": "Long Field second grove, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
+          "at": [
+            5.0,
+            1235.0
+          ],
+          "radius": 14.0,
+          "count": 2,
+          "scale_min": 0.55,
+          "scale_max": 0.7
+        },
+        {
+          "_why": "Long Field second grove, the body between the peak and the shoulder -- see the peak sub-anchor above.",
+          "at": [
+            5.0,
+            1235.0
+          ],
+          "radius": 14.0,
+          "count": 7,
+          "scale_min": 0.8,
+          "scale_max": 1.3
         }
       ],
       "_comment_model_scale_vp3": "VP3: per-model size classes on top of the shared range (scatter_rules.gd `model_scale`, RNG-safe). CommonTree_1 (widest canopy) becomes the big broad form, _2 (deep-green variant) the compact one, so the three variants differ in SIZE as well as tint and a copse carries an age range rather than three tints of one silhouette.",
@@ -562,9 +676,25 @@
           "models": [
             "res://assets/environment/stylized_nature/TwistedTree_2.gltf"
           ],
-          "scale_min": 1.1,
-          "scale_max": 1.15,
-          "max_slope_deg": 20.0
+          "scale_min": 1.3,
+          "scale_max": 1.3,
+          "max_slope_deg": 20.0,
+          "_why_tree_silhouette_0903": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.2/5.3): 1.1-1.15 -> 1.3. At 360m from comp2-route-out this is a 19m tree at 3 degrees of visual height -- the crest reads as a crown of three (this tree plus the new CommonTree_1 pair below) only if the hero itself is unmistakably the tallest thing in it. Fixed rather than ranged: this is the ONE hero on the route's only overlook and its whole job is to be a known, repeatable height a player can size the basin against, not to vary."
+        },
+        {
+          "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.2): the knoll crown out of the Gate Meadow -- the first landmark past the road gate, a pale wide crown on the only landform in the first 400m (h13.5, tools/_probe_band1_composition.gd named points). CherryBlossom_3 is the family's one non-green canopy and the plan spends it here and nowhere else in Band 1 (6.4). Also the return view's skyline accent from comp1-village-approach, right of the tutorial mound.",
+          "at": [
+            42.0,
+            128.0
+          ],
+          "radius": 3.0,
+          "count": 1,
+          "models": [
+            "res://assets/environment/stylized_nature/CherryBlossom_3.gltf"
+          ],
+          "scale_min": 1.25,
+          "scale_max": 1.25,
+          "max_slope_deg": 30.0
         }
       ],
       "_comment_retexture_adjust_SUPERSEDED_vp3": "VP3 (superseded 2026-09-02, PALE-MINT BAKE, see `trees` layer for full mechanism/history): `retexture_adjust` (vegetation.gd::_adjusted_texture) used to do this at load time via `Image.adjust_bsc`. Leaves_NormalTree_C.png has a ZERO blue channel on every texel, so no multiply tint can ever take a canopy below HSV saturation 1.0 -- which is the whole reason two rounds of variant_retint still rendered fluorescent lime. Saturation 0.55 mixes 45% toward grey, which finally gives the tints below a blue channel to work with; the three variant colours are then re-derived so the family lands at spring / deep-cool / warm yellow-green rather than three lime values. THE REASONING STILL HOLDS -- only the mechanism changed: `adjust_bsc` is not a real Image method so this never ran, and even fixed the resulting ImageTexture's empty resource_path is dropped by the PackedScene/Terrain3DMeshAsset round-trip. The `retexture_adjust` key is REMOVED (not left inert) because the `retexture` swap above now points straight at the pre-baked `derived/Leaves_NormalTree_C_desat55.png`, and leaving this in place would double-apply the same edit.",
