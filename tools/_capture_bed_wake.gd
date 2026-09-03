@@ -88,7 +88,7 @@ func _run() -> void:
 
 	# A second, top-down-ish vantage that does not depend on the rig's own
 	# follow/collision behaviour at all, so the bed and whatever is lying on
-	# it can be judged independent of any camera-framing bug found above.
+	# it can be judged independent of any camera-framing question.
 	var overhead := Camera3D.new()
 	overhead.fov = 55.0
 	overhead.far = 100.0
@@ -101,6 +101,20 @@ func _run() -> void:
 	image = root.get_texture().get_image()
 	image.save_png("%s/wake-overhead.png" % out)
 	print("shot -> %s/wake-overhead.png" % out)
+
+	# A close side view, the frame this task's own sheet is built from.
+	var side := Camera3D.new()
+	side.fov = 55.0
+	side.far = 100.0
+	world.add_child(side)
+	side.global_position = bed + Vector3(2.2, 0.3, 0.4)
+	side.look_at(bed + Vector3(0.0, 0.2, 0.4), Vector3.UP)
+	side.make_current()
+	for i in 20:
+		await process_frame
+	image = root.get_texture().get_image()
+	image.save_png("%s/wake-lying-side-close.png" % out)
+	print("shot -> %s/wake-lying-side-close.png" % out)
 
 	print("done: %s" % out)
 	quit(0)

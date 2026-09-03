@@ -318,23 +318,56 @@ func _fit() -> void:
 ## sideways — the pivot itself does not need to move for this to read as
 ## "lying down starting from where they were standing".
 ##
-## The angles are not hand-derived; Node3D's Euler composition was checked
-## with a throwaway script (`transform.basis * Vector3(...)` on a few
-## candidate rotations, off-tree, no scene needed) rather than assumed, after
-## an early hand calculation of the same numbers turned out wrong. Of the two
-## natural 90-degree tips, `(x=90, z=180)` is the one where the head end (the
-## art's own local +Y, "up") lands on world -Z — toward the headboard/pillow
-## end, the same end `BedPrompt` already sits over — while the face (`-Z`,
-## "forward") ends up pointing world +Y, up at the ceiling, rather than down
-## into the mattress. `model_yaw` is folded in for whichever way this
-## particular rig's front actually faces; today both human configs (trainer,
-## grandpa) declare `model_yaw: 0`, so it has no visible effect yet.
+## OPENING-BED-0903. The angles are not hand-derived; Node3D's Euler
+## composition was checked with a throwaway script (`transform.basis *
+## Vector3(...)` on a few candidate rotations, off-tree, no scene needed)
+## rather than assumed. Two DIFFERENT things were checked there, and only one
+## of them actually matters at runtime — this is the record of finding that
+## out, because the mistake cost a shipped bug (the owner: "when you're in
+## the bed at the beginning it's just a backpack not a person").
+##
+## `(x=90, z=180)` is the rotation where the head end (the art's own local
+## +Y, "up") lands on world -Z — toward the headboard/pillow end, the same
+## end `BedPrompt` sits over — and the face (`-Z`, "forward") ends up
+## pointing world +Y, up at the ceiling. That arithmetic is correct: measured
+## with `render_bounds.gd` (root = this node, so `_art`'s own rotation is
+## included), the resulting AABB is a correctly placed, correctly sized
+## ~1.8 x 0.85 x 0.6 m box lying along Z. It is also, independent of how
+## that exact rotation is built — three different constructions were tried,
+## including composing the two tip Basis objects directly rather than going
+## through this property at all — SKINNED WRONG: the rig renders as a small
+## collapsed lump near the pivot instead of a body spanning the bed
+## (`ralph/reports/OPENING-BED-0903/_sheet_bed.png` is the before/after).
+## `Basis.get_euler()` on every one of those constructions reports the same
+## thing: X decomposes to +90 degrees. A rotation landing in that canonical
+## family, combined with ANY nonzero second axis (Y or Z, either slot,
+## either order), reproduces the collapse — this was checked directly, not
+## inferred. A rotation in the mirror family, X = -90, renders correctly
+## every time it was tried, alone or combined. That asymmetry between +90
+## and -90 is a property of this engine/rig/renderer combination, not of the
+## geometry, and nothing here explains WHY the skin shears one way and not
+## the other; only that it reliably does.
+##
+## So this uses `x = -90` alone rather than the pair that gets the face
+## pointing up. The trade is real: the head still lands correctly at -Z
+## (BedPrompt's own position is untouched, and so is every other beat's math
+## that assumes it), but the face now lands on world -Y, into the pillow,
+## not up at the ceiling — a prone sleeping pose rather than supine. That is
+## a strictly smaller change than it sounds: nobody asked for a face-up
+## sleeper, the owner's own complaint was "not a person" at all, and a body
+## that actually spans the bed face-down reads as a person asleep, which a
+## collapsed lump never did. `model_yaw` is folded in the same way it always
+## was; both human configs (trainer, grandpa) declare it `0` today, which is
+## also the only value confirmed safe in combination with `x = -90` — a
+## future nonzero `model_yaw` on a lying-capable character needs the same
+## direct-render check this comment describes, not an assumption that the
+## pattern holds.
 func set_lying(lying: bool) -> void:
 	if _art == null or _lying == lying:
 		return
 	_lying = lying
 	if lying:
-		_art.rotation = Vector3(deg_to_rad(90.0), deg_to_rad(_model_yaw), deg_to_rad(180.0))
+		_art.rotation = Vector3(deg_to_rad(-90.0), deg_to_rad(_model_yaw), 0.0)
 	else:
 		_art.rotation = Vector3(0.0, deg_to_rad(_model_yaw), 0.0)
 
