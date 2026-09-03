@@ -79,6 +79,7 @@ var _leg_species_this_leg: Dictionary = {} ## int leg -> Dictionary[String,bool]
 var _species_seen_cumulative: Dictionary = {}  ## String species -> bool
 var _leg_cumulative_species_at_end: Dictionary = {}  ## int leg -> int
 var _samples := 0
+var _last_leg_logged := -1
 
 
 func _init() -> void:
@@ -187,6 +188,9 @@ func _sample() -> void:
 	_samples += 1
 
 	var leg := int(_walked_total / LEG_METRES)
+	if leg != _last_leg_logged:
+		_last_leg_logged = leg
+		print("  [leg %d starts] walked=%.1fm real position=(%.1f, %.1f)" % [leg, _walked_total, now.x, now.z])
 	var nearby := 0
 	var here := Vector2(now.x, now.z)
 	for w: Variant in (_director.call("wild_creatures") as Array):
