@@ -944,8 +944,42 @@ const BRIDGE_BLOCKED_M := 0.0
 
 
 func _check_south_bridge(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
+	await _assert_south_bridge_site_sound(world, player, failures)
 	await _check_gated_crossing(world, player, failures,
 		NodePath("SouthBridge"), "the South Bridge", "south_bridge_key", "south_bridge_open")
+
+
+## docs/CURRENT_STATE.md §3 (P1): a player capsule placed at
+## `SouthBridge.near_point(BRIDGE_START_BACK)` was once reported settling
+## INSIDE geometry there -- all eight compass probes
+## `player_controller.gd::_entombed_at` sweeps sealed, `_clamp_runaway_velocity`
+## firing hundreds of times on ~121 m/s depenetration. `_walk_at_the_bridge`'s
+## own STEP_SANITY_M guard (below) stops a recovery teleport from that being
+## mis-scored as a crossed gate, but it does not say whether the ground there
+## is actually sound -- nothing before this asserted that directly. This does,
+## with the same predicate the production entombment failsafe uses (never a
+## raycast -- D09), and `tools/probe_south_bridge_gully.gd` is the same check
+## run standalone across a ring of bearings and radii around the site.
+func _assert_south_bridge_site_sound(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
+	var bridge: Node3D = world.get_node_or_null(^"SouthBridge") as Node3D
+	if bridge == null:
+		return  # _check_gated_crossing below reports the missing node
+	var site: Vector2 = bridge.call("near_point", BRIDGE_START_BACK)
+	var ground: float = float(world.call("ground_height_at", site.x, site.y))
+	if is_nan(ground):
+		failures.append("no ground at the South Bridge approach site %s" % str(site))
+		return
+	player.global_position = Vector3(site.x, ground + 1.0, site.y)
+	player.velocity = Vector3.ZERO
+	for i in 90:
+		await physics_frame
+		if player.call("is_on_floor"):
+			break
+	for i in 10:
+		await physics_frame
+	if bool(player.call("_entombed_at", player.global_transform)):
+		failures.append(
+			"the South Bridge approach site %s is entombed -- all eight compass probes sealed" % str(site))
 
 
 ## SE22: the Old Mill Crossing, the only way over SE21's river. Same
