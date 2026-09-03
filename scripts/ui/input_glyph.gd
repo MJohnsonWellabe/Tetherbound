@@ -174,6 +174,15 @@ const GLYPHS := {
 	## neither keeps a pad button. Start/Menu went to `game_menu` and RT went
 	## to `combat_quick` alone.
 	"build_open": {"keyboard": "keyboard_b.png"},
+	## HUD-INPUT-0903 (owner playtest 2026-09-03): a direct pad route into Build
+	## that does not need the hammer equipped first. Keyboard half restates
+	## `build_open`'s own B (project.godot's own comment on the action explains
+	## why the keyboard half is here at all); the gamepad half reuses the real
+	## trigger art `build_rotate_left`/`combat_charged` already draw
+	## (`xbox_lt.png`) rather than sourcing anything new -- see project.godot's
+	## comment on the action for why LT is free for this in the exploration
+	## context specifically.
+	"build_shortcut": {"keyboard": "keyboard_b.png", "gamepad": "xbox_lt.png"},
 	"torch_place": {"keyboard": "keyboard_p.png"},
 	"game_menu": {"keyboard": "keyboard_escape.png", "gamepad": "xbox_button_start.png"},
 

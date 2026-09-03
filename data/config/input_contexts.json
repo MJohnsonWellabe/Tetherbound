@@ -15,7 +15,7 @@
 
   "contexts": {
     "world": {
-      "_comment": "Free run of the map: no fight, no menu, no armed build ghost. Torch, the build hammer and the tool swing are in this list with keyboard bindings only -- CONTROLLER-MAP took their pad buttons away and made torch and hammer hotbar tools. On a pad the build catalogue opens on `interact` with the hammer in hand (playground_hud.gd::_hammer_opens_the_catalogue), which is one more reader of X, not a second binding on it.",
+      "_comment": "Free run of the map: no fight, no menu, no armed build ghost. Torch, the build hammer and the tool swing are in this list with keyboard bindings only -- CONTROLLER-MAP took their pad buttons away and made torch and hammer hotbar tools. On a pad the build catalogue opens on `interact` with the hammer in hand (playground_hud.gd::_hammer_opens_the_catalogue), which is one more reader of X, not a second binding on it. `map` already carries its own pad button (View) from the authored map and is shown in the persistent exploration legend -- HUD-INPUT-0903 confirmed both rather than rebinding it. `build_shortcut` is HUD-INPUT-0903's new one: LT, live ONLY here (never listed in `build_placement` below, where the same physical axis already means `build_rotate_left`) -- see project.godot's own comment on the action for why that split is safe rather than a second reader of the same trigger.",
       "actions": [
         "move_forward", "move_back", "move_left", "move_right",
         "look_up", "look_down", "look_left", "look_right",
@@ -23,7 +23,7 @@
         "interact", "inventory", "map", "game_menu",
         "hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5",
         "party_cycle", "creature_recall",
-        "torch_toggle", "torch_place", "build_open", "use_tool"
+        "torch_toggle", "torch_place", "build_open", "build_shortcut", "use_tool"
       ]
     },
 
