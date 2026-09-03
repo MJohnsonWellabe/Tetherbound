@@ -42,6 +42,14 @@ const STEP_HEIGHT := 0.35
 const DEPENETRATION_STEP_M := 5.0
 const RING_RADII := [2.0, 4.0, 6.0]
 const RING_BEARINGS := 8
+## After the settle, hold forward (toward the bridge, `across`) for this many
+## frames before re-checking `_entombed_at` -- `_walk_at_the_bridge` does the
+## same, and the production `[player] entombed ...` log line this bug was
+## found from fired mid-walk, not at the bare teleport: an isolated settle
+## with no input never engages `_recover_if_entombed` at all (it only
+## accumulates while `_wanted_dir` is non-zero), so a static-only check can
+## miss a defect that only shows up once the body is actually moving.
+const WALK_FRAMES := 150
 
 
 func _init() -> void:
@@ -66,8 +74,15 @@ func _run() -> void:
 		print("PROBE: no player body in the scene")
 		quit(1)
 		return
+	var camera_rig: Node3D = world.get_node_or_null(^"CameraRig") as Node3D
+	if camera_rig == null:
+		print("PROBE: no CameraRig in the scene")
+		quit(1)
+		return
 
 	var site: Vector2 = bridge.call("near_point", BRIDGE_START_BACK)
+	var target: Vector2 = bridge.call("far_point", BRIDGE_START_BACK)
+	var outward := Vector3(target.x - site.x, 0.0, target.y - site.y).normalized()
 	print("site (SouthBridge.near_point(%.1f)): (%.2f, %.2f)" % [BRIDGE_START_BACK, site.x, site.y])
 
 	var points: Array = [{"label": "SITE", "xz": site}]
@@ -85,18 +100,22 @@ func _run() -> void:
 	var no_ground_count := 0
 	print("")
 	print("%-24s %10s %10s  %-24s %8s %6s %s" % [
-		"placement", "x", "z", "final (x, y, z)", "max_step", "depen", "sealed"])
+		"placement", "x", "z", "final (x, y, z)", "max_step", "depen", "sealed (rest/walk)"])
 	for entry: Variant in points:
 		var p: Dictionary = entry
 		var xz: Vector2 = p["xz"]
 		print("probing %s at (%.2f, %.2f)..." % [p["label"], xz.x, xz.y])
-		var result := await _probe_point(world, player, xz)
+		var result := await _probe_point(world, player, camera_rig, xz, outward)
 		var flag := "SEALED" if result["sealed"] else "clear"
 		if result["sealed"]:
 			sealed_count += 1
 		if result["no_ground"]:
 			no_ground_count += 1
 			flag = "NO GROUND"
+		else:
+			flag = "%s (%s/%s)" % [flag,
+				"Y" if result["sealed_at_rest"] else "n",
+				"Y" if result["sealed_after_walk"] else "n"]
 		print("%-24s %10.2f %10.2f  (%7.2f, %6.2f, %7.2f) %8.2f %6d %s" % [
 			p["label"], xz.x, xz.y,
 			result["final"].x, result["final"].y, result["final"].z,
@@ -119,7 +138,7 @@ func _run() -> void:
 ## (`_recover_if_entombed`) never engages here -- it only accumulates while
 ## `_wanted_dir` is non-zero -- which is exactly what makes it safe to then
 ## ask the same `_entombed_at` predicate directly and trust the answer.
-func _probe_point(world: Node, player: CharacterBody3D, xz: Vector2) -> Dictionary:
+func _probe_point(world: Node, player: CharacterBody3D, camera_rig: Node3D, xz: Vector2, outward: Vector3) -> Dictionary:
 	var ground: float = float(world.call("ground_height_at", xz.x, xz.y))
 	if is_nan(ground):
 		return {
@@ -132,6 +151,7 @@ func _probe_point(world: Node, player: CharacterBody3D, xz: Vector2) -> Dictiona
 
 	player.global_position = Vector3(xz.x, ground + 1.0, xz.y)
 	player.velocity = Vector3.ZERO
+	camera_rig.set("yaw", Vector3(0.0, 0.0, -1.0).signed_angle_to(outward, Vector3.UP))
 
 	var previous := player.global_position
 	var max_step := 0.0
@@ -153,12 +173,32 @@ func _probe_point(world: Node, player: CharacterBody3D, xz: Vector2) -> Dictiona
 			stable_frames = 0
 		previous = here
 
-	var sealed: bool = bool(player.call("_entombed_at", player.global_transform))
+	var sealed_at_rest: bool = bool(player.call("_entombed_at", player.global_transform))
+
+	# Now walk, same as `_walk_at_the_bridge` -- the production `[player]
+	# entombed ...` log this bug was found from fired while the body was
+	# being asked to move, not at the bare teleport.
+	Input.action_press("move_forward")
+	for i in WALK_FRAMES:
+		await physics_frame
+		var here := player.global_position
+		var step := here.distance_to(previous)
+		max_step = maxf(max_step, step)
+		if step > DEPENETRATION_STEP_M:
+			depenetration_events += 1
+		previous = here
+	Input.action_release("move_forward")
+	for i in 10:
+		await physics_frame
+
+	var sealed_after_walk: bool = bool(player.call("_entombed_at", player.global_transform))
 	return {
 		"final": player.global_position,
 		"max_step": max_step,
 		"depenetration_events": depenetration_events,
-		"sealed": sealed,
+		"sealed": sealed_at_rest or sealed_after_walk,
+		"sealed_at_rest": sealed_at_rest,
+		"sealed_after_walk": sealed_after_walk,
 		"no_ground": false,
 	}
 
