@@ -42,7 +42,12 @@ player-path smoke chain run one test at a time. Classification per the audit bri
 | Gather route navigation | **Working but rough** | same smoke: the controller could not reach authored wood at (16, −28), stopped 23 m short. Walker or authoring issue; the harness walker is known to fail on village walls |
 | Traversal / South Bridge | **Working in the harness, hole still real** | `smoke_traversal` passed on the first attempt this session (438 s) on the tree carrying the teleport guard; the entombment at (7.9, −3.4, 1319) is the world defect the guard stops mis-scoring, not a fixed one |
 | Burrow Warrens | Working | `smoke_warrens` passes (379 s) |
-| Relay, Stronghold, finale, playground, riding, settings | see the note below | code and data present and wired (`docs/GAMEPLAY_SYSTEMS.md`); Gate F S04–S10 never passed as a chain |
+| Tether Relay (captain, captive, Gear, village follow-up) | Working | `smoke_relay` passes (402 s) |
+| Stronghold and Gate E finale (Warden, legendary, ceremony) | Working (scripted) | `smoke_stronghold` (404 s) and `smoke_gate_e_finale` (486 s) pass; never played as a continuous chapter (Gate F S04–S10 unverified) |
+| World stand-up, riding, settings | Working | `smoke_playground` (334 s), `smoke_riding` (336 s), `smoke_settings` (358 s) pass |
+
+Smoke chain total: 22 run, 20 pass, 2 fail (`gate_a_opening_segment` on `main`, fixed on
+this branch and re-run green; `gate_b_continuous`, open).
 
 Smoke isolation finding: `smoke_title_new_game` fails whenever an earlier smoke has left a
 real `user://saves/slot_0.json`, because the title then shows the returning-player
