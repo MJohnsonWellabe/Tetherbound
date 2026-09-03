@@ -77,6 +77,20 @@ eye, not only at 60–100 m (§5, "Life"); the mound gets a dark foot copse on t
 the route sees (5.1); the bridge parapet is composed against a dark treeline so the
 funnel has a target (5.7); and the fence line is rebuilt as a line (5.7).
 
+**Second pass.** After the pond-reveal and bridge-rim stands were re-sited from the
+profile, the same judge read the two new frames blind ("Second pass" in
+`JUDGE-before.md`). `comp7`: "no pond … what he sees is a hedge"; the road "bends right
+toward the trees at ~40 m, away from the camera's line of sight, so the road and the
+sightline disagree"; the cottage (the mill) at ~150 m is "2 % of frame height and
+stands alone". `comp8`: "the bridge is a speck … reads as a wooden crate or a livestock
+pen; at 30 % it is a 12 px tan dot"; "the mid-ground is populated for the first time in
+this set" (the grove, two creatures) "and the subject at its far end is too small and
+too crate-like to be the reward"; "at 30 % the two thumbnails are distinguishable from
+each other, which is more than the six earlier stands managed". Both findings are
+built into 5.5 and 5.7: the reveal window is cut where the road and the sightline
+diverge, with the trailhead sign at its road-side edge, and the bridge gets a
+silhouette it does not have.
+
 ### 1.4 What the route's ground actually does (probe)
 
 Water level −17.0. Heights are metres; arc is metres walked from the village square.
@@ -457,8 +471,15 @@ grove line runs across the whole distance and **the mill's red roof shows above 
 centre**, 150 m away, the first built thing on the sightline since the village; the
 water is still not visible, because the grove's road-side edge between arc 590 and 650
 stands between the eye and the sheet. The trainer is 6 m ahead on the road. No creature.
-The far ridge left is bare. The second judge's read is in `JUDGE-before.md` ("Second
-pass"). **Now (arrival):**
+The far ridge left is bare. **Judged (second pass):** "No pond … what he sees is a
+hedge"; "the road … bends right toward the trees at ~40 m, away from the camera's line
+of sight, so the road and the sightline disagree"; the mid-ground centre at 10–40 m "is
+empty grass". The divergence is real and permanent: from arc 560 the road runs at 30°
+to the line to the mill, and it does not point at the water until it is in it. That is
+why the window is a clearing beside the road and not the road, why the "Pond Circuit"
+trailhead stands at its road-side edge with its arm into it, and why the reveal element
+has to stand above the grove line (the mill roof does, by 4 m) rather than rely on the
+water alone. **Now (arrival):**
 a dense grove of same-height red trunks fills the frame, the water is a strip glimpsed
 between trunks, Dara stands among the trees on the left, a fallen branch is the right
 near element; there is no window to the water and the footbridge is not visible. **Now
@@ -562,8 +583,15 @@ pale against the shade on the left at 40 m, and at the far end of the road's gap
 small orange shape at 64 m that is the bridge's timber, with the far bank's slope
 behind it. The grove was placed by WORLD-TREES as a thin-leg fill 12–13 m off the
 trail; the trail's bend at (30,1250) brings the road through it, and by accident it is
-the best gate on the route. The second judge's read is in `JUDGE-before.md` ("Second
-pass"). **Now (place5):** the gully's cut
+the best gate on the route. **Judged (second pass):** "The bridge is a speck … a pale
+timber lattice ~3 m wide and ~2 m tall … reads as a wooden crate or a livestock pen; at
+30 % it is a 12 px tan dot"; "no rim: the ground under the trainer is flat and the road
+runs level to the object" (the drop from 2.45 to −5.5 happens over the next 50 m, past
+the grove, and is hidden); two creatures present, "neither readable as a species at
+30 %, neither framed as a subject"; "the mid-ground is populated for the first time in
+this set". So the grove-as-gate holds, and the bridge itself is the defect: at 64 m the
+parapet is the same pale timber as the fence kit and has no dark ground behind it.
+**Now (place5):** the gully's cut
 walls are hard-edged grass planes, the road runs into a trench, a bare dead tree stands
 on the far skyline, the bridge itself is not in frame.
 
@@ -606,9 +634,12 @@ not fix a hole and must not be used to hide one.
 (grunt and Meadowhart stay).
 
 **Proof:** re-render `comp6`, `comp8`, `place5`; in `comp6` the fence must read as one
-line with breaks at 30 % size and the uprights must be visible at the notch; in `comp8`
-the bridge parapet must sit against a dark treeline, not sky; in `place5` the darkest
-5 % must be stone or shadow under trees, not the cut wall.
+line with breaks at 30 % size and the grove's road gap must be visible as the notch; in
+`comp8` the bridge parapet must sit against the far-rim grove, not sky or bare slope,
+and must be nameable as a bridge by the blind judge at full size (it was "a crate");
+in `place5` the darkest 5 % must be stone or shadow under trees, not the cut wall. The
+Meadowhart pair must be visible in `comp8` or `place5` as a creature taller than the
+trainer.
 
 ### 5.8 The survey stands
 

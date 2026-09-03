@@ -315,3 +315,47 @@ What carried: nothing that would make a viewer say "same kind of game". The trai
 - A landmark object in the key art's own language: windmill, tower or rune monolith.
 - A bridge that reads as a bridge at 60 m; the hall's timber-frame model if the braces are modelled that way.
 - An idle animation with weight for the trainer.
+
+## Second pass — comp7 and comp8 re-sited (same session)
+
+Two frames judged blind, same renderer caveat as above. Trainer 1.80 m is the ruler. Crops at 200–800% and a 30% thumbnail were used to check the named subjects.
+
+### C-7 `comp7-pond-reveal.png`
+
+Defects
+- **No pond.** Nothing in the frame is water: no turquoise, no reflection, no bank, no reeds. Searched the horizon band and the ground under the right-hand trees at 4x; it is grass, dirt and trunks.
+- The ground ahead of the trainer rises to the tree line, not down; "descending toward" is not what the picture shows. The road enters at bottom-right and bends right toward the trees at ~40 m, away from the camera's line of sight, so the road and the sightline disagree.
+- The left half (0–30 m) is a slope of the same 30 cm grass and the same flowering plant repeated ~25 times at even spacing; overexposed yellow patches at left-mid and a dark unlit band across the road with a jagged edge at the bottom of the frame.
+- The tree line at 40–80 m is one species, one trunk colour, one canopy green, one height; at 30% it fuses with the field into a single green band with a brown stripe of trunks.
+- The cottage at ~150 m, left of centre, is ~2% of frame height and stands alone: no road to it, no yard, no smoke. The signpost at ~40 m right of centre is a pale stick, ~1% of frame height, unreadable as a sign at 30%.
+- Distance beyond 80 m: a grey-green mound with the same speckle frequency as the grass, no strata, no trees on it.
+- The trainer at ~5 m, centre, is in the same arms-out idle as every other frame and faces the empty slope, not the road, the cottage or anything.
+- Scale: trainer, signpost (~2.5 m), trees (~10 m), cottage agree. No creature to check.
+
+(a) Eye lands on the trainer's tan pack, dead centre, ~5 m. Second, the bright orange road at bottom-right, because it is the largest warm shape; the cottage is fourth or fifth.
+
+(b) It asks you to look over the trainer's shoulder at what he sees, and what he sees is a hedge. Foreground (0–10 m): grass, the plant grid, the road edge. Mid (10–80 m): the signpost, one tree at ~50 m left, the tree line. Distance (beyond 80 m): the cottage and the mound. The mid-ground centre, 10–40 m, where palworld-02 puts a cave mouth and two Pals and the key art's pond panel puts a dock and water, is empty grass.
+
+(c) The pond is not visible at any size.
+
+### C-8 `comp8-bridge-rim.png`
+
+Defects
+- **The bridge is a speck.** At ~70 m, centre-left at the road's end, there is a pale timber lattice ~3 m wide and ~2 m tall (~4% of frame width) with a blue-grey strip beneath it. At full size it reads as a wooden crate or a livestock pen; at 30% it is a 12 px tan dot. Nothing reads as a span, a deck, an arch or a gap it crosses; the blue-grey strip is the only hint of water and it is one pixel row.
+- No rim: the ground under the trainer is flat and the road runs level to the object. The road does not drop away, so there is no reveal.
+- The grove is the best depth in either frame (trunks at ~3, 8, 15, 30 m), but it is the one tree instanced: identical red-orange trunks, identical canopy blob, no interior shadow, and two canopies at top-left and top-right cut flat by the frame edge.
+- The road fills the lower 45% of the frame with one speckled orange noise at the same frequency from 1 m to 70 m, scattered with ~25 white confetti pebbles that cast no shadow and float. The trainer stands on the right verge, not on the road; the road's convergence point and the trainer are not on the same line.
+- Two creatures are present: a pale pink-white spiky quadruped under the trunks at ~30 m left (~2 m tall — taller than the trainer, good) and a tan quadruped on a grey slope at ~50 m far right (~1.5 m long). Both are ~15–25 px and read as "pale animal" only; neither is readable as a species at 30%, and neither is framed as a subject — the left one is half behind a trunk, the right one is cut by the frame edge.
+- Distance beyond 80 m: the same grey-green speckled mound, and a grey slab-like patch behind the right creature (terrain blend seam or the dome's flank; it reads as a slab).
+- Foreground left: a clump of tall yellow-orange reeds and the flowering plant at 2–6 m — the one place in either frame with scale variety in the understory.
+
+(a) Eye lands on the trainer's tan pack, right of centre, ~5 m, against the dark trunk behind him. Second, the bright road wedge at bottom-centre. The bridge object is sixth or seventh, after the canopies and the pale creature at left.
+
+(b) It asks you to follow the road to the bridge. Foreground (0–10 m): road, reeds, trunks at left and right edges. Mid (10–80 m): trunks, both creatures, the bridge object. Distance: mound and slab. The mid-ground is populated for the first time in this set; the subject at its far end is too small and too crate-like to be the reward.
+
+(c) The bridge is visible only if you already know where to look: ~50 x 40 px at full size, a dot at 30%, and it reads as a crate, not a bridge, at both sizes.
+
+### Both
+
+- At 30% the two thumbnails are distinguishable from each other (open slope vs. grove), which is more than the six earlier stands managed.
+- Neither frame delivers its named subject. comp7 has no pond; comp8 has a bridge only by assertion. Both face the same fix as before: put the subject at 10–40 m on the sightline, and raise the camera or drop the ground so the road actually leads down to it.
