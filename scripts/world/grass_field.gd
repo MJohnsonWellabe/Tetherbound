@@ -80,6 +80,17 @@ var _centre := Vector3(INF, INF, INF)
 ## How many tuft instances the ring stood up, across every tile. The ring's own
 ## `multimesh` is null once tiled, so the count lives here.
 var _ring_instances := 0
+## GRASS-CULL-0903. Every tiled MultiMeshInstance3D this node stood up, across
+## the grass, stone and cover systems -- kept so `_retighten_tile_aabbs` can
+## revisit their `custom_aabb` once real terrain data is available. Empty when
+## `cull_tile_m` is 0 (the single-MultiMesh A/B path needs no retightening: it
+## is deliberately one uncullable mesh).
+var _tile_nodes: Array[MultiMeshInstance3D] = []
+## Metres of slack added above and below the sampled terrain height range when
+## tightening a tile's AABB -- covers blade/bush/flower height (under 1m),
+## wind bend, and the terrain relief a coarse sample grid can miss between its
+## own points. See `_retighten_tile_aabbs`.
+const TILE_HEIGHT_PAD := 12.0
 
 
 static func config() -> Dictionary:
@@ -562,7 +573,10 @@ static func _fill_lattice_tiles(mesh: Mesh, plan: Array, cell: float, tile_m: fl
 
 ## Stand the tiles up as children of `under`, all sharing one material, and
 ## report how many instances that took. Children of the ring move with it.
-static func _stand_up_tiles(under: Node3D, prefix: String, tiles: Array, mat: ShaderMaterial) -> int:
+## `out_nodes`, when given, collects every node created -- see
+## `_retighten_tile_aabbs` for why a caller wants them back.
+static func _stand_up_tiles(under: Node3D, prefix: String, tiles: Array, mat: ShaderMaterial,
+		out_nodes: Array[MultiMeshInstance3D] = []) -> int:
 	var placed := 0
 	for entry: Variant in tiles:
 		var tile: Dictionary = entry
@@ -574,6 +588,7 @@ static func _stand_up_tiles(under: Node3D, prefix: String, tiles: Array, mat: Sh
 		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		node.custom_aabb = tile["aabb"]
 		under.add_child(node)
+		out_nodes.append(node)
 		placed += int((tile["mm"] as MultiMesh).instance_count)
 	return placed
 
@@ -646,7 +661,7 @@ func _build() -> void:
 	if tile_m > 0.0:
 		multimesh = null
 		placed = _stand_up_tiles(self, "GrassTile",
-				_fill_lattice_tiles(mm.mesh, plan, cell, tile_m, _grass_lod(cfg)), _material)
+				_fill_lattice_tiles(mm.mesh, plan, cell, tile_m, _grass_lod(cfg)), _material, _tile_nodes)
 	else:
 		placed = _fill_lattice(mm, plan, cell)
 		multimesh = mm
@@ -767,7 +782,7 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		var placed := 0
 		if tile_m > 0.0:
 			placed = _stand_up_tiles(node, "Tile",
-					_fill_lattice_tiles(mm.mesh, plan, cell, tile_m, lod), mat)
+					_fill_lattice_tiles(mm.mesh, plan, cell, tile_m, lod), mat, _tile_nodes)
 		else:
 			placed = _fill_lattice(mm, plan, cell)
 			node.multimesh = mm
@@ -1332,7 +1347,7 @@ func _build_stones(cfg: Dictionary, radius: float) -> void:
 	var placed := 0
 	if tile_m > 0.0:
 		placed = _stand_up_tiles(_stones, "StoneTile",
-				_fill_lattice_tiles(mm.mesh, plan, cell, tile_m), _stone_material)
+				_fill_lattice_tiles(mm.mesh, plan, cell, tile_m), _stone_material, _tile_nodes)
 	else:
 		placed = _fill_lattice(mm, plan, cell)
 		_stones.multimesh = mm
@@ -1924,6 +1939,110 @@ func _field_materials() -> Array[ShaderMaterial]:
 		out.append(_far_material)
 	return out
 
+
+# ---------------------------------------------------------------------------
+# GRASS-CULL-0903. Why the tiles VP2 built were not actually being culled, and
+# the fix.
+#
+# THE DEFECT. `_fill_lattice_tiles` gives every tile an AABB `-400..+400` in
+# Y (see that function). It has to be that wide, because the CPU never learns
+# an instance's real world height -- every tuft/stone/bush/flower/leaf is
+# placed by sampling Terrain3D's heightmap in the VERTEX SHADER, so the only
+# thing the AABB can safely promise, without that knowledge, is "somewhere in
+# the whole corridor's elevation range". Measured directly with a real
+# `Camera3D.get_frustum()` plane test at `band1_open` (not assumed): with that
+# AABB, 34 of the grass ring's 40 tiles pass -- 85%, not the "roughly a third"
+# `cull_tile_m`'s own comment describes. The reason is geometric, not a
+# rendering bug: an 800m-tall box, at almost any azimuth around a camera
+# tilted a few degrees off level, has SOME point far enough above or below
+# camera height that the near and side planes -- which pass through the
+# camera's own position -- cannot rule it out. Tiling was real work with
+# almost no payoff, because the box it culls by was never actually where the
+# grass is.
+#
+# THE FIX. Sample Terrain3D's real height under the ring -- the same
+# `data.get_height` call `playground_world.gd::ground_height_at` already uses
+# -- and use that to bound every tile's Y instead of the whole corridor's
+# range. A coarse grid over the ring's own footprint, once per lattice-cell
+# move (the same cadence `_apply_built` already runs at, not every frame:
+# terrain relief does not change under a ring that has not moved), replaces
+# the 800m pillar with a band a few dozen metres tall at most -- tight enough
+# that the same frustum-plane test now matches the tile-culling comment's own
+# claim instead of contradicting it.
+#
+# WHY ONE SHARED RANGE, NOT ONE SAMPLE PER TILE. A per-tile sample would be
+# tighter still, but the win is in collapsing 800m to "how hilly this stretch
+# of corridor actually is" -- a few to a few dozen metres -- and one range
+# shared by every tile gets that whole collapse for a fraction of the height
+# queries, with no risk of a single unlucky tile-local sample missing a dip
+# under its own footprint. `TILE_HEIGHT_PAD` is the margin against everything
+# a coarse shared sample cannot see: blade/bush/flower height (under 1m),
+# wind bend, and relief between grid points.
+#
+# SAFETY. `_terrain_height_range` returns NAN when nothing samples (terrain
+# not streamed in yet, or `_terrain` unbound) and `_retighten_tile_aabbs`
+# leaves every AABB exactly as `_fill_lattice_tiles` built it in that case --
+# the untightened default is the same "-400..+400, never wrong" bound this
+# file already shipped, so a cold or not-yet-streamed corridor degrades to
+# the old behaviour rather than culling something real.
+# ---------------------------------------------------------------------------
+
+## One terrain height sample, or NAN where the terrain has nothing to say --
+## unstreamed ground, or no terrain bound yet. Same call
+## `playground_world.gd::ground_height_at` uses; not shared with it directly
+## because that lives outside this lane's file scope.
+func _terrain_height_at(x: float, z: float) -> float:
+	if _terrain == null:
+		return NAN
+	var data: Object = _terrain.get("data")
+	if data == null:
+		return NAN
+	return float(data.call("get_height", Vector3(x, 0.0, z)))
+
+
+## The real min/max terrain height under a `radius`-metre square centred on
+## `centre`, from a coarse grid -- cheap enough to run every lattice-cell
+## move (a handful of texture fetches), not cheap enough to run every frame.
+## `Vector2(NAN, NAN)` when every sample came back NAN.
+func _terrain_height_range(centre: Vector3, radius: float) -> Vector2:
+	const GRID := 9
+	var lo := INF
+	var hi := -INF
+	var got := false
+	for i in GRID:
+		var fx := -1.0 + 2.0 * float(i) / float(GRID - 1)
+		for j in GRID:
+			var fz := -1.0 + 2.0 * float(j) / float(GRID - 1)
+			var h := _terrain_height_at(centre.x + fx * radius, centre.z + fz * radius)
+			if is_nan(h):
+				continue
+			got = true
+			lo = minf(lo, h)
+			hi = maxf(hi, h)
+	return Vector2(lo, hi) if got else Vector2(NAN, NAN)
+
+
+## Replace every tiled MultiMeshInstance3D's Y bound with the real terrain
+## range under the ring, padded by `TILE_HEIGHT_PAD`. Each tile keeps its own
+## X/Z footprint exactly as `_fill_lattice_tiles` computed it -- only Y
+## changes, and only when a real sample came back.
+func _retighten_tile_aabbs(anchor: Vector3) -> void:
+	if _tile_nodes.is_empty():
+		return
+	var radius := float(config().get("field_radius", 72.0))
+	var h_range := _terrain_height_range(anchor, radius)
+	if is_nan(h_range.x):
+		return
+	var y0 := h_range.x - TILE_HEIGHT_PAD
+	var y1 := h_range.y + TILE_HEIGHT_PAD
+	for node: MultiMeshInstance3D in _tile_nodes:
+		if not is_instance_valid(node):
+			continue
+		var aabb := node.custom_aabb
+		node.custom_aabb = AABB(Vector3(aabb.position.x, y0, aabb.position.z),
+				Vector3(aabb.size.x, y1 - y0, aabb.size.z))
+
+
 func _process(delta: float) -> void:
 	if _material == null:
 		return
@@ -1978,3 +2097,7 @@ func _process(delta: float) -> void:
 	# travelled, and a player laying a floor panel is standing still inside the
 	# cell they are building on, so the next step picks it up.
 	_apply_built(anchor)
+	# GRASS-CULL-0903: same cadence -- the ring has just moved, so this is the
+	# one moment the tiles' world footprint changed and their AABBs might now
+	# cover different terrain. See the comment block above `_process`.
+	_retighten_tile_aabbs(anchor)
