@@ -13,6 +13,8 @@ const HUD_SCENE := preload("res://scenes/ui/playground_hud.tscn")
 const PLAYGROUND_HUD := preload("res://scripts/ui/playground_hud.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
+const PROGRESSION := preload("res://autoload/progression_state.gd")
 
 const HANDHELD_SIZE := Vector2i(1280, 800)
 
@@ -127,6 +129,7 @@ func _run() -> void:
 	_check_party_strip_never_overlaps_creature_panel_or_vitals()
 	await _check_creature_panel_stands_down_while_the_roster_is_up()
 	_check_objective_text_physical_size()
+	await _check_no_authored_objective_title_is_clipped(game)
 	_check_vitals_value_physical_size()
 	_check_nothing_is_oversized()
 	_check_hud_occupancy()
@@ -428,6 +431,53 @@ func _check_objective_text_physical_size() -> void:
 		return
 	_check_cap_height(label.get_theme_font_size("font_size"), "quest subtext",
 		HUD_SCALE.SENTENCE_CAP_ARCMIN)
+
+
+## HARNESS-HYGIENE-0903 (owner playtest finding: "Train with your team before
+## the …" -- truncated by the objective card's word-ellipsis overrun, at this
+## file's own 1280x800 handheld window). `canvas_items` stretch keeps the
+## authored (logical) layout identical between 1280x800 and the 1920x1080
+## `smoke_objective_hint_card.gd` measures, so the wrap count this checks does
+## not depend on the window -- but the bug was reported on the Ally's real
+## panel resolution, so it is asserted here too rather than trusted by
+## similarity. See `smoke_objective_hint_card.gd`'s own copy of this check for
+## why `get_line_count()`, not "does it overflow its plate", is the question
+## that actually catches a silently dropped sentence tail.
+func _check_no_authored_objective_title_is_clipped(game: Node) -> void:
+	var label := _hud.get(&"_objective_text_label") as Label
+	if game == null or label == null:
+		_fail("HUD/Game did not expose the objective label for the clipping check")
+		return
+
+	var cap := int(_hud.get_script().get_script_constant_map().get("OBJECTIVE_LINES", -1))
+	if cap <= 0:
+		_fail("could not read OBJECTIVE_LINES off playground_hud.gd")
+		return
+
+	var log_reader: RefCounted = QUEST_LOG.new()
+	var progression: RefCounted = PROGRESSION.new()
+	var entries: Array = log_reader.call("main_entries", progression)
+	if entries.size() < 20:
+		_fail("only %d main objective entries found -- this check is not exercising the chapter" % entries.size())
+		return
+
+	var clipped: Array[String] = []
+	for raw: Variant in entries:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var text := str((raw as Dictionary).get("label", ""))
+		game.set("objective_text", text)
+		for i in 3:
+			await process_frame
+		if label.get_line_count() > cap:
+			clipped.append("%d-line (cap %d): %s" % [label.get_line_count(), cap, text])
+
+	if not clipped.is_empty():
+		_fail(("%d of %d authored objective titles wrap past OBJECTIVE_LINES and lose their tail to the "
+			+ "word-ellipsis overrun at %s: %s") % [clipped.size(), entries.size(), HANDHELD_SIZE, ", ".join(clipped)])
+		return
+	print("  ok    all %d authored objective titles fit within OBJECTIVE_LINES (%d) at %s -- none clipped" % [
+		entries.size(), cap, HANDHELD_SIZE])
 
 
 ## HUD-POPUP task 3: the player's own HP readout ("100 / 100") measured ~10

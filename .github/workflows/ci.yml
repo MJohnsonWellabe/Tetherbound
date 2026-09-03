@@ -246,12 +246,12 @@ jobs:
   #
   # Does NOT catch: a config edit that lands together with a correct re-bake
   # but describes the wrong intent (this only checks the fingerprint matches,
-  # not that the bake is "good"); anything about `data/terrain/playground`,
-  # which has no equivalent freshness check at all (see this task's own
-  # report). Does NOT re-bake or auto-commit anything -- failing here means a
-  # human or a lane runs `godot --headless --path . --script
-  # scripts/world/bake_playground_scatter.gd` and commits the result, same as
-  # today.
+  # not that the bake is "good"). `data/terrain/playground` has its own,
+  # separate equivalent check now: `verify-terrain-bake-freshness` below
+  # (HARNESS-HYGIENE-0903). Does NOT re-bake or auto-commit anything --
+  # failing here means a human or a lane runs `godot --headless --path .
+  # --script scripts/world/bake_playground_scatter.gd` and commits the
+  # result, same as today.
   verify-scatter-bake-freshness:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -275,6 +275,44 @@ jobs:
         run: |
           godot --headless --path . --script tests/run_tests.gd \
             -- --only=test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh
+
+  # HARNESS-HYGIENE-0903. `data/terrain/playground`'s own equivalent of the
+  # job above -- the gap the scatter job's own comment names ("anything about
+  # data/terrain/playground, which has no equivalent freshness check at
+  # all"). `terrain_playground.json` was edited (doc-path text in comments)
+  # during the 2026-09-02 repository reset with no re-bake, and nothing on
+  # disk or in CI could have caught it. Same shape as the job above: one
+  # dedicated, fast, named job so a stale terrain bake shows up as one red
+  # line in the run summary instead of buried in a shard's log.
+  #
+  # Does NOT catch a config edit that lands together with a correct re-bake
+  # but describes the wrong intent. Does NOT re-bake or auto-commit anything
+  # -- failing here means a human or a lane runs `godot --headless --path .
+  # --script scripts/world/build_playground_terrain.gd` and commits the
+  # result (region files AND manifest.json).
+  verify-terrain-bake-freshness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Check the playground terrain bake is fresh
+        run: |
+          godot --headless --path . --script tests/run_tests.gd \
+            -- --only=test_terrain_bake_freshness.gd::test_playground_terrain_bake_is_committed_and_fresh
 
   verify-unit-tests:
     runs-on: ubuntu-latest

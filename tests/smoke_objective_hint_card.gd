@@ -86,6 +86,7 @@ func _run() -> void:
 	_check_an_unauthored_rung_shows_nothing()
 	await _check_the_card_stands_down_on_its_own()
 	await _check_the_objective_plate_holds_its_own_text()
+	await _check_no_authored_objective_title_is_clipped()
 
 	_report()
 
@@ -292,6 +293,58 @@ func _check_the_objective_plate_holds_its_own_text() -> void:
 	print("  ok    the objective plate holds its longest authored line (%.0fpx of text in a %.0fpx plate)" % [
 		label_rect.size.y, block_rect.size.y,
 	])
+
+
+## HARNESS-HYGIENE-0903 (owner playtest finding: "Train with your team before
+## the …" -- the tail of the sentence never reached the screen).
+##
+## `_check_the_objective_plate_holds_its_own_text` above only proves the
+## label never draws PAST its own plate, which `max_lines_visible` +
+## `OVERRUN_TRIM_WORD_ELLIPSIS` (`_build_objective_block()`) guarantee by
+## construction -- that check would pass identically whether the cap was 2
+## lines or 20, because a widget that cannot overflow is not the same claim
+## as a widget that shows the whole sentence. This instead asks the one
+## question that actually catches the bug: does the FULL wrapped line count
+## (`Label.get_line_count()`, which reports the unclamped wrap regardless of
+## `max_lines_visible` -- see `_layout_objective_block()`'s own comment) fit
+## inside `OBJECTIVE_LINES`? Driven against every authored `main` objective
+## title, not a sample, the same way the plate check above is.
+func _check_no_authored_objective_title_is_clipped() -> void:
+	var game := root.get_node_or_null(^"Game")
+	var label := _hud.get(&"_objective_text_label") as Label
+	if game == null or label == null:
+		_fail("HUD/Game did not expose the objective label for the clipping check")
+		return
+
+	var cap := int(_hud.get_script().get_script_constant_map().get("OBJECTIVE_LINES", -1))
+	if cap <= 0:
+		_fail("could not read OBJECTIVE_LINES off playground_hud.gd")
+		return
+
+	var log_reader: RefCounted = QUEST_LOG.new()
+	var progression: RefCounted = PROGRESSION.new()
+	var entries: Array = log_reader.call("main_entries", progression)
+	if entries.size() < 20:
+		_fail("only %d main objective entries found -- this check is not exercising the chapter" % entries.size())
+		return
+
+	var clipped: Array[String] = []
+	for raw: Variant in entries:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var text := str((raw as Dictionary).get("label", ""))
+		game.set("objective_text", text)
+		for i in 3:
+			await process_frame
+		if label.get_line_count() > cap:
+			clipped.append("%d-line (cap %d): %s" % [label.get_line_count(), cap, text])
+
+	if not clipped.is_empty():
+		_fail(("%d of %d authored objective titles wrap past OBJECTIVE_LINES and lose their tail to the "
+			+ "word-ellipsis overrun at %s: %s") % [clipped.size(), entries.size(), _screen, ", ".join(clipped)])
+		return
+	print("  ok    all %d authored objective titles fit within OBJECTIVE_LINES (%d) at %s -- none clipped" % [
+		entries.size(), cap, _screen])
 
 
 ## Every visible HUD widget the card could land on, with the name to blame in
