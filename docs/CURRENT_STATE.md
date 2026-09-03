@@ -117,7 +117,7 @@ into `claude/do-this-2t7fny`, which feeds PR #26.
 |---|---|---|
 | OBJECTIVE-CAMP | the gather rung retires once the camp exists, however it was built | `test_quest_log` 38/38; `smoke_gate_b_continuous` now passes the village and tournament-readiness beats (its remaining failure is the gather-route walker, GATHER-ROUTE lane) |
 | WARRENS-ONCE | elders, alphas and the Warrens guardian can be fought, caught or KO'd once; persisted | `test_spawn_tables` 27/27, `test_wild_once` 13/13 |
-| HARNESS-HYGIENE | terrain-bake freshness guard (`test_terrain_bake_freshness`, CI job), harness slot-offset sweep, MAIN STORY label fits at 1280×800 and 1080p | rig 49/49, instrumentation 18/18, HUD widgets 33/33; **the terrain guard is red until the terrain bake is written with a manifest** (bake running) |
+| HARNESS-HYGIENE | terrain-bake freshness guard (`test_terrain_bake_freshness`, CI job), harness slot-offset sweep, MAIN STORY label fits at 1280×800 and 1080p | rig 49/49, instrumentation 18/18, HUD widgets 33/33; terrain guard green after the manifest was written (`0702ad4c`; 63 of 64 regions byte-identical, so the bake was not stale) |
 | TOURNAMENT-FLOW | signup in one visit when ready; begin-round choice; win and next-round announcements; flat banners gone | `test_tournament` 60/60 |
 | WORLD-CONTENT | two Band 1 field trainers (the shepherd on the Rise, the wanderer at the trail camp), 8 harvest nodes, Pond fisher and camp prop, bridge fence line, Rise TM cache | `test_trainers_data` 50/50, `test_harvest` 22/22, `test_band_dialogue` 3/3, `test_band_content` 6/6, `test_chapter_content_map` 4/4 |
 
