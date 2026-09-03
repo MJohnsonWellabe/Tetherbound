@@ -9,8 +9,9 @@ extends "res://tests/test_case.gd"
 ## against (CLAUDE.md: no Meshy generation without one). `set_lying` fakes
 ## the pose with a rotation on the loaded art instead, so what is worth
 ## pinning down here is the geometry contract, not a look: does the pose
-## actually land the character flat, head toward the pillow end, face up
-## rather than into the mattress — and does letting go put them back on
+## actually land the character flat, head toward the pillow end, face into
+## the pillow (prone — see set_lying()'s header for why the supine rotation
+## is the one that skins wrong) — and does letting go put them back on
 ## their feet.
 ##
 ## D02's scope is "pure logic, not scenes, not rendering" — this instantiates
@@ -52,8 +53,19 @@ func test_set_lying_true_tips_the_body_flat() -> void:
 	# Toward the headboard/pillow end (-Z), the same end BedPrompt sits over —
 	# see set_lying()'s own comment for how that was checked, not assumed.
 	assert_almost_eq(head.z, -1.0, 0.01, "lying: the head end should point toward -Z (the pillow end)")
-	# Face up at the ceiling, not down into the mattress.
-	assert_almost_eq(face.y, 1.0, 0.01, "lying: the face should point up, not down into the mattress")
+	# Face DOWN into the pillow, prone rather than supine -- and deliberately so.
+	# This assertion read `1.0` until 2026-09-03, written against the
+	# `(x=90, z=180)` rotation that puts the face at the ceiling. That rotation
+	# is arithmetically correct and renders WRONG: `set_lying()`'s own header
+	# records the measurement, that every construction landing X at canonical
+	# +90 combined with any nonzero second axis skins the rig into a collapsed
+	# lump near the pivot, and that the mirror family (X = -90, alone) renders a
+	# body actually spanning the bed. The shipped pose is the one that renders,
+	# so the contract this file pins is the prone one. Head-toward-the-pillow
+	# (above) is unchanged and is the assertion that actually protects
+	# `BedPrompt`'s placement; if the face ever comes back up, it must come back
+	# with a render, not with an edit here.
+	assert_almost_eq(face.y, -1.0, 0.01, "lying: the shipped pose is prone -- the face points into the pillow")
 	model.free()
 
 

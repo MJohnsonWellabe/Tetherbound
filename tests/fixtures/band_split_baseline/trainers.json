@@ -107,7 +107,8 @@
       "defeated": "village_oskar_beaten",
       "team": [
         {
-          "species": "terrapup",
+          "_why_d72": "D72 (owner playtest 2026-09-03, finding 10): the two starters belong to the opening choice alone, so no other trainer in the chapter may field one. This slot held a starter and now holds the nearest non-starter of the same type already used in this band file, at the same authored level -- index, id, level and reward are untouched. Mirrored in tests/fixtures/band_split_baseline/trainers.json in the same change, per that fixture's TRACKED MIRROR policy.",
+          "species": "meadowhart",
           "level": 6
         },
         {
@@ -225,7 +226,8 @@
       "defeated": "relay_orrin_defeated",
       "team": [
         {
-          "species": "terrapup",
+          "_why_d72": "D72 (owner playtest 2026-09-03, finding 10): the two starters belong to the opening choice alone, so no other trainer in the chapter may field one. This slot held a starter and now holds the nearest non-starter of the same type already used in this band file, at the same authored level -- index, id, level and reward are untouched. Mirrored in tests/fixtures/band_split_baseline/trainers.json in the same change, per that fixture's TRACKED MIRROR policy.",
+          "species": "burrowback",
           "level": 9
         },
         {
@@ -272,7 +274,8 @@
           "level": 10
         },
         {
-          "species": "galewisp",
+          "_why_d72": "D72 (owner playtest 2026-09-03, finding 10): the two starters belong to the opening choice alone, so no other trainer in the chapter may field one. This slot held a starter and now holds the nearest non-starter of the same type already used in this band file, at the same authored level -- index, id, level and reward are untouched. Mirrored in tests/fixtures/band_split_baseline/trainers.json in the same change, per that fixture's TRACKED MIRROR policy.",
+          "species": "galecrest",
           "level": 10
         }
       ],

@@ -969,7 +969,8 @@ func _assert_south_bridge_site_sound(world: Node, player: CharacterBody3D, failu
 	if is_nan(ground):
 		failures.append("no ground at the South Bridge approach site %s" % str(site))
 		return
-	player.global_position = Vector3(site.x, ground + 1.0, site.y)
+	var placed := Vector3(site.x, ground + 1.0, site.y)
+	player.global_position = placed
 	player.velocity = Vector3.ZERO
 	for i in 90:
 		await physics_frame
@@ -977,9 +978,23 @@ func _assert_south_bridge_site_sound(world: Node, player: CharacterBody3D, failu
 			break
 	for i in 10:
 		await physics_frame
-	if bool(player.call("_entombed_at", player.global_transform)):
-		failures.append(
-			"the South Bridge approach site %s is entombed -- all eight compass probes sealed" % str(site))
+	if not bool(player.call("_entombed_at", player.global_transform)):
+		return
+	# Say WHERE, not just "sealed". This assertion failed only on CI (three
+	# attempts, three times) while passing on this box and under
+	# `tools/probe_south_bridge_gully.gd`, and the message as first written
+	# could not tell the two candidate stories apart: a genuinely sealed
+	# approach, or a body the gully's own failsafe recovery had already moved
+	# somewhere else before the probe ran (the carve here is 11 m deep with a
+	# `failsafe` volume, and the locked gate leaf stands 2.5 m away at the
+	# crossing's own `gate_offset`). Both settle to "all eight sealed"; only
+	# the coordinates separate them.
+	var rest: Vector3 = player.global_position
+	var drift := Vector2(rest.x, rest.z).distance_to(site)
+	failures.append(
+		("the South Bridge approach site %s is entombed -- all eight compass probes sealed. "
+		+ "Placed at %s, came to rest at %s (%.2f m from the site, %.2f m below the placement).")
+		% [str(site), str(placed), str(rest), drift, placed.y - rest.y])
 
 
 ## SE22: the Old Mill Crossing, the only way over SE21's river. Same

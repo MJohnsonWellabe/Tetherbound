@@ -262,7 +262,11 @@ func run(tree: SceneTree) -> Dictionary:
 	if bool(_combat.call("is_fighting")) or str(_combat.call("outcome")) != "caught":
 		_fail("successful catch did not return to exploration")
 	elif _game.party.size() != 2:
-		_fail("catch returned to exploration with %d party members, expected two" % _game.party.size())
+		var roster := PackedStringArray()
+		for member: Variant in _game.party.members():
+			roster.append(str((member as RefCounted).get("species_id")))
+		_fail("catch returned to exploration with %d party members, expected two: %s"
+			% [_game.party.size(), ", ".join(roster)])
 	elif not bool(_player.call("locomotion_enabled")):
 		_fail("trainer locomotion was not restored after the catch")
 	else:
