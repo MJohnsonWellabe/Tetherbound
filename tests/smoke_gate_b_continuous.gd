@@ -85,16 +85,27 @@ const TEST_DIR := "user://test_saves_gate_b_continuous/"
 ## line ends on "objective to leave for South Bridge" (`docs/ROADMAP.md`),
 ## and a run that sets that flag itself consumes the objective the chapter is
 ## supposed to finish pointing at. Crossing the bridge is Gate C's first beat.
+##
+## OBJECTIVE-CAMP-0903: three fragments here (`home_materials_gathered`,
+## `home_built`, `player_slept_at_home`) still read "Gather wood", "small
+## home" and "Sleep until" -- wording FIRST-HOUR-FUN-REBUILD retired from
+## `objectives.json` in favour of "Gather supplies...", "Make camp..." and
+## "Rest at camp..." without this file following. That is a stale expectation
+## in the harness, not a stalled chain: it failed this run at exactly the row
+## the labels drifted, reading as "the tracked objective still reads 'Gather
+## supplies for your team's camp.' instead of advancing to the 'Gather wood'
+## beat" for a tracked line that was, in fact, already correct. Corrected to
+## match the shipped labels rather than weakened.
 const LADDER := [
 	["opening:beat:road", "first wild creature"],
 	["road_gate_open", "village gate"],
 	["tam_tools_given", "Tam"],
 	["tournament_team_ready", "tournament"],
 	["tournament_training_ready", "Train with"],
-	["home_materials_gathered", "Gather wood"],
-	["home_built", "small home"],
+	["home_materials_gathered", "Gather supplies"],
+	["home_built", "Make camp"],
 	["creature_bed_built_3", "Creature Bed"],
-	["player_slept_at_home", "Sleep until"],
+	["player_slept_at_home", "Rest at camp"],
 	["tournament_team_fed", "Feed your team"],
 	["tournament_entered", "Enter the village tournament"],
 	["tournament_won", "Win the village tournament"],
