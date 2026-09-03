@@ -50,10 +50,42 @@ const PROGRESS := 0.08
 ## Physics frames spent walking sideways once a detour starts. Each further
 ## detour on the same side runs `DETOUR_GROWTH` frames longer, because a long
 ## wall needs a longer slide than a fence post does.
+##
+## FENCE-CORNER-0903. A cap on how large one attempt is allowed to grow was
+## tried, to stop a single detour from carrying the body arbitrarily far past
+## a corner it had already cleared (measured once, uncapped: a single ~40m
+## detour, 122m off the straight line). It solved that but cost more than it
+## fixed: capping growth makes every attempt smaller, so a spot needing
+## several genuinely-working but individually modest attempts to clear now
+## failed each one's own smaller showing and abandoned early (measured live
+## in the real continuous route: 686 side flips, stuck before ever reaching
+## the corner this file exists for). The actual fix for "gone far enough" is
+## `step()`'s own forward free-space check below -- it ends a detour the
+## instant the way to the target re-opens, independent of how large the
+## detour was ever allowed to grow -- so growth stays uncapped and
+## `DETOURS_PER_SIDE`'s only job is not letting a truly wrong side spin
+## forever.
 const DETOUR_FRAMES := 45
 const DETOUR_GROWTH := 25
-## Detours on one side that fail to unstick before the other side is tried.
-const DETOURS_PER_SIDE := 3
+## Detours on one side that fail to unstick before the other side is tried --
+## a hard cap, in case `_side` genuinely never sees the abandon check below
+## fire (it always should; this is the backstop against that being wrong).
+##
+## FENCE-CORNER-0903. Raising this alone, tried first, cost a regression:
+## bumped to 10 flat, `smoke_gate_b_continuous --gate-b-full-chain` broke a
+## SHORTER, previously-reliable leg near RoadGate ("controller could not
+## reach authored wood at (16.0, -28.0)", 2 of 2 runs) that a small budget
+## (`_travel_budget` ~1680 frames for that ~24m leg) cannot afford to spend
+## on ten growing attempts down a side that was simply the wrong one --
+## `DETOUR_FRAMES` + growth summed over 10 tries is ~1575 frames on its own,
+## before any backoff. A flat cap cannot tell "still working" from "wrong
+## side" apart; only measured progress can. See `SIDE_ABANDON_ATTEMPTS`/
+## `SIDE_ABANDON_PROGRESS_M` below for what actually decides when to give up
+## on a side -- they answer that question in a couple of attempts on a wrong
+## side, and let a genuinely-working side (the corner: real westward creep
+## every cycle) keep going far past this cap's old value of 3, which is what
+## a 15m fence run with a post at each end needed.
+const DETOURS_PER_SIDE := 20
 ## The sideways free-space probe. Only as far as a detour would actually walk.
 const PROBE_REACH := 3.0
 
@@ -95,6 +127,32 @@ const PROBE_HALF_WIDTH := 0.35
 ## Clearance a side needs before sliding that way is travel rather than a wedge.
 ## The body is 0.8m across; this is that plus a hand's breadth either side.
 const BODY_WIDTH := 0.9
+## FENCE-CORNER-0903. How `_begin_detour` decides a committed side is still
+## worth persisting on: from the SECOND attempt onward it checks total net
+## lateral progress since the side was first committed, and abandons early
+## (flips, regardless of `DETOURS_PER_SIDE`) if that total has not covered
+## real ground. A wrong side reads this within two attempts; a side that is
+## genuinely working (measured live: real, if slow, metres-per-attempt creep
+## along a 15m fence run) clears it every time and keeps its growing detour
+## going toward `DETOURS_PER_SIDE`'s cap instead.
+const SIDE_ABANDON_ATTEMPTS := 2
+## Metres of net progress along the committed side, since it was picked,
+## an abandon check requires to call the side still working. Below one full
+## `BODY_WIDTH` is noise a slide can rack up just easing around its own
+## contact point without actually going anywhere.
+const SIDE_ABANDON_PROGRESS_M := 1.0
+## FENCE-CORNER-0903. Consecutive physics frames a detour's forward
+## free-space probe (toward the TARGET, not the detour's own perpendicular)
+## must read clear before `step()` trusts it and ends the detour outright.
+## 20 frames is a third of a second -- long enough that a momentary gap
+## between two pieces of geometry (measured: the tournament board and a
+## neighbouring fence panel) cannot read as "the corner is behind me", since
+## the body is still moving and that gap closes again within a few frames;
+## genuinely open terrain past a cleared corner stays clear for the whole
+## window. See `step()`'s own comment on this check for the two failure
+## modes (no check at all: 122m overshoot; a one-shot check: 678 flips
+## stuck on unrelated geometry) that fixed this number rather than 1 or 60.
+const CLEAR_AHEAD_FRAMES := 20
 ## Frames spent reversing away from the target when BOTH sides are pinched.
 ## Short: this is shaking loose from a pocket, not a leg of the journey.
 const BACKOFF_FRAMES := 30
@@ -148,11 +206,31 @@ var _detour := Vector3.ZERO
 var _detour_left := 0
 var _side := 0.0
 var _side_detours := 0
+## Where the body was when `_side` was last freshly picked (not each retry --
+## see `SIDE_ABANDON_ATTEMPTS`/`SIDE_ABANDON_PROGRESS_M`). Total displacement
+## from here along the committed side is the real "is this working" signal.
+var _side_commit_origin := Vector3.ZERO
 ## Where the body was when the current detour was last examined, and how many
 ## frames ago that was. A detour that is not carrying the body anywhere is
 ## abandoned rather than run to its frame count -- see DETOUR_CHECK_FRAMES.
 var _detour_origin := Vector3.ZERO
 var _detour_age := 0
+## Consecutive frames the forward-toward-target probe has read clear during
+## the current detour -- see `CLEAR_AHEAD_FRAMES`.
+var _clear_ahead := 0
+## FENCE-CORNER-0903. True while the current `_detour_left` run is the
+## step-back-and-sideways recovery `step()` starts on a stall, as opposed to
+## an ordinary `_begin_detour()` slide. A recovery that itself stalls (both
+## the direction chosen and the ground it is standing on refuse to move it
+## at all -- measured live pinned against a closed gate leaf, `moved/1s
+## 0.03` for the rest of the frame budget) must not just start ANOTHER
+## recovery: that recomputes the identical direction from the identical
+## position and deadlocks forever, which is a strictly worse failure than
+## the oscillation this file exists to fix. This flag is the one-recovery-
+## then-fall-back guard: a stall during a recovery forces the harder,
+## guaranteed-terminating `_back_off()` (full side reset) instead of another
+## attempt at the same stuck direction.
+var _recovering := false
 
 
 func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable) -> void:
@@ -230,10 +308,39 @@ func step(point: Vector3) -> void:
 	var to := point - _player.global_position
 	to.y = 0.0
 	if _detour_left > 0:
+		# FENCE-CORNER-0903. Stop sliding once straight-at-the-target has read
+		# clear for a SUSTAINED stretch, not a single lucky instant. Aimed at
+		# a real, if rare, overshoot (a walker that had genuinely cleared the
+		# TrailGate corner rode a growing detour a further 40m and landed
+		# 122m off the straight line) -- but a one-shot version of this check
+		# measured worse than the overshoot it fixed: near closely-packed
+		# geometry (the tournament board and its neighbouring fence panels,
+		# well before TrailGate) a single favourable probe cancels a detour
+		# that is still genuinely needed, the body walks straight back into
+		# contact, and the resulting cycle is worse than the oscillation this
+		# file exists to fix (678-686 side flips, stuck before ever reaching
+		# the corner). `CLEAR_AHEAD_FRAMES` consecutive clear reads is long
+		# enough that a momentary gap between two obstacles cannot fake it --
+		# actually open terrain past a cleared corner reads clear for the
+		# whole stretch, a gap between board and fence does not.
+		if _free_space(to.normalized()) >= PROBE_REACH:
+			_clear_ahead += 1
+		else:
+			_clear_ahead = 0
+		if _clear_ahead >= CLEAR_AHEAD_FRAMES:
+			_detour_left = 0
+			_side = 0.0
+			_side_detours = 0
+			_recovering = false
+			_clear_ahead = 0
 		# Stop sliding the moment the ground ahead stops being ground. The side
 		# was checked when the detour began, but a slide is several metres long
-		# and an edge can arrive part-way along it.
-		if _drops_away(_detour):
+		# and an edge can arrive part-way along it. Guarded on `_detour_left`
+		# still being set: the clear-ahead check above may just have ended
+		# the detour outright, and `_detour_stalled()` must not be asked
+		# about (and silently tick its own ageing counter for) a detour that
+		# no longer exists.
+		elif _drops_away(_detour):
 			_detour_left = 0
 			_side = -_side
 			_side_detours = 0
@@ -242,9 +349,62 @@ func step(point: Vector3) -> void:
 			# stopped moving anyway -- furniture the probe could not see from
 			# where it stood, or a corner that closed as the slide entered it.
 			# Give up on this side now instead of grinding out the frame count.
-			_detour_left = 0
-			_side = -_side
-			_side_detours = 0
+			#
+			# FENCE-CORNER-0903. This used to force `_side = -_side` right
+			# here, unconditionally, on every stall -- which measured live
+			# against a 15m fence run with a corner post at each end
+			# (`village_boundary.json`'s TrailGate -> vertex 7 edge,
+			# `village_boundary.gd`'s `FenceCornerGuard_6`/`_7`) as 79-94
+			# side flips and a walker pinned in a ~10m band that never once
+			# covered the last metre or two to either post. Two things were
+			# wrong, found by measuring what each candidate fix actually did:
+			#
+			#   1. Flipping in place discards a side that WAS making real, if
+			#      slow, progress. Retreating first and re-trying the SAME side
+			#      (`_side`/`_side_detours` left alone here) lets `_begin_detour`'s
+			#      own growing-duration retries do their job instead of
+			#      restarting the coin flip on every stall.
+			#   2. A corner POST sticks out further than the panel either side
+			#      of it (`village_boundary.gd`'s `POST_HALF` 1.1m vs. a panel's
+			#      own 0.25m half-thickness), so a body hugging the panel at its
+			#      ordinary ~0.4-0.5m clearance is already closer to the post
+			#      than the post's own face by the time it arrives. A diagonal
+			#      retreat (part standoff, part lateral) was tried and measured
+			#      WORSE (37-38 flips, same trap) than retreating straight back
+			#      (29 flips, real westward creep to within 2m of clearing):
+			#      trading standoff for lateral distance the body cannot use yet
+			#      just re-hits the post sooner. The lateral progress this file
+			#      wants belongs to `_begin_detour`'s own committed slide, once
+			#      retreating straight back has actually made room for it.
+			#
+			# GUARANTEED EXIT. Measured pinned against a closed gate leaf (a
+			# separate, real defect that probe was reproducing because it
+			# never opens the gate -- the actual gather route always does),
+			# the straight-back retreat direction can itself be a direction
+			# nothing under it will move along, and `_detour_stalled()`
+			# re-firing every `DETOUR_CHECK_FRAMES` would just restart an
+			# identical retreat from an identical position forever:
+			# `moved/1s 0.03` for the rest of the frame budget, a hard
+			# freeze strictly worse than the oscillation this file exists to
+			# fix. `_recovering` makes this a ONE-shot: a stall during an
+			# already-in-progress recovery falls back to the plain,
+			# guaranteed-terminating flip (which sets no new `_detour_left`
+			# of its own, so it cannot re-enter this same stuck branch)
+			# instead of trying the identical recovery again.
+			if _recovering:
+				_recovering = false
+				_detour_left = 0
+				_side = -_side
+				_side_detours = 0
+			else:
+				_recovering = true
+				_detour = -to.normalized()
+				_detour_left = BACKOFF_FRAMES
+				_detour_origin = _player.global_position
+				_detour_age = 0
+				_push(_detour)
+				await _tree.physics_frame
+				return
 		else:
 			_detour_left -= 1
 			_push(_detour)
@@ -281,6 +441,9 @@ func reset() -> void:
 	_side_detours = 0
 	_detour_origin = Vector3.ZERO
 	_detour_age = 0
+	_recovering = false
+	_side_commit_origin = Vector3.ZERO
+	_clear_ahead = 0
 
 
 ## Has the detour currently running stopped carrying the body anywhere?
@@ -308,20 +471,72 @@ func _detour_stalled() -> bool:
 func _begin_detour(to: Vector3) -> void:
 	_stall = 0
 	_gap = to.length()
+	# An ordinary committed slide is starting, so any FENCE-CORNER-0903
+	# stall-recovery in progress is over -- otherwise a recovery that
+	# happened to succeed would still read as "already recovering" on the
+	# NEXT unrelated stall, cutting straight to the guaranteed-exit flip
+	# instead of getting its own one-shot retreat.
+	_recovering = false
+	# A fresh run at `CLEAR_AHEAD_FRAMES`, scoped to the detour that is about
+	# to start rather than left over from wherever the last one ended.
+	_clear_ahead = 0
 	var perpendicular := to.normalized().cross(Vector3.UP).normalized()
+	# FENCE-CORNER-0903. `_side` is picked fresh (or force-flipped) only on
+	# these two branches; a repeat call that is just continuing an already-
+	# committed side leaves `fresh_side` false. The free-space sanity check
+	# below used to run on EVERY call, committed side or not, which measured
+	# live against a 15m fence run (`village_boundary.json`'s TrailGate ->
+	# vertex 7 edge, two corner posts a body-width apart at either end) as
+	# 79-94 side flips and a walker that never got past x=-14 of the 15m it
+	# needed: any call into `_begin_detour` only ever happens right after a
+	# stall, i.e. right up against something, so the "does the COMMITTED
+	# side have room RIGHT NOW" read is close to always false at that exact
+	# instant regardless of whether the committed side is actually the way
+	# out -- and flipping on that reads it wrote off the very side that was
+	# making real (if slow) net progress along the wall. This docstring's
+	# own "decided once per side and then KEPT" was already the intent;
+	# checking on every repeat call is what was breaking it.
+	var fresh_side := false
 	if _side == 0.0:
 		_side = _freer_side(to)
 		_side_detours = 0
-	elif _side_detours >= DETOURS_PER_SIDE:
-		_side = -_side
-		_side_detours = 0
-	if _free_space(perpendicular * _side) < BODY_WIDTH:
-		if _free_space(perpendicular * -_side) >= BODY_WIDTH:
+		fresh_side = true
+	else:
+		var abandon := _side_detours >= DETOURS_PER_SIDE
+		# FENCE-CORNER-0903. A flat attempt cap cannot tell a side that is
+		# genuinely working (creeping metres along a long wall, one retry at
+		# a time) from one that was simply wrong from the start -- only
+		# measured progress can, so this checks net displacement along
+		# `_side` since it was first committed (`_side_commit_origin` is set
+		# once below, when the side is freshly picked, not on every retry).
+		# A per-ATTEMPT version of this check was tried too: it judges each
+		# capped attempt's own showing, which sounds stricter but measured
+		# WORSE in the real continuous route -- a spot needing several short,
+		# choppy-but-real attempts to clear (each individually unremarkable)
+		# now failed each one's own bar and abandoned in a couple of tries,
+		# regardless of whether the side was genuinely working. Overshoot
+		# past a corner already cleared -- cumulative's own failure mode,
+		# measured at 122m off course -- is handled below instead, by
+		# actually checking whether the way to the target has opened back
+		# up, which is the real "stop now" signal a distance/attempt-based
+		# rule was always a proxy for.
+		if not abandon and _side_detours >= SIDE_ABANDON_ATTEMPTS:
+			var progress := (_player.global_position - _side_commit_origin).dot(perpendicular * _side)
+			abandon = progress < SIDE_ABANDON_PROGRESS_M
+		if abandon:
 			_side = -_side
 			_side_detours = 0
-		else:
-			_back_off(to)
-			return
+			fresh_side = true
+	if fresh_side:
+		_side_commit_origin = _player.global_position
+		if _free_space(perpendicular * _side) < BODY_WIDTH:
+			if _free_space(perpendicular * -_side) >= BODY_WIDTH:
+				_side = -_side
+				_side_detours = 0
+				_side_commit_origin = _player.global_position
+			else:
+				_back_off(to)
+				return
 	_side_detours += 1
 	_detour = perpendicular * _side
 	_detour_left = DETOUR_FRAMES + (_side_detours - 1) * DETOUR_GROWTH
