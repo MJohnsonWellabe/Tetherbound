@@ -19,6 +19,7 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const CAMP_TENT := preload("res://scripts/build/camp_tent.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
+const CAMP_FILL_LIGHT := preload("res://scripts/world/camp_fill_light.gd")
 
 ## CAMP-SHELTER-0903, owner playtest 2026-09-03 item 7: "You should have to
 ## have the tent over your head to sleep." Duplicated from
@@ -58,6 +59,7 @@ func build_real() -> void:
 	add_child(_piece)
 	_piece.position.y = BED_SINK
 	_piece.call("build_real", MESH_PATH)
+	CAMP_FILL_LIGHT.attach(self, 0.7)
 
 	var prompt: Node3D = INTERACTABLE.new()
 	prompt.name = "Interactable"
