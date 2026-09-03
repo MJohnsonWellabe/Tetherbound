@@ -17,6 +17,14 @@ var _world: Node
 var _game: Node
 var _player: CharacterBody3D
 var _arbiter: Node
+## CAMP-SHELTER-0903. `Game.take_pending_world_message()` is a one-shot,
+## read-and-clear queue -- `playground_hud.gd::_update_world_message()`
+## already polls it every frame in a real booted world (this one), so this
+## test's own call reads whatever the HUD has not already drained on some
+## earlier physics frame, usually "". Read off the HUD's own message Label
+## instead, the same fix `smoke_combat.gd`'s own header comment already
+## explains for the identical race.
+var _message: Label
 
 
 func _init() -> void:
@@ -31,6 +39,8 @@ func _run() -> void:
 	_game = root.get_node_or_null(^"Game")
 	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
 	_arbiter = get_first_node_in_group("interaction_arbiter")
+	var hud := _world.get_node_or_null(^"PlaygroundHUD")
+	_message = hud.find_child("Message", true, false) as Label if hud != null else null
 	if _game == null or _player == null or _arbiter == null:
 		_fail("Meadows did not stand up Game, Player, and InteractionArbiter")
 		_report()
@@ -57,15 +67,22 @@ func _run() -> void:
 	# Known clear-meadow coordinates also used by the modal/build regressions.
 	var bed := await _place_fixture("creature_bed", Vector3(70.0, 0.0, 70.0))
 	# OWNER-0902-CAMP-SPLIT: the "Rest until morning" prompt now lives on the
-	# standalone bedroll, not a bundled camp.
+	# standalone bedroll, not a bundled camp. CAMP-SHELTER-0903: a bedroll can
+	# no longer be PLACED anywhere but inside a tent's own footprint, so the
+	# tent goes down first, at the exact same aim spot -- the player has not
+	# moved or turned between the two fixture placements, so both ghosts
+	# resolve to the same grid cell and the bedroll lands dead centre in the
+	# tent it was just aimed at, same as a player pitching camp for real.
+	var tent := await _place_fixture("tent", Vector3(100.0, 0.0, 80.0))
 	var bedroll := await _place_fixture("bedroll", Vector3(100.0, 0.0, 80.0))
-	if bed == null or bedroll == null:
+	if bed == null or tent == null or bedroll == null:
 		_report()
 		return
 
 	await _exercise_creature_bed(bed, party)
 	await _exercise_repeated_torch()
 	await _exercise_player_rest(bedroll, bed, party)
+	await _exercise_bedroll_without_tent_overhead()
 	_report()
 
 
@@ -234,6 +251,113 @@ func _exercise_player_rest(bedroll: Node3D, bed: Node3D, party: RefCounted) -> v
 		_fail("completed rest left a duplicate resting body in the bed")
 	else:
 		print("player rest: day advanced, trainer healed, creature completed rest and returned active")
+
+
+const PLAYER_BED := preload("res://scripts/build/player_bed.gd")
+const CAMP_TENT := preload("res://scripts/build/camp_tent.gd")
+
+## CAMP-SHELTER-0903: "you should have to have the tent over your head to
+## sleep" is a LIVE footprint check (`player_bed.gd::_tent_overhead`), not a
+## flag written once at placement -- and now that a bedroll can no longer be
+## PLACED anywhere but inside a tent's own footprint, the only way left to
+## reach "no tent overhead" is a bedroll that predates the rule (an existing
+## save, or a tent dismantled out from under one already standing). Built
+## directly rather than through the controller/menu, the same way
+## `tools/gate_f/probe_bed_rest_sequence.gd` builds a standalone `creature_bed`
+## to probe its own interaction without re-driving the whole placement flow --
+## `restore_from_game` would do the identical direct `build_real()` call for a
+## save like this, with nothing to check the loaded position against.
+func _exercise_bedroll_without_tent_overhead() -> void:
+	# Ground height, not a hard-coded 0.0 -- every other fixture in this file
+	# reaches its actual Y through `_teleport_to`'s own `ground_height_at`
+	# sample (or the live build placer's own ground-clamped resolve()). A
+	# bedroll built directly, off by even a metre from the real terrain
+	# height here, sits far enough from the player's own ground-sampled
+	# teleport that its 2.6m Interactable range never reaches them -- the
+	# root cause of this helper's own first failed run.
+	var orphan_x := 106.0
+	var orphan_z := 80.0
+	var orphan_y := float(_world.call("ground_height_at", orphan_x, orphan_z)) \
+		if _world.has_method("ground_height_at") else 0.0
+	var orphan := PLAYER_BED.new()
+	orphan.name = "OrphanBedroll"
+	_world.add_child(orphan)
+	orphan.global_position = Vector3(orphan_x, orphan_y, orphan_z)
+	orphan.call("build_real")
+	for i in 10:
+		await physics_frame
+
+	var vitals: RefCounted = _player.get("vitals")
+	if vitals == null:
+		_fail("Player has no vitals for the no-tent rest check")
+		return
+	vitals.set("health", 40.0)
+	var day_before := int(_game.get("day"))
+
+	var prompt := orphan.get_node_or_null(^"Interactable") as Node3D
+	if prompt == null:
+		_fail("a bedroll with no tent still needs its own Rest interaction (for a legacy save to load into)")
+		return
+	await _teleport_near(prompt, Vector3.ZERO)
+	if not await _wait_provider(prompt):
+		_fail("orphan bedroll's Rest prompt never won arbitration")
+		return
+	if _message != null:
+		_message.text = ""
+		_message.visible = false
+	await _tap("interact")
+	for i in 40:
+		await physics_frame
+
+	if int(_game.get("day")) != day_before:
+		_fail("resting on a bedroll with no tent overhead advanced the day anyway")
+	if float(vitals.get("health")) >= float(vitals.get("max_health")):
+		_fail("resting on a bedroll with no tent overhead healed the trainer anyway")
+	if _message == null:
+		_fail("no HUD message strip found; cannot confirm the refusal reason reached the screen")
+	else:
+		var refusal := str(_message.text) if _message.visible else ""
+		if not refusal.to_lower().contains("tent"):
+			_fail("no on-screen reason named the missing tent (got '%s')" % refusal)
+		else:
+			print("bedroll with no tent overhead: rest refused, on-screen reason shown ('%s')" % refusal)
+
+	# Same bedroll, no re-placement -- a tent pitched over it after the fact
+	# (the live-check half of the same rule) must make it sleepable with no
+	# migration step. Built directly at the orphan's own exact position
+	# rather than through `_place_fixture` (which aims `PLACE_AHEAD` in front
+	# of wherever the player is currently FACING, not at the literal
+	# coordinate passed in) -- this is the live-check half of the rule under
+	# test, not the placement flow, which the tent+bedroll placed together at
+	# the top of this file already proves through the real controller path.
+	var tent := CAMP_TENT.new()
+	tent.name = "TentOverOrphan"
+	_world.add_child(tent)
+	tent.global_position = orphan.global_position
+	tent.call("build_real")
+	# `player_bed.gd::_tent_overhead` finds a tent by walking `PLACED_GROUP`
+	# for `BUILDING_ID_META` -- both stamped by `build_placer.gd::
+	# _spawn_building` on a real placement, neither of which this direct
+	# construction goes through, so both are set by hand (same fix
+	# `smoke_gateb_flags.gd`'s own equivalent direct-build needed).
+	tent.add_to_group("placed_building")
+	tent.set_meta("building_id", "tent")
+	for i in 10:
+		await physics_frame
+
+	await _teleport_near(prompt, Vector3.ZERO)
+	if not await _wait_provider(prompt):
+		_fail("orphan bedroll's Rest prompt never re-won arbitration after a tent went up over it")
+		return
+	await _tap("interact")
+	for i in 150:
+		await physics_frame
+	if int(_game.get("day")) != day_before + 1:
+		_fail("a tent pitched after the fact did not make the same bedroll sleepable")
+	elif float(vitals.get("health")) < float(vitals.get("max_health")):
+		_fail("the now-sheltered bedroll advanced the day but did not heal the trainer")
+	else:
+		print("bedroll gained a tent overhead after the fact and rest now succeeds, unchanged")
 
 
 func _tap(action: String) -> void:
