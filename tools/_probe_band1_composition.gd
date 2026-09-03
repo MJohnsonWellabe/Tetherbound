@@ -48,9 +48,9 @@ func _init() -> void:
 				var p := a + dir * t
 				var h: float = f.height_at(p.x, p.y)
 				var cols := []
-				for side in [1.0, -1.0]:
+				for side: float in [1.0, -1.0]:
 					for off: float in OFFSETS:
-						var q := p + left * (off * side)
+						var q: Vector2 = p + left * (off * side)
 						cols.append(float(f.height_at(q.x, q.y)))
 				var ahead := p + dir * 10.0
 				var slope: float = float(f.height_at(ahead.x, ahead.y)) - h
