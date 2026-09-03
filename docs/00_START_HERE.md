@@ -40,6 +40,12 @@ prefix gates in CI.
 `docs/HANDOFF_2026-09-03.md` first** — it carries the live lane state, the open PR, and the
 traps that have already cost this project time.
 
+**If you are starting Gate 3, read `docs/GATE3_COORDINATOR_BRIEF.md` first.** Gate 3 may
+begin before Gate 2 is called done — the Gate 1 precedent covers this — but Gate 3's
+acceptance is defined by reference to the Gate 2 standard, and task 2.8 is currently
+empowered to revise that standard. The brief says which Gate 3 work is safe to start now
+and which must wait for 2.8's verdict.
+
 ## What is authoritative
 
 | Question | Read |
@@ -81,12 +87,24 @@ Precedence when documents disagree: newest owner directive or playtest in `docs/
 
 ## Known issues right now
 
-See `docs/CURRENT_STATE.md` §3 for the ranked list. Headline items: opening orb-floor
-smoke red; continuous Gate B objective chain stalls on "Gather supplies for your team's
-camp" after tournament readiness; South Bridge entombment at (7.9, −3.4, 1319); Bram's
-shop exit clips furniture; objective label truncates at 1280×800; four items only the
-owner's ROG Ally can close (interact reliability, frame rate with grass on, player
-sleep, day/night advancing).
+See `docs/CURRENT_STATE.md` §3 for the ranked list — it is authoritative and this
+summary is not. Updated 2026-09-03; the four items this section used to head with
+(opening orb floor, the Gate B objective chain, South Bridge entombment, the truncated
+objective label) are all closed, two of them as harness defects rather than game
+defects. See "Current stage" above.
+
+Headline items still open:
+
+- The tutorial catch is unstable across knockout / re-engage rounds.
+- Bramblebun reads as a self-lit glow at night: `field_emission` was raised to 2.5 for
+  daytime grass separation and the multiply is not time-of-day scaled.
+- The settlement fence's concave corner past TrailGate stops the scripted gather-route
+  walk. Lane `FENCE-CORNER` is deciding whether that is a world defect or a harness one.
+- Bram's shop exit clips furniture.
+- Gate 2's task list (2.1–2.7) is complete while its blind-judge bar is not met; task
+  2.8 decides what that means. See `docs/GATE3_COORDINATOR_BRIEF.md` §2.
+- Four items only the owner's ROG Ally can close: interact reliability, frame rate with
+  grass on, player sleep, day/night advancing.
 
 ## Validation expectations
 
