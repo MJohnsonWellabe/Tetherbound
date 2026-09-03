@@ -76,17 +76,36 @@ tools/_scratch_*
 # do not belong in the tree.
 *_lod0_texture_0.orig.png
 
-# Evidence payloads. Gate F runs and capture rounds write screenshots,
-# telemetry and save handoffs under ralph/reports/. Only the written verdicts
-# (*.md) and one contact sheet per round belong in the tree; 2.8 GB of frames
-# and jsonl accumulated here in three days before this rule existed. Keep the
-# payload local (or attach it to the CI run) and commit the summary.
-ralph/reports/**/*.png
-ralph/reports/**/*.jpg
+# Evidence payloads. Capture rounds and telemetry under ralph/reports/ grew to
+# 2.8 GB in three days. Only written verdicts (*.md) and one contact sheet
+# (_sheet*.png) per round belong in the tree; per-frame captures and telemetry
+# stay local or attach to the CI run.
+#
+# Written as plain ignores, no `!` negations: `git check-ignore` reports a
+# negated match with exit 0 too, and both tests/test_gate_f_rig.gd and the
+# Gate F harness's own _uncommittable() read exit 0 as "git will not carry
+# this". Gate F run directories (ralph/reports/gate-f-*/) are therefore not
+# named here at all: the protocol requires their prescribed captures and
+# save handoffs to be committed (CD-2). Everything else is.
+ralph/reports/visual-parity/**/[!_]*.png
+ralph/reports/visual-parity/**/[!_]*.jpg
+ralph/reports/audit/**/[!_]*.png
+ralph/reports/audit/**/[!_]*.jpg
+ralph/reports/judge-*/**/[!_]*.png
+ralph/reports/hud-catch/**/[!_]*.png
+ralph/reports/shots/**/[!_]*.png
+ralph/reports/T[0-9]-*/**/[!_]*.png
+ralph/reports/T[0-9]-*/**/[!_]*.jpg
+ralph/reports/t[0-9]-*/**/[!_]*.png
+ralph/reports/OWNER-*/**/[!_]*.png
+ralph/reports/WORLD-*/**/[!_]*.png
+ralph/reports/CAMP-*/**/[!_]*.png
+ralph/reports/HUD-*/**/[!_]*.png
+ralph/reports/TOURNAMENT-*/**/[!_]*.png
+ralph/reports/HARNESS-*/**/[!_]*.png
+ralph/reports/OPENING-*/**/[!_]*.png
 ralph/reports/**/*.jsonl
 ralph/reports/**/*.csv
-ralph/reports/**/*.json
-!ralph/reports/**/_sheet*.png
-!ralph/reports/**/manifest.json
+ralph/reports/**/telemetry/
 
 # Historical material lives in archive/; nothing there is loaded by the game.
