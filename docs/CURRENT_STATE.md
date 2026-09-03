@@ -97,6 +97,15 @@ redesign proceeds; whether Grandpa's loft bed was ever tried.
 
 ## 4. Process findings that changed how work is verified
 
+- Raising `OBJECTIVE_LINES` 2 -> 4 to stop long objective titles truncating also
+  raised the block's FLOOR, because `OBJECTIVE_BLOCK_HEIGHT` was derived from the cap:
+  168.8px -> 261.6px reserved permanently, a third of the 1280x800 handheld screen held
+  open for a panel reading "Win the village tournament." No test caught it — the
+  truncation check only asks whether text is clipped, never whether the panel is bigger
+  than its contents. **A fix measured on the case that motivated it can still regress
+  every other case.** Split into `OBJECTIVE_MIN_LINES` (floor) and `OBJECTIVE_LINES`
+  (cap) on 2026-09-03; the panel still grows to four lines when the text needs them.
+
 - `smoke_title_new_game.gd` passed in CI and failed on any machine that had run
   another smoke first, because `title_screen.gd` interposes a "Start a fresh game?"
   confirmation whenever a save slot is occupied and the test never answered it. CI
