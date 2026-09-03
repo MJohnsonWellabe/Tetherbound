@@ -471,6 +471,7 @@ func _build_placeholder() -> void:
 		_build_capsule(look)
 	_refresh_shiny_tint()
 	_apply_ground_contact_shadow()
+	_apply_night_floor()
 
 
 ## Load the species' model and fit it to the gameplay size. Returns false when
@@ -823,6 +824,93 @@ func _apply_field_brightness() -> void:
 	if strength <= 0.0:
 		return
 	_brighten_node(_model, strength, degreen)
+
+
+## NIGHT-LEGIBILITY (ROADMAP 2.7). `character_model.gd::set_emission_floor_scale`
+## gives humans a small additive, time-of-day-scaled emission floor so a body
+## lit by nothing but ambient/moon still reads at night; creatures never had
+## the equivalent, because most of the roster ships from the older production
+## pipeline SELF-LIT (painted albedo copied into the emission slot at a
+## constant multiplier, `creatures_visual.json`'s `emission_scale`), and that
+## constant glow alone already keeps them legible after dark -- measured with
+## `tools/_capture_night_legibility.gd` this session, a self-lit species
+## (mudsnout) renders with real form and good contrast at night, no fix needed.
+##
+## The species that do NOT ship that convention -- a plain lit PBR material,
+## `emission_enabled == false` (Bramblebun's redesign mesh is one, and any
+## future creature exported the same way) -- have nothing standing between
+## them and the world's own deliberately-dim night ambient. The same capture
+## measured one of them (sparkit) rendering completely invisible against the
+## grass at night while the trainer two metres away read fine: a genuine
+## silhouette-less gap, not a framing artefact.
+##
+## This gives exactly those materials the same mechanism humans have: a small
+## additive floor, sourced from the creature's OWN current albedo texture
+## (never a foreign colour, and read AFTER every colourway/field-brightness
+## pass above so it floors whatever the creature currently looks like) that
+## `world_look.gd` scales to zero in daylight and up at night. A creature that
+## already reads fine (self-lit, or an ordinary daylight scene) is untouched;
+## `emission_enabled` is the gate, so this only ever adds where nothing was
+## already keeping the shape visible.
+static var _night_floor_scale := 0.0
+static var _night_floor_materials: Dictionary = {}
+
+
+## Called by `world_look.gd` on each look change, exactly like
+## `character_model.gd`'s own version -- rescales every material this body
+## class already floored, in place, rather than waiting for the next spawn to
+## pick up a new time of day.
+static func set_emission_floor_scale(scale: float) -> void:
+	var wanted := clampf(scale, 0.0, 1.0)
+	if is_equal_approx(wanted, _night_floor_scale):
+		return
+	_night_floor_scale = wanted
+	for material: BaseMaterial3D in _night_floor_materials.values():
+		material.emission_energy_multiplier = wanted
+
+
+func _apply_night_floor() -> void:
+	if _has_model:
+		_night_floor_node(_model)
+		return
+	for node in [_body, _head]:
+		if node != null and node.material_override is BaseMaterial3D:
+			node.material_override = _night_floor_material(node.material_override as BaseMaterial3D)
+
+
+func _night_floor_node(node: Node) -> void:
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			var source: Material = instance.get_active_material(surface)
+			if not (source is BaseMaterial3D) or (source as BaseMaterial3D).emission_enabled:
+				continue
+			instance.set_surface_override_material(surface, _night_floor_material(source as BaseMaterial3D))
+	for child in node.get_children():
+		_night_floor_node(child)
+
+
+## One floored material per (species, source material) pair, shared the same
+## way every other cache in this file is -- keyed by `resource_name` so a
+## `_field_bright`/`_alpha_rim`/plain-shipped material each floor separately
+## and never leak across species or variants.
+func _night_floor_material(source: BaseMaterial3D) -> BaseMaterial3D:
+	var suffix := "_night_floor"
+	if source.resource_name.ends_with(suffix):
+		return source
+	var key := "%s|%s" % [species_id, source.resource_name]
+	if _night_floor_materials.has(key):
+		return _night_floor_materials[key]
+	var floored := source.duplicate() as BaseMaterial3D
+	floored.resource_name = "%s%s" % [floored.resource_name, suffix]
+	floored.emission_enabled = true
+	floored.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
+	floored.emission_texture = floored.albedo_texture
+	floored.emission = Color(1.0, 1.0, 1.0, 1.0)
+	floored.emission_energy_multiplier = _night_floor_scale
+	_night_floor_materials[key] = floored
+	return floored
 
 
 func _brighten_node(node: Node, strength: float, degreen: float = 0.0) -> void:
@@ -1218,6 +1306,7 @@ func apply_size_multiplier(multiplier: float) -> void:
 		_build_capsule(look)
 	_refresh_shiny_tint()
 	_apply_ground_contact_shadow()
+	_apply_night_floor()
 	# BACKLOG-VISUAL-ALPHA-GROUNDING. The caller already stood this body on the
 	# ground via `place_on_ground()` BEFORE calling here (`encounter_director.
 	# _make_alpha()` resizes an already-placed wild), and that call's

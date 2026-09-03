@@ -9,6 +9,7 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const REST_PANEL := preload("res://scripts/ui/creature_bed_panel.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
+const CAMP_FILL_LIGHT := preload("res://scripts/world/camp_fill_light.gd")
 
 ## GATEB-FLAGS: the ladder's `creature_bed_built` CONTRACT flag
 ## (data/progression/objectives.json) -- set the instant this object is
@@ -393,6 +394,7 @@ func build_real(player_built: bool = true) -> void:
 	_piece.call("build_real", MESH_PATH, {}, PAD_SCALE)
 	_dress_pad()
 	_build_rim()
+	CAMP_FILL_LIGHT.attach(self, 0.6)
 	var prompt: Node3D = INTERACTABLE.new()
 	prompt.name = "Interactable"
 	prompt.position = Vector3(0.0, 0.6, 0.7)
