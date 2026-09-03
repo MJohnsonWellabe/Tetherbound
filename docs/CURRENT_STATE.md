@@ -127,6 +127,28 @@ redesign proceeds; whether Grandpa's loft bed was ever tried.
   telemetry were tracked. Evidence hygiene is now in `docs/AGENT_WORKFLOW.md` §8 and
   `.gitignore`.
 - Six harness failures in a day were the same bug: fixed-slot inventory lookups.
+- CI-TRUTH-0903: `smoke_gate_b_continuous.gd` ran in no CI job at all, not gated and
+  not even known-red — verified by grepping every workflow file, not assumed. Split
+  into a gating CORE run (opening through tournament readiness, the part that has
+  actually passed reliably) and a `--gate-b-full-chain` continuation that stays
+  workflow_dispatch-only/`continue-on-error` until the gather route and tail are
+  reliable. **Verified green for real**, not read off the YAML: run
+  [33750739621](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/33750739621)
+  on `ralph/CI-TRUTH-0903` @ `de2540b1`, push event, 34m14s wall clock (11:37:57 →
+  12:12:11 UTC) — `verify-gate-b-core` genuinely executed (not skipped) and passed on
+  its first attempt in 6m47s, every other required job green, and both
+  `verify-continuous-core-known-red` and `verify-gate-b-full-known-red` correctly
+  **skipped** (their `if` gates on `workflow_dispatch`, and this was a plain push) —
+  the known-red split is not silently gating or silently vanishing, it is doing
+  exactly what its `if` says.
+- CI-TRUTH-0903's gather-route diagnosis (P2 row above) was double-checked against
+  `origin/main` before being committed, because a same-day poke claimed
+  `ralph/MID-LAYER-0903` and `ralph/BAND1-DISCOVERY-0903` had landed and could have
+  moved the scatter the diagnosis depends on. They had not: `origin/main` was still
+  `46cff79e` at check time, identical to this branch's own merge-base, and both named
+  branches remain separate unmerged remote refs. The diagnosis stands as verified
+  against the tree it was actually measured on. Worth a re-check whenever either lane
+  does land, since both touch world content near the corridor spine.
 
 ## 4b. Landed on the reset branch from the 2026-09-03 lanes
 
