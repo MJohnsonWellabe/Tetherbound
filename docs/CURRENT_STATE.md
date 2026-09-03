@@ -176,12 +176,12 @@ Points of interest: one optional discovery with a real reward, signposts legible
   where the loop should be. No map/baker code changed.
 - Tests run on a clean `--import` (Godot 4.7-stable): `test_band_content.gd` 6/6,
   `test_playground_heightfield.gd` 15/15, `test_map_baker.gd` 7/7, `test_harvest.gd`
-  30/30. Not run: the full unit suite or `smoke_playground` — this container has no
-  GPU, and `--rendering-driver opengl3` under `xvfb-run` (required for any capture)
-  measured 30–50 minutes per two-or-three-frame capture of the full `meadows_playground`
-  scene (vs. `smoke_playground`'s own reported 334 s headless), which the session's time
-  budget could not repeat for a full smoke chain on top of the three capture runs it did
-  complete.
+  30/30, `smoke_playground.gd` OK (headless, real day-1 farm/build/gather/recall path).
+  Not run: the full unit suite — this container has no GPU, and `--rendering-driver
+  opengl3` under `xvfb-run` (required for any capture) measured 30–50 minutes per
+  two-or-three-frame capture of the full `meadows_playground` scene (vs.
+  `smoke_playground`'s own 334 s headless), which the session's time budget could not
+  repeat for a 28-minute full suite on top of the three capture runs it did complete.
 
 ## 5. Gate status
 
