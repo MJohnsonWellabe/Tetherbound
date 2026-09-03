@@ -757,7 +757,7 @@
     {
       "order": 1049,
       "name": "rise_cache_marker",
-      "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2 (the Rise): the discovery cache (playground_world.gd CACHE_AT['tm_rock_throw']) is 'marked by a lone dead tree'. One tree, not a station -- the point is a single silhouette a player notices from a distance and walks toward, not a grove. Reuses the installed DeadTree_2 model every wood harvest node in this band already uses (CLAUDE.md: no new mesh), scaled up from harvest.json's 0.22 gathering-node convention to read as a real dead tree rather than a stick, since this one carries no gather prompt of its own -- the cache beside it does. Sited at the exact cache position (-382.8,355.5), ~50m off the road at arc 603 (the ALREADY-STANDING 'Pond Circuit' trailhead crest, terrain_playground.json paths.trailheads), a real ground scan (tools/_probe_world_content_0903c.gd): dry, worst slope 11.8 degrees over a 2m pad.",
+      "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2 (the Rise): the discovery cache (playground_world.gd CACHE_AT['tm_rock_throw']) is 'marked by a lone dead tree'. One tree, not a station -- the point is a single silhouette a player notices from a distance and walks toward, not a grove. Reuses the installed DeadTree_2 model every wood harvest node in this band already uses (CLAUDE.md: no new mesh), scaled up from harvest.json's 0.22 gathering-node convention to read as a real dead tree rather than a stick, since this one carries no gather prompt of its own -- the cache beside it does. Sited at the exact cache position (-382.8,355.5), ~50m off the road at arc 603 (the ALREADY-STANDING 'Pond Circuit' trailhead crest, terrain_playground.json paths.trailheads), a real ground scan (tools/_probe_world_content_0903c.gd): dry, worst slope 11.8 degrees over a 2m pad. BAND1-DISCOVERY-0903: `docs/specs/BAND1_COMPOSITION_PLAN.md` §6.1/§5.3 names this as the ONE discovery marker (the WORLD-TREES lane's second, decorative dead tree 107m away at (-276,320) is a vegetation anchor this lane does not own and is not touched here) and, from the Rise crest overlook 170m away, calls for it to read as 'a grey vertical 30° right of the road, alone on the slope' rather than the harvest-node-scaled sapling it was.",
       "props": [
         {
           "model": "DeadTree_2",
@@ -766,9 +766,9 @@
             355.5
           ],
           "yaw_deg": 40.0,
-          "scale": 0.9,
+          "scale": 1.3,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "The marker itself, at the cache's own coordinates so the tree and the find read as one thing from any approach angle. Same model/directory harvest.json's wood nodes already load (DeadTree_2.gltf), just scaled up (0.9 vs the gathering convention's 0.22) since this one carries no gather prompt of its own."
+          "_why": "The marker itself, at the cache's own coordinates so the tree and the find read as one thing from any approach angle. Same model/directory harvest.json's wood nodes already load (DeadTree_2.gltf). Scale 1.3 (was 0.9, itself already scaled up from the gathering convention's 0.22 since this one carries no gather prompt of its own): the composition plan's own crest-overlook proof requires this marker to survive 170m of distance and read as a landmark silhouette, not a stick -- 0.9 was still sized for a near approach, not the long sightline the Rise window now depends on."
         }
       ]
     },
