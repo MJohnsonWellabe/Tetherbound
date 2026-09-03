@@ -35,14 +35,21 @@ const DEFAULT_HORIZON := 0.30
 
 const VIEWPOINTS := [
 	{
-		# Place 1: the Gate Meadow (arc 0-450). Standing just past the village
-		# gate, looking up the road at the new near-road tree flanks (20,50)
-		# and (-5,95) and the pre-existing first-bend rock line.
+		# Place 1: the Gate Meadow (arc 0-450). ROUND 1 FIX: the first eye
+		# (2,15) sat 11.7m from the practice-trainer clearing centre (13,9),
+		# inside its 14m radius, so the round-1 frame was shot from inside a
+		# fenced training pen rather than the open road -- the blind judge's
+		# round-1 verdict ("same anchor tree, same purple flower bush") was
+		# right that nothing new was visible, because nothing new was in
+		# frame. Moved to (9,25), 16.5m clear of that clearing and back on
+		# the road, looking straight up it at (9,90) so the new tree flanks
+		# at (20,50) (23.7 degrees right) and (-5,95) (11.3 degrees left)
+		# both fall inside frame instead of off to one side.
 		"name": "place1-gate-meadow",
-		"eye": Vector2(2.0, 15.0), "eye_h": 2.2,
-		"target": Vector2(8.0, 90.0), "target_h": 2.0,
+		"eye": Vector2(9.0, 25.0), "eye_h": 2.2,
+		"target": Vector2(9.0, 90.0), "target_h": 2.0,
 		"time": "day", "horizon": 0.32,
-		"actor": Vector2(4.0, 12.0),
+		"actor": Vector2(11.0, 22.0),
 	},
 	{
 		# Place 2: the Rise (arc 450-900). On the road just before the crest,
@@ -56,12 +63,20 @@ const VIEWPOINTS := [
 	{
 		# Place 3: the Pond pocket (arc 900-1200), the approved lush
 		# reference -- unchanged by this lane, captured for the judge's full
-		# five-place set. Looking toward the mill/pond basin.
+		# five-place set. ROUND 1 FIX: the first eye (-360,550) sampled the
+		# analytic heightfield at -19.40m, BELOW water.level (-17.0,
+		# terrain_playground.json) -- the round-1 frame was shot from
+		# underwater looking up through the surface, which is exactly the
+		# "smeared dark-cyan band over a featureless plain" the blind judge
+		# called the single worst frame in the set. Moved to (-325,560),
+		# height -16.40 (just above the waterline, the damp shore ring), on
+		# the shore opposite the mill so the frame looks across the open
+		# water at it instead of sitting inside the basin.
 		"name": "place3-pond-pocket",
-		"eye": Vector2(-360.0, 550.0), "eye_h": 2.2,
+		"eye": Vector2(-325.0, 560.0), "eye_h": 2.2,
 		"target": Vector2(-383.5, 517.0), "target_h": 3.0,
 		"time": "day", "horizon": 0.30,
-		"actor": Vector2(-357.0, 546.0),
+		"actor": Vector2(-322.0, 556.0),
 	},
 	{
 		# Place 4: the Long Field (arc 1200-1950). Looking at the second
