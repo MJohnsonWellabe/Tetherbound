@@ -90,6 +90,34 @@ const VIEWPOINTS := [
 		"time": "day", "horizon": 0.30,
 		"actor": Vector2(100.0, 1228.0),
 	},
+	{
+		# Pond reveal. FIRST SITING (-357,399), arc 600, was wrong: the pocket's
+		# grove edge already stands 15-40m ahead there and the "Pond Circuit"
+		# trailhead post at (-357.8,401.1) is 2.5m from the lens. The probe's
+		# profile says the window is EARLIER: arc 540-575 (h -1..-3.5), where the
+		# ground left of the road already falls toward the basin (L30 -3.5,
+		# L60 -6.2 at arc 551) and the sightline to the mill passes 25-30m left
+		# of the grove's road-side edge. Eye at arc ~560, 152m from the mill.
+		"name": "comp7-pond-reveal",
+		"eye": Vector2(-320.0, 378.0), "eye_h": 2.2,
+		"target": Vector2(-383.5, 517.0), "target_h": 3.0,
+		"time": "day", "horizon": 0.30,
+		"actor": Vector2(-324.0, 384.0),
+	},
+	{
+		# Bridge rim. FIRST SITING (-27,1299), arc 2300, was wrong: that point
+		# is the bottom of a hollow (h -5.5) BETWEEN the true rim and the
+		# abutment, and a corridor-fill boulder stands 5m ahead of it. The
+		# probe's profile: the road crests at arc 2253 (h 2.45), drops to -5.5
+		# at 2303, climbs to the near abutment (-2.5, arc 2355), crosses the
+		# 9m gully and lands at -2.1. The rim is arc 2253; from there the bridge
+		# is 64m away and 5m below, seen across the hollow against the far bank.
+		"name": "comp8-bridge-rim",
+		"eye": Vector2(11.0, 1266.0), "eye_h": 2.2,
+		"target": Vector2(8.0, 1330.0), "target_h": 3.0,
+		"time": "day", "horizon": 0.30,
+		"actor": Vector2(8.0, 1273.0),
+	},
 ]
 
 
@@ -165,9 +193,17 @@ func _run() -> void:
 	else:
 		failures.append("no Terrain node with set_camera")
 
+	var only := ""
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--only="):
+			only = argument.trim_prefix("--only=")
 	for entry: Variant in VIEWPOINTS:
 		var view: Dictionary = entry
 		var name: String = str(view["name"])
+		# `--only=a,b` re-renders named stands into the same directory without
+		# touching the others, so one corrected stand does not cost eight.
+		if only != "" and name not in only.split(","):
+			continue
 
 		_pose(camera, field, view)
 		_place_actor(player, field, camera, view)

@@ -126,6 +126,7 @@ into `claude/do-this-2t7fny`, which feeds PR #26.
 | SOUTH-BRIDGE-HOLE | no player-facing change, and now with a cause rather than a shrug: the entombment is the site guard's own teleport outrunning Terrain3D's Dynamic/Game collision radius, not the crossing. The guard waits for the ground before judging it | 4/4 green after the wait, 2/3 before; the red run's coordinates are in the §2 row. **Closed as a harness defect** — reopen on any reproduction from a walked path rather than a placement |
 | BRAM-EXIT | no code change: the item was misfiled. Bram is the innkeeper (`inn_interior.gd`), not the shop (`shop_interior.gd`, which is Mira's), and the existing door-axis exit fix already covers his room; it had simply never been probed there | new `tools/gate_f/probe_inn_exit_clearance.gd` clears the doorway from 6 of 6 furnished pockets; all three Bram cycles in `smoke_gate_b_continuous` exit cleanly |
 | WORLD-RULES | gathered harvest nodes stay gone permanently (a progression flag per node, restored on load); the three starters are removed from every band trainer roster and replaced with same-type non-starters. D72 records both | verification in progress at time of writing; the lane reported one unnamed failing smoke and was asked for it |
+| BAND1-COMPOSITION (ROADMAP 2.1) | no player-facing change: the design document `docs/specs/BAND1_COMPOSITION_PLAN.md` that 2.2/2.3/2.5/2.6 implement. Per stand (village approach, route out, the Rise forward and back, the Pond reveal/arrival/shore, the bridge approach and rim, plus the Long Field and the five survey stands): eye/look pair, what sits at each depth, which lane builds it, what the re-render must prove. Headline decision: the Rise crest is rebuilt as a window onto the Pond, not a grove | sixteen stands rendered from the merged tree after a fresh import (`ralph/reports/BAND1-COMPOSITION-0903/_sheet_*_before.png`); code-blind judge Bar A **no** / Bar B **no** (`JUDGE-before.md`): zero readable creatures in sixteen frames, one tree/rock/plant, distance a fog void; `comp4-rise-look-back` named as the template. Two capture stands were re-sited from the terrain profile (`tools/_probe_band1_composition.gd`) after their first frames proved the ground wrong: the pond reveal is at arc 560 not 600, the bridge rim at arc 2253 not 2300 |
 
 ## 5. Gate status
 
@@ -133,7 +134,9 @@ into `claude/do-this-2t7fny`, which feeds PR #26.
 - **Gate 1 (first session):** open. Green: title, opening, menus, build, rest, catch,
   combat, tournament, village. Red: opening orb floor (fix pending landing), objective
   chain after tournament readiness, gather route, South Bridge traversal on first attempt.
-- **Gate 2 (core world complete):** not started. Fresh survey frames and the blind
-  critique are in `docs/VISUAL_BIBLE.md` §4.
+- **Gate 2 (core world complete):** 2.1 (composition plan) delivered as
+  `docs/specs/BAND1_COMPOSITION_PLAN.md` with its judged before-frames; 2.2/2.3/2.5/2.6
+  unblocked. Fresh survey frames and the earlier blind critique are in
+  `docs/VISUAL_BIBLE.md` §4; the 2.1 judge is the current before-verdict for the route.
 - **Gate 3 / 4:** not started. Gate F S03 reached 6 failures outside its lane's scope;
   S04–S10 unverified as a chain.
