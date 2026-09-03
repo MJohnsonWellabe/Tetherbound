@@ -750,22 +750,6 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		if tier.has("reach_m"):
 			plan = _cap_reach(plan, float(tier["reach_m"]),
 					float(tier.get("reach_band_m", cfg.get("reach_band_m", 6.0))), cell)
-		# GRASS-CULL: the same graduated far-band thinning `_build` already
-		# applies to the grass tier's own base layer (see `_thin_far` above),
-		# now reachable by any cover tier that opts in with `far_thin`. Bushes
-		# are the one tier this fixes: at 0.85m they are too large for a hard
-		# `reach_m` cliff the way a 10cm stone or a fallen leaf takes one --
-		# that would trade the grass ring's own solved "hard line at the edge"
-		# defect for a new one in the understorey -- so they get the graduated
-		# floor-plus-steps ramp instead, which is the mechanism this file
-		# already built and tested for exactly this shape of cost. A tier that
-		# does not set `far_thin` is unaffected -- flowers and litter keep
-		# their existing hard `reach_m` caps, which already zero them well
-		# inside the ring and need nothing added.
-		if bool(tier.get("far_thin", false)):
-			plan = _thin_far(plan, float(tier.get("fade_start", cfg.get("fade_start", 42.0))), radius,
-					float(tier.get("far_thin_floor", cfg.get("far_thin_floor", 1.0))),
-					int(tier.get("far_thin_steps", cfg.get("far_thin_steps", 0))), cell)
 		# VP2: a cheaper bush past `lod.far_bush_m`, every other leaf dropped.
 		var lod: Array = []
 		var lod_cfg: Dictionary = cfg.get("lod", {})
