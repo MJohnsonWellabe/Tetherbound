@@ -2807,6 +2807,17 @@ func _spawn_population(director: Node) -> void:
 			}
 			if spec.has("wander_radius"):
 				spawn_opts["wander_radius"] = float(spec.get("wander_radius"))
+			# WARRENS-ONCE, owner playtest 2026-09-03 item 9: a named resident
+			# (today, only the vault's Elder Trailpup) is the same kind of
+			# one-shot encounter the guardian below is -- beaten, caught or
+			# freed, it does not get a second chance. `nickname` is already
+			# the marker that singles a spawn entry out as a named individual
+			# rather than ordinary population (`_dress_the_guardian()`'s own
+			# comment describes the same two-object write for the guardian),
+			# so reusing it here costs no new config field.
+			var once_nickname := str(spec.get("nickname", ""))
+			if once_nickname != "":
+				spawn_opts["once_id"] = _once_flag_for_nickname(once_nickname)
 			var body: Node3D = director.call("spawn_wild", str(spec.get("species", "")), to_global(at), spawn_opts)
 			if body != null:
 				# CONTENT-0828 / FIRST-HOUR-FUN-REBUILD. Optional, and used by
@@ -2840,6 +2851,16 @@ func _spawn_population(director: Node) -> void:
 	}
 	if guardian.has("wander_radius"):
 		guardian_opts["wander_radius"] = float(guardian.get("wander_radius"))
+	# WARRENS-ONCE, owner playtest 2026-09-03 item 9: "After I fight it and
+	# catch it or kill it I shouldn't get another chance." Reuses `_clear_flag()`
+	# rather than a second flag id -- the guardian going down for good IS what
+	# "the warrens is cleared" already means (`is_cleared()`/`grant_clear_reward()`
+	# below), so a fresh boot or a return trip that finds the flag already set
+	# now spawns no guardian at all instead of a fresh one the player could
+	# fight again before `_process()`'s own poll ever noticed the first was
+	# still "alive". Idempotent with `grant_clear_reward()`: whichever of the
+	# two sets the flag first, the other's `set_flag()` call is a no-op.
+	guardian_opts["once_id"] = _clear_flag()
 	_guardian = director.call("spawn_wild", str(guardian.get("species", "")),
 		to_global(Vector3(g_centre.x + g_offset.x, _floor_y + 0.5, g_centre.z + g_offset.z)), guardian_opts)
 	if _guardian != null:
@@ -3092,6 +3113,18 @@ func is_cleared() -> bool:
 
 func _clear_flag() -> String:
 	return str(_config.get("clear", {}).get("flag", "warrens_cleared"))
+
+
+## WARRENS-ONCE. A stable SB9 flag id for a named `spawns` resident (today,
+## the vault's "Elder Trailpup"), so `encounter_director.gd::spawn_wild()`
+## can refuse to spawn it a second time and `_on_combat_exited()` can set the
+## flag the moment it is beaten, caught or freed. Derived from the nickname
+## itself rather than a new authored field: two entries sharing one nickname
+## would collide, but nothing in this file does that today, and a nickname
+## nobody else uses is the whole reason it read as a named individual in the
+## first place.
+func _once_flag_for_nickname(nickname: String) -> String:
+	return "warrens_once_%s" % nickname.to_lower().replace(" ", "_")
 
 
 ## Sets the cleared flag and pays the story reward -- ONCE. Returns true only

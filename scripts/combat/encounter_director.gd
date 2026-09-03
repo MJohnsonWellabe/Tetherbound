@@ -172,6 +172,16 @@ var _wild_gates: Dictionary = {}
 ## farmable resource within a minute of beating it.
 var _wild_respawn: Dictionary = {}
 
+## WARRENS-ONCE. Wild node -> progression flag id, for the bodies this
+## director must never bring back once they leave the field the honest way
+## (beaten, caught, or freed). Populated only for a spawn that named one:
+## a band's `alpha`/`elder` entry (`_spawn_creatures()`, keyed off the
+## entry's own unique `order`) or a caller of `spawn_wild()` that passed an
+## explicit `once_id` in `opts` (`burrow_warrens.gd`'s guardian and its
+## nicknamed residents). An ordinary wild is never in this map, so nothing
+## here changes the respawn/faint machinery for the meadow's population.
+var _once_only: Dictionary = {}
+
 ## --- STREAM-D: distance-based activation ------------------------------------
 ##
 ## The owner has directed wild density up from ~70 to roughly 700-1100 across
@@ -381,7 +391,30 @@ func _spawn_creatures() -> void:
 			"members": [] as Array[Node3D], "active": true,
 		}
 
+		# WARRENS-ONCE, owner playtest 2026-09-03 item 9: "I can fight
+		# multiple elders on there. After I fight it and catch it or kill it
+		# I shouldn't get another chance." The same complaint the Warrens'
+		# own guardian gets applies to every named `alpha`/`elder` individual
+		# across the bands -- they are ordinary wild creatures
+		# (`_comment_spawns` on every band file says so) and were fainting,
+		# respawning and refilling on catch exactly like the rest of the
+		# meadow. `order` is this entry's own stable, globally-unique
+		# identity (the band files' own header), so the flag id needs no new
+		# authored field.
+		var once_alpha: Dictionary = spawn.get("alpha", {}) if spawn.get("alpha", {}) is Dictionary else {}
+		var once_elder: Dictionary = spawn.get("elder", {}) if spawn.get("elder", {}) is Dictionary else {}
+		var once_id := ""
+		if not once_alpha.is_empty() or not once_elder.is_empty():
+			once_id = "wild_once_%d" % int(spawn.get("order", index))
+		var once_already_cleared := _once_cleared(once_id)
+
 		for n in count:
+			# The named individual is always the cluster's first member
+			# (`_make_alpha()`/`_apply_elder()` below). Once it is beaten,
+			# caught or freed, this spot simply spawns one fewer body -- the
+			# rest of an ordinary-population cluster (`n > 0`) is untouched.
+			if n == 0 and once_already_cleared:
+				continue
 			var wild: Node3D = CREATURE_SCENE.instantiate()
 			# Indexed, because clusters exist now. Two nodes both named
 			# "Wild_bramblebun" under one parent would be silently auto-renamed
@@ -477,9 +510,16 @@ func _spawn_creatures() -> void:
 			# a species the player already knows.
 			if n == 0:
 				_make_alpha(wild, species, spawn, centre.z)
+				if once_id != "" and not once_alpha.is_empty():
+					# WARRENS-ONCE: remembers this exact body so
+					# `_on_combat_exited()` can fire the flag and skip its
+					# respawn timer the moment this alpha leaves the field.
+					_once_only[wild] = once_id
 			var wild_cfg: Dictionary = MATH.config().get("wild", {})
 			if not elder.is_empty():
 				wild_cfg = _apply_elder(wild, elder, wild_cfg)
+				if once_id != "":
+					_once_only[wild] = once_id
 			wild.call("configure", wild_cfg)
 			wild.set("home", wild.global_position)
 			# An aggressive creature asks; this node decides. Keeping the decision
@@ -627,9 +667,23 @@ func _apply_plan(spawn: Dictionary, plan: Dictionary) -> Dictionary:
 ##                (`burrow_warrens.gd`) pass a radius that keeps their own
 ##                residents inside their own walls; left unset, behaviour is
 ##                unchanged for the open-world seeded population.
+##   once_id    — WARRENS-ONCE. A progression flag id this individual owns.
+##                Already fired (SB9's flag store, `_once_cleared()` above) →
+##                this call spawns nothing and returns null, so a defeated/
+##                caught guardian or named resident never comes back once its
+##                scene rebuilds (leave and return, or reload a save). Not yet
+##                fired → the body spawns as usual and is remembered
+##                (`_once_only`), so `_on_combat_exited()` can set the flag
+##                and skip its respawn timer the moment this fight resolves.
+##                Omitted entirely for the ordinary seeded population, which
+##                keeps fainting, respawning and being caught exactly as
+##                before.
 func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D:
 	if not SPECIES.has(species):
 		push_error("spawn_wild('%s') names a species that is not in species.json" % species)
+		return null
+	var once_id := str(opts.get("once_id", ""))
+	if _once_cleared(once_id):
 		return null
 	var wild: Node3D = CREATURE_SCENE.instantiate()
 	wild.set_script(WILD_SCRIPT)
@@ -657,6 +711,8 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	wild.set("home", wild.global_position)
 	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
 	_wild_creatures.append(wild)
+	if once_id != "":
+		_once_only[wild] = once_id
 	return wild
 
 
@@ -1082,6 +1138,31 @@ func ally_instance() -> RefCounted:
 func _party() -> RefCounted:
 	var game := get_node_or_null(^"/root/Game")
 	return game.get("party") if game != null else null
+
+
+## WARRENS-ONCE. `_progression()` (below, already existed for trainer-defeat
+## flags) is SB9's flat flag store, the same one `burrow_warrens.gd::
+## is_cleared()`/`grant_clear_reward()` already read and write for the
+## dungeon's own clear flag.
+##
+## True once `id` has fired. Empty `id` always reads false, which is what
+## keeps an ordinary wild (no once-id at all) untouched by every call site
+## below.
+func _once_cleared(id: String) -> bool:
+	if id == "":
+		return false
+	var progression := _progression()
+	return progression != null and bool(progression.call("has", id))
+
+
+## Sets `id`, idempotently — the same guarantee `progression_state.gd::
+## set_flag()` already gives every other caller in the game.
+func _mark_once_cleared(id: String) -> void:
+	if id == "":
+		return
+	var progression := _progression()
+	if progression != null:
+		progression.call("set_flag", id)
 
 
 ## `CO1`: put the current follower away without releasing it from the party.
@@ -1773,6 +1854,15 @@ func _on_combat_exited(outcome: String) -> void:
 	_engaged_with = null
 
 	if wild != null and is_instance_valid(wild):
+		# WARRENS-ONCE: a guardian, alpha or elder leaving the field the
+		# honest way (beaten or caught) is gone for good, not on the usual
+		# cooldown — the flag fires here and no respawn timer is ever set for
+		# it, so it cannot come back for the rest of this session, and
+		# `spawn_wild()`/`_spawn_creatures()` will not spawn it again once
+		# the scene rebuilds (leave and return, or a reload). A wild that was
+		# never given a once-id (`_once_only.has(wild)` false) is untouched —
+		# same faint/respawn/catch path as before.
+		var once_id: String = str(_once_only.get(wild, ""))
 		match outcome:
 			"won":
 				# It stays on the ground for a moment before it clears. §15: the
@@ -1780,15 +1870,21 @@ func _on_combat_exited(outcome: String) -> void:
 				# might have caught.
 				wild.call("notify_fainted")
 				_faint_timers[wild] = float(CATCH.config().get("faint", {}).get("linger_seconds", 4.0))
-				_respawn_timers[wild] = _respawn_delay_for(wild)
+				if once_id != "":
+					_mark_once_cleared(once_id)
+				else:
+					_respawn_timers[wild] = _respawn_delay_for(wild)
 			CAUGHT:
 				_resolve_catch(_manager.call("caught_instance") as RefCounted)
 				wild.visible = false
-				# The spawn POINT refills with a new wild individual on the
-				# usual delay — the caught instance now lives in the party (or
-				# on the ceremony's seam), and the meadow does not empty out
-				# one catch at a time.
-				_respawn_timers[wild] = _respawn_delay_for(wild)
+				if once_id != "":
+					_mark_once_cleared(once_id)
+				else:
+					# The spawn POINT refills with a new wild individual on the
+					# usual delay — the caught instance now lives in the party (or
+					# on the ceremony's seam), and the meadow does not empty out
+					# one catch at a time.
+					_respawn_timers[wild] = _respawn_delay_for(wild)
 
 	# R2.5: the M2 auto-heal above this comment used to run here. It was a
 	# placeholder for a healing system, camp rest and potions that did not
