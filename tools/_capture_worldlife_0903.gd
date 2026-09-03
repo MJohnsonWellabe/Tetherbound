@@ -171,7 +171,11 @@ func _write_contact_sheet() -> void:
 		return
 	var w := _images[0].get_width()
 	var h := _images[0].get_height()
-	var sheet := Image.create(w * _images.size(), h, false, Image.FORMAT_RGB8)
+	var sheet := Image.create(w * _images.size(), h, false, _images[0].get_format())
 	for i in _images.size():
-		sheet.blit_rect(_images[i], Rect2i(0, 0, w, h), Vector2i(w * i, 0))
+		var frame: Image = _images[i]
+		if frame.get_format() != sheet.get_format():
+			frame = frame.duplicate()
+			frame.convert(sheet.get_format())
+		sheet.blit_rect(frame, Rect2i(0, 0, w, h), Vector2i(w * i, 0))
 	sheet.save_png("%s/_sheet_life.png" % OUT_DIR)
