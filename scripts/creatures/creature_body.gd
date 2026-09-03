@@ -280,6 +280,11 @@ var _has_model: bool = false
 ## which has nothing to animate.
 var _animator: RefCounted = null
 
+## CREATURE-LEGIBILITY-0903. The ground-contact shadow quad, built lazily on
+## first `_apply_ground_contact_shadow()` call and reused (resized in place)
+## on every rebuild -- see that function's own comment.
+var _contact_shadow: MeshInstance3D = null
+
 @onready var _collision: CollisionShape3D = $Collision
 @onready var _model: Node3D = $Model
 @onready var _body: MeshInstance3D = $Body
@@ -465,6 +470,7 @@ func _build_placeholder() -> void:
 	if not _build_model(look):
 		_build_capsule(look)
 	_refresh_shiny_tint()
+	_apply_ground_contact_shadow()
 
 
 ## Load the species' model and fit it to the gameplay size. Returns false when
@@ -848,6 +854,64 @@ func _brighten_node(node: Node, strength: float, degreen: float = 0.0) -> void:
 		_brighten_node(child, strength, degreen)
 
 
+## CREATURE-LEGIBILITY-0903 (Gate 2.4). The "sits ON the ground, not IN it"
+## lever, separate from `_apply_field_brightness()`'s colour/value lever
+## above. `tools/survey.sh`'s own header says this renderer has no SSAO, so
+## nothing else in the scene pins a creature's feet down the way a real-time
+## shadow would -- a small body standing in tall grass has no contact cue at
+## all, which reads as floating/buried rather than standing.
+##
+## A flat, unshaded, soft-edged ellipse under the model's own origin (which
+## `_fit()` already puts at the creature's feet). Applies to every creature
+## with a loaded model, not per-species like the rim/emission/degreen levers
+## above -- this is a fact about the renderer, not a fact about any one
+## species' palette, so `creatures_visual.json::contact_shadow` has no
+## per-species table. Built once and resized in place on every call rather
+## than freed and rebuilt, so a `_visual_rest` entry captured mid-tween
+## (`play_absorb`/`play_breakout`) never ends up pointing at a freed node.
+func _apply_ground_contact_shadow() -> void:
+	if not _has_model or not VISUAL.contact_shadow_enabled():
+		if _contact_shadow != null:
+			_contact_shadow.visible = false
+		return
+	if _contact_shadow == null:
+		_contact_shadow = MeshInstance3D.new()
+		_contact_shadow.name = "ContactShadow"
+		_contact_shadow.mesh = QuadMesh.new()
+		_contact_shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		_contact_shadow.material_override = _shared_contact_shadow_material()
+		# Lays the quad flat on the XZ plane facing +Y; unshaded, so which way
+		# the normal points changes nothing about how it renders.
+		_contact_shadow.rotation.x = -PI * 0.5
+		add_child(_contact_shadow)
+	var diameter := _radius * 2.0 * VISUAL.contact_shadow_radius_scale()
+	(_contact_shadow.mesh as QuadMesh).size = Vector2.ONE * diameter
+	# A hair above the origin, not AT it -- coplanar with the ground plane a
+	# creature's collider already sits flush against is exactly the geometry
+	# that z-fights.
+	_contact_shadow.position = Vector3(0.0, 0.02, 0.0)
+	_contact_shadow.visible = true
+
+
+## One shader material for every creature's shadow blob, same cache
+## discipline as `_variant_materials`/`_shiny_swap_materials` below -- the
+## colour/softness come from config, not per-instance state, so nothing here
+## ever needs a second copy.
+static var _contact_shadow_material: ShaderMaterial = null
+
+
+func _shared_contact_shadow_material() -> ShaderMaterial:
+	if _contact_shadow_material == null:
+		var material := ShaderMaterial.new()
+		material.shader = load("res://shaders/creature_contact_shadow.gdshader")
+		material.set_shader_parameter(
+			"shadow_colour", Color(0.0, 0.0, 0.0, VISUAL.contact_shadow_opacity()))
+		material.set_shader_parameter("core_fraction", VISUAL.contact_shadow_core_fraction())
+		material.set_shader_parameter("edge_power", VISUAL.contact_shadow_edge_power())
+		_contact_shadow_material = material
+	return _contact_shadow_material
+
+
 func _rim_light_node(node: Node, strength: float, tag: String) -> void:
 	if node is MeshInstance3D:
 		var instance := node as MeshInstance3D
@@ -1153,6 +1217,7 @@ func apply_size_multiplier(multiplier: float) -> void:
 	if not _build_model(look):
 		_build_capsule(look)
 	_refresh_shiny_tint()
+	_apply_ground_contact_shadow()
 	# BACKLOG-VISUAL-ALPHA-GROUNDING. The caller already stood this body on the
 	# ground via `place_on_ground()` BEFORE calling here (`encounter_director.
 	# _make_alpha()` resizes an already-placed wild), and that call's
@@ -1348,7 +1413,7 @@ var _visual_rest: Dictionary = {}
 
 func _visual_children() -> Array[Node3D]:
 	var visuals: Array[Node3D] = []
-	for node in [_model, _body, _head]:
+	for node in [_model, _body, _head, _contact_shadow]:
 		if node != null and node.visible:
 			visuals.append(node)
 	return visuals
