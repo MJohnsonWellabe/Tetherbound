@@ -186,6 +186,7 @@
         },
         {
           "model": "Stool",
+          "dir": "res://assets/props/quaternius_furniture",
           "at": [-19.5, 7453.0],
           "yaw_deg": 75.6,
           "sink_m": 0.04,
