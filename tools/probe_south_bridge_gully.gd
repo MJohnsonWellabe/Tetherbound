@@ -28,8 +28,8 @@ extends SceneTree
 ## crossing ever moved.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const SETTLE_FRAMES := 300
-const PLACEMENT_SETTLE_FRAMES := 150
+const SETTLE_FRAMES := 240
+const PLACEMENT_SETTLE_FRAMES := 90
 const BRIDGE_START_BACK := 11.0
 ## Same predicate player_controller.gd::_entombed_at uses (movement.json's
 ## `unstick.probe_m` / STEP_HEIGHT) -- kept as literals here because the
@@ -54,6 +54,7 @@ func _run() -> void:
 	current_scene = world
 	for i in SETTLE_FRAMES:
 		await physics_frame
+	print("world settled after %d frames" % SETTLE_FRAMES)
 
 	var bridge: Node3D = world.get_node_or_null(^"SouthBridge") as Node3D
 	if bridge == null:
@@ -88,6 +89,7 @@ func _run() -> void:
 	for entry: Variant in points:
 		var p: Dictionary = entry
 		var xz: Vector2 = p["xz"]
+		print("probing %s at (%.2f, %.2f)..." % [p["label"], xz.x, xz.y])
 		var result := await _probe_point(world, player, xz)
 		var flag := "SEALED" if result["sealed"] else "clear"
 		if result["sealed"]:
