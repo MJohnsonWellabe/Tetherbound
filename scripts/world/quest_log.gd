@@ -288,6 +288,30 @@ func tracked_hint(progression: RefCounted) -> String:
 	return ""
 
 
+## WHICH rung the line above is showing, by its own `id`.
+##
+## Same walk, same order, same answer -- this returns the entry's identity
+## where `tracked_text()` returns its prose. It exists because a test that
+## wants to say "the chain advanced to the care rung" had no way to say it
+## except by matching a fragment of the label, and prose is exactly the thing
+## that gets rewritten: `gate_b_tail_segment.gd` pinned "Care for your team"
+## and "Sleep until", and `git log -S` on `objectives.json` shows NEITHER
+## string has ever existed in that file. The assertion could only ever fail,
+## and it sat behind a job that does not gate, so it did -- silently, for as
+## long as it has been there.
+##
+## An `id` is a contract; a label is a sentence someone will improve. Anything
+## asserting about which objective is showing should ask this.
+func tracked_id(progression: RefCounted) -> String:
+	for raw: Variant in _main:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var entry := raw as Dictionary
+		if not _done(entry, progression):
+			return str(entry.get("id", ""))
+	return ""
+
+
 ## Spec §16's one concise HUD line: the first Main Story entry not yet done,
 ## in file order. "" once every authored Main Story objective is complete --
 ## the chapter's later phases simply have not authored the next one yet, not

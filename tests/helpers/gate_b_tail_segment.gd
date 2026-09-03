@@ -205,11 +205,24 @@ func _load_engage_distance() -> void:
 ## flag without the objective moving is a beat the player cannot see they
 ## finished, and `data/progression/objectives.json` is the game's own record of
 ## where they are.
-func _objective_should_read(fragment: String, after: String) -> void:
-	var tracked := str(QUEST_LOG.new().call("tracked_text", _progression))
-	if not tracked.contains(fragment):
-		_fail("'%s' is done and the tracked objective reads '%s'; it should have moved on to "
-			% [after, tracked] + "the beat that says '%s'" % fragment)
+## Which rung the HUD's one tracked line is showing, asserted by the rung's own
+## `id` rather than by a fragment of its label.
+##
+## This used to match label prose, and two of its five call sites pinned
+## strings -- "Care for your team" and "Sleep until" -- that `git log -S` shows
+## have NEVER existed in `data/progression/objectives.json`. Those two could
+## only ever fail, and because `smoke_gate_b_continuous` runs in a job that
+## does not gate, they did: unnoticed, reporting a stalled objective chain that
+## was in fact advancing exactly as authored. `quest_log.gd::tracked_id()` was
+## added for this. An id is a contract; a label is a sentence someone will
+## improve, and improving it must not turn a passing test red.
+func _objective_should_be(rung_id: String, after: String) -> void:
+	var quest_log := QUEST_LOG.new()
+	var tracked := str(quest_log.call("tracked_id", _progression))
+	if tracked != rung_id:
+		_fail(("'%s' is done and the tracked objective is the '%s' rung (%s); "
+			+ "it should have moved on to '%s'")
+			% [after, tracked, str(quest_log.call("tracked_text", _progression)), rung_id])
 
 
 ## Iteration mode. The compact campsite is REGISTERED rather than placed -- the same
@@ -280,11 +293,11 @@ func _place_the_creature_beds() -> bool:
 				_fail(("the campsite and first Creature Bed are standing but home_built is unset; "
 					+ "home_progress.gd wants %s") % str(HOME_PROGRESS.required_pieces()))
 				return false
-			_objective_should_read("Care for your team", "home_built")
+			_objective_should_be("tournament_sleep", "home_built")
 	_bed = _beds[0]
 	transcript.append("placed %d creature beds through the build menu, one per entrant; %s left"
 		% [_beds.size(), _stock()])
-	_objective_should_read("Sleep until", "creature_bed_built")
+	_objective_should_be("tournament_sleep", "creature_bed_built")
 	return true
 
 
@@ -308,7 +321,7 @@ func _place_the_campsite() -> bool:
 		return false
 	transcript.append("placed the tent, campfire and bedroll; a Creature Bed is still needed; %s left"
 		% _stock())
-	_objective_should_read("Make camp", "the campsite")
+	_objective_should_be("tournament_build_camp", "the campsite")
 	return true
 
 
@@ -475,7 +488,7 @@ func _sleep_the_team_into_condition() -> bool:
 	if not _flag("player_slept_at_home"):
 		_fail("the player slept at their own camp and 'player_slept_at_home' is unset")
 		return false
-	_objective_should_read("Enter the village tournament", "player_slept_at_home")
+	_objective_should_be("tournament_enter", "player_slept_at_home")
 	return true
 
 
@@ -639,7 +652,7 @@ func _enter_the_tournament() -> bool:
 		_fail("the sign-up conversation played and 'tournament_entered' is unset")
 		return false
 	transcript.append("signed into the draw through the marshal's own ladder")
-	_objective_should_read("Win the village tournament", "tournament_entered")
+	_objective_should_be("tournament_win", "tournament_entered")
 	return true
 
 
