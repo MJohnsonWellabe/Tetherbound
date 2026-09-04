@@ -68,6 +68,34 @@ const ARCH_X_OFFSET := 0.5
 const BANNER_W := 0.9
 const BANNER_H := 1.55
 
+## GATE-1-HELD follow-up (2026-09-04). The owner supplied real reference art
+## for this checkpoint (`docs/art/reference/21_South_Bridge_Checkpoint_Gate.png`)
+## and Meshy generated `south_bridge_gate.glb` from it — see
+## `docs/specs/ASSET_LEDGER.md`'s "Riding Saddle and South Bridge Checkpoint
+## Gate" entry, which named the trap this const's placement code has to dodge:
+## the hero scan bakes ITS OWN closed double leaf into the same fused object
+## as its posts, lintel and lanterns, but this crossing already stands a
+## separate, independently-animated leaf (`_mesh`, `gated_crossing.gd`) that
+## permanently swings open on the real unlock event. Standing both up loses
+## either way — doubled leaves while shut, or a "ghost" closed leaf left
+## standing once the player actually opens the gate.
+##
+## Kept safe by using the hero scan as PURE DRESSING in exactly the footprint
+## the procedural posts/lintel/banners used to occupy, and retiring it the
+## instant the crossing is genuinely unlocked (`_on_unlocked` below) — the
+## real `_mesh` leaf is the one that swings; the hero dressing just stops
+## being there to contradict it. The procedural gatehouse stays as the
+## fallback if the model ever fails to load, per the D49 convention of never
+## leaving a checkpoint with nothing standing over it.
+const HERO_GATE_MODEL := "res://assets/environment/team_tether/south_bridge_gate.glb"
+## The hero scan's own bounds run roughly 1 : 0.41 : 0.16 (width : height :
+## depth, per the ledger's measurement) rather than the procedural
+## gatehouse's near-square archway, so it is fit by HEIGHT against the
+## existing posts rather than width — the dimension a player walking through
+## actually reads, and the one the scan's own thin depth cannot distort.
+const HERO_GATE_HEIGHT := POST_H + LINTEL_H
+var _hero_gate: Node3D = null
+
 
 func _init() -> void:
 	super("south_bridge", "south_bridge_key", "south_bridge_open")
@@ -83,12 +111,25 @@ func _build_extras(_world: Node3D, prefabs: RefCounted, _deck_ground: float) -> 
 	_build_checkpoint_gatehouse(prefabs)
 
 
+## Retires the hero checkpoint dressing the instant the crossing is genuinely
+## unlocked. See `HERO_GATE_MODEL`'s own header for why it cannot be left
+## standing once `_mesh` (the real leaf) has swung open: it bakes in its own
+## closed leaf, and leaving it up would read as the gate never having opened.
+func _on_unlocked() -> void:
+	if _hero_gate != null and is_instance_valid(_hero_gate):
+		_hero_gate.queue_free()
+	_hero_gate = null
+
+
 ## The archway stands ARCH_X_OFFSET further toward the village than the gate
 ## leaf itself, at the parapet rail's own z line — see ARCH_HALF_Z/ARCH_X_OFFSET's
 ## own header for why, after a first render put these posts through that rail.
-func _build_checkpoint_gatehouse(_prefabs: RefCounted) -> void:
+func _build_checkpoint_gatehouse(prefabs: RefCounted) -> void:
 	var arch_x: float = _mesh.position.x - ARCH_X_OFFSET
 	var deck_y: float = _mesh.position.y
+
+	if _build_hero_gate(prefabs, arch_x, deck_y):
+		return
 
 	var timber := StandardMaterial3D.new()
 	timber.albedo_color = Color("#4a3520")
@@ -117,6 +158,52 @@ func _build_checkpoint_gatehouse(_prefabs: RefCounted) -> void:
 	lintel.material_override = timber
 	lintel.position = Vector3(arch_x, deck_y + POST_H - LINTEL_H * 0.5, 0.0)
 	add_child(lintel)
+
+
+## Tries to stand the generated hero mesh at the archway instead of the
+## procedural posts/lintel/banners. Returns whether it actually did — a
+## failed load falls back to the procedural gatehouse rather than leaving the
+## checkpoint bare.
+##
+## `combined_aabb` reports the model's bounds in ITS OWN unscaled, unrotated
+## local space (see that function's own header) — neither `hero.scale` nor
+## `hero.rotation` factor into it, so both the fit and the final placement are
+## worked out from that one raw measurement rather than re-measuring after
+## each transform is applied.
+func _build_hero_gate(prefabs: RefCounted, arch_x: float, deck_y: float) -> bool:
+	if not ResourceLoader.exists(HERO_GATE_MODEL):
+		return false
+	var resource: Resource = load(HERO_GATE_MODEL)
+	if not resource is PackedScene:
+		return false
+	var hero: Node3D = (resource as PackedScene).instantiate()
+	if hero == null:
+		return false
+	hero.name = "CheckpointHero"
+	add_child(hero)
+
+	var raw_aabb: AABB = prefabs.call("combined_aabb", hero)
+	if raw_aabb.size.y <= 0.0:
+		hero.queue_free()
+		return false
+
+	var scale_factor: float = HERO_GATE_HEIGHT / raw_aabb.size.y
+	hero.scale = Vector3.ONE * scale_factor
+	# Yawed the same quarter turn `_mesh` (the real leaf) stands at — this
+	# crossing's local +X is the village-to-far axis, and every object meant
+	# to face across the deck rather than along it turns the same way.
+	hero.rotation.y = deg_to_rad(90.0)
+
+	var centre_scaled := (raw_aabb.position + raw_aabb.size * 0.5) * scale_factor
+	var centre_rotated := centre_scaled.rotated(Vector3.UP, hero.rotation.y)
+	var bottom_scaled_y: float = raw_aabb.position.y * scale_factor
+	hero.position = Vector3(
+		arch_x - centre_rotated.x,
+		deck_y - bottom_scaled_y,
+		-centre_rotated.z)
+
+	_hero_gate = hero
+	return true
 
 
 ## GATE-1-HELD round 2. A blind pass on round 1's flat-box banner (the same

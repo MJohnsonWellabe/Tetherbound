@@ -254,6 +254,7 @@ func mount() -> bool:
 		body.call("set_following", false)
 
 	_apply_climb_limit(body, species_id)
+	_attach_saddle(body, species_id)
 	var offset: Vector3 = SPECIES.rideable(species_id).get("mount_offset", Vector3.UP)
 	_player.call("set_carrier", body, offset)
 	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_target"):
@@ -281,6 +282,7 @@ func dismount() -> bool:
 	if alive:
 		_last_mount_position = body.global_position
 	_restore_climb_limit(body if alive else null)
+	_detach_saddle(body if alive else null)
 
 	if _player != null and is_instance_valid(_player):
 		_player.call("set_carrier", null)
@@ -417,6 +419,59 @@ func _restore_climb_limit(body: Node3D) -> void:
 		return
 	character.floor_max_angle = float(character.get_meta("ride_floor_max_angle"))
 	character.remove_meta("ride_floor_max_angle")
+
+
+## 2026-09-04. The mesh docs/specs/ASSET_LEDGER.md's "Riding Saddle" entry
+## installed. Owner directive, this session and OP-0904-9 before it: no
+## rideable species carries a saddle at spawn, it appears only once earned
+## (`_has_tack()`, already gating `mount()` on `requires_item` per species —
+## nothing new needed there) and fitted.
+##
+## Scoped here to "visible while actually being ridden" rather than "worn
+## permanently once fitted" — the fuller version needs a per-creature-
+## instance flag threaded through `creature_body.gd`'s own build path so an
+## un-ridden, un-followed creature standing in the field shows it too, which
+## is a wider change than this pass attempts. Attach/detach around the ride
+## itself already satisfies the hard rule ("never at spawn") and is the
+## honest, scoped step; the always-worn version is further work, not a
+## design change.
+const SADDLE_MODEL := "res://assets/props/riding_saddle/riding_saddle.glb"
+## Fallback scale and vertical offset when a species carries no seat block
+## of its own. `mount_offset` is the RIDER's seat, a little under the
+## creature's own back line (see that key's own comment in species.json);
+## the saddle sits just below that, on the back itself, hence the small
+## downward nudge rather than reusing the offset unchanged.
+const SADDLE_SCALE := 0.5
+const SADDLE_Y_NUDGE := -0.12
+
+
+func _attach_saddle(body: Node3D, species_id: String) -> void:
+	if body == null or not is_instance_valid(body):
+		return
+	_detach_saddle(body)
+	var resource: Resource = load(SADDLE_MODEL)
+	var visual: Node3D = null
+	if resource is PackedScene:
+		visual = (resource as PackedScene).instantiate()
+	elif resource is Mesh:
+		var mesh_instance := MeshInstance3D.new()
+		mesh_instance.mesh = resource
+		visual = mesh_instance
+	if visual == null:
+		return
+	visual.name = "RideSaddle"
+	var offset: Vector3 = SPECIES.rideable(species_id).get("mount_offset", Vector3.UP)
+	visual.position = Vector3(offset.x, offset.y + SADDLE_Y_NUDGE, offset.z)
+	visual.scale = Vector3.ONE * SADDLE_SCALE
+	body.add_child(visual)
+
+
+func _detach_saddle(body: Node3D) -> void:
+	if body == null or not is_instance_valid(body):
+		return
+	var existing := body.get_node_or_null(^"RideSaddle")
+	if existing != null:
+		existing.queue_free()
 
 
 ## The slope, in degrees, the current mount treats as floor. The trainer's own
