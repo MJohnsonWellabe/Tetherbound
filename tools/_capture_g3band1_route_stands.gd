@@ -18,6 +18,18 @@ extends SceneTree
 ## `tools/gate_f/operator_harness.gd::_step_face` uses (`want =
 ## atan2(-dx,-dz)`), so a stand faces the same way the played route recorded it
 ## facing, not a guess.
+##
+## ROUND 2: a first cut placed the camera exactly AT the recorded position, at
+## roughly eye height -- effectively first-person. A blind pass on that render
+## found four of fifteen frames were substantially or entirely the INSIDE of
+## nearby geometry (a tree trunk; at the bridge stand, this lane's own new
+## checkpoint post). That was never the real gameplay camera, which is
+## `scripts/player/camera_rig.gd`'s third-person SpringArm3D, 5.2m behind the
+## player and 1.75m above them, shortening on collision. This pass reproduces
+## that distance/height and stands in for the SpringArm3D's own shapecast with
+## a single raycast pushout from the pivot toward the candidate eye position --
+## cheaper than a real shapecast, and sufficient to keep the lens out of solid
+## geometry, which is the actual defect being fixed.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
@@ -25,8 +37,19 @@ const OUT_DIR := "res://shots/g3band1"
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 6
 const FOV := 70.0
-const EYE_H := 1.65
 const LOOK_DISTANCE := 15.0
+
+# Third-person rig values, reused rather than guessed: scripts/player/camera_rig.gd's
+# own defaults (arm distance 5.2m, pivot height 1.75m above the player, collision
+# margin 0.6m). A free camera planted exactly at the recorded first-person eye
+# position clipped INSIDE nearby geometry in four of an earlier pass's fifteen
+# frames (a tree trunk, and — at the bridge stand — this lane's own new checkpoint
+# post), because the real gameplay camera was never at that position: it was 5.2m
+# behind it, with SpringArm3D pulling in short of anything solid. Reproducing that
+# pull-back, with the same kind of pushout, is what the earlier pass was missing.
+const RIG_DISTANCE := 5.2
+const RIG_HEIGHT := 1.75
+const RIG_MARGIN := 0.6
 
 # id, at:[x,z], yaw_deg -- from run/G2C.json's teleport/face pairs and
 # run/G2C/shots/manifest.json's recorded `pos`.
@@ -114,12 +137,10 @@ func _run() -> void:
 		var yaw := deg_to_rad(yaw_deg)
 
 		var ground: float = float(field.call("height_at", at.x, at.y))
-		var eye := Vector3(at.x, ground + EYE_H, at.y)
 		# Same convention operator_harness.gd::_step_face inverts (`want =
 		# atan2(-dx,-dz)`): forward = (-sin(yaw), -cos(yaw)).
 		var forward := Vector2(-sin(yaw), -cos(yaw))
-		var look_xz := at + forward * LOOK_DISTANCE
-		var target := Vector3(look_xz.x, ground + EYE_H, look_xz.y)
+		var pivot := Vector3(at.x, ground + RIG_HEIGHT, at.y)
 
 		if player != null:
 			player.global_position = Vector3(at.x, ground + 0.1, at.y)
@@ -129,6 +150,24 @@ func _run() -> void:
 				player.call("set_facing_yaw", yaw)
 			else:
 				player.rotation.y = yaw
+
+		# Behind the pivot, same as the real SpringArm3D rig, with a raycast
+		# pushout standing in for its shapecast collision so the camera cannot
+		# end up inside a trunk, a wall or this lane's own new checkpoint posts.
+		var behind := Vector3(-forward.x, 0.0, -forward.y)
+		var candidate := pivot + behind * RIG_DISTANCE
+		var eye := candidate
+		var space: PhysicsDirectSpaceState3D = world.get_world_3d().direct_space_state
+		var query := PhysicsRayQueryParameters3D.create(pivot, candidate)
+		var hit: Dictionary = space.intersect_ray(query)
+		if not hit.is_empty():
+			var hit_pos: Vector3 = hit["position"]
+			var travelled := pivot.distance_to(hit_pos)
+			var safe := maxf(travelled - RIG_MARGIN, 0.6)
+			eye = pivot + behind * safe
+
+		var look_xz := at + forward * LOOK_DISTANCE
+		var target := Vector3(look_xz.x, ground + RIG_HEIGHT, look_xz.y)
 
 		camera.global_position = eye
 		camera.look_at(target, Vector3.UP)
