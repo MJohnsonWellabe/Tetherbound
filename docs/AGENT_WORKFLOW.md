@@ -114,6 +114,18 @@ reproduced from the branch is treated as failed.
 - Address inventory by item identity, never by slot offset. Six harness failures in one
   day were fixed-slot lookups going stale.
 - If a test is red because the implementation is wrong, fix the implementation.
+- **A world boot is its own test, and grep it for `ERROR:`, not for `SCRIPT ERROR`.**
+  `godot --headless --path . --script tests/smoke_playground.gd` before any push that
+  touches world, spawn, creature or encounter code. The reason is a defect that shipped:
+  a G-2 guard threw on every single world build, non-fatally, so the smokes still printed
+  OK while Godot exited non-zero and no unit test covered it at all.
+  Then grep the log for `^ERROR:` — **`SCRIPT ERROR` alone is not enough**. GDScript
+  raises `SCRIPT ERROR`, but the engine's own subsystems raise plain `ERROR:`, and a
+  narrower grep silently passes those. Found on 2026-09-04, when a native
+  `ERROR: Parameter "material" is null` from the alpha-resize path sat in a run whose
+  `SCRIPT ERROR` count was zero and was only noticed by reading a CI log by eye. Expect a
+  small number of known-benign `ERROR:` lines; the check is that the set does not grow,
+  which means reading them rather than counting them.
 
 ## 7. Renders and visual judgment
 
