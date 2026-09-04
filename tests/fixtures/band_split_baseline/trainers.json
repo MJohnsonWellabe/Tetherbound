@@ -439,7 +439,8 @@
       },
       "defeat_flag": "defeated_stronghold_courtyard",
       "rechallenge": false,
-      "_comment_base_t1_hall_3": "T1-HALL-3, 2026-08-30. REVERTED to the rank's shared oxblood grunt silhouette. JUDGE-5 (D2, ranked 2nd of 16) read the officer_b body in H-07-courtyard blind and called it \"from a different game\": cel-shaded anime, flat blown-out white face, painted eye and mouth, hair as a solid magenta mass, in a world of painted stylised realism -- and said the swap away from hall0830's oxblood grunt \"cost style cohesion and cost the Team Tether colour identity\". That is a property of the generated atlas, not of the override mechanism: the three Meshy cast bodies used inside the Hall (grunt_c/officer_b/captain_a) all carry the same anime idiom and a purple-magenta palette with no oxblood in it (measured: mean lit RGB (76,57,60) for officer_b against the grunt rig's (73,52,52) maroon). The rank system's own default base IS `grunt` for all three ranks, so deleting the override restores the body the judge preferred with no other change; rank stays legible through the badge/palette layer exactly as before. T3-INSTALL's per-individual identity goal is sound and is not reopened for NPCs outside the Hall -- this reverts only the three bodies standing in the frames JUDGE-5 condemned."
+      "_comment_base_t1_hall_3": "T1-HALL-3, 2026-08-30. REVERTED to the rank's shared oxblood grunt silhouette. JUDGE-5 (D2, ranked 2nd of 16) read the officer_b body in H-07-courtyard blind and called it \"from a different game\": cel-shaded anime, flat blown-out white face, painted eye and mouth, hair as a solid magenta mass, in a world of painted stylised realism -- and said the swap away from hall0830's oxblood grunt \"cost style cohesion and cost the Team Tether colour identity\". That is a property of the generated atlas, not of the override mechanism: the three Meshy cast bodies used inside the Hall (grunt_c/officer_b/captain_a) all carry the same anime idiom and a purple-magenta palette with no oxblood in it (measured: mean lit RGB (76,57,60) for officer_b against the grunt rig's (73,52,52) maroon). The rank system's own default base IS `grunt` for all three ranks, so deleting the override restores the body the judge preferred with no other change; rank stays legible through the badge/palette layer exactly as before. T3-INSTALL's per-individual identity goal is sound and is not reopened for NPCs outside the Hall -- this reverts only the three bodies standing in the frames JUDGE-5 condemned.",
+      "_why_combat": "G-2/G-3, GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903). No W- id assigns this row a profile, and none is added: left fully at DEFAULT, deliberately, on all three. §5.1's own escalation ladder already has Ness fielding CURRENT on all three of hers at the Sigil gate, one room before this one (this file's other rows) -- giving Solene a profile too would spend the 'first behavioural surprise inside the Hall' beat twice in three fights and blunt it when Hald actually needs it (his own `_why_combat` above says the same thing from his side of the ladder). Solene's own escalation lever is what her `_comment` above already claims: 'the step up from the patrol is a whole extra creature, not just levels' -- a numeric escalation, not a behavioural one, and DEFAULT is the correct way to author that honestly rather than inventing a one-off. Corr and Verrick hold the same DEFAULT floor earlier in the band for the identical reason (their own rows, other file). Should a later pass want the courtyard to carry its own texture, the mudsnout (the escaped special encounter's own kin, per this row's `_comment`) is the one member with a story reason to differ from its two neighbours."
     },
     {
       "id": "stronghold_elite",
@@ -460,6 +461,7 @@
         {
           "species": "galecrest",
           "level": 18,
+          "_why_combat": "G-2/G-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903), W-7. DIVER -- hit-and-run, short tell, comes again from a new side. Hald is 'the last check of the kit, not the HP' (W-8): a diver that keeps repositioning is what makes a player burn a potion mid-fight rather than just outlasting one long trade. Inert until G-2's `wild_creature.gd` merge lands.",
           "combat": {
             "telegraph": 0.4,
             "lunge": 5.5,
@@ -471,11 +473,13 @@
         },
         {
           "species": "burrowback",
-          "level": 19
+          "level": 19,
+          "_why_combat": "G-2/G-3, W-7. Left at DEFAULT deliberately, the same floor-role Corr and Verrick hold earlier in the band (see their own `_why_combat` in this file's other rows) -- Hald's team is meant to read as DIVER and WALL either side of one ordinary fighter, not three novelties at once. `stronghold_courtyard`'s own team stays fully DEFAULT for the same reason: the first behavioural surprise inside the Hall is reserved for Hald, right before the Warden fields five, so it lands as a real step rather than diluting across every fight in the building."
         },
         {
           "species": "mosshell",
           "level": 19,
+          "_why_combat": "G-2/G-3, W-7. WALL -- slow, heavy, stands its ground, the punish window is long. Mosshell is the type answer this row exists to add (Water, per W-7's own point); giving it the profile that rewards a patient, well-spaced fight matches a shelled creature's own read and pairs with the DIVER above it to bracket the ordinary burrowback in the middle. Inert until G-2 lands.",
           "combat": {
             "telegraph": 0.85,
             "recovery": 1.1,
@@ -502,7 +506,7 @@
       "defeat_flag": "defeated_stronghold_elite",
       "rechallenge": false,
       "_comment_base_t1_hall_3": "T1-HALL-3, 2026-08-30. REVERTED to the rank's shared oxblood grunt silhouette. JUDGE-5 (D2, ranked 2nd of 16) read the officer_b body in H-07-courtyard blind and called it \"from a different game\": cel-shaded anime, flat blown-out white face, painted eye and mouth, hair as a solid magenta mass, in a world of painted stylised realism -- and said the swap away from hall0830's oxblood grunt \"cost style cohesion and cost the Team Tether colour identity\". That is a property of the generated atlas, not of the override mechanism: the three Meshy cast bodies used inside the Hall (grunt_c/officer_b/captain_a) all carry the same anime idiom and a purple-magenta palette with no oxblood in it (measured: mean lit RGB (76,57,60) for officer_b against the grunt rig's (73,52,52) maroon). The rank system's own default base IS `grunt` for all three ranks, so deleting the override restores the body the judge preferred with no other change; rank stays legible through the badge/palette layer exactly as before. T3-INSTALL's per-individual identity goal is sound and is not reopened for NPCs outside the Hall -- this reverts only the three bodies standing in the frames JUDGE-5 condemned.",
-      "_comment_w7": "GATE3_ENCOUNTER_CONTRACTS.md W-7. Shipped duskhush -> mosshell: his own `_comment` above claims 'three creatures of three different types' and the data did not deliver it (Air/Ground/Air). Now Air/Ground/Water, which is what the comment always said. Combat profiles per G-3 (DIVER on galecrest, default on burrowback, WALL on mosshell) land here inert until G-2's `set_engaged()` merge ships on the combat/encounter lane's own branch -- absent-block-means-today's-behaviour is G-2's own contract, so this is safe to author ahead of that merge. No TM-tier quick here (W-3): Hald fights with species moves, same as the courtyard, so the step up into TM quicks lands only in the Warden's own arena.",
+      "_comment_w7": "GATE3_ENCOUNTER_CONTRACTS.md W-7. Shipped duskhush -> mosshell: his own `_comment` above claims 'three creatures of three different types' and the data did not deliver it (Air/Ground/Air). Now Air/Ground/Water, which is what the comment always said. No TM-tier quick here (W-3): Hald fights with species moves, same as the courtyard, so the step up into TM quicks lands only in the Warden's own arena.",
       "_why_mirrored_g3_land_0904": "G3-LAND-0904 mirror. G3-FINALE changed this row's identity in the live config (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md, the W- contracts) and did not mirror it, so tests/test_band_content.gd went red at integration. The rule this satisfies is the fixture's own: a deliberate identity move is made TWICE, live config and mirror, in the same commit. Mirrored here by the coordinator at integration rather than reverted, because the change is the point -- the Warden opened at level 16 against an elite fielding 18/19/19, so the chapter's last fight was softer at the front than the one gate the player cannot walk around."
     },
     {
@@ -732,7 +736,7 @@
           "moves": {
             "quick": "rock_throw"
           },
-          "_comment_profile": "WALL -- the drilled line that does not move.",
+          "_why_combat": "G-2/G-3, GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903), W-2. WALL, sent first -- the drilled line that does not move, telegraph long enough to punish, on-type rock_throw (W-3). A player's first read of the Warden's doctrine is 'this one holds ground', the plainest of the five profiles and the correct one to open on. Inert until G-2's `wild_creature.gd` merge lands.",
           "combat": {
             "telegraph": 0.85,
             "recovery": 1.1,
@@ -747,7 +751,7 @@
           "moves": {
             "quick": "wind_blade"
           },
-          "_comment_profile": "DIVER -- hit-and-run, short tell, comes again from a new side.",
+          "_why_combat": "G-2/G-3, W-2. DIVER, sent second -- hit-and-run, short tell, comes again from a new side. Ness fielded this same profile on all three of her creatures at the Sigil gate (this file's other rows); meeting it again here, on one creature this time, is the doctrine repeating at the top of the ladder rather than a one-off. Inert until G-2 lands.",
           "combat": {
             "telegraph": 0.4,
             "lunge": 5.5,
@@ -763,7 +767,7 @@
           "moves": {
             "quick": "aqua_shot"
           },
-          "_comment_profile": "CURRENT -- relentless pressure, never backs off far.",
+          "_why_combat": "G-2/G-3, W-2. CURRENT, sent third -- relentless pressure, short cooldown, never backs off far. The Water answer in the five, and the profile that turns 'brief lull between send-outs' into 'no lull at all' for one round, so the fight's middle does not sag between the WALL/DIVER opener and the CHARGER/ACE close. Inert until G-2 lands.",
           "combat": {
             "attack_cooldown": 0.7,
             "recovery": 0.55,
@@ -778,7 +782,7 @@
           "moves": {
             "quick": "rock_throw"
           },
-          "_comment_profile": "CHARGER -- the stag that closes the distance in one lunge.",
+          "_why_combat": "G-2/G-3, W-2. CHARGER, sent fourth -- the stag that closes the distance in one lunge, tell is distance not time. The second-to-last send-out is where the contract asks for the fight's own tension to visibly rise before the ace; a long-range closer that punishes standing still is the shape of that rise. Inert until G-2 lands.",
           "combat": {
             "preferred_range": 4.5,
             "lunge": 7.0,
@@ -794,7 +798,7 @@
           "moves": {
             "quick": "rock_throw"
           },
-          "_comment_profile": "ACE -- the one telegraph in the chapter worth reading. lunge/cone_degrees widened past the base ACE profile to Earth Fist's own shape (G-9, the Warrens guardian's signature move), the chapter's heaviest hit stepped around the same way at the end as it was foreshadowed at the start.",
+          "_why_combat": "G-2/G-3, W-2. ACE, sent last -- the one telegraph in the chapter worth reading. `lunge`/`cone_degrees` widened past the base ACE profile to Earth Fist's own shape (G-9, the Warrens guardian's signature move at level 14): the chapter's first telegraph-worth-respecting and its last are the same shape, on the same move family, eighteen levels and every fight in this file apart. A player who learned to step out of Earth Fist in the first hour gets to feel that lesson pay off in the last one. Inert until G-2 lands.",
           "combat": {
             "telegraph": 1.0,
             "recovery": 1.2,
