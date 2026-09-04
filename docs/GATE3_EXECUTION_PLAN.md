@@ -147,6 +147,46 @@ Recorded here so they are not rediscovered a fourth time.
   chapter's largest extent, against Band 1's 69 / 48 / 15. Measured; the player-facing
   consequence is not.
 
+## 4b. The trap that blocks a logic-lane Gate F run before step 1
+
+Cost the coordinator one launch and, on the same evening, sat under three lanes at once.
+Written down because nothing in `docs/acceptance/` says it and the symptom looks like a
+failed run rather than a refused one.
+
+`tools/gate_f/operator_harness.gd`'s capture pre-flight compares the running process
+against a freeze record. It looks in two places, nearest first: the run directory's own
+`RUN_METADATA.json`, then the tracked candidate record at
+`ralph/reports/gate-f-candidate/RUN_METADATA.json`. That tracked record is **from
+2026-08-27** and says `"display_server": "X11 under xvfb-run"`.
+
+A logic-lane run is `--headless` with no rendering driver, so it has no display server.
+The claim contradicts the process, and **every segment refuses to start** — writing a
+`BLOCKER.md`, an `INCOMPLETE.md` and an `INVENTORY.json` of `0 pass / 0 fail / 0 skipped`
+having executed no step. `run_chain.sh` then correctly stops the whole chain at S01
+because no exit save was written. Read too fast, that looks like the chain died; it did
+not run.
+
+The fix is the coordinator step, and the harness's own `_freeze_display_claim()` comment
+spells it out: a run that wants a logic lane **must say so in a freeze record written
+before the run**. Put a `RUN_METADATA.json` in the run directory carrying a `lanes` block:
+
+```json
+"lanes": { "logic": {
+  "display_server": "headless (--headless, no rendering driver)",
+  "renderer": "none -- no rendering driver is loaded"
+} }
+```
+
+The check passes when the claim contains `headless`. Two things not to do: do not edit
+the tracked candidate record (it is the 2026-08-27 run's record and scoping a new claim
+into it rewrites that run's history), and do not reach for
+`--gatef-allow-no-capture`, which records a BLOCKER severity note and degrades the
+segment rather than declaring the lane honestly.
+
+While writing that record, fill in `suite_state_at_freeze` and
+`known_open_defects_at_freeze` truthfully. The field exists, in the protocol's own
+words, "so Phase B reads the actual state rather than an implied green."
+
 ## 5. Standing rules for this gate
 
 From `CLAUDE.md`, `docs/AGENT_WORKFLOW.md` and `docs/GATE3_COORDINATOR_BRIEF.md` §6,
