@@ -74,6 +74,12 @@ const TUTORIAL_ORB := "orb_basic"
 ## trainer's challenge look up the exact same data.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 
+## G3-OPENING-FIX-0904 (2.10). `heal_party` reuses the exact rest a Creature
+## Bed gives one member (`home_recovery.gd::rest()` -- heal_fully() plus the
+## same flat overnight rest XP), applied to the whole party at once.
+const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+
 ## Mirrors CombatManager.OUTCOME_CAUGHT rather than typing "caught" twice, so a
 ## renamed outcome cannot silently stop matching here. Same reason
 ## encounter_director.gd declares its own.
@@ -488,8 +494,10 @@ func _drain_effects() -> void:
 				_queue_shop(str(parts[1]))
 			"battle":
 				_queue_battle(str(parts[1]))
+			"heal_party":
+				_heal_party()
 			_:
-				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:', 'flag:', 'shop:' and 'battle:' and nothing else" % effect)
+				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:', 'flag:', 'shop:', 'battle:' and 'heal_party' and nothing else" % effect)
 
 
 ## `shop:goods:mira` / `shop:creatures:oskar` — D39 (OF31). A villager opens a
@@ -629,6 +637,45 @@ func _set_progression_flag(flag_id: String) -> void:
 		push_error("the Game autoload has no progression store; '%s' was written nowhere" % flag_id)
 		return
 	progression.call("set_flag", flag_id)
+
+
+## `heal_party` — G3-OPENING-FIX-0904 (2.10), the owner instruction "give
+## revives after the tournament" (2026-09-03), given a real mechanism.
+##
+## The tournament's three rounds reliably leave three of five creatures on 0
+## HP (GATE2-EVIDENCE-0903), and nothing between the arena and the South
+## Bridge gatekeeper ever picked the team back up -- the player was walking
+## the Lower Meadows route on a battered team while the satchel carried the
+## cure the whole way. Rejected alternatives, and why: Halda or Mira SELLING
+## recovery adds a shop transaction to a beat that is already handing the
+## player a reward (the saddle pattern) -- charging for the fix to a problem
+## the tournament itself caused reads as the game taxing its own design. The
+## Trail Camp becoming the authored stop was the other candidate, and it sits
+## roughly 900m south, past Old Bram's own fight -- recovery that only lands
+## AFTER the first post-tournament battle does not answer the battered walk
+## OUT of the arena, only the walk into whatever comes next. Restoring the
+## team at the champion beat is the one place that answers the state the
+## tournament itself produces, at the moment the game is already crowning
+## the win, and it costs nothing else in the beat: no new panel, no new
+## vendor inventory, no new site.
+##
+## Reuses `home_recovery.gd::rest()` -- the exact thing a Creature Bed does
+## to one party member -- for every member at once, so the champion beat
+## reads as "the same kind of rest", not a bespoke heal-everything spell.
+func _heal_party() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		push_error("no Game autoload; heal_party healed nobody")
+		return
+	var party: RefCounted = game.get("party")
+	if party == null:
+		push_error("the Game autoload has no party; heal_party healed nobody")
+		return
+	var cfg := PROGRESSION.config()
+	for i in int(party.call("size")):
+		var creature: RefCounted = party.call("at", i)
+		if creature != null:
+			HOME_RECOVERY.rest(creature, cfg)
 
 
 ## `give:orb_basic:50` — Grandpa's parting gifts, granted on the line that
