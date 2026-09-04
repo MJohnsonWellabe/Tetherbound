@@ -364,6 +364,14 @@ do not run a second bake for one lane.
 `verify-scatter-bake-freshness` / `verify-terrain-bake-freshness` are green only because a
 `RETRIES` rescue turned 0-for-1 into green.
 
+**D73 §5 puts one more change inside this same window, and it cannot wait for the next
+one.** The "one lollipop, repeated" tree-lines are `corridor_fill`'s own draw, and
+widening its `scale_min`/`scale_max` re-rolls the whole corridor's RNG stream — so it is
+done **once, as the first bake window of Gate 3, before any band lane bakes on top of
+it**, and never again per band. Band lanes then author against the re-rolled fill. That
+makes the re-roll part of this bake, not a follow-up: a later re-roll invalidates every
+band's authoring done against the current stream.
+
 ### Stage 3 — evidence per segment, in parallel (the band lanes)
 
 - **CL-R1** (S01–S05) — the coordinator's, because it crosses Gate 1 and 2.
@@ -603,6 +611,40 @@ The checkpoint tag `gate2-candidate` is placed when (a) and (b) pass and the tem
 passes; `gate2-done` (a new tag, proposed) when (c) passes and the owner's Ally check is
 recorded. Splitting the tag is what lets the project say honestly where it is.
 
+### What D73 already settled, 2026-09-04
+
+`docs/decisions/D73-evidence-is-machine-made-and-the-visual-bars-run-beside-gate-3.md`
+landed on `main` (`6a04501e`) after this section was written, and **half of this
+recommendation is no longer a recommendation — it is decided policy, in the same
+direction.** Read this section with that in front of it:
+
+- **D73 §2 settles the instrument.** The bars are answered on the **GPU route strip** —
+  one frame every 40 m along the authored spine at the player's eye height, day and
+  night, on the kickoff machine's GPU — not on posed survey stands rendered in software
+  with no creature in frame. That is this section's own "stands taken from the played
+  route's own trace", arrived at independently, and it also lifts the rubric's "do not
+  trust fine lighting" caveat for GPU frames. The fixed stands survive only for
+  before/after work on one specific stand.
+- **D73 §2 also adds a constraint this section did not have:** *a gate does not close on
+  a judge "no"*. `CURRENT_STATE` §5 used to allow Gate 2's task list to complete with
+  both bars still answered no; that is now disallowed. A gate whose acceptance names the
+  bars closes only when the route-strip judge answers yes on the bands it covers, or
+  when a written owner note in `docs/owner/` accepts the specific named gaps.
+- **D73 §1 removes the owner precondition** from the fourth acceptance clause and from
+  §4.1's table: `tools/owner/KICKOFF.cmd` is the whole human contribution, and the run's
+  own telemetry, video sheets and `fps.json` are the hardware confirmation. Every
+  "needs owner confirmation on hardware" row is now waiting on a kickoff run, not on a
+  person — which is exactly why CL-O0, the parse error that aborted that run before it
+  collected anything, was the most expensive line in the playtest.
+
+**What is still open here, and what a lane should do with it.** D73 decided *how* the
+bars are judged; it did not rewrite the acceptance clause in `docs/ROADMAP.md`. The
+(a)/(b)/(c) split above and the two-tag proposal are still proposals, and they are now
+*more* useful rather than less: D73's "no gate closes on a judge no" is a hard bar, and
+splitting `gate2-candidate` from `gate2-done` is the mechanism that lets the project be
+honest about standing in front of it rather than quietly redefining it. Put the split to
+the owner with D73 cited, not instead of it.
+
 ---
 
 ## 6. What "done" costs
@@ -715,3 +757,33 @@ repo has previously handled by leaving both statements in the tree:
 - **CL-O7 vs the Warrens' four blind lighting passes.** Those passes judged the guardian.
   The owner judged the room. The prior "verified" verdicts on the Warrens interior are
   superseded, and the reports carrying them should say so rather than being deleted.
+
+**Three more, from D73 landing on `main` after §4 was written.** These are live
+collisions between this document and a decision record, not softenings, and each is
+recorded rather than resolved here because two of them turn on a file this session did
+not witness being written:
+
+- **D73 §4 vs §4.2's grass answer, in opposite directions.** §4.2 summarises
+  `docs/owner/OWNER_DIRECTIVES_2026-09-04.md` as *"the grass clump-card question is
+  closed (procedural grass is enough)"* — i.e. no work. D73 §4 decides the opposite:
+  implement clump cards in `grass_field.gd` behind a `grass_field.json` key, **on by
+  default**, judged on the next route strip, flag off in one commit if the judge calls
+  them worse. Both cannot be current. D73 is dated the same day and is on `main`; the
+  directives file is a record this coordinator did not witness. **Do not implement either
+  until that is reconciled** — a flagged, default-on shader change to every metre of
+  ground in the game is not the thing to get wrong from an ambiguous source.
+- **D73 §7 vs CL-G12, on Grandpa's loft bed.** D73 §7 closes it: `smoke_gate_b_continuous`
+  sleeps in it, the kickoff run's S02 video shows it, *"reopen only from a kickoff-run S02
+  or S03 defect row"*. CL-G12 has it owner-reproduced as broken. Under `CLAUDE.md`'s
+  precedence an owner reproduction outranks a decision and D73's own reopening clause does
+  not get to exclude one — **but the reproduction's only source is the same unwitnessed
+  directives file**, and the playtest this session did witness does not mention the bed.
+  So CL-G12 stands as written and stays in the plan, with this caveat attached: confirm
+  it against the owner before a lane spends a session root-causing a bed that a passing
+  smoke says works.
+- **D73 §6 vs CL-G10, and this one is simply good news.** CL-G10 lists the dialogue camera
+  as *"owner decision pending"*. It is not pending any more: D73 §6 decides a conversation
+  **push-in** (camera to a two-shot at ~3.5 m over the fade) rather than any change to
+  villager scale, which the owner has already had cut and re-cut. CL-G10 is therefore a
+  scoped implementation task under the visual track, judged from the S03 video sheets —
+  not a question. Read its row that way.
