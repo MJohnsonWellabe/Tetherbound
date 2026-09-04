@@ -18,6 +18,22 @@ Every item has an id (`CL-…`) so a lane can cite it. Every acceptance criterio
 **fails if**. Sizes are relative: **S** = hours for one agent, **M** = one lane session,
 **L** = several sessions or real render time, **XL** = art or an owner decision.
 
+**Amended 2026-09-04 by the coordinator, after the round-one lanes landed.** Two things
+changed after the lane above read the tree, and both are recorded rather than folded
+silently into the prose it wrote:
+
+- **What shipped.** Sixteen Gate 3 lanes were folded onto `ralph/G3-LAND-0904` and their
+  sessions archived. §2's rows are not re-scored one by one here — the lane reports under
+  `ralph/reports/G3-*/` are the record — but every row that names a lane as its owner
+  should be read as "that lane has landed; whether it *worked* is still stage 3's
+  question", which is exactly the "done but unproven" category §0 warns about.
+- **What arrived.** Two owner messages, after this lane finished. They are the single
+  largest addition to the remaining work in this document and they have their own
+  subsection, **§2.G**. Under `CLAUDE.md`'s precedence they outrank everything else here
+  for what they cover. Read §2.G before planning any of §2.A–§2.F, because it re-weights
+  them: three of its items are proven-failing on owner hardware, and one of them
+  (CL-O2, "there is no night time") contradicts a probe this repo currently trusts.
+
 The standard this plan is held to is the one both gates are held to: **an honest fail
 with a scoped task list is worth more than a manufactured pass.** Both gates fail today.
 That is the first time either has had real evidence, and it is progress.
@@ -237,6 +253,74 @@ it to, or **unassigned**.
 | CL-R6 | **The continuous S01 → S10e chain** on the SHA that carries everything above. Only it says whether the party arriving at Band 4 is the party the curve assumes and whether travel between bands is dead. | Gate 3's "does the chapter play"; the §8 sentence "pass a continuous playthrough from the prior gate to the next" | CL-R1, R2, R3 all PASS individually | L (the S10 cost problem included) |
 | CL-R7 | **The owner's hardware pass** (§4). | the four [OWNER-ONLY] items in both gates' acceptance | a released build carrying CL-R4's bake | owner |
 
+### 2.G The 2026-09-04 owner playtest and the directives that followed
+
+**Written into this plan 2026-09-04 by the coordinator, after §2.A–§2.F were drafted.**
+Two owner messages arrived after the G3-CLOSURE-PLAN lane read the tree, and under
+`CLAUDE.md`'s precedence they outrank everything above them in this document for what
+they cover. Recorded verbatim in `docs/owner/OWNER_PLAYTEST_2026-09-04.md` and
+`docs/owner/OWNER_DIRECTIVES_2026-09-04-B.md`; those two files are the canonical wording
+and the rows below are only the scoping.
+
+**None of this is started.** The owner's standing instruction is that in-flight work
+finishes and lands first; these are scoped, unstarted rows for whoever picks the work up.
+
+Read all of it against the sentence the owner led with — **"the game plays great"**. The
+core verbs are not the complaint. The complaint is visuals and content, and specifically
+content *after leaving the village*. An item here that gets implemented in a way that
+satisfies its letter while leaving the route feeling empty has failed, because the
+directives' own closing line names the goal: *"rather than being a running simulator."*
+
+#### The four that block others, named first
+
+Nothing in this subsection is sequenced by size. Four items gate the rest:
+
+1. **CL-O4 (density) before CL-W4 (level gate) and CL-W5 (no refight).** No-refight plus a
+   level gate means wild encounters carry the entire regrind, and the owner has separately
+   reported wilds are sparse outside the village. Ship the density first or the bridge gate
+   becomes exactly the wall A-4 says it must not be.
+2. **CL-O9/CL-W3 (the rideable roster) is a design contract before it is code.** It changes
+   what a starter choice means for the whole game, not just this chapter.
+3. **CL-W2's task-feed contract before CL-O4's "things pop up on the map".** The directives
+   hand the abstract mechanic two authored instances (relays, all-trainers); build the
+   contract around those rather than around a generic feed.
+4. **CL-W6 (bonding and levelling visible) is load-bearing for every other item here.**
+   Until advancing a bond or a level is legible in play, each new tracked objective is
+   asking the player to grind toward a number they cannot see.
+
+#### From the playtest
+
+| Id | Item | Source | Size | Kind |
+|---|---|---|---|---|
+| CL-O0 | **The kickoff run aborts at parse time on the Ally.** `$Seg:` / `$Name:` inside double-quoted PowerShell strings parse as drive/scope qualifiers. Ten occurrences. **Fixed 2026-09-04** (`${Seg}:`), guarded by `tests/test_kickoff_script_syntax.gd`, which was verified failable by reintroducing one. This is why this playtest carries no frame rate, no route strip and no `--verify-export` run: CI has no Windows runner, so the first parse of that file was on the owner's machine. | OP-0904-0 | — | **done** |
+| CL-O1 | **The village is the wrong shape and too crowded.** Houses along a road, not a circle; a berry field, a tree grove and a stone area as named places; **five villagers maximum**, the rest redistributed into the chapter rather than deleted — which is also part of CL-O4's answer. `village.json`, `village_npcs.json`, `props.json`, band 1 `harvest.json`. **Fails if** the redistributed villagers are removed instead of resited. | OP-0904-1 | L | proven failing (owner) |
+| CL-O2 | **There is no night time.** Flat, on the shipped build. The repo currently believes otherwise — `CURRENT_STATE` §3 carries "day counter stuck / night reads as dusk" as *needs owner confirmation*, and NIGHT-LEGIBILITY tuned night against rendered night frames. This reproduction closes that in the negative and outranks the probes. Root-cause the difference between the shipped build's clock and the harness's, not the harness's. `day_cycle.gd`, `world_look.gd`. | OP-0904-2 | M | proven failing (owner) |
+| CL-O3 | **Riding is unfinished in three ways.** The rider is invisible on the mount; sprint and jump are lost while mounted; and the saddle is on the model before it is built. The third is a design rule, not a bug: **a rideable creature ships with no saddle, and the saddle appears on the model only once built and fitted** — it is the visible proof of the craft the riding unlock is built around. `riding_controller.gd`, the mount attach point in `creature_body.gd`, the saddle recipe path. **Fails if** any rideable species' mesh or scene carries a saddle at spawn. | OP-0904-3 | M | proven failing (owner) |
+| CL-O4 | **There is not enough to do, and nothing pulls you off the path.** The largest content item in the playtest, and it agrees with what the instruments measured from the other side: band 5 ships 23 spawns and 8 harvest nodes over the chapter's largest extent against band 1's 69 and 48. The owner is describing that gradient as a player. Two halves: **density** (spawns, harvest, reasons to leave the spine, across bands 2–5) and **a surfaced task feed** — "things pop up on the map and tell you to go do them", which is a **new mechanic**, not a tuning change, and takes CL-W2's contract first. | OP-0904-4 | L (density) + M (feed, after the contract) | proven failing (owner) |
+| CL-O5 | **Bonding does not mean enough, and fights are too easy.** Difficulty is now owner-reproduced, which changes the standing of the G-2 work that landed this session: per-encounter `combat` profiles give *named* opponents real behaviour for the first time, and this says the **baseline** is soft too. Both levers have evidence behind them now. Bonding is CL-W6; "a reason to fight everyone" is CL-W2's all-trainers quest plus reward economy. | OP-0904-5 | M–L | proven failing (owner) |
+| CL-O6 | **Camping is not necessary and must be.** The rest rhythm exists mechanically and costs nothing to skip. The owner has made it a requirement rather than a quality goal. **Careful:** `CLAUDE.md` forbids harsher hunger/thirst and starvation death, so necessity must come from attrition, distance and recovery scarcity — not from a survival meter. **Fails if** the fix is a faster satiety drain. | OP-0904-6 | M | proven failing (owner) |
+| CL-O7 | **The Burrow Warrens looks terrible.** Blunt and unqualified. The Warrens has had four rounds of blind lighting judgement *on the guardian alone*; this says the room around it still does not read. Treat prior "verified" verdicts on the Warrens interior as superseded. `burrow_warrens.json`, `burrow_warrens.gd`. | OP-0904-7 | M | proven failing (owner) |
+| CL-O8 | **The legendary should be inside the machine**, not in a ring outside it. A staging change to the chapter's climax that strengthens the reveal prompt 69 already asks for: the creature *is* the power source, so it belongs inside the thing draining it. `stronghold_climax.gd`, `stronghold_climax.json`. | OP-0904-8 | S–M | not done |
+| CL-O9 | **The rideable roster, and two new traversal abilities.** Burrowback, Tuskroot (the grown Mudsnout) and Terrapup become rideable; the other two starters get **fly** and **teleport**, each behind an in-game unlock. Narrowed by CL-W3 below: fly and teleport are learned **well after the Meadows**, so nothing of Biome 2 is built here. Still a design contract before code — which starter gets which, what teaches it, what it costs, and how either interacts with a corridor world whose gates are deliberately physical (`severed_spokes.gd`, the Sigil gate, the South Bridge). **A creature that flies over a locked gate breaks the chapter's own structure, so the unlock and its limits are the design, not the ability.** | OP-0904-9 | XL (contract) then L | not done |
+
+#### From the directives, and the same-day amendment
+
+The amendment narrows three of these. Where they disagree, **the amendment wins**; the
+rows below are already written to the amended form.
+
+| Id | Item | Source | Size | Kind |
+|---|---|---|---|---|
+| CL-W1 | **Alphas pin to the map at 300 m and stay pinned.** Within 300 m an alpha appears on the map; the pin **clears when the alpha is caught or beaten** (A-3 — no dismissal mechanic is needed, because a full roster can still clear a pin by winning). 15 alpha/elder entries already exist across the band spawn files, so the content is there and unadvertised. | D-0904B-1, A-3 | M | not done |
+| CL-W2 | **Relay stations as a running, story-carried objective, plus an all-trainers quest.** Beat the Team Tether grunts at each relay; each defeat lets you **turn that relay off**; the sequence is built into the story so it is something to keep doing as you travel. Plus a tracked quest to beat every trainer in the Meadows. And explicitly: *"add more like that."* This is the concrete form of CL-O4's task feed — two authored instances to design the contract around. `tether_relay.gd`, `relay_site.json`, the quest log, the map. | D-0904B-2 | L | not done |
+| CL-W3 | **Fly and teleport come well after the Meadows; Terrapup pays off inside it.** Terrapup is rideable from midway through the chapter; the other two starters' abilities are learned in later biomes. Compatible with the Biome 2 hard rule — nothing of Biome 2 gets built, the abilities simply are not granted and the Meadows never teaches them. **The consequence the owner is knowingly accepting**, stated so it is designed for rather than discovered: two of three starter choices have no traversal payoff inside this chapter. That is the trade — deferred versus immediate — but it means the Meadows must stay fully completable and satisfying with any of the three, and **the choice must be legible at the moment it is made**. A player who picks fly and spends the chapter wondering what they gave up has been punished, not rewarded. | D-0904B-3 | design; folds into CL-O9's contract | not done |
+| CL-W4 | **The level gate is a trainer refusing, in character — not a UI lock.** Key **and** level, but the mechanism is A-4's: the **fight does not start**, and the trainer says why (*"you're too low level I'll crush you and send you crying to Grandpa"*). The gate's job is to **hand the player a next thing to do**, not to stop them. Mechanically this is a **fifth reason `can_challenge()` can be false**, and `trainer_npc.gd`'s own dark-features T1 note already warns what happens when those reasons get collapsed: a too-low player must hear the taunt, **not** the already-defeated line. `MEADOWS_PROGRESSION_SPEC.md` needs a line added for the level condition; it no longer needs the reversal D-0904B-4 first implied, because a trainer who sizes you up and refuses *is* the world creating the gate. | D-0904B-4, A-4 | M | not done |
+| CL-W5 | **One fight per opponent, and no leaving a trainer fight.** Half shipped: all **31** authored trainers across the five band files already carry `"rechallenge": false`. Two pieces remain. **(a) A-2, a confirmed defect:** `trainer_npc.gd::_prompt_for()` is unconditional, so a beaten trainer still advertises "Challenge" even though `can_challenge()` is false and the defeated line plays — the repo's own rule broken (`interactable.gd`: *"a visible prompt the button refuses is worse than no prompt"*). **A trap for whoever fixes it:** that function's own comment records the prompt must never contain **"talk"** or **"choose"**, because `tests/smoke_opening.gd` locates Grandpa and the three starters by exactly those substrings — so "Talk to %s" breaks the opening smoke. Pick other wording or change how that smoke finds its targets; do not discover this in CI. **(b) A-1:** no-fleeing applies to **trainer** fights only. A wild fight keeps its exit, which is what removes the softlock risk raised against D-0904B-5 — `combat_manager.gd::_flee_pressed()` stays, gated on the opponent being wild. The tournament's post-loss retry is a deliberate exception and stays one. | D-0904B-5, A-1, A-2 | S (a) + M (b) | (a) proven failing; (b) not done |
+| CL-W6 | **Bonding and levelling must be important and visible.** `bond_milestones.json` and the level system exist and are close to invisible in play. The owner's own framing: *"once we make bonding and levelling animals more of an important and visual thing in the game it will feel better to grind it. that's what we need."* Design plus UI. **The load-bearing item in this subsection** — see the ordering note above. | D-0904B-6 | L | not done |
+| CL-W7 | **Cut the endgame dialogue down, hard.** Measured on `data/dialogue/stronghold.json`: the whole file is **5,343 characters**; `stronghold_warden_challenge` alone is 8 lines / **1,547 characters**, averaging 193 characters a line and peaking at 379 — paragraphs, at the moment the player most wants to fight. `stronghold_free_legendary` is 4 lines / 784. **What must survive the cut:** spec §33 gives the Warden a worldview rather than a motive — he believes separation prevents chaos, he confirms the readout rather than denying it, and he does not recant when he loses. That characterisation is canon and is why the fight lands. Cutting to length is not licence to flatten him into a generic boss; the job is to say the same thing in a fraction of the words, and the freeing sequence should carry its weight **visually**, which is what prompt 69 asks for anyway. | A-5 | S–M | proven failing (owner) |
+
+**Fails if** any of this is implemented by editing `docs/owner/*` — those files are the
+record of what the owner said, not a work tracker. Progress is recorded here.
+
 ---
 
 ## 3. Ordering, with the dependencies named
@@ -307,6 +391,42 @@ S05 also re-scores Gate 2's template on a party that got there by play rather th
 
 The released build that carries stage 2's bake goes to the Ally. The four owner-only
 items and the questions in §4 close there or not at all.
+
+### Where §2.G's work goes in these stages
+
+It mostly does not fit them, and pretending it does would be the more useful-looking
+lie. The five stages above are built to *close the two gates as currently worded*. §2.G
+is the owner telling us the chapter those gates would certify is not yet the game he
+wants — so its items are not a sixth stage after Gate 3, they are a re-scoping of what
+Gate 3 has to contain.
+
+The honest placement:
+
+- **Stage 1, immediately, no contract needed.** CL-W5(a) — the Challenge prompt on a
+  beaten trainer, a confirmed one-function defect with a named trap. CL-O8 — the
+  legendary inside the machine, a staging change in one file family. CL-W7 — the
+  endgame dialogue cut, which is data plus judgement and blocks nothing.
+- **Stage 1, but root-cause first.** CL-O2 (no night time) and CL-O3 (rider invisible,
+  no sprint/jump while mounted). Both are defects on the shipped build that the
+  in-engine probes do not reproduce, so the work starts by finding the gap between the
+  probe's path and the real one — the same shape as CL-G12 (Grandpa's loft bed).
+- **Before stage 3 can mean anything.** CL-O4's density half, CL-O7 (the Warrens), and
+  CL-W6 (bonding and levelling visible). Running S06–S09 evidence against a route the
+  owner has already called empty measures a chapter we are about to change.
+- **Design contracts first, then a stage of their own.** CL-O9/CL-W3 (the rideable
+  roster, fly, teleport), CL-W2 (the relay chain and the all-trainers quest, which is
+  also CL-O4's task-feed contract), CL-W4 (the diegetic level gate), CL-W5(b) (no
+  fleeing a trainer fight), CL-O1 (the village replan), CL-O6 (camping made necessary
+  inside the satiety hard rule). None of these should be handed to an implementation
+  lane as a paragraph of owner quote; each needs a written contract first, the way
+  `docs/specs/GATE3_ENCOUNTER_CONTRACTS.md` was written before the encounter lanes ran.
+
+**The scheduling question this raises, stated rather than decided:** stages 3–5 spend
+real render and chain time certifying bands 2–5 as they stand. §2.G changes bands 2–5.
+Someone has to choose whether to (a) close the gates as worded first and treat §2.G as
+the next chapter of work, or (b) fold §2.G into Gate 3 and re-date the gate. This plan
+does not have the standing to pick; §5 is the same kind of question one level down, and
+the owner has answered that kind before.
 
 ### The dependencies that are not obvious from the stages
 
@@ -572,3 +692,26 @@ a lane does next: CL-D3 (the seventh report is not here), CL-D4 (the clearings a
 CL-H3 (the fence-corner fix does not exist on `origin`), CL-E1 (Oreth's profile fell
 between two lanes), the S04 caveat having two causes not one (§1.2), and the Gate 2
 acceptance bar (§5).
+
+**Added 2026-09-04 with §2.G.** Three more, all owner-sourced, and all of the kind this
+repo has previously handled by leaving both statements in the tree:
+
+- **CL-O2 vs `docs/CURRENT_STATE.md` §3 and the NIGHT-LEGIBILITY work.** `CURRENT_STATE`
+  carries "day counter stuck / night reads as dusk" as *needs owner confirmation*, and
+  night lighting was tuned against rendered night frames. The owner's flat "there is no
+  night time" on the shipped build closes that in the negative. The probes are not wrong
+  about what they measured; they measured the harness. **`CURRENT_STATE` §3 must be
+  edited when CL-O2 is picked up**, not left reading as an open question the owner has
+  answered.
+- **CL-W4 vs `docs/specs/MEADOWS_PROGRESSION_SPEC.md`.** The spec's South Bridge section
+  reads *"a physical key/mechanism, **not a UI level lock**"* and *"roughly 5–8
+  (tunable, **not a hard level requirement**)"*, and Gate 2's own 2.8 evidence run
+  praised the build for exactly that. The owner's first message looked like a straight
+  reversal; the same-day amendment (A-4) resolved it instead — the fight simply does not
+  start and the trainer says why, which *is* the world creating the gate. So the spec is
+  not reversed, but it is **incomplete**: it needs a line for the level condition and
+  for the diegetic refusal. Add it; do not leave the two statements to be reconciled by
+  whoever reads them next.
+- **CL-O7 vs the Warrens' four blind lighting passes.** Those passes judged the guardian.
+  The owner judged the room. The prior "verified" verdicts on the Warrens interior are
+  superseded, and the reports carrying them should say so rather than being deleted.
