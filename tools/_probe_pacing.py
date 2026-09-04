@@ -588,6 +588,44 @@ def material_report():
     return rows, rootstone_supply, harvest_total("ironwood"), recipe_cost(RECIPES_IRON, "orb_prime")
 
 
+# --- derived: how hard the OPPONENT hits back --------------------------------
+
+
+def danger_report():
+    """W23-DIFFICULTY (D74): the opponent's side of the same arithmetic dps() does.
+
+    The chapter's pacing verdict (D42) counts fight TIME, which enemy damage does
+    not change -- so a difficulty retune that adds danger without adding grind
+    leaves every number above untouched and would be invisible here. This prints
+    the number it moves: the enemy's damage rate at an even level match, from
+    combat.json's `enemy` block exactly as `wild_creature.gd::spaced_config_for`
+    applies it (power x damage_scale), over the AI's real cycle -- telegraph,
+    recovery, the reposition beat, and the walk back in from the reposition arc
+    (reposition_speed x reposition_time of ground, closed at chase_speed). Same
+    HIT_EFFICIENCY discount as the player, for the same reason. Per fight, the
+    fraction of the player's own health an even-level opponent takes is enemy
+    dps x the seconds it takes the player to kill it, over the player's hp --
+    which reduces to (enemy dps / player dps) x (enemy hp / player hp), and at
+    an even level between two same-base creatures the second factor is 1. It is
+    an UPPER bound: the first swing waits `first_attack_delay`, and the kill
+    cuts the last cycle short, both of which the smoke below models and this
+    does not (measured 2026-09-04: 15-21% at band entry against the ~38% here).
+
+    tests/smoke_combat_baseline.gd is the measured version of this (it steps
+    the real decision table with a scripted pilot); this is the closed form, so
+    a change to either can be checked against the other.
+    """
+    e = COMBAT["enemy"]
+    scale = float(COMBAT["damage"]["scale"])
+    power = float(e["power"]) * float(e.get("damage_scale", 1.0))
+    hit = power * scale * 0.5
+    walk_back = (float(e["reposition_speed"]) * float(e["reposition_time"])) / max(0.1, float(e["chase_speed"]))
+    cycle = float(e["telegraph"]) + float(e["recovery"]) + float(e["reposition_time"]) + walk_back
+    cycle = max(cycle, float(e["attack_cooldown"]))
+    enemy_dps = (hit / cycle) * HIT_EFFICIENCY
+    return hit, cycle, enemy_dps, enemy_dps / DPS if DPS > 0 else 0.0
+
+
 # --- the simulation ----------------------------------------------------------
 
 
@@ -802,6 +840,16 @@ def main():
           % rootstone_supply)
     print("  ironwood the chapter can supply:  %d ; orb_prime costs %d"
           % (ironwood_supply, orb_prime.get("ironwood", 0)))
+    print()
+
+    hit, cycle, enemy_dps, ratio = danger_report()
+    print("-- danger (D74): what an even-level opponent takes back " + "-" * 22)
+    print("  enemy hit at even level: %.1f  every %.2fs  ->  %.2f dps against the player's %.2f (ratio %.2f)"
+          % (hit, cycle, enemy_dps, DPS, ratio))
+    print("  i.e. an even-level opponent gives back ~%.0f%% of the damage it takes. Per fight that is an "
+          "UPPER bound on the lead's health cost" % (ratio * 100.0))
+    print("  (the closed form ignores first_attack_delay and the kill cutting the last cycle short); "
+          "tests/smoke_combat_baseline.gd measures the real figure")
     print()
 
 
