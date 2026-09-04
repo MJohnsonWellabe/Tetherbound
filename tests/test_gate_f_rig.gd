@@ -1040,3 +1040,128 @@ func test_the_run_level_inventory_checks_the_debt_was_paid() -> void:
 		+ "not carry dies with the container")
 	assert_true(ledger.contains("os.path.getsize"),
 		"present must mean present ON DISK, not present in a manifest row")
+
+
+# --- CL-H13: a press is resolved against the live context before it goes in --
+#
+# W02-HARNESS-CONTEXT-0904. `input_context` flipped to `build_catalogue` at
+# three Gate 3 sites (Oreth / Captain Riverwatch in S08, Captain Vance in S07)
+# and was read as the game's context router failing. It was not: the segments
+# pressed `combat_charged` while no fight was running, the harness injected
+# LT, and LT in the `world` context opens the Build catalogue by design
+# (HUD-INPUT-0903). The guard below is the mechanism-level fix; these tests
+# ask the guard the same questions a run asks, against the real InputMap and
+# the real `input_contexts.json`, and drive the real `press` step through a
+# harness instance to show the guard is wired in front of the injection.
+
+class _ContextStub extends RefCounted:
+	var context := "world"
+	func input_context() -> String:
+		return context
+	func player() -> Node3D:
+		return null
+
+
+func test_the_physical_collision_the_press_guard_exists_for_is_real() -> void:
+	# The premise, from the engine rather than from prose: injecting
+	# `combat_charged`'s joypad binding marks `build_shortcut` pressed too.
+	# This is what the harness's `_edge()` sends, and what a real LT pull does.
+	var binding := HARNESS._physical_binding(&"combat_charged", "joypad")
+	assert_true(binding is InputEventJoypadMotion, "combat_charged binds a joypad axis")
+	var down := InputEventJoypadMotion.new()
+	down.axis = (binding as InputEventJoypadMotion).axis
+	down.axis_value = (binding as InputEventJoypadMotion).axis_value
+	Input.parse_input_event(down)
+	Input.flush_buffered_events()
+	var charged := Input.is_action_pressed(&"combat_charged")
+	var shortcut := Input.is_action_pressed(&"build_shortcut")
+	# Release BEFORE asserting, so a failed assertion cannot leave the axis
+	# held under every later test in the run.
+	var up := InputEventJoypadMotion.new()
+	up.axis = down.axis
+	up.axis_value = 0.0
+	Input.parse_input_event(up)
+	Input.flush_buffered_events()
+	assert_true(charged, "the injected axis event reaches combat_charged")
+	assert_true(shortcut,
+		"the SAME axis event reaches build_shortcut: one trigger pull is both actions, and "
+		+ "only the game's input context decides which one is read")
+	assert_false(Input.is_action_pressed(&"build_shortcut"), "the release edge clears it")
+
+
+func test_a_press_the_live_context_does_not_list_is_refused_and_names_the_collision() -> void:
+	# S08-93 / S07-57's shape: a charged attack with no fight running.
+	var r: Dictionary = HARNESS._resolve_press("combat_charged", "world", "")
+	assert_true(bool(r["checked"]), "world is a mapped context, so the press is checked")
+	assert_false(bool(r["ok"]), "combat_charged is not live in world and must be refused")
+	assert_eq(str(r["raw"]), "JoyAxis:4:1.0", "the refusal names the physical binding")
+	assert_true((r["fires_live"] as Array).has("build_shortcut"),
+		"the refusal names what the binding WOULD have done: opened the Build catalogue")
+	assert_true(str(r["why"]).contains("build_shortcut"), "the sentence carries the collision")
+	# In a fight the same press is the verb the step named.
+	var fight: Dictionary = HARNESS._resolve_press("combat_charged", "combat", "")
+	assert_true(bool(fight["ok"]) and bool(fight["checked"]), "combat_charged is live in combat")
+	# G3-BAND3's mouse routing (S07-57, kept): out of a fight it is still not
+	# the verb the step named -- but it is inert, and the guard says which.
+	var mouse: Dictionary = HARNESS._resolve_press("combat_charged", "world", "mouse")
+	assert_false(bool(mouse["ok"]), "a mouse-routed charged attack with no fight is still refused")
+	assert_true((mouse["fires_live"] as Array).is_empty(), "…but it collides with nothing")
+	assert_true(str(mouse["why"]).contains("inert"), "the refusal says the press was inert")
+	# Two more collisions a flipped segment then hits, step after step.
+	var lb: Dictionary = HARNESS._resolve_press("party_cycle", "build_catalogue", "")
+	assert_false(bool(lb["ok"]))
+	assert_true((lb["fires_live"] as Array).has("menu_tab_left"),
+		"'switch pilot' behind the catalogue is a category change")
+	var x: Dictionary = HARNESS._resolve_press("interact", "build_placement", "")
+	assert_false(bool(x["ok"]))
+	assert_true((x["fires_live"] as Array).has("build_place"), "X with a ghost armed places it")
+
+
+func test_the_press_guard_passes_through_what_the_map_does_not_describe() -> void:
+	# Refusing on a guess is the failure mode in the other direction. A context
+	# the map does not name, and an action the map lists nowhere, go through
+	# UNCHECKED and say so.
+	var title: Dictionary = HARNESS._resolve_press("ui_accept", "title", "")
+	assert_true(bool(title["ok"]) and not bool(title["checked"]), "the title screen is unmapped")
+	var tab: Dictionary = HARNESS._resolve_press("interact", "menu_save", "")
+	assert_true(bool(tab["ok"]) and not bool(tab["checked"]), "an unmapped pause tab is unchecked")
+	var ui: Dictionary = HARNESS._resolve_press("ui_down", "world", "")
+	assert_true(bool(ui["ok"]) and not bool(ui["checked"]), "ui_down is in no context")
+	# `includes` are expanded: the satchel tab inherits the shell's confirm.
+	var satchel: Dictionary = HARNESS._resolve_press("ui_accept", "menu_backpack", "")
+	assert_true(bool(satchel["ok"]) and bool(satchel["checked"]), "menu_backpack includes menu")
+	var live: Dictionary = HARNESS._resolve_press("interact", "world", "")
+	assert_true(bool(live["ok"]) and bool(live["checked"]), "interact is live in the world")
+
+
+func test_the_press_step_refuses_before_it_injects() -> void:
+	# The wiring, driven through the real `_step_press`: with the world in
+	# `world`, a charged attack must come back FAIL from the guard without a
+	# single edge sent. The harness is a SceneTree; the refusal path returns
+	# before its first `await`, which is what makes it callable here, and the
+	# instance is freed before its deferred `_run` can fire.
+	var harness := HARNESS.new()
+	var stub := _ContextStub.new()
+	harness._probe = stub
+	var before := Input.is_action_pressed(&"build_shortcut")
+	# `callv`, not a direct call: a direct call to a coroutine must be awaited,
+	# and this file's tests run synchronously. `callv` hands back the String
+	# when the function returns before its first await -- the refusal path --
+	# and a suspended function state when it does not, which is exactly the
+	# broken case (a press that went in) and fails the `is String` check.
+	var result: Variant = harness.callv("_step_press", [{"control": "combat_charged", "hold": "long"}, "T-93"])
+	var after := Input.is_action_pressed(&"build_shortcut")
+	var hold: Variant = harness._step_hold({"control": "combat_charged"}, "T-hold")
+	var held := Input.is_action_pressed(&"combat_charged")
+	# Do not leave anything down whatever the verdict.
+	Input.action_release(&"combat_charged")
+	Input.action_release(&"build_shortcut")
+	harness.free()
+	assert_true(result is String, "the refusal returns synchronously, before any await")
+	assert_true(str(result).begins_with("FAIL press guard"),
+		"a charged attack in the world is refused: got '%s'" % str(result))
+	assert_true(str(result).contains("build_shortcut"), "the step result names the collision")
+	assert_true(str(result).contains("0 of 1"), "no press landed")
+	assert_false(before or after, "nothing was injected: build_shortcut never went down")
+	assert_true(hold is String and str(hold).begins_with("FAIL press guard"), "hold is guarded too")
+	assert_false(held, "the refused hold sent no down edge")
