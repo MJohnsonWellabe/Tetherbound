@@ -238,7 +238,7 @@ continuous path prompt 69's "Evidence run" section asks for.
 | Bullet | Status |
 |---|---|
 | stronghold feels like a climax, not a late content room set | **Met** — escalating rank/team-size ladder, no repeated rooms, §2 |
-| Warden tests the chapter's team-building skills | **Met, measured** — §1: 38–101% longer / more hits taken than the fight immediately before it, both team archetypes |
+| Warden tests the chapter's team-building skills | **Met on aggregate numbers, measured** — §1: 38–101% longer / more hits taken than the fight immediately before it, both team archetypes. **Combat *identity* (distinct from "largest numbers") was a real gap this report's first pass missed** — see the encounter-contract addendum below: data-side fix (W-1/2/3/7) landed this session, the shared AI mechanism (G-2) is the coordinator's own branch |
 | reveal is understandable in the world | **Met** — §3, environmental readout ahead of the Warden's own words |
 | legendary freeing has ceremony | **Met** — §4, live-tested |
 | five-slot decision can be genuinely difficult | **Met mechanically** (identity/history surfaced, choice explicit and permanent, enforced ordering); whether it *feels* difficult to a real player is a subjective playtest question this session cannot answer from a synthetic finale-level team |
@@ -246,12 +246,172 @@ continuous path prompt 69's "Evidence run" section asks for.
 | no progression/save duplication | **Met, measured** — §6, both reload windows |
 | final sequence leaves a strong next-chapter question without entering Biome 2 | **Met** — `rift_collapse.gd`/SG44 is a distant, non-enterable sky effect, unchanged by this lane, out of this lane's ownership and not touched |
 
+## Addendum — GATE3_ENCOUNTER_CONTRACTS.md (Fable, `ralph/G3-ENCOUNTERS-0903`)
+
+After the report above was written, the Gate 3 coordinator relayed a
+finding from `docs/specs/GATE3_ENCOUNTER_CONTRACTS.md`: every opponent in
+the game currently shares one global `combat.json` `enemy` AI block
+(`scripts/creatures/wild_creature.gd:333`), so §1's escalation measurement
+in this report, while accurate about *aggregate numbers*, could not answer
+prompt 69's actual requirement that the Warden have "a recognizable combat
+identity, not simply the largest numbers." That is a real gap this report
+did not catch on its own first pass — the ladder probe measures outcomes,
+not behaviour, and behaviour was uniform across every trainer in the game
+at the time it was measured.
+
+Contract G-2 (a per-body `combat` override merged in `set_engaged()`, plus
+five reusable behaviour profiles — WALL/CHARGER/DIVER/CURRENT/ACE) is being
+implemented by the coordinator directly, on their own branch, because
+`wild_creature.gd` is shared across all five Gate 3 lanes. This lane's half
+is authoring the Hall cast's data against that contract, in the three rows
+already under this lane's exclusive ownership.
+
+### What changed (commit `a54aacd5`)
+
+- **W-1** (`warden_aldis` levels): 16/17/17/18/20 → **18/18/19/19/20**. The
+  shipped opening was two levels *below* Hald's own weakest member (18) —
+  measured concretely in §1 above (round 1 of both fights ran at nearly
+  identical pace, 14.0s vs 14.2s), which is the "soft front" the contract
+  names. No member now sits below the elite's floor; the ace is unchanged
+  at the chapter's highest; still inside `chapter_curve.json`'s band-5
+  `[15,20]` window (not edited — that file is G3-ECONOMY's).
+- **W-2** (send-out order + profiles): burrowback (**WALL**) → galecrest
+  (**DIVER**) → brooktail (**CURRENT**) → meadowhart (**CHARGER**) →
+  tuskroot (**ACE**, `lunge 6.5`/`cone_degrees 72` — Earth Fist's own shape
+  from the Warrens guardian, G-9). Order in the JSON array is authoritative
+  send-out order (confirmed by this lane's own earlier reading of
+  `encounter_director.gd::_send_out_next_creature()` — plain FIFO, no sort).
+- **W-3** (TM-tier quicks, Warden only): `rock_throw`/`aqua_shot`/
+  `wind_blade`, each confirmed on-type against `species.json` and each
+  15–20% harder than the species default per `data/moves/moves.json`.
+- **W-7** (`stronghold_elite`/Hald): duskhush → **mosshell**. His own
+  shipped `_comment` claimed "three creatures of three different types"
+  against an actual Air/Ground/Air team; now Air/Ground/Water, matching the
+  comment. Profiles: galecrest DIVER, burrowback default (no override),
+  mosshell WALL.
+- `stronghold_courtyard` (Solene): checked against the contract, **no
+  change made** — no W-contract assigns her row a `combat` profile, and
+  W-8 keeps both her and Hald on species moves, reserving TM-tier quicks
+  for the Warden alone.
+
+The `combat` blocks are inert data on this branch: `set_engaged()` does not
+read them yet (that merge is the coordinator's, on a separate branch), and
+G-2's own contract guarantees an absent/unread block leaves today's
+behaviour byte-for-byte unchanged — so authoring them ahead of that merge
+carries no behavioural risk on this branch.
+
+### Validation
+
+- `test_trainers_data.gd`: 50 tests, 1386 assertions, 0 failed (checked by
+  hand first against the specific guards this change could trip —
+  `test_the_wardens_team_is_the_hardest_in_the_chapter`'s `lowest >
+  captain_high` and `highest >= lowest + 2`, `test_no_step_on_the_critical_
+  path_jumps_more_than_four_levels`, `test_nothing_in_the_stronghold_out_
+  levels_the_warden`, `test_the_critical_path_alone_pays_for_the_warden_
+  ready_level` — all still hold with the new numbers, then run for real).
+- `test_chapter_curve.gd`: 18 tests, 451 assertions, 0 failed.
+- `smoke_stronghold.gd` (route): passed.
+- `smoke_gate_e_finale.gd` (full continuous run): passed, including the new
+  Hald team (mosshell) and the new Warden team/order/moves end to end —
+  the same continuous walk-in → gauntlet → recovery → elite → reveal →
+  Warden → lever → ceremony → healing → acknowledgment path as the original
+  report, now exercised against the raised levels.
+
+### W-9 (Hald's line matches his geometry) — verified, no change needed
+
+W-9 asks that the blast shutter be visible behind Hald from his challenge
+position, lit by its own conduit run, so his line ("the shutter behind me
+stays down while I'm standing") is literally true on screen. Checked with a
+small read-only headless probe against the live scene (not rendered, pure
+transform query — `tools/`-style, not committed):
+
+- Hald's world position: `(10.0, 6.17, 7629.0)`, facing `-Z` (`facing_deg
+  180`, matching `stronghold.json`'s own `_why` note that this turns him to
+  face the corridor the player walks in from).
+- The blast shutter (`BlastShutter_defeated_stronghold_elite`): `(8.0,
+  8.17, 7635.1)`, **6.7 m** from Hald along the vector `(-2.0, 2.0, 6.1)`.
+  `dot(Hald's forward, vector to shutter) = -0.907` — strongly negative,
+  meaning the shutter sits almost dead-centre on his back axis, not off to
+  a side that could read as incidental.
+- The `tether_approach → warden_arena` conduit
+  (`data/config/stronghold.json`'s `conduits` array, `offset: 2.6`,
+  self-lit via `_live_material()`) resolves to an unnamed mesh at `(10.6,
+  6.23, 7637.1)` — **3.2 m** from the shutter, i.e. the same passage.
+
+Already satisfied by existing geometry; no code or data change made. This
+is a geometric/transform verification, not a rendered one — I did not run
+this through `tools/survey.sh` or the blind-judge skill, so "visible" here
+means "on the unoccluded line the numbers describe," not "confirmed
+legible in a real frame." If the coordinator wants photographic
+confirmation, that is a `tools/survey.sh` + visual-judge pass this session
+did not do.
+
+### W-4 (Warden Arena dressing + re-measurement) — not done, flagged open
+
+W-4 asks for the arena's end wall and door to be dressed (banners, the
+conduits converging on the chamber door, two braziers outside the 11 m
+combat ring) and the Warden's silhouette re-measured at 16 m against the
+1.5:1 luminance floor `CREATURE-LEGIBILITY-0903` established. This is
+squarely this lane's file (`scripts/world/stronghold.gd`) but is a
+genuinely visual task — new geometry plus a real headless-rendered capture
+plus a blind-judge pass, per this project's own rule that visual work is
+never judged by the agent that made it. That pipeline
+(`tools/survey.sh`, xvfb, Compatibility renderer, `.claude/skills/
+visual-judge/SKILL.md`) was not set up or run this session. Rather than
+manufacture a low-confidence pass, this is left open and named here so the
+coordinator can route it — either back to this lane in a follow-up session
+with render time budgeted, or to whichever lane is already doing the
+Hall's other visual work this session found in progress
+(`_comment_base_t1_hall_3`'s JUDGE-5 pass, `hall_occupation`'s lighting
+rounds).
+
+### Design intent — what the Warden's fight is supposed to feel like
+
+The coordinator asked this lane to state intent so the G-2 merge can be
+checked against it, separately from the contract's own numbers:
+
+The Warden should feel like **the only fight in the chapter fought by
+someone who has trained for exactly this job**, not like a bigger wild
+encounter. Concretely: the first four send-outs should each be
+*legible as the profile a captain already taught* — a player who has
+fought the region's captains and Hald should be able to name what's coming
+before it swings, the way `stronghold_warden_defeated`'s own line ("Rest
+your five first. He fields more than I do") tells you going in that this
+is attrition, not a single hard check. The fifth (tuskroot, ACE) should be
+the one moment in the whole chapter where the correct read is "step out of
+this, don't trade with it" — mechanically identical in shape to the
+Warrens guardian's Earth Fist (W-2's own point: the chapter's first
+telegraph-worth-respecting and its last are the same shape, met at level 14
+and again at level 20), so a player who learned that lesson in the first
+hour gets to feel it pay off in the last one. What it should *not* feel
+like: a wall that out-punishes good play regardless of positioning (G-3's
+own *fails if* — no profile should one-shot a full-health curve-appropriate
+creature), and not a repeat of Hald's own fight at a higher number — Hald
+is the "last check of the kit" (W-8), spends the player's consumables, and
+is beatable clean; the Warden should cost more of the *fight itself* —
+faint pauses, repositioning against five different rhythms in a row — not
+just more HP bars. If the G-2 merge makes WALL/CURRENT read as
+interchangeable "the enemy hits me sometimes," or makes DIVER's retreat
+read as the AI simply being far away rather than *leaving and coming back
+from a new side*, that's the gap between the contract's numbers and this
+intent worth checking for.
+
 ## What changed on this branch
 
 - `tools/_capture_band1_map_trails.gd.uid`,
-  `tools/_capture_band1_signpost_legibility.gd.uid` — added (see header).
+  `tools/_capture_band1_signpost_legibility.gd.uid` — added (Godot-generated
+  sidecars for two scripts committed without one; see commit `37afeb04`).
+- `ralph/reports/G3-FINALE-0903/REPORT.md` — this report (commit
+  `24bb3754`, this addendum).
+- `data/config/bands/band5_stronghold_approach/trainers.json` — the
+  `warden_aldis` and `stronghold_elite` rows only, per
+  `GATE3_ENCOUNTER_CONTRACTS.md` W-1/W-2/W-3/W-7 (commit `a54aacd5`). See
+  the addendum above for the full reasoning; `stronghold_courtyard` was
+  checked and left unchanged.
 - No other files changed. Every system this lane owns was verified against
-  its acceptance bullet by real execution and left as authored.
+  its acceptance bullet by real execution and left as authored, or (the
+  Warden/Hald data) changed against a design contract and re-verified by
+  the same tests that verified it before the change.
 
 ## What was not chased further
 
@@ -266,3 +426,12 @@ continuous path prompt 69's "Evidence run" section asks for.
   69's environmental-storytelling bullets need a visual pass, that is
   `tools/survey.sh` + `.claude/skills/visual-judge/SKILL.md` work this
   report did not do.
+- **W-4** (Warden Arena wall/door dressing + luminance re-measurement) —
+  open, flagged in the addendum above. This is the one contract item
+  assigned to this lane ("Hall lane") that genuinely was not attempted,
+  because it needs the render pipeline and a blind-judge pass this session
+  did not set up.
+- The G-2 mechanism itself (`set_engaged()`'s merge, the five profiles'
+  actual in-engine feel) is the coordinator's own branch and was not
+  re-verified here beyond confirming the `combat` blocks this lane authored
+  parse correctly and stay inert until that merge lands.
