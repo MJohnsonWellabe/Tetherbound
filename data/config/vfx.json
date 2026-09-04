@@ -1,0 +1,124 @@
+{
+  "_comment": "W09-VFX (CL-A2, funded by the owner 2026-09-04). Combat and reward VFX: the hit spark and body flash on every landed blow, the KO puff, the catch-success burst and the level-up flourish. ALL of this is tunable presentation; nothing here touches damage, reach, timing or progression. `enabled` false is the whole revert -- the existing impact_flash.gd ring in combat.json `impact` is independent and keeps playing either way. Sizes are in metres BEFORE the struck body's own radius scales them (see `body_scale`), so a bramblebun and a tuskroot each get a burst sized to their body rather than one fixed burst that swamps one and vanishes on the other. Colours are '#rrggbb'.",
+  "enabled": true,
+
+  "_comment_type_colours": "The elemental hue a hit carries, keyed by the move's `type` in data/moves/moves.json. The move's own `vfx.colour` wins when it names one (every shipped move does); this map is the fallback for a strike that reaches the flash with only a type name, and the source of truth a designer edits to recolour an element everywhere at once. Values are the same swatches moves.json already uses.",
+  "type_colours": {
+    "ground": "#d9b26a",
+    "water": "#57b6e8",
+    "air": "#dbeaf7",
+    "dark": "#9b5fd0",
+    "electric": "#f5d24a",
+    "fire": "#f07a2b",
+    "psychic": "#c39bf0",
+    "ice": "#a8dcf0"
+  },
+  "default_colour": "#ffd27a",
+
+  "_comment_damage_scale": "How much bigger a heavy blow bursts than a light one. `fraction` is damage / the struck creature's max HP: at or below `light_fraction` the burst plays at `min`, at or above `heavy_fraction` at `max`, linear between. A charged move that takes a third of the bar should not look like a quick jab that took a twentieth.",
+  "damage_scale": {
+    "light_fraction": 0.04,
+    "heavy_fraction": 0.30,
+    "min": 0.8,
+    "max": 1.7
+  },
+
+  "_comment_hit_spark": "The spark: a spray of bright motes and streaks thrown out from the point of contact, falling under gravity and fading. Lives longer than combat.json's 0.26s ring on purpose -- the ring says 'contact', the spray is what is still on screen a third of a second later. `count` is per burst; `speed` metres/second; `spread_degrees` the cone around the camera plane the sprays leave in; `size` the mote radius in metres; `streak_fraction` how many of them are drawn as elongated streaks along their own motion rather than round motes.",
+  "hit_spark": {
+    "enabled": true,
+    "count": 14,
+    "duration": 0.55,
+    "speed": 5.5,
+    "speed_variance": 0.45,
+    "spread_degrees": 360.0,
+    "gravity": 9.0,
+    "size": 0.13,
+    "size_variance": 0.5,
+    "streak_fraction": 0.5,
+    "streak_length": 2.6,
+    "core_size": 0.34,
+    "core_duration": 0.18,
+    "core_colour": "#fff6df",
+    "charged_scale": 1.35,
+    "body_scale": 1.0,
+    "no_depth_test": true
+  },
+
+  "_comment_hit_flash": "The struck body itself lights up for a few frames: a material overlay drawn over every mesh of the creature, brightest at the silhouette (fresnel) so the flash reads as the body being lit rather than as a white blob painted over it. Per-instance (GeometryInstance3D.material_overlay), so two creatures of one species never flash together the way a shared-material edit would make them.",
+  "hit_flash": {
+    "enabled": true,
+    "duration": 0.16,
+    "colour": "#fff1d6",
+    "strength": 0.85,
+    "rim_power": 1.6,
+    "flat_mix": 0.55,
+    "charged_strength": 1.0
+  },
+
+  "_comment_ko_puff": "The creature that just fainted lets out a soft cloud: slow, pale, mostly upward, bigger and longer than a hit. Fired from the same damage hook as the spark, on the blow that emptied the bar, so a trainer's second creature falling mid-battle puffs the same as a wild one ending the fight.",
+  "ko_puff": {
+    "enabled": true,
+    "count": 12,
+    "duration": 0.9,
+    "speed": 2.2,
+    "speed_variance": 0.4,
+    "spread_degrees": 360.0,
+    "gravity": -1.6,
+    "size": 0.42,
+    "size_variance": 0.35,
+    "streak_fraction": 0.0,
+    "streak_length": 1.0,
+    "core_size": 0.6,
+    "core_duration": 0.25,
+    "colour": "#e9e4d6",
+    "core_colour": "#fffaf0",
+    "body_scale": 1.0,
+    "alpha": 0.55,
+    "no_depth_test": true
+  },
+
+  "_comment_catch_burst": "The seal, on top of catching.json's own warm flash: gold sparkles thrown out from the sealed orb and drifting up, so a catch lands as a reward and not only as a verdict line.",
+  "catch_burst": {
+    "enabled": true,
+    "count": 18,
+    "duration": 0.85,
+    "speed": 3.4,
+    "speed_variance": 0.5,
+    "spread_degrees": 360.0,
+    "gravity": -2.4,
+    "size": 0.1,
+    "size_variance": 0.5,
+    "streak_fraction": 0.35,
+    "streak_length": 3.0,
+    "core_size": 0.45,
+    "core_duration": 0.3,
+    "colour": "#ffe08a",
+    "core_colour": "#fff8e0",
+    "body_scale": 1.0,
+    "alpha": 0.95,
+    "no_depth_test": true
+  },
+
+  "_comment_level_up": "The reward picture. On the creature that levelled: a vertical column of light through the body, two rings that rise from the feet past the crown, gold motes climbing with them, and a rim glow on the body itself, all over `duration` seconds. Sized off the body's own height and radius so it fits whoever levelled. `bench_on_trainer` false means a party member that levelled in its orb (the bench share) gets no world flourish -- the HUD line still names it; there is no body to light. `min_gap` collapses a poll detection and a progression-feed event for the same creature into one flourish once Game.progression_feed exists.",
+  "level_up": {
+    "enabled": true,
+    "duration": 1.5,
+    "colour": "#ffd77a",
+    "ring_colour": "#fff2c4",
+    "beam_colour": "#ffe9a8",
+    "ring_count": 2,
+    "ring_radius_scale": 1.6,
+    "ring_thickness": 0.28,
+    "rise_scale": 1.35,
+    "beam_width_scale": 1.5,
+    "beam_height_scale": 2.4,
+    "beam_alpha": 0.5,
+    "mote_count": 14,
+    "mote_size": 0.11,
+    "rim_strength": 0.9,
+    "rim_power": 2.2,
+    "bench_on_trainer": false,
+    "min_gap": 0.75,
+    "no_depth_test": true
+  }
+}
