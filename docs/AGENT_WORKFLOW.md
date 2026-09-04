@@ -125,7 +125,12 @@ reproduced from the branch is treated as failed.
   `ERROR: Parameter "material" is null` from the alpha-resize path sat in a run whose
   `SCRIPT ERROR` count was zero and was only noticed by reading a CI log by eye. Expect a
   small number of known-benign `ERROR:` lines; the check is that the set does not grow,
-  which means reading them rather than counting them.
+  which means reading them rather than counting them. **The count is not stable and must not
+  be the bar** — `ERROR: Parameter "material" is null` was observed 1, 2, 2 and 3 times across
+  four runs of near-identical trees on 2026-09-04, because it comes off alpha creature builds
+  whose number varies with what streamed in. A rule written against the count would fire on
+  noise and be switched off within a day; a rule written against the distinct set caught the
+  real thing (a native error the `SCRIPT ERROR` grep never saw) and stayed quiet on the rest.
 
 ## 7. Renders and visual judgment
 
