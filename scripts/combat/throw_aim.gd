@@ -496,6 +496,19 @@ func _release() -> void:
 			_leave_aim()
 			return
 	if not _spend_orb():
+		# G3-OPENING-FIX-0904. The one refusal in this function that used to
+		# say nothing: the range check three lines up and every other
+		# refusal in this file emit `throw_refused` so a press that does
+		# nothing is never indistinguishable from a dropped input (see the
+		# file header and `try_begin_aim()`'s own "no orbs left" refusal).
+		# This path was the exception -- reachable if the satchel's last
+		# orb of the spent tier is removed by something else between the
+		# aim opening and the release (another system touching the
+		# inventory mid-aim), and it left `_leave_aim()` as the only
+		# visible effect: state returns to IDLE with no explanation, which
+		# a retried throw right after a miss can read as "the second orb
+		# never left the hand".
+		throw_refused.emit("no orbs left")
 		_leave_aim()
 		return
 	state = State.THROWN

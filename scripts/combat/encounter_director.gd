@@ -471,7 +471,17 @@ func _spawn_creatures() -> void:
 			# is only built by a full world boot.
 			var named_combat: Dictionary = {}
 			var alpha_block: Dictionary = spawn.get("alpha", {}) if spawn.get("alpha", {}) is Dictionary else {}
-			for block: Dictionary in [elder, alpha_block]:
+			# Both halves of this loop were written twice, by G-2 and by
+			# G3-OPENING-FIX, and the merge keeps each side's better half:
+			# the typed array from theirs (an untyped literal infers
+			# Array[Variant] and warns), and the `has()` guard from the G-2
+			# fix. `get("combat", {})` also works here BECAUSE the result is
+			# bound to a local first -- what broke in CI was reading
+			# `block["combat"]` on the right of an `and` whose left side had
+			# already passed on the default. Keeping the explicit guard so
+			# the shape that failed cannot come back by editing one line.
+			var named_blocks: Array[Dictionary] = [elder, alpha_block]
+			for block in named_blocks:
 				if not block.has("combat"):
 					continue
 				var block_combat: Variant = block["combat"]
@@ -2062,6 +2072,29 @@ func can_challenge(spec: Dictionary) -> bool:
 ## reason into one line (dark-features T1).
 func no_usable_ally() -> bool:
 	return _ally == null or _ally.fainted or _ally_body == null or not is_instance_valid(_ally_body)
+
+
+## G3-OPENING-FIX-0904 (2.10). Which of `no_usable_ally()`'s two real causes
+## applies, so the refusal line can name it instead of always guessing "hurt".
+##
+## `_ally.fainted` and `_ally_body == null` used to collapse into one line --
+## "get it back on its feet... a bed will do it" -- which is only true for the
+## first cause. The second is a healthy creature that simply is not out (a
+## fresh save load never auto-deploys anything, or the active creature was
+## put away): telling that player to go rest a creature that is not hurt
+## points at the wrong fix entirely. `_ally == null` reads as "undeployed"
+## too -- it is the same "nothing is out" state `dismiss_active_creature()`
+## and a fresh load both leave, just without even a stale reference around to
+## ask whether it is fainted.
+##
+## Returns "" when nothing is wrong, so a caller can treat an unexpected ""
+## as a bug rather than silently falling through to one of the two lines.
+func usable_ally_blocker() -> String:
+	if _ally != null and _ally.fainted:
+		return "fainted"
+	if _ally == null or _ally_body == null or not is_instance_valid(_ally_body):
+		return "undeployed"
+	return ""
 
 
 ## Take up a trainer's challenge. `trainer` is the body that issued it, used

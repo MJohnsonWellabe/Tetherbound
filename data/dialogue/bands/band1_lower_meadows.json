@@ -177,8 +177,12 @@
     "tournament_final_beaten": {
       "speaker": "Oskar",
       "portrait": "res://assets/ui/portraits/trainer.png",
+      "_comment_heal_party": "G3-OPENING-FIX-0904 (2.10), the owner instruction 'give revives after the tournament' (2026-09-03). The tournament's three rounds reliably leave three of five creatures on 0 HP, and this is the one line every player who wins the final sees -- unlike tournament_halda_champion, which needs a separate walk back to Halda and, by its own _comment_saddle above, is optional (the saddle pattern itself is already granted by tournament_final_oskar's reward.flags whether or not that walk happens). Putting the heal here means it lands on the exact state the tournament produces, for every winner, not only the ones who go looking for Halda afterward.",
       "lines": [
-        "Took the Meadowhart off me fair. Go and see Halda — the pattern's hers to hand over, and I'll not go back on it."
+        {
+          "text": "Took the Meadowhart off me fair. Go and see Halda — the pattern's hers to hand over, and I'll not go back on it.",
+          "effect": "heal_party"
+        }
       ]
     },
     "south_bridge_grunt_challenge": {
