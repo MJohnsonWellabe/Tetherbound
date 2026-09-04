@@ -790,3 +790,21 @@ A second pass (mesh/material edits, not a regeneration — no Meshy credit spent
 A third blind pass (same reviewer discipline, fresh renders, no knowledge of what changed) on the fixed versions: **Mushroom now passes outright.** Potion Plant and Candy were still **CLOSE BUT NEEDS WORK** — potion plant for leftover buried/stray bud geometry at specific coordinates in four frames (a cleanup pass, not a redesign); candy for a flat disc/seam artefact on top of the now-round body and the wrapper ends, while structurally improved, still not reading as a candy twist from the side.
 
 **Owner decision, 2026-09-04: ship as-is.** No further fix round. The known open items — candy's flat-top seam and honest wrapper-lobe limitation, potion plant's stray/buried bud geometry — are recorded here rather than silently accepted, for whoever picks up polish on these later. `tools/art_pipeline/blender/probe_rotation.py` (the quick single-angle Blender probe that caught the orientation bug above) is kept in the tree as a reusable diagnostic; it needs `xvfb-run -a` and the same cached Blender every other pipeline script uses.
+
+## Riding Saddle and South Bridge Checkpoint Gate — real reference art arrives (2026-09-04)
+
+Two objects `docs/prompts/74`'s Prompts A and C were written for — the saddle and the South Bridge checkpoint gate — had no owner reference art all session, so no generation was licensed. The owner then supplied both as real production boards in the same format as boards 13–16, closing that gate:
+
+| | |
+|---|---|
+| Reference | `docs/art/reference/20_Riding_Saddle.png`, `21_South_Bridge_Checkpoint_Gate.png`, owner-supplied 2026-09-04 |
+| Source | Meshy.ai multi-image-to-3D, refine tier, one candidate each (no preview round — the boards are clean, multi-angle production sheets, and the remaining Meshy balance did not support a preview-then-refine two-step on both) |
+| Task ids | `riding_saddle`: `01a06dc7-a774-7366-91ad-f75794abe4a1`. `south_bridge_gate`: `01a06dc7-b0e3-743f-bfd1-d563012207a7` |
+| Credits | 30 + 30 = 60, from a starting balance of 125. Balance after: 65 |
+| Installed | `assets/props/riding_saddle/riding_saddle.glb` (3,553 tris); `assets/environment/team_tether/south_bridge_gate.glb` (4,687 tris, the reserved-hero-object family alongside the pylon/relay apparatus/tether machine) |
+
+**Saddle: clean pass, no fixes needed.** Verified through `turntable.py`'s real Blender render from all four angles — leather seat, sage cloth panel, sheepskin lining, both wrapped handles, stirrups, buckled girth strap, the side pouch all read exactly as the board on the first candidate.
+
+**Gate: strong from the angles a player will actually see, thin from one they likely won't.** Front and three-quarter renders are a close match to the board — timber posts with iron strapping, X-braced double leaf, central lock plate, hanging lanterns, blue Team Tether banners, stone footings. The pure orthogonal side view, however, shows real front-to-back thinness (bounds ratio roughly 1 : 0.41 : 0.16 width:height:depth) — closer to a stage flat than a fully volumetric structure from that one angle. **Owner decision: ship as-is** — the object sits on a bridge, whose sides drop into water, so no walkable vantage point should ever put a player at the exact profile angle that exposes it. Flagged here rather than silently accepted: if it ever reads badly from an actual in-game camera, that is the defect to reproduce and fix, not the orthogonal test render.
+
+**Not done by this entry:** placement in the world. The gate needs to be sited at the South Bridge crossing (superseding or supplementing `south_bridge.gd`'s existing procedural checkpoint dressing — reconcile rather than double up) and the saddle needs wiring into the riding system's earned-saddle rule (absent at spawn, appears once built and fitted, per the owner's standing directive). Both are `docs/prompts/74`'s install route, §4, next.
