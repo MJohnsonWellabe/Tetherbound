@@ -126,6 +126,17 @@ func _run() -> void:
 		if look == null:
 			print("WARNING: --time=%s given but no WorldLook in the scene" % time_of_day)
 		else:
+			# G3-CREATURE-COLOUR-0904. `world_look.gd::_process()` keeps the clock
+			# running and re-blends the FULL environment (art.json's own
+			# `creature_field_emission_scale` included) every BLEND_INTERVAL --
+			# without freezing it, that continuous re-apply stomps a
+			# `--extra-field-scale=` variant's manual override within a couple of
+			# frames, and every variant in a sweep silently converges on
+			# whatever art.json's OWN configured value is instead of the one
+			# actually being tested. `set_clock_frozen()` is `world_look.gd`'s
+			# own public API for exactly this (survey/capture tooling already
+			# relies on it staying still).
+			look.call("set_clock_frozen", true)
 			look.call("apply_time", time_of_day)
 			for i in SETTLE_FRAMES:
 				await physics_frame
