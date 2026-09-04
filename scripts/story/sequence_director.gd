@@ -42,6 +42,8 @@ const BEATS := preload("res://scripts/story/opening_beats.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NPC := preload("res://scripts/npc/npc_body.gd")
+## Measures a SKINNED rig the way the renderer draws it — see `_refresh_lying_lift()`.
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 ## F3/GATE-F-LEG-S10CDE. `greeting_for()` is what reads a villager's
 ## `greeting_when` ladder; `_grandpa_conversation_id()` reuses it for
 ## Grandpa's own ladder (opening_beats.gd's `grandpa_conversations_when()`)
@@ -102,11 +104,19 @@ const GROUND_WAIT_FRAMES := 300
 ## `BedTwin.obj`'s vertices: the marker falls just past the taller, more
 ## decorative end of the two). Feet-out rather than head-out because
 ## `character_model.gd::set_lying()`'s rotation pivots the body around its
-## feet and swings the head end toward -Z from there; 1.5m lands the feet at
-## the OTHER (shorter, footboard) end of the same mesh, which is the mattress
-## actually being roughly the trainer's own height (~1.8m) long inside its
-## frame. TUNABLE — a different bed model changes both numbers.
-const BED_LIE_REACH := 1.5
+## feet and swings the head end toward -Z from there.
+##
+## 1.5 was reasoned to, not measured, and it was 0.135 m too far: measured
+## with `tools/gate_f/probe_loft_bed_wake_pose.gd`, the mattress collider
+## `grandpa_house.gd::_bed_mattress_collider()` builds runs z −1.865 … 0.265
+## in house-local metres, and the rendered lying body is exactly 1.800 m long
+## in Z, spanning `feet_z − 1.8 … feet_z`. 1.5 put the feet at z 0.400 —
+## past the footboard, over the loft floor, with the heels hanging off the
+## end. 1.20 puts the feet at 0.100 and the head at −1.700, which centres the
+## body in the 2.129 m mattress with 0.165 m clear at both ends.
+## TUNABLE — a different bed model changes both numbers, and the probe
+## re-measures them rather than asserting these.
+const BED_LIE_REACH := 1.20
 
 ## Above the dialogue panel (5) and the naming panel (6), below the pause menu
 ## (20). A fade-in that the HUD draws over is not a fade-in.
@@ -431,6 +441,7 @@ func _process(delta: float) -> void:
 	_refresh_lockout()
 	_refresh_prompts()
 	_refresh_door_gate()
+	_refresh_lying_lift()
 	_check_left_the_bed()
 	_maybe_open_picker()
 	_maybe_open_shop()
@@ -1039,6 +1050,67 @@ func _set_player_lying(lying: bool) -> void:
 	var model := _player.get_node_or_null(^"Model")
 	if model != null and model.has_method("set_lying"):
 		model.call("set_lying", lying)
+	_refresh_lying_lift()
+
+
+## OWNER-0904: *"at the beginning of the game, you are submerged in the bed
+## rather than on it."*
+##
+## `character_model.gd::set_lying()` tips the art onto its back by rotating it
+## −90° about X, and `_fit()` has already put the art's own origin at the
+## character's FEET — so the rotation pivots the body around a point on the
+## surface it is standing on, and the body that was 1.8 m tall above that
+## point becomes a body 0.6 m thick CENTRED on it. Measured, not reasoned
+## (`tools/gate_f/probe_loft_bed_wake_pose.gd`, before this fix): the rendered
+## AABB spanned world y 3.419 … 4.034 with the mattress plane at 3.750 —
+## 0.331 m of the trainer below the sheet. That is the owner's report exactly,
+## and it is independent of where on the bed the body is placed, which is why
+## `OPENING-BED-0903` did not catch it: that round fixed a collapsed skin and
+## read the result by eye for a different defect.
+##
+## The lift is MEASURED off the rig rather than declared, through the same
+## `render_bounds.gd` the model's own `_fit()` uses (a skinned mesh has to be
+## measured the way the GPU draws it, not down its node chain). A rig with a
+## different lying silhouette gets the right number without anyone editing a
+## constant here.
+##
+## Applied to the `Model` node rather than to the body: the capsule still
+## rests on the mattress collider, so nothing about collision, the wake beat's
+## own "walked off the bed" radius, or the Get-up prompt moves. Recomputed
+## every frame from the model's own `is_lying()` — the same "recomputed, never
+## pushed" rule the door gate and the prompts keep — because
+## `trainer_model.gd::_process()` clears the pose on its own the instant the
+## trainer moves, and a lift pushed once at `set_lying(false)` would be a lift
+## left behind on every exit that does not route through this director.
+const LIE_CLEARANCE_M := 0.02
+
+var _lying_lift_m := -1.0
+
+
+## How far a posed-lying `model` has to rise for its lowest rendered point to
+## clear the surface its body is resting on. Static and public so the capture
+## tool and the probes measure the SHIPPED number rather than a copy of it —
+## a tool that re-derives the fix cannot prove the fix.
+static func lying_lift_for(model: Node3D) -> float:
+	if model == null:
+		return 0.0
+	var box: AABB = RENDER_BOUNDS.measure(model)
+	return maxf(0.0, -box.position.y) + LIE_CLEARANCE_M
+
+
+func _refresh_lying_lift() -> void:
+	if _player == null:
+		return
+	var model := _player.get_node_or_null(^"Model") as Node3D
+	if model == null or not model.has_method("is_lying"):
+		return
+	var wanted := 0.0
+	if bool(model.call("is_lying")):
+		if _lying_lift_m < 0.0:
+			_lying_lift_m = lying_lift_for(model)
+		wanted = _lying_lift_m
+	if absf(model.position.y - wanted) > 0.0005:
+		model.position.y = wanted
 
 
 ## Getting out of bed ends the wake beat, however you do it.
