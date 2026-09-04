@@ -280,9 +280,25 @@ Points of interest: one optional discovery with a real reward, signposts legible
     single worst gap per segment.
   - *Reliability:* no freezes, no input loss, no save/load failures, no bad collision on the
     played route. Both segments wrote and reloaded exit saves through the production Save tab.
-  - *Presentation:* the blind judge's answer, `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md`,
-    judged on 16 frames taken from the played route's own 2 Hz trace (gameplay camera, HUD on,
-    real positions/headings/clock hours) rather than posed stands.
+  - *Presentation:* **both bar questions answered no** by a code-blind pass on 16 frames taken
+    from the played route's own 2 Hz trace (gameplay camera, HUD on, real positions and
+    headings) rather than posed stands —
+    `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md`, 16/16 frames non-degenerate. Same verdict as
+    MID-LAYER's and TREE-SILHOUETTE's judges, reached from different frames, and it finds four
+    things no posed set could: the **HUD is in frame and judged** (food bar outside a 5 % safe
+    area, objective/action/interact hierarchy that does not separate, an interact pill covering
+    the object it names); **the South Bridge is visually unbuilt** — a bare plank frame, no gate,
+    no banner, no guard, for the chapter's first physical gate; **the oxblood reservation is
+    broken**, leaked onto village roofs, tree trunks and friendly HUD icons while the Team Tether
+    grunt wears unrelieved black; and **Bramblebun reads candy pink in daylight**, independently
+    corroborating §3's open item that 2.4's `field_emission` 0.9 → 2.5 overshot — the ledger knew
+    only about night. Trees measure ~2.3× the 1.80 m trainer on redwood-thick trunks with no
+    branch structure below the canopy. Two of the judge's findings are **my instrument, not the
+    game**, and are recorded as such in the report: the capture lane teleports to a traced
+    position without restaging, so its two creature-forward stands show empty ground where
+    telemetry proves both fights ran, and it never deploys a companion. The deeper point stands —
+    four blind passes running have been unable to see the thing the game is named after, scoped
+    as 2.15.
   - *Decision:* **FAIL.** Passes on dead travel, on the perf proxy, and on reliability of the
     played path; fails on presentation and on the roster-pressure clause.
 

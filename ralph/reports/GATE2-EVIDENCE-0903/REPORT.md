@@ -305,22 +305,107 @@ This does not change this run's verdict: §5 fails on grounds inside the gate's 
 
 ## 8. Blind judge
 
-See `JUDGE.md` beside this file: a code-blind pass over **16 frames taken from the played
-route** — gameplay camera, HUD on, at positions and headings read out of the run's own
-2 Hz trace, not posed at ideal stands
-(`tools/gate_f/derive_gate2_route_captures.py`, `run/G2C.json`,
-`_sheet_gate2_route.png`). The critic was given the sheet, the frames and
-`docs/reference/`, and nothing about the code, the history or what had changed.
+Full report in `JUDGE.md` beside this file. A code-blind critic, given only the contact
+sheet, the 16 frames and `docs/reference/`, and nothing about the code, the history or what
+had changed.
 
-Capture lane: 1280×720 under xvfb + opengl3 (Compatibility), matching every prior
-blind-judge sheet in this series rather than starting a new one; the choice and its cost
-reasoning are recorded in `run/G2C/CAPTURE_RESOLUTION.json`. **16 of 16 frames non-degenerate**
-by the harness's own dark-fraction/stddev test (mean luma 44–81, dark fraction 0.02–0.41).
+**Both bar questions: no.**
 
-**One limitation, recorded rather than hidden:** all sixteen `pin_clock` steps were REFUSED
-— the harness requires `diag: true` to freeze the world clock, and the generator did not set
-it. So every frame was taken at the live clock's ~08:30 rather than at the hour its trace
-recorded. The frames are real gameplay frames at real route positions and headings, and a
-uniform hour is if anything a cleaner control for judging composition and density; but **this
-set cannot speak to time-of-day variation at all**, and the judge was told so. The generator
-now sets the flag.
+- **Bar A (does this belong to the key art's world?) — no.** The subject matter is right and
+  one frame (`G2-S05-0271-route`) genuinely evokes the board's oak-grove panel. What breaks
+  it: the board's identity is oak groves you walk *under*, and the build has 4–5 m shrubs
+  with bare cylinder trunks and no branch structure below the canopy; the grass highlight
+  goes acid lime and the rabbits candy pink, neither in the board's palette strip; fog erases
+  a far plane the board keeps crisp; **the oxblood the board reserves for Team Tether has
+  leaked onto village roofs, tree trunks and friendly HUD icons**, while the one Team Tether
+  grunt wears unrelieved black.
+- **Bar B (same kind of game as Palworld?) — no.** A viewer would call it a third-person
+  open-world game with a survival HUD. Nothing signals creature collection or creature
+  combat: no creature at readable size, no companion beside the trainer, no nameplates or
+  level tags, no catch affordance, no combat VFX.
+
+**Its three ranked gaps:** creatures absent or unreadable where the references always feature
+them; the distance dissolving into a featureless wash where the references make it somewhere
+you want to go — *including the route's own destination*, the South Bridge, which renders as
+a bare plank frame with no gate, banner or guard; and scatter that reads as a rule rather
+than a layout (twelve identical evenly-spaced trees in `G2-S04-0206`, a one-mesh tree wall
+with no mouth, four identical creatures at identical scale in a line), compounded by trees
+measuring only ~2.3× the 1.80 m trainer on redwood-thick trunks.
+
+### 8.1 Where this judge disagrees with the previous ones, and why
+
+It **agrees on the verdict** — MID-LAYER's after-judge, TREE-SILHOUETTE's after-judge and its
+after-fix pass all answered no / no — but it reaches it from different frames and finds
+things those could not.
+
+The previous three judged **posed survey stands**: `tools/survey.sh`'s five fixed viewpoints
+plus the places and composition sets, all framed deliberately. This judged **sixteen stands
+taken from the played route's own 2 Hz trace** — the gameplay camera, HUD on, where the
+player actually stood. That difference produces four findings no posed set had reported:
+
+1. **The HUD is in frame and is judged.** The posed sets have no HUD at all (the earlier
+   report says "interface (n/a — no HUD present)"). This one names the food bar outside a 5 %
+   safe area, objective/action/interact hierarchy that does not separate, low health-text
+   contrast, and an interact pill covering the object it names.
+2. **The South Bridge itself is visually unbuilt.** No posed stand ever framed it: the
+   previous survey's `place5-bridge-approach` reported "no clear bridge structure is visible
+   despite the filename". Standing on the crossing, this judge confirms it — a bare plank
+   frame, half off-corner, no gate, no banner, no guard, for the chapter's first physical
+   gate and the thing Team Tether is supposed to be holding.
+3. **The oxblood reservation is broken**, on village roofs, tree trunks and friendly HUD
+   icons. This is one of the rubric's own colour criteria and no posed set had flagged it.
+4. **Bramblebun reads candy pink in daylight.** `docs/CURRENT_STATE.md` §3 already carries an
+   open item that task 2.4's raise of `field_emission` 0.9 → 2.5 makes Bramblebun a glowing
+   pink blob **at night**. This judge, on morning frames, independently calls the same
+   creature candy pink — so 2.4 overshot in daylight too, which the ledger did not know.
+
+### 8.2 What this judge saw that my own capture method caused, not the game
+
+Recorded plainly, because a visual finding produced by the instrument is the same trap as a
+harness defect that looks like a world defect, and this run has already hit that trap twice.
+
+The capture lane **teleports to a traced position and takes a frame**; it does not restage
+what was happening there. So:
+
+- The two "creature-forward" stands (`G2-S05-0502-fight-starts`, `G2-S05-0522-level-up`)
+  show the *place* the fight and the level-up happened, with no fight running — which is why
+  the judge found them near-identical and empty. **That is my instrument, not the game**: the
+  logic lane's telemetry shows both fights ran, with `combat_hit` and `combat_switch` firing
+  throughout.
+- **No companion creature stands beside the trainer** in any frame, because the capture lane
+  never presses `creature_recall` after loading. In play, the route was walked with a
+  deployed creature.
+
+What is **not** excused by that: creatures do appear in the set (four in a line in
+`G2-S05-0722`, more at `G2-S05-0670`) and are judged unreadable at size on their own merits.
+And the deeper point survives entirely — **four independent blind passes in a row have now
+been unable to see the thing this game is named after**, because no evidence set the project
+produces puts a creature in frame at size. That is a defect in the evidence pipeline, and it
+is scoped as 2.15.
+
+### 8.3 The judge's own fixable / needs-art split
+
+*Scene work, no new art:* grow the trees to 12–18 m against the 1.80 m trainer and fix the
+trunk ratio; cluster the tree line with clearings and a mouth and add ≥3× scale variance;
+pull the grass highlight off lime and the rabbits off candy pink; re-reserve the red family
+and put oxblood back on Team Tether; push the fog far plane out; replace the blob shadow
+decal with one carrying canopy shape and give characters a consistent contact shadow; a
+value or rim break so the trainer survives dappled shadow; stop the camera rendering from
+inside a bush (`G2-S05-0335`); fix Halda's plank/torso intersection; the terrain-blend patch
+seam; and the HUD safe-area and hierarchy items.
+
+*Needs art that is not in the build:* creature silhouettes that read at 16 px; a companion
+on screen; combat and reward VFX; tree meshes with branch structure below the canopy; at
+least one Meadows landmark to navigate by; and a built South Bridge with Team Tether
+presence.
+
+Capture-lane provenance and limits: 1280×720 under xvfb + opengl3 (Compatibility), matching
+every prior sheet in this series rather than starting a new one — the choice and its cost
+reasoning are in `run/G2C/CAPTURE_RESOLUTION.json`. **16 of 16 frames non-degenerate** by the
+harness's own dark-fraction/stddev test (mean luma 44–81, dark fraction 0.02–0.41). **All
+sixteen `pin_clock` steps were REFUSED** — the harness requires `diag: true` to freeze the
+world clock and the generator did not set it — so every frame is at the live clock's ~08:30
+rather than its traced hour. The frames are real gameplay frames at real route positions; a
+uniform hour is if anything a cleaner control for composition and density, but **this set
+cannot speak to time-of-day variation**, and the judge was told so. The generator now sets
+the flag.
