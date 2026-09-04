@@ -1,0 +1,38 @@
+{
+  "_comment": "Camera behaviour that is not the exploration orbit. The orbit itself still lives in movement.json's `camera` block; this file holds the modes that take the rig away from it. Today that is the conversation push-in (D73 sec6, closure plan CL-G10).",
+
+  "conversation": {
+    "_comment": "The two-shot the rig blends to while a conversation is on screen. Distances in metres, angles in degrees. The rig is a SpringArm3D: `distance` is the arm length from the framing pivot to the camera, and the engine shortens it further if something is in the way.",
+
+    "distance": 3.5,
+    "blend_time": 0.45,
+    "fov": 40.0,
+
+    "_comment_bias": "Where along the trainer -> speaker line the frame is centred. 0 is the trainer, 1 is the speaker. High, because the shot is about the person talking: at 0.78 the speaker lands near the middle of frame and the trainer's near shoulder falls on the opposite third.",
+    "speaker_bias": 0.78,
+
+    "_comment_shoulder": "How far the camera is swung off the trainer -> speaker axis, which is what puts the trainer's shoulder in frame instead of the back of their head.",
+    "shoulder_yaw_deg": 18.0,
+    "elevation_deg": 7.0,
+
+    "_comment_anchors": "The framing points on each body. The trainer's is a fixed height above the followed body (so it still works mounted, where the followed body is the mount). The speaker's is a fraction of that character's own height, so a tall NPC is framed on the chest rather than the belt.",
+    "trainer_anchor_height": 1.45,
+    "speaker_anchor_frac": 0.78,
+
+    "_comment_guards": "Nothing here may put the camera inside the person talking, and a conversation opened from across a field is not a conversation this shot is for.",
+    "min_speaker_clearance": 1.25,
+    "min_pair_separation": 0.6,
+    "max_speaker_distance": 9.0,
+    "min_distance": 1.2,
+
+    "_comment_fallback": "Indoors -- Mira's cottage, Bram's inn -- there is often no 3.5m of room behind the trainer. When the arm's own sweep says the two-shot is blocked before `clearance_ratio` of its length, the shot is re-solved as a closer over-shoulder and then clamped to whatever room is actually there.",
+    "clearance_ratio": 0.82,
+    "fallback": {
+      "distance": 2.1,
+      "shoulder_yaw_deg": 11.0,
+      "elevation_deg": 5.0,
+      "fov": 46.0,
+      "speaker_bias": 0.7
+    }
+  }
+}
