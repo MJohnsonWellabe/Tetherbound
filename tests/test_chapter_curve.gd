@@ -21,6 +21,7 @@ extends "res://tests/test_case.gd"
 const CURVE := preload("res://scripts/creatures/chapter_curve.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const PARTY := preload("res://autoload/party.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 const PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 
@@ -386,3 +387,50 @@ func test_a_caller_with_no_curve_falls_back_to_the_global_band() -> void:
 	var prog: Dictionary = PROGRESSION.config()
 	var cfg: Dictionary = CURVE.progression_config_at(0.0, prog, {})
 	assert_eq(cfg, prog, "an empty curve did not fall back to the shipped progression config unchanged")
+
+
+# --- W23-DIFFICULTY (D74): the baseline danger targets ------------------------
+
+## CL-G8. A region whose strongest field creature sits well below the level the
+## team ARRIVES at is a region where the field is scenery from the first step.
+## One level under is tolerated because Band 2's ceiling is pinned by the
+## Warrens' weakest resident, which must stay strictly above the field (the
+## test above); anything wider is the finding G3-ECONOMY flagged coming back.
+func test_no_regions_wild_ceiling_sits_more_than_one_level_under_the_arrival() -> void:
+	for entry: Variant in _regions():
+		var region: Dictionary = entry as Dictionary
+		var wild: Array = region.get("wild_band", []) as Array
+		var enter_level := int(_team(region).get("enter", 0))
+		assert_true(int(wild[1]) >= enter_level - 1,
+			"region '%s' tops out at level %d against a team arriving at %d; every wild there is already beaten on arrival"
+			% [str(region.get("id", "")), int(wild[1]), enter_level])
+
+
+## The `difficulty` block is what tests/smoke_combat_baseline.gd measures the
+## shipped numbers against. A missing or malformed target makes that smoke pass
+## by asserting nothing, which is the worst way for a difficulty retune to rot.
+func test_the_difficulty_targets_are_present_and_sane() -> void:
+	var difficulty: Dictionary = _curve().get("difficulty", {}) as Dictionary
+	assert_false(difficulty.is_empty(), "chapter_curve.json has no `difficulty` block")
+	var party: Array = difficulty.get("party", []) as Array
+	assert_eq(party.size(), PARTY.MAX_CREATURES,
+		"the pilot's typical party has %d creatures; the cap is %d and the smoke fights with a full five" % [party.size(), PARTY.MAX_CREATURES])
+	for id: Variant in party:
+		assert_true(SPECIES.has(str(id)), "difficulty.party names '%s', which is not in species.json" % str(id))
+	for key: String in ["wild_lead_hp_cost", "trainer_floor_lead_hp_cost"]:
+		var band: Array = difficulty.get(key, []) as Array
+		assert_eq(band.size(), 2, "difficulty.%s is not a [low, high] band" % key)
+		if band.size() == 2:
+			assert_true(float(band[0]) > 0.0 and float(band[0]) < float(band[1]) and float(band[1]) <= 1.0,
+				"difficulty.%s = %s is not a fraction band inside (0, 1]" % [key, str(band)])
+	var one_shot := float(difficulty.get("max_single_hit_fraction", 0.0))
+	assert_true(one_shot > 0.0 and one_shot < 1.0,
+		"difficulty.max_single_hit_fraction (%.2f) must sit strictly inside (0, 1): 1.0 would permit G-3's own fails-if, a one-shot" % one_shot)
+	var warden_level := int(difficulty.get("warden_level", 0))
+	var band5: Dictionary = {}
+	for entry: Variant in _regions():
+		if str((entry as Dictionary).get("id", "")) == "band5_stronghold_approach":
+			band5 = entry as Dictionary
+	var team: Dictionary = _team(band5)
+	assert_true(warden_level >= int(team.get("enter", 0)) and warden_level <= int(team.get("exit", 0)),
+		"difficulty.warden_level (%d) is outside band 5's own team band %d-%d" % [warden_level, int(team.get("enter", 0)), int(team.get("exit", 0))])

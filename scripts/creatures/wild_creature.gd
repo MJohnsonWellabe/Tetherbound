@@ -111,6 +111,18 @@ var _catch_aim_slowdown_scale: float = 0.35
 ## numbers it is handed, not how it thinks. No new intent, no charged-move AI.
 var combat_override: Dictionary = {}
 
+## W23-DIFFICULTY (D74). True for a body a TRAINER sent out, set by
+## `encounter_director._send_out_next_creature()` beside `combat_override`.
+## It selects `combat.json`'s optional `enemy_trainer` overlay in
+## `_enemy_config_for_this_body()`: a drilled creature fights with a shorter
+## first beat and a tighter cadence than a field animal of the same species,
+## which is the baseline the owner measured as soft ("beating other trainers is
+## way too easy") and the one thing the G-2 per-member override could not say
+## for the 25 of 31 trainers that author no block at all. A wild body never
+## sets this and is untouched; the per-member override still wins for every
+## key it names, so the authored profiles (WALL, CHARGER...) are unchanged.
+var trainer_owned: bool = false
+
 var _rng := RandomNumberGenerator.new()
 
 
@@ -366,12 +378,20 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 
 func _enemy_config_for_this_body() -> Dictionary:
 	var base: Dictionary = MATH.config().get("enemy", {})
-	if combat_override.is_empty():
+	var trainer_overlay: Dictionary = MATH.config().get("enemy_trainer", {}) if trainer_owned else {}
+	if combat_override.is_empty() and trainer_overlay.is_empty():
 		# The overwhelmingly common path, and deliberately the SAME Dictionary
 		# every creature in the game got before G-2 existed -- not a copy, so
 		# there is no behaviour difference and no allocation to explain.
 		return base
 	var merged := base.duplicate(true)
+	# Layered in this order on purpose: the trainer overlay is a BASELINE for
+	# every trainer-owned body, and the per-member `combat` block is the
+	# encounter's own voice, so the member's numbers must win for every key
+	# both name. Same key whitelist for both, for the same typo-safety reason.
+	for key: String in _COMBAT_OVERRIDE_KEYS:
+		if trainer_overlay.has(key):
+			merged[key] = trainer_overlay[key]
 	for key: String in _COMBAT_OVERRIDE_KEYS:
 		if combat_override.has(key):
 			merged[key] = combat_override[key]
@@ -484,17 +504,35 @@ func _spaced_config() -> Dictionary:
 		return _combat_cfg
 	var mine: float = body_radius()
 	var theirs: float = float(_opponent.call("body_radius")) if _opponent.has_method("body_radius") else 0.5
-	var floor_at: float = (mine + theirs) * float(_combat_cfg.get("body_clearance", 1.35))
+	return spaced_config_for(_combat_cfg, mine, theirs)
 
-	var preferred: float = maxf(float(_combat_cfg.get("preferred_range", 2.1)), floor_at)
-	var spaced := _combat_cfg.duplicate()
+
+## The spacing arithmetic, static so tests/smoke_combat_baseline.gd fights with
+## the SAME numbers a live body does rather than a copy of this function that
+## drifts. `mine`/`theirs` are the two gameplay radii.
+##
+## W23-DIFFICULTY (D74): this is also where `enemy.damage_scale` lands.
+## The G-2 profiles author ABSOLUTE `power` values against the 8.0 baseline
+## (WALL 12.0, CURRENT 6.4, ACE 14.4), so raising `enemy.power` itself would
+## have quietly inverted their shapes -- a CURRENT picket hitting softer than
+## a field bramblebun. The scale multiplies AFTER the per-body merge, so every
+## opponent in the chapter gets heavier by the same ratio and the profiles
+## keep exactly the relationships the contract's table promises. It is NOT in
+## `_COMBAT_OVERRIDE_KEYS`: no band file may author it, it is one chapter-wide
+## number.
+static func spaced_config_for(cfg: Dictionary, mine: float, theirs: float) -> Dictionary:
+	var floor_at: float = (mine + theirs) * float(cfg.get("body_clearance", 1.35))
+
+	var preferred: float = maxf(float(cfg.get("preferred_range", 2.1)), floor_at)
+	var spaced := cfg.duplicate()
 	spaced["preferred_range"] = preferred
 	# Reach grows with the spacing, or the creature stands exactly where it can
 	# no longer hit anything and whiffs forever. Two bodies further apart are
 	# further apart at the SURFACE by the same amount, so the swing that used to
 	# connect still does.
-	spaced["range"] = maxf(float(_combat_cfg.get("range", 2.6)), preferred + 0.5)
-	spaced["reposition_distance"] = maxf(float(_combat_cfg.get("reposition_distance", 5.0)), preferred + 2.4)
+	spaced["range"] = maxf(float(cfg.get("range", 2.6)), preferred + 0.5)
+	spaced["reposition_distance"] = maxf(float(cfg.get("reposition_distance", 5.0)), preferred + 2.4)
+	spaced["power"] = float(cfg.get("power", 8.0)) * float(cfg.get("damage_scale", 1.0))
 	return spaced
 
 
