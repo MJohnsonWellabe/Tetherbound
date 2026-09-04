@@ -50,6 +50,10 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## but the literal baked terrain bitmap, one bake for both.
 const MAP_BAKER_PATH := "res://scripts/world/map_baker.gd"
 
+## CL-W1. Read from `map_state.gd` (already preloaded above as `MAP_STATE`)
+## rather than respelled — see `minimap.gd`'s own copy of this line for why.
+const ALPHA_MARKER_PREFIX := MAP_STATE.ALPHA_MARKER_PREFIX
+
 const ICON_DIR := "res://assets/ui/icons/map/"
 ## OP21-15: bumped from 26 across the board (icon/marker/font sizes below) —
 ## this screen's `canvas.draw_*` calls sit under the SAME `canvas_items`
@@ -435,6 +439,14 @@ func _update_legend(map_state: RefCounted) -> void:
 	var seen: Dictionary = {}
 	for entry: Dictionary in (map_state.call("landmarks") as Array):
 		if bool(entry.get("dynamic", false)):
+			# CL-W1. One exception to "dynamic markers are not legend material":
+			# a red mark the player has never seen before needs a word for what
+			# it is, once. Camps and the objective still do not appear here --
+			# the player placed the camp and the objective has its own HUD line,
+			# so neither is a symbol anybody has to look up.
+			if str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX) and not seen.has("alpha"):
+				seen["alpha"] = true
+				_legend_row.add_child(_legend_entry(str(entry.get("icon", "alpha")), "Alpha"))
 			continue
 		if not bool(entry.get("discovered", false)):
 			continue
@@ -517,6 +529,12 @@ func _draw_map(canvas: Control) -> void:
 			_draw_icon(canvas, map_rect, entry, 1.0)
 		elif bool(entry.get("silhouette", false)):
 			_draw_icon(canvas, map_rect, {"icon": "question", "position": entry.get("position")}, 0.6)
+
+	# CL-W1. Alpha pin names, in their own pass AFTER every icon: a label drawn
+	# inside the loop above would be painted over by whatever icon the loop
+	# reached next. D-0904B-1's pin has to say WHICH alpha, or it is a red mark
+	# the player has to walk to in order to learn anything.
+	_draw_alpha_pin_labels(canvas, map_rect, map_state)
 
 	# Region name labels — only for regions the player has actually entered
 	# (map_state.gd's own regions() doc: "a renderer needs the geometry for
@@ -736,6 +754,48 @@ func _map_marker_exclusion_rects(canvas: Control, map_rect: Rect2, map_state: Re
 	return occupied
 
 
+## Draws "Alpha Galecrest" / "Elder Mosshell" beside each pin.
+##
+## Placed to the right of its marker by default and flipped to the left when
+## that would run the text off the canvas — the corridor's whole-Meadows fit is
+## a narrow centre strip with wide gutters, so a right-hand label is usually
+## reading into empty gutter, which is exactly where there is room for it. No
+## collision solve between labels: the sixteen authored clusters are spread over
+## 7 km of corridor and only the ones within 300 m of somewhere the player has
+## been are pinned at all, so two pin labels landing on each other is not a case
+## that exists in the authored world. If it ever does, this is where to fix it.
+func _draw_alpha_pin_labels(canvas: Control, map_rect: Rect2, map_state: RefCounted) -> void:
+	if _region_font == null:
+		_region_font = load(UITokens.FONT_PATH)
+	if _region_font == null:
+		return
+	for entry: Dictionary in (map_state.call("landmarks") as Array):
+		if not bool(entry.get("dynamic", false)):
+			continue
+		if not str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX):
+			continue
+		var text := str(entry.get("display_name", ""))
+		if text.is_empty():
+			continue
+		var point := _world_to_canvas(entry.get("position", Vector2.ZERO), map_rect)
+		var half := _marker_size(entry) * 0.5
+		var viewport := Rect2(Vector2.ZERO, canvas.size).grow(-half)
+		if not viewport.has_point(point):
+			continue
+		var width := _region_font.get_string_size(
+			text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, CANVAS_LABEL_FONT_SIZE).x
+		var baseline := point + Vector2(half + 8.0, CANVAS_LABEL_FONT_SIZE * 0.36)
+		var alignment := HORIZONTAL_ALIGNMENT_LEFT
+		if baseline.x + width > canvas.size.x - 8.0:
+			baseline.x = point.x - half - 8.0 - width
+			alignment = HORIZONTAL_ALIGNMENT_LEFT
+			if baseline.x < 8.0:
+				continue
+		_draw_string_legible(
+			canvas, _region_font, baseline, text, alignment, width + 4.0,
+			CANVAS_LABEL_FONT_SIZE, UITokens.DANGER)
+
+
 func _marker_size(entry: Dictionary) -> float:
 	var category := str(entry.get("category", ""))
 	if category == "major":
@@ -771,7 +831,17 @@ func _draw_icon(canvas: Control, map_rect: Rect2, entry: Dictionary, alpha: floa
 	# landmark now gets one, sized down for minor/generic categories so a
 	# major destination still reads as visually heavier on the map.
 	var plate_scale := 0.58 if category == "major" else 0.48
-	canvas.draw_circle(point, marker_size * plate_scale, Color(0.02, 0.03, 0.04, 0.72))
+	var plate := Color(0.02, 0.03, 0.04, 0.72)
+	if str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX):
+		# CL-W1. The one coloured plate on this map. Every place icon shares
+		# the neutral dark disc above precisely so that no place shouts louder
+		# than another; an alpha pin is not a place, it is a threat the owner
+		# asked to be advertised, and it is the only mark here that is meant to
+		# pull the eye. Drawn a shade darker than `UITokens.DANGER` itself so
+		# the white glyph on top keeps its contrast.
+		plate = Color(UITokens.DANGER.darkened(0.35), 0.94)
+		canvas.draw_circle(point, marker_size * plate_scale + 2.0, Color(0.02, 0.03, 0.04, 0.85))
+	canvas.draw_circle(point, marker_size * plate_scale, plate)
 	canvas.draw_texture_rect(tex, Rect2(point - size * 0.5, size), false, Color(1, 1, 1, alpha))
 
 

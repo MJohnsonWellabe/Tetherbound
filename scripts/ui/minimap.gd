@@ -49,6 +49,7 @@ extends Control
 ## step into fogged ground.
 
 const WORLD_EXTENT := preload("res://scripts/world/world_extent.gd")
+const MAP_STATE := preload("res://autoload/map_state.gd")
 const MOVE_EPSILON := 0.05
 const YAW_EPSILON := 0.01
 const CREATURE_SHOW_DISTANCE := 15.0
@@ -59,6 +60,11 @@ const CORNER_STEPS := 10
 const OBJECTIVE_LABEL_PUSH := 10.0 ## px the distance label sits past the clamped diamond, toward the rim.
 const PLAYER_MARKER_CLEAR_RADIUS := 34.0 # bumped alongside the player marker's own enlargement below
 const MARKER_SEPARATION := 22.0
+## CL-W1. `map_state.gd` owns the id shape; this is a read of that const, not a
+## second spelling of it — a marker id prefix that drifted between the database
+## and the two things that draw it would silently turn every alpha pin back into
+## a camp dot with no error anywhere.
+const ALPHA_MARKER_PREFIX := MAP_STATE.ALPHA_MARKER_PREFIX
 
 ## OW3: was 0.95 — 5% show-through, which stacked with this widget's already
 ## tight ~90m span meant unexplored ground at the rim read as dim terrain
@@ -364,6 +370,17 @@ func _draw_landmarks(centre: Vector2, scale_px_per_m: float, objective_position:
 		var is_dynamic: bool = bool(entry.get("dynamic", false))
 
 		if is_dynamic:
+			if str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX):
+				# CL-W1. An alpha pin is not a camp and must not read as one:
+				# the whole point of D-0904B-1 is that the player looks at the
+				# map and sees a THREAT worth going to. Drawn as a red chevron
+				# rather than a dot so it separates from the cream camp dots,
+				# the white landmark circles and the gold objective diamond on
+				# shape as well as on colour -- the minimap is small, and
+				# colour alone is the one channel that does not survive being
+				# small.
+				_draw_alpha_pin(local)
+				continue
 			# Camps and the like — muted cream, always discovered by
 			# definition (map_state.gd's own contract: a dynamic marker would
 			# not exist yet if it were not).
@@ -373,6 +390,32 @@ func _draw_landmarks(centre: Vector2, scale_px_per_m: float, objective_position:
 		else:
 			# silhouette, not yet discovered: a "?" placeholder, spec §6A.4.
 			_draw_upright_text(local, "?", UITokens.FONT_LABEL, UITokens.TEXT_MUTED)
+
+
+## The same chevron-over-pip mark `assets/ui/icons/map/alpha.png` carries on
+## the full map, drawn with `draw_colored_polygon` here because the minimap is a
+## rotating canvas of primitives and does not load icon textures at all. The
+## proportions are the icon's, scaled down: at minimap size the chevron alone is
+## the readable part, and the pip is what stops a lone chevron reading as the
+## objective diamond's top half.
+func _draw_alpha_pin(local: Vector2) -> void:
+	var r := 8.0
+	var arm := r * 0.42
+	var points := PackedVector2Array([
+		local + Vector2(0.0, -r),
+		local + Vector2(r, -r * 0.10),
+		local + Vector2(r - arm, r * 0.40),
+		local + Vector2(0.0, -r + arm * 1.05),
+		local + Vector2(-r + arm, r * 0.40),
+		local + Vector2(-r, -r * 0.10),
+	])
+	# Outline first, then the fill on top: the pin sits on baked terrain whose
+	# colour is not ours to choose, and every other marker on this canvas gets
+	# the same treatment for the same reason.
+	draw_polyline(points + PackedVector2Array([points[0]]), UITokens.OUTLINE, 3.0, true)
+	draw_colored_polygon(points, UITokens.DANGER)
+	draw_circle(local + Vector2(0.0, r * 0.72), r * 0.24, UITokens.OUTLINE)
+	draw_circle(local + Vector2(0.0, r * 0.72), r * 0.17, UITokens.DANGER)
 
 
 func _draw_landmark_icon(local: Vector2, category: String) -> void:

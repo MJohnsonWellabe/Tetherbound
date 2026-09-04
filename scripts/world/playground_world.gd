@@ -51,6 +51,7 @@ const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 const SOUTH_BRIDGE := preload("res://scripts/world/south_bridge.gd")
 const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
 const TETHER_RELAY := preload("res://scripts/world/tether_relay.gd")
+const ALPHA_PINS := preload("res://scripts/world/alpha_pins.gd")
 const MILL_CROSSING := preload("res://scripts/world/mill_crossing.gd")
 const RIVER := preload("res://scripts/world/river.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
@@ -595,6 +596,11 @@ func _ready() -> void:
 	BOOT_LOG.phase("playground: water built (pond, stream, reeds — counts above)")
 	_build_settlement()
 	BOOT_LOG.phase("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")
+	# CL-W1. The whole hook: `alpha_pins.gd` self-ticks and shares no state with
+	# anything here — see its own header for why it is not part of the encounter
+	# director. Added after the player is placed so its `../Player` lookup finds
+	# a body already standing on the terrain.
+	add_child(ALPHA_PINS.new())
 	_capture_mouse_if_free()
 	get_window().focus_entered.connect(_capture_mouse_if_free)
 	_report_for_export_check()
