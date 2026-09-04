@@ -237,6 +237,13 @@ func _trainer_prompt_label() -> String:
 ## `_refuse_combat_input()` already exists to prevent for the other three.
 func _a_trainer_fight_cannot_be_walked_out_of() -> void:
 	for action: String in ["combat_run", "creature_recall"]:
+		# Blank the toast first. `_throw_pressed()` reads `interact` as well as
+		# `combat_throw`, so every interact press of the challenge just above
+		# left "Can't throw an orb outside a fight." sitting on this label --
+		# `playground_hud.gd` hides the strip on a timer but never clears its
+		# text. Without this the check reads a stale sentence and reports a
+		# silent refusal that did in fact speak.
+		_clear_the_hud_message()
 		await _press(action)
 		for i in 12:
 			await physics_frame
@@ -251,6 +258,19 @@ func _a_trainer_fight_cannot_be_walked_out_of() -> void:
 			_fail("'%s' was refused silently; the HUD says '%s'" % [action, said])
 			return
 	print("disengage refused on both bindings: '%s'" % COMBAT.FLEE_REFUSED_MESSAGE)
+
+
+## Empty the toast label AND the one-shot queue behind it, so the next thing
+## the label says is the next thing something actually pushed.
+func _clear_the_hud_message() -> void:
+	var game := root.get_node_or_null(^"/root/Game")
+	if game != null:
+		game.call("take_pending_world_message")
+	if _hud == null:
+		return
+	var label: Label = _hud.get("_hotbar_message") as Label
+	if label != null:
+		label.text = ""
 
 
 ## The text the world-message toast most recently showed, read off the HUD's
