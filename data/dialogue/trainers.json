@@ -4,12 +4,21 @@
   "_comment_relay": "SE25. Team Tether at the relay station. The register is OFFICIOUS, not cartoonish: these are people doing a job they believe in, who think the barriers are necessary and that the player is interfering with important work. Nobody gloats, nobody monologues, and nobody threatens. They also never explain what the relay is FOR -- spec 32's ladder puts the explanation two rungs above this one, and a grunt who knew would be a grunt who tells you.",
   "_comment_short": "Two or three lines. A trainer who monologues is a trainer the player skips, and the fight is the content.",
   "_comment_no_usable_creature": "T2-GATEF-RUN4 / dark-features T1. ONE generic id, not a per-trainer pair -- every trainer in the table (27 of them, the Warden included) opens THIS conversation instead of their own 'defeated' line when scripts/combat/encounter_director.gd::no_usable_ally() is true and they are not actually beaten, so a player whose only creature just fainted gets told the truth (go heal it) rather than a false 'you already won'. Generic because the fix has to reach every trainer without touching ~20 trainer.json entries one at a time.",
+  "_comment_no_ally_deployed": "G3-OPENING-FIX-0904 (2.10), GATE2-EVIDENCE-0903's own finding. `trainer_no_usable_creature` above used to be the ONLY line for every one of `no_usable_ally()`'s causes, and it is only true for one of them: a fainted creature. The other is a healthy party with nothing currently standing beside the trainer at all -- a fresh save load never auto-deploys anyone, or the player put their creature away -- and telling that player to find a bed points at a problem they do not have. `encounter_director.gd::usable_ally_blocker()` names which cause applies; `trainer_npc.gd` picks this conversation for 'undeployed' and the one above for 'fainted'. Same generic-reach reasoning as the comment above: one id for every trainer.",
   "conversations": {
     "trainer_no_usable_creature": {
       "speaker": "Trainer",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "Your creature can't fight like this. Get it back on its feet first — a bed will do it, or something to revive it on the spot.",
+        "Come find me again once you've got something to send out."
+      ]
+    },
+    "trainer_no_ally_deployed": {
+      "speaker": "Trainer",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You haven't got anything out. Call one of your team out first.",
         "Come find me again once you've got something to send out."
       ]
     },
@@ -177,7 +186,7 @@
       "lines": [
         "You read the gusts. Most don't bother.",
         "The Ridge Sigil, then. I'd sooner it went to someone who watches the sky.",
-        "Oreth's down in the draw, if the river didn't have him first. He's the patient one — don't let him tire you into a mistake."
+        "That's the last of us, if you'd already stood down Halder and Oreth. The Hall road answers to three now — go see."
       ]
     },
     "captain_riverwatch_challenge": {
@@ -195,7 +204,7 @@
       "lines": [
         "A plan, then. Good.",
         "One more sigil. The Hall approach reads all three or none — no bargaining with a lock.",
-        "Go on up. I hope you're right about what's in there."
+        "Halder holds the high pasture, west and up from here, if you haven't met him yet. Vess is past him, on the ridge. Two more, then that lock opens."
       ]
     },
     "patrol_ridgeline_challenge": {

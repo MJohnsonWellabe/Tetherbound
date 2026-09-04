@@ -139,6 +139,94 @@ distant view. The fixable half (1, 2 mid-layer, 3 clustering, 5, 6, 7, 8, 9) is 
 `docs/ROADMAP.md` Gates 2–3. The half that needs art not in the build (true canopy
 structure, a unified creature/character material language) is deferred by hard rule.
 
+## 4a. GATE2-EVIDENCE-0903 and its residual (2026-09-04, G3-BAND1-FINISH-0904)
+
+`ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md` judged sixteen stands taken from a REAL
+played route's own 2 Hz trace (the gameplay camera, HUD on, where the player actually
+stood) rather than the posed survey above — a stronger instrument that found things §4's
+posed set could not, most importantly that the South Bridge itself had never been framed
+by any prior judge. Both bar questions answered **no**. Gate 2's own tasks (2.2–2.7) could
+not move that verdict: every residual gap it named was props, fence, signposts, water and
+terrain, none of it in vegetation/creature/night scope (see that report's §6). This
+section is the residual band's own record, not a replacement for §4.
+
+**Fixed this pass**, each reachable through props/scripts/materials, no new mesh:
+
+- **The South Bridge read as unbuilt** — "a bare plank frame, half off-corner, no gate, no
+  banner, no guard, for the chapter's first physical gate and the thing Team Tether is
+  supposed to be holding" (JUDGE.md §3). `scripts/world/south_bridge.gd` now builds a
+  checkpoint gatehouse over the existing gate leaf — two posts, a lintel, and two hanging
+  oxblood banners carrying the same compass sigil `road_gate.gd`'s own Sigil Gate already
+  established (`tether_sigil.gd`), at this bridge's own human scale rather than the Sigil
+  Gate's monumental one. Reuses an existing mechanism (`road_gate.gd::
+  _build_faction_gatehouse`/`_hang_sigil_banner`) rather than inventing a second one.
+- **The oxblood reservation was broken** — "the reddest objects in this world are the
+  village roofs ... while the one Team Tether grunt wears unrelieved black" (JUDGE.md §2,
+  §8.1 item 3). Four of six settlement roof prefabs (`workshop`, `cottage_a`, `cottage_b`,
+  `farmhouse_shell`, plus the mill) had NO roof retint at all and exported at the kit's raw,
+  more saturated default; only `inn` had been tuned. All five now share `inn`'s own already-
+  approved muted terracotta (`#8a5a3a`, `data/config/building_prefabs.json`), clear of both
+  oxblood tones in the game (`#6b2a20`, `#7a2430`). The grunt's own colour and the friendly
+  HUD icon half of this finding are outside this lane's file ownership (trainers.json /
+  `scripts/ui/**`) and are unaddressed here.
+- **Orphan fence segments at the bridge approach** (2.13). `bridge_approach_fence`
+  (`data/config/bands/band1_lower_meadows/props.json`) was four ~2m panels spaced ~20m
+  apart — four isolated posts, not a fence line. Five interpolated panels close the two
+  INTACT runs to ~6-7m spacing; the run leading into the already-toppled panel keeps the
+  widest gap, on purpose, since that is the stretch meant to read as rotted away.
+- **Signposts as bare posts** (2.13). `scripts/world/signpost.gd` now plants a small,
+  jittered ring of stone blocks around every post's own foot (deterministic per site) —
+  every signpost in the game, not just Band 1's, since this file is shared.
+- **No roster decision on the direct Band 1 route** (2.12; Gate 2.5's own acceptance).
+  Both of Band 1's authored "temptation" creatures (the Meadowhart herd at the bridge
+  approach, the elder Mosshell at the Pond) were sited to require a deliberate detour off
+  the corridor spine — by design, per their own `_why_d1` entries. The played
+  GATE2-EVIDENCE-0903 route, walked straight with no detour, met neither.
+  `data/config/bands/band1_lower_meadows/spawns.json` order 1005 (the Meadowhart pair) is
+  moved along the same perpendicular from the same route point, 40m → 12m off centreline,
+  so part of its scatter draw now lands on the walkable line itself. Order 1900 (the elder
+  Mosshell) is untouched — it stays the region's deliberately curiosity-gated temptation.
+
+**Named but not fixable from this lane's files:**
+
+- **Tree scale and trunk proportion** — "trees measuring only ~2.3× the 1.80m trainer on
+  redwood-thick trunks" (JUDGE.md §8, §8.3). `data/config/vegetation.json` `layers.trees`
+  (`CommonTree_1/2/3`, `scale_min`/`scale_max` 0.5/1.45) is the only place this is
+  authored, and this project's freshness-guarded global bake means it cannot be touched by
+  this lane (see CLAUDE.md and this report's own rules). **Proposed, not applied**: raise
+  `scale_min`/`scale_max` toward roughly 2.2/4.0 so the range's own top clears 12–18m
+  against the 1.80m trainer, verified against `tools/measure_models.gd`'s real native
+  mesh height rather than guessed — the trunk-diameter complaint is very likely a symptom
+  of being undersized at this scale rather than a separate mesh defect (a correctly-scaled
+  tree from the same mesh should not read as a redwood stump), but that needs a render to
+  confirm once the scale itself moves. Per CLAUDE.md, grow the trees; never shrink the
+  trainer.
+- **Scatter reading as a rule, not a layout** — "twelve identical evenly-spaced trees...
+  a one-mesh tree wall with no mouth" is `vegetation.json`'s own `corridor_bands`/
+  clearings authoring, equally off-limits to this lane.
+- **The mill's "add sails" note is a mis-statement of the actual gap.** `building_prefabs.
+  json`'s `mill` prefab is a WATER mill with a real turning wheel (fence pickets as
+  paddles, an axle, seven paddles at r=1.75m) — a deliberate choice (`village.json`'s own
+  note: "The TowerWindmill is gone, not replaced... a mismatched second-family landmark is
+  exactly the split-the-difference failure D24 closed"). Adding sails would re-open that
+  closed decision, not fix a gap. The real, still-open question is whether the existing
+  wheel reads clearly enough at the distances the route actually sees it from; that is a
+  legibility check this pass did not have evidence to act on (no G2C stand frames the
+  mill), not a sails request.
+- **Water shading** — the pond/stream/river material (`data/config/water.json`,
+  `scripts/world/water.gd`) already carries eight blind-judged, CONVERGED tuning rounds
+  (`_comment_round1`–`_comment_rounds5_8` in that file) and an explicitly recorded ceiling:
+  no reflections, by design (bible §15 rules out the expensive tier; the Compatibility
+  renderer has no SSR). The GATE2-EVIDENCE-0903 complaint ("appears once, as a small flat
+  blue shape... no shore transition and no reflection") is the pond seen once, at extreme
+  distance, in the background of one frame — a framing/distance artefact of that one stand,
+  not a shading defect this file's own converged values should be re-opened for.
+
+**Blind judge, same stands, after this pass:** see
+`ralph/reports/G3-BAND1-FINISH-0904/REPORT.md` §8 for the full verdict; summarised here so
+this gap list stays the living record. [placeholder — filled in once the render/judge pass
+in that report lands]
+
 ## 5. Owner decisions that bound visual work
 
 - Creatures should stand taller than the trainer; fix relative scale by growing the

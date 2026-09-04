@@ -71,16 +71,16 @@ function Save-Phases {
 }
 
 function Run-Phase([string]$Name, [scriptblock]$Body, [bool]$Slow = $false) {
-  if ($Only -and (($Only -split ",") -notcontains $Name)) { Log "phase $Name: skipped (-Only $Only)"; return }
-  if ($Quick -and $Slow) { Log "phase $Name: skipped (-Quick)"; return }
-  if ($script:Phases.ContainsKey($Name) -and $script:Phases[$Name].status -eq "ok" -and $Resume) { Log "phase $Name: already ok in $Resume, skipped"; return }
+  if ($Only -and (($Only -split ",") -notcontains $Name)) { Log "phase ${Name}: skipped (-Only $Only)"; return }
+  if ($Quick -and $Slow) { Log "phase ${Name}: skipped (-Quick)"; return }
+  if ($script:Phases.ContainsKey($Name) -and $script:Phases[$Name].status -eq "ok" -and $Resume) { Log "phase ${Name}: already ok in $Resume, skipped"; return }
   Log "=== phase $Name ==="
   $t0 = Get-Date
   $status = "ok"; $err = ""
   try { & $Body } catch { $status = "failed"; $err = "$($_.Exception.Message)"; Log "phase $Name FAILED: $err" }
   $script:Phases[$Name] = @{ status = $status; error = $err; started = $t0.ToString("o"); seconds = [int]((Get-Date) - $t0).TotalSeconds }
   Save-Phases
-  Log "=== phase $Name: $status ($([int]((Get-Date) - $t0).TotalSeconds) s) ==="
+  Log "=== phase ${Name}: $status ($([int]((Get-Date) - $t0).TotalSeconds) s) ==="
 }
 
 function Quote-Arg([string]$a) { if ($a -match '[\s"]') { return '"' + ($a -replace '"', '\"') + '"' } else { return $a } }
@@ -404,9 +404,9 @@ function Phase-Export {
 }
 
 function Process-Video([string]$Avi, [string]$Seg, [string]$SegDir) {
-  if (-not (Test-Path $Avi)) { Log "$Seg: the movie writer produced no file at $Avi"; return }
+  if (-not (Test-Path $Avi)) { Log "${Seg}: the movie writer produced no file at $Avi"; return }
   $size = [int]((Get-Item $Avi).Length / 1MB)
-  Log "$Seg: video $size MB"
+  Log "${Seg}: video $size MB"
   if (-not $script:Ffmpeg) { return }
   $mp4 = [IO.Path]::ChangeExtension($Avi, ".mp4")
   $code = Invoke-Proc $script:Ffmpeg @("-y", "-loglevel", "error", "-i", $Avi, "-c:v", "libx264", "-preset", "veryfast", "-crf", "26", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "96k", $mp4) (Join-Path $script:Evidence "logs\ffmpeg-$Seg.log") 14400 $RunLocal
@@ -417,15 +417,15 @@ function Process-Video([string]$Avi, [string]$Seg, [string]$SegDir) {
     # One frame per ten seconds, kept locally, for anyone walking a defect back to its moment.
     $strip = Join-Path $RunLocal "strips\$Seg"; New-Item -ItemType Directory -Force -Path $strip | Out-Null
     Invoke-Proc $script:Ffmpeg @("-y", "-loglevel", "error", "-i", $mp4, "-vf", "fps=1/10,scale=640:-1", (Join-Path $strip "%05d.png")) (Join-Path $script:Evidence "logs\ffmpeg-strip-$Seg.log") 3600 $RunLocal | Out-Null
-  } else { Log "$Seg: transcode failed (exit $code); keeping the .avi" }
+  } else { Log "${Seg}: transcode failed (exit $code); keeping the .avi" }
 }
 
 function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie) {
   $out = Join-Path $script:GateRun $Seg
-  if (Test-Path (Join-Path $out "INVENTORY.json")) { Log "$Seg: already has INVENTORY.json, skipped"; return }
+  if (Test-Path (Join-Path $out "INVENTORY.json")) { Log "${Seg}: already has INVENTORY.json, skipped"; return }
   if (Test-Path $out) {
     $n = 1; while (Test-Path "$out-superseded-$n") { $n += 1 }
-    Move-Item $out "$out-superseded-$n"; Log "$Seg: previous attempt renamed to -superseded-$n"
+    Move-Item $out "$out-superseded-$n"; Log "${Seg}: previous attempt renamed to -superseded-$n"
   }
   New-Item -ItemType Directory -Force -Path $out | Out-Null
   $cmd = @("--script", "tools/gate_f/operator_harness.gd", "--",
@@ -444,7 +444,7 @@ function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie) {
   $wall = [int]((Get-Date) - $t0).TotalSeconds
   Add-Content -Path (Join-Path $script:GateRun "CHAIN_LOG.tsv") -Value ("{0}`t{1}`t{2}`t{3}" -f $Seg, $t0.ToUniversalTime().ToString("o"), $wall, $code)
   if ($Movie) { Process-Video $avi $Seg $out }
-  Log "$Seg: exit $code after $wall s"
+  Log "${Seg}: exit $code after $wall s"
 }
 
 function Phase-Chain {

@@ -7,8 +7,8 @@
   "_comment_long_walks": "The three legs here are the chapter's first long ones (village->pond ~600 m, pond->bridge ~900 m). budget_frames is sized from the distance at the walking rate the self-check measured on this box; held_budget_frames is raised so a wild encounter en route pauses the walk instead of aborting it, and the FAIL message names the input_context that held it if it never comes back.",
   "evidence_lane": "logic",
   "capture_lane": "S05C",
-  "_comment_evidence_lane": "\u00a7H/\u00a7G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md \u00a7H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the \u00a7G ids its steps would have taken are DELEGATED to S05C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S05C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
-  "_comment_record_hz_split": "AMENDED for the \u00a7H/\u00a7G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because \u00a7H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- \u00a7H's prescribed frames move to S05C, which may run BOUNDED record windows around a named state.",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S05C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S05C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the §H/§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because §H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- §H's prescribed frames move to S05C, which may run BOUNDED record windows around a named state.",
   "steps": [
     {
       "id": "S05-01",
@@ -126,6 +126,270 @@
         "id": "head_to_south_bridge"
       },
       "expected": "Section E.5 objective 16/27 `head_to_south_bridge`, 'Cross the South Bridge into the Lower Meadows.'"
+    },
+    {
+      "id": "S05-11r",
+      "action": "note",
+      "title": "pick the team up off the tournament floor",
+      "args": {
+        "text": "GATE2-EVIDENCE-0903, owner instruction 2026-09-03 ('give revives after the tournament'). The S04 exit save this segment loads carries THREE fainted creatures out of five (ripplet L7 0/143, bramblebun L6 0/130, bramblebun L6 0/130) and ten unused Revives in the satchel; before this block S05 walked that team into Band 1 with two creatures standing. Played through the production Satchel menu by item identity, the same sequence S03.json's own nine recovery blocks use."
+      },
+      "expected": "a note event carries the owner instruction and the state it answers into events.jsonl"
+    },
+    {
+      "id": "S05-11r1a",
+      "action": "open_menu",
+      "title": "open the Satchel to pick the team up (1 of 3)",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "the pause shell on the Satchel tab"
+    },
+    {
+      "id": "S05-11r1b",
+      "action": "focus_item",
+      "title": "focus the Revive draught",
+      "args": {
+        "item": "revive",
+        "max_moves": 60
+      },
+      "expected": "the cursor lands on the Revive cell, found by item identity rather than by a slot number"
+    },
+    {
+      "id": "S05-11r1c",
+      "action": "press",
+      "title": "use it on whoever is down",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use() opens the target picker while any party member is fainted"
+    },
+    {
+      "id": "S05-11r1d",
+      "action": "press",
+      "title": "confirm the picker's first eligible entrant",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the picker auto-focuses the first eligible (fainted) row; this confirms it and the creature comes back at half strength (items.json `revive: 0.5`)"
+    },
+    {
+      "id": "S05-11r1e",
+      "action": "press",
+      "title": "put back an accidental pick-up, or close the shell",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "S03's own recovery shape: if the press above picked the stack up this puts it back, otherwise it reads as Close"
+    },
+    {
+      "id": "S05-11r1f",
+      "action": "press",
+      "title": "close the shell for real",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the world owns input again"
+    },
+    {
+      "id": "S05-11r1g",
+      "action": "wait_until",
+      "title": "wait for the world to own input",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "no menu is left holding input before the next round"
+    },
+    {
+      "id": "S05-11r2a",
+      "action": "open_menu",
+      "title": "open the Satchel to pick the team up (2 of 3)",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "the pause shell on the Satchel tab"
+    },
+    {
+      "id": "S05-11r2b",
+      "action": "focus_item",
+      "title": "focus the Revive draught",
+      "args": {
+        "item": "revive",
+        "max_moves": 60
+      },
+      "expected": "the cursor lands on the Revive cell, found by item identity rather than by a slot number"
+    },
+    {
+      "id": "S05-11r2c",
+      "action": "press",
+      "title": "use it on whoever is down",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use() opens the target picker while any party member is fainted"
+    },
+    {
+      "id": "S05-11r2d",
+      "action": "press",
+      "title": "confirm the picker's first eligible entrant",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the picker auto-focuses the first eligible (fainted) row; this confirms it and the creature comes back at half strength (items.json `revive: 0.5`)"
+    },
+    {
+      "id": "S05-11r2e",
+      "action": "press",
+      "title": "put back an accidental pick-up, or close the shell",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "S03's own recovery shape: if the press above picked the stack up this puts it back, otherwise it reads as Close"
+    },
+    {
+      "id": "S05-11r2f",
+      "action": "press",
+      "title": "close the shell for real",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the world owns input again"
+    },
+    {
+      "id": "S05-11r2g",
+      "action": "wait_until",
+      "title": "wait for the world to own input",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "no menu is left holding input before the next round"
+    },
+    {
+      "id": "S05-11r3a",
+      "action": "open_menu",
+      "title": "open the Satchel to pick the team up (3 of 3)",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "the pause shell on the Satchel tab"
+    },
+    {
+      "id": "S05-11r3b",
+      "action": "focus_item",
+      "title": "focus the Revive draught",
+      "args": {
+        "item": "revive",
+        "max_moves": 60
+      },
+      "expected": "the cursor lands on the Revive cell, found by item identity rather than by a slot number"
+    },
+    {
+      "id": "S05-11r3c",
+      "action": "press",
+      "title": "use it on whoever is down",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use() opens the target picker while any party member is fainted"
+    },
+    {
+      "id": "S05-11r3d",
+      "action": "press",
+      "title": "confirm the picker's first eligible entrant",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the picker auto-focuses the first eligible (fainted) row; this confirms it and the creature comes back at half strength (items.json `revive: 0.5`)"
+    },
+    {
+      "id": "S05-11r3e",
+      "action": "press",
+      "title": "put back an accidental pick-up, or close the shell",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "S03's own recovery shape: if the press above picked the stack up this puts it back, otherwise it reads as Close"
+    },
+    {
+      "id": "S05-11r3f",
+      "action": "press",
+      "title": "close the shell for real",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the world owns input again"
+    },
+    {
+      "id": "S05-11r3g",
+      "action": "wait_until",
+      "title": "wait for the world to own input",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "no menu is left holding input before the next round"
+    },
+    {
+      "id": "S05-11rx",
+      "action": "assert",
+      "title": "three Revives were actually spent",
+      "args": {
+        "check": "inventory_count",
+        "item": "revive",
+        "equals": 7
+      },
+      "expected": "the satchel held ten Revives on load and holds seven now -- read live off the inventory snapshot, so a press sequence that LOOKED right but spent nothing fails here rather than being discovered at the South Bridge",
+      "observation": "GATE2-EVIDENCE-0903, owner instruction 2026-09-03 ('give revives after the tournament'). The S04 exit save this segment loads carries THREE fainted creatures out of five (ripplet L7 0/143, bramblebun L6 0/130, bramblebun L6 0/130) and ten unused Revives in the satchel; before this block S05 walked that team into Band 1 with two creatures standing. Played through the production Satchel menu by item identity, the same sequence S03.json's own nine recovery blocks use."
+    },
+    {
+      "id": "S05-11ry",
+      "action": "assert",
+      "title": "the world owns input before the walk south",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no shell is left open by the recovery block"
+    },
+    {
+      "id": "S05-11rz",
+      "action": "press",
+      "title": "send the revived creature back out",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "the active creature is deployed again now that it is conscious; `can_challenge()` needs a live ally body and the deploy at S05-09a could not make one from a fainted creature",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). The other half of the owner's 'give revives after the tournament' instruction, and the defect the revives alone uncovered. S05-09a deploys the active creature immediately after the load -- BEFORE this recovery block -- and at that moment the active creature is Moss, brought out of the tournament final on 0/142.8 HP. A fainted creature cannot be sent out, so no ally body was ever created; reviving Moss a few steps later restores the creature but nothing re-deploys it. `encounter_director.gd::can_challenge()` requires `_ally_body != null and is_instance_valid(_ally_body)`, so with a fully healthy five-creature party (nobody fainted, 38-113 HP each) BOTH of this segment's fights refused to start: Old Bram at (195,905) and the South Bridge grunt at (14,1314) each answered with `no_usable_ally()`'s line -- 'Your creature can't fight like this... a bed will do it, or something to eat' / 'Come find me again once you've got something to send out.' -- `combat_running=false`, and `south_bridge_open` was never set, so the chapter's own physical gate could not be earned. Measured on run S05-superseded-4 (98P/7F): every downstream failure in it descends from this one press. Sending the creature back out is what a player does after reviving it."
+    },
+    {
+      "id": "S05-11rz2",
+      "action": "wait",
+      "title": "let the creature finish coming out",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the ally body exists and is settled before the walk south"
     },
     {
       "id": "S05-12",
@@ -436,6 +700,23 @@
         "text": "Section B names an 'optional detour' here and does not say which. Section L.4 names old_champion_bram (195,905) as the journey's representative optional trainer and data/config/map_landmarks.json puts the Trail Camp (348,919.5) on the same corridor bend -- 'a waypoint to be found by walking to it and remembered'. Both are walked below. RECORDED as the transcriber's reading of an under-specified span."
       },
       "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S05-32x",
+      "action": "move_to",
+      "title": "climb out of the pond basin the way out",
+      "args": {
+        "at": [
+          -280.0,
+          550.0
+        ],
+        "budget_frames": 7200,
+        "close_enough": 5.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "the pond sits in a 14 m basin; this is its north-east shoulder, where the prior successful S05 leg climbed out before turning for the detour",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). HARNESS DEFECT, proven not to be a world defect. Walked straight at Old Bram from the pond shore, `stick_navigator.gd` freezes the body at (-328.7, -14.2, 505.3) -- to a centimetre, on three independent runs -- for 543 play seconds with locomotion ENABLED the whole time ('0 held'), and on the first run never recovered at all (the leg spent its full 29,250-frame budget and reported 'stopped 658.8 m short'). tools/gate_f/probe_pond_stranding.gd stands the real player body at that exact coordinate and at eight points on a 6 m ring around it, injects a real full-deflection left stick, and measures 12-17 m of travel in five of eight bearings from every stand, body resting exactly on the authored heightfield (delta <= 0.09 m), on_floor, touching nothing but Terrain3D: 0 of 10 stands wedged. A person walks out of the Pond basin at once; the walker sits in it. This leg is therefore authored the way RIG-F6 authored the village-fence legs -- through the way out, in legs checked against a route that was actually walked. The waypoint below is where ralph/reports/gate-f-leg-s05's own successful run left the basin (-280.1, 550.1, y -2.65, a 12 m climb out of the shore at y -14.8), not a guess."
     },
     {
       "id": "S05-33",
@@ -1049,5 +1330,7 @@
       },
       "expected": "a note event carries this observation into events.jsonl"
     }
-  ]
+  ],
+  "_comment_gate2_evidence_0903": "GATE2-EVIDENCE-0903 (2026-09-03), owner instruction 'give revives after the tournament': a post-tournament recovery block (S05-11r*) runs three production-menu Revives on the three creatures the tournament's three rounds left fainted, before the segment walks south. See that block's own note step for the measured state it answers.",
+  "_comment_gate2_evidence_0903_pond": "GATE2-EVIDENCE-0903: S05-32x authors the climb out of the Pond basin before the Old Bram detour. See its observation for the 543-second walker freeze it answers and the probe that proves the world is passable there."
 }

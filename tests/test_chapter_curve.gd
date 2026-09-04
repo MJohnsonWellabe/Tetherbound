@@ -201,6 +201,54 @@ func test_the_meadows_offers_more_creatures_than_the_party_can_hold() -> void:
 		"the wild table fields %d distinct species against the curve's floor of %d" % [species.size(), floor_count])
 
 
+## G3-ECONOMY-0903. `expected_members` used to read 3 for band1_lower_meadows
+## even though that region's own `temptations` line says "the five fills up
+## here" -- and data/config/tournament.json's `entry.min_party_size` is a real,
+## wired gate on the tournament board, which stands inside this region, before
+## the South Bridge. A player cannot reach the board under that party size, so
+## the region's own expected count cannot honestly be lower than the gate the
+## region itself enforces. Tied to the live config rather than pinned as a
+## literal, so retuning the tournament's entry requirement retunes this check
+## instead of silently drifting out of sync with it again.
+func test_band1_expects_the_party_size_its_own_tournament_requires() -> void:
+	var file := FileAccess.open("res://data/config/tournament.json", FileAccess.READ)
+	assert_true(file != null, "data/config/tournament.json is missing")
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	assert_true(parsed is Dictionary, "data/config/tournament.json did not parse to a Dictionary")
+	var tournament: Dictionary = parsed as Dictionary
+	var min_party := int((tournament.get("entry", {}) as Dictionary).get("min_party_size", 0))
+	assert_true(min_party > 0, "tournament.json names no entry.min_party_size to check against")
+	for entry: Variant in _regions():
+		var region: Dictionary = entry as Dictionary
+		if str(region.get("id", "")) != "band1_lower_meadows":
+			continue
+		var expected := int(_team(region).get("expected_members", 0))
+		assert_true(expected >= min_party,
+			("band1_lower_meadows expects %d party members but its own tournament will not seat "
+			+ "fewer than %d -- a player following the critical path cannot be at the region's "
+			+ "own expected size and still be short of the tournament board")
+			% [expected, min_party])
+
+
+## `expected_members` is a claim about how full the five is at each point on
+## the route; once it reaches the five-creature cap it may not un-fill, and it
+## is not allowed to claim MORE than the hard cap CLAUDE.md sets (five, ever).
+func test_expected_members_never_exceeds_the_cap_or_goes_backwards() -> void:
+	var previous := 0
+	for entry: Variant in _regions():
+		var region: Dictionary = entry as Dictionary
+		var expected := int(_team(region).get("expected_members", 0))
+		assert_true(expected <= PARTY.MAX_CREATURES,
+			"region '%s' expects %d party members, above the %d-creature cap"
+			% [str(region.get("id", "")), expected, PARTY.MAX_CREATURES])
+		assert_true(expected >= previous,
+			"region '%s' expects %d party members, fewer than the region before it (%d) -- the five does not shrink on its own"
+			% [str(region.get("id", "")), expected, previous])
+		previous = expected
+
+
 # --- authored content sits inside its own region ------------------------------
 
 ## A `gate_fight` (village tournament rounds, the South Bridge gatekeeper) is

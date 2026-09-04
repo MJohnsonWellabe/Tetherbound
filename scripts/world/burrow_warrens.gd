@@ -2861,6 +2861,17 @@ func _spawn_population(director: Node) -> void:
 	# still "alive". Idempotent with `grant_clear_reward()`: whichever of the
 	# two sets the flag first, the other's `set_flag()` call is a no-op.
 	guardian_opts["once_id"] = _clear_flag()
+	# G-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md). Until this existed, the
+	# guardian's whole fight identity was decoration: `_dress_the_guardian()`
+	# below sets `move_charged = earth_fist` on the instance, but
+	# `combat_manager.gd` reads the charged slot through a PLAYER-side profile
+	# and `wild_creature.gd` loaded one global `enemy` block for every opponent
+	# in the game -- so this block's own `_comment_guardian_move` ("what makes
+	# the fight a different fight rather than a longer one") only ever reached a
+	# player who CAUGHT it. Absent from the config, behaviour is unchanged.
+	var guardian_combat: Variant = guardian.get("combat", {})
+	if guardian_combat is Dictionary and not (guardian_combat as Dictionary).is_empty():
+		guardian_opts["combat"] = guardian_combat
 	_guardian = director.call("spawn_wild", str(guardian.get("species", "")),
 		to_global(Vector3(g_centre.x + g_offset.x, _floor_y + 0.5, g_centre.z + g_offset.z)), guardian_opts)
 	if _guardian != null:

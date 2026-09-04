@@ -458,6 +458,37 @@ func _spawn_creatures() -> void:
 			if not elder.is_empty():
 				wild.set("body_scale", float(elder.get("body_scale", 1.0)))
 			wild.call("populate", species, _player)
+			# G-2. The alpha's block wins over the elder's when an entry
+			# authors both, matching `_merge_named_individual`'s own precedence
+			# for every other key the two blocks share.
+			#
+			# `has()` before the read, not `get("combat", {})`: the default a
+			# missing key returns IS a Dictionary, so a type check on it passes
+			# and the `and`'s right-hand side then indexes a key that was never
+			# there. That is a SCRIPT ERROR on every world build, non-fatal and
+			# therefore easy to ship -- it went red in CI (verify-gate-evidence-shard)
+			# and not in any local test, because the seeded population this walks
+			# is only built by a full world boot.
+			var named_combat: Dictionary = {}
+			var alpha_block: Dictionary = spawn.get("alpha", {}) if spawn.get("alpha", {}) is Dictionary else {}
+			# Both halves of this loop were written twice, by G-2 and by
+			# G3-OPENING-FIX, and the merge keeps each side's better half:
+			# the typed array from theirs (an untyped literal infers
+			# Array[Variant] and warns), and the `has()` guard from the G-2
+			# fix. `get("combat", {})` also works here BECAUSE the result is
+			# bound to a local first -- what broke in CI was reading
+			# `block["combat"]` on the right of an `and` whose left side had
+			# already passed on the default. Keeping the explicit guard so
+			# the shape that failed cannot come back by editing one line.
+			var named_blocks: Array[Dictionary] = [elder, alpha_block]
+			for block in named_blocks:
+				if not block.has("combat"):
+					continue
+				var block_combat: Variant = block["combat"]
+				if block_combat is Dictionary and not (block_combat as Dictionary).is_empty():
+					named_combat = (block_combat as Dictionary).duplicate(true)
+			if not named_combat.is_empty():
+				wild.set("combat_override", named_combat)
 			# Audit B3: "" (no tier) for every authored anchor, which
 			# `TIER_RIM_STRENGTH` resolves to `common`'s 0.0 -- only a rolled
 			# spawn (`spawn_tables.gd::plan_for`) ever sets a real tier here.
@@ -702,6 +733,15 @@ func _apply_plan(spawn: Dictionary, plan: Dictionary) -> Dictionary:
 ##                Omitted entirely for the ordinary seeded population, which
 ##                keeps fainting, respawning and being caught exactly as
 ##                before.
+##   combat     — G-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md). A per-encounter
+##                behaviour override merged over `combat.json`'s `enemy` block
+##                for THIS body only, so a named opponent can fight differently
+##                rather than merely bigger. Absent → today's behaviour byte for
+##                byte, which is the contract's own failure condition. Authored
+##                in the data that already describes the individual: a spawn
+##                entry's `alpha`/`elder` block, `burrow_warrens.json`'s
+##                `guardian`, or a trainer team member. See
+##                `wild_creature.gd::combat_override`.
 func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D:
 	if not SPECIES.has(species):
 		push_error("spawn_wild('%s') names a species that is not in species.json" % species)
@@ -717,6 +757,13 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 		parent = get_parent()
 	parent.add_child(wild)
 	wild.call("populate", species, _player)
+	# G-2: before anything can engage this body. `populate()` does not clear it
+	# and a fresh instance starts empty, so an override cannot leak between
+	# bodies -- the contract's "fails if the override reaches any body that did
+	# not author it".
+	var opt_combat: Variant = opts.get("combat", {})
+	if opt_combat is Dictionary and not (opt_combat as Dictionary).is_empty():
+		wild.set("combat_override", (opt_combat as Dictionary).duplicate(true))
 	var level := int(opts.get("level", 0))
 	if level > 0:
 		_set_fixed_level(wild, species, level)
@@ -2027,6 +2074,29 @@ func no_usable_ally() -> bool:
 	return _ally == null or _ally.fainted or _ally_body == null or not is_instance_valid(_ally_body)
 
 
+## G3-OPENING-FIX-0904 (2.10). Which of `no_usable_ally()`'s two real causes
+## applies, so the refusal line can name it instead of always guessing "hurt".
+##
+## `_ally.fainted` and `_ally_body == null` used to collapse into one line --
+## "get it back on its feet... a bed will do it" -- which is only true for the
+## first cause. The second is a healthy creature that simply is not out (a
+## fresh save load never auto-deploys anything, or the active creature was
+## put away): telling that player to go rest a creature that is not hurt
+## points at the wrong fix entirely. `_ally == null` reads as "undeployed"
+## too -- it is the same "nothing is out" state `dismiss_active_creature()`
+## and a fresh load both leave, just without even a stale reference around to
+## ask whether it is fainted.
+##
+## Returns "" when nothing is wrong, so a caller can treat an unexpected ""
+## as a bug rather than silently falling through to one of the two lines.
+func usable_ally_blocker() -> String:
+	if _ally != null and _ally.fainted:
+		return "fainted"
+	if _ally == null or _ally_body == null or not is_instance_valid(_ally_body):
+		return "undeployed"
+	return ""
+
+
 ## Take up a trainer's challenge. `trainer` is the body that issued it, used
 ## to decide where their creatures come from; null is legal.
 ##
@@ -2110,6 +2180,9 @@ func _send_out_next_creature() -> bool:
 	get_parent().add_child(body)
 	body.call("populate", str(creature.get("species_id")), _player)
 	body.set("instance", creature)
+	# G-2, before the fight can open. A trainer creature with no `combat` block
+	# in trainers.json carries an empty dictionary and fights exactly as it did.
+	body.set("combat_override", creature.get("combat_override"))
 	body.call("set_shiny", bool(creature.get("shiny")))
 	body.set("aggressive", false)
 	body.call("configure", MATH.config().get("wild", {}))

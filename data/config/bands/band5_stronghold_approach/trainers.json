@@ -57,6 +57,7 @@
       "facing_deg": 90.0,
       "challenge": "stronghold_courtyard_challenge",
       "defeated": "stronghold_courtyard_defeated",
+      "_why_combat": "G-2/G-3, GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903). No W- id assigns this row a profile, and none is added: left fully at DEFAULT, deliberately, on all three. §5.1's own escalation ladder already has Ness fielding CURRENT on all three of hers at the Sigil gate, one room before this one (this file's other rows) -- giving Solene a profile too would spend the 'first behavioural surprise inside the Hall' beat twice in three fights and blunt it when Hald actually needs it (his own `_why_combat` above says the same thing from his side of the ladder). Solene's own escalation lever is what her `_comment` above already claims: 'the step up from the patrol is a whole extra creature, not just levels' -- a numeric escalation, not a behavioural one, and DEFAULT is the correct way to author that honestly rather than inventing a one-off. Corr and Verrick hold the same DEFAULT floor earlier in the band for the identical reason (their own rows, other file). Should a later pass want the courtyard to carry its own texture, the mudsnout (the escaped special encounter's own kin, per this row's `_comment`) is the one member with a story reason to differ from its two neighbours.",
       "team": [
         {
           "species": "mosshell",
@@ -92,6 +93,7 @@
     {
       "order": 10,
       "id": "stronghold_elite",
+      "_why_mirrored_g3_land_0904": "G3-LAND-0904 mirror. G3-FINALE changed this row's identity in the live config (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md, the W- contracts) and did not mirror it, so tests/test_band_content.gd went red at integration. The rule this satisfies is the fixture's own: a deliberate identity move is made TWICE, live config and mirror, in the same commit. Mirrored here by the coordinator at integration rather than reverted, because the change is the point -- the Warden opened at level 16 against an elite fielding 18/19/19, so the chapter's last fight was softer at the front than the one gate the player cannot walk around.",
       "name": "Keeper Hald",
       "_comment": "SG38, spec Sec8 'Tether Chamber Approach: elite trainer'. Captain rank, three creatures of three different types, and the hardest fight before the Warden. His defeat flag is also the ONE door in the complex: data/config/stronghold.json's tether_approach->warden_arena passage is `gated_by_flag: defeated_stronghold_elite`, so he is not a fight the player can walk around. The recovery point sits behind him, which is the order Sec8 asks for -- elite, then rest, then the Warden.",
       "_comment_ow5d": "OW5D relocation, same offset as stronghold_patrol above.",
@@ -105,18 +107,37 @@
       "facing_deg": 90.0,
       "challenge": "stronghold_elite_challenge",
       "defeated": "stronghold_elite_defeated",
+      "_comment_w7": "GATE3_ENCOUNTER_CONTRACTS.md W-7. Shipped duskhush -> mosshell: his own `_comment` above claims 'three creatures of three different types' and the data did not deliver it (Air/Ground/Air). Now Air/Ground/Water, which is what the comment always said. No TM-tier quick here (W-3): Hald fights with species moves, same as the courtyard, so the step up into TM quicks lands only in the Warden's own arena.",
       "team": [
         {
           "species": "galecrest",
-          "level": 18
+          "level": 18,
+          "_why_combat": "G-2/G-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903), W-7. DIVER -- hit-and-run, short tell, comes again from a new side. Hald is 'the last check of the kit, not the HP' (W-8): a diver that keeps repositioning is what makes a player burn a potion mid-fight rather than just outlasting one long trade. Inert until G-2's `wild_creature.gd` merge lands.",
+          "combat": {
+            "telegraph": 0.4,
+            "lunge": 5.5,
+            "reposition_distance": 7.0,
+            "reposition_time": 1.6,
+            "attack_cooldown": 0.9,
+            "power": 7.2
+          }
         },
         {
           "species": "burrowback",
-          "level": 19
+          "level": 19,
+          "_why_combat": "G-2/G-3, W-7. Left at DEFAULT deliberately, the same floor-role Corr and Verrick hold earlier in the band (see their own `_why_combat` in this file's other rows) -- Hald's team is meant to read as DIVER and WALL either side of one ordinary fighter, not three novelties at once. `stronghold_courtyard`'s own team stays fully DEFAULT for the same reason: the first behavioural surprise inside the Hall is reserved for Hald, right before the Warden fields five, so it lands as a real step rather than diluting across every fight in the building."
         },
         {
-          "species": "duskhush",
-          "level": 19
+          "species": "mosshell",
+          "level": 19,
+          "_why_combat": "G-2/G-3, W-7. WALL -- slow, heavy, stands its ground, the punish window is long. Mosshell is the type answer this row exists to add (Water, per W-7's own point); giving it the profile that rewards a patient, well-spaced fight matches a shelled creature's own read and pairs with the DIVER above it to bracket the ordinary burrowback in the middle. Inert until G-2 lands.",
+          "combat": {
+            "telegraph": 0.85,
+            "recovery": 1.1,
+            "power": 12.0,
+            "chase_speed": 3.4,
+            "reposition_distance": 2.5
+          }
         }
       ],
       "reward": {
@@ -140,6 +161,7 @@
     {
       "order": 14,
       "id": "warden_aldis",
+      "_why_mirrored_g3_land_0904": "G3-LAND-0904 mirror. G3-FINALE changed this row's identity in the live config (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md, the W- contracts) and did not mirror it, so tests/test_band_content.gd went red at integration. The rule this satisfies is the fixture's own: a deliberate identity move is made TWICE, live config and mirror, in the same commit. Mirrored here by the coordinator at integration rather than reverted, because the change is the point -- the Warden opened at level 16 against an elite fielding 18/19/19, so the chapter's last fight was softer at the front than the one gate the player cannot walk around.",
       "name": "Warden Aldis",
       "_comment": "R8.3, spec Act VI step 35 and M14 -- the chapter's last fight. THERE IS NO BOSS MODE AND NO BOSS SCRIPT. He is an ordinary row of this same table: the same team schema, the same reward schema, the same defeat flag, the same encounter_director.begin_trainer_battle(), the same sequential send-out, and catching refused exactly as it is refused for every other trainer in the game (a trainer's creatures are theirs -- CLAUDE.md's hard rule). What makes him the boss is the ONLY thing spec sec12 says makes a boss: a full team of five and the highest levels in the chapter.",
       "_comment_character": "Spec sec33 gives him a worldview rather than a motive, and the lines are in data/dialogue/stronghold.json. He is not a moustache-twirler: he believes separation prevents chaos and that ordinary people do not understand the risks, he confirms the readout rather than denying it, and he does not recant when he loses. His face is still PAINTED rather than modelled (HANDOFF sec6) -- flagged, not faked. Sec20 covers creatures, so a Warden face sheet is legal under sec22's budget, but it is owner-gated art and no generation was spent here.",
@@ -155,27 +177,77 @@
       "facing_deg": 180.0,
       "challenge": "stronghold_warden_challenge",
       "defeated": "stronghold_warden_defeated",
-      "_comment_team": "A FULL team of five -- the only trainer in the chapter who fields one, and the first time the player's own five-creature limit is met by an equal. Levels 16-20 sit above SF34's captains (10-16) with the ace a clear step above the rest. Three types across the five so no single answer sweeps it: two Ground, one Water, one Air, and a Ground ace. ALL TUNABLE.",
+      "_comment_team": "A FULL team of five -- the only trainer in the chapter who fields one, and the first time the player's own five-creature limit is met by an equal. Three types across the five so no single answer sweeps it: two Ground, one Water, one Air, and a Ground ace. ALL TUNABLE.",
+      "_comment_w1_w2_w3": "GATE3_ENCOUNTER_CONTRACTS.md W-1/W-2/W-3, G3-ENCOUNTERS-0903 (Fable). W-1: shipped 16/17/17/18/20 opened two levels SOFTER than Hald's own weakest (18) -- a player who just beat 18/19/19, rested, and opened the chapter's climax against a 16 and two 17s. Raised to 18/18/19/19/20 (sum 94, +38 over Hald's 56): no member below the elite's floor, the ace still the chapter's highest, still inside band5's [15,20] window (data/config/chapter_curve.json, owned by G3-ECONOMY -- not edited here). W-2: send-out order is now the doctrine, not an accident of authoring order -- the first four are the four behaviour profiles the region's captains/elite already taught the player, one each, so a prepared player recognises each as it comes out; the fifth is the one telegraph in the chapter worth reading, Earth Fist's own cone from the Warrens guardian (G-9), on the ace. W-3: TM-tier quicks on this team only (rock_throw/aqua_shot/wind_blade, each 15-20% harder than the species move and on-type) -- G-4's *fails if* is that nothing below the Warden carries one, so the step into this arena is felt in the first exchange, not before it. `combat` blocks are G-3's five reusable profiles (WALL/DIVER/CURRENT/CHARGER/ACE per the region's own captains), computed off combat.json's `enemy` defaults; they are inert until G-2's `set_engaged()` merge ships on the encounter lane's own branch (G-2's own contract: absent behaviour is unchanged, and an override only ever reaches the body that authored it), so authoring them here ahead of that merge is safe.",
       "team": [
         {
           "species": "burrowback",
-          "level": 16
-        },
-        {
-          "species": "brooktail",
-          "level": 17
+          "level": 18,
+          "moves": {"quick": "rock_throw"},
+          "_why_combat": "G-2/G-3, GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903), W-2. WALL, sent first -- the drilled line that does not move, telegraph long enough to punish, on-type rock_throw (W-3). A player's first read of the Warden's doctrine is 'this one holds ground', the plainest of the five profiles and the correct one to open on. Inert until G-2's `wild_creature.gd` merge lands.",
+          "combat": {
+            "telegraph": 0.85,
+            "recovery": 1.1,
+            "power": 12.0,
+            "chase_speed": 3.4,
+            "reposition_distance": 2.5
+          }
         },
         {
           "species": "galecrest",
-          "level": 17
+          "level": 18,
+          "moves": {"quick": "wind_blade"},
+          "_why_combat": "G-2/G-3, W-2. DIVER, sent second -- hit-and-run, short tell, comes again from a new side. Ness fielded this same profile on all three of her creatures at the Sigil gate (this file's other rows); meeting it again here, on one creature this time, is the doctrine repeating at the top of the ladder rather than a one-off. Inert until G-2 lands.",
+          "combat": {
+            "telegraph": 0.4,
+            "lunge": 5.5,
+            "reposition_distance": 7.0,
+            "reposition_time": 1.6,
+            "attack_cooldown": 0.9,
+            "power": 7.2
+          }
+        },
+        {
+          "species": "brooktail",
+          "level": 19,
+          "moves": {"quick": "aqua_shot"},
+          "_why_combat": "G-2/G-3, W-2. CURRENT, sent third -- relentless pressure, short cooldown, never backs off far. The Water answer in the five, and the profile that turns 'brief lull between send-outs' into 'no lull at all' for one round, so the fight's middle does not sag between the WALL/DIVER opener and the CHARGER/ACE close. Inert until G-2 lands.",
+          "combat": {
+            "attack_cooldown": 0.7,
+            "recovery": 0.55,
+            "reposition_time": 0.5,
+            "reposition_distance": 2.0,
+            "power": 6.4
+          }
         },
         {
           "species": "meadowhart",
-          "level": 18
+          "level": 19,
+          "moves": {"quick": "rock_throw"},
+          "_why_combat": "G-2/G-3, W-2. CHARGER, sent fourth -- the stag that closes the distance in one lunge, tell is distance not time. The second-to-last send-out is where the contract asks for the fight's own tension to visibly rise before the ace; a long-range closer that punishes standing still is the shape of that rise. Inert until G-2 lands.",
+          "combat": {
+            "preferred_range": 4.5,
+            "lunge": 7.0,
+            "telegraph": 0.6,
+            "recovery": 0.9,
+            "attack_cooldown": 1.6,
+            "power": 10.4
+          }
         },
         {
           "species": "tuskroot",
-          "level": 20
+          "level": 20,
+          "moves": {"quick": "rock_throw"},
+          "_why_combat": "G-2/G-3, W-2. ACE, sent last -- the one telegraph in the chapter worth reading. `lunge`/`cone_degrees` widened past the base ACE profile to Earth Fist's own shape (G-9, the Warrens guardian's signature move at level 14): the chapter's first telegraph-worth-respecting and its last are the same shape, on the same move family, eighteen levels and every fight in this file apart. A player who learned to step out of Earth Fist in the first hour gets to feel that lesson pay off in the last one. Inert until G-2 lands.",
+          "combat": {
+            "telegraph": 1.0,
+            "recovery": 1.2,
+            "power": 14.4,
+            "lunge": 6.5,
+            "cone_degrees": 72,
+            "attack_cooldown": 1.8,
+            "first_attack_delay": 2.5
+          }
         }
       ],
       "reward": {
@@ -222,6 +294,7 @@
         }
       ],
       "_why_team": "The same two species this exact stretch of ground already fields wild (spawns.json orders 5000/5002) -- his own creatures came off this land, not out of a barracks. Floor of the band's [15,20] trainer range: this fight is a doorbell, not an obstacle.",
+      "_why_combat": "G-2/G-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903). Left at DEFAULT deliberately -- Corr is the first fight in the band and the floor the rest of the approach's escalation (Ness's CURRENT below, and whatever profile the Hall cast's own lane gives Solene/Hald) reads against. `stronghold_patrol` (Verrick, order 8) shares this same grunt-tier default at the other end of the approach and carries no matching comment: that row is a pre-split-protected entry (`test_band_content.gd`'s baseline mirror), and 'no combat block' needs no rationale recorded on the row that has one.",
       "reward": {
         "coins": 45,
         "items": [
@@ -256,18 +329,22 @@
       "team": [
         {
           "species": "trailpup",
-          "level": 16
+          "level": 16,
+          "combat": {"attack_cooldown": 0.7, "recovery": 0.55, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4}
         },
         {
           "species": "galecrest",
-          "level": 16
+          "level": 16,
+          "combat": {"attack_cooldown": 0.7, "recovery": 0.55, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4}
         },
         {
           "species": "mosshell",
-          "level": 16
+          "level": 16,
+          "combat": {"attack_cooldown": 0.7, "recovery": 0.55, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4}
         }
       ],
       "_why_team": "Trailpup and galecrest are this band's own wild roster (spawns.json orders 5003/5001); mosshell is `stronghold_courtyard`'s own species, met here a room early and wilder for it, the same continuity the mudsnout special encounter (spawns.json order 5004) uses. Three creatures, one level above the outer watch, and the escalation reads: the further in, the more the checkpoint fields.",
+      "_why_combat": "G-2/G-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903). Ness is the one officer-rank fight this lane owns (Solene/Hald/the Warden are the Hall cast, G3-FINALE's per this lane's own file-ownership split) and gets the CURRENT profile -- relentless pressure, short cooldown, never backs off far -- so 'past the gate, rank means something' (her own challenge line) is a felt difference, not just a third creature and a level. Both grunt fights this lane owns (Corr, Verrick) stay at DEFAULT so Ness reads as a real step up rather than one fight among three that all play the same. Inert until G-2's `wild_creature.gd` merge lands; absent that code every number here is unused.",
       "reward": {
         "coins": 65,
         "items": [

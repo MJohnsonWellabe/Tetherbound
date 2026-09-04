@@ -28,6 +28,7 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const DIALOGUE_RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 
 const WARDEN_ID := "warden_aldis"
 const FREED_FLAG := "legendary_freed"
@@ -102,6 +103,7 @@ func _run() -> void:
 
 	_the_warden_is_reachable()
 	_the_reveal_is_on_the_threshold()
+	_the_duty_board_is_at_the_waystop()
 	_the_chamber_is_shut_until_he_falls()
 
 	await _challenge_him()
@@ -184,6 +186,35 @@ func _the_reveal_is_on_the_threshold() -> void:
 		if here.distance_to(to_warden) < 1.0:
 			_fail("the readout is standing on top of the Warden; it is meant to be met first")
 	print("the reveal readout is standing and readable before the fight")
+
+
+## R-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md sec7.2). The duty board stands
+## at band 5's waystop, well short of the Hall itself, and reading it must
+## never gate anything -- it is the owner's readiness layer, not a lock.
+func _the_duty_board_is_at_the_waystop() -> void:
+	var board := _world.find_child("StrongholdDutyBoard", true, false) as Node3D
+	if board == null:
+		_fail("no Tether duty board in the world; R-2's waystop readiness layer is missing")
+		return
+	var prompt := board.get_node_or_null(^"ReadoutPrompt")
+	if prompt == null or not bool(prompt.get("enabled")):
+		_fail("the duty board offers no prompt; it cannot be read")
+		return
+	var body: Node3D = _climax.call("warden_body") as Node3D
+	var away := board.global_position.distance_to(body.global_position) if body != null else -1.0
+	if body != null and away < 40.0:
+		_fail("the duty board is %.0fm from the Warden; it belongs at the waystop, well short of the Hall" % away)
+	var conversation: Dictionary = DIALOGUE_RUNNER.table().get("stronghold_duty_board", {})
+	if conversation.is_empty():
+		_fail("'stronghold_duty_board' is not in the dialogue table")
+		return
+	var spoken := ""
+	for line: Variant in (conversation.get("lines", []) as Array):
+		spoken += (str(line) if typeof(line) == TYPE_STRING else str((line as Dictionary).get("text", ""))) + "\n"
+	for forbidden in ["legendary", "veridian", "stag", "power source"]:
+		if spoken.to_lower().contains(forbidden):
+			_fail("the duty board says '%s'; it may only name the draw, never what chamber five holds" % forbidden)
+	print("the duty board stands %.0fm from the Warden and names the draw only" % away)
 
 
 ## R8.4's gate, and the single place §28's order is enforced in the world: the

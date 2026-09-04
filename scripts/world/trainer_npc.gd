@@ -47,6 +47,14 @@ const CONFIG_PATH := "res://data/config/trainers.json"
 ## touching every band's own trainers.json.
 const NO_USABLE_CREATURE_CONVERSATION := "trainer_no_usable_creature"
 
+## G3-OPENING-FIX-0904 (2.10). The other half of `no_usable_ally()`'s two
+## real causes: nothing is out at all, as opposed to something out and
+## fainted. `NO_USABLE_CREATURE_CONVERSATION`'s own line ("get it back on
+## its feet... a bed will do it") is only true for the fainted case -- a
+## healthy party with nothing deployed (a fresh load, a creature put away)
+## needs "call one out", not a trip to a bed nothing asked for.
+const NO_ALLY_DEPLOYED_CONVERSATION := "trainer_no_ally_deployed"
+
 ## BAND-SPLIT. The `trainers` array is cut per corridor band under
 ## `data/config/bands/<band>/trainers.json`; `flow` and `prompts` are global
 ## and stay in the head file. `band_content.gd` merges them back.
@@ -186,7 +194,16 @@ func _on_challenged(spec: Dictionary) -> void:
 		# This is the one of those four that is actually a common, ordinary
 		# player state (a fainted starter) rather than a real win -- so it
 		# gets its own, honest, generic line instead of a false "defeated".
+		#
+		# G3-OPENING-FIX-0904 (2.10): that one line used to cover BOTH of
+		# `no_usable_ally()`'s real causes and was only true for one of
+		# them -- "get it back on its feet, a bed will do it" tells a
+		# player whose creature is not out, but is not hurt either, to go
+		# heal something that does not need healing.
+		# `usable_ally_blocker()` names which cause actually applies.
 		conversation = NO_USABLE_CREATURE_CONVERSATION
+		if str(director.call("usable_ally_blocker")) == "undeployed":
+			conversation = NO_ALLY_DEPLOYED_CONVERSATION
 	else:
 		conversation = str(spec.get("defeated", ""))
 	if conversation == "":
@@ -363,6 +380,12 @@ static func creature_for(entry: Dictionary) -> RefCounted:
 			creature.move_quick = quick
 		if charged != "":
 			creature.move_charged = charged
+	# G-2: the entry's optional per-creature behaviour override, read beside
+	# `moves` because it is the same kind of thing -- this individual fights
+	# differently, and nothing about the species changes.
+	var combat: Variant = entry.get("combat", {})
+	if combat is Dictionary and not (combat as Dictionary).is_empty():
+		creature.combat_override = (combat as Dictionary).duplicate(true)
 	return creature
 
 

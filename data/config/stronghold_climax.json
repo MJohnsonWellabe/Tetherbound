@@ -23,6 +23,17 @@
     "screen_colour": "#7fd8c4"
   },
 
+  "_comment_duty_board": "R-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md sec7.2). The same readout primitive `reveal` above uses (`stronghold_climax.gd::_place_readout`, now built from any config entry rather than only `reveal`), stood at band 5's waystop instead of the arena threshold -- the owner's Sec10 readiness layer in the world, so the player learns the garrison's numbers before committing to the final approach. No `mark`: the waystop is band 5's own clearing, outside the stronghold's marker set, so `fallback` is the only coordinate this entry has. [-25.0, 7466.0] sits 9.9m from the waystop's own fire ((-22.6,7456.4), data/config/bands/band5_stronghold_approach/props.json) almost exactly on the bearing from that fire to the Hall (outer_works, world (8,7560)) -- in frame as the player leaves camp for the works, per R-2's own fail condition -- and 5m clear of the northmost camp prop (the crate at (-22.6,7461.0)), so it stands in the open rather than inside the furniture cluster. Carries no flag and gates nothing: reading it is optional, same as the reveal, and the text only ever gives the draw -- `tests/test_dialogue_runner.gd`'s spoiler scan forbids naming what is in chamber five here.",
+  "duty_board": {
+    "fallback": [-25.0, 7466.0],
+    "label": "Read the Tether duty board",
+    "conversation": "stronghold_duty_board",
+    "height": 1.35,
+    "panel_size": [1.5, 1.1, 0.28],
+    "colour": "#332228",
+    "screen_colour": "#7fd8c4"
+  },
+
   "_comment_warden": "R8.3. He is an ORDINARY row of data/config/trainers.json -- same table, same team schema, same reward schema, same defeat flag, same encounter_director.begin_trainer_battle() -- carrying `placed_by: \"stronghold_climax\"` so the world's own trainer pass and the stronghold's gauntlet pass both skip him and this file's mark decides where he stands. There is no boss combat mode and there is no boss script: 'the hardest trainer in the chapter' is a team and a set of levels, which is exactly what Sec12 asks for.",
   "warden": {
     "trainer": "warden_aldis",

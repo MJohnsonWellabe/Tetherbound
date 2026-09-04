@@ -85,6 +85,32 @@ var _combat_cfg: Dictionary = {}
 var _catch_aim_active: bool = false
 var _catch_aim_slowdown_scale: float = 0.35
 
+## G-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md): this body's per-encounter
+## behaviour override, merged OVER `combat.json`'s `enemy` block for this body
+## alone. Empty means today's behaviour byte for byte, which is the contract's
+## own failure condition -- "fails if any ordinary wild creature's fight changes
+## when the block is absent" -- and is why this merges rather than replaces.
+##
+## Why it exists: before G-2 every opponent in the game fought out of the ONE
+## global `enemy` block. Wild bramblebun, relay picket, Sigil captain and the
+## Warden all shared a brain and differed only in level and roster, so a
+## "memorable, not standard fight + HP" guardian (prompt 63) or a Warden with a
+## "recognizable combat identity, not simply the largest numbers" (prompt 69)
+## could not be authored at all. `burrow_warrens.json`'s guardian documented a
+## signature Earth Fist chosen for being dodgeable; it only ever reached a
+## player who CAUGHT it, because `combat_manager.gd` reads `move_charged`
+## through a player-side profile and the wild AI never looks at it.
+##
+## Set by whoever spawns the body, from data that already exists: a
+## `spawns.json` alpha/elder block, `burrow_warrens.json`'s guardian block, or a
+## trainer team member in `trainers.json`. Never inherited -- a fresh body
+## starts empty, so an override cannot leak onto a creature that did not author
+## one, which is the contract's other failure condition.
+##
+## `combat_ai.gd::decide()` stays pure and is untouched: this changes the
+## numbers it is handed, not how it thinks. No new intent, no charged-move AI.
+var combat_override: Dictionary = {}
+
 var _rng := RandomNumberGenerator.new()
 
 
@@ -94,7 +120,7 @@ func _ready() -> void:
 	home = global_position
 	_target = home
 	_pause_left = _rng.randf_range(_pause_min, _pause_max)
-	_combat_cfg = MATH.config().get("enemy", {})
+	_combat_cfg = _enemy_config_for_this_body()
 	_catch_aim_slowdown_scale = float(
 		CATCH.config().get("aim", {}).get("target_slowdown_scale", _catch_aim_slowdown_scale))
 
@@ -323,6 +349,35 @@ func set_clearance_check(check: Callable) -> void:
 	_clearance_check = check
 
 
+## `combat.json`'s `enemy` block with this body's own G-2 override laid over it.
+##
+## Only the `enemy` block's own keys are honoured. An unknown key is dropped
+## rather than passed through: the override is authored in content data by a
+## band lane, and a typo that silently became a live tuning value -- or a key
+## that reached `combat_ai.gd` expecting a shape it does not have -- would be a
+## content bug that presents as a physics bug. `_comment*` keys are skipped for
+## the same reason every other config reader here skips them.
+const _COMBAT_OVERRIDE_KEYS: Array[String] = [
+	"power", "telegraph", "recovery", "attack_cooldown", "preferred_range",
+	"chase_speed", "reposition_speed", "reposition_time", "reposition_distance",
+	"lunge", "first_attack_delay", "cone_degrees", "range",
+]
+
+
+func _enemy_config_for_this_body() -> Dictionary:
+	var base: Dictionary = MATH.config().get("enemy", {})
+	if combat_override.is_empty():
+		# The overwhelmingly common path, and deliberately the SAME Dictionary
+		# every creature in the game got before G-2 existed -- not a copy, so
+		# there is no behaviour difference and no allocation to explain.
+		return base
+	var merged := base.duplicate(true)
+	for key: String in _COMBAT_OVERRIDE_KEYS:
+		if combat_override.has(key):
+			merged[key] = combat_override[key]
+	return merged
+
+
 ## --- combat ---------------------------------------------------------------
 
 ## Called by the combat manager when a fight opens and closes.
@@ -330,7 +385,7 @@ func set_engaged(value: bool, opponent: Node3D = null) -> void:
 	engaged = value
 	_opponent = opponent
 	if value:
-		_combat_cfg = MATH.config().get("enemy", {})
+		_combat_cfg = _enemy_config_for_this_body()
 		_intent = AI.Intent.CLOSE
 		_beat_left = 0.0
 		# It does not swing the instant the fight opens; the player gets a beat

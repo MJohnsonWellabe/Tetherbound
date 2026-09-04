@@ -1,0 +1,26 @@
+{
+  "_comment": "G3-BAND2 reopen: play S06. Run-local freeze record, written BEFORE the segment ran and never amended after. This exists because operator_harness.gd::_freeze_display_claim reads the run directory's own RUN_METADATA.json first and ralph/reports/gate-f-candidate/RUN_METADATA.json second; the global one is the 2026-08-27 freeze and carries a flat display_server of X11 under xvfb-run with no `lanes` block, which CD-8b-refuses this segment's headless logic lane before step 1 even though it plans zero captures of its own (they are delegated to S06C). Shape copied from the precedent this same defect already has -- ralph/reports/gate-f-capstone-1/RUN_METADATA.json's own `lanes` block, written for the identical reason.",
+  "run_id": "gate-f-run-G3-BAND2-0903",
+  "run_dir": "ralph/reports/gate-f-run-G3-BAND2-0903",
+  "candidate_ref": "ralph/G3-BAND2-0903, off origin/main",
+  "godot_version": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "path": "$HOME/.cache/tetherbound-art/godot",
+    "kind": "linux x86_64 editor build, release URL pinned Godot_v4.7-stable_linux.x86_64.zip"
+  },
+  "operator": "sonnet-agent (lane G3-BAND2)",
+  "input_mode": "synthetic joypad + keyboard via parse_input_event (+ paired action press/release)",
+  "save_state": "fresh user:// dir; S06 seeded from a hand-authored synthetic S05-exit (tools/gate_f/build_s06_entry_synthetic.gd), not a chained real run -- see that file's own header for why",
+  "free_build": false,
+  "date": "2026-09-04",
+  "resolution": "n/a for the logic lane (no rendering); this run does not run a capture lane",
+  "display_server": "headless (logic lane, no display server -- honest, matches this process)",
+  "renderer": "none (logic lane, no rendering)",
+  "lanes": {
+    "logic": {
+      "display_server": "headless (logic lane, no display server)",
+      "renderer": "none (logic lane)"
+    }
+  },
+  "purpose": "G3-BAND2 lane, reopened by the Gate 3 coordinator to play S06 (Stone & Root) against a synthetic clean entry, isolating Band 2 from the rest of the S01-S05 chain. S06's own evidence_lane is 'logic'; its prescribed §G captures are declared DELEGATED to S06C, which this run does not execute -- this run answers S06's own logic-lane obligations (step verdicts, telemetry, the exit save), not the capture debt."
+}

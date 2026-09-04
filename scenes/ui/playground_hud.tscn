@@ -84,6 +84,21 @@ mouse_filter = 2
 ; measure and remains centred. The hotbar shrinks to its content at the right
 ; edge, keeping the trainer/camera focus lane clear instead of covering the
 ; character's torso at the normal third-person framing.
+;
+; GATE3-HUD-SAFEAREA (Gate 2 evidence judge, `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md`
+; §6, the FOOD bar's own finding): offset_bottom -96 -> -150. The player
+; vitals column (`Root/VitalsCluster`, `playground_hud.gd::vitals_position()`)
+; is anchored independently off the true canvas bottom and now reserves a
+; real 5% safe-area margin there (`SAFE_AREA_BOTTOM_FRACTION`) instead of a
+; flat 6px one -- but this dock's own FIXED bottom edge (anchor_bottom = 1.0,
+; so this offset alone decides it, unaffected by grow_vertical) sat only 96px
+; off that same true bottom, leaving the vitals column nowhere to grow into
+; without overlapping this dock's own reserved rect (`smoke_hud_handheld_
+; legibility.gd::_check_left_stack_clears_bottom_dock`). -150 clears the
+; vitals column's new margin with room measured against both supported
+; canvases (1080 and the Ally's 1200); it also moves the hotbar/legend/
+; prompt row itself further from the true bottom edge, which is a safe-area
+; improvement for the persistent action strip too, not just a side effect.
 [node name="BottomDock" type="VBoxContainer" parent="Root"]
 anchor_right = 1.0
 anchor_top = 1.0
@@ -91,7 +106,7 @@ anchor_bottom = 1.0
 offset_left = 56.0
 offset_top = -460.0
 offset_right = -56.0
-offset_bottom = -96.0
+offset_bottom = -150.0
 grow_vertical = 0
 alignment = 2
 mouse_filter = 2
