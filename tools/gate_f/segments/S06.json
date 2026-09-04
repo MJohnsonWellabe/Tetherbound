@@ -9,6 +9,7 @@
   "capture_lane": "S06C",
   "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S06C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S06C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
   "_comment_record_hz_split": "AMENDED for the §H/§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because §H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- §H's prescribed frames move to S06C, which may run BOUNDED record windows around a named state.",
+  "_comment_clh1": "W21-HARNESS-FIGHTS-0904, closure-plan rows CL-H1 / CL-H2 (and CL-H7 in S07). Every fight in this segment was `press combat_quick, times: N` -- the failure mode SEGMENT_SCHEMA.md names by name, and the one G3-BAND2, G3-BAND3, G3-BAND4 and G3-BAND5 each derailed on in turn. A counted press block is right for exactly one matchup: a fight's length is a function of levels, the type chart and a +/-10% roll on every hit, and a press step only ever asserts that INPUT WAS INJECTED, so a block that ran out mid-fight (or emptied itself into a party wipe) reported PASS either way. Three changes, applied uniformly:\n  1. every fight is now `fight_until_resolved` -- combat_quick only while the action machine reads READY, one party_cycle when the pilot drops below 35% of max HP, and a stop only when both is_fighting() and trainer_battle_active() have been quiet. A block that was a CATCH chip (S08's two wild engages) becomes `chip_to_floor` instead, which reads the target's real HP and deliberately does NOT resolve the fight;\n  2. every challenge conversation is `advance_dialogue_until_closed` instead of a fixed press count. G3-BAND5 measured twelve presses running out before the outer watch's panel closed, leaving input_context on `narrative_modal` where the next step expected combat;\n  3. every fight is preceded by a recovery ladder -- a Revive addressed BY ITEM IDENTITY (never a slot), then a switch -- ending in the `active_creature_alive` party-health gate, and followed by a bag-free post-faint switch. G3-BAND2 watched a fully fainted party walk 450 s into a dungeon and drop its whole satchel because nothing in the script ever recovered it.\nScripted mid-fight `party_cycle` beats are gone with the counted blocks that surrounded them: fight_until_resolved's own switch fires on the pilot's real HP, which is what CB-09's 'switching under pressure' means. Scripted `combat_charged` and `camera_recenter` presses are kept and moved to the fight's opening, because fight_until_resolved owns the fight end to end and nothing can be threaded through its middle.",
   "steps": [
     {
       "id": "S06-01",
@@ -221,6 +222,117 @@
       "expected": "the window closes on the first ground inside band 2, at the quarry picket. This leg is longer than 60 s and cannot be split -- see this segment's section H note"
     },
     {
+      "id": "S06-18p0",
+      "title": "the world has input back before the satchel opens",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "no fight, fade or narrative modal is still holding input when this ladder starts"
+    },
+    {
+      "id": "S06-18p1",
+      "title": "open the satchel",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() on open, so the item grid owns focus"
+    },
+    {
+      "id": "S06-18p2",
+      "title": "find the Revive BY ITEM IDENTITY",
+      "action": "focus_item",
+      "args": {
+        "item": "revive",
+        "max_moves": 60
+      },
+      "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the recovery is addressed by item identity, never by slot index: focus_item walks the cursor onto whichever cell actually holds `revive`, because a fixed offset is only right for one arrangement of a bag (GAME-9/RIG-24). FAILs honestly, naming the bag, once the entry seed's Revive stack is spent -- which is real evidence about the run's recovery budget, not a flaky step."
+    },
+    {
+      "id": "S06-18p3",
+      "title": "use it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "skip_if": {
+          "check": "inventory_count",
+          "item": "revive",
+          "max": 0
+        }
+      },
+      "expected": "tab_backpack.gd::_read_use() opens the target picker if any party member is fainted, and safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions by tools/gate_f/probe_revive_menu_flow.gd. SKIPPED outright when the bag holds no Revive, so the press can never land on whatever the grid happened to focus instead."
+    },
+    {
+      "id": "S06-18p4",
+      "title": "confirm the fainted row",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap",
+        "skip_if": {
+          "check": "inventory_count",
+          "item": "revive",
+          "max": 0
+        }
+      },
+      "expected": "if the picker opened, focus already sits on the only eligible (fainted) row, so this clears `fainted` and spends one Revive; with nobody fainted it merely picks the stack up off the grid, which the close below puts back."
+    },
+    {
+      "id": "S06-18p5",
+      "title": "hand the world back",
+      "action": "close_menu",
+      "args": {},
+      "expected": "close_menu presses menu_cancel until input_context stops beginning with 'menu', so it closes the picker branch and the picked-up-stack branch alike"
+    },
+    {
+      "id": "S06-18p6",
+      "title": "the world owns input again before the switch",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "section E.3 step 6's target is input leakage after a surface closes"
+    },
+    {
+      "id": "S06-18p7",
+      "title": "hand the pilot to a live creature if the lead is still down",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "skip_if": {
+          "check": "active_creature_alive"
+        }
+      },
+      "expected": "revive-then-cycle, the order ralph/reports/gate-f-run-20260901T220548Z-s03fix measured over three attempts. SKIPPED when the lead is already standing; a real pilot handoff when it is not."
+    },
+    {
+      "id": "S06-18p8",
+      "title": "let the replacement stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly active body needs a few frames"
+    },
+    {
+      "id": "S06-18p9",
+      "title": "party-health gate before the quarry picket Dorn",
+      "action": "assert",
+      "args": {
+        "check": "active_creature_alive"
+      },
+      "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the party-health assert CL-H1 asks for before each challenge. `active_creature_alive` fails the segment honestly at the moment the party stopped being fight-ready, instead of letting encounter_director.gd::can_challenge()'s silent refusal (or a scripted press landing on the no-usable-creature conversation instead of a fight) burn the rest of the budget unexplained."
+    },
+    {
       "id": "S06-18",
       "title": "challenge Dorn",
       "action": "press",
@@ -232,15 +344,14 @@
     },
     {
       "id": "S06-19",
-      "title": "hear him out",
-      "action": "press",
+      "title": "hear Dorn out",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "max_presses": 12,
+        "settle_frames": 60
       },
-      "expected": "trainer flow stages send-out"
+      "expected": "trainer flow stages send-out",
+      "observation": "CL-H1 (W21-HARNESS-FIGHTS-0904). /CL-H2: was a fixed `press interact, times: N`. A count is right for one conversation length; over-pressing re-opens the panel and under-pressing leaves input_context on `narrative_modal` where the next step expects combat -- G3-BAND5 measured exactly that at the outer watch, and the fight never started. `advance_dialogue_until_closed` reads dialogue_runner.gd::line() and stops the moment the panel closes. quarry_dorn_challenge is two lines; scripts/world/trainer_npc.gd starts the fight when the words run out, so the predicate close IS the handoff."
     },
     {
       "id": "S06-20",
@@ -250,6 +361,26 @@
         "seconds": 3
       },
       "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S06-20c",
+      "title": "combat owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat' -- something combat-shaped owns input after the conversation closed"
+    },
+    {
+      "id": "S06-20f",
+      "title": "a fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "CombatManager::is_fighting() is true -- the engage was RECEIVED, not merely pressed. A bare press asserts only that input was injected, which is how S02 passed its engage step into an unengaged world for six runs (RIG-26)."
     },
     {
       "id": "S06-21",
@@ -268,14 +399,14 @@
     {
       "id": "S06-22",
       "title": "fight Dorn",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 34,
-        "settle_frames": 30
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "until_flag": "defeated_quarry_dorn"
       },
-      "expected": "Section E.1 per-fight record: duration, hit events, switches, camera corrections, target_on_screen dropouts, pathing stalls, difficulty read, XP/reward"
+      "expected": "Section E.1 per-fight record: duration, hit events, switches, camera corrections, target_on_screen dropouts, pathing stalls, difficulty read, XP/reward",
+      "observation": "CL-H1 (W21-HARNESS-FIGHTS-0904). was `press combat_quick, times: N` -- the failure mode SEGMENT_SCHEMA.md names by name. A counted press block is right for exactly one matchup, and G3-BAND2's own telemetry watched all four party members faint in sequence inside one such block while every step reported PASS. `fight_until_resolved` presses combat_quick only while the action machine reads READY, presses party_cycle once when the pilot drops below switch_below of max HP (which is CB-09's switching-under-pressure, driven by the creature's real HP instead of a scripted beat), and stops only when both is_fighting() and trainer_battle_active() have been false for quiet_frames."
     },
     {
       "id": "S06-23",
@@ -285,6 +416,28 @@
         "seconds": 8
       },
       "expected": "rewards and control return"
+    },
+    {
+      "id": "S06-23x1",
+      "title": "post-faint switch",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "skip_if": {
+          "check": "active_creature_alive"
+        }
+      },
+      "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the post-faint switch. SKIPPED when the fight left the lead standing; a real pilot handoff when it fainted. Bag-free, so it still recovers the belt with an empty satchel."
+    },
+    {
+      "id": "S06-23x2",
+      "title": "let the replacement stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the replacement body needs a few frames"
     },
     {
       "id": "S06-19w",
@@ -691,6 +844,117 @@
       "expected": "Section G: interior chamber mid-clear, interior -- interior readability, lighting"
     },
     {
+      "id": "S06-60p0",
+      "title": "the world has input back before the satchel opens",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "no fight, fade or narrative modal is still holding input when this ladder starts"
+    },
+    {
+      "id": "S06-60p1",
+      "title": "open the satchel",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() on open, so the item grid owns focus"
+    },
+    {
+      "id": "S06-60p2",
+      "title": "find the Revive BY ITEM IDENTITY",
+      "action": "focus_item",
+      "args": {
+        "item": "revive",
+        "max_moves": 60
+      },
+      "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the recovery is addressed by item identity, never by slot index: focus_item walks the cursor onto whichever cell actually holds `revive`, because a fixed offset is only right for one arrangement of a bag (GAME-9/RIG-24). FAILs honestly, naming the bag, once the entry seed's Revive stack is spent -- which is real evidence about the run's recovery budget, not a flaky step."
+    },
+    {
+      "id": "S06-60p3",
+      "title": "use it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "skip_if": {
+          "check": "inventory_count",
+          "item": "revive",
+          "max": 0
+        }
+      },
+      "expected": "tab_backpack.gd::_read_use() opens the target picker if any party member is fainted, and safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions by tools/gate_f/probe_revive_menu_flow.gd. SKIPPED outright when the bag holds no Revive, so the press can never land on whatever the grid happened to focus instead."
+    },
+    {
+      "id": "S06-60p4",
+      "title": "confirm the fainted row",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap",
+        "skip_if": {
+          "check": "inventory_count",
+          "item": "revive",
+          "max": 0
+        }
+      },
+      "expected": "if the picker opened, focus already sits on the only eligible (fainted) row, so this clears `fainted` and spends one Revive; with nobody fainted it merely picks the stack up off the grid, which the close below puts back."
+    },
+    {
+      "id": "S06-60p5",
+      "title": "hand the world back",
+      "action": "close_menu",
+      "args": {},
+      "expected": "close_menu presses menu_cancel until input_context stops beginning with 'menu', so it closes the picker branch and the picked-up-stack branch alike"
+    },
+    {
+      "id": "S06-60p6",
+      "title": "the world owns input again before the switch",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "section E.3 step 6's target is input leakage after a surface closes"
+    },
+    {
+      "id": "S06-60p7",
+      "title": "hand the pilot to a live creature if the lead is still down",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "skip_if": {
+          "check": "active_creature_alive"
+        }
+      },
+      "expected": "revive-then-cycle, the order ralph/reports/gate-f-run-20260901T220548Z-s03fix measured over three attempts. SKIPPED when the lead is already standing; a real pilot handoff when it is not."
+    },
+    {
+      "id": "S06-60p8",
+      "title": "let the replacement stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly active body needs a few frames"
+    },
+    {
+      "id": "S06-60p9",
+      "title": "party-health gate before the enclosed Warrens chamber fight",
+      "action": "assert",
+      "args": {
+        "check": "active_creature_alive"
+      },
+      "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the party-health assert CL-H1 asks for before each challenge. `active_creature_alive` fails the segment honestly at the moment the party stopped being fight-ready, instead of letting encounter_director.gd::can_challenge()'s silent refusal (or a scripted press landing on the no-usable-creature conversation instead of a fight) burn the rest of the budget unexplained."
+    },
+    {
       "id": "S06-60",
       "title": "engage what is in the hall",
       "action": "press",
@@ -745,18 +1009,6 @@
       "expected": "Section G: CB-05: Warrens fight, enclosed geometry, inside Burrow Warrens chambers -- per-case: camera fields under enclosure"
     },
     {
-      "id": "S06-64",
-      "title": "fight in the chamber",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 28,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 CB-05 records the camera fields specifically: a fight pressed against a wall is where `target_on_screen` drops out and the camera-correction count means something"
-    },
-    {
       "id": "S06-65",
       "title": "recentre the camera mid-fight",
       "action": "press",
@@ -767,16 +1019,15 @@
       "expected": "Section F: 'Camera correction: any scripted camera input needed solely to restore the target/route to view'. Every one of these is counted"
     },
     {
-      "id": "S06-66",
-      "title": "finish the chamber fight",
-      "action": "press",
+      "id": "S06-64",
+      "title": "fight in the chamber",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 18,
-        "settle_frames": 30
+        "budget_frames": 9000,
+        "switch_below": 0.35
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Section E.1 CB-05 records the camera fields specifically: a fight pressed against a wall is where `target_on_screen` drops out and the camera-correction count means something",
+      "observation": "CL-H1 (W21-HARNESS-FIGHTS-0904). was `press combat_quick, times: N` -- the failure mode SEGMENT_SCHEMA.md names by name. A counted press block is right for exactly one matchup, and G3-BAND2's own telemetry watched all four party members faint in sequence inside one such block while every step reported PASS. `fight_until_resolved` presses combat_quick only while the action machine reads READY, presses party_cycle once when the pilot drops below switch_below of max HP (which is CB-09's switching-under-pressure, driven by the creature's real HP instead of a scripted beat), and stops only when both is_fighting() and trainer_battle_active() have been false for quiet_frames. The camera recentre that used to sit BETWEEN two counted blocks now opens the fight: fight_until_resolved owns the fight end to end by design, so a scripted camera correction cannot be threaded through its middle. Section F still counts the press."
     },
     {
       "id": "S06-67",
@@ -786,6 +1037,28 @@
         "seconds": 8
       },
       "expected": "rewards and control return with no stuck modal"
+    },
+    {
+      "id": "S06-67x1",
+      "title": "post-faint switch",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "skip_if": {
+          "check": "active_creature_alive"
+        }
+      },
+      "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the post-faint switch. SKIPPED when the fight left the lead standing; a real pilot handoff when it fainted. Bag-free, so it still recovers the belt with an empty satchel."
+    },
+    {
+      "id": "S06-67x2",
+      "title": "let the replacement stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the replacement body needs a few frames"
     },
     {
       "id": "S06-68",
@@ -848,6 +1121,117 @@
       "expected": "Section G: guardian encounter, guardian chamber -- memorable-encounter staging"
     },
     {
+      "id": "S06-72p0",
+      "title": "the world has input back before the satchel opens",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "no fight, fade or narrative modal is still holding input when this ladder starts"
+    },
+    {
+      "id": "S06-72p1",
+      "title": "open the satchel",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "game_menu.gd::select() grabs tab_backpack.gd::first_focus() on open, so the item grid owns focus"
+    },
+    {
+      "id": "S06-72p2",
+      "title": "find the Revive BY ITEM IDENTITY",
+      "action": "focus_item",
+      "args": {
+        "item": "revive",
+        "max_moves": 60
+      },
+      "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the recovery is addressed by item identity, never by slot index: focus_item walks the cursor onto whichever cell actually holds `revive`, because a fixed offset is only right for one arrangement of a bag (GAME-9/RIG-24). FAILs honestly, naming the bag, once the entry seed's Revive stack is spent -- which is real evidence about the run's recovery budget, not a flaky step."
+    },
+    {
+      "id": "S06-72p3",
+      "title": "use it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "skip_if": {
+          "check": "inventory_count",
+          "item": "revive",
+          "max": 0
+        }
+      },
+      "expected": "tab_backpack.gd::_read_use() opens the target picker if any party member is fainted, and safely refuses ('Nobody needs reviving.') with no state change otherwise -- live-verified in both directions by tools/gate_f/probe_revive_menu_flow.gd. SKIPPED outright when the bag holds no Revive, so the press can never land on whatever the grid happened to focus instead."
+    },
+    {
+      "id": "S06-72p4",
+      "title": "confirm the fainted row",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap",
+        "skip_if": {
+          "check": "inventory_count",
+          "item": "revive",
+          "max": 0
+        }
+      },
+      "expected": "if the picker opened, focus already sits on the only eligible (fainted) row, so this clears `fainted` and spends one Revive; with nobody fainted it merely picks the stack up off the grid, which the close below puts back."
+    },
+    {
+      "id": "S06-72p5",
+      "title": "hand the world back",
+      "action": "close_menu",
+      "args": {},
+      "expected": "close_menu presses menu_cancel until input_context stops beginning with 'menu', so it closes the picker branch and the picked-up-stack branch alike"
+    },
+    {
+      "id": "S06-72p6",
+      "title": "the world owns input again before the switch",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "section E.3 step 6's target is input leakage after a surface closes"
+    },
+    {
+      "id": "S06-72p7",
+      "title": "hand the pilot to a live creature if the lead is still down",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "skip_if": {
+          "check": "active_creature_alive"
+        }
+      },
+      "expected": "revive-then-cycle, the order ralph/reports/gate-f-run-20260901T220548Z-s03fix measured over three attempts. SKIPPED when the lead is already standing; a real pilot handoff when it is not."
+    },
+    {
+      "id": "S06-72p8",
+      "title": "let the replacement stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the newly active body needs a few frames"
+    },
+    {
+      "id": "S06-72p9",
+      "title": "party-health gate before the Warren Guardian",
+      "action": "assert",
+      "args": {
+        "check": "active_creature_alive"
+      },
+      "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the party-health assert CL-H1 asks for before each challenge. `active_creature_alive` fails the segment honestly at the moment the party stopped being fight-ready, instead of letting encounter_director.gd::can_challenge()'s silent refusal (or a scripted press landing on the no-usable-creature conversation instead of a fight) burn the rest of the budget unexplained."
+    },
+    {
       "id": "S06-72",
       "title": "face the Warren Guardian",
       "action": "press",
@@ -867,38 +1251,24 @@
       "expected": "the combat camera acquires both combatants"
     },
     {
-      "id": "S06-74",
-      "title": "fight the guardian",
-      "action": "press",
+      "id": "S06-73c",
+      "title": "combat owns input",
+      "action": "assert",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 36,
-        "settle_frames": 30
+        "check": "input_context",
+        "equals": "combat"
       },
-      "expected": "Section E.1 per-fight record; the guardian is the band's memorable encounter and its difficulty read is section D's material"
+      "expected": "input_context is 'combat' -- something combat-shaped owns input after the conversation closed"
     },
     {
-      "id": "S06-75",
-      "title": "switch pilot under pressure",
-      "action": "press",
+      "id": "S06-73f",
+      "title": "a fight is actually running",
+      "action": "assert",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "check": "combat_running",
+        "equals": true
       },
-      "expected": "Section E.1 CB-09's shape, crossed naturally: pilot handoff and camera handoff inside a chamber"
-    },
-    {
-      "id": "S06-76",
-      "title": "keep fighting",
-      "action": "press",
-      "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 24,
-        "settle_frames": 30
-      },
-      "expected": "Section E.1 per-fight record"
+      "expected": "CombatManager::is_fighting() is true -- the engage was RECEIVED, not merely pressed. A bare press asserts only that input was injected, which is how S02 passed its engage step into an unengaged world for six runs (RIG-26)."
     },
     {
       "id": "S06-77",
@@ -911,16 +1281,15 @@
       "expected": "the charged verb's hold edge in an enclosed fight"
     },
     {
-      "id": "S06-78",
-      "title": "finish the guardian",
-      "action": "press",
+      "id": "S06-74",
+      "title": "fight the guardian",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 20,
-        "settle_frames": 30
+        "budget_frames": 12000,
+        "switch_below": 0.35
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Section E.1 per-fight record; the guardian is the band's memorable encounter and its difficulty read is section D's material",
+      "observation": "CL-H1 (W21-HARNESS-FIGHTS-0904). was `press combat_quick, times: N` -- the failure mode SEGMENT_SCHEMA.md names by name. A counted press block is right for exactly one matchup, and G3-BAND2's own telemetry watched all four party members faint in sequence inside one such block while every step reported PASS. `fight_until_resolved` presses combat_quick only while the action machine reads READY, presses party_cycle once when the pilot drops below switch_below of max HP (which is CB-09's switching-under-pressure, driven by the creature's real HP instead of a scripted beat), and stops only when both is_fighting() and trainer_battle_active() have been false for quiet_frames. The charged attack that used to sit between two counted blocks now opens the fight, and the scripted mid-fight party_cycle is gone: fight_until_resolved's own switch fires on the pilot's real HP instead of on a beat guessed in advance, which is what CB-09's 'switching under pressure' actually means."
     },
     {
       "id": "S06-79",
@@ -930,6 +1299,28 @@
         "seconds": 10
       },
       "expected": "the vault door is what 'you have beaten the thing standing in the doorway' opens"
+    },
+    {
+      "id": "S06-79x1",
+      "title": "post-faint switch",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "skip_if": {
+          "check": "active_creature_alive"
+        }
+      },
+      "expected": "CL-H1 (W21-HARNESS-FIGHTS-0904). the post-faint switch. SKIPPED when the fight left the lead standing; a real pilot handoff when it fainted. Bag-free, so it still recovers the belt with an empty satchel."
+    },
+    {
+      "id": "S06-79x2",
+      "title": "let the replacement stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "encounter_director.gd::summon_active_creature() is async; the replacement body needs a few frames"
     },
     {
       "id": "S06-80",
