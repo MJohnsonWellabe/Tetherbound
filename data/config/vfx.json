@@ -23,6 +23,7 @@
     "max": 1.7
   },
 
+  "_comment_burst_keys": "Shared by hit_spark, ko_puff and catch_burst (all scripts/vfx/vfx_burst.gd): `up_bias` tilts every particle's direction upward before normalising (0 isotropic, 1 mostly up); `grow` is how much a particle swells over its life (0 none, 1.2 more than doubles); `alpha` the peak opacity; `core_*` the bright flash at the origin that dies fast.",
   "_comment_hit_spark": "The spark: a spray of bright motes and streaks thrown out from the point of contact, falling under gravity and fading. Lives longer than combat.json's 0.26s ring on purpose -- the ring says 'contact', the spray is what is still on screen a third of a second later. `count` is per burst; `speed` metres/second; `spread_degrees` the cone around the camera plane the sprays leave in; `size` the mote radius in metres; `streak_fraction` how many of them are drawn as elongated streaks along their own motion rather than round motes.",
   "hit_spark": {
     "enabled": true,
@@ -32,6 +33,8 @@
     "speed_variance": 0.45,
     "spread_degrees": 360.0,
     "gravity": 9.0,
+    "up_bias": 0.25,
+    "grow": 0.0,
     "size": 0.13,
     "size_variance": 0.5,
     "streak_fraction": 0.5,
@@ -64,6 +67,8 @@
     "speed_variance": 0.4,
     "spread_degrees": 360.0,
     "gravity": -1.6,
+    "up_bias": 0.9,
+    "grow": 1.2,
     "size": 0.42,
     "size_variance": 0.35,
     "streak_fraction": 0.0,
@@ -86,6 +91,8 @@
     "speed_variance": 0.5,
     "spread_degrees": 360.0,
     "gravity": -2.4,
+    "up_bias": 0.6,
+    "grow": 0.3,
     "size": 0.1,
     "size_variance": 0.5,
     "streak_fraction": 0.35,

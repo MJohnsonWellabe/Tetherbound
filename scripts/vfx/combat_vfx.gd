@@ -55,6 +55,10 @@ static var _config: Dictionary = {}
 ## Tests and the perf probe switch the whole layer off and on without editing
 ## the config file: null defers to vfx.json, true/false wins over it.
 static var _enabled_override: Variant = null
+## The one watcher this process has installed (or asked to be installed): two
+## hits landing in the same physics tick both reach `ensure_watcher` before the
+## deferred `add_child` has run, and without this each would make its own.
+static var _watcher: Node = null
 
 
 static func config() -> Dictionary:
@@ -233,11 +237,15 @@ static func ensure_watcher(from: Node) -> Node:
 	var tree := from.get_tree()
 	if tree == null or tree.root == null:
 		return null
+	if _watcher != null and is_instance_valid(_watcher):
+		return _watcher
 	var existing := tree.root.get_node_or_null(NodePath(WATCHER_NAME))
 	if existing != null:
+		_watcher = existing
 		return existing
 	var watcher := new()
 	watcher.name = WATCHER_NAME
+	_watcher = watcher
 	# Deferred: hooks fire from inside physics callbacks, where adding a
 	# child to the root is not allowed to happen synchronously.
 	tree.root.call_deferred("add_child", watcher)
