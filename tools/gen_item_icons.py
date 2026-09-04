@@ -909,37 +909,41 @@ def _candy_body() -> Image.Image:
     every candy tier is drawn on: a round sweet with a twisted wrapper end
     fanning out on each side, matching the installed
     `assets/props/candy_pickup/candy_pickup.glb` and board 17's "one wrapper,
-    three tiers". One cutout at each neck separates the ball from its wrapper
-    so the shape reads as a sweet and not a bow-tie, and one crimp cutout per
-    fan gives the twist. The three tiers (`icon_good_candy`, `icon_great_candy`,
-    `icon_rare_candy`) add markers to this blank the way the orb tiers add
-    rings, so the family stays one silhouette."""
-    # Round 1's blind judge measured the plain sweet as a 1.9:1 letterbox bar,
-    # the two lightest icons in the inventory grid; the ball and fans are sized
-    # so the envelope is closer to the square third-of-a-tile mass every other
-    # item icon has.
+    three tiers". A short cutout at each neck pinches the wrapper against the
+    ball (a twist, not a severed bow-tie: the fan stays joined above and
+    below the pinch); the fan's own notched outline gives the fold, with no
+    crimp line, which crossed the pinch into an 'H' bracket. The three
+    tiers (`icon_good_candy`, `icon_great_candy`, `icon_rare_candy`) add
+    markers to this blank the way the orb tiers add rings, so the family
+    stays one silhouette.
+
+    Envelope: the blind judge measured rounds 1-2 as a wide short bar bleeding
+    to both tile edges and sitting low, where every other item icon is a
+    compact mass inset 8-11px on each side. The fans stop at x=28/228 (7px in
+    at 64px) and the sweet is centred on the tile."""
     img = new_canvas()
     d = ImageDraw.Draw(img)
-    cx, cy, r = 128, 150, 74
+    cx, cy, r = 128, CANDY_CY, 72
     for sign in (1, -1):
         neck = cx + sign * (r - 8)
-        tip = cx + sign * 124
+        tip = cx + sign * 100
         fan = [
-            (neck, cy - 20),
-            (tip, cy - 62),
-            (cx + sign * 104, cy),
-            (tip, cy + 62),
-            (neck, cy + 20),
+            (neck, cy - 26),
+            (tip, cy - 60),
+            (cx + sign * 88, cy),
+            (tip, cy + 60),
+            (neck, cy + 26),
         ]
         d.polygon(fan, fill=FG)
-        # crimp: a short cutout from the neck into the fan's centre
-        cutout_line(d, [(neck + sign * 12, cy), (cx + sign * 102, cy)], width=max(3, STROKE // 2))
     d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
-    # neck cutouts: the twist, where the wrapper pinches tight against the ball
+    # neck pinch: shorter than the fan's neck, so the wrapper stays attached
     for sign in (1, -1):
         x = cx + sign * (r + 2)
-        cutout_line(d, [(x, cy - 26), (x, cy + 26)])
+        cutout_line(d, [(x, cy - 14), (x, cy + 14)])
     return img
+
+
+CANDY_CY = 136  # the sweet's centre line; the wings on Rare sit above it
 
 
 def _cutout_star(d: ImageDraw.ImageDraw, cx: float, cy: float, outer: float, inner: float, points: int = 5) -> None:
@@ -965,7 +969,7 @@ def icon_great_candy() -> Image.Image:
     reads as 'this one is better' next to the plain tier."""
     img = _candy_body()
     d = ImageDraw.Draw(img)
-    _cutout_star(d, 128, 150, 40, 16)
+    _cutout_star(d, 128, CANDY_CY, 40, 16)
     return img
 
 
@@ -974,24 +978,23 @@ def icon_rare_candy() -> Image.Image:
     off its shoulders -- board 17's gold tier is winged, and the world pickup
     grows the same wings as child geometry. The wings sit above the wrapper
     fans so the outline gains a third silhouette feature (ball, fans, wings)
-    where Good has one and Great two."""
-    # Round 1's blind judge read the first wings (two straight diagonal
-    # ribbons with hairline hatching) as a medal's ribbons, and a scalloped
-    # redraw read as antlers. Each wing is a smooth lobe (a rotated ellipse)
-    # swept up and outward from the ball's shoulder, split by one full-stroke
-    # feather cutout along its length -- a wing's outline, no mark finer than
-    # the rest of the set carries.
+    where Good has one and Great two.
+
+    Each wing is a smooth lobe (a rotated ellipse) swept up and outward,
+    split by one full-stroke feather cutout along its length, and held a
+    clear gap off the ball rather than joined to it: two blind rounds read
+    wings that met the sweet (straight hatched ribbons, then lobes seated
+    behind a shoulder cutout) as a medal's ribbons, rim and lug."""
     img = icon_great_candy()
     d = ImageDraw.Draw(img)
-    cx, cy = 128, 150
-    r = 74
+    cx, cy = 128, CANDY_CY
     for sign in (1, -1):
-        root = (cx + sign * 34, cy - 62)
-        tip = (cx + sign * 124, cy - 116)
+        root = (cx + sign * 50, cy - 70)
+        tip = (cx + sign * 100, cy - 102)
         mx, my = (root[0] + tip[0]) / 2, (root[1] + tip[1]) / 2
         ang = math.atan2(tip[1] - root[1], tip[0] - root[0])
-        a = math.hypot(tip[0] - root[0], tip[1] - root[1]) / 2 + 6
-        b = 26
+        a = math.hypot(tip[0] - root[0], tip[1] - root[1]) / 2 + 4
+        b = 20
         pts = []
         for i in range(48):
             t = i * 2 * math.pi / 48
@@ -999,19 +1002,16 @@ def icon_rare_candy() -> Image.Image:
             pts.append((mx + ex * math.cos(ang) - ey * math.sin(ang),
                         my + ex * math.sin(ang) + ey * math.cos(ang)))
         d.polygon(pts, fill=FG)
-    # re-lay the ball over the wing roots, then one cutout along each shoulder
-    # so the wing is a separate part, not a bulge of the sweet
-    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
-    _cutout_star(d, cx, cy, 40, 16)
-    for sign in (1, -1):
-        cutout_arc(d, (cx - r, cy - r, cx + r, cy + r),
-                   (222 if sign < 0 else 282), (258 if sign < 0 else 318), width=STROKE)
-        # the feather split, from a third of the way out to just short of the tip
-        root = (cx + sign * 34, cy - 62)
-        tip = (cx + sign * 124, cy - 116)
-        f0 = (root[0] + (tip[0] - root[0]) * 0.3, root[1] + (tip[1] - root[1]) * 0.3)
+        # the feather split, from a quarter of the way out to just short of the tip
+        f0 = (root[0] + (tip[0] - root[0]) * 0.25, root[1] + (tip[1] - root[1]) * 0.25)
         f1 = (root[0] + (tip[0] - root[0]) * 0.98, root[1] + (tip[1] - root[1]) * 0.98)
         cutout_line(d, [f0, f1], width=STROKE)
+    # the gap between wing and sweet: re-cut the ball's outline so the wing
+    # root never touches it
+    r = 72
+    d.ellipse((cx - r - 6, cy - r - 6, cx + r + 6, cy + r + 6), outline=CLEAR, width=7)
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
+    _cutout_star(d, cx, cy, 40, 16)
     return img
 
 
@@ -1058,22 +1058,18 @@ def icon_speed_mushroom() -> Image.Image:
 
 
 def icon_stamina_mushroom() -> Image.Image:
-    """Stamina Shroom: the orange cap, ringed. Two large ring cutouts (an
-    outline each, not a filled dot) so it and Speed are told apart by the mark
-    itself even before the tint: one big bullseye against five small dots."""
+    """Stamina Shroom: the orange cap, ringed. Three open ring cutouts (an
+    outline each, not a filled dot) so it and Speed are told apart by the
+    mark itself even before the tint: rings against dots. The rings are
+    large with a full-stroke wall so the hole survives the 19px thumbnail,
+    and they are three in a triangle: one concentric bullseye read as an eye
+    (and as the orbs' own ring ladder) to the blind judge."""
     img = _mushroom_body(cap_half_w=92, cap_top=36, cap_bottom=124)
     d = ImageDraw.Draw(img)
     cx = 128
-    # One large bullseye (two concentric rings, walls at full stroke) high on
-    # the cap: round 1's blind judge found three small rings filled in at 19px
-    # into blobs that only the count told from Speed's dots. One big open mark
-    # against five small solid ones is a difference in geometry, not in dot
-    # treatment.
-    # Concentric, not side by side: two rings next to each other on a dome
-    # read as a pair of eyes.
-    x, y = cx, 82
-    for r in (36, 16):
-        d.ellipse((x - r, y - r, x + r, y + r), outline=CLEAR, width=STROKE)
+    w = int(STROKE * 0.9)
+    for x, y, r in ((cx, 66, 24), (cx - 48, 98, 22), (cx + 48, 98, 22)):
+        d.ellipse((x - r, y - r, x + r, y + r), outline=CLEAR, width=w)
     return img
 
 
@@ -1085,10 +1081,10 @@ def icon_wild_mushroom() -> Image.Image:
     # Round 1's four hairline rim ticks were gone by 32px. Two full-stroke
     # gill notches per side, run up from the rim well into the cap, are the
     # smallest mark that still shows at the 19px thumbnail.
-    img = _mushroom_body(cap_half_w=118, cap_top=52, cap_bottom=120, stem_half_w=34)
+    img = _mushroom_body(cap_half_w=106, cap_top=50, cap_bottom=120, stem_half_w=34)
     d = ImageDraw.Draw(img)
     cx, rim_y = 128, 120
-    for x in (cx - 98, cx - 66, cx + 66, cx + 98):
+    for x in (cx - 88, cx - 60, cx + 60, cx + 88):
         cutout_line(d, [(x, rim_y - 14), (x, rim_y + 14)], width=STROKE)
     return img
 
