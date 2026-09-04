@@ -1,0 +1,47 @@
+{
+  "_comment": "Gate 3 coordinator freeze, written BEFORE the run per protocol section A.2. This run exists to answer one question the project has never answered: is there a healthy S03 -> S09 chain, and do bands 2-5 and the finale produce any evidence about their own content? Gate F run 3 (2026-08-27/28) could not -- its S06-S09 failures were one South Bridge stranding counted once per dependent assertion, and archive/reports/GATE_F_RUN_3_FINDINGS.md says so in its own words.",
+  "candidate_sha": "3ca3b7a1059d2cd8e0f2adb292940a481807d5d9",
+  "candidate_ref": "claude/gate-3-coordinator-cjgwca (main at 3c73aab5 plus this branch's docs-only commits)",
+  "frozen_at_utc": "2026-09-04T00:19:16Z",
+  "run_dir": "ralph/reports/gate-f-run-g3-20260904T001916Z",
+  "supersedes": {
+    "_comment": "Nothing. This does NOT supersede ralph/reports/gate-f-candidate/RUN_METADATA.json, which remains the 2026-08-27 candidate record for that run. This file is scoped to this run directory only, which is why it lives here and not there."
+  },
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "kind": "linux editor binary, NOT the shipped Windows export",
+    "path": "~/.cache/tetherbound-art/godot",
+    "sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+    "_comment": "Section 0.5: export-identity behaviour on Windows stays [OWNER-ONLY]."
+  },
+  "lanes": {
+    "logic": {
+      "display_server": "headless (--headless, no rendering driver)",
+      "renderer": "none -- no rendering driver is loaded",
+      "_comment": "This run is LOGIC ONLY, declared here before the run rather than chosen mid-run, which is what the harness's own _freeze_display_claim() comment demands after run 2. Every segment S01-S10e declares evidence_lane=logic already; their prescribed frames are DELEGATED to the *C capture lanes, which this run does not execute. The capture debt is therefore real and outstanding, not discharged -- read it with tools/gate_f/run_inventory.py."
+    }
+  },
+  "resolution": null,
+  "resolution_substituted": false,
+  "_comment_resolution": "No resolution: nothing is rendered. A capture lane, when one is run, records its own.",
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "fresh user:// dir; every segment wipes saves and seeds from the previous segment's exit save",
+  "date": "2026-09-04",
+  "operator": "Gate 3 coordinator (opus, session_01Rra117rfv84LPqbL5ACBn4)",
+  "free_build": false,
+  "suite_state_at_freeze": {
+    "reverified_in_container": false,
+    "_comment": "NOT re-run before this freeze, and this field exists so nobody reads an implied green. The full unit suite is ~28 minutes and this container provisioned bare; asset import alone took ~50 minutes. docs/CURRENT_STATE.md section 2 records 1728 unit tests / 0 failures as of 2026-09-02 on main at cf535cce, which is three landings ago and is NOT a claim about this SHA."
+  },
+  "known_open_defects_at_freeze": [
+    "docs/CURRENT_STATE.md section 3, P1: the tutorial catch is unstable across KO/re-engage rounds. smoke_gate_b_continuous has failed inside the opening in two different ways on consecutive runs of one commit. If S03 fails this way it is this defect, not a new finding -- and it is the same mechanism that stranded run 3, so it is the single most likely thing to end this chain early.",
+    "docs/CURRENT_STATE.md section 3, P2: the gather-route walker cannot round the village_boundary concave corner past TrailGate. ralph/FENCE-CORNER-0903 fixed stick_navigator for this and is NOT on this SHA.",
+    "Six Gate 3 lanes are pushing branches concurrently. None of their work is on this SHA. This run measures main-as-of-3c73aab5, which is the baseline their changes will be judged against, not the post-Gate-3 state."
+  ],
+  "what_this_run_cannot_say": [
+    "Anything about how the game LOOKS. No frames are rendered. Every visual verdict is delegated and outstanding.",
+    "Anything about ROG Ally frame rate, GPU frame time, VRAM or thermals -- [OWNER-ONLY], per section 0.4.",
+    "Anything about the Windows export's behaviour, per section 0.5."
+  ]
+}
