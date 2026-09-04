@@ -856,9 +856,10 @@
       "action": "assert",
       "args": {
         "check": "route_rows_at_least",
-        "rows": 1200
+        "rows": 480
       },
-      "expected": "Section C.2"
+      "expected": "Section C.2",
+      "observation": "2.14/G3-HARNESS-0904. 1200 described a ~600 s segment at the schema's own 2 Hz (Section C.2); this segment runs ~267 s on the shipped tournament flow (TOURNAMENT-FLOW-0903 and GATE2-EVIDENCE-0903's harness fixes both landed since 1200 was set). Re-derived from a real run at this SHA: route.csv held 520 rows at this assert's own checkpoint (t=263.75s). 480 keeps a margin below that measured value rather than pinning to the ceiling, so ordinary run-to-run timing variance does not flake it."
     },
     {
       "id": "S04-62",
