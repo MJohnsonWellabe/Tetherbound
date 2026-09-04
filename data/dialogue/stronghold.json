@@ -10,6 +10,18 @@
   "_comment_warden": "Spec §33, and it is the whole assignment. He sincerely believes separation prevents chaos, that controlled trade prevents regional conflict, that dangerous migration must be limited, that ordinary people do not understand the risks, and that Team Tether carries the burden of holding it together. He can still be abusing power -- he is -- and he is NOT a moustache-twirler. He never says 'you cannot stop me'. He says a version of 'you don't understand what these barriers are holding apart', and he means it, and he is not entirely wrong, and he is doing this to a living thing anyway. He does not recant when he loses. That is the point: the player has to make the choice against a real argument, not against a sneer.",
 
   "conversations": {
+    "stronghold_duty_board": {
+      "_comment": "R-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md sec7.2). A Team Tether duty board at band 5's waystop, the last camp before the works -- the owner's Sec10 readiness layer in the world, so the player learns the garrison's numbers before committing to the approach rather than discovering them one room at a time. Same flat institutional voice as `stronghold_reveal`, and it names ONLY the draw: this board must never be the one that says what chamber five holds, so tests/test_dialogue_runner.gd's spoiler scan can pass this file's OWN exemption by without this conversation needing it -- confirmed by hand against FORBIDDEN_WORDS (legendary/veridian/stag/living power/power source), none of which appear below. Garrison numbers match `data/config/bands/band5_stronghold_approach/trainers.json`'s own team sizes (Verrick 2, Solene 3, Hald 3, Warden Aldis 5) -- a board that lied about them would undercut the readiness it exists to give.",
+      "speaker": "Tether Duty Board",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "GARRISON DUTY BOARD — HALL APPROACH. POSTINGS AS ROTATED.",
+        "VERRICK — 2. SOLENE — 3. HALD — 3. WARDEN — 5.",
+        "Each posting stands until relieved by the one behind it. None of them stand down early.",
+        "NO RELIEF UNTIL THE DRAW IS STABLE."
+      ]
+    },
+
     "stronghold_reveal": {
       "_comment": "SG40. A Team Tether maintenance readout bolted to the arena threshold -- environmental storytelling, in the flat institutional voice of a machine nobody expected an outsider to read. It says the three things §32's stronghold rung lists: the legendary is the living power source, Team Tether is siphoning it, and the people running it know exactly what they are doing. The horror is in the register: this is a status board, and none of it is phrased as a crime.",
       "speaker": "Tether Readout",

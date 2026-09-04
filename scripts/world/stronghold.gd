@@ -256,6 +256,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
 	_build_trim()
 	_build_structure()
 	_build_conduits()
+	_build_warden_arena_dressing()
 	_build_lights()
 	_build_exterior_facing()
 	_build_exterior_dressing()
@@ -3661,6 +3662,54 @@ func _build_conduits() -> void:
 			or bool((_chambers[to] as Dictionary).get("open", false))
 		_box(size, Vector3(mid.x, _floor_y + 0.06, mid.z),
 			_exterior_live_material() if open_yard else _live_material(), false)
+
+
+## W-4 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md sec5.2). CONTENT-0828B measured
+## the arena at 97% of pixels under luminance 40 before its lights were
+## authored; JUDGE-5 called it "four untextured walls and a cobble floor".
+## Dresses the walls and the far end ONLY, exactly as the contract asks --
+## the combat arena radius (`data/config/combat.json`'s `arena.radius`, 11m)
+## fits this 24x26m room with a metre to spare, and nothing built here carries
+## collision or stands inside that ring.
+##
+## Banners go on the wall BEHIND `warden_stand` (the far, +z end -- the one
+## wall in this room with no passage in it, so the Warden is framed by the
+## complex's own heraldry rather than bare stone), the same +z-wall yaw
+## `_build_yard_banners()` already uses. Conduits run along the entry (-z)
+## wall's base from each jamb toward the passage the player just walked
+## through, converging on it the way every inter-chamber floor cable already
+## converges on the Legendary Chamber (`_build_conduits()` above) -- read here
+## from the wall the player enters through, since this room has no far
+## chamber of its own to run a floor cable toward.
+func _build_warden_arena_dressing() -> void:
+	if not _chambers.has("warden_arena"):
+		return
+	var chamber: Dictionary = _chambers["warden_arena"]
+	var centre := _local_of(chamber.get("at", []))
+	var half := _size_of(chamber.get("size", [])) * 0.5
+	var height := float(chamber.get("height", 11.0))
+
+	var top := _floor_y + height * 0.78
+	for s: float in [-1.0, 1.0]:
+		_hang_banner(Vector3(centre.x + s * half.x * 0.45, top,
+			centre.z + half.y - _wall_t * 0.5), PI * 0.5,
+			BANNER_COLOUR, BANNER_SCALE * 1.1)
+
+	# The passage in is `passages`' own tether_approach->warden_arena entry,
+	# centred on this chamber's own x (both chambers share x=0) at half-width
+	# 1.7m. Each run starts a metre off the side wall and ends just clear of
+	# the jamb, hugging the entry wall's base rather than crossing the floor.
+	var door_half_w := 1.7
+	var wall_z := centre.z - half.y + _wall_t * 0.5 + 0.15
+	var mat := _live_material()
+	for s2: float in [-1.0, 1.0]:
+		var far_x := s2 * (half.x - 1.0)
+		var near_x := s2 * (door_half_w + 0.4)
+		var length := absf(far_x - near_x)
+		if length < 0.2:
+			continue
+		_box(Vector3(length, 0.12, 0.2), Vector3((far_x + near_x) * 0.5, _floor_y + 0.06, wall_z),
+			mat, false, "WardenArenaDoorConduit_%d" % int(s2))
 
 
 ## DIAGNOSTIC RESULT, ITEM 1 (2026-09-02). A single OmniLight3D dropped at the
