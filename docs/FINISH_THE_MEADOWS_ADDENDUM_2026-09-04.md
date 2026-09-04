@@ -24,6 +24,8 @@ The existing `FINISH_THE_MEADOWS.md` row **"Bonding and levelling made visible"*
 
 Treat it as a dedicated progression workstream, not a single VFX ticket.
 
+**The contract for A1 and A2 is written: `docs/prompts/73-PROGRESSION-VISIBLE-bond-and-level-feedback.md`** (2026-09-04). It carries the measured current state, the progression-feed event contract that candy (§B) and companion reactions (§E) consume, and the one design decision the orchestrator must record before implementation (the ordered bond ladder).
+
 ## A1. Bond progress
 
 Design the feedback contract first, then implement it in bounded lanes.
@@ -145,6 +147,8 @@ Implement a readable three-tier candy family and recognizable world representati
 The implementation can temporarily use existing suitable assets while systems are built, but visual completion requires normal-distance recognition and the standard capture + code-blind judge loop.
 
 Do not spend generation budget before the project's reference-art rule allows it.
+
+Candy and recovery pickups are not expected to need a generation. The objects that are, and the owner boards that unlock them, are in `docs/prompts/74-ART-REFERENCE-owner-boards-for-meshy.md`.
 
 ---
 

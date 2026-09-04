@@ -40,6 +40,19 @@ These are the package-level layer that assembles child systems into the complete
 - `69-STRONGHOLD-chapter-finale.md` — Hall/Warden/legendary/world-healing payoff.
 - `70-MEADOWS-full-chapter-integration-playthrough.md` — final 3–4 hour acceptance/tuning pass.
 
+## Finish-the-Meadows contracts (2026-09-04)
+
+Written against `docs/FINISH_THE_MEADOWS.md` and its addendum, from the owner's 2026-09-04
+directives:
+
+- `73-PROGRESSION-VISIBLE-bond-and-level-feedback.md` — the A1/A2 contract: one progression
+  feed, three loudness levels, the Team screen answering "how bonded am I and what raises
+  it", and the ordered-ladder decision. Supersedes `47` and owns the feedback lines of `67`.
+- `74-ART-REFERENCE-owner-boards-for-meshy.md` — the three reference boards most likely to
+  be needed (South Bridge checkpoint gate, ridge watchtower, riding saddle), the image
+  prompts to produce them in board 13's format, the intake route, and when a credit may be
+  spent per object.
+
 ## Current Gate A environment baseline
 
 - `71-GATEA-opening-environment-baseline.md` — make the opening/village/pond area representative enough to judge the real game during Gate A: naturally available creatures/resources, approved lush pond pocket, nearby broad open sightlines, readable trails, and no global density sweep.
