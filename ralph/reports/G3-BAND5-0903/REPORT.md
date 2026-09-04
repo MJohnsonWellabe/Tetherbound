@@ -527,3 +527,56 @@ confirmation that this session's earlier finding (Band 5's spawn/harvest/prop
 density is already complete and should not be padded further) was the contract's
 own intended reading of D70's "crescendo, not count" framing, not an
 under-verification on this lane's part.
+
+---
+
+## P-5.1 visual verification (the Hall must grow)
+
+Two capture attempts were needed: the first (600 s budget) produced 4 of 6 day
+frames before running out of time; a second (2200 s budget) completed all 12
+(`tools/_probe_band5_approach.gd`'s capture pass, `01-band-mouth` through
+`06-the-waystop`, day and night, under `xvfb-run` + `--rendering-driver opengl3`,
+never combined with `--headless`). Contact sheet built with
+`tools/contact_sheet.gd -- --dir=res://shots/band5_approach`. A blind sub-agent
+(no source, no conversation context, told only that six viewpoints face the same
+distant structure along one route) judged it independently per `.claude/skills/
+visual-judge/SKILL.md`'s method — this report did not judge its own frames.
+
+**Verdict: PASS on P-5.1's own fail condition, with one real secondary defect
+named.** The blind judge's own words: *"Taken as 01 vs. 06 alone, the growth
+reads as clear and satisfying"* — the Hall goes from "barely there... no towers
+legible" at `01-band-mouth` to *"clearly the largest and most dominant... full
+curtain wall with multiple towers, visible windows and stonework detail"* at
+`06-the-waystop`. P-5.1's literal fail condition ("the Hall does not read as
+distinctly larger at the waystop than at the seam") does not fire.
+
+**The secondary defect, named precisely because it would otherwise be lost in a
+pass:** `03-mid-route`'s capture viewpoint faces away from the Hall entirely —
+the judge's own words, *"This viewpoint faces a foreground pylon inside a tree
+grove — the sightline has turned away from the target entirely... the one frame
+in the sequence that breaks the 'watch it get closer' read."* This is a capture
+camera-aim issue in `tools/_probe_band5_approach.gd`'s own hard-coded shot list
+(`03-mid-route`, eye (-20,7250) looking at the fixed target (0,7560)) rather than
+a confirmed world defect — `vegetation.json`'s own `the_approach_sightline`
+clearings (orders 16-18, read earlier in this report) exist specifically to open
+this exact sightline along the road, so the gap is plausibly the capture
+viewpoint's own aim/offset rather than the corridor itself being blind at that
+point; a real player walking the spine at that position was not independently
+re-checked this session. Flagged rather than fixed: `tools/_probe_band5_approach.gd`
+is a shared Gate 3 capture tool, not a band-5-owned file, and re-aiming one shot
+in it risks the same "edit across ownership" mistake this report elsewhere avoids.
+
+**Sky-plane / white-billboard artifacts: none found across all 12 frames**,
+independently confirming this session's earlier headless mesh-scan finding
+(`_probe_band5_sky_planes.gd`) with a second, different method (a blind human-style
+read of the actual rendered pixels rather than a geometry query). The judge's one
+soft note — night cloud texture reading "flat, streaky, comb-like" in several
+night frames — is a possible stylisation question for whoever owns `art.json`'s
+sky, not a band-5 defect, and is recorded here rather than acted on.
+
+Per this repo's evidence-hygiene rule (`.gitignore`'s own comment: "written
+verdicts and one contact sheet per round... belong in the tree; per-frame
+captures... stay local"), only the contact sheet is committed
+(`ralph/reports/G3-BAND5-0903/_sheet_band5_approach.png` — the repo-root `/shots/`
+tree it was rendered into is itself gitignored, so the sheet is copied here
+rather than referenced in place), not the 12 raw PNGs.
