@@ -859,14 +859,12 @@
     {
       "id": "S08-79",
       "title": "hear the captain out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 12,
-        "settle_frames": 20
+        "max_presses": 20,
+        "settle_frames": 30
       },
-      "expected": "one of the three the objective counts"
+      "expected": "one of the three the objective counts -- G3-BAND4 harness fix v2: advance_dialogue_until_closed (CD-3's own primitive) replaces a blind press-count. events.jsonl traced the fight_until_resolved-still-not-a-PASS finding to this exact step: press interact x12/x10 against a 3-line challenge conversation overshoots by 8-9 presses once the dialogue closes and the challenge auto-starts combat, and those extra presses land as aim/catch-throw actions mid-fight (orb_greater spent against an uncatchable trainer creature), which is enough non-fighting time to trip fight_until_resolved's own quiet-detection into a premature exit. See REPORT.md."
     },
     {
       "id": "S08-80",
@@ -971,14 +969,12 @@
     {
       "id": "S08-90",
       "title": "hear the captain out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 12,
-        "settle_frames": 20
+        "max_presses": 20,
+        "settle_frames": 30
       },
-      "expected": "the second of the three"
+      "expected": "the second of the three -- G3-BAND4 harness fix v2: advance_dialogue_until_closed (CD-3's own primitive) replaces a blind press-count. events.jsonl traced the fight_until_resolved-still-not-a-PASS finding to this exact step: press interact x12/x10 against a 3-line challenge conversation overshoots by 8-9 presses once the dialogue closes and the challenge auto-starts combat, and those extra presses land as aim/catch-throw actions mid-fight (orb_greater spent against an uncatchable trainer creature), which is enough non-fighting time to trip fight_until_resolved's own quiet-detection into a premature exit. See REPORT.md."
     },
     {
       "id": "S08-91",
@@ -1114,14 +1110,12 @@
     {
       "id": "S08-102",
       "title": "hear them out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "max_presses": 20,
+        "settle_frames": 30
       },
-      "expected": "record what an optional fight offers this late in the chapter"
+      "expected": "record what an optional fight offers this late in the chapter -- G3-BAND4 harness fix v2: advance_dialogue_until_closed (CD-3's own primitive) replaces a blind press-count. events.jsonl traced the fight_until_resolved-still-not-a-PASS finding to this exact step: press interact x12/x10 against a 3-line challenge conversation overshoots by 8-9 presses once the dialogue closes and the challenge auto-starts combat, and those extra presses land as aim/catch-throw actions mid-fight (orb_greater spent against an uncatchable trainer creature), which is enough non-fighting time to trip fight_until_resolved's own quiet-detection into a premature exit. See REPORT.md."
     },
     {
       "id": "S08-103",
@@ -1193,14 +1187,12 @@
     {
       "id": "S08-108",
       "title": "hear the captain out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 12,
-        "settle_frames": 20
+        "max_presses": 20,
+        "settle_frames": 30
       },
-      "expected": "the last of the three"
+      "expected": "the last of the three -- G3-BAND4 harness fix v2: advance_dialogue_until_closed (CD-3's own primitive) replaces a blind press-count. events.jsonl traced the fight_until_resolved-still-not-a-PASS finding to this exact step: press interact x12/x10 against a 3-line challenge conversation overshoots by 8-9 presses once the dialogue closes and the challenge auto-starts combat, and those extra presses land as aim/catch-throw actions mid-fight (orb_greater spent against an uncatchable trainer creature), which is enough non-fighting time to trip fight_until_resolved's own quiet-detection into a premature exit. See REPORT.md."
     },
     {
       "id": "S08-109",
