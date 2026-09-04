@@ -4,6 +4,12 @@
 > whole remaining plan to finish the chapter, in order, written to be picked up cold. It
 > supersedes older prose about what is next. `docs/GATE2_GATE3_CLOSURE_PLAN.md` is the
 > detail behind it, with a *fails if* on every open item.
+>
+> **Then read [`docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md`](FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md).**
+> It adds the newest owner-directed chapter requirements: visible bond/level progression,
+> Good/Great/Rare Candy, denser useful world findables, and visible companion personality.
+> The source directive is `docs/owner/OWNER_DIRECTIVES_2026-09-04-C.md` and outranks older
+> planning where it overlaps.
 
 **Read this first. It is the only routing document.** Rewritten 2026-09-02 at the
 repository reset; it replaces `ralph/START_HERE.md`, the coordinator handovers and the
