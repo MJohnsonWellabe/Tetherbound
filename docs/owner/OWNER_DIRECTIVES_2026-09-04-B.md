@@ -152,3 +152,100 @@ first. These are scoped, unstarted rows for `docs/GATE2_GATE3_CLOSURE_PLAN.md`.
 | D-0904B-4 | level+key gating that prompts | design, **reverses spec** | edit `MEADOWS_PROGRESSION_SPEC.md`; keep the refusal diegetic |
 | D-0904B-5 | one fight per opponent; no fleeing | half shipped; half new | the total-party-faint exit |
 | D-0904B-6 | bonding and levelling visible | design + UI | — |
+
+
+---
+
+# Amendment — same day, owner clarifications
+
+These correct and narrow the items above. Where they disagree with §D-0904B-1,
+-4 or -5, **the amendment wins**.
+
+## Verbatim
+
+> you shouldn't be able to leave a fight with another character once it's started.
+> still should be able to with a wild creature. also you can still hit challenge
+> someone else after you beat them. maybe it doesn't let you fight again but you
+> should t even see the challenge button anymore. just talk to or whatever. alpha
+> pin clears when you catch it or beat it. gate just make the fight not start
+> unless you're a certain level. the guy can just say "you're too low level I'll
+> crush you and send you crying to Grandpa"
+>
+> the dialogue at the end needs to be cut way down. it was paragraphs with the
+> warden. then paragraphs on the legendary thing.
+
+## A-1 — No fleeing applies to TRAINERS only; wild fights keep the exit
+
+This resolves the softlock concern raised against D-0904B-5. A wild fight stays
+leavable, so the player is never locked in an unwinnable encounter with no exit;
+only a trainer fight is a commitment once accepted. `combat_manager.gd`'s
+`_flee_pressed()` stays, gated on the opponent being wild.
+
+## A-2 — The Challenge button must disappear once a trainer is beaten
+
+**Confirmed in the code, and it is a real defect.** `trainer_npc.gd::_prompt_for()`
+is unconditional:
+
+```gdscript
+return prompts().get("challenge", "Challenge %s") % str(spec.get("name", "Trainer"))
+```
+
+The *conversation* already switches after a win — `can_challenge()` is false and
+the defeated line plays — but the **prompt label never does**, so every beaten
+trainer still advertises "Challenge". That is the repo's own stated rule being
+broken: `interactable.gd` says *"off means no offer at all... a visible prompt
+the button refuses is worse than no prompt."*
+
+**A trap for whoever implements this.** `_prompt_for()`'s own comment records that
+the prompt must never contain **"talk"** or **"choose"**, because
+`tests/smoke_opening.gd` locates Grandpa and the three starters by exactly those
+substrings. So the obvious fix — "Talk to %s" — will break the opening smoke.
+Pick different wording, or change how that smoke finds its targets; do not
+discover this in CI.
+
+## A-3 — The alpha pin clears on caught **or beaten**
+
+Answers the open question in D-0904B-1. No dismissal mechanic needed: a full
+roster can still clear the pin by winning the fight.
+
+## A-4 — The level gate is the trainer refusing, not a lock
+
+> gate just make the fight not start unless you're a certain level. the guy can
+> just say "you're too low level I'll crush you and send you crying to Grandpa"
+
+This settles the tension flagged in D-0904B-4 in the best available way. There is
+no UI level lock: the **fight does not start**, and the trainer says why, in
+character. `MEADOWS_PROGRESSION_SPEC`'s "a physical key/mechanism, not a UI level
+lock" survives intact — a trainer who sizes you up and refuses *is* the world
+creating the gate. The spec still needs a line added for the level condition, but
+it is no longer a reversal.
+
+Mechanically this is a **fifth reason `can_challenge()` can be false**, and the
+dark-features T1 note in `trainer_npc.gd` already warns what happens when those
+reasons get collapsed: a too-low player must hear the taunt, not the
+already-defeated line.
+
+## A-5 — Cut the endgame dialogue down, hard
+
+Measured on the current build, `data/dialogue/stronghold.json`:
+
+| Conversation | Lines | Characters |
+|---|---|---|
+| `stronghold_warden_challenge` | 8 | **1,547** |
+| `stronghold_free_legendary` | 4 | 784 |
+| `stronghold_warden_defeated` | 5 | 741 |
+| `stronghold_reveal` | 5 | 637 |
+| `stronghold_machinery_fails` | 4 | 636 |
+| `stronghold_chamber` | 4 | 424 |
+| **whole file** | | **5,343** |
+
+The Warden's pre-fight speech averages 193 characters a line and peaks at 379 —
+paragraphs, exactly as reported, at the moment the player most wants to fight.
+
+**What must survive the cut.** Spec §33 gives the Warden a worldview rather than a
+motive: he believes separation prevents chaos, he confirms the readout rather than
+denying it, and he does not recant when he loses. That characterisation is canon
+and is the reason the fight lands. Cutting to length is not licence to flatten him
+into a generic boss — the job is to say the same thing in a fraction of the words,
+and the freeing sequence should carry its weight visually rather than in text,
+which is what prompt 69 asks for anyway ("physically and emotionally legible").
