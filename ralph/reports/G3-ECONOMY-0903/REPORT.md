@@ -246,12 +246,20 @@ floor and the recurrence evidence, not a playtest verdict.
   `chapter_curve.json` and `chapter_rewards.json` after every edit — both parse clean.
 - Godot 4.7-stable installed fresh in this container (none was present); a full
   `--import` was run before any GDScript test.
-- `godot --headless --path . --script tests/run_tests.gd -- --only=test_chapter_curve.gd`
-  and `-- --only=test_chapter_rewards.gd`: **[fill in from the actual run — see below]**
+- `godot --headless --path . --script tests/run_tests.gd -- --only=test_chapter_curve.gd`:
+  **20 tests, 465 assertions, 0 failed** (includes the 2 new tests).
+- `-- --only=test_chapter_rewards.gd`: **10 tests, 139 assertions, 0 failed** (includes
+  the 1 new test).
+- `-- --only=test_progression.gd`: 44 tests, 113 assertions, 0 failed (spot check —
+  `progression.json` is owned by this lane and untouched this session, confirming no
+  incidental drift).
+- `-- --only=test_spawn_tables.gd`: 27 tests, 7749 assertions, 0 failed (spot check on
+  the spawn table this lane's species count and `region_at()` resolution depend on).
 
-Not run: the full 1728-test suite (28+ min) — time-boxed to the two files this lane
-actually changed plus a spot check; the coordinator's own merge should still run the full
-suite before landing, per `docs/AGENT_WORKFLOW.md`.
+Not run: the full 1728-test suite (28+ min) — time-boxed to the files this lane actually
+touched plus targeted spot checks on files this lane's changes depend on; the
+coordinator's own merge should still run the full suite before landing, per
+`docs/AGENT_WORKFLOW.md`.
 
 ## Summary of every number changed, and why
 
