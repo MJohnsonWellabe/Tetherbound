@@ -242,10 +242,18 @@ func _shoot(variant: Dictionary, at: Vector3) -> void:
 	table["field_rim"] = float(variant["rim"])
 	table["field_emission"] = float(variant.get("emission", 0.0))
 	table["field_degreen"] = float(variant.get("degreen", 0.0))
-	# Explicit every shot, not just when a variant opts in -- otherwise a
-	# `--extra-field-scale=` variant's setting would leak forward onto every
-	# variant shot after it, since this is a static, process-wide scale.
-	CREATURE_BODY.set_field_brightness_scale(float(variant.get("field_scale", 1.0)))
+	# ONLY when a variant opts in. An earlier version of this line ran
+	# unconditionally with a `1.0` default, which silently overrode whatever
+	# `--time=`/`apply_time()` had just set through the REAL config path
+	# (`world_look.gd` reading `art.json`'s own `creature_field_emission_scale`)
+	# -- every ordinary SHIPPED/height/emission/degreen variant was secretly
+	# forced back to the daytime (1.0) scale even at `--time=night`, which is
+	# exactly the config-driven behaviour this probe exists to verify. Leaving
+	# the scale untouched here means those variants render whatever the clock
+	# actually set; only an explicit `--extra-field-scale=` variant drives it
+	# directly.
+	if variant.has("field_scale"):
+		CREATURE_BODY.set_field_brightness_scale(float(variant["field_scale"]))
 
 	if _body != null and is_instance_valid(_body):
 		_body.queue_free()
