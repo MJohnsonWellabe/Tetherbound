@@ -162,11 +162,19 @@ func _init() -> void:
 			"rested_seconds_left": 0.0,
 		})
 
-	# Band 4/5 boundary, open meadow -- see header. Y is set high and left for
-	# physics to settle on load, the same convention `build_s10b_synthetic_
-	# seed.gd` uses rather than reading live terrain.
+	# Band 4/5 boundary, open meadow -- see header. `tools/_probe_ground_y.gd`
+	# (scratch, this session) measured real ground at (0,7000) as -1.803 via
+	# `playground_heightfield.gd`; half a metre of air above that, the same
+	# margin `seed_s09_exit.gd` uses for its own live-terrain placement,
+	# rather than a guessed height. FOUND THE HARD WAY: an earlier version of
+	# this file placed the player at a flat y=15.0 (mirroring
+	# `build_s10b_synthetic_seed.gd`'s own y=20.0-over-guessed-ground
+	# convention) without checking the real height here -- a ~16.8 m fall
+	# that dealt fall damage, dropped the player to 0 HP, and spawned a
+	# death satchel before S09-04 ever ran. A real ground sample is cheap;
+	# guessing this margin is not.
 	var pose := {
-		"position": [0.0, 15.0, 7000.0],
+		"position": [0.0, -1.303, 7000.0],
 		"model_yaw": 0.0,
 		"camera_yaw": 0.0,
 		"camera_pitch": -0.15,
