@@ -458,6 +458,15 @@ func _spawn_creatures() -> void:
 			if not elder.is_empty():
 				wild.set("body_scale", float(elder.get("body_scale", 1.0)))
 			wild.call("populate", species, _player)
+			# G-2. The alpha's block wins over the elder's when an entry
+			# authors both, matching `_merge_named_individual`'s own precedence
+			# for every other key the two blocks share.
+			var named_combat: Dictionary = {}
+			for block: Dictionary in [elder, (spawn.get("alpha", {}) as Dictionary) if spawn.get("alpha", {}) is Dictionary else {}]:
+				if block.get("combat", {}) is Dictionary and not (block["combat"] as Dictionary).is_empty():
+					named_combat = (block["combat"] as Dictionary).duplicate(true)
+			if not named_combat.is_empty():
+				wild.set("combat_override", named_combat)
 			# Audit B3: "" (no tier) for every authored anchor, which
 			# `TIER_RIM_STRENGTH` resolves to `common`'s 0.0 -- only a rolled
 			# spawn (`spawn_tables.gd::plan_for`) ever sets a real tier here.
@@ -702,6 +711,15 @@ func _apply_plan(spawn: Dictionary, plan: Dictionary) -> Dictionary:
 ##                Omitted entirely for the ordinary seeded population, which
 ##                keeps fainting, respawning and being caught exactly as
 ##                before.
+##   combat     — G-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md). A per-encounter
+##                behaviour override merged over `combat.json`'s `enemy` block
+##                for THIS body only, so a named opponent can fight differently
+##                rather than merely bigger. Absent → today's behaviour byte for
+##                byte, which is the contract's own failure condition. Authored
+##                in the data that already describes the individual: a spawn
+##                entry's `alpha`/`elder` block, `burrow_warrens.json`'s
+##                `guardian`, or a trainer team member. See
+##                `wild_creature.gd::combat_override`.
 func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D:
 	if not SPECIES.has(species):
 		push_error("spawn_wild('%s') names a species that is not in species.json" % species)
@@ -717,6 +735,12 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 		parent = get_parent()
 	parent.add_child(wild)
 	wild.call("populate", species, _player)
+	# G-2: before anything can engage this body. `populate()` does not clear it
+	# and a fresh instance starts empty, so an override cannot leak between
+	# bodies -- the contract's "fails if the override reaches any body that did
+	# not author it".
+	if opts.get("combat", {}) is Dictionary and not (opts.get("combat", {}) as Dictionary).is_empty():
+		wild.set("combat_override", (opts["combat"] as Dictionary).duplicate(true))
 	var level := int(opts.get("level", 0))
 	if level > 0:
 		_set_fixed_level(wild, species, level)
@@ -2110,6 +2134,9 @@ func _send_out_next_creature() -> bool:
 	get_parent().add_child(body)
 	body.call("populate", str(creature.get("species_id")), _player)
 	body.set("instance", creature)
+	# G-2, before the fight can open. A trainer creature with no `combat` block
+	# in trainers.json carries an empty dictionary and fights exactly as it did.
+	body.set("combat_override", creature.get("combat_override"))
 	body.call("set_shiny", bool(creature.get("shiny")))
 	body.set("aggressive", false)
 	body.call("configure", MATH.config().get("wild", {}))

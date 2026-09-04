@@ -363,6 +363,12 @@ static func creature_for(entry: Dictionary) -> RefCounted:
 			creature.move_quick = quick
 		if charged != "":
 			creature.move_charged = charged
+	# G-2: the entry's optional per-creature behaviour override, read beside
+	# `moves` because it is the same kind of thing -- this individual fights
+	# differently, and nothing about the species changes.
+	var combat: Variant = entry.get("combat", {})
+	if combat is Dictionary and not (combat as Dictionary).is_empty():
+		creature.combat_override = (combat as Dictionary).duplicate(true)
 	return creature
 
 

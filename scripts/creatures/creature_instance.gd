@@ -161,6 +161,15 @@ var levels_gained_with_you: int = 0
 var move_quick: String = ""
 var move_charged: String = ""
 
+## G-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md). This individual's behaviour
+## override when it fights AS AN OPPONENT, carried here for the same reason
+## `move_quick`/`move_charged` are: a trainer's team entry may override it per
+## creature, and the instance is what survives the trip from
+## `trainers.json` to the body `_send_out_next_creature()` builds. Empty for
+## every player creature and every ordinary trainer creature, which is the
+## contract's requirement that an absent block changes nothing.
+var combat_override: Dictionary = {}
+
 ## --- individuality (R4.2) ----------------------------------------------------
 
 ## Per-stat quality rolls, 0.0-1.0, 0.5 = perfectly average (GAME_DESIGN.md 11:
