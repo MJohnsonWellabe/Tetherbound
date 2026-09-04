@@ -92,6 +92,10 @@ var _pending_conversation: String = ""
 ## before a single body was placed) shows the right labels immediately.
 var _progression_revision: int = -1
 
+## `Game.progression`, looked up once. Null until the first frame that finds
+## it, and never re-fetched: the autoload outlives every world.
+var _progression_cache: RefCounted = null
+
 
 ## `group` selects which rows of the table this placer owns, matched against
 ## each row's `placed_by`. The default ("") is the world's own pass and places
@@ -299,14 +303,21 @@ func _prompt_for(spec: Dictionary) -> String:
 ## majority of frames this is one integer compare and nothing else, and the
 ## relabel walk only runs on the frames a flag genuinely flipped.
 func _process(_delta: float) -> void:
-	var progression := _progression()
-	if progression == null:
+	# The `/root/Game` lookup is cached rather than repeated per frame: this
+	# runs on every frame of the game, and `playground_hud.gd` caches the same
+	# autoload for the same reason. `_placed == 0` skips the stronghold/village
+	# placer instances that stood nobody up.
+	if _placed == 0:
 		return
-	var revision := int(progression.get("revision"))
+	if _progression_cache == null:
+		_progression_cache = _progression()
+		if _progression_cache == null:
+			return
+	var revision := int(_progression_cache.get("revision"))
 	if revision == _progression_revision:
 		return
 	_progression_revision = revision
-	_refresh_prompts(progression)
+	_refresh_prompts(_progression_cache)
 
 
 ## Re-label every body this node placed. Public so a test can force the pass

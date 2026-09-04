@@ -28,6 +28,9 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+## For `FLEE_REFUSED_MESSAGE` only -- a const, so it is read off the script
+## rather than off the live node (`Node.get()` sees properties, not consts).
+const COMBAT := preload("res://scripts/combat/combat_manager.gd")
 
 ## Which trainer this test fights. Read by ID from the table rather than by
 ## index or position, so SC12/SC13 replacing the placeholder with Mira, Oskar
@@ -48,6 +51,7 @@ var _manager: Node = null
 var _director: Node = null
 var _panel: Node = null
 var _trainer: Node3D = null
+var _hud: Node = null
 var _spec: Dictionary = {}
 
 var _refusals: Array[String] = []
@@ -82,6 +86,7 @@ func _run() -> void:
 		_report()
 		return
 
+	_the_prompt_offers_a_fight_before_it_is_won()
 	_stand_in_front_of_the_trainer()
 	_snapshot_reward_counts()
 	await _challenge()
@@ -91,6 +96,7 @@ func _run() -> void:
 		return
 
 	_the_battle_opened_against_a_trainers_creature()
+	await _a_trainer_fight_cannot_be_walked_out_of()
 	await _an_orb_throw_is_refused()
 	await _fight_the_whole_team()
 	_the_trainer_is_recorded_as_beaten()
@@ -156,6 +162,7 @@ func _collect_nodes() -> bool:
 	_manager = _world.get_node_or_null(^"CombatManager")
 	_director = _world.get_node_or_null(^"EncounterDirector")
 	_panel = _world.get_node_or_null(^"DialoguePanel")
+	_hud = _world.get_node_or_null(^"PlaygroundHUD")
 	if _player == null or _rig == null or _manager == null or _director == null or _panel == null:
 		_fail("the scene is missing the player, camera rig, combat manager, director or dialogue panel")
 		return false
@@ -194,6 +201,68 @@ func _collect_nodes() -> bool:
 		if outcome == "won":
 			_opponents_felled += 1)
 	return true
+
+
+## CL-W5(a), the first half. An unbeaten trainer must still ADVERTISE the
+## fight -- checked before the win so the second half below ("and stops
+## advertising it afterwards") is a real change of state rather than a prompt
+## that never said "Challenge" in the first place.
+func _the_prompt_offers_a_fight_before_it_is_won() -> void:
+	var label := _trainer_prompt_label()
+	if not label.to_lower().contains("challenge"):
+		_fail("an unbeaten trainer does not offer their fight (prompt reads '%s')" % label)
+		return
+	print("prompt before the fight: '%s'" % label)
+
+
+## The label on the trainer's own `Interactable`, which is what the arbiter
+## draws when the player is standing in range. Read off the node rather than
+## off `trainer_npc.gd`'s static reader, because the defect CL-W5(a) is about
+## is exactly that the two can disagree: the label is resolved once at build
+## time and stored, so a static function returning the right string proves
+## nothing about what the player sees.
+func _trainer_prompt_label() -> String:
+	if _trainer == null or not _trainer.has_method("prompt_node"):
+		return ""
+	var prompt: Node3D = _trainer.call("prompt_node")
+	return "" if prompt == null else str(prompt.get("label"))
+
+
+## CL-W5(b), owner amendment A-1: "you shouldn't be able to leave a fight with
+## another character once it's started."
+##
+## Both physical disengage bindings, pressed mid-fight, exactly as a player
+## gives them. The fight must still be running afterwards AND the player must
+## have been told why -- a dead button with no explanation is the failure
+## `_refuse_combat_input()` already exists to prevent for the other three.
+func _a_trainer_fight_cannot_be_walked_out_of() -> void:
+	for action: String in ["combat_run", "creature_recall"]:
+		await _press(action)
+		for i in 12:
+			await physics_frame
+		if not bool(_manager.call("is_fighting")):
+			_fail("'%s' walked the player out of a trainer fight" % action)
+			return
+		if not bool(_director.call("trainer_battle_active")):
+			_fail("'%s' ended the trainer battle without ending the fight" % action)
+			return
+		var said := _last_hud_message()
+		if said != COMBAT.FLEE_REFUSED_MESSAGE:
+			_fail("'%s' was refused silently; the HUD says '%s'" % [action, said])
+			return
+	print("disengage refused on both bindings: '%s'" % COMBAT.FLEE_REFUSED_MESSAGE)
+
+
+## The text the world-message toast most recently showed, read off the HUD's
+## own label rather than the one-shot `Game` queue -- `playground_hud.gd::
+## _update_world_message()` drains that queue every frame the real HUD is in
+## the tree, so reading the queue here would just race it for an empty string.
+## This checks what the PLAYER actually saw.
+func _last_hud_message() -> String:
+	if _hud == null:
+		return ""
+	var label: Label = _hud.get("_hotbar_message") as Label
+	return str(label.text) if label != null else ""
 
 
 ## Put the player in front of the trainer rather than walking the whole
@@ -474,6 +543,20 @@ func _the_trainer_cannot_be_fought_again() -> void:
 		_fail("a beaten trainer still opens their challenge conversation ('%s')" % conversation)
 	if bool(_director.call("can_challenge", _spec)):
 		_fail("the director would take a beaten trainer's challenge a second time")
+
+	# CL-W5(a), the second half, and the defect itself: `_prompt_for()` was
+	# unconditional, so this label went on reading "Challenge <name>" for a
+	# fight `can_challenge()` had already decided to refuse. Checked on the
+	# LIVE node after the win, not on the static reader, because the label is
+	# resolved at build time and stored -- the whole bug lived in the gap
+	# between those two.
+	var label := _trainer_prompt_label()
+	if label.to_lower().contains("challenge"):
+		_fail("a beaten trainer still advertises 'Challenge' (prompt reads '%s')" % label)
+	elif not label.contains(str(_spec.get("name", ""))):
+		_fail("a beaten trainer's prompt lost their name (reads '%s')" % label)
+	else:
+		print("prompt after the fight: '%s'" % label)
 
 	_stand_in_front_of_the_trainer()
 	for i in 60:

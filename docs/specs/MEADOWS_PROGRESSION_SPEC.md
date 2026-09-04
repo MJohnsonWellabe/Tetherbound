@@ -322,6 +322,21 @@ Defeating the required trainer earns access.
 
 Recommended natural team level by crossing: roughly **5–8** (tunable, not a hard level requirement).
 
+**The level condition is a trainer refusing, not a lock** (owner directive
+2026-09-04-B, amendment A-4; closure plan §7; D74). A trainer row may carry an
+optional `min_level`; while the player's highest-level creature is under it the
+fight simply does not start, and that trainer says why, in character — *"You're
+too low level. I'll crush you and send you crying to Grandpa."* — naming the
+level that would change it. There is no menu error, no greyed button and no UI
+level lock: the sentence above survives intact, because a person who sizes up
+your team and turns you away *is* the world creating the gate, and the refusal
+hands the player their next thing to do rather than stopping them. The bridge
+keeps its physical key/mechanism either way. The mechanism ships unused —
+**no trainer in the table carries a `min_level` yet** — because a level gate on
+a route without wild encounters to level against is the wall this is explicitly
+not meant to be (`docs/FINISH_THE_MEADOWS.md`, "the dependency to state
+plainly"): density lands first.
+
 ---
 
 ## BAND 2 — STONE & ROOT
