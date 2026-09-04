@@ -311,10 +311,11 @@ times, not many content defects"). `tools/gate_f/segments/S08.json` is not
 in this lane's file ownership, and the fix (a switch-or-revive step after
 any fight that could faint the lead, or a pre-flight party-health check) is
 a Gate F harness change, not a `band4_upper_meadows_ironwood` one. **Neither
-Halder's nor Oreth's actual fight outcome was validated by this run** — no
-real, sustained combat exchange happened against either — so this run
-cannot confirm or deny whether this session's own CHARGER/CURRENT/DIVER
-overrides are appropriately tuned. That remains open.
+Halder's nor Oreth's actual fight outcome was validated by a PLAYED fight in
+this run** — no real, sustained combat exchange happened against either —
+so a live, driven fight against either captain remains open. A quantitative
+check does exist now, below (formula-driven, not played), and it did not
+find the profiles unsound.
 
 **The routing verdict** (the contract's open question, and the coordinator's
 explicit ask: does the route support Oreth being fought first?): **agree**,
@@ -386,6 +387,55 @@ already-fully-specified fix, low risk, directly closes a real spec gap. This
 session did not reach the coordinator via cross-session messaging
 (`ListAgents` reported no reachable peer at the time); recording it here per
 the report contract instead.
+
+## The C-4/C-5 balance question, answered quantitatively
+
+The S08 run above could not tell us whether Halder's and Vess's new profiles
+are actually winnable — no real fight against either ever happened. Rather
+than leave that as a bare "unverified," built
+`tools/_probe_band4_captain_combat_balance.gd`: a steady-state
+damage-per-second model built from the SAME live functions the game uses
+(`combat_math.base_damage`, `progression.stat_at_level`), not a
+reimplementation — a formula change elsewhere in the tree updates this
+probe's answer automatically. It checks the contract's own two `fails if`
+bounds directly (G-3's one-blow safety check; C-4's "party at entry level
+wins with at most one faint" / "party two levels under cannot win free"),
+swept across four assumed player quick-attack hit rates (100% down to a
+deliberately harsh 35%), for a LONE, never-switching, no-potion Terrapup —
+the single worst case a real five-creature party (which can switch and heal)
+would never actually be reduced to. Run headless, ~1 second, no world boot
+needed:
+
+- **No one-shot risk anywhere**: every captain team member's hit against a
+  fresh, full-health, band-entry-level Terrapup lands at 3-6% of its HP —
+  nowhere close to G-3's one-blow bound.
+- **Halder (captain_field), band-entry level 13**: the lone Terrapup
+  survives solo at 100%/70% assumed hit rate (50%/28% HP left) and faints
+  at 50%/35% (weak play). Real damage, not a formality — matches the
+  contract's own framing of Halder as "no trick... whoever's strongest."
+- **Vess (captain_ridge), band-entry level 13**: gentler than Halder solo
+  (64%/49%/28% HP left at 100%/70%/50%, faints only at the harshest 35%) —
+  consistent with the contract's own design, where Vess's exam is the
+  *route*, not a harder fight than Halder's.
+- **Two-levels-under check (Halder only, C-4's other bound)**: a lone L11
+  Terrapup still survives at 100%/70% hit rate (42%/18% HP left), faints at
+  50%/35%. Read against the letter of "a party two levels under can win
+  without a potion" this is a close call — a skilled solo run at 2-under
+  does survive without a potion. Read against the bound's actual intent
+  (an under-levelled party should not trivialise the fight for free) it
+  holds: 58-82% of HP is spent doing it, not a walkover, and a real
+  five-creature party at 2-under has proportionally more total HP to spend
+  than the solo worst case modelled here. Flagged as a genuine nuance
+  rather than a clean pass, not smoothed over.
+
+Honest limits of this check, stated once rather than per-number above: it is
+a steady-state DPS model (attacks/second × damage/hit), not a frame-accurate
+simulation — every player swing is assumed to land in range, both sides are
+assumed to fight at a constant distance the whole time, and type
+effectiveness is neutral (1.0×) throughout. It is a sanity check on the
+arithmetic the profiles imply, and the best evidence this session could
+produce without a working harness — it is not a substitute for a played
+fight, which is exactly what the harness gap above still owes.
 
 ## What is still open
 
