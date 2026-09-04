@@ -1,0 +1,25 @@
+            L3->L10 costs 2216 xp, L10->L20 costs 8688 xp
+
+band                              travel fights  catch   talk  story  GRIND    total  levels
+--------------------------------------------------------------------------------------------
+Band 0 - Homebound                    0m     1m     0m     3m    16m     0m      20m   3->3  
+Band 1 - Lower Meadows                4m     6m     1m    17m     0m     0m      28m   3->9  
+Band 2 - Stone & Root                11m     4m     0m     0m    26m     0m      41m   9->12 
+Band 3 - The River Lock               4m     5m     0m     4m     1m     0m      13m  12->15 
+Band 4 - Upper Meadows / Ironwood     7m     5m     0m     1m     0m     0m      14m  15->17 
+Act VI - The Meadows Hall             1m     8m     0m    12m     5m     0m      26m  17->21 
+--------------------------------------------------------------------------------------------
+TOTAL                                26m    29m     2m    37m    49m     0m     142m
+
+TOTAL: 2.37 hours   (target 3-4h, D42)
+  of which forced wild grinding: 0.00 hours across 0 extra fights
+  critical-path fights: 54 creature battles
+  projected first completion: 4.74 hours (floor x 2.0)
+  verdict: OVER the 3-4 hour target (D42)
+
+-- materials on the critical path --------------------------------------------
+  Riding Saddle (frame + saddle)     costs  8 rootstone
+  Greater Orb (one)                  costs  4 rootstone
+  rootstone the chapter can supply: 35 (quarry nodes + warrens deposits + clear reward)
+  ironwood the chapter can supply:  57 ; orb_prime costs 4
+
