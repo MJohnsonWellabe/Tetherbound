@@ -1,0 +1,405 @@
+{
+  "_why": "W18-DENSITY-B4-B5, 2026-09-04 (CL-O4 density half; docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md sections B/C; docs/owner/OWNER_DIRECTIVES_2026-09-04-C.md sections 2-3). One-time world finds for the Upper Meadows, loaded by scripts/world/band_pickups.gd and persisted by `id` (the once-flag; one identity per authored location, so a reload cannot mint a second copy). `tier` is the addendum's placement logic: critical = on the road, sparse and Good; side = ordinary side exploration, Good; detour = a loop or a named point of interest, Great; secret = a memorable landmark, a deep branch or the hardest optional encounter, Rare. Recovery items are sited BEFORE the attrition they support (the two captains, the rest-free ridge climb of P-4.1, the seam into the approach), never after it, and never inside a camp. Every position was probed on the real world (tools/_probe_band_density.gd: Terrain3D ground, 2m pad slope/spread, solid scatter, river, prompt separation >= 4.5m from every harvest node and pickup). Positions are [x, z]; y comes from the ground.",
+  "pickups": [
+    {
+      "id": "b4_candy_seam_ironwood_pair",
+      "item": "good_candy",
+      "pos": [
+        -70.0,
+        4835.0
+      ],
+      "tier": "critical",
+      "why": "The band's doorstep, 20m off the road beside the (-56,4818) Ironwood pair the seam rhythm opens with: the first candy after the river says the Upper Meadows pays for looking."
+    },
+    {
+      "id": "b4_candy_oldgrowth_wallow_bend",
+      "item": "good_candy",
+      "pos": [
+        -300.0,
+        4975.0
+      ],
+      "tier": "critical",
+      "why": "The old-growth's second bend, between the two mudsnout wallows (orders 4017/4018), on the road itself -- the addendum's 'critical path: sparse, mostly Good'."
+    },
+    {
+      "id": "b4_candy_ridge_road_picket",
+      "item": "good_candy",
+      "pos": [
+        -25.0,
+        6318.0
+      ],
+      "tier": "critical",
+      "why": "At the unmanned ridge road picket (props.json order 4004) P-4.2 asks to read as recently manned -- a dropped pack's sweet is the cheapest 'someone was just here' the barricade can carry."
+    },
+    {
+      "id": "b4_candy_oldgrowth_duskhush_pocket",
+      "item": "good_candy",
+      "pos": [
+        -100.0,
+        4905.0
+      ],
+      "tier": "side",
+      "why": "35m east of the road in the night-duskhush pocket (orders 4013/4014): a player who walks toward the roost by day finds the sweet, and by night finds the roost too."
+    },
+    {
+      "id": "b4_candy_ironwood_stand_core",
+      "item": "good_candy",
+      "pos": [
+        -325.0,
+        5097.0
+      ],
+      "tier": "side",
+      "why": "Inside the Ironwood stand's crafting clearing (vegetation.json clearing 4002), between the felling nodes: the stand is the band's material tier and this says stopping to fell it is worth more than the wood."
+    },
+    {
+      "id": "b4_candy_juno_paddock",
+      "item": "good_candy",
+      "pos": [
+        -205.0,
+        5425.0
+      ],
+      "tier": "side",
+      "why": "Juno's paddock, 30m from the drover herself: the warm-up trainer's ground pays a little for the walk over, so the optional fight is not the only reason to leave the road."
+    },
+    {
+      "id": "b4_candy_pasture_rock_shelf",
+      "item": "good_candy",
+      "pos": [
+        -75.0,
+        5520.0
+      ],
+      "tier": "side",
+      "why": "On the rock shelf the burrowback clusters (orders 4031/4032) dig under, 40m west of the road on the way to Halder: side exploration on the pasture, Good."
+    },
+    {
+      "id": "b4_candy_halder_pasture_edge",
+      "item": "good_candy",
+      "pos": [
+        120.0,
+        5640.0
+      ],
+      "tier": "side",
+      "why": "50m past Captain Halder's ground, at the pasture's edge below the stock camp: the first Sigil fight leaves the player looking around, and the field answers."
+    },
+    {
+      "id": "b4_candy_stockcamp_hedge",
+      "item": "good_candy",
+      "pos": [
+        300.0,
+        5690.0
+      ],
+      "tier": "side",
+      "why": "At the hedge where the wind ridge traverse forks off (330,5700), 30m south of the fork: a sweet at the fork is the pull that makes a player notice the loop exists."
+    },
+    {
+      "id": "b4_candy_highfield_south_paddock",
+      "item": "good_candy",
+      "pos": [
+        365.0,
+        5820.0
+      ],
+      "tier": "side",
+      "why": "The Highfield's south paddock (map_landmarks `the_highfield`), between the ridge road and the herd: ordinary side ground on the landmark, Good."
+    },
+    {
+      "id": "b4_candy_wind_ridge_saddle",
+      "item": "good_candy",
+      "pos": [
+        345.0,
+        6095.0
+      ],
+      "tier": "side",
+      "why": "The saddle where the ridge traverse comes back down toward the overlook, off the loop's own line: the loop's exit pays as well as its entry."
+    },
+    {
+      "id": "b4_candy_high_pasture_east",
+      "item": "good_candy",
+      "pos": [
+        70.0,
+        6290.0
+      ],
+      "tier": "side",
+      "why": "55m east of the road on the high pasture, near the TM aerial_flash's own glade: side ground between the overlook and the picket."
+    },
+    {
+      "id": "b4_candy_climb_foot",
+      "item": "good_candy",
+      "pos": [
+        -150.0,
+        6330.0
+      ],
+      "tier": "side",
+      "why": "At the foot of the rest-free ridge climb (P-4.1), 30m off the road: the last easy find before the climb, so the climb's own sweet (a Great, halfway up) is a promise the foot already made."
+    },
+    {
+      "id": "b4_candy_ridge_camp_supply",
+      "item": "good_candy",
+      "pos": [
+        -225.0,
+        6500.0
+      ],
+      "tier": "side",
+      "why": "35m from the ridge patrol camp (props.json order 4000), on the Ridgeline Watch's east slope: the camp's own supply spill, Good, outside the rest pad."
+    },
+    {
+      "id": "b4_candy_runout_trailpup_meadow",
+      "item": "good_candy",
+      "pos": [
+        -100.0,
+        6745.0
+      ],
+      "tier": "side",
+      "why": "The run-out meadow between the trailpup clusters (orders 4056/4057), 40m off the road: the approach to the Broken Tower keeps paying at ordinary side-exploration rates."
+    },
+    {
+      "id": "b4_candy_seam_south_meadow",
+      "item": "good_candy",
+      "pos": [
+        55.0,
+        6970.0
+      ],
+      "tier": "side",
+      "why": "The last meadow before the band 5 seam, 30m east of the road beside the trailpup cluster (order 4061): the Upper Meadows says goodbye with one more Good rather than a wall of nothing."
+    },
+    {
+      "id": "b4_candy_grove_alpha_burrowback",
+      "item": "great_candy",
+      "pos": [
+        -292.0,
+        5095.0
+      ],
+      "tier": "detour",
+      "why": "Behind the alpha Burrowback at (-285,5080) (level +4, the grove's guardian): a tougher encounter guards a Great, the addendum's 'tougher encounters, stronger points of interest'."
+    },
+    {
+      "id": "b4_candy_galecrest_alpha_crag",
+      "item": "great_candy",
+      "pos": [
+        -432.0,
+        5172.0
+      ],
+      "tier": "detour",
+      "why": "On the crag the Galecrest alpha (order 4001, level +3) circles, past its 20m radius: the deepest point of the old-growth swing, a Great for walking to the west edge of the band."
+    },
+    {
+      "id": "b4_candy_ironwood_far_side",
+      "item": "great_candy",
+      "pos": [
+        -372.0,
+        5052.0
+      ],
+      "tier": "detour",
+      "why": "The far side of the Ironwood stand, behind the trees from the road (harvest.json's own 'genuine detour off the tree-line stand, not visible from the spine'): a Great for going round the back."
+    },
+    {
+      "id": "b4_candy_ridge_climb_shoulder",
+      "item": "great_candy",
+      "pos": [
+        -215.0,
+        6385.0
+      ],
+      "tier": "detour",
+      "why": "Halfway up the rest-free ridge climb (P-4.1 forbids a clearing here, not a find): the climb is the band's attrition beat and a Great rewards it without healing anyone."
+    },
+    {
+      "id": "b4_candy_wind_ridge_crest",
+      "item": "great_candy",
+      "pos": [
+        462.0,
+        5895.0
+      ],
+      "tier": "detour",
+      "why": "The wind ridge traverse's crest (loop `wind_ridge_traverse`, the highest ground in the Meadows): the loop is the band's biggest detour and MACRO_LAYOUT wants it sparse so the vista lands -- one Great, not a scatter."
+    },
+    {
+      "id": "b4_candy_high_pasture_herd_edge",
+      "item": "great_candy",
+      "pos": [
+        110.0,
+        6290.0
+      ],
+      "tier": "detour",
+      "why": "The east edge of the high pasture where the Meadowhart herd (order 4051) grazes below the overlook: the riding-payoff loop's own Great, 80m off the road."
+    },
+    {
+      "id": "b4_candy_conduit_post",
+      "item": "great_candy",
+      "pos": [
+        388.0,
+        6090.0
+      ],
+      "tier": "detour",
+      "why": "Beside the severed conduit post (props.json order 4002), the band's faction evidence: a Great where Team Tether's own line was cut, so the story beat is also a reward beat."
+    },
+    {
+      "id": "b4_candy_rocky_shoulder_den",
+      "item": "great_candy",
+      "pos": [
+        -250.0,
+        6438.0
+      ],
+      "tier": "detour",
+      "why": "At the rocky-shoulder den (orders 4076/4102, the tight burrowback/trailpup pocket above the ridge camp): the encounter contract's 'galecrest den (wild)' beat, a tougher fight in a tight space, Great."
+    },
+    {
+      "id": "b4_candy_broken_tower",
+      "item": "great_candy",
+      "pos": [
+        18.0,
+        6822.0
+      ],
+      "tier": "detour",
+      "why": "In the Broken Tower's collapsed footprint (map_landmarks `the_broken_tower`, 30m radius), beside the revive and the TM the patrol never shipped: a landmark's deliberate reward, Great."
+    },
+    {
+      "id": "b4_candy_stormtrail_rain_crag",
+      "item": "rare_candy",
+      "pos": [
+        -452.0,
+        5222.0
+      ],
+      "tier": "secret",
+      "why": "Beside the rain-gated Stormtrail's stand (order 4100, one individual, appears only in rain): a memorable secret at the band's far west edge -- the candy is always there, the creature only sometimes, and finding both is the story a player tells."
+    },
+    {
+      "id": "b4_candy_rue_lost_creature",
+      "item": "rare_candy",
+      "pos": [
+        -318.0,
+        5885.0
+      ],
+      "tier": "secret",
+      "why": "Rue's Tether Patrol at (-300,5870), the deepest off-spine optional trainer in the band (the encounter contract's own 'optional'): a deep branch with a hard fight at the end earns a Rare."
+    },
+    {
+      "id": "b4_candy_herd_bull_highfield",
+      "item": "rare_candy",
+      "pos": [
+        441.0,
+        5828.0
+      ],
+      "tier": "secret",
+      "why": "Beside the herd bull (order 4101, alpha Meadowhart level +4, P-4.3's kept block) on the Highfield: the band's landmark encounter and its riding temptation in one place, so the Rare sits where the roster question is asked."
+    },
+    {
+      "id": "b4_candy_watchtower_spur_corner",
+      "item": "rare_candy",
+      "pos": [
+        -333.0,
+        6580.0
+      ],
+      "tier": "secret",
+      "why": "The far corner of the watchtower spur (loop `watchtower_spur`, past Captain Vess): 'the first clear sight of the stronghold', reached only by taking the spur beyond the fight -- a landmark and a deep corner, Rare."
+    },
+    {
+      "id": "b4_potion_oldgrowth_swing",
+      "item": "potion_small",
+      "pos": [
+        -250.0,
+        4930.0
+      ],
+      "tier": "side",
+      "why": "On the old-growth swing before the grove's alpha Burrowback and the Galecrest alpha: basic supplies before the band's first two alpha fights, 30m off the road."
+    },
+    {
+      "id": "b4_revive_grove_pad",
+      "item": "revive",
+      "pos": [
+        -322.0,
+        5083.0
+      ],
+      "tier": "side",
+      "why": "On the Ironwood crafting pad (clearing 4002, not a rest): the first revive after the river, sited where two alphas and a rain-gated rare live within 150m -- recovery before that attrition, not after it."
+    },
+    {
+      "id": "b4_mushroom_stamina_night_pocket",
+      "item": "stamina_mushroom",
+      "pos": [
+        -262.0,
+        5252.0
+      ],
+      "tier": "detour",
+      "why": "In the night-duskhush pocket (order 4008) beside the stashed tonic (harvest 4022): a defence buff for the walk to Juno and Halder, a detour's better supply."
+    },
+    {
+      "id": "b4_potion_rue_trail",
+      "item": "potion_small",
+      "pos": [
+        -150.0,
+        5640.0
+      ],
+      "tier": "side",
+      "why": "On the trail out toward Rue's patrol, halfway from the road: the deep branch is optional and its fight is hard, so the branch carries its own basic supply on the way OUT, before the fight."
+    },
+    {
+      "id": "b4_potion_before_halder",
+      "item": "potion_large",
+      "pos": [
+        75.0,
+        5515.0
+      ],
+      "tier": "critical",
+      "why": "On the road 80m before Captain Halder: 'main routes: occasional basic supplies', placed before the first Sigil captain rather than after."
+    },
+    {
+      "id": "b4_revive_before_stockcamp",
+      "item": "revive",
+      "pos": [
+        240.0,
+        5620.0
+      ],
+      "tier": "side",
+      "why": "45m before the Highfield stock camp (the band's one working camp), on the approach from Halder: a revive found limping TO the camp, never inside it -- recovery before the rest, the W17/W18 siting rule."
+    },
+    {
+      "id": "b4_mushroom_speed_wind_ridge",
+      "item": "speed_mushroom",
+      "pos": [
+        445.0,
+        5985.0
+      ],
+      "tier": "detour",
+      "why": "On the wind ridge traverse past the galecrest line (order 4066): a speed buff on the highest, thinnest stretch, a detour's stronger supply."
+    },
+    {
+      "id": "b4_potion_before_ridge_climb",
+      "item": "potion_large",
+      "pos": [
+        -30.0,
+        6325.0
+      ],
+      "tier": "side",
+      "why": "Beside the picket at the foot of the rest-free ridge climb (P-4.1): the last heal before Vess is found before the climb starts, which is where a player decides whether to camp first."
+    },
+    {
+      "id": "b4_revive_ridge_climb",
+      "item": "revive",
+      "pos": [
+        -190.0,
+        6425.0
+      ],
+      "tier": "critical",
+      "why": "On the climb itself, 60m below Captain Vess: a revive before the second captain, where the attrition of the rest-free climb bites -- recovery arriving before the fight it supports."
+    },
+    {
+      "id": "b4_mushroom_wild_broken_tower",
+      "item": "wild_mushroom",
+      "pos": [
+        62.0,
+        6778.0
+      ],
+      "tier": "side",
+      "why": "At the Broken Tower's foot, 40m from the patrol's own revive: an attack buff on the last landmark before the approach, for the alpha Galecrest pack that opens band 5."
+    },
+    {
+      "id": "b4_potion_seam_south",
+      "item": "potion_small",
+      "pos": [
+        -20.0,
+        6985.0
+      ],
+      "tier": "critical",
+      "why": "On the road 15m before the band 5 seam: basic supplies before Corr and the danger beat, the approach's own attrition, found before it starts."
+    }
+  ]
+}

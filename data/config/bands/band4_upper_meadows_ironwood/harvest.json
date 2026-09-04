@@ -1,4 +1,5 @@
 {
+  "_comment_w18_density": "W18-DENSITY-B4-B5, 2026-09-04 (CL-O4). Orders 4032-4050 raise this band from 26 nodes (7.6/km over 3436m) toward band 1's 20/km, sited where the chainage census (tools/_probe_band_density.gd) found the road empty of gathering: the old-growth swing (0 nodes over 300m), the Juno-Halder pasture, the ridge fork, the climb, the run-out and the seam. Ironwood stays the band's tier and gets three more trees at the places a player would otherwise walk 2km back for; berries arrive for the first time (no food existed above the river). The stand, the captains, the Sigil gate, the herd bull and Rue are untouched; the wind ridge traverse gets two nodes, not more, because MACRO_LAYOUT 3.2 wants it sparse for the vista. Every `at` was probed on the real world before it shipped.",
   "_comment": "BAND-SPLIT. Band-local nodes for band4_upper_meadows_ironwood. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order harvest nodes are added to the scene tree. A new entry in this band takes an unused order in this band's reserved range 4000-4999, which no other band can collide with; do not renumber an existing one.",
   "_comment_ironwood_d4": "GATE-D4/prompt 65. Ironwood is Band 4's whole material tier (spec Band 4, `data/recipes/recipes_ironwood.json`) and this file held zero nodes at package start -- the only ironwood anywhere in the chapter was five nodes in `data/config/bands/band2_stone_and_root/harvest.json`, sited around the Burrow Warrens, a Band 2 site the D2 lane owns and this lane does not touch. A player who reaches Band 4's captains without having taken the Warrens spur had no ironwood at all, and one who had could not restock without a ~2km walk back through a region already cleared. These five nodes put the tier where spec Band 4 actually names it: the old-growth on the western swing, the same pocket `spawns.json`'s order-4000 trailpup cluster already sites, so gathering the region's own resource happens inside the region's own old-growth rather than a neighbour's dungeon. MEASURED with `tools/_probe_band4_sites.gd` (heights 1.3-3.8m, worst local slope 5.3-9.1 degrees over a 3m pad -- the five flattest of eight candidates walked across the same old-growth pocket). Model/scale pattern matches band2's own ironwood nodes (`TwistedTree_1/2/3`, ~0.28-0.32) so the two stands read as the same species rather than two different trees that both happen to drop the same item. Amounts and scales TUNABLE.",
   "_comment_stand_d4b": "GATE-D4b, round 1 of the blind visual pass (docs/AGENT_WORKFLOW.md). The critic, shown shots/band4/ and nothing about what changed, named this stand twice: `ironwood-grove does not read as a grove -- four isolated trees on open lawn', and `constant scale at even intervals ... that is a scatter pass, not a placement'. Both were true of the numbers it was judging: the five nodes stood 35-70m apart in a rough line across the old-growth at model_scale 0.28-0.32, a 14 percent spread that reads as one repeated tree. Re-sited into a clustered stand -- a four-tree core inside ~15m at (-342,5078) (-336,5069) (-352,5074) (-345,5088), with a fifth at (-339,5060) carrying the group south -- so the mass clusters and the ground between the trees reads as a clearing rather than as the default state of the region. Scales spread to 0.26-0.42, an elder tree and a young one in the same stand, still centred on band2's own 0.28-0.32 so the two ironwood stands stay the same species rather than becoming two trees that happen to drop the same item. Every position MEASURED with tools/_probe_band4_sites.gd (heights 1.48-2.09m, worst local slope 3.0-9.1 degrees over a 2m pad -- the five flattest of twelve candidates walked across the pocket), all of them 8-25m from clearings[4002]'s camp pad so the fire stands beside the stand it supplies. What the critic named that this does NOT fix is the region's scatter density, which is not this lane's file to edit: see the standing density_scale request in archive/ralph/DONE.md.",
@@ -260,6 +261,253 @@
       "at": [206.8, 6144.4],
       "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
       "_why": "T5-CADENCE. What the Wind Overlook (props.json order 4003) pays. Exit criterion G9 forbids an empty reward and G4 asks that 'every major region creates genuine roster temptation' -- T4-REGIONS scored band 4's temptation FAIL outright ('zero new species across 3436m'), which this lane cannot fix from a harvest node, but an orb the band otherwise has none of is the one thing that changes what a player can DO about the alpha two hundred metres back. Tucked behind the outcrop, 2.4m clear of the nearest stone, so it is found by walking up to the markers rather than seen from the road."
+    },
+    {
+      "order": 4032,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -150.0,
+        4905.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.34,
+      "_why_w18_density": "W18-DENSITY. The old-growth swing (spine 100-400m) held no harvest at all between the seam pair and the stand; a lone ironwood at the first bend puts the band's tier on the road it names."
+    },
+    {
+      "order": 4033,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -195.0,
+        4925.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_w18_density": "W18-DENSITY. Deadfall under the old-growth at the second bend; wood was 3 nodes in 3.4km."
+    },
+    {
+      "order": 4034,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [
+        -230.0,
+        4990.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.2,
+      "_why_w18_density": "W18-DENSITY. Tussocks by the mudsnout wallow (order 4017), the swing's first fiber."
+    },
+    {
+      "order": 4035,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        -320.0,
+        5020.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.0,
+      "_why_w18_density": "W18-DENSITY. The stand's rock foot, where the burrowback three (order 4103) dig; stone on the way in to the grove."
+    },
+    {
+      "order": 4036,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        -250.0,
+        4900.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why_w18_density": "W18-DENSITY. Band 4 had no food at all; a berry bush on the old-growth's sunny side gives the light-satiety loop something to find up here (CLAUDE.md: food restores, no starvation)."
+    },
+    {
+      "order": 4037,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [
+        -120.0,
+        5440.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why_w18_density": "W18-DENSITY. The pasture between Juno and Halder (spine 900-1300m) had one node; tussocks on the road's west verge."
+    },
+    {
+      "order": 4038,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -100.0,
+        5395.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_w18_density": "W18-DENSITY. A blown-down tree on the pasture's edge, 50m from Juno's paddock."
+    },
+    {
+      "order": 4039,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        100.0,
+        5470.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.0,
+      "_why_w18_density": "W18-DENSITY. Field stone above the burrowback shelf (order 4032), on the approach to Captain Halder."
+    },
+    {
+      "order": 4040,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        200.0,
+        5520.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why_w18_density": "W18-DENSITY. The pasture hedge below the pipwing roost (order 4036): food before the first captain."
+    },
+    {
+      "order": 4041,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        300.0,
+        5740.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.3,
+      "_why_w18_density": "W18-DENSITY. The Highfield's lone ironwood at the ridge fork: a player heading up the traverse can restock the tier without walking back to the stand."
+    },
+    {
+      "order": 4042,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [
+        450.0,
+        5900.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.2,
+      "_why_w18_density": "W18-DENSITY. Wind-bent grass on the ridge crest, beside the traverse loop."
+    },
+    {
+      "order": 4043,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        480.0,
+        5860.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.05,
+      "_why_w18_density": "W18-DENSITY. The ridge's exposed stone at the traverse's high point -- the wind ridge stays thin on purpose (MACRO_LAYOUT 3.2), so one stone, not a quarry."
+    },
+    {
+      "order": 4044,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        420.0,
+        6070.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_w18_density": "W18-DENSITY. Deadfall past the severed conduit post, on the descent to the camp pad."
+    },
+    {
+      "order": 4045,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        -60.0,
+        6270.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why_w18_density": "W18-DENSITY. A hedge on the high pasture before the picket and the rest-free climb: food where a player decides whether to camp first."
+    },
+    {
+      "order": 4046,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        -140.0,
+        6390.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0,
+      "_why_w18_density": "W18-DENSITY. The climb's rock shoulder (spine 2400-2600m held one node); stone under the new burrowback three (order 4109)."
+    },
+    {
+      "order": 4047,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -300.0,
+        6540.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.3,
+      "_why_w18_density": "W18-DENSITY. The last ironwood before the Hall, on the watchtower spur at the watch's back -- restock for the final assault's recipes without the 2km walk to the stand."
+    },
+    {
+      "order": 4048,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [
+        -150.0,
+        6690.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why_w18_density": "W18-DENSITY. The run-out meadow (spine 2900-3100m held one node); tussocks by the night duskhush roost (order 4110)."
+    },
+    {
+      "order": 4049,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        100.0,
+        6870.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_w18_density": "W18-DENSITY. Deadfall below the Broken Tower on the last meadow."
+    },
+    {
+      "order": 4050,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        -30.0,
+        6960.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.0,
+      "_why_w18_density": "W18-DENSITY. Stone at the seam into band 5, the last gather before the approach (spine 3400m held nothing)."
     }
   ]
 }
