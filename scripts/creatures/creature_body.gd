@@ -257,6 +257,9 @@ var _requested_speed: float = 0.0
 ## Attack lunges and knockbacks, decaying. Separate from `velocity` so being hit
 ## mid-stride reads as a shove rather than as a cancelled input.
 var _impulse: Vector3 = Vector3.ZERO
+## W14-RIDING. Metres per second of launch asked for by `request_jump` and not
+## yet spent. Zero means nothing is pending; the frame that applies it clears it.
+var _jump_speed: float = 0.0
 
 var _speed: float = 5.0
 var _acceleration: float = 34.0
@@ -1468,9 +1471,35 @@ func add_impulse(direction: Vector3, strength: float) -> void:
 	_impulse += flat.normalized() * strength
 
 
+## W14-RIDING / CL-O3. Leave the ground, `height` metres of clearance.
+##
+## The vertical counterpart of `add_impulse`, and it has to live here rather
+## than in the caller for one measured reason: the grounded branch of
+## `_physics_process` below overwrites `velocity.y` with the slope-pinning
+## bias every frame the body is on the floor, so a launch velocity written
+## from outside is eaten before `move_and_slide` ever sees it, whatever order
+## the two nodes tick in. The request is therefore recorded and CONSUMED by
+## that branch instead of fighting it.
+##
+## Height, not velocity, for the same reason movement.json's `jump.height` is
+## height: `_gravity` is the creature's own, so retuning it does not silently
+## change how high anything hops.
+##
+## Refused in mid-air, so a held button is one jump. Everything else about
+## being airborne -- gravity, the arc, the landing -- is already this
+## function's neighbour below and is not duplicated.
+func request_jump(height: float) -> void:
+	if height <= 0.0 or not is_on_floor():
+		return
+	_jump_speed = sqrt(2.0 * _gravity * height)
+
+
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= _gravity * delta
+	elif _jump_speed > 0.0:
+		velocity.y = _jump_speed
+		_jump_speed = 0.0
 	else:
 		# Small downward bias, the same trick the trainer uses, so the creature
 		# stays pinned to slopes instead of skipping off every crest.

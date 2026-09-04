@@ -792,20 +792,27 @@ func set_carrier(node: Node3D, offset: Vector3 = Vector3.ZERO) -> void:
 	_carrier = node
 	_carried = node != null
 	_carry_offset = offset
-	# The trainer's ART is hidden while carried, not the node: the torch is a
-	# child of this body (scripts/player/torch.gd) and a rider who loses their
-	# light at dusk because they got on a deer is a bug. Hiding is tied to the
-	# carrier here, in ONE place, rather than left to the caller — that is what
-	# makes "the player is never left invisible" an invariant of clearing the
-	# carrier rather than a step somebody can forget on one of the exit paths.
+	# OP-0904-3, owner, on hardware: "When you ride your person didn't show up
+	# on the creature."
 	#
-	# There is no seated pose in the trainer rig (M11's clips are idle/walk/
-	# sprint/throw), so a visible standing trainer would ride the Meadowhart
-	# standing bolt upright on its back. Hidden is the honest placeholder until
-	# a sit clip exists; the mount offset is already authored for where the
-	# rider belongs, so that swap is art, not code.
+	# This used to hide the trainer's art outright while carried, and the
+	# comment that stood here said why: there is no seated clip on the rig, so
+	# a visible trainer rode the Meadowhart standing bolt upright on its back.
+	# That was an honest placeholder and it shipped, which made it a bug the
+	# owner found by playing. The rig still has no seated clip and CLAUDE.md
+	# still forbids buying one, so the pose is authored on the skeleton instead
+	# -- `trainer_model.gd::set_riding()` carries the whole story and the axis
+	# measurements it was built on.
+	#
+	# The art stays visible either way. The torch is a child of this body
+	# (scripts/player/torch.gd) and a rider who loses their light at dusk
+	# because they got on a deer was always a bug; now nothing about being
+	# carried touches visibility at all, which is a stronger version of the
+	# invariant the old comment was reaching for.
 	if _model != null:
-		_model.visible = node == null
+		_model.visible = true
+		if _model.has_method("set_riding"):
+			_model.call("set_riding", node != null)
 	if node == null:
 		# Nothing about the ride carries over into standing up: no leftover
 		# velocity, no buffered jump from a button pressed in the saddle.
@@ -820,8 +827,9 @@ func carrier() -> Node3D:
 	return _carrier if _carried else null
 
 
-## Is the trainer's own art on screen? False only while carried. Read by
-## tests/smoke_riding.gd, which exists mostly to prove this comes back true.
+## Is the trainer's own art on screen? Read by tests/smoke_riding.gd, which
+## exists mostly to prove this is true — including, since OP-0904-3, while the
+## trainer is sitting on a creature.
 func rider_visible() -> bool:
 	return _model == null or _model.visible
 

@@ -34,7 +34,13 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 const BUILD_HOLD := preload("res://scripts/build/build_hold.gd")
 const ARBITER_NODE := preload("res://scripts/world/interaction_arbiter.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const CONFIG_PATH := "res://data/config/movement.json"
+## W14-RIDING / CL-O3. Everything about the RIDE rather than about the animal:
+## the sprint multiplier, the hop height, and the rider's seated pose. Kept out
+## of movement.json because that file is the TRAINER's locomotion sheet and the
+## two drift apart -- see riding.json's own header.
+const RIDING_CONFIG_PATH := "res://data/config/riding.json"
 
 ## How close the trainer has to be for the mount prompt to appear. Generous for
 ## the same reason `interactable.gd`'s default radius is: a prompt that only
@@ -87,6 +93,20 @@ var _last_mount_position: Vector3 = Vector3.ZERO
 var _ride_camera: Dictionary = {}
 var _walk_speed: float = 5.0
 
+## W14-RIDING / CL-O3, from data/config/riding.json. Read once at ready, the
+## same way `_ride_camera` is: these are tuning numbers, not live state.
+var _sprint_multiplier: float = 1.4
+var _jump_height: float = 1.6
+var _jump_cooldown: float = 0.35
+## Seconds left before the mount will accept another hop. Counted down rather
+## than timestamped so a paused tree (the map, the pause menu) does not silently
+## bank cooldown while nothing is ticking.
+var _jump_cooldown_left: float = 0.0
+## Whether the stick is currently asking the mount to run. Read by the smoke
+## test, which has to prove the mount actually goes faster rather than trusting
+## the multiplier in the data file.
+var _sprinting: bool = false
+
 
 func _ready() -> void:
 	_player = get_node_or_null(player_path) as Node3D
@@ -112,6 +132,29 @@ func _load_config() -> void:
 		var camera: Variant = block.get("camera", {})
 		if camera is Dictionary:
 			_ride_camera = camera
+	_load_riding_config()
+
+
+func _load_riding_config() -> void:
+	var cfg := riding_config()
+	var sprint: Variant = cfg.get("sprint", {})
+	if sprint is Dictionary:
+		_sprint_multiplier = float((sprint as Dictionary).get("speed_multiplier", _sprint_multiplier))
+	var jump: Variant = cfg.get("jump", {})
+	if jump is Dictionary:
+		_jump_height = float((jump as Dictionary).get("height", _jump_height))
+		_jump_cooldown = float((jump as Dictionary).get("cooldown_seconds", _jump_cooldown))
+
+
+## data/config/riding.json, parsed. Static so `trainer_model.gd` reads the
+## rider's seated pose out of the SAME file this node reads the ride out of,
+## without either of them owning a copy of the other's numbers.
+static func riding_config() -> Dictionary:
+	var file := FileAccess.open(RIDING_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {}
 
 
 ## Same late, group-based attach `interactable.gd` uses, and for the same
@@ -142,13 +185,43 @@ func mount_body() -> Node3D:
 	return _mount if is_mounted() else null
 
 
-## The speed the current mount travels at, m/s. Zero when not mounted. Read by
-## the smoke test, which has to prove riding actually beats running rather than
-## trusting the multiplier in the data file.
+## The speed the current mount travels at, m/s, at a WALK. Zero when not
+## mounted. Read by the smoke test, which has to prove riding actually beats
+## running rather than trusting the multiplier in the data file.
 func ride_speed() -> float:
 	if not is_mounted():
 		return 0.0
 	return _ride_speed_for(str(_mount.get("species_id")))
+
+
+## W14-RIDING / CL-O3. The speed the mount is being asked for RIGHT NOW: the
+## walk above, multiplied while the sprint button is held. Owner, on hardware:
+## "You can't sprint or jump when riding."
+##
+## One multiplier on the species' own ride speed rather than a second speed
+## table, for the same reason `ride_speed_multiplier` multiplies the trainer's
+## walk instead of naming an absolute: retuning a mount moves one number.
+func ride_speed_now() -> float:
+	var base := ride_speed()
+	return base * _sprint_multiplier if _sprinting else base
+
+
+## The top speed this mount can be asked for. Data, not live state, so a test
+## can price the sprint before it drives it.
+func ride_sprint_speed() -> float:
+	return ride_speed() * _sprint_multiplier
+
+
+## Is the mount running? False when not mounted, and false the frame the stick
+## goes to centre — sprint is speed, not a mode.
+func is_ride_sprinting() -> bool:
+	return is_mounted() and _sprinting
+
+
+## Metres of clearance a hop asks for. Read by the smoke test so the hop is
+## checked against what the mount was ASKED for rather than a number typed twice.
+func ride_jump_height() -> float:
+	return _jump_height
 
 
 func _ride_speed_for(species_id: String) -> float:
@@ -254,7 +327,10 @@ func mount() -> bool:
 		body.call("set_following", false)
 
 	_apply_climb_limit(body, species_id)
-	_attach_saddle(body, species_id)
+	# Putting it on. The saddle stays on afterwards -- see the saddle rule
+	# below for why "only while you are sitting on it" was the wrong reading of
+	# the owner's sentence.
+	fit_saddle(body)
 	var offset: Vector3 = SPECIES.rideable(species_id).get("mount_offset", Vector3.UP)
 	_player.call("set_carrier", body, offset)
 	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_target"):
@@ -282,7 +358,6 @@ func dismount() -> bool:
 	if alive:
 		_last_mount_position = body.global_position
 	_restore_climb_limit(body if alive else null)
-	_detach_saddle(body if alive else null)
 
 	if _player != null and is_instance_valid(_player):
 		_player.call("set_carrier", null)
@@ -337,14 +412,20 @@ func _ground_height(at: Vector3) -> float:
 
 ## --- driving ----------------------------------------------------------------
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	_attach()
+	_jump_cooldown_left = maxf(0.0, _jump_cooldown_left - delta)
+	# Every frame, on both branches: a creature that was summoned since the last
+	# tick has to put its saddle back on, and one whose saddle was never fitted
+	# has to be standing there without one. See `_refresh_worn_saddle()`.
+	_refresh_worn_saddle()
 	if not is_mounted():
 		if _riding_now:
 			# The body was freed while we held it. This is the despawn case:
 			# dismount() puts the player back at the last place the mount was
 			# standing, visible, collidable and under their own power.
 			dismount()
+		_sprinting = false
 		return
 	if not _riding_allowed():
 		dismount()
@@ -352,7 +433,31 @@ func _physics_process(_delta: float) -> void:
 
 	_last_mount_position = _mount.global_position
 
+	# RG5's rule, applied to the mount. `jump` and the build menu's own
+	# `ui_accept` are the SAME physical button (project.godot: joypad button 0),
+	# and `build_menu.gd` deliberately does not pause the tree -- so without
+	# this, confirming a piece in the catalogue would hop the creature you are
+	# sitting on. `player_controller._try_jump()` already asks this question for
+	# the trainer; a mounted player is the same button and the same panel.
+	var input_owned := INPUT_OWNER.current(get_tree()) != null
+
+	# OP-0904-3's second item: the mount jumps. A real hop, not a nudge --
+	# `riding.json`'s height clears the low fences and rocks a walking player
+	# vaults with `player_controller._try_step_up()`. The rider stays seated
+	# through it for free: they are parented to the mount's transform by
+	# `set_carrier`, so the arc is the creature's and the trainer simply goes
+	# with it, which is exactly what a rider does.
+	if not input_owned and Input.is_action_just_pressed("jump") and _jump_cooldown_left <= 0.0 \
+			and _mount.has_method("request_jump"):
+		_mount.call("request_jump", _jump_height)
+		_jump_cooldown_left = _jump_cooldown
+
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	# Sprint is speed, not a mode: held with the stick centred it does nothing,
+	# the same rule `player_controller._apply_movement()` uses for the trainer.
+	# D48 §3 and D75: it costs the player nothing and the mount has no meter.
+	_sprinting = not input_owned and input != Vector2.ZERO \
+		and Input.is_action_pressed("sprint")
 	if input == Vector2.ZERO:
 		return
 	var direction := Vector3(input.x, 0.0, input.y)
@@ -364,7 +469,7 @@ func _physics_process(_delta: float) -> void:
 		return
 	# The one line that is riding. Everything else about how the creature moves
 	# is the creature's, unchanged.
-	_mount.call("request_move", direction.normalized(), ride_speed())
+	_mount.call("request_move", direction.normalized(), ride_speed_now())
 
 
 ## --- R8.5: the tier above Meadowhart ----------------------------------------
@@ -421,21 +526,51 @@ func _restore_climb_limit(body: Node3D) -> void:
 	character.remove_meta("ride_floor_max_angle")
 
 
-## 2026-09-04. The mesh docs/specs/ASSET_LEDGER.md's "Riding Saddle" entry
-## installed. Owner directive, this session and OP-0904-9 before it: no
-## rideable species carries a saddle at spawn, it appears only once earned
-## (`_has_tack()`, already gating `mount()` on `requires_item` per species —
-## nothing new needed there) and fitted.
+## --- the saddle rule (OP-0904-3, CL-O3) -------------------------------------
 ##
-## Scoped here to "visible while actually being ridden" rather than "worn
-## permanently once fitted" — the fuller version needs a per-creature-
-## instance flag threaded through `creature_body.gd`'s own build path so an
-## un-ridden, un-followed creature standing in the field shows it too, which
-## is a wider change than this pass attempts. Attach/detach around the ride
-## itself already satisfies the hard rule ("never at spawn") and is the
-## honest, scoped step; the always-worn version is further work, not a
-## design change.
+## Owner, playing the shipped build: *"Nothing that is rideable should come with
+## a saddle on it. You have to build the saddle and put it on then it visually
+## appears. It shouldn't visually be there."*
+##
+## That is three claims and they are tested separately in
+## `tests/test_riding_saddle.gd`:
+##
+##   1. **Never at spawn.** No rideable species' scene or mesh carries a saddle,
+##      and nothing here attaches one until it is fitted. This half was already
+##      true before this lane and is now pinned by a test that spawns every
+##      species carrying a `rideable` block and asserts the node is absent.
+##   2. **Built.** `_has_tack()` already refuses to mount without the item, and
+##      the item is the tournament's prize (`D48` §4, `test_recipes.gd`'s
+##      `TOURNAMENT_GATED_RECIPE`). Nothing is fitted that was not crafted.
+##   3. **Then it visually appears — and STAYS.** This is what changed. The
+##      saddle used to be attached in `mount()` and torn off again in
+##      `dismount()`, so it existed only for as long as you were sitting on it:
+##      the visible proof of the craft was invisible in every moment the player
+##      would actually look at their creature. `fit_saddle()` now records the
+##      fit and the saddle is worn from then on, following, standing, resting or
+##      being ridden.
+##
+## **Where "fitted" lives, and why it is a flag rather than a field on the
+## creature.** `autoload/progression_state.gd`'s flag store is saved and loaded
+## with the game, and this node can write it without reaching into
+## `creature_instance.gd`'s serialisation — which this lane does not own and
+## which would have to grow a field, a save key and a migration for a boolean.
+## The flag is per-SPECIES (`saddle_fitted_meadowhart`), so a second Meadowhart
+## in a five-creature roster wears the saddle its species was fitted for. That
+## is a deliberate simplification and it is recorded in `D75`; the alternative
+## reads as a bug the first time a player swaps mounts and finds bare leather.
+##
+## **The legendary is exempt and stays exempt.** Its `requires_item` is empty
+## (`species.json`'s own `_comment_rideable`: *"it carries you because it
+## offered to"*), so there is no saddle to fit and none is ever attached —
+## strapping the crafting bench's leather to it would be the wrong sentence
+## about what just happened in that chamber. The check below is on the species'
+## own required item, not on "is it rideable".
 const SADDLE_MODEL := "res://assets/props/riding_saddle/riding_saddle.glb"
+## The item whose craft this mesh is the proof of. A species asking for
+## different tack (`requires_item`) is a species this saddle is not for.
+const SADDLE_ITEM := "saddle"
+const SADDLE_NODE := ^"RideSaddle"
 ## Fallback scale and vertical offset when a species carries no seat block
 ## of its own. `mount_offset` is the RIDER's seat, a little under the
 ## creature's own back line (see that key's own comment in species.json);
@@ -443,6 +578,84 @@ const SADDLE_MODEL := "res://assets/props/riding_saddle/riding_saddle.glb"
 ## downward nudge rather than reusing the offset unchanged.
 const SADDLE_SCALE := 0.5
 const SADDLE_Y_NUDGE := -0.12
+
+
+## Is THIS saddle the tack this species wants? False for a species that needs
+## none (the legendary) and false for one that names different gear, so the
+## mesh is never hung on an animal the craft was not for. Pure data, so
+## `tests/test_riding_saddle.gd` can hold the rule without standing a body up.
+static func saddle_belongs_on(species_id: String) -> bool:
+	return str(SPECIES.rideable(species_id).get("requires_item", "")) == SADDLE_ITEM
+
+
+## Has a saddle been built and fitted to this species? Saved with the game.
+##
+## `store` exists for the unit test and for nothing else: the flag store is
+## normally `/root/Game`'s, and `tests/run_tests.gd` does all its work inside
+## `_init()`, before the tree has autoloads — so a test that could not be
+## handed a store could only assert against a null one, which passes for the
+## wrong reason.
+static func saddle_is_fitted(species_id: String, store: RefCounted = null) -> bool:
+	var flags: RefCounted = store if store != null else _progression()
+	if flags == null:
+		return false
+	return bool(flags.call("has", saddle_fitted_flag(species_id)))
+
+
+static func saddle_fitted_flag(species_id: String) -> String:
+	return "saddle_fitted_%s" % species_id
+
+
+static func _progression() -> RefCounted:
+	var loop := Engine.get_main_loop()
+	if loop == null or not loop is SceneTree:
+		return null
+	var game := (loop as SceneTree).root.get_node_or_null(^"/root/Game")
+	return game.get("progression") if game != null else null
+
+
+## Put the saddle on. The moment the owner's sentence turns on: the item has
+## been built, the player is putting it on the animal, and from here it is
+## visibly there. Returns whether anything was fitted, so a caller can tell a
+## refusal from a no-op.
+##
+## Called by `mount()`, because getting on is the act of putting it on and the
+## project has no spare button for a second one (D48 §1: riding spends no new
+## binding). A species that needs no tack is never fitted; see the header.
+func fit_saddle(body: Node3D) -> bool:
+	if body == null or not is_instance_valid(body):
+		return false
+	var species_id := str(body.get("species_id"))
+	if not saddle_belongs_on(species_id):
+		return false
+	if not _has_tack(species_id):
+		return false
+	var store := _progression()
+	if store != null:
+		store.call("set_flag", saddle_fitted_flag(species_id))
+	_attach_saddle(body, species_id)
+	return true
+
+
+## The creature standing in the world wears its saddle if, and only if, one has
+## been fitted to its species. Ticked every frame rather than hooked onto a
+## summon signal for the reason this file's own header gives: a gate set once
+## when something changed is a gate that is wrong the first time something else
+## touches it — and the ally body is destroyed and rebuilt by
+## `encounter_director.gd` on every dismiss, every fight and every scene change.
+func _refresh_worn_saddle() -> void:
+	if _encounter == null or not is_instance_valid(_encounter):
+		return
+	var body: Node3D = _encounter.call("ally_body")
+	if body == null or not is_instance_valid(body):
+		return
+	var species_id := str(body.get("species_id"))
+	var wanted := saddle_belongs_on(species_id) and saddle_is_fitted(species_id)
+	var worn := body.get_node_or_null(SADDLE_NODE) != null
+	if wanted and not worn:
+		_attach_saddle(body, species_id)
+	elif worn and not wanted:
+		_detach_saddle(body)
 
 
 func _attach_saddle(body: Node3D, species_id: String) -> void:
@@ -469,9 +682,14 @@ func _attach_saddle(body: Node3D, species_id: String) -> void:
 func _detach_saddle(body: Node3D) -> void:
 	if body == null or not is_instance_valid(body):
 		return
-	var existing := body.get_node_or_null(^"RideSaddle")
+	var existing := body.get_node_or_null(SADDLE_NODE)
 	if existing != null:
 		existing.queue_free()
+		# Named nodes are only freed at the end of the frame, so a re-attach in
+		# the same tick would find the old one still sitting there and Godot
+		# would rename the new one `RideSaddle2` -- which `_refresh_worn_saddle`
+		# would then never see and would re-add forever.
+		existing.name = "RideSaddleRemoved"
 
 
 ## The slope, in degrees, the current mount treats as floor. The trainer's own

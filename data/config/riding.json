@@ -1,0 +1,30 @@
+{
+  "_comment": "W14-RIDING / CL-O3, 2026-09-04. Everything about riding that is about the RIDE rather than about the animal. Which creature is a mount, how fast it goes and what tack it needs stay per-species in data/creatures/species.json's `rideable` block (D48 §2); the camera pose while mounted stays in movement.json's `riding.camera`, where camera_rig.gd's profile reader already finds it. What is new here is the owner's OP-0904-3 list: a mount that can sprint, a mount that can hop, and a rider who is actually sitting on it. All TUNABLE.",
+
+  "sprint": {
+    "_comment": "Owner, on hardware: `You can't sprint or jump when riding.` A multiplier on the species' own ride speed, not a second speed table, for the same reason ride_speed_multiplier multiplies the trainer's walk: one number to move if a mount is retuned. Meadowhart rides at 2.0 x 5.0 = 10 m/s, so a sprinting Meadowhart is 14 m/s against a sprinting trainer's 8.6 -- the gap riding is sold on stays a gap when both sides are running.",
+    "speed_multiplier": 1.4,
+    "_comment_stamina": "D48 §3 says riding costs the PLAYER no stamina and the mount has no meter. D75 extends that ruling to the sprint rather than quietly inventing a cost: `creature_stamina_cost` is 0.0 and reads as documentation of a decision, not as a knob that was never wired. A future cost belongs on a distance budget or a cooldown, per D48's own note, and would be a decision before it was a number.",
+    "creature_stamina_cost": 0.0
+  },
+
+  "jump": {
+    "_comment": "Metres of clearance, converted to launch velocity against the CREATURE's own gravity by creature_body.request_jump() so retuning creature gravity does not silently change how high a mount hops -- the same conversion movement.json's `jump.height` gets for the trainer. 1.6 against the trainer's 1.35: the brief's bar is `a real hop that clears the low fences/rocks a walking player can vault`, and a mount that jumps LOWER than the person riding it would read as a downgrade.",
+    "height": 1.6,
+    "_comment_cooldown": "Stops a held button from re-launching on the first frame of ground contact, which reads as a bounce rather than a jump.",
+    "cooldown_seconds": 0.35
+  },
+
+  "rider": {
+    "_comment": "OP-0904-3's first item: `When you ride your person didn't show up on the creature.` The trainer rig has no seated clip (animate_humanoid.py bakes idle/walk/sprint/jump/throw/chop and CLAUDE.md forbids spending a Meshy generation without owner reference art), so trainer_model.gd poses the skeleton directly. Angles are degrees of FLEXION on each joint, applied about the axis measured off the authored walk clip rather than assumed -- see trainer_model.gd::RIDE_POSE for the measurement.",
+    "_comment_seat_drop": "Metres the art is lowered so the rider's HIPS, not their feet, land on the species' `mount_offset`. That offset is authored as `where the rider is seated` (species.json's own _comment_rideable), and the rig's origin is at the soles -- so without this the trainer sits one leg-length too high and reads as floating, which is exactly the defect being fixed. ~0.51 x the 1.80 m trainer's height is the hip joint on this rig.",
+    "seat_drop_m": 0.92,
+    "hip_flexion_deg": 74.0,
+    "knee_flexion_deg": 68.0,
+    "ankle_flexion_deg": 8.0,
+    "thigh_spread_deg": 16.0,
+    "torso_lean_deg": 10.0,
+    "shoulder_flexion_deg": 34.0,
+    "elbow_flexion_deg": 52.0
+  }
+}
