@@ -254,8 +254,16 @@ def main():
             if row["weather"]:
                 clock["weather"] = row["weather"]
             step("pin_clock", "pin the clock to the trace's hour at t=%.0f s" % t, args=clock,
+                 diag=True,
                  expected="the hour and weather the played route had here (%.2f h, %s)" % (
-                     row["clock_hour"], row["weather"] or "clear"))
+                     row["clock_hour"], row["weather"] or "clear"),
+                 observation="DIAG: freezing the world clock is a diagnostic instrument, not "
+                             "something a player can do, and the harness refuses it without this "
+                             "flag -- which is how GATE2-EVIDENCE-0903's first capture lane took "
+                             "all sixteen of its frames at the live clock's ~08:30 instead of at "
+                             "the hours its own trace recorded. The frames were still real "
+                             "gameplay frames at real route positions; they just could not show "
+                             "time-of-day variation.")
             step("teleport", "stand where the played route stood at t=%.0f s (%s)" % (t, label),
                  args={"at": [round(row["x"], 2), round(row["z"], 2)],
                        "resettle_frames": args.resettle_frames},

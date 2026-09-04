@@ -305,7 +305,22 @@ This does not change this run's verdict: §5 fails on grounds inside the gate's 
 
 ## 8. Blind judge
 
-See `JUDGE.md` beside this file: a code-blind pass over 16 frames taken from the played
-route — the gameplay camera, HUD on, at positions, headings and clock hours read out of
-the run's own 2 Hz trace, not posed at ideal stands
-(`tools/gate_f/derive_gate2_route_captures.py`, `run/G2C.json`).
+See `JUDGE.md` beside this file: a code-blind pass over **16 frames taken from the played
+route** — gameplay camera, HUD on, at positions and headings read out of the run's own
+2 Hz trace, not posed at ideal stands
+(`tools/gate_f/derive_gate2_route_captures.py`, `run/G2C.json`,
+`_sheet_gate2_route.png`). The critic was given the sheet, the frames and
+`docs/reference/`, and nothing about the code, the history or what had changed.
+
+Capture lane: 1280×720 under xvfb + opengl3 (Compatibility), matching every prior
+blind-judge sheet in this series rather than starting a new one; the choice and its cost
+reasoning are recorded in `run/G2C/CAPTURE_RESOLUTION.json`. **16 of 16 frames non-degenerate**
+by the harness's own dark-fraction/stddev test (mean luma 44–81, dark fraction 0.02–0.41).
+
+**One limitation, recorded rather than hidden:** all sixteen `pin_clock` steps were REFUSED
+— the harness requires `diag: true` to freeze the world clock, and the generator did not set
+it. So every frame was taken at the live clock's ~08:30 rather than at the hour its trace
+recorded. The frames are real gameplay frames at real route positions and headings, and a
+uniform hour is if anything a cleaner control for judging composition and density; but **this
+set cannot speak to time-of-day variation at all**, and the judge was told so. The generator
+now sets the flag.
