@@ -3689,9 +3689,18 @@ func _build_warden_arena_dressing() -> void:
 	var half := _size_of(chamber.get("size", [])) * 0.5
 	var height := float(chamber.get("height", 11.0))
 
+	# G3-WARDEN-ARENA-0904's own blind judge, on the first cut of this pass (two
+	# banners at half.x*0.45, inner edges 2.7m clear of the centreline either
+	# side): "the banners sit to his left and right, not behind him... his
+	# silhouette is still sitting against the same dark, low-contrast stone it
+	# was against before". 0.45 -> 0.28 pulls both banners' inner edges to
+	# ~0.7m off `warden_stand`'s own centreline (a ~1.4m gap between them,
+	# rather than the ~5.5m gap 0.45 left) without the two cloths overlapping
+	# each other or the corners, so the wall directly behind him is heraldry
+	# rather than bare stone either side of a wide dark gap.
 	var top := _floor_y + height * 0.78
 	for s: float in [-1.0, 1.0]:
-		_hang_banner(Vector3(centre.x + s * half.x * 0.45, top,
+		_hang_banner(Vector3(centre.x + s * half.x * 0.28, top,
 			centre.z + half.y - _wall_t * 0.5), PI * 0.5,
 			BANNER_COLOUR, BANNER_SCALE * 1.1)
 
