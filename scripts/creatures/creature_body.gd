@@ -913,6 +913,116 @@ func _night_floor_material(source: BaseMaterial3D) -> BaseMaterial3D:
 	return floored
 
 
+## G3-CREATURE-COLOUR-0904 (docs/CURRENT_STATE.md §3, reopening CREATURE-LEGIBILITY-
+## 0903/Gate 2.4). Two separate defects were closing over the same code path.
+##
+## (1) NIGHT: `field_emission`/`field_degreen` were a plain multiply applied once
+## at spawn/colourway-swap time with no clock awareness -- raising `field_emission`
+## for a daytime grass-separation bar meant the identical push then ran unchanged
+## after dark, reading as an out-of-place bright/pink self-lit glow (confirmed
+## identical pixels with `world_look.gd`'s NIGHT-LEGIBILITY floor on and off -- not
+## that floor's doing). Fixed the same way `_night_floor_material()` above fixes
+## the mirror-image problem: one shared, rescalable material per (species, source
+## material) pair, cached in `_field_bright_info` and rescaled in place by
+## `set_field_brightness_scale()`, driven off the same clock `world_look.gd` already
+## drives `set_emission_floor_scale()` from. `_field_scale` defaults to 1.0 (full
+## daytime push, unchanged) so nothing here moves anything until `world_look.gd`
+## actually calls the setter with a config value below 1.0.
+##
+## (2) DAYLIGHT: the GATE2-EVIDENCE-0903 blind judge independently called the same
+## creature "candy pink" in broad daylight, on a species whose shipped coat texture
+## (measured directly) is a plain warm tan (mean RGB 123/101/57) with nothing pink
+## in it. Root cause: `field_degreen`'s green-channel suppression used to scale
+## WITH `strength`, so CREATURE-LEGIBILITY-0903 raising `field_emission` 0.9 -> 2.5
+## for a value/luminance bar unintentionally nearly tripled the R/B-vs-G gap a
+## totally separate hue lever (OWNER-0901-CREATURE-GRASS-VISIBILITY-V2's fix for
+## moss patches reading grass-hued) had been tuned to open -- a value push widening
+## a hue lever it was never meant to touch. `FIELD_DEGREEN_GAP` fixes that gap's
+## SIZE at what a real blind pass already approved at `field_emission`'s ORIGINAL
+## 0.9 (0.9 * 0.5 * 0.75 = 0.3375, kept as a flat constant rather than a fraction of
+## `strength`), so any future daytime value push stays hue-neutral instead of
+## quietly re-opening the same defect at a new brightness.
+static var _field_scale := 1.0
+## One shared, rescalable material per (species, source material) pair -- same
+## `species_id|resource_name` sharing discipline `_night_floor_materials` above
+## uses, for the same reason: many instances of one species must not each own a
+## private duplicate this static setter would otherwise have to hunt down.
+static var _field_bright_info: Dictionary = {}
+const FIELD_DEGREEN_GAP := 0.35
+
+
+## Called by `world_look.gd` on each look change, exactly like
+## `set_emission_floor_scale()` above -- rescales every material this body class
+## already brightened, in place, rather than waiting for the next spawn/colourway
+## swap to pick up a new time of day.
+static func set_field_brightness_scale(scale: float) -> void:
+	var wanted := clampf(scale, 0.0, 1.0)
+	if is_equal_approx(wanted, _field_scale):
+		return
+	_field_scale = wanted
+	for info: Dictionary in _field_bright_info.values():
+		_apply_field_bright_values(info)
+
+
+static func _apply_field_bright_values(info: Dictionary) -> void:
+	var material: BaseMaterial3D = info["material"]
+	var strength: float = float(info["strength"]) * _field_scale
+	var degreen: float = float(info["degreen"])
+	var factor := 1.0 + strength
+	# Green gets the same push as red/blue minus a FIXED gap -- see this
+	# section's own header comment for why the gap no longer scales with
+	# `strength`/`_field_scale`. degreen=0 leaves this equal to `factor`,
+	# unchanged from before this lever existed.
+	var g_factor := maxf(factor - degreen * FIELD_DEGREEN_GAP, 0.0)
+	var albedo: Color = info["orig_albedo"]
+	var new_albedo := Color(
+		albedo.r * factor, albedo.g * g_factor, albedo.b * factor, albedo.a)
+	material.albedo_color = new_albedo
+	if material.emission_enabled:
+		material.emission_energy_multiplier = float(info["orig_emission_mult"]) * factor
+	# `_night_floor_material()` above duplicates whichever material is active
+	# at BUILD time and only ever revisits its OWN `emission_energy_multiplier`
+	# afterwards (`set_emission_floor_scale()`'s loop) -- if this exact material
+	# was in turn wrapped by that floor (the ordinary case: colourway -> field
+	# brightness -> night floor, see `_apply_night_floor()`'s call order in
+	# `_build_placeholder()`), the floored copy's `albedo_color` is a frozen
+	# snapshot from whenever it was made and would otherwise go stale the first
+	# time this scale changes after spawn -- a live creature's coat would stop
+	# tracking the clock even though its own emission glow kept doing so
+	# correctly. Same cache, same key shape as `_night_floor_material()` uses.
+	var floored_key := "%s|%s" % [String(info.get("species_id", "")), material.resource_name]
+	if _night_floor_materials.has(floored_key):
+		(_night_floor_materials[floored_key] as BaseMaterial3D).albedo_color = new_albedo
+
+
+func _field_bright_material(source: BaseMaterial3D, strength: float, degreen: float) -> BaseMaterial3D:
+	# Keyed on strength/degreen as well as species/material, not just the first
+	# two like `_night_floor_material()` above -- unlike that floor (one fixed
+	# config value per time of day), `field_emission`/`field_degreen` are read
+	# from the species table at spawn time, and `tools/_probe_grass_separation.gd`
+	# depends on being able to mutate that table and re-spawn the SAME species
+	# mid-process to sweep values. Keying on the value too means a sweep gets a
+	# fresh cache entry per value tried, exactly like the un-cached original did,
+	# while steady-state gameplay (one fixed value per species) still shares one
+	# material across every live instance of that species.
+	var key := "%s|%s|%.4f|%.4f" % [species_id, source.resource_name, strength, degreen]
+	if _field_bright_info.has(key):
+		return _field_bright_info[key]["material"] as BaseMaterial3D
+	var material := source.duplicate() as BaseMaterial3D
+	material.resource_name = "%s_field_bright" % material.resource_name
+	var info := {
+		"material": material,
+		"orig_albedo": source.albedo_color,
+		"orig_emission_mult": source.emission_energy_multiplier,
+		"strength": strength,
+		"degreen": degreen,
+		"species_id": species_id,
+	}
+	_field_bright_info[key] = info
+	_apply_field_bright_values(info)
+	return material
+
+
 func _brighten_node(node: Node, strength: float, degreen: float = 0.0) -> void:
 	if node is MeshInstance3D:
 		var instance := node as MeshInstance3D
@@ -922,22 +1032,10 @@ func _brighten_node(node: Node, strength: float, degreen: float = 0.0) -> void:
 			if not (source is BaseMaterial3D):
 				continue
 			var material := source as BaseMaterial3D
-			var suffix := "_field_bright"
-			if material.resource_name.ends_with(suffix):
+			if material.resource_name.ends_with("_field_bright"):
 				continue
-			material = material.duplicate() as BaseMaterial3D
-			material.resource_name = "%s%s" % [material.resource_name, suffix]
-			instance.set_surface_override_material(surface, material)
-			var factor := 1.0 + strength
-			# Green channel gets a smaller share of the same push -- see
-			# `FIELD_DEGREEN_MAX`'s own comment. degreen=0 leaves this equal to
-			# `factor`, unchanged from before this lever existed.
-			var g_factor := 1.0 + strength * (1.0 - 0.5 * degreen)
-			var albedo := material.albedo_color
-			material.albedo_color = Color(
-				albedo.r * factor, albedo.g * g_factor, albedo.b * factor, albedo.a)
-			if material.emission_enabled:
-				material.emission_energy_multiplier *= factor
+			instance.set_surface_override_material(
+				surface, _field_bright_material(material, strength, degreen))
 	for child in node.get_children():
 		_brighten_node(child, strength, degreen)
 
