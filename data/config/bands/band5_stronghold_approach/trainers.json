@@ -105,18 +105,34 @@
       "facing_deg": 90.0,
       "challenge": "stronghold_elite_challenge",
       "defeated": "stronghold_elite_defeated",
+      "_comment_w7": "GATE3_ENCOUNTER_CONTRACTS.md W-7. Shipped duskhush -> mosshell: his own `_comment` above claims 'three creatures of three different types' and the data did not deliver it (Air/Ground/Air). Now Air/Ground/Water, which is what the comment always said. Combat profiles per G-3 (DIVER on galecrest, default on burrowback, WALL on mosshell) land here inert until G-2's `set_engaged()` merge ships on the combat/encounter lane's own branch -- absent-block-means-today's-behaviour is G-2's own contract, so this is safe to author ahead of that merge. No TM-tier quick here (W-3): Hald fights with species moves, same as the courtyard, so the step up into TM quicks lands only in the Warden's own arena.",
       "team": [
         {
           "species": "galecrest",
-          "level": 18
+          "level": 18,
+          "combat": {
+            "telegraph": 0.4,
+            "lunge": 5.5,
+            "reposition_distance": 7.0,
+            "reposition_time": 1.6,
+            "attack_cooldown": 0.9,
+            "power": 7.2
+          }
         },
         {
           "species": "burrowback",
           "level": 19
         },
         {
-          "species": "duskhush",
-          "level": 19
+          "species": "mosshell",
+          "level": 19,
+          "combat": {
+            "telegraph": 0.85,
+            "recovery": 1.1,
+            "power": 12.0,
+            "chase_speed": 3.4,
+            "reposition_distance": 2.5
+          }
         }
       ],
       "reward": {
@@ -155,27 +171,77 @@
       "facing_deg": 180.0,
       "challenge": "stronghold_warden_challenge",
       "defeated": "stronghold_warden_defeated",
-      "_comment_team": "A FULL team of five -- the only trainer in the chapter who fields one, and the first time the player's own five-creature limit is met by an equal. Levels 16-20 sit above SF34's captains (10-16) with the ace a clear step above the rest. Three types across the five so no single answer sweeps it: two Ground, one Water, one Air, and a Ground ace. ALL TUNABLE.",
+      "_comment_team": "A FULL team of five -- the only trainer in the chapter who fields one, and the first time the player's own five-creature limit is met by an equal. Three types across the five so no single answer sweeps it: two Ground, one Water, one Air, and a Ground ace. ALL TUNABLE.",
+      "_comment_w1_w2_w3": "GATE3_ENCOUNTER_CONTRACTS.md W-1/W-2/W-3, G3-ENCOUNTERS-0903 (Fable). W-1: shipped 16/17/17/18/20 opened two levels SOFTER than Hald's own weakest (18) -- a player who just beat 18/19/19, rested, and opened the chapter's climax against a 16 and two 17s. Raised to 18/18/19/19/20 (sum 94, +38 over Hald's 56): no member below the elite's floor, the ace still the chapter's highest, still inside band5's [15,20] window (data/config/chapter_curve.json, owned by G3-ECONOMY -- not edited here). W-2: send-out order is now the doctrine, not an accident of authoring order -- the first four are the four behaviour profiles the region's captains/elite already taught the player, one each, so a prepared player recognises each as it comes out; the fifth is the one telegraph in the chapter worth reading, Earth Fist's own cone from the Warrens guardian (G-9), on the ace. W-3: TM-tier quicks on this team only (rock_throw/aqua_shot/wind_blade, each 15-20% harder than the species move and on-type) -- G-4's *fails if* is that nothing below the Warden carries one, so the step into this arena is felt in the first exchange, not before it. `combat` blocks are G-3's five reusable profiles (WALL/DIVER/CURRENT/CHARGER/ACE per the region's own captains), computed off combat.json's `enemy` defaults; they are inert until G-2's `set_engaged()` merge ships on the encounter lane's own branch (G-2's own contract: absent behaviour is unchanged, and an override only ever reaches the body that authored it), so authoring them here ahead of that merge is safe.",
       "team": [
         {
           "species": "burrowback",
-          "level": 16
-        },
-        {
-          "species": "brooktail",
-          "level": 17
+          "level": 18,
+          "moves": {"quick": "rock_throw"},
+          "_comment_profile": "WALL -- the drilled line that does not move.",
+          "combat": {
+            "telegraph": 0.85,
+            "recovery": 1.1,
+            "power": 12.0,
+            "chase_speed": 3.4,
+            "reposition_distance": 2.5
+          }
         },
         {
           "species": "galecrest",
-          "level": 17
+          "level": 18,
+          "moves": {"quick": "wind_blade"},
+          "_comment_profile": "DIVER -- hit-and-run, short tell, comes again from a new side.",
+          "combat": {
+            "telegraph": 0.4,
+            "lunge": 5.5,
+            "reposition_distance": 7.0,
+            "reposition_time": 1.6,
+            "attack_cooldown": 0.9,
+            "power": 7.2
+          }
+        },
+        {
+          "species": "brooktail",
+          "level": 19,
+          "moves": {"quick": "aqua_shot"},
+          "_comment_profile": "CURRENT -- relentless pressure, never backs off far.",
+          "combat": {
+            "attack_cooldown": 0.7,
+            "recovery": 0.55,
+            "reposition_time": 0.5,
+            "reposition_distance": 2.0,
+            "power": 6.4
+          }
         },
         {
           "species": "meadowhart",
-          "level": 18
+          "level": 19,
+          "moves": {"quick": "rock_throw"},
+          "_comment_profile": "CHARGER -- the stag that closes the distance in one lunge.",
+          "combat": {
+            "preferred_range": 4.5,
+            "lunge": 7.0,
+            "telegraph": 0.6,
+            "recovery": 0.9,
+            "attack_cooldown": 1.6,
+            "power": 10.4
+          }
         },
         {
           "species": "tuskroot",
-          "level": 20
+          "level": 20,
+          "moves": {"quick": "rock_throw"},
+          "_comment_profile": "ACE -- the one telegraph in the chapter worth reading. lunge/cone_degrees widened past the base ACE profile to Earth Fist's own shape (G-9, the Warrens guardian's signature move), the chapter's heaviest hit stepped around the same way at the end as it was foreshadowed at the start.",
+          "combat": {
+            "telegraph": 1.0,
+            "recovery": 1.2,
+            "power": 14.4,
+            "lunge": 6.5,
+            "cone_degrees": 72,
+            "attack_cooldown": 1.8,
+            "first_attack_delay": 2.5
+          }
         }
       ],
       "reward": {
