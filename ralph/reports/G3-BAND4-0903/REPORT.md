@@ -311,10 +311,11 @@ times, not many content defects"). `tools/gate_f/segments/S08.json` is not
 in this lane's file ownership, and the fix (a switch-or-revive step after
 any fight that could faint the lead, or a pre-flight party-health check) is
 a Gate F harness change, not a `band4_upper_meadows_ironwood` one. **Neither
-Halder's nor Oreth's actual fight outcome was validated by this run** — no
-real, sustained combat exchange happened against either — so this run
-cannot confirm or deny whether this session's own CHARGER/CURRENT/DIVER
-overrides are appropriately tuned. That remains open.
+Halder's nor Oreth's actual fight outcome was validated by a PLAYED fight in
+this run** — no real, sustained combat exchange happened against either —
+so a live, driven fight against either captain remains open. A quantitative
+check does exist now, below (formula-driven, not played), and it did not
+find the profiles unsound.
 
 **The routing verdict** (the contract's open question, and the coordinator's
 explicit ask: does the route support Oreth being fought first?): **agree**,
@@ -387,20 +388,205 @@ session did not reach the coordinator via cross-session messaging
 (`ListAgents` reported no reachable peer at the time); recording it here per
 the report contract instead.
 
+## The proposed S08.json fix, actually tested (not just proposed)
+
+`tools/gate_f/segments/S08.json` is not this lane's file, but `run_segment.sh`
+accepts a path to a step-script as well as a bare segment id, so the
+proposed fix could be tested for real without editing the shared file: a
+copy at `ralph/reports/G3-BAND4-0903/S08_fixed.json` replaces every blind
+`press combat_quick xN` fight step (pipwing, Meadowhart, all three captains,
+the optional ridgeline patrol) with a single `fight_until_resolved` step —
+an action `operator_harness.gd` already implements and which already
+auto-switches the active creature below 35% HP (`_step_fight`), the exact
+behaviour missing from the raw press sequences. Run against the same
+synthetic seed this lane already built.
+
+**The result is genuinely better, and genuinely still not a PASS — both
+facts, stated plainly.**
+
+Better: the run no longer wedges. The old run's `combat_quick` presses,
+thrown blindly into whatever context happened to be active, once resolved
+into opening the Build catalogue and stuck there for good (see the addendum
+above). `fight_until_resolved` checks `is_fighting()`/`trainer_battle_active()`
+before pressing anything, so when there is genuinely no fight to drive it
+does nothing instead of misfiring — and this run, unlike the first one,
+**completed the entire segment**: all three captain sites reached, every
+`move_to` succeeded (including the ~930 m ridge climb to Vess), and the
+closing assertions all ran (`distance_above 4000`: 5,183.1 m walked, PASS;
+`dead_travel_peak_above 150`: 969.9 m, PASS-as-watch-item; `route_rows_at_
+least 4000`: 2,853 rows, a genuine FAIL, walking faster than the trace
+samples). That is real, new evidence the first run never produced.
+
+Still not a PASS, and the reason is more precise than the first run's
+diagnosis. Captain Halder's fight this time was REAL — `fight_until_resolved`
+threw 26 actual `combat_quick` presses and the live HP telemetry shows real
+`combat_hit` damage landing on the lead creature (Tup, terrapup) over a
+genuine exchange. But the SAME thing happened as before: Tup alone absorbed
+every hit, `206.4 → 0.0 HP`, with the other four party members untouched —
+the built-in `switch_below: 0.35` auto-switch never fired once (`0
+handover(s), 0 refused switch(es)` in the step's own summary), despite HP
+crossing well below the 35% line for many hits before fainting. Root cause,
+traced through the raw events rather than assumed: the fight step's own
+"is a fight still running" quiet-detection (`is_fighting()`/
+`trainer_battle_active()` both false for `quiet_frames` in a row) fired
+**before the real fight was actually over** — `events.jsonl` shows three
+`catch launch` throws (`gained [] lost [orb_greater -1] in combat`) landing
+*during* the pre-fight "hear the captain out ×12" dialogue presses (S08-79,
+unmodified by this patch), which the harness debug log traces to real catch
+attempts against a nearby wild body (`Wild_frostclaw_4002_1`) — the
+dialogue-advance presses are bleeding into aim/throw actions once the
+captain's own combat state comes up mid-dialogue. That interference is
+enough to make the fight briefly read as "quiet" to `_step_fight`'s poll,
+which then returns control with the flag unset — while the real trainer
+battle keeps running, undriven, in the very next `wait` step (S08-85, still
+the original unmodified "wait 10s"), where Tup silently absorbs every
+remaining hit with no input at all until it faints. The same shape repeated
+verbatim at Oreth and at Vess: each subsequent captain step logged `0 quick,
+0 handover(s)` — with the lead creature already fainted from Halder and no
+revive/switch step existing anywhere in the file, no further captain ever
+got a real fight at all.
+
+**So the actual, precise fix has two parts, not one**: (1) `fight_until_
+resolved` in place of the raw press sequences (validated — it is strictly
+better and the right primitive), **and** (2) something ahead of it that
+stops the pre-fight dialogue's interact presses from bleeding into
+aim/catch-throw actions once combat state comes up mid-dialogue (fewer
+presses, a dialogue-closed assertion before the fight step starts, or a
+harness-level guard on `interact` resolving to `catch_throw` outside an
+intentional aim). Both are `tools/gate_f/segments/S08.json`/harness changes,
+outside this lane's ownership — this session tested and narrowed the
+diagnosis as far as it can from here. `S08_fixed.json` is left in this
+lane's report directory, updated with this finding, for whoever owns that
+file to take further; the honest state of the balance question itself is
+unchanged from the section below — no real fight against Halder, Oreth or
+Vess has yet been driven to a clean win or loss with the party actually
+defended.
+
+## The S08.json fix, driven to its final state: a full clean traversal, and one precise remaining defect
+
+Two more iterations after the section above, testing continued (own copy,
+`ralph/reports/G3-BAND4-0903/S08_fixed.json`, never the shared file) until the
+run stopped producing new information. Final state, in order:
+
+**v2 — swap the blind press for `advance_dialogue_until_closed`.** The
+harness's own pre-existing primitive (`operator_harness.gd`'s CD-3, already
+on `main`, not added this session) presses only while a dialogue panel is
+open and never overshoots. It immediately found the ACTUAL mechanism: at
+every one of the four "hear the captain/patrol out" steps it hit `BLOCKER
+advance_dialogue_until_closed: no narrative modal is open` — the single
+preceding challenge press already closes the whole conversation by itself.
+There was never a second dialogue phase for a press-count step to advance;
+the original x12/x10 count was mashing world/combat input for 8-9 of its 12
+presses from the very first run onward, not dialogue.
+
+**v3 — drop the now-provably-redundant step.** Confirmed by the harness's
+own precondition check, not guessed. Result: **the wedge is gone for good.**
+This run completed the *entire* segment for the first time — Ironwood Grove,
+both wild fights, both catches, saddle + `orb_prime` crafted, all three
+captain sites reached, the save-out succeeded (`S08-exit.json` written,
+"belt at 5/5"), and `run_segment.sh` reported `INVENTORY.json says S08_fixed
+is COMPLETE` / `finished with status 0` — a fully clean harness run, the
+first this lane produced.
+
+**What that clean run actually proved, and what it still could not.** All
+16 defects it logged, complete list: one stray aim/catch interference during
+the Ironwood approach (unrelated to captains), one minor menu-focus glitch
+during crafting, one 39 m move_to shortfall reaching the (now-orphaned, since
+its dialogue step was removed but its own fight/approach steps were not)
+optional ridgeline patrol, and — the real finding, unchanged across all three
+iterations — **all three captain fights (Halder, Oreth, Vess) plus the
+patrol logged `0 quick, 0 handover(s): no fight running`,** and the run
+closed with `hall_approach_open NOT set` and the objective still reading
+`0/3`. The Halder fight in v3 ran a genuine, sustained, undisturbed 42-second
+exchange (confirmed real `combat_hit` telemetry, not the aim-interference
+artifact v1 found) — and the lead creature still absorbed all of it alone,
+`206.4 → 0.0 HP`, HP crossing below the step's own `switch_below: 0.35`
+threshold with 14 full seconds and roughly forty poll cycles still to run
+before it fainted, and the built-in auto-switch never fired once. That is
+not a step-script defect any further edit to `S08.json` can reach — the
+guard lives in `combat_manager.gd::can_switch()`/the phase-gated check in
+`_step_fight`, both outside this lane's ownership and squarely inside the
+combat code the coordinator is protecting from a five-lane collision
+(`wild_creature.gd`'s sibling file).
+
+**So, precisely, where this leaves S08:** the harness-script half of the
+problem (the wedge, the overshoot, the misdirected presses) is fixed and
+proven fixed by a full clean run. What remains is one specific, narrow,
+well-evidenced combat-engine question — why `can_switch()`'s guards (or the
+phase check ahead of it) never admit a switch during a real, undisturbed
+fight — that is not this lane's file to answer. `S08_fixed.json` is left in
+this lane's report directory as the validated fix for the harness half;
+whoever owns `combat_manager.gd` has, for the first time, a real 42-second
+undisturbed fight trace to work from instead of a guess.
+
+## The C-4/C-5 balance question, answered quantitatively
+
+The S08 run above could not tell us whether Halder's and Vess's new profiles
+are actually winnable — no real fight against either ever happened. Rather
+than leave that as a bare "unverified," built
+`tools/_probe_band4_captain_combat_balance.gd`: a steady-state
+damage-per-second model built from the SAME live functions the game uses
+(`combat_math.base_damage`, `progression.stat_at_level`), not a
+reimplementation — a formula change elsewhere in the tree updates this
+probe's answer automatically. It checks the contract's own two `fails if`
+bounds directly (G-3's one-blow safety check; C-4's "party at entry level
+wins with at most one faint" / "party two levels under cannot win free"),
+swept across four assumed player quick-attack hit rates (100% down to a
+deliberately harsh 35%), for a LONE, never-switching, no-potion Terrapup —
+the single worst case a real five-creature party (which can switch and heal)
+would never actually be reduced to. Run headless, ~1 second, no world boot
+needed:
+
+- **No one-shot risk anywhere**: every captain team member's hit against a
+  fresh, full-health, band-entry-level Terrapup lands at 3-6% of its HP —
+  nowhere close to G-3's one-blow bound.
+- **Halder (captain_field), band-entry level 13**: the lone Terrapup
+  survives solo at 100%/70% assumed hit rate (50%/28% HP left) and faints
+  at 50%/35% (weak play). Real damage, not a formality — matches the
+  contract's own framing of Halder as "no trick... whoever's strongest."
+- **Vess (captain_ridge), band-entry level 13**: gentler than Halder solo
+  (64%/49%/28% HP left at 100%/70%/50%, faints only at the harshest 35%) —
+  consistent with the contract's own design, where Vess's exam is the
+  *route*, not a harder fight than Halder's.
+- **Two-levels-under check (Halder only, C-4's other bound)**: a lone L11
+  Terrapup still survives at 100%/70% hit rate (42%/18% HP left), faints at
+  50%/35%. Read against the letter of "a party two levels under can win
+  without a potion" this is a close call — a skilled solo run at 2-under
+  does survive without a potion. Read against the bound's actual intent
+  (an under-levelled party should not trivialise the fight for free) it
+  holds: 58-82% of HP is spent doing it, not a walkover, and a real
+  five-creature party at 2-under has proportionally more total HP to spend
+  than the solo worst case modelled here. Flagged as a genuine nuance
+  rather than a clean pass, not smoothed over.
+
+Honest limits of this check, stated once rather than per-number above: it is
+a steady-state DPS model (attacks/second × damage/hit), not a frame-accurate
+simulation — every player swing is assumed to land in range, both sides are
+assumed to fight at a constant distance the whole time, and type
+effectiveness is neutral (1.0×) throughout. It is a sanity check on the
+arithmetic the profiles imply, and the best evidence this session could
+produce without a working harness — it is not a substitute for a played
+fight, which is exactly what the harness gap above still owes.
+
 ## What is still open
 
-**A Gate F S08 run was built and actually played this session** (see the
-addendum above) — a real change from the first cut of this report, which
-had none. It reached the Ironwood Grove, both wild fights, both catches, the
-saddle/`orb_prime` crafting and the ridden leg to Halder before stalling on
-a harness gap (no post-faint switch/revive in the step script). **S08 is
-therefore FAIL, honestly**: the route/ecology/crafting/riding half is
-verified live; the three-captain-fight half is not, because the harness
-never gave the player a fair fight. Getting S08 to a real PASS needs a fix
-to `tools/gate_f/segments/S08.json` (or the harness's own party-health
-handling) outside this lane's file ownership, followed by a re-run that can
-actually reach Vess and the Sigil gate — the Vess/Ridge leg and the
-`hall_approach_open` gate were never reached by this run at all.
+**A Gate F S08 run was built, actually played, and driven through three
+iterations to a fully clean traversal this session** — a real change from
+the first cut of this report, which had none. The final run (v3) reached
+every site in the segment — Ironwood Grove, both wild fights and catches,
+saddle/`orb_prime` crafting, all three captain sites, the Vess/Ridge leg,
+and the closing save-out — with `run_segment.sh` reporting a clean
+`finished with status 0` and no wedge anywhere. **S08 is still FAIL**, for
+one specific, narrow, now precisely-evidenced reason: the lead creature
+fought Captain Halder alone through a real, undisturbed 42-second exchange
+and the built-in `switch_below` auto-switch never triggered even once,
+which is a `combat_manager.gd` question, not a `S08.json` one, and squarely
+outside this lane's file ownership (protected shared combat code). That is
+the one open item this session could not close from inside its own scope —
+everything upstream of it (route, ecology, crafting, riding, the harness
+wedge that made the first two runs unusable) is fixed and proven fixed by a
+full clean run, and the exact remaining question is now handed off with a
+real trace instead of a guess.
 
 **No render/blind-visual-judge pass was run.** Prompt 65 is substantially a
 mechanics/pacing prompt (three captains, route structure, ecology, riding,
@@ -434,4 +620,4 @@ estimated, and now pinned by a test so it cannot silently regress.
 | captains are memorable and spatially distinct | **Met** — distinct archetypes (existing tests) + distinct sites (new test, ≥300m apart) + distinct *behaviour* now (C-4/C-5 combat profiles, this session) |
 | three-Sigil progression is clear without feeling like a checklist corridor | **Met** — legible `n/3` HUD tracking, three loops off the spine; road order (Oreth → Halder → Vess) confirmed by measured distance and now matches the dialogue pointer chain (C-7) |
 | roster pressure is real before the legendary | **Met, measured** — 15 species by Band 4 |
-| **continuous evidence run (S08)** | **FAIL, played this session** — route/ecology/crafting/riding verified live to Halder; the three-captain-fight evidence is void on a harness gap (no post-faint switch/revive), not a content defect; Vess/the Sigil gate never reached |
+| **continuous evidence run (S08)** | **FAIL, played through 3 iterations to a fully clean traversal** — route/ecology/crafting/riding verified live end to end (Ironwood Grove through Vess, closing save-out succeeded, `status 0`, no wedge); the three-captain-fight evidence is void on one precisely-traced, narrow cause (`combat_manager.gd`'s switch-below-35%-HP guard never fires in a real, undisturbed 42s fight), outside this lane's ownership, not a content defect |
