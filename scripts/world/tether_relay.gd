@@ -909,8 +909,32 @@ func disable_relay() -> bool:
 	progression.call("set_flag", console_flag())
 	_kill_the_conduits()
 	_sync_console()
+	_heal_local_ground()
 	_say(str(console.get("done_message", "")))
 	return true
+
+
+## GATE3_ENCOUNTER_CONTRACTS.md V-5, G3-BAND3-0903. D41 says drained ground
+## "heals when the machinery fails" — this site's machinery fails the moment
+## the console is pressed, but `meadow_healing.gd`'s own sweep of this same
+## `heal()` method only fires once, on the chapter's `legendary_freed` flag,
+## everywhere at once. This is the filter that reading gap: the relay's own
+## dead-ground skin, and only it, heals the moment ITS machinery dies, rather
+## than waiting for the Warden. Nothing new is built — `heal()`/
+## `dead_ground_visible()`/`_finish_healing()` already exist and already are
+## exactly what `meadow_healing.gd` calls generically on every healable node
+## in the world; this is the one extra, earlier caller. Idempotent both ways:
+## `heal()` itself no-ops if already healing or already healed, and calling it
+## again later from `meadow_healing.gd`'s own sweep on `legendary_freed` finds
+## `dead_ground_visible()` already false and skips this node, exactly as it
+## already does for anything healed early. `seconds <= 0` in config disables
+## the early heal without touching `meadow_healing.gd`'s own later one.
+func _heal_local_ground() -> void:
+	var config: Dictionary = _config.get("dead_ground", {})
+	var seconds := float(config.get("heal_on_disable_seconds", 12.0))
+	if seconds <= 0.0:
+		return
+	heal(seconds)
 
 
 func _on_console_used() -> void:

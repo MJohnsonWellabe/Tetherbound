@@ -91,6 +91,7 @@ func _run() -> void:
 	_the_console_is_one_way(relay, progression)
 	_the_console_can_be_gated(relay, progression)
 	_the_ground_is_drained(relay)
+	await _the_local_ground_heals_on_disable(relay)
 
 	print("")
 	if _failures.is_empty():
@@ -294,6 +295,32 @@ func _the_console_can_be_gated(relay: Node3D, progression: RefCounted) -> void:
 
 	console["requires_flag"] = restore
 	progression.call("set_flag", "smoke_relay_gate", false)
+
+
+## GATE3_ENCOUNTER_CONTRACTS.md V-5, G3-BAND3-0903. D41: drained ground heals
+## when the machinery fails. The relay's own dead-ground skin should start
+## fading the moment ITS console goes quiet, not wait for the chapter's
+## `legendary_freed` ending (`meadow_healing.gd`'s own generic sweep). By this
+## point in the run the relay has already been disabled twice
+## (`_the_console_is_one_way`, then again inside `_the_console_can_be_gated`'s
+## own `requires_flag` toggle), so `heal()` has already been called at least
+## once — this only has to prove the fade actually runs to completion, not
+## trigger it a third time.
+func _the_local_ground_heals_on_disable(relay: Node3D) -> void:
+	if not bool(relay.call("dead_ground_visible")):
+		_fail("the relay's dead ground was never visible to begin with; this proves nothing about healing it")
+		return
+	var config: Dictionary = relay.get("_config")
+	var seconds: float = float((config.get("dead_ground", {}) as Dictionary).get("heal_on_disable_seconds", 12.0))
+	var frames := int(ceil(seconds * 60.0)) + 60
+	for i in frames:
+		await physics_frame
+	if not bool(relay.call("healed")):
+		_fail("the relay's dead ground did not finish healing %.1fs after the console was disabled" % seconds)
+	if bool(relay.call("dead_ground_visible")):
+		_fail("the relay's dead ground is still visible after it finished healing")
+	print("local ground heal: healed=%s dead_ground_visible=%s (%.1fs after disable)" % [
+		str(relay.call("healed")), str(relay.call("dead_ground_visible")), seconds])
 
 
 ## D41 at full strength. Two things, both read from the ONE authored source

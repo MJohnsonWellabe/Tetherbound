@@ -222,10 +222,24 @@ section is the residual band's own record, not a replacement for §4.
   distance, in the background of one frame — a framing/distance artefact of that one stand,
   not a shading defect this file's own converged values should be re-opened for.
 
-**Blind judge, same stands, after this pass:** see
-`ralph/reports/G3-BAND1-FINISH-0904/REPORT.md` §8 for the full verdict; summarised here so
-this gap list stays the living record. [placeholder — filled in once the render/judge pass
-in that report lands]
+**Blind judge, same stands, after this pass:** full verdict and per-item measurements in
+`ralph/reports/G3-BAND1-FINISH-0904/REPORT.md` §8; summarised here so this gap list stays
+the living record. Both bar questions are still **no** — none of this residual band's fixes
+were ever going to move that verdict alone, since the judge's own headline finding both
+before and after is that no creature appears in any of the sixteen stands, which is content
+this lane cannot supply. What DID move, confirmed by a fresh blind pass reading the
+re-rendered frames with no knowledge of what changed: the South Bridge checkpoint now reads
+as a real Team Tether presence ("three bright red banners... carrying a white circular
+emblem, hung under a dark timber arch over the only bridge... does read as 'somebody has
+claimed this'") where the prior pass saw a bare plank frame; and the oxblood-reservation
+finding is resolved by measurement (roof hue 29°/sat 0.42 against the checkpoint banner's
+own hue 14°/sat 0.74 in the same render batch, both sampled directly from the rendered
+pixels). Two things the same pass still names as open, honestly carried forward rather than
+claimed fixed: the gate leaf itself did not read as a clear physical barrier from the one
+recorded camera stand at the crossing ("the arch is completely open... nothing spans the
+road" — the leaf and its lock are unchanged and functional, this is a framing/legibility
+finding, not a mechanism one), and the one Team Tether grunt in frame is distant, off the
+road and carries no faction colour of his own (`trainers.json`, not this lane's file).
 
 ## 5. Owner decisions that bound visual work
 

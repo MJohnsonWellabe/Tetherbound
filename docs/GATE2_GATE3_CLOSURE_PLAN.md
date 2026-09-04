@@ -9,6 +9,46 @@ what on which files), and it does not replace either. Where it contradicts somet
 written down it says so and says why; the full list is in
 `ralph/reports/G3-CLOSURE-PLAN-0904/REPORT.md`.
 
+---
+
+## Picking this up cold
+
+If you are starting from nothing, read in this order and stop when you have what you need.
+
+1. **§0** — the three kinds of "not done". It runs the whole plan, and the dangerous
+   category is "done but unproven", which is where most of Gate 3 sits.
+2. **§2.G** — the owner's 2026-09-04 playtest and directives, sixteen scoped rows. This is
+   the largest block of remaining work and it outranks everything else here for what it
+   covers. Its first four rows gate the rest; they are named at the top of the section.
+3. **§3** — the ordering, and the honest note about where §2.G's work does *not* fit it.
+4. Everything else as you need it.
+
+**What is true as of 2026-09-04, after this round landed:**
+
+- Sixteen lanes merged to `main` (PRs #32 and #33). Sixteen lane sessions archived.
+- **Both gates still fail.** That has not changed and this document does not soften it.
+- The single re-bake ran zero times, correctly — see CL-R4, which records the checks
+  rather than the intention.
+- **Gate 3 has its first played segment evidence**: S07, 104/119 with a complete
+  inventory. S06, S08, S09 and S10a–e still have none as a chain.
+
+**Four claims in this repo were corrected this round by checking them against the code.**
+They are listed because the pattern matters more than any one of them — each had been
+written down confidently, and two had already propagated into other documents:
+
+| Claim, as written | What the code says |
+|---|---|
+| The G-2 crash was "a Godot 4.7 GDScript-VM edge case" | An ordinary bug: `get("k", {}) is Dictionary` tests the *default*, then the next line indexes a missing key |
+| `verify-gate-b-core` is the "Quarry Foreman / Prompt under Door" defect | A nondeterministic leg with **four** outcomes on one commit, including a full pass — the arbiter winner is not even stable (CL-H12) |
+| Widening a scatter `scale_min`/`scale_max` re-rolls the corridor's RNG stream | It does not: same draw count, same order, identical placements. Asserted by three documents; `vegetation.json`'s own note had it right |
+| A shared `JoyAxis:4` binding lets a charged attack open Build mid-fight | Two independent guards prevent it (context separation, and the combat gate). The real finding is a harness measurement risk |
+
+**The habit worth keeping:** verifying a comment against another comment is not
+verification. That sentence is already in PR #32's description because a lane certified
+an encounter as meeting its contract by reading the config's own prose about it.
+
+---
+
 Precedence is `CLAUDE.md`'s. Nothing proposed here violates a hard rule; where closing a
 gate would need something a hard rule forbids (a new mesh, a Meshy generation without
 owner reference art), the item is put in §4 for the owner instead of being smuggled into
@@ -185,7 +225,9 @@ dialogue`, with the interact press accepted and no dialogue inside the 90-frame 
 the Foreman again with `arbiter winner=`**`EncounterDirector`**; and a clean run of the
 whole leg. The Bram stop had never been seen because the Foreman stop masks it, and
 the varying winner says the label "Prompt under Door" has been describing one sample
-as if it were the mechanism.
+as if it were the mechanism. The next commit's run then passed the check outright, with
+no fix in between — so a green here is one sample too, and a branch that happened to draw
+one would look like it had fixed the known red.
 
 | Id | Item | Size | Kind |
 |---|---|---|---|
@@ -267,7 +309,7 @@ as if it were the mechanism.
 | CL-R1 | **S01 → S05 chain on the merged SHA**, healthy: five creatures, home built, slept, fed, tournament won, bridge earned by play. | Gate 1's proof-by-play; Gate 2's template (2.12's decision recorded; 2.10 in game, not a menu block); the premise of every Gate 3 chain claim | CL-H3, H4, H6, G1, G2, G3, B1 | L (S03 alone is ~30 min wall; the rest ~20) |
 | CL-R2 | **S06, S07, S08, S09 each on its own synthetic entry**, re-run after CL-H1/H2 — "S0N, given a clean entry, does X", never "the chapter does X". Each fills the template, scores its contract **fails if** rows, records the three sentences (G-1). | each band's "does this band play"; CL-E3 | CL-H1, H2, H3(gorge), H5, H7, H8 | M per band, parallel |
 | CL-R3 | **S10a–e** under the protocol, or an honest substitute the coordinator names (the smokes already cover the mechanism; the protocol run is what covers the *walk* and the frames). | the finale's "does this band play" | CL-H11; CL-E4 for its frames | L |
-| CL-R4 | **The re-bake**, once, after the round-two merge, both bakes, then a CI run whose code jobs ran (35–45 min) and green freshness guards. | every vegetation and terrain proposal (CL-B2, CL-E6) | the merge | M |
+| CL-R4 | ~~**The re-bake**, once, after the round-two merge~~ — **not run, because it has no input. Checked on merged `main` (`d041680b`) rather than assumed:** both freshness guards pass first attempt (`test_playground_bake_is_committed_and_fresh`, `test_playground_terrain_bake_is_committed_and_fresh`), because the ownership rule held — **no lane touched `vegetation.json` or `terrain_playground.json`.** And no lane left an applicable diff: G3-BAND3 proposed nothing; G3-BAND1-FINISH **declined** to propose one for the dome hill, on the correct reasoning that it had not located the responsible field and *"a guessed diff against a freshness-guarded terrain bake is worse than none"*; and CL-E6 is a design ask (site a pylon spur or drained tongue toward the pocket), which needs authoring and a judged render, not a bake. Baking anyway would produce an identical artefact at best. **The rule survives unchanged for the next round** — one bake, after a merge, never on a lane branch — it simply has nothing to do this round. Reopen it when CL-B2's tree/terrain slices or CL-E6 produce a real diff. | — | — | done (no-op) |
 | CL-R5 | **Capture lanes** S05C (Gate 2's sixteen stands) and S06C–S10cC, with CL-H9's staging, then one blind judge per band. | Gate 2's corrected clause (§5); Gate 3's per-band judge; C-6, G-5, P-5.2, W-4 | CL-H9, H10, R4 | L |
 | CL-R6 | **The continuous S01 → S10e chain** on the SHA that carries everything above. Only it says whether the party arriving at Band 4 is the party the curve assumes and whether travel between bands is dead. | Gate 3's "does the chapter play"; the §8 sentence "pass a continuous playthrough from the prior gate to the next" | CL-R1, R2, R3 all PASS individually | L (the S10 cost problem included) |
 | CL-R7 | **The owner's hardware pass** (§4). | the four [OWNER-ONLY] items in both gates' acceptance | a released build carrying CL-R4's bake | owner |
@@ -370,7 +412,13 @@ and every one run this week returned a FAIL whose root cause was the harness. Sp
 render session on S06C before CL-H9 lands produces a sixteenth frame set with no
 creature in it.
 
-### Stage 2 — one merge, one re-bake (coordinator)
+### Stage 2 — one merge, one re-bake (coordinator) — **done 2026-09-04, and the bake was a no-op**
+
+The merge landed as `d041680b` (PR #32, fourteen lanes). The bake did not run, and CL-R4
+records why with the checks that establish it: both freshness guards pass on merged
+`main`, no lane touched a bake input, and no lane left an applicable diff. That is the
+ownership rule working, not a step skipped. The paragraph below stays as the standing
+instruction for the next round.
 
 Land stage 1 onto `ralph/G3-LAND-0904`, apply the collected vegetation and terrain
 proposals (CL-B2's tree/terrain slices, CL-E6), run **both** bakes once, commit bake and

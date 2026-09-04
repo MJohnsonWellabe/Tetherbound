@@ -1,0 +1,10 @@
+{
+  "_comment": "G3-BAND3-0903 own freeze record for this ad hoc, single-lane S07 re-run (v4, after routing S07-57's charged attack around the combat_charged/build_shortcut input collision). See gate-f-s07/RUN_METADATA.json for the full reasoning.",
+  "run_dir": "ralph/reports/G3-BAND3-0903/gate-f-s07-v4",
+  "lanes": {
+    "logic": {
+      "display_server": "headless",
+      "renderer": "none"
+    }
+  }
+}
