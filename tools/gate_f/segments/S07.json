@@ -320,13 +320,12 @@
     },
     {
       "id": "S07-26",
-      "title": "the river region contains the arrival",
-      "action": "assert",
+      "title": "the river region at the arrival point",
+      "action": "note",
       "args": {
-        "check": "region_is",
-        "equals": "the_long_water"
+        "text": "G3-BAND3-0903, harness defect found and fixed. This was a hard `region_is == the_long_water` assert and it cannot pass at this waypoint: `map_landmarks.json`'s own `the_long_water` is a 52m-radius circle centred near (-150,4200) (its own comment records being cut down from 72m specifically so it would not swallow the Tether Relay's centre), and S07-23's walk target for 'the river first visible' is (150,3500) -- roughly 700m away, on the corridor's own approach to the river, not inside the named landmark. Reproduced in a real run: region read 'corridor' (the harness's own fallback label for open corridor ground, `gate_f_probe.gd::CORRIDOR`), not a game defect -- the river genuinely is visible from open corridor ground well before the player is within 52m of the crossing. Converted to a note recording the real region rather than asserting a location this waypoint was never going to be inside."
       },
-      "expected": "map_state.gd's containment puts the player in `the_long_water`"
+      "expected": "a note event carries this observation into events.jsonl"
     },
     {
       "id": "S07-26a",
@@ -402,14 +401,14 @@
     {
       "id": "S07-32",
       "title": "fight Hess",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 32,
-        "settle_frames": 30
+        "until_flag": "defeated_relay_hess",
+        "budget_frames": 9000,
+        "switch_below": 0.35
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Section E.1 per-fight record",
+      "observation": "G3-BAND3-0903, harness defect found and fixed. This step was a fixed `combat_quick x32` press block with no swap-safety net, unlike Vance's own multi-block sequence below. Traced in a real run's telemetry (ralph/reports/G3-BAND3-0903/gate-f-s07/): the 32-press budget ran out with Hess's second creature (Mudsnout) still alive at roughly 11 HP, combat never formally ended, `input_context` never returned to `world`, and every step from S07-34 (walking to Orrin) onward executed against a player still frozen in that same stuck fight for the rest of the run -- the whole five-creature party was ground down to 0 HP with no further attack input ever sent. `operator_harness.gd::_step_fight` already exists for exactly this (`until_flag` + an HP-gated `party_cycle` handover) and was simply never adopted for this trainer; switched to it rather than guessing a larger fixed count that could still run out against an unlucky roll."
     },
     {
       "id": "S07-33",
@@ -493,14 +492,14 @@
     {
       "id": "S07-38",
       "title": "fight Orrin",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 32,
-        "settle_frames": 30
+        "until_flag": "defeated_relay_orrin",
+        "budget_frames": 9000,
+        "switch_below": 0.35
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Section E.1 per-fight record",
+      "observation": "G3-BAND3-0903, same fix and same reason as S07-32's own observation: a fixed press count with no swap-safety net is what stranded Hess's fight in this segment's own run history. Switched to `operator_harness.gd`'s existing `fight` action (`until_flag`, HP-gated `party_cycle` handover) before this trainer could reproduce the same class of defect."
     },
     {
       "id": "S07-39",
@@ -558,16 +557,16 @@
       "action": "move_to",
       "args": {
         "at": [
-          347.5,
-          3763.5
+          343.2,
+          3771.1
         ],
         "budget_frames": 4050,
         "close_enough": 3.0,
         "held_budget_frames": 10800,
         "answer_prompts": true
       },
-      "expected": "Section B: S07's span names the officer between the pickets and the captain. relay_officer_dell stands at (347.5,3763.5)",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "expected": "Section B: S07's span names the officer between the pickets and the captain. relay_officer_dell stands at (343.2,3771.1) (GATE3_ENCOUNTER_CONTRACTS.md V-1, G3-BAND3-0903 -- moved from (347.5,3763.5) to the gate opening; see that trainer's own `_why_v1_gate3_encounters`).",
+      "observation": "G3-BAND3-0903: this waypoint was still the pre-V-1 coordinate, which is EXACTLY the failure S07-40g's own comment warns a future re-siting would cause -- 'a future re-siting of either the road or the gate shows up as one waypoint disagreeing with the map instead of a silent detour failure', quoted here because that is precisely what happened. Reproduced in a real run: the walk itself 'succeeded' (the old coordinate is still an ordinary walkable yard spot), so S07-44's challenge press found nobody there, no fight ever started, S07-47's own `fight_until_resolved` correctly gave up after 240 frames of no fight running, and the segment never reached Dell, the captain, the captive, the console or the crossing. Updated to Dell's real position; S07-40g's own gate waypoint (342.1,3771.6) is 1.4m from this one and left as-is since it still routes cleanly around the flank wall. answer_prompts note carried over unchanged from before this edit -- see below."
     },
     {
       "id": "S07-42",
@@ -629,14 +628,14 @@
     {
       "id": "S07-47",
       "title": "fight Dell",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 34,
-        "settle_frames": 30
+        "until_flag": "defeated_relay_dell",
+        "budget_frames": 12000,
+        "switch_below": 0.35
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Section E.1 per-fight record",
+      "observation": "G3-BAND3-0903, same fix and same reason as S07-32's own observation. Dell fields three creatures against Hess's/Orrin's two, so this budget is larger than theirs rather than shared blindly."
     },
     {
       "id": "S07-48",
@@ -839,9 +838,11 @@
       "action": "press",
       "args": {
         "control": "combat_charged",
-        "hold": "long"
+        "hold": "long",
+        "device": "mouse"
       },
-      "expected": "the charged verb's hold edge"
+      "expected": "the charged verb's hold edge",
+      "observation": "G3-BAND3-0903, REAL SHIPPED BUG FOUND (project.godot InputMap, not this segment, not this band's data): `combat_charged` and `build_shortcut` are BOTH bound to the identical physical input, JoyAxis:4 at axis_value 1.0 -- a player holding the left trigger for a charged attack on a controller also fires the Build shortcut. Reproduced in two full real runs of this exact step at the default (joypad) device: the instant the press landed, `input_context` flipped to `build_catalogue` and never returned, stranding every step for the rest of the segment (rescue the captive, disable the relay, restore the crossing, save) behind a menu nothing in the script ever closes. `device: \"mouse\"` routes this ONE step through `combat_charged`'s own separate mouse-button binding (button_index 2, which `build_shortcut` does not share) so this segment's own evidence is not lost to a bug outside Band 3's file ownership -- it does not fix the underlying collision, which needs an owner/input decision (rebind one of the two actions off JoyAxis:4) and is reported, not silently patched, in ralph/reports/G3-BAND3-0903/REPORT.md. Any OTHER segment that presses `combat_charged` on the default joypad device is still exposed and is not this edit's to chase."
     },
     {
       "id": "S07-57b",
