@@ -48,12 +48,21 @@
     },
     {
       "activity": "trainer_oskar",
+      "required": false,
+      "reward": {
+        "coin": 15
+      },
+      "enables": "Coins toward Mira's store. G3-ECONOMY-0903: this row used to claim Oskar's village challenge pays `south_bridge_key` and is what 'opens Band 2' — stale against the 2026-08-22 TOURNAMENT-1 directive (same day this file's own audit ran), which moved the key off Oskar onto a Team Tether grunt so Oskar could become the tournament final instead; `data/config/bands/band1_lower_meadows/trainers.json`'s live `trainer_oskar` entry has never carried `south_bridge_key` or `gate_fight` since. See `south_bridge_grunt` below for the real bridge reward.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "south_bridge_grunt",
       "required": true,
       "reward": {
-        "coin": 15,
+        "coins": 25,
         "south_bridge_key": 1
       },
-      "enables": "The South Bridge Key — the reward IS the progression. Opens Band 2.",
+      "enables": "The South Bridge Key — the reward IS the progression. Opens Band 2. G3-ECONOMY-0903: ADDED by this audit; the actual key-holder since TOURNAMENT-1 had no row here at all, only the stale `trainer_oskar` one above.",
       "understood_when_received": true
     },
     {
@@ -225,7 +234,7 @@
       "reward": {
         "spends": "coins"
       },
-      "enables": "Nine TMs at 120-300 coins, orbs, potions, revives and seeds — the chapter's coin sink. Total coin income from required and optional trainers is 860 plus 30 starting, so a player who fights everything can afford roughly three of the expensive TMs: a real choice, not a shopping list.",
+      "enables": "Nine TMs at 120-300 coins, orbs, potions, revives and seeds — the chapter's coin sink. Total coin income across every trainer plus the Burrow Warrens clear is 1467 plus 30 starting; the REQUIRED-path subset alone (practice, Mira, Tam, the three tournament rounds, south_bridge_grunt, the Warrens clear, the relay ladder, the three captains, the three stronghold fights, the Warden) is 975 plus 30 starting -- recomputed G3-ECONOMY-0903 straight from trainers.json's reward blocks (the previous '860 plus 30' figure both predated the tournament rows this file's own `_comment_audit_gap_closed` added and still counted the now-removed `trainer_oskar` south_bridge_key row as required income, while missing several optional field trainers this file's rows never itemized individually). Either total affords several of the expensive TMs: a real choice, not a shopping list.",
       "understood_when_received": true
     },
     {
