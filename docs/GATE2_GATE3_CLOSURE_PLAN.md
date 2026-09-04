@@ -185,7 +185,9 @@ dialogue`, with the interact press accepted and no dialogue inside the 90-frame 
 the Foreman again with `arbiter winner=`**`EncounterDirector`**; and a clean run of the
 whole leg. The Bram stop had never been seen because the Foreman stop masks it, and
 the varying winner says the label "Prompt under Door" has been describing one sample
-as if it were the mechanism.
+as if it were the mechanism. The next commit's run then passed the check outright, with
+no fix in between — so a green here is one sample too, and a branch that happened to draw
+one would look like it had fixed the known red.
 
 | Id | Item | Size | Kind |
 |---|---|---|---|
