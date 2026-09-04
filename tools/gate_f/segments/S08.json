@@ -524,6 +524,96 @@
       "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
     },
     {
+      "id": "S08-45r",
+      "action": "note",
+      "title": "pick up the wild-fight faint before the road, per 2.10/G3-BAND4-0903",
+      "args": {
+        "text": "G3-BAND4-0903's addendum: the lead creature (Tup, L13 Terrapup) took steady combat_hit damage through THIS wild meadowhart fight -- 27 hits, 206.4 -> 0.0 HP -- and fainted here, well before Halder. Nothing downstream of this point used to switch the active creature or spend one of the seed's two Revives, so every subsequent fight sent a fainted creature to the front and the segment's captain-fight evidence was void. Revived through the production Satchel menu by item identity, the same sequence S05-11r (GATE2-EVIDENCE-0903) and S03.json's own recovery blocks use, followed by one creature_recall press -- RIG-F9/2.11: a creature revived from the Satchel is not sent back out on its own."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S08-45r1a",
+      "title": "open the Satchel to pick the lead up off the ground",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "the pause shell on the Satchel tab"
+    },
+    {
+      "id": "S08-45r1b",
+      "title": "focus the Revive draught",
+      "action": "focus_item",
+      "args": {
+        "item": "revive",
+        "max_moves": 60
+      },
+      "expected": "the cursor lands on the Revive cell, found by item identity rather than by a slot number"
+    },
+    {
+      "id": "S08-45r1c",
+      "title": "use it on whoever is down",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "tab_backpack.gd::_read_use() opens the target picker while any party member is fainted; if nobody is, _open_target_picker refuses and nothing opens"
+    },
+    {
+      "id": "S08-45r1d",
+      "title": "confirm the picker's first eligible entrant",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the picker auto-focuses the first eligible (fainted) row; this confirms it and the creature comes back at half strength (items.json revive: 0.5)"
+    },
+    {
+      "id": "S08-45r1e",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "S03's own recovery shape: if the press above picked the stack up (nobody was fainted, Use refused and left focus on the item) this puts it back; otherwise it reads as Close"
+    },
+    {
+      "id": "S08-45r1f",
+      "title": "close the shell for real",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the world owns input again"
+    },
+    {
+      "id": "S08-45r1g",
+      "title": "wait for the world to own input",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 1200,
+        "poll_frames": 5
+      },
+      "expected": "no menu is left holding input before the next leg"
+    },
+    {
+      "id": "S08-45r1h",
+      "title": "re-deploy whatever the revive above brought back",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-F9/2.11: a creature revived from the Satchel is not sent back out on its own -- can_challenge() stays false with a healthy party until the active slot is re-summoned"
+    },
+    {
       "id": "S08-46",
       "title": "capture GF-19-UI-09",
       "action": "capture",
@@ -851,6 +941,15 @@
       "expected": "control returns to the player on foot"
     },
     {
+      "id": "S08-77a",
+      "title": "the lead is actually fit to fight, before Captain Halder",
+      "action": "assert",
+      "args": {
+        "check": "active_creature_alive"
+      },
+      "expected": "2.11/S08: a fainted active creature does not clear itself, and encounter_director.gd::can_challenge() silently refuses a fight it is sent to -- fail here, honestly, rather than let a scripted press downstream misresolve against whatever menu happens to be focused (S08's own finding, at Oreth, after this same gap)."
+    },
+    {
       "id": "S08-78",
       "title": "challenge Captain Halder",
       "action": "press",
@@ -984,6 +1083,15 @@
       },
       "expected": "Section D RT-10's third anchor (-100,4350) is captain_riverwatch",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S08-88a",
+      "title": "the lead is actually fit to fight, before Captain Oreth",
+      "action": "assert",
+      "args": {
+        "check": "active_creature_alive"
+      },
+      "expected": "2.11/S08: a fainted active creature does not clear itself, and encounter_director.gd::can_challenge() silently refuses a fight it is sent to -- fail here, honestly, rather than let a scripted press downstream misresolve against whatever menu happens to be focused (S08's own finding, at Oreth, after this same gap)."
     },
     {
       "id": "S08-89",
@@ -1230,6 +1338,15 @@
       },
       "expected": "captain_ridge, the third of the three the objective counts",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S08-106a",
+      "title": "the lead is actually fit to fight, before Captain Vess",
+      "action": "assert",
+      "args": {
+        "check": "active_creature_alive"
+      },
+      "expected": "2.11/S08: a fainted active creature does not clear itself, and encounter_director.gd::can_challenge() silently refuses a fight it is sent to -- fail here, honestly, rather than let a scripted press downstream misresolve against whatever menu happens to be focused (S08's own finding, at Oreth, after this same gap)."
     },
     {
       "id": "S08-107",

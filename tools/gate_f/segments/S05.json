@@ -703,20 +703,12 @@
     },
     {
       "id": "S05-32x",
-      "action": "move_to",
-      "title": "climb out of the pond basin the way out",
+      "action": "note",
+      "title": "the pond-basin workaround waypoint is retired -- 2.9 fixed",
       "args": {
-        "at": [
-          -280.0,
-          550.0
-        ],
-        "budget_frames": 7200,
-        "close_enough": 5.0,
-        "held_budget_frames": 7200,
-        "answer_prompts": true
+        "text": "G3-HARNESS-0904/2.9. This id used to be a move_to waypoint at (-280, 550), the pond basin's north-east shoulder, authored as a workaround for a stick_navigator.gd defect (GATE2-EVIDENCE-0903: the walker froze at (-328.7,-14.2,505.3) for 543 play seconds on the direct bearing to Old Bram, world proven passable there by tools/gate_f/probe_pond_stranding.gd, 0/10 stands wedged). Root-caused and fixed in stick_navigator.gd: a detour that ended (budget spent or aborted) used to fall straight back into the distance-to-far-target stall check, which reads honest sideways travel around an obstacle as no progress at all and re-detours, often flipping sides every cycle instead of ever finishing the corner -- the same root shape recorded for the settlement-fence corner past TrailGate (docs/CURRENT_STATE.md Section 3, 79 side-flips in 133s). Fixed by continuing to follow the obstacle for as long as the straight line to the target stays blocked, instead of falling back to the flawed distance metric. Verified: tools/gate_f/probe_pond_walker_fix.gd stands the real player body at the exact recorded stall coordinate and drives stick_navigator.walk_to() at the same Old Bram bearing under the ORIGINAL 29250-frame budget this leg's own S05-33 step already carries -- arrived in 10385 frames (173.1 play-seconds), unassisted, no waypoint. The workaround waypoint is retired; S05-33 below now walks the whole leg on its own."
       },
-      "expected": "the pond sits in a 14 m basin; this is its north-east shoulder, where the prior successful S05 leg climbed out before turning for the detour",
-      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). HARNESS DEFECT, proven not to be a world defect. Walked straight at Old Bram from the pond shore, `stick_navigator.gd` freezes the body at (-328.7, -14.2, 505.3) -- to a centimetre, on three independent runs -- for 543 play seconds with locomotion ENABLED the whole time ('0 held'), and on the first run never recovered at all (the leg spent its full 29,250-frame budget and reported 'stopped 658.8 m short'). tools/gate_f/probe_pond_stranding.gd stands the real player body at that exact coordinate and at eight points on a 6 m ring around it, injects a real full-deflection left stick, and measures 12-17 m of travel in five of eight bearings from every stand, body resting exactly on the authored heightfield (delta <= 0.09 m), on_floor, touching nothing but Terrain3D: 0 of 10 stands wedged. A person walks out of the Pond basin at once; the walker sits in it. This leg is therefore authored the way RIG-F6 authored the village-fence legs -- through the way out, in legs checked against a route that was actually walked. The waypoint below is where ralph/reports/gate-f-leg-s05's own successful run left the basin (-280.1, 550.1, y -2.65, a 12 m climb out of the shore at y -14.8), not a guess."
+      "expected": "a note event carries this observation into events.jsonl"
     },
     {
       "id": "S05-33",
@@ -748,14 +740,13 @@
     {
       "id": "S05-35",
       "title": "hear him out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "max_presses": 20,
+        "settle_frames": 60
       },
-      "expected": "record what an optional trainer offers and why a player would accept"
+      "expected": "record what an optional trainer offers and why a player would accept",
+      "observation": "G3-HARNESS-0904, re-run on the merged tree per the Gate 3 coordinator's addendum. A fixed 10-press count is exactly the class CD-3/GATE2-EVIDENCE-0903 already fixed nine times over in S04.json (advance_dialogue_until_closed, 'a guess is wrong in both directions') and had not yet been fixed here: measured live, Old Bram's own greeting outlasts 10 presses, so S05-35w's own diagnostic (input_context=narrative_modal, wanted world) fired at the very next walk and the modal never closed for the rest of the segment -- S05-48/S05-48f then found the South Bridge fight itself unstartable (combat_running=false, still narrative_modal), and everything from there down (south_bridge_open, the crossing, S05-60's own trace count) failed as one cascade from this single stuck modal, not as five separate defects."
     },
     {
       "id": "S05-36",
@@ -1219,9 +1210,10 @@
       "action": "assert",
       "args": {
         "check": "route_rows_at_least",
-        "rows": 3000
+        "rows": 1200
       },
-      "expected": "Section C.2"
+      "expected": "Section C.2",
+      "observation": "2.14/G3-HARNESS-0904. 3000 described a ~1500 s segment at the schema's own 2 Hz (Section C.2), sized against a run whose Pond leg (S05-32x's own predecessor) burned 543 s frozen in the basin. With that walker defect fixed (2.9) and the workaround waypoint retired, re-derived from real runs at this SHA rather than one number: route.csv held 1349 rows at this checkpoint on GATE2-EVIDENCE-0903's own original reference run, 1720 on a full run to the South Bridge with S05-32x retired, and 1353 on a run that hit the S05-33/Old-Bram-detour stall this same session found (a live, open defect -- see G3-HARNESS-0904's report; the trace itself ran correctly through that stall, same as it did through the Pond one). 1200 sits safely below every real measurement gathered rather than pinned to any one run's ceiling, so this keeps proving the trace ran without going flaky on ordinary run-to-run variance or on a segment that stops early for an unrelated, honestly-reported reason."
     },
     {
       "id": "S05-61",
@@ -1332,5 +1324,5 @@
     }
   ],
   "_comment_gate2_evidence_0903": "GATE2-EVIDENCE-0903 (2026-09-03), owner instruction 'give revives after the tournament': a post-tournament recovery block (S05-11r*) runs three production-menu Revives on the three creatures the tournament's three rounds left fainted, before the segment walks south. See that block's own note step for the measured state it answers.",
-  "_comment_gate2_evidence_0903_pond": "GATE2-EVIDENCE-0903: S05-32x authors the climb out of the Pond basin before the Old Bram detour. See its observation for the 543-second walker freeze it answers and the probe that proves the world is passable there."
+  "_comment_gate2_evidence_0903_pond": "GATE2-EVIDENCE-0903 (2026-09-03) found the 543-second walker freeze leaving the Pond basin and proved it was a stick_navigator.gd defect, not a world hole (tools/gate_f/probe_pond_stranding.gd, 0/10 stands wedged). S05-32x authored a climb-out waypoint as a workaround. G3-HARNESS-0904 (2026-09-04) root-caused and fixed the navigator itself (2.9) and retired the waypoint -- see S05-32x's own note step for the fix and its verification."
 }

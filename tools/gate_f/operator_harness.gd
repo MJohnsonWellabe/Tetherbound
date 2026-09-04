@@ -5009,6 +5009,22 @@ func _step_assert(args: Dictionary) -> Dictionary:
 				return {"ok": have >= want_min, "actual": "party size %d (wanted >= %d)" % [have, want_min]}
 			var want := int(args.get("equals", -1))
 			return {"ok": have == want, "actual": "party size %d (wanted %d)" % [have, want]}
+		"active_creature_alive":
+			# 2.11/S08. `encounter_director.gd::can_challenge()` refuses to
+			# start a fight without a live ally body, and the party's own
+			# active index does not move when its occupant faints -- so
+			# "somebody is deployed" is not "that fight is winnable". A
+			# step script that walks into a trainer without checking this
+			# first gets `no_usable_ally()`'s refusal line or, worse (S08's
+			# own finding), a scripted press that was aimed at a fight
+			# resolving against whatever menu happens to be focused
+			# instead. Placed as a pre-flight gate immediately before a
+			# fight step, this fails the segment HONESTLY at the moment
+			# the party stopped being fight-ready, instead of letting a
+			# fainted lead silently void every step downstream of it.
+			var hp := float(_probe.call("active_creature_hp"))
+			return {"ok": hp > 0.0, "actual": (
+				"no creature deployed" if hp < 0.0 else "active creature at %.1f HP" % hp)}
 		"creature_fed":
 			# Live-reads `party_state()[index].fed`. For `skip_if` on a feed
 			# sequence: a creature caught late in a segment can still be at or
