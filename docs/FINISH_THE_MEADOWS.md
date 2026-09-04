@@ -35,22 +35,50 @@ So the work divides three ways, and they are not equally blocked:
 Nothing here is glamorous and all of it is load-bearing. Until these land, visual work
 cannot be judged and three of five bands cannot be evidenced.
 
-### 0.1 — The capture pipeline cannot put a creature in frame (CL-H9 / task 2.15) — **M**
+### 0.1 — The route strip photographs the world with nobody in it (CL-H9 / task 2.15) — **S–M**
 
-**This is the single most blocking item in the project and it currently has no owner.**
+**The most blocking item in the project, it has no owner, and the repair is much smaller
+than it has been described.**
 
-The capture tool teleports to a traced position and photographs it without staging: no
-companion deployed, "fight frames" with no fight, "level-up frames" with no event. Four
-blind judging passes in a row produced sixteen frames with **zero readable creatures** —
-in a game about collecting creatures.
+**First, what is not wrong.** The capture-and-judge loop exists, it is extensive, and it
+works: **64 capture scripts, 18 survey scripts, a route-strip tool and a code-blind judge
+skill.** It produced Bramblebun's day and night colour, the night lighting floor, creature
+contact shadows, the mid-layer between grass and canopy, and tree silhouettes at seven
+copses. **And 17 of those scripts do put creatures on screen** —
+`_capture_creature_roster`, `_capture_life`, `_capture_locations`,
+`_capture_night_legibility`, `_capture_combat_moments`, the T1 variant lineups. Creature
+capture is not missing. Do not rebuild any of this.
 
-Every visual verdict in both gates runs through this. Bar B — "would someone say this is
-trying to be the same kind of game" — is unanswerable while it holds, and answering it
-anyway measures the camera rig.
+**The actual gap is narrower.** The scripts that stage a creature are *creature-subject*
+captures — a roster lineup, a bed rest, an animation sheet. The scripts that judge *the
+world* — the survey stands, the location set, and critically `tools/_capture_route_strip.gd`,
+which D73 §2 made the basis for **both bars** — photograph the world with nobody in it.
+Grepped for `creature`, `companion`, `deploy`, `party`: **zero hits.** It walks the spine
+and shoots empty landscape.
 
-**Done when:** the capture lane stages what it photographs — companion deployed after load,
-a fight frame taken inside a fight, nameplates where the game has them — and rejects a
-frame that fails a "creature present and readable" check rather than saving it.
+So the loop is not broken. **It is pointed at two subjects that never appear in the same
+frame** — and Bar B asks a question only a combined frame can answer: *does this look like
+the same kind of game?* That cannot be answered from a creature lineup on a neutral
+background, and it cannot be answered from a beautiful empty meadow. Four passes returned
+no / no while individual defects genuinely got fixed, because the frames showed the
+scenery and the cast separately and never the game.
+
+**Two things compound it, both already decided and neither needing new work:**
+
+- **The judging has been on posed stands.** D73 §2 already moved it to the route strip,
+  for the obvious reason — a camera parked at a nice spot flatters a build.
+- **Container frames are software-rendered.** `VISUAL_BIBLE.md` says outright: trust
+  composition, silhouette, colour relationships, scale and geometry; **do not trust fine
+  lighting.** So every lighting iteration run in-container has been half-blind, which is
+  exactly why D73 moved the bars onto GPU frames from the kickoff run.
+
+**Done when** `_capture_route_strip.gd` deploys the companion before it walks and takes at
+least one frame inside a real fight — borrowing from `_capture_life.gd` and
+`_capture_combat_moments.gd`, which already know how — and rejects a frame that fails a
+"creature present and readable" check rather than saving it.
+
+**Fails if** anyone treats this as a reason to rebuild the capture system. The system is
+fine. Two scripts need to learn what a third already does.
 
 ### 0.2 — The harness's `input_context` misresolves (CL-H13) — **M**
 
@@ -86,9 +114,11 @@ re-site hides the defect instead of finding it.
 
 # Phase 1 — Visuals
 
-The owner's priority. Ordered by impact per unit of effort. **1.1 and 1.2 need nothing
-from Phase 0** — do them immediately, in parallel with it. Everything from 1.4 down needs
-0.1 first, because it needs a judge that can see.
+The owner's priority. Ordered by impact per unit of effort. **1.1, 1.2 and 1.3 need
+nothing from Phase 0** — start them immediately, in parallel. Everything from 1.4 down
+wants 0.1 first, not because the judge is broken but because until the route strip carries
+a creature and a fight, the judge keeps answering the same two bars on frames that cannot
+address them.
 
 ### 1.1 — Every NPC speaks with the player's face — **S. The cheapest large win available.**
 
@@ -316,7 +346,7 @@ gets frame rate, the export check and the four hardware items, which is most of 
 
 | When | What | Why |
 |---|---|---|
-| **Now, in parallel** | 0.1, 0.2, 0.3 · 1.1, 1.2, 1.3 · start writing C1, C2, C3 | The Phase 0 items block everything downstream. 1.1–1.3 need none of them. The contracts are the long pole and only need a writer. |
+| **Now, in parallel** | 0.1, 0.2, 0.3 · 1.1, 1.2, 1.3 · start writing C1, C2, C3 | 0.1 is now a two-script change, so it is cheap and first. 0.2 and 0.3 block three bands of evidence. 1.1–1.3 need none of them. The contracts are the long pole and only need a writer. |
 | **Once 0.1 lands** | 1.4–1.8 · the first GPU route strip · Gate 4's kickoff run | Visual work becomes judgeable; Gate 4 becomes collectable. |
 | **Once 0.2 and 0.3 land** | S06, S08, S09, S10 evidence · per-band judges | Gate 3's remaining four bands. |
 | **Once the contracts are written** | 2a implementation · then 2b's gated items | Density first, then the gates that depend on it. |
@@ -326,9 +356,11 @@ gets frame rate, the export check and the four hardware items, which is most of 
 
 # How to trust this document
 
-Six claims in this repo were checked against the code on 2026-09-04 and found wrong. All
-six had been written down confidently; two had already propagated into other documents;
-one was blocking a top-ranked visual fix.
+Seven claims were checked against the code on 2026-09-04 and found wrong. All had been
+written down confidently; two had already propagated into other documents; one was
+blocking a top-ranked visual fix. **The seventh is this document's own first draft** — the
+owner read it and asked why the existing capture-and-judge loop was not simply being run
+again, which was the right question and exposed an overstatement.
 
 | Claim as written | What was true |
 |---|---|
@@ -338,6 +370,7 @@ one was blocking a top-ranked visual fix.
 | A shared trigger binding lets a charged attack open Build mid-fight | Two shipped guards make it unreachable; the real defect is in the harness, at three sites |
 | The fence-corner walker fix "does not exist on `origin`" | It sat in an open pull request the whole time |
 | Grandpa's loft bed is closed by harness evidence | The owner has never been able to sleep in it. The smoke passes because the harness reaches the bed by a path the player cannot |
+| *(this document, first draft)* “the capture pipeline cannot put a creature in frame” | Overstated, and the owner caught it. 17 capture scripts stage creatures; the loop works and has shipped real fixes. Only the **route strip** walks empty — two scripts need to learn what a third already does. A plan that describes a small gap as a broken system gets a rebuild it does not need |
 
 **The habit that caught all six: verifying a comment against another comment is not
 verification.** A lane had certified an encounter as meeting its contract by reading the
