@@ -26,6 +26,7 @@ If you are starting from nothing, read in this order and stop when you have what
 **What is true as of 2026-09-04, after this round landed:**
 
 - Sixteen lanes merged to `main` (PRs #32 and #33). Sixteen lane sessions archived.
+- **`main` is verified healthy at `efd0bcb8`**, checked on the merged result rather than on either branch: both bake freshness guards green first attempt, `test_band_content` 6/6 (1,147 assertions), and `smoke_playground` exit 0 with its native-`ERROR:` set unchanged. Two PRs landing within half an hour is exactly when a merged tree goes bad without anyone looking, so it was looked at.
 - **Both gates still fail.** That has not changed and this document does not soften it.
 - The single re-bake ran zero times, correctly — see CL-R4, which records the checks
   rather than the intention.
