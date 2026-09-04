@@ -461,10 +461,22 @@ func _spawn_creatures() -> void:
 			# G-2. The alpha's block wins over the elder's when an entry
 			# authors both, matching `_merge_named_individual`'s own precedence
 			# for every other key the two blocks share.
+			#
+			# `has()` before the read, not `get("combat", {})`: the default a
+			# missing key returns IS a Dictionary, so a type check on it passes
+			# and the `and`'s right-hand side then indexes a key that was never
+			# there. That is a SCRIPT ERROR on every world build, non-fatal and
+			# therefore easy to ship -- it went red in CI (verify-gate-evidence-shard)
+			# and not in any local test, because the seeded population this walks
+			# is only built by a full world boot.
 			var named_combat: Dictionary = {}
-			for block: Dictionary in [elder, (spawn.get("alpha", {}) as Dictionary) if spawn.get("alpha", {}) is Dictionary else {}]:
-				if block.get("combat", {}) is Dictionary and not (block["combat"] as Dictionary).is_empty():
-					named_combat = (block["combat"] as Dictionary).duplicate(true)
+			var alpha_block: Dictionary = spawn.get("alpha", {}) if spawn.get("alpha", {}) is Dictionary else {}
+			for block: Dictionary in [elder, alpha_block]:
+				if not block.has("combat"):
+					continue
+				var block_combat: Variant = block["combat"]
+				if block_combat is Dictionary and not (block_combat as Dictionary).is_empty():
+					named_combat = (block_combat as Dictionary).duplicate(true)
 			if not named_combat.is_empty():
 				wild.set("combat_override", named_combat)
 			# Audit B3: "" (no tier) for every authored anchor, which
@@ -739,8 +751,9 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	# and a fresh instance starts empty, so an override cannot leak between
 	# bodies -- the contract's "fails if the override reaches any body that did
 	# not author it".
-	if opts.get("combat", {}) is Dictionary and not (opts.get("combat", {}) as Dictionary).is_empty():
-		wild.set("combat_override", (opts["combat"] as Dictionary).duplicate(true))
+	var opt_combat: Variant = opts.get("combat", {})
+	if opt_combat is Dictionary and not (opt_combat as Dictionary).is_empty():
+		wild.set("combat_override", (opt_combat as Dictionary).duplicate(true))
 	var level := int(opts.get("level", 0))
 	if level > 0:
 		_set_fixed_level(wild, species, level)
