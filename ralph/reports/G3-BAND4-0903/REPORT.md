@@ -388,6 +388,80 @@ session did not reach the coordinator via cross-session messaging
 (`ListAgents` reported no reachable peer at the time); recording it here per
 the report contract instead.
 
+## The proposed S08.json fix, actually tested (not just proposed)
+
+`tools/gate_f/segments/S08.json` is not this lane's file, but `run_segment.sh`
+accepts a path to a step-script as well as a bare segment id, so the
+proposed fix could be tested for real without editing the shared file: a
+copy at `ralph/reports/G3-BAND4-0903/S08_fixed.json` replaces every blind
+`press combat_quick xN` fight step (pipwing, Meadowhart, all three captains,
+the optional ridgeline patrol) with a single `fight_until_resolved` step —
+an action `operator_harness.gd` already implements and which already
+auto-switches the active creature below 35% HP (`_step_fight`), the exact
+behaviour missing from the raw press sequences. Run against the same
+synthetic seed this lane already built.
+
+**The result is genuinely better, and genuinely still not a PASS — both
+facts, stated plainly.**
+
+Better: the run no longer wedges. The old run's `combat_quick` presses,
+thrown blindly into whatever context happened to be active, once resolved
+into opening the Build catalogue and stuck there for good (see the addendum
+above). `fight_until_resolved` checks `is_fighting()`/`trainer_battle_active()`
+before pressing anything, so when there is genuinely no fight to drive it
+does nothing instead of misfiring — and this run, unlike the first one,
+**completed the entire segment**: all three captain sites reached, every
+`move_to` succeeded (including the ~930 m ridge climb to Vess), and the
+closing assertions all ran (`distance_above 4000`: 5,183.1 m walked, PASS;
+`dead_travel_peak_above 150`: 969.9 m, PASS-as-watch-item; `route_rows_at_
+least 4000`: 2,853 rows, a genuine FAIL, walking faster than the trace
+samples). That is real, new evidence the first run never produced.
+
+Still not a PASS, and the reason is more precise than the first run's
+diagnosis. Captain Halder's fight this time was REAL — `fight_until_resolved`
+threw 26 actual `combat_quick` presses and the live HP telemetry shows real
+`combat_hit` damage landing on the lead creature (Tup, terrapup) over a
+genuine exchange. But the SAME thing happened as before: Tup alone absorbed
+every hit, `206.4 → 0.0 HP`, with the other four party members untouched —
+the built-in `switch_below: 0.35` auto-switch never fired once (`0
+handover(s), 0 refused switch(es)` in the step's own summary), despite HP
+crossing well below the 35% line for many hits before fainting. Root cause,
+traced through the raw events rather than assumed: the fight step's own
+"is a fight still running" quiet-detection (`is_fighting()`/
+`trainer_battle_active()` both false for `quiet_frames` in a row) fired
+**before the real fight was actually over** — `events.jsonl` shows three
+`catch launch` throws (`gained [] lost [orb_greater -1] in combat`) landing
+*during* the pre-fight "hear the captain out ×12" dialogue presses (S08-79,
+unmodified by this patch), which the harness debug log traces to real catch
+attempts against a nearby wild body (`Wild_frostclaw_4002_1`) — the
+dialogue-advance presses are bleeding into aim/throw actions once the
+captain's own combat state comes up mid-dialogue. That interference is
+enough to make the fight briefly read as "quiet" to `_step_fight`'s poll,
+which then returns control with the flag unset — while the real trainer
+battle keeps running, undriven, in the very next `wait` step (S08-85, still
+the original unmodified "wait 10s"), where Tup silently absorbs every
+remaining hit with no input at all until it faints. The same shape repeated
+verbatim at Oreth and at Vess: each subsequent captain step logged `0 quick,
+0 handover(s)` — with the lead creature already fainted from Halder and no
+revive/switch step existing anywhere in the file, no further captain ever
+got a real fight at all.
+
+**So the actual, precise fix has two parts, not one**: (1) `fight_until_
+resolved` in place of the raw press sequences (validated — it is strictly
+better and the right primitive), **and** (2) something ahead of it that
+stops the pre-fight dialogue's interact presses from bleeding into
+aim/catch-throw actions once combat state comes up mid-dialogue (fewer
+presses, a dialogue-closed assertion before the fight step starts, or a
+harness-level guard on `interact` resolving to `catch_throw` outside an
+intentional aim). Both are `tools/gate_f/segments/S08.json`/harness changes,
+outside this lane's ownership — this session tested and narrowed the
+diagnosis as far as it can from here. `S08_fixed.json` is left in this
+lane's report directory, updated with this finding, for whoever owns that
+file to take further; the honest state of the balance question itself is
+unchanged from the section below — no real fight against Halder, Oreth or
+Vess has yet been driven to a clean win or loss with the party actually
+defended.
+
 ## The C-4/C-5 balance question, answered quantitatively
 
 The S08 run above could not tell us whether Halder's and Vess's new profiles
