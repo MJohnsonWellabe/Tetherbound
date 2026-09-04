@@ -476,6 +476,7 @@ func _pull_the_lever() -> void:
 	if not bool(prompt.get("enabled")):
 		_fail("the machine is still refused with the Warden beaten; the legendary can never be freed")
 		return
+	_the_legendary_is_inside_the_machine()
 	# Ask the prompt for a REAL offer from where the player is actually standing,
 	# before activating it.
 	#
@@ -517,6 +518,78 @@ func _pull_the_lever() -> void:
 	if legendary != null and legendary.get_node_or_null(^"ContainmentVFX") != null:
 		_fail("the containment cage is still standing around a freed legendary")
 	print("the legendary is freed and '%s' is set once" % FREED_FLAG)
+
+
+## OP-0904-8 (owner: "The legendary should be in the machine not in a ring
+## outside the machine"). Before the lever, the bound creature stands INSIDE
+## the machine's measured cage: on the machine's own axis, above the dais the
+## mesh carries there, under its crown -- measured off the installed mesh by
+## `stronghold_climax.gd::_measure_cage`, not off a mark.
+func _the_legendary_is_inside_the_machine() -> void:
+	var legendary: Node3D = _climax.call("legendary_body") as Node3D
+	if legendary == null:
+		_fail("no bound legendary in the chamber before the lever")
+		return
+	var measure: Dictionary = _climax.call("cage_measure")
+	if measure.is_empty():
+		_fail("the climax found no machine to stand the legendary inside; it is in the ring on the floor again")
+		return
+	var axis: Vector3 = measure["axis"]
+	var off := Vector2(legendary.global_position.x - axis.x, legendary.global_position.z - axis.z).length()
+	var up := legendary.global_position.y - axis.y
+	var dais := float(measure["dais_top"])
+	var crown := float(measure["crown_under"])
+	if off > 1.0:
+		_fail("the bound legendary stands %.1f m off the machine's axis; it should be inside the machine" % off)
+	if up < dais - 0.05 or up > crown:
+		_fail("the bound legendary stands %.2f m up the machine; the cage void is %.2f..%.2f m" % [up, dais, crown])
+	var machine: Node3D = _hold.call("machine") as Node3D
+	if machine != null and legendary.global_position.distance_to(machine.global_position) > 6.0:
+		_fail("the bound legendary is %.1f m from the machine" % legendary.global_position.distance_to(machine.global_position))
+	print("the legendary is bound inside the machine: %.2f m off axis, %.2f m up (dais %.2f, crown %.2f)" % [
+		off, up, dais, crown])
+
+
+## After the freeing, the creature has STEPPED OUT of the machine (the visual
+## half of the freeing, prompt 69's "physically legible"), and the Hall's
+## garrison has stood down (CL-G5): the sentries and the camp gone, every
+## fire and lamp on the gate face dark.
+func _the_legendary_stepped_out_and_the_garrison_withdrew() -> void:
+	var legendary: Node3D = _climax.call("legendary_body") as Node3D
+	var measure: Dictionary = _climax.call("cage_measure")
+	if legendary != null and not measure.is_empty():
+		var axis: Vector3 = measure["axis"]
+		var off := Vector2(legendary.global_position.x - axis.x, legendary.global_position.z - axis.z).length()
+		var up := legendary.global_position.y - axis.y
+		if off < 2.5 and up > float(measure["dais_top"]) - 0.5:
+			_fail("the freed legendary is still standing in the machine (%.1f m off axis, %.2f m up)" % [off, up])
+		else:
+			print("the freed legendary stepped out of the machine: %.1f m off axis, %.2f m up" % [off, up])
+	var watcher: Node = _climax.call("garrison_withdrawal")
+	if watcher == null:
+		_fail("the climax hung no garrison watcher off the Hall; the occupation can never withdraw")
+		return
+	if not bool(watcher.call("withdrawn")):
+		_fail("the legendary is freed and the Hall's garrison never withdrew")
+		return
+	var report: Dictionary = watcher.call("withdrawal_report")
+	var sentries: Node3D = _hold.find_child("GateSentries", false, false) as Node3D
+	if sentries != null and sentries.visible:
+		_fail("the gate sentries are still standing at the Hall after the machinery died")
+	var camp: Node3D = _hold.find_child("GarrisonCamp", false, false) as Node3D
+	if camp != null and camp.visible:
+		_fail("the garrison camp is still pitched at the Hall after the machinery died")
+	var fires: Node = _hold.find_child("HallBraziers", false, false)
+	var lit := 0
+	if fires != null:
+		for light in fires.find_children("*", "Light3D", true, false):
+			if (light as Light3D).visible:
+				lit += 1
+	if lit > 0:
+		_fail("%d of the Hall's braziers are still burning after the garrison withdrew" % lit)
+	if int(report.get("withdrawn", 0)) <= 0 or int(report.get("lights_out", 0)) <= 0:
+		_fail("the withdrawal report is empty (%s); nothing visibly changed at the Hall" % str(report))
+	print("the garrison withdrew: %s" % str(report))
 
 
 ## The chapter's decision, on the belt it was designed for. Five creatures with
@@ -633,6 +706,7 @@ func _the_region_answers() -> void:
 	print("the region answered: %d plants back, %d tether lights out, %d barriers open, %d patrols withdrawn"
 		% [int(report.get("regrown", 0)), int(report.get("lights_killed", 0)),
 			int(report.get("barriers_opened", 0)), int(report.get("patrols_withdrawn", 0))])
+	_the_legendary_stepped_out_and_the_garrison_withdrew()
 
 
 ## The last beat prompt 69 names, and the one the chapter had no way to reach:

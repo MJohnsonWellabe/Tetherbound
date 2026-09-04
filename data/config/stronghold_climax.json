@@ -43,7 +43,8 @@
     "placed_by": "stronghold_climax"
   },
 
-  "_comment_legendary": "R8.4. CLAUDE.md's hard rule, restated so nobody has to go looking: no new creature meshes for the Meadows at any credit balance. `veridian` is already in data/creatures/species.json with real production art (board 06, owner-approved as the legendary's direct source), already the tallest body in the roster at 2.6m, and already has an OF28 `vivid` colourway. Everything below is the LEGAL differentiation on top of that one existing mesh: a scale multiplier that puts it a further half-metre over its own wild size, a containment VFX while it is bound and a release VFX when it is freed. No new model, no new generation, no repaint beyond the colourway system that already ships.",
+  "_comment_legendary": "R8.4. CLAUDE.md's hard rule, restated so nobody has to go looking: no new creature meshes for the Meadows at any credit balance. `veridian` is already in data/creatures/species.json with real production art (board 06, owner-approved as the legendary's direct source), already the tallest body in the roster at 2.6m, and already has an OF28 `vivid` colourway. Everything below is the LEGAL differentiation on top of that one existing mesh: a scale multiplier that puts it a further half-metre over its own wild size, restraint VFX while it is bound and a release light when it is freed. No new model, no new generation, no repaint beyond the colourway system that already ships.",
+  "_comment_staging": "OP-0904-8 (owner 2026-09-04: 'The legendary should be in the machine not in a ring outside the machine'). While bound it stands INSIDE the Tether Machine, in the cage void the board draws its prisoner in: on the machine's axis, above the dais the installed mesh carries there, under its crown. `stage` tunes how that void is MEASURED off the mesh (stronghold_climax.gd::_measure_cage), never where it is -- D49's lesson. On the installed mesh fitted to 15 m: dais 3.13 m, crown 8.89 m, void 5.76 m, 2.6 m of headroom over the 3.17 m creature. `mark`/`fallback` below are where the FREED creature steps out to (R8.2's `legendary_stand`, +6 m in the chamber's local depth), and where the bound one stands only when no stronghold is in the tree.",
   "legendary": {
     "species": "veridian",
     "display_name": "Veridian Stag",
@@ -52,23 +53,33 @@
     "mark": "legendary_stand",
     "fallback": [232.0, -177.0],
     "facing_deg": 180.0,
+    "_comment_facing": "Local to the stronghold's frame, like every other facing. 180 faces the chamber's -depth side: the reveal stand and the arch's face, so the player who walks round to look at it meets its eyes.",
     "scale": 1.22,
     "_comment_scale": "On top of the species' own 2.6m, so it stands ~3.2m in the chamber -- a head and a rack above anything else the player has met, and visibly not the same animal as a wild one would be if one ever spawned. Applied to the model pivot, so the collider and the fit are untouched.",
+    "stage": {
+      "_comment": "How the cage void is read off the machine mesh. `axis_probe_radius` is how far from the axis still counts as 'the middle' when finding the dais top and the crown underside; `clearance` lifts the feet that far off the dais so the hooves do not z-fight it.",
+      "axis_probe_radius": 1.0,
+      "clearance": 0.05
+    },
     "bound": {
-      "_comment": "While it is still in the machine's containment ring: drained, held, lit by somebody else's light. A cold teal cage (data/config/palette.json's reserved Tether teal) tight around the body, plus a slow pulse so it reads as machinery working rather than as scenery.",
+      "_comment": "While it is held in the machine: drained, clamped, lit by somebody else's light. Two cold teal restraint rings (palette.json's reserved Tether teal) tight on the body -- `rings` are heights as fractions of the body's own height, the radius is the species' gameplay radius plus `ring_clearance` -- plus a slow pulse so it reads as machinery working rather than as scenery. The old 24-bar floor ring of radius 3.4 m is gone: it was the ring outside the machine.",
       "colour": "#7fd8c4",
       "energy": 2.4,
       "range": 9.0,
       "pulse_seconds": 2.6,
-      "ring_radius": 3.4,
-      "ring_segments": 24
+      "rings": [0.42, 0.74],
+      "ring_clearance": 0.25,
+      "ring_thickness": 0.08
     },
     "freed": {
-      "_comment": "The instant it is loose: the cage colour is gone and the light is its OWN -- warm, wide, and brighter than the machine ever was. This is the only moment in the chapter lit by something that is not Team Tether.",
+      "_comment": "The instant it is loose: the cage colour is gone and the light is its OWN -- warm, wide, and brighter than the machine ever was. This is the only moment in the chapter lit by something that is not Team Tether. It then STEPS OUT of the machine to the `mark` over `step_out_seconds` (down off the dais, then across), turns to the player, and on the join offer crosses to `approach_distance` from them over `approach_seconds`.",
       "colour": "#e8d79a",
       "energy": 5.5,
       "range": 22.0,
-      "rise_seconds": 1.8
+      "rise_seconds": 1.8,
+      "step_out_seconds": 2.4,
+      "approach_distance": 2.6,
+      "approach_seconds": 2.0
     }
   },
 

@@ -103,6 +103,7 @@ func _run() -> void:
 	_the_gauntlet_is_placed_and_challengeable(world, hold)
 	_the_recovery_point_revives_and_heals(hold)
 	_the_machine_stands_in_the_legendary_chamber(hold)
+	_the_legendary_is_bound_inside_the_machine(world, hold)
 	await _the_route_is_traversable_in_order(player, hold, progression)
 
 	print("")
@@ -296,6 +297,48 @@ func _the_recovery_point_revives_and_heals(hold: Node3D) -> void:
 		_fail("resting at the stronghold's recovery point did not revive a fainted creature")
 	if int(creature.get("hp")) < int(creature.get("max_hp")):
 		_fail("resting did not heal to full")
+
+
+## OP-0904-8 (owner 2026-09-04): "The legendary should be in the machine not
+## in a ring outside the machine." The bound creature stands INSIDE the
+## machine's cage void, which `stronghold_climax.gd::_measure_cage` reads off
+## the installed mesh: on the axis, above the dais, under the crown, and with
+## the whole body under that crown. Asserted here, where the machine's own
+## scale is asserted, because the two are one staging.
+func _the_legendary_is_bound_inside_the_machine(world: Node, hold: Node3D) -> void:
+	var climax: Node = world.get_node_or_null(^"StrongholdClimax")
+	if climax == null:
+		_fail("the world built no StrongholdClimax; nothing stands in the machine")
+		return
+	var legendary: Node3D = climax.call("legendary_body") as Node3D
+	if legendary == null:
+		_fail("the chamber has no bound legendary in it")
+		return
+	var measure: Dictionary = climax.call("cage_measure")
+	if measure.is_empty():
+		_fail("the climax measured no cage in the machine; the legendary is standing on its floor mark, outside")
+		return
+	var machine: Node3D = hold.call("machine")
+	var axis: Vector3 = measure["axis"]
+	var off := Vector2(legendary.global_position.x - axis.x, legendary.global_position.z - axis.z).length()
+	var up := legendary.global_position.y - axis.y
+	var dais := float(measure["dais_top"])
+	var crown := float(measure["crown_under"])
+	var body_top := up + float(legendary.call("body_height")) * 1.22
+	print("bound legendary: %.2f m off the machine's axis, feet %.2f m up (dais %.2f, crown %.2f, void %.2f m), body top %.2f m" % [
+		off, up, dais, crown, float(measure["void_height"]), body_top])
+	if off > 1.0:
+		_fail("the bound legendary stands %.2f m off the machine's axis; it is not inside the machine" % off)
+	if up < dais - 0.05 or up > dais + 0.5:
+		_fail("the bound legendary's feet are %.2f m up the machine; the dais is at %.2f m" % [up, dais])
+	if body_top > crown + 0.05:
+		_fail("the bound legendary's %.2f m body top pokes through the machine's crown at %.2f m" % [body_top, crown])
+	if machine != null:
+		var box := _aabb_of(machine)
+		if not box.has_point(legendary.global_position + Vector3.UP * 0.5):
+			_fail("the bound legendary is outside the machine's own bounds")
+	if legendary.get_node_or_null(^"ContainmentVFX") == null:
+		_fail("the bound legendary carries no containment VFX")
 
 
 ## The centrepiece, and the seam. This asserts the SCALE (which is real work and

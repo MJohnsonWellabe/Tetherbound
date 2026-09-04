@@ -34,6 +34,7 @@ const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
+const OCCUPATION := preload("res://scripts/world/stronghold_occupation.gd")
 
 ## The climax's own stages, in §28's order. "" is "nothing has started".
 const STAGE_CHAMBER := "chamber"
@@ -55,6 +56,12 @@ var _machine_prompt: Node3D = null
 var _legendary: Node3D = null
 var _cage: Node3D = null
 var _light: OmniLight3D = null
+var _withdrawal: Node = null
+## Where the freed legendary steps OUT to (R8.2's `legendary_stand` mark), and
+## the measured cage it stood in -- see `_place_legendary`.
+var _freed_spot: Vector3 = Vector3.ZERO
+var _cage_measure: Dictionary = {}
+var _step_tween: Tween = null
 
 var _stage: String = ""
 var _pending_conversation: String = ""
@@ -79,8 +86,30 @@ func build(world: Node, player: Node3D) -> bool:
 	_duty_board = _place_readout(_config.get("duty_board", {}), "StrongholdDutyBoard")
 	_place_machine_prompt()
 	_place_legendary()
+	_watch_the_garrison()
 	_watch_the_dialogue_panel()
 	return true
+
+
+## CL-G5. The Hall's exterior garrison (braziers, sconces, sentries, the camp,
+## the relay hub) is placed once by `stronghold.gd::_build_occupation()` and
+## used to stay lit and manned forever, so "the world looked changed because
+## of what I did" never held at the one building the player just broke.
+## `stronghold_occupation.gd` owns the withdrawal (what goes dark, what
+## leaves, driven by `stronghold_occupation.json`'s `withdrawal` block); this
+## node only hangs it off the stronghold and lets it watch `legendary_freed`,
+## on load as much as live.
+func _watch_the_garrison() -> void:
+	if _stronghold == null:
+		return
+	_withdrawal = OCCUPATION.new()
+	_withdrawal.name = "GarrisonWithdrawal"
+	add_child(_withdrawal)
+	_withdrawal.call("watch_withdrawal", _stronghold)
+
+
+func garrison_withdrawal() -> Node:
+	return _withdrawal
 
 
 func _load_config() -> Dictionary:
@@ -300,14 +329,28 @@ func _place_legendary() -> void:
 		# `_sync_gate()`'s own `legendary_is_freed()` check.
 		_stage = STAGE_DONE
 		return
-	var at := _spot(spec)
+	# OP-0904-8 (owner: "The legendary should be in the machine not in a ring
+	# outside the machine"). R8.2's `legendary_stand` mark is where the freed
+	# creature steps OUT to; while it is bound it stands INSIDE the machine,
+	# in the cage void the board draws its prisoner in. That void is MEASURED
+	# off the installed mesh (D49's lesson: never by transform guess) -- see
+	# `_measure_cage`. Without a stronghold in the tree (a bare test scene)
+	# there is no machine to stand inside, and the mark's own fallback is
+	# where it stands, as before.
+	_freed_spot = _spot(spec)
+	var bound_at := _freed_spot
+	_cage_measure = _measure_cage(spec.get("stage", {}) as Dictionary)
+	if not _cage_measure.is_empty():
+		bound_at = _cage_measure["stand"] as Vector3
 	var body: Node3D = CREATURE_SCENE.instantiate()
 	body.name = "BoundLegendary"
 	body.set_script(CREATURE_BODY)
 	add_child(body)
-	body.global_position = at
+	body.global_position = bound_at
 	body.call("setup", str(spec.get("species", "veridian")), false)
-	body.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
+	# `facing_deg` is authored in the stronghold's LOCAL frame, like every
+	# other facing in this file and in stronghold.gd's own gauntlet.
+	body.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)) + _stronghold_yaw_deg())
 
 	# Differentiation, half one: scale, on the model pivot only, so the
 	# collider and the species' own fit are untouched.
@@ -317,6 +360,15 @@ func _place_legendary() -> void:
 		pivot.scale = Vector3(factor, factor, factor)
 
 	_legendary = body
+	if not _cage_measure.is_empty():
+		var top := float(body.call("body_height")) * float(spec.get("scale", 1.0))
+		var headroom := float(_cage_measure["void_height"]) - top
+		print("[climax] the legendary stands inside the machine: dais %.2f m up, void %.2f m tall, body %.2f m, headroom %.2f m" % [
+			float(_cage_measure["dais_top"]), float(_cage_measure["void_height"]), top, headroom])
+		if headroom < 0.0:
+			# Grow the smaller side, never shrink (owner 2026-09-01): the
+			# creature keeps its size and the report says the cage is short.
+			push_warning("the machine's cage void is %.2f m shorter than the legendary; it stands anyway" % -headroom)
 	_build_cage(spec.get("bound", {}) as Dictionary)
 
 	if legendary_is_freed():
@@ -333,15 +385,101 @@ func _place_legendary() -> void:
 		# the decision again. Show it freed, not caged, and resume at the
 		# join offer rather than replaying the chamber/free lines it has
 		# already heard.
-		_release_visual()
+		_release_visual(true)
 		_chamber_told = true
 		_stage = STAGE_FREED
 
 
-## Differentiation, half two: the containment VFX. A cold teal ring of light
-## tight around it while it is held, replaced on release by a warm light of
-## its own that is wider and brighter than the machine's ever was — the only
+## The cage void inside the installed Tether Machine, measured off the mesh
+## itself the way `stronghold.gd::_fit_to_height` fitted it: the highest
+## geometry near the machine's axis in its lower half is the dais the prisoner
+## stands on; the lowest geometry near the axis above that is the crown it
+## stands under. Vertices are read in the machine's own frame through the
+## fitted model transform, so the exporter's origin and units never enter it.
+## Returns {} when there is no machine to stand inside.
+##
+## `stage.axis_probe_radius` (metres from the axis that counts as "near") and
+## `stage.clearance` (how far above the dais the feet go) are the only
+## tunables; nothing here is a guessed metre.
+func _measure_cage(stage: Dictionary) -> Dictionary:
+	if _stronghold == null or not _stronghold.has_method("machine"):
+		return {}
+	var machine: Node3D = _stronghold.call("machine") as Node3D
+	if machine == null:
+		return {}
+	var model: Node3D = machine.get_node_or_null(^"Model") as Node3D
+	if model == null:
+		return {}
+	var probe := float(stage.get("axis_probe_radius", 1.0))
+	var half := 0.0
+	var dais_top := -INF
+	var crown_under := INF
+	var meshes := model.find_children("*", "MeshInstance3D", true, false)
+	# First the fitted height, for the half-way split.
+	for child in meshes:
+		var mi := child as MeshInstance3D
+		if mi.mesh == null:
+			continue
+		var box := _to_machine(mi, machine) * mi.get_aabb()
+		half = maxf(half, box.end.y)
+	half *= 0.5
+	for child in meshes:
+		var mi := child as MeshInstance3D
+		if mi.mesh == null:
+			continue
+		var into := _to_machine(mi, machine)
+		for surface in mi.mesh.get_surface_count():
+			var verts: PackedVector3Array = mi.mesh.surface_get_arrays(surface)[Mesh.ARRAY_VERTEX]
+			for v in verts:
+				var p: Vector3 = into * v
+				if Vector2(p.x, p.z).length() > probe:
+					continue
+				if p.y < half:
+					dais_top = maxf(dais_top, p.y)
+				elif p.y > half - 2.0:
+					crown_under = minf(crown_under, p.y)
+	if not is_finite(dais_top) or not is_finite(crown_under) or crown_under <= dais_top:
+		return {}
+	var clearance := float(stage.get("clearance", 0.05))
+	var stand: Vector3 = machine.global_transform * Vector3(0.0, dais_top + clearance, 0.0)
+	return {
+		"dais_top": dais_top,
+		"crown_under": crown_under,
+		"void_height": crown_under - dais_top,
+		"stand": stand,
+		"axis": machine.global_position,
+	}
+
+
+## A mesh's transform into the machine node's own frame, composed by walking
+## the parent chain (the same technique `stronghold.gd::_visual_bounds` uses,
+## for the same reason: it is right whether or not the tree is live yet).
+func _to_machine(visual: Node3D, machine: Node3D) -> Transform3D:
+	var here := Transform3D.IDENTITY
+	var step: Node = visual
+	while step != null and step != machine:
+		if step is Node3D:
+			here = (step as Node3D).transform * here
+		step = step.get_parent()
+	return here
+
+
+## For tests and probes: the measured cage, or {} in a bare scene.
+func cage_measure() -> Dictionary:
+	return _cage_measure
+
+
+## Differentiation, half two: the containment VFX. Two cold teal restraint
+## rings held tight around the body (sized from the creature's own gameplay
+## radius and height, so they fit whatever the species is), plus a cold light
+## from the machine, while it is held; replaced on release by a warm light of
+## its own that is wider and brighter than the machine's ever was -- the only
 ## moment in the chapter lit by something that is not Team Tether.
+##
+## OP-0904-8: this used to be a 24-bar cage of radius 3.4 m standing on the
+## FLOOR around the creature, i.e. the "ring outside the machine" the owner
+## reported. The machine mesh already carries its own containment rings and
+## clamp arms; what is added here is only what says "held", on the body.
 func _build_cage(bound: Dictionary) -> void:
 	if _legendary == null:
 		return
@@ -349,26 +487,32 @@ func _build_cage(bound: Dictionary) -> void:
 	_cage.name = "ContainmentVFX"
 	_legendary.add_child(_cage)
 
-	var radius := float(bound.get("ring_radius", 3.4))
-	var segments := maxi(6, int(bound.get("ring_segments", 24)))
+	var factor := float((_config.get("legendary", {}) as Dictionary).get("scale", 1.0))
+	var radius := float(_legendary.call("body_radius")) * factor + float(bound.get("ring_clearance", 0.25))
+	var height := float(_legendary.call("body_height")) * factor
+	var thickness := float(bound.get("ring_thickness", 0.08))
 	var material := _material(str(bound.get("colour", "#7fd8c4")), 2.2)
-	for i in segments:
-		var angle := TAU * float(i) / float(segments)
-		var bar := MeshInstance3D.new()
-		bar.name = "CageBar%d" % i
-		var mesh := BoxMesh.new()
-		mesh.size = Vector3(0.09, 3.2, 0.09)
-		bar.mesh = mesh
-		bar.material_override = material
-		bar.position = Vector3(cos(angle) * radius, 1.6, sin(angle) * radius)
-		_cage.add_child(bar)
+	var index := 0
+	for entry: Variant in (bound.get("rings", [0.42, 0.74]) as Array):
+		var ring := MeshInstance3D.new()
+		ring.name = "RestraintRing%d" % index
+		var torus := TorusMesh.new()
+		torus.inner_radius = radius
+		torus.outer_radius = radius + thickness
+		torus.rings = 8
+		torus.ring_segments = 32
+		ring.mesh = torus
+		ring.material_override = material
+		ring.position = Vector3(0.0, height * clampf(float(entry), 0.05, 0.95), 0.0)
+		_cage.add_child(ring)
+		index += 1
 
 	_light = OmniLight3D.new()
 	_light.name = "ContainmentLight"
 	_light.light_color = Color(str(bound.get("colour", "#7fd8c4")))
 	_light.light_energy = float(bound.get("energy", 2.4))
 	_light.omni_range = float(bound.get("range", 9.0))
-	_light.position = Vector3(0.0, 2.0, 0.0)
+	_light.position = Vector3(0.0, height * 0.6, 0.0)
 	_legendary.add_child(_light)
 
 
@@ -479,7 +623,11 @@ func _free_the_legendary() -> void:
 	_release_visual()
 
 
-func _release_visual() -> void:
+## The cage goes, the light turns warm, and the creature STEPS OUT of the
+## machine to R8.2's `legendary_stand` -- the freeing made physically legible
+## (prompt 69) rather than narrated. `immediate` is the loaded-save case: no
+## walk, it is simply standing free.
+func _release_visual(immediate: bool = false) -> void:
 	if _freed_visual:
 		return
 	_freed_visual = true
@@ -491,11 +639,70 @@ func _release_visual() -> void:
 		_light.light_color = Color(str(freed.get("colour", "#e8d79a")))
 		_light.light_energy = float(freed.get("energy", 5.5))
 		_light.omni_range = float(freed.get("range", 22.0))
+	_step_out(freed, immediate)
+
+
+func _step_out(freed: Dictionary, immediate: bool) -> void:
+	if _legendary == null or _cage_measure.is_empty():
+		return
+	if immediate:
+		_legendary.global_position = _freed_spot
+		return
+	if _step_tween != null and _step_tween.is_valid():
+		_step_tween.kill()
+	var seconds := maxf(0.1, float(freed.get("step_out_seconds", 2.4)))
+	var from := _legendary.global_position
+	# Down off the dais first, then across the floor: two legs so it does not
+	# slide diagonally through the machine's own base.
+	var landing := Vector3(from.x, _freed_spot.y, from.z).lerp(Vector3(_freed_spot.x, _freed_spot.y, _freed_spot.z), 0.35)
+	_step_tween = create_tween()
+	_step_tween.tween_property(_legendary, "global_position", landing, seconds * 0.45) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_step_tween.tween_property(_legendary, "global_position", _freed_spot, seconds * 0.55) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_step_tween.tween_callback(_face_the_player)
+
+
+## It comes to the player: the offer is the creature crossing the room, not a
+## line of text saying so.
+func _approach_player() -> void:
+	if _legendary == null or _player == null:
+		return
+	var freed: Dictionary = (_config.get("legendary", {}) as Dictionary).get("freed", {})
+	var stop := float(freed.get("approach_distance", 2.6))
+	var here := _legendary.global_position
+	var to := _player.global_position
+	var flat := to - here
+	flat.y = 0.0
+	if flat.length() <= stop + 0.1:
+		_face_the_player()
+		return
+	var target := to - flat.normalized() * stop
+	target.y = here.y
+	if _step_tween != null and _step_tween.is_valid():
+		_step_tween.kill()
+	_step_tween = create_tween()
+	_step_tween.tween_property(_legendary, "global_position", target,
+		maxf(0.1, float(freed.get("approach_seconds", 2.0)))) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_step_tween.tween_callback(_face_the_player)
+
+
+func _face_the_player() -> void:
+	if _legendary == null or _player == null:
+		return
+	var flat := _player.global_position - _legendary.global_position
+	flat.y = 0.0
+	if flat.length() < 0.05:
+		return
+	# `creature_body.facing()` is +Z, so the yaw that points +Z at the player.
+	_legendary.rotation.y = atan2(flat.x, flat.z)
 
 
 ## Step 3: it VOLUNTARILY offers to join. No orb is thrown and no fight
 ## happens — the word in §28 is "voluntarily" and it is load-bearing.
 func _offer_to_join() -> void:
+	_approach_player()
 	_start(str((_config.get("machine", {}) as Dictionary).get("join_conversation", "")))
 
 
