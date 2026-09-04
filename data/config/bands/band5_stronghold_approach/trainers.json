@@ -222,6 +222,7 @@
         }
       ],
       "_why_team": "The same two species this exact stretch of ground already fields wild (spawns.json orders 5000/5002) -- his own creatures came off this land, not out of a barracks. Floor of the band's [15,20] trainer range: this fight is a doorbell, not an obstacle.",
+      "_why_combat": "G-2/G-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903). Left at DEFAULT deliberately -- Corr is the first fight in the band and the floor the rest of the approach's escalation (Ness's CURRENT below, and whatever profile the Hall cast's own lane gives Solene/Hald) reads against. `stronghold_patrol` (Verrick, order 8) shares this same grunt-tier default at the other end of the approach and carries no matching comment: that row is a pre-split-protected entry (`test_band_content.gd`'s baseline mirror), and 'no combat block' needs no rationale recorded on the row that has one.",
       "reward": {
         "coins": 45,
         "items": [
@@ -256,18 +257,22 @@
       "team": [
         {
           "species": "trailpup",
-          "level": 16
+          "level": 16,
+          "combat": {"attack_cooldown": 0.7, "recovery": 0.55, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4}
         },
         {
           "species": "galecrest",
-          "level": 16
+          "level": 16,
+          "combat": {"attack_cooldown": 0.7, "recovery": 0.55, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4}
         },
         {
           "species": "mosshell",
-          "level": 16
+          "level": 16,
+          "combat": {"attack_cooldown": 0.7, "recovery": 0.55, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4}
         }
       ],
       "_why_team": "Trailpup and galecrest are this band's own wild roster (spawns.json orders 5003/5001); mosshell is `stronghold_courtyard`'s own species, met here a room early and wilder for it, the same continuity the mudsnout special encounter (spawns.json order 5004) uses. Three creatures, one level above the outer watch, and the escalation reads: the further in, the more the checkpoint fields.",
+      "_why_combat": "G-2/G-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903). Ness is the one officer-rank fight this lane owns (Solene/Hald/the Warden are the Hall cast, G3-FINALE's per this lane's own file-ownership split) and gets the CURRENT profile -- relentless pressure, short cooldown, never backs off far -- so 'past the gate, rank means something' (her own challenge line) is a felt difference, not just a third creature and a level. Both grunt fights this lane owns (Corr, Verrick) stay at DEFAULT so Ness reads as a real step up rather than one fight among three that all play the same. Inert until G-2's `wild_creature.gd` merge lands; absent that code every number here is unused.",
       "reward": {
         "coins": 65,
         "items": [
