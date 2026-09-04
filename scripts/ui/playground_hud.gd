@@ -377,7 +377,20 @@ const HEALTH_BAR_CONTENT_HEIGHT := 34.0
 ## stacked not next to each other"), so this is the one true-bottom anchor the
 ## pair needs; the health bar above it derives its own position from this
 ## plate's real top instead of a second canvas-bottom margin.
+##
+## GATE3-HUD-SAFEAREA (Gate 2 evidence judge, `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md`
+## §6: "the `FOOD 100%` bar runs to about 15px from the bottom edge in every
+## frame ... that is a ~2% margin; a 5% TV/handheld overscan crop takes it").
+## A flat 6px margin reads as a fixed fraction of whichever canvas happens to
+## be rendering -- ~0.6% of the Ally's real 1200-tall authored canvas at
+## `aspect="expand"`, nowhere near the 5% overscan-safe floor every console
+## and handheld UI guideline reserves, and CLAUDE.md names the Ally the
+## primary target. `vitals_position()` now clears the LARGER of this fixed
+## floor and `SAFE_AREA_BOTTOM_FRACTION` of the real canvas height, so the
+## margin scales with the screen instead of being a constant that happened to
+## read as adequate on whatever canvas it was last measured against.
 const BOTTOM_VITALS_MARGIN := 6.0
+const SAFE_AREA_BOTTOM_FRACTION := 0.05
 ## Vertical gap between the health plate and the satiety plate now that they
 ## are stacked, health above food. Reuses `UITokens.GAP`, the same small-gap
 ## token `PARTY_ACTIVE_GAP` above already borrows, rather than a new number.
@@ -649,6 +662,29 @@ const HUD_SENTENCE_FONT_SIZE := 32
 ## `smoke_exploration_legend.gd` checks.
 const LEGEND_SIZE := Vector2(940.0, 76.0)
 
+## GATE3-HUD-INTERACT: the interact pill's own box width used to be a flat
+## `custom_minimum_size.x = 640` in the .tscn regardless of what it said --
+## Godot does not shrink a `fit_content` `RichTextLabel`'s WIDTH to its text
+## when autowrap is on, only its height, so "Chop" (measured 140px of
+## content) and "Put Thunderbristle Junior away" (541px) reserved the exact
+## same 640px of world behind them. `_fit_prompt_pill()` now measures each
+## prompt's real content width (via `_prompt_measure`, an off-screen scratch
+## label carrying the same font size and bbcode) and sizes the pill to that,
+## clamped between these two. `PROMPT_MIN_WIDTH` is a floor only the emptiest
+## prompts ("Chop", 140+32=172px measured) would ever hit. `PROMPT_MAX_WIDTH`
+## keeps the pill's OLD fixed width as a ceiling -- the widest realistic
+## single-verb prompt measures 541+32=573px, so this still never wraps an
+## ordinary prompt, and `smoke_prompt_hotbar_dock.gd`'s combined
+## message+long-name case (want: wraps to two lines) still hits this ceiling
+## exactly as before.
+const PROMPT_MIN_WIDTH := 200.0
+const PROMPT_MAX_WIDTH := 640.0
+## `prompt_box.content_margin_left/right` in `_ready()` and the width
+## `_fit_prompt_pill()` reserves for them share this constant so the two
+## can never drift the way two independently hand-copied `16.0`s could.
+const PROMPT_CONTENT_MARGIN_X := 16.0
+const PROMPT_SCRATCH_WIDTH := 2000.0
+
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const DEFAULT_MAX_BUFF_CHIPS := 3
 const BUFF_CHIP_SIZE := 20.0  ## HUD-SCALE: 28 -> 20, matching PARTY_PIP_SIZE as it always has.
@@ -692,6 +728,11 @@ var _max_raw_axis_seen := 0.0
 
 @onready var _root: Control = $Root
 @onready var _prompt_label: RichTextLabel = $Root/BottomDock/Prompt
+## GATE3-HUD-INTERACT: off-screen scratch label `_fit_prompt_pill()` measures
+## against. Never added to `BottomDock` and never visible -- it exists only
+## to answer "how wide does this text want to be with nothing constraining
+## it," which `_prompt_label` itself cannot answer once autowrap is active.
+var _prompt_measure: RichTextLabel = null
 @onready var _debug_readout: Label = $Root/DebugReadout
 @onready var _hotbar_chips: Array[PanelContainer] = [
 	$Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot1,
@@ -790,9 +831,14 @@ var _hp_icon: TextureRect = null
 var _hp_bar: ProgressBar = null
 var _hp_fill: StyleBoxFlat = null
 var _hp_value_label: Label = null
+## GATE3-HUD-CONTRAST: opaque backing behind `_hp_value_label`'s digits -- see
+## `_style_meter_value_chip()`'s own header for why the label's font colour
+## alone cannot fix this.
+var _hp_value_chip: Panel = null
 var _satiety_bar: ProgressBar = null
 var _satiety_caption_label: Label = null
 var _satiety_value_label: Label = null
+var _satiety_value_chip: Panel = null
 var _satiety_state_label: Label = null
 
 var _last_health_value := -1.0
@@ -914,12 +960,20 @@ func _ready() -> void:
 	# a plate without restructuring the scene tree or touching
 	# `fit_content`'s own auto-sizing, which just grows to include the new
 	# stylebox's content margins.
-	var prompt_box := UITokens.panel_box()
-	prompt_box.content_margin_left = 16.0
+	#
+	# GATE3-HUD-INTERACT (Gate 2 evidence judge, `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md`
+	# §6: "the `Try the bridge gate` pill sits directly over the bridge gate
+	# the objective is telling you to look at"). This box's ACCENT border now
+	# also marks it as the interact tier (see `_style_meter_value_chip()`'s
+	# sibling reasoning on tiering HUD surfaces) -- `panel_box_accent()`'s own
+	# header covers why TEAL.
+	var prompt_box := UITokens.panel_box_accent(UITokens.TEAL)
+	prompt_box.content_margin_left = PROMPT_CONTENT_MARGIN_X
 	prompt_box.content_margin_top = 6.0
-	prompt_box.content_margin_right = 16.0
+	prompt_box.content_margin_right = PROMPT_CONTENT_MARGIN_X
 	prompt_box.content_margin_bottom = 6.0
 	_prompt_label.add_theme_stylebox_override("normal", prompt_box)
+	_build_prompt_measure()
 
 	UITokens.make_text_legible(_prompt_label)
 	UITokens.make_text_legible(_hotbar_message)
@@ -954,6 +1008,7 @@ func _ready() -> void:
 	# the player stands in front of something interactable.
 	_prompt_label.text = "" if _prompt_belongs_to_combat() \
 			else (str(_arbiter.call("prompt")) if _arbiter != null else "")
+	_fit_prompt_pill()
 
 	# Structure is finished: outline/shadow every Label and RichTextLabel this
 	# file just built, in one pass, rather than one make_text_legible call per
@@ -964,10 +1019,58 @@ func _ready() -> void:
 	_reflow_left_stack()
 
 
+## GATE3-HUD-HIERARCHY (Gate 2 evidence judge, `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md`
+## §6: "objective / action / interact hierarchy does not separate ... every
+## element is the same dark-navy rounded panel at the same opacity"). The
+## hotbar and the exploration legend beneath it are the PERSISTENT
+## capability row -- what the player can always do -- and are the one tier
+## of the three that is never telling the player anything urgent, so they
+## get `panel_deep_box()`, the token this file's own header already
+## documents as "a surface that wants to read as further back / behind
+## everything else on screen." The interact pill (`_prompt_label`, styled in
+## `_ready()`) and the objective card (`_build_objective_block()`) each get
+## their own accent border instead, so all three tiers are visually distinct
+## rather than one repeated dark-navy box.
 func _style_hotbar() -> void:
-	$Root/BottomDock/HotbarPanel.add_theme_stylebox_override("panel", UITokens.panel_box())
+	$Root/BottomDock/HotbarPanel.add_theme_stylebox_override("panel", UITokens.panel_deep_box())
 	for chip in _hotbar_chips:
 		chip.add_theme_stylebox_override("panel", UITokens.slot_box(false))
+
+
+## Builds `_prompt_measure`: see that field's own header for why it exists.
+func _build_prompt_measure() -> void:
+	_prompt_measure = RichTextLabel.new()
+	_prompt_measure.name = "PromptMeasure"
+	_prompt_measure.bbcode_enabled = true
+	_prompt_measure.fit_content = true
+	_prompt_measure.scroll_active = false
+	_prompt_measure.visible = false
+	_prompt_measure.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_prompt_measure.custom_minimum_size = Vector2(PROMPT_SCRATCH_WIDTH, 0.0)
+	_prompt_measure.size = Vector2(PROMPT_SCRATCH_WIDTH, 200.0)
+	_prompt_measure.add_theme_font_size_override(
+		"normal_font_size", _prompt_label.get_theme_font_size("normal_font_size")
+	)
+	_root.add_child(_prompt_measure)
+
+
+## GATE3-HUD-INTERACT: resizes the interact pill to what `_prompt_label`'s
+## CURRENT text actually needs -- see `PROMPT_MIN_WIDTH`'s own header for the
+## measurements this is built on. Called every time the prompt text changes
+## (`_on_prompt_changed()` and the seed assignment in `_ready()`), never every
+## frame -- `prompt_changed` only fires on an edge, so this is cheap.
+func _fit_prompt_pill() -> void:
+	if _prompt_label == null or _prompt_measure == null:
+		return
+	if _prompt_label.text.is_empty():
+		_prompt_label.custom_minimum_size = Vector2(PROMPT_MIN_WIDTH, 0.0)
+		return
+	_prompt_measure.text = _prompt_label.text
+	var natural := _prompt_measure.get_content_width()
+	var target := clampf(
+		natural + PROMPT_CONTENT_MARGIN_X * 2.0, PROMPT_MIN_WIDTH, PROMPT_MAX_WIDTH
+	)
+	_prompt_label.custom_minimum_size = Vector2(target, 0.0)
 
 
 # --- active-creature block ----------------------------------------------------------
@@ -1421,7 +1524,19 @@ func _update_party_pips() -> void:
 			continue
 		var member: RefCounted = members[i]
 		var fainted := bool(member.get("fainted"))
-		box.bg_color = UITokens.DANGER if fainted else _distinct_tint(members, i)
+		# GATE3-HUD-HIERARCHY (Gate 2 evidence judge, `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md`
+		# §6, and the shared oxblood-reservation finding it names alongside
+		# G3-BAND1-FINISH's world half: "the board's reserved Team Tether
+		# oxblood has leaked onto friendly HUD icons"). `DANGER` reads as an
+		# active, urgent alert everywhere else it is used on this HUD (the
+		# health bar sliding toward it, the fight-lost outcome text) -- a
+		# fainted party member is not that, it is a PAST-TENSE unavailable
+		# state, the same fact an empty roster slot two lines above signals
+		# with a muted, low-alpha fill rather than a saturated colour. Reusing
+		# that same "unavailable" language here is both more accurate (fainted
+		# isn't an ongoing danger) and stops a friendly pip from carrying the
+		# one hue this HUD is supposed to leave for Team Tether alone.
+		box.bg_color = Color(UITokens.TEXT_MUTED, 0.55) if fainted else _distinct_tint(members, i)
 		if not selected:
 			box.border_color = UITokens.BORDER
 		else:
@@ -1546,7 +1661,8 @@ static func left_stack_bottom(canvas_height: float) -> float:
 ## header for why stacking here no longer reopens OWNER-0902-HUD-TEAM-MENU's
 ## "team menu overruns the food bar" defect.
 static func vitals_position(canvas_height: float) -> Vector2:
-	var plate_bottom := canvas_height - BOTTOM_VITALS_MARGIN
+	var margin := maxf(BOTTOM_VITALS_MARGIN, canvas_height * SAFE_AREA_BOTTOM_FRACTION)
+	var plate_bottom := canvas_height - margin
 	var plate_top := plate_bottom - (VITALS_HEIGHT_WITHOUT_HP + VITALS_PLATE_OVERHANG * 2.0)
 	return Vector2(CREATURE_BLOCK_X, plate_top + VITALS_PLATE_OVERHANG)
 
@@ -1817,6 +1933,58 @@ func _update_party_strip() -> void:
 # --- player vitals cluster --------------------------------------------------------
 
 
+## GATE3-HUD-CONTRAST (Gate 2 evidence judge, `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md`
+## §6: "the 100 / 100 health text is light green on a green bar"). Measured:
+## the label's previously-unset default ~0.875-grey fill against `HP_GREEN`
+## is a 1.6:1 WCAG contrast ratio at full health -- the exact frame the
+## critic judged. No single text colour fixes this, because the bar this text
+## sits on top of is not one colour: `HP_GREEN` sweeps to `DANGER` as HP
+## drops, briefly flashes white on a hit, and -- since the value text is
+## right-aligned over a LEFT-filling bar -- at low HP the text actually sits
+## over the bar's unfilled TRACK (near-black) rather than its fill at all.
+## Dark text reads well against the bright fill states and vanishes against
+## the track; light text is the reverse. An opaque chip behind just the
+## digits removes the dependency on the bar's state entirely: the text's
+## contrast is against `OUTLINE`'s own colour (already used everywhere on
+## this HUD to punch text out of the busy world behind it), never against
+## the meter.
+func _style_meter_value_chip() -> Panel:
+	var chip := Panel.new()
+	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color(UITokens.OUTLINE, 1.0)
+	box.corner_radius_top_left = UITokens.RADIUS_BAR
+	box.corner_radius_top_right = UITokens.RADIUS_BAR
+	box.corner_radius_bottom_left = UITokens.RADIUS_BAR
+	box.corner_radius_bottom_right = UITokens.RADIUS_BAR
+	chip.add_theme_stylebox_override("panel", box)
+	return chip
+
+
+## Resizes `chip` to hug `label`'s current text and right-aligns it to
+## `label`'s own right edge, so a `999 / 999` string gets the same guarantee
+## a `7 / 40` one does instead of the chip being sized for a guessed worst
+## case. Called every time the label's text changes.
+func _fit_meter_value_chip(chip: Panel, label: Label) -> void:
+	if chip == null or label == null:
+		return
+	var font: Font = label.get_theme_font("font")
+	if font == null:
+		font = ThemeDB.fallback_font
+	var font_size := label.get_theme_font_size("font_size")
+	var text_size: Vector2 = font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
+	if text_size.x <= 0.0:
+		chip.size = Vector2.ZERO
+		return
+	var pad_x := 10.0
+	var pad_y := 4.0
+	var width := text_size.x + pad_x * 2.0
+	var height := text_size.y + pad_y * 2.0
+	var right_edge := label.position.x + label.size.x
+	chip.size = Vector2(width, height)
+	chip.position = Vector2(right_edge - width, label.position.y + (label.size.y - height) * 0.5)
+
+
 ## Buff icons row, satiety row (bar + hunger-state text). One Control holds
 ## both so the idle-fade rule can fade the whole cluster with a single
 ## modulate write, matching the old per-bar fade this replaces.
@@ -1883,6 +2051,11 @@ func _build_vitals_cluster() -> void:
 	_satiety_bar.add_theme_stylebox_override("fill", UITokens.fill_box(UITokens.WARNING))
 	_vitals_cluster.add_child(_satiety_bar)
 
+	# GATE3-HUD-CONTRAST: the chip is added FIRST so it draws behind the label
+	# added right after it -- see `_style_meter_value_chip()`'s own header.
+	_satiety_value_chip = _style_meter_value_chip()
+	_vitals_cluster.add_child(_satiety_value_chip)
+
 	_satiety_value_label = Label.new()
 	_satiety_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_satiety_value_label.position = Vector2(VITALS_CAPTION_WIDTH, VITALS_FOOD_ONLY_ROW_Y - 8.0)
@@ -1890,6 +2063,7 @@ func _build_vitals_cluster() -> void:
 	_satiety_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_satiety_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_value_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
+	_satiety_value_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	_vitals_cluster.add_child(_satiety_value_label)
 
 	# HUNGRY/STARVING tag: kept outside `VITALS_WIDTH` to the right, same as
@@ -1968,6 +2142,11 @@ func _build_player_health_bar() -> void:
 	_hp_bar.add_theme_stylebox_override("fill", _hp_fill)
 	_health_bar_cluster.add_child(_hp_bar)
 
+	# GATE3-HUD-CONTRAST: the chip is added FIRST so it draws behind the label
+	# added right after it -- see `_style_meter_value_chip()`'s own header.
+	_hp_value_chip = _style_meter_value_chip()
+	_health_bar_cluster.add_child(_hp_value_chip)
+
 	_hp_value_label = Label.new()
 	_hp_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hp_value_label.position = Vector2(0.0, HEALTH_BAR_ROW_Y - 8.0)
@@ -1975,6 +2154,7 @@ func _build_player_health_bar() -> void:
 	_hp_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_hp_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_hp_value_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
+	_hp_value_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	_health_bar_cluster.add_child(_hp_value_label)
 
 
@@ -2083,10 +2263,12 @@ func _update_vitals_cluster(vitals: RefCounted, delta: float) -> void:
 		_hp_bar.modulate.a = 1.0
 
 	_hp_value_label.text = "%d / %d" % [int(round(health_value)), int(round(max_health))]
+	_fit_meter_value_chip(_hp_value_chip, _hp_value_label)
 
 	var satiety_fraction: float = vitals.satiety_fraction()
 	_satiety_bar.value = satiety_fraction
 	_satiety_value_label.text = "%d%%" % int(round(satiety_fraction * 100.0))
+	_fit_meter_value_chip(_satiety_value_chip, _satiety_value_label)
 	var hunger := str(vitals.call("hunger_state"))
 	match hunger:
 		"hungry":
@@ -2295,7 +2477,9 @@ func _build_objective_block() -> void:
 	backing.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	backing.position = Vector2.ZERO
 	backing.size = block.size
-	backing.add_theme_stylebox_override("panel", UITokens.panel_box())
+	# GATE3-HUD-HIERARCHY: WARNING accent -- the "what the game is telling
+	# you to do" tier. See `UITokens.panel_box_accent()`'s own header.
+	backing.add_theme_stylebox_override("panel", UITokens.panel_box_accent(UITokens.WARNING))
 	block.add_child(backing)
 	_objective_backing = backing
 
@@ -2863,6 +3047,7 @@ func _top_cost_lines() -> Array[String]:
 
 func _on_prompt_changed(text: String) -> void:
 	_prompt_label.text = "" if _prompt_belongs_to_combat() else text
+	_fit_prompt_pill()
 
 
 ## True when the arbiter's winning offer came from the encounter director —
@@ -2900,7 +3085,9 @@ func _build_exploration_legend() -> void:
 	_exploration_legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_exploration_legend.custom_minimum_size = LEGEND_SIZE
 	_exploration_legend.size_flags_horizontal = Control.SIZE_SHRINK_END
-	_exploration_legend.add_theme_stylebox_override("panel", UITokens.panel_box())
+	# GATE3-HUD-HIERARCHY: the persistent capability row (with `HotbarPanel`)
+	# recedes on `panel_deep_box()` -- see `_style_hotbar()`'s own header.
+	_exploration_legend.add_theme_stylebox_override("panel", UITokens.panel_deep_box())
 	dock.add_child(_exploration_legend)
 	dock.move_child(_exploration_legend, 1)
 

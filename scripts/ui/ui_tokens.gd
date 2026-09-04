@@ -205,10 +205,43 @@ static func panel_box(bg: Color = BG_PANEL, border: Color = BORDER) -> StyleBoxF
 	return box
 
 
-## The same panel shape over `BG_DEEP` instead of `BG_PANEL` — for a surface
-## that wants to read as further back / behind everything else on screen.
+## The same panel shape over `BG_DEEP` instead of `BG_PANEL`, with NO border —
+## for a surface that wants to read as further back / behind everything else
+## on screen, not as another card in the same stack.
+##
+## GATE3-HUD-HIERARCHY (Gate 2 evidence judge, `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md`
+## §6, and a second blind pass on this lane's own fix): a border-plus-darker-
+## fill treatment still read as "the same card template with a duller
+## colour," because every tier still carried an edge. Dropping the edge here
+## — kept on `panel_box_accent()`'s two MESSAGE tiers below — is what turns
+## "duller card" into "this is furniture, not a message."
 static func panel_deep_box() -> StyleBoxFlat:
-	return panel_box(BG_DEEP, BORDER)
+	var box := panel_box(BG_DEEP, Color(BORDER, 0.0))
+	box.border_width_left = 0
+	box.border_width_right = 0
+	box.border_width_top = 0
+	box.border_width_bottom = 0
+	return box
+
+
+## `panel_box()` with a bright, doubled-width border instead of the neutral
+## `BORDER` — for a panel that has to read as a DIFFERENT KIND of message
+## from a plain HUD panel sitting right next to it, not just another box in
+## the same stack (GATE3-HUD-HIERARCHY, a Gate 2 evidence blind judge on
+## `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md` §6: "objective / action /
+## interact hierarchy does not separate ... every element is the same
+## dark-navy rounded panel at the same opacity"). `playground_hud.gd` uses
+## this for the two tiers that ARE telling the player something (the
+## objective card, WARNING; the interact pill, TEAL) and leaves the third
+## tier — the persistent hotbar/legend capability row, which never is —
+## on the plain, receding `panel_deep_box()`.
+static func panel_box_accent(accent: Color, bg: Color = BG_PANEL) -> StyleBoxFlat:
+	var box := panel_box(bg, accent)
+	box.border_width_left = EDGE * 2
+	box.border_width_right = EDGE * 2
+	box.border_width_top = EDGE * 2
+	box.border_width_bottom = EDGE * 2
+	return box
 
 
 ## A flat fill with bar-radius corners: bar/track fills, nothing else.
