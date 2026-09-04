@@ -1,5 +1,18 @@
 # G3-BAND5-0903 — Stronghold Approach (prompt 66) — verification report
 
+## Addendum log
+
+This report was extended twice after its first publish, by two messages from the
+Gate 3 coordinator (session_01Rra117rfv84LPqbL5ACBn4):
+
+1. **A played S09, not just config verification.** A report with no game change,
+   however well-evidenced, is not a shipped deliverable — see "S09: the played-path
+   evidence" below for the headline number this produced and the two harness
+   defects it found along the way.
+2. **`docs/specs/GATE3_ENCOUNTER_CONTRACTS.md`** (Fable, `ralph/G3-ENCOUNTERS-0903`,
+   docs-only). See "Gate 3 encounter contracts" below for what this lane implemented,
+   what it proposed cross-lane, and what it declined to touch.
+
 ## Headline finding
 
 **This lane's job turned out to be verification, not authoring.** Band 5's
@@ -269,3 +282,248 @@ because verification did not surface a defect inside this lane's own remit
 that a data/code edit here would fix. The one real open item found
 (terrain bake freshness for the drain stations) is outside this lane's
 files and the hard "do not run either bake" constraint.
+
+---
+
+## S09: the played-path evidence
+
+The coordinator's correction: a report with no game change is not a shipped
+deliverable, and "already-satisfied" is a finding about a specific tested claim,
+not a summary judgement on a prompt. This section is the actual played path,
+not another round of reading comments.
+
+### Building the entry seed, and a real bug found in it
+
+No completed Gate F run has ever produced a real `S08-exit.json` (`tools/gate_f/
+seed_s09_exit.gd`'s own header says so), so `tools/gate_f/build_s09_entry_synthetic.gd`
+constructs one, modelled on `build_s10b_synthetic_seed.gd`'s approach (real
+species/level arithmetic via `creature_species.gd`/`progression.gd`, no full scene
+load). Every assumption is sourced in the script's own header: party of five at
+band 5's entry level (`chapter_curve.json`'s `team.enter: 16`), every main-chain
+flag through `hall_approach_open` (copied from `seed_s09_exit.gd`'s own list, minus
+its final two S09-owned flags), and a position at the band 4/5 boundary (0,7000)
+rather than literally at the Sigil gate, so S09's own first `move_to` step has real
+distance to walk.
+
+**A real bug, caught by running it rather than trusting it.** The first version
+placed the player at a flat y=15.0 (mirroring `build_s10b_synthetic_seed.gd`'s own
+y=20.0-over-guessed-ground convention) without checking real ground height. Real
+ground at (0,7000) is -1.803 (measured with `playground_heightfield.gd`), so the
+seed dropped the player 16.8 m — enough fall damage to zero player HP and spawn a
+death satchel before S09-04 (the title boot) ever ran, on the run's first attempt.
+Fixed to 0.5 m above a measured ground sample, the same margin `seed_s09_exit.gd`
+already uses. **Every synthetic seed in this project that places a player above a
+guessed rather than measured ground height should be treated as suspect** —
+`build_s10b_synthetic_seed.gd`'s own y=20.0 was never re-verified here and may
+carry the same defect; flagging for whoever owns that file.
+
+### Running S09, and what it found
+
+`tools/gate_f/run_segment.sh S09` in logic mode (headless, no display server —
+correct for `evidence_lane: logic`, which S09.json declares) additionally needed a
+per-run `RUN_METADATA.json` (`ralph/reports/gate-f-run-G3-BAND5-0903-S09/
+RUN_METADATA.json`) declaring the logic lane as headless: without it, the harness's
+CD-8b pre-flight check binds every run to the unrelated 2026-08-27 candidate freeze
+at `ralph/reports/gate-f-candidate/RUN_METADATA.json` (which correctly describes
+*that* run's own xvfb/X11 capture-lane environment) and refuses to start any
+logic-only segment in this container at all — a harness-level blocker with nothing
+to do with band 5, resolved through the harness's own documented mechanism
+(`operator_harness.gd::_freeze_display_claim()`'s header literally instructs this).
+
+The run completed (`INVENTORY.json`: `"complete": true`, exit code 0) but **14 of 79
+steps failed**, all downstream of two harness defects, not band 5 world defects:
+
+**1. The outer watch's dialogue never handed off to combat (t≈424s).** After
+walking to Corr (285 m, PASS), challenging him and pressing through his two-line
+"hear him out" dialogue (12 presses, PASS), `input_context` was still
+`narrative_modal` where combat was expected — the fight never started
+(`combat_running=false`). **This is not new**: S09.json's own step-script comment
+on the *next* walk (S09-25w) already names this exact failure class as
+pre-existing and unresolved elsewhere in the chain — *"That finding is already
+captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md — three
+press counts, identical 7201-frame holds."* Band 5's own two-line challenge/defeat
+conversations (`data/dialogue/bands/band5_stronghold_approach.json`) are not
+unusual in length or structure next to every other trainer's in the game; this
+reads as the same cross-segment narrative-modal/press-count harness issue other
+segments have already found, reproduced here rather than discovered here.
+
+**2. The walk to the checkpoint drove into the Sigil Gate's own gorge trench and
+never recovered (t≈740s onward).** `S09-33`'s `move_to` toward Ness at (45,7440)
+stopped 92.2 m short at (3.0, -7.0, 7358.0) after burning its full 15,300-frame
+budget (80 frames held). Measured directly: real ground at that exact point is
+-7.054 (`playground_heightfield.gd`), matching the player's logged y almost
+exactly — **the player was not stuck in geometry, it was standing at the bottom of
+`sigil_gate_gorge_west`**, the 11 m-deep, ~72°-walled carve `terrain_playground.json`
+authors specifically so prompt 66's "physical gates cannot be trivially bypassed"
+acceptance bullet holds (verified earlier in this report: `seal_half_width=16.0`,
+the causeway narrows to roughly a 1 m standable sliver at the gate's own centre).
+The run log's repeated `velocity 121 m/s exceeded the 120 m/s ceiling ... clamped`
+warnings at this exact position are the same signature `terrain_playground.json`'s
+own `_comment_failsafe` on this carve already documents from a *different* Gate F
+lane: *"S10c and S10d, both walking the post-win return leg, permanently pinned
+inside the west wing, `_clamp_runaway_velocity` firing every physics frame with
+zero net displacement, `move_to` burning its entire budget."* This is the exact
+same trap, reproduced here for the first time on the *forward* leg rather than the
+return leg. The carve's own failsafe rescue mechanism (`severed_spokes.gd`'s
+`_add_carve_failsafe`, wired via `road_gate.gd`'s `gorge_carve_ids` at
+`playground_world.gd::_build_sigil_gate()`) exists and is correctly configured —
+this is a scripted `move_to` walker driving itself into a deliberately-built
+barrier rather than through the gate's own narrow causeway, not a hole in the
+carve or a missing rescue. **Per the coordinator's own advance warning: a
+navigator routing problem, not a world defect.** Not fixed here — `severed_spokes.gd`
+is this lane's file, but the walker that drove into the trap
+(`tools/gate_f/operator_harness.gd`'s `move_to` action, presumably backed by the
+same `stick_navigator`-shaped logic named in `docs/HANDOFF_2026-09-03.md`) is Gate F
+harness infrastructure, not band 5 world data, and CLAUDE.md's own guidance is not
+to fix the harness by teleporting past geometry — that would hide the next real
+defect for a real player.
+
+**Everything after t≈740s is downstream of #2**, not independent evidence: the
+player never moved again for the rest of the run (same position through t=979s),
+so the checkpoint fight, the camp build, the rest cycle and the walk to the Hall
+all executed against a body standing at the bottom of the gorge. The build-menu
+steps (S09-44..51, scripted regardless of player position) left `input_context`
+stuck on `build_catalogue`, which is why every later menu/save step also failed —
+one root cause with a long tail, not seven separate ones.
+
+### The headline number, and where it actually comes from
+
+**S09 via the Gate F operator harness could not produce a clean walk-through in
+this container and does not itself yield a usable dead-travel/pacing verdict for
+band 5** — the run derailed at the first fight and again at the gorge before
+reaching the checkpoint, the camp decision, or the Hall threshold, so its own
+`dead_travel_peak`/`distance_above`/`route_rows_at_least` assertions (S09-58/59/60)
+measure a truncated, harness-broken 1,049.5 m partial walk, not the real ~2 km
+round-trip route — reporting those numbers as band 5's pacing would be exactly the
+"verifying a comment against another comment" mistake the coordinator's first
+correction named.
+
+**The credible played-path number is the one already in this report's "live
+probes" section, and it stands**: `tools/_probe_band5_approach.gd`, run
+independently earlier this session, drives the player to real positions along the
+*authored* spine (not a generic target-seeking walker) and lets the world populate
+around them — **longest dead-travel interval 63 m over the 651 m spine**,
+comfortably under the ~60 s bar. That instrument is not subject to either harness
+defect found above: it does not use dialogue press-counts or a naive `move_to`
+walker, and it never asks the player to cross the gorge (the spine's own
+waypoints, taken directly from `terrain_playground.json`'s authored trail, go
+through the gate's own narrow causeway by construction). It is real evidence of a
+real walked route — just not the Gate F protocol's own instrument.
+
+### Verdict
+
+**S09: FAIL, as a Gate F protocol run in this container — for reasons that are
+harness defects, not band 5 world defects.** The band's own pacing evidence
+(dead-travel 63 m, escalating occupation, live drain, sound physical gate) stands
+on the independent probe evidence already in this report and is not undermined by
+S09's own failure to complete. Re-running S09 to a clean PASS needs either a fix to
+the two named harness issues (outside this lane's ownership) or a hand-scripted
+walker that follows the authored spine instead of a straight-line target-seek —
+not a band 5 data or code change.
+
+Evidence template (`docs/ROADMAP.md`'s per-segment format):
+- **Player purpose:** cross the drained, occupied approach and commit to the Hall.
+- **Team progression:** synthetic party of five, L15-16, full HP/energy, unchanged
+  across the run (no fight completed).
+- **Roster decision:** none observed — the run never reached the doorstep alpha
+  (R-3, below) or the waystop.
+- **Route readability / stronghold growth / faction escalation:** not measurable
+  from this run; see the independent probes elsewhere in this report instead.
+- **Longest dead-travel interval:** 63 m (from `_probe_band5_approach.gd`, not S09).
+- **Collision/gate failures:** one reproduced — the Sigil Gate gorge navigator trap
+  (harness, not world; see above).
+
+---
+
+## Gate 3 encounter contracts (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md)
+
+Fetched from `ralph/G3-ENCOUNTERS-0903` (Fable, docs-only, on the same `main` this
+branch is cut from) per the coordinator's second addendum. Band 5's own contracts
+are §6.4 (P-5.1/5.2/5.3) and §7 (R-1..R-6, the roster-pressure moment); the general
+mechanism is G-1..G-7; §8 is the shipped/change table.
+
+### What this lane implemented directly (both owned files, both tested)
+
+- **R-3 — the doorstep alpha.** The first member of the existing (-20,7505)
+  burrowback cluster (`spawns.json` order 5015, already the densest ordinary
+  cluster in the band's second half per its own `_why`) is now a once-only alpha:
+  `level_bonus: 2` over the band's [14,17] roll (16-19, parity with the elite the
+  player is about to fight), `scale: 1.3`, and a `combat` block carrying the WALL
+  profile's data (G-3: `telegraph 0.85, recovery 1.1, power 12.0, chase_speed 3.4,
+  reposition_distance 2.5`). The four ordinary members are untouched. **This data
+  is inert until G-2 lands** — the coordinator is implementing the per-body
+  `combat`-override merge in `wild_creature.gd::set_engaged()` separately, and this
+  lane was explicitly told not to touch that file. Verified: `test_spawns_data.gd`
+  25/25 with the block in place.
+- **G-2/G-3 combat profile data on this lane's own trainer rows.** Of the six
+  band-5 trainer fights, three belong to this lane
+  (`stronghold_outer_watch`/Corr, `stronghold_checkpoint`/Ness,
+  `stronghold_patrol`/Verrick) and three are the Hall cast
+  (`stronghold_courtyard`/Solene, `stronghold_elite`/Hald, `warden_aldis`) that
+  this lane's own original file-ownership brief assigns to G3-FINALE. Of the
+  three owned fights: Corr stays at DEFAULT (the floor the rest of the approach's
+  escalation reads against), Ness's three-creature team each carries the CURRENT
+  profile (`attack_cooldown 0.7, recovery 0.55, reposition_time 0.5,
+  reposition_distance 2.0, power 6.4` — relentless pressure, matching her own
+  challenge line "rank means something out here"). Verrick (order 8) is left
+  untouched entirely: it is a pre-split-protected `trainers.json` entry
+  (`test_band_content.gd`'s baseline-mirror check caught an added comment there on
+  the first attempt), and "no override" needs no comment to take effect. This
+  addresses part of the coordinator's own finding — *"Corr, Verrick, Ness and
+  Solene cannot build pressure through anything but roster size and level, because
+  the AI each fields is identical"* — for the two of those four names this lane
+  owns; Verrick's own profile choice (if any) and Solene's are the same call for
+  whoever owns those rows to make, so the shape reads consistently end to end.
+  Verified: `test_trainers_data.gd` 50/50, `test_band_content.gd` 6/6.
+
+### What this lane proposes, cross-lane, rather than implementing
+
+Per §10's own instruction ("If a contract needs a file another lane owns, write
+the row you would have written into your report and name the lane... do not edit
+across ownership"):
+
+- **P-5.2 — the scorched pocket must be visible from the spine.** The contract's
+  own table names the owner as "band 5 world" (vegetation/terrain), not band 5
+  data — and this lane's hard constraints forbid touching `vegetation.json` or
+  `terrain_playground.json` regardless. Proposed row for that lane: one pylon spur
+  or drained-ground tongue from the trunk conduit line (already measured sound in
+  this report's pylon-line probe) toward the Sunstone/Mudsnout pocket at
+  (121,7336), plus the TM's own glow and the Mudsnout's silhouette sited on the
+  pocket's near edge — all per the contract's own exact wording. Nothing in
+  `props.json`/`harvest.json`/`spawns.json` (this lane's own files) can make a
+  scatter-thinned sightline exist; the pocket's spawn/harvest/prop content is
+  already authored and correct, only its visibility from the road is the gap.
+- **R-2 — the duty board at the waystop.** The mechanism this needs
+  (`stronghold_climax.gd::_place_readout`, reachable for a second config entry) is
+  a small change to a file this lane's own brief explicitly assigns to
+  G3-FINALE (`stronghold_climax.gd`), not to band 5. Proposed for that lane: once
+  the builder is reachable, this lane would add one readout entry at the waystop
+  ((-25,7460), in frame from the fire) with the faction's own register text the
+  contract specifies (*"VERRICK — 2. SOLENE — 3. HALD — 3. WARDEN — 5. NO RELIEF
+  UNTIL THE DRAW IS STABLE."*) and a matching `interactable`/conversation pair in
+  `data/dialogue/bands/band5_stronghold_approach.json` (this lane's own file, ready
+  to add once the mechanism exists) — checked against
+  `test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary`,
+  which the proposed text does not trip (it names the draw, not what chamber five
+  holds).
+
+### What this lane declined to touch, and why
+
+**W-1, W-2, W-3, W-7** (the Warden's levels/send-out-order/TM-tier quicks, and
+Keeper Hald's duskhush→mosshell swap) all target `warden_aldis` and
+`stronghold_elite` — two of the three rows this lane's own original brief
+explicitly assigns to G3-FINALE ("leave them alone... coordinate through the
+coordinator if the approach's own pacing needs them changed"), regardless of what
+the encounter contract's own §8 table lists as "owner lane: band 5 data". The
+contract itself also flags **W-1 as an open owner question** (§9.2: raise the
+Warden to 18/18/19/19/20, or lower Hald instead — not decided in the document),
+so it would not have been implemented unilaterally even absent the ownership
+conflict. Both are named here for G3-FINALE to pick up, with the contract's own
+citation (W-1/W-2/W-3/W-7) rather than applied.
+
+**P-5.3** ("nothing else is added to the road... fails if the band's entry count
+rises for any reason other than P-5.2 and §7") is not a change to make — it is
+confirmation that this session's earlier finding (Band 5's spawn/harvest/prop
+density is already complete and should not be padded further) was the contract's
+own intended reading of D70's "crescendo, not count" framing, not an
+under-verification on this lane's part.

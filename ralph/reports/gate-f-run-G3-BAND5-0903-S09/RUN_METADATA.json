@@ -1,0 +1,17 @@
+{
+  "_comment": "Per-run freeze record for the G3-BAND5-0903 Gate F addendum: a played S09 (Sigil gate -> outer watch -> checkpoint -> final camp decision -> Hall threshold) against a synthetically-seeded entry save, per operator_harness.gd's own documented mechanism (`_freeze_display_claim()`'s header: 'a run that wants a logic lane must SAY SO IN THE FREEZE RECORD BEFORE THE RUN'). This run's logic lane is genuinely headless in this container -- no xvfb, no X11, `tools/gate_f/run_segment.sh S09` (no --capture). S09.json declares `evidence_lane: logic` and `capture_lane: S09C`; every prescribed capture step is delegated, not taken in this process. This record exists only to stop CD-8b's pre-flight contradiction check from binding this run to the unrelated 2026-08-27 candidate freeze at ralph/reports/gate-f-candidate/RUN_METADATA.json, which correctly describes THAT run's own xvfb/X11 capture-lane environment, not this one.",
+  "candidate_sha": "711ffd7424c3343be5d5069a0b268bc577ceba41",
+  "candidate_ref": "ralph/G3-BAND5-0903",
+  "frozen_at_utc": "2026-09-03T23:58:15Z",
+  "run_dir": "ralph/reports/gate-f-run-G3-BAND5-0903-S09",
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "operator": "sonnet-agent (G3-BAND5-0903)",
+  "lanes": {
+    "logic": {
+      "display_server": "headless",
+      "renderer": "headless (no rendering driver; --headless, no --rendering-driver)"
+    }
+  },
+  "_comment_no_capture_lane_run": "This addendum runs the logic lane only, against a synthetic entry seed, to get a real measured dead-travel number. No capture-lane (S09C) run was performed in this container -- xvfb/opengl3 capture mode was not exercised for this addendum."
+}
