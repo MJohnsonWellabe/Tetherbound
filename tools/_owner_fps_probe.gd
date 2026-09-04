@@ -144,7 +144,8 @@ func _run() -> void:
 			"draw_calls": Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
 			"primitives": Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),
 		}
-		(report["sites"] as Dictionary)[name] = site
+		var sites: Dictionary = report["sites"]
+		sites[name] = site
 		print("%-22s %8.1f %8.2f %8.2f %8.1f" % [name, site["fps_avg"], site["frame_ms_p95"], site["frame_ms_max"], site["fps_1pct_low"]])
 
 	if _out != "":

@@ -202,8 +202,8 @@ func _run() -> void:
 	print("")
 	print("%d route frames -> %s" % [written, _out_dir])
 	if not failures.is_empty():
-		for line in failures:
-			print("FAIL: %s" % line)
+		for fail_line in failures:
+			print("FAIL: %s" % fail_line)
 		quit(1)
 		return
 	quit(0)

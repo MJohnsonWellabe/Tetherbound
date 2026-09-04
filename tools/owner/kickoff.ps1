@@ -181,8 +181,40 @@ function Ensure-Ffmpeg {
   if ($found) { $script:Ffmpeg = $found.FullName; Log "ffmpeg: $script:Ffmpeg" }
 }
 
+# Git is what carries the evidence back. Install it when missing: winget
+# first, the official installer second. The FIRST push from a machine opens
+# GitHub's sign-in in a browser once (Git Credential Manager); after that it
+# is cached and every later run pushes on its own.
+function Ensure-Git {
+  if (Get-Command git -ErrorAction SilentlyContinue) { return }
+  Log "git not found; installing Git for Windows"
+  try {
+    $winget = Get-Command winget -ErrorAction SilentlyContinue
+    if ($winget) {
+      & winget install --id Git.Git -e --silent --accept-package-agreements --accept-source-agreements 2>&1 | ForEach-Object { Log "winget: $_" }
+    }
+  } catch { Log "winget failed: $($_.Exception.Message)" }
+  if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+    try {
+      $rel = Invoke-RestMethod -Uri "https://api.github.com/repos/git-for-windows/git/releases/latest" -UseBasicParsing
+      $asset = $rel.assets | Where-Object { $_.name -match "^Git-.*-64-bit\.exe$" } | Select-Object -First 1
+      if ($asset) {
+        $inst = Join-Path $ToolsDir $asset.name
+        Download $asset.browser_download_url $inst | Out-Null
+        & $inst /VERYSILENT /NORESTART /NOCANCEL /SP- /COMPONENTS="gitlfs" | Out-Null
+      }
+    } catch { Log "git installer failed: $($_.Exception.Message)" }
+  }
+  foreach ($c in @("$env:ProgramFiles\Git\cmd", "$env:LOCALAPPDATA\Programs\Git\cmd")) {
+    if (Test-Path (Join-Path $c "git.exe")) { $env:Path = "$c;$env:Path" }
+  }
+  if (Get-Command git -ErrorAction SilentlyContinue) { Log "git: $((& git --version) 2>&1)" }
+  else { Log "git still missing: the run will work, the evidence will only be zipped" }
+}
+
 function Ensure-Repo {
   $branch = Resolve-Branch
+  Ensure-Git
   $git = Get-Command git -ErrorAction SilentlyContinue
   $repo = Find-Repo
   if ($repo) {
