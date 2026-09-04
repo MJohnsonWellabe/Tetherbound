@@ -904,6 +904,160 @@ def icon_river_sigil() -> Image.Image:
     return _sigil_disc(device)
 
 
+def _candy_body() -> Image.Image:
+    """W00-ICONS / addendum 2026-09-04 sec B. The shared wrapped-sweet blank
+    every candy tier is drawn on: a round sweet with a twisted wrapper end
+    fanning out on each side, matching the installed
+    `assets/props/candy_pickup/candy_pickup.glb` and board 17's "one wrapper,
+    three tiers". One cutout at each neck separates the ball from its wrapper
+    so the shape reads as a sweet and not a bow-tie, and one crimp cutout per
+    fan gives the twist. The three tiers (`icon_good_candy`, `icon_great_candy`,
+    `icon_rare_candy`) add markers to this blank the way the orb tiers add
+    rings, so the family stays one silhouette."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx, cy, r = 128, 148, 62
+    for sign in (1, -1):
+        neck = cx + sign * (r - 6)
+        tip = cx + sign * 122
+        fan = [
+            (neck, cy - 16),
+            (tip, cy - 50),
+            (cx + sign * 104, cy),
+            (tip, cy + 50),
+            (neck, cy + 16),
+        ]
+        d.polygon(fan, fill=FG)
+        # crimp: a short cutout from the neck into the fan's centre
+        cutout_line(d, [(neck + sign * 12, cy), (cx + sign * 100, cy)], width=max(3, STROKE // 2))
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
+    # neck cutouts: the twist, where the wrapper pinches tight against the ball
+    for sign in (1, -1):
+        x = cx + sign * (r + 2)
+        cutout_line(d, [(x, cy - 22), (x, cy + 22)])
+    return img
+
+
+def _cutout_star(d: ImageDraw.ImageDraw, cx: float, cy: float, outer: float, inner: float, points: int = 5) -> None:
+    """A five-point star punched through the silhouette, tip up."""
+    pts = []
+    for i in range(points * 2):
+        radius = outer if i % 2 == 0 else inner
+        angle = -math.pi / 2 + i * math.pi / points
+        pts.append((cx + math.cos(angle) * radius, cy + math.sin(angle) * radius))
+    d.polygon(pts, fill=CLEAR)
+
+
+def icon_good_candy() -> Image.Image:
+    """Good Candy, +1 level: the plain wrapped sweet, no marker. The bottom of
+    the tier ladder is the blank itself, tinted green from items.json."""
+    return _candy_body()
+
+
+def icon_great_candy() -> Image.Image:
+    """Great Candy, +2 levels: the same sweet with a star medallion cut out of
+    the ball -- board 17's blue tier carries a star on the wrapper, and a
+    single central cutout is the one marker that survives 64px and still
+    reads as 'this one is better' next to the plain tier."""
+    img = _candy_body()
+    d = ImageDraw.Draw(img)
+    _cutout_star(d, 128, 148, 34, 14)
+    return img
+
+
+def icon_rare_candy() -> Image.Image:
+    """Rare Candy, +3 levels: the starred sweet with two small wings lifted
+    off its shoulders -- board 17's gold tier is winged, and the world pickup
+    grows the same wings as child geometry. The wings sit above the wrapper
+    fans so the outline gains a third silhouette feature (ball, fans, wings)
+    where Good has one and Great two."""
+    img = icon_great_candy()
+    d = ImageDraw.Draw(img)
+    cx, cy = 128, 148
+    for sign in (1, -1):
+        wing = [
+            (cx + sign * 34, cy - 52),
+            (cx + sign * 64, cy - 122),
+            (cx + sign * 112, cy - 108),
+            (cx + sign * 96, cy - 78),
+            (cx + sign * 62, cy - 58),
+        ]
+        d.polygon(wing, fill=FG)
+        # two feather cutouts so the wing reads as a wing, not a horn
+        cutout_line(d, [(cx + sign * 52, cy - 70), (cx + sign * 96, cy - 100)], width=max(3, STROKE // 2))
+        cutout_line(d, [(cx + sign * 46, cy - 58), (cx + sign * 82, cy - 80)], width=max(3, STROKE // 2))
+    return img
+
+
+def _mushroom_body(cap_half_w: int, cap_top: int, cap_bottom: int, stem_half_w: int = 30) -> Image.Image:
+    """W00-ICONS / addendum 2026-09-04 sec B. The shared cap-and-stem blank
+    the three foraged mushrooms are drawn on: a domed cap over a stem that
+    flares at the root, with one cutout across the stem just under the rim so
+    the cap sits ON the stem rather than merging into a keyhole. The tiers
+    (`icon_speed_mushroom`, `icon_stamina_mushroom`, `icon_wild_mushroom`)
+    differ by the cutout pattern on the cap, by cap width, and by their
+    items.json tints, never by a second silhouette."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx = 128
+    rim_y = cap_bottom
+    # stem, drawn first so the cap covers its top
+    d.polygon(
+        [(cx - stem_half_w, rim_y - 20), (cx + stem_half_w, rim_y - 20),
+         (cx + stem_half_w + 14, 232), (cx - stem_half_w - 14, 232)],
+        fill=FG,
+    )
+    d.ellipse((cx - stem_half_w - 16, 220, cx + stem_half_w + 16, 244), fill=FG)  # root
+    # cap: a dome (top half of an ellipse) over a shallow rim ellipse
+    d.chord((cx - cap_half_w, cap_top, cx + cap_half_w, cap_top + 2 * (rim_y - cap_top)), 180, 360, fill=FG)
+    d.ellipse((cx - cap_half_w, rim_y - 16, cx + cap_half_w, rim_y + 14), fill=FG)
+    # the stem meets the underside of the rim
+    cutout_line(
+        d,
+        [(cx - stem_half_w - 8, rim_y + 20), (cx, rim_y + 28), (cx + stem_half_w + 8, rim_y + 20)],
+        width=STROKE,
+    )
+    return img
+
+
+def icon_speed_mushroom() -> Image.Image:
+    """Speed Shroom: the blue cap, dotted. Five spot cutouts across the dome,
+    the classic toadstool marking, and the tier that reads 'spotted'."""
+    img = _mushroom_body(cap_half_w=92, cap_top=36, cap_bottom=124)
+    d = ImageDraw.Draw(img)
+    cx = 128
+    for x, y, r in ((cx, 62, 13), (cx - 44, 84, 11), (cx + 44, 84, 11), (cx - 20, 108, 9), (cx + 22, 108, 9)):
+        cutout_ellipse(d, (x - r, y - r, x + r, y + r))
+    return img
+
+
+def icon_stamina_mushroom() -> Image.Image:
+    """Stamina Shroom: the orange cap, ringed. Three ring cutouts (an outline
+    each, not a filled dot) so it and Speed are told apart by the mark itself
+    even before the tint: rings against dots."""
+    img = _mushroom_body(cap_half_w=92, cap_top=36, cap_bottom=124)
+    d = ImageDraw.Draw(img)
+    cx = 128
+    w = max(3, int(STROKE * 0.7))
+    for x, y, r in ((cx, 66, 20), (cx - 50, 94, 15), (cx + 50, 94, 15)):
+        d.ellipse((x - r, y - r, x + r, y + r), outline=CLEAR, width=w)
+    return img
+
+
+def icon_wild_mushroom() -> Image.Image:
+    """Wild Shroom: the red cap, broad and flat -- board 17's "broad and
+    unmistakable". Wider than its siblings on a stouter stem, and the cap's
+    only marks are gill cutouts along the underside, so the tier reads by
+    outline (a wide flat cap) rather than by a spot pattern."""
+    img = _mushroom_body(cap_half_w=118, cap_top=52, cap_bottom=120, stem_half_w=34)
+    d = ImageDraw.Draw(img)
+    cx, rim_y = 128, 120
+    w = max(3, int(STROKE * 0.7))
+    for x in (cx - 96, cx - 66, cx + 66, cx + 96):
+        cutout_line(d, [(x, rim_y - 6), (x, rim_y + 10)], width=w)
+    return img
+
+
 ITEM_ICONS = {
     "coin.png": icon_coin,
     "wood.png": icon_wood,
@@ -940,6 +1094,14 @@ ITEM_ICONS = {
     "field_sigil.png": icon_field_sigil,
     "ridge_sigil.png": icon_ridge_sigil,
     "river_sigil.png": icon_river_sigil,
+    # W00-ICONS: addendum 2026-09-04 sec B, the found candies and foraged
+    # mushrooms PR #39 added to items.json.
+    "good_candy.png": icon_good_candy,
+    "great_candy.png": icon_great_candy,
+    "rare_candy.png": icon_rare_candy,
+    "speed_mushroom.png": icon_speed_mushroom,
+    "stamina_mushroom.png": icon_stamina_mushroom,
+    "wild_mushroom.png": icon_wild_mushroom,
 }
 
 
