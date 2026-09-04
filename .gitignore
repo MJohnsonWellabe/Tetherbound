@@ -105,8 +105,26 @@ ralph/reports/TOURNAMENT-*/**/[!_]*.png
 ralph/reports/HARNESS-*/**/[!_]*.png
 ralph/reports/OPENING-*/**/[!_]*.png
 ralph/reports/CREATURE-*/**/[!_]*.png
+ralph/reports/G3-WARDEN-ARENA-*/**/[!_]*.png
+# G3-CREATURE-COLOUR-0904: per-frame sweep captures stay local, same
+# convention as CREATURE-*/GATE2-* above -- only underscore-prefixed contact
+# sheets and REPORT.md are evidence worth carrying in the tree.
+ralph/reports/G3-CREATURE-COLOUR-*/**/[!_]*.png
 ralph/reports/**/*.jsonl
 ralph/reports/**/*.csv
 ralph/reports/**/telemetry/
 
 # Historical material lives in archive/; nothing there is loaded by the game.
+# GATE2-EVIDENCE-0903: the Gate 2 evidence run's per-frame captures and
+# save payloads stay local; verdicts (*.md), the segment script and one
+# contact sheet (_sheet*.png) are what the tree carries.
+ralph/reports/GATE2-*/**/[!_]*.png
+ralph/reports/GATE2-*/**/saves/
+ralph/reports/GATE2-*/**/frames/
+# Superseded attempts: their numbers are quoted in REPORT.md (three independent
+# reproductions of the Pond stall, the two tournament blockers) and the report is
+# the evidence. The per-step notes of an attempt that was restarted are not.
+ralph/reports/GATE2-*/**/*-superseded-*/
+# Harness capture-cost diagnostics, not evidence frames.
+ralph/reports/GATE2-*/**/_preflight.png
+ralph/reports/GATE2-*/**/capture_smoke.png

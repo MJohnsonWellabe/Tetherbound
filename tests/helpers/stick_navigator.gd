@@ -410,6 +410,29 @@ func step(point: Vector3) -> void:
 			_push(_detour)
 			await _tree.physics_frame
 			return
+	# GATEB-COORD / 2.9. A detour that just ended -- budget spent, or aborted
+	# above -- used to fall straight back into the gap check below, which
+	# measures progress ONLY as closing distance on `point`. On a long uphill
+	# bearing (the Pond's shoulder) or a concave fence corner, `point` can be
+	# hundreds of metres away and a whole detour's worth of honest sideways
+	# travel barely moves that number, so the gap check reads it as a fresh
+	# stall, waits out STALL_FRAMES pushing straight back into the same
+	# obstacle, and re-detours -- often flipping sides every cycle instead of
+	# ever finishing the corner. So: while a side is committed, keep
+	# following the obstacle for as long as the straight line to `point` is
+	# still blocked, and only fall back to the distance-based check once that
+	# line is actually open. `_begin_detour` still owns the DETOURS_PER_SIDE
+	# flip and the wedge/back-off cases, so this does not weaken either.
+	if _side != 0.0 and _free_space(to.normalized()) < BODY_WIDTH:
+		_begin_detour(to)
+		_push(_detour)
+		await _tree.physics_frame
+		return
+	# The straight line is open: whatever `_side` was following is no longer
+	# relevant, so the next stall re-probes fresh instead of inheriting a
+	# side count run up against an earlier, unrelated obstacle.
+	_side = 0.0
+	_side_detours = 0
 	var gap := to.length()
 	if gap < _gap - PROGRESS:
 		_gap = gap

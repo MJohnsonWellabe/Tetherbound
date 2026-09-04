@@ -319,6 +319,44 @@ func _assert_reward_flags_are_granted(activity: String, flags: Variant) -> void:
 			+ "nothing hands over")
 
 
+## G3-ECONOMY-0903. The audit's `trainer_oskar` row used to claim he pays
+## `south_bridge_key` and "opens Band 2" -- stale against the 2026-08-22
+## TOURNAMENT-1 directive (dated the SAME DAY the audit itself was written),
+## which moved the key onto `south_bridge_grunt` so Oskar could become the
+## tournament final instead. Nothing before this test pinned which trainer id
+## actually grants the key, so the same silent drift could happen again the
+## next time a reward moves between two named NPCs. Pinned two ways: the real
+## bridge-key holder is the one the audit credits, and no OTHER row still
+## claims the key.
+func test_the_audited_bridge_key_matches_who_actually_holds_it() -> void:
+	var file := FileAccess.open(
+		"res://data/config/bands/band1_lower_meadows/trainers.json", FileAccess.READ)
+	assert_true(file != null, "band1 trainers.json is missing")
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not (parsed is Dictionary):
+		return
+	var key_holder := ""
+	for entry: Variant in (parsed as Dictionary).get("trainers", []):
+		var trainer := entry as Dictionary
+		if _reward_has_item(trainer.get("reward", {}), "south_bridge_key"):
+			key_holder = str(trainer.get("id", ""))
+	assert_eq(key_holder, "south_bridge_grunt",
+		"the real bridge-key holder in trainers.json is '%s'; if that ever changes again "
+		% key_holder + "the audit row named after it needs to move too")
+
+	var audit := _audit()
+	var rows_claiming_key: Array = []
+	for row: Variant in audit.get("activities", []):
+		var r := row as Dictionary
+		if str(r.get("reward", {}).get("south_bridge_key", "")) != "":
+			rows_claiming_key.append(str(r.get("activity", "")))
+	assert_eq(rows_claiming_key, ["south_bridge_grunt"],
+		"the audit rows claiming south_bridge_key are %s; exactly one row, named after the "
+		% [rows_claiming_key] + "real key-holder, should claim it")
+
+
 ## T3-REWARD, owner-direction §14. Pins the reward-ladder SHAPE onto the real
 ## trainer/dungeon data, the same way test_the_audited_tournament_prize_...
 ## above pins the tournament final's coin figure -- an audit row is a claim,

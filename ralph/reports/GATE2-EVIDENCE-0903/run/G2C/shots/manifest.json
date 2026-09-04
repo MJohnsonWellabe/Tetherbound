@@ -1,0 +1,452 @@
+{
+  "shots": [
+    {
+      "bytes": 1338525,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.20773852,
+      "file": "shots/G2-S04-0000-region-change.png",
+      "hud": "on",
+      "id": "G2-S04-0000-region-change",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.026,
+        "mean_luma": 78.0,
+        "stddev_luma": 39.6
+      },
+      "pos": [
+        0.0,
+        0.9,
+        0.0
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 7.31666666666667,
+      "trigger": "played-route stand: region-change at play t=1 s, grandpas_village, dead-travel 0 m, input_context title",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1777490,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.24515197333333,
+      "file": "shots/G2-S04-0206-dialogue.png",
+      "hud": "on",
+      "id": "G2-S04-0206-dialogue",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.038,
+        "mean_luma": 79.3,
+        "stddev_luma": 40.9
+      },
+      "pos": [
+        27.97,
+        -0.35,
+        7.99
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 8.25,
+      "trigger": "played-route stand: dialogue at play t=206 s, grandpas_village, dead-travel 0 m, input_context combat",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1725064,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.28242034666667,
+      "file": "shots/G2-S04-0249-fight-starts.png",
+      "hud": "on",
+      "id": "G2-S04-0249-fight-starts",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.077,
+        "mean_luma": 71.2,
+        "stddev_luma": 39.9
+      },
+      "pos": [
+        30.03,
+        -0.52,
+        6.14
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 9.18333333333333,
+      "trigger": "played-route stand: fight-starts at play t=249 s, grandpas_village, dead-travel 0 m, input_context combat",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1716914,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.31948692,
+      "file": "shots/G2-S04-0361-route.png",
+      "hud": "on",
+      "id": "G2-S04-0361-route",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.083,
+        "mean_luma": 69.7,
+        "stddev_luma": 39.3
+      },
+      "pos": [
+        30.44,
+        -0.65,
+        6.24
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 10.1166666666667,
+      "trigger": "played-route stand: route at play t=362 s, grandpas_village, dead-travel 0 m, input_context combat",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1830426,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.35742522666667,
+      "file": "shots/G2-S04-0400-dialogue.png",
+      "hud": "on",
+      "id": "G2-S04-0400-dialogue",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.023,
+        "mean_luma": 80.2,
+        "stddev_luma": 40.4
+      },
+      "pos": [
+        20.25,
+        0.08,
+        12.35
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 11.05,
+      "trigger": "played-route stand: dialogue at play t=400 s, grandpas_village, dead-travel 0 m, input_context world",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1338940,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.39415372,
+      "file": "shots/G2-S05-0000-region-change.png",
+      "hud": "on",
+      "id": "G2-S05-0000-region-change",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.026,
+        "mean_luma": 78.0,
+        "stddev_luma": 38.9
+      },
+      "pos": [
+        0.0,
+        0.9,
+        0.0
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 11.9833333333333,
+      "trigger": "played-route stand: region-change at play t=1 s, grandpas_village, dead-travel 0 m, input_context title",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1825705,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.43188054666667,
+      "file": "shots/G2-S05-0180-route.png",
+      "hud": "on",
+      "id": "G2-S05-0180-route",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.023,
+        "mean_luma": 79.6,
+        "stddev_luma": 40.3
+      },
+      "pos": [
+        20.25,
+        0.08,
+        12.35
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 12.9166666666667,
+      "trigger": "played-route stand: route at play t=181 s, grandpas_village, dead-travel 0 m, input_context world",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1276527,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.46895941333333,
+      "file": "shots/G2-S05-0271-route.png",
+      "hud": "on",
+      "id": "G2-S05-0271-route",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.413,
+        "mean_luma": 46.0,
+        "stddev_luma": 42.8
+      },
+      "pos": [
+        -235.89,
+        5.17,
+        295.19
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 13.85,
+      "trigger": "played-route stand: route at play t=271 s, corridor, dead-travel 50 m, input_context world",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1038022,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.51148692,
+      "file": "shots/G2-S05-0335-region-change.png",
+      "hud": "on",
+      "id": "G2-S05-0335-region-change",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.062,
+        "mean_luma": 60.9,
+        "stddev_luma": 40.6
+      },
+      "pos": [
+        -296.76,
+        -8.47,
+        537.95
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 15.0,
+      "trigger": "played-route stand: region-change at play t=335 s, the_pond, dead-travel 76 m, input_context world",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1420670,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.54884872,
+      "file": "shots/G2-S05-0451-route.png",
+      "hud": "on",
+      "id": "G2-S05-0451-route",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.295,
+        "mean_luma": 44.4,
+        "stddev_luma": 33.6
+      },
+      "pos": [
+        104.15,
+        -3.42,
+        857.07
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 15.85,
+      "trigger": "played-route stand: route at play t=451 s, corridor, dead-travel 54 m, input_context world",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1682366,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.58682025333333,
+      "file": "shots/G2-S05-0502-fight-starts.png",
+      "hud": "on",
+      "id": "G2-S05-0502-fight-starts",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.043,
+        "mean_luma": 71.5,
+        "stddev_luma": 37.5
+      },
+      "pos": [
+        191.08,
+        -5.23,
+        897.16
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 16.7833333333333,
+      "trigger": "played-route stand: fight-starts at play t=502 s, corridor, dead-travel 0 m, input_context combat",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1681274,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.62360797333333,
+      "file": "shots/G2-S05-0522-level-up.png",
+      "hud": "on",
+      "id": "G2-S05-0522-level-up",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.043,
+        "mean_luma": 71.4,
+        "stddev_luma": 37.4
+      },
+      "pos": [
+        191.08,
+        -5.23,
+        897.16
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 17.7166666666667,
+      "trigger": "played-route stand: level-up at play t=522 s, corridor, dead-travel 0 m, input_context combat",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1473869,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.66124441333333,
+      "file": "shots/G2-S05-0578-landmark.png",
+      "hud": "on",
+      "id": "G2-S05-0578-landmark",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.038,
+        "mean_luma": 70.4,
+        "stddev_luma": 43.6
+      },
+      "pos": [
+        324.41,
+        1.83,
+        920.69
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 18.65,
+      "trigger": "played-route stand: landmark at play t=578 s, corridor, dead-travel 0 m, input_context world",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1521666,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.69815358666667,
+      "file": "shots/G2-S05-0670-landmark.png",
+      "hud": "on",
+      "id": "G2-S05-0670-landmark",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.201,
+        "mean_luma": 53.1,
+        "stddev_luma": 38.7
+      },
+      "pos": [
+        14.34,
+        0.39,
+        1302.1
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 19.5833333333333,
+      "trigger": "played-route stand: landmark at play t=670 s, corridor, dead-travel 0 m, input_context world",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1659988,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.73586577333333,
+      "file": "shots/G2-S05-0722-route.png",
+      "hud": "on",
+      "id": "G2-S05-0722-route",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.076,
+        "mean_luma": 71.8,
+        "stddev_luma": 42.1
+      },
+      "pos": [
+        20.19,
+        0.82,
+        1307.78
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 20.5166666666667,
+      "trigger": "played-route stand: route at play t=723 s, corridor, dead-travel 0 m, input_context combat",
+      "weather": "clear"
+    },
+    {
+      "bytes": 1719287,
+      "camera_kind": "gameplay",
+      "class": "G2",
+      "clock_hour": 8.77304721333333,
+      "file": "shots/G2-S05-0755-objective.png",
+      "hud": "on",
+      "id": "G2-S05-0755-objective",
+      "intended_proof": "what the player saw here on the played Gate 2 route",
+      "luma": {
+        "dark_fraction": 0.031,
+        "mean_luma": 80.7,
+        "stddev_luma": 43.0
+      },
+      "pos": [
+        9.66,
+        -2.9,
+        1319.38
+      ],
+      "segment": "G2C",
+      "size": [
+        1280,
+        720
+      ],
+      "t": 21.45,
+      "trigger": "played-route stand: objective at play t=755 s, corridor, dead-travel 0 m, input_context world",
+      "weather": "clear"
+    }
+  ]
+}

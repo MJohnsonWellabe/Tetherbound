@@ -110,6 +110,16 @@ Headline items still open:
 - Four items only the owner's ROG Ally can close: interact reliability, frame rate with
   grass on, player sleep, day/night advancing.
 
+## How evidence is produced (D73)
+
+No gate waits on a human. The owner's only act is double-clicking
+`tools/owner/KICKOFF.cmd` on a Windows machine with a GPU (the ROG Ally). That
+produces the GPU route strip the visual bars are answered on, a real frame-rate
+file, the shipped-build verdict and the Gate F chain with video, and pushes it
+as `owner-run/<stamp>`. `docs/acceptance/KICKOFF_RUN.md` says what agents do with
+a run. Open design questions are decided by the orchestrator and recorded in
+`docs/decisions/`; they are not queued for the owner.
+
 ## Validation expectations
 
 - Unit: `godot --headless --path . --script tests/run_tests.gd` (≈28 min; use

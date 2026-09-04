@@ -243,6 +243,28 @@ func active_creature() -> Variant:
 	return str(active.call("label")) if active != null else null
 
 
+## HP of the piloted/deployed creature `active_creature()` names, or -1.0
+## when none is out. Answers a different question than `active_creature()`
+## returning non-null: the party's own active INDEX does not move when its
+## occupant faints (RIG-F9/2.11), so "somebody is out" and "that somebody can
+## still fight" are two separate facts and a caller checking only the first
+## reads a fainted lead as a healthy one.
+func active_creature_hp() -> float:
+	var combat := combat_manager()
+	if combat != null and combat.has_method("is_fighting") and bool(combat.call("is_fighting")):
+		var fighting: Variant = combat.call("active_creature")
+		if fighting != null:
+			return float(fighting.get("hp"))
+	var g := game()
+	if g == null:
+		return -1.0
+	var party: Variant = g.get("party")
+	if party == null:
+		return -1.0
+	var active: Variant = party.call("active")
+	return float(active.get("hp")) if active != null else -1.0
+
+
 ## `{hp, stamina, satiety}` from the live vitals object.
 func player_vitals() -> Dictionary:
 	var g := game()

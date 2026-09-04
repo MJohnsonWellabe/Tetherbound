@@ -1,0 +1,25 @@
+{
+  "_comment": "GATE2-EVIDENCE-0903 (ROADMAP 2.8): the Gate 2 evidence run, tournament victory -> Lower Meadows -> detour -> South Bridge, as Gate F S04 + S05 played through the real harness. Not a formal Gate F chapter freeze: no coordinator froze a candidate SHA, so this run directory carries its own metadata rather than the stale global record at ralph/reports/gate-f-candidate/RUN_METADATA.json (2026-08-27, candidate f082bdf6, capture-mode X11). Entered from a built S03-exit seed (tools/gate_f/build_gate2_seed.gd): the freshest played S03 exit save with its party levelled to tournament.json's entry floor through the real level arithmetic and the sleep/bed/feed rung flags set -- the same allowance tests/smoke_gate_b_continuous.gd makes in CI. Everything from the tournament sign-up onward is played.",
+  "candidate_ref": "ralph/GATE2-EVIDENCE-0903 from main 3c73aab5",
+  "godot_version": "4.7",
+  "godot_build": "4.7.stable.official.5b4e0cb0f",
+  "binary": {
+    "kind": "linux editor binary, NOT the shipped Windows export",
+    "path": "~/godot-bin/godot"
+  },
+  "resolution_substituted": false,
+  "input_mode": "synthetic joypad + keyboard via Input.parse_input_event, paired with Input.action_press/release",
+  "save_state": "seeded slot 4 from a built S03-exit.json (tools/gate_f/build_gate2_seed.gd over gate-f-run-20260902T200321Z-s03fablefix11's played S03 exit: five creatures levelled to L5, camp/beds/sleep/feed flags set)",
+  "operator": "GATE2-EVIDENCE-0903 lane",
+  "free_build": false,
+  "lanes": {
+    "logic": {
+      "display_server": "headless: this process has no display server",
+      "renderer": "headless: no rendering driver"
+    },
+    "capture": {
+      "display_server": "X11 under xvfb-run",
+      "renderer": "opengl3 (Compatibility), software GL (llvmpipe)"
+    }
+  }
+}

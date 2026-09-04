@@ -858,6 +858,39 @@
           "_why": "the bluff's own stone, at the same 0.2 the meadow scatter uses, anchoring the post to the ground it was sited on"
         }
       ]
+    },
+    {
+      "order": 3010,
+      "name": "riverwatch_post",
+      "_why": "GATE3_ENCOUNTER_CONTRACTS.md C-2, G3-BAND3-0903: 'give his stand a three-prop Riverwatch post... so the draw reads as a posting, not a man on grass.' Captain Oreth (data/config/bands/band3_the_river_lock/trainers.json, `captain_riverwatch`) stands at (-100,4350) with nothing around him -- the same defect this band's own `crossing_watchpost` cluster (order 3009) answers 450m north for an abandoned Team Tether post. This is Oreth's own equivalent, sited 2-4m off his own position on the flat floor of the draw his `_why_here` already describes (measured, not guessed: tools/_probe_cadence_sites.gd's own `height_at` sampled -1.66..-2.15m over this footprint, well inside the 1.48m spread/10.5-degree worst slope his trainers.json entry already records for this site).",
+      "_why_no_banner": "C-2's own text names 'the crossing_watchpost cluster's own kit', which includes an oxblood-retinted Team Tether Banner -- Oreth is a Meadows captain, not Team Tether, and planting that faction's own mark at his post would misread as his site being an occupied Tether position rather than a legitimate posting. Reused the kit's seating/storage vocabulary (bench, barrel, stone anchor) and left the banner out rather than retint it into a colour this catalogue has not authored for an ordinary captain.",
+      "props": [
+        {
+          "model": "Bench",
+          "at": [-97.0, 4353.0],
+          "yaw_deg": 19.5,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "turned to face back down the draw toward the Old Mill Crossing (bearing -160.5, the same reciprocal Oreth's own re-sited `facing_deg` now uses) -- the seat that watches the crossing, the same 'what a watch actually does' reasoning `crossing_watchpost`'s own bench already carries"
+        },
+        {
+          "model": "Barrel",
+          "at": [-98.5, 4354.0],
+          "yaw_deg": -10.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "water for a posting on open ground, set touching the bench's own side so the two read as one load rather than two stray objects"
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [-96.0, 4352.0],
+          "yaw_deg": 140.0,
+          "sink_m": 0.04,
+          "scale": 0.2,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the draw's own stone, at the same 0.2 the meadow scatter uses -- anchors the post to the ground it was sited on, the same closing piece `crossing_watchpost`'s own kit ends on"
+        }
+      ]
     }
   ]
 }

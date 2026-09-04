@@ -2008,11 +2008,12 @@ func _on_target_row(index: int) -> void:
 		return
 
 	if _targeting_revive > 0.0:
-		# OF32 lands `creature_instance.gd::revive()` in parallel; nothing in
-		# the shipped item set sets a `revive` field yet, so this branch
-		# cannot fire today. It stays honest about the contract this picker
-		# was written against rather than assuming a revive item can only
-		# ever arrive alongside a working revive() to call.
+		# OF32 lands `creature_instance.gd::revive()` in parallel. The
+		# has_method guard stays: it keeps this branch honest about the
+		# contract the picker was written against rather than assuming a
+		# revive item can only ever arrive alongside a working revive() to
+		# call, even now that `data/items/items.json`'s `revive` item makes
+		# this reachable in production.
 		if not creature.has_method("revive"):
 			say("Can't revive that here yet.")
 			_end_targeting()
@@ -2020,6 +2021,25 @@ func _on_target_row(index: int) -> void:
 		creature.call("revive", _targeting_revive)
 		inventory.call("remove", id, 1)
 		say("%s is back on its feet." % str(creature.call("label")))
+		# G3-OPENING-FIX-0904 (2.11). Reviving the party's ACTIVE creature does
+		# not, by itself, put it back beside the trainer: nothing that sends a
+		# creature out (`summon_active_creature()`) runs off of a stat change,
+		# only off `party.revision` (a different active slot chosen) or an
+		# explicit recall press. A creature that faints on the way INTO a
+		# fainted-refuses-to-deploy handoff -- the tournament's own last
+		# round, or a fresh save load -- leaves the trainer with no ally body
+		# at all, and reviving it here left `encounter_director.gd::
+		# can_challenge()` false until the player pressed recall by hand: a
+		# healed party that still could not start the next fight. Deploying
+		# here, at the moment the revive actually happens, is a no-op every
+		# other time (`summon_active_creature()` already refuses while
+		# something is out, mid-fight, or the active creature isn't this
+		# one) so it never overrides a creature the player deliberately put
+		# away.
+		if creature == party.call("active"):
+			var director := _encounter_director()
+			if director != null:
+				director.call("summon_active_creature")
 		_end_targeting()
 		return
 
@@ -2293,6 +2313,16 @@ func _player_node() -> Node3D:
 	if world == null:
 		return null
 	return world.get_node_or_null(^"Player") as Node3D
+
+
+## Same shape as `_player_node()`, for the revive-redeploy fix above.
+func _encounter_director() -> Node:
+	if not is_inside_tree():
+		return null
+	var world := get_tree().get_current_scene()
+	if world == null:
+		return null
+	return world.get_node_or_null(^"EncounterDirector")
 
 
 func _config() -> Dictionary:

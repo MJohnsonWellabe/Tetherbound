@@ -92,13 +92,14 @@
       "name": "Officer Dell",
       "_comment": "SE25. The relay's own duty officer, standing on the site itself rather than out on the road -- three creatures where the pickets field two, and the first of the four whose badge is bronze rather than grey.",
       "_comment_ow5d": "OW5D relocation, same (+242,+3726) offset as relay_site.json's `site.centre`.",
+      "_why_v1_gate3_encounters": "GATE3_ENCOUNTER_CONTRACTS.md V-1, G3-BAND3-0903: was (347.5,3763.5), local (s=-4.3,t=-0.1) -- 7.9m from Captain Vance, the same yard, the same backdrop, thirty seconds apart. The blind judge run on this branch's own fresh capture (06-relay-*.png) confirmed the read the contract predicted before this edit landed: 'reads as clump, not escalation... the picket/officer/captain roles collapse into one loose crowd.' Moved to the gate opening itself, local (s=-13,t=0.6) -- world_of() with this file's own centre/bearing math, rounded -- so the yard is entered PAST him and the fight is framed by the piers and lintel (tether_relay.json's own gate geometry, opening 6.8m, so t=0.6 keeps him 0.6m off the walk-through centreline the same way relay_site.json's Sentry and props.json's checkpoint gap already do it). Ladder now reads road -> road -> gate -> yard, four distinct backdrops. Still 13.0m from the site centre, inside the 26m COMPACT_SITE_IDS bound test_every_relay_position_sits_inside_the_authored_site checks. relay_site.json's Relay Sentry moved the same commit so the two no longer overlap at the gate.",
       "rank": "officer",
       "position": [
-        347.5,
-        3763.5
+        343.2,
+        3771.1
       ],
-      "facing_deg": -34.4,
-      "_why_here": "On the site's south-west edge, 4m out from centre. Ground -3.37m, 1.53m spread.",
+      "facing_deg": 145.6,
+      "_why_here": "At the gate opening, local (s=-13,t=0.6) -- 0.6m off the walk-through centreline, facing back down the approach bearing (145.6, the same reciprocal Sela's own facing already uses) so he is the first thing the player sees framed by the piers. The yard and Vance stand past him.",
       "challenge": "relay_dell_challenge",
       "defeated": "relay_dell_defeated",
       "team": [
@@ -148,18 +149,28 @@
       "_why_here": "At the console end of the site, 3.6m past centre on the bearing, so he is between the player and the captive -- the fight cannot be walked around. Ground -2.31m, 1.05m spread.",
       "challenge": "relay_captain_challenge",
       "defeated": "relay_captain_defeated_greeting",
+      "_why_v2_gate3_encounters": "GATE3_ENCOUNTER_CONTRACTS.md V-2, G3-BAND3-0903: was tuskroot(11), galecrest(11), duskhush(12), sent out in that order -- Tuskroot, the first Tuskroot the player has ever seen (D20/D17: it never spawns wild, and no trainer before this one fields one), was sent out FIRST and fell first, contradicting Vance's own challenge line ('I don't send the weakest out first'). Reordered so the line is true and the new species is the one the player has to beat last. Same three creatures, same levels, same total (34) -- only send order moved.",
       "team": [
-        {
-          "species": "tuskroot",
-          "level": 11
-        },
         {
           "species": "galecrest",
           "level": 11
         },
         {
           "species": "duskhush",
-          "level": 12
+          "level": 11
+        },
+        {
+          "species": "tuskroot",
+          "level": 12,
+          "combat": {
+            "_comment": "GATE3_ENCOUNTER_CONTRACTS.md G-3/V-2 CHARGER profile, relative to combat.json's `enemy` defaults (power 8, telegraph 0.55, recovery 0.75, attack_cooldown 1.1, preferred_range 2.1, lunge 3.4). Read by scripts/creatures/wild_creature.gd's per-body `combat` override (G-2, landing separately from the G3-ENCOUNTERS lane) -- absent or unread, this body fights exactly as before. Closes from range in one lunge; the tell is the distance it keeps, not the wind-up time, which is what makes it read as different from Dell's or a picket's creatures rather than the same fight at a higher number.",
+            "preferred_range": 4.5,
+            "lunge": 7.0,
+            "telegraph": 0.6,
+            "recovery": 0.9,
+            "attack_cooldown": 1.6,
+            "power": 10.4
+          }
         }
       ],
       "reward": {
@@ -195,14 +206,16 @@
       "_comment_palette": "A regional accent laid over the CAPTAIN rank -- the terracotta of the river lock's warm stone, sitting between the other two. All three sit in the CAPTAIN RANK's own warm oxblood family (npc_ranks.json, `#d4a3a3`) at roughly its luminance, rather than in the olive/tan/slate they used to carry. That is the actual fix VIS-CAST landed here: NP2-grunt-wire moved the captain rank to the reserved faction colour, these three overrode `palette` wholesale, and `trainer_npc.gd::model_config()` REPLACED the whole dictionary instead of merging it -- so the oxblood reached the generic `relay_captain` and reached none of the three captains a player actually fights. `model_config()` now merges `palette` per surface, and these hexes are inside the family the merge is there to preserve. HONEST LIMIT, measured rather than assumed: every human rig carries one fused material addressed by a single `\"*\"` key, so the body palette is the only dial there is, and it is now spent on faction identity. Three accents held inside one reserved colour at one luminance moved the RENDERED torso by only a few points per channel in the cast capture -- these read as one faction with a nuance, not as three visibly different coats, and no hex inside this family will do better. Real per-site separation needs a dial that is not the faction colour: a second material on the rig, an accessory, or a per-site prop. The site's own character otherwise lives in `_why_here` and the dialogue, which is where it does the real work anyway.",
       "_comment_ow6": "OW6. Measured against OW5-walk's real spine (see relay_captain's own `_comment_ow6` for the method): nearest spine point is 6830m of authored polyline / 59.3% in, ~22.4 walked minutes -- second of the four field/relay captains. Left in place.",
       "_comment_ow5d": "OW5D relocation to (-100,4350), section 3.1's own text: 'Riverwatch Captain sits off-spine on the Band 3/4 seam.' `facing_deg` UNCHANGED and stale -- see captain_field's own OW5D note. This captain's whole `_why_here` below describes a posting that watches for a river that, per this same macro-layout document (section 5), now actually exists nearby (the river crosses the corridor at z~4200, per section 10.2's Old Mill Crossing row) -- the 'no actual watercourse here yet' caveat is arguably resolved by the new geography, but confirming that is OW5C's river work, not this pass's.",
+      "_why_c2_gate3_encounters": "GATE3_ENCOUNTER_CONTRACTS.md C-2, G3-BAND3-0903: 'fix Oreth's stale facing_deg... so he faces the crossing the player arrives from.' -31.4 was the pre-OW5D facing, never re-derived after the OW5D move -- see `_comment_ow5d` above, which already flagged it stale. The river now runs through this band (SE22, since resolved) and the crossing the player actually arrives from is the Old Mill Crossing at (-152,4203). Re-derived, not guessed: atan2(dx,dz) on the vector from this trainer's own position to the crossing's, the same bearing formula every other facing_deg in this file already uses for 'faces back down the direction the player arrives from' (Sela's own -- data/config/relay_site.json -- and Officer Dell's own V-1 move above use the identical formula for the relay's approach bearing).",
       "position": [
         -100.0,
         4350.0
       ],
-      "facing_deg": -31.4,
-      "_why_here": "The low draw at the foot of the Rise's south-east flank -- the lowest ground in the upper Meadows (h=-6.54m, 6.9m below the Field Captain's pasture), which is where the ridge's runoff would collect and what a Riverwatch posting is watching. MEASURED: 1.48m spread, worst slope 10.5 degrees over an 8m pad, 209m out. HONEST LIMIT, recorded rather than papered over: there is no actual watercourse here yet -- the Meadows' only running water is the west stream and the pond (terrain_playground.json `water`), and Band 3's river geography is SE22's, not this item's. This is the right SHAPE of ground for the posting and the terrain lease is held elsewhere, so no bake was run to put water in it. If SE22 ever cuts an upper draw, it belongs on this spot. STALE after OW5D's move -- see `_comment_ow5d` above.",
+      "facing_deg": -160.5,
+      "_why_here": "The low draw at the foot of the Rise's south-east flank -- the lowest ground in the upper Meadows (h=-6.54m, 6.9m below the Field Captain's pasture), which is where the ridge's runoff would collect and what a Riverwatch posting is watching. MEASURED: 1.48m spread, worst slope 10.5 degrees over an 8m pad, 209m out. The river now runs through this band (SE22): the crossing the player restores at (-152,4203) is what this posting was always watching for, and C-2's re-siting of `facing_deg` (see `_why_c2_gate3_encounters` above) now points this trainer at it. HONEST LIMIT, unchanged: no camp/detour was added past his own three-prop post (props.json order 3010) -- C-2 itself says a camp-able pad here is a defect, not a gap, and this stays clear of one.",
       "challenge": "captain_riverwatch_challenge",
       "defeated": "captain_riverwatch_defeated",
+      "_why_c1_gate3_encounters": "GATE3_ENCOUNTER_CONTRACTS.md C-1, G3-BAND3-0903: brooktail ace was 16, tying Vess (the third captain fought in road order) and out-levelling Halder (15, the second) -- the same backwards step GATEC-CURVE already fixed for captain_field/captain_ridge, left in this one. Dropped to 15: still inside Band 3's [8,16] trainer_levels window, still above Vance's 12, and the road-order ladder now reads 15 -> 15 -> 16 (Oreth -> Halder -> Vess) instead of dipping. Mirrored in tests/fixtures/band_split_baseline/trainers.json the same commit.",
       "team": [
         {
           "species": "mosshell",
@@ -214,7 +227,7 @@
         },
         {
           "species": "brooktail",
-          "level": 16
+          "level": 15
         }
       ],
       "reward": {

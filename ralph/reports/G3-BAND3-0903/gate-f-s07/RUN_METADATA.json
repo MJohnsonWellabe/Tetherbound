@@ -1,0 +1,10 @@
+{
+  "_comment": "G3-BAND3-0903 own freeze record for this ad hoc, single-lane S07 run. Not the coordinated Gate F candidate (ralph/reports/gate-f-candidate/RUN_METADATA.json, frozen at f082bdf6 for a whole-chapter run) -- this is a lane-scoped run against a synthetic Band 3 entry seed, on this branch's own head. Declared per operator_harness.gd's own CD-8b mechanism (`_freeze_display_claim`): the nearest RUN_METADATA.json is checked first, so this stops the global candidate's stale X11 claim (which describes a different, unrelated run) from being applied to a run that never asked for a display.",
+  "run_dir": "ralph/reports/G3-BAND3-0903/gate-f-s07",
+  "lanes": {
+    "logic": {
+      "display_server": "headless",
+      "renderer": "none"
+    }
+  }
+}

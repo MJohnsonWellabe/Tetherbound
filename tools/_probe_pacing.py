@@ -379,9 +379,34 @@ BEATS = [
     site_beat(0, "The village", landmark("village"), seconds=120.0,
               note="harvest/camp basics, signpost"),
 
+    # G3-ECONOMY-0903: this probe's Band 1 critical path used to end at
+    # trainer_oskar with the note "pays the South Bridge Key" and never fought
+    # the village tournament at all. Both are wrong against the shipped game:
+    # the 2026-08-22 TOURNAMENT-1 owner directive moved the bridge key off
+    # Oskar onto a Team Tether grunt (`south_bridge_grunt`,
+    # bands/band1_lower_meadows/trainers.json) specifically so Oskar could
+    # become the tournament's final round, and `data/progression/objectives.json`
+    # gates the chapter's own tracked objective chain on `tournament_won`, a
+    # flag ONLY `tournament_final_oskar` writes -- so the three-round tournament
+    # (`data/config/tournament.json`) is mandatory critical path, not optional
+    # content, and the old beat list measured a route the shipped game does not
+    # let a player take (crossing the bridge without ever entering the
+    # tournament, and crafting the saddle -- gated on the tournament final's
+    # `recipe_saddle` reward flag, recipes_rootstone.json -- before winning it).
+    # trainer_mira/trainer_tam are the separate, non-`gate_fight` VILLAGE
+    # challenges against the same two people (deliberately different teams
+    # from their tournament rounds per trainers.json's own comment) and are
+    # kept as the ordinary way a fresh team reaches the tournament's
+    # `min_level: 5` entry bar before the bracket. trainer_oskar's own village
+    # challenge is no longer required for anything (not gate_fight, no longer
+    # the key) and is left out of the critical path as optional content.
     trainer_beat("trainer_mira", 1),
     trainer_beat("trainer_tam", 1),
-    trainer_beat("trainer_oskar", 1, "pays the South Bridge Key"),
+    trainer_beat("tournament_quarter_mira", 1, "tournament round 1 of 3"),
+    trainer_beat("tournament_semi_tam", 1, "tournament round 2 of 3"),
+    trainer_beat("tournament_final_oskar", 1,
+                 "tournament final; grants the recipe_saddle flag (recipes_rootstone.json)"),
+    trainer_beat("south_bridge_grunt", 1, "the actual bridge-key holder since TOURNAMENT-1"),
     site_beat(1, "The South Bridge (gate 1)", landmark("south_bridge"), seconds=30.0),
 
     site_beat(2, "Old Quarry rootstone", ROOTSTONE_AT,
@@ -497,19 +522,37 @@ def _band_entry_levels():
 # does not belong to a single place -- its 22 conversations are the pre/post
 # battle lines of every trainer in the chapter -- so it is split across the
 # bands in proportion to how many critical-path trainers each one holds.
+# G3-ECONOMY-0903: band 1's own trainer count moved 3 -> 6 (mira, tam, the
+# three tournament rounds, south_bridge_grunt) when the tournament and the
+# real bridge gatekeeper were added to the critical path above; the split
+# below is recomputed from the same BEATS list rather than left stale.
+_TRAINER_BEAT_COUNT_BY_BAND = {}
+for _b in BEATS:
+    if _b["kind"] == "trainer":
+        _TRAINER_BEAT_COUNT_BY_BAND[_b["band"]] = _TRAINER_BEAT_COUNT_BY_BAND.get(_b["band"], 0) + 1
+_TOTAL_TRAINER_BEATS = sum(_TRAINER_BEAT_COUNT_BY_BAND.values())
 DIALOGUE_BAND = {
     "data/dialogue/opening.json": {0: 1.0},
     "data/dialogue/village.json": {1: 1.0},
     "data/dialogue/relay.json": {3: 1.0},
     "data/dialogue/stronghold.json": {5: 1.0},
     "data/dialogue/meadows_freed.json": {5: 1.0},
-    "data/dialogue/trainers.json": {0: 1 / 15.0, 1: 3 / 15.0, 3: 4 / 15.0,
-                                    4: 3 / 15.0, 5: 4 / 15.0},
+    "data/dialogue/trainers.json": {
+        b: n / float(_TOTAL_TRAINER_BEATS) for b, n in _TRAINER_BEAT_COUNT_BY_BAND.items()
+    },
 }
 
 # Section 18's gate asks the player to "form a meaningful five". The starter is
-# given; the other four are caught, and the spec puts that in the early bands.
-CATCHES_PER_BAND = {0: 1, 1: 2, 2: 1}
+# given; the other four are caught. G3-ECONOMY-0903: this used to charge the
+# fourth catch to probe band 2, which resolves to chapter_curve.json's SECOND
+# region (band2_stone_and_root, PROBE_BAND_TO_REGION[2] == 1) -- but that
+# file's own band1_lower_meadows row says "the first four catches happen
+# here" in so many words, and the tournament's `min_party_size: 5` entry gate
+# (data/config/tournament.json) sits inside band1_lower_meadows too, before
+# the bridge. A player cannot plausibly reach the tournament board with only
+# four total creatures and pick up the fifth a whole region later, so all
+# four catches are charged to probe band 1, which is still Lower Meadows.
+CATCHES_PER_BAND = {0: 1, 1: 3}
 
 BAND_NAMES = {
     0: "Band 0 - Homebound",

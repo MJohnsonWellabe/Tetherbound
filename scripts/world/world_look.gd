@@ -648,6 +648,15 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# time-of-day block leaves this key unset -- 0.0 default, so day/golden/
 	# dawn stay exactly as measured before this floor existed.
 	CREATURE_BODY.set_emission_floor_scale(float(cfg.get("creature_emission_floor", 0.0)))
+	# G3-CREATURE-COLOUR-0904 (docs/CURRENT_STATE.md §3). The mirror image of the
+	# floor directly above: `field_emission`/`field_degreen`
+	# (creature_body.gd::_apply_field_brightness()) are a per-species DAYTIME
+	# grass-separation push, tuned against a bright daylit frame with no clock
+	# awareness at all, so the same push ran full-strength after dark and read as
+	# an out-of-place self-lit glow against the world's own deliberately-dim night
+	# ambient. 1.0 here is the base/unchanged default -- every daytime measurement
+	# behind `field_emission`'s own value stays exactly what it was tuned against.
+	CREATURE_BODY.set_field_brightness_scale(float(cfg.get("creature_field_emission_scale", 1.0)))
 
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env.tonemap_exposure = float(cfg.get("exposure", 1.0))

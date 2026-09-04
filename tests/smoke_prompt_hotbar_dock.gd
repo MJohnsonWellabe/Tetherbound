@@ -50,6 +50,7 @@ const LONG_PROMPT := "[img=36x36]res://assets/ui/input_prompts/keyboard_r.png[/i
 const SHORT_PROMPT := "[img=36x36]res://assets/ui/input_prompts/keyboard_r.png[/img]   Put Pip away"
 
 var _failures: Array[String] = []
+var _hud: Node = null
 var _hotbar: Control = null
 var _prompt: RichTextLabel = null
 var _message: Label = null
@@ -88,6 +89,7 @@ func _run() -> void:
 	for i in SETTLE:
 		await process_frame
 
+	_hud = hud
 	_hotbar = hud.find_child("HotbarPanel", true, false) as Control
 	_prompt = hud.find_child("Prompt", true, false) as RichTextLabel
 	_message = hud.find_child("Message", true, false) as Label
@@ -136,6 +138,13 @@ func _case(label: String, message_showing: bool, prompt_text: String, wrapped_ex
 	if message_showing:
 		_message.text = "Ridge Tonic restores 80."
 	_prompt.text = prompt_text
+	# GATE3-HUD-INTERACT: real gameplay always resizes the pill through
+	# `_fit_prompt_pill()` right after the text change (see that function's
+	# own header) -- this test used to poke `_prompt.text` directly and rely
+	# on the box's old FIXED 640px width, which no longer reflects what a
+	# player actually sees once the pill sizes itself to its own content.
+	if _hud != null and _hud.has_method("_fit_prompt_pill"):
+		_hud.call("_fit_prompt_pill")
 	for i in SETTLE:
 		await process_frame
 

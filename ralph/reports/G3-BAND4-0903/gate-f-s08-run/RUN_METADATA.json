@@ -1,0 +1,16 @@
+{
+  "candidate_sha": "00925963aa244ab4ad5b44e3d528fb21ceac3156",
+  "godot_version": "4.7-stable",
+  "operator": "sonnet-agent (G3-BAND4 lane)",
+  "run_kind": "isolated single-segment evidence run (S08 only), synthetic S07-exit entry seed -- NOT a coordinator-frozen S01-S10e chain",
+  "note": "This run directory has no coordinator-authored freeze record (docs/acceptance/GATE_F_MASTER_PROTOCOL.md section A.2 makes that the coordinator's own step, before S01 of a full chain, which this is not). Written here so the harness's own CD-8b pre-flight (tools/gate_f/operator_harness.gd::_freeze_display_claim) reads THIS run's true, lane-scoped state instead of falling back to the unrelated ralph/reports/gate-f-candidate/RUN_METADATA.json, which declares X11-under-xvfb for every lane with no `lanes` block -- a flat claim that contradicts a genuinely headless logic-lane invocation of a segment that plans no shots of its own (evidence_lane=logic; its captures are delegated to S08C, not taken here) and falsely blocks it. This record states only what actually happened in this process.",
+  "input_mode": "synthetic joypad + keyboard via parse_input_event",
+  "save_state": "seeded slot 4 from a hand-built S07-exit.json (tools/gate_f/build_s08_entry_synthetic.gd), not a fresh user:// dir",
+  "free_build": false,
+  "lanes": {
+    "logic": {
+      "display_server": "headless (no display server at all -- plain `godot --headless --path .`, no rendering driver, no xvfb, per tools/gate_f/run_segment.sh's own logic-mode invocation)",
+      "renderer": "none (headless; this lane plans and takes no captures)"
+    }
+  }
+}

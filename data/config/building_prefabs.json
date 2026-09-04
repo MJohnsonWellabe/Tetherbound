@@ -531,9 +531,14 @@
           "color": "#f0c684",
           "emission": "#f0c684",
           "energy": 0.85
+        },
+        "MI_RoundTiles": {
+          "color": "#8a6448",
+          "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
         }
       },
-      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses"
+      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses",
+      "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904, GATE2-EVIDENCE-0903/JUDGE.md: 'the reddest objects in this world are the village roofs ... while the one Team Tether grunt wears unrelieved black' -- the reserved-red rubric criterion this project's own oxblood convention exists for (severed_spokes.gd, road_gate.gd, stronghold.gd all reserve it for Team Tether). This recipe's own `Roof_RoundTiles_6x8` module had NO roof retint at all, so it exported at the kit's raw `T_RoundTiles_BaseColor.png` -- the single most visible roof in the square (the workshop is the biggest building on it) reading redder than anything Team Tether wears. ROUND 1 of this fix only added a `color` multiply (the SAME `#8a5a3a` `inn`'s own retint below already ships, approved by an earlier lane for a DIFFERENT reason, R7.9/HIST-164 -- differentiating the inn from the farmhouse, never checked against the oxblood-reservation rubric). A fresh blind pass on that render still measured this roof at essentially the same hue and saturation as the game's own reserved oxblood. Root cause, found by sampling `T_RoundTiles_BaseColor.png` directly: `_apply_retint`'s `color` MULTIPLIES the existing texture rather than replacing it, and that texture's own baked hue is a nearly-invariant ~5-17 degrees (measured: whole-texture average, darkest 5% and brightest 5% of texels all land inside that band) at saturation 0.7-0.76 -- a plain multiply cannot move a result's hue far from a base texture already this saturated, whatever the tint colour is, because the tint can only scale channels down, never inject a different ratio the base does not already carry enough of. ROUND 2: also swap the texture, to `T_RockTrim_BaseColor.png` -- an already-vendored, nearly neutral warm grey in this same kit (measured saturation 0.145) -- via `_apply_retint`'s existing texture-swap key (the same mechanism the settlement's own authored trees already use to move off a texture no multiply could reach). Against a near-neutral base, the `color` multiply becomes the film that actually determines the final hue, which is the whole point: `#8a6448` against that base measures at hue ~25 degrees, saturation ~0.55 -- clearly on the warm terracotta-brown side of the line, not the ~5-9 degree, 0.7-0.85 saturation band both of the game's own reserved oxblood values (`#6b2a20` road_gate.gd, `#7a2430` this file's own stronghold Banner) occupy. Same tile GEOMETRY (`Roof_RoundTiles_*`, D24's one roof family), only the diffuse film moved."
     },
     "cottage_a": {
       "_why": "Village house, plaster and timber, gable front with door and window facing the approach. Stands where SmallBarn stood.",
@@ -946,9 +951,14 @@
           "color": "#f0c684",
           "emission": "#f0c684",
           "energy": 0.85
+        },
+        "MI_RoundTiles": {
+          "color": "#8a6448",
+          "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
         }
       },
-      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses"
+      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses",
+      "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904. Same reserved-red fix as `workshop`'s own `_why_retint_oxblood_reservation` above, same reused `#8a6448` + `T_RockTrim_BaseColor.png` texture swap as `workshop`'s own round-2 fix -- this recipe's `Roof_RoundTiles_4x6` had no roof retint at all."
     },
     "cottage_b": {
       "_why": "The smaller stone cottage, shuttered window and stone chimney. Stands where the ChickenCoop stood -- differentiated from cottage_a by material (UnevenBrick vs plaster) inside the same family, the way D23 differentiates creatures.",
@@ -1330,9 +1340,14 @@
           "color": "#f0c684",
           "emission": "#f0c684",
           "energy": 0.85
+        },
+        "MI_RoundTiles": {
+          "color": "#8a6448",
+          "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
         }
       },
-      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses"
+      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses",
+      "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904. Same reserved-red fix as `workshop`'s own `_why_retint_oxblood_reservation` above, same reused `#8a6448` + `T_RockTrim_BaseColor.png` texture swap -- this recipe's `Roof_RoundTiles_4x4` had no roof retint at all."
     },
     "well": {
       "_why": "The square's centre marker, rebuilt in-family: a stone platform curb, two timber posts, a small round-tile canopy and a wooden bucket, standing on a paved apron where the four dirt paths meet. Replaces the third-outlier pantile well the blind critic flagged (BLOCKED.md).",
@@ -2469,9 +2484,14 @@
           "color": "#f0c684",
           "emission": "#f0c684",
           "energy": 0.85
+        },
+        "MI_RoundTiles": {
+          "color": "#8a6448",
+          "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
         }
       },
-      "_why_retint": "warm pane instead of a black hole -- same colour every other building in the square carries"
+      "_why_retint": "warm pane instead of a black hole -- same colour every other building in the square carries",
+      "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904. Same reserved-red fix as `workshop`'s own `_why_retint_oxblood_reservation`, same reused `#8a6448` + `T_RockTrim_BaseColor.png` texture swap -- Grandpa's own roof (`Roof_RoundTiles_6x10`) had no roof retint at all, so the farmhouse the player wakes up in was the same raw, over-saturated red every other cottage was."
     },
     "inn": {
       "_why": "R7.9, owner-requested 2026-08-16: an inn where the villagers can stay. No inn/tavern prefab exists in the Medieval Village MegaKit (D24 -- the one civilian architectural family), so this clones farmhouse_shell's own two-storey massing -- the closest existing shape, per the backlog item's own text -- rather than inventing an off-family landmark (village.json's own note on the removed TowerWindmill records exactly why that would repeat D24's split-the-difference failure). Unlike farmhouse_shell this authors a real openable door leaf and wall colliders with a doorway hole (R7.8's door verb, scripts/world/village_door.gd), because an inn is entered by strangers on an ordinary interact, not gated by a story beat the way Grandpa's is. Footprint 6m (x) by 10m (z), front = +z. The interior (scripts/world/inn_interior.gd, attached by village.gd from village.json's `interior: \"inn\"` key) caps the walkable space at the FIRST storey only -- a flat ceiling collider blocks the upper course and roof shell, which stays facade-only. A real second floor is Grandpa's one bespoke cost in this settlement (loft, stairs, rail) and an ordinary inn does not obviously owe the same investment just because its shell is two storeys.",
@@ -3332,7 +3352,8 @@
           "energy": 0.85
         },
         "MI_RoundTiles": {
-          "color": "#8a5a3a"
+          "color": "#8a6448",
+          "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
         },
         "MI_WoodTrim": {
           "color": "#4a3526"
@@ -3341,7 +3362,8 @@
           "color": "#d8c9a8"
         }
       },
-      "_why_retint": "warm pane, same colour every other building in the square carries. MI_RoundTiles retint (confirmed the real material name with a throwaway probe loading the .gltf module directly and printing every surface's resource_name, per ralph/NOTES.md's own R7.9 record) was written as 'the whole of how it reads as its own building rather than a second copy of the farmhouse shell'. HIST-164 is the finding that it was not enough, and it is measurable rather than a matter of taste: the inn and farmhouse_shell have IDENTICAL module histograms -- 74 modules against 75, and the one extra is a door leaf, which is not visible from outside -- so a blind critic reading a frame of the two side by side called them 'visible twins in the same frame' and concluded 'the world cannot be navigated by looking at it'. MI_WoodTrim (dark stained oak) and MI_Plaster (a warm limewash) are added because half-timbering is the dominant texture on both buildings, so those two named surfaces are what change how the whole facade reads, where the roof alone changes one band of it. Named surfaces, not art.json's single multiply over every surface, which MEADOWS_PROGRESSION_SPEC sec21 names as the failure. STILL OPEN, and recorded rather than buried: the massing is unchanged -- same footprint, same roof module, same window pattern -- which is the other half of what 'the same kit used the same way twice' means. See ralph/reports/hist-clusters-log.md for what an L-plan would cost and why four dormers were tried and rejected."
+      "_why_retint": "warm pane, same colour every other building in the square carries. MI_RoundTiles retint (confirmed the real material name with a throwaway probe loading the .gltf module directly and printing every surface's resource_name, per ralph/NOTES.md's own R7.9 record) was written as 'the whole of how it reads as its own building rather than a second copy of the farmhouse shell'. HIST-164 is the finding that it was not enough, and it is measurable rather than a matter of taste: the inn and farmhouse_shell have IDENTICAL module histograms -- 74 modules against 75, and the one extra is a door leaf, which is not visible from outside -- so a blind critic reading a frame of the two side by side called them 'visible twins in the same frame' and concluded 'the world cannot be navigated by looking at it'. MI_WoodTrim (dark stained oak) and MI_Plaster (a warm limewash) are added because half-timbering is the dominant texture on both buildings, so those two named surfaces are what change how the whole facade reads, where the roof alone changes one band of it. Named surfaces, not art.json's single multiply over every surface, which MEADOWS_PROGRESSION_SPEC sec21 names as the failure. STILL OPEN, and recorded rather than buried: the massing is unchanged -- same footprint, same roof module, same window pattern -- which is the other half of what 'the same kit used the same way twice' means. See ralph/reports/hist-clusters-log.md for what an L-plan would cost and why four dormers were tried and rejected.",
+      "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904. This roof's own `color` value moved from `#8a5a3a` to `#8a6448` plus a `T_RockTrim_BaseColor.png` texture swap, in step with `workshop`'s own `_why_retint_oxblood_reservation` (that entry has the measurement: a plain colour multiply cannot move a result's hue far from `T_RoundTiles_BaseColor.png`'s own near-invariant ~5-17 degree hue at 0.7+ saturation, which is close enough to the game's reserved oxblood to fail GATE2-EVIDENCE-0903's blind judge even after `#8a5a3a` was already applied everywhere). This building was the one that HAD a roof retint already and was never itself named as too red -- moved anyway so the settlement's one roof family stays one colour rather than five buildings on the corrected value and this one alone on the superseded one."
     },
     "castle": {
       "_why": "RE-MASSED 2026-08-16, owner directive (second playtest): the OF4-rebuild castle read as 'toys in a field' -- 23x17m, 3.9m walls, 6.2m tallest tower against a 1.8m player -- and the owner asked for concept-board scale (docs/reference/owner-board-2026-08-15-*.png, castle panels), rebuilt IN PLACE so the stronghold complex behind it (stronghold.json's five chambers, gauntlet and climax, all sited against this footprint's south edge) stands exactly where it was. The south curtain keeps the shipped gate line z=-8.448 for that reason. Footprint 36x40m on the wall centrelines -- the terrain chose that bound, not timidity: the Rise flank climbs +34m twenty metres west of the wall and the heightfield ends ~30m east (measured, probe grid 2026-08-16), so HEIGHT carries the scale instead: 10.2m two-course curtains at module scale 2.6, 19.4m corner towers, 14.2m twin gatehouse flankers, and a ~29m keep. Generated layout (uniform runs), authored landmarks -- the same author-time-recipe philosophy as before, with the generator's constants recorded here.",
@@ -5927,9 +5949,14 @@
           "color": "#f0c684",
           "emission": "#f0c684",
           "energy": 0.85
+        },
+        "MI_RoundTiles": {
+          "color": "#8a6448",
+          "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
         }
       },
-      "_why_retint": "the same warm lit glass every building in the family carries"
+      "_why_retint": "the same warm lit glass every building in the family carries",
+      "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904. Same reserved-red fix as `workshop`'s own `_why_retint_oxblood_reservation`, same reused `#8a6448` + `T_RockTrim_BaseColor.png` texture swap -- `Roof_RoundTiles_6x6` had no roof retint at all."
     },
     "footbridge": {
       "_why": "Bible sec12's bridges: timber deck + stone abutments, spanning the EV5 stream carve beside the mill. Placed with ground:'highest' (village.gd) so the deck rides the banks instead of sinking to the streambed its own AABB corner finds. Oskar the Bridgehand finally has a bridge to keep (data/dialogue/village.json).",

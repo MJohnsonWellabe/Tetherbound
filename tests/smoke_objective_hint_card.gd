@@ -410,6 +410,20 @@ func _push_the_dock_to_its_tallest() -> void:
 	var prompt := _hud.find_child("Prompt", true, false) as RichTextLabel
 	if prompt != null:
 		prompt.text = LONG_PROMPT
+		# The pill's width is no longer a fixed number in the .tscn: it is
+		# measured per prompt by `_fit_prompt_pill()` off the real text, and
+		# `_on_prompt_changed()` is the only caller. Poking `.text` here
+		# leaves the pill at whatever width the LAST prompt set -- which at
+		# HUD build time is the empty-text floor, `PROMPT_MIN_WIDTH` (200px).
+		# LONG_PROMPT wrapped into 200px is ~950px tall, so the dock grew
+		# clean off the top of the canvas (hotbar top measured -17) and the
+		# card had no band left to fit in. That is a harness artefact, not a
+		# HUD defect: no real prompt ever reaches the label without going
+		# through the signal. `smoke_prompt_hotbar_dock.gd::_case()` already
+		# carries this same call for the same reason; this is the second
+		# file that pokes the label directly and it needs it too.
+		if _hud.has_method("_fit_prompt_pill"):
+			_hud.call("_fit_prompt_pill")
 
 
 ## Every `how` the chapter authors, resolved through `quest_log.gd` exactly as

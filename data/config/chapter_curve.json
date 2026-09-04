@@ -3,7 +3,8 @@
 
   "_comment_authority": "This file does NOT own trainer teams (data/config/bands/<band>/trainers.json), wild populations (bands/<band>/spawns.json), the xp curve or the award (data/config/progression.json). It owns the BAND each of those must land inside, and tests/test_chapter_curve.gd fails the build when one drifts out. That split is deliberate: a regional package still authors its own content, it just cannot silently author it at the wrong strength for where it sits on the route.",
 
-  "_comment_measurement": "The `team` bands are MEASURED, not wished for. `python3 tools/_probe_pacing.py` walks the shipped critical path against the shipped xp curve and award and prints, per band, the level a lead creature enters and leaves at: 3->8, 8->10, 10->13, 13->16, 16->20 (2026-08-22, curve 40*L^1.15, award 30+16L). Those five pairs are what the `team.enter`/`team.exit` numbers below are. Re-run the probe after any tuning here or in progression.json; if the printed numbers move, these move with them.",
+  "_comment_measurement": "The `team` bands are MEASURED, not wished for. `python3 tools/_probe_pacing.py` walks the shipped critical path against the shipped xp curve and award and prints, per band, the level a lead creature enters and leaves at. RE-MEASURED 2026-09-03 (G3-ECONOMY-0903): 3->9, 9->12, 12->15, 15->17, 17->21 (curve unchanged, still 40*L^1.15, award 30+16L). The 2026-08-22 numbers this comment used to record (3->8, 8->10, 10->13, 13->16, 16->20) were never a drift in the shipped content -- the probe itself was wrong the whole time and nobody had re-run it since. Two real bugs, both in tools/_probe_pacing.py, both fixed in the same pass: (1) its Band 1 critical path fought `trainer_oskar` for 'pays the South Bridge Key' and never fought the village tournament at all, but the 2026-08-22 TOURNAMENT-1 owner directive -- dated the SAME DAY as the stale measurement -- had already moved the bridge key off Oskar onto a Team Tether grunt (`south_bridge_grunt`) specifically so Oskar could become the tournament's final round, and `data/progression/objectives.json` gates the tracked objective chain on `tournament_won`, a flag only the tournament final writes, which makes the three-round tournament (`data/config/tournament.json`) mandatory critical path that the probe was silently skipping along with the real bridge fight. (2) `CATCHES_PER_BAND` charged the fourth catch to probe band 2 (chapter_curve region band2_stone_and_root) while this very file's own band1_lower_meadows row says 'the first four catches happen here' -- and the tournament's own `min_party_size: 5` entry gate sits inside band1_lower_meadows, before the bridge, so a player literally cannot reach the tournament board without all four catches done first. Both are now modeled; see tools/_probe_pacing.py's own comments at the fix sites. Re-run the probe after any tuning here or in progression.json; if the printed numbers move, these move with them.",
+  "_comment_measurement_pacing": "The same corrected run also reprints the chapter's total-time verdict, which this file does not own but which every regional package should know: raw critical path 2.35h, projected first completion (the probe's own x2.0 floor multiplier) 4.71h against the 3-4h D42 target -- OVER, same verdict the old buggy probe also printed (4.74h). Fixing the tournament/bridge-grunt bug did not fix the pacing; it confirmed the OVER verdict was real rather than an artifact of the missing content. XP-curve/trainer-difficulty retuning to close that gap is Gate 4's charter (docs/ROADMAP.md), not this file's; recorded here so nobody reads a green Gate 3 curve as a green overall pace.",
 
   "_comment_no_scaling": "Prompt 57: 'The world does not rescale to the player.' Nothing in this file is read against the player's actual level. `wild_band` is resolved from a spawn's WORLD POSITION and nothing else -- a level-3 player who walks to the stronghold approach meets the same level 14-17 creatures a level-19 player does, and that is the point.",
 
@@ -14,61 +15,61 @@
       "id": "band1_lower_meadows",
       "name": "Lower Meadows",
       "z_to": 1360.0,
-      "team": {"enter": 3, "exit": 8, "expected_members": 3},
+      "team": {"enter": 3, "exit": 9, "expected_members": 5},
       "wild_band": [2, 6],
       "trainer_levels": [2, 7],
       "tools": ["starter orb", "basic orbs", "first TMs", "creature bed", "player bed"],
       "xp_sources": ["practice fight", "village tournament rounds", "field wild fights", "first catches"],
       "temptations": "The first four catches happen here, so the five fills up here. Every later region's roster pressure is paid for by how attached the player got in this one.",
-      "tuning": "Wild band UNCHANGED from progression.json's historical global [2,6]: the opening is the most-tested stretch in the repo and the point of this file is not to reopen it."
+      "tuning": "Wild band UNCHANGED from progression.json's historical global [2,6]: the opening is the most-tested stretch in the repo and the point of this file is not to reopen it. `expected_members` corrected 3 -> 5 (G3-ECONOMY-0903): this region's own `temptations` line already said the five fills up here, and `data/config/tournament.json`'s `entry.min_party_size: 5` is a real, wired gate inside this region, before the South Bridge -- a player cannot reach the tournament board with fewer than five. `exit` moved 8 -> 9: the tournament's three rounds and the real bridge gatekeeper (`south_bridge_grunt`, not `trainer_oskar`) are real Band 1 XP the old measurement never fought; see `_comment_measurement`."
     },
     {
       "id": "band2_stone_and_root",
       "name": "Stone & Root (Old Quarry / Burrow Warrens)",
       "z_to": 3180.0,
-      "team": {"enter": 8, "exit": 10, "expected_members": 4},
+      "team": {"enter": 9, "exit": 12, "expected_members": 5},
       "wild_band": [6, 8],
       "trainer_levels": [9, 14],
       "tools": ["rootstone recipes", "riding saddle", "greater orb", "heartstone (Mudsnout -> Tuskroot)"],
       "xp_sources": ["warrens residents", "warrens guardian", "quarry field fights"],
       "temptations": "Mudsnout's evolution gate (level 15 + bond 55 + a catalyst stone) is decided here even though it fires later -- this band names one of its two destinations (D71 added a second, band 5's Sunstone -> Ashtusk) -- and the Meadowhart met just past the South Bridge is the traversal slot arriving while the party is still filling.",
-      "tuning": "The field band tops out at 8, one below the Warrens' weakest resident: burrow_warrens.json's hand-placed levels (9, 10, 10, 11, guardian 14) sit strictly ABOVE the ridge outside on purpose -- a dungeon that fights at field strength is not a dungeon -- and tests/test_chapter_curve.gd fails the build if that ordering is ever lost. `trainer_levels` covers the warrens too, because it is this region's authored opposition; the band has no trainers of its own, which is prompt 59's gap, not this file's."
+      "tuning": "The field band tops out at 8, one below the Warrens' weakest resident: burrow_warrens.json's hand-placed levels (9, 10, 10, 11, guardian 14) sit strictly ABOVE the ridge outside on purpose -- a dungeon that fights at field strength is not a dungeon -- and tests/test_chapter_curve.gd fails the build if that ordering is ever lost. `trainer_levels` covers the warrens too, because it is this region's authored opposition; the band has no trainers of its own, which is prompt 59's gap, not this file's. `enter`/`expected_members` corrected 8/4 -> 9/5 (G3-ECONOMY-0903): the five is already full by the time Band 1's own tournament is entered (see that region's note), not partway through this one. Worth a look by whoever owns this band's spawns/trainers: the field band's own ceiling (8) now sits BELOW the team's corrected entry level (9), one level short of even matching it -- every wild creature here is already weaker than the team on arrival, not just by the time the band ends. Not changed here (`wild_band` drives live spawn rolls that BAND2 lanes are authoring content against right now); flagged for the coordinator to route."
     },
     {
       "id": "band3_the_river_lock",
       "name": "The River Lock (Tether Relay)",
       "z_to": 4760.0,
-      "team": {"enter": 10, "exit": 13, "expected_members": 5},
+      "team": {"enter": 12, "exit": 15, "expected_members": 5},
       "wild_band": [9, 12],
       "trainer_levels": [8, 16],
       "tools": ["relay-tier TMs", "second trait unlocks at full bond", "appraisal reading"],
       "xp_sources": ["relay picket line", "relay officer", "relay captain", "Captain Riverwatch"],
-      "temptations": "The five is normally full by the time the relay is reached, so this is the first region where a catch costs somebody. It is the earliest place the cap is supposed to hurt.",
+      "temptations": "The five is normally full well before the relay is reached (Band 1's own tournament gate requires it), so a catch has cost somebody since the South Bridge. This is not the first region the cap bites -- it is the first region far enough into the chapter that a catch here is competing against real accumulated history, not just a full slot.",
       "tuning": "The relay's four-fight ladder (8, 9, 10, 11-12) is the densest trainer run in the chapter and carries the player across this whole band on its own; the wild band exists to make a catch here a real alternative, not to be the xp source."
     },
     {
       "id": "band4_upper_meadows_ironwood",
       "name": "Upper Meadows / Ironwood",
       "z_to": 7000.0,
-      "team": {"enter": 13, "exit": 16, "expected_members": 5},
+      "team": {"enter": 15, "exit": 17, "expected_members": 5},
       "wild_band": [11, 14],
       "trainer_levels": [13, 16],
       "tools": ["ironwood recipes", "sigils", "riding in earnest", "Tuskroot"],
       "xp_sources": ["regional captains", "ironwood ecology", "optional detours"],
       "temptations": "The Meadowhart cluster up here is the traversal creature met at a level that can actually fight, which is prompt 67's 'traversal must not create a dead slot' -- a mount picked up at level 2 in a level-14 region would have been exactly that dead slot.",
-      "tuning": "The corridor's longest single leg (Ironwood grove to the Sigil gate) so the ecology has room to vary without a wall. The 28-minute travel figure this note used to cite came from tools/_probe_pacing.py before its stale site coordinates were fixed; the leg measures ~7 minutes ridden. The team band either side of it did not move -- travel time never fed the level model."
+      "tuning": "The corridor's longest single leg (Ironwood grove to the Sigil gate) so the ecology has room to vary without a wall. The 28-minute travel figure this note used to cite came from tools/_probe_pacing.py before its stale site coordinates were fixed; the leg measures ~7 minutes ridden. `enter` corrected 13 -> 15 (G3-ECONOMY-0903, see the file-level `_comment_measurement`): the corrected pacing probe's Band 1/3 fix compounds forward through every later band. Worth a look by whoever owns this band: `wild_band`'s own ceiling (14) now sits BELOW the corrected entry level (15) -- the field here is already trivial to a team that just arrived, not only by the region's own exit. Not changed here (BAND4 is authoring spawns against this number right now); flagged for the coordinator to route, same as Band 2's identical finding above."
     },
     {
       "id": "band5_stronghold_approach",
       "name": "Stronghold Approach & Meadows Hall",
       "z_to": 1000000.0,
-      "team": {"enter": 16, "exit": 20, "expected_members": 5},
+      "team": {"enter": 17, "exit": 21, "expected_members": 5},
       "wild_band": [14, 17],
       "trainer_levels": [15, 20],
       "tools": ["everything the chapter has", "full-bond perks", "Best Creature", "sunstone (Mudsnout -> Ashtusk)"],
       "xp_sources": ["patrol", "courtyard", "elite", "the Warden"],
       "temptations": "The legendary join offer lands here against five creatures that have each been carried the length of the chapter. If a player can name a filler creature at this point, prompt 67 has failed upstream of the Hall, not in it. D71/T3-SUNSTONE adds a second one, cheaper to act on: the Sunstone sits in the scorched Team Tether ground by the Sigil gate, and a player who already has a bonded Mudsnout has to decide, in the same band that hands them the legendary offer, whether a SECOND Mudsnout raised from nothing is worth one of their five holders for an Ashtusk.",
-      "tuning": "Wild top (17) stays under the Warden's ace (20) and under the elite (19): the approach is drained, occupied land, not a place that out-levels the boss it leads to."
+      "tuning": "Wild top (17) stays under the Warden's ace (20) and under the elite (19): the approach is drained, occupied land, not a place that out-levels the boss it leads to. `enter`/`exit` corrected 16/20 -> 17/21 (G3-ECONOMY-0903): the corrected probe still fights the Warden at L19, one below his ace, exactly as this note wants -- the exit figure (21) is the level AFTER his own team's xp is banked, a result of winning, not a pre-fight advantage. Nothing about 'stays under the ace' stopped being true; only the recorded arrival number was stale."
     }
   ],
 
@@ -79,7 +80,7 @@
     "_comment_deficit": "How far below a region's expected team ENTRY level that region's strongest wild creature may sit before a catch there stops being a real option. This is the single number that decides whether the five-cap keeps biting: under the old single global [2,6] band, a creature caught in the stronghold approach arrived twelve levels below the team it was joining, so no player would ever weigh it against a member they had raised, so the cap silently stopped mattering after the first hour. A deficit of 2 means a fresh catch is always close enough to argue for.",
 
     "min_distinct_wild_species": 6,
-    "_comment_options": "More desirable creatures than slots is the whole mechanism. Six is the floor, not the target -- the roster is 17 species and the spawn table currently fields 12 distinct ones. Asserted against the merged spawn table so deleting a species from the world fails the build instead of quietly making the cap free.",
+    "_comment_options": "More desirable creatures than slots is the whole mechanism. Six is the floor, not the target -- the roster is 25 species (3 starters, 2 evolution-only forms, and by all owner/decision references to date 1 legendary, so ~19 are ever wild-catchable candidates) and the spawn table currently fields 15 distinct non-starter ones (re-measured G3-ECONOMY-0903; this comment previously said 17/12, both stale against WORLD-CONTENT/BAND1-ECOLOGY's species additions since it was written). Per-region: band1_lower_meadows 11, band2_stone_and_root 6, band3_the_river_lock 14, band4_upper_meadows_ironwood 8, band5_stronghold_approach 7 (chapter_curve region boundaries, `python3 -c` one-liner against spawns.json + this file's own `z_to` table; a player meets several times the floor before the Hall in every region past the opening). Asserted against the merged spawn table so deleting a species from the world fails the build instead of quietly making the cap free.",
 
     "_comment_costs": "What the player actually loses by replacing a member, all of it already implemented and none of it storage: invested levels (progression.json's curve is steep enough that a mid-chapter replacement starts several fights behind), accumulated bond and its stat nodes plus the second trait it unlocks at full bond, Best Creature designation, an in-progress evolution gate, and the traversal slot if the one being cut is the mount. The release ceremony (R4.10) is where those are shown before the choice is committed."
   }
