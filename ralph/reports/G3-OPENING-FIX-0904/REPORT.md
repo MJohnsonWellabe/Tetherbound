@@ -36,7 +36,32 @@ for block in named_blocks:
 ```
 
 Confirmed the fix by reverting it and re-running `tests/smoke_catching.gd`: fails
-identically without the fix, passes with it. This crash is not one of the three
+identically without the fix, passes with it.
+
+> **Correction, added by the coordinator when folding this lane (2026-09-04).** The
+> "Godot 4.7 GDScript-VM/compiler edge case" reading above is wrong, and the fix works
+> for a different reason than this report gives. It is an ordinary bug in the line I
+> wrote, and it is worth correcting here rather than leaving a future reader to distrust
+> the engine over it.
+>
+> `block.get("combat", {}) is Dictionary` asks the type of the **default** when the key
+> is absent — and `{}` *is* a Dictionary, so the guard passes. The `and` then evaluates
+> `block["combat"]`, which indexes a key that is not there and throws exactly the error
+> quoted. The report's own observation that both elements were "provably empty, valid
+> Dictionaries" is not evidence against a data cause; it is precisely the condition that
+> triggers it. Nothing about the typed `for`, the array literal or the ternary is
+> involved — the same line throws with a plain local.
+>
+> The rewrite above genuinely fixes it, because it tests `block_combat` (the value
+> `get()` returned) instead of re-indexing the dictionary. The merged form on
+> `ralph/G3-LAND-0904` keeps this lane's typed `Array[Dictionary]` and reaches the same
+> place with `if not block.has("combat"): continue`, which states the actual
+> precondition.
+>
+> The process finding stands and is the more useful half of section 0: unit tests did not
+> cover a world boot, the crash was non-fatal so the smokes still printed OK while Godot
+> exited non-zero, and `tests/smoke_playground.gd` plus a grep for `SCRIPT ERROR` is now
+> in the pre-push set because of it. This crash is not one of the three
 named defects, but every one of them was unreachable without it — it is why this
 report opens with it rather than burying it in defect 1's section. `tests/
 smoke_catching.gd` is the regression test (already existed; not new).

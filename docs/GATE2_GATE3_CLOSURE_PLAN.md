@@ -84,13 +84,13 @@ Task status, 2.1–2.16:
 | 2.1–2.7 | landed | done; 2.4 and 2.7 measured, 2.2/2.3 judged no / no | — |
 | 2.8 evidence run | done, verdict FAIL | proven failing | — |
 | 2.9 Pond walker | open | proven failing (harness, world exonerated by `probe_pond_stranding.gd` 0/10 wedged) | G3-HARNESS |
-| 2.10 post-tournament recovery beat | open | not done (design), partly directed by the owner 2026-09-03 ("give revives after the tournament") | G3-OPENING-FIX (Fable contract needed) |
-| 2.11 revived creature not re-deployed | open | proven failing in the harness; player-facing or not is unconfirmed | G3-OPENING-FIX |
-| 2.12 one roster decision on the Band 1 route | open | proven failing (mid-fight rotation only; no catch, no keep-or-release) | G3-BAND1-FINISH (Fable contract needed) |
-| 2.13 props, palette, terrain form, the bridge | open | proven failing (judge-named, itemised) | G3-BAND1-FINISH; the needs-art half is §4 |
+| 2.10 post-tournament recovery beat | **landed, unproven** | code shipped; no played path has scored it | G3-OPENING-FIX — landed on `ralph/G3-LAND-0904`, `ralph/reports/G3-OPENING-FIX-0904/REPORT.md`, four new smokes green |
+| 2.11 revived creature not re-deployed | **landed, unproven** | fix shipped with `smoke_revive_redeploy`; whether it was ever player-facing is still unconfirmed and now unfalsifiable from this side | G3-OPENING-FIX — landed |
+| 2.12 one roster decision on the Band 1 route | **landed, unproven** | the Meadowhart cluster moved from 40 m off the route's nearest segment to 12 m, so part of its scatter draw can land on the walked line; whether a player actually meets it is CL-R1's to answer, not the author's | G3-BAND1-FINISH — landed |
+| 2.13 props, palette, terrain form, the bridge | **partly landed, unproven** | `south_bridge.gd`, `signpost.gd`, band 1 props, building prefabs and the `VISUAL_BIBLE` gap list shipped; the judge has not seen any of it, and the needs-art half is still §4 / CL-A1 | G3-BAND1-FINISH — landed |
 | 2.14 stale trace thresholds | open | proven failing (instrument) — `S04.json:858`, `S05.json:1221` still carry 1,200 / 3,000 | G3-HARNESS |
 | 2.15 the evidence pipeline cannot show a creature | open | proven failing (four passes) | **nobody** — not in `GATE3_EXECUTION_PLAN.md` §6, and it gates every visual verdict in both gates (§3) |
-| 2.16 Bramblebun candy pink, day and night | open | proven failing (measured at night; judge-named by day) | G3-CREATURE-COLOUR |
+| 2.16 Bramblebun candy pink, day and night | **closed** | both halves root-caused to one mechanism (`field_emission`/`field_degreen` had no clock awareness), fixed, re-measured (day 1.263:1 → 1.618:1) and blind-judged on a real before/after sheet. The lane also re-measured the rest of the roster: Terrapup already cleared, Mudsnout was failing and was raised, **Burrowback is a design question rather than a fix** — darker than the field by design, 1.18:1 across a full sweep, and brightening it trades away its identity. That last one is open and belongs to whoever owns creature identity. | G3-CREATURE-COLOUR — landed, `ralph/reports/G3-CREATURE-COLOUR-0904/REPORT.md` |
 
 ### 1.2 Gate 3 — bands 2–5 and the finale
 
