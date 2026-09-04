@@ -444,3 +444,251 @@ static func _find(from: Node, want: String) -> Node:
 		if hit != null:
 			return hit
 	return null
+
+
+## ---------------------------------------------------------------------------
+## CREATURE PRESENT AND READABLE (W01-ROUTE-STRIP, 2026-09-04).
+##
+## `_subject_problems` above answers "is the subject's AABB technically on
+## screen", and that is the wrong question for a creature game's own evidence:
+## a Bramblebun whose bounding box clips one corner of the frame, or that
+## projects to eleven pixels of silhouette behind the trainer's shoulder, passes
+## it -- and `docs/VISUAL_PARITY_PROGRESS.md` records a blind judge rejecting
+## exactly such a fight frame ("the Bramblebun silhouette was too small and the
+## trainer was absent"). The route strip's Bar B question -- is this the same
+## kind of game? -- can only be asked of a frame where the trainer and the
+## creatures are all READABLE, so this is the stricter check the strip refuses
+## a frame on.
+##
+## Pure geometry, on purpose. The unit suite runs under `--script` with no
+## main loop (`tests/test_gate_f_instrumentation.gd`'s foot note), so a check
+## that leaned on `Camera3D.unproject_position` could never be seen to fail in a
+## test. The projection here is the same arithmetic the engine's own
+## `unproject_position` performs (`Projection.create_perspective` on the
+## camera's vertical FOV and the viewport aspect, then NDC to pixels), and
+## `_capture_route_strip.gd` prints the pixel delta between the two on its
+## first frame so a drift would be loud rather than silent.
+##
+## A subject is `{"name": String, "aabb": AABB}` in WORLD space -- the caller
+## measures it from the species' declared size or the trainer's own capsule,
+## the way `_capture_life.gd` does, never from a skinned mesh's bind-pose
+## AABB. Optional `"body": Node3D` is the subject's own physics body, excluded
+## from the occlusion rays so a creature is never reported hidden behind
+## itself.
+
+## Minimum projected height of a subject as a fraction of the frame's height.
+## 0.12 at 720 px is ~86 px of silhouette: enough to name the species and see
+## the trainer as a ruler, which is what "readable" means for the two bars.
+const READABLE_MIN_HEIGHT_FRAC := 0.12
+## How much of the projected rect must lie inside the frame. A subject with a
+## quarter of its box cropped by the frame edge is still a subject; one with
+## half of it gone is not.
+const READABLE_MIN_INSIDE_FRAC := 0.75
+## Near plane for the pure projection. Same order as a real Camera3D's default.
+const READABLE_NEAR := 0.05
+
+
+## Screen-space point for `world_point` through a camera at `cam` (its global
+## transform) with vertical field of view `fov_deg`, drawing into a viewport
+## `size` pixels large. Null when the point is behind the near plane --
+## `unproject_position` returns a mirrored, meaningless point there and the
+## caller must not treat it as a position.
+static func project_point(cam: Transform3D, fov_deg: float, size: Vector2,
+		world_point: Vector3) -> Variant:
+	if size.x <= 0.0 or size.y <= 0.0:
+		return null
+	var view := cam.affine_inverse() * world_point
+	if view.z > -READABLE_NEAR:
+		return null
+	var projection := Projection.create_perspective(fov_deg, size.x / size.y, READABLE_NEAR, 4000.0)
+	var clip := projection * Vector4(view.x, view.y, view.z, 1.0)
+	if is_zero_approx(clip.w):
+		return null
+	var ndc := Vector2(clip.x / clip.w, clip.y / clip.w)
+	return Vector2((ndc.x * 0.5 + 0.5) * size.x, (-ndc.y * 0.5 + 0.5) * size.y)
+
+
+## The projected screen rect of a world-space box, and whether any corner was
+## behind the camera. `rect` is meaningful only when `behind` is false.
+static func projected_rect(cam: Transform3D, fov_deg: float, size: Vector2,
+		box: AABB) -> Dictionary:
+	var min_pt := Vector2(INF, INF)
+	var max_pt := Vector2(-INF, -INF)
+	for i in 8:
+		var screen: Variant = project_point(cam, fov_deg, size, box.get_endpoint(i))
+		if screen == null:
+			return {"rect": Rect2(), "behind": true}
+		var pt: Vector2 = screen
+		min_pt = Vector2(minf(min_pt.x, pt.x), minf(min_pt.y, pt.y))
+		max_pt = Vector2(maxf(max_pt.x, pt.x), maxf(max_pt.y, pt.y))
+	return {"rect": Rect2(min_pt, max_pt - min_pt), "behind": false}
+
+
+## Everything that makes `subjects` unreadable in a frame shot through `cam`,
+## as human-readable lines. Empty means every named subject is present,
+## inside the frame, and big enough to read.
+##
+## An EMPTY subject list is a failure, not a pass: this check exists to refuse
+## the frame with nobody in it, and a caller that found no creature to name
+## has exactly that frame.
+##
+## `opts`:
+##   min_height_frac  -- override `READABLE_MIN_HEIGHT_FRAC`
+##   min_inside_frac  -- override `READABLE_MIN_INSIDE_FRAC`
+##   space            -- a `PhysicsDirectSpaceState3D`; when given, two rays
+##                       (camera -> box centre, camera -> three-quarter height)
+##                       must not BOTH be stopped by something that is not the
+##                       subject's own body. Skipped when null: a stage with no
+##                       physics cannot be assessed for occlusion, and this
+##                       must never be the reason a capture crashes.
+static func readable_problems(cam: Transform3D, fov_deg: float, size: Vector2,
+		subjects: Array, opts: Dictionary = {}) -> Array[String]:
+	var out: Array[String] = []
+	if subjects.is_empty():
+		out.append("no subject was named for this frame -- a creature-game frame with " +
+			"nobody in it is the exact frame this check exists to refuse")
+		return out
+	if size.x <= 0.0 or size.y <= 0.0:
+		out.append("the viewport has no size; nothing can be measured")
+		return out
+	var min_height := float(opts.get("min_height_frac", READABLE_MIN_HEIGHT_FRAC))
+	var min_inside := float(opts.get("min_inside_frac", READABLE_MIN_INSIDE_FRAC))
+	var space: Variant = opts.get("space", null)
+	var frame := Rect2(Vector2.ZERO, size)
+	for entry: Variant in subjects:
+		var subject: Dictionary = entry if entry is Dictionary else {}
+		var name := str(subject.get("name", "subject"))
+		if not subject.has("aabb"):
+			out.append("'%s' has no bounding box to measure" % name)
+			continue
+		var box: AABB = subject["aabb"]
+		var projected := projected_rect(cam, fov_deg, size, box)
+		if bool(projected["behind"]):
+			out.append("'%s' has a corner behind the capture camera -- it cannot be read in this frame" % name)
+			continue
+		var rect: Rect2 = projected["rect"]
+		if not frame.intersects(rect):
+			out.append("'%s' projects to %s, entirely outside the %s frame" % [name, str(rect), str(size)])
+			continue
+		var height_frac := rect.size.y / size.y
+		if height_frac < min_height:
+			out.append(("'%s' is only %.1f%% of the frame's height (%.0f px); %.0f%% is the " +
+				"floor for a readable silhouette") % [name, height_frac * 100.0, rect.size.y, min_height * 100.0])
+		var visible := frame.intersection(rect)
+		var inside_frac := 0.0
+		if rect.get_area() > 0.0:
+			inside_frac = visible.get_area() / rect.get_area()
+		if inside_frac < min_inside:
+			out.append("'%s' is cropped by the frame edge: only %.0f%% of its box is inside (%.0f%% required)" % [
+				name, inside_frac * 100.0, min_inside * 100.0])
+		if space is PhysicsDirectSpaceState3D:
+			var blocker := _occluder(space as PhysicsDirectSpaceState3D, cam.origin, box,
+				subject.get("body", null), subjects)
+			if blocker != "":
+				out.append("'%s' is hidden behind '%s' from this camera -- present in the world, unreadable in the frame" % [
+					name, blocker])
+	return out
+
+
+## The same check, read off a live camera: its global transform, vertical FOV,
+## the size of the viewport it draws into, and its world's physics space for
+## the occlusion rays. For a tool at the shutter.
+static func readable_problems_for_camera(camera: Camera3D, subjects: Array,
+		opts: Dictionary = {}) -> Array[String]:
+	if camera == null or not is_instance_valid(camera):
+		var out: Array[String] = ["no capture camera"]
+		return out
+	var viewport := camera.get_viewport()
+	var size := viewport.get_visible_rect().size if viewport != null else Vector2.ZERO
+	var merged := opts.duplicate()
+	if not merged.has("space"):
+		var world := camera.get_world_3d()
+		merged["space"] = world.direct_space_state if world != null else null
+	return readable_problems(camera.global_transform, camera.fov, size, subjects, merged)
+
+
+## Name of whatever stops BOTH occlusion rays before they reach the subject,
+## or "" when at least one ray gets through. The subject's own body (and any
+## collider under it) is excluded from the query, not skipped after the fact:
+## a ray that stops on the subject's own capsule has reached the subject.
+static func _occluder(space: PhysicsDirectSpaceState3D, from: Vector3, box: AABB,
+		own_body: Variant, _all_subjects: Array) -> String:
+	var exclude: Array[RID] = []
+	if own_body is Node:
+		_collect_rids(own_body as Node, exclude)
+	var centre := box.get_center()
+	var upper := Vector3(centre.x, box.position.y + box.size.y * 0.75, centre.z)
+	var blockers: Array[String] = []
+	for target: Vector3 in [centre, upper]:
+		var query := PhysicsRayQueryParameters3D.create(from, target)
+		query.exclude = exclude
+		query.collide_with_areas = false
+		var hit: Dictionary = space.intersect_ray(query)
+		if hit.is_empty():
+			return ""
+		# A hit INSIDE the subject's own box counts as reaching it (a collider
+		# the exclude list did not know about, or terrain the creature stands
+		# on at its feet).
+		var at: Vector3 = hit.get("position", target)
+		if box.grow(0.05).has_point(at):
+			return ""
+		var collider: Variant = hit.get("collider")
+		blockers.append((collider as Node).name if collider is Node else "unnamed geometry")
+	return blockers[0] if not blockers.is_empty() else ""
+
+
+static func _collect_rids(node: Node, into: Array[RID]) -> void:
+	if node is CollisionObject3D:
+		into.append((node as CollisionObject3D).get_rid())
+	for child in node.get_children():
+		_collect_rids(child, into)
+
+
+## Smallest camera distance along `bearing` (a unit vector pointing FROM the
+## focus TOWARD where the camera should stand, horizontal) at which every
+## subject's projected box sits inside the frame with `margin_frac` of the
+## frame's size kept clear on each edge. The camera is placed at
+## `focus + bearing * d + (0, height, 0)` and aimed at `focus + (0, look_up, 0)`.
+##
+## This is the "camera distance solved against all three projected bounds"
+## that `docs/VISUAL_PARITY_PROGRESS.md`'s route-strip investigation named as
+## the first of its two lessons: a distance solved for the two creatures left
+## the trainer out of the fight frame. Stepped rather than closed-form because
+## the bound is a max over eight corners of several boxes, and a 0.25 m step
+## is finer than any framing difference a judge could see.
+##
+## Returns -1.0 when no distance in [`d_min`, `d_max`] fits everything.
+static func fit_distance(focus: Vector3, bearing: Vector3, height: float, look_up: float,
+		fov_deg: float, size: Vector2, subjects: Array, margin_frac := 0.06,
+		d_min := 3.0, d_max := 30.0, step := 0.25) -> float:
+	var flat := Vector3(bearing.x, 0.0, bearing.z)
+	if flat.length() < 0.001:
+		return -1.0
+	flat = flat.normalized()
+	var safe := Rect2(size * margin_frac, size * (1.0 - 2.0 * margin_frac))
+	var d := d_min
+	while d <= d_max + 0.0001:
+		var cam := camera_transform_at(focus, flat, d, height, look_up)
+		var all_in := true
+		for entry: Variant in subjects:
+			var subject: Dictionary = entry if entry is Dictionary else {}
+			if not subject.has("aabb"):
+				continue
+			var projected := projected_rect(cam, fov_deg, size, subject["aabb"])
+			if bool(projected["behind"]) or not safe.encloses(projected["rect"]):
+				all_in = false
+				break
+		if all_in:
+			return d
+		d += step
+	return -1.0
+
+
+## The transform `fit_distance` evaluates: standing `distance` metres from
+## `focus` along `bearing`, `height` above it, looking at `focus + look_up`.
+static func camera_transform_at(focus: Vector3, bearing: Vector3, distance: float,
+		height: float, look_up: float) -> Transform3D:
+	var origin := focus + bearing * distance + Vector3(0.0, height, 0.0)
+	var target := focus + Vector3(0.0, look_up, 0.0)
+	var xform := Transform3D(Basis.IDENTITY, origin)
+	return xform.looking_at(target, Vector3.UP)
