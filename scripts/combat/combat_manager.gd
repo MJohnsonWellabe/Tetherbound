@@ -84,6 +84,12 @@ enum State { INACTIVE, ACTIVE, RESOLVING }
 ## world needs to treat them differently.
 const OUTCOME_CAUGHT := "caught"
 
+## CL-W5(b). What the disengage button says when it refuses a trainer fight.
+## Here rather than in a config block because it is not a tunable: it is the
+## sentence that makes an otherwise dead button legible, and it has exactly one
+## caller (`_refuse_flee()`).
+const FLEE_REFUSED_MESSAGE := "You can't walk away from a challenge."
+
 ## What the player's creature is doing. Wind-up and recovery are ROOTED: committing
 ## to an attack costs you your mobility, which is the whole reason a charged
 ## attack is a decision rather than a better button.
@@ -992,7 +998,7 @@ func _read_player_input() -> void:
 	# reaches this through `creature_recall` -- the same button that calls the
 	# creature out and puts it away outside a fight.
 	if _flee_pressed():
-		_begin_resolve("fled")
+		try_flee()
 		return
 
 	# Attack presses are RECORDED whatever state the creature is in, and fired by
@@ -1028,6 +1034,62 @@ func _throw_pressed() -> bool:
 func _flee_pressed() -> bool:
 	return Input.is_action_just_pressed("combat_run") \
 			or Input.is_action_just_pressed("creature_recall")
+
+
+## CL-W5(b), owner directive 2026-09-04-B amendment A-1: "you shouldn't be able
+## to leave a fight with another character once it's started. still should be
+## able to with a wild creature."
+##
+## Wild fights keep the exit exactly as they had it, which is what keeps the
+## softlock D-0904B-5 worried about off the table: the player is never sealed
+## into an unwinnable encounter they did not accept. A TRAINER fight is a
+## commitment the moment it is accepted, and the only other way out stays what
+## it already was -- the whole party fainting, which
+## `encounter_director.gd`/the death satchel already resolve.
+##
+## `_enemy_owned` (R8.1) is the same flag that already refuses a catch on
+## somebody else's creature, so "whose creature is this" is asked once and
+## answered in one place.
+func can_flee() -> bool:
+	return not _enemy_owned
+
+
+## Act on the disengage button. Split out of `_read_player_input()` so the
+## refusal is testable without driving `Input` through a whole standing world:
+## the decision, the message and the resolve all live here rather than inside a
+## frame handler.
+##
+## Returns true only when the fight actually ended.
+func try_flee() -> bool:
+	if not can_flee():
+		_refuse_flee()
+		return false
+	_begin_resolve("fled")
+	return true
+
+
+## What the player is told when the disengage button refuses, or "" when it
+## would not refuse. Pure, and separate from the push below, so the SENTENCE
+## can be checked without a `Game` autoload to push it through -- the unit
+## runner starts none (`tests/run_tests.gd` runs under `--script`), and a rule
+## whose only test is "a function returned false" passes just as happily when
+## the player is told nothing at all.
+func flee_refusal() -> String:
+	return "" if can_flee() else FLEE_REFUSED_MESSAGE
+
+
+## Say why the button did nothing, through the same one-shot toast
+## `_refuse_combat_input()` above already answers a dead fight button with. An
+## unexplained dead button reads as a broken build -- a blind playtest reached
+## exactly that verdict about the three combat buttons once already, which is
+## why that function exists.
+func _refuse_flee() -> void:
+	if not is_inside_tree():
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	game.call("push_world_message", flee_refusal())
 
 
 ## Fire a buffered attack press once the creature is ready for it.

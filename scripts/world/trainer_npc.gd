@@ -55,6 +55,17 @@ const NO_USABLE_CREATURE_CONVERSATION := "trainer_no_usable_creature"
 ## needs "call one out", not a trip to a bed nothing asked for.
 const NO_ALLY_DEPLOYED_CONVERSATION := "trainer_no_ally_deployed"
 
+## CL-W4 / owner amendment A-4 ("gate just make the fight not start unless
+## you're a certain level. the guy can just say 'you're too low level...'").
+## The fifth reason `can_challenge()` can be false, and -- like the two above
+## it -- ONE generic id every trainer opens rather than a per-trainer pair, so
+## a `min_level` added to any row of the table already has a line to refuse
+## with. `$level` in its text is filled in from the row's own requirement
+## (`dialogue_runner.gd::set_value`), which is what carries the remedy the
+## owner asked for ("then it would prompt you to go back and fight more to get
+## a level up") without a quest-log entry per trainer.
+const TOO_LOW_CONVERSATION := "trainer_too_low"
+
 ## BAND-SPLIT. The `trainers` array is cut per corridor band under
 ## `data/config/bands/<band>/trainers.json`; `flow` and `prompts` are global
 ## and stay in the head file. `band_content.gd` merges them back.
@@ -74,6 +85,12 @@ var _placed: int = 0
 ## conversation only — its own, and only when that one was a challenge.
 var _pending_spec: Dictionary = {}
 var _pending_conversation: String = ""
+
+## CL-W5(a). The last `Game.progression.revision` `_process()` relabelled for.
+## -1 means "never yet", so the first frame with a progression store always
+## does one pass and a world built from a LOADED save (trainers already beaten
+## before a single body was placed) shows the right labels immediately.
+var _progression_revision: int = -1
 
 
 ## `group` selects which rows of the table this placer owns, matched against
@@ -186,8 +203,20 @@ func _on_challenged(spec: Dictionary) -> void:
 	var conversation: String
 	if challenging:
 		conversation = str(spec.get("challenge", ""))
-	elif director != null and bool(director.call("no_usable_ally")) \
-			and not already_beaten(spec, _progression()):
+	elif already_beaten(spec, _progression()):
+		# Hoisted above the two refusal branches below. It used to be the
+		# `else` fall-through, which was correct while there were only two
+		# reasons; with the level gate added it has to be checked FIRST, or a
+		# beaten trainer carrying a `min_level` the player is under would taunt
+		# somebody who already won -- the exact collapse the dark-features T1
+		# note warns about, in the other direction.
+		conversation = str(spec.get("defeated", ""))
+	elif director != null and bool(director.call("too_low_to_challenge", spec)):
+		# CL-W4 / A-4. The gate IS the trainer: the fight does not start and
+		# they say why, in character, naming the level that would change it.
+		conversation = TOO_LOW_CONVERSATION
+		panel.call("set_value", "level", str(required_level(spec)))
+	elif director != null and bool(director.call("no_usable_ally")):
 		# Dark-features T1: `can_challenge()` is false for four distinct
 		# reasons (already beaten, no usable ally, mid-battle, malformed
 		# spec) and used to collapse all of them into the "defeated" line.
@@ -256,10 +285,44 @@ func _progression() -> RefCounted:
 
 
 func _prompt_for(spec: Dictionary) -> String:
-	# Built from the table rather than stored per trainer, and never containing
-	# "talk" or "choose": tests/smoke_opening.gd finds Grandpa and the three
-	# starters by exactly those substrings.
-	return prompts().get("challenge", "Challenge %s") % str(spec.get("name", "Trainer"))
+	return prompt_for(spec, _progression())
+
+
+## CL-W5(a). Keep every placed trainer's prompt LABEL honest as the world
+## changes underneath it.
+##
+## `_spawn()` resolves a label once, at build time, and `interactable.gd`
+## stores that string -- so the beaten half of `prompt_for()` below would never
+## have reached a player who beat somebody after the world was built, which is
+## every player. Progression's own `revision` counter (bumped only when a flag
+## actually changes state) is what makes this cheap: on the overwhelming
+## majority of frames this is one integer compare and nothing else, and the
+## relabel walk only runs on the frames a flag genuinely flipped.
+func _process(_delta: float) -> void:
+	var progression := _progression()
+	if progression == null:
+		return
+	var revision := int(progression.get("revision"))
+	if revision == _progression_revision:
+		return
+	_progression_revision = revision
+	_refresh_prompts(progression)
+
+
+## Re-label every body this node placed. Public so a test can force the pass
+## without waiting on a frame.
+func _refresh_prompts(progression: RefCounted) -> void:
+	for child in get_children():
+		var body := child as Node3D
+		if body == null or not body.has_method("prompt_node"):
+			continue
+		var prompt: Node3D = body.call("prompt_node")
+		if prompt == null:
+			continue
+		var spec := trainer(str(body.get_meta("trainer_id", "")))
+		if spec.is_empty():
+			continue
+		prompt.set("label", prompt_for(spec, progression))
 
 
 ## --- the table ----------------------------------------------------------------
@@ -357,6 +420,89 @@ static func already_beaten(spec: Dictionary, progression: RefCounted) -> bool:
 ## keeps.
 static func conversation_for(spec: Dictionary, progression: RefCounted) -> String:
 	return str(spec.get("defeated" if already_beaten(spec, progression) else "challenge", ""))
+
+
+## CL-W5(a), owner amendment A-2: "you can still hit challenge someone else
+## after you beat them. maybe it doesn't let you fight again but you shouldn't
+## even see the challenge button anymore. just talk to or whatever."
+##
+## `interactable.gd`'s own rule, quoted in that amendment: "a visible prompt
+## the button refuses is worse than no prompt." The button is not removed --
+## a beaten trainer is still a person you can walk up to and get a word out of
+## -- but it stops advertising a fight that will not happen.
+##
+## NEVER "Talk to" or "Choose": `tests/smoke_opening.gd` finds Grandpa and the
+## three starters by exactly those substrings, so a beaten trainer worded that
+## way would be picked up as a starter and the opening smoke would start
+## failing for a reason nothing about the opening changed. Both defaults here,
+## and both `prompts()` entries in `data/config/trainers.json`, are chosen
+## clear of those two words.
+static func prompt_for(spec: Dictionary, progression: RefCounted) -> String:
+	var beaten := already_beaten(spec, progression)
+	var fallback := "Greet %s" if beaten else "Challenge %s"
+	var template := str(prompts().get("defeated" if beaten else "challenge", fallback))
+	if not template.contains("%s"):
+		# A mis-authored template would otherwise throw at format time and take
+		# the whole placement pass with it.
+		push_error("trainers.json prompts.%s has no %%s for the trainer's name" % [
+			"defeated" if beaten else "challenge"])
+		template = fallback
+	return template % str(spec.get("name", "Trainer"))
+
+
+## CL-W4. The level this trainer refuses to fight below, or 0 for the ordinary
+## case: no level condition at all.
+##
+## Two spellings are read because the closure plan and the brief name different
+## ones (`min_level`, `challenge_level`) and a row authored with either should
+## work rather than silently gate nothing. `min_level` is the canonical one and
+## the one `data/config/trainers.json` documents.
+##
+## NOTHING SHIPPED CARRIES ONE YET, deliberately: `docs/FINISH_THE_MEADOWS.md`
+## ("the dependency to state plainly") wants wild density landed before a level
+## gate exists on the route, or the gate becomes the wall D-0904B-4 explicitly
+## says it must not be. This is the mechanism, ready for the row that turns it on.
+static func required_level(spec: Dictionary) -> int:
+	if spec.has("min_level"):
+		return maxi(0, int(spec.get("min_level", 0)))
+	return maxi(0, int(spec.get("challenge_level", 0)))
+
+
+## The number `required_level()` is measured against: the HIGHEST level in the
+## party, not the active creature's and not an average.
+##
+## D74 records why. The player owns five creatures total and switches mid-fight
+## (`combat_manager.gd::switchable_indices`), so the team that would actually
+## answer a challenge is the whole party; gating on whoever happens to be
+## deployed would refuse a player whose strongest creature is one button press
+## away, and gating on an average would punish carrying a freshly-caught
+## low-level creature -- the exact thing the chapter wants the player doing.
+##
+## A null party (a bare test scene, the unit runner with no autoloads) reads as
+## 0. That is the cautious direction only once paired with `below_challenge_level()`
+## below, which refuses to gate at all when there is no party to measure.
+static func party_high_level(party: RefCounted) -> int:
+	if party == null:
+		return 0
+	var highest := 0
+	for member: Variant in (party.call("members") as Array):
+		var creature := member as RefCounted
+		if creature != null:
+			highest = maxi(highest, int(creature.get("level")))
+	return highest
+
+
+## Is this trainer's level condition currently refusing the player?
+##
+## False whenever the row names no level (every shipped row today) and false
+## whenever there is no party object to measure at all -- a scene with no
+## `Game` autoload must not invent a gate, for the same reason
+## `already_beaten()` reads a null progression as "not beaten".
+static func below_challenge_level(spec: Dictionary, party: RefCounted) -> bool:
+	var need := required_level(spec)
+	if need <= 0 or party == null:
+		return false
+	return party_high_level(party) < need
 
 
 ## One of the trainer's creatures, built from its table entry.

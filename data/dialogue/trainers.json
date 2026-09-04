@@ -5,7 +5,16 @@
   "_comment_short": "Two or three lines. A trainer who monologues is a trainer the player skips, and the fight is the content.",
   "_comment_no_usable_creature": "T2-GATEF-RUN4 / dark-features T1. ONE generic id, not a per-trainer pair -- every trainer in the table (27 of them, the Warden included) opens THIS conversation instead of their own 'defeated' line when scripts/combat/encounter_director.gd::no_usable_ally() is true and they are not actually beaten, so a player whose only creature just fainted gets told the truth (go heal it) rather than a false 'you already won'. Generic because the fix has to reach every trainer without touching ~20 trainer.json entries one at a time.",
   "_comment_no_ally_deployed": "G3-OPENING-FIX-0904 (2.10), GATE2-EVIDENCE-0903's own finding. `trainer_no_usable_creature` above used to be the ONLY line for every one of `no_usable_ally()`'s causes, and it is only true for one of them: a fainted creature. The other is a healthy party with nothing currently standing beside the trainer at all -- a fresh save load never auto-deploys anyone, or the player put their creature away -- and telling that player to find a bed points at a problem they do not have. `encounter_director.gd::usable_ally_blocker()` names which cause applies; `trainer_npc.gd` picks this conversation for 'undeployed' and the one above for 'fainted'. Same generic-reach reasoning as the comment above: one id for every trainer.",
+  "_comment_too_low": "CL-W4, owner directive 2026-09-04-B amendment A-4. The owner's own wording, verbatim, is the first line -- the taunt IS the gate, and it is deliberately a person being rude rather than a UI refusal. Same one-generic-id reasoning as the two comments above: any trainer row that grows a `min_level` opens THIS conversation, so the mechanism reaches all ~31 trainers without a per-trainer pair. `$level` is filled in by `scripts/world/trainer_npc.gd::_on_challenged()` from that row's own requirement (`dialogue_runner.gd::set_value`), which is what carries D-0904B-4's load-bearing half -- the refusal names what would change it, so it hands the player a next thing to do instead of being a wall.",
   "conversations": {
+    "trainer_too_low": {
+      "speaker": "Trainer",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You're too low level. I'll crush you and send you crying to Grandpa.",
+        "Come back with something at level $level and I'll take you seriously."
+      ]
+    },
     "trainer_no_usable_creature": {
       "speaker": "Trainer",
       "portrait": "res://assets/ui/portraits/trainer.png",

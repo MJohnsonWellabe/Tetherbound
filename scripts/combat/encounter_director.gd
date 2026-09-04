@@ -2060,7 +2060,32 @@ func can_challenge(spec: Dictionary) -> bool:
 		return false
 	if _ally == null or _ally.fainted or _ally_body == null or not is_instance_valid(_ally_body):
 		return false
+	# CL-W4 / owner amendment A-4. The FIFTH reason, and the only one that is
+	# not about the player being unable to fight at all: this particular person
+	# will not take this particular challenge yet. Refused here rather than
+	# inside `begin_trainer_battle()` so `trainer_npc.gd` can say so in
+	# character before a fight is ever offered -- "gate just make the fight not
+	# start unless you're a certain level."
+	if too_low_to_challenge(spec):
+		return false
 	return not TRAINERS.already_beaten(spec, _progression())
+
+
+## CL-W4. Is `can_challenge()` refusing because of THIS trainer's level
+## condition, rather than any of the other four reasons?
+##
+## A sibling query in exactly the shape `no_usable_ally()` already established,
+## and for the same reason its own header gives: `can_challenge()`'s bare-bool
+## contract is read from 8+ call sites and must not grow a reason code, but
+## `trainer_npc.gd` has to tell the refusals apart or a too-low player hears
+## the already-defeated line instead of the taunt (the dark-features T1 note).
+##
+## `min_level` is a property of the trainer and the party, not of the fight, so
+## this is true whether or not anything is deployed -- a player with a level-20
+## bench and nothing out is not too low, they simply have nothing out, and
+## `no_usable_ally()` is the query that says so.
+func too_low_to_challenge(spec: Dictionary) -> bool:
+	return TRAINERS.below_challenge_level(spec, _party())
 
 
 ## Is the ONE reason `can_challenge()` just refused "nothing to fight with",
