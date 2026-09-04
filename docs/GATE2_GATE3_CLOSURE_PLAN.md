@@ -174,6 +174,21 @@ it to, or **unassigned**.
 
 ### 2.A The instrument — gates every evidence run (§3 stage 1)
 
+**Added 2026-09-04: one row that changes how a reader should treat "the known red".**
+`verify-gate-b-core`'s failure has been carried everywhere — in `docs/ROADMAP.md`, in
+#31's commit message, in this PR's own standing-down comment — as a single named defect:
+*Quarry Foreman cycle 1, arbiter winner = Prompt under Door*. Characterising it on
+`bf86c043` showed it is not one defect. The job's two attempts stopped in two different
+places: attempt 1 at the Foreman, attempt 2 **past** the Foreman and then at `Bram cycle
+2 did not open dialogue`, with the interact press accepted and no dialogue inside the
+90-frame budget. The Bram stop had never been seen because the Foreman stop masks it.
+
+| Id | Item | Size | Kind |
+|---|---|---|---|
+| CL-H12 | **`gate_a_npc_gather_segment.gd`'s village-tools leg is nondeterministically red at more than one point**, and both points are prompt arbitration rather than any one NPC. Fixing the Foreman and calling the check closed will simply surface the next stop — which is precisely what happened between attempt 1 and attempt 2 of the same job on the same commit. Scope this as "the leg is reliable across N consecutive runs", not as "the Foreman is fixed". **Fails if** the acceptance is a single green run: this leg has now produced three different outcomes (Foreman stop, Bram stop, full pass) on the same code. | M | proven failing |
+
+
+
 | Id | Item | Source | Claimed by | Size | Kind |
 |---|---|---|---|---|---|
 | CL-H1 | **Blind press blocks in every Gate 3 segment.** `S06.json`, `S07.json`, `S08.json`, `S09.json` contain zero `fight_until_resolved` steps; every trainer and wild fight is `press combat_quick, times: N`. `SEGMENT_SCHEMA.md` names this failure mode. S06 (Dorn), S07 (Hess), S08 (wild Meadowhart) all derailed on it. Re-script every fight step in S06–S09 with `fight_until_resolved`, a post-faint switch or revive by item identity (never slot), and a party-health assert before each trainer challenge. | G3-BAND2 addendum; G3-BAND3 §4b; G3-BAND4 addendum | G3-HARNESS names only "S08 has no post-faint switch or revive" — **S06, S07 and S09 are not in its brief** | M | proven failing (instrument) |
