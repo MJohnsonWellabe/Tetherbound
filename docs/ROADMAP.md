@@ -158,18 +158,46 @@ Acceptance per band: evidence template PASS; the finished-region checklist in
 
 Checkpoints: tag `band2-candidate` … `band5-candidate`, `finale-candidate`.
 
+### Gate 3 parallel track — clearing the visual bars (D73)
+
+Runs beside the band lanes, on files the band lanes do not own. The judge's
+"no / no" after Gate 2 was mostly not band content, so waiting for Gate 3 to
+finish would not have fixed it. Verdicts come from the kickoff run's GPU route
+strip (`docs/acceptance/KICKOFF_RUN.md`), per band, day and night.
+
+| # | Task | Tier | Owns | Serialises with |
+|---|---|---|---|---|
+| V1 | **Route-strip judging.** Sheet the first kickoff run's route strip, run the blind judge per band, rank the gaps; this list replaces `docs/VISUAL_BIBLE.md` §4 as the standing gap list. | Fable directs, Sonnet judges blind | `docs/VISUAL_BIBLE.md` | nothing |
+| V2 | **One material language.** A single stylised shading contract across creatures, the humanoid cast, props and terrain: outline policy, ramp, specular, night floor. Creatures stop reading as a different game from the trainer. | Fable designs, Sonnet implements | `shaders/`, creature and character materials, `data/config/art.json`, `world_look.gd` | nothing in band data |
+| V3 | **Distance.** Aerial perspective as a terrain-material gradient decoupled from fog; ridge tree-lines as silhouettes; the Hall and the village surviving at 400 m. | Sonnet from the bible's named mechanisms | `shaders/terrain_ground.gdshader`, `terrain_playground.json` colour/macro, `far_cover.gdshader` | V5's bake |
+| V4 | **Canopy and rock structure from the installed family** (D73 §3): foliage cards / canopy break-up on the installed trees; bake-time displaced rock variants. The half the judges called "art not in the build". | Fable designs, Sonnet implements | `scripts/world/vegetation*.gd`, `scatter_rules.gd` model handling, `cover_tier.gdshader` | V5's bake |
+| V5 | **Corridor-fill re-roll, once** (D73 §5): widen the `trees` layer's corridor-wide scale range and re-bake in one window before the Band 2 lane bakes. | Sonnet | `data/config/vegetation.json`, `data/scatter/playground` | **every band lane's bake**: this goes first |
+| V6 | **Grass clump cards behind a flag, on by default** (D73 §4). | Sonnet | `grass_field.gd`, `grass_field.json`, `grass_field.gdshader` | nothing |
+| V7 | **Locomotion rebuild** (`MEADOWS_QUALITY_REBUILD_PLAN.md` §2–3, D73 §9), judged from the kickoff run's video strips. | Fable designs, Sonnet implements | `scripts/player/` gait, humanoid animation | nothing |
+| V8 | **Dialogue push-in** (D73 §6) and the remaining placeholder-grade elements: the mill's sails, the near-black site. | Haiku/Sonnet | `scripts/ui/` dialogue camera, band props | nothing |
+| V9 | **Per-band visual contracts** for bands 2–5, authored before each band's lane starts, in the shape of `docs/specs/BAND1_COMPOSITION_PLAN.md`. | Fable | `docs/specs/BAND<n>_COMPOSITION_PLAN.md` | precedes that band's lane |
+
+A gate whose acceptance names the bars does not close on a judge "no"
+(D73 §2). V1 runs on every kickoff; V2–V8 land through PRs like any lane.
+
 ---
 
 ## Gate 4 — Full chapter integration, pacing and hardware performance
 
 **Owning prompt:** `70-MEADOWS-full-chapter-integration-playthrough.md`, with
-`36-R9.1`, `37-R9.2`, `38-R9.3`.
+`36-R9.1`, `37-R9.2`, `38-R9.3`. **Evidence: the kickoff run** (D73,
+`docs/acceptance/KICKOFF_RUN.md`), not a human playthrough.
 
-One continuous S01–S10 run under the Gate F protocol
-(`docs/acceptance/GATE_F_PROTOCOL.md`), then tuning: XP curve, trainer difficulty, wild
-levels, resource availability, travel time, encounter density, camp usefulness,
-objective clarity, reward economy, target-hardware performance on the ROG Ally. Do not
-cut required chapter beats to hit the 3–4 hour clock.
+The owner double-clicks `tools/owner/KICKOFF.cmd` on the Ally. That runs Gate F
+S01–S10e with video on real hardware, the GPU route strip, the real frame-rate
+probe and the shipped-build check, and pushes it as `owner-run/<stamp>`. Agents
+then do the tuning from it: XP curve, trainer difficulty, wild levels, resource
+availability, travel time, encounter density, camp usefulness, objective clarity,
+reward economy, frame rate. Do not cut required chapter beats to hit the 3–4 hour
+clock. Repeat the run after each tuning landing; the gate passes on a run whose
+evidence template reads PASS for every segment, whose route-strip judge answers
+yes on both bars for every band, and whose `EXPORT_VERDICT.md` is a pass on a
+release newer than the last code landing.
 
 Definition of Meadows completion: `docs/acceptance/MEADOWS_EXIT_CRITERION.md`.
 
