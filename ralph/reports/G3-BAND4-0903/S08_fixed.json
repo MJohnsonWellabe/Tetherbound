@@ -1,0 +1,1393 @@
+{
+  "id": "S08_fixed",
+  "title": "G3-BAND4 PROPOSED FIX: Upper Meadows / Band 4: crossing -> ironwood -> saddle & riding -> three captains -> three Sigils",
+  "lane": "journey",
+  "_comment": "Transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B (span), section D (RT-09's end and RT-10), section E.1 (CB-04's band 4 fights and CB-12's large-body half), section E.2 (CT-08's party count), section E.5 (objective `defeat_the_captains`), section G (GF-11-UPPER-01/02, GF-05-MEADOW-02, GF-18-MAP-02, GF-19-UI-09, GF-14-COMBAT-04d, GF-14-COMBAT-12), section L.3 (saddle + orb_prime crafted at real cost) and section L.4 (riding) and section H (0.1 Hz plus the band handoff window).",
+  "_comment_rt10_order": "AMBIGUITY: section D's RT-10 lists its anchors as ironwood grove (-345,5060), (170,5590), (-100,4350), (-280,6460) -- but (-100,4350) is captain_riverwatch, which sits 1240 m SOUTH of (170,5590) and is the first captain a player walking north from the crossing would reach. Transcribed in section D's listed order anyway, because reordering is exactly what the transcription rule forbids; the operator should record the actual encounter order the ground produces.",
+  "evidence_lane": "logic",
+  "capture_lane": "S08C",
+  "_comment_evidence_lane": "\u00a7H/\u00a7G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md \u00a7H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the \u00a7G ids its steps would have taken are DELEGATED to S08C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S08C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the \u00a7H/\u00a7G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because \u00a7H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- \u00a7H's prescribed frames move to S08C, which may run BOUNDED record windows around a named state.",
+  "steps": [
+    {
+      "id": "S08-01",
+      "title": "how this segment is entered",
+      "action": "note",
+      "args": {
+        "text": "Section B: this segment's entry save is `S07-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. Section B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S08-02",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer"
+    },
+    {
+      "id": "S08-03",
+      "title": "seed slot 4 from the previous segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S07-exit.json"
+      },
+      "expected": "Section B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
+    },
+    {
+      "id": "S08-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused and Load Game enabled, because a save now exists"
+    },
+    {
+      "id": "S08-05",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses its first button; without focus a controller cannot reach Load Game at all"
+    },
+    {
+      "id": "S08-06",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "S08-07",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+    },
+    {
+      "id": "S08-08",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
+    },
+    {
+      "id": "S08-09",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+    },
+    {
+      "id": "S08-09a",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-11: a load restores the party and deploys nothing -- encounter_director.gd::_engageable() returns null on a null ally before any distance check, so no combat/catch/gate-flag assertion downstream of a load can mean anything without this. creature_recall (RB) summons the active creature so this segment's fights can actually start."
+    },
+    {
+      "id": "S08-10",
+      "title": "the team travelled",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 3
+      },
+      "expected": "three entrants across the crossing",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+    },
+    {
+      "id": "S08-11",
+      "title": "the captains are tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "defeat_the_captains"
+      },
+      "expected": "Section E.5 objective 22/27 `defeat_the_captains`, 'Defeat the Upper Meadows captains.' with the n/3 count appended -- one of only two counted entries in the chain"
+    },
+    {
+      "id": "S08-12",
+      "title": "Section H cadence for this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 0.1 Hz segment plus event-forced frames, with the band 3 -> band 4 handoff window inside it. No background-recorder action exists in the vocabulary; recorded as a gap."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S08-12a",
+      "title": "record_start: band 3 -> band 4, the Upper Meadows arrival across the crossing",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 3 -> band 4, the Upper Meadows arrival across the crossing",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "S07 saved at the crossing, so this segment loads on the band 3/4 boundary: the window opens at the load's own first step, which is GF-11-UPPER-01, the frame section G triggers on 'Upper Meadows entry across the crossing'"
+    },
+    {
+      "id": "S08-12b",
+      "title": "Section H band-handoff windows in this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 'Mandatory for the highest-risk segments: ... every band handoff +/-60 s (region transitions)'. The pairs in this segment raise the background recorder from the 0.1 Hz journey baseline to 0.5 Hz across each band boundary this segment crosses, and `record_stop` returns to the baseline rather than switching the recorder off, so the record stays continuous either side. AMBIGUITY RECORDED: +/-60 s cannot be sized exactly from a step script. A `move_to` leg's duration is not known before the run and a leg cannot be split, so each window is placed to contain the crossing plus as much of its approach and its settle as the surrounding steps allow -- erring long, because the schema's own measurement makes a 0.5 Hz window affordable as a window (1.05 ms/frame for its length) while a window that missed the transition would cost the evidence."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S08-13",
+      "title": "capture GF-11-UPPER-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-11-UPPER-01",
+        "class": "11",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "Upper Meadows entry across the crossing, RT-09 end",
+        "intended_proof": "region shift is felt"
+      },
+      "expected": "Section G: Upper Meadows entry across the crossing, RT-09 end -- region shift is felt"
+    },
+    {
+      "id": "S08-14",
+      "title": "open the Map tab",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "Section G GF-18-MAP-02 wants both zoom extremes at S08, and section E.5 wants the map opened at every major objective"
+    },
+    {
+      "id": "S08-15",
+      "title": "zoom the map all the way in",
+      "action": "press",
+      "args": {
+        "control": "map_zoom_in",
+        "hold": "tap",
+        "times": 6,
+        "settle_frames": 10
+      },
+      "expected": "Section G: 'both zoom extremes'"
+    },
+    {
+      "id": "S08-16",
+      "title": "zoom the map all the way out",
+      "action": "press",
+      "args": {
+        "control": "map_zoom_out",
+        "hold": "tap",
+        "times": 8,
+        "settle_frames": 10
+      },
+      "expected": "Section G: 'both zoom extremes'"
+    },
+    {
+      "id": "S08-17",
+      "title": "capture GF-18-MAP-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-18-MAP-02",
+        "class": "18",
+        "hud": "on",
+        "camera_kind": "menu",
+        "trigger": "Map tab at S08 (late chapter), both zoom extremes",
+        "intended_proof": "reveal growth, zoom behavior"
+      },
+      "expected": "Section G: Map tab at S08 (late chapter), both zoom extremes -- reveal growth, zoom behavior"
+    },
+    {
+      "id": "S08-18",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell"
+    },
+    {
+      "id": "S08-19",
+      "title": "reopen the Map tab",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "Section E.5: 'zoom persistence across close/reopen' -- checked again late, where the revealed map is large"
+    },
+    {
+      "id": "S08-20",
+      "title": "close the shell again",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell"
+    },
+    {
+      "id": "S08-21",
+      "title": "Section E.5 nav note -- defeat_the_captains",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 22/27 `defeat_the_captains`. Wording: 'Defeat the Upper Meadows captains. n/3' -- it names WHAT, a count, and a WHERE only as wide as a whole region. Player-visible information: `the_ironwood_grove` and `the_ridgeline_watch` are named regions on the late map (GF-18-MAP-02), the ground climbs north from the crossing into high pasture, and the count tells the player there are three of something to find. Route decision: work north through the grove and then the high pasture, letting the named regions be the waypoints, because three captains spread over a region cannot be routed to any more precisely than that. Reasoned from GF-11-UPPER-01 and GF-18-MAP-02. Operator: record whether 'n/3' actually helped, and how long the player spent not knowing where a captain was."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S08-22",
+      "title": "walk to the Ironwood Grove",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -345.0,
+          5060.0
+        ],
+        "budget_frames": 45000,
+        "close_enough": 5.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-10's first anchor (-345,5060): 'the region's whole material tier, its one special encounter, and a night-ecology pocket, all one place'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S08-23",
+      "title": "the grove region contains the arrival",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_ironwood_grove"
+      },
+      "expected": "map_state.gd's containment puts the player in `the_ironwood_grove`"
+    },
+    {
+      "id": "S08-23a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 3 -> band 4, the Upper Meadows arrival across the crossing",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes after the region assert puts the player in `the_ironwood_grove`, band 4's first named region"
+    },
+    {
+      "id": "S08-24",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "the grove's own content joins the POI set"
+    },
+    {
+      "id": "S08-25",
+      "title": "harvest ironwood",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 90
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use ... rootstone (pickaxe), ironwood'"
+    },
+    {
+      "id": "S08-26",
+      "title": "walk to the grove's pipwing",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -334.2,
+          5055.3
+        ],
+        "budget_frames": 3000,
+        "close_enough": 4.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Section E.1 CB-12: 'fight smallest (pipwing/bramblebun class) and largest (meadowhart/tuskroot class) wilds; melee vs ranged movesets'. This is the small half; the large half is the meadowhart below",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S08-27",
+      "title": "engage the pipwing",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "CB-12's small-body case"
+    },
+    {
+      "id": "S08-28",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S08-29",
+      "title": "fight the pipwing",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3600,
+        "switch_below": 0.35
+      },
+      "expected": "G3-BAND4 harness fix proposal: fight_until_resolved auto-switches the active creature below 35% HP (tools/gate_f/operator_harness.gd::_step_fight) instead of the blind combat_quick press count this step used to be -- see ralph/reports/G3-BAND4-0903/REPORT.md's addendum for why the original press-count sequence let a fainted lead creature sit through every subsequent captain challenge with no real fight ever starting."
+    },
+    {
+      "id": "S08-30",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: the throw is aimed"
+    },
+    {
+      "id": "S08-31",
+      "title": "the aim owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "input_context is `combat_aim`"
+    },
+    {
+      "id": "S08-32",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2 CT-08: 'Party-not-full -> catch -> count'"
+    },
+    {
+      "id": "S08-33",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S08-34",
+      "title": "the fourth slot filled",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 4
+      },
+      "expected": "Section E.2 CT-08: 'verify party count increments'. Four of five",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+    },
+    {
+      "id": "S08-35",
+      "title": "walk to the meadowhart herd",
+      "action": "move_to",
+      "args": {
+        "at": [
+          12.3,
+          5561.2
+        ],
+        "budget_frames": 36000,
+        "close_enough": 5.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "the high pasture herd; section L.4's riding row needs a Meadowhart in the belt",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S08-36",
+      "title": "capture GF-05-MEADOW-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-05-MEADOW-02",
+        "class": "5",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "same class, band 4 high pasture, RT-10",
+        "intended_proof": "upper meadow identity differs from lower"
+      },
+      "expected": "Section G: same class, band 4 high pasture, RT-10 -- upper meadow identity differs from lower"
+    },
+    {
+      "id": "S08-37",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "the herd joins the POI set"
+    },
+    {
+      "id": "S08-38",
+      "title": "engage a meadowhart",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.1 CB-12's large-body case"
+    },
+    {
+      "id": "S08-39",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera has to frame a much larger body"
+    },
+    {
+      "id": "S08-40",
+      "title": "capture GF-14-COMBAT-12",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-12a",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-12: size/range spread -- the large half (meadowhart/tuskroot class)",
+        "intended_proof": "per-case: the camera and the melee/ranged read at the other end of the size range"
+      },
+      "expected": "Section G: CB-12: size/range spread -- the large half (meadowhart/tuskroot class) -- per-case: the camera and the melee/ranged read at the other end of the size range"
+    },
+    {
+      "id": "S08-41",
+      "title": "fight the meadowhart",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 5400,
+        "switch_below": 0.35
+      },
+      "expected": "G3-BAND4 harness fix proposal: fight_until_resolved auto-switches the active creature below 35% HP (tools/gate_f/operator_harness.gd::_step_fight) instead of the blind combat_quick press count this step used to be -- see ralph/reports/G3-BAND4-0903/REPORT.md's addendum for why the original press-count sequence let a fainted lead creature sit through every subsequent captain challenge with no real fight ever starting."
+    },
+    {
+      "id": "S08-42",
+      "title": "begin the aim",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2: the throw is aimed"
+    },
+    {
+      "id": "S08-43",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2 CT-08 again, this time filling the belt"
+    },
+    {
+      "id": "S08-44",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the `catch_result` event carries the outcome"
+    },
+    {
+      "id": "S08-45",
+      "title": "the belt is full",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 5
+      },
+      "expected": "five of five. CLAUDE.md: the player can own only five creatures, ever -- no storage, no reserve box, no hidden sixth slot",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+    },
+    {
+      "id": "S08-46",
+      "title": "capture GF-19-UI-09",
+      "action": "capture",
+      "args": {
+        "id": "GF-19-UI-09",
+        "class": "19",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "party strip at 5/5, world",
+        "intended_proof": "exactly five slots, no sixth implied"
+      },
+      "expected": "Section G: party strip at 5/5, world -- exactly five slots, no sixth implied"
+    },
+    {
+      "id": "S08-47",
+      "title": "the five-creature rule, on screen",
+      "action": "note",
+      "args": {
+        "text": "Section E.2 CT-08's own words: the HUD 'shows exactly five slots maximum -- nothing may imply a sixth'. GF-19-UI-09 is that frame. Section B branches X03's party-full study (CT-09) from this segment's exit save, so the 5/5 state has to travel through the handoff intact."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S08-48",
+      "title": "Section L.3 band 4 crafting has no authored site",
+      "action": "note",
+      "args": {
+        "text": "Section L.3 requires 'S08 saddle + orb_prime -- each paid at real cost' and section L.4 requires 'Riding (saddle, mount, dismount, speed, no stamina cost)'. Section B's S08 span names 'saddle & riding' and the protocol names no crafting site in band 4, so the workbench below is placed by the player on the high pasture. RECORDED as the transcriber's siting."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S08-49",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the pause shell, opened by its bound button",
+      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
+    },
+    {
+      "id": "S08-50",
+      "title": "cycle to the Build tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 12
+      },
+      "expected": "four RB presses reach Build",
+      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build."
+    },
+    {
+      "id": "S08-51",
+      "title": "open the build menu",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "'Open Build Menu' is the tab's only focusable control"
+    },
+    {
+      "id": "S08-52",
+      "title": "let the build menu open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "it reopens on the last category and piece used this session"
+    },
+    {
+      "id": "S08-53",
+      "title": "move to Crafting",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_left",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 12
+      },
+      "expected": "`build_menu.gd::CATEGORY_ORDER` -- Crafting holds the Workbench"
+    },
+    {
+      "id": "S08-54",
+      "title": "arm the workbench",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "paid at the real cost; free_build is OFF"
+    },
+    {
+      "id": "S08-55",
+      "title": "let the ghost arm",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the placement camera takes over"
+    },
+    {
+      "id": "S08-56",
+      "title": "place the workbench",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "Section L.3's crafting site for band 4"
+    },
+    {
+      "id": "S08-57",
+      "title": "let the placement register",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "`GameState.placed_buildings` gains the workbench"
+    },
+    {
+      "id": "S08-58",
+      "title": "use the workbench",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the craft panel opens over the world"
+    },
+    {
+      "id": "S08-59",
+      "title": "let the craft panel open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "Section E.4 lists the craft panel among the surfaces the matrix crosses"
+    },
+    {
+      "id": "S08-60",
+      "title": "the craft panel focuses a recipe",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "without focus the panel cannot be driven on a pad"
+    },
+    {
+      "id": "S08-61",
+      "title": "craft the saddle",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section L.3: 'S08 saddle + orb_prime -- each paid at real cost'. The inventory snapshot on the `craft` event is the evidence"
+    },
+    {
+      "id": "S08-62",
+      "title": "let the craft resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the `craft` event carries the full slot snapshot"
+    },
+    {
+      "id": "S08-63",
+      "title": "focus the prime orb recipe",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "AMBIGUITY RECORDED: the protocol names the recipes but not their order in the panel"
+    },
+    {
+      "id": "S08-64",
+      "title": "craft the prime orb",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section L.3's second band 4 recipe, paid at the real cost"
+    },
+    {
+      "id": "S08-65",
+      "title": "let the craft resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the `craft` event carries the full slot snapshot"
+    },
+    {
+      "id": "S08-66",
+      "title": "leave the craft panel",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the surface hands the world back"
+    },
+    {
+      "id": "S08-67",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is back to 'world'; input leakage after a surface closes is the target"
+    },
+    {
+      "id": "S08-68",
+      "title": "mount the meadowhart",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'Riding (saddle, mount, dismount, speed, no stamina cost) | S08: craft saddle, mount Meadowhart, ride RT-10 leg, dismount, remount'"
+    },
+    {
+      "id": "S08-69",
+      "title": "let the mount stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the riding camera and the mounted locomotion take over"
+    },
+    {
+      "id": "S08-70",
+      "title": "capture GF-11-UPPER-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-11-UPPER-02",
+        "class": "11",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "riding on Meadowhart, RT-10",
+        "intended_proof": "riding payoff exists and stages correctly"
+      },
+      "expected": "Section G: riding on Meadowhart, RT-10 -- riding payoff exists and stages correctly"
+    },
+    {
+      "id": "S08-71",
+      "title": "ride RT-10's leg to Captain Halder",
+      "action": "move_to",
+      "args": {
+        "at": [
+          170.0,
+          5590.0
+        ],
+        "budget_frames": 9000,
+        "close_enough": 4.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-10's second anchor (170,5590) is captain_field. Section L.4: 'ride RT-10 leg'. Riding must not cost stamina",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S08-72",
+      "title": "dismount",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'mount, dismount, speed, no stamina cost'"
+    },
+    {
+      "id": "S08-73",
+      "title": "let the dismount settle",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "control returns to the player on foot"
+    },
+    {
+      "id": "S08-74",
+      "title": "remount",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: '... dismount, remount'"
+    },
+    {
+      "id": "S08-75",
+      "title": "let the remount settle",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the riding camera takes over again"
+    },
+    {
+      "id": "S08-76",
+      "title": "dismount for the fight",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the human never fights, and a captain fight is piloted"
+    },
+    {
+      "id": "S08-77",
+      "title": "let the dismount settle",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "control returns to the player on foot"
+    },
+    {
+      "id": "S08-78",
+      "title": "challenge Captain Halder",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.1 CB-04: 'S08: captain_field, captain_ridge, captain_riverwatch'"
+    },
+    {
+      "id": "S08-79",
+      "title": "hear the captain out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 20
+      },
+      "expected": "one of the three the objective counts"
+    },
+    {
+      "id": "S08-80",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "Section L.6 T05: the combat camera acquires both combatants at fight start"
+    },
+    {
+      "id": "S08-81",
+      "title": "capture GF-14-COMBAT-04d",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-04d",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-04: representative fight per band -- S08, captain_field",
+        "intended_proof": "per-case: band 4's representative fight"
+      },
+      "expected": "Section G: CB-04: representative fight per band -- S08, captain_field -- per-case: band 4's representative fight"
+    },
+    {
+      "id": "S08-82",
+      "title": "fight Captain Halder",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "until_flag": "defeated_captain_field"
+      },
+      "expected": "G3-BAND4 harness fix proposal: fight_until_resolved auto-switches the active creature below 35% HP (tools/gate_f/operator_harness.gd::_step_fight) instead of the blind combat_quick press count this step used to be -- see ralph/reports/G3-BAND4-0903/REPORT.md's addendum for why the original press-count sequence let a fainted lead creature sit through every subsequent captain challenge with no real fight ever starting."
+    },
+    {
+      "id": "S08-85",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return with no stuck modal"
+    },
+    {
+      "id": "S08-86",
+      "title": "the field captain is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_captain_field"
+      },
+      "expected": "`defeated_captain_field`, the first of the objective's three `count_flags`"
+    },
+    {
+      "id": "S08-87",
+      "title": "Section D RT-10's third anchor is south of its second",
+      "action": "note",
+      "args": {
+        "text": "Section D RT-10's third anchor is (-100,4350), which is captain_riverwatch -- 1240 m back south, below the grove the segment already passed. Walked in the order section D lists rather than the order the ground would produce, because reordering coverage is exactly what the transcription rule forbids. The distance this costs is real and lands in section D's own figures for RT-10, which is the honest place for it."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S08-79w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "S08-88",
+      "title": "walk south to Captain Oreth",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -100.0,
+          4350.0
+        ],
+        "budget_frames": 63000,
+        "close_enough": 4.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-10's third anchor (-100,4350) is captain_riverwatch",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S08-89",
+      "title": "challenge Captain Oreth",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.1 CB-04's second band 4 captain"
+    },
+    {
+      "id": "S08-90",
+      "title": "hear the captain out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 20
+      },
+      "expected": "the second of the three"
+    },
+    {
+      "id": "S08-91",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S08-92",
+      "title": "fight Captain Oreth",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "until_flag": "defeated_captain_riverwatch"
+      },
+      "expected": "G3-BAND4 harness fix proposal: fight_until_resolved auto-switches the active creature below 35% HP (tools/gate_f/operator_harness.gd::_step_fight) instead of the blind combat_quick press count this step used to be -- see ralph/reports/G3-BAND4-0903/REPORT.md's addendum for why the original press-count sequence let a fainted lead creature sit through every subsequent captain challenge with no real fight ever starting."
+    },
+    {
+      "id": "S08-95",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return"
+    },
+    {
+      "id": "S08-96",
+      "title": "the riverwatch captain is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_captain_riverwatch"
+      },
+      "expected": "`defeated_captain_riverwatch`, the second of the three `count_flags`"
+    },
+    {
+      "id": "S08-96a",
+      "title": "record_start: band 4's northern region transition, into the Ridgeline Watch",
+      "action": "record_start",
+      "args": {
+        "hz": 0.5,
+        "label": "band 4's northern region transition, into the Ridgeline Watch",
+        "hud": "on",
+        "camera_kind": "gameplay"
+      },
+      "expected": "AMBIGUITY RECORDED: the band 4 -> band 5 handoff is NOT a spatial crossing inside S08. Section B ends this segment on the third captain -- the Sigils open the gate, and the walk through it happens in S09. So this pair sits on the last region transition S08 actually crosses, into `the_ridgeline_watch`, which is the ground the sigil gate stands beyond; the band boundary itself is covered by S09's first window"
+    },
+    {
+      "id": "S08-90w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "S08-97",
+      "title": "walk north to Captain Vess on the ridgeline",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -280.0,
+          6460.0
+        ],
+        "budget_frames": 99000,
+        "close_enough": 4.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-10's fourth anchor (-280,6460) is captain_ridge, in `the_ridgeline_watch`",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S08-98",
+      "title": "the ridgeline region contains the arrival",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "the_ridgeline_watch"
+      },
+      "expected": "map_state.gd's containment puts the player in `the_ridgeline_watch`"
+    },
+    {
+      "id": "S08-99",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "the watch's own content joins the POI set"
+    },
+    {
+      "id": "S08-99a",
+      "title": "record_stop: back to the 0.1 Hz journey baseline after band 4's northern region transition, into the Ridgeline Watch",
+      "action": "record_stop",
+      "args": {
+        "baseline": true
+      },
+      "expected": "the window closes after the point-of-interest rescan inside the watch"
+    },
+    {
+      "id": "S08-100",
+      "title": "walk to the ridgeline patrol first",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -235.0,
+          6470.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.5,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Section L.4: 'Required trainer fights + representative optional | optional: old_champion_bram (195,905), patrol_ridgeline'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S08-101",
+      "title": "challenge the ridgeline patrol",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the second of the journey's two named optional trainers"
+    },
+    {
+      "id": "S08-102",
+      "title": "hear them out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 20
+      },
+      "expected": "record what an optional fight offers this late in the chapter"
+    },
+    {
+      "id": "S08-103",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S08-104",
+      "title": "fight the patrol",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3600,
+        "switch_below": 0.35,
+        "until_flag": "defeated_patrol_ridgeline"
+      },
+      "expected": "G3-BAND4 harness fix proposal: fight_until_resolved auto-switches the active creature below 35% HP (tools/gate_f/operator_harness.gd::_step_fight) instead of the blind combat_quick press count this step used to be -- see ralph/reports/G3-BAND4-0903/REPORT.md's addendum for why the original press-count sequence let a fainted lead creature sit through every subsequent captain challenge with no real fight ever starting."
+    },
+    {
+      "id": "S08-105",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "rewards and control return"
+    },
+    {
+      "id": "S08-102w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "S08-106",
+      "title": "walk to Captain Vess",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -280.0,
+          6460.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.5,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "captain_ridge, the third of the three the objective counts",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S08-107",
+      "title": "challenge Captain Vess",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.1 CB-04's third band 4 captain"
+    },
+    {
+      "id": "S08-108",
+      "title": "hear the captain out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 20
+      },
+      "expected": "the last of the three"
+    },
+    {
+      "id": "S08-109",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants"
+    },
+    {
+      "id": "S08-110",
+      "title": "fight Captain Vess",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "until_flag": "defeated_captain_ridge"
+      },
+      "expected": "G3-BAND4 harness fix proposal: fight_until_resolved auto-switches the active creature below 35% HP (tools/gate_f/operator_harness.gd::_step_fight) instead of the blind combat_quick press count this step used to be -- see ralph/reports/G3-BAND4-0903/REPORT.md's addendum for why the original press-count sequence let a fainted lead creature sit through every subsequent captain challenge with no real fight ever starting."
+    },
+    {
+      "id": "S08-113",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 10
+      },
+      "expected": "rewards and control return"
+    },
+    {
+      "id": "S08-114",
+      "title": "the ridge captain is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_captain_ridge"
+      },
+      "expected": "`defeated_captain_ridge`, the third of the three `count_flags`"
+    },
+    {
+      "id": "S08-115",
+      "title": "the Hall approach is open",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "hall_approach_open"
+      },
+      "expected": "`hall_approach_open` is objective 22/27's own flag: three Sigils, three captains. Section B: S08's span ends at 'three Sigils'"
+    },
+    {
+      "id": "S08-116",
+      "title": "the chain turns toward the Hall",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "fight_through_the_hall"
+      },
+      "expected": "Section E.5 objective 23/27 `fight_through_the_hall`, 'Fight through the guard inside Meadows Hall.'"
+    },
+    {
+      "id": "S08-117",
+      "title": "band 4 was actually walked and ridden",
+      "action": "assert",
+      "args": {
+        "check": "distance_above",
+        "metres": 4000.0
+      },
+      "expected": "Section D RT-10 as listed is a circuit of well over 4 km; no pacing claim may come from a shortcut (section 0.6)"
+    },
+    {
+      "id": "S08-118",
+      "title": "the 2 Hz trace ran throughout",
+      "action": "assert",
+      "args": {
+        "check": "route_rows_at_least",
+        "rows": 4000
+      },
+      "expected": "Section C.2"
+    },
+    {
+      "id": "S08-119",
+      "title": "band 4's longest empty stretch is on the record",
+      "action": "assert",
+      "args": {
+        "check": "dead_travel_peak_above",
+        "metres": 150.0
+      },
+      "expected": "Section D: '>= 250 m is a finding; 150-250 m is a watch item'. The peak is the half that proves accumulation; a PASS records a watch item and its size"
+    },
+    {
+      "id": "S08-120",
+      "title": "Section B save handoff",
+      "action": "note",
+      "args": {
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X01 (riding/late menus) and X03 (party-full catch, 5/5) from this file."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S08-121",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab",
+      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
+    },
+    {
+      "id": "S08-122",
+      "title": "cycle right to the Save tab",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 12
+      },
+      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json",
+      "observation": "times 5 -> 3: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: save."
+    },
+    {
+      "id": "S08-123",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S08-124",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S08-125",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S08-126",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
+    },
+    {
+      "id": "S08-127",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S08-exit.json"
+      },
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S08-exit.json`"
+    },
+    {
+      "id": "S08-128",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S08-129",
+      "title": "close the segment",
+      "action": "note",
+      "args": {
+        "text": "S08 exit save written and copied, with the belt at 5/5."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ],
+  "_comment_g3band4_fix": "Not authored content -- a proposed patch to tools/gate_f/segments/S08.json, outside this lane's file ownership, so it lives here rather than editing the shared file directly. Replaces every blind `press combat_quick xN` fight step (S08-29, S08-41, S08-82/83/84, S08-92/93/94, S08-104, S08-110/111/112) with a single `fight_until_resolved` step, which tools/gate_f/operator_harness.gd already implements and already auto-switches the active creature below 35%% HP -- the exact behaviour missing from the raw press sequences that let a fainted lead creature sit through every subsequent captain challenge with no real fight. See ralph/reports/G3-BAND4-0903/REPORT.md for the full diagnosis and this fix's own validated result. If this reads correct, the change to apply to the real tools/gate_f/segments/S08.json is exactly this diff, minus this comment and the id/title rename above."
+}
