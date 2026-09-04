@@ -34,6 +34,7 @@ const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const REALM_HEART_STATE := preload("res://autoload/realm_heart_state.gd")
 const PLAYER_EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
@@ -73,6 +74,15 @@ var map: RefCounted = null
 ## see `autoload/progression_state.gd`'s own header for the full contract.
 ## Instantiated in `_ready()`, same as `map` above.
 var progression: RefCounted = null
+
+## Cloudreach Phase 1.  Realm Heart selection outlives scene transitions just
+## like progression and map state, while remaining a composed RefCounted so
+## Game stays the project's single autoload.
+var realm_hearts: RefCounted = null
+
+## Which world scene a Continue or realm transition should enter.  Pose saves
+## carry the same id so coordinates from one realm are never applied to another.
+var current_realm: String = "meadows"
 
 ## SB11. Reads `progression`'s flags against `data/progression/objectives.json`
 ## to answer "what is the one tracked Main Story line" and "what does the
@@ -461,6 +471,8 @@ func reset_for_new_game() -> void:
 	map = MAP_STATE.new()
 	map.configure(_map_landmarks_config())
 	progression = PROGRESSION_STATE.new()
+	realm_hearts = REALM_HEART_STATE.new()
+	current_realm = "meadows"
 	quest_log = QUEST_LOG.new()
 	objective_text = quest_log.call("tracked_text", progression)
 	objective_hint = quest_log.call("tracked_hint", progression)
@@ -928,6 +940,44 @@ func save_game(slot: int) -> bool:
 	return bool(save_system.call("save", self, slot))
 
 
+func current_realm_scene() -> String:
+	if realm_hearts == null:
+		return ""
+	return str(realm_hearts.call("scene_for_realm", current_realm))
+
+
+func can_enter_realm(realm_id: String) -> bool:
+	if realm_hearts == null or progression == null:
+		return false
+	var scene := str(realm_hearts.call("scene_for_realm", realm_id))
+	if scene == "":
+		return false
+	var key_flag := str(realm_hearts.call("entry_key_for_realm", realm_id))
+	return key_flag == "" or bool(progression.call("has", key_flag))
+
+
+## Cross a real realm boundary.  The transition autosave deliberately bypasses
+## `save_game()`'s pose capture: after `current_realm` changes, a pose captured
+## from the outgoing scene would be labelled as the destination and could drop
+## the player at a valid but unrelated coordinate on Continue.
+func enter_realm(realm_id: String) -> bool:
+	if not can_enter_realm(realm_id):
+		return false
+	var scene := str(realm_hearts.call("scene_for_realm", realm_id))
+	if not ResourceLoader.exists(scene):
+		push_error("realm '%s' points at missing scene %s" % [realm_id, scene])
+		return false
+	_sync_placed_building_state()
+	_sync_death_satchel_state()
+	_sync_harvest_state()
+	current_realm = realm_id
+	saved_player_pose = {}
+	if save_system != null:
+		save_system.call("save", self, autosave_slot())
+	get_tree().change_scene_to_file(scene)
+	return true
+
+
 ## R3.1-remainder. A placed storage chest's own contents live on the live
 ## scene node (`storage_state.gd`), not in `placed_buildings` — `save_game
 ## .gd` deliberately never touches the scene tree (see its own header), so
@@ -1026,6 +1076,7 @@ func _capture_player_pose() -> void:
 		rig = player.get_parent().get_node_or_null(^"CameraRig")
 	var facing := model.global_rotation.y if model != null else player.global_rotation.y
 	saved_player_pose = {
+		"realm": current_realm,
 		"position": [player.global_position.x, player.global_position.y, player.global_position.z],
 		"model_yaw": facing,
 		"camera_yaw": float(rig.get("yaw")) if rig != null else facing,
@@ -1037,6 +1088,8 @@ func _capture_player_pose() -> void:
 ## pre-world/title-screen case, not an error; Player._ready retries it.
 func apply_loaded_player_pose() -> bool:
 	if saved_player_pose.is_empty():
+		return false
+	if str(saved_player_pose.get("realm", "meadows")) != current_realm:
 		return false
 	var player := _find_player()
 	if player == null:

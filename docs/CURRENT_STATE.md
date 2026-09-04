@@ -392,3 +392,40 @@ Points of interest: one optional discovery with a real reward, signposts legible
 
 - **Gate 3 / 4:** not started. Gate F S03 reached 6 failures outside its lane's scope;
   S04–S10 unverified as a chain.
+
+## 2026-09-04 — Cloudreach checkpoint / agent exit
+
+Branch: `codex/cloudreach-cliffs`, based on `origin/main` `763ecac1a` (PR #40).
+
+This is a deliberately narrow, buildable foundation checkpoint, not a completed Cloudreach
+pass and not visual acceptance. It adds the persistent second-realm seam: the Meadows Warden
+now grants durable `realm_key_cloudreach` and `realm_heart_meadows_earned` progression facts
+exactly once through the existing trainer-defeat path; a short automatic victory conversation
+names both rewards and Cloudreach; data-driven `RealmHeartState` owns placement and the single
+active Heart choice; Meadowstride doubles maximum stamina without stacking; save format v17
+persists the current realm and active Heart while migrating older saves to the Meadows; and
+Continue selects the saved realm scene. A saved player pose is realm-tagged so Meadows
+coordinates cannot be applied in another world.
+
+Verification on Godot 4.7 stable (`D:\Tetherbound-tools\godot\Godot_v4.7-stable_win64_console.exe`):
+the focused handoff/Heart/vitals/dialogue/trainer/band suite passed **161 tests / 3,640
+assertions / 0 failures**. The dialogue runner intentionally emits one expected error while
+testing rejection of a nonexistent conversation; there were no parse errors or unexpected
+script errors in this run. A whole-project editor scan reached script-class registration cleanly,
+then began a first-time import of the entire asset library; it was stopped at 18% to keep this
+handoff bounded, and all generated import metadata was removed before commit.
+
+Exact resume point: build the physical Heart shrine in the Meadows, then the locked Storm Road
+realm gate and `scenes/world/cloudreach_cliffs.tscn`; only after that should a smoke test call
+`Game.enter_realm("cloudreach")`. The realm registry already names that scene, but
+`Game.enter_realm` checks `ResourceLoader.exists` before mutating or saving state, so this
+checkpoint refuses the unfinished crossing safely. Then prove Warden victory -> reward dialogue
+-> shrine place/equip -> doubled stamina -> locked/unlocked gate -> Cloudreach -> return ->
+save/reload as one continuous real-game path before starting Phase 2 terrain. No visual-judge
+pass or performance measurement has been claimed for this systems-only checkpoint.
+
+Known external input gap: PR #40 did not include the referenced Cloudreach concept board and no
+local copy was found on C: or D:. Follow the directive's written visual language until the owner
+provides the board; do not invent a competing style reference. Do not implement the intentionally
+deferred final Cloudreach creature roster, final Fly bird models, unique animations, legendary
+final art, or the Water biome while completing the functional chapter.

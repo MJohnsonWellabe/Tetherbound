@@ -155,6 +155,13 @@ extends RefCounted
 ## VERSION 15 (T3-ENCOUNTER's `world_seed`) went in on `main`, hence 16 rather
 ## than the 15 an earlier pass on this branch used before rebasing.
 ##
+## ## VERSION 17 — REALMS AND REALM HEARTS
+##
+## Cloudreach adds a second world scene and the one-active Realm Heart choice.
+## `current_realm` selects the scene Continue enters; `realm_hearts` stores the
+## active Heart id. Older saves honestly belong to the Meadows and have no
+## active Heart, so `_migrate_v16` supplies exactly those defaults.
+##
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
@@ -192,7 +199,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 16
+const VERSION := 17
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -223,6 +230,7 @@ func slot_info(slot: int) -> Dictionary:
 	return {
 		"day": int(data.get("day", 1)),
 		"party_size": (data.get("party", []) as Array).size(),
+		"realm": str(data.get("current_realm", "meadows")),
 	}
 
 
@@ -234,6 +242,7 @@ func save(game: Object, slot: int) -> bool:
 
 	var map_obj: Variant = game.get("map")
 	var progression_obj: Variant = game.get("progression")
+	var realm_hearts_obj: Variant = game.get("realm_hearts")
 	var data := {
 		"version": VERSION,
 		"day": int(game.get("day")),
@@ -246,6 +255,8 @@ func save(game: Object, slot: int) -> bool:
 		"satiety": _read_satiety(game),
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
 		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
+		"realm_hearts": (realm_hearts_obj as RefCounted).call("save_data") if realm_hearts_obj != null else {},
+		"current_realm": str(game.get("current_realm")) if game.get("current_realm") != null else "meadows",
 		"harvested_vegetation": (game.get("harvested_vegetation") as Dictionary).duplicate(true),
 		"world_seed": int(game.get("world_seed")) if game.get("world_seed") != null else 0,
 		"felled_vegetation": (game.get("felled_vegetation") as Dictionary).duplicate(true),
@@ -294,6 +305,8 @@ func load_slot(game: Object, slot: int) -> bool:
 	if game.get("saved_player_pose") != null:
 		var pose_raw: Variant = data.get("player_pose", {})
 		game.set("saved_player_pose", _sanitise_player_pose(pose_raw))
+	if game.get("current_realm") != null:
+		game.set("current_realm", str(data.get("current_realm", "meadows")))
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
 
 	var map_obj: Variant = game.get("map")
@@ -305,6 +318,14 @@ func load_slot(game: Object, slot: int) -> bool:
 	if progression_obj != null:
 		var progression_data: Variant = data.get("progression", {})
 		(progression_obj as RefCounted).call("load_data", progression_data if typeof(progression_data) == TYPE_DICTIONARY else {})
+
+	var realm_hearts_obj: Variant = game.get("realm_hearts")
+	if realm_hearts_obj != null:
+		var hearts_data: Variant = data.get("realm_hearts", {})
+		(realm_hearts_obj as RefCounted).call(
+			"load_data",
+			hearts_data if typeof(hearts_data) == TYPE_DICTIONARY else {},
+			progression_obj as RefCounted if progression_obj != null else null)
 	return true
 
 
@@ -325,6 +346,7 @@ func _sanitise_player_pose(raw: Variant) -> Dictionary:
 		if not _finite_number(pose.get(key)):
 			return {}
 	return {
+		"realm": str(pose.get("realm", "meadows")),
 		"position": [float(position_raw[0]), float(position_raw[1]), float(position_raw[2])],
 		"model_yaw": float(pose["model_yaw"]),
 		"camera_yaw": float(pose["camera_yaw"]),
@@ -645,6 +667,20 @@ func _migrate_v15(data: Dictionary) -> Dictionary:
 		creature["rest_nights_together"] = 0
 		creature["feeds_together"] = 0
 	migrated["party"] = party
+	return migrated
+
+
+## VERSION 16 -> 17: every pre-Cloudreach save was written in the Meadows and
+## predates an active Realm Heart selection.
+func _migrate_v16(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 17
+	migrated["current_realm"] = "meadows"
+	migrated["realm_hearts"] = {}
+	var pose: Variant = migrated.get("player_pose", {})
+	if pose is Dictionary and not (pose as Dictionary).is_empty():
+		(pose as Dictionary)["realm"] = "meadows"
+		migrated["player_pose"] = pose
 	return migrated
 
 

@@ -729,6 +729,7 @@
       "facing_deg": 180.0,
       "challenge": "stronghold_warden_challenge",
       "defeated": "stronghold_warden_defeated",
+      "victory_conversation": "stronghold_warden_realm_reward",
       "_comment_team": "A FULL team of five -- the only trainer in the chapter who fields one, and the first time the player's own five-creature limit is met by an equal. Three types across the five so no single answer sweeps it: two Ground, one Water, one Air, and a Ground ace. ALL TUNABLE.",
       "team": [
         {
@@ -823,7 +824,10 @@
             "count": 4
           }
         ],
-        "flags": [],
+        "flags": [
+          "realm_key_cloudreach",
+          "realm_heart_meadows_earned"
+        ],
         "xp_bonus": 400
       },
       "_comment_defeat_flag": "R8.4 waits on exactly this id: data/config/stronghold_climax.json gates the tether machine shut until it is set, so a player who sprints past him cannot reach the Legendary Chamber's lever with the boss still standing. Spec sec28's order is not optional and this flag is where that is enforced. SG44's world event reads `legendary_freed`, not this.",

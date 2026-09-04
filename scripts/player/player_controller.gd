@@ -22,6 +22,7 @@ signal landed(impact_speed: float, damage: float)
 signal died()
 
 var vitals: RefCounted = VITALS.new()
+var _realm_heart_revision: int = -1
 ## The torch's light (scripts/player/torch.gd) -- built here from the first
 ## frame like `tool_hold` below, but only actually lit while `torch` is the
 ## equipped tool (OW12; see that file's own header). Exposed the same way
@@ -189,6 +190,7 @@ func _load_config() -> void:
 
 	vitals.configure(config)
 	_load_vitals_config()
+	_sync_realm_heart_power()
 
 
 ## D29 satiety. Separate file from movement.json so hunger tuning does not
@@ -206,6 +208,7 @@ func _load_vitals_config() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	_sync_realm_heart_power()
 	if _carried:
 		_ride(delta)
 		return
@@ -242,6 +245,20 @@ func _physics_process(delta: float) -> void:
 
 	vitals.tick(delta, _sprinting and velocity.length() > 0.5)
 	vitals.tick_satiety(delta)
+
+
+func _sync_realm_heart_power() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var hearts: Variant = game.get("realm_hearts")
+	if hearts == null:
+		return
+	var next_revision := int((hearts as RefCounted).get("revision"))
+	if next_revision == _realm_heart_revision:
+		return
+	_realm_heart_revision = next_revision
+	vitals.call("set_stamina_capacity_multiplier", hearts.call("stamina_capacity_multiplier"))
 
 
 ## T5-CARE. A ceiling on how fast this body can be travelling, whatever put the

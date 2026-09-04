@@ -1,0 +1,27 @@
+{
+  "_comment": "Cloudreach Phase 1. Realm Hearts are reusable realm rewards. Story ownership (earned/placed) stays in the progression flag store; exactly one active selection is persisted by RealmHeartState. Values are tunable.",
+  "hearts": {
+    "meadows": {
+      "display_name": "Heart of Meadows",
+      "earned_flag": "realm_heart_meadows_earned",
+      "placed_flag": "realm_heart_meadows_placed",
+      "power": {
+        "display_name": "Meadowstride",
+        "description": "Doubles maximum stamina.",
+        "max_stamina_multiplier": 2.0
+      }
+    }
+  },
+  "realms": {
+    "meadows": {
+      "display_name": "The Meadows",
+      "scene": "res://scenes/world/meadows_playground.tscn",
+      "entry_key_flag": ""
+    },
+    "cloudreach": {
+      "display_name": "Cloudreach Cliffs",
+      "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+      "entry_key_flag": "realm_key_cloudreach"
+    }
+  }
+}

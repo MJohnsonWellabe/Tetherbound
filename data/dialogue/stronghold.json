@@ -69,6 +69,16 @@
       ]
     },
 
+    "stronghold_warden_realm_reward": {
+      "_comment": "Cloudreach Phase 1. Automatic first-victory handoff. The flags are granted by the Warden trainer row before this opens, so closing the panel early cannot lose either entitlement and a full satchel cannot block them.",
+      "speaker": "Warden Aldis",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You won. Take the Realm Key — it opens the Storm Road beyond the village.",
+        "And take the Heart of Meadows home. Place it at the old shrine; its strength will carry you into Cloudreach."
+      ]
+    },
+
     "stronghold_chamber": {
       "_comment": "R8.4, and the first thing the player is given in the chamber is a LOOK, not a button. The room is the machine and the machine has something in it. Deliberately wordless about what to do next -- the prompt on the machine is the next thing, and it is the player's hand on it.",
       "speaker": "Chamber Five",

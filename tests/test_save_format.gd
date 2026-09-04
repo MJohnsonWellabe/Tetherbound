@@ -26,6 +26,7 @@ const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const REALM_HEART_STATE := preload("res://autoload/realm_heart_state.gd")
 
 const TEST_DIR := "user://test_saves_format/"
 
@@ -61,6 +62,9 @@ class FakeGame:
 	var saved_player_pose: Dictionary = {}
 	var map: RefCounted = null
 	var progression: RefCounted = null
+	## Cloudreach Phase 1 / VERSION 17.
+	var realm_hearts: RefCounted = null
+	var current_realm: String = "meadows"
 	## Fallback satiety — round-tripped directly when `_vitals` below is null,
 	## mirroring the real `Game.satiety` field's job.
 	var satiety: float = 100.0
@@ -103,6 +107,7 @@ func _game(seed_party: bool = true) -> RefCounted:
 	game.party = PARTY.new()
 	game.inventory = INVENTORY.new(db)
 	game.progression = PROGRESSION_STATE.new()
+	game.realm_hearts = REALM_HEART_STATE.new()
 	if seed_party:
 		var creature: RefCounted = CREATURE.from_species("terrapup", {
 			"display_name": "Terrapup", "type": "ground", "base_hp": 100.0,
@@ -112,6 +117,21 @@ func _game(seed_party: bool = true) -> RefCounted:
 		creature.take_damage(35.0)
 		game.party.add(creature)
 	return game
+
+
+func test_save_then_load_round_trips_realm_and_active_heart() -> void:
+	var written := _game(false)
+	written.progression.set_flag("realm_heart_meadows_earned")
+	assert_true(written.realm_hearts.place("meadows", written.progression))
+	assert_true(written.realm_hearts.activate("meadows", written.progression))
+	written.current_realm = "cloudreach"
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_eq(read.current_realm, "cloudreach")
+	assert_eq(read.realm_hearts.active_id(), "meadows")
+	assert_eq(read.realm_hearts.stamina_capacity_multiplier(), 2.0)
 
 
 func test_slot_count_is_between_three_and_five() -> void:
