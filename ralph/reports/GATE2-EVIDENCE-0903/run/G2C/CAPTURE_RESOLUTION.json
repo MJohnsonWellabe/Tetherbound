@@ -1,0 +1,7 @@
+{
+  "requested": [1280, 720],
+  "used": [1280, 720],
+  "substituted": false,
+  "why": "GATE2-EVIDENCE-0903 ran this capture lane at 1280x720 deliberately, not as a fallback from run_segment.sh's 1920x1080. Two reasons, both recorded rather than assumed: (1) every prior blind-judge sheet this verdict has to be compared against (BAND1-COMPOSITION-0903, MID-LAYER-0903, TREE-SILHOUETTE-0903, and tools/survey.sh itself) was rendered at 1280x720 under xvfb + opengl3, so this matches the series rather than starting a new one; (2) under llvmpipe on this container a rendered frame at 1280x720 measured ~2 s (tools/perf_render_stats.gd: 450 frames in 16m41s), and 1920x1080 is 2.25x the pixels -- the difference between a 40-minute lane and a 2-hour one, against harness_config.json's own CD-7 warning that capture-mode cost is priced in RENDERED frames.",
+  "smoke": "capture_smoke.png"
+}
