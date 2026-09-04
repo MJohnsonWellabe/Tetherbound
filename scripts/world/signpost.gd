@@ -103,7 +103,7 @@ const LABEL_FONT_SIZE := 144
 ## answer is pale lettering with a dark edge.
 const POST_COLOUR := Color("#6e4a28")
 const PLANK_COLOUR := Color("#724b31")
-const ROPE_COLOUR := Color("#a8905f")
+const ROPE_COLOUR := Color("#8a7448")
 const INK_COLOUR := Color("#f4ecd8")
 const INK_OUTLINE_COLOUR := Color("#2a1a10")
 

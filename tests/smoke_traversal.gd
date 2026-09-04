@@ -950,8 +950,71 @@ const BRIDGE_BLOCKED_M := 0.0
 
 func _check_south_bridge(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
 	await _assert_south_bridge_site_sound(world, player, failures)
+	_assert_south_bridge_held(world, failures)
 	await _check_gated_crossing(world, player, failures,
 		NodePath("SouthBridge"), "the South Bridge", "south_bridge_key", "south_bridge_open")
+	await _assert_south_bridge_stood_down(world, failures)
+
+
+## W22-BRIDGE-SIGNPOST-0904 (closure plan CL-B3): the crossing is DRESSED as
+## held, not just gated. `south_bridge.gd::_build_occupation` stands a
+## barricade, two staked banners, a lantern and a posted sentry in front of
+## the archway, and `gated_crossing.gd::_build_rail` rails the deck from the
+## recipe's own `rail` block. This asks the built scene for each of them, so
+## a recipe edit that drops the `rail` block, or a config path that goes
+## missing, fails here rather than on the next blind judge.
+func _assert_south_bridge_held(world: Node, failures: Array[String]) -> void:
+	var bridge: Node3D = world.get_node_or_null(^"SouthBridge") as Node3D
+	if bridge == null:
+		return
+	var rail := bridge.get_node_or_null(^"Span/Rail")
+	var posts := 0
+	if rail != null:
+		for child in rail.get_children():
+			if child.name.begins_with("Post_"):
+				posts += 1
+	if posts < 4:
+		failures.append("the South Bridge deck has %d rail posts; the rope rail is not built" % posts)
+	var banners := _count_named(bridge, "CheckpointBanner")
+	if banners < 2:
+		failures.append("the South Bridge flies %d banner(s); a held crossing flies two" % banners)
+	for side in ["A", "B"]:
+		if bridge.get_node_or_null("Occupation/Barricade_%s" % side) == null:
+			failures.append("the South Bridge has no barricade %s on its shoulder" % side)
+	var glow := bridge.get_node_or_null(^"Occupation/Lantern/Lamp/Glow")
+	if not glow is OmniLight3D:
+		failures.append("the South Bridge checkpoint has no lit lantern")
+	if bridge.get_node_or_null(^"Occupation/Sentries/Bridge Sentry") == null:
+		failures.append("nobody is posted at the South Bridge while it is shut")
+	print("  South Bridge, held:  %d rail posts, %d banners, sentry posted" % [posts, banners])
+
+
+## Once the crossing is genuinely open the body that would contradict an
+## open gate stands down (`south_bridge_dressing.json`'s `place_when`), and
+## the evidence it was held -- barricade, banners -- stays.
+func _assert_south_bridge_stood_down(world: Node, failures: Array[String]) -> void:
+	var bridge: Node3D = world.get_node_or_null(^"SouthBridge") as Node3D
+	if bridge == null or not bool(bridge.call("is_open")):
+		return
+	# `village_npcs.gd` re-reads its `place_when` gates when the flag store's
+	# revision moves, on its next process frame; give it a few.
+	for i in 6:
+		await physics_frame
+	var sentry := bridge.get_node_or_null(^"Occupation/Sentries/Bridge Sentry")
+	if sentry != null and not sentry.is_queued_for_deletion():
+		failures.append("the Bridge Sentry is still posted over an open South Bridge")
+	if bridge.get_node_or_null(^"Occupation/Barricade_A") == null:
+		failures.append("the South Bridge's barricade vanished with the gate; the evidence it was held should stay")
+	print("  South Bridge, opened: sentry stood down, barricade still standing")
+
+
+func _count_named(node: Node, name_prefix: String) -> int:
+	var total := 0
+	for child in node.get_children():
+		if child.name.begins_with(name_prefix):
+			total += 1
+		total += _count_named(child, name_prefix)
+	return total
 
 
 ## docs/CURRENT_STATE.md §3 (P1): a player capsule placed at

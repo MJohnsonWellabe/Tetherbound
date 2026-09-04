@@ -17,6 +17,7 @@ extends SceneTree
 
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
+const CROSSING := preload("res://scripts/world/gated_crossing.gd")
 const DEFAULT_OUT_DIR := "res://shots/w22/isolated"
 const SETTLE_FRAMES := 12
 
@@ -75,6 +76,13 @@ func _run() -> void:
 		return
 	span.name = "Span"
 	world.add_child(span)
+	# The rope rail is built by the crossing from the recipe's own `rail`
+	# block, not by the prefab composer -- stand a bare crossing up just to
+	# run that one builder over the span, exactly as `build()` would.
+	var crossing: Node3D = CROSSING.new()
+	crossing.name = "RailBuilder"
+	world.add_child(crossing)
+	crossing.call("_build_rail", prefabs, span, "south_bridge")
 
 	var sign: Node3D = SIGNPOST.new()
 	sign.name = "Signpost"
