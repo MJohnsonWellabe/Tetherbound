@@ -204,6 +204,14 @@ var _targeting_tonic: String = ""
 ## as `_targeting_tonic` above and running through the same picker.
 var _targeting_food: String = ""
 
+## 2026-09-04. The candy item id being targeted, or "". Fifth user of the one
+## picker: "which of yours?" again, eligibility is "not fainted and not
+## already at the level cap" (`_level_headroom`, mirroring `_elixir_headroom`
+## exactly), and the confirm handler calls the same `set_level()` a story
+## spawn already uses rather than inventing a second levelling path.
+## docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md section B.
+var _targeting_level_up: String = ""
+
 ## TM/move lookups, loaded on first use and kept. `tm_db.gd` owns the
 ## compatibility list and `move_db.gd` owns power/type/slot; this screen reads
 ## both and duplicates neither (OF29's brief: reconcile, don't duplicate).
@@ -245,6 +253,7 @@ func build() -> void:
 	_targeting_elixir = ""
 	_targeting_tonic = ""
 	_targeting_food = ""
+	_targeting_level_up = ""
 	_confirming = -1
 
 	var config := _config()
@@ -1341,6 +1350,17 @@ func _read_use() -> void:
 		)
 		return
 
+	# 2026-09-04: Good/Great/Rare Candy pick their creature the same way a
+	# tonic does. addendum section B.
+	if (db.call("definition", id) as Dictionary).has("level_up"):
+		_targeting_level_up = id
+		_open_target_picker(
+			0.0, 0.0, "",
+			"Nobody can use that right now.",
+			"Who eats it? It raises their level."
+		)
+		return
+
 	# D47: an elixir picks its drinker the same way a TM picks its student.
 	# Placed ahead of the TM branch only because `kind` is checked in order;
 	# the two are mutually exclusive kinds and neither shadows the other.
@@ -1681,12 +1701,25 @@ func _elixir_headroom(creature: RefCounted) -> int:
 	return maxi(0, cap - current)
 
 
+## Levels this creature can still gain before the level cap
+## (`progression.json`'s `level.cap`) refuses it outright, mirroring
+## `_elixir_headroom` exactly.
+func _level_headroom(creature: RefCounted) -> int:
+	if creature == null or _targeting_level_up.is_empty():
+		return 0
+	var cap := int(PROGRESSION.config().get("level", {}).get("cap", 50))
+	return maxi(0, cap - int(creature.get("level")))
+
+
 func _eligible(creature: RefCounted, heal: float, revive: float, tm: String) -> bool:
 	if creature == null:
 		return false
 	if not _targeting_tonic.is_empty():
 		# Any living creature can drink a tonic; a fainted one cannot.
 		return not bool(creature.get("fainted"))
+	if not _targeting_level_up.is_empty():
+		# Any living creature under the level cap.
+		return not bool(creature.get("fainted")) and _level_headroom(creature) > 0
 	if not _targeting_food.is_empty():
 		# A living creature that is not already full. Refusing the full ones
 		# is what stops a berry being spent for nothing.
@@ -1714,6 +1747,10 @@ func _ineligible_reason(creature: RefCounted, heal: float, revive: float, tm: St
 		return "empty"
 	if not _targeting_tonic.is_empty():
 		return "fainted" if bool(creature.get("fainted")) else ""
+	if not _targeting_level_up.is_empty():
+		if bool(creature.get("fainted")):
+			return "fainted"
+		return "" if _level_headroom(creature) > 0 else "already at the level cap"
 	if not _targeting_food.is_empty():
 		if bool(creature.get("fainted")):
 			return "fainted"
@@ -1965,6 +2002,25 @@ func _on_target_row(index: int) -> void:
 		say("%s drank the %s. %s for %ds." % [
 			str(creature.call("label")), str(db.call("item_name", id)),
 			str(tonic.get("stat", "")).capitalize(), int(tonic.get("duration_s", 0))
+		])
+		_end_targeting()
+		return
+
+	if not _targeting_level_up.is_empty():
+		var levels := int((db.call("definition", id) as Dictionary).get("level_up", 0))
+		var before := int(creature.get("level"))
+		creature.call("set_level", before + levels, PROGRESSION.config())
+		var after := int(creature.get("level"))
+		if after <= before:
+			# `_eligible()` said yes a line ago; the same defensive dead-end
+			# guard every branch here keeps -- never spend a permanent item
+			# on nothing.
+			say("%s is already at the level cap." % str(creature.call("label")))
+			_end_targeting()
+			return
+		inventory.call("remove", id, 1)
+		say("%s jumped to level %d! (+%d)" % [
+			str(creature.call("label")), after, after - before
 		])
 		_end_targeting()
 		return

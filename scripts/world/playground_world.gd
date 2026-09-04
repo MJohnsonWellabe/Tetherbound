@@ -392,13 +392,40 @@ const TM_AT := {
 ## team this early has banked. A free copy on a curiosity-rewarded detour is a
 ## real Band 1 upgrade the day it is found, not a recipe waiting for a
 ## material two regions away.
+## 2026-09-04. A first representative placement of the new pickup art
+## (docs/specs/ASSET_LEDGER.md, "Meadows pickup props") through this exact
+## existing mechanism, per the addendum's own art-source order: reuse
+## infrastructure, one new mesh per family, tint/scale for tiers rather than
+## a pickup per tier. **Not the full regional-density pass** —
+## docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md sections B/C ask for ~100
+## candy and ~100-150 findables total, authored per band in regional
+## batches; this is one of each family, in Band 1, to prove the seam works
+## end to end. The remaining bands and the rest of the count are the next
+## regional batch, not attempted here.
+##
+## UNVERIFIED GROUND: placed 2-3m from the two already-proven-valid points
+## above rather than at a freshly probed site — this session had no running
+## Godot instance to confirm ground height at a new coordinate.
+## `ground_height_at()` refuses gracefully (push_error, no spawn, no crash)
+## if any of these land off-terrain, so the failure mode is silent rather
+## than broken, but treat these four as needing a real probe
+## (`tools/_probe_activities_sites.gd`'s pattern) before trusting them as
+## final band-1 placements.
 const CACHE_AT := {
 	"elixir_might": Vector2(-165.0, 7065.0),
 	"tm_rock_throw": Vector2(-382.8, 355.5),
+	"good_candy": Vector2(-167.5, 7062.5),
+	"potion_small": Vector2(-380.3, 358.0),
+	"revive": Vector2(-384.5, 353.0),
+	"stamina_mushroom": Vector2(-163.0, 7067.5),
 }
 const CACHE_LABEL := {
 	"elixir_might": "Take the elixir",
 	"tm_rock_throw": "Take the TM",
+	"good_candy": "Take the candy",
+	"potion_small": "Take the potion",
+	"revive": "Take the revive",
+	"stamina_mushroom": "Take the mushroom",
 }
 const CACHE_MODEL := "res://assets/props/quaternius_fantasy/Barrel.gltf"
 const CACHE_MODEL_SCALE := 0.9
@@ -1424,6 +1451,25 @@ func _place_item_caches() -> void:
 		_spawn_item_cache(item_id)
 
 
+## 2026-09-04. `world_model`/`world_model_scale` on the item's own
+## `data/items/items.json` definition take priority over the shared
+## `CACHE_MODEL` barrel — every pickup this session generated real art for
+## (candy, potion, revive, mushroom) carries these keys; an item with
+## neither (the elixir, the TM disc) still gets the barrel exactly as
+## before. One lookup, additive, nothing about the existing two caches
+## changes.
+func _item_cache_model(item_id: String) -> Array:
+	var game := get_node_or_null(^"/root/Game")
+	var db: RefCounted = game.get("items") as RefCounted if game != null else null
+	if db == null:
+		return [CACHE_MODEL, CACHE_MODEL_SCALE]
+	var definition: Dictionary = db.call("definition", item_id) as Dictionary
+	var model := str(definition.get("world_model", ""))
+	if model.is_empty():
+		return [CACHE_MODEL, CACHE_MODEL_SCALE]
+	return [model, float(definition.get("world_model_scale", 1.0))]
+
+
 func _spawn_item_cache(item_id: String) -> void:
 	if get_node_or_null(NodePath("Cache_%s" % item_id)) != null:
 		return
@@ -1436,7 +1482,9 @@ func _spawn_item_cache(item_id: String) -> void:
 	pickup.name = "Cache_%s" % item_id
 	pickup.position = Vector3(at.x, ground, at.y)
 	add_child(pickup)
-	pickup.call("setup", item_id, CACHE_LABEL.get(item_id, "Take it"), CACHE_MODEL, CACHE_MODEL_SCALE)
+	var model_and_scale := _item_cache_model(item_id)
+	pickup.call("setup", item_id, CACHE_LABEL.get(item_id, "Take it"),
+		model_and_scale[0], model_and_scale[1])
 
 
 ## D71/T3-SUNSTONE: the Sunstone, a one-time physical pickup exactly like

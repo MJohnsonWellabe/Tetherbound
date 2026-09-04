@@ -304,6 +304,72 @@
         ]
       },
       "_comment": "RETRY 2 2026-09-04: feeding STAMINA and WILD as if they were two angles of one object produced a rounded-blob/rock shape on five candidates across two prompt versions -- they are genuinely different mushroom arrangements, not two views of the same one, and multi-image-to-3D was averaging them. No second angle of any single cluster exists on the board, so front and three_quarter are now the SAME Stamina crop, forcing effectively single-image reconstruction (the >=2-view floor in reference_views() needs two named files, not two different pictures)."
+    },
+    "riding_saddle": {
+      "file": "20_Riding_Saddle.png",
+      "background": [
+        237,
+        231,
+        220
+      ],
+      "pad": 280,
+      "views": {
+        "side": [
+          555,
+          68,
+          745,
+          335
+        ],
+        "front": [
+          758,
+          68,
+          952,
+          335
+        ],
+        "top": [
+          948,
+          58,
+          1145,
+          335
+        ],
+        "back": [
+          560,
+          338,
+          755,
+          565
+        ]
+      },
+      "_comment": "Board 20 (owner-supplied 2026-09-04, production-board format), docs/prompts/74 Prompt C. Four clean orthographic views: SIDE, FRONT, TOP, REAR. Real reference art at last -- generation licensed per CLAUDE.md's reference-art gate."
+    },
+    "south_bridge_gate": {
+      "file": "21_South_Bridge_Checkpoint_Gate.png",
+      "background": [
+        240,
+        236,
+        228
+      ],
+      "pad": 630,
+      "views": {
+        "front": [
+          820,
+          25,
+          1440,
+          275
+        ],
+        "side": [
+          820,
+          310,
+          1035,
+          530
+        ],
+        "back": [
+          1040,
+          310,
+          1440,
+          530
+        ]
+      },
+      "_comment": "Board 21 (owner-supplied 2026-09-04, production-board format), docs/prompts/74 Prompt A. FRONT ELEVATION (CLOSED), SIDE VIEW, REAR VIEW. A Team Tether hero object -- D24's reserved category -- with owner reference art at last, satisfying CLAUDE.md's gate."
     }
   }
 }

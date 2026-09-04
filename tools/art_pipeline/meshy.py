@@ -231,7 +231,11 @@ PROPS = {"tether_pylon", "relay_apparatus", "tether_machine",
          # fails a blind judge. Registered here so a later `generate` call
          # needs no further setup.
          "candy_pickup", "revive_flower", "potion_plant", "mushroom_pickup",
-         "meadows_signpost", "meadows_bridge_section"}
+         "meadows_signpost", "meadows_bridge_section",
+         # Boards 20/21, owner-supplied 2026-09-04 (real production boards,
+         # docs/prompts/74 Prompts C and A) -- reference-art gate now
+         # satisfied for both.
+         "riding_saddle", "south_bridge_gate"}
 STYLE_PROP = ("stylized PBR game environment prop, hand-painted fantasy style, "
               "clean readable forms, large clear colour regions, restrained "
               "surface detail, single object, upright, full structure visible")
@@ -927,6 +931,36 @@ SPECIES_PROMPTS = {
         "block footings at the base of each post, stylised hand-painted "
         "fantasy game prop, roughly 2 metres wide and 1.2 metres tall at "
         "the rail, single modular section, resting level"),
+
+    # Board 20, owner-supplied 2026-09-04. docs/prompts/74 Prompt C.
+    "riding_saddle": (
+        "a single riding saddle for a large creature mount, resting alone "
+        "on nothing (no animal, no stand). Curved seat of worn brown "
+        "leather over a frame, thick cream sheepskin wool lining showing "
+        "all around the underside edge, raised front horn/handle wrapped "
+        "in leather, low rounded cantle at the back. Two wide adjustable "
+        "leather girth straps hanging with metal buckles, a small "
+        "removable pouch on one side with a buckled flap, D-ring metal "
+        "attachment loops, simplified low-profile stirrup loops. Worn "
+        "brown leather and sage-green cloth seat panel, muted natural "
+        "tones, hand-tooled leather texture, practical adjustable straps "
+        "with visible spare length, roughly 45cm long, single object, "
+        "resting upright as if on a stand"),
+
+    # Board 21, owner-supplied 2026-09-04. docs/prompts/74 Prompt A.
+    "south_bridge_gate": (
+        "a fortified wooden checkpoint gate spanning a bridge crossing, "
+        "two squared blackened-timber gateposts with iron strap bands and "
+        "rivets, a heavy double gate leaf of thick timber planks braced "
+        "with X-pattern iron-strapped crossbeams, a central iron lock "
+        "plate where the two leaves meet. Each post has a angled iron "
+        "bracket holding a hooded lantern, and a hanging cloth banner in "
+        "muted deep blue with a pale gold leaf-branch emblem. Stone block "
+        "footings at the base of each post. Weathered dark timber, aged "
+        "iron hardware with rust streaks, pale grey stone footings, "
+        "sturdy and functional, no skulls, no spikes, no glowing runes, "
+        "roughly 5 metres wide and 4 metres tall at the post tops, single "
+        "structure, standing upright, gate shown closed"),
 
     "camp_flame": (
         "a single stylised campfire FLAME, solid faceted shape, multiple "

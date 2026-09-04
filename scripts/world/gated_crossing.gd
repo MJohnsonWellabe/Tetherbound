@@ -400,6 +400,18 @@ func _unlock() -> void:
 		_mesh.rotation.y = _leaf_rest_yaw + deg_to_rad(90.0)
 	if _prompt != null:
 		_prompt.call("set_enabled", false)
+	_on_unlocked()
+
+
+## Called once, the instant this crossing is genuinely opened — live (from
+## `_on_tried`) or restored from a save flag at build time. Base no-op; a
+## subclass whose checkpoint dressing (`_build_extras`) bakes its own closed
+## leaf into the same object as its posts or frame overrides this to retire
+## that dressing here, so it does not stand as a "ghost" closed leaf beside
+## the real one once `_mesh` has actually swung open. See `south_bridge.gd`'s
+## own `_on_unlocked` for the concrete case this exists for.
+func _on_unlocked() -> void:
+	pass
 
 
 ## The locked answer. No dialogue, no HUD line, no "you need a key" — the leaf

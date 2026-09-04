@@ -122,6 +122,8 @@
       "colour": "#3f8f6a",
       "heal": 80,
       "icon": "res://assets/ui/icons/items/potion_large.png",
+      "world_model": "res://assets/props/potion_plant/potion_plant.glb",
+      "world_model_scale": 0.55,
       "blurb": "A proper dose, brewed from ironwood bark. For the long fights.",
       "description": "Bitter resin boiled out of ironwood bark and cut with berry pulp. More than twice a small potion's worth in one go — the thing you carry into a gauntlet where there is no time to stop and pour three."
     },
@@ -195,6 +197,8 @@
       "colour": "#5aa356",
       "heal": 35,
       "icon": "res://assets/ui/icons/items/potion_small.png",
+      "world_model": "res://assets/props/potion_plant/potion_plant.glb",
+      "world_model_scale": 0.35,
       "blurb": "Patches a creature's scrapes. For your creature, mind — you get soup.",
       "description": "A small dose that closes cuts and eases bruising on a creature fast. It only works on a creature — for you, it's soup and rest, same as always."
     },
@@ -205,8 +209,100 @@
       "colour": "#c9538a",
       "revive": 0.5,
       "icon": "res://assets/ui/icons/items/revive.png",
+      "world_model": "res://assets/props/revive_flower/revive_flower.glb",
+      "world_model_scale": 0.4,
       "blurb": "Brings a fainted creature back up, half strength. Nothing else does.",
       "description": "A denser, costlier draught than a potion, and the only thing that raises a creature back up once it's fainted. It comes back at half its full strength — a proper rest is still what finishes the job."
+    },
+    "good_candy": {
+      "name": "Good Candy",
+      "kind": "consumable",
+      "stack": 10,
+      "colour": "#4caf6f",
+      "level_up": 1,
+      "icon": "res://assets/ui/icons/items/good_candy.png",
+      "world_model": "res://assets/props/candy_pickup/candy_pickup.glb",
+      "world_model_scale": 0.55,
+      "blurb": "A found sweet. One creature jumps a level, straight away.",
+      "description": "Wrapped and a little sticky, found rather than bought. Feed it to a creature and that creature is one level further along, no fight required — the addendum's exploration-reward candy, three tiers of the same wrapper.",
+      "_comment_tier": "docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md section B. One mesh, three tiers by tint/decal at placement time -- ASSET_LEDGER's candy_pickup entry."
+    },
+    "great_candy": {
+      "name": "Great Candy",
+      "kind": "consumable",
+      "stack": 10,
+      "colour": "#3f6fd0",
+      "level_up": 2,
+      "icon": "res://assets/ui/icons/items/great_candy.png",
+      "world_model": "res://assets/props/candy_pickup/candy_pickup.glb",
+      "world_model_scale": 0.6,
+      "blurb": "A better find. Two levels, straight away.",
+      "description": "The blue-wrapped tier — a tougher detour or a stronger encounter earned it. Two levels on the creature that eats it, no fight required.",
+      "_comment_tier": "docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md section B."
+    },
+    "rare_candy": {
+      "name": "Rare Candy",
+      "kind": "consumable",
+      "stack": 10,
+      "colour": "#e0a92e",
+      "level_up": 3,
+      "icon": "res://assets/ui/icons/items/rare_candy.png",
+      "world_model": "res://assets/props/candy_pickup/candy_pickup.glb",
+      "world_model_scale": 0.65,
+      "blurb": "The rarest find. Three levels, straight away.",
+      "description": "Gold-wrapped, winged, and kept for a memorable secret or a hard-won corner of the Meadows. Three levels on the creature that eats it, no fight required.",
+      "_comment_tier": "docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md section B. The board's gold tier carries wings as real geometry, not a texture -- add as a small child mesh at the world-pickup instancing site, not a second generation (see prop_views.json's own comment on candy_pickup)."
+    },
+    "speed_mushroom": {
+      "name": "Speed Shroom",
+      "kind": "consumable",
+      "stack": 10,
+      "colour": "#4a7fd6",
+      "icon": "res://assets/ui/icons/items/speed_mushroom.png",
+      "world_model": "res://assets/props/mushroom_pickup/mushroom_pickup.glb",
+      "world_model_scale": 0.5,
+      "blurb": "Gathered, not bought. A quick burst of speed, briefly.",
+      "description": "Blue-capped, found clustered at tree bases and rocks. The same timed-buff mechanism a tonic already uses — the world reward version of one.",
+      "creature_buff": {
+        "id": "speed_mushroom",
+        "stat": "speed",
+        "scale": 0.15,
+        "duration_s": 90.0
+      }
+    },
+    "stamina_mushroom": {
+      "name": "Stamina Shroom",
+      "kind": "consumable",
+      "stack": 10,
+      "colour": "#d98a2e",
+      "icon": "res://assets/ui/icons/items/stamina_mushroom.png",
+      "world_model": "res://assets/props/mushroom_pickup/mushroom_pickup.glb",
+      "world_model_scale": 0.5,
+      "blurb": "Gathered, not bought. Sturdier defence, briefly.",
+      "description": "Orange-capped, the common one of the cluster. A short defence buff, the found-in-the-world sibling of a tonic.",
+      "creature_buff": {
+        "id": "stamina_mushroom",
+        "stat": "defence",
+        "scale": 0.15,
+        "duration_s": 90.0
+      }
+    },
+    "wild_mushroom": {
+      "name": "Wild Shroom",
+      "kind": "consumable",
+      "stack": 10,
+      "colour": "#c4402c",
+      "icon": "res://assets/ui/icons/items/wild_mushroom.png",
+      "world_model": "res://assets/props/mushroom_pickup/mushroom_pickup.glb",
+      "world_model_scale": 0.5,
+      "blurb": "Gathered, not bought. General use, briefly stronger attacks.",
+      "description": "Red-capped, broad and unmistakable. A short attack buff — the least specialised of the three, general-purpose foraging.",
+      "creature_buff": {
+        "id": "wild_mushroom",
+        "stat": "attack",
+        "scale": 0.15,
+        "duration_s": 90.0
+      }
     },
     "axe": {
       "name": "Axe",
