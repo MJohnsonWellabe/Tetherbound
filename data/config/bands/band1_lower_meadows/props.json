@@ -818,6 +818,7 @@
       "order": 1051,
       "name": "bridge_approach_fence",
       "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 5 (the Bridge approach): 'a broken-fence line leading the eye toward the South Bridge on the approach'. Four sections of the settlement's own wooden-fence kit (quaternius_medieval, already vendored -- CLAUDE.md: no new prop family), NOT village.json's structural `fence_run` prefab (that is a sealed boundary line with gate logic; this is scenery, an old field-fence nobody has mended). Run along the road's own shoulder from arc 2170 to arc 2250 of trail.bands[0], 8-10m off the centreline, ending short of the south_bridge_grunt checkpoint (order 1000, arc 2371) so the eye is led TO the gate rather than past it. The third section is toppled (`pitch_deg`) -- the 'broken' the route contract asks for, not just an intact line -- reading as an old field boundary from before Team Tether closed the crossing, left to rot the way the tether_waypost cluster (order 1020) reads as evidence rather than a manned position.",
+      "_why_orphan_fix_g3band1": "G3-BAND1-FINISH-0904, GATE2-EVIDENCE-0903/REPORT.md 2.13: 'connect or remove the orphan fence segments at the bridge approach'. The four ORIGINAL sections above sat ~19-20m apart from each other -- checked against the coordinates themselves, not eyeballed (P1->P2 20.0m, P2->P3 20.0m, P3->P4 21.7m) -- against a ~2m panel width each. Four isolated 2m fence posts scattered every 20m across an 80m stretch is not a broken FENCE LINE, it is four unrelated fence posts, which is exactly what a critic with no access to this file's own '_why' would see and call orphaned. Fixed by filling the two INTACT runs (P1-P2, P3-P4) down to ~6-7m spacing -- close enough that the eye joins consecutive panels into one line, the same interval real field fencing actually uses -- while leaving the P2-P3 run at one added interior panel rather than fully closed: that is the stretch immediately before the toppled section, and a wider gap there reads as the part of the line that has actually rotted away, which is the story the toppled panel is telling. Every new position is a linear interpolation between the two ORIGINAL anchors either side of it (this fence runs close enough to straight over these distances that the four original bearings -71.6/-71.6/-60.0/-49.4 already vary by under 12 degrees end to end), alternating the same three module variants the original four already used so the line does not read as one plank repeated (bible sec12/D24 -- no new prop family, no new mesh, just more of the same three already-vendored segments).",
       "props": [
         {
           "model": "Prop_WoodenFence_Single",
@@ -831,6 +832,28 @@
           "_why": "First section, arc 2170, running with the road's own bearing."
         },
         {
+          "model": "Prop_WoodenFence_Extension2",
+          "at": [
+            75.57,
+            1225.33
+          ],
+          "yaw_deg": -71.6,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "G3-BAND1-FINISH-0904: interpolated 1/3 of the way from section 1 to section 2, closing the 20m gap to ~6.7m so the two read as one line rather than two isolated posts."
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            69.23,
+            1227.47
+          ],
+          "yaw_deg": -71.6,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "G3-BAND1-FINISH-0904: interpolated 2/3 of the way from section 1 to section 2."
+        },
+        {
           "model": "Prop_WoodenFence_Extension1",
           "at": [
             62.9,
@@ -840,6 +863,17 @@
           "scale": 1.0,
           "dir": "res://assets/buildings/quaternius_medieval",
           "_why": "Second section, arc 2190, continuing the line."
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            53.4,
+            1232.75
+          ],
+          "yaw_deg": -65.8,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "G3-BAND1-FINISH-0904: one interior panel midway between section 2 and the toppled section 3 -- this run stays the widest gap in the line on purpose (see `_why_orphan_fix_g3band1`), just no longer a full 20m of nothing leading into the break."
         },
         {
           "model": "Prop_WoodenFence_Extension2",
@@ -853,6 +887,28 @@
           "scale": 1.0,
           "dir": "res://assets/buildings/quaternius_medieval",
           "_why": "Third section, arc 2210 -- the broken one, tipped almost flat (`pitch_deg` 72, the same lean mechanic `bridge_repair_site`'s axe already uses on this prop family's fixed vertical authoring) with its foot sunk into the grass rather than floating."
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            36.73,
+            1238.83
+          ],
+          "yaw_deg": -56.47,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "G3-BAND1-FINISH-0904: interpolated 1/3 of the way from the toppled section to section 4 -- the line resuming past the break, leading the eye on toward the checkpoint."
+        },
+        {
+          "model": "Prop_WoodenFence_Extension1",
+          "at": [
+            29.57,
+            1241.77
+          ],
+          "yaw_deg": -52.93,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "G3-BAND1-FINISH-0904: interpolated 2/3 of the way from the toppled section to section 4."
         },
         {
           "model": "Prop_WoodenFence_Single",

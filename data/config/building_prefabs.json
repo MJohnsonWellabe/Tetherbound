@@ -531,9 +531,13 @@
           "color": "#f0c684",
           "emission": "#f0c684",
           "energy": 0.85
+        },
+        "MI_RoundTiles": {
+          "color": "#8a5a3a"
         }
       },
-      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses"
+      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses",
+      "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904, GATE2-EVIDENCE-0903/JUDGE.md: 'the reddest objects in this world are the village roofs ... while the one Team Tether grunt wears unrelieved black' -- the reserved-red rubric criterion this project's own oxblood convention exists for (severed_spokes.gd, road_gate.gd, stronghold.gd all reserve it for Team Tether). This recipe's own `Roof_RoundTiles_6x8` module had NO roof retint at all, so it exported at the kit's raw, more saturated default -- the single most visible roof in the square (the workshop is the biggest building on it) reading redder than anything Team Tether wears. `#8a5a3a` is not a new colour: it is the SAME muted terracotta `inn`'s own retint below already ships and a blind pass already approved (R7.9/HIST-164) -- reused here so the settlement's one roof family (bible sec12) is actually one COLOUR too, not four buildings on the vendor default and one tuned outlier. Kept well clear of both reserved oxblood tones in the game (`#6b2a20` road_gate.gd, `#7a2430` building_prefabs.json's own stronghold Banner) -- warmer, lighter and more orange, no possible read as a faction mark."
     },
     "cottage_a": {
       "_why": "Village house, plaster and timber, gable front with door and window facing the approach. Stands where SmallBarn stood.",
@@ -946,9 +950,13 @@
           "color": "#f0c684",
           "emission": "#f0c684",
           "energy": 0.85
+        },
+        "MI_RoundTiles": {
+          "color": "#8a5a3a"
         }
       },
-      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses"
+      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses",
+      "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904. Same reserved-red fix as `workshop`'s own `_why_retint_oxblood_reservation` above, same reused `#8a5a3a` (already shipped and approved on `inn`) -- this recipe's `Roof_RoundTiles_4x6` had no roof retint at all."
     },
     "cottage_b": {
       "_why": "The smaller stone cottage, shuttered window and stone chimney. Stands where the ChickenCoop stood -- differentiated from cottage_a by material (UnevenBrick vs plaster) inside the same family, the way D23 differentiates creatures.",
@@ -1330,9 +1338,13 @@
           "color": "#f0c684",
           "emission": "#f0c684",
           "energy": 0.85
+        },
+        "MI_RoundTiles": {
+          "color": "#8a5a3a"
         }
       },
-      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses"
+      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses",
+      "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904. Same reserved-red fix as `workshop`'s own `_why_retint_oxblood_reservation` above, same reused `#8a5a3a` -- this recipe's `Roof_RoundTiles_4x4` had no roof retint at all."
     },
     "well": {
       "_why": "The square's centre marker, rebuilt in-family: a stone platform curb, two timber posts, a small round-tile canopy and a wooden bucket, standing on a paved apron where the four dirt paths meet. Replaces the third-outlier pantile well the blind critic flagged (BLOCKED.md).",
@@ -2469,9 +2481,13 @@
           "color": "#f0c684",
           "emission": "#f0c684",
           "energy": 0.85
+        },
+        "MI_RoundTiles": {
+          "color": "#8a5a3a"
         }
       },
-      "_why_retint": "warm pane instead of a black hole -- same colour every other building in the square carries"
+      "_why_retint": "warm pane instead of a black hole -- same colour every other building in the square carries",
+      "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904. Same reserved-red fix as `workshop`'s own `_why_retint_oxblood_reservation`, same reused `#8a5a3a` -- Grandpa's own roof (`Roof_RoundTiles_6x10`) had no roof retint at all, so the farmhouse the player wakes up in was the same raw, over-saturated red every other cottage was."
     },
     "inn": {
       "_why": "R7.9, owner-requested 2026-08-16: an inn where the villagers can stay. No inn/tavern prefab exists in the Medieval Village MegaKit (D24 -- the one civilian architectural family), so this clones farmhouse_shell's own two-storey massing -- the closest existing shape, per the backlog item's own text -- rather than inventing an off-family landmark (village.json's own note on the removed TowerWindmill records exactly why that would repeat D24's split-the-difference failure). Unlike farmhouse_shell this authors a real openable door leaf and wall colliders with a doorway hole (R7.8's door verb, scripts/world/village_door.gd), because an inn is entered by strangers on an ordinary interact, not gated by a story beat the way Grandpa's is. Footprint 6m (x) by 10m (z), front = +z. The interior (scripts/world/inn_interior.gd, attached by village.gd from village.json's `interior: \"inn\"` key) caps the walkable space at the FIRST storey only -- a flat ceiling collider blocks the upper course and roof shell, which stays facade-only. A real second floor is Grandpa's one bespoke cost in this settlement (loft, stairs, rail) and an ordinary inn does not obviously owe the same investment just because its shell is two storeys.",
@@ -5927,9 +5943,13 @@
           "color": "#f0c684",
           "emission": "#f0c684",
           "energy": 0.85
+        },
+        "MI_RoundTiles": {
+          "color": "#8a5a3a"
         }
       },
-      "_why_retint": "the same warm lit glass every building in the family carries"
+      "_why_retint": "the same warm lit glass every building in the family carries",
+      "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904. Same reserved-red fix as `workshop`'s own `_why_retint_oxblood_reservation`, same reused `#8a5a3a` -- `Roof_RoundTiles_6x6` had no roof retint at all."
     },
     "footbridge": {
       "_why": "Bible sec12's bridges: timber deck + stone abutments, spanning the EV5 stream carve beside the mill. Placed with ground:'highest' (village.gd) so the deck rides the banks instead of sinking to the streambed its own AABB corner finds. Oskar the Bridgehand finally has a bridge to keep (data/dialogue/village.json).",
