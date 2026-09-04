@@ -383,13 +383,35 @@ do not run a second bake for one lane.
 `verify-scatter-bake-freshness` / `verify-terrain-bake-freshness` are green only because a
 `RETRIES` rescue turned 0-for-1 into green.
 
-**D73 §5 puts one more change inside this same window, and it cannot wait for the next
-one.** The "one lollipop, repeated" tree-lines are `corridor_fill`'s own draw, and
-widening its `scale_min`/`scale_max` re-rolls the whole corridor's RNG stream — so it is
-done **once, as the first bake window of Gate 3, before any band lane bakes on top of
-it**, and never again per band. Band lanes then author against the re-rolled fill. That
-makes the re-roll part of this bake, not a follow-up: a later re-roll invalidates every
-band's authoring done against the current stream.
+**On D73 §5 and this bake window — the constraint it states does not exist, and an
+earlier revision of this section repeated it before checking.** D73 §5 says widening
+`corridor_fill`'s `scale_min`/`scale_max` "re-rolls the whole corridor's RNG stream", and
+concludes it must therefore happen **once, as the first bake window of Gate 3, before any
+band lane bakes on top of it**. That conclusion is sound only if the premise is, and the
+premise is wrong.
+
+`scatter_rules.gd::_place_one()` draws instance scale as a single
+`rng.randf_range(low, high)`, followed unconditionally by one `randi_range` for the model
+and one `randf_range` for the yaw. Every rejection test — `path_standoff` and the rest —
+is already resolved *before* those three draws, and none of them reads the scale. A wider
+range therefore consumes **exactly the same number of draws, in the same order**:
+placements, model choices and yaws all come out identical, and only the size numbers
+change. `vegetation.json`'s own note at the Band 2 anchor says this in as many words —
+*"RNG-safe: a wider `scale_min`/`scale_max` range draws the same one `randf_range()` call
+per placed instance regardless of its bounds"* — and it is right.
+
+**What this changes.** The corridor-fill scale re-roll is still worth doing; the "one
+lollipop, repeated" reading is real. But it is an ordinary tuning change that can land in
+any bake window, and a later one does **not** invalidate band authoring done before it. Do
+not sequence the gate around it.
+
+**What genuinely does re-roll the stream** — from the same file's hard-won notes, and
+these *are* worth sequencing: raising an anchor's `count`, because that changes the attempt
+budget drawn from the layer's shared stream and `_place_corridor_fill` runs after every
+anchor in that same stream for the whole corridor (tried, rendered, and found to thin out
+the very frame it was meant to fix); and adding a per-layer `band_scale`, because
+`_place_verge` re-rolls that layer corridor-wide. A lane proposing either has a real
+ordering problem. A lane proposing a scale range does not.
 
 ### Stage 3 — evidence per segment, in parallel (the band lanes)
 
