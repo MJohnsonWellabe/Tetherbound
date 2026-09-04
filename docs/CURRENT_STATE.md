@@ -8,6 +8,22 @@ Every claim here was verified in this session on `main` at `cf535cce` (2026-09-0
 22:05 UTC) with Godot 4.7-stable headless in a clean container, unless marked
 *(reported)*.
 
+## Exit note — Codex 2026-09-04
+
+The working copy was moved to `D:\Tetherbound-source`, updated to PR #37's
+`b83123738`, and checkpointed after the owner asked this session to stop. The
+checkpoint contains only tested VP0 capture-infrastructure repairs: tiled-grass
+validation, regression coverage, top-level propagation of failed Windows
+capture stages, and fresh scatter/terrain manifest fingerprints. Targeted
+result: **10 tests, 19 assertions, 0 failed**.
+
+No pickup/progression implementation from prompt 75 has started. The attempted
+Phase 0.1 route-strip implementation was reverted after its final GPU smoke
+failed the stricter three-subject fight framing and combat-exit cleanup checks.
+The exact reproduction, blind visual finding, and next implementation steps are
+in `docs/VISUAL_PARITY_PROGRESS.md` under “Exact resume point.” There are no
+half-finished source edits from that attempt in this checkpoint.
+
 ## 1. Git truth
 
 - `origin/main` is `cf535cce`. All five remaining remote branches

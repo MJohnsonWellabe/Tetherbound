@@ -126,10 +126,19 @@ static func _grass_problems(tree: SceneTree, camera: Camera3D) -> Array[String]:
 		out.append("the GrassField is following '%s', not the capture camera '%s' -- " % [
 			(followed as Node).name if followed is Node else "<none>", camera.name] +
 			"the grass ring is centred somewhere this frame does not show")
-	var mm: MultiMesh = field.get("multimesh")
-	if mm == null or mm.instance_count <= 0:
+	# The current GrassField splits the ring into cullable child tiles, so the
+	# parent intentionally has no MultiMesh.  `_ring_instances` is the shipped
+	# field's authoritative live count; retain the parent-MultiMesh fallback for
+	# capture scenes that still build the older untiled representation.
+	if not _field_has_instances(field):
 		out.append("the GrassField exists but holds no instances -- nothing to draw")
 	return out
+
+
+static func _field_has_instances(field: Object) -> bool:
+	var ring_instances := int(field.get("_ring_instances"))
+	var mm: MultiMesh = field.get("multimesh")
+	return ring_instances > 0 or (mm != null and mm.instance_count > 0)
 
 
 ## Terrain3D streams around whatever camera it was handed, so a tool that poses
