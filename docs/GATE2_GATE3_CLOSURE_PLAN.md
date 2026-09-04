@@ -178,14 +178,18 @@ it to, or **unassigned**.
 `verify-gate-b-core`'s failure has been carried everywhere — in `docs/ROADMAP.md`, in
 #31's commit message, in this PR's own standing-down comment — as a single named defect:
 *Quarry Foreman cycle 1, arbiter winner = Prompt under Door*. Characterising it on
-`bf86c043` showed it is not one defect. The job's two attempts stopped in two different
-places: attempt 1 at the Foreman, attempt 2 **past** the Foreman and then at `Bram cycle
-2 did not open dialogue`, with the interact press accepted and no dialogue inside the
-90-frame budget. The Bram stop had never been seen because the Foreman stop masks it.
+`bf86c043` showed it is not one defect. Across two workflow runs of two attempts each on one
+commit it produced three different failures and one pass: the Foreman with `arbiter
+winner=Prompt under Door`; **past** the Foreman and then `Bram cycle 2 did not open
+dialogue`, with the interact press accepted and no dialogue inside the 90-frame budget;
+the Foreman again with `arbiter winner=`**`EncounterDirector`**; and a clean run of the
+whole leg. The Bram stop had never been seen because the Foreman stop masks it, and
+the varying winner says the label "Prompt under Door" has been describing one sample
+as if it were the mechanism.
 
 | Id | Item | Size | Kind |
 |---|---|---|---|
-| CL-H12 | **`gate_a_npc_gather_segment.gd`'s village-tools leg is nondeterministically red at more than one point**, and both points are prompt arbitration rather than any one NPC. Fixing the Foreman and calling the check closed will simply surface the next stop — which is precisely what happened between attempt 1 and attempt 2 of the same job on the same commit. Scope this as "the leg is reliable across N consecutive runs", not as "the Foreman is fixed". **Fails if** the acceptance is a single green run: this leg has now produced three different outcomes (Foreman stop, Bram stop, full pass) on the same code. | M | proven failing |
+| CL-H12 | **`gate_a_npc_gather_segment.gd`'s village-tools leg is nondeterministically red at more than one point**, and the cause is prompt arbitration rather than any one NPC — the arbiter winner at the Foreman is not even stable between runs (`Prompt under Door` one run, `EncounterDirector` the next), so a fix aimed at a named claimant is aimed at a sample. Fixing the Foreman and calling the check closed will simply surface the next stop — which is precisely what happened between attempt 1 and attempt 2 of the same job on the same commit. Scope this as "the leg is reliable across N consecutive runs", not as "the Foreman is fixed". **Fails if** the acceptance is a single green run: this leg has now produced four different outcomes on the same commit (Foreman/door, Foreman/EncounterDirector, Bram cycle 2, full pass). | M | proven failing |
 
 
 
