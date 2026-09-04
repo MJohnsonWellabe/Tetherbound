@@ -10,8 +10,9 @@ Every claim here was verified in this session on `main` at `cf535cce` (2026-09-0
 
 ## Exit note — Codex 2026-09-04
 
-The working copy was moved to `D:\Tetherbound-source`, updated to PR #37's
-`b83123738`, and checkpointed after the owner asked this session to stop. The
+The working copy was moved to `D:\Tetherbound-source`, updated through
+`origin/main` at `90efc0d5b`, and checkpointed after the owner asked this
+session to stop. The
 checkpoint contains only tested VP0 capture-infrastructure repairs: tiled-grass
 validation, regression coverage, top-level propagation of failed Windows
 capture stages, and fresh scatter/terrain manifest fingerprints. Targeted

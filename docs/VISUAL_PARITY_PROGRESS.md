@@ -7,8 +7,8 @@ only implementation, test, capture, and handoff state.
 
 - Working branch: `codex/meadows-visual-parity`
 - Working copy: `D:\Tetherbound-source`
-- Base updated from `origin/main` at `b83123738` (PR #37) by merge/fast-forward;
-  no in-progress work was reset to obtain it.
+- Base first updated for PR #37 at `b83123738`, then merged through the final
+  upstream `origin/main` at `90efc0d5b`; no in-progress work was reset.
 - Godot: `4.7.stable.official.5b4e0cb0f`
 - Renderer used: Windows Compatibility / OpenGL 3.3 on an NVIDIA GTX 1060 3GB.
 - VP0 is **not complete**. No visual-parity pass is claimed or accepted.
