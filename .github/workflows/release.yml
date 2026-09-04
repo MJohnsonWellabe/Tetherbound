@@ -134,8 +134,13 @@ jobs:
         # Zipped because a Godot export is an .exe next to a .pck and a
         # Terrain3D .dll, and all three have to travel together. Downloading a
         # bare .exe and finding it will not start is the obvious failure here.
+        #
+        # The kickoff pair ships in the same zip (D73): the owner downloads the
+        # game from the website, unzips, and double-clicks KICKOFF.cmd to run
+        # the whole evidence pass -- docs/acceptance/KICKOFF_RUN.md.
         run: |
           set -euo pipefail
+          cp tools/owner/KICKOFF.cmd tools/owner/kickoff.ps1 build/windows/
           cd build/windows
           zip -r ../../Tetherbound-windows.zip .
           cd ../..
@@ -151,6 +156,10 @@ jobs:
 
             **Windows / ROG Ally.** Unzip and run `Tetherbound.exe` — keep the
             `.pck` and the `.dll` next to it.
+
+            **Evidence run.** Double-click `KICKOFF.cmd` from the same folder
+            and walk away; it fetches the repo, plays the chapter with video,
+            and pushes the evidence. See `docs/acceptance/KICKOFF_RUN.md`.
 
             This is a vertical-slice prototype in progress, not a finished game.
 
