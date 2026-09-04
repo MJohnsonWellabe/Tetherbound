@@ -8,7 +8,7 @@
   "conversations": {
     "relay_captive_held": {
       "speaker": "Sela",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_ranger.png",
       "lines": [
         "Don't stand there. They walk the perimeter on the hour and they will simply add you to me.",
         "If you're set on this, the one at the console is the one who matters. The rest take his word for what's necessary."
@@ -16,7 +16,7 @@
     },
     "relay_captive_freed": {
       "speaker": "Sela",
-      "portrait": "res://assets/ui/portraits/trainer.png",
+      "portrait": "res://assets/ui/portraits/villager_ranger.png",
       "lines": [
         "You beat the Captain. I heard the whole thing from here and I still don't quite believe it.",
         "Sela. Border survey — I mapped where the Meadows stops, which turns out to be the one job nobody wanted done.",
