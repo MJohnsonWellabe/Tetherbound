@@ -135,6 +135,8 @@ func build(world: Node, at: Vector2, routes_override: Variant = null) -> void:
 	body.add_child(shape)
 	add_child(body)
 
+	_build_base_dressing(at)
+
 	var i := 0
 	for entry: Variant in routes:
 		var route: Dictionary = entry as Dictionary
@@ -149,6 +151,55 @@ func build(world: Node, at: Vector2, routes_override: Variant = null) -> void:
 
 func placed() -> int:
 	return _placed
+
+
+## G3-BAND1-FINISH-0904, docs/VISUAL_BIBLE.md gap list / GATE2-EVIDENCE-0903
+## 2.13: "signposts as set dressing rather than bare posts". Every signpost in
+## the game (the village junction and every trailhead alike, since this is the
+## one file both go through) stood as a single primitive planted straight into
+## grass with nothing around its foot — correct as a MECHANISM (R7.1's own
+## header: "placeholder is fine to prove a mechanic"), but read as generated
+## rather than placed, the exact complaint the judge's `_why` list groups with
+## the scatter regularity findings. A small worked stone base — the kind of
+## thing whoever dug the post hole would have packed the ground with — is the
+## cheapest primitive-only fix that says "someone planted this" without a new
+## mesh: a handful of low, irregular stone blocks in a loose ring, not a
+## perfect circle (regularity is the thing being fixed), sized and jittered
+## from a hash of the post's own world position so two signposts never carry
+## the same little pile and a re-render is stable frame to frame.
+const BASE_STONE_COUNT := 6
+const BASE_STONE_RADIUS := 0.34
+const BASE_STONE_SIZE := 0.11
+
+
+func _build_base_dressing(at: Vector2) -> void:
+	var stone_mat := StandardMaterial3D.new()
+	stone_mat.albedo_color = Color("#8f897c")
+	stone_mat.roughness = 0.95
+	var rng := RandomNumberGenerator.new()
+	# Deterministic per site: the same two floats every time this exact
+	# signpost is built, so a render taken twice for a before/after comparison
+	# never shows the stones having quietly rearranged themselves.
+	rng.seed = hash(Vector2i(int(round(at.x * 4.0)), int(round(at.y * 4.0))))
+
+	var holder := Node3D.new()
+	holder.name = "BaseDressing"
+	add_child(holder)
+
+	for i in BASE_STONE_COUNT:
+		var angle := (float(i) / float(BASE_STONE_COUNT)) * TAU + rng.randf_range(-0.35, 0.35)
+		var reach := BASE_STONE_RADIUS * rng.randf_range(0.7, 1.15)
+		var stone := MeshInstance3D.new()
+		stone.name = "BaseStone%d" % i
+		var box := BoxMesh.new()
+		var size := BASE_STONE_SIZE * rng.randf_range(0.75, 1.3)
+		box.size = Vector3(size, size * rng.randf_range(0.55, 0.85), size * rng.randf_range(0.85, 1.25))
+		stone.mesh = box
+		stone.material_override = stone_mat
+		stone.position = Vector3(cos(angle) * reach, size * 0.3, sin(angle) * reach)
+		stone.rotation = Vector3(
+			rng.randf_range(-0.12, 0.12), rng.randf_range(0.0, TAU), rng.randf_range(-0.12, 0.12))
+		holder.add_child(stone)
 
 
 ## R7.1-visual round 3: the critic caught two arms visually crossing in an X
