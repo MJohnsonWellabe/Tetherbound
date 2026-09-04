@@ -41,6 +41,7 @@ extends SceneTree
 ## problem -- C and B are what let that be answered instead of assumed.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
+const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const DEFAULT_SPECIES_ID := "bramblebun"
 ## Overridable by `--species=`; see this session's header note.
 var SPECIES_ID := DEFAULT_SPECIES_ID
@@ -71,10 +72,21 @@ func _run() -> void:
 	var extra_heights: Array[float] = []
 	var extra_emissions: Array[float] = []
 	var extra_degreens: Array[float] = []
+	var extra_field_scales: Array[float] = []
 	var skip_baseline := false
+	# G3-CREATURE-COLOUR-0904. `--time=` points the probe's own WorldLook at a
+	# named preset (`day`/`golden`/`night`/`dawn`) before shooting, the same
+	# `apply_time()` call `tools/_capture_night_legibility.gd` uses -- without
+	# this the probe always renders at whatever the scene boots at (day), which
+	# cannot answer whether a value/hue lever tuned for the daytime grass-
+	# separation bar also reads correctly once `world_look.gd`'s night grade and
+	# this species' own time-of-day field-brightness scale are both live.
+	var time_of_day := ""
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			_out_dir = arg.substr(6)
+		elif arg.begins_with("--time="):
+			time_of_day = arg.substr(7)
 		elif arg.begins_with("--extra-heights="):
 			for token in arg.substr(16).split(","):
 				if token.strip_edges() != "":
@@ -87,6 +99,17 @@ func _run() -> void:
 			for token in arg.substr(16).split(","):
 				if token.strip_edges() != "":
 					extra_degreens.append(token.strip_edges().to_float())
+		elif arg.begins_with("--extra-field-scale="):
+			# G3-CREATURE-COLOUR-0904. Sweeps `creature_body.gd::set_field_brightness_scale()`
+			# directly -- the night-side lever `world_look.gd` normally drives off
+			# `art.json`'s `creature_field_emission_scale` -- without needing a
+			# config edit + engine restart per value tried. `--time=` still
+			# decides the LIGHT the creature sits in; this decides how far the
+			# per-species push is scaled down on top of it, so the two compose
+			# exactly the way a real night does.
+			for token in arg.substr(20).split(","):
+				if token.strip_edges() != "":
+					extra_field_scales.append(token.strip_edges().to_float())
 		elif arg.begins_with("--species="):
 			SPECIES_ID = arg.substr(10)
 		elif arg == "--skip-baseline":
@@ -97,6 +120,27 @@ func _run() -> void:
 	root.add_child(_world)
 	for i in SETTLE_FRAMES:
 		await physics_frame
+
+	if time_of_day != "":
+		var look: Node = _world.get_node_or_null(^"WorldLook")
+		if look == null:
+			print("WARNING: --time=%s given but no WorldLook in the scene" % time_of_day)
+		else:
+			# G3-CREATURE-COLOUR-0904. `world_look.gd::_process()` keeps the clock
+			# running and re-blends the FULL environment (art.json's own
+			# `creature_field_emission_scale` included) every BLEND_INTERVAL --
+			# without freezing it, that continuous re-apply stomps a
+			# `--extra-field-scale=` variant's manual override within a couple of
+			# frames, and every variant in a sweep silently converges on
+			# whatever art.json's OWN configured value is instead of the one
+			# actually being tested. `set_clock_frozen()` is `world_look.gd`'s
+			# own public API for exactly this (survey/capture tooling already
+			# relies on it staying still).
+			look.call("set_clock_frozen", true)
+			look.call("apply_time", time_of_day)
+			for i in SETTLE_FRAMES:
+				await physics_frame
+			print("time of day set to %s" % time_of_day)
 
 	# A patch of open meadow with the grass field on. Taken from the same area
 	# `capture_catch_sequence.gd` fights in, so the field is the one the owner
@@ -165,6 +209,11 @@ func _run() -> void:
 			"tag": "TEST-g%.2f" % g, "height": shipped_height, "rim": shipped_rim,
 			"emission": shipped_emission, "degreen": g,
 		})
+	for fs in extra_field_scales:
+		variants.append({
+			"tag": "TEST-fs%.2f" % fs, "height": shipped_height, "rim": shipped_rim,
+			"emission": shipped_emission, "degreen": shipped_degreen, "field_scale": fs,
+		})
 
 	for variant: Dictionary in variants:
 		await _shoot(variant, look_at)
@@ -193,6 +242,18 @@ func _shoot(variant: Dictionary, at: Vector3) -> void:
 	table["field_rim"] = float(variant["rim"])
 	table["field_emission"] = float(variant.get("emission", 0.0))
 	table["field_degreen"] = float(variant.get("degreen", 0.0))
+	# ONLY when a variant opts in. An earlier version of this line ran
+	# unconditionally with a `1.0` default, which silently overrode whatever
+	# `--time=`/`apply_time()` had just set through the REAL config path
+	# (`world_look.gd` reading `art.json`'s own `creature_field_emission_scale`)
+	# -- every ordinary SHIPPED/height/emission/degreen variant was secretly
+	# forced back to the daytime (1.0) scale even at `--time=night`, which is
+	# exactly the config-driven behaviour this probe exists to verify. Leaving
+	# the scale untouched here means those variants render whatever the clock
+	# actually set; only an explicit `--extra-field-scale=` variant drives it
+	# directly.
+	if variant.has("field_scale"):
+		CREATURE_BODY.set_field_brightness_scale(float(variant["field_scale"]))
 
 	if _body != null and is_instance_valid(_body):
 		_body.queue_free()
