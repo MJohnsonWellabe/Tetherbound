@@ -57,7 +57,33 @@ colour applies, lifted to the shared `TINT_PEAK`).
 - Inspected all six PNGs at 4x, 64 px, 32 px and 19 px on a dark tile
   (`_sheet_r1.png`, top row; bottom row is six existing icons for context).
 
-## Blind judge
+## Blind judge (code-blind sub-agent, opus, given only the sheet, `docs/reference/`, board 17 and the visual-judge skill)
+
+### Round 1 (`_sheet_r1.png`)
+
+Verdict, condensed: the six read "cleanly" as two families ("a player would say
+'sweet' and 'mushroom'"); all three candy tiers and the Speed/Stamina pair were
+distinct at 64 px and 19 px; the flat-fill / knockout treatment matched the
+existing set exactly (same 223 peak channel, no glow). Defects named:
+
+1. Rare Candy read as "a military medal / rosette with ribbons" (straight
+   diagonal wings with hairline hatching).
+2. Wild Shroom's hairline rim ticks vanished below 64 px, leaving a blank cap.
+3. Stamina's three small rings filled in at 19 px into blobs told from Speed's
+   dots only by count.
+4. Good/Great Candy were 1.93:1 letterbox bars (29.6 % / 27.9 % tile fill vs
+   32-41 % for every existing icon).
+5. Hue collisions: Rare gold ~ Greater Orb gold, Stamina orange ~ Prime Orb
+   orange, Great Candy blue ~ Speed Shroom blue.
+6. Good Candy's blank centre (suggested the board's leaf); suggested a crown
+   instead of a star on Rare.
+
+Acted on (round 2): 1, 2, 3, 4. Not acted on: 5 is fixed by the tints in
+`items.json`, which this lane does not own (recorded below for the owner);
+6 contradicts the brief (Good = plain, Great = star, Rare = star + wings), so
+the brief's design stands.
+
+### Round 2 (`_sheet_r2.png`)
 
 _(filled in below)_
 
