@@ -61,14 +61,30 @@ These are the finish line. Each must be true of a real player's behaviour.
   another. (Blind judge 2026-08-30: the four Aspect variants currently read as
   ONE shared decal mask hue-swapped four times — **open defect**.)
 - B2. Creatures stay **visually prominent against their habitat** — no creature
-  vanishing into the grass field on luminance (Bramblebun measured 1.08:1 —
-  **open**).
+  vanishing into the grass field on luminance. (~~Bramblebun measured 1.08:1 —
+  open.~~ **Numbers corrected 2026-09-04, CL-D7: 1.08:1 is three passes stale.**
+  Gate 2.4 re-measured Bramblebun off real rendered frames at 1.331:1 shipped
+  and raised it to 1.568:1 by sweeping `field_emission` 0.9 → 2.5;
+  G3-CREATURE-COLOUR-0904 then found the scene had drifted since that
+  measurement, and its own fix reads **1.618:1** against the 1.5:1 bar.
+  Mudsnout 1.73:1 and Terrapup 1.66:1 also clear it. **What is actually open is
+  no longer the ratio, it is two things the ratio work exposed:** Burrowback
+  reaches only **1.18–1.19:1** across a full sweep and is dark by design
+  (grey-olive rock-nodule armour), so brightening it trades away its identity —
+  a design question, not a fix; and the value push itself overshot, which
+  G3-CREATURE-COLOUR-0904 closed for night glow and day pink but which the
+  judge's "reads a little flat/blown-out" note still stands against.)
 - B3. Rarity is **legible on sight**: common / uncommon / rare / alpha differ in
   presentation, not just in a stat block.
 - B4. Creatures sit **correctly in the world** — on the ground, not embedded in
   slopes; at correct depth in water; with contact shadows so they are not
-  pasted on. (**Open** — judge found embedded-on-slope spawns and no contact
-  shadows.)
+  pasted on. (**Half closed 2026-09-04, CL-D7.** ~~no contact shadows~~ — Gate
+  2.4 gave every creature body a flat unshaded ground-contact ellipse
+  (`shaders/creature_contact_shadow.gdshader`,
+  `creature_body.gd::_apply_ground_contact_shadow()`), answering the
+  Compatibility renderer's missing SSAO, verified headless by
+  `tools/_probe_contact_shadow_check.gd`. **Still open:** the embedded-on-slope
+  half, which nothing has re-judged since.)
 - B5. Every species that exists in data is **reachable in play** (owner
   directive D-0830-2: built is not done).
 - B6. Silhouette reads at gameplay distance, not only in a close crop — the
@@ -132,8 +148,14 @@ stretch · day/night readability · acceptable ROG performance.
 - E4. The **campsite kit is coherent** — one art family, one consistent sense of
   scale, no interpenetrating props (**open**: judge found scanned-PBR vs
   hand-painted mixed, tent smaller than the bed inside it).
-- E5. Interiors and dungeons read as places, not corridors — the **Warrens
-  interior is the standing GOOD example; protect it.**
+- E5. Interiors and dungeons read as places, not corridors. (~~the Warrens
+  interior is the standing GOOD example; protect it.~~ **Contested, 2026-09-04,
+  CL-D7.** The owner's 2026-09-03 playtest, finding 9, says "burrow warrens
+  doesn't look good", and per `CLAUDE.md` precedence the newer owner statement
+  outranks this line until a blind judge on real frames says otherwise. Do not
+  read this row as a reason to leave the Warrens alone. The Warrens interior
+  visual pass is closure-plan item **CL-E8**; that row, not this one, carries
+  the work.)
 
 ## F. Good story and its delivery
 
