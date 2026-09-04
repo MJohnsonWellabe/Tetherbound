@@ -233,7 +233,7 @@ radius was tried and reverted for a test's sake, not for a picture's). The judge
 show pink dots in the far mid-ground read as flowers, and four brown quadrupeds on a
 ridge at ~35 px, identical mesh, scale and rotation, the same value as the sunlit grass
 behind them. A 1.0 m Bramblebun at 40 m under the 70° exploration lens is ~15 px tall
-at 720p; the same animal at 12 m is ~50 px, and a 2.05 m Meadowhart at 25 m is ~55 px.
+at 720p; the same animal at 12 m is ~50 px, and a 2.05 m Meadowhart at 25 m is ~50 px.
 Distance, not height, is the lever — and height is closed by owner directive anyway.
 
 ### 3.2 What must be true in an ordinary gameplay frame
