@@ -51,7 +51,14 @@ directives:
 - `74-ART-REFERENCE-owner-boards-for-meshy.md` — the three reference boards most likely to
   be needed (South Bridge checkpoint gate, ridge watchtower, riding saddle), the image
   prompts to produce them in board 13's format, the intake route, and when a credit may be
-  spent per object.
+  spent per object. **Updated 2026-09-04** with a status section: candy, revive flower,
+  potion plant and mushroom were generated and installed the same day against a different,
+  owner-produced board (see `docs/specs/ASSET_LEDGER.md`); §7 is a new procedural-first
+  task for the signpost and bridge, which were deferred rather than generated.
+- `75-CODEX-pull-in-pickup-assets-and-finish-the-meadows.md` — the routing document for a
+  fresh Codex session: what to read, what the four new pickup assets are and how they wire
+  into `item_cache_pickup.gd`, what is deferred, and that the phase-0 instrument fixes in
+  `docs/FINISH_THE_MEADOWS.md` still come first if there's a choice of what to pick up.
 
 ## Current Gate A environment baseline
 

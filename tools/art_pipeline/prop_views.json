@@ -148,6 +148,162 @@
         ]
       },
       "_comment": "Board 16's FULL BODY SILHOUETTE panel, which is not a silhouette at all -- it is a clean front-and-back turnaround of the whole figure at one scale, with the ~1.85m bar beside it. Two views is meshy.py's documented minimum. The head is left in frame deliberately: cropping the body at the neck would lose the shoulder line, and the head this body ships with is thrown away by graft_head.py anyway. NOTE the staff in the front view -- NEGATIVE_HUMAN bans `staff` and that ban is kept ON PURPOSE here even though the drawing shows one, because the Warden needs no staff prop in game and a staff fused into the mesh is unusable. That is the opposite of the DROP_FOR_SPECIES case: there the ban fought the subject's own signature, here it fights an accessory we do not want."
+    },
+    "revive_flower": {
+      "file": "17_Candy_Revive_Potion_Mushroom_Pickups.png",
+      "background": [
+        234,
+        229,
+        221
+      ],
+      "pad": 274,
+      "views": {
+        "front": [
+          990,
+          150,
+          1240,
+          385
+        ],
+        "three_quarter": [
+          1255,
+          230,
+          1360,
+          300
+        ]
+      },
+      "_comment": "Board 17 panel B. front is the hero bloom. three_quarter is the middle VARIATIONS thumbnail (cream/yellow), the closest-hue alternate to the hero's white/gold so colour drift stays small; the other two thumbnails are purple/blue palette swaps, kept out for the same reason."
+    },
+    "potion_plant": {
+      "file": "17_Candy_Revive_Potion_Mushroom_Pickups.png",
+      "background": [
+        234,
+        229,
+        221
+      ],
+      "pad": 168,
+      "views": {
+        "front": [
+          377,
+          628,
+          495,
+          772
+        ],
+        "side": [
+          255,
+          628,
+          374,
+          772
+        ]
+      },
+      "_comment": "Board 17 panel C. front is the MEDIUM potion plant, the reused single mesh (small/large are scale variants applied in-engine, matching the board's own STAGE VARIATIONS note). side is the SMALL potion plant cell -- same species and framing, smaller instance -- used only because the pipeline requires 2 views; front carries the real proportions."
+    },
+    "meadows_signpost": {
+      "file": "18_Signpost_Bridge_Modular_Props.png",
+      "background": [
+        236,
+        224,
+        210
+      ],
+      "pad": 174,
+      "views": {
+        "front": [
+          18,
+          635,
+          130,
+          785
+        ],
+        "side": [
+          77,
+          847,
+          134,
+          900
+        ],
+        "back": [
+          139,
+          847,
+          196,
+          900
+        ]
+      },
+      "_comment": "Board 18 ASSET 03. front is the 'Directional (Multi)' hero object -- the one already labelled with real Meadows place names (Grandpa's Village, The Pond, Relay Station) -- so it is the object to generate, blank-planked at generation time (text is a runtime label, not part of the mesh). side and back come from the small ANGLE VIEWS strip beneath it."
+    },
+    "meadows_bridge_section": {
+      "file": "18_Signpost_Bridge_Modular_Props.png",
+      "background": [
+        236,
+        224,
+        210
+      ],
+      "pad": 278,
+      "views": {
+        "front": [
+          1034,
+          626,
+          1288,
+          772
+        ],
+        "side": [
+          1090,
+          845,
+          1146,
+          896
+        ],
+        "top": [
+          1146,
+          845,
+          1205,
+          896
+        ]
+      },
+      "_comment": "Board 18 ASSET 05. front is the beauty render of the straight bridge section (deck, rails, end posts) -- the object CL-B3/prompt 74 already names as needed at the South Bridge and reusable elsewhere. side and top come from the small ANGLE VIEWS (STRAIGHT SECTION) strip beneath it."
+    },
+    "candy_pickup": {
+      "file": "17_Candy_Revive_Potion_Mushroom_Pickups.png",
+      "background": [
+        234,
+        229,
+        221
+      ],
+      "pad": 189,
+      "views": {
+        "front": [
+          255,
+          168,
+          408,
+          305
+        ],
+        "three_quarter": [
+          255,
+          335,
+          345,
+          400
+        ]
+      },
+      "_comment": "Board 17 panel A. ONE mesh for all three candy tiers (owner instruction 2026-09-04: 'one and color it different and add a different badge' -- the tm_orb economy again). front/three_quarter are the GOOD CANDY cell and its cleanest alt angle, the plainest of the three tiers (no wings). Great Candy = same mesh, blue tint, star medallion decal. Rare Candy = same mesh, gold tint, crown medallion decal, PLUS two small wing meshes attached as child nodes in Godot -- the board's wings are real geometry a texture swap cannot fake; do not regenerate a second candy for them."
+    },
+    "mushroom_pickup": {
+      "file": "17_Candy_Revive_Potion_Mushroom_Pickups.png",
+      "background": [
+        234,
+        229,
+        221
+      ],
+      "pad": 121,
+      "views": {
+        "front": [
+          1145,
+          635,
+          1266,
+          730
+        ],
+        "three_quarter": [
+          1145,
+          635,
+          1266,
+          730
+        ]
+      },
+      "_comment": "RETRY 2 2026-09-04: feeding STAMINA and WILD as if they were two angles of one object produced a rounded-blob/rock shape on five candidates across two prompt versions -- they are genuinely different mushroom arrangements, not two views of the same one, and multi-image-to-3D was averaging them. No second angle of any single cluster exists on the board, so front and three_quarter are now the SAME Stamina crop, forcing effectively single-image reconstruction (the >=2-view floor in reference_views() needs two named files, not two different pictures)."
     }
   }
 }

@@ -211,7 +211,27 @@ HUMANS = {"trainer", "grandpa", "warden", "villager_female", "villager_male", "g
 PROPS = {"tether_pylon", "relay_apparatus", "tether_machine",
          "camp_tent", "camp_fire_pit", "camp_bed",
          "camp_firewood", "camp_flame",
-         "tm_orb"}
+         "tm_orb",
+         # PICKUP-BATCH-0904. Owner-supplied board 17
+         # (docs/art/reference/17_Candy_Revive_Potion_Mushroom_Pickups.png),
+         # owner directive 2026-09-04: "we should use meshy to design the
+         # candies, mushrooms, revive flower and potion plants." Reference
+         # art satisfies CLAUDE.md's "never spend a Meshy generation without
+         # owner-supplied reference art" for these four objects; see
+         # docs/prompts/74-ART-REFERENCE-owner-boards-for-meshy.md. ONE mesh
+         # per family (tm_orb economy) -- candy_pickup covers Good/Great/Rare
+         # by material tint plus a medallion decal (Rare's wings are added as
+         # separate small child-node meshes in Godot, not regenerated);
+         # mushroom_pickup covers Speed/Stamina by tint (Wild Shroom's
+         # broader cap is a non-uniform scale + texture, not a second mesh).
+         # meadows_signpost and meadows_bridge_section have reference crops
+         # staged (board 18) but are NOT generated yet -- owner instruction
+         # 2026-09-04: try editing the existing procedural bridge/signpost to
+         # read closer to the board first, and spend the credit only if that
+         # fails a blind judge. Registered here so a later `generate` call
+         # needs no further setup.
+         "candy_pickup", "revive_flower", "potion_plant", "mushroom_pickup",
+         "meadows_signpost", "meadows_bridge_section"}
 STYLE_PROP = ("stylized PBR game environment prop, hand-painted fantasy style, "
               "clean readable forms, large clear colour regions, restrained "
               "surface detail, single object, upright, full structure visible")
@@ -823,6 +843,91 @@ SPECIES_PROMPTS = {
     # campfire panel actually draws. Intended to replace or sit alongside
     # `campfire_glow.gd`'s procedural billboard flame, which the owner
     # separately called out as reading as a toy.
+    # PICKUP-BATCH-0904, from owner board 17 panel A. One mesh for all three
+    # candy tiers -- see the PROPS set comment. This prompt describes the
+    # PLAIN (Good Candy) wrap: no crown, no wings, no star. Those are added
+    # per-tier in Godot as a medallion decal swap plus tint; Rare's wings are
+    # separate small meshes, not part of this generation.
+    "candy_pickup": (
+        "a single wrapped candy, rounded sphere body with two twisted "
+        "wrapper ends like a classic candy wrapper, smooth glossy shell. "
+        "One flat circular medallion inset on the front face, plain and "
+        "blank (no icon). Whimsical, collectible, NOT a UI icon -- reads as "
+        "a small object resting on the ground. Soft glossy sheen, rounded "
+        "wrapper folds with a few sharp facet creases, roughly 15cm across, "
+        "single object, upright, resting on its rounded underside"),
+
+    # Board 17 panel B. The one luminous flower family for the revive
+    # pickup. Leaves and glowing bloom are separate readable parts so a
+    # material pass can drive the glow independently in Godot.
+    "revive_flower": (
+        "a single luminous flower plant, one tall lily-like bloom with six "
+        "wide pointed petals curling open, glowing softly from within at "
+        "the petal base and centre. Tall stamens rising from the centre "
+        "tipped with small glowing points. A cluster of long broad pointed "
+        "leaves at the base, upright and slightly curved. Pale white "
+        "petals blending to soft blue at the tips, warm golden glow at the "
+        "core, natural but magical, roughly 45cm tall, single plant, "
+        "growing upright from a small patch of bare soil"),
+
+    # Board 17 panel C. The medium potion plant; small/large are the same
+    # mesh at different scales in Godot, matching the board's own STAGE
+    # VARIATIONS note.
+    "potion_plant": (
+        "a single stylised herb plant, cluster of broad pointed green "
+        "leaves at the base with two or three upright stems rising above "
+        "them, each stem tipped by a smooth glossy red teardrop bud like a "
+        "sealed potion capsule. Buds rounded at the base tapering to a "
+        "soft point, natural but clearly a game pickup plant, roughly 35cm "
+        "tall, single plant, growing upright from a small patch of bare "
+        "soil with a few loose seed pods scattered at the base"),
+
+    # Board 17 panel D. One mesh for all three mushroom tiers -- see the
+    # PROPS set comment. RETRY 2026-09-04: the first crop (which included
+    # the base grass) and this same prompt produced a spiky rock-like blob
+    # on all three preview candidates, not a mushroom -- the crop is fixed
+    # (caps+stems only, no grass) and this prompt now states the failure
+    # mode as an explicit negative rather than trusting "whimsical" to rule
+    # it out.
+    "mushroom_pickup": (
+        "a cluster of two or three stylised toadstool mushrooms of "
+        "different heights growing together, SMOOTH ROUNDED DOME-SHAPED "
+        "CAPS like a classic storybook toadstool, smooth cylindrical "
+        "stems. Caps scattered with a few small round pale spots. NOT "
+        "spiky, NOT thorny, NOT jagged, NOT a rock or crystal formation -- "
+        "every surface is smooth and rounded, only the dome caps and "
+        "straight stems, no grass or foliage modelled into the object. "
+        "Warm orange cap colour shading paler toward the spots, cream "
+        "stems, whimsical and charming, not photoreal, roughly 25cm tall "
+        "at the tallest cap, single cluster, resting upright on a bare "
+        "flat base"),
+
+    # Board 18 ASSET 03. Registered but NOT generated yet -- owner
+    # instruction 2026-09-04: edit the existing procedural signpost to read
+    # closer to this board first, and spend a generation only if that fails
+    # a blind judge. Prompt kept ready so that decision costs one command.
+    # Blank planks: the real place names ("Grandpa's Village", "The Pond",
+    # "Relay Station") are a runtime label, never baked into the mesh.
+    "meadows_signpost": (
+        "a wooden directional signpost, single upright post with three "
+        "arrow-shaped wooden planks jutting out at different heights and "
+        "angles, each plank pointing a different direction, planks blank "
+        "with no text or carving. Rope-wrapped cap at the top of the post, "
+        "small tuft of grass at the base, warm weathered brown wood grain, "
+        "stylised hand-painted fantasy game prop, roughly 2.2 metres tall, "
+        "single object, standing upright"),
+
+    # Board 18 ASSET 05. Registered but NOT generated yet -- same standing
+    # instruction as meadows_signpost above.
+    "meadows_bridge_section": (
+        "a short modular wooden bridge section, plank deck between two "
+        "stout timber corner posts on stone footings, a rope handrail "
+        "strung between the posts on each side. Weathered brown timber "
+        "planks, rope rails with wrapped knots at the posts, small stone "
+        "block footings at the base of each post, stylised hand-painted "
+        "fantasy game prop, roughly 2 metres wide and 1.2 metres tall at "
+        "the rail, single modular section, resting level"),
+
     "camp_flame": (
         "a single stylised campfire FLAME, solid faceted shape, multiple "
         "layered upward-curling tongues of fire like low-poly stylised "

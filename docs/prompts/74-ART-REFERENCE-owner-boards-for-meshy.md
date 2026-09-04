@@ -20,6 +20,110 @@ when spending one becomes allowed, per object.
 
 ---
 
+## STATUS, 2026-09-04 — a different, unplanned batch shipped first
+
+The owner independently produced six boards through ChatGPT the same day (not the three
+this file asked for) covering candy, revive flower, potion plant, edible mushroom,
+signpost and bridge, and directed Meshy generation against four of them directly. That
+batch is **done and installed** — full account, task ids and credit spend in
+`docs/specs/ASSET_LEDGER.md` §"Meadows pickup props — candy, revive flower, potion plant,
+mushroom (2026-09-04)":
+
+- `assets/props/candy_pickup/candy_pickup.glb` — one mesh, all three candy tiers (tint +
+  medallion decal in Godot; Rare's wings are separate small meshes, not baked in).
+- `assets/props/revive_flower/revive_flower.glb`
+- `assets/props/potion_plant/potion_plant.glb` — one mesh, small/medium/large are scale
+  variants at placement time.
+- `assets/props/mushroom_pickup/mushroom_pickup.glb` — one mesh, all three mushroom
+  tiers (tint in Godot; Wild Shroom's broader cap is a non-uniform scale, not a second
+  mesh). Owner-confirmed over the installed `Mushroom_Common.gltf` alternative the ledger
+  entry found mid-batch — see that entry for why the installed asset was checked too late
+  to save the credit, and check `assets/environment/` and `assets/props/` **before**
+  queuing a generation next time, not after one starts failing.
+
+**None of the three objects below this line were touched by that batch.** The South
+Bridge checkpoint gate, the ridge watchtower and the saddle remain exactly as described:
+no board drawn, no reference art, no generation licensed. Sections 1–6 below are
+unchanged and still the task for those three.
+
+**Signpost and bridge are deferred, not generated**, on a fourth owner instruction the
+same session: *"I wonder if the signs and bridge could actually be created without meshy
+by editing what we have to look more like the reference art. then we can spend our
+credit elsewhere."* The board that would have generated them
+(`docs/art/reference/18_Signpost_Bridge_Modular_Props.png`) is already staged — crops cut,
+`prop_views.json` entries and `SPECIES_PROMPTS` written, `meadows_signpost` /
+`meadows_bridge_section` registered in `meshy.py`'s `PROPS` set — so if the procedural
+pass below fails a blind judge, generating them is one command:
+`meshy.py generate meadows_signpost` / `meadows_bridge_section`. See §7 for the
+procedural task itself.
+
+---
+
+## §7 — Signpost and bridge, procedural-first (no Meshy)
+
+Both are already real, working, primitive-built mechanisms, not placeholders standing in
+for nothing — the gap to board 18 is cosmetic, not structural, and is closable with
+material and geometry edits inside the existing scripts.
+
+### Signpost (`scripts/world/signpost.gd`)
+
+Already builds, per site: a tapered `CylinderMesh` post, one arm per route (a `BoxMesh`
+plank plus a 3-sided-cylinder arrowhead, mounted around the post at the golden angle so
+arms never visually collide), double-sided `Label3D` text painted on each plank face, and
+a small irregular stone-block base dressing. This is structurally close to board 18's
+"Directional (Multi)" object already — post, angled arms, real destination names.
+
+What the board has that the script does not, all reachable without a new mesh:
+
+- **A rope-wrapped band near the top of the post.** The board draws this on every
+  variant. Add one small torus or short banded cylinder segment above the topmost arm,
+  in a darker warm brown, textured or not — a primitive addition to `build()`.
+- **Warmer, more saturated wood tone.** `post_mat.albedo_color` is `#6b4a2f`, the plank
+  colour `#c8a874` — board 18's post reads richer/more reddish. Compare directly against
+  a render and retune both, plus `roughness`, rather than guessing.
+- **A pointed plank silhouette**, not a separate cone arrowhead bolted to a flat plank.
+  Board 18's arms are single tapered planks, wide at the post end and pointed at the
+  tip — closer to a real fingerpost. This needs the plank mesh itself reshaped (a tapered
+  prism or two triangles cut from a box) rather than the current plank+cone assembly;
+  weigh this against the risk of breaking the label-fit math in `_label_scale()`, which
+  assumes a rectangular board.
+
+**Fails if** any change breaks `_add_arm()`'s golden-angle mounting (arms must still not
+visually collide) or `_label_scale()`'s fit-to-plank sizing (BAND1-DISCOVERY-0903's own
+hard-won 3x label resolution fix). Render before/after on the same stand
+(`tools/survey.sh`, Compatibility renderer) and put both to the blind judge against board
+18's own "Directional (Multi)" panel before calling this done.
+
+### Bridge (`scripts/world/gated_crossing.gd`, `scripts/world/south_bridge.gd`)
+
+The checkpoint dressing (posts, lintel, oxblood sigil banners) already exists in
+`south_bridge.gd`, built for the *Team Tether occupation* half of the gap — that is a
+separate, still-unstarted object (§1 Prompt A above, the checkpoint gate specifically).
+The *deck* itself — the plank-and-rail crossing every gate in the game reuses — comes
+through `gated_crossing.gd`'s `prefabs` system from `building_prefabs.json`, not raw
+primitives in that file. Before writing any new mesh code:
+
+1. Read what `building_prefabs.json`'s deck/rail entries actually reference today — an
+   installed pack prop, or a primitive builder — and render it in isolation.
+2. Compare that render to board 18's "Bridge Plank & Rail (Modular)" panel: rope rails
+   with wrapped-knot detail at the posts, squared timber posts on stone-block footings,
+   visible plank seams.
+3. If the installed prop is close, the gap is material/colour tuning (warmer timber,
+   visible rope texture or a simple wrapped-rope mesh detail at each post) — cheap.
+4. If it is a bare unrailed plank strip, decide whether Kenney/Quaternius's already-
+   vendored packs (`assets/props/kenney_survival/`, `assets/props/quaternius_survival/`,
+   `assets/props/quaternius_fantasy/`) have a bridge or dock piece close enough to
+   kitbash, per the project's own art-source order — check before generating.
+
+**Fails if** this is attempted by editing `south_bridge.gd`'s checkpoint dressing instead
+of the deck/rail source in `gated_crossing.gd`/`building_prefabs.json` — those are two
+different gaps (occupation vs. construction) and board 18 is evidence for the second one,
+not the first. Same judge process as the signpost: render on the actual crossing stand
+used by `ralph/reports/GATE2-EVIDENCE-0903/JUDGE.md`, blind-judge against board 18, and
+only fall back to `meshy generate meadows_bridge_section` if that fails.
+
+---
+
 ## 1. Why these three, and not others
 
 Checked against the tree on 2026-09-04:
