@@ -40,6 +40,26 @@ These are the package-level layer that assembles child systems into the complete
 - `69-STRONGHOLD-chapter-finale.md` — Hall/Warden/legendary/world-healing payoff.
 - `70-MEADOWS-full-chapter-integration-playthrough.md` — final 3–4 hour acceptance/tuning pass.
 
+## Finish-the-Meadows contracts (2026-09-04)
+
+Written against `docs/FINISH_THE_MEADOWS.md` and its addendum, from the owner's 2026-09-04
+directives:
+
+- `73-PROGRESSION-VISIBLE-bond-and-level-feedback.md` — the A1/A2 contract: one progression
+  feed, three loudness levels, the Team screen answering "how bonded am I and what raises
+  it", and the ordered-ladder decision. Supersedes `47` and owns the feedback lines of `67`.
+- `74-ART-REFERENCE-owner-boards-for-meshy.md` — the three reference boards most likely to
+  be needed (South Bridge checkpoint gate, ridge watchtower, riding saddle), the image
+  prompts to produce them in board 13's format, the intake route, and when a credit may be
+  spent per object. **Updated 2026-09-04** with a status section: candy, revive flower,
+  potion plant and mushroom were generated and installed the same day against a different,
+  owner-produced board (see `docs/specs/ASSET_LEDGER.md`); §7 is a new procedural-first
+  task for the signpost and bridge, which were deferred rather than generated.
+- `75-CODEX-pull-in-pickup-assets-and-finish-the-meadows.md` — the routing document for a
+  fresh Codex session: what to read, what the four new pickup assets are and how they wire
+  into `item_cache_pickup.gd`, what is deferred, and that the phase-0 instrument fixes in
+  `docs/FINISH_THE_MEADOWS.md` still come first if there's a choice of what to pick up.
+
 ## Current Gate A environment baseline
 
 - `71-GATEA-opening-environment-baseline.md` — make the opening/village/pond area representative enough to judge the real game during Gate A: naturally available creatures/resources, approved lush pond pocket, nearby broad open sightlines, readable trails, and no global density sweep.
