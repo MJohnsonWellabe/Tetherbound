@@ -832,8 +832,26 @@
         "attenuation": 1.0
       }
     ],
-    "_comment_gate_source": "Two brazier BASKETS with no light of their own, standing at two of the four gate fire points `lights` already authors. The T1-ARCH gate recipe lit the curtain convincingly and put nothing in the frame that could be doing the lighting; these are that missing source, and they cost zero omnis because the light is already there.",
+    "_comment_gate_source": "Brazier BASKETS with no light of their own, standing where `lights`/`lights_flanks` already authors a source. The T1-ARCH gate recipe lit the curtain convincingly and put nothing in the frame that could be doing the lighting; these are that missing source, and they cost zero omnis because the light is already there. The Warden Arena pair (W-4) is the same trick applied inside the Hall: `EXTERIOR_OMNI_BUDGET` was already spent to 21 of 22 before this pass (`stronghold.gd::_report_light_budget`'s own count), so a THIRD real omni pair here would have pushed the Hall over its design ceiling for two props that only need to read as fire, not to actually light the room -- the arena's own two ambient sky-fill `lights` entries at [-8,90.2]/[8,90.2] already do that job.",
     "gate_source": [
+      {
+        "_comment": "W-4 (GATE3_ENCOUNTER_CONTRACTS.md sec5.2), Warden Arena threshold, west jamb. Both of this pair sit outside the 11m combat ring (distance from the arena centre (0,90.2) is 14.06m) and clear of the door's own 3.4m passage width, flanking the entry the player has just walked through rather than the ring or the Warden's own end wall -- the far wall behind `warden_stand` stays comparatively dark, which is what the arena's own re-measured silhouette contrast needs.",
+        "at": [
+          -8.5,
+          79.0
+        ],
+        "on_floor": true,
+        "scale": 1.9
+      },
+      {
+        "_comment": "W-4, Warden Arena threshold, east jamb -- mirrors the west brazier above.",
+        "at": [
+          8.5,
+          79.0
+        ],
+        "on_floor": true,
+        "scale": 1.9
+      },
       {
         "at": [
           -8.0,

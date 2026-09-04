@@ -50,6 +50,7 @@ var _player: Node3D = null
 var _stronghold: Node = null
 var _trainers: Node3D = null
 var _readout: Node3D = null
+var _duty_board: Node3D = null
 var _machine_prompt: Node3D = null
 var _legendary: Node3D = null
 var _cage: Node3D = null
@@ -74,7 +75,8 @@ func build(world: Node, player: Node3D) -> bool:
 
 	_stronghold = _find_stronghold()
 	_place_warden()
-	_place_readout()
+	_readout = _place_readout(_config.get("reveal", {}), "TetherReadout")
+	_duty_board = _place_readout(_config.get("duty_board", {}), "StrongholdDutyBoard")
 	_place_machine_prompt()
 	_place_legendary()
 	_watch_the_dialogue_panel()
@@ -200,16 +202,21 @@ func warden_body() -> Node3D:
 
 ## --- SG40: the reveal ---------------------------------------------------------
 
-## A Team Tether maintenance readout on the threshold of the Warden Arena.
-## Environmental storytelling the player chooses to read, standing where §28
-## puts the discovery: BEFORE the Warden speaks and before the fight.
-func _place_readout() -> void:
-	var spec: Dictionary = _config.get("reveal", {})
+## A Team Tether maintenance readout, built from any config entry that carries
+## `fallback`/`mark`, `label` and `conversation` -- SG40's arena-threshold
+## reveal and R-2's waystop duty board (GATE3_ENCOUNTER_CONTRACTS.md sec7.2)
+## are the same primitive panel and the same `interactable.gd` + conversation
+## mechanism, standing in two different places for two different reasons: the
+## reveal is environmental storytelling read where §28 puts the discovery
+## (BEFORE the Warden speaks and before the fight); the duty board is the
+## owner's §10 readiness layer, read at the last camp before the approach,
+## with no flag and nothing gated on it -- reading either is optional.
+func _place_readout(spec: Dictionary, node_name: String) -> Node3D:
 	if spec.is_empty():
-		return
+		return null
 	var at := _spot(spec)
 	var panel := Node3D.new()
-	panel.name = "TetherReadout"
+	panel.name = node_name
 	add_child(panel)
 	panel.global_position = at
 
@@ -232,12 +239,13 @@ func _place_readout() -> void:
 	screen.position = Vector3(0.0, float(spec.get("height", 1.35)), size.z * 0.51 + 0.01)
 	panel.add_child(screen)
 
-	_readout = INTERACTABLE.new()
-	_readout.name = "ReadoutPrompt"
-	_readout.position = Vector3(0.0, float(spec.get("height", 1.35)), 0.0)
-	panel.add_child(_readout)
-	_readout.call("configure", str(spec.get("label", "Read the Tether readout")), _prompt_radius(), true)
-	_readout.connect("activated", _on_readout.bind(str(spec.get("conversation", ""))))
+	var prompt := INTERACTABLE.new()
+	prompt.name = "ReadoutPrompt"
+	prompt.position = Vector3(0.0, float(spec.get("height", 1.35)), 0.0)
+	panel.add_child(prompt)
+	prompt.call("configure", str(spec.get("label", "Read the Tether readout")), _prompt_radius(), true)
+	prompt.connect("activated", _on_readout.bind(str(spec.get("conversation", ""))))
+	return panel
 
 
 func _on_readout(conversation: String) -> void:

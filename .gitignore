@@ -105,6 +105,7 @@ ralph/reports/TOURNAMENT-*/**/[!_]*.png
 ralph/reports/HARNESS-*/**/[!_]*.png
 ralph/reports/OPENING-*/**/[!_]*.png
 ralph/reports/CREATURE-*/**/[!_]*.png
+ralph/reports/G3-WARDEN-ARENA-*/**/[!_]*.png
 ralph/reports/**/*.jsonl
 ralph/reports/**/*.csv
 ralph/reports/**/telemetry/
