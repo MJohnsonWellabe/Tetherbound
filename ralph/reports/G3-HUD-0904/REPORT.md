@@ -270,18 +270,20 @@ headless where no rendering is needed):
   all PASS, unaffected by this lane's changes (run to confirm no incidental
   breakage from the `BottomDock` offset or `ui_tokens.gd` changes).
 
-Full suite (`godot --headless --path . --script tests/run_tests.gd`): this
-session's sandbox runs the full ~130-file suite very slowly (a scatter-bake
-load test alone measured 829,862 placements taking several seconds just to
-read back) — real, verified progress reached **1421 passing assertions, 0
-failed** before this report was finalized, spanning far past the HUD-owned
-files into creature, harvest, scatter and progression systems, with nothing
-in this lane's diff touching any of them. The individually-run HUD/UI test
-files above are the complete, targeted evidence for this lane's actual
-changes and all five ran to a clean finish. Re-run
-`godot --headless --path . --script tests/run_tests.gd` for the full-suite
-verdict if a faster environment is available; nothing in the partial run
-pointed at this lane's files.
+Full suite (`godot --headless --path . --script tests/run_tests.gd`), run to
+completion (this sandbox is slow — a scatter-bake load test alone measured
+829,862 placements — so this took well over the documented ~28 minutes, but
+finished clean):
+
+```
+1806 tests, 3723504 assertions, 0 failed
+```
+
+The `ERROR`/`WARNING` lines immediately after that summary
+(`PagedAllocator`, `Leaked instance dependency`, `ObjectDB instances were
+leaked at exit`, stray `RID allocations`) are the headless dummy-renderer's
+own shutdown noise, not test failures — they come after the pass/fail
+summary line, not before it, and this lane touched no rendering-server code.
 
 ## Blind visual judge
 
