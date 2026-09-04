@@ -9,6 +9,46 @@ what on which files), and it does not replace either. Where it contradicts somet
 written down it says so and says why; the full list is in
 `ralph/reports/G3-CLOSURE-PLAN-0904/REPORT.md`.
 
+---
+
+## Picking this up cold
+
+If you are starting from nothing, read in this order and stop when you have what you need.
+
+1. **§0** — the three kinds of "not done". It runs the whole plan, and the dangerous
+   category is "done but unproven", which is where most of Gate 3 sits.
+2. **§2.G** — the owner's 2026-09-04 playtest and directives, sixteen scoped rows. This is
+   the largest block of remaining work and it outranks everything else here for what it
+   covers. Its first four rows gate the rest; they are named at the top of the section.
+3. **§3** — the ordering, and the honest note about where §2.G's work does *not* fit it.
+4. Everything else as you need it.
+
+**What is true as of 2026-09-04, after this round landed:**
+
+- Sixteen lanes merged to `main` (PRs #32 and #33). Sixteen lane sessions archived.
+- **Both gates still fail.** That has not changed and this document does not soften it.
+- The single re-bake ran zero times, correctly — see CL-R4, which records the checks
+  rather than the intention.
+- **Gate 3 has its first played segment evidence**: S07, 104/119 with a complete
+  inventory. S06, S08, S09 and S10a–e still have none as a chain.
+
+**Four claims in this repo were corrected this round by checking them against the code.**
+They are listed because the pattern matters more than any one of them — each had been
+written down confidently, and two had already propagated into other documents:
+
+| Claim, as written | What the code says |
+|---|---|
+| The G-2 crash was "a Godot 4.7 GDScript-VM edge case" | An ordinary bug: `get("k", {}) is Dictionary` tests the *default*, then the next line indexes a missing key |
+| `verify-gate-b-core` is the "Quarry Foreman / Prompt under Door" defect | A nondeterministic leg with **four** outcomes on one commit, including a full pass — the arbiter winner is not even stable (CL-H12) |
+| Widening a scatter `scale_min`/`scale_max` re-rolls the corridor's RNG stream | It does not: same draw count, same order, identical placements. Asserted by three documents; `vegetation.json`'s own note had it right |
+| A shared `JoyAxis:4` binding lets a charged attack open Build mid-fight | Two independent guards prevent it (context separation, and the combat gate). The real finding is a harness measurement risk |
+
+**The habit worth keeping:** verifying a comment against another comment is not
+verification. That sentence is already in PR #32's description because a lane certified
+an encounter as meeting its contract by reading the config's own prose about it.
+
+---
+
 Precedence is `CLAUDE.md`'s. Nothing proposed here violates a hard rule; where closing a
 gate would need something a hard rule forbids (a new mesh, a Meshy generation without
 owner reference art), the item is put in §4 for the owner instead of being smuggled into
