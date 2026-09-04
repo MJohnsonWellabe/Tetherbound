@@ -68,13 +68,21 @@ Meshy spend without owner reference art. The judges' "art not in the build"
 list (canopy structure, rock variety) is therefore in scope for the visual
 track (`docs/ROADMAP.md`, Gate 3 parallel track).
 
-## 4. Grass clump cards ship behind the flag
+## 4. ~~Grass clump cards ship behind the flag~~ — **REVERSED BY THE OWNER, 2026-09-04**
 
-The blade-shape redesign (clump cards) waited on an owner answer since
-2026-09-02. Decision: implement it in `grass_field.gd` behind a
-`grass_field.json` key, **on by default**, judged on the next route strip. If
-the judge names the cards as worse than the blades on the same stands, the flag
-goes off in one commit. The 75k-tuft density decision is unchanged.
+**Do not implement clump cards.** Asked directly on 2026-09-04, the owner's answer was
+flat: *"procedural grass is enough."* That is the opposite of what this section decided,
+and under `CLAUDE.md`'s precedence the owner's answer wins over a decision record.
+
+This section stays visible rather than being deleted, because its reasoning is still worth
+reading and because a reader who finds only the reversal should be able to see what was
+reversed. The original text follows; it is **not** current.
+
+> The blade-shape redesign (clump cards) waited on an owner answer since
+> 2026-09-02. Decision: implement it in `grass_field.gd` behind a
+> `grass_field.json` key, **on by default**, judged on the next route strip. If
+> the judge names the cards as worse than the blades on the same stands, the flag
+> goes off in one commit. The 75k-tuft density decision is unchanged.
 
 ## 5. Corridor-fill tree scale is re-rolled once, before Band 2's bake
 
@@ -92,11 +100,24 @@ duration of the fade) rather than any change to villager scale, which the
 owner has already had cut and re-cut. Implemented as a bounded task under the
 visual track; judged from the S03 video sheets.
 
-## 7. Grandpa's loft bed is closed by harness evidence
+## 7. ~~Grandpa's loft bed is closed by harness evidence~~ — **REOPENED BY THE OWNER, 2026-09-04**
 
-Whether the owner "ever tried" the loft bed cannot be answered and no longer
-needs to be. `smoke_gate_b_continuous` sleeps in it and the kickoff run's S02
-video shows it. Reopen only from a kickoff-run S02 or S03 defect row.
+**The bed does not work.** Asked directly on 2026-09-04: *"I've never been able to sleep in
+the loft bed."* That is a direct owner reproduction and under `CLAUDE.md`'s precedence it
+outranks this record and the passing smoke alike.
+
+The smoke is not lying — `smoke_gate_b_continuous` really does sleep in that bed. **That is
+the finding, not a contradiction:** the harness reaches the bed by a path the player
+cannot, so the defect lives between the two, exactly as CL-O2 (the day/night clock) turned
+out to. Root-cause it there — the prompt, the reach, interact arbitration on the loft, or
+the bed's placement — not by re-running a probe that already passes.
+
+The clause below ("reopen only from a kickoff-run defect row") is void. An owner
+reproduction reopens an item; a decision record cannot fence that off.
+
+> Whether the owner "ever tried" the loft bed cannot be answered and no longer
+> needs to be. `smoke_gate_b_continuous` sleeps in it and the kickoff run's S02
+> video shows it. Reopen only from a kickoff-run S02 or S03 defect row.
 
 ## 8. D50's loops satisfy the rebuild plan; no macro redesign
 

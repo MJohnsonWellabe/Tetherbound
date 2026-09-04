@@ -130,12 +130,62 @@ materials) and 2.5/2.6 (band data) run in parallel with them. 2.1 precedes 2.2�
 
 ### Acceptance
 
-- Blind judge on the five survey stands plus village and bridge approach: Bar A yes;
-  Bar B "trying to be the same kind of game" on composition and density, with remaining
-  gaps named as art-not-in-build.
+**REWRITTEN 2026-09-04 on the owner's decision.** The previous first clause is kept at the
+bottom of this section for the record. It was replaced for three reasons, each measured
+rather than felt: it judged posed survey stands nobody plays from (D73 §2 had already moved
+the bars onto the GPU route strip); **no task inside this gate could move it** — every
+blind pass named props, fence, signposts, sails, water, lighting, terrain form and the
+bridge, none of which tasks 2.2–2.7 were scoped to touch, so the gate could complete
+entirely and its verdict not shift, which it did three times; and Bar B was unreachable by
+construction, because a creature-collection question cannot be answered by a frame set with
+no creature in it (four passes produced sixteen frames with zero readable creatures).
+
+Rewriting the bar does **not** pass this gate. The current failure also stands on grounds
+squarely inside its reach. It makes the gate passable by the work it contains.
+
+- **Blind judge, on stands taken from the played route's own trace** — gameplay camera,
+  HUD on, a companion deployed, a fight frame containing a fight; never posed survey
+  viewpoints, which flatter a build. Frames come from the GPU route strip (D73 §2), one
+  every 40 m along the authored spine at the player's eye height, day and night. In three
+  parts:
+
+  - **(a) Vegetation, creature and night** — against 2.2, 2.3, 2.4, 2.7 and 2.16:
+    silhouette variety named as improved; a mid-layer present between grass and canopy;
+    scatter that reads as laid out, not as a rule; creature-to-ground separation ≥ 1.5:1
+    measured **and** the judge no longer naming any creature as off-palette by day or
+    night; night midground readable.
+    **Fails if** the judge names any of these as unchanged on the same stand where it was
+    named before.
+  - **(b) Composition, props and terrain** — against 2.13: each item the 2.8 judge
+    itemised is named as improved *on the stand it was named on*; the South Bridge reads
+    as a held crossing from the approach; the red family is reserved for Team Tether.
+    **Fails if** any itemised item is still named on its stand, or oxblood appears on a
+    friendly surface.
+  - **(c) Bar A and Bar B** — asked **only after (a) and (b) pass**, and only once the
+    capture lane can put a creature in frame at size (2.15). Bar A yes; Bar B "trying to
+    be the same kind of game", with remaining gaps named as art-not-in-build and that list
+    checked against `CLAUDE.md`'s hard rules, so the project knows which gaps are a
+    decision and which are a lane.
+    **Fails if** Bar B is answered on a frame set with no companion beside the trainer and
+    no fight in the fight frame — that answer measures the instrument, not the game.
+
 - Evidence template PASS; no dead-travel interval over ~60 s that is not intentional.
-- Perf proxy within the provisional budget; the owner's Ally frame-rate check on the
-  released build.
+- Perf proxy within the provisional budget; the owner's Ally frame-rate check — now
+  satisfied by the kickoff run's own `fps.json` rather than a separate owner report
+  (D73 §1).
+
+**Two checkpoint tags, not one.** `gate2-candidate` is placed when (a) and (b) pass and the
+evidence template passes. `gate2-done` when (c) passes and the Ally run is recorded.
+Splitting them is what lets this project say honestly where it is, instead of choosing
+between "done" and "still failing" when the truth is in between.
+
+**A gate does not close on a judge "no"** (D73 §2): it closes when the route-strip judge
+answers yes on the bands it covers, or when a written owner note in `docs/owner/` accepts
+the specific named gaps.
+
+> **Superseded first clause, for the record:** "Blind judge on the five survey stands plus
+> village and bridge approach: Bar A yes; Bar B 'trying to be the same kind of game' on
+> composition and density, with remaining gaps named as art-not-in-build."
 
 **Status after 2.8 (GATE2-EVIDENCE-0903, 2026-09-03): not met.** Dead travel passes (two
 intervals over 60 s, 63 s and 71 s, none over 75 s); the perf proxy passes (`band1_open`

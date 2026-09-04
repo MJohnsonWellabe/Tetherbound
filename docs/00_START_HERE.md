@@ -1,5 +1,10 @@
 # START HERE — Tetherbound
 
+> **Start here, 2026-09-04: [`docs/FINISH_THE_MEADOWS.md`](FINISH_THE_MEADOWS.md)** — the
+> whole remaining plan to finish the chapter, in order, written to be picked up cold. It
+> supersedes older prose about what is next. `docs/GATE2_GATE3_CLOSURE_PLAN.md` is the
+> detail behind it, with a *fails if* on every open item.
+
 **Read this first. It is the only routing document.** Rewritten 2026-09-02 at the
 repository reset; it replaces `ralph/START_HERE.md`, the coordinator handovers and the
 dated backlogs, which are now under `archive/`.
@@ -27,8 +32,9 @@ them were not what they claimed:
 - The opening-segment orb floor is **fixed** (gate on the beat, not the species).
 - The Gate B objective chain was **never stalling** — two assertions were pinned to label
   strings that had never existed in `objectives.json`, behind a job that did not gate. The
-  gather-route half is real and is the settlement fence's concave corner past TrailGate,
-  not scatter density.
+  gather-route half was real, and is now **fixed**: the corner past TrailGate was a
+  harness defect, not a world defect — a real body clears it on a plain stick-hold; only
+  `stick_navigator.gd`'s stall/flip logic could not round it (FENCE-CORNER-0903).
 - The South Bridge `smoke_traversal` failure was **a harness defect, not a world hole**: a
   teleport outran Terrain3D's camera-following collision, so the body fell before the
   ground existed under it. The crossing's geometry was never changed and never needed to be.
@@ -39,6 +45,12 @@ prefix gates in CI.
 **If you are picking up an in-flight orchestration session, read
 `docs/HANDOFF_2026-09-03.md` first** — it carries the live lane state, the open PR, and the
 traps that have already cost this project time.
+
+**If you are starting Gate 3, read `docs/GATE3_COORDINATOR_BRIEF.md` first.** Gate 3 may
+begin before Gate 2 is called done — the Gate 1 precedent covers this — but Gate 3's
+acceptance is defined by reference to the Gate 2 standard, and task 2.8 is currently
+empowered to revise that standard. The brief says which Gate 3 work is safe to start now
+and which must wait for 2.8's verdict.
 
 ## What is authoritative
 
@@ -81,12 +93,27 @@ Precedence when documents disagree: newest owner directive or playtest in `docs/
 
 ## Known issues right now
 
-See `docs/CURRENT_STATE.md` §3 for the ranked list. Headline items: opening orb-floor
-smoke red; continuous Gate B objective chain stalls on "Gather supplies for your team's
-camp" after tournament readiness; South Bridge entombment at (7.9, −3.4, 1319); Bram's
-shop exit clips furniture; objective label truncates at 1280×800; four items only the
-owner's ROG Ally can close (interact reliability, frame rate with grass on, player
-sleep, day/night advancing).
+See `docs/CURRENT_STATE.md` §3 for the ranked list — it is authoritative and this
+summary is not. Updated 2026-09-03; the four items this section used to head with
+(opening orb floor, the Gate B objective chain, South Bridge entombment, the truncated
+objective label) are all closed, two of them as harness defects rather than game
+defects. See "Current stage" above.
+
+Headline items still open:
+
+- The tutorial catch is unstable across knockout / re-engage rounds.
+- Bramblebun reads as a self-lit glow at night: `field_emission` was raised to 2.5 for
+  daytime grass separation and the multiply is not time-of-day scaled.
+- Gate B's tail stalls placing creature beds (3 of 5), and the objective does not advance
+  off "Make camp for your team". Found only after the gather-route fix let the run get
+  that far.
+- Gate B's walk back to the Practice Meadow clearing stalls ~27–32 m short. Same reason:
+  newly reachable, not newly broken.
+- Bram's shop exit clips furniture.
+- Gate 2's task list (2.1–2.7) is complete while its blind-judge bar is not met; task
+  2.8 decides what that means. See `docs/GATE3_COORDINATOR_BRIEF.md` §2.
+- Four items only the owner's ROG Ally can close: interact reliability, frame rate with
+  grass on, player sleep, day/night advancing.
 
 ## How evidence is produced (D73)
 
